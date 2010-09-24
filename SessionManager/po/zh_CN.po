@@ -1,0 +1,3437 @@
+# Chinese translations for i package.
+# Copyright (C) 2010 Ulteo SAS
+# This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
+# Automatically generated, 2010.
+# Author: Alex Liang <chinabiue@yahoo.com.cn>, 2010.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-05-19 09:06+0200\n"
+"PO-Revision-Date: 2010-03-11 17:03+0100\n"
+"Last-Translator: Alex Liang <chinabiue@yahoo.com.cn>\n"
+"Language-Team: Chinese<LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.5.3\n"
+
+#: ../web/admin/usersgroup.php:33 ../web/classes/Preferences.class.php:281
+msgid "1 day"
+msgstr "1 天"
+
+#: ../web/admin/usersgroup.php:32 ../web/classes/Preferences.class.php:281
+msgid "1 hour"
+msgstr "1 小时"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "1 minute"
+msgstr "1 分钟"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "1 month"
+msgstr "1 月"
+
+#: ../web/admin/usersgroup.php:34 ../web/classes/Preferences.class.php:281
+msgid "1 week"
+msgstr "1 周"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "10 minutes"
+msgstr "10 分钟"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "12 hours"
+msgstr "12 小时"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "15 minutes"
+msgstr "15 分钟"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "2 days"
+msgstr "2 天"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "2 hours"
+msgstr "2 小时"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "2 minutes"
+msgstr "2 分钟"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "30 minutes"
+msgstr "30 分钟"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "5 hours"
+msgstr "5 小时"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "5 minutes"
+msgstr "5 分钟"
+
+#: ../web/classes/Preferences.class.php:278
+msgid "8-bits"
+msgstr "8 位"
+
+#: ../web/admin/classes/UsersGroupsList.class.php:91
+#: ../web/admin/classes/UsersList.class.php:93
+#: ../web/admin/classes/UsersList.class.php:130
+#, php-format
+msgid "<strong>%d</strong> result for \"%s\"."
+msgid_plural "<strong>%d</strong> results for \"%s\"."
+msgstr[0] "\"%s\".有<strong>%d</strong>个结果"
+msgstr[1] "\"%s\".有<strong>%d</strong>个结果"
+
+#: ../web/admin/classes/UsersGroupsList.class.php:87
+#: ../web/admin/classes/UsersList.class.php:89
+#, php-format
+msgid ""
+"<strong>Partial content:</strong> Only <strong>%d result</strong> displayed "
+"but there are more. Please restrict your search field."
+msgid_plural ""
+"<strong>Partial content:</strong> Only <strong>%d results</strong> displayed "
+"but there are more. Please restrict your search field."
+msgstr[0] "<strong>局部内容：</strong> 只显示<strong>%d 个结果</strong> 还有更多结果。请限制搜索区域。"
+msgstr[1] "<strong>局部内容：</strong> 只显示<strong>%d 个结果</strong> 还有更多结果。请限制搜索区域。"
+
+#: ../web/admin/sharedfolders.php:43
+msgid "A shared folder with that name already exists!"
+msgstr "已存在同名分享文件夹！"
+
+#: ../web/admin/actions.php:393
+msgid "A shared folder with this name already exists"
+msgstr "已存在同名分享文件夹！"
+
+#: ../web/admin/sharedfolders.php:184
+msgid "ACL"
+msgstr "访问控制表"
+
+#: ../web/admin/reporting.php:482 ../web/admin/reporting.php:508
+#: ../web/admin/reporting.php:527 ../web/admin/reporting.php:540
+msgid "Abscissa: day of the month"
+msgstr "横坐标：日之于月"
+
+#: ../web/admin/reporting.php:484 ../web/admin/reporting.php:510
+#: ../web/admin/reporting.php:529 ../web/admin/reporting.php:542
+msgid "Abscissa: hour of the day"
+msgstr "横坐标：小时之于日"
+
+#: ../web/classes/Preferences.class.php:304
+msgid "Action to do when an user already have an active session"
+msgstr "用户已有一活动会话时采取的动作"
+
+#: ../web/classes/Preferences.class.php:243
+msgid "Action when an ApS status is not ready anymore"
+msgstr "程序组未准备好时采取的动作"
+
+#: ../web/classes/Preferences.class.php:491
+msgid "Activated callbacks"
+msgstr "已激活反馈"
+
+#: ../web/classes/Session.class.php:126
+msgid "Active"
+msgstr "活动"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:26
+#: ../web/modules/UserDB/activedirectory.php:151
+#: ../web/modules/UserGroupDB/activedirectory.php:113
+msgid "Active Directory"
+msgstr "活动目录"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:363
+msgid "Active Directory User Groups"
+msgstr "活动目录用户组"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:236
+msgid "Active Directory integration"
+msgstr "活动目录集合"
+
+#: ../web/admin/users.php:420 ../web/admin/servers.php:979
+msgid "Active sessions"
+msgstr "活动会话"
+
+#: ../web/admin/applications.php:401
+msgid "Active tasks on this application"
+msgstr "此程序活动任务"
+
+#: ../web/admin/servers.php:947
+msgid "Active tasks on this server"
+msgstr "此服务器活动任务"
+
+#: ../web/admin/appsgroup.php:224 ../web/admin/usersgroup.php:524
+#: ../web/admin/publications.php:132 ../web/admin/applications_static.php:244
+#: ../web/admin/users.php:215 ../web/admin/users.php:234
+msgid "Add"
+msgstr "添加"
+
+#: ../web/admin/applications_static.php:180
+msgid "Add a static application"
+msgstr "添加静态程序"
+
+#: ../web/admin/usersgroup.php:985 ../web/admin/sharedfolders.php:212
+msgid "Add access to this shared folder"
+msgstr "添加分享文件夹访问"
+
+#: ../web/admin/news.php:90
+msgid "Add news"
+msgstr "添加新闻"
+
+#: ../web/admin/news.php:101
+msgid "Add this news"
+msgstr "添加此新闻"
+
+#: ../web/admin/appsgroup.php:465 ../web/admin/usersgroup.php:887
+msgid "Add this publication"
+msgstr "添加此发布"
+
+#: ../web/admin/usersgroup.php:936
+msgid "Add this rule"
+msgstr "添加此规则"
+
+#: ../web/admin/appsgroup.php:378 ../web/admin/usersgroup.php:843
+#: ../web/admin/applications_static.php:577 ../web/admin/users.php:410
+#: ../web/admin/applications.php:461
+msgid "Add to this group"
+msgstr "添加到此组"
+
+#: ../web/admin/login.php:99 ../web/admin/includes/page_template.php:242
+#: ../web/includes/functions.inc.d/template.inc.php:79
+#: ../web/includes/functions.inc.d/template.inc.php:124
+msgid "Administration"
+msgstr "管理"
+
+#: ../web/classes/Preferences.class.php:153
+msgid "Administration console language"
+msgstr "控制窗口语言"
+
+#: ../web/modules/UserDB/activedirectory.php:85
+msgid "Administrator DN"
+msgstr "管理DN"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:255
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:361
+#: ../web/admin/classes/Configuration_mode_ad.class.php:261
+msgid "Administrator account"
+msgstr "管理帐户"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:359
+msgid "Administrator account:"
+msgstr "管理帐户："
+
+#: ../web/modules/UserDB/activedirectory.php:87
+msgid "Administrator password"
+msgstr "管理密码"
+
+#: ../web/index.php:312
+msgid "Advanced settings"
+msgstr "高级设定"
+
+#: ../web/admin/usersgroup.php:489 ../web/admin/usersgroup.php:734
+msgid "All"
+msgstr "全部"
+
+#: ../web/classes/Preferences.class.php:326
+msgid "Allow connections through proxy (SSH/ping applet test required)"
+msgstr "允许通过代理连接（需要SSH/ping程序支持）"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:261
+msgid "Anonymous bind"
+msgstr "匿名绑定"
+
+#: ../web/admin/servers.php:834
+msgid "Application"
+msgstr "程序"
+
+#: ../web/admin/actions.php:294
+#, php-format
+msgid "Application '%s' successfully deleted"
+msgstr "成功删除程序'%s' "
+
+#: ../web/admin/configuration-sumup.php:95
+msgid "Application Server"
+msgstr "程序服务器"
+
+#: ../web/classes/Preferences.class.php:234
+msgid "Application Server settings"
+msgstr "程序服务器设定"
+
+#: ../web/admin/logs.php:149
+msgid "Application Servers"
+msgstr "程序服务器"
+
+#: ../web/startsession.php:237
+msgid "Application does not exist"
+msgstr "程序不存在"
+
+#: ../web/admin/publications.php:80
+msgid "Application group"
+msgstr "程序组"
+
+#: ../web/admin/appsgroup.php:137
+msgid "Application groups"
+msgstr "程序组"
+
+#: ../web/admin/index.php:112
+msgid "Application groups list"
+msgstr "程序组列表"
+
+#: ../web/admin/appsgroup.php:295
+msgid "Application groups management"
+msgstr "程序组管理"
+
+#: ../web/admin/index.php:110
+msgid "Application list"
+msgstr "程序列表"
+
+#: ../web/startsession.php:252
+msgid "Application not available"
+msgstr "程序无法使用"
+
+#: ../web/admin/actions.php:115
+msgid "ApplicationDB is not writeable"
+msgstr "程序数据库不可写"
+
+#: ../web/admin/actions.php:129 ../web/admin/actions.php:138
+#, php-format
+msgid "ApplicationGroup '%s' successfully modified"
+msgstr "成功编辑程序组'%s'"
+
+#. general div
+#: ../web/admin/includes/page_template.php:47
+#: ../web/admin/includes/page_template.php:114 ../web/admin/sumup.php:193
+#: ../web/admin/applications.php:112
+msgid "Applications"
+msgstr "程序"
+
+#: ../web/admin/includes/page_template.php:121
+msgid "Applications Groups"
+msgstr "程序组"
+
+#: ../web/admin/index.php:105
+msgid "Applications and Appgroups"
+msgstr "程序和程序组"
+
+#: ../web/admin/servers.php:857
+msgid "Applications available on this server"
+msgstr "此服务器可用程序"
+
+#: ../web/admin/wizard.php:312
+msgid "Applications/groups selection"
+msgstr "选择程序/组"
+
+#: ../web/admin/wizard.php:530
+msgid "Applications:"
+msgstr "程序："
+
+#: ../web/admin/appsgroup.php:78
+msgid "AppsGroup successfully added"
+msgstr "成功添加程序组"
+
+#: ../web/admin/appsgroup.php:91
+msgid "AppsGroup successfully deleted"
+msgstr "成功删除程序组"
+
+#: ../web/admin/appsgroup.php:124
+msgid "AppsGroup successfully modified"
+msgstr "成功编辑程序组"
+
+#: ../web/admin/wizard.php:447
+msgid "Are you sure that you want to create this publication?"
+msgstr "确认创建此发布？"
+
+#: ../web/admin/users.php:203
+msgid "Are you sure you want to delete selected users?"
+msgstr "确认删除选择用户？"
+
+#: ../web/admin/appsgroup.php:187 ../web/admin/usersgroup.php:410
+msgid "Are you sure you want to delete these groups?"
+msgstr "确认删除此组？"
+
+#: ../web/admin/applications_static.php:167
+msgid "Are you sure you want to delete these static applications?"
+msgstr "确认删除此静态程序?"
+
+#: ../web/admin/applications_static.php:557 ../web/admin/applications.php:440
+msgid "Are you sure you want to delete this application from this group?"
+msgstr "确认从本组删除此程序？"
+
+#: ../web/admin/appsgroup.php:356 ../web/admin/applications_static.php:148
+#: ../web/admin/applications_static.php:461
+msgid "Are you sure you want to delete this application?"
+msgstr "确认删除此程序？"
+
+#: ../web/admin/appsgroup.php:174 ../web/admin/appsgroup.php:311
+#: ../web/admin/usersgroup.php:393 ../web/admin/usersgroup.php:666
+msgid "Are you sure you want to delete this group?"
+msgstr "确认删除此组？"
+
+#: ../web/admin/applications_static.php:524
+msgid "Are you sure you want to delete this icon?"
+msgstr "确认删除此图标？"
+
+#: ../web/admin/news.php:76
+msgid "Are you sure you want to delete this news?"
+msgstr "确认删除此新闻？"
+
+#: ../web/admin/appsgroup.php:443 ../web/admin/usersgroup.php:865
+#: ../web/admin/publications.php:97
+msgid "Are you sure you want to delete this publication?"
+msgstr "确认删除此发布？"
+
+#: ../web/admin/usersgroup.php:911
+msgid "Are you sure you want to delete this rule?"
+msgstr "确认删除此规则？"
+
+#: ../web/admin/servers.php:479 ../web/admin/servers.php:797
+msgid "Are you sure you want to delete this server?"
+msgstr "确认删除此服务器？"
+
+#: ../web/admin/usersgroup.php:965 ../web/admin/sharedfolders.php:192
+msgid "Are you sure you want to delete this shared folder access?"
+msgstr "确认删除此分享文件夹访问权？"
+
+#: ../web/admin/sharedfolders.php:98
+msgid "Are you sure you want to delete this shared folder?"
+msgstr "确认删除此分享文件夹？"
+
+#: ../web/admin/users.php:390
+msgid "Are you sure you want to delete this user from this group?"
+msgstr "确认从本组删除此用户？"
+
+#: ../web/admin/usersgroup.php:819 ../web/admin/users.php:186
+#: ../web/admin/users.php:316
+msgid "Are you sure you want to delete this user?"
+msgstr "确认删除此用户？"
+
+#: ../web/admin/sessions.php:264
+msgid "Are you sure you want to kill selected sessions?"
+msgstr "确认终止选择会话？"
+
+#: ../web/admin/sessions.php:189 ../web/admin/sessions.php:250
+msgid "Are you sure you want to kill this session?"
+msgstr "确认终止此会话？"
+
+#: ../web/admin/servers.php:876 ../web/admin/applications.php:362
+msgid "Are you sure you want to remove this application from this server?"
+msgstr "确认从服务器移除此程序？"
+
+#: ../web/admin/applications.php:314
+msgid "Are you sure you want to remove this application?"
+msgstr "确认移除此程序？"
+
+#: ../web/admin/usersgroup.php:489 ../web/admin/usersgroup.php:737
+msgid "At least one"
+msgstr "至少一个"
+
+#: ../web/classes/Preferences.class.php:226
+msgid "Authentication"
+msgstr "验证"
+
+#: ../web/ajax/login.php:26 ../web/startsession.php:70
+#: ../web/startsession.php:74
+msgid "Authentication failed"
+msgstr "验证失败"
+
+#: ../web/admin/configuration-sumup.php:100
+msgid "Authorized FQDN"
+msgstr "已授权正式域名"
+
+#: ../web/classes/Preferences.class.php:235
+msgid "Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)"
+msgstr "已授权机器（正式域名或IP - 可使用(*.)通配符）"
+
+#: ../web/classes/Preferences.class.php:249
+msgid "Auto register new servers"
+msgstr "自动注册新服务器"
+
+#: ../web/classes/Preferences.class.php:252
+msgid "Auto switch new servers to production mode"
+msgstr "自动切换新服务器到生产模式"
+
+#: ../web/classes/Preferences.class.php:154
+msgid "Autodetect"
+msgstr "自动检测"
+
+#: ../web/admin/applications.php:212
+msgid "Available"
+msgstr "可用"
+
+#. <th>'._('Desktop File').'</th>
+#: ../web/admin/sumup.php:65
+msgid "Available servers"
+msgstr "可用服务器"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:107
+msgid "Back to default"
+msgstr "重设为默认"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:230
+msgid "Base DN:"
+msgstr "基本DN"
+
+#: ../web/admin/wizard.php:460
+msgid "Between these usergroups"
+msgstr "在此用户组间"
+
+#: ../web/admin/wizard.php:478
+msgid "Between this newly created usergroup"
+msgstr "在此新用户组间"
+
+#: ../web/admin/wizard.php:458
+msgid "Between this usergroup"
+msgstr "在此用户组间"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:263
+msgid "Bind DN (without suffix):"
+msgstr "绑定DN(无后缀）："
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:264
+msgid "Bind password:"
+msgstr "绑定密码："
+
+#: ../web/admin/appsgroup.php:244 ../web/admin/usersgroup.php:571
+#: ../web/admin/applications.php:213
+msgid "Block"
+msgstr "锁定"
+
+#: ../web/admin/appsgroup.php:158 ../web/admin/appsgroup.php:248
+#: ../web/admin/usersgroup.php:370 ../web/admin/usersgroup.php:575
+#: ../web/admin/applications.php:216
+msgid "Blocked"
+msgstr "已锁定"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:137
+msgid "Both CPU and RAM are used as criterias, with a little randomization..."
+msgstr "CPU和RAM标准使用，有一定随机性..."
+
+#: ../web/classes/Server.class.php:348
+msgid "Broken"
+msgstr "已损坏"
+
+#: ../web/modules/AuthMethod/CAS.php:71
+msgid "CAS authentication"
+msgstr "CAS验证"
+
+#: ../web/modules/AuthMethod/CAS.php:85
+msgid "CAS server URL"
+msgstr "CAS服务器地址"
+
+#: ../web/admin/servers.php:342 ../web/admin/servers.php:461
+#: ../web/admin/servers.php:709
+msgid "CPU"
+msgstr "CPU"
+
+#: ../web/admin/reporting.php:367 ../web/admin/servers.php:351
+#: ../web/admin/servers.php:715
+msgid "CPU usage"
+msgstr "CPU使用率"
+
+#: ../web/admin/usersgroup.php:477
+msgid "Cached"
+msgstr "缓存"
+
+#: ../web/admin/wizard.php:607
+msgid "Cannot create application group"
+msgstr "无法创程序组"
+
+#: ../web/admin/wizard.php:587
+msgid "Cannot create usergroup"
+msgstr "无法创建用户组"
+
+#: ../web/admin/servers.php:548
+msgid "Cannot get server monitoring"
+msgstr "无法获取服务器监视"
+
+#: ../web/admin/servers.php:563
+msgid "Cannot list available applications"
+msgstr "无法列出现有程序"
+
+#: ../web/admin/servers.php:829
+msgid "Category"
+msgstr "分类"
+
+#: ../web/admin/password.php:53
+msgid "Change"
+msgstr "更改"
+
+#: ../web/admin/password.php:36 ../web/admin/includes/page_template.php:197
+msgid "Change Administrator password"
+msgstr "更改管理员密码"
+
+#: ../web/classes/Preferences.class.php:308
+#: ../web/classes/Preferences.class.php:332
+msgid ""
+"Choose Advanced Settings options you want to make available to users before "
+"they launch a session."
+msgstr "如想在用户启动会话前使其可用请选择高级设定。"
+
+#: ../web/classes/Preferences.class.php:416
+msgid "Choose the modules you want to enable."
+msgstr "选择要激活的模块"
+
+#: ../web/classes/Preferences.class.php:365
+msgid "Choose the plugins you want to enable."
+msgstr "选择要激活的插件"
+
+#: ../web/events/callbacks/ServerStatusChanged/Task.class.php:53
+msgid "Cleanup tasks"
+msgstr "清理任务"
+
+#: ../web/admin/applications_static.php:220
+#: ../web/admin/applications_static.php:438
+#: ../web/admin/applications_static.php:502
+msgid "Command"
+msgstr "指令"
+
+#: ../web/plugins/FS/cifs.php:94
+msgid "Common Internet File System (CIFS)"
+msgstr "通用互联网文件系统（CIFS）"
+
+#: ../web/plugins/FS/cifs_no_sfu.php:35
+msgid "Common Internet File System (CIFS) without services for unix"
+msgstr "无unix服务的通用互联网文件系统（CIFS）"
+
+#. conf not valid
+#: ../web/admin/index.php:83 ../web/admin/configuration-partial.php:53
+#: ../web/admin/configuration-partial.php:60
+#: ../web/admin/includes/page_template.php:53 ../web/admin/servers.php:729
+#: ../web/admin/sharedfolders.php:160 ../web/admin/configuration.php:69
+#: ../web/admin/configuration.php:81
+msgid "Configuration"
+msgstr "配置"
+
+#: ../web/includes/core-minimal.inc.php:61
+msgid "Configuration file missing"
+msgstr "配置文件丢失"
+
+#: ../web/includes/core-minimal.inc.php:68
+msgid "Configuration not valid"
+msgstr "配置无效"
+
+#. configuration saved
+#: ../web/admin/configuration-partial.php:49 ../web/admin/sharedfolders.php:64
+#: ../web/admin/configuration.php:65
+msgid "Configuration successfully saved"
+msgstr "成功保存配置"
+
+#: ../web/admin/wizard.php:559
+msgid "Confirm"
+msgstr "确认"
+
+#: ../web/admin/wizard.php:445
+msgid "Confirmation"
+msgstr "确认"
+
+#: ../web/admin/sessions.php:177
+msgid "Connect to or observe this session"
+msgstr "连接或观察此会话"
+
+#: ../web/admin/news.php:63
+msgid "Content"
+msgstr "连接"
+
+#: ../web/admin/wizard.php:324
+msgid "Create a group with applications"
+msgstr "创建带程序的组"
+
+#: ../web/admin/wizard.php:179
+msgid "Create a group with users"
+msgstr "创建带用户的组"
+
+#: ../web/admin/appsgroup.php:200 ../web/admin/usersgroup.php:433
+msgid "Create a new group"
+msgstr "创建新组"
+
+#: ../web/admin/wizard.php:402
+msgid "Create appgroup"
+msgstr "创建程序组"
+
+#: ../web/admin/sharedfolders.php:113
+msgid "Create this shared folder"
+msgstr "创建此分享文件夹"
+
+#: ../web/admin/wizard.php:253
+msgid "Create usergroup"
+msgstr "创建用户组"
+
+#: ../web/classes/Session.class.php:123
+msgid "Created"
+msgstr "已创建"
+
+#: ../web/admin/tasks.php:117 ../web/admin/tasks.php:185
+msgid "Creation time"
+msgstr "创建时间"
+
+#: ../web/modules/UserDB/sql_external.php:208
+msgid "Crypt"
+msgstr "Crypt加密"
+
+#: ../web/admin/logs.php:166
+msgid "Daemon log"
+msgstr "守护进程日志"
+
+#: ../web/admin/configuration-sumup.php:56
+msgid "Database"
+msgstr "数据库"
+
+#: ../web/classes/Preferences.class.php:202
+msgid "Database host address"
+msgstr "数据库主机地址"
+
+#: ../web/modules/UserDB/sql_external.php:201
+#: ../web/modules/UserGroupDB/sql_external.php:111
+#: ../web/classes/Preferences.class.php:208
+msgid "Database name"
+msgstr "数据库名"
+
+#: ../web/classes/Preferences.class.php:206
+msgid "Database password"
+msgstr "数据库密码"
+
+#: ../web/admin/includes/page_template.php:155
+msgid "Database settings"
+msgstr "数据库设置"
+
+#: ../web/classes/Preferences.class.php:204
+msgid "Database username"
+msgstr "数据库名"
+
+#: ../web/admin/configuration-sumup.php:63
+msgid "Database: "
+msgstr "数据库："
+
+#: ../web/admin/news.php:63
+msgid "Date"
+msgstr "日期"
+
+#: ../web/admin/reporting.php:104
+msgid "Day"
+msgstr "日"
+
+#: ../web/index.php:539
+msgid "Debug"
+msgstr "调试"
+
+#: ../web/classes/Preferences.class.php:157
+msgid "Debug options list"
+msgstr "调试选项列表"
+
+#: ../web/classes/Preferences.class.php:170
+msgid "Default browser"
+msgstr "默认浏览器"
+
+#: ../web/admin/applications_static.php:259
+msgid "Default browser for :"
+msgstr "默认浏览器为："
+
+#: ../web/classes/Preferences.class.php:271
+msgid "Default language for session"
+msgstr "会话默认语言"
+
+#: ../web/classes/Preferences.class.php:267
+msgid "Default mode for session"
+msgstr "会话默认模式"
+
+#: ../web/classes/Preferences.class.php:173
+msgid "Default policy"
+msgstr "默认策略"
+
+#: ../web/classes/Preferences.class.php:277
+msgid "Default quality for session"
+msgstr "会话默认特性"
+
+#: ../web/classes/Preferences.class.php:280
+msgid "Default timeout for session"
+msgstr "会话默认超时"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:275
+msgid "Default user branch"
+msgstr "默认用户分支"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:251
+#: ../web/admin/classes/Configuration_mode_ad.class.php:352
+msgid "Default user branch (Users)"
+msgstr "默认用户分支"
+
+#. $c = new ConfigElement_input('start_app','start_app','start_app_des','');
+#. $this->add('general',$c);
+#: ../web/classes/Preferences.class.php:164
+msgid "Default user group"
+msgstr "默认用户组"
+
+#: ../web/classes/Preferences.class.php:274
+msgid "Default windows keymap for session"
+msgstr "会话默认键盘布局"
+
+#: ../web/admin/usersgroup.php:656
+msgid "Define as default"
+msgstr "设定为默认"
+
+#: ../web/admin/appsgroup.php:175 ../web/admin/appsgroup.php:189
+#: ../web/admin/usersgroup.php:394 ../web/admin/usersgroup.php:412
+#: ../web/admin/publications.php:102 ../web/admin/applications_static.php:151
+#: ../web/admin/applications_static.php:169
+#: ../web/admin/applications_static.php:464 ../web/admin/users.php:187
+#: ../web/admin/users.php:205 ../web/admin/tasks.php:146
+#: ../web/admin/tasks.php:215 ../web/admin/servers.php:482
+#: ../web/admin/servers.php:506 ../web/admin/servers.php:800
+msgid "Delete"
+msgstr "删除"
+
+#: ../web/admin/usersgroup.php:970 ../web/admin/sharedfolders.php:197
+msgid "Delete access to this shared folder"
+msgstr "删除此分享文件夹访问权"
+
+#: ../web/admin/appsgroup.php:361 ../web/admin/usersgroup.php:824
+#: ../web/admin/applications_static.php:562 ../web/admin/users.php:395
+#: ../web/admin/applications.php:445
+msgid "Delete from this group"
+msgstr "从本组删除"
+
+#: ../web/admin/appsgroup.php:312 ../web/admin/usersgroup.php:667
+msgid "Delete this group"
+msgstr "删除此组"
+
+#: ../web/admin/applications_static.php:524
+msgid "Delete this icon"
+msgstr "删除此图标"
+
+#: ../web/admin/news.php:80
+msgid "Delete this news"
+msgstr "删除此新闻"
+
+#: ../web/admin/appsgroup.php:448 ../web/admin/usersgroup.php:870
+msgid "Delete this publication"
+msgstr "删除此发布"
+
+#: ../web/admin/usersgroup.php:916
+msgid "Delete this rule"
+msgstr "删除此规则"
+
+#: ../web/admin/sharedfolders.php:102
+msgid "Delete this shared folder"
+msgstr "删除此分享文件夹"
+
+#: ../web/admin/users.php:317
+msgid "Delete this user"
+msgstr "删除此用户"
+
+#. echo '<th>'._('Status').'</th>';
+#: ../web/admin/appsgroup.php:148 ../web/admin/appsgroup.php:211
+#: ../web/admin/appsgroup.php:298 ../web/admin/usersgroup.php:359
+#: ../web/admin/usersgroup.php:471 ../web/admin/usersgroup.php:635
+#: ../web/admin/wizard.php:266 ../web/admin/wizard.php:415
+#: ../web/admin/applications_static.php:112
+#: ../web/admin/applications_static.php:436
+#: ../web/admin/classes/UsersGroupsList.class.php:80
+#: ../web/admin/applications.php:125 ../web/admin/applications.php:298
+msgid "Description"
+msgstr "描述"
+
+#: ../web/admin/wizard.php:483 ../web/admin/wizard.php:529
+msgid "Description: "
+msgstr "描述："
+
+#: ../web/classes/Preferences.class.php:268
+msgid "Desktop"
+msgstr "桌面"
+
+#: ../web/classes/Session.class.php:131
+msgid "Destroyed"
+msgstr "已损坏"
+
+#. echo '<th>'._('Version').'</th>';
+#: ../web/admin/tasks.php:121 ../web/admin/tasks.php:189
+#: ../web/admin/servers.php:308 ../web/admin/servers.php:437
+#: ../web/admin/servers.php:699 ../web/admin/servers.php:953
+#: ../web/admin/applications.php:407
+msgid "Details"
+msgstr "细节"
+
+#: ../web/classes/Preferences.class.php:240
+msgid "Disable reverse FQDN checking"
+msgstr "禁用反向正式域名检查"
+
+#: ../web/admin/users.php:164 ../web/admin/users.php:333
+#: ../web/admin/classes/UsersList.class.php:82
+msgid "Display name"
+msgstr "显示名字"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:248
+msgid "Display name field:"
+msgstr "显示名字域："
+
+#: ../web/classes/Preferences.class.php:320
+msgid ""
+"Display the list of users from the corporate directory in the login box. If "
+"the list is not displayed, the user must enter his login name."
+msgstr "在登陆框显示共同文件夹内用户名列表。 如果列表不显示，用户必须键入用户名。"
+
+#: ../web/classes/Preferences.class.php:320
+msgid "Display users list"
+msgstr "显示用户列表"
+
+#. Not yet Implemented
+#. $str.= '<tr><td style="text-align: right;"><input class="input_checkbox" type="checkbox" name="user_branch_recursive"/></td>';
+#. $str.= '<td>'._('Recursive Mode').'</td></tr>';
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:247
+msgid "Distinguished name field:"
+msgstr "可识别名域："
+
+#: ../web/classes/Preferences.class.php:244
+msgid "Do nothing"
+msgstr "不操作"
+
+#: ../web/modules/UserDB/activedirectory.php:83
+msgid "Domain name"
+msgstr "域名"
+
+#: ../web/modules/UserDB/activedirectory.php:83
+msgid "Domain name used by Active Directory"
+msgstr "域名已被活动目录使用"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:242
+#: ../web/admin/classes/Configuration_mode_ad.class.php:347
+msgid "Domain:"
+msgstr "域名："
+
+#: ../web/admin/logs.php:140 ../web/admin/logs.php:158
+#: ../web/admin/logs.php:168 ../web/admin/logs.php:206
+#: ../web/admin/logs.php:210
+msgid "Download full log file"
+msgstr "下载全部日志文件"
+
+#: ../web/admin/usersgroup.php:424 ../web/admin/usersgroup.php:427
+msgid "Dynamic"
+msgstr "动态"
+
+#: ../web/index.php:134
+msgid "ERROR"
+msgstr "错误"
+
+#: ../web/classes/Preferences.class.php:213
+msgid "Email settings"
+msgstr "Email设定"
+
+#: ../web/admin/appsgroup.php:249 ../web/admin/usersgroup.php:576
+msgid "Enable"
+msgstr "激活"
+
+#: ../web/admin/sharedfolders.php:120
+msgid "Enable Internal WebDAV filesystem"
+msgstr "激活联网分布式受权和版本控制文件系统"
+
+#: ../web/classes/Preferences.class.php:240
+msgid ""
+"Enable this option if you don't want to check that the result of the reverse "
+"FQDN address fits the one that was registered."
+msgstr "如果不想检查反向正式域名地址符合已注册域名请激活此选项。"
+
+#: ../web/admin/appsgroup.php:156 ../web/admin/appsgroup.php:243
+#: ../web/admin/usersgroup.php:368 ../web/admin/usersgroup.php:570
+msgid "Enabled"
+msgstr "激活"
+
+#: ../web/classes/Preferences.class.php:238
+msgid ""
+"Enter a private addresses you wish to associate to a specific IP in case of "
+"issue with the DNS configuration or to override a reverse address result. "
+"Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)"
+msgstr ""
+"如果DNS配置问题或需要重写反向地址，请输入想要关联的特定IP的私有地址。例如：pong.office.ulteo.com (field 1) "
+"192.168.0.113 (field 2)"
+
+#: ../web/admin/tasks.php:130 ../web/admin/tasks.php:199
+#: ../web/admin/configuration-profile.php:235 ../web/admin/servers.php:960
+#: ../web/admin/applications.php:414
+#: ../web/includes/functions.inc.d/template.inc.php:44
+#: ../web/includes/functions.inc.d/template.inc.php:49
+msgid "Error"
+msgstr "错误"
+
+#: ../web/admin/users.php:266
+msgid "Error while requesting usergroups"
+msgstr "请求用户组出错"
+
+#: ../web/admin/reporting.php:253
+msgid "Error: \"from\" date is after \"to\" date, switching"
+msgstr "错误：日期\"from\" 在\"to\" 之后，正在切换"
+
+#: ../web/admin/reporting.php:260
+msgid "Error: \"to\" field is in the future, switch to the current time"
+msgstr "错误：时段\"to\" 在未来，切换到当前时间"
+
+#. Events settings
+#: ../web/admin/includes/page_template.php:185
+#: ../web/classes/Preferences.class.php:464
+msgid "Events settings"
+msgstr "事件设定"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:113
+msgid "Examples"
+msgstr "例"
+
+#: ../web/admin/applications.php:299
+msgid "Executable"
+msgstr "可执行"
+
+#: ../web/classes/Preferences.class.php:268
+msgid "External"
+msgstr "外部"
+
+#: ../web/admin/servers.php:306 ../web/admin/servers.php:435
+#: ../web/admin/sumup.php:191
+msgid "FQDN"
+msgstr "正式域名"
+
+#: ../web/admin/configuration-sumup.php:116
+msgid "FQDN check"
+msgstr "正式域名检查"
+
+#: ../web/admin/configuration-sumup.php:108
+msgid "FQDN private address"
+msgstr "正式域名私有地址"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:31
+msgid "Factor impact"
+msgstr "系数冲突"
+
+#: ../web/admin/usersgroup.php:548
+msgid "Failed to load usergroup"
+msgstr "载入用户组失败"
+
+#: ../web/modules/UserDB/ldap.php:272
+msgid "Filter (optional)"
+msgstr "过滤器（可选）"
+
+#: ../web/admin/classes/UsersList.class.php:114
+msgid "Filter add list: "
+msgstr "添加过滤器列表："
+
+#: ../web/modules/UserDB/ldap.php:272
+msgid "Filter, example (&(distinguishedname=mike*)(uid=42*))"
+msgstr "过滤器，例如(&(distinguishedname=mike*)(uid=42*))"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:250
+msgid "Filter:"
+msgstr "过滤器："
+
+#: ../web/admin/usersgroup.php:493 ../web/admin/usersgroup.php:741
+msgid "Filters"
+msgstr "过滤器"
+
+#: ../web/admin/tasks.php:128 ../web/admin/tasks.php:197
+msgid "Finished"
+msgstr "完成"
+
+#: ../web/classes/Preferences.class.php:305
+msgid "Forbid access"
+msgstr "禁止访问"
+
+#: ../web/classes/Preferences.class.php:308
+#: ../web/classes/Preferences.class.php:332
+msgid "Forceable paramaters by users"
+msgstr "用户强制参数"
+
+#: ../web/admin/reporting.php:438 ../web/classes/Preferences.class.php:217
+msgid "From"
+msgstr "从"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:123
+msgid ""
+"Full CPU: only CPU usage is used as a criteria to choose the best\n"
+"server to use for an incoming user."
+msgstr "全速CPU：只使用CPU使用率作为进入用户选择最好服务器的标准。"
+
+#: ../web/admin/index.php:88 ../web/classes/Preferences.class.php:151
+msgid "General configuration"
+msgstr "常用配置"
+
+#: ../web/index.php:75
+msgid "Getting userlist failed"
+msgstr "获取用户列表失败"
+
+#: ../web/modules/UserGroupDB/ldap_posix.php:134
+msgid "Group Branch DN"
+msgstr "组分支DN"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:280
+msgid "Group Branch DN:"
+msgstr "组分支DN:"
+
+#: ../web/admin/applications_static.php:550 ../web/admin/applications.php:432
+msgid "Groups with this application"
+msgstr "包含此程序的组"
+
+#: ../web/modules/UserDB/sql_external.php:207
+msgid "Hash method"
+msgstr "Hash方式"
+
+#: ../web/classes/Preferences.class.php:314
+msgid "Heading title"
+msgstr "标题栏"
+
+#: ../web/classes/Preferences.class.php:278
+msgid "High"
+msgstr "高"
+
+#: ../web/classes/Preferences.class.php:278
+msgid "Highest"
+msgstr "最高"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:291
+#: ../web/admin/classes/Configuration_mode_internal.class.php:99
+#: ../web/admin/classes/Configuration_mode_ad.class.php:301
+msgid "Home Directory"
+msgstr "根目录"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:373
+#: ../web/admin/classes/Configuration_mode_ad.class.php:368
+msgid "Home Directory:"
+msgstr "根目录："
+
+#: ../web/classes/Preferences.class.php:219
+msgid "Host"
+msgstr "主机"
+
+#: ../web/admin/configuration-sumup.php:61
+msgid "Host: "
+msgstr "主机："
+
+#: ../web/admin/reporting.php:133
+msgid "Hour"
+msgstr "小时"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:95
+msgid "I want to create my own users"
+msgstr "创建自己的用户"
+
+#: ../web/admin/tasks.php:184 ../web/admin/servers.php:950
+#: ../web/admin/applications.php:404
+msgid "ID"
+msgstr "ID"
+
+#: ../web/admin/applications_static.php:520
+msgid "Icon"
+msgstr "徽标"
+
+#: ../web/modules/AuthMethod/Token.php:95
+#, fuzzy
+msgid ""
+"If a token argument is sent to startsession, the system tries to get an user "
+"login by requesting the token validation url.<br /><br />Put here the url to "
+"request if a token argument is sent to <i>startsession</i> instead of login/"
+"password.<br /><br />The special string <b>%TOKEN%</b> needs to be set "
+"because it's replaced by the token argument when the URL is requested."
+msgstr ""
+"如果令牌参数被发送用于启动会话，系统将试图通过令牌验证URL地址取得用户登入信息。<br /><br "
+"/>如果令牌参数被发送到<i>startsession</i>而不是登入密码，将请求URL地址放在这里。 因为当请求URL地址时，它将会被令牌参数代替。"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:315
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:380
+msgid "In guest mode"
+msgstr "访客模式"
+
+#: ../web/admin/includes/page_template.php:28
+msgid "Index"
+msgstr "索引"
+
+#: ../web/admin/sessions.php:118
+msgid "Information"
+msgstr "信息"
+
+#: ../web/admin/users.php:434 ../web/admin/servers.php:996
+msgid "Informations about this session"
+msgstr "会话信息"
+
+#: ../web/admin/classes/Preferences_admin.class.php:105
+msgid "Initialization failed"
+msgstr "初始化失败"
+
+#: ../web/classes/Session.class.php:125
+msgid "Initializing"
+msgstr "初始化中"
+
+#: ../web/admin/tasks.php:236 ../web/admin/servers.php:836
+msgid "Install"
+msgstr "安装"
+
+#: ../web/admin/servers.php:808
+msgid "Install an application"
+msgstr "安装程序"
+
+#: ../web/admin/tasks.php:226
+msgid "Install an application from a package name"
+msgstr "从包名安装程序"
+
+#: ../web/admin/servers.php:813
+msgid "Install from a package name"
+msgstr "从包名安装"
+
+#: ../web/admin/servers.php:915 ../web/admin/applications.php:392
+msgid "Install on this server"
+msgstr "安装到此服务器"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:26
+msgid "Internal"
+msgstr "内部"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:79
+msgid "Internal Database Profiles"
+msgstr "内部数据库配置文件"
+
+#: ../web/plugins/FS/dav.php:78
+msgid "Internal WebDAV"
+msgstr "内部联网分布式授权和版本控制"
+
+#: ../web/startsession.php:363 ../web/startsession.php:373
+msgid "Internal error"
+msgstr "内部错误"
+
+#: ../web/classes/SessionReportItem.class.php:157
+msgid "Internal error: failed to initialize session"
+msgstr "内部错误：初始化会话失败"
+
+#: ../web/classes/SessionReportItem.class.php:158
+msgid "Internal error: failed to suspend session"
+msgstr "内部错误：挂起会话失败"
+
+#: ../web/classes/SessionReportItem.class.php:156
+msgid "Internal error: wrong session status"
+msgstr "内部错误：错误会话状态"
+
+#: ../web/webservices/session_invite.php:93
+msgid "Invitation"
+msgstr "邀请"
+
+#: ../web/events/SessionAddInvite.class.php:26
+msgid "Invitation sent"
+msgstr "发送邀请"
+
+#: ../web/classes/Preferences.class.php:305
+msgid "Invite into the session"
+msgstr "在会话中邀请"
+
+#: ../web/admin/tasks.php:122
+msgid "Job id"
+msgstr "工作ID"
+
+#: ../web/admin/sessions.php:165
+msgid "Join this application"
+msgstr "加入此程序"
+
+#: ../web/admin/sessions.php:184
+msgid "Join this session"
+msgstr "加入此会话"
+
+#: ../web/classes/SessionReportItem.class.php:161
+msgid "KMA expirated"
+msgstr "密钥管理算法(KAM)已截止"
+
+#: ../web/admin/sessions.php:253 ../web/admin/sessions.php:266
+msgid "Kill"
+msgstr "终止"
+
+#: ../web/admin/sessions.php:188 ../web/admin/sessions.php:192
+msgid "Kill this session"
+msgstr "终止此会话"
+
+#: ../web/classes/SessionReportItem.class.php:155
+msgid "Killed by administrator"
+msgstr "由管理员终止"
+
+#: ../web/modules/UserGroupDB/ldap_memberof.php:182
+msgid "LDAP using memberOf"
+msgstr "LDAP使用成员"
+
+#: ../web/modules/UserGroupDB/ldap_posix.php:139
+msgid "LDAP using posix group"
+msgstr "LDAP使用可移植组"
+
+#: ../web/index.php:345
+msgid "Language"
+msgstr "语言"
+
+#: ../web/admin/configuration-sumup.php:45
+msgid "Last save"
+msgstr "最后保存"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "Launch an application when the desktop is starting"
+msgstr "桌面开始时载入程序"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "Launch an application with extra arguments"
+msgstr "以额外参数启动程序"
+
+#: ../web/classes/Preferences.class.php:300
+msgid "Launch forced application with a desktop"
+msgstr "强制启动桌面程序"
+
+#: ../web/classes/Preferences.class.php:329
+msgid "Launch session in a popup"
+msgstr "在弹出窗口中启动会话"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:27
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:222
+#: ../web/modules/UserDB/ldap.php:309
+msgid "Lightweight Directory Access Protocol (LDAP)"
+msgstr "轻量级目录访问协议（LDAP）"
+
+#: ../web/admin/appsgroup.php:346
+msgid "List of applications in this group"
+msgstr "此组中程序列表"
+
+#: ../web/admin/appsgroup.php:433 ../web/admin/usersgroup.php:856
+msgid "List of publications for this group"
+msgstr "此组中发布列表"
+
+#: ../web/admin/sumup.php:177
+msgid "List of servers"
+msgstr "服务器列表"
+
+#: ../web/admin/tasks.php:180
+msgid "List of tasks"
+msgstr "任务列表"
+
+#: ../web/admin/sumup.php:52
+msgid "List of users"
+msgstr "用户列表"
+
+#: ../web/admin/usersgroup.php:810
+msgid "List of users in this group"
+msgstr "此组用户列表"
+
+#: ../web/classes/Preferences.class.php:262
+msgid "Load Balancing policy"
+msgstr "负载平衡策略"
+
+#: ../web/index.php:127
+msgid "Loading"
+msgstr "载入"
+
+#: ../web/classes/Preferences.class.php:215 ../web/plugins/FS/local.php:35
+msgid "Local"
+msgstr "本地"
+
+#: ../web/admin/users.php:293
+msgid "Locale"
+msgstr "本地"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:249
+msgid "Locale field"
+msgstr "本地网"
+
+#: ../web/index.php:131 ../web/admin/login.php:107 ../web/admin/login.php:147
+msgid "Log in"
+msgstr "登入"
+
+#: ../web/index.php:244 ../web/admin/users.php:163 ../web/admin/users.php:288
+#: ../web/admin/classes/UsersList.class.php:78 ../web/admin/login.php:131
+msgid "Login"
+msgstr "登入"
+
+#: ../web/modules/AuthMethod/Password.php:47
+msgid "Login/Password authentication"
+msgstr "登入/密码授权"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:328
+msgid "Login: "
+msgstr "登入："
+
+#: ../web/classes/Preferences.class.php:317
+msgid "Logo URL"
+msgstr "徽标地址"
+
+#: ../web/admin/includes/page_template.php:65
+msgid "Logout"
+msgstr "登出"
+
+#: ../web/admin/logs.php:131 ../web/admin/logs.php:205
+#: ../web/admin/logs.php:209 ../web/admin/configuration-sumup.php:73
+#: ../web/admin/includes/page_template.php:211
+msgid "Logs"
+msgstr "日志"
+
+#: ../web/admin/servers.php:345 ../web/admin/servers.php:711
+msgid "MB"
+msgstr "MB"
+
+#: ../web/modules/UserDB/sql_external.php:208
+msgid "MD5"
+msgstr "MD5"
+
+#: ../web/classes/Preferences.class.php:466
+msgid "Mail addresses to send alerts to"
+msgstr "要发送警告的邮件地址"
+
+#: ../web/classes/Preferences.class.php:214
+msgid "Mail server type"
+msgstr "邮件服务器类型"
+
+#: ../web/admin/appsgroup.php:168 ../web/admin/usersgroup.php:387
+#: ../web/admin/applications_static.php:142 ../web/admin/users.php:180
+#: ../web/admin/servers.php:362 ../web/admin/applications.php:155
+msgid "Manage"
+msgstr "管理"
+
+#: ../web/admin/appsgroup.php:185 ../web/admin/usersgroup.php:408
+#: ../web/admin/wizard.php:211 ../web/admin/wizard.php:230
+#: ../web/admin/wizard.php:355 ../web/admin/wizard.php:374
+#: ../web/admin/applications_static.php:163 ../web/admin/users.php:199
+#: ../web/admin/sessions.php:262 ../web/admin/servers.php:391
+#: ../web/admin/servers.php:496
+msgid "Mark all"
+msgstr "标记所有"
+
+#: ../web/modules/UserDB/sql_external.php:205
+#: ../web/modules/UserDB/ldap.php:269
+#: ../web/modules/UserGroupDB/sql_external.php:115
+msgid "Matching"
+msgstr "匹配"
+
+#: ../web/index.php:35
+msgid "Maximum"
+msgstr "最大"
+
+#: ../web/classes/Preferences.class.php:167
+msgid "Maximum items per page"
+msgstr "每页最大条目"
+
+#: ../web/classes/Preferences.class.php:278
+msgid "Medium"
+msgstr "中"
+
+#: ../web/admin/applications_static.php:236
+msgid "MimeTypes"
+msgstr "多用途因特网邮件扩展(MIME)类型"
+
+#: ../web/admin/applications_static.php:474
+#: ../web/admin/applications_static.php:538 ../web/admin/news.php:126
+#: ../web/admin/news.php:135
+msgid "Modify"
+msgstr "更改"
+
+#: ../web/admin/actions.php:55 ../web/admin/actions.php:105
+#: ../web/admin/actions.php:260 ../web/admin/actions.php:287
+#: ../web/admin/applications_static.php:36 ../web/admin/servers.php:604
+#: ../web/admin/applications.php:35 ../web/modules/ApplicationDB.php:32
+#: ../web/classes/Application_weblink.class.php:38
+#: ../web/classes/Server.class.php:727
+#: ../web/classes/abstract/Abstract_Server.class.php:202
+msgid "Module ApplicationDB must be enabled"
+msgstr "模块程序数据库必须激活"
+
+#: ../web/index.php:64 ../web/admin/users.php:35 ../web/admin/sumup.php:39
+#: ../web/modules/UserGroupDB/ldap_memberof.php:99
+#: ../web/modules/UserDB.php:32
+msgid "Module UserDB must be enabled"
+msgstr "模块用户数据库必须激活"
+
+#: ../web/modules/UserGroupDB.php:32 ../web/modules/UserGroupDB.php:144
+#: ../web/modules/UserGroupDB/ldap_posix.php:32
+#: ../web/modules/UserGroupDB/ldap_posix.php:69
+msgid "Module UserGroupDB must be enabled"
+msgstr "模块用户组数据库必须激活"
+
+#: ../web/classes/Preferences.class.php:416
+msgid "Modules activation"
+msgstr "模块激活"
+
+#: ../web/admin/classes/Preferences_admin.class.php:171
+#: ../web/admin/classes/Preferences_admin.class.php:177
+msgid "Modules configuration not valid"
+msgstr "模块配置无效"
+
+#: ../web/admin/servers.php:310 ../web/admin/servers.php:694
+#: ../web/admin/servers.php:701
+msgid "Monitoring"
+msgstr "监视"
+
+#: ../web/modules/UserDB/sql.php:219 ../web/modules/ApplicationDB/sql.php:175
+#: ../web/modules/UserGroupDB/sql.php:144
+msgid "MySQL"
+msgstr "MySQL"
+
+#: ../web/classes/Preferences.class.php:201
+msgid "MySQL configuration"
+msgstr "MySQL配置"
+
+#: ../web/modules/UserDB/sql_external.php:230
+#: ../web/modules/UserGroupDB/sql_external.php:137
+msgid "MySQL external"
+msgstr "外部MySQL"
+
+#. if ($is_rw)
+#. echo '<th class="unsortable"></th>';
+#: ../web/admin/appsgroup.php:147 ../web/admin/appsgroup.php:206
+#: ../web/admin/usersgroup.php:358 ../web/admin/usersgroup.php:466
+#: ../web/admin/wizard.php:261 ../web/admin/wizard.php:410
+#: ../web/admin/applications_static.php:111
+#: ../web/admin/classes/UsersGroupsList.class.php:76
+#: ../web/admin/sharedfolders.php:165 ../web/admin/applications.php:124
+msgid "Name"
+msgstr "名字"
+
+#. fqdn_private_address : array('dns' => ip);
+#: ../web/classes/Preferences.class.php:238
+msgid "Name/IP Address association (name <-> ip)"
+msgstr "名字/IP地址关联（名字 <-> ip地址）"
+
+#: ../web/admin/wizard.php:482 ../web/admin/wizard.php:528
+msgid "Name:"
+msgstr "名字："
+
+#: ../web/plugins/FS/nfs.php:50
+msgid "Network File System (NFS)"
+msgstr "网络文件系统（NFS）"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "Never"
+msgstr "从不"
+
+#: ../web/classes/SessionReportItem.class.php:162
+msgid "Never connected to SSH server"
+msgstr "从不连接到SSH服务器"
+
+#: ../web/admin/users.php:346 ../web/admin/password.php:43
+msgid "New password"
+msgstr "新密码"
+
+#: ../web/admin/news.php:59 ../web/admin/includes/page_template.php:225
+msgid "News"
+msgstr "新闻"
+
+#: ../web/admin/actions.php:344
+msgid "News successfully added"
+msgstr "成功新闻添加"
+
+#: ../web/admin/actions.php:353
+msgid "News successfully deleted"
+msgstr "成功新闻删除"
+
+#: ../web/admin/news.php:39
+msgid "News successfully modified"
+msgstr "成功编辑新闻"
+
+#: ../web/admin/wizard.php:237 ../web/admin/wizard.php:257
+#: ../web/admin/wizard.php:278 ../web/admin/wizard.php:317
+#: ../web/admin/wizard.php:387 ../web/admin/wizard.php:406
+#: ../web/admin/wizard.php:427
+msgid "Next"
+msgstr "下一个"
+
+#: ../web/index.php:482 ../web/index.php:496 ../web/index.php:510
+#: ../web/index.php:524 ../web/index.php:543 ../web/admin/usersgroup.php:479
+#: ../web/admin/sumup.php:90 ../web/admin/sumup.php:115
+#: ../web/modules/UserDB/ldap.php:276
+msgid "No"
+msgstr "否(N)"
+
+#: ../web/admin/password.php:30
+msgid "No action found"
+msgstr "无对应动作"
+
+#: ../web/admin/sessions.php:276
+msgid "No active session"
+msgstr "无活动会话"
+
+#: ../web/admin/wizard.php:87
+msgid "No application group selected"
+msgstr "没有选择程序组"
+
+#: ../web/admin/appsgroup.php:141
+msgid "No application groups available"
+msgstr "无程序组可用"
+
+#: ../web/admin/sessions.php:139
+msgid "No application running"
+msgstr "无程序运行"
+
+#: ../web/admin/wizard.php:95
+msgid "No application selected"
+msgstr "没有选择程序"
+
+#: ../web/admin/wizard.php:159 ../web/admin/wizard.php:308
+#: ../web/admin/applications_static.php:102 ../web/admin/applications.php:116
+msgid "No available application"
+msgstr "无可用程序"
+
+#: ../web/startsession.php:210
+msgid "No available filesystem"
+msgstr "无可用文件系统"
+
+#: ../web/index.php:98 ../web/index.php:103 ../web/startsession.php:166
+msgid "No available server"
+msgstr "无可用服务器"
+
+#: ../web/startsession.php:204
+msgid "No available session"
+msgstr "无可用会话"
+
+#: ../web/index.php:77 ../web/admin/wizard.php:157 ../web/admin/users.php:157
+msgid "No available user"
+msgstr "无可用用户"
+
+#: ../web/admin/usersgroup.php:344
+msgid "No available user group"
+msgstr "无可用用户组"
+
+#: ../web/events/callbacks/SessionStart/Mail.class.php:56
+msgid "No error given"
+msgstr "没有给出错误"
+
+#: ../web/admin/wizard.php:63 ../web/admin/wizard.php:109
+msgid "No group name"
+msgstr "无组名"
+
+#: ../web/admin/publications.php:85
+msgid "No publication"
+msgstr "无发布"
+
+#: ../web/admin/sumup.php:181 ../web/admin/sumup.php:185
+msgid "No server available"
+msgstr "无可用服务器"
+
+#: ../web/admin/servers.php:517
+msgid "No unregistered server"
+msgstr "无未注册服务器"
+
+#: ../web/admin/wizard.php:39
+msgid "No user group selected"
+msgstr "请选择用户组"
+
+#: ../web/admin/wizard.php:49
+msgid "No user selected"
+msgstr "请选择用户"
+
+#: ../web/admin/applications_static.php:278
+msgid "None"
+msgstr "无"
+
+#: ../web/classes/SessionReportItem.class.php:154
+msgid "Normally ended"
+msgstr "正常结束"
+
+#: ../web/admin/users.php:427 ../web/admin/sessions.php:128
+#: ../web/admin/servers.php:989
+msgid "Not started yet"
+msgstr "未启动"
+
+#: ../web/admin/servers.php:733
+msgid "Number of available sessions on this server"
+msgstr "此服务器可用会话数"
+
+#: ../web/admin/reporting.php:279 ../web/admin/reporting.php:334
+msgid "Number of sessions"
+msgstr "会话数"
+
+#: ../web/admin/configuration-profile.php:235
+msgid "OK"
+msgstr "OK"
+
+#: ../web/events/callbacks/ServerStatusChanged/Mail.class.php:46
+#, php-format
+msgid "OVD Alert: %s is offline"
+msgstr "OVD警告：%s离线"
+
+#: ../web/events/callbacks/SqlFailure/Mail.class.php:46
+#, php-format
+msgid "OVD Alert: MySQL %s is offline"
+msgstr "OVD警告：MySQL%s 离线"
+
+#: ../web/events/callbacks/ServerStatusChanged/Mail.class.php:48
+#, php-format
+msgid "OVD End Alert: %s is up again"
+msgstr "OVD终止警告：%s再一次结束"
+
+#: ../web/events/callbacks/SqlFailure/Mail.class.php:49
+#, php-format
+msgid "OVD End Alert: MySQL %s is up again"
+msgstr "OVD终止警告：MySQL再一次结束"
+
+#: ../web/events/callbacks/SessionStart/Mail.class.php:50
+#, php-format
+msgid "OVD Session alert: %s (uid %s) couldn't log in"
+msgstr "OVD会话警告：%s（UID %s）无法登入"
+
+#: ../web/admin/sessions.php:164
+msgid "Observe this application"
+msgstr "观察此程序"
+
+#: ../web/admin/sessions.php:183
+msgid "Observe this session"
+msgstr "观察此会话"
+
+#: ../web/classes/Server.class.php:346
+msgid "Offline"
+msgstr "离线"
+
+#: ../web/classes/Preferences.class.php:466
+msgid "On system alerts, mails will be sent to these addresses"
+msgstr "系统警告，邮件将会发送到以下地址"
+
+#: ../web/classes/Server.class.php:344
+msgid "Online"
+msgstr "在线"
+
+#: ../web/admin/classes/UsersList.class.php:124
+#, php-format
+msgid "Only <strong>%d result</strong> displayed but there are more."
+msgid_plural "Only <strong>%d results</strong> displayed but there are more."
+msgstr[0] "只有<strong>%d 个结果</strong> 显示，还有更多"
+msgstr[1] "只有<strong>%d 个结果</strong> 显示，还有更多"
+
+#: ../web/admin/reporting.php:486 ../web/admin/reporting.php:512
+msgid "Ordinate: number of sessions"
+msgstr "纵坐标：会话数目"
+
+#: ../web/admin/reporting.php:531
+msgid "Ordinate: usage of CPU in percent"
+msgstr "纵坐标：CPU使用率 百分之"
+
+#: ../web/admin/reporting.php:544
+msgid "Ordinate: usage of RAM in percent"
+msgstr "纵坐标：RAM使用率 百分之"
+
+#: ../web/admin/applications.php:295
+msgid "Package"
+msgstr "包"
+
+#: ../web/admin/classes/UsersList.class.php:122
+msgid "Partial content:"
+msgstr "部分内容："
+
+#: ../web/index.php:270 ../web/admin/login.php:139
+msgid "Password"
+msgstr "密码"
+
+#: ../web/admin/actions.php:363
+msgid "Password is empty"
+msgstr "密码为空"
+
+#: ../web/admin/actions.php:375
+msgid "Password not changed"
+msgstr "密码无变动"
+
+#: ../web/admin/actions.php:371
+msgid "Password successfully changed"
+msgstr "重设密码成功"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:330
+msgid "Password: "
+msgstr "密码："
+
+#: ../web/admin/actions.php:366
+msgid "Passwords are not identical"
+msgstr "密码不一致"
+
+#: ../web/index.php:478
+msgid "Persistent session"
+msgstr "持续会话"
+
+#: ../web/modules/UserDB/sql_external.php:208
+msgid "Plain"
+msgstr "平原"
+
+#: ../web/admin/classes/Preferences_admin.class.php:88
+msgid "Please install CURL support for PHP"
+msgstr "请为PHP安装CURL支持"
+
+#: ../web/index.php:225
+msgid "Please login with your username"
+msgstr "请使用用户名登入"
+
+#: ../web/index.php:223
+msgid "Please login with your username and password"
+msgstr "请使用用户名和密码登入"
+
+#: ../web/admin/classes/UsersList.class.php:125
+msgid "Please restrict your search field."
+msgstr "请限制搜索区域"
+
+#: ../web/classes/Preferences.class.php:365
+msgid "Plugins activation"
+msgstr "插件激活"
+
+#: ../web/classes/Preferences.class.php:367
+msgid "Plugins configuration"
+msgstr "插件配置"
+
+#: ../web/admin/classes/Preferences_admin.class.php:135
+msgid "Plugins configuration not valid"
+msgstr "插件配置无效"
+
+#: ../web/classes/Preferences.class.php:199
+msgid "Policy for administration delegation"
+msgstr "管理权代理策略"
+
+#: ../web/admin/usersgroup.php:897
+msgid "Policy of this group"
+msgstr "组策略"
+
+#: ../web/classes/Preferences.class.php:221
+msgid "Port"
+msgstr "端口"
+
+#: ../web/classes/Preferences.class.php:268
+msgid "Portal"
+msgstr "入口"
+
+#: ../web/admin/configuration-partial.php:119
+#: ../web/admin/configuration.php:131
+msgid "Preferences not loaded"
+msgstr "参数没有载入"
+
+#: ../web/admin/configuration-sumup.php:64
+msgid "Prefix: "
+msgstr "前缀："
+
+#: ../web/admin/wizard.php:275 ../web/admin/wizard.php:383
+#: ../web/admin/wizard.php:424 ../web/admin/wizard.php:556
+msgid "Previous"
+msgstr "前一个"
+
+#: ../web/admin/includes/page_template.php:173
+msgid "Profile settings"
+msgstr "轮廓设定"
+
+#: ../web/modules/UserDB/ldap.php:267
+msgid "Protocol version"
+msgstr "协议版本"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:229
+msgid "Protocol version:"
+msgstr "协议版本："
+
+#: ../web/index.php:578
+msgid "Proxy host"
+msgstr "代理主机"
+
+#: ../web/index.php:602
+msgid "Proxy password"
+msgstr "代理密码"
+
+#: ../web/index.php:586
+msgid "Proxy port"
+msgstr "代理端口"
+
+#: ../web/index.php:567
+msgid "Proxy type"
+msgstr "代理类型"
+
+#: ../web/index.php:594
+msgid "Proxy username"
+msgstr "代理用户名"
+
+#: ../web/admin/wizard.php:167 ../web/admin/wizard.php:253
+#: ../web/admin/wizard.php:312 ../web/admin/wizard.php:402
+#: ../web/admin/wizard.php:445
+msgid "Publication Wizard"
+msgstr "发布向导"
+
+#: ../web/admin/index.php:114
+msgid "Publication list"
+msgstr "发布列表"
+
+#: ../web/admin/actions.php:190
+msgid "Publication successfully added"
+msgstr "成功添加发布"
+
+#: ../web/admin/actions.php:203
+msgid "Publication successfully deleted"
+msgstr "成功删除发布"
+
+#: ../web/admin/index.php:115 ../web/admin/includes/page_template.php:142
+msgid "Publication wizard"
+msgstr "发布向导"
+
+#: ../web/admin/publications.php:75
+#: ../web/admin/includes/page_template.php:135
+msgid "Publications"
+msgstr "发布"
+
+#: ../web/index.php:434
+msgid "Quality"
+msgstr "性能"
+
+#: ../web/admin/servers.php:345 ../web/admin/servers.php:464
+#: ../web/admin/servers.php:711
+msgid "RAM"
+msgstr "RAM"
+
+#: ../web/admin/reporting.php:383 ../web/admin/servers.php:353
+#: ../web/admin/servers.php:717
+msgid "RAM usage"
+msgstr "RAM使用状况"
+
+#: ../web/admin/servers.php:750
+msgid "Redirection name of this server"
+msgstr "此服务器重定向名"
+
+#: ../web/admin/reporting.php:474
+msgid "Refresh"
+msgstr "刷新"
+
+#: ../web/admin/servers.php:473 ../web/admin/servers.php:501
+msgid "Register"
+msgstr "注册"
+
+#: ../web/index.php:610
+msgid "Remember proxy"
+msgstr "记住代理"
+
+#: ../web/modules/AuthMethod/RemoteUser.php:46
+msgid "RemoteUser authentication"
+msgstr "远程用户验证"
+
+#: ../web/admin/usersgroup.php:653
+msgid "Remove from default"
+msgstr "从默认移除"
+
+#: ../web/admin/servers.php:881 ../web/admin/applications.php:367
+msgid "Remove from this server"
+msgstr "从此服务器移除"
+
+#: ../web/classes/Preferences.class.php:246
+msgid "Remove orphan applications when the server is deleted"
+msgstr "删除服务器时移除单程序"
+
+#: ../web/admin/applications.php:318
+msgid "Remove this application"
+msgstr "移除此程序"
+
+#: ../web/admin/sharedfolders.php:174
+msgid "Rename"
+msgstr "重命名"
+
+#: ../web/admin/servers.php:938
+msgid "Replicate on those servers"
+msgstr "服务器包含的副本"
+
+#: ../web/admin/servers.php:927
+msgid "Replication"
+msgstr "副本"
+
+#: ../web/admin/reporting.php:391 ../web/admin/includes/page_template.php:217
+msgid "Reporting"
+msgstr "报告"
+
+#: ../web/classes/Session.class.php:129
+msgid "Resuming"
+msgstr "摘要"
+
+#: ../web/admin/password.php:48
+msgid "Retype password"
+msgstr "重输密码"
+
+#: ../web/admin/usersgroup.php:721
+msgid "Rules"
+msgstr "规则"
+
+#: ../web/admin/usersgroup.php:258
+#, php-format
+msgid "Rules of '%s' successfully modified"
+msgstr "成功编辑'%s'的规则"
+
+#: ../web/admin/sessions.php:136
+msgid "Running applications"
+msgstr "正在运行的程序"
+
+#: ../web/modules/AuthMethod/RemoteUser.php:62
+msgid "SERVER variable for SSO"
+msgstr "单点登入SERVER变量"
+
+#: ../web/index.php:135
+msgid "SESSION IS STARTED"
+msgstr "会话已启动"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:170
+msgid "SESSIONMANAGER_ADMIN_LOGIN is not defined"
+msgstr "SESSIONMANAGER_ADMIN_LOGIN 未定义"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:173
+msgid "SESSIONMANAGER_ADMIN_PASSWORD is not defined"
+msgstr "SESSIONMANAGER_ADMIN_PASSWORD 未定义"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:167
+msgid "SESSIONMANAGER_CONFFILE_SERIALIZED is not defined"
+msgstr "SESSIONMANAGER_CONFFILE_SERIALIZED 未定义"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:182
+msgid "SESSIONMANAGER_CONFFILE_SERIALIZED is not writable"
+msgstr "SESSIONMANAGER_CONFFILE_SERIALIZED 不可写"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:164
+msgid "SESSIONMANAGER_LOGS is not defined"
+msgstr "SESSIONMANAGER_LOGS 未定义"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:179
+msgid "SESSIONMANAGER_LOGS is not writable"
+msgstr "SESSIONMANAGER_LOGS 不可写"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:161
+msgid "SESSIONMANAGER_SPOOL is not defined"
+msgstr "SESSIONMANAGER_SPOOL 未定义"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:176
+msgid "SESSIONMANAGER_SPOOL is not writable"
+msgstr "SESSIONMANAGER_SPOOL 不可写"
+
+#: ../web/classes/Preferences.class.php:231
+msgid "SMTP password"
+msgstr "SMTP密码"
+
+#: ../web/classes/Preferences.class.php:215
+msgid "SMTP server"
+msgstr "SMTP服务器"
+
+#: ../web/classes/Preferences.class.php:229
+msgid "SMTP username"
+msgstr "SMTP用户名"
+
+#: ../web/admin/classes/Preferences_admin.class.php:99
+msgid "SQL configuration not valid"
+msgstr "SQL配置无效"
+
+#: ../web/admin/classes/Preferences_admin.class.php:93
+msgid "SQL configuration not valid(2)"
+msgstr "SQL配置无效（2）"
+
+#: ../web/classes/Preferences.class.php:323
+msgid "SSH/ping applet test"
+msgstr "SSH/ping程序测试"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:270
+msgid "Same as Users, "
+msgstr "与用户相同"
+
+#: ../web/admin/configuration-partial.php:112
+#: ../web/admin/includes/functions.inc.php:282
+#: ../web/admin/configuration-profile.php:226
+#: ../web/admin/configuration.php:109
+msgid "Save"
+msgstr "保存"
+
+#: ../web/admin/users.php:365
+msgid "Save the modifications"
+msgstr "保存更改"
+
+#: ../web/admin/configuration-profile.php:220
+msgid "Saved successfully"
+msgstr "保存成功"
+
+#: ../web/admin/classes/UsersGroupsList.class.php:70
+#: ../web/admin/classes/UsersList.class.php:72
+#: ../web/admin/classes/UsersList.class.php:115
+msgid "Search"
+msgstr "搜索"
+
+#: ../web/admin/classes/UsersList.class.php:70
+msgid "Search for user pattern: "
+msgstr "用户模式搜索："
+
+#: ../web/admin/classes/UsersGroupsList.class.php:68
+msgid "Search for users groups pattern: "
+msgstr "用户组模式搜索："
+
+#: ../web/admin/classes/UsersGroupsList.class.php:72
+#: ../web/admin/classes/UsersList.class.php:74
+msgid "Search in: "
+msgstr "搜索区域："
+
+#: ../web/classes/Preferences.class.php:157
+msgid "Select debug options you want to enable."
+msgstr "选择要激活的调试选项"
+
+#: ../web/events/callbacks/SqlFailure/Mail.class.php:59
+#: ../web/events/callbacks/ServerStatusChanged/Mail.class.php:57
+msgid "Send a mail"
+msgstr "发邮件"
+
+#: ../web/events/callbacks/SessionStart/Mail.class.php:65
+msgid "Send a mail on login problem"
+msgstr "登入出错时发邮件"
+
+#: ../web/index.php:389 ../web/admin/reporting.php:501
+#: ../web/admin/sessions.php:233 ../web/admin/tasks.php:187
+msgid "Server"
+msgstr "服务器"
+
+#: ../web/admin/servers.php:252
+#, php-format
+msgid "Server '%s' successfully deleted"
+msgstr "成功删除服务器'%s'"
+
+#: ../web/admin/servers.php:83 ../web/admin/servers.php:190
+#: ../web/admin/servers.php:204 ../web/admin/servers.php:218
+#: ../web/admin/servers.php:232
+#, php-format
+msgid "Server '%s' successfully modified"
+msgstr "成功编辑服务器'%s'"
+
+#: ../web/admin/servers.php:169
+#, php-format
+msgid "Server '%s' successfully registered"
+msgstr "成功注册服务器'%s'"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:227
+#: ../web/admin/classes/Configuration_mode_ad.class.php:241
+msgid "Server Host:"
+msgstr "服务器主机："
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:228
+msgid "Server Port:"
+msgstr "服务器端口："
+
+#: ../web/modules/UserDB/sql_external.php:195
+#: ../web/modules/UserDB/activedirectory.php:81
+#: ../web/modules/UserDB/ldap.php:253
+#: ../web/modules/UserGroupDB/sql_external.php:105
+msgid "Server host address"
+msgstr "服务器主机地址"
+
+#: ../web/modules/UserDB/ldap.php:255
+msgid "Server port"
+msgstr "服务器端口"
+
+#: ../web/admin/includes/page_template.php:167
+msgid "Server settings"
+msgstr "服务器设定"
+
+#: ../web/events/ServerStatusChanged.class.php:30
+msgid "Server status changed"
+msgstr "服务器状态已更改"
+
+#: ../web/admin/servers.php:111
+msgid "Server upgrading"
+msgstr "升级服务器中"
+
+#: ../web/admin/sessions.php:122
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:360
+msgid "Server:"
+msgstr "服务器："
+
+#: ../web/admin/index.php:64 ../web/admin/tasks.php:119
+#: ../web/admin/includes/page_template.php:35
+#: ../web/admin/includes/page_template.php:73 ../web/admin/servers.php:297
+msgid "Servers"
+msgstr "服务器"
+
+#: ../web/admin/index.php:69
+msgid "Servers list"
+msgstr "服务器列表"
+
+#: ../web/admin/applications.php:349
+msgid "Servers with this application"
+msgstr "包含此程序的服务器"
+
+#: ../web/admin/sessions.php:232
+msgid "Session"
+msgstr "会话"
+
+#: ../web/admin/logs.php:135
+msgid "Session Manager"
+msgstr "会话管理器"
+
+#: ../web/admin/reporting.php:312 ../web/admin/reporting.php:348
+msgid "Session end status"
+msgstr "会话结束状态"
+
+#: ../web/index.php:323
+msgid "Session mode"
+msgstr "会话模式"
+
+#: ../web/classes/Preferences.class.php:294
+msgid "Session owner can share his session"
+msgstr "会话拥有者可分享此会话"
+
+#: ../web/admin/reporting.php:298
+msgid "Session repartition"
+msgstr "分割会话"
+
+#: ../web/admin/includes/page_template.php:179
+msgid "Session settings"
+msgstr "会话设置"
+
+#: ../web/events/SessionStart.class.php:26
+msgid "Session startup"
+msgstr "启动会话"
+
+#: ../web/events/SessionStatusChanged.class.php:26
+msgid "Session status changed"
+msgstr "会话状态改变"
+
+#: ../web/classes/Preferences.class.php:283
+msgid "Session timeout message"
+msgstr "会话超时信息"
+
+#: ../web/admin/sessions.php:116 ../web/admin/includes/page_template.php:205
+msgid "Sessions"
+msgstr "会话"
+
+#: ../web/admin/sessions.php:204
+#, php-format
+msgid "Sessions (total: %s)"
+msgstr "会话（总计：%s）"
+
+#: ../web/classes/Preferences.class.php:285
+msgid "Sessions are persistent"
+msgstr "会话持续"
+
+#: ../web/classes/Preferences.class.php:265
+msgid "Sessions settings"
+msgstr "会话设置"
+
+#: ../web/admin/servers.php:355 ../web/admin/servers.php:719
+msgid "Sessions usage"
+msgstr "会话使用率"
+
+#: ../web/modules/UserDB/ldap.php:275
+msgid ""
+"Set this to Yes when you use LDAP profile to connect to an ActiveDirectory "
+"environment instead of using the ActiveDirectory profile"
+msgstr "当使用LDAP参数连接活动目录时 设此项为Yes (不使用活动目录默认参数)"
+
+#: ../web/admin/appsgroup.php:310 ../web/admin/usersgroup.php:648
+#: ../web/admin/users.php:313
+msgid "Settings"
+msgstr "设定"
+
+#: ../web/index.php:492
+msgid "Shareable session"
+msgstr "可分享会话"
+
+#: ../web/admin/usersgroup.php:958 ../web/admin/includes/page_template.php:93
+#: ../web/admin/sharedfolders.php:89
+msgid "Shared folders"
+msgstr "已分享文件夹"
+
+#: ../web/admin/actions.php:402
+#, php-format
+msgid "SharedFolder '%s' successfully added"
+msgstr "成功添加分享文件夹'%s' "
+
+#: ../web/admin/actions.php:306
+msgid "SharedFolder successfully added"
+msgstr "成功添加分享文件夹"
+
+#: ../web/admin/actions.php:312 ../web/admin/actions.php:414
+msgid "SharedFolder successfully deleted"
+msgstr "成功删除分享文件夹"
+
+#: ../web/admin/actions.php:324 ../web/admin/actions.php:329
+#: ../web/admin/actions.php:428 ../web/admin/actions.php:442
+msgid "SharedFolder successfully modified"
+msgstr "成功编辑分享文件夹"
+
+#: ../web/admin/sharedfolders.php:41
+msgid "SharedFolder successfully renamed"
+msgstr "成功重命名分享文件夹"
+
+#: ../web/index.php:506 ../web/classes/Preferences.class.php:288
+msgid "Show icons on user desktop"
+msgstr "在桌面显示图标"
+
+#: ../web/classes/SessionReportItem.class.php:160
+msgid "Shutdown of the Application Server"
+msgstr "程序服务器关机"
+
+#: ../web/index.php:411
+msgid "Size"
+msgstr "尺寸"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:354
+msgid "Specific Organization Unit"
+msgstr "指定组织单元"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:256
+#: ../web/admin/classes/Configuration_mode_ad.class.php:280
+msgid "Specific Organization Unit:"
+msgstr "指定组织单元："
+
+#: ../web/events/SqlFailure.class.php:26
+msgid "Sql failure"
+msgstr "SQL出错"
+
+#: ../web/admin/sessions.php:125
+msgid "Started:"
+msgstr "开始："
+
+#: ../web/admin/usersgroup.php:424
+msgid "Static"
+msgstr "静态"
+
+#. general div
+#: ../web/admin/applications_static.php:98
+msgid "Static Applications"
+msgstr "静态程序"
+
+#: ../web/admin/includes/page_template.php:128
+msgid "Static applications"
+msgstr "静态程序"
+
+#. echo '<th>'._('Version').'</th>';
+#: ../web/admin/appsgroup.php:149 ../web/admin/appsgroup.php:299
+#: ../web/admin/usersgroup.php:360 ../web/admin/usersgroup.php:636
+#: ../web/admin/index.php:127 ../web/admin/sessions.php:235
+#: ../web/admin/tasks.php:120 ../web/admin/tasks.php:188
+#: ../web/admin/includes/page_template.php:59 ../web/admin/servers.php:308
+#: ../web/admin/servers.php:698 ../web/admin/servers.php:952
+#: ../web/admin/sumup.php:194 ../web/admin/applications.php:406
+msgid "Status"
+msgstr "状态"
+
+#: ../web/admin/sessions.php:132
+msgid "Status:"
+msgstr "状态："
+
+#: ../web/admin/configuration-profile.php:241
+msgid "Success"
+msgstr "成功"
+
+#: ../web/admin/includes/page_template.php:149
+msgid "Sum up"
+msgstr "总计"
+
+#: ../web/admin/includes/page_template.php:232
+msgid "Summary"
+msgstr "摘要"
+
+#: ../web/classes/Session.class.php:128
+msgid "Suspended"
+msgstr "挂起"
+
+#: ../web/classes/Session.class.php:127
+msgid "Suspending"
+msgstr "挂起中"
+
+#: ../web/admin/servers.php:326 ../web/admin/servers.php:398
+#: ../web/admin/servers.php:674 ../web/classes/Preferences.class.php:244
+msgid "Switch to maintenance"
+msgstr "切换到维护"
+
+#: ../web/admin/servers.php:322 ../web/admin/servers.php:397
+#: ../web/admin/servers.php:670
+msgid "Switch to production"
+msgstr "切换到生产"
+
+#: ../web/admin/includes/page_template.php:161
+msgid "System settings"
+msgstr "系统设定"
+
+#: ../web/modules/UserDB/sql_external.php:203
+msgid "Table of users"
+msgstr "用户表"
+
+#: ../web/classes/Preferences.class.php:210
+msgid "Table prefix"
+msgstr "表前缀"
+
+#: ../web/admin/actions.php:71 ../web/admin/servers.php:101
+#: ../web/admin/servers.php:154
+msgid "Task successfully added"
+msgstr "成功添加任务"
+
+#: ../web/admin/actions.php:73 ../web/admin/tasks.php:89
+#: ../web/admin/servers.php:148
+msgid "Task successfully deleted"
+msgstr "成功删除任务"
+
+#: ../web/admin/tasks.php:176 ../web/admin/includes/page_template.php:85
+msgid "Tasks"
+msgstr "任务"
+
+#: ../web/admin/tasks.php:113
+msgid "Tasks managment"
+msgstr "任务管理"
+
+#: ../web/admin/configuration-profile.php:227
+msgid "Test"
+msgstr "测试"
+
+#: ../web/modules/UserDB/activedirectory.php:81
+msgid "The address of your Active Directory server."
+msgstr "活动目录服务器地址"
+
+#: ../web/modules/UserDB/ldap.php:253
+msgid "The address of your LDAP server."
+msgstr "LDAP服务器地址"
+
+#: ../web/modules/UserDB/sql_external.php:195
+#: ../web/modules/UserGroupDB/sql_external.php:105
+msgid "The address of your MySQL server."
+msgstr "MySQL服务器地址"
+
+#: ../web/classes/Preferences.class.php:202
+msgid ""
+"The address of your database host. This database contains adminstration "
+"console data. Example: localhost or db.mycorporate.com."
+msgstr "数据库主机地址。此数据库包含管理控制台数据。例如: localhost or db.mycorporate.com."
+
+#: ../web/classes/Preferences.class.php:202
+msgid ""
+"The address of your database host. This database contains adminstrations "
+"console data. Example: localhost or db.mycorporate.com."
+msgstr "数据库主机地址。此数据库包含管理控制台数据。例如: localhost or db.mycorporate.com."
+
+#: ../web/events/callbacks/SessionStart/Mail.class.php:54
+msgid "The following error happened:\n"
+msgstr "以下错误发生：\n"
+
+#: ../web/modules/AuthMethod/Token.php:96
+msgid "The id of the XML node which contains the user login"
+msgstr "包含用户登入的XML节点ID"
+
+#: ../web/classes/Preferences.class.php:167
+msgid "The maximum number of items that can be displayed."
+msgstr "最大显示数目"
+
+#: ../web/modules/AuthMethod/Token.php:97
+msgid ""
+"The name of the XML attribute which contains the user login (in the node "
+"\"user_node_name\")"
+msgstr "包含用户登入的XML属性名称(在节点\"user_node_name\"中)"
+
+#: ../web/modules/UserDB/sql_external.php:201
+#: ../web/modules/UserGroupDB/sql_external.php:111
+#: ../web/classes/Preferences.class.php:208
+msgid "The name of the database."
+msgstr "数据库名称"
+
+#: ../web/modules/UserDB/ldap.php:255
+msgid "The port number used by your LDAP server."
+msgstr "LDAP服务器使用端口数目"
+
+#: ../web/modules/UserDB/ldap.php:255
+msgid "The port use by your LDAP server."
+msgstr "LDAP服务器使用端口"
+
+#: ../web/modules/UserDB/ldap.php:267
+msgid "The protocol version used by your LDAP server."
+msgstr "LDAP服务器使用协议版本"
+
+#: ../web/includes/functions.inc.d/template.inc.php:52
+msgid "The service is not available, please try again later"
+msgstr "服务不可用，稍后再试"
+
+#: ../web/classes/Preferences.class.php:210
+msgid "The table prefix for the database."
+msgstr "数据库表前缀"
+
+#: ../web/modules/UserDB/sql_external.php:197
+#: ../web/modules/UserDB/activedirectory.php:85
+#: ../web/modules/UserDB/ldap.php:257
+msgid ""
+"The user login that must be used to access the database (to list users "
+"accounts)."
+msgstr "必须访问数据库的用户登入（列出用户帐户）。"
+
+#: ../web/modules/UserGroupDB/sql_external.php:107
+msgid ""
+"The user login that must be used to access the database (to list users "
+"groups accounts)."
+msgstr "必须访问数据库的用户登入（列出用户组名）"
+
+#: ../web/classes/Preferences.class.php:204
+msgid "The user name that must be used to access the database."
+msgstr "必须访问数据库的用户名。"
+
+#: ../web/modules/UserDB/sql_external.php:199
+#: ../web/modules/UserDB/activedirectory.php:87
+#: ../web/modules/UserDB/ldap.php:259
+#: ../web/modules/UserGroupDB/sql_external.php:109
+msgid ""
+"The user password that must be used to access the database (to list users "
+"accounts)."
+msgstr "必须访问数据库的用户密码（列出用户帐户）。"
+
+#: ../web/classes/Preferences.class.php:206
+msgid "The user password that must be used to access the database."
+msgstr "必须访问数据库的用户密码"
+
+#: ../web/classes/Preferences.class.php:204
+msgid "The username that must be used to access the database."
+msgstr "必须访问数据库的用户名"
+
+#. the user does not exist
+#: ../web/admin/login.php:38 ../web/admin/login.php:45
+msgid "There was an error with your authentication"
+msgstr "验证出错"
+
+#: ../web/admin/applications.php:318
+msgid "This application is orphan"
+msgstr "这是孤程序"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:82
+msgid ""
+"This is the default Profile manager. This profile manager saves all the data "
+"into a the same SQL database as you defined it in the system configuration."
+msgstr "这是默认资料管理器。资料管理器将所有数据存入系统配置定义的SQL数据库。"
+
+#: ../web/admin/actions.php:195
+msgid "This publication already exists"
+msgstr "此发布已存在"
+
+#: ../web/admin/actions.php:208
+msgid "This publication does not exist"
+msgstr "此发布不存在"
+
+#: ../web/admin/usersgroup.php:481
+msgid "Time between two updates:"
+msgstr "两次更新间隔时间："
+
+#: ../web/index.php:456
+msgid "Timeout"
+msgstr "超时"
+
+#: ../web/admin/news.php:63
+msgid "Title"
+msgstr "标题"
+
+#: ../web/classes/Session.class.php:122
+msgid "To create"
+msgstr "创建"
+
+#: ../web/classes/Session.class.php:130
+msgid "To destroy"
+msgstr "破坏"
+
+#: ../web/classes/Session.class.php:124
+msgid "To start"
+msgstr "开始"
+
+#: ../web/modules/AuthMethod/Token.php:97
+msgid "Token XML login attribute name"
+msgstr "获取XML登入属性名称"
+
+#: ../web/modules/AuthMethod/Token.php:96
+msgid "Token XML user node name"
+msgstr "获取XML用户节点名称"
+
+#: ../web/modules/AuthMethod/Token.php:69
+msgid "Token authentication"
+msgstr "获取验证"
+
+#: ../web/modules/AuthMethod/Token.php:95
+msgid "Token validation URL"
+msgstr "获取验证URL地址"
+
+#. echo '<th>'._('Package').'</th>';
+#: ../web/admin/usersgroup.php:361 ../web/admin/applications_static.php:113
+#: ../web/admin/applications_static.php:435 ../web/admin/tasks.php:118
+#: ../web/admin/tasks.php:186 ../web/admin/servers.php:306
+#: ../web/admin/servers.php:435 ../web/admin/servers.php:698
+#: ../web/admin/servers.php:951 ../web/admin/sumup.php:192
+#: ../web/admin/applications.php:126 ../web/admin/applications.php:296
+#: ../web/admin/applications.php:405
+msgid "Type"
+msgstr "类型"
+
+#: ../web/admin/applications_static.php:222
+#: ../web/admin/applications_static.php:440
+#: ../web/admin/applications_static.php:505
+msgid "URL"
+msgstr "URL地址"
+
+#: ../web/admin/users.php:289 ../web/admin/users.php:339
+msgid "Uid"
+msgstr "Uid"
+
+#: ../web/admin/actions.php:421
+msgid "Unable to create this shared folder access"
+msgstr "无法创建此分享文件夹访问"
+
+#: ../web/admin/servers.php:244
+msgid "Unable to delete a server when there are active sessions on it!"
+msgstr "无法删除服务器，服务器存在活动会话"
+
+#: ../web/admin/actions.php:205
+msgid "Unable to delete the publication"
+msgstr "无法删除发布"
+
+#: ../web/admin/actions.php:351
+msgid "Unable to delete this news"
+msgstr "无法删除新闻"
+
+#: ../web/admin/actions.php:410
+msgid "Unable to delete this shared folder"
+msgstr "无法删除分享文件夹"
+
+#: ../web/admin/actions.php:436
+msgid "Unable to delete this shared folder access"
+msgstr "无法删除分享文件夹访问"
+
+#: ../web/admin/wizard.php:161
+msgid "Unable to display users list: too many users"
+msgstr "无法显示用户列表：用户过多"
+
+#: ../web/admin/actions.php:192
+msgid "Unable to save the publication"
+msgstr "无法保存发布"
+
+#: ../web/admin/login.php:57
+msgid "Unauthorized access"
+msgstr "越权访问"
+
+#: ../web/admin/applications.php:217
+msgid "Unblock"
+msgstr "解锁"
+
+#: ../web/classes/Server.class.php:340
+msgid "Under maintenance"
+msgstr "维护中"
+
+#: ../web/classes/Server.class.php:350 ../web/classes/Server.class.php:385
+#: ../web/classes/Server.class.php:418
+msgid "Unknown"
+msgstr "未知"
+
+#: ../web/admin/appsgroup.php:185 ../web/admin/usersgroup.php:408
+#: ../web/admin/wizard.php:211 ../web/admin/wizard.php:230
+#: ../web/admin/wizard.php:355 ../web/admin/wizard.php:374
+#: ../web/admin/applications_static.php:164 ../web/admin/users.php:200
+#: ../web/admin/sessions.php:262 ../web/admin/servers.php:392
+#: ../web/admin/servers.php:497
+msgid "Unmark all"
+msgstr "取消标记所有"
+
+#: ../web/admin/includes/page_template.php:79 ../web/admin/servers.php:425
+msgid "Unregistered servers"
+msgstr "未注册服务器"
+
+#: ../web/admin/index.php:70
+msgid "Unregistered servers list"
+msgstr "未注册服务器列表"
+
+#: ../web/admin/actions.php:339
+msgid "Untitled"
+msgstr "未命名"
+
+#: ../web/admin/applications_static.php:291
+msgid "Update"
+msgstr "更新"
+
+#: ../web/admin/usersgroup.php:799
+msgid "Update rules"
+msgstr "更新规则"
+
+#: ../web/admin/appsgroup.php:338 ../web/admin/usersgroup.php:693
+msgid "Update the description"
+msgstr "更新描述"
+
+#: ../web/admin/appsgroup.php:330 ../web/admin/usersgroup.php:685
+msgid "Update the name"
+msgstr "更新名称"
+
+#: ../web/admin/usersgroup.php:710
+msgid "Update the schedule"
+msgstr "更新日程"
+
+#: ../web/admin/tasks.php:249 ../web/admin/servers.php:843
+msgid "Upgrade"
+msgstr "升级"
+
+#: ../web/admin/tasks.php:239 ../web/admin/servers.php:847
+msgid "Upgrade the internal system and applications"
+msgstr "升级内部系统和程序"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:326
+#: ../web/admin/classes/Configuration_mode_ad.class.php:374
+msgid "Use Active Directory Home dir"
+msgstr "使用活动目录根目录"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:292
+msgid "Use Active Directory User Groups"
+msgstr "使用活动目录用户组"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:320
+#: ../web/admin/classes/Configuration_mode_ad.class.php:372
+msgid "Use Active Directory User profiles as Home directory"
+msgstr "使用活动目录参数作为根目录"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:377
+msgid "Use CIFS link using the LDAP field"
+msgstr "使用LDAP字段的CIFS链接"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:310
+msgid "Use CIFS link using the LDAP field:"
+msgstr "使用LDAP字段的CIFS链接："
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:287
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:370
+#: ../web/admin/classes/Configuration_mode_ad.class.php:297
+#: ../web/admin/classes/Configuration_mode_ad.class.php:365
+msgid "Use Internal User Groups"
+msgstr "使用内部用户组"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:296
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:375
+#: ../web/admin/classes/Configuration_mode_internal.class.php:104
+#: ../web/admin/classes/Configuration_mode_ad.class.php:306
+#: ../web/admin/classes/Configuration_mode_ad.class.php:370
+msgid "Use Internal home directory (no server replication)"
+msgstr "使用内部根目录（无服务器副本）"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:278
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:368
+msgid "Use LDAP User Groups using Posix group"
+msgstr "使用可移植组的LDAP用户组"
+
+#: ../web/modules/UserGroupDB/ldap_posix.php:134
+msgid "Use LDAP User Groups using Posix group, Group Branch DN:"
+msgstr "使用可移植组的LDAP用户组，组分支DN:"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:273
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:366
+msgid "Use LDAP User Groups using the MemberOf field"
+msgstr "使用MemberOf字段的LDAP用户组"
+
+#: ../web/classes/Preferences.class.php:223
+msgid "Use SSL with SMTP"
+msgstr "使用SSL验证的SMTP"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:123
+msgid "Use a dynamic internal user list"
+msgstr "使用动态内部用户列表"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:90
+msgid "Use a static user list (useful for test)"
+msgstr "使用静态用户列表（测试用）"
+
+#: ../web/admin/wizard.php:328
+msgid "Use appgroups"
+msgstr "使用程序组"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:231
+msgid "Use as Active Directory server:"
+msgstr "作为活动目录服务器使用："
+
+#: ../web/modules/UserDB/ldap.php:275
+msgid "Use as an Active Directory server?"
+msgstr "作为活动目录服务器使用？"
+
+#: ../web/index.php:393
+msgid "Use load balancing"
+msgstr "使用负载平衡"
+
+#: ../web/index.php:520
+msgid "Use pop-up"
+msgstr "使用弹出"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:303
+#: ../web/admin/classes/Configuration_mode_internal.class.php:111
+#: ../web/admin/classes/Configuration_mode_ad.class.php:313
+msgid "Use shared folders"
+msgstr "使用已分享文件夹"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:125
+msgid "Use the static user list"
+msgstr "使用静态用户列表"
+
+#: ../web/admin/wizard.php:185
+msgid "Use usergroups"
+msgstr "使用用户组"
+
+#: ../web/admin/sessions.php:234
+msgid "User"
+msgstr "用户"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:269
+#: ../web/admin/classes/Configuration_mode_ad.class.php:288
+msgid "User Groups"
+msgstr "用户组"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:364
+#: ../web/admin/classes/Configuration_mode_ad.class.php:361
+msgid "User Groups:"
+msgstr "用户组："
+
+#: ../web/admin/modules/UserDB/sql.php:33
+msgid "User already exists"
+msgstr "用户已存在"
+
+#: ../web/modules/UserDB/activedirectory.php:89
+msgid "User branch DN"
+msgstr "用户分支DN"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:241
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:362
+msgid "User branch:"
+msgstr "用户分支："
+
+#: ../web/classes/Preferences.class.php:291
+msgid "User can launch a session with no application"
+msgstr "用户可启动无程序会话"
+
+#: ../web/classes/Preferences.class.php:297
+msgid "User can use a console in the session"
+msgstr "用户可在会话中使用控制台"
+
+#: ../web/admin/usersgroup.php:337
+msgid "User groups"
+msgstr "用户组"
+
+#: ../web/admin/usersgroup.php:631
+msgid "User groups management"
+msgstr "用户组管理"
+
+#: ../web/admin/users.php:377
+msgid "User groups with this user"
+msgstr "包含此用户之用户组"
+
+#: ../web/admin/index.php:51
+msgid "User list"
+msgstr "用户列表"
+
+#: ../web/modules/UserDB/sql_external.php:197
+#: ../web/modules/UserDB/ldap.php:257
+#: ../web/modules/UserGroupDB/sql_external.php:107
+msgid "User login"
+msgstr "用户登入"
+
+#: ../web/admin/password.php:25
+msgid "User not authorize to manage configuration"
+msgstr "用户未被授权管理配置"
+
+#: ../web/modules/UserDB/sql_external.php:199
+#: ../web/modules/UserDB/ldap.php:259
+#: ../web/modules/UserGroupDB/sql_external.php:109
+msgid "User password"
+msgstr "用户密码"
+
+#: ../web/admin/users.php:105
+msgid "User successfully added"
+msgstr "成功添加用户"
+
+#: ../web/admin/users.php:115
+msgid "User successfully deleted"
+msgstr "成功删除用户"
+
+#: ../web/admin/users.php:132
+msgid "User successfully modified"
+msgstr "成功编辑用户"
+
+#: ../web/admin/wizard.php:167
+msgid "User/group selection"
+msgstr "用户/组选择"
+
+#: ../web/admin/sessions.php:121
+msgid "User:"
+msgstr "用户："
+
+#: ../web/admin/configuration-sumup.php:62
+msgid "User: "
+msgstr "用户："
+
+#: ../web/admin/usersgroup.php:125 ../web/admin/usersgroup.php:162
+msgid "UserGroup successfully added"
+msgstr "成功添加用户组"
+
+#: ../web/admin/usersgroup.php:181
+msgid "UserGroup successfully deleted"
+msgstr "成功删除用户组"
+
+#: ../web/admin/usersgroup.php:225 ../web/admin/usersgroup.php:284
+#: ../web/admin/usersgroup.php:317
+msgid "UserGroup successfully modified"
+msgstr "成功编辑用户组"
+
+#: ../web/admin/users.php:150
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:239
+#: ../web/admin/classes/Configuration_mode_internal.class.php:86
+#: ../web/admin/classes/Configuration_mode_ad.class.php:247
+#: ../web/admin/includes/page_template.php:41
+#: ../web/admin/includes/page_template.php:100
+msgid "Users"
+msgstr "用户"
+
+#: ../web/admin/includes/page_template.php:107
+msgid "Users Groups"
+msgstr "用户组"
+
+#: ../web/admin/index.php:46
+msgid "Users and Users groups"
+msgstr "用户和用户组"
+
+#. User
+#: ../web/admin/classes/Configuration_mode_ad.class.php:350
+msgid "Users branch:"
+msgstr "用户分支："
+
+#: ../web/admin/publications.php:79
+msgid "Users group"
+msgstr "用户组"
+
+#: ../web/admin/modules/UserGroupDB/sql.php:32
+msgid "Users group already exists"
+msgstr "用户组已存在"
+
+#: ../web/admin/index.php:53
+msgid "Users groups list"
+msgstr "用户组列表"
+
+#: ../web/admin/wizard.php:484
+msgid "Users:"
+msgstr "用户："
+
+#. problem, what to do ?
+#: ../web/admin/actions.php:153 ../web/admin/actions.php:157
+#: ../web/admin/actions.php:168 ../web/admin/actions.php:172
+#: ../web/admin/actions.php:243
+#, php-format
+msgid "UsersGroup '%s' successfully modified"
+msgstr "成功编辑用户组'%s' "
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:325
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:384
+msgid "Using global login/password to authenticate"
+msgstr "全局登入/密码授权"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:320
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:382
+msgid "Using user login/password to authenticate"
+msgstr "用户登入/密码授权"
+
+#: ../web/admin/usersgroup.php:488 ../web/admin/usersgroup.php:730
+msgid "Validation type"
+msgstr "确认类型"
+
+#: ../web/admin/servers.php:698
+msgid "Version"
+msgstr "版本"
+
+#: ../web/admin/logs.php:139 ../web/admin/logs.php:157
+#: ../web/admin/logs.php:167
+msgid "View full log file online"
+msgstr "在线查看全部日志"
+
+#: ../web/index.php:133
+msgid "WARNING, START ANYWAY"
+msgstr "警告，强行加载"
+
+#: ../web/admin/servers.php:556
+msgid "Warning: server is broken"
+msgstr "警告：服务器损坏"
+
+#: ../web/admin/servers.php:554
+msgid "Warning: server is offline"
+msgstr "警告：服务器离线"
+
+#: ../web/admin/applications_static.php:27
+msgid "Web"
+msgstr "互联网"
+
+#: ../web/admin/includes/page_template.php:191
+#: ../web/classes/Preferences.class.php:312
+msgid "Web interface settings"
+msgstr "互联网界面设置"
+
+#: ../web/admin/applications_static.php:258
+msgid "Web link configuration"
+msgstr "互联网链接设置"
+
+#: ../web/admin/logs.php:156
+msgid "Web log"
+msgstr "互联网日志"
+
+#: ../web/admin/servers.php:765
+msgid "Web port of this server"
+msgstr "此服务器的互联网接口"
+
+#: ../web/classes/Preferences.class.php:329
+msgid ""
+"When set to yes, the session will start in a new browser window, and when "
+"set to no, the session will start in the current browser window"
+msgstr "当设置为是(Y)，会话在浏览器新窗口创建, 当当设置为否(N)，会话在浏览器当前窗口创建"
+
+#: ../web/index.php:367
+msgid "Windows keymap"
+msgstr "Windows键盘布局"
+
+#: ../web/admin/sessions.php:124
+msgid "Windows server:"
+msgstr "Windows服务器："
+
+#: ../web/index.php:132
+msgid "YOU ALREADY HAVE AN ACTIVE SESSION"
+msgstr "已启动一个活动会话"
+
+#: ../web/index.php:481 ../web/index.php:495 ../web/index.php:509
+#: ../web/index.php:523 ../web/index.php:542 ../web/admin/usersgroup.php:480
+#: ../web/admin/sumup.php:88 ../web/admin/sumup.php:113
+#: ../web/modules/UserDB/ldap.php:276
+msgid "Yes"
+msgstr "是(Y)"
+
+#: ../web/startsession.php:153
+msgid "You already have a session, please contact your administrator"
+msgstr "已存在一个会话，请联系管理员"
+
+#: ../web/startsession.php:128
+msgid "You already have an active session"
+msgstr "已启动一个活动会话"
+
+#: ../web/index.php:227
+#, php-format
+msgid "You are authenticated as %s"
+msgstr "授权为%s"
+
+#: ../web/admin/includes/functions.inc.php:437
+msgid "You are not allowed to perform this action"
+msgstr "禁止执行此动作"
+
+#: ../web/admin/sharedfolders.php:84
+msgid ""
+"You are not using Internal WebDAV filesystem, \"Shared folders\" are "
+"disabled!"
+msgstr "使用非WebDAV文件系统, \"分享文件夹\" 不可用！"
+
+#: ../web/ajax/login.php:30
+msgid "You are now logged in"
+msgstr "正在登入"
+
+#: ../web/classes/Preferences.class.php:314
+msgid "You can customize the heading title here."
+msgstr "在此定制标题名"
+
+#: ../web/classes/Preferences.class.php:317
+msgid ""
+"You can customize the logo by entering a new path or replacing the "
+"corresponding image. Use a 90 pixels high image in png or jpeg format. "
+"Example: sessionmanager/media/image/header.png"
+msgstr ""
+"通过键入新路径或更换相应图像定制徽标。使用高90像素的png或jpeg格式。 "
+"例如：sessionmanager/media/image/header.png"
+
+#: ../web/startsession.php:169
+msgid "You don't have access to a linux server for now"
+msgstr "当前无法访问Linux服务器"
+
+#: ../web/startsession.php:316
+msgid "You don't have access to a windows server for now"
+msgstr "当前无法访问Windows服务器"
+
+#: ../web/admin/appsgroup.php:69
+msgid "You must define a name to your application group"
+msgstr "必须给程序组命名"
+
+#: ../web/admin/usersgroup.php:112 ../web/admin/usersgroup.php:134
+msgid "You must define a name to your usergroup"
+msgstr "必须给用户组命名"
+
+#: ../web/admin/applications_static.php:312
+msgid "You must give a command to your application"
+msgstr "必须给程序指令"
+
+#: ../web/admin/applications_static.php:308
+msgid "You must give a name to your application"
+msgstr "必须给程序命名"
+
+#: ../web/admin/actions.php:387
+msgid "You must give a name to your shared folder"
+msgstr "必须给分享文件夹命名"
+
+#: ../web/admin/servers.php:94
+msgid "You must give a package name."
+msgstr "必须给包命名"
+
+#: ../web/admin/usersgroup.php:143 ../web/admin/usersgroup.php:239
+msgid "You must give a value to each rule of your usergroup"
+msgstr "必须给用户组规则赋值"
+
+#: ../web/webservices/session_invite.php:95
+msgid "You received an invitation from"
+msgstr "收到邀请函"
+
+#: ../web/admin/sumup.php:63
+msgid "access to these applications"
+msgstr "访问程序"
+
+#: ../web/admin/index.php:146
+msgid "active session"
+msgstr "激活会话"
+
+#: ../web/admin/index.php:144
+msgid "active sessions"
+msgstr "激活会话组"
+
+#: ../web/admin/wizard.php:510
+msgid "and these applications groups"
+msgstr "和此程序组"
+
+#: ../web/admin/wizard.php:508
+msgid "and this applications group"
+msgstr "和此程序"
+
+#: ../web/admin/wizard.php:524
+msgid "and this newly created applications group"
+msgstr "和此新建程序组"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "app with desktop"
+msgstr "桌面程序"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "application"
+msgstr "程序"
+
+#: ../web/admin/index.php:176
+msgid "broken server"
+msgstr "已损坏服务器"
+
+#: ../web/admin/index.php:174
+msgid "broken servers"
+msgstr "已损坏服务器"
+
+#: ../web/admin/servers.php:744 ../web/admin/servers.php:759
+#: ../web/admin/servers.php:774
+msgid "change"
+msgstr "更改"
+
+#: ../web/admin/servers.php:343 ../web/admin/servers.php:462
+#: ../web/admin/servers.php:710
+msgid "core"
+msgstr "内核"
+
+#: ../web/admin/servers.php:343 ../web/admin/servers.php:462
+#: ../web/admin/servers.php:710
+msgid "cores"
+msgstr "内核"
+
+#: ../web/classes/Preferences.class.php:158
+msgid "critical"
+msgstr "关键"
+
+#: ../web/classes/Preferences.class.php:158
+#: ../web/classes/Preferences.class.php:333
+msgid "debug"
+msgstr "调试"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "desktop icons"
+msgstr "桌面图标"
+
+#: ../web/classes/Server.class.php:106
+msgid "does not send a valid monitoring"
+msgstr "不要发送有效监视"
+
+#: ../web/classes/Server.class.php:92
+msgid "does not send a valid type"
+msgstr "不要发送有效类型"
+
+#: ../web/classes/Server.class.php:99
+msgid "does not send a valid version"
+msgstr "不要发送有效版本"
+
+#: ../web/classes/Preferences.class.php:158
+msgid "error"
+msgstr "错误"
+
+#: ../web/admin/usersgroup.php:905
+msgid "extend from default"
+msgstr "从默认扩展"
+
+#: ../web/modules/UserDB/fake.php:108
+msgid "fake"
+msgstr "伪造"
+
+#: ../web/index.php:26 ../web/webservices/server_status.php:48
+#: ../web/admin/configuration-sumup.php:35
+msgid "get Preferences failed"
+msgstr "获取参数失败"
+
+#: ../web/admin/sumup.php:63
+msgid "in this application group"
+msgstr "在此程序组"
+
+#: ../web/admin/sumup.php:63
+msgid "in this user group"
+msgstr "在此用户组"
+
+#: ../web/classes/Preferences.class.php:158
+msgid "info"
+msgstr "信息"
+
+#: ../web/admin/servers.php:899
+msgid "install in progress"
+msgstr "正在安装"
+
+#: ../web/classes/Server.class.php:194
+msgid "is NOT online!"
+msgstr "不在线"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "language"
+msgstr "语言"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:37
+msgid "less"
+msgstr "更少"
+
+#: ../web/modules/UserDB/unix.php:116
+msgid "local"
+msgstr "本地"
+
+#: ../web/admin/sumup.php:63 ../web/plugins/FS/cifs.php:106
+msgid "login"
+msgstr "登入"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:263
+msgid "login:"
+msgstr "登入："
+
+#: ../web/classes/Preferences.class.php:187
+msgid "manage Application groups"
+msgstr "管理程序组"
+
+#: ../web/classes/Preferences.class.php:185
+msgid "manage Applications"
+msgstr "管理程序"
+
+#: ../web/classes/Preferences.class.php:191
+msgid "manage Configuration"
+msgstr "管理配置"
+
+#: ../web/classes/Preferences.class.php:195
+msgid "manage News"
+msgstr "管理新闻"
+
+#: ../web/classes/Preferences.class.php:189
+msgid "manage Publications"
+msgstr "管理发布"
+
+#: ../web/classes/Preferences.class.php:177
+msgid "manage Servers"
+msgstr "管理服务器"
+
+#: ../web/classes/Preferences.class.php:179
+msgid "manage Shared folders"
+msgstr "管理分享文件夹"
+
+#: ../web/classes/Preferences.class.php:183
+msgid "manage Usergroups"
+msgstr "管理用户组"
+
+#: ../web/classes/Preferences.class.php:181
+msgid "manage Users"
+msgstr "管理用户"
+
+#: ../web/modules/UserDB/activedirectory.php:91
+msgid "match"
+msgstr "匹配"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:37
+msgid "more"
+msgstr "更多"
+
+#: ../web/admin/servers.php:818
+msgid "more options"
+msgstr "更多选项"
+
+#: ../web/admin/sumup.php:63
+msgid "name"
+msgstr "名字"
+
+#: ../web/classes/Preferences.class.php:224
+#: ../web/classes/Preferences.class.php:227
+#: ../web/classes/Preferences.class.php:241
+#: ../web/classes/Preferences.class.php:247
+#: ../web/classes/Preferences.class.php:250
+#: ../web/classes/Preferences.class.php:253
+#: ../web/classes/Preferences.class.php:286
+#: ../web/classes/Preferences.class.php:289
+#: ../web/classes/Preferences.class.php:292
+#: ../web/classes/Preferences.class.php:295
+#: ../web/classes/Preferences.class.php:298
+#: ../web/classes/Preferences.class.php:301
+#: ../web/classes/Preferences.class.php:321
+#: ../web/classes/Preferences.class.php:324
+#: ../web/classes/Preferences.class.php:327
+#: ../web/classes/Preferences.class.php:330
+msgid "no"
+msgstr "否(N)"
+
+#: ../web/admin/index.php:166
+msgid "offline server"
+msgstr "离线服务器"
+
+#: ../web/admin/index.php:164
+msgid "offline servers"
+msgstr "离线服务器"
+
+#: ../web/admin/index.php:156
+msgid "online server"
+msgstr "在线服务器"
+
+#: ../web/admin/index.php:154
+msgid "online servers"
+msgstr "在线服务器"
+
+#: ../web/index.php:594 ../web/index.php:602
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:249
+msgid "optional"
+msgstr "可选"
+
+#: ../web/plugins/FS/cifs.php:108
+msgid "password"
+msgstr "密码"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:264
+msgid "password:"
+msgstr "密码："
+
+#: ../web/classes/Preferences.class.php:309
+msgid "persistent"
+msgstr "持久"
+
+#: ../web/webservices/session_invite.php:95
+msgid "please click on the link below to join the online session"
+msgstr "点击以下链接加入在线会话"
+
+#: ../web/classes/Preferences.class.php:333
+msgid "popup"
+msgstr "弹出"
+
+#: ../web/footer.php:31 ../web/admin/includes/page_template.php:370
+#: ../web/includes/functions.inc.d/template.inc.php:150
+msgid "powered by"
+msgstr "出品人"
+
+#: ../web/admin/classes/Preferences_admin.class.php:128
+msgid "prefs is not valid for FS plugin"
+msgstr "FS插件无效"
+
+#: ../web/admin/classes/Preferences_admin.class.php:149
+#: ../web/admin/classes/Preferences_admin.class.php:159
+msgid "prefs is not valid for module"
+msgstr "模块选项无效"
+
+#: ../web/admin/classes/Preferences_admin.class.php:116
+msgid "prefs is not valid for plugin"
+msgstr "插件选项无效"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "quality"
+msgstr "特性"
+
+#: ../web/admin/servers.php:286 ../web/admin/servers.php:537
+msgid "redirection name cannot be empty!"
+msgstr "重定向名不能为空"
+
+#: ../web/admin/servers.php:284 ../web/admin/servers.php:535
+msgid "redirection name may be invalid!"
+msgstr "重定向名无效!"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "server"
+msgstr "服务器"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "session mode"
+msgstr "会话模式"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "shareable"
+msgstr "可分享"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "size"
+msgstr "尺寸"
+
+#: ../web/admin/reporting.php:462
+msgid "step"
+msgstr "步骤"
+
+#: ../web/modules/UserGroupDB/sql_external.php:113
+msgid "table of usersgroup"
+msgstr "用户组列表"
+
+#: ../web/classes/Preferences.class.php:309
+#: ../web/classes/SessionReportItem.class.php:159
+msgid "timeout"
+msgstr "超时"
+
+#: ../web/admin/reporting.php:450
+msgid "to"
+msgstr "到"
+
+#: ../web/classes/Preferences.class.php:175
+msgid "use Admin panel"
+msgstr "使用管理面板"
+
+#: ../web/classes/Preferences.class.php:186
+msgid "view Application groups"
+msgstr "查看程序组"
+
+#: ../web/classes/Preferences.class.php:184
+msgid "view Applications"
+msgstr "查看程序"
+
+#: ../web/classes/Preferences.class.php:190
+msgid "view Configuration"
+msgstr "查看设置"
+
+#: ../web/classes/Preferences.class.php:194
+msgid "view News"
+msgstr "查看新闻"
+
+#: ../web/classes/Preferences.class.php:188
+msgid "view Publications"
+msgstr "查看发布"
+
+#: ../web/classes/Preferences.class.php:176
+msgid "view Servers"
+msgstr "查看服务器"
+
+#: ../web/classes/Preferences.class.php:178
+msgid "view Shared folders"
+msgstr "查看分享文件夹"
+
+#: ../web/classes/Preferences.class.php:192
+msgid "view Status"
+msgstr "查看状态"
+
+#: ../web/classes/Preferences.class.php:193
+msgid "view Summary"
+msgstr "查看摘要"
+
+#: ../web/classes/Preferences.class.php:182
+msgid "view Usergroups"
+msgstr "查看用户组"
+
+#: ../web/classes/Preferences.class.php:180
+msgid "view Users"
+msgstr "查看用户"
+
+#: ../web/classes/Preferences.class.php:158
+msgid "warning"
+msgstr "警告"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "windows keymap"
+msgstr "windows键盘布局"
+
+#: ../web/classes/Preferences.class.php:224
+#: ../web/classes/Preferences.class.php:227
+#: ../web/classes/Preferences.class.php:241
+#: ../web/classes/Preferences.class.php:247
+#: ../web/classes/Preferences.class.php:250
+#: ../web/classes/Preferences.class.php:253
+#: ../web/classes/Preferences.class.php:286
+#: ../web/classes/Preferences.class.php:289
+#: ../web/classes/Preferences.class.php:292
+#: ../web/classes/Preferences.class.php:295
+#: ../web/classes/Preferences.class.php:298
+#: ../web/classes/Preferences.class.php:301
+#: ../web/classes/Preferences.class.php:321
+#: ../web/classes/Preferences.class.php:324
+#: ../web/classes/Preferences.class.php:327
+#: ../web/classes/Preferences.class.php:330
+msgid "yes"
+msgstr "是(Y)"
