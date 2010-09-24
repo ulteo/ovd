@@ -151,7 +151,7 @@ class Preferences {
 		$this->addPrettyName('general',_('General configuration'));
 
 		$c = new ConfigElement_select('admin_language', _('Administration console language'), _('Administration console language'), _('Administration console language'), 'en_GB');
-		$c->setContentAvailable(array('auto'=>_('Autodetect'),'de_DE'=>'Deutsch','en_GB'=>'English','es_ES'=>'Español','fr_FR'=>'Français','it_IT'=>'Italiano','ja_JP'=>'日本語','nl_NL'=>'Nederlands','pt_BR'=>'Português (Brasil)','ru_RU'=>'Русский','zh_CN'=>'中文简体'));
+		$c->setContentAvailable(array('auto'=>_('Autodetect'),'ar_AR'=>'العربي','de_DE'=>'Deutsch','en_GB'=>'English','es_ES'=>'Español','fr_FR'=>'Français','it_IT'=>'Italiano','ja_JP'=>'日本語','nl_NL'=>'Nederlands','pt_BR'=>'Português (Brasil)','ru_RU'=>'Русский','zh_CN'=>'中文简体'));
 		$this->add($c,'general');
 
 		$c = new ConfigElement_multiselect('log_flags', _('Debug options list'), _('Select debug options you want to enable.'), _('Select debug options you want to enable.'), array('info','warning','error','critical'));
@@ -269,7 +269,7 @@ class Preferences {
 		$this->add($c,'general','session_settings_defaults');
 
 		$c = new ConfigElement_select('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB');
-		$c->setContentAvailable(array('de_DE'=>'Deutsch','en_GB'=>'English','es_ES'=>'Español','fr_FR'=>'Français','it_IT'=>'Italiano','ja_JP'=>'日本語','nl_NL'=>'Nederlands','pt_BR'=>'Português (Brasil)','ru_RU'=>'Русский','zh_CN'=>'中文简体'));
+		$c->setContentAvailable(array('ar_AR'=>'العربي','de_DE'=>'Deutsch','en_GB'=>'English','es_ES'=>'Español','fr_FR'=>'Français','it_IT'=>'Italiano','ja_JP'=>'日本語','nl_NL'=>'Nederlands','pt_BR'=>'Português (Brasil)','ru_RU'=>'Русский','zh_CN'=>'中文简体'));
 		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_select('windows_keymap', _('Default windows keymap for session'), _('Default windows keymap for session'), _('Default windows keymap for session'), 'en-us');
 		$c->setContentAvailable(array('ar' => 'ar', 'cs' => 'cs', 'da' => 'da', 'de' => 'de', 'de-ch' => 'de-ch', 'en-dv' => 'en-dv', 'en-gb' => 'en-gb', 'en-us' => 'en-us', 'es' => 'es', 'et' => 'et', 'fi' => 'fi', 'fo' => 'fo', 'fr' => 'fr', 'fr-be' => 'fr-be', 'fr-ca' => 'fr-ca', 'fr-ch' => 'fr-ch', 'he' => 'he', 'hr' => 'hr', 'hu' => 'hu', 'is' => 'is', 'it' => 'it', 'ja' => 'ja', 'ko' => 'ko', 'lt' => 'lt', 'lv' => 'lv', 'mk' => 'mk', 'nl' => 'nl', 'nl-be' => 'nl-be', 'no' => 'no', 'pl' => 'pl', 'pt' => 'pt', 'pt-br' => 'pt-br', 'ru' => 'ru', 'sl' => 'sl', 'sv' => 'sv', 'th' => 'th', 'tr' => 'tr'));

@@ -1,0 +1,171 @@
+# Arabic translations for ovd-i package.
+# Copyright (C) 2010 Ulteo SAS
+# This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
+# Automatically generated, 2010.
+# Author: Ghaleb Salah <ghaleb.salah@gmail.com>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-05-19 09:06+0200\n"
+"PO-Revision-Date: 2010-07-29 14:21+0200\n"
+"Last-Translator: Ghaleb Salah <ghaleb.salah@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: ../web/portal/share_app.php:27
+msgid "Application sharing"
+msgstr "مشاركة التطبيقات"
+
+#: ../web/desktop/index.php:61 ../web/portal/resume.php:58
+#: ../web/portal/index.php:75 ../web/portal/external_app.php:89
+#: ../web/external/index.php:99
+msgid "Close this window"
+msgstr "اغلق هذه النافذة"
+
+#: ../web/desktop/index.php:91
+msgid "Desktop sharing"
+msgstr "مشاركة سطح المكتب"
+
+#: ../web/desktop/index.php:96 ../web/portal/share_app.php:31
+msgid "Email address"
+msgstr "البريد الالكتروني"
+
+#: ../web/desktop/index.php:62 ../web/portal/index.php:76
+#: ../web/error/index.php:54
+#, php-format
+msgid "If you want to start another session, click <a href=\"%s\">here</a>"
+msgstr "اذا كنت تريد بدء جلسة اخرى, انقر <a href=\"%s\"> هنا </a>"
+
+#: ../web/desktop/index.php:99 ../web/portal/share_app.php:32
+msgid "Invite"
+msgstr "ادعو"
+
+#: ../web/portal/external_app.php:122 ../web/external/index.php:132
+#, php-format
+msgid "Loading %s"
+msgstr "تحميل %s"
+
+#: ../web/portal/resume.php:75
+msgid "Loading Application"
+msgstr "تحميل التطبيق"
+
+#: ../web/desktop/index.php:119
+msgid "Loading Desktop"
+msgstr "تحميل سطح المكتب"
+
+#: ../web/error/index.php:71
+msgid "Loading Error"
+msgstr "خطأ في التحميل"
+
+# not sure about "portal" translation, used Portal as Account
+#: ../web/portal/index.php:179
+msgid "Loading Portal"
+msgstr "تحميل الحساب"
+
+# not sure about "portal" translation, used Portal as Account
+#: ../web/share/index.php:74
+msgid "Loading Share"
+msgstr "تحميل المشاركة"
+
+#: ../web/portal/index.php:118
+msgid "Logout"
+msgstr "تسجيل الخروج"
+
+#: ../web/portal/index.php:134
+msgid "My applications"
+msgstr "تطبيقاتي"
+
+#: ../web/portal/index.php:158
+msgid "My files"
+msgstr "ملفاتي"
+
+#: ../web/portal/index.php:146
+msgid "Running applications"
+msgstr "التطبيقات قيد التشغيل"
+
+#. <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+#: ../web/error/index.php:51
+msgid "Server: invalid token"
+msgstr "الخادم: رمز غير صحيح"
+
+#. <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+#: ../web/desktop/index.php:57 ../web/portal/resume.php:54
+#: ../web/portal/index.php:71 ../web/portal/external_app.php:84
+#: ../web/external/index.php:94 ../web/share/index.php:54
+msgid "Server: session closed unexpectedly"
+msgstr "الخادم: الجلسة توقفت بصورة غير متوقعة"
+
+#: ../web/portal/external_app.php:85 ../web/external/index.php:95
+msgid "Server: unable to start application"
+msgstr "الخادم: غير متاح تشغيل التطبيق"
+
+#: ../web/desktop/index.php:77
+msgid "Share desktop"
+msgstr "مشاركة سطح المكتب"
+
+#: ../web/share/index.php:56
+msgid "Shared application has ended unexpectedly"
+msgstr "التطبيقات المشاركة توقفت بصورة غير متوقعة"
+
+#: ../web/share/index.php:55
+msgid "Shared application has ended, you can now close the window"
+msgstr "التطبيق المشارك توقفت, يمكنك اغلاق النافذة الان"
+
+#: ../web/portal/index.php:114
+msgid "Suspend"
+msgstr "معلق"
+
+#: ../web/portal/index.php:102
+#, php-format
+msgid "Welcome %s!"
+msgstr "اهلا s%!"
+
+#: ../web/portal/resume.php:56 ../web/portal/external_app.php:87
+#: ../web/external/index.php:97
+msgid "Your application has ended unexpectedly"
+msgstr "التطبيق الخاص بك توقف بصورة غير متوقعة"
+
+#: ../web/portal/resume.php:55 ../web/portal/external_app.php:86
+#: ../web/external/index.php:96
+msgid "Your application has ended, you can now close the window"
+msgstr "التطبيق الخاص بك توقف, يمكنك اغلاة النافذة الان"
+
+#: ../web/desktop/index.php:59 ../web/portal/index.php:73
+#: ../web/error/index.php:52
+msgid "Your session has ended unexpectedly"
+msgstr "الجلسة الخاصة بك توقفت بصورة غير متوقعة"
+
+#: ../web/desktop/index.php:58 ../web/portal/index.php:72
+msgid "Your session has ended, you can now close the window"
+msgstr "الجلسة الخاصة بك توقفت, يمكنك اغلاق النافة الان"
+
+#: ../web/desktop/index.php:97 ../web/portal/share_app.php:31
+msgid "active mode"
+msgstr "الوضع النشط"
+
+#: ../web/desktop/index.php:60 ../web/portal/resume.php:57
+#: ../web/portal/index.php:74 ../web/portal/external_app.php:88
+#: ../web/error/index.php:53 ../web/external/index.php:98
+#: ../web/share/index.php:57
+msgid "error details"
+msgstr "تفاصيل الخطأ"
+
+#: ../web/portal/index.php:70
+msgid "resume"
+msgstr "متابعة"
+
+#. <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+#: ../web/portal/index.php:68
+msgid "share"
+msgstr "مشاركة"
+
+#: ../web/portal/index.php:69
+msgid "suspend"
+msgstr "معلق"
