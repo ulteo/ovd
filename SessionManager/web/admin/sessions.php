@@ -149,7 +149,8 @@ else {
 		echo '<div>';
 		if (isset($pagechanger))
 			echo $pagechanger;
-		echo '<table class="main_sub sortable" id="sessions_list_table" border="0" cellspacing="1" cellpadding="3">';
+		echo '<table style="width: 100%;" border="0" cellspacing="1" cellpadding="3"><tr><td style="vertical-align: top;">';
+		echo '<table style="margin-left: 0px; margin-right: auto;" class="main_sub sortable" id="sessions_list_table" border="0" cellspacing="1" cellpadding="3">';
 		echo '	<tr class="title">';
 		if (count($sessions) > 1)
 			echo '		<th class="unsortable"></th>';
@@ -195,6 +196,28 @@ else {
 			echo '</tfoot>';
 		}
 		echo '</table>';
+		echo '</td><td style="vertical-align: top;">';
+		echo '<table style="margin-left: auto; margin-right: 0px;" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
+		echo '<tr class="title">';
+		echo '<th>'._('Status').'</th>';
+		echo '<th>'._('Number of sessions').'</th>';
+		echo '</tr>';
+		echo '<tfoot>';
+		$i = 0;
+		foreach (Session::getAllStates() as $state) {
+			$total = Abstract_Session::countByStatus($state);
+			if ($total == 0)
+				continue;
+
+			$css_class = 'content'.(($i++%2==0)?1:2);
+			echo '<tr class="'.$css_class.'">';
+			echo '<td><span class="msg_'.Session::colorStatus($state).'">'.Session::textStatus($state).'</span></td>';
+			echo '<td style="text-align: right;">'.$total.'</td>';
+			echo '</tr>';
+		}
+		echo '</tfoot>';
+		echo '</table>';
+		echo '</td></tr></table>';
 		if (isset($pagechanger))
 			echo $pagechanger;
 		echo '</div>';

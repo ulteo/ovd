@@ -93,6 +93,10 @@ class Session {
 		return $buf;
 	}
 
+	public function getAllStates() {
+		return array(Session::SESSION_STATUS_UNKNOWN, Session::SESSION_STATUS_ERROR, Session::SESSION_STATUS_CREATED, Session::SESSION_STATUS_INIT, Session::SESSION_STATUS_INITED, Session::SESSION_STATUS_ACTIVE, Session::SESSION_STATUS_INACTIVE, Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_STATUS_DESTROYED);
+	}
+
 	public function getStatus() {
 		if ($this->uptodateAttribute('status'))
 			return $this->getAttribute('status');
