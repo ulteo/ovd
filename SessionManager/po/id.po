@@ -1,0 +1,3481 @@
+# Indonesian translations for ovd-i package.
+# Copyright (C) 2010 Ulteo SAS
+# This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
+# Automatically generated, 2010.
+# Author: Teguh Umar Dhanu <teguh.umar@pgn.co.id>, 2010.
+# Author: Rikhi Narang <Rikhi.Narang@pgn.co.id>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-05-19 09:06+0200\n"
+"PO-Revision-Date: 2010-09-05 12:22+0200\n"
+"Last-Translator: Teguh Umar Dhanu <teguh.umar@pgn.co.id>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.1.0\n"
+
+#: ../web/admin/usersgroup.php:33 ../web/classes/Preferences.class.php:281
+msgid "1 day"
+msgstr "1 hari"
+
+#: ../web/admin/usersgroup.php:32 ../web/classes/Preferences.class.php:281
+msgid "1 hour"
+msgstr "1 jam"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "1 minute"
+msgstr "1 menit"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "1 month"
+msgstr "1 bulan"
+
+#: ../web/admin/usersgroup.php:34 ../web/classes/Preferences.class.php:281
+msgid "1 week"
+msgstr "1 minggu"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "10 minutes"
+msgstr "10 menit"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "12 hours"
+msgstr "12 jam"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "15 minutes"
+msgstr "15 menit"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "2 days"
+msgstr "2 hari"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "2 hours"
+msgstr "2 jam"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "2 minutes"
+msgstr "2 menit"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "30 minutes"
+msgstr "30 menit"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "5 hours"
+msgstr "5 jam"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "5 minutes"
+msgstr "5 menit"
+
+#: ../web/classes/Preferences.class.php:278
+msgid "8-bits"
+msgstr "8-bits"
+
+#: ../web/admin/classes/UsersGroupsList.class.php:91
+#: ../web/admin/classes/UsersList.class.php:93
+#: ../web/admin/classes/UsersList.class.php:130
+#, php-format
+msgid "<strong>%d</strong> result for \"%s\"."
+msgid_plural "<strong>%d</strong> results for \"%s\"."
+msgstr[0] "<strong>%d</strong> hasil untuk \"%s\"."
+
+# transtale restrict
+#: ../web/admin/classes/UsersGroupsList.class.php:87
+#: ../web/admin/classes/UsersList.class.php:89
+#, php-format
+msgid ""
+"<strong>Partial content:</strong> Only <strong>%d result</strong> displayed "
+"but there are more. Please restrict your search field."
+msgid_plural ""
+"<strong>Partial content:</strong> Only <strong>%d results</strong> displayed "
+"but there are more. Please restrict your search field."
+msgstr[0] ""
+"<strong>Sebagian isi dari:</strong> Hanya <strong>%d hasil</strong> "
+"ditampilkan, tetapi masih banyak lagi. Mohon untuk lebih menrestrik pada "
+"field pencarian."
+
+#: ../web/admin/sharedfolders.php:43
+msgid "A shared folder with that name already exists!"
+msgstr "Nama folder bersama tersebut sudah ada!"
+
+#: ../web/admin/actions.php:393
+msgid "A shared folder with this name already exists"
+msgstr "Nama folderbersama tersebut sudah ada"
+
+#: ../web/admin/sharedfolders.php:184
+msgid "ACL"
+msgstr "ACL"
+
+#: ../web/admin/reporting.php:482 ../web/admin/reporting.php:508
+#: ../web/admin/reporting.php:527 ../web/admin/reporting.php:540
+msgid "Abscissa: day of the month"
+msgstr "Absis: hari dari bulan"
+
+#: ../web/admin/reporting.php:484 ../web/admin/reporting.php:510
+#: ../web/admin/reporting.php:529 ../web/admin/reporting.php:542
+msgid "Abscissa: hour of the day"
+msgstr "Absis: jam dari hari"
+
+#: ../web/classes/Preferences.class.php:304
+msgid "Action to do when an user already have an active session"
+msgstr "Aksi yang harus dilakukan jika pengguna sudah mempunyai sesi yang aktif"
+
+#: ../web/classes/Preferences.class.php:243
+msgid "Action when an ApS status is not ready anymore"
+msgstr "Aksi ketika status ApS tidak lagi tersedia"
+
+#: ../web/classes/Preferences.class.php:491
+msgid "Activated callbacks"
+msgstr "Panggilan balik diaktifkan"
+
+#: ../web/classes/Session.class.php:126
+msgid "Active"
+msgstr "Aktif"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:26
+#: ../web/modules/UserDB/activedirectory.php:151
+#: ../web/modules/UserGroupDB/activedirectory.php:113
+msgid "Active Directory"
+msgstr "Active Directory"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:363
+msgid "Active Directory User Groups"
+msgstr "Active Directory User Groups"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:236
+msgid "Active Directory integration"
+msgstr "Active Directory integration"
+
+#: ../web/admin/users.php:420 ../web/admin/servers.php:979
+msgid "Active sessions"
+msgstr "Sesi yang sedang aktif"
+
+#: ../web/admin/applications.php:401
+msgid "Active tasks on this application"
+msgstr "Tugas yang aktif pada aplikasi ini"
+
+#: ../web/admin/servers.php:947
+msgid "Active tasks on this server"
+msgstr "Tugas yang aktif pada server ini"
+
+#: ../web/admin/appsgroup.php:224 ../web/admin/usersgroup.php:524
+#: ../web/admin/publications.php:132 ../web/admin/applications_static.php:244
+#: ../web/admin/users.php:215 ../web/admin/users.php:234
+msgid "Add"
+msgstr "Tambah"
+
+#: ../web/admin/applications_static.php:180
+msgid "Add a static application"
+msgstr "Tambahkan aplikasi statis"
+
+#: ../web/admin/usersgroup.php:985 ../web/admin/sharedfolders.php:212
+msgid "Add access to this shared folder"
+msgstr "Tambahkan akses ke folder bersama ini"
+
+#: ../web/admin/news.php:90
+msgid "Add news"
+msgstr "Tambahkan berita"
+
+#: ../web/admin/news.php:101
+msgid "Add this news"
+msgstr "Tambahkan berita ini"
+
+#: ../web/admin/appsgroup.php:465 ../web/admin/usersgroup.php:887
+msgid "Add this publication"
+msgstr "Tambahkan publikasi ini"
+
+#: ../web/admin/usersgroup.php:936
+msgid "Add this rule"
+msgstr "Tambahkan aturan ini"
+
+#: ../web/admin/appsgroup.php:378 ../web/admin/usersgroup.php:843
+#: ../web/admin/applications_static.php:577 ../web/admin/users.php:410
+#: ../web/admin/applications.php:461
+msgid "Add to this group"
+msgstr "Tambahkan group ini"
+
+#: ../web/admin/login.php:99 ../web/admin/includes/page_template.php:242
+#: ../web/includes/functions.inc.d/template.inc.php:79
+#: ../web/includes/functions.inc.d/template.inc.php:124
+msgid "Administration"
+msgstr "Administrasi"
+
+#: ../web/classes/Preferences.class.php:153
+msgid "Administration console language"
+msgstr "Administrasi bahasa"
+
+#: ../web/modules/UserDB/activedirectory.php:85
+msgid "Administrator DN"
+msgstr "Administrator DN"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:255
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:361
+#: ../web/admin/classes/Configuration_mode_ad.class.php:261
+msgid "Administrator account"
+msgstr "Administrator account"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:359
+msgid "Administrator account:"
+msgstr "Administrator account:"
+
+#: ../web/modules/UserDB/activedirectory.php:87
+msgid "Administrator password"
+msgstr "Administrator password"
+
+#: ../web/index.php:312
+msgid "Advanced settings"
+msgstr "Pengaturan lebih lanjutan"
+
+#: ../web/admin/usersgroup.php:489 ../web/admin/usersgroup.php:734
+msgid "All"
+msgstr "Semua"
+
+#: ../web/classes/Preferences.class.php:326
+msgid "Allow connections through proxy (SSH/ping applet test required)"
+msgstr "Izinkan koneksi melalui proxy (SSH/diperlukan test ping applet)"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:261
+msgid "Anonymous bind"
+msgstr "Anonymous bind"
+
+#: ../web/admin/servers.php:834
+msgid "Application"
+msgstr "Aplikasi"
+
+#: ../web/admin/actions.php:294
+#, php-format
+msgid "Application '%s' successfully deleted"
+msgstr "Aplikasi '%s' telah berhasil dihapus"
+
+#: ../web/admin/configuration-sumup.php:95
+msgid "Application Server"
+msgstr "Server Aplikasi"
+
+#: ../web/classes/Preferences.class.php:234
+msgid "Application Server settings"
+msgstr "Pengaturan Server Applikasi"
+
+#: ../web/admin/logs.php:149
+msgid "Application Servers"
+msgstr "Server-server Aplikasi"
+
+#: ../web/startsession.php:237
+msgid "Application does not exist"
+msgstr "Applikasi tidak ada"
+
+#: ../web/admin/publications.php:80
+msgid "Application group"
+msgstr "Kelompok aplikasi"
+
+#: ../web/admin/appsgroup.php:137
+msgid "Application groups"
+msgstr "Kelompok aplikasi"
+
+#: ../web/admin/index.php:112
+msgid "Application groups list"
+msgstr "Daftar kelompok aplikasi"
+
+#: ../web/admin/appsgroup.php:295
+msgid "Application groups management"
+msgstr "Pengaturan kelompok aplikasi"
+
+#: ../web/admin/index.php:110
+msgid "Application list"
+msgstr "Daftar aplikasi"
+
+#: ../web/startsession.php:252
+msgid "Application not available"
+msgstr "Applikasi tidak tersedia/tidak siap"
+
+#: ../web/admin/actions.php:115
+msgid "ApplicationDB is not writeable"
+msgstr "ApplicationDB tidak dapat ditulis"
+
+#: ../web/admin/actions.php:129 ../web/admin/actions.php:138
+#, php-format
+msgid "ApplicationGroup '%s' successfully modified"
+msgstr "ApplicationGroup '%s' sukses dimodifikasi"
+
+#. general div
+#: ../web/admin/includes/page_template.php:47
+#: ../web/admin/includes/page_template.php:114 ../web/admin/sumup.php:193
+#: ../web/admin/applications.php:112
+msgid "Applications"
+msgstr "Aplikasi-aplikasi"
+
+#: ../web/admin/includes/page_template.php:121
+msgid "Applications Groups"
+msgstr "Kelompok aplikasi"
+
+#: ../web/admin/index.php:105
+msgid "Applications and Appgroups"
+msgstr "Aplikasi dan Kelompok Aplikasi"
+
+#: ../web/admin/servers.php:857
+msgid "Applications available on this server"
+msgstr "Aplikasi yang tersedia di server ini"
+
+#: ../web/admin/wizard.php:312
+msgid "Applications/groups selection"
+msgstr "Pilihan aplikasi/group"
+
+#: ../web/admin/wizard.php:530
+msgid "Applications:"
+msgstr "Aplikasi:"
+
+#: ../web/admin/appsgroup.php:78
+msgid "AppsGroup successfully added"
+msgstr "AppsGroup sukses ditambahkan"
+
+#: ../web/admin/appsgroup.php:91
+msgid "AppsGroup successfully deleted"
+msgstr "AppsGroup sukses dihapus"
+
+#: ../web/admin/appsgroup.php:124
+msgid "AppsGroup successfully modified"
+msgstr "AppsGroup sukses diubah"
+
+#: ../web/admin/wizard.php:447
+msgid "Are you sure that you want to create this publication?"
+msgstr "Apakah anda yakin untuk membuat publikasi ini?"
+
+#: ../web/admin/users.php:203
+msgid "Are you sure you want to delete selected users?"
+msgstr "Apakah anda yakin akan menghapus pengguna yang dipilih?"
+
+#: ../web/admin/appsgroup.php:187 ../web/admin/usersgroup.php:410
+msgid "Are you sure you want to delete these groups?"
+msgstr "Apakah anda yakin akan menghapus kelompok tersebut?"
+
+#: ../web/admin/applications_static.php:167
+msgid "Are you sure you want to delete these static applications?"
+msgstr "Apakah anda yakin akan menghapus aplikasi statis tersebut?"
+
+#: ../web/admin/applications_static.php:557 ../web/admin/applications.php:440
+msgid "Are you sure you want to delete this application from this group?"
+msgstr "Apakah anda yakin akan menghapus aplikasi ini dari kelompok ini?"
+
+#: ../web/admin/appsgroup.php:356 ../web/admin/applications_static.php:148
+#: ../web/admin/applications_static.php:461
+msgid "Are you sure you want to delete this application?"
+msgstr "Apakah anda yakin akan menghapus aplikasi ini?"
+
+#: ../web/admin/appsgroup.php:174 ../web/admin/appsgroup.php:311
+#: ../web/admin/usersgroup.php:393 ../web/admin/usersgroup.php:666
+msgid "Are you sure you want to delete this group?"
+msgstr "Apakah anda yakin akan menghapus kelompok ini?"
+
+#: ../web/admin/applications_static.php:524
+msgid "Are you sure you want to delete this icon?"
+msgstr "Apakah anda yakin akan menghapus ikon ini?"
+
+#: ../web/admin/news.php:76
+msgid "Are you sure you want to delete this news?"
+msgstr "Apakah anda yakin akan menghapus berita ini?"
+
+#: ../web/admin/appsgroup.php:443 ../web/admin/usersgroup.php:865
+#: ../web/admin/publications.php:97
+msgid "Are you sure you want to delete this publication?"
+msgstr "Apakah anda yakin akan menghapus pubilkasi ini?"
+
+#: ../web/admin/usersgroup.php:911
+msgid "Are you sure you want to delete this rule?"
+msgstr "Apakah anda yakin akan menghapus aturan ini?"
+
+#: ../web/admin/servers.php:479 ../web/admin/servers.php:797
+msgid "Are you sure you want to delete this server?"
+msgstr "Apakah anda yakin akan menghapus server ini?"
+
+#: ../web/admin/usersgroup.php:965 ../web/admin/sharedfolders.php:192
+msgid "Are you sure you want to delete this shared folder access?"
+msgstr "Apakah anda yakin akan menghapus akses folder bersama ini?"
+
+#: ../web/admin/sharedfolders.php:98
+msgid "Are you sure you want to delete this shared folder?"
+msgstr "Apakah anda yakinakan menghapus folder bersama ini?"
+
+#: ../web/admin/users.php:390
+msgid "Are you sure you want to delete this user from this group?"
+msgstr "Apakah anda yakin akan menghapus pengguna ini dari kelompok?"
+
+#: ../web/admin/usersgroup.php:819 ../web/admin/users.php:186
+#: ../web/admin/users.php:316
+msgid "Are you sure you want to delete this user?"
+msgstr "Apakah anda yakin akan menghapus pengguna ini?"
+
+#: ../web/admin/sessions.php:264
+msgid "Are you sure you want to kill selected sessions?"
+msgstr "Apakah anda yakin akan menutup sesi yang dipilh?"
+
+#: ../web/admin/sessions.php:189 ../web/admin/sessions.php:250
+msgid "Are you sure you want to kill this session?"
+msgstr "Apakah anda yakin akan menutup sesi ini?"
+
+#: ../web/admin/servers.php:876 ../web/admin/applications.php:362
+msgid "Are you sure you want to remove this application from this server?"
+msgstr "Apakah anda yakin akan menghapus aplikasi ini dari server?"
+
+#: ../web/admin/applications.php:314
+msgid "Are you sure you want to remove this application?"
+msgstr "Apakah anda yakin akan menghapus aplikasi ini?"
+
+#: ../web/admin/usersgroup.php:489 ../web/admin/usersgroup.php:737
+msgid "At least one"
+msgstr "Sekurangnya satu"
+
+#: ../web/classes/Preferences.class.php:226
+msgid "Authentication"
+msgstr "Otentikasi"
+
+#: ../web/ajax/login.php:26 ../web/startsession.php:70
+#: ../web/startsession.php:74
+msgid "Authentication failed"
+msgstr "Otentikasi gagal"
+
+#: ../web/admin/configuration-sumup.php:100
+msgid "Authorized FQDN"
+msgstr "FQDN yang sah"
+
+#: ../web/classes/Preferences.class.php:235
+msgid "Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)"
+msgstr ""
+"Mesin yang sah (FQDN atau IP - penggunaan kartu-bebas (*.) diperbolehkan)"
+
+#: ../web/classes/Preferences.class.php:249
+msgid "Auto register new servers"
+msgstr "Pendaftaran otomatis server baru"
+
+#: ../web/classes/Preferences.class.php:252
+msgid "Auto switch new servers to production mode"
+msgstr "Perpindahan otomatis server baru ke mode produksi"
+
+#: ../web/classes/Preferences.class.php:154
+msgid "Autodetect"
+msgstr "Deteksi otomatis"
+
+#: ../web/admin/applications.php:212
+msgid "Available"
+msgstr "Tersedia"
+
+#. <th>'._('Desktop File').'</th>
+#: ../web/admin/sumup.php:65
+msgid "Available servers"
+msgstr "Server yang tersedia"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:107
+msgid "Back to default"
+msgstr "Kembali ke default"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:230
+msgid "Base DN:"
+msgstr "Base DN:"
+
+#: ../web/admin/wizard.php:460
+msgid "Between these usergroups"
+msgstr "Antara usergroup"
+
+#: ../web/admin/wizard.php:478
+msgid "Between this newly created usergroup"
+msgstr "Antara usergroup yang baru dibuat"
+
+#: ../web/admin/wizard.php:458
+msgid "Between this usergroup"
+msgstr "Antara usergroup"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:263
+msgid "Bind DN (without suffix):"
+msgstr "Bind DN (without suffix):"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:264
+msgid "Bind password:"
+msgstr "Bind password:"
+
+#: ../web/admin/appsgroup.php:244 ../web/admin/usersgroup.php:571
+#: ../web/admin/applications.php:213
+msgid "Block"
+msgstr "Blok"
+
+#: ../web/admin/appsgroup.php:158 ../web/admin/appsgroup.php:248
+#: ../web/admin/usersgroup.php:370 ../web/admin/usersgroup.php:575
+#: ../web/admin/applications.php:216
+msgid "Blocked"
+msgstr "Terblokir"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:137
+msgid "Both CPU and RAM are used as criterias, with a little randomization..."
+msgstr ""
+"CPU dan RAM telah digunakan sesuai kriteria, dengan sedikit pengacakan..."
+
+#: ../web/classes/Server.class.php:348
+msgid "Broken"
+msgstr "Hancur"
+
+#: ../web/modules/AuthMethod/CAS.php:71
+msgid "CAS authentication"
+msgstr "Otentikasi CAS"
+
+#: ../web/modules/AuthMethod/CAS.php:85
+msgid "CAS server URL"
+msgstr "URL ver CAS"
+
+#: ../web/admin/servers.php:342 ../web/admin/servers.php:461
+#: ../web/admin/servers.php:709
+msgid "CPU"
+msgstr "CPU"
+
+#: ../web/admin/reporting.php:367 ../web/admin/servers.php:351
+#: ../web/admin/servers.php:715
+msgid "CPU usage"
+msgstr "Penggunaan CPU"
+
+#: ../web/admin/usersgroup.php:477
+msgid "Cached"
+msgstr "Cached"
+
+#: ../web/admin/wizard.php:607
+msgid "Cannot create application group"
+msgstr "Tidak dapat membuat kelompok aplikasi"
+
+#: ../web/admin/wizard.php:587
+msgid "Cannot create usergroup"
+msgstr "Tidak dapat membuat usergroup"
+
+#: ../web/admin/servers.php:548
+msgid "Cannot get server monitoring"
+msgstr "Tidak mendapatkan server monitoring"
+
+#: ../web/admin/servers.php:563
+msgid "Cannot list available applications"
+msgstr "Tidak mendapatkan daftar aplikasi yang tersedia"
+
+#: ../web/admin/servers.php:829
+msgid "Category"
+msgstr "Kategori"
+
+#: ../web/admin/password.php:53
+msgid "Change"
+msgstr "Ubah"
+
+#: ../web/admin/password.php:36 ../web/admin/includes/page_template.php:197
+msgid "Change Administrator password"
+msgstr "Ubah password Administrator"
+
+#: ../web/classes/Preferences.class.php:308
+#: ../web/classes/Preferences.class.php:332
+msgid ""
+"Choose Advanced Settings options you want to make available to users before "
+"they launch a session."
+msgstr ""
+"Pilih Seting Advance agar tersedia untuk pengguna sebelum mereka memulai "
+"sesi."
+
+#: ../web/classes/Preferences.class.php:416
+msgid "Choose the modules you want to enable."
+msgstr "Pilih module yang akan diaktifkan."
+
+#: ../web/classes/Preferences.class.php:365
+msgid "Choose the plugins you want to enable."
+msgstr "Pilih plugins yang ingin diaktifkan."
+
+#: ../web/events/callbacks/ServerStatusChanged/Task.class.php:53
+msgid "Cleanup tasks"
+msgstr "Membersihan tugas"
+
+#: ../web/admin/applications_static.php:220
+#: ../web/admin/applications_static.php:438
+#: ../web/admin/applications_static.php:502
+msgid "Command"
+msgstr "Perintah"
+
+#: ../web/plugins/FS/cifs.php:94
+msgid "Common Internet File System (CIFS)"
+msgstr "Common Internet File System (CIFS)"
+
+#: ../web/plugins/FS/cifs_no_sfu.php:35
+msgid "Common Internet File System (CIFS) without services for unix"
+msgstr "Common Internet File System (CIFS) tanpa services untuk unix"
+
+#. conf not valid
+#: ../web/admin/index.php:83 ../web/admin/configuration-partial.php:53
+#: ../web/admin/configuration-partial.php:60
+#: ../web/admin/includes/page_template.php:53 ../web/admin/servers.php:729
+#: ../web/admin/sharedfolders.php:160 ../web/admin/configuration.php:69
+#: ../web/admin/configuration.php:81
+msgid "Configuration"
+msgstr "Konfigurasi"
+
+# missing = hilang
+# not found = tidak ditemukan
+#: ../web/includes/core-minimal.inc.php:61
+msgid "Configuration file missing"
+msgstr "Berkas konfigurasi hilang"
+
+#: ../web/includes/core-minimal.inc.php:68
+msgid "Configuration not valid"
+msgstr "Konfigurasi tidak vaild"
+
+#. configuration saved
+#: ../web/admin/configuration-partial.php:49 ../web/admin/sharedfolders.php:64
+#: ../web/admin/configuration.php:65
+msgid "Configuration successfully saved"
+msgstr "Konfigurasi sukses disimpan"
+
+# Memastikan
+#: ../web/admin/wizard.php:559
+msgid "Confirm"
+msgstr "Konfirm"
+
+#: ../web/admin/wizard.php:445
+msgid "Confirmation"
+msgstr "Konfirmasi"
+
+#: ../web/admin/sessions.php:177
+msgid "Connect to or observe this session"
+msgstr "Sambung ke atau mengamati sesi ini"
+
+#: ../web/admin/news.php:63
+msgid "Content"
+msgstr "Isi"
+
+#: ../web/admin/wizard.php:324
+msgid "Create a group with applications"
+msgstr "Buat group dengan aplikasi"
+
+#: ../web/admin/wizard.php:179
+msgid "Create a group with users"
+msgstr "Buat group dengan user"
+
+#: ../web/admin/appsgroup.php:200 ../web/admin/usersgroup.php:433
+msgid "Create a new group"
+msgstr "Buat group baru"
+
+#: ../web/admin/wizard.php:402
+msgid "Create appgroup"
+msgstr "Buat appgroup"
+
+#: ../web/admin/sharedfolders.php:113
+msgid "Create this shared folder"
+msgstr "Buat folder bersama"
+
+#: ../web/admin/wizard.php:253
+msgid "Create usergroup"
+msgstr "Buat usergroup"
+
+#: ../web/classes/Session.class.php:123
+msgid "Created"
+msgstr "Sudah dibuat"
+
+#: ../web/admin/tasks.php:117 ../web/admin/tasks.php:185
+msgid "Creation time"
+msgstr "Waktu pembuatan"
+
+# ruang bawah tanah?
+#: ../web/modules/UserDB/sql_external.php:208
+msgid "Crypt"
+msgstr "Crypt"
+
+#: ../web/admin/logs.php:166
+msgid "Daemon log"
+msgstr "Log daemon"
+
+#: ../web/admin/configuration-sumup.php:56
+msgid "Database"
+msgstr "Database"
+
+#: ../web/classes/Preferences.class.php:202
+msgid "Database host address"
+msgstr "Alamat host database"
+
+#: ../web/modules/UserDB/sql_external.php:201
+#: ../web/modules/UserGroupDB/sql_external.php:111
+#: ../web/classes/Preferences.class.php:208
+msgid "Database name"
+msgstr "Nama database"
+
+#: ../web/classes/Preferences.class.php:206
+msgid "Database password"
+msgstr "Password database"
+
+#: ../web/admin/includes/page_template.php:155
+msgid "Database settings"
+msgstr "Seting database"
+
+#: ../web/classes/Preferences.class.php:204
+msgid "Database username"
+msgstr "Database username"
+
+#: ../web/admin/configuration-sumup.php:63
+msgid "Database: "
+msgstr "Database: "
+
+#: ../web/admin/news.php:63
+msgid "Date"
+msgstr "Tanggal"
+
+#: ../web/admin/reporting.php:104
+msgid "Day"
+msgstr "Hari"
+
+#: ../web/index.php:539
+msgid "Debug"
+msgstr "Debug"
+
+#: ../web/classes/Preferences.class.php:157
+msgid "Debug options list"
+msgstr "Daftar pilihan debug"
+
+#: ../web/classes/Preferences.class.php:170
+msgid "Default browser"
+msgstr "Default browser"
+
+#: ../web/admin/applications_static.php:259
+msgid "Default browser for :"
+msgstr "Default browser untuk :"
+
+#: ../web/classes/Preferences.class.php:271
+msgid "Default language for session"
+msgstr "Bahasa default untuk sesi"
+
+#: ../web/classes/Preferences.class.php:267
+msgid "Default mode for session"
+msgstr "Mode default untuk sesi"
+
+#: ../web/classes/Preferences.class.php:173
+msgid "Default policy"
+msgstr "Default policy"
+
+#: ../web/classes/Preferences.class.php:277
+msgid "Default quality for session"
+msgstr "Kualitas default untuk sesi"
+
+#: ../web/classes/Preferences.class.php:280
+msgid "Default timeout for session"
+msgstr "Waktu tenggang default untuk sesi"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:275
+msgid "Default user branch"
+msgstr "Cabang default pengguna"
+
+# Default user branch (Users) users = jamak
+#: ../web/admin/classes/Configuration_mode_ad.class.php:251
+#: ../web/admin/classes/Configuration_mode_ad.class.php:352
+msgid "Default user branch (Users)"
+msgstr "Cabang default pengguna (Banyak pengguna)"
+
+#. $c = new ConfigElement_input('start_app','start_app','start_app_des','');
+#. $this->add('general',$c);
+#: ../web/classes/Preferences.class.php:164
+msgid "Default user group"
+msgstr "Group default pengguna"
+
+#: ../web/classes/Preferences.class.php:274
+msgid "Default windows keymap for session"
+msgstr "Default windows keymap untuk sesi"
+
+#: ../web/admin/usersgroup.php:656
+msgid "Define as default"
+msgstr "Tetapkan sebagai default"
+
+#: ../web/admin/appsgroup.php:175 ../web/admin/appsgroup.php:189
+#: ../web/admin/usersgroup.php:394 ../web/admin/usersgroup.php:412
+#: ../web/admin/publications.php:102 ../web/admin/applications_static.php:151
+#: ../web/admin/applications_static.php:169
+#: ../web/admin/applications_static.php:464 ../web/admin/users.php:187
+#: ../web/admin/users.php:205 ../web/admin/tasks.php:146
+#: ../web/admin/tasks.php:215 ../web/admin/servers.php:482
+#: ../web/admin/servers.php:506 ../web/admin/servers.php:800
+msgid "Delete"
+msgstr "Hapus"
+
+#: ../web/admin/usersgroup.php:970 ../web/admin/sharedfolders.php:197
+msgid "Delete access to this shared folder"
+msgstr "Hapus akses pada folder bersama ini"
+
+#: ../web/admin/appsgroup.php:361 ../web/admin/usersgroup.php:824
+#: ../web/admin/applications_static.php:562 ../web/admin/users.php:395
+#: ../web/admin/applications.php:445
+msgid "Delete from this group"
+msgstr "Hapus dari group ini"
+
+#: ../web/admin/appsgroup.php:312 ../web/admin/usersgroup.php:667
+msgid "Delete this group"
+msgstr "Hapus group ini"
+
+#: ../web/admin/applications_static.php:524
+msgid "Delete this icon"
+msgstr "Hapus ikon ini"
+
+#: ../web/admin/news.php:80
+msgid "Delete this news"
+msgstr "Hapus berita ini"
+
+#: ../web/admin/appsgroup.php:448 ../web/admin/usersgroup.php:870
+msgid "Delete this publication"
+msgstr "Hapus publikasi ini"
+
+#: ../web/admin/usersgroup.php:916
+msgid "Delete this rule"
+msgstr "Hapus aturan ini"
+
+#: ../web/admin/sharedfolders.php:102
+msgid "Delete this shared folder"
+msgstr "Hapus folder bersama ini"
+
+#: ../web/admin/users.php:317
+msgid "Delete this user"
+msgstr "Hapus pengguna ini"
+
+#. echo '<th>'._('Status').'</th>';
+#: ../web/admin/appsgroup.php:148 ../web/admin/appsgroup.php:211
+#: ../web/admin/appsgroup.php:298 ../web/admin/usersgroup.php:359
+#: ../web/admin/usersgroup.php:471 ../web/admin/usersgroup.php:635
+#: ../web/admin/wizard.php:266 ../web/admin/wizard.php:415
+#: ../web/admin/applications_static.php:112
+#: ../web/admin/applications_static.php:436
+#: ../web/admin/classes/UsersGroupsList.class.php:80
+#: ../web/admin/applications.php:125 ../web/admin/applications.php:298
+msgid "Description"
+msgstr "Deskripsi"
+
+#: ../web/admin/wizard.php:483 ../web/admin/wizard.php:529
+msgid "Description: "
+msgstr "Deskripsi:"
+
+#: ../web/classes/Preferences.class.php:268
+msgid "Desktop"
+msgstr "Desktop"
+
+#: ../web/classes/Session.class.php:131
+msgid "Destroyed"
+msgstr "Dihancurkan"
+
+#. echo '<th>'._('Version').'</th>';
+#: ../web/admin/tasks.php:121 ../web/admin/tasks.php:189
+#: ../web/admin/servers.php:308 ../web/admin/servers.php:437
+#: ../web/admin/servers.php:699 ../web/admin/servers.php:953
+#: ../web/admin/applications.php:407
+msgid "Details"
+msgstr "Rincian"
+
+#: ../web/classes/Preferences.class.php:240
+msgid "Disable reverse FQDN checking"
+msgstr "Nonaktifkan pengecekan terbalik FQDN"
+
+#: ../web/admin/users.php:164 ../web/admin/users.php:333
+#: ../web/admin/classes/UsersList.class.php:82
+msgid "Display name"
+msgstr "Tampilkan nama"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:248
+msgid "Display name field:"
+msgstr "Tampilkan filed nama:"
+
+#: ../web/classes/Preferences.class.php:320
+msgid ""
+"Display the list of users from the corporate directory in the login box. If "
+"the list is not displayed, the user must enter his login name."
+msgstr ""
+"Menampilkan daftar pengguna dari direktori perusahaan di kotak login. Jika "
+"tidak ada pada daftar, pengguna harus memasukkan nama login-nya."
+
+#: ../web/classes/Preferences.class.php:320
+msgid "Display users list"
+msgstr "Tamplikan daftar pengguna"
+
+#. Not yet Implemented
+#. $str.= '<tr><td style="text-align: right;"><input class="input_checkbox" type="checkbox" name="user_branch_recursive"/></td>';
+#. $str.= '<td>'._('Recursive Mode').'</td></tr>';
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:247
+msgid "Distinguished name field:"
+msgstr "Distinguished name field:"
+
+#: ../web/classes/Preferences.class.php:244
+msgid "Do nothing"
+msgstr "Tidak melakukan apa-apa"
+
+#: ../web/modules/UserDB/activedirectory.php:83
+msgid "Domain name"
+msgstr "Nama domain"
+
+#: ../web/modules/UserDB/activedirectory.php:83
+msgid "Domain name used by Active Directory"
+msgstr "Nama domain yang digunakan oleh Active Directory"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:242
+#: ../web/admin/classes/Configuration_mode_ad.class.php:347
+msgid "Domain:"
+msgstr "Domain:"
+
+#: ../web/admin/logs.php:140 ../web/admin/logs.php:158
+#: ../web/admin/logs.php:168 ../web/admin/logs.php:206
+#: ../web/admin/logs.php:210
+msgid "Download full log file"
+msgstr "Unduh semua log file"
+
+#: ../web/admin/usersgroup.php:424 ../web/admin/usersgroup.php:427
+msgid "Dynamic"
+msgstr "Dinamik"
+
+#: ../web/index.php:134
+msgid "ERROR"
+msgstr "ERROR"
+
+#: ../web/classes/Preferences.class.php:213
+msgid "Email settings"
+msgstr "Seting email"
+
+#: ../web/admin/appsgroup.php:249 ../web/admin/usersgroup.php:576
+msgid "Enable"
+msgstr "Aktifkan"
+
+#: ../web/admin/sharedfolders.php:120
+msgid "Enable Internal WebDAV filesystem"
+msgstr "Aktifkan filesystem WebDAV internal"
+
+#: ../web/classes/Preferences.class.php:240
+msgid ""
+"Enable this option if you don't want to check that the result of the reverse "
+"FQDN address fits the one that was registered."
+msgstr ""
+"Aktifkan pilihan ini jika anda tidak ingin mengecek kesesuaian hasil dari "
+"alamat reverse FQDN dengan yang terdaftar."
+
+#: ../web/admin/appsgroup.php:156 ../web/admin/appsgroup.php:243
+#: ../web/admin/usersgroup.php:368 ../web/admin/usersgroup.php:570
+msgid "Enabled"
+msgstr "Aktifkan"
+
+#: ../web/classes/Preferences.class.php:238
+msgid ""
+"Enter a private addresses you wish to associate to a specific IP in case of "
+"issue with the DNS configuration or to override a reverse address result. "
+"Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)"
+msgstr ""
+"Masukkan alamat private yang ingin Anda hubungkan ke IP tertentu untuk "
+"konfigurasi DNS atau untuk mengganti hasil dari alamat reverse. Contoh: "
+"pong.office.ulteo.com (bidang 1) 192.168.0.113 (bidang 2)"
+
+#: ../web/admin/tasks.php:130 ../web/admin/tasks.php:199
+#: ../web/admin/configuration-profile.php:235 ../web/admin/servers.php:960
+#: ../web/admin/applications.php:414
+#: ../web/includes/functions.inc.d/template.inc.php:44
+#: ../web/includes/functions.inc.d/template.inc.php:49
+msgid "Error"
+msgstr "Error"
+
+#: ../web/admin/users.php:266
+msgid "Error while requesting usergroups"
+msgstr "Error ketika meminta usergroups"
+
+#: ../web/admin/reporting.php:253
+msgid "Error: \"from\" date is after \"to\" date, switching"
+msgstr "Error: \"dari\" tanggal setelah \"sampai\" tanggal, berganti"
+
+#: ../web/admin/reporting.php:260
+msgid "Error: \"to\" field is in the future, switch to the current time"
+msgstr "Error: \"pada\" bagian di masa depan, rubahlah dengan waktu sekarang"
+
+#. Events settings
+#: ../web/admin/includes/page_template.php:185
+#: ../web/classes/Preferences.class.php:464
+msgid "Events settings"
+msgstr "Pengaturan even"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:113
+msgid "Examples"
+msgstr "Contoh"
+
+#: ../web/admin/applications.php:299
+msgid "Executable"
+msgstr "Dapat dieksekusi"
+
+#: ../web/classes/Preferences.class.php:268
+msgid "External"
+msgstr "Eksternal"
+
+#: ../web/admin/servers.php:306 ../web/admin/servers.php:435
+#: ../web/admin/sumup.php:191
+msgid "FQDN"
+msgstr "FQDN"
+
+#: ../web/admin/configuration-sumup.php:116
+msgid "FQDN check"
+msgstr "Pengecekan FQDN"
+
+#: ../web/admin/configuration-sumup.php:108
+msgid "FQDN private address"
+msgstr "Alamat private FQDN"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:31
+msgid "Factor impact"
+msgstr "Faktor dampak"
+
+#: ../web/admin/usersgroup.php:548
+msgid "Failed to load usergroup"
+msgstr "Gagal meload usergroup"
+
+#: ../web/modules/UserDB/ldap.php:272
+msgid "Filter (optional)"
+msgstr "Filter (opsional)"
+
+#: ../web/admin/classes/UsersList.class.php:114
+msgid "Filter add list: "
+msgstr "Filter daftar tambahan:"
+
+#: ../web/modules/UserDB/ldap.php:272
+msgid "Filter, example (&(distinguishedname=mike*)(uid=42*))"
+msgstr "Filter, contoh (&(distinguishedname=mike*)(uid=42*))"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:250
+msgid "Filter:"
+msgstr "Filter:"
+
+#: ../web/admin/usersgroup.php:493 ../web/admin/usersgroup.php:741
+msgid "Filters"
+msgstr "Filter"
+
+#: ../web/admin/tasks.php:128 ../web/admin/tasks.php:197
+msgid "Finished"
+msgstr "Selesai"
+
+#: ../web/classes/Preferences.class.php:305
+msgid "Forbid access"
+msgstr "Larangan akses"
+
+#: ../web/classes/Preferences.class.php:308
+#: ../web/classes/Preferences.class.php:332
+msgid "Forceable paramaters by users"
+msgstr "Paramater yang dapat dipaksakan oleh user"
+
+#: ../web/admin/reporting.php:438 ../web/classes/Preferences.class.php:217
+msgid "From"
+msgstr "Dari"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:123
+msgid ""
+"Full CPU: only CPU usage is used as a criteria to choose the best\n"
+"server to use for an incoming user."
+msgstr ""
+"Kendali CPU: penggunaan CPU hanya digunakan sebagai kriteria untuk memilih\n"
+" server terbaik yang digunakan untuk pengguna yang masuk."
+
+#: ../web/admin/index.php:88 ../web/classes/Preferences.class.php:151
+msgid "General configuration"
+msgstr "Konfigurasi umum"
+
+#: ../web/index.php:75
+msgid "Getting userlist failed"
+msgstr "Gagal mendapatkan userlist"
+
+#: ../web/modules/UserGroupDB/ldap_posix.php:134
+msgid "Group Branch DN"
+msgstr "Kelompuk Branch DN"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:280
+msgid "Group Branch DN:"
+msgstr "Kelompuk Branch DN:"
+
+#: ../web/admin/applications_static.php:550 ../web/admin/applications.php:432
+msgid "Groups with this application"
+msgstr "Kelompok dengan aplikasi ini"
+
+#: ../web/modules/UserDB/sql_external.php:207
+msgid "Hash method"
+msgstr "Metode hash"
+
+#: ../web/classes/Preferences.class.php:314
+msgid "Heading title"
+msgstr "Judul kepala"
+
+#: ../web/classes/Preferences.class.php:278
+msgid "High"
+msgstr "Tinggi"
+
+#: ../web/classes/Preferences.class.php:278
+msgid "Highest"
+msgstr "Tertinggi"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:291
+#: ../web/admin/classes/Configuration_mode_internal.class.php:99
+#: ../web/admin/classes/Configuration_mode_ad.class.php:301
+msgid "Home Directory"
+msgstr "Directory asal"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:373
+#: ../web/admin/classes/Configuration_mode_ad.class.php:368
+msgid "Home Directory:"
+msgstr "Directory asal:"
+
+#: ../web/classes/Preferences.class.php:219
+msgid "Host"
+msgstr "Host"
+
+#: ../web/admin/configuration-sumup.php:61
+msgid "Host: "
+msgstr "Host: "
+
+#: ../web/admin/reporting.php:133
+msgid "Hour"
+msgstr "Jam"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:95
+msgid "I want to create my own users"
+msgstr "Saya ingin membuat user sendiri"
+
+#: ../web/admin/tasks.php:184 ../web/admin/servers.php:950
+#: ../web/admin/applications.php:404
+msgid "ID"
+msgstr "ID"
+
+#: ../web/admin/applications_static.php:520
+msgid "Icon"
+msgstr "Ikon"
+
+# terjemahan kasar, perbaikin lagi
+#: ../web/modules/AuthMethod/Token.php:95
+msgid ""
+"If a token argument is sent to startsession, the system tries to get an user "
+"login by requesting the token validation url.<br /><br />Put here the url to "
+"request if a token argument is sent to <i>startsession</i> instead of login/"
+"password.<br /><br />The special string <b>%TOKEN%</b> needs to be set "
+"because it's replaced by the token argument when the URL is requested."
+msgstr ""
+"Jika argumen token dikirimkan ke startsession, sistem akan mencoba untuk "
+"mendapatkan user login dengan meminta validsi token url.<br /><br />Letakkan "
+"url disini untuk meminta jika argumen token dikirimkan ke "
+"<i>startsession</i> daripapda login/password.<br /><br />String spesial <b>%"
+"TOKEN%</b> dibutuhkan untuk diset sebab diganti oleh argumen token ketika "
+"ada permintaan URL."
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:315
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:380
+msgid "In guest mode"
+msgstr "Pada mode tamu"
+
+#: ../web/admin/includes/page_template.php:28
+msgid "Index"
+msgstr "Indeks"
+
+#: ../web/admin/sessions.php:118
+msgid "Information"
+msgstr "Informasi"
+
+#: ../web/admin/users.php:434 ../web/admin/servers.php:996
+msgid "Informations about this session"
+msgstr "Informasi tentang sesi ini"
+
+#: ../web/admin/classes/Preferences_admin.class.php:105
+msgid "Initialization failed"
+msgstr "Inisialisasi gagal"
+
+#: ../web/classes/Session.class.php:125
+msgid "Initializing"
+msgstr "Inisialisasi"
+
+#: ../web/admin/tasks.php:236 ../web/admin/servers.php:836
+msgid "Install"
+msgstr "Install"
+
+#: ../web/admin/servers.php:808
+msgid "Install an application"
+msgstr "Install sebuah aplikasi"
+
+#: ../web/admin/tasks.php:226
+msgid "Install an application from a package name"
+msgstr "Install sebuah aplikasi dari nama paket"
+
+#: ../web/admin/servers.php:813
+msgid "Install from a package name"
+msgstr "Install dari nama paket"
+
+#: ../web/admin/servers.php:915 ../web/admin/applications.php:392
+msgid "Install on this server"
+msgstr "Install pada server ini"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:26
+msgid "Internal"
+msgstr "Internal"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:79
+msgid "Internal Database Profiles"
+msgstr "Profile database internal"
+
+#: ../web/plugins/FS/dav.php:78
+msgid "Internal WebDAV"
+msgstr "WebDAV internal"
+
+#: ../web/startsession.php:363 ../web/startsession.php:373
+msgid "Internal error"
+msgstr "Error internal"
+
+#: ../web/classes/SessionReportItem.class.php:157
+msgid "Internal error: failed to initialize session"
+msgstr "Error internal: inisialisasi sesi gagal"
+
+#: ../web/classes/SessionReportItem.class.php:158
+msgid "Internal error: failed to suspend session"
+msgstr "Error internal: gagal mensuspen sesi"
+
+#: ../web/classes/SessionReportItem.class.php:156
+msgid "Internal error: wrong session status"
+msgstr "Error internal: status sesi salah"
+
+#: ../web/webservices/session_invite.php:93
+msgid "Invitation"
+msgstr "Undangan"
+
+#: ../web/events/SessionAddInvite.class.php:26
+msgid "Invitation sent"
+msgstr "Undangan terkirim"
+
+#: ../web/classes/Preferences.class.php:305
+msgid "Invite into the session"
+msgstr "Mengundang ke dalam sesi"
+
+#: ../web/admin/tasks.php:122
+msgid "Job id"
+msgstr "Id pekerjaan"
+
+#: ../web/admin/sessions.php:165
+msgid "Join this application"
+msgstr "Bergabung di aplikasi ini"
+
+#: ../web/admin/sessions.php:184
+msgid "Join this session"
+msgstr "Bergabung di sesi ini"
+
+#: ../web/classes/SessionReportItem.class.php:161
+msgid "KMA expirated"
+msgstr "KMA berakhir"
+
+#: ../web/admin/sessions.php:253 ../web/admin/sessions.php:266
+msgid "Kill"
+msgstr "Matikan"
+
+#: ../web/admin/sessions.php:188 ../web/admin/sessions.php:192
+msgid "Kill this session"
+msgstr "Matikan sesi ini"
+
+#: ../web/classes/SessionReportItem.class.php:155
+msgid "Killed by administrator"
+msgstr "Dimatikan oleh administrator"
+
+#: ../web/modules/UserGroupDB/ldap_memberof.php:182
+msgid "LDAP using memberOf"
+msgstr "LDAP menggunakan memberOf"
+
+#: ../web/modules/UserGroupDB/ldap_posix.php:139
+msgid "LDAP using posix group"
+msgstr "LDAP menggunakan kelompok posix"
+
+#: ../web/index.php:345
+msgid "Language"
+msgstr "Bahasa"
+
+#: ../web/admin/configuration-sumup.php:45
+msgid "Last save"
+msgstr "Penyimpanan terakhir"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "Launch an application when the desktop is starting"
+msgstr "Menjalankan aplikasi saat desktop dimulai"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "Launch an application with extra arguments"
+msgstr "Menjalankan aplikasi dengan argumen ekstra"
+
+#: ../web/classes/Preferences.class.php:300
+msgid "Launch forced application with a desktop"
+msgstr "Menjalankan paksa aplikasi dengan desktop"
+
+#: ../web/classes/Preferences.class.php:329
+msgid "Launch session in a popup"
+msgstr "Menjalankan sesi pada popup"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:27
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:222
+#: ../web/modules/UserDB/ldap.php:309
+msgid "Lightweight Directory Access Protocol (LDAP)"
+msgstr "Lightweight Directory Access Protocol (LDAP)"
+
+#: ../web/admin/appsgroup.php:346
+msgid "List of applications in this group"
+msgstr "Daftar aplikasi pada grup ini"
+
+#: ../web/admin/appsgroup.php:433 ../web/admin/usersgroup.php:856
+msgid "List of publications for this group"
+msgstr "Daftar publikasi untuk grup ini"
+
+#: ../web/admin/sumup.php:177
+msgid "List of servers"
+msgstr "Daftar server"
+
+#: ../web/admin/tasks.php:180
+msgid "List of tasks"
+msgstr "Daftar tugas"
+
+#: ../web/admin/sumup.php:52
+msgid "List of users"
+msgstr "Daftar pengguna"
+
+#: ../web/admin/usersgroup.php:810
+msgid "List of users in this group"
+msgstr "Daftar pengguna di grup ini"
+
+#: ../web/classes/Preferences.class.php:262
+msgid "Load Balancing policy"
+msgstr "Kebijakan beban kerja"
+
+#: ../web/index.php:127
+msgid "Loading"
+msgstr "Loading"
+
+#: ../web/classes/Preferences.class.php:215 ../web/plugins/FS/local.php:35
+msgid "Local"
+msgstr "Lokal"
+
+#: ../web/admin/users.php:293
+msgid "Locale"
+msgstr "Lokal"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:249
+msgid "Locale field"
+msgstr "Field lokal"
+
+#: ../web/index.php:131 ../web/admin/login.php:107 ../web/admin/login.php:147
+msgid "Log in"
+msgstr "Login"
+
+#: ../web/index.php:244 ../web/admin/users.php:163 ../web/admin/users.php:288
+#: ../web/admin/classes/UsersList.class.php:78 ../web/admin/login.php:131
+msgid "Login"
+msgstr "Login"
+
+#: ../web/modules/AuthMethod/Password.php:47
+msgid "Login/Password authentication"
+msgstr "Otentekasi Login/Password"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:328
+msgid "Login: "
+msgstr "Login: "
+
+#: ../web/classes/Preferences.class.php:317
+msgid "Logo URL"
+msgstr "Logo URL"
+
+#: ../web/admin/includes/page_template.php:65
+msgid "Logout"
+msgstr "Logout"
+
+#: ../web/admin/logs.php:131 ../web/admin/logs.php:205
+#: ../web/admin/logs.php:209 ../web/admin/configuration-sumup.php:73
+#: ../web/admin/includes/page_template.php:211
+msgid "Logs"
+msgstr "Logs"
+
+#: ../web/admin/servers.php:345 ../web/admin/servers.php:711
+msgid "MB"
+msgstr "MB"
+
+#: ../web/modules/UserDB/sql_external.php:208
+msgid "MD5"
+msgstr "MD5"
+
+#: ../web/classes/Preferences.class.php:466
+msgid "Mail addresses to send alerts to"
+msgstr "Alamat email untuk dikirim alarm"
+
+#: ../web/classes/Preferences.class.php:214
+msgid "Mail server type"
+msgstr "Tipe mail server"
+
+#: ../web/admin/appsgroup.php:168 ../web/admin/usersgroup.php:387
+#: ../web/admin/applications_static.php:142 ../web/admin/users.php:180
+#: ../web/admin/servers.php:362 ../web/admin/applications.php:155
+msgid "Manage"
+msgstr "Manage"
+
+#: ../web/admin/appsgroup.php:185 ../web/admin/usersgroup.php:408
+#: ../web/admin/wizard.php:211 ../web/admin/wizard.php:230
+#: ../web/admin/wizard.php:355 ../web/admin/wizard.php:374
+#: ../web/admin/applications_static.php:163 ../web/admin/users.php:199
+#: ../web/admin/sessions.php:262 ../web/admin/servers.php:391
+#: ../web/admin/servers.php:496
+msgid "Mark all"
+msgstr "Tandai semua"
+
+#: ../web/modules/UserDB/sql_external.php:205
+#: ../web/modules/UserDB/ldap.php:269
+#: ../web/modules/UserGroupDB/sql_external.php:115
+msgid "Matching"
+msgstr "Menyesuaikan"
+
+#: ../web/index.php:35
+msgid "Maximum"
+msgstr "Maximum"
+
+#: ../web/classes/Preferences.class.php:167
+msgid "Maximum items per page"
+msgstr "Maximum item per halaman"
+
+#: ../web/classes/Preferences.class.php:278
+msgid "Medium"
+msgstr "Medium"
+
+#: ../web/admin/applications_static.php:236
+msgid "MimeTypes"
+msgstr "MimeTypes"
+
+#: ../web/admin/applications_static.php:474
+#: ../web/admin/applications_static.php:538 ../web/admin/news.php:126
+#: ../web/admin/news.php:135
+msgid "Modify"
+msgstr "Mengubah"
+
+#: ../web/admin/actions.php:55 ../web/admin/actions.php:105
+#: ../web/admin/actions.php:260 ../web/admin/actions.php:287
+#: ../web/admin/applications_static.php:36 ../web/admin/servers.php:604
+#: ../web/admin/applications.php:35 ../web/modules/ApplicationDB.php:32
+#: ../web/classes/Application_weblink.class.php:38
+#: ../web/classes/Server.class.php:727
+#: ../web/classes/abstract/Abstract_Server.class.php:202
+msgid "Module ApplicationDB must be enabled"
+msgstr "Module ApplicationDB harus diaktifkan"
+
+#: ../web/index.php:64 ../web/admin/users.php:35 ../web/admin/sumup.php:39
+#: ../web/modules/UserGroupDB/ldap_memberof.php:99
+#: ../web/modules/UserDB.php:32
+msgid "Module UserDB must be enabled"
+msgstr "Module UserDB harus diaktifkan"
+
+#: ../web/modules/UserGroupDB.php:32 ../web/modules/UserGroupDB.php:144
+#: ../web/modules/UserGroupDB/ldap_posix.php:32
+#: ../web/modules/UserGroupDB/ldap_posix.php:69
+msgid "Module UserGroupDB must be enabled"
+msgstr "Module UserGroupDB harus diaktifkan"
+
+#: ../web/classes/Preferences.class.php:416
+msgid "Modules activation"
+msgstr "Aktifasi modul"
+
+#: ../web/admin/classes/Preferences_admin.class.php:171
+#: ../web/admin/classes/Preferences_admin.class.php:177
+msgid "Modules configuration not valid"
+msgstr "Konfigurasi modul tidak valid"
+
+#: ../web/admin/servers.php:310 ../web/admin/servers.php:694
+#: ../web/admin/servers.php:701
+msgid "Monitoring"
+msgstr "Monitoring"
+
+#: ../web/modules/UserDB/sql.php:219 ../web/modules/ApplicationDB/sql.php:175
+#: ../web/modules/UserGroupDB/sql.php:144
+msgid "MySQL"
+msgstr "MySQL"
+
+#: ../web/classes/Preferences.class.php:201
+msgid "MySQL configuration"
+msgstr "Konfigurasi MySQL"
+
+#: ../web/modules/UserDB/sql_external.php:230
+#: ../web/modules/UserGroupDB/sql_external.php:137
+msgid "MySQL external"
+msgstr "Eksternal MySQL"
+
+#. if ($is_rw)
+#. echo '<th class="unsortable"></th>';
+#: ../web/admin/appsgroup.php:147 ../web/admin/appsgroup.php:206
+#: ../web/admin/usersgroup.php:358 ../web/admin/usersgroup.php:466
+#: ../web/admin/wizard.php:261 ../web/admin/wizard.php:410
+#: ../web/admin/applications_static.php:111
+#: ../web/admin/classes/UsersGroupsList.class.php:76
+#: ../web/admin/sharedfolders.php:165 ../web/admin/applications.php:124
+msgid "Name"
+msgstr "Nama"
+
+#. fqdn_private_address : array('dns' => ip);
+#: ../web/classes/Preferences.class.php:238
+msgid "Name/IP Address association (name <-> ip)"
+msgstr "Asosiasi Nama/Alamat IP (nama <-> ip)"
+
+#: ../web/admin/wizard.php:482 ../web/admin/wizard.php:528
+msgid "Name:"
+msgstr "Nama:"
+
+#: ../web/plugins/FS/nfs.php:50
+msgid "Network File System (NFS)"
+msgstr "Network File System (NFS)"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "Never"
+msgstr "Tidak pernah"
+
+#: ../web/classes/SessionReportItem.class.php:162
+msgid "Never connected to SSH server"
+msgstr "Tidak pernah terkoneksi ke server SSH"
+
+#: ../web/admin/users.php:346 ../web/admin/password.php:43
+msgid "New password"
+msgstr "Password baru"
+
+#: ../web/admin/news.php:59 ../web/admin/includes/page_template.php:225
+msgid "News"
+msgstr "Berita"
+
+#: ../web/admin/actions.php:344
+msgid "News successfully added"
+msgstr "Berita berhasil ditambahkan"
+
+#: ../web/admin/actions.php:353
+msgid "News successfully deleted"
+msgstr "Berita berhasil dihapus"
+
+#: ../web/admin/news.php:39
+msgid "News successfully modified"
+msgstr "Berita berhasil diubah"
+
+#: ../web/admin/wizard.php:237 ../web/admin/wizard.php:257
+#: ../web/admin/wizard.php:278 ../web/admin/wizard.php:317
+#: ../web/admin/wizard.php:387 ../web/admin/wizard.php:406
+#: ../web/admin/wizard.php:427
+msgid "Next"
+msgstr "Selanjutnya"
+
+# tidka atau bukan tergantung dari kalimat yang menyertainya
+#: ../web/index.php:482 ../web/index.php:496 ../web/index.php:510
+#: ../web/index.php:524 ../web/index.php:543 ../web/admin/usersgroup.php:479
+#: ../web/admin/sumup.php:90 ../web/admin/sumup.php:115
+#: ../web/modules/UserDB/ldap.php:276
+msgid "No"
+msgstr "Tidak"
+
+#: ../web/admin/password.php:30
+msgid "No action found"
+msgstr "Tidak ditemukan aksi"
+
+#: ../web/admin/sessions.php:276
+msgid "No active session"
+msgstr "Tidak ada sesi aktif"
+
+#: ../web/admin/wizard.php:87
+msgid "No application group selected"
+msgstr "Tidak ada grup aplikasi yang dipilih"
+
+#: ../web/admin/appsgroup.php:141
+msgid "No application groups available"
+msgstr "Tidak tersedia grup aplikasi"
+
+#: ../web/admin/sessions.php:139
+msgid "No application running"
+msgstr "Tidak ada aplikasi yang berjalan"
+
+#: ../web/admin/wizard.php:95
+msgid "No application selected"
+msgstr "Tidak ada aplikasi yang dipilih"
+
+#: ../web/admin/wizard.php:159 ../web/admin/wizard.php:308
+#: ../web/admin/applications_static.php:102 ../web/admin/applications.php:116
+msgid "No available application"
+msgstr "Tidak ada aplikasi yang tersedia"
+
+#: ../web/startsession.php:210
+msgid "No available filesystem"
+msgstr "Tidak ada filesystem yang tersedia"
+
+#: ../web/index.php:98 ../web/index.php:103 ../web/startsession.php:166
+msgid "No available server"
+msgstr "Tidak ada server yang tersedia"
+
+#: ../web/startsession.php:204
+msgid "No available session"
+msgstr "Tidak ada sesi yang tersedia"
+
+#: ../web/index.php:77 ../web/admin/wizard.php:157 ../web/admin/users.php:157
+msgid "No available user"
+msgstr "Tidak ada user yang tersdia"
+
+#: ../web/admin/usersgroup.php:344
+msgid "No available user group"
+msgstr "Tidak ada user group"
+
+#: ../web/events/callbacks/SessionStart/Mail.class.php:56
+msgid "No error given"
+msgstr "Tidak ada pesan error"
+
+#: ../web/admin/wizard.php:63 ../web/admin/wizard.php:109
+msgid "No group name"
+msgstr "Tidak ada nama group"
+
+#: ../web/admin/publications.php:85
+msgid "No publication"
+msgstr "Tidak ada publikasi"
+
+#: ../web/admin/sumup.php:181 ../web/admin/sumup.php:185
+msgid "No server available"
+msgstr "Tidak ada server yang tersedia"
+
+#: ../web/admin/servers.php:517
+msgid "No unregistered server"
+msgstr "Tidak ada server yang tidak diregistrasi"
+
+#: ../web/admin/wizard.php:39
+msgid "No user group selected"
+msgstr "Tidak ada user group yang dipilih"
+
+#: ../web/admin/wizard.php:49
+msgid "No user selected"
+msgstr "Tidak ada user yang dipilih"
+
+#: ../web/admin/applications_static.php:278
+msgid "None"
+msgstr "Tidak ada - kosong"
+
+#: ../web/classes/SessionReportItem.class.php:154
+msgid "Normally ended"
+msgstr "Berakhir secara normal"
+
+#: ../web/admin/users.php:427 ../web/admin/sessions.php:128
+#: ../web/admin/servers.php:989
+msgid "Not started yet"
+msgstr "Belum dimulai"
+
+#: ../web/admin/servers.php:733
+msgid "Number of available sessions on this server"
+msgstr "Jumlah sesi yang tersedia di server ini"
+
+#: ../web/admin/reporting.php:279 ../web/admin/reporting.php:334
+msgid "Number of sessions"
+msgstr "Jumlah sesi"
+
+#: ../web/admin/configuration-profile.php:235
+msgid "OK"
+msgstr "OK"
+
+#: ../web/events/callbacks/ServerStatusChanged/Mail.class.php:46
+#, php-format
+msgid "OVD Alert: %s is offline"
+msgstr "Alarm OVD: %s is offline"
+
+#: ../web/events/callbacks/SqlFailure/Mail.class.php:46
+#, php-format
+msgid "OVD Alert: MySQL %s is offline"
+msgstr "Alarm OVD: MySQL %s is offline"
+
+#: ../web/events/callbacks/ServerStatusChanged/Mail.class.php:48
+#, php-format
+msgid "OVD End Alert: %s is up again"
+msgstr "Akhir Alarm OVD: %s is up again"
+
+#: ../web/events/callbacks/SqlFailure/Mail.class.php:49
+#, php-format
+msgid "OVD End Alert: MySQL %s is up again"
+msgstr "Akhir Alarm OVD: MySQL %s is up again"
+
+#: ../web/events/callbacks/SessionStart/Mail.class.php:50
+#, php-format
+msgid "OVD Session alert: %s (uid %s) couldn't log in"
+msgstr "Alarm sesi OVD: %s (uid %s) tidak dapat login"
+
+#: ../web/admin/sessions.php:164
+msgid "Observe this application"
+msgstr "Perhatikan aplikasi ini"
+
+#: ../web/admin/sessions.php:183
+msgid "Observe this session"
+msgstr "Perhatikan sesi ini"
+
+#: ../web/classes/Server.class.php:346
+msgid "Offline"
+msgstr "Offline"
+
+#: ../web/classes/Preferences.class.php:466
+msgid "On system alerts, mails will be sent to these addresses"
+msgstr "Saat alarm sistem, email akan dikirmkan ke alamat tersebut"
+
+#: ../web/classes/Server.class.php:344
+msgid "Online"
+msgstr "Online"
+
+#: ../web/admin/classes/UsersList.class.php:124
+#, php-format
+msgid "Only <strong>%d result</strong> displayed but there are more."
+msgid_plural "Only <strong>%d results</strong> displayed but there are more."
+msgstr[0] "Hanya <strong>%d hasil</strong> yang ditampilkan, ada lebih banyak."
+
+#: ../web/admin/reporting.php:486 ../web/admin/reporting.php:512
+msgid "Ordinate: number of sessions"
+msgstr "Ordinat: jumlah sesi"
+
+#: ../web/admin/reporting.php:531
+msgid "Ordinate: usage of CPU in percent"
+msgstr "Ordinate: penggunaan CPU dalam persen"
+
+#: ../web/admin/reporting.php:544
+msgid "Ordinate: usage of RAM in percent"
+msgstr "Ordinate: penggunaan of RAM dalam persen"
+
+#: ../web/admin/applications.php:295
+msgid "Package"
+msgstr "Paket"
+
+#: ../web/admin/classes/UsersList.class.php:122
+msgid "Partial content:"
+msgstr "Sebagian isi:"
+
+#: ../web/index.php:270 ../web/admin/login.php:139
+msgid "Password"
+msgstr "Password"
+
+#: ../web/admin/actions.php:363
+msgid "Password is empty"
+msgstr "Password kosong"
+
+#: ../web/admin/actions.php:375
+msgid "Password not changed"
+msgstr "Password tidak berubah"
+
+#: ../web/admin/actions.php:371
+msgid "Password successfully changed"
+msgstr "Password berhasil diubah"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:330
+msgid "Password: "
+msgstr "Password: "
+
+#: ../web/admin/actions.php:366
+msgid "Passwords are not identical"
+msgstr "Password tidak identik"
+
+#: ../web/index.php:478
+msgid "Persistent session"
+msgstr "Persistent sesi"
+
+#: ../web/modules/UserDB/sql_external.php:208
+msgid "Plain"
+msgstr "Plain"
+
+#: ../web/admin/classes/Preferences_admin.class.php:88
+msgid "Please install CURL support for PHP"
+msgstr "Silakan instal dukungan CURL untuk PHP"
+
+#: ../web/index.php:225
+msgid "Please login with your username"
+msgstr "Silahkan login dengan username anda"
+
+#: ../web/index.php:223
+msgid "Please login with your username and password"
+msgstr "Silahkan login dengan username dan password anda"
+
+#: ../web/admin/classes/UsersList.class.php:125
+msgid "Please restrict your search field."
+msgstr "Batasi kolom pencarian anda."
+
+#: ../web/classes/Preferences.class.php:365
+msgid "Plugins activation"
+msgstr "Aktifasi plugin"
+
+#: ../web/classes/Preferences.class.php:367
+msgid "Plugins configuration"
+msgstr "Konfigurasi plugin"
+
+#: ../web/admin/classes/Preferences_admin.class.php:135
+msgid "Plugins configuration not valid"
+msgstr "Konfigurasi plugin tidak valid"
+
+#: ../web/classes/Preferences.class.php:199
+msgid "Policy for administration delegation"
+msgstr "Kebijakan untuk delegasi administrasi"
+
+#: ../web/admin/usersgroup.php:897
+msgid "Policy of this group"
+msgstr "Kebijakan untuk group ini"
+
+#: ../web/classes/Preferences.class.php:221
+msgid "Port"
+msgstr "Port"
+
+#: ../web/classes/Preferences.class.php:268
+msgid "Portal"
+msgstr "Portal"
+
+#: ../web/admin/configuration-partial.php:119
+#: ../web/admin/configuration.php:131
+msgid "Preferences not loaded"
+msgstr "Preferensi tidak dimuat"
+
+#: ../web/admin/configuration-sumup.php:64
+msgid "Prefix: "
+msgstr "Prefix: "
+
+#: ../web/admin/wizard.php:275 ../web/admin/wizard.php:383
+#: ../web/admin/wizard.php:424 ../web/admin/wizard.php:556
+msgid "Previous"
+msgstr "Sebelumnya"
+
+#: ../web/admin/includes/page_template.php:173
+msgid "Profile settings"
+msgstr "Pengaturan profile"
+
+#: ../web/modules/UserDB/ldap.php:267
+msgid "Protocol version"
+msgstr "Versi protokol"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:229
+msgid "Protocol version:"
+msgstr "Versi protokol:"
+
+#: ../web/index.php:578
+msgid "Proxy host"
+msgstr "Proxy host"
+
+#: ../web/index.php:602
+msgid "Proxy password"
+msgstr "Proxy password"
+
+#: ../web/index.php:586
+msgid "Proxy port"
+msgstr "Proxy port"
+
+#: ../web/index.php:567
+msgid "Proxy type"
+msgstr "Proxy type"
+
+#: ../web/index.php:594
+msgid "Proxy username"
+msgstr "Proxy username"
+
+#: ../web/admin/wizard.php:167 ../web/admin/wizard.php:253
+#: ../web/admin/wizard.php:312 ../web/admin/wizard.php:402
+#: ../web/admin/wizard.php:445
+msgid "Publication Wizard"
+msgstr "Tuntunan publikasi"
+
+#: ../web/admin/index.php:114
+msgid "Publication list"
+msgstr "Daftar publikasi"
+
+#: ../web/admin/actions.php:190
+msgid "Publication successfully added"
+msgstr "Publikasi sukses ditambahkan"
+
+#: ../web/admin/actions.php:203
+msgid "Publication successfully deleted"
+msgstr "Publikasi sukses dihapus"
+
+#: ../web/admin/index.php:115 ../web/admin/includes/page_template.php:142
+msgid "Publication wizard"
+msgstr "Tuntunan publikasi"
+
+#: ../web/admin/publications.php:75
+#: ../web/admin/includes/page_template.php:135
+msgid "Publications"
+msgstr "Publikasi"
+
+#: ../web/index.php:434
+msgid "Quality"
+msgstr "Kualitas"
+
+#: ../web/admin/servers.php:345 ../web/admin/servers.php:464
+#: ../web/admin/servers.php:711
+msgid "RAM"
+msgstr "RAM"
+
+#: ../web/admin/reporting.php:383 ../web/admin/servers.php:353
+#: ../web/admin/servers.php:717
+msgid "RAM usage"
+msgstr "Penggunaan RAM"
+
+#: ../web/admin/servers.php:750
+msgid "Redirection name of this server"
+msgstr "Redirection nama server ini"
+
+#: ../web/admin/reporting.php:474
+msgid "Refresh"
+msgstr "Refresh"
+
+#: ../web/admin/servers.php:473 ../web/admin/servers.php:501
+msgid "Register"
+msgstr "Register"
+
+#: ../web/index.php:610
+msgid "Remember proxy"
+msgstr "Ingat proxy"
+
+#: ../web/modules/AuthMethod/RemoteUser.php:46
+msgid "RemoteUser authentication"
+msgstr "Otentikasi RemoteUser"
+
+#: ../web/admin/usersgroup.php:653
+msgid "Remove from default"
+msgstr "Hapus dari default"
+
+#: ../web/admin/servers.php:881 ../web/admin/applications.php:367
+msgid "Remove from this server"
+msgstr "Hapus dari server ini"
+
+#: ../web/classes/Preferences.class.php:246
+msgid "Remove orphan applications when the server is deleted"
+msgstr "Hapus aplikasi yang sendiri ketika server sudah dihapus"
+
+#: ../web/admin/applications.php:318
+msgid "Remove this application"
+msgstr "Hapus aplikasi ini"
+
+#: ../web/admin/sharedfolders.php:174
+msgid "Rename"
+msgstr "Ubah nama"
+
+#: ../web/admin/servers.php:938
+msgid "Replicate on those servers"
+msgstr "Replikasi pada server tersebut"
+
+#: ../web/admin/servers.php:927
+msgid "Replication"
+msgstr "Replikasi"
+
+#: ../web/admin/reporting.php:391 ../web/admin/includes/page_template.php:217
+msgid "Reporting"
+msgstr "Pelaporan"
+
+#: ../web/classes/Session.class.php:129
+msgid "Resuming"
+msgstr "Melanjutkan"
+
+#: ../web/admin/password.php:48
+msgid "Retype password"
+msgstr "Ketik ulang password"
+
+#: ../web/admin/usersgroup.php:721
+msgid "Rules"
+msgstr "Aturan"
+
+#: ../web/admin/usersgroup.php:258
+#, php-format
+msgid "Rules of '%s' successfully modified"
+msgstr "Aturan '%s' berhasil diubah"
+
+#: ../web/admin/sessions.php:136
+msgid "Running applications"
+msgstr "Menjalankan aplikasi"
+
+#: ../web/modules/AuthMethod/RemoteUser.php:62
+msgid "SERVER variable for SSO"
+msgstr "Variabel SERVER untuk SSO"
+
+#: ../web/index.php:135
+msgid "SESSION IS STARTED"
+msgstr "SESI DIMULAI"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:170
+msgid "SESSIONMANAGER_ADMIN_LOGIN is not defined"
+msgstr "SESSIONMANAGER_ADMIN_LOGIN belum didefinisikan"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:173
+msgid "SESSIONMANAGER_ADMIN_PASSWORD is not defined"
+msgstr "SESSIONMANAGER_ADMIN_PASSWORD belum didefinisikan"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:167
+msgid "SESSIONMANAGER_CONFFILE_SERIALIZED is not defined"
+msgstr "SESSIONMANAGER_CONFFILE_SERIALIZED belum didefinisikan"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:182
+msgid "SESSIONMANAGER_CONFFILE_SERIALIZED is not writable"
+msgstr "SESSIONMANAGER_CONFFILE_SERIALIZED tidak dapat ditulis"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:164
+msgid "SESSIONMANAGER_LOGS is not defined"
+msgstr "SESSIONMANAGER_LOGS belum didefinisikan"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:179
+msgid "SESSIONMANAGER_LOGS is not writable"
+msgstr "SESSIONMANAGER_LOGS tidak dapat ditulis"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:161
+msgid "SESSIONMANAGER_SPOOL is not defined"
+msgstr "SESSIONMANAGER_SPOOL belum didefinisikan"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:176
+msgid "SESSIONMANAGER_SPOOL is not writable"
+msgstr "SESSIONMANAGER_SPOOL tidak dapat ditulis"
+
+#: ../web/classes/Preferences.class.php:231
+msgid "SMTP password"
+msgstr "Password SMTP"
+
+#: ../web/classes/Preferences.class.php:215
+msgid "SMTP server"
+msgstr "Server SMTP"
+
+#: ../web/classes/Preferences.class.php:229
+msgid "SMTP username"
+msgstr "Username SMTP"
+
+#: ../web/admin/classes/Preferences_admin.class.php:99
+msgid "SQL configuration not valid"
+msgstr "Konfigurasi SQL tidak valid"
+
+#: ../web/admin/classes/Preferences_admin.class.php:93
+msgid "SQL configuration not valid(2)"
+msgstr "Konfigurasi SQL tidak valid(2)"
+
+#: ../web/classes/Preferences.class.php:323
+msgid "SSH/ping applet test"
+msgstr "SSH/ping applet test"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:270
+msgid "Same as Users, "
+msgstr "Same as Users, "
+
+#: ../web/admin/configuration-partial.php:112
+#: ../web/admin/includes/functions.inc.php:282
+#: ../web/admin/configuration-profile.php:226
+#: ../web/admin/configuration.php:109
+msgid "Save"
+msgstr "Simpan"
+
+#: ../web/admin/users.php:365
+msgid "Save the modifications"
+msgstr "Simpan hasil modifikasi"
+
+#: ../web/admin/configuration-profile.php:220
+msgid "Saved successfully"
+msgstr "Berhasil disimpan"
+
+#: ../web/admin/classes/UsersGroupsList.class.php:70
+#: ../web/admin/classes/UsersList.class.php:72
+#: ../web/admin/classes/UsersList.class.php:115
+msgid "Search"
+msgstr "Pencarian"
+
+#: ../web/admin/classes/UsersList.class.php:70
+msgid "Search for user pattern: "
+msgstr "Pencarian user dengan pola:"
+
+#: ../web/admin/classes/UsersGroupsList.class.php:68
+msgid "Search for users groups pattern: "
+msgstr "Pencarian user grup dengan pola:"
+
+#: ../web/admin/classes/UsersGroupsList.class.php:72
+#: ../web/admin/classes/UsersList.class.php:74
+msgid "Search in: "
+msgstr "Pencarian di:"
+
+#: ../web/classes/Preferences.class.php:157
+msgid "Select debug options you want to enable."
+msgstr "Pilih opsi debug yang akan di aktifkan."
+
+#: ../web/events/callbacks/SqlFailure/Mail.class.php:59
+#: ../web/events/callbacks/ServerStatusChanged/Mail.class.php:57
+msgid "Send a mail"
+msgstr "Krim surat"
+
+#: ../web/events/callbacks/SessionStart/Mail.class.php:65
+msgid "Send a mail on login problem"
+msgstr "Kirim surat jika ada masalah login"
+
+#: ../web/index.php:389 ../web/admin/reporting.php:501
+#: ../web/admin/sessions.php:233 ../web/admin/tasks.php:187
+msgid "Server"
+msgstr "Server"
+
+#: ../web/admin/servers.php:252
+#, php-format
+msgid "Server '%s' successfully deleted"
+msgstr "Server '%s' berhasil dihapus"
+
+#: ../web/admin/servers.php:83 ../web/admin/servers.php:190
+#: ../web/admin/servers.php:204 ../web/admin/servers.php:218
+#: ../web/admin/servers.php:232
+#, php-format
+msgid "Server '%s' successfully modified"
+msgstr "Server '%s' berhasil dimodifikasi"
+
+#: ../web/admin/servers.php:169
+#, php-format
+msgid "Server '%s' successfully registered"
+msgstr "Server '%s' berhasil didaftarkan"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:227
+#: ../web/admin/classes/Configuration_mode_ad.class.php:241
+msgid "Server Host:"
+msgstr "Server Host:"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:228
+msgid "Server Port:"
+msgstr "Server Port:"
+
+#: ../web/modules/UserDB/sql_external.php:195
+#: ../web/modules/UserDB/activedirectory.php:81
+#: ../web/modules/UserDB/ldap.php:253
+#: ../web/modules/UserGroupDB/sql_external.php:105
+msgid "Server host address"
+msgstr "Alamat server host"
+
+#: ../web/modules/UserDB/ldap.php:255
+msgid "Server port"
+msgstr "Server port"
+
+#: ../web/admin/includes/page_template.php:167
+msgid "Server settings"
+msgstr "Server seting"
+
+#: ../web/events/ServerStatusChanged.class.php:30
+msgid "Server status changed"
+msgstr "Server status berubah"
+
+#: ../web/admin/servers.php:111
+msgid "Server upgrading"
+msgstr "Server upgrading"
+
+#: ../web/admin/sessions.php:122
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:360
+msgid "Server:"
+msgstr "Server:"
+
+#: ../web/admin/index.php:64 ../web/admin/tasks.php:119
+#: ../web/admin/includes/page_template.php:35
+#: ../web/admin/includes/page_template.php:73 ../web/admin/servers.php:297
+msgid "Servers"
+msgstr "Servers"
+
+#: ../web/admin/index.php:69
+msgid "Servers list"
+msgstr "Daftar server"
+
+#: ../web/admin/applications.php:349
+msgid "Servers with this application"
+msgstr "Server dengan aplikasi ini"
+
+#: ../web/admin/sessions.php:232
+msgid "Session"
+msgstr "Sesi"
+
+#: ../web/admin/logs.php:135
+msgid "Session Manager"
+msgstr "Manager Sesi"
+
+#: ../web/admin/reporting.php:312 ../web/admin/reporting.php:348
+msgid "Session end status"
+msgstr "Status akhir sesi"
+
+#: ../web/index.php:323
+msgid "Session mode"
+msgstr "Mode sesi"
+
+#: ../web/classes/Preferences.class.php:294
+msgid "Session owner can share his session"
+msgstr "Pemilik sesi dapat berbagi sesinya"
+
+#: ../web/admin/reporting.php:298
+msgid "Session repartition"
+msgstr "Repartisi sesi"
+
+#: ../web/admin/includes/page_template.php:179
+msgid "Session settings"
+msgstr "Seting sesi"
+
+#: ../web/events/SessionStart.class.php:26
+msgid "Session startup"
+msgstr "Session startup"
+
+#: ../web/events/SessionStatusChanged.class.php:26
+msgid "Session status changed"
+msgstr "Status sesi berubah"
+
+#: ../web/classes/Preferences.class.php:283
+msgid "Session timeout message"
+msgstr "Pesan timeout sesi"
+
+#: ../web/admin/sessions.php:116 ../web/admin/includes/page_template.php:205
+msgid "Sessions"
+msgstr "Sesi"
+
+#: ../web/admin/sessions.php:204
+#, php-format
+msgid "Sessions (total: %s)"
+msgstr "Sesi (total: %s)"
+
+#: ../web/classes/Preferences.class.php:285
+msgid "Sessions are persistent"
+msgstr "Sessions are persistent"
+
+#: ../web/classes/Preferences.class.php:265
+msgid "Sessions settings"
+msgstr "Seting sesi"
+
+#: ../web/admin/servers.php:355 ../web/admin/servers.php:719
+msgid "Sessions usage"
+msgstr "Penggunaan sesi"
+
+#: ../web/modules/UserDB/ldap.php:275
+msgid ""
+"Set this to Yes when you use LDAP profile to connect to an ActiveDirectory "
+"environment instead of using the ActiveDirectory profile"
+msgstr ""
+"Set ke ya ketika menggunakan LDAP profile untuk koneksi ke dan tidak "
+"menggunakan profile ActiveDirectory"
+
+#: ../web/admin/appsgroup.php:310 ../web/admin/usersgroup.php:648
+#: ../web/admin/users.php:313
+msgid "Settings"
+msgstr "Seting"
+
+#: ../web/index.php:492
+msgid "Shareable session"
+msgstr "Shareable session"
+
+#: ../web/admin/usersgroup.php:958 ../web/admin/includes/page_template.php:93
+#: ../web/admin/sharedfolders.php:89
+msgid "Shared folders"
+msgstr "Shared folders"
+
+#: ../web/admin/actions.php:402
+#, php-format
+msgid "SharedFolder '%s' successfully added"
+msgstr "SharedFolder '%s' berhasil ditambahkan"
+
+#: ../web/admin/actions.php:306
+msgid "SharedFolder successfully added"
+msgstr "SharedFolder berhasil ditambahkan"
+
+#: ../web/admin/actions.php:312 ../web/admin/actions.php:414
+msgid "SharedFolder successfully deleted"
+msgstr "SharedFolder berhasil dihapus"
+
+#: ../web/admin/actions.php:324 ../web/admin/actions.php:329
+#: ../web/admin/actions.php:428 ../web/admin/actions.php:442
+msgid "SharedFolder successfully modified"
+msgstr "SharedFolder berhasil diubah"
+
+#: ../web/admin/sharedfolders.php:41
+msgid "SharedFolder successfully renamed"
+msgstr "SharedFolder berhasil diganti nama"
+
+#: ../web/index.php:506 ../web/classes/Preferences.class.php:288
+msgid "Show icons on user desktop"
+msgstr "Tampilkan ikon pada desktop user"
+
+#: ../web/classes/SessionReportItem.class.php:160
+msgid "Shutdown of the Application Server"
+msgstr "Matikan Server Aplikasi"
+
+#: ../web/index.php:411
+msgid "Size"
+msgstr "Ukuran"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:354
+msgid "Specific Organization Unit"
+msgstr "Spesifik Organization Unit"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:256
+#: ../web/admin/classes/Configuration_mode_ad.class.php:280
+msgid "Specific Organization Unit:"
+msgstr "Spesifik Organization Unit:"
+
+#: ../web/events/SqlFailure.class.php:26
+msgid "Sql failure"
+msgstr "Sql gagal"
+
+#: ../web/admin/sessions.php:125
+msgid "Started:"
+msgstr "Mulai:"
+
+#: ../web/admin/usersgroup.php:424
+msgid "Static"
+msgstr "Statik"
+
+#. general div
+#: ../web/admin/applications_static.php:98
+msgid "Static Applications"
+msgstr "Aplikasi Statik"
+
+#: ../web/admin/includes/page_template.php:128
+msgid "Static applications"
+msgstr "Aplikasi statik"
+
+#. echo '<th>'._('Version').'</th>';
+#: ../web/admin/appsgroup.php:149 ../web/admin/appsgroup.php:299
+#: ../web/admin/usersgroup.php:360 ../web/admin/usersgroup.php:636
+#: ../web/admin/index.php:127 ../web/admin/sessions.php:235
+#: ../web/admin/tasks.php:120 ../web/admin/tasks.php:188
+#: ../web/admin/includes/page_template.php:59 ../web/admin/servers.php:308
+#: ../web/admin/servers.php:698 ../web/admin/servers.php:952
+#: ../web/admin/sumup.php:194 ../web/admin/applications.php:406
+msgid "Status"
+msgstr "Status"
+
+#: ../web/admin/sessions.php:132
+msgid "Status:"
+msgstr "Status:"
+
+#: ../web/admin/configuration-profile.php:241
+msgid "Success"
+msgstr "Sukses"
+
+#: ../web/admin/includes/page_template.php:149
+msgid "Sum up"
+msgstr "Sum up"
+
+#: ../web/admin/includes/page_template.php:232
+msgid "Summary"
+msgstr "Ringkasan"
+
+#: ../web/classes/Session.class.php:128
+msgid "Suspended"
+msgstr "Suspended"
+
+#: ../web/classes/Session.class.php:127
+msgid "Suspending"
+msgstr "Suspending"
+
+#: ../web/admin/servers.php:326 ../web/admin/servers.php:398
+#: ../web/admin/servers.php:674 ../web/classes/Preferences.class.php:244
+msgid "Switch to maintenance"
+msgstr "Pindah ke pemeliharaan"
+
+#: ../web/admin/servers.php:322 ../web/admin/servers.php:397
+#: ../web/admin/servers.php:670
+msgid "Switch to production"
+msgstr "Pindah ke produksi"
+
+#: ../web/admin/includes/page_template.php:161
+msgid "System settings"
+msgstr "Sistem seting"
+
+#: ../web/modules/UserDB/sql_external.php:203
+msgid "Table of users"
+msgstr "Tabel pengguna"
+
+#: ../web/classes/Preferences.class.php:210
+msgid "Table prefix"
+msgstr "Tabel prefix"
+
+#: ../web/admin/actions.php:71 ../web/admin/servers.php:101
+#: ../web/admin/servers.php:154
+msgid "Task successfully added"
+msgstr "Task sukses ditambahkan"
+
+#: ../web/admin/actions.php:73 ../web/admin/tasks.php:89
+#: ../web/admin/servers.php:148
+msgid "Task successfully deleted"
+msgstr "Task sukses dihapus"
+
+#: ../web/admin/tasks.php:176 ../web/admin/includes/page_template.php:85
+msgid "Tasks"
+msgstr "Task"
+
+#: ../web/admin/tasks.php:113
+msgid "Tasks managment"
+msgstr "Manajemen task"
+
+#: ../web/admin/configuration-profile.php:227
+msgid "Test"
+msgstr "Tes"
+
+#: ../web/modules/UserDB/activedirectory.php:81
+msgid "The address of your Active Directory server."
+msgstr "Alamat server Active Directory."
+
+#: ../web/modules/UserDB/ldap.php:253
+msgid "The address of your LDAP server."
+msgstr "Alamat server LDAP."
+
+#: ../web/modules/UserDB/sql_external.php:195
+#: ../web/modules/UserGroupDB/sql_external.php:105
+msgid "The address of your MySQL server."
+msgstr "Alamat server MySQL."
+
+#: ../web/classes/Preferences.class.php:202
+msgid ""
+"The address of your database host. This database contains adminstration "
+"console data. Example: localhost or db.mycorporate.com."
+msgstr ""
+"Alamat host database Anda. Database ini berisi konsol administrasi data. "
+"Contoh: localhost atau db.mycorporate.com."
+
+#: ../web/classes/Preferences.class.php:202
+msgid ""
+"The address of your database host. This database contains adminstrations "
+"console data. Example: localhost or db.mycorporate.com."
+msgstr ""
+"Alamat host database Anda. Database ini berisi konsol administrasi data. "
+"Contoh: localhost atau db.mycorporate.com."
+
+#: ../web/events/callbacks/SessionStart/Mail.class.php:54
+msgid "The following error happened:\n"
+msgstr "Terjadi kesalahan berikut:\n"
+
+#: ../web/modules/AuthMethod/Token.php:96
+msgid "The id of the XML node which contains the user login"
+msgstr "Id dari XML node yang berisi user login"
+
+#: ../web/classes/Preferences.class.php:167
+msgid "The maximum number of items that can be displayed."
+msgstr "Nilai maksimum item yang dapat ditampilkan."
+
+#: ../web/modules/AuthMethod/Token.php:97
+msgid ""
+"The name of the XML attribute which contains the user login (in the node "
+"\"user_node_name\")"
+msgstr "Nama atribut XML yang berisi user login (dalam node \"user_nie_name\")"
+
+#: ../web/modules/UserDB/sql_external.php:201
+#: ../web/modules/UserGroupDB/sql_external.php:111
+#: ../web/classes/Preferences.class.php:208
+msgid "The name of the database."
+msgstr "Nama database."
+
+#: ../web/modules/UserDB/ldap.php:255
+msgid "The port number used by your LDAP server."
+msgstr "Nomor port yang digunakan oleh server LDAP."
+
+#: ../web/modules/UserDB/ldap.php:255
+msgid "The port use by your LDAP server."
+msgstr "Port yang digunakan oleh server LDAP."
+
+#: ../web/modules/UserDB/ldap.php:267
+msgid "The protocol version used by your LDAP server."
+msgstr "Versi protocol yang digunakan oleh server LDAP."
+
+#: ../web/includes/functions.inc.d/template.inc.php:52
+msgid "The service is not available, please try again later"
+msgstr "Layanan tidak tersedia, silakan coba lagi nanti"
+
+#: ../web/classes/Preferences.class.php:210
+msgid "The table prefix for the database."
+msgstr "Prefix tabel untuk database."
+
+#: ../web/modules/UserDB/sql_external.php:197
+#: ../web/modules/UserDB/activedirectory.php:85
+#: ../web/modules/UserDB/ldap.php:257
+msgid ""
+"The user login that must be used to access the database (to list users "
+"accounts)."
+msgstr ""
+"User login yang harus digunakan untuk mengakses database (untuk daftar "
+"account user)."
+
+#: ../web/modules/UserGroupDB/sql_external.php:107
+msgid ""
+"The user login that must be used to access the database (to list users "
+"groups accounts)."
+msgstr ""
+"User login yang harus digunakan untuk mengakses database (untuk daftar "
+"account user group)."
+
+#: ../web/classes/Preferences.class.php:204
+msgid "The user name that must be used to access the database."
+msgstr "Nama user yang harus digunakan untuk mengakases database."
+
+#: ../web/modules/UserDB/sql_external.php:199
+#: ../web/modules/UserDB/activedirectory.php:87
+#: ../web/modules/UserDB/ldap.php:259
+#: ../web/modules/UserGroupDB/sql_external.php:109
+msgid ""
+"The user password that must be used to access the database (to list users "
+"accounts)."
+msgstr ""
+"Password user yang harus digunakan untuk mengakases database (untuk daftar "
+"account user)."
+
+#: ../web/classes/Preferences.class.php:206
+msgid "The user password that must be used to access the database."
+msgstr "Password user yang harus digunakan untu mengakses database."
+
+#: ../web/classes/Preferences.class.php:204
+msgid "The username that must be used to access the database."
+msgstr "Username yang harus digunakan untuk mengakses database."
+
+#. the user does not exist
+#: ../web/admin/login.php:38 ../web/admin/login.php:45
+msgid "There was an error with your authentication"
+msgstr "Terjadi error dengan otentikasi anda"
+
+#: ../web/admin/applications.php:318
+msgid "This application is orphan"
+msgstr "Aplikasi ini tanpa induk"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:82
+msgid ""
+"This is the default Profile manager. This profile manager saves all the data "
+"into a the same SQL database as you defined it in the system configuration."
+msgstr ""
+"Ini adalah default Profile manager. Profile meneger ini menyimpan semua data "
+"pada database SQL yang sama seperti didefinisikan dalam sistem konfigurasi."
+
+#: ../web/admin/actions.php:195
+msgid "This publication already exists"
+msgstr "Publikasi sudah ada"
+
+#: ../web/admin/actions.php:208
+msgid "This publication does not exist"
+msgstr "Publikasi belum ada"
+
+#: ../web/admin/usersgroup.php:481
+msgid "Time between two updates:"
+msgstr "Waktu antara uda update:"
+
+#: ../web/index.php:456
+msgid "Timeout"
+msgstr "Timeout"
+
+#: ../web/admin/news.php:63
+msgid "Title"
+msgstr "Judul"
+
+#: ../web/classes/Session.class.php:122
+msgid "To create"
+msgstr "Membuat"
+
+#: ../web/classes/Session.class.php:130
+msgid "To destroy"
+msgstr "Menghancurkan"
+
+#: ../web/classes/Session.class.php:124
+msgid "To start"
+msgstr "Memulai"
+
+#: ../web/modules/AuthMethod/Token.php:97
+msgid "Token XML login attribute name"
+msgstr "Token XML login attribute name"
+
+#: ../web/modules/AuthMethod/Token.php:96
+msgid "Token XML user node name"
+msgstr "Token XML user node name"
+
+#: ../web/modules/AuthMethod/Token.php:69
+msgid "Token authentication"
+msgstr "Otentikasi token"
+
+#: ../web/modules/AuthMethod/Token.php:95
+msgid "Token validation URL"
+msgstr "Validasi URL token"
+
+#. echo '<th>'._('Package').'</th>';
+#: ../web/admin/usersgroup.php:361 ../web/admin/applications_static.php:113
+#: ../web/admin/applications_static.php:435 ../web/admin/tasks.php:118
+#: ../web/admin/tasks.php:186 ../web/admin/servers.php:306
+#: ../web/admin/servers.php:435 ../web/admin/servers.php:698
+#: ../web/admin/servers.php:951 ../web/admin/sumup.php:192
+#: ../web/admin/applications.php:126 ../web/admin/applications.php:296
+#: ../web/admin/applications.php:405
+msgid "Type"
+msgstr "Tipe"
+
+#: ../web/admin/applications_static.php:222
+#: ../web/admin/applications_static.php:440
+#: ../web/admin/applications_static.php:505
+msgid "URL"
+msgstr "URL"
+
+#: ../web/admin/users.php:289 ../web/admin/users.php:339
+msgid "Uid"
+msgstr "Uid"
+
+#: ../web/admin/actions.php:421
+msgid "Unable to create this shared folder access"
+msgstr "Tidak dapat membuat akses folder bersama"
+
+#: ../web/admin/servers.php:244
+msgid "Unable to delete a server when there are active sessions on it!"
+msgstr ""
+"Tidak dapat menghapus server ketika ada sesi aktif pada server tersebut!"
+
+#: ../web/admin/actions.php:205
+msgid "Unable to delete the publication"
+msgstr "Tidak dapat menghapus publikasi"
+
+#: ../web/admin/actions.php:351
+msgid "Unable to delete this news"
+msgstr "Tidak dapat menghapus berita"
+
+#: ../web/admin/actions.php:410
+msgid "Unable to delete this shared folder"
+msgstr "Tidak dapat menghapus folder berasama"
+
+#: ../web/admin/actions.php:436
+msgid "Unable to delete this shared folder access"
+msgstr "Tidak dapat menghapus akses folder bersama"
+
+#: ../web/admin/wizard.php:161
+msgid "Unable to display users list: too many users"
+msgstr "Tidak dapat menampilkan daftar user: terlalu banyak user"
+
+#: ../web/admin/actions.php:192
+msgid "Unable to save the publication"
+msgstr "Tidak dapat menyimpan publikasi"
+
+#: ../web/admin/login.php:57
+msgid "Unauthorized access"
+msgstr "Akses tidak sah"
+
+#: ../web/admin/applications.php:217
+msgid "Unblock"
+msgstr "Tidak diblok"
+
+#: ../web/classes/Server.class.php:340
+msgid "Under maintenance"
+msgstr "Dalam perbaikan"
+
+#: ../web/classes/Server.class.php:350 ../web/classes/Server.class.php:385
+#: ../web/classes/Server.class.php:418
+msgid "Unknown"
+msgstr "Tidak diketahui"
+
+#: ../web/admin/appsgroup.php:185 ../web/admin/usersgroup.php:408
+#: ../web/admin/wizard.php:211 ../web/admin/wizard.php:230
+#: ../web/admin/wizard.php:355 ../web/admin/wizard.php:374
+#: ../web/admin/applications_static.php:164 ../web/admin/users.php:200
+#: ../web/admin/sessions.php:262 ../web/admin/servers.php:392
+#: ../web/admin/servers.php:497
+msgid "Unmark all"
+msgstr "Tidak ditandai semua"
+
+#: ../web/admin/includes/page_template.php:79 ../web/admin/servers.php:425
+msgid "Unregistered servers"
+msgstr "Server tidak terdaftar"
+
+#: ../web/admin/index.php:70
+msgid "Unregistered servers list"
+msgstr "Daftar server yang tidak terdaftar"
+
+#: ../web/admin/actions.php:339
+msgid "Untitled"
+msgstr "Tidak berjudul"
+
+#: ../web/admin/applications_static.php:291
+msgid "Update"
+msgstr "Update"
+
+#: ../web/admin/usersgroup.php:799
+msgid "Update rules"
+msgstr "Update rules"
+
+#: ../web/admin/appsgroup.php:338 ../web/admin/usersgroup.php:693
+msgid "Update the description"
+msgstr "Update deskripsi"
+
+#: ../web/admin/appsgroup.php:330 ../web/admin/usersgroup.php:685
+msgid "Update the name"
+msgstr "Update nama"
+
+#: ../web/admin/usersgroup.php:710
+msgid "Update the schedule"
+msgstr "Update jadwal"
+
+#: ../web/admin/tasks.php:249 ../web/admin/servers.php:843
+msgid "Upgrade"
+msgstr "Upgrade"
+
+#: ../web/admin/tasks.php:239 ../web/admin/servers.php:847
+msgid "Upgrade the internal system and applications"
+msgstr "Upgrade sistem internal dan aplikasi"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:326
+#: ../web/admin/classes/Configuration_mode_ad.class.php:374
+msgid "Use Active Directory Home dir"
+msgstr "Gunakan Active Directory Home dir"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:292
+msgid "Use Active Directory User Groups"
+msgstr "Gunakan Active Directory User Groups"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:320
+#: ../web/admin/classes/Configuration_mode_ad.class.php:372
+msgid "Use Active Directory User profiles as Home directory"
+msgstr "Gunakan Active Directory User profile sebagai Home directory"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:377
+msgid "Use CIFS link using the LDAP field"
+msgstr "Gunakan link CIFS menggunakan field LDAP"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:310
+msgid "Use CIFS link using the LDAP field:"
+msgstr "Gunakan link CIFS menggunakan field LDAP:"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:287
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:370
+#: ../web/admin/classes/Configuration_mode_ad.class.php:297
+#: ../web/admin/classes/Configuration_mode_ad.class.php:365
+msgid "Use Internal User Groups"
+msgstr "Gunakan Internal User Groups"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:296
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:375
+#: ../web/admin/classes/Configuration_mode_internal.class.php:104
+#: ../web/admin/classes/Configuration_mode_ad.class.php:306
+#: ../web/admin/classes/Configuration_mode_ad.class.php:370
+msgid "Use Internal home directory (no server replication)"
+msgstr "Gunakan Internal home directory (tanpa replikasi server)"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:278
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:368
+msgid "Use LDAP User Groups using Posix group"
+msgstr "Gunakan LDAP User Groups menggunakan group Posix"
+
+#: ../web/modules/UserGroupDB/ldap_posix.php:134
+msgid "Use LDAP User Groups using Posix group, Group Branch DN:"
+msgstr "Gunakan LDAP User Groups menggunakan group Posix, Group Branch DN:"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:273
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:366
+msgid "Use LDAP User Groups using the MemberOf field"
+msgstr "Gunakan LDAP User Groups menggunakan field MemberOf"
+
+#: ../web/classes/Preferences.class.php:223
+msgid "Use SSL with SMTP"
+msgstr "Gunakan SSL dengan SMTP"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:123
+msgid "Use a dynamic internal user list"
+msgstr "Gunakan daftar pengguna internal dinamis"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:90
+msgid "Use a static user list (useful for test)"
+msgstr "Gunakan daftar pengguna statis (berguna untuk tes)"
+
+#: ../web/admin/wizard.php:328
+msgid "Use appgroups"
+msgstr "Gunakan appgroups"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:231
+msgid "Use as Active Directory server:"
+msgstr "Gunakan sebegai server Active Directory:"
+
+#: ../web/modules/UserDB/ldap.php:275
+msgid "Use as an Active Directory server?"
+msgstr "Gunakan sebagai server Active Directory?"
+
+#: ../web/index.php:393
+msgid "Use load balancing"
+msgstr "Gunakan load balancing"
+
+#: ../web/index.php:520
+msgid "Use pop-up"
+msgstr "Gunakan pop-up"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:303
+#: ../web/admin/classes/Configuration_mode_internal.class.php:111
+#: ../web/admin/classes/Configuration_mode_ad.class.php:313
+msgid "Use shared folders"
+msgstr "Gunakan folder bersama"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:125
+msgid "Use the static user list"
+msgstr "Gunakan daftar user statis"
+
+#: ../web/admin/wizard.php:185
+msgid "Use usergroups"
+msgstr "Gunakan usergroups"
+
+#: ../web/admin/sessions.php:234
+msgid "User"
+msgstr "User"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:269
+#: ../web/admin/classes/Configuration_mode_ad.class.php:288
+msgid "User Groups"
+msgstr "User Groups"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:364
+#: ../web/admin/classes/Configuration_mode_ad.class.php:361
+msgid "User Groups:"
+msgstr "User Groups:"
+
+#: ../web/admin/modules/UserDB/sql.php:33
+msgid "User already exists"
+msgstr "User sudah ada"
+
+#: ../web/modules/UserDB/activedirectory.php:89
+msgid "User branch DN"
+msgstr "User branch DN"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:241
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:362
+msgid "User branch:"
+msgstr "User branch:"
+
+#: ../web/classes/Preferences.class.php:291
+msgid "User can launch a session with no application"
+msgstr "User dapat menjalankan sesi tanpa aplikasi"
+
+#: ../web/classes/Preferences.class.php:297
+msgid "User can use a console in the session"
+msgstr "User dapat menggunakan console dalam sesi"
+
+#: ../web/admin/usersgroup.php:337
+msgid "User groups"
+msgstr "User group"
+
+#: ../web/admin/usersgroup.php:631
+msgid "User groups management"
+msgstr "Management user groups"
+
+#: ../web/admin/users.php:377
+msgid "User groups with this user"
+msgstr "User group dengan user ini"
+
+#: ../web/admin/index.php:51
+msgid "User list"
+msgstr "Daftar user"
+
+#: ../web/modules/UserDB/sql_external.php:197
+#: ../web/modules/UserDB/ldap.php:257
+#: ../web/modules/UserGroupDB/sql_external.php:107
+msgid "User login"
+msgstr "User login"
+
+#: ../web/admin/password.php:25
+msgid "User not authorize to manage configuration"
+msgstr "User tidak berwenang untuk mengatur konfigurasi"
+
+#: ../web/modules/UserDB/sql_external.php:199
+#: ../web/modules/UserDB/ldap.php:259
+#: ../web/modules/UserGroupDB/sql_external.php:109
+msgid "User password"
+msgstr "User password"
+
+#: ../web/admin/users.php:105
+msgid "User successfully added"
+msgstr "User berhasil ditambahkan"
+
+#: ../web/admin/users.php:115
+msgid "User successfully deleted"
+msgstr "User berhasil dihapus"
+
+#: ../web/admin/users.php:132
+msgid "User successfully modified"
+msgstr "User berhasil diubah"
+
+#: ../web/admin/wizard.php:167
+msgid "User/group selection"
+msgstr "Pilihan user/group"
+
+#: ../web/admin/sessions.php:121
+msgid "User:"
+msgstr "User:"
+
+#: ../web/admin/configuration-sumup.php:62
+msgid "User: "
+msgstr "User: "
+
+#: ../web/admin/usersgroup.php:125 ../web/admin/usersgroup.php:162
+msgid "UserGroup successfully added"
+msgstr "UserGroup berhasil ditambah"
+
+#: ../web/admin/usersgroup.php:181
+msgid "UserGroup successfully deleted"
+msgstr "UserGroup berhasil dihapus"
+
+#: ../web/admin/usersgroup.php:225 ../web/admin/usersgroup.php:284
+#: ../web/admin/usersgroup.php:317
+msgid "UserGroup successfully modified"
+msgstr "UserGroup berhasil diganti"
+
+#: ../web/admin/users.php:150
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:239
+#: ../web/admin/classes/Configuration_mode_internal.class.php:86
+#: ../web/admin/classes/Configuration_mode_ad.class.php:247
+#: ../web/admin/includes/page_template.php:41
+#: ../web/admin/includes/page_template.php:100
+msgid "Users"
+msgstr "Users"
+
+#: ../web/admin/includes/page_template.php:107
+msgid "Users Groups"
+msgstr "User Group"
+
+#: ../web/admin/index.php:46
+msgid "Users and Users groups"
+msgstr "User dan User Group"
+
+#. User
+#: ../web/admin/classes/Configuration_mode_ad.class.php:350
+msgid "Users branch:"
+msgstr "Users branch:"
+
+#: ../web/admin/publications.php:79
+msgid "Users group"
+msgstr "Users group"
+
+#: ../web/admin/modules/UserGroupDB/sql.php:32
+msgid "Users group already exists"
+msgstr "Users group sudah ada"
+
+#: ../web/admin/index.php:53
+msgid "Users groups list"
+msgstr "Daftar user group"
+
+#: ../web/admin/wizard.php:484
+msgid "Users:"
+msgstr "User:"
+
+#. problem, what to do ?
+#: ../web/admin/actions.php:153 ../web/admin/actions.php:157
+#: ../web/admin/actions.php:168 ../web/admin/actions.php:172
+#: ../web/admin/actions.php:243
+#, php-format
+msgid "UsersGroup '%s' successfully modified"
+msgstr "UsersGroup '%s' berhasil diubah"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:325
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:384
+msgid "Using global login/password to authenticate"
+msgstr "Menggunakan global login/password untuk otentikasi"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:320
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:382
+msgid "Using user login/password to authenticate"
+msgstr "Menggunakan user login/password untuk otentikasi"
+
+#: ../web/admin/usersgroup.php:488 ../web/admin/usersgroup.php:730
+msgid "Validation type"
+msgstr "Tipe validasi"
+
+#: ../web/admin/servers.php:698
+msgid "Version"
+msgstr "Versi"
+
+#: ../web/admin/logs.php:139 ../web/admin/logs.php:157
+#: ../web/admin/logs.php:167
+msgid "View full log file online"
+msgstr "Lihat log file penuh secara online"
+
+#: ../web/index.php:133
+msgid "WARNING, START ANYWAY"
+msgstr "PERINGATAN, START SAJA"
+
+#: ../web/admin/servers.php:556
+msgid "Warning: server is broken"
+msgstr "Peringatan: server rusak"
+
+#: ../web/admin/servers.php:554
+msgid "Warning: server is offline"
+msgstr "Peringatan: server offline"
+
+#: ../web/admin/applications_static.php:27
+msgid "Web"
+msgstr "Web"
+
+#: ../web/admin/includes/page_template.php:191
+#: ../web/classes/Preferences.class.php:312
+msgid "Web interface settings"
+msgstr "Pengaturan antarmuka web"
+
+#: ../web/admin/applications_static.php:258
+msgid "Web link configuration"
+msgstr "Konfigurasi web link"
+
+#: ../web/admin/logs.php:156
+msgid "Web log"
+msgstr "Web log"
+
+#: ../web/admin/servers.php:765
+msgid "Web port of this server"
+msgstr "Port web untuk server ini"
+
+#: ../web/classes/Preferences.class.php:329
+msgid ""
+"When set to yes, the session will start in a new browser window, and when "
+"set to no, the session will start in the current browser window"
+msgstr ""
+"Bila diatur ke ya, sesi akan dimulai pada jendela baru browser, dan ketika "
+"diatur ke tidak, sesi akan dimulai pada jendela browser yang ada"
+
+#: ../web/index.php:367
+msgid "Windows keymap"
+msgstr "Windows keymap"
+
+#: ../web/admin/sessions.php:124
+msgid "Windows server:"
+msgstr "Windows server:"
+
+#: ../web/index.php:132
+msgid "YOU ALREADY HAVE AN ACTIVE SESSION"
+msgstr "ANDA SUDAH MEMPUNYAI SESI AKTIF"
+
+#: ../web/index.php:481 ../web/index.php:495 ../web/index.php:509
+#: ../web/index.php:523 ../web/index.php:542 ../web/admin/usersgroup.php:480
+#: ../web/admin/sumup.php:88 ../web/admin/sumup.php:113
+#: ../web/modules/UserDB/ldap.php:276
+msgid "Yes"
+msgstr "Ya"
+
+#: ../web/startsession.php:153
+msgid "You already have a session, please contact your administrator"
+msgstr "Anda telah memiliki sesi, silahkan hubungi administrator anda"
+
+#: ../web/startsession.php:128
+msgid "You already have an active session"
+msgstr "Anda sudah mempunyai sesi aktif"
+
+#: ../web/index.php:227
+#, php-format
+msgid "You are authenticated as %s"
+msgstr "Anda terotentikasi sebagai %s"
+
+#: ../web/admin/includes/functions.inc.php:437
+msgid "You are not allowed to perform this action"
+msgstr "Anda tidak diizinkan untuk melakukan aksi ini"
+
+#: ../web/admin/sharedfolders.php:84
+msgid ""
+"You are not using Internal WebDAV filesystem, \"Shared folders\" are "
+"disabled!"
+msgstr ""
+"Anda tidak menggunakan filesystem WebDAV Internal, \"folder Bersama\" dinon-"
+"aktifkan!"
+
+#: ../web/ajax/login.php:30
+msgid "You are now logged in"
+msgstr "Anda sekarang sudah masuk"
+
+#: ../web/classes/Preferences.class.php:314
+msgid "You can customize the heading title here."
+msgstr "Anda dapat menyesuaikan judul pos di sini."
+
+#: ../web/classes/Preferences.class.php:317
+msgid ""
+"You can customize the logo by entering a new path or replacing the "
+"corresponding image. Use a 90 pixels high image in png or jpeg format. "
+"Example: sessionmanager/media/image/header.png"
+msgstr ""
+"Anda dapat menyesuaikan logo dengan memasukkan sebuah path baru atau "
+"menggantikan gambar yang ada. Gunakan 90 piksel gambar tinggi dalam format "
+"png atau jpeg. Contoh: sessionmanager/media/image/header.png"
+
+#: ../web/startsession.php:169
+msgid "You don't have access to a linux server for now"
+msgstr "Saat ini anda tidak mempunyai akses ke linux server"
+
+#: ../web/startsession.php:316
+msgid "You don't have access to a windows server for now"
+msgstr "Saat ini anda tidak mempunyai akses ke windows server"
+
+#: ../web/admin/appsgroup.php:69
+msgid "You must define a name to your application group"
+msgstr "Anda harus menentukan nama group aplikasi anda"
+
+#: ../web/admin/usersgroup.php:112 ../web/admin/usersgroup.php:134
+msgid "You must define a name to your usergroup"
+msgstr "Anda harus menetapkan nama usergroup anda"
+
+#: ../web/admin/applications_static.php:312
+msgid "You must give a command to your application"
+msgstr "Anda harus memberi perintah pada aplikasi anda"
+
+#: ../web/admin/applications_static.php:308
+msgid "You must give a name to your application"
+msgstr "Anda harus memberi nama pada aplikasi anda"
+
+#: ../web/admin/actions.php:387
+msgid "You must give a name to your shared folder"
+msgstr "Anda harus memberik nama pada folder bersama anda"
+
+#: ../web/admin/servers.php:94
+msgid "You must give a package name."
+msgstr "Anda harus memberi nama paket."
+
+#: ../web/admin/usersgroup.php:143 ../web/admin/usersgroup.php:239
+msgid "You must give a value to each rule of your usergroup"
+msgstr "Anda harus memberi nilai untuk setiap aturan usergroup anda"
+
+#: ../web/webservices/session_invite.php:95
+msgid "You received an invitation from"
+msgstr "Anda menerima undangan dari"
+
+#: ../web/admin/sumup.php:63
+msgid "access to these applications"
+msgstr "akses ke aplikasi"
+
+#: ../web/admin/index.php:146
+msgid "active session"
+msgstr "sesi aktif"
+
+#: ../web/admin/index.php:144
+msgid "active sessions"
+msgstr "sesi aktif"
+
+#: ../web/admin/wizard.php:510
+msgid "and these applications groups"
+msgstr "dan aplikasi group tersebut"
+
+#: ../web/admin/wizard.php:508
+msgid "and this applications group"
+msgstr "dan aplikasi group tersebut"
+
+#: ../web/admin/wizard.php:524
+msgid "and this newly created applications group"
+msgstr "dan aplikasi group yang baru dibuat"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "app with desktop"
+msgstr "app dengan desktop"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "application"
+msgstr "aplikasi"
+
+#: ../web/admin/index.php:176
+msgid "broken server"
+msgstr "server rusak"
+
+#: ../web/admin/index.php:174
+msgid "broken servers"
+msgstr "server rusak"
+
+#: ../web/admin/servers.php:744 ../web/admin/servers.php:759
+#: ../web/admin/servers.php:774
+msgid "change"
+msgstr "ganti"
+
+#: ../web/admin/servers.php:343 ../web/admin/servers.php:462
+#: ../web/admin/servers.php:710
+msgid "core"
+msgstr "inti"
+
+#: ../web/admin/servers.php:343 ../web/admin/servers.php:462
+#: ../web/admin/servers.php:710
+msgid "cores"
+msgstr "inti"
+
+#: ../web/classes/Preferences.class.php:158
+msgid "critical"
+msgstr "kritikal"
+
+#: ../web/classes/Preferences.class.php:158
+#: ../web/classes/Preferences.class.php:333
+msgid "debug"
+msgstr "debug"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "desktop icons"
+msgstr "ikon desktop"
+
+#: ../web/classes/Server.class.php:106
+msgid "does not send a valid monitoring"
+msgstr "tidak mengirim monitoring yang valid"
+
+#: ../web/classes/Server.class.php:92
+msgid "does not send a valid type"
+msgstr "tidak mengirim tipe yang valid"
+
+#: ../web/classes/Server.class.php:99
+msgid "does not send a valid version"
+msgstr "tidak mengirim versi yang valid"
+
+#: ../web/classes/Preferences.class.php:158
+msgid "error"
+msgstr "error"
+
+#: ../web/admin/usersgroup.php:905
+msgid "extend from default"
+msgstr "penambahan dari default"
+
+#: ../web/modules/UserDB/fake.php:108
+msgid "fake"
+msgstr "palsu"
+
+#: ../web/index.php:26 ../web/webservices/server_status.php:48
+#: ../web/admin/configuration-sumup.php:35
+msgid "get Preferences failed"
+msgstr "Preferensi gagal diambil"
+
+#: ../web/admin/sumup.php:63
+msgid "in this application group"
+msgstr "dalam aplikasi group ini"
+
+#: ../web/admin/sumup.php:63
+msgid "in this user group"
+msgstr "dalam user group ini"
+
+#: ../web/classes/Preferences.class.php:158
+msgid "info"
+msgstr "info"
+
+#: ../web/admin/servers.php:899
+msgid "install in progress"
+msgstr "progres instalasi"
+
+#: ../web/classes/Server.class.php:194
+msgid "is NOT online!"
+msgstr "Tidak online!"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "language"
+msgstr "bahasa"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:37
+msgid "less"
+msgstr "kurang"
+
+#: ../web/modules/UserDB/unix.php:116
+msgid "local"
+msgstr "lokal"
+
+#: ../web/admin/sumup.php:63 ../web/plugins/FS/cifs.php:106
+msgid "login"
+msgstr "login"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:263
+msgid "login:"
+msgstr "login:"
+
+#: ../web/classes/Preferences.class.php:187
+msgid "manage Application groups"
+msgstr "kelola Aplikasi group"
+
+#: ../web/classes/Preferences.class.php:185
+msgid "manage Applications"
+msgstr "kelola Aplikasi"
+
+#: ../web/classes/Preferences.class.php:191
+msgid "manage Configuration"
+msgstr "kelola Konfigurasi"
+
+#: ../web/classes/Preferences.class.php:195
+msgid "manage News"
+msgstr "kelola Berita"
+
+#: ../web/classes/Preferences.class.php:189
+msgid "manage Publications"
+msgstr "kelola Publikasi"
+
+#: ../web/classes/Preferences.class.php:177
+msgid "manage Servers"
+msgstr "kelola Server"
+
+#: ../web/classes/Preferences.class.php:179
+msgid "manage Shared folders"
+msgstr "kelola Folder bersama"
+
+#: ../web/classes/Preferences.class.php:183
+msgid "manage Usergroups"
+msgstr "kelola Usergroups"
+
+#: ../web/classes/Preferences.class.php:181
+msgid "manage Users"
+msgstr "kelola User"
+
+#: ../web/modules/UserDB/activedirectory.php:91
+msgid "match"
+msgstr "cocok"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:37
+msgid "more"
+msgstr "lebih"
+
+#: ../web/admin/servers.php:818
+msgid "more options"
+msgstr "opsi lebih"
+
+#: ../web/admin/sumup.php:63
+msgid "name"
+msgstr "nama"
+
+#: ../web/classes/Preferences.class.php:224
+#: ../web/classes/Preferences.class.php:227
+#: ../web/classes/Preferences.class.php:241
+#: ../web/classes/Preferences.class.php:247
+#: ../web/classes/Preferences.class.php:250
+#: ../web/classes/Preferences.class.php:253
+#: ../web/classes/Preferences.class.php:286
+#: ../web/classes/Preferences.class.php:289
+#: ../web/classes/Preferences.class.php:292
+#: ../web/classes/Preferences.class.php:295
+#: ../web/classes/Preferences.class.php:298
+#: ../web/classes/Preferences.class.php:301
+#: ../web/classes/Preferences.class.php:321
+#: ../web/classes/Preferences.class.php:324
+#: ../web/classes/Preferences.class.php:327
+#: ../web/classes/Preferences.class.php:330
+msgid "no"
+msgstr "tidak"
+
+#: ../web/admin/index.php:166
+msgid "offline server"
+msgstr "server offline"
+
+#: ../web/admin/index.php:164
+msgid "offline servers"
+msgstr "server offline"
+
+#: ../web/admin/index.php:156
+msgid "online server"
+msgstr "server online"
+
+#: ../web/admin/index.php:154
+msgid "online servers"
+msgstr "server online"
+
+#: ../web/index.php:594 ../web/index.php:602
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:249
+msgid "optional"
+msgstr "opsional"
+
+#: ../web/plugins/FS/cifs.php:108
+msgid "password"
+msgstr "password"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:264
+msgid "password:"
+msgstr "password:"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "persistent"
+msgstr "persistent"
+
+#: ../web/webservices/session_invite.php:95
+msgid "please click on the link below to join the online session"
+msgstr "klik link di bawah ini untuk bergabung dengan sesi online"
+
+#: ../web/classes/Preferences.class.php:333
+msgid "popup"
+msgstr "popup"
+
+#: ../web/footer.php:31 ../web/admin/includes/page_template.php:370
+#: ../web/includes/functions.inc.d/template.inc.php:150
+msgid "powered by"
+msgstr "powered by"
+
+#: ../web/admin/classes/Preferences_admin.class.php:128
+msgid "prefs is not valid for FS plugin"
+msgstr "prefs tidak berlaku untuk plugin FS"
+
+#: ../web/admin/classes/Preferences_admin.class.php:149
+#: ../web/admin/classes/Preferences_admin.class.php:159
+msgid "prefs is not valid for module"
+msgstr "prefs tidak berlaku untuk modul"
+
+#: ../web/admin/classes/Preferences_admin.class.php:116
+msgid "prefs is not valid for plugin"
+msgstr "prefs tidak berlaku untuk plugin"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "quality"
+msgstr "kualitas"
+
+#: ../web/admin/servers.php:286 ../web/admin/servers.php:537
+msgid "redirection name cannot be empty!"
+msgstr "nama pengalihan tidak boleh kosong!"
+
+#: ../web/admin/servers.php:284 ../web/admin/servers.php:535
+msgid "redirection name may be invalid!"
+msgstr "nama pengalihan mungkin tidak valid!"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "server"
+msgstr "server"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "session mode"
+msgstr "mode sesi"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "shareable"
+msgstr "dapat dibagi"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "size"
+msgstr "ukuran"
+
+#: ../web/admin/reporting.php:462
+msgid "step"
+msgstr "langkah"
+
+#: ../web/modules/UserGroupDB/sql_external.php:113
+msgid "table of usersgroup"
+msgstr "tabel usergroup"
+
+#: ../web/classes/Preferences.class.php:309
+#: ../web/classes/SessionReportItem.class.php:159
+msgid "timeout"
+msgstr "timeout"
+
+#: ../web/admin/reporting.php:450
+msgid "to"
+msgstr "ke"
+
+#: ../web/classes/Preferences.class.php:175
+msgid "use Admin panel"
+msgstr "gunakan Admin panel"
+
+#: ../web/classes/Preferences.class.php:186
+msgid "view Application groups"
+msgstr "tampilkan Group aplikasi"
+
+#: ../web/classes/Preferences.class.php:184
+msgid "view Applications"
+msgstr "tampilkan Aplikasi"
+
+#: ../web/classes/Preferences.class.php:190
+msgid "view Configuration"
+msgstr "tampilkan Konfigurasi"
+
+#: ../web/classes/Preferences.class.php:194
+msgid "view News"
+msgstr "tampilkan Berita"
+
+#: ../web/classes/Preferences.class.php:188
+msgid "view Publications"
+msgstr "tampilkan Publikasi"
+
+#: ../web/classes/Preferences.class.php:176
+msgid "view Servers"
+msgstr "tampilkan Server"
+
+#: ../web/classes/Preferences.class.php:178
+msgid "view Shared folders"
+msgstr "tampilkan Folder bersama"
+
+#: ../web/classes/Preferences.class.php:192
+msgid "view Status"
+msgstr "tampilkan Status"
+
+#: ../web/classes/Preferences.class.php:193
+msgid "view Summary"
+msgstr "tampilkan Ringkasan"
+
+#: ../web/classes/Preferences.class.php:182
+msgid "view Usergroups"
+msgstr "tampilkan Usergroup"
+
+#: ../web/classes/Preferences.class.php:180
+msgid "view Users"
+msgstr "tampilkan User"
+
+#: ../web/classes/Preferences.class.php:158
+msgid "warning"
+msgstr "peringatan"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "windows keymap"
+msgstr "windows keymap"
+
+#: ../web/classes/Preferences.class.php:224
+#: ../web/classes/Preferences.class.php:227
+#: ../web/classes/Preferences.class.php:241
+#: ../web/classes/Preferences.class.php:247
+#: ../web/classes/Preferences.class.php:250
+#: ../web/classes/Preferences.class.php:253
+#: ../web/classes/Preferences.class.php:286
+#: ../web/classes/Preferences.class.php:289
+#: ../web/classes/Preferences.class.php:292
+#: ../web/classes/Preferences.class.php:295
+#: ../web/classes/Preferences.class.php:298
+#: ../web/classes/Preferences.class.php:301
+#: ../web/classes/Preferences.class.php:321
+#: ../web/classes/Preferences.class.php:324
+#: ../web/classes/Preferences.class.php:327
+#: ../web/classes/Preferences.class.php:330
+msgid "yes"
+msgstr "ya"
