@@ -34,6 +34,7 @@ import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +51,7 @@ import org.ulteo.ovd.client.authInterface.DisconnectionFrame;
 import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.desktop.OvdClientDesktop;
+import org.ulteo.ovd.client.env.WorkArea;
 import org.ulteo.ovd.client.gui.GUIActions;
 import org.ulteo.ovd.client.gui.SwingTools;
 import org.ulteo.ovd.client.profile.ProfileProperties;
@@ -88,8 +90,19 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		
 		Logger.getRootLogger().setLevel(Level.INFO);
 
+		// Init Ulteo Logger instance
+		String log_dir = Constants.PATH_NATIVE_CLIENT_CONF + Constants.FILE_SEPARATOR + "logs";
+		(new File(log_dir)).mkdirs();
+		if (! org.ulteo.Logger.initInstance(true, log_dir+Constants.FILE_SEPARATOR +org.ulteo.Logger.getDate()+".log", true))
+			System.err.println("Unable to iniatialize logger instance");
+
 		if (OSTools.isWindows()) {
-			LibraryLoader.LoadLibrary(LibraryLoader.LIB_WINDOW_PATH_NAME);
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.LIB_WINDOW_PATH_NAME);
+			} catch (FileNotFoundException ex) {
+				org.ulteo.Logger.error(ex.getMessage());
+				System.exit(2);
+			}
 		}
 		boolean regProfile = false;
 		String profile = null;
@@ -117,12 +130,6 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 					break;
 			}
 		}
-		
-		// Init Ulteo Logger instance
-		String log_dir = Constants.PATH_NATIVE_CLIENT_CONF + Constants.FILE_SEPARATOR + "logs";
-		(new File(log_dir)).mkdirs();
-		if (! org.ulteo.Logger.initInstance(true, log_dir+Constants.FILE_SEPARATOR +org.ulteo.Logger.getDate()+".log", true))
-			System.err.println("Unable to iniatialize logger instance");
 		
 		StartConnection s = null;
 
@@ -552,8 +559,14 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 				this.client = new OvdClientDesktop(dialog, resolution, this);
 				break;
 			case Properties.MODE_REMOTEAPPS:
-				if (OSTools.isLinux())
-					LibraryLoader.LoadLibrary(LibraryLoader.LIB_X_CLIENT_AREA);
+				if (OSTools.isLinux()) {
+					try {
+						LibraryLoader.LoadLibrary(LibraryLoader.LIB_X_CLIENT_AREA);
+					} catch (FileNotFoundException ex) {
+						WorkArea.disableLibraryLoading();
+						org.ulteo.Logger.error(ex.getMessage());
+					}
+				}
 				
 				this.client = new OvdClientPortal(dialog, response.getUsername(), this.autoPublicated, this.regProfile, this);
 				break;

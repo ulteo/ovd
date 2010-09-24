@@ -31,6 +31,8 @@ import org.ulteo.ovd.integrated.OSTools;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import java.io.FileNotFoundException;
+import org.ulteo.ovd.client.env.WorkArea;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -111,7 +113,20 @@ public class StartTokenAuth {
 			System.err.println("Unable to iniatialize logger instance");
 		
 		if (OSTools.isWindows()) {
-			LibraryLoader.LoadLibrary(LibraryLoader.LIB_WINDOW_PATH_NAME);
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.LIB_WINDOW_PATH_NAME);
+			} catch (FileNotFoundException ex) {
+				org.ulteo.Logger.error(ex.getMessage());
+				System.exit(2);
+			}
+		}
+		else if (OSTools.isLinux()) {
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.LIB_X_CLIENT_AREA);
+			} catch (FileNotFoundException ex) {
+				WorkArea.disableLibraryLoading();
+				org.ulteo.Logger.error(ex.getMessage());
+			}
 		}
 		
 		if (ovdServer == null) {

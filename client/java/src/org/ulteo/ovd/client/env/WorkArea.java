@@ -26,8 +26,14 @@ import org.ulteo.Logger;
 import org.ulteo.ovd.integrated.OSTools;
 
 public class WorkArea {
+	private static boolean loadLibrary = true;
+
+	public static void disableLibraryLoading() {
+		WorkArea.loadLibrary = false;
+	}
+
 	public static Rectangle getWorkAreaSize() {
-		if (OSTools.isLinux()) {
+		if (WorkArea.loadLibrary && OSTools.isLinux()) {
 			int[] area = getWorkAreaSizeForX();
 			if (area.length == 4)
 				return new Rectangle(area[0], area[1], area[2], area[3]);

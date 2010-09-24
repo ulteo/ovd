@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LibraryLoader {
 	public static final String RESOURCE_LIBRARY_DIRECTORY_WINDOWS = "/ressources/WindowsLibs";
@@ -46,9 +48,28 @@ public class LibraryLoader {
 	}
 	
 	//This method is called from an non applet client
-	public static void LoadLibrary(String DLLName) {
+	public static void LoadLibrary(String LibName) throws FileNotFoundException {
 		String fileSeparator= System.getProperty("file.separator");
-		System.load(System.getProperty("user.dir")+fileSeparator+DLLName);
+		String libraryPaths = System.getProperty("java.library.path");
+
+		List<String> paths = new ArrayList<String>();
+		paths.add(System.getProperty("user.dir"));
+		for (String each : libraryPaths.split(":"))
+			paths.add(each);
+
+		for (String each : paths) {
+			int len = each.length();
+			if (each.substring((len - 1), len).equals(fileSeparator))
+				each += fileSeparator;
+			each += LibName;
+
+			if (new File(each).exists()) {
+				System.load(each);
+				return;
+			}
+		}
+
+		throw new FileNotFoundException("Unable to find required library: "+LibName);
 	}
 	
 }
