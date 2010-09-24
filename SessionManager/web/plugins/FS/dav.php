@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2009
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -45,7 +46,7 @@ class FS_dav extends Plugin {
 
 		$buf = '';
 		foreach ($sharedfolders as $sharedfolder)
-			$buf.= $sharedfolder->name.'|http://'.$_SERVER['SERVER_NAME'].$base_url.'webdav.php/'.$sharedfolder->id.'/'."\n";
+			$buf.= $sharedfolder->name.'|http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].$base_url.'webdav.php/'.$sharedfolder->id.'/'."\n";
 
 		$this->redir_args['module_fs']['dav_dirs'] = $buf;
 
