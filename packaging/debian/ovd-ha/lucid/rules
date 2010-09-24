@@ -8,8 +8,9 @@ DEB_DH_INSTALL_SOURCEDIR = debian/tmp
 DEB_DH_INSTALLINIT_ARGS_ulteo-ovd-ha = --name=ulteo_ha
 
 install/ulteo-ovd-ha::
-	cd ha/shell && make install DESTDIR=$(CURDIR)/$(DEB_DH_INSTALL_SOURCEDIR)
+	cd ha/shell && make install DESTDIR=$(DEB_DESTDIR)
 	cp ha/ulteo_ha debian/ulteo-ovd-ha.ulteo_ha.init
 
 binary-fixup/ulteo-ovd-ha::
-	chmod 4755 $(CURDIR)/debian/ulteo-ovd-ha/usr/bin/HAshell
+	chmod u+s $(CURDIR)/debian/$(cdbs_curpkg)/usr/bin/HAshell \
+		$(CURDIR)/debian/$(cdbs_curpkg)/usr/share/ulteo/ovd/ha/su_cmd.sh

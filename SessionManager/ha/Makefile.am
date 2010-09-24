@@ -21,4 +21,5 @@ HAshell = shell/Makefile \
 EXTRA_DIST = $(ha_DATA) $(conf_DATA) $(ocf_DATA) $(HAshell)
 
 install-data-hook:
-	chmod 755 $(DESTDIR)$(libdir)/ocf/resource.d/heartbeat/mysql-ovd
+	chmod 4755 $(DESTDIR)$(datadir)/ulteo/ovd/ha/su_cmd.sh
+	chmod  755 $(DESTDIR)$(libdir)/ocf/resource.d/heartbeat/mysql-ovd
