@@ -14,7 +14,7 @@
     <property name="datadir"     location="${prefix}/share" />
     <property name="destdir"     location="" />
 
-    <property name="version" value="2.5.1~+svn@REVISION@" />
+    <property name="version" value="2.5.1" />
     <property name="tar.dir" value="ovd-applets-${version}" />
     <property name="tar"     value="${tar.dir}.tar" />
     <property name="tar.gz"  value="${tar}.gz" />
