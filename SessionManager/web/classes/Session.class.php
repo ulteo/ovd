@@ -144,6 +144,11 @@ class Session {
 
 		Logger::debug('main', 'Starting Session::setStatus for \''.$this->id.'\'');
 
+		$ev = new SessionStatusChanged(array(
+			'id'		=>	$this->id,
+			'status'	=>	$status_
+		));
+
 		if ($status_ == Session::SESSION_STATUS_INITED) {
 			Logger::info('main', 'Session start : \''.$this->id.'\'');
 
@@ -164,10 +169,15 @@ class Session {
 
 			if (! $this->orderDeletion())
 				Logger::error('main', 'Unable to order session deletion for session \''.$this->id.'\'');
-			else
+			else {
+				$ev->emit();
+
 				return false;
+			}
 		} elseif ($status_ == Session::SESSION_STATUS_DESTROYED || $status_ == Session::SESSION_STATUS_ERROR || $status_ == Session::SESSION_STATUS_UNKNOWN) {
 			Logger::info('main', 'Session purge : \''.$this->id.'\'');
+
+			$ev->emit();
 
 			Abstract_Session::delete($this->id);
 
@@ -176,11 +186,6 @@ class Session {
 
 		Logger::debug('main', 'Status set to "'.$status_.'" ('.$this->textStatus($status_).') for session \''.$this->id.'\'');
 		$this->setAttribute('status', $status_);
-
-		$ev = new SessionStatusChanged(array(
-			'id'		=>	$this->id,
-			'status'	=>	$status_
-		));
 
 		$ev->emit();
 
