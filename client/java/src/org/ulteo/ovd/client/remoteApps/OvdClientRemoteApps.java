@@ -21,7 +21,6 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
-import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 
 import net.propero.rdp.RdesktopException;
@@ -41,8 +40,13 @@ import org.ulteo.rdp.OvdAppListener;
 import org.ulteo.rdp.RdpConnectionOvd;
 import java.net.UnknownHostException;
 import org.ulteo.ovd.client.env.WorkArea;
+import org.ulteo.ovd.integrated.Spool;
+import org.ulteo.ovd.integrated.SystemAbstract;
 
 public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppListener {
+
+	protected Spool spool = null;
+	protected SystemAbstract system = null;
 	
 	public OvdClientRemoteApps(SessionManagerCommunication smComm) {
 		super(smComm, null);
@@ -59,6 +63,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		} catch (OvdException ex) {
 			this.logger.error(ex);
 		}
+
 		this.customizeRemoteAppsConnection(co);
 	}
 
@@ -78,6 +83,13 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	
 	@Override
 	protected void runDisconnecting() {}
+
+	@Override
+	protected void runSessionTerminated() {
+		this.spool.stop();
+		this.spool.deleteTree();
+		this.spool = null;
+	}
 
 	public abstract void ovdInited(OvdAppChannel o);
 

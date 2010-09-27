@@ -56,8 +56,6 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	private PortalFrame portal = null;
 	private String username = null;
 	private boolean publicated = false;
-	private SystemAbstract system = null;
-	private Spool spool = null;
 	private List<Application> appsList = null;
 	private List<Application> appsListToEnable = null;
 	private boolean autoPublish = false;
@@ -119,9 +117,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	@Override
 	protected void runSessionTerminated() {
-		this.spool.stop();
-		this.spool.deleteTree();
-		this.spool = null;
+		super.runSessionTerminated();
 		
 		this.portal.setVisible(false);
 		this.portal.getSystray().removeSysTray();
@@ -295,6 +291,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		return this.autoPublish;
 	}
 
+	@Override
 	public void updateNews(List<News> newsList) {
 		if (newsList.size() == 0) {
 			if (this.portal.containsNewsPanel()) {

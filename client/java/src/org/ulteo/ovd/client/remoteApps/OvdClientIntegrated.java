@@ -28,7 +28,6 @@ import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.integrated.Spool;
-import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.integrated.SystemLinux;
 import org.ulteo.ovd.integrated.SystemWindows;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -44,9 +43,6 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 
 		return map;
 	}
-
-	private Spool spool = null;
-	private SystemAbstract system = null;
 
 	public OvdClientIntegrated(SessionManagerCommunication smComm) {
 		super(smComm);
@@ -81,12 +77,6 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 		this.spool.start();
 		this.spool.waitThreadEnd();
 		this.exit(0);
-	}
-
-	@Override
-	protected void runSessionTerminated() {
-		this.spool.deleteTree();
-		this.spool = null;
 	}
 
 	@Override
