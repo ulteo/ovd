@@ -29,6 +29,12 @@ class UserDB_sql extends UserDB  {
 		}
 	}
 	
+	protected function exists($login_) {
+		$sql2 = SQL::getInstance();
+		$res = $sql2->DoQuery('SELECT 1 FROM @1 WHERE @2=%3', $this->table, 'login', $login_);
+		return ($sql2->NumRows() == 1);
+	}
+	
 	public function import($login_){
 		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3', $this->table, 'login', $login_);
@@ -234,8 +240,8 @@ class UserDB_sql extends UserDB  {
 		Logger::debug('main', 'UserDB::sql::add');
 		if ($this->isOK($user_)){
 			// user already exists ?
-			$user_from_db = $this->import($user_->getAttribute('login'));
-			if (is_object($user_from_db)) {
+			$user_from_db = $this->exists($user_->getAttribute('login'));
+			if ($user_from_db === true) {
 				Logger::error('main', 'UserDB_sql::add user (login='.$user_->getAttribute('login').') already exists');
 				popup_error(_('User already exists'));
 				return false;
