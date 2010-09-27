@@ -71,6 +71,14 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		if (OSTools.isWindows()) {
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.LIB_WINDOW_PATH_NAME);
+			} catch (FileNotFoundException ex) {
+				System.err.println(ex.getMessage());
+				System.exit(2);
+			}
+		}
 		
 		try {
 			UIManager.put("Slider.paintValue", Boolean.FALSE);
@@ -96,14 +104,6 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		if (! org.ulteo.Logger.initInstance(true, log_dir+Constants.FILE_SEPARATOR +org.ulteo.Logger.getDate()+".log", true))
 			System.err.println("Unable to iniatialize logger instance");
 
-		if (OSTools.isWindows()) {
-			try {
-				LibraryLoader.LoadLibrary(LibraryLoader.LIB_WINDOW_PATH_NAME);
-			} catch (FileNotFoundException ex) {
-				org.ulteo.Logger.error(ex.getMessage());
-				System.exit(2);
-			}
-		}
 		boolean regProfile = false;
 		String profile = null;
 		String password = null;
