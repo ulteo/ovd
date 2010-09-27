@@ -60,6 +60,8 @@ public class PortalFrame extends JFrame implements WindowListener {
 	private SouthEastPanel sep = null;	
 	private Font font = new Font("Dialog", 1, 12);
 	private IntegratedTrayIcon systray = null;
+
+	private boolean iconsButtonEnabled = false;
 	
 	public PortalFrame(String username) {
 		if (username == null)
@@ -135,6 +137,7 @@ public class PortalFrame extends JFrame implements WindowListener {
 		this.gbc.insets.bottom = 10;
 		this.gbc.anchor = GridBagConstraints.SOUTHEAST;
 		this.sep = new SouthEastPanel(_rdpActions);
+		this.enableIconsButton();
 		this.add(sep, gbc);
 		this.validate();
 	}
@@ -152,6 +155,13 @@ public class PortalFrame extends JFrame implements WindowListener {
 	}
 
 	public void enableIconsButton() {
+		if (this.iconsButtonEnabled)
+			return;
+
+		if (this.sep == null)
+			return;
+
+		this.iconsButtonEnabled = true;
 		this.sep.toggleIconsButton(true);
 	}
 
