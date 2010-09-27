@@ -1,3 +1,9 @@
+ovd-session-manager (2.5.1-1) 2-5-staging; urgency=low
+
+  * New stable release
+
+ -- Samuel Bovée <samuel@ulteo.com>  Mon, 27 Sep 2010 13:56:08 +0200
+
 ovd-session-manager (2.5-1) 2-5-staging; urgency=low
 
   * New stable release 
