@@ -29,16 +29,17 @@ LDFLAGS=-lgdi32
 
 
 
-all: extract_icon.exe
+all: exeIcon2png.exe extract_icon.exe
 
-%.exe: %.c
-	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+exeIcon2png.exe: exeIcon2png.o
+	$(CC) -o $@ $< $(LDFLAGS) -lpng -lz
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+%.exe: %.o
+	$(CC) -o $@ $< $(LDFLAGS)
 
 
 clean:
+	$(RM) exeIcon2png.exe
 	$(RM) extract_icon.exe
 	$(RM) *.o
 	$(RM) *~
