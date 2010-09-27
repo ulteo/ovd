@@ -126,7 +126,7 @@ public class SystemWindows extends SystemAbstract {
 				return;
 			}
 		}
-		BufferedImage buf = new BufferedImage(app.getIcon().getIconWidth(), app.getIcon().getIconHeight(), BufferedImage.TYPE_INT_RGB);
+		BufferedImage buf = new BufferedImage(app.getIcon().getIconWidth(), app.getIcon().getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graph = buf.createGraphics();
 		graph.drawImage(app.getIcon().getImage(), 0, 0, null);
 		graph.dispose();

@@ -141,7 +141,7 @@ public class SystemLinux extends SystemAbstract {
 		}
 		try {
 			Image icon = app.getIcon().getImage();
-			BufferedImage buff = new BufferedImage(icon.getWidth(null), icon.getHeight(null), BufferedImage.TYPE_INT_RGB);
+			BufferedImage buff = new BufferedImage(icon.getWidth(null), icon.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 			Graphics2D g = buff.createGraphics();
 			g.drawImage(icon, null, null);
 			ImageIO.write(buff, "png", output);
