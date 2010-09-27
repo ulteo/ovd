@@ -42,7 +42,7 @@ public class LinuxShortcut extends Shortcut {
 		}
 		xfceShorcuts = null;
 
-		File shortcut = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+app.getId()+".desktop");
+		File shortcut = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
 		try {
 			boolean first = true;
 			PrintWriter pw = new PrintWriter(shortcut);
@@ -73,7 +73,7 @@ public class LinuxShortcut extends Shortcut {
 
 	@Override
 	public void remove(Application app) {
-		File shortcut = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+app.getId()+".desktop");
+		File shortcut = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
 		if (shortcut.exists())
 			shortcut.delete();
 

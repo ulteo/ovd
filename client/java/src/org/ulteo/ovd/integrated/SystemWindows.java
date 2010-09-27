@@ -42,19 +42,34 @@ public class SystemWindows extends SystemAbstract {
 	}
 
 	@Override
-	public String install(Application app) {
+	public String create(Application app) {
+		Logger.debug("Creating the '"+app.getName()+"' shortcut");
+		
 		this.saveIcon(app);
 		this.fileAssociate.createAppAction(app);
-		
-		String shortcutName = this.shortcut.create(app);
 
-		if (shortcutName == null)
-			return null;
+		return this.shortcut.create(app);
+	}
+
+	@Override
+	public void clean(Application app) {
+		Logger.debug("Deleting the '"+app.getName()+"' shortcut");
+
+		this.uninstall(app);
+		this.shortcut.remove(app);
+		this.fileAssociate.removeAppAction(app);
+	}
+
+	@Override
+	public void install(Application app) {
+		Logger.debug("Installing the '"+app.getName()+"' shortcut");
+
+		String shortcutName = WindowsShortcut.replaceForbiddenChars(app.getName())+Constants.SHORTCUTS_EXTENSION;
 
 		File f = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+shortcutName);
 		if (! f.exists()) {
 			Logger.error("Cannot copy the '"+shortcutName+"' shortcut: The file does not exist ("+f.getPath()+")");
-			return null;
+			return;
 		}
 
 		try {
@@ -76,29 +91,28 @@ public class SystemWindows extends SystemAbstract {
 			shortcutReader.close();
 		} catch(FileNotFoundException e) {
 			Logger.error("This file does not exists: "+e.getMessage());
-			return null;
+			return;
 		} catch(IOException e) {
 			Logger.error("An error occured during the shortcut '"+shortcutName+"' copy: "+e.getMessage());
-			return null;
+			return;
 		}
-
-		return shortcutName;
 	}
 
 	@Override
 	public void uninstall(Application app) {
-		File desktopItem = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+app.getName()+".lnk");
+		Logger.debug("Uninstalling the '"+app.getName()+"' shortcut");
+
+		String shortcutName = WindowsShortcut.replaceForbiddenChars(app.getName())+Constants.SHORTCUTS_EXTENSION;
+
+		File desktopItem = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+shortcutName);
 		if (desktopItem.exists())
 			desktopItem.delete();
 		desktopItem = null;
 
-		File menuItem = new File(Constants.PATH_STARTMENU+Constants.FILE_SEPARATOR+app.getName()+".lnk");
+		File menuItem = new File(Constants.PATH_STARTMENU+Constants.FILE_SEPARATOR+shortcutName);
 		if (menuItem.exists())
 			menuItem.delete();
 		menuItem = null;
-
-		this.shortcut.remove(app);
-		this.fileAssociate.removeAppAction(app);
 	}
 
 	@Override

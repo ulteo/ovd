@@ -63,6 +63,11 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		} catch (OvdException ex) {
 			this.logger.error(ex);
 		}
+		
+		for (Application app : co.getAppsList()) {
+			if (this.system.create(app) == null)
+				org.ulteo.Logger.error("The "+app.getName()+" shortcut could not be created");
+		}
 
 		this.customizeRemoteAppsConnection(co);
 	}
@@ -89,6 +94,11 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		this.spool.stop();
 		this.spool.deleteTree();
 		this.spool = null;
+
+		for (RdpConnectionOvd co : this.connections) {
+			for (Application app : co.getAppsList())
+				this.system.clean(app);
+		}
 	}
 
 	public abstract void ovdInited(OvdAppChannel o);

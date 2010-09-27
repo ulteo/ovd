@@ -42,59 +42,90 @@ public class SystemLinux extends SystemAbstract {
 	}
 
 	@Override
-	public String install(Application app) {
+	public String create(Application app) {
+		Logger.debug("Creating the '"+app.getName()+"' shortcut");
+		
 		this.saveIcon(app);
-		String shortcutName = this.shortcut.create(app);
+		return this.shortcut.create(app);
+	}
 
-		if (shortcutName == null)
-			return null;
+	@Override
+	public void clean(Application app) {
+		Logger.debug("Deleting the '"+app.getName()+"' shortcut");
 
-		File f = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+shortcutName);
+		this.uninstall(app);
+		this.shortcut.remove(app);
+	}
+
+	@Override
+	public void install(Application app) {
+		Logger.debug("Installing the '"+app.getName()+"' shortcut");
+		
+		File f = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
 		if (! f.exists()) {
-			Logger.error("Cannot copy the '"+shortcutName+"' shortcut: The file does not exist ("+f.getPath()+")");
-			return null;
+			Logger.error("Cannot copy the '"+app.getId()+Constants.SHORTCUTS_EXTENSION+"' shortcut: The file does not exist ("+f.getPath()+")");
+			return;
 		}
 
 		try {
 			BufferedInputStream shortcutReader = new BufferedInputStream(new FileInputStream(f), 4096);
-			File desktopShortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+shortcutName);
-			File xdgShortcut = new File(Constants.PATH_XDG_APPLICATIONS+Constants.FILE_SEPARATOR+shortcutName);
+			
+			if (new File(Constants.PATH_OVD_SPOOL_XDG_APPLICATIONS).exists()) {
+				File xdgShortcut = new File(Constants.PATH_OVD_SPOOL_XDG_APPLICATIONS+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
+				BufferedOutputStream xdgStream = new BufferedOutputStream(new FileOutputStream(xdgShortcut), 4096);
 
-			BufferedOutputStream desktopStream = new BufferedOutputStream(new FileOutputStream(desktopShortcut), 4096);
-			BufferedOutputStream xdgStream = new BufferedOutputStream(new FileOutputStream(xdgShortcut), 4096);
+				int currentChar;
+				while ((currentChar = shortcutReader.read()) != -1) {
+					xdgStream.write(currentChar);
+				}
 
-			int currentChar;
-			while ((currentChar = shortcutReader.read()) != -1) {
-				desktopStream.write(currentChar);
-				xdgStream.write(currentChar);
+				xdgStream.close();
 			}
+			else {
+				File desktopShortcut = null;
+				if (true) /* ToDo: pref SM*/
+					desktopShortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
+				File xdgShortcut = new File(Constants.PATH_XDG_APPLICATIONS+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
 
-			desktopStream.close();
-			xdgStream.close();
+				BufferedOutputStream desktopStream = null;
+				if (desktopShortcut != null)
+					desktopStream = new BufferedOutputStream(new FileOutputStream(desktopShortcut), 4096);
+				BufferedOutputStream xdgStream = new BufferedOutputStream(new FileOutputStream(xdgShortcut), 4096);
+
+				int currentChar;
+				while ((currentChar = shortcutReader.read()) != -1) {
+					if (desktopStream != null)
+						desktopStream.write(currentChar);
+					xdgStream.write(currentChar);
+				}
+
+				if (desktopStream != null)
+					desktopStream.close();
+				xdgStream.close();
+			}
 			shortcutReader.close();
 		} catch(FileNotFoundException e) {
 			Logger.error("This file does not exists: "+e.getMessage());
-			return null;
+			return;
 		} catch(IOException e) {
-			Logger.error("An error occured during the shortcut '"+shortcutName+"' copy: "+e.getMessage());
-			return null;
+			Logger.error("An error occured during the shortcut '"+app.getId()+Constants.SHORTCUTS_EXTENSION+"' copy: "+e.getMessage());
+			return;
 		}
-		return shortcutName;
 	}
 
 	@Override
 	public void uninstall(Application app) {
-		File desktop = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+app.getId()+".desktop");
+		Logger.debug("Uninstalling the '"+app.getName()+"' shortcut");
+
+		File desktop = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
 		if (desktop.exists())
 			desktop.delete();
 		desktop = null;
 
-		File xdgApps = new File(Constants.PATH_XDG_APPLICATIONS+Constants.FILE_SEPARATOR+app.getId()+".desktop");
+		File xdgApps = new File(Constants.PATH_XDG_APPLICATIONS+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
 		if (xdgApps.exists())
 			xdgApps.delete();
 		xdgApps = null;
-
-		this.shortcut.remove(app);
 	}
 
 	@Override

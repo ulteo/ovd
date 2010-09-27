@@ -25,11 +25,7 @@ package org.ulteo.ovd.client.remoteApps;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,12 +38,10 @@ import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.portal.PortalFrame;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.News;
-import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.integrated.SystemLinux;
 import org.ulteo.ovd.integrated.SystemWindows;
-import org.ulteo.ovd.integrated.shorcut.WindowsShortcut;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
@@ -153,10 +147,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		for (RdpConnectionOvd rc : this.availableConnections) {
 			if (rc.getOvdAppChannel() == o) {
 				for (Application app : rc.getAppsList()) {
-					this.logger.info("Installing application \""+app.getName()+"\"");
-					this.system.install(app);
 					if (this.autoPublish)
-						this.publish(app);
+						this.system.install(app);
 
 					if (! this.portal.isVisible()) {
 						if (this.appsListToEnable == null)
@@ -205,21 +197,10 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		return publicated;
 	}
 
-	public void publish(Application app) {
-		String shortcutName = WindowsShortcut.replaceForbiddenChars(app.getName()).concat(".lnk");
-
-		if (new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+shortcutName).exists())
-			this.copyShortcut(shortcutName);
-		else
-			this.logger.error("Unable to copy "+shortcutName+": The shortcut does not exist.");
-	}
-
 	public void publish() {
-		File shortcut = new File(Constants.PATH_SHORTCUTS);
-		String[] shortcutList = shortcut.list();
-		if (shortcutList != null) {
-			for (String each : shortcutList) {
-				copyShortcut(each);
+		for (RdpConnectionOvd co : this.getAvailableConnections()) {
+			for (Application app : co.getAppsList()) {
+				this.system.install(app);
 			}
 		}
 		
@@ -227,44 +208,13 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 
 	public void unpublish() {
-		File shortcut = new File(Constants.PATH_SHORTCUTS);
-		String[] shortcutList = shortcut.list();
-		for (String each : shortcutList) {
-			File desktopShortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+each);
-			if (desktopShortcut.exists()) {
-				desktopShortcut.delete();
-			}
-			
-			File startMenuShortcut = new File(Constants.PATH_STARTMENU+Constants.FILE_SEPARATOR+each);
-			if (startMenuShortcut.exists()) {
-				startMenuShortcut.delete();
+		for (RdpConnectionOvd co : this.getAvailableConnections()) {
+			for (Application app : co.getAppsList()) {
+				this.system.uninstall(app);
 			}
 		}
 		
 		this.publicated = false;
-	}
-
-	public void copyShortcut(String shortcut) {
-		try {
-			BufferedInputStream shortcutReader = new BufferedInputStream(new FileInputStream(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+shortcut), 4096);
-			File desktopShortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+shortcut);
-			File startMenuShortcut = new File(Constants.PATH_STARTMENU+Constants.FILE_SEPARATOR+shortcut);
-			
-			BufferedOutputStream desktopStream = new BufferedOutputStream(new FileOutputStream(desktopShortcut), 4096);
-			BufferedOutputStream startMenuStream = new BufferedOutputStream(new FileOutputStream(startMenuShortcut), 4096);
-			
-			int currentChar;
-			while ((currentChar = shortcutReader.read()) != -1) {
-				desktopStream.write(currentChar);
-				startMenuStream.write(currentChar);
-			}
-			
-			desktopStream.close();
-			startMenuStream.close();
-			shortcutReader.close();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	public SystemAbstract getSystem() {

@@ -26,8 +26,8 @@ public final class Constants {
 
 	public static final String HOMEDIR = System.getProperty("user.home");
 	public static final String PATH_STARTMENU = (OSTools.isWindows()) ? WindowsPaths.getStartMenuPath() : "";
-	public static final String PATH_XFCE_MENU_ENTRIES = Constants.HOMEDIR+Constants.FILE_SEPARATOR+".local/share/applications";
-	public static final String PATH_XDG_APPLICATIONS = "/var/spool/ulteo/ovd/"+System.getProperty("user.name")+"/xdg/applications";
+	public static final String PATH_XDG_APPLICATIONS = Constants.HOMEDIR+Constants.FILE_SEPARATOR+".local/share/applications";
+	public static final String PATH_OVD_SPOOL_XDG_APPLICATIONS = "/var/spool/ulteo/ovd/"+System.getProperty("user.name")+"/xdg/applications";
 	public static final String PATH_DESKTOP = (OSTools.isWindows()) ? WindowsPaths.getDesktopPath() : LinuxPaths.getDesktopPath();
 	public static final String PATH_DOCUMENT = (OSTools.isWindows()) ? WindowsPaths.getPersonalDataPath() : LinuxPaths.getDocumentPath();
 

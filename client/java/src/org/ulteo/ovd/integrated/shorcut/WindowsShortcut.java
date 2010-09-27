@@ -46,8 +46,7 @@ public class WindowsShortcut extends Shortcut {
 		if (app == null)
 			return null;
 
-		appName = app.getName();
-		replaceForbiddenChars(appName);
+		appName = replaceForbiddenChars(app.getName());
 
 		File shorcutDirectory = new File(Constants.PATH_SHORTCUTS);
 		if (! shorcutDirectory.exists())
@@ -76,7 +75,7 @@ public class WindowsShortcut extends Shortcut {
 			icon.delete();
 		icon = null;
 
-		File shortcut = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+app.getName()+".lnk");
+		File shortcut = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+replaceForbiddenChars(app.getName())+".lnk");
 		if (shortcut.exists())
 			shortcut.delete();
 		shortcut = null;

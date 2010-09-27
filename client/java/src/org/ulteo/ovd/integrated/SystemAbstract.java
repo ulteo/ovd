@@ -28,7 +28,11 @@ public abstract class SystemAbstract {
 	protected Shortcut shortcut = null;
 	protected FileAssociate fileAssociate = null;
 
-	public abstract String install(Application app);
+	public abstract String create(Application app);
+
+	public abstract void clean(Application app);
+
+	public abstract void install(Application app);
 
 	public abstract void uninstall(Application app);
 
@@ -37,33 +41,4 @@ public abstract class SystemAbstract {
 	public final void setShortcutArgumentInstance(String token) {
 		this.shortcut.setToken(token);
 	}
-
-	/*private void saveIcon() {
-		File output = new File(Constants.iconsPath+Constants.separator+this.id+"."+((OSTools.isWindows()) ? "ico" : "png"));
-		if (! output.exists()) {
-			try {
-				output.createNewFile();
-			} catch (IOException ex) {
-				Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-		BufferedImage buf = new BufferedImage(this.icon.getIconWidth(), this.icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
-		Graphics2D graph = buf.createGraphics();
-		graph.drawImage(this.icon.getImage(), 0, 0, null);
-		graph.dispose();
-
-		if (OSTools.isWindows()) {
-			try {
-				net.sf.image4j.codec.ico.ICOEncoder.write(buf, output);
-			} catch (IOException ex) {
-				Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-		else {
-			try {
-				ImageIO.write(buf, "png", output);
-			}catch (Exception e) {}
-		}
-
-	}*/
 }

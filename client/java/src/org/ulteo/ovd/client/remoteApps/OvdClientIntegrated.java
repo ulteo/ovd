@@ -92,11 +92,7 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 				continue;
 
 			for (Application app : rc.getAppsList()) {
-				String shortcutName = this.system.install(app);
-				if (shortcutName == null) {
-					Logger.error("The "+app.getName()+" shortcut could not be created");
-					continue;
-				}
+				this.system.install(app);
 			}
 		}
 	}
