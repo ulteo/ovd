@@ -160,8 +160,6 @@ class Abstract_Server {
 	}
 
 	private static function saveProperty($server_, $object_property_, $db_property_, $old_property_) {
-		Logger::debug('main', 'Starting Abstract_Server::saveProperty for \''.$server_->fqdn.'\' object_property \''.$object_property_.'\' db_property \''.$db_property_.'\'');
-
 		$property_ = ((isset($server_->$object_property_))?serialize($server_->$object_property_):NULL);
 		$old_property_ = ((! is_null($old_property_))?serialize($old_property_):NULL);
 
