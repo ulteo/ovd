@@ -59,6 +59,7 @@ public class Desktop extends Applet implements RdpListener {
 	public static final String JS_API_F_SERVER = "serverStatus";
 	public static final String JS_API_O_SERVER_CONNECTED = "connected";
 	public static final String JS_API_O_SERVER_DISCONNECTED = "disconnected";
+	public static final String JS_API_O_SERVER_FAILED = "failed";
 	public static final String JS_API_O_SERVER_READY = "ready";
 	
 	@Override
@@ -304,8 +305,22 @@ public class Desktop extends Applet implements RdpListener {
 	}
 
 	@Override
-	public void failed(RdpConnection co) {
-		System.out.println("Connection failed: removing rdpConnection to "+this.rc.getServer());
+	public void failed(RdpConnection co, String msg) {
+		System.out.println("Connection  to "+this.rc.getServer()+" failed: "+msg);
+
+		int tryNumber = co.getTryNumber();
+		if (tryNumber < 1) {
+			Logger.debug("checkRDPConnections -- Bad try number("+tryNumber+"). Will continue normal process.");
+			return;
+		}
+
+		if (tryNumber > 1) {
+			Logger.error("checkRDPConnections -- Several try to connect to "+co.getServer()+" failed. Will exit.");
+			this.forwardJS(JS_API_F_SERVER, 0, JS_API_O_SERVER_FAILED);
+			return;
+		}
+
+		co.connect();
 	}
 
 	@Override
