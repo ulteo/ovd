@@ -30,7 +30,6 @@ import org.ulteo.rdp.OvdAppListener;
 
 import java.applet.Applet;
 import java.applet.AppletContext;
-import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,6 +105,7 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 	public static final String JS_API_F_SERVER = "serverStatus";
 	public static final String JS_API_O_SERVER_CONNECTED = "connected";
 	public static final String JS_API_O_SERVER_DISCONNECTED = "disconnected";
+	public static final String JS_API_O_SERVER_FAILED = "failed";
 	public static final String JS_API_O_SERVER_READY = "ready";
 	
 	// Begin extends Applet
@@ -427,8 +427,36 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 	}
 
 	@Override
-	public void failed(RdpConnection co) {
-		System.out.println("Connection failed: removing rdpConnection to "+co.getServer());
+	public void failed(RdpConnection co, String msg) {
+		System.out.println("Connection to "+co.getServer()+" failed: "+msg);
+
+		boolean retry = false;
+
+		int state = co.getState();
+
+		if (state == RdpConnectionOvd.STATE_CONNECTED) {
+			return;
+		}
+
+		if (state != RdpConnectionOvd.STATE_FAILED) {
+			Logger.debug("checkRDPConnections "+co.getServer()+" -- Bad connection state("+state+"). Will continue normal process.");
+			return;
+		}
+
+		int tryNumber = co.getTryNumber();
+		if (tryNumber < 1) {
+			Logger.debug("checkRDPConnections "+co.getServer()+" -- Bad try number("+tryNumber+"). Will continue normal process.");
+			return;
+		}
+
+		if (tryNumber > 1) {
+			Logger.error("checkRDPConnections "+co.getServer()+" -- Several try to connect failed.");
+			this.forwardJS(JS_API_F_SERVER, 0, JS_API_O_SERVER_FAILED);
+			return;
+		}
+
+		Logger.warn("checkRDPConnections "+co.getServer()+" -- Connection failed. Will try to reconnect.");
+		co.connect();
 	}
 
 	@Override
