@@ -207,6 +207,81 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 	@Override
 	public boolean checkRDPConnections() {
+		String session_status = null;
+		try {
+			session_status = this.smComm.askForSessionStatus();
+		} catch (SessionManagerException ex) {
+			Logger.error("checkRDPConnections -- Failed to get session status from session manager: "+ex.getMessage()+". Will exit.");
+			for (RdpConnectionOvd co : this.performedConnections) {
+				this.hide(co);
+			}
+			return false;
+		}
+		if (session_status == null) {
+			Logger.error("checkRDPConnections -- Failed to get session status from session manager: Internal error. Will exit.");
+			for (RdpConnectionOvd co : this.performedConnections) {
+				this.hide(co);
+			}
+			return false;
+		}
+
+		if (!(session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED) || session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE))) {
+			Logger.info("checkRDPConnections -- Your session has ended. Will exit.");
+			for (RdpConnectionOvd co : this.performedConnections) {
+				this.hide(co);
+			}
+			return false;
+		}
+
+		boolean retry = false;
+
+		int nbApps = 0;
+		int nbAppsAvailable = 0;
+
+		for (RdpConnectionOvd co : this.performedConnections) {
+			int nbAppsByServer = co.getAppsList().size();
+			nbApps += nbAppsByServer;
+
+			int state = co.getState();
+
+			if (state == RdpConnectionOvd.STATE_CONNECTED) {
+				nbAppsAvailable += nbAppsByServer;
+				continue;
+			}
+
+			if (state != RdpConnectionOvd.STATE_FAILED) {
+				Logger.debug("checkRDPConnections "+co.getServer()+" -- Bad connection state("+state+"). Will continue normal process.");
+				continue;
+			}
+
+			int tryNumber = co.getTryNumber();
+			if (tryNumber < 1) {
+				Logger.debug("checkRDPConnections "+co.getServer()+" -- Bad try number("+tryNumber+"). Will continue normal process.");
+				continue;
+			}
+
+			if (tryNumber > 1) {
+				Logger.error("checkRDPConnections "+co.getServer()+" -- Several try to connect failed.");
+				this.hide(co);
+				continue;
+			}
+
+			Logger.warn("checkRDPConnections "+co.getServer()+" -- Connection failed. Will try to reconnect.");
+			this.performedConnections.remove(co);
+			co.connect();
+			retry = true;
+		}
+
+		if (retry)
+			return true;
+
+		float percent = ((float) (100 * nbAppsAvailable)) / nbApps;
+		if (percent < 50) {
+			Logger.error("Less than 50 percent of applications are available("+percent+"%). Will exit.");
+			return false;
+		}
+		Logger.warn("More than 50 percent of applications are available("+percent+"%). Will continue.");
+
 		return true;
 	}
 }
