@@ -598,7 +598,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 		if (this.showProgressbar)
 			SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, false));
-		this.discFrame.setVisible(true);
+		SwingTools.invokeLater(GUIActions.setVisible(this.discFrame, true));
 	}
 	
 	public void checkDisconnectionSource() {
