@@ -175,41 +175,54 @@ class ApplicationsDetection:
 		path_tmp = tempfile.mktemp()
 		
 		path_bmp = path_tmp + ".bmp"
-		cmd = """"%s" "%s" "%s" """%("extract_icon.exe", iconLocation, path_bmp)
-		
-		status = self.execute(cmd, True)
-		if status != 0:
-			Logger.warn("ApplicationsDetection::getIcon following command returned %d: %s"%(status, cmd))
-			if os.path.exists(path_bmp):
-				os.remove(path_bmp)
-			
-			return None
-		
-		if not os.path.exists(path_bmp):
-			Logger.warn("ApplicationsDetection::getIcon No bmp file returned")
-			return None
-		
 		path_png = path_tmp + ".png"
 		
-		cmd = """"%s" -Q -O "%s" "%s" """%("bmp2png.exe", path_png, path_bmp)
+		
+		cmd = """"%s" "%s" "%s" """%("exeIcon2png.exe", iconLocation, path_png)
 		status = self.execute(cmd, True)
 		if status != 0:
-			Logger.warn("ApplicationsDetection::getIcon following command returned %d: %s"%(status, cmd))
-			os.remove(path_bmp)
+			Logger.warn("Unable to extract icon, use alternative method")
+			Logger.debug("ApplicationsDetection::getIcon following command returned %d: %s"%(status, cmd))
 			if os.path.exists(path_png):
 				os.remove(path_png)
 			
-			return None
+			cmd = """"%s" "%s" "%s" """%("extract_icon.exe", iconLocation, path_bmp)
+			
+			status = self.execute(cmd, True)
+			if status != 0:
+				Logger.warn("Unable to extract icon with the alternative method")
+				Logger.debug("ApplicationsDetection::getIcon following command returned %d: %s"%(status, cmd))
+				if os.path.exists(path_bmp):
+					os.remove(path_bmp)
+				
+				return None
+			
+			if not os.path.exists(path_bmp):
+				Logger.debug("ApplicationsDetection::getIcon No bmp file returned")
+				return None
+			
+			
+			cmd = """"%s" -Q -O "%s" "%s" """%("bmp2png.exe", path_png, path_bmp)
+			status = self.execute(cmd, True)
+			if status != 0:
+				Logger.warn("Unable to extract icon with the alternative method")
+				Logger.debug("ApplicationsDetection::getIcon following command returned %d: %s"%(status, cmd))
+				os.remove(path_bmp)
+				if os.path.exists(path_png):
+					os.remove(path_png)
+				
+				return None
+			
+			os.remove(path_bmp)
 		
 		if not os.path.exists(path_png):
-			Logger.warn("ApplicationsDetection::getIcon No png file returned")
+			Logger.debug("ApplicationsDetection::getIcon No png file returned")
 			return None
 		
 		f = open(path_png, 'rb')
 		buffer = f.read()
 		f.close()
 		
-		os.remove(path_bmp)
 		os.remove(path_png)
 		return buffer
 		
