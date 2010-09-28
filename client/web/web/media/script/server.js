@@ -66,6 +66,11 @@ var Server = Class.create({
 
 			daemon.sessionmanager_request_time = 2000;
 			daemon.loop();
+		} else if (status_ == 'failed') {
+			this.ready = false;
+			this.connected = false;
+
+			daemon.logout();
 		}
 
 		var applications = daemon.liaison_server_applications.get(this.id);
