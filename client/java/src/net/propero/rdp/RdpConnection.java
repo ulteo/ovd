@@ -52,6 +52,11 @@ public class RdpConnection implements SeamListener, Runnable{
 	public static final int DEFAULT_HEIGHT = 600;
 	public static final int DEFAULT_PERSISTENT_CACHE_SIZE = 100;
 
+	public final static int STATE_DISCONNECTED = 0;
+	public final static int STATE_CONNECTING = 1;
+	public final static int STATE_CONNECTED = 2;
+	public final static int STATE_FAILED = 3;
+
 	protected String keyMapPath = "/ressources/keymaps/";
 
 	protected VChannels channels = null;
@@ -65,6 +70,9 @@ public class RdpConnection implements SeamListener, Runnable{
 	private RdesktopCanvas_Localised canvas = null;
 	protected String mapFile = null;
 	private CopyOnWriteArrayList<RdpListener> listener = new CopyOnWriteArrayList<RdpListener>();
+	private int state = STATE_DISCONNECTED;
+	private int tryNumber = 0;
+	private String failedMsg = null;
 	private Thread connectionThread = null;
 	private Logger logger = Logger.getLogger(RdpConnection.class);
 
@@ -81,6 +89,14 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.opt.set_bpp(DEFAULT_BPP);
 
 		this.channels = new VChannels(this.opt);
+	}
+
+	public int getState() {
+		return this.state;
+	}
+
+	public int getTryNumber() {
+		return this.tryNumber;
 	}
 
 	public String getServer() {
@@ -369,7 +385,8 @@ public class RdpConnection implements SeamListener, Runnable{
 			this.backstoreFrame.add(this.canvas);
 			this.backstoreFrame.pack();
 		}
-		
+
+		this.tryNumber++;
 		this.fireConnecting();
 
 		// Configure a keyboard layout
@@ -409,23 +426,21 @@ public class RdpConnection implements SeamListener, Runnable{
 							System.out.println("The terminal server disconnected before licence negotiation completed.\nPossible cause: terminal server could not issue a licence.");
 					}
 				}catch(ConnectionException e){
-					System.out.println("ConnectionException - "+e.getMessage());
+					this.failedMsg = e.getMessage();
 					this.keep_running = false;
 					exit = 1;
 				} catch (UnknownHostException e) {
-					System.out.println(e.getClass().getName() + " " + e.getMessage());
+					this.failedMsg = e.getMessage();
 					this.keep_running = false;
 					exit = 1;
 				}catch(SocketException s){
 					if(this.RdpLayer.isConnected()){
-						System.out.println(s.getClass().getName() + " " + s.getMessage());
-						s.printStackTrace();
+						this.failedMsg = s.getMessage();
 						exit = 1;
 					}
 					this.keep_running = false;
 				}catch (RdesktopException e) {
-					System.out.println(e.getClass().getName() + " " + e.getMessage());
-					e.printStackTrace(System.err);
+					this.failedMsg = e.getMessage();
 					
 					if (!this.opt.readytosend) {
 						// maybe the licence server was having a comms
@@ -538,24 +553,32 @@ public class RdpConnection implements SeamListener, Runnable{
 	}
 	
 	protected void fireConnected() {
+		this.state = STATE_CONNECTED;
+		
 		for(RdpListener list : this.listener) {
 			list.connected(this);
 		}
 	}
 	
 	protected void fireConnecting() {
+		this.state = STATE_CONNECTING;
+
 		for(RdpListener list : this.listener) {
 			list.connecting(this);
 		}
 	}
 	
 	protected void fireFailed() {
+		this.state = STATE_FAILED;
+		
 		for(RdpListener list : this.listener) {
-			list.failed(this);
+			list.failed(this, this.failedMsg);
 		}
 	}
 	
 	protected synchronized void fireDisconnected() {
+		this.state = STATE_DISCONNECTED;
+		
 		for(RdpListener list : this.listener) {
 			list.disconnected(this);
 		}

@@ -35,6 +35,7 @@ import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
+import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public class OvdClientDesktop extends OvdClient {
@@ -86,7 +87,10 @@ public class OvdClientDesktop extends OvdClient {
 
 	@Override
 	public void hide(RdpConnection co) {
-		desktop.setVisible(false);
+		this.desktopLaunched = false;
+		this.desktop.setVisible(false);
+		this.desktop.dispose();
+		this.desktop = null;
 	}
 
 	private void initDesktop(RdpConnectionOvd co) {
@@ -180,6 +184,58 @@ public class OvdClientDesktop extends OvdClient {
 		this.connections.add(rc);
 		
 		return true;
+	}
+
+	@Override
+	public boolean checkRDPConnections() {
+		RdpConnectionOvd co = this.performedConnections.get(0);
+		int state = co.getState();
+
+		if (state == RdpConnectionOvd.STATE_CONNECTED)
+			return true;
+
+		if (state != RdpConnectionOvd.STATE_FAILED) {
+			Logger.debug("checkRDPConnections -- Bad connection state("+state+"). Will continue normal process.");
+			return true;
+		}
+
+		int tryNumber = co.getTryNumber();
+		if (tryNumber < 1) {
+			Logger.debug("checkRDPConnections -- Bad try number("+tryNumber+"). Will continue normal process.");
+			return true;
+		}
+
+		if (tryNumber > 1) {
+			Logger.debug("checkRDPConnections -- Several try to connect to "+co.getServer()+" failed. Will exit.");
+			this.hide(co);
+			return false;
+		}
+
+		String session_status = null;
+		try {
+			session_status = this.smComm.askForSessionStatus();
+		} catch (SessionManagerException ex) {
+			Logger.error("checkRDPConnections -- Failed to get session status from session manager: "+ex.getMessage()+". Will exit.");
+			this.hide(co);
+			return false;
+		}
+		if (session_status == null) {
+			Logger.error("checkRDPConnections -- Failed to get session status from session manager: Internal error. Will exit.");
+			this.hide(co);
+			return false;
+		}
+
+		if (session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED) || session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE)) {
+			this.performedConnections.remove(co);
+			co.connect();
+
+			return true;
+		}
+
+		Logger.info("checkRDPConnections -- Your session has ended. Will exit.");
+		this.hide(co);
+
+		return false;
 	}
 
 	@Override

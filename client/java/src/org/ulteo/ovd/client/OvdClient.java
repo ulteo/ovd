@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CopyOnWriteArrayList;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
 import org.apache.log4j.Logger;
@@ -68,6 +69,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	protected Thread getStatus = null;
 	protected ArrayList<RdpConnectionOvd> connections = null;
 	protected ArrayList<RdpConnectionOvd> availableConnections = null;
+	protected CopyOnWriteArrayList<RdpConnectionOvd> performedConnections = null;
 	protected String keymap = null;
 	
 	protected Thread sessionStatusMonitoringThread = null;
@@ -134,6 +136,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.graphic = graphic_;
 
 		this.availableConnections = new ArrayList<RdpConnectionOvd>();
+		this.performedConnections = new CopyOnWriteArrayList<RdpConnectionOvd>();
 	}
 
 	private void addAvailableConnection(RdpConnectionOvd rc) {
@@ -213,6 +216,20 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 			this.continueSessionStatusMonitoringThread = true;
 			this.sessionStatusMonitoringThread.start();
 		}
+
+		do {
+			// Waiting for all the RDP connections are performed
+			while (this.performedConnections.size() < this.connections.size()) {
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException ex) {}
+			}
+
+			if (! this.checkRDPConnections()) {
+				this.disconnectAll();
+				break;
+			}
+		} while (this.performedConnections.size() < this.connections.size());
 		
 		while (this.connectionIsActive) {
 			try {
@@ -222,6 +239,8 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 		return this.exitAfterLogout;
 	}
+
+	public abstract boolean checkRDPConnections();
 
 	public void sessionReady() {
 		org.ulteo.Logger.info("Session is ready");
@@ -312,6 +331,8 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	/* RdpListener */
 	public void connected(RdpConnection co) {
 		this.logger.info("Connected to "+co.getServer());
+
+		this.performedConnections.add((RdpConnectionOvd) co);
 		this.addAvailableConnection((RdpConnectionOvd)co);
 
 		this.display(co);
@@ -328,6 +349,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.uncustomizeConnection((RdpConnectionOvd) co);
 
 		this.hide(co);
+		this.performedConnections.remove((RdpConnectionOvd) co);
 		this.removeAvailableConnection((RdpConnectionOvd)co);
 		this.logger.info("Disconnected from "+co.getServer());
 
@@ -338,8 +360,10 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		}
 	}
 
-	public void failed(RdpConnection co) {
-		this.logger.error("Connection to "+co.getServer()+" failed");
+	public void failed(RdpConnection co, String msg) {
+		this.logger.error("Connection to "+co.getServer()+" failed: "+msg);
+
+		this.performedConnections.add((RdpConnectionOvd) co);
 	}
 
 	/* RdpActions */

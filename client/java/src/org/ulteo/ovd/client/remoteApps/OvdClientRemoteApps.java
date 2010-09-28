@@ -204,4 +204,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		
 		return true;
 	}
+
+	@Override
+	public boolean checkRDPConnections() {
+		return true;
+	}
 }

@@ -41,7 +41,7 @@ public class TCPSocketFactory implements SocketFactory {
 			rdpsock = new Socket();
 			rdpsock.connect(new InetSocketAddress(this.host, this.port), 3000);
 		} catch (Exception e) {
-			throw new RdesktopException("Creating Socket failed:" + e.getMessage());
+			throw new RdesktopException(e.getMessage());
 		}
 		
 		return rdpsock;

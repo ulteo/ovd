@@ -76,7 +76,6 @@ public abstract class ISO {
 		try {
 			this.rdpsock = (Socket) this.opt.socketFactory.createSocket();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new RdesktopException("Creating socket failed: " + e.getMessage());
 		}
 	}
