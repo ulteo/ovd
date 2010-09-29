@@ -1,8 +1,8 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2008,2009 Ulteo SAS
+# Copyright (C) 2008-2010 Ulteo SAS
 # http://www.ulteo.com
-# Author Laurent CLOUET <laurent@ulteo.com> 2008,2009
+# Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009
 #
 # This program is free software; you can redistribute it and/or 
@@ -90,7 +90,13 @@ class ThreadPoolingHttpServer(HTTPServer):
 		self.spooler.put((request, client_address))
 	
 	def server_close(self):
+		try:
+			HTTPServer.shutdown(self)
+		except Exception, err:
+			# with python 2.5 shutdown does not exist
+			pass
 		HTTPServer.server_close(self)
+		
 		for t in self.threads:
 			if t.isAlive():
 				t._Thread__stop()
