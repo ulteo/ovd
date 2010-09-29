@@ -53,15 +53,11 @@ function parse_monitoring_XML($xml_) {
 		return false;
 
 	$server = Abstract_Server::load($server_node->getAttribute('name'));
-	if (! $server) {
-		echo return_error(2, 'Server does not exist');
-		die();
-	}
+	if (! $server)
+		return false;
 
-	if (! $server->isAuthorized()) {
-		echo return_error(3, 'Server is not authorized');
-		die();
-	}
+	if (! $server->isAuthorized())
+		return false;
 
 	$ret = array(
 		'server'	=>	$server_node->getAttribute('name')
@@ -142,6 +138,17 @@ function parse_monitoring_XML($xml_) {
 $ret = parse_monitoring_XML(@file_get_contents('php://input'));
 if (! $ret) {
 	echo return_error(1, 'Server does not send a valid XML');
+	die();
+}
+
+$server = Abstract_Server::load($ret['server']);
+if (! $server) {
+	echo return_error(2, 'Server does not exist');
+	die();
+}
+
+if (! $server->isAuthorized()) {
+	echo return_error(3, 'Server is not authorized');
 	die();
 }
 
