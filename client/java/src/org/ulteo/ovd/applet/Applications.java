@@ -451,7 +451,13 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 
 		if (tryNumber > 1) {
 			Logger.error("checkRDPConnections "+co.getServer()+" -- Several try to connect failed.");
-			this.forwardJS(JS_API_F_SERVER, 0, JS_API_O_SERVER_FAILED);
+			for (Integer o : this.connections.keySet()) {
+				if (this.connections.get(o) == co) {
+					this.forwardJS(JS_API_F_SERVER, o, JS_API_O_SERVER_FAILED);
+					return;
+				}
+			}
+			Logger.error("checkRDPConnections "+co.getServer()+" -- Failed to retrieve connection.");
 			return;
 		}
 
