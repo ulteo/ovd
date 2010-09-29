@@ -6,6 +6,7 @@ License: GPL2
 Group: Applications/System
 Source0: %{name}-%{version}.tar.gz
 BuildArch: noarch
+Buildroot: %{buildroot}
 Requires: httpd, curl, php, php-ldap, php-mysql, php-xml, php-mbstring, php-pear, php-gd, php-pecl-imagick, ovd-applets
 
 %description

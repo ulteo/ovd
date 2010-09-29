@@ -6,7 +6,7 @@ License: GPL2
 Group: Applications/System
 Source0: %{name}-%{version}.tar.gz
 BuildArch: i386
-BuildRequires: ovd-applets, libstdc++-devel, gcc-c++
+BuildRequires: libstdc++-devel, gcc-c++
 Requires: apache2, apache2-mod_php5, curl, php5, php5-ldap, php5-mysql, php5-mbstring, php5-xmlwriter, php5-gettext, php5-curl, ovd-applets
 
 %description

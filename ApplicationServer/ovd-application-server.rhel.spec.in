@@ -6,7 +6,8 @@ License: GPL2
 Group: Applications/System
 Source0: %{name}-%{version}.tar.gz
 BuildArch: i386
-BuildRequires: ovd-applets, libstdc++-devel, gcc-c++
+BuildRequires: libstdc++-devel, gcc-c++
+Buildroot: %{buildroot}
 Requires: httpd, curl, php, php-ldap, php-mysql, php-xml, php-mbstring, php-pecl-imagick, ovd-applets
 
 %description
