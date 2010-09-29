@@ -96,8 +96,8 @@ public class Client implements RdpListener, Runnable {
 		System.exit(0);
 	}
 
-	public void failed(RdpConnection co) {
-		logger.info("Connection to "+rc.getUsername() + "@" + rc.getServer() + " failed");
+	public void failed(RdpConnection co, String msg) {
+		logger.error("Connection to "+rc.getUsername() + "@" + rc.getServer() + " failed: "+msg);
 		System.exit(0);
 	}
 

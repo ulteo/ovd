@@ -371,8 +371,8 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		this.initPane(co);
 	}
 
-	public void failed(RdpConnection co) {
-		RdpClient.logger.warn("Connection to "+co.getServer()+" failed");
+	public void failed(RdpConnection co, String msg) {
+		RdpClient.logger.error("Connection to "+co.getServer()+" failed: "+msg);
 	}
 
 	public void disconnected(RdpConnection co) {
