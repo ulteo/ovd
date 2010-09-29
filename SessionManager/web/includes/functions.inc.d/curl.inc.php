@@ -44,7 +44,7 @@ function query_url_request($url_, $log_returned_data_=true, $data_in_file_=false
 	}
 
 	if ($hr->getResponseCode() != 200)
-		Logger::debug('main', "query_url_request($url_) returncode: '$code'");
+		Logger::debug('main', "query_url_request($url_) returncode: '".$hr->getResponseCode()."'");
 
 	return array('data' => $data, 'code' => $hr->getResponseCode(), 'content_type' => $hr->getResponseContentType());
 }
