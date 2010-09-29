@@ -23,43 +23,30 @@
 
 function query_url_request($url_, $log_returned_data_=true, $data_in_file_=false) {
 	Logger::debug('main', "query_url_request($url_,$log_returned_data_, $data_in_file_)");
-	$socket = curl_init($url_);
-	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
-	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, DEFAULT_REQUEST_TIMEOUT);
-	curl_setopt($socket, CURLOPT_TIMEOUT, (DEFAULT_REQUEST_TIMEOUT+5));
-	if ( $data_in_file_ === true) {
+
+	$hr = new HttpRequest($url_, 'GET');
+	if ($data_in_file_ === true) {
 		$data_file = tempnam(NULL, 'curl_');
 		$fp = fopen($data_file, 'w');
-		curl_setopt($socket, CURLOPT_FILE, $fp);
+		$hr->setToFile($fp);
 	}
-	$data = curl_exec($socket);
-	if ($data === false) {
-		Logger::error('main', "query_url_request($url_) error code: ".curl_errno($socket). " text: '".curl_error($socket)."'");
-		if (curl_errno($socket) == CURLE_GOT_NOTHING) { // http://curl.haxx.se/mail/lib-2004-02/0384.html http://curl.haxx.se/mail/archive-2007-02/0114.html
-			usleep(rand(1000000, 3000000));
-			$data = curl_exec($socket);
-			if ($data === false) {
-				Logger::error('main', "query_url_request($url_) error (2) code: ".curl_errno($socket). " text: '".curl_error($socket)."'");
-			}
-		}
-	}
-	$code = curl_getinfo($socket, CURLINFO_HTTP_CODE);
-	$content_type=curl_getinfo($socket, CURLINFO_CONTENT_TYPE);
-	if ( $data_in_file_ === true) {
+	$data = $hr->send();
+	if ($data_in_file_ === true) {
 		$data = $data_file;
 		fclose($fp);
 	}
 
-	curl_close($socket);
-	
-	if ($code != 200)
+	if ($data === false)
+		Logger::error('main', "query_url_request($url_) error code: ".$hr->getResponseErrno(). " text: '".$hr->getResponseError()."'");
+	else {
+		if (str_startswith($hr->getResponseContentType(), 'text/') && $log_returned_data_ === true)
+			Logger::debug('main', "query_url_request($url_) returntext: '$data'");
+	}
+
+	if ($hr->getResponseCode() != 200)
 		Logger::debug('main', "query_url_request($url_) returncode: '$code'");
-	
-	if (str_startswith($content_type, 'text/') && $log_returned_data_ === true)
-		Logger::debug('main', "query_url_request($url_) returntext: '$data'");
-	
-	return array('data' => $data, 'code' => $code, 'content_type' => $content_type);
+
+	return array('data' => $data, 'code' => $hr->getResponseCode(), 'content_type' => $hr->getResponseContentType());
 }
 
 function query_url_no_error($url_, $log_returned_data_=true) {
@@ -83,52 +70,30 @@ function query_url($url_, $log_returned_data_=true) {
 
 function query_url_post_xml($url_, $xml_, $log_returned_data_=true) {
 	Logger::debug('main', "query_url_post_xml($url_, $xml_, $log_returned_data_)");
-	$socket = curl_init($url_);
-	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
-	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, DEFAULT_REQUEST_TIMEOUT);
-	curl_setopt($socket, CURLOPT_TIMEOUT, (DEFAULT_REQUEST_TIMEOUT+5));
-	curl_setopt($socket, CURLOPT_POSTFIELDS, $xml_);
-	curl_setopt($socket, CURLOPT_HTTPHEADER, array('Connection: close', 'Content-Type: text/xml'));
-	$data = curl_exec($socket);
-	if ($data === false) {
-		Logger::error('main', "query_url_post_xml($url_) error code: ".curl_errno($socket). " text: '".curl_error($socket)."'");
-		if (curl_errno($socket) == CURLE_GOT_NOTHING) { // http://curl.haxx.se/mail/lib-2004-02/0384.html http://curl.haxx.se/mail/archive-2007-02/0114.html
-			usleep(rand(1000000, 3000000));
-			$data = curl_exec($socket);
-			if ($data === false) {
-				Logger::error('main', "query_url_post_xml($url_) error (2) code: ".curl_errno($socket). " text: '".curl_error($socket)."'");
-			}
-		}
-	}
 
-	curl_close($socket);
+	$hr = new HttpRequest($url_, 'POST', array('contentType' => 'text/xml', 'postFields' => $xml_));
+	$data = $hr->send();
+	if ($data === false)
+		Logger::error('main', "query_url_post_xml($url_) error code: ".$hr->getResponseErrno()." text: '".$hr->getResponseError()."'");
+	else {
+		if (str_startswith($hr->getResponseContentType(), 'text/') && $log_returned_data_ === true)
+			Logger::debug('main', "query_url_post_xml($url_) returntext: '$data'");
+	}
 
 	return $data;
 }
 
 function query_url_post($url_, $string_=NULL, $log_returned_data_=true) {
 	Logger::debug('main', "query_url_post($url_, $string_, $log_returned_data_)");
-	$socket = curl_init($url_);
-	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
-	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, DEFAULT_REQUEST_TIMEOUT);
-	curl_setopt($socket, CURLOPT_TIMEOUT, (DEFAULT_REQUEST_TIMEOUT+5));
-	curl_setopt($socket, CURLOPT_POSTFIELDS, $string_);
-	curl_setopt($socket, CURLOPT_HTTPHEADER, array('Connection: close'));
-	$data = curl_exec($socket);
-	if ($data === false) {
-		Logger::error('main', "query_url_post($url_) error code: ".curl_errno($socket). " text: '".curl_error($socket)."'");
-		if (curl_errno($socket) == CURLE_GOT_NOTHING) { // http://curl.haxx.se/mail/lib-2004-02/0384.html http://curl.haxx.se/mail/archive-2007-02/0114.html
-			usleep(rand(1000000, 3000000));
-			$data = curl_exec($socket);
-			if ($data === false) {
-				Logger::error('main', "query_url_post($url_) error (2) code: ".curl_errno($socket). " text: '".curl_error($socket)."'");
-			}
-		}
-	}
 
-	curl_close($socket);
+	$hr = new HttpRequest($url_, 'POST', array('postFields' => $string_));
+	$data = $hr->send();
+	if ($data === false)
+		Logger::error('main', "query_url_post($url_) error code: ".$hr->getResponseErrno(). " text: '".$hr->getResponseError()."'");
+	else {
+		if (str_startswith($hr->getResponseContentType(), 'text/') && $log_returned_data_ === true)
+			Logger::debug('main', "query_url_post($url_) returntext: '$data'");
+	}
 
 	return $data;
 }
