@@ -25,6 +25,7 @@ from SimpleHTTPServer import SimpleHTTPRequestHandler
 import cgi
 import httplib
 import socket
+import time
 
 from ovd.Logger import Logger
 from ovd.Config import Config
@@ -100,6 +101,10 @@ class ThreadPoolingHttpServer(HTTPServer):
 		for t in self.threads:
 			if t.isAlive():
 				t._Thread__stop()
+		time.sleep(3)
+		for t in self.threads:
+			if t.isAlive():
+				t._Thread__delete()
 
 class HttpRequestHandler(SimpleHTTPRequestHandler):
 	def log_message(self, format, *args):
