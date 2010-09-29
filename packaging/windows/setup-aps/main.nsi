@@ -25,6 +25,7 @@
 
 !define BASENAME "${PRODUCT_NAME}"
 !define EXE_NAME "ovdSlaveServer.exe"
+!define CONFIG_FILE "$APPDATA\ulteo\ovd\slaveserver.conf"
 !define SHORTCUT "${BASENAME}.lnk"
 !define UNINSTALL_SHORTCUT "Uninstall - ${PRODUCT_NAME}.lnk"
 
@@ -111,20 +112,34 @@
 
 ## First Dialog
 Function InputBoxPageShow
-  ;ReadRegStr $R1 HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "sm_address"
-
-  ;${IF} $R0 == ""
-  ;  StrCpy $R0 "sm.ulteo.com"
-  ;${ENDIF}
-  
   Var /GLOBAL sm_address
+
+  ; $R0 : File handle
+  ; $R1 : Line
+  ; $R2 : SubString
+  ClearErrors
+  FileOpen $R0 "${CONFIG_FILE}" r
+  IfErrors again
+
+  loop:
+    FileRead $R0 $R1
+    IfErrors again
+    Push $R1
+    Push "session_manager = "
+    Call StrStr
+    Pop $R2
+    ${IF} $R2 == ""
+      Goto loop
+    ${ENDIF}
+    StrCpy $sm_address $R2 -1 18
+  
   again:
     !insertmacro MUI_HEADER_TEXT "Configuration" "Give the Session Manager address."
 
     PassDialog::InitDialog /NOUNLOAD InputBox \
                            /HEADINGTEXT "Caution: give full name or ip address" \
                            /GROUPTEXT "Session Manager host/address" \
-                           /BOX "Example: sm.ulteo.com" "" 0
+                           /BOX "Example: sm.ulteo.com" $sm_address 0
     PassDialog::Show
     Pop $0
   
@@ -204,7 +219,7 @@ Section "post" PostCmd
   SetOutPath "$APPDATA\ulteo\ovd"
 
   DetailPrint "Generating Config file"
-  FileOpen $4 "$APPDATA\ulteo\ovd\slaveserver.conf" w
+  FileOpen $4 "${CONFIG_FILE}" w
   FileWrite $4 "session_manager = $sm_address"
   FileWrite $4 "$\r$\n" 
   FileWrite $4 "ROLES = aps"
