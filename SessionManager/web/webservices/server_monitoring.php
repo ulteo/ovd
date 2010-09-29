@@ -2,6 +2,7 @@
 /**
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
@@ -51,7 +52,7 @@ function parse_monitoring_XML($xml_) {
 	if (! $server_node->hasAttribute('name'))
 		return false;
 
-	$server = Abstract_Server::load($server_node->hasAttribute('name'));
+	$server = Abstract_Server::load($server_node->getAttribute('name'));
 	if (! $server) {
 		echo return_error(2, 'Server does not exist');
 		die();
