@@ -31,6 +31,7 @@ from Platform import Platform as RolePlatform
 class SessionManagement(Thread):
 	def __init__(self, aps_instance, queue):
 		Thread.__init__(self)
+		self.setName("SessionManagement")
 		
 		self.aps_instance = aps_instance
 		self.queue = queue

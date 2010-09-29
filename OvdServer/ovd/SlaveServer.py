@@ -88,7 +88,7 @@ class SlaveServer:
 			Logger.error("SlaveServer: unable to initialize communication class")
 			return False
 		
-		self.communication.ovd_thread = threading.Thread(target=self.communication.run)
+		self.communication.ovd_thread = threading.Thread(name="Communication", target=self.communication.run)
 		self.threads.append(self.communication.ovd_thread)
 		
 		for role in self.roles:
@@ -99,7 +99,7 @@ class SlaveServer:
 				Logger.error("SlaveServer: unable to initialize role '%s' %s"%(role.getName(), str(e)))
 				return False
 			
-			role.thread = threading.Thread(target=role.run)
+			role.thread = threading.Thread(name="role_%s"%(role.getName()), target=role.run)
 			self.threads.append(role.thread)
 		
 		# Start 

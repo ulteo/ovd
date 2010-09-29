@@ -71,7 +71,7 @@ class ThreadPoolingHttpServer(HTTPServer):
 		self.threads = []
 		
 		for _ in xrange(self.threadNumber):
-			t = Thread(target = self.thread_run)
+			t = Thread(name = "HTTPRequestHandler", target = self.thread_run)
 			self.threads.append(t)
 			t.start()
 	
