@@ -139,7 +139,8 @@ class HttpRequest {
 		curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 
 		$this->responseBody = curl_exec($ch);
-		while (curl_errno($ch) == CURLE_GOT_NOTHING && $i <= 5) {
+		$i = 1;
+		while (curl_errno($ch) == CURLE_GOT_NOTHING && $i < 5) {
 			usleep(rand(1000000, 3000000));
 			$this->responseBody = curl_exec($ch);
 			$i++;
