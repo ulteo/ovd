@@ -112,7 +112,14 @@ class ApplicationsDetection:
 				
 			if len(shortcut.GetIconLocation()[0])>0:
 				application["icon"]  = unicode(shortcut.GetIconLocation()[0], encoding)
-
+			
+			
+			if self.msi is not None:
+				application["command"] = self.msi.getTargetFromShortcut(filename)
+				if application["command"] is None:
+					application["command"] = shortcut.GetPath(0)[0] + " " + shortcut.GetArguments()
+			
+			
 			# Find the mime types linked to the application
 			# TODO: there is probably a faster way to handle this
 			
@@ -128,12 +135,6 @@ class ApplicationsDetection:
 			
 			application["mimetypes"] = mimes
 			
-
-			if self.msi is not None:
-				application["command"] = self.msi.getTargetFromShortcut(filename)
-				if application["command"] is None:
-					application["command"] = shortcut.GetPath(0)[0] + " " + shortcut.GetArguments()
-					
 			applications[application["id"]] = application
 			
 		
