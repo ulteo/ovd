@@ -47,7 +47,7 @@ public abstract class DiskManager {
 	/**************************************************************************/
 	public void launch() {
 		diskAction = new Timer();
-		diskAction.schedule(new DiskUpdater(this), 0, 5000);
+		diskAction.schedule(new DiskUpdater(this, this.rdpdrChannel), 0, 5000);
 		
 	}
 	

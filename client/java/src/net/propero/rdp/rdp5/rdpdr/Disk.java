@@ -61,7 +61,9 @@ public class Disk extends RdpdrDevice{
 	public static final int STATUS_FILE_IS_A_DIRECTORY    = 0xc00000ba;
 	public static final int STATUS_OBJECT_NAME_COLLISION  = 0xc0000035;
 
-	public Disk(String path, String name_){
+	public Disk(RdpdrChannel rdpdr_, String path, String name_){
+		super(rdpdr_);
+
 		this.local_path = path;
 		this.name = name_;
 		this.device_type = 8;
@@ -87,7 +89,7 @@ public class Disk extends RdpdrDevice{
 			return STATUS_ACCESS_DENIED;
 		//dealing path
 		filename = filename.replace("\\", System.getProperty("file.separator"));
-		String path = RdpdrChannel.g_rdpdr_device[device_id].local_path + filename;
+		String path = this.rdpdr.g_rdpdr_device[device_id].local_path + filename;
 		//path = path.replace("//", "/");
 
 		File file1 = new File(path);
@@ -379,7 +381,7 @@ public class Disk extends RdpdrDevice{
 		return STATUS_SUCCESS;
 	}
 	
-	public static int disk_set_information(
+	public int disk_set_information(
 			int handle, int info_class, RdpPacket in, RdpPacket out){
 		DEBUG("disk_set_information");
 		int length, file_attributes, delete_on_close;
@@ -454,7 +456,7 @@ public class Disk extends RdpdrDevice{
 					return STATUS_INVALID_PARAMETER;
 				}
 				
-				newname = RdpdrChannel.g_rdpdr_device[tempfinfo.get_device_id()].local_path + newname; 
+				newname = this.rdpdr.g_rdpdr_device[tempfinfo.get_device_id()].local_path + newname;
 				File tmpF2 = new File(newname);
 				try{
 					File tmpFile = getFileFromHandle(handle);

@@ -668,14 +668,14 @@ public class Rdesktop {
 					for (String diskName : diskList.keySet()) {
 						String diskPath = diskList.get(diskName);
 						
-						RdpdrDevice disk = new Disk(diskPath, diskName);
+						RdpdrDevice disk = new Disk(rdpdrChannel, diskPath, diskName);
 						rdpdrChannel.register(disk);
 					}
 				}
 				if (opt.printerEnabled) {
 					rdpdrChannel = new RdpdrChannel(opt, common);
 					for(int i=0; i<opt.printers.length; i++) {
-						Printer p = new Printer(opt.printers[i],opt.printers[i] ,true);
+						Printer p = new Printer(rdpdrChannel, opt.printers[i],opt.printers[i] ,true);
 						rdpdrChannel.register(p);
 					}
 					channels.register(rdpdrChannel);

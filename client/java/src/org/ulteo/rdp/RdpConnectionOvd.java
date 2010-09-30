@@ -177,7 +177,7 @@ public class RdpConnectionOvd extends RdpConnection {
 	 *	- Use a PrinterManager instance in order to register all local printers
 	 */
 	private void mountLocalPrinters() throws OvdException, RdesktopException {
-		OVDPrinterManager printerManager = new OVDPrinterManager();
+		OVDPrinterManager printerManager = new OVDPrinterManager(this.rdpdrChannel);
 		printerManager.searchAllPrinter();
 		if (printerManager.hasPrinter()) {
 			this.initRdpdrChannel();

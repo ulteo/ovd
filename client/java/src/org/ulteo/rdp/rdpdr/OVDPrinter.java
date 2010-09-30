@@ -40,8 +40,8 @@ public class OVDPrinter extends Printer {
 	public static OVDPrinterThread printerThread = null;
 	
 	
-	public OVDPrinter(String name, String displayName, boolean isDefault) {
-		super(name, displayName, isDefault);
+	public OVDPrinter(RdpdrChannel rdpdr_, String name, String displayName, boolean isDefault) {
+		super(rdpdr_, name, displayName, isDefault);
 		this.driver = "Ulteo TS Printer Driver";
 	}
 	

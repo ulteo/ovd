@@ -79,12 +79,12 @@ public class RdpdrChannel extends VChannel {
 	
 	public int g_num_devices = 0;
 	LinkedList g_iorequest = new LinkedList();
-	public static RdpdrDevice[] g_rdpdr_device;
+	public RdpdrDevice[] g_rdpdr_device;
 	protected static Logger logger = Logger.getLogger(RdpdrChannel.class);
 	
 	public RdpdrChannel(Options opt, Common common) {
 		super(opt, common);
-		g_rdpdr_device = new RdpdrDevice[RDPDR_MAX_DEVICES];
+		this.g_rdpdr_device = new RdpdrDevice[RDPDR_MAX_DEVICES];
 		g_num_devices = 0;
 	}
 	
@@ -258,9 +258,9 @@ public class RdpdrChannel extends VChannel {
 
 		for (i = 0; i < g_num_devices; i++)
 		{
-			if (g_rdpdr_device[i].device_type == DEVICE_TYPE_PRINTER)
+			if (this.g_rdpdr_device[i].device_type == DEVICE_TYPE_PRINTER)
 			{
-				Printer printerinfo = (Printer) g_rdpdr_device[i].pdevice_data.get("PRINTER");
+				Printer printerinfo = (Printer) this.g_rdpdr_device[i].pdevice_data.get("PRINTER");
 				printerinfo.bloblen = 0;
 				size += 0x18;
 				size += 2 * printerinfo.driver.length() + 2;
@@ -294,17 +294,17 @@ public class RdpdrChannel extends VChannel {
 		s.setLittleEndian32(g_num_devices);
 
 		for (i = 0; i < g_num_devices; i++){
-			if (g_rdpdr_device[i].get_device_type() == DEVICE_TYPE_DISK)
+			if (this.g_rdpdr_device[i].get_device_type() == DEVICE_TYPE_DISK)
 				continue;
-			s.setLittleEndian32(g_rdpdr_device[i].device_type);
-			System.out.println("device_type:"+g_rdpdr_device[i].device_type);
+			s.setLittleEndian32(this.g_rdpdr_device[i].device_type);
+			System.out.println("device_type:"+this.g_rdpdr_device[i].device_type);
 			s.setLittleEndian32(i); /* RDP Device ID */
-			s.out_uint8p(g_rdpdr_device[i].name, 8);
-			System.out.println("name:"+g_rdpdr_device[i].name);
+			s.out_uint8p(this.g_rdpdr_device[i].name, 8);
+			System.out.println("name:"+this.g_rdpdr_device[i].name);
 
-			switch (g_rdpdr_device[i].device_type){
+			switch (this.g_rdpdr_device[i].device_type){
 				case DEVICE_TYPE_PRINTER:
-					Printer printerinfo = (Printer) g_rdpdr_device[i].pdevice_data.get("PRINTER");
+					Printer printerinfo = (Printer) this.g_rdpdr_device[i].pdevice_data.get("PRINTER");
 					String printerName = printerinfo.get_display_name();
 					int driverlen = 2 * printerinfo.driver.length() + 2;
 					int printerlen = 2 * printerName.length() + 2;
@@ -367,7 +367,7 @@ public class RdpdrChannel extends VChannel {
 		id     = s.getLittleEndian32();
 		major  = s.getLittleEndian32();
 		minor  = s.getLittleEndian32();
-		fns    = g_rdpdr_device[device];//Get the device type abstract handle
+		fns    = this.g_rdpdr_device[device];//Get the device type abstract handle
 //		System.out.println("HANDLE: " + device + g_rdpdr_device[device].name);
 		
 		buffer_len = 0;
@@ -417,7 +417,7 @@ public class RdpdrChannel extends VChannel {
 					filename = "";
 				}
 
-				status = g_rdpdr_device[device].create(device, desired_access, 
+				status = this.g_rdpdr_device[device].create(device, desired_access,
 						share_mode, disposition,flags_and_attributes, filename,result);
 				buffer_len = 1;
 				buffer.set8(0);
@@ -425,13 +425,13 @@ public class RdpdrChannel extends VChannel {
 
 			case IRP_MJ_CLOSE:
 //				System.out.println("IRP:IRP_MJ_CLOSE" + " ["+(sequence_count++) + "]");
-				status = g_rdpdr_device[device].close(file);
+				status = this.g_rdpdr_device[device].close(file);
 				buffer.set8(0);
 				break;
 
 			case IRP_MJ_READ:
 //				System.out.println("IRP:IRP_MJ_READ" + " ["+(sequence_count++) + "]");
-				if(g_rdpdr_device[device].device_type==DEVICE_TYPE_PRINTER){
+				if(this.g_rdpdr_device[device].device_type==DEVICE_TYPE_PRINTER){
 					status = STATUS_NOT_SUPPORTED;
 					buffer.set8(0);
 					break;
@@ -444,7 +444,7 @@ public class RdpdrChannel extends VChannel {
 				}
 				if (true){//(rw_blocking) {	/* Complete read immediately */
 					byte[] buf = new byte[length];
-					status = g_rdpdr_device[device].read(file, buf, length, offset, result);
+					status = this.g_rdpdr_device[device].read(file, buf, length, offset, result);
 					buffer_len = result[0];
 					if(buffer_len<0)
 						buffer_len = 0;
@@ -467,7 +467,7 @@ public class RdpdrChannel extends VChannel {
 				if (true){//(rw_blocking) {	/* Complete write immediately */
 					byte[] buf = new byte[length];
 					s.copyToByteArray(buf, 0, s.getPosition(), length);
-					status = g_rdpdr_device[device].write(file, buf, length, offset, result);
+					status = this.g_rdpdr_device[device].write(file, buf, length, offset, result);
 					break;
 				}
 
@@ -491,7 +491,7 @@ public class RdpdrChannel extends VChannel {
 				}
 				info_level = s.getLittleEndian32();
 				int OldPosition = buffer.getPosition();
-				status = Disk.disk_set_information(file, info_level,s, buffer);
+				status = new Disk(this, null, null).disk_set_information(file, info_level,s, buffer);
 				result[0] = buffer_len = buffer.getPosition() - OldPosition;
 				break;
 
@@ -657,13 +657,13 @@ public class RdpdrChannel extends VChannel {
 		
 	}
 	
-	static boolean rdpdr_handle_ok(int device, int handle) {
+	public boolean rdpdr_handle_ok(int device, int handle) {
 		switch (g_rdpdr_device[device].device_type) {
 			case DEVICE_TYPE_PARALLEL:
 			case DEVICE_TYPE_SERIAL:
 			case DEVICE_TYPE_PRINTER:
 			case DEVICE_TYPE_SCARD:
-				if (g_rdpdr_device[device].handle != handle)
+				if (this.g_rdpdr_device[device].handle != handle)
 					return false;
 				break;
 			case DEVICE_TYPE_DISK:

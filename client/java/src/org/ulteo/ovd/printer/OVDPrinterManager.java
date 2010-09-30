@@ -43,9 +43,12 @@ public class OVDPrinterManager {
 	private static Logger logger = Logger.getLogger(OVDPrinterManager.class);
 	private ArrayList<OVDPrinter> printerList;
 	private String defaultPrinterName;
+	private RdpdrChannel rdpdr = null;
 	public static URL URLPrintingApplet = null;
 	
-	public OVDPrinterManager(){
+	public OVDPrinterManager(RdpdrChannel rdpdr_){
+		this.rdpdr = rdpdr_;
+
 		this.printerList = new ArrayList<OVDPrinter>();
 		this.defaultPrinterName = "";
 	}
@@ -81,11 +84,11 @@ public class OVDPrinterManager {
 				isDefault = true;
 
 			String displayName = getValideDisplayName(printerName);
-			printerList.add(i, new OVDPrinter(printerName, displayName,  isDefault));
+			printerList.add(i, new OVDPrinter(this.rdpdr, printerName, displayName,  isDefault));
 			isDefault = false;
 		}
 		if (printerList.isEmpty()){
-			printerList.add(0, new OVDPrinter(OVDPrinterThread.filePrinterName, OVDPrinterThread.filePrinterName, true));
+			printerList.add(0, new OVDPrinter(this.rdpdr, OVDPrinterThread.filePrinterName, OVDPrinterThread.filePrinterName, true));
 		}		
 	}
 	
@@ -96,7 +99,7 @@ public class OVDPrinterManager {
 		for (String printerName : pList) {
 			if ( isExist(printerName) ){
 				String displayName = getValideDisplayName(printerName);
-				printerList.add(new OVDPrinter(printerName, displayName, true));
+				printerList.add(new OVDPrinter(this.rdpdr, printerName, displayName, true));
 			}
 		}
 	}

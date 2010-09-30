@@ -31,10 +31,12 @@ import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
 public class DiskUpdater extends TimerTask {
 	Logger logger = Logger.getLogger(DiskUpdater.class);
 	private DiskManager diskManager = null;
+	private RdpdrChannel rdpdr = null;
 	
 	/**************************************************************************/
-	public DiskUpdater(DiskManager dm) {
+	public DiskUpdater(DiskManager dm, RdpdrChannel rdpdr_) {
 		this.diskManager = dm;
+		this.rdpdr = rdpdr_;
 	}
 	
 	/**************************************************************************/
@@ -49,7 +51,7 @@ public class DiskUpdater extends TimerTask {
 			diskManager.mountStaticShare();
 		}
 
-		for (RdpdrDevice device : RdpdrChannel.g_rdpdr_device) {
+		for (RdpdrDevice device : this.rdpdr.g_rdpdr_device) {
 			if (device == null) {
 				continue;
 			}

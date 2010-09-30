@@ -41,8 +41,12 @@ public abstract class RdpdrDevice {
 	public String local_path;
 	public boolean slotIsFree = false;
 	public Map pdevice_data = new HashMap(); //take of structured point func
-	public void RdpdrDevice(){
+	protected RdpdrChannel rdpdr = null;
+
+	public RdpdrDevice(RdpdrChannel rdpdr_){
+		this.rdpdr = rdpdr_;
 	}
+
 	public abstract int create(int device, int desired_access, int share_mode, int disposition, int flags_and_attributes, String filename,int[] result);
 	public abstract int read(int handle, byte[] data, int length, int offset, int[] result); 
 	public abstract int write(int handle, byte[] data, int length, int offset, int[] result);

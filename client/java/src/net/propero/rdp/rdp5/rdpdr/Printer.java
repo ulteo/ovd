@@ -67,7 +67,9 @@ public class Printer extends RdpdrDevice{
 	//status
 	public final int STATUS_SUCCESS			= 0x00000000;
 	
-	public Printer(String name, String display_name, boolean is_default){//temp data for test
+	public Printer(RdpdrChannel rdpdr_, String name, String display_name, boolean is_default){//temp data for test
+		super(rdpdr_);
+		
 		this.name = "PRN" + printerCount;
 		printerCount++;
 		this.printer_name = name;

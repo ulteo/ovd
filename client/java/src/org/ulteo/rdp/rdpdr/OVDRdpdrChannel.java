@@ -180,7 +180,7 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 	}
 
 	public RdpdrDevice getDeviceFromPath(String path) {
-		for (RdpdrDevice device : g_rdpdr_device) {
+		for (RdpdrDevice device : this.g_rdpdr_device) {
 			if (device == null)
 				continue;
 				
@@ -218,7 +218,7 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		logger.info("mount a new drive "+name+" => "+path);
 		String magic = "rDAD";
 		int index = getNextFreeSlot();
-		Disk d = new Disk(path, name);
+		Disk d = new Disk(this, path, name);
 		
 		RdpPacket_Localised s;
 		this.register(d);
@@ -258,7 +258,7 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		int id = -1;
 
 		for (int i = 0 ; i< RDPDR_MAX_DEVICES ; i++) {
-			RdpdrDevice dev = g_rdpdr_device[i];
+			RdpdrDevice dev = this.g_rdpdr_device[i];
 			if (dev.name.equals(name) && dev.local_path.equals(path)) {
 				id = i;
 				break;
@@ -283,20 +283,20 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 			e.printStackTrace();
 			return false;
 		}
-		g_rdpdr_device[id].slotIsFree = true;
-		g_rdpdr_device[id].set_name("");
-		g_rdpdr_device[id].set_local_path("");
+		this.g_rdpdr_device[id].slotIsFree = true;
+		this.g_rdpdr_device[id].set_name("");
+		this.g_rdpdr_device[id].set_local_path("");
 
 		return true;
 	}
 
 	private int getNextFreeSlot() {
 		for (int i=0; i< RDPDR_MAX_DEVICES ; i++) {
-			if (g_rdpdr_device[i] == null)
+			if (this.g_rdpdr_device[i] == null)
 				return i;
-			if (g_rdpdr_device[i].get_device_type() == DEVICE_TYPE_PRINTER) 
+			if (this.g_rdpdr_device[i].get_device_type() == DEVICE_TYPE_PRINTER)
 				continue;
-			if (g_rdpdr_device[i].slotIsFree)
+			if (this.g_rdpdr_device[i].slotIsFree)
 				return i;
 		}
 		return -1;
@@ -313,7 +313,7 @@ public class OVDRdpdrChannel extends RdpdrChannel {
  			logger.warn("the max number of device is reached");
  			return false;
  		}
-		OVDRdpdrChannel.g_rdpdr_device[index] = v;
+		this.g_rdpdr_device[index] = v;
 		g_num_devices++;
 		return true;
  	}
