@@ -48,7 +48,7 @@ make_default_conf() {
 
     # DRBD conf
     local device=/dev/drbd0;
-    local disk=/dev/loop0;
+    local disk=$(losetup -f);
     sed -e "s/%RESOURCE%/$DRBD_RESOURCE/" -e "s,%DEVICE%,$device," \
         -e "s,%LOOP%,$disk," -e "s/%AUTH_KEY%/$AUTHKEY/" \
         -e "s/%HOSTNAME%/$HOSTNAME/" -e "s/%NIC_ADDR%/$NIC_ADDR/" \

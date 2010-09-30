@@ -27,6 +27,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
+
+HA_VARLIB_DIR=/var/lib/ulteo/ovd
+
+detect_lo() {
+	losetup -a |grep "$HA_VARLIB_DIR/vbd0.bin" |cut -d ":" -f1
+}
+
+
 case $1 in
 
     start)
@@ -36,7 +44,10 @@ case $1 in
     ;;
 
     stop)
-        losetup -d $DRBD_LOOP
+        DRBD_LOOP=$(detect_lo)
+        if [ -n "$DRBD_LOOP" ]; then
+            losetup -d $DRBD_LOOP
+        fi
         service mysql restart || true
         service apache2 restart
     ;;
