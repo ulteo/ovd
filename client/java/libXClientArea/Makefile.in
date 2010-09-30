@@ -50,6 +50,6 @@ uninstall:
 	$(RM) $(LIBDIR)/$(EXEC)
 
 dist: clean
-	tar -cvf ovd-xclient-area-99.99+svn@VERSION@.tar.gz src/org_ulteo_ovd_client_env_WorkArea.c Makefile
+	tar -cvf ovd-xclient-area-@VERSION@.tar.gz src/org_ulteo_ovd_client_env_WorkArea.c Makefile
 
 distcheck: dist
