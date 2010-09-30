@@ -56,6 +56,9 @@ drbd_install()
     drbdadm create-md $DRBD_RESOURCE >> $HA_LOG 2>&1
     drbdadm up $DRBD_RESOURCE 2>> $HA_LOG || true
 
+    # create drbd mount directory
+    mkdir -p $DRBD_MOUNT_DIR
+
     if [ $1 == "M" ]; then
         # Check if overwrite of peer is necessary
         drbdadm -- --overwrite-data-of-peer primary $DRBD_RESOURCE
@@ -64,7 +67,6 @@ drbd_install()
         mkfs.ext3 $DRBD_DEVICE >> $HA_LOG 2>&1
 
         # Copy MySQL DB to VDB0
-        mkdir -p $DRBD_MOUNT_DIR
         mount $DRBD_DEVICE $DRBD_MOUNT_DIR
         cp -a $MYSQL_DB $SM_SPOOL_DIR $DRBD_MOUNT_DIR
         umount $DRBD_MOUNT_DIR
