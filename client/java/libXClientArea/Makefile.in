@@ -21,8 +21,8 @@ JAVAHOME?=/usr/lib/jvm/java-1.6.0-openjdk
 CFLAGS=-Wall -I${JAVAHOME}/include -I${JAVAHOME}/include/linux -fPIC
 LDFLAGS=-lX11
 EXEC=libXClientArea.so
-DIST?=/usr/lib/
-
+DESTDIR?=.
+LIBDIR=$(DESTDIR)/usr/lib/
 
 all: $(EXEC)
 
@@ -43,7 +43,13 @@ clean:
 	$(RM) -rf org
 
 install: all
-	install $(EXEC) $(DIST)
+	mkdir -p $(LIBDIR)
+	install $(EXEC) $(LIBDIR)
 
 uninstall:
-	$(RM) $(DIST)/$(EXEC)
+	$(RM) $(LIBDIR)/$(EXEC)
+
+dist: clean
+	tar -cvf ovd-xclient-area-99.99+svn@VERSION@.tar.gz src/org_ulteo_ovd_client_env_WorkArea.c Makefile
+
+distcheck: dist
