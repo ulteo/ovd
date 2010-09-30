@@ -48,7 +48,7 @@ case $1 in
         if [ -n "$DRBD_LOOP" ]; then
             losetup -d $DRBD_LOOP
         fi
-        service mysql restart || true
+        service mysql --full-restart
         service apache2 restart
     ;;
 
