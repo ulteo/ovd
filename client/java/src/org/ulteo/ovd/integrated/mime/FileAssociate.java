@@ -22,10 +22,13 @@ package org.ulteo.ovd.integrated.mime;
 
 import org.ulteo.ovd.Application;
 
-public abstract class FileAssociate /*implements Runnable */{
-	/*abstract public void run();
-	abstract public void removeOVDKeys();*/
+public abstract class FileAssociate {
+	protected String token = null;
 
 	abstract public void createAppAction(Application app);
 	abstract public void removeAppAction(Application app);
+
+	public final void setToken(String token) {
+		this.token = token;
+	}
 }

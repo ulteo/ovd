@@ -40,5 +40,8 @@ public abstract class SystemAbstract {
 	
 	public final void setShortcutArgumentInstance(String token) {
 		this.shortcut.setToken(token);
+
+		if (this.fileAssociate != null)
+			this.fileAssociate.setToken(token);
 	}
 }

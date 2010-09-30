@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ulteo.ovd.Application;
+import org.ulteo.ovd.integrated.Constants;
 
 public class WindowsRegistry extends FileAssociate {
 	/*public static void main(String[] args){
@@ -131,7 +132,7 @@ public class WindowsRegistry extends FileAssociate {
 						RegistryKey ovdShell = key.createSubKey("ovdShell_" + app.getId(), "");
 						ovdShell.setValue(new RegStringValue(ovdShell, "", "Open with "+app.getName()));
 						ovdShell = ovdShell.createSubKey("command", "");
-						ovdShell.setValue(new RegStringValue(ovdShell, "", "UlteoOVDIntegratedLauncher.exe "+app.getId()+" \"%1\""));
+						ovdShell.setValue(new RegStringValue(ovdShell, "", "\""+System.getProperty("user.dir")+Constants.FILE_SEPARATOR+Constants.FILENAME_LAUNCHER+"\" "+this.token+" "+app.getId()+" \"%1\""));
 					}
 					else {
 						System.err.println(key.getFullName()+" doesn't exist");
