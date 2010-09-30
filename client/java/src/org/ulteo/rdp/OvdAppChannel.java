@@ -41,6 +41,7 @@ public class OvdAppChannel extends VChannel {
 	public static final int	ORDER_LOGOFF	= 0x04;
 	public static final int ORDER_STOP	= 0x05;
 	public static final int ORDER_CANT_START= 0x06;
+	public static final int	ORDER_START_WITH_ARG= 0x07;
 	
 	private boolean channel_open = false;
 	
@@ -120,6 +121,36 @@ public class OvdAppChannel extends VChannel {
 		out.setLittleEndian32(app_id);
 		out.markEnd();
 		
+		try {
+			this.send_packet( out );
+		} catch( RdesktopException e ) {
+			System.err.println( e.getMessage() );
+			e.printStackTrace();
+		} catch( IOException e ) {
+			System.err.println( e.getMessage() );
+			e.printStackTrace();
+		} catch( CryptoException e ) {
+			System.err.println( e.getMessage() );
+			e.printStackTrace();
+		}
+	}
+
+	public void sendStartApp(int token, int app_id, String sharename, String path) {
+		byte[] sharenameBytes = sharename.getBytes();
+		byte[] pathBytes = path.getBytes();
+		
+		RdpPacket_Localised out = new RdpPacket_Localised(17 + sharenameBytes.length + pathBytes.length);
+		out.set8(ORDER_START_WITH_ARG);
+		out.setLittleEndian32(token);
+		out.setLittleEndian32(app_id);
+		out.setLittleEndian32(sharenameBytes.length);
+		out.copyFromByteArray(sharenameBytes, 0, out.getPosition(), sharenameBytes.length);
+		out.setPosition(out.getPosition() + sharenameBytes.length);
+		out.setLittleEndian32(pathBytes.length);
+		out.copyFromByteArray(pathBytes, 0, out.getPosition(), pathBytes.length);
+		out.setPosition(out.getPosition() + pathBytes.length);
+		out.markEnd();
+
 		try {
 			this.send_packet( out );
 		} catch( RdesktopException e ) {
