@@ -21,8 +21,8 @@
 package org.ulteo.rdp;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.propero.rdp.Common;
 import net.propero.rdp.Options;
@@ -50,7 +50,7 @@ public class OvdAppChannel extends VChannel {
 	public OvdAppChannel(Options opt_, Common common_) {
 		super(opt_, common_);
 		
-		this.listener = new ArrayList<OvdAppListener>();
+		this.listener = new CopyOnWriteArrayList<OvdAppListener>();
 	}
 	
 	public int flags() {
