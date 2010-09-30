@@ -81,7 +81,7 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 					}
 					if ((magic[2] == 'r') && (magic[3] == 'd')) {
 						/* connect to a specific resource */
-						handle = data.getBigEndian32();
+						handle = data.getLittleEndian32();
 						Logger.debug("RDPDR: Server connected to resource "+handle);
 						return;
 					}
