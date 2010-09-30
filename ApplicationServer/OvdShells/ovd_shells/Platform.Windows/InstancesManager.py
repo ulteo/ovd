@@ -65,3 +65,7 @@ class InstancesManager(AbstractInstancesManager):
 		ret = win32process.TerminateProcess(handle, 0)
 		
 		win32file.CloseHandle(handle)
+	
+	@staticmethod
+	def shareName2path(share):
+		return r"\\tsclient\%s"%(share)

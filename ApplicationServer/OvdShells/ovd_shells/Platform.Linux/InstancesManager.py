@@ -53,4 +53,7 @@ class InstancesManager(AbstractInstancesManager):
 	
 	def kill(self, pid):
 		os.kill(signal.SIGTERM)
-
+	
+	@staticmethod
+	def shareName2path(share):
+		return os.path.join(os.path.expanduser('~'), ".rdp_drive", share)

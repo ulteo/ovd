@@ -18,6 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import os
 import struct
 import threading
 import time
@@ -66,6 +67,9 @@ class InstancesManager(threading.Thread):
 					(token, app) = job[1:3]
 					cmd = "startovdapp %d"%(app)
 					
+					if len(job)>3:
+						arg = os.path.join(self.shareName2path(job[3]), job[4])
+						cmd+=' "%s"'%(arg)
 					instance = self.launch(cmd)
 					
 					# ToDo: sleep 0.5s and check if the process exist
@@ -122,6 +126,10 @@ class InstancesManager(threading.Thread):
 		raise NotImplementedError("must be redeclared")
 	
 	def launch(self, cmd):
+		raise NotImplementedError("must be redeclared")
+	
+	@staticmethod
+	def shareName2path(share):
 		raise NotImplementedError("must be redeclared")
 	
 	def onInstanceNotAvailable(self, token):

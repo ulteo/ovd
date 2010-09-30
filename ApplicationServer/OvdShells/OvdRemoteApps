@@ -72,6 +72,27 @@ def main():
 			print "recv startapp order %d %d"%(token, app_id)
 			im.pushJob((order, token, app_id))
 		
+		elif order == OvdAppChannel.ORDER_START_WITH_ARGS:
+			token = struct.unpack('<I', packet[1:5])[0]
+			app_id = struct.unpack('<I', packet[5:9])[0]
+			
+			ptr = 9
+			l = struct.unpack('<I', packet[ptr:ptr+4])[0]
+			ptr+= 4
+			
+			share = packet[ptr:ptr+l]
+			ptr+= l
+			
+			l = struct.unpack('<I', packet[ptr:ptr+4])[0]
+			ptr+= 4
+			
+			path = packet[ptr:ptr+l]
+			ptr+=l
+			
+			job = (OvdAppChannel.ORDER_START, token, app_id, share, path)
+			print "recv startapp order %d %d %s %s"%(token, app_id, share, path)
+			im.pushJob(job)
+	
 		elif order == OvdAppChannel.ORDER_STOP:
 			token = struct.unpack('<I', packet[1:5])[0]
 			

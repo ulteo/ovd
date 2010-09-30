@@ -135,8 +135,16 @@ def startSeamless():
 	launch("seamlessrdpshell")
 	
 def transformCommand(cmd_, args_):
-		if "%1" in cmd_ and len(args_)>0:
-			return cmd_.replace("%1", args[0])
+		args = args_
+		if len(args)>0:
+			if "%1" in cmd_:
+				cmd_ = cmd_.replace("%1", args.pop(0))
+			if "%*" in cmd_:
+				cmd_ = cmd_.replace("%*", " ".join(args))
+				args = []
+		
+		if len(args)>0:
+			cmd_+= " "+" ".join(args)
 		
 		return cmd_
 
