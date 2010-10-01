@@ -54,7 +54,7 @@ dist: clean
 	mkdir -p $$DISTDIR/src ; \
 	cp Makefile $$DISTDIR ; \
 	cp src/org_ulteo_ovd_client_env_WorkArea.c $$DISTDIR/src ; \
-	tar -zcf ovd-xclient-area-@VERSION@.tar.gz $$DISTDIR ; \
+	tar -zcf ovd-xclient-area.tar.gz $$DISTDIR ; \
 	rm -rf $$DISTDIR
 
 distcheck: dist
