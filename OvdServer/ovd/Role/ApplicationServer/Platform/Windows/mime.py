@@ -17,6 +17,8 @@
 
 import re
 from _winreg import *
+import win32api
+import win32con
 
 # _winreg.ExpandEnvironmentStrings only appears in python 2.6
 try:
@@ -191,6 +193,89 @@ class MimeInfos():
 		finally:
 			if key is not None:
 				CloseKey(key)
+	
+	
+	@staticmethod
+	def extract_know_mime_ext_matching():
+		ret = {}
+		
+		try:
+			hkey = win32api.RegOpenKey(win32con.HKEY_CLASSES_ROOT, r"MIME\Database\Content Type", 0, win32con.KEY_READ)
+		except:
+			return ret
+		
+		i = 0
+		while True:
+			try:
+				mime_type = win32api.RegEnumKey(hkey, i)
+				i+= 1
+			except Exception, err:
+				break
+			
+			try:
+				hkey2 = win32api.RegOpenKey(win32con.HKEY_CLASSES_ROOT, r"MIME\Database\Content Type\%s"%(mime_type), 0, win32con.KEY_QUERY_VALUE)
+			except:
+				print "weird behavior 1"
+				continue
+			
+			try:
+				(o,t) = win32api.RegQueryValueEx(hkey2, "Extension")
+			except:
+				continue
+			finally:
+				win32api.RegCloseKey(hkey2)
+			
+			if t is not win32con.REG_SZ:
+				continue
+		
+			ret[mime_type] = o
+		
+		win32api.RegCloseKey(hkey)
+		return ret
+	
+	
+	@staticmethod
+	def extract_know_mime_ext_matching_alt():
+		ret = {}
+		
+		startEnumerate = False
+		i = 0
+		while True:
+			try:
+				name = win32api.RegEnumKey(win32con.HKEY_CLASSES_ROOT, i)
+				i+= 1
+			except Exception, err:
+				break
+			
+			if not name.startswith("."):
+				if startEnumerate:
+					# Assume the enumerate is in alpha order so no more .something
+					# because the enumerate is too long
+					break
+				continue
+			
+			startEnumerate = True
+			try:
+				hkey2 = win32api.RegOpenKey(win32con.HKEY_CLASSES_ROOT, name, 0, win32con.KEY_QUERY_VALUE)
+			except:
+				print "weird behavior 1"
+				continue
+			
+			try:
+				(o,t) = win32api.RegQueryValueEx(hkey2, "Content Type")
+			except:
+				continue
+			finally:
+				win32api.RegCloseKey(hkey2)
+			
+			if t is not win32con.REG_SZ:
+				continue
+			
+			if not ret.has_key(o):
+				ret[o] = []
+			ret[o].append(name)
+		
+		return ret
 
 
 if __name__ == "__main__":
