@@ -19,6 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import glob
 import locale
 import os
 import time
@@ -135,13 +136,14 @@ class Session:
 				encoding = "UTF8"
 			
 			applications = {}
-			for basename in os.listdir(self.instanceDirectory):
+			for path in glob.glob(os.path.join(self.instanceDirectory, "*")):
+				basename = os.path.basename(path)
+				
 				if type(basename) is unicode:
 					name = basename
 				else:
 					name = unicode(basename, encoding)
 				
-				path = os.path.join(self.instanceDirectory, basename)
 				if not os.path.isfile(path):
 					continue
 				
