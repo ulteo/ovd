@@ -46,7 +46,7 @@ public class ApplicationListener implements ActionListener{
 		long b = ((long)((Math.random()+1)*100000));
 		int token = (int)((a/b)*(long)((Math.random()+1)*10000));
 
-		ApplicationInstance ai = new ApplicationInstance(this.app, token);
+		ApplicationInstance ai = new ApplicationInstance(this.app, null, token);
 		ai.setLaunchedFromShortcut(false);
 
 		this.runningApps.addInstance(ai);

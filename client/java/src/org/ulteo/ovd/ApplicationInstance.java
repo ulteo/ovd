@@ -21,10 +21,18 @@
 package org.ulteo.ovd;
 
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.crypto.CryptoException;
+import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
+import org.ulteo.Logger;
+import org.ulteo.ovd.integrated.Constants;
+import org.ulteo.rdp.OvdAppChannel;
+import org.ulteo.rdp.OvdAppListener;
+import org.ulteo.rdp.rdpdr.DeviceListener;
+import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 
-public class ApplicationInstance {
+public class ApplicationInstance implements DeviceListener, OvdAppListener {
 	public static final int STOPPING = 0;
 	public static final int STOPPED = 1;
 	public static final int STARTING = 2;
@@ -33,12 +41,17 @@ public class ApplicationInstance {
 	private static final int MAX_STATE = 3;
 
 	private Application app = null;
+	private String arg = null;
 	private int token = -1;
+	private String sharename = null;
+	private String path = null;
+	private RdpdrDevice waitedDevice = null;
 	private int state = STOPPED;
 	private boolean launchedFromShortcut = false;
 
-	public ApplicationInstance(Application app_, int token_) {
+	public ApplicationInstance(Application app_, String arg_, int token_) {
 		this.app = app_;
+		this.arg = arg_;
 		this.token = token_;
 	}
 
@@ -66,8 +79,74 @@ public class ApplicationInstance {
 		this.launchedFromShortcut = launchedFromShortcut_;
 	}
 
+	private boolean parseArg() {
+		if (this.arg == null || this.waitedDevice == null)
+			return false;
+
+		int pos = this.arg.lastIndexOf(Constants.FILE_SEPARATOR);
+		String local_path = this.arg.substring(0, pos);
+		
+		String share_local_path = this.waitedDevice.get_local_path();
+		if (share_local_path.endsWith(Constants.FILE_SEPARATOR))
+			share_local_path = share_local_path.substring(0, share_local_path.length() - 1);
+
+		if (local_path.equals(share_local_path)) {
+			this.path = this.arg.substring(pos + 1);
+			this.sharename = this.waitedDevice.get_name();
+
+			return true;
+		}
+
+		if (share_local_path.length() < local_path.length()) {
+			this.sharename = this.waitedDevice.get_name();
+			this.path = this.arg.substring(share_local_path.length() + 1, this.arg.length());
+
+			return true;
+		}
+
+		return false;
+	}
+
 	public void startApp() throws RdesktopException, IOException, CryptoException {
-		this.app.getConnection().getOvdAppChannel().sendStartApp(this.token, this.app.getId());
+		if (this.arg == null) {
+			this.app.getConnection().getOvdAppChannel().sendStartApp(this.token, this.app.getId());
+		}
+		else {
+			OVDRdpdrChannel rdpdr = this.app.getConnection().getRdpdrChannel();
+			try {
+				this.waitedDevice = rdpdr.getDeviceFromFile(arg);
+			} catch (InvalidParameterException ex) {
+				Logger.error("Unable to get a drive for '"+this.arg+"': "+ex.getMessage());
+				this.waitedDevice = null;
+				return;
+			}
+
+			if (this.waitedDevice == null) {
+				rdpdr.addDeviceListener(this);
+				this.waitedDevice = rdpdr.mountDeviceFromFile(arg);
+				if (this.waitedDevice == null) {
+					Logger.error("Unable to mount a drive for: '"+this.arg+"'");
+					rdpdr.removeDeviceListener(this);
+					return;
+				}
+			}
+
+			if (! this.parseArg()) {
+				Logger.error("Failed to parse arg: '"+this.arg+"'");
+				this.waitedDevice = null;
+				if (rdpdr.getDeviceListeners().contains(this))
+					rdpdr.removeDeviceListener(this);
+				return;
+			}
+
+			if (! this.waitedDevice.connected) {
+				Logger.info("Waiting for device mount: "+this.waitedDevice.handle);
+				return;
+			}
+
+			this.waitedDevice = null;
+			this.app.getConnection().getOvdAppChannel().sendStartApp(this.token, this.app.getId(), this.sharename, this.path);
+		}
 		this.state = STARTING;
 	}
 
@@ -83,5 +162,37 @@ public class ApplicationInstance {
 	
 	public Application getApplication() {
 		return this.app;
+	}
+
+	public void deviveConnected(RdpdrDevice device) {
+		if (device != this.waitedDevice)
+			return;
+
+		Logger.info("Device "+device.name+"("+device.handle+") connected");
+
+		this.app.getConnection().getOvdAppChannel().sendStartApp(this.token, this.app.getId(), this.sharename, this.path);
+		this.state = STARTING;
+
+		this.app.getConnection().getRdpdrChannel().removeDeviceListener(this);
+		this.app.getConnection().getOvdAppChannel().addOvdAppListener(this);
+	}
+
+	public void ovdInited(OvdAppChannel o) {}
+	public void ovdInstanceStarted(int instance_) {}
+
+	public void ovdInstanceStopped(int instance_) {
+		if (instance_ != this.token || this.waitedDevice == null)
+			return;
+
+		this.app.getConnection().getOvdAppChannel().removeOvdAppListener(this);
+		this.app.getConnection().getRdpdrChannel().unmountDrive(this.waitedDevice.get_name(), this.waitedDevice.get_local_path());
+	}
+
+	public void ovdInstanceError(int instance_) {
+		if (instance_ != this.token || this.waitedDevice == null)
+			return;
+
+		this.app.getConnection().getOvdAppChannel().removeOvdAppListener(this);
+		this.app.getConnection().getRdpdrChannel().unmountDrive(this.waitedDevice.get_name(), this.waitedDevice.get_local_path());
 	}
 }

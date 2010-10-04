@@ -36,6 +36,9 @@ import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public class Spool implements Runnable {
+	private final static String PREFIX_ID = "id = ";
+	private final static String PREFIX_ARG = "arg = ";
+
 	private Logger logger = Logger.getLogger(Spool.class);
 	private OvdClient client = null;
 	private String os = null;
@@ -119,14 +122,27 @@ public class Spool implements Runnable {
 				File[] children = this.toLaunchDir.listFiles();
 				for (File todo : children) {
 					try {
+						int appId = -1;
+						String arg = null;
 						Scanner scanner = new Scanner(todo);
 						while (scanner.hasNextLine()) {
 							String line = scanner.nextLine().trim();
 							if(line.isEmpty())
 								continue;
 
-							this.startApp(line, todo.getName());
+							if (line.startsWith(PREFIX_ID)) {
+								appId = Integer.parseInt(line.substring(PREFIX_ID.length()));
+								continue;
+							}
+
+							if (line.startsWith(PREFIX_ARG)) {
+								arg = line.substring(PREFIX_ARG.length());
+								continue;
+							}
+
+							org.ulteo.Logger.warn("File '"+todo.getName()+"': Unknown line content: "+line);
 						}
+						this.startApp(appId, arg, todo.getName());
 						scanner.close();
 					} catch (FileNotFoundException ex) {
 						this.logger.error("No read file '" + todo.getAbsolutePath() + "'");
@@ -207,15 +223,14 @@ public class Spool implements Runnable {
 		return null;
 	}
 
-	private void startApp(String appId_, String token_) {
-		int appId = Integer.parseInt(appId_);
-		this.logger.info("Start application "+appId+"("+token_+")");
-		Application app = this.findAppById(appId);
+	private void startApp(int appId_, String arg_, String token_) {
+		this.logger.info("Start application "+appId_+" with arg '"+arg_+"'(token: "+token_+")");
+		Application app = this.findAppById(appId_);
 		if (app == null) {
 			this.logger.error("Can not start application (id: "+appId_+")");
 			return;
 		}
-		ApplicationInstance ai = new ApplicationInstance(app, Integer.parseInt(token_));
+		ApplicationInstance ai = new ApplicationInstance(app, arg_, Integer.parseInt(token_));
 		ai.setLaunchedFromShortcut(true);
 		this.appInstances.add(ai);
 		try {

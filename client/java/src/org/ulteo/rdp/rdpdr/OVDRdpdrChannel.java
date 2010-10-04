@@ -20,6 +20,10 @@
 package org.ulteo.rdp.rdpdr;
 
 import java.io.IOException;
+import java.security.InvalidParameterException;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.ulteo.Logger;
 
@@ -32,6 +36,7 @@ import net.propero.rdp.RdpPacket_Localised;
 import net.propero.rdp.rdp5.rdpdr.Disk;
 import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
+import org.ulteo.ovd.integrated.Constants;
 
 public class OVDRdpdrChannel extends RdpdrChannel {
 	
@@ -51,9 +56,13 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 
 	private boolean supportUnicode = false;
 	private int drive_version = DRIVE_CAPABILITY_VERSION_01;
-	
+
+	private List<DeviceListener> listeners = null;
+
 	public OVDRdpdrChannel(Options opt, Common common) {
 		super(opt, common);
+
+		this.listeners = new CopyOnWriteArrayList<DeviceListener>();
 	}
 
 	public void process( RdpPacket data ) throws RdesktopException, IOException, CryptoException {
@@ -83,6 +92,12 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 						/* connect to a specific resource */
 						handle = data.getLittleEndian32();
 						Logger.debug("RDPDR: Server connected to resource "+handle);
+
+						this.g_rdpdr_device[handle].connected = true;
+
+						for (DeviceListener l : this.listeners) {
+							l.deviveConnected(this.g_rdpdr_device[handle]);
+						}
 						return;
 					}
 					if ((magic[2] == 'P') && (magic[3] == 'S')) {
@@ -179,6 +194,23 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		}
 	}
 
+	public RdpdrDevice getDeviceFromName(String name) {
+		for (RdpdrDevice device : this.g_rdpdr_device) {
+			if (device == null)
+				continue;
+
+			if (device.get_device_type() != RdpdrChannel.DEVICE_TYPE_DISK)
+				continue;
+
+			if (device.slotIsFree)
+				continue;
+
+			if (device.get_name().equals(name) )
+				return device;
+		}
+		return null;
+	}
+
 	public RdpdrDevice getDeviceFromPath(String path) {
 		for (RdpdrDevice device : this.g_rdpdr_device) {
 			if (device == null)
@@ -193,6 +225,50 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 			if (device.get_local_path().equals(path) )
 				return device;
 		}
+		return null;
+	}
+
+	public RdpdrDevice getDeviceFromFile(String file) throws InvalidParameterException {
+		int pos = file.lastIndexOf(Constants.FILE_SEPARATOR);
+
+		if (pos == -1)
+			throw new InvalidParameterException("'"+file+"' is not a path");
+
+		if (pos == (file.length() - 1))
+			throw new InvalidParameterException("'"+file+"' is a directory not a file");
+
+		String path = file.substring(0, pos);
+		for (RdpdrDevice device : this.g_rdpdr_device) {
+			if (device == null)
+				continue;
+
+			if (device.get_device_type() != RdpdrChannel.DEVICE_TYPE_DISK)
+				continue;
+
+			if (device.slotIsFree )
+				continue;
+
+			String share_local_path = device.get_local_path();
+			if (share_local_path.endsWith(Constants.FILE_SEPARATOR))
+				share_local_path = share_local_path.substring(0, share_local_path.length() - 1);
+			
+			if (share_local_path.equals(path) || path.startsWith(share_local_path))
+				return device;
+		}
+		
+		return null;
+	}
+
+	public RdpdrDevice mountDeviceFromFile(String file) {
+		int pos = file.lastIndexOf(Constants.FILE_SEPARATOR);
+		String path = file.substring(0, pos);
+		String name = "tmp"+UUID.randomUUID();
+
+		if (this.mountNewDrive(name, path)) {
+			return this.getDeviceFromName(name);
+		}
+
+		Logger.error("Failed to mount drive '"+name+"' ==> '"+path+"'");
 		return null;
 	}
 	
@@ -318,4 +394,15 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		return true;
  	}
 
+	public List<DeviceListener> getDeviceListeners() {
+		return this.listeners;
+	}
+
+	public void addDeviceListener(DeviceListener listener) {
+		this.listeners.add(listener);
+	}
+
+	public void removeDeviceListener(DeviceListener listener) {
+		this.listeners.remove(listener);
+	}
 }

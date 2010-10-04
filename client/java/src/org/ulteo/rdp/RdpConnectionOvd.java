@@ -250,6 +250,14 @@ public class RdpConnectionOvd extends RdpConnection {
 		return this.ovdAppChannel;
 	}
 
+	/**
+	 * Return the current OVDRdpdrChannel instance
+	 * @return OVDRdpdrChannel instance
+	 */
+	public OVDRdpdrChannel getRdpdrChannel() {
+		return (OVDRdpdrChannel) this.rdpdrChannel;
+	}
+
 	public void sendLogoff() throws OvdException {
 		if (this.ovdAppChannel == null)
 			throw new OvdException("Unable to send logoff: OvdAppChannel does not exist");
