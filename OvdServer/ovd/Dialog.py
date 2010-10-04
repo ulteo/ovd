@@ -223,7 +223,7 @@ class Dialog(AbstractDialog):
 		
 		document = self.get_response_xml(response)
 		if document is None:
-			Logger.warn("Dialog::send_server_status response not XML")
+			Logger.warn("Dialog::send_server_monitoring response not XML")
 			return False
 		
 		rootNode = document.documentElement
