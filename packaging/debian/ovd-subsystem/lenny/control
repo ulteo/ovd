@@ -7,7 +7,7 @@ Standards-Version: 3.7.3
 
 Package: ulteo-ovd-subsystem
 Architecture: all
-Pre-Depends: debconf, po-debconf
+Pre-Depends: ${misc:Depends}, po-debconf
 Depends: curl
 Conflicts: ulteo-ovd-application-server (<< 3), ulteo-ovd-slaveserver
 Description: Ulteo Open Virtual Desktop - Subsystem
