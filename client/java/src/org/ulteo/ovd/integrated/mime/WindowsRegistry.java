@@ -137,7 +137,7 @@ public class WindowsRegistry extends FileAssociate {
 						subkeysToRemove.add(subKeyStr);
 					}
 					for (String subKeyStr : subkeysToRemove) {
-						this.removeKey(key, subKeyStr);
+						WindowsRegistry.removeKey(key, subKeyStr);
 					}
 					subkeysToRemove.clear();
 
@@ -148,7 +148,7 @@ public class WindowsRegistry extends FileAssociate {
 		}
 	}
 
-	private void removeKey(RegistryKey key, String keyStr) {
+	private static void removeKey(RegistryKey key, String keyStr) {
 		RegistryKey subKey = Registry.openSubkey(key, keyStr, RegistryKey.ACCESS_ALL);
 		if (subKey == null)
 			return;
@@ -162,7 +162,7 @@ public class WindowsRegistry extends FileAssociate {
 				toRemove.add(subKeyStr);
 			}
 			for (String subKeyStr : toRemove) {
-				this.removeKey(subKey, subKeyStr);
+				WindowsRegistry.removeKey(subKey, subKeyStr);
 			}
 			toRemove.clear();
 
