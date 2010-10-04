@@ -21,6 +21,9 @@
  **/
 require_once(dirname(__FILE__).'/../admin/includes/core.inc.php');
 
+if (Preferences::fileExists() === false)
+	exit(1);
+
 //BEGIN Updating logs cache
 $servers = Servers::getAll();
 foreach ($servers as $server) {

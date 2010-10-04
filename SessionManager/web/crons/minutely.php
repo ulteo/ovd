@@ -20,6 +20,9 @@
  **/
 require_once(dirname(__FILE__).'/../admin/includes/core.inc.php');
 
+if (Preferences::fileExists() === false)
+	exit(1);
+
 //BEGIN Sessions expiration
 $sessions = Abstract_Session::load_all();
 foreach ($sessions as $session) {
