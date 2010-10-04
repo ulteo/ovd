@@ -786,6 +786,14 @@ $session_node->setAttribute('multimedia', $multimedia);
 $session_node->setAttribute('redirect_client_printers', $redirect_client_printers);
 if ($timeout > 0)
 	$session_node->setAttribute('duration', $timeout);
+$settings_node = $dom->createElement('settings');
+foreach ($session->settings as $setting_k => $setting_v) {
+	$setting_node = $dom->createElement('setting');
+	$setting_node->setAttribute('name', $setting_k);
+	$setting_node->setAttribute('value', $setting_v);
+	$settings_node->appendChild($setting_node);
+}
+$session_node->appendChild($settings_node);
 $user_node = $dom->createElement('user');
 $user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 $session_node->appendChild($user_node);
