@@ -9,5 +9,5 @@ Homepage: http://www.ulteo.com
 Package: ulteo-ovd-integrated-launcher
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Ulteo Open Virtual Desktop: integrated laucher
+Description: Ulteo Open Virtual Desktop - integrated laucher
  Launch hook for seamless applications

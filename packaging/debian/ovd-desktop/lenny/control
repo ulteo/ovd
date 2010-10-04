@@ -13,5 +13,5 @@ Depends: ulteo-ovd-desktop-settings, ulteo-xfce4-restricted-menu-plugin,
 Recommends: xinit, app-install-data
 Suggests: gdm
 Conflicts: xfce (>= 4.6)
-Description: Ulteo Open Virtual Desktop: XFCE desktop
+Description: Ulteo Open Virtual Desktop - XFCE desktop
  A desktop based on Xfce 4.4 for Ulteo OVD solution
