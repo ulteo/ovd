@@ -23,6 +23,7 @@ import os
 import pythoncom
 import re
 import tempfile
+import win32api
 from win32com.shell import shell, shellcon
 import win32event
 import win32file
@@ -163,11 +164,11 @@ class ApplicationsDetection:
 		shortcut.QueryInterface( pythoncom.IID_IPersistFile ).Load(filename)
 		
 		(iconLocation, iconId) = shortcut.GetIconLocation()
-		iconLocation = self.evalPath(iconLocation)
+		iconLocation = win32api.ExpandEnvironmentStrings(iconLocation)
 		
 		if len(iconLocation) == 0 or not os.path.exists(iconLocation):
 			Logger.debug("ApplicationsDetection::getIcon No IconLocation, use shortcut target")
-			iconLocation = self.evalPath(shortcut.GetPath(shell.SLGP_RAWPATH)[0])
+			iconLocation = win32api.ExpandEnvironmentStrings(shortcut.GetPath(shell.SLGP_RAWPATH)[0])
 			
 			if len(iconLocation) == 0 or not os.path.exists(iconLocation):
 				Logger.warn("ApplicationsDetection::getIcon Neither IconLocation nor shortcut target on %s (%s)"%(filename, iconLocation))
@@ -255,16 +256,3 @@ class ApplicationsDetection:
 				r.append(i)
 		
 		return r
-
-	@staticmethod
-	def evalPath(path):
-		all = re.findall("%[a-zA-Z]+%", path)
-		all = ApplicationsDetection.ArrayUnique(all)
-		
-		for item in all:
-			buf = item[1:-1].upper()
-			if os.environ.has_key(buf):
-				path = path.replace(item, os.environ[buf])
-		
-		return path
-
