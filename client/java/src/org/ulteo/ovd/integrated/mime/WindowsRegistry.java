@@ -28,8 +28,7 @@ import com.ice.jni.registry.RegistryKey;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.integrated.Constants;
 
@@ -107,7 +106,7 @@ public class WindowsRegistry extends FileAssociate {
 					}
 					
 				} catch (RegistryException ex) {
-					Logger.getLogger(WindowsRegistry.class.getName()).log(Level.SEVERE, null, ex);
+					Logger.error(ex.getMessage());
 				}
 			}
 		}
@@ -142,7 +141,7 @@ public class WindowsRegistry extends FileAssociate {
 					subkeysToRemove.clear();
 
 				} catch (RegistryException ex) {
-					Logger.getLogger(WindowsRegistry.class.getName()).log(Level.SEVERE, null, ex);
+					Logger.error(ex.getMessage());
 				}
 			}
 		}
@@ -178,7 +177,7 @@ public class WindowsRegistry extends FileAssociate {
 
 			key.deleteSubKey(keyStr);
 		} catch (RegistryException ex) {
-			Logger.getLogger(WindowsRegistry.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.error(ex.getMessage());
 		}
 	}
 }
