@@ -106,7 +106,7 @@ BOOL hicon2pngfile(HICON ico, LPCTSTR png_filename) {
 
         pixels = (LPBYTE) GlobalAlloc(GMEM_FIXED, bmih.biWidth * bmih.biHeight * (bmih.biBitCount / 8));
         if (pixels == NULL) {
-            puts("Oulahlahh");
+            fprintf(stderr, "GlobalAlloc failed\n");
             return FALSE;
         }
 
