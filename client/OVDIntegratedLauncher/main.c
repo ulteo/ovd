@@ -64,6 +64,7 @@ int main(int argc, LPSTR argv[]) {
     TCHAR spool_dir[MAX_PATH];
     SPOOL * spool = NULL;
     int instance;
+    LPSTR args = NULL;
     
     if (argc < 3) {
         fprintf(stderr, "Missing arguments.\n");
@@ -84,7 +85,11 @@ int main(int argc, LPSTR argv[]) {
         return 2;
     }
 
-    instance = spool_instance_create(spool, argv[2], NULL);
+    if (argc > 3) {
+        args = argv[3];
+    }
+
+    instance = spool_instance_create(spool, argv[2], args);
     if (instance == -1) {
         fprintf(stderr, "Internal error 2\n");
         return 2;

@@ -158,9 +158,9 @@ int spool_instance_create(P_SPOOL spool, const LPSTR appId, const LPSTR args) {
     if (! f)
         return -1;
 
-    fprintf(f, "%s", appId);
+    fprintf(f, "id = %s", appId);
     if (args != NULL && strlen(args) > 0) {
-        fprintf(f, "\n%s", args);
+        fprintf(f, "\narg = %s", args);
     }
     fclose(f);
 
