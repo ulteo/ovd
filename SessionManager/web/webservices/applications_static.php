@@ -48,26 +48,28 @@ $dom = new DomDocument('1.0', 'utf-8');
 $node = $dom->createElement('applications');
 
 $applications = $server->getApplications();
-foreach ($applications as $app) {
-	if (! $app->getAttribute('static'))
-		continue;
+if (is_array($applications)) {
+	foreach ($applications as $app) {
+		if (! $app->getAttribute('static'))
+			continue;
 
-	if ($app->getAttribute('type') != $server->getAttribute('type'))
-		continue;
+		if ($app->getAttribute('type') != $server->getAttribute('type'))
+			continue;
 
-	$app_node = $dom->createElement('application');
-	$app_node->setAttribute('id', $app->getAttribute('id'));
-	$app_node->setAttribute('name', $app->getAttribute('name'));
-	$app_node->setAttribute('description', $app->getAttribute('description'));
-	$app_node->setAttribute('command', $app->getAttribute('executable_path'));
-	$app_node->setAttribute('revision', $app->getAttribute('revision'));
-	$mimes = explode(';', $app->getAttribute('mimetypes'));
-	foreach ($mimes as $mime) {
-		$mime_node = $dom->createElement('mime');
-		$mime_node->setAttribute('type', $mime);
-		$app_node->appendChild($mime_node);
+		$app_node = $dom->createElement('application');
+		$app_node->setAttribute('id', $app->getAttribute('id'));
+		$app_node->setAttribute('name', $app->getAttribute('name'));
+		$app_node->setAttribute('description', $app->getAttribute('description'));
+		$app_node->setAttribute('command', $app->getAttribute('executable_path'));
+		$app_node->setAttribute('revision', $app->getAttribute('revision'));
+		$mimes = explode(';', $app->getAttribute('mimetypes'));
+		foreach ($mimes as $mime) {
+			$mime_node = $dom->createElement('mime');
+			$mime_node->setAttribute('type', $mime);
+			$app_node->appendChild($mime_node);
+		}
+		$node->appendChild($app_node);
 	}
-	$node->appendChild($app_node);
 }
 
 $dom->appendChild($node);
