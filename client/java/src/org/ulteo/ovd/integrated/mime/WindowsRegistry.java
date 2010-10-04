@@ -34,31 +34,8 @@ import org.ulteo.ovd.Application;
 import org.ulteo.ovd.integrated.Constants;
 
 public class WindowsRegistry extends FileAssociate {
-	/*public static void main(String[] args){
-		String mimeType = new String("text/plain");
-
-		WindowsRegistry reg = new WindowsRegistry(null);
-		System.out.println("Searching extensions for Content Type = '"+mimeType+"' ...");
-		ArrayList<String> exts = reg.findExtByMimeType(mimeType);
-		System.out.println("Results:");
-		for (String ext : exts) {
-			System.out.println(ext);
-		}
-	}*/
-
-	//private ArrayList<RdpConnection> connections = null;
-
 	public WindowsRegistry() {
 	}
-
-	/*public WindowsRegistry(ArrayList<RdpConnection> connections_) {
-		this.connections = connections_;
-	}*/
-
-	/*public void run() {
-		this.createOVDAction();
-		System.out.println("MimeTypes association ... ok");
-	}*/
 
 	private ArrayList<String> findExtByMimeType(String mime_) {
 		ArrayList<String> exts = new ArrayList<String>();
@@ -93,15 +70,6 @@ public class WindowsRegistry extends FileAssociate {
 
 		return exts;
 	}
-
-	/*private void createOVDAction() {
-		for (RdpConnection rc : this.connections) {
-			ArrayList<Application> appList = rc.getAppsList();
-			for (Application app : appList) {
-				this.createAppAction(app);
-			}
-		}
-	}*/
 
 	public void createAppAction(Application app) {
 		List<String> mimeList = app.getSupportedMimeTypes();
@@ -144,15 +112,6 @@ public class WindowsRegistry extends FileAssociate {
 			}
 		}
 	}
-
-	/*public void removeOVDKeys() {
-		for (RdpConnection rc : this.connections) {
-			ArrayList<Application> appList = rc.getAppsList();
-			for (Application app : appList) {
-				this.removeAppAction(app);
-			}
-		}
-	}*/
 
 	public void removeAppAction(Application app) {
 		List<String> mimeList = app.getSupportedMimeTypes();
