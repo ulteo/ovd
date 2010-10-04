@@ -64,6 +64,9 @@ BOOL hicon2pngfile(HICON ico, LPCTSTR png_filename) {
     BITMAP bm;
     ICONINFO info;
 
+    BITMAPINFO bmi;
+    BITMAPINFOHEADER bmih;
+    LPBYTE pixels;
   
     png_structp png_ptr;
     png_infop info_ptr;
@@ -89,10 +92,32 @@ BOOL hicon2pngfile(HICON ico, LPCTSTR png_filename) {
     hdcMem = CreateCompatibleDC(hdcScr);
     SelectObject(hdcMem, info.hbmColor);
 
-    hdcScr2 = GetDC(NULL);
-    hbmMem2 = CreateCompatibleBitmap(hdcScr2, bm.bmWidth, bm.bmHeight);
-    hdcMem2 = CreateCompatibleDC(hdcScr2);
-    SelectObject(hdcMem2, info.hbmMask);
+    if (bm.bmBitsPixel == 32) {
+        // XP icons
+        memset(&bmi, 0, sizeof(BITMAPINFO));
+        bmih.biSize = sizeof(BITMAPINFOHEADER);
+        bmih.biWidth  = bm.bmWidth;
+        bmih.biHeight = bm.bmHeight;
+        bmih.biBitCount = 32;
+        bmih.biCompression = BI_RGB;
+        bmih.biPlanes = 1;
+        bmi.bmiHeader.biBitCount = 32;
+        bmi.bmiHeader = bmih;
+
+        pixels = (LPBYTE) GlobalAlloc(GMEM_FIXED, bmih.biWidth * bmih.biHeight * (bmih.biBitCount / 8));
+        if (pixels == NULL) {
+            puts("Oulahlahh");
+            return FALSE;
+        }
+
+        GetDIBits(hdcMem, info.hbmColor, 0, (WORD) bmih.biHeight, pixels, &bmi, DIB_RGB_COLORS);
+    }
+    else {
+        hdcScr2 = GetDC(NULL);
+        hbmMem2 = CreateCompatibleBitmap(hdcScr2, bm.bmWidth, bm.bmHeight);
+        hdcMem2 = CreateCompatibleDC(hdcScr2);
+        SelectObject(hdcMem2, info.hbmMask);
+    }
  
     png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, png_my_error, png_my_warning);
     if (png_ptr == NULL) {
@@ -137,16 +162,27 @@ BOOL hicon2pngfile(HICON ico, LPCTSTR png_filename) {
   
     for (y=0 ; y<bm.bmHeight ; y++) {
         for (x=0 ; x<bm.bmWidth ; x++) {
-            COLORREF pixel, pixel_alpha;
             char r,g,b,a;
+	
+            if (bm.bmBitsPixel == 32) {
+                int pos = (bm.bmHeight - y) * bm.bmWidth + x;
+	  
+                a = pixels[pos * 4 + 3];
+                r = pixels[pos * 4 + 2];
+                g = pixels[pos * 4 + 1];
+                b = pixels[pos * 4 + 0];
+            }
+            else { 
+                COLORREF pixel, pixel_alpha;
       
-            pixel = GetPixel(hdcMem, x, y);
-            pixel_alpha = GetPixel(hdcMem2, x, y);
+                pixel = GetPixel(hdcMem, x, y);
+                pixel_alpha = GetPixel(hdcMem2, x, y);
       
-            r = GetRValue(pixel);
-            g = GetGValue(pixel);
-            b = GetBValue(pixel);
-            a = 255 - GetRValue(pixel_alpha);
+                r = GetRValue(pixel);
+                g = GetGValue(pixel);
+                b = GetBValue(pixel);
+                a = 255 - GetRValue(pixel_alpha);
+            }
 #ifdef DEBUG
             printf("Value(%d, %d): R%x, G%x, B%x, A%x\n", x, y, r, g, b, a);
 #endif
@@ -165,6 +201,9 @@ BOOL hicon2pngfile(HICON ico, LPCTSTR png_filename) {
     png_destroy_write_struct(&png_ptr, &info_ptr);
     fclose(fp);
   
+    if (bm.bmBitsPixel == 32)
+        GlobalFree(pixels);
+
     return TRUE;
 }
 
