@@ -29,9 +29,9 @@ class Abstract_NetworkFolder {
 		
 		$NetworkFolder_table_structure = array(
 			'id'			=>	'int(8) NOT NULL auto_increment',
-			'name'			=>	'varchar(255) NOT NULL',
-			'server'		=>	'varchar(255) NOT NULL',
-			'status'		=>	'varchar(255) NOT NULL',
+			'name'			=>	'varchar(255)',
+			'server'		=>	'varchar(255)',
+			'status'		=>	'varchar(255)',
 		);
 		
 		$ret = $SQL->buildTable($sql_conf['prefix'].'NetworkFolder', $NetworkFolder_table_structure, array('id'));

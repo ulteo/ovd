@@ -30,12 +30,12 @@ class Abstract_UserGroup_Preferences {
 		$SQL = SQL::newInstance($sql_conf);
 		
 		$usergroup_preferences_table_structure = array(
-			'group_id'	=>	'varchar(1024) NOT NULL',
-// 			'type'		=>	'varchar(255) NOT NULL',
-			'key'		=>	'varchar(255) NOT NULL',
-			'container'	=>	'varchar(255) NOT NULL',
-			'element_id'=>	'varchar(255) NOT NULL',
-			'value'		=>	'text NOT NULL'
+			'group_id'	=>	'varchar(1024)',
+// 			'type'		=>	'varchar(255)',
+			'key'		=>	'varchar(255)',
+			'container'	=>	'varchar(255)',
+			'element_id'=>	'varchar(255)',
+			'value'		=>	'text'
 		);
 		
 		$ret = $SQL->buildTable($sql_conf['prefix'].self::$table, $usergroup_preferences_table_structure, array());

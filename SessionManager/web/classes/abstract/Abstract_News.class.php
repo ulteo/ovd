@@ -30,9 +30,9 @@ class Abstract_News {
 
 		$news_table_structure = array(
 			'id'			=>	'int(8) NOT NULL auto_increment',
-			'title'			=>	'varchar(64) NOT NULL',
-			'content'		=>	'text NOT NULL',
-			'timestamp'		=>	'int(10) NOT NULL'
+			'title'			=>	'varchar(64)',
+			'content'		=>	'text',
+			'timestamp'		=>	'int(10)'
 		);
 
 		$ret = $SQL->buildTable($sql_conf['prefix'].'news', $news_table_structure, array('id'));

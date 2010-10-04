@@ -29,18 +29,18 @@ class Abstract_Session {
 		$SQL = SQL::newInstance($sql_conf);
 
 		$sessions_table_structure = array(
-			'id'				=>	'varchar(255) NOT NULL',
-			'server'			=>	'varchar(255) NOT NULL',
-			'mode'				=>	'varchar(32) NOT NULL',
-			'type'				=>	'varchar(32) NOT NULL',
-			'status'			=>	'varchar(32) NOT NULL',
-			'settings'			=>	'text NOT NULL',
-			'user_login'		=>	'varchar(255) NOT NULL',
-			'user_displayname'	=>	'varchar(255) NOT NULL',
-			'servers'			=>	'text NOT NULL',
-			'applications'		=>	'text NOT NULL',
-			'start_time'		=>	'varchar(255) NOT NULL',
-			'timestamp'			=>	'int(10) NOT NULL'
+			'id'				=>	'varchar(255)',
+			'server'			=>	'varchar(255)',
+			'mode'				=>	'varchar(32)',
+			'type'				=>	'varchar(32)',
+			'status'			=>	'varchar(32)',
+			'settings'			=>	'text',
+			'user_login'		=>	'varchar(255)',
+			'user_displayname'	=>	'varchar(255)',
+			'servers'			=>	'text',
+			'applications'		=>	'text',
+			'start_time'		=>	'varchar(255)',
+			'timestamp'			=>	'int(10)'
 		);
 
 		$ret = $SQL->buildTable($sql_conf['prefix'].'sessions', $sessions_table_structure, array('id'));

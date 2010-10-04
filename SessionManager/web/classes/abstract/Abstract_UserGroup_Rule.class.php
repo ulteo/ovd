@@ -30,10 +30,10 @@ class Abstract_UserGroup_Rule {
 
 		$usergroup_rules_table_structure = array(
 			'id'			=>	'int(8) NOT NULL auto_increment',
-			'attribute'		=>	'varchar(255) NOT NULL',
-			'type'			=>	'varchar(255) NOT NULL',
-			'value'			=>	'varchar(255) NOT NULL',
-			'usergroup_id'	=>	'varchar(255) NOT NULL'
+			'attribute'		=>	'varchar(255)',
+			'type'			=>	'varchar(255)',
+			'value'			=>	'varchar(255)',
+			'usergroup_id'	=>	'varchar(255)'
 		);
 
 		$ret = $SQL->buildTable($sql_conf['prefix'].'usergroup_rules', $usergroup_rules_table_structure, array('id'));

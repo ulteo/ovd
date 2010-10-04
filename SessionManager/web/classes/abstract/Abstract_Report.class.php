@@ -33,12 +33,12 @@ class Abstract_Report {
 		$SQL = SQL::newInstance($sql_conf);
 
 		$servers_history_table_structure = array(
-			'fqdn' => 'VARCHAR(255) NOT NULL',
-			'external_name' => 'VARCHAR(255) NOT NULL',
-			'timestamp' => 'TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP',
-			'cpu' => 'FLOAT NOT NULL',
-			'ram' => 'FLOAT NOT NULL',
-			'data' => 'LONGTEXT NOT NULL');
+			'fqdn' => 'VARCHAR(255)',
+			'external_name' => 'VARCHAR(255)',
+			'timestamp' => 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP',
+			'cpu' => 'FLOAT',
+			'ram' => 'FLOAT',
+			'data' => 'LONGTEXT');
 		
 		$ret = $SQL->buildTable($sql_conf['prefix'].'servers_history', $servers_history_table_structure, array());
 
@@ -49,12 +49,12 @@ class Abstract_Report {
 
 		$sessions_history_table_structure = array(
 			'id' => 'INT(16) NOT NULL auto_increment',
-			'start_stamp' => 'TIMESTAMP NOT NULL default CURRENT_TIMESTAMP',
+			'start_stamp' => 'TIMESTAMP default CURRENT_TIMESTAMP',
 			'stop_stamp' => 'TIMESTAMP NULL default NULL',
 			'stop_why' => 'VARCHAR(16) default NULL',
-			'user' => 'VARCHAR(255) NOT NULL',
-			'server' => 'VARCHAR(255) NOT NULL',
-			'data' => 'LONGTEXT NOT NULL');
+			'user' => 'VARCHAR(255)',
+			'server' => 'VARCHAR(255)',
+			'data' => 'LONGTEXT');
 		
 		$ret = $SQL->buildTable($sql_conf['prefix'].'sessions_history', $sessions_history_table_structure, array('id'));
 

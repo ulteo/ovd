@@ -39,18 +39,18 @@ class Abstract_Server {
 		$SQL = SQL::newInstance($sql_conf);
 
 		$servers_table_structure = array(
-			'fqdn'			=>	'varchar(255) NOT NULL',
-			'status'		=>	'varchar(255) NOT NULL',
-			'registered'	=>	'int(8) NOT NULL',
-			'locked'		=>	'int(8) NOT NULL',
-			'type'			=>	'varchar(255) NOT NULL',
-			'version'		=>	'varchar(255) NOT NULL',
-			'cpu_model'		=>	'varchar(255) NOT NULL',
-			'cpu_nb_cores'	=>	'int(8) NOT NULL',
-			'cpu_load'		=>	'int(8) NOT NULL',
-			'ram_total'		=>	'int(16) NOT NULL',
-			'ram_used'		=>	'int(16) NOT NULL',
-			'timestamp'		=>	'int(10) NOT NULL'
+			'fqdn'			=>	'varchar(255)',
+			'status'		=>	'varchar(255)',
+			'registered'	=>	'int(8)',
+			'locked'		=>	'int(8)',
+			'type'			=>	'varchar(255)',
+			'version'		=>	'varchar(255)',
+			'cpu_model'		=>	'varchar(255)',
+			'cpu_nb_cores'	=>	'int(8)',
+			'cpu_load'		=>	'int(8)',
+			'ram_total'		=>	'int(16)',
+			'ram_used'		=>	'int(16)',
+			'timestamp'		=>	'int(10)'
 		);
 
 		$ret = $SQL->buildTable($sql_conf['prefix'].'servers', $servers_table_structure, array('fqdn'));
@@ -63,9 +63,9 @@ class Abstract_Server {
 		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].'servers\' created');
 
 		$servers_properties_table_structure = array(
-			'fqdn'			=>	'varchar(255) NOT NULL',
-			'property'		=>	'varchar(64) NOT NULL',
-			'value'			=>	'varchar(255) NOT NULL'
+			'fqdn'			=>	'varchar(255)',
+			'property'		=>	'varchar(64)',
+			'value'			=>	'varchar(255)'
 		);
 
 		$ret = $SQL->buildTable($sql_conf['prefix'].'servers_properties', $servers_properties_table_structure, array('fqdn', 'property'));

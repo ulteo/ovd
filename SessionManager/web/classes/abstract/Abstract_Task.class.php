@@ -28,13 +28,13 @@ class Abstract_Task {
 		$SQL = SQL::newInstance($sql_conf);
 
 		$tasks_table_structure = array(
-			'id'				=>	'varchar(32) NOT NULL',
-			'type'				=>	'varchar(32) NOT NULL',
-			'job_id'			=>	'varchar(32) NOT NULL',
-			'server'			=>	'varchar(255) NOT NULL',
-			'status'			=>	'varchar(64) NOT NULL',
-			't_begin'			=>	'int(10) NOT NULL',
-			't_end'				=>	'int(10) NOT NULL',
+			'id'				=>	'varchar(32)',
+			'type'				=>	'varchar(32)',
+			'job_id'			=>	'varchar(32)',
+			'server'			=>	'varchar(255)',
+			'status'			=>	'varchar(64)',
+			't_begin'			=>	'int(10)',
+			't_end'				=>	'int(10)',
 			'applications_line'	=>	'varchar(255)',
 			'applications'		=>	'text'
 		);
