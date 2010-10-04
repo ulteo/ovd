@@ -53,6 +53,10 @@ class Preferences {
 		}
 		return self::$instance;
 	}
+	
+	public static function fileExists() {
+		return @file_exists(SESSIONMANAGER_CONFFILE_SERIALIZED); // ugly
+	}
 
 	public function getKeys(){
 		return array_keys($this->elements);
