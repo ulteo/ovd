@@ -44,6 +44,12 @@ int main(int argc, char* argv[]){
     ret = hicon2pngfile(ico, argv[2]);
     if (ret != TRUE) {
         fprintf(stderr, "save png failed %d\n", (int)GetLastError());
+        return 3;
+    }
+
+    ret = DestroyIcon(ico);
+    if (ret != TRUE) {
+        fprintf(stderr, "Unable to destroy icon (%d) but PNG transformation succeed\n", (int)GetLastError());
         return 2;
     }
 
