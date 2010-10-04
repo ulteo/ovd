@@ -24,6 +24,7 @@
 void png_my_error(png_structp, png_const_charp);
 void png_my_warning(png_structp, png_const_charp);
 BOOL hicon2pngfile(HICON, LPCTSTR);
+BOOL isARGBPixels(LPBYTE, long int);
 
 
 int main(int argc, char* argv[]){
@@ -67,6 +68,7 @@ BOOL hicon2pngfile(HICON ico, LPCTSTR png_filename) {
     BITMAPINFO bmi;
     BITMAPINFOHEADER bmih;
     LPBYTE pixels;
+	BOOL argbColors = FALSE;
   
     png_structp png_ptr;
     png_infop info_ptr;
@@ -93,7 +95,6 @@ BOOL hicon2pngfile(HICON ico, LPCTSTR png_filename) {
     SelectObject(hdcMem, info.hbmColor);
 
     if (bm.bmBitsPixel == 32) {
-        // XP icons
         memset(&bmi, 0, sizeof(BITMAPINFO));
         bmih.biSize = sizeof(BITMAPINFOHEADER);
         bmih.biWidth  = bm.bmWidth;
@@ -111,8 +112,19 @@ BOOL hicon2pngfile(HICON ico, LPCTSTR png_filename) {
         }
 
         GetDIBits(hdcMem, info.hbmColor, 0, (WORD) bmih.biHeight, pixels, &bmi, DIB_RGB_COLORS);
+        
+        argbColors = isARGBPixels(pixels, bmih.biWidth * bmih.biHeight);
+    }
+    
+    if (argbColors == TRUE) {
+#ifdef DEBUG
+        printf("XP Icons\n");
+#endif
     }
     else {
+#ifdef DEBUG
+        printf("Old icons\n");
+#endif
         hdcScr2 = GetDC(NULL);
         hbmMem2 = CreateCompatibleBitmap(hdcScr2, bm.bmWidth, bm.bmHeight);
         hdcMem2 = CreateCompatibleDC(hdcScr2);
@@ -164,7 +176,7 @@ BOOL hicon2pngfile(HICON ico, LPCTSTR png_filename) {
         for (x=0 ; x<bm.bmWidth ; x++) {
             char r,g,b,a;
 	
-            if (bm.bmBitsPixel == 32) {
+            if (argbColors == TRUE) {
                 int pos = (bm.bmHeight - y) * bm.bmWidth + x;
 	  
                 a = pixels[pos * 4 + 3];
@@ -206,6 +218,19 @@ BOOL hicon2pngfile(HICON ico, LPCTSTR png_filename) {
 
     return TRUE;
 }
+
+
+BOOL isARGBPixels(LPBYTE pixels, long int size) {
+    int i;
+    for (i=0; i<size; i++) {
+        char a = pixels[i * 4 + 3];
+        if (a!=0)
+            return TRUE;
+    }
+    
+    return FALSE;
+}
+
 
 void png_my_error(png_structp png_ptr, png_const_charp message) {
     fprintf(stderr, "ERROR(libpng): %s - %s\n", message,
