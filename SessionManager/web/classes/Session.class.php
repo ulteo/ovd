@@ -32,10 +32,10 @@ class Session {
 	const SESSION_STATUS_WAIT_DESTROY = "wait_destroy";
 	const SESSION_STATUS_DESTROYED = "destroyed";
 
-	const SESSION_END_LOGOUT = "logout";
-	const SESSION_END_ADMINKILL = "adminkill";
-	const SESSION_END_TIMEOUT = "timeout";
-	const SESSION_END_UNUSED = "unused";
+	const SESSION_END_STATUS_LOGOUT = "logout";
+	const SESSION_END_STATUS_ADMINKILL = "adminkill";
+	const SESSION_END_STATUS_TIMEOUT = "timeout";
+	const SESSION_END_STATUS_UNUSED = "unused";
 
 	const MODE_DESKTOP = "desktop";
 	const MODE_APPLICATIONS = "applications";
