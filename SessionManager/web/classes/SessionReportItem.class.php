@@ -25,29 +25,24 @@ require_once(CLASSES_DIR.'/ReportItems.class.php');
 class SessionReportItem {
 	private $token;
 	private $sql_id = -1;
-	private $server;
+	public $server;
 	private $node;
 	private $current_apps = array();
 	private $apps_raw_data = array(); /* pid, id, running (ReportRunningItem) */
 
-	/* Session items are stored in the db before computing anything else
-	 * because the sql_id is an auto-incremented int. We need to know this id
-	 * so that the server reports can be linked to it */
 	public function __construct($token_) {
 		$this->token = $token_;
 		$session = Abstract_Session::load($token_);
-		$this->server = $session->getAttribute('server');
-		$this->user = $session->getAttribute('user_login');
+		if (is_object($session)) {
+			$this->server = $session->getAttribute('server');
+			$this->user = $session->getAttribute('user_login');
+		}
+		else {
+			Logger::error('main', "SessionReportItem::construct($token_) failed");
+		}
 		$this->current_apps = array();
-
-		$sql = SQL::getInstance();
-		$res = $sql->DoQuery(
-			'INSERT INTO @1 (@2,@3,@4) VALUES (%5,%6,%7)',
-			SESSIONS_HISTORY_TABLE,'user','server','data',
-			$this->user,$this->server,'');
-		if ($res !== false)
-			$this->sql_id = $sql->InsertId();
-	}
+		$this->sql_id = $token_;
+ 	}
 
 	public function getId() {
 		return $this->sql_id;

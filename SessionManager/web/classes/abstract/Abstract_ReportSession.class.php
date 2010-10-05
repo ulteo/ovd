@@ -70,11 +70,10 @@ class Abstract_ReportSession {
 	}
 	
 	public static function create($report_) {
-		Logger::critical('main', "Abstract_ReportSession::create(".serialize($report_).")");
 		Logger::debug('main', 'Abstract_ReportSession::create');
 		
 		$sql = SQL::getInstance();
-		$res = $sql->DoQuery('INSERT INTO @1 (@2,@3,@4,@5) VALUES (%6,%7,%8,%9)', SESSIONS_HISTORY_TABLE, 'id', 'user', 'server', 'data',  $report_->sql_id, $report_->user, $report_->server, '');
+		$res = $sql->DoQuery('INSERT INTO @1 (@2,@3,@4,@5) VALUES (%6,%7,%8,%9)', SESSIONS_HISTORY_TABLE, 'id', 'user', 'server', 'data',  $report_->getID(), $report_->user, $report_->server, '');
 		return $res;
 	}
 	
@@ -83,9 +82,9 @@ class Abstract_ReportSession {
 		Logger::debug('main', "Abstract_ReportSession::update");
 		
 		$SQL = SQL::getInstance();
-		$report = Abstract_ReportSession::load($report_->sql_id);
+		$report = Abstract_ReportSession::load($report_->getID());
 		if (! is_object($report)) {
-			Logger::debug('main', "Abstract_ReportSession::updateSession failed to load report ".$report_->sql_id);
+			Logger::debug('main', "Abstract_ReportSession::updateSession failed to load report ".$report_->getID());
 			return false;
 		}
 		
@@ -96,7 +95,7 @@ class Abstract_ReportSession {
 			'user', $report_->user,
 			'server', $report_->server,
 // 			'data',
-			'id', $report_->sql_id);
+			'id', $report_->getID());
 		return $ret;
 	}
  }

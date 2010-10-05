@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -266,6 +267,10 @@ class Session {
 		$buf = $this->getAttribute('status');
 
 		return '<span class="msg_'.$this->colorStatus($buf).'">'.$this->textStatus($buf).'</span>';
+	}
+
+	public static function textEndStatus($end_status_) {
+		return $end_status_; // for now the text is not translated
 	}
 
 	public function isAlive() {
