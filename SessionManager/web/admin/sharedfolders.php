@@ -33,7 +33,7 @@ if (isset($_REQUEST['action'])) {
 	show_default();
 
 function show_default() {
-	$sharedfolders = Abstract_NetworkFolder::load_by_type(NetworkFolder::NF_TYPE_NETFOLDER);
+	$sharedfolders = Abstract_NetworkFolder::load_by_type(NetworkFolder::NF_TYPE_NETWORKFOLDER);
 	
 	$can_manage_sharedfolders = isAuthorized('manageSharedFolders');
 	$can_manage_configuration = isAuthorized('manageConfiguration');

@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class NetworkFolder {
 	const NF_TYPE_PROFILE = "profile";
-	const NF_TYPE_NETFOLDER = "network_folder";
+	const NF_TYPE_NETWORKFOLDER = "network_folder";
 
 	public $id = NULL;
 	public $type = '';

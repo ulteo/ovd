@@ -458,7 +458,7 @@ function server_display_role_preparation_fs($server_) {
 					$ret['used by profiles'][$a_networkfolder->id] []= $buf;
 				}
 			}
-		} elseif ($a_networkfolder->type == NetworkFolder::NF_TYPE_NETFOLDER) {
+		} elseif ($a_networkfolder->type == NetworkFolder::NF_TYPE_NETWORKFOLDER) {
 			$ret['sharedfolders'][$a_networkfolder->id] = $a_networkfolder;
 			if (isset($ret['used by sharedfolders'][$a_networkfolder->id]) === false) {
 				$ret['used by sharedfolders'][$a_networkfolder->id] = array();
