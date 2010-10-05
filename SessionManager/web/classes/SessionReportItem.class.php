@@ -26,9 +26,11 @@ class SessionReportItem {
 	private $token;
 	private $sql_id = -1;
 	public $server;
+	public $user;
 	private $node;
 	private $current_apps = array();
 	private $apps_raw_data = array(); /* pid, id, running (ReportRunningItem) */
+	public $stop_why;
 
 	public function __construct($token_) {
 		$this->token = $token_;
