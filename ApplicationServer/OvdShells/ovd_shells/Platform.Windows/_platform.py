@@ -140,11 +140,11 @@ def transformCommand(cmd_, args_):
 			if "%1" in cmd_:
 				cmd_ = cmd_.replace("%1", args.pop(0))
 			if "%*" in cmd_:
-				cmd_ = cmd_.replace("%*", " ".join(args))
+				cmd_ = cmd_.replace("%*", " ".join(['"'+a+'"' for a in args]))
 				args = []
 		
 		if len(args)>0:
-			cmd_+= " "+" ".join(args)
+			cmd_+= " "+" ".join(['"'+a+'"' for a in args])
 		
 		return cmd_
 
