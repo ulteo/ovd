@@ -26,7 +26,6 @@ scripts_DATA = Application.class.php \
                Session.class.php \
                SessionReportItem.class.php \
                Token.class.php \
-               Tokens.class.php \
                User.class.php \
                UsersGroup.class.php \
                UserGroupDBDynamic.class.php \
