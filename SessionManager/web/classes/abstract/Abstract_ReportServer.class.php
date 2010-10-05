@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Gauvain Pocentek <gauvain@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Gauvain Pocentek <gauvain@ulteo.com> 2009
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,44 +22,28 @@
 
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-class Abstract_Report {
+class Abstract_ReportServer {
 	static $TYPE_SERVER = 0;
 	static $TYPE_APPLICATION = 1;
-
+	
 	public static function init($prefs_) {
-		Logger::debug('main', 'Starting Abstract_Report::init');
+		Logger::debug('main', 'Starting Abstract_ReportServer::init');
 
 		$sql_conf = $prefs_->get('general', 'sql');
 		$SQL = SQL::newInstance($sql_conf);
 
 		$servers_history_table_structure = array(
-			'fqdn' => 'VARCHAR(255)',
-			'external_name' => 'VARCHAR(255)',
-			'timestamp' => 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP',
-			'cpu' => 'FLOAT',
-			'ram' => 'FLOAT',
-			'data' => 'LONGTEXT');
+			'fqdn' => 'VARCHAR(255) NOT NULL',
+			'external_name' => 'VARCHAR(255) NOT NULL',
+			'timestamp' => 'TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP',
+			'cpu' => 'FLOAT NOT NULL',
+			'ram' => 'FLOAT NOT NULL',
+			'data' => 'LONGTEXT NOT NULL');
 		
 		$ret = $SQL->buildTable($sql_conf['prefix'].'servers_history', $servers_history_table_structure, array());
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].'servers_history\'');
-			return false;
-		}
-
-		$sessions_history_table_structure = array(
-			'id' => 'INT(16) NOT NULL auto_increment',
-			'start_stamp' => 'TIMESTAMP default CURRENT_TIMESTAMP',
-			'stop_stamp' => 'TIMESTAMP NULL default NULL',
-			'stop_why' => 'VARCHAR(16) default NULL',
-			'user' => 'VARCHAR(255)',
-			'server' => 'VARCHAR(255)',
-			'data' => 'LONGTEXT');
-		
-		$ret = $SQL->buildTable($sql_conf['prefix'].'sessions_history', $sessions_history_table_structure, array('id'));
-
-		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].'sessions_history\'');
+			Logger::error('main', 'Unable to create SQL table \''.$sql_conf['prefix'].'servers_history\'');
 			return false;
 		}
 

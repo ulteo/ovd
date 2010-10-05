@@ -3,7 +3,8 @@ SUBDIRS = liaison
 scripts_DATA = Abstract_Invite.class.php \
                Abstract_NetworkFolder.class.php \
                Abstract_News.class.php \
-               Abstract_Report.class.php \
+               Abstract_ReportServer.class.php \
+               Abstract_ReportSession.class.php \
                Abstract_Server.class.php \
                Abstract_Session.class.php \
                Abstract_Task.class.php \
