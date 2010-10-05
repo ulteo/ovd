@@ -111,6 +111,7 @@ class Role(AbstractRole):
 				
 		cleaner = SessionManagement(self, self.sessions_spooler)
 		for session in self.sessions.values():
+			session.end_status = Session.SESSION_END_STATUS_SHUTDOWN
 			cleaner.destroy_session(session)
 		
 		self.purgeGroup()
@@ -129,6 +130,9 @@ class Role(AbstractRole):
 		rootNode = doc.createElement('session')
 		rootNode.setAttribute("id", session.id)
 		rootNode.setAttribute("status", session.status)
+		if session.status == Session.SESSION_STATUS_DESTROYED and session.end_status is not None:
+			rootNode.setAttribute("reason", session.end_status)
+		
 		doc.appendChild(rootNode)
 		
 		response = self.main_instance.dialog.send_packet("/session/status", doc)
@@ -173,6 +177,10 @@ class Role(AbstractRole):
 				if ts_id is None:
 					if session.status in [Session.SESSION_STATUS_ACTIVE, Session.SESSION_STATUS_INACTIVE]:
 						Logger.error("Weird, running session %s no longer exist"%(session.id))
+						
+						if session.status == Session.SESSION_STATUS_ACTIVE:
+							# User has logged off
+							session.end_status = Session.SESSION_END_STATUS_NORMAL
 						
 						if session.status not in [Session.SESSION_STATUS_WAIT_DESTROY, Session.SESSION_STATUS_DESTROYED]:
 							self.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)

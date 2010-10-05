@@ -26,6 +26,7 @@ from ovd.Logger import Logger
 from ovd.Platform import Platform
 
 from Platform import Platform as RolePlatform
+from Session import Session
 
 
 class SessionManagement(Thread):
@@ -60,6 +61,7 @@ class SessionManagement(Thread):
 		
 		if Platform.System.userExist(session.user.name):
 			Logger.error("unable to create session: user %s already exists"%(session.user.name))
+			session.end_status = Session.SESSION_END_STATUS_ERROR
 			self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
 			return self.destroy_session(session)
 		
@@ -74,6 +76,7 @@ class SessionManagement(Thread):
 		rr = session.user.create()
 		if rr is False:
 			Logger.error("unable to create session for user %s"%(session.user.name))
+			session.end_status = Session.SESSION_END_STATUS_ERROR
 			self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
 			return self.destroy_session(session)
 		
@@ -85,6 +88,7 @@ class SessionManagement(Thread):
 		
 		if rr is False:
 			Logger.error("unable to initialize session %s"%(session.id))
+			session.end_status = Session.SESSION_END_STATUS_ERROR
 			self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
 			return self.destroy_session(session)
 		

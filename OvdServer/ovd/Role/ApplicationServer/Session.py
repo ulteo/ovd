@@ -40,6 +40,10 @@ class Session:
 	SESSION_STATUS_WAIT_DESTROY = "wait_destroy"
 	SESSION_STATUS_DESTROYED = "destroyed"
 	
+	SESSION_END_STATUS_NORMAL = "exit"
+	SESSION_END_STATUS_SHUTDOWN = "shutdown"
+	SESSION_END_STATUS_ERROR = "internal"
+	
 	MODE_DESKTOP = "desktop"
 	MODE_APPLICATIONS = "applications"
 	
@@ -53,6 +57,7 @@ class Session:
 		self.instanceDirectory = None
 		self.used_applications = {}
 		self.external_apps_token = None
+		self.end_status = None
 		
 		self.log = []
 		self.switch_status(Session.SESSION_STATUS_INIT)
