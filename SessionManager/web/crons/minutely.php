@@ -29,14 +29,14 @@ foreach ($sessions as $session) {
 	if ($session->start_time != 0 && array_key_exists('timeout', $session->settings) && $session->settings['timeout'] > 0) {
 		if ($session->start_time+$session->settings['timeout'] < time()) {
 			Logger::info('main', '(minutely cron) Session \''.$session->id.'\' has expired, ending...');
-			$session->orderDeletion();
+			$session->orderDeletion(true, Session::SESSION_END_TIMEOUT);
 		}
 	}
 
 	if ($session->start_time == 0 || in_array($session->status, array(Session::SESSION_STATUS_CREATED, Session::SESSION_STATUS_INIT, Session::SESSION_STATUS_INITED))) {
 		if ($session->timestamp < time()-DEFAULT_UNUSED_SESSION_DURATION) {
 			Logger::info('main', '(minutely cron) Session \''.$session->id.'\' was never used, ending...');
-			$session->orderDeletion();
+			$session->orderDeletion(true, Session::SESSION_END_UNUSED);
 		}
 	}
 }

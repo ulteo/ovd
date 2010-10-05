@@ -1063,7 +1063,7 @@ if ($_REQUEST['name'] == 'Session') {
 				$session = Abstract_Session::load($session);
 				
 				if (is_object($session)) {
-					if (! $session->orderDeletion()) {
+					if (! $session->orderDeletion(true, Session::SESSION_END_ADMINKILL)) {
 						Logger::error('main', 'Unable to order deletion of session \''.$session->id.'\': purging');
 						Abstract_Session::delete($session->id);
 						popup_error(sprintf(_("Unable to delete session '%s'"), $session->id));

@@ -32,6 +32,11 @@ class Session {
 	const SESSION_STATUS_WAIT_DESTROY = "wait_destroy";
 	const SESSION_STATUS_DESTROYED = "destroyed";
 
+	const SESSION_END_LOGOUT = "logout";
+	const SESSION_END_ADMINKILL = "adminkill";
+	const SESSION_END_TIMEOUT = "timeout";
+	const SESSION_END_UNUSED = "unused";
+
 	const MODE_DESKTOP = "desktop";
 	const MODE_APPLICATIONS = "applications";
 
@@ -122,7 +127,7 @@ class Session {
 		return $ret;
 	}
 
-	public function setStatus($status_) {
+	public function setStatus($status_, $reason_=NULL) {
 		if ($status_ == $this->getAttribute('status'))
 			return false; // status is already the same...
 
@@ -160,6 +165,14 @@ class Session {
 		} elseif ($status_ == Session::SESSION_STATUS_WAIT_DESTROY) {
 			Logger::info('main', 'Session end : \''.$this->id.'\'');
 
+			if ($status_ == Session::SESSION_STATUS_WAIT_DESTROY && ! is_null($reason_)) {
+				$report_session = Abstract_ReportSession::load($this->id);
+				if (is_object($report_session)) {
+					$report_session->stop_why = $reason_;
+					Abstract_ReportSession::update($report_session);
+				}
+			}
+
 			$plugins = new Plugins();
 			$plugins->doLoad();
 
@@ -177,6 +190,14 @@ class Session {
 			}
 		} elseif ($status_ == Session::SESSION_STATUS_DESTROYED || $status_ == Session::SESSION_STATUS_ERROR || $status_ == Session::SESSION_STATUS_UNKNOWN) {
 			Logger::info('main', 'Session purge : \''.$this->id.'\'');
+
+			if ($status_ == Session::SESSION_STATUS_DESTROYED && ! is_null($reason_)) {
+				$report_session = Abstract_ReportSession::load($this->id);
+				if (is_object($report_session)) {
+					$report_session->stop_why = $reason_;
+					Abstract_ReportSession::update($report_session);
+				}
+			}
 
 			$ev->emit();
 
@@ -303,7 +324,7 @@ class Session {
 		return false;
 	}
 
-	public function orderDeletion($request_aps_=true) {
+	public function orderDeletion($request_aps_=true, $reason_=NULL) {
 		Logger::debug('main', 'Starting Session::orderDeletion for \''.$this->id.'\'');
 
 		if ($request_aps_) {
@@ -320,7 +341,7 @@ class Session {
 			}
 		}
 
-		$this->setStatus(Session::SESSION_STATUS_DESTROYED);
+		$this->setStatus(Session::SESSION_STATUS_DESTROYED, $reason_);
 
 		return true;
 	}

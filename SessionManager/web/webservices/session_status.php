@@ -55,10 +55,16 @@ function parse_session_status_XML($xml_) {
 	if (! $node->hasAttribute('status'))
 		return false;
 
-	return array(
+	$ret = array(
 		'id'		=>	$node->getAttribute('id'),
-		'status'	=>	$node->getAttribute('status')
+		'status'	=>	$node->getAttribute('status'),
+		'reason'	=>	NULL
 	);
+
+	if ($node->hasAttribute('reason'))
+		$ret['reason'] = $node->getAttribute('reason');
+
+	return $ret;
 }
 
 $ret = parse_session_status_XML(@file_get_contents('php://input'));
@@ -73,7 +79,7 @@ if (! $session) {
 	die();
 }
 
-if ($session->setStatus($ret['status']))
+if ($session->setStatus($ret['status'], $ret['reason']))
 	Abstract_Session::save($session);
 
 header('Content-Type: text/xml; charset=utf-8');

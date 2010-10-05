@@ -70,7 +70,7 @@ if (is_object($session)) {
 	if ($ret == 'suspend')
 		$session->setStatus(Session::SESSION_STATUS_INACTIVE);
 	else
-		$session->setStatus(Session::SESSION_STATUS_WAIT_DESTROY);
+		$session->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_END_LOGOUT);
 }
 
 header('Content-Type: text/xml; charset=utf-8');
