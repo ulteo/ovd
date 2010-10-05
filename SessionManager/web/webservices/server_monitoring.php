@@ -157,7 +157,7 @@ $server->setAttribute('ram_used', $ret['ram_used']);
 
 Abstract_Server::save($server); //update Server cache timestamp
 
-if (is_array($ret['sessions'])) {
+if (array_key_exists('sessions', $ret) && is_array($ret['sessions'])) {
 	foreach ($ret['sessions'] as $session) {
 		$buf = Abstract_Session::load($session['id']);
 		if (! $buf)
