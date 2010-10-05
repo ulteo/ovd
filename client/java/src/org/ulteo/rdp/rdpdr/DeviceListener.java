@@ -23,5 +23,5 @@ package org.ulteo.rdp.rdpdr;
 import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
 
 public interface DeviceListener {
-	public void deviveConnected(RdpdrDevice device);
+	public void deviceConnected(RdpdrDevice device);
 }

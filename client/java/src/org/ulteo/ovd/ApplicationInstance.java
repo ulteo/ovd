@@ -164,7 +164,7 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 		return this.app;
 	}
 
-	public void deviveConnected(RdpdrDevice device) {
+	public void deviceConnected(RdpdrDevice device) {
 		if (device != this.waitedDevice)
 			return;
 

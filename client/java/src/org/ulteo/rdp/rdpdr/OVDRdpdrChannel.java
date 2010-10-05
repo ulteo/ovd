@@ -96,7 +96,7 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 						this.g_rdpdr_device[handle].connected = true;
 
 						for (DeviceListener l : this.listeners) {
-							l.deviveConnected(this.g_rdpdr_device[handle]);
+							l.deviceConnected(this.g_rdpdr_device[handle]);
 						}
 						return;
 					}
