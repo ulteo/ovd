@@ -24,4 +24,5 @@ import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
 
 public interface DeviceListener {
 	public void deviceConnected(RdpdrDevice device);
+	public void deviceFailed(RdpdrDevice device);
 }

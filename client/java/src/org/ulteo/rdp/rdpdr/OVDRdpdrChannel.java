@@ -91,6 +91,19 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 					if ((magic[2] == 'r') && (magic[3] == 'd')) {
 						/* connect to a specific resource */
 						handle = data.getLittleEndian32();
+						int ntStatus = data.getLittleEndian32();
+						
+						if (ntStatus != 0x00000000) {
+							Logger.error("RDPDR: Server failed to connect to resource "+handle);
+
+							this.unregister(handle);
+
+							for (DeviceListener l : this.listeners) {
+								l.deviceFailed(this.g_rdpdr_device[handle]);
+							}
+							return;
+						}
+
 						Logger.debug("RDPDR: Server connected to resource "+handle);
 
 						this.g_rdpdr_device[handle].connected = true;
@@ -359,9 +372,8 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 			e.printStackTrace();
 			return false;
 		}
-		this.g_rdpdr_device[id].slotIsFree = true;
-		this.g_rdpdr_device[id].set_name("");
-		this.g_rdpdr_device[id].set_local_path("");
+
+		this.unregister(id);
 
 		return true;
 	}
@@ -392,6 +404,23 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		this.g_rdpdr_device[index] = v;
 		g_num_devices++;
 		return true;
+ 	}
+
+	public void unregister(int id) {
+		RdpdrDevice device = null;
+ 		try {
+			device = this.g_rdpdr_device[id];
+		} catch (Exception ex) {
+			Logger.error("RDPDR: "+id+" is not a correct device id");
+			return;
+		}
+
+		this.g_num_devices--;
+
+		device.connected = false;
+		device.slotIsFree = true;
+		device.set_name("");
+		device.set_local_path("");
  	}
 
 	public List<DeviceListener> getDeviceListeners() {

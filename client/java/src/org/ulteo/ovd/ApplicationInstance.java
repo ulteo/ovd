@@ -177,6 +177,15 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 		this.app.getConnection().getOvdAppChannel().addOvdAppListener(this);
 	}
 
+	public void deviceFailed(RdpdrDevice device) {
+		if (device != this.waitedDevice)
+			return;
+
+		Logger.error("Failed to connect to device "+device.name+"("+device.handle+"). Cannot start application '"+this.app.getName()+"'");
+
+		this.app.getConnection().getRdpdrChannel().removeDeviceListener(this);
+	}
+
 	public void ovdInited(OvdAppChannel o) {}
 	public void ovdInstanceStarted(int instance_) {}
 
