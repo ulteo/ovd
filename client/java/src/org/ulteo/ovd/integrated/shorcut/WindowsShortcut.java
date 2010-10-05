@@ -39,33 +39,38 @@ public class WindowsShortcut extends Shortcut {
 		return str;
 	}
 
-	private String appName = null;
+	private JShellLink shortcut = null;
+
+	public WindowsShortcut() {
+		this.shortcut = new JShellLink();
+		this.shortcut.setFolder(Constants.PATH_SHORTCUTS);
+		this.shortcut.setWorkingDirectory("");
+		this.shortcut.setPath(System.getProperty("user.dir")+Constants.FILE_SEPARATOR+Constants.FILENAME_LAUNCHER);
+	}
 
 	@Override
 	public String create(Application app) {
 		if (app == null)
 			return null;
 
-		appName = replaceForbiddenChars(app.getName());
+		String appName = replaceForbiddenChars(app.getName());
 
 		File shorcutDirectory = new File(Constants.PATH_SHORTCUTS);
 		if (! shorcutDirectory.exists())
 			shorcutDirectory.mkdirs();
 		shorcutDirectory = null;
 
-		JShellLink shortcut = new JShellLink(Constants.PATH_SHORTCUTS, appName);
-		shortcut.setWorkingDirectory("");
-		shortcut.setPath(System.getProperty("user.dir")+Constants.FILE_SEPARATOR+Constants.FILENAME_LAUNCHER);
-		shortcut.setArguments(""+this.token+" "+app.getId());
-		shortcut.setIconLocation(Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".ico");
-		shortcut.setIconIndex(0);
+		this.shortcut.setName(appName);
+		this.shortcut.setArguments(""+this.token+" "+app.getId());
+		this.shortcut.setIconLocation(Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".ico");
+		this.shortcut.setIconIndex(0);
 		try {
-			shortcut.save();
+			this.shortcut.save();
 		} catch (RuntimeException re) {
 			return null;
 		}
 
-		return this.appName+".lnk";
+		return appName+".lnk";
 	}
 
 	@Override
