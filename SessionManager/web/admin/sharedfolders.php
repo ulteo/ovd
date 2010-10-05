@@ -33,14 +33,7 @@ if (isset($_REQUEST['action'])) {
 	show_default();
 
 function show_default() {
-	$sharedfolders = Abstract_NetworkFolder::load_all();
-	foreach ($sharedfolders as $key => $value) {
-		// if the networkfolder is link to a user it's not a networkfolder but a profile
-		$users = $value->getUsers();
-		if (($users === false) || (is_array($users) && count($users) > 0)) {
-			unset($sharedfolders[$key]);
-		}
-	}
+	$sharedfolders = Abstract_NetworkFolder::load_by_type(NetworkFolder::NF_TYPE_NETFOLDER);
 	
 	$can_manage_sharedfolders = isAuthorized('manageSharedFolders');
 	$can_manage_configuration = isAuthorized('manageConfiguration');

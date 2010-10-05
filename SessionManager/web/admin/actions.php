@@ -1304,6 +1304,7 @@ function action_add_sharedfolder() {
 	}
 
 	$buf = new NetworkFolder();
+	$buf->type = NetworkFolder::NF_TYPE_NETFOLDER;
 	$buf->name = $sharedfolder_name;
 	
 	if (array_key_exists('sharedfolder_server', $_REQUEST)) {

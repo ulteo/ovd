@@ -844,6 +844,7 @@ class Server {
 			if (is_object($folder) === false) {
 				// networkfolder does not exist -> create it
 				$folder = new NetworkFolder();
+				$folder->type = NetworkFolder::NF_TYPE_NETFOLDER;
 				$folder->id = $folder_id;
 				$folder->name = $folder_id;
 				$folder->server = $this->fqdn;

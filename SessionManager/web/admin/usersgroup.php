@@ -710,7 +710,7 @@ if (count($users_all) > 0 || count($users) > 0) {
 	echo '</div>';
 	echo '<br/>';
 
-    $all_sharedfolders = Abstract_NetworkFolder::load_all();
+    $all_sharedfolders = Abstract_NetworkFolder::load_by_type(NetworkFolder::NF_TYPE_NETFOLDER);
 
     if (count($all_sharedfolders) > 0) {
 		$available_sharedfolders = array();

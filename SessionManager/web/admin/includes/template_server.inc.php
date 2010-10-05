@@ -443,41 +443,38 @@ function server_display_role_preparation_fs($server_) {
 	$ret['used by sharedfolders'] = array();
 	
 	foreach ($networkfolders as $a_networkfolder) {
-		
-		$users = $a_networkfolder->getUsers();
-		if (is_array($users) && count($users) > 0) {
+		if ($a_networkfolder->type == NetworkFolder::NF_TYPE_PROFILE) {
 			$ret['profiles'][$a_networkfolder->id] = $a_networkfolder;
 			if (isset($ret['used by profiles'][$a_networkfolder->id]) === false) {
 				$ret['used by profiles'][$a_networkfolder->id] = array();
 			}
 			
-			foreach ($users as $a_user) {
-				$buf = array();
-				$buf['id'] =  $a_user->getAttribute('login');
-				$buf['name'] = $a_user->getAttribute('displayname');
-				$ret['used by profiles'][$a_networkfolder->id] []= $buf;
-			}
-		}
-		else {
-			$groups = $a_networkfolder->getUserGroups();
-			
-			if (is_array($groups) && count($groups) > 0) {
-				$ret['sharedfolders'][$a_networkfolder->id] = $a_networkfolder;
-				if (isset($ret['used by sharedfolders'][$a_networkfolder->id]) === false) {
-					$ret['used by sharedfolders'][$a_networkfolder->id] = array();
+			$users = $a_networkfolder->getUsers();
+			if (is_array($users) && count($users) > 0) {
+				foreach ($users as $a_user) {
+					$buf = array();
+					$buf['id'] =  $a_user->getAttribute('login');
+					$buf['name'] = $a_user->getAttribute('displayname');
+					$ret['used by profiles'][$a_networkfolder->id] []= $buf;
 				}
-				
+			}
+		} elseif ($a_networkfolder->type == NetworkFolder::NF_TYPE_NETFOLDER) {
+			$ret['sharedfolders'][$a_networkfolder->id] = $a_networkfolder;
+			if (isset($ret['used by sharedfolders'][$a_networkfolder->id]) === false) {
+				$ret['used by sharedfolders'][$a_networkfolder->id] = array();
+			}
+
+			$groups = $a_networkfolder->getUserGroups();
+			if (is_array($groups) && count($groups) > 0) {
 				foreach ($groups as $a_group) {
 					$buf = array();
 					$buf['id'] = $a_group->getUniqueID();
 					$buf['name'] = $a_group->name;
 					$ret['used by sharedfolders'][$a_networkfolder->id] []= $buf;
 				}
-				
 			}
-			else {
-				$ret['NetworkFolders'][$a_networkfolder->id] = $a_networkfolder;
-			}
+		} else {
+			$ret['NetworkFolders'][$a_networkfolder->id] = $a_networkfolder;
 		}
 	}
 	return $ret;

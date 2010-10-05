@@ -29,6 +29,7 @@ class Abstract_NetworkFolder {
 		
 		$NetworkFolder_table_structure = array(
 			'id'			=>	'int(8) NOT NULL auto_increment',
+			'type'			=>	'varchar(255)',
 			'name'			=>	'varchar(255)',
 			'server'		=>	'varchar(255)',
 			'status'		=>	'varchar(255)',
@@ -94,7 +95,7 @@ class Abstract_NetworkFolder {
 		$SQL = SQL::getInstance();
 		
 		if (is_null($NetworkFolder_->id)) {
-			$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4) VALUES (%5,%6,%7)', $SQL->prefix.'NetworkFolder', 'name', 'server', 'status', $NetworkFolder_->name, $NetworkFolder_->server,  $NetworkFolder_->status);
+			$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4,@5) VALUES (%6,%7,%8,%9)', $SQL->prefix.'NetworkFolder', 'type', 'name', 'server', 'status', $NetworkFolder_->type, $NetworkFolder_->name, $NetworkFolder_->server,  $NetworkFolder_->status);
 			
 			$NetworkFolder_->id = $SQL->InsertId();
 			if (is_null($NetworkFolder_->name) || $NetworkFolder_->name === '') {
@@ -102,7 +103,7 @@ class Abstract_NetworkFolder {
 			}
 		}
 		else {
-			$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4,@5) VALUES (%6,%7,%8,%9)', $SQL->prefix.'NetworkFolder', 'id', 'name', 'server', 'status', $NetworkFolder_->id, $NetworkFolder_->name, $NetworkFolder_->server,  $NetworkFolder_->status);
+			$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4,@5,@6) VALUES (%7,%8,%9,%10,%11)', $SQL->prefix.'NetworkFolder', 'id', 'type', 'name', 'server', 'status', $NetworkFolder_->id, $NetworkFolder_->type, $NetworkFolder_->name, $NetworkFolder_->server,  $NetworkFolder_->status);
 		}
 		
 		if (is_null($NetworkFolder_->name) || $NetworkFolder_->name === '') {
@@ -125,13 +126,14 @@ class Abstract_NetworkFolder {
 	}
 	
 	private static function generateFromRow($row_) {
-		if (array_key_exists('id', $row_) == false || array_key_exists('name', $row_) == false || array_key_exists('server', $row_) == false || array_key_exists('status', $row_) == false) {
+		if (array_key_exists('id', $row_) == false || array_key_exists('type', $row_) == false || array_key_exists('name', $row_) == false || array_key_exists('server', $row_) == false || array_key_exists('status', $row_) == false) {
 			Logger::error('main', 'Abstract_NetworkFolder::generateFromRow row not ok, row '.serialize($row_));
 			return NULL;
 		}
 		
 		$obj = new NetworkFolder();
 		$obj->id = $row_['id'];
+		$obj->type = $row_['type'];
 		$obj->name = $row_['name'];
 		$obj->server = $row_['server'];
 		$obj->status = $row_['status'];
@@ -170,6 +172,26 @@ class Abstract_NetworkFolder {
 		$nb_rows = $SQL->NumRows();
 		
 		return $nb_rows;
+	}
+	
+	public static function load_by_type($type_) {
+		Logger::debug('main', "Abstract_NetworkFolder::load_by_type($type_)");
+
+		$SQL = SQL::getInstance();
+
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2=%3', $SQL->prefix.'NetworkFolder', 'type', $type_);
+		$rows = $SQL->FetchAllResults();
+
+		$networkfolders = array();
+		foreach ($rows as $row) {
+			$networkfolder = self::generateFromRow($row);
+			if (! is_object($networkfolder))
+				continue;
+
+			$networkfolders[$networkfolder->id] = $networkfolder;
+		}
+
+		return $networkfolders;
 	}
 	
 	public static function load_from_user($login_) {
@@ -260,7 +282,7 @@ class Abstract_NetworkFolder {
 		Logger::debug('main', 'Abstract_NetworkFolder::update for \''.$NetworkFolder_->id.'\'');
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('UPDATE @1 SET @2=%3, @4=%5, @6=%7 WHERE @8=%9 LIMIT 1', $SQL->prefix.'NetworkFolder', 'name', $NetworkFolder_->name, 'server', $NetworkFolder_->server, 'status', $NetworkFolder_->status, 'id', $NetworkFolder_->id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3, @4=%5, @6=%7, @8=%9 WHERE @10=%11 LIMIT 1', $SQL->prefix.'NetworkFolder', 'type', $NetworkFolder_->type, 'name', $NetworkFolder_->name, 'server', $NetworkFolder_->server, 'status', $NetworkFolder_->status, 'id', $NetworkFolder_->id);
 		
 		return true;
 	}

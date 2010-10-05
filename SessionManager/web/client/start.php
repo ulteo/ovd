@@ -367,6 +367,7 @@ if (isset($old_session_id)) {
 
 				$fileserver = array_pop($fileservers);
 				$profile = new NetworkFolder();
+				$profile->type = NetworkFolder::NF_TYPE_PROFILE;
 				$profile->server = $fileserver->getAttribute('fqdn');
 				Abstract_NetworkFolder::save($profile);
 
