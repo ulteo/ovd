@@ -149,12 +149,6 @@ class Abstract_Session {
 
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sessions', 'id', $id);
 
-		$invites_liaisons = Abstract_Liaison::load('SessionInvite', $id_, NULL);
-		foreach ($invites_liaisons as $invites_liaison) {
-			Abstract_Invite::delete($invites_liaison->group);
-		}
-		Abstract_Liaison::delete('SessionInvite', $id_, NULL);
-
 		Abstract_Liaison::delete('ServerSession', NULL, $id_);
 
 		$tokens = Abstract_Token::load_by_session($id_);

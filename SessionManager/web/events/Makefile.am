@@ -1,7 +1,6 @@
 SUBDIRS = callbacks
 
 scripts_DATA = ServerStatusChanged.class.php \
-               SessionAddInvite.class.php \
                SessionStart.class.php \
                SessionStatusChanged.class.php \
                SqlFailure.class.php

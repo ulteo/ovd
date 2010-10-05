@@ -8,8 +8,6 @@ scripts_DATA = Application.class.php \
                ConfigElement.class.php \
                FileTailer.class.php \
                HttpRequest.class.php \
-               Invite.class.php \
-               Invites.class.php \
                LDAP.class.php \
                Liaison.class.php \
                Logger.class.php \
