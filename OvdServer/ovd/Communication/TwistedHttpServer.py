@@ -85,8 +85,10 @@ class HttpRequestHandler(resource.Resource):
 	def render_GET(self, request):
 		def render_GET_internal(response):
 			if response is None:
+				Logger.error("HttpRequestHandler::render_GET_internal response is none %s sending httplib.NOT_FOUND"%(request))
 				return self.send_error(request, httplib.NOT_FOUND)
 			if response is False:
+				Logger.error("HttpRequestHandler::render_GET_internal response is False %s sending httplib.UNAUTHORIZED"%(request))
 				return self.send_error(request, httplib.UNAUTHORIZED)
 				
 			request.setResponseCode(httplib.OK)
@@ -118,6 +120,7 @@ class HttpRequestHandler(resource.Resource):
 	def render_POST(self, request):
 		def render_POST_internal(response):
 			if response is None:
+				Logger.error("HttpRequestHandler::render_POST_internal return None sending httplib.NOT_FOUND")
 				self.send_error(request, httplib.NOT_FOUND)
 				return
 			
