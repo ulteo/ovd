@@ -333,7 +333,7 @@ class Session {
 			}
 		}
 
-		$this->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, $reason_);
+		$this->setStatus(Session::SESSION_STATUS_DESTROYED, $reason_);
 
 		return true;
 	}
