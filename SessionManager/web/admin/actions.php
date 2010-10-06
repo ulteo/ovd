@@ -819,7 +819,7 @@ if ($_REQUEST['name'] == 'User') {
 	}
 	
 	if ($_REQUEST['action'] == 'add') {
-		$minimun_attributes =  array_unique(array_merge(array('login', 'displayname', 'password'), get_needed_attributes_user_from_module_plugin()));
+		$minimun_attributes = array('login', 'displayname', 'password');
 		if (!isset($_REQUEST['login']) or !isset($_REQUEST['displayname']) or !isset($_REQUEST['password']))
 			die_error(_("Unable to create user"), __FILE__, __LINE__);
 		

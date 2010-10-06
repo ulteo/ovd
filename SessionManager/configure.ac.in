@@ -121,8 +121,6 @@ web/client/Makefile
 web/crons/Makefile
 web/webservices/admin/Makefile
 web/webservices/Makefile
-web/plugins/Makefile
-web/plugins/FS/Makefile
 web/modules/Makefile
 web/modules/AuthMethod/Makefile
 web/modules/UserGroupDB/Makefile

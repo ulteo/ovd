@@ -39,9 +39,6 @@ class Configuration_mode_internal extends Configuration_mode {
   }
 
   public function form_valid($form) {
-	if (! in_array($form['homedir'], array('local')))
-		return False;
-
     return True;
   }
 
@@ -53,10 +50,6 @@ class Configuration_mode_internal extends Configuration_mode {
     // Select Module for UserGroupDB
     $prefs->set('UserGroupDB', 'enable', 'sql');
 
-
-    // Set the FS type
-	$prefs->set('plugins', 'FS', $form['homedir']);
-
     return True;
   }
 
@@ -65,7 +58,6 @@ class Configuration_mode_internal extends Configuration_mode {
     $form = array();
     $config = $prefs->get('UserDB', 'enable');
 
-	$form['homedir']  = $prefs->get('plugins', 'FS');
     return $form;
   }
 
@@ -75,16 +67,6 @@ class Configuration_mode_internal extends Configuration_mode {
     $str.= '<div class="section">';
     $str.= _('This is the default Profile manager. This profile manager saves all the data into a the same SQL database as you defined it in the system configuration.');
     $str.= '</div>';
-
-	$str.= '<div class="section">';
-	$str.= '<h3>'._('Home Directory').'</h3>';
-	$str.= '<input class="input_radio" type="radio" name="homedir" value="local"';
-	if ($form['homedir'] == 'local')
-		$str.= ' checked="checked"';
-	$str.= '/>';
-	$str.= _('Use Internal home directory (no server replication)');
-
-	$str.= '</div>';
 
     return $str;
   }

@@ -127,19 +127,6 @@ class Configuration_mode_ad extends Configuration_mode {
       $ad_ar['match']['memberof'] = 'memberOf';
 
 
-    // plugins fs ...
-    if ($form['homedir'] == 'local')
-      $plugin_fs = 'local';
-    elseif ($form['homedir'] == 'ad_profile') {
-      $plugin_fs = 'cifs_no_sfu';
-      $ad_ar['match']['homedir'] = 'profilePath';
-
-    }
-    else {
-      $plugin_fs = 'cifs_no_sfu';
-      $ad_ar['match']['homedir'] = 'homeDirectory';
-    }
-
     // Select AD as UserDB
     $prefs->set('UserDB', 'enable', 'activedirectory');
 
@@ -149,14 +136,6 @@ class Configuration_mode_ad extends Configuration_mode {
 
     // Select Module for UserGroupDB
     $prefs->set('UserGroupDB', 'enable', $form['user_group']);
-
-
-    // Set the FS type
-    $prefs->set('plugins', 'FS', $plugin_fs);
-    if ( $plugin_fs == 'cifs_no_sfu') {
-        $data = array('authentication_method' => 'user');
-        $prefs->set('plugins', 'FS_cifs_no_sfu', $data);
-    }
 
     return True;
   }
@@ -213,17 +192,6 @@ class Configuration_mode_ad extends Configuration_mode {
 
     $buf = $prefs->get('UserGroupDB', 'enable');
     $form['user_group'] = ($buf == 'activedirectory')?'activedirectory':'sql';
-
-    // plugins fs ...
-    $buf = $prefs->get('plugins', 'FS');
-    if ($buf == 'cifs_no_sfu') {
-      if ($config['match']['homedir'] == 'profilePath')
-	$form['homedir'] = 'ad_profile';
-      else
-	$form['homedir'] = 'ad_homedir';
-    }
-    else
-      $form['homedir'] = 'local';
 
     return $form;
   }
@@ -293,28 +261,6 @@ class Configuration_mode_ad extends Configuration_mode {
     $str.= '/>'._('Use Internal User Groups');
     $str.= '</div>';
 
-    $str.= '<div class="section">';
-    $str.= '<h3>'._('Home Directory').'</h3>';
-    $str.= '<input class="input_radio" type="radio" name="homedir" value="local"';
-    if ($form['homedir'] == 'local')
-      $str.= ' checked="checked"';
-    $str.= '/>';
-    $str.= _('Use Internal home directory (no server replication)');
-    $str.= '<br/>';
-
-    $str.= '<input class="input_radio" type="radio" name="homedir" value="ad_profile" ';
-    if ($form['homedir'] == 'ad_profile')
-      $str.= ' checked="checked"';
-    $str.= '/>';
-    $str.= _('Use Active Directory User profiles as Home directory');
-    $str.= '<br/>';
-    $str.= '<input class="input_radio" type="radio" name="homedir" value="ad_homedir"';
-    if ($form['homedir'] == 'ad_homedir')
-      $str.= ' checked="checked"';
-    $str.= '/>';
-    $str.= _('Use Active Directory Home dir');
-    $str.= '</div>';
-
     /*
     $str.= '<div style="display:none" class="section">';
     $str.= '<h3>'._('Windows Applications').'</h3>';
@@ -354,15 +300,6 @@ class Configuration_mode_ad extends Configuration_mode {
       $str.= _('Use Internal User Groups');
     $str.= '</li>';
   
-    $str.= '<li><strong>'._('Home Directory:').'</strong> ';
-    if ($form['homedir'] == 'local')
-      $str.= _('Use Internal home directory (no server replication)');
-    elseif ($form['homedir'] == 'ad_profile')
-      $str.= _('Use Active Directory User profiles as Home directory');
-    elseif ($form['homedir'] == 'ad_homedir')
-      $str.= _('Use Active Directory Home dir');
-    $str.= '</li>';
-
     $str.= '</ul>';
 
     return $str;

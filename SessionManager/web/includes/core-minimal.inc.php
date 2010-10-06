@@ -33,7 +33,6 @@ define('CLASSES_DIR', SESSIONMANAGER_ROOT.'/classes');
 define('ABSTRACT_CLASSES_DIR', SESSIONMANAGER_ROOT.'/classes/abstract');
 define('ADMIN_CLASSES_DIR', SESSIONMANAGER_ROOT_ADMIN.'/classes');
 define('MODULES_DIR', SESSIONMANAGER_ROOT.'/modules');
-define('PLUGINS_DIR', SESSIONMANAGER_ROOT.'/plugins');
 define('EVENTS_DIR', SESSIONMANAGER_ROOT.'/events');
 define('CALLBACKS_DIR', SESSIONMANAGER_ROOT.'/events/callbacks');
 
@@ -82,10 +81,6 @@ function __autoload($class_name) { //what about NameSpaces ?
 		$class_files []= ADMIN_CLASSES_DIR.'/'.$class_name.'.class.php';
 
 		$class_files []= MODULES_DIR.'/'.preg_replace('/_/', '/', $class_name, 1).'.php';
-
-		$class_files []= PLUGINS_DIR.'/'.strtolower(substr($class_name, 7)).'.php';
-		if (substr($class_name, 0, 3) == 'FS_')
-			$class_files []= PLUGINS_DIR.'/FS/'.preg_replace('/FS_/', '', $class_name, 1).'.php';
 
 		foreach ($class_files as $class_file) {
 			if (file_exists($class_file)) {

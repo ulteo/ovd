@@ -369,7 +369,6 @@ class UserDB_sql extends UserDB  {
 		$table = $sql_conf['prefix'].'user';
 		$sql2 = SQL::newInstance($sql_conf);
 		
-		// TODO : use get_needed_attributes_user_from_module_plugin to get all right fields
 		$user_table_structure = array(
 			'login' => 'varchar(100) NOT NULL',
 			'displayname' => 'varchar(100) NOT NULL',

@@ -133,10 +133,6 @@ function locale2unix($locale_) {
 	return $locale;
 }
 
-function plugin_error($errno_, $errstr_, $errfile_, $errline_, $errcontext_) {
-	Logger::error('plugins', $errstr_.' in '.$errfile_.' line '.$errline_);
-}
-
 function conf_is_valid() {
 	if (! defined('SESSIONMANAGER_SPOOL'))
 		return 'SESSIONMANAGER_SPOOL is not defined';
@@ -207,27 +203,6 @@ function gen_string($nc, $st='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 
 function gen_unique_string() {
 	return time().gen_string(5);
-}
-
-function get_needed_attributes_user_from_module_plugin() {
-	$prefs = Preferences::getInstance();
-	if (! $prefs)
-		die_error('get Preferences failed',__FILE__,__LINE__);
-	$plugs = new Plugins();
-	$plugins = $plugs->getAvailablePlugins();
-	if (array_key_exists('plugins', $plugins)) {
-		$plugins['plugin_enable'] = $plugins['plugins'];
-		unset($plugins['plugins']);
-	}
-	$attributes = array();
-	foreach ($plugins as $k1 => $v1) {
-		$plugins_enable = $prefs->get('plugins', $k1);
-		foreach ($v1 as $k2 => $v2) {
-			if (isset($v2['UserDB']) && ($k2 == $plugins_enable))
-				$attributes = array_merge($attributes,$v2['UserDB']);
-		}
-	}
-	return $attributes;
 }
 
 function user_cmp($o1, $o2) {

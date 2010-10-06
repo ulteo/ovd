@@ -105,11 +105,6 @@ function parse_session_create_XML($xml_) {
 	return true;
 }
 
-$plugins = new Plugins();
-$plugins->doLoad();
-
-$plugins->doInit();
-
 $prefs = Preferences::getInstance();
 if (! $prefs) {
 	Logger::error('main', '(startsession) get Preferences failed');
@@ -470,11 +465,6 @@ if (isset($old_session_id)) {
 if ($ret === false)
 	throw_response(INTERNAL_ERROR);
 
-$fs = $prefs->get('plugins', 'FS');
-if (is_null($fs))
-	throw_response(INTERNAL_ERROR);
-$module_fs = $fs;
-
 $default_args = array(
 	'user_login'		=>	$user->getAttribute('login'),
 	'user_displayname'	=>	$user->getAttribute('displayname'),
@@ -520,27 +510,10 @@ if (isset($desktop_icons) && $desktop_icons != '0')
 if (isset($allow_shell) && $allow_shell != '0')
 	$optional_args['allow_shell'] = 1;
 
-$plugins->doStartsession(array(
-	'fqdn'	=>	$session->server,
-	'session'	=>	$session->id
-));
-
-$plugins_args = array();
-foreach ($plugins->plugins as $plugin) {
-	foreach ($plugin->redir_args as $k => $v)
-		if ($k != 'session')
-			$plugins_args[$k] = $v;
-
-	if (substr(get_class($plugin), 0, 3) == 'FS_')
-		$plugins_args['home_dir_type'] = $plugin->getHomeDirType();
-}
-
 $data = array();
 foreach ($default_args as $k => $v)
 	$data[$k] = $v;
 foreach ($optional_args as $k => $v)
-	$data[$k] = $v;
-foreach ($plugins_args as $k => $v)
 	$data[$k] = $v;
 
 $session->setAttribute('settings', $data);

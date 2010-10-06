@@ -132,7 +132,7 @@ function show_default($userDB) {
     echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
 
     $content_color = 1;
-    $minimun_attributes =  array_unique(array_merge(array('login', 'displayname',  'password'), get_needed_attributes_user_from_module_plugin()));
+    $minimun_attributes = array('login', 'displayname',  'password');
     foreach ($minimun_attributes as $minimun_attribute) {
       echo '<tr class="content'.$content_color.'">';
       echo '<th>'._($minimun_attribute).'</th>';

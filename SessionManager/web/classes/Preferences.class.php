@@ -375,65 +375,7 @@ class Preferences {
 		$this->add($c,'general','web_interface_settings');
 
 		$this->getPrefsModules();
-		$this->getPrefsPlugins();
 		$this->getPrefsEvents();
-	}
-
-
-	public function getPrefsPlugins(){
-		$plugs = new Plugins();
-		$p2 = $plugs->getAvailablePlugins();
-		// we remove all disabled Plugins
-		foreach ($p2 as $plugin_dir2 => $plu2) {
-			foreach ($plu2 as $plugin_name2 => $plugin_name2_value){
-				if ($plugin_dir2 == 'plugins')
-					$plugin_enable2 = call_user_func(array('Plugin_'.$plugin_name2, 'enable'));
-				else
-					$plugin_enable2 = call_user_func(array($plugin_dir2.'_'.$plugin_name2, 'enable'));
-				if ($plugin_enable2 !== true)
-					unset($p2[$plugin_dir2][$plugin_name2]);
-			}
-		}
-		$plugins_prettyname = array();
-		if (array_key_exists('plugins', $p2)) {
-			foreach ($p2['plugins'] as $plugin_name => $plu6) {
-				$plugin_prettyname = call_user_func(array('Plugin_'.$plugin_name, 'prettyName'));
-				if (is_null($plugin_prettyname))
-					$plugin_prettyname = $plugin_name;
-				$plugins_prettyname[$plugin_name] = $plugin_prettyname;
-			}
-
-			$c = new ConfigElement_multiselect('plugin_enable', _('Plugins activation'), _('Choose the plugins you want to enable.'), _('Choose the plugins you want to enable.'), array());
-			$c->setContentAvailable($plugins_prettyname);
-			$this->addPrettyName('plugins',_('Plugins configuration'));
-			$this->add($c,'plugins');
-			unset($p2['plugins']);
-		}
-
-		foreach ($p2 as $key1 => $value1){
-			$plugins_prettyname = array();
-			$c = new ConfigElement_select($key1, $key1, 'plugins '.$key1, 'plugins '.$key1, array());
-			foreach ($value1 as $plugin_name => $plu6) {
-				$plugin_prettyname = call_user_func(array($key1.'_'.$plugin_name, 'prettyName'));
-				if (is_null($plugin_prettyname))
-					$plugin_prettyname = $plugin_name;
-				$plugins_prettyname[$plugin_name] = $plugin_prettyname;
-				$c->setContentAvailable($plugins_prettyname);
-
-				$isdefault1 = call_user_func(array($key1.'_'.$plugin_name, 'isDefault'));
-				if ($isdefault1 === true) // replace the default value
-					$c->content = $plugin_name;
-
-				$plugin_conf = 'return '.$key1.'_'.$plugin_name.'::configuration();';
-				$list_conf = call_user_func(array($key1.'_'.$plugin_name, 'configuration'));
-				if (is_array($list_conf)) {
-					foreach ($list_conf as $l_conf){
-						$this->add($l_conf,'plugins', $key1.'_'.$plugin_name);
-					}
-				}
-			}
-			$this->add($c,'plugins');
-		}
 	}
 
 	public function getPrefsModules(){

@@ -112,8 +112,6 @@ function init_db($prefs_) {
 	}
 	Logger::debug('main', 'init_db modules inited');
 
-	//TODO : do the same for plugins
-
 	// Init of Abstract
 	Abstract_Server::init($prefs_);
 	Abstract_Session::init($prefs_);

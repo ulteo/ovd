@@ -104,37 +104,7 @@ class Preferences_admin extends Preferences {
 			Logger::error('main', 'init_db failed');
 			return _('Initialization failed');
 		}
-
-		$plugins_ok = true;
-		$plugins_enable = $this->get('plugins', 'plugin_enable');
-		if (!is_null($plugins_enable)) {
-			foreach ($plugins_enable as $plugin_name) {
-				$ret_eval = call_user_func(array('Plugin_'.strtolower($plugin_name), 'prefsIsValid'), $this);
-				if ($ret_eval !== true) {
-					Logger::error('main', 'prefs is not valid for plugin \''.$plugin_name.'\'');
-					$plugins_ok = false;
-					return _('prefs is not valid for plugin').' ('.$plugin_name.')'; // TODO
-				}
-			}
-		}
-		$plugins_FS = $this->get('plugins', 'FS');
-		// for now we can use one FS at the same time
-		if (!is_null($plugins_FS)) {
-// 			foreach ($plugins_FS['FS'] as $plugin_name) {
-				$ret_eval = call_user_func(array('FS_'.strtolower($plugins_FS), 'prefsIsValid'), $this);
-				if ($ret_eval !== true) {
-					Logger::error('main', 'prefs is not valid for FS plugin \''.$plugins_FS.'\'');
-					$plugins_ok = false;
-					return _('prefs is not valid for FS plugin').' ('.$plugins_FS.')'; // TODO
-				}
-// 			}
-		}
 		
-		if ( $plugins_ok === false) {
-			Logger::error('main', 'PREFERENCESADMIN::isValid plugins false');
-			return _('Plugins configuration not valid');
-		}
-
 		$modules_ok = true;
 		$modules_enable = $this->get('general', 'module_enable');
 		foreach ($modules_enable as $module_name) {

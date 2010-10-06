@@ -37,7 +37,7 @@ abstract class UserDB extends Module  {
 		return self::$instance;
 	}
 	public function isOK($user_){
-		$minimun_attribute = array_unique(array_merge(array('login','displayname'), get_needed_attributes_user_from_module_plugin()));
+		$minimun_attribute = array('login','displayname');
 		if (is_object($user_)){
 			foreach ($minimun_attribute as $attribute){
 				if ($user_->hasAttribute($attribute) == false) {

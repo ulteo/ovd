@@ -173,14 +173,6 @@ class Session {
 				}
 			}
 
-			$plugins = new Plugins();
-			$plugins->doLoad();
-
-			$plugins->doRemovesession(array(
-				'fqdn'		=>	$this->server,
-				'session'	=>	$this->id
-			));
-
 			if (! $this->orderDeletion())
 				Logger::error('main', 'Unable to order session deletion for session \''.$this->id.'\'');
 			else {

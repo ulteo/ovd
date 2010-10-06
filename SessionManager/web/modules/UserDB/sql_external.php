@@ -124,8 +124,7 @@ class UserDB_sql_external extends UserDB {
 		if (! $prefs)
 			die_error('get Preferences failed',__FILE__,__LINE__);
 		$config = $prefs->get('UserDB','sql_external');
-		$minimun_attribute = array_unique(
-		array_merge(array_keys($config['match']), get_needed_attributes_user_from_module_plugin()));
+		$minimun_attribute = array_keys($config['match']);
 		if (is_object($user_)){
 			foreach ($minimun_attribute as $attribute){
 				if ($user_->hasAttribute($attribute) == false)

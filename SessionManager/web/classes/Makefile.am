@@ -15,8 +15,6 @@ scripts_DATA = Application.class.php \
                NetworkFolder.class.php \
                SQL.class.php \
                News.class.php \
-               Plugin.class.php \
-               Plugins.class.php \
                Preferences.class.php \
                ReportItems.class.php \
                Server.class.php \

@@ -89,16 +89,6 @@ else {
 				print_prefs5($prefs, 'general', 'mails_settings');
 				echo '<br />';
 				print_prefs5($prefs, 'general', 'policy');
-				if (is_array($prefs->elements['plugins'])) {
-					foreach (array_keys($prefs->elements['plugins']) as $k){
-						if (str_startswith($k,'FS')) {
-	// 						unset($prefs->prefs['plugins'][$k]);
-							unset($prefs->elements['plugins'][$k]);
-						}
-					}
-				}
-				echo '<br />';
-				print_prefs4($prefs, 'plugins', true);
 				break;
 			case 'auth':
 				if (array_key_exists('AuthMethod',$prefs->elements))
