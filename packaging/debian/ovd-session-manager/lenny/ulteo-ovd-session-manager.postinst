@@ -80,6 +80,7 @@ then
 
     # download the chroot if needed
     while [ ! -e $CACHEDIR/base.tar.gz ]; do
+        mkdir -p $CACHEDIR
 
         # get the tarball url and quit if empty
         db_get ulteo-ovd-session-manager/tarball_url && URL=$RET
@@ -89,7 +90,6 @@ then
         CURLOPTS="--retry 3 --connect-timeout 60 --insecure -L"
         if curl $CURLOPTS -f -s -I "$URL" > /dev/null ; then
             echo "Retrieving the chroot tarball..."
-            mkdir -p $CACHEDIR
             curl $CURLOPTS "$URL" > $CACHEDIR/base.tar.gz && continue
         fi
 
