@@ -45,6 +45,8 @@ class Share:
 	def exists(self):
 		return os.path.isdir(self.directory)
 	
+	def isActive(self):
+		return self.active
 	
 	def status(self):
 		if not self.exists():
@@ -132,69 +134,21 @@ class Share:
 		return ret
 	
 	
-	def add_user(self, user, password):
-		cmd = "useradd -d /dev/null -s /bin/false -G %s %s"%(Config.group, user)
-		s,o = commands.getstatusoutput(cmd)
-		if s == 2304:
-			Logger.warn("FS: unable to create user: already exists")
-			self.users.append(user)
-			return True
-		elif s != 0:
-			Logger.error("FS: unable to create user")
-			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
-			return False
-		
-		
-		cmd = 'echo "%s\\n%s" | smbpasswd -s -a %s'%(password, password, user)
-		s,o = commands.getstatusoutput(cmd)
-		if s == 256:
-			# "echo" is different between bash and dash
-			cmd = 'echo -e "%s\\n%s" | smbpasswd -s -a %s'%(password, password, user)
-			s,o = commands.getstatusoutput(cmd)
-		
-		if s != 0:
-			Logger.error("FS: unable to set samba password")
-			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
-			return False
-		
-		cmd = 'htpasswd -b %s "%s" "%s"'%(Config.dav_passwd_file, user, password)
-		s,o = commands.getstatusoutput(cmd)
-		if s != 0:
-			Logger.error("FS: unable to update apache auth file")
-			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
-			return False
-		
-		
+	def add_user(self, user):
 		self.users.append(user)
-		return True
+		return self.enable()
 	
 	
 	def del_user(self, user):
-		ret = True
+		if user not in self.users:
+			return True
 		
-		cmd = 'htpasswd -D %s "%s"'%(Config.dav_passwd_file, user)
-		s,o = commands.getstatusoutput(cmd)
-		if s != 0:
-			Logger.error("FS: unable to update apache auth file")
-			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
-			return False
+		self.users.remove(user)
+		if len(self.users) > 0:
+			return True
 		
-		
-		cmd = 'smbpasswd -x %s'%(user)
-		s,o = commands.getstatusoutput(cmd)
-		if s != 0:
-			Logger.error("FS: unable to del smb password")
-			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
-			ret = False
-		
-		cmd = "userdel -f %s"%(user)
-		s,o = commands.getstatusoutput(cmd)
-		if s != 0:
-			Logger.error("FS: unable to del user")
-			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
-			ret = False
-		
-		if user in self.users:
-			self.users.remove(user)
-		
-		return ret
+		return self.disable()
+	
+	
+	def has_user(self, user):
+		return (user in self.users)

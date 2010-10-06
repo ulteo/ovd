@@ -32,6 +32,7 @@ from ovd import util
 
 from Config import Config
 from Share import Share
+from User import User
 
 
 class Dialog(AbstractDialog):
@@ -54,74 +55,6 @@ class Dialog(AbstractDialog):
 		
 			elif path == "/statistics":
 				return self.req_statistics(request)
-			
-			#elif path.startswith("/share/"):
-				#buf = path[len("/share/"):]
-				
-				#buf = buf.split("/")
-				#if buf[0] == "create":
-					#if len(buf) != 2:
-						#return None
-					
-					#doc = Document()
-					#rootNode = doc.createElement('share')
-					#rootNode.setAttribute("id", buf[1])
-					#doc.appendChild(rootNode)
-					#request["data"] = doc.toxml()
-					
-					#return self.req_share_create(request)
-				
-				#elif buf[0] == "delete":
-					#if len(buf) != 2:
-						#return None
-					
-					#doc = Document()
-					#rootNode = doc.createElement('share')
-					#rootNode.setAttribute("id", buf[1])
-					#doc.appendChild(rootNode)
-					#request["data"] = doc.toxml()
-					
-					#return self.req_share_delete(request)
-				
-				#elif buf[0] == "users":
-					
-					#if len(buf) < 4:
-						#return None
-					
-					#if buf[1] == "add":
-						#doc = Document()
-						#rootNode = doc.createElement('share')
-						#rootNode.setAttribute("id", buf[2])
-						#doc.appendChild(rootNode)
-						
-						#for user in buf[3:]:
-							#(login, passwd) = user.split(":", 2)
-							
-							#node = doc.createElement('user')
-							#node.setAttribute("login", login)
-							#node.setAttribute("password", passwd)
-							#rootNode.appendChild(node)
-						
-						#request["data"] = doc.toxml()
-						#return self.req_share_add_users(request)
-					
-					#elif buf[1] == "del":
-						#doc = Document()
-						#rootNode = doc.createElement('share')
-						#rootNode.setAttribute("id", buf[2])
-						#doc.appendChild(rootNode)
-						
-						#for user in buf[3:]:
-							#node = doc.createElement('user')
-							#node.setAttribute("login", user)
-							#rootNode.appendChild(node)
-						
-						#request["data"] = doc.toxml()
-						
-						#return self.req_share_del_users(request)
-				
-				return None
-			
 		
 		elif request["method"] == "POST":
 			if path == "/share/create":
@@ -130,13 +63,14 @@ class Dialog(AbstractDialog):
 			elif path == "/share/delete":
 				return self.req_share_delete(request)
 			
-			elif path == "/share/users/add":
-				return self.req_share_add_users(request)
+			elif path == "/access/enable":
+				return self.req_enable_user(request)
 			
-			elif path == "/share/users/del":
-				return self.req_share_del_users(request)
+			elif path == "/access/disable":
+				return self.req_disable_user(request)
 		
 		return None
+	
 	
 	def req_list_all(self, request):
 		shares = self.role_instance.get_existing_shares()
@@ -156,6 +90,7 @@ class Dialog(AbstractDialog):
 		
 		return self.req_answer(doc)
 	
+	
 	def req_statistics(self, request):
 		infos  = self.role_instance.get_disk_size_infos()
 		
@@ -168,6 +103,7 @@ class Dialog(AbstractDialog):
 		doc.appendChild(rootNode)
 		
 		return self.req_answer(doc)
+	
 	
 	def req_share_create(self, request):
 		try:
@@ -204,7 +140,10 @@ class Dialog(AbstractDialog):
 			doc.appendChild(rootNode)
 			return self.req_answer(doc)
 		
+		
+		self.role_instance.shares[share_id] = share
 		return self.share2xml(share)
+	
 	
 	def req_share_delete(self, request):
 		try:
@@ -227,6 +166,7 @@ class Dialog(AbstractDialog):
 		
 		if self.role_instance.shares.has_key(share_id):
 			share = self.role_instance.shares[share_id]
+			del(self.role_instance.shares[share_id])
 		else:
 			share = Share(share_id, Config.spool)
 			share.delete()
@@ -242,27 +182,33 @@ class Dialog(AbstractDialog):
 		doc.appendChild(rootNode)
 		return self.req_answer(doc)
 	
+	def user2xml(self, user, exists):
+		doc = Document()
+		rootNode = doc.createElement('user')
+		rootNode.setAttribute("login", user)
+		if exists:
+			status = "ok"
+		else:
+			status = "unknown"
+		rootNode.setAttribute("status", status)
+		doc.appendChild(rootNode)
+		return self.req_answer(doc)
 	
-	def req_share_add_users(self, request):
+	
+	def req_enable_user(self, request):
 		try:
 			document = minidom.parseString(request["data"])
 			
 			rootNode = document.documentElement
-			if rootNode.nodeName != "share":
+			if rootNode.nodeName != "session":
 				raise Exception("invalid root node")
 			
-			share_id = rootNode.getAttribute("id")
+			user = rootNode.getAttribute("login")
+			password = rootNode.getAttribute("password")
 			
-			userNodes = rootNode.getElementsByTagName("user")
-			if len(userNodes)==0:
-				raise Exception("usage")
-			
-			users = []
-			for node in userNodes:
-				login = node.getAttribute("login")
-				password = node.getAttribute("password")
-				
-				users.append((login, password))
+			shares = []
+			for node in rootNode.getElementsByTagName("share"):
+				shares.append(node.getAttribute("id"))
 		
 		except Exception, err:
 			Logger.warn("Invalid xml input: "+str(err))
@@ -272,51 +218,74 @@ class Dialog(AbstractDialog):
 			doc.appendChild(rootNode)
 			return self.req_answer(doc)
 		
-		if self.role_instance.shares.has_key(share_id):
-			share = self.role_instance.shares[share_id]
-		else:
-			share = Share(share_id, Config.spool)
-			if share.status is Share.STATUS_NOT_EXISTS:
-				doc = Document()
-				rootNode = doc.createElement('error')
-				rootNode.setAttribute("id", "not_exists")
-				doc.appendChild(rootNode)
-				return self.req_answer(doc)
+		u = User(user)
+		if u.existSomeWhere():
+			Logger.warn("FS: Enable user %s but already exists in system: purging it"%(user))
+			u.clean()
 			
-			self.role_instance.shares[share_id] = share
-		
-		for (user,password) in users:
-			if not share.add_user(user, password):
+			if u.existSomeWhere():
+				Logger.error("FS: unable to del user %s"%(user))
 				doc = Document()
 				rootNode = doc.createElement('error')
 				rootNode.setAttribute("id", "system_error")
+				rootNode.setAttribute("msg", "user already exists and cannot be deleted")
 				doc.appendChild(rootNode)
 				return self.req_answer(doc)
 		
-		share.enable()
-		return self.share2xml(share)
+		if not u.create(password):
+			Logger.error("FS: unable to create user %s"%(user))
+			doc = Document()
+			rootNode = doc.createElement('error')
+			rootNode.setAttribute("id", "system_error")
+			rootNode.setAttribute("msg", "user cannot be created")
+			doc.appendChild(rootNode)
+			return self.req_answer(doc)
+		
+		somethingWrong = False
+		for share_id in shares:
+			if not self.role_instance.shares.has_key(share_id):
+				somethingWrong = True
+				response = self.share2xml(Share(share_id, Config.spool))
+				break
+			
+			share = self.role_instance.shares[share_id]
+			if not share.add_user(user):
+				somethingWrong = True
+				doc = Document()
+				rootNode = doc.createElement('error')
+				rootNode.setAttribute("id", "system_error")
+				rootNode.setAttribute("msg", "share cannot enable user")
+				doc.appendChild(rootNode)
+				response = self.req_answer(doc)
+				break
+		
+		if somethingWrong:
+			for share_id in shares:
+				try:
+					share = self.role_instance.shares[share_id]
+				except:
+					continue
+				
+				share.del_user(user)
+			u.destroy()
+			
+			return response
+		
+		Logger.debug("FS:request req_enable_user return success")
+		return self.req_answer(document)
 	
 	
-	def req_share_del_users(self, request):
+	
+	def req_disable_user(self, request):
 		try:
 			document = minidom.parseString(request["data"])
 			
 			rootNode = document.documentElement
-			if rootNode.nodeName != "share":
+			if rootNode.nodeName != "session":
 				raise Exception("invalid root node")
 			
-			share_id = rootNode.getAttribute("id")
+			user = rootNode.getAttribute("login")
 			
-			userNodes = rootNode.getElementsByTagName("user")
-			if len(userNodes)==0:
-				raise Exception("usage")
-			
-			users = []
-			for node in userNodes:
-				login = node.getAttribute("login")
-				
-				users.append(login)
-		
 		except Exception, err:
 			Logger.warn("Invalid xml input: "+str(err))
 			doc = Document()
@@ -326,29 +295,27 @@ class Dialog(AbstractDialog):
 			return self.req_answer(doc)
 		
 		
-		if not self.role_instance.shares.has_key(share_id):
-			return self.share2xml(Share(share_id, Config.spool))
-			
-		share = self.role_instance.shares[share_id]
+		u = User(user)
+		if u.existSomeWhere():
+			Logger.warn("FS: Enable user %s but already exists in system: purging it"%(user))
+			return self.user2xml(user, False)
 		
-		ret = True
-		for user in users:
-			if not share.del_user(user):
-				ret = False
+		somethingWrong = False
 		
+		for share in self.role_instance.shares.values():
+			if share.has_user(user):
+				if not share.del_user(user):
+					somethingWrong = True
 		
-		if len(share.users) == 0:
-			if not share.disable():
-				ret = False
-			
-			del(self.role_instance.shares[share_id])
+		if not u.destroy():
+			somethingWrong = True
 		
-		if not ret:
+		if somethingWrong:
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "system_error")
 			doc.appendChild(rootNode)
 			return self.req_answer(doc)
 		
-		
-		return self.share2xml(share)
+		Logger.debug("FS:request req_disable_user return success")
+		return self.req_answer(document)

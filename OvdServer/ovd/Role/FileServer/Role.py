@@ -35,6 +35,7 @@ from Config import Config
 from Dialog import Dialog
 from Rec import Rec
 from Share import Share
+from User import User
 
 
 class Role(AbstractRole):
@@ -52,12 +53,19 @@ class Role(AbstractRole):
 			os.makedirs(Config.spool)
 		
 		if not self.cleanup_samba():
-			Logger.error("FileServer: unable to cleanup samba users")
+			Logger.error("FileServer: unable to cleanup samba")
+			return False
+		
+		if not self.purgeGroup():
+			Logger.error("FileServer: unable to cleanup users")
 			return False
 		
 		wm = WatchManager()
 		self.inotify = ThreadedNotifier(wm)
 		wm.add_watch(path=Config.spool, mask=Rec.mask, proc_fun=Rec(), rec=True, auto_add=True)
+		
+		
+		self.shares = self.get_existing_shares()
 		
 		return True
 
@@ -69,7 +77,9 @@ class Role(AbstractRole):
 	
 	def stop(self):
 		Logger.info("FileServer:: stopping")
+		
 		self.cleanup_samba()
+		self.purgeGroup()
 		self.inotify.stop()
 	
 	
@@ -88,16 +98,19 @@ class Role(AbstractRole):
 		# check samba conf
 		ret = True
 		
+		for share in self.shares.values():
+			if share.isActive():
+				if not share.disable():
+					ret = False
+		
 		for share in self.get_enabled_usershares():
-			Logger.debug("FileServer:: Removing share '%s'"%(share.name))
-			s, o = commands.getstatusoutput("net usershare delete %s"%(share.name))
+			Logger.debug("FileServer:: Removing share '%s'"%(share))
+			s, o = commands.getstatusoutput("net usershare delete %s"%(share))
 			if s is not 0:
 				Logger.error("FS: unable to 'net usershare delete': %d => %s"%(s, o))
 				ret = False
 		
-		ret2 = self.purgeGroup()
-		
-		return ret and ret2
+		return ret
 	
 	
 	def purgeGroup(self):
@@ -111,41 +124,31 @@ class Role(AbstractRole):
 				continue
 			
 			Logger.debug("FileServer:: deleting user '%s'"%(user))
-			cmd = 'smbpasswd -x %s'%(user)
-			s,o = commands.getstatusoutput(cmd)
-			if s != 0:
-				Logger.error("FS: unable to del smb password")
-				Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
 			
-			
-			cmd = "userdel -f %s"%(user)
-			s,o = commands.getstatusoutput(cmd)
-			if s != 0:
-				Logger.error("FS: unable to del user")
-				Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
+			u = User(user)
+			u.clean()
+			if u.existSomeWhere():
+				Logger.error("FS: unable to del user %s"%(user))
 				ret =  False
 		
 		return ret
 	
 	
-	def get_existing_shares(self):
-		shares = []
+	@staticmethod
+	def get_existing_shares():
+		shares = {}
 		
 		for f in glob.glob(Config.spool+"/*"):
 			name = os.path.basename(f)
 			
-			if name in self.shares.keys():
-				continue
-			
 			share = Share(name, Config.spool)
-			shares.append(share)
+			shares[name] = share
 			
-		return shares + self.shares.values()
+		return shares
+	
 	
 	
 	def get_enabled_usershares(self):
-		exisings = self.get_existing_shares()
-		
 		s, o = commands.getstatusoutput("net usershare list")
 		if s is not 0:
 			Logger.error("FS: unable to 'net usershare list': %d => %s"%(s, o))
@@ -153,13 +156,7 @@ class Role(AbstractRole):
 		
 		names = [s.strip() for s in o.splitlines()]
 		
-		
-		shares = []
-		for share in exisings:
-			if share.name in names:
-				shares.append(share)
-		
-		return shares
+		return names
 	
 	
 	def get_disk_size_infos(self):
