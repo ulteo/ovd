@@ -304,7 +304,7 @@ class Dialog:
     def check_whatsup(self):
         Logger.debug("Begin check")
 
-        old_status = 2
+        old_status = "created"
         while 1==1:
             status = self.doSessionStatus()
             if status != old_status:
