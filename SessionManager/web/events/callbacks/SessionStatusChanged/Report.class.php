@@ -24,7 +24,6 @@ require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
 class SessionStatusChangedReport extends EventCallback {
     public function run () {
-		Logger::critical('main', 'SessionStatusChangedReport::run '.serialize($this->ev));
 		switch ($this->ev->status) {
 			/* session starts */
 			case Session::SESSION_STATUS_READY:
