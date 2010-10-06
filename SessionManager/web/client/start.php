@@ -333,21 +333,13 @@ if (isset($old_session_id)) {
 
 				$profile_available = true;
 
-				if (! $netfolder->delUser($user)) {
+				if (! $fileserver->delUserFromNetworkFolder($netfolder->id, $user_login)) {
 					Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 1)');
 					throw_response(INTERNAL_ERROR);
 				}
-				if (! $fileserver->delUserFromNetworkFolder($netfolder->id, $user_login)) {
-					Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 2)');
-					throw_response(INTERNAL_ERROR);
-				}
 
-				if (! $netfolder->addUser($user)) {
-					Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 3)');
-					throw_response(INTERNAL_ERROR);
-				}
 				if (! $fileserver->addUserToNetworkFolder($netfolder->id, $user_login, $user_password)) {
-					Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 4)');
+					Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 2)');
 					throw_response(INTERNAL_ERROR);
 				}
 
