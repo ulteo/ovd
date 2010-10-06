@@ -966,17 +966,17 @@ class Server {
 
 		$dom = new DomDocument('1.0', 'utf-8');
 
-		$node = $dom->createElement('share');
-		$node->setAttribute('id', $name_);
-		$user_node = $dom->createElement('user');
-		$user_node->setAttribute('login', $login_);
-		$user_node->setAttribute('password', $password_);
-		$node->appendChild($user_node);
+		$node = $dom->createElement('session');
+		$node->setAttribute('login', $login_);
+		$node->setAttribute('password', $password_);
+		$share_node = $dom->createElement('share');
+		$share_node->setAttribute('id', $name_);
+		$node->appendChild($share_node);
 		$dom->appendChild($node);
 
 		$xml = $dom->saveXML();
 
-		$xml = query_url_post_xml($this->getBaseURL().'/fs/share/users/add', $xml);
+		$xml = query_url_post_xml($this->getBaseURL().'/fs/access/enable', $xml);
 		if (! $xml) {
 			$this->isUnreachable();
 			Logger::error('main', 'Server::addUserToNetworkFolder server \''.$this->fqdn.'\' is unreachable');
@@ -992,11 +992,11 @@ class Server {
 		if (! $dom->hasChildNodes())
 			return false;
 
-		$node = $dom->getElementsByTagname('share')->item(0);
+		$node = $dom->getElementsByTagname('session')->item(0);
 		if (is_null($node))
 			return false;
 
-		if (! $node->hasAttribute('id'))
+		if (! $node->hasAttribute('login'))
 			return false;
 
 		return true;
@@ -1015,16 +1015,13 @@ class Server {
 
 		$dom = new DomDocument('1.0', 'utf-8');
 
-		$node = $dom->createElement('share');
-		$node->setAttribute('id', $name_);
-		$user_node = $dom->createElement('user');
-		$user_node->setAttribute('login', $login_);
-		$node->appendChild($user_node);
+		$node = $dom->createElement('session');
+		$node->setAttribute('login', $login_);
 		$dom->appendChild($node);
 
 		$xml = $dom->saveXML();
 
-		$xml = query_url_post_xml($this->getBaseURL().'/fs/share/users/del', $xml);
+		$xml = query_url_post_xml($this->getBaseURL().'/fs/access/disable', $xml);
 		if (! $xml) {
 			$this->isUnreachable();
 			Logger::error('main', 'Server::delUserFromNetworkFolder server \''.$this->fqdn.'\' is unreachable');
@@ -1040,11 +1037,11 @@ class Server {
 		if (! $dom->hasChildNodes())
 			return false;
 
-		$node = $dom->getElementsByTagname('share')->item(0);
+		$node = $dom->getElementsByTagname('session')->item(0);
 		if (is_null($node))
 			return false;
 
-		if (! $node->hasAttribute('id'))
+		if (! $node->hasAttribute('login'))
 			return false;
 
 		return true;
