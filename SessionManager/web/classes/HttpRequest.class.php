@@ -35,6 +35,8 @@ class HttpRequest {
 	protected $responseErrno = 0;
 	protected $responseError = NULL;
 
+	private $max_requests = 5;
+
 	public function __construct($url_=NULL, $request_method_='POST', $options_=array()) {
 		$this->url = $url_;
 		$this->method = $request_method_;
@@ -140,7 +142,7 @@ class HttpRequest {
 
 		$this->responseBody = curl_exec($ch);
 		$i = 1;
-		while (curl_errno($ch) == CURLE_GOT_NOTHING && $i < 5) {
+		while (curl_errno($ch) == CURLE_GOT_NOTHING && $i < $this->max_requests) {
 			usleep(rand(1000000, 3000000));
 			$this->responseBody = curl_exec($ch);
 			$i++;
