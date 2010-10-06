@@ -24,13 +24,13 @@ import os
 import struct
 import sys
 import time
+import locale
 
 from ovd_shells import OvdAppChannel
 from ovd_shells.Platform import _platform as Platform
 from ovd_shells.Platform.InstancesManager import InstancesManager
 from ovd_shells.Platform.VirtualChannel import VirtualChannel
 from ovd_shells import Util
-
 
 def main():
 	user_sdir = Platform.getUserSessionDir()
@@ -81,12 +81,16 @@ def main():
 			ptr+= 4
 			
 			share = packet[ptr:ptr+l]
+			share = share.decode("UTF-16LE")
+			share = share.encode(locale.getpreferredencoding())
 			ptr+= l
 			
 			l = struct.unpack('<I', packet[ptr:ptr+4])[0]
 			ptr+= 4
 			
 			path = packet[ptr:ptr+l]
+			path = path.decode("UTF-16LE")
+			path = path.encode(locale.getpreferredencoding())
 			ptr+=l
 			
 			job = (OvdAppChannel.ORDER_START, token, app_id, share, path)
