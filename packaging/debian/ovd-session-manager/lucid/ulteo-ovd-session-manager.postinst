@@ -12,6 +12,8 @@ LOGDIR=/var/log/ulteo/sessionmanager
 A2SITESDIR=/etc/apache2/sites-available
 A2CONFDIR=/etc/apache2/conf.d
 
+A2USER=www-data
+
 # VHost server config
 if [ ! -e $A2SITESDIR/sessionmanager-vhost-server ]; then
     ln -sfT $CONFDIR/apache2-vhost-server.conf \
@@ -71,7 +73,8 @@ then
 
     # create folders and change permissions
     mkdir -p $SPOOLDIR/reporting $LOGDIR
-    chown www-data:www-data $SPOOLDIR $SPOOLDIR/reporting $LOGDIR $CONFFILE
+    chown $A2USER:$A2USER $SPOOLDIR $SPOOLDIR/reporting $LOGDIR $CONFFILE
+    sed -i "s/@APACHE_USER@/${A2USER}/" $CONFDIR/sessionmanager.cron
 
     # clear the password
     unset RET

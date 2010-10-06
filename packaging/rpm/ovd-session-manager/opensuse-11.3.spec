@@ -48,6 +48,8 @@ sed -i -e 's,^#!/usr/bin/php$,#!/usr/bin/php5,' $(find $RPM_BUILD_ROOT -name *.p
 A2CONFDIR=/etc/apache2/conf.d
 CONFDIR=/etc/ulteo/sessionmanager
 
+A2USER=www-run
+
 a2enmod php5 > /dev/null
 
 # VHost server config
@@ -104,6 +106,7 @@ fi
 
 # link crons
 chmod a+x $CONFDIR/sessionmanager.cron
+sed -i "s/@APACHE_USER@/${A2USER}/" $CONFDIR/sessionmanager.cron
 ln -sfT $CONFDIR/sessionmanager.cron /etc/cron.d/sessionmanager
 
 %postun -n ulteo-ovd-session-manager
