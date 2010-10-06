@@ -253,7 +253,7 @@ if (isset($old_session_id)) {
 
 	$session_type = 'resume';
 
-	$session->setStatus(Session::SESSION_STATUS_INITED);
+	$session->setStatus(Session::SESSION_STATUS_READY);
 
 	$ret = true;
 

@@ -26,7 +26,7 @@ class Session {
 	const SESSION_STATUS_ERROR = "error";
 	const SESSION_STATUS_CREATED = "created";
 	const SESSION_STATUS_INIT = "init";
-	const SESSION_STATUS_INITED = "ready";
+	const SESSION_STATUS_READY = "ready";
 	const SESSION_STATUS_ACTIVE = "logged";
 	const SESSION_STATUS_INACTIVE = "disconnected";
 	const SESSION_STATUS_WAIT_DESTROY = "wait_destroy";
@@ -100,7 +100,7 @@ class Session {
 	}
 
 	public function getAllStates() {
-		return array(Session::SESSION_STATUS_UNKNOWN, Session::SESSION_STATUS_ERROR, Session::SESSION_STATUS_CREATED, Session::SESSION_STATUS_INIT, Session::SESSION_STATUS_INITED, Session::SESSION_STATUS_ACTIVE, Session::SESSION_STATUS_INACTIVE, Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_STATUS_DESTROYED);
+		return array(Session::SESSION_STATUS_UNKNOWN, Session::SESSION_STATUS_ERROR, Session::SESSION_STATUS_CREATED, Session::SESSION_STATUS_INIT, Session::SESSION_STATUS_READY, Session::SESSION_STATUS_ACTIVE, Session::SESSION_STATUS_INACTIVE, Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_STATUS_DESTROYED);
 	}
 
 	public function getStatus() {
@@ -134,7 +134,7 @@ class Session {
 		$states = array(
 			Session::SESSION_STATUS_CREATED			=>	0,
 			Session::SESSION_STATUS_INIT			=>	1,
-			Session::SESSION_STATUS_INITED			=>	2,
+			Session::SESSION_STATUS_READY			=>	2,
 			Session::SESSION_STATUS_ACTIVE			=>	3,
 			Session::SESSION_STATUS_INACTIVE		=>	4,
 			Session::SESSION_STATUS_WAIT_DESTROY	=>	5,
@@ -155,7 +155,7 @@ class Session {
 			'status'	=>	$status_
 		));
 
-		if ($status_ == Session::SESSION_STATUS_INITED) {
+		if ($status_ == Session::SESSION_STATUS_READY) {
 			Logger::info('main', 'Session start : \''.$this->id.'\'');
 
 			$this->setAttribute('start_time', time());
@@ -230,7 +230,7 @@ class Session {
 			case Session::SESSION_STATUS_INIT:
 				return _('Initializing');
 				break;
-			case Session::SESSION_STATUS_INITED:
+			case Session::SESSION_STATUS_READY:
 				return _('Ready');
 				break;
 			case Session::SESSION_STATUS_ACTIVE:
@@ -264,7 +264,7 @@ class Session {
 			case Session::SESSION_STATUS_INIT:
 				return 'warn';
 				break;
-			case Session::SESSION_STATUS_INITED:
+			case Session::SESSION_STATUS_READY:
 				return 'ok';
 				break;
 			case Session::SESSION_STATUS_ACTIVE:
@@ -303,7 +303,7 @@ class Session {
 		if (($buf = $this->getAttribute('status')) === false)
 			return false;
 
-		if (in_array($buf, array(Session::SESSION_STATUS_CREATED, Session::SESSION_STATUS_INIT, Session::SESSION_STATUS_INITED, Session::SESSION_STATUS_ACTIVE)))
+		if (in_array($buf, array(Session::SESSION_STATUS_CREATED, Session::SESSION_STATUS_INIT, Session::SESSION_STATUS_READY, Session::SESSION_STATUS_ACTIVE)))
 			return true;
 
 		return false;

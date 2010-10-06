@@ -27,7 +27,7 @@ class SessionStatusChangedReport extends EventCallback {
 		Logger::critical('main', 'SessionStatusChangedReport::run '.serialize($this->ev));
 		switch ($this->ev->status) {
 			/* session starts */
-			case Session::SESSION_STATUS_INITED:
+			case Session::SESSION_STATUS_READY:
 				Logger::critical('main', 'SessionStatusChangedReport::run inited 00');
 				$token = $this->ev->id;
 				Logger::critical('main', 'SessionStatusChangedReport::run inited 04');
