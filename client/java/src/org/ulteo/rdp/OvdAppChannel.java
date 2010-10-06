@@ -21,6 +21,7 @@
 package org.ulteo.rdp;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -136,8 +137,16 @@ public class OvdAppChannel extends VChannel {
 	}
 
 	public void sendStartApp(int token, int app_id, String sharename, String path) {
-		byte[] sharenameBytes = sharename.getBytes();
-		byte[] pathBytes = path.getBytes();
+		byte[] sharenameBytes = null;
+		byte[] pathBytes = null;
+
+		try {
+			sharenameBytes = sharename.getBytes("UTF-16LE");
+			pathBytes = path.getBytes("UTF-16LE");
+		} catch (UnsupportedEncodingException ex) {
+			logger.error("Failed to send startapp: UTF-16LE is not supported by your JVM: "+ex.getMessage());
+			return;
+		}
 		
 		RdpPacket_Localised out = new RdpPacket_Localised(17 + sharenameBytes.length + pathBytes.length);
 		out.set8(ORDER_START_WITH_ARG);
