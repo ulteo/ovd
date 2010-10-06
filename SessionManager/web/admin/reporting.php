@@ -180,6 +180,14 @@ function get_session_history($t0, $t1, $mode_) {
 
 	$g = $sql->FetchAllResults();
 	foreach($g as $p) {
+		if (is_null($p['stop_stamp'])) { // todo: or stop_stamp=NULL
+			if (! Abstract_Session::exists($p['id'])) {
+				// Before the v2.5, most of sessions report was empty ...
+//				Logger::warning('main', 'Invalid reporting item session '.$p['id']);
+				continue;
+			}
+		}
+
 		$y = strtotime($p['start_stamp']);
 		$buf = date($mode_->get_prefix(), $y);
 		
@@ -276,7 +284,6 @@ function show_page($mode_) {
 	else
 		$t1 = time();
 
-
 	$t0 = $mode_->transform_date($t0);
 	$t1 = $mode_->transform_date($t1);
 	if ($t0>$t1) {
@@ -305,7 +312,6 @@ function show_page($mode_) {
 	list($session_number, $result, $res_server, $end_status) = get_session_history($t0, $t2, $mode_);
 		$info2 = get_server_history($t0, $t2, $mode_);
 
-
 	$chart = new LineChart();
 	$chart->getPlot()->setLogoFileName('');
 	$dataSet = new XYDataSet();
@@ -314,7 +320,7 @@ function show_page($mode_) {
 
 
 	$chart->setDataSet($dataSet);
-	$chart->setTitle(_('Number of sessions'));
+	$chart->setTitle(_('Number of launched sessions'));
 
 	$tmpfile = tempnam(TMP_DIR, REPORT_PREFIX);
 	$file_id = substr($tmpfile, strlen(TMP_DIR.'/'.REPORT_PREFIX));
@@ -369,7 +375,7 @@ function show_page($mode_) {
 
 
 		$chart->setDataSet($dataSet);
-		$chart->setTitle(_('Number of sessions'));
+		$chart->setTitle(_('Number of launched sessions'));
 		$tmpfile = tempnam(TMP_DIR, REPORT_PREFIX);
 		$servers[$fqdn]['session_file'] = substr($tmpfile, strlen(TMP_DIR.'/'.REPORT_PREFIX));
 		$chart->render($tmpfile);
@@ -527,6 +533,18 @@ function show_page($mode_) {
 	echo '<br/>';
 	echo _('Ordinate: number of sessions');
 	echo '</i></td></tr>';
+
+	echo '<tr><td>';
+	echo '<img src="?img=nb_sessions&mode='.$mode_->get_value().'&from='.date('Y-m-d H:i:s', $t0).'&to='.date('Y-m-d H:i:s', $t1).'" />';
+	echo '</td><td><i>';
+	if ($mode_->get_value() == 'day')
+		echo _('Abscissa: day of the month');
+	else
+		echo _('Abscissa: hour of the day');
+	echo '<br/>';
+	echo _('Ordinate: number of sessions');
+	echo '</i></td></tr>';
+	
 	echo '</table>';
 
 	if ($session_number>0) {
@@ -594,6 +612,100 @@ function show_page($mode_) {
 	die();
 }
 
+
+function show_img_nb_session($mode_) {
+	$ret =  getNB_SESSION($mode_);
+
+	// Number of session chart
+	$chart = new LineChart();
+	$chart->getPlot()->setLogoFileName('');
+	$dataSet = new XYDataSet();
+	foreach ($ret as $day => $num)
+		$dataSet->addPoint(new Point(substr($day, -2), $num));
+
+	$chart->setDataSet($dataSet);
+	$chart->setTitle(_('Number of active sessions'));
+
+	header('Content-Type: image/png');
+	$chart->render();
+	die();
+}
+
+function getNB_SESSION($mode_) {
+	if (isset($_GET['from']))
+		$t0 = strtotime($_GET['from']);
+	else
+		$t0 = strtotime($mode_->get_default_from());
+
+	if (isset($_GET['to']))
+		$t1 = strtotime($_GET['to']);
+	else
+		$t1 = time();
+
+	if (isset($_GET['server']))
+		$server_part = 'AND server="'.$_GET['server'].'"';
+	else
+		$server_part = '';
+
+	$t0 = $mode_->transform_date($t0);
+	$t1 = $mode_->transform_date($t1);
+	if ($t0>$t1) {
+		popup_error(_('Error: "from" date is after "to" date, switching'));
+		$buf = $t0;
+		$t0 = $t1;
+		$t1 = $buf;
+	}
+
+	if ($t1 > time()) {
+		popup_error(_('Error: "to" field is in the future, switch to the current time'));
+		$t1 = $mode_->transform_date(time());
+	}
+
+	$t2 = strtotime($mode_->get_next(), $t1);
+
+
+	$prefs = Preferences::getInstance();
+	$mysql_conf = $prefs->get('general', 'sql');
+
+	$sql = SQL::getInstance();
+	$res = $sql->DoQuery('SELECT * FROM @1 WHERE @2 BETWEEN %3 AND %4 '.$server_part.' AND ( @5 <= %4 OR ( @6 IS NULL AND id IN (SELECT id FROM @7)))',
+						 SESSIONS_HISTORY_TABLE, 'start_stamp', date('c', $t0), date('c', $t2), 
+						 'stop_stamp', 'stop_stamp', $mysql_conf['prefix'].'sessions');
+
+
+	$result_nb_sessions = build_array($t0, $t2, $mode_);
+
+	$g = $sql->FetchAllResults();
+	foreach($g as $p) {
+		$y = strtotime($p['start_stamp']);
+		$buf = date($mode_->get_prefix(), $y);
+
+		foreach($result_nb_sessions as $k => $v) {
+			if ($buf > $k) {
+				continue;
+			}
+
+			if (is_null($p['stop_stamp'])) {
+				$result_nb_sessions[$k]+= 1;
+			}
+			else {
+				$time_stop = strtotime($p['stop_stamp']);
+				$str_stop = date($mode_->get_prefix(), $time_stop);
+
+				if ($str_stop >= $k) {
+					$result_nb_sessions [$k] += 1;
+				}
+				else {
+					break;
+				}
+			}
+		}
+	}
+
+	return $result_nb_sessions;
+}
+
+
 if (isset($_GET['img']) && isset($_GET['file']))
 	show_img($_GET['file']);
 
@@ -614,5 +726,10 @@ switch($_GET['mode']) {
 		$mode = new ReportMode_day();
 		break;
 }
+
+if (isset($_GET['img']) && $_GET['img'] == 'nb_sessions') {
+	show_img_nb_session($mode);
+}
+
 
 show_page($mode);
