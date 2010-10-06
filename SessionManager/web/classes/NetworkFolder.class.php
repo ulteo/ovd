@@ -90,7 +90,7 @@ class NetworkFolder {
 	}
 	
 	public function chooseFileServer() {
-		$available_servers = Servers::getAvailableByRoleSortedByLoadBalancing(Servers::$role_fs);
+		$available_servers = Servers::getAvailableByRoleSortedByLoadBalancing(Server::SERVER_ROLE_FS);
 		if (is_array($available_servers)) {
 			$server = array_shift($available_servers);
 			if (is_object($server)) {

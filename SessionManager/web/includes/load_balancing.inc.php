@@ -84,7 +84,7 @@ class DecisionCriterion_session extends DecisionCriterion {
 		return 100;
 	}
 	public function applyOnRole($role_) {
-		return (Servers::$role_aps === $role_);
+		return (Server::SERVER_ROLE_APS === $role_);
 	}
 }
 
@@ -121,7 +121,7 @@ class DecisionCriterion_disk extends DecisionCriterion {
 	}
 	public function applyOnRole($role_) {
 		// it can be applied on any role
-		return (Servers::$role_fs === $role_);
+		return (Server::SERVER_ROLE_FS === $role_);
 	}
 }
 
@@ -142,6 +142,6 @@ class DecisionCriterion_networkfolder extends DecisionCriterion {
 	}
 	public function applyOnRole($role_) {
 		// it can be applied on any role
-		return (Servers::$role_fs === $role_);
+		return (Server::SERVER_ROLE_FS === $role_);
 	}
 }

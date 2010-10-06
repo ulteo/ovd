@@ -22,6 +22,9 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Server {
+	const SERVER_ROLE_APS = "aps";
+	const SERVER_ROLE_FS = "fs";
+
 	public $fqdn = NULL;
 
 	public $status = NULL;
@@ -241,10 +244,10 @@ class Server {
 		if (is_array($this->roles)) {
 			foreach ($this->roles as $role) {
 				switch ($role) {
-					case Servers::$role_aps:
+					case Server::SERVER_ROLE_APS:
 						$this->updateApplications();
 						break;
-					case Servers::$role_fs:
+					case Server::SERVER_ROLE_FS:
 						$stats = $this->getStatisticsForFS();
 						if (is_array($stats)) {
 							if (array_key_exists('size', $stats)) {
@@ -725,7 +728,7 @@ class Server {
 	}
 
 	public function getStatisticsForFS() {
-		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
+		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_FS, $this->roles)) {
 			Logger::critical('main', 'SERVER::getStatisticsForFS - Not an FS');
 			return false;
 		}
@@ -771,7 +774,7 @@ class Server {
 	}
 
 	public function getNetworkFoldersList() {
-		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
+		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_FS, $this->roles)) {
 			Logger::critical('main', 'SERVER::getNetworkFoldersList - Not an FS');
 			return false;
 		}
@@ -817,7 +820,7 @@ class Server {
 	}
 
 	public function updateNetworkFolders() {
-		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
+		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_FS, $this->roles)) {
 			Logger::critical('main', 'Server::updateNetworkFolders - Not an FS');
 			return false;
 		}
@@ -856,7 +859,7 @@ class Server {
 	}
 	
 	public function createNetworkFolder($name_) {
-		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
+		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_FS, $this->roles)) {
 			Logger::critical('main', 'SERVER::createNetworkFolder - Not an FS');
 			return false;
 		}
@@ -901,7 +904,7 @@ class Server {
 	}
 
 	public function deleteNetworkFolder($name_, $force_=false) {
-		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
+		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_FS, $this->roles)) {
 			Logger::critical('main', 'SERVER::deleteNetworkFolder - Not an FS');
 			return false;
 		}
@@ -947,7 +950,7 @@ class Server {
 	}
 
 	public function addUserToNetworkFolder($name_, $login_, $password_) {
-		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
+		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_FS, $this->roles)) {
 			Logger::critical('main', 'SERVER::addUserToNetworkFolder - Not an FS');
 			return false;
 		}
@@ -996,7 +999,7 @@ class Server {
 	}
 
 	public function delUserFromNetworkFolder($name_, $login_) {
-		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
+		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_FS, $this->roles)) {
 			Logger::critical('main', 'SERVER::delUserFromNetworkFolder - Not an FS');
 			return false;
 		}
@@ -1063,7 +1066,7 @@ class Server {
 	public function getApplications() {
 		Logger::debug('main', 'SERVER::getApplications for server '.$this->fqdn);
 
-		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_aps, $this->roles)) {
+		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $this->roles)) {
 			Logger::critical('main', 'SERVER::getApplications - Not an ApS');
 			return NULL;
 		}
@@ -1090,7 +1093,7 @@ class Server {
 	public function updateApplications(){
 		Logger::debug('main', 'Server::updateApplications');
 
-		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_aps, $this->roles)) {
+		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $this->roles)) {
 			Logger::critical('main', 'SERVER::updateApplications - Not an ApS');
 			return false;
 		}
@@ -1217,7 +1220,7 @@ class Server {
 	}
 	
 	public function syncStaticApplications() {
-		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_aps, $this->roles)) {
+		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $this->roles)) {
 			Logger::critical('main', 'Server::syncStaticApplications - Not an ApS');
 			return false;
 		}

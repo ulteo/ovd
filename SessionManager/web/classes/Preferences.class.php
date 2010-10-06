@@ -290,7 +290,7 @@ class Preferences {
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','slave_server_settings');
 
-		$roles = array(Servers::$role_aps => _('Load Balancing policy for Application Server'), Servers::$role_fs => _('Load Balancing policy for File Server'));
+		$roles = array(Server::SERVER_ROLE_APS => _('Load Balancing policy for Application Server'), Server::SERVER_ROLE_FS => _('Load Balancing policy for File Server'));
 		foreach ($roles as $role => $text) {
 			$decisionCriterion = get_classes_startwith('DecisionCriterion_');
 			$content_load_balancing = array();
