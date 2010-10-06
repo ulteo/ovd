@@ -528,8 +528,10 @@ function show_page($mode_) {
 	echo '</td><td><i>';
 	if ($mode_->get_value() == 'day')
 		echo _('Abscissa: day of the month');
-	else
+	else if ($mode_->get_value() == 'hour')
 		echo _('Abscissa: hour of the day');
+	else if ($mode_->get_value() == 'minute')
+		echo _('Abscissa: minute of the hour');
 	echo '<br/>';
 	echo _('Ordinate: number of sessions');
 	echo '</i></td></tr>';
@@ -539,8 +541,10 @@ function show_page($mode_) {
 	echo '</td><td><i>';
 	if ($mode_->get_value() == 'day')
 		echo _('Abscissa: day of the month');
-	else
+	else if ($mode_->get_value() == 'hour')
 		echo _('Abscissa: hour of the day');
+	else if ($mode_->get_value() == 'minute')
+		echo _('Abscissa: minute of the hour');
 	echo '<br/>';
 	echo _('Ordinate: number of sessions');
 	echo '</i></td></tr>';
@@ -565,8 +569,10 @@ function show_page($mode_) {
 			echo '</td><td><i>';
 			if ($mode_->get_value() == 'day')
 				echo _('Abscissa: day of the month');
-			else
+			else if ($mode_->get_value() == 'hour')
 				echo _('Abscissa: hour of the day');
+			else if ($mode_->get_value() == 'minute')
+				echo _('Abscissa: minute of the hour');
 			echo '<br/>';
 			echo _('Ordinate: number of sessions');
 			echo '</i></td></tr>';
@@ -584,8 +590,10 @@ function show_page($mode_) {
 			echo '</td><td><i>';
 			if ($mode_->get_value() == 'day')
 				echo _('Abscissa: day of the month');
-			else
+			else if ($mode_->get_value() == 'hour')
 				echo _('Abscissa: hour of the day');
+			else if ($mode_->get_value() == 'minute')
+				echo _('Abscissa: minute of the hour');
 			echo '<br/>';
 			echo _('Ordinate: usage of CPU in percent');
 			echo '</i></td></tr>';
@@ -597,8 +605,11 @@ function show_page($mode_) {
 			echo '</td><td><i>';
 			if ($mode_->get_value() == 'day')
 				echo _('Abscissa: day of the month');
-			else
+			else if ($mode_->get_value() == 'hour')
 				echo _('Abscissa: hour of the day');
+			else if ($mode_->get_value() == 'minute')
+				echo _('Abscissa: minute of the hour');
+			
 			echo '<br/>';
 			echo _('Ordinate: usage of RAM in percent');
 			echo '</i></td></tr>';
