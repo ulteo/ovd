@@ -117,7 +117,7 @@ function show_manage($id, $tm) {
 }
 
 function show_default($tm) {
-	$servers_  = Servers::getOnline();
+	$servers_ = Abstract_Server::load_by_status(Server::SERVER_STATUS_ONLINE);
 	$servers = array();
 	foreach($servers_ as $server) {
 		if (isset($server->ulteo_system) && $server->ulteo_system == 1)

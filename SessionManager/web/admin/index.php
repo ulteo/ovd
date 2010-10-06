@@ -161,11 +161,11 @@ if ($show_status) {
 	echo '<ul>';
 	$count_active_sessions = Abstract_Session::countByStatus(Session::SESSION_STATUS_ACTIVE);
 
-	$online_servers = Servers::getOnline();
+	$online_servers = Abstract_Server::load_by_status(Server::SERVER_STATUS_ONLINE);
 	$count_online_servers = count($online_servers);
-	$offline_servers = Servers::getOffline();
+	$offline_servers = Abstract_Server::load_by_status(Server::SERVER_STATUS_OFFLINE);
 	$count_offline_servers = count($offline_servers);
-	$broken_servers = Servers::getBroken();
+	$broken_servers = Abstract_Server::load_by_status(Server::SERVER_STATUS_BROKEN);
 	$count_broken_servers = count($broken_servers);
 
 	echo '<li>';

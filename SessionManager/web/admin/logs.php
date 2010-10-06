@@ -95,7 +95,7 @@ function show_all($flags_) {
 		$display[basename($logfile)] = $lines;
 	}
 
-	$servers = Servers::getAll();
+	$servers = Abstract_Server::load_all();
 	$display2 = array();
 	foreach ($servers as $server) {
 		$buf = new Server_Logs($server);

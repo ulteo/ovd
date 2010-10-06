@@ -25,7 +25,7 @@ if (Preferences::fileExists() === false)
 	exit(1);
 
 //BEGIN Updating logs cache
-$servers = Servers::getAll();
+$servers = Abstract_Server::load_all();
 foreach ($servers as $server) {
 	$buf = new Server_Logs($server);
 	$buf->process();

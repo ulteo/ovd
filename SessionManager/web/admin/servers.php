@@ -40,7 +40,7 @@ elseif ($_GET['view'] == 'unregistered')
 
 function show_default() {
 //FIX ME ?
-  $a_servs = Servers::getRegistered();
+  $a_servs = Abstract_Server::load_registered(true);
   if (! is_array($a_servs))
     $a_servs = array();
 
@@ -211,7 +211,7 @@ function show_default() {
 
 function show_unregistered() {
 //FIX ME ?
-  $u_servs = Servers::getUnregistered();
+  $u_servs = Abstract_Server::load_registered(false);
   if (! is_array($u_servs))
     $u_servs = array();
 

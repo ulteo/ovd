@@ -221,7 +221,7 @@ if ($_REQUEST['name'] == 'Application_static') {
 				if (! $ret) {
 					popup_error(sprintf(_("Failed to delete application '%s'"), $app->getAttribute('name')));
 				}
-				$servers = Servers::getAvailableType($app->getAttribute('type'));
+				$servers = Abstract_Server::load_available_by_type($app->getAttribute('type'));
 				foreach ($servers as $server)
 					$server->syncStaticApplications();
 				popup_info(sprintf(_("Application '%s' successfully deleted"), $app->getAttribute('name')));
@@ -270,7 +270,7 @@ if ($_REQUEST['name'] == 'Application_static') {
 			if (! $ret) {
 				popup_error(sprintf(_("Failed to modify application '%s'"), $app->getAttribute('name')));
 			}
-			$servers = Servers::getAvailableType($app->getAttribute('type'));
+			$servers = Abstract_Server::load_available_by_type($app->getAttribute('type'));
 			foreach ($servers as $server)
 				$server->syncStaticApplications();
 			popup_info(sprintf(_("Application '%s' successfully modified"), $app->getAttribute('name')));
@@ -1099,7 +1099,7 @@ if ($_REQUEST['name'] == 'Server') {
 					popup_info(sprintf(_("Server '%s' successfully deleted"), $buf->getAttribute('fqdn')));
 				}
 			}
-			$buf = count(Servers::getUnregistered());
+			$buf = count(Abstract_Server::load_registered(false));
 			if ($buf == 0)
 				redirect('servers.php');
 			else
@@ -1122,7 +1122,7 @@ if ($_REQUEST['name'] == 'Server') {
 			}
 		}
 		
-		$buf = count(Servers::getUnregistered());
+		$buf = count(Abstract_Server::load_registered(false));
 		if ($buf == 0)
 			redirect('servers.php');
 		else

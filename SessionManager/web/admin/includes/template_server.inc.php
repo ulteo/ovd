@@ -57,13 +57,13 @@ function server_display_role_preparation_aps($server) {
 	if (!$server_online && count($applications) == 0)
 		$applications_all = array();
 	
-	$servers_all = Servers::getOnline();
+	$servers_all = Abstract_Server::load_by_status(Server::SERVER_STATUS_ONLINE);
 	foreach($servers_all as $k => $v) {
 		if ($v->fqdn == $server->fqdn)
 			unset($servers_all[$k]);
 	}
 	
-	$servers_replication = Servers::getOnline();
+	$servers_replication = Abstract_Server::load_by_status(Server::SERVER_STATUS_ONLINE);
 	foreach($servers_replication as $k => $v) {
 		if ($v->fqdn == $server->fqdn)
 			unset($servers_replication[$k]);

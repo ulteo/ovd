@@ -317,7 +317,7 @@ if (isset($old_session_id)) {
 	} else
 		$random_server = $servers[0];
 
-	$fileservers = Servers::getAvailableByRole(Server::SERVER_ROLE_FS);
+	$fileservers = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_FS);
 	if (count($fileservers) > 0) {
 		$netfolders = $user->getNetworkFolders();
 

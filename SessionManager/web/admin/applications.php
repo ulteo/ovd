@@ -193,7 +193,7 @@ function show_manage($id, $applicationDB) {
   if ( $app->getAttribute('static'))
     $servers_all = array();
   else
-    $servers_all = Servers::getAll();
+    $servers_all = Abstract_Server::load_all();
   $liaisons = Abstract_Liaison::load('ApplicationServer', $app->getAttribute('id'), NULL);
   $servers_id = array();
   foreach ($liaisons as $liaison)

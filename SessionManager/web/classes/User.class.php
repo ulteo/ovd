@@ -138,7 +138,7 @@ class User {
 		$slave_server_settings = $prefs->get('general', 'slave_server_settings');
 		$default_settings = $prefs->get('general', 'session_settings_defaults');
 		
-		$available_servers = Servers::getAvailableByRoleSortedByLoadBalancing(Server::SERVER_ROLE_APS);
+		$available_servers = Abstract_Server::load_available_by_role_sorted_by_load_balancing(Server::SERVER_ROLE_APS);
 		
 		$applications = $this->applications(NULL, false);
 		$servers_to_use = array();

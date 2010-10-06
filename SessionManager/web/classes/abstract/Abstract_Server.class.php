@@ -320,7 +320,7 @@ class Abstract_Server {
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
 			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
+			return array();
 		}
 
 		$sql_conf = $prefs->get('general', 'sql');
@@ -339,6 +339,128 @@ class Abstract_Server {
 		}
 
 		return $servers;
+	}
+
+	public static function load_available() {
+		$servers = Abstract_Server::load_all();
+
+		foreach ($servers as $k => $server) {
+			if (! $server->getAttribute('registered'))
+				unset($servers[$k]);
+
+			if ($server->getAttribute('locked'))
+				unset($servers[$k]);
+
+			if (! $server->isOnline())
+				unset($servers[$k]);
+		}
+
+		return $servers;
+	}
+
+	public static function load_by_status($status_) {
+		$servers = Abstract_Server::load_all();
+
+		foreach ($servers as $k => $server) {
+			switch ($status_) {
+				case Server::SERVER_STATUS_ONLINE:
+					if (! $server->getAttribute('registered'))
+						unset($servers[$k]);
+
+					if (! $server->isOnline())
+						unset($servers[$k]);
+					break;
+				case Server::SERVER_STATUS_OFFLINE:
+				case Server::SERVER_STATUS_BROKEN:
+				default:
+					if ($server->getAttribute('status') != $status_)
+						unset($servers[$k]);
+					break;
+			}
+		}
+
+		return $servers;
+	}
+
+	public static function load_registered($registered_=true) {
+		$servers = Abstract_Server::load_all();
+
+		foreach ($servers as $k => $server) {
+			if (! $server->getAttribute('registered') && $registered_ === true)
+				unset($servers[$k]);
+			elseif ($server->getAttribute('registered') && $registered_ === false)
+				unset($servers[$k]);
+		}
+
+		return $servers;
+	}
+
+	public static function load_available_by_type($type_) {
+		$servers = Abstract_Server::load_available();
+
+		foreach ($servers as $k => $server) {
+			if ($server->getAttribute('type') != $type_)
+				unset($servers[$k]);
+		}
+
+		return $servers;
+	}
+
+	public static function load_available_by_role($role_) {
+		$servers = Abstract_Server::load_available();
+
+		foreach ($servers as $k => $server) {
+			if (! array_key_exists($role_, $server->roles))
+				unset($servers[$k]);
+		}
+
+		return $servers;
+	}
+
+	public static function load_available_by_role_sorted_by_load_balancing($role_) {
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return array();
+		}
+
+		$slave_server_settings = $prefs->get('general', 'slave_server_settings');
+		$key = 'load_balancing_'.$role_;
+		if (!array_key_exists($key, $slave_server_settings)) {
+			Logger::error('main' , 'USER::getAvailableServer $slave_server_settings[\''.$key.'\'] not set');
+			return array();
+		}
+		$criterions = $slave_server_settings[$key];
+		if (is_null($criterions)) {
+			Logger::error('main' , 'USER::getAvailableServer criterions is null');
+			return array();
+		}
+
+		$available_servers = Abstract_Server::load_available_by_role($role_);
+		$server_object = array();
+		$servers = array();
+		$servers2 = array();
+		if (is_array($available_servers)) {
+			foreach($available_servers as $server) {
+				$val = 0;
+				foreach ($criterions as $criterion_name  => $criterion_value ) {
+					$name_class1 = 'DecisionCriterion_'.$criterion_name;
+					$d1 = new $name_class1($server);
+					if ($d1->applyOnRole($role_)) {
+						$r1 = $d1->get();
+						$val += $r1* $criterion_value;
+					}
+				}
+				$servers[$server->fqdn] = $val;
+				$server_object[$server->fqdn] = $server;
+			}
+			arsort($servers);
+
+			foreach ($servers as $fqdn => $val) {
+				$servers2[$fqdn] = $server_object[$fqdn];
+			}
+		}
+		return $servers2;
 	}
 
 	public static function uptodate($server_) {

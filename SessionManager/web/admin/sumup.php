@@ -163,7 +163,7 @@ else{
 
 echo '<h2>'._('List of servers').'</h2>';
 
-$servs_all = Servers::getAll();
+$servs_all = Abstract_Server::load_all();
 if (is_null($servs_all)){
 	echo _('No server available').'<br />';
 }
