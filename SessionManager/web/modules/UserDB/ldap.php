@@ -329,6 +329,13 @@ class UserDB_ldap  extends UserDB {
 		}
 		return true;
 	}
+	
+	public function makeLDAPconfig($config_=NULL) {
+		if (is_null($config_) === false) {
+			return $config_;
+		}
+		return $this->config;
+	}
 
 	public static function isValidDN($dn_) {
 		$base_pattern = '[a-zA-Z]+=[^,=]+';
