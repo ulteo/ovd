@@ -60,7 +60,7 @@ class Logger {
 		if (is_null($this->fd))
 			return;
 
-		$msg = @date('M j H:i:s').' - '.$_SERVER['REMOTE_ADDR'].' - '.strtoupper($level_).' - ';
+		$msg = @date('M j H:i:s').' - '.@$_SERVER['REMOTE_ADDR'].' - '.strtoupper($level_).' - ';
 		if (is_null($this->level_flags))
 			$msg.=  'NOPREFS - ';
 		$msg.= $data_."\r\n";
