@@ -22,6 +22,8 @@ package org.ulteo.rdp;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -33,6 +35,7 @@ import net.propero.rdp.RdpPacket_Localised;
 import net.propero.rdp.crypto.CryptoException;
 import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
+import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
 
 public class OvdAppChannel extends VChannel {
 	public static final int	ORDER_INIT	= 0x00;
@@ -47,10 +50,13 @@ public class OvdAppChannel extends VChannel {
 	private boolean channel_open = false;
 	
 	private List<OvdAppListener> listener = null;
+
+	private HashMap<RdpdrDevice, List<Integer>> sharesUsedByApps = null;
 	
 	public OvdAppChannel(Options opt_, Common common_) {
 		super(opt_, common_);
-		
+
+		this.sharesUsedByApps = new HashMap<RdpdrDevice, List<Integer>>();
 		this.listener = new CopyOnWriteArrayList<OvdAppListener>();
 	}
 	
@@ -219,5 +225,40 @@ public class OvdAppChannel extends VChannel {
 
 	public void removeOvdAppListener(OvdAppListener listener) {
 		this.listener.remove(listener);
+	}
+
+	public void addShareUsedByApp(RdpdrDevice device, int instance) {
+		if (! this.sharesUsedByApps.containsKey(device))
+			this.sharesUsedByApps.put(device, new ArrayList<Integer>());
+		
+		this.sharesUsedByApps.get(device).add(new Integer(instance));
+	}
+
+	public void removeShareUsedByApp(RdpdrDevice device, int instance) {
+		Integer i = null;
+		List<Integer> l = this.sharesUsedByApps.get(device);
+		for (Integer each : l) {
+			if (each.intValue() == instance) {
+				i = each;
+				break;
+			}
+		}
+
+		if (i == null) {
+			logger.error("Failed to find application instance "+instance);
+			return;
+		}
+
+		l.remove(i);
+
+		if (l.size() == 0)
+			this.sharesUsedByApps.remove(device);
+	}
+
+	public boolean isShareUsed(RdpdrDevice device) {
+		if (this.sharesUsedByApps.containsKey(device))
+			return true;
+		
+		return false;
 	}
 }

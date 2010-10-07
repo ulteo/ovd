@@ -144,8 +144,10 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 				return;
 			}
 
-			this.waitedDevice = null;
-			this.app.getConnection().getOvdAppChannel().sendStartApp(this.token, this.app.getId(), this.sharename, this.path);
+			OvdAppChannel ovdApp = this.app.getConnection().getOvdAppChannel();
+
+			ovdApp.addOvdAppListener(this);
+			ovdApp.sendStartApp(this.token, this.app.getId(), this.sharename, this.path);
 		}
 		this.state = STARTING;
 	}
@@ -170,11 +172,13 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 
 		Logger.info("Device "+device.name+"("+device.handle+") connected");
 
-		this.app.getConnection().getOvdAppChannel().sendStartApp(this.token, this.app.getId(), this.sharename, this.path);
+		OvdAppChannel ovdApp = this.app.getConnection().getOvdAppChannel();
+
+		ovdApp.addOvdAppListener(this);
+		ovdApp.sendStartApp(this.token, this.app.getId(), this.sharename, this.path);
 		this.state = STARTING;
 
 		this.app.getConnection().getRdpdrChannel().removeDeviceListener(this);
-		this.app.getConnection().getOvdAppChannel().addOvdAppListener(this);
 	}
 
 	public void deviceFailed(RdpdrDevice device) {
@@ -187,21 +191,37 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 	}
 
 	public void ovdInited(OvdAppChannel o) {}
-	public void ovdInstanceStarted(int instance_) {}
+	public void ovdInstanceStarted(int instance_) {
+		if (instance_ != this.token)
+			return;
+		
+		if (this.waitedDevice != null)
+			this.app.getConnection().getOvdAppChannel().addShareUsedByApp(this.waitedDevice, this.token);
+	}
 
 	public void ovdInstanceStopped(int instance_) {
-		if (instance_ != this.token || this.waitedDevice == null)
+		if (instance_ != this.token)
 			return;
+		
+		OvdAppChannel ovdApp = this.app.getConnection().getOvdAppChannel();
 
-		this.app.getConnection().getOvdAppChannel().removeOvdAppListener(this);
-		this.app.getConnection().getRdpdrChannel().unmountDrive(this.waitedDevice.get_name(), this.waitedDevice.get_local_path());
+		ovdApp.removeOvdAppListener(this);
+
+		ovdApp.removeShareUsedByApp(this.waitedDevice, this.token);
+		if (! ovdApp.isShareUsed(this.waitedDevice))
+			this.app.getConnection().getRdpdrChannel().unmountDrive(this.waitedDevice.get_name(), this.waitedDevice.get_local_path());
 	}
 
 	public void ovdInstanceError(int instance_) {
-		if (instance_ != this.token || this.waitedDevice == null)
+		if (instance_ != this.token)
 			return;
 
-		this.app.getConnection().getOvdAppChannel().removeOvdAppListener(this);
-		this.app.getConnection().getRdpdrChannel().unmountDrive(this.waitedDevice.get_name(), this.waitedDevice.get_local_path());
+		OvdAppChannel ovdApp = this.app.getConnection().getOvdAppChannel();
+
+		ovdApp.removeOvdAppListener(this);
+
+		ovdApp.removeShareUsedByApp(this.waitedDevice, this.token);
+		if (! ovdApp.isShareUsed(this.waitedDevice))
+			this.app.getConnection().getRdpdrChannel().unmountDrive(this.waitedDevice.get_name(), this.waitedDevice.get_local_path());
 	}
 }
