@@ -2,10 +2,10 @@
 
 . /usr/share/debconf/confmodule
 
-CHROOTDIR=/opt/ulteo
+CONFFILE=/etc/ulteo/subsystem.conf
+[ -f $CONFFILE ] && . $CONFFILE
+[ -z "$CHROOTDIR" ] && CHROOTDIR=/opt/ulteo
 CHROOTCONF=$CHROOTDIR/etc/ulteo/ovd/slaveserver.conf
-
-CONFDIR=/etc/ulteo
 
 set_conf () {
     # $1: configfile
@@ -82,7 +82,7 @@ else
     CHROOTDIR=""
 fi
 
-sed -i "/^CHROOT=/c CHROOT=${CHROOTDIR}" $CONFDIR/subsystem.conf
+sed -i "/^CHROOTDIR=/c CHROOTDIR=${CHROOTDIR}" $CONFFILE
 
 db_stop
 
