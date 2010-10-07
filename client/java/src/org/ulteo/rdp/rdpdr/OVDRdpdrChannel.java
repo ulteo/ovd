@@ -92,6 +92,11 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 						/* connect to a specific resource */
 						handle = data.getLittleEndian32();
 						int ntStatus = data.getLittleEndian32();
+
+						if (handle < 0 || handle >= this.g_rdpdr_device.length) {
+							Logger.error("RDPDR: Bad handle: "+handle+" (status: "+ntStatus+")");
+							return;
+						}
 						
 						if (ntStatus != 0x00000000) {
 							Logger.error("RDPDR: Server failed to connect to resource "+handle);

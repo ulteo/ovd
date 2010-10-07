@@ -296,6 +296,7 @@ public class RdpdrChannel extends VChannel {
 		for (i = 0; i < g_num_devices; i++){
 			if (this.g_rdpdr_device[i].get_device_type() == DEVICE_TYPE_DISK)
 				continue;
+			System.out.println("automount device "+i);
 			s.setLittleEndian32(this.g_rdpdr_device[i].device_type);
 			System.out.println("device_type:"+this.g_rdpdr_device[i].device_type);
 			s.setLittleEndian32(i); /* RDP Device ID */
