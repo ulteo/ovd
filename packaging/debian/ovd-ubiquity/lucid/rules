@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+DEB_DH_INSTALL_SOURCEDIR = debian/ubiquity-ovd
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+
+install/ubiquity-ovd::
+	mkdir -p $(DEB_DH_INSTALL_SOURCEDIR)/usr/lib/ubiquity/plugins $(DEB_DH_INSTALL_SOURCEDIR)/usr/share/ubiquity/gtk
+	cp ubi-ovd.py $(DEB_DH_INSTALL_SOURCEDIR)/usr/lib/ubiquity/plugins
+	cp stepUlteo.ui $(DEB_DH_INSTALL_SOURCEDIR)/usr/share/ubiquity/gtk
+	cp ovd-setup $(DEB_DH_INSTALL_SOURCEDIR)/usr/share/ubiquity

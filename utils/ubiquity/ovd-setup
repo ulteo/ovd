@@ -1,0 +1,6 @@
+#!/bin/sh
+
+export DEBIAN_FRONTEND=non-interactive
+debconf-get-selections | grep -e "^ulteo" | chroot /target debconf-set-selections
+chroot /target apt-cdrom add
+chroot /target apt-get --yes --force-yes install ulteo-ovd-easy-install
