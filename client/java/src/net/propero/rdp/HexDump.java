@@ -36,25 +36,27 @@ public class HexDump {
 	if (msg != null)
 		System.out.println(msg);
 
+	String dump = new String();
     	while (offset < data.length)
     	{
-    		System.out.print(String.format("%04x ", offset));
+    		dump += String.format("%04x ", offset);
     		thisline = data.length - offset;
     		if (thisline > 16)
     			thisline = 16;
 
     		for (i = 0; i < thisline; i++)
-    			System.out.print(String.format("%02x ", data[offset + i]));
+    			dump += String.format("%02x ", data[offset + i]);
 
     		for (i = 0; i < 16; i++)
-    			System.out.print("   ");
+    			dump += "   ";
 
     		for (i = 0; i < thisline; i++)
-    			System.out.print(String.format("%c", (data[offset + i] >= 0x20 && data[offset + i] < 0x7f) ? data[offset + i] : '.'));
+    			dump += String.format("%c", (data[offset + i] >= 0x20 && data[offset + i] < 0x7f) ? data[offset + i] : '.');
 
-    		System.out.println("");
+    		dump += "\n";
     		offset += thisline;
     	}
+	System.out.println(dump);
     }
 
     public static void encode(RdpPacket_Localised data, String msg) {
