@@ -4,7 +4,7 @@
 
 DATADIR=/usr/share/ulteo/ovd/slaveserver
 SPOOLDIR=/var/spool/ulteo/ovd/slaverser
-HOMEDIR=/var/lib/ulteo/ovd/slaverver/fs
+HOMEDIR=/var/lib/ulteo/ovd/slaveserver/fs
 
 A2SITESAVDIR=/etc/apache2/sites-available
 
