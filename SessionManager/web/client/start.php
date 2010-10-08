@@ -606,7 +606,7 @@ if (! isset($old_session_id)) {
 				$sharedfolder_node->setAttribute('server', $netshare_fileserver->external_name);
 				$sharedfolder_node->setAttribute('dir', $netshare->id);
 				$sharedfolder_node->setAttribute('name', $netshare->name);
-				$sharedfolder_node->setAttribute('login', $user_login.'_'.$netshare->id);
+				$sharedfolder_node->setAttribute('login', $user_login);
 				$sharedfolder_node->setAttribute('password', $user_password);
 				$sharedfolders_node->appendChild($sharedfolder_node);
 			}
@@ -707,7 +707,7 @@ if (! isset($old_session_id)) {
 					$sharedfolder_node->setAttribute('server', $netshare_fileserver->external_name);
 					$sharedfolder_node->setAttribute('dir', $netshare->id);
 					$sharedfolder_node->setAttribute('name', $netshare->name);
-					$sharedfolder_node->setAttribute('login', $user_login.'_'.$netshare->id);
+					$sharedfolder_node->setAttribute('login', $user_login);
 					$sharedfolder_node->setAttribute('password', $user_password);
 					$sharedfolders_node->appendChild($sharedfolder_node);
 				}
