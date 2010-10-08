@@ -1,14 +1,10 @@
-scripts_DATA =  setup.php
-
+scripts_DATA =  demo.php setup.php
 scriptsdir = $(datadir)/ulteo/sessionmanager/admin/init
 
-EXTRA_DIST = setup.php.in
+%.php: %.php.in
+	sed "s,@DATADIR@,$(datadir)," $(srcdir)/$@.in > $@
 
-setup.php:
-	sed -e "s,@DATADIR@,$(datadir)," \
-		< $(srcdir)/setup.php.in > $@
+EXTRA_DIST = demo.php.in setup.php.in
 
 clean-local:
-	rm -f setup.php
-
-.PHONY: setup.php
+	rm -f demo.php setup.php
