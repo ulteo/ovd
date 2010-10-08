@@ -659,7 +659,7 @@ class Server {
 		}
 
 		if (! $this->isOnline()) {
-			Logger::debug('main', 'Server::orderFSAccessDisable("'.$user_login_.'") server "'.$this->fqdn.':'.$this->web_port.'" is not online');
+			Logger::debug('main', 'Server::orderFSAccessDisable server "'.$this->fqdn.':'.$this->web_port.'" is not online');
 			return false;
 		}
 
