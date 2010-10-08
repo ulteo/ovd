@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -301,10 +301,6 @@ class UserDB_ldap  extends UserDB {
 		$ret []= $c;
 		
 		$c = new ConfigElement_input('filter', _('Filter (optional)'), _('Filter, example (&(distinguishedname=mike*)(uid=42*))'), _('Filter, example (&(distinguishedname=mike*)(uid=42*))'), '');
-		$ret []= $c;
-
-		$c = new ConfigElement_select('ad',_('Use as an Active Directory server?'), _('Set this to Yes when you use LDAP profile to connect to an ActiveDirectory environment instead of using the ActiveDirectory profile'), _('Set this to Yes when you use LDAP profile to connect to an ActiveDirectory environment instead of using the ActiveDirectory profile'), '0');
-		$c->setContentAvailable(array(0=>_('No'),1=>_('Yes')));
 		$ret []= $c;
 
 		return $ret;

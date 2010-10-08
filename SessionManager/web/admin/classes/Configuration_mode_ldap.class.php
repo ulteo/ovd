@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -74,7 +74,6 @@ class Configuration_mode_ldap extends Configuration_mode {
     $config = array();
     $config['host'] = $form['host'];
     $config['suffix'] = $form['suffix'];
-    $config['ad'] = (isset($form['ad']))?1:0;
     $config['port'] = $form['port'];
     $config['protocol_version'] = $form['proto'];
 
@@ -125,8 +124,6 @@ class Configuration_mode_ldap extends Configuration_mode {
 
     $form['host'] = $config['host'];
     $form['suffix'] = $config['suffix'];
-    if ($config['ad'] == 1)
-      $form['ad'] = $config['ad'];
     $form['port'] = ($config['port']=='')?'389':$config['port'];
     $form['proto'] = ($config['protocol_version']=='')?'3':$config['protocol_version'];
 
@@ -183,10 +180,6 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '<tr><td>'._('Server Port:').'</td><td><input type="text" name="port" value="'.$form['port'].'" /></td></tr>';
     $str.= '<tr><td>'._('Protocol version:').'</td><td><input type="text" name="proto" value="'.$form['proto'].'" /></td></tr>';
     $str.= '<tr><td>'._('Base DN:').'</td><td><input type="text" name="suffix" value="'.$form['suffix'].'" /></td></tr>';
-    $str.= '<tr><td>'._('Use as Active Directory server:').'</td><td><input type="checkbox" name="ad" value="1"';
-    if (isset($form['ad']))
-      $str.= ' checked="checked"';
-    $str.= ' /></td></tr>';
     $str.= '</table>';
     $str.= '</div>';
 
