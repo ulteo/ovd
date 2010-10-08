@@ -296,8 +296,8 @@ class Dialog(AbstractDialog):
 		
 		
 		u = User(user)
-		if u.existSomeWhere():
-			Logger.warn("FS: Enable user %s but already exists in system: purging it"%(user))
+		if not u.existSomeWhere():
+			Logger.warn("FS: Cannot disable unknown user %s"%(user))
 			return self.user2xml(user, False)
 		
 		somethingWrong = False
