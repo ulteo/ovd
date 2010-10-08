@@ -205,6 +205,8 @@ class Dialog(AbstractDialog):
 			
 			user = rootNode.getAttribute("login")
 			password = rootNode.getAttribute("password")
+			if len(user) == 0 or len(password) == 0:
+				raise Exception("empty parameters")
 			
 			shares = []
 			for node in rootNode.getElementsByTagName("share"):
@@ -285,6 +287,8 @@ class Dialog(AbstractDialog):
 				raise Exception("invalid root node")
 			
 			user = rootNode.getAttribute("login")
+			if len(user) == 0:
+				raise Exception("empty parameters")
 			
 		except Exception, err:
 			Logger.warn("Invalid xml input: "+str(err))
