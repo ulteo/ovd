@@ -67,12 +67,6 @@ class Configuration_mode_ldap extends Configuration_mode {
     if (! in_array($form['user_group'], array('ldap_memberof', 'ldap_posix', 'sql')))
       return False;
 
-	if (! in_array($form['homedir'], array('local', 'cifs')))
-		return False;
-
-    if (! in_array($form['cifs_auth'], array('anonymous', 'user', 'global_user')))
-      return False;
-
     return True;
   }
 
