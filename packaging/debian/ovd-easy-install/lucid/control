@@ -13,7 +13,8 @@ Description: Ulteo Open Virtual Desktop: debconf database
 
 Package: ulteo-ovd-easy-install
 Architecture: all
-Pre-Depends: debconf, ulteo-ovd-debconf-database
+Suggests: ulteo-ovd-debconf-database
+Pre-Depends: debconf
 Depends: mysql-server, wwwconfig-common,
  ulteo-ovd-session-manager, ulteo-ovd-web-client, ulteo-ovd-subsystem
 Description: Ulteo Open Virtual Desktop: easy install
