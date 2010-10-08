@@ -41,14 +41,15 @@ class Profile(AbstractProfile):
 	def mount(self):
 		os.makedirs(self.profile_mount_point)
 		
-		cmd = "mount -t cifs -o username=%s,password=%s,uid=%s,gid=0,umask=077 //%s/%s %s"%(self.login, self.password, self.session.user.name, self.host, self.directory, self.profile_mount_point)
-		Logger.debug("Profile mount command: '%s'"%(cmd))
-		s,o = commands.getstatusoutput(cmd)
-		if s != 0:
-			Logger.error("Profile mount failed")
-			Logger.debug("Profile mount failed (status: %d) => %s"%(s, o))
-		else:
-			self.profileMounted = True
+		if self.profile is not None:
+			cmd = "mount -t cifs -o username=%s,password=%s,uid=%s,gid=0,umask=077 //%s/%s %s"%(self.profile["login"], self.profile["password"], self.session.user.name, self.profile["server"], self.profile["dir"], self.profile_mount_point)
+			Logger.debug("Profile mount command: '%s'"%(cmd))
+			s,o = commands.getstatusoutput(cmd)
+			if s != 0:
+				Logger.error("Profile mount failed")
+				Logger.debug("Profile mount failed (status: %d) => %s"%(s, o))
+			else:
+				self.profileMounted = True
 		
 		for sharedFolder in self.sharedFolders:
 			dest = os.path.join(self.MOUNT_POINT, self.session.id, "sharedFolder_"+ hashlib.md5(sharedFolder["server"]+ sharedFolder["dir"]).hexdigest())
@@ -82,33 +83,35 @@ class Profile(AbstractProfile):
 					Logger.error("Profile bind dir failed (status: %d) %s"%(s, o))
 				else:
 					self.folderRedirection.append(dst)
-				
-				
-		self.homeDir = pwd.getpwnam(self.session.user.name)[5]
-		for d in [self.DesktopDir, self.DocumentsDir]:
-			src = os.path.join(self.profile_mount_point, d)
-			dst = os.path.join(self.homeDir, d)
-			
-			if not os.path.exists(src):
-				os.makedirs(src)
-			
-			if not os.path.exists(dst):
-				os.makedirs(dst)
-			
-			cmd = "mount -o bind \"%s\" \"%s\""%(src, dst)
-			Logger.debug("Profile bind dir command '%s'"%(cmd))
-			s,o = commands.getstatusoutput(cmd)
-			if s != 0:
-				Logger.error("Profile bind dir failed")
-				Logger.error("Profile bind dir failed (status: %d) %s"%(s, o))
-			else:
-				self.folderRedirection.append(dst)
 		
-		self.copySessionStart()
+		if self.profile is not None:
+			self.homeDir = pwd.getpwnam(self.session.user.name)[5]
+			for d in [self.DesktopDir, self.DocumentsDir]:
+				src = os.path.join(self.profile_mount_point, d)
+				dst = os.path.join(self.homeDir, d)
+				
+				if not os.path.exists(src):
+					os.makedirs(src)
+				
+				if not os.path.exists(dst):
+					os.makedirs(dst)
+				
+				cmd = "mount -o bind \"%s\" \"%s\""%(src, dst)
+				Logger.debug("Profile bind dir command '%s'"%(cmd))
+				s,o = commands.getstatusoutput(cmd)
+				if s != 0:
+					Logger.error("Profile bind dir failed")
+					Logger.error("Profile bind dir failed (status: %d) %s"%(s, o))
+				else:
+					self.folderRedirection.append(dst)
+			
+			
+			self.copySessionStart()
 	
 	
 	def umount(self):
-		self.copySessionStop()
+		if self.profile is not None:
+			self.copySessionStop()
 		
 		while len(self.folderRedirection)>0:
 			d = self.folderRedirection.pop()
@@ -134,7 +137,7 @@ class Profile(AbstractProfile):
 				
 				os.rmdir(sharedFolder["mountdest"])
 		
-		if self.profileMounted:
+		if self.profile is not None and self.profileMounted:
 			cmd = "umount %s"%(self.profile_mount_point)
 			Logger.debug("Profile umount command: '%s'"%(cmd))
 			s,o = commands.getstatusoutput(cmd)

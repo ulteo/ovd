@@ -227,14 +227,20 @@ class Dialog(AbstractDialog):
 		
 		session.init()
 		
+		if profileNode is not None or len(sharedfolderNodes)>0:
+			profile = Platform.Profile(session)
+		
 		if profileNode is not None:
-			profile = Platform.Profile(profileNode.getAttribute("server"), profileNode.getAttribute("dir"), profileNode.getAttribute("login"), profileNode.getAttribute("password"), session)
+			folder = {}
+			for attribute in ["server", "dir", "login", "password"]:
+				folder[attribute] = profileNode.getAttribute(attribute)
+			profile.setProfile(folder)
 		
 		for sharedFolderNode in sharedfolderNodes:
 			folder = {}
 			for attribute in ["name", "server", "dir", "login", "password"]:
 				folder[attribute] = sharedFolderNode.getAttribute(attribute)
-			profile.sharedFolders.append(folder)
+			profile.addSharedFolder(folder)
 		
 		self.role_instance.sessions[session.id] = session
 		self.role_instance.sessions_spooler.put(("create", session))

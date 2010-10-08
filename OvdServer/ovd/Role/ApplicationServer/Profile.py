@@ -23,21 +23,23 @@ class Profile:
 	DesktopDir = "Desktop"
 	DocumentsDir = "Documents"
 	
-	def __init__(self, host, directory, login, password, session):
-		self.host = host
-		self.directory = directory
-		self.login = login
-		self.password = password
+	def __init__(self, session):
 		self.session = session
 		
+		self.profile = None
 		self.sharedFolders = []
 		
 		self.session.profile = self
 		self.init()
 	
-	
 	def init(self):
 		raise NotImplementedError()
+	
+	def setProfile(self, profile):
+		self.profile = profile
+	
+	def addSharedFolder(self, folder):
+		self.sharedFolders.append(folder)
 	
 	def mount(self):
 		raise NotImplementedError()

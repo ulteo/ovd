@@ -39,6 +39,11 @@ class Profile(AbstractProfile):
 	def init(self):
 		self.mountPoint = None
 	
+	
+	def hasProfile(self):
+		return (self.profile is None)
+	
+	
 	def mount(self):
 		buf = self.getFreeLetter()
 		if buf is None:
@@ -48,11 +53,11 @@ class Profile(AbstractProfile):
 		self.mountPoint = "%s:"%(buf)
 		
 		try:
-			win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, self.mountPoint, r"\\%s\%s"%(self.host, self.directory), None, self.login, self.password)
+			win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, self.mountPoint, r"\\%s\%s"%(self.profile["host"], self.profile["dir"]), None, self.profile["login"], self.profile["password"])
 		
 		except Exception, err:
 			Logger.error("Unable to mount drive")
-			Logger.debug("Unable to mount drive, '%s', try the net use command equivalent: '%s'"%(str(err), "net use %s \\\\%s\\%s %s /user:%s"%(self.mountPoint, self.host, self.directory, self.password, self.login)))
+			Logger.debug("Unable to mount drive, '%s', try the net use command equivalent: '%s'"%(str(err), "net use %s \\\\%s\\%s %s /user:%s"%(self.mountPoint, self.profile["host"], self.profile["dir"], self.profile["password"], self.profile["login"])))
 			
 			self.mountPoint = None
 			return False
@@ -153,25 +158,28 @@ class Profile(AbstractProfile):
 	
 	
 	def overrideRegistry(self, hiveName):
-		key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software", 0, win32con.KEY_SET_VALUE)
-		win32api.RegCreateKey(key, r"Ulteo")
-		win32api.RegCloseKey(key)
+		if self.profile is not None or len(self.sharedFolders)>0
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software", 0, win32con.KEY_SET_VALUE)
+			win32api.RegCreateKey(key, r"Ulteo")
+			win32api.RegCloseKey(key)
+			
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo", 0, win32con.KEY_SET_VALUE)
+			win32api.RegCreateKey(key, r"ovd")
+			win32api.RegCloseKey(key)
 		
-		key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo", 0, win32con.KEY_SET_VALUE)
-		win32api.RegCreateKey(key, r"ovd")
-		win32api.RegCloseKey(key)
 		
-		key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo\ovd", 0, win32con.KEY_SET_VALUE)
-		win32api.RegCreateKey(key, r"profile")
-		win32api.RegCloseKey(key)
+		if self.profile is not None:
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo\ovd", 0, win32con.KEY_SET_VALUE)
+			win32api.RegCreateKey(key, r"profile")
+			win32api.RegCloseKey(key)
+			
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo\ovd\profile", 0, win32con.KEY_SET_VALUE)
+			win32api.RegSetValueEx(key, "host", 0, win32con.REG_SZ, self.profile["host"])
+			win32api.RegSetValueEx(key, "directory", 0, win32con.REG_SZ, self.profile["dir"])
+			win32api.RegSetValueEx(key, "login", 0, win32con.REG_SZ, self.profile["login"])
+			win32api.RegSetValueEx(key, "password", 0, win32con.REG_SZ, self.profile["password"])
+			win32api.RegCloseKey(key)
 		
-		key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo\ovd\profile", 0, win32con.KEY_SET_VALUE)
-		win32api.RegSetValueEx(key, "host", 0, win32con.REG_SZ, self.host)
-		win32api.RegSetValueEx(key, "directory", 0, win32con.REG_SZ, self.directory)
-		win32api.RegSetValueEx(key, "login", 0, win32con.REG_SZ, self.login)
-		win32api.RegSetValueEx(key, "password", 0, win32con.REG_SZ, self.password)
-		win32api.RegCloseKey(key)
-
 		shareNum = 0
 		for share in self.sharedFolders:
 			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo\ovd", 0, win32con.KEY_SET_VALUE)
@@ -187,14 +195,14 @@ class Profile(AbstractProfile):
 			
 			shareNum+= 1
 		
-
-		# Redirect the Shell Folders to the remote profile
-		path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
-		
-		key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
-		win32api.RegSetValueEx(key, "Desktop",  0, win32con.REG_SZ, os.path.join("U:\\", self.DesktopDir))
-		win32api.RegSetValueEx(key, "Personal", 0, win32con.REG_SZ, os.path.join("U:\\", self.DocumentsDir))
-		win32api.RegCloseKey(key)
+		if self.profile is not None:
+			# Redirect the Shell Folders to the remote profile
+			path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
+			
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+			win32api.RegSetValueEx(key, "Desktop",  0, win32con.REG_SZ, os.path.join("U:\\", self.DesktopDir))
+			win32api.RegSetValueEx(key, "Personal", 0, win32con.REG_SZ, os.path.join("U:\\", self.DocumentsDir))
+			win32api.RegCloseKey(key)
 	
 	
 	def getFreeLetter(self):

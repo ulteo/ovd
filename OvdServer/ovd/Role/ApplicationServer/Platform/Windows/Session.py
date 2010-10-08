@@ -70,7 +70,7 @@ class Session(AbstractSession):
 		win32profile.UnloadUserProfile(logon, hkey)
 		win32api.CloseHandle(logon)
 		
-		if self.profile is not None:
+		if self.profile is not None and self.profile.hasProfile():
 			if not self.profile.mount():
 				return False
 			
@@ -82,7 +82,7 @@ class Session(AbstractSession):
 		
 		self.overwriteDefaultRegistry(self.windowsProfileDir)
 		
-		if self.profile is not None:
+		if self.profile is not None and self.profile.hasProfile():
 			self.profile.umount()
 		
 		return True
@@ -121,7 +121,7 @@ class Session(AbstractSession):
 	
 	
 	def uninstall_client(self):
-		if self.profile is not None:
+		if self.profile is not None and self.profile.hasProfile():
 			if not self.profile.mount():
 				Logger.warn("Unable to mount profile at uninstall_client of session "+self.id)
 			else:
