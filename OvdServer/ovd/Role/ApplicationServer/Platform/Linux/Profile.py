@@ -34,13 +34,14 @@ class Profile(AbstractProfile):
 		self.folderRedirection = []
 		
 		self.cifs_dst = os.path.join(self.MOUNT_POINT, self.session.id)
+		self.profile_mount_point = os.path.join(self.cifs_dst, "profile")
 		self.homeDir = None
 	
 	
 	def mount(self):
-		os.makedirs(self.cifs_dst)
+		os.makedirs(self.profile_mount_point)
 		
-		cmd = "mount -t cifs -o username=%s,password=%s,uid=%s,gid=0,umask=077 //%s/%s %s"%(self.login, self.password, self.session.user.name, self.host, self.directory, self.cifs_dst)
+		cmd = "mount -t cifs -o username=%s,password=%s,uid=%s,gid=0,umask=077 //%s/%s %s"%(self.login, self.password, self.session.user.name, self.host, self.directory, self.profile_mount_point)
 		Logger.debug("Profile mount command: '%s'"%(cmd))
 		s,o = commands.getstatusoutput(cmd)
 		if s != 0:
@@ -85,7 +86,7 @@ class Profile(AbstractProfile):
 				
 		self.homeDir = pwd.getpwnam(self.session.user.name)[5]
 		for d in [self.DesktopDir, self.DocumentsDir]:
-			src = os.path.join(self.cifs_dst, d)
+			src = os.path.join(self.profile_mount_point, d)
 			dst = os.path.join(self.homeDir, d)
 			
 			if not os.path.exists(src):
@@ -130,22 +131,24 @@ class Profile(AbstractProfile):
 				if s != 0:
 					Logger.error("Profile sharedFolder umount dir failed")
 					Logger.error("Profile sharedFolder umount dir failed (status: %d) %s"%(s, o))
+				
+				os.rmdir(sharedFolder["mountdest"])
 		
 		if self.profileMounted:
-			cmd = "umount %s"%(self.cifs_dst)
+			cmd = "umount %s"%(self.profile_mount_point)
 			Logger.debug("Profile umount command: '%s'"%(cmd))
 			s,o = commands.getstatusoutput(cmd)
 			if s != 0:
 				Logger.error("Profile umount failed")
 				Logger.debug("Profile umount failed (status: %d) => %s"%(s, o))
 			
-			os.rmdir(self.cifs_dst)
+			os.rmdir(self.profile_mount_point)
 	
 	def copySessionStart(self):
 		if self.homeDir is None or not os.path.isdir(self.homeDir):
 			return
 		
-		d = os.path.join(self.cifs_dst, "conf.Linux")
+		d = os.path.join(self.profile_mount_point, "conf.Linux")
 		if not os.path.exists(d):
 			return
 		
@@ -163,7 +166,7 @@ class Profile(AbstractProfile):
 		if self.homeDir is None or not os.path.isdir(self.homeDir):
 			return
 		
-		d = os.path.join(self.cifs_dst, "conf.Linux")
+		d = os.path.join(self.profile_mount_point, "conf.Linux")
 		if not os.path.exists(d):
 			os.makedirs(d)
 		
