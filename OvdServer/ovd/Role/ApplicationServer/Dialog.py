@@ -203,6 +203,7 @@ class Dialog(AbstractDialog):
 			
 			sharedfolderNodes = sessionNode.getElementsByTagName("sharedfolder")
 			for node in sharedfolderNodes:
+				node.getAttribute("name")
 				node.getAttribute("server")
 				node.getAttribute("dir")
 				node.getAttribute("login")
@@ -231,7 +232,7 @@ class Dialog(AbstractDialog):
 		
 		for sharedFolderNode in sharedfolderNodes:
 			folder = {}
-			for attribute in ["server", "dir", "login", "password"]:
+			for attribute in ["name", "server", "dir", "login", "password"]:
 				folder[attribute] = sharedFolderNode.getAttribute(attribute)
 			profile.sharedFolders.append(folder)
 		

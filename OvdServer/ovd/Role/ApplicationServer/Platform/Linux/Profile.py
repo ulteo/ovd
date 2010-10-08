@@ -64,10 +64,10 @@ class Profile(AbstractProfile):
 			else:
 				sharedFolder["mountdest"] = dest
 				home = pwd.getpwnam(self.session.user.name)[5]
-				dst = os.path.join(home, sharedFolder["dir"])
+				dst = os.path.join(home, sharedFolder["name"])
 				i = 0
 				while os.path.exists(dst):
-					dst = os.path.join(home, sharedFolder["dir"]+str(i))
+					dst = os.path.join(home, sharedFolder["name"]+"_%d"%(i))
 					i += 1
 				
 				if not os.path.exists(dst):
