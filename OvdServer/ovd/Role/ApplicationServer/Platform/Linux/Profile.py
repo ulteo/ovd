@@ -183,7 +183,7 @@ class Profile(AbstractProfile):
 	
 	@staticmethod
 	def getRsyncMethod(src, dst):
-		grep_cmd = " | ".join(['grep -v "^%s"'%(word) for word in Profile.rsyncBlacklist()])
+		grep_cmd = " | ".join(['grep -v "/%s$"'%(word) for word in Profile.rsyncBlacklist()])
 		find_cmd = 'find "%s" -maxdepth 1 -name ".*" | %s'%(src, grep_cmd)
 		
 		return 'rsync -rlptD $(%s) "%s/"'%(find_cmd, dst)
