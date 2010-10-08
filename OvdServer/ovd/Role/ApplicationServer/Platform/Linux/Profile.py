@@ -66,9 +66,9 @@ class Profile(AbstractProfile):
 				home = pwd.getpwnam(self.session.user.name)[5]
 				dst = os.path.join(home, sharedFolder["dir"])
 				i = 0
-				while os.path.exists("%s%s"%(dst, i)):
+				while os.path.exists(dst):
+					dst = os.path.join(home, sharedFolder["dir"]+str(i))
 					i += 1
-				dst = "%s%s"%(dst, i)
 				
 				if not os.path.exists(dst):
 					os.makedirs(dst)
