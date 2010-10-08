@@ -143,6 +143,8 @@ class Profile(AbstractProfile):
 				Logger.debug("Profile umount failed (status: %d) => %s"%(s, o))
 			
 			os.rmdir(self.profile_mount_point)
+		
+		os.rmdir(self.cifs_dst)
 	
 	def copySessionStart(self):
 		if self.homeDir is None or not os.path.isdir(self.homeDir):
