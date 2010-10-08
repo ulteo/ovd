@@ -7,7 +7,7 @@ DEB_DH_INSTALLINIT_ARGS := -- "defaults 98 02"
 install/ulteo-ovd-subsystem::
 	CONFDIR=$(CURDIR)/debian/$(cdbs_curpkg)/etc/ulteo/ ; \
 	mkdir -p $$CONFDIR ; \
-	echo "CHROOT=" > $$CONFDIR/subsystem.conf
+	echo "CHROOTDIR=" > $$CONFDIR/subsystem.conf
 
 clean::
 	#debconf-updatepo
