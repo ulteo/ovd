@@ -155,7 +155,7 @@ class Profile(AbstractProfile):
 			return
 		
 		# Copy conf files
-		cmd = 'rsync -a $(find "%s" -maxdepth 1) "%s/"'%(d, self.homeDir)
+		cmd = self.getRsyncMethod(d, self.homeDir)
 		Logger.debug("rsync cmd '%s'"%(cmd))
 		
 		s,o = commands.getstatusoutput(cmd)
@@ -173,10 +173,21 @@ class Profile(AbstractProfile):
 			os.makedirs(d)
 		
 		# Copy conf files
-		cmd = 'rsync -a $(find "%s" -maxdepth 1 -name ".*") "%s/"'%(self.homeDir, d)
+		cmd = self.getRsyncMethod(self.homeDir, d)
 		Logger.debug("rsync cmd '%s'"%(cmd))
 		
 		s,o = commands.getstatusoutput(cmd)
 		if s is not 0:
 			Logger.error("Unable to copy conf to profile")
 			Logger.debug("Unable to copy conf to profile, cmd '%s' return %d: %s"%(cmd, s, o))
+	
+	@staticmethod
+	def getRsyncMethod(src, dst):
+		grep_cmd = " | ".join(['grep -v "^%s"'%(word) for word in Profile.rsyncBlacklist()])
+		find_cmd = 'find "%s" -maxdepth 1 -name ".*" | %s'%(src, grep_cmd)
+		
+		return 'rsync -rlptD $(%s) "%s/"'%(find_cmd, dst)
+	
+	@staticmethod
+	def rsyncBlacklist():
+		return [".gvfs", ".pulse", ".rdp_drive", ".Trash", ".vnc"]
