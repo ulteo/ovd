@@ -30,15 +30,13 @@ import win32file
 import win32process
 
 from ovd.Logger import Logger
-import mime
 import LnkFile
+from MimeTypeInfos import MimeTypeInfos
 from Msi import Msi
 
 
 class ApplicationsDetection:
 	def __init__(self):
-		self.mimetypes = mime.MimeInfos()
-		
 		(_, encoding) = locale.getdefaultlocale()
 		if encoding is None:
 			encoding = "utf8"
@@ -48,7 +46,10 @@ class ApplicationsDetection:
 		except WindowsError,e:
 			Logger.warn("getApplicationsXML_nocache: Unable to init Msi")
 			self.msi = None
-			
+		
+		self.mimetypes = MimeTypeInfos()
+		self.mimetypes.load()
+		
 		pythoncom.CoInitialize()
 
 		try:
@@ -121,20 +122,7 @@ class ApplicationsDetection:
 					application["command"] = shortcut.GetPath(0)[0] + " " + shortcut.GetArguments()
 			
 			
-			# Find the mime types linked to the application
-			# TODO: there is probably a faster way to handle this
-			
-			
-			mimes = []
-			for extension in self.mimetypes.extensions:
-				ext = self.mimetypes.ext_keys[extension]
-				
-				for app_path in ext["apps"]:
-					if not ext["type"] in mimes and self._compare_commands(app_path, application["command"]):
-						mimes.append(ext["type"])
-						break
-			
-			application["mimetypes"] = mimes
+			application["mimetypes"] = self.mimetypes.get_mime_types_from_command(application["command"])
 			
 			applications[application["id"]] = application
 			
