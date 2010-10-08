@@ -225,6 +225,10 @@ class Page(Plugin):
         self.preseed('ulteo-ovd-easy-install/mysql_dbpass', self.ui.get_password())
         Plugin.ok_handler(self)
 
+    def cleanup(self):
+        Plugin.cleanup(self)
+        self.frontend.stop_debconf()
+
 
 class Install(InstallPlugin):
     def prepare(self, unfiltered=False):
