@@ -652,6 +652,57 @@ class Server {
 		return true;
 	}
 
+	public function orderFSAccessEnable($login_, $password_, $netfolders_) {
+		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_FS, $this->roles)) {
+			Logger::critical('main', 'SERVER::orderFSAccessEnable - Not an FS');
+			return false;
+		}
+
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::orderFSAccessEnable server "'.$this->fqdn.':'.$this->web_port.'" is not online');
+			return false;
+		}
+
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$node = $dom->createElement('session');
+		$node->setAttribute('login', $login_);
+		$node->setAttribute('password', $password_);
+		foreach ($netfolders_ as $netfolder) {
+			$share_node = $dom->createElement('share');
+			$share_node->setAttribute('id', $netfolder);
+			$node->appendChild($share_node);
+		}
+		$dom->appendChild($node);
+
+		$xml = $dom->saveXML();
+
+		$xml = query_url_post_xml($this->getBaseURL().'/fs/access/enable', $xml);
+		if (! $xml) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server::orderFSAccessEnable server \''.$this->fqdn.'\' is unreachable');
+			return false;
+		}
+
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
+			return false;
+
+		if (! $dom->hasChildNodes())
+			return false;
+
+		$node = $dom->getElementsByTagname('session')->item(0);
+		if (is_null($node))
+			return false;
+
+		if (! $node->hasAttribute('login'))
+			return false;
+
+		return true;
+	}
+
 	public function orderFSAccessDisable($login_) {
 		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_FS, $this->roles)) {
 			Logger::critical('main', 'SERVER::orderFSAccessDisable - Not an FS');
@@ -993,55 +1044,6 @@ class Server {
 			return false;
 
 		if (! $node->hasAttribute('id'))
-			return false;
-
-		return true;
-	}
-
-	public function addUserToNetworkFolder($name_, $login_, $password_) {
-		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_FS, $this->roles)) {
-			Logger::critical('main', 'SERVER::addUserToNetworkFolder - Not an FS');
-			return false;
-		}
-
-		if (! $this->isOnline()) {
-			Logger::debug('main', 'Server::addUserToNetworkFolder("'.$name_.'", "'.$login_.'") server "'.$this->fqdn.':'.$this->web_port.'" is not online');
-			return false;
-		}
-
-		$dom = new DomDocument('1.0', 'utf-8');
-
-		$node = $dom->createElement('session');
-		$node->setAttribute('login', $login_);
-		$node->setAttribute('password', $password_);
-		$share_node = $dom->createElement('share');
-		$share_node->setAttribute('id', $name_);
-		$node->appendChild($share_node);
-		$dom->appendChild($node);
-
-		$xml = $dom->saveXML();
-
-		$xml = query_url_post_xml($this->getBaseURL().'/fs/access/enable', $xml);
-		if (! $xml) {
-			$this->isUnreachable();
-			Logger::error('main', 'Server::addUserToNetworkFolder server \''.$this->fqdn.'\' is unreachable');
-			return false;
-		}
-
-		$dom = new DomDocument('1.0', 'utf-8');
-
-		$buf = @$dom->loadXML($xml);
-		if (! $buf)
-			return false;
-
-		if (! $dom->hasChildNodes())
-			return false;
-
-		$node = $dom->getElementsByTagname('session')->item(0);
-		if (is_null($node))
-			return false;
-
-		if (! $node->hasAttribute('login'))
 			return false;
 
 		return true;

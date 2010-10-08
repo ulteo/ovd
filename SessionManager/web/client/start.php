@@ -332,13 +332,6 @@ if (isset($old_session_id)) {
 					continue;
 
 				$profile_available = true;
-
-				$fileserver->orderFSAccessDisable($user_login);
-				if (! $fileserver->addUserToNetworkFolder($netfolder->id, $user_login, $user_password)) {
-					Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 2)');
-					throw_response(INTERNAL_ERROR);
-				}
-
 				$profile_server = $netfolder->server;
 				$profile_name = $netfolder->id;
 			}
@@ -361,10 +354,6 @@ if (isset($old_session_id)) {
 
 				if (! $profile->addUser($user)) {
 					Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 2)');
-					throw_response(INTERNAL_ERROR);
-				}
-				if (! $fileserver->addUserToNetworkFolder($profile->id, $user_login, $user_password)) {
-					Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 3)');
 					throw_response(INTERNAL_ERROR);
 				}
 
@@ -417,12 +406,6 @@ if (isset($old_session_id)) {
 
 					throw_response(INTERNAL_ERROR);
 				}
-			}
-
-			$sharedfolder_server->orderFSAccessDisable($user_login);
-			if (! $sharedfolder_server->addUserToNetworkFolder($sharedfolder->id, $user_login, $user_password)) {
-				Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" on shared folder "'.$sharedfolder->id.'" failed');
-				throw_response(INTERNAL_ERROR);
 			}
 
 			$netshares[] = $sharedfolder;
@@ -530,6 +513,36 @@ $ev->setAttributes(array(
 $ev->emit();
 
 if (! isset($old_session_id)) {
+	$mounts = array();
+
+	if (isset($profile_available) && $profile_available === true) {
+		if (! array_key_exists($profile_server, $mounts))
+			$mounts[$profile_server] = array();
+
+		$mounts[$profile_server][] = $profile_name;
+	}
+
+	if (isset($sharedfolders_available) && $sharedfolders_available === true) {
+		foreach ($netshares as $netshare) {
+			if (! array_key_exists($netshare->server, $mounts))
+				$mounts[$netshare->server] = array();
+
+			$mounts[$netshare->server][] = $netshare->id;
+		}
+	}
+
+	foreach ($mounts as $k => $v) {
+		$server = Abstract_Server::load($k);
+		if (! $server)
+			continue;
+
+		$server->orderFSAccessDisable($user_login);
+		if (! $server->orderFSAccessEnable($user_login, $user_password, $v)) {
+			Logger::error('main', '(startsession) Cannot enable FS access for User "'.$user_login.'" on Server "'.$server->fqdn.'"');
+			throw_response(INTERNAL_ERROR);
+		}
+	}
+
 	if ($session->mode == Session::MODE_DESKTOP) {
 		$server = Abstract_Server::load($session->server);
 		if (! $server)
