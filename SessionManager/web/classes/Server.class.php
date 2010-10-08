@@ -652,6 +652,51 @@ class Server {
 		return true;
 	}
 
+	public function orderFSAccessDisable($login_) {
+		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_FS, $this->roles)) {
+			Logger::critical('main', 'SERVER::orderFSAccessDisable - Not an FS');
+			return false;
+		}
+
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::orderFSAccessDisable("'.$user_login_.'") server "'.$this->fqdn.':'.$this->web_port.'" is not online');
+			return false;
+		}
+
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$node = $dom->createElement('session');
+		$node->setAttribute('login', $login_);
+		$dom->appendChild($node);
+
+		$xml = $dom->saveXML();
+
+		$xml = query_url_post_xml($this->getBaseURL().'/fs/access/disable', $xml);
+		if (! $xml) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server::orderFSAccessDisable server \''.$this->fqdn.'\' is unreachable');
+			return false;
+		}
+
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
+			return false;
+
+		if (! $dom->hasChildNodes())
+			return false;
+
+		$node = $dom->getElementsByTagname('session')->item(0);
+		if (is_null($node))
+			return false;
+
+		if (! $node->hasAttribute('login'))
+			return false;
+
+		return true;
+	}
+
 	public function userIsLoggedIn($user_login_) {
 		$user_login_ .= '_OVD'; //hardcoded
 
@@ -980,51 +1025,6 @@ class Server {
 		if (! $xml) {
 			$this->isUnreachable();
 			Logger::error('main', 'Server::addUserToNetworkFolder server \''.$this->fqdn.'\' is unreachable');
-			return false;
-		}
-
-		$dom = new DomDocument('1.0', 'utf-8');
-
-		$buf = @$dom->loadXML($xml);
-		if (! $buf)
-			return false;
-
-		if (! $dom->hasChildNodes())
-			return false;
-
-		$node = $dom->getElementsByTagname('session')->item(0);
-		if (is_null($node))
-			return false;
-
-		if (! $node->hasAttribute('login'))
-			return false;
-
-		return true;
-	}
-
-	public function delUserFromNetworkFolder($name_, $login_) {
-		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_FS, $this->roles)) {
-			Logger::critical('main', 'SERVER::delUserFromNetworkFolder - Not an FS');
-			return false;
-		}
-
-		if (! $this->isOnline()) {
-			Logger::debug('main', 'Server::delUserFromNetworkFolder("'.$name_.'", "'.$login_.'") server "'.$this->fqdn.':'.$this->web_port.'" is not online');
-			return false;
-		}
-
-		$dom = new DomDocument('1.0', 'utf-8');
-
-		$node = $dom->createElement('session');
-		$node->setAttribute('login', $login_);
-		$dom->appendChild($node);
-
-		$xml = $dom->saveXML();
-
-		$xml = query_url_post_xml($this->getBaseURL().'/fs/access/disable', $xml);
-		if (! $xml) {
-			$this->isUnreachable();
-			Logger::error('main', 'Server::delUserFromNetworkFolder server \''.$this->fqdn.'\' is unreachable');
 			return false;
 		}
 

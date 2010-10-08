@@ -333,7 +333,7 @@ if (isset($old_session_id)) {
 
 				$profile_available = true;
 
-				$fileserver->delUserFromNetworkFolder($netfolder->id, $user_login);
+				$fileserver->orderFSAccessDisable($user_login);
 				if (! $fileserver->addUserToNetworkFolder($netfolder->id, $user_login, $user_password)) {
 					Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 2)');
 					throw_response(INTERNAL_ERROR);
@@ -419,7 +419,7 @@ if (isset($old_session_id)) {
 				}
 			}
 
-			$sharedfolder_server->delUserFromNetworkFolder($sharedfolder->id, $user_login);
+			$sharedfolder_server->orderFSAccessDisable($user_login);
 			if (! $sharedfolder_server->addUserToNetworkFolder($sharedfolder->id, $user_login, $user_password)) {
 				Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" on shared folder "'.$sharedfolder->id.'" failed');
 				throw_response(INTERNAL_ERROR);
@@ -509,6 +509,8 @@ $session->setAttribute('start_time', time());
 
 $session->settings['aps_access_login'] = $user_login;
 $session->settings['aps_access_password'] = $user_password;
+$session->settings['fs_access_login'] = $session->settings['aps_access_login'];
+$session->settings['fs_access_password'] = $session->settings['aps_access_password'];
 
 $save_session = Abstract_Session::save($session);
 if ($save_session === true) {
