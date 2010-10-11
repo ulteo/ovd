@@ -58,26 +58,26 @@ else
     db_go
 fi
 
+# create folders and change permissions
+mkdir -p $SPOOLDIR/reporting $LOGDIR
+chown $A2USER:$A2USER $SPOOLDIR $SPOOLDIR/reporting $LOGDIR $CONFFILE
+sed -i "s/@APACHE_USER@/${A2USER}/" $CONFDIR/sessionmanager.cron
+
 ############################### FIRST INSTALL #################################
 
 if [ "$1" = "configure" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ])
 then
     CONFFILE=$CONFDIR/config.inc.php
 
-    # set the configuration
     db_get ulteo-ovd-session-manager/admin_login && LOGIN="$RET"
-    db_get ulteo-ovd-session-manager/admin_password
-    PASSWD=$(echo -n $RET | md5sum | cut -d " " -f 1)
+    db_get ulteo-ovd-session-manager/admin_password && \
+        PASSWD=$(echo -n $RET | md5sum | cut -d " " -f 1) && unset RET
+
+    # set the configuration
     sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_LOGIN.*').*('.*)$,\1$LOGIN\2," $CONFFILE
     sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_PASSWORD.*').*('.*)$,\1$PASSWD\2," $CONFFILE
 
-    # create folders and change permissions
-    mkdir -p $SPOOLDIR/reporting $LOGDIR
-    chown $A2USER:$A2USER $SPOOLDIR $SPOOLDIR/reporting $LOGDIR $CONFFILE
-    sed -i "s/@APACHE_USER@/${A2USER}/" $CONFDIR/sessionmanager.cron
-
     # clear the password
-    unset RET
     db_reset ulteo-ovd-session-manager/admin_password
     db_reset ulteo-ovd-session-manager/admin_password_again
 
