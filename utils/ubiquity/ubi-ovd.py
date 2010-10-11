@@ -26,6 +26,8 @@
 
 import os
 import debconf
+import random
+import string
 
 from ubiquity import validation
 from ubiquity.misc import execute, execute_root, debconf_escape
