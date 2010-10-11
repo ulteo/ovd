@@ -194,20 +194,17 @@ class Dialog(AbstractDialog):
 			nodes = sessionNode.getElementsByTagName("profile")
 			if len(nodes)>0:
 				profileNode = nodes[0]
-				profileNode.getAttribute("server")
-				profileNode.getAttribute("dir")
-				profileNode.getAttribute("login")
-				profileNode.getAttribute("password")
+				for attribute in ["server", "dir", "login", "password"]:
+					if len(profileNode.getAttribute(attribute)) == 0:
+						raise Exception("Empty attribute "+attribute)
 			else:
 				profileNode = None
 			
 			sharedfolderNodes = sessionNode.getElementsByTagName("sharedfolder")
 			for node in sharedfolderNodes:
-				node.getAttribute("name")
-				node.getAttribute("server")
-				node.getAttribute("dir")
-				node.getAttribute("login")
-				node.getAttribute("password")
+				for attribute in ["server", "dir", "login", "password", "name"]:
+					if len(node.getAttribute(attribute)) == 0:
+						raise Exception("Empty attribute "+attribute)
 		
 		except Exception, err:
 			Logger.warn("Invalid xml input: "+str(err))
@@ -238,7 +235,7 @@ class Dialog(AbstractDialog):
 		
 		for sharedFolderNode in sharedfolderNodes:
 			folder = {}
-			for attribute in ["name", "server", "dir", "login", "password"]:
+			for attribute in ["server", "dir", "login", "password", "name"]:
 				folder[attribute] = sharedFolderNode.getAttribute(attribute)
 			profile.addSharedFolder(folder)
 		
