@@ -60,6 +60,10 @@ class Role(AbstractRole):
 			Logger.error("FileServer: unable to cleanup users")
 			return False
 		
+		if not self.cleanup_repository():
+			Logger.error("FileServer: unable to cleanup users")
+			return False
+		
 		wm = WatchManager()
 		self.inotify = ThreadedNotifier(wm)
 		wm.add_watch(path=Config.spool, mask=Rec.mask, proc_fun=Rec(), rec=True, auto_add=True)
@@ -111,6 +115,22 @@ class Role(AbstractRole):
 				ret = False
 		
 		return ret
+	
+	
+	def cleanup_repository(self):
+		cmd = 'chown -R %s:%s "%s"'%(Config.uid, Config.gid, Config.spool)
+		s, o = commands.getstatusoutput(cmd)
+		if s is not 0:
+			Logger.debug("FS: following command '%s' returned %d => %s"%(cmd, s, o))
+			return False
+		
+		cmd = 'chmod -R u=rwX,g=rwX,o-rwx "%s"'%(Config.spool)
+		s, o = commands.getstatusoutput(cmd)
+		if s is not 0:
+			Logger.debug("FS: following command '%s' returned %d => %s"%(cmd, s, o))
+			return False
+		
+		return True
 	
 	
 	def purgeGroup(self):
