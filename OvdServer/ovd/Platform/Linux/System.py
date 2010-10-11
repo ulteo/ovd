@@ -236,7 +236,9 @@ class System(AbstractSystem):
 		cmd = "userdel --force  --remove %s"%(name_)
 		
 		s,o = commands.getstatusoutput(cmd)
-		if s != 0:
+		if s == 3072:
+			Logger.debug("mail dir error: '%s' return %d => %s"%(cmd, s, o))
+		elif s != 0:
 			Logger.error("userRemove return %d (%s)"%(s, o))
 			return False
 		
