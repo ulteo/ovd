@@ -163,10 +163,20 @@ if (array_key_exists('sessions', $ret) && is_array($ret['sessions'])) {
 		if (! $buf)
 			continue;
 
-		$buf->setStatus($session['status']);
-		$buf->setRunningApplications($ret['server'], $session['instances']);
+		$modified = false;
 
-		Abstract_Session::save($buf); //update Session cache timestamp
+		if ($session['status'] != $buf->getAttribute('status')) {
+			$modified = true;
+			$buf->setStatus($session['status']);
+		}
+
+		if ($session['status'] == Session::SESSION_STATUS_ACTIVE) {
+			$modified = true;
+			$buf->setRunningApplications($ret['server'], $session['instances']);
+		}
+
+		if ($modified === true)
+			Abstract_Session::save($buf); //update Session cache timestamp
 	}
 }
 
