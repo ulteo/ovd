@@ -6,7 +6,7 @@ case "$1" in
 
     configure)
         passwd=$(< /dev/urandom tr -dc _A-Za-z0-9 | head -c12)
-        sed -r "/root_password/ s/(.*)/\1$passwd/" $DEBCONFDB | debconf-set-selections
+        sed "/root_password/ s/$/$passwd/" $DEBCONFDB | debconf-set-selections
     ;;
 
     abort-*)
