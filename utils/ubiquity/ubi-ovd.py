@@ -227,9 +227,9 @@ class Page(Plugin):
         self.preseed('ulteo-ovd-easy-install/mysql_dbpass', self.ui.get_password())
 
         mysql_passwd = ''.join([random.choice(''.join([string.digits, string.letters, '_'])) for i in range(0, 12)])
-        self.preseed('ulteo-ovd-debconf-database/mysql_root_password', passwd)
-        self.preseed('mysql-server/root_password', passwd)
-        self.preseed('mysql-server/root_password_again', passwd)
+        self.preseed('ulteo-ovd-debconf-database/mysql_root_password', mysql_passwd)
+        self.preseed('mysql-server/root_password', mysql_passwd)
+        self.preseed('mysql-server/root_password_again', mysql_passwd)
 
         Plugin.ok_handler(self)
 
