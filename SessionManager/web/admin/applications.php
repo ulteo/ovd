@@ -209,7 +209,7 @@ function show_manage($id, $applicationDB) {
       continue;
     elseif ( $server->type != $app->getAttribute('type'))
       continue;
-    else
+    elseif (is_array($server->roles) && array_key_exists(Server::SERVER_ROLE_APS, $server->roles))
       $servers_available[]= $server;
   }
 
