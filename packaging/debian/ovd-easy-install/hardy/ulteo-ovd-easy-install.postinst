@@ -46,6 +46,8 @@ case "$1" in
     *) ;;
 esac
 
+db_stop
+
 #DEBHELPER#
 
 exit 0
