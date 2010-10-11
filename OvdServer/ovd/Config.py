@@ -76,6 +76,9 @@ class Config:
 				if Config.ROLES_ALIASES.has_key(b):
 					b = Config.ROLES_ALIASES[b]
 				
+				if b in Config.roles:
+					continue
+				
 				Config.roles.append(b)
 		
 		if Config.infos.has_key("session_manager"):
