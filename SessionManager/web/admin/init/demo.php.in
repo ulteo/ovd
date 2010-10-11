@@ -89,10 +89,12 @@ if ($ret !== true) {
 }
 
 $applications = $server->getApplications();
-foreach ($applications as $application) {
-	$ret = Abstract_Liaison::save('AppsGroup', $application->getAttribute('id'), $appsGroup->id);
-	if ($ret !== true) {
-		Logger::error('main', 'demo.php failed add application to application group');
-		die();
+if (is_array($applications)) {
+	foreach ($applications as $application) {
+		$ret = Abstract_Liaison::save('AppsGroup', $application->getAttribute('id'), $appsGroup->id);
+		if ($ret !== true) {
+			Logger::error('main', 'demo.php failed add application to application group');
+			die();
+		}
 	}
 }
