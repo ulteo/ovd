@@ -23,6 +23,8 @@ conf_mysql()
 
     php /usr/share/ulteo/sessionmanager/admin/init/setup.php \
         "$dbserver" "$dbname" "$dbprefix" "$dbuser" "$dbpass" 2> /dev/null || true
+
+    php /usr/share/ulteo/sessionmanager/admin/init/demo.php
 }
 
 case "$1" in
