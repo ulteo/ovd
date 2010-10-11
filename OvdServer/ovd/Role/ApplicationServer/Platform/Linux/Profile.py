@@ -189,7 +189,7 @@ class Profile(AbstractProfile):
 		grep_cmd = " | ".join(['grep -v "/%s$"'%(word) for word in Profile.rsyncBlacklist()])
 		find_cmd = 'find "%s" -maxdepth 1 -name ".*" | %s'%(src, grep_cmd)
 		
-		return 'rsync -rlptD $(%s) "%s/"'%(find_cmd, dst)
+		return 'rsync -rltD --max-size=20m $(%s) "%s/"'%(find_cmd, dst)
 	
 	@staticmethod
 	def rsyncBlacklist():
