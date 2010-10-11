@@ -52,7 +52,7 @@ else{
 	if (count($us) > 0){
 		echo '<table id="users_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
 		echo '<tr class="title">';
-		echo '<th>'._('login').'</th><td>'._('name').'</th><th>'._('in this user group').'</th><th>'._('in this application group').'</th><th>'._('access to these applications').'</th>';
+		echo '<th>'._('login').'</th><td>'._('name').'</th><th>'._('in this user group').'</th><th>'._('in this application group').'</th><th>'._('access to these applications').'</th><th>'._('acces to these Network folders').'</th>';
 // 		<th>'._('Desktop File').'</th>
 		echo '<th>'._('Available servers').'</th>';
 		echo '</tr>';
@@ -123,6 +123,20 @@ else{
 					
 					if (in_array($aaa->getAttribute('type'), $apps_type) == false)
 						$apps_type []= $aaa->getAttribute('type');
+					echo '</tr>';
+				}
+				echo '</table>';
+			}
+			echo '</td>';
+			
+			echo '<td>';
+			$networkfolder_s = array_merge($u->getSharedFolders(), $u->getNetworkFolders());
+			if (count($networkfolder_s) > 0) {
+				echo '<table border="0" cellspacing="1" cellpadding="3">';
+				foreach ($networkfolder_s as $a_networkfolder) {
+					echo '<tr>';
+					echo '<td>'.$a_networkfolder->type.'</td>';
+					echo '<td><a href="sharedfolders.php?action=manage&id='.$a_networkfolder->id.'">'.$a_networkfolder->name.'</a></td>';
 					echo '</tr>';
 				}
 				echo '</table>';
