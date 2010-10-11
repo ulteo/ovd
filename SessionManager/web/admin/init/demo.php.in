@@ -62,8 +62,9 @@ if (! $prefs->backup()) {
 }
 
 // application group
+$ApplicationsGroupDB = ApplicationsGroupDB::getInstance();
 $appsGroup = new AppsGroup(NULL, 'some_linux_apps', 'some_linux_apps', 1);
-$res = $appsGroup->insertDB();
+$res = $ApplicationsGroupDB->add($appsGroup);
 if (!$res) {
 	Logger::error('main', 'demo.php failed add application group');
 	die();
