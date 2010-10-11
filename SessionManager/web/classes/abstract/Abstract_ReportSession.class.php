@@ -53,19 +53,17 @@ class Abstract_ReportSession {
 	
 	public static function load($id_) {
 		Logger::debug('main', "Abstract_ReportSession::load($id_)");
-		Logger::critical('main', "Abstract_ReportSession::load($id_)");
 		
 		$report = new SessionReportItem($id_); // hoho...
 		return $report;
 	}
 	
 	public static function exists($id_) {
-		Logger::critical('main', "Abstract_ReportSession::exists($id_)");
+		Logger::debug('main', "Abstract_ReportSession::exists($id_)");
 		$SQL = SQL::getInstance();
 		
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sessions_history', 'id', $id_);
 		$total = $SQL->NumRows();
-		Logger::critical('main', "Abstract_ReportSession::exists($id_) total -> ".serialize($total));
 		return ($total == 1);
 	}
 	
@@ -78,7 +76,6 @@ class Abstract_ReportSession {
 	}
 	
 	public static function update($report_) {
-		Logger::critical('main', "Abstract_ReportSession::update(".serialize($report_).")");
 		Logger::debug('main', "Abstract_ReportSession::update");
 		
 		$SQL = SQL::getInstance();
