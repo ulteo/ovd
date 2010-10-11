@@ -169,4 +169,20 @@ class Role(AbstractRole):
 	
 	
 	def getReporting(self, node):
-		pass
+		doc = Document()
+		
+		infos  = self.get_disk_size_infos()
+		sizeNode = doc.createElement('size')
+		sizeNode.setAttribute("total", str(infos[0]))
+		sizeNode.setAttribute("free", str(infos[1]))
+		node.appendChild(sizeNode)
+		
+		for (share_id, share) in self.shares.items():
+			shareNode = doc.createElement("share")
+			shareNode.setAttribute("id", share_id)
+			shareNode.setAttribute("status", str(share.status()))
+			
+			for user in share.users:
+				userNode = doc.createElement("user")
+				userNode.setAttribute("login", user)
+				shareNode.appendChild(userNode)
