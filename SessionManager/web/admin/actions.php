@@ -22,6 +22,8 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
+if (! is_array($_SESSION) || ! array_key_exists('admin_login', $_SESSION))
+	redirect('index.php');
 
 if (!isset($_SERVER['HTTP_REFERER']))
 	redirect('index.php');
