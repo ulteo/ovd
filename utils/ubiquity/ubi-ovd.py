@@ -223,6 +223,12 @@ class Page(Plugin):
         self.preseed('ulteo-ovd-session-manager/tarball_url', "file:///cdrom/install/base.tar.gz")
         self.preseed('ulteo-ovd-easy-install/mysql_dbuser', admin_login)
         self.preseed('ulteo-ovd-easy-install/mysql_dbpass', self.ui.get_password())
+
+        mysql_passwd = ''.join([random.choice(''.join([string.digits, string.letters, '_'])) for i in range(0, 12)])
+        self.preseed('ulteo-ovd-debconf-database/mysql_root_password', passwd)
+        self.preseed('mysql-server/root_password', passwd)
+        self.preseed('mysql-server/root_password_again', passwd)
+
         Plugin.ok_handler(self)
 
     def cleanup(self):
