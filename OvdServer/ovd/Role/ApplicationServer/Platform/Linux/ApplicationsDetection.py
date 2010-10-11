@@ -62,7 +62,7 @@ class ApplicationsDetection():
 		if parser.has_option('Desktop Entry', 'Categories'):
 			categ = parser.get('Desktop Entry','Categories')
 			
-			for elem in ["settings", "Peripherals", "System", "information"]:
+			for elem in ["information", "Peripherals", "settings", "Screensaver", "System"]:
 				if elem in categ:
 					return True
 		
