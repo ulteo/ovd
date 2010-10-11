@@ -1,5 +1,6 @@
 citadel-server	citadel/Administrator	string	admin
 citadel-server	citadel/Password	password	admin
+citadel-server	citadel/Password_again	password	admin
 citadel-server	citadel/ServerIPAddress	string	0.0.0.0
 citadel-server	citadel/LoginType	string	Internal
 mysql-server-5.0	mysql-server/root_password_again	password	
