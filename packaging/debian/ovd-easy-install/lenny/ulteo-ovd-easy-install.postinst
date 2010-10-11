@@ -24,13 +24,13 @@ conf_mysql()
     php /usr/share/ulteo/sessionmanager/admin/init/setup.php \
         "$dbserver" "$dbname" "$dbprefix" "$dbuser" "$dbpass" 2> /dev/null || true
 
-    php /usr/share/ulteo/sessionmanager/admin/init/demo.php
-
     # restart OVD slave server cause the DB was not ready before now
     CONFFILE=/etc/ulteo/subsystem.conf
     [ -f "$CONFFILE" ] && . $CONFFILE
     [ -z "$CHROOTDIR" ] && CHROOTDIR=/opt/ulteo
     chroot $CHROOTDIR /etc/init.d/ovdSlaveServer restart
+
+    php /usr/share/ulteo/sessionmanager/admin/init/demo.php
 }
 
 case "$1" in
