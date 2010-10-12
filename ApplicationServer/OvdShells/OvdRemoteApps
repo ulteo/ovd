@@ -64,8 +64,15 @@ def main():
 			time.sleep(0.5)
 			continue
 		
+		if len(packet) < 1:
+			print "Packet length error"
+			continue
+		
 		order = struct.unpack('>B', packet[0])[0]
 		if order == OvdAppChannel.ORDER_START:
+			if len(packet) != 9:
+				print "Packet length error"
+				continue
 			token = struct.unpack('<I', packet[1:5])[0]
 			app_id = struct.unpack('<I', packet[5:9])[0]
 			
@@ -73,24 +80,41 @@ def main():
 			im.pushJob((order, token, app_id))
 		
 		elif order == OvdAppChannel.ORDER_START_WITH_ARGS:
+			if len(packet) < 9 + 4 + 4:
+				print "Packet length error"
+				continue
 			token = struct.unpack('<I', packet[1:5])[0]
 			app_id = struct.unpack('<I', packet[5:9])[0]
 			
 			ptr = 9
 			l = struct.unpack('<I', packet[ptr:ptr+4])[0]
+			if len(packet) < ptr + l + 4:
+				print "Packet length error"
+				continue
 			ptr+= 4
 			
 			share = packet[ptr:ptr+l]
-			share = share.decode("UTF-16LE")
-			share = share.encode(locale.getpreferredencoding())
+			try:
+				share = share.decode("UTF-16LE")
+				share = share.encode(locale.getpreferredencoding())
+			except:
+				print "Message ORDER_START_WITH_ARGS: share argument is not UTF-16-LE srting"
+				continue
 			ptr+= l
 			
 			l = struct.unpack('<I', packet[ptr:ptr+4])[0]
+			if len(packet) != ptr + l:
+				print "Packet length error"
+				continue
 			ptr+= 4
 			
 			path = packet[ptr:ptr+l]
-			path = path.decode("UTF-16LE")
-			path = path.encode(locale.getpreferredencoding())
+			try:
+				path = path.decode("UTF-16LE")
+				path = path.encode(locale.getpreferredencoding())
+			except:
+				print "Message ORDER_START_WITH_ARGS: path argument is not UTF-16-LE srting"
+				continue
 			ptr+=l
 			
 			job = (OvdAppChannel.ORDER_START, token, app_id, share, path)
@@ -98,6 +122,9 @@ def main():
 			im.pushJob(job)
 	
 		elif order == OvdAppChannel.ORDER_STOP:
+			if len(packet) < 5:
+				print "Packet length error"
+				continue
 			token = struct.unpack('<I', packet[1:5])[0]
 			
 			print "recv stop order %d"%(token)
