@@ -14,8 +14,12 @@ package net.propero.rdp;
 
 import java.awt.*;
 import java.awt.image.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import net.propero.rdp.keymapping.KeyCode;
 import net.propero.rdp.keymapping.KeyCode_FileBased;
@@ -714,6 +718,31 @@ public abstract class RdesktopCanvas extends Canvas {
                 cy, null, this.width, srcx, srcy);
         this.repaint(x, y, cx, cy);
 
+    }
+    
+    /**
+     * Save a part of the memory
+     * 
+     * @param saveToFile
+     *            Bitmap image to save
+     */
+    public void saveToFile(Bitmap bitmap){
+        if(this.opt.server_bpp == 8) return;
+
+    	WrappedImage w = new WrappedImage(bitmap.getWidth(), bitmap.getHeight(), BufferedImage.TYPE_INT_RGB);
+    	int[] temp = bitmap.getBitmapData();
+    	for (int i = 0 ; i<bitmap.getWidth() ; i++)
+        	for (int j = 0 ; j < bitmap.getHeight() ; j++) 
+        		w.setRGB(i, j, temp[j * bitmap.getWidth() + i]);
+    	
+        try {
+            // Save as JPEG
+        	File file = new File("./testimages/" + this.opt.imgCount + ".jpg");
+            this.opt.imgCount++;
+            ImageIO.write(w.getBufferedImage(), "jpg", file);
+        } catch (IOException e) {
+        	e.printStackTrace();
+        }
     }
 
     /**
