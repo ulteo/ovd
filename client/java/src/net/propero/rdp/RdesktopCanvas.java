@@ -755,8 +755,10 @@ public abstract class RdesktopCanvas extends Canvas {
         int x = memblt.getX();
         int y = memblt.getY();
 
-        if (x > this.right || y > this.bottom)
+        if (x > this.right || y > this.bottom) {
+            logger.warn("x and y are off the screen " + "[x=" + x + ",y=" + y + "]");
             return; // off screen
+        }
 
         int cx = memblt.getCX();
         int cy = memblt.getCY();
@@ -796,6 +798,7 @@ public abstract class RdesktopCanvas extends Canvas {
 
             this.repaint(x, y, cx, cy);
         } catch (RdesktopException e) {
+            logger.warn("Exception in drawMemBltOrder : " + e.getMessage());
         }
     }
 
@@ -905,8 +908,10 @@ public abstract class RdesktopCanvas extends Canvas {
         int x = patblt.getX();
         int y = patblt.getY();
 
-        if (x > this.right || y > this.bottom)
+        if (x > this.right || y > this.bottom) {
+            logger.warn("x and y are off the screen " + "[x=" + x + ",y=" + y + "]");
             return; // off screen
+        }
 
         int cx = patblt.getCX();
         int cy = patblt.getCY();
@@ -988,6 +993,7 @@ public abstract class RdesktopCanvas extends Canvas {
                         bitmap.getBitmapData(), bitmap.getWidth(), srcx, srcy);
             }
         } catch (RdesktopException e) {
+            logger.warn("Exception in drawTriBltOrder : " + e.getMessage());
         }
     }
 
