@@ -32,6 +32,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
@@ -40,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.JLabel;
 
 import javax.swing.JOptionPane;
 import org.apache.log4j.BasicConfigurator;
@@ -50,6 +52,7 @@ import org.ulteo.ovd.client.authInterface.AuthFrame;
 import org.ulteo.ovd.client.authInterface.DisconnectionFrame;
 import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
+import org.ulteo.ovd.client.desktop.DesktopFrame;
 import org.ulteo.ovd.client.desktop.OvdClientDesktop;
 import org.ulteo.ovd.client.env.WorkArea;
 import org.ulteo.ovd.client.gui.GUIActions;
@@ -66,7 +69,150 @@ import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.sm.Callback {
+	public static class Options {
+		public String username = null;
+		public String password = null;
+		public String server = null;
+		public String keymap = null;
+		public String lang = null;
+		public Dimension geometry = null;
+		public int sessionMode = -1;
+		public boolean nltm = false;
+		public boolean showProgressBar = true;
+		public boolean autopublish = false;
+		public boolean autostart = false;
+	}
+
+	public static Options main_options = null;
+
+	public static int optionMask = 0x00000000;
+	
+	public static final int FLAG_OPTION_USERNAME = 0x00000001;
+	public static final int FLAG_OPTION_PASSWORD = 0x00000002;
+	public static final int FLAG_OPTION_SERVER = 0x00000004;
+	public static final int FLAG_OPTION_KEYMAP = 0x00000008;
+	public static final int FLAG_OPTION_LANGUAGE = 0x00000010;
+	public static final int FLAG_OPTION_GEOMETRY = 0x00000020;
+	public static final int FLAG_OPTION_SESSION_MODE = 0x00000040;
+	public static final int FLAG_OPTION_NTLM = 0x00000080;
+	public static final int FLAG_OPTION_SHOW_PROGRESS_BAR = 0x00000100;
+	public static final int FLAG_OPTION_AUTO_INTEGRATION = 0x00000200;
+	public static final int FLAG_OPTION_AUTO_START = 0x00000400;
+
 	public static final String productName = "Ulteo OVD Client";
+
+	public static final int FLAG_NO_OPTS = 0x00000000;
+	public static final int FLAG_CMDLINE_OPTS = 0x00000001;
+	public static final int FLAG_FILE_OPTS = 0x00000002;
+	public static final int FLAG_REGISTRY_OPTS = 0x00000004;
+
+
+	private static void parseProperties(ProfileProperties properties) {
+		if (properties == null)
+			return;
+
+		if (StartConnection.main_options.sessionMode == -1) {
+			StartConnection.main_options.sessionMode =  Properties.MODE_ANY;
+			if (properties.getSessionMode() == ProfileProperties.MODE_APPLICATIONS)
+				StartConnection.main_options.sessionMode = Properties.MODE_REMOTEAPPS;
+			else if (properties.getSessionMode() == ProfileProperties.MODE_DESKTOP)
+				StartConnection.main_options.sessionMode = Properties.MODE_DESKTOP;
+		}
+
+		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_USERNAME) == 0) {
+			String username = properties.getLogin();
+			if (username != null) {
+				StartConnection.main_options.username = username;
+				StartConnection.optionMask |= StartConnection.FLAG_OPTION_USERNAME;
+			}
+		}
+		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_SERVER) == 0) {
+			String server = properties.getHost();
+			if (server != null) {
+				StartConnection.main_options.server = server;
+				StartConnection.optionMask |= StartConnection.FLAG_OPTION_SERVER;
+			}
+		}
+		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_NTLM) == 0) {
+			StartConnection.main_options.nltm = properties.getUseLocalCredentials();
+			StartConnection.optionMask |= StartConnection.FLAG_OPTION_NTLM;
+		}
+		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_AUTO_INTEGRATION) == 0) {
+			StartConnection.main_options.autopublish = properties.getAutoPublish();
+			StartConnection.optionMask |= StartConnection.FLAG_OPTION_AUTO_INTEGRATION;
+		}
+		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_LANGUAGE) == 0) {
+			String language = properties.getLang();
+			if (language != null) {
+				StartConnection.main_options.lang = language;
+				StartConnection.optionMask |= StartConnection.FLAG_OPTION_LANGUAGE;
+			}
+		}
+		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_KEYMAP) == 0) {
+			String keymap = properties.getKeymap();
+			if (keymap != null) {
+				StartConnection.main_options.keymap = keymap;
+				StartConnection.optionMask |= StartConnection.FLAG_OPTION_KEYMAP;
+			}
+		}
+		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_SHOW_PROGRESS_BAR) == 0) {
+			StartConnection.main_options.showProgressBar = properties.getShowProgressbar();
+			StartConnection.optionMask |= StartConnection.FLAG_OPTION_SHOW_PROGRESS_BAR;
+		}
+	}
+
+	public static ProfileProperties getProfileFromIni(String path) {
+		ProfileIni ini = new ProfileIni();
+		String profile = "";
+
+		if (path == null) {
+			List<String> profiles = ini.listProfiles();
+
+			if (profiles == null)
+				return null;
+
+			profile = ProfileIni.DEFAULT_PROFILE;
+
+			if (! profiles.contains(profile))
+				return null;
+		}
+		else {
+			File file = new File(path);
+			profile = file.getName();
+			path = file.getParent();
+		}
+
+		ProfileProperties properties = null;
+		try {
+			properties = ini.loadProfile(profile, path);
+		} catch (IOException ex) {
+			System.err.println("Unable to load \""+profile+"\" profile: "+ex.getMessage());
+			return null;
+		}
+
+		return properties;
+	}
+
+	public static boolean getFormValuesFromFile(String profile) {
+		ProfileProperties properties = getProfileFromIni(profile);
+		if (properties == null)
+			return false;
+
+		StartConnection.parseProperties(properties);
+
+		return true;
+	}
+
+	private static boolean getFormValuesFromRegistry() {
+		ProfileProperties properties = ProfileRegistry.loadProfile();
+		if (properties == null)
+			return false;
+
+		StartConnection.parseProperties(properties);
+
+		return true;
+	}
+	
 	/**
 	 * @param args
 	 */
@@ -104,25 +250,107 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		if (! org.ulteo.Logger.initInstance(true, log_dir+Constants.FILE_SEPARATOR +org.ulteo.Logger.getDate()+".log", true))
 			System.err.println("Unable to iniatialize logger instance");
 
-		boolean regProfile = false;
 		String profile = null;
-		String password = null;
+		StartConnection.main_options = new Options();
+		int flags = StartConnection.FLAG_CMDLINE_OPTS;
 
-		LongOpt[] alo = new LongOpt[1];
+		LongOpt[] alo = new LongOpt[5];
 		alo[0] = new LongOpt("reg", LongOpt.NO_ARGUMENT, null, 0);
-		Getopt opt = new Getopt(OvdClient.productName, args, "c:p:s:", alo);
+		alo[1] = new LongOpt("auto-start", LongOpt.NO_ARGUMENT, null, 1);
+		alo[2] = new LongOpt("auto-integration", LongOpt.NO_ARGUMENT, null, 2);
+		alo[3] = new LongOpt("ntlm", LongOpt.NO_ARGUMENT, null, 3);
+		alo[4] = new LongOpt("progress-bar", LongOpt.REQUIRED_ARGUMENT, null, 4);
+		Getopt opt = new Getopt(OvdClient.productName, args, "c:p:u:m:g:k:l:s:", alo);
 
 		int c;
 		while ((c = opt.getopt()) != -1) {
 			switch (c) {
 				case 0: //--reg
-					regProfile = true;
+					flags |= StartConnection.FLAG_REGISTRY_OPTS;
+					break;
+				case 1: //--auto-start
+					StartConnection.main_options.autostart = true;
+
+					StartConnection.optionMask |= StartConnection.FLAG_OPTION_AUTO_START;
+					break;
+				case 2: //--auto-integration
+					StartConnection.main_options.autopublish = true;
+
+					StartConnection.optionMask |= StartConnection.FLAG_OPTION_AUTO_INTEGRATION;
+					break;
+				case 3: //--ntlm
+					StartConnection.main_options.nltm = true;
+
+					StartConnection.optionMask |= StartConnection.FLAG_OPTION_NTLM;
+					break;
+				case 4: //--progress-bar [show|hide]
+					String arg = new String(opt.getOptarg());
+					if (arg.equalsIgnoreCase("show"))
+						StartConnection.main_options.showProgressBar = true;
+					else if (arg.equalsIgnoreCase("hide"))
+						StartConnection.main_options.showProgressBar = false;
+					else
+						StartConnection.usage();
+
+					StartConnection.optionMask |= StartConnection.FLAG_OPTION_SHOW_PROGRESS_BAR;
 					break;
 				case 'c':
 					profile = new String(opt.getOptarg());
+					flags |= StartConnection.FLAG_FILE_OPTS;
 					break;
 				case 'p':
-					password = new String(opt.getOptarg());
+					StartConnection.main_options.password = new String(opt.getOptarg());
+
+					StartConnection.optionMask |= StartConnection.FLAG_OPTION_PASSWORD;
+					break;
+				case 'u':
+					StartConnection.main_options.username = new String(opt.getOptarg());
+
+					StartConnection.optionMask |= StartConnection.FLAG_OPTION_USERNAME;
+					break;
+				case 'm':
+					String sessionMode = new String(opt.getOptarg());
+					if (sessionMode.equalsIgnoreCase("auto"))
+						StartConnection.main_options.sessionMode = Properties.MODE_ANY;
+					if (sessionMode.equalsIgnoreCase("desktop"))
+						StartConnection.main_options.sessionMode = Properties.MODE_DESKTOP;
+					if (sessionMode.equalsIgnoreCase("applications"))
+						StartConnection.main_options.sessionMode = Properties.MODE_REMOTEAPPS;
+
+					StartConnection.optionMask |= StartConnection.FLAG_OPTION_SESSION_MODE;
+					break;
+				case 'g':
+					String geometry = new String(opt.getOptarg());
+					int pos = geometry.indexOf("x");
+					
+					if (geometry.lastIndexOf("x") != pos)
+						StartConnection.usage();
+
+					try {
+						StartConnection.main_options.geometry = new Dimension();
+						StartConnection.main_options.geometry.width = Integer.parseInt(geometry.substring(0, pos));
+						StartConnection.main_options.geometry.height = Integer.parseInt(geometry.substring(pos + 1, geometry.length()));
+					} catch (NumberFormatException ex) {
+						System.err.println(ex.getMessage() + "\n" + ex.getStackTrace());
+						StartConnection.usage();
+					}
+
+					StartConnection.optionMask |= StartConnection.FLAG_OPTION_GEOMETRY;
+					break;
+				case 'k':
+					StartConnection.main_options.keymap = new String(opt.getOptarg());
+
+					StartConnection.optionMask |= StartConnection.FLAG_OPTION_KEYMAP;
+					break;
+				case 'l':
+					StartConnection.main_options.lang = new String(opt.getOptarg());
+
+					StartConnection.optionMask |= StartConnection.FLAG_OPTION_LANGUAGE;
+					break;
+				case 's':
+					StartConnection.main_options.server = new String(opt.getOptarg());
+
+					StartConnection.optionMask |= StartConnection.FLAG_OPTION_SERVER;
 					break;
 				default:
 					usage();
@@ -130,33 +358,69 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 					break;
 			}
 		}
-		
-		StartConnection s = null;
 
-		if (regProfile) {
-			s = new StartConnection(regProfile);
+		if ((flags & StartConnection.FLAG_FILE_OPTS) != 0 && (flags & StartConnection.FLAG_REGISTRY_OPTS) != 0) {
+			org.ulteo.Logger.error("You cannot use --reg with -c");
+			StartConnection.usage();
+		}
+
+		if ((flags & StartConnection.FLAG_FILE_OPTS) != 0) {
+			if (! StartConnection.getFormValuesFromFile(profile))
+				org.ulteo.Logger.warn("The configuration file \""+profile+"\" doesn't exist.");
+		}
+		else if ((flags & StartConnection.FLAG_REGISTRY_OPTS) != 0) {
+			if (! StartConnection.getFormValuesFromRegistry())
+				org.ulteo.Logger.warn("No available configuration from registry");
+		}
+
+		if (StartConnection.main_options.nltm && (StartConnection.main_options.username != null || StartConnection.main_options.password != null)) {
+			org.ulteo.Logger.error("You cannot use --ntml with -u or -p");
+			StartConnection.usage();
+		}
+		if (StartConnection.main_options.sessionMode == Properties.MODE_DESKTOP && StartConnection.main_options.autopublish) {
+			org.ulteo.Logger.error("You cannot use --auto-integration in desktop mode");
+			StartConnection.usage();
+		}
+		if (StartConnection.main_options.sessionMode == Properties.MODE_REMOTEAPPS && StartConnection.main_options.geometry != null) {
+			org.ulteo.Logger.error("You cannot use -g in applications mode");
+			StartConnection.usage();
+		}
+		if (StartConnection.main_options.autostart) {
+			if (((StartConnection.main_options.username == null || StartConnection.main_options.password == null) && !StartConnection.main_options.nltm) || StartConnection.main_options.server == null) {
+				org.ulteo.Logger.error("You must specify the server (-s) and your credentials (-u, -p or --ntlm)");
+				StartConnection.usage();
+			}
+
+			if (StartConnection.main_options.sessionMode == -1) {
+				StartConnection.main_options.sessionMode = Properties.MODE_ANY;
+			}
+		}
+
+		StartConnection s = new StartConnection(StartConnection.main_options, flags);
+		if (StartConnection.main_options.autostart) {
 			s.startThread();
-			s.waitThread();
 		}
-		else if (profile != null) {
-			s = new StartConnection(profile, password);
-			s.startThread();
-			s.waitThread();
-		}
-		else {
-			s = new StartConnection();
-			s.waitThread();
-		}
-		System.gc();
+		s.waitThread();
+
 		System.exit(0);
 	}
 
 	public static void usage() {
 		System.err.println(StartConnection.productName);
 		System.err.println("Usage: java -jar OVDNativeClient.jar [options]");
-		System.err.println("\t-c file		Load configuration from `file`");
-		System.err.println("\t-p		Password");
-		System.err.println("\t--reg		Load configuration from registry");
+		System.err.println("\t-c file				Load configuration from `file`");
+		System.err.println("\t--reg				Load configuration from registry");
+		System.err.println("\t-s server			Server");
+		System.err.println("\t-u username			Username");
+		System.err.println("\t-p password			Password");
+		System.err.println("\t--ntlm				Use NTLM authentication");
+		System.err.println("\t-m [auto|desktop|applications]	Session mode");
+		System.err.println("\t-g widthxheight			Geometry");
+		System.err.println("\t-k keymap			Keymap");
+		System.err.println("\t-l language			Language");
+		System.err.println("\t--progress-bar [show|hide]	Set the progress bar visibility");
+		System.err.println("\t--auto-integration		Enable auto integration");
+		System.err.println("\t--auto-start			Enable auto start");
 		System.err.println("Examples:");
 		System.err.println("\tClassic use:");
 		System.err.println("\t\tjava -jar OVDNativeClient.jar -c config.ovd -p password");
@@ -180,19 +444,6 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	private LoadingFrame loadingFrame = null;
 	private AuthFrame authFrame = null;
 	private DisconnectionFrame discFrame = null;
-	private String profile = null;
-	private boolean command = false;
-	private boolean regProfile = false;
-	private String password = null;
-	private int mode = 0;
-	private int resolution = 0;
-	private boolean localCredential = false;
-	private String host = null;
-	private String username = null;
-	private boolean autoPublicated = false;
-	private String language = null;
-	private String keymap = null;
-	private boolean showProgressbar = true;
 
 	private boolean isCancelled = false;
 	
@@ -201,27 +452,21 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	private HashMap<String, String> responseHandler = null;
 	private OvdClient client = null;
 
-	public StartConnection() {
-		this.init();
-		this.authFrame = new AuthFrame(this);
-		this.loadProfile(null);
-		this.authFrame.showWindow();
-		this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
-	}
+	private Options opts = null;
+	private int flags = StartConnection.FLAG_NO_OPTS;
 
-	//Auto-start constructor
-	public StartConnection(boolean regProfile_) {
-		this.init();
-		this.command = true;
-		this.regProfile = regProfile_;
-	}
+	public StartConnection(Options opts_, int flags_) {
+		this.opts = opts_;
+		this.flags = flags_;
 
-	public StartConnection(String profile, String password) {
 		this.init();
-		this.profile = profile;
-		this.password = password;
-		this.command = true;
-		this.loadingFrame.setLocationRelativeTo(null);
+
+		if (! this.opts.autostart) {
+			this.authFrame = new AuthFrame(this);
+			this.loadOptions();
+			this.authFrame.showWindow();
+			this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
+		}
 	}
 	
 	public void init() {
@@ -236,6 +481,47 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.responseHandler.put(ERROR_DEFAULT, I18n._("An error occured, please contact your administrator"));
 		this.loadingFrame = new LoadingFrame(this);
 		this.discFrame = new DisconnectionFrame();
+	}
+
+	private void loadOptions() {
+		if (this.opts.sessionMode > -1) {
+			JLabel item = null;
+			if (this.opts.sessionMode == Properties.MODE_ANY)
+				item = this.authFrame.getItemModeAuto();
+			if (this.opts.sessionMode == Properties.MODE_DESKTOP)
+				item = this.authFrame.getItemModeDesktop();
+			if (this.opts.sessionMode == Properties.MODE_REMOTEAPPS)
+				item = this.authFrame.getItemModeApplication();
+
+			this.authFrame.getSessionModeBox().setSelectedItem(item);
+		}
+
+		if (this.opts.username != null)
+			this.authFrame.setLogin(this.opts.username);
+
+		if (this.opts.password != null)
+			this.authFrame.getPassword().setText(this.opts.password);
+
+		if (this.opts.server != null)
+			this.authFrame.setHost(this.opts.server);
+		if (this.opts.lang != null) {
+			for (int i = 0; i < Language.languageList.length; i++) {
+				if (this.opts.lang.equalsIgnoreCase(Language.languageList[i][2])) {
+					this.authFrame.getLanguageBox().setSelectedIndex(i);
+					break;
+				}
+			}
+		}
+		if (this.opts.keymap != null) {
+			for (int i = 0; i < Language.keymapList.length; i++) {
+				if (this.opts.keymap.equals(Language.keymapList[i][1])) {
+					this.authFrame.getKeyboardBox().setSelectedIndex(i);
+					break;
+				}
+			}
+		}
+		this.authFrame.setUseLocalCredentials(this.opts.nltm);
+		this.authFrame.setAutoPublishChecked(this.opts.autopublish);
 	}
 	
 	public static int JOB_NOTHING = 0;
@@ -267,6 +553,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 				} catch (InterruptedException e) {}
 			}
 		}
+
+
 	}
 
 	public void run() {
@@ -275,19 +563,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		if (this.launchConnection()) {
 			this.continueMainThread = false;
 		}
-		else {
-			if (this.regProfile) {
-				this.disableLoadingMode();
-				JOptionPane.showMessageDialog(null, I18n._("This configuration is not allowed, please contact your administrator or try manually"), I18n._("Bad configuration"), JOptionPane.WARNING_MESSAGE);
-				this.regProfile = false;
-				this.command = false;
-				this.authFrame = new AuthFrame(this);
-				this.loadProfile(null);
-				if (this.showProgressbar)
-					this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
-			}
-			if(! command || this.regProfile)
-				this.authFrame.showWindow();
+		else if(! this.opts.autostart) {
+			this.authFrame.showWindow();
 		}
 		this.thread = null;
 	}
@@ -324,7 +601,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	}
 
 	public void disableLoadingMode() {
-		if (this.showProgressbar)
+		if (this.opts.showProgressBar)
 			this.loadingFrame.setVisible(false);
 	}
 
@@ -333,124 +610,57 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	}
 
 	public boolean getFormValuesFromGui() {
-		this.username = this.authFrame.getLogin().getText();
-		this.host = this.authFrame.getHost().getText();
-		this.mode =  Properties.MODE_ANY;
+		this.opts.username = this.authFrame.getLogin().getText();
+		this.opts.server = this.authFrame.getHost().getText();
+		this.opts.sessionMode =  Properties.MODE_ANY;
 		if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeApplication())
-			this.mode = Properties.MODE_REMOTEAPPS;
+			this.opts.sessionMode = Properties.MODE_REMOTEAPPS;
 		else if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeDesktop())
-			this.mode = Properties.MODE_DESKTOP;
+			this.opts.sessionMode = Properties.MODE_DESKTOP;
 				
+		switch (this.authFrame.getResBar().getValue()) {
+			case 0 :
+				this.opts.geometry = DesktopFrame.SMALL_RES;
+				break;
+			case 1 :
+				this.opts.geometry = DesktopFrame.MEDUIM_RES;
+				break;
+			case 2 :
+				this.opts.geometry = DesktopFrame.HIGH_RES;
+				break;
+			case 3 :
+				this.opts.geometry = DesktopFrame.MAXIMISED;
+				break;
+			case 4 :
+				this.opts.geometry = DesktopFrame.FULLSCREEN;
+				break;
+		}
 		
-		this.resolution = this.authFrame.getResBar().getValue();
-		this.localCredential = (this.authFrame.isUseLocalCredentials());
+		this.opts.nltm = this.authFrame.isUseLocalCredentials();
 
-		this.autoPublicated = this.authFrame.isAutoPublishChecked();
+		this.opts.autopublish = this.authFrame.isAutoPublishChecked();
 		
-		this.language = Language.languageList[this.authFrame.getLanguageBox().getSelectedIndex()][2];
-		this.keymap = Language.keymapList[this.authFrame.getKeyboardBox().getSelectedIndex()][1];
+		this.opts.lang = Language.languageList[this.authFrame.getLanguageBox().getSelectedIndex()][2];
+		this.opts.keymap = Language.keymapList[this.authFrame.getKeyboardBox().getSelectedIndex()][1];
 			
-		this.password = new String(this.authFrame.getPassword().getPassword());
+		this.opts.password = new String(this.authFrame.getPassword().getPassword());
 		this.authFrame.getPassword().setText("");
 		
-		if (this.host.equals("")) {
+		if (this.opts.server.equals("")) {
 			JOptionPane.showMessageDialog(null, I18n._("You must specify the host field !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
 			this.disableLoadingMode();
 			return false;
 		}
 		
-		if (this.localCredential == false) {
-			if (this.username.equals("")) {
+		if (this.opts.nltm == false) {
+			if (this.opts.username.equals("")) {
 				JOptionPane.showMessageDialog(null, I18n._("You must specify a username !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
 				this.disableLoadingMode();
 				return false;
 			}
-			if (this.password.equals("")) {
+			if (this.opts.password.equals("")) {
 				JOptionPane.showMessageDialog(null, I18n._("You must specify a password !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
 				this.disableLoadingMode();
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public boolean getFormValuesFromFile() {
-		ProfileProperties properties = getProfileFromIni(profile);
-		if (properties == null) {
-			System.out.println("The configuration file \""+profile+"\" doesn't exist.");
-			return false;
-		}
-
-		this.mode =  Properties.MODE_ANY;
-		if (properties.getSessionMode() == ProfileProperties.MODE_APPLICATIONS)
-			this.mode = Properties.MODE_REMOTEAPPS;
-		else if (properties.getSessionMode() == ProfileProperties.MODE_DESKTOP)
-			this.mode = Properties.MODE_DESKTOP;
-
-		this.username = properties.getLogin();
-		this.host = properties.getHost();
-		this.localCredential = properties.getUseLocalCredentials();
-		this.autoPublicated = properties.getAutoPublish();
-		this.showProgressbar = properties.getShowProgressbar();
-
-		if (this.host.equals("")) {
-			System.err.println("You must specifiy the host field !");
-			this.disableLoadingMode();
-			return false;
-		}
-
-		if (properties.getUseLocalCredentials() == false) {
-			if (this.username.equals("")) {
-				System.err.println("You must specify a username !");
-				this.disableLoadingMode();
-				return false;
-			}
-
-			if (this.password == null) {
-				usage();
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	private boolean getFormValuesFromRegistry() {
-		ProfileProperties properties = ProfileRegistry.loadProfile();
-		if (properties == null) {
-			System.out.println("Cannot find configuration in registry.");
-			this.disableLoadingMode();
-			return false;
-		}
-		
-		this.mode =  Properties.MODE_ANY;
-		if (properties.getSessionMode() == ProfileProperties.MODE_APPLICATIONS)
-			this.mode = Properties.MODE_REMOTEAPPS;
-		else if (properties.getSessionMode() == ProfileProperties.MODE_DESKTOP)
-			this.mode = Properties.MODE_DESKTOP;
-
-		this.username = properties.getLogin();
-		this.host = properties.getHost();
-		this.localCredential = properties.getUseLocalCredentials();
-		this.autoPublicated = properties.getAutoPublish();
-		this.language = properties.getLang();
-		this.keymap = properties.getKeymap();
-		this.showProgressbar = properties.getShowProgressbar();
-		
-		if (this.host == null || this.host.length() == 0) {
-			System.err.println("Cannot find the host field in the registry");
-			this.disableLoadingMode();
-			return false;
-		}
-		
-		if (properties.getUseLocalCredentials() == false) {
-			if (this.username == null || this.username.length() == 0) {
-				System.err.println("Cannot find the username field in the registry");
-				this.disableLoadingMode();
-				return false;
-			}
-			
-			if (this.password == null) {
-				System.err.println("No password used");
 				return false;
 			}
 		}
@@ -470,41 +680,31 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	public boolean launchConnection() {
 		boolean exit = false;
 
-		if (! command) {
+		if (! this.opts.autostart) {
 			if (! this.getFormValuesFromGui())
 				return exit;
 			this.getBackupEntries();
 		}
-		else {
-			if (this.regProfile) {
-				if (! this.getFormValuesFromRegistry())
-					return exit;
-			}
-			else {
-				if (! this.getFormValuesFromFile())
-					return exit;
-			}
-		}
 
-		if (this.showProgressbar)
+		if (this.opts.showProgressBar)
 			SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, true));
 
 		// Start OVD session
-		SessionManagerCommunication dialog = new SessionManagerCommunication(host, true);
-		if (! command)
+		SessionManagerCommunication dialog = new SessionManagerCommunication(this.opts.server, true);
+		if (! this.opts.autostart)
 			dialog.addCallbackListener(this);
 
 		this.updateProgress(LoadingStatus.STATUS_SM_CONNECTION, 0);
-		Properties request = new Properties(mode);
-		request.setLang(language);
+		Properties request = new Properties(this.opts.sessionMode);
+		request.setLang(this.opts.lang);
 		request.setTimeZone(Calendar.getInstance().getTimeZone().getID());
 
 		try {
 			boolean ret = false;
-			if (localCredential)
+			if (this.opts.nltm)
 				ret = dialog.askForSession(request);
 			else
-				ret = dialog.askForSession(username, password, request);
+				ret = dialog.askForSession(this.opts.username, this.opts.password, request);
 			
 			if (ret == false) {
 				this.disableLoadingMode();
@@ -523,12 +723,12 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		}
 		this.updateProgress(LoadingStatus.STATUS_SM_START, 0);
 		
-		if (this.showProgressbar)
+		if (this.opts.showProgressBar)
 			this.loadingFrame.getCancelButton().setEnabled(true);
 		
 		Properties response = dialog.getResponseProperties();
 		
-		if ((mode != Properties.MODE_ANY) && (response.getMode() != request.getMode())) {
+		if ((this.opts.sessionMode != Properties.MODE_ANY) && (response.getMode() != request.getMode())) {
 			this.disableLoadingMode();
 			JOptionPane.showMessageDialog(null, I18n._("Internal error: unsupported session mode"), I18n._("Error"), JOptionPane.WARNING_MESSAGE);
 			System.err.println("Error: No valid session mode received");
@@ -556,7 +756,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 		switch (response.getMode()) {
 			case Properties.MODE_DESKTOP:
-				this.client = new OvdClientDesktop(dialog, resolution, this);
+				this.client = new OvdClientDesktop(dialog, this.opts.geometry, this);
 				break;
 			case Properties.MODE_REMOTEAPPS:
 				if (OSTools.isLinux()) {
@@ -568,14 +768,14 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 					}
 				}
 				
-				this.client = new OvdClientPortal(dialog, response.getUsername(), this.autoPublicated, this.regProfile, this);
+				this.client = new OvdClientPortal(dialog, response.getUsername(), this.opts.autopublish, this.opts.autostart, this);
 				break;
 			default:
 				JOptionPane.showMessageDialog(null, I18n._("Internal error: unsupported session mode"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
 				this.disableLoadingMode();
 				return exit;
 		}
-		this.client.setKeymap(this.keymap);
+		this.client.setKeymap(this.opts.keymap);
 
 		if (! this.isCancelled) {
 			Runtime.getRuntime().addShutdownHook(new ShutdownTask(this.client));
@@ -594,9 +794,10 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	
 	@Override
 	public void sessionDisconnecting() {
+
 		this.setJobMainThread(JOB_DISCONNECT_CLI);
 
-		if (this.showProgressbar)
+		if (this.opts.showProgressBar)
 			SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, false));
 		SwingTools.invokeLater(GUIActions.setVisible(this.discFrame, true));
 	}
@@ -605,7 +806,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		if (! this.discFrame.isVisible()) {
 			if (loadingFrame.isVisible())
 				disableLoadingMode();
-			if(! command)
+			if(! this.opts.autostart)
 				JOptionPane.showMessageDialog(null, I18n._("You have been disconnected"), I18n._("Your session has ended"), JOptionPane.INFORMATION_MESSAGE);
 			else {
 				System.err.println("You have been disconnected");
@@ -615,7 +816,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		else {
 			this.disableDisconnectingMode();
 			
-			if (command)
+			if (this.opts.autostart)
 				System.exit(0);
 		}
 	}
@@ -658,110 +859,21 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	}
 
 	public void updateProgress(int status, int subStatus) {
-		if (this.showProgressbar)
+		if (this.opts.showProgressBar)
 			this.loadingFrame.updateProgression(status, subStatus);
 	}
 
 	public void sessionConnected() {
 		if ((this.loadingFrame != null && this.loadingFrame.isVisible()) || (this.authFrame != null && this.authFrame.getMainFrame().isVisible())) {
 			this.disableLoadingMode();
-			if (! command)
+			if (! this.opts.autostart)
 				this.authFrame.hideWindow();
 		}
 	}
 
 	private void saveProfile() throws IOException {
-		String login = this.authFrame.getLogin().getText();
-		boolean useLocalCredentials = this.authFrame.isUseLocalCredentials();
-		String host = this.authFrame.getHost().getText();
-
-		int sessionMode = ProfileProperties.MODE_AUTO;
-		if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeApplication())
-			sessionMode = ProfileProperties.MODE_APPLICATIONS;
-		else if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeDesktop())
-			sessionMode = ProfileProperties.MODE_DESKTOP;
-		
-		boolean autoPublish = this.authFrame.isAutoPublishChecked();
-		int screensize = this.authFrame.getResBar().getValue();
-		String lang = this.language;
-		String keymap = this.keymap;
-
 		ProfileIni ini = new ProfileIni();
 		ini.setProfile(null, null);
-		ini.saveProfile(new ProfileProperties(login, host, sessionMode, autoPublish, useLocalCredentials, screensize, lang, keymap));
-	}
-
-	public static ProfileProperties getProfileFromIni(String path) {
-		ProfileIni ini = new ProfileIni();
-		String profile = "";
-
-		if (path == null) {
-			List<String> profiles = ini.listProfiles();
-
-			if (profiles == null)
-				return null;
-
-			profile = ProfileIni.DEFAULT_PROFILE;
-			
-			if (! profiles.contains(profile))
-				return null;
-		}
-		else {
-			File file = new File(path);
-			profile = file.getName();
-			path = file.getParent();
-		}
-		
-		ProfileProperties properties = null;
-		try {
-			properties = ini.loadProfile(profile, path);
-		} catch (IOException ex) {
-			System.err.println("Unable to load \""+profile+"\" profile: "+ex.getMessage());
-			return null;
-		}
-		
-		return properties;
-	}
-	
-	private void loadProfile(String path) {
-		ProfileProperties properties = getProfileFromIni(path);
-
-		if (properties == null)
-			return;
-
-		this.authFrame.setLogin(properties.getLogin());
-		this.authFrame.setUseLocalCredentials(properties.getUseLocalCredentials());
-		this.authFrame.setHost(properties.getHost());
-		
-		Object item = this.authFrame.getItemModeAuto();
-		if (properties.getSessionMode() == ProfileProperties.MODE_APPLICATIONS)
-			item = this.authFrame.getItemModeApplication();
-		else if (properties.getSessionMode() == ProfileProperties.MODE_DESKTOP)
-			item = this.authFrame.getItemModeDesktop();
-		this.authFrame.getSessionModeBox().setSelectedItem(item);
-		
-		this.authFrame.setAutoPublishChecked(properties.getAutoPublish());
-		this.authFrame.setResolution(properties.getScreenSize());
-
-		this.authFrame.setRememberMeChecked(true);
-		
-		if (properties.getLang() != null) {
-			for (int i = 0; i < Language.languageList.length; i++) {
-				if (properties.getLang().equalsIgnoreCase(Language.languageList[i][2])) {
-					this.authFrame.getLanguageBox().setSelectedIndex(i);
-					break;
-				}
-			}
-		}
-		if (properties.getKeymap() != null) {
-			for (int i = 0; i < Language.keymapList.length; i++) {
-				if (properties.getKeymap().equals(Language.keymapList[i][1])) {
-					this.authFrame.getKeyboardBox().setSelectedIndex(i);
-					break;
-				}
-			}
-		}
-		
-		this.authFrame.getPassword().requestFocus();
+		ini.saveProfile(new ProfileProperties(this.opts.username, this.opts.server, this.opts.sessionMode, this.opts.autopublish, this.opts.nltm, this.opts.geometry, this.opts.lang, this.opts.keymap));
 	}
 }

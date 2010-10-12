@@ -20,30 +20,26 @@
 
 package org.ulteo.ovd.client.profile;
 
+import java.awt.Dimension;
+
 public class ProfileProperties {
-	public static final int SCREENSIZE_800X600 = 0;
-	public static final int SCREENSIZE_1024X768 = 1;
-	public static final int SCREENSIZE_1280X678 = 2;
-	public static final int MAXIMIZED = 3;
-	public static final int FULLSCREEN = 4;
-	
 	public static final int MODE_AUTO = 0;
 	public static final int MODE_DESKTOP = 1;
 	public static final int MODE_APPLICATIONS = 2;
 
 	private String login = System.getProperty("user.name");
 	private String host = null;
-	private int sessionMode = 0;
+	private int sessionMode = -1;
 	private boolean autoPublish = false;
 	private boolean useLocalCredentials = false;
-	private int screensize = 0;
+	private Dimension screensize = null;
 	private String lang = null;
 	private String keymap = null;
 	private boolean showProgressbar = true;
 	
 	public ProfileProperties() {}
 
-	public ProfileProperties(String login_, String host_, int sessionMode_, boolean autoPublish_, boolean useLocalCredentials_, int screensize_, String lang, String keymap) {
+	public ProfileProperties(String login_, String host_, int sessionMode_, boolean autoPublish_, boolean useLocalCredentials_, Dimension screensize_, String lang, String keymap) {
 		this.login = login_;
 		this.host = host_;
 		this.sessionMode = sessionMode_;
@@ -94,21 +90,11 @@ public class ProfileProperties {
 		this.autoPublish = autoPublish_;
 	}
 
-	public int getScreenSize() {
+	public Dimension getScreenSize() {
 		return this.screensize;
 	}
 
-	public void setScreenSize(int screenSize_) {
-		switch (screenSize_) {
-			case SCREENSIZE_800X600:
-			case SCREENSIZE_1024X768:
-			case SCREENSIZE_1280X678:
-			case MAXIMIZED:
-			case FULLSCREEN:
-				break;
-			default:
-				screenSize_ = FULLSCREEN;
-		}
+	public void setScreenSize(Dimension screenSize_) {
 		this.screensize = screenSize_;
 	}
 	

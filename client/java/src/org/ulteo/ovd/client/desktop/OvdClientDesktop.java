@@ -41,22 +41,26 @@ import org.ulteo.rdp.RdpConnectionOvd;
 public class OvdClientDesktop extends OvdClient {
 	private DesktopFrame desktop = null;
 	private boolean desktopLaunched = false;
-	private int resolution = 0;
+	private Dimension resolution = null;
+	private boolean fullscreen = false;
 	
-	public OvdClientDesktop(SessionManagerCommunication smComm, int resolution) {
+	public OvdClientDesktop(SessionManagerCommunication smComm, Dimension resolution) {
 		super(smComm, null);
 
 		this.init(resolution);
 	}
 
-	public OvdClientDesktop(SessionManagerCommunication smComm, int resolution, Callback obj) {
+	public OvdClientDesktop(SessionManagerCommunication smComm, Dimension resolution, Callback obj) {
 		super(smComm, obj);
 
 		this.init(resolution);
 	}
 
-	private void init(int resolution_) {
+	private void init(Dimension resolution_) {
 		this.resolution = resolution_;
+
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		this.fullscreen = (this.resolution.width == screenSize.width && this.resolution.height == screenSize.height);
 	}
 
 	@Override
@@ -94,25 +98,9 @@ public class OvdClientDesktop extends OvdClient {
 	}
 
 	private void initDesktop(RdpConnectionOvd co) {
-		switch (this.resolution) {
-			case 0 :
-				this.desktop = new DesktopFrame(DesktopFrame.SMALL_RES, false, this);
-				break;
-			case 1 :
-				this.desktop = new DesktopFrame(DesktopFrame.MEDUIM_RES, false, this);
-				break;
-			case 2 :
-				this.desktop = new DesktopFrame(DesktopFrame.HIGH_RES, false, this);
-				break;
-			case 3 :
-				this.desktop = new DesktopFrame(DesktopFrame.MAXIMISED, false, this);
-				break;
-			case 4 :
-				this.desktop = new DesktopFrame(DesktopFrame.FULLSCREEN, true, this);
-				break;
-		}
+		this.desktop = new DesktopFrame(this.resolution, this.fullscreen, this);
 
-		if(this.resolution != 4) {
+		if (! this.fullscreen) {
 			Insets inset = null;
 			inset = this.desktop.getInsets();
 			this.desktop.setLocationRelativeTo(null);

@@ -23,8 +23,10 @@ package org.ulteo.ovd.client.profile;
 import com.ice.jni.registry.Registry;
 import com.ice.jni.registry.RegistryException;
 import com.ice.jni.registry.RegistryKey;
+import java.awt.Dimension;
 import java.util.Enumeration;
 import org.ulteo.Logger;
+import org.ulteo.ovd.client.desktop.DesktopFrame;
 
 public class ProfileRegistry extends Profile {
 
@@ -89,16 +91,28 @@ public class ProfileRegistry extends Profile {
 					properties.setShowProgressbar(showProgressBar);
 				}
 				else if (field.equalsIgnoreCase(FIELD_SCREENSIZE)) {
-					if(value.equalsIgnoreCase(VALUE_800X600))
-						properties.setScreenSize(ProfileProperties.SCREENSIZE_800X600);
-					else if(value.equalsIgnoreCase(VALUE_1024X768))
-						properties.setScreenSize(ProfileProperties.SCREENSIZE_1024X768);
-					else if(value.equalsIgnoreCase(VALUE_1280X678))
-						properties.setScreenSize(ProfileProperties.SCREENSIZE_1280X678);
-					else if(value.equalsIgnoreCase(VALUE_MAXIMIZED))
-						properties.setScreenSize(ProfileProperties.MAXIMIZED);
-					else
-						properties.setScreenSize(ProfileProperties.FULLSCREEN);
+					int pos = value.indexOf("x");
+
+					if (pos != -1 && value.lastIndexOf("x") == pos) {
+						try {
+							Dimension dim = new Dimension();
+							dim.width = Integer.parseInt(value.substring(0, pos));
+							dim.height = Integer.parseInt(value.substring(pos + 1, value.length()));
+
+							properties.setScreenSize(dim);
+						} catch (NumberFormatException ex) {
+							Logger.error("Failed to parse screen size value: '"+value+"'");
+						}
+					}
+					else if (value.equalsIgnoreCase(VALUE_MAXIMIZED)) {
+						properties.setScreenSize(DesktopFrame.MAXIMISED);
+					}
+					else if (value.equalsIgnoreCase(VALUE_FULLSCREEN)) {
+						properties.setScreenSize(DesktopFrame.FULLSCREEN);
+					}
+					else {
+						Logger.error("Failed to parse screen size value: '"+value+"'");
+					}
 				}
 				else if (field.equalsIgnoreCase(FIELD_LANG)) {
 					properties.setLang(value);

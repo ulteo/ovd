@@ -20,11 +20,14 @@
 
 package org.ulteo.ovd.client.profile;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.ini4j.Ini;
+import org.ulteo.Logger;
+import org.ulteo.ovd.client.desktop.DesktopFrame;
 import org.ulteo.ovd.integrated.Constants;
 
 public class ProfileIni extends Profile {
@@ -105,22 +108,17 @@ public class ProfileIni extends Profile {
 			ini.put(INI_SECTION_PUBLICATION, FIELD_AUTOPUBLISH, VALUE_FALSE);
 		
 
-		switch (properties.getScreenSize()) {
-			case 0 :
-				ini.put(INI_SECTION_SCREEN, FIELD_SCREENSIZE, VALUE_800X600);
-				break;
-			case 1 :
-				ini.put(INI_SECTION_SCREEN, FIELD_SCREENSIZE, VALUE_1024X768);
-				break;
-			case 2 :
-				ini.put(INI_SECTION_SCREEN, FIELD_SCREENSIZE, VALUE_1280X678);
-				break;
-			case 3 :
-				ini.put(INI_SECTION_SCREEN, FIELD_SCREENSIZE, VALUE_MAXIMIZED);
-				break;
-			case 4 :
+		Dimension screensize = properties.getScreenSize();
+		if (screensize != null) {
+			if (screensize.equals(DesktopFrame.FULLSCREEN)) {
 				ini.put(INI_SECTION_SCREEN, FIELD_SCREENSIZE, VALUE_FULLSCREEN);
-				break;
+			}
+			else if (screensize.equals(DesktopFrame.MAXIMISED)) {
+				ini.put(INI_SECTION_SCREEN, FIELD_SCREENSIZE, VALUE_MAXIMIZED);
+			}
+			else {
+				ini.put(INI_SECTION_SCREEN, FIELD_SCREENSIZE, screensize.width+"x"+screensize.height);
+			}
 		}
 		
 		ini.put(INI_SECTION_SESSION, FIELD_LANG, properties.getLang());
@@ -191,16 +189,28 @@ public class ProfileIni extends Profile {
 		
 		value = ini.get(INI_SECTION_SCREEN, FIELD_SCREENSIZE);
 		if (value != null) {
-			if(value.equals(VALUE_800X600))
-				properties.setScreenSize(ProfileProperties.SCREENSIZE_800X600);
-			else if(value.equals(VALUE_1024X768))
-				properties.setScreenSize(ProfileProperties.SCREENSIZE_1024X768);
-			else if(value.equals(VALUE_1280X678))
-				properties.setScreenSize(ProfileProperties.SCREENSIZE_1280X678);
-			else if(value.equals(VALUE_MAXIMIZED))
-				properties.setScreenSize(ProfileProperties.MAXIMIZED);
-			else
-				properties.setScreenSize(ProfileProperties.FULLSCREEN);
+			int pos = value.indexOf("x");
+
+			if (pos != -1 && value.lastIndexOf("x") == pos) {
+				try {
+					Dimension dim = new Dimension();
+					dim.width = Integer.parseInt(value.substring(0, pos));
+					dim.height = Integer.parseInt(value.substring(pos + 1, value.length()));
+
+					properties.setScreenSize(dim);
+				} catch (NumberFormatException ex) {
+					Logger.error("Failed to parse screen size value: '"+value+"'");
+				}
+			}
+			else if (value.equalsIgnoreCase(VALUE_MAXIMIZED)) {
+				properties.setScreenSize(DesktopFrame.MAXIMISED);
+			}
+			else if (value.equalsIgnoreCase(VALUE_FULLSCREEN)) {
+				properties.setScreenSize(DesktopFrame.FULLSCREEN);
+			}
+			else {
+				Logger.error("Failed to parse screen size value: '"+value+"'");
+			}
 		}
 		
 		value = ini.get(INI_SECTION_SESSION, FIELD_LANG);
