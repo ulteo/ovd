@@ -164,10 +164,11 @@ public class Cache {
 		if ((cache_id < bitmapcache.length) && (cache_idx < bitmapcache[0].length)) {
 			bitmapcache[cache_id][cache_idx] = bitmap;
 
-			if (this.opt.use_rdp5) {
-				if (++num_bitmaps_in_memory[cache_id] > Rdp.BMPCACHE2_C2_CELLS)
-				removeLRUBitmap(cache_id);
-			}
+//It is not the client which decide to remove a part of it cache
+//			if (this.opt.use_rdp5) {
+//				if (++num_bitmaps_in_memory[cache_id] > Rdp.BMPCACHE2_C2_CELLS)
+//				removeLRUBitmap(cache_id);
+//			}
 
 			bitmapcache[cache_id][cache_idx] = bitmap;
 			bitmapcache[cache_id][cache_idx].usage = stamp;
