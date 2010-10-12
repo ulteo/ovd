@@ -64,6 +64,7 @@ class HttpServer(AbstractCommunication):
 
 class ThreadPoolingHttpServer(HTTPServer):
 	def __init__(self, server_address, RequestHandlerClass, numberOfThread):
+		self.serverHasBeLanched = False
 		HTTPServer.__init__(self, server_address, RequestHandlerClass)
 		self.threadNumber = numberOfThread
 		
@@ -90,13 +91,19 @@ class ThreadPoolingHttpServer(HTTPServer):
 	def process_request(self, request, client_address):
 		self.spooler.put((request, client_address))
 	
+	def serve_forever(self):
+		self.serverHasBeLanched = True
+		HTTPServer.serve_forever(self)
+	
 	def server_close(self):
-		try:
-			HTTPServer.shutdown(self)
-		except Exception, err:
-			# with python 2.5 shutdown does not exist
-			pass
-		HTTPServer.server_close(self)
+		if self.serverHasBeLanched:
+			try:
+				HTTPServer.shutdown(self)
+			except Exception, err:
+				# with python 2.5 shutdown does not exist
+				pass
+			
+			HTTPServer.server_close(self)
 		
 		for t in self.threads:
 			if t.isAlive():
