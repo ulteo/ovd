@@ -1,8 +1,3 @@
-citadel-server	citadel/Administrator	string	admin
-citadel-server	citadel/Password	password	admin
-citadel-server	citadel/Password_again	password	admin
-citadel-server	citadel/ServerIPAddress	string	0.0.0.0
-citadel-server	citadel/LoginType	string	Internal
 mysql-server-5.1	mysql-server/root_password_again	password	
 mysql-server-5.1	mysql-server/root_password	password	
 ulteo-ovd-session-manager	ulteo-ovd-session-manager/admin_login	string	admin
