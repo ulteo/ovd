@@ -51,7 +51,7 @@ public class WindowsDiskManager extends DiskManager {
 		String driveString;
 		for (File drive : drives) {
 			driveString = drive.getAbsolutePath();
-			if (driveString.equalsIgnoreCase("A:\\") || driveString.equalsIgnoreCase("D:\\"))
+			if (driveString.equalsIgnoreCase("A:\\"))
 				continue;
 			newDrives.add(driveString);
 		}
