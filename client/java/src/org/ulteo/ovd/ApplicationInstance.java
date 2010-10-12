@@ -31,6 +31,7 @@ import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 import org.ulteo.rdp.rdpdr.DeviceListener;
 import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
+import org.ulteo.rdp.rdpdr.OVDRdpdrDisk;
 
 public class ApplicationInstance implements DeviceListener, OvdAppListener {
 	public static final int STOPPING = 0;
@@ -45,7 +46,7 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 	private int token = -1;
 	private String sharename = null;
 	private String path = null;
-	private RdpdrDevice waitedDevice = null;
+	private OVDRdpdrDisk waitedDevice = null;
 	private int state = STOPPED;
 	private boolean launchedFromShortcut = false;
 
@@ -170,6 +171,8 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 		if (device != this.waitedDevice)
 			return;
 
+		((OVDRdpdrDisk) device).setInternalUsage(true);
+
 		Logger.info("Device "+device.name+"("+device.handle+") connected");
 
 		OvdAppChannel ovdApp = this.app.getConnection().getOvdAppChannel();
@@ -206,10 +209,12 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 		OvdAppChannel ovdApp = this.app.getConnection().getOvdAppChannel();
 
 		ovdApp.removeOvdAppListener(this);
-
-		ovdApp.removeShareUsedByApp(this.waitedDevice, this.token);
-		if (! ovdApp.isShareUsed(this.waitedDevice))
-			this.app.getConnection().getRdpdrChannel().unmountDrive(this.waitedDevice.get_name(), this.waitedDevice.get_local_path());
+		
+		if (this.waitedDevice != null) {
+			ovdApp.removeShareUsedByApp(this.waitedDevice, this.token);
+			if (! ovdApp.isShareUsed(this.waitedDevice) && this.waitedDevice.getInternalUsage())
+				this.app.getConnection().getRdpdrChannel().unmountDrive(this.waitedDevice.get_name(), this.waitedDevice.get_local_path());
+		}
 	}
 
 	public void ovdInstanceError(int instance_) {

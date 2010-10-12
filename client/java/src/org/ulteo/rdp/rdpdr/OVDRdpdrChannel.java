@@ -246,7 +246,7 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		return null;
 	}
 
-	public RdpdrDevice getDeviceFromFile(String file) throws InvalidParameterException {
+	public OVDRdpdrDisk getDeviceFromFile(String file) throws InvalidParameterException {
 		int pos = file.lastIndexOf(Constants.FILE_SEPARATOR);
 
 		if (pos == -1)
@@ -271,19 +271,19 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 				share_local_path = share_local_path.substring(0, share_local_path.length() - 1);
 			
 			if (share_local_path.equals(path) || path.startsWith(share_local_path))
-				return device;
+				return (OVDRdpdrDisk) device;
 		}
 		
 		return null;
 	}
 
-	public RdpdrDevice mountDeviceFromFile(String file) {
+	public OVDRdpdrDisk mountDeviceFromFile(String file) {
 		int pos = file.lastIndexOf(Constants.FILE_SEPARATOR);
 		String path = file.substring(0, pos);
 		String name = "tmp"+UUID.randomUUID();
 
 		if (this.mountNewDrive(name, path)) {
-			return this.getDeviceFromName(name);
+			return (OVDRdpdrDisk) this.getDeviceFromName(name);
 		}
 
 		Logger.error("Failed to mount drive '"+name+"' ==> '"+path+"'");
@@ -312,7 +312,7 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		logger.info("mount a new drive "+name+" => "+path);
 		String magic = "rDAD";
 		int index = getNextFreeSlot();
-		Disk d = new Disk(this, path, name);
+		OVDRdpdrDisk d = new OVDRdpdrDisk(this, path, name);
 		
 		RdpPacket_Localised s;
 		this.register(d);
