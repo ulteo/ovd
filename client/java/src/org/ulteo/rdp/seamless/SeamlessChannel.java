@@ -74,7 +74,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 
 		Window sf;
 
-		if ((flags & WINDOW_CREATE_POPUP) != 0) {
+		if (parent != 0 && (flags & WINDOW_CREATE_POPUP) != 0) {
 			String parentName = "w_"+parent;
 			Window sf_parent;
 
