@@ -107,9 +107,9 @@ class Role(AbstractRole):
 				if not share.disable():
 					ret = False
 		
-		for share in self.get_enabled_usershares():
-			Logger.debug("FileServer:: Removing share '%s'"%(share))
-			s, o = commands.getstatusoutput("net usershare delete %s"%(share))
+		for usershare in self.get_enabled_usershares():
+			Logger.debug("FileServer:: Removing share '%s'"%(usershare))
+			s, o = commands.getstatusoutput("net usershare delete %s"%(usershare))
 			if s is not 0:
 				Logger.error("FS: unable to 'net usershare delete': %d => %s"%(s, o))
 				ret = False
