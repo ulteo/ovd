@@ -70,7 +70,7 @@ def main():
 		
 		order = struct.unpack('>B', packet[0])[0]
 		if order == OvdAppChannel.ORDER_START:
-			if len(packet) != 9:
+			if len(packet) < 9:
 				print "Packet length error"
 				continue
 			token = struct.unpack('<I', packet[1:5])[0]
@@ -103,7 +103,7 @@ def main():
 			ptr+= l
 			
 			l = struct.unpack('<I', packet[ptr:ptr+4])[0]
-			if len(packet) != ptr + l:
+			if len(packet) < ptr + l:
 				print "Packet length error"
 				continue
 			ptr+= 4
