@@ -383,6 +383,10 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			if (! StartConnection.getFormValuesFromRegistry())
 				org.ulteo.Logger.warn("No available configuration from registry");
 		}
+		else {
+			if (! StartConnection.getFormValuesFromFile(null))
+				org.ulteo.Logger.warn("The default configuration file does not exist.");
+		}
 
 		if (StartConnection.main_options.nltm && (StartConnection.main_options.username != null || StartConnection.main_options.password != null)) {
 			org.ulteo.Logger.error("You cannot use --ntml with -u or -p");
