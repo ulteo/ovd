@@ -158,7 +158,7 @@ class Profile(AbstractProfile):
 	
 	
 	def overrideRegistry(self, hiveName):
-		if self.profile is not None or len(self.sharedFolders)>0
+		if self.profile is not None or len(self.sharedFolders)>0:
 			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software", 0, win32con.KEY_SET_VALUE)
 			win32api.RegCreateKey(key, r"Ulteo")
 			win32api.RegCloseKey(key)
