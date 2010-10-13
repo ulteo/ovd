@@ -41,7 +41,7 @@ class Profile(AbstractProfile):
 	
 	
 	def hasProfile(self):
-		return (self.profile is None)
+		return (self.profile is not None)
 	
 	
 	def mount(self):
