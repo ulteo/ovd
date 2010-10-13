@@ -146,6 +146,7 @@ class Dialog(AbstractDialog):
 	
 	
 	def req_share_delete(self, request):
+		Logger.debug("FS:dialog::delete_share")
 		try:
 			document = minidom.parseString(request["data"])
 			roodNode = document.documentElement
@@ -164,12 +165,13 @@ class Dialog(AbstractDialog):
 			doc.appendChild(rootNode)
 			return self.req_answer(doc)
 		
-		if self.role_instance.shares.has_key(share_id):
-			share = self.role_instance.shares[share_id]
-			del(self.role_instance.shares[share_id])
-		else:
-			share = Share(share_id, Config.spool)
-			share.delete()
+		if not self.role_instance.shares.has_key(share_id):
+			Logger.debug("Unknown share '%s'"%(share_id))
+			return self.share2xml(Share(share_id, Config.spool))
+		
+		share = self.role_instance.shares[share_id]
+		share.delete()
+		del(self.role_instance.shares[share_id])
 		
 		return self.share2xml(share)
 	
