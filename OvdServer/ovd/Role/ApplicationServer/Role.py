@@ -293,7 +293,23 @@ class Role(AbstractRole):
 	
 	
 	def updateApplications(self):
-		appsdetect = RolePlatform.ApplicationsDetection()
+		try:
+			appsdetect = RolePlatform.ApplicationsDetection()
+		except:
+			Logger.warn("Bug #3: Unable to access to registry in the same time a user access to a session")
+			appsdetect = None
+			for i in xrange(3):
+				try:
+				  	appsdetect = RolePlatform.ApplicationsDetection()
+				  	break
+				except:
+					pass
+			
+			if appsdetect is None:
+				Logger.info("Unsuccefully build ApplicationDetection object in 4 times")
+				return
+		
+		
 		self.applications = appsdetect.get()
 		
 		
