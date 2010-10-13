@@ -159,6 +159,10 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			StartConnection.main_options.showProgressBar = properties.getShowProgressbar();
 			StartConnection.optionMask |= StartConnection.FLAG_OPTION_SHOW_PROGRESS_BAR;
 		}
+		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_GEOMETRY) == 0) {
+			StartConnection.main_options.geometry = properties.getScreenSize();
+			StartConnection.optionMask |= StartConnection.FLAG_OPTION_GEOMETRY;
+		}
 	}
 
 	public static ProfileProperties getProfileFromIni(String path) {
