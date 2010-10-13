@@ -39,11 +39,11 @@ class Rec(ProcessEvent):
 	
 	def process_IN_CREATE(self, event_k):
 		path = os.path.join(event_k.path,event_k.name)
-		os.chown(path, Config.uid, Config.gid)
+		os.lchown(path, Config.uid, Config.gid)
 		
 		if os.path.isdir(path):
 			Logger.debug("FileServer::Rec chmod dir %s"%(path))
 			os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.S_ISGID)
-		else:
+		elif os.path.isfile(path):
 			Logger.debug("FileServer::Rec chmod file %s"%(path))
 			os.chmod(path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP)
