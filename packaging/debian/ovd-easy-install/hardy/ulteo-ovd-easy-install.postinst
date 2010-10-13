@@ -30,6 +30,8 @@ conf_mysql()
     [ -z "$CHROOTDIR" ] && CHROOTDIR=/opt/ulteo
     chroot $CHROOTDIR /etc/init.d/ovdSlaveServer restart
 
+    sleep 5 # waiting hack cause the first request in the SM is corrupted
+
     php /usr/share/ulteo/sessionmanager/admin/init/demo.php
 }
 
