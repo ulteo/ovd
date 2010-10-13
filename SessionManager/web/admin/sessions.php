@@ -168,7 +168,10 @@ else {
 			if (count($sessions) > 1)
 				echo '		<td><input class="input_checkbox" type="checkbox" name="selected_session[]" value="'.$session->id.'" /></td>';
 			echo '		<td><a href="sessions.php?info='.$session->id.'">'.$session->id.'</td>';
-			echo '		<td><a href="servers.php?action=manage&fqdn='.$session->server.'">'.$session->server.'</td>';
+			echo '		<td>';
+			foreach ($session->getAttribute('servers') as $server)
+				echo ' <a href="servers.php?action=manage&fqdn='.$server.'">'.$server.'</a>';
+			echo '		</td>';
 			echo '		<td><a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</td>';
 			echo '		<td>'.$session->stringStatus().'</td>';
 			echo '		<td>';
