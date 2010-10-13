@@ -20,6 +20,7 @@
 
 package org.ulteo.ovd.client.profile;
 
+import com.ice.jni.registry.RegStringValue;
 import com.ice.jni.registry.Registry;
 import com.ice.jni.registry.RegistryException;
 import com.ice.jni.registry.RegistryKey;
@@ -30,23 +31,15 @@ import org.ulteo.ovd.client.desktop.DesktopFrame;
 
 public class ProfileRegistry extends Profile {
 
-	public static ProfileProperties loadProfile() {
-		ProfileProperties properties = null;
-		RegistryKey confKey = Registry.openSubkey(Registry.HKEY_LOCAL_MACHINE, "Software\\Ulteo\\OVD\\NativeClient", RegistryKey.ACCESS_READ);
-
-		if (confKey == null)
-			confKey = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software\\Ulteo\\OVD\\NativeClient", RegistryKey.ACCESS_READ);
-
-		if (confKey == null)
-			return properties;
-
-		properties = new ProfileProperties();
+	private static ProfileProperties extractPropertiesFromKey(RegistryKey key, ProfileProperties properties) {
+		if (key == null || properties == null)
+			return null;
 
 		try {
-			Enumeration fieldsEnum = confKey.valueElements();
+			Enumeration fieldsEnum = key.valueElements();
 			while (fieldsEnum.hasMoreElements()) {
 				String field = (String) fieldsEnum.nextElement();
-				String value = confKey.getStringValue(field);
+				String value = key.getStringValue(field);
 
 				if (field.equalsIgnoreCase(FIELD_LOGIN)) {
 					properties.setLogin(value);
@@ -124,8 +117,99 @@ public class ProfileRegistry extends Profile {
 		} catch (RegistryException ex) {
 			Logger.error("Getting profile preferencies from registry failed: "+ex.getMessage());
 		}
+		return properties;
+	}
 
+	public static ProfileProperties loadProfile() {
+		ProfileProperties properties = new ProfileProperties();
+
+		RegistryKey key = null;
+
+		key = Registry.openSubkey(Registry.HKEY_LOCAL_MACHINE, "Software\\Ulteo\\OVD\\NativeClient", RegistryKey.ACCESS_READ);
+		if (key != null)
+			properties = ProfileRegistry.extractPropertiesFromKey(key, properties);
+
+		key = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software\\Ulteo\\OVD\\NativeClient", RegistryKey.ACCESS_READ);
+		if (key != null)
+			properties = ProfileRegistry.extractPropertiesFromKey(key, properties);
+
+		if (key == null)
+			return null;
 
 		return properties;
+	}
+
+	public static void saveProfile(ProfileProperties properties) {
+		RegistryKey key = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software\\Ulteo\\OVD\\NativeClient", RegistryKey.ACCESS_WRITE);
+		if (key == null) {
+			Logger.debug("The key 'HKCU\\Software\\Ulteo\\OVD\\NativeClient' does not exist, will create it");
+
+			key = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software", RegistryKey.ACCESS_WRITE);
+			try {
+				key = key.createSubKey("Ulteo", "");
+				key = key.createSubKey("OVD", "");
+				key = key.createSubKey("NativeClient", "");
+			} catch (RegistryException ex) {
+				Logger.error("Failed to create registry key: "+ex.getMessage());
+				return;
+			}
+		}
+
+		try {
+			String tmpStr = null;
+
+			tmpStr = properties.getLogin();
+			if (tmpStr != null)
+				key.setValue(new RegStringValue(key, FIELD_LOGIN, tmpStr));
+
+			tmpStr = properties.getHost();
+			if (tmpStr != null)
+				key.setValue(new RegStringValue(key, FIELD_HOST, tmpStr));
+
+			tmpStr = properties.getLang();
+			if (tmpStr != null)
+				key.setValue(new RegStringValue(key, FIELD_LANG, tmpStr));
+
+			tmpStr = properties.getKeymap();
+			if (tmpStr != null)
+				key.setValue(new RegStringValue(key, FIELD_KEYMAP, tmpStr));
+
+			int sessionMode = properties.getSessionMode();
+			if (sessionMode > -1) {
+				if (properties.getSessionMode() == ProfileProperties.MODE_DESKTOP)
+					tmpStr = VALUE_MODE_DESKTOP;
+				else if (properties.getSessionMode() == ProfileProperties.MODE_APPLICATIONS)
+					tmpStr = VALUE_MODE_APPLICATIONS;
+				else
+					tmpStr = VALUE_MODE_AUTO;
+				key.setValue(new RegStringValue(key, FIELD_MODE, tmpStr));
+			}
+
+			Dimension screensize = properties.getScreenSize();
+			if (screensize != null) {
+				if (screensize.equals(DesktopFrame.FULLSCREEN)) {
+					key.setValue(new RegStringValue(key, FIELD_SCREENSIZE, VALUE_FULLSCREEN));
+				}
+				else if (screensize.equals(DesktopFrame.MAXIMISED)) {
+					key.setValue(new RegStringValue(key, FIELD_SCREENSIZE, VALUE_MAXIMIZED));
+				}
+				else {
+					key.setValue(new RegStringValue(key, FIELD_SCREENSIZE, screensize.width+"x"+screensize.height));
+				}
+				screensize = null;
+			}
+
+			boolean tmpBool = properties.getAutoPublish();
+			key.setValue(new RegStringValue(key, FIELD_AUTOPUBLISH, ""+tmpBool));
+
+			tmpBool = properties.getUseLocalCredentials();
+			key.setValue(new RegStringValue(key, FIELD_LOCALCREDENTIALS, ""+tmpBool));
+
+			tmpBool = properties.getShowProgressbar();
+			key.setValue(new RegStringValue(key, FIELD_SHOW_PROGRESSBAR, ""+tmpBool));
+			
+		} catch (RegistryException ex) {
+			Logger.error("Setting profile preferencies in the registry failed: "+ex.getMessage());
+		}
 	}
 }

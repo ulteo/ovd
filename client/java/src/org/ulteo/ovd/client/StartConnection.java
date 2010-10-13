@@ -867,8 +867,31 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	}
 
 	private void saveProfile() throws IOException {
+		ProfileProperties properties = new ProfileProperties(this.opts.username, this.opts.server, this.opts.sessionMode, this.opts.autopublish, this.opts.nltm, this.opts.geometry, this.opts.lang, this.opts.keymap);
+
+		if ((this.flags & StartConnection.FLAG_REGISTRY_OPTS) != 0) {
+			ProfileRegistry.saveProfile(properties);
+			return;
+		}
+
 		ProfileIni ini = new ProfileIni();
-		ini.setProfile(null, null);
-		ini.saveProfile(new ProfileProperties(this.opts.username, this.opts.server, this.opts.sessionMode, this.opts.autopublish, this.opts.nltm, this.opts.geometry, this.opts.lang, this.opts.keymap));
+
+		if ((this.flags & StartConnection.FLAG_FILE_OPTS) != 0) {
+
+			String path = null;
+			String profile = this.opts.profile;
+			int idx = this.opts.profile.lastIndexOf(System.getProperty("file.separator"));
+
+			if (idx != -1) {
+				profile = this.opts.profile.substring(idx + 1, this.opts.profile.length());
+				path = this.opts.profile.substring(0, idx + 1);
+			}
+
+			ini.setProfile(profile, path);
+		}
+		else {
+			ini.setProfile(null, null);// Default profile
+		}
+		ini.saveProfile(properties);
 	}
 }
