@@ -240,7 +240,7 @@ class Page(Plugin):
 
 class Install(InstallPlugin):
     def prepare(self, unfiltered=False):
-        execute_root('/usr/share/ubiquity/ovd-setup')
+        execute_root('/usr/lib/ubiquity/ovd-setup/ovd-setup')
         return ([], [])
 
     def install(self, target, progress, *args, **kwargs):
