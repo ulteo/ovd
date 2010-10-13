@@ -138,8 +138,11 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			StartConnection.optionMask |= StartConnection.FLAG_OPTION_NTLM;
 		}
 		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_AUTO_INTEGRATION) == 0) {
-			StartConnection.main_options.autopublish = properties.getAutoPublish();
-			StartConnection.optionMask |= StartConnection.FLAG_OPTION_AUTO_INTEGRATION;
+			boolean auto_integration = properties.getAutoPublish();
+			if (! (auto_integration && StartConnection.main_options.sessionMode == Properties.MODE_DESKTOP)) {
+				StartConnection.main_options.autopublish = auto_integration;
+				StartConnection.optionMask |= StartConnection.FLAG_OPTION_AUTO_INTEGRATION;
+			}
 		}
 		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_LANGUAGE) == 0) {
 			String language = properties.getLang();
@@ -160,8 +163,11 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			StartConnection.optionMask |= StartConnection.FLAG_OPTION_SHOW_PROGRESS_BAR;
 		}
 		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_GEOMETRY) == 0) {
-			StartConnection.main_options.geometry = properties.getScreenSize();
-			StartConnection.optionMask |= StartConnection.FLAG_OPTION_GEOMETRY;
+			Dimension geometry = properties.getScreenSize();
+			if (! (geometry != null && StartConnection.main_options.sessionMode == Properties.MODE_REMOTEAPPS)) {
+				StartConnection.main_options.geometry = geometry;
+				StartConnection.optionMask |= StartConnection.FLAG_OPTION_GEOMETRY;
+			}
 		}
 	}
 
