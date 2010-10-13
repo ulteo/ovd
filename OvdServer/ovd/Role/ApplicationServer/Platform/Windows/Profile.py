@@ -53,11 +53,11 @@ class Profile(AbstractProfile):
 		self.mountPoint = "%s:"%(buf)
 		
 		try:
-			win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, self.mountPoint, r"\\%s\%s"%(self.profile["host"], self.profile["dir"]), None, self.profile["login"], self.profile["password"])
+			win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, self.mountPoint, r"\\%s\%s"%(self.profile["server"], self.profile["dir"]), None, self.profile["login"], self.profile["password"])
 		
 		except Exception, err:
 			Logger.error("Unable to mount drive")
-			Logger.debug("Unable to mount drive, '%s', try the net use command equivalent: '%s'"%(str(err), "net use %s \\\\%s\\%s %s /user:%s"%(self.mountPoint, self.profile["host"], self.profile["dir"], self.profile["password"], self.profile["login"])))
+			Logger.debug("Unable to mount drive, '%s', try the net use command equivalent: '%s'"%(str(err), "net use %s \\\\%s\\%s %s /user:%s"%(self.mountPoint, self.profile["server"], self.profile["dir"], self.profile["password"], self.profile["login"])))
 			
 			self.mountPoint = None
 			return False
@@ -174,7 +174,7 @@ class Profile(AbstractProfile):
 			win32api.RegCloseKey(key)
 			
 			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo\ovd\profile", 0, win32con.KEY_SET_VALUE)
-			win32api.RegSetValueEx(key, "host", 0, win32con.REG_SZ, self.profile["host"])
+			win32api.RegSetValueEx(key, "host", 0, win32con.REG_SZ, self.profile["server"])
 			win32api.RegSetValueEx(key, "directory", 0, win32con.REG_SZ, self.profile["dir"])
 			win32api.RegSetValueEx(key, "login", 0, win32con.REG_SZ, self.profile["login"])
 			win32api.RegSetValueEx(key, "password", 0, win32con.REG_SZ, self.profile["password"])
