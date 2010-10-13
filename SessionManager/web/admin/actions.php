@@ -852,6 +852,11 @@ if ($_REQUEST['name'] == 'User') {
 				}
 				else {
 					$u = $userDB->import($user_login);
+					$netfolders = $u->getNetworkFolders();
+					if (is_array($netfolders)) {
+						foreach ($netfolders as $netfolder)
+							Abstract_NetworkFolder::delete($netfolder);
+					}
 					$res = $userDB->remove($u);
 					
 					if (! $res) {
