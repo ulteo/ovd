@@ -502,7 +502,7 @@ function server_display_role_fs($server_, $var_) {
 		)
 	);
 	
-	foreach ($datas as $data) {
+	foreach ($datas as $k => $data) {
 		if (is_array($data['folder']) && count($data['folder']) > 0 && is_array($data['usedby'])) {
 			echo '<h3>'.$data['name'].'</h3>';
 			$count = 0;
@@ -541,11 +541,11 @@ function server_display_role_fs($server_, $var_) {
 					echo '</ul>';
 				}
 				echo '</td>';
-				echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this network folder?').'\');">';
+				echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''.(($k == 0)?_('Are you sure that you want to delete this user profile?'):_('Are you sure that you want to delete this network folder?')).'\');">';
 				echo '<input type="hidden" name="name" value="NetworkFolders" />';
 				echo '<input type="hidden" name="action" value="del" />';
 				echo '<input type="hidden" name="ids[]" value="'.$a_networkfolder->id.'" />';
-				echo '<input type="submit" value="'._('Delete this network folder').'" />';
+				echo '<input type="submit" value="'.(($k == 0)?_('Delete this user profile'):_('Delete this network folder')).'" />';
 				echo '</form></td>';
 				echo '</tr>';
 			}
