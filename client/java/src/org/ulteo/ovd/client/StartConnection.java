@@ -100,6 +100,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	public static final int FLAG_OPTION_SHOW_PROGRESS_BAR = 0x00000100;
 	public static final int FLAG_OPTION_AUTO_INTEGRATION = 0x00000200;
 	public static final int FLAG_OPTION_AUTO_START = 0x00000400;
+	public static final int FLAG_OPTION_REMEMBER_ME = 0x00004000;
 
 	public static final int FLAG_CMDLINE_OPTS = 0x00000800;
 	public static final int FLAG_FILE_OPTS = 0x00001000;
@@ -210,6 +211,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 		StartConnection.parseProperties(properties);
 
+		StartConnection.optionMask |= StartConnection.FLAG_OPTION_REMEMBER_ME;
+
 		return true;
 	}
 
@@ -219,6 +222,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			return false;
 
 		StartConnection.parseProperties(properties);
+
+		StartConnection.optionMask |= StartConnection.FLAG_OPTION_REMEMBER_ME;
 
 		return true;
 	}
@@ -485,6 +490,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		if (! this.opts.autostart) {
 			this.authFrame = new AuthFrame(this, this.opts.geometry);
 			this.loadOptions();
+			this.authFrame.setRememberMeChecked((this.flags & StartConnection.FLAG_OPTION_REMEMBER_ME) != 0);
 			this.authFrame.showWindow();
 			this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
 		}
