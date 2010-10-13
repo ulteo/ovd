@@ -59,6 +59,9 @@ function show_default() {
   $userDB = UserDB::getInstance();
   $usersgroupsList = new UsersGroupsList($_REQUEST);
   $groups = $usersgroupsList->search();
+  if (is_array($groups)) {
+    usort($groups, "usergroup_cmp");
+  }
   $searchDiv = $usersgroupsList->getForm();
 
   $has_group = ! (is_null($groups) or (count($groups) == 0));
