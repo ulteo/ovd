@@ -153,6 +153,7 @@ class UserGroupDB_ldap_memberof {
 		
 		$infos = $ldap->get_entries($sr);
 		foreach ($infos as $dn => $info) {
+			$buf = array();
 			foreach ($config_ldap['match'] as $attribut => $match_ldap) {
 				if (isset($info[$match_ldap][0])) {
 					$buf[$attribut] = $info[$match_ldap][0];
