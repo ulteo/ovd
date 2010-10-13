@@ -207,4 +207,4 @@ class Role(AbstractRole):
 				userNode.setAttribute("login", user)
 				shareNode.appendChild(userNode)
 
-		node.appendChild(shareNode)
+			node.appendChild(shareNode)
