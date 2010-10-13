@@ -50,11 +50,8 @@ class Dialog(AbstractDialog):
 		if request["method"] == "GET":
 			Logger.debug("do_GET "+path)
 			
-			if path == "/shares":
-				return self.req_list_all(request)
-		
-			elif path == "/statistics":
-				return self.req_statistics(request)
+			if path == "/info":
+				return self.req_info(request)
 		
 		elif request["method"] == "POST":
 			if path == "/share/create":
@@ -72,34 +69,10 @@ class Dialog(AbstractDialog):
 		return None
 	
 	
-	def req_list_all(self, request):
-		shares = self.role_instance.get_existing_shares()
-		infos  = self.role_instance.get_disk_size_infos()
-		
+	def req_info(self, request):
 		doc = Document()
-		rootNode = doc.createElement('shares')
-		rootNode.setAttribute("total_size", str(infos[0]))
-		rootNode.setAttribute("free_size", str(infos[1]))
-		doc.appendChild(rootNode)
-		
-		for share in shares:
-			node = doc.createElement('share')
-			node.setAttribute("id", share.name)
-			node.setAttribute("status", str(share.status()))
-			rootNode.appendChild(node)
-		
-		return self.req_answer(doc)
-	
-	
-	def req_statistics(self, request):
-		infos  = self.role_instance.get_disk_size_infos()
-		
-		doc = Document()
-		rootNode = doc.createElement('statistics')
-		sizeNode = doc.createElement('size')
-		sizeNode.setAttribute("total", str(infos[0]))
-		sizeNode.setAttribute("free", str(infos[1]))
-		rootNode.appendChild(sizeNode)
+		rootNode = doc.createElement('info')
+		self.role_instance.getReporting(rootNode)
 		doc.appendChild(rootNode)
 		
 		return self.req_answer(doc)
