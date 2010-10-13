@@ -246,7 +246,7 @@ class Server {
 		$this->setAttribute('registered', true);
 
 		if (is_array($this->roles)) {
-			foreach ($this->roles as $role) {
+			foreach ($this->roles as $role => $enabled) {
 				switch ($role) {
 					case Server::SERVER_ROLE_APS:
 						$this->updateApplications();
