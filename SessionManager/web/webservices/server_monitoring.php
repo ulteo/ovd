@@ -129,6 +129,30 @@ function parse_monitoring_XML($xml_) {
 				$sri = new ServerReportItem($ret['server'], $xml_);
 				$sri->save();
 				break;
+			case 'FileServer':
+				$size_node = $dom->getElementsByTagName('size')->item(0);
+				if (is_null($size_node))
+					break;
+
+				$ret['disk_size'] = array(
+					'total'	=>	NULL,
+					'free'	=>	NULL
+				);
+				if ($size_node->hasAttribute('total'))
+					$ret['disk_size']['total'] = $size_node->getAttribute('total');
+				if ($size_node->hasAttribute('free'))
+					$ret['disk_size']['free'] = $size_node->getAttribute('free');
+
+				$ret['shares'] = array();
+
+				$share_nodes = $dom->getElementsByTagName('share');
+				foreach ($share_nodes as $share_node) {
+					$ret['shares'][$share_node->getAttribute('id')] = array(
+						'id'		=>	$share_node->getAttribute('id'),
+						'status'	=>	$share_node->getAttribute('status')
+					);
+				}
+				break;
 		}
 	}
 
@@ -155,6 +179,11 @@ if (! $server->isAuthorized()) {
 $server->setAttribute('cpu_load', $ret['cpu_load']);
 $server->setAttribute('ram_used', $ret['ram_used']);
 
+if (array_key_exists('disk_size', $ret)) {
+	$server->setAttribute('disk_total', $ret['disk_size']['total']);
+	$server->setAttribute('disk_free', $ret['disk_size']['free']);
+}
+
 Abstract_Server::save($server); //update Server cache timestamp
 
 if (array_key_exists('sessions', $ret) && is_array($ret['sessions'])) {
@@ -177,6 +206,30 @@ if (array_key_exists('sessions', $ret) && is_array($ret['sessions'])) {
 
 		if ($modified === true)
 			Abstract_Session::save($buf); //update Session cache timestamp
+	}
+}
+
+if (array_key_exists('shares', $ret) && is_array($ret['shares'])) {
+	foreach ($ret['shares'] as $share) {
+		$buf = Abstract_NetworkFolder::load($share['id']);
+		if (! $buf) {
+			$server = Abstract_Server::load($ret['server']);
+			if (! $server)
+				continue;
+
+			$server->deleteNetworkFolder($share['id'], true);
+			continue;
+		}
+
+		$modified = false;
+
+		if ($share['status'] != $buf->status) {
+			$modified = true;
+			$buf->status = $share['status'];
+		}
+
+		if ($modified === true)
+			Abstract_NetworkFolder::save($buf);
 	}
 }
 
