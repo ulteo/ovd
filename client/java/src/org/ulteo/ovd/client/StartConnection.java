@@ -212,6 +212,10 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 		return true;
 	}
+
+	private static final int RETURN_CODE_SUCCESS = 0;
+	private static final int RETURN_CODE_ERROR = 1;
+	private static final int RETURN_CODE_BAD_ARGUMENTS = 2;
 	
 	/**
 	 * @param args
@@ -254,13 +258,14 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		StartConnection.main_options = new Options();
 		int flags = StartConnection.FLAG_CMDLINE_OPTS;
 
-		LongOpt[] alo = new LongOpt[5];
+		LongOpt[] alo = new LongOpt[6];
 		alo[0] = new LongOpt("reg", LongOpt.NO_ARGUMENT, null, 0);
 		alo[1] = new LongOpt("auto-start", LongOpt.NO_ARGUMENT, null, 1);
 		alo[2] = new LongOpt("auto-integration", LongOpt.NO_ARGUMENT, null, 2);
 		alo[3] = new LongOpt("ntlm", LongOpt.NO_ARGUMENT, null, 3);
 		alo[4] = new LongOpt("progress-bar", LongOpt.REQUIRED_ARGUMENT, null, 4);
-		Getopt opt = new Getopt(OvdClient.productName, args, "c:p:u:m:g:k:l:s:", alo);
+		alo[5] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 5);
+		Getopt opt = new Getopt(OvdClient.productName, args, "c:p:u:m:g:k:l:s:h", alo);
 
 		int c;
 		while ((c = opt.getopt()) != -1) {
@@ -290,9 +295,13 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 					else if (arg.equalsIgnoreCase("hide"))
 						StartConnection.main_options.showProgressBar = false;
 					else
-						StartConnection.usage();
+						StartConnection.usage(RETURN_CODE_BAD_ARGUMENTS);
 
 					StartConnection.optionMask |= StartConnection.FLAG_OPTION_SHOW_PROGRESS_BAR;
+					break;
+				case 5: //--help
+				case 'h':
+					StartConnection.usage(RETURN_CODE_SUCCESS);
 					break;
 				case 'c':
 					profile = new String(opt.getOptarg());
@@ -324,7 +333,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 					int pos = geometry.indexOf("x");
 					
 					if (geometry.lastIndexOf("x") != pos)
-						StartConnection.usage();
+						StartConnection.usage(RETURN_CODE_BAD_ARGUMENTS);
 
 					try {
 						StartConnection.main_options.geometry = new Dimension();
@@ -332,7 +341,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 						StartConnection.main_options.geometry.height = Integer.parseInt(geometry.substring(pos + 1, geometry.length()));
 					} catch (NumberFormatException ex) {
 						System.err.println(ex.getMessage() + "\n" + ex.getStackTrace());
-						StartConnection.usage();
+						StartConnection.usage(RETURN_CODE_BAD_ARGUMENTS);
 					}
 
 					StartConnection.optionMask |= StartConnection.FLAG_OPTION_GEOMETRY;
@@ -353,15 +362,14 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 					StartConnection.optionMask |= StartConnection.FLAG_OPTION_SERVER;
 					break;
 				default:
-					usage();
-					System.exit(0);
+					usage(RETURN_CODE_BAD_ARGUMENTS);
 					break;
 			}
 		}
 
 		if ((flags & StartConnection.FLAG_FILE_OPTS) != 0 && (flags & StartConnection.FLAG_REGISTRY_OPTS) != 0) {
 			org.ulteo.Logger.error("You cannot use --reg with -c");
-			StartConnection.usage();
+			StartConnection.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 
 		if ((flags & StartConnection.FLAG_FILE_OPTS) != 0) {
@@ -375,20 +383,20 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 		if (StartConnection.main_options.nltm && (StartConnection.main_options.username != null || StartConnection.main_options.password != null)) {
 			org.ulteo.Logger.error("You cannot use --ntml with -u or -p");
-			StartConnection.usage();
+			StartConnection.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 		if (StartConnection.main_options.sessionMode == Properties.MODE_DESKTOP && StartConnection.main_options.autopublish) {
 			org.ulteo.Logger.error("You cannot use --auto-integration in desktop mode");
-			StartConnection.usage();
+			StartConnection.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 		if (StartConnection.main_options.sessionMode == Properties.MODE_REMOTEAPPS && StartConnection.main_options.geometry != null) {
 			org.ulteo.Logger.error("You cannot use -g in applications mode");
-			StartConnection.usage();
+			StartConnection.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 		if (StartConnection.main_options.autostart) {
 			if (((StartConnection.main_options.username == null || StartConnection.main_options.password == null) && !StartConnection.main_options.nltm) || StartConnection.main_options.server == null) {
 				org.ulteo.Logger.error("You must specify the server (-s) and your credentials (-u, -p or --ntlm)");
-				StartConnection.usage();
+				StartConnection.usage(RETURN_CODE_BAD_ARGUMENTS);
 			}
 
 			if (StartConnection.main_options.sessionMode == -1) {
@@ -402,10 +410,10 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		}
 		s.waitThread();
 
-		System.exit(0);
+		System.exit(RETURN_CODE_SUCCESS);
 	}
 
-	public static void usage() {
+	public static void usage(int status) {
 		System.err.println(StartConnection.productName);
 		System.err.println("Usage: java -jar OVDNativeClient.jar [options]");
 		System.err.println("\t-c file				Load configuration from `file`");
@@ -429,7 +437,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		System.err.println("\tLoad configuration from registry");
 		System.err.println("\t\tjava -jar OVDNativeClient.jar --reg");
 
-		System.exit(0);
+		System.exit(status);
 	}
 
 	private static final String ERROR_AUTHENTICATION_FAILED = "auth_failed";
@@ -705,7 +713,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 				ret = dialog.askForSession(request);
 			else
 				ret = dialog.askForSession(this.opts.username, this.opts.password, request);
-			
+
 			if (ret == false) {
 				this.disableLoadingMode();
 				return exit;
