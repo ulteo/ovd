@@ -70,6 +70,7 @@ import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.sm.Callback {
 	public static class Options {
+		public String profile = null;
 		public String username = null;
 		public String password = null;
 		public String server = null;
@@ -87,6 +88,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 	public static int optionMask = 0x00000000;
 	
+	public static final int FLAG_NO_OPTS = 0x00000000;
 	public static final int FLAG_OPTION_USERNAME = 0x00000001;
 	public static final int FLAG_OPTION_PASSWORD = 0x00000002;
 	public static final int FLAG_OPTION_SERVER = 0x00000004;
@@ -99,19 +101,17 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	public static final int FLAG_OPTION_AUTO_INTEGRATION = 0x00000200;
 	public static final int FLAG_OPTION_AUTO_START = 0x00000400;
 
+	public static final int FLAG_CMDLINE_OPTS = 0x00000800;
+	public static final int FLAG_FILE_OPTS = 0x00001000;
+	public static final int FLAG_REGISTRY_OPTS = 0x00002000;
+
 	public static final String productName = "Ulteo OVD Client";
-
-	public static final int FLAG_NO_OPTS = 0x00000000;
-	public static final int FLAG_CMDLINE_OPTS = 0x00000001;
-	public static final int FLAG_FILE_OPTS = 0x00000002;
-	public static final int FLAG_REGISTRY_OPTS = 0x00000004;
-
 
 	private static void parseProperties(ProfileProperties properties) {
 		if (properties == null)
 			return;
 
-		if (StartConnection.main_options.sessionMode == -1) {
+		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_SESSION_MODE) == 0) {
 			StartConnection.main_options.sessionMode =  Properties.MODE_ANY;
 			if (properties.getSessionMode() == ProfileProperties.MODE_APPLICATIONS)
 				StartConnection.main_options.sessionMode = Properties.MODE_REMOTEAPPS;
@@ -254,9 +254,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		if (! org.ulteo.Logger.initInstance(true, log_dir+Constants.FILE_SEPARATOR +org.ulteo.Logger.getDate()+".log", true))
 			System.err.println("Unable to iniatialize logger instance");
 
-		String profile = null;
 		StartConnection.main_options = new Options();
-		int flags = StartConnection.FLAG_CMDLINE_OPTS;
+		StartConnection.optionMask = StartConnection.FLAG_CMDLINE_OPTS;
 
 		LongOpt[] alo = new LongOpt[6];
 		alo[0] = new LongOpt("reg", LongOpt.NO_ARGUMENT, null, 0);
@@ -271,7 +270,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		while ((c = opt.getopt()) != -1) {
 			switch (c) {
 				case 0: //--reg
-					flags |= StartConnection.FLAG_REGISTRY_OPTS;
+					StartConnection.optionMask |= StartConnection.FLAG_REGISTRY_OPTS;
 					break;
 				case 1: //--auto-start
 					StartConnection.main_options.autostart = true;
@@ -304,8 +303,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 					StartConnection.usage(RETURN_CODE_SUCCESS);
 					break;
 				case 'c':
-					profile = new String(opt.getOptarg());
-					flags |= StartConnection.FLAG_FILE_OPTS;
+					StartConnection.main_options.profile = new String(opt.getOptarg());
+					StartConnection.optionMask |= StartConnection.FLAG_FILE_OPTS;
 					break;
 				case 'p':
 					StartConnection.main_options.password = new String(opt.getOptarg());
@@ -367,16 +366,16 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			}
 		}
 
-		if ((flags & StartConnection.FLAG_FILE_OPTS) != 0 && (flags & StartConnection.FLAG_REGISTRY_OPTS) != 0) {
+		if ((StartConnection.optionMask & StartConnection.FLAG_FILE_OPTS) != 0 && (StartConnection.optionMask & StartConnection.FLAG_REGISTRY_OPTS) != 0) {
 			org.ulteo.Logger.error("You cannot use --reg with -c");
 			StartConnection.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 
-		if ((flags & StartConnection.FLAG_FILE_OPTS) != 0) {
-			if (! StartConnection.getFormValuesFromFile(profile))
-				org.ulteo.Logger.warn("The configuration file \""+profile+"\" doesn't exist.");
+		if ((StartConnection.optionMask & StartConnection.FLAG_FILE_OPTS) != 0) {
+			if (! StartConnection.getFormValuesFromFile(StartConnection.main_options.profile))
+				org.ulteo.Logger.warn("The configuration file \""+StartConnection.main_options.profile+"\" doesn't exist.");
 		}
-		else if ((flags & StartConnection.FLAG_REGISTRY_OPTS) != 0) {
+		else if ((StartConnection.optionMask & StartConnection.FLAG_REGISTRY_OPTS) != 0) {
 			if (! StartConnection.getFormValuesFromRegistry())
 				org.ulteo.Logger.warn("No available configuration from registry");
 		}
@@ -404,7 +403,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			}
 		}
 
-		StartConnection s = new StartConnection(StartConnection.main_options, flags);
+		StartConnection s = new StartConnection(StartConnection.main_options, StartConnection.optionMask);
 		if (StartConnection.main_options.autostart) {
 			s.startThread();
 		}
