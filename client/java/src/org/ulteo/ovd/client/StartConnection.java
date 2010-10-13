@@ -377,7 +377,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 		if ((StartConnection.optionMask & StartConnection.FLAG_FILE_OPTS) != 0) {
 			if (! StartConnection.getFormValuesFromFile(StartConnection.main_options.profile))
-				org.ulteo.Logger.warn("The configuration file \""+StartConnection.main_options.profile+"\" doesn't exist.");
+				org.ulteo.Logger.warn("The configuration file \""+StartConnection.main_options.profile+"\" does not exist.");
 		}
 		else if ((StartConnection.optionMask & StartConnection.FLAG_REGISTRY_OPTS) != 0) {
 			if (! StartConnection.getFormValuesFromRegistry())
