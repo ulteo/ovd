@@ -470,7 +470,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.init();
 
 		if (! this.opts.autostart) {
-			this.authFrame = new AuthFrame(this);
+			this.authFrame = new AuthFrame(this, this.opts.geometry);
 			this.loadOptions();
 			this.authFrame.showWindow();
 			this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
@@ -626,22 +626,10 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		else if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeDesktop())
 			this.opts.sessionMode = Properties.MODE_DESKTOP;
 				
-		switch (this.authFrame.getResBar().getValue()) {
-			case 0 :
-				this.opts.geometry = DesktopFrame.SMALL_RES;
-				break;
-			case 1 :
-				this.opts.geometry = DesktopFrame.MEDUIM_RES;
-				break;
-			case 2 :
-				this.opts.geometry = DesktopFrame.HIGH_RES;
-				break;
-			case 3 :
-				this.opts.geometry = DesktopFrame.MAXIMISED;
-				break;
-			case 4 :
-				this.opts.geometry = DesktopFrame.FULLSCREEN;
-				break;
+		this.opts.geometry = this.authFrame.getResolution();
+		if (this.opts.geometry == null) {
+			org.ulteo.Logger.error("No resolution selected: will select the default resolution");
+			this.opts.geometry = DesktopFrame.DEFAULT_RES;
 		}
 		
 		this.opts.nltm = this.authFrame.isUseLocalCredentials();

@@ -32,7 +32,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -50,11 +49,13 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.ulteo.Logger;
 import org.ulteo.ovd.client.gui.GUIActions;
 import org.ulteo.ovd.client.gui.SwingTools;
 
 import org.ulteo.ovd.client.I18n;
 import org.ulteo.ovd.client.Language;
+import org.ulteo.ovd.client.desktop.DesktopFrame;
 
 public class AuthFrame implements ActionListener, Runnable {
 
@@ -102,8 +103,9 @@ public class AuthFrame implements ActionListener, Runnable {
 	private JComboBoxItem itemModeAuto = new JComboBoxItem(I18n._("Auto"));
 	private JComboBoxItem itemModeApplication = new JComboBoxItem(I18n._("Application"));
 	private JComboBoxItem itemModeDesktop = new JComboBoxItem(I18n._("Desktop"));
-	private JSlider resBar = new JSlider(0, 4, 4);
-	private JLabel resolutionValue = new JLabel(I18n._("Fullscreen"));
+	private JSlider resBar = null;
+	private JLabel resolutionValue = null;
+	private String[] resolutionStrings = null;
 	private JComboBox languageBox = new JComboBox();
 	private JComboBox keyboardBox = new JComboBox();
 	private JCheckBox rememberMe = new JCheckBox(I18n._("Remember me"));
@@ -114,7 +116,7 @@ public class AuthFrame implements ActionListener, Runnable {
 	
 	private ActionListener obj = null;
 	
-	public AuthFrame(ActionListener obj_) {
+	public AuthFrame(ActionListener obj_, Dimension resolution_) {
 		this.obj = obj_;
 
 		this.jobsList = new CopyOnWriteArrayList();
@@ -133,10 +135,10 @@ public class AuthFrame implements ActionListener, Runnable {
 		this.languageBox.setRenderer(new JComboLanguage(null, ""));
 		this.initLanguageBox();
 		
-		this.init();
+		this.init(resolution_);
 	}
 	
-	public void init() {
+	public void init(Dimension resolution_) {
 		this.optionClicked = false;
 
 		this.mainFrame.setVisible(false);
@@ -169,17 +171,8 @@ public class AuthFrame implements ActionListener, Runnable {
 				startJob(JOB_LOCAL_CREDENTIALS);
 			}
 		});
-		
-		resBar.setMajorTickSpacing(1);
-		resBar.setPaintTicks(true);
-		resBar.setSnapToTicks(true);
-		resBar.addChangeListener(new ChangeListener() {
-			
-			@Override
-			public void stateChanged(ChangeEvent ce) {
-				startJob(JOB_RESOLUTION_BAR);
-			}
-		});
+
+		this.initResolutionSlider(resolution_);
 		
 		optionListener = new ActionListener() {
 			
@@ -333,12 +326,11 @@ public class AuthFrame implements ActionListener, Runnable {
 				break;
 			case JOB_RESOLUTION_BAR:
 				int value = this.resBar.getValue();
-				String[] strs = {"800x600", "1024x768", "1280x678", I18n._("Maximized"), I18n._("Fullscreen")};
 
-				if (value >= strs.length)
+				if (value >= this.resolutionStrings.length)
 					return;
 
-				SwingTools.invokeLater(GUIActions.setLabelText(this.resolutionValue, strs[value]));
+				SwingTools.invokeLater(GUIActions.setLabelText(this.resolutionValue, this.resolutionStrings[value]));
 				break;
 			case JOB_OPTIONS:
 				if (! this.optionClicked) {
@@ -500,6 +492,70 @@ public class AuthFrame implements ActionListener, Runnable {
 		
 		keyboardBox.setSelectedIndex(sysKeymap);
 	}
+
+	private void initResolutionSlider(Dimension res) {
+		List<Dimension> defaultRes = new ArrayList<Dimension>();
+		defaultRes.add(DesktopFrame.SMALL_RES);
+		defaultRes.add(DesktopFrame.MEDUIM_RES);
+		defaultRes.add(DesktopFrame.HIGH_RES);
+
+		if (res != null) {
+			boolean resFound = false;
+			for (Dimension d : defaultRes) {
+				if (d.width == res.width && d.height == res.height)
+					resFound = true;
+			}
+			if (! resFound)
+				defaultRes.add(res);
+		}
+
+		Dimension resolutions[] = new Dimension[defaultRes.size()];
+		Dimension tmp = null;
+
+		int position = 0;
+		for (int i = 0; i < resolutions.length; i++) {
+			for (Dimension d : defaultRes) {
+				if (resolutions[i] == null || d.width < resolutions[i].width || (d.width == resolutions[i].width && d.height < resolutions[i].height)) {
+					tmp = d;
+					resolutions[i] = d;
+				}
+			}
+
+			if (resolutions[i] == null) {
+				Logger.error("resolutions["+i+"] is null: it should never appear");
+			}
+
+			if (resolutions[i] == res)
+				position = i;
+
+			defaultRes.remove(tmp);
+		}
+		defaultRes.clear();
+		defaultRes = null;
+
+		int sliderLength = resolutions.length + 2; // resolutions.length + 2 (Maximized + Fullscreen)
+
+		this.resBar = new JSlider(JSlider.HORIZONTAL, 0, sliderLength - 1, position);
+		this.resBar.setMajorTickSpacing(1);
+		this.resBar.setPaintTicks(true);
+		this.resBar.setSnapToTicks(true);
+		this.resBar.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent ce) {
+				startJob(JOB_RESOLUTION_BAR);
+			}
+		});
+
+		this.resolutionStrings = new String[sliderLength];
+		for (int i = 0; i < resolutions.length; i++) {
+			this.resolutionStrings[i] = resolutions[i].width+"x"+resolutions[i].height;
+		}
+		this.resolutionStrings[sliderLength - 2] = I18n._("Maximized");
+		this.resolutionStrings[sliderLength - 1] = I18n._("Fullscreen");
+
+		this.resolutionValue = new JLabel(this.resolutionStrings[position]);
+	}
 	
 	public void showWindow() {
 		KeyboardFocusManager.setCurrentKeyboardFocusManager(null);
@@ -544,8 +600,36 @@ public class AuthFrame implements ActionListener, Runnable {
 		SwingTools.invokeLater(GUIActions.customizeTextComponent(this.hostTextField, host_));
 	}
 
-	public JSlider getResBar() {
-		return resBar;
+	public Dimension getResolution() {
+		int position = this.resBar.getValue();
+
+		
+		if (position < 0) {
+			return null;
+		}
+		if (position >= this.resolutionStrings.length + 1) {
+			return DesktopFrame.FULLSCREEN;
+		}
+		if (position == this.resolutionStrings.length) {
+			return DesktopFrame.MAXIMISED;
+		}
+
+		int p = this.resolutionStrings[position].indexOf("x");
+
+		if (this.resolutionStrings[position].lastIndexOf("x") != p)
+			return null;
+
+		Dimension resolution = null;
+		try {
+			resolution = new Dimension();
+			resolution.width = Integer.parseInt(this.resolutionStrings[position].substring(0, p));
+			resolution.height = Integer.parseInt(this.resolutionStrings[position].substring(p + 1, this.resolutionStrings[position].length()));
+		} catch (NumberFormatException ex) {
+			Logger.error("Failed to parse '"+this.resolutionStrings[position]+"': "+ex.getMessage());
+			resolution = null;
+		}
+
+		return resolution;
 	}
 
 	public void setResolution(int resolution_) {

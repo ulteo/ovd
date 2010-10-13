@@ -47,6 +47,7 @@ public class DesktopFrame extends JFrame implements WindowListener {
 	public static Dimension HIGH_RES = new Dimension(1280,678);
 	public static Dimension MAXIMISED = new Dimension(screenWidth-insets.left-insets.right, screenHeight-insets.top-insets.bottom);
 	public static Dimension FULLSCREEN = new Dimension(screenWidth, screenHeight);
+	public static Dimension DEFAULT_RES = DesktopFrame.FULLSCREEN;
 	
 	public DesktopFrame(Dimension dim, boolean undecorated, RdpActions actions_) {
 		this.actions = actions_;
