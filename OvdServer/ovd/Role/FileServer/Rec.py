@@ -38,6 +38,13 @@ class Rec(ProcessEvent):
 	mask = EventsCodes.IN_CREATE 
 	
 	def process_IN_CREATE(self, event_k):
+		if event_k.name:
+			if event_k.path.startswith(Config.spool):
+				buf = event_k.path[len(Config.spool)+1:].split("/")
+				if len(buf) == 1:
+					Logger.debug2("process_IN_CREATE doesn't change file attribute on root .htaccess file")
+					return
+		  
 		path = os.path.join(event_k.path,event_k.name)
 		os.lchown(path, Config.uid, Config.gid)
 		
