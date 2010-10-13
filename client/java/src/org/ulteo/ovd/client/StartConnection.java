@@ -568,10 +568,10 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	public void run() {
 		this.isCancelled = false;
 
-		if (this.launchConnection()) {
+		if (this.launchConnection() || this.opts.autostart) {
 			this.continueMainThread = false;
 		}
-		else if(! this.opts.autostart) {
+		else {
 			this.authFrame.showWindow();
 		}
 		this.thread = null;
