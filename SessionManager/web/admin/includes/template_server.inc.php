@@ -508,7 +508,8 @@ function server_display_role_fs($server_, $var_) {
 			$count = 0;
 			echo '<table id="available_networkfolder_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
 			echo '<tr class="title">';
-			echo '<th>'._('Name').'</th>';
+			if ($k != 0)
+				echo '<th>'._('Name').'</th>';
 			echo '<th>'._('Status').'</th>';
 			echo '<th class="unsortable">'._('Used by').'</th>';
 			echo '<th class="unsortable"></th>';
@@ -518,14 +519,16 @@ function server_display_role_fs($server_, $var_) {
 				
 				$content = 'content'.(($count++%2==0)?1:2);
 				echo '<tr class="'.$content.'">';
-				echo '<td>';
-				if ($data['page'] !== 'users') {
-					echo '<a href="sharedfolders.php?action=manage&id='.$a_networkfolder->id.'">'.$a_networkfolder->name.'</a>';
+				if ($k != 0) {
+					echo '<td>';
+					if ($data['page'] !== 'users') {
+						echo '<a href="sharedfolders.php?action=manage&id='.$a_networkfolder->id.'">'.$a_networkfolder->name.'</a>';
+					}
+					else {
+						echo $a_networkfolder->name;
+					}
+					echo '</td>';
 				}
-				else {
-					echo $a_networkfolder->name;
-				}
-				echo '</td>';
 				echo '<td>';
 				echo $a_networkfolder->status;
 				echo '</td>';
