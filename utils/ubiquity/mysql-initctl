@@ -100,4 +100,4 @@ if [ "$service" == "mysql" ]; then
     esac
 fi
 
-exit
+exit 0

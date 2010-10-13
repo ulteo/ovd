@@ -2,6 +2,5 @@
 
 debconf-get-selections | grep -e "^ulteo-ovd" -e "^mysql-server" | chroot /target debconf-set-selections
 chroot /target apt-cdrom add
-chroot /target dpkg-divert --local --rename --add /sbin/initctl
 cp /usr/lib/ubiquity/ovd-setup/mysql-initctl /target/sbin/initctl
 apt-install ulteo-ovd-easy-install
