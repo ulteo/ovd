@@ -838,7 +838,7 @@ class Server {
 			return false;
 		}
 
-		$xml = query_url($this->getBaseURL().'/fs/statistics');
+		$xml = query_url($this->getBaseURL().'/fs/info');
 		if (! $xml) {
 			$this->isUnreachable();
 			Logger::error('main', 'Server::getStatisticsForFS server \''.$this->fqdn.'\' is unreachable');
@@ -852,10 +852,6 @@ class Server {
 			return false;
 
 		if (! $dom->hasChildNodes())
-			return false;
-
-		$node = $dom->getElementsByTagname('statistics')->item(0);
-		if (is_null($node))
 			return false;
 
 		$size_node = $dom->getElementsByTagname('size')->item(0);
@@ -884,7 +880,7 @@ class Server {
 			return false;
 		}
 
-		$xml = query_url($this->getBaseURL().'/fs/shares');
+		$xml = query_url($this->getBaseURL().'/fs/info');
 		if (! $xml) {
 			$this->isUnreachable();
 			Logger::error('main', 'Server::getNetworkFoldersList server \''.$this->fqdn.'\' is unreachable');
@@ -898,10 +894,6 @@ class Server {
 			return false;
 
 		if (! $dom->hasChildNodes())
-			return false;
-
-		$node = $dom->getElementsByTagname('shares')->item(0);
-		if (is_null($node))
 			return false;
 
 		$share_nodes = $dom->getElementsByTagname('share');
