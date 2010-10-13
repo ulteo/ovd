@@ -206,3 +206,5 @@ class Role(AbstractRole):
 				userNode = doc.createElement("user")
 				userNode.setAttribute("login", user)
 				shareNode.appendChild(userNode)
+
+		node.appendChild(shareNode)
