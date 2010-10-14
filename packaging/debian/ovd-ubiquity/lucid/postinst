@@ -9,7 +9,8 @@ sed -i "123,129 c\        shutil.copyfile('/usr/lib/ubiquity/ovd-setup/mysql-ini
 gconftool-2 --direct --type string \
   --config-source xml:readwrite:/etc/gconf/gconf.xml.mandatory \
   --set /desktop/gnome/background/picture_filename /usr/share/wallpapers/ulteo-ubiquity.png \
-  --set /desktop/gnome/background/picture_options stretched
+  --set /desktop/gnome/background/picture_options stretched \
+  --set /apps/metacity/general/theme OVD
 
 #DEBHELPER#
 
