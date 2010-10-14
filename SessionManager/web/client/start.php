@@ -536,7 +536,6 @@ if (! isset($old_session_id)) {
 		if (! $server)
 			continue;
 
-		$server->orderFSAccessDisable($user_login);
 		if (! $server->orderFSAccessEnable($user_login, $user_password, $v)) {
 			Logger::error('main', '(startsession) Cannot enable FS access for User "'.$user_login.'" on Server "'.$server->fqdn.'"');
 			throw_response(INTERNAL_ERROR);

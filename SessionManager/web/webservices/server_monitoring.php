@@ -149,8 +149,13 @@ function parse_monitoring_XML($xml_) {
 				foreach ($share_nodes as $share_node) {
 					$ret['shares'][$share_node->getAttribute('id')] = array(
 						'id'		=>	$share_node->getAttribute('id'),
-						'status'	=>	$share_node->getAttribute('status')
+						'status'	=>	$share_node->getAttribute('status'),
+						'users'		=>	array()
 					);
+
+					$user_nodes = $share_node->getElementsByTagName('user');
+					foreach ($user_nodes as $user_node)
+						$ret['shares'][$share_node->getAttribute('id')]['users'][] = $user_node->getAttribute('login');
 				}
 				break;
 		}
@@ -222,6 +227,27 @@ if (array_key_exists('shares', $ret) && is_array($ret['shares'])) {
 		}
 
 		$modified = false;
+
+		switch ($share['status']) {
+			case NetworkFolder::NF_STATUS_ACTIVE:
+				$disabled = 0;
+				foreach ($share['users'] as $user) {
+					$sessions = Abstract_Session::getByUser(substr($user, 0, -4));
+
+					if (count($sessions) == 0) {
+						$server = Abstract_Server::load($ret['server']);
+						if (! $server)
+							continue;
+
+						if ($server->orderFSAccessDisable($user))
+							$disabled += 1;
+					}
+				}
+
+				if ($disabled == count($share['users']))
+					$share['status'] = NetworkFolder::NF_STATUS_INACTIVE;
+				break;
+		}
 
 		if ($share['status'] != $buf->status) {
 			$modified = true;
