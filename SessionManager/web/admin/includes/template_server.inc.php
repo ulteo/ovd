@@ -510,7 +510,7 @@ function server_display_role_fs($server_, $var_) {
 			echo '<tr class="title">';
 			if ($k != 0)
 				echo '<th>'._('Name').'</th>';
-			echo '<th class="unsortable">'._('Used by').'</th>';
+			echo '<th class="unsortable">'.(($k == 0)?_('Owner'):_('Used by')).'</th>';
 			echo '<th>'._('Status').'</th>';
 			echo '<th class="unsortable"></th>';
 			echo '</tr>';
