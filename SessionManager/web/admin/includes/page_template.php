@@ -329,7 +329,7 @@ function page_header($params_=array()) {
 
   echo '<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">';
   echo '<tr>';
-  echo '<td style="min-width: 10%; text-align: left; border-bottom: 1px solid #ccc;" class="menu">';
+  echo '<td style="min-width: 10%; text-align: left;" class="menu">';
   page_menu();
   echo '</td>';
 
@@ -337,7 +337,7 @@ function page_header($params_=array()) {
   //echo '<h1 class="centered">'.$title.'</h1>';
   //echo '</td>';
 
-  echo '<td style="text-align: right; padding-right: 10px; border-bottom: 1px solid #ccc;" class="logo">';
+  echo '<td style="width: 100%; text-align: right; padding-right: 10px; border-bottom: 1px solid #ccc;" class="logo">';
   echo '<a href="index.php"><img src="'.ROOT_ADMIN_URL.'/media/image/header.png" alt="'.$title.'" title="'.$title.'" /></a>';
   echo '</td>';
 
@@ -483,6 +483,7 @@ function page_menu(){
 	echo '<table border="0" cellspacing="0" cellpadding="10">';
 	echo '<tr>';
 
+	$first = true;
 	foreach($menu2 as $id => $entrie) {
 		if (count($entrie['parent'])>0)
 			continue;
@@ -491,8 +492,12 @@ function page_menu(){
 			continue;
 		
 		echo '<td style="min-width: 60px; height: 81px; text-align: center; vertical-align: middle;';
-//		if ($id == $parent)
-//			echo ' background: #eee; border-left: 1px solid  #ccc; border-right: 1px solid #ccc;';
+		if ($id == $parent) {
+			if ($first !== true)
+				echo ' border-left: 1px solid  #ccc;';
+			echo ' background: #eee; border-right: 1px solid #ccc; border-bottom: 0px;';
+		} else
+			echo ' border-bottom: 1px solid #ccc;';
 		
 		if (isset($entrie['mod']))
 			$img = ''.$entrie['mod'].'/media/image/menu_'.$entrie['mod_id'].'.png';
@@ -505,6 +510,8 @@ function page_menu(){
 			echo '_active';
 		
 		echo '">'.$entrie['name'].'</span></a></td>'."\n";
+
+		$first = false;
 	}
 	echo '</tr>';
 	echo '</table>';
