@@ -510,8 +510,8 @@ function server_display_role_fs($server_, $var_) {
 			echo '<tr class="title">';
 			if ($k != 0)
 				echo '<th>'._('Name').'</th>';
-			echo '<th>'._('Status').'</th>';
 			echo '<th class="unsortable">'._('Used by').'</th>';
+			echo '<th>'._('Status').'</th>';
 			echo '<th class="unsortable"></th>';
 			echo '</tr>';
 			
@@ -530,9 +530,6 @@ function server_display_role_fs($server_, $var_) {
 					echo '</td>';
 				}
 				echo '<td>';
-				echo $a_networkfolder->status;
-				echo '</td>';
-				echo '<td>';
 				if (array_key_exists($a_networkfolder->id, $data['usedby']) &&  (is_null($data['page']) === false)) {
 					$objs = $data['usedby'][$a_networkfolder->id];
 					echo '<ul>';
@@ -543,6 +540,9 @@ function server_display_role_fs($server_, $var_) {
 					}
 					echo '</ul>';
 				}
+				echo '</td>';
+				echo '<td>';
+				echo $a_networkfolder->status;
 				echo '</td>';
 				echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''.(($k == 0)?_('Are you sure that you want to delete this user profile?'):_('Are you sure that you want to delete this network folder?')).'\');">';
 				echo '<input type="hidden" name="name" value="NetworkFolders" />';
