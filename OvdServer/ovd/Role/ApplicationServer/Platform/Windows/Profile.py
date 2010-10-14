@@ -163,8 +163,9 @@ class Profile(AbstractProfile):
 			win32api.RegCreateKey(key, r"Ulteo")
 			win32api.RegCloseKey(key)
 			
-			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo", 0, win32con.KEY_SET_VALUE)
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo", 0, win32con.KEY_ALL_ACCESS)
 			win32api.RegCreateKey(key, r"ovd")
+			Reg.DeleteTree(key, r"ovd", False)
 			win32api.RegCloseKey(key)
 		
 		
