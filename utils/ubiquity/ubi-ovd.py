@@ -34,7 +34,7 @@ from ubiquity.misc import execute, execute_root, debconf_escape
 from ubiquity.plugin import *
 
 NAME = 'ovd'
-AFTER = 'language'
+AFTER = 'usersetup'
 WEIGHT = 10
 
 class PageBase(PluginUI):
