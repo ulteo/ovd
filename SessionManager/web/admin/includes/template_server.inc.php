@@ -542,7 +542,7 @@ function server_display_role_fs($server_, $var_) {
 				}
 				echo '</td>';
 				echo '<td>';
-				echo $a_networkfolder->status;
+				echo '<span class="msg_'.NetworkFolder::colorStatus($a_networkfolder->status).'">'.NetworkFolder::textStatus($a_networkfolder->status).'</span>';
 				echo '</td>';
 				echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''.(($k == 0)?_('Are you sure that you want to delete this user profile?'):_('Are you sure that you want to delete this network folder?')).'\');">';
 				echo '<input type="hidden" name="name" value="NetworkFolders" />';

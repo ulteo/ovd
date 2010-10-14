@@ -24,6 +24,10 @@ class NetworkFolder {
 	const NF_TYPE_PROFILE = "profile";
 	const NF_TYPE_NETWORKFOLDER = "network_folder";
 
+	const NF_STATUS_NOT_EXISTS = 1;
+	const NF_STATUS_ACTIVE = 2;
+	const NF_STATUS_INACTIVE = 3;
+
 	public $id = NULL;
 	public $type = '';
 	public $name = '';
@@ -102,5 +106,37 @@ class NetworkFolder {
 	
 	public function __toString() {
 		return get_class($this).'(id \''.$this->id.'\' name \''.$this->name.'\' server \''.$this->server.'\' status \''.$this->status.'\' )';
+	}
+
+	public function textStatus($status_=NetworkFolder::NF_STATUS_NOT_EXISTS) {
+		switch ($status_) {
+			case NetworkFolder::NF_STATUS_NOT_EXISTS:
+				return _('Unknown');
+				break;
+			case NetworkFolder::NF_STATUS_ACTIVE:
+				return _('Active');
+				break;
+			case NetworkFolder::NF_STATUS_INACTIVE:
+				return _('Inactive');
+				break;
+		}
+
+		return _('Unknown');
+	}
+
+	public function colorStatus($status_=NetworkFolder::NF_STATUS_NOT_EXISTS) {
+		switch ($status_) {
+			case NetworkFolder::NF_STATUS_NOT_EXISTS:
+				return 'error';
+				break;
+			case NetworkFolder::NF_STATUS_ACTIVE:
+				return 'ok';
+				break;
+			case NetworkFolder::NF_STATUS_INACTIVE:
+				return 'warn';
+				break;
+		}
+
+		return 'error';
 	}
 }
