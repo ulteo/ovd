@@ -532,13 +532,18 @@ function server_display_role_fs($server_, $var_) {
 				echo '<td>';
 				if (array_key_exists($a_networkfolder->id, $data['usedby']) &&  (is_null($data['page']) === false)) {
 					$objs = $data['usedby'][$a_networkfolder->id];
-					echo '<ul>';
-					foreach ($objs as $a_obj) {
-						echo '<li>';
+					if ($k != 0) {
+						echo '<ul>';
+						foreach ($objs as $a_obj) {
+							echo '<li>';
+							echo '<a href="'.$data['page'].'.php?action=manage&id='.$a_obj['id'].'">'.$a_obj['name'].'</a>';
+							echo '</li>';
+						}
+						echo '</ul>';
+					} else {
+						$a_obj = array_pop($objs);
 						echo '<a href="'.$data['page'].'.php?action=manage&id='.$a_obj['id'].'">'.$a_obj['name'].'</a>';
-						echo '</li>';
 					}
-					echo '</ul>';
 				}
 				echo '</td>';
 				echo '<td>';
