@@ -354,10 +354,16 @@ class Preferences {
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
 
+		$c = new ConfigElement_select('enable_profiles', _('Enable user profiles'), _('Enable user profiles'), _('Enable user profiles'), 1);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_select('auto_create_profile', _('Auto-create user profile when nonexistant'), _('Auto-create user profile when nonexistant'), _('Auto-create user profile when nonexistant'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_select('start_without_profile', _('Launch a session without a valid profile'), _('Launch a session without a valid profile'), _('Launch a session without a valid profile'), 1);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c,'general','session_settings_defaults');
+		$c = new ConfigElement_select('enable_sharedfolders', _('Enable sharedfolders'), _('Enable sharedfolders'), _('Enable sharedfolders'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_select('start_without_all_sharedfolders', _('Launch a session even if a shared folder\'s fileserver is missing'), _('Launch a session even if a shared folder\'s fileserver is missing'), _('Launch a session even if a shared folder\'s fileserver is missing'), 1);

@@ -154,8 +154,10 @@ $start_app_args = '';
 $allow_shell = $default_settings['allow_shell'];
 $multimedia = $default_settings['multimedia'];
 $redirect_client_printers = $default_settings['redirect_client_printers'];
+$enable_profiles = $default_settings['enable_profiles'];
 $auto_create_profile = $default_settings['auto_create_profile'];
 $start_without_profile = $default_settings['start_without_profile'];
+$enable_sharedfolders = $default_settings['enable_sharedfolders'];
 $start_without_all_sharedfolders = $default_settings['start_without_all_sharedfolders'];
 
 $advanced_settings = array();
@@ -312,107 +314,111 @@ if (isset($old_session_id)) {
 	} else
 		$random_server = $servers[0];
 
-	$fileservers = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_FS);
-	if (count($fileservers) > 0) {
-		$netfolders = $user->getNetworkFolders();
+	if (isset($enable_profiles) && $enable_profiles == 1) {
+		$fileservers = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_FS);
+		if (count($fileservers) > 0) {
+			$netfolders = $user->getNetworkFolders();
 
-		if (! is_array($netfolders)) {
-			Logger::error('main', '(startsession) User::getNetworkFolders() failed');
-			throw_response(INTERNAL_ERROR);
-		}
-
-		$profile_available = false;
-		if (count($netfolders) == 1) {
-			Logger::debug('main', '(startsession) User "'.$user_login.'" already have a profile, using it');
-
-			$netfolder = array_pop($netfolders);
-
-			foreach ($fileservers as $fileserver) {
-				if ($fileserver->fqdn != $netfolder->server)
-					continue;
-
-				$profile_available = true;
-				$profile_server = $netfolder->server;
-				$profile_name = $netfolder->id;
+			if (! is_array($netfolders)) {
+				Logger::error('main', '(startsession) User::getNetworkFolders() failed');
+				throw_response(INTERNAL_ERROR);
 			}
-		} else {
-			Logger::debug('main', '(startsession) User "'.$user_login.'" does not have a profile for now, checking for auto-creation');
-
-			if (isset($auto_create_profile) && $auto_create_profile == 1) {
-				Logger::debug('main', '(startsession) User "'.$user_login.'" profile will be auto-created, and used');
-
-				$fileserver = array_pop($fileservers);
-				$profile = new NetworkFolder();
-				$profile->type = NetworkFolder::NF_TYPE_PROFILE;
-				$profile->server = $fileserver->getAttribute('fqdn');
-				Abstract_NetworkFolder::save($profile);
-
-				if (! $fileserver->createNetworkFolder($profile->id)) {
-					Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 1)');
-					throw_response(INTERNAL_ERROR);
-				}
-
-				if (! $profile->addUser($user)) {
-					Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 2)');
-					throw_response(INTERNAL_ERROR);
-				}
-
-				$profile_available = true;
-				$profile_server = $profile->server;
-				$profile_name = $profile->id;
-			} else {
-				Logger::debug('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" disabled, checking for session without profile');
-
-				if (isset($start_without_profile) && $start_without_profile == 1) {
-					Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without a valid profile, proceeding');
-
-					$profile_available = false;
-				} else {
-					Logger::error('main', '(startsession) User "'.$user_login.'" does not have a valid profile, aborting');
-
-					throw_response(INTERNAL_ERROR);
-				}
-			}
-		}
-	} else {
-		Logger::debug('main', '(startsession) FileServer not available for User "'.$user_login.'", checking for session without profile');
-
-		if (isset($start_without_profile) && $start_without_profile == 1) {
-			Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without a valid profile, proceeding');
 
 			$profile_available = false;
-		} else {
-			Logger::error('main', '(startsession) User "'.$user_login.'" does not have a valid profile, aborting');
+			if (count($netfolders) == 1) {
+				Logger::debug('main', '(startsession) User "'.$user_login.'" already have a profile, using it');
 
-			throw_response(INTERNAL_ERROR);
+				$netfolder = array_pop($netfolders);
+
+				foreach ($fileservers as $fileserver) {
+					if ($fileserver->fqdn != $netfolder->server)
+						continue;
+
+					$profile_available = true;
+					$profile_server = $netfolder->server;
+					$profile_name = $netfolder->id;
+				}
+			} else {
+				Logger::debug('main', '(startsession) User "'.$user_login.'" does not have a profile for now, checking for auto-creation');
+
+				if (isset($auto_create_profile) && $auto_create_profile == 1) {
+					Logger::debug('main', '(startsession) User "'.$user_login.'" profile will be auto-created, and used');
+
+					$fileserver = array_pop($fileservers);
+					$profile = new NetworkFolder();
+					$profile->type = NetworkFolder::NF_TYPE_PROFILE;
+					$profile->server = $fileserver->getAttribute('fqdn');
+					Abstract_NetworkFolder::save($profile);
+
+					if (! $fileserver->createNetworkFolder($profile->id)) {
+						Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 1)');
+						throw_response(INTERNAL_ERROR);
+					}
+
+					if (! $profile->addUser($user)) {
+						Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 2)');
+						throw_response(INTERNAL_ERROR);
+					}
+
+					$profile_available = true;
+					$profile_server = $profile->server;
+					$profile_name = $profile->id;
+				} else {
+					Logger::debug('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" disabled, checking for session without profile');
+
+					if (isset($start_without_profile) && $start_without_profile == 1) {
+						Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without a valid profile, proceeding');
+
+						$profile_available = false;
+					} else {
+						Logger::error('main', '(startsession) User "'.$user_login.'" does not have a valid profile, aborting');
+
+						throw_response(INTERNAL_ERROR);
+					}
+				}
+			}
+		} else {
+			Logger::debug('main', '(startsession) FileServer not available for User "'.$user_login.'", checking for session without profile');
+
+			if (isset($start_without_profile) && $start_without_profile == 1) {
+				Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without a valid profile, proceeding');
+
+				$profile_available = false;
+			} else {
+				Logger::error('main', '(startsession) User "'.$user_login.'" does not have a valid profile, aborting');
+
+				throw_response(INTERNAL_ERROR);
+			}
 		}
 	}
 
-	$sharedfolders = $user->getSharedFolders();
-	$netshares = array();
-	$sharedfolders_available = false;
-	if (is_array($sharedfolders) && count($sharedfolders) > 0) {
-		foreach ($sharedfolders as $sharedfolder) {
-			$sharedfolder_server = Abstract_Server::load($sharedfolder->server);
-			if (! $sharedfolder_server || ! $sharedfolder_server->isOnline()) {
-				Logger::error('main', '(startsession) Server "'.$sharedfolder->server.'" for shared folder "'.$sharedfolder->id.'" is not available');
+	if (isset($enable_sharedfolders) && $enable_sharedfolders == 1) {
+		$sharedfolders = $user->getSharedFolders();
+		$netshares = array();
+		$sharedfolders_available = false;
+		if (is_array($sharedfolders) && count($sharedfolders) > 0) {
+			foreach ($sharedfolders as $sharedfolder) {
+				$sharedfolder_server = Abstract_Server::load($sharedfolder->server);
+				if (! $sharedfolder_server || ! $sharedfolder_server->isOnline()) {
+					Logger::error('main', '(startsession) Server "'.$sharedfolder->server.'" for shared folder "'.$sharedfolder->id.'" is not available');
 
-				if (isset($start_without_all_sharedfolders) && $start_without_all_sharedfolders == 1) {
-					Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without all shared folders available, proceeding');
+					if (isset($start_without_all_sharedfolders) && $start_without_all_sharedfolders == 1) {
+						Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without all shared folders available, proceeding');
 
-					continue;
-				} else {
-					Logger::error('main', '(startsession) User "'.$user_login.'" does not have all shared folders available, aborting');
+						continue;
+					} else {
+						Logger::error('main', '(startsession) User "'.$user_login.'" does not have all shared folders available, aborting');
 
-					throw_response(INTERNAL_ERROR);
+						throw_response(INTERNAL_ERROR);
+					}
 				}
+
+				$netshares[] = $sharedfolder;
 			}
 
-			$netshares[] = $sharedfolder;
+			if (count($netshares) > 0)
+				$sharedfolders_available = true;
 		}
-
-		if (count($netshares) > 0)
-			$sharedfolders_available = true;
 	}
 
 	$random_session_id = gen_unique_string();
