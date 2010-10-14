@@ -270,7 +270,8 @@ def DeleteTree(key, subkey, deleteRoot = True):
 	while flag_continue:
 		try:
 			subsubKey = win32api.RegEnumKey(hkey, index)
-			index+= 1
+			# don't increment because it's a enum and we delete the key so the index is always 0
+			#index+= 1
 #			print "delete key: ",subsubKey
 			DeleteTree(hkey, subsubKey)
 		except Exception, err:
@@ -282,7 +283,8 @@ def DeleteTree(key, subkey, deleteRoot = True):
 	while flag_continue:
 		try:
 			(value, _, _) = win32api.RegEnumValue(hkey, index)
-			index+= 1
+			# don't increment because it's a enum and we delete the key so the index is always 0
+			# index+= 1
 #			print "delete value: ",value
 			win32api.RegDeleteValue(hkey, value)
 		except Exception, err:
