@@ -370,7 +370,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 		String name = "w_"+id;
 		if( this.windows.containsKey(name)) {
-		    logger.error("ID '"+id+"' already exist");
+		    logger.error("[processCreate] ID '"+String.format("0x%08lx", id)+"' already exist");
 		    return false;
 		}
 
@@ -400,7 +400,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 		String name = "w_"+id;
 		if(! this.windows.containsKey(name)) {
-		    logger.error("ID '"+id+"' doesn't exist");
+		    logger.error("[processDestroy] ID '"+String.format("0x%08lx", id)+"' doesn't exist");
 		    return false;
 		}
 
@@ -425,7 +425,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 					this.windows.remove(key);
 				}
 			} catch (Exception e) {
-				logger.error("Couldn't remove the window " + key + ".", e);
+				logger.error("[processDestroyGrp] Couldn't remove the window " + key + ".", e);
 				return false;
 			}
 		}
@@ -442,7 +442,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 		String name = "w_"+id;
 		if(! this.windows.containsKey(name)) {
-		    logger.error("ID '"+id+"' doesn't exist");
+		    logger.error("[processPosition] ID '"+String.format("0x%08lx", id)+"' doesn't exist");
 		    return false;
 		}
 
@@ -456,7 +456,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		//TODO: ui_seamless_settitle(id, tokens[3], flags);
 		String name = "w_"+id;
 		if(! this.windows.containsKey(name)) {
-		    logger.error("ID '"+id+"' doesn't exist");
+		    logger.error("[processTitle] ID '"+String.format("0x%08lx", id)+"' doesn't exist");
 		    return false;
 		}
 
@@ -476,7 +476,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 		String name = "w_"+id;
 		if(! this.windows.containsKey(name)) {
-		    logger.error("ID '"+id+"' doesn't exist");
+		    logger.error("[processState] ID '"+String.format("0x%08lx", id)+"' doesn't exist");
 		    return false;
 		}
 
@@ -517,7 +517,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		try {
 		    this.send_sync();
 		} catch(Exception e) {
-		    logger.error("Unable to send_sync !!!");
+		    logger.error("[processHello] Unable to send_sync !!!");
 		}
 
 		if (this.main_window != null)
@@ -533,7 +533,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		String name = "w_"+window_id;
 		
 		if(! this.windows.containsKey(name)) {
-		    logger.error("ID '"+window_id+"' doesn't exist");
+		    logger.error("[process_setIcon] ID '"+String.format("0x%08lx", window_id)+"' doesn't exist");
 		    return false;
 		}
 
@@ -542,18 +542,18 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		if (chunk == 0)
 		{
 			if (f.sw_getIconSize() > 0)
-				logger.debug("New icon started before previous completed");
+				logger.debug("[process_setIcon] New icon started before previous completed");
 			
 			if (! format.equals("RGBA"))
 			{
-				logger.error("Uknown icon format \"" + format + "\"");
+				logger.error("[process_setIcon] Uknown icon format \"" + format + "\"");
 				return false;
 			}
 			
 			int icon_size = width * height * 4;
 			if(! f.sw_setIconSize(icon_size))
 			{
-				logger.error("Icon too large (" + icon_size + " bytes)");
+				logger.error("[process_setIcon] Icon too large (" + icon_size + " bytes)");
 				return false;
 			}
 			
@@ -567,7 +567,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		
 		if (bitmap.length > (f.sw_getIconSize() - f.sw_getIconOffset()))
 		{
-			logger.error("Too large chunk received (" + bitmap.length + " bytes > " + (f.sw_getIconSize() - f.sw_getIconOffset()) + " bytes)\n");
+			logger.error("[process_setIcon] Too large chunk received (" + bitmap.length + " bytes > " + (f.sw_getIconSize() - f.sw_getIconOffset()) + " bytes)\n");
 			f.sw_setIconSize(0);
 			return false;
 		}
@@ -580,7 +580,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		f.sw_setIconBuffer(icon_buffer);
 		f.sw_setIconOffset(f.sw_getIconOffset() + bitmap.length);
 		
-		logger.debug("icon_offset: "+f.sw_getIconOffset()+" icon_size: "+f.sw_getIconSize());
+		logger.debug("[process_setIcon] icon_offset: "+f.sw_getIconOffset()+" icon_size: "+f.sw_getIconSize());
 		if (f.sw_getIconOffset() == f.sw_getIconSize())
 		{
 			BufferedImage icon = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
