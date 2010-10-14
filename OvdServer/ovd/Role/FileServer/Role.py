@@ -108,7 +108,7 @@ class Role(AbstractRole):
 					ret = False
 		
 		for usershare in self.get_enabled_usershares():
-			Logger.debug("FileServer:: Removing share '%s'"%(usershare))
+			Logger.debug("FileServer:: Removing samba usershare '%s'"%(usershare))
 			s, o = commands.getstatusoutput("net usershare delete %s"%(usershare))
 			if s is not 0:
 				Logger.error("FS: unable to 'net usershare delete': %d => %s"%(s, o))
