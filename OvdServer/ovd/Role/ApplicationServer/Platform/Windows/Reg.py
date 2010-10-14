@@ -298,6 +298,34 @@ def DeleteTree(key, subkey, deleteRoot = True):
 		win32api.RegDeleteKey(key, subkey)
 
 
+def LsTree(key, subkey, nb=0):
+	print "%s * Node %s"%(" "*(nb*2), subkey)
+	hkey = win32api.RegOpenKey(key, subkey, 0, win32con.KEY_ALL_ACCESS)
+	
+	index = 0
+	flag_continue = True
+	while flag_continue:
+		try:
+			subsubKey = win32api.RegEnumKey(hkey, index)
+			index+= 1
+			LsTree(hkey, subsubKey, nb+1)
+		except Exception, err:
+			flag_continue = False
+	
+	index = 0
+	flag_continue = True
+	while flag_continue:
+		try:
+			(value, _, _) = win32api.RegEnumValue(hkey, index)
+			index+= 1
+			
+			print "%s * Value %s"%(" "*(nb+2)*2, value)
+		except Exception, err:
+			flag_continue = False
+		
+	win32api.RegCloseKey(hkey)
+
+
 def getActiveSetupKeys():
 	path = r"Software\Microsoft\Active Setup\Installed Components"
 	
