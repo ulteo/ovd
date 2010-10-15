@@ -438,7 +438,7 @@ if (isset($old_session_id)) {
 	$session->status = Session::SESSION_STATUS_CREATED;
 	$session->user_login = $user->getAttribute('login');
 	$session->user_displayname = $user->getAttribute('displayname');
-	$session->servers = $servers;
+	$session->servers = array_unique($servers);
 
 	$ret = true;
 
