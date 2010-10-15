@@ -108,7 +108,10 @@ class Role(AbstractRole):
 		for thread in self.threads:
 			if thread.isAlive():
 				thread._Thread__stop()
-				
+		
+		for session in self.sessions.values():
+			session.switch_status(Session.SESSION_STATUS_WAIT_DESTROY)
+		
 		cleaner = SessionManagement(self, self.sessions_spooler)
 		for session in self.sessions.values():
 			session.end_status = Session.SESSION_END_STATUS_SHUTDOWN
