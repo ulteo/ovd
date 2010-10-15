@@ -182,6 +182,14 @@ class Profile(AbstractProfile):
 			win32api.RegSetValueEx(key, "login", 0, win32con.REG_SZ, self.profile["login"])
 			win32api.RegSetValueEx(key, "password", 0, win32con.REG_SZ, self.profile["password"])
 			win32api.RegCloseKey(key)
+			
+			# Set the name
+			path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\MountPoints2\##%s#%s"%(self.profile["server"], self.profile["dir"])
+			Reg.CreateKeyR(win32con.HKEY_USERS, path)
+			
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+			win32api.RegSetValueEx(key, "_LabelFromReg", 0, win32con.REG_SZ, "Personal User Profile")
+			win32api.RegCloseKey(key)
 		
 		shareNum = 0
 		for share in self.sharedFolders:
@@ -195,6 +203,14 @@ class Profile(AbstractProfile):
 			win32api.RegSetValueEx(key, "login", 0, win32con.REG_SZ, share["login"])
 			win32api.RegSetValueEx(key, "password", 0, win32con.REG_SZ, share["password"])
 			win32api.RegSetValueEx(key, "name", 0, win32con.REG_SZ, share["name"])
+			win32api.RegCloseKey(key)
+			
+			# Set the name
+			path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\MountPoints2\##%s#%s"%(share["server"], share["dir"])
+			Reg.CreateKeyR(win32con.HKEY_USERS, path)
+			
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+			win32api.RegSetValueEx(key, "_LabelFromReg", 0, win32con.REG_SZ, share["name"])
 			win32api.RegCloseKey(key)
 			
 			shareNum+= 1

@@ -168,6 +168,26 @@ def OpenKeyCreateIfDoesntExist(root, path):
 	
 	return key
 
+def CreateKeyR(hkey, path):
+	if path.endswith("\\"):
+		path = path[:-2]
+	
+	if "\\" in path:
+		(parents, name) = path.rsplit("\\", 1)
+		
+		try:
+			hkey2 = win32api.RegOpenKey(hkey, parents, 0, win32con.KEY_SET_VALUE)
+		except Exception, err:
+			CreateKeyR(hkey, parents)
+			hkey2 = win32api.RegOpenKey(hkey, parents, 0, win32con.KEY_SET_VALUE)
+	else:
+		name = path
+		hkey2 = hkey
+	
+	win32api.RegCreateKey(hkey2, name)
+	win32api.RegCloseKey(hkey2)
+
+
 def ProcessActiveSetupEntry(BaseKey, Entry, Username, LocaleValue):
 	hkey = win32api.RegOpenKey(BaseKey, Entry, 0, win32con.KEY_ALL_ACCESS)
 	
