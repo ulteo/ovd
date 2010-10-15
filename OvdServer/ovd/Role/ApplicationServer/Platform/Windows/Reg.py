@@ -283,7 +283,11 @@ def UpdateActiveSetup(Username, hiveName, active_setup_path):
 	win32api.RegCloseKey(hkey_src)
 
 def DeleteTree(key, subkey, deleteRoot = True):
-	hkey = win32api.RegOpenKey(key, subkey, 0, win32con.KEY_ALL_ACCESS)
+	try:
+		hkey = win32api.RegOpenKey(key, subkey, 0, win32con.KEY_ALL_ACCESS)
+	except:
+		# subkey already doesn't exist
+		return
 	
 	index = 0
 	flag_continue = True
