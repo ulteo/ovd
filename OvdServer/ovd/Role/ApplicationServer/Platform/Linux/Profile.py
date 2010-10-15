@@ -39,9 +39,11 @@ class Profile(AbstractProfile):
 	
 	
 	def mount(self):
-		os.makedirs(self.profile_mount_point)
+		os.makedirs(self.cifs_dst)
 		
 		if self.profile is not None:
+			os.makedirs(self.profile_mount_point)
+			
 			cmd = "mount -t cifs -o username=%s,password=%s,uid=%s,gid=0,umask=077 //%s/%s %s"%(self.profile["login"], self.profile["password"], self.session.user.name, self.profile["server"], self.profile["dir"], self.profile_mount_point)
 			Logger.debug("Profile mount command: '%s'"%(cmd))
 			s,o = commands.getstatusoutput(cmd)
