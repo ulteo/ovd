@@ -65,6 +65,7 @@ class Profile(AbstractProfile):
 			if s != 0:
 				Logger.error("Profile sharedFolder mount failed")
 				Logger.debug("Profile sharedFolder mount failed (status: %d) => %s"%(s, o))
+				os.rmdir(dest)
 			else:
 				sharedFolder["mountdest"] = dest
 				home = pwd.getpwnam(self.session.user.name)[5]
