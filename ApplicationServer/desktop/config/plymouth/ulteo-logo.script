@@ -165,8 +165,8 @@ fun StringToInteger (str) {
 # Ubuntu background color
 #Window.SetBackgroundTopColor (0.16, 0.00, 0.12);     # Nice colour on top of the screen fading to
 #Window.SetBackgroundBottomColor (0.16, 0.00, 0.12);  # an equally nice colour on the bottom
-Window.SetBackgroundTopColor (1.00, 0.40, 0.00);
-Window.SetBackgroundBottomColor (0.50, 0.20, 0.00);
+Window.SetBackgroundTopColor (0.10, 0.31, 0.48);
+Window.SetBackgroundBottomColor (0.10, 0.31, 0.48);
 
 logo.image = Image ("ulteo-logo.png"); # "special://logo" is a special keyword which finds the logo image
 logo.sprite = Sprite ();
