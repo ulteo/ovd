@@ -141,30 +141,14 @@ class SessionManagement(Thread):
 					Logger.error("RDP server dialog failed ... ")
 					Logger.debug("SessionManagement::logoff_user: %s"%(str(err)))
 					return
+				
+				del(user.infos["tsid"])
 	
 	
 	def destroy_user(self, user):
 		Logger.info("SessionManagement::destroy_user %s"%(user.name))
 		
 		if user.infos.has_key("tsid"):
-			sessid = user.infos["tsid"]
-			
-			try:
-				status = RolePlatform.TS.getState(sessid)
-			except Exception,err:
-				Logger.error("RDP server dialog failed ... ")
-				Logger.debug("SessionManagement::destroy_user: %s"%(str(err)))
-				return
-			
-			if status in [RolePlatform.TS.STATUS_LOGGED, RolePlatform.TS.STATUS_DISCONNECTED]:
-				Logger.info("must log off ts session %s user %s"%(sessid, user.name))
-				
-				try:
-					RolePlatform.TS.logoff(sessid)
-				except Exception,err:
-					Logger.error("RDP server dialog failed ... ")
-					Logger.debug("SessionManagement::destroy_user: %s"%(str(err)))
-					return
-				
+			self.logoff_user(user)
 		
 		user.destroy()

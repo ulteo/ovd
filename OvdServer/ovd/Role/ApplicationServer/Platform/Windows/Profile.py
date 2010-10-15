@@ -57,6 +57,7 @@ class Profile(AbstractProfile):
 		
 		except Exception, err:
 			Logger.error("Unable to mount drive")
+			Logger.debug("WNetAddConnection2 return %s"%(err))
 			Logger.debug("Unable to mount drive, '%s', try the net use command equivalent: '%s'"%(str(err), "net use %s \\\\%s\\%s %s /user:%s"%(self.mountPoint, self.profile["server"], self.profile["dir"], self.profile["password"], self.profile["login"])))
 			
 			self.mountPoint = None
@@ -74,6 +75,7 @@ class Profile(AbstractProfile):
 		
 		except Exception, err:
 			Logger.error("Unable to umount drive")
+			Logger.debug("WNetCancelConnection2 return %s"%(err))
 			Logger.debug("Unable to umount drive, net use command equivalent: '%s'"%("net use %s: /delete"%(self.mountPoint)))
 	
 	

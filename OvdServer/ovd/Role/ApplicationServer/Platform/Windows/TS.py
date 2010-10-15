@@ -21,6 +21,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import pythoncom
+import pywintypes
+import time
 import win32api
 import win32com
 import win32ts
@@ -69,27 +71,61 @@ class TS(AbstractTS):
 			domain_ = win32api.GetComputerName()
 		
 		sessions = win32ts.WTSEnumerateSessions(None)
+		session_closing = []
+		
 		for session in sessions:
 			if not 0 < session["SessionId"] < 65536:
 				continue
 			
 			try:
-				state = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSConnectState)
-			except:
-				Logger.warn("Unable to list session %d"%(session["SessionId"]))
-				continue
-			
-			
-			login = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSUserName)
-			if login != username_:
-				continue
-			
-			domain = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSDomainName)
-			if domain.lower() != domain_.lower():
-				Logger.debug("Session %s: ts session %d is not from the user %s but from a AD user"%(session["SessionId"], username_))
+				login = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSUserName)
+				if login != username_:
+					continue
+				
+				domain = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSDomainName)
+				if domain.lower() != domain_.lower():
+					Logger.debug("Session %s: ts session %d is not from the user %s but from a AD user"%(session["SessionId"], username_))
+					continue
+			except pywintypes.error, err:
+				if err[0] == 7007: # A close operation is pending on the session.
+					session_closing.append(session)
+				else:
+					Logger.warn("Unable to list session %d"%(session["SessionId"]))
+					Logger.debug("WTSQuerySessionInformation returned %s"%(err))
 				continue
 			
 			return session["SessionId"]
+		
+		t0 = time.time()
+		len1 = len(session_closing)
+		len2 = 0
+		while len1>0 and time.time()-t0 < 10:
+			if len2 == len1:
+				time.sleep(0.2)
+			len2 = len1
+			
+			for i in xrange(len(session_closing)):
+				session = session_closing.pop(0)
+				
+				try:
+					login = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSUserName)
+					if login != username_:
+						continue
+					
+					domain = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSDomainName)
+					if domain.lower() != domain_.lower():
+						Logger.debug("Session %s: ts session %d is not from the user %s but from a AD user"%(session["SessionId"], username_))
+						continue
+				except pywintypes.error, err:
+					if err[0] == 7007: # A close operation is pending on the session.
+						Logger.debug("TS session %d close operation pending"%(session["SessionId"]))
+						session_closing.append(session)
+					continue
+				
+				return session["SessionId"]
+			
+			len1 = len(session_closing)
+		
 		return None
 	
 	

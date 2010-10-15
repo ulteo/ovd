@@ -135,8 +135,6 @@ class Session(AbstractSession):
 				if not self.profile.umount():
 					Logger.error("Unable to umount profile at uninstall_client of session "+self.id)
 		
-		self.user.destroy()
-		
 		return True
 	
 	
