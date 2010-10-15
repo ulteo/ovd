@@ -54,10 +54,10 @@ if (isset($_GET['info'])) {
 	echo '<h2>'._('Information').'</h2>';
 
 	echo '<ul>';
-	echo '<li><strong>'._('Servers:').'</strong>';
+	echo '<li><strong>'._('Servers:').'</strong><ul>';
 	foreach ($session->getAttribute('servers') as $server)
-		echo ' <a href="servers.php?action=manage&fqdn='.$server.'">'.$server.'</a>';
-	echo '</li>';
+		echo '<li><a href="servers.php?action=manage&fqdn='.$server.'">'.$server.'</a></li>';
+	echo '</ul></li>';
 	echo '<li><strong>'._('User:').'</strong> <a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</a></li>';
 	echo '<li><strong>'._('Type:').'</strong> ';
 	if ($session->getAttribute('mode') == Session::MODE_DESKTOP)
@@ -155,7 +155,7 @@ else {
 		if (count($sessions) > 1)
 			echo '		<th class="unsortable"></th>';
 		echo '		<th>'._('Session').'</th>';
-		echo '		<th>'._('Server').'</th>';
+		echo '		<th>'._('Servers').'</th>';
 		echo '		<th>'._('User').'</th>';
 		echo '		<th>'._('Status').'</th>';
 		echo '	</tr>';
@@ -168,10 +168,10 @@ else {
 			if (count($sessions) > 1)
 				echo '		<td><input class="input_checkbox" type="checkbox" name="selected_session[]" value="'.$session->id.'" /></td>';
 			echo '		<td><a href="sessions.php?info='.$session->id.'">'.$session->id.'</td>';
-			echo '		<td>';
+			echo '		<td><ul>';
 			foreach ($session->getAttribute('servers') as $server)
-				echo ' <a href="servers.php?action=manage&fqdn='.$server.'">'.$server.'</a>';
-			echo '		</td>';
+				echo '<li><a href="servers.php?action=manage&fqdn='.$server.'">'.$server.'</a></li>';
+			echo '		</ul></td>';
 			echo '		<td><a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</td>';
 			echo '		<td>'.$session->stringStatus().'</td>';
 			echo '		<td>';

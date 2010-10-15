@@ -77,6 +77,9 @@ foreach ($session->servers as $server) {
 	if (! $server)
 		continue;
 
+	if (! is_array($server->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $server->roles))
+		continue;
+
 	if ($server->fqdn == $session->server)
 		continue;
 

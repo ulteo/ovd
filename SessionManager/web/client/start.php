@@ -337,6 +337,8 @@ if (isset($old_session_id)) {
 					$profile_available = true;
 					$profile_server = $netfolder->server;
 					$profile_name = $netfolder->id;
+
+					$servers[] = $profile_server;
 				}
 			} else {
 				Logger::debug('main', '(startsession) User "'.$user_login.'" does not have a profile for now, checking for auto-creation');
@@ -363,6 +365,8 @@ if (isset($old_session_id)) {
 					$profile_available = true;
 					$profile_server = $profile->server;
 					$profile_name = $profile->id;
+
+					$servers[] = $profile_server;
 				} else {
 					Logger::debug('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" disabled, checking for session without profile');
 
@@ -414,6 +418,8 @@ if (isset($old_session_id)) {
 				}
 
 				$netshares[] = $sharedfolder;
+
+				$servers[] = $sharedfolder->server;
 			}
 
 			if (count($netshares) > 0)
@@ -553,6 +559,9 @@ if (! isset($old_session_id)) {
 		if (! $server)
 			continue;
 
+		if (! is_array($server->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $server->roles))
+			continue;
+
 		if ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1) {
 			$external_apps_token = new Token(gen_unique_string());
 			$external_apps_token->type = 'external_apps';
@@ -659,6 +668,9 @@ if (! isset($old_session_id)) {
 		foreach ($session->servers as $server) {
 			$server = Abstract_Server::load($server);
 			if (! $server)
+				continue;
+
+			if (! is_array($server->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $server->roles))
 				continue;
 
 			if ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1 && $server->fqdn == $session->server)
@@ -810,6 +822,9 @@ if ($session->mode == Session::MODE_DESKTOP) {
 	if (! $server)
 		continue;
 
+	if (! is_array($server->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $server->roles))
+		continue;
+
 	$server_applications = $server->getApplications();
 	if (! is_array($server_applications))
 		$server_applications = array();
@@ -848,6 +863,9 @@ if ($session->mode == Session::MODE_DESKTOP) {
 	foreach ($session->servers as $server) {
 		$server = Abstract_Server::load($server);
 		if (! $server)
+			continue;
+
+		if (! is_array($server->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $server->roles))
 			continue;
 
 		$server_applications = $server->getApplications();

@@ -316,10 +316,10 @@ class Session {
 		return false;
 	}
 
-	public function orderDeletion($request_aps_=true, $reason_=NULL) {
+	public function orderDeletion($request_servers_=true, $reason_=NULL) {
 		Logger::debug('main', 'Starting Session::orderDeletion for \''.$this->id.'\'');
 
-		if ($request_aps_) {
+		if ($request_servers_) {
 			foreach ($this->servers as $server) {
 				$session_server = Abstract_Server::load($server);
 				if (! $session_server) {
@@ -327,9 +327,19 @@ class Session {
 					return false;
 				}
 
-				$buf = $session_server->orderSessionDeletion($this->id);
-				if (! $buf)
-					Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on server \''.$server.'\'');
+				if (is_array($session_server->roles)) {
+					if (array_key_exists(Server::SERVER_ROLE_APS, $session_server->roles)) {
+						$buf = $session_server->orderSessionDeletion($this->id);
+						if (! $buf)
+							Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on server \''.$server.'\'');
+					}
+
+					if (array_key_exists(Server::SERVER_ROLE_FS, $session_server->roles)) {
+						$buf = $session_server->orderFSAccessDisable($this->user_login.'_OVD');
+						if (! $buf)
+							Logger::warning('main', 'Session::orderDeletion User \''.$this->user_login.'_OVD\' already logged out of server \''.$server.'\'');
+					}
+				}
 			}
 		}
 
