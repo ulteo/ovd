@@ -85,7 +85,7 @@ class User(AbstractUser):
 		
 		s,o = commands.getstatusoutput(cmd)
 		if s == 3072:
-			Logger.debug("mail dir error: '%s' return %d => %s"%(cmd, s, o))
+			Logger.debug("mail dir error: '%s' return %d => %s"%(str(cmd), s, o))
 		elif s != 0:
 			Logger.error("userdel return %d (%s)"%(s, o))
 			return False
