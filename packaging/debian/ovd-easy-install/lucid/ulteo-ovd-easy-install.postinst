@@ -21,8 +21,8 @@ conf_mysql()
     . /usr/share/wwwconfig-common/mysql-createuser.sh
     . /usr/share/wwwconfig-common/mysql-createdb.sh
 
-    php /usr/share/ulteo/sessionmanager/admin/init/setup.php \
-        "$dbserver" "$dbname" "$dbprefix" "$dbuser" "$dbpass" 2> /dev/null || true
+    su www-data -c 'php /usr/share/ulteo/sessionmanager/admin/init/setup.php \
+        "$dbserver" "$dbname" "$dbprefix" "$dbuser" "$dbpass" 2> /dev/null || true'
 
     # restart OVD slave server cause the DB was not ready before now
     CONFFILE=/etc/ulteo/subsystem.conf
@@ -32,7 +32,7 @@ conf_mysql()
 
     sleep 5 # waiting hack cause the first request in the SM is corrupted
 
-    php /usr/share/ulteo/sessionmanager/admin/init/demo.php
+    su www-data -c 'php /usr/share/ulteo/sessionmanager/admin/init/demo.php'
 }
 
 case "$1" in
