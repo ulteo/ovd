@@ -28,6 +28,7 @@ import os
 import debconf
 import random
 import string
+import subprocess
 
 from ubiquity import validation
 from ubiquity.misc import execute, execute_root, debconf_escape
@@ -37,10 +38,12 @@ NAME = 'ovd'
 AFTER = 'usersetup'
 WEIGHT = 10
 
+
 class PageBase(PluginUI):
+
     def __init__(self):
         self.allow_password_empty = False
-    
+
     def set_administrator_login(self, value):
         """Set the user's Unix user name."""
         raise NotImplementedError('set_administrator_login')
@@ -106,6 +109,17 @@ class PageGtk(PageBase):
         if gtk.gdk.get_default_root_window().get_screen().get_height() <= 600:
             self.scrolledwin.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         self.plugin_widgets = self.page
+
+        # show the IP
+        def shell(cmd):
+            p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+            return p.communicate()[0].strip('\n')
+        eth = shell("ifconfig | grep ^eth | head -n 1 | cut -d' ' -f1")
+        if eth:
+            ip = shell("unset LANG ; ifconfig %s | sed  -rn '/inet addr/ {s/.*addr:(.*)  Bcast.*/\\1/;p}'" % eth)
+            if ip:
+                builder.get_object('label_ip').set_text("-  http://%s/ovd/admin" % ip)
+                builder.get_object('box_ip').show()
 
         builder.connect_signals(self)
         self.debug("finished __init__")
@@ -213,6 +227,7 @@ class PageNoninteractive(PageBase):
 
 
 class Page(Plugin):
+
     def prepare(self, unfiltered=False):
         # We need to call info_loop as we switch to the page so the next button gets disabled.
         self.ui.info_loop(None)
