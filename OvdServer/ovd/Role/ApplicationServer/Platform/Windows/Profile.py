@@ -161,22 +161,18 @@ class Profile(AbstractProfile):
 	
 	def overrideRegistry(self, hiveName):
 		if self.profile is not None or len(self.sharedFolders)>0:
-			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software", 0, win32con.KEY_SET_VALUE)
-			win32api.RegCreateKey(key, r"Ulteo")
-			win32api.RegCloseKey(key)
+			Reg.CreateKeyR(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo")
 			
 			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo", 0, win32con.KEY_ALL_ACCESS)
-			win32api.RegCreateKey(key, r"ovd")
 			Reg.DeleteTree(key, r"ovd", False)
 			win32api.RegCloseKey(key)
 		
 		
 		if self.profile is not None:
-			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo\ovd", 0, win32con.KEY_SET_VALUE)
-			win32api.RegCreateKey(key, r"profile")
-			win32api.RegCloseKey(key)
+			path = hiveName+r"\Software\Ulteo\ovd\profile"
+			Reg.CreateKeyR(win32con.HKEY_USERS, path)
 			
-			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo\ovd\profile", 0, win32con.KEY_SET_VALUE)
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
 			win32api.RegSetValueEx(key, "host", 0, win32con.REG_SZ, self.profile["server"])
 			win32api.RegSetValueEx(key, "directory", 0, win32con.REG_SZ, self.profile["dir"])
 			win32api.RegSetValueEx(key, "login", 0, win32con.REG_SZ, self.profile["login"])
@@ -193,16 +189,14 @@ class Profile(AbstractProfile):
 		
 		shareNum = 0
 		for share in self.sharedFolders:
-			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo\ovd", 0, win32con.KEY_SET_VALUE)
-			win32api.RegCreateKey(key, r"share_%d"%(shareNum))
-			win32api.RegCloseKey(key)
+			path = hiveName+r"\Software\Ulteo\ovd\share_%d"%(shareNum)
+			Reg.CreateKeyR(win32con.HKEY_USERS, path)
 			
-			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo\ovd\share_%d"%(shareNum), 0, win32con.KEY_SET_VALUE)
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
 			win32api.RegSetValueEx(key, "host", 0, win32con.REG_SZ, share["server"])
 			win32api.RegSetValueEx(key, "directory", 0, win32con.REG_SZ, share["dir"])
 			win32api.RegSetValueEx(key, "login", 0, win32con.REG_SZ, share["login"])
 			win32api.RegSetValueEx(key, "password", 0, win32con.REG_SZ, share["password"])
-			win32api.RegSetValueEx(key, "name", 0, win32con.REG_SZ, share["name"])
 			win32api.RegCloseKey(key)
 			
 			# Set the name
