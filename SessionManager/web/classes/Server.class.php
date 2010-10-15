@@ -559,12 +559,12 @@ class Server {
 
 	public function getDiskUsage() {
 		$total_disk = (float)($this->getAttribute('disk_total'));
-		$used_disk = (float)($this->getAttribute('disk_free'));
+		$free_disk = (float)($this->getAttribute('disk_free'));
 
 		if ($total_disk == 0)
 			return false;
 
-		return round(($used_disk/$total_disk)*100);
+		return round((($total_disk-$free_disk)/$total_disk)*100);
 	}
 
 	public function orderDeletion() {
