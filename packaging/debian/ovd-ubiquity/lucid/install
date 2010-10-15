@@ -1,6 +1,7 @@
-ubi-ovd.py /usr/lib/ubiquity/plugins
-stepUlteo.ui /usr/share/ubiquity/gtk
-ovd-setup /usr/lib/ubiquity/ovd-setup
-mysql-initctl /usr/lib/ubiquity/ovd-setup
+ubi-ovd.py         /usr/lib/ubiquity/plugins
+ovd-setup          /usr/lib/ubiquity/ovd-setup
+mysql-initctl      /usr/lib/ubiquity/ovd-setup
+stepUserInfo.xslt  /usr/lib/ubiquity/ovd-setup
+stepUlteo.ui       /usr/share/ubiquity/gtk
+OVD                /usr/share/themes
 ulteo-ubiquity.png /usr/share/wallpapers
-OVD /usr/share/themes

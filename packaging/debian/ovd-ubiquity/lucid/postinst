@@ -12,6 +12,9 @@ gconftool-2 --direct --type string \
   --set /desktop/gnome/background/picture_options stretched \
   --set /apps/metacity/general/theme OVD
 
+xsltproc -o /usr/share/ubiquity/gtk/stepUserInfo.ui /usr/lib/ubiquity/ovd-setup/stepUserInfo.xslt \
+            /usr/share/ubiquity/gtk/stepUserInfo.ui
+
 #DEBHELPER#
 
 exit 0
