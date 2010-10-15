@@ -1313,6 +1313,7 @@ function action_add_sharedfolder() {
 	$buf = new NetworkFolder();
 	$buf->type = NetworkFolder::NF_TYPE_NETWORKFOLDER;
 	$buf->name = $sharedfolder_name;
+	$buf->status = NetworkFolder::NF_STATUS_INACTIVE;
 	
 	if (array_key_exists('sharedfolder_server', $_REQUEST)) {
 		$a_server = Abstract_Server::load($_REQUEST['sharedfolder_server']);
