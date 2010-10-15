@@ -36,6 +36,22 @@ if (! array_key_exists('session_id', $_SESSION)) {
 	die();
 }
 
+if (! Abstract_Session::exists($_SESSION['session_id'])) {
+	header('Content-Type: text/xml; charset=utf-8');
+
+	$dom = new DomDocument('1.0', 'utf-8');
+	$session_node = $dom->createElement('session');
+	$session_node->setAttribute('id', $_SESSION['session_id']);
+	$session_node->setAttribute('status', 'unknown');
+	$dom->appendChild($session_node);
+
+	$xml = $dom->saveXML();
+
+	echo $xml;
+
+	die();
+}
+
 $session = Abstract_Session::load($_SESSION['session_id']);
 if (! $session) {
 	header('Content-Type: text/xml; charset=utf-8');
