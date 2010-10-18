@@ -20,6 +20,7 @@
 
 import commands
 import hashlib
+import locale
 import os
 import pwd
 
@@ -45,6 +46,7 @@ class Profile(AbstractProfile):
 			os.makedirs(self.profile_mount_point)
 			
 			cmd = "mount -t cifs -o username=%s,password=%s,uid=%s,gid=0,umask=077 //%s/%s %s"%(self.profile["login"], self.profile["password"], self.session.user.name, self.profile["server"], self.profile["dir"], self.profile_mount_point)
+			cmd = self.transformToLocaleEncoding(cmd)
 			Logger.debug("Profile mount command: '%s'"%(cmd))
 			s,o = commands.getstatusoutput(cmd)
 			if s != 0:
@@ -60,6 +62,7 @@ class Profile(AbstractProfile):
 			
 			print "mount dest ",dest
 			cmd = "mount -t cifs -o username=%s,password=%s,uid=%s,gid=0,umask=077 //%s/%s %s"%(sharedFolder["login"], sharedFolder["password"], self.session.user.name, sharedFolder["server"], sharedFolder["dir"], dest)
+			cmd = self.transformToLocaleEncoding(cmd)
 			Logger.debug("Profile, sharedFolder mount command: '%s'"%(cmd))
 			s,o = commands.getstatusoutput(cmd)
 			if s != 0:
@@ -69,6 +72,7 @@ class Profile(AbstractProfile):
 			else:
 				sharedFolder["mountdest"] = dest
 				home = pwd.getpwnam(self.session.user.name)[5]
+				
 				dst = os.path.join(home, sharedFolder["name"])
 				i = 0
 				while os.path.exists(dst):
@@ -79,6 +83,7 @@ class Profile(AbstractProfile):
 					os.makedirs(dst)
 				
 				cmd = "mount -o bind \"%s\" \"%s\""%(dest, dst)
+				cmd = self.transformToLocaleEncoding(cmd)
 				Logger.debug("Profile bind dir command '%s'"%(cmd))
 				s,o = commands.getstatusoutput(cmd)
 				if s != 0:
@@ -100,6 +105,7 @@ class Profile(AbstractProfile):
 					os.makedirs(dst)
 				
 				cmd = "mount -o bind \"%s\" \"%s\""%(src, dst)
+				cmd = self.transformToLocaleEncoding(cmd)
 				Logger.debug("Profile bind dir command '%s'"%(cmd))
 				s,o = commands.getstatusoutput(cmd)
 				if s != 0:
@@ -123,6 +129,7 @@ class Profile(AbstractProfile):
 				continue
 			
 			cmd = "umount \"%s\""%(d)
+			cmd = self.transformToLocaleEncoding(cmd)
 			Logger.debug("Profile bind dir command: '%s'"%(cmd))
 			s,o = commands.getstatusoutput(cmd)
 			if s != 0:
@@ -132,6 +139,7 @@ class Profile(AbstractProfile):
 		for sharedFolder in self.sharedFolders:
 			if sharedFolder.has_key("mountdest"):
 				cmd = """umount "%s" """%(sharedFolder["mountdest"])
+				cmd = self.transformToLocaleEncoding(cmd)
 				Logger.debug("Profile sharedFolder umount dir command: '%s'"%(cmd))
 				s,o = commands.getstatusoutput(cmd)
 				if s != 0:
@@ -142,6 +150,7 @@ class Profile(AbstractProfile):
 		
 		if self.profile is not None and self.profileMounted:
 			cmd = "umount %s"%(self.profile_mount_point)
+			cmd = self.transformToLocaleEncoding(cmd)
 			Logger.debug("Profile umount command: '%s'"%(cmd))
 			s,o = commands.getstatusoutput(cmd)
 			if s != 0:
@@ -201,3 +210,13 @@ class Profile(AbstractProfile):
 	@staticmethod
 	def rsyncBlacklist():
 		return [".gvfs", ".pulse", ".pulse-cookie", ".rdp_drive", ".Trash", ".vnc"]
+	
+	
+	@staticmethod
+	def transformToLocaleEncoding(data):
+		try:
+			encoding = locale.getpreferredencoding()
+		except:
+			encoding = "UTF-8"
+		
+		return data.encode(encoding)
