@@ -508,6 +508,8 @@ function server_display_role_fs($server_, $var_) {
 			$count = 0;
 			echo '<table id="available_networkfolder_table_'.$k.'" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
 			echo '<tr class="title">';
+			if (count($data['folder']) > 1)
+				echo '<th class="unsortable"></th>';
 			if ($k != 0)
 				echo '<th>'._('Name').'</th>';
 			echo '<th class="unsortable">'.(($k == 0)?_('Owner'):_('Used by')).'</th>';
