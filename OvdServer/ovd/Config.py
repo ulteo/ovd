@@ -47,6 +47,7 @@ class Config:
 	
 	log_level = Logger.INFO | Logger.WARN | Logger.ERROR | Logger.DEBUG
 	log_file = os.path.join(Platform.System.get_default_log_dir(), "slaveserver.log")
+	log_threaded = False
 	
 	conf_dir = Platform.System.get_default_config_dir()
 	spool_dir = Platform.System.get_default_spool_dir()
@@ -103,6 +104,9 @@ class Config:
 					Config.log_level|= Logger.DEBUG_2
 				else:
 					Config.log_level|= Logger.DEBUG_3
+		
+		if Config.infos.has_key("LOG_THREADED"):
+			Config.log_threaded = (Config.infos["LOG_THREADED"].lower() == "true")
 		
 		return True
 	

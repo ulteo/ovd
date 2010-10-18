@@ -46,6 +46,7 @@ class Logger:
 		self.filename = filename
 		
 		self.threaded = False
+		self.thread = None
 		
 		if filename is not None or stdout is not False:	
 			formatter = logging.Formatter('%(asctime)s [%(levelname)s]: %(message)s')
@@ -70,16 +71,18 @@ class Logger:
 
 			if self.consoleHandler is not None:
 				self.logging.removeHandler(self.consoleHandler)
-		
-		if self.threaded:
-			self.thread._Thread__stop()
 	
 	
-	def setThreadedMode(self):
-		self.queue = Queue()
-		self.thread = threading.Thread(name="log", target=self.run)
-		self.threaded = True
-		self.thread.start()
+	def setThreadedMode(self, mode):
+		if mode is True and self.threaded is False:
+			self.queue = Queue()
+			self.thread = threading.Thread(name="log", target=self.run)
+			self.threaded = True
+			self.thread.start()
+		else:
+			self.threaded = False
+			if self.thread is not None and self.thread.isAlive():
+				self.thread._Thread__stop()
 	
 	
 	def run(self):
@@ -125,13 +128,18 @@ class Logger:
 	def initialize(name, loglevel, filename=None, stdout=False, threaded=False):
 		instance = Logger(name, loglevel, filename, stdout)
 		if threaded:
-			instance.setThreadedMode()
+			instance.setThreadedMode(True)
 		
 		Logger.setInstance(instance)
 		
 	@staticmethod 
 	def setInstance(instance):
+		old_instance = Logger._instance
+		
 		Logger._instance = instance
+		
+		if old_instance is not None and old_instance.threaded:
+			old_instance.setThreadedMode(False)
 	
 	@staticmethod
 	def info(message):

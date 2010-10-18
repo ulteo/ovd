@@ -121,7 +121,7 @@ class Win32Logger(Logger):
 
 	# Static methods
 	@staticmethod 
-	def initialize(name, loglevel, file=None):
+	def initialize(name, loglevel, file=None, threaded=False):
 		instance = Win32Logger(name, loglevel, file)
 		Logger._instance = instance
 

@@ -111,7 +111,7 @@ def main():
 			print >> sys.stderr, "Unable to write pid-file '%s'"%(pidFile)
 			sys.exit(1)
 	
-	Logger.initialize("OVD", Config.log_level, Config.log_file, (not daemonize))
+	Logger.initialize("OVD", Config.log_level, Config.log_file, (not daemonize), Config.log_threaded)
 	
 	
 	server = SlaveServer(Communication)
@@ -141,6 +141,9 @@ def main():
 	
 	if not server.stopped:
 		server.stop()
+	
+	if Config.log_threaded:
+		Logger.initialize("OVD", Config.log_level, Config.log_file, (not daemonize), False)
 	
 	Logger.info("SlaveServer stopped")
 	if pidFile is not None and os.path.exists(pidFile):
