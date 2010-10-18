@@ -506,7 +506,7 @@ function server_display_role_fs($server_, $var_) {
 		if (is_array($data['folder']) && count($data['folder']) > 0 && is_array($data['usedby'])) {
 			echo '<h3>'.$data['name'].'</h3>';
 			$count = 0;
-			echo '<table id="available_networkfolder_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
+			echo '<table id="available_networkfolder_table_'.$k.'" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
 			echo '<tr class="title">';
 			if ($k != 0)
 				echo '<th>'._('Name').'</th>';
@@ -519,6 +519,8 @@ function server_display_role_fs($server_, $var_) {
 				
 				$content = 'content'.(($count++%2==0)?1:2);
 				echo '<tr class="'.$content.'">';
+				if (count($data['folder']) > 1)
+					echo '<td><input class="input_checkbox" type="checkbox" name="ids[]" value="'.$a_networkfolder->id.'" /></td>';
 				if ($k != 0) {
 					echo '<td>';
 					if ($data['page'] !== 'users') {
@@ -553,10 +555,30 @@ function server_display_role_fs($server_, $var_) {
 				echo '<input type="hidden" name="name" value="NetworkFolders" />';
 				echo '<input type="hidden" name="action" value="del" />';
 				echo '<input type="hidden" name="ids[]" value="'.$a_networkfolder->id.'" />';
-				echo '<input type="submit" value="'.(($k == 0)?_('Delete this user profile'):_('Delete this network folder')).'" />';
+				echo '<input type="submit" value="'._('Delete').'" />';
 				echo '</form></td>';
 				echo '</tr>';
 			}
+
+			if (count($data['folder']) > 1) {
+				$content = 'content'.(($count++%2==0)?1:2);
+				echo '<tfoot>';
+				echo '<tr class="'.$content.'">';
+				echo '<td colspan="'.(($k != 0)?4:3).'">';
+				echo '<a href="javascript:;" onclick="markAllRows(\'available_networkfolder_table_'.$k.'\'); return false">'._('Mark all').'</a>';
+				echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'available_networkfolder_table_'.$k.'\'); return false">'._('Unmark all').'</a>';
+				echo '</td>';
+				echo '<td>';
+				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''.(($k == 0)?_('Are you sure that you want to delete these user profiles?'):_('Are you sure that you want to delete these network folders?')).'\') && updateMassActionsForm(this, \'available_networkfolder_table_'.$k.'\');">';
+				echo '<input type="hidden" name="name" value="NetworkFolders" />';
+				echo '<input type="hidden" name="action" value="del" />';
+				echo '<input type="submit" name="to_production" value="'._('Delete').'"/>';
+				echo '</form>';
+				echo '</td>';
+				echo '</tr>';
+				echo '</tfoot>';
+			}
+
 			echo '</table>';
 			echo '<br />';
 		}
