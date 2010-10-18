@@ -45,6 +45,7 @@ from Reg import OpenKeyCreateIfDoesntExist
 class Session(AbstractSession):
 	def init(self):
 		self.installedShortcut = []
+		self.succefully_installed = False
 	
 	
 	def install_client(self):
@@ -86,6 +87,7 @@ class Session(AbstractSession):
 		if self.profile is not None and self.profile.hasProfile():
 			self.profile.umount()
 		
+		self.succefully_installed = True
 		return True
 	
 	
@@ -122,6 +124,9 @@ class Session(AbstractSession):
 	
 	
 	def uninstall_client(self):
+		if not self.succefully_installed:
+			return
+		
 		self.archive_shell_dump()
 		
 		if self.profile is not None and self.profile.hasProfile():
