@@ -2,7 +2,7 @@
 
 CONFDIR=/etc/ulteo/ovd
 
-ovd-slaveserver-role add Gateway
+[ -z "$2" ] && ovd-slaveserver-role add Gateway
 
 if [ ! -e $CONFDIR/gateway.pem ]; then
     openssl genrsa 1024 > $CONFDIR/gateway.pem 2> /dev/null

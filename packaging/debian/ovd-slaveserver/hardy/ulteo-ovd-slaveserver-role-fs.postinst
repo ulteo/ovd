@@ -9,7 +9,7 @@ HOMEDIR=/var/lib/ulteo/ovd/slaveserver/fs
 A2SITESAVDIR=/etc/apache2/sites-available
 
 # update slavesever config file
-ovd-slaveserver-role add FileServer
+[ -z "$2" ] && ovd-slaveserver-role add FileServer
 
 # add user ovd-fs
 getent passwd ovd-fs >/dev/null || adduser --system --group --home $HOMEDIR ovd-fs 2> /dev/null
