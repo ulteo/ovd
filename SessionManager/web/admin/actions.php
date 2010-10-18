@@ -832,6 +832,11 @@ if ($_REQUEST['name'] == 'User') {
 			}
 		}
 		
+		if ($u->hasAttribute('password') && $u->getAttribute('password') === '') {
+			popup_error(_('Unable to create user with an empty password'));
+			redirect();
+		}
+		
 		$res = $userDB->add($u);
 		if (! $res) {
 			popup_error(sprintf(_("Unable to create user '%s'"), $_REQUEST['login']));
