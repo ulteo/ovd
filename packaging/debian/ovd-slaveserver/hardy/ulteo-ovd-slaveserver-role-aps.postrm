@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ovd-slaveserver-role del ApplicationServer
+[ "$1" != "upgrade" ] && ovd-slaveserver-role del ApplicationServer
 
 #DEBHELPER#
 
