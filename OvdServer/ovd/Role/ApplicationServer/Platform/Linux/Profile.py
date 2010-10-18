@@ -23,6 +23,7 @@ import hashlib
 import locale
 import os
 import pwd
+import urllib
 
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Profile import Profile as AbstractProfile
@@ -41,6 +42,7 @@ class Profile(AbstractProfile):
 	
 	def mount(self):
 		os.makedirs(self.cifs_dst)
+		self.homeDir = pwd.getpwnam(self.session.user.name)[5]
 		
 		if self.profile is not None:
 			os.makedirs(self.profile_mount_point)
@@ -71,7 +73,7 @@ class Profile(AbstractProfile):
 				os.rmdir(dest)
 			else:
 				sharedFolder["mountdest"] = dest
-				home = pwd.getpwnam(self.session.user.name)[5]
+				home = self.homeDir
 				
 				dst = os.path.join(home, sharedFolder["name"])
 				i = 0
@@ -91,9 +93,9 @@ class Profile(AbstractProfile):
 					Logger.error("Profile bind dir failed (status: %d) %s"%(s, o))
 				else:
 					self.folderRedirection.append(dst)
+					self.addGTKBookmark(dst)
 		
 		if self.profile is not None:
-			self.homeDir = pwd.getpwnam(self.session.user.name)[5]
 			for d in [self.DesktopDir, self.DocumentsDir]:
 				src = os.path.join(self.profile_mount_point, d)
 				dst = os.path.join(self.homeDir, d)
@@ -220,3 +222,13 @@ class Profile(AbstractProfile):
 			encoding = "UTF-8"
 		
 		return data.encode(encoding)
+	
+	
+	def addGTKBookmark(self, url):
+		url = self.transformToLocaleEncoding(url)
+		url = urllib.pathname2url(url)
+		
+		path = os.path.join(self.homeDir, ".gtk-bookmarks")
+		f = file(path, "a")
+		f.write("file://%s\n"%(url))
+		f.close()
