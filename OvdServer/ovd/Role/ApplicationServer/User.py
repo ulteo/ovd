@@ -22,9 +22,13 @@ class User:
 	def __init__(self, name_, infos_ = {}):
 		self.name = name_
 		self.infos = infos_
+		self.home = None
 	
 	def create(self):
 		pass
 	
 	def destroy(self):
 		pass
+	
+	def get_home(self):
+		return self.home

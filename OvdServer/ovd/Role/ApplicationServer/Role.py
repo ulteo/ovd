@@ -19,6 +19,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import glob
+import os
 from Queue import Queue
 import time
 import threading
@@ -86,6 +88,8 @@ class Role(AbstractRole):
 		if not self.purgeGroup():
 			Logger.error("Unable to purge group")
 			return False
+		
+		self.purgeArchives()
 		
 		for _ in xrange(1):
 			self.threads.append(SessionManagement(self, self.sessions_spooler))
@@ -247,6 +251,11 @@ class Role(AbstractRole):
 					return False
 			
 		return False
+	
+	
+	def purgeArchives(self):
+		for path in glob.glob(os.path.join(Config.spool_dir, "sessions dump archive", "*")):
+			os.remove(path)
 	
 	
 	@staticmethod

@@ -89,6 +89,8 @@ class Session(AbstractSession):
 	
 	
 	def uninstall_client(self):
+		self.archive_shell_dump()
+		
 		if self.profile is not None:
 			self.profile.umount()
 		
@@ -102,6 +104,7 @@ class Session(AbstractSession):
 		
 		if os.path.exists(d):
 			shutil.rmtree(d)
+	
 	
 	def get_target_file(self, application):
 		return "%s.desktop"%(str(application["id"]))

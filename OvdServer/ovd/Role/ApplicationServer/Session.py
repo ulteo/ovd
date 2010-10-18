@@ -22,6 +22,7 @@
 import glob
 import locale
 import os
+import shutil
 import time
 
 from ovd.Config import Config
@@ -160,3 +161,21 @@ class Session:
 
 			self.used_applications = applications
 		return self.used_applications
+	
+	
+	def archive_shell_dump(self):
+		path = os.path.join(self.user.get_home(), "ovd-dump.txt")
+		if not os.path.isfile(path):
+			return
+		
+		spool = os.path.join(Config.spool_dir, "sessions dump archive")
+		if not os.path.exists(spool):
+			os.makedirs(spool)
+		
+		dst = os.path.join(spool, "%s %s.txt"%(self.id, self.user.name))
+		shutil.copyfile(path, dst)
+		
+		try:
+			os.remove(path)
+		except:
+			pass

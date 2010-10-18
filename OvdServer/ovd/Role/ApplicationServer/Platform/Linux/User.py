@@ -59,6 +59,9 @@ class User(AbstractUser):
 		if self.infos.has_key("shell"):
 			xrdp.UserSetShell(self.name, self.infos["shell"])
 			xrdp.UserAllowUserShellOverride(self.name, True)
+		
+		
+		self.home = pwd.getpwnam(self.name)[5]
 		return True
 	
 	

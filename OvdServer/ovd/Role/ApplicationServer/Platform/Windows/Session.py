@@ -54,6 +54,7 @@ class Session(AbstractSession):
 		data["UserName"] = self.user.name
 		hkey = win32profile.LoadUserProfile(logon, data)
 		self.windowsProfileDir = win32profile.GetUserProfileDirectory(logon)
+		self.user.home = self.windowsProfileDir
 		
 		self.windowsProgramsDir = shell.SHGetFolderPath(0, shellcon.CSIDL_PROGRAMS, logon, 0)
 		Logger.debug("startmenu: %s"%(self.windowsProgramsDir))
@@ -121,6 +122,8 @@ class Session(AbstractSession):
 	
 	
 	def uninstall_client(self):
+		self.archive_shell_dump()
+		
 		if self.profile is not None and self.profile.hasProfile():
 			if not self.profile.mount():
 				Logger.warn("Unable to mount profile at uninstall_client of session "+self.id)
