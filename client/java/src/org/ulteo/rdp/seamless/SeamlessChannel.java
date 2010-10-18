@@ -68,7 +68,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 	protected boolean processCreate(long id, long group, long parent, long flags) {
 		String name = "w_"+id;
 		if( this.windows.containsKey(name)) {
-		    logger.error("[processCreate] ID '"+String.format("0x%08lx", id)+"' already exist");
+		    logger.error("[processCreate] ID '"+String.format("0x%08x", id)+"' already exist");
 		    return false;
 		}
 
@@ -80,11 +80,15 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 
 			// Special case for transient windows
 			if (parent == 0xffffffffL) {
-				logger.debug("[processCreate] Transient window: "+String.format("0x%08lx", id));
+				System.out.println("1");
+				logger.debug("[processCreate] Transient window: "+String.format("0x%08x", id));
+				System.out.println("2");
 				sf_parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
 			}
 			else if(! this.windows.containsKey(parentName)) {
-			    logger.error("[processCreate] Parent window ID '"+String.format("0x%08lx", parent)+"' does not exist");
+				System.out.println("3 "+parent);
+			    logger.error("[processCreate] Parent window ID '"+String.format("0x%08x", parent)+"' does not exist");
+			    System.out.println("4");
 			    return false;
 			}
 			else

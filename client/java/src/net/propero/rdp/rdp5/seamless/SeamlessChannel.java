@@ -370,7 +370,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 		String name = "w_"+id;
 		if( this.windows.containsKey(name)) {
-		    logger.error("[processCreate] ID '"+String.format("0x%08lx", id)+"' already exist");
+		    logger.error("[processCreate] ID '"+String.format("0x%08x", id)+"' already exist");
 		    return false;
 		}
 
@@ -400,7 +400,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 		String name = "w_"+id;
 		if(! this.windows.containsKey(name)) {
-		    logger.error("[processDestroy] ID '"+String.format("0x%08lx", id)+"' doesn't exist");
+		    logger.error("[processDestroy] ID '"+String.format("0x%08x", id)+"' doesn't exist");
 		    return false;
 		}
 
@@ -442,7 +442,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 		String name = "w_"+id;
 		if(! this.windows.containsKey(name)) {
-		    logger.error("[processPosition] ID '"+String.format("0x%08lx", id)+"' doesn't exist");
+		    logger.error("[processPosition] ID '"+String.format("0x%08x", id)+"' doesn't exist");
 		    return false;
 		}
 
@@ -456,7 +456,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		//TODO: ui_seamless_settitle(id, tokens[3], flags);
 		String name = "w_"+id;
 		if(! this.windows.containsKey(name)) {
-		    logger.error("[processTitle] ID '"+String.format("0x%08lx", id)+"' doesn't exist");
+		    logger.error("[processTitle] ID '"+String.format("0x%08x", id)+"' doesn't exist");
 		    return false;
 		}
 
@@ -476,7 +476,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 		String name = "w_"+id;
 		if(! this.windows.containsKey(name)) {
-		    logger.error("[processState] ID '"+String.format("0x%08lx", id)+"' doesn't exist");
+		    logger.error("[processState] ID '"+String.format("0x%08x", id)+"' doesn't exist");
 		    return false;
 		}
 
@@ -533,7 +533,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		String name = "w_"+window_id;
 		
 		if(! this.windows.containsKey(name)) {
-		    logger.error("[process_setIcon] ID '"+String.format("0x%08lx", window_id)+"' doesn't exist");
+		    logger.error("[process_setIcon] ID '"+String.format("0x%08x", window_id)+"' doesn't exist");
 		    return false;
 		}
 
