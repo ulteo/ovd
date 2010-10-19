@@ -860,6 +860,7 @@ if ($session->mode == Session::MODE_DESKTOP) {
 	}
 	$session_node->appendChild($server_node);
 } elseif ($session->mode == Session::MODE_APPLICATIONS) {
+	$defined_apps = array();
 	foreach ($session->servers as $server) {
 		$server = Abstract_Server::load($server);
 		if (! $server)
@@ -881,7 +882,6 @@ if ($session->mode == Session::MODE_DESKTOP) {
 		$server_node->setAttribute('login', $user_login);
 		$server_node->setAttribute('password', $user_password);
 
-		$defined_apps = array();
 		foreach ($user->applications() as $application) {
 			if ($application->getAttribute('type') != $server->getAttribute('type'))
 				continue;
