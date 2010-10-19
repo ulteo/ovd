@@ -80,6 +80,8 @@ class SessionManagement(Thread):
 			self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
 			return self.destroy_session(session)
 		
+		session.user.created = True
+		
 		try:
 			rr = session.install_client()
 		except Exception,err:
@@ -99,21 +101,24 @@ class SessionManagement(Thread):
 	def destroy_session(self, session):
 		Logger.info("SessionManagement::destroy %s"%(session.id))
 		
-		try:
-			sessid = RolePlatform.TS.getSessionID(session.user.name)
-		except Exception,err:
-			Logger.error("RDP server dialog failed ... ")
-			Logger.debug("SessionManagement::destroy_session: %s"%(str(err)))
-			return
-		
-		if sessid is not None:
-			session.user.infos["tsid"] = sessid
-		
-		self.logoff_user(session.user)
-		
-		session.uninstall_client()
-		
-		self.destroy_user(session.user)
+		if session.user.created:
+			# Doesn't have to destroy the session if the user was never created
+			
+			try:
+				sessid = RolePlatform.TS.getSessionID(session.user.name)
+			except Exception,err:
+				Logger.error("RDP server dialog failed ... ")
+				Logger.debug("SessionManagement::destroy_session: %s"%(str(err)))
+				return
+			
+			if sessid is not None:
+				session.user.infos["tsid"] = sessid
+			
+			self.logoff_user(session.user)
+			
+			session.uninstall_client()
+			
+			self.destroy_user(session.user)
 		
 		if self.aps_instance.sessions.has_key(session.id):
 			del(self.aps_instance.sessions[session.id])

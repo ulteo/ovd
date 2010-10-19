@@ -23,6 +23,7 @@ class User:
 		self.name = name_
 		self.infos = infos_
 		self.home = None
+		self.created = False
 	
 	def create(self):
 		pass
@@ -32,3 +33,6 @@ class User:
 	
 	def get_home(self):
 		return self.home
+	
+	def exists(self):
+		pass
