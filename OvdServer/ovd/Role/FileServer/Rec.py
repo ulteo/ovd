@@ -46,11 +46,22 @@ class Rec(ProcessEvent):
 					return
 		  
 		path = os.path.join(event_k.path,event_k.name)
-		os.lchown(path, Config.uid, Config.gid)
-		
 		if os.path.isdir(path):
 			Logger.debug("FileServer::Rec chmod dir %s"%(path))
-			os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.S_ISGID)
+			chmod_flag = stat.S_IRWXU | stat.S_IRWXG | stat.S_ISGID
 		elif os.path.isfile(path):
 			Logger.debug("FileServer::Rec chmod file %s"%(path))
-			os.chmod(path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP)
+			chmod_flag = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP
+		else:
+			chmod_flag = None
+		
+		try:
+			os.lchown(path, Config.uid, Config.gid)
+			if chmod_flag is not None:
+				os.chmod(path, chmod_flag)
+		except OSError, err:
+			if os.path.exists(path):
+				Logger.warn("Unable to change file owner for '%s'"%(path))
+				Logger.debug("lchown returned %s"%(err))
+			else:
+				Logger.debug2("FS:REC:process_IN_CREATE: path '%s' deleted before chown/chmod operations")
