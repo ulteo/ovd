@@ -334,11 +334,11 @@ class Session {
 							Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on server \''.$server.'\'');
 					}
 
-					if (array_key_exists(Server::SERVER_ROLE_FS, $session_server->roles)) {
+					/*if (array_key_exists(Server::SERVER_ROLE_FS, $session_server->roles)) {
 						$buf = $session_server->orderFSAccessDisable($this->user_login.'_OVD');
 						if (! $buf)
 							Logger::warning('main', 'Session::orderDeletion User \''.$this->user_login.'_OVD\' already logged out of server \''.$server.'\'');
-					}
+					}*/
 				}
 			}
 		}
