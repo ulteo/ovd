@@ -335,9 +335,9 @@ class Session {
 					}
 
 					/*if (array_key_exists(Server::SERVER_ROLE_FS, $session_server->roles)) {
-						$buf = $session_server->orderFSAccessDisable($this->user_login.'_OVD');
+						$buf = $session_server->orderFSAccessDisable($this->settings['fs_access_login']);
 						if (! $buf)
-							Logger::warning('main', 'Session::orderDeletion User \''.$this->user_login.'_OVD\' already logged out of server \''.$server.'\'');
+							Logger::warning('main', 'Session::orderDeletion User \''.$this->settings['fs_access_login'].'\' already logged out of server \''.$server.'\'');
 					}*/
 				}
 			}
