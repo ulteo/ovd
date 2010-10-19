@@ -880,12 +880,18 @@ if ($session->mode == Session::MODE_DESKTOP) {
 		$server_node->setAttribute('fqdn', $server->getAttribute('external_name'));
 		$server_node->setAttribute('login', $user_login);
 		$server_node->setAttribute('password', $user_password);
+
+		$defined_apps = array();
 		foreach ($user->applications() as $application) {
 			if ($application->getAttribute('type') != $server->getAttribute('type'))
 				continue;
 
 			if (! in_array($application->getAttribute('id'), $available_applications))
 				continue;
+
+			if (in_array($application->getAttribute('id'), $defined_apps))
+				continue;
+			$defined_apps[] = $application->getAttribute('id');
 
 			$application_node = $dom->createElement('application');
 			$application_node->setAttribute('id', $application->getAttribute('id'));
