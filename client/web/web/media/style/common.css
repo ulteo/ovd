@@ -188,7 +188,7 @@ div.rounded {
 }
 
 #desktopAppletContainer {
-	position: relative;
+	position: absolute;
 
 	top: 0px;
 	left: 0px;
@@ -230,14 +230,28 @@ div.rounded {
 }
 
 #applicationsAppletContainer {
-	position: relative;
+	position: absolute;
 
 	top: 0px;
 	left: 0px;
 }
 
 #printingAppletContainer {
-	position: relative;
+	position: absolute;
+
+	top: 0px;
+	left: 0px;
+}
+
+#testJava {
+	position: absolute;
+
+	top: 0px;
+	left: 0px;
+}
+
+#CheckJava {
+	position: absolute;
 
 	top: 0px;
 	left: 0px;

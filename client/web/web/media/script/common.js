@@ -689,6 +689,7 @@ function buildAppletNode(name, code, archive, extra_params) {
 	applet_node.setAttribute('id', name);
 	applet_node.setAttribute('width', '1');
 	applet_node.setAttribute('height', '1');
+	applet_node.setAttribute('style', 'position: absolute; top: 0px; left: 0px;');
 
 	var params = new Hash();
 	params.set('name', name);
