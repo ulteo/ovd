@@ -300,4 +300,22 @@ class Abstract_Session {
 
 		return $sessions;
 	}
+
+	public static function getByFSUser($fs_user_login_) {
+		$SQL = SQL::getInstance();
+
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 LIKE %3', $SQL->prefix.'sessions', 'settings', '%fs_access_login%'.$fs_user_login_.'%');
+		$rows = $SQL->FetchAllResults();
+
+		$sessions = array();
+		foreach ($rows as $row) {
+			$session = self::generateFromRow($row);
+			if (! is_object($session))
+				continue;
+
+			$sessions[] = $session;
+		}
+
+		return $sessions;
+	}
 }

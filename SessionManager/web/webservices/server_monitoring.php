@@ -232,7 +232,7 @@ if (array_key_exists('shares', $ret) && is_array($ret['shares'])) {
 			case NetworkFolder::NF_STATUS_ACTIVE:
 				$disabled = 0;
 				foreach ($share['users'] as $user) {
-					$sessions = Abstract_Session::getByUser(substr($user, 0, -4));
+					$sessions = Abstract_Session::getByFSUser($user);
 
 					if (count($sessions) == 0) {
 						$server = Abstract_Server::load($ret['server']);
