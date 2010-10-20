@@ -34,10 +34,10 @@ public class LinuxPaths {
 		try {
 			xdgProperties.load(new FileInputStream(xdgFile));
 		} catch (FileNotFoundException e) {
-			org.ulteo.Logger.error("Unable to find the xdg file: "+xdgFile);
+			org.ulteo.Logger.debug("Unable to find the xdg file: "+xdgFile);
 			return null;
 		} catch (IOException e) {
-			org.ulteo.Logger.error("Unable to read xdg file: "+xdgFile);
+			org.ulteo.Logger.debug("Unable to read xdg file: "+xdgFile);
 			return null;
 		}
 		return xdgProperties;
