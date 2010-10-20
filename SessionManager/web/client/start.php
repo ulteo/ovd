@@ -233,8 +233,10 @@ if ($sessions > 0) {
 		if ($session->mode == Session::MODE_DESKTOP && $session->isSuspended()) {
 			$old_session_id = $session->id;
 
-			$user_login = $session->settings['aps_access_login'];
-			$user_password = $session->settings['aps_access_password'];
+			$user_login_aps = $session->settings['aps_access_login'];
+			$user_password_aps = $session->settings['aps_access_password'];
+			$user_login_fs = $session->settings['fs_access_login'];
+			$user_password_fs = $session->settings['fs_access_password'];
 		} elseif ($session->isAlive()) {
 			Logger::error('main', '(startsession) User \''.$user->getAttribute('login').'\' already have an active session');
 			throw_response(USER_WITH_ACTIVE_SESSION);
@@ -256,8 +258,10 @@ if (isset($old_session_id)) {
 
 	Logger::info('main', '(startsession) Resuming session for '.$user->getAttribute('login').' ('.$old_session_id.' => '.$session->server.')');
 } else {
-	$user_login = $user->getAttribute('login').'_OVD'; //hardcoded
-	$user_password = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+	$user_login_aps = 'u'.time().gen_string(5).'_APS'; //hardcoded
+	$user_password_aps = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+	$user_login_fs = 'u'.time().gen_string(6).'_FS'; //hardcoded
+	$user_password_fs = $user_password_aps;
 
 	$buf_servers = $user->getAvailableServers();
 	if (is_null($buf_servers) || count($buf_servers) == 0) {
@@ -326,7 +330,7 @@ if (isset($old_session_id)) {
 
 			$profile_available = false;
 			if (count($netfolders) == 1) {
-				Logger::debug('main', '(startsession) User "'.$user_login.'" already have a profile, using it');
+				Logger::debug('main', '(startsession) User "'.$user_login_fs.'" already have a profile, using it');
 
 				$netfolder = array_pop($netfolders);
 
@@ -341,10 +345,10 @@ if (isset($old_session_id)) {
 					$servers[] = $profile_server;
 				}
 			} else {
-				Logger::debug('main', '(startsession) User "'.$user_login.'" does not have a profile for now, checking for auto-creation');
+				Logger::debug('main', '(startsession) User "'.$user_login_fs.'" does not have a profile for now, checking for auto-creation');
 
 				if (isset($auto_create_profile) && $auto_create_profile == 1) {
-					Logger::debug('main', '(startsession) User "'.$user_login.'" profile will be auto-created, and used');
+					Logger::debug('main', '(startsession) User "'.$user_login_fs.'" profile will be auto-created, and used');
 
 					$fileserver = array_pop($fileservers);
 					$profile = new NetworkFolder();
@@ -353,12 +357,12 @@ if (isset($old_session_id)) {
 					Abstract_NetworkFolder::save($profile);
 
 					if (! $fileserver->createNetworkFolder($profile->id)) {
-						Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 1)');
+						Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login_fs.'" failed (step 1)');
 						throw_response(INTERNAL_ERROR);
 					}
 
 					if (! $profile->addUser($user)) {
-						Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 2)');
+						Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login_fs.'" failed (step 2)');
 						throw_response(INTERNAL_ERROR);
 					}
 
@@ -368,28 +372,28 @@ if (isset($old_session_id)) {
 
 					$servers[] = $profile_server;
 				} else {
-					Logger::debug('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" disabled, checking for session without profile');
+					Logger::debug('main', '(startsession) Auto-creation of profile for User "'.$user_login_fs.'" disabled, checking for session without profile');
 
 					if (isset($start_without_profile) && $start_without_profile == 1) {
-						Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without a valid profile, proceeding');
+						Logger::debug('main', '(startsession) User "'.$user_login_fs.'" can start a session without a valid profile, proceeding');
 
 						$profile_available = false;
 					} else {
-						Logger::error('main', '(startsession) User "'.$user_login.'" does not have a valid profile, aborting');
+						Logger::error('main', '(startsession) User "'.$user_login_fs.'" does not have a valid profile, aborting');
 
 						throw_response(INTERNAL_ERROR);
 					}
 				}
 			}
 		} else {
-			Logger::debug('main', '(startsession) FileServer not available for User "'.$user_login.'", checking for session without profile');
+			Logger::debug('main', '(startsession) FileServer not available for User "'.$user_login_fs.'", checking for session without profile');
 
 			if (isset($start_without_profile) && $start_without_profile == 1) {
-				Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without a valid profile, proceeding');
+				Logger::debug('main', '(startsession) User "'.$user_login_fs.'" can start a session without a valid profile, proceeding');
 
 				$profile_available = false;
 			} else {
-				Logger::error('main', '(startsession) User "'.$user_login.'" does not have a valid profile, aborting');
+				Logger::error('main', '(startsession) User "'.$user_login_fs.'" does not have a valid profile, aborting');
 
 				throw_response(INTERNAL_ERROR);
 			}
@@ -407,11 +411,11 @@ if (isset($old_session_id)) {
 					Logger::error('main', '(startsession) Server "'.$sharedfolder->server.'" for shared folder "'.$sharedfolder->id.'" is not available');
 
 					if (isset($start_without_all_sharedfolders) && $start_without_all_sharedfolders == 1) {
-						Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without all shared folders available, proceeding');
+						Logger::debug('main', '(startsession) User "'.$user_login_fs.'" can start a session without all shared folders available, proceeding');
 
 						continue;
 					} else {
-						Logger::error('main', '(startsession) User "'.$user_login.'" does not have all shared folders available, aborting');
+						Logger::error('main', '(startsession) User "'.$user_login_fs.'" does not have all shared folders available, aborting');
 
 						throw_response(INTERNAL_ERROR);
 					}
@@ -502,10 +506,10 @@ foreach ($optional_args as $k => $v)
 $session->setAttribute('settings', $data);
 $session->setAttribute('start_time', time());
 
-$session->settings['aps_access_login'] = $user_login;
-$session->settings['aps_access_password'] = $user_password;
-$session->settings['fs_access_login'] = $session->settings['aps_access_login'];
-$session->settings['fs_access_password'] = $session->settings['aps_access_password'];
+$session->settings['aps_access_login'] = $user_login_aps;
+$session->settings['aps_access_password'] = $user_password_aps;
+$session->settings['fs_access_login'] = $user_login_fs;
+$session->settings['fs_access_password'] = $user_password_fs;
 
 $save_session = Abstract_Session::save($session);
 if ($save_session === true) {
@@ -548,8 +552,8 @@ if (! isset($old_session_id)) {
 		if (! $server)
 			continue;
 
-		if (! $server->orderFSAccessEnable($user_login, $user_password, $v)) {
-			Logger::error('main', '(startsession) Cannot enable FS access for User "'.$user_login.'" on Server "'.$server->fqdn.'"');
+		if (! $server->orderFSAccessEnable($user_login_fs, $user_password_fs, $v)) {
+			Logger::error('main', '(startsession) Cannot enable FS access for User "'.$user_login_fs.'" on Server "'.$server->fqdn.'"');
 			throw_response(INTERNAL_ERROR);
 		}
 	}
@@ -595,8 +599,8 @@ if (! isset($old_session_id)) {
 			$session_node->appendChild($parameter_node);
 		}
 		$user_node = $dom->createElement('user');
-		$user_node->setAttribute('login', $user_login);
-		$user_node->setAttribute('password', $user_password);
+		$user_node->setAttribute('login', $user_login_aps);
+		$user_node->setAttribute('password', $user_password_aps);
 		$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 		$session_node->appendChild($user_node);
 
@@ -605,8 +609,8 @@ if (! isset($old_session_id)) {
 			$profile_node = $dom->createElement('profile');
 			$profile_node->setAttribute('server', $profile_fileserver->external_name);
 			$profile_node->setAttribute('dir', $profile_name);
-			$profile_node->setAttribute('login', $user_login);
-			$profile_node->setAttribute('password', $user_password);
+			$profile_node->setAttribute('login', $user_login_fs);
+			$profile_node->setAttribute('password', $user_password_fs);
 			$session_node->appendChild($profile_node);
 		}
 
@@ -620,8 +624,8 @@ if (! isset($old_session_id)) {
 				$sharedfolder_node->setAttribute('server', $netshare_fileserver->external_name);
 				$sharedfolder_node->setAttribute('dir', $netshare->id);
 				$sharedfolder_node->setAttribute('name', $netshare->name);
-				$sharedfolder_node->setAttribute('login', $user_login);
-				$sharedfolder_node->setAttribute('password', $user_password);
+				$sharedfolder_node->setAttribute('login', $user_login_fs);
+				$sharedfolder_node->setAttribute('password', $user_password_fs);
 				$sharedfolders_node->appendChild($sharedfolder_node);
 			}
 		}
@@ -699,8 +703,8 @@ if (! isset($old_session_id)) {
 				$session_node->appendChild($parameter_node);
 			}
 			$user_node = $dom->createElement('user');
-			$user_node->setAttribute('login', $user_login);
-			$user_node->setAttribute('password', $user_password);
+			$user_node->setAttribute('login', $user_login_aps);
+			$user_node->setAttribute('password', $user_password_aps);
 			$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 			$session_node->appendChild($user_node);
 
@@ -709,8 +713,8 @@ if (! isset($old_session_id)) {
 				$profile_node = $dom->createElement('profile');
 				$profile_node->setAttribute('server', $profile_fileserver->external_name);
 				$profile_node->setAttribute('dir', $profile_name);
-				$profile_node->setAttribute('login', $user_login);
-				$profile_node->setAttribute('password', $user_password);
+				$profile_node->setAttribute('login', $user_login_fs);
+				$profile_node->setAttribute('password', $user_password_fs);
 				$session_node->appendChild($profile_node);
 			}
 
@@ -724,8 +728,8 @@ if (! isset($old_session_id)) {
 					$sharedfolder_node->setAttribute('server', $netshare_fileserver->external_name);
 					$sharedfolder_node->setAttribute('dir', $netshare->id);
 					$sharedfolder_node->setAttribute('name', $netshare->name);
-					$sharedfolder_node->setAttribute('login', $user_login);
-					$sharedfolder_node->setAttribute('password', $user_password);
+					$sharedfolder_node->setAttribute('login', $user_login_fs);
+					$sharedfolder_node->setAttribute('password', $user_password_fs);
 					$sharedfolders_node->appendChild($sharedfolder_node);
 				}
 			}
@@ -798,8 +802,8 @@ if (isset($profile_available) && $profile_available === true) {
 	$profile_node = $dom->createElement('profile');
 	$profile_node->setAttribute('server', $profile_server);
 	$profile_node->setAttribute('dir', $profile_name);
-	$profile_node->setAttribute('login', $user_login);
-	$profile_node->setAttribute('password', $user_password);
+	$profile_node->setAttribute('login', $user_login_fs);
+	$profile_node->setAttribute('password', $user_password_fs);
 	$session_node->appendChild($profile_node);
 }
 
@@ -810,8 +814,8 @@ if (isset($sharedfolders_available) && $sharedfolders_available === true) {
 		$sharedfolder_node->setAttribute('server', $netshare->server);
 		$sharedfolder_node->setAttribute('dir', $netshare->id);
 		$sharedfolder_node->setAttribute('name', $netshare->name);
-		$sharedfolder_node->setAttribute('login', $user_login);
-		$sharedfolder_node->setAttribute('password', $user_password);
+		$sharedfolder_node->setAttribute('login', $user_login_fs);
+		$sharedfolder_node->setAttribute('password', $user_password_fs);
 		$sharedfolders_node->appendChild($sharedfolder_node);
 	}
 	$session_node->appendChild($sharedfolders_node);
@@ -835,8 +839,8 @@ if ($session->mode == Session::MODE_DESKTOP) {
 
 	$server_node = $dom->createElement('server');
 	$server_node->setAttribute('fqdn', $server->getAttribute('external_name'));
-	$server_node->setAttribute('login', $user_login);
-	$server_node->setAttribute('password', $user_password);
+	$server_node->setAttribute('login', $user_login_aps);
+	$server_node->setAttribute('password', $user_password_aps);
 	foreach ($user->applications() as $application) {
 		if ($application->getAttribute('type') != $server->getAttribute('type'))
 			continue;
@@ -879,8 +883,8 @@ if ($session->mode == Session::MODE_DESKTOP) {
 
 		$server_node = $dom->createElement('server');
 		$server_node->setAttribute('fqdn', $server->getAttribute('external_name'));
-		$server_node->setAttribute('login', $user_login);
-		$server_node->setAttribute('password', $user_password);
+		$server_node->setAttribute('login', $user_login_aps);
+		$server_node->setAttribute('password', $user_password_aps);
 
 		foreach ($user->applications() as $application) {
 			if ($application->getAttribute('type') != $server->getAttribute('type'))
