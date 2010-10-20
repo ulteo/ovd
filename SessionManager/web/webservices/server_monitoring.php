@@ -215,6 +215,7 @@ if (array_key_exists('sessions', $ret) && is_array($ret['sessions'])) {
 }
 
 if (array_key_exists('shares', $ret) && is_array($ret['shares'])) {
+	$disabled_users = array();
 	foreach ($ret['shares'] as $share) {
 		$buf = Abstract_NetworkFolder::load($share['id']);
 		if (! $buf) {
@@ -232,6 +233,9 @@ if (array_key_exists('shares', $ret) && is_array($ret['shares'])) {
 			case NetworkFolder::NF_STATUS_ACTIVE:
 				$disabled = 0;
 				foreach ($share['users'] as $user) {
+					if (in_array($user, $disabled_users))
+						continue;
+
 					$sessions = Abstract_Session::getByFSUser($user);
 
 					if (count($sessions) == 0) {
@@ -239,8 +243,10 @@ if (array_key_exists('shares', $ret) && is_array($ret['shares'])) {
 						if (! $server)
 							continue;
 
-						if ($server->orderFSAccessDisable($user))
+						if ($server->orderFSAccessDisable($user)) {
 							$disabled += 1;
+							$disabled_users[] = $user;
+						}
 					}
 				}
 
