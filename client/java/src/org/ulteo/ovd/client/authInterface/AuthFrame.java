@@ -27,11 +27,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -136,6 +137,13 @@ public class AuthFrame implements ActionListener, Runnable {
 		this.initLanguageBox();
 		
 		this.init(resolution_);
+
+		this.mainFrame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent evt) {
+				SwingTools.invokeLater(GUIActions.textComponentRequestFocus(passwordTextField));
+			}
+		});
 	}
 	
 	public void init(Dimension resolution_) {
@@ -558,7 +566,6 @@ public class AuthFrame implements ActionListener, Runnable {
 	}
 	
 	public void showWindow() {
-		KeyboardFocusManager.setCurrentKeyboardFocusManager(null);
 		this.startButtonClicked = false;
 		this.toggleLocalCredentials();
 		SwingTools.invokeLater(GUIActions.setVisible(this.mainFrame, true));

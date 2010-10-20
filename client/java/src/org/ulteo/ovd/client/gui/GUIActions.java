@@ -32,6 +32,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 import javax.swing.JSlider;
 import javax.swing.text.JTextComponent;
 
@@ -395,6 +396,35 @@ public class GUIActions {
 		public void run() {
 			removeComponents(this.wnd, this.components).run();
 			packWindow(this.wnd).run();
+		}
+	}
+
+	/* TextComponentRequestFocus */
+	public static Runnable textComponentRequestFocus(JTextComponent c) {
+		return Actions.new TextComponentRequestFocus(c);
+	}
+
+	private class TextComponentRequestFocus implements Runnable {
+		private JTextComponent c = null;
+
+		public TextComponentRequestFocus(JTextComponent c_) {
+			this.c = c_;
+		}
+
+		public void run() {
+			if (this.c == null)
+				return;
+
+			this.c.requestFocus();
+
+
+			int pos;
+			if (this.c.getClass() == JPasswordField.class)
+				pos = ((JPasswordField)this.c).getPassword().length;
+			else
+				pos = this.c.getText().length();
+
+			this.c.setCaretPosition(pos);
 		}
 	}
 }
