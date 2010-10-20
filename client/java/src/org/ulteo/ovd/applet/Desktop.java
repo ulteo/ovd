@@ -24,6 +24,7 @@ package org.ulteo.ovd.applet;
 import java.applet.Applet;
 import java.applet.AppletContext;
 import java.awt.BorderLayout;
+import java.io.FileNotFoundException;
 
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdesktopException;
@@ -69,13 +70,19 @@ public class Desktop extends Applet implements RdpListener {
 			tempdir+= System.getProperty("file.separator");
 		
 		if (OSTools.isWindows()) {
-			LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_WINDOWS, LibraryLoader.LIB_WINDOW_PATH_NAME);
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_WINDOWS, LibraryLoader.LIB_WINDOW_PATH_NAME);
+			} catch (FileNotFoundException ex) {
+				Logger.error(ex.getMessage());
+				this.stop();
+				return;
+			}
 		}
 		if (! Logger.initInstance(true, tempdir+"ulteo-ovd-"+Logger.getDate()+".log", true)) {
 			System.err.println(this.getClass().toString()+" Unable to iniatialize logger instance");
 			Logger.initInstance(true, null, true);
 		}
-		
+
 		System.out.println(this.getClass().toString() +"  init");
 		boolean status = this.checkSecurity();
 		if (! status) {

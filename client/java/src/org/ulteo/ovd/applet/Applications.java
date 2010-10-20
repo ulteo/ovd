@@ -21,6 +21,7 @@
 
 package org.ulteo.ovd.applet;
 
+import java.io.FileNotFoundException;
 import org.ulteo.Logger;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.integrated.OSTools;
@@ -116,10 +117,21 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 			tempdir+= System.getProperty("file.separator");
 		
 		if (OSTools.isWindows()) {
-			LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_WINDOWS, LibraryLoader.LIB_WINDOW_PATH_NAME);
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_WINDOWS, LibraryLoader.LIB_WINDOW_PATH_NAME);
+			} catch (FileNotFoundException ex) {
+				Logger.error(ex.getMessage());
+				this.stop();
+				return;
+			}
 		}
 		else if (OSTools.isLinux()) {
-			LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_LINUX, LibraryLoader.LIB_X_CLIENT_AREA);
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_LINUX, LibraryLoader.LIB_X_CLIENT_AREA);
+			} catch (FileNotFoundException ex) {
+				Logger.error(ex.getMessage());
+				WorkArea.disableLibraryLoading();
+			}
 		}
 		
 		if (! Logger.initInstance(true, tempdir+"ulteo-ovd-"+Logger.getDate()+".log", true)) {
@@ -128,14 +140,14 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 		}
 		
 		System.out.println(this.getClass().toString() +"  init");
-		
+
 		boolean status = this.checkSecurity();
 		if (! status) {
 			System.err.println(this.getClass().toString() +"  init: Not enought privileges, unable to continue");
 			this.stop();
 			return;
 		}
-		
+
 		if (! this.readParameters()) {
 			System.err.println(this.getClass().toString() +"  usage error");
 			this.stop();

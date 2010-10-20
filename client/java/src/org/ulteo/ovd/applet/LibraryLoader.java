@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.ulteo.Logger;
 
 public class LibraryLoader {
 	public static final String RESOURCE_LIBRARY_DIRECTORY_WINDOWS = "/ressources/WindowsLibs";
@@ -15,7 +16,7 @@ public class LibraryLoader {
 	public static final String LIB_X_CLIENT_AREA = "libXClientArea.so";
 	
 	//This method is called from an applet
-	public static void LoadLibrary(String ressourceDirectory, String DLLName) {
+	public static void LoadLibrary(String ressourceDirectory, String DLLName) throws FileNotFoundException {
 		InputStream dllResource = LibraryLoader.class.getResourceAsStream(ressourceDirectory+"/"+DLLName);
 		String fileSeparator= System.getProperty("file.separator");
 		//test the resource in order to know if client is started in applet mode
@@ -31,20 +32,24 @@ public class LibraryLoader {
 				}
 				fos.close();
 			} catch (FileNotFoundException e) {
-				org.ulteo.Logger.error("Unable to find "+destFile+ e.getMessage());
+				Logger.error("Unable to find "+destFile+ e.getMessage());
 			} catch (IOException e) {
-				org.ulteo.Logger.error("Error while creating "+destFile);
+				Logger.error("Error while creating "+destFile);
 			}
 			try {
 				System.load(destFile);
 			} catch (SecurityException e) {
-				org.ulteo.Logger.error("Library loading generate an security exception: "+e.getMessage());
+				Logger.error("Library loading generate an security exception: "+e.getMessage());
 			} catch (UnsatisfiedLinkError e) {
-				org.ulteo.Logger.error("Error while loading library: "+e.getMessage());
+				Logger.error("Error while loading library: "+e.getMessage());
 			} catch (NullPointerException e) {
-				org.ulteo.Logger.error("Unable to load an empty library: "+e.getMessage());
+				Logger.error("Unable to load an empty library: "+e.getMessage());
 			}
+
+			return;
 		}
+
+		throw new FileNotFoundException("Unable to find required library in the jar: "+ressourceDirectory+"/"+DLLName);
 	}
 	
 	//This method is called from an non applet client
