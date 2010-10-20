@@ -93,7 +93,7 @@
         </para>
         <screen>
 	  <![CDATA[
-deb http://archive.ulteo.com/ovd/trunk/debian lenny main
+deb http://archive.ulteo.com/ovd/3.0/debian lenny main
 
 deb http://ftp.debian.org/debian/ lenny main non-free]]>
         </screen>

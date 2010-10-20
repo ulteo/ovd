@@ -101,7 +101,7 @@
         </para>
         <screen>
 	  <![CDATA[
-deb http://archive.ulteo.com/ovd/trunk/ubuntu lucid main
+deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main
 
 deb http://archive.ubuntu.com/ubuntu/ hardy main universe
 deb http://security.ubuntu.com/ubuntu/ hardy-security main]]>
