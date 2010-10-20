@@ -112,6 +112,14 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 	// Begin extends Applet
 	@Override
 	public void init() {
+		System.out.println(this.getClass().toString() +"  init");
+		boolean status = this.checkSecurity();
+		if (! status) {
+			System.err.println(this.getClass().toString() +"  init: Not enought privileges, unable to continue");
+			this.stop();
+			return;
+		}
+
 		String tempdir = System.getProperty("java.io.tmpdir");
 		if (! tempdir.endsWith(System.getProperty("file.separator"))) 
 			tempdir+= System.getProperty("file.separator");
@@ -137,15 +145,6 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 		if (! Logger.initInstance(true, tempdir+"ulteo-ovd-"+Logger.getDate()+".log", true)) {
 			System.err.println(this.getClass().toString()+" Unable to iniatialize logger instance");
 			Logger.initInstance(true, null, true);
-		}
-		
-		System.out.println(this.getClass().toString() +"  init");
-
-		boolean status = this.checkSecurity();
-		if (! status) {
-			System.err.println(this.getClass().toString() +"  init: Not enought privileges, unable to continue");
-			this.stop();
-			return;
 		}
 
 		if (! this.readParameters()) {
