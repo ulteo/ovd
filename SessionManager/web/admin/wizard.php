@@ -368,7 +368,7 @@ function show_step3() {
 		$content = 'content'.(($count++%2==0)?1:2);
 
 		echo '<tr class="'.$content.'">';
-		echo '<td><input class="input_checkbox" type="checkbox" name="appgroups[]" value="'.$appgroup->id.'" /> <a href="appsgroups.php?action=manage&id='.$appgroup->id.'">'.$appgroup->name.'</a></td>';
+		echo '<td><input class="input_checkbox" type="checkbox" name="appgroups[]" value="'.$appgroup->id.'" /> <a href="appsgroup.php?action=manage&id='.$appgroup->id.'">'.$appgroup->name.'</a></td>';
 		echo '</tr>';
 	}
 	$content = 'content'.(($count++%2==0)?1:2);
