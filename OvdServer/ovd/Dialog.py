@@ -38,24 +38,10 @@ from ovd.Platform import Platform
 class Dialog(AbstractDialog):
 	def __init__(self, server_instance):
 		self.server = server_instance
-		self.url = "http://%s:%d"%(Config.session_manager, Config.SM_SERVER_PORT)
-		self.name = None
 	
 	@staticmethod
 	def getName():
 		return "server"
-	
-	def initialize(self):
-		node = self.send_server_name()
-		if node is None:
-			raise Exception("invalid response")
-		
-		if not node.hasAttribute("name"):
-			raise Exception("invalid response")
-		
-		self.name = node.getAttribute("name")
-		return True
-	
 	
 	def process(self, request):
 		path = request["path"]
@@ -90,152 +76,6 @@ class Dialog(AbstractDialog):
 			return None
 		
 		return None
-	
-	def stop(self):
-		if self.name is not None:
-			self.send_server_status("down")
-	
-	@staticmethod
-	def get_response_xml(stream):
-		if not stream.headers.has_key("Content-Type"):
-			return None
-		
-		contentType = stream.headers["Content-Type"].split(";")[0]
-		if not contentType == "text/xml":
-			Logger.error("content type: %s"%(contentType))
-			print stream.read()
-			return None
-		
-		try:
-			document = minidom.parseString(stream.read())
-		except:
-			Logger.warn("No response XML")
-			return None
-		
-		return document
-	
-	
-	def send_server_name(self):
-		url = "%s/server/name"%(self.url)
-		Logger.debug('SessionManagerRequest::server_name url '+url)
-		
-		req = urllib2.Request(url)
-		try:
-			f = urllib2.urlopen(req)
-		except IOError, e:
-			Logger.debug("SessionManagerRequest::server_status error"+str(e))
-			return None
-		except httplib.BadStatusLine, err:
-			Logger.debug("SessionManagerRequest::server_name not receive HTTP response"+str(err))
-			return None
-		
-		document = self.get_response_xml(f)
-		if document is None:
-			Logger.warn("Dialog::send_server_name not XML response")
-			return None
-		
-		rootNode = document.documentElement
-		
-		if rootNode.nodeName != "server":
-			return None
-		
-		return rootNode
-	
-	
-	def get(self, path):
-		url = "%s%s"%(self.url, path)
-		Logger.debug("Dialog::get url %s"%(url))
-		
-		req = urllib2.Request(url)
-		
-		try:
-			stream = urllib2.urlopen(req)
-		except IOError, e:
-			Logger.debug("Dialog::get error"+str(e))
-			return None
-		except httplib.BadStatusLine, err:
-			Logger.debug("Dialog::get not receive HTTP response"+str(err))
-			return None
-		
-		return stream
-	
-	
-	def send_packet(self, path, document):
-		rootNode = document.documentElement
-		rootNode.setAttribute("name", self.name)
-				
-		url = "%s%s"%(self.url, path)
-		Logger.debug("Dialog::send_packet url %s"%(url))
-		
-		req = urllib2.Request(url)
-		req.add_header("Content-type", "text/xml; charset=UTF-8")
-		req.add_data(document.toxml())
-		
-		try:
-			stream = urllib2.urlopen(req)
-		except IOError, e:
-			Logger.debug("Dialog::send_packet error"+str(e))
-			return False
-		except httplib.BadStatusLine, err:
-			Logger.debug("Dialog::send_packet not receive HTTP response"+str(err))
-			return False
-		
-		return stream
-	
-	
-	def send_server_status(self, status="ready"):
-		doc = Document()
-		rootNode = doc.createElement('server')
-		rootNode.setAttribute("status", status)
-		doc.appendChild(rootNode)
-		
-		response = self.send_packet("/server/status", doc)
-		if response is False:
-			Logger.warn("Dialog::send_server_status Unable to send packet")
-			return False
-		
-		document = self.get_response_xml(response)
-		if document is None:
-			Logger.warn("Dialog::send_server_status response not XML")
-			return False
-		
-		rootNode = document.documentElement
-		
-		if rootNode.nodeName != "server":
-			Logger.error("Dialog::send_server_status response not valid %s"%(rootNode.toxml()))
-			return False
-		
-		if not rootNode.hasAttribute("name") or rootNode.getAttribute("name") != self.name:
-			Logger.error("Dialog::send_server_status response invalid name")
-			return False
-		
-		if not rootNode.hasAttribute("status") or rootNode.getAttribute("status") != status:
-			Logger.error("Dialog::send_server_status response invalid status")
-			return False
-		
-		return True
-	
-	
-	def send_server_monitoring(self, doc):
-		response = self.send_packet("/server/monitoring", doc)
-		if response is False:
-			return False
-		
-		document = self.get_response_xml(response)
-		if document is None:
-			Logger.warn("Dialog::send_server_monitoring response not XML")
-			return False
-		
-		rootNode = document.documentElement
-		if rootNode.nodeName != "server":
-			Logger.error("Dialog::send_server_monitoring response not valid %s"%(rootNode.toxml()))
-			return False
-		
-		if not rootNode.hasAttribute("name") or rootNode.getAttribute("name") != self.name:
-			Logger.error("Dialog::send_server_monitoring response invalid name")
-			return False
-		
-		return True
 	
 	
 	def response_error(self, code):

@@ -30,6 +30,7 @@ from ovd.Logger import Logger
 from ovd.Platform import Platform
 
 from Dialog import Dialog
+from SMRequestManager import SMRequestManager
 
 class SlaveServer:
 	def __init__(self, CommunicationClass):
@@ -53,6 +54,7 @@ class SlaveServer:
 		
 		
 		self.dialog = Dialog(self)
+		self.smRequestManager = SMRequestManager()
 		
 		for role in Config.roles:
 			try:
@@ -77,10 +79,11 @@ class SlaveServer:
 		
 		# Initialisation
 		try:
-			if not self.dialog.initialize():
+			if not self.smRequestManager.initialize():
 				raise Exception()
 		except Exception, e:
-			Logger.error("SlaveServer: unable to initialize dialog class %s"%(str(e)))
+			Logger.error("SlaveServer: unable to initialize communication with Session Manager")
+			Logger.debug("smRequestManager initialize returned %s"%(str(e)))
 			return False
 		
 		self.updateMonitoring()
@@ -129,7 +132,7 @@ class SlaveServer:
 				Logger.info("Waiting for role %s status running"%(role.getName()))
 				time.sleep(1)
 		
-		if not self.dialog.send_server_status():
+		if not self.smRequestManager.switch_status(self.smRequestManager.STATUS_READY):
 			Logger.warn("SlaveServer::loop unable to send status ready")
 			return False
 		
@@ -151,7 +154,7 @@ class SlaveServer:
 			self.time_last_send_monitoring = t1
 			
 			doc = self.getMonitoring()
-			self.dialog.send_server_monitoring(doc)
+			self.smRequestManager.send_server_monitoring(doc)
 			
 			self.time_last_send_monitoring = time.time()
 	
@@ -159,7 +162,8 @@ class SlaveServer:
 	def stop(self, Signum=None, Frame=None):
 		Logger.info("SlaveServer stop")
 		self.stopped = True
-	
+		self.smRequestManager.switch_status(self.smRequestManager.STATUS_PENDING)
+			
 		for thread in self.threads:
 			if thread.isAlive():
 				thread._Thread__stop()
@@ -176,21 +180,14 @@ class SlaveServer:
 				role.stop()
 				
 		self.communication.stop()
-		self.dialog.stop()
+		self.smRequestManager.switch_status(self.smRequestManager.STATUS_DOWN)
 	
 		return 0
 	
 	
 	def getMonitoring(self):
-		i = 0
-		while self.monitoring is None:
-			if i > 10:
-				break
-			i+= 1
-			time.sleep(0.2)
-		
 		rootNode = self.monitoring
-		rootNode.setAttribute("name", self.dialog.name)
+		rootNode.setAttribute("name", self.smRequestManager.name)
 		
 		doc = Document()
 		for role in self.roles:

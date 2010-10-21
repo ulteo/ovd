@@ -58,7 +58,7 @@ class Role(AbstractRole):
 		
 		self.has_run = False
 		
-		self.static_apps = RolePlatform.ApplicationsStatic(self.main_instance.dialog)
+		self.static_apps = RolePlatform.ApplicationsStatic(self.main_instance.smRequestManager)
 		self.static_apps_must_synced = False
 		self.static_apps_lock = threading.Lock()
 	
@@ -142,7 +142,7 @@ class Role(AbstractRole):
 		
 		doc.appendChild(rootNode)
 		
-		response = self.main_instance.dialog.send_packet("/session/status", doc)
+		response = self.main_instance.smRequestManager.send_packet("/session/status", doc)
 		Logger.debug2("ApplicationServer: send_session_status: %s"%(response))
 		if response is False:
 			Logger.warn("ApplicationServer: unable to send session status")
