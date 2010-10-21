@@ -13,6 +13,7 @@ A2SITESAVDIR=/etc/apache2/sites-available
 
 # add user ovd-fs
 getent passwd ovd-fs >/dev/null || adduser --system --group --home $HOMEDIR ovd-fs 2> /dev/null
+usermod -G ovd-fs www-data >/dev/null
 chown ovd-fs:ovd-fs $HOMEDIR
 
 # create spool directory
