@@ -89,5 +89,12 @@ web/media/script/lib/nifty/Makefile
 web/media/script/lib/prototype/Makefile
 web/media/script/lib/scriptaculous/Makefile
 web/media/style/Makefile
+web/PEAR/Makefile
+web/PEAR/HTTP/Makefile
+web/PEAR/HTTP/Request/Makefile
+web/PEAR/HTTP/WebDAV/Makefile
+web/PEAR/HTTP/WebDAV/Client/Makefile
+web/PEAR/HTTP/WebDAV/Tools/Makefile
+web/PEAR/Net/Makefile
 ])
 AC_OUTPUT

@@ -1,4 +1,4 @@
-SUBDIRS = ajax applet includes media
+SUBDIRS = ajax applet includes media PEAR
 
 scripts_DATA = apps.php \
                icon.php \
