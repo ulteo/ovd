@@ -65,6 +65,9 @@ public class RdpPacket_Localised extends RdpPacket {
 	}
 
 	public void copyFromByteArray(byte[] array, int array_offset, int mem_offset, int len){
+		if (len == 0)
+			return;
+
 	if ((array_offset >= array.length) || (array_offset + len > array.length) || (mem_offset + len > bb.capacity())) {
 		throw new ArrayIndexOutOfBoundsException("memory accessed out of Range!");
 	}
