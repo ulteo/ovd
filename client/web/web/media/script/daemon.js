@@ -436,6 +436,11 @@ var Daemon = Class.create({
 			$('printingAppletContainer').hide();
 		$('printingAppletContainer').innerHTML = '';
 
+		if (this.explorer) {
+			if ($('fileManagerContainer'))
+				$('fileManagerContainer').innerHTML = '';
+		}
+
 		if ($('endContainer')) {
 			$('endContent').innerHTML = '';
 
