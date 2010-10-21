@@ -185,6 +185,10 @@ function onStartSessionSuccess(xml_) {
 	if (buffer.length == 1)
 		explorer = true;
 
+	var buffer = xml.getElementsByTagName('sharedfolders');
+	if (buffer.length == 1)
+		explorer = true;
+
 	startsession = true;
 
 	if (! use_popup) {
