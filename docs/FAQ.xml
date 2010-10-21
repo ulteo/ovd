@@ -258,21 +258,6 @@ $ getent hosts 192.168.0.19
     </para>
   </section>
 
-  <!--
-      <section>
-      /etc/init.d/ulteo-ovd restart
-      Error:
-      chroot: cannot run command '/etc/init.d/ulteo-ovdd': no such file or directory 
-
-
-solution :
-etc/init.d/ulteo-ovdd is in chroot
-These commands work ?
-[code]chroot /opt/ulteo
-/etc/init.d/ulteo-ovdd restart[/code]
-</section>
-  -->
-
   <section id="err03_firewall">
     <title>
       Why do I get an <emphasis>Err03</emphasis> when I want to launch a
@@ -337,8 +322,8 @@ These commands work ?
     </title>
 
      <programlisting><![CDATA[
-  * Starting ulteo-ovdd daemon
-chroot: cannot change root directory to /etc/init.d/ulteo-ovdd: No
+  * Starting Ulteo OVD SlaveServer
+chroot: cannot change root directory to /etc/init.d/ovdSlaveServer: No
 such file or directory]]>
      </programlisting>
 
@@ -347,29 +332,6 @@ such file or directory]]>
        chroot exist? (by default it is /opt/ulteo)
      </para>
   </section>
-
-  <section id="debian_support">
-    <title>Why GNU/Linux Debian 5.0 is not fully supported?</title>
-
-    <para>
-      GNU/Linux Debian 5.0 is not fully supported because one kernel module
-      is missing on Debian systems: <emphasis role="strong">aufs</emphasis>.
-    </para>
-
-    <para>
-      We are using the aufs module for CIFS mounts.
-      If you are not using CIFS, Ulteo OVD will work fine on GNU/Linux Debian 5.0.
-    </para>
-
-
-    <para>
-      To test if your Linux kernel provides the aufs module:
-      <screen><![CDATA[
-$ find /lib/modules/`uname -r` -name aufs]]>
-      </screen>
-    </para>
-  </section>
-
 
 
 </article>
