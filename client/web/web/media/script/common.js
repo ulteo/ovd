@@ -181,11 +181,7 @@ function onStartSessionSuccess(xml_) {
 
 	$('user_password').value = '';
 
-	var buffer = xml.getElementsByTagName('profile');
-	if (buffer.length == 1)
-		explorer = true;
-
-	var buffer = xml.getElementsByTagName('sharedfolders');
+	var buffer = xml.getElementsByTagName('explorer');
 	if (buffer.length == 1)
 		explorer = true;
 
@@ -213,6 +209,9 @@ function onStartSessionSuccess(xml_) {
 			else
 				daemon = new Applications('ulteo-applet.jar', 'org.ulteo.ovd.applet.Applications', false, debug);
 			daemon.explorer = explorer;
+
+			if (daemon.explorer)
+				$('fileManagerWrap').show();
 
 			daemon.keymap = $('session_keymap').value;
 			try {

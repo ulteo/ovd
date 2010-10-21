@@ -148,6 +148,8 @@ function get_users_list() {
 
 				$('printingAppletContainer').hide();
 
+				$('fileManagerWrap').hide();
+
 				$('debugContainer').hide();
 				$('debugLevels').hide();
 			});
@@ -351,7 +353,7 @@ function get_users_list() {
 					<td style="width: 5px;">
 					</td>
 					<td style="text-align: left; vertical-align: top; background: #eee;">
-						<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
+						<div id="fileManagerWrap" class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 						<div>
 							<h2><?php echo _('My files'); ?></h2>
 

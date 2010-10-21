@@ -67,6 +67,8 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 					$('<?php echo $_SESSION['session_mode']; ?>AppletContainer').hide();
 				if ($('splashContainer'))
 					$('splashContainer').show();
+
+				$('fileManagerWrap').hide();
 			});
 		</script>
 
@@ -244,7 +246,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 					<td style="width: 5px;">
 					</td>
 					<td style="text-align: left; vertical-align: top; background: #eee;">
-						<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
+						<div id="fileManagerWrap" class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 						<div>
 							<h2><?php echo _('My files'); ?></h2>
 

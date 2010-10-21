@@ -182,7 +182,8 @@ $_SESSION['explorer'] = false;
 $profile_node = $session_node->getElementsByTagName('profile')->item(0);
 $sharedfolders_node = $session_node->getElementsByTagName('sharedfolders')->item(0);
 if (is_object($profile_node) || is_object($sharedfolders_node)) {
-	$_SESSION['explorer'] = true;
+	if (is_dir(dirname(__FILE__).'/ajaxplorer/'))
+		$_SESSION['explorer'] = true;
 
 	$_SESSION['ajxp'] = array();
 	$_SESSION['ajxp']['repositories'] = array();
@@ -226,6 +227,13 @@ if (is_object($sharedfolders_node)) {
 	}
 }
 
+if (array_key_exists('explorer', $_SESSION) && $_SESSION['explorer'] === true) {
+	$explorer_node = $dom->createElement('explorer');
+	$explorer_node->setAttribute('enabled', (($_SESSION['explorer'] === true)?1:0));
+	$session_node->appendChild($explorer_node);
+}
+
+$xml = $dom->saveXML();
 $_SESSION['xml'] = $xml;
 
 setcookie('ovd-client[sessionmanager_host]', $_POST['sessionmanager_host'], (time()+(60*60*24*7)));
