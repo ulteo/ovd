@@ -180,11 +180,15 @@ if (count($server_nodes) < 1) {
 $_SESSION['explorer'] = false;
 
 $profile_node = $session_node->getElementsByTagName('profile')->item(0);
-if (is_object($profile_node)) {
+$sharedfolders_node = $session_node->getElementsByTagName('sharedfolders')->item(0);
+if (is_object($profile_node) || is_object($sharedfolders_node)) {
 	$_SESSION['explorer'] = true;
 
 	$_SESSION['ajxp'] = array();
 	$_SESSION['ajxp']['repositories'] = array();
+}
+
+if (is_object($profile_node)) {
 	$_SESSION['ajxp']['repositories'][] = array(
 		'DISPLAY'					=>	_('Profile'),
 		'DRIVER'					=>	'fs',
@@ -200,16 +204,7 @@ if (is_object($profile_node)) {
 	);
 }
 
-$sharedfolders_node = $session_node->getElementsByTagName('sharedfolders')->item(0);
 if (is_object($sharedfolders_node)) {
-	$_SESSION['explorer'] = true;
-
-	if (! array_key_exists('ajxp', $_SESSION))
-		$_SESSION['ajxp'] = array();
-
-	if (! array_key_exists('repositories', $_SESSION['ajxp']))
-		$_SESSION['ajxp']['repositories'] = array();
-
 	$sharedfolder_nodes = $sharedfolders_node->getElementsByTagName('sharedfolder');
 	foreach ($sharedfolder_nodes as $sharedfolder_node) {
 		if (! is_object($sharedfolder_node))
