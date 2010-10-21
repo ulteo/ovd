@@ -38,7 +38,7 @@ class Rec(ProcessEvent):
 	mask = EventsCodes.IN_CREATE 
 	
 	def process_IN_CREATE(self, event_k):
-		if event_k.name:
+		if event_k.name == ".htaccess":
 			if event_k.path.startswith(Config.spool):
 				buf = event_k.path[len(Config.spool)+1:].split("/")
 				if len(buf) == 1:
