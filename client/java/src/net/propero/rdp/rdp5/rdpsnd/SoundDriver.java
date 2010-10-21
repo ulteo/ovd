@@ -32,6 +32,8 @@
 package net.propero.rdp.rdp5.rdpsnd;
 
 import java.util.GregorianCalendar;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
@@ -52,165 +54,126 @@ public class SoundDriver {
 		protected RdpPacket	s;
 		protected int		tick;
 		protected int		index;
+		protected long		time;
 	}
 
+	private BlockingQueue<AudioPacket> spool;
 	private SoundChannel		soundChannel;
-
-	private static final int		MAX_QUEUE		= 20;
-	private static final int		BUFFER_SIZE	= 65536;
-
-	private AudioPacket[]		packetQueue;
-	private int				queueHi, queueLo;
-
+	private static final int	BUFFER_SIZE	= 65536;
 	private SourceDataLine		oDevice;
 	private int				volume;
-
 	private WaveFormatEx		format;
-
-	private boolean			reopened;
 	private boolean			dspBusy;
 	private boolean 		soundDown;		
-
-	private byte[]				buffer, outBuffer;
-	private GregorianCalendar	prevTime;
+	private boolean 		playing;
+	private byte[]			buffer, outBuffer;
+	
 
 	public SoundDriver( SoundChannel sndChannel ) {
-		soundDown = false;
-		soundChannel = sndChannel;
-		packetQueue = new AudioPacket[ MAX_QUEUE ];
-		for( int i = 0; i < MAX_QUEUE; i++ )
-			packetQueue[ i ] = new AudioPacket();
-		queueHi = 0;
-		queueLo = 0;
-		reopened = true;
-		dspBusy = false;
-		buffer = new byte[ BUFFER_SIZE ];
-		outBuffer = new byte[ BUFFER_SIZE ];
-		oDevice = null;
-		format = null;
-		volume = 65535;
+		this.soundDown = false;
+		this.playing = true;
+		this.soundChannel = sndChannel;
+		this.dspBusy = false;
+		this.buffer = new byte[ BUFFER_SIZE ];
+		this.outBuffer = new byte[ BUFFER_SIZE ];
+		this.oDevice = null;
+		this.format = null;
+		this.volume = 65535;
+		this.spool = new LinkedBlockingQueue<AudioPacket>();
+	}
+
+	
+	public void stopDriver()
+	{
+		this.playing = false;
 	}
 
 	public boolean waveOutOpen() {
 		return true;
 	}
-
+	
 	public void waveOutClose() {
-		int queueLo2 = queueLo;
-		while( queueLo2 != queueHi ) {
-			soundChannel.sendCompletion( packetQueue[ queueLo2 ].tick, packetQueue[ queueLo2 ].index );
-			queueLo2 = ( queueLo2 + 1 ) % MAX_QUEUE;
-		}
-		if( oDevice != null ) {
-			oDevice.stop();
-			oDevice.flush();
-			oDevice.close();
-			oDevice = null;
+		if( this.oDevice != null ) {
+			this.oDevice.stop();
+			this.oDevice.flush();
+			this.oDevice.close();
+			this.oDevice = null;
 		}
 	}
 
 	public boolean waveOutSetFormat( WaveFormatEx fmt ) {
-		if (soundDown)
+		if (this.soundDown)
 			return false;
-		format = fmt;
+		this.format = fmt;
 
 		WaveFormatEx trFormat = SoundDecoder.translateFormatForDevice( fmt );
 		AudioFormat audioFormat = new AudioFormat( trFormat.nSamplesPerSec, trFormat.wBitsPerSample, trFormat.nChannels, true, false );
 
 		try {
-			if( oDevice != null ) {
-				oDevice.drain();
-				oDevice.close();
+			if( this.oDevice != null ) {
+				this.oDevice.drain();
+				this.oDevice.close();
 			}
 
 			DataLine.Info dataLineInfo = new DataLine.Info( SourceDataLine.class, audioFormat );
-			oDevice = (SourceDataLine)AudioSystem.getLine( dataLineInfo );
+			this.oDevice = (SourceDataLine)AudioSystem.getLine( dataLineInfo );
 
-			oDevice.open( audioFormat );
-			oDevice.start();
+			this.oDevice.open( audioFormat );
+			this.oDevice.start();
 		} catch( Exception e ) {
 			System.out.println("Unable to play sound");
 			this.soundDown = true;
 			return false;
 		}
 
-		reopened = true;
-
 		return true;
 	}
 
 	public void waveOutWrite( RdpPacket s, int tick, int packetIndex ) {
-		AudioPacket packet = packetQueue[ queueHi ];
-		int nextHi = ( queueHi + 1 ) % MAX_QUEUE;
-
-		if( nextHi == queueLo ) {
-			logger.error( "No space to queue audio packet" );
-			return;
+		AudioPacket current = new AudioPacket();
+		
+		current.s = s;
+		current.tick = tick;
+		current.index = packetIndex;
+		current.s.incrementPosition(4);
+		current.time = new GregorianCalendar().getTimeInMillis();
+		try {
+			this.spool.add(current);
 		}
-
-		queueHi = nextHi;
-
-		packet.s = s;
-		packet.tick = tick;
-		packet.index = packetIndex;
-
-		packet.s.incrementPosition( 4 );
-
-		if( !dspBusy ) waveOutPlay();
+		catch (IllegalStateException e)
+		{
+			logger.warn("Sound driver spool is full");
+			this.dspBusy = true;
+		}
 	}
 
 	public void waveOutVolume( int left, int right ) {
-		volume = left < right ? right : left;
+		this.volume = left < right ? right : left;
 	}
 
-	public void waveOutPlay() {
+	public void waveOutPlay(AudioPacket packet) {
 
-		if( reopened ) {
-			reopened = false;
-			prevTime = new GregorianCalendar();
-		}
-
-		if( queueLo == queueHi ) {
-			dspBusy = false;
-			return;
-		}
-
-		AudioPacket packet = packetQueue[ queueLo ];
 		RdpPacket out = packet.s;
 
-		int nextTick;
-		if( ( ( queueLo + 1 ) % MAX_QUEUE ) != queueHi )
-			nextTick = packetQueue[ ( queueLo + 1 ) % MAX_QUEUE ].tick;
-		else
-			nextTick = ( packet.tick + 65535 ) % 65536;
-
 		int len = ( BUFFER_SIZE > out.size() - out.getPosition() ) ? ( out.size() - out.getPosition() ) : BUFFER_SIZE;
-		out.copyToByteArray( buffer, 0, out.getPosition(), len );
+		out.copyToByteArray( this.buffer, 0, out.getPosition(), len );
 		out.incrementPosition( len );
 
-		int outLen = SoundDecoder.getBufferSize( len, format );
+		int outLen = SoundDecoder.getBufferSize( len, this.format );
 		if( outLen > outBuffer.length ) outBuffer = new byte[ outLen ];
-		outBuffer = SoundDecoder.decode( buffer, outBuffer, len, format );
+		this.outBuffer = SoundDecoder.decode( this.buffer, this.outBuffer, len, this.format );
 
-		oDevice.write( outBuffer, 0, outLen );
+		this.oDevice.write( this.outBuffer, 0, outLen );
 
 		GregorianCalendar tv = new GregorianCalendar();
+		long duration = tv.getTimeInMillis() - packet.time;
+		soundChannel.sendCompletion( ( ( packet.tick + (int)duration ) % 65536 ), packet.index );
 
-		long duration = tv.getTimeInMillis() - prevTime.getTimeInMillis();
-
-		if( packet.tick > nextTick ) nextTick += 65536;
-
-		if( ( out.getPosition() == out.size() ) || ( duration > nextTick - packet.tick + 500 ) ) {
-			prevTime = tv;
-			soundChannel.sendCompletion( ( ( packet.tick + (int)duration ) % 65536 ), packet.index );
-			queueLo = ( queueLo + 1 ) % MAX_QUEUE;
-		}
-		dspBusy = true;
 		return;
 	}
 
 	public boolean isDspBusy() {
-		return dspBusy;
+		return this.dspBusy;
 	}
 
 	public boolean waveOutFormatSupported( WaveFormatEx fmt ) {
@@ -229,4 +192,25 @@ public class SoundDriver {
 		}
 	}
 
+
+	/*
+	 * Use a single Thread to play sound, suggestions of Julien
+	 * */
+	public class playThread extends Thread{
+		public void run(){
+			try {
+				while(playing){
+						AudioPacket current = spool.take();
+						waveOutPlay(current);
+				}
+			} catch(InterruptedException e) {
+				logger.info("Sound thread stopped");
+			}
+		}
+	}
+
+
+	public void start() {
+		new playThread().start();
+	}
 }

@@ -58,7 +58,6 @@ public class SoundChannel extends VChannel {
 	private int			tick;
 	private int			packetIndex;
 	private int			formatCount;
-	private	playThread 	ps;
 
 	private SoundDriver		soundDriver;
 
@@ -66,21 +65,20 @@ public class SoundChannel extends VChannel {
 
 	public SoundChannel(Options opt_, Common common_) {
 		super(opt_, common_);
-		awaitingDataPacket = false;
-		deviceOpen = false;
-		format = 0;
-		currentFormat = 0;
-		tick = 0;
-		packetIndex = 0;
-		formatCount = 0;
-		formats = new WaveFormatEx[ MAX_FORMATS ];
-		for( int i = 0; i < MAX_FORMATS; i++ )
-			formats[ i ] = new WaveFormatEx();
-		soundDriver = new SoundDriver( this );
+		this.awaitingDataPacket = false;
+		this.deviceOpen = false;
+		this.format = 0;
+		this.currentFormat = 0;
+		this.tick = 0;
+		this.packetIndex = 0;
+		this.formatCount = 0;
+		this.formats = new WaveFormatEx[ this.MAX_FORMATS ];
+		for( int i = 0; i <this. MAX_FORMATS; i++ )
+			this.formats[ i ] = new WaveFormatEx();
+		this.soundDriver = new SoundDriver( this );
 		
 		//init & run playThread
-		ps = new playThread();
-		ps.start();
+		this.soundDriver.start();
 	}
 
 	public int flags() {
@@ -92,44 +90,34 @@ public class SoundChannel extends VChannel {
 	}
 
 	public void stopPlayThread() {
-		new Thread(new Runnable() {
-			public void run() {
-				ps.interrupt();
-				while (ps.isAlive()) {
-					try {
-						Thread.sleep(10);
-					} catch (InterruptedException ex) {}
-				}
-			}
-		}).start();
+		this.soundDriver.stopDriver();
 	}
 
 	public void process( RdpPacket data ) throws RdesktopException, IOException, CryptoException {
 		int type, length;
 
-		if( awaitingDataPacket ) {
-			if( format >= MAX_FORMATS ) {
+		if( this.awaitingDataPacket ) {
+			if( this.format >= this.MAX_FORMATS ) {
 				logger.error( "RDPSND: Invalid format index\n" );
 				return;
 			}
 
-			if( !deviceOpen || ( format != currentFormat ) ) {
-				if( !deviceOpen && !soundDriver.waveOutOpen() ) {
-					sendCompletion( tick, packetIndex );
+			if( !this.deviceOpen || ( this.format != this.currentFormat ) ) {
+				if( !this.deviceOpen && !this.soundDriver.waveOutOpen() ) {
+					sendCompletion( this.tick, this.packetIndex );
 					return;
 				}
-				if( !soundDriver.waveOutSetFormat( formats[ format ] ) ) {
-					sendCompletion( tick, packetIndex );
-					soundDriver.waveOutClose();
-					deviceOpen = false;
+				if( !this.soundDriver.waveOutSetFormat( this.formats[ format ] ) ) {
+					sendCompletion( this.tick, this.packetIndex );
+					this.soundDriver.waveOutClose();
+					this.deviceOpen = false;
 					return;
 				}
-				deviceOpen = true;
-				currentFormat = format;
+				this.deviceOpen = true;
+				this.currentFormat = format;
 			}
-			soundDriver.waveOutWrite( data, tick, packetIndex );
-			awaitingDataPacket = false;
-			this.waveOutPlay();
+			this.soundDriver.waveOutWrite( data, this.tick, this.packetIndex );
+			this.awaitingDataPacket = false;
 			return;
 		}
 
@@ -139,14 +127,14 @@ public class SoundChannel extends VChannel {
 
 		switch( type ) {
 			case RDPSND_WRITE:
-				tick = data.getLittleEndian16() & 0xFFFF;
-				format = data.getLittleEndian16() & 0xFFFF;
-				packetIndex = data.getLittleEndian16() & 0xFFFF;
-				awaitingDataPacket = true;
+				this.tick = data.getLittleEndian16() & 0xFFFF;
+				this.format = data.getLittleEndian16() & 0xFFFF;
+				this.packetIndex = data.getLittleEndian16() & 0xFFFF;
+				this.awaitingDataPacket = true;
 				break;
 			case RDPSND_CLOSE:
-				soundDriver.waveOutClose();
-				deviceOpen = false;
+				this.soundDriver.waveOutClose();
+				this.deviceOpen = false;
 				break;
 			case RDPSND_NEGOTIATE:
 				negotiate( data );
@@ -156,24 +144,14 @@ public class SoundChannel extends VChannel {
 				break;
 			case RDPSND_SET_VOLUME:
 				int volume = data.getLittleEndian32();
-				if( deviceOpen ) {
-					soundDriver.waveOutVolume( ( volume & 0xffff ), ( volume >> 16 ) & 0xffff );
+				if( this.deviceOpen ) {
+					this.soundDriver.waveOutVolume( ( volume & 0xffff ), ( volume >> 16 ) & 0xffff );
 				}
 				break;
 			default:
 				logger.error( "RDPSND packet type " + type );
 				break;
 		}
-		this.waveOutPlay();
-	}
-
-	public void waveOutPlay() {
-		if(soundDriver.isDspBusy()){
-			synchronized(ps) {
-				ps.notify();
-			}
-		}
-//		if( soundDriver.isDspBusy() ) soundDriver.waveOutPlay();
 	}
 
 	public void sendCompletion( int tick, int packetIndex ) {
@@ -236,8 +214,8 @@ public class SoundChannel extends VChannel {
 				data.incrementPosition( readCnt + discardCnt );
 
 				if( deviceAvailable && soundDriver.waveOutFormatSupported( format ) ) {
-					formatCount++;
-					if( formatCount == MAX_FORMATS ) break;
+					this.formatCount++;
+					if( this.formatCount == MAX_FORMATS ) break;
 				}
 			}
 		}
@@ -316,25 +294,4 @@ public class SoundChannel extends VChannel {
 		s.setLittleEndian16( size );
 		return s;
 	}
-	
-	/*
-	 * Use a single Thread to play sound, suggestions of Julien
-	 * */
-	public class playThread extends Thread{
-		public void run(){
-			try {
-				while(true){
-					while(!soundDriver.isDspBusy()){
-						synchronized(this) {
-							wait();
-						}
-					}
-					soundDriver.waveOutPlay();
-				}
-			} catch(InterruptedException e) {
-				logger.info("Sound thread stopped");
-			}
-		}
-	}
-	
 }
