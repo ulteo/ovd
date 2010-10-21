@@ -100,9 +100,8 @@ class Config:
 					Config.log_level|= Config.LOGS_FLAGS_ALIASES[item]
 			
 			if debug_count>1:
-				if debug_count<3:
-					Config.log_level|= Logger.DEBUG_2
-				else:
+				Config.log_level|= Logger.DEBUG_2
+				if debug_count>=3:
 					Config.log_level|= Logger.DEBUG_3
 		
 		if Config.infos.has_key("LOG_THREADED"):
