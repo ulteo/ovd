@@ -84,6 +84,14 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	public static final String FIELD_SESSION_MODE = "session_mode";
 	public static final String FIELD_ICON_ID = "id";
 
+	public static final String NODE_SETTINGS = "settings";
+	public static final String NODE_SETTING = "setting";
+
+	public static final String FIELD_NAME = "name";
+	public static final String FIELD_VALUE = "value";
+
+	public static final String NAME_DESKTOP_ICONS = "desktop_icons";
+
 	private static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
 	private static final String CONTENT_TYPE_XML = "text/xml";
 	private static final String CONTENT_TYPE_PNG = "image/png";
@@ -588,6 +596,30 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 			if (rootNode.hasAttribute("duration"))
 				response.setDuration(Integer.parseInt(rootNode.getAttribute("duration")));
+
+			NodeList settingsNodeList = rootNode.getElementsByTagName(NODE_SETTINGS);
+			if (settingsNodeList.getLength() == 1) {
+				Element settingsNode = (Element) settingsNodeList.item(0);
+
+				settingsNodeList = settingsNode.getElementsByTagName(NODE_SETTING);
+				for (int i = 0; i < settingsNodeList.getLength(); i++) {
+					Element setting = (Element) settingsNodeList.item(i);
+
+					String name = setting.getAttribute(FIELD_NAME);
+					if (name == null)
+						continue;
+					String value = setting.getAttribute(FIELD_VALUE);
+
+					if (name.equalsIgnoreCase(NAME_DESKTOP_ICONS)) {
+						try {
+							int val = Integer.parseInt(value);
+							response.setDesktopIcons(val > 0);
+						} catch (NumberFormatException ex) {
+							org.ulteo.Logger.error("Failed to parse value '"+value+"' (name: "+NAME_DESKTOP_ICONS+")");
+						}
+					}
+				}
+			}
 			
 			NodeList usernameNodeList = rootNode.getElementsByTagName("user");
 			if (usernameNodeList.getLength() == 1) {

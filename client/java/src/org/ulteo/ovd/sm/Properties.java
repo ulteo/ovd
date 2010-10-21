@@ -33,6 +33,8 @@ public class Properties {
 	
 	private boolean multimedia = false;
 	private boolean printers = false;
+
+	private boolean desktop_icons = false;
 	
 	public Properties(int mode) {
 		this.mode = mode;
@@ -92,5 +94,13 @@ public class Properties {
 
 	public void setDuration(int duration_) {
 		this.duration = duration_;
+	}
+
+	public boolean isDesktopIcons() {
+		return this.desktop_icons;
+	}
+
+	public void setDesktopIcons(boolean desktop_icons_) {
+		this.desktop_icons = desktop_icons_;
 	}
 }

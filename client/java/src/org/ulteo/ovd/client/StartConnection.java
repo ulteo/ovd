@@ -783,7 +783,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 					}
 				}
 				
-				this.client = new OvdClientPortal(dialog, response.getUsername(), this.opts.autopublish, this.opts.autostart, this);
+				this.client = new OvdClientPortal(dialog, response.getUsername(), response.isDesktopIcons(), this.opts.autostart, this);
 				break;
 			default:
 				JOptionPane.showMessageDialog(null, I18n._("Internal error: unsupported session mode"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
