@@ -128,45 +128,6 @@ def CopyTree(KeySrc, SubKey, KeyDest):
 		Logger.warn("Unable to close key in order to proceed CopyTree")
 		Logger.error("Unable to close key in order to proceed CopyTree: %s"%(str(e)))
 
-def OpenKeyCreateIfDoesntExist(root, path):
-	try:
-		key = _winreg.OpenKey(root, path, 0, _winreg.KEY_SET_VALUE)
-	except Exception, err:
-		key = None
-	
-	if key is None:
-		keyName = os.path.basename(path)
-		parentPath = os.path.dirname(path)
-		if len(parentPath) == 0:
-			parentPath = None
-		
-		
-		need_to_create_son = False
-		if parentPath is not None:
-			key = OpenKeyCreateIfDoesntExist(root, parentPath)
-			if key is not None:
-				need_to_create_son = True
-			else:
-				return None
-		
-		if need_to_create_son:
-			try:
-#				print "Create key:",keyName
-				_winreg.CreateKey(key, keyName)
-			except Exception, err:
-#				print "create key error 1",keyName,err
-				return None
-			finally:
-				 _winreg.CloseKey(key)
-			
-		try:
-#			print "Finally open key",path
-			key = _winreg.OpenKey(root, path, 0, _winreg.KEY_SET_VALUE)
-		except Exception, err:
-#			print "open key error 2",path,err
-			return None
-	
-	return key
 
 def CreateKeyR(hkey, path):
 	if path.endswith("\\"):
@@ -246,8 +207,8 @@ def UpdateActiveSetup(Username, hiveName, active_setup_path):
 	
 	try:
 		hkey_src = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, active_setup_path, 0, win32con.KEY_ALL_ACCESS)
-		hkey_dst = OpenKeyCreateIfDoesntExist(win32con.HKEY_USERS, r"%s\%s"%(hiveName,active_setup_path))
-		
+		CreateKeyR(win32con.HKEY_USERS, r"%s\%s"%(hiveName,active_setup_path))
+		hkey_dst = win32api.RegOpenKey(win32con.HKEY_USERS, r"%s\%s"%(hiveName,active_setup_path), 0, win32con.KEY_ALL_ACCESS)
 		CopyTree(hkey_src, "Installed Components", hkey_dst)
 		
 	except Exception, err:
@@ -436,7 +397,8 @@ def setTimezone(rootPath, tz):
 	DaylightStart = tzi[28:44]
 	
 	path = r"%s\SYSTEM\CurrentControlSet\Control\TimeZoneInformation"%(rootPath)
-	hkey = OpenKeyCreateIfDoesntExist(win32con.HKEY_USERS, path)
+	CreateKeyR(win32con.HKEY_USERS, path)
+	hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS)
 	if hkey is None:
 		Logger.error("setTimezone, unable to open "+path)
 		return False

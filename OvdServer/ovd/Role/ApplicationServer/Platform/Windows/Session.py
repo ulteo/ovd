@@ -40,7 +40,6 @@ import LnkFile
 from Msi import Msi
 from ovd.Platform import Platform
 import Reg
-from Reg import OpenKeyCreateIfDoesntExist
 
 class Session(AbstractSession):
 	def init(self):
@@ -229,8 +228,12 @@ class Session(AbstractSession):
 				#"NoViewContextMenu", # Mouse right clic
 				#"StartMenuLogOff",
 				]
+		try:
+			Reg.CreateKeyR(_winreg.HKEY_USERS, path)
+			key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+		except:
+			key = None
 		
-		key = OpenKeyCreateIfDoesntExist(_winreg.HKEY_USERS, path)
 		if key is None:
 			Logger.error("Unable to open key '%s'"%(path))
 		else:
@@ -245,7 +248,11 @@ class Session(AbstractSession):
 				"NoDispCPL",
 				]
 		
-		key = OpenKeyCreateIfDoesntExist(_winreg.HKEY_USERS, path)
+		try:
+			Reg.CreateKeyR(_winreg.HKEY_USERS, path)
+			key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+		except:
+			key = None
 		if key is None:
 			Logger.error("Unable to open key '%s'"%(path))
 		else:
@@ -257,7 +264,11 @@ class Session(AbstractSession):
 		path = r"%s\Control Panel\Desktop"%(hiveName)
 		items = ["ScreenSaveActive", "ScreenSaverIsSecure"]
 		
-		key = OpenKeyCreateIfDoesntExist(_winreg.HKEY_USERS, path)
+		try:
+			Reg.CreateKeyR(_winreg.HKEY_USERS, path)
+			key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+		except:
+			key = None
 		if key is None:
 			Logger.error("Unable to open key '%s'"%(path))
 		else:
