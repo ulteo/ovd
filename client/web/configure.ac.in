@@ -76,7 +76,6 @@ AC_CONFIG_FILES([
 Makefile
 config/Makefile
 web/Makefile
-web/ajax/Makefile
 web/applet/Makefile
 web/includes/Makefile
 web/media/Makefile

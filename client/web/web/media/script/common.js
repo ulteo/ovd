@@ -69,7 +69,7 @@ function startSession() {
 
 	if (! $('use_local_credentials_true') || ! $('use_local_credentials_true').checked) {
 		new Ajax.Request(
-			'ajax/login.php',
+			'login.php',
 			{
 				method: 'post',
 				parameters: {
