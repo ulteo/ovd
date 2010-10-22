@@ -33,7 +33,7 @@ class Folders(AbstractFolders):
 			return
 		
 		shares_def_dir = os.path.join(os.environ["OVD_SESSION_DIR"], "shares")
-		if not os.path.is_dir(shares_def_dir):
+		if not os.path.isdir(shares_def_dir):
 			return
 		
 		for path in glob.glob(os.path.join(shares_def_dir, "*")):
@@ -45,7 +45,7 @@ class Folders(AbstractFolders):
 			if not os.path.exists(content):
 				continue
 			
-			self.share[name] = content
+			self.shares[name] = content
 	
 	
 	def getPathFromID(self, id_):
