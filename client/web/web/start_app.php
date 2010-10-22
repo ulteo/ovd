@@ -33,6 +33,7 @@ if (array_key_exists('check', $_GET)) {
 	foreach ($_SESSION['start_app'] as $k => $v) {
 		$start_app_node = $dom->createElement('start_app');
 		$start_app_node->setAttribute('id', $v['id']);
+		$start_app_node->setAttribute('network_folder', $_SESSION['ajxp']['folders'][$v['repository']]);
 		$start_app_node->setAttribute('path', $v['path']);
 		$start_apps_node->appendChild($start_app_node);
 
@@ -47,6 +48,7 @@ if (array_key_exists('check', $_GET)) {
 }
 
 $_SESSION['start_app'][] = array(
-	'id'	=>	$_POST['id'],
-	'path'	=>	$_POST['path']
+	'id'			=>	$_POST['id'],
+	'repository'	=>	$_POST['repository'],
+	'path'			=>	substr($_POST['path'], 1)
 );

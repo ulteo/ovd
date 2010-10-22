@@ -71,13 +71,17 @@ function generateAjaxplorerActionsXML($application_nodes_) {
 		$app_name = $application_node->getAttribute('name');
 
 	$clientcallback_cdata = <<<EOF
+var repository;
 var path;
 if (window.actionArguments && window.actionArguments.length > 0) {
+	repository = 0;
 	path = window.actionArguments[0];
 } else {
 	userSelection = ajaxplorer.getFilesList().getUserSelection();
-	if (userSelection && userSelection.isUnique())
+	if (userSelection && userSelection.isUnique()) {
+		repository = ajaxplorer.repositoryId;
 		path = userSelection.getUniqueFileName();
+	}
 }
 
 new Ajax.Request(
@@ -86,6 +90,7 @@ new Ajax.Request(
 		method: 'post',
 		parameters: {
 			id: $app_id,
+			repository: repository,
 			path: path
 		}
 	}
@@ -299,6 +304,7 @@ if (is_object($profile_node) || is_object($sharedfolders_node)) {
 	$_SESSION['ajxp'] = array();
 	$_SESSION['ajxp']['applications'] = '';
 	$_SESSION['ajxp']['repositories'] = array();
+	$_SESSION['ajxp']['folders'] = array();
 }
 
 if ($_SESSION['explorer'] === true) {
@@ -318,6 +324,8 @@ if ($_SESSION['explorer'] === true) {
 				'PAGINATION_NUMBER'		=>	200
 			),
 		);
+
+		$_SESSION['ajxp']['folders'][] = $profile_node->getAttribute('dir');
 	}
 
 	if (is_object($sharedfolders_node)) {
@@ -339,6 +347,8 @@ if ($_SESSION['explorer'] === true) {
 					'PAGINATION_NUMBER'		=>	200
 				),
 			);
+
+			$_SESSION['ajxp']['folders'][] = $sharedfolder_node->getAttribute('dir');
 		}
 	}
 }

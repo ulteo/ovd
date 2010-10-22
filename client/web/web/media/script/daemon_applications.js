@@ -262,7 +262,7 @@ var Applications = Class.create(Daemon, {
 
 		for (var i=0; i<buffer.length; i++) {
 			var application = this.applications.get(parseInt(buffer[i].getAttribute('id')));
-			application.launch_with_file(buffer[i].getAttribute('path'));
+			application.launch_with_file(buffer[i].getAttribute('network_folder'), buffer[i].getAttribute('path'));
 		}
 	},
 
