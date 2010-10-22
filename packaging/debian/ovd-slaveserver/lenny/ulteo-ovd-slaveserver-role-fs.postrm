@@ -6,7 +6,7 @@ FSCACHEDIR=/var/lib/ulteo/ovd/slaveserver/fs
 A2SITESAVDIR=/etc/apache2/sites-available
 A2SITESENDIR=/etc/apache2/sites-enabled
 
-[ "$1" != "upgrade" ] && ovd-slaveserver-role del FileServer
+[ "$1" != "upgrade" ] && ovd-slaveserver-role del FileServer
 
 # VHost webdav config
 [ -e $A2SITESENDIR/slaveserver-fs ] && a2dissite slaveserver-fs > /dev/null
