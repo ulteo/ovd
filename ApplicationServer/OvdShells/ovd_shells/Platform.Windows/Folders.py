@@ -35,6 +35,7 @@ class Folders(AbstractFolders):
 		self.shares = self.parseRegistry()
 		
 		if "profile" in self.shares.keys():
+			profile = self.shares["profile"]
 			try:
 				win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, "U:", r"\\%s\%s"%(profile["host"], profile["directory"]), None, profile["login"], profile["password"])
 				profile["local_path"] = "U:\\"
@@ -62,8 +63,8 @@ class Folders(AbstractFolders):
 	
 	
 	def getPathFromID(self, id_):
-		for share in self.shares.keys():
-			if share["id"] == id_ and share.has_key("local_path"):
+		for share in self.shares.values():
+			if share["directory"] == id_ and share.has_key("local_path"):
 				return share["local_path"]
 		
 		return None
