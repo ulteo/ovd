@@ -45,6 +45,31 @@ class fsAccessDriver extends AbstractAccessDriver
 	
 	function  fsAccessDriver($driverName, $filePath, $repository, $optOptions = NULL){
 		parent::AbstractAccessDriver($driverName, $filePath, $repository);
+
+		$this->initUlteoActions();
+	}
+	
+	private function initUlteoActions() {
+		$this->xml_data = $_SESSION['ajxp']['applications'];
+		$this->xml_parser = xml_parser_create( "UTF-8" );
+
+		//xml_parser_set_option( $this->xml_parser, XML_OPTION_CASE_FOLDING, false );
+		xml_set_object( $this->xml_parser, $this );
+		xml_set_element_handler( $this->xml_parser, "_startElement", "_endElement");
+		xml_set_character_data_handler( $this->xml_parser, "_cData" );
+		xml_parse( $this->xml_parser, $this->xml_data, true );
+		xml_parser_free( $this->xml_parser );
+
+		$fileData = $this->xml_data;
+		$matches = array();
+		foreach ($this->actions as $actionName => $actionData){
+			preg_match_all('/(<action name=\"'.$actionName.'\".*?>.*?<\/action>)/', str_replace("\n", "", $fileData), $matches);
+			if(count($matches) && count($matches[0])){
+				$actionXML = $matches[0][0];
+				$this->actions[$actionName]["XML"] = $actionXML;
+			}
+		}
+		$this->actions["get_driver_actions"] = array();
 	}
 	
 	function initRepository(){
