@@ -81,7 +81,7 @@ Rectangle* getWorkAreaRect() {
 	return rect;
 }
 
-JNIEXPORT jintArray JNICALL Java_org_ulteo_ovd_client_env_WorkArea_getWorkAreaSizeForX(JNIEnv *env, jclass class) {
+JNIEXPORT jintArray JNICALL Java_org_ulteo_utils_jni_WorkArea_getWorkAreaSizeForX(JNIEnv *env, jclass class) {
 	Rectangle* rect;
 	jintArray area;
 	int buff[4];

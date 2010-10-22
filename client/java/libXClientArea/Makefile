@@ -26,12 +26,12 @@ LIBDIR=$(DESTDIR)/usr/lib/
 
 all: $(EXEC)
 
-$(EXEC): src/org_ulteo_ovd_client_env_WorkArea.o
+$(EXEC): src/org_ulteo_utils_jni_WorkArea.o
 	$(CC) $(LDFLAGS) -shared -o $@ $^
 
-src/org_ulteo_ovd_client_env_WorkArea.h:
-	javac -classpath ../src -d . ../src/org/ulteo/ovd/client/env/WorkArea.java
-	javah -d ./src/ org.ulteo.ovd.client.env.WorkArea
+src/org_ulteo_utils_jni_WorkArea.h:
+	javac -classpath ../src -d . ../src/org/ulteo/utils/jni/WorkArea.java
+	javah -d ./src/ org.ulteo.utils.jni.WorkArea
 
 src/%.o: src/%.c src/%.h
 	$(CC) $(CFLAGS) -c -o $@ $<
@@ -39,7 +39,7 @@ src/%.o: src/%.c src/%.h
 clean:
 	$(RM) src/*.o $(EXEC)
 	$(RM) *~
-	$(RM) src/org_ulteo_ovd_client_env_WorkArea.h
+	$(RM) src/org_ulteo_utils_jni_WorkArea.h
 	$(RM) -rf org
 
 install: all
@@ -53,7 +53,7 @@ dist: clean
 	DISTDIR=ovd-xclient-area-@VERSION@ ; \
 	mkdir -p $$DISTDIR/src ; \
 	cp Makefile $$DISTDIR ; \
-	cp src/org_ulteo_ovd_client_env_WorkArea.c $$DISTDIR/src ; \
+	cp src/org_ulteo_utils_jni_WorkArea.c $$DISTDIR/src ; \
 	tar -zcf ovd-xclient-area.tar.gz $$DISTDIR ; \
 	rm -rf $$DISTDIR
 
