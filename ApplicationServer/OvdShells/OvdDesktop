@@ -26,6 +26,7 @@ import os
 import sys
 
 from ovd_shells.Platform import _platform as Platform
+from ovd_shells.Platform.Folders import Folders
 from ovd_shells import Util
 
 def generateConfFile(path_file_, sm_, token_):
@@ -59,7 +60,8 @@ def main(startExplorer):
 	user_sdir = Platform.getUserSessionDir()
 	
 	# Load profile share
-	Platform.mountShares()
+	folders = Folders()
+	folders.registerShares()
 	
 	Util.loadUserEnv(user_sdir)
 	#if user_sdir is None:

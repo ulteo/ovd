@@ -84,6 +84,12 @@ class Session(AbstractSession):
 		
 		if self.profile is not None:
 			self.profile.mount()
+			
+			shares_dir = os.path.join(d, "shares")
+			if not os.path.isdir(shares_dir):
+			  os.makedirs(shares_dir)
+			
+			self.profile.register_shares(shares_dir)
 		
 		return True
 	

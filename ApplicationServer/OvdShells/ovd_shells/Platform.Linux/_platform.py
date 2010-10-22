@@ -133,6 +133,3 @@ def transformCommand(cmd_, args_):
 		cmd = re.sub("%[a-z]", "", cmd)
 		
 		return cmd
-
-def mountShares():
-	pass

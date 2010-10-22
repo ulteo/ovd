@@ -92,6 +92,7 @@ class Profile(AbstractProfile):
 					Logger.error("Profile bind dir failed")
 					Logger.error("Profile bind dir failed (status: %d) %s"%(s, o))
 				else:
+					sharedFolder["local_path"] = dst
 					self.folderRedirection.append(dst)
 					self.addGTKBookmark(dst)
 		
@@ -232,3 +233,20 @@ class Profile(AbstractProfile):
 		f = file(path, "a")
 		f.write("file://%s\n"%(url))
 		f.close()
+	
+	
+	def register_shares(self, dest_dir):
+		if self.profileMounted is True:
+			path = os.path.join(dest_dir, self.profile["dir"])
+			f = file(path, "w")
+			f.write(self.homeDir)
+			f.close()
+		
+		for sharedFolder in self.sharedFolders:
+			if not sharedFolder.has_key("local_path"):
+				continue
+			
+			path = os.path.join(dest_dir, sharedFolder["dir"])
+			f = file(path, "w")
+			f.write(self.transformToLocaleEncoding(sharedFolder["local_path"]))
+			f.close()

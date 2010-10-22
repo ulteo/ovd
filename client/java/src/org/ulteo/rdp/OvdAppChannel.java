@@ -47,6 +47,9 @@ public class OvdAppChannel extends VChannel {
 	public static final int ORDER_CANT_START= 0x06;
 	public static final int	ORDER_START_WITH_ARG= 0x07;
 	
+	public static final int DIR_TYPE_SHARED_FOLDER = 0X01;
+	public static final int DIR_TYPE_RDP_DRIVE     = 0x02;
+	
 	private boolean channel_open = false;
 	
 	private List<OvdAppListener> listener = null;
@@ -154,10 +157,11 @@ public class OvdAppChannel extends VChannel {
 			return;
 		}
 		
-		RdpPacket_Localised out = new RdpPacket_Localised(17 + sharenameBytes.length + pathBytes.length);
+		RdpPacket_Localised out = new RdpPacket_Localised(18 + sharenameBytes.length + pathBytes.length);
 		out.set8(ORDER_START_WITH_ARG);
 		out.setLittleEndian32(token);
 		out.setLittleEndian32(app_id);
+		out.set8(DIR_TYPE_RDP_DRIVE);
 		out.setLittleEndian32(sharenameBytes.length);
 		out.copyFromByteArray(sharenameBytes, 0, out.getPosition(), sharenameBytes.length);
 		out.setPosition(out.getPosition() + sharenameBytes.length);

@@ -35,6 +35,8 @@ class OvdAppChannel:
 	ORDER_CANT_START= 0x06
 	ORDER_START_WITH_ARGS = 0x07
 	
+	DIR_TYPE_SHARED_FOLDER = 0X01
+	DIR_TYPE_RDP_DRIVE     = 0x02
 	
 	def __init__(self, instance_manager):
 		self.im = instance_manager
@@ -108,13 +110,18 @@ class OvdAppChannel:
 	
 	
 	def packet_ORDER_START_WITH_ARGS(self, packet):
-		if len(packet) < 9 + 4 + 4:
+		if len(packet) < 13 + 4 + 4:
 			print "Packet length error"
 			return
 		token = struct.unpack('<I', packet[1:5])[0]
 		app_id = struct.unpack('<I', packet[5:9])[0]
 		
-		ptr = 9
+		dir_type = struct.unpack('>B', packet[9])[0]
+		if dir_type not in [self.DIR_TYPE_SHARED_FOLDER, self.DIR_TYPE_RDP_DRIVE]:
+			print "Message ORDER_START_WITH_ARGS: unknown dir type %X"%(dir_type)
+			return
+		
+		ptr = 10
 		l = struct.unpack('<I', packet[ptr:ptr+4])[0]
 		if len(packet) < ptr + l + 4:
 			print "Packet length error"
@@ -145,6 +152,6 @@ class OvdAppChannel:
 			return
 		ptr+=l
 		
-		job = (self.ORDER_START, token, app_id, share, path)
-		print "recv startapp order %d %d %s %s"%(token, app_id, share, path)
+		job = (self.ORDER_START, token, app_id, dir_type, share, path)
+		print "recv startapp order %d %d %d %s %s"%(token, app_id, dir_type, share, path)
 		self.im.pushJob(job)

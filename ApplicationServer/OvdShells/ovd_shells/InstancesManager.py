@@ -26,10 +26,11 @@ import time
 from OvdAppChannel import OvdAppChannel
 
 class InstancesManager(threading.Thread):
-	def __init__(self, vchannel):
+	def __init__(self, vchannel, folders):
 		threading.Thread.__init__(self)
 		
 		self.vchannel = vchannel
+		self.folders = folders
 		self.jobs = []
 		self.instances = []
 
@@ -68,8 +69,15 @@ class InstancesManager(threading.Thread):
 					cmd = "startovdapp %d"%(app)
 					
 					if len(job)>3:
-						arg = os.path.join(self.shareName2path(job[3]), job[4])
-						cmd+=' "%s"'%(arg)
+						dir_type = job[3]
+						if dir_type == OvdAppChannel.DIR_TYPE_RDP_DRIVE:
+							local_path = self.shareName2path(job[4])
+						else:
+							local_path = self.folders.getPathFromID(job[4])
+						
+						if local_path is not None:
+							arg = os.path.join(local_path, job[5])
+							cmd+=' "%s"'%(arg)
 					instance = self.launch(cmd)
 					
 					# ToDo: sleep 0.5s and check if the process exist

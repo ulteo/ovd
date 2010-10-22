@@ -26,6 +26,7 @@ import time
 
 from ovd_shells.OvdAppChannel import OvdAppChannel
 from ovd_shells.Platform import _platform as Platform
+from ovd_shells.Platform.Folders import Folders
 from ovd_shells.Platform.InstancesManager import InstancesManager
 from ovd_shells.Platform.VirtualChannel import VirtualChannel
 from ovd_shells import Util
@@ -36,7 +37,8 @@ def main():
 		sys.exit(1)
 	
 	# Load profile share
-	Platform.mountShares()
+	folders = Folders()
+	folders.registerShares()
 	
 	os.environ["OVD_SESSION_DIR"] = user_sdir
 	Util.loadUserEnv(user_sdir)
@@ -48,7 +50,7 @@ def main():
 	
 	vchannel.Write(OvdAppChannel.getInitPacket())
 	
-	im = InstancesManager(vchannel)
+	im = InstancesManager(vchannel, folders)
 	im.start()
 	
 	app_channel = OvdAppChannel(im)

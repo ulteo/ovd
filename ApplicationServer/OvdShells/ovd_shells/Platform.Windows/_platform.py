@@ -29,9 +29,7 @@ from win32com.shell import shell, shellcon
 import win32con
 import win32event
 import win32file
-import win32netcon
 import win32process
-import win32wnet
 
 
 def findProcessWithEnviron(pattern):
@@ -164,76 +162,3 @@ def getSubProcess(ppid):
 	
 	return pids
 
-
-def mountShares():
-	try:
-		hkey = win32api.RegOpenKey(win32con.HKEY_CURRENT_USER, r"Software\ulteo\ovd", 0, win32con.KEY_READ)
-	except:
-		return
-	
-	shares_name = []
-	i = 0
-	while True:
-		try:
-			name = win32api.RegEnumKey(hkey, i)
-			shares_name.append(name)
-		except Exception, err:
-			break
-		i+= 1
-	win32api.RegCloseKey(hkey)
-	
-	shares = {}
-	for name in shares_name:
-		share = {}
-		hkey = None
-		try:
-			hkey = win32api.RegOpenKey(win32con.HKEY_CURRENT_USER, r"Software\ulteo\ovd\%s"%(name), 0, win32con.KEY_READ | win32con.KEY_QUERY_VALUE)
-			
-			for item in ["host", "directory", "login", "password"]:
-				(share[item], type_) = win32api.RegQueryValueEx(hkey, item)
-				if type_ is not win32con.REG_SZ:
-					raise Exception("item %s in not type REG_SZ"%(item))
-		except Exception, err:
-			print "Registry content error for shares: ",err
-			continue
-		
-		finally:
-			if hkey is not None:
-				win32api.RegCloseKey(hkey)
-		
-		shares[name] =  share
-	
-	
-	if "profile" in shares.keys():
-		profile = shares.pop("profile")
-		try:
-			win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, "U:", r"\\%s\%s"%(profile["host"], profile["directory"]), None, profile["login"], profile["password"])
-		  
-		except Exception, err:
-			cmd = "net use U: \\\\%s\\%s %s /user:%s"%(profile["host"], profile["directory"], profile["password"], profile["login"])
-			print "Unable to mount share: ",err
-			print "Try with this command: ",cmd
-	
-	for name in shares.keys():
-		share = shares[name]
-		letter = getFreeLetter()+":"
-		
-		try:
-			win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, letter, r"\\%s\%s"%(share["host"], share["directory"]), None, share["login"], share["password"])
-		
-		except Exception, err:
-			cmd = "net use %s \\\\%s\\%s %s /user:%s"%(letter, share["host"], share["directory"], share["password"], share["login"])
-			print "Unable to mount share: ",err
-			print "Try with this command: ",cmd
-
-
-def getFreeLetter():
-	drives = win32api.GetLogicalDriveStrings().split('\x00')[:-1]
-	
-	for i in "ZYXWVUTSRQPONMLKJIHGFEDCBA":
-		letter = "%s:\\"%(i.upper())
-		#print letter
-		if letter not in drives:
-			return i
-	
-	return None
