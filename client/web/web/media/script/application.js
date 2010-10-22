@@ -102,6 +102,15 @@ var Application = Class.create({
 		daemon.liaison_runningapplicationtoken_application.set(rand, this.id);
 	},
 
+	launch_with_file: function(path_) {
+		var date = new Date();
+		var rand = parseInt(date.getTime()/1000);
+
+		var server = daemon.servers.get(this.server_id);
+		$('ulteoapplet').startApplicationWithFile(rand, this.id, server.java_id, path_);
+		daemon.liaison_runningapplicationtoken_application.set(rand, this.id);
+	},
+
 	getIconURL: function() {
 		return 'icon.php?id='+this.id;
 	}

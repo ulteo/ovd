@@ -220,7 +220,50 @@ var Applications = Class.create(Daemon, {
 		if (! this.explorer)
 			return;
 
-		$('fileManagerContainer').innerHTML = '<iframe style="width: 100%; height: 100%; border: none;" src="ajaxplorer/"></iframe>';
+		this.explorer_loop();
+
+		$('fileManagerContainer').innerHTML = '<iframe style="width: 100%; height: 100%; border: none;" src="ajaxplorer/?compile"></iframe>';
+	},
+
+	explorer_loop: function() {
+		this.push_log('debug', '[applications] explorer_loop()');
+
+		this.check_start_app();
+
+		if (! this.is_stopped())
+			setTimeout(this.explorer_loop.bind(this), 2000);
+	},
+
+	check_start_app: function() {
+		this.push_log('debug', '[applications] check_start_app()');
+
+		new Ajax.Request(
+			'start_app.php',
+			{
+				method: 'get',
+				parameters: {
+					check: true,
+					differentiator: Math.floor(Math.random()*50000)
+				},
+				onSuccess: this.parse_check_start_app.bind(this)
+			}
+		);
+	},
+
+	parse_check_start_app: function(transport) {
+		this.push_log('debug', '[applications] parse_check_start_app(transport@check_start_app())');
+
+		var xml = transport.responseXML;
+
+		var buffer = xml.getElementsByTagName('start_app');
+
+		if (buffer.length == 0)
+			return;
+
+		for (var i=0; i<buffer.length; i++) {
+			var application = this.applications.get(parseInt(buffer[i].getAttribute('id')));
+			application.launch_with_file(buffer[i].getAttribute('path'));
+		}
 	},
 
 	display_news: function() {
