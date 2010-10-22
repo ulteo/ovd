@@ -51,8 +51,8 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.ulteo.Logger;
-import org.ulteo.ovd.client.gui.GUIActions;
-import org.ulteo.ovd.client.gui.SwingTools;
+import org.ulteo.gui.GUIActions;
+import org.ulteo.gui.SwingTools;
 
 import org.ulteo.utils.I18n;
 import org.ulteo.ovd.client.Language;

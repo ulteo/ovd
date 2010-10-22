@@ -38,9 +38,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.ulteo.ovd.client.gui.GUIActions;
-import org.ulteo.ovd.client.gui.HyperLink;
-import org.ulteo.ovd.client.gui.SwingTools;
+import org.ulteo.gui.GUIActions;
+import org.ulteo.gui.forms.HyperLink;
+import org.ulteo.gui.SwingTools;
 import org.ulteo.ovd.sm.News;
 
 

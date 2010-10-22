@@ -40,8 +40,8 @@ import javax.swing.JOptionPane;
 
 import org.ulteo.utils.I18n;
 import org.ulteo.ovd.client.authInterface.LogoutPopup;
-import org.ulteo.ovd.client.gui.GUIActions;
-import org.ulteo.ovd.client.gui.SwingTools;
+import org.ulteo.gui.GUIActions;
+import org.ulteo.gui.SwingTools;
 import org.ulteo.ovd.client.remoteApps.IntegratedTrayIcon;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.rdp.RdpActions;

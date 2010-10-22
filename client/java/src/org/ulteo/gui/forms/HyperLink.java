@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package org.ulteo.ovd.client.gui;
+package org.ulteo.gui.forms;
 
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
@@ -30,6 +30,8 @@ import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.JLabel;
+import org.ulteo.gui.GUIActions;
+import org.ulteo.gui.SwingTools;
 
 public class HyperLink extends JLabel implements MouseListener {
 	private Cursor prevCursor = null;
