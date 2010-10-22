@@ -20,7 +20,7 @@
 
 package org.ulteo.ovd.client.authInterface;
 
-import org.ulteo.ovd.client.I18n;
+import org.ulteo.utils.I18n;
 
 public class LoadingStatus {
 	public static String STATUS_SM_CONNECTION_STRING = I18n._("Connecting to the session manager");

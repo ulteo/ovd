@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
-import org.ulteo.ovd.client.I18n;
+import org.ulteo.utils.I18n;
 import org.ulteo.ovd.integrated.Constants;
 
 public class WindowsRegistry extends FileAssociate {

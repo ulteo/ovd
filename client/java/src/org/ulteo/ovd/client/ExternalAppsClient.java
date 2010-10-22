@@ -40,7 +40,7 @@ import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 
-public class StartTokenAuth {
+public class ExternalAppsClient {
 	public static String name = "OvdExternalAppsClient";
 	
 	public static void usage() {

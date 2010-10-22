@@ -31,7 +31,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
-import org.ulteo.ovd.client.I18n;
+import org.ulteo.utils.I18n;
 
 public class LoadingFrame extends JDialog {
 

@@ -28,7 +28,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import org.ulteo.ovd.client.I18n;
+import org.ulteo.utils.I18n;
 import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
 import org.ulteo.rdp.RdpActions;
 

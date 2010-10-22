@@ -34,7 +34,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import org.ulteo.ovd.client.I18n;
+import org.ulteo.utils.I18n;
 import org.ulteo.ovd.sm.News;
 
 public class NewsFrame extends JFrame {

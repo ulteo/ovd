@@ -22,6 +22,7 @@
 
 package org.ulteo.ovd.client;
 
+import org.ulteo.utils.I18n;
 import org.ulteo.ovd.applet.LibraryLoader;
 import org.ulteo.ovd.client.profile.ProfileIni;
 import java.io.File;
@@ -69,7 +70,7 @@ import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 
-public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.sm.Callback {
+public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.Callback {
 	public static class Options {
 		public String profile = null;
 		public String username = null;
@@ -113,62 +114,62 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		if (properties == null)
 			return;
 
-		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_SESSION_MODE) == 0) {
-			StartConnection.main_options.sessionMode =  Properties.MODE_ANY;
+		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_SESSION_MODE) == 0) {
+			NativeClient.main_options.sessionMode =  Properties.MODE_ANY;
 			if (properties.getSessionMode() == ProfileProperties.MODE_APPLICATIONS)
-				StartConnection.main_options.sessionMode = Properties.MODE_REMOTEAPPS;
+				NativeClient.main_options.sessionMode = Properties.MODE_REMOTEAPPS;
 			else if (properties.getSessionMode() == ProfileProperties.MODE_DESKTOP)
-				StartConnection.main_options.sessionMode = Properties.MODE_DESKTOP;
+				NativeClient.main_options.sessionMode = Properties.MODE_DESKTOP;
 		}
 
-		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_USERNAME) == 0) {
+		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_USERNAME) == 0) {
 			String username = properties.getLogin();
 			if (username != null) {
-				StartConnection.main_options.username = username;
-				StartConnection.optionMask |= StartConnection.FLAG_OPTION_USERNAME;
+				NativeClient.main_options.username = username;
+				NativeClient.optionMask |= NativeClient.FLAG_OPTION_USERNAME;
 			}
 		}
-		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_SERVER) == 0) {
+		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_SERVER) == 0) {
 			String server = properties.getHost();
 			if (server != null) {
-				StartConnection.main_options.server = server;
-				StartConnection.optionMask |= StartConnection.FLAG_OPTION_SERVER;
+				NativeClient.main_options.server = server;
+				NativeClient.optionMask |= NativeClient.FLAG_OPTION_SERVER;
 			}
 		}
-		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_NTLM) == 0) {
-			StartConnection.main_options.nltm = properties.getUseLocalCredentials();
-			StartConnection.optionMask |= StartConnection.FLAG_OPTION_NTLM;
+		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_NTLM) == 0) {
+			NativeClient.main_options.nltm = properties.getUseLocalCredentials();
+			NativeClient.optionMask |= NativeClient.FLAG_OPTION_NTLM;
 		}
-		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_AUTO_INTEGRATION) == 0) {
+		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_AUTO_INTEGRATION) == 0) {
 			boolean auto_integration = properties.getAutoPublish();
-			if (! (auto_integration && StartConnection.main_options.sessionMode == Properties.MODE_DESKTOP)) {
-				StartConnection.main_options.autopublish = auto_integration;
-				StartConnection.optionMask |= StartConnection.FLAG_OPTION_AUTO_INTEGRATION;
+			if (! (auto_integration && NativeClient.main_options.sessionMode == Properties.MODE_DESKTOP)) {
+				NativeClient.main_options.autopublish = auto_integration;
+				NativeClient.optionMask |= NativeClient.FLAG_OPTION_AUTO_INTEGRATION;
 			}
 		}
-		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_LANGUAGE) == 0) {
+		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_LANGUAGE) == 0) {
 			String language = properties.getLang();
 			if (language != null) {
-				StartConnection.main_options.lang = language;
-				StartConnection.optionMask |= StartConnection.FLAG_OPTION_LANGUAGE;
+				NativeClient.main_options.lang = language;
+				NativeClient.optionMask |= NativeClient.FLAG_OPTION_LANGUAGE;
 			}
 		}
-		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_KEYMAP) == 0) {
+		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_KEYMAP) == 0) {
 			String keymap = properties.getKeymap();
 			if (keymap != null) {
-				StartConnection.main_options.keymap = keymap;
-				StartConnection.optionMask |= StartConnection.FLAG_OPTION_KEYMAP;
+				NativeClient.main_options.keymap = keymap;
+				NativeClient.optionMask |= NativeClient.FLAG_OPTION_KEYMAP;
 			}
 		}
-		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_SHOW_PROGRESS_BAR) == 0) {
-			StartConnection.main_options.showProgressBar = properties.getShowProgressbar();
-			StartConnection.optionMask |= StartConnection.FLAG_OPTION_SHOW_PROGRESS_BAR;
+		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_SHOW_PROGRESS_BAR) == 0) {
+			NativeClient.main_options.showProgressBar = properties.getShowProgressbar();
+			NativeClient.optionMask |= NativeClient.FLAG_OPTION_SHOW_PROGRESS_BAR;
 		}
-		if ((StartConnection.optionMask & StartConnection.FLAG_OPTION_GEOMETRY) == 0) {
+		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_GEOMETRY) == 0) {
 			Dimension geometry = properties.getScreenSize();
-			if (! (geometry != null && StartConnection.main_options.sessionMode == Properties.MODE_REMOTEAPPS)) {
-				StartConnection.main_options.geometry = geometry;
-				StartConnection.optionMask |= StartConnection.FLAG_OPTION_GEOMETRY;
+			if (! (geometry != null && NativeClient.main_options.sessionMode == Properties.MODE_REMOTEAPPS)) {
+				NativeClient.main_options.geometry = geometry;
+				NativeClient.optionMask |= NativeClient.FLAG_OPTION_GEOMETRY;
 			}
 		}
 	}
@@ -210,9 +211,9 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		if (properties == null)
 			return false;
 
-		StartConnection.parseProperties(properties);
+		NativeClient.parseProperties(properties);
 
-		StartConnection.optionMask |= StartConnection.FLAG_OPTION_REMEMBER_ME;
+		NativeClient.optionMask |= NativeClient.FLAG_OPTION_REMEMBER_ME;
 
 		return true;
 	}
@@ -222,9 +223,9 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		if (properties == null)
 			return false;
 
-		StartConnection.parseProperties(properties);
+		NativeClient.parseProperties(properties);
 
-		StartConnection.optionMask |= StartConnection.FLAG_OPTION_REMEMBER_ME;
+		NativeClient.optionMask |= NativeClient.FLAG_OPTION_REMEMBER_ME;
 
 		return true;
 	}
@@ -273,8 +274,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		//Cleaning up all useless OVD data
 		SystemAbstract.cleanAll();
 
-		StartConnection.main_options = new Options();
-		StartConnection.optionMask = StartConnection.FLAG_CMDLINE_OPTS;
+		NativeClient.main_options = new Options();
+		NativeClient.optionMask = NativeClient.FLAG_CMDLINE_OPTS;
 
 		LongOpt[] alo = new LongOpt[6];
 		alo[0] = new LongOpt("reg", LongOpt.NO_ARGUMENT, null, 0);
@@ -289,95 +290,95 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		while ((c = opt.getopt()) != -1) {
 			switch (c) {
 				case 0: //--reg
-					StartConnection.optionMask |= StartConnection.FLAG_REGISTRY_OPTS;
+					NativeClient.optionMask |= NativeClient.FLAG_REGISTRY_OPTS;
 					break;
 				case 1: //--auto-start
-					StartConnection.main_options.autostart = true;
+					NativeClient.main_options.autostart = true;
 
-					StartConnection.optionMask |= StartConnection.FLAG_OPTION_AUTO_START;
+					NativeClient.optionMask |= NativeClient.FLAG_OPTION_AUTO_START;
 					break;
 				case 2: //--auto-integration
-					StartConnection.main_options.autopublish = true;
+					NativeClient.main_options.autopublish = true;
 
-					StartConnection.optionMask |= StartConnection.FLAG_OPTION_AUTO_INTEGRATION;
+					NativeClient.optionMask |= NativeClient.FLAG_OPTION_AUTO_INTEGRATION;
 					break;
 				case 3: //--ntlm
-					StartConnection.main_options.nltm = true;
+					NativeClient.main_options.nltm = true;
 
-					StartConnection.optionMask |= StartConnection.FLAG_OPTION_NTLM;
+					NativeClient.optionMask |= NativeClient.FLAG_OPTION_NTLM;
 					break;
 				case 4: //--progress-bar [show|hide]
 					String arg = new String(opt.getOptarg());
 					if (arg.equalsIgnoreCase("show"))
-						StartConnection.main_options.showProgressBar = true;
+						NativeClient.main_options.showProgressBar = true;
 					else if (arg.equalsIgnoreCase("hide"))
-						StartConnection.main_options.showProgressBar = false;
+						NativeClient.main_options.showProgressBar = false;
 					else
-						StartConnection.usage(RETURN_CODE_BAD_ARGUMENTS);
+						NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 
-					StartConnection.optionMask |= StartConnection.FLAG_OPTION_SHOW_PROGRESS_BAR;
+					NativeClient.optionMask |= NativeClient.FLAG_OPTION_SHOW_PROGRESS_BAR;
 					break;
 				case 5: //--help
 				case 'h':
-					StartConnection.usage(RETURN_CODE_SUCCESS);
+					NativeClient.usage(RETURN_CODE_SUCCESS);
 					break;
 				case 'c':
-					StartConnection.main_options.profile = new String(opt.getOptarg());
-					StartConnection.optionMask |= StartConnection.FLAG_FILE_OPTS;
+					NativeClient.main_options.profile = new String(opt.getOptarg());
+					NativeClient.optionMask |= NativeClient.FLAG_FILE_OPTS;
 					break;
 				case 'p':
-					StartConnection.main_options.password = new String(opt.getOptarg());
+					NativeClient.main_options.password = new String(opt.getOptarg());
 
-					StartConnection.optionMask |= StartConnection.FLAG_OPTION_PASSWORD;
+					NativeClient.optionMask |= NativeClient.FLAG_OPTION_PASSWORD;
 					break;
 				case 'u':
-					StartConnection.main_options.username = new String(opt.getOptarg());
+					NativeClient.main_options.username = new String(opt.getOptarg());
 
-					StartConnection.optionMask |= StartConnection.FLAG_OPTION_USERNAME;
+					NativeClient.optionMask |= NativeClient.FLAG_OPTION_USERNAME;
 					break;
 				case 'm':
 					String sessionMode = new String(opt.getOptarg());
 					if (sessionMode.equalsIgnoreCase("auto"))
-						StartConnection.main_options.sessionMode = Properties.MODE_ANY;
+						NativeClient.main_options.sessionMode = Properties.MODE_ANY;
 					if (sessionMode.equalsIgnoreCase("desktop"))
-						StartConnection.main_options.sessionMode = Properties.MODE_DESKTOP;
+						NativeClient.main_options.sessionMode = Properties.MODE_DESKTOP;
 					if (sessionMode.equalsIgnoreCase("applications"))
-						StartConnection.main_options.sessionMode = Properties.MODE_REMOTEAPPS;
+						NativeClient.main_options.sessionMode = Properties.MODE_REMOTEAPPS;
 
-					StartConnection.optionMask |= StartConnection.FLAG_OPTION_SESSION_MODE;
+					NativeClient.optionMask |= NativeClient.FLAG_OPTION_SESSION_MODE;
 					break;
 				case 'g':
 					String geometry = new String(opt.getOptarg());
 					int pos = geometry.indexOf("x");
 					
 					if (geometry.lastIndexOf("x") != pos)
-						StartConnection.usage(RETURN_CODE_BAD_ARGUMENTS);
+						NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 
 					try {
-						StartConnection.main_options.geometry = new Dimension();
-						StartConnection.main_options.geometry.width = Integer.parseInt(geometry.substring(0, pos));
-						StartConnection.main_options.geometry.height = Integer.parseInt(geometry.substring(pos + 1, geometry.length()));
+						NativeClient.main_options.geometry = new Dimension();
+						NativeClient.main_options.geometry.width = Integer.parseInt(geometry.substring(0, pos));
+						NativeClient.main_options.geometry.height = Integer.parseInt(geometry.substring(pos + 1, geometry.length()));
 					} catch (NumberFormatException ex) {
 						System.err.println(ex.getMessage() + "\n" + ex.getStackTrace());
-						StartConnection.usage(RETURN_CODE_BAD_ARGUMENTS);
+						NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 					}
 
-					StartConnection.optionMask |= StartConnection.FLAG_OPTION_GEOMETRY;
+					NativeClient.optionMask |= NativeClient.FLAG_OPTION_GEOMETRY;
 					break;
 				case 'k':
-					StartConnection.main_options.keymap = new String(opt.getOptarg());
+					NativeClient.main_options.keymap = new String(opt.getOptarg());
 
-					StartConnection.optionMask |= StartConnection.FLAG_OPTION_KEYMAP;
+					NativeClient.optionMask |= NativeClient.FLAG_OPTION_KEYMAP;
 					break;
 				case 'l':
-					StartConnection.main_options.lang = new String(opt.getOptarg());
+					NativeClient.main_options.lang = new String(opt.getOptarg());
 
-					StartConnection.optionMask |= StartConnection.FLAG_OPTION_LANGUAGE;
+					NativeClient.optionMask |= NativeClient.FLAG_OPTION_LANGUAGE;
 					break;
 				case 's':
-					StartConnection.main_options.server = new String(opt.getOptarg());
+					NativeClient.main_options.server = new String(opt.getOptarg());
 
-					StartConnection.optionMask |= StartConnection.FLAG_OPTION_SERVER;
+					NativeClient.optionMask |= NativeClient.FLAG_OPTION_SERVER;
 					break;
 				default:
 					usage(RETURN_CODE_BAD_ARGUMENTS);
@@ -385,49 +386,49 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			}
 		}
 
-		if ((StartConnection.optionMask & StartConnection.FLAG_FILE_OPTS) != 0 && (StartConnection.optionMask & StartConnection.FLAG_REGISTRY_OPTS) != 0) {
+		if ((NativeClient.optionMask & NativeClient.FLAG_FILE_OPTS) != 0 && (NativeClient.optionMask & NativeClient.FLAG_REGISTRY_OPTS) != 0) {
 			org.ulteo.Logger.error("You cannot use --reg with -c");
-			StartConnection.usage(RETURN_CODE_BAD_ARGUMENTS);
+			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 
-		if ((StartConnection.optionMask & StartConnection.FLAG_FILE_OPTS) != 0) {
-			if (! StartConnection.getFormValuesFromFile(StartConnection.main_options.profile))
-				org.ulteo.Logger.warn("The configuration file \""+StartConnection.main_options.profile+"\" does not exist.");
+		if ((NativeClient.optionMask & NativeClient.FLAG_FILE_OPTS) != 0) {
+			if (! NativeClient.getFormValuesFromFile(NativeClient.main_options.profile))
+				org.ulteo.Logger.warn("The configuration file \""+NativeClient.main_options.profile+"\" does not exist.");
 		}
-		else if ((StartConnection.optionMask & StartConnection.FLAG_REGISTRY_OPTS) != 0) {
-			if (! StartConnection.getFormValuesFromRegistry())
+		else if ((NativeClient.optionMask & NativeClient.FLAG_REGISTRY_OPTS) != 0) {
+			if (! NativeClient.getFormValuesFromRegistry())
 				org.ulteo.Logger.warn("No available configuration from registry");
 		}
 		else {
-			if (! StartConnection.getFormValuesFromFile(null))
+			if (! NativeClient.getFormValuesFromFile(null))
 				org.ulteo.Logger.warn("The default configuration file does not exist.");
 		}
 
-		if (StartConnection.main_options.nltm && (StartConnection.main_options.username != null || StartConnection.main_options.password != null)) {
+		if (NativeClient.main_options.nltm && (NativeClient.main_options.username != null || NativeClient.main_options.password != null)) {
 			org.ulteo.Logger.error("You cannot use --ntml with -u or -p");
-			StartConnection.usage(RETURN_CODE_BAD_ARGUMENTS);
+			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
-		if (StartConnection.main_options.sessionMode == Properties.MODE_DESKTOP && StartConnection.main_options.autopublish) {
+		if (NativeClient.main_options.sessionMode == Properties.MODE_DESKTOP && NativeClient.main_options.autopublish) {
 			org.ulteo.Logger.error("You cannot use --auto-integration in desktop mode");
-			StartConnection.usage(RETURN_CODE_BAD_ARGUMENTS);
+			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
-		if (StartConnection.main_options.sessionMode == Properties.MODE_REMOTEAPPS && StartConnection.main_options.geometry != null) {
+		if (NativeClient.main_options.sessionMode == Properties.MODE_REMOTEAPPS && NativeClient.main_options.geometry != null) {
 			org.ulteo.Logger.error("You cannot use -g in applications mode");
-			StartConnection.usage(RETURN_CODE_BAD_ARGUMENTS);
+			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
-		if (StartConnection.main_options.autostart) {
-			if (((StartConnection.main_options.username == null || StartConnection.main_options.password == null) && !StartConnection.main_options.nltm) || StartConnection.main_options.server == null) {
+		if (NativeClient.main_options.autostart) {
+			if (((NativeClient.main_options.username == null || NativeClient.main_options.password == null) && !NativeClient.main_options.nltm) || NativeClient.main_options.server == null) {
 				org.ulteo.Logger.error("You must specify the server (-s) and your credentials (-u, -p or --ntlm)");
-				StartConnection.usage(RETURN_CODE_BAD_ARGUMENTS);
+				NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 			}
 
-			if (StartConnection.main_options.sessionMode == -1) {
-				StartConnection.main_options.sessionMode = Properties.MODE_ANY;
+			if (NativeClient.main_options.sessionMode == -1) {
+				NativeClient.main_options.sessionMode = Properties.MODE_ANY;
 			}
 		}
 
-		StartConnection s = new StartConnection(StartConnection.main_options, StartConnection.optionMask);
-		if (StartConnection.main_options.autostart) {
+		NativeClient s = new NativeClient(NativeClient.main_options, NativeClient.optionMask);
+		if (NativeClient.main_options.autostart) {
 			s.startThread();
 		}
 		s.waitThread();
@@ -436,7 +437,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	}
 
 	public static void usage(int status) {
-		System.err.println(StartConnection.productName);
+		System.err.println(NativeClient.productName);
 		System.err.println("Usage: java -jar OVDNativeClient.jar [options]");
 		System.err.println("\t-c file				Load configuration from `file`");
 		System.err.println("\t--reg				Load configuration from registry");
@@ -483,9 +484,9 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	private OvdClient client = null;
 
 	private Options opts = null;
-	private int flags = StartConnection.FLAG_NO_OPTS;
+	private int flags = NativeClient.FLAG_NO_OPTS;
 
-	public StartConnection(Options opts_, int flags_) {
+	public NativeClient(Options opts_, int flags_) {
 		this.opts = opts_;
 		this.flags = flags_;
 
@@ -494,7 +495,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		if (! this.opts.autostart) {
 			this.authFrame = new AuthFrame(this, this.opts.geometry);
 			this.loadOptions();
-			this.authFrame.setRememberMeChecked((this.flags & StartConnection.FLAG_OPTION_REMEMBER_ME) != 0);
+			this.authFrame.setRememberMeChecked((this.flags & NativeClient.FLAG_OPTION_REMEMBER_ME) != 0);
 			this.authFrame.showWindow();
 			this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
 		}
@@ -893,14 +894,14 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	private void saveProfile() throws IOException {
 		ProfileProperties properties = new ProfileProperties(this.opts.username, this.opts.server, this.opts.sessionMode, this.opts.autopublish, this.opts.nltm, this.opts.geometry, this.opts.lang, this.opts.keymap);
 
-		if ((this.flags & StartConnection.FLAG_REGISTRY_OPTS) != 0) {
+		if ((this.flags & NativeClient.FLAG_REGISTRY_OPTS) != 0) {
 			ProfileRegistry.saveProfile(properties);
 			return;
 		}
 
 		ProfileIni ini = new ProfileIni();
 
-		if ((this.flags & StartConnection.FLAG_FILE_OPTS) != 0) {
+		if ((this.flags & NativeClient.FLAG_FILE_OPTS) != 0) {
 
 			String path = null;
 			String profile = this.opts.profile;

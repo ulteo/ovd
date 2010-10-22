@@ -23,7 +23,7 @@ package org.ulteo.ovd.client.authInterface;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.ulteo.ovd.client.I18n;
+import org.ulteo.utils.I18n;
 import org.ulteo.rdp.RdpActions;
 
 public class LogoutPopup extends JOptionPane {

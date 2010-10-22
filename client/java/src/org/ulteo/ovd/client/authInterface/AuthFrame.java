@@ -54,7 +54,7 @@ import org.ulteo.Logger;
 import org.ulteo.ovd.client.gui.GUIActions;
 import org.ulteo.ovd.client.gui.SwingTools;
 
-import org.ulteo.ovd.client.I18n;
+import org.ulteo.utils.I18n;
 import org.ulteo.ovd.client.Language;
 import org.ulteo.ovd.client.desktop.DesktopFrame;
 

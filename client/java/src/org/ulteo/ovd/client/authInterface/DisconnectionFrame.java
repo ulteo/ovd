@@ -27,7 +27,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
-import org.ulteo.ovd.client.I18n;
+import org.ulteo.utils.I18n;
 
 public class DisconnectionFrame extends JDialog {
 	
