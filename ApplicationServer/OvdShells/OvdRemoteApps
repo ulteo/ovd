@@ -21,12 +21,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
-import struct
 import sys
 import time
-import locale
 
-from ovd_shells import OvdAppChannel
+from ovd_shells.OvdAppChannel import OvdAppChannel
 from ovd_shells.Platform import _platform as Platform
 from ovd_shells.Platform.InstancesManager import InstancesManager
 from ovd_shells.Platform.VirtualChannel import VirtualChannel
@@ -48,100 +46,13 @@ def main():
 	vchannel = VirtualChannel(OvdAppChannel.NAME)
 	tryOpenChannel(vchannel)
 	
-	
-	buf = struct.pack(">B", OvdAppChannel.ORDER_INIT)
-	vchannel.Write(buf)
+	vchannel.Write(OvdAppChannel.getInitPacket())
 	
 	im = InstancesManager(vchannel)
 	im.start()
 	
-	try:
-		encoding = locale.getpreferredencoding()
-	except locale.Error, err:
-		encoding = "UTF-8"
-	
-	while 1:
-		# Read a complete packet
-		# so we assume a maximum packet size is 512
-		packet = vchannel.Read(512)
-		if packet is None:
-			print "error at read"
-			time.sleep(0.5)
-			continue
-		
-		if len(packet) < 1:
-			print "Packet length error"
-			continue
-		
-		order = struct.unpack('>B', packet[0])[0]
-		if order == OvdAppChannel.ORDER_START:
-			if len(packet) < 9:
-				print "Packet length error"
-				continue
-			token = struct.unpack('<I', packet[1:5])[0]
-			app_id = struct.unpack('<I', packet[5:9])[0]
-			
-			print "recv startapp order %d %d"%(token, app_id)
-			im.pushJob((order, token, app_id))
-		
-		elif order == OvdAppChannel.ORDER_START_WITH_ARGS:
-			if len(packet) < 9 + 4 + 4:
-				print "Packet length error"
-				continue
-			token = struct.unpack('<I', packet[1:5])[0]
-			app_id = struct.unpack('<I', packet[5:9])[0]
-			
-			ptr = 9
-			l = struct.unpack('<I', packet[ptr:ptr+4])[0]
-			if len(packet) < ptr + l + 4:
-				print "Packet length error"
-				continue
-			ptr+= 4
-			
-			share = packet[ptr:ptr+l]
-			try:
-				share = share.decode("UTF-16LE")
-				share = share.encode(encoding)
-			except:
-				print "Message ORDER_START_WITH_ARGS: share argument is not UTF-16-LE srting"
-				continue
-			ptr+= l
-			
-			l = struct.unpack('<I', packet[ptr:ptr+4])[0]
-			if len(packet) < ptr + l:
-				print "Packet length error"
-				continue
-			ptr+= 4
-			
-			path = packet[ptr:ptr+l]
-			try:
-				path = path.decode("UTF-16LE")
-				path = path.encode(encoding)
-			except:
-				print "Message ORDER_START_WITH_ARGS: path argument is not UTF-16-LE srting"
-				continue
-			ptr+=l
-			
-			job = (OvdAppChannel.ORDER_START, token, app_id, share, path)
-			print "recv startapp order %d %d %s %s"%(token, app_id, share, path)
-			im.pushJob(job)
-	
-		elif order == OvdAppChannel.ORDER_STOP:
-			if len(packet) < 5:
-				print "Packet length error"
-				continue
-			token = struct.unpack('<I', packet[1:5])[0]
-			
-			print "recv stop order %d"%(token)
-			im.pushJob((order, token))
-		
-		
-		elif order == OvdAppChannel.ORDER_EXIT:
-			# logoff
-			break
-		
-		else:
-			print "unknown message %X"%(order)
+	app_channel = OvdAppChannel(im)
+	app_channel.run(vchannel)
 	
 	im.stop()
 	

@@ -23,7 +23,7 @@ import struct
 import threading
 import time
 
-import OvdAppChannel
+from OvdAppChannel import OvdAppChannel
 
 class InstancesManager(threading.Thread):
 	def __init__(self, vchannel):
@@ -102,8 +102,7 @@ class InstancesManager(threading.Thread):
 			t_init+= (t1 - t0)
 			if t_init > 5:
 				# We send channel init time to time to manage the reconnection
-				buf = struct.pack(">B", OvdAppChannel.ORDER_INIT)
-				self.vchannel.Write(buf)
+				self.vchannel.Write(OvdAppChannel.getInitPacket())
 				t_init = 0
 	
 	def stop(self):
