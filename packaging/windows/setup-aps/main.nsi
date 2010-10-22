@@ -110,6 +110,9 @@
   
   !insertmacro MUI_RESERVEFILE_LANGDLL
 
+;Include String Functions
+  !include String.nsh
+
 ## First Dialog
 Function InputBoxPageShow
   Var /GLOBAL sm_address
@@ -131,7 +134,11 @@ Function InputBoxPageShow
     ${IF} $R2 == ""
       Goto loop
     ${ENDIF}
-    StrCpy $sm_address $R2 -1 18
+    
+    StrCpy $R2 $R2 "" 18
+    Push $R2
+    Call Trim
+    Pop $sm_address
   
   again:
     !insertmacro MUI_HEADER_TEXT "Configuration" "Give the Session Manager address."
