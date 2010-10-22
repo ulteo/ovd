@@ -32,7 +32,7 @@ import org.ulteo.ovd.integrated.OSTools;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 import java.io.FileNotFoundException;
-import org.ulteo.ovd.client.env.WorkArea;
+import org.ulteo.utils.jni.WorkArea;
 import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.ovd.sm.Properties;

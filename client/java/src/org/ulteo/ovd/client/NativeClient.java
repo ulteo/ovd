@@ -55,7 +55,7 @@ import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.desktop.DesktopFrame;
 import org.ulteo.ovd.client.desktop.OvdClientDesktop;
-import org.ulteo.ovd.client.env.WorkArea;
+import org.ulteo.utils.jni.WorkArea;
 import org.ulteo.ovd.client.gui.GUIActions;
 import org.ulteo.ovd.client.gui.SwingTools;
 import org.ulteo.ovd.client.profile.ProfileProperties;

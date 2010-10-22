@@ -40,7 +40,7 @@ import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
 import netscape.javascript.JSObject;
-import org.ulteo.ovd.client.env.WorkArea;
+import org.ulteo.utils.jni.WorkArea;
 
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.rdp.rdpdr.OVDPrinter;

@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package org.ulteo.ovd.client.env;
+package org.ulteo.utils.jni;
 
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
