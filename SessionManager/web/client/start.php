@@ -153,6 +153,7 @@ $start_app = '';
 $start_app_args = '';
 $allow_shell = $default_settings['allow_shell'];
 $multimedia = $default_settings['multimedia'];
+$redirect_client_drives = $default_settings['redirect_client_drives'];
 $redirect_client_printers = $default_settings['redirect_client_printers'];
 $enable_profiles = $default_settings['enable_profiles'];
 $auto_create_profile = $default_settings['auto_create_profile'];
@@ -783,6 +784,7 @@ $session_node = $dom->createElement('session');
 $session_node->setAttribute('id', $session->id);
 $session_node->setAttribute('mode', $session->mode);
 $session_node->setAttribute('multimedia', $multimedia);
+$session_node->setAttribute('redirect_client_drives', $redirect_client_drives);
 $session_node->setAttribute('redirect_client_printers', $redirect_client_printers);
 if ($timeout > 0)
 	$session_node->setAttribute('duration', $timeout);

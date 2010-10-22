@@ -350,6 +350,9 @@ class Preferences {
 		$c = new ConfigElement_select('multimedia', _('Multimedia'), _('Multimedia'), _('Multimedia'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
+		$c = new ConfigElement_select('redirect_client_drives', _('Redirect client drives'), _('Redirect client drives'), _('Redirect client drives'), 2);
+		$c->setContentAvailable(array('no'=>_('no'),'partial'=>_('partial'),'full'=>_('full')));
+		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_select('redirect_client_printers', _('Redirect client printers'), _('Redirect client printers'), _('Redirect client printers'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');

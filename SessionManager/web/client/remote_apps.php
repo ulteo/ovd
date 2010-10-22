@@ -71,6 +71,7 @@ $session_node = $dom->createElement('session');
 $session_node->setAttribute('id', $session->id);
 $session_node->setAttribute('mode', Session::MODE_APPLICATIONS);
 $session_node->setAttribute('multimedia', false);
+$session_node->setAttribute('redirect_client_drives', false);
 $session_node->setAttribute('redirect_client_printers', false);
 foreach ($session->servers as $server) {
 	$server = Abstract_Server::load($server);
