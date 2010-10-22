@@ -401,7 +401,7 @@ class Dialog(AbstractDialog):
 			elif request in ["stdout", "stderr"]:
 				response = {}
 				response["code"] = httplib.OK
-				response["Content-Type"] = "image/png"
+				response["Content-Type"] = "text/plain"
 				response["data"] = self.role_instance.apt.getRequestLog(rid, request)
 				return response
 			
