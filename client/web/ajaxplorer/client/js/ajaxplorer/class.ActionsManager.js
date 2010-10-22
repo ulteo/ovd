@@ -257,10 +257,13 @@ ActionsManager = Class.create({
 					}
 				}
 			}
+			var real_src = resolveImageSource(action.options.src, '/images/crystal/actions/ICON_SIZE', 16);
+			if (action.options.src.substr(0, 1) == '/')
+				real_src = action.options.src;
 			contextActions.push({
 				name:action.getKeyedText(),
 				alt:action.options.title,
-				image:resolveImageSource(action.options.src, '/images/crystal/actions/ICON_SIZE', 16),
+				image:real_src,
 				isDefault:isDefault,
 				callback:function(e){this.apply()}.bind(action)
 			});

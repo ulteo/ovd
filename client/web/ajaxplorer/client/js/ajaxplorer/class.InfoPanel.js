@@ -205,7 +205,10 @@ InfoPanel = Class.create({
 			if(selectionType == 'multiple' && action.selectionContext.unique) return; 
 			if(selectionType == 'unique' && (!action.context.selection || action.selectionContext.multipleOnly)) return;
 			//if(count > 0) actionString += ' | ';
-			actionString += '<a href="" onclick="ajaxplorer.actionBar.fireAction(\''+action.options.name+'\');return false;"><img src="'+ajxpResourcesFolder+'/images/crystal/actions/16/'+action.options.src+'" width="16" height="16" align="absmiddle" border="0"> '+action.options.title+'</a>';
+			var real_src = ajxpResourcesFolder+'/images/crystal/actions/16/'+action.options.src;
+			if (action.options.src.substr(0, 1) == '/')
+				real_src = action.options.src;
+			actionString += '<a href="" onclick="ajaxplorer.actionBar.fireAction(\''+action.options.name+'\');return false;"><img src="'+real_src+'" width="16" height="16" align="absmiddle" border="0"> '+action.options.title+'</a>';
 			count++;
 		}.bind(this));
 		actionString += '</div>';
