@@ -145,7 +145,7 @@ public class OvdAppChannel extends VChannel {
 		}
 	}
 
-	public void sendStartApp(int token, int app_id, String sharename, String path) {
+	public void sendStartApp(int token, int app_id, int shareType, String sharename, String path) {
 		byte[] sharenameBytes = null;
 		byte[] pathBytes = null;
 
@@ -161,7 +161,7 @@ public class OvdAppChannel extends VChannel {
 		out.set8(ORDER_START_WITH_ARG);
 		out.setLittleEndian32(token);
 		out.setLittleEndian32(app_id);
-		out.set8(DIR_TYPE_RDP_DRIVE);
+		out.set8(shareType);
 		out.setLittleEndian32(sharenameBytes.length);
 		out.copyFromByteArray(sharenameBytes, 0, out.getPosition(), sharenameBytes.length);
 		out.setPosition(out.getPosition() + sharenameBytes.length);

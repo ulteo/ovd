@@ -74,11 +74,18 @@ class OrderApplication extends Order {
 	public int id;
 	public int application_id;
 	public int server_id;
+	public int repository;
+	public String path = null;
 	
 	public OrderApplication(int id, int application_id, int server_id) {
 		this.id = id;
 		this.application_id = application_id;
 		this.server_id = server_id;	
+	}
+	
+	public void setPath(int repository, String path) {
+		this.repository = repository;
+		this.path = path;
 	}
 	
 	public String toString() {
@@ -334,8 +341,12 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 					continue;
 				}
 					
-				
-				chan.sendStartApp(order.id, order.application_id);
+				if (order.path == null)
+					chan.sendStartApp(order.id, order.application_id);
+				else {
+					System.out.println("App: "+order.path);
+					chan.sendStartApp(order.id, order.application_id, chan.DIR_TYPE_SHARED_FOLDER, ""+order.repository, order.path);
+				}
 			}
 		}
 	}
@@ -355,7 +366,14 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 	public void startApplication(int token, int id, int server) {
 		this.pushOrder(new OrderApplication(token, id, new Integer(server)));
 	}
-
+	
+	public void startApplicationWithFile(int token, int id, int server, int repository, String path) {
+		OrderApplication o = new OrderApplication(token, id, new Integer(server));
+		o.setPath(repository, path);
+		
+		this.pushOrder(o);
+	}
+	
 	public void forwardJS(String functionName, Integer instance, String status) {
 		Object[] args = new Object[2];
 		args[0] = instance;
