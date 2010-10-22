@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import org.ulteo.Logger;
+import org.ulteo.utils.FilesOp;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.integrated.Constants;
 
@@ -81,5 +82,28 @@ public class LinuxShortcut extends Shortcut {
 		if (icon.exists())
 			icon.delete();
 		
+	}
+
+	public static void removeAll() {
+		FilesOp.deleteDirectory(new File(Constants.PATH_ICONS));
+		
+		File shortcuts_dir = new File(Constants.PATH_SHORTCUTS);
+		if (! shortcuts_dir.exists())
+			return;
+
+		String[] shortcuts = shortcuts_dir.list();
+		for (String filename : shortcuts) {
+			File[] f = new File[3];
+			f[0] = new File(Constants.PATH_OVD_SPOOL_XDG_APPLICATIONS+Constants.FILE_SEPARATOR+filename);
+			f[1] = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+filename);
+			f[2] = new File(Constants.PATH_XDG_APPLICATIONS+Constants.FILE_SEPARATOR+filename);
+
+			for (File each: f) {
+				if (each.exists())
+					each.delete();
+			}
+		}
+
+		FilesOp.deleteDirectory(shortcuts_dir);
 	}
 }

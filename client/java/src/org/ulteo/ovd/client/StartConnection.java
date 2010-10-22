@@ -62,6 +62,7 @@ import org.ulteo.ovd.client.profile.ProfileRegistry;
 import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
 import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.OSTools;
+import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -268,6 +269,9 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		(new File(log_dir)).mkdirs();
 		if (! org.ulteo.Logger.initInstance(true, log_dir+Constants.FILE_SEPARATOR +org.ulteo.Logger.getDate()+".log", true))
 			System.err.println("Unable to iniatialize logger instance");
+
+		//Cleaning up all useless OVD data
+		SystemAbstract.cleanAll();
 
 		StartConnection.main_options = new Options();
 		StartConnection.optionMask = StartConnection.FLAG_CMDLINE_OPTS;

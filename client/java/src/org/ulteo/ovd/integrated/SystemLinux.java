@@ -57,6 +57,10 @@ public class SystemLinux extends SystemAbstract {
 		this.shortcut.remove(app);
 	}
 
+	public static void cleanAll() {
+		LinuxShortcut.removeAll();
+	}
+
 	@Override
 	public void install(Application app) {
 		Logger.debug("Installing the '"+app.getName()+"' shortcut");

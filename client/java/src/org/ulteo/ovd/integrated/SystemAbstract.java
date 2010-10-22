@@ -32,6 +32,13 @@ public abstract class SystemAbstract {
 
 	public abstract void clean(Application app);
 
+	public static void cleanAll() {
+		if (OSTools.isWindows())
+			SystemWindows.cleanAll();
+		else if (OSTools.isLinux())
+			SystemLinux.cleanAll();
+	}
+
 	public abstract void install(Application app);
 
 	public abstract void uninstall(Application app);

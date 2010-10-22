@@ -60,6 +60,11 @@ public class SystemWindows extends SystemAbstract {
 		this.fileAssociate.removeAppAction(app);
 	}
 
+	public static void cleanAll() {
+		WindowsShortcut.removeAll();
+		WindowsRegistry.removeAll();
+	}
+
 	@Override
 	public void install(Application app) {
 		Logger.debug("Installing the '"+app.getName()+"' shortcut");

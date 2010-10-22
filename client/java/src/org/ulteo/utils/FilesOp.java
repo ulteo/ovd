@@ -18,41 +18,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package org.ulteo.ovd.client;
+package org.ulteo.utils;
 
 import java.io.File;
-import org.ulteo.Logger;
-import org.ulteo.utils.FilesOp;
-import org.ulteo.ovd.integrated.Constants;
-import org.ulteo.ovd.integrated.SystemAbstract;
 
-public class ShutdownTask extends Thread {
-	private OvdClient client = null;
-
-	public ShutdownTask(OvdClient client_) {
-		this.client = client_;
-	}
-
-	@Override
-	public void run() {
-		if (this.client == null) {
-			Logger.error("Shutdown task: client is null");
+public class FilesOp {
+	public static void deleteDirectory(File directory) {
+		if (! directory.exists())
 			return;
+
+		for (File each : directory.listFiles()) {
+			if (each.isDirectory()) {
+				FilesOp.deleteDirectory(each);
+				continue;
+			}
+			each.delete();
 		}
 
-		this.client.disconnectAll();
-
-		//Cleaning up all useless OVD data
-		SystemAbstract.cleanAll();
-
-		String instance = this.client.getInstance();
-		if (instance == null)
-			return;
-
-		File instance_dir = new File(Constants.PATH_REMOTE_APPS+Constants.FILE_SEPARATOR+instance);
-		if (! instance_dir.exists())
-			return;
-
-		FilesOp.deleteDirectory(instance_dir);
+		directory.delete();
 	}
 }

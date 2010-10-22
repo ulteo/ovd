@@ -33,6 +33,7 @@ import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 import java.io.FileNotFoundException;
 import org.ulteo.ovd.client.env.WorkArea;
+import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -111,6 +112,9 @@ public class StartTokenAuth {
 			tempdir+= System.getProperty("file.separator");
 		if (! org.ulteo.Logger.initInstance(true, tempdir+"ulteo-ovd-"+org.ulteo.Logger.getDate()+".log", true))
 			System.err.println("Unable to iniatialize logger instance");
+
+		//Cleaning up all useless OVD data
+		SystemAbstract.cleanAll();
 		
 		if (OSTools.isWindows()) {
 			try {

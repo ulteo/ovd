@@ -22,6 +22,7 @@ package org.ulteo.ovd.integrated.shorcut;
 
 import java.io.File;
 import net.jimmc.jshortcut.JShellLink;
+import org.ulteo.utils.FilesOp;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.integrated.Constants;
 
@@ -84,5 +85,27 @@ public class WindowsShortcut extends Shortcut {
 		if (shortcut.exists())
 			shortcut.delete();
 		shortcut = null;
+	}
+
+	public static void removeAll() {
+		FilesOp.deleteDirectory(new File(Constants.PATH_ICONS));
+
+		File shortcuts_dir = new File(Constants.PATH_SHORTCUTS);
+		if (! shortcuts_dir.exists())
+			return;
+
+		String[] shortcuts = shortcuts_dir.list();
+		for (String filename : shortcuts) {
+			File[] f = new File[2];
+			f[0] = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+filename);
+			f[1] = new File(Constants.PATH_STARTMENU+Constants.FILE_SEPARATOR+filename);
+
+			for (File each: f) {
+				if (each.exists())
+					each.delete();
+			}
+		}
+
+		FilesOp.deleteDirectory(shortcuts_dir);
 	}
 }

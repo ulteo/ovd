@@ -291,6 +291,69 @@ public class WindowsRegistry extends FileAssociate {
 		}
 	}
 
+	public static void removeAll() {
+		RegistryKey key = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software\\Classes", RegistryKey.ACCESS_ALL);
+		if (key == null) {
+			Logger.error("Unable to access to HKCU");
+			return;
+		}
+
+		try {
+			List<String> keysToRemove = new ArrayList<String>();
+
+			Enumeration enumKeys = key.keyElements();
+			while (enumKeys.hasMoreElements()) {
+				boolean keep = false;
+				
+				String targetStr = (String) enumKeys.nextElement();
+
+				if (targetStr.startsWith(".")) {
+					RegistryKey extKey = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software\\Classes\\"+targetStr, RegistryKey.ACCESS_READ);
+					if (extKey == null)
+						continue;
+
+					String target = extKey.getStringValue("");
+					if (target == null || ! target.startsWith(TARGET_PREFIX))
+						keep = true;
+				}
+				else {
+					RegistryKey targetKey = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software\\Classes\\"+targetStr+"\\shell", RegistryKey.ACCESS_ALL);
+					if (targetKey == null)
+						continue;
+
+					List<String> shellsToRemove = new ArrayList<String>();
+
+					Enumeration enumShells = targetKey.keyElements();
+					while (enumShells.hasMoreElements()) {
+						String shellStr = (String) enumShells.nextElement();
+						
+						if (! shellStr.startsWith(KEY_PREFIX)) {
+							keep = true;
+							continue;
+						}
+
+						shellsToRemove.add(shellStr);
+					}
+
+					for (String each : shellsToRemove)
+						WindowsRegistry.removeKey(targetKey, each);
+
+					targetKey.closeKey();
+				}
+
+				if (keep)
+					continue;
+
+				keysToRemove.add(targetStr);
+			}
+
+			for (String each : keysToRemove)
+				WindowsRegistry.removeKey(key, each);
+		} catch (RegistryException ex) {
+			Logger.error(ex.getMessage());
+		}
+	}
+
 	private static final HashMap<String, String[]> mimes = new HashMap<String, String[]>() {
 		{
 			put("Application/xml",	 new String[]{"vcproj"});
