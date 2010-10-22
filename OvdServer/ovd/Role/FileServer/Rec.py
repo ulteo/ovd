@@ -35,17 +35,9 @@ from ovd.Logger import Logger
 from Config import Config
 
 class Rec(ProcessEvent):
-	mask = EventsCodes.IN_CREATE 
+	mask = EventsCodes.IN_CREATE | EventsCodes.IN_MOVED_TO
 	
-	def process_IN_CREATE(self, event_k):
-		if event_k.name == ".htaccess":
-			if event_k.path.startswith(Config.spool):
-				buf = event_k.path[len(Config.spool)+1:].split("/")
-				if len(buf) == 1:
-					Logger.debug2("process_IN_CREATE doesn't change file attribute on root .htaccess file")
-					return
-		  
-		path = os.path.join(event_k.path,event_k.name)
+	def process(self, path):
 		if os.path.isdir(path):
 			Logger.debug("FileServer::Rec chmod dir %s"%(path))
 			chmod_flag = stat.S_IRWXU | stat.S_IRWXG | stat.S_ISGID
@@ -64,4 +56,21 @@ class Rec(ProcessEvent):
 				Logger.warn("Unable to change file owner for '%s'"%(path))
 				Logger.debug("lchown returned %s"%(err))
 			else:
-				Logger.debug2("FS:REC:process_IN_CREATE: path '%s' deleted before chown/chmod operations")
+				Logger.debug2("FS:REC: path '%s' deleted before chown/chmod operations"%(path))
+	
+	
+	def process_IN_CREATE(self, event_k):
+		if event_k.name == ".htaccess":
+			if event_k.path.startswith(Config.spool):
+				buf = event_k.path[len(Config.spool)+1:].split("/")
+				if len(buf) == 1:
+					Logger.debug2("process_IN_CREATE doesn't change file attribute on root .htaccess file")
+					return
+		  
+		path = os.path.join(event_k.path,event_k.name)
+		self.process(path)
+	
+	
+	def process_IN_MOVED_TO(self, event_k):
+		path = os.path.join(event_k.path,event_k.name)
+		self.process(path)
