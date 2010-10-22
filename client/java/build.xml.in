@@ -135,7 +135,7 @@
    <antcall target="precompile" />
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
 	   target="1.5" source="1.5"
-	   includes="org/ulteo/ovd/client/StartTokenAuth.java">
+	   includes="org/ulteo/ovd/client/ExternalAppsClient.java">
       <classpath>
         <fileset dir="required_libraries">
           <include name="*.jar" />
@@ -157,7 +157,7 @@
      <jar destfile="jars/OVDExternalAppsClient.jar" basedir="build">
        <manifest>
          <attribute name="Main-Class"
-                    value="org.ulteo.ovd.client.StartTokenAuth"/>
+                    value="org.ulteo.ovd.client.ExternalAppsClient"/>
        </manifest>
      </jar>
    </target>
@@ -175,7 +175,7 @@
     <antcall target="precompile" />
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
            target="1.5" source="1.5"
-           includes="org/ulteo/ovd/client/StartConnection.java">
+           includes="org/ulteo/ovd/client/NativeClient.java">
       <classpath>
         <fileset dir="required_libraries">
           <include name="*.jar" />
@@ -213,7 +213,7 @@
     <antcall target="ovdNativeClient_jar" />
     <jar destfile="jars/OVDNativeClient.jar" basedir="build">
       <manifest>
-        <attribute name="Main-Class" value="org.ulteo.ovd.client.StartConnection"/>
+        <attribute name="Main-Class" value="org.ulteo.ovd.client.NativeClient"/>
       </manifest>
     </jar>
   </target>
@@ -223,7 +223,7 @@
     <antcall target="ovdNativeClient_jar" />
     <jar destfile="jars/OVDNativeClient.jar" basedir="build">
       <manifest>
-        <attribute name="Main-Class" value="org.ulteo.ovd.client.StartConnection"/>
+        <attribute name="Main-Class" value="org.ulteo.ovd.client.NativeClient"/>
         <attribute name="Class-Path" value="/usr/share/java/gnu-getopt.jar
                                             /usr/share/java/log4j-1.2.jar"/>
       </manifest>
