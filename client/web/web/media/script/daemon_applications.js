@@ -222,7 +222,7 @@ var Applications = Class.create(Daemon, {
 
 		this.explorer_loop();
 
-		$('fileManagerContainer').innerHTML = '<iframe style="width: 100%; height: 100%; border: none;" src="ajaxplorer/?compile"></iframe>';
+		$('fileManagerContainer').innerHTML = '<iframe style="width: 100%; height: 100%; border: none;" src="ajaxplorer/"></iframe>';
 	},
 
 	explorer_loop: function() {
