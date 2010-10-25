@@ -119,7 +119,9 @@ class ApplicationsDetection:
 			if self.msi is not None:
 				application["command"] = self.msi.getTargetFromShortcut(filename)
 				if application["command"] is None:
-					application["command"] = shortcut.GetPath(0)[0] + " " + shortcut.GetArguments()
+					application["command"] = shortcut.GetPath(0)[0]
+					if len(shortcut.GetArguments())>0:
+						application["command"]+= " "+shortcut.GetArguments()
 			
 			
 			application["mimetypes"] = self.mimetypes.get_mime_types_from_command(application["command"])
