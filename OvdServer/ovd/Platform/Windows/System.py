@@ -69,7 +69,8 @@ class System(AbstractSystem):
 			windows_server = wmi_serv.ExecQuery("Select Caption from Win32_OperatingSystem")
 			
 			buffer = windows_server[0].Caption
-			buffer = buffer.encode('utf-8')
+			if buffer is unicode:
+				buffer = buffer.encode('utf-8')
 		
 		except Exception, err:
 			Logger.warn("System::getVersion: version except '%s'"%(str(err)))
