@@ -118,7 +118,8 @@ class PageGtk(PageBase):
         if eth:
             ip = shell("unset LANG ; ifconfig %s | sed  -rn '/inet addr/ {s/.*addr:(.*)  Bcast.*/\\1/;p}'" % eth)
             if ip:
-                builder.get_object('label_ip').set_text("-  http://%s/ovd/admin" % ip)
+                builder.get_object('label_sm_address').set_text("http://%s/ovd/admin" % ip)
+                builder.get_object('label_wi_address').set_text("http://%s/ovd" % ip)
                 builder.get_object('box_ip').show()
 
         builder.connect_signals(self)
