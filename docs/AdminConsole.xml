@@ -109,16 +109,6 @@
             </para>
           </listitem>
           <listitem>
-            <para><emphasis>Web port of this server:</emphasis> this
-            is the port where the Application Server is listening for
-            web services accesses from the Session Manager</para>.
-            <important>
-              <para>You shouldn't modify this value unless you are
-              sure of what you are doing</para>
-            </important>
-          </listitem>
-
-          <listitem>
             <para>
               The maintenance/production box is a status information. This status is
               used to keep some servers online and ready to use on
