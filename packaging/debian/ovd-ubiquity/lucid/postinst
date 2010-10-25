@@ -3,8 +3,6 @@
 . /usr/share/debconf/confmodule
 
 sed -i "/^AFTER/c AFTER = 'ovd'" /usr/lib/ubiquity/plugins/ubi-summary.py
-sed -i "123,129 c\        shutil.copyfile('/usr/lib/ubiquity/ovd-setup/mysql-initctl', initctl)" \
-    /usr/lib/ubiquity/ubiquity/install_misc.py
 
 gconftool-2 --direct --type string \
   --config-source xml:readwrite:/etc/gconf/gconf.xml.mandatory \

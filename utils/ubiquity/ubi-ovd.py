@@ -24,14 +24,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os
-import debconf
 import random
 import string
 import subprocess
 
-from ubiquity import validation
-from ubiquity.misc import execute, execute_root, debconf_escape
+from ubiquity.install_misc import chroot_setup, chroot_cleanup
 from ubiquity.plugin import *
 
 NAME = 'ovd'
@@ -260,5 +257,8 @@ class Install(InstallPlugin):
 
     def install(self, target, progress, *args, **kwargs):
         progress.info('ubiquity/install/ovd')
-        return InstallPlugin.install(self, target, progress, *args, **kwargs)
+        chroot_setup(target)
+        rv = InstallPlugin.install(self, target, progress, *args, **kwargs)
+        chroot_cleanup(target)
+        return rv
 
