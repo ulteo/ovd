@@ -255,10 +255,9 @@ class Page(Plugin):
 
 class Install(InstallPlugin):
     def prepare(self, unfiltered=False):
-        progress.info('ubiquity/install/ovd')
-        execute_root('/usr/lib/ubiquity/ovd-setup/ovd-setup')
-        return ([], [])
+        return (['/usr/lib/ubiquity/ovd-setup/ovd-setup'])
 
     def install(self, target, progress, *args, **kwargs):
+        progress.info('ubiquity/install/ovd')
         return InstallPlugin.install(self, target, progress, *args, **kwargs)
 
