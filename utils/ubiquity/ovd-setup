@@ -2,4 +2,9 @@
 
 debconf-get-selections | grep -e "^ulteo-ovd" -e "^mysql-server" | chroot /target debconf-set-selections
 chroot /target apt-cdrom add
+
+apt_install_direct=/var/lib/ubiquity/apt-install-direct
+is_apt_install_direct=[ -f $apt_install_direct ]
+test $is_apt_install_direct || touch $apt_install_direct
 apt-install ulteo-ovd-easy-install
+test $is_apt_install_direct || rm $apt_install_direct
