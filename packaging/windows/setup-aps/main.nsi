@@ -126,7 +126,7 @@ Function InputBoxPageShow
 
   loop:
     FileRead $R0 $R1
-    IfErrors again
+    IfErrors close_file
     Push $R1
     Push "session_manager = "
     Call StrStr
@@ -139,6 +139,9 @@ Function InputBoxPageShow
     Push $R2
     Call Trim
     Pop $sm_address
+  
+  close_file:
+    FileClose $R0
   
   again:
     !insertmacro MUI_HEADER_TEXT "Configuration" "Give the Session Manager address."
