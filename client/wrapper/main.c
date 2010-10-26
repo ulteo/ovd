@@ -81,6 +81,8 @@ int launch(const char *command_line, ...) {
   
   si.dwFlags = STARTF_USESHOWWINDOW|STARTF_USESTDHANDLES;
   si.wShowWindow = SW_HIDE;
+  si.hStdError = GetStdHandle(STD_OUTPUT_HANDLE); 
+  si.hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE); 
   
   printf("Launch '%s'\n", buf);
 
