@@ -66,6 +66,9 @@ public class AuthFrame implements ActionListener, Runnable {
 	private static final int JOB_OPTIONS = 2;
 	private static final int JOB_START = 3;
 
+	private static final String RESOLUTION_MAXIMIZED = I18n._("Maximized");
+	private static final String RESOLUTION_FULLSCREEN = I18n._("Fullscreen");
+
 	private List<Integer> jobsList = null;
 	
 	private JFrame mainFrame = new JFrame();
@@ -559,8 +562,8 @@ public class AuthFrame implements ActionListener, Runnable {
 		for (int i = 0; i < resolutions.length; i++) {
 			this.resolutionStrings[i] = resolutions[i].width+"x"+resolutions[i].height;
 		}
-		this.resolutionStrings[sliderLength - 2] = I18n._("Maximized");
-		this.resolutionStrings[sliderLength - 1] = I18n._("Fullscreen");
+		this.resolutionStrings[sliderLength - 2] = RESOLUTION_MAXIMIZED;
+		this.resolutionStrings[sliderLength - 1] = RESOLUTION_FULLSCREEN;
 
 		this.resolutionValue = new JLabel(this.resolutionStrings[position]);
 	}
@@ -609,15 +612,14 @@ public class AuthFrame implements ActionListener, Runnable {
 
 	public Dimension getResolution() {
 		int position = this.resBar.getValue();
-
 		
 		if (position < 0) {
 			return null;
 		}
-		if (position >= this.resolutionStrings.length + 1) {
+		if (this.resolutionStrings[position].equals(RESOLUTION_FULLSCREEN)) {
 			return DesktopFrame.FULLSCREEN;
 		}
-		if (position == this.resolutionStrings.length) {
+		if (this.resolutionStrings[position].equals(RESOLUTION_MAXIMIZED)) {
 			return DesktopFrame.MAXIMISED;
 		}
 
