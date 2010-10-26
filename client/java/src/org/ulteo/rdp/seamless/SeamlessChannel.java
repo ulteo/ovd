@@ -277,8 +277,8 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 
 		@Override
 		public void run() {
-			int xClick = this.evt.getX() + opt.x_offset;
-			int yClick = this.evt.getY() + opt.y_offset;
+			int xClick = this.evt.getX();
+			int yClick = this.evt.getY();
 			RectWindow rw = this.sw.getRectWindow();
 
 			if (	(xClick < RectWindow.SEAMLESS_BORDER_SIZE ||
