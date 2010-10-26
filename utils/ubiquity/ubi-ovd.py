@@ -85,9 +85,9 @@ class PageGtk(PageBase):
         builder = gtk.Builder()
         self.controller.add_builder(builder)
         builder.add_from_file('/usr/share/ubiquity/gtk/stepUlteo.ui')
+        
         self.page = builder.get_object('stepUlteo')
         self.administrator_login = builder.get_object('administrator_login')
-        self.administrator_login.set_text('admin')
         self.password = builder.get_object('password')
         self.verified_password = builder.get_object('verified_password')
         self.administrator_login_error_reason = builder.get_object('administrator_login_error_reason')
@@ -95,6 +95,8 @@ class PageGtk(PageBase):
         self.password_error_reason = builder.get_object('password_error_reason')
         self.password_error_box = builder.get_object('password_error_box')
         self.scrolledwin = builder.get_object('ulteo_scrolledwindow')
+        
+        self.administrator_login.set_text('admin')
 
         # Some signals need to be connected by hand so that we have the
         # handler ids.
@@ -115,8 +117,8 @@ class PageGtk(PageBase):
         if eth:
             ip = shell("unset LANG ; ifconfig %s | sed  -rn '/inet addr/ {s/.*addr:(.*)  Bcast.*/\\1/;p}'" % eth)
             if ip:
-                builder.get_object('label_sm_address').set_text("http://%s/ovd/admin" % ip)
-                builder.get_object('label_wi_address').set_text("http://%s/ovd" % ip)
+                builder.get_object('ovd_sm_address').set_text("http://%s/ovd/admin" % ip)
+                builder.get_object('ovd_wc_address').set_text("http://%s/ovd" % ip)
                 builder.get_object('box_ip').show()
 
         builder.connect_signals(self)
@@ -125,8 +127,8 @@ class PageGtk(PageBase):
     def plugin_translate(self, lang):
         user = self.controller.get_string('administrator_login_inactive_label', lang)
         pasw = self.controller.get_string('password_inactive_label', lang)
-        vpas = self.controller.get_string('password_again_inactive_label',
-                                          lang)
+        vpas = self.controller.get_string('password_again_inactive_label', lang)
+        self.unmatch_passwords_error = self.controller.get_string('ovd_unmatch_passwords', lang)
         self.administrator_login.set_inactive_message(user)
         self.password.set_inactive_message(pasw)
         self.verified_password.set_inactive_message(vpas)
@@ -169,7 +171,7 @@ class PageGtk(PageBase):
 
     def on_passwords_changed(self, widget):
         if self.get_password() != self.get_verified_password():
-            self.password_error("unmatched")
+            self.password_error(self.unmatch_passwords_error)
         else:
             self.password_error_box.hide()
 

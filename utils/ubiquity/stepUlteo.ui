@@ -7,7 +7,7 @@
     <property name="border_width">6</property>
     <property name="orientation">vertical</property>
     <child>
-      <object class="GtkLabel" id="ulteo_heading_label">
+      <object class="GtkLabel" id="ovd_heading">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="xalign">0</property>
@@ -15,9 +15,6 @@
         <property name="use_markup">True</property>
         <property name="selectable">False</property>
         <property name="single_line_mode">True</property>
-        <attributes>
-          <attribute name="weight" value="bold"/>
-        </attributes>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -58,11 +55,11 @@
                     <property name="orientation">vertical</property>
                     <property name="spacing">6</property>
                     <child>
-                      <object class="GtkLabel" id="admin_login_label">
+                      <object class="GtkLabel" id="ovd_admin_login">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="no">Administrator login</property>
+                        <property name="label" translatable="yes">Administrator login</property>
                         <property name="selectable">False</property>
                       </object>
                       <packing>
@@ -164,7 +161,7 @@
                     <property name="orientation">vertical</property>
                     <property name="spacing">6</property>
                     <child>
-                      <object class="GtkLabel" id="administrator_password_label">
+                      <object class="GtkLabel" id="ovd_administrator_password">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="xalign">0</property>
@@ -285,7 +282,7 @@
                               </object>
                             </child>
                             <child>
-                            <object class="GtkLabel" id="password_mysql_label">
+                            <object class="GtkLabel" id="ovd_mysql_password">
                               <property name="visible">True</property>
                               <property name="can_focus">True</property>
                               <property name="xalign">0</property>
@@ -326,7 +323,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="label2">
+                      <object class="GtkLabel" id="ovd_sm_present_address">
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="ypad">15</property>
@@ -338,11 +335,10 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="label_sm_address">
+                      <object class="GtkLabel" id="ovd_sm_address">
                         <property name="visible">True</property>
                         <property name="xalign">0.05</property>
                         <attributes>
-                          <attribute name="style" value="normal"/>
                           <attribute name="weight" value="ultraheavy"/>
                         </attributes>
                       </object>
@@ -352,7 +348,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="label3">
+                      <object class="GtkLabel" id="ovd_wc_present_address">
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="ypad">15</property>
@@ -364,7 +360,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="label_wi_address">
+                      <object class="GtkLabel" id="ovd_wc_address">
                         <property name="visible">True</property>
                         <property name="xalign">0.05</property>
                         <attributes>
