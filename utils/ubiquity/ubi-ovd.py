@@ -27,6 +27,7 @@
 import random
 import string
 import subprocess
+import gtk
 
 from ubiquity.install_misc import chroot_setup, chroot_cleanup
 from ubiquity.plugin import *
@@ -80,12 +81,10 @@ class PageGtk(PageBase):
         self.debug("__init__")
         self.controller = controller
 
-        import gtk
-        from ubiquity.frontend.gtk_components.labelled_entry import LabelledEntry
         builder = gtk.Builder()
         self.controller.add_builder(builder)
         builder.add_from_file('/usr/share/ubiquity/gtk/stepUlteo.ui')
-        
+
         self.page = builder.get_object('stepUlteo')
         self.administrator_login = builder.get_object('administrator_login')
         self.password = builder.get_object('password')
@@ -95,7 +94,7 @@ class PageGtk(PageBase):
         self.password_error_reason = builder.get_object('password_error_reason')
         self.password_error_box = builder.get_object('password_error_box')
         self.scrolledwin = builder.get_object('ulteo_scrolledwindow')
-        
+
         self.administrator_login.set_text('admin')
 
         # Some signals need to be connected by hand so that we have the

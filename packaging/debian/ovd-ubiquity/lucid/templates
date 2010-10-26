@@ -2,7 +2,7 @@ Template: ubiquity/install/ovd
 Type: text
 Description: Installing OVD (it will take few minutes)
 
-Template: ubiquity/text/ovd_heading
+Template: ubiquity/text/ovd_heading_label
 Type: text
 Description: Ulteo OVD configuration
 
@@ -14,7 +14,7 @@ Template: ubiquity/text/ovd_administrator_password
 Type: text
 Description: Administrator password
 
-Template: ubiquity/text/ovd_mysql_password
+Template: ubiquity/text/ovd_mysql_password_extra_label
 Type: text
 Description: This password will also be used for the MySQL account
 
