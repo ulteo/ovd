@@ -42,7 +42,7 @@
       <listitem>
         <para>
           An internet connexion that allow HTTP or the Ulteo OVD DVD
-          to install debian packages.
+          to install ubuntu packages.
         </para>
       </listitem>
       
@@ -91,7 +91,7 @@
 
 
   <section>
-    <title>Debian packages configuration</title>
+    <title>Ubuntu packages configuration</title>
 
     <itemizedlist>
       <listitem>
