@@ -113,9 +113,6 @@ public class ExternalAppsClient {
 		if (! org.ulteo.Logger.initInstance(true, tempdir+"ulteo-ovd-"+org.ulteo.Logger.getDate()+".log", true))
 			System.err.println("Unable to iniatialize logger instance");
 
-		//Cleaning up all useless OVD data
-		SystemAbstract.cleanAll();
-		
 		if (OSTools.isWindows()) {
 			try {
 				LibraryLoader.LoadLibrary(LibraryLoader.LIB_WINDOW_PATH_NAME);
@@ -132,6 +129,9 @@ public class ExternalAppsClient {
 				org.ulteo.Logger.error(ex.getMessage());
 			}
 		}
+
+		//Cleaning up all useless OVD data
+		SystemAbstract.cleanAll();
 		
 		if (ovdServer == null) {
 			System.err.println("Error: No SM host specified");
