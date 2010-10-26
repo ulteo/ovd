@@ -33,14 +33,17 @@ SRC1=main.c
 RES1=ressources.rc
 OBJ1=$(SRC1:.c=.o) $(RES1:.rc=.o)
 EXE1=OvdNativeClient.exe
+EXE2=OvdNativeClientw.exe
 
 
 .SUFFIXES: .c .rc
 
-all: $(EXE1) 
+all: $(EXE1) $(EXE2)
 
 $(EXE1): $(OBJ1)
-	$(CC) -o $(EXE1) $(OBJ1) $(LDFLAGS) -mwindows
+	$(CC) -o $(EXE1) $(OBJ1) $(LDFLAGS)
+$(EXE2): $(OBJ1)
+	$(CC) -o $(EXE2) $(OBJ1) $(LDFLAGS) -mwindows
 
 .rc.o :
 	$(RESC) -o $@ $<

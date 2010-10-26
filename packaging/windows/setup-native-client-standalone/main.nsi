@@ -24,7 +24,7 @@
 !define PRODUCT_FULL_NAME "${PRODUCT_PUBLISHER} ${PRODUCT_NAME}"
 
 !define BASENAME "${PRODUCT_FULL_NAME}"
-!define EXE_NAME "OVDNativeClient.exe"
+!define EXE_NAME "OVDNativeClientw.exe"
 !define SHORTCUT "${PRODUCT_NAME}.lnk"
 !define SHORTCUT_ICON "ulteo.ico"
 !define UNINSTALL_SHORTCUT "Uninstall - ${PRODUCT_NAME}.lnk"
