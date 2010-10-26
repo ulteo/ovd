@@ -40,24 +40,23 @@ void usage(const char *name) {
 
 
 int main(int argc, LPSTR argv[]) {
-    //    TCHAR path[MAX_PATH];
+    TCHAR cmd_line[2048];
     int ret;
-    
-    if (argc > 1) {
-        fprintf(stderr, "ToDo.\n");
-        usage(argv[0]);
-        return 1;
-    }
+    int i;
 
     {
         TCHAR pwd[MAX_PATH];
         GetCurrentDirectory(MAX_PATH, pwd);
         printf("Pwd: '%s'\n", pwd);
     }
+    
+    sprintf(cmd_line, "jre\\bin\\java.exe -jar \"%s\"", JAR_FILE);
+    for (i=1; i<argc; i++)
+        sprintf(cmd_line, "%s %s", cmd_line, argv[i]);
 
     //  PathCombine();
     printf("Before jre\n");
-    ret = launch("jre\\bin\\java.exe -jar \"%s\"", JAR_FILE);
+    ret = launch(cmd_line);
     printf("After jre %d\n",ret);
     return ret;
 }
