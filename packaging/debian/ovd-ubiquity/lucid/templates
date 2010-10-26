@@ -29,3 +29,8 @@ Description: To launch sessions, the Web client will be reached at this address:
 Template: ubiquity/text/ovd_unmatch_passwords
 Type: text
 Description: unmatch
+
+Template: ubiquity/text/ovd_text_label
+Type: text
+Description:
+ Ulteo OVD 3.0 will now be installed.
