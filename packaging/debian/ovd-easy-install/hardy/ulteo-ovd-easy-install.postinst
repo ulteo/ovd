@@ -21,18 +21,23 @@ conf_mysql()
     . /usr/share/wwwconfig-common/mysql-createuser.sh
     . /usr/share/wwwconfig-common/mysql-createdb.sh
 
-    # hack for ISO: force restart apache2 (invoke-rc.d doesn't work)
-    [ -f /sbin/initctl.REAL ] && /etc/init.d/apache2 restart
-
     su www-data -c "php /usr/share/ulteo/sessionmanager/admin/init/setup.php \
         \"$dbserver\" \"$dbname\" \"$dbprefix\" \"$dbuser\" \"$dbpass\" \
         2> /dev/null || true"
 
+    # hack for ISO: force restart apache2 and subsystem services
+    # -> invoke-rc.d doesn't work
+    if [ -f /sbin/initctl.REAL ]; then
+        /etc/init.d/apache2 restart
+        /etc/init.d/ulteo-ovd-subsystem start
+
     # restart OVD slave server cause the DB was not ready before now
-    CONFFILE=/etc/ulteo/subsystem.conf
-    [ -f "$CONFFILE" ] && . $CONFFILE
-    [ -z "$CHROOTDIR" ] && CHROOTDIR=/opt/ulteo
-    chroot $CHROOTDIR /etc/init.d/ovdSlaveServer restart
+    else
+        CONFFILE=/etc/ulteo/subsystem.conf
+        [ -f "$CONFFILE" ] && . $CONFFILE
+        [ -z "$CHROOTDIR" ] && CHROOTDIR=/opt/ulteo
+        chroot $CHROOTDIR /etc/init.d/ovdSlaveServer restart
+    fi
 
     # hack: wait cause the first request in the SM can be corrupted
     sleep 5
