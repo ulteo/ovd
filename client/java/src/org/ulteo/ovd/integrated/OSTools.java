@@ -41,4 +41,8 @@ public class OSTools {
 	public static boolean isLinux() {
 		return System.getProperty("os.name").startsWith("Linux");
 	}
+
+    public static boolean is64() {
+        return System.getProperty("os.arch").contains("64");
+    }
 }

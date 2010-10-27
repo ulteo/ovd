@@ -18,29 +18,40 @@
 
 CC=gcc
 JAVAHOME?=/usr/lib/jvm/java-1.6.0-openjdk
+ARCH?=32
 CFLAGS=-Wall -I${JAVAHOME}/include -I${JAVAHOME}/include/linux -fPIC
 LDFLAGS=-lX11
 EXEC=libXClientArea.so
 DESTDIR?=.
 LIBDIR=$(DESTDIR)/usr/lib/
+CIBLE=$(ARCH)/$(EXEC)
 
-all: $(EXEC)
+ifeq ($(ARCH), 64)
+  CIBLE+=32/$(EXEC)
+endif
 
-$(EXEC): src/org_ulteo_utils_jni_WorkArea.o
-	$(CC) $(LDFLAGS) -shared -o $@ $^
+all: $(CIBLE)
+
+%/pre:
+	mkdir -p $(dir $@)
+
+%/$(EXEC): %/pre %/org_ulteo_utils_jni_WorkArea.o
+	$(CC) $(LDFLAGS) -m$(subst /,,$(dir $@)) -shared -o $@ $1
 
 src/org_ulteo_utils_jni_WorkArea.h:
 	javac -classpath ../src -d . ../src/org/ulteo/utils/jni/WorkArea.java
 	javah -d ./src/ org.ulteo.utils.jni.WorkArea
 
-src/%.o: src/%.c src/%.h
-	$(CC) $(CFLAGS) -c -o $@ $<
+32/%.o: src/%.c src/%.h
+	$(CC) $(CFLAGS) -m32 -c -o $@ $<
+
+64/%.o: src/%.c src/%.h
+	$(CC) $(CFLAGS) -m64 -c -o $@ $<
 
 clean:
-	$(RM) src/*.o $(EXEC)
 	$(RM) *~
 	$(RM) src/org_ulteo_utils_jni_WorkArea.h
-	$(RM) -rf org
+	$(RM) -rf org 32 64
 
 install: all
 	mkdir -p $(LIBDIR)

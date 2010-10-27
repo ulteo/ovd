@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import org.ulteo.Logger;
+import org.ulteo.ovd.integrated.OSTools;
 
 public class LibraryLoader {
 	public static final String RESOURCE_LIBRARY_DIRECTORY_WINDOWS = "/ressources/WindowsLibs";
@@ -17,6 +18,11 @@ public class LibraryLoader {
 	
 	//This method is called from an applet
 	public static void LoadLibrary(String ressourceDirectory, String DLLName) throws FileNotFoundException {
+        if (OSTools.is64())
+            ressourceDirectory += "/64";
+        else
+            ressourceDirectory += "/32";
+
 		InputStream dllResource = LibraryLoader.class.getResourceAsStream(ressourceDirectory+"/"+DLLName);
 		String fileSeparator= System.getProperty("file.separator");
 		//test the resource in order to know if client is started in applet mode
