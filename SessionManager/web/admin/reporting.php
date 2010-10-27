@@ -343,7 +343,7 @@ function show_page($mode_) {
 				$tot+= $v;
 			$value = ($tot*100)/$session_number;
 
-			$dataSet->addPoint(new Point(str_replace(array('%FQDN%', '%TOTAL%'), array($fqdn, (int)($value)), ngettext(_('%FQDN% (%TOTAL% session)'), _('%FQDN% (%TOTAL% sessions)'), $value)), $value));
+			$dataSet->addPoint(new Point(str_replace(array('%FQDN%', '%TOTAL%'), array($fqdn, (int)($tot)), ngettext(_('%FQDN% (%TOTAL% session)'), _('%FQDN% (%TOTAL% sessions)'), $value)), $value));
 		}
 
 		$chart = new PieChart();
