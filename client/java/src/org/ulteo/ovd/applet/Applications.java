@@ -441,6 +441,9 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 	
 	@Override
 	public void disconnected(RdpConnection co) {
+		if (co == null || this.connections == null)
+			return;
+
 		System.out.println("Disconneted from "+co.getServer());
 		
 		Integer server_id = null;
