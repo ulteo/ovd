@@ -61,13 +61,12 @@ class OrderServer extends Order {
 		this.host = host;
 		this.port = port;
 		this.login = login;
-		this.password = password;		
+		this.password = password;
 	}
 	
 	public String toString() {
 		return "Server (id: "+this.id+ ", host: "+this.host+")";
 	}
-	
 }
 
 class OrderApplication extends Order {
@@ -126,7 +125,7 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 			this.stop();
 			return;
 		}
-
+		
 		String tempdir = System.getProperty("java.io.tmpdir");
 		if (! tempdir.endsWith(System.getProperty("file.separator"))) 
 			tempdir+= System.getProperty("file.separator");
@@ -169,9 +168,9 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 	@Override
 	public void start() {	
 		if (! this.finished_init || this.started_stop)
-			return;	
+			return;
 		System.out.println(this.getClass().toString() +" start");
-
+		
 		this.spoolThread.start();
 	}
 	
@@ -231,10 +230,9 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 		} catch(java.security.AccessControlException e) {
 			return false;
 		}
-
+		
 		return true;
 	}
-
 	
 	public synchronized Order popOrder() {
 		if (this.spoolOrder.size() == 0)
@@ -271,13 +269,13 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 				Rectangle dim = WorkArea.getWorkAreaSize();
 				System.out.println("Width: "+dim.width);
 				System.out.println("Height: "+dim.height);
-
+				
 				byte flags = RdpConnectionOvd.MODE_APPLICATION;
 				if(this.multimedia_mode)
 					flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
 				if (this.map_local_printers)
 					flags |= RdpConnectionOvd.MOUNT_PRINTERS;
-
+				
 				RdpConnectionOvd rc;
 				try {
 					rc = new RdpConnectionOvd(flags);
@@ -290,7 +288,7 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 				} catch (RdesktopException ex) {
 					System.err.println("WARNING: "+ex.getMessage());
 				}
-
+				
 				rc.setServer(order.host, order.port);
 				rc.setCredentials(order.login, order.password);
 				// Ensure that width is multiple of 4
@@ -299,9 +297,9 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 				rc.setGraphic(dim.width & ~3, dim.height, RdpConnectionOvd.DEFAULT_BPP);
 				rc.setGraphicOffset(dim.x, dim.y);
 				rc.setKeymap(keymap);
-
+				
 				rc.addRdpListener(this);
-
+				
 				try {
 					rc.addOvdAppListener(this);
 				} catch (OvdException ex) {
@@ -408,20 +406,20 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 	
 	@Override
 	public void ovdInstanceError(int instance) {
-		this.forwardJS(JS_API_F_INSTANCE, new Integer(instance), JS_API_O_INSTANCE_ERROR);	
+		this.forwardJS(JS_API_F_INSTANCE, new Integer(instance), JS_API_O_INSTANCE_ERROR);
 	}
-
+	
 	@Override
 	public void ovdInstanceStarted(int instance) {
-		this.forwardJS(JS_API_F_INSTANCE, new Integer(instance), JS_API_O_INSTANCE_STARTED);	
+		this.forwardJS(JS_API_F_INSTANCE, new Integer(instance), JS_API_O_INSTANCE_STARTED);
 	}
-
+	
 	@Override
 	public void ovdInstanceStopped(int instance) {
-		this.forwardJS(JS_API_F_INSTANCE, new Integer(instance), JS_API_O_INSTANCE_STOPPED);	
+		this.forwardJS(JS_API_F_INSTANCE, new Integer(instance), JS_API_O_INSTANCE_STOPPED);
 	}
 	// End implements OvdAppListener
-
+	
 	@Override
 	public void connected(RdpConnection co) {
 		System.out.println("Connected to "+co.getServer());
@@ -435,12 +433,12 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 		}
 		this.forwardJS(JS_API_F_SERVER, server_id, JS_API_O_SERVER_CONNECTED);
 	}
-
+	
 	@Override
 	public void connecting(RdpConnection co) {
 		System.out.println("Connecting to "+co.getServer());
 	}
-
+	
 	@Override
 	public void disconnected(RdpConnection co) {
 		System.out.println("Disconneted from "+co.getServer());
@@ -454,30 +452,30 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 		}
 		this.forwardJS(JS_API_F_SERVER, server_id, JS_API_O_SERVER_DISCONNECTED);
 	}
-
+	
 	@Override
 	public void failed(RdpConnection co, String msg) {
 		System.out.println("Connection to "+co.getServer()+" failed: "+msg);
-
+		
 		boolean retry = false;
-
+		
 		int state = co.getState();
-
+		
 		if (state == RdpConnectionOvd.STATE_CONNECTED) {
 			return;
 		}
-
+		
 		if (state != RdpConnectionOvd.STATE_FAILED) {
 			Logger.debug("checkRDPConnections "+co.getServer()+" -- Bad connection state("+state+"). Will continue normal process.");
 			return;
 		}
-
+		
 		int tryNumber = co.getTryNumber();
 		if (tryNumber < 1) {
 			Logger.debug("checkRDPConnections "+co.getServer()+" -- Bad try number("+tryNumber+"). Will continue normal process.");
 			return;
 		}
-
+		
 		if (tryNumber > 1) {
 			Logger.error("checkRDPConnections "+co.getServer()+" -- Several try to connect failed.");
 			for (Integer o : this.connections.keySet()) {
@@ -489,11 +487,11 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 			Logger.error("checkRDPConnections "+co.getServer()+" -- Failed to retrieve connection.");
 			return;
 		}
-
+		
 		Logger.warn("checkRDPConnections "+co.getServer()+" -- Connection failed. Will try to reconnect.");
 		co.connect();
 	}
-
+	
 	@Override
 	public void seamlessEnabled(RdpConnection co) {}
 }
