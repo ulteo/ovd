@@ -69,6 +69,8 @@ public class RectWindow extends Component {
 	
 	private Window refWindow = null;
 
+	private boolean isOffscreenAuthorized = true;
+
 	public RectWindow(Window f, Dimension dim, Rectangle maxBounds_) {
 		this.left = new LineWindow(f);
 		this.right = new LineWindow(f);
@@ -258,7 +260,8 @@ public class RectWindow extends Component {
 	
 	@Override
 	public void setBounds(Rectangle r) {
-		r = this.fixBounds(r);
+		if (! this.isOffscreenAuthorized)
+			r = this.fixBounds(r);
 
 		Rectangle r_left = new Rectangle(r.x, r.y, RectWindow.BORDER_SIZE, r.height);
 		Rectangle r_right = new Rectangle(r.x+r.width-RectWindow.BORDER_SIZE, r.y, RectWindow.BORDER_SIZE, r.height);
