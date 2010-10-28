@@ -1,9 +1,0 @@
-#!/usr/bin/make -f
-
-DEB_DH_INSTALL_SOURCEDIR = debian/libovd-xclient-area
-
-include /usr/share/cdbs/1/rules/debhelper.mk
-
-install/libovd-xclient-area::
-	make install DESTDIR=$(DEB_DESTDIR)
-#	install -D $(CURDIR)/libXClientArea/libXClientArea.so $(CURDIR)/$(DEB_DH_INSTALL_SOURCEDIR)/usr/lib/libXClientArea.so
