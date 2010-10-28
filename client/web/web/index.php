@@ -24,6 +24,9 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 $languages = get_available_languages();
 $keymaps = get_available_keymaps();
 
+if (defined('SESSIONMANAGER_HOST'))
+	$users = get_users_list();
+
 $wi_sessionmanager_host = '';
 if (defined('SESSIONMANAGER_HOST'))
 	$wi_sessionmanager_host	= SESSIONMANAGER_HOST;
@@ -409,7 +412,7 @@ function get_users_list() {
 <?php
 if (! defined('SESSIONMANAGER_HOST') && (! isset($wi_sessionmanager_host) || $wi_sessionmanager_host == ''))
 	echo '$(\'sessionmanager_host\').focus();';
-elseif (isset($wi_user_login) && $wi_user_login != '')
+elseif ($users !== false || (isset($wi_user_login) && $wi_user_login != ''))
 	echo '$(\'user_password\').focus();';
 else
 	echo '$(\'user_login\').focus();';
@@ -465,9 +468,6 @@ checkSessionMode();
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
 													<?php
-														if (defined('SESSIONMANAGER_HOST'))
-															$users = get_users_list();
-
 														if (! defined('SESSIONMANAGER_HOST') || $users === false) {
 													?>
 													<input type="text" id="user_login" value="<?php echo $wi_user_login; ?>" onchange="checkLogin();" onkeyup="checkLogin();" />
