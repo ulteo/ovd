@@ -12,7 +12,7 @@ Distribution: SLES 11 SP1
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Buildrequires: ulteo-ovd-cert, java-1_6_0-ibm-devel, ant, ant-nodeps, mingw32-cross-gcc
+Buildrequires: ulteo-ovd-cert, java-1_6_0-ibm-devel, ant, ant-nodeps, mingw32-cross-gcc, xorg-x11-libX11-devel-32bit, gcc-32bit
 Buildroot: %{buildroot}
 
 %description

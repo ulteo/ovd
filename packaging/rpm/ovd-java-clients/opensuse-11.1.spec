@@ -12,7 +12,7 @@ Distribution: OpenSUSE 11.1
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Buildrequires: ulteo-ovd-cert, java-1_6_0-openjdk-devel, ant, ant-nodeps, mingw32-cross-gcc
+Buildrequires: ulteo-ovd-cert, java-1_6_0-openjdk-devel, ant, ant-nodeps, mingw32-cross-gcc, xorg-x11-libX11-devel-32bit, gcc-32bit
 Buildroot: %{buildroot}
 
 %description
