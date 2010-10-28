@@ -17,38 +17,37 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+package org.ulteo.ovd.applet;
 
-package org.ulteo.ovd.printer;
+import java.awt.Component;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import org.ulteo.ovd.printer.OVDPrinterThread;
+import org.ulteo.utils.AbstractFocusManager;
 
-
-public class OVDStandalonePrinterThread implements OVDPrinterThread, Runnable{
-	private BlockingQueue<OVDJob> spool;
+public class AppletFocusManager implements AbstractFocusManager{
+	private OVDPrinterThread printerThread = null;
 	
-	
-	public OVDStandalonePrinterThread() {
-		spool = new LinkedBlockingQueue<OVDJob>() ;
-	}
-
-	
-	public void run(){
-		OVDJob job = null;
-		try{
-			job = spool.take();
-		}
-		catch (InterruptedException e){ }
-		job.print();
-	}
-	
-	public void printPages(String printerName, String pdfFilename) {
-		this.spool.add(new OVDJob(pdfFilename, printerName));
-		new Thread(this).start();
+	public AppletFocusManager(OVDPrinterThread pt) {
+		this.printerThread = pt;
 	}
 
 	@Override
-	public int getState() {
-		return OVDPrinterThread.PRINTER_THREAD_STATE_LOADED;
+	public void performedFocusGain(Component component) { }
+
+	@Override
+	public void performedFocusLost(Component component) {
+		if (component == null) {
+			return;
+		}
+		if (this.printerThread == null) {
+			return;
+		}
+		int state = this.printerThread.getState(); 
+		if (state == OVDPrinterThread.PRINTER_THREAD_STATE_LOADING) {
+			if (component != null) {
+				component.requestFocus();
+				component.requestFocusInWindow();
+			}			
+		}
 	}
 }

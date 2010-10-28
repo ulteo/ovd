@@ -23,12 +23,19 @@ package org.ulteo.rdp.seamless;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
+
+import org.ulteo.utils.AbstractFocusManager;
+
 import net.propero.rdp.Common;
 import net.propero.rdp.rdp5.seamless.SeamFrame;
 
 
-public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing {
+public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, FocusListener {
+	public static AbstractFocusManager focusManager = null;
+	
 	protected boolean lockMouseEvents = false;
 	protected RectWindow rw = null;
 
@@ -39,6 +46,7 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing {
 		
 		Dimension dim = new Dimension(this.backstore.getWidth(), this.backstore.getHeight());
 		this.rw = new RectWindow(this, dim, this.maxBounds);
+		this.addFocusListener(this);
 	}
 
 	private void parseFlags(int flags) {
@@ -84,6 +92,22 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing {
 				break;
 			default:
 				break;
+		}
+	}
+	
+	@Override
+	public void focusGained(FocusEvent e) {
+		if (SeamlessFrame.focusManager != null)
+		{
+			SeamlessFrame.focusManager.performedFocusLost(this);
+		}
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		if (SeamlessFrame.focusManager != null)
+		{
+			SeamlessFrame.focusManager.performedFocusLost(this);
 		}
 	}
 }

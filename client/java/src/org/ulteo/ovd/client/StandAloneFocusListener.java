@@ -17,38 +17,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+package org.ulteo.ovd.client;
 
-package org.ulteo.ovd.printer;
+import java.awt.Component;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import org.ulteo.utils.AbstractFocusManager;
 
 
-public class OVDStandalonePrinterThread implements OVDPrinterThread, Runnable{
-	private BlockingQueue<OVDJob> spool;
-	
-	
-	public OVDStandalonePrinterThread() {
-		spool = new LinkedBlockingQueue<OVDJob>() ;
-	}
-
-	
-	public void run(){
-		OVDJob job = null;
-		try{
-			job = spool.take();
-		}
-		catch (InterruptedException e){ }
-		job.print();
-	}
-	
-	public void printPages(String printerName, String pdfFilename) {
-		this.spool.add(new OVDJob(pdfFilename, printerName));
-		new Thread(this).start();
-	}
+public class StandAloneFocusListener implements AbstractFocusManager{
 
 	@Override
-	public int getState() {
-		return OVDPrinterThread.PRINTER_THREAD_STATE_LOADED;
-	}
+	public void performedFocusGain(Component container) { }
+
+	@Override
+	public void performedFocusLost(Component container) { }
+
 }

@@ -24,6 +24,8 @@ package org.ulteo.ovd.applet;
 import java.applet.Applet;
 import java.applet.AppletContext;
 import java.awt.BorderLayout;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.FileNotFoundException;
 
 import net.propero.rdp.RdesktopCanvas;
@@ -36,10 +38,12 @@ import org.ulteo.Logger;
 import org.ulteo.ovd.FullscreenWindow;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDAppletPrinterThread;
+import org.ulteo.ovd.printer.OVDPrinterThread;
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
+import org.ulteo.utils.AbstractFocusManager;
 
-public class Desktop extends Applet implements RdpListener {
+public class Desktop extends Applet implements RdpListener, FocusListener {
 
 	private boolean fullscreenMode = false;
 	private FullscreenWindow externalWindow = null;
@@ -63,6 +67,8 @@ public class Desktop extends Applet implements RdpListener {
 	public static final String JS_API_O_SERVER_FAILED = "failed";
 	public static final String JS_API_O_SERVER_READY = "ready";
 	
+	public AbstractFocusManager focusManager = null;
+
 	@Override
 	public void init() {
 		System.out.println(this.getClass().toString() +"  init");
@@ -105,7 +111,9 @@ public class Desktop extends Applet implements RdpListener {
 			System.out.println("Printer detection active");
 			flags |= RdpConnectionOvd.MOUNT_PRINTERS;
 			AppletContext appletContext= getAppletContext();
-			OVDPrinter.setPrinterThread(new OVDAppletPrinterThread(appletContext));
+			OVDAppletPrinterThread appletPrinterThread = new OVDAppletPrinterThread(appletContext); 
+			OVDPrinter.setPrinterThread(appletPrinterThread);
+			this.focusManager = new AppletFocusManager(appletPrinterThread);
 		}
 
 		try {
@@ -267,6 +275,7 @@ public class Desktop extends Applet implements RdpListener {
 			this.add(canvas);
 			this.validate();
 		}
+		canvas.addFocusListener(this);
 	}
 	
 
@@ -331,4 +340,22 @@ public class Desktop extends Applet implements RdpListener {
 
 	@Override
 	public void seamlessEnabled(RdpConnection co) {}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		if (this.focusManager != null) {
+			if (this.rc != null) {
+				this.focusManager.performedFocusGain(this.rc.getCanvas());
+			}
+		}
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		if (this.focusManager != null) {
+			if (this.rc != null) {
+				this.focusManager.performedFocusLost(this.rc.getCanvas());
+			}
+		}
+	}
 }

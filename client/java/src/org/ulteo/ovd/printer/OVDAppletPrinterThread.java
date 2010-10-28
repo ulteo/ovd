@@ -22,9 +22,12 @@ package org.ulteo.ovd.printer;
 
 import java.applet.Applet;
 import java.applet.AppletContext;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.File;
 
 import org.apache.log4j.Logger;
+import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 
 public class OVDAppletPrinterThread implements OVDPrinterThread {
@@ -36,6 +39,7 @@ public class OVDAppletPrinterThread implements OVDPrinterThread {
 	private AppletContext appletContext;
 	private String printerAppletName = "PrinterApplet";
 	private String spoolPath = "";
+	private int state = OVDPrinterThread.PRINTER_THREAD_STATE_UNLOADED;
 	
 	
 	
@@ -95,5 +99,24 @@ public class OVDAppletPrinterThread implements OVDPrinterThread {
 			logger.error("Unable to move pdf ["+pdfFile.getAbsolutePath()+"] file to spool dir  ["+spoolFile.getAbsolutePath());
 			return;			
 		}
+	}
+
+	@Override
+	public int getState() {
+		if (this.state == OVDPrinterThread.PRINTER_THREAD_STATE_LOADED) {
+			return state;
+		}
+		if (this.state == OVDPrinterThread.PRINTER_THREAD_STATE_LOADING) {
+			state = OVDPrinterThread.PRINTER_THREAD_STATE_LOADED;
+			return state;
+		}
+		
+		Applet printer = null;
+		printer = appletContext.getApplet(printerAppletName);
+		if (printer != null) {
+			state = OVDPrinterThread.PRINTER_THREAD_STATE_LOADING;
+			return state;
+		}
+		return OVDPrinterThread.PRINTER_THREAD_STATE_UNLOADED;
 	}
 }

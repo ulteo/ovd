@@ -27,6 +27,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Window;
+import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -39,12 +40,17 @@ import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
 import javax.swing.JDialog;
+
+import org.ulteo.utils.AbstractFocusManager;
+
 import net.propero.rdp.Common;
 import net.propero.rdp.Input;
 import net.propero.rdp.WrappedImage;
 import net.propero.rdp.rdp5.seamless.SeamlessWindow;
 
-public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMovingResizing, KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
+public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMovingResizing, KeyListener, MouseListener, MouseMotionListener, MouseWheelListener, FocusListener {
+	public static AbstractFocusManager focusManager = null;
+
 	private Common common = null;
 	private int id;
 	private int group;
@@ -87,6 +93,7 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 		this.setUndecorated(true);
 		this.sw_setMyPosition(-1, -1, 1, 1);
 		this.setVisible(false);
+		this.addFocusListener(this);
 	}
 
 	private void parseFlags(int flags) {
@@ -371,6 +378,20 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 				break;
 			default:
 				break;
+		}
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		if (SeamlessPopup.focusManager != null)	{
+			SeamlessPopup.focusManager.performedFocusLost(this);
+		}
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		if (SeamlessPopup.focusManager != null)	{
+			SeamlessPopup.focusManager.performedFocusLost(this);
 		}
 	}
 }

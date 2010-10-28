@@ -22,6 +22,7 @@
 package org.ulteo.ovd.applet;
 
 import java.io.FileNotFoundException;
+
 import org.ulteo.Logger;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.integrated.OSTools;
@@ -40,10 +41,14 @@ import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
 import netscape.javascript.JSObject;
+
+import org.ulteo.utils.AbstractFocusManager;
 import org.ulteo.utils.jni.WorkArea;
 
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
+import org.ulteo.rdp.seamless.SeamlessFrame;
+import org.ulteo.rdp.seamless.SeamlessPopup;
 
 
 abstract class Order {
@@ -100,6 +105,7 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 	private HashMap<Integer, RdpConnectionOvd> connections = null;
 	private List<Order> spoolOrder = null;
 	private Thread spoolThread = null;
+	private AbstractFocusManager focusManager;
 
 	private boolean finished_init = false;
 	private boolean started_stop = false;
@@ -217,7 +223,11 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 		buf = this.getParameter("redirect_client_printers");
 		if (buf != null){
 			AppletContext appletContext= getAppletContext();
-			OVDPrinter.setPrinterThread(new OVDAppletPrinterThread(appletContext));
+			OVDAppletPrinterThread appletPrinterThread = new OVDAppletPrinterThread(appletContext); 
+			OVDPrinter.setPrinterThread(appletPrinterThread);
+			focusManager = new AppletFocusManager(appletPrinterThread);
+			SeamlessFrame.focusManager = focusManager;
+			SeamlessPopup.focusManager = focusManager;
 			this.map_local_printers = buf.equalsIgnoreCase("true");
 		}
 		
