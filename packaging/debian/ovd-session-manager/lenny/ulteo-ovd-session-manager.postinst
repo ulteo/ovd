@@ -7,6 +7,8 @@ CACHEDIR=/var/cache/ulteo/sessionmanager
 SPOOLDIR=/var/spool/ulteo/sessionmanager
 LOGDIR=/var/log/ulteo/sessionmanager
 
+CONFFILE=$CONFDIR/config.inc.php
+
 ############################# APACHE CONFIGURATION #############################
 
 A2SITESDIR=/etc/apache2/sites-available
@@ -67,8 +69,6 @@ sed -i "s/@APACHE_USER@/${A2USER}/" $CONFDIR/sessionmanager.cron
 
 if [ "$1" = "configure" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ])
 then
-    CONFFILE=$CONFDIR/config.inc.php
-
     db_get ulteo-ovd-session-manager/admin_login && LOGIN="$RET"
     db_get ulteo-ovd-session-manager/admin_password && \
         PASSWD=$(echo -n $RET | md5sum | cut -d " " -f 1) && unset RET

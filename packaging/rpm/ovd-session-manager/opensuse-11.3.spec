@@ -135,9 +135,9 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/ulteo/sessionmanager/*.conf
 %config /etc/ulteo/sessionmanager/sessionmanager.cron
 %config /etc/logrotate.d/sessionmanager
-%defattr(0660,wwwrun,root)
+%defattr(0660,wwwrun,wwwrun)
 %config /etc/ulteo/sessionmanager/config.inc.php
-%defattr(2770,wwwrun,root)
+%defattr(2770,wwwrun,wwwrun)
 /var/*
 
 %changelog -n ulteo-ovd-session-manager
