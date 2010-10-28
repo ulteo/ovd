@@ -1,6 +1,6 @@
 Template: ubiquity/install/ovd
 Type: text
-Description: Installing OVD (it will take few minutes)
+Description: Installing OVD (it's going to take few minutes)
 
 Template: ubiquity/text/ovd_heading_label
 Type: text
@@ -20,11 +20,15 @@ Description: This password will also be used for the MySQL account
 
 Template: ubiquity/text/ovd_sm_present_address
 Type: text
-Description: To administrate OVD, the Session manager will be reached at this address:
+Description:
+ Once installed, the Session Manager can be reached at the following address
+ to administrate OVD:
 
 Template: ubiquity/text/ovd_wc_present_address
 Type: text
-Description: To launch sessions, the Web client will be reached at this address:
+Description:
+ Once installed, the Web client can be reached at the following address to
+ launch sessions:
 
 Template: ubiquity/text/ovd_unmatch_passwords
 Type: text
@@ -32,5 +36,4 @@ Description: unmatch
 
 Template: ubiquity/text/ovd_text_label
 Type: text
-Description:
- Ulteo OVD 3.0 will now be installed.
+Description: Ulteo OVD 3.0 is now going to be installed.

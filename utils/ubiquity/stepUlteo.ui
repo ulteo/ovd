@@ -327,7 +327,7 @@
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="ypad">15</property>
-                        <property name="label" translatable="yes">To administrate OVD, the Session manager will be reached at this address:</property>
+                        <property name="label" translatable="yes">Once installed, the Session Manager can be reached at the following address to administrate OVD:</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -352,7 +352,7 @@
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="ypad">15</property>
-                        <property name="label" translatable="yes">To launch sessions, the Web client will be reached at this address:</property>
+                        <property name="label" translatable="yes">Once installed, the Web client can be reached at the following address to launch sessions:</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
