@@ -25,7 +25,6 @@ import struct
 import win32api
 import win32con
 import win32security
-import _winreg
 
 from ovd.Logger import Logger
 
