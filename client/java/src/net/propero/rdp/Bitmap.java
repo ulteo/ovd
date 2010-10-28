@@ -1305,7 +1305,7 @@ public class Bitmap {
 								}
 								if ((mask & mixmask) != 0)
 									// setli(pixel, line, x, mix, Bpp);
-									pixel[line + x] = (byte) mix;
+									pixel[line + x] = mix;
 								else
 									// setli(pixel, line, x, 0, Bpp);
 									pixel[line + x] = 0;
