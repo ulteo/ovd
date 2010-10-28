@@ -9,3 +9,11 @@ test $is_apt_install_direct || touch $apt_install_direct
 cp /usr/lib/ubiquity/ovd-setup/mysql-initctl /target/sbin/initctl
 apt-install ulteo-ovd-easy-install
 test $is_apt_install_direct || rm $apt_install_direct
+
+# change /etc/issue
+unset LANG
+eth=$(ifconfig | grep ^eth | head -n 1 | cut -d' ' -f1)
+if [ -n "$eth" ]; then
+    ip=$(ifconfig eth0 | sed  -rn '/inet addr/ {s/.*addr:(.*)  Bcast.*/\1/;p}')
+    [ -n "$ip" ] && sed -i "s/-------/${ip}/" /target/etc/issue
+fi
