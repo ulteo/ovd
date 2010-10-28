@@ -34,9 +34,13 @@ public class WorkArea {
 
 	public static Rectangle getWorkAreaSize() {
 		if (WorkArea.loadLibrary && OSTools.isLinux()) {
-			int[] area = getWorkAreaSizeForX();
-			if (area.length == 4)
-				return new Rectangle(area[0], area[1], area[2], area[3]);
+			try {
+				int[] area = getWorkAreaSizeForX();
+				if (area.length == 4)
+					return new Rectangle(area[0], area[1], area[2], area[3]);
+			} catch (UnsatisfiedLinkError e) {
+				Logger.error("Failed to execute method: "+e.getMessage());
+			}
 
 			Logger.error("Failed to get the client workarea.");
 		}
