@@ -181,6 +181,19 @@ class Session(AbstractSession):
 		# Load the hive
 		_winreg.LoadKey(win32con.HKEY_USERS, hiveName, registryFile)
 		
+		# Set the OVD Environnment
+		path = r"%s\Environment"%(hiveName)
+		try:
+			Reg.CreateKeyR(_winreg.HKEY_USERS, path)
+			hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+		except:
+			hkey = None
+		if hkey is None:
+			Logger.error("Unable to open key '%s'"%(path))
+		else:
+			win32api.RegSetValueEx(hkey, "OVD_SESSION_DIR", 0, win32con.REG_SZ, os.path.join(self.appDataDir, "ulteo", "ovd"))
+			win32api.RegCloseKey(hkey)
+		
 		# Set the language
 		if self.parameters.has_key("locale"):
 			path = r"%s\Control Panel\Desktop"%(hiveName)

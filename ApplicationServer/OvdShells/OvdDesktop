@@ -57,7 +57,10 @@ def generateConfFile(path_file_, sm_, token_):
 	return True
 
 def main(startExplorer):
-	user_sdir = Platform.getUserSessionDir()
+	if os.environ.has_key("OVD_SESSION_DIR"):
+		user_sdir = os.environ["OVD_SESSION_DIR"]
+	else:
+		user_sdir = Platform.getUserSessionDir()
 	
 	# Load profile share
 	folders = Folders()
