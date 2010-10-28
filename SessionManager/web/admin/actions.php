@@ -857,6 +857,10 @@ if ($_REQUEST['name'] == 'User') {
 				}
 				else {
 					$u = $userDB->import($user_login);
+					if (! is_object($u)) {
+						popup_error(sprintf(_("Unable to delete user '%s'"), $user_login));
+						redirect();
+					}
 					$netfolders = $u->getNetworkFolders();
 					if (is_array($netfolders)) {
 						foreach ($netfolders as $netfolder)
