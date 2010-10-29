@@ -1,0 +1,4614 @@
+# Japanese translations for uovdsm package.
+# Copyright (C) 2010 Ulteo SAS
+# This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
+# Automatically generated, 2010.
+# Author: Satoshi Yuza <satoshi.yuza@gmail.com>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: uovdsm\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-10-29 10:39+0200\n"
+"PO-Revision-Date: 2010-05-23 20:00+0900\n"
+"Last-Translator: Satoshi Yuza <satoshi.yuza@gmail.com>\n"
+"Language-Team: none\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: ../../SessionManager/web/admin/actions.php:83
+#, fuzzy, php-format
+msgid "Task to add application '%s' on server '%s' successfully added"
+msgstr "アプリケーション '%s'を削除しました。"
+
+#: ../../SessionManager/web/admin/actions.php:89
+#, fuzzy, php-format
+msgid "Task to remove application '%s' from server '%s' successfully added"
+msgstr "アプリグループ '%s' を修正しました。"
+
+#: ../../SessionManager/web/admin/actions.php:95
+#, fuzzy, php-format
+msgid "Application '%s' successfully added to server '%s'"
+msgstr "アプリケーション '%s'を削除しました。"
+
+#: ../../SessionManager/web/admin/actions.php:99
+#, fuzzy, php-format
+msgid "Application '%s' successfully deleted from server '%s'"
+msgstr "アプリケーション '%s'を削除しました。"
+
+#: ../../SessionManager/web/admin/actions.php:134
+#: ../../SessionManager/web/admin/actions.php:179
+msgid "ApplicationDB is not writeable"
+msgstr "アプリケーションDBは、書込み不可能です。"
+
+#: ../../SessionManager/web/admin/actions.php:141
+#: ../../SessionManager/web/admin/actions.php:146
+#: ../../SessionManager/web/admin/actions.php:224
+#, fuzzy, php-format
+msgid "Failed to delete application '%s'"
+msgstr "公開設定を削除できません。"
+
+#: ../../SessionManager/web/admin/actions.php:149
+#: ../../SessionManager/web/admin/actions.php:229
+#, php-format
+msgid "Application '%s' successfully deleted"
+msgstr "アプリケーション '%s'を削除しました。"
+
+#: ../../SessionManager/web/admin/actions.php:158
+#, fuzzy, php-format
+msgid "Unable to import application %s"
+msgstr "公開設定を保存できませんでした。"
+
+#: ../../SessionManager/web/admin/actions.php:165
+#, fuzzy, php-format
+msgid "Unable to modify store application '%s'"
+msgstr "公開設定を削除できません。"
+
+#: ../../SessionManager/web/admin/actions.php:168
+#: ../../SessionManager/web/admin/actions.php:278
+#, fuzzy, php-format
+msgid "Application '%s' successfully modified"
+msgstr "アプリグループ '%s' を修正しました。"
+
+#: ../../SessionManager/web/admin/actions.php:199
+#, fuzzy
+msgid "Application is not ok"
+msgstr "アプリケーション"
+
+#: ../../SessionManager/web/admin/actions.php:206
+#, fuzzy, php-format
+msgid "Failed to add application '%s'"
+msgstr "利用可能アプリケーション"
+
+#: ../../SessionManager/web/admin/actions.php:209
+#, fuzzy, php-format
+msgid "Application '%s' successfully added"
+msgstr "アプリケーション '%s'を削除しました。"
+
+#: ../../SessionManager/web/admin/actions.php:219
+#: ../../SessionManager/web/admin/actions.php:261
+#, fuzzy, php-format
+msgid "Unable to import application '%s'"
+msgstr "公開設定を保存できませんでした。"
+
+#: ../../SessionManager/web/admin/actions.php:240
+#, fuzzy, php-format
+msgid "Application '%s' icon successfully deleted"
+msgstr "アプリケーション '%s'を削除しました。"
+
+#: ../../SessionManager/web/admin/actions.php:273
+#, fuzzy, php-format
+msgid "Failed to modify application '%s'"
+msgstr "変更を保存"
+
+#: ../../SessionManager/web/admin/actions.php:345
+#: ../../SessionManager/web/admin/actions.php:355
+#, php-format
+msgid "ApplicationGroup '%s' successfully modified"
+msgstr "アプリグループ '%s' を修正しました。"
+
+#: ../../SessionManager/web/admin/actions.php:366
+#, fuzzy
+msgid "Application Group Database not writeable"
+msgstr "アプリケーションDBは、書込み不可能です。"
+
+#: ../../SessionManager/web/admin/actions.php:377
+#, fuzzy, php-format
+msgid "Unable to create applications group '%s'"
+msgstr "アプリグループを作成できません。"
+
+#: ../../SessionManager/web/admin/actions.php:379
+#, fuzzy, php-format
+msgid "Applications group '%s' successfully added"
+msgstr "アプリグループ '%s' を修正しました。"
+
+#: ../../SessionManager/web/admin/actions.php:391
+#: ../../SessionManager/web/admin/actions.php:410
+#, fuzzy, php-format
+msgid "Import of applications group '%s' failed"
+msgstr "アプリグループが利用できません。"
+
+#: ../../SessionManager/web/admin/actions.php:396
+#, fuzzy, php-format
+msgid "Unable to remove applications group '%s'"
+msgstr "アプリグループ"
+
+#: ../../SessionManager/web/admin/actions.php:399
+#, fuzzy, php-format
+msgid "Applications group '%s' successfully deleted"
+msgstr "アプリケーション '%s'を削除しました。"
+
+#: ../../SessionManager/web/admin/actions.php:431
+#, fuzzy, php-format
+msgid "Unable to modify applications group '%s'"
+msgstr "アプリグループ"
+
+#: ../../SessionManager/web/admin/actions.php:433
+#, fuzzy, php-format
+msgid "Applications group '%s' successfully modified"
+msgstr "アプリグループ '%s' を修正しました。"
+
+#. problem, what to do ?
+#: ../../SessionManager/web/admin/actions.php:450
+#: ../../SessionManager/web/admin/actions.php:454
+#: ../../SessionManager/web/admin/actions.php:465
+#: ../../SessionManager/web/admin/actions.php:469
+#: ../../SessionManager/web/admin/actions.php:740
+#, php-format
+msgid "UsersGroup '%s' successfully modified"
+msgstr "ユーザーグループ '%s' の編集に成功しました。"
+
+#: ../../SessionManager/web/admin/actions.php:487
+msgid "Publication successfully added"
+msgstr "公開設定が追加されました。"
+
+#: ../../SessionManager/web/admin/actions.php:489
+msgid "Unable to save the publication"
+msgstr "公開設定を保存できませんでした。"
+
+#: ../../SessionManager/web/admin/actions.php:492
+msgid "This publication already exists"
+msgstr "この公開設定は、すでに存在しています。"
+
+#: ../../SessionManager/web/admin/actions.php:500
+msgid "Publication successfully deleted"
+msgstr "公開設定が削除されました。"
+
+#: ../../SessionManager/web/admin/actions.php:502
+msgid "Unable to delete the publication"
+msgstr "公開設定を削除できません。"
+
+#: ../../SessionManager/web/admin/actions.php:505
+msgid "This publication does not exist"
+msgstr "公開設定が存在しません。"
+
+#: ../../SessionManager/web/admin/actions.php:519
+msgid "You must define a name to your usergroup"
+msgstr "usergroup 名を、定義する必要があります。"
+
+#: ../../SessionManager/web/admin/actions.php:525
+#: ../../SessionManager/web/admin/actions.php:575
+#: ../../SessionManager/web/admin/actions.php:593
+msgid "User Group Database not writeable"
+msgstr ""
+
+#: ../../SessionManager/web/admin/actions.php:533
+#: ../../SessionManager/web/admin/actions.php:684
+msgid "You must give a value to each rule of your usergroup"
+msgstr "ユーザーグループのルールを定義する必要があります。"
+
+#: ../../SessionManager/web/admin/actions.php:551
+#, fuzzy
+msgid "Unknow usergroup type"
+msgstr "ユーザーグループが選択されていません。"
+
+#: ../../SessionManager/web/admin/actions.php:556
+#, fuzzy
+msgid "Unable to create user group"
+msgstr "ユーザーグループを作成できません。"
+
+#: ../../SessionManager/web/admin/actions.php:559
+msgid "UserGroup successfully added"
+msgstr "ユーザーグループを追加しました。"
+
+#: ../../SessionManager/web/admin/actions.php:569
+#: ../../SessionManager/web/admin/actions.php:598
+#: ../../SessionManager/web/admin/actions.php:677
+#: ../../SessionManager/web/admin/actions.php:751
+#, fuzzy, php-format
+msgid "Failed to import Usergroup '%s'"
+msgstr "ユーザーグループのロードに失敗しました。"
+
+#: ../../SessionManager/web/admin/actions.php:580
+#, fuzzy, php-format
+msgid "Unable to remove usergroup '%s'"
+msgstr "ユーザーグループのロードに失敗しました。"
+
+#: ../../SessionManager/web/admin/actions.php:583
+#, fuzzy, php-format
+msgid "UserGroup '%s' successfully deleted"
+msgstr "ユーザーグループを削除しました。"
+
+#: ../../SessionManager/web/admin/actions.php:628
+#: ../../SessionManager/web/admin/actions.php:701
+#, fuzzy, php-format
+msgid "Unable to update Usergroup '%s'"
+msgstr "ユーザーグループの表示"
+
+#: ../../SessionManager/web/admin/actions.php:632
+#: ../../SessionManager/web/admin/actions.php:666
+#, fuzzy, php-format
+msgid "UserGroup '%s' successfully modified"
+msgstr "ユーザーグループ '%s' の編集に成功しました。"
+
+#: ../../SessionManager/web/admin/actions.php:639
+msgid "Not enough rights"
+msgstr ""
+
+#: ../../SessionManager/web/admin/actions.php:656
+#, fuzzy, php-format
+msgid "Failed to import group '%s'"
+msgstr "ユーザーグループのロードに失敗しました。"
+
+#: ../../SessionManager/web/admin/actions.php:663
+#, fuzzy
+msgid "Unable to save prefs"
+msgstr "ユーザー テーブル"
+
+#: ../../SessionManager/web/admin/actions.php:703
+#, php-format
+msgid "Rules of '%s' successfully modified"
+msgstr "ルール '%s' は、変更されました。"
+
+#: ../../SessionManager/web/admin/actions.php:806
+#, fuzzy
+msgid "Usergroup successfully modified"
+msgstr "ユーザーグループを修正しました。"
+
+#: ../../SessionManager/web/admin/actions.php:809
+#, fuzzy
+msgid "Failed to modify usergroup"
+msgstr "ユーザーグループのロードに失敗しました。"
+
+#: ../../SessionManager/web/admin/actions.php:820
+#, fuzzy
+msgid "User Database not writeable"
+msgstr "内部データベースのプロファイル"
+
+#: ../../SessionManager/web/admin/actions.php:826
+#, fuzzy
+msgid "Unable to create user"
+msgstr "ニュースを削除できません。"
+
+#: ../../SessionManager/web/admin/actions.php:836
+#, fuzzy
+msgid "Unable to create user with an empty password"
+msgstr "共有フォルダへのアクセス権を作成できませんでした。"
+
+#: ../../SessionManager/web/admin/actions.php:842
+#, fuzzy, php-format
+msgid "Unable to create user '%s'"
+msgstr "ニュースを削除できません。"
+
+#: ../../SessionManager/web/admin/actions.php:846
+#, fuzzy, php-format
+msgid "User '%s' successfully added"
+msgstr "ユーザーを追加しました。"
+
+#: ../../SessionManager/web/admin/actions.php:856
+#, fuzzy, php-format
+msgid "Unable to delete user '%s' because he have an active session"
+msgstr "セッションが接続されているためサーバーを削除できません。"
+
+#: ../../SessionManager/web/admin/actions.php:861
+#: ../../SessionManager/web/admin/actions.php:872
+#, fuzzy, php-format
+msgid "Unable to delete user '%s'"
+msgstr "ニュースを削除できません。"
+
+#: ../../SessionManager/web/admin/actions.php:875
+#, fuzzy, php-format
+msgid "User '%s' successfully deleted"
+msgstr "ユーザを削除しました。"
+
+#: ../../SessionManager/web/admin/actions.php:888
+#, fuzzy, php-format
+msgid "Unable to import user '%s'"
+msgstr "ユーザー テーブル"
+
+#: ../../SessionManager/web/admin/actions.php:898
+#, fuzzy, php-format
+msgid "Unable to modify user '%s'"
+msgstr "ユーザー テーブル"
+
+#: ../../SessionManager/web/admin/actions.php:900
+#, fuzzy, php-format
+msgid "User '%s' successfully modified"
+msgstr "ユーザーを修正しました。"
+
+#: ../../SessionManager/web/admin/actions.php:908
+msgid "No custom password given at populate."
+msgstr ""
+
+#: ../../SessionManager/web/admin/actions.php:919
+msgid "User database populated."
+msgstr ""
+
+#: ../../SessionManager/web/admin/actions.php:922
+msgid "User database population failed."
+msgstr ""
+
+#: ../../SessionManager/web/admin/actions.php:939
+#: ../../SessionManager/web/modules/ApplicationDB.php:32
+msgid "Module ApplicationDB must be enabled"
+msgstr "ApplicationDB モジュールを有効にする必要があります。"
+
+#: ../../SessionManager/web/admin/actions.php:980
+msgid "SharedFolder successfully renamed"
+msgstr "共有フォルダーをリネームしました。"
+
+#: ../../SessionManager/web/admin/actions.php:982
+msgid "A shared folder with that name already exists!"
+msgstr "同じ名前の共有フォルダが既に存在しています"
+
+#: ../../SessionManager/web/admin/actions.php:995
+#: ../../SessionManager/web/admin/actions.php:1000
+#: ../../SessionManager/web/admin/actions.php:1402
+#: ../../SessionManager/web/admin/actions.php:1423
+msgid "SharedFolder successfully modified"
+msgstr "共有フォルダーを修正しました。"
+
+#: ../../SessionManager/web/admin/actions.php:1016
+#, fuzzy, php-format
+msgid "Unable to delete network folder '%s'"
+msgstr "共有フォルダを削除できませんでした。"
+
+#: ../../SessionManager/web/admin/actions.php:1018
+#, fuzzy, php-format
+msgid "Network folder '%s' successfully deleted"
+msgstr "サーバー '%s'は、削除されました。"
+
+#: ../../SessionManager/web/admin/actions.php:1030
+msgid "Untitled"
+msgstr "タイトルなし"
+
+#: ../../SessionManager/web/admin/actions.php:1035
+msgid "News successfully added"
+msgstr " ニュースを追加しました。"
+
+#: ../../SessionManager/web/admin/actions.php:1042
+msgid "Unable to delete this news"
+msgstr "ニュースを削除できません。"
+
+#: ../../SessionManager/web/admin/actions.php:1044
+msgid "News successfully deleted"
+msgstr "ニュースを削除しました。"
+
+#: ../../SessionManager/web/admin/actions.php:1054
+msgid "Password is empty"
+msgstr "パスワードが入力されていません。"
+
+#: ../../SessionManager/web/admin/actions.php:1057
+msgid "Passwords are not identical"
+msgstr "パスワードは、一致しませんでした。"
+
+#: ../../SessionManager/web/admin/actions.php:1062
+msgid "Password successfully changed"
+msgstr "パスワードが変更されました。"
+
+#: ../../SessionManager/web/admin/actions.php:1066
+msgid "Password not changed"
+msgstr "パスワードは、変更されませんでした。"
+
+#: ../../SessionManager/web/admin/actions.php:1085
+#, fuzzy, php-format
+msgid "Unable to delete session '%s'"
+msgstr "ニュースを削除できません。"
+
+#: ../../SessionManager/web/admin/actions.php:1089
+#, fuzzy, php-format
+msgid "Session '%s' successfully deleted"
+msgstr "サーバー '%s'は、削除されました。"
+
+#: ../../SessionManager/web/admin/actions.php:1107
+#, fuzzy, php-format
+msgid ""
+"Unable to delete the server '%s' because there are active sessions on it."
+msgstr "セッションが接続されているためサーバーを削除できません。"
+
+#: ../../SessionManager/web/admin/actions.php:1115
+#, php-format
+msgid "Server '%s' successfully deleted"
+msgstr "サーバー '%s'は、削除されました。"
+
+#: ../../SessionManager/web/admin/actions.php:1133
+#, php-format
+msgid "Server '%s' successfully registered"
+msgstr "サーバー '%s'は、登録されました。"
+
+#: ../../SessionManager/web/admin/actions.php:1136
+#, fuzzy, php-format
+msgid "Failed to register Server '%s'"
+msgstr "新規サーバーの自動登録"
+
+#: ../../SessionManager/web/admin/actions.php:1158
+#: ../../SessionManager/web/admin/actions.php:1169
+#: ../../SessionManager/web/admin/actions.php:1180
+#, php-format
+msgid "Server '%s' successfully modified"
+msgstr "サーバー '%s'は、変更されました。"
+
+#: ../../SessionManager/web/admin/actions.php:1193
+#: ../../SessionManager/web/admin/actions.php:1246
+#: ../../SessionManager/web/admin/actions.php:1269
+msgid "Task successfully added"
+msgstr "タスクを追加しました。"
+
+#: ../../SessionManager/web/admin/actions.php:1206
+#, fuzzy, php-format
+msgid "Server '%s' is upgrading"
+msgstr "サーバーをアップグレード"
+
+#: ../../SessionManager/web/admin/actions.php:1240
+#: ../../SessionManager/web/admin/actions.php:1301
+msgid "Task successfully deleted"
+msgstr "タスクを削除しました。"
+
+#: ../../SessionManager/web/admin/actions.php:1312
+msgid "You must give a name to your shared folder"
+msgstr "共有フォルダ名を定義する必要があります。"
+
+#: ../../SessionManager/web/admin/actions.php:1318
+msgid "A shared folder with this name already exists"
+msgstr "同じ名前の共有フォルダが既に存在しています"
+
+#: ../../SessionManager/web/admin/actions.php:1334
+#, fuzzy
+msgid "No server avalaible for sharedFolder"
+msgstr "利用可能なサーバーは、存在しません。"
+
+#: ../../SessionManager/web/admin/actions.php:1342
+#, fuzzy
+msgid "Unable to add shared folder"
+msgstr "共有フォルダを削除できませんでした。"
+
+#: ../../SessionManager/web/admin/actions.php:1348
+#, fuzzy, php-format
+msgid "Unable to create shared folder on file server '%s'"
+msgstr "共有フォルダへのアクセス権を作成できませんでした。"
+
+#: ../../SessionManager/web/admin/actions.php:1353
+#, php-format
+msgid "SharedFolder '%s' successfully added"
+msgstr "共有フォルダー '%s' を追加しました。"
+
+#: ../../SessionManager/web/admin/actions.php:1360
+#: ../../SessionManager/web/admin/actions.php:1378
+msgid "Unable to delete this shared folder"
+msgstr "共有フォルダを削除できませんでした。"
+
+#: ../../SessionManager/web/admin/actions.php:1366
+#: ../../SessionManager/web/admin/actions.php:1372
+#, fuzzy, php-format
+msgid "Unable to delete shared folder on file server '%s'"
+msgstr "共有フォルダへのアクセス権を削除できませんでした。"
+
+#: ../../SessionManager/web/admin/actions.php:1382
+msgid "SharedFolder successfully deleted"
+msgstr "共有フォルダーを削除しました。"
+
+#: ../../SessionManager/web/admin/actions.php:1389
+msgid "Unable to create this shared folder access"
+msgstr "共有フォルダへのアクセス権を作成できませんでした。"
+
+#: ../../SessionManager/web/admin/actions.php:1396
+#: ../../SessionManager/web/admin/actions.php:1417
+#, fuzzy
+msgid "Unable to load usergroup"
+msgstr "ユーザーグループのロードに失敗しました。"
+
+#: ../../SessionManager/web/admin/actions.php:1410
+msgid "Unable to delete this shared folder access"
+msgstr "共有フォルダへのアクセス権を削除できませんでした。"
+
+#. general div
+#: ../../SessionManager/web/admin/applications.php:54
+#: ../../SessionManager/web/admin/includes/page_template.php:56
+#: ../../SessionManager/web/admin/includes/page_template.php:116
+#: ../../SessionManager/web/admin/sessions.php:66
+#: ../../SessionManager/web/admin/sumup.php:195
+#: ../../SessionManager/web/classes/Preferences.class.php:334
+msgid "Applications"
+msgstr "アプリケーション"
+
+#: ../../SessionManager/web/admin/applications.php:58
+#: ../../SessionManager/web/admin/applications_static.php:65
+#: ../../SessionManager/web/admin/wizard.php:159
+#: ../../SessionManager/web/admin/wizard.php:309
+msgid "No available application"
+msgstr "利用可能なアプリケーションが存在しません。"
+
+#. if ($is_rw)
+#. echo '<th class="unsortable"></th>';
+#: ../../SessionManager/web/admin/applications.php:66
+#: ../../SessionManager/web/admin/applications_static.php:74
+#: ../../SessionManager/web/admin/appsgroup.php:57
+#: ../../SessionManager/web/admin/appsgroup.php:119
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:76
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:514
+#: ../../SessionManager/web/admin/sharedfolders.php:118
+#: ../../SessionManager/web/admin/usersgroup.php:95
+#: ../../SessionManager/web/admin/usersgroup.php:206
+#: ../../SessionManager/web/admin/usersgroup.php:778
+#: ../../SessionManager/web/admin/wizard.php:261
+#: ../../SessionManager/web/admin/wizard.php:411
+msgid "Name"
+msgstr "名前"
+
+#. echo '<th>'._('Status').'</th>';
+#: ../../SessionManager/web/admin/applications.php:67
+#: ../../SessionManager/web/admin/applications.php:244
+#: ../../SessionManager/web/admin/applications_static.php:75
+#: ../../SessionManager/web/admin/applications_static.php:337
+#: ../../SessionManager/web/admin/appsgroup.php:58
+#: ../../SessionManager/web/admin/appsgroup.php:124
+#: ../../SessionManager/web/admin/appsgroup.php:211
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:80
+#: ../../SessionManager/web/admin/usersgroup.php:96
+#: ../../SessionManager/web/admin/usersgroup.php:211
+#: ../../SessionManager/web/admin/usersgroup.php:398
+#: ../../SessionManager/web/admin/wizard.php:266
+#: ../../SessionManager/web/admin/wizard.php:416
+msgid "Description"
+msgstr "説明"
+
+#. echo '<th>'._('Package').'</th>';
+#: ../../SessionManager/web/admin/applications.php:68
+#: ../../SessionManager/web/admin/applications.php:242
+#: ../../SessionManager/web/admin/applications.php:351
+#: ../../SessionManager/web/admin/applications_static.php:76
+#: ../../SessionManager/web/admin/applications_static.php:336
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:379
+#: ../../SessionManager/web/admin/servers.php:75
+#: ../../SessionManager/web/admin/servers.php:233
+#: ../../SessionManager/web/admin/servers.php:394
+#: ../../SessionManager/web/admin/sumup.php:193
+#: ../../SessionManager/web/admin/tasks.php:68
+#: ../../SessionManager/web/admin/tasks.php:142
+#: ../../SessionManager/web/admin/usersgroup.php:98
+msgid "Type"
+msgstr "タイプ"
+
+#: ../../SessionManager/web/admin/applications.php:97
+#: ../../SessionManager/web/admin/applications_static.php:105
+#: ../../SessionManager/web/admin/appsgroup.php:78
+#: ../../SessionManager/web/admin/servers.php:152
+#: ../../SessionManager/web/admin/usersgroup.php:124
+#: ../../SessionManager/web/admin/users.php:89
+msgid "Manage"
+msgstr "管理"
+
+#: ../../SessionManager/web/admin/applications.php:158
+msgid "Available"
+msgstr "利用可能"
+
+#: ../../SessionManager/web/admin/applications.php:159
+#: ../../SessionManager/web/admin/appsgroup.php:157
+#: ../../SessionManager/web/admin/usersgroup.php:312
+msgid "Block"
+msgstr "ブロック"
+
+#: ../../SessionManager/web/admin/applications.php:162
+#: ../../SessionManager/web/admin/appsgroup.php:68
+#: ../../SessionManager/web/admin/appsgroup.php:161
+#: ../../SessionManager/web/admin/usersgroup.php:107
+#: ../../SessionManager/web/admin/usersgroup.php:316
+msgid "Blocked"
+msgstr "ブロック"
+
+#: ../../SessionManager/web/admin/applications.php:163
+msgid "Unblock"
+msgstr "アンブロック"
+
+#: ../../SessionManager/web/admin/applications.php:241
+msgid "Package"
+msgstr "パッケージ"
+
+#: ../../SessionManager/web/admin/applications.php:245
+msgid "Executable"
+msgstr "起動"
+
+#: ../../SessionManager/web/admin/applications.php:260
+msgid "Are you sure you want to remove this application?"
+msgstr "このアプリケーションを削除しますか？"
+
+#: ../../SessionManager/web/admin/applications.php:264
+msgid "This application is orphan"
+msgstr "This application is orphan"
+
+#: ../../SessionManager/web/admin/applications.php:264
+msgid "Remove this application"
+msgstr "このアプリケーションを削除"
+
+#: ../../SessionManager/web/admin/applications.php:295
+#: ../../SessionManager/web/admin/applications_static.php:456
+msgid "Servers with this application"
+msgstr "Servers with this application"
+
+#: ../../SessionManager/web/admin/applications.php:308
+#: ../../SessionManager/web/admin/applications_static.php:464
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:303
+msgid "Are you sure you want to remove this application from this server?"
+msgstr "このサーバーからアプリケーションを削除しますか？"
+
+#: ../../SessionManager/web/admin/applications.php:313
+#: ../../SessionManager/web/admin/applications_static.php:469
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:308
+msgid "Remove from this server"
+msgstr "このサーバーから削除"
+
+#: ../../SessionManager/web/admin/applications.php:338
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:344
+msgid "Install on this server"
+msgstr "このサーバーにインストール"
+
+#: ../../SessionManager/web/admin/applications.php:347
+msgid "Active tasks on this application"
+msgstr "このアプリケーションのアクティブなタスク"
+
+#: ../../SessionManager/web/admin/applications.php:350
+#: ../../SessionManager/web/admin/ha/status.php:186
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:378
+#: ../../SessionManager/web/admin/tasks.php:140
+msgid "ID"
+msgstr "ID"
+
+#. echo '<th>'._('Version').'</th>';
+#: ../../SessionManager/web/admin/applications.php:352
+#: ../../SessionManager/web/admin/appsgroup.php:59
+#: ../../SessionManager/web/admin/appsgroup.php:212
+#: ../../SessionManager/web/admin/ha/menu.inc.php:30
+#: ../../SessionManager/web/admin/includes/page_template.php:68
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:380
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:516
+#: ../../SessionManager/web/admin/index.php:158
+#: ../../SessionManager/web/admin/servers.php:78
+#: ../../SessionManager/web/admin/servers.php:394
+#: ../../SessionManager/web/admin/sessions.php:160
+#: ../../SessionManager/web/admin/sessions.php:205
+#: ../../SessionManager/web/admin/sumup.php:196
+#: ../../SessionManager/web/admin/tasks.php:70
+#: ../../SessionManager/web/admin/tasks.php:144
+#: ../../SessionManager/web/admin/usersgroup.php:97
+#: ../../SessionManager/web/admin/usersgroup.php:399
+msgid "Status"
+msgstr "ステータス"
+
+#. echo '<th>'._('Version').'</th>';
+#: ../../SessionManager/web/admin/applications.php:353
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:381
+#: ../../SessionManager/web/admin/servers.php:78
+#: ../../SessionManager/web/admin/servers.php:236
+#: ../../SessionManager/web/admin/servers.php:395
+#: ../../SessionManager/web/admin/tasks.php:71
+#: ../../SessionManager/web/admin/tasks.php:145
+msgid "Details"
+msgstr "詳細"
+
+#: ../../SessionManager/web/admin/applications.php:360
+#: ../../SessionManager/web/admin/configuration-profile.php:235
+#: ../../SessionManager/web/admin/ha/status.php:256
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:388
+#: ../../SessionManager/web/admin/tasks.php:80
+#: ../../SessionManager/web/admin/tasks.php:155
+#: ../../SessionManager/web/classes/Session.class.php:217
+msgid "Error"
+msgstr "エラー"
+
+#: ../../SessionManager/web/admin/applications.php:378
+#: ../../SessionManager/web/admin/applications_static.php:496
+msgid "Groups with this application"
+msgstr "このアプリケーションをグループ化"
+
+#: ../../SessionManager/web/admin/applications.php:386
+#: ../../SessionManager/web/admin/applications_static.php:503
+msgid "Are you sure you want to delete this application from this group?"
+msgstr "このグループから、アプリケーションを削除しますか？"
+
+#: ../../SessionManager/web/admin/applications.php:391
+#: ../../SessionManager/web/admin/applications_static.php:508
+#: ../../SessionManager/web/admin/appsgroup.php:279
+#: ../../SessionManager/web/admin/usersgroup.php:594
+#: ../../SessionManager/web/admin/users.php:337
+msgid "Delete from this group"
+msgstr "このグループから削除"
+
+#: ../../SessionManager/web/admin/applications.php:407
+#: ../../SessionManager/web/admin/applications_static.php:523
+#: ../../SessionManager/web/admin/appsgroup.php:296
+#: ../../SessionManager/web/admin/usersgroup.php:611
+#: ../../SessionManager/web/admin/users.php:352
+msgid "Add to this group"
+msgstr "このグループに追加"
+
+#: ../../SessionManager/web/admin/applications_static.php:27
+msgid "Web"
+msgstr "ウェブ"
+
+#. general div
+#: ../../SessionManager/web/admin/applications_static.php:61
+msgid "Static Applications"
+msgstr "特定アプリケーション"
+
+#: ../../SessionManager/web/admin/applications_static.php:111
+#: ../../SessionManager/web/admin/applications_static.php:362
+#: ../../SessionManager/web/admin/appsgroup.php:274
+msgid "Are you sure you want to delete this application?"
+msgstr "このアプリケーションを削除しますか？"
+
+#: ../../SessionManager/web/admin/applications_static.php:115
+#: ../../SessionManager/web/admin/applications_static.php:134
+#: ../../SessionManager/web/admin/applications_static.php:366
+#: ../../SessionManager/web/admin/appsgroup.php:85
+#: ../../SessionManager/web/admin/appsgroup.php:101
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:560
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:577
+#: ../../SessionManager/web/admin/publications.php:104
+#: ../../SessionManager/web/admin/servers.php:288
+#: ../../SessionManager/web/admin/servers.php:316
+#: ../../SessionManager/web/admin/servers.php:484
+#: ../../SessionManager/web/admin/tasks.php:97
+#: ../../SessionManager/web/admin/tasks.php:172
+#: ../../SessionManager/web/admin/usersgroup.php:132
+#: ../../SessionManager/web/admin/usersgroup.php:151
+#: ../../SessionManager/web/admin/users.php:96
+#: ../../SessionManager/web/admin/users.php:116
+msgid "Delete"
+msgstr "削除"
+
+#: ../../SessionManager/web/admin/applications_static.php:127
+#: ../../SessionManager/web/admin/appsgroup.php:96
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:570
+#: ../../SessionManager/web/admin/servers.php:186
+#: ../../SessionManager/web/admin/servers.php:302
+#: ../../SessionManager/web/admin/sessions.php:191
+#: ../../SessionManager/web/admin/usersgroup.php:146
+#: ../../SessionManager/web/admin/users.php:109
+#: ../../SessionManager/web/admin/wizard.php:211
+#: ../../SessionManager/web/admin/wizard.php:230
+#: ../../SessionManager/web/admin/wizard.php:356
+#: ../../SessionManager/web/admin/wizard.php:375
+msgid "Mark all"
+msgstr "すべてを選択"
+
+#: ../../SessionManager/web/admin/applications_static.php:128
+#: ../../SessionManager/web/admin/appsgroup.php:96
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:571
+#: ../../SessionManager/web/admin/servers.php:187
+#: ../../SessionManager/web/admin/servers.php:303
+#: ../../SessionManager/web/admin/sessions.php:191
+#: ../../SessionManager/web/admin/usersgroup.php:146
+#: ../../SessionManager/web/admin/users.php:110
+#: ../../SessionManager/web/admin/wizard.php:211
+#: ../../SessionManager/web/admin/wizard.php:230
+#: ../../SessionManager/web/admin/wizard.php:356
+#: ../../SessionManager/web/admin/wizard.php:375
+msgid "Unmark all"
+msgstr "すべてを未選択"
+
+#: ../../SessionManager/web/admin/applications_static.php:131
+msgid "Are you sure you want to delete these static applications?"
+msgstr "これらの特定アプリケーションを削除しますか？"
+
+#: ../../SessionManager/web/admin/applications_static.php:145
+msgid "Add a static application"
+msgstr "特定アプリケーションの追加"
+
+#: ../../SessionManager/web/admin/applications_static.php:186
+#: ../../SessionManager/web/admin/applications_static.php:339
+#: ../../SessionManager/web/admin/applications_static.php:407
+msgid "Command"
+msgstr "コマンド"
+
+#: ../../SessionManager/web/admin/applications_static.php:188
+#: ../../SessionManager/web/admin/applications_static.php:341
+#: ../../SessionManager/web/admin/applications_static.php:410
+msgid "URL"
+msgstr "URL"
+
+#: ../../SessionManager/web/admin/applications_static.php:205
+msgid "MimeTypes"
+msgstr "MimeTypes"
+
+#: ../../SessionManager/web/admin/applications_static.php:214
+#: ../../SessionManager/web/admin/appsgroup.php:137
+#: ../../SessionManager/web/admin/publications.php:134
+#: ../../SessionManager/web/admin/usersgroup.php:264
+#: ../../SessionManager/web/admin/users.php:126
+#: ../../SessionManager/web/admin/users.php:146
+msgid "Add"
+msgstr "追加"
+
+#: ../../SessionManager/web/admin/applications_static.php:232
+msgid "Web link configuration"
+msgstr "ウエブリンク設定"
+
+#: ../../SessionManager/web/admin/applications_static.php:233
+msgid "Default browser for :"
+msgstr "デフォルトブラウザ:"
+
+#: ../../SessionManager/web/admin/applications_static.php:255
+msgid "None"
+msgstr "なし"
+
+#: ../../SessionManager/web/admin/applications_static.php:269
+msgid "Update"
+msgstr "更新"
+
+#: ../../SessionManager/web/admin/applications_static.php:376
+#: ../../SessionManager/web/admin/applications_static.php:444
+#: ../../SessionManager/web/admin/news.php:126
+#: ../../SessionManager/web/admin/news.php:135
+msgid "Modify"
+msgstr "編集"
+
+#: ../../SessionManager/web/admin/applications_static.php:426
+msgid "Icon"
+msgstr "アイコン"
+
+#: ../../SessionManager/web/admin/applications_static.php:430
+msgid "Delete this icon"
+msgstr "このアイコンを削除"
+
+#: ../../SessionManager/web/admin/applications_static.php:430
+msgid "Are you sure you want to delete this icon?"
+msgstr "このアイコンを削除しますか？"
+
+#: ../../SessionManager/web/admin/applications_static.php:486
+#, fuzzy
+msgid "Add to this server"
+msgstr "このグループに追加"
+
+#: ../../SessionManager/web/admin/appsgroup.php:47
+msgid "Application groups"
+msgstr "アプリグループ"
+
+#: ../../SessionManager/web/admin/appsgroup.php:51
+msgid "No application groups available"
+msgstr "アプリグループが利用できません。"
+
+#: ../../SessionManager/web/admin/appsgroup.php:66
+#: ../../SessionManager/web/admin/appsgroup.php:156
+#: ../../SessionManager/web/admin/usersgroup.php:105
+#: ../../SessionManager/web/admin/usersgroup.php:311
+msgid "Enabled"
+msgstr "有効"
+
+#: ../../SessionManager/web/admin/appsgroup.php:84
+#: ../../SessionManager/web/admin/appsgroup.php:224
+#: ../../SessionManager/web/admin/usersgroup.php:130
+#: ../../SessionManager/web/admin/usersgroup.php:430
+msgid "Are you sure you want to delete this group?"
+msgstr "このグループを削除しますか？"
+
+#: ../../SessionManager/web/admin/appsgroup.php:98
+#: ../../SessionManager/web/admin/usersgroup.php:148
+msgid "Are you sure you want to delete these groups?"
+msgstr "このグループを削除しますか？"
+
+#: ../../SessionManager/web/admin/appsgroup.php:112
+#: ../../SessionManager/web/admin/usersgroup.php:172
+msgid "Create a new group"
+msgstr "新規グループを作成"
+
+#: ../../SessionManager/web/admin/appsgroup.php:162
+#: ../../SessionManager/web/admin/ha/configuration.php:292
+#: ../../SessionManager/web/admin/usersgroup.php:317
+msgid "Enable"
+msgstr "有効化"
+
+#: ../../SessionManager/web/admin/appsgroup.php:208
+msgid "Application groups management"
+msgstr "アプリグループ管理"
+
+#: ../../SessionManager/web/admin/appsgroup.php:223
+#: ../../SessionManager/web/admin/usersgroup.php:411
+#: ../../SessionManager/web/admin/users.php:259
+msgid "Settings"
+msgstr "設定"
+
+#: ../../SessionManager/web/admin/appsgroup.php:225
+#: ../../SessionManager/web/admin/usersgroup.php:431
+msgid "Delete this group"
+msgstr "このグループを削除"
+
+#: ../../SessionManager/web/admin/appsgroup.php:247
+#: ../../SessionManager/web/admin/usersgroup.php:452
+msgid "Update the name"
+msgstr "名称を更新"
+
+#: ../../SessionManager/web/admin/appsgroup.php:256
+#: ../../SessionManager/web/admin/usersgroup.php:461
+msgid "Update the description"
+msgstr "説明を更新"
+
+#: ../../SessionManager/web/admin/appsgroup.php:264
+msgid "List of applications in this group"
+msgstr "このグループのアプリケーション一覧"
+
+#: ../../SessionManager/web/admin/appsgroup.php:351
+#: ../../SessionManager/web/admin/usersgroup.php:628
+msgid "List of publications for this group"
+msgstr "このグループの公開設定一覧"
+
+#: ../../SessionManager/web/admin/appsgroup.php:361
+#: ../../SessionManager/web/admin/publications.php:99
+#: ../../SessionManager/web/admin/usersgroup.php:637
+msgid "Are you sure you want to delete this publication?"
+msgstr "この公開設定を削除しますか？"
+
+#: ../../SessionManager/web/admin/appsgroup.php:366
+#: ../../SessionManager/web/admin/usersgroup.php:642
+msgid "Delete this publication"
+msgstr "この公開設定を削除"
+
+#: ../../SessionManager/web/admin/appsgroup.php:383
+#: ../../SessionManager/web/admin/usersgroup.php:659
+msgid "Add this publication"
+msgstr "この公開設定を追加"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:26
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:152
+#: ../../SessionManager/web/modules/UserGroupDB/activedirectory.php:139
+msgid "Active Directory"
+msgstr "Active Directory"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:200
+msgid "Active Directory integration"
+msgstr "Active Directoryへの接続"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:205
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:179
+msgid "Server Host:"
+msgstr "サーバー名:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:206
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:282
+msgid "Domain:"
+msgstr "ドメイン:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:211
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:187
+#: ../../SessionManager/web/admin/includes/page_template.php:50
+#: ../../SessionManager/web/admin/includes/page_template.php:102
+#: ../../SessionManager/web/admin/users.php:59
+msgid "Users"
+msgstr "ユーザー"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:215
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:287
+msgid "Default user branch (Users)"
+msgstr "Default user branch (Users)"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:220
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:244
+msgid "Specific Organization Unit:"
+msgstr "Specific Organization Unit:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:225
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:203
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:252
+msgid "Administrator account"
+msgstr "管理者アカウント"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:227
+msgid "login:"
+msgstr "ログイン:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:228
+msgid "password:"
+msgstr "パスワード:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:234
+msgid "Same as Users, "
+msgstr "Same as Users, "
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:239
+msgid "Default user branch"
+msgstr "Default user branch"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:252
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:217
+msgid "User Groups"
+msgstr "ユーザーグループ"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:256
+msgid "Use Active Directory User Groups"
+msgstr "ActiveDirectory の User Group を利用"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:261
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:300
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:235
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:261
+msgid "Use Internal User Groups"
+msgstr "Internal ユーザーグループを利用"
+
+#. User
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:285
+msgid "Users branch:"
+msgstr "Users branch:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:289
+msgid "Specific Organization Unit"
+msgstr "Specific Organization Unit"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:294
+msgid "Administrator account:"
+msgstr "管理者アカウント:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:296
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:255
+msgid "User Groups:"
+msgstr "ユーザーグループ:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:298
+msgid "Active Directory User Groups"
+msgstr "Active Directory User Groups"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:27
+msgid "Internal"
+msgstr "内部データベース"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:65
+msgid "Internal Database Profiles"
+msgstr "内部データベースのプロファイル"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:68
+msgid ""
+"This is the default Profile manager. This profile manager saves all the data "
+"into a the same SQL database as you defined it in the system configuration."
+msgstr ""
+"これは、既定のプロファイル管理方法です。すべてのプロファイルは、システムで設"
+"定されたデータベースサーバーに保存されます。"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:79
+msgid "Use a dynamic internal user list"
+msgstr "変更可能なユーザリストを利用"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:27
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:174
+#: ../../SessionManager/web/modules/UserDB/ldap.php:343
+msgid "Lightweight Directory Access Protocol (LDAP)"
+msgstr "Lightweight Directory Access Protocol (LDAP)"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:180
+msgid "Server Port:"
+msgstr "サーバーポート:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:181
+msgid "Protocol version:"
+msgstr "プロトコル バージョン:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:182
+msgid "Base DN:"
+msgstr "Base DN:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:189
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:253
+msgid "User branch:"
+msgstr "User branch:"
+
+#. Not yet Implemented
+#. $str.= '<tr><td style="text-align: right;"><input class="input_checkbox" type="checkbox" name="user_branch_recursive"/></td>';
+#. $str.= '<td>'._('Recursive Mode').'</td></tr>';
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:195
+msgid "Distinguished name field:"
+msgstr "Distinguished name field:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:196
+msgid "Display name field:"
+msgstr "表示名:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:197
+msgid "Locale field"
+msgstr "Locale field"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:197
+msgid "optional"
+msgstr "オプション"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:198
+msgid "Filter:"
+msgstr "フィルター:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:209
+msgid "Anonymous bind"
+msgstr "匿名ユーザーの追加"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:211
+msgid "Bind DN (without suffix):"
+msgstr "Bind DN (without suffix):"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:212
+msgid "Bind password:"
+msgstr "Bind password:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:221
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:257
+msgid "Use LDAP User Groups using the MemberOf field"
+msgstr "LDAP ユーザグループを利用 (the MemberOf field)"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:226
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:259
+msgid "Use LDAP User Groups using Posix group"
+msgstr "LDAP ユーザーグループを利用 (Posix group)"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:228
+msgid "Group Branch DN:"
+msgstr "Group Branch DN:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:251
+msgid "Server:"
+msgstr "サーバー:"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:88
+msgid "Please install CURL support for PHP"
+msgstr "Please install CURL support for PHP"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:93
+msgid "SQL configuration not valid(2)"
+msgstr "SQL 設定が無効です。(2)"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:99
+msgid "SQL configuration not valid"
+msgstr "SQL 設定が無効です。"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:105
+msgid "Initialization failed"
+msgstr "初期化に失敗しました。"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:119
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:129
+msgid "prefs is not valid for module"
+msgstr "モジュールの初期値が無効です。"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:141
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:147
+msgid "Modules configuration not valid"
+msgstr "モジュールの設定が無効です。"
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:68
+msgid "Search for users groups pattern: "
+msgstr "検索パターン:"
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:70
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:71
+msgid "Search"
+msgstr "検 索"
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:72
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:73
+msgid "Search in: "
+msgstr "検索対象: "
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:87
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:88
+#, php-format
+msgid ""
+"<strong>Partial content:</strong> Only <strong>%d result</strong> displayed "
+"but there are more. Please restrict your search field."
+msgid_plural ""
+"<strong>Partial content:</strong> Only <strong>%d results</strong> displayed "
+"but there are more. Please restrict your search field."
+msgstr[0] ""
+"<strong>不完全なコンテンツ:</strong>  検索対象が多いため、<strong>%d件</"
+"strong>のみ表示されています。検索条件で絞り込みを行ってください。"
+msgstr[1] ""
+"<strong>不完全なコンテンツ:</strong>  検索対象が多いため、<strong>%d件</"
+"strong>のみ表示されています。検索条件で絞り込みを行ってください。"
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:91
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:92
+#, php-format
+msgid "<strong>%d</strong> result for \"%s\"."
+msgid_plural "<strong>%d</strong> results for \"%s\"."
+msgstr[0] "\"%s\"の結果は、<strong>%d件</strong>です。"
+msgstr[1] "\"%s\"の結果は、<strong>%d件</strong>です。"
+
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:69
+msgid "Search for user pattern: "
+msgstr "検索パターン:"
+
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:77
+#: ../../SessionManager/web/admin/login.php:125
+#: ../../SessionManager/web/admin/users.php:72
+#: ../../SessionManager/web/admin/users.php:236
+msgid "Login"
+msgstr "ログイン"
+
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:81
+#: ../../SessionManager/web/admin/users.php:73
+#: ../../SessionManager/web/admin/users.php:281
+msgid "Display name"
+msgstr "表示名"
+
+#. configuration saved
+#: ../../SessionManager/web/admin/configuration-partial.php:49
+#: ../../SessionManager/web/admin/configuration.php:65
+msgid "Configuration successfully saved"
+msgstr "設定が保存されました。"
+
+#. conf not valid
+#: ../../SessionManager/web/admin/configuration-partial.php:53
+#: ../../SessionManager/web/admin/configuration-partial.php:60
+#: ../../SessionManager/web/admin/configuration.php:69
+#: ../../SessionManager/web/admin/configuration.php:81
+#: ../../SessionManager/web/admin/ha/configuration.php:467
+#: ../../SessionManager/web/admin/ha/menu.inc.php:32
+#: ../../SessionManager/web/admin/includes/page_template.php:62
+#: ../../SessionManager/web/admin/index.php:84
+#: ../../SessionManager/web/admin/servers.php:438
+#: ../../SessionManager/web/admin/sharedfolders.php:113
+msgid "Configuration"
+msgstr "設定"
+
+#: ../../SessionManager/web/admin/configuration-partial.php:111
+#: ../../SessionManager/web/admin/configuration.php:109
+#: ../../SessionManager/web/admin/configuration-profile.php:226
+#: ../../SessionManager/web/admin/includes/functions.inc.php:251
+msgid "Save"
+msgstr "保存"
+
+#: ../../SessionManager/web/admin/configuration-partial.php:118
+#: ../../SessionManager/web/admin/configuration.php:131
+msgid "Preferences not loaded"
+msgstr "Preferences not loaded"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:220
+msgid "Saved successfully"
+msgstr "保存しました。"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:227
+msgid "Test"
+msgstr "テスト"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:235
+msgid "OK"
+msgstr "OK"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:241
+msgid "Success"
+msgstr "成功しました"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:35
+#: ../../SessionManager/web/admin/includes/core.inc.php:55
+msgid "get Preferences failed"
+msgstr "初期設定に失敗しました。"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:45
+msgid "Last save"
+msgstr "最終更新"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:73
+#: ../../SessionManager/web/admin/ha/menu.inc.php:31
+#: ../../SessionManager/web/admin/includes/page_template.php:219
+#: ../../SessionManager/web/admin/logs.php:113
+#: ../../SessionManager/web/admin/logs.php:172
+#: ../../SessionManager/web/admin/logs.php:176
+msgid "Logs"
+msgstr "ログ"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:95
+#, fuzzy
+msgid "Slave Server"
+msgstr "サーバーを表示"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:100
+msgid "Authorized FQDN"
+msgstr "FQDN"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:108
+msgid "FQDN private address"
+msgstr "FQDNプライベートアドレス"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:116
+msgid "FQDN check"
+msgstr "FQDNチェック"
+
+#: ../../SessionManager/web/admin/ha/classes/Cib.class.php:30
+#: ../../SessionManager/web/admin/ha/classes/Cib.class.php:31
+#: ../../SessionManager/web/admin/ha/classes/Cib.class.php:324
+#: ../../SessionManager/web/admin/sessions.php:68
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:114
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:124
+#: ../../SessionManager/web/classes/Server.class.php:452
+#: ../../SessionManager/web/classes/Server.class.php:461
+#: ../../SessionManager/web/classes/Server.class.php:468
+#: ../../SessionManager/web/classes/Session.class.php:214
+#: ../../SessionManager/web/classes/Session.class.php:242
+msgid "Unknown"
+msgstr "不明"
+
+#: ../../SessionManager/web/admin/ha/classes/GRNode.class.php:65
+#, fuzzy
+msgid "Group"
+msgstr "ユーザーグループ"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:66
+msgid "Master/Slaves"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:70
+msgid "Master"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:71
+msgid "Slaves"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:72
+msgid "Stopped"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:73
+msgid "Failed"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:112
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:120
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:107
+msgid "Resources configured"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:114
+msgid "No master"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:122
+msgid "No slaves"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:108
+#, fuzzy
+msgid "Started on"
+msgstr "開始:"
+
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:109
+msgid "Stopped on"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:110
+msgid "Failed on"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:98
+#: ../../SessionManager/web/admin/ha/configuration.php:147
+msgid "An error occured during reading configuration file, no values found !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:118
+msgid "Could not extract configuration values from file !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:133
+#: ../../SessionManager/web/admin/ha/configuration.php:137
+msgid "An error occured during update of the virtual IP !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:171
+msgid "No host has been registered yet."
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:187
+#, fuzzy
+msgid "Delete unregistered servers"
+msgstr "未登録のサーバは、存在しません。"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:194
+msgid ""
+"Your will change the virtual IP, afterward modify your url with the good IP "
+"to obtain the admin web interface !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:196
+msgid "Apply new virtual IP"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:206
+#, fuzzy, php-format
+msgid "%s server(s) has been successfully removed !"
+msgstr "サーバー '%s'は、変更されました。"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:208
+msgid "An error occured, no unregistered server deleted !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:217
+msgid "Cannot enable host because one already enabled !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:228
+#: ../../SessionManager/web/admin/ha/configuration.php:251
+msgid "Cannot disable host because it is not enabled !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:239
+msgid "Host has been enabled !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:242
+msgid "An error occured during activation, can not enable host !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:257
+msgid "Host has been disabled !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:260
+msgid "An error occured during disabling host, cannot disable host !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:267
+msgid ""
+"You will enable the slave server, the master server and slave server will "
+"restart their services to load the new configurations. It takes less than 3 "
+"minutes, during this time the web interface will be disabled."
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:273
+#, fuzzy
+msgid "Unregistered Server"
+msgstr "未登録サーバー"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:277
+#: ../../SessionManager/web/admin/ha/configuration.php:314
+#, fuzzy
+msgid "Hostname"
+msgstr "ホスト"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:282
+#: ../../SessionManager/web/admin/ha/configuration.php:319
+msgid "address"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:287
+#: ../../SessionManager/web/admin/news.php:63
+msgid "Date"
+msgstr "日付"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:304
+msgid ""
+"You will disable the slave server, the master host will restart their "
+"services to load the new configurations. It takes less than 3 minutes, "
+"during this time the web interface will be disabled."
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:310
+#, fuzzy
+msgid "Registered Server"
+msgstr "未登録サーバー"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:324
+#, fuzzy
+msgid "Disable"
+msgstr "利用可能"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:338
+#, fuzzy
+msgid "Update HA configuration"
+msgstr "ウエブリンク設定"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:338
+msgid "Submit"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:373
+msgid "The system is in maintenance mode ! Cannot apply changes."
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:387
+msgid "Cannot enable host because no host found in DB !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:397
+#, php-format
+msgid "Host %s at address %s has been notifyed succesfully !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:400
+#: ../../SessionManager/web/admin/ha/configuration.php:426
+#, fuzzy, php-format
+msgid "Cannot query slave host at address %s"
+msgstr "サーバーホストアドレス"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:420
+#, php-format
+msgid "Host %s has been set in standby and master %s will restart Heartbeat !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:430
+msgid "An error occured during disabling, can not disable host !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:441
+msgid "Changing configuration... Please wait few seconds"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:444
+msgid ""
+"Changing configuration failded... Verify configuration at field HA::Virtual "
+"IP"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:457
+msgid "Virtual IP \""
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/logs.php:68
+msgid "High Availability logs"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/logs.php:74
+#: ../../SessionManager/web/admin/ha/logs.php:77
+msgid "Show alerts"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/logs.php:80
+#: ../../SessionManager/web/admin/ha/logs.php:83
+#, fuzzy
+msgid "Show informations"
+msgstr "情報"
+
+#: ../../SessionManager/web/admin/ha/logs.php:89
+#, fuzzy
+msgid "Cleanup logs"
+msgstr "タスクのクリーンアップ"
+
+#: ../../SessionManager/web/admin/ha/logs.php:91
+#, php-format
+msgid "%s logs"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/menu.inc.php:29
+#, fuzzy
+msgid "High Availability"
+msgstr "利用可能"
+
+#: ../../SessionManager/web/admin/ha/registration.php:48
+msgid "Host has been already registered !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/registration.php:84
+msgid "Host activation has been done successfully !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/registration.php:87
+msgid "An error occured in POST request activation !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/registration.php:92
+msgid "Deleting host has been done successfully !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/registration.php:95
+#: ../../SessionManager/web/admin/ha/registration.php:99
+msgid "Request is not well formatted !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:78
+#, fuzzy
+msgid "General Informations"
+msgstr "全般設定"
+
+#: ../../SessionManager/web/admin/ha/status.php:80
+msgid "Last time update of this page and informations contained"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:80
+#, fuzzy
+msgid "Last update"
+msgstr "最終更新"
+
+#: ../../SessionManager/web/admin/ha/status.php:85
+msgid ""
+"The DC (Designated Coordinator) is elected a node in the cluster. He is "
+"responsible for the actions of each cluster elements."
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:85
+msgid "Actual DC"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:90
+msgid "Number of nodes provided and configured in the cluster"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:90
+msgid "Nodes configured"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:95
+msgid "Number of resources configured for all nodes"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:105
+#, fuzzy
+msgid "ressources Status"
+msgstr "セッションは終了しています。"
+
+#: ../../SessionManager/web/admin/ha/status.php:114
+msgid "ressources errors"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:127
+#: ../../SessionManager/web/admin/ha/status.php:129
+#: ../../SessionManager/web/admin/ha/status.php:162
+#: ../../SessionManager/web/admin/ha/status.php:163
+msgid "Out of Network"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:141
+#: ../../SessionManager/web/admin/ha/status.php:145
+#: ../../SessionManager/web/classes/Server.class.php:446
+msgid "Online"
+msgstr "オンライン"
+
+#: ../../SessionManager/web/admin/ha/status.php:142
+#, fuzzy
+msgid "Production"
+msgstr "公開設定"
+
+#: ../../SessionManager/web/admin/ha/status.php:146
+#: ../../SessionManager/web/classes/Session.class.php:226
+msgid "Ready"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:154
+msgid "Standby"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:172
+#, fuzzy
+msgid "An error has occured, please call your administrator !"
+msgstr "あなたは、既に接続中です。管理者へコンタクトしてください。"
+
+#: ../../SessionManager/web/admin/ha/status.php:176
+#: ../../SessionManager/web/admin/logs.php:117
+msgid "Session Manager"
+msgstr "セッションマネージャー"
+
+#: ../../SessionManager/web/admin/ha/status.php:182
+msgid "Unpaused"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:184
+msgid "Paused"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:193
+msgid "Pause"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:201
+msgid "Set it online"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:229
+msgid "High Availability Status"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:256
+msgid "Waiting for Heartbeat's CIB..."
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:256
+msgid ""
+"Please check permissions on ulteo-ovd.conf or if \"cibadmin -Q\" works "
+"fine ! Apache could have been started by another user than www-data."
+msgstr ""
+
+#: ../../SessionManager/web/admin/includes/core.inc.php:59
+#: ../../SessionManager/web/admin/index.php:138
+#: ../../SessionManager/web/webservices/configuration.php:32
+msgid "The system is in maintenance mode"
+msgstr ""
+
+#: ../../SessionManager/web/admin/includes/functions.inc.php:406
+msgid "You are not allowed to perform this action"
+msgstr "このアクションの権限がありません。"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:37
+#: ../../SessionManager/web/admin/index.php:41
+msgid "Index"
+msgstr "インデックス"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:44
+#: ../../SessionManager/web/admin/includes/page_template.php:75
+#: ../../SessionManager/web/admin/index.php:65
+#: ../../SessionManager/web/admin/servers.php:64
+#: ../../SessionManager/web/admin/sessions.php:158
+#: ../../SessionManager/web/admin/tasks.php:69
+msgid "Servers"
+msgstr "サーバー"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:81
+#: ../../SessionManager/web/admin/servers.php:223
+msgid "Unregistered servers"
+msgstr "未登録サーバー"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:87
+#: ../../SessionManager/web/admin/tasks.php:132
+msgid "Tasks"
+msgstr "タスク"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:95
+#: ../../SessionManager/web/admin/sharedfolders.php:44
+#: ../../SessionManager/web/admin/usersgroup.php:730
+msgid "Shared folders"
+msgstr "共有フォルダー"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:109
+msgid "Users Groups"
+msgstr "ユーザーグループ"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:123
+msgid "Applications Groups"
+msgstr "アプリグループ"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:130
+msgid "Static applications"
+msgstr "特定アプリケーション"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:137
+#: ../../SessionManager/web/admin/publications.php:77
+msgid "Publications"
+msgstr "公開設定"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:144
+#: ../../SessionManager/web/admin/index.php:116
+msgid "Publication wizard"
+msgstr "公開設定ウィザード"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:151
+msgid "Sum up"
+msgstr "設 定"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:157
+msgid "Database settings"
+msgstr "データベース"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:163
+msgid "System settings"
+msgstr "システム"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:169
+msgid "Server settings"
+msgstr "サーバー"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:175
+msgid "Profile settings"
+msgstr "プロファイル"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:181
+#, fuzzy
+msgid "Authentication settings"
+msgstr "認証"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:187
+msgid "Session settings"
+msgstr "セッション"
+
+#. Events settings
+#: ../../SessionManager/web/admin/includes/page_template.php:193
+#: ../../SessionManager/web/classes/Preferences.class.php:456
+msgid "Events settings"
+msgstr "イベント"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:199
+#: ../../SessionManager/web/classes/Preferences.class.php:380
+msgid "Web interface settings"
+msgstr "Webインターフェイス"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:205
+#: ../../SessionManager/web/admin/password.php:36
+msgid "Change Administrator password"
+msgstr "管理者パスワード"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:213
+msgid "Sessions"
+msgstr "セッション"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:225
+#: ../../SessionManager/web/admin/reporting.php:309
+#: ../../SessionManager/web/admin/reporting.php:461
+msgid "Reporting"
+msgstr "レポーティング"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:233
+#: ../../SessionManager/web/admin/news.php:59
+msgid "News"
+msgstr "ニュース"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:240
+msgid "Summary"
+msgstr "サマリー"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:268
+msgid "Logout"
+msgstr "ログアウト"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:275
+#: ../../SessionManager/web/admin/login.php:93
+#: ../../SessionManager/web/includes/functions.inc.d/template.inc.php:68
+#: ../../SessionManager/web/includes/functions.inc.d/template.inc.php:112
+msgid "Administration"
+msgstr "Administration"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:401
+#: ../../SessionManager/web/includes/functions.inc.d/template.inc.php:134
+msgid "powered by"
+msgstr "Powered by"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:102
+#: ../../SessionManager/web/admin/servers.php:51
+msgid "redirection name may be invalid!"
+msgstr "redirection name に、誤りがあります。"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:104
+#: ../../SessionManager/web/admin/servers.php:53
+msgid "redirection name cannot be empty!"
+msgstr "redirection name は、空欄にできません。"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:109
+msgid "Cannot list available applications"
+msgstr "有効なアプリケーションリストを表示できません。"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:210
+msgid "Number of available sessions on this server"
+msgstr "このサーバーの利用可能セッション数"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:222
+#: ../../SessionManager/web/admin/servers.php:452
+msgid "change"
+msgstr "変更"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:231
+msgid "Install an application"
+msgstr "アプリケーションをインストール"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:237
+msgid "Install from a package name"
+msgstr "パッケージ名からインストール"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:242
+msgid "more options"
+msgstr "拡張オプション"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:254
+msgid "Category"
+msgstr "カテゴリ"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:259
+msgid "Application"
+msgstr "アプリケーション"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:261
+#: ../../SessionManager/web/admin/tasks.php:194
+msgid "Install"
+msgstr "インストール"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:270
+#: ../../SessionManager/web/admin/tasks.php:208
+msgid "Upgrade"
+msgstr "アップグレード"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:275
+#: ../../SessionManager/web/admin/tasks.php:197
+msgid "Upgrade the internal system and applications"
+msgstr "内部システムとアプリケーションをアップグレード"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:284
+msgid "Applications available on this server"
+msgstr "このサーバーで利用できるアプリケーション"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:326
+msgid "install in progress"
+msgstr "インストール状況"
+
+#. div replication
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:355
+msgid "Replication"
+msgstr "複製"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:367
+msgid "Replicate on those servers"
+msgstr "これらのサーバーを複製"
+
+#. div tasks
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:375
+msgid "Active tasks on this server"
+msgstr "このサーバーのアクティブなタスク"
+
+#. div 1 has_sessions
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:406
+#: ../../SessionManager/web/admin/users.php:362
+msgid "Active sessions"
+msgstr "アクティブなセッション"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:416
+#: ../../SessionManager/web/admin/sessions.php:73
+#: ../../SessionManager/web/admin/users.php:369
+msgid "Not started yet"
+msgstr "開始されていません。"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:423
+#: ../../SessionManager/web/admin/users.php:376
+msgid "Informations about this session"
+msgstr "このセッションの情報"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:486
+#, fuzzy
+msgid "User profiles in the server"
+msgstr "これらのサーバーを複製"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:492
+#, fuzzy
+msgid "Shared folders in the server"
+msgstr "共有フォルダー"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:498
+msgid "NetworkFolders in the server"
+msgstr ""
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:515
+msgid "Owner"
+msgstr ""
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:515
+msgid "Used by"
+msgstr ""
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:556
+#, fuzzy
+msgid "Are you sure that you want to delete this user profile?"
+msgstr "このユーザーを削除しますか？"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:556
+#, fuzzy
+msgid "Are you sure that you want to delete this network folder?"
+msgstr "この共有フォルダを削除しますか？"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:574
+#, fuzzy
+msgid "Are you sure that you want to delete these user profiles?"
+msgstr "このユーザーを削除しますか？"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:574
+#, fuzzy
+msgid "Are you sure that you want to delete these network folders?"
+msgstr "この共有フォルダを削除しますか？"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:590
+#: ../../SessionManager/web/admin/usersgroup.php:781
+#, fuzzy
+msgid "Action"
+msgstr "アプリケーション"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:597
+#: ../../SessionManager/web/admin/sharedfolders.php:68
+msgid "Create this shared folder"
+msgstr "共有フォルダーを作成"
+
+#: ../../SessionManager/web/admin/index.php:47
+msgid "Users and Users groups"
+msgstr "ユーザー関連"
+
+#: ../../SessionManager/web/admin/index.php:52
+msgid "User list"
+msgstr "ユーザーリスト"
+
+#: ../../SessionManager/web/admin/index.php:54
+msgid "Users groups list"
+msgstr "ユーザーグループ"
+
+#: ../../SessionManager/web/admin/index.php:70
+msgid "Servers list"
+msgstr "サーバーリスト"
+
+#: ../../SessionManager/web/admin/index.php:71
+msgid "Unregistered servers list"
+msgstr "未登録サーバーリスト"
+
+#: ../../SessionManager/web/admin/index.php:89
+#: ../../SessionManager/web/classes/Preferences.class.php:175
+msgid "General configuration"
+msgstr "全般設定"
+
+#: ../../SessionManager/web/admin/index.php:106
+msgid "Applications and Appgroups"
+msgstr "アプリケーション関連"
+
+#: ../../SessionManager/web/admin/index.php:111
+msgid "Application list"
+msgstr "アプリケーション"
+
+#: ../../SessionManager/web/admin/index.php:113
+msgid "Application groups list"
+msgstr "アプリグループ"
+
+#: ../../SessionManager/web/admin/index.php:115
+msgid "Publication list"
+msgstr "公開設定リスト"
+
+#: ../../SessionManager/web/admin/index.php:128
+msgid "System"
+msgstr ""
+
+#: ../../SessionManager/web/admin/index.php:141
+#, fuzzy
+msgid "Switch the system to production mode?"
+msgstr "新規サーバー追加時に自動的にプロダクションモードへ切替"
+
+#: ../../SessionManager/web/admin/index.php:141
+#, fuzzy
+msgid "Switch the system to production mode"
+msgstr "新規サーバー追加時に自動的にプロダクションモードへ切替"
+
+#: ../../SessionManager/web/admin/index.php:143
+#, fuzzy
+msgid "The system is in production mode"
+msgstr "新規サーバー追加時に自動的にプロダクションモードへ切替"
+
+#: ../../SessionManager/web/admin/index.php:146
+#, fuzzy
+msgid "Switch the system to maintenance mode?"
+msgstr "メンテナンスモードへ切替"
+
+#: ../../SessionManager/web/admin/index.php:146
+#, fuzzy
+msgid "Switch the system to maintenance mode"
+msgstr "メンテナンスモードへ切替"
+
+#: ../../SessionManager/web/admin/index.php:175
+msgid "active sessions"
+msgstr "アクティブセッション"
+
+#: ../../SessionManager/web/admin/index.php:177
+msgid "active session"
+msgstr "アクティブセッション"
+
+#: ../../SessionManager/web/admin/index.php:185
+msgid "online servers"
+msgstr "オンラインサーバー"
+
+#: ../../SessionManager/web/admin/index.php:187
+msgid "online server"
+msgstr "オンラインサーバー"
+
+#: ../../SessionManager/web/admin/index.php:195
+msgid "offline servers"
+msgstr "オフラインサーバー"
+
+#: ../../SessionManager/web/admin/index.php:197
+msgid "offline server"
+msgstr "オフラインサーバー"
+
+#: ../../SessionManager/web/admin/index.php:205
+msgid "broken servers"
+msgstr "壊れたサーバー"
+
+#: ../../SessionManager/web/admin/index.php:207
+msgid "broken server"
+msgstr "壊れたサーバー"
+
+#. the user does not exist
+#: ../../SessionManager/web/admin/login.php:38
+#: ../../SessionManager/web/admin/login.php:45
+msgid "There was an error with your authentication"
+msgstr "認証に失敗しました。"
+
+#: ../../SessionManager/web/admin/login.php:57
+msgid "Unauthorized access"
+msgstr "許可されないアクセス"
+
+#: ../../SessionManager/web/admin/login.php:101
+#: ../../SessionManager/web/admin/login.php:141
+msgid "Log in"
+msgstr "ログイン"
+
+#: ../../SessionManager/web/admin/login.php:133
+msgid "Password"
+msgstr "パスワード"
+
+#: ../../SessionManager/web/admin/logs.php:121
+#: ../../SessionManager/web/admin/logs.php:139
+msgid "View full log file online"
+msgstr "ログファイルをオンラインで参照"
+
+#: ../../SessionManager/web/admin/logs.php:122
+#: ../../SessionManager/web/admin/logs.php:140
+#: ../../SessionManager/web/admin/logs.php:173
+#: ../../SessionManager/web/admin/logs.php:177
+msgid "Download full log file"
+msgstr "すべてのログファイルをダウンロード"
+
+#: ../../SessionManager/web/admin/logs.php:131
+msgid "Application Servers"
+msgstr "アプリケーションサーバー"
+
+#: ../../SessionManager/web/admin/logs.php:138
+#, fuzzy
+msgid "Log"
+msgstr "ログ"
+
+#: ../../SessionManager/web/admin/news.php:39
+msgid "News successfully modified"
+msgstr "ニュースを修正しました。"
+
+#: ../../SessionManager/web/admin/news.php:63
+msgid "Title"
+msgstr "タイトル"
+
+#: ../../SessionManager/web/admin/news.php:63
+msgid "Content"
+msgstr "内容"
+
+#: ../../SessionManager/web/admin/news.php:76
+msgid "Are you sure you want to delete this news?"
+msgstr "このニュースを削除しますか？"
+
+#: ../../SessionManager/web/admin/news.php:80
+msgid "Delete this news"
+msgstr "このニュースを削除"
+
+#: ../../SessionManager/web/admin/news.php:90
+msgid "Add news"
+msgstr "ニュースを追加"
+
+#: ../../SessionManager/web/admin/news.php:101
+msgid "Add this news"
+msgstr "このニュースを追加"
+
+#: ../../SessionManager/web/admin/password.php:25
+msgid "User not authorize to manage configuration"
+msgstr "利用者に設定管理の権限を委任しない"
+
+#: ../../SessionManager/web/admin/password.php:30
+msgid "No action found"
+msgstr "アクションが見つかりません。"
+
+#: ../../SessionManager/web/admin/password.php:43
+#: ../../SessionManager/web/admin/users.php:288
+msgid "New password"
+msgstr "新しいパスワード"
+
+#: ../../SessionManager/web/admin/password.php:48
+msgid "Retype password"
+msgstr "パスワードの再入力"
+
+#: ../../SessionManager/web/admin/password.php:53
+msgid "Change"
+msgstr "変更"
+
+#: ../../SessionManager/web/admin/publications.php:81
+msgid "Users group"
+msgstr "ユーザーグループ"
+
+#: ../../SessionManager/web/admin/publications.php:82
+msgid "Application group"
+msgstr "アプリグループ"
+
+#: ../../SessionManager/web/admin/publications.php:87
+msgid "No publication"
+msgstr "公開設定がありません。"
+
+#: ../../SessionManager/web/admin/reporting.php:106
+msgid "Day"
+msgstr "日"
+
+#: ../../SessionManager/web/admin/reporting.php:135
+msgid "Hour"
+msgstr "時間"
+
+#: ../../SessionManager/web/admin/reporting.php:165
+#, fuzzy
+msgid "Minute"
+msgstr "１分"
+
+#: ../../SessionManager/web/admin/reporting.php:292
+#: ../../SessionManager/web/admin/reporting.php:697
+msgid "Error: \"from\" date is after \"to\" date, switching"
+msgstr "Error: \"from\" の日付と \"to\" の日付を切り替えてください。"
+
+#: ../../SessionManager/web/admin/reporting.php:299
+#: ../../SessionManager/web/admin/reporting.php:704
+msgid "Error: \"to\" field is in the future, switch to the current time"
+msgstr "エラー: \"to\" が、未来の時刻です。現在の時刻に設定してください。"
+
+#: ../../SessionManager/web/admin/reporting.php:307
+#, fuzzy, php-format
+msgid "%s is not writable"
+msgstr "アプリケーションDBは、書込み不可能です。"
+
+#: ../../SessionManager/web/admin/reporting.php:332
+#: ../../SessionManager/web/admin/reporting.php:394
+#, fuzzy
+msgid "Number of launched sessions"
+msgstr "セッション数"
+
+#: ../../SessionManager/web/admin/reporting.php:346
+msgid "%FQDN% (%TOTAL% session)"
+msgstr ""
+
+#: ../../SessionManager/web/admin/reporting.php:346
+msgid "%FQDN% (%TOTAL% sessions)"
+msgstr ""
+
+#: ../../SessionManager/web/admin/reporting.php:351
+msgid "Session repartition"
+msgstr "セッションの配分"
+
+#: ../../SessionManager/web/admin/reporting.php:360
+#: ../../SessionManager/web/admin/reporting.php:403
+msgid "%STATUS% (%TOTAL% session)"
+msgstr ""
+
+#: ../../SessionManager/web/admin/reporting.php:360
+#: ../../SessionManager/web/admin/reporting.php:403
+msgid "%STATUS% (%TOTAL% sessions)"
+msgstr ""
+
+#: ../../SessionManager/web/admin/reporting.php:365
+#: ../../SessionManager/web/admin/reporting.php:408
+msgid "Session end status"
+msgstr "セッションは終了しています。"
+
+#: ../../SessionManager/web/admin/reporting.php:432
+#: ../../SessionManager/web/admin/servers.php:128
+#: ../../SessionManager/web/admin/servers.php:411
+msgid "CPU usage"
+msgstr "CPU利用率"
+
+#: ../../SessionManager/web/admin/reporting.php:453
+#: ../../SessionManager/web/admin/servers.php:130
+#: ../../SessionManager/web/admin/servers.php:413
+msgid "RAM usage"
+msgstr "RAM 使用率"
+
+#: ../../SessionManager/web/admin/reporting.php:508
+#: ../../SessionManager/web/classes/Preferences.class.php:254
+msgid "From"
+msgstr "開始"
+
+#: ../../SessionManager/web/admin/reporting.php:520
+msgid "to"
+msgstr "終了"
+
+#: ../../SessionManager/web/admin/reporting.php:532
+msgid "step"
+msgstr "ステップ"
+
+#: ../../SessionManager/web/admin/reporting.php:548
+msgid "Refresh"
+msgstr "更新"
+
+#: ../../SessionManager/web/admin/reporting.php:556
+#: ../../SessionManager/web/admin/reporting.php:569
+#: ../../SessionManager/web/admin/reporting.php:597
+#: ../../SessionManager/web/admin/reporting.php:618
+#: ../../SessionManager/web/admin/reporting.php:633
+msgid "Abscissa: day of the month"
+msgstr "横軸: 日"
+
+#: ../../SessionManager/web/admin/reporting.php:558
+#: ../../SessionManager/web/admin/reporting.php:571
+#: ../../SessionManager/web/admin/reporting.php:599
+#: ../../SessionManager/web/admin/reporting.php:620
+#: ../../SessionManager/web/admin/reporting.php:635
+msgid "Abscissa: hour of the day"
+msgstr "横軸: 時間"
+
+#: ../../SessionManager/web/admin/reporting.php:560
+#: ../../SessionManager/web/admin/reporting.php:573
+#: ../../SessionManager/web/admin/reporting.php:601
+#: ../../SessionManager/web/admin/reporting.php:622
+#: ../../SessionManager/web/admin/reporting.php:637
+#, fuzzy
+msgid "Abscissa: minute of the hour"
+msgstr "横軸: 時間"
+
+#: ../../SessionManager/web/admin/reporting.php:562
+#: ../../SessionManager/web/admin/reporting.php:575
+#: ../../SessionManager/web/admin/reporting.php:603
+msgid "Ordinate: number of sessions"
+msgstr "縦軸: セッション数"
+
+#: ../../SessionManager/web/admin/reporting.php:590
+#: ../../SessionManager/web/admin/tasks.php:143
+msgid "Server"
+msgstr "サーバー"
+
+#: ../../SessionManager/web/admin/reporting.php:624
+msgid "Ordinate: usage of CPU in percent"
+msgstr "縦軸: CPU利用率"
+
+#: ../../SessionManager/web/admin/reporting.php:640
+msgid "Ordinate: usage of RAM in percent"
+msgstr "縦軸: RAM利用率"
+
+#: ../../SessionManager/web/admin/reporting.php:671
+#, fuzzy
+msgid "Number of active sessions"
+msgstr "セッション数"
+
+#: ../../SessionManager/web/admin/servers.php:75
+#: ../../SessionManager/web/admin/servers.php:233
+#: ../../SessionManager/web/admin/sumup.php:192
+msgid "FQDN"
+msgstr "FQDN"
+
+#: ../../SessionManager/web/admin/servers.php:76
+#: ../../SessionManager/web/admin/servers.php:234
+#: ../../SessionManager/web/admin/sumup.php:194
+msgid "Roles"
+msgstr ""
+
+#: ../../SessionManager/web/admin/servers.php:80
+#: ../../SessionManager/web/admin/servers.php:390
+#: ../../SessionManager/web/admin/servers.php:397
+msgid "Monitoring"
+msgstr "モニタリング"
+
+#: ../../SessionManager/web/admin/servers.php:91
+#: ../../SessionManager/web/admin/servers.php:193
+#: ../../SessionManager/web/admin/servers.php:359
+msgid "Switch to production"
+msgstr "プロダクションモードに切替"
+
+#: ../../SessionManager/web/admin/servers.php:95
+#: ../../SessionManager/web/admin/servers.php:194
+#: ../../SessionManager/web/admin/servers.php:363
+#: ../../SessionManager/web/classes/Preferences.class.php:281
+msgid "Switch to maintenance"
+msgstr "メンテナンスモードへ切替"
+
+#: ../../SessionManager/web/admin/servers.php:119
+#: ../../SessionManager/web/admin/servers.php:265
+#: ../../SessionManager/web/admin/servers.php:405
+msgid "CPU"
+msgstr "CPU"
+
+#: ../../SessionManager/web/admin/servers.php:120
+#: ../../SessionManager/web/admin/servers.php:266
+#: ../../SessionManager/web/admin/servers.php:406
+msgid "cores"
+msgstr "コア"
+
+#: ../../SessionManager/web/admin/servers.php:120
+#: ../../SessionManager/web/admin/servers.php:266
+#: ../../SessionManager/web/admin/servers.php:406
+msgid "core"
+msgstr "コア"
+
+#: ../../SessionManager/web/admin/servers.php:122
+#: ../../SessionManager/web/admin/servers.php:268
+#: ../../SessionManager/web/admin/servers.php:407
+msgid "RAM"
+msgstr "RAM"
+
+#: ../../SessionManager/web/admin/servers.php:122
+#: ../../SessionManager/web/admin/servers.php:407
+msgid "MB"
+msgstr "MB"
+
+#: ../../SessionManager/web/admin/servers.php:138
+#: ../../SessionManager/web/admin/servers.php:421
+msgid "Sessions usage"
+msgstr "セッション使用量"
+
+#: ../../SessionManager/web/admin/servers.php:142
+#: ../../SessionManager/web/admin/servers.php:425
+#, fuzzy
+msgid "Disk usage"
+msgstr "セッション使用量"
+
+#: ../../SessionManager/web/admin/servers.php:203
+#, fuzzy
+msgid "No server"
+msgstr "サーバー"
+
+#: ../../SessionManager/web/admin/servers.php:278
+#: ../../SessionManager/web/admin/servers.php:309
+msgid "Register"
+msgstr "登録"
+
+#: ../../SessionManager/web/admin/servers.php:284
+#: ../../SessionManager/web/admin/servers.php:480
+msgid "Are you sure you want to delete this server?"
+msgstr "このサーバーを削除しますか？"
+
+#: ../../SessionManager/web/admin/servers.php:327
+msgid "No unregistered server"
+msgstr "未登録のサーバは、存在しません。"
+
+#: ../../SessionManager/web/admin/servers.php:347
+msgid "Cannot get server monitoring"
+msgstr "サーバーの監視状況を取得できません。"
+
+#: ../../SessionManager/web/admin/servers.php:353
+msgid "Warning: server is offline"
+msgstr "警告: サーバーはオフラインです。"
+
+#: ../../SessionManager/web/admin/servers.php:355
+msgid "Warning: server is broken"
+msgstr "警告: サーバーは壊れています。"
+
+#: ../../SessionManager/web/admin/servers.php:394
+msgid "Version"
+msgstr "バージョン"
+
+#: ../../SessionManager/web/admin/servers.php:442
+msgid "Redirection name of this server"
+msgstr "このサーバーのリダイレクション名"
+
+#: ../../SessionManager/web/admin/servers.php:496
+#, php-format
+msgid "Role: %s"
+msgstr ""
+
+#: ../../SessionManager/web/admin/sessions.php:52
+#, fuzzy
+msgid "Session - %ID%"
+msgstr "セッション"
+
+#: ../../SessionManager/web/admin/sessions.php:54
+msgid "Information"
+msgstr "情報"
+
+#: ../../SessionManager/web/admin/sessions.php:57
+#, fuzzy
+msgid "Servers:"
+msgstr "サーバー"
+
+#: ../../SessionManager/web/admin/sessions.php:61
+msgid "User:"
+msgstr "ユーザー:"
+
+#: ../../SessionManager/web/admin/sessions.php:62
+#, fuzzy
+msgid "Type:"
+msgstr "タイプ"
+
+#: ../../SessionManager/web/admin/sessions.php:64
+#: ../../SessionManager/web/classes/Preferences.class.php:334
+msgid "Desktop"
+msgstr "デスクトップ"
+
+#: ../../SessionManager/web/admin/sessions.php:70
+msgid "Started:"
+msgstr "開始:"
+
+#: ../../SessionManager/web/admin/sessions.php:77
+msgid "Status:"
+msgstr "ステータス:"
+
+#: ../../SessionManager/web/admin/sessions.php:81
+msgid "Running applications"
+msgstr "稼働中のアプリケーション"
+
+#: ../../SessionManager/web/admin/sessions.php:85
+msgid "No application running"
+msgstr "稼働中のアプリケーションがありません。"
+
+#: ../../SessionManager/web/admin/sessions.php:111
+#: ../../SessionManager/web/admin/sessions.php:116
+msgid "Kill this session"
+msgstr "このセッションを強制終了"
+
+#: ../../SessionManager/web/admin/sessions.php:112
+#: ../../SessionManager/web/admin/sessions.php:178
+msgid "Are you sure you want to kill this session?"
+msgstr "このセッションを切断しますか？"
+
+#: ../../SessionManager/web/admin/sessions.php:128
+#, php-format
+msgid "Sessions (total: %s)"
+msgstr "セッション数 (合計: %s)"
+
+#: ../../SessionManager/web/admin/sessions.php:157
+msgid "Session"
+msgstr "セッション"
+
+#: ../../SessionManager/web/admin/sessions.php:159
+msgid "User"
+msgstr "ユーザー"
+
+#: ../../SessionManager/web/admin/sessions.php:182
+#: ../../SessionManager/web/admin/sessions.php:196
+msgid "Kill"
+msgstr "強制終了"
+
+#: ../../SessionManager/web/admin/sessions.php:193
+msgid "Are you sure you want to kill selected sessions?"
+msgstr "このセッションを切断しますか？"
+
+#: ../../SessionManager/web/admin/sessions.php:206
+msgid "Number of sessions"
+msgstr "セッション数"
+
+#: ../../SessionManager/web/admin/sessions.php:228
+msgid "No active session"
+msgstr "アクティブなセッションがありません。"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:53
+msgid "Are you sure you want to delete this shared folder?"
+msgstr "この共有フォルダを削除しますか？"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:57
+msgid "Delete this shared folder"
+msgstr "この共有フォルダーを削除"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:128
+msgid "Rename"
+msgstr "リネーム"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:139
+msgid "ACL"
+msgstr "ACL"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:147
+#: ../../SessionManager/web/admin/usersgroup.php:737
+msgid "Are you sure you want to delete this shared folder access?"
+msgstr "共有フォルダのアクセス権を削除しますか？"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:152
+#: ../../SessionManager/web/admin/usersgroup.php:742
+msgid "Delete access to this shared folder"
+msgstr "この共有フォルダへのアクセス権を削除"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:167
+#: ../../SessionManager/web/admin/usersgroup.php:757
+msgid "Add access to this shared folder"
+msgstr "この共有フォルダにアクセス権を追加"
+
+#: ../../SessionManager/web/admin/sumup.php:44
+msgid "List of users"
+msgstr "ユーザー"
+
+#: ../../SessionManager/web/admin/sumup.php:55
+msgid "login"
+msgstr "ログイン"
+
+#: ../../SessionManager/web/admin/sumup.php:55
+msgid "name"
+msgstr "名前"
+
+#: ../../SessionManager/web/admin/sumup.php:55
+msgid "in this user group"
+msgstr "ユーザーグループ"
+
+#: ../../SessionManager/web/admin/sumup.php:55
+msgid "in this application group"
+msgstr "アプリグループ"
+
+#: ../../SessionManager/web/admin/sumup.php:55
+msgid "access to these applications"
+msgstr "利用可能アプリケーション"
+
+#: ../../SessionManager/web/admin/sumup.php:55
+#, fuzzy
+msgid "access to these network folders"
+msgstr "この共有フォルダにアクセス権を追加"
+
+#. <th>'._('Desktop File').'</th>
+#: ../../SessionManager/web/admin/sumup.php:57
+msgid "Available servers"
+msgstr "利用可能サーバー"
+
+#: ../../SessionManager/web/admin/sumup.php:80
+#: ../../SessionManager/web/admin/sumup.php:104
+#: ../../SessionManager/web/admin/usersgroup.php:220
+#: ../../SessionManager/web/admin/users.php:169
+#: ../../SessionManager/web/webservices/configuration.php:108
+#: ../../SessionManager/web/webservices/configuration.php:110
+#: ../../SessionManager/web/webservices/configuration.php:111
+#: ../../SessionManager/web/webservices/configuration.php:112
+msgid "Yes"
+msgstr "はい"
+
+#. $seconds => $text
+#. $forceable_parameters['shareable'] = array('0' => _('No'), '1' => _('Yes'));
+#: ../../SessionManager/web/admin/sumup.php:82
+#: ../../SessionManager/web/admin/sumup.php:106
+#: ../../SessionManager/web/admin/usersgroup.php:219
+#: ../../SessionManager/web/admin/users.php:170
+#: ../../SessionManager/web/webservices/configuration.php:108
+#: ../../SessionManager/web/webservices/configuration.php:110
+#: ../../SessionManager/web/webservices/configuration.php:111
+#: ../../SessionManager/web/webservices/configuration.php:112
+msgid "No"
+msgstr "いいえ"
+
+#: ../../SessionManager/web/admin/sumup.php:178
+msgid "List of servers"
+msgstr "サーバーリスト"
+
+#: ../../SessionManager/web/admin/sumup.php:182
+#: ../../SessionManager/web/admin/sumup.php:186
+msgid "No server available"
+msgstr "利用可能なサーバーは、存在しません。"
+
+#: ../../SessionManager/web/admin/tasks.php:63
+msgid "Tasks managment"
+msgstr "タスク管理"
+
+#: ../../SessionManager/web/admin/tasks.php:67
+#: ../../SessionManager/web/admin/tasks.php:141
+msgid "Creation time"
+msgstr "実施時刻"
+
+#: ../../SessionManager/web/admin/tasks.php:72
+msgid "Job id"
+msgstr "ジョブ ID"
+
+#: ../../SessionManager/web/admin/tasks.php:78
+#: ../../SessionManager/web/admin/tasks.php:153
+msgid "Finished"
+msgstr "完了"
+
+#: ../../SessionManager/web/admin/tasks.php:136
+msgid "List of tasks"
+msgstr "タスクリスト"
+
+#: ../../SessionManager/web/admin/tasks.php:157
+#, fuzzy
+msgid "In progress"
+msgstr "インストール状況"
+
+#: ../../SessionManager/web/admin/tasks.php:183
+msgid "Install an application from a package name"
+msgstr "パッケージ名からアプリケーションをインストール"
+
+#: ../../SessionManager/web/admin/usersgroup.php:32
+#: ../../SessionManager/web/classes/Preferences.class.php:189
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "1 hour"
+msgstr "１時間"
+
+#: ../../SessionManager/web/admin/usersgroup.php:33
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "1 day"
+msgstr "１日"
+
+#: ../../SessionManager/web/admin/usersgroup.php:34
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "1 week"
+msgstr "１週間"
+
+#: ../../SessionManager/web/admin/usersgroup.php:74
+msgid "User groups"
+msgstr "ユーザーグループ"
+
+#: ../../SessionManager/web/admin/usersgroup.php:81
+msgid "No available user group"
+msgstr "利用可能なユーザーグループが存在しません。"
+
+#: ../../SessionManager/web/admin/usersgroup.php:163
+msgid "Static"
+msgstr "特定"
+
+#: ../../SessionManager/web/admin/usersgroup.php:163
+#: ../../SessionManager/web/admin/usersgroup.php:166
+msgid "Dynamic"
+msgstr "動的"
+
+#: ../../SessionManager/web/admin/usersgroup.php:217
+msgid "Cached"
+msgstr "キャッシュ"
+
+#: ../../SessionManager/web/admin/usersgroup.php:221
+msgid "Time between two updates:"
+msgstr "Time between two updates:"
+
+#: ../../SessionManager/web/admin/usersgroup.php:228
+#: ../../SessionManager/web/admin/usersgroup.php:500
+msgid "Validation type"
+msgstr "Validation type"
+
+#: ../../SessionManager/web/admin/usersgroup.php:229
+#: ../../SessionManager/web/admin/usersgroup.php:504
+msgid "All"
+msgstr "すべて"
+
+#: ../../SessionManager/web/admin/usersgroup.php:229
+#: ../../SessionManager/web/admin/usersgroup.php:507
+msgid "At least one"
+msgstr "At least one"
+
+#: ../../SessionManager/web/admin/usersgroup.php:233
+#: ../../SessionManager/web/admin/usersgroup.php:511
+msgid "Filters"
+msgstr "フィルター"
+
+#: ../../SessionManager/web/admin/usersgroup.php:289
+msgid "Failed to load usergroup"
+msgstr "ユーザーグループのロードに失敗しました。"
+
+#: ../../SessionManager/web/admin/usersgroup.php:394
+msgid "User groups management"
+msgstr "ユーザーグループ管理"
+
+#: ../../SessionManager/web/admin/usersgroup.php:416
+msgid "Remove from default"
+msgstr "デフォルトから削除"
+
+#: ../../SessionManager/web/admin/usersgroup.php:419
+msgid "Define as default"
+msgstr "デフォルトとして設定"
+
+#: ../../SessionManager/web/admin/usersgroup.php:479
+msgid "Update the schedule"
+msgstr "スケジュールを更新"
+
+#: ../../SessionManager/web/admin/usersgroup.php:490
+msgid "Rules"
+msgstr "ルール"
+
+#: ../../SessionManager/web/admin/usersgroup.php:569
+msgid "Update rules"
+msgstr "ルールを更新"
+
+#: ../../SessionManager/web/admin/usersgroup.php:580
+msgid "List of users in this group"
+msgstr "このグループのユーザーリスト"
+
+#: ../../SessionManager/web/admin/usersgroup.php:589
+#: ../../SessionManager/web/admin/users.php:95
+#: ../../SessionManager/web/admin/users.php:262
+msgid "Are you sure you want to delete this user?"
+msgstr "このユーザーを削除しますか？"
+
+#: ../../SessionManager/web/admin/usersgroup.php:669
+msgid "Policy of this group"
+msgstr "このグループのポリシー"
+
+#: ../../SessionManager/web/admin/usersgroup.php:677
+msgid "extend from default"
+msgstr "デフォルトから拡張"
+
+#: ../../SessionManager/web/admin/usersgroup.php:683
+msgid "Are you sure you want to delete this rule?"
+msgstr "このルールを削除しますか？"
+
+#: ../../SessionManager/web/admin/usersgroup.php:688
+msgid "Delete this rule"
+msgstr "このルールを削除"
+
+#: ../../SessionManager/web/admin/usersgroup.php:708
+msgid "Add this rule"
+msgstr "このルールを追加"
+
+#: ../../SessionManager/web/admin/usersgroup.php:767
+#, fuzzy
+msgid "Session settings configuration"
+msgstr "セッション"
+
+#: ../../SessionManager/web/admin/usersgroup.php:779
+#, fuzzy
+msgid "Default value"
+msgstr "デフォルトポリシー"
+
+#: ../../SessionManager/web/admin/usersgroup.php:780
+msgid "Value"
+msgstr ""
+
+#: ../../SessionManager/web/admin/usersgroup.php:802
+#, fuzzy
+msgid "Remove this overriden setting"
+msgstr "このアプリケーションを削除"
+
+#: ../../SessionManager/web/admin/usersgroup.php:816
+#, fuzzy
+msgid "Save settings"
+msgstr "サーバー"
+
+#: ../../SessionManager/web/admin/usersgroup.php:838
+#, fuzzy
+msgid "Add this setting"
+msgstr "このニュースを追加"
+
+#: ../../SessionManager/web/admin/users.php:66
+#: ../../SessionManager/web/admin/wizard.php:157
+#: ../../SessionManager/web/webservices/configuration.php:81
+msgid "No available user"
+msgstr "利用可能なユーザーが存在しません。"
+
+#: ../../SessionManager/web/admin/users.php:113
+msgid "Are you sure you want to delete selected users?"
+msgstr "このユーザーを削除しますか？"
+
+#: ../../SessionManager/web/admin/users.php:155
+#: ../../SessionManager/web/admin/users.php:185
+msgid "Populate"
+msgstr ""
+
+#: ../../SessionManager/web/admin/users.php:158
+msgid ""
+"This feature is useful to create default accounts. It is mainly used when "
+"you want to test the system quickly. It is not recommended to use thoses "
+"default accounts in a production system because it is very easy to delete "
+"them by mistake using this \"populate\" feature."
+msgstr ""
+
+#: ../../SessionManager/web/admin/users.php:167
+msgid "Overwrite existent: "
+msgstr ""
+
+#: ../../SessionManager/web/admin/users.php:173
+#, fuzzy
+msgid "Password management:"
+msgstr "タスク管理"
+
+#: ../../SessionManager/web/admin/users.php:180
+#, fuzzy
+msgid "Same as the login"
+msgstr "Same as Users, "
+
+#: ../../SessionManager/web/admin/users.php:181
+msgid "Custom:"
+msgstr ""
+
+#: ../../SessionManager/web/admin/users.php:214
+msgid "Error while requesting usergroups"
+msgstr "ユーザーグループをリクエスト中にエラー"
+
+#: ../../SessionManager/web/admin/users.php:240
+msgid "Locale"
+msgstr "ロケール"
+
+#: ../../SessionManager/web/admin/users.php:263
+msgid "Delete this user"
+msgstr "このユーザーを削除"
+
+#: ../../SessionManager/web/admin/users.php:307
+msgid "Save the modifications"
+msgstr "変更を保存"
+
+#: ../../SessionManager/web/admin/users.php:319
+msgid "User groups with this user"
+msgstr "このユーザーをユーザーグループに追加"
+
+#: ../../SessionManager/web/admin/users.php:332
+msgid "Are you sure you want to delete this user from this group?"
+msgstr "このグループからユーザを削除しますか？"
+
+#: ../../SessionManager/web/admin/wizard.php:39
+msgid "No user group selected"
+msgstr "ユーザーグループが選択されていません。"
+
+#: ../../SessionManager/web/admin/wizard.php:49
+msgid "No user selected"
+msgstr "ユーザーが選択されていません。"
+
+#: ../../SessionManager/web/admin/wizard.php:63
+#: ../../SessionManager/web/admin/wizard.php:109
+msgid "No group name"
+msgstr "グループ名がありません。"
+
+#: ../../SessionManager/web/admin/wizard.php:87
+msgid "No application group selected"
+msgstr "アプリグループが選択されていません。"
+
+#: ../../SessionManager/web/admin/wizard.php:95
+msgid "No application selected"
+msgstr "アプリケーションが選択されていません。"
+
+#: ../../SessionManager/web/admin/wizard.php:161
+msgid "Unable to display users list: too many users"
+msgstr "ユーザーリストを表示できません。ユーザ数が多すぎます。"
+
+#: ../../SessionManager/web/admin/wizard.php:167
+#: ../../SessionManager/web/admin/wizard.php:253
+#: ../../SessionManager/web/admin/wizard.php:313
+#: ../../SessionManager/web/admin/wizard.php:403
+#: ../../SessionManager/web/admin/wizard.php:446
+msgid "Publication Wizard"
+msgstr "公開設定ウィザード"
+
+#: ../../SessionManager/web/admin/wizard.php:167
+msgid "User/group selection"
+msgstr "ユーザー/グループの選択"
+
+#: ../../SessionManager/web/admin/wizard.php:179
+msgid "Create a group with users"
+msgstr "ユーザーグループを作成"
+
+#: ../../SessionManager/web/admin/wizard.php:185
+msgid "Use usergroups"
+msgstr "既存ユーザーグループを使用"
+
+#: ../../SessionManager/web/admin/wizard.php:237
+#: ../../SessionManager/web/admin/wizard.php:257
+#: ../../SessionManager/web/admin/wizard.php:278
+#: ../../SessionManager/web/admin/wizard.php:318
+#: ../../SessionManager/web/admin/wizard.php:388
+#: ../../SessionManager/web/admin/wizard.php:407
+#: ../../SessionManager/web/admin/wizard.php:428
+msgid "Next"
+msgstr "次へ"
+
+#: ../../SessionManager/web/admin/wizard.php:253
+msgid "Create usergroup"
+msgstr "ユーザーグループを作成"
+
+#: ../../SessionManager/web/admin/wizard.php:275
+#: ../../SessionManager/web/admin/wizard.php:384
+#: ../../SessionManager/web/admin/wizard.php:425
+#: ../../SessionManager/web/admin/wizard.php:557
+msgid "Previous"
+msgstr "前へ"
+
+#: ../../SessionManager/web/admin/wizard.php:313
+msgid "Applications/groups selection"
+msgstr "アプリケーション/グループの選択"
+
+#: ../../SessionManager/web/admin/wizard.php:325
+msgid "Create a group with applications"
+msgstr "アプリグループを作成"
+
+#: ../../SessionManager/web/admin/wizard.php:329
+msgid "Use appgroups"
+msgstr "アプリグループを使用"
+
+#: ../../SessionManager/web/admin/wizard.php:403
+msgid "Create appgroup"
+msgstr "アプリグループを作成"
+
+#: ../../SessionManager/web/admin/wizard.php:446
+msgid "Confirmation"
+msgstr "確認"
+
+#: ../../SessionManager/web/admin/wizard.php:448
+msgid "Are you sure that you want to create this publication?"
+msgstr "この公開設定を作成しますか？"
+
+#: ../../SessionManager/web/admin/wizard.php:459
+msgid "Between this usergroup"
+msgstr "ユーザーグループ"
+
+#: ../../SessionManager/web/admin/wizard.php:461
+msgid "Between these usergroups"
+msgstr "ユーザーグループ"
+
+#: ../../SessionManager/web/admin/wizard.php:479
+msgid "Between this newly created usergroup"
+msgstr "ユーザーグループを新しく作成する。"
+
+#: ../../SessionManager/web/admin/wizard.php:483
+#: ../../SessionManager/web/admin/wizard.php:529
+msgid "Name:"
+msgstr "名前:"
+
+#: ../../SessionManager/web/admin/wizard.php:484
+#: ../../SessionManager/web/admin/wizard.php:530
+msgid "Description: "
+msgstr "説明:"
+
+#: ../../SessionManager/web/admin/wizard.php:485
+msgid "Users:"
+msgstr "ユーザー:"
+
+#: ../../SessionManager/web/admin/wizard.php:509
+msgid "and this applications group"
+msgstr "アプリグループ"
+
+#: ../../SessionManager/web/admin/wizard.php:511
+msgid "and these applications groups"
+msgstr "アプリグループ"
+
+#: ../../SessionManager/web/admin/wizard.php:525
+msgid "and this newly created applications group"
+msgstr "アプリグループを再作成します。"
+
+#: ../../SessionManager/web/admin/wizard.php:531
+msgid "Applications:"
+msgstr "アプリケーション:"
+
+#: ../../SessionManager/web/admin/wizard.php:560
+msgid "Confirm"
+msgstr "確認"
+
+#: ../../SessionManager/web/admin/wizard.php:588
+msgid "Cannot create usergroup"
+msgstr "ユーザーグループを作成できません。"
+
+#: ../../SessionManager/web/admin/wizard.php:609
+msgid "Cannot create application group"
+msgstr "アプリグループを作成できません。"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:38
+msgid "Factor impact"
+msgstr "指標設定"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:45
+msgid "less"
+msgstr "less"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:45
+msgid "more"
+msgstr "さらに"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:123
+msgid "Back to default"
+msgstr "デフォルト"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:129
+msgid "Examples"
+msgstr "設定例"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:139
+msgid ""
+"Full CPU: only CPU usage is used as a criteria to choose the best\n"
+"server to use for an incoming user."
+msgstr "CPU利用率によって、最適なサーバーへの振り分けを実施"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:153
+msgid "Both CPU and RAM are used as criterias, with a little randomization..."
+msgstr "CPUとRAMの利用率により分散"
+
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:117
+msgid "Active"
+msgstr "アクティブ"
+
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:120
+#, fuzzy
+msgid "Inactive"
+msgstr "アクティブ"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:177
+#, fuzzy
+msgid "System in maintenance mode"
+msgstr "メンテナンスモードへ切替"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:178
+#: ../../SessionManager/web/classes/Preferences.class.php:261
+#: ../../SessionManager/web/classes/Preferences.class.php:264
+#: ../../SessionManager/web/classes/Preferences.class.php:278
+#: ../../SessionManager/web/classes/Preferences.class.php:284
+#: ../../SessionManager/web/classes/Preferences.class.php:287
+#: ../../SessionManager/web/classes/Preferences.class.php:290
+#: ../../SessionManager/web/classes/Preferences.class.php:310
+#: ../../SessionManager/web/classes/Preferences.class.php:313
+#: ../../SessionManager/web/classes/Preferences.class.php:316
+#: ../../SessionManager/web/classes/Preferences.class.php:319
+#: ../../SessionManager/web/classes/Preferences.class.php:328
+#: ../../SessionManager/web/classes/Preferences.class.php:344
+#: ../../SessionManager/web/classes/Preferences.class.php:347
+#: ../../SessionManager/web/classes/Preferences.class.php:351
+#: ../../SessionManager/web/classes/Preferences.class.php:354
+#: ../../SessionManager/web/classes/Preferences.class.php:357
+#: ../../SessionManager/web/classes/Preferences.class.php:361
+#: ../../SessionManager/web/classes/Preferences.class.php:364
+#: ../../SessionManager/web/classes/Preferences.class.php:367
+#: ../../SessionManager/web/classes/Preferences.class.php:370
+#: ../../SessionManager/web/classes/Preferences.class.php:373
+#: ../../SessionManager/web/classes/Preferences.class.php:383
+msgid "no"
+msgstr "いいえ"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:178
+#: ../../SessionManager/web/classes/Preferences.class.php:261
+#: ../../SessionManager/web/classes/Preferences.class.php:264
+#: ../../SessionManager/web/classes/Preferences.class.php:278
+#: ../../SessionManager/web/classes/Preferences.class.php:284
+#: ../../SessionManager/web/classes/Preferences.class.php:287
+#: ../../SessionManager/web/classes/Preferences.class.php:290
+#: ../../SessionManager/web/classes/Preferences.class.php:310
+#: ../../SessionManager/web/classes/Preferences.class.php:313
+#: ../../SessionManager/web/classes/Preferences.class.php:316
+#: ../../SessionManager/web/classes/Preferences.class.php:319
+#: ../../SessionManager/web/classes/Preferences.class.php:328
+#: ../../SessionManager/web/classes/Preferences.class.php:344
+#: ../../SessionManager/web/classes/Preferences.class.php:347
+#: ../../SessionManager/web/classes/Preferences.class.php:351
+#: ../../SessionManager/web/classes/Preferences.class.php:357
+#: ../../SessionManager/web/classes/Preferences.class.php:361
+#: ../../SessionManager/web/classes/Preferences.class.php:364
+#: ../../SessionManager/web/classes/Preferences.class.php:367
+#: ../../SessionManager/web/classes/Preferences.class.php:370
+#: ../../SessionManager/web/classes/Preferences.class.php:373
+#: ../../SessionManager/web/classes/Preferences.class.php:383
+msgid "yes"
+msgstr "はい"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:181
+msgid "Administration console language"
+msgstr "管理コンソールの言語"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:182
+msgid "Autodetect"
+msgstr "自動検出"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:185
+msgid "Debug options list"
+msgstr "デバッグのオプションリスト"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:185
+msgid "Select debug options you want to enable."
+msgstr "有効にしたいデバッグ・オプションを選択"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:186
+msgid "debug"
+msgstr "デバッグ"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:186
+msgid "info"
+msgstr "情報"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:186
+msgid "warning"
+msgstr "警告"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:186
+msgid "error"
+msgstr "エラー"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:186
+msgid "critical"
+msgstr "重要"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:188
+msgid "Cache logs update interval"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:189
+msgid "30 seconds"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:189
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "1 minute"
+msgstr "１分"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:189
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "5 minutes"
+msgstr "５分間"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:189
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "15 minutes"
+msgstr "１５分"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:189
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "30 minutes"
+msgstr "３０分間"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:189
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "2 hours"
+msgstr "２時間"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:191
+msgid "Cache logs expiry time"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:192
+#, fuzzy
+msgid "A day"
+msgstr "１日"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:192
+#, fuzzy
+msgid "A week"
+msgstr "１週間"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:192
+#, fuzzy
+msgid "A month"
+msgstr "１ヶ月"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:192
+msgid "A year"
+msgstr ""
+
+#. $c = new ConfigElement_input('start_app','start_app','start_app_des','');
+#. $this->add('general',$c);
+#: ../../SessionManager/web/classes/Preferences.class.php:198
+msgid "Default user group"
+msgstr "デフォルトのユーザーグループ"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:201
+msgid "Maximum items per page"
+msgstr "ページあたりの最大アイテム数"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:201
+msgid "The maximum number of items that can be displayed."
+msgstr "アイテムの最大表示数"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:204
+msgid "Default browser"
+msgstr "デフォルトブラウザ"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:207
+msgid "Default policy"
+msgstr "デフォルトポリシー"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:209
+msgid "use Admin panel"
+msgstr "管理者パネルを使う"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:210
+msgid "view Servers"
+msgstr "サーバーを表示"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:211
+msgid "manage Servers"
+msgstr "サーバーの管理"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:212
+msgid "view Shared folders"
+msgstr "共有フォルダを表示"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:213
+msgid "manage Shared folders"
+msgstr "共有フォルダの管理"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:214
+msgid "view Users"
+msgstr "ユーザーを表示"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:215
+msgid "manage Users"
+msgstr "ユーザーの管理"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:216
+msgid "view Usergroups"
+msgstr "ユーザーグループを表示"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:217
+msgid "manage Usergroups"
+msgstr "ユーザーグループの管理"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:218
+msgid "view Applications"
+msgstr "アプリケーションを表示"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:219
+msgid "manage Applications"
+msgstr "アプリケーションの管理"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:220
+msgid "view Application groups"
+msgstr "アプリグループを表示"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:221
+msgid "manage Application groups"
+msgstr "アプリグループの管理"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:222
+msgid "view Publications"
+msgstr "公開設定を表示"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:223
+msgid "manage Publications"
+msgstr "公開設定の管理"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:224
+msgid "view Configuration"
+msgstr "設定を表示"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:225
+msgid "manage Configuration"
+msgstr "コンフィグレーションの管理"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:226
+msgid "view Status"
+msgstr "ステータスを表示"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:227
+msgid "view Summary"
+msgstr "サマリーを表示"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:228
+msgid "view News"
+msgstr "ニュースを表示"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:229
+msgid "manage News"
+msgstr "ニュースの管理"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:233
+msgid "Policy for administration delegation"
+msgstr "管理者権限の委譲ポリシー"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:235
+#, fuzzy
+msgid "SQL configuration"
+msgstr "MySQL 設定"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:236
+#, fuzzy
+msgid "Database type"
+msgstr "データベース:"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:236
+#, fuzzy
+msgid "The type of your database."
+msgstr "データベース名"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:237
+#: ../../SessionManager/web/modules/ApplicationDB/sql.php:190
+#: ../../SessionManager/web/modules/ApplicationsGroupDB/sql.php:171
+#: ../../SessionManager/web/modules/UserDB/sql.php:228
+#: ../../SessionManager/web/modules/UserGroupDB/sql.php:164
+msgid "MySQL"
+msgstr "MySQL"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:239
+msgid "Database host address"
+msgstr "ホストアドレス"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:239
+msgid ""
+"The address of your database host. This database contains adminstration "
+"console data. Example: localhost or db.mycorporate.com."
+msgstr ""
+"DBサーバーのアドレス (管理者コンソールのデータが登録されているデータベース)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:239
+msgid ""
+"The address of your database host. This database contains adminstrations "
+"console data. Example: localhost or db.mycorporate.com."
+msgstr ""
+"DBサーバーのアドレス (管理者コンソールのデータが登録されているデータベース)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:241
+msgid "Database username"
+msgstr "ユーザー名"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:241
+msgid "The username that must be used to access the database."
+msgstr "データベースに接続可能なユーザー名"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:241
+msgid "The user name that must be used to access the database."
+msgstr "The user name that must be used to access the database."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:243
+msgid "Database password"
+msgstr "パスワード"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:243
+msgid "The user password that must be used to access the database."
+msgstr "The user password that must be used to access the database."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:245
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:200
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:111
+msgid "Database name"
+msgstr "データベース名"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:245
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:200
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:111
+msgid "The name of the database."
+msgstr "データベース名"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:247
+msgid "Table prefix"
+msgstr "テーブル プレフィックス"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:247
+msgid "The table prefix for the database."
+msgstr "データベースのテーブルプレフィックス"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:250
+msgid "Email settings"
+msgstr "Email 設定"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:251
+msgid "Mail server type"
+msgstr "メールサーバーのタイプ"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:252
+msgid "Local"
+msgstr "ローカル"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:252
+msgid "SMTP server"
+msgstr "SMTP サーバー"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:256
+msgid "Host"
+msgstr "ホスト"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:258
+msgid "Port"
+msgstr "ポート番号"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:260
+msgid "Use SSL with SMTP"
+msgstr "SMTPでSSLを使用"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:263
+msgid "Authentication"
+msgstr "認証"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:266
+msgid "SMTP username"
+msgstr "SMTP ユーザー名"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:268
+msgid "SMTP password"
+msgstr "SMTP パスワード"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:271
+#, fuzzy
+msgid "Slave Server settings"
+msgstr "サーバー"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:272
+msgid "Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)"
+msgstr "接続先のサーバー (FQDN or IP - ワイルドカード(*.) が指定できます)"
+
+#. fqdn_private_address : array('dns' => ip);
+#: ../../SessionManager/web/classes/Preferences.class.php:275
+msgid "Name/IP Address association (name <-> ip)"
+msgstr "ホスト名/IPアドレスの関連付け"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:275
+msgid ""
+"Enter a private addresses you wish to associate to a specific IP in case of "
+"issue with the DNS configuration or to override a reverse address result. "
+"Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)"
+msgstr ""
+"DNSの設定に問題がある場合、DNS名とプライベート・アドレスを関連付けてくださ"
+"い。\n"
+"例: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:277
+msgid "Disable reverse FQDN checking"
+msgstr "FQDNのチェックをしない"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:277
+msgid ""
+"Enable this option if you don't want to check that the result of the reverse "
+"FQDN address fits the one that was registered."
+msgstr "FQDNアドレスの確認を無効にしたい場合、有効を選択してください。"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:280
+#, fuzzy
+msgid "Action when an server status is not ready anymore"
+msgstr "アプリケーションサーバーが、準備できていないときの動作"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:281
+msgid "Do nothing"
+msgstr "何もしない"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:283
+#, fuzzy
+msgid "Remove orphan applications when the application server is deleted"
+msgstr "サーバーが削除された際に、利用されないアプリケーションを削除"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:286
+msgid "Auto register new servers"
+msgstr "新規サーバーの自動登録"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:289
+msgid "Auto switch new servers to production mode"
+msgstr "新規サーバー追加時に自動的にプロダクションモードへ切替"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:293
+#, fuzzy
+msgid "Load Balancing policy for Application Server"
+msgstr "負荷分散ポリシー"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:293
+#, fuzzy
+msgid "Load Balancing policy for File Server"
+msgstr "負荷分散ポリシー"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:307
+#, fuzzy
+msgid "Remote Desktop settings"
+msgstr "イベント"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:309
+msgid "Enable Remote Desktop"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:312
+msgid "Sessions are persistent"
+msgstr "セッションの持続"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:315
+msgid "Show icons on user desktop"
+msgstr "デスクトップ上にアイコンを表示"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:318
+msgid "Allow external applications in Desktop"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:321
+#, fuzzy
+msgid "Desktop type"
+msgstr "デスクトップ"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:322
+msgid "Any"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:322
+msgid "Linux"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:322
+#, fuzzy
+msgid "Windows"
+msgstr "Windows キーマップ"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:325
+#, fuzzy
+msgid "Remote Applications settings"
+msgstr "アプリケーションサーバー"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:327
+#, fuzzy
+msgid "Enable Remote Applications"
+msgstr "アプリケーションの管理"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:331
+msgid "Sessions settings"
+msgstr "セッション"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:333
+msgid "Default mode for session"
+msgstr "既定モード"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:337
+msgid "Default language for session"
+msgstr "言 語"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:340
+msgid "Default timeout for session"
+msgstr "セッションタイムアウト"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "2 minutes"
+msgstr "２分"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "10 minutes"
+msgstr "１０分"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "5 hours"
+msgstr "５時間"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "12 hours"
+msgstr "１２時間"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "2 days"
+msgstr "２日間"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "1 month"
+msgstr "１ヶ月"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "Never"
+msgstr "無制限"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:343
+msgid "User can launch a session with no application"
+msgstr "アプリケーションなしでセッションを起動可能"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:346
+msgid "User can use a console in the session"
+msgstr "コンソールを利用可能"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:350
+msgid "Multimedia"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:353
+msgid "Redirect client drives"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:354
+msgid "partial"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:354
+msgid "full"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:356
+msgid "Redirect client printers"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:360
+#, fuzzy
+msgid "Enable user profiles"
+msgstr "内部データベースのプロファイル"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:363
+msgid "Auto-create user profile when nonexistant"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:366
+#, fuzzy
+msgid "Launch a session without a valid profile"
+msgstr "ポップアップでセッション起動"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:369
+#, fuzzy
+msgid "Enable sharedfolders"
+msgstr "共有フォルダを使用"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:372
+msgid "Launch a session even if a shared folder's fileserver is missing"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:376
+msgid "Forceable paramaters by users"
+msgstr "ユーザー毎にパラメーターを強制付加"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:376
+msgid ""
+"Choose Advanced Settings options you want to make available to users before "
+"they launch a session."
+msgstr ""
+"セッション起動の前に利用可能にしたいユーザーの拡張オプションを選択してくださ"
+"い。"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:377
+msgid "session mode"
+msgstr "セッションモード"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:377
+msgid "language"
+msgstr "言語"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:377
+msgid "server"
+msgstr "サーバー"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:377
+msgid "timeout"
+msgstr "タイムアウト"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:382
+msgid "Display users list"
+msgstr "ユーザーリストの表示"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:382
+msgid ""
+"Display the list of users from the corporate directory in the login box. If "
+"the list is not displayed, the user must enter his login name."
+msgstr ""
+"ログイン画面にユーザーリストを表示しない。ユーザーリストが表示されないため、"
+"ログイン名を自分で入れる必要があります。"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:408
+msgid "Modules activation"
+msgstr "モジュールの有効化"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:408
+msgid "Choose the modules you want to enable."
+msgstr "有効化したいモジュールを選択してください。"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:458
+msgid "Mail addresses to send alerts to"
+msgstr "アラート送信先のメールアドレス"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:458
+msgid "On system alerts, mails will be sent to these addresses"
+msgstr "システムアラートは、このメールアドレスに送信されます。"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:483
+msgid "Activated callbacks"
+msgstr "有効にするイベント"
+
+#: ../../SessionManager/web/classes/Server.class.php:288
+msgid "is NOT online!"
+msgstr "オンラインでありません!"
+
+#: ../../SessionManager/web/classes/Server.class.php:442
+msgid "Under maintenance"
+msgstr "メンテナンスモード"
+
+#: ../../SessionManager/web/classes/Server.class.php:448
+msgid "Offline"
+msgstr "オフライン"
+
+#: ../../SessionManager/web/classes/Server.class.php:450
+msgid "Broken"
+msgstr "壊れています。"
+
+#: ../../SessionManager/web/classes/Session.class.php:220
+msgid "Created"
+msgstr "作成"
+
+#: ../../SessionManager/web/classes/Session.class.php:223
+msgid "Initializing"
+msgstr "初期化しています。"
+
+#: ../../SessionManager/web/classes/Session.class.php:229
+msgid "Logged"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Session.class.php:232
+msgid "Disconnected"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Session.class.php:235
+msgid "To destroy"
+msgstr "To destroy"
+
+#: ../../SessionManager/web/classes/Session.class.php:238
+msgid "Destroyed"
+msgstr "破棄する"
+
+#: ../../SessionManager/web/classes/tasks/Task.class.php:68
+#, php-format
+msgid "Unable to submit Task to server '%s'"
+msgstr ""
+
+#: ../../SessionManager/web/classes/User.class.php:312
+#, php-format
+msgid ""
+"User '%s' have at least two groups with the same overriden rule but with "
+"differents value, the result will be unpredictable."
+msgstr ""
+
+#: ../../SessionManager/web/client/start.php:270
+msgid "No available server"
+msgstr "利用可能なサーバーが存在しません。"
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Mail.class.php:46
+#, php-format
+msgid "OVD Alert: %s is offline"
+msgstr "OVD アラート: %s は、オフラインです。"
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Mail.class.php:48
+#, php-format
+msgid "OVD End Alert: %s is up again"
+msgstr "OVD End Alert: %s is up again"
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Mail.class.php:57
+#: ../../SessionManager/web/events/callbacks/SqlFailure/Mail.class.php:59
+msgid "Send a mail"
+msgstr "メールを送信"
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Task.class.php:53
+msgid "Cleanup tasks"
+msgstr "タスクのクリーンアップ"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:49
+#, fuzzy, php-format
+msgid "OVD Session alert: %s couldn't log in"
+msgstr "OVD セッションアラート: %s (uid %s) が、ログインできませんでした。"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:53
+msgid "The following error happened:\n"
+msgstr "エラーが発生しました。\n"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:55
+msgid "No error given"
+msgstr "エラーが取得できませんでした。"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:64
+msgid "Send a mail on login problem"
+msgstr "ログイン障害時にメールを送信"
+
+#: ../../SessionManager/web/events/callbacks/SqlFailure/Mail.class.php:46
+#, php-format
+msgid "OVD Alert: MySQL %s is offline"
+msgstr "OVD アラート: MySQL %s が、オフラインです。"
+
+#: ../../SessionManager/web/events/callbacks/SqlFailure/Mail.class.php:49
+#, php-format
+msgid "OVD End Alert: MySQL %s is up again"
+msgstr "OVD End Alert: MySQL %s is up again"
+
+#: ../../SessionManager/web/events/ServerStatusChanged.class.php:30
+msgid "Server status changed"
+msgstr "サーバーステータスの変更"
+
+#: ../../SessionManager/web/events/SessionStart.class.php:26
+msgid "Session startup"
+msgstr "セッションの開始"
+
+#: ../../SessionManager/web/events/SessionStatusChanged.class.php:26
+msgid "Session status changed"
+msgstr "セッションのステータスを変更"
+
+#: ../../SessionManager/web/events/SqlFailure.class.php:26
+msgid "Sql failure"
+msgstr "SQLの失敗"
+
+#: ../../SessionManager/web/includes/defaults.inc.php:26
+#, fuzzy
+msgid "Open Virtual Desktop"
+msgstr "デスクトップと共にアプリケーションを起動"
+
+#: ../../SessionManager/web/modules/ApplicationsGroupDB.php:32
+#, fuzzy
+msgid "Module ApplicationsGroupDB must be enabled"
+msgstr "ApplicationDB モジュールを有効にする必要があります。"
+
+#: ../../SessionManager/web/modules/ApplicationsGroupDB/sql.php:198
+#, fuzzy
+msgid "Applications group already exists"
+msgstr "アプリグループ"
+
+#: ../../SessionManager/web/modules/AuthMethod/CAS.php:72
+msgid "CAS authentication"
+msgstr "CAS 認証"
+
+#: ../../SessionManager/web/modules/AuthMethod/CAS.php:86
+msgid "CAS server URL"
+msgstr "CAS サーバー URL"
+
+#: ../../SessionManager/web/modules/AuthMethod/Password.php:48
+msgid "Login/Password authentication"
+msgstr "ログイン/パスワード 認証方式"
+
+#: ../../SessionManager/web/modules/AuthMethod/RemoteUser.php:47
+msgid "RemoteUser authentication"
+msgstr "RemoteUser authentication"
+
+#: ../../SessionManager/web/modules/AuthMethod/RemoteUser.php:63
+msgid "SERVER variable for SSO"
+msgstr "SERVER variable for SSO"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:69
+msgid "Token authentication"
+msgstr "Token authentication"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:95
+msgid "Token validation URL"
+msgstr "Token validation URL"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:95
+msgid ""
+"If a token argument is sent to startsession, the system tries to get an user "
+"login by requesting the token validation url.<br /><br />Put here the url to "
+"request if a token argument is sent to <i>startsession</i> instead of login/"
+"password.<br /><br />The special string <b>%TOKEN%</b> needs to be set "
+"because it's replaced by the token argument when the URL is requested."
+msgstr ""
+"もし、セッション開始時にトークンが送られてくる場合、トークンのURLの要求により"
+"システムへのログインを試みます。<br /><br />ログイン/パスワードの替わりにトー"
+"クンを利用したい場合は、ここに設定してください。<br /><br />特殊な文字列：<b>"
+"%TOKEN%</b>に置き換える必要があります。"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:96
+msgid "Token XML user node name"
+msgstr "Token XML user node name"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:96
+msgid "The id of the XML node which contains the user login"
+msgstr "The id of the XML node which contains the user login"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:97
+msgid "Token XML login attribute name"
+msgstr "Token XML login attribute name"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:97
+msgid ""
+"The name of the XML attribute which contains the user login (in the node "
+"\"user_node_name\")"
+msgstr ""
+"The name of the XML attribute which contains the user login (in the node "
+"\"user_node_name\")"
+
+#: ../../SessionManager/web/modules/HA/high_availability.php:29
+msgid "Virtual IP"
+msgstr ""
+
+#: ../../SessionManager/web/modules/HA/high_availability.php:39
+#, fuzzy
+msgid "HA configuration"
+msgstr "設定"
+
+#: ../../SessionManager/web/modules/HA.php:31
+#: ../../SessionManager/web/modules/UserDB.php:32
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_memberof.php:102
+#: ../../SessionManager/web/webservices/configuration.php:66
+msgid "Module UserDB must be enabled"
+msgstr "UserDB モジュールを有効にする必要があります。"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:82
+#: ../../SessionManager/web/modules/UserDB/ldap.php:284
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:194
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:105
+msgid "Server host address"
+msgstr "サーバーホストアドレス"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:82
+msgid "The address of your Active Directory server."
+msgstr "ActiveDirectory のアドレス"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:84
+msgid "Domain name"
+msgstr "ドメイン名"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:84
+msgid "Domain name used by Active Directory"
+msgstr "ドメイン名が、Active Directoryに利用されます。"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:86
+msgid "Administrator DN"
+msgstr "管理者名（DN）"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:86
+#: ../../SessionManager/web/modules/UserDB/ldap.php:288
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:196
+msgid ""
+"The user login that must be used to access the database (to list users "
+"accounts)."
+msgstr ""
+"The user login that must be used to access the database (to list users "
+"accounts)."
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:88
+msgid "Administrator password"
+msgstr "管理者パスワード"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:88
+#: ../../SessionManager/web/modules/UserDB/ldap.php:290
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:198
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:109
+msgid ""
+"The user password that must be used to access the database (to list users "
+"accounts)."
+msgstr ""
+"The user password that must be used to access the database (to list users "
+"accounts)."
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:90
+msgid "User branch DN"
+msgstr "User branch DN"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:92
+msgid "match"
+msgstr "マッチ条件"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:284
+msgid "The address of your LDAP server."
+msgstr "LDAPサーバーのアドレス"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:286
+msgid "Server port"
+msgstr "サーバーポート"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:286
+msgid "The port number used by your LDAP server."
+msgstr "LDAPサーバーのポート番号"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:286
+msgid "The port use by your LDAP server."
+msgstr "LDAPサーバーのポート番号"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:288
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:196
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:107
+msgid "User login"
+msgstr "ユーザーログイン"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:290
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:198
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:109
+msgid "User password"
+msgstr "ユーザーパスワード"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:298
+msgid "Protocol version"
+msgstr "プロトコル バージョン"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:298
+msgid "The protocol version used by your LDAP server."
+msgstr "LDAPサーバーのプロトコル Ver."
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:300
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:204
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:115
+msgid "Matching"
+msgstr "マッチング"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:303
+msgid "Filter (optional)"
+msgstr "フィルター(オプション)"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:303
+msgid "Filter, example (&(distinguishedname=mike*)(uid=42*))"
+msgstr "フィルター、例(&(distinguishedname=mike*)(uid=42*))"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:194
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:105
+msgid "The address of your MySQL server."
+msgstr "MySQLサーバーのアドレス"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:202
+msgid "Table of users"
+msgstr "ユーザー テーブル"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:206
+msgid "Hash method"
+msgstr "ハッシュ方法"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:207
+msgid "MD5"
+msgstr "MD5"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:207
+msgid "Crypt"
+msgstr "暗号化"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:207
+msgid "Plain"
+msgstr "平文"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:229
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:137
+msgid "MySQL external"
+msgstr "外部 MySQL"
+
+#: ../../SessionManager/web/modules/UserDB/sql.php:246
+msgid "User already exists"
+msgstr "ユーザーはすでに存在しています。"
+
+#: ../../SessionManager/web/modules/UserDB/unix.php:116
+msgid "local"
+msgstr "ローカル"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_memberof.php:190
+msgid "LDAP using memberOf"
+msgstr "LDAP using memberOf"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:32
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:69
+#: ../../SessionManager/web/modules/UserGroupDB.php:32
+#: ../../SessionManager/web/modules/UserGroupDB.php:148
+msgid "Module UserGroupDB must be enabled"
+msgstr "UserGroupDB モジュールを有効にする必要があります。"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:134
+msgid "Group Branch DN"
+msgstr "Group Branch DN"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:134
+msgid "Use LDAP User Groups using Posix group, Group Branch DN:"
+msgstr "LDAP ユーザグループを利用 (Posix group, Group Branch DN:)"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:139
+msgid "LDAP using posix group"
+msgstr "LDAP (posix groupを利用)"
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:107
+msgid ""
+"The user login that must be used to access the database (to list users "
+"groups accounts)."
+msgstr ""
+"The user login that must be used to access the database (to list users "
+"groups accounts)."
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:113
+msgid "table of usersgroup"
+msgstr "ユーザーグループの表示"
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql.php:183
+msgid "Users group already exists"
+msgstr "ユーザーグループは、既に存在しています。"
+
+#: ../../SessionManager/web/webservices/configuration.php:26
+msgid "Internal error"
+msgstr "内部エラー"
+
+#: ../../SessionManager/web/webservices/configuration.php:39
+msgid "Maximum"
+msgstr "最大値"
+
+#: ../../SessionManager/web/webservices/configuration.php:79
+msgid "Getting userlist failed"
+msgstr "ユーザーリストの取得に失敗しました。"
+
+#~ msgid "8-bits"
+#~ msgstr "8ビット"
+
+#~ msgid "Action to do when an user already have an active session"
+#~ msgstr "既にアクティブなセッションがある時の動作"
+
+#~ msgid "Advanced settings"
+#~ msgstr "高度な設定"
+
+#~ msgid "Allow connections through proxy (SSH/ping applet test required)"
+#~ msgstr "プロクシ経由での接続を許可する (SSH/ping applet test required))"
+
+#~ msgid "Application Server"
+#~ msgstr "アプリケーションサーバー"
+
+#~ msgid "Application does not exist"
+#~ msgstr "アプリケーションは存在しません。"
+
+#~ msgid "Application not available"
+#~ msgstr "アプリケーションは、利用できません。"
+
+#~ msgid "AppsGroup successfully added"
+#~ msgstr "アプリグループを追加しました。"
+
+#~ msgid "AppsGroup successfully deleted"
+#~ msgstr "アプリグループを削除しました。"
+
+#~ msgid "AppsGroup successfully modified"
+#~ msgstr "アプリグループを修正しました。"
+
+#~ msgid "Authentication failed"
+#~ msgstr "認証失敗"
+
+#~ msgid "Choose the plugins you want to enable."
+#~ msgstr "有効化したいプラグインを選択してください。"
+
+#~ msgid "Common Internet File System (CIFS)"
+#~ msgstr "Common Internet File System (CIFS)"
+
+#~ msgid "Common Internet File System (CIFS) without services for unix"
+#~ msgstr "Common Internet File System (CIFS) without services for unix"
+
+#~ msgid "Configuration file missing"
+#~ msgstr "設定ファイルに誤りがあります。"
+
+#~ msgid "Configuration not valid"
+#~ msgstr "設定が無効です。"
+
+#~ msgid "Connect to or observe this session"
+#~ msgstr "このセッションへ接続"
+
+#~ msgid "Daemon log"
+#~ msgstr "Daemon log"
+
+#~ msgid "Database"
+#~ msgstr "データベース"
+
+#~ msgid "Debug"
+#~ msgstr "デバッグ"
+
+#~ msgid "Default quality for session"
+#~ msgstr "品 質"
+
+#~ msgid "Default windows keymap for session"
+#~ msgstr "キーマップ既定値"
+
+#~ msgid "ERROR"
+#~ msgstr "エラー"
+
+#~ msgid "Enable Internal WebDAV filesystem"
+#~ msgstr "内部 WebDAV ファイルシステムを有効化"
+
+#~ msgid "External"
+#~ msgstr "外部"
+
+#~ msgid "Filter add list: "
+#~ msgstr "フィルターを追加:"
+
+#~ msgid "Forbid access"
+#~ msgstr "アクセス禁止"
+
+#~ msgid "Heading title"
+#~ msgstr "ウィンドウ タイトル"
+
+#~ msgid "High"
+#~ msgstr "高"
+
+#~ msgid "Highest"
+#~ msgstr "最高"
+
+#~ msgid "Home Directory"
+#~ msgstr "ホームディレクトリー"
+
+#~ msgid "Home Directory:"
+#~ msgstr "ホームディレクトリー"
+
+#~ msgid "Host: "
+#~ msgstr "ホスト:"
+
+#~ msgid "I want to create my own users"
+#~ msgstr "ユーザーを作成"
+
+#~ msgid "In guest mode"
+#~ msgstr "ゲストモード"
+
+#~ msgid "Internal WebDAV"
+#~ msgstr "内部 WebDAV"
+
+#~ msgid "Internal error: failed to initialize session"
+#~ msgstr "Internal error: セッションの初期化に失敗しました。"
+
+#~ msgid "Internal error: failed to suspend session"
+#~ msgstr "Internal error: セッションの中断に失敗しました。"
+
+#~ msgid "Internal error: wrong session status"
+#~ msgstr "Internal error: セッションのステータスに誤りがあります。"
+
+#~ msgid "Invitation"
+#~ msgstr "招待状"
+
+#~ msgid "Invitation sent"
+#~ msgstr "招待状を送信"
+
+#~ msgid "Invite into the session"
+#~ msgstr "このセッションに招待"
+
+#~ msgid "Join this application"
+#~ msgstr "このアプリケーションを追加"
+
+#~ msgid "Join this session"
+#~ msgstr "このセッションを追加"
+
+#~ msgid "KMA expirated"
+#~ msgstr "KMA expirated"
+
+#~ msgid "Killed by administrator"
+#~ msgstr "管理者によって切断"
+
+#~ msgid "Language"
+#~ msgstr "言語"
+
+#~ msgid "Launch an application when the desktop is starting"
+#~ msgstr "デスクトップが開始される時に、アプリケーションを起動"
+
+#~ msgid "Launch an application with extra arguments"
+#~ msgstr "引数を利用してアプリケーションを起動"
+
+#~ msgid "Launch forced application with a desktop"
+#~ msgstr "デスクトップと共にアプリケーションを起動"
+
+#~ msgid "Loading"
+#~ msgstr "読み込み中"
+
+#~ msgid "Login: "
+#~ msgstr "ログイン:"
+
+#~ msgid "Logo URL"
+#~ msgstr "ロゴのURL"
+
+#~ msgid "Medium"
+#~ msgstr "中"
+
+#~ msgid "Network File System (NFS)"
+#~ msgstr "Network File System (NFS)"
+
+#~ msgid "Never connected to SSH server"
+#~ msgstr "SSHサーバーに接続しません"
+
+#~ msgid "No available filesystem"
+#~ msgstr "利用可能なファイルシステムが存在しません。"
+
+#~ msgid "No available session"
+#~ msgstr "利用可能なセッションが存在しません。"
+
+#~ msgid "Normally ended"
+#~ msgstr "正常終了しました。"
+
+#~ msgid "Observe this application"
+#~ msgstr "このアプリケーションを監視"
+
+#~ msgid "Observe this session"
+#~ msgstr "このセッションを監視"
+
+#~ msgid "Only <strong>%d result</strong> displayed but there are more."
+#~ msgid_plural ""
+#~ "Only <strong>%d results</strong> displayed but there are more."
+#~ msgstr[0] "件数が多いため、<strong>%d 件</strong>のみ、表示しています。"
+#~ msgstr[1] "件数が多いため、<strong>%d 件</strong>のみ、表示しています。"
+
+#~ msgid "Partial content:"
+#~ msgstr "一部のコンテンツ:"
+
+#~ msgid "Password: "
+#~ msgstr "パスワード:"
+
+#~ msgid "Persistent session"
+#~ msgstr "永続的なセッション"
+
+#~ msgid "Please login with your username"
+#~ msgstr "ユーザーを選択しログインしてください。"
+
+#~ msgid "Please login with your username and password"
+#~ msgstr "ユーザー名とパスワードでログインしてください。"
+
+#~ msgid "Please restrict your search field."
+#~ msgstr "検索対象を制限してください。"
+
+#~ msgid "Plugins activation"
+#~ msgstr "プラグインの有効化"
+
+#~ msgid "Plugins configuration"
+#~ msgstr "プラグイン設定"
+
+#~ msgid "Plugins configuration not valid"
+#~ msgstr "プラグインの設定が無効です。"
+
+#~ msgid "Portal"
+#~ msgstr "ポータル"
+
+#~ msgid "Prefix: "
+#~ msgstr "プレフィックス:"
+
+#~ msgid "Proxy host"
+#~ msgstr "プロキシーホスト"
+
+#~ msgid "Proxy password"
+#~ msgstr "プロキシーパスワード"
+
+#~ msgid "Proxy port"
+#~ msgstr "プロキシーポート"
+
+#~ msgid "Proxy type"
+#~ msgstr "プロキシータイプ"
+
+#~ msgid "Proxy username"
+#~ msgstr "プロキシーユーザー名"
+
+#~ msgid "Quality"
+#~ msgstr "品質"
+
+#~ msgid "Remember proxy"
+#~ msgstr "Remember proxy"
+
+#~ msgid "Resuming"
+#~ msgstr "再開"
+
+#~ msgid "SESSION IS STARTED"
+#~ msgstr "セッションがスタートしました。"
+
+#~ msgid "SESSIONMANAGER_ADMIN_LOGIN is not defined"
+#~ msgstr "SESSIONMANAGER_ADMIN_LOGIN が、定義されていません。"
+
+#~ msgid "SESSIONMANAGER_ADMIN_PASSWORD is not defined"
+#~ msgstr "SESSIONMANAGER_ADMIN_PASSWORD が、定義されていません。"
+
+#~ msgid "SESSIONMANAGER_CONFFILE_SERIALIZED is not defined"
+#~ msgstr "SESSIONMANAGER_CONFFILE_SERIALIZED が、定義されていません。"
+
+#~ msgid "SESSIONMANAGER_CONFFILE_SERIALIZED is not writable"
+#~ msgstr "SESSIONMANAGER_CONFFILE_SERIALIZED が、書き込み不可です。"
+
+#~ msgid "SESSIONMANAGER_LOGS is not defined"
+#~ msgstr "SESSIONMANAGER_LOGS が、定義されていません。"
+
+#~ msgid "SESSIONMANAGER_LOGS is not writable"
+#~ msgstr "SESSIONMANAGER_LOGS が、書き込み不可です。"
+
+#~ msgid "SESSIONMANAGER_SPOOL is not defined"
+#~ msgstr "SESSIONMANAGER_SPOOL が、定義されていません。"
+
+#~ msgid "SESSIONMANAGER_SPOOL is not writable"
+#~ msgstr "SESSIONMANAGER_SPOOL が、書き込み不可です。"
+
+#~ msgid "SSH/ping applet test"
+#~ msgstr "SSH/ping アプレットテスト"
+
+#~ msgid "Session mode"
+#~ msgstr "セッションモード"
+
+#~ msgid "Session owner can share his session"
+#~ msgstr "セッション所有者はセッションを共有可能"
+
+#~ msgid "Session timeout message"
+#~ msgstr "タイムアウト時のメッセージ"
+
+#~ msgid ""
+#~ "Set this to Yes when you use LDAP profile to connect to an "
+#~ "ActiveDirectory environment instead of using the ActiveDirectory profile"
+#~ msgstr ""
+#~ "ActiveDirectory のプロファイルを利用する代わりに、LDAPのプロファイルを利用"
+#~ "する場合は、Yes を選択"
+
+#~ msgid "Shareable session"
+#~ msgstr "共有可能なセッション"
+
+#~ msgid "SharedFolder successfully added"
+#~ msgstr "共有フォルダーを追加しました。"
+
+#~ msgid "Shutdown of the Application Server"
+#~ msgstr "アプリケーションサーバーのシャットダウン"
+
+#~ msgid "Size"
+#~ msgstr "サイズ"
+
+#~ msgid "Suspended"
+#~ msgstr "サスペンド"
+
+#~ msgid "Suspending"
+#~ msgstr "サスペンド中"
+
+#~ msgid "The service is not available, please try again later"
+#~ msgstr "サービスは利用できません。時間を置いてから再度接続してください。"
+
+#~ msgid "Timeout"
+#~ msgstr "タイムアウト"
+
+#~ msgid "To create"
+#~ msgstr "To create"
+
+#~ msgid "To start"
+#~ msgstr "To start"
+
+#~ msgid "Uid"
+#~ msgstr "Uid"
+
+#~ msgid "Use Active Directory Home dir"
+#~ msgstr "ActiveDirectory の Home dir を利用"
+
+#~ msgid "Use Active Directory User profiles as Home directory"
+#~ msgstr "Home directory として、ActiveDirectory の User profiles を利用"
+
+#~ msgid "Use CIFS link using the LDAP field"
+#~ msgstr "LDAPフィールドを使って、CIFSを利用"
+
+#~ msgid "Use CIFS link using the LDAP field:"
+#~ msgstr "LDAPフィールドを使って、CIFSを利用"
+
+#~ msgid "Use Internal home directory (no server replication)"
+#~ msgstr "ホームディレクトリを利用"
+
+#~ msgid "Use a static user list (useful for test)"
+#~ msgstr "テスト用ユーザリストを利用"
+
+#~ msgid "Use as Active Directory server:"
+#~ msgstr "ADサーバーを利用:"
+
+#~ msgid "Use as an Active Directory server?"
+#~ msgstr "ADサーバを利用しますか？"
+
+#~ msgid "Use load balancing"
+#~ msgstr "ロードバランスを使う"
+
+#~ msgid "Use pop-up"
+#~ msgstr "ポップアップを使用"
+
+#~ msgid "Use the static user list"
+#~ msgstr "テスト用ユーザーを利用"
+
+#~ msgid "User: "
+#~ msgstr "ユーザー: "
+
+#~ msgid "Using global login/password to authenticate"
+#~ msgstr "Using global login/password to authenticate"
+
+#~ msgid "Using user login/password to authenticate"
+#~ msgstr "Using user login/password to authenticate"
+
+#~ msgid "WARNING, START ANYWAY"
+#~ msgstr "WARNING, START ANYWAY"
+
+#~ msgid "Web log"
+#~ msgstr "Web log"
+
+#~ msgid "Web port of this server"
+#~ msgstr "このサーバーのポート番号"
+
+#~ msgid ""
+#~ "When set to yes, the session will start in a new browser window, and when "
+#~ "set to no, the session will start in the current browser window"
+#~ msgstr ""
+#~ "”はい”を選択した場合、セッションは新規ウィンドウで開始されます。”いいえ”を"
+#~ "選択した場合、現在利用しているウインドウで開始されます。"
+
+#~ msgid "Windows server:"
+#~ msgstr "Windows サーバー:"
+
+#~ msgid "YOU ALREADY HAVE AN ACTIVE SESSION"
+#~ msgstr "あなたは、既に接続中です。"
+
+#~ msgid "You already have an active session"
+#~ msgstr "あなたは、既に接続中です。"
+
+#~ msgid "You are authenticated as %s"
+#~ msgstr "あなたは、%s として、認証されています。"
+
+#~ msgid ""
+#~ "You are not using Internal WebDAV filesystem, \"Shared folders\" are "
+#~ "disabled!"
+#~ msgstr ""
+#~ "Internal の WebDAV ファイルシステムが利用できません。\"Shared folders\"  "
+#~ "は、利用できません。"
+
+#~ msgid "You are now logged in"
+#~ msgstr "ログインしています。"
+
+#~ msgid "You can customize the heading title here."
+#~ msgstr "タイトルヘッダを変更できます。"
+
+#~ msgid ""
+#~ "You can customize the logo by entering a new path or replacing the "
+#~ "corresponding image. Use a 90 pixels high image in png or jpeg format. "
+#~ "Example: sessionmanager/media/image/header.png"
+#~ msgstr ""
+#~ "ロゴをカスタマイズできます。高解像度 90 ピクセル (png または jpeg) 例: "
+#~ "sessionmanager/media/image/header.png"
+
+#~ msgid "You don't have access to a linux server for now"
+#~ msgstr "ただいま、Linuxサーバーに接続できません。"
+
+#~ msgid "You don't have access to a windows server for now"
+#~ msgstr "ただいま、Windowsサーバーに接続できません。"
+
+#~ msgid "You must define a name to your application group"
+#~ msgstr "アプリグループ名を定義する必要があります。"
+
+#~ msgid "You must give a command to your application"
+#~ msgstr "コマンドを設定する必要があります。"
+
+#~ msgid "You must give a name to your application"
+#~ msgstr "アプリケーション名を設定する必要があります。"
+
+#~ msgid "You must give a package name."
+#~ msgstr "パッケージ名が必要です。"
+
+#~ msgid "You received an invitation from"
+#~ msgstr "招待メールの From アドレス"
+
+#~ msgid "application"
+#~ msgstr "アプリケーション"
+
+#~ msgid "desktop icons"
+#~ msgstr "デスクトップアイコン"
+
+#~ msgid "does not send a valid monitoring"
+#~ msgstr "does not send a valid monitoring"
+
+#~ msgid "does not send a valid type"
+#~ msgstr "does not send a valid type"
+
+#~ msgid "does not send a valid version"
+#~ msgstr "does not send a valid version"
+
+#~ msgid "fake"
+#~ msgstr "疑似"
+
+#~ msgid "password"
+#~ msgstr "パスワード"
+
+#~ msgid "persistent"
+#~ msgstr "永続的"
+
+#~ msgid "please click on the link below to join the online session"
+#~ msgstr ""
+#~ "オンラインのセッションに参加するために以下のリンクをクリックしてください。"
+
+#~ msgid "popup"
+#~ msgstr "ポップアップ"
+
+#~ msgid "prefs is not valid for FS plugin"
+#~ msgstr "prefs is not valid for FS plugin"
+
+#~ msgid "prefs is not valid for plugin"
+#~ msgstr "プラグインの初期値が無効です。"
+
+#~ msgid "quality"
+#~ msgstr "品質"
+
+#~ msgid "shareable"
+#~ msgstr "共有可能"
+
+#~ msgid "size"
+#~ msgstr "サイズ"
+
+#~ msgid "windows keymap"
+#~ msgstr "windows キーマップ"
+
+#~ msgid "No error"
+#~ msgstr "エラーはありません。"
+
+#~ msgid "Others"
+#~ msgstr "その他"

@@ -1,0 +1,4637 @@
+# Russian translations for uovdsm package.
+# Copyright (C) 2010 Ulteo SAS
+# This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
+# Automatically generated, 2010.
+# Author: Alexander Haidukov <ahaidukov@gmail.com>, 2010.
+# Author: Vitalyi Goreslavets <admin@gorets.pp.ua>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: uovdsm\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-10-29 10:39+0200\n"
+"PO-Revision-Date: 2010-06-24 09:00+0100\n"
+"Last-Translator: Vitalyi Goreslavets <admin@gorets.pp.ua>\n"
+"Language-Team: Russian\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-Language: Russian\n"
+"X-Poedit-Country: RUSSIAN FEDERATION\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: ../../SessionManager/web/admin/actions.php:83
+#, fuzzy, php-format
+msgid "Task to add application '%s' on server '%s' successfully added"
+msgstr "Приложение '%s' успешно удалено"
+
+#: ../../SessionManager/web/admin/actions.php:89
+#, fuzzy, php-format
+msgid "Task to remove application '%s' from server '%s' successfully added"
+msgstr "Группа приложений '%s' успешно модифицирована"
+
+#: ../../SessionManager/web/admin/actions.php:95
+#, fuzzy, php-format
+msgid "Application '%s' successfully added to server '%s'"
+msgstr "Приложение '%s' успешно удалено"
+
+#: ../../SessionManager/web/admin/actions.php:99
+#, fuzzy, php-format
+msgid "Application '%s' successfully deleted from server '%s'"
+msgstr "Приложение '%s' успешно удалено"
+
+#: ../../SessionManager/web/admin/actions.php:134
+#: ../../SessionManager/web/admin/actions.php:179
+msgid "ApplicationDB is not writeable"
+msgstr "Нет прав на запись в ApplicationDB"
+
+#: ../../SessionManager/web/admin/actions.php:141
+#: ../../SessionManager/web/admin/actions.php:146
+#: ../../SessionManager/web/admin/actions.php:224
+#, fuzzy, php-format
+msgid "Failed to delete application '%s'"
+msgstr "Невозможно удалить публикацию"
+
+#: ../../SessionManager/web/admin/actions.php:149
+#: ../../SessionManager/web/admin/actions.php:229
+#, php-format
+msgid "Application '%s' successfully deleted"
+msgstr "Приложение '%s' успешно удалено"
+
+#: ../../SessionManager/web/admin/actions.php:158
+#, fuzzy, php-format
+msgid "Unable to import application %s"
+msgstr "Не удалось сохранить публикацию"
+
+#: ../../SessionManager/web/admin/actions.php:165
+#, fuzzy, php-format
+msgid "Unable to modify store application '%s'"
+msgstr "Невозможно удалить публикацию"
+
+#: ../../SessionManager/web/admin/actions.php:168
+#: ../../SessionManager/web/admin/actions.php:278
+#, fuzzy, php-format
+msgid "Application '%s' successfully modified"
+msgstr "Группа приложений '%s' успешно модифицирована"
+
+#: ../../SessionManager/web/admin/actions.php:199
+#, fuzzy
+msgid "Application is not ok"
+msgstr "Приложения"
+
+#: ../../SessionManager/web/admin/actions.php:206
+#, fuzzy, php-format
+msgid "Failed to add application '%s'"
+msgstr "доступные приложения"
+
+#: ../../SessionManager/web/admin/actions.php:209
+#, fuzzy, php-format
+msgid "Application '%s' successfully added"
+msgstr "Приложение '%s' успешно удалено"
+
+#: ../../SessionManager/web/admin/actions.php:219
+#: ../../SessionManager/web/admin/actions.php:261
+#, fuzzy, php-format
+msgid "Unable to import application '%s'"
+msgstr "Не удалось сохранить публикацию"
+
+#: ../../SessionManager/web/admin/actions.php:240
+#, fuzzy, php-format
+msgid "Application '%s' icon successfully deleted"
+msgstr "Приложение '%s' успешно удалено"
+
+#: ../../SessionManager/web/admin/actions.php:273
+#, fuzzy, php-format
+msgid "Failed to modify application '%s'"
+msgstr "Сохранить инменения"
+
+#: ../../SessionManager/web/admin/actions.php:345
+#: ../../SessionManager/web/admin/actions.php:355
+#, php-format
+msgid "ApplicationGroup '%s' successfully modified"
+msgstr "Группа приложений '%s' успешно модифицирована"
+
+#: ../../SessionManager/web/admin/actions.php:366
+#, fuzzy
+msgid "Application Group Database not writeable"
+msgstr "Нет прав на запись в ApplicationDB"
+
+#: ../../SessionManager/web/admin/actions.php:377
+#, fuzzy, php-format
+msgid "Unable to create applications group '%s'"
+msgstr "Невозможно создать группу"
+
+#: ../../SessionManager/web/admin/actions.php:379
+#, fuzzy, php-format
+msgid "Applications group '%s' successfully added"
+msgstr "Группа приложений '%s' успешно модифицирована"
+
+#: ../../SessionManager/web/admin/actions.php:391
+#: ../../SessionManager/web/admin/actions.php:410
+#, fuzzy, php-format
+msgid "Import of applications group '%s' failed"
+msgstr "Нет доступных групп приложений"
+
+#: ../../SessionManager/web/admin/actions.php:396
+#, fuzzy, php-format
+msgid "Unable to remove applications group '%s'"
+msgstr "группы приложений"
+
+#: ../../SessionManager/web/admin/actions.php:399
+#, fuzzy, php-format
+msgid "Applications group '%s' successfully deleted"
+msgstr "Приложение '%s' успешно удалено"
+
+#: ../../SessionManager/web/admin/actions.php:431
+#, fuzzy, php-format
+msgid "Unable to modify applications group '%s'"
+msgstr "группа приложений"
+
+#: ../../SessionManager/web/admin/actions.php:433
+#, fuzzy, php-format
+msgid "Applications group '%s' successfully modified"
+msgstr "Группа приложений '%s' успешно модифицирована"
+
+#. problem, what to do ?
+#: ../../SessionManager/web/admin/actions.php:450
+#: ../../SessionManager/web/admin/actions.php:454
+#: ../../SessionManager/web/admin/actions.php:465
+#: ../../SessionManager/web/admin/actions.php:469
+#: ../../SessionManager/web/admin/actions.php:740
+#, php-format
+msgid "UsersGroup '%s' successfully modified"
+msgstr "Группа '%s' успешно изменена"
+
+#: ../../SessionManager/web/admin/actions.php:487
+msgid "Publication successfully added"
+msgstr "Публикация успешно добавлена"
+
+#: ../../SessionManager/web/admin/actions.php:489
+msgid "Unable to save the publication"
+msgstr "Не удалось сохранить публикацию"
+
+#: ../../SessionManager/web/admin/actions.php:492
+msgid "This publication already exists"
+msgstr "Публикация уже существует"
+
+#: ../../SessionManager/web/admin/actions.php:500
+msgid "Publication successfully deleted"
+msgstr "Публикация успешно удалена"
+
+#: ../../SessionManager/web/admin/actions.php:502
+msgid "Unable to delete the publication"
+msgstr "Невозможно удалить публикацию"
+
+#: ../../SessionManager/web/admin/actions.php:505
+msgid "This publication does not exist"
+msgstr "Публикация не существует"
+
+#: ../../SessionManager/web/admin/actions.php:519
+msgid "You must define a name to your usergroup"
+msgstr "Необходимо задать имя группы пользователей"
+
+#: ../../SessionManager/web/admin/actions.php:525
+#: ../../SessionManager/web/admin/actions.php:575
+#: ../../SessionManager/web/admin/actions.php:593
+msgid "User Group Database not writeable"
+msgstr ""
+
+#: ../../SessionManager/web/admin/actions.php:533
+#: ../../SessionManager/web/admin/actions.php:684
+msgid "You must give a value to each rule of your usergroup"
+msgstr ""
+"Необходимо задать значения для каждого правила в пользовательской группе"
+
+#: ../../SessionManager/web/admin/actions.php:551
+#, fuzzy
+msgid "Unknow usergroup type"
+msgstr "Не задана группа пользователей"
+
+#: ../../SessionManager/web/admin/actions.php:556
+#, fuzzy
+msgid "Unable to create user group"
+msgstr "Невозможно создать группу"
+
+#: ../../SessionManager/web/admin/actions.php:559
+msgid "UserGroup successfully added"
+msgstr "Группа успешно добавлена"
+
+#: ../../SessionManager/web/admin/actions.php:569
+#: ../../SessionManager/web/admin/actions.php:598
+#: ../../SessionManager/web/admin/actions.php:677
+#: ../../SessionManager/web/admin/actions.php:751
+#, fuzzy, php-format
+msgid "Failed to import Usergroup '%s'"
+msgstr "Сбой загрузки группы пользователей"
+
+#: ../../SessionManager/web/admin/actions.php:580
+#, fuzzy, php-format
+msgid "Unable to remove usergroup '%s'"
+msgstr "Сбой загрузки группы пользователей"
+
+#: ../../SessionManager/web/admin/actions.php:583
+#, fuzzy, php-format
+msgid "UserGroup '%s' successfully deleted"
+msgstr "Группа успешно удалена"
+
+#: ../../SessionManager/web/admin/actions.php:628
+#: ../../SessionManager/web/admin/actions.php:701
+#, fuzzy, php-format
+msgid "Unable to update Usergroup '%s'"
+msgstr "таблица групп пользователей"
+
+#: ../../SessionManager/web/admin/actions.php:632
+#: ../../SessionManager/web/admin/actions.php:666
+#, fuzzy, php-format
+msgid "UserGroup '%s' successfully modified"
+msgstr "Группа '%s' успешно изменена"
+
+#: ../../SessionManager/web/admin/actions.php:639
+msgid "Not enough rights"
+msgstr ""
+
+#: ../../SessionManager/web/admin/actions.php:656
+#, fuzzy, php-format
+msgid "Failed to import group '%s'"
+msgstr "Сбой загрузки группы пользователей"
+
+#: ../../SessionManager/web/admin/actions.php:663
+#, fuzzy
+msgid "Unable to save prefs"
+msgstr "Таблица пользователей"
+
+#: ../../SessionManager/web/admin/actions.php:703
+#, php-format
+msgid "Rules of '%s' successfully modified"
+msgstr "Правило '%s' успешно изменено"
+
+#: ../../SessionManager/web/admin/actions.php:806
+#, fuzzy
+msgid "Usergroup successfully modified"
+msgstr "Группа успешно изменена"
+
+#: ../../SessionManager/web/admin/actions.php:809
+#, fuzzy
+msgid "Failed to modify usergroup"
+msgstr "Сбой загрузки группы пользователей"
+
+#: ../../SessionManager/web/admin/actions.php:820
+#, fuzzy
+msgid "User Database not writeable"
+msgstr "Внутренняя база данных пользователей"
+
+#: ../../SessionManager/web/admin/actions.php:826
+#, fuzzy
+msgid "Unable to create user"
+msgstr "Не возможно удалить новость"
+
+#: ../../SessionManager/web/admin/actions.php:836
+#, fuzzy
+msgid "Unable to create user with an empty password"
+msgstr "Ошибка открытия доступа к папке"
+
+#: ../../SessionManager/web/admin/actions.php:842
+#, fuzzy, php-format
+msgid "Unable to create user '%s'"
+msgstr "Не возможно удалить новость"
+
+#: ../../SessionManager/web/admin/actions.php:846
+#, fuzzy, php-format
+msgid "User '%s' successfully added"
+msgstr "Пользователь успешно добавлен"
+
+#: ../../SessionManager/web/admin/actions.php:856
+#, fuzzy, php-format
+msgid "Unable to delete user '%s' because he have an active session"
+msgstr "Невозможно удалить сервер. Необходимо остановить все активные сеансы!"
+
+#: ../../SessionManager/web/admin/actions.php:861
+#: ../../SessionManager/web/admin/actions.php:872
+#, fuzzy, php-format
+msgid "Unable to delete user '%s'"
+msgstr "Не возможно удалить новость"
+
+#: ../../SessionManager/web/admin/actions.php:875
+#, fuzzy, php-format
+msgid "User '%s' successfully deleted"
+msgstr "Пользователь успешно удалён"
+
+#: ../../SessionManager/web/admin/actions.php:888
+#, fuzzy, php-format
+msgid "Unable to import user '%s'"
+msgstr "Таблица пользователей"
+
+#: ../../SessionManager/web/admin/actions.php:898
+#, fuzzy, php-format
+msgid "Unable to modify user '%s'"
+msgstr "Таблица пользователей"
+
+#: ../../SessionManager/web/admin/actions.php:900
+#, fuzzy, php-format
+msgid "User '%s' successfully modified"
+msgstr "Пользователь успешно изменён"
+
+#: ../../SessionManager/web/admin/actions.php:908
+msgid "No custom password given at populate."
+msgstr ""
+
+#: ../../SessionManager/web/admin/actions.php:919
+msgid "User database populated."
+msgstr ""
+
+#: ../../SessionManager/web/admin/actions.php:922
+msgid "User database population failed."
+msgstr ""
+
+#: ../../SessionManager/web/admin/actions.php:939
+#: ../../SessionManager/web/modules/ApplicationDB.php:32
+msgid "Module ApplicationDB must be enabled"
+msgstr "Модуль ApplicationDB должен быть включен"
+
+#: ../../SessionManager/web/admin/actions.php:980
+msgid "SharedFolder successfully renamed"
+msgstr "Папка успешно переименована"
+
+#: ../../SessionManager/web/admin/actions.php:982
+msgid "A shared folder with that name already exists!"
+msgstr "Папка с таким именем уже существует!"
+
+#: ../../SessionManager/web/admin/actions.php:995
+#: ../../SessionManager/web/admin/actions.php:1000
+#: ../../SessionManager/web/admin/actions.php:1402
+#: ../../SessionManager/web/admin/actions.php:1423
+msgid "SharedFolder successfully modified"
+msgstr "Общая папка успешно изменена"
+
+#: ../../SessionManager/web/admin/actions.php:1016
+#, fuzzy, php-format
+msgid "Unable to delete network folder '%s'"
+msgstr "Не возможно удалить эту общую папку"
+
+#: ../../SessionManager/web/admin/actions.php:1018
+#, fuzzy, php-format
+msgid "Network folder '%s' successfully deleted"
+msgstr "Сервер '%s' успешно удален"
+
+#: ../../SessionManager/web/admin/actions.php:1030
+msgid "Untitled"
+msgstr "Без названия"
+
+#: ../../SessionManager/web/admin/actions.php:1035
+msgid "News successfully added"
+msgstr "Новость успешно добавлена"
+
+#: ../../SessionManager/web/admin/actions.php:1042
+msgid "Unable to delete this news"
+msgstr "Не возможно удалить новость"
+
+#: ../../SessionManager/web/admin/actions.php:1044
+msgid "News successfully deleted"
+msgstr "Новость успешна удалена"
+
+#: ../../SessionManager/web/admin/actions.php:1054
+msgid "Password is empty"
+msgstr "Поле Пароль пустое"
+
+#: ../../SessionManager/web/admin/actions.php:1057
+msgid "Passwords are not identical"
+msgstr "Палоли не совпадают"
+
+#: ../../SessionManager/web/admin/actions.php:1062
+msgid "Password successfully changed"
+msgstr "Пароль успешно изменен"
+
+#: ../../SessionManager/web/admin/actions.php:1066
+msgid "Password not changed"
+msgstr "Пароль не изменен"
+
+#: ../../SessionManager/web/admin/actions.php:1085
+#, fuzzy, php-format
+msgid "Unable to delete session '%s'"
+msgstr "Не возможно удалить новость"
+
+#: ../../SessionManager/web/admin/actions.php:1089
+#, fuzzy, php-format
+msgid "Session '%s' successfully deleted"
+msgstr "Сервер '%s' успешно удален"
+
+#: ../../SessionManager/web/admin/actions.php:1107
+#, fuzzy, php-format
+msgid ""
+"Unable to delete the server '%s' because there are active sessions on it."
+msgstr "Невозможно удалить сервер. Необходимо остановить все активные сеансы!"
+
+#: ../../SessionManager/web/admin/actions.php:1115
+#, php-format
+msgid "Server '%s' successfully deleted"
+msgstr "Сервер '%s' успешно удален"
+
+#: ../../SessionManager/web/admin/actions.php:1133
+#, php-format
+msgid "Server '%s' successfully registered"
+msgstr "Сервер '%s' успешно зарегистрирован"
+
+#: ../../SessionManager/web/admin/actions.php:1136
+#, fuzzy, php-format
+msgid "Failed to register Server '%s'"
+msgstr "Автоматически регистрировать новые серверы"
+
+#: ../../SessionManager/web/admin/actions.php:1158
+#: ../../SessionManager/web/admin/actions.php:1169
+#: ../../SessionManager/web/admin/actions.php:1180
+#, php-format
+msgid "Server '%s' successfully modified"
+msgstr "Сервер '%s' успешно модифицирован"
+
+#: ../../SessionManager/web/admin/actions.php:1193
+#: ../../SessionManager/web/admin/actions.php:1246
+#: ../../SessionManager/web/admin/actions.php:1269
+msgid "Task successfully added"
+msgstr "Задание успешно добавлено"
+
+#: ../../SessionManager/web/admin/actions.php:1206
+#, fuzzy, php-format
+msgid "Server '%s' is upgrading"
+msgstr "Обновление сервера"
+
+#: ../../SessionManager/web/admin/actions.php:1240
+#: ../../SessionManager/web/admin/actions.php:1301
+msgid "Task successfully deleted"
+msgstr "Задание успешно удалено"
+
+#: ../../SessionManager/web/admin/actions.php:1312
+msgid "You must give a name to your shared folder"
+msgstr "необходимо задать имя для общей папки"
+
+#: ../../SessionManager/web/admin/actions.php:1318
+msgid "A shared folder with this name already exists"
+msgstr "Общая папка с таким именем уже существует"
+
+#: ../../SessionManager/web/admin/actions.php:1334
+#, fuzzy
+msgid "No server avalaible for sharedFolder"
+msgstr "Нет доступных серверов"
+
+#: ../../SessionManager/web/admin/actions.php:1342
+#, fuzzy
+msgid "Unable to add shared folder"
+msgstr "Не возможно удалить эту общую папку"
+
+#: ../../SessionManager/web/admin/actions.php:1348
+#, fuzzy, php-format
+msgid "Unable to create shared folder on file server '%s'"
+msgstr "Ошибка открытия доступа к папке"
+
+#: ../../SessionManager/web/admin/actions.php:1353
+#, php-format
+msgid "SharedFolder '%s' successfully added"
+msgstr "Общая папка '%s' успешно добавлена"
+
+#: ../../SessionManager/web/admin/actions.php:1360
+#: ../../SessionManager/web/admin/actions.php:1378
+msgid "Unable to delete this shared folder"
+msgstr "Не возможно удалить эту общую папку"
+
+#: ../../SessionManager/web/admin/actions.php:1366
+#: ../../SessionManager/web/admin/actions.php:1372
+#, fuzzy, php-format
+msgid "Unable to delete shared folder on file server '%s'"
+msgstr "Невозможно удалить общий доступ к папке"
+
+#: ../../SessionManager/web/admin/actions.php:1382
+msgid "SharedFolder successfully deleted"
+msgstr "Общая папка успешно удалена"
+
+#: ../../SessionManager/web/admin/actions.php:1389
+msgid "Unable to create this shared folder access"
+msgstr "Ошибка открытия доступа к папке"
+
+#: ../../SessionManager/web/admin/actions.php:1396
+#: ../../SessionManager/web/admin/actions.php:1417
+#, fuzzy
+msgid "Unable to load usergroup"
+msgstr "Сбой загрузки группы пользователей"
+
+#: ../../SessionManager/web/admin/actions.php:1410
+msgid "Unable to delete this shared folder access"
+msgstr "Невозможно удалить общий доступ к папке"
+
+#. general div
+#: ../../SessionManager/web/admin/applications.php:54
+#: ../../SessionManager/web/admin/includes/page_template.php:56
+#: ../../SessionManager/web/admin/includes/page_template.php:116
+#: ../../SessionManager/web/admin/sessions.php:66
+#: ../../SessionManager/web/admin/sumup.php:195
+#: ../../SessionManager/web/classes/Preferences.class.php:334
+msgid "Applications"
+msgstr "Приложения"
+
+#: ../../SessionManager/web/admin/applications.php:58
+#: ../../SessionManager/web/admin/applications_static.php:65
+#: ../../SessionManager/web/admin/wizard.php:159
+#: ../../SessionManager/web/admin/wizard.php:309
+msgid "No available application"
+msgstr "Нет доступных приложений"
+
+#. if ($is_rw)
+#. echo '<th class="unsortable"></th>';
+#: ../../SessionManager/web/admin/applications.php:66
+#: ../../SessionManager/web/admin/applications_static.php:74
+#: ../../SessionManager/web/admin/appsgroup.php:57
+#: ../../SessionManager/web/admin/appsgroup.php:119
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:76
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:514
+#: ../../SessionManager/web/admin/sharedfolders.php:118
+#: ../../SessionManager/web/admin/usersgroup.php:95
+#: ../../SessionManager/web/admin/usersgroup.php:206
+#: ../../SessionManager/web/admin/usersgroup.php:778
+#: ../../SessionManager/web/admin/wizard.php:261
+#: ../../SessionManager/web/admin/wizard.php:411
+msgid "Name"
+msgstr "Название"
+
+#. echo '<th>'._('Status').'</th>';
+#: ../../SessionManager/web/admin/applications.php:67
+#: ../../SessionManager/web/admin/applications.php:244
+#: ../../SessionManager/web/admin/applications_static.php:75
+#: ../../SessionManager/web/admin/applications_static.php:337
+#: ../../SessionManager/web/admin/appsgroup.php:58
+#: ../../SessionManager/web/admin/appsgroup.php:124
+#: ../../SessionManager/web/admin/appsgroup.php:211
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:80
+#: ../../SessionManager/web/admin/usersgroup.php:96
+#: ../../SessionManager/web/admin/usersgroup.php:211
+#: ../../SessionManager/web/admin/usersgroup.php:398
+#: ../../SessionManager/web/admin/wizard.php:266
+#: ../../SessionManager/web/admin/wizard.php:416
+msgid "Description"
+msgstr "Общая информация"
+
+#. echo '<th>'._('Package').'</th>';
+#: ../../SessionManager/web/admin/applications.php:68
+#: ../../SessionManager/web/admin/applications.php:242
+#: ../../SessionManager/web/admin/applications.php:351
+#: ../../SessionManager/web/admin/applications_static.php:76
+#: ../../SessionManager/web/admin/applications_static.php:336
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:379
+#: ../../SessionManager/web/admin/servers.php:75
+#: ../../SessionManager/web/admin/servers.php:233
+#: ../../SessionManager/web/admin/servers.php:394
+#: ../../SessionManager/web/admin/sumup.php:193
+#: ../../SessionManager/web/admin/tasks.php:68
+#: ../../SessionManager/web/admin/tasks.php:142
+#: ../../SessionManager/web/admin/usersgroup.php:98
+msgid "Type"
+msgstr "Тип"
+
+#: ../../SessionManager/web/admin/applications.php:97
+#: ../../SessionManager/web/admin/applications_static.php:105
+#: ../../SessionManager/web/admin/appsgroup.php:78
+#: ../../SessionManager/web/admin/servers.php:152
+#: ../../SessionManager/web/admin/usersgroup.php:124
+#: ../../SessionManager/web/admin/users.php:89
+msgid "Manage"
+msgstr "Настроить"
+
+#: ../../SessionManager/web/admin/applications.php:158
+msgid "Available"
+msgstr "Доступен"
+
+#: ../../SessionManager/web/admin/applications.php:159
+#: ../../SessionManager/web/admin/appsgroup.php:157
+#: ../../SessionManager/web/admin/usersgroup.php:312
+msgid "Block"
+msgstr "Заблокировать"
+
+#: ../../SessionManager/web/admin/applications.php:162
+#: ../../SessionManager/web/admin/appsgroup.php:68
+#: ../../SessionManager/web/admin/appsgroup.php:161
+#: ../../SessionManager/web/admin/usersgroup.php:107
+#: ../../SessionManager/web/admin/usersgroup.php:316
+msgid "Blocked"
+msgstr "Заблокировано"
+
+#: ../../SessionManager/web/admin/applications.php:163
+msgid "Unblock"
+msgstr "Разблокировать"
+
+#: ../../SessionManager/web/admin/applications.php:241
+msgid "Package"
+msgstr "Пакет"
+
+#: ../../SessionManager/web/admin/applications.php:245
+msgid "Executable"
+msgstr "Команда"
+
+#: ../../SessionManager/web/admin/applications.php:260
+msgid "Are you sure you want to remove this application?"
+msgstr "Вы действительно хотите удалить это приложение?"
+
+#: ../../SessionManager/web/admin/applications.php:264
+msgid "This application is orphan"
+msgstr "Это единственное приложение"
+
+#: ../../SessionManager/web/admin/applications.php:264
+msgid "Remove this application"
+msgstr "Удалить это приложение"
+
+#: ../../SessionManager/web/admin/applications.php:295
+#: ../../SessionManager/web/admin/applications_static.php:456
+msgid "Servers with this application"
+msgstr "Серверы на которых установлено это приложение"
+
+#: ../../SessionManager/web/admin/applications.php:308
+#: ../../SessionManager/web/admin/applications_static.php:464
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:303
+msgid "Are you sure you want to remove this application from this server?"
+msgstr "Вы действительно хотите удалить это приложение с этого сервера?"
+
+#: ../../SessionManager/web/admin/applications.php:313
+#: ../../SessionManager/web/admin/applications_static.php:469
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:308
+msgid "Remove from this server"
+msgstr "Удалить с сервера"
+
+#: ../../SessionManager/web/admin/applications.php:338
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:344
+msgid "Install on this server"
+msgstr "Установить на этом сервере"
+
+#: ../../SessionManager/web/admin/applications.php:347
+msgid "Active tasks on this application"
+msgstr "Активные задания для этого приложения"
+
+#: ../../SessionManager/web/admin/applications.php:350
+#: ../../SessionManager/web/admin/ha/status.php:186
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:378
+#: ../../SessionManager/web/admin/tasks.php:140
+msgid "ID"
+msgstr "ID"
+
+#. echo '<th>'._('Version').'</th>';
+#: ../../SessionManager/web/admin/applications.php:352
+#: ../../SessionManager/web/admin/appsgroup.php:59
+#: ../../SessionManager/web/admin/appsgroup.php:212
+#: ../../SessionManager/web/admin/ha/menu.inc.php:30
+#: ../../SessionManager/web/admin/includes/page_template.php:68
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:380
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:516
+#: ../../SessionManager/web/admin/index.php:158
+#: ../../SessionManager/web/admin/servers.php:78
+#: ../../SessionManager/web/admin/servers.php:394
+#: ../../SessionManager/web/admin/sessions.php:160
+#: ../../SessionManager/web/admin/sessions.php:205
+#: ../../SessionManager/web/admin/sumup.php:196
+#: ../../SessionManager/web/admin/tasks.php:70
+#: ../../SessionManager/web/admin/tasks.php:144
+#: ../../SessionManager/web/admin/usersgroup.php:97
+#: ../../SessionManager/web/admin/usersgroup.php:399
+msgid "Status"
+msgstr "Состояние"
+
+#. echo '<th>'._('Version').'</th>';
+#: ../../SessionManager/web/admin/applications.php:353
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:381
+#: ../../SessionManager/web/admin/servers.php:78
+#: ../../SessionManager/web/admin/servers.php:236
+#: ../../SessionManager/web/admin/servers.php:395
+#: ../../SessionManager/web/admin/tasks.php:71
+#: ../../SessionManager/web/admin/tasks.php:145
+msgid "Details"
+msgstr "Подробности"
+
+#: ../../SessionManager/web/admin/applications.php:360
+#: ../../SessionManager/web/admin/configuration-profile.php:235
+#: ../../SessionManager/web/admin/ha/status.php:256
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:388
+#: ../../SessionManager/web/admin/tasks.php:80
+#: ../../SessionManager/web/admin/tasks.php:155
+#: ../../SessionManager/web/classes/Session.class.php:217
+msgid "Error"
+msgstr "Ошибка"
+
+#: ../../SessionManager/web/admin/applications.php:378
+#: ../../SessionManager/web/admin/applications_static.php:496
+msgid "Groups with this application"
+msgstr "Группы с этим приложением"
+
+#: ../../SessionManager/web/admin/applications.php:386
+#: ../../SessionManager/web/admin/applications_static.php:503
+msgid "Are you sure you want to delete this application from this group?"
+msgstr "Вы действительно хотите удалить это приложение из группы?"
+
+#: ../../SessionManager/web/admin/applications.php:391
+#: ../../SessionManager/web/admin/applications_static.php:508
+#: ../../SessionManager/web/admin/appsgroup.php:279
+#: ../../SessionManager/web/admin/usersgroup.php:594
+#: ../../SessionManager/web/admin/users.php:337
+msgid "Delete from this group"
+msgstr "Удалить из группы"
+
+#: ../../SessionManager/web/admin/applications.php:407
+#: ../../SessionManager/web/admin/applications_static.php:523
+#: ../../SessionManager/web/admin/appsgroup.php:296
+#: ../../SessionManager/web/admin/usersgroup.php:611
+#: ../../SessionManager/web/admin/users.php:352
+msgid "Add to this group"
+msgstr "Добавить в группу"
+
+#: ../../SessionManager/web/admin/applications_static.php:27
+msgid "Web"
+msgstr "Веб"
+
+#. general div
+#: ../../SessionManager/web/admin/applications_static.php:61
+msgid "Static Applications"
+msgstr "Статические приложения"
+
+#: ../../SessionManager/web/admin/applications_static.php:111
+#: ../../SessionManager/web/admin/applications_static.php:362
+#: ../../SessionManager/web/admin/appsgroup.php:274
+msgid "Are you sure you want to delete this application?"
+msgstr "Вы действительно хотите удалить это приложение?"
+
+#: ../../SessionManager/web/admin/applications_static.php:115
+#: ../../SessionManager/web/admin/applications_static.php:134
+#: ../../SessionManager/web/admin/applications_static.php:366
+#: ../../SessionManager/web/admin/appsgroup.php:85
+#: ../../SessionManager/web/admin/appsgroup.php:101
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:560
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:577
+#: ../../SessionManager/web/admin/publications.php:104
+#: ../../SessionManager/web/admin/servers.php:288
+#: ../../SessionManager/web/admin/servers.php:316
+#: ../../SessionManager/web/admin/servers.php:484
+#: ../../SessionManager/web/admin/tasks.php:97
+#: ../../SessionManager/web/admin/tasks.php:172
+#: ../../SessionManager/web/admin/usersgroup.php:132
+#: ../../SessionManager/web/admin/usersgroup.php:151
+#: ../../SessionManager/web/admin/users.php:96
+#: ../../SessionManager/web/admin/users.php:116
+msgid "Delete"
+msgstr "Удалить"
+
+#: ../../SessionManager/web/admin/applications_static.php:127
+#: ../../SessionManager/web/admin/appsgroup.php:96
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:570
+#: ../../SessionManager/web/admin/servers.php:186
+#: ../../SessionManager/web/admin/servers.php:302
+#: ../../SessionManager/web/admin/sessions.php:191
+#: ../../SessionManager/web/admin/usersgroup.php:146
+#: ../../SessionManager/web/admin/users.php:109
+#: ../../SessionManager/web/admin/wizard.php:211
+#: ../../SessionManager/web/admin/wizard.php:230
+#: ../../SessionManager/web/admin/wizard.php:356
+#: ../../SessionManager/web/admin/wizard.php:375
+msgid "Mark all"
+msgstr "Выделить всё"
+
+#: ../../SessionManager/web/admin/applications_static.php:128
+#: ../../SessionManager/web/admin/appsgroup.php:96
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:571
+#: ../../SessionManager/web/admin/servers.php:187
+#: ../../SessionManager/web/admin/servers.php:303
+#: ../../SessionManager/web/admin/sessions.php:191
+#: ../../SessionManager/web/admin/usersgroup.php:146
+#: ../../SessionManager/web/admin/users.php:110
+#: ../../SessionManager/web/admin/wizard.php:211
+#: ../../SessionManager/web/admin/wizard.php:230
+#: ../../SessionManager/web/admin/wizard.php:356
+#: ../../SessionManager/web/admin/wizard.php:375
+msgid "Unmark all"
+msgstr "Снять выделение"
+
+#: ../../SessionManager/web/admin/applications_static.php:131
+msgid "Are you sure you want to delete these static applications?"
+msgstr "Вы действительно хотите удалить эти приложения?"
+
+#: ../../SessionManager/web/admin/applications_static.php:145
+msgid "Add a static application"
+msgstr "Добавить статическое приложение"
+
+#: ../../SessionManager/web/admin/applications_static.php:186
+#: ../../SessionManager/web/admin/applications_static.php:339
+#: ../../SessionManager/web/admin/applications_static.php:407
+msgid "Command"
+msgstr "Команда"
+
+#: ../../SessionManager/web/admin/applications_static.php:188
+#: ../../SessionManager/web/admin/applications_static.php:341
+#: ../../SessionManager/web/admin/applications_static.php:410
+msgid "URL"
+msgstr "URL"
+
+#: ../../SessionManager/web/admin/applications_static.php:205
+msgid "MimeTypes"
+msgstr "MimeTypes"
+
+#: ../../SessionManager/web/admin/applications_static.php:214
+#: ../../SessionManager/web/admin/appsgroup.php:137
+#: ../../SessionManager/web/admin/publications.php:134
+#: ../../SessionManager/web/admin/usersgroup.php:264
+#: ../../SessionManager/web/admin/users.php:126
+#: ../../SessionManager/web/admin/users.php:146
+msgid "Add"
+msgstr "Добавить"
+
+#: ../../SessionManager/web/admin/applications_static.php:232
+msgid "Web link configuration"
+msgstr "Веб-ссылка"
+
+#: ../../SessionManager/web/admin/applications_static.php:233
+msgid "Default browser for :"
+msgstr "Браузер по-умолчанию"
+
+#: ../../SessionManager/web/admin/applications_static.php:255
+msgid "None"
+msgstr "Нет"
+
+#: ../../SessionManager/web/admin/applications_static.php:269
+msgid "Update"
+msgstr "Обновить"
+
+#: ../../SessionManager/web/admin/applications_static.php:376
+#: ../../SessionManager/web/admin/applications_static.php:444
+#: ../../SessionManager/web/admin/news.php:126
+#: ../../SessionManager/web/admin/news.php:135
+msgid "Modify"
+msgstr "Изменить"
+
+#: ../../SessionManager/web/admin/applications_static.php:426
+msgid "Icon"
+msgstr "Значок"
+
+#: ../../SessionManager/web/admin/applications_static.php:430
+msgid "Delete this icon"
+msgstr "Удалить этот значок"
+
+#: ../../SessionManager/web/admin/applications_static.php:430
+msgid "Are you sure you want to delete this icon?"
+msgstr "Вы действительно хотите удалить этот значок?"
+
+#: ../../SessionManager/web/admin/applications_static.php:486
+#, fuzzy
+msgid "Add to this server"
+msgstr "Добавить в группу"
+
+#: ../../SessionManager/web/admin/appsgroup.php:47
+msgid "Application groups"
+msgstr "Группы приложений"
+
+#: ../../SessionManager/web/admin/appsgroup.php:51
+msgid "No application groups available"
+msgstr "Нет доступных групп приложений"
+
+#: ../../SessionManager/web/admin/appsgroup.php:66
+#: ../../SessionManager/web/admin/appsgroup.php:156
+#: ../../SessionManager/web/admin/usersgroup.php:105
+#: ../../SessionManager/web/admin/usersgroup.php:311
+msgid "Enabled"
+msgstr "Включено"
+
+#: ../../SessionManager/web/admin/appsgroup.php:84
+#: ../../SessionManager/web/admin/appsgroup.php:224
+#: ../../SessionManager/web/admin/usersgroup.php:130
+#: ../../SessionManager/web/admin/usersgroup.php:430
+msgid "Are you sure you want to delete this group?"
+msgstr "Вы действительно хотите удалить эту группу?"
+
+#: ../../SessionManager/web/admin/appsgroup.php:98
+#: ../../SessionManager/web/admin/usersgroup.php:148
+msgid "Are you sure you want to delete these groups?"
+msgstr "Вы действительно хотите удалить эти группы?"
+
+#: ../../SessionManager/web/admin/appsgroup.php:112
+#: ../../SessionManager/web/admin/usersgroup.php:172
+msgid "Create a new group"
+msgstr "Создать новую группу"
+
+#: ../../SessionManager/web/admin/appsgroup.php:162
+#: ../../SessionManager/web/admin/ha/configuration.php:292
+#: ../../SessionManager/web/admin/usersgroup.php:317
+msgid "Enable"
+msgstr "Включить"
+
+#: ../../SessionManager/web/admin/appsgroup.php:208
+msgid "Application groups management"
+msgstr "Управление группой приложений"
+
+#: ../../SessionManager/web/admin/appsgroup.php:223
+#: ../../SessionManager/web/admin/usersgroup.php:411
+#: ../../SessionManager/web/admin/users.php:259
+msgid "Settings"
+msgstr "Настройки"
+
+#: ../../SessionManager/web/admin/appsgroup.php:225
+#: ../../SessionManager/web/admin/usersgroup.php:431
+msgid "Delete this group"
+msgstr "Удалить группу"
+
+#: ../../SessionManager/web/admin/appsgroup.php:247
+#: ../../SessionManager/web/admin/usersgroup.php:452
+msgid "Update the name"
+msgstr "Обновить имя"
+
+#: ../../SessionManager/web/admin/appsgroup.php:256
+#: ../../SessionManager/web/admin/usersgroup.php:461
+msgid "Update the description"
+msgstr "Обновить описание"
+
+#: ../../SessionManager/web/admin/appsgroup.php:264
+msgid "List of applications in this group"
+msgstr "Список приложений в этой группе"
+
+#: ../../SessionManager/web/admin/appsgroup.php:351
+#: ../../SessionManager/web/admin/usersgroup.php:628
+msgid "List of publications for this group"
+msgstr "Список публикаций"
+
+#: ../../SessionManager/web/admin/appsgroup.php:361
+#: ../../SessionManager/web/admin/publications.php:99
+#: ../../SessionManager/web/admin/usersgroup.php:637
+msgid "Are you sure you want to delete this publication?"
+msgstr "Вы действительно хотите удалить эту публикацию?"
+
+#: ../../SessionManager/web/admin/appsgroup.php:366
+#: ../../SessionManager/web/admin/usersgroup.php:642
+msgid "Delete this publication"
+msgstr "Удалить публикацию"
+
+#: ../../SessionManager/web/admin/appsgroup.php:383
+#: ../../SessionManager/web/admin/usersgroup.php:659
+msgid "Add this publication"
+msgstr "Добавить публикацию"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:26
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:152
+#: ../../SessionManager/web/modules/UserGroupDB/activedirectory.php:139
+msgid "Active Directory"
+msgstr "Active Directory"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:200
+msgid "Active Directory integration"
+msgstr "Интеграция с Active Directory"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:205
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:179
+msgid "Server Host:"
+msgstr "Хост:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:206
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:282
+msgid "Domain:"
+msgstr "Домен:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:211
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:187
+#: ../../SessionManager/web/admin/includes/page_template.php:50
+#: ../../SessionManager/web/admin/includes/page_template.php:102
+#: ../../SessionManager/web/admin/users.php:59
+msgid "Users"
+msgstr "Пользователи"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:215
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:287
+msgid "Default user branch (Users)"
+msgstr "Контейнер по умолчанию"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:220
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:244
+msgid "Specific Organization Unit:"
+msgstr "Определенная единица подразделения (OU):"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:225
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:203
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:252
+msgid "Administrator account"
+msgstr "Учетная запись администратора"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:227
+msgid "login:"
+msgstr "Логин:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:228
+msgid "password:"
+msgstr "Пароль:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:234
+msgid "Same as Users, "
+msgstr "Такой же как и Users,"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:239
+msgid "Default user branch"
+msgstr "Контейнер для пользователей по-умолчанию"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:252
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:217
+msgid "User Groups"
+msgstr "Группы"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:256
+msgid "Use Active Directory User Groups"
+msgstr "Использовать группы пльзователей из Active Directory"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:261
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:300
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:235
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:261
+msgid "Use Internal User Groups"
+msgstr "Инспользовать внутренние группы пользователей"
+
+#. User
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:285
+msgid "Users branch:"
+msgstr "Дерево пользователей"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:289
+msgid "Specific Organization Unit"
+msgstr "Определите подразделения организации"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:294
+msgid "Administrator account:"
+msgstr "Учетная запись администратора:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:296
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:255
+msgid "User Groups:"
+msgstr "Группы:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:298
+msgid "Active Directory User Groups"
+msgstr "Группы пользователей Active Directory"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:27
+msgid "Internal"
+msgstr "Внутренний"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:65
+msgid "Internal Database Profiles"
+msgstr "Внутренняя база данных пользователей"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:68
+msgid ""
+"This is the default Profile manager. This profile manager saves all the data "
+"into a the same SQL database as you defined it in the system configuration."
+msgstr ""
+"Тип управления профилями пользователей по-умолчанию. Все данные храняться в "
+"базе данных, которая задана в разделе <strong>Настройки&nbsp;&rarr;&nbsp;"
+"База&nbsp;данных</strong>"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:79
+msgid "Use a dynamic internal user list"
+msgstr "Использовать внутренний динамический список пользователей"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:27
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:174
+#: ../../SessionManager/web/modules/UserDB/ldap.php:343
+msgid "Lightweight Directory Access Protocol (LDAP)"
+msgstr "LDAP"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:180
+msgid "Server Port:"
+msgstr "Порт"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:181
+msgid "Protocol version:"
+msgstr "Версия протокола:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:182
+msgid "Base DN:"
+msgstr "Базовое DN"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:189
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:253
+msgid "User branch:"
+msgstr "Дерево пользователя:"
+
+#. Not yet Implemented
+#. $str.= '<tr><td style="text-align: right;"><input class="input_checkbox" type="checkbox" name="user_branch_recursive"/></td>';
+#. $str.= '<td>'._('Recursive Mode').'</td></tr>';
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:195
+msgid "Distinguished name field:"
+msgstr "Отображаемые названия полей:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:196
+msgid "Display name field:"
+msgstr "Отображаемые поля:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:197
+msgid "Locale field"
+msgstr "Поле определяющее локаль"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:197
+msgid "optional"
+msgstr "опционально"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:198
+msgid "Filter:"
+msgstr "Фильтр:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:209
+msgid "Anonymous bind"
+msgstr "Анонимно"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:211
+msgid "Bind DN (without suffix):"
+msgstr "Bind DN (без суффикса):"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:212
+msgid "Bind password:"
+msgstr "Пароль:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:221
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:257
+msgid "Use LDAP User Groups using the MemberOf field"
+msgstr "Получить из LDAP каталога используя поле MemberOf "
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:226
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:259
+msgid "Use LDAP User Groups using Posix group"
+msgstr "Получать из каталога LDAP с использованием Posix группы"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:228
+msgid "Group Branch DN:"
+msgstr "Дополнительное DN групы"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:251
+msgid "Server:"
+msgstr "Сервер: "
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:88
+msgid "Please install CURL support for PHP"
+msgstr "Необходимо добавить поддержку CURL в PHP"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:93
+msgid "SQL configuration not valid(2)"
+msgstr "Не валидная SQL конфигурация (2)"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:99
+msgid "SQL configuration not valid"
+msgstr "Не валидная SQL конфигурация"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:105
+msgid "Initialization failed"
+msgstr "Ошибка инициализации"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:119
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:129
+msgid "prefs is not valid for module"
+msgstr "не валидные параметры для модуля"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:141
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:147
+msgid "Modules configuration not valid"
+msgstr "Не валидная конфигурация для модулей "
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:68
+msgid "Search for users groups pattern: "
+msgstr "Поиск по группе:"
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:70
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:71
+msgid "Search"
+msgstr "Поиск"
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:72
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:73
+msgid "Search in: "
+msgstr "Поиск по"
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:87
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:88
+#, php-format
+msgid ""
+"<strong>Partial content:</strong> Only <strong>%d result</strong> displayed "
+"but there are more. Please restrict your search field."
+msgid_plural ""
+"<strong>Partial content:</strong> Only <strong>%d results</strong> displayed "
+"but there are more. Please restrict your search field."
+msgstr[0] ""
+"<strong>Не все содержимое:</strong> Только <strong>%d результатов</strong> "
+"показано,всего их больше. Ограничте область поиска."
+msgstr[1] ""
+"<strong>Не все содержимое:</strong> Только <strong>%d результат</strong> "
+"показано,всего их больше. Ограничте область поиска."
+msgstr[2] ""
+"<strong>Не все содержимое:</strong> Только <strong>%d результата</strong> "
+"показано,всего их больше. Ограничте область поиска."
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:91
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:92
+#, php-format
+msgid "<strong>%d</strong> result for \"%s\"."
+msgid_plural "<strong>%d</strong> results for \"%s\"."
+msgstr[0] "<strong>%d</strong> результатов для \"%s\"."
+msgstr[1] "<strong>%d</strong> результат для \"%s\"."
+msgstr[2] "<strong>%d</strong> результа для \"%s\"."
+
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:69
+msgid "Search for user pattern: "
+msgstr "Поиск по пользователям:"
+
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:77
+#: ../../SessionManager/web/admin/login.php:125
+#: ../../SessionManager/web/admin/users.php:72
+#: ../../SessionManager/web/admin/users.php:236
+msgid "Login"
+msgstr "Логин"
+
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:81
+#: ../../SessionManager/web/admin/users.php:73
+#: ../../SessionManager/web/admin/users.php:281
+msgid "Display name"
+msgstr "Полное имя"
+
+#. configuration saved
+#: ../../SessionManager/web/admin/configuration-partial.php:49
+#: ../../SessionManager/web/admin/configuration.php:65
+msgid "Configuration successfully saved"
+msgstr "Конфигурация успешно сохранена"
+
+#. conf not valid
+#: ../../SessionManager/web/admin/configuration-partial.php:53
+#: ../../SessionManager/web/admin/configuration-partial.php:60
+#: ../../SessionManager/web/admin/configuration.php:69
+#: ../../SessionManager/web/admin/configuration.php:81
+#: ../../SessionManager/web/admin/ha/configuration.php:467
+#: ../../SessionManager/web/admin/ha/menu.inc.php:32
+#: ../../SessionManager/web/admin/includes/page_template.php:62
+#: ../../SessionManager/web/admin/index.php:84
+#: ../../SessionManager/web/admin/servers.php:438
+#: ../../SessionManager/web/admin/sharedfolders.php:113
+msgid "Configuration"
+msgstr "Настройки"
+
+#: ../../SessionManager/web/admin/configuration-partial.php:111
+#: ../../SessionManager/web/admin/configuration.php:109
+#: ../../SessionManager/web/admin/configuration-profile.php:226
+#: ../../SessionManager/web/admin/includes/functions.inc.php:251
+msgid "Save"
+msgstr "Сохранить"
+
+#: ../../SessionManager/web/admin/configuration-partial.php:118
+#: ../../SessionManager/web/admin/configuration.php:131
+msgid "Preferences not loaded"
+msgstr "Настройки не загружены"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:220
+msgid "Saved successfully"
+msgstr "Сохранено"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:227
+msgid "Test"
+msgstr "Тестировать"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:235
+msgid "OK"
+msgstr "OK"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:241
+msgid "Success"
+msgstr "Готово"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:35
+#: ../../SessionManager/web/admin/includes/core.inc.php:55
+msgid "get Preferences failed"
+msgstr "Не возможно получить параметры"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:45
+msgid "Last save"
+msgstr "Последнее сохранение"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:73
+#: ../../SessionManager/web/admin/ha/menu.inc.php:31
+#: ../../SessionManager/web/admin/includes/page_template.php:219
+#: ../../SessionManager/web/admin/logs.php:113
+#: ../../SessionManager/web/admin/logs.php:172
+#: ../../SessionManager/web/admin/logs.php:176
+msgid "Logs"
+msgstr "Журналы"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:95
+#, fuzzy
+msgid "Slave Server"
+msgstr "Серверы (просмотр)"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:100
+msgid "Authorized FQDN"
+msgstr "Авторизация FQDN"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:108
+msgid "FQDN private address"
+msgstr "Адрес FQDN"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:116
+msgid "FQDN check"
+msgstr "Проверка FQDN"
+
+#: ../../SessionManager/web/admin/ha/classes/Cib.class.php:30
+#: ../../SessionManager/web/admin/ha/classes/Cib.class.php:31
+#: ../../SessionManager/web/admin/ha/classes/Cib.class.php:324
+#: ../../SessionManager/web/admin/sessions.php:68
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:114
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:124
+#: ../../SessionManager/web/classes/Server.class.php:452
+#: ../../SessionManager/web/classes/Server.class.php:461
+#: ../../SessionManager/web/classes/Server.class.php:468
+#: ../../SessionManager/web/classes/Session.class.php:214
+#: ../../SessionManager/web/classes/Session.class.php:242
+msgid "Unknown"
+msgstr "Неизвесно"
+
+#: ../../SessionManager/web/admin/ha/classes/GRNode.class.php:65
+#, fuzzy
+msgid "Group"
+msgstr "Группы"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:66
+msgid "Master/Slaves"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:70
+msgid "Master"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:71
+msgid "Slaves"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:72
+msgid "Stopped"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:73
+msgid "Failed"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:112
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:120
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:107
+msgid "Resources configured"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:114
+msgid "No master"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:122
+msgid "No slaves"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:108
+#, fuzzy
+msgid "Started on"
+msgstr "Запущен:"
+
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:109
+msgid "Stopped on"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:110
+msgid "Failed on"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:98
+#: ../../SessionManager/web/admin/ha/configuration.php:147
+msgid "An error occured during reading configuration file, no values found !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:118
+msgid "Could not extract configuration values from file !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:133
+#: ../../SessionManager/web/admin/ha/configuration.php:137
+msgid "An error occured during update of the virtual IP !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:171
+msgid "No host has been registered yet."
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:187
+#, fuzzy
+msgid "Delete unregistered servers"
+msgstr "Нет незарегистрированных серверов"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:194
+msgid ""
+"Your will change the virtual IP, afterward modify your url with the good IP "
+"to obtain the admin web interface !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:196
+msgid "Apply new virtual IP"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:206
+#, fuzzy, php-format
+msgid "%s server(s) has been successfully removed !"
+msgstr "Сервер '%s' успешно модифицирован"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:208
+msgid "An error occured, no unregistered server deleted !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:217
+msgid "Cannot enable host because one already enabled !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:228
+#: ../../SessionManager/web/admin/ha/configuration.php:251
+msgid "Cannot disable host because it is not enabled !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:239
+msgid "Host has been enabled !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:242
+msgid "An error occured during activation, can not enable host !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:257
+msgid "Host has been disabled !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:260
+msgid "An error occured during disabling host, cannot disable host !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:267
+msgid ""
+"You will enable the slave server, the master server and slave server will "
+"restart their services to load the new configurations. It takes less than 3 "
+"minutes, during this time the web interface will be disabled."
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:273
+#, fuzzy
+msgid "Unregistered Server"
+msgstr "Незарегистрированные серверы"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:277
+#: ../../SessionManager/web/admin/ha/configuration.php:314
+#, fuzzy
+msgid "Hostname"
+msgstr "Имя или IP-адрес"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:282
+#: ../../SessionManager/web/admin/ha/configuration.php:319
+msgid "address"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:287
+#: ../../SessionManager/web/admin/news.php:63
+msgid "Date"
+msgstr "Дата"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:304
+msgid ""
+"You will disable the slave server, the master host will restart their "
+"services to load the new configurations. It takes less than 3 minutes, "
+"during this time the web interface will be disabled."
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:310
+#, fuzzy
+msgid "Registered Server"
+msgstr "Незарегистрированные серверы"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:324
+#, fuzzy
+msgid "Disable"
+msgstr "Доступен"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:338
+#, fuzzy
+msgid "Update HA configuration"
+msgstr "Веб-ссылка"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:338
+msgid "Submit"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:373
+msgid "The system is in maintenance mode ! Cannot apply changes."
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:387
+msgid "Cannot enable host because no host found in DB !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:397
+#, php-format
+msgid "Host %s at address %s has been notifyed succesfully !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:400
+#: ../../SessionManager/web/admin/ha/configuration.php:426
+#, fuzzy, php-format
+msgid "Cannot query slave host at address %s"
+msgstr "Адрес хоста"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:420
+#, php-format
+msgid "Host %s has been set in standby and master %s will restart Heartbeat !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:430
+msgid "An error occured during disabling, can not disable host !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:441
+msgid "Changing configuration... Please wait few seconds"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:444
+msgid ""
+"Changing configuration failded... Verify configuration at field HA::Virtual "
+"IP"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/configuration.php:457
+msgid "Virtual IP \""
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/logs.php:68
+msgid "High Availability logs"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/logs.php:74
+#: ../../SessionManager/web/admin/ha/logs.php:77
+msgid "Show alerts"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/logs.php:80
+#: ../../SessionManager/web/admin/ha/logs.php:83
+#, fuzzy
+msgid "Show informations"
+msgstr "Информация"
+
+#: ../../SessionManager/web/admin/ha/logs.php:89
+#, fuzzy
+msgid "Cleanup logs"
+msgstr "Очистить список задач"
+
+#: ../../SessionManager/web/admin/ha/logs.php:91
+#, php-format
+msgid "%s logs"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/menu.inc.php:29
+#, fuzzy
+msgid "High Availability"
+msgstr "Доступен"
+
+#: ../../SessionManager/web/admin/ha/registration.php:48
+msgid "Host has been already registered !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/registration.php:84
+msgid "Host activation has been done successfully !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/registration.php:87
+msgid "An error occured in POST request activation !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/registration.php:92
+msgid "Deleting host has been done successfully !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/registration.php:95
+#: ../../SessionManager/web/admin/ha/registration.php:99
+msgid "Request is not well formatted !"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:78
+#, fuzzy
+msgid "General Informations"
+msgstr "Общие настройки"
+
+#: ../../SessionManager/web/admin/ha/status.php:80
+msgid "Last time update of this page and informations contained"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:80
+#, fuzzy
+msgid "Last update"
+msgstr "Последнее сохранение"
+
+#: ../../SessionManager/web/admin/ha/status.php:85
+msgid ""
+"The DC (Designated Coordinator) is elected a node in the cluster. He is "
+"responsible for the actions of each cluster elements."
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:85
+msgid "Actual DC"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:90
+msgid "Number of nodes provided and configured in the cluster"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:90
+msgid "Nodes configured"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:95
+msgid "Number of resources configured for all nodes"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:105
+#, fuzzy
+msgid "ressources Status"
+msgstr "Конечный статус сессии"
+
+#: ../../SessionManager/web/admin/ha/status.php:114
+msgid "ressources errors"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:127
+#: ../../SessionManager/web/admin/ha/status.php:129
+#: ../../SessionManager/web/admin/ha/status.php:162
+#: ../../SessionManager/web/admin/ha/status.php:163
+msgid "Out of Network"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:141
+#: ../../SessionManager/web/admin/ha/status.php:145
+#: ../../SessionManager/web/classes/Server.class.php:446
+msgid "Online"
+msgstr "Доступен"
+
+#: ../../SessionManager/web/admin/ha/status.php:142
+#, fuzzy
+msgid "Production"
+msgstr "Публикации"
+
+#: ../../SessionManager/web/admin/ha/status.php:146
+#: ../../SessionManager/web/classes/Session.class.php:226
+msgid "Ready"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:154
+msgid "Standby"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:172
+#, fuzzy
+msgid "An error has occured, please call your administrator !"
+msgstr "Ваша сессия уже запущена. Пожалуйста, обратитесь администратору"
+
+#: ../../SessionManager/web/admin/ha/status.php:176
+#: ../../SessionManager/web/admin/logs.php:117
+msgid "Session Manager"
+msgstr "Менеджер сеансов"
+
+#: ../../SessionManager/web/admin/ha/status.php:182
+msgid "Unpaused"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:184
+msgid "Paused"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:193
+msgid "Pause"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:201
+msgid "Set it online"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:229
+msgid "High Availability Status"
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:256
+msgid "Waiting for Heartbeat's CIB..."
+msgstr ""
+
+#: ../../SessionManager/web/admin/ha/status.php:256
+msgid ""
+"Please check permissions on ulteo-ovd.conf or if \"cibadmin -Q\" works "
+"fine ! Apache could have been started by another user than www-data."
+msgstr ""
+
+#: ../../SessionManager/web/admin/includes/core.inc.php:59
+#: ../../SessionManager/web/admin/index.php:138
+#: ../../SessionManager/web/webservices/configuration.php:32
+msgid "The system is in maintenance mode"
+msgstr ""
+
+#: ../../SessionManager/web/admin/includes/functions.inc.php:406
+msgid "You are not allowed to perform this action"
+msgstr "У Вас не достаточно привилегий для выполнения этого действия"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:37
+#: ../../SessionManager/web/admin/index.php:41
+msgid "Index"
+msgstr "Главная"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:44
+#: ../../SessionManager/web/admin/includes/page_template.php:75
+#: ../../SessionManager/web/admin/index.php:65
+#: ../../SessionManager/web/admin/servers.php:64
+#: ../../SessionManager/web/admin/sessions.php:158
+#: ../../SessionManager/web/admin/tasks.php:69
+msgid "Servers"
+msgstr "Серверы приложений"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:81
+#: ../../SessionManager/web/admin/servers.php:223
+msgid "Unregistered servers"
+msgstr "Незарегистрированные серверы"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:87
+#: ../../SessionManager/web/admin/tasks.php:132
+msgid "Tasks"
+msgstr "Задания"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:95
+#: ../../SessionManager/web/admin/sharedfolders.php:44
+#: ../../SessionManager/web/admin/usersgroup.php:730
+msgid "Shared folders"
+msgstr "Общие папки"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:109
+msgid "Users Groups"
+msgstr "Группы"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:123
+msgid "Applications Groups"
+msgstr "Группы приложений"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:130
+msgid "Static applications"
+msgstr "Статические приложения"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:137
+#: ../../SessionManager/web/admin/publications.php:77
+msgid "Publications"
+msgstr "Публикации"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:144
+#: ../../SessionManager/web/admin/index.php:116
+msgid "Publication wizard"
+msgstr "Мастер публикации"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:151
+msgid "Sum up"
+msgstr "Информация"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:157
+msgid "Database settings"
+msgstr "Настройки Базы данных"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:163
+msgid "System settings"
+msgstr "Система"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:169
+msgid "Server settings"
+msgstr "Серверы приложений"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:175
+msgid "Profile settings"
+msgstr "Профили пользователей"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:181
+#, fuzzy
+msgid "Authentication settings"
+msgstr "Аутентификация"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:187
+msgid "Session settings"
+msgstr "Сеансы"
+
+#. Events settings
+#: ../../SessionManager/web/admin/includes/page_template.php:193
+#: ../../SessionManager/web/classes/Preferences.class.php:456
+msgid "Events settings"
+msgstr "Настройки Событий"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:199
+#: ../../SessionManager/web/classes/Preferences.class.php:380
+msgid "Web interface settings"
+msgstr "Веб-интерфейс"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:205
+#: ../../SessionManager/web/admin/password.php:36
+msgid "Change Administrator password"
+msgstr "Пароль администратора"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:213
+msgid "Sessions"
+msgstr "Сеансы"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:225
+#: ../../SessionManager/web/admin/reporting.php:309
+#: ../../SessionManager/web/admin/reporting.php:461
+msgid "Reporting"
+msgstr "Отчеты"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:233
+#: ../../SessionManager/web/admin/news.php:59
+msgid "News"
+msgstr "Новости"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:240
+msgid "Summary"
+msgstr "Информация о системе"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:268
+msgid "Logout"
+msgstr "Выход"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:275
+#: ../../SessionManager/web/admin/login.php:93
+#: ../../SessionManager/web/includes/functions.inc.d/template.inc.php:68
+#: ../../SessionManager/web/includes/functions.inc.d/template.inc.php:112
+msgid "Administration"
+msgstr "Панель администрирования"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:401
+#: ../../SessionManager/web/includes/functions.inc.d/template.inc.php:134
+msgid "powered by"
+msgstr "Работает на"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:102
+#: ../../SessionManager/web/admin/servers.php:51
+msgid "redirection name may be invalid!"
+msgstr "перенаправление может быть неверным!"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:104
+#: ../../SessionManager/web/admin/servers.php:53
+msgid "redirection name cannot be empty!"
+msgstr "название перенаправления не может быть пустым"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:109
+msgid "Cannot list available applications"
+msgstr "Не возможно вывести список доступных приложений"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:210
+msgid "Number of available sessions on this server"
+msgstr "Максимальное количество сеансов на сервере"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:222
+#: ../../SessionManager/web/admin/servers.php:452
+msgid "change"
+msgstr "изменить"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:231
+msgid "Install an application"
+msgstr "Установить приложение"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:237
+msgid "Install from a package name"
+msgstr "Установить приложение из пакета"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:242
+msgid "more options"
+msgstr "еще опции"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:254
+msgid "Category"
+msgstr "Категория"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:259
+msgid "Application"
+msgstr "Приложение"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:261
+#: ../../SessionManager/web/admin/tasks.php:194
+msgid "Install"
+msgstr "Установить"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:270
+#: ../../SessionManager/web/admin/tasks.php:208
+msgid "Upgrade"
+msgstr "Обновить"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:275
+#: ../../SessionManager/web/admin/tasks.php:197
+msgid "Upgrade the internal system and applications"
+msgstr "Обновить систему и приложения"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:284
+msgid "Applications available on this server"
+msgstr "Доступные приложения"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:326
+msgid "install in progress"
+msgstr "идет установка..."
+
+#. div replication
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:355
+msgid "Replication"
+msgstr "Репликация"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:367
+msgid "Replicate on those servers"
+msgstr "Реплицировать"
+
+#. div tasks
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:375
+msgid "Active tasks on this server"
+msgstr "Активные задания на сервере"
+
+#. div 1 has_sessions
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:406
+#: ../../SessionManager/web/admin/users.php:362
+msgid "Active sessions"
+msgstr "Активные сессии"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:416
+#: ../../SessionManager/web/admin/sessions.php:73
+#: ../../SessionManager/web/admin/users.php:369
+msgid "Not started yet"
+msgstr "Пока не запущен"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:423
+#: ../../SessionManager/web/admin/users.php:376
+msgid "Informations about this session"
+msgstr "Информация о сессии"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:486
+#, fuzzy
+msgid "User profiles in the server"
+msgstr "Реплицировать"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:492
+#, fuzzy
+msgid "Shared folders in the server"
+msgstr "Общие папки"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:498
+msgid "NetworkFolders in the server"
+msgstr ""
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:515
+msgid "Owner"
+msgstr ""
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:515
+msgid "Used by"
+msgstr ""
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:556
+#, fuzzy
+msgid "Are you sure that you want to delete this user profile?"
+msgstr "Вы действительно хотите удалить этого пользователя?"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:556
+#, fuzzy
+msgid "Are you sure that you want to delete this network folder?"
+msgstr "Вы действительно хотите удалить эту общую папку?"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:574
+#, fuzzy
+msgid "Are you sure that you want to delete these user profiles?"
+msgstr "Вы действительно хотите удалить этого пользователя?"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:574
+#, fuzzy
+msgid "Are you sure that you want to delete these network folders?"
+msgstr "Вы действительно хотите удалить эту общую папку?"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:590
+#: ../../SessionManager/web/admin/usersgroup.php:781
+#, fuzzy
+msgid "Action"
+msgstr "Приложение"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:597
+#: ../../SessionManager/web/admin/sharedfolders.php:68
+msgid "Create this shared folder"
+msgstr "Создать папку"
+
+#: ../../SessionManager/web/admin/index.php:47
+msgid "Users and Users groups"
+msgstr "Пользователи и группы"
+
+#: ../../SessionManager/web/admin/index.php:52
+msgid "User list"
+msgstr "Пользователи"
+
+#: ../../SessionManager/web/admin/index.php:54
+msgid "Users groups list"
+msgstr "Группы"
+
+#: ../../SessionManager/web/admin/index.php:70
+msgid "Servers list"
+msgstr "Список серверов"
+
+#: ../../SessionManager/web/admin/index.php:71
+msgid "Unregistered servers list"
+msgstr "Незарегистрированные серверы"
+
+#: ../../SessionManager/web/admin/index.php:89
+#: ../../SessionManager/web/classes/Preferences.class.php:175
+msgid "General configuration"
+msgstr "Общие настройки"
+
+#: ../../SessionManager/web/admin/index.php:106
+msgid "Applications and Appgroups"
+msgstr "Приложения и группы приложений"
+
+#: ../../SessionManager/web/admin/index.php:111
+msgid "Application list"
+msgstr "Приложения"
+
+#: ../../SessionManager/web/admin/index.php:113
+msgid "Application groups list"
+msgstr "Группы приложений"
+
+#: ../../SessionManager/web/admin/index.php:115
+msgid "Publication list"
+msgstr "Список публикаций"
+
+#: ../../SessionManager/web/admin/index.php:128
+msgid "System"
+msgstr ""
+
+#: ../../SessionManager/web/admin/index.php:141
+#, fuzzy
+msgid "Switch the system to production mode?"
+msgstr "Автоматически переключать новые серверы в продуктивный режим"
+
+#: ../../SessionManager/web/admin/index.php:141
+#, fuzzy
+msgid "Switch the system to production mode"
+msgstr "Автоматически переключать новые серверы в продуктивный режим"
+
+#: ../../SessionManager/web/admin/index.php:143
+#, fuzzy
+msgid "The system is in production mode"
+msgstr "Автоматически переключать новые серверы в продуктивный режим"
+
+#: ../../SessionManager/web/admin/index.php:146
+#, fuzzy
+msgid "Switch the system to maintenance mode?"
+msgstr "В режим обслуживания"
+
+#: ../../SessionManager/web/admin/index.php:146
+#, fuzzy
+msgid "Switch the system to maintenance mode"
+msgstr "В режим обслуживания"
+
+#: ../../SessionManager/web/admin/index.php:175
+msgid "active sessions"
+msgstr "активные сеансы"
+
+#: ../../SessionManager/web/admin/index.php:177
+msgid "active session"
+msgstr "активный сеанс"
+
+#: ../../SessionManager/web/admin/index.php:185
+msgid "online servers"
+msgstr "доступные серверы"
+
+#: ../../SessionManager/web/admin/index.php:187
+msgid "online server"
+msgstr "доступный сервер"
+
+#: ../../SessionManager/web/admin/index.php:195
+msgid "offline servers"
+msgstr "недоступные серверы"
+
+#: ../../SessionManager/web/admin/index.php:197
+msgid "offline server"
+msgstr "недоступный сервер"
+
+#: ../../SessionManager/web/admin/index.php:205
+msgid "broken servers"
+msgstr "неисправные серверы"
+
+#: ../../SessionManager/web/admin/index.php:207
+msgid "broken server"
+msgstr "неисправный сервер"
+
+#. the user does not exist
+#: ../../SessionManager/web/admin/login.php:38
+#: ../../SessionManager/web/admin/login.php:45
+msgid "There was an error with your authentication"
+msgstr "Ошибка. Неудачная попытка аутентификации."
+
+#: ../../SessionManager/web/admin/login.php:57
+msgid "Unauthorized access"
+msgstr "Неавторизированый доступ"
+
+#: ../../SessionManager/web/admin/login.php:101
+#: ../../SessionManager/web/admin/login.php:141
+msgid "Log in"
+msgstr "Войти"
+
+#: ../../SessionManager/web/admin/login.php:133
+msgid "Password"
+msgstr "Пароль"
+
+#: ../../SessionManager/web/admin/logs.php:121
+#: ../../SessionManager/web/admin/logs.php:139
+msgid "View full log file online"
+msgstr "Посмотреть полный файл журнала"
+
+#: ../../SessionManager/web/admin/logs.php:122
+#: ../../SessionManager/web/admin/logs.php:140
+#: ../../SessionManager/web/admin/logs.php:173
+#: ../../SessionManager/web/admin/logs.php:177
+msgid "Download full log file"
+msgstr "Скачать полный файл журнала"
+
+#: ../../SessionManager/web/admin/logs.php:131
+msgid "Application Servers"
+msgstr "Серверы приложений"
+
+#: ../../SessionManager/web/admin/logs.php:138
+#, fuzzy
+msgid "Log"
+msgstr "Журналы"
+
+#: ../../SessionManager/web/admin/news.php:39
+msgid "News successfully modified"
+msgstr "Новость успешно отредактирована"
+
+#: ../../SessionManager/web/admin/news.php:63
+msgid "Title"
+msgstr "Заголовок"
+
+#: ../../SessionManager/web/admin/news.php:63
+msgid "Content"
+msgstr "Содержимое"
+
+#: ../../SessionManager/web/admin/news.php:76
+msgid "Are you sure you want to delete this news?"
+msgstr "Вы действительно хотите удалить эту новость?"
+
+#: ../../SessionManager/web/admin/news.php:80
+msgid "Delete this news"
+msgstr "Удалить"
+
+#: ../../SessionManager/web/admin/news.php:90
+msgid "Add news"
+msgstr "Добавить новость"
+
+#: ../../SessionManager/web/admin/news.php:101
+msgid "Add this news"
+msgstr "Добавить"
+
+#: ../../SessionManager/web/admin/password.php:25
+msgid "User not authorize to manage configuration"
+msgstr ""
+"Пользователь не имеет достаточных привелегий для управления конфигурацией"
+
+#: ../../SessionManager/web/admin/password.php:30
+msgid "No action found"
+msgstr "Действие не найдено"
+
+#: ../../SessionManager/web/admin/password.php:43
+#: ../../SessionManager/web/admin/users.php:288
+msgid "New password"
+msgstr "Новый пароль"
+
+#: ../../SessionManager/web/admin/password.php:48
+msgid "Retype password"
+msgstr "Повторите пароль"
+
+#: ../../SessionManager/web/admin/password.php:53
+msgid "Change"
+msgstr "Изменить"
+
+#: ../../SessionManager/web/admin/publications.php:81
+msgid "Users group"
+msgstr "Группа пользователей"
+
+#: ../../SessionManager/web/admin/publications.php:82
+msgid "Application group"
+msgstr "Группа приложений"
+
+#: ../../SessionManager/web/admin/publications.php:87
+msgid "No publication"
+msgstr "Нет публикаций"
+
+#: ../../SessionManager/web/admin/reporting.php:106
+msgid "Day"
+msgstr "День"
+
+#: ../../SessionManager/web/admin/reporting.php:135
+msgid "Hour"
+msgstr "Час"
+
+#: ../../SessionManager/web/admin/reporting.php:165
+#, fuzzy
+msgid "Minute"
+msgstr "1 минута"
+
+#: ../../SessionManager/web/admin/reporting.php:292
+#: ../../SessionManager/web/admin/reporting.php:697
+msgid "Error: \"from\" date is after \"to\" date, switching"
+msgstr "Ошибка: \"от\" даты \"до\" "
+
+#: ../../SessionManager/web/admin/reporting.php:299
+#: ../../SessionManager/web/admin/reporting.php:704
+msgid "Error: \"to\" field is in the future, switch to the current time"
+msgstr "Ошибка: \"до\" поле из будущего, выберите текущую дату"
+
+#: ../../SessionManager/web/admin/reporting.php:307
+#, fuzzy, php-format
+msgid "%s is not writable"
+msgstr "Нет прав на запись в ApplicationDB"
+
+#: ../../SessionManager/web/admin/reporting.php:332
+#: ../../SessionManager/web/admin/reporting.php:394
+#, fuzzy
+msgid "Number of launched sessions"
+msgstr "Количество сеансов"
+
+#: ../../SessionManager/web/admin/reporting.php:346
+msgid "%FQDN% (%TOTAL% session)"
+msgstr ""
+
+#: ../../SessionManager/web/admin/reporting.php:346
+msgid "%FQDN% (%TOTAL% sessions)"
+msgstr ""
+
+#: ../../SessionManager/web/admin/reporting.php:351
+msgid "Session repartition"
+msgstr "Распределение сессий"
+
+#: ../../SessionManager/web/admin/reporting.php:360
+#: ../../SessionManager/web/admin/reporting.php:403
+msgid "%STATUS% (%TOTAL% session)"
+msgstr ""
+
+#: ../../SessionManager/web/admin/reporting.php:360
+#: ../../SessionManager/web/admin/reporting.php:403
+msgid "%STATUS% (%TOTAL% sessions)"
+msgstr ""
+
+#: ../../SessionManager/web/admin/reporting.php:365
+#: ../../SessionManager/web/admin/reporting.php:408
+msgid "Session end status"
+msgstr "Конечный статус сессии"
+
+#: ../../SessionManager/web/admin/reporting.php:432
+#: ../../SessionManager/web/admin/servers.php:128
+#: ../../SessionManager/web/admin/servers.php:411
+msgid "CPU usage"
+msgstr "Использование ЦП"
+
+#: ../../SessionManager/web/admin/reporting.php:453
+#: ../../SessionManager/web/admin/servers.php:130
+#: ../../SessionManager/web/admin/servers.php:413
+msgid "RAM usage"
+msgstr "Использование RAM"
+
+#: ../../SessionManager/web/admin/reporting.php:508
+#: ../../SessionManager/web/classes/Preferences.class.php:254
+msgid "From"
+msgstr "Отправитель"
+
+#: ../../SessionManager/web/admin/reporting.php:520
+msgid "to"
+msgstr "к"
+
+#: ../../SessionManager/web/admin/reporting.php:532
+msgid "step"
+msgstr "шаг"
+
+#: ../../SessionManager/web/admin/reporting.php:548
+msgid "Refresh"
+msgstr "Обновить"
+
+#: ../../SessionManager/web/admin/reporting.php:556
+#: ../../SessionManager/web/admin/reporting.php:569
+#: ../../SessionManager/web/admin/reporting.php:597
+#: ../../SessionManager/web/admin/reporting.php:618
+#: ../../SessionManager/web/admin/reporting.php:633
+msgid "Abscissa: day of the month"
+msgstr "X: дни месяца"
+
+#: ../../SessionManager/web/admin/reporting.php:558
+#: ../../SessionManager/web/admin/reporting.php:571
+#: ../../SessionManager/web/admin/reporting.php:599
+#: ../../SessionManager/web/admin/reporting.php:620
+#: ../../SessionManager/web/admin/reporting.php:635
+msgid "Abscissa: hour of the day"
+msgstr "Y: часы"
+
+#: ../../SessionManager/web/admin/reporting.php:560
+#: ../../SessionManager/web/admin/reporting.php:573
+#: ../../SessionManager/web/admin/reporting.php:601
+#: ../../SessionManager/web/admin/reporting.php:622
+#: ../../SessionManager/web/admin/reporting.php:637
+#, fuzzy
+msgid "Abscissa: minute of the hour"
+msgstr "Y: часы"
+
+#: ../../SessionManager/web/admin/reporting.php:562
+#: ../../SessionManager/web/admin/reporting.php:575
+#: ../../SessionManager/web/admin/reporting.php:603
+msgid "Ordinate: number of sessions"
+msgstr "Y: количество сеансов"
+
+#: ../../SessionManager/web/admin/reporting.php:590
+#: ../../SessionManager/web/admin/tasks.php:143
+msgid "Server"
+msgstr "Сервер приложений"
+
+#: ../../SessionManager/web/admin/reporting.php:624
+msgid "Ordinate: usage of CPU in percent"
+msgstr "Y: процент использования CPU"
+
+#: ../../SessionManager/web/admin/reporting.php:640
+msgid "Ordinate: usage of RAM in percent"
+msgstr "Y: процент использования RAM"
+
+#: ../../SessionManager/web/admin/reporting.php:671
+#, fuzzy
+msgid "Number of active sessions"
+msgstr "Количество сеансов"
+
+#: ../../SessionManager/web/admin/servers.php:75
+#: ../../SessionManager/web/admin/servers.php:233
+#: ../../SessionManager/web/admin/sumup.php:192
+msgid "FQDN"
+msgstr "FQDN"
+
+#: ../../SessionManager/web/admin/servers.php:76
+#: ../../SessionManager/web/admin/servers.php:234
+#: ../../SessionManager/web/admin/sumup.php:194
+msgid "Roles"
+msgstr ""
+
+#: ../../SessionManager/web/admin/servers.php:80
+#: ../../SessionManager/web/admin/servers.php:390
+#: ../../SessionManager/web/admin/servers.php:397
+msgid "Monitoring"
+msgstr "Мониторинг"
+
+#: ../../SessionManager/web/admin/servers.php:91
+#: ../../SessionManager/web/admin/servers.php:193
+#: ../../SessionManager/web/admin/servers.php:359
+msgid "Switch to production"
+msgstr "В рабочий режим"
+
+#: ../../SessionManager/web/admin/servers.php:95
+#: ../../SessionManager/web/admin/servers.php:194
+#: ../../SessionManager/web/admin/servers.php:363
+#: ../../SessionManager/web/classes/Preferences.class.php:281
+msgid "Switch to maintenance"
+msgstr "В режим обслуживания"
+
+#: ../../SessionManager/web/admin/servers.php:119
+#: ../../SessionManager/web/admin/servers.php:265
+#: ../../SessionManager/web/admin/servers.php:405
+msgid "CPU"
+msgstr "ЦП"
+
+#: ../../SessionManager/web/admin/servers.php:120
+#: ../../SessionManager/web/admin/servers.php:266
+#: ../../SessionManager/web/admin/servers.php:406
+msgid "cores"
+msgstr "ядер"
+
+#: ../../SessionManager/web/admin/servers.php:120
+#: ../../SessionManager/web/admin/servers.php:266
+#: ../../SessionManager/web/admin/servers.php:406
+msgid "core"
+msgstr "ядро"
+
+#: ../../SessionManager/web/admin/servers.php:122
+#: ../../SessionManager/web/admin/servers.php:268
+#: ../../SessionManager/web/admin/servers.php:407
+msgid "RAM"
+msgstr "RAM"
+
+#: ../../SessionManager/web/admin/servers.php:122
+#: ../../SessionManager/web/admin/servers.php:407
+msgid "MB"
+msgstr "MB"
+
+#: ../../SessionManager/web/admin/servers.php:138
+#: ../../SessionManager/web/admin/servers.php:421
+msgid "Sessions usage"
+msgstr "Сеансы"
+
+#: ../../SessionManager/web/admin/servers.php:142
+#: ../../SessionManager/web/admin/servers.php:425
+#, fuzzy
+msgid "Disk usage"
+msgstr "Сеансы"
+
+#: ../../SessionManager/web/admin/servers.php:203
+#, fuzzy
+msgid "No server"
+msgstr "сервер"
+
+#: ../../SessionManager/web/admin/servers.php:278
+#: ../../SessionManager/web/admin/servers.php:309
+msgid "Register"
+msgstr "Зарегистрировать"
+
+#: ../../SessionManager/web/admin/servers.php:284
+#: ../../SessionManager/web/admin/servers.php:480
+msgid "Are you sure you want to delete this server?"
+msgstr "Вы действительно хотите удалить этот сервер?"
+
+#: ../../SessionManager/web/admin/servers.php:327
+msgid "No unregistered server"
+msgstr "Нет незарегистрированных серверов"
+
+#: ../../SessionManager/web/admin/servers.php:347
+msgid "Cannot get server monitoring"
+msgstr "Не могу получить мониторинг сервера"
+
+#: ../../SessionManager/web/admin/servers.php:353
+msgid "Warning: server is offline"
+msgstr "Внимание: сервер недоступен"
+
+#: ../../SessionManager/web/admin/servers.php:355
+msgid "Warning: server is broken"
+msgstr "Внимание: сервер неисправен"
+
+#: ../../SessionManager/web/admin/servers.php:394
+msgid "Version"
+msgstr "Версия"
+
+#: ../../SessionManager/web/admin/servers.php:442
+msgid "Redirection name of this server"
+msgstr "Адрес перенаправления"
+
+#: ../../SessionManager/web/admin/servers.php:496
+#, php-format
+msgid "Role: %s"
+msgstr ""
+
+#: ../../SessionManager/web/admin/sessions.php:52
+#, fuzzy
+msgid "Session - %ID%"
+msgstr "Сеанс"
+
+#: ../../SessionManager/web/admin/sessions.php:54
+msgid "Information"
+msgstr "Информация"
+
+#: ../../SessionManager/web/admin/sessions.php:57
+#, fuzzy
+msgid "Servers:"
+msgstr "Серверы приложений"
+
+#: ../../SessionManager/web/admin/sessions.php:61
+msgid "User:"
+msgstr "Пользователь:"
+
+#: ../../SessionManager/web/admin/sessions.php:62
+#, fuzzy
+msgid "Type:"
+msgstr "Тип"
+
+#: ../../SessionManager/web/admin/sessions.php:64
+#: ../../SessionManager/web/classes/Preferences.class.php:334
+msgid "Desktop"
+msgstr "Рабочий стол"
+
+#: ../../SessionManager/web/admin/sessions.php:70
+msgid "Started:"
+msgstr "Запущен:"
+
+#: ../../SessionManager/web/admin/sessions.php:77
+msgid "Status:"
+msgstr "Статус:"
+
+#: ../../SessionManager/web/admin/sessions.php:81
+msgid "Running applications"
+msgstr "Запущенные приложения"
+
+#: ../../SessionManager/web/admin/sessions.php:85
+msgid "No application running"
+msgstr "Нет запущенных приложений"
+
+#: ../../SessionManager/web/admin/sessions.php:111
+#: ../../SessionManager/web/admin/sessions.php:116
+msgid "Kill this session"
+msgstr "Уничтожить сеанс"
+
+#: ../../SessionManager/web/admin/sessions.php:112
+#: ../../SessionManager/web/admin/sessions.php:178
+msgid "Are you sure you want to kill this session?"
+msgstr "Вы действительно хотите уничтожить этот сеанс?"
+
+#: ../../SessionManager/web/admin/sessions.php:128
+#, php-format
+msgid "Sessions (total: %s)"
+msgstr "Сессии (всего: %s) "
+
+#: ../../SessionManager/web/admin/sessions.php:157
+msgid "Session"
+msgstr "Сеанс"
+
+#: ../../SessionManager/web/admin/sessions.php:159
+msgid "User"
+msgstr "Пользователь"
+
+#: ../../SessionManager/web/admin/sessions.php:182
+#: ../../SessionManager/web/admin/sessions.php:196
+msgid "Kill"
+msgstr "Уничтожить"
+
+#: ../../SessionManager/web/admin/sessions.php:193
+msgid "Are you sure you want to kill selected sessions?"
+msgstr "Вы действительно хотите уничтожить выбранные сеансы?"
+
+#: ../../SessionManager/web/admin/sessions.php:206
+msgid "Number of sessions"
+msgstr "Количество сеансов"
+
+#: ../../SessionManager/web/admin/sessions.php:228
+msgid "No active session"
+msgstr "Нет активных сеансов"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:53
+msgid "Are you sure you want to delete this shared folder?"
+msgstr "Вы действительно хотите удалить эту общую папку?"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:57
+msgid "Delete this shared folder"
+msgstr "Удалить папку"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:128
+msgid "Rename"
+msgstr "Переименовать"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:139
+msgid "ACL"
+msgstr "Правила доступа"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:147
+#: ../../SessionManager/web/admin/usersgroup.php:737
+msgid "Are you sure you want to delete this shared folder access?"
+msgstr "Вы действительно хотите удать правило доступа для этой папки?"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:152
+#: ../../SessionManager/web/admin/usersgroup.php:742
+msgid "Delete access to this shared folder"
+msgstr "Удалить правило"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:167
+#: ../../SessionManager/web/admin/usersgroup.php:757
+msgid "Add access to this shared folder"
+msgstr "Предоставить доступ к этой папке"
+
+#: ../../SessionManager/web/admin/sumup.php:44
+msgid "List of users"
+msgstr "Список пользователей"
+
+#: ../../SessionManager/web/admin/sumup.php:55
+msgid "login"
+msgstr "логин"
+
+#: ../../SessionManager/web/admin/sumup.php:55
+msgid "name"
+msgstr "имя"
+
+#: ../../SessionManager/web/admin/sumup.php:55
+msgid "in this user group"
+msgstr "группа пользователей"
+
+#: ../../SessionManager/web/admin/sumup.php:55
+msgid "in this application group"
+msgstr "группа приложений"
+
+#: ../../SessionManager/web/admin/sumup.php:55
+msgid "access to these applications"
+msgstr "доступные приложения"
+
+#: ../../SessionManager/web/admin/sumup.php:55
+#, fuzzy
+msgid "access to these network folders"
+msgstr "Предоставить доступ к этой папке"
+
+#. <th>'._('Desktop File').'</th>
+#: ../../SessionManager/web/admin/sumup.php:57
+msgid "Available servers"
+msgstr "Доступные серверы"
+
+#: ../../SessionManager/web/admin/sumup.php:80
+#: ../../SessionManager/web/admin/sumup.php:104
+#: ../../SessionManager/web/admin/usersgroup.php:220
+#: ../../SessionManager/web/admin/users.php:169
+#: ../../SessionManager/web/webservices/configuration.php:108
+#: ../../SessionManager/web/webservices/configuration.php:110
+#: ../../SessionManager/web/webservices/configuration.php:111
+#: ../../SessionManager/web/webservices/configuration.php:112
+msgid "Yes"
+msgstr "Да"
+
+#. $seconds => $text
+#. $forceable_parameters['shareable'] = array('0' => _('No'), '1' => _('Yes'));
+#: ../../SessionManager/web/admin/sumup.php:82
+#: ../../SessionManager/web/admin/sumup.php:106
+#: ../../SessionManager/web/admin/usersgroup.php:219
+#: ../../SessionManager/web/admin/users.php:170
+#: ../../SessionManager/web/webservices/configuration.php:108
+#: ../../SessionManager/web/webservices/configuration.php:110
+#: ../../SessionManager/web/webservices/configuration.php:111
+#: ../../SessionManager/web/webservices/configuration.php:112
+msgid "No"
+msgstr "Нет"
+
+#: ../../SessionManager/web/admin/sumup.php:178
+msgid "List of servers"
+msgstr "Список серверов"
+
+#: ../../SessionManager/web/admin/sumup.php:182
+#: ../../SessionManager/web/admin/sumup.php:186
+msgid "No server available"
+msgstr "Нет доступных серверов"
+
+#: ../../SessionManager/web/admin/tasks.php:63
+msgid "Tasks managment"
+msgstr "Управление заданиями"
+
+#: ../../SessionManager/web/admin/tasks.php:67
+#: ../../SessionManager/web/admin/tasks.php:141
+msgid "Creation time"
+msgstr "Время создания"
+
+#: ../../SessionManager/web/admin/tasks.php:72
+msgid "Job id"
+msgstr "идентификатор задачи"
+
+#: ../../SessionManager/web/admin/tasks.php:78
+#: ../../SessionManager/web/admin/tasks.php:153
+msgid "Finished"
+msgstr "Завершено"
+
+#: ../../SessionManager/web/admin/tasks.php:136
+msgid "List of tasks"
+msgstr "Список заданий"
+
+#: ../../SessionManager/web/admin/tasks.php:157
+#, fuzzy
+msgid "In progress"
+msgstr "идет установка..."
+
+#: ../../SessionManager/web/admin/tasks.php:183
+msgid "Install an application from a package name"
+msgstr "Установить приложение из пакета"
+
+#: ../../SessionManager/web/admin/usersgroup.php:32
+#: ../../SessionManager/web/classes/Preferences.class.php:189
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "1 hour"
+msgstr "1 час"
+
+#: ../../SessionManager/web/admin/usersgroup.php:33
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "1 day"
+msgstr "1 день"
+
+#: ../../SessionManager/web/admin/usersgroup.php:34
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "1 week"
+msgstr "1 неделя"
+
+#: ../../SessionManager/web/admin/usersgroup.php:74
+msgid "User groups"
+msgstr "Группы"
+
+#: ../../SessionManager/web/admin/usersgroup.php:81
+msgid "No available user group"
+msgstr "Нет доступных групп пользователей"
+
+#: ../../SessionManager/web/admin/usersgroup.php:163
+msgid "Static"
+msgstr "Статическая"
+
+#: ../../SessionManager/web/admin/usersgroup.php:163
+#: ../../SessionManager/web/admin/usersgroup.php:166
+msgid "Dynamic"
+msgstr "Динамическая"
+
+#: ../../SessionManager/web/admin/usersgroup.php:217
+msgid "Cached"
+msgstr "В кеше"
+
+#: ../../SessionManager/web/admin/usersgroup.php:221
+msgid "Time between two updates:"
+msgstr "Время между двумя обновлениями:"
+
+#: ../../SessionManager/web/admin/usersgroup.php:228
+#: ../../SessionManager/web/admin/usersgroup.php:500
+msgid "Validation type"
+msgstr "Тип проверки"
+
+#: ../../SessionManager/web/admin/usersgroup.php:229
+#: ../../SessionManager/web/admin/usersgroup.php:504
+msgid "All"
+msgstr "Все"
+
+#: ../../SessionManager/web/admin/usersgroup.php:229
+#: ../../SessionManager/web/admin/usersgroup.php:507
+msgid "At least one"
+msgstr "Как минимум одна"
+
+#: ../../SessionManager/web/admin/usersgroup.php:233
+#: ../../SessionManager/web/admin/usersgroup.php:511
+msgid "Filters"
+msgstr "Фильтры"
+
+#: ../../SessionManager/web/admin/usersgroup.php:289
+msgid "Failed to load usergroup"
+msgstr "Сбой загрузки группы пользователей"
+
+#: ../../SessionManager/web/admin/usersgroup.php:394
+msgid "User groups management"
+msgstr "Управление группами"
+
+#: ../../SessionManager/web/admin/usersgroup.php:416
+msgid "Remove from default"
+msgstr "Группа по-умолчанию: Отменить"
+
+#: ../../SessionManager/web/admin/usersgroup.php:419
+msgid "Define as default"
+msgstr "Сделать группой по-умолчанию"
+
+#: ../../SessionManager/web/admin/usersgroup.php:479
+msgid "Update the schedule"
+msgstr "Обновить расписание"
+
+#: ../../SessionManager/web/admin/usersgroup.php:490
+msgid "Rules"
+msgstr "Правила"
+
+#: ../../SessionManager/web/admin/usersgroup.php:569
+msgid "Update rules"
+msgstr "Обновить правила"
+
+#: ../../SessionManager/web/admin/usersgroup.php:580
+msgid "List of users in this group"
+msgstr "Пользователи группы"
+
+#: ../../SessionManager/web/admin/usersgroup.php:589
+#: ../../SessionManager/web/admin/users.php:95
+#: ../../SessionManager/web/admin/users.php:262
+msgid "Are you sure you want to delete this user?"
+msgstr "Вы действительно хотите удалить этого пользователя?"
+
+#: ../../SessionManager/web/admin/usersgroup.php:669
+msgid "Policy of this group"
+msgstr "Политики группы"
+
+#: ../../SessionManager/web/admin/usersgroup.php:677
+msgid "extend from default"
+msgstr "установить по умолчанию"
+
+#: ../../SessionManager/web/admin/usersgroup.php:683
+msgid "Are you sure you want to delete this rule?"
+msgstr "Вы действительно хотите удалить это правило?"
+
+#: ../../SessionManager/web/admin/usersgroup.php:688
+msgid "Delete this rule"
+msgstr "Удалить правило"
+
+#: ../../SessionManager/web/admin/usersgroup.php:708
+msgid "Add this rule"
+msgstr "Добавить правило"
+
+#: ../../SessionManager/web/admin/usersgroup.php:767
+#, fuzzy
+msgid "Session settings configuration"
+msgstr "Сеансы"
+
+#: ../../SessionManager/web/admin/usersgroup.php:779
+#, fuzzy
+msgid "Default value"
+msgstr "Политика по-умолчанию"
+
+#: ../../SessionManager/web/admin/usersgroup.php:780
+msgid "Value"
+msgstr ""
+
+#: ../../SessionManager/web/admin/usersgroup.php:802
+#, fuzzy
+msgid "Remove this overriden setting"
+msgstr "Удалить это приложение"
+
+#: ../../SessionManager/web/admin/usersgroup.php:816
+#, fuzzy
+msgid "Save settings"
+msgstr "Серверы приложений"
+
+#: ../../SessionManager/web/admin/usersgroup.php:838
+#, fuzzy
+msgid "Add this setting"
+msgstr "Добавить"
+
+#: ../../SessionManager/web/admin/users.php:66
+#: ../../SessionManager/web/admin/wizard.php:157
+#: ../../SessionManager/web/webservices/configuration.php:81
+msgid "No available user"
+msgstr "Пользователи отсутсвуют"
+
+#: ../../SessionManager/web/admin/users.php:113
+msgid "Are you sure you want to delete selected users?"
+msgstr "Вы действительно хотите удалить выбранных пользователей?"
+
+#: ../../SessionManager/web/admin/users.php:155
+#: ../../SessionManager/web/admin/users.php:185
+msgid "Populate"
+msgstr ""
+
+#: ../../SessionManager/web/admin/users.php:158
+msgid ""
+"This feature is useful to create default accounts. It is mainly used when "
+"you want to test the system quickly. It is not recommended to use thoses "
+"default accounts in a production system because it is very easy to delete "
+"them by mistake using this \"populate\" feature."
+msgstr ""
+
+#: ../../SessionManager/web/admin/users.php:167
+msgid "Overwrite existent: "
+msgstr ""
+
+#: ../../SessionManager/web/admin/users.php:173
+#, fuzzy
+msgid "Password management:"
+msgstr "Управление заданиями"
+
+#: ../../SessionManager/web/admin/users.php:180
+#, fuzzy
+msgid "Same as the login"
+msgstr "Такой же как и Users,"
+
+#: ../../SessionManager/web/admin/users.php:181
+msgid "Custom:"
+msgstr ""
+
+#: ../../SessionManager/web/admin/users.php:214
+msgid "Error while requesting usergroups"
+msgstr "Произошла ошибка при получении групп польователей"
+
+#: ../../SessionManager/web/admin/users.php:240
+msgid "Locale"
+msgstr "Локаль"
+
+#: ../../SessionManager/web/admin/users.php:263
+msgid "Delete this user"
+msgstr "Удалить пользователя"
+
+#: ../../SessionManager/web/admin/users.php:307
+msgid "Save the modifications"
+msgstr "Сохранить инменения"
+
+#: ../../SessionManager/web/admin/users.php:319
+msgid "User groups with this user"
+msgstr "Группы в которые включен пользователь"
+
+#: ../../SessionManager/web/admin/users.php:332
+msgid "Are you sure you want to delete this user from this group?"
+msgstr "Вы дествительно хотите удалить пользователя из группы?"
+
+#: ../../SessionManager/web/admin/wizard.php:39
+msgid "No user group selected"
+msgstr "Не задана группа пользователей"
+
+#: ../../SessionManager/web/admin/wizard.php:49
+msgid "No user selected"
+msgstr "Не задан пользователь"
+
+#: ../../SessionManager/web/admin/wizard.php:63
+#: ../../SessionManager/web/admin/wizard.php:109
+msgid "No group name"
+msgstr "Не задано имя группы"
+
+#: ../../SessionManager/web/admin/wizard.php:87
+msgid "No application group selected"
+msgstr "Не задана группа приложений"
+
+#: ../../SessionManager/web/admin/wizard.php:95
+msgid "No application selected"
+msgstr "Приложение не выбрано"
+
+#: ../../SessionManager/web/admin/wizard.php:161
+msgid "Unable to display users list: too many users"
+msgstr "Невозможно показать список пользователей: слишком много пользователей"
+
+#: ../../SessionManager/web/admin/wizard.php:167
+#: ../../SessionManager/web/admin/wizard.php:253
+#: ../../SessionManager/web/admin/wizard.php:313
+#: ../../SessionManager/web/admin/wizard.php:403
+#: ../../SessionManager/web/admin/wizard.php:446
+msgid "Publication Wizard"
+msgstr "Мастер публикаций"
+
+#: ../../SessionManager/web/admin/wizard.php:167
+msgid "User/group selection"
+msgstr "Выбор пользователей и групп"
+
+#: ../../SessionManager/web/admin/wizard.php:179
+msgid "Create a group with users"
+msgstr "Создать группу с пользователями"
+
+#: ../../SessionManager/web/admin/wizard.php:185
+msgid "Use usergroups"
+msgstr "Использовать существующие группы"
+
+#: ../../SessionManager/web/admin/wizard.php:237
+#: ../../SessionManager/web/admin/wizard.php:257
+#: ../../SessionManager/web/admin/wizard.php:278
+#: ../../SessionManager/web/admin/wizard.php:318
+#: ../../SessionManager/web/admin/wizard.php:388
+#: ../../SessionManager/web/admin/wizard.php:407
+#: ../../SessionManager/web/admin/wizard.php:428
+msgid "Next"
+msgstr "Далее"
+
+#: ../../SessionManager/web/admin/wizard.php:253
+msgid "Create usergroup"
+msgstr "Создать группу"
+
+#: ../../SessionManager/web/admin/wizard.php:275
+#: ../../SessionManager/web/admin/wizard.php:384
+#: ../../SessionManager/web/admin/wizard.php:425
+#: ../../SessionManager/web/admin/wizard.php:557
+msgid "Previous"
+msgstr "Назад"
+
+#: ../../SessionManager/web/admin/wizard.php:313
+msgid "Applications/groups selection"
+msgstr "Выбор приложений и групп приложений"
+
+#: ../../SessionManager/web/admin/wizard.php:325
+msgid "Create a group with applications"
+msgstr "Создать группу с приложениями"
+
+#: ../../SessionManager/web/admin/wizard.php:329
+msgid "Use appgroups"
+msgstr "Использовать существующие группы приложений"
+
+#: ../../SessionManager/web/admin/wizard.php:403
+msgid "Create appgroup"
+msgstr "Создание группы приложений"
+
+#: ../../SessionManager/web/admin/wizard.php:446
+msgid "Confirmation"
+msgstr "Подтверждение"
+
+#: ../../SessionManager/web/admin/wizard.php:448
+msgid "Are you sure that you want to create this publication?"
+msgstr "Вы действительно хотите создать публикацию?"
+
+#: ../../SessionManager/web/admin/wizard.php:459
+msgid "Between this usergroup"
+msgstr "Мужду этой группой"
+
+#: ../../SessionManager/web/admin/wizard.php:461
+msgid "Between these usergroups"
+msgstr "Между этими группами пользователей"
+
+#: ../../SessionManager/web/admin/wizard.php:479
+msgid "Between this newly created usergroup"
+msgstr "Между созданными группами пользователей"
+
+#: ../../SessionManager/web/admin/wizard.php:483
+#: ../../SessionManager/web/admin/wizard.php:529
+msgid "Name:"
+msgstr "Имя"
+
+#: ../../SessionManager/web/admin/wizard.php:484
+#: ../../SessionManager/web/admin/wizard.php:530
+msgid "Description: "
+msgstr "Описание"
+
+#: ../../SessionManager/web/admin/wizard.php:485
+msgid "Users:"
+msgstr "Пользователи:"
+
+#: ../../SessionManager/web/admin/wizard.php:509
+msgid "and this applications group"
+msgstr "группа приложений"
+
+#: ../../SessionManager/web/admin/wizard.php:511
+msgid "and these applications groups"
+msgstr "группы приложений"
+
+#: ../../SessionManager/web/admin/wizard.php:525
+msgid "and this newly created applications group"
+msgstr "группа приложений"
+
+#: ../../SessionManager/web/admin/wizard.php:531
+msgid "Applications:"
+msgstr "Приложения:"
+
+#: ../../SessionManager/web/admin/wizard.php:560
+msgid "Confirm"
+msgstr "Подтвердить"
+
+#: ../../SessionManager/web/admin/wizard.php:588
+msgid "Cannot create usergroup"
+msgstr "Невозможно создать группу"
+
+#: ../../SessionManager/web/admin/wizard.php:609
+msgid "Cannot create application group"
+msgstr "Невозможно создать группу"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:38
+msgid "Factor impact"
+msgstr "Параметры показателей"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:45
+msgid "less"
+msgstr "меньше"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:45
+msgid "more"
+msgstr "больше"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:123
+msgid "Back to default"
+msgstr "Восстановить настройки по-умолчанию"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:129
+msgid "Examples"
+msgstr "Примеры"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:139
+msgid ""
+"Full CPU: only CPU usage is used as a criteria to choose the best\n"
+"server to use for an incoming user."
+msgstr ""
+"CPU: в качестве критерия для выбора сервера используется только информация о "
+"доступности ресурсов процессора"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:153
+msgid "Both CPU and RAM are used as criterias, with a little randomization..."
+msgstr "В качестве критериев используются и доступность ресурсов ЦП и ОЗУ..."
+
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:117
+msgid "Active"
+msgstr "Активный"
+
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:120
+#, fuzzy
+msgid "Inactive"
+msgstr "Активный"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:177
+#, fuzzy
+msgid "System in maintenance mode"
+msgstr "В режим обслуживания"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:178
+#: ../../SessionManager/web/classes/Preferences.class.php:261
+#: ../../SessionManager/web/classes/Preferences.class.php:264
+#: ../../SessionManager/web/classes/Preferences.class.php:278
+#: ../../SessionManager/web/classes/Preferences.class.php:284
+#: ../../SessionManager/web/classes/Preferences.class.php:287
+#: ../../SessionManager/web/classes/Preferences.class.php:290
+#: ../../SessionManager/web/classes/Preferences.class.php:310
+#: ../../SessionManager/web/classes/Preferences.class.php:313
+#: ../../SessionManager/web/classes/Preferences.class.php:316
+#: ../../SessionManager/web/classes/Preferences.class.php:319
+#: ../../SessionManager/web/classes/Preferences.class.php:328
+#: ../../SessionManager/web/classes/Preferences.class.php:344
+#: ../../SessionManager/web/classes/Preferences.class.php:347
+#: ../../SessionManager/web/classes/Preferences.class.php:351
+#: ../../SessionManager/web/classes/Preferences.class.php:354
+#: ../../SessionManager/web/classes/Preferences.class.php:357
+#: ../../SessionManager/web/classes/Preferences.class.php:361
+#: ../../SessionManager/web/classes/Preferences.class.php:364
+#: ../../SessionManager/web/classes/Preferences.class.php:367
+#: ../../SessionManager/web/classes/Preferences.class.php:370
+#: ../../SessionManager/web/classes/Preferences.class.php:373
+#: ../../SessionManager/web/classes/Preferences.class.php:383
+msgid "no"
+msgstr "нет"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:178
+#: ../../SessionManager/web/classes/Preferences.class.php:261
+#: ../../SessionManager/web/classes/Preferences.class.php:264
+#: ../../SessionManager/web/classes/Preferences.class.php:278
+#: ../../SessionManager/web/classes/Preferences.class.php:284
+#: ../../SessionManager/web/classes/Preferences.class.php:287
+#: ../../SessionManager/web/classes/Preferences.class.php:290
+#: ../../SessionManager/web/classes/Preferences.class.php:310
+#: ../../SessionManager/web/classes/Preferences.class.php:313
+#: ../../SessionManager/web/classes/Preferences.class.php:316
+#: ../../SessionManager/web/classes/Preferences.class.php:319
+#: ../../SessionManager/web/classes/Preferences.class.php:328
+#: ../../SessionManager/web/classes/Preferences.class.php:344
+#: ../../SessionManager/web/classes/Preferences.class.php:347
+#: ../../SessionManager/web/classes/Preferences.class.php:351
+#: ../../SessionManager/web/classes/Preferences.class.php:357
+#: ../../SessionManager/web/classes/Preferences.class.php:361
+#: ../../SessionManager/web/classes/Preferences.class.php:364
+#: ../../SessionManager/web/classes/Preferences.class.php:367
+#: ../../SessionManager/web/classes/Preferences.class.php:370
+#: ../../SessionManager/web/classes/Preferences.class.php:373
+#: ../../SessionManager/web/classes/Preferences.class.php:383
+msgid "yes"
+msgstr "да"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:181
+msgid "Administration console language"
+msgstr "Язык панели управления"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:182
+msgid "Autodetect"
+msgstr "Автообнаружение"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:185
+msgid "Debug options list"
+msgstr "Список опций отладки"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:185
+msgid "Select debug options you want to enable."
+msgstr "Выберите опции для отладки"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:186
+msgid "debug"
+msgstr "отладка"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:186
+msgid "info"
+msgstr "информация"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:186
+msgid "warning"
+msgstr "предупреждение"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:186
+msgid "error"
+msgstr "ошибка"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:186
+msgid "critical"
+msgstr "критический"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:188
+msgid "Cache logs update interval"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:189
+msgid "30 seconds"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:189
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "1 minute"
+msgstr "1 минута"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:189
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "5 minutes"
+msgstr "5 минут"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:189
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "15 minutes"
+msgstr "15 минут"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:189
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "30 minutes"
+msgstr "30 минут"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:189
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "2 hours"
+msgstr "2 часа"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:191
+msgid "Cache logs expiry time"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:192
+#, fuzzy
+msgid "A day"
+msgstr "1 день"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:192
+#, fuzzy
+msgid "A week"
+msgstr "1 неделя"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:192
+#, fuzzy
+msgid "A month"
+msgstr "1 месяц"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:192
+msgid "A year"
+msgstr ""
+
+#. $c = new ConfigElement_input('start_app','start_app','start_app_des','');
+#. $this->add('general',$c);
+#: ../../SessionManager/web/classes/Preferences.class.php:198
+msgid "Default user group"
+msgstr "Группа пользователей по-умолчанию"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:201
+msgid "Maximum items per page"
+msgstr "Максимум записей на странице"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:201
+msgid "The maximum number of items that can be displayed."
+msgstr "Максимально отображаемое число"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:204
+msgid "Default browser"
+msgstr "Браузер по-умолчанию"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:207
+msgid "Default policy"
+msgstr "Политика по-умолчанию"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:209
+msgid "use Admin panel"
+msgstr "Доступ к панели администратора"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:210
+msgid "view Servers"
+msgstr "Серверы (просмотр)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:211
+msgid "manage Servers"
+msgstr "Серверы (управление)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:212
+msgid "view Shared folders"
+msgstr "Общие папки (просмотр)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:213
+msgid "manage Shared folders"
+msgstr "Общие папки (управление)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:214
+msgid "view Users"
+msgstr "Пользователи (просмотр)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:215
+msgid "manage Users"
+msgstr "Пользователи (управление)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:216
+msgid "view Usergroups"
+msgstr "Группы пользователей (просмотр)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:217
+msgid "manage Usergroups"
+msgstr "Группы пользователей (управление)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:218
+msgid "view Applications"
+msgstr "Приложения (просмотр)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:219
+msgid "manage Applications"
+msgstr "Приложения (управление)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:220
+msgid "view Application groups"
+msgstr "Группы приложений (просмотр)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:221
+msgid "manage Application groups"
+msgstr "Группы приложений (управление)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:222
+msgid "view Publications"
+msgstr "Публикации (просмотр)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:223
+msgid "manage Publications"
+msgstr "Публикации (управление)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:224
+msgid "view Configuration"
+msgstr "Настройки (просмотр)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:225
+msgid "manage Configuration"
+msgstr "Настройки (управление)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:226
+msgid "view Status"
+msgstr "Состояние (просмотр)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:227
+msgid "view Summary"
+msgstr "Общая информация (просмотр)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:228
+msgid "view News"
+msgstr "Новости (просмотр)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:229
+msgid "manage News"
+msgstr "Новости (управление)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:233
+msgid "Policy for administration delegation"
+msgstr "Политика делегирования административных привелегий"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:235
+#, fuzzy
+msgid "SQL configuration"
+msgstr "Конфигурация MySQL"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:236
+#, fuzzy
+msgid "Database type"
+msgstr "База данных:"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:236
+#, fuzzy
+msgid "The type of your database."
+msgstr "Имя базы данных"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:237
+#: ../../SessionManager/web/modules/ApplicationDB/sql.php:190
+#: ../../SessionManager/web/modules/ApplicationsGroupDB/sql.php:171
+#: ../../SessionManager/web/modules/UserDB/sql.php:228
+#: ../../SessionManager/web/modules/UserGroupDB/sql.php:164
+msgid "MySQL"
+msgstr "MySQL"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:239
+msgid "Database host address"
+msgstr "Адрес сервера"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:239
+msgid ""
+"The address of your database host. This database contains adminstration "
+"console data. Example: localhost or db.mycorporate.com."
+msgstr ""
+"Адрес хоста Базы Даных. Она содержит данные консолиадминистратора. Например: "
+"localhost or db.mycorporate.com."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:239
+msgid ""
+"The address of your database host. This database contains adminstrations "
+"console data. Example: localhost or db.mycorporate.com."
+msgstr ""
+"Адрес хоста Базы Даных. Она содержит данные консолиадминистратора. Например: "
+"localhost or db.mycorporate.com."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:241
+msgid "Database username"
+msgstr "Пользователь"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:241
+msgid "The username that must be used to access the database."
+msgstr "Имя пользователя для доступа к базе данных"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:241
+msgid "The user name that must be used to access the database."
+msgstr "Имя пользователя для доступа к базе данных."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:243
+msgid "Database password"
+msgstr "Пароль"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:243
+msgid "The user password that must be used to access the database."
+msgstr "Пароль пользователя"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:245
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:200
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:111
+msgid "Database name"
+msgstr "База данных"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:245
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:200
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:111
+msgid "The name of the database."
+msgstr "Имя базы данных"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:247
+msgid "Table prefix"
+msgstr "Префикс для таблиц"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:247
+msgid "The table prefix for the database."
+msgstr "Префикс таблиц в для базы данных."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:250
+msgid "Email settings"
+msgstr "Настройки электронной почты"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:251
+msgid "Mail server type"
+msgstr "Тип сервера"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:252
+msgid "Local"
+msgstr "Локальный"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:252
+msgid "SMTP server"
+msgstr "SMTP сервер"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:256
+msgid "Host"
+msgstr "Имя или IP-адрес"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:258
+msgid "Port"
+msgstr "Порт"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:260
+msgid "Use SSL with SMTP"
+msgstr "Использовать SSL с SMTP"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:263
+msgid "Authentication"
+msgstr "Аутентификация"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:266
+msgid "SMTP username"
+msgstr "Пользователь"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:268
+msgid "SMTP password"
+msgstr "Пароль"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:271
+#, fuzzy
+msgid "Slave Server settings"
+msgstr "Серверы приложений"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:272
+msgid "Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)"
+msgstr ""
+"Авторизованные серверы (Полное доменное имя или IP-адрес. Допускается "
+"использование подстановочных знаков (*.))"
+
+#. fqdn_private_address : array('dns' => ip);
+#: ../../SessionManager/web/classes/Preferences.class.php:275
+msgid "Name/IP Address association (name <-> ip)"
+msgstr "Связь имени и IP-адреса <br />(имя &rarr; ip)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:275
+msgid ""
+"Enter a private addresses you wish to associate to a specific IP in case of "
+"issue with the DNS configuration or to override a reverse address result. "
+"Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)"
+msgstr ""
+"Введите приватные адреса которые необходимо ассоциировать с определенным IP-"
+"адресом в случае проблем в конфигурации DNS или для переопределения "
+"обратного резолвинга. Пример: pong.office.ulteo.com (поле 1) 192.168.0.113 "
+"(поле 2)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:277
+msgid "Disable reverse FQDN checking"
+msgstr ""
+"Отключить проверку на существование доменного имени в обратной ДНС зоне"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:277
+msgid ""
+"Enable this option if you don't want to check that the result of the reverse "
+"FQDN address fits the one that was registered."
+msgstr ""
+"Enable this option if you don't want to check that the result of the reverse "
+"FQDN address fits the one that was registered."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:280
+#, fuzzy
+msgid "Action when an server status is not ready anymore"
+msgstr "Выполнять в случае если сервер приложений (ApS) не доступен"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:281
+msgid "Do nothing"
+msgstr "Ничего не делать"
+
+# не понятно как перевести orphan ... пока пусть будет "одиночный".
+#: ../../SessionManager/web/classes/Preferences.class.php:283
+#, fuzzy
+msgid "Remove orphan applications when the application server is deleted"
+msgstr "В случае удаления сервера, удалить одиночные приложения "
+
+#: ../../SessionManager/web/classes/Preferences.class.php:286
+msgid "Auto register new servers"
+msgstr "Автоматически регистрировать новые серверы"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:289
+msgid "Auto switch new servers to production mode"
+msgstr "Автоматически переключать новые серверы в продуктивный режим"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:293
+#, fuzzy
+msgid "Load Balancing policy for Application Server"
+msgstr "Политика балансировки нагрузки"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:293
+#, fuzzy
+msgid "Load Balancing policy for File Server"
+msgstr "Политика балансировки нагрузки"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:307
+#, fuzzy
+msgid "Remote Desktop settings"
+msgstr "Настройки Событий"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:309
+msgid "Enable Remote Desktop"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:312
+msgid "Sessions are persistent"
+msgstr "Сеансы пользователей являются постоянными (persistent)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:315
+msgid "Show icons on user desktop"
+msgstr "Показывать значки на рабочем столе"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:318
+msgid "Allow external applications in Desktop"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:321
+#, fuzzy
+msgid "Desktop type"
+msgstr "Рабочий стол"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:322
+msgid "Any"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:322
+msgid "Linux"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:322
+#, fuzzy
+msgid "Windows"
+msgstr "Раскладка"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:325
+#, fuzzy
+msgid "Remote Applications settings"
+msgstr "Настройки серверов приложений"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:327
+#, fuzzy
+msgid "Enable Remote Applications"
+msgstr "Приложения (управление)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:331
+msgid "Sessions settings"
+msgstr "Настройка параметров сеансов"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:333
+msgid "Default mode for session"
+msgstr "Режим сеанса по-умолчанию"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:337
+msgid "Default language for session"
+msgstr "Язык для сеанса по-умолчанию"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:340
+msgid "Default timeout for session"
+msgstr "Таймаут для сеанса по-умолчанию"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "2 minutes"
+msgstr "2 минуты"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "10 minutes"
+msgstr "10 минут"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "5 hours"
+msgstr "5 часов"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "12 hours"
+msgstr "12 часов"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "2 days"
+msgstr "2 дня"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "1 month"
+msgstr "1 месяц"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "Never"
+msgstr "Никогда"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:343
+msgid "User can launch a session with no application"
+msgstr "Пользователь может запускать сеанс без приложений"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:346
+msgid "User can use a console in the session"
+msgstr "Пользователь может использовать консоль в сеансе"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:350
+msgid "Multimedia"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:353
+msgid "Redirect client drives"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:354
+msgid "partial"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:354
+msgid "full"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:356
+msgid "Redirect client printers"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:360
+#, fuzzy
+msgid "Enable user profiles"
+msgstr "Внутренняя база данных пользователей"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:363
+msgid "Auto-create user profile when nonexistant"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:366
+#, fuzzy
+msgid "Launch a session without a valid profile"
+msgstr "Запуск сессии в отдельном окне"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:369
+#, fuzzy
+msgid "Enable sharedfolders"
+msgstr "Использовать общие папки"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:372
+msgid "Launch a session even if a shared folder's fileserver is missing"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:376
+msgid "Forceable paramaters by users"
+msgstr "Параметры сеанса изменяемые пользователями"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:376
+msgid ""
+"Choose Advanced Settings options you want to make available to users before "
+"they launch a session."
+msgstr ""
+"Выберите расширенные настройки если хотите сделать доступными для "
+"пользователей до начала их сессии."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:377
+msgid "session mode"
+msgstr "режим сессии"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:377
+msgid "language"
+msgstr "язык"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:377
+msgid "server"
+msgstr "сервер"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:377
+msgid "timeout"
+msgstr "таймаут"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:382
+msgid "Display users list"
+msgstr "Показать список пользователей"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:382
+msgid ""
+"Display the list of users from the corporate directory in the login box. If "
+"the list is not displayed, the user must enter his login name."
+msgstr ""
+"Показывать список пользователей с корпоративной директории в поле логина. "
+"Если список не отображается, пользователь должен сам ввести логин."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:408
+msgid "Modules activation"
+msgstr "Модули"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:408
+msgid "Choose the modules you want to enable."
+msgstr "Выберите модули, которые хотите включить."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:458
+msgid "Mail addresses to send alerts to"
+msgstr "Адреса электронной почты для отправки уведомлений"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:458
+msgid "On system alerts, mails will be sent to these addresses"
+msgstr "Системные сообщения будут отправлены по этим адресам"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:483
+msgid "Activated callbacks"
+msgstr "Обработчики событий"
+
+#: ../../SessionManager/web/classes/Server.class.php:288
+msgid "is NOT online!"
+msgstr "недоступен!"
+
+#: ../../SessionManager/web/classes/Server.class.php:442
+msgid "Under maintenance"
+msgstr "Обслуживается"
+
+#: ../../SessionManager/web/classes/Server.class.php:448
+msgid "Offline"
+msgstr "Недоступен"
+
+#: ../../SessionManager/web/classes/Server.class.php:450
+msgid "Broken"
+msgstr "Неисправен"
+
+#: ../../SessionManager/web/classes/Session.class.php:220
+msgid "Created"
+msgstr "Создано"
+
+#: ../../SessionManager/web/classes/Session.class.php:223
+msgid "Initializing"
+msgstr "Инициализация"
+
+#: ../../SessionManager/web/classes/Session.class.php:229
+msgid "Logged"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Session.class.php:232
+msgid "Disconnected"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Session.class.php:235
+msgid "To destroy"
+msgstr "На уничтожение"
+
+#: ../../SessionManager/web/classes/Session.class.php:238
+msgid "Destroyed"
+msgstr "Уничтожена"
+
+#: ../../SessionManager/web/classes/tasks/Task.class.php:68
+#, php-format
+msgid "Unable to submit Task to server '%s'"
+msgstr ""
+
+#: ../../SessionManager/web/classes/User.class.php:312
+#, php-format
+msgid ""
+"User '%s' have at least two groups with the same overriden rule but with "
+"differents value, the result will be unpredictable."
+msgstr ""
+
+#: ../../SessionManager/web/client/start.php:270
+msgid "No available server"
+msgstr "Нет доступных серверов"
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Mail.class.php:46
+#, php-format
+msgid "OVD Alert: %s is offline"
+msgstr "OVD Alert: %s не доступен"
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Mail.class.php:48
+#, php-format
+msgid "OVD End Alert: %s is up again"
+msgstr "OVD End Alert: %s вновь запущен"
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Mail.class.php:57
+#: ../../SessionManager/web/events/callbacks/SqlFailure/Mail.class.php:59
+msgid "Send a mail"
+msgstr "Отправить сообщение"
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Task.class.php:53
+msgid "Cleanup tasks"
+msgstr "Очистить список задач"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:49
+#, fuzzy, php-format
+msgid "OVD Session alert: %s couldn't log in"
+msgstr "OVD Session alert: %s (uid %s) не возможно зарегистрироваться"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:53
+msgid "The following error happened:\n"
+msgstr "Произошла обшибка:\n"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:55
+msgid "No error given"
+msgstr "Неизвестная ошибка"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:64
+msgid "Send a mail on login problem"
+msgstr "Отправить сообщение в случае неудачной аутентификации"
+
+#: ../../SessionManager/web/events/callbacks/SqlFailure/Mail.class.php:46
+#, php-format
+msgid "OVD Alert: MySQL %s is offline"
+msgstr "OVD Alert: MySQL %s не доступен"
+
+#: ../../SessionManager/web/events/callbacks/SqlFailure/Mail.class.php:49
+#, php-format
+msgid "OVD End Alert: MySQL %s is up again"
+msgstr "OVD End Alert: MySQL %s вновь доступен"
+
+#: ../../SessionManager/web/events/ServerStatusChanged.class.php:30
+msgid "Server status changed"
+msgstr "Статус сервера изменен"
+
+#: ../../SessionManager/web/events/SessionStart.class.php:26
+msgid "Session startup"
+msgstr "Запуск сеанса"
+
+#: ../../SessionManager/web/events/SessionStatusChanged.class.php:26
+msgid "Session status changed"
+msgstr "Статус сеанса изменен"
+
+#: ../../SessionManager/web/events/SqlFailure.class.php:26
+msgid "Sql failure"
+msgstr "Неудачное выполнение SQL запросов"
+
+#: ../../SessionManager/web/includes/defaults.inc.php:26
+#, fuzzy
+msgid "Open Virtual Desktop"
+msgstr "приложения доступные на рабочем столе"
+
+#: ../../SessionManager/web/modules/ApplicationsGroupDB.php:32
+#, fuzzy
+msgid "Module ApplicationsGroupDB must be enabled"
+msgstr "Модуль ApplicationDB должен быть включен"
+
+#: ../../SessionManager/web/modules/ApplicationsGroupDB/sql.php:198
+#, fuzzy
+msgid "Applications group already exists"
+msgstr "Группы приложений"
+
+#: ../../SessionManager/web/modules/AuthMethod/CAS.php:72
+msgid "CAS authentication"
+msgstr "CAS аутентификация"
+
+#: ../../SessionManager/web/modules/AuthMethod/CAS.php:86
+msgid "CAS server URL"
+msgstr "Адрес CAS сервера"
+
+#: ../../SessionManager/web/modules/AuthMethod/Password.php:48
+msgid "Login/Password authentication"
+msgstr "Аутентификация по логину/паролю"
+
+#: ../../SessionManager/web/modules/AuthMethod/RemoteUser.php:47
+msgid "RemoteUser authentication"
+msgstr "Аутентификация удаленного пользователя"
+
+#: ../../SessionManager/web/modules/AuthMethod/RemoteUser.php:63
+msgid "SERVER variable for SSO"
+msgstr "Переменная SERVER для SSO"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:69
+msgid "Token authentication"
+msgstr "Аутентификация по маркеру безопасности"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:95
+msgid "Token validation URL"
+msgstr "Маркер проверки URL"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:95
+msgid ""
+"If a token argument is sent to startsession, the system tries to get an user "
+"login by requesting the token validation url.<br /><br />Put here the url to "
+"request if a token argument is sent to <i>startsession</i> instead of login/"
+"password.<br /><br />The special string <b>%TOKEN%</b> needs to be set "
+"because it's replaced by the token argument when the URL is requested."
+msgstr ""
+"Если маркер безопасности посылается сессии, система пытается получить логин "
+"пользователя по предоставленному ключу в URL.<br /><br />Вставте сюда URL "
+"запроса если аргумента посылается <i>сессии</i> вместо логина/и пароля.<br /"
+"><br />Специальная переменная <b>%TOKEN%</b> должна быть установлена так как "
+"она заменяет аргумент когда URL запрошен."
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:96
+msgid "Token XML user node name"
+msgstr "Маркер безопасности XML узла"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:96
+msgid "The id of the XML node which contains the user login"
+msgstr "ID XML узла, который содержит логин"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:97
+msgid "Token XML login attribute name"
+msgstr "Маркер безопасности атрибута XML с логином"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:97
+msgid ""
+"The name of the XML attribute which contains the user login (in the node "
+"\"user_node_name\")"
+msgstr ""
+"Название XML атрибута который содержит логин(в узле \"user_node_name\")"
+
+#: ../../SessionManager/web/modules/HA/high_availability.php:29
+msgid "Virtual IP"
+msgstr ""
+
+#: ../../SessionManager/web/modules/HA/high_availability.php:39
+#, fuzzy
+msgid "HA configuration"
+msgstr "Настройки"
+
+#: ../../SessionManager/web/modules/HA.php:31
+#: ../../SessionManager/web/modules/UserDB.php:32
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_memberof.php:102
+#: ../../SessionManager/web/webservices/configuration.php:66
+msgid "Module UserDB must be enabled"
+msgstr "Модуль UserDB должен быть включен"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:82
+#: ../../SessionManager/web/modules/UserDB/ldap.php:284
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:194
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:105
+msgid "Server host address"
+msgstr "Адрес хоста"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:82
+msgid "The address of your Active Directory server."
+msgstr "Адрес Active Directory сервера."
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:84
+msgid "Domain name"
+msgstr "Имя домена"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:84
+msgid "Domain name used by Active Directory"
+msgstr "Имя домена в Active Directory"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:86
+msgid "Administrator DN"
+msgstr "DN Администратора"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:86
+#: ../../SessionManager/web/modules/UserDB/ldap.php:288
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:196
+msgid ""
+"The user login that must be used to access the database (to list users "
+"accounts)."
+msgstr ""
+"Логин пользователя для доступа к базе даных (для просмотра списка аккаунтов)."
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:88
+msgid "Administrator password"
+msgstr "Пароль администратора"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:88
+#: ../../SessionManager/web/modules/UserDB/ldap.php:290
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:198
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:109
+msgid ""
+"The user password that must be used to access the database (to list users "
+"accounts)."
+msgstr ""
+"Логин пользователя для доступа к базе даных (для просмотра списка аккаунтов)."
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:90
+msgid "User branch DN"
+msgstr "DN дерева пользователей"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:92
+msgid "match"
+msgstr "совпадают"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:284
+msgid "The address of your LDAP server."
+msgstr "Адрес LDAP сервера"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:286
+msgid "Server port"
+msgstr "Порт"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:286
+msgid "The port number used by your LDAP server."
+msgstr "Номер порта LDAP сервера"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:286
+msgid "The port use by your LDAP server."
+msgstr "Порт используемый LDAP сервером"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:288
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:196
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:107
+msgid "User login"
+msgstr "Имя пользователя"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:290
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:198
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:109
+msgid "User password"
+msgstr "Пароль"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:298
+msgid "Protocol version"
+msgstr "Версия протокола"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:298
+msgid "The protocol version used by your LDAP server."
+msgstr "Версия протокола используемая LDAP сервером"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:300
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:204
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:115
+msgid "Matching"
+msgstr "Согласование"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:303
+msgid "Filter (optional)"
+msgstr "Фильтр (опционально)"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:303
+msgid "Filter, example (&(distinguishedname=mike*)(uid=42*))"
+msgstr "Фильтр, пример (&(distinguishedname=mike*)(uid=42*)) "
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:194
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:105
+msgid "The address of your MySQL server."
+msgstr "Адрес MySQL сервера"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:202
+msgid "Table of users"
+msgstr "Таблица пользователей"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:206
+msgid "Hash method"
+msgstr "Hash метод"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:207
+msgid "MD5"
+msgstr "MD5"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:207
+msgid "Crypt"
+msgstr "Шифрование"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:207
+msgid "Plain"
+msgstr "Простой"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:229
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:137
+msgid "MySQL external"
+msgstr "внешняя база MySQL"
+
+#: ../../SessionManager/web/modules/UserDB/sql.php:246
+msgid "User already exists"
+msgstr "Пользователь уже существует"
+
+#: ../../SessionManager/web/modules/UserDB/unix.php:116
+msgid "local"
+msgstr "локальный"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_memberof.php:190
+msgid "LDAP using memberOf"
+msgstr "Использовать LDAP с пользователями"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:32
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:69
+#: ../../SessionManager/web/modules/UserGroupDB.php:32
+#: ../../SessionManager/web/modules/UserGroupDB.php:148
+msgid "Module UserGroupDB must be enabled"
+msgstr "Модуль UserGroupDB должен быть включен"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:134
+msgid "Group Branch DN"
+msgstr "Дополнительное DN групы"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:134
+msgid "Use LDAP User Groups using Posix group, Group Branch DN:"
+msgstr "Получать из каталога LDAP с использованием Posix группы, DN группы"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:139
+msgid "LDAP using posix group"
+msgstr "LDAP использовать posix группу"
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:107
+msgid ""
+"The user login that must be used to access the database (to list users "
+"groups accounts)."
+msgstr ""
+"Логин пользователя для доступа к базе даных (для просмотра списка групп)."
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:113
+msgid "table of usersgroup"
+msgstr "таблица групп пользователей"
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql.php:183
+msgid "Users group already exists"
+msgstr "Группа уже существует"
+
+#: ../../SessionManager/web/webservices/configuration.php:26
+msgid "Internal error"
+msgstr "Внутренняя ошибка"
+
+#: ../../SessionManager/web/webservices/configuration.php:39
+msgid "Maximum"
+msgstr "Максимум"
+
+#: ../../SessionManager/web/webservices/configuration.php:79
+msgid "Getting userlist failed"
+msgstr "Не возможно получить поле \"список пользователей\""
+
+#~ msgid "8-bits"
+#~ msgstr "8-бит"
+
+#~ msgid "Action to do when an user already have an active session"
+#~ msgstr ""
+#~ "Действие которое необходимо выполнить в случае если пользователь уже "
+#~ "имеет активный сеанс"
+
+#~ msgid "Advanced settings"
+#~ msgstr "Расширенные настроки"
+
+#~ msgid "Allow connections through proxy (SSH/ping applet test required)"
+#~ msgstr ""
+#~ "Разрешить соединения через прокси (SSH/ping applet test должен быть "
+#~ "включен)"
+
+#~ msgid "Application Server"
+#~ msgstr "Серверы приложений"
+
+#~ msgid "Application does not exist"
+#~ msgstr "Приложение не существует"
+
+#~ msgid "Application not available"
+#~ msgstr "Приложение не доступно"
+
+#~ msgid "AppsGroup successfully added"
+#~ msgstr "Группа приложений успешно добавлена"
+
+#~ msgid "AppsGroup successfully deleted"
+#~ msgstr "Группа приложений успешно удалена"
+
+#~ msgid "AppsGroup successfully modified"
+#~ msgstr "Группа приложений успешно модифицирована"
+
+#~ msgid "Authentication failed"
+#~ msgstr "Ошибка Аутентификации"
+
+#~ msgid "Choose the plugins you want to enable."
+#~ msgstr "Выберите плагины, которые хотите включить."
+
+#~ msgid "Common Internet File System (CIFS)"
+#~ msgstr "Common Internet File System (CIFS)"
+
+#~ msgid "Common Internet File System (CIFS) without services for unix"
+#~ msgstr "Common Internet File System (CIFS) без сервисов для unix"
+
+#~ msgid "Configuration file missing"
+#~ msgstr "Не найден файл конфигурации"
+
+#~ msgid "Configuration not valid"
+#~ msgstr "Конфигурация содержит ошибки"
+
+#~ msgid "Connect to or observe this session"
+#~ msgstr "Подключиться или наблюдать за этом сеансом"
+
+#~ msgid "Daemon log"
+#~ msgstr "Лог демона"
+
+#~ msgid "Database"
+#~ msgstr "База данных"
+
+#~ msgid "Debug"
+#~ msgstr "Отладка"
+
+#~ msgid "Default quality for session"
+#~ msgstr "Качество изображения для сеанса по-умолчанию"
+
+#~ msgid "Default windows keymap for session"
+#~ msgstr "Раскладка клавиатуры для сеанса по-умолчанию"
+
+#~ msgid "ERROR"
+#~ msgstr "ОШИБКА"
+
+#~ msgid "Enable Internal WebDAV filesystem"
+#~ msgstr "Включить файловую систему Internal WebDAV"
+
+#~ msgid "External"
+#~ msgstr "Внешний"
+
+#~ msgid "Filter add list: "
+#~ msgstr "Фильтр"
+
+#~ msgid "Forbid access"
+#~ msgstr "Запретить доступ"
+
+#~ msgid "Heading title"
+#~ msgstr "Заголовок"
+
+#~ msgid "High"
+#~ msgstr "Высокий"
+
+#~ msgid "Highest"
+#~ msgstr "Наивысший"
+
+#~ msgid "Home Directory"
+#~ msgstr "Домашняя директория"
+
+#~ msgid "Home Directory:"
+#~ msgstr "Домашняя директория:"
+
+#~ msgid "Host: "
+#~ msgstr "Имя или IP-адрес"
+
+#~ msgid "I want to create my own users"
+#~ msgstr "Создать пользователей"
+
+#~ msgid "In guest mode"
+#~ msgstr "В гостевом режиме"
+
+#~ msgid "Internal WebDAV"
+#~ msgstr "Внешний WebDAV"
+
+#~ msgid "Internal error: failed to initialize session"
+#~ msgstr "Внутренняя ошибка: сессия не инициализирована"
+
+#~ msgid "Internal error: failed to suspend session"
+#~ msgstr "Внутренняя ошибка: невозможно приостановить сессию"
+
+#~ msgid "Internal error: wrong session status"
+#~ msgstr "Внутренняя ошибка: неправильный статус сессии"
+
+#~ msgid "Invitation"
+#~ msgstr "Приглашение"
+
+#~ msgid "Invitation sent"
+#~ msgstr "Приглашение отправлено"
+
+#~ msgid "Invite into the session"
+#~ msgstr "Пригласить в сессию"
+
+#~ msgid "Join this application"
+#~ msgstr "Подключиться к приложению"
+
+#~ msgid "Join this session"
+#~ msgstr "Подключиться к сеансу"
+
+#~ msgid "KMA expirated"
+#~ msgstr "Время жизни сессии"
+
+#~ msgid "Killed by administrator"
+#~ msgstr "Завершено Администратором"
+
+#~ msgid "Language"
+#~ msgstr "Язык"
+
+#~ msgid "Launch an application when the desktop is starting"
+#~ msgstr "запуск приложения в момент инициализации рабочего стола"
+
+#~ msgid "Launch an application with extra arguments"
+#~ msgstr "Запуск приложений с дополнительными аргументами"
+
+#~ msgid "Launch forced application with a desktop"
+#~ msgstr "Принудительно запускать приложение вместе с рабочим столом"
+
+#~ msgid "Loading"
+#~ msgstr "Загрузка"
+
+#~ msgid "Login: "
+#~ msgstr "Логин: "
+
+#~ msgid "Logo URL"
+#~ msgstr "Логотип (URL)"
+
+#~ msgid "Medium"
+#~ msgstr "Средний"
+
+#~ msgid "Network File System (NFS)"
+#~ msgstr "Network File System (NFS)"
+
+#~ msgid "Never connected to SSH server"
+#~ msgstr "Никогда не соединялся с SSH сервером"
+
+#~ msgid "No available filesystem"
+#~ msgstr "Нет доступных файловых систем"
+
+#~ msgid "No available session"
+#~ msgstr "Нет достпных сеансов"
+
+#~ msgid "Normally ended"
+#~ msgstr "Нормально завершен"
+
+#~ msgid "Observe this application"
+#~ msgstr "Наблюдать за приложением"
+
+#~ msgid "Observe this session"
+#~ msgstr "Наблюдать за этим сеансом"
+
+#~ msgid "Partial content:"
+#~ msgstr "Часть содержания"
+
+#~ msgid "Password: "
+#~ msgstr "Пароль: "
+
+#~ msgid "Persistent session"
+#~ msgstr "Постоянная сессия"
+
+#~ msgid "Please login with your username"
+#~ msgstr "Пожалуйста зарегистрируйтесь"
+
+#~ msgid "Please login with your username and password"
+#~ msgstr "Пожалуйста залогинитесь"
+
+#~ msgid "Please restrict your search field."
+#~ msgstr "Пожалуйста, ограничте область поиска"
+
+#~ msgid "Plugins activation"
+#~ msgstr "Активация плагинов"
+
+#~ msgid "Plugins configuration"
+#~ msgstr "Конфигурация плагинов"
+
+#~ msgid "Plugins configuration not valid"
+#~ msgstr "Не валидная конфигурация для плагинов"
+
+#~ msgid "Portal"
+#~ msgstr "Портал"
+
+#~ msgid "Prefix: "
+#~ msgstr "Префикс:"
+
+#~ msgid "Proxy host"
+#~ msgstr "Хост прокси"
+
+#~ msgid "Proxy password"
+#~ msgstr "Пароль прокси"
+
+#~ msgid "Proxy port"
+#~ msgstr "Порт"
+
+#~ msgid "Proxy type"
+#~ msgstr "Тип прокси"
+
+#~ msgid "Proxy username"
+#~ msgstr "Имя пользователя"
+
+#~ msgid "Quality"
+#~ msgstr "Качество"
+
+#~ msgid "Remember proxy"
+#~ msgstr "Запомнить прокси"
+
+#~ msgid "Resuming"
+#~ msgstr "Возобновление"
+
+#~ msgid "SESSION IS STARTED"
+#~ msgstr "СЕССИЯ ЗАПУЩЕНА"
+
+#~ msgid "SESSIONMANAGER_ADMIN_LOGIN is not defined"
+#~ msgstr "SESSIONMANAGER_ADMIN_LOGIN не задан"
+
+#~ msgid "SESSIONMANAGER_ADMIN_PASSWORD is not defined"
+#~ msgstr "SESSIONMANAGER_ADMIN_PASSWORD не задан"
+
+#~ msgid "SESSIONMANAGER_CONFFILE_SERIALIZED is not defined"
+#~ msgstr "SESSIONMANAGER_CONFFILE_SERIALIZED не задан"
+
+#~ msgid "SESSIONMANAGER_CONFFILE_SERIALIZED is not writable"
+#~ msgstr "SESSIONMANAGER_CONFFILE_SERIALIZED не доступен для записи"
+
+#~ msgid "SESSIONMANAGER_LOGS is not defined"
+#~ msgstr "SESSIONMANAGER_LOGS не задана"
+
+#~ msgid "SESSIONMANAGER_LOGS is not writable"
+#~ msgstr "SESSIONMANAGER_LOGS не доступен для записи"
+
+#~ msgid "SESSIONMANAGER_SPOOL is not defined"
+#~ msgstr "SESSIONMANAGER_SPOOL не задана"
+
+#~ msgid "SESSIONMANAGER_SPOOL is not writable"
+#~ msgstr "SESSIONMANAGER_SPOOL не доступен для записи"
+
+#~ msgid "SSH/ping applet test"
+#~ msgstr "SSH/ping тест"
+
+#~ msgid "Session mode"
+#~ msgstr "Режим сессии"
+
+#~ msgid "Session owner can share his session"
+#~ msgstr "Владелец сеанса может предоставить общий доступ к своему сеансу"
+
+#~ msgid "Session timeout message"
+#~ msgstr "Сообщение пользователю при завершении сеанса"
+
+#~ msgid ""
+#~ "Set this to Yes when you use LDAP profile to connect to an "
+#~ "ActiveDirectory environment instead of using the ActiveDirectory profile"
+#~ msgstr ""
+#~ "Установите Да, если вы используете LDAP профиль для ActiveDirectory "
+#~ "вместо профиля ActiveDirectory"
+
+#~ msgid "Shareable session"
+#~ msgstr "Разделяемая сессия"
+
+#~ msgid "SharedFolder successfully added"
+#~ msgstr "Общая папка успешно добавлена"
+
+#~ msgid "Shutdown of the Application Server"
+#~ msgstr "Серверы приложений"
+
+#~ msgid "Size"
+#~ msgstr "Размер"
+
+#~ msgid "Suspended"
+#~ msgstr "Остановлена"
+
+#~ msgid "Suspending"
+#~ msgstr "Остановка"
+
+#~ msgid "The service is not available, please try again later"
+#~ msgstr "Сервис не доступен"
+
+#~ msgid "Timeout"
+#~ msgstr "Таймаут"
+
+#~ msgid "To create"
+#~ msgstr "Чтобы создать"
+
+#~ msgid "To start"
+#~ msgstr "Для начала"
+
+#~ msgid "Uid"
+#~ msgstr "Идентификатор"
+
+#~ msgid "Use Active Directory Home dir"
+#~ msgstr "Брать домашнюю директорию из Active Directory"
+
+#~ msgid "Use Active Directory User profiles as Home directory"
+#~ msgstr ""
+#~ "Брать домашнюю директорию пользователя из профиля пользователя в Active "
+#~ "Directory"
+
+#~ msgid "Use CIFS link using the LDAP field"
+#~ msgstr "CIFS ссылка полученная из поля LDAP каталога"
+
+#~ msgid "Use CIFS link using the LDAP field:"
+#~ msgstr "CIFS ссылка полученная из поля LDAP каталога:"
+
+#~ msgid "Use Internal home directory (no server replication)"
+#~ msgstr "Использовать локальные (без репликации между серверами)"
+
+#~ msgid "Use a static user list (useful for test)"
+#~ msgstr "Использовать статический список пользователей"
+
+#~ msgid "Use as Active Directory server:"
+#~ msgstr "Использовать в качестве сервера Active Directory:"
+
+#~ msgid "Use as an Active Directory server?"
+#~ msgstr "Использовать AD сервер?"
+
+#~ msgid "Use load balancing"
+#~ msgstr "Политика балансировки нагрузки"
+
+#~ msgid "Use pop-up"
+#~ msgstr "Использовать pop-up"
+
+#~ msgid "Use the static user list"
+#~ msgstr "Используется статический список пользователей"
+
+#~ msgid "User: "
+#~ msgstr "Пользователь:"
+
+#~ msgid "Using global login/password to authenticate"
+#~ msgstr "Использовать глобальный аккаунт для аутентификации"
+
+#~ msgid "Using user login/password to authenticate"
+#~ msgstr "Использовать логин/пароль пользователя для аутентификации"
+
+#~ msgid "WARNING, START ANYWAY"
+#~ msgstr "ВНИМАНИЕ, ВСЕРАВНО ЗАПУСТИТЬ"
+
+#~ msgid "Web log"
+#~ msgstr "Журнал"
+
+#~ msgid "Web port of this server"
+#~ msgstr "Порт веб-сервера"
+
+#~ msgid ""
+#~ "When set to yes, the session will start in a new browser window, and when "
+#~ "set to no, the session will start in the current browser window"
+#~ msgstr ""
+#~ "Если установить Да, сиссия стартует в новом окне, а если НЕТ сессия "
+#~ "откроется в этом окне"
+
+#~ msgid "Windows server:"
+#~ msgstr "Windows сервер:"
+
+#~ msgid "YOU ALREADY HAVE AN ACTIVE SESSION"
+#~ msgstr "У ВАС УЖЕ ЕСТЬ АКТИВНАЯ СЕССИЯ"
+
+#~ msgid "You already have an active session"
+#~ msgstr "У Вас уже есть активная сессия"
+
+#~ msgid "You are authenticated as %s"
+#~ msgstr "Вы зарегистрированы как %s"
+
+#~ msgid ""
+#~ "You are not using Internal WebDAV filesystem, \"Shared folders\" are "
+#~ "disabled!"
+#~ msgstr ""
+#~ "\"Общие папки\" отключены т.к. не используется файловая система Internal "
+#~ "WebDAV."
+
+#~ msgid "You are now logged in"
+#~ msgstr "Вы не зарегистрированы"
+
+#~ msgid "You can customize the heading title here."
+#~ msgstr "Здесь вы можете изменить заголовок"
+
+#~ msgid ""
+#~ "You can customize the logo by entering a new path or replacing the "
+#~ "corresponding image. Use a 90 pixels high image in png or jpeg format. "
+#~ "Example: sessionmanager/media/image/header.png"
+#~ msgstr ""
+#~ "Вы можете изменить лого, указав путь к новому файлу.Используйте картинку "
+#~ "высотой 90 пикселей, формата png или jpeg. Например: sessionmanager/media/"
+#~ "image/header.png"
+
+#~ msgid "You don't have access to a linux server for now"
+#~ msgstr "У Вас нет доступа к linux серверу"
+
+#~ msgid "You don't have access to a windows server for now"
+#~ msgstr "У Вас нет доступа к windows серверу "
+
+#~ msgid "You must define a name to your application group"
+#~ msgstr "Необходимо задать имя группы приложений"
+
+#~ msgid "You must give a command to your application"
+#~ msgstr "Необходимо задать команду для приложения"
+
+#~ msgid "You must give a name to your application"
+#~ msgstr "Необходимо задать имя для приложения"
+
+#~ msgid "You must give a package name."
+#~ msgstr "Необходимо задать имя пакета"
+
+#~ msgid "You received an invitation from"
+#~ msgstr "Вы получили приглашение от"
+
+#~ msgid "application"
+#~ msgstr "приложение"
+
+#~ msgid "desktop icons"
+#~ msgstr "значки рабочего стола"
+
+#~ msgid "does not send a valid monitoring"
+#~ msgstr "не отправлять валидный мониторинг"
+
+#~ msgid "does not send a valid type"
+#~ msgstr "не отправлять валидный тип"
+
+#~ msgid "does not send a valid version"
+#~ msgstr "не отправлять валидную версию "
+
+#~ msgid "fake"
+#~ msgstr "фальшивый"
+
+#~ msgid "password"
+#~ msgstr "пароль"
+
+#~ msgid "persistent"
+#~ msgstr "постоянство (persistent)"
+
+#~ msgid "please click on the link below to join the online session"
+#~ msgstr "Для подключения к сеансу нажмите ссылку"
+
+#~ msgid "popup"
+#~ msgstr "вслывающее окно"
+
+#~ msgid "prefs is not valid for FS plugin"
+#~ msgstr "параметры для FS плагина не валидные"
+
+#~ msgid "prefs is not valid for plugin"
+#~ msgstr "невалидные параметры для плагина"
+
+#~ msgid "quality"
+#~ msgstr "качество"
+
+#~ msgid "shareable"
+#~ msgstr "разделяемая"
+
+#~ msgid "size"
+#~ msgstr "размер"
+
+#~ msgid "windows keymap"
+#~ msgstr "раскладка клавиатуры"
+
+#~ msgid "No error"
+#~ msgstr "Без ошибок"
+
+#~ msgid "Others"
+#~ msgstr "Другие"
+
+#~ msgid "document"
+#~ msgstr "документ"
