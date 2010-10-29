@@ -110,6 +110,7 @@ static node* addHWDNToHistory(HWND hwnd){
 	if (hwdHistory == NULL){
 		hwdHistory = malloc(sizeof(node));
 		hwdHistory->windows = hwnd;
+		hwdHistory->title = NULL;
 		hwdHistory->next = NULL;
 		return hwdHistory;
 	}
