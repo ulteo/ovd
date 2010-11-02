@@ -18,7 +18,7 @@ for pofile in glob.glob(os.path.join("po", "*.po")):
 	node = '<exec executable="msgfmt" dir=".">'
 	node+= '<arg value="--java2"/>'
 	node+= '<arg value="-d"/>'
-	node+= '<arg value="build/ressources"/>'
+	node+= '<arg value="build/resources"/>'
  	node+= '<arg value="-r"/>'
  	node+= '<arg value="Messages"/>'
  	node+= '<arg value="-l"/>'

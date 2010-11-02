@@ -11,19 +11,19 @@ import org.ulteo.Logger;
 import org.ulteo.ovd.integrated.OSTools;
 
 public class LibraryLoader {
-	public static final String RESOURCE_LIBRARY_DIRECTORY_WINDOWS = "/ressources/WindowsLibs";
+	public static final String RESOURCE_LIBRARY_DIRECTORY_WINDOWS = "/resources/WindowsLibs";
 	public static final String LIB_WINDOW_PATH_NAME = "libWindowsPaths.dll";
-	public static final String RESOURCE_LIBRARY_DIRECTORY_LINUX = "/ressources/LinuxLibs";
+	public static final String RESOURCE_LIBRARY_DIRECTORY_LINUX = "/resources/LinuxLibs";
 	public static final String LIB_X_CLIENT_AREA = "libXClientArea.so";
 	
 	//This method is called from an applet
-	public static void LoadLibrary(String ressourceDirectory, String DLLName) throws FileNotFoundException {
+	public static void LoadLibrary(String resourceDirectory, String DLLName) throws FileNotFoundException {
         if (OSTools.is64())
-            ressourceDirectory += "/64";
+            resourceDirectory += "/64";
         else
-            ressourceDirectory += "/32";
+            resourceDirectory += "/32";
 
-		InputStream dllResource = LibraryLoader.class.getResourceAsStream(ressourceDirectory+"/"+DLLName);
+		InputStream dllResource = LibraryLoader.class.getResourceAsStream(resourceDirectory+"/"+DLLName);
 		String fileSeparator= System.getProperty("file.separator");
 		//test the resource in order to know if client is started in applet mode
 		if (dllResource != null) {
@@ -55,7 +55,7 @@ public class LibraryLoader {
 			return;
 		}
 
-		throw new FileNotFoundException("Unable to find required library in the jar: "+ressourceDirectory+"/"+DLLName);
+		throw new FileNotFoundException("Unable to find required library in the jar: "+resourceDirectory+"/"+DLLName);
 	}
 	
 	//This method is called from an non applet client

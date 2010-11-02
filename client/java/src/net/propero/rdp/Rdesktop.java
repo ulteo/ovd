@@ -174,7 +174,7 @@ public class Rdesktop {
 
 	static boolean showTools;
 
-	static final String keyMapPath = "ressources/keymaps/";
+	static final String keyMapPath = "resources/keymaps/";
 
 	static String mapFile = null;
 
