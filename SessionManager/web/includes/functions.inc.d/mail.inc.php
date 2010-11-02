@@ -29,7 +29,6 @@ function sendamail($to_, $subject_, $message_) {
 		die_error('get Preferences failed',__FILE__,__LINE__);
 
 	$web_interface_settings = $prefs->get('general', 'web_interface_settings');
-	$title = $web_interface_settings['main_title'];
 
 	$buf = $prefs->get('general', 'mails_settings');
 
