@@ -32,6 +32,7 @@ public class I18n {
 		}
 		catch(java.util.MissingResourceException e) {
 			System.err.println("Unable to load translation");
+			catalog = null;
 		}
 	}
 

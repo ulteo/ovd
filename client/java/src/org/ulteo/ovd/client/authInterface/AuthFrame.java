@@ -37,6 +37,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.ImageIcon;
@@ -66,23 +67,23 @@ public class AuthFrame implements ActionListener, Runnable {
 	private static final int JOB_OPTIONS = 2;
 	private static final int JOB_START = 3;
 
-	private static final String RESOLUTION_MAXIMIZED = I18n._("Maximized");
-	private static final String RESOLUTION_FULLSCREEN = I18n._("Fullscreen");
+	private String RESOLUTION_MAXIMIZED = I18n._("Maximized");
+	private String RESOLUTION_FULLSCREEN = I18n._("Fullscreen");
 
 	private List<Integer> jobsList = null;
 	
 	private JFrame mainFrame = new JFrame();
 	private boolean desktopLaunched = false;
 	
-	private JLabel login = new JLabel(I18n._("Login"));
-	private JLabel password = new JLabel(I18n._("Password"));
-	private JLabel host = new JLabel(I18n._("Host"));
+	private JLabel login = new JLabel();
+	private JLabel password = new JLabel();
+	private JLabel host = new JLabel();
 	private JTextField loginTextField = new JTextField();
 	private JPasswordField passwordTextField = new JPasswordField();
 	private String loginStr = null;
 	
 	private JTextField hostTextField = new JTextField();
-	private JButton startButton = new JButton(I18n._("Start !"));
+	private JButton startButton = new JButton();
 	private boolean startButtonClicked = false;
 	private JButton moreOption = new JButton();
 	private Image frameLogo = null;
@@ -99,22 +100,22 @@ public class AuthFrame implements ActionListener, Runnable {
 	private JLabel hostLogoLabel = new JLabel();
 	private boolean optionClicked;
 	private JLabel optionLogoLabel = new JLabel();
-	private JLabel mode = new JLabel(I18n._("Mode"));
-	private JLabel resolution = new JLabel(I18n._("Resolution"));
-	private JLabel language = new JLabel(I18n._("Language"));
-	private JLabel keyboard = new JLabel(I18n._("Keyboard"));
+	private JLabel mode = new JLabel();
+	private JLabel resolution = new JLabel();
+	private JLabel language = new JLabel();
+	private JLabel keyboard = new JLabel();
 	private JComboBox sessionModeBox = null;
-	private JComboBoxItem itemModeAuto = new JComboBoxItem(I18n._("Auto"));
-	private JComboBoxItem itemModeApplication = new JComboBoxItem(I18n._("Application"));
-	private JComboBoxItem itemModeDesktop = new JComboBoxItem(I18n._("Desktop"));
+	private JComboBoxItem itemModeAuto = new JComboBoxItem();
+	private JComboBoxItem itemModeApplication = new JComboBoxItem();
+	private JComboBoxItem itemModeDesktop = new JComboBoxItem();
 	private JSlider resBar = null;
 	private JLabel resolutionValue = null;
 	private String[] resolutionStrings = null;
 	private JComboBox languageBox = new JComboBox();
 	private JComboBox keyboardBox = new JComboBox();
-	private JCheckBox rememberMe = new JCheckBox(I18n._("Remember me"));
-	private JCheckBox autoPublish = new JCheckBox(I18n._("Auto-publish shortcuts"));
-	private JCheckBox useLocalCredentials = new JCheckBox(I18n._("Use local credentials"));
+	private JCheckBox rememberMe = new JCheckBox();
+	private JCheckBox autoPublish = new JCheckBox();
+	private JCheckBox useLocalCredentials = new JCheckBox();
 	private boolean displayUserLocalCredentials = (System.getProperty("os.name").startsWith("Windows"));
 	private ActionListener optionListener = null;
 	
@@ -174,7 +175,6 @@ public class AuthFrame implements ActionListener, Runnable {
 		optionLogoLabel.setIcon(optionLogo);
 		
 		moreOption.setIcon(showOption);
-		moreOption.setText(I18n._("More options ..."));
 		
 		this.useLocalCredentials.addActionListener(new ActionListener() {
 			@Override
@@ -303,6 +303,9 @@ public class AuthFrame implements ActionListener, Runnable {
 				c.addKeyListener(keyListener);
 			}
 		}
+		
+		// Load the language strings
+		(new ChangeLanguage(this)).run();
 		
 		mainFrame.pack();
 		mainFrame.setLocationRelativeTo(null);
@@ -444,41 +447,60 @@ public class AuthFrame implements ActionListener, Runnable {
 		SwingTools.invokeLater(GUIActions.addComponentsAndPack(this.mainFrame, componentList, gbcToAdd));
 	}
 	
-	public void initLanguageBox() {
-		int size = Language.languageList.length;
-		int sysLang = 0;
+	public static int compareLocales(Locale l1, Locale l2) {
+		if (l1.getLanguage() != l2.getLanguage())
+			return 0;
 		
+		if (l1.getCountry() != l2.getCountry())
+			return 1;
+		
+		return 2;
+	}
+	
+	
+	public void initLanguageBox() {
+		Locale locale = Locale.getDefault();
+		System.out.println("Default locale: "+locale);
+		int size = Language.languageList.length;
+		
+		int enabledLanguageIndex = 0;
+		int enabledLanguageScore = 0;
 		
 		for (int i = 0; i < size; i++) {
-			String local = Language.languageList[i][0]+((! Language.languageList[i][1].equals("")) ? " - "+Language.languageList[i][1] : "");
+			String language[] = Language.languageList[i];
+			
+			String name = language[0];
+			if (! language.equals(""))
+				name+= " - " + language[1];
+			
+			Locale locale2 = new Locale(language[2]);
+			String flag_name = language[2];
+			if (language.length > 3) {
+				flag_name+= "-"+language[3];
+				locale2 = new Locale(language[2], language[3]);
+			}
 			
 			ImageIcon img = null;
 			
-			URL imgUrl = getClass().getClassLoader().getResource("pics/flags/"+Language.languageList[i][2]+".png");
-			
+			URL imgUrl = getClass().getClassLoader().getResource("pics/flags/"+flag_name+".png");
 			if (imgUrl != null) {
 				img = new ImageIcon(mainFrame.getToolkit().getImage(imgUrl));
 			}
 			else {
-				System.err.println("Missing file: "+Language.languageList[i][2]+".png");
-			}
-			JComboLanguage lang = new JComboLanguage(img, local);
-			
-			if (Language.languageList[i][2].contains(System.getProperty("user.language")) && Language.languageList[i][2].contains("-")) {
-				if (Language.languageList[i][2].equalsIgnoreCase(System.getProperty("user.language")+"-"+System.getProperty("user.country"))) {
-					sysLang = i;
-				}
-			}
-			else {
-				if (Language.languageList[i][2].equals(System.getProperty("user.language"))) {
-					sysLang = i;
-				}
+				System.err.println("Missing file: "+flag_name+".png");
 			}
 			
+			JComboLanguage lang = new JComboLanguage(img, name);
 			languageBox.addItem(lang);
+			
+			int ret = this.compareLocales(locale, locale2);
+			if (ret > enabledLanguageScore) {
+				enabledLanguageScore = ret;
+				enabledLanguageIndex = i;
+			}
 		}
 		
-		languageBox.setSelectedIndex(sysLang);
+		languageBox.setSelectedIndex(enabledLanguageIndex);
 	}
 	
 	public void initKeyboardBox() {
@@ -877,6 +899,56 @@ public class AuthFrame implements ActionListener, Runnable {
 			GUIActions.customizeTextComponent(this.loginField, (this.enabled) ? System.getProperty("user.name") : ((this.username != null) ? this.username : this.loginField.getText())).run();
 			GUIActions.setEnabledComponents(this.components, ! this.enabled).run();
 		}
+	}
+	
+	/* ChangeLanguage */
+	public static Runnable changeLanguage(AuthFrame authFrame_) {
+		return authFrame_.new ChangeLanguage(authFrame_);
+	}
 
+	private class ChangeLanguage implements Runnable {
+		private AuthFrame authFrame = null;
+		
+		public ChangeLanguage(AuthFrame authFrame_) {
+			this.authFrame = authFrame_;
+		}
+		
+		public void run() {
+			this.authFrame.login.setText(I18n._("Login"));
+			this.authFrame.password.setText(I18n._("Password"));
+			this.authFrame.host.setText(I18n._("Host"));
+			this.authFrame.startButton.setText(I18n._("Start !"));
+			this.authFrame.mode.setText(I18n._("Mode"));
+			this.authFrame.resolution.setText(I18n._("Resolution"));
+			this.authFrame.language.setText(I18n._("Language"));
+			this.authFrame.keyboard.setText(I18n._("keyboard"));
+			this.authFrame.login.setText(I18n._("Login"));
+			
+			this.authFrame.itemModeAuto.setText(I18n._("Auto"));
+			this.authFrame.itemModeApplication.setText(I18n._("Application"));
+			this.authFrame.itemModeDesktop.setText(I18n._("Desktop"));
+			this.authFrame.rememberMe.setText(I18n._("Remember me"));
+			this.authFrame.autoPublish.setText(I18n._("Auto-publish shortcuts"));
+			this.authFrame.useLocalCredentials.setText(I18n._("Use local credentials"));
+			
+			String buf = I18n._("More options ...");
+			if (this.authFrame.optionClicked)
+				buf = I18n._("Fewer options");
+			this.authFrame.moreOption.setText(buf);
+			
+			this.authFrame.RESOLUTION_MAXIMIZED = I18n._("Maximized");
+			this.authFrame.RESOLUTION_FULLSCREEN = I18n._("Fullscreen");
+			
+			if (this.authFrame.resolutionStrings.length >= 2) {
+				this.authFrame.resolutionStrings[this.authFrame.resolutionStrings.length - 2] = RESOLUTION_MAXIMIZED;
+				this.authFrame.resolutionStrings[this.authFrame.resolutionStrings.length - 1] = RESOLUTION_FULLSCREEN;
+			}
+			
+			int value = this.authFrame.resBar.getValue();
+			if (value < this.authFrame.resolutionStrings.length)
+				this.authFrame.resolutionValue.setText(this.authFrame.resolutionStrings[value]);
+			
+			this.authFrame.mainFrame.pack();
+		}
 	}
 }

@@ -28,6 +28,10 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 public class JComboBoxItem extends JLabel implements ListCellRenderer {
+	public JComboBoxItem() {
+		super();
+	}
+	
 	public JComboBoxItem(String text) {
 		super(text);
 	}

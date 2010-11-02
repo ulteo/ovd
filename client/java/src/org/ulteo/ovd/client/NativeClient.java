@@ -38,8 +38,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JLabel;
@@ -473,6 +473,48 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	private static final String ERROR_ACTIVE_SESSION = "user_with_active_session";
 	private static final String ERROR_DEFAULT = "default";
 
+	public static class ResponseHandler {
+		public static String get(String key) {
+			if (key.equals(ERROR_AUTHENTICATION_FAILED))
+				return I18n._("Authentication failed, please double-check your password and try again");
+			else if (key.equals(ERROR_IN_MAINTENANCE))
+				return I18n._("The system is in maintenance mode, please contact your administrator for more information");
+			else if (key.equals(ERROR_INTERNAL))
+				return I18n._("An internal error occured, please contact your administrator");
+			else if (key.equals(ERROR_INVALID_USER))
+				return I18n._("You specified an invalid login, please double-check and try again");
+			else if (key.equals(ERROR_SERVICE_NOT_AVAILABLE))
+				return I18n._("The service is not available, please contact your administrator for more information");
+			else if (key.equals(ERROR_UNAUTHORIZED_SESSION_MODE))
+				return I18n._("You are not authorized to launch a session in this mode");
+			else if (key.equals(ERROR_ACTIVE_SESSION))
+				return I18n._("You already have an active session");
+			
+			return I18n._("An error occured, please contact your administrator");
+		}
+		public static boolean has(String key) {
+			if (key.equals(ERROR_AUTHENTICATION_FAILED))
+				return true;
+			else if (key.equals(ERROR_IN_MAINTENANCE))
+				return true;
+			else if (key.equals(ERROR_INTERNAL))
+				return true;
+			else if (key.equals(ERROR_INVALID_USER))
+				return true;
+			else if (key.equals(ERROR_SERVICE_NOT_AVAILABLE))
+				return true;
+			else if (key.equals(ERROR_UNAUTHORIZED_SESSION_MODE))
+				return true;
+			else if (key.equals(ERROR_ACTIVE_SESSION))
+				return true;
+			else if (key.equals(ERROR_DEFAULT))
+				return true;
+			
+			return false;
+		}
+	}
+	
+	
 	private LoadingFrame loadingFrame = null;
 	private AuthFrame authFrame = null;
 	private DisconnectionFrame discFrame = null;
@@ -481,7 +523,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	
 	private Thread thread = null;
 
-	private HashMap<String, String> responseHandler = null;
 	private OvdClient client = null;
 
 	private Options opts = null;
@@ -495,6 +536,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 		if (! this.opts.autostart) {
 			this.authFrame = new AuthFrame(this, this.opts.geometry);
+			this.authFrame.getLanguageBox().addActionListener(this);
 			this.loadOptions();
 			this.authFrame.setRememberMeChecked((this.flags & NativeClient.FLAG_OPTION_REMEMBER_ME) != 0);
 			this.authFrame.showWindow();
@@ -503,15 +545,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	}
 	
 	public void init() {
-		this.responseHandler = new HashMap<String, String>();
-		this.responseHandler.put(ERROR_AUTHENTICATION_FAILED, I18n._("Authentication failed, please double-check your password and try again"));
-		this.responseHandler.put(ERROR_IN_MAINTENANCE, I18n._("The system is in maintenance mode, please contact your administrator for more information"));
-		this.responseHandler.put(ERROR_INTERNAL, I18n._("An internal error occured, please contact your administrator"));
-		this.responseHandler.put(ERROR_INVALID_USER, I18n._("You specified an invalid login, please double-check and try again"));
-		this.responseHandler.put(ERROR_SERVICE_NOT_AVAILABLE, I18n._("The service is not available, please contact your administrator for more information"));
-		this.responseHandler.put(ERROR_UNAUTHORIZED_SESSION_MODE, I18n._("You are not authorized to launch a session in this mode"));
-		this.responseHandler.put(ERROR_ACTIVE_SESSION, I18n._("You already have an active session"));
-		this.responseHandler.put(ERROR_DEFAULT, I18n._("An error occured, please contact your administrator"));
 		this.loadingFrame = new LoadingFrame(this);
 		this.discFrame = new DisconnectionFrame();
 	}
@@ -631,6 +664,24 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		else if (e.getSource() == this.authFrame.GetStartButton()) {
 			this.startThread();
 		}
+		else if (e.getSource() == this.authFrame.getLanguageBox()) {
+			int i = this.authFrame.getLanguageBox().getSelectedIndex();
+			String language[] = Language.languageList[i];
+			
+			Locale locale = new Locale(language[2]);
+			if (Language.languageList[i].length > 3)
+				locale = new Locale(language[2], language[3]);
+			
+			System.out.println("Switch language from "+Locale.getDefault()+" to "+locale);
+			
+			Locale.setDefault(locale);
+			
+			I18n.init();
+			
+			SwingTools.invokeLater(AuthFrame.changeLanguage(this.authFrame));
+			SwingTools.invokeLater(LoadingFrame.changeLanguage(this.loadingFrame));
+			SwingTools.invokeLater(DisconnectionFrame.changeLanguage(this.discFrame));
+		}
 	}
 
 	public void disableLoadingMode() {
@@ -662,6 +713,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.opts.autopublish = this.authFrame.isAutoPublishChecked();
 		
 		this.opts.lang = Language.languageList[this.authFrame.getLanguageBox().getSelectedIndex()][2];
+		if (Language.languageList[this.authFrame.getLanguageBox().getSelectedIndex()].length > 3)
+			this.opts.lang+= "_"+Language.languageList[this.authFrame.getLanguageBox().getSelectedIndex()][3].toUpperCase();
 		this.opts.keymap = Language.keymapList[this.authFrame.getKeyboardBox().getSelectedIndex()][1];
 			
 		this.opts.password = new String(this.authFrame.getPassword().getPassword());
@@ -850,8 +903,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	@Override
 	public void reportErrorStartSession(String code) {
 
-		if (this.responseHandler.containsKey(code)) {
-			JOptionPane.showMessageDialog(null, this.responseHandler.get(code), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+		if (ResponseHandler.has(code)) {
+			JOptionPane.showMessageDialog(null, ResponseHandler.get(code), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
@@ -860,21 +913,21 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 	@Override
 	public void reportError(int code, String message) {
-		String error = this.responseHandler.get(ERROR_DEFAULT);
+		String error = ResponseHandler.get(ERROR_DEFAULT);
 		JOptionPane.showMessageDialog(null, error, I18n._("Error"), JOptionPane.ERROR_MESSAGE);
 		org.ulteo.Logger.error(error+ " (code: "+code+"):\n" + message);
 	}
 
 	@Override
 	public void reportUnauthorizedHTTPResponse(String moreInfos) {
-		String error = this.responseHandler.get(ERROR_AUTHENTICATION_FAILED);
+		String error = ResponseHandler.get(ERROR_AUTHENTICATION_FAILED);
 		JOptionPane.showMessageDialog(null, error, I18n._("Error"), JOptionPane.ERROR_MESSAGE);
 		org.ulteo.Logger.error(error + "\n" + moreInfos);
 	}
 
 	@Override
 	public void reportNotFoundHTTPResponse(String moreInfos) {
-		String error = this.responseHandler.get(ERROR_DEFAULT);
+		String error = ResponseHandler.get(ERROR_DEFAULT);
 		JOptionPane.showMessageDialog(null, error, I18n._("Error"), JOptionPane.ERROR_MESSAGE);
 		org.ulteo.Logger.error(error+ "\n" + moreInfos);
 	}

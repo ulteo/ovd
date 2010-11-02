@@ -23,13 +23,6 @@ package org.ulteo.ovd.client.authInterface;
 import org.ulteo.utils.I18n;
 
 public class LoadingStatus {
-	public static String STATUS_SM_CONNECTION_STRING = I18n._("Connecting to the session manager");
-	public static String STATUS_SM_START_STRING = I18n._("Get session information from session manager");
-	public static String STATUS_SM_GET_APPLICATION_STRING = I18n._("Get application data from session manager");
-	public static String STATUS_CLIENT_INSTALL_APPLICATION_STRING = I18n._("install application data on client");
-	public static String STATUS_CLIENT_WAITING_SERVER_STRING = I18n._("Waiting server for session");
-	public static String STATUS_INVALID_STRING = I18n._("Invalid status");
-	
 	public static final int STATUS_SM_CONNECTION = 10;
 	public static final int STATUS_SM_START = 20;
 	public static final int STATUS_SM_GET_APPLICATION = 40;
@@ -70,22 +63,21 @@ public class LoadingStatus {
 	public static String getMsg(int status) {
 		switch (status) {
 		case STATUS_SM_CONNECTION:
-			return  STATUS_SM_CONNECTION_STRING;
+			return  I18n._("Connecting to the session manager");
 		case STATUS_SM_START:
-			return STATUS_SM_START_STRING;
+			return I18n._("Get session information from session manager");
 			
 		case STATUS_SM_GET_APPLICATION:
-			return STATUS_SM_GET_APPLICATION_STRING;
+			return I18n._("Get application data from session manager");
 
 		case STATUS_CLIENT_INSTALL_APPLICATION:
-			return STATUS_CLIENT_INSTALL_APPLICATION_STRING;
+			return I18n._("install application data on client");
 
 		case STATUS_CLIENT_WAITING_SERVER:
-			return STATUS_CLIENT_WAITING_SERVER_STRING;
+			return I18n._("Waiting server for session");
 			
 		default:
-			return STATUS_INVALID_STRING;
+			return I18n._("Invalid status");
 		}
-		
 	}
 }

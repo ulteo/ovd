@@ -31,6 +31,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
+import org.ulteo.gui.GUIActions;
 import org.ulteo.utils.I18n;
 
 public class LoadingFrame extends JDialog {
@@ -40,6 +41,8 @@ public class LoadingFrame extends JDialog {
 	private JButton cancel = null;
 	private JProgressBar aJProgressBar = null;
 	private JLabel jlabel = null;
+	
+	private int loadingStatus = 0;
 
 	public LoadingFrame(ActionListener obj_) {
 		this.obj = obj_;
@@ -65,7 +68,7 @@ public class LoadingFrame extends JDialog {
 		aJProgressBar.setStringPainted(true);
 		aJProgressBar.setPreferredSize(new Dimension(280, 20));
 		aJProgressBar.setLocation(10,45);
-		jlabel = new JLabel(LoadingStatus.STATUS_SM_START_STRING);
+		this.jlabel = new JLabel(LoadingStatus.getMsg(LoadingStatus.STATUS_SM_START));
 		this.add(BorderLayout.NORTH, aJProgressBar);
 		this.add(BorderLayout.EAST, this.cancel);
 		this.add(BorderLayout.SOUTH, jlabel);
@@ -80,10 +83,29 @@ public class LoadingFrame extends JDialog {
 		if (! this.isVisible()) {
 			return;
 		}
+		this.loadingStatus = status;
 		int loadingValue = LoadingStatus.getIncrement(status, subStatus);
 		String msg = LoadingStatus.getMsg(status);
 		
 		this.aJProgressBar.setValue(loadingValue);
 		this.jlabel.setText(msg);
+	}
+	
+	public static Runnable changeLanguage(LoadingFrame loadingFrame_) {
+		return loadingFrame_.new ChangeLanguage(loadingFrame_);
+	}
+	
+	private class ChangeLanguage implements Runnable {
+		private LoadingFrame loadingFrame = null;
+		
+		public ChangeLanguage(LoadingFrame loadingFrame_) {
+			this.loadingFrame = loadingFrame_;
+		}
+		
+		public void run() {
+			this.loadingFrame.jlabel.setText(LoadingStatus.getMsg(this.loadingFrame.loadingStatus));
+			this.loadingFrame.cancel.setText(I18n._("Cancel"));
+			this.loadingFrame.setTitle(I18n._("Now loading"));
+		}
 	}
 }

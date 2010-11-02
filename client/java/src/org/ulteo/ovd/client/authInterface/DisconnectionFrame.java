@@ -52,4 +52,21 @@ public class DisconnectionFrame extends JDialog {
 		this.setLocationRelativeTo(null);
 		this.pack();
 	}
+	
+	
+	public static Runnable changeLanguage(DisconnectionFrame frame_) {
+		return frame_.new ChangeLanguage(frame_);
+	}
+	
+	private class ChangeLanguage implements Runnable {
+		private DisconnectionFrame frame = null;
+		
+		public ChangeLanguage(DisconnectionFrame frame_) {
+			this.frame = frame_;
+		}
+		
+		public void run() {	
+			this.frame.setTitle(I18n._("Disconnecting !"));
+		}
+	}
 }
