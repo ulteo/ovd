@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -42,18 +42,6 @@ function display_loadbar($percents_) {
 function init_db($prefs_) {
 	// prefs must be valid
 	Logger::debug('main', 'init_db');
-	$sql_conf = $prefs_->get('general', 'sql');
-	if (!is_array($sql_conf)) {
-		Logger::error('main', 'init_db sql conf not valid');
-		return false;
-	}
-	$LIAISON_TABLE = $sql_conf['prefix'].'liaison';
-	$USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE = $sql_conf['prefix'].'ug_ag_link';
-
-	// we create the sql table
-	$sql2 = SQL::newInstance($sql_conf);
-
-	Logger::debug('main', 'init_db all tables created');
 
 	$modules_enable = $prefs_->get('general', 'module_enable');
 	foreach ($modules_enable as $module_name) {
