@@ -1,6 +1,7 @@
 #! /usr/bin/python
 
 import os, glob, pysvn
+import shutil
 
 path = os.path.dirname( os.path.realpath( __file__ ) )
 
@@ -13,17 +14,24 @@ else:
 	version = "99.99+svn%05d"%(revision)
 
 langs = []
-for pofile in glob.glob(os.path.join("po", "*.po")):
-	name = os.path.basename(pofile)[:-3]
+
+
+for src in glob.glob(os.path.join("..","..","i18n","uovdclient","*.po")):
+	name = os.path.basename(src)
+	language = name[:-3]
+	dst = os.path.join("po", name)
+	shutil.copyfile(src, dst)
+	
 	node = '<exec executable="msgfmt" dir=".">'
 	node+= '<arg value="--java2"/>'
 	node+= '<arg value="-d"/>'
+	node+= '<arg value="build"/>'
 	node+= '<arg value="build/resources"/>'
  	node+= '<arg value="-r"/>'
  	node+= '<arg value="Messages"/>'
  	node+= '<arg value="-l"/>'
- 	node+= '<arg value="%s"/>'%(name)
- 	node+= '<arg value="%s"/>'%(pofile)
+	node+= '<arg value="%s"/>'%(language)
+	node+= '<arg value="%s"/>'%(dst)
  	node+= '</exec>'
 	langs.append(node)
 
