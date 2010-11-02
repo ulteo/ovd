@@ -26,7 +26,6 @@ for src in glob.glob(os.path.join("..","..","i18n","uovdclient","*.po")):
 	node+= '<arg value="--java2"/>'
 	node+= '<arg value="-d"/>'
 	node+= '<arg value="build"/>'
-	node+= '<arg value="build/resources"/>'
  	node+= '<arg value="-r"/>'
  	node+= '<arg value="Messages"/>'
  	node+= '<arg value="-l"/>'
