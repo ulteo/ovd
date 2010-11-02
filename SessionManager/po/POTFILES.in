@@ -10,7 +10,6 @@ web/webservices/application.php
 web/webservices/session_status.php
 web/webservices/icon.php
 web/webservices/domain.php
-web/webservices/admin/sourceslist.php
 web/webservices/session_invite.php
 web/webservices/server_status.php
 web/header.php

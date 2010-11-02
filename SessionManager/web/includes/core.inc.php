@@ -42,7 +42,6 @@ if (is_object($prefs)) {
 	define('HAS_PREFERENCES', true);
 	$sql_conf = $prefs->get('general', 'sql');
 	if (is_array($sql_conf)) {
-		define('SOURCES_LIST_TABLE', $sql_conf['prefix'].'sources_list');
 		define('SERVERS_HISTORY_TABLE', $sql_conf['prefix'].'servers_history');
 		define('SESSIONS_HISTORY_TABLE', $sql_conf['prefix'].'sessions_history');
 		SQL::newInstance($sql_conf);

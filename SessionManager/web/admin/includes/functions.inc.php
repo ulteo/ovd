@@ -39,23 +39,6 @@ function display_loadbar($percents_) {
 	return $normal_bar;
 }
 
-function get_all_sourceslist_mirrors(){
-	$sql2 = SQL::getInstance();
-	$res = $sql2->DoQuery('SELECT @1 FROM @2','element', SOURCES_LIST_TABLE);
-	if ($res !== false){
-		$result = array();
-		$rows = $sql2->FetchAllResults($res);
-		foreach ($rows as $row){
-			$result []= $row['element'];
-		}
-		return $result;
-	}
-	else {
-		// not the right argument
-		return NULL;
-	}
-}
-
 function init_db($prefs_) {
 	// prefs must be valid
 	Logger::debug('main', 'init_db');
@@ -66,23 +49,9 @@ function init_db($prefs_) {
 	}
 	$LIAISON_TABLE = $sql_conf['prefix'].'liaison';
 	$USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE = $sql_conf['prefix'].'ug_ag_link';
-	$SOURCES_LIST_TABLE = $sql_conf['prefix'].'sources_list';
 
 	// we create the sql table
 	$sql2 = SQL::newInstance($sql_conf);
-
-	$SOURCES_LIST_structure = array(
-		'id' => 'int(8) NOT NULL auto_increment',
-		'element' => 'varchar(200) NOT NULL',
-		'group' => 'varchar(200) NOT NULL');
-	$ret = $sql2->buildTable($SOURCES_LIST_TABLE, $SOURCES_LIST_structure, array('id'));
-	
-	if ( $ret === false) {
-		Logger::error('main', 'init_db table '.$SOURCES_LIST_TABLE.' fail to created');
-		return false;
-	}
-	else
-		Logger::debug('main', 'init_db table '.$SOURCES_LIST_TABLE.' created');
 
 	Logger::debug('main', 'init_db all tables created');
 

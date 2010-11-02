@@ -1,5 +1,3 @@
-SUBDIRS =  admin
-
 scripts_DATA =  application_icon.php \
                 applications_static.php \
                 configuration.php \
