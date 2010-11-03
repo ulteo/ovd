@@ -91,6 +91,8 @@ class User(AbstractUser):
 			if osVersion > 5:
 				if "OvdDesktop" in shell:
 					shell = "cmd /c \"start %s --NoExplorer & start explorer \""%(self.infos["shell"])
+				else:
+					shell = "cmd /c \"start %s\""%(self.infos["shell"])
 
 			win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigInitialProgram, shell)
 			win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigfInheritInitialProgram, False)
