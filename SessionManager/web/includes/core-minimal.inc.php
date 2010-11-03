@@ -50,7 +50,7 @@ if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 $language = locale2unix($buf);
 if (! in_admin()) {
 	setlocale(LC_ALL, $language);
-	$domain = 'uovdsm';
+	$domain = 'uovdsmadmin';
 	bindtextdomain($domain, LOCALE_DIR);
 	textdomain($domain);
 }
