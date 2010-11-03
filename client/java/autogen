@@ -13,33 +13,17 @@ else:
 	revision = c.info(path)["revision"].number
 	version = "99.99+svn%05d"%(revision)
 
-langs = []
-
-
+if os.path.exists("po"):
+    shutil.rmtree("po")
+os.mkdir("po")
 for src in glob.glob(os.path.join("..","..","i18n","uovdclient","*.po")):
-	name = os.path.basename(src)
-	language = name[:-3]
-	dst = os.path.join("po", name)
-	shutil.copyfile(src, dst)
-	
-	node = '<exec executable="msgfmt" dir=".">'
-	node+= '<arg value="--java2"/>'
-	node+= '<arg value="-d"/>'
-	node+= '<arg value="build"/>'
- 	node+= '<arg value="-r"/>'
- 	node+= '<arg value="Messages"/>'
- 	node+= '<arg value="-l"/>'
-	node+= '<arg value="%s"/>'%(language)
-	node+= '<arg value="%s"/>'%(dst)
- 	node+= '</exec>'
-	langs.append(node)
+	shutil.copy(src, "po")
 
 f = file(os.path.join(path, "build.xml.in"), "r")
 content = f.read()
 f.close()
 
 content = content.replace("@VERSION@", str(version))
-content = content.replace("@MESSAGE_LANGS@", "\n".join(langs))
 
 f = file(os.path.join(path, "build.xml"), "w")
 f.write(content)

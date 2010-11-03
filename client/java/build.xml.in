@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 
 <project name="ulteo" default="applet">
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+    <classpath>
+      <pathelement location="required_libraries/ant-contrib-1.0b3.jar"/>
+    </classpath>
+  </taskdef>
+
   <property name="build.cert" value="certificate"/>
   <property name="keystore.password" value=""/>
   <property name="version" value="@VERSION@" />
@@ -189,9 +195,23 @@
     </javac>
   </target>
 
+  <target name="generate.lang">
+    <propertyregex property="po.lang" input="${po.file}"
+                   regexp="po/(.*).po$" select="\1" />
+    <echo>Generate "${po.lang}" language</echo>
+    <exec executable="msgfmt" dir=".">
+      <arg value="--java2" />
+      <arg value="-d"/> <arg value="build"/>
+      <arg value="-r"/> <arg value="Messages"/>
+      <arg value="-l"/> <arg value="${po.lang}"/>
+      <arg value="po/${po.lang}.po"/>
+    </exec>
+  </target>
+
   <target name="ovdNativeClient_jar">
-    <!-- Auto-generated exec ant command for i18n fonctionality -->
-    @MESSAGE_LANGS@
+    <foreach target="generate.lang" param="po.file" >
+      <path><fileset dir="po" includes="*.po" /></path>
+    </foreach>
     <copy todir="build/pics">
       <fileset dir="icons" />
     </copy>
