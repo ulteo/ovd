@@ -124,6 +124,11 @@ public class SoundDriver {
 			System.out.println("Unable to play sound");
 			this.soundDown = true;
 			return false;
+			
+		} catch( LinkageError e ) {
+			System.out.println("Unable to play sound due to an internal error");
+			this.soundDown = true;
+			return false;
 		}
 
 		return true;
