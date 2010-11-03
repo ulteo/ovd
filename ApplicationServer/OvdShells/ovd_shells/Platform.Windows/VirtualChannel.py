@@ -19,6 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import ctypes
+import threading
 import win32event
 
 from ovd_shells.VirtualChannel import VirtualChannel as AbstractVirtualChannel
@@ -29,15 +30,20 @@ class VirtualChannel(AbstractVirtualChannel):
 		
 		self.dll = ctypes.windll.LoadLibrary("Wtsapi32.dll")
 		self._handle = None
+		self.mutex = threading.Lock()
 		
 	def Open(self):
+		self.mutex.acquire()
 		self._handle =  self.dll.WTSVirtualChannelOpen(0, -1, self.name)
+		self.mutex.release()
 		
 		return self._handle != None
 	
 	def Close(self):
 		if self._handle is not None:
+			self.mutex.acquire()
 			self._handle =  self.dll.WTSVirtualChannelClose(self._handle)
+			self.mutex.release()
 		
 	
 	def Read(self, size):
@@ -45,12 +51,12 @@ class VirtualChannel(AbstractVirtualChannel):
 		buffer_len = ctypes.c_ulong(size)
 		bytes_read = ctypes.c_ulong()
 		
-		
-		ret = self.dll.WTSVirtualChannelRead(self._handle, win32event.INFINITE, ctypes.byref(buffer), buffer_len, ctypes.byref(bytes_read))
-		if ret==0:
-			return None
-		
-		return buffer.raw
+		while True:
+			self.mutex.acquire()
+			ret = self.dll.WTSVirtualChannelRead(self._handle, 500, ctypes.byref(buffer), buffer_len, ctypes.byref(bytes_read))
+			self.mutex.release()
+			if ret>0:
+				return buffer.raw
 	
 	def Write(self, message):
 		buffer = ctypes.create_string_buffer(len(message))
@@ -59,6 +65,8 @@ class VirtualChannel(AbstractVirtualChannel):
 		byte_written = ctypes.c_ulong()
 		
 		
+		self.mutex.acquire()
 		ret = self.dll.WTSVirtualChannelWrite(self._handle, buffer, buffer_len, ctypes.byref(byte_written))
+		self.mutex.release()
 		
 		return True
