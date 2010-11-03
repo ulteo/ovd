@@ -26,6 +26,7 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 
 import java.net.UnknownHostException;
+import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
@@ -92,8 +93,7 @@ public class OvdClientDesktop extends OvdClient {
 	@Override
 	public void hide(RdpConnection co) {
 		this.desktopLaunched = false;
-		this.desktop.setVisible(false);
-		this.desktop.dispose();
+		this.desktop.destroy();
 		this.desktop = null;
 	}
 
@@ -230,8 +230,10 @@ public class OvdClientDesktop extends OvdClient {
 	public void connecting(RdpConnection co) {
 		super.connecting(co);
 
-		this.desktop.getContentPane().add(co.getCanvas());
-		co.getCanvas().validate();
+		RdesktopCanvas canvas = co.getCanvas();
+		this.desktop.setCanvas(canvas);
+		this.desktop.getContentPane().add(canvas);
+		canvas.validate();
 		this.desktop.pack();
 	}
 

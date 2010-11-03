@@ -94,6 +94,8 @@ public abstract class Input {
 	protected Options opt = null;
 
 	protected KeyAdapter keyAdapter = null;
+	protected MouseAdapter mouseAdapter = null;
+	protected MouseMotionAdapter mouseMotionAdapter = null;
 
 	protected static final int DEFAULT_KEYSTROKE_DELAY = 500;
 	protected HashMap<KeyStroke, Long> keystrokesList = null;
@@ -163,12 +165,21 @@ public abstract class Input {
      * Add all relevant input listeners to the canvas
     */
 	protected void setInputListeners() {
-		RdesktopMouseAdapter mouseAdapter = new RdesktopMouseAdapter();
-		canvas.addMouseListener(mouseAdapter);
-		canvas.addMouseWheelListener(mouseAdapter);
-		canvas.addMouseMotionListener(new RdesktopMouseMotionAdapter());
+		this.mouseAdapter = new RdesktopMouseAdapter();
+		this.canvas.addMouseListener(this.mouseAdapter);
+		this.canvas.addMouseWheelListener(this.mouseAdapter);
+		this.mouseMotionAdapter = new RdesktopMouseMotionAdapter();
+		this.canvas.addMouseMotionListener(this.mouseMotionAdapter);
 		this.keyAdapter = new RdesktopKeyAdapter();
 		this.canvas.addKeyListener(this.keyAdapter);
+	}
+
+	public MouseAdapter getMouseAdapter() {
+		return this.mouseAdapter;
+	}
+
+	public MouseMotionAdapter getMouseMotionAdapter() {
+		return this.mouseMotionAdapter;
 	}
 
 	public KeyAdapter getKeyAdapter() {
