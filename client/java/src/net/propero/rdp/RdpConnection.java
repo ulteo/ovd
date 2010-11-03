@@ -387,7 +387,6 @@ public class RdpConnection implements SeamListener, Runnable{
 		}
 
 		this.tryNumber++;
-		this.fireConnecting();
 
 		// Configure a keyboard layout
 		this.loadKeymap();
@@ -404,6 +403,8 @@ public class RdpConnection implements SeamListener, Runnable{
 		
 		this.keep_running = true;
 		int exit = 0;
+
+		this.fireConnecting();
 		
 		while (this.keep_running) {
 			if (this.RdpLayer != null) {
