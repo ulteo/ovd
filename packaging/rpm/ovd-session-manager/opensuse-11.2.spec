@@ -48,7 +48,7 @@ sed -i -e 's,^#!/usr/bin/php$,#!/usr/bin/php5,' $(find $RPM_BUILD_ROOT -name *.p
 A2CONFDIR=/etc/apache2/conf.d
 CONFDIR=/etc/ulteo/sessionmanager
 
-A2USER=www-run
+A2USER=wwwrun
 
 a2enmod php5 > /dev/null
 
