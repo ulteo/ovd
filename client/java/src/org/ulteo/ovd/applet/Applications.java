@@ -432,6 +432,9 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 	
 	@Override
 	public void connected(RdpConnection co) {
+		if (co == null || this.connections == null)
+			return;
+		
 		System.out.println("Connected to "+co.getServer());
 		
 		Integer server_id = null;
@@ -446,6 +449,9 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 	
 	@Override
 	public void connecting(RdpConnection co) {
+		if (co == null || this.connections == null)
+			return;
+		
 		System.out.println("Connecting to "+co.getServer());
 	}
 	
@@ -468,6 +474,9 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 	
 	@Override
 	public void failed(RdpConnection co, String msg) {
+		if (co == null || this.connections == null)
+			return;
+		
 		System.out.println("Connection to "+co.getServer()+" failed: "+msg);
 		
 		boolean retry = false;
