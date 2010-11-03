@@ -22,7 +22,12 @@ import org.apache.log4j.Level;
 
 import java.awt.Component;
 import java.awt.event.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
+import javax.swing.KeyStroke;
 
 public abstract class Input {
 
@@ -88,6 +93,12 @@ public abstract class Input {
 	KeyCode keys = null;
 	protected Options opt = null;
 
+	protected KeyAdapter keyAdapter = null;
+
+	protected static final int DEFAULT_KEYSTROKE_DELAY = 500;
+	protected HashMap<KeyStroke, Long> keystrokesList = null;
+	protected List<InputListener> inputListeners = null;
+
     /**
      * Create a new Input object with a given keymap object
      * @param c Canvas on which to listen for input events
@@ -101,8 +112,10 @@ public abstract class Input {
 		rdp = r;
 		if (this.opt.debug_keyboard)
 			logger.setLevel(Level.DEBUG);
-		addInputListeners();
+		this.setInputListeners();
 		pressedKeys = new Vector();
+		this.keystrokesList = new HashMap<KeyStroke, Long>();
+		this.inputListeners = new CopyOnWriteArrayList<InputListener>();
 	}
 
     /**
@@ -123,19 +136,66 @@ public abstract class Input {
 		rdp = r;
 		if (this.opt.debug_keyboard)
 			logger.setLevel(Level.DEBUG);
-		addInputListeners();
+		this.setInputListeners();
 		pressedKeys = new Vector();
+		this.keystrokesList = new HashMap<KeyStroke, Long>();
+		this.inputListeners = new CopyOnWriteArrayList<InputListener>();
+	}
+
+	public void addInputListener(InputListener listener) {
+		this.inputListeners.add(listener);
+	}
+
+	public boolean removeInputListener(InputListener listener) {
+		if (! this.inputListeners.contains(listener))
+			return false;
+
+		this.inputListeners.remove(listener);
+		return true;
+	}
+
+	protected void fireKeyStrokePressed(KeyStroke keystroke, KeyEvent ke) {
+		for (InputListener each : this.inputListeners)
+			each.keyStrokePressed(keystroke, ke);
 	}
 
     /**
      * Add all relevant input listeners to the canvas
     */
-	public void addInputListeners() {
+	protected void setInputListeners() {
 		RdesktopMouseAdapter mouseAdapter = new RdesktopMouseAdapter();
 		canvas.addMouseListener(mouseAdapter);
 		canvas.addMouseWheelListener(mouseAdapter);
 		canvas.addMouseMotionListener(new RdesktopMouseMotionAdapter());
-		canvas.addKeyListener(new RdesktopKeyAdapter());
+		this.keyAdapter = new RdesktopKeyAdapter();
+		this.canvas.addKeyListener(this.keyAdapter);
+	}
+
+	public KeyAdapter getKeyAdapter() {
+		return this.keyAdapter;
+	}
+
+	public void addKeyStroke(KeyStroke keystroke) {
+		if (keystroke == null)
+			return;
+
+		this.keystrokesList.put(keystroke, 0L);
+	}
+
+	public boolean removeKeyStroke(KeyStroke keystroke) {
+		if (keystroke == null || this.keystrokesList.isEmpty())
+			return false;
+
+		boolean found = false;
+		for (KeyStroke each : this.keystrokesList.keySet()) {
+			if (each.equals(keystroke))
+				found = true;
+		}
+		if (! found)
+			return false;
+
+		this.keystrokesList.remove(keystroke);
+		return true;
 	}
 
 	/**
@@ -301,6 +361,21 @@ public abstract class Input {
          * Handle a keyPressed event, sending any relevant keypresses to the server
          */
 		public void keyPressed(KeyEvent e) {
+			KeyStroke keystroke = KeyStroke.getKeyStrokeForEvent(e);
+
+			for (Entry<KeyStroke, Long> each : keystrokesList.entrySet()) {
+				if (each.getKey().equals(keystroke)) {
+					long time = System.currentTimeMillis();
+					Long lastTime = each.getValue();
+					if (time >= (lastTime + DEFAULT_KEYSTROKE_DELAY)) {
+						each.setValue(time);
+						fireKeyStrokePressed(keystroke, e);
+					}
+					return;
+				}
+
+			}
+
 			lastKeyEvent = e;
 			modifiersValid = true;
 			long time = getTime();

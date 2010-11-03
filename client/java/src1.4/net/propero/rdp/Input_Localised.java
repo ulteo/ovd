@@ -82,8 +82,8 @@ public class Input_Localised extends Input {
 	  }
 	}
 		  
-	public void addInputListeners(){
-		super.addInputListeners();
+	public void setInputListeners(){
+		super.setInputListeners();
 		canvas.addMouseWheelListener(new RdesktopMouseWheelAdapter());
 	}
 	
