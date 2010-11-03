@@ -36,6 +36,7 @@ class Session {
 	const SESSION_END_STATUS_ADMINKILL = "adminkill";
 	const SESSION_END_STATUS_TIMEOUT = "timeout";
 	const SESSION_END_STATUS_UNUSED = "unused";
+	const SESSION_END_STATUS_ERROR = "error";
 
 	const MODE_DESKTOP = "desktop";
 	const MODE_APPLICATIONS = "applications";

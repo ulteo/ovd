@@ -39,6 +39,13 @@ foreach ($sessions as $session) {
 			$session->orderDeletion(true, Session::SESSION_END_STATUS_UNUSED);
 		}
 	}
+
+	if (in_array($session->status, array(Session::SESSION_STATUS_ACTIVE))) {
+		if (! $session->isAlive()) {
+			Logger::info('main', '(minutely cron) Session \''.$session->id.'\' does not exist anymore, purging...');
+			$session->orderDeletion(false, Session::SESSION_END_STATUS_ERROR);
+		}
+	}
 }
 //END Sessions expiration
 
