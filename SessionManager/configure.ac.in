@@ -27,7 +27,6 @@ if test -z "$xgversion" -o -z "$mmversion" -o -z "$mfversion"; then
 fi
 GETTEXT_PACKAGE=uovdsm
 AC_SUBST(GETTEXT_PACKAGE)
-ALL_LINGUAS=$(sed -r -e "/^#/d" -e "s/#.*//" "po/LINGUAS")
 AC_SUBST(ALL_LINGUAS)
 
 # change libdir for HA OCF resource
@@ -113,7 +112,6 @@ fi
 
 AC_CONFIG_FILES([
 Makefile
-po/Makefile
 config/Makefile
 scripts/Makefile
 web/Makefile

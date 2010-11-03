@@ -1,4 +1,4 @@
-SUBDIRS = web po config scripts examples
+SUBDIRS = web config scripts examples
 
 if HA
 SUBDIRS += ha
