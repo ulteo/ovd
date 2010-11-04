@@ -13,12 +13,6 @@ else:
 	revision = c.info(path)["revision"].number
 	version = "99.99+svn%05d"%(revision)
 
-if os.path.exists("po"):
-    shutil.rmtree("po")
-os.mkdir("po")
-for src in glob.glob(os.path.join("..","..","i18n","uovdclient","*.po")):
-	shutil.copy(src, "po")
-
 f = file(os.path.join(path, "build.xml.in"), "r")
 content = f.read()
 f.close()
