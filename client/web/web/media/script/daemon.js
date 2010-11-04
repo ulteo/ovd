@@ -523,7 +523,7 @@ var Daemon = Class.create({
 			if (this.error_message != '' && this.error_message != 'undefined')
 				offContent('errorContainer');
 
-			$('endContainer').show();
+			showEnd();
 		}
 
 		if ($('endMessage')) {

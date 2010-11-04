@@ -124,14 +124,24 @@ function hideEnd() {
 }
 
 function showEnd() {
+	if ($('endContainer').visible())
+		return;
+
+	if ($('loginBox').visible())
+		return;
+
 	new Effect.Appear($('endContainer'));
 }
 
 function hideLogin() {
 	new Effect.Move($('loginBox'), { x: 0, y: -1000 });
+	setTimeout(function() {
+		$('loginBox').hide();
+	}, 1000);
 }
 
 function showLogin() {
+	$('loginBox').show();
 	new Effect.Move($('loginBox'), { x: 0, y: 1000 });
 
 	if (debug) {
