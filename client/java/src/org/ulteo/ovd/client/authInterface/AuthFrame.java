@@ -835,7 +835,7 @@ public class AuthFrame implements ActionListener, Runnable {
 			this.wnd = authFrame_.mainFrame;
 			this.button = authFrame_.moreOption;
 			this.img = authFrame_.showOption;
-			this.buttonLabel = I18n._("More options ...");
+			this.buttonLabel = I18n._("More options...");
 
 			this.init(authFrame_);
 		}
@@ -917,7 +917,7 @@ public class AuthFrame implements ActionListener, Runnable {
 			this.authFrame.login.setText(I18n._("Login"));
 			this.authFrame.password.setText(I18n._("Password"));
 			this.authFrame.host.setText(I18n._("Host"));
-			this.authFrame.startButton.setText(I18n._("Start !"));
+			this.authFrame.startButton.setText(I18n._("Start!"));
 			this.authFrame.mode.setText(I18n._("Mode"));
 			this.authFrame.resolution.setText(I18n._("Resolution"));
 			this.authFrame.language.setText(I18n._("Language"));
@@ -931,7 +931,7 @@ public class AuthFrame implements ActionListener, Runnable {
 			this.authFrame.autoPublish.setText(I18n._("Auto-publish shortcuts"));
 			this.authFrame.useLocalCredentials.setText(I18n._("Use local credentials"));
 			
-			String buf = I18n._("More options ...");
+			String buf = I18n._("More options...");
 			if (this.authFrame.optionClicked)
 				buf = I18n._("Fewer options");
 			this.authFrame.moreOption.setText(buf);

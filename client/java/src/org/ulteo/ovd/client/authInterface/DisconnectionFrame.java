@@ -37,7 +37,7 @@ public class DisconnectionFrame extends JDialog {
 
 		this.logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
 		this.setIconImage(this.logo);
-		this.setTitle(I18n._("Disconnecting !"));
+		this.setTitle(I18n._("Disconnecting!"));
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setSize(300, 50);
 		this.setPreferredSize(new Dimension(300,50));
@@ -66,7 +66,7 @@ public class DisconnectionFrame extends JDialog {
 		}
 		
 		public void run() {	
-			this.frame.setTitle(I18n._("Disconnecting !"));
+			this.frame.setTitle(I18n._("Disconnecting!"));
 		}
 	}
 }

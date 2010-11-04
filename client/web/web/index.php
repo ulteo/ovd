@@ -208,7 +208,7 @@ function get_users_list() {
 							<td style="text-align: left; vertical-align: middle;">
 								<strong><?php echo _('System compatibility error'); ?></strong>
 								<div id="systemTestError1" style="margin-top: 15px; display: none;">
-									<p><?php echo _('Java is not available on your system or in your web browser.'); ?></p>
+									<p><?php echo _('Java is neither available on your system nor in your web browser.'); ?></p>
 									<p><?php echo _('Please install Java extension for your web browser or contact your administrator.'); ?></p>
 								</div>
 

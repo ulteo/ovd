@@ -226,10 +226,10 @@ if (! is_null($response_node)) {
 
 	switch ($response_code) {
 		case 'auth_failed':
-			$ret = _('Authentication failed, please double-check your password and try again');
+			$ret = _('Authentication failed: please double-check your password and try again');
 			break;
 		case 'in_maintenance':
-			$ret = _('The system is in maintenance mode, please contact your administrator for more information');
+			$ret = _('The system is on maintenance mode, please contact your administrator for more information');
 			break;
 		case 'internal_error':
 			$ret = _('An internal error occured, please contact your administrator');

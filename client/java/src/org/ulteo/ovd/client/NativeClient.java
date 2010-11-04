@@ -476,9 +476,9 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	public static class ResponseHandler {
 		public static String get(String key) {
 			if (key.equals(ERROR_AUTHENTICATION_FAILED))
-				return I18n._("Authentication failed, please double-check your password and try again");
+				return I18n._("Authentication failed: please double-check your password and try again");
 			else if (key.equals(ERROR_IN_MAINTENANCE))
-				return I18n._("The system is in maintenance mode, please contact your administrator for more information");
+				return I18n._("The system is on maintenance mode, please contact your administrator for more information");
 			else if (key.equals(ERROR_INTERNAL))
 				return I18n._("An internal error occured, please contact your administrator");
 			else if (key.equals(ERROR_INVALID_USER))
@@ -637,7 +637,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 	public void startThread() {
 		if (this.thread != null) {
-			System.err.println("Very weird: thread should not exist anymore !");
+			System.err.println("Very weird: thread should not exist anymore!");
 			this.thread.interrupt();
 			this.thread = null;
 		}
@@ -650,7 +650,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == this.loadingFrame.getCancelButton()) {
 			if (this.thread == null) {
-				System.err.println("Very weird: thread should exist !");
+				System.err.println("Very weird: thread should exist!");
 			}
 			else {
 				this.isCancelled = true;
@@ -721,19 +721,19 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.authFrame.getPassword().setText("");
 		
 		if (this.opts.server.equals("")) {
-			JOptionPane.showMessageDialog(null, I18n._("You must specify the host field !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, I18n._("You must specify the host field!"), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE);
 			this.disableLoadingMode();
 			return false;
 		}
 		
 		if (this.opts.nltm == false) {
 			if (this.opts.username.equals("")) {
-				JOptionPane.showMessageDialog(null, I18n._("You must specify a username !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, I18n._("You must specify a username!"), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE);
 				this.disableLoadingMode();
 				return false;
 			}
 			if (this.opts.password.equals("")) {
-				JOptionPane.showMessageDialog(null, I18n._("You must specify a password !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, I18n._("You must specify a password!"), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE);
 				this.disableLoadingMode();
 				return false;
 			}
@@ -787,7 +787,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		} catch (SessionManagerException ex) {
 			System.err.println(ex.getMessage());
 
-			String errormsg = I18n._("Unable to reach a Session Manager!");
+			String errormsg = I18n._("Unable to reach the Session Manager!");
 			if (ex.getMessage().equals("Host is unreachable"))
 				errormsg = I18n._("Host is unreachable!");
 			JOptionPane.showMessageDialog(null, errormsg, I18n._("Warning!"), JOptionPane.WARNING_MESSAGE);
@@ -845,7 +845,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				this.client = new OvdClientPortal(dialog, response.getUsername(), response.isDesktopIcons(), this.opts.autostart, this);
 				break;
 			default:
-				JOptionPane.showMessageDialog(null, I18n._("Internal error: unsupported session mode"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, I18n._("Internal error: unsupported session mode"), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE);
 				this.disableLoadingMode();
 				return exit;
 		}

@@ -42,7 +42,7 @@ public class LogoutPopup extends JOptionPane {
 	
 	public void showPopup() {
 		int option = showOptionDialog(frame, I18n._("Do you really want to close the window?"), 
-				I18n._("Warning !"),
+				I18n._("Warning!"),
 				JOptionPane.YES_NO_CANCEL_OPTION,
 				JOptionPane.WARNING_MESSAGE,
 				null,

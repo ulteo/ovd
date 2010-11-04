@@ -71,7 +71,7 @@ public class LoadingStatus {
 			return I18n._("Get application data from session manager");
 
 		case STATUS_CLIENT_INSTALL_APPLICATION:
-			return I18n._("install application data on client");
+			return I18n._("Installing application data on client");
 
 		case STATUS_CLIENT_WAITING_SERVER:
 			return I18n._("Waiting server for session");
