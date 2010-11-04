@@ -41,6 +41,7 @@ Rectangle* getWorkAreaRect() {
 	unsigned long nitems;
 	unsigned long remaining_bytes;
 	unsigned char* data;
+	long* return_words;
 	Rectangle* rect;
 
 	if (dpy == NULL) {
@@ -71,10 +72,12 @@ Rectangle* getWorkAreaRect() {
 		return NULL;
 	}
 
-	rect->x = (int) (data[0] | (data[1] << 8) | (data[2] << 16) | (data[3] << 24));
-	rect->y = (int) (data[4] | (data[5] << 8) | (data[6] << 16) | (data[7] << 24));
-	rect->width = (int) (data[8] | (data[9] << 8) | (data[10] << 16) | (data[11] << 24));
-	rect->height = (int) (data[12] | (data[13] << 8) | (data[14] << 16) | (data[15] << 24));
+	return_words = (long *) data;
+
+	rect->x = return_words[0];
+	rect->y = return_words[1];
+	rect->width = return_words[2];
+	rect->height = return_words[3];
 
 	XCloseDisplay(dpy);
 
