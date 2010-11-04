@@ -531,8 +531,8 @@ checkSessionMode();
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
 														<select id="session_mode" onchange="checkSessionMode();" onclick="checkSessionMode();">
-															<option value="desktop"<?php if ($wi_session_mode == 'desktop') echo ' selected="selected"'; ?>><?php echo _('Desktop'); ?></option>
-															<option value="applications"<?php if ($wi_session_mode == 'applications') echo ' selected="selected"'; ?>><?php echo _('Portal'); ?></option>
+															<option id="mode_desktop_gettext" value="desktop"<?php if ($wi_session_mode == 'desktop') echo ' selected="selected"'; ?>></option>
+															<option id="mode_portal_gettext" value="applications"<?php if ($wi_session_mode == 'applications') echo ' selected="selected"'; ?>></option>
 														</select>
 													</td>
 												</tr>
