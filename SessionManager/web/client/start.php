@@ -248,8 +248,10 @@ if ($sessions > 0) {
 
 			$user_login_aps = $session->settings['aps_access_login'];
 			$user_password_aps = $session->settings['aps_access_password'];
-			$user_login_fs = $session->settings['fs_access_login'];
-			$user_password_fs = $session->settings['fs_access_password'];
+			if (array_key_exists('fs_access_login', $session->settings) && array_key_exists('fs_access_password', $session->settings)) {
+				$user_login_fs = $session->settings['fs_access_login'];
+				$user_password_fs = $session->settings['fs_access_password'];
+			}
 		} elseif ($session->isAlive()) {
 			Logger::error('main', '(startsession) User \''.$user->getAttribute('login').'\' already have an active session');
 			throw_response(USER_WITH_ACTIVE_SESSION);
@@ -273,8 +275,10 @@ if (isset($old_session_id)) {
 } else {
 	$user_login_aps = 'u'.time().gen_string(5).'_APS'; //hardcoded
 	$user_password_aps = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-	$user_login_fs = 'u'.time().gen_string(6).'_FS'; //hardcoded
-	$user_password_fs = $user_password_aps;
+	if ((isset($enable_profiles) && $enable_profiles == 1) || (isset($enable_sharedfolders) && $enable_sharedfolders == 1)) {
+		$user_login_fs = 'u'.time().gen_string(6).'_FS'; //hardcoded
+		$user_password_fs = $user_password_aps;
+	}
 
 	$buf_servers = $user->getAvailableServers();
 	if (is_null($buf_servers) || count($buf_servers) == 0) {
@@ -522,8 +526,10 @@ $session->setAttribute('start_time', time());
 
 $session->settings['aps_access_login'] = $user_login_aps;
 $session->settings['aps_access_password'] = $user_password_aps;
-$session->settings['fs_access_login'] = $user_login_fs;
-$session->settings['fs_access_password'] = $user_password_fs;
+if (isset($user_login_fs) && isset($user_password_fs)) {
+	$session->settings['fs_access_login'] = $user_login_fs;
+	$session->settings['fs_access_password'] = $user_password_fs;
+}
 
 $save_session = Abstract_Session::save($session);
 if ($save_session === true) {
