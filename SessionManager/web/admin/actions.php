@@ -752,48 +752,51 @@ if ($_REQUEST['name'] == 'UserGroup_settings') {
 			redirect();
 		}
 		$ret = null;
-		if ($_REQUEST['action'] == 'add' && isset($_REQUEST['element_id'])) {
+		if ($_REQUEST['action'] == 'add' && isset($_REQUEST['container']) && isset($_REQUEST['element_id'])) {
+			$container = $_REQUEST['container'];
 			$setting_to_add = $_REQUEST['element_id'];
-			$session_settings_defaults = $prefs->getElements('general', 'session_settings_defaults');
+			$session_settings_defaults = $prefs->getElements('general', $container);
 			if (array_key_exists($setting_to_add, $session_settings_defaults) == false) {
-				Logger::error('main', "(action.php) UserGroup_settings, add unable to find '$setting_to_add' in defaults session settings");
-				popup_error(_("unable to find '$setting_to_add' in defaults session settings"));
+				Logger::error('main', "(action.php) UserGroup_settings, add unable to find '$setting_to_add' in '$container'");
+				popup_error(_("unable to find '$setting_to_add' in '$container'"));
 				redirect();
 			}
 			
 			$config_element = clone $session_settings_defaults[$setting_to_add];
-			$ugp = new UserGroup_Preferences($group->getUniqueID(), 'general', 'session_settings_defaults', $setting_to_add, $config_element->content);
+			$ugp = new UserGroup_Preferences($group->getUniqueID(), 'general', $container, $setting_to_add, $config_element->content);
 			$ret = Abstract_UserGroup_Preferences::save($ugp);
 		}
-		else if ($_REQUEST['action'] == 'del' && isset($_REQUEST['element_id'])) {
+		else if ($_REQUEST['action'] == 'del' && isset($_REQUEST['container']) && isset($_REQUEST['element_id'])) {
+			$container = $_REQUEST['container'];
 			$element_id = $_REQUEST['element_id'];
-			$ret = Abstract_UserGroup_Preferences::delete($group->getUniqueID(), 'general', 'session_settings_defaults', $element_id);
+			$ret = Abstract_UserGroup_Preferences::delete($group->getUniqueID(), 'general', $container, $element_id);
 		}
-		else if ($_REQUEST['action'] == 'modify') {
+		else if ($_REQUEST['action'] == 'modify' && isset($_REQUEST['container'])) {
+			$container = $_REQUEST['container'];
 			$formdata = array();
 			$sep = '___';
-			$sepkey = 'general'.$sep.'session_settings_defaults';
+			$sepkey = 'general'.$sep.$container;
 			foreach ($_REQUEST as $key2 =>  $value2) {
 				if ( substr($key2, 0, strlen($sepkey)) == $sepkey) {
 					$formdata[$key2] = $value2;
 				}
 			}
 			$formarray = formToArray($formdata);
-			if (isset($formarray['general']['session_settings_defaults'])) {
-				$data = $formarray['general']['session_settings_defaults'];
+			if (isset($formarray['general'][$container])) {
+				$data = $formarray['general'][$container];
 				
 				// TODO: to be better...
 				$ret = null;
-				$todel = Abstract_UserGroup_Preferences::loadByUserGroupId($group->getUniqueID(), 'general', 'session_settings_defaults');
+				$todel = Abstract_UserGroup_Preferences::loadByUserGroupId($group->getUniqueID(), 'general', $container);
 				foreach ($todel as $key2 => $value2) {
-					$ret = Abstract_UserGroup_Preferences::delete($group->getUniqueID(), 'general', 'session_settings_defaults', $value2->element_id);
+					$ret = Abstract_UserGroup_Preferences::delete($group->getUniqueID(), 'general', $container, $value2->element_id);
 					if ( $ret !== true) {
 						break;
 					}
 				}
 				
 				foreach ($data as $element_id => $value) {
-					$ugp = new UserGroup_Preferences($group->getUniqueID(), 'general', 'session_settings_defaults', $element_id, $value);
+					$ugp = new UserGroup_Preferences($group->getUniqueID(), 'general', $container, $element_id, $value);
 					$ret = Abstract_UserGroup_Preferences::save($ugp);
 					if ( $ret !== true) {
 						break;

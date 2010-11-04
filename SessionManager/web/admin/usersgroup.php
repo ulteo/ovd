@@ -374,17 +374,26 @@ function show_manage($id) {
   $can_manage_usersgroups = isAuthorized('manageUsersGroups');
   $can_manage_publications = isAuthorized('managePublications');
   $can_manage_sharedfolders = isAuthorized('manageServers');
-
-  $session_settings_defaults = $prefs->getElements('general', 'session_settings_defaults');
-  $prefs_of_a_group_unsort = Abstract_UserGroup_Preferences::loadByUserGroupId($group->getUniqueID(), 'general',  'session_settings_defaults');
+  
+  $prefs_to_get_for_a_group = array('session_settings_defaults', 'remote_desktop_settings',  'remote_applications_settings');
   $prefs_of_a_group = array();
   $unuse_settings = array();
-  foreach ($session_settings_defaults as $k4 => $v4) {  // we should use the ones from the group ($prefs_of_a_group_unsort) but we can display then if they are in $session_settings_defaults
-    if (array_key_exists($k4, $prefs_of_a_group_unsort)) {
-      $prefs_of_a_group[$k4] = $prefs_of_a_group_unsort[$k4];
-    }
-    else {
-      $unuse_settings[$k4] = $v4;
+  $session_prefs = array();
+  
+  foreach ($prefs_to_get_for_a_group as $prefs_to_get_for_a_group_value) {
+    $prefs_of_a_group[$prefs_to_get_for_a_group_value] = array();
+    $unuse_settings[$prefs_to_get_for_a_group_value] = array();
+    
+    $session_prefs[$prefs_to_get_for_a_group_value] = $prefs->getElements('general', $prefs_to_get_for_a_group_value);
+    $prefs_of_a_group_unsort = Abstract_UserGroup_Preferences::loadByUserGroupId($group->getUniqueID(), 'general', $prefs_to_get_for_a_group_value);
+ 
+    foreach ($session_prefs[$prefs_to_get_for_a_group_value] as $k4 => $v4) {  // we should use the ones from the group ($prefs_of_a_group_unsort) but we can display then if they are in $session_prefs
+      if (array_key_exists($k4, $prefs_of_a_group_unsort)) {
+        $prefs_of_a_group[$prefs_to_get_for_a_group_value][$k4] = $prefs_of_a_group_unsort[$k4];
+      }
+      else {
+        $unuse_settings[$prefs_to_get_for_a_group_value][$k4] = $v4;
+      }
     }
   }
 
@@ -768,75 +777,84 @@ if (count($users_all) > 0 || count($users) > 0) {
 	echo '</h2>';
 	
 	if ($prefs_of_a_group != array()) {
-		echo '<form action="actions.php" method="post">';
-		$key_name = 'general';
-		$container = 'session_settings_defaults';
-		// from admin/functions.inc.php
-		$color=0;
-		echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">'; // TODO
-		echo '<tr  class="title">';
-		echo '<th>'._('Name').'</th>';
-		echo '<th>'._('Default value').'</th>';
-		echo '<th>'._('Value').'</th>';
-		echo '<th>'._('Action').'</th>';
-		echo '<tr>';
-		foreach ($prefs_of_a_group as $element_key => $usersgroup_preferences) {
-			$config_element = $usersgroup_preferences->toConfigElement();
-			echo '<tr class="content'.($color % 2 +1).'">';
-			echo '<td style="width: 250px;">';
-			echo '<span onmouseover="showInfoBulle(\''.str_replace("'", "&rsquo;", $config_element->description_detailed).'\'); return false;" onmouseout="hideInfoBulle(); return false;">'.$config_element->label.'</span>';
+		foreach ($prefs_of_a_group as $container => $prefs_of_a_group_value) {
+			echo '<fieldset class="prefssessionusergroup">';
+			echo '<legend>'.$prefs->getPrettyName($container).'</legend>';
 			
-			echo '<td>';
-			$default_element = $session_settings_defaults[$config_element->id];
-			$default_element->setFormSeparator('NaN'); // it must be different of ___
-			$default_element->setPath(array('key_name' => $key_name, 'container' => $container, 'element_id' => $config_element->id));
-			echo $default_element->toHTML(true);
-			echo '</td>';
+			echo '<form action="actions.php" method="post">';
+			$key_name = 'general';
+			echo '<input type="hidden" name="container" value="'.$container.'" />';
+			// from admin/functions.inc.php
+			$color=0;
+			if (count($prefs_of_a_group_value) != 0) {
+				echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3" style="margin-bottom: 10px;">'; // TODO
+				echo '<tr  class="title">';
+				echo '<th>'._('Name').'</th>';
+				echo '<th>'._('Default value').'</th>';
+				echo '<th>'._('Value').'</th>';
+				echo '<th>'._('Action').'</th>';
+				echo '<tr>';
+				
+				foreach ($prefs_of_a_group_value as $element_key => $usersgroup_preferences) {
+					$config_element = $usersgroup_preferences->toConfigElement();
+					echo '<tr class="content'.($color % 2 +1).'">';
+					echo '<td style="width: 250px;">';
+					echo '<span onmouseover="showInfoBulle(\''.str_replace("'", "&rsquo;", $config_element->description_detailed).'\'); return false;" onmouseout="hideInfoBulle(); return false;">'.$config_element->label.'</span>';
+					
+					echo '<td>';
+					$default_element = $session_prefs[$container][$config_element->id];
+					$default_element->setFormSeparator('NaN'); // it must be different of ___
+					$default_element->setPath(array('key_name' => $key_name, 'container' => $container, 'element_id' => $config_element->id));
+					echo $default_element->toHTML(true);
+					echo '</td>';
+					
+					echo '</td>';
+					echo '<td style="padding: 3px;">';
+					print_element($key_name, $container, $element_key, $config_element);
+					echo '</td>';
+					
+					echo '<td>';
+					echo '<input type="button" value="'._('Remove this overriden setting').'" onclick="usergroup_settings_remove(\''.$group->getUniqueID().'\',\''.$container.'\',\''.$config_element->id.'\'); return false;"/>';
+					echo '</td>';
+					
+					echo '</tr>';
+					$color++;
+				}
 			
-			echo '</td>';
-			echo '<td style="padding: 3px;">';
-			print_element($key_name, $container, $element_key, $config_element);
-			echo '</td>';
+				// end from
+				echo '<tr class="content'.($color % 2 +1).'">';
+				echo '<td colspan="3"></td>';
+				echo '<td>';
+				echo '<input type="hidden" name="name" value="UserGroup_settings" />';
+				echo '<input type="hidden" name="container" value="'.$container.'" />';
+				echo '<input type="hidden" name="unique_id" value="'.$group->getUniqueID().'" />';
+				echo '<input type="hidden" name="action" value="modify" />';
+				echo '<input type="submit" value="'._('Save settings').'" />';
+				
+				echo '</td>';
+				echo '</tr>';
+				echo '</table>';
+				echo '</form>';
+			}
 			
-			echo '<td>';
-			echo '<input type="button" value="'._('Remove this overriden setting').'" onclick="usergroup_settings_remove(\''.$group->getUniqueID().'\', \''.$config_element->id.'\'); return false;"/>';
-			echo '</td>';
-			
-			echo '</tr>';
-			$color++;
+			if ($unuse_settings[$container] != array()) {
+				echo '<form action="actions.php" method="post">';
+					echo '<input type="hidden" name="name" value="UserGroup_settings" />';
+					echo '<input type="hidden" name="container" value="'.$container.'" />';
+					echo '<input type="hidden" name="unique_id" value="'.$group->getUniqueID().'" />';
+					echo '<input type="hidden" name="action" value="add" />';
+					
+				echo '<select name="element_id">';
+				foreach ($unuse_settings[$container] as $setting_name => $setting_content) {
+					echo '<option value="'.$setting_name.'" >'.$setting_content->label.'</option>';
+				}
+				echo '</select>';
+				echo ' ';
+				echo '<input type="submit" value="'._('Add this setting').'" />';
+				echo '</form>';
+			}
+			echo '</fieldset>';
 		}
-		
-		// end from
-		echo '<tr class="content'.($color % 2 +1).'">';
-		echo '<td colspan="3"></td>';
-		echo '<td>';
-		echo '<input type="hidden" name="name" value="UserGroup_settings" />';
-		echo '<input type="hidden" name="unique_id" value="'.$group->getUniqueID().'" />';
-		echo '<input type="hidden" name="action" value="modify" />';
-		echo '<input type="submit" value="'._('Save settings').'" />';
-		
-		echo '</td>';
-		echo '</tr>';
-		echo '</table>';
-		echo '</form>';
-		
-		echo '<br />';
-	}
-	
-	if ($unuse_settings != array()) {
-		echo '<form action="actions.php" method="post">';
-			echo '<input type="hidden" name="name" value="UserGroup_settings" />';
-			echo '<input type="hidden" name="unique_id" value="'.$group->getUniqueID().'" />';
-			echo '<input type="hidden" name="action" value="add" />';
-			
-		echo '<select name="element_id">';
-		foreach ($unuse_settings as $setting_name => $setting_content) {
-			echo '<option value="'.$setting_name.'" >'.$setting_content->label.'</option>';
-		}
-		echo '</select>';
-		echo ' ';
-		echo '<input type="submit" value="'._('Add this setting').'" />';
-		echo '</form>';
 	}
 	
 	echo '</div>'; // Session settings configuration
