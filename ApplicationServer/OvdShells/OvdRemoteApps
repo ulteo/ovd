@@ -56,6 +56,9 @@ def main():
 	im = InstancesManager(vchannel, folders)
 	im.start()
 	
+	# Applications to auto starts
+	Util.manageAutoStartApplication(user_sdir)
+	
 	app_channel = OvdAppChannel(im)
 	app_channel.run(vchannel)
 	

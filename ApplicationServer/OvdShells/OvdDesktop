@@ -109,9 +109,13 @@ def main(startExplorer):
 			Platform.launchIntegratedClient(configuration_file)
 		except Exception, err:
 			print "Unable to start external apps", err
+	
+	
+	# Applications to auto starts
+	Util.manageAutoStartApplication(user_sdir)
+	
 	if startExplorer:
 		Platform.startDesktop()
-	
 	
 	sys.exit(0)
 

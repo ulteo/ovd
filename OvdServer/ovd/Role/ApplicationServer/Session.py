@@ -20,8 +20,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import glob
+import hashlib
 import locale
 import os
+import random
 import shutil
 import time
 
@@ -55,6 +57,7 @@ class Session:
 		self.parameters = parameters_
 		self.profile = None
 		self.applications = applications_
+		self.application_to_start = []
 		self.instanceDirectory = None
 		self.used_applications = {}
 		self.external_apps_token = None
@@ -111,6 +114,24 @@ class Session:
 			f = open(os.path.join(self.user_session_dir, "token"), "w")
 			f.write(self.external_apps_token+"\n")
 			f.close()
+		
+		
+		if len(self.application_to_start) > 0:
+			apps2start_dir = os.path.join(self.user_session_dir, "to_start")
+			os.mkdir(apps2start_dir)
+			
+			for application in self.application_to_start:
+				id_ = hashlib.md5("%f%f"%(random.random(), time.time())).hexdigest()
+				
+				f = open(os.path.join(apps2start_dir, id_), "w")
+				f.write(application["id"])
+				if (application.has_key("arg")):
+					f.write("\n"+application["arg"])
+				f.close()
+	
+	
+	def setApplicationToStart(self, application_to_start):
+		self.application_to_start = application_to_start
 	
 	def setExternalAppsToken(self, external_apps_token):
 		self.external_apps_token = external_apps_token

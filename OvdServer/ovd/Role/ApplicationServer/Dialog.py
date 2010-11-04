@@ -170,9 +170,13 @@ class Dialog(AbstractDialog):
 				
 				session[attr] = userNode.getAttribute(attr)
 			
+			applications_ids = []
 			session["applications"] = []
 			applicationNodes = sessionNode.getElementsByTagName("application")
 			for node in applicationNodes:
+				if node.parentNode != sessionNode:
+					continue
+				
 				application = {}
 				
 				application["id"] = node.getAttribute("id")
@@ -185,6 +189,27 @@ class Dialog(AbstractDialog):
 					application["file"] = self.role_instance.static_apps.getApplicationPath(application["id"])
 				
 				session["applications"].append(application)
+				applications_ids.append(application["id"])
+			
+			
+			application_to_start = []
+			startNodes = sessionNode.getElementsByTagName("start")
+			if len(startNodes)>0:
+				startNodes = startNodes[0]
+				
+				applicationNodes = startNodes.getElementsByTagName("application")
+				for node in applicationNodes:
+					application = {}
+					
+					application["id"] = node.getAttribute("id")
+					if application["id"] not in applications_ids:
+						Logger.warn("Cannot start unknown application %s"%(application["id"]))
+						continue
+					
+					if node.hasAttribute("arg"):
+						application["arg"] = node.getAttribute("arg")
+					
+					application_to_start.append(application)
 			
 			session["parameters"] = {}
 			for node in sessionNode.getElementsByTagName("parameter"):
@@ -222,6 +247,7 @@ class Dialog(AbstractDialog):
 		if external_apps_token is not None:
 			session.setExternalAppsToken(external_apps_token)
 		
+		session.setApplicationToStart(application_to_start)
 		session.init()
 		
 		if profileNode is not None or len(sharedfolderNodes)>0:

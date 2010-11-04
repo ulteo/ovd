@@ -18,7 +18,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import glob
 import os
+
+from ovd_shells.Platform import _platform as Platform
 
 def loadUserEnv(d):
 	path = os.path.join(d, "env")
@@ -38,3 +41,15 @@ def loadUserEnv(d):
 			continue
 		
 		os.environ[key] = value
+
+def manageAutoStartApplication(d):
+	for path in glob.glob(os.path.join(d, "to_start", "*")):
+		f = file(path, "r")
+		lines = f.readlines()
+		f.close()
+		
+		cmd = "startovdapp %s"%(lines[0].strip())
+		if len(lines) > 1:
+			cmd+= ' "%s"'%(lines[1].strip())
+		
+		Platform.launch(cmd)

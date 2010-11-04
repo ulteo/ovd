@@ -79,6 +79,20 @@ function parse_client_XML($xml_) {
 			$_POST['password'] = $user_node->getAttribute('password');
 	}
 
+	$start_node = $dom->getElementsByTagname('start')->item(0);
+	if (! is_null($start_node)) {
+		$application_nodes = $start_node->getElementsByTagname('application');
+		foreach ($application_nodes as $application_node) {
+			if (! isset($_REQUEST['start_apps']) || ! is_array($_REQUEST['start_apps']))
+				$_REQUEST['start_apps'] = array();
+
+			$_REQUEST['start_apps'][] = array(
+				'id'	=>	$application_node->getAttribute('id'),
+				'arg'	=>	(($application_node->hasAttribute('arg'))?$application_node->getAttribute('arg'):NULL)
+			);
+		}
+	}
+
 	return true;
 }
 
@@ -149,8 +163,6 @@ if (! is_object($user)) {
 $default_settings = $user->getSessionSettings();
 $session_mode = $default_settings['session_mode'];
 $timeout = $default_settings['timeout'];
-$start_app = '';
-$start_app_args = '';
 $allow_shell = $default_settings['allow_shell'];
 $multimedia = $default_settings['multimedia'];
 $redirect_client_drives = $default_settings['redirect_client_drives'];
@@ -463,34 +475,35 @@ $default_args = array(
 $optional_args = array();
 if (isset($timezone))
 	$optional_args['timezone'] = $timezone;
-if (isset($start_app) && $start_app != '') {
+if (isset($_REQUEST['start_apps']) && is_array($_REQUEST['start_apps'])) {
+	$start_apps = $_REQUEST['start_apps'];
+
 	$applicationDB = ApplicationDB::getInstance();
-	$app = $applicationDB->import($start_app);
 
-	if (! is_object($app)) {
-		Logger::error('main', '(startsession) No such application for id \''.$start_app.'\'');
-		throw_response(SERVICE_NOT_AVAILABLE);
-	}
+	foreach ($start_apps as $start_app) {
+		$app = $applicationDB->import($start_app['id']);
 
-	$apps = $user->applications();
+		if (! is_object($app)) {
+			Logger::error('main', '(startsession) No such application for id \''.$start_app['id'].'\'');
+			throw_response(SERVICE_NOT_AVAILABLE);
+		}
 
-	$ok = false;
-	foreach ($apps as $user_app) {
-		if ($user_app->getAttribute('id') == $start_app) {
-			$ok = true;
-			break;
+		$apps = $user->applications();
+
+		$ok = false;
+		foreach ($apps as $user_app) {
+			if ($user_app->getAttribute('id') == $start_app['id']) {
+				$ok = true;
+				break;
+			}
+		}
+
+		if ($ok === false) {
+			Logger::error('main', '(startsession) Application not available for user \''.$user->getAttribute('login').'\' id \''.$start_app['id'].'\'');
+			throw_response(SERVICE_NOT_AVAILABLE);
 		}
 	}
-
-	if ($ok === false) {
-		Logger::error('main', '(startsession) Application not available for user \''.$user->getAttribute('login').'\' id \''.$start_app.'\'');
-		throw_response(SERVICE_NOT_AVAILABLE);
-	}
-
-	$optional_args['start_app_id'] = $start_app;
 }
-if (isset($start_app_args) && $start_app_args != '')
-	$optional_args['start_app_args'] = $start_app_args;
 if (isset($persistent) && $persistent != '0')
 	$optional_args['persistent'] = 1;
 if (isset($desktop_icons) && $desktop_icons != '0')
@@ -650,6 +663,18 @@ if (! isset($old_session_id)) {
 			$session_node->appendChild($application_node);
 		}
 
+		if (isset($start_apps) && is_array($start_apps)) {
+			$start_node = $dom->createElement('start');
+			foreach ($start_apps as $start_app) {
+				$application_node = $dom->createElement('application');
+				$application_node->setAttribute('id', $start_app['id']);
+				if (! is_null($start_app['arg']))
+					$application_node->setAttribute('arg', $start_app['arg']);
+				$start_node->appendChild($application_node);
+			}
+			$session_node->appendChild($start_node);
+		}
+
 		$dom->appendChild($session_node);
 
 		$xml = $dom->saveXML();
@@ -752,6 +777,18 @@ if (! isset($old_session_id)) {
 					$application_node->setAttribute('mode', 'static');
 
 				$session_node->appendChild($application_node);
+			}
+
+			if (isset($start_apps) && is_array($start_apps) && ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1)) {
+				$start_node = $dom->createElement('start');
+				foreach ($start_apps as $start_app) {
+					$application_node = $dom->createElement('application');
+					$application_node->setAttribute('id', $start_app['id']);
+					if (! is_null($start_app['arg']))
+						$application_node->setAttribute('arg', $start_app['arg']);
+					$start_node->appendChild($application_node);
+				}
+				$session_node->appendChild($start_node);
 			}
 
 			$dom->appendChild($session_node);
