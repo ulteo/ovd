@@ -39,7 +39,7 @@ public abstract class SystemAbstract {
 			SystemLinux.cleanAll();
 	}
 
-	public abstract void install(Application app);
+	public abstract void install(Application app, boolean showDesktopIcon);
 
 	public abstract void uninstall(Application app);
 

@@ -25,7 +25,6 @@ package org.ulteo.ovd.client.remoteApps;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,6 +52,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	private List<Application> appsList = null;
 	private List<Application> appsListToEnable = null;
 	private boolean autoPublish = false;
+	private boolean showDesktopIcons = false;
 	private boolean hiddenAtStart = false;
 	
 	public OvdClientPortal(SessionManagerCommunication smComm) {
@@ -61,10 +61,11 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.init();
 	}
 
-	public OvdClientPortal(SessionManagerCommunication smComm, String login_, boolean autoPublish, boolean hiddenAtStart_, Callback obj) {
+	public OvdClientPortal(SessionManagerCommunication smComm, String login_, boolean autoPublish, boolean showDesktopIcons_, boolean hiddenAtStart_, Callback obj) {
 		super(smComm, obj);
 		this.username = login_;
 		this.autoPublish = autoPublish;
+		this.showDesktopIcons = showDesktopIcons_;
 		this.hiddenAtStart = hiddenAtStart_;
 		
 		this.init();
@@ -148,7 +149,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			if (rc.getOvdAppChannel() == o) {
 				for (Application app : rc.getAppsList()) {
 					if (this.autoPublish)
-						this.system.install(app);
+						this.system.install(app, this.showDesktopIcons);
 
 					if (! this.portal.isVisible()) {
 						if (this.appsListToEnable == null)
@@ -200,7 +201,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	public void publish() {
 		for (RdpConnectionOvd co : this.getAvailableConnections()) {
 			for (Application app : co.getAppsList()) {
-				this.system.install(app);
+				this.system.install(app, this.showDesktopIcons);
 			}
 		}
 		

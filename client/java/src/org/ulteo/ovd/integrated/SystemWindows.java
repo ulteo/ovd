@@ -66,7 +66,7 @@ public class SystemWindows extends SystemAbstract {
 	}
 
 	@Override
-	public void install(Application app) {
+	public void install(Application app, boolean showDesktopIcon) {
 		Logger.debug("Installing the '"+app.getName()+"' shortcut");
 
 		String shortcutName = WindowsShortcut.replaceForbiddenChars(app.getName())+Constants.SHORTCUTS_EXTENSION;
@@ -79,19 +79,25 @@ public class SystemWindows extends SystemAbstract {
 
 		try {
 			BufferedInputStream shortcutReader = new BufferedInputStream(new FileInputStream(f), 4096);
-			File desktopShortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+shortcutName);
-			File startMenuShortcut = new File(Constants.PATH_STARTMENU+Constants.FILE_SEPARATOR+shortcutName);
 
-			BufferedOutputStream desktopStream = new BufferedOutputStream(new FileOutputStream(desktopShortcut), 4096);
+			BufferedOutputStream desktopStream = null;
+			if (showDesktopIcon) {
+				File desktopShortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+shortcutName);
+				desktopStream = new BufferedOutputStream(new FileOutputStream(desktopShortcut), 4096);
+			}
+
+			File startMenuShortcut = new File(Constants.PATH_STARTMENU+Constants.FILE_SEPARATOR+shortcutName);
 			BufferedOutputStream startMenuStream = new BufferedOutputStream(new FileOutputStream(startMenuShortcut), 4096);
 
 			int currentChar;
 			while ((currentChar = shortcutReader.read()) != -1) {
-				desktopStream.write(currentChar);
+				if (desktopStream != null)
+					desktopStream.write(currentChar);
 				startMenuStream.write(currentChar);
 			}
 
-			desktopStream.close();
+			if (desktopStream != null)
+				desktopStream.close();
 			startMenuStream.close();
 			shortcutReader.close();
 		} catch(FileNotFoundException e) {

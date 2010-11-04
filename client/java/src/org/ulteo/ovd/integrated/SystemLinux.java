@@ -62,7 +62,7 @@ public class SystemLinux extends SystemAbstract {
 	}
 
 	@Override
-	public void install(Application app) {
+	public void install(Application app, boolean showDesktopIcon) {
 		Logger.debug("Installing the '"+app.getName()+"' shortcut");
 		
 		File f = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
@@ -87,7 +87,7 @@ public class SystemLinux extends SystemAbstract {
 			}
 			else {
 				File desktopShortcut = null;
-				if (true) /* ToDo: pref SM*/
+				if (showDesktopIcon)
 					desktopShortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
 				File xdgShortcut = new File(Constants.PATH_XDG_APPLICATIONS+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
 

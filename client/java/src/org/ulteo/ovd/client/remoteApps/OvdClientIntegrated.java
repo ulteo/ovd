@@ -44,12 +44,15 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 		return map;
 	}
 
+	protected boolean showDesktopIcons = false;
+
 	public OvdClientIntegrated(SessionManagerCommunication smComm) {
 		super(smComm);
 		this.init();
 	}
 
 	private void init() {
+		this.showDesktopIcons = this.smComm.getResponseProperties().isDesktopIcons();
 		this.spool = new Spool(this);
 	}
 
@@ -92,7 +95,7 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 				continue;
 
 			for (Application app : rc.getAppsList()) {
-				this.system.install(app);
+				this.system.install(app, this.showDesktopIcons);
 			}
 		}
 	}

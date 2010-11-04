@@ -842,7 +842,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 					}
 				}
 				
-				this.client = new OvdClientPortal(dialog, response.getUsername(), response.isDesktopIcons(), this.opts.autostart, this);
+				this.client = new OvdClientPortal(dialog, response.getUsername(), this.opts.autopublish, response.isDesktopIcons(), this.opts.autostart, this);
 				break;
 			default:
 				JOptionPane.showMessageDialog(null, I18n._("Internal error: unsupported session mode"), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE);
