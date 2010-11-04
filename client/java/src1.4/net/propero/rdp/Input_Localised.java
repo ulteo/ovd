@@ -81,11 +81,6 @@ public class Input_Localised extends Input {
 		  this.opt.useLockingKeyState = false;
 	  }
 	}
-		  
-	public void setInputListeners(){
-		super.setInputListeners();
-		canvas.addMouseWheelListener(new RdesktopMouseWheelAdapter());
-	}
 	
 	public boolean handleShortcutKeys(long time, KeyEvent e, boolean pressed){
 		if (super.handleShortcutKeys(time,e,pressed)) return true;

@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 import java.awt.Component;
+import java.awt.MouseInfo;
 import java.awt.event.*;
 import java.util.HashMap;
 import java.util.List;
@@ -167,7 +168,10 @@ public abstract class Input {
 	protected void setInputListeners() {
 		this.mouseAdapter = new RdesktopMouseAdapter();
 		this.canvas.addMouseListener(this.mouseAdapter);
-		this.canvas.addMouseWheelListener(this.mouseAdapter);
+		if (MouseInfo.getNumberOfButtons() > 3)
+			this.canvas.addMouseWheelListener(this.mouseAdapter);
+		else
+			this.logger.warn("No mouse wheel was detected");
 		this.mouseMotionAdapter = new RdesktopMouseMotionAdapter();
 		this.canvas.addMouseMotionListener(this.mouseMotionAdapter);
 		this.keyAdapter = new RdesktopKeyAdapter();
