@@ -240,7 +240,7 @@ function show_default($prefs, $applicationDB) {
 			if ($can_manage_applications) {
 				echo '<form action="actions.php" method="post">';
 				echo '<input type="hidden" name="action" value="Application_static" />';
-				echo '<input type="hidden" name="application_name" value="default_browser" />';
+				echo '<input type="hidden" name="name" value="default_browser" />';
 				echo '<input type="hidden" name="attributes_send[]" value="application_name" />';
 				echo '<input type="hidden" name="action" value="add" />';
 				echo '<input type="hidden" name="type" value="'.$type.'" />';
