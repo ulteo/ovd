@@ -44,3 +44,4 @@ js/ajaxplorer/class.FormManager.js
 js/ajaxplorer/class.MultiUploader.js
 js/ajaxplorer/class.MultiDownloader.js
 js/ajaxplorer/class.Ajaxplorer.js
+js/ajaxplorer/mime_type.js

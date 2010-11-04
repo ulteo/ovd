@@ -131,8 +131,14 @@ EOF;
 			$context_node->setAttribute('contextMenu', 'true');
 			$context_node->setAttribute('infoPanel', 'true');
 			$context_node->setAttribute('inZip', 'false');
-			$context_node->setAttribute('ulteoMimes', implode(',', $v['mimes']));
+			$context_node->setAttribute('handleMimeTypes', 'true');
 			$gui_node->appendChild($context_node);
+
+			foreach ($v['mimes'] as $mime) {
+				$mime_node = $dom->createElement('mime');
+				$mime_node->setAttribute('type', $mime);
+				$context_node->appendChild($mime_node);
+			}
 
 			$selectioncontext_node = $dom->createElement('selectionContext');
 			$selectioncontext_node->setAttribute('dir', 'false');
