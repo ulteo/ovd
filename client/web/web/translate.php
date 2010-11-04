@@ -27,15 +27,10 @@ function locale2unix($locale_) {
 
 	$locale = strtolower($locale_);
 	$locales = array(
-		'fr'	=>	'fr_FR',
-		'en'	=>	'en_US',
-		'de'	=>	'de_DE',
-		'es'	=>	'es_ES',
-		'pt'	=>	'pt_PT',
-		'it'	=>	'it_IT'
+		'en'	=>	'en_US'
 	);
 
-	if (!preg_match('/[a-zA-Z-_]/', $locale))
+	if (! preg_match('/[a-zA-Z-_]/', $locale))
 		$locale = $locales['en'];
 
 	if (strlen($locale) == 2) {
