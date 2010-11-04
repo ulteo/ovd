@@ -27,7 +27,9 @@ function locale2unix($locale_) {
 
 	$locale = strtolower($locale_);
 	$locales = array(
-		'en'	=>	'en_US'
+		'ar'	=>	'ar_AE',
+		'en'	=>	'en_US',
+		'ja'	=>	'ja_JP',
 	);
 
 	if (! preg_match('/[a-zA-Z-_]/', $locale))
