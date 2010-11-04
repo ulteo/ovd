@@ -32,6 +32,8 @@ public class CheckJava extends Applet {
 	private RequestForwarder ajax = null;
 	private Thread ajaxThread = null;
 	
+	private String userLogin = "";
+	
 	@Override
 	public void init() {
 		this.jsCallBack_onSuccess = this.getParameter("onSuccess");
@@ -54,6 +56,7 @@ public class CheckJava extends Applet {
 			
 			try {
 				System.getProperty("user.home");
+				this.userLogin = System.getProperty("user.name");
 				callback = this.jsCallBack_onSuccess;
 			} catch(java.security.AccessControlException e) {
 				System.err.println("AccessControl issue");
@@ -84,5 +87,9 @@ public class CheckJava extends Applet {
 	
 	public void ajaxRequest(String sm, String mode, String language, String timezone, String callback) {
 		this.ajax.pushOrder(new AjaxOrder(sm, mode, language, timezone, callback));
+	}
+	
+	public String getUserLogin() {
+		return this.userLogin;
 	}
 }

@@ -707,15 +707,24 @@ function checkLogin() {
 	if ($('use_local_credentials_true') && $('use_local_credentials_true').checked) {
 		$('use_popup_true').disabled = true;
 		$('use_popup_false').disabled = true;
-		$('user_login').disabled = true;
+		
+		$('user_login_local').innerHTML = $('CheckSignedJava').getUserLogin();
 		if ($('user_password'))
 			$('user_password').disabled = true;
+		
+		$('user_login').hide();
+		$('user_login_local').show();
+		$('password_row').hide();
 	} else {
 		$('use_popup_true').disabled = false;
 		$('use_popup_false').disabled = false;
-		$('user_login').disabled = false;
+		
 		if ($('user_password'))
 			$('user_password').disabled = false;
+		
+		$('user_login').show();
+		$('user_login_local').hide();
+		$('password_row').show();
 	}
 
 	if ($('sessionmanager_host').value != '' && $('sessionmanager_host').value != sessionmanager_host_example && ($('user_login').value != '' || ($('use_local_credentials_true') && $('use_local_credentials_true').checked)))

@@ -483,9 +483,10 @@ checkSessionMode();
 													<?php
 														}
 													?>
+													<span id="user_login_local" style="display: none; color: grey; font-style: italic;"></span>
 												</td>
 											</tr>
-											<tr>
+											<tr id="password_row">
 												<td style="text-align: right; vertical-align: middle;">
 													<img src="media/image/icons/user_password.png" alt="" title="" />
 												</td>
