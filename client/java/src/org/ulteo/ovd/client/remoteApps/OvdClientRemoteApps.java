@@ -39,6 +39,7 @@ import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 import org.ulteo.rdp.RdpConnectionOvd;
 import java.net.UnknownHostException;
+import java.util.List;
 import org.ulteo.utils.jni.WorkArea;
 import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
@@ -47,6 +48,10 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 	protected Spool spool = null;
 	protected SystemAbstract system = null;
+
+	private int numberOfApplication = 0;
+	private int ApplicationIncrement = 0;
+	private int ApplicationIndex = 0;
 	
 	public OvdClientRemoteApps(SessionManagerCommunication smComm) {
 		super(smComm, null);
@@ -72,9 +77,14 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			this.logger.error(ex);
 		}
 		
+		int applicationIncrement = 100 / co.getAppsList().size();
 		for (Application app : co.getAppsList()) {
 			if (this.system.create(app) == null)
 				org.ulteo.Logger.error("The "+app.getName()+" shortcut could not be created");
+
+			int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
+			this.obj.updateProgress(LoadingStatus.STATUS_CLIENT_INSTALL_APPLICATION, subStatus);
+			this.ApplicationIndex++;
 		}
 
 		this.customizeRemoteAppsConnection(co);
@@ -130,11 +140,16 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		if (properties.isPrinters())
 			flags |= RdpConnectionOvd.MOUNT_PRINTERS;
 		
-		int numberOfServer = this.smComm.getServers().size();
-		int serverIncrement = (int)100/numberOfServer;
-		int serverIndex = 0;
-		int status = 0;
-		for (ServerAccess server : this.smComm.getServers()) {
+		List<ServerAccess> serversList = this.smComm.getServers();
+		this.numberOfApplication = 0;
+
+		for (ServerAccess server : serversList)
+			this.numberOfApplication += server.getApplications().size();
+
+		this.ApplicationIncrement = 100 / numberOfApplication;
+		this.ApplicationIndex = 0;
+
+		for (ServerAccess server : serversList) {
 			if (this.isCancelled)
 				return false;
 
@@ -183,16 +198,13 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			
 			if (this.keymap != null)
 				rc.setKeymap(this.keymap);
-						
-			int numberOfApplication = server.getApplications().size();
-			int ApplicationIncrement = (int)serverIncrement/numberOfApplication;
-			int ApplicationIndex = 0;
+			
 			for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
 				if (this.isCancelled)
 					return false;
 				
 				try {
-					int subStatus = (int)(status + ApplicationIndex * ApplicationIncrement); 
+					int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
 					this.obj.updateProgress(LoadingStatus.STATUS_SM_GET_APPLICATION, subStatus);
 					
 					Application app = new Application(rc, appItem.getId(), appItem.getName(), appItem.getMimes(), this.smComm.askForIcon(Integer.toString(appItem.getId())));
@@ -201,14 +213,13 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 					ex.printStackTrace();
 					Logger.warn("Cannot get the \""+appItem.getName()+"\" icon: "+ex.getMessage());
 				}
-				ApplicationIndex++;
+				this.ApplicationIndex++;
 			}
-			status+=serverIndex * serverIncrement;
-			serverIndex++;
 			
 			this.connections.add(rc);
 		}
 		this.obj.updateProgress(LoadingStatus.STATUS_SM_GET_APPLICATION, 100);
+		this.ApplicationIndex = 0;
 		
 		return true;
 	}
