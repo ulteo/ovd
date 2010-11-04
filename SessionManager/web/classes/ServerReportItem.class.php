@@ -74,7 +74,10 @@ class ServerReportItem {
 		if ($node->length > 0) {
 			$total = (float) ($server->ram_total);
 			$used = (float) ($node->item(0)->getAttribute('used'));
-			$this->ram = round (($used / $total) * 100, 2);
+			if ($total > 0)
+				$this->ram = round (($used / $total) * 100, 2);
+			else
+				$this->ram = 0;
 		} else {
 			$this->ram = -1;
 		}
