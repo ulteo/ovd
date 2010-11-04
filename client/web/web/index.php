@@ -94,7 +94,7 @@ function get_users_list() {
 		if ($user_node->hasAttribute('login'))
 			$users[$user_node->getAttribute('login')] = ((strlen($user_node->getAttribute('displayname')) > 32)?substr($user_node->getAttribute('displayname'), 0, 32).'...':$user_node->getAttribute('displayname'));
 	}
-	natsort($users);
+	natcasesort($users);
 
 	return $users;
 }
