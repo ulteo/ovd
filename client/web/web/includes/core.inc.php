@@ -29,6 +29,8 @@ define('WEB_CLIENT_CONF_FILE', '/etc/ulteo/webclient/config.inc.php');
 if (file_exists(WEB_CLIENT_CONF_FILE))
 	include_once(WEB_CLIENT_CONF_FILE);
 
+define('LOCALE_DIR', '/usr/share/locale');
+
 require_once(dirname(__FILE__).'/functions.inc.php');
 
 @session_start();

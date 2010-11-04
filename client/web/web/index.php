@@ -187,10 +187,10 @@ function get_users_list() {
 					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
 						<tr>
 							<td style="text-align: left; vertical-align: top;">
-								<strong><?php echo _('Checking for system compatibility'); ?></strong>
+								<strong><span id="system_compatibility_check_1_gettext">&nbsp;</span></strong>
 								<div style="margin-top: 15px;">
-									<p><?php echo _('If this is your first time here, a Java security window will show up and you have to accept it to use the service.'); ?></p>
-									<p><?php echo _('You are advised to check the "<i>Always trust content from this publisher</i>" checkbox.'); ?></p>
+									<p id="system_compatibility_check_2_gettext">&nbsp;</p>
+									<p id="system_compatibility_check_3_gettext">&nbsp;</p>
 								</div>
 							</td>
 							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
@@ -206,17 +206,17 @@ function get_users_list() {
 					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
 						<tr>
 							<td style="text-align: left; vertical-align: middle;">
-								<strong><?php echo _('System compatibility error'); ?></strong>
+								<strong><span id="system_compatibility_error_1_gettext">&nbsp;</span></strong>
 								<div id="systemTestError1" style="margin-top: 15px; display: none;">
-									<p><?php echo _('Java is neither available on your system nor in your web browser.'); ?></p>
-									<p><?php echo _('Please install Java extension for your web browser or contact your administrator.'); ?></p>
+									<p id="system_compatibility_error_2_gettext">&nbsp;</p>
+									<p id="system_compatibility_error_3_gettext">&nbsp;</p>
 								</div>
 
 								<div id="systemTestError2" style="margin-top: 15px; display: none;">
-									<p><?php echo _('You have not accepted the Java security window.'); ?></p>
+									<p id="system_compatibility_error_4_gettext">&nbsp;</p>
 								</div>
 
-								<p>You <strong>cannot</strong> have access to this service.</p>
+								<p id="system_compatibility_error_5_gettext">&nbsp;</p>
 							</td>
 							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
 								<img src="media/image/error.png" width="32" height="32" alt="" title="" />
@@ -244,7 +244,7 @@ function get_users_list() {
 						</tr>
 						<tr>
 							<td style="text-align: right; vertical-align: bottom; margin: 10px;" colspan="2">
-								<a href="javascript:;" onclick="hideNews(); return false;"><?php echo _('close'); ?></a>
+								<a href="javascript:;" onclick="hideNews(); return false;"><span id="close_gettext">&nbsp;</span></a>
 							</td>
 						</tr>
 					</table>
@@ -261,7 +261,7 @@ function get_users_list() {
 				</tr>
 				<tr>
 					<td style="text-align: left; vertical-align: middle; margin-top: 15px;">
-						<span style="font-size: 1.35em; font-weight: bold; color: #686868;"><?php echo _('Loading:'); ?> Open Virtual Desktop</span>
+						<span style="font-size: 1.35em; font-weight: bold; color: #686868;" id="loading_ovd_gettext">&nbsp;</span>
 					</td>
 					<td style="width: 20px"></td>
 					<td style="text-align: left; vertical-align: middle;">
@@ -305,7 +305,7 @@ function get_users_list() {
 							<img src="media/image/ulteo.png" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" />
 						</td>
 						<td style="text-align: left; border-bottom: 1px solid #ccc;" class="title centered">
-							<h1><?php echo _('Welcome!'); ?></h1>
+							<h1><span id="welcome_gettext">&nbsp;</span></h1>
 						</td>
 						<td style="width: 60%; border-bottom: 1px solid #ccc; text-align: left;" class="title centered">
 							<div id="newsContainer" style="padding-left: 5px; padding-right: 5px; height: 70px; overflow: auto;">
@@ -317,11 +317,11 @@ function get_users_list() {
 									<?php
 										/*{ //persistent session
 									?>
-									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.suspend(); return false;"><img src="media/image/suspend.png" width="32" height="32" alt="suspend" title="<?php echo _('Suspend'); ?>" /><br /><?php echo _('Suspend'); ?></a></td>
+									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.suspend(); return false;"><img src="media/image/suspend.png" width="32" height="32" alt="" title="" /><br /><span id="suspend_gettext">&nbsp;</span></a></td>
 									<?php
 										}*/
 									?>
-									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.logout(); return false;"><img src="media/image/logout.png" width="32" height="32" alt="logout" title="<?php echo _('Logout'); ?>" /><br /><?php echo _('Logout'); ?></a></td>
+									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.logout(); return false;"><img src="media/image/logout.png" width="32" height="32" alt="" title="" /><br /><span id="logout_gettext">&nbsp;</span></a></td>
 								</tr>
 							</table>
 						</td>
@@ -334,7 +334,7 @@ function get_users_list() {
 					<td style="width: 15%; text-align: left; vertical-align: top; background: #eee;">
 						<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 						<div>
-							<h2><?php echo _('My applications'); ?></h2>
+							<h2><span id="my_apps_gettext">&nbsp;</span></h2>
 
 							<div id="appsContainer" style="overflow: auto;">
 							</div>
@@ -346,7 +346,7 @@ function get_users_list() {
 					<td style="width: 15%; text-align: left; vertical-align: top; background: #eee;">
 						<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 						<div>
-							<h2><?php echo _('Running applications'); ?></h2>
+							<h2><span id="running_apps_gettext">&nbsp;</span></h2>
 
 							<div id="runningAppsContainer" style="overflow: auto;">
 							</div>
@@ -358,7 +358,7 @@ function get_users_list() {
 					<td style="text-align: left; vertical-align: top; background: #eee;">
 						<div id="fileManagerWrap" class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 						<div>
-							<h2><?php echo _('My files'); ?></h2>
+							<h2><span id="my_files_gettext">&nbsp;</span></h2>
 
 							<div id="fileManagerContainer">
 							</div>
@@ -431,7 +431,7 @@ checkSessionMode();
 													<img src="media/image/icons/sessionmanager.png" alt="" title="" />
 												</td>
 												<td style="text-align: left; vertical-align: middle;">
-													<strong><?php echo _('Session Manager'); ?></strong>
+													<strong><span id="session_manager_gettext">&nbsp;</span></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
 													<input type="text" id="sessionmanager_host" value="<?php echo $wi_sessionmanager_host; ?>" onchange="checkLogin();" onkeyup="checkLogin();" />
@@ -464,7 +464,7 @@ checkSessionMode();
 													<img src="media/image/icons/user_login.png" alt="" title="" />
 												</td>
 												<td style="text-align: left; vertical-align: middle;">
-													<strong><?php echo _('Login'); ?></strong>
+													<strong><span id="login_gettext">&nbsp;</span></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
 													<?php
@@ -490,7 +490,7 @@ checkSessionMode();
 													<img src="media/image/icons/user_password.png" alt="" title="" />
 												</td>
 												<td style="text-align: left; vertical-align: middle;">
-													<strong><?php echo _('Password'); ?></strong>
+													<strong><span id="password_gettext">&nbsp;</span></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
 													<input type="password" id="user_password" value="" />
@@ -515,11 +515,11 @@ checkSessionMode();
 														<img src="media/image/icons/use_local_credentials.png" alt="" title="" />
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
-														<strong><?php echo _('Use local credentials'); ?></strong>
+														<strong><span id="use_local_credentials_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="use_local_credentials_true" name="use_local_credentials" value="1"<?php if ($wi_use_local_credentials == 1) echo ' checked="checked"'; ?> onchange="checkLogin();" onclick="checkLogin();" /> <?php echo _('Yes'); ?>
-														<input class="input_radio" type="radio" id="use_local_credentials_false" name="use_local_credentials" value="0"<?php if ($wi_use_local_credentials == 0) echo ' checked="checked"'; ?> onchange="checkLogin();" onclick="checkLogin();" /> <?php echo _('No'); ?>
+														<input class="input_radio" type="radio" id="use_local_credentials_true" name="use_local_credentials" value="1"<?php if ($wi_use_local_credentials == 1) echo ' checked="checked"'; ?> onchange="checkLogin();" onclick="checkLogin();" /> <span id="use_local_credentials_yes_gettext">&nbsp;</span>
+														<input class="input_radio" type="radio" id="use_local_credentials_false" name="use_local_credentials" value="0"<?php if ($wi_use_local_credentials == 0) echo ' checked="checked"'; ?> onchange="checkLogin();" onclick="checkLogin();" /> <span id="use_local_credentials_no_gettext">&nbsp;</span>
 													</td>
 												</tr>
 												<tr>
@@ -527,7 +527,7 @@ checkSessionMode();
 														<img src="media/image/icons/session_mode.png" alt="" title="" />
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
-														<strong><?php echo _('Mode'); ?></strong>
+														<strong><span id="mode_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
 														<select id="session_mode" onchange="checkSessionMode();" onclick="checkSessionMode();">
@@ -541,11 +541,11 @@ checkSessionMode();
 														<img src="media/image/icons/settings_desktop_fullscreen.png" alt="" title="" />
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
-														<strong><?php echo _('Fullscreen'); ?></strong>
+														<strong><span id="fullscreen_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="desktop_fullscreen_true" name="desktop_fullscreen" value="1"<?php if ($wi_desktop_fullscreen == 1) echo ' checked="checked"'; ?> /> <?php echo _('Yes'); ?>
-														<input class="input_radio" type="radio" id="desktop_fullscreen_false" name="desktop_fullscreen" value="0"<?php if ($wi_desktop_fullscreen == 0) echo ' checked="checked"'; ?> /> <?php echo _('No'); ?>
+														<input class="input_radio" type="radio" id="desktop_fullscreen_true" name="desktop_fullscreen" value="1"<?php if ($wi_desktop_fullscreen == 1) echo ' checked="checked"'; ?> /> <span id="fullscreen_yes_gettext">&nbsp;</span>
+														<input class="input_radio" type="radio" id="desktop_fullscreen_false" name="desktop_fullscreen" value="0"<?php if ($wi_desktop_fullscreen == 0) echo ' checked="checked"'; ?> /> <span id="fullscreen_no_gettext">&nbsp;</span>
 													</td>
 												</tr>
 												<tr>
@@ -553,10 +553,10 @@ checkSessionMode();
 														<img src="media/image/icons/session_language.png" alt="" title="" />
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
-														<strong><?php echo _('Language'); ?></strong>
+														<strong><span id="language_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<span style="margin-right: 5px;"><img id="session_language_flag" /></span><script type="text/javascript">Event.observe(window, 'load', function() { updateFlag($('session_language').value); updateKeymap($('session_language').value); });</script><select id="session_language" onchange="updateFlag($('session_language').value); updateKeymap($('session_language').value);" onkeyup="updateFlag($('session_language').value); updateKeymap($('session_language').value);">
+														<span style="margin-right: 5px;"><img id="session_language_flag" /></span><script type="text/javascript">Event.observe(window, 'load', function() { translateInterface($('session_language').value); updateFlag($('session_language').value); updateKeymap($('session_language').value); });</script><select id="session_language" onchange="translateInterface($('session_language').value); updateFlag($('session_language').value); updateKeymap($('session_language').value);" onkeyup="translateInterface($('session_language').value); updateFlag($('session_language').value); updateKeymap($('session_language').value);">
 															<?php
 																foreach ($languages as $language)
 																	echo '<option value="'.$language['id'].'" style="background: url(\'media/image/flags/'.$language['id'].'.png\') no-repeat right;"'.(($language['id'] == $user_language || $language['id'] == substr($user_language, 0, 2))?' selected="selected"':'').'>'.$language['english_name'].((array_key_exists('local_name', $language))?' - '.$language['local_name']:'').'</option>';
@@ -569,7 +569,7 @@ checkSessionMode();
 														<img src="media/image/icons/keyboard_layout.png" alt="" title="" />
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
-														<strong><?php echo _('Keyboard layout'); ?></strong>
+														<strong><span id="keyboard_layout_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
 														<select id="session_keymap">
@@ -588,8 +588,8 @@ checkSessionMode();
 														<strong><?php echo _('Use pop-up'); ?></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="use_popup_true" name="popup" value="1"<?php if ($wi_use_popup == 1) echo ' checked="checked"'; ?> /> <?php echo _('Yes'); ?>
-														<input class="input_radio" type="radio" id="use_popup_false" name="popup" value="0"<?php if ($wi_use_popup == 0) echo ' checked="checked"'; ?> /> <?php echo _('No'); ?>
+														<input class="input_radio" type="radio" id="use_popup_true" name="popup" value="1"<?php if ($wi_use_popup == 1) echo ' checked="checked"'; ?> /> <span id="debug_yes_gettext">&nbsp;</span>
+														<input class="input_radio" type="radio" id="use_popup_false" name="popup" value="0"<?php if ($wi_use_popup == 0) echo ' checked="checked"'; ?> /> <span id="debug_no_gettext">&nbsp;</span>
 													</td>
 												</tr>
 <?php
@@ -600,11 +600,11 @@ checkSessionMode();
 														<img src="media/image/icons/debug.png" alt="" title="" />
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
-														<strong><?php echo _('Debug'); ?></strong>
+														<strong><span id="debug_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="debug_true" name="debug" value="1"<?php if ($wi_debug == 1) echo ' checked="checked"'; ?> /> <?php echo _('Yes'); ?>
-														<input class="input_radio" type="radio" id="debug_false" name="debug" value="0"<?php if ($wi_debug == 0) echo ' checked="checked"'; ?> /> <?php echo _('No'); ?>
+														<input class="input_radio" type="radio" id="debug_true" name="debug" value="1"<?php if ($wi_debug == 1) echo ' checked="checked"'; ?> /> <span id="debug_yes_gettext">&nbsp;</span>
+														<input class="input_radio" type="radio" id="debug_false" name="debug" value="0"<?php if ($wi_debug == 0) echo ' checked="checked"'; ?> /> <span id="debug_no_gettext">&nbsp;</span>
 													</td>
 												</tr>
 <?php
@@ -615,10 +615,10 @@ checkSessionMode();
 										<table style="width: 100%; margin-left: auto; margin-right: auto; margin-top: 35px; padding-bottom: 10px;" border="0" cellspacing="0" cellpadding="5">
 											<tr style="height: 40px;">
 												<td style="text-align: left; vertical-align: bottom;">
-													<span id="advanced_settings_status" style="position: relative; left: 20px;"><img src="media/image/show.png" width="12" height="12" alt="" title="" /></span><input style="padding-left: 18px;" type="button" value="<?php echo _('Advanced settings'); ?>" onclick="switchSettings(); return false;" />
+													<span id="advanced_settings_status" style="position: relative; left: 20px;"><img src="media/image/show.png" width="12" height="12" alt="" title="" /></span><input style="padding-left: 18px;" type="button" id="advanced_settings_gettext" value="" onclick="switchSettings(); return false;" />
 												</td>
 												<td style="text-align: right; vertical-align: bottom;">
-													<span id="submitButton"><input type="submit" id="submitLogin" value="<?php echo _('Connect'); ?>" /></span>
+													<span id="submitButton"><input type="submit" id="connect_gettext" value="" /></span>
 													<span id="submitLoader" style="display: none;"><img src="media/image/loader.gif" width="24" height="24" alt="" title="" /></span>
 												</td>
 											</tr>

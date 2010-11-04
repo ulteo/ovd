@@ -619,6 +619,35 @@ function hideNews() {
 	$('newsWrap').style.height = '';
 }
 
+function translateInterface(lang_) {
+	new Ajax.Request(
+		'translate.php',
+		{
+			method: 'post',
+			parameters: {
+				lang: lang_
+			},
+			onSuccess: function(transport) {
+				var xml = transport.responseXML;
+				if (xml == null)
+					return;
+
+				var translations = xml.getElementsByTagName('translation');
+				for (var i = 0; i < translations.length; i++) {
+					var obj = $(translations[i].getAttribute('id')+'_gettext');
+					if (! obj)
+						continue;
+
+					if (obj.nodeName.toLowerCase() == 'input')
+						obj.value = translations[i].getAttribute('string');
+					else
+						obj.innerHTML = translations[i].getAttribute('string');
+				}
+			}
+		}
+	);
+}
+
 function updateFlag(id_) {
 	$('session_language_flag').src = 'media/image/flags/'+id_+'.png';
 }
@@ -678,9 +707,9 @@ function checkLogin() {
 	}
 
 	if ($('sessionmanager_host').value != '' && $('sessionmanager_host').value != sessionmanager_host_example && ($('user_login').value != '' || ($('use_local_credentials_true') && $('use_local_credentials_true').checked)))
-		$('submitLogin').disabled = false;
+		$('connect_gettext').disabled = false;
 	else
-		$('submitLogin').disabled = true;
+		$('connect_gettext').disabled = true;
 }
 
 function checkSessionMode() {

@@ -10,7 +10,8 @@ scripts_DATA = apps.php \
                servers.php \
                session_status.php \
                start_app.php \
-               synchronize.php
+               synchronize.php \
+               translate.php
 
 scriptsdir = $(datadir)/ulteo/webclient
 
