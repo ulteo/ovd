@@ -92,7 +92,7 @@ $translations = array(
 	'system_compatibility_check_3'	=>	_('You are advised to check the "<em>Always trust content from this publisher</em>" checkbox.'),
 
 	'system_compatibility_error_1'	=>	_('System compatibility error'),
-	'system_compatibility_error_2'	=>	_('Java is not available on your system or in your web browser.'),
+	'system_compatibility_error_2'	=>	_('Java is not available either on your system or in your web browser.'),
 	'system_compatibility_error_3'	=>	_('Please install Java extension for your web browser or contact your administrator.'),
 	'system_compatibility_error_4'	=>	_('You have not accepted the Java security window.'),
 	'system_compatibility_error_5'	=>	_('You <strong>cannot</strong> have access to this service.'),
