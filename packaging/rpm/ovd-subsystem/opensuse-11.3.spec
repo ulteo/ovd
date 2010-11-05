@@ -12,7 +12,6 @@ Distribution: OpenSUSE 11.3
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Buildrequires: subversion
 
 %description
 This package provides the subsystem for the Ulteo Open Virtual Desktop.
