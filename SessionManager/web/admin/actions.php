@@ -162,7 +162,7 @@ if ($_REQUEST['name'] == 'Application') {
 				
 				$res = $applicationDB->update($app);
 				if (! $res) {
-					die_error(sprintf(_("Unable to modify store application '%s'"), $id), __FILE__ ,__LINE__);
+					die_error(sprintf(_("Unable to modify application '%s'"), $id), __FILE__ ,__LINE__);
 				}
 			}
 			popup_info(sprintf(_("Application '%s' successfully modified"), $app->getAttribute('name')));
