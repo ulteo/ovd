@@ -31,29 +31,37 @@ rc_reset
 [ -f $sysconfdir/ulteo-ovd-subsystem ] && . $sysconfdir/ulteo-ovd-subsystem
 [ "$START" = no ] && exit 0
 
+CONFFILE=/etc/ulteo/subsystem.conf
+[ -f "$CONFFILE" ] && . $CONFFILE
+[ -z "$CHROOTDIR" ] && CHROOTDIR=/opt/ulteo
 
-CONF=/etc/ulteo/subsystem.conf
-[ -f "$CONF" ] && . $CONF
-[ -z "$CHROOT" ] && CHROOT=/opt/ulteo
-
-test -d "$CHROOT" || exit 5
+test -d "$CHROOTDIR" || exit 5
 
 do_start() {
-    mount -t proc none $CHROOT/proc
-    mount -t devpts none $CHROOT/dev/pts
+    [ -d "$CHROOTDIR" ] || return 1
 
-    chroot $CHROOT /etc/init.d/cups start
-    chroot $CHROOT /etc/init.d/xrdp start
-    chroot $CHROOT /etc/init.d/ovdSlaveServer start
+    # hack to hide a cups issue
+    MODKERNELDIR=$CHROOTDIR/lib/modules/$(uname -r)
+    mkdir -p $MODKERNELDIR
+    touch $MODKERNELDIR/modules.dep
+
+    mount -t proc none $CHROOTDIR/proc
+    mount -t devpts none $CHROOTDIR/dev/pts
+
+    chroot $CHROOTDIR /etc/init.d/cups start
+    chroot $CHROOTDIR /etc/init.d/xrdp start
+    chroot $CHROOTDIR /etc/init.d/ovdSlaveServer start
 }
 
 do_stop() {
-    chroot $CHROOT /etc/init.d/ovdSlaveServer stop
-    chroot $CHROOT /etc/init.d/xrdp stop
-    chroot $CHROOT /etc/init.d/cups stop
+    [ -d "$CHROOTDIR" ] || return 1
 
-    umount $CHROOT/dev/pts || true
-    umount $CHROOT/proc || true
+    chroot $CHROOTDIR /etc/init.d/ovdSlaveServer stop
+    chroot $CHROOTDIR /etc/init.d/xrdp stop
+    chroot $CHROOTDIR /etc/init.d/cups stop
+
+    umount $CHROOTDIR/dev/pts || true
+    umount $CHROOTDIR/proc || true
 }
 
 case $1 in

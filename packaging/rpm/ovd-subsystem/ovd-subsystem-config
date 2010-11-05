@@ -141,7 +141,7 @@ set_conf $CHROOTCONF "session_manager" "$SM"
 [ -f /etc/hosts ] && cp /etc/hosts $TARGET/etc/hosts
 
 mkdir -p $CONFDIR
-set_conf $CONFDIR/subsystem.conf "CHROOT" $TARGET
+set_conf $CONFDIR/subsystem.conf "CHROOTDIR" $TARGET
 
 
 if which chkconfig > /dev/null; then

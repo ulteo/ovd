@@ -43,9 +43,9 @@ service ulteo-ovd-subsystem stop
 
 %postun -n ulteo-ovd-subsystem
 SUBCONF=/etc/ulteo/subsystem.conf
-CHROOT=/opt/ulteo
+CHROOTDIR=/opt/ulteo
 [ -f $SUBCONF ] && . $SUBCONF
-rm -rf $CHROOT
+rm -rf $CHROOTDIR
 rm -f $SUBCONF
 
 %clean -n ulteo-ovd-subsystem

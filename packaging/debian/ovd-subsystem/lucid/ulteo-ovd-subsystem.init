@@ -22,6 +22,12 @@ CONFFILE=/etc/ulteo/subsystem.conf
 
 do_start() {
     [ -d "$CHROOTDIR" ] || return 1
+
+    # hack to hide a cups issue
+    MODKERNELDIR=$CHROOTDIR/lib/modules/$(uname -r)
+    mkdir -p $MODKERNELDIR
+    touch $MODKERNELDIR/modules.dep
+
     mount -t proc none $CHROOTDIR/proc
     mount -t devpts none $CHROOTDIR/dev/pts
 
@@ -32,6 +38,7 @@ do_start() {
 
 do_stop() {
     [ -d "$CHROOTDIR" ] || return 1
+
     chroot $CHROOTDIR /etc/init.d/ovdSlaveServer stop
     chroot $CHROOTDIR /etc/init.d/xrdp stop
     chroot $CHROOTDIR /etc/init.d/cups stop
