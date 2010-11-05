@@ -26,27 +26,28 @@ ARCH=$(shell getconf LONG_BIT)
 CFLAGS=-I${JAVAHOME}/include -I${JAVAHOME}/include/linux
 LDFLAGS=-lX11 -lxcb -lXau -lXdmcp
 # -lxcb-xlib for Hardy
-ifeq "$(ARCH)" '64'
-LDFLAGS+=-Llib_pic
+ifeq ($(ARCH), 64)
+LDFLAGS+=$(if $(STATIC), -Llib_pic)
 endif
 
-all: $(ARCH)/pre $(ARCH)/$(EXEC)
+all: pre $(EXEC)
 
-%/pre:
-	mkdir -p $(dir $@)
+pre:
+	mkdir -p $(ARCH)
 
-%/$(EXEC): %/org_ulteo_utils_jni_WorkArea.o
-	$(LD) -o $@ -share -soname $(EXEC) $? --strip-all \
+$(EXEC): org_ulteo_utils_jni_WorkArea.o
+ifndef STATIC
+	$(CC) -o $(ARCH)/$@ -shared -Wl,-soname,$@ $? $(LDFLAGS)
+else
+	$(LD) -o $(ARCH)/$@ -share -soname $(EXEC) $^ --strip-all \
 		-static $(LDFLAGS) -Bdynamic -lc
+endif
 
 src/org_ulteo_utils_jni_WorkArea.h:
 	javac -classpath ../src -d . ../src/org/ulteo/utils/jni/WorkArea.java
 	javah -d ./src/ org.ulteo.utils.jni.WorkArea
 
-32/%.o: src/%.c src/%.h
-	$(CC) -Os -fPIC -Wall $(CFLAGS) -o $@ -c $<
-
-64/%.o: src/%.c src/%.h
+%.o: src/%.c src/%.h
 	$(CC) -Os -fPIC -Wall $(CFLAGS) -o $@ -c $<
 
 clean:
