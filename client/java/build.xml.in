@@ -267,10 +267,10 @@
   <target name="applet.jar" description="sign jar applets" depends="applet" >
     <copy file="windowsPathsJNI/libWindowsPaths.dll"
           todir="build/resources/WindowsLibs/32" />
-    <copy file="libXClientArea/32/libXClientArea.so"
-          todir="build/resources/LinuxLibs/32" />
-    <copy file="libXClientArea/64/libXClientArea.so" failonerror="false"
-          todir="build/resources/LinuxLibs/64" />
+    <copy file="required_libraries/libXClientArea/32/libXClientArea.so"
+          todir="build/resources/LinuxLibs/32" failonerror="false" />
+    <copy file="required_libraries/libXClientArea/64/libXClientArea.so"
+          todir="build/resources/LinuxLibs/64" failonerror="false" />
     <jar destfile="jars/ulteo-applet-${compile.release}.jar" basedir="build">
       <include name="**" />
     </jar>
@@ -335,7 +335,7 @@
     <copy todir="${sdist.dir}">
       <fileset dir="." includes="build.xml README">
         <include name="src*/**" />
-        <include name="required_libraries/*" />
+        <include name="required_libraries/**" />
         <include name="keymaps/*" />
         <include name="scripts/*" />
         <include name="icons/**" />

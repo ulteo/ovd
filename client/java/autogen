@@ -3,6 +3,7 @@
 import os
 import sys
 import pysvn
+import shutil
 from subprocess import Popen
 
 path = os.path.dirname( os.path.realpath( __file__ ) )
@@ -26,5 +27,17 @@ f.write(content)
 f.close()
 
 if sys.platform == "linux2":
-    p = Popen("./autogen", cwd=os.path.join(path, "libXClientArea"))
+    libdir = os.path.join(path, "libXClientArea")
+    dst = os.path.join(path, "required_libraries", "libXClientArea")
+    if os.path.exists(dst):
+        shutil.rmtree(dst)
+    p = Popen("./autogen", cwd=libdir)
+    p.wait()
+    os.makedirs(dst)
+    for arch in ['32','64']:
+        src = os.path.join(libdir, arch)
+        if os.path.exists(os.path.join(src, "libXClientArea.so")):
+            shutil.move(src, dst)
+    print libdir
+    p = Popen("make clean", cwd=libdir, shell=True)
     p.wait()
