@@ -20,28 +20,16 @@
 
 package org.ulteo.ovd.client.desktop;
 
-import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.MouseAdapter;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
-import net.propero.rdp.Input;
 import net.propero.rdp.RdesktopCanvas;
 
 public class ScrollableDesktopFrame extends JFrame implements ComponentListener {
 
-	private static final int SCROLLBAR_INCREMENT_UNIT = 20;
-
 	private DesktopFrame desktopFrame = null;
-	private RdesktopCanvas canvas = null;
-	private JPanel view = null;
-	private JScrollPane scrollPane = null;
+	private ScrollableDesktopPanel scrollableDesktop = null;
 
 	public ScrollableDesktopFrame(DesktopFrame desktopFrame_) {
 		super("Ulteo Remote Desktop");
@@ -59,55 +47,25 @@ public class ScrollableDesktopFrame extends JFrame implements ComponentListener 
 		this.addComponentListener(this);
 	}
 
-	public void setCanvas(RdesktopCanvas canvas_) {
-		this.canvas = canvas_;
-
-		Input input = this.canvas.getInput();
-		
-		this.view = new JPanel() {
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-
-				Rectangle r = g.getClipBounds();
-				g.drawImage(canvas.backstore.getSubimage(r.x,r.y,r.width,r.height),r.x,r.y,null);
-			}
-		};
-		this.canvas.addComponentListener(this.view);
-
-		MouseAdapter mouseAdapter = input.getMouseAdapter();
-		this.view.addMouseListener(mouseAdapter);
-		this.view.addMouseWheelListener(mouseAdapter);
-		this.view.addMouseMotionListener(input.getMouseMotionAdapter());
-
-		this.view.setFocusable(true);
-		this.view.addKeyListener(input.getKeyAdapter());
-		this.view.setPreferredSize(this.canvas.getPreferredSize());
-
-		this.scrollPane = new JScrollPane();
-		this.scrollPane.getViewport().setView(this.view);
-		this.setPreferredSize(this.canvas.getPreferredSize());
-		InputMap im = this.scrollPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-		im.put(KeyStroke.getKeyStroke("UP"), "none");
-		im.put(KeyStroke.getKeyStroke("DOWN"), "none");
-		im.put(KeyStroke.getKeyStroke("LEFT"), "none");
-		im.put(KeyStroke.getKeyStroke("RIGHT"), "none");
-		this.scrollPane.getHorizontalScrollBar().setUnitIncrement(SCROLLBAR_INCREMENT_UNIT);
-		this.scrollPane.getVerticalScrollBar().setUnitIncrement(SCROLLBAR_INCREMENT_UNIT);
+	public void setCanvas(RdesktopCanvas canvas) {
+		this.scrollableDesktop = new ScrollableDesktopPanel(canvas);
 	}
 
 	public JPanel getView() {
-		return this.view;
+		if (this.scrollableDesktop == null)
+			return null;
+
+		return this.scrollableDesktop.getView();
 	}
 
 	public void componentResized(ComponentEvent ce) {}
 	public void componentMoved(ComponentEvent ce) {}
 	public void componentShown(ComponentEvent ce) {
 		this.getContentPane().removeAll();
-		this.getContentPane().add(this.scrollPane);
+		this.getContentPane().add(this.scrollableDesktop);
 		this.getContentPane().validate();
 		
-		this.view.requestFocus();
+		this.scrollableDesktop.getView().requestFocus();
 	}
 	public void componentHidden(ComponentEvent ce) {}
 }
