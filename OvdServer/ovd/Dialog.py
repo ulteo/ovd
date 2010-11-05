@@ -88,7 +88,7 @@ class Dialog(AbstractDialog):
 	def req_server_status(self, request):
 		doc = Document()
 		rootNode = doc.createElement('server')
-		rootNode.setAttribute("name", self.name)
+		rootNode.setAttribute("name", self.server.smRequestManager.name)
 		rootNode.setAttribute("status", "ready")
 		
 		doc.appendChild(rootNode)
