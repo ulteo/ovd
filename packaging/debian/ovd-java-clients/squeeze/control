@@ -3,8 +3,7 @@ Section: utils
 Priority: optional
 Maintainer: Samuel Bovée <samuel@ulteo.com>
 Build-Depends: debhelper (>= 6), cdbs, ulteo-ovd-cert,
- default-jdk, ant, ant-optional, gcc-multilib, mingw32,
- libx11-dev, ia32-libs [amd64]
+ default-jdk, ant, ant-optional, mingw32, libx11-dev
 Standards-Version: 3.8.2
 
 Package: ulteo-ovd-applets
