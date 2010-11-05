@@ -1,7 +1,9 @@
 #! /usr/bin/python
 
-import os, glob, pysvn
-import shutil
+import os
+import sys
+import pysvn
+from subprocess import Popen
 
 path = os.path.dirname( os.path.realpath( __file__ ) )
 
@@ -22,3 +24,7 @@ content = content.replace("@VERSION@", str(version))
 f = file(os.path.join(path, "build.xml"), "w")
 f.write(content)
 f.close()
+
+if sys.platform == "linux2":
+    p = Popen("./autogen", cwd=os.path.join(path, "libXClientArea"))
+    p.wait()

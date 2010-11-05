@@ -44,9 +44,6 @@
     <delete dir="build"/>
     <delete dir="jars"/>
     <antcall target="clean.jni" />
-    <exec executable="make" failonerror="true" dir="libXClientArea" >
-      <arg value="clean" />
-    </exec>
   </target>
 
   <target name="precompile">
@@ -57,16 +54,6 @@
     </copy>
     <mkdir dir="jars"/>
     <mkdir dir="dist"/>
-  </target>
-
-  <target name="libXClientArea" description="compile libXClientArea">
-    <exec executable="getconf" outputproperty="arch" >
-        <arg value="LONG_BIT" />
-    </exec>
-    <exec executable="make" failonerror="true" dir="libXClientArea">
-       <env key="JAVAHOME"  path="${java.home}/.." />
-       <env key="ARCH" value="${arch}" />
-    </exec>
   </target>
 
 
@@ -264,7 +251,6 @@
 
   <target name="applet">
     <antcall target="precompile" />
-    <antcall target="libXClientArea" />
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
            target="1.5" source="1.5" includes="org/ulteo/ovd/applet/**.java" >
       <classpath>

@@ -18,40 +18,41 @@
 
 CC=gcc
 JAVAHOME?=/usr/lib/jvm/java-1.6.0-openjdk
-ARCH?=32
-CFLAGS=-Wall -I${JAVAHOME}/include -I${JAVAHOME}/include/linux -fPIC
-LDFLAGS=-lX11
 EXEC=libXClientArea.so
 DESTDIR?=.
 LIBDIR=$(DESTDIR)/usr/lib/
-CIBLE=$(ARCH)/$(EXEC)
+ARCH=$(shell getconf LONG_BIT)
 
-ifeq ($(ARCH), 64)
-  CIBLE+=32/$(EXEC)
+CFLAGS=-I${JAVAHOME}/include -I${JAVAHOME}/include/linux
+LDFLAGS=-lX11 -lxcb -lXau -lXdmcp
+# -lxcb-xlib for Hardy
+ifeq "$(ARCH)" '64'
+LDFLAGS+=-Llib_pic
 endif
 
-all: $(CIBLE)
+all: $(ARCH)/pre $(ARCH)/$(EXEC)
 
 %/pre:
 	mkdir -p $(dir $@)
 
-%/$(EXEC): %/pre %/org_ulteo_utils_jni_WorkArea.o
-	$(CC) $(LDFLAGS) -m$(subst /,,$(dir $@)) -shared -o $@ $1
+%/$(EXEC): %/org_ulteo_utils_jni_WorkArea.o
+	$(LD) -o $@ -share -soname $(EXEC) $? --strip-all \
+		-static $(LDFLAGS) -Bdynamic -lc
 
 src/org_ulteo_utils_jni_WorkArea.h:
 	javac -classpath ../src -d . ../src/org/ulteo/utils/jni/WorkArea.java
 	javah -d ./src/ org.ulteo.utils.jni.WorkArea
 
 32/%.o: src/%.c src/%.h
-	$(CC) $(CFLAGS) -m32 -c -o $@ $<
+	$(CC) -Os -fPIC -Wall $(CFLAGS) -o $@ -c $<
 
 64/%.o: src/%.c src/%.h
-	$(CC) $(CFLAGS) -m64 -c -o $@ $<
+	$(CC) -Os -fPIC -Wall $(CFLAGS) -o $@ -c $<
 
 clean:
 	$(RM) *~
 	$(RM) src/org_ulteo_utils_jni_WorkArea.h
-	$(RM) -rf org 32 64
+	$(RM) -rf org *.o $(EXEC) $(ARCH)
 
 install: all
 	mkdir -p $(LIBDIR)
