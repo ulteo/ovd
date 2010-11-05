@@ -57,7 +57,7 @@ clean:
 
 install: all
 	mkdir -p $(LIBDIR)
-	install $(EXEC) $(LIBDIR)
+	install $(ARCH)/$(EXEC) $(LIBDIR)
 
 uninstall:
 	$(RM) $(LIBDIR)/$(EXEC)

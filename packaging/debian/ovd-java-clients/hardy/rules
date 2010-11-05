@@ -8,12 +8,13 @@ include /usr/share/cdbs/1/class/ant.mk
 JAVA_HOME = /usr/lib/jvm/java-6-sun
 OVD_CERT_DIR = /usr/share/ulteo/ovd-cert/
 
-DEB_ANT_BUILD_TARGET = libXClientArea
 DEB_ANT_INSTALL_TARGET = applet.install ovdExternalAppsClient.install vdi.install
 DEB_ANT_ARGS += -Dprefix=/usr -Dbuild.type=stripped -Ddestdir=$(DEB_DESTDIR) -Dbuild.cert=$(OVD_CERT_DIR) -Dkeystore.password=$(shell cat $(OVD_CERT_DIR)/password)
 
 DEB_JARS += $(ANT_HOME)/lib/ant-nodeps.jar # debian bug #420287
 
+build/libovd-xclient-area::
+	cd libXClientArea ; make
+
 install/libovd-xclient-area::
-	install -D $(CURDIR)/libXClientArea/$$(getconf LONG_BIT)/libXClientArea.so \
-		$(CURDIR)/$(DEB_DH_INSTALL_SOURCEDIR)/usr/lib/libXClientArea.so
+	cd libXClientArea ; make install DESTDIR=$(CURDIR)/$(DEB_DH_INSTALL_SOURCEDIR)
