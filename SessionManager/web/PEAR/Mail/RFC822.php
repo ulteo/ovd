@@ -80,7 +80,7 @@ class Mail_RFC822 {
      * Whether or not to validate atoms for non-ascii characters.
      * @var boolean $validate
      */
-    var $validate = true;
+    var $validate = false;
 
     /**
      * The array of raw addresses built up as we parse.
