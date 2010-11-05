@@ -10,6 +10,7 @@ URL: http://www.ulteo.com
 Packager: Samuel Bovée <samuel@ulteo.com>
 Distribution: SLES 11 SP1
 
+Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
 Buildroot: %{buildroot}
 Buildrequires: subversion

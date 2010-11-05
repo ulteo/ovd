@@ -10,6 +10,7 @@ URL: http://www.ulteo.com
 Packager: Samuel Bovée <samuel@ulteo.com>
 Distribution: OpenSUSE 11.3
 
+Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
 Buildrequires: subversion
 
