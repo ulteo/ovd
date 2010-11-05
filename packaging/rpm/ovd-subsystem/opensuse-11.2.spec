@@ -27,16 +27,14 @@ Requires: curl
 This package provides the subsystem for the Ulteo Open Virtual Desktop.
 
 %prep -n ulteo-ovd-subsystem
-svn co https://svn.ulteo.com/ovd/trunk/packaging/rpm/ovd-subsystem/
-cd ovd-subsystem
-cp ulteo-ovd-subsystem ovd-subsystem-config %_builddir
+%setup -q
 
 %install -n ulteo-ovd-subsystem
 SBINDIR=%buildroot/usr/sbin
 INITDIR=%buildroot/etc/init.d
 mkdir -p $SBINDIR $INITDIR
 cp ovd-subsystem-config $SBINDIR
-cp ulteo-ovd-subsystem $INITDIR
+cp ulteo-ovd-subsystem.init.rpm $INITDIR/ulteo-ovd-subsystem
 
 %preun
 service ulteo-ovd-subsystem stop
