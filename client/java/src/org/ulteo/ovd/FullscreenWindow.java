@@ -26,13 +26,14 @@ import java.awt.event.FocusListener;
 import java.awt.GraphicsEnvironment;
 import java.awt.GraphicsDevice;
 import java.awt.Toolkit;
-import java.awt.Window;
+import javax.swing.JFrame;
 
 
-public class FullscreenWindow extends Window implements FocusListener {
+public class FullscreenWindow extends JFrame implements FocusListener {
 	public FullscreenWindow() {
 		super(null, GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration());
-		
+
+		this.setUndecorated(true);
 		this.addFocusListener(this);
 	}
 	
