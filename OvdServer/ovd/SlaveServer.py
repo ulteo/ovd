@@ -22,6 +22,7 @@
 import os
 import time
 import threading
+import sys
 from xml.dom.minidom import Document
 
 from ovd.Config import Config
