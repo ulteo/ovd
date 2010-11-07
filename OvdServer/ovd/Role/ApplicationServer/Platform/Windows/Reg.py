@@ -91,7 +91,7 @@ def CopyTree(KeySrc, SubKey, KeyDest):
 		hkey_dst = win32api.RegOpenKey(KeyDest, SubKey, 0, win32con.KEY_ALL_ACCESS)
 	except Exception, err:
 		Logger.warn("Unable to open key in order to proceed CopyTree")
-		Logger.error("Unable to open key in order to proceed CopyTree: %s"%(str(e)))
+		Logger.error("Unable to open key in order to proceed CopyTree: %s"%(str(err)))
 		if hkey_src is not None:
 			win32api.RegCloseKey(hkey_src)
 		if hkey_dst is not None:
@@ -125,7 +125,7 @@ def CopyTree(KeySrc, SubKey, KeyDest):
 		win32api.RegCloseKey(hkey_dst)
 	except Exception, err:
 		Logger.warn("Unable to close key in order to proceed CopyTree")
-		Logger.error("Unable to close key in order to proceed CopyTree: %s"%(str(e)))
+		Logger.error("Unable to close key in order to proceed CopyTree: %s"%(str(err)))
 
 
 def CreateKeyR(hkey, path):
