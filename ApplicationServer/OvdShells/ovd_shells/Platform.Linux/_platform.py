@@ -23,6 +23,7 @@ import glob
 import os
 import re
 import signal
+import sys
 
 
 def findProcessWithEnviron(pattern):
