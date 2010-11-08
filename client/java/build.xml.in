@@ -280,7 +280,7 @@
         <attribute name="Main-Class" value="org.ulteo.ovd.applet.CheckJava"/>
       </manifest>
     </jar>
-    <signjar destDir="jars" alias="ulteo" storepass="${keystore.password}"
+    <signjar destdir="jars" alias="ulteo" storepass="${keystore.password}"
              keystore="${build.cert}/keystore" >
         <fileset dir="required_libraries" includes="log4j-1.2.jar" />
         <fileset dir="jars" includes="ulteo-applet-${compile.release}.jar" />
