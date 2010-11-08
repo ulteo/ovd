@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -299,13 +299,13 @@ class User {
 		return $result;
 	}
 	
-	public function getSessionSettings() {
+	public function getSessionSettings($container_) {
 		$prefs = Preferences::getInstance();
 		$overriden = array();
-		$default_settings = $prefs->get('general', 'session_settings_defaults');
+		$default_settings = $prefs->get('general', $container_);
 		$groups = $this->usersGroups();
 		foreach ($groups as $a_group) {
-			$prefs_of_a_group_unsort = Abstract_UserGroup_Preferences::loadByUserGroupId($a_group->getUniqueID(), 'general',  'session_settings_defaults');
+			$prefs_of_a_group_unsort = Abstract_UserGroup_Preferences::loadByUserGroupId($a_group->getUniqueID(), 'general', $container_);
 			foreach ($prefs_of_a_group_unsort as $key => $pref) {
 				$element = $pref->toConfigElement();
 				if (isset($overriden[$key]) && ($overriden[$key] == true) && ($element->content != $default_settings[$key])) {

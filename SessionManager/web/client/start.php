@@ -160,7 +160,7 @@ if (! is_object($user)) {
 	throw_response(INVALID_USER);
 }
 
-$default_settings = $user->getSessionSettings();
+$default_settings = $user->getSessionSettings('session_settings_defaults');
 $session_mode = $default_settings['session_mode'];
 $timeout = $default_settings['timeout'];
 $allow_shell = $default_settings['allow_shell'];
@@ -178,11 +178,11 @@ $buf = $prefs->get('general', 'session_settings_defaults');
 foreach ($buf['advanced_settings_startsession'] as $v)
 	$advanced_settings[] = $v;
 
-$remote_desktop_settings = $prefs->get('general', 'remote_desktop_settings');
+$remote_desktop_settings = $user->getSessionSettings('remote_desktop_settings');
 $persistent = $remote_desktop_settings['persistent'];
 $desktop_icons = $remote_desktop_settings['desktop_icons'];
 
-$remote_applications_settings = $prefs->get('general', 'remote_applications_settings');
+$remote_applications_settings = $user->getSessionSettings('remote_applications_settings');
 
 $enabled_session_modes = array();
 $sessmodes = array('desktop', 'applications');
