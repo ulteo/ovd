@@ -112,7 +112,7 @@ EOF;
 	foreach ($actions as $k => $v) {
 		$action_node = $dom->createElement('action');
 		$action_node->setAttribute('name', $k);
-		$action_node->setAttribute('fileDefault', 'true');
+		$action_node->setAttribute('fileDefault', 'false');
 		$actions_node->appendChild($action_node);
 
 		$gui_node = $dom->createElement('gui');
