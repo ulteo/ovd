@@ -20,9 +20,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import httplib
-import urllib
-import urllib2
-import socket
 from xml.dom import minidom
 from xml.dom.minidom import Document
 
