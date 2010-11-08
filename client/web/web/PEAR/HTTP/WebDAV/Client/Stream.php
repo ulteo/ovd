@@ -476,9 +476,9 @@ class HTTP_WebDAV_Client_Stream
             $this->dirpos = 0;
 
             // for all returned resource entries
-            foreach (split("\n", $req->getResponseBody()) as $line) {
+            foreach (explode("\n", $req->getResponseBody()) as $line) {
                 // get the href URL
-                if (ereg("href>([^<]*)", $line, $matches)) {
+                if (preg_match("@href>([^<]*)@", $line, $matches)) {
                     // skip the directory itself
                     if ($matches[1] == $this->path) {
                         continue;

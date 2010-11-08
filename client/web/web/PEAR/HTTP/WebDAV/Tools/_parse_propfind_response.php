@@ -98,7 +98,7 @@ class HTTP_WebDAV_Client_parse_propfind_response
                 $this->_tmpprop['mtime'] = strtotime($this->_tmpdata);
                 break;
             case 'creationdate':
-                $t = split("[^[:digit:]]", $this->_tmpdata);
+                $t = preg_split("@[^0-9]@", $this->_tmpdata);
                 $this->_tmpprop['ctime'] = mktime($t[3], $t[4], $t[5], $t[1], $t[2], $t[0]);
                 unset($t);
                 break;
