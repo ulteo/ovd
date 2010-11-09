@@ -8,241 +8,196 @@
     <title>Ulteo Open Virtual Desktop</title>
     <subtitle>Installation from the DVD-ROM</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
-
     <copyright>
       <year>2009</year>
       <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
     </copyright>
   </articleinfo>
 
-
-  <para>
-    If you haven't yet an Ulteo OVD DVD-ROM, please donwload the corresponding ISO file from
-    <ulink url="http://www.ulteo.com/home/ovdi/openvirtualdesktop/download" /> and burn it to a fresh DVD.
-  </para>
-
-
-  <para>
-    Insert the Ulteo OVD DVD-ROM into your computer and restart it.
-    If you selected the DVD-ROM as first boot device you'll see the
-    bootloader interface:
-  </para>
-
-  <para>
-    <screenshot>
-      <screeninfo>DVDrom Boot</screeninfo>
-      <graphic fileref="img/iso/gfxboot.png"></graphic>
-    </screenshot>
-  </para>
-
-  <section id="install">
-    <title>Installation</title>
+  <section id="launch_install_cd">
+    <title>Get and launch install CD</title>
 
     <para>
-      Press <emphasis>Enter</emphasis>, the system is now going to
-      boot. It may take some time.
+      If you haven't yet an Ulteo OVD DVD-ROM, please donwload the corresponding ISO file from
+      <ulink url="http://www.ulteo.com/home/ovdi/openvirtualdesktop/download" /> and burn it to a fresh DVD.
+    </para>
+
+    <para>
+      Insert the Ulteo OVD DVD-ROM into your computer and restart it.
+      If you selected the DVD-ROM as first boot device you'll see the
+      bootloader interface:
     </para>
 
     <itemizedlist>
-      <listitem>
-	<para>
-	  The first step is used to select the system language. Choose your language from the list 
-	  and click on <emphasis>Forward</emphasis>.
-	</para>
 
-	<screenshot>
-	  <screeninfo>ubiquity - step 1</screeninfo>
-	  <graphic fileref="img/iso/ubiquity-step1.png"></graphic>
-	</screenshot>
+      <listitem>
+        <para>Choose a language:</para>
+        <para><screenshot>
+          <screeninfo>DVDrom GFXBoot1</screeninfo>
+          <graphic fileref="img/iso/gfxboot1.png"/>
+        </screenshot></para>
+        <beginpage />
       </listitem>
 
       <listitem>
-	<para>
-	  In the second step, the system asks you to define your
-	  location. Either select a point on the map or choose one from
-	  the <emphasis>Selected city</emphasis> form and click on
-	  <emphasis>Forward</emphasis>.
-	</para>
-
-	<screenshot>
-	  <screeninfo>ubiquity - step 2</screeninfo>
-	  <graphic fileref="img/iso/ubiquity-step2.png"></graphic>
-	</screenshot>
-      </listitem>
-
-
-      <listitem>
-	<para>
-	  The third step is used to define the keyboard layout. Select
-	  yours and click on <emphasis>Forward</emphasis>.
-	</para>
-
-	<screenshot>
-	  <screeninfo>ubiquity - step 3</screeninfo>
-	  <graphic fileref="img/iso/ubiquity-step3.png"></graphic>
-	</screenshot>
-      </listitem>
-
-
-      <listitem>
-	<para>
-	  Then, you have to select the partitioning method. We suggest
-	  the automatic method: <emphasis>Guided - use entire
-	  disk</emphasis>.
-	</para>
-
-	<screenshot>
-	  <screeninfo>ubiquity - step 4</screeninfo>
-	  <graphic fileref="img/iso/ubiquity-step4.png"></graphic>
-	</screenshot>
-      </listitem>
-
-
-      <listitem id="install-step5">
-	<para>
-          These questions are about the installed operating system
-          itself, user login and password used to access the OS, along
-          with the hostname of the machine.
-	</para>
-
-	<screenshot>
-	  <screeninfo>ubiquity - step 5</screeninfo>
-	  <graphic fileref="img/iso/ubiquity-step5.png"></graphic>
-	</screenshot>
-      </listitem>
-
-      <listitem  id="install-step6">
-	<para>
-          This question is about the Ulteo OVD installation mode. This
-          documentation only support the both mode (Application Server
-          and Session Manager checked)
-	</para>
-
-	<screenshot>
-	  <screeninfo>ubiquity - step 6</screeninfo>
-	  <graphic fileref="img/iso/ubiquity-step6.png"></graphic>
-	</screenshot>
-      </listitem>
-
-     <listitem  id="install-step7">
-	<para>
-          Type a password and confirm it
-	</para>
-
-	<screenshot>
-	  <screeninfo>ubiquity - step 7</screeninfo>
-	  <graphic fileref="img/iso/ubiquity-step7.png"></graphic>
-	</screenshot>
+        <para>Select <emphasis>Install Ulteo</emphasis></para>
+        <para><screenshot>
+          <screeninfo>DVDrom GFXBoot2</screeninfo>
+          <graphic fileref="img/iso/gfxboot2.png"/>
+        </screenshot></para>
+        <beginpage />
       </listitem>
 
       <listitem>
-	<para>
-	  Now now carefully the installation summary.
-	</para>
-
-	<para>
-	  Click on <emphasis>Install</emphasis>.
-	</para>
-
-	<screenshot>
-	  <screeninfo>ubiquity - step 8</screeninfo>
-	  <graphic fileref="img/iso/ubiquity-step8.png"></graphic>
-	</screenshot>
+        <para>The system is now going to boot. It may take some time.</para>
+        <para><screenshot>
+        <screeninfo>Live CD boot splash screen</screeninfo>
+          <anchor id="splash_screen" />
+          <graphic fileref="img/iso/splash_livecd.png"/>
+        </screenshot></para>
+        <beginpage />
       </listitem>
 
-      <listitem>
-	<para>
-	  Now, you just have to wait during the system installation.
-	</para>
-
-	<screenshot>
-	  <screeninfo>ubiquity - step 8-1</screeninfo>
-	  <graphic fileref="img/iso/ubiquity-step8-1.png"></graphic>
-	</screenshot>
-      </listitem>
-
-
-
-      <listitem>
-	<para>
-	  Finally, click on <emphasis>Restart now</emphasis>.
-	</para>
-
-	<screenshot>
-	  <screeninfo>ubiquity - step 8-2</screeninfo>
-	  <graphic fileref="img/iso/ubiquity-step8-2.png"></graphic>
-	</screenshot>
-      </listitem>
     </itemizedlist>
 
   </section>
 
+  <section id="install">
+    <title>Installation</title>
 
-  <section id="getip">
-    <title>First boot: find the IP address</title>
+    <itemizedlist>
 
-    <para>
-      Ulteo OVD is mainly a network service, so it is useful to know
-      the network IP address of this machine to access it from the
-      network, for instance with a web browser.
-    </para>
+      <listitem>
+        <para>
+          The first step is used to select the system language. Choose your language from the list 
+          and click on <emphasis>Forward</emphasis>.
+        </para>
+        <para><screenshot>
+          <screeninfo>ubiquity - step 1 - language</screeninfo>
+          <graphic fileref="img/iso/ubiquity_language.png"></graphic>
+        </screenshot></para>
+        <beginpage />
+      </listitem>
 
-    <para>
-      First of all, you have to log into the system, and use the
-      username and password you specified
-      at <link linkend="install-step5">install time</link>.
-    </para>
+      <listitem>
+        <para>
+          In the second step, the system asks you to define your
+          location. Either select a point on the map or choose one from
+          the <emphasis>Selected city</emphasis> form and click on
+          <emphasis>Forward</emphasis>.
+        </para>
+        <para><screenshot>
+          <screeninfo>ubiquity - step 2 - timezone</screeninfo>
+          <graphic fileref="img/iso/ubiquity_timezone.png"></graphic>
+        </screenshot></para>
+        <beginpage />
+      </listitem>
 
-    <screenshot>
-      <screeninfo>System login</screeninfo>
-      <graphic fileref="img/iso/system-login.png"></graphic>
-    </screenshot>
+      <listitem>
+        <para>
+          The third step is used to define the keyboard layout. Select
+          yours and click on <emphasis>Forward</emphasis>.
+        </para>
+        <para><screenshot>
+          <screeninfo>ubiquity - step 3 - keyboard layout</screeninfo>
+          <graphic fileref="img/iso/ubiquity_keyboard_layout.png"></graphic>
+        </screenshot></para>
+        <beginpage />
+      </listitem>
 
-    <para>
-      On an active terminal command line type the following command:
-      <screen><![CDATA[
-$ ifconfig eth0]]>
-      </screen>
-    </para>
+      <listitem>
+        <para>
+          Then, you have to select the partitioning method. We suggest
+          the automatic method: <emphasis>Erase and use the entire
+          disk</emphasis>.
+        </para>
+        <para><screenshot>
+          <screeninfo>ubiquity - step 4 - partman</screeninfo>
+          <graphic fileref="img/iso/ubiquity_partman.png"></graphic>
+        </screenshot></para>
+        <beginpage />
+      </listitem>
 
-    <para>
-      Following is a possible output:
-      <screen><![CDATA[
-$ ifconfig eth0
-	eth0      Link encap:Ethernet  HWaddr 00:30:05:5c:73:a5  
-	inet addr:192.168.0.180  Bcast:192.168.0.255  Mask:255.255.255.0
-	UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-	RX packets:876143 errors:0 dropped:0 overruns:0 frame:0
-	TX packets:1053723 errors:0 dropped:0 overruns:0 carrier:0
-	collisions:0 txqueuelen:100 
-	RX bytes:205179680 (195.6 MiB)  TX bytes:573401350 (546.8 MiB)]]>
-      </screen>
 
-      The IP address we are looking for 
-      is <emphasis role="strong">192.168.0.180</emphasis>.
-    </para>
+      <listitem>
+        <anchor id="identity_info" />
+        <para>
+          These questions are about the installed operating system
+          itself, user login and password used to access the OS, along
+          with the hostname of the machine.
+        </para>
+        <para><screenshot>
+          <screeninfo>ubiquity - step 6 - identity information</screeninfo>
+          <graphic fileref="img/iso/ubiquity_identity_info.png"></graphic>
+        </screenshot></para>
+        <beginpage />
+      </listitem>
 
-    <important>
-      <para>
-	From now on the Session Manager url we are going to use is
-	<emphasis role="strong">http://192.168.0.180/ovd</emphasis>
-	and you can access the administrator console
-	from: <emphasis role="strong">
-	  http://192.168.0.180/ovd/admin</emphasis>
-      </para>
-    </important>
+     <listitem>
+        <anchor id="ovd_configuration" />
+        <para>
+          Type a password and confirm it.
+          Usefull address is displayed to you for near future use of OVD.
+        </para>
+        <para><screenshot>
+          <screeninfo>ubiquity - step 7 - OVD configuration</screeninfo>
+          <graphic fileref="img/iso/ubiquity_ovd_configuration.png"></graphic>
+        </screenshot></para>
+        <beginpage />
+     </listitem>
 
-    <para>
-      By using a web browser and entering the correct IP address, you
-      should see this kind of page:
+     <listitem>
+        <para>
+          Now now carefully the installation summary.
+          Click on <emphasis>Install</emphasis>.
+        </para>
+        <para><screenshot>
+  	      <screeninfo>ubiquity - step 8 - summary</screeninfo>
+          <graphic fileref="img/iso/ubiquity_summary.png"></graphic>
+        </screenshot></para>
+        <beginpage />
+      </listitem>
 
-      <screenshot>
-	<screeninfo>Session Manager into a web browser</screeninfo>
-	<graphic fileref="img/iso/sm_www_service_not_available.png"></graphic>
-      </screenshot>
-    </para>
+      <listitem>
+      <para> Now, you just have to wait during the system installation. </para>
+        <para><screenshot>
+          <screeninfo>ubiquity - install OVD system</screeninfo>
+          <graphic fileref="img/iso/ubiquity_install_system.png"></graphic>
+        </screenshot></para>
+        <beginpage />
+      </listitem>
+
+      <listitem>
+        <para> Finally, click on <emphasis>Restart now</emphasis>.  </para>
+        <para><screenshot>
+          <screeninfo>ubiquity - restart</screeninfo>
+          <graphic fileref="img/iso/ubiquity_restart.png"></graphic>
+        </screenshot></para>
+        <beginpage />
+      </listitem>
+
+    </itemizedlist>
   </section>
 
+  <section id="system_boot">
+    <title>First boot</title>
+    <para>
+      Wait that the new OVD system reboots. It displays again the same
+      <ulink url="#splash_screen">boot splash screen</ulink> seen before.
+    </para>
+    <para>
+      When the OVD has booted, it waits on the login prompt system.
+      OVD information usefull addresses are recalled to you.
+    </para>
+    <para><screenshot>
+      <screeninfo>OVD system - first boot</screeninfo>
+      <graphic fileref="img/iso/system_prompt.png"></graphic>
+    </screenshot></para>
+    <para>
+      Log in to OVD system is recommended to experiment users. Login id and password are
+      the same used during the <ulink url="#identity_info">fifth step</ulink> of install.
+    </para>
+  </section>
 
   <section id="configuration">
     <title>Configure your Application Server</title>
@@ -250,140 +205,47 @@ $ ifconfig eth0
     <para>
       Once you can access the Ulteo system from your browser, go
       to the administration console:
-      <ulink url="http://192.168.0.180/ovd/admin" /> and authenticate yourself.
+      <ulink url="http://10.42.1.242/ovd/admin" /> and authenticate yourself.
     </para>
 
-    <important>
       <para>
-	The administrator login and password are both <emphasis
-	role="strong">admin</emphasis>.
+        The administrator login and password are both those filled at the
+        <ulink url="#ovd_configuration" >sixth step</ulink> of install.
       </para>
-    </important>
 
     <para>
       <inlinemediaobject>
-	<imageobject>
-	  <imagedata fileref="img/sm_www_admin_login.png"/>
-	</imageobject>
-	<textobject>
-	  <phrase>Session Manager admin login</phrase>
-	</textobject>
+      <imageobject>
+        <imagedata fileref="img/sm_www_admin_login.png"/>
+      </imageobject>
+      <textobject>
+        <phrase>Session Manager admin login</phrase>
+      </textobject>
       </inlinemediaobject>
     </para>
 
     <para>
+      Then you arrive on the main administrator menu of the Web interface.
+    </para>
+
+    <para>
       <inlinemediaobject>
-	<imageobject>
-	  <imagedata fileref="img/sm_admin_main.png"/>
-	</imageobject>
-	<textobject>
-	  <phrase>Session Manager admin main page</phrase>
-	</textobject>
+        <imageobject>
+          <imagedata fileref="img/sm_admin_main.png"/>
+        </imageobject>
+        <textobject>
+          <phrase>Session Manager admin main page</phrase>
+        </textobject>
       </inlinemediaobject>
     </para>
 
-    <simplesect>
-      <title>Register the server</title>
+    <para>
+      To administrate the OVD, follow the corresponding online
+      <ulink url="http://doc.ulteo.com/trunk/AdminConsole.html" >documentation</ulink>.
+    </para>
 
-      <itemizedlist>
-	<listitem>
-	  <para>
-	    Your Ulteo Applications Server (ApS) should show up in the <emphasis
-	      role="strong">Unregistered servers</emphasis> page.
-	  </para>
-
-	  <screenshot>
-	    <screeninfo>Session Manager - server page</screeninfo>
-	    <graphic fileref="img/sm_admin_server_unregistered.png"></graphic>
-	  </screenshot>
-
-	  <para>
-	    Click on <emphasis>register</emphasis>.
-	  </para>
-	</listitem>
-
-	<listitem>
-	  <para>
-	    Then, click on <emphasis>Switch to production</emphasis> to
-	    switch it to Production mode.
-	  </para>
-	</listitem>
-      </itemizedlist>
-    </simplesect>
-
-    <simplesect>
-      <title>Set a redirection name</title>
-
-      <para>
-	Your Application Server has <emphasis
-	role="strong">localhost</emphasis> as server
-      name so you <emphasis role="strong">have to</emphasis> replace it
-      with  <link linkend="getip">the network address we previously retrieved</link> (In our
-	example, it is 192.168.0.180).
-      </para>
-
-      <screenshot>
-	<screeninfo>Session Manager - server redirection name</screeninfo>
-	<graphic fileref="img/sm_admin_external_name.png"></graphic>
-      </screenshot>     
-
-      <xi:include href="Installation.xml" xpointer="redirectionname_explain" />
-    </simplesect>
   </section>
 
-
-  <xi:include href="Installation.xml" xpointer="publication" />
-  <xi:include href="Installation.xml" xpointer="launch_session" />
-
-<!--
-  <section id="system-info">
-    <title>System information</title>
-
-    <simplesect>
-      <title>Session Manager administration access</title>
-
-      <para>
-	The administrator login and password on the Session Manager
-	are both <emphasis role="strong">admin</emphasis>.
-      </para>
-
-      <para>
-	It can be changed by editing the
-	<emphasis>/etc/ulteo/sessionmanager/config.inc.php</emphasis>
-	file.
-      </para>
-
-      <para>
-	The SESSIONMANAGER_ADMIN_PASSWORD is a MD5 hash of the password.
-	In order to generate the MD5 hash of a password, use the following command:
-	<screen><![CDATA[
-# echo -n test_password | md5sum]]>
-	</screen>
-      </para>
-    </simplesect>
-
-    
-    <simplesect>
-      <title>MySQL configuration</title>
-
-      <para>
-	As the system has to run without any extra server, MySQL is
-	automatically installed and autoconfigured.
-      </para>
-      <para>
-	An administrator (root) SQL password is autogenerated. A MySQL user/password
-	is also generated to be used by the Session Manager.
-      </para>
-
-      <para>
-	The MySQL Ulteo login is <emphasis>ulteoadmin</emphasis>. The
-	password is auto generated and can be read in this file: 
-	<emphasis>/etc/ulteo-session-manager.secret</emphasis>. It's useful in case
-	you would access directly to the MySQL server. If you change
-	it in the MySQL server, think about updating this file too.
-      </para>
-    </simplesect>
-  </section>
--->
+  <xi:include href="Easy_Installation.xml" xpointer="launch_session" />
 
 </article>
