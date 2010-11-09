@@ -179,31 +179,15 @@ foreach ($buf['advanced_settings_startsession'] as $v)
 	$advanced_settings[] = $v;
 
 $remote_desktop_settings = $user->getSessionSettings('remote_desktop_settings');
+$remote_desktop_enabled = (($remote_desktop_settings['enabled'] == 1)?true:false);
 $persistent = $remote_desktop_settings['persistent'];
 $desktop_icons = $remote_desktop_settings['desktop_icons'];
 
 $remote_applications_settings = $user->getSessionSettings('remote_applications_settings');
+$remote_applications_enabled = (($remote_applications_settings['enabled'] == 1)?true:false);
 
-$enabled_session_modes = array();
-$sessmodes = array('desktop', 'applications');
-foreach ($sessmodes as $sessmode) {
-	$buf = $prefs->get('general', 'remote_'.$sessmode.'_settings');
-	if (! $buf)
-		continue;
-
-	if ($buf['enabled'] == 1)
-		$enabled_session_modes[] = $sessmode;
-}
-
-if (isset($_SESSION['mode'])) {
-	if (! in_array('session_mode', $advanced_settings) && $_SESSION['mode'] != $session_mode)
-		throw_response(UNAUTHORIZED_SESSION_MODE);
-
-	if (in_array('session_mode', $advanced_settings) && ! in_array($_SESSION['mode'], $enabled_session_modes))
-		throw_response(UNAUTHORIZED_SESSION_MODE);
-
+if (isset($_SESSION['mode']))
 	$session_mode = $_SESSION['mode'];
-}
 
 $locale = $user->getLocale();
 
@@ -213,9 +197,6 @@ foreach ($protocol_vars as $protocol_var) {
 		switch ($protocol_var) {
 			case 'session_mode':
 				if (! in_array('session_mode', $advanced_settings) && $_REQUEST['session_mode'] != $session_mode)
-					throw_response(UNAUTHORIZED_SESSION_MODE);
-
-				if (in_array('session_mode', $advanced_settings) && ! in_array($_REQUEST['session_mode'], $enabled_session_modes))
 					throw_response(UNAUTHORIZED_SESSION_MODE);
 
 				$session_mode = $_REQUEST['session_mode'];
@@ -234,6 +215,20 @@ $other_vars = array('timezone');
 foreach ($other_vars as $other_var) {
 	if (isset($_REQUEST[$other_var]) && $_REQUEST[$other_var] != '')
 		$$other_var = $_REQUEST[$other_var];
+}
+
+switch ($session_mode) {
+	case Session::MODE_DESKTOP:
+		if (! isset($remote_desktop_enabled) || $remote_desktop_enabled === false)
+			throw_response(UNAUTHORIZED_SESSION_MODE);
+		break;
+	case Session::MODE_APPLICATIONS:
+		if (! isset($remote_applications_enabled) || $remote_applications_enabled === false)
+			throw_response(UNAUTHORIZED_SESSION_MODE);
+		break;
+	default:
+		throw_response(UNAUTHORIZED_SESSION_MODE);
+		break;
 }
 
 Logger::debug('main', '(startsession) Now checking for old session');
