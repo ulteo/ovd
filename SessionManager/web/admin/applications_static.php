@@ -229,8 +229,8 @@ function show_default($prefs, $applicationDB) {
 	}
 
 	echo '<br />';
-	echo '<h2>'._('Web link configuration').'</h2>';
-	echo _('Default browser for :');
+	echo '<h2>'._('Web links configuration').'</h2>';
+	echo _('Default browser for:');
 	$browsers = $prefs->get('general', 'default_browser');
 	if ( $browsers != array() && !is_null($browsers)) {
 		echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';

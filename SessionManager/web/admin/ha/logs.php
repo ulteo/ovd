@@ -77,7 +77,7 @@ else {
 	echo '<input type="checkbox" name="warn" value="1" /> '._('Show alerts').' ';
 }
 if ($info) {
-	echo '<input type="checkbox" name="info" value="1" checked="checked" /> '._('Show informations').' ';
+	echo '<input type="checkbox" name="info" value="1" checked="checked" /> '._('Show information').' ';
 }
 else{
 	echo '<input type="checkbox" name="info" value="1" /> '._('Show informations').' ';

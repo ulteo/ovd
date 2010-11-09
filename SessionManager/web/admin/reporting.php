@@ -296,7 +296,7 @@ function show_page($mode_) {
 	}
 	
 	if ($t1 > time()) {
-		popup_error(_('Error: "to" field is in the future, switch to the current time'));
+		popup_error(_('Error: "to" field is in the future, switching to current time'));
 		$t1 = $mode_->transform_date(time());
 	}
 	
@@ -621,7 +621,7 @@ function show_page($mode_) {
 			else if ($mode_->get_value() == 'minute')
 				echo _('Abscissa: minute of the hour');
 			echo '<br/>';
-			echo _('Ordinate: usage of CPU in percent');
+			echo _('Ordinate: CPU usage in percent');
 			echo '</i></td></tr>';
 		}
 
@@ -637,7 +637,7 @@ function show_page($mode_) {
 				echo _('Abscissa: minute of the hour');
 			
 			echo '<br/>';
-			echo _('Ordinate: usage of RAM in percent');
+			echo _('Ordinate: RAM usage in percent');
 			echo '</i></td></tr>';
 		}
 

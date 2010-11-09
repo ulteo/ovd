@@ -48,9 +48,9 @@ function show_default() {
   foreach($a_servs as $s) {
 	$external_name_checklist = array('localhost', '127.0.0.1');
 	if (in_array($s->fqdn, $external_name_checklist) && in_array($s->getAttribute('external_name'), $external_name_checklist))
-		popup_error($s->fqdn.': '._('redirection name may be invalid!'));
+		popup_error(sprintf(_('Server "%s": redirection name may be invalid!'), $s->fqdn));
 	if ($s->getAttribute('external_name') == '')
-		popup_error($s->fqdn.': '._('redirection name cannot be empty!'));
+		popup_error(sprintf(_('Server "%s": redirection name cannot be empty!'), $s->fqdn));
 
     if ($s->isOnline())
       $nb_a_servs_online++;
@@ -439,7 +439,7 @@ function show_manage($fqdn) {
   echo '<table>';
   
   echo '<tr><td>';
-  echo _('Redirection name of this server').': ';
+  echo _('Redirection name for this server').': ';
   echo '</td><td>';
   if ($can_do_action) {
     echo '<form action="actions.php" method="post">';

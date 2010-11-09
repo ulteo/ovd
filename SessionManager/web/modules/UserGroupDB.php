@@ -29,7 +29,7 @@ class UserGroupDB extends Module {
 		
 		$mods_enable = $prefs->get('general','module_enable');
 		if (! in_array('UserGroupDB',$mods_enable))
-			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
+			die_error(_('UserGroupDB module must be enabled'),__FILE__,__LINE__);
 		
 		$this->instance_type = array();
 		$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
@@ -145,7 +145,7 @@ class UserGroupDB extends Module {
 		
 		$mods_enable = $prefs->get('general','module_enable');
 		if (! in_array('UserGroupDB',$mods_enable))
-			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
+			die_error(_('UserGroupDB module must be enabled'),__FILE__,__LINE__);
 		
 		$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
 		$a_userGroupDB = new $mod_usergroup_name();

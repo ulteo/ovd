@@ -56,7 +56,7 @@ class SqlFailureMail extends EventCallback {
     }
 
 	public function getDescription() {
-		return _("Send a mail");
+		return _("Send an email");
 	}
 
 	public function isInternal() {

@@ -65,7 +65,7 @@ class Configuration_mode_internal extends Configuration_mode {
     $str= '<h1>'._('Internal Database Profiles').'</h1>';
 
     $str.= '<div class="section">';
-    $str.= _('This is the default Profile manager. This profile manager saves all the data into a the same SQL database as you defined it in the system configuration.');
+    $str.= _('This is the default profile manager. This profile manager saves all the data into a the same SQL database as you defined it in the system configuration.');
     $str.= '</div>';
 
     return $str;
@@ -76,7 +76,7 @@ class Configuration_mode_internal extends Configuration_mode {
 
     $str = '';
     if ($config == 'sql')
-      $str.= _('Use a dynamic internal user list');
+      $str.= _('Use a dynamic internal User Group');
 
     return $str;
   }

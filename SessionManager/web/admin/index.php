@@ -49,7 +49,7 @@ page_header();
 	<ul>
 		<?php
 			if ($show_users)
-				echo '<li><a href="users.php">'._('User list').'</a></li>';
+				echo '<li><a href="users.php">'._('Users list').'</a></li>';
 			if ($show_usersgroups)
 				echo '<li><a href="usersgroup.php">'._('Users groups list').'</a></li>';
 		?>
@@ -103,16 +103,16 @@ if ($show_configuration) {
 		<td style="text-align: left; vertical-align: top;">
 <div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
-	<h2><?php echo _('Applications and Appgroups'); ?></h2>
+	<h2><?php echo _('Applications and applications groups'); ?></h2>
 
 	<ul>
 		<?php
 		if ($show_applications)
-			echo '<li><a href="applications.php">'._('Application list').'</a></li>';
+			echo '<li><a href="applications.php">'._('Applications list').'</a></li>';
 		if ($show_applicationsgroups)
-			echo '<li><a href="appsgroup.php">'._('Application groups list').'</a><br /><br /></li>';
+			echo '<li><a href="appsgroup.php">'._('Applications groups list').'</a><br /><br /></li>';
 		if ($show_publications) {
-			echo '<li><a href="publications.php">'._('Publication list').'</a></li>';
+			echo '<li><a href="publications.php">'._('Publications list').'</a></li>';
 			echo '<li><a href="wizard.php">'._('Publication wizard').'</a></li>';
 		}
 		?>
@@ -135,15 +135,15 @@ if ($show_configuration) {
 
 		$system_in_maintenance = $prefs->get('general', 'system_in_maintenance');
 		if ($system_in_maintenance == '1') {
-			echo '<span class="msg_error">'._('The system is in maintenance mode').'</span><br /><br />';
+			echo '<span class="msg_error">'._('The system is on maintenance mode').'</span><br /><br />';
 
 			if (isAuthorized('manageServers'))
-				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Switch the system to production mode?').'\');"><input type="hidden" name="name" value="System" /><input type="hidden" name="action" value="change" /><input type="hidden" name="switch_to" value="production" /><input style="background: #05a305; color: #fff; font-weight: bold;" type="submit" value="'._('Switch the system to production mode').'" /></form>';
+				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to switch the system to production mode?').'\');"><input type="hidden" name="name" value="System" /><input type="hidden" name="action" value="change" /><input type="hidden" name="switch_to" value="production" /><input style="background: #05a305; color: #fff; font-weight: bold;" type="submit" value="'._('Switch the system to production mode').'" /></form>';
 		} else {
 			echo '<span class="msg_ok">'._('The system is in production mode').'</span><br /><br />';
 
 			if (isAuthorized('manageServers'))
-				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Switch the system to maintenance mode?').'\');"><input type="hidden" name="name" value="System" /><input type="hidden" name="action" value="change" /><input type="hidden" name="switch_to" value="maintenance" /><input type="submit" value="'._('Switch the system to maintenance mode').'" /></form>';
+				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to switch the system to maintenance mode?').'\');"><input type="hidden" name="name" value="System" /><input type="hidden" name="action" value="change" /><input type="hidden" name="switch_to" value="maintenance" /><input type="submit" value="'._('Switch the system to maintenance mode').'" /></form>';
 		}
 	?>
 	</span>

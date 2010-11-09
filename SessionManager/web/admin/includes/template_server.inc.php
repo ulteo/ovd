@@ -99,9 +99,9 @@ function server_display_role_preparation_aps($server) {
 
 	$external_name_checklist = array('localhost', '127.0.0.1');
 	if (in_array($server->fqdn, $external_name_checklist) && in_array($server->getAttribute('external_name'), $external_name_checklist))
-		popup_error($server->fqdn.': '._('redirection name may be invalid!'));
+		popup_error(sprintf(_('Server "%s": redirection name may be invalid!'), $s->fqdn));
 	if ($server->getAttribute('external_name') == '')
-		popup_error($server->fqdn.': '._('redirection name cannot be empty!'));
+		popup_error(sprintf(_('Server "%s": redirection name cannot be empty!'), $s->fqdn));
 	
 	if ($server_online) {
 		$buf = $server->updateApplications();
@@ -420,7 +420,7 @@ function server_display_role_aps($server, $var) {
 			echo '<td><a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</td>';
 			echo '<td>';
 			echo '<input type="hidden" name="info" value="'.$session->id.'" />';
-			echo '</td><td><input type="submit" value="'._('Informations about this session').'" /></td>';
+			echo '</td><td><input type="submit" value="'._('Information about this session').'" /></td>';
 			echo '</td>';
 			echo '</tr></form>';
 		}
@@ -483,19 +483,19 @@ function server_display_role_preparation_fs($server_) {
 function server_display_role_fs($server_, $var_) {
 	$datas = array(
 		0 => array(
-			'name' => _('User profiles in the server'),
+			'name' => _('User profiles on the server'),
 			'folder' => $var_['profiles'],
 			'usedby' => $var_['used by profiles'],
 			'page' => 'users',
 		),
 		1 => array(
-			'name' => _('Shared folders in the server'),
+			'name' => _('Shared folders on the server'),
 			'folder' => $var_['sharedfolders'],
 			'usedby' => $var_['used by sharedfolders'],
 			'page' => 'usersgroup',
 		),
 		2 => array(
-			'name' => _('NetworkFolders in the server'),
+			'name' => _('Network folders on the server'),
 			'folder' => $var_['NetworkFolders'],
 			'usedby' => array(),
 			'page' => NULL,
@@ -553,7 +553,7 @@ function server_display_role_fs($server_, $var_) {
 				echo '<td>';
 				echo '<span class="msg_'.NetworkFolder::colorStatus($a_networkfolder->status).'">'.NetworkFolder::textStatus($a_networkfolder->status).'</span>';
 				echo '</td>';
-				echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''.(($k == 0)?_('Are you sure that you want to delete this user profile?'):_('Are you sure that you want to delete this network folder?')).'\');">';
+				echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''.(($k == 0)?_('Are you sure you want to delete this user profile?'):_('Are you sure you want to delete this network folder?')).'\');">';
 				echo '<input type="hidden" name="name" value="NetworkFolders" />';
 				echo '<input type="hidden" name="action" value="del" />';
 				echo '<input type="hidden" name="ids[]" value="'.$a_networkfolder->id.'" />';
@@ -571,7 +571,7 @@ function server_display_role_fs($server_, $var_) {
 				echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'available_networkfolder_table_'.$k.'\'); return false">'._('Unmark all').'</a>';
 				echo '</td>';
 				echo '<td>';
-				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''.(($k == 0)?_('Are you sure that you want to delete these user profiles?'):_('Are you sure that you want to delete these network folders?')).'\') && updateMassActionsForm(this, \'available_networkfolder_table_'.$k.'\');">';
+				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''.(($k == 0)?_('Are you sure you want to delete these user profiles?'):_('Are you sure you want to delete these network folders?')).'\') && updateMassActionsForm(this, \'available_networkfolder_table_'.$k.'\');">';
 				echo '<input type="hidden" name="name" value="NetworkFolders" />';
 				echo '<input type="hidden" name="action" value="del" />';
 				echo '<input type="submit" name="to_production" value="'._('Delete').'"/>';

@@ -95,7 +95,7 @@ function makeConfiguration($slave_ip, $slave_hostname) {
 	$t=false;
 	$prefs_vars=extractVarsFromConfFile();
 	if (!count($prefs_vars)) {
-		popup_error(_('An error occured during reading configuration file, no values found !'));
+		popup_error(_('An error occured while reading configuration file, no values found!'));
 		return;
 	}
 	$prefs = Preferences::getInstance();
@@ -115,7 +115,7 @@ function updateVIP($vip) {
 	$t=false;
 	$prefs_vars=extractVarsFromConfFile();
 	if (!count($prefs_vars)) {
-		popup_error(_('Could not extract configuration values from file !'));
+		popup_error(_('Could not extract configuration values from file!'));
 		return false;
 	}
 	$prefs= Preferences::getInstance();
@@ -130,11 +130,11 @@ function updateVIP($vip) {
 			return true;
 		}
 		catch (Exception $e) {
-			popup_error(_('An error occured during update of the virtual IP !'));
+			popup_error(_('An error occured when updating the virtual IP!'));
 		}
 		return false;
 	 } else {
-		popup_error(_('An error occured during update of the virtual IP !'));
+		popup_error(_('An error occured when updating the virtual IP!'));
 	 }
 	 return false;
 }
@@ -144,7 +144,7 @@ function checkConfigurationHasChanged($apply) {
 	$v=false;
 	$prefs_vars=extractVarsFromConfFile();
 	if (!count($prefs_vars)) {
-		popup_error(_('An error occured during reading configuration file, no values found !'));
+		popup_error(_('An error occured while reading configuration file, no values found!'));
 		return;
 	}
 	$prefs = Preferences::getInstance();
@@ -191,7 +191,7 @@ function getRegistration($SQL, $table) {
 }
 
 function getChangeConfigurationsForm() {
-	$html= '<form  onsubmit="return confirm(\''._("Your will change the virtual IP, afterward modify your url with the good IP to obtain the admin web interface !").'\');"  action="configuration.php" method="post" enctype="multipart/form-data">';
+	$html= '<form  onsubmit="return confirm(\''._("Your will have to change the virtual IP and then modify your url with the correct IP to reach the admin web interface!").'\');"  action="configuration.php" method="post" enctype="multipart/form-data">';
 	$html.= '<input type="hidden" name="action" value="reload_vip" />';
 	$html.= '<input style="background:#229630; color:#FFF; font-weight:bold" type="submit" name="submit" value="'._("Apply new virtual IP").'" />';
 	$html.= '</form>';
@@ -203,9 +203,9 @@ function deleteAllUnregisteredServers($SQL, $table) {
 	$res = $SQL->DoQuery($query);
 	$nb = $SQL->NumRows();
 	if ($nb) {
-		popup_info(sprintf(_('%s server(s) has been successfully removed !'),$nb));
+		popup_info(sprintf(_('%s server(s) has been successfully removed!'),$nb));
 	} else {
-		popup_error(_('An error occured, no unregistered server deleted !'));
+		popup_error(_('An error occured, no unregistered server deleted!'));
 	}
 }
 
@@ -214,7 +214,7 @@ function isActivable($SQL, $table, $id_host) {
 	$res = $SQL->DoQuery($query);
 	$nb = $SQL->NumRows();
 	if ($nb) {
-		popup_error(_('Cannot enable host because one already enabled !'));
+		popup_error(_('Cannot enable host because one is already enabled!'));
 		return false;
 	}
 	return true;
@@ -225,7 +225,7 @@ function isDeactivable($SQL, $table, $id_host) {
 	$res = $SQL->DoQuery($query);
 	$nb = $SQL->NumRows();
 	if (! $nb) {
-		popup_error(_('Cannot disable host because it is not enabled !'));
+		popup_error(_('Cannot disable host because it is not enabled!'));
 		return false;
 	}
 	return true;
@@ -236,10 +236,10 @@ function enable_hostDB($SQL, $table, $id_host) {
 	$res = $SQL->DoQuery($query);
 	$nb = $SQL->NumRows();
 	if ($nb) {
-		popup_info(_('Host has been enabled !'));
+		popup_info(_('Host has been enabled!'));
 		
 	} else {
-		 popup_error(_('An error occured during activation, can not enable host !'));
+		 popup_error(_('An error occured during activation, can not enable host!'));
 	}
 }
 
@@ -248,23 +248,23 @@ function disable_hostDB($SQL, $table, $id_host) {
 	$res = $SQL->DoQuery($query);
 	$nb = $SQL->NumRows();
 	if (!$nb) {
-		popup_error(_('Cannot disable host because it is not enabled !'));
+		popup_error(_('Cannot disable host because it is not enabled!'));
 	}
 	$query = 'DELETE FROM `'.$table.'` WHERE id_host='.$id_host;
 	$res = $SQL->DoQuery($query);
 	$nb = $SQL->NumRows();
 	if ($nb) {
-		popup_info(_('Host has been disabled !'));
+		popup_info(_('Host has been disabled!'));
 		
 	} else {
-		popup_error(_('An error occured during disabling host, cannot disable host !'));
+		popup_error(_('An error occured during disabling host, cannot disable host!'));
 	}
 }
 
 function getUnregisteredServer($id_host,$hostname, $fqdn, $timestamp) {
 	$html="";
 	$html.= '<div id="ha_unregistered_servers'.$id_host.'">';
-	$html.= '<form onsubmit="return confirm(\''._("You will enable the slave server, the master server and slave server will restart their services to load the new configurations. It takes less than 3 minutes, during this time the web interface will be disabled.").'\')" action="configuration.php" method="post" enctype="multipart/form-data">';
+	$html.= '<form onsubmit="return confirm(\''._("When enabling the slave server, the master server and slave server are going to restart their services to load the new configurations. It takes less than 3 minutes. During this time the web interface will be disabled.").'\')" action="configuration.php" method="post" enctype="multipart/form-data">';
 	$html.= '<input type="hidden" name="action" value="enable" />';
 	$html.= '<input type="hidden" name="id_host" value="'.$id_host.'" />';
 	$html.= '<table id="ha_config"  style="" class="main_sub" border="0" cellpadding="3" cellspacing="1">';
@@ -301,7 +301,7 @@ function getUnregisteredServer($id_host,$hostname, $fqdn, $timestamp) {
 function getRegisteredServer($id_host,$hostname, $fqdn, $timestamp) {
 	$html="";
 	$html.= '<div id="ha_registered_servers'.$id_host.'">';
-	$html.= '<form onsubmit="return confirm(\''._("You will disable the slave server, the master host will restart their services to load the new configurations. It takes less than 3 minutes, during this time the web interface will be disabled.").'\');"  action="configuration.php" method="post" enctype="multipart/form-data">';
+	$html.= '<form onsubmit="return confirm(\''._("When enabling the slave server, the master server is going to restart their services to load the new configurations. It takes less than 3 minutes. During this time the web interface will be disabled.").'\');"  action="configuration.php" method="post" enctype="multipart/form-data">';
 	$html.= '<input type="hidden" name="action" value="disable" />';
 	$html.= '<input type="hidden" name="id_host" value="'.$id_host.'" />';
 	$html.= '<table id="ha_config"  style="" class="main_sub" border="0" cellpadding="3" cellspacing="1">';
@@ -341,7 +341,7 @@ function getVIPFormBox() {
 function query_slave($action,$m_hostname,$passwd,$s_ip) {
 	$req = query_url_post("https://".$s_ip._URL_OVD_ADMIN_HA."/registration.php", "action=".$action."&hostname=".$m_hostname."&passwd=".$passwd, false);
 	if (getResponseType($req)) {
-		   Logger::warning('ha', "Activation request from ".$m_hostname." to ".$s_ip." has been send !");
+		   Logger::warning('ha', "Activation request from ".$m_hostname." to ".$s_ip." has been send!");
 	} else{
 		 Logger::error('ha', "An error occured when trying to send an HTTP request (registration.php)  from ".$m_hostname." to ".$s_ip);
 		 return false;
@@ -370,7 +370,7 @@ $html="";
 $system_in_maintenance = $prefs->get('general', 'system_in_maintenance');
 if ($system_in_maintenance) {
 	unset($action);
-	popup_error(_('The system is in maintenance mode ! Cannot apply changes.'));
+	popup_error(_('The system is in maintenance mode! Cannot apply changes.'));
 }
 
 if (isset($action)) {
@@ -384,7 +384,7 @@ if (isset($action)) {
 						$res = $SQL->DoQuery($query);
 						$nb = $SQL->NumRows();
 						if (!$nb) {
-							popup_error(_('Cannot enable host because no host found in DB !'));
+							popup_error(_('Cannot enable host because no host found in DB!'));
 							break;
 						}
 						$row = $SQL->FetchResult($res);
@@ -394,7 +394,7 @@ if (isset($action)) {
 							makeConfiguration($s_ip,$s_hostname);
 							$ret=ShellExec::exec_shell_cmd("reload_master",$s_ip,$s_hostname,$passwd);
 							enable_hostDB($SQL, $table, $id_host);
-							popup_info(sprintf(_('Host %s at address %s has been notifyed succesfully !'),$s_hostname,$s_ip));	
+							popup_info(sprintf(_('Host %s at address %s has been notifyed succesfully!'),$s_hostname,$s_ip));	
 							$upd_slave=true;
 						} else {
 							popup_error(sprintf(_('Cannot query slave host at address %s'),$s_ip));
@@ -417,7 +417,7 @@ if (isset($action)) {
 						$s_hostname = $row["hostname"];
 						if (isset($s_ip) && isset($s_hostname)) {
 							disable_hostDB($SQL, $table, $id_host);
-							popup_info(sprintf(_('Host %s has been set in standby and master %s will restart Heartbeat !'),$s_hostname,$m_hostname));	
+							popup_info(sprintf(_('Host %s has been set in standby and master %s will restart Heartbeat!'),$s_hostname,$m_hostname));	
 							$ret=ShellExec::exec_action_to_host($s_hostname,"on");
 							$ret=ShellExec::exec_shell_cmd("reload_master_excl","0","0",$passwd);
 							$upd_slave=true;
@@ -427,7 +427,7 @@ if (isset($action)) {
 							break;
 						}
 					} else {
-						popup_error(_('An error occured during disabling, can not disable host !'));
+						popup_error(_('An error occured during disabling, can not disable host!'));
 					}	
 				}
 			}
@@ -438,7 +438,7 @@ if (isset($action)) {
 			if (isset($all_prefs["VIP"])) {
 				$ret=ShellExec::exec_shell_cmd("reload_vip",$all_prefs["VIP"],"0","0");
 				checkConfigurationHasChanged(true);
-				popup_info(_('Changing configuration... Please wait few seconds'));
+				popup_info(_('Changing configuration... Please wait a few seconds'));
 			}
 			else {
 				popup_error(_('Changing configuration failded... Verify configuration at field HA::Virtual IP'));
@@ -454,7 +454,7 @@ if (isset($action)) {
 					redirect("configuration.php");
 				}
 				else {
-					popup_error(_('Virtual IP "'.$_POST["ha_vip"].'" is not valid !'));
+					popup_error(sprintf(_('Virtual IP "%s" is not valid!'), $_POST["ha_vip"]));
 				}
 			}
 			break;

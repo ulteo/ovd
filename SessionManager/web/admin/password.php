@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
 if (! checkAuthorization('manageConfiguration')) {
-	pop_error(_('User not authorize to manage configuration'));
+	pop_error(_('User not authorized to manage configuration'));
 	redirect('index.php');
 }
 

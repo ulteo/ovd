@@ -79,7 +79,7 @@ function show_default() {
   echo '<table class="main_sub sortable" id="publications_list_table" border="0" cellspacing="1" cellpadding="5">';
   echo '<tr class="title">';
   echo '<th>'._('Users group').'</th>';
-  echo '<th>'._('Application group').'</th>';
+  echo '<th>'._('Applications group').'</th>';
   echo '</tr>';
 
   if (! $has_publish) {

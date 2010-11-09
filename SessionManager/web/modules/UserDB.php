@@ -29,7 +29,7 @@ abstract class UserDB extends Module  {
 			
 			$mods_enable = $prefs->get('general','module_enable');
 			if (!in_array('UserDB',$mods_enable)){
-				die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
+				die_error(_('UserDB module must be enabled'),__FILE__,__LINE__);
 			}
 			$mod_app_name = 'UserDB_'.$prefs->get('UserDB','enable');
 			self::$instance = new $mod_app_name();

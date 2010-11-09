@@ -57,7 +57,7 @@ if(isset($_POST["action"])) {
 			break;
 		default:
 			unset($_POST["action"]);
-			Logger::error('ha', "status.php::bad action command, hacking attempt with action '".$action."' !");
+			Logger::error('ha', "status.php::bad action command, hacking attempt with action '".$action."'!");
 	}
 	unset($_POST["node"]);
 	unset($_POST["resource"]);
@@ -75,14 +75,14 @@ function action_to_hosts($action, $host) {
 
 function view_general_informations($cib) {
 	echo '<table style="width: 100%;" class="main_sub" border="0" cellpadding="3" cellspacing="1">';
-	echo '<tr class="title"><th colspan="2" style="text-transform:uppercase;">'._('General Informations').'</th></tr>';
+	echo '<tr class="title"><th colspan="2" style="text-transform:uppercase;">'._('General Status').'</th></tr>';
 	echo '<tr class="content1"><td style="width: 150px;">';
-	echo '<span onmouseover="showInfoBulle(\''._('Last time update of this page and informations contained').'\'); return false;" onmouseout="hideInfoBulle(); return false;">'._('Last update').'</span>';
+	echo '<span onmouseover="showInfoBulle(\''._('Last time update of this page and included information').'\'); return false;" onmouseout="hideInfoBulle(); return false;">'._('Last update').'</span>';
 	echo '</td><td>';
 	echo '<b style="color:#FF0000;">'.date("j F Y, H:i:s").'</b>'; 
 	echo '</td></tr>';
 	echo '<tr class="content2"><td>';
-	echo '<span onmouseover="showInfoBulle(\''._('The DC (Designated Coordinator) is elected a node in the cluster. He is responsible for the actions of each cluster elements.').'\'); return false;" onmouseout="hideInfoBulle(); return false;">'._('Actual DC').'</span>';
+	echo '<span onmouseover="showInfoBulle(\''._('The DC (Designated Coordinator) has elected a node in the cluster. It is responsible for actions of each cluster element.').'\'); return false;" onmouseout="hideInfoBulle(); return false;">'._('Current DC').'</span>';
 	echo '</td><td style="padding: 3px;">';
 	echo $cib->get_dc_uuid();
 	echo '</td></tr>';
@@ -102,7 +102,7 @@ function view_general_informations($cib) {
 
 function view_resources_status($cib) {
 	echo '<table style="width: 100%;" class="main_sub" border="0" cellpadding="3" cellspacing="1">';
-	echo '<tr class="title"><th colspan="2" style="text-transform:uppercase;">'._('ressources Status').'</th></tr>';
+	echo '<tr class="title"><th colspan="2" style="text-transform:uppercase;">'._('Ressources Status').'</th></tr>';
 	$r_tree=& $cib->get_resources_tree();
 	echo $r_tree->view_format_table($cib);
 	echo '</table>';
@@ -111,7 +111,7 @@ function view_resources_status($cib) {
 
 function view_resources_errors($errors) {
 	echo '<table style="width: 100%;" class="main_sub" border="0" cellpadding="3" cellspacing="1" width="100%">';
-	echo '<tr class="title"><th colspan="2" style="text-transform:uppercase;">'._('ressources errors').'</th></tr>';
+	echo '<tr class="title"><th colspan="2" style="text-transform:uppercase;">'._('Ressources errors').'</th></tr>';
 	foreach ($errors as $error){
 		echo '<tr class="content1"><td>';
 		echo $error["time"]." Resource ".$error["resource"]." FAILDED on ".$error["node"].", rc-code=".$error["rc_code"];
@@ -169,7 +169,7 @@ function view_node_box_status($nid,$node,$is_master) {
 		}
 	}
 	else{
-		return _('An error has occured, please call your administrator !');
+		return _('An error has occured, please call your administrator!');
 	}
 	echo '<div class="host_status"><table cellpadding="3" cellspacing="0" border="0" width="100%" class="host_status '.$node_status.'"><tr class="host_title"><td>';
 	echo '<span class="status">'.$node_status_str.'</span> ';
@@ -253,7 +253,7 @@ function show_error() {
 	page_header();
 	echo '<div>';
 	echo '<link rel="stylesheet" type="text/css" href="media/style/media-ha.css" />';
-	echo '<div class="ha_error_cib"><div class="ha_error_txt_block"><h2>'._('Error').'</h2><div class="ha_error_loader"><p><b>'._("Waiting for Heartbeat's CIB...").'</b><br />'._('Please check permissions on ulteo-ovd.conf or if "cibadmin -Q" works fine ! Apache could have been started by another user than www-data.').'</p><div><img src="media/image/loader.gif" /></div></div></div></div>';
+	echo '<div class="ha_error_cib"><div class="ha_error_txt_block"><h2>'._('Error').'</h2><div class="ha_error_loader"><p><b>'._("Waiting for Heartbeat's CIB...").'</b><br />'._('Please check permissions on ulteo-ovd.conf or if "cibadmin -Q" works fine! Apache could have been started by another user than www-data.').'</p><div><img src="media/image/loader.gif" /></div></div></div></div>';
 	echo '<script type="text/javascript" charset="utf-8">Event.observe(window, \'load\', function() { setTimeout(function() { location.reload(true); }, 5000); });</script>';
 	echo '</div>';
 	page_footer();

@@ -250,7 +250,7 @@ class Preferences {
 		$c = new ConfigElement_select('type', _('Database type'), _('The type of your database.'), _('The type of your database.'), 'mysql');
 		$c->setContentAvailable(array('mysql'=>_('MySQL')));
 		$this->add($c,'general','sql');
-		$c = new ConfigElement_input('host', _('Database host address'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'');
+		$c = new ConfigElement_input('host', _('Database host address'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'),'');
 		$this->add($c,'general','sql');
 		$c = new ConfigElement_input('user', _('Database username'), _('The username that must be used to access the database.'), _('The user name that must be used to access the database.'),'');
 		$this->add($c,'general','sql');
@@ -291,7 +291,7 @@ class Preferences {
 		$c = new ConfigElement_select('disable_fqdn_check', _('Disable reverse FQDN checking'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general', 'slave_server_settings');
-		$c = new ConfigElement_select('action_when_as_not_ready', _('Action when an server status is not ready anymore'), _('Action when an server status is not ready anymore'), _('Action when an server status is not ready anymore'), 0);
+		$c = new ConfigElement_select('action_when_as_not_ready', _('Action when a server status is not ready anymore'), _('Action when a server status is not ready anymore'), _('Action when an server status is not ready anymore'), 0);
 		$c->setContentAvailable(array(0=>_('Do nothing'),1=>_('Switch to maintenance')));
 		$this->add($c,'general', 'slave_server_settings');
 		$c = new ConfigElement_select('remove_orphan', _('Remove orphan applications when the application server is deleted'), _('Remove orphan applications when the application server is deleted'), _('Remove orphan applications when the application server is deleted'), 0);
@@ -304,7 +304,7 @@ class Preferences {
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','slave_server_settings');
 
-		$roles = array(Server::SERVER_ROLE_APS => _('Load Balancing policy for Application Server'), Server::SERVER_ROLE_FS => _('Load Balancing policy for File Server'));
+		$roles = array(Server::SERVER_ROLE_APS => _('Load Balancing policy for Application Servers'), Server::SERVER_ROLE_FS => _('Load Balancing policy for File Servers'));
 		foreach ($roles as $role => $text) {
 			$decisionCriterion = get_classes_startwith('DecisionCriterion_');
 			$content_load_balancing = array();
@@ -387,16 +387,16 @@ class Preferences {
 		$c = new ConfigElement_select('enable_profiles', _('Enable user profiles'), _('Enable user profiles'), _('Enable user profiles'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('auto_create_profile', _('Auto-create user profile when nonexistant'), _('Auto-create user profile when nonexistant'), _('Auto-create user profile when nonexistant'), 1);
+		$c = new ConfigElement_select('auto_create_profile', _('Auto-create user profiles when non-existant'), _('Auto-create user profile when non-existant'), _('Auto-create user profile when nonexistant'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_select('start_without_profile', _('Launch a session without a valid profile'), _('Launch a session without a valid profile'), _('Launch a session without a valid profile'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('enable_sharedfolders', _('Enable sharedfolders'), _('Enable sharedfolders'), _('Enable sharedfolders'), 1);
+		$c = new ConfigElement_select('enable_sharedfolders', _('Enable shared folders'), _('Enable shared folders'), _('Enable shared folders'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('start_without_all_sharedfolders', _('Launch a session even if a shared folder\'s fileserver is missing'), _('Launch a session even if a shared folder\'s fileserver is missing'), _('Launch a session even if a shared folder\'s fileserver is missing'), 1);
+		$c = new ConfigElement_select('start_without_all_sharedfolders', _('Launch a session even when a shared folder\'s fileserver is missing'), _('Launch a session even when a shared folder\'s fileserver is missing'), _('Launch a session even when a shared folder\'s fileserver is missing'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
 
@@ -406,7 +406,7 @@ class Preferences {
 
 		$this->addPrettyName('web_interface_settings',_('Web interface settings'));
 
-		$c = new ConfigElement_select('show_list_users', _('Display users list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), 1);
+		$c = new ConfigElement_select('show_list_users', _('Display users list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must provide his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must provide his login name.'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','web_interface_settings');
 
@@ -482,7 +482,7 @@ class Preferences {
 		/* Events settings */
 		$this->addPrettyName('events', _("Events settings"));
 
-		$c = new ConfigElement_list('mail_to', _('Mail addresses to send alerts to'), _('On system alerts, mails will be sent to these addresses'), NULL, array());
+		$c = new ConfigElement_list('mail_to', _('Email addresses to send alerts to'), _('On system alerts, emails will be sent to these addresses'), NULL, array());
 		$this->add($c,'events');
 
 		$events = Events::loadAll();

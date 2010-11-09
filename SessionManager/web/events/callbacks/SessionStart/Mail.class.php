@@ -61,7 +61,7 @@ class SessionStartMail extends EventCallback {
     }
 
 	public function getDescription() {
-		return _("Send a mail on login problem");
+		return _("Send an email on login problem");
 	}
 
 	public function isInternal() {

@@ -80,23 +80,27 @@ if ($_REQUEST['name'] == 'Application_Server') {
 				$t = new Task_install(0, $_REQUEST['server'], $app);
 				$tm->add($t);
 
-				popup_info(sprintf(_('Task to add application \'%s\' on server \'%s\' successfully added'), $id, $_REQUEST['server']));
+				$msg = _('Task to add application \'%APPLICATION%\' on server \'%SERVER%\' was successfully added');
+				popup_info(str_replace(array('%APPLICATION%', '%SERVER%'), array($id, $_REQUEST['server']), $msg));
 			} elseif ($_REQUEST['action'] == 'del') {
 				$tm = new Tasks_Manager();
 				$t = new Task_remove(0, $_REQUEST['server'], $app);
 				$tm->add($t);
 
-				popup_info(sprintf(_('Task to remove application \'%s\' from server \'%s\' successfully added'), $id, $_REQUEST['server']));
+				$msg = _('Task to remove application \'%APPLICATION%\' from server \'%SERVER%\' was successfully added');
+				popup_info(str_replace(array('%APPLICATION%', '%SERVER%'), array($id, $_REQUEST['server']), $msg));
 			}
 		} else {
 			if ($_REQUEST['action'] == 'add') {
 				Abstract_Liaison::save('ApplicationServer', $id, $_REQUEST['server']);
 
-				popup_info(sprintf(_('Application \'%s\' successfully added to server \'%s\''), $id, $_REQUEST['server']));
+				$msg = _('Application \'%APPLICATION%\' successfully added to server \'%SERVER%\'')
+				popup_info(str_replace(array('%APPLICATION%', '%SERVER%'), array($id, $_REQUEST['server']), $msg));
 			} elseif ($_REQUEST['action'] == 'del') {
 				Abstract_Liaison::delete('ApplicationServer', $id, $_REQUEST['server']);
 
-				popup_info(sprintf(_('Application \'%s\' successfully deleted from server \'%s\''), $id, $_REQUEST['server']));
+				$msg = _('Application \'%APPLICATION%\' successfully deleted from server \'%SERVER%\'');
+				popup_info(str_replace(array('%APPLICATION%', '%SERVER%'), array($id, $_REQUEST['server']), $msg));
 			}
 		}
 	}
@@ -237,7 +241,7 @@ if ($_REQUEST['name'] == 'Application_static') {
 			foreach ($_REQUEST['checked_applications'] as $id) {
 				$app = $applicationDB->import($id);
 				$app->delIcon();
-				popup_info(sprintf(_("Application '%s' icon successfully deleted"), $app->getAttribute('name')));
+				popup_info(sprintf(_("'%s' application's icon was successfully deleted"), $app->getAttribute('name')));
 				redirect('applications_static.php?action=manage&id='.$app->getAttribute('id'));
 			}
 		}
@@ -363,7 +367,7 @@ if ($_REQUEST['name'] == 'ApplicationsGroup') {
 	
 	$applicationsGroupDB = ApplicationsGroupDB::getInstance();
 	if (! $applicationsGroupDB->isWriteable()) {
-		die_error(_('Application Group Database not writeable'), __FILE__, __LINE__);
+		die_error(_('Application Group Database is not writeable'), __FILE__, __LINE__);
 	}
 	
 	if ($_REQUEST['action'] == 'add') {
@@ -388,7 +392,7 @@ if ($_REQUEST['name'] == 'ApplicationsGroup') {
 			foreach ($ids as $id) {
 				$group = $applicationsGroupDB->import($id);
 				if (! is_object($group)) {
-					popup_error(sprintf(_("Import of applications group '%s' failed"), $id));
+					popup_error(sprintf(_("Importing applications group '%s' failed"), $id));
 					continue;
 				}
 				
@@ -516,13 +520,13 @@ if ($_REQUEST['name'] == 'UserGroup') {
 	if ($_REQUEST['action'] == 'add') {
 		if (isset($_REQUEST['type']) && isset($_REQUEST['name_group']) &&  isset($_REQUEST['description_group'])) {
 			if ($_REQUEST['name_group'] == '') {
-				popup_error(_('You must define a name to your usergroup'));
+				popup_error(_('You must define a name for your usergroup'));
 				redirect('usersgroup.php');
 			}
 			
 			if ($_REQUEST['type'] == 'static') {
 				if (! $userGroupDB->isWriteable()) {
-					die_error(_('User Group Database not writeable'), __FILE__, __LINE__);
+					die_error(_('User Group Database is not writeable'), __FILE__, __LINE__);
 				}
 				$g = new UsersGroup(NULL,$_REQUEST['name_group'], $_REQUEST['description_group'], 1);
 			}
@@ -530,7 +534,7 @@ if ($_REQUEST['name'] == 'UserGroup') {
 				$rules = array();
 				foreach ($_POST['rules'] as $rule) {
 					if ($rule['value'] == '') {
-						popup_error(_('You must give a value to each rule of your usergroup'));
+						popup_error(_('You must provide a value to each rule of your usergroup'));
 						redirect();
 					}
 					
@@ -553,7 +557,7 @@ if ($_REQUEST['name'] == 'UserGroup') {
 			
 			$res = $userGroupDB->add($g);
 			if (!$res) {
-				die_error(_("Unable to create user group"), __FILE__, __LINE__);
+				die_error(_("Unable to create usergroup"), __FILE__, __LINE__);
 			}
 			
 			popup_info(_('UserGroup successfully added'));
@@ -856,7 +860,7 @@ if ($_REQUEST['name'] == 'User') {
 				$sessions = Abstract_Session::getByUser($user_login);
 				$has_sessions = count($sessions);
 				if ($has_sessions) {
-					popup_error(sprintf(_("Unable to delete user '%s' because he have an active session"), $user_login));
+					popup_error(sprintf(_("Unable to delete user '%s' because he has an active session"), $user_login));
 				}
 				else {
 					$u = $userDB->import($user_login);
@@ -908,7 +912,7 @@ if ($_REQUEST['name'] == 'User') {
 		$override = ($_REQUEST['override'] == '1');
 		if ($_REQUEST['password'] == 'custom') {
 			if (strlen($_REQUEST['password_str']) == 0) {
-				popup_error(_('No custom password given at populate.'));
+				popup_error(_('No custom password given for populating the database.'));
 				redirect();
 			}
 			
@@ -980,7 +984,7 @@ if ($_REQUEST['name'] == 'SharedFolder') {
 					$sharedfolder->name = $new_name;
 					$ret = Abstract_NetworkFolder::save($sharedfolder);
 					if ($ret === true)
-						popup_info(_('SharedFolder successfully renamed'));
+						popup_info(_('Shared folder successfully renamed'));
 				} else
 					popup_error(_('A shared folder with that name already exists!'));
 			}
@@ -995,12 +999,12 @@ if ($_REQUEST['name'] == 'SharedFolder_ACL') {
 
 	if ($_REQUEST['action'] == 'add' && isset($_REQUEST['sharedfolder_id']) && isset($_REQUEST['usergroup_id'])) {
 		action_add_sharedfolder_acl($_REQUEST['sharedfolder_id'], $_REQUEST['usergroup_id']);
-		popup_info(_('SharedFolder successfully modified'));
+		popup_info(_('Shared folder successfully modified'));
 		redirect();
 	}
 	elseif ($_REQUEST['action'] == 'del' && isset($_REQUEST['sharedfolder_id']) && isset($_REQUEST['usergroup_id'])) {
 		action_del_sharedfolder_acl($_REQUEST['sharedfolder_id'], $_REQUEST['usergroup_id']);
-		popup_info(_('SharedFolder successfully modified'));
+		popup_info(_('Shared folder successfully modified'));
 		redirect();
 	}
 }
@@ -1312,7 +1316,7 @@ if ($_REQUEST['name'] == 'Task') {
 function action_add_sharedfolder() {
 	$sharedfolder_name = $_REQUEST['sharedfolder_name'];
 	if ($sharedfolder_name == '') {
-		popup_error(_('You must give a name to your shared folder'));
+		popup_error(_('You must provide a name to your shared folder'));
 		return false;
 	}
 
@@ -1334,7 +1338,7 @@ function action_add_sharedfolder() {
 		$a_server = $buf->chooseFileServer();
 	}
 	if (is_object($a_server) === false) {
-		popup_error(_('No server avalaible for sharedFolder'));
+		popup_error(_('No server avalaible for shared folder'));
 		return false;
 	}
 	
@@ -1353,7 +1357,7 @@ function action_add_sharedfolder() {
 		return false;
 	}
 
-	popup_info(sprintf(_('SharedFolder \'%s\' successfully added'), $buf->name));
+	popup_info(sprintf(_('Shared folder \'%s\' successfully added'), $buf->name));
 	return true;
 }
 
@@ -1382,7 +1386,7 @@ function action_del_sharedfolder($sharedfolder_id) {
 		return false;
 	}
 
-	popup_info(_('SharedFolder successfully deleted'));
+	popup_info(_('Shared folder successfully deleted'));
 	return true;
 }
 
@@ -1402,7 +1406,7 @@ function action_add_sharedfolder_acl($sharedfolder_id_, $usergroup_id_) {
 	
 	$ret = $sharedfolder->addUserGroup($group);
 	if ($ret === true)
-		popup_info(_('SharedFolder successfully modified'));
+		popup_info(_('Shared folder successfully modified'));
 	
 	return true;
 }
@@ -1423,7 +1427,7 @@ function action_del_sharedfolder_acl($sharedfolder_id_, $usergroup_id_) {
 	
 	$ret = $sharedfolder->delUserGroup($group);
 	if ($ret === true)
-		popup_info(_('SharedFolder successfully modified'));
+		popup_info(_('Shared folder successfully modified'));
 	return true;
 }
 

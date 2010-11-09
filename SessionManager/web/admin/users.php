@@ -155,7 +155,7 @@ function show_default($userDB) {
     echo '<h2>'._('Populate').'</h2>';
     echo '<div id="user_populate">';
     echo '<p>';
-    echo _('This feature is useful to create default accounts. It is mainly used when you want to test the system quickly. It is not recommended to use thoses default accounts in a production system because it is very easy to delete them by mistake using this "populate" feature.');
+    echo _('This feature is useful to create default accounts. It is mainly used when you want to test the system quickly. It is not recommended to use those default accounts on a production system because it is very easy to delete them by mistake using this "populate" feature.');
     echo '</p>';
     
     echo '<form action="actions.php" method="post">';
@@ -164,7 +164,7 @@ function show_default($userDB) {
     
     echo '<table border="0" cellspacing="1" cellpadding="3">';
     echo '<tr>';
-    echo '<td>'._('Overwrite existent: ').'</td>';
+    echo '<td>'._('Overwrite existing: ').'</td>';
     echo '<td><select name="override">';
     echo '<option value="1">'._('Yes').'</option>';
     echo '<option value="0" selected="selected">'._('No').'</option>';
@@ -177,7 +177,7 @@ function show_default($userDB) {
     echo '  else';
     echo '    $(\'password_str\').style.visibility = \'hidden\';';
     echo '">';
-    echo '<option value="login">'._('Same as the login').'</option>';
+    echo '<option value="login">'._('Same as username').'</option>';
     echo '<option value="custom">'._('Custom:').'</option>';
     echo '</select></td>';
     echo '<td><input type="text" name="password_str" value="" id="password_str" style="visibility: hidden"/></td>';
@@ -304,7 +304,7 @@ function show_manage($login, $userDB, $userGroupDB) {
     $content = 'content'.(($count%2==0)?1:2);
     echo '<tr class="'.$content.'">';
     echo '<td colspan="2">';
-    echo '<input type="submit" name="modify" value="'._('Save the modifications').'" />';
+    echo '<input type="submit" name="modify" value="'._('Save changes').'" />';
     echo '</td>';
     echo '</tr>';
 
@@ -373,7 +373,7 @@ function show_manage($login, $userDB, $userGroupDB) {
       echo '<td><a href="servers.php?action=manage&fqdn='.$session->server.'">'.$session->server.'</td>';
       echo '<td>';
       echo '<input type="hidden" name="info" value="'.$session->id.'" />';
-      echo '</td><td><input type="submit" value="'._('Informations about this session').'" /></td>';
+      echo '</td><td><input type="submit" value="'._('Information about this session').'" /></td>';
       echo '</td>';
       echo '</tr></form>';
     }

@@ -223,7 +223,7 @@ class Configuration_mode_ldap extends Configuration_mode {
         $str.= '<input class="input_radio" type="radio" name="user_group" value="ldap_posix"';
     if ($form['user_group'] == 'ldap_posix')
       $str.= ' checked="checked"';
-    $str.= ' />'._('Use LDAP User Groups using Posix group');
+    $str.= ' />'._('Use LDAP User Groups using Posix groups');
     $str.= '<br/><div style="padding-left: 3%;">';
     $str.= _('Group Branch DN:').' <input type="text" name="group_branch_dn" value="'.$form['group_branch_dn'].'"/>';
     $str.= '</div>';

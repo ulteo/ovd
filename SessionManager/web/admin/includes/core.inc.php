@@ -52,8 +52,8 @@ define('ROOT_ADMIN_URL', get_root_admin_url());
 
 $prefs = Preferences::getInstance();
 if (! $prefs)
-	die_error(_('get Preferences failed'), __FILE__, __LINE__);
+	die_error('get Preferences failed', __FILE__, __LINE__);
 
 $system_in_maintenance = $prefs->get('general', 'system_in_maintenance');
 if ($system_in_maintenance == '1')
-	popup_error(_('The system is in maintenance mode'));
+	popup_error(_('The system is on maintenance mode'));

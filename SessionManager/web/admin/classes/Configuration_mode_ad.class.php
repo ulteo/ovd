@@ -224,8 +224,8 @@ class Configuration_mode_ad extends Configuration_mode {
     $str.= '<div class="section">';
     $str.= '<h3>'._('Administrator account').'</h3>';
     $str.= '<table>';
-    $str.= '<tr><td>'._('login:').'</td><td><input type="text" name="admin_login" value="'.$form['admin_login'].'" /></td></tr>';
-    $str.= '<tr><td>'._('password:').'</td><td><input type="password" name="admin_password" value="'.$form['admin_password'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Login:').'</td><td><input type="text" name="admin_login" value="'.$form['admin_login'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Password:').'</td><td><input type="password" name="admin_password" value="'.$form['admin_password'].'" /></td></tr>';
 
     $str.= '<tr><td colspan="2">';
     $str.= '<input class="input_radio" type="radio" name="admin_branch" value="same"';

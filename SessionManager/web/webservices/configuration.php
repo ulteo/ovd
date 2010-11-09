@@ -29,7 +29,7 @@ if (! $prefs) {
 
 $system_in_maintenance = $prefs->get('general', 'system_in_maintenance');
 if ($system_in_maintenance == '1') {
-	die_error(_('The system is in maintenance mode'), __FILE__, __LINE__, true);
+	die_error(_('The system is on maintenance mode'), __FILE__, __LINE__, true);
 }
 
 if (isset($prefs->elements['general']['session_settings_defaults']['language']))
@@ -63,7 +63,7 @@ $use_popup = $default_settings['use_popup'];
 
 $mods_enable = $prefs->get('general', 'module_enable');
 if (!in_array('UserDB', $mods_enable))
-	die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
+	die_error(_('UserDB module must be enabled'),__FILE__,__LINE__);
 
 $userDB = UserDB::getInstance();
 

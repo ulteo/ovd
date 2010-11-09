@@ -32,7 +32,7 @@ page_header();
 
 $prefs = Preferences::getInstance();
 if (! $prefs) {
-	die_error(_('get Preferences failed'),__FILE__,__LINE__);
+	die_error('get Preferences failed',__FILE__,__LINE__);
 }
 ?>
 

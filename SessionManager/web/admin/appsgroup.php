@@ -48,7 +48,7 @@ function show_default() {
 
   echo '<div>';
   if (! $has_group)
-    echo _('No application groups available').'<br />';
+    echo _('No available application groups').'<br />';
   else {
     echo '<table class="main_sub sortable" id="appgroups_list" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';

@@ -326,7 +326,7 @@ function show_step3() {
 	echo '<th><input class="input_radio" type="radio" name="use" value="appgroups" onclick="$(\'wizard_apps_list_table\').hide(); $(\'wizard_appgroups_list_table\').show()"';
 	if ($appgroup_selected)
 		echo ' checked="checked"';
-	echo '/> '._('Use appgroups').'</th>';
+	echo '/> '._('Use an application group').'</th>';
 	echo '</tr>';
   } else
   	echo '<input type="hidden" name="use" value="apps" />';
@@ -400,7 +400,7 @@ function show_step4() {
   $count = 0;
   page_header();
   echo '<div>';
-  echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Create appgroup').'</h1>';
+  echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Create application group').'</h1>';
 
   echo '<form action="" method="post">';
   echo '<input type="hidden" name="from" value="step4" />';
@@ -456,9 +456,9 @@ function show_step5() {
 
 		echo '<p style="font-weight: bold;">';
 		if (count($_SESSION['wizard']['usergroups']) == 1)
-			echo _('Between this usergroup');
+			echo _('Between this users group');
 		else
-			echo _('Between these usergroups');
+			echo _('Between these users groups');
 		echo '</p>';
 
 		echo '<ul>';
@@ -476,7 +476,7 @@ function show_step5() {
 		$userDB = UserDB::getInstance();
 
 		echo '<p style="font-weight: bold;">';
-		echo _('Between this newly created usergroup');
+		echo _('Between this newly created users group');
 		echo '</p>';
 
 		echo '<ul>';

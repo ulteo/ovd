@@ -82,7 +82,7 @@ if (isset($_GET['info'])) {
 
 		$running_apps = $session->getRunningApplications();
 		if (count($running_apps) == 0) {
-			echo _('No application running');
+			echo _('No running application');
 		} else {
 			echo '<ul>';
 			echo '<table>';
