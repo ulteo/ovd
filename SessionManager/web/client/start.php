@@ -655,10 +655,9 @@ if (! isset($old_session_id)) {
 			$application_node = $dom->createElement('application');
 			$application_node->setAttribute('id', $application->getAttribute('id'));
 			$application_node->setAttribute('name', $application->getAttribute('name'));
-			if (! $application->getAttribute('static')) {
+			if (! $application->getAttribute('static'))
 				$application_node->setAttribute('mode', 'local');
-				$application_node->setAttribute('desktopfile', $application->getAttribute('desktopfile'));
-			} else
+			else
 				$application_node->setAttribute('mode', 'static');
 
 			$session_node->appendChild($application_node);
@@ -771,10 +770,9 @@ if (! isset($old_session_id)) {
 				$application_node = $dom->createElement('application');
 				$application_node->setAttribute('id', $application->getAttribute('id'));
 				$application_node->setAttribute('name', $application->getAttribute('name'));
-				if (! $application->getAttribute('static')) {
+				if (! $application->getAttribute('static'))
 					$application_node->setAttribute('mode', 'local');
-					$application_node->setAttribute('desktopfile', $application->getAttribute('desktopfile'));
-				} else
+				else
 					$application_node->setAttribute('mode', 'static');
 
 				$session_node->appendChild($application_node);

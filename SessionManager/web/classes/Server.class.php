@@ -412,6 +412,9 @@ class Server {
 					Logger::info('main', 'Status set to "ready" for server \''.$this->fqdn.'\'');
 					$this->setAttribute('status', 'ready');
 				}
+
+				if (is_array($this->roles) && array_key_exists(Server::SERVER_ROLE_APS, $this->roles))
+					$this->updateApplications();
 				break;
 			case 'down':
 				if ($this->getAttribute('status') != 'down') {
@@ -962,8 +965,8 @@ class Server {
 		return true;
 	}
 
-	public function getApplicationIcon($id_, $real_id_) {
-		$ret = query_url($this->getBaseURL().'/aps/application/icon/'.$real_id_);
+	public function getApplicationIcon($id_) {
+		$ret = query_url($this->getBaseURL().'/aps/application/icon/'.$id_);
 		if (! $ret)
 			return false;
 
@@ -1053,6 +1056,7 @@ class Server {
 		$current_liaison_key = array();
 
 		$application_node = $dom->getElementsByTagName("application");
+		$sync_apps = array();
 		foreach($application_node as $app_node){
 			$app_name = '';
 			$app_description = '';
@@ -1070,8 +1074,7 @@ class Server {
 				$app_package = $app_node->getAttribute("package");
 			if ($app_node->hasAttribute("desktopfile"))
 				$app_desktopfile = $app_node->getAttribute("desktopfile");
-			if ($app_node->hasAttribute("id"))
-				$app_real_id = $app_node->getAttribute("id");
+			$local_id = $app_node->getAttribute("id");
 
 			$exe_node = $app_node->getElementsByTagName('executable')->item(0);
 			if ($exe_node->hasAttribute("command")) {
@@ -1113,15 +1116,14 @@ class Server {
 							return $ret;
 						}
 					}
-					if (! file_exists($a->getIconPathRW())) {
-						$this->getApplicationIcon($a->getAttribute('id'), $app_real_id);
-					}
 					$current_liaison_key[] = $a->getAttribute('id');
 				}
 				else{
 					//echo "Application not ok<br>\n";
 				}
 			}
+
+			$sync_apps[$local_id] = $a->getAttribute('id');
 		}
 
 		$previous_liaison_key = array_keys($previous_liaison);
@@ -1132,6 +1134,33 @@ class Server {
 					Abstract_Liaison::delete('ApplicationServer', $key, $this->fqdn);
 			}
 		}
+
+		if (count($sync_apps) > 0) {
+			$dom = new DomDocument('1.0', 'utf-8');
+
+			$applications_node = $dom->createElement('applications');
+			foreach ($sync_apps as $local_id => $id) {
+				$application_node = $dom->createElement('application');
+				$application_node->setAttribute('id', $id);
+				$application_node->setAttribute('local_id', $local_id);
+				$applications_node->appendChild($application_node);
+			}
+			$dom->appendChild($applications_node);
+
+			$xml = $dom->saveXML();
+
+			query_url_post_xml($this->getBaseURL().'/aps/applications/ids', $xml);
+
+			foreach ($sync_apps as $local_id => $id) {
+				$a = $applicationDB->import($id);
+				if (! is_object($a))
+					continue;
+
+				if (! file_exists($a->getIconPathRW()))
+					$this->getApplicationIcon($a->getAttribute('id'));
+			}
+		}
+
 		return true;
 	}
 	
