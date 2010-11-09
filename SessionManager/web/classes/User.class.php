@@ -224,12 +224,30 @@ class User {
 	
 	public function getSharedFolders() {
 		$sharedfolders = array();
+		$prefs = Preferences::getInstance();
+		$session_settings_defaults = $prefs->get('general', 'session_settings_defaults');
+		if (array_key_exists('enable_sharedfolders', $session_settings_defaults)) {
+			$enable_sharedfolders = $session_settings_defaults['enable_sharedfolders'];
+			if ($enable_sharedfolders == 0) {
+				return $sharedfolders;
+			}
+		}
+		
 		$usergroups = $this->usersGroups();
 		if (is_array($usergroups) === false) {
 			Logger::error('main', 'User::getSharedFolders usersGroups failed for user (login='.$this->getAttribute('login').')');
 		}
 		else {
 			foreach ($usergroups as $group) {
+				$prefs_of_a_group_unsort = Abstract_UserGroup_Preferences::loadByUserGroupId($group->getUniqueID(), 'general',  'session_settings_defaults');
+				if (array_key_exists('enable_sharedfolders', $prefs_of_a_group_unsort)) {
+					$pref = $prefs_of_a_group_unsort['enable_sharedfolders'];
+					$element = $pref->toConfigElement();
+					$enable_sharedfolders = $element->content;
+					if ($enable_sharedfolders == 0) {
+						continue;
+					}
+				}
 				$networkfolders = Abstract_NetworkFolder::load_from_usergroup($group->getUniqueID());
 				foreach ($networkfolders as $a_networkfolder) {
 					$sharedfolders[] = $a_networkfolder;
