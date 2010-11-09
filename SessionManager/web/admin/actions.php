@@ -94,7 +94,7 @@ if ($_REQUEST['name'] == 'Application_Server') {
 			if ($_REQUEST['action'] == 'add') {
 				Abstract_Liaison::save('ApplicationServer', $id, $_REQUEST['server']);
 
-				$msg = _('Application \'%APPLICATION%\' successfully added to server \'%SERVER%\'')
+				$msg = _('Application \'%APPLICATION%\' successfully added to server \'%SERVER%\'');
 				popup_info(str_replace(array('%APPLICATION%', '%SERVER%'), array($id, $_REQUEST['server']), $msg));
 			} elseif ($_REQUEST['action'] == 'del') {
 				Abstract_Liaison::delete('ApplicationServer', $id, $_REQUEST['server']);
