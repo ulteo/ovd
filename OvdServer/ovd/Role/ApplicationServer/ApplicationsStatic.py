@@ -34,6 +34,8 @@ class ApplicationsStatic:
 		self.spool = os.path.join(Config.spool_dir, "static_applications")
 		if not os.path.exists(self.spool):
 			os.makedirs(self.spool)
+		
+		self.applications = {}
 	
 	
 	def synchronize(self):
@@ -95,6 +97,10 @@ class ApplicationsStatic:
 		f.writelines(application_["revision"])
 		f.close()
 		
+		
+		application["filename"] = getApplicationPath(application_["id"])
+		self.applications[application_["id"]] = application
+		
 		return True
 	
 	
@@ -104,6 +110,9 @@ class ApplicationsStatic:
 			
 			if os.path.exists(path):
 				os.remove(path)
+		
+		if self.applications.has_key(application_id_):
+			del(self.applications[application_id_])
 	
 	
 	def getList(self):

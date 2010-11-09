@@ -104,7 +104,7 @@ class ApplicationsDetection:
 				continue
 			
 			application = {}
-			application["id"] = hashlib.md5(filename.encode(encoding)).hexdigest()
+			application["local_id"] = hashlib.md5(filename.encode(encoding)).hexdigest()
 			application["name"] = name
 			application["command"] = unicode(shortcut.GetPath(0)[0], encoding)
 			application["filename"] = filename
@@ -126,7 +126,7 @@ class ApplicationsDetection:
 			
 			application["mimetypes"] = self.mimetypes.get_mime_types_from_command(application["command"])
 			
-			applications[application["id"]] = application
+			applications[application["local_id"]] = application
 			
 		
 		return applications

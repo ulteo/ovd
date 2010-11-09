@@ -101,7 +101,7 @@ class ApplicationsDetection():
 			
 			
 			application = {}
-			application["id"] = hashlib.md5(filename).hexdigest()
+			application["local_id"] = hashlib.md5(filename).hexdigest()
 			application["name"] = parser.get('Desktop Entry', "Name")
 			application["command"] = parser.get('Desktop Entry', "Exec")
 			application["filename"] = filename
@@ -123,7 +123,7 @@ class ApplicationsDetection():
 			elif parser.has_option('Desktop Entry', "GenericName"):
 				application["description"] = parser.get('Desktop Entry', "GenericName")
 			
-			applications[application["id"]] = application
+			applications[application["local_id"]] = application
 			
 		return applications
 	

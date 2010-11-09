@@ -82,6 +82,9 @@ class Dialog(AbstractDialog):
 			elif  path == "/debian" and self.role_instance.canManageApplications():
 				return self.req_debian(request)
 			
+			elif path == "/applications/ids":
+			  return self.req_applications_matching(request)
+			
 			return None
 		
 		return None
@@ -98,22 +101,88 @@ class Dialog(AbstractDialog):
 	
 	
 	def req_applications(self, request):
-		doc = self.role_instance.getApplications()
-		if doc is None:
-			return None
+		doc = Document()
+		rootNode = doc.createElement('applications')
+		doc.appendChild(rootNode)
+		
+		self.role_instance.applications_mutex.acquire()
+		
+		for application in self.role_instance.applications.values():
+			appNode = doc.createElement("application")
+			appNode.setAttribute("id", application["local_id"])
+			appNode.setAttribute("name", application["name"])
+			appNode.setAttribute("desktopfile", application["filename"])
+			if application.has_key("description"):
+				appNode.setAttribute("description", application["description"])
+			exeNode = doc.createElement("executable")
+			exeNode.setAttribute("command", application["command"])
+			#if application.has_key("icon"):
+			#	exeNode.setAttribute("icon", application["icon"])
+			exeNode.setAttribute("mimetypes", ";".join(application["mimetypes"])+";")
+			appNode.appendChild(exeNode)
+			
+			rootNode.appendChild(appNode)
+		
+		self.role_instance.applications_mutex.release()
 		
 		return self.req_answer(doc)
-
+	
+	
+	def req_applications_matching(self, request):
+		try:
+			document = minidom.parseString(request["data"])
+			rootNode = document.documentElement
+			
+			if rootNode.nodeName != "applications":
+				raise Exception("invalid root node")
+			
+			matching = []
+			applicationNodes = rootNode.getElementsByTagName("application")
+			for node in applicationNodes:
+				matching.append((node.getAttribute("id"), node.getAttribute("local_id")))
+		
+		except Exception, err:
+			Logger.warn("Invalid xml input: "+str(err))
+			doc = Document()
+			rootNode = doc.createElement('error')
+			rootNode.setAttribute("id", "usage")
+			doc.appendChild(rootNode)
+			return self.req_answer(doc)
+		
+		self.role_instance.applications_mutex.acquire()
+		
+		self.role_instance.applications_id_SM = {}
+		
+		for (sm_id, local_id) in matching:
+			if not self.role_instance.applications.has_key(local_id):
+				continue
+			
+			self.role_instance.applications[local_id]["id"] = sm_id
+			self.role_instance.applications_id_SM[sm_id] = self.role_instance.applications[local_id]
+		
+		self.role_instance.applications_mutex.release()
+		
+		doc = Document()
+		rootNode = doc.createElement('applications')
+		rootNode.setAttribute("matching", "ok")
+		doc.appendChild(rootNode)
+		
+		return self.req_answer(doc)
+	
 	
 	def req_icon(self, app_id):
 		if self.role_instance.applications is None:
 			return self.req_unauthorized()
 		
-		if not self.role_instance.applications.has_key(app_id):
+		self.role_instance.applications_mutex.acquire()
+		
+		if not self.role_instance.applications_id_SM.has_key(app_id):
+			self.role_instance.applications_mutex.release()
 			return self.req_unauthorized()
 		
-		app =  self.role_instance.applications[app_id]
+		app =  self.role_instance.applications_id_SM[app_id]
 		
+		self.role_instance.applications_mutex.release()
 
 		appsdetect = Platform.ApplicationsDetection()
 		data = appsdetect.getIcon(app["filename"])
@@ -167,27 +236,27 @@ class Dialog(AbstractDialog):
 				
 				session[attr] = userNode.getAttribute(attr)
 			
-			applications_ids = []
-			session["applications"] = []
+			applications = {}
+			
+			self.role_instance.applications_mutex.acquire()
 			applicationNodes = sessionNode.getElementsByTagName("application")
 			for node in applicationNodes:
 				if node.parentNode != sessionNode:
 					continue
 				
-				application = {}
+				app_id = node.getAttribute("id")
+				if self.role_instance.applications_id_SM.has_key(app_id):
+					applications[app_id] = self.role_instance.applications_id_SM[app_id]
 				
-				application["id"] = node.getAttribute("id")
-				application["name"] = node.getAttribute("name")
+				elif self.role_instance.static_apps.applications.has_key(app_id):
+					applications[app_id] = self.role_instance.static_apps_lock.applications[app_id]
 				
-				application["type"] = node.getAttribute("mode")
-				if application["type"] == "local":
-					application["file"] = node.getAttribute("desktopfile")
 				else:
-					application["file"] = self.role_instance.static_apps.getApplicationPath(application["id"])
-				
-				session["applications"].append(application)
-				applications_ids.append(application["id"])
+					self.role_instance.applications_mutex.release()
+					Logger.warn("Unknown application id %s"%(app_id))
+					raise Exception("Unknown application id %s"%(app_id))
 			
+			self.role_instance.applications_mutex.release()
 			
 			application_to_start = []
 			startNodes = sessionNode.getElementsByTagName("start")
@@ -199,7 +268,7 @@ class Dialog(AbstractDialog):
 					application = {}
 					
 					application["id"] = node.getAttribute("id")
-					if application["id"] not in applications_ids:
+					if application["id"] not in applications.keys():
 						Logger.warn("Cannot start unknown application %s"%(application["id"]))
 						continue
 					
@@ -240,7 +309,7 @@ class Dialog(AbstractDialog):
 		if session["parameters"].has_key("locale"):
 			user.infos["locale"] = session["parameters"]["locale"]
 		
-		session = Platform.Session(session["id"], session["mode"], user, session["parameters"], session["applications"])
+		session = Platform.Session(session["id"], session["mode"], user, session["parameters"], applications.values())
 		if external_apps_token is not None:
 			session.setExternalAppsToken(external_apps_token)
 		

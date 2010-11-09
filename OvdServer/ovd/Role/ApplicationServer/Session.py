@@ -85,9 +85,9 @@ class Session:
 		os.mkdir(self.shortcutDirectory)
 
 		for application in self.applications:
-			cmd = RolePlatform.Platform.ApplicationsDetection.getExec(application["file"])
+			cmd = RolePlatform.Platform.ApplicationsDetection.getExec(application["filename"])
 			if cmd is None:
-				Logger.error("Session::install_client unable to extract command from app_id %s (%s)"%(application["id"], application["file"]))
+				Logger.error("Session::install_client unable to extract command from app_id %s (%s)"%(application["id"], application["filename"]))
 				continue
 			
 			f = file(os.path.join(self.matchingDirectory, application["id"]), "w")
@@ -97,11 +97,11 @@ class Session:
 		
 		for application in self.applications:
 			final_file = os.path.join(self.shortcutDirectory, self.get_target_file(application))
-			Logger.debug("install_client %s %s %s"%(str(application["file"]), str(final_file), str(application["id"])))
+			#Logger.debug("install_client %s %s %s"%(str(application["filename"]), str(final_file), str(application["id"])))
 			
-			ret = self.clone_shortcut(application["file"], final_file, "startovdapp", [application["id"]])
+			ret = self.clone_shortcut(application["filename"], final_file, "startovdapp", [application["id"]])
 			if not ret:
-				Logger.warn("Unable to clone shortcut '%s' to '%s'"%(application["file"], final_file))
+				Logger.warn("Unable to clone shortcut '%s' to '%s'"%(application["filename"], final_file))
 				continue
 			
 			self.install_shortcut(final_file)

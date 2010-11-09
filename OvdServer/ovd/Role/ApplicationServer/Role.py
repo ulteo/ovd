@@ -53,8 +53,9 @@ class Role(AbstractRole):
 		self.sessions_spooler = Queue()
 		self.threads = []
 		
-		self.applications = None
-		self.applicationsXML = None
+		self.applications = {}
+		self.applications_id_SM = {}
+		self.applications_mutex = threading.Lock()
 		
 		self.has_run = False
 		
@@ -290,16 +291,6 @@ class Role(AbstractRole):
 			self.static_apps_lock.release()
 	
 	
-	def getApplications(self):
-		i = 0
-		while self.applicationsXML is None:
-			if i > 10:
-				break
-			i+= 1
-			time.sleep(0.2)
-			
-		return self.applicationsXML
-	
 	def canManageApplications(self):
 		return self.main_instance.ulteo_system
 	
@@ -321,34 +312,26 @@ class Role(AbstractRole):
 				Logger.info("Unsuccefully build ApplicationDetection object in 4 times")
 				return
 		
+		applications = appsdetect.get()
+		known_ids = []
 		
-		self.applications = appsdetect.get()
+		self.applications_mutex.acquire()
 		
+		for id_, application in applications.items():
+			known_ids.append(id_)
+			
+			if self.applications.has_key(id_):
+				if self.applications[id_] == application:
+					continue
+			
+			self.applications[id_] = application
 		
-		doc = Document()
-		rootNode = doc.createElement('applications')
-		
-		for application in self.applications.values():
-			appNode = doc.createElement("application")
+		for id_ in self.applications.keys():
+			if id_ in known_ids:
+				continue
 			
-			appNode.setAttribute("id", application["id"])
-			appNode.setAttribute("name", application["name"])
-			appNode.setAttribute("desktopfile", application["filename"])
-			if application.has_key("description"):
-				appNode.setAttribute("description", application["description"])
-			
-			exeNode = doc.createElement("executable")
-			exeNode.setAttribute("command", application["command"])
-			#if application.has_key("icon"):
-			#	exeNode.setAttribute("icon", application["icon"])
-			
-			exeNode.setAttribute("mimetypes", ";".join(application["mimetypes"])+";")
-			appNode.appendChild(exeNode)
-			
-			rootNode.appendChild(appNode)
-			
-		doc.appendChild(rootNode)
-		self.applicationsXML = doc
+			del(self.applications[id_])
+		self.applications_mutex.release()
 	
 	
 	def getReporting(self, node):
