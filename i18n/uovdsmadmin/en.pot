@@ -5,9 +5,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: uovdsm\n"
+"Project-Id-Version: uovdsmadmin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-29 10:39+0200\n"
+"POT-Creation-Date: 2010-11-09 11:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,484 +18,494 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: ../../SessionManager/web/admin/actions.php:83
-#, php-format
-msgid "Task to add application '%s' on server '%s' successfully added"
+msgid ""
+"Task to add application '%APPLICATION%' on server '%SERVER%' was "
+"successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:89
-#, php-format
-msgid "Task to remove application '%s' from server '%s' successfully added"
+#: ../../SessionManager/web/admin/actions.php:90
+msgid ""
+"Task to remove application '%APPLICATION%' from server '%SERVER%' was "
+"successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:95
-#, php-format
-msgid "Application '%s' successfully added to server '%s'"
+#: ../../SessionManager/web/admin/actions.php:97
+msgid "Application '%APPLICATION%' successfully added to server '%SERVER%'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:99
-#, php-format
-msgid "Application '%s' successfully deleted from server '%s'"
+#: ../../SessionManager/web/admin/actions.php:102
+msgid "Application '%APPLICATION%' successfully deleted from server '%SERVER%'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:134
-#: ../../SessionManager/web/admin/actions.php:179
+#: ../../SessionManager/web/admin/actions.php:138
+#: ../../SessionManager/web/admin/actions.php:183
 msgid "ApplicationDB is not writeable"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:141
-#: ../../SessionManager/web/admin/actions.php:146
-#: ../../SessionManager/web/admin/actions.php:224
+#: ../../SessionManager/web/admin/actions.php:145
+#: ../../SessionManager/web/admin/actions.php:150
+#: ../../SessionManager/web/admin/actions.php:228
 #, php-format
 msgid "Failed to delete application '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:149
-#: ../../SessionManager/web/admin/actions.php:229
+#: ../../SessionManager/web/admin/actions.php:153
+#: ../../SessionManager/web/admin/actions.php:233
 #, php-format
 msgid "Application '%s' successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:158
+#: ../../SessionManager/web/admin/actions.php:162
 #, php-format
 msgid "Unable to import application %s"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:165
+#: ../../SessionManager/web/admin/actions.php:169
 #, php-format
-msgid "Unable to modify store application '%s'"
+msgid "Unable to modify application '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:168
-#: ../../SessionManager/web/admin/actions.php:278
+#: ../../SessionManager/web/admin/actions.php:172
+#: ../../SessionManager/web/admin/actions.php:282
 #, php-format
 msgid "Application '%s' successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:199
+#: ../../SessionManager/web/admin/actions.php:203
 msgid "Application is not ok"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:206
+#: ../../SessionManager/web/admin/actions.php:210
 #, php-format
 msgid "Failed to add application '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:209
+#: ../../SessionManager/web/admin/actions.php:213
 #, php-format
 msgid "Application '%s' successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:219
-#: ../../SessionManager/web/admin/actions.php:261
+#: ../../SessionManager/web/admin/actions.php:223
+#: ../../SessionManager/web/admin/actions.php:265
 #, php-format
 msgid "Unable to import application '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:240
+#: ../../SessionManager/web/admin/actions.php:244
 #, php-format
-msgid "Application '%s' icon successfully deleted"
+msgid "'%s' application's icon was successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:273
+#: ../../SessionManager/web/admin/actions.php:277
 #, php-format
 msgid "Failed to modify application '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:345
-#: ../../SessionManager/web/admin/actions.php:355
+#: ../../SessionManager/web/admin/actions.php:349
+#: ../../SessionManager/web/admin/actions.php:359
 #, php-format
 msgid "ApplicationGroup '%s' successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:366
-msgid "Application Group Database not writeable"
+#: ../../SessionManager/web/admin/actions.php:370
+msgid "Application Group Database is not writeable"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:377
+#: ../../SessionManager/web/admin/actions.php:381
 #, php-format
 msgid "Unable to create applications group '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:379
+#: ../../SessionManager/web/admin/actions.php:383
 #, php-format
 msgid "Applications group '%s' successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:391
-#: ../../SessionManager/web/admin/actions.php:410
+#: ../../SessionManager/web/admin/actions.php:395
 #, php-format
-msgid "Import of applications group '%s' failed"
+msgid "Importing applications group '%s' failed"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:396
+#: ../../SessionManager/web/admin/actions.php:400
 #, php-format
 msgid "Unable to remove applications group '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:399
+#: ../../SessionManager/web/admin/actions.php:403
 #, php-format
 msgid "Applications group '%s' successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:431
+#: ../../SessionManager/web/admin/actions.php:414
+#, php-format
+msgid "Import of applications group '%s' failed"
+msgstr ""
+
+#: ../../SessionManager/web/admin/actions.php:435
 #, php-format
 msgid "Unable to modify applications group '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:433
+#: ../../SessionManager/web/admin/actions.php:437
 #, php-format
 msgid "Applications group '%s' successfully modified"
 msgstr ""
 
 #. problem, what to do ?
-#: ../../SessionManager/web/admin/actions.php:450
 #: ../../SessionManager/web/admin/actions.php:454
-#: ../../SessionManager/web/admin/actions.php:465
+#: ../../SessionManager/web/admin/actions.php:458
 #: ../../SessionManager/web/admin/actions.php:469
-#: ../../SessionManager/web/admin/actions.php:740
+#: ../../SessionManager/web/admin/actions.php:473
+#: ../../SessionManager/web/admin/actions.php:744
 #, php-format
 msgid "UsersGroup '%s' successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:487
+#: ../../SessionManager/web/admin/actions.php:491
 msgid "Publication successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:489
+#: ../../SessionManager/web/admin/actions.php:493
 msgid "Unable to save the publication"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:492
+#: ../../SessionManager/web/admin/actions.php:496
 msgid "This publication already exists"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:500
+#: ../../SessionManager/web/admin/actions.php:504
 msgid "Publication successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:502
+#: ../../SessionManager/web/admin/actions.php:506
 msgid "Unable to delete the publication"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:505
+#: ../../SessionManager/web/admin/actions.php:509
 msgid "This publication does not exist"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:519
-msgid "You must define a name to your usergroup"
+#: ../../SessionManager/web/admin/actions.php:523
+msgid "You must define a name for your usergroup"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:525
-#: ../../SessionManager/web/admin/actions.php:575
-#: ../../SessionManager/web/admin/actions.php:593
-msgid "User Group Database not writeable"
+#: ../../SessionManager/web/admin/actions.php:529
+msgid "User Group Database is not writeable"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:533
-#: ../../SessionManager/web/admin/actions.php:684
-msgid "You must give a value to each rule of your usergroup"
+#: ../../SessionManager/web/admin/actions.php:537
+msgid "You must provide a value to each rule of your usergroup"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:551
+#: ../../SessionManager/web/admin/actions.php:555
 msgid "Unknow usergroup type"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:556
-msgid "Unable to create user group"
+#: ../../SessionManager/web/admin/actions.php:560
+msgid "Unable to create usergroup"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:559
+#: ../../SessionManager/web/admin/actions.php:563
 msgid "UserGroup successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:569
-#: ../../SessionManager/web/admin/actions.php:598
-#: ../../SessionManager/web/admin/actions.php:677
-#: ../../SessionManager/web/admin/actions.php:751
+#: ../../SessionManager/web/admin/actions.php:573
+#: ../../SessionManager/web/admin/actions.php:602
+#: ../../SessionManager/web/admin/actions.php:681
+#: ../../SessionManager/web/admin/actions.php:755
 #, php-format
 msgid "Failed to import Usergroup '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:580
+#: ../../SessionManager/web/admin/actions.php:579
+#: ../../SessionManager/web/admin/actions.php:597
+msgid "User Group Database not writeable"
+msgstr ""
+
+#: ../../SessionManager/web/admin/actions.php:584
 #, php-format
 msgid "Unable to remove usergroup '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:583
+#: ../../SessionManager/web/admin/actions.php:587
 #, php-format
 msgid "UserGroup '%s' successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:628
-#: ../../SessionManager/web/admin/actions.php:701
+#: ../../SessionManager/web/admin/actions.php:632
+#: ../../SessionManager/web/admin/actions.php:705
 #, php-format
 msgid "Unable to update Usergroup '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:632
-#: ../../SessionManager/web/admin/actions.php:666
+#: ../../SessionManager/web/admin/actions.php:636
+#: ../../SessionManager/web/admin/actions.php:670
 #, php-format
 msgid "UserGroup '%s' successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:639
+#: ../../SessionManager/web/admin/actions.php:643
 msgid "Not enough rights"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:656
+#: ../../SessionManager/web/admin/actions.php:660
 #, php-format
 msgid "Failed to import group '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:663
+#: ../../SessionManager/web/admin/actions.php:667
 msgid "Unable to save prefs"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:703
+#: ../../SessionManager/web/admin/actions.php:688
+msgid "You must give a value to each rule of your usergroup"
+msgstr ""
+
+#: ../../SessionManager/web/admin/actions.php:707
 #, php-format
 msgid "Rules of '%s' successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:806
+#: ../../SessionManager/web/admin/actions.php:813
 msgid "Usergroup successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:809
+#: ../../SessionManager/web/admin/actions.php:816
 msgid "Failed to modify usergroup"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:820
+#: ../../SessionManager/web/admin/actions.php:827
 msgid "User Database not writeable"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:826
+#: ../../SessionManager/web/admin/actions.php:833
 msgid "Unable to create user"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:836
+#: ../../SessionManager/web/admin/actions.php:843
 msgid "Unable to create user with an empty password"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:842
+#: ../../SessionManager/web/admin/actions.php:849
 #, php-format
 msgid "Unable to create user '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:846
+#: ../../SessionManager/web/admin/actions.php:853
 #, php-format
 msgid "User '%s' successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:856
+#: ../../SessionManager/web/admin/actions.php:863
 #, php-format
-msgid "Unable to delete user '%s' because he have an active session"
+msgid "Unable to delete user '%s' because he has an active session"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:861
-#: ../../SessionManager/web/admin/actions.php:872
+#: ../../SessionManager/web/admin/actions.php:868
+#: ../../SessionManager/web/admin/actions.php:879
 #, php-format
 msgid "Unable to delete user '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:875
+#: ../../SessionManager/web/admin/actions.php:882
 #, php-format
 msgid "User '%s' successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:888
+#: ../../SessionManager/web/admin/actions.php:895
 #, php-format
 msgid "Unable to import user '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:898
+#: ../../SessionManager/web/admin/actions.php:905
 #, php-format
 msgid "Unable to modify user '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:900
+#: ../../SessionManager/web/admin/actions.php:907
 #, php-format
 msgid "User '%s' successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:908
-msgid "No custom password given at populate."
+#: ../../SessionManager/web/admin/actions.php:915
+msgid "No custom password given for populating the database."
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:919
+#: ../../SessionManager/web/admin/actions.php:926
 msgid "User database populated."
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:922
+#: ../../SessionManager/web/admin/actions.php:929
 msgid "User database population failed."
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:939
+#: ../../SessionManager/web/admin/actions.php:946
 #: ../../SessionManager/web/modules/ApplicationDB.php:32
 msgid "Module ApplicationDB must be enabled"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:980
-msgid "SharedFolder successfully renamed"
+#: ../../SessionManager/web/admin/actions.php:987
+msgid "Shared folder successfully renamed"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:982
+#: ../../SessionManager/web/admin/actions.php:989
 msgid "A shared folder with that name already exists!"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:995
-#: ../../SessionManager/web/admin/actions.php:1000
-#: ../../SessionManager/web/admin/actions.php:1402
-#: ../../SessionManager/web/admin/actions.php:1423
-msgid "SharedFolder successfully modified"
+#: ../../SessionManager/web/admin/actions.php:1002
+#: ../../SessionManager/web/admin/actions.php:1007
+#: ../../SessionManager/web/admin/actions.php:1409
+#: ../../SessionManager/web/admin/actions.php:1430
+msgid "Shared folder successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1016
+#: ../../SessionManager/web/admin/actions.php:1023
 #, php-format
 msgid "Unable to delete network folder '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1018
+#: ../../SessionManager/web/admin/actions.php:1025
 #, php-format
 msgid "Network folder '%s' successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1030
+#: ../../SessionManager/web/admin/actions.php:1037
 msgid "Untitled"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1035
+#: ../../SessionManager/web/admin/actions.php:1042
 msgid "News successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1042
+#: ../../SessionManager/web/admin/actions.php:1049
 msgid "Unable to delete this news"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1044
+#: ../../SessionManager/web/admin/actions.php:1051
 msgid "News successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1054
+#: ../../SessionManager/web/admin/actions.php:1061
 msgid "Password is empty"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1057
+#: ../../SessionManager/web/admin/actions.php:1064
 msgid "Passwords are not identical"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1062
+#: ../../SessionManager/web/admin/actions.php:1069
 msgid "Password successfully changed"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1066
+#: ../../SessionManager/web/admin/actions.php:1073
 msgid "Password not changed"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1085
+#: ../../SessionManager/web/admin/actions.php:1092
 #, php-format
 msgid "Unable to delete session '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1089
+#: ../../SessionManager/web/admin/actions.php:1096
 #, php-format
 msgid "Session '%s' successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1107
+#: ../../SessionManager/web/admin/actions.php:1114
 #, php-format
 msgid ""
 "Unable to delete the server '%s' because there are active sessions on it."
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1115
+#: ../../SessionManager/web/admin/actions.php:1122
 #, php-format
 msgid "Server '%s' successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1133
+#: ../../SessionManager/web/admin/actions.php:1140
 #, php-format
 msgid "Server '%s' successfully registered"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1136
+#: ../../SessionManager/web/admin/actions.php:1143
 #, php-format
 msgid "Failed to register Server '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1158
-#: ../../SessionManager/web/admin/actions.php:1169
-#: ../../SessionManager/web/admin/actions.php:1180
+#: ../../SessionManager/web/admin/actions.php:1165
+#: ../../SessionManager/web/admin/actions.php:1176
+#: ../../SessionManager/web/admin/actions.php:1187
 #, php-format
 msgid "Server '%s' successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1193
-#: ../../SessionManager/web/admin/actions.php:1246
-#: ../../SessionManager/web/admin/actions.php:1269
+#: ../../SessionManager/web/admin/actions.php:1200
+#: ../../SessionManager/web/admin/actions.php:1253
+#: ../../SessionManager/web/admin/actions.php:1276
 msgid "Task successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1206
+#: ../../SessionManager/web/admin/actions.php:1213
 #, php-format
 msgid "Server '%s' is upgrading"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1240
-#: ../../SessionManager/web/admin/actions.php:1301
+#: ../../SessionManager/web/admin/actions.php:1247
+#: ../../SessionManager/web/admin/actions.php:1308
 msgid "Task successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1312
-msgid "You must give a name to your shared folder"
+#: ../../SessionManager/web/admin/actions.php:1319
+msgid "You must provide a name to your shared folder"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1318
+#: ../../SessionManager/web/admin/actions.php:1325
 msgid "A shared folder with this name already exists"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1334
-msgid "No server avalaible for sharedFolder"
+#: ../../SessionManager/web/admin/actions.php:1341
+msgid "No server avalaible for shared folder"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1342
+#: ../../SessionManager/web/admin/actions.php:1349
 msgid "Unable to add shared folder"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1348
+#: ../../SessionManager/web/admin/actions.php:1355
 #, php-format
 msgid "Unable to create shared folder on file server '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1353
+#: ../../SessionManager/web/admin/actions.php:1360
 #, php-format
-msgid "SharedFolder '%s' successfully added"
+msgid "Shared folder '%s' successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1360
-#: ../../SessionManager/web/admin/actions.php:1378
+#: ../../SessionManager/web/admin/actions.php:1367
+#: ../../SessionManager/web/admin/actions.php:1385
 msgid "Unable to delete this shared folder"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1366
-#: ../../SessionManager/web/admin/actions.php:1372
+#: ../../SessionManager/web/admin/actions.php:1373
+#: ../../SessionManager/web/admin/actions.php:1379
 #, php-format
 msgid "Unable to delete shared folder on file server '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1382
-msgid "SharedFolder successfully deleted"
-msgstr ""
-
 #: ../../SessionManager/web/admin/actions.php:1389
-msgid "Unable to create this shared folder access"
+msgid "Shared folder successfully deleted"
 msgstr ""
 
 #: ../../SessionManager/web/admin/actions.php:1396
-#: ../../SessionManager/web/admin/actions.php:1417
+msgid "Unable to create this shared folder access"
+msgstr ""
+
+#: ../../SessionManager/web/admin/actions.php:1403
+#: ../../SessionManager/web/admin/actions.php:1424
 msgid "Unable to load usergroup"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1410
+#: ../../SessionManager/web/admin/actions.php:1417
 msgid "Unable to delete this shared folder access"
 msgstr ""
 
@@ -505,7 +515,7 @@ msgstr ""
 #: ../../SessionManager/web/admin/includes/page_template.php:116
 #: ../../SessionManager/web/admin/sessions.php:66
 #: ../../SessionManager/web/admin/sumup.php:195
-#: ../../SessionManager/web/classes/Preferences.class.php:334
+#: ../../SessionManager/web/classes/Preferences.class.php:348
 msgid "Applications"
 msgstr ""
 
@@ -527,7 +537,7 @@ msgstr ""
 #: ../../SessionManager/web/admin/sharedfolders.php:118
 #: ../../SessionManager/web/admin/usersgroup.php:95
 #: ../../SessionManager/web/admin/usersgroup.php:206
-#: ../../SessionManager/web/admin/usersgroup.php:778
+#: ../../SessionManager/web/admin/usersgroup.php:792
 #: ../../SessionManager/web/admin/wizard.php:261
 #: ../../SessionManager/web/admin/wizard.php:411
 msgid "Name"
@@ -544,7 +554,7 @@ msgstr ""
 #: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:80
 #: ../../SessionManager/web/admin/usersgroup.php:96
 #: ../../SessionManager/web/admin/usersgroup.php:211
-#: ../../SessionManager/web/admin/usersgroup.php:398
+#: ../../SessionManager/web/admin/usersgroup.php:407
 #: ../../SessionManager/web/admin/wizard.php:266
 #: ../../SessionManager/web/admin/wizard.php:416
 msgid "Description"
@@ -668,7 +678,7 @@ msgstr ""
 #: ../../SessionManager/web/admin/tasks.php:70
 #: ../../SessionManager/web/admin/tasks.php:144
 #: ../../SessionManager/web/admin/usersgroup.php:97
-#: ../../SessionManager/web/admin/usersgroup.php:399
+#: ../../SessionManager/web/admin/usersgroup.php:408
 msgid "Status"
 msgstr ""
 
@@ -689,7 +699,7 @@ msgstr ""
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:388
 #: ../../SessionManager/web/admin/tasks.php:80
 #: ../../SessionManager/web/admin/tasks.php:155
-#: ../../SessionManager/web/classes/Session.class.php:217
+#: ../../SessionManager/web/classes/Session.class.php:218
 msgid "Error"
 msgstr ""
 
@@ -706,7 +716,7 @@ msgstr ""
 #: ../../SessionManager/web/admin/applications.php:391
 #: ../../SessionManager/web/admin/applications_static.php:508
 #: ../../SessionManager/web/admin/appsgroup.php:279
-#: ../../SessionManager/web/admin/usersgroup.php:594
+#: ../../SessionManager/web/admin/usersgroup.php:603
 #: ../../SessionManager/web/admin/users.php:337
 msgid "Delete from this group"
 msgstr ""
@@ -714,7 +724,7 @@ msgstr ""
 #: ../../SessionManager/web/admin/applications.php:407
 #: ../../SessionManager/web/admin/applications_static.php:523
 #: ../../SessionManager/web/admin/appsgroup.php:296
-#: ../../SessionManager/web/admin/usersgroup.php:611
+#: ../../SessionManager/web/admin/usersgroup.php:620
 #: ../../SessionManager/web/admin/users.php:352
 msgid "Add to this group"
 msgstr ""
@@ -818,11 +828,11 @@ msgid "Add"
 msgstr ""
 
 #: ../../SessionManager/web/admin/applications_static.php:232
-msgid "Web link configuration"
+msgid "Web links configuration"
 msgstr ""
 
 #: ../../SessionManager/web/admin/applications_static.php:233
-msgid "Default browser for :"
+msgid "Default browser for:"
 msgstr ""
 
 #: ../../SessionManager/web/admin/applications_static.php:255
@@ -861,7 +871,7 @@ msgid "Application groups"
 msgstr ""
 
 #: ../../SessionManager/web/admin/appsgroup.php:51
-msgid "No application groups available"
+msgid "No available application groups"
 msgstr ""
 
 #: ../../SessionManager/web/admin/appsgroup.php:66
@@ -874,7 +884,7 @@ msgstr ""
 #: ../../SessionManager/web/admin/appsgroup.php:84
 #: ../../SessionManager/web/admin/appsgroup.php:224
 #: ../../SessionManager/web/admin/usersgroup.php:130
-#: ../../SessionManager/web/admin/usersgroup.php:430
+#: ../../SessionManager/web/admin/usersgroup.php:439
 msgid "Are you sure you want to delete this group?"
 msgstr ""
 
@@ -899,23 +909,23 @@ msgid "Application groups management"
 msgstr ""
 
 #: ../../SessionManager/web/admin/appsgroup.php:223
-#: ../../SessionManager/web/admin/usersgroup.php:411
+#: ../../SessionManager/web/admin/usersgroup.php:420
 #: ../../SessionManager/web/admin/users.php:259
 msgid "Settings"
 msgstr ""
 
 #: ../../SessionManager/web/admin/appsgroup.php:225
-#: ../../SessionManager/web/admin/usersgroup.php:431
+#: ../../SessionManager/web/admin/usersgroup.php:440
 msgid "Delete this group"
 msgstr ""
 
 #: ../../SessionManager/web/admin/appsgroup.php:247
-#: ../../SessionManager/web/admin/usersgroup.php:452
+#: ../../SessionManager/web/admin/usersgroup.php:461
 msgid "Update the name"
 msgstr ""
 
 #: ../../SessionManager/web/admin/appsgroup.php:256
-#: ../../SessionManager/web/admin/usersgroup.php:461
+#: ../../SessionManager/web/admin/usersgroup.php:470
 msgid "Update the description"
 msgstr ""
 
@@ -924,23 +934,23 @@ msgid "List of applications in this group"
 msgstr ""
 
 #: ../../SessionManager/web/admin/appsgroup.php:351
-#: ../../SessionManager/web/admin/usersgroup.php:628
+#: ../../SessionManager/web/admin/usersgroup.php:637
 msgid "List of publications for this group"
 msgstr ""
 
 #: ../../SessionManager/web/admin/appsgroup.php:361
 #: ../../SessionManager/web/admin/publications.php:99
-#: ../../SessionManager/web/admin/usersgroup.php:637
+#: ../../SessionManager/web/admin/usersgroup.php:646
 msgid "Are you sure you want to delete this publication?"
 msgstr ""
 
 #: ../../SessionManager/web/admin/appsgroup.php:366
-#: ../../SessionManager/web/admin/usersgroup.php:642
+#: ../../SessionManager/web/admin/usersgroup.php:651
 msgid "Delete this publication"
 msgstr ""
 
 #: ../../SessionManager/web/admin/appsgroup.php:383
-#: ../../SessionManager/web/admin/usersgroup.php:659
+#: ../../SessionManager/web/admin/usersgroup.php:668
 msgid "Add this publication"
 msgstr ""
 
@@ -989,11 +999,11 @@ msgid "Administrator account"
 msgstr ""
 
 #: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:227
-msgid "login:"
+msgid "Login:"
 msgstr ""
 
 #: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:228
-msgid "password:"
+msgid "Password:"
 msgstr ""
 
 #: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:234
@@ -1052,12 +1062,12 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:68
 msgid ""
-"This is the default Profile manager. This profile manager saves all the data "
+"This is the default profile manager. This profile manager saves all the data "
 "into a the same SQL database as you defined it in the system configuration."
 msgstr ""
 
 #: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:79
-msgid "Use a dynamic internal user list"
+msgid "Use a dynamic internal User Group"
 msgstr ""
 
 #: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:27
@@ -1124,8 +1134,7 @@ msgid "Use LDAP User Groups using the MemberOf field"
 msgstr ""
 
 #: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:226
-#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:259
-msgid "Use LDAP User Groups using Posix group"
+msgid "Use LDAP User Groups using Posix groups"
 msgstr ""
 
 #: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:228
@@ -1134,6 +1143,10 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:251
 msgid "Server:"
+msgstr ""
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:259
+msgid "Use LDAP User Groups using Posix group"
 msgstr ""
 
 #: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:88
@@ -1236,7 +1249,7 @@ msgstr ""
 #: ../../SessionManager/web/admin/configuration-partial.php:111
 #: ../../SessionManager/web/admin/configuration.php:109
 #: ../../SessionManager/web/admin/configuration-profile.php:226
-#: ../../SessionManager/web/admin/includes/functions.inc.php:251
+#: ../../SessionManager/web/admin/includes/functions.inc.php:208
 msgid "Save"
 msgstr ""
 
@@ -1259,11 +1272,6 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/configuration-profile.php:241
 msgid "Success"
-msgstr ""
-
-#: ../../SessionManager/web/admin/configuration-sumup.php:35
-#: ../../SessionManager/web/admin/includes/core.inc.php:55
-msgid "get Preferences failed"
 msgstr ""
 
 #: ../../SessionManager/web/admin/configuration-sumup.php:45
@@ -1304,8 +1312,8 @@ msgstr ""
 #: ../../SessionManager/web/classes/Server.class.php:452
 #: ../../SessionManager/web/classes/Server.class.php:461
 #: ../../SessionManager/web/classes/Server.class.php:468
-#: ../../SessionManager/web/classes/Session.class.php:214
-#: ../../SessionManager/web/classes/Session.class.php:242
+#: ../../SessionManager/web/classes/Session.class.php:215
+#: ../../SessionManager/web/classes/Session.class.php:243
 msgid "Unknown"
 msgstr ""
 
@@ -1361,16 +1369,16 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:98
 #: ../../SessionManager/web/admin/ha/configuration.php:147
-msgid "An error occured during reading configuration file, no values found !"
+msgid "An error occured while reading configuration file, no values found!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:118
-msgid "Could not extract configuration values from file !"
+msgid "Could not extract configuration values from file!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:133
 #: ../../SessionManager/web/admin/ha/configuration.php:137
-msgid "An error occured during update of the virtual IP !"
+msgid "An error occured when updating the virtual IP!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:171
@@ -1383,8 +1391,8 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:194
 msgid ""
-"Your will change the virtual IP, afterward modify your url with the good IP "
-"to obtain the admin web interface !"
+"Your will have to change the virtual IP and then modify your url with the "
+"correct IP to reach the admin web interface!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:196
@@ -1393,43 +1401,43 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:206
 #, php-format
-msgid "%s server(s) has been successfully removed !"
+msgid "%s server(s) has been successfully removed!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:208
-msgid "An error occured, no unregistered server deleted !"
+msgid "An error occured, no unregistered server deleted!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:217
-msgid "Cannot enable host because one already enabled !"
+msgid "Cannot enable host because one is already enabled!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:228
 #: ../../SessionManager/web/admin/ha/configuration.php:251
-msgid "Cannot disable host because it is not enabled !"
+msgid "Cannot disable host because it is not enabled!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:239
-msgid "Host has been enabled !"
+msgid "Host has been enabled!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:242
-msgid "An error occured during activation, can not enable host !"
+msgid "An error occured during activation, can not enable host!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:257
-msgid "Host has been disabled !"
+msgid "Host has been disabled!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:260
-msgid "An error occured during disabling host, cannot disable host !"
+msgid "An error occured during disabling host, cannot disable host!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:267
 msgid ""
-"You will enable the slave server, the master server and slave server will "
-"restart their services to load the new configurations. It takes less than 3 "
-"minutes, during this time the web interface will be disabled."
+"When enabling the slave server, the master server and slave server are going "
+"to restart their services to load the new configurations. It takes less than "
+"3 minutes. During this time the web interface will be disabled."
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:273
@@ -1453,9 +1461,9 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:304
 msgid ""
-"You will disable the slave server, the master host will restart their "
-"services to load the new configurations. It takes less than 3 minutes, "
-"during this time the web interface will be disabled."
+"When enabling the slave server, the master server is going to restart their "
+"services to load the new configurations. It takes less than 3 minutes. "
+"During this time the web interface will be disabled."
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:310
@@ -1475,16 +1483,16 @@ msgid "Submit"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:373
-msgid "The system is in maintenance mode ! Cannot apply changes."
+msgid "The system is in maintenance mode! Cannot apply changes."
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:387
-msgid "Cannot enable host because no host found in DB !"
+msgid "Cannot enable host because no host found in DB!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:397
 #, php-format
-msgid "Host %s at address %s has been notifyed succesfully !"
+msgid "Host %s at address %s has been notifyed succesfully!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:400
@@ -1495,15 +1503,15 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:420
 #, php-format
-msgid "Host %s has been set in standby and master %s will restart Heartbeat !"
+msgid "Host %s has been set in standby and master %s will restart Heartbeat!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:430
-msgid "An error occured during disabling, can not disable host !"
+msgid "An error occured during disabling, can not disable host!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:441
-msgid "Changing configuration... Please wait few seconds"
+msgid "Changing configuration... Please wait a few seconds"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:444
@@ -1513,7 +1521,8 @@ msgid ""
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:457
-msgid "Virtual IP \""
+#, php-format
+msgid "Virtual IP \"%s\" is not valid!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/logs.php:68
@@ -1526,6 +1535,9 @@ msgid "Show alerts"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/logs.php:80
+msgid "Show information"
+msgstr ""
+
 #: ../../SessionManager/web/admin/ha/logs.php:83
 msgid "Show informations"
 msgstr ""
@@ -1544,32 +1556,32 @@ msgid "High Availability"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/registration.php:48
-msgid "Host has been already registered !"
+msgid "Host has been already registered!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/registration.php:84
-msgid "Host activation has been done successfully !"
+msgid "Host activation has been done successfully!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/registration.php:87
-msgid "An error occured in POST request activation !"
+msgid "An error occured in POST request activation!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/registration.php:92
-msgid "Deleting host has been done successfully !"
+msgid "Deleting host has been done successfully!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/registration.php:95
 #: ../../SessionManager/web/admin/ha/registration.php:99
-msgid "Request is not well formatted !"
+msgid "Request is not well formatted!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/status.php:78
-msgid "General Informations"
+msgid "General Status"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/status.php:80
-msgid "Last time update of this page and informations contained"
+msgid "Last time update of this page and included information"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/status.php:80
@@ -1578,12 +1590,12 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/ha/status.php:85
 msgid ""
-"The DC (Designated Coordinator) is elected a node in the cluster. He is "
-"responsible for the actions of each cluster elements."
+"The DC (Designated Coordinator) has elected a node in the cluster. It is "
+"responsible for actions of each cluster element."
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/status.php:85
-msgid "Actual DC"
+msgid "Current DC"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/status.php:90
@@ -1599,11 +1611,11 @@ msgid "Number of resources configured for all nodes"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/status.php:105
-msgid "ressources Status"
+msgid "Ressources Status"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/status.php:114
-msgid "ressources errors"
+msgid "Ressources errors"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/status.php:127
@@ -1624,7 +1636,7 @@ msgid "Production"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/status.php:146
-#: ../../SessionManager/web/classes/Session.class.php:226
+#: ../../SessionManager/web/classes/Session.class.php:227
 msgid "Ready"
 msgstr ""
 
@@ -1633,7 +1645,7 @@ msgid "Standby"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/status.php:172
-msgid "An error has occured, please call your administrator !"
+msgid "An error has occured, please call your administrator!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/status.php:176
@@ -1667,17 +1679,17 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/ha/status.php:256
 msgid ""
-"Please check permissions on ulteo-ovd.conf or if \"cibadmin -Q\" works "
-"fine ! Apache could have been started by another user than www-data."
+"Please check permissions on ulteo-ovd.conf or if \"cibadmin -Q\" works fine! "
+"Apache could have been started by another user than www-data."
 msgstr ""
 
 #: ../../SessionManager/web/admin/includes/core.inc.php:59
 #: ../../SessionManager/web/admin/index.php:138
 #: ../../SessionManager/web/webservices/configuration.php:32
-msgid "The system is in maintenance mode"
+msgid "The system is on maintenance mode"
 msgstr ""
 
-#: ../../SessionManager/web/admin/includes/functions.inc.php:406
+#: ../../SessionManager/web/admin/includes/functions.inc.php:363
 msgid "You are not allowed to perform this action"
 msgstr ""
 
@@ -1707,7 +1719,7 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/includes/page_template.php:95
 #: ../../SessionManager/web/admin/sharedfolders.php:44
-#: ../../SessionManager/web/admin/usersgroup.php:730
+#: ../../SessionManager/web/admin/usersgroup.php:739
 msgid "Shared folders"
 msgstr ""
 
@@ -1763,12 +1775,12 @@ msgstr ""
 
 #. Events settings
 #: ../../SessionManager/web/admin/includes/page_template.php:193
-#: ../../SessionManager/web/classes/Preferences.class.php:456
+#: ../../SessionManager/web/classes/Preferences.class.php:483
 msgid "Events settings"
 msgstr ""
 
 #: ../../SessionManager/web/admin/includes/page_template.php:199
-#: ../../SessionManager/web/classes/Preferences.class.php:380
+#: ../../SessionManager/web/classes/Preferences.class.php:407
 msgid "Web interface settings"
 msgstr ""
 
@@ -1814,12 +1826,14 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:102
 #: ../../SessionManager/web/admin/servers.php:51
-msgid "redirection name may be invalid!"
+#, php-format
+msgid "Server \"%s\": redirection name may be invalid!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:104
 #: ../../SessionManager/web/admin/servers.php:53
-msgid "redirection name cannot be empty!"
+#, php-format
+msgid "Server \"%s\": redirection name cannot be empty!"
 msgstr ""
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:109
@@ -1906,19 +1920,19 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:423
 #: ../../SessionManager/web/admin/users.php:376
-msgid "Informations about this session"
+msgid "Information about this session"
 msgstr ""
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:486
-msgid "User profiles in the server"
+msgid "User profiles on the server"
 msgstr ""
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:492
-msgid "Shared folders in the server"
+msgid "Shared folders on the server"
 msgstr ""
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:498
-msgid "NetworkFolders in the server"
+msgid "Network folders on the server"
 msgstr ""
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:515
@@ -1930,23 +1944,23 @@ msgid "Used by"
 msgstr ""
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:556
-msgid "Are you sure that you want to delete this user profile?"
+msgid "Are you sure you want to delete this user profile?"
 msgstr ""
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:556
-msgid "Are you sure that you want to delete this network folder?"
+msgid "Are you sure you want to delete this network folder?"
 msgstr ""
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:574
-msgid "Are you sure that you want to delete these user profiles?"
+msgid "Are you sure you want to delete these user profiles?"
 msgstr ""
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:574
-msgid "Are you sure that you want to delete these network folders?"
+msgid "Are you sure you want to delete these network folders?"
 msgstr ""
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:590
-#: ../../SessionManager/web/admin/usersgroup.php:781
+#: ../../SessionManager/web/admin/usersgroup.php:795
 msgid "Action"
 msgstr ""
 
@@ -1960,7 +1974,7 @@ msgid "Users and Users groups"
 msgstr ""
 
 #: ../../SessionManager/web/admin/index.php:52
-msgid "User list"
+msgid "Users list"
 msgstr ""
 
 #: ../../SessionManager/web/admin/index.php:54
@@ -1981,19 +1995,19 @@ msgid "General configuration"
 msgstr ""
 
 #: ../../SessionManager/web/admin/index.php:106
-msgid "Applications and Appgroups"
+msgid "Applications and applications groups"
 msgstr ""
 
 #: ../../SessionManager/web/admin/index.php:111
-msgid "Application list"
+msgid "Applications list"
 msgstr ""
 
 #: ../../SessionManager/web/admin/index.php:113
-msgid "Application groups list"
+msgid "Applications groups list"
 msgstr ""
 
 #: ../../SessionManager/web/admin/index.php:115
-msgid "Publication list"
+msgid "Publications list"
 msgstr ""
 
 #: ../../SessionManager/web/admin/index.php:128
@@ -2001,7 +2015,7 @@ msgid "System"
 msgstr ""
 
 #: ../../SessionManager/web/admin/index.php:141
-msgid "Switch the system to production mode?"
+msgid "Are you sure you want to switch the system to production mode?"
 msgstr ""
 
 #: ../../SessionManager/web/admin/index.php:141
@@ -2013,7 +2027,7 @@ msgid "The system is in production mode"
 msgstr ""
 
 #: ../../SessionManager/web/admin/index.php:146
-msgid "Switch the system to maintenance mode?"
+msgid "Are you sure you want to switch the system to maintenance mode?"
 msgstr ""
 
 #: ../../SessionManager/web/admin/index.php:146
@@ -2120,7 +2134,7 @@ msgid "Add this news"
 msgstr ""
 
 #: ../../SessionManager/web/admin/password.php:25
-msgid "User not authorize to manage configuration"
+msgid "User not authorized to manage configuration"
 msgstr ""
 
 #: ../../SessionManager/web/admin/password.php:30
@@ -2145,7 +2159,7 @@ msgid "Users group"
 msgstr ""
 
 #: ../../SessionManager/web/admin/publications.php:82
-msgid "Application group"
+msgid "Applications group"
 msgstr ""
 
 #: ../../SessionManager/web/admin/publications.php:87
@@ -2170,8 +2184,7 @@ msgid "Error: \"from\" date is after \"to\" date, switching"
 msgstr ""
 
 #: ../../SessionManager/web/admin/reporting.php:299
-#: ../../SessionManager/web/admin/reporting.php:704
-msgid "Error: \"to\" field is in the future, switch to the current time"
+msgid "Error: \"to\" field is in the future, switching to current time"
 msgstr ""
 
 #: ../../SessionManager/web/admin/reporting.php:307
@@ -2224,7 +2237,7 @@ msgid "RAM usage"
 msgstr ""
 
 #: ../../SessionManager/web/admin/reporting.php:508
-#: ../../SessionManager/web/classes/Preferences.class.php:254
+#: ../../SessionManager/web/classes/Preferences.class.php:268
 msgid "From"
 msgstr ""
 
@@ -2276,15 +2289,19 @@ msgid "Server"
 msgstr ""
 
 #: ../../SessionManager/web/admin/reporting.php:624
-msgid "Ordinate: usage of CPU in percent"
+msgid "Ordinate: CPU usage in percent"
 msgstr ""
 
 #: ../../SessionManager/web/admin/reporting.php:640
-msgid "Ordinate: usage of RAM in percent"
+msgid "Ordinate: RAM usage in percent"
 msgstr ""
 
 #: ../../SessionManager/web/admin/reporting.php:671
 msgid "Number of active sessions"
+msgstr ""
+
+#: ../../SessionManager/web/admin/reporting.php:704
+msgid "Error: \"to\" field is in the future, switch to the current time"
 msgstr ""
 
 #: ../../SessionManager/web/admin/servers.php:75
@@ -2314,7 +2331,7 @@ msgstr ""
 #: ../../SessionManager/web/admin/servers.php:95
 #: ../../SessionManager/web/admin/servers.php:194
 #: ../../SessionManager/web/admin/servers.php:363
-#: ../../SessionManager/web/classes/Preferences.class.php:281
+#: ../../SessionManager/web/classes/Preferences.class.php:295
 msgid "Switch to maintenance"
 msgstr ""
 
@@ -2392,7 +2409,7 @@ msgid "Version"
 msgstr ""
 
 #: ../../SessionManager/web/admin/servers.php:442
-msgid "Redirection name of this server"
+msgid "Redirection name for this server"
 msgstr ""
 
 #: ../../SessionManager/web/admin/servers.php:496
@@ -2421,7 +2438,7 @@ msgid "Type:"
 msgstr ""
 
 #: ../../SessionManager/web/admin/sessions.php:64
-#: ../../SessionManager/web/classes/Preferences.class.php:334
+#: ../../SessionManager/web/classes/Preferences.class.php:348
 msgid "Desktop"
 msgstr ""
 
@@ -2438,7 +2455,7 @@ msgid "Running applications"
 msgstr ""
 
 #: ../../SessionManager/web/admin/sessions.php:85
-msgid "No application running"
+msgid "No running application"
 msgstr ""
 
 #: ../../SessionManager/web/admin/sessions.php:111
@@ -2498,17 +2515,17 @@ msgid "ACL"
 msgstr ""
 
 #: ../../SessionManager/web/admin/sharedfolders.php:147
-#: ../../SessionManager/web/admin/usersgroup.php:737
+#: ../../SessionManager/web/admin/usersgroup.php:746
 msgid "Are you sure you want to delete this shared folder access?"
 msgstr ""
 
 #: ../../SessionManager/web/admin/sharedfolders.php:152
-#: ../../SessionManager/web/admin/usersgroup.php:742
+#: ../../SessionManager/web/admin/usersgroup.php:751
 msgid "Delete access to this shared folder"
 msgstr ""
 
 #: ../../SessionManager/web/admin/sharedfolders.php:167
-#: ../../SessionManager/web/admin/usersgroup.php:757
+#: ../../SessionManager/web/admin/usersgroup.php:766
 msgid "Add access to this shared folder"
 msgstr ""
 
@@ -2609,18 +2626,18 @@ msgid "Install an application from a package name"
 msgstr ""
 
 #: ../../SessionManager/web/admin/usersgroup.php:32
-#: ../../SessionManager/web/classes/Preferences.class.php:189
-#: ../../SessionManager/web/classes/Preferences.class.php:341
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:368
 msgid "1 hour"
 msgstr ""
 
 #: ../../SessionManager/web/admin/usersgroup.php:33
-#: ../../SessionManager/web/classes/Preferences.class.php:341
+#: ../../SessionManager/web/classes/Preferences.class.php:368
 msgid "1 day"
 msgstr ""
 
 #: ../../SessionManager/web/admin/usersgroup.php:34
-#: ../../SessionManager/web/classes/Preferences.class.php:341
+#: ../../SessionManager/web/classes/Preferences.class.php:368
 msgid "1 week"
 msgstr ""
 
@@ -2650,22 +2667,22 @@ msgid "Time between two updates:"
 msgstr ""
 
 #: ../../SessionManager/web/admin/usersgroup.php:228
-#: ../../SessionManager/web/admin/usersgroup.php:500
+#: ../../SessionManager/web/admin/usersgroup.php:509
 msgid "Validation type"
 msgstr ""
 
 #: ../../SessionManager/web/admin/usersgroup.php:229
-#: ../../SessionManager/web/admin/usersgroup.php:504
+#: ../../SessionManager/web/admin/usersgroup.php:513
 msgid "All"
 msgstr ""
 
 #: ../../SessionManager/web/admin/usersgroup.php:229
-#: ../../SessionManager/web/admin/usersgroup.php:507
+#: ../../SessionManager/web/admin/usersgroup.php:516
 msgid "At least one"
 msgstr ""
 
 #: ../../SessionManager/web/admin/usersgroup.php:233
-#: ../../SessionManager/web/admin/usersgroup.php:511
+#: ../../SessionManager/web/admin/usersgroup.php:520
 msgid "Filters"
 msgstr ""
 
@@ -2673,81 +2690,81 @@ msgstr ""
 msgid "Failed to load usergroup"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:394
+#: ../../SessionManager/web/admin/usersgroup.php:403
 msgid "User groups management"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:416
+#: ../../SessionManager/web/admin/usersgroup.php:425
 msgid "Remove from default"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:419
+#: ../../SessionManager/web/admin/usersgroup.php:428
 msgid "Define as default"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:479
+#: ../../SessionManager/web/admin/usersgroup.php:488
 msgid "Update the schedule"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:490
+#: ../../SessionManager/web/admin/usersgroup.php:499
 msgid "Rules"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:569
+#: ../../SessionManager/web/admin/usersgroup.php:578
 msgid "Update rules"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:580
+#: ../../SessionManager/web/admin/usersgroup.php:589
 msgid "List of users in this group"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:589
+#: ../../SessionManager/web/admin/usersgroup.php:598
 #: ../../SessionManager/web/admin/users.php:95
 #: ../../SessionManager/web/admin/users.php:262
 msgid "Are you sure you want to delete this user?"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:669
+#: ../../SessionManager/web/admin/usersgroup.php:678
 msgid "Policy of this group"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:677
+#: ../../SessionManager/web/admin/usersgroup.php:686
 msgid "extend from default"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:683
+#: ../../SessionManager/web/admin/usersgroup.php:692
 msgid "Are you sure you want to delete this rule?"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:688
+#: ../../SessionManager/web/admin/usersgroup.php:697
 msgid "Delete this rule"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:708
+#: ../../SessionManager/web/admin/usersgroup.php:717
 msgid "Add this rule"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:767
+#: ../../SessionManager/web/admin/usersgroup.php:776
 msgid "Session settings configuration"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:779
+#: ../../SessionManager/web/admin/usersgroup.php:793
 msgid "Default value"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:780
+#: ../../SessionManager/web/admin/usersgroup.php:794
 msgid "Value"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:802
+#: ../../SessionManager/web/admin/usersgroup.php:817
 msgid "Remove this overriden setting"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:816
+#: ../../SessionManager/web/admin/usersgroup.php:832
 msgid "Save settings"
 msgstr ""
 
-#: ../../SessionManager/web/admin/usersgroup.php:838
+#: ../../SessionManager/web/admin/usersgroup.php:853
 msgid "Add this setting"
 msgstr ""
 
@@ -2769,13 +2786,13 @@ msgstr ""
 #: ../../SessionManager/web/admin/users.php:158
 msgid ""
 "This feature is useful to create default accounts. It is mainly used when "
-"you want to test the system quickly. It is not recommended to use thoses "
-"default accounts in a production system because it is very easy to delete "
+"you want to test the system quickly. It is not recommended to use those "
+"default accounts on a production system because it is very easy to delete "
 "them by mistake using this \"populate\" feature."
 msgstr ""
 
 #: ../../SessionManager/web/admin/users.php:167
-msgid "Overwrite existent: "
+msgid "Overwrite existing: "
 msgstr ""
 
 #: ../../SessionManager/web/admin/users.php:173
@@ -2783,7 +2800,7 @@ msgid "Password management:"
 msgstr ""
 
 #: ../../SessionManager/web/admin/users.php:180
-msgid "Same as the login"
+msgid "Same as username"
 msgstr ""
 
 #: ../../SessionManager/web/admin/users.php:181
@@ -2803,7 +2820,7 @@ msgid "Delete this user"
 msgstr ""
 
 #: ../../SessionManager/web/admin/users.php:307
-msgid "Save the modifications"
+msgid "Save changes"
 msgstr ""
 
 #: ../../SessionManager/web/admin/users.php:319
@@ -2889,11 +2906,11 @@ msgid "Create a group with applications"
 msgstr ""
 
 #: ../../SessionManager/web/admin/wizard.php:329
-msgid "Use appgroups"
+msgid "Use an application group"
 msgstr ""
 
 #: ../../SessionManager/web/admin/wizard.php:403
-msgid "Create appgroup"
+msgid "Create application group"
 msgstr ""
 
 #: ../../SessionManager/web/admin/wizard.php:446
@@ -2905,15 +2922,15 @@ msgid "Are you sure that you want to create this publication?"
 msgstr ""
 
 #: ../../SessionManager/web/admin/wizard.php:459
-msgid "Between this usergroup"
+msgid "Between this users group"
 msgstr ""
 
 #: ../../SessionManager/web/admin/wizard.php:461
-msgid "Between these usergroups"
+msgid "Between these users groups"
 msgstr ""
 
 #: ../../SessionManager/web/admin/wizard.php:479
-msgid "Between this newly created usergroup"
+msgid "Between this newly created users group"
 msgstr ""
 
 #: ../../SessionManager/web/admin/wizard.php:483
@@ -3001,53 +3018,53 @@ msgid "System in maintenance mode"
 msgstr ""
 
 #: ../../SessionManager/web/classes/Preferences.class.php:178
-#: ../../SessionManager/web/classes/Preferences.class.php:261
-#: ../../SessionManager/web/classes/Preferences.class.php:264
+#: ../../SessionManager/web/classes/Preferences.class.php:275
 #: ../../SessionManager/web/classes/Preferences.class.php:278
-#: ../../SessionManager/web/classes/Preferences.class.php:284
-#: ../../SessionManager/web/classes/Preferences.class.php:287
-#: ../../SessionManager/web/classes/Preferences.class.php:290
-#: ../../SessionManager/web/classes/Preferences.class.php:310
-#: ../../SessionManager/web/classes/Preferences.class.php:313
-#: ../../SessionManager/web/classes/Preferences.class.php:316
-#: ../../SessionManager/web/classes/Preferences.class.php:319
-#: ../../SessionManager/web/classes/Preferences.class.php:328
-#: ../../SessionManager/web/classes/Preferences.class.php:344
-#: ../../SessionManager/web/classes/Preferences.class.php:347
-#: ../../SessionManager/web/classes/Preferences.class.php:351
-#: ../../SessionManager/web/classes/Preferences.class.php:354
-#: ../../SessionManager/web/classes/Preferences.class.php:357
-#: ../../SessionManager/web/classes/Preferences.class.php:361
-#: ../../SessionManager/web/classes/Preferences.class.php:364
-#: ../../SessionManager/web/classes/Preferences.class.php:367
-#: ../../SessionManager/web/classes/Preferences.class.php:370
-#: ../../SessionManager/web/classes/Preferences.class.php:373
-#: ../../SessionManager/web/classes/Preferences.class.php:383
+#: ../../SessionManager/web/classes/Preferences.class.php:292
+#: ../../SessionManager/web/classes/Preferences.class.php:298
+#: ../../SessionManager/web/classes/Preferences.class.php:301
+#: ../../SessionManager/web/classes/Preferences.class.php:304
+#: ../../SessionManager/web/classes/Preferences.class.php:324
+#: ../../SessionManager/web/classes/Preferences.class.php:327
+#: ../../SessionManager/web/classes/Preferences.class.php:330
+#: ../../SessionManager/web/classes/Preferences.class.php:333
+#: ../../SessionManager/web/classes/Preferences.class.php:342
+#: ../../SessionManager/web/classes/Preferences.class.php:371
+#: ../../SessionManager/web/classes/Preferences.class.php:374
+#: ../../SessionManager/web/classes/Preferences.class.php:378
+#: ../../SessionManager/web/classes/Preferences.class.php:381
+#: ../../SessionManager/web/classes/Preferences.class.php:384
+#: ../../SessionManager/web/classes/Preferences.class.php:388
+#: ../../SessionManager/web/classes/Preferences.class.php:391
+#: ../../SessionManager/web/classes/Preferences.class.php:394
+#: ../../SessionManager/web/classes/Preferences.class.php:397
+#: ../../SessionManager/web/classes/Preferences.class.php:400
+#: ../../SessionManager/web/classes/Preferences.class.php:410
 msgid "no"
 msgstr ""
 
 #: ../../SessionManager/web/classes/Preferences.class.php:178
-#: ../../SessionManager/web/classes/Preferences.class.php:261
-#: ../../SessionManager/web/classes/Preferences.class.php:264
+#: ../../SessionManager/web/classes/Preferences.class.php:275
 #: ../../SessionManager/web/classes/Preferences.class.php:278
-#: ../../SessionManager/web/classes/Preferences.class.php:284
-#: ../../SessionManager/web/classes/Preferences.class.php:287
-#: ../../SessionManager/web/classes/Preferences.class.php:290
-#: ../../SessionManager/web/classes/Preferences.class.php:310
-#: ../../SessionManager/web/classes/Preferences.class.php:313
-#: ../../SessionManager/web/classes/Preferences.class.php:316
-#: ../../SessionManager/web/classes/Preferences.class.php:319
-#: ../../SessionManager/web/classes/Preferences.class.php:328
-#: ../../SessionManager/web/classes/Preferences.class.php:344
-#: ../../SessionManager/web/classes/Preferences.class.php:347
-#: ../../SessionManager/web/classes/Preferences.class.php:351
-#: ../../SessionManager/web/classes/Preferences.class.php:357
-#: ../../SessionManager/web/classes/Preferences.class.php:361
-#: ../../SessionManager/web/classes/Preferences.class.php:364
-#: ../../SessionManager/web/classes/Preferences.class.php:367
-#: ../../SessionManager/web/classes/Preferences.class.php:370
-#: ../../SessionManager/web/classes/Preferences.class.php:373
-#: ../../SessionManager/web/classes/Preferences.class.php:383
+#: ../../SessionManager/web/classes/Preferences.class.php:292
+#: ../../SessionManager/web/classes/Preferences.class.php:298
+#: ../../SessionManager/web/classes/Preferences.class.php:301
+#: ../../SessionManager/web/classes/Preferences.class.php:304
+#: ../../SessionManager/web/classes/Preferences.class.php:324
+#: ../../SessionManager/web/classes/Preferences.class.php:327
+#: ../../SessionManager/web/classes/Preferences.class.php:330
+#: ../../SessionManager/web/classes/Preferences.class.php:333
+#: ../../SessionManager/web/classes/Preferences.class.php:342
+#: ../../SessionManager/web/classes/Preferences.class.php:371
+#: ../../SessionManager/web/classes/Preferences.class.php:374
+#: ../../SessionManager/web/classes/Preferences.class.php:378
+#: ../../SessionManager/web/classes/Preferences.class.php:384
+#: ../../SessionManager/web/classes/Preferences.class.php:388
+#: ../../SessionManager/web/classes/Preferences.class.php:391
+#: ../../SessionManager/web/classes/Preferences.class.php:394
+#: ../../SessionManager/web/classes/Preferences.class.php:397
+#: ../../SessionManager/web/classes/Preferences.class.php:400
+#: ../../SessionManager/web/classes/Preferences.class.php:410
 msgid "yes"
 msgstr ""
 
@@ -3055,214 +3072,214 @@ msgstr ""
 msgid "Administration console language"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:182
+#: ../../SessionManager/web/classes/Preferences.class.php:183
 msgid "Autodetect"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:185
+#: ../../SessionManager/web/classes/Preferences.class.php:199
 msgid "Debug options list"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:185
+#: ../../SessionManager/web/classes/Preferences.class.php:199
 msgid "Select debug options you want to enable."
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:186
+#: ../../SessionManager/web/classes/Preferences.class.php:200
 msgid "debug"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:186
+#: ../../SessionManager/web/classes/Preferences.class.php:200
 msgid "info"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:186
+#: ../../SessionManager/web/classes/Preferences.class.php:200
 msgid "warning"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:186
+#: ../../SessionManager/web/classes/Preferences.class.php:200
 msgid "error"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:186
+#: ../../SessionManager/web/classes/Preferences.class.php:200
 msgid "critical"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:188
+#: ../../SessionManager/web/classes/Preferences.class.php:202
 msgid "Cache logs update interval"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:189
+#: ../../SessionManager/web/classes/Preferences.class.php:203
 msgid "30 seconds"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:189
-#: ../../SessionManager/web/classes/Preferences.class.php:341
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:368
 msgid "1 minute"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:189
-#: ../../SessionManager/web/classes/Preferences.class.php:341
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:368
 msgid "5 minutes"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:189
-#: ../../SessionManager/web/classes/Preferences.class.php:341
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:368
 msgid "15 minutes"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:189
-#: ../../SessionManager/web/classes/Preferences.class.php:341
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:368
 msgid "30 minutes"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:189
-#: ../../SessionManager/web/classes/Preferences.class.php:341
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:368
 msgid "2 hours"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:191
+#: ../../SessionManager/web/classes/Preferences.class.php:205
 msgid "Cache logs expiry time"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:192
+#: ../../SessionManager/web/classes/Preferences.class.php:206
 msgid "A day"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:192
+#: ../../SessionManager/web/classes/Preferences.class.php:206
 msgid "A week"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:192
+#: ../../SessionManager/web/classes/Preferences.class.php:206
 msgid "A month"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:192
+#: ../../SessionManager/web/classes/Preferences.class.php:206
 msgid "A year"
 msgstr ""
 
 #. $c = new ConfigElement_input('start_app','start_app','start_app_des','');
 #. $this->add('general',$c);
-#: ../../SessionManager/web/classes/Preferences.class.php:198
+#: ../../SessionManager/web/classes/Preferences.class.php:212
 msgid "Default user group"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:201
+#: ../../SessionManager/web/classes/Preferences.class.php:215
 msgid "Maximum items per page"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:201
+#: ../../SessionManager/web/classes/Preferences.class.php:215
 msgid "The maximum number of items that can be displayed."
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:204
+#: ../../SessionManager/web/classes/Preferences.class.php:218
 msgid "Default browser"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:207
+#: ../../SessionManager/web/classes/Preferences.class.php:221
 msgid "Default policy"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:209
+#: ../../SessionManager/web/classes/Preferences.class.php:223
 msgid "use Admin panel"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:210
+#: ../../SessionManager/web/classes/Preferences.class.php:224
 msgid "view Servers"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:211
+#: ../../SessionManager/web/classes/Preferences.class.php:225
 msgid "manage Servers"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:212
+#: ../../SessionManager/web/classes/Preferences.class.php:226
 msgid "view Shared folders"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:213
+#: ../../SessionManager/web/classes/Preferences.class.php:227
 msgid "manage Shared folders"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:214
+#: ../../SessionManager/web/classes/Preferences.class.php:228
 msgid "view Users"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:215
+#: ../../SessionManager/web/classes/Preferences.class.php:229
 msgid "manage Users"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:216
+#: ../../SessionManager/web/classes/Preferences.class.php:230
 msgid "view Usergroups"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:217
+#: ../../SessionManager/web/classes/Preferences.class.php:231
 msgid "manage Usergroups"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:218
+#: ../../SessionManager/web/classes/Preferences.class.php:232
 msgid "view Applications"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:219
+#: ../../SessionManager/web/classes/Preferences.class.php:233
 msgid "manage Applications"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:220
+#: ../../SessionManager/web/classes/Preferences.class.php:234
 msgid "view Application groups"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:221
+#: ../../SessionManager/web/classes/Preferences.class.php:235
 msgid "manage Application groups"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:222
+#: ../../SessionManager/web/classes/Preferences.class.php:236
 msgid "view Publications"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:223
+#: ../../SessionManager/web/classes/Preferences.class.php:237
 msgid "manage Publications"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:224
+#: ../../SessionManager/web/classes/Preferences.class.php:238
 msgid "view Configuration"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:225
+#: ../../SessionManager/web/classes/Preferences.class.php:239
 msgid "manage Configuration"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:226
+#: ../../SessionManager/web/classes/Preferences.class.php:240
 msgid "view Status"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:227
+#: ../../SessionManager/web/classes/Preferences.class.php:241
 msgid "view Summary"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:228
+#: ../../SessionManager/web/classes/Preferences.class.php:242
 msgid "view News"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:229
+#: ../../SessionManager/web/classes/Preferences.class.php:243
 msgid "manage News"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:233
+#: ../../SessionManager/web/classes/Preferences.class.php:247
 msgid "Policy for administration delegation"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:235
+#: ../../SessionManager/web/classes/Preferences.class.php:249
 msgid "SQL configuration"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:236
+#: ../../SessionManager/web/classes/Preferences.class.php:250
 msgid "Database type"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:236
+#: ../../SessionManager/web/classes/Preferences.class.php:250
 msgid "The type of your database."
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:237
+#: ../../SessionManager/web/classes/Preferences.class.php:251
 #: ../../SessionManager/web/modules/ApplicationDB/sql.php:190
 #: ../../SessionManager/web/modules/ApplicationsGroupDB/sql.php:171
 #: ../../SessionManager/web/modules/UserDB/sql.php:228
@@ -3270,349 +3287,355 @@ msgstr ""
 msgid "MySQL"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:239
+#: ../../SessionManager/web/classes/Preferences.class.php:253
 msgid "Database host address"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:239
+#: ../../SessionManager/web/classes/Preferences.class.php:253
 msgid ""
 "The address of your database host. This database contains adminstration "
 "console data. Example: localhost or db.mycorporate.com."
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:239
-msgid ""
-"The address of your database host. This database contains adminstrations "
-"console data. Example: localhost or db.mycorporate.com."
-msgstr ""
-
-#: ../../SessionManager/web/classes/Preferences.class.php:241
+#: ../../SessionManager/web/classes/Preferences.class.php:255
 msgid "Database username"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:241
+#: ../../SessionManager/web/classes/Preferences.class.php:255
 msgid "The username that must be used to access the database."
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:241
+#: ../../SessionManager/web/classes/Preferences.class.php:255
 msgid "The user name that must be used to access the database."
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:243
+#: ../../SessionManager/web/classes/Preferences.class.php:257
 msgid "Database password"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:243
+#: ../../SessionManager/web/classes/Preferences.class.php:257
 msgid "The user password that must be used to access the database."
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:245
+#: ../../SessionManager/web/classes/Preferences.class.php:259
 #: ../../SessionManager/web/modules/UserDB/sql_external.php:200
 #: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:111
 msgid "Database name"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:245
+#: ../../SessionManager/web/classes/Preferences.class.php:259
 #: ../../SessionManager/web/modules/UserDB/sql_external.php:200
 #: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:111
 msgid "The name of the database."
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:247
+#: ../../SessionManager/web/classes/Preferences.class.php:261
 msgid "Table prefix"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:247
+#: ../../SessionManager/web/classes/Preferences.class.php:261
 msgid "The table prefix for the database."
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:250
+#: ../../SessionManager/web/classes/Preferences.class.php:264
 msgid "Email settings"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:251
+#: ../../SessionManager/web/classes/Preferences.class.php:265
 msgid "Mail server type"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:252
+#: ../../SessionManager/web/classes/Preferences.class.php:266
 msgid "Local"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:252
+#: ../../SessionManager/web/classes/Preferences.class.php:266
 msgid "SMTP server"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:256
+#: ../../SessionManager/web/classes/Preferences.class.php:270
 msgid "Host"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:258
+#: ../../SessionManager/web/classes/Preferences.class.php:272
 msgid "Port"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:260
+#: ../../SessionManager/web/classes/Preferences.class.php:274
 msgid "Use SSL with SMTP"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:263
+#: ../../SessionManager/web/classes/Preferences.class.php:277
 msgid "Authentication"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:266
+#: ../../SessionManager/web/classes/Preferences.class.php:280
 msgid "SMTP username"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:268
+#: ../../SessionManager/web/classes/Preferences.class.php:282
 msgid "SMTP password"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:271
+#: ../../SessionManager/web/classes/Preferences.class.php:285
 msgid "Slave Server settings"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:272
+#: ../../SessionManager/web/classes/Preferences.class.php:286
 msgid "Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)"
 msgstr ""
 
 #. fqdn_private_address : array('dns' => ip);
-#: ../../SessionManager/web/classes/Preferences.class.php:275
+#: ../../SessionManager/web/classes/Preferences.class.php:289
 msgid "Name/IP Address association (name <-> ip)"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:275
+#: ../../SessionManager/web/classes/Preferences.class.php:289
 msgid ""
 "Enter a private addresses you wish to associate to a specific IP in case of "
 "issue with the DNS configuration or to override a reverse address result. "
 "Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:277
+#: ../../SessionManager/web/classes/Preferences.class.php:291
 msgid "Disable reverse FQDN checking"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:277
+#: ../../SessionManager/web/classes/Preferences.class.php:291
 msgid ""
 "Enable this option if you don't want to check that the result of the reverse "
 "FQDN address fits the one that was registered."
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:280
+#: ../../SessionManager/web/classes/Preferences.class.php:294
+msgid "Action when a server status is not ready anymore"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:294
 msgid "Action when an server status is not ready anymore"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:281
+#: ../../SessionManager/web/classes/Preferences.class.php:295
 msgid "Do nothing"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:283
+#: ../../SessionManager/web/classes/Preferences.class.php:297
 msgid "Remove orphan applications when the application server is deleted"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:286
+#: ../../SessionManager/web/classes/Preferences.class.php:300
 msgid "Auto register new servers"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:289
+#: ../../SessionManager/web/classes/Preferences.class.php:303
 msgid "Auto switch new servers to production mode"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:293
-msgid "Load Balancing policy for Application Server"
-msgstr ""
-
-#: ../../SessionManager/web/classes/Preferences.class.php:293
-msgid "Load Balancing policy for File Server"
+#: ../../SessionManager/web/classes/Preferences.class.php:307
+msgid "Load Balancing policy for Application Servers"
 msgstr ""
 
 #: ../../SessionManager/web/classes/Preferences.class.php:307
-msgid "Remote Desktop settings"
-msgstr ""
-
-#: ../../SessionManager/web/classes/Preferences.class.php:309
-msgid "Enable Remote Desktop"
-msgstr ""
-
-#: ../../SessionManager/web/classes/Preferences.class.php:312
-msgid "Sessions are persistent"
-msgstr ""
-
-#: ../../SessionManager/web/classes/Preferences.class.php:315
-msgid "Show icons on user desktop"
-msgstr ""
-
-#: ../../SessionManager/web/classes/Preferences.class.php:318
-msgid "Allow external applications in Desktop"
+msgid "Load Balancing policy for File Servers"
 msgstr ""
 
 #: ../../SessionManager/web/classes/Preferences.class.php:321
+msgid "Remote Desktop settings"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:323
+msgid "Enable Remote Desktop"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:326
+msgid "Sessions are persistent"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:329
+msgid "Show icons on user desktop"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:332
+msgid "Allow external applications in Desktop"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:335
 msgid "Desktop type"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:322
+#: ../../SessionManager/web/classes/Preferences.class.php:336
 msgid "Any"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:322
+#: ../../SessionManager/web/classes/Preferences.class.php:336
 msgid "Linux"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:322
+#: ../../SessionManager/web/classes/Preferences.class.php:336
 msgid "Windows"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:325
+#: ../../SessionManager/web/classes/Preferences.class.php:339
 msgid "Remote Applications settings"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:327
+#: ../../SessionManager/web/classes/Preferences.class.php:341
 msgid "Enable Remote Applications"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:331
+#: ../../SessionManager/web/classes/Preferences.class.php:345
 msgid "Sessions settings"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:333
+#: ../../SessionManager/web/classes/Preferences.class.php:347
 msgid "Default mode for session"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:337
+#: ../../SessionManager/web/classes/Preferences.class.php:351
 msgid "Default language for session"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:340
+#: ../../SessionManager/web/classes/Preferences.class.php:367
 msgid "Default timeout for session"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:341
+#: ../../SessionManager/web/classes/Preferences.class.php:368
 msgid "2 minutes"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:341
+#: ../../SessionManager/web/classes/Preferences.class.php:368
 msgid "10 minutes"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:341
+#: ../../SessionManager/web/classes/Preferences.class.php:368
 msgid "5 hours"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:341
+#: ../../SessionManager/web/classes/Preferences.class.php:368
 msgid "12 hours"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:341
+#: ../../SessionManager/web/classes/Preferences.class.php:368
 msgid "2 days"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:341
+#: ../../SessionManager/web/classes/Preferences.class.php:368
 msgid "1 month"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:341
+#: ../../SessionManager/web/classes/Preferences.class.php:368
 msgid "Never"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:343
+#: ../../SessionManager/web/classes/Preferences.class.php:370
 msgid "User can launch a session with no application"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:346
+#: ../../SessionManager/web/classes/Preferences.class.php:373
 msgid "User can use a console in the session"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:350
+#: ../../SessionManager/web/classes/Preferences.class.php:377
 msgid "Multimedia"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:353
+#: ../../SessionManager/web/classes/Preferences.class.php:380
 msgid "Redirect client drives"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:354
+#: ../../SessionManager/web/classes/Preferences.class.php:381
 msgid "partial"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:354
+#: ../../SessionManager/web/classes/Preferences.class.php:381
 msgid "full"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:356
+#: ../../SessionManager/web/classes/Preferences.class.php:383
 msgid "Redirect client printers"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:360
+#: ../../SessionManager/web/classes/Preferences.class.php:387
 msgid "Enable user profiles"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:363
+#: ../../SessionManager/web/classes/Preferences.class.php:390
+msgid "Auto-create user profiles when non-existant"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:390
+msgid "Auto-create user profile when non-existant"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Preferences.class.php:390
 msgid "Auto-create user profile when nonexistant"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:366
+#: ../../SessionManager/web/classes/Preferences.class.php:393
 msgid "Launch a session without a valid profile"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:369
-msgid "Enable sharedfolders"
+#: ../../SessionManager/web/classes/Preferences.class.php:396
+msgid "Enable shared folders"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:372
-msgid "Launch a session even if a shared folder's fileserver is missing"
+#: ../../SessionManager/web/classes/Preferences.class.php:399
+msgid "Launch a session even when a shared folder's fileserver is missing"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:376
+#: ../../SessionManager/web/classes/Preferences.class.php:403
 msgid "Forceable paramaters by users"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:376
+#: ../../SessionManager/web/classes/Preferences.class.php:403
 msgid ""
 "Choose Advanced Settings options you want to make available to users before "
 "they launch a session."
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:377
+#: ../../SessionManager/web/classes/Preferences.class.php:404
 msgid "session mode"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:377
+#: ../../SessionManager/web/classes/Preferences.class.php:404
 msgid "language"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:377
+#: ../../SessionManager/web/classes/Preferences.class.php:404
 msgid "server"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:377
+#: ../../SessionManager/web/classes/Preferences.class.php:404
 msgid "timeout"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:382
+#: ../../SessionManager/web/classes/Preferences.class.php:409
 msgid "Display users list"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:382
+#: ../../SessionManager/web/classes/Preferences.class.php:409
 msgid ""
 "Display the list of users from the corporate directory in the login box. If "
-"the list is not displayed, the user must enter his login name."
+"the list is not displayed, the user must provide his login name."
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:408
+#: ../../SessionManager/web/classes/Preferences.class.php:435
 msgid "Modules activation"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:408
+#: ../../SessionManager/web/classes/Preferences.class.php:435
 msgid "Choose the modules you want to enable."
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:458
-msgid "Mail addresses to send alerts to"
+#: ../../SessionManager/web/classes/Preferences.class.php:485
+msgid "Email addresses to send alerts to"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:458
-msgid "On system alerts, mails will be sent to these addresses"
+#: ../../SessionManager/web/classes/Preferences.class.php:485
+msgid "On system alerts, emails will be sent to these addresses"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Preferences.class.php:483
+#: ../../SessionManager/web/classes/Preferences.class.php:510
 msgid "Activated callbacks"
 msgstr ""
 
@@ -3632,27 +3655,27 @@ msgstr ""
 msgid "Broken"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Session.class.php:220
+#: ../../SessionManager/web/classes/Session.class.php:221
 msgid "Created"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Session.class.php:223
+#: ../../SessionManager/web/classes/Session.class.php:224
 msgid "Initializing"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Session.class.php:229
+#: ../../SessionManager/web/classes/Session.class.php:230
 msgid "Logged"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Session.class.php:232
+#: ../../SessionManager/web/classes/Session.class.php:233
 msgid "Disconnected"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Session.class.php:235
+#: ../../SessionManager/web/classes/Session.class.php:236
 msgid "To destroy"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Session.class.php:238
+#: ../../SessionManager/web/classes/Session.class.php:239
 msgid "Destroyed"
 msgstr ""
 
@@ -3664,11 +3687,11 @@ msgstr ""
 #: ../../SessionManager/web/classes/User.class.php:312
 #, php-format
 msgid ""
-"User '%s' have at least two groups with the same overriden rule but with "
-"differents value, the result will be unpredictable."
+"User '%s' has at least two groups with the same overriden rule but with "
+"different values, the result will be unpredictable."
 msgstr ""
 
-#: ../../SessionManager/web/client/start.php:270
+#: ../../SessionManager/web/client/start.php:286
 msgid "No available server"
 msgstr ""
 
@@ -3684,11 +3707,11 @@ msgstr ""
 
 #: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Mail.class.php:57
 #: ../../SessionManager/web/events/callbacks/SqlFailure/Mail.class.php:59
-msgid "Send a mail"
+msgid "Send an email"
 msgstr ""
 
 #: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Task.class.php:53
-msgid "Cleanup tasks"
+msgid "Clean up tasks"
 msgstr ""
 
 #: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:49
@@ -3705,7 +3728,7 @@ msgid "No error given"
 msgstr ""
 
 #: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:64
-msgid "Send a mail on login problem"
+msgid "Send an email on login problem"
 msgstr ""
 
 #: ../../SessionManager/web/events/callbacks/SqlFailure/Mail.class.php:46
@@ -3788,7 +3811,7 @@ msgid "Token XML user node name"
 msgstr ""
 
 #: ../../SessionManager/web/modules/AuthMethod/Token.php:96
-msgid "The id of the XML node which contains the user login"
+msgid "The id of the XML node that contains the user login"
 msgstr ""
 
 #: ../../SessionManager/web/modules/AuthMethod/Token.php:97
@@ -3813,7 +3836,7 @@ msgstr ""
 #: ../../SessionManager/web/modules/UserDB.php:32
 #: ../../SessionManager/web/modules/UserGroupDB/ldap_memberof.php:102
 #: ../../SessionManager/web/webservices/configuration.php:66
-msgid "Module UserDB must be enabled"
+msgid "UserDB module must be enabled"
 msgstr ""
 
 #: ../../SessionManager/web/modules/UserDB/activedirectory.php:82
@@ -3964,7 +3987,7 @@ msgstr ""
 #: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:69
 #: ../../SessionManager/web/modules/UserGroupDB.php:32
 #: ../../SessionManager/web/modules/UserGroupDB.php:148
-msgid "Module UserGroupDB must be enabled"
+msgid "UserGroupDB module must be enabled"
 msgstr ""
 
 #: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:134
