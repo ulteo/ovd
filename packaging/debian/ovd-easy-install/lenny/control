@@ -8,7 +8,7 @@ Build-Depends: cdbs, debhelper (>= 6)
 Package: ulteo-ovd-debconf-database
 Architecture: all
 Depends: debconf-utils
-Description: Ulteo Open Virtual Desktop: debconf database
+Description: Ulteo Open Virtual Desktop - debconf database
  Debconf database used to make a quick install
 
 Package: ulteo-ovd-easy-install
