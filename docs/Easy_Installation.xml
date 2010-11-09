@@ -238,7 +238,7 @@
 	<para>
 	  <inlinemediaobject>
             <imageobject>
-	      <imagedata fileref="img/wi_login.png"/>
+	      <imagedata fileref="img/wc_login.png"/>
             </imageobject>
             <textobject>
 	      <phrase>Web Client login</phrase>
@@ -256,7 +256,7 @@
 	<para>
 	  <inlinemediaobject>
             <imageobject>
-	      <imagedata fileref="img/wi_loading.png"/>
+	      <imagedata fileref="img/wc_loading.png"/>
             </imageobject>
             <textobject>
 	      <phrase>Session launching</phrase>
@@ -274,7 +274,7 @@
 	<para>
 	  <inlinemediaobject>
             <imageobject>
-	      <imagedata fileref="img/wi_session_desktop_started.png"/>
+	      <imagedata fileref="img/wc_session_desktop_started.png"/>
             </imageobject>
             <textobject>
 	      <phrase>Session launched</phrase>

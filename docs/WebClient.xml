@@ -38,7 +38,7 @@
 
     <screenshot>
 	  <screeninfo>Web Client - Test window</screeninfo>
-	  <graphic fileref="img/wi_test_window.png"></graphic>
+	  <graphic fileref="img/wc_test_window.png"></graphic>
     </screenshot>
 
     <para>
@@ -47,7 +47,7 @@
 
     <screenshot>
 	  <screeninfo>Web Client - Test failed</screeninfo>
-	  <graphic fileref="img/wi_test_failed.png"></graphic>
+	  <graphic fileref="img/wc_test_failed.png"></graphic>
     </screenshot>
 
     <para>
@@ -56,7 +56,7 @@
 
     <screenshot>
 	  <screeninfo>Web Client - Login window</screeninfo>
-	  <graphic fileref="img/wi_login_window.png"></graphic>
+	  <graphic fileref="img/wc_login_window.png"></graphic>
     </screenshot>
 
     <para>
@@ -65,7 +65,7 @@
 
     <screenshot>
 	  <screeninfo>Web Client - Desktop session</screeninfo>
-	  <graphic fileref="img/wi_desktop_session.png"></graphic>
+	  <graphic fileref="img/wc_desktop_session.png"></graphic>
     </screenshot>
   </section>
 
@@ -78,7 +78,7 @@
 
     <screenshot>
 	  <screeninfo>Web Client - Advanced login window</screeninfo>
-	  <graphic fileref="img/wi_advanced_login_window.png"></graphic>
+	  <graphic fileref="img/wc_advanced_login_window.png"></graphic>
     </screenshot>
 
     <para>
@@ -139,7 +139,7 @@
 
     <screenshot>
 	  <screeninfo>Web Client - Session loading</screeninfo>
-	  <graphic fileref="img/wi_session_loading.png"></graphic>
+	  <graphic fileref="img/wc_session_loading.png"></graphic>
     </screenshot>
 
     <para>
@@ -155,7 +155,7 @@
 
       <screenshot>
 	    <screeninfo>Web Client - Desktop session</screeninfo>
-	    <graphic fileref="img/wi_desktop_session.png"></graphic>
+	    <graphic fileref="img/wc_desktop_session.png"></graphic>
       </screenshot>
     </simplesect>
 
@@ -168,7 +168,7 @@
 
       <screenshot>
 	    <screeninfo>Web Client - Portal session</screeninfo>
-	    <graphic fileref="img/wi_portal_session.png"></graphic>
+	    <graphic fileref="img/wc_portal_session.png"></graphic>
       </screenshot>
     </simplesect>
   </section>
@@ -182,7 +182,7 @@
 
     <screenshot>
 	  <screeninfo>Web Client - Session end</screeninfo>
-	  <graphic fileref="img/wi_session_end.png"></graphic>
+	  <graphic fileref="img/wc_session_end.png"></graphic>
     </screenshot>
 
     <para>
