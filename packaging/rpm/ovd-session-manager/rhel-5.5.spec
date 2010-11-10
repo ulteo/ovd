@@ -43,14 +43,12 @@ make DESTDIR=%{buildroot} install
 # install the logrotate example
 mkdir -p %{buildroot}/etc/logrotate.d
 install -m 0644 examples/ulteo-sm.logrotate %{buildroot}/etc/logrotate.d/sessionmanager
-# hack to not provide /usr/bin/php (zypper)
-sed -i -e 's,^#!/usr/bin/php$,#!/usr/bin/php5,' $(find %{buildroot} -name *.php*)
 
 %post -n ulteo-ovd-session-manager
 A2CONFDIR=/etc/apache2/conf.d
 CONFDIR=/etc/ulteo/sessionmanager
 
-A2USER=wwwrun
+A2USER=apache
 
 a2enmod php5 > /dev/null
 
@@ -136,9 +134,9 @@ rm -rf %{buildroot}
 %config /etc/ulteo/sessionmanager/*.conf
 %config /etc/ulteo/sessionmanager/sessionmanager.cron
 %config /etc/logrotate.d/sessionmanager
-%defattr(0660,wwwrun,www)
+%defattr(0660,apache,apache)
 %config /etc/ulteo/sessionmanager/config.inc.php
-%defattr(2770,wwwrun,www)
+%defattr(2770,apache,apache)
 /var/*
 
 %changelog -n ulteo-ovd-session-manager
