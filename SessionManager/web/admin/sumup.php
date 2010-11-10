@@ -52,7 +52,7 @@ else{
 	if (count($us) > 0){
 		echo '<table id="users_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
 		echo '<tr class="title">';
-		echo '<th>'._('login').'</th><td>'._('name').'</th><th>'._('in this user group').'</th><th>'._('in this application group').'</th><th>'._('access to these applications').'</th><th>'._('access to these network folders').'</th>';
+		echo '<th>'._('login').'</th><th>'._('name').'</th><th>'._('in this user group').'</th><th>'._('in this application group').'</th><th>'._('access to these applications').'</th><th>'._('access to these network folders').'</th>';
 // 		<th>'._('Desktop File').'</th>
 		echo '<th>'._('Available servers').'</th>';
 		echo '</tr>';
