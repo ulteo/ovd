@@ -59,8 +59,9 @@ fi
 
 %postun -n ulteo-ovd-web-client
 A2CONFDIR=/etc/apache2/conf.d
-if [ -e $A2CONFDIR/webclient ]; then
-    rm -f $A2CONFDIR/webclient
+
+if [ -e $A2CONFDIR/webclient.conf ]; then
+    rm -f $A2CONFDIR/webclient.conf
     if apache2ctl configtest 2>/dev/null; then
         service apache2 reload || true
     else
