@@ -6,8 +6,8 @@
 # maybe not the good folder ! or remove it ?
 
 Summary:       Extension to create and modify images using ImageMagick
-Name:          php5-%{pecl_name}
-Version:       3.0.0
+Name:          php-%{pecl_name}
+Version:       3.0.1RC2
 Release:       1
 License:       PHP
 Group:         Development/Languages
@@ -17,7 +17,7 @@ Distribution:  RHEL 5.5
 
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php5-devel >= 5.1.3, php5-pear, ImageMagick-devel >= 6.2.4
+BuildRequires: php-devel >= 5.1.3, php-pear, ImageMagick-devel >= 6.2.4
 
 %if %{?php_zend_api}0
 Requires:      php(zend-abi) = %{php_zend_api}
@@ -88,7 +88,7 @@ fi
 %config(noreplace) %{_sysconfdir}/php.d/%{name}.ini
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
-/usr/include/php5/ext/imagick/*.h
+/usr/include/php/ext/imagick/*.h
 
 %changelog
 * Tue Sep 02 2010 Samuel Bovee <samuel@ulteo.com> 3.0.0-1
