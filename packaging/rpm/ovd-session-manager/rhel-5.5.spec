@@ -45,12 +45,10 @@ mkdir -p %{buildroot}/etc/logrotate.d
 install -m 0644 examples/ulteo-sm.logrotate %{buildroot}/etc/logrotate.d/sessionmanager
 
 %post -n ulteo-ovd-session-manager
-A2CONFDIR=/etc/apache2/conf.d
+A2CONFDIR=/etc/httpd/conf.d
 CONFDIR=/etc/ulteo/sessionmanager
 
 A2USER=apache
-
-a2enmod php5 > /dev/null
 
 # VHost server config
 if [ ! -e $A2CONFDIR/sessionmanager-vhost-server.conf ]; then
@@ -72,8 +70,6 @@ if [ ! -e $A2CONFDIR/sessionmanager-vhost-ssl.conf ]; then
         $CONFDIR/apache2-vhost-ssl.conf
     ln -sfT $CONFDIR/apache2-vhost-ssl.conf \
         $A2CONFDIR/sessionmanager-vhost-ssl.conf
-    a2enflag SSL > /dev/null
-    a2enmod ssl > /dev/null
 fi
 
 # SSL self-signed key generation
@@ -89,8 +85,8 @@ then
 fi
 
 # restart apache server
-if apache2ctl configtest 2>/dev/null; then
-    service apache2 restart || true
+if apachectl configtest 2>/dev/null; then
+    /etc/init.d/httpd restart || true
 else
     echo << EOF
 "Apache configuration error after enable OVD virtual hosts. Please remove your
@@ -107,7 +103,7 @@ ln -sfT $CONFDIR/sessionmanager.cron /etc/cron.d/sessionmanager
 
 %postun -n ulteo-ovd-session-manager
 if [ "$1" = "0" ]; then
-    A2CONFDIR=/etc/apache2/conf.d
+    A2CONFDIR=/etc/httpd/conf.d
     CONFDIR=/etc/ulteo/sessionmanager
     rm -f $A2CONFDIR/sessionmanager-vhost-server.conf \
           $A2CONFDIR/sessionmanager-vhost-ssl.conf \
@@ -118,7 +114,7 @@ if [ "$1" = "0" ]; then
            /var/cache/ulteo/sessionmanager \
            /var/log/ulteo/sessionmanager
 
-    if apache2ctl configtest 2>/dev/null; then
+    if apachectl configtest 2>/dev/null; then
         service apache2 restart || true
     else
         echo "Apache configuration broken: correct the issue and restart the apache2 server"
