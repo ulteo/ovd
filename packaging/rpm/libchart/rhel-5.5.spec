@@ -26,7 +26,7 @@ Summary: Simple PHP chart drawing library
 Group: Applications/web
 Requires: php, php-gd
 
-%description -n php5-libchart
+%description -n php-libchart
 Libchart is a free chart creation PHP library, that is easy to use.
 
 %prep -n php-libchart
