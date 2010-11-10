@@ -96,10 +96,8 @@ Requires: ulteo-ovd-web-client
 %description -n ulteo-ovd-web-client-ajaxplorer
 This is a web based client for Ulteo OVD.
 
-%post -n ulteo-ovd-web-client-ajaxplorer
-AJAXPLORERDIR=/usr/share/ulteo/webclient/ajaxplorer
-chown wwwrun:wwwrun $AJAXPLORERDIR/server/logs
-
 %files -n ulteo-ovd-web-client-ajaxplorer
 %defattr(-,root,root)
 /usr/share/ulteo/webclient/ajaxplorer
+%defattr(-,wwwrun,www)
+/usr/share/ulteo/webclient/ajaxplorer/server/logs
