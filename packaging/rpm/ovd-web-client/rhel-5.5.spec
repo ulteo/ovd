@@ -40,15 +40,13 @@ make DESTDIR=$RPM_BUILD_ROOT install
 cp -a ajaxplorer $RPM_BUILD_ROOT/usr/share/ulteo/webclient
 
 %post -n ulteo-ovd-web-client
-A2CONFDIR=/etc/apache2/conf.d
+A2CONFDIR=/etc/httpd/conf.d
 CONFDIR=/etc/ulteo/webclient
-
-a2enmod php5 > /dev/null
 
 if [ ! -e $A2CONFDIR/webclient.conf ]; then
     ln -sf $CONFDIR/apache2.conf $A2CONFDIR/webclient.conf
-    if apache2ctl configtest 2>/dev/null; then
-        service apache2 reload || true
+    if apachectl configtest 2>/dev/null; then
+        /etc/init.d/httpd reload || true
     else
         echo << EOF
 "Your apache configuration is broken!
@@ -58,12 +56,12 @@ EOF
 fi
 
 %postun -n ulteo-ovd-web-client
-A2CONFDIR=/etc/apache2/conf.d
+A2CONFDIR=/etc/httpd/conf.d
 
 if [ -e $A2CONFDIR/webclient.conf ]; then
     rm -f $A2CONFDIR/webclient.conf
-    if apache2ctl configtest 2>/dev/null; then
-        service apache2 reload || true
+    if apachectl configtest 2>/dev/null; then
+        /etc/init.d/httpd reload || true
     else
         echo << EOF
 "Your apache configuration is broken!
