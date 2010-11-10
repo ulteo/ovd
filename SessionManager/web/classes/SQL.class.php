@@ -123,6 +123,8 @@ class SQL {
 		}
 
 		$this->statement = $this->pdo->prepare($query);
+		if (! is_object($this->statement))
+			die_error('<strong>Error:</strong><br />Unable to PDO::prepare()<br />Query: '.$query,__FILE__,__LINE__);
 
 		$result = $this->statement->execute();
 		if (! $result) {
