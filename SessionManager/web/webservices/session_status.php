@@ -57,6 +57,7 @@ function parse_session_status_XML($xml_) {
 
 	$ret = array(
 		'id'		=>	$node->getAttribute('id'),
+		'server'	=>	$_SERVER['REMOTE_ADDR'],
 		'status'	=>	$node->getAttribute('status'),
 		'reason'	=>	NULL
 	);
@@ -79,8 +80,7 @@ if (! $session) {
 	die();
 }
 
-if ($session->setStatus($ret['status'], $ret['reason']))
-	Abstract_Session::save($session);
+$session->setServerStatus($ret['server'], $ret['status']);
 
 header('Content-Type: text/xml; charset=utf-8');
 $dom = new DomDocument('1.0', 'utf-8');

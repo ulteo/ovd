@@ -55,8 +55,18 @@ if (isset($_GET['info'])) {
 
 	echo '<ul>';
 	echo '<li><strong>'._('Servers:').'</strong><ul>';
-	foreach ($session->getAttribute('servers') as $server)
-		echo '<li><a href="servers.php?action=manage&fqdn='.$server.'">'.$server.'</a></li>';
+	foreach ($session->getAttribute('servers') as $role => $servers) {
+		echo '<li>'.$role.'</li>';
+		echo '<ul>';
+		foreach ($servers as $fqdn => $data) {
+			echo '<li>';
+			echo '<a href="servers.php?action=manage&fqdn='.$fqdn.'">'.$fqdn.'</a>';
+			if ($role == Server::SERVER_ROLE_APS)
+				echo ' (<span class="msg_'.Session::colorStatus($data['status']).'">'.Session::textStatus($data['status']).'</span>)';
+			echo '</li>';
+		}
+		echo '</ul>';
+	}
 	echo '</ul></li>';
 	echo '<li><strong>'._('User:').'</strong> <a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</a></li>';
 	echo '<li><strong>'._('Type:').'</strong> ';
@@ -169,8 +179,13 @@ else {
 				echo '		<td><input class="input_checkbox" type="checkbox" name="selected_session[]" value="'.$session->id.'" /></td>';
 			echo '		<td><a href="sessions.php?info='.$session->id.'">'.$session->id.'</td>';
 			echo '		<td><ul>';
-			foreach ($session->getAttribute('servers') as $server)
-				echo '<li><a href="servers.php?action=manage&fqdn='.$server.'">'.$server.'</a></li>';
+			foreach ($session->getAttribute('servers') as $role => $servers) {
+				echo '<li>'.$role.'</li>';
+				echo '<ul>';
+				foreach ($servers as $fqdn => $data)
+					echo '<li><a href="servers.php?action=manage&fqdn='.$fqdn.'">'.$fqdn.'</a></li>';
+				echo '</ul>';
+			}
 			echo '		</ul></td>';
 			echo '		<td><a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</td>';
 			echo '		<td>'.$session->stringStatus().'</td>';

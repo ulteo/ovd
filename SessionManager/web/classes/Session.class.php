@@ -30,6 +30,7 @@ class Session {
 	const SESSION_STATUS_ACTIVE = "logged";
 	const SESSION_STATUS_INACTIVE = "disconnected";
 	const SESSION_STATUS_WAIT_DESTROY = "wait_destroy";
+	const SESSION_STATUS_DESTROYING = "destroying";
 	const SESSION_STATUS_DESTROYED = "destroyed";
 
 	const SESSION_END_STATUS_LOGOUT = "logout";
@@ -128,6 +129,99 @@ class Session {
 		return $ret;
 	}
 
+	public function setServerStatus($server_, $status_) {
+		$states = array(
+			Session::SESSION_STATUS_CREATED			=>	0,
+			Session::SESSION_STATUS_INIT			=>	1,
+			Session::SESSION_STATUS_READY			=>	2,
+			Session::SESSION_STATUS_ACTIVE			=>	3,
+			Session::SESSION_STATUS_INACTIVE		=>	4,
+			Session::SESSION_STATUS_WAIT_DESTROY	=>	5,
+			Session::SESSION_STATUS_DESTROYING		=>	6,
+			Session::SESSION_STATUS_DESTROYED		=>	7,
+			Session::SESSION_STATUS_ERROR			=>	8,
+			Session::SESSION_STATUS_UNKNOWN			=>	9
+		);
+
+		if (! array_key_exists($server_, $this->servers[Server::SERVER_ROLE_APS]))
+			return false; // no such Server
+
+		$current_status = $this->servers[Server::SERVER_ROLE_APS][$server_]['status'];
+
+		if ($status_ == $current_status)
+			return false; // status is already the same...
+
+		if (array_key_exists($status_, $states) && array_key_exists($current_status, $states)) {
+			if ($states[$status_] < $states[$current_status])
+				return false; // avoid switching Session to a previous status...
+		}
+
+		Logger::debug('main', 'Starting Session::setServerStatus for \''.$this->id.'\'');
+
+		Logger::debug('main', 'Status set to "'.$status_.'" ('.$this->textStatus($status_).') for server \''.$server_.'\' on session \''.$this->id.'\'');
+		$this->servers[Server::SERVER_ROLE_APS][$server_]['status'] = $status_;
+		Abstract_Session::save($this);
+
+		switch ($status_) {
+			case Session::SESSION_STATUS_INIT:
+				Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - Server "'.$server_.'" is now "'.$status_.'", switching Session status to "'.$status_.'"');
+				$this->setStatus(Session::SESSION_STATUS_INIT);
+				break;
+			case Session::SESSION_STATUS_READY:
+				$all_ready = true;
+				foreach ($this->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
+					if ($fqdn != $server_ && $data['status'] != Session::SESSION_STATUS_READY) {
+						$all_ready = false;
+						break;
+					}
+				}
+				if ($all_ready) {
+					Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - All servers are "'.$status_.'", switching Session status to "'.$status_.'"');
+					$this->setStatus(Session::SESSION_STATUS_READY);
+				}
+				break;
+			case Session::SESSION_STATUS_ACTIVE:
+				Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - Server "'.$server_.'" is now "'.$status_.'", switching Session status to "'.$status_.'"');
+				$this->setStatus(Session::SESSION_STATUS_ACTIVE);
+				break;
+			case Session::SESSION_STATUS_INACTIVE:
+				Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - Server "'.$server_.'" is now "'.$status_.'", switching Session status to "'.$status_.'"');
+				$this->setStatus(Session::SESSION_STATUS_INACTIVE);
+				break;
+			case Session::SESSION_STATUS_WAIT_DESTROY:
+				Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - Server "'.$server_.'" is now "'.$status_.'", switching Session status to "'.$status_.'"');
+				$this->setStatus(Session::SESSION_STATUS_WAIT_DESTROY);
+				break;
+			case Session::SESSION_STATUS_DESTROYING:
+				Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - Server "'.$server_.'" is now "'.$status_.'", switching Session status to "'.$status_.'"');
+				$this->setStatus(Session::SESSION_STATUS_DESTROYING);
+				break;
+			case Session::SESSION_STATUS_DESTROYED:
+				$all_destroyed = true;
+				foreach ($this->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
+					if ($fqdn != $server_ && $data['status'] != Session::SESSION_STATUS_DESTROYED) {
+						$all_destroyed = false;
+						break;
+					}
+				}
+				if ($all_destroyed) {
+					Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - All servers are "'.$status_.'", switching Session status to "'.$status_.'"');
+					$this->setStatus(Session::SESSION_STATUS_DESTROYED);
+				}
+				break;
+			case Session::SESSION_STATUS_ERROR:
+				Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - Server "'.$server_.'" is now "'.$status_.'", switching Session status to "'.$status_.'"');
+				$this->setStatus(Session::SESSION_STATUS_WAIT_DESTROY);
+				break;
+			case Session::SESSION_STATUS_UNKNOWN:
+				Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - Server "'.$server_.'" is now "'.$status_.'", switching Session status to "'.$status_.'"');
+				$this->setStatus(Session::SESSION_STATUS_WAIT_DESTROY);
+				break;
+		}
+
+		return true;
+	}
+
 	public function setStatus($status_, $reason_=NULL) {
 		if ($status_ == $this->getAttribute('status'))
 			return false; // status is already the same...
@@ -139,9 +233,10 @@ class Session {
 			Session::SESSION_STATUS_ACTIVE			=>	3,
 			Session::SESSION_STATUS_INACTIVE		=>	4,
 			Session::SESSION_STATUS_WAIT_DESTROY	=>	5,
-			Session::SESSION_STATUS_DESTROYED		=>	6,
-			Session::SESSION_STATUS_ERROR			=>	7,
-			Session::SESSION_STATUS_UNKNOWN			=>	8
+			Session::SESSION_STATUS_DESTROYING		=>	6,
+			Session::SESSION_STATUS_DESTROYED		=>	7,
+			Session::SESSION_STATUS_ERROR			=>	8,
+			Session::SESSION_STATUS_UNKNOWN			=>	9
 		);
 
 		if (array_key_exists($status_, $states) && array_key_exists($this->getAttribute('status'), $states)) {
@@ -181,7 +276,7 @@ class Session {
 
 				return false;
 			}
-		} elseif ($status_ == Session::SESSION_STATUS_DESTROYED || $status_ == Session::SESSION_STATUS_ERROR || $status_ == Session::SESSION_STATUS_UNKNOWN) {
+		} elseif ($status_ == Session::SESSION_STATUS_DESTROYED) {
 			Logger::info('main', 'Session purge : \''.$this->id.'\'');
 
 			if ($status_ == Session::SESSION_STATUS_DESTROYED && ! is_null($reason_)) {
@@ -235,6 +330,9 @@ class Session {
 			case Session::SESSION_STATUS_WAIT_DESTROY:
 				return _('To destroy');
 				break;
+			case Session::SESSION_STATUS_DESTROYING:
+				return _('Destroying');
+				break;
 			case Session::SESSION_STATUS_DESTROYED:
 				return _('Destroyed');
 				break;
@@ -267,6 +365,9 @@ class Session {
 				return 'warn';
 				break;
 			case Session::SESSION_STATUS_WAIT_DESTROY:
+				return 'warn';
+				break;
+			case Session::SESSION_STATUS_DESTROYING:
 				return 'warn';
 				break;
 			case Session::SESSION_STATUS_DESTROYED:
@@ -321,30 +422,27 @@ class Session {
 		Logger::debug('main', 'Starting Session::orderDeletion for \''.$this->id.'\'');
 
 		if ($request_servers_) {
-			foreach ($this->servers as $server) {
-				$session_server = Abstract_Server::load($server);
+			foreach ($this->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
+				$session_server = Abstract_Server::load($fqdn);
 				if (! $session_server) {
-					Logger::error('main', 'Session::orderDeletion Unable to load server \''.$server.'\'');
+					Logger::error('main', 'Session::orderDeletion Unable to load server \''.$fqdn.'\'');
 					return false;
 				}
 
 				if (is_array($session_server->roles)) {
 					if (array_key_exists(Server::SERVER_ROLE_APS, $session_server->roles)) {
 						$buf = $session_server->orderSessionDeletion($this->id);
-						if (! $buf)
-							Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on server \''.$server.'\'');
+						if (! $buf) {
+							Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on server \''.$fqdn.'\'');
+							$this->setServerStatus($fqdn, Session::SESSION_STATUS_DESTROYED);
+						} else
+							$this->setServerStatus($fqdn, Session::SESSION_STATUS_DESTROYING);
 					}
-
-					/*if (array_key_exists(Server::SERVER_ROLE_FS, $session_server->roles)) {
-						$buf = $session_server->orderFSAccessDisable($this->settings['fs_access_login']);
-						if (! $buf)
-							Logger::warning('main', 'Session::orderDeletion User \''.$this->settings['fs_access_login'].'\' already logged out of server \''.$server.'\'');
-					}*/
 				}
 			}
 		}
 
-		$this->setStatus(Session::SESSION_STATUS_DESTROYED, $reason_);
+		$this->setStatus(Session::SESSION_STATUS_DESTROYING, $reason_);
 
 		return true;
 	}

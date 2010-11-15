@@ -268,11 +268,15 @@ if (isset($old_session_id)) {
 
 	Logger::info('main', '(startsession) Resuming session for '.$user->getAttribute('login').' ('.$old_session_id.' => '.$session->server.')');
 } else {
+	$servers = array();
+
 	$user_login_aps = 'u'.time().gen_string(5).'_APS'; //hardcoded
 	$user_password_aps = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+	$servers[Server::SERVER_ROLE_APS] = array();
 	if ((isset($enable_profiles) && $enable_profiles == 1) || (isset($enable_sharedfolders) && $enable_sharedfolders == 1)) {
 		$user_login_fs = 'u'.time().gen_string(6).'_FS'; //hardcoded
 		$user_password_fs = $user_password_aps;
+		$servers[Server::SERVER_ROLE_FS] = array();
 	}
 
 	$buf_servers = $user->getAvailableServers();
@@ -284,20 +288,22 @@ if (isset($old_session_id)) {
 		throw_response(SERVICE_NOT_AVAILABLE);
 	}
 
-	$servers = array();
-	foreach ($buf_servers as $buf_server)
-		$servers[] = $buf_server->fqdn;
+	foreach ($buf_servers as $buf_server) {
+		$servers[Server::SERVER_ROLE_APS][$buf_server->fqdn] = array(
+			'status' => Session::SESSION_STATUS_CREATED
+		);
+	}
 	$random_server = false;
 	if ($session_mode == Session::MODE_DESKTOP && (isset($remote_desktop_settings) && array_key_exists('desktop_type', $remote_desktop_settings))) {
 		switch ($remote_desktop_settings['desktop_type']) {
 			case 'linux':
-				foreach ($servers as $k => $server) {
-					$server = Abstract_Server::load($server);
+				foreach ($servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
+					$server = Abstract_Server::load($fqdn);
 					if (! $server)
 						continue;
 
 					if ($server->getAttribute('type') == 'linux') {
-						$random_server = $servers[$k];
+						$random_server = $fqdn;
 						break;
 					}
 				}
@@ -307,13 +313,13 @@ if (isset($old_session_id)) {
 				}
 				break;
 			case 'windows':
-				foreach ($servers as $k => $server) {
-					$server = Abstract_Server::load($server);
+				foreach ($servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
+					$server = Abstract_Server::load($fqdn);
 					if (! $server)
 						continue;
 
 					if ($server->getAttribute('type') == 'windows') {
-						$random_server = $servers[$k];
+						$random_server = $fqdn;
 						break;
 					}
 				}
@@ -324,11 +330,11 @@ if (isset($old_session_id)) {
 				break;
 			case 'any':
 			default:
-				$random_server = $servers[0];
+				$random_server = array_rand($servers[Server::SERVER_ROLE_APS]);
 				break;
 		}
 	} else
-		$random_server = $servers[0];
+		$random_server = array_rand($servers[Server::SERVER_ROLE_APS]);
 
 	if (isset($enable_profiles) && $enable_profiles == 1) {
 		$fileservers = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_FS);
@@ -354,7 +360,7 @@ if (isset($old_session_id)) {
 					$profile_server = $netfolder->server;
 					$profile_name = $netfolder->id;
 
-					$servers[] = $profile_server;
+					$servers[Server::SERVER_ROLE_FS][$profile_server] = array();
 				}
 			} else {
 				Logger::debug('main', '(startsession) User "'.$user_login_fs.'" does not have a profile for now, checking for auto-creation');
@@ -382,7 +388,7 @@ if (isset($old_session_id)) {
 					$profile_server = $profile->server;
 					$profile_name = $profile->id;
 
-					$servers[] = $profile_server;
+					$servers[Server::SERVER_ROLE_FS][$profile_server] = array();
 				} else {
 					Logger::debug('main', '(startsession) Auto-creation of profile for User "'.$user_login_fs.'" disabled, checking for session without profile');
 
@@ -435,7 +441,7 @@ if (isset($old_session_id)) {
 
 				$netshares[] = $sharedfolder;
 
-				$servers[] = $sharedfolder->server;
+				$servers[Server::SERVER_ROLE_FS][$sharedfolder->server] = array();
 			}
 
 			if (count($netshares) > 0)
@@ -454,7 +460,7 @@ if (isset($old_session_id)) {
 	$session->status = Session::SESSION_STATUS_CREATED;
 	$session->user_login = $user->getAttribute('login');
 	$session->user_displayname = $user->getAttribute('displayname');
-	$session->servers = array_unique($servers);
+	$session->servers = $servers;
 
 	$ret = true;
 
@@ -695,8 +701,8 @@ if (! isset($old_session_id)) {
 	}
 
 	if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1)) {
-		foreach ($session->servers as $server) {
-			$server = Abstract_Server::load($server);
+		foreach ($session->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
+			$server = Abstract_Server::load($fqdn);
 			if (! $server)
 				continue;
 
@@ -903,8 +909,8 @@ if ($session->mode == Session::MODE_DESKTOP) {
 	$session_node->appendChild($server_node);
 } elseif ($session->mode == Session::MODE_APPLICATIONS) {
 	$defined_apps = array();
-	foreach ($session->servers as $server) {
-		$server = Abstract_Server::load($server);
+	foreach ($session->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
+		$server = Abstract_Server::load($fqdn);
 		if (! $server)
 			continue;
 

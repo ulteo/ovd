@@ -100,6 +100,7 @@ function parse_monitoring_XML($xml_) {
 				foreach ($session_nodes as $session_node) {
 					$ret['sessions'][$session_node->getAttribute('id')] = array(
 						'id'		=>	$session_node->getAttribute('id'),
+						'server'	=>	$_SERVER['REMOTE_ADDR'],
 						'status'	=>	$session_node->getAttribute('status'),
 						'instances'	=>	array()
 					);
@@ -199,7 +200,10 @@ if (array_key_exists('sessions', $ret) && is_array($ret['sessions'])) {
 
 		$modified = false;
 
-		if ($session['status'] != $buf->getAttribute('status')) {
+		if (! array_key_exists($session['server'], $buf->servers[Server::SERVER_ROLE_APS]))
+			continue;
+
+		if ($session['status'] != $buf->servers[Server::SERVER_ROLE_APS][$session['server']]['status']) {
 			$modified = true;
 			$buf->setStatus($session['status']);
 		}
