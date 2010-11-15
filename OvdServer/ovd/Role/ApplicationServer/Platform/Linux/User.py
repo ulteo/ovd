@@ -2,6 +2,7 @@
 
 # Copyright (C) 2010 Ulteo SAS
 # http://www.ulteo.com
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -19,6 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import commands
+import locale
 import pwd
 import xrdp
 
@@ -28,18 +30,18 @@ from ovd.Role.ApplicationServer.User import User as AbstractUser
 
 class User(AbstractUser):
 	def create(self):
-		cmd = "useradd -m -k /dev/null"
+		cmd = u"useradd -m -k /dev/null"
 		if self.infos.has_key("displayName"):
-			cmd+= " --comment '%s,,,'"%(self.infos["displayName"])
+			cmd+= u" --comment '%s,,,'"%(self.infos["displayName"])
 		
 		groups = ["video", "audio", "pulse", "pulse-access", "fuse"]
 		if self.infos.has_key("groups"):
 			groups+= self.infos["groups"]
-		cmd+= " --groups %s"%(",".join(groups))
+		cmd+= u" --groups %s"%(",".join(groups))
 		
-		cmd+= " "+self.name
+		cmd+= u" "+self.name
 		
-		s,o = commands.getstatusoutput(cmd)
+		s,o = commands.getstatusoutput(cmd.encode(locale.getpreferredencoding()))
 		if s != 0:
 			Logger.error("userAdd return %d (%s)"%(s, o))
 			return False
