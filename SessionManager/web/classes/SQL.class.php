@@ -122,6 +122,9 @@ class SQL {
 	}
 
 	private function CleanValue($value_) {
+		if (! is_string($value_))
+			return $value_;
+
 		$this->CheckLink();
 
 		if (get_magic_quotes_gpc())
