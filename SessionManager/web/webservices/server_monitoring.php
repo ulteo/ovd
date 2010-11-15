@@ -205,7 +205,7 @@ if (array_key_exists('sessions', $ret) && is_array($ret['sessions'])) {
 
 		if ($session['status'] != $buf->servers[Server::SERVER_ROLE_APS][$session['server']]['status']) {
 			$modified = true;
-			$buf->setStatus($session['status']);
+			$buf->setServerStatus($session['server'], $session['status']);
 		}
 
 		if ($session['status'] == Session::SESSION_STATUS_ACTIVE) {
