@@ -111,22 +111,25 @@ class Session {
 
 		Logger::debug('main', 'Starting Session::getStatus for \''.$this->id.'\'');
 
-		$server = Abstract_Server::load($this->server);
-		if (! $server) {
-			Logger::error('main', 'Session::getStatus failed to load server (server='.$this->server.')');
-			return false;
+		foreach ($this->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
+			$server = Abstract_Server::load($fqdn);
+			if (! $server) {
+				Logger::error('main', 'Session::getStatus failed to load server (server='.$fqdn.')');
+				$this->setServerStatus($fqdn, Session::SESSION_STATUS_ERROR);
+				continue;
+			}
+
+			$ret = $server->getSessionStatus($this->id);
+			if (! $ret) {
+				Logger::error('main', 'Session::getStatus('.$this->id.') - ApS answer is incorrect');
+				$this->setServerStatus($fqdn, Session::SESSION_STATUS_ERROR);
+				continue;
+			}
+
+			$this->setServerStatus($fqdn, $ret);
 		}
 
-		$ret = $server->getSessionStatus($this->id);
-		if (! $ret) {
-			Logger::error('main', 'Session::getStatus('.$this->id.') - ApS answer is incorrect');
-			return false;
-		}
-
-		if ($ret != $this->getAttribute('status'))
-			$this->setStatus($ret);
-
-		return $ret;
+		return $this->getAttribute('status');
 	}
 
 	public function setServerStatus($server_, $status_) {
