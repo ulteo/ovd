@@ -970,11 +970,23 @@ class Server {
 		if (! $ret)
 			return false;
 
-		if (! $ret || $ret == '')
-			return false;
-
 		if (! check_folder(CACHE_DIR.'/image') || ! check_folder(CACHE_DIR.'/image/application'))
 			return false;
+
+		$imgfile = tempnam(NULL, 'ico');
+		@file_put_contents($imgfile, $ret);
+
+		try {
+			$imagick = new Imagick();
+			$imagick->readImage($imgfile);
+		} catch (Exception $e) {
+			Logger::error('main', 'Server::getApplicationIcon('.$id_.') - Content received is not an image');
+			Logger::debug('main', 'Server::getApplicationIcon('.$id_.') - Content received : '.$ret);
+			return false;
+		}
+
+		if (file_exists($imgfile))
+			@unlink($imgfile);
 
 		@file_put_contents(CACHE_DIR.'/image/application/'.$id_.'.png', $ret);
 
