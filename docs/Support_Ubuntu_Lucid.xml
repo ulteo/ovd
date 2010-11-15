@@ -108,7 +108,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
         In this document, we are using
         <emphasis>sm.ulteo.com</emphasis> for the Session Manager
         address, <emphasis>aps.ulteo.com</emphasis> for the
-        Application Server and <emphasis>wi.ulteo.com</emphasis> for
+        Application Server and <emphasis>wc.ulteo.com</emphasis> for
         the Web Client.
       </para>
       

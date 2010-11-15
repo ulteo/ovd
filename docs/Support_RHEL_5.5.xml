@@ -25,6 +25,8 @@
       All operation have to be done as super user (root).
     </para>
 
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="warning_name_examples" />
+
     <simplesect>
       <title id="repository_title">Repository</title>
 
@@ -34,36 +36,18 @@
         RPM repository into your system.
       </para>
 
-      <itemizedlist>
-        <listitem id="repo_step_1">
-          <para>
-            The first step is to configure yum to enable the Ulteo rpm repository.
-            Create the file <emphasis>/etc/yum.repos.d/ovd.repo</emphasis> with:</para>
-            <screen><![CDATA[
+      <para>
+        The first step is to configure yum to enable the Ulteo rpm repository.
+        Create the file <emphasis>/etc/yum.repos.d/ovd.repo</emphasis> with:</para>
+        <screen><![CDATA[
 [ovd-3.0]
 name=Ulteo OVD 3.0
 baseurl=http://archive.ulteo.com/ovd/3.0/rhel/5.5/
 enabled=1
 gpgcheck=1
-gpgkey=http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key]]>
-            </screen>
-        </listitem>
-
-        <listitem id="repo_step_2">
-          <para>
-            Install the keyring package to validate the repository
-            using gpg:
-          </para>
-          <screen>
-            <![CDATA[
-# rpm --import http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key]]>
-          </screen>
-        </listitem>
-
-      </itemizedlist>
+gpgkey=http://archive.ulteo.com/ovd/keyring]]>
+        </screen>
     </simplesect>
-
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="warning_name_examples" />
 
     <simplesect id="seLinux">
       <title>SELinux</title>
@@ -78,6 +62,7 @@ gpgkey=http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key]]>
 # yum remove selinux-policy]]>
       </screen>
     </simplesect>
+
   </section>
 
   <section id="sm">
@@ -115,7 +100,7 @@ gpgkey=http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key]]>
 	  </para>
 	  <screen>
 	    <![CDATA[
-# service mysql start]]>
+# service mysqld start]]>
 	  </screen>
 	</listitem>
 
