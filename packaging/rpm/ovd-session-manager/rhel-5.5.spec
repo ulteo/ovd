@@ -54,7 +54,6 @@ A2USER=apache
 if [ ! -e $A2CONFDIR/sessionmanager-vhost-server.conf ]; then
     ln -sfT $CONFDIR/apache2-vhost-server.conf \
         $A2CONFDIR/sessionmanager-vhost-server.conf
-    a2enmod rewrite >/dev/null
 fi
 
 # Alias admin
