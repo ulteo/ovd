@@ -152,7 +152,7 @@ class SQL {
 
 		$this->total_queries += 1;
 
-		return $this->result;
+		return true;
 	}
 
 	public function FetchResult() {
