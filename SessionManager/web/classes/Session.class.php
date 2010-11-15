@@ -142,8 +142,8 @@ class Session {
 			Session::SESSION_STATUS_WAIT_DESTROY	=>	5,
 			Session::SESSION_STATUS_DESTROYING		=>	6,
 			Session::SESSION_STATUS_DESTROYED		=>	7,
-			Session::SESSION_STATUS_ERROR			=>	8,
-			Session::SESSION_STATUS_UNKNOWN			=>	9
+			Session::SESSION_STATUS_ERROR			=>	7,
+			Session::SESSION_STATUS_UNKNOWN			=>	7
 		);
 
 		if (! array_key_exists($server_, $this->servers[Server::SERVER_ROLE_APS]))
@@ -238,8 +238,8 @@ class Session {
 			Session::SESSION_STATUS_WAIT_DESTROY	=>	5,
 			Session::SESSION_STATUS_DESTROYING		=>	6,
 			Session::SESSION_STATUS_DESTROYED		=>	7,
-			Session::SESSION_STATUS_ERROR			=>	8,
-			Session::SESSION_STATUS_UNKNOWN			=>	9
+			Session::SESSION_STATUS_ERROR			=>	7,
+			Session::SESSION_STATUS_UNKNOWN			=>	7
 		);
 
 		if (array_key_exists($status_, $states) && array_key_exists($this->getAttribute('status'), $states)) {
@@ -424,6 +424,9 @@ class Session {
 	public function orderDeletion($request_servers_=true, $reason_=NULL) {
 		Logger::debug('main', 'Starting Session::orderDeletion for \''.$this->id.'\'');
 
+		$total = count($this->servers[Server::SERVER_ROLE_APS]);
+		$destroyed = 0;
+
 		if ($request_servers_) {
 			foreach ($this->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
 				$session_server = Abstract_Server::load($fqdn);
@@ -438,6 +441,7 @@ class Session {
 						if (! $buf) {
 							Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on server \''.$fqdn.'\'');
 							$this->setServerStatus($fqdn, Session::SESSION_STATUS_DESTROYED);
+							$destroyed++;
 						} else
 							$this->setServerStatus($fqdn, Session::SESSION_STATUS_DESTROYING);
 					}
@@ -445,7 +449,10 @@ class Session {
 			}
 		}
 
-		$this->setStatus(Session::SESSION_STATUS_DESTROYING, $reason_);
+		if ($destroyed == $total)
+			$this->setStatus(Session::SESSION_STATUS_DESTROYED, $reason_);
+		else
+			$this->setStatus(Session::SESSION_STATUS_DESTROYING, $reason_);
 
 		return true;
 	}
