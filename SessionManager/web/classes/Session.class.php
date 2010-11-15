@@ -282,6 +282,24 @@ class Session {
 		} elseif ($status_ == Session::SESSION_STATUS_DESTROYED) {
 			Logger::info('main', 'Session purge : \''.$this->id.'\'');
 
+			if (array_key_exists(Server::SERVER_ROLE_FS, $this->servers)) {
+				foreach ($this->servers[Server::SERVER_ROLE_FS] as $fqdn => $data) {
+					$session_server = Abstract_Server::load($fqdn);
+					if (! $session_server) {
+						Logger::error('main', 'Session::orderDeletion Unable to load server \''.$fqdn.'\'');
+						return false;
+					}
+
+					if (is_array($session_server->roles)) {
+						if (array_key_exists(Server::SERVER_ROLE_FS, $session_server->roles)) {
+							$buf = $session_server->orderFSAccessDisable($this->settings['fs_access_login']);
+							if (! $buf)
+								Logger::warning('main', 'Session::orderDeletion User \''.$this->settings['fs_access_login'].'\' already logged out of server \''.$fqdn.'\'');
+						}
+					}
+				}
+			}
+
 			if ($status_ == Session::SESSION_STATUS_DESTROYED && ! is_null($reason_)) {
 				$report_session = Abstract_ReportSession::load($this->id);
 				if (is_object($report_session)) {
