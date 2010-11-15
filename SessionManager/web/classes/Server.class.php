@@ -649,7 +649,7 @@ class Server {
 		if (! $node->hasAttribute('status'))
 			return false;
 
-		if ($node->getAttribute('status') != 'destroying')
+		if ($node->getAttribute('status') != 'wait_destroy')
 			return false;
 
 		return true;
