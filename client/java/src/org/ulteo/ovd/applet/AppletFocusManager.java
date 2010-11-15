@@ -20,34 +20,52 @@
 package org.ulteo.ovd.applet;
 
 import java.awt.Component;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.ulteo.ovd.printer.OVDPrinterThread;
 import org.ulteo.utils.AbstractFocusManager;
 
 public class AppletFocusManager implements AbstractFocusManager{
 	private OVDPrinterThread printerThread = null;
+
+	public class FocusTask extends TimerTask {
+		private Component component;
+		private long taskCount = 10;
+		
+		public FocusTask(Component c) {
+			this.component = c;
+		}
 	
+		public void run() {
+			this.component.requestFocusInWindow();
+			this.component.requestFocus();
+
+			if (this.taskCount == 0)
+			{
+				this.cancel();
+				return;
+			}
+			taskCount--;
+		}
+	}
+
 	public AppletFocusManager(OVDPrinterThread pt) {
 		this.printerThread = pt;
 	}
 
 	@Override
-	public void performedFocusGain(Component component) { }
+	public void performedFocusGain(Component component) { 
+	}
 
 	@Override
 	public void performedFocusLost(Component component) {
 		if (component == null) {
 			return;
 		}
-		if (this.printerThread == null) {
-			return;
-		}
-		int state = this.printerThread.getState(); 
-		if (state == OVDPrinterThread.PRINTER_THREAD_STATE_LOADING) {
-			if (component != null) {
-				component.requestFocus();
-				component.requestFocusInWindow();
-			}			
+		if (this.printerThread != null && this.printerThread.hasFocus()) {
+			Timer timer = new Timer();
+			timer.schedule(new FocusTask(component), 0, 500);
 		}
 	}
 }

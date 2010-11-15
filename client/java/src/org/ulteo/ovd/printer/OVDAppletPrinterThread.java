@@ -39,7 +39,6 @@ public class OVDAppletPrinterThread implements OVDPrinterThread {
 	private AppletContext appletContext;
 	private String printerAppletName = "PrinterApplet";
 	private String spoolPath = "";
-	private int state = OVDPrinterThread.PRINTER_THREAD_STATE_UNLOADED;
 	
 	
 	
@@ -102,21 +101,12 @@ public class OVDAppletPrinterThread implements OVDPrinterThread {
 	}
 
 	@Override
-	public int getState() {
-		if (this.state == OVDPrinterThread.PRINTER_THREAD_STATE_LOADED) {
-			return state;
-		}
-		if (this.state == OVDPrinterThread.PRINTER_THREAD_STATE_LOADING) {
-			state = OVDPrinterThread.PRINTER_THREAD_STATE_LOADED;
-			return state;
-		}
-		
+	public boolean hasFocus() {
 		Applet printer = null;
 		printer = appletContext.getApplet(printerAppletName);
 		if (printer != null) {
-			state = OVDPrinterThread.PRINTER_THREAD_STATE_LOADING;
-			return state;
+			return printer.hasFocus();
 		}
-		return OVDPrinterThread.PRINTER_THREAD_STATE_UNLOADED;
+		return false;
 	}
 }

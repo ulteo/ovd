@@ -38,7 +38,6 @@ import org.ulteo.Logger;
 import org.ulteo.ovd.FullscreenWindow;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDAppletPrinterThread;
-import org.ulteo.ovd.printer.OVDPrinterThread;
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 import org.ulteo.utils.AbstractFocusManager;
@@ -169,6 +168,7 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 			return;
 		this.started_stop = true;
 		System.out.println(this.getClass().toString()+" stop");
+		this.focusManager = null;
 
 		if (this.rc != null) {
 			try {
@@ -343,19 +343,15 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 
 	@Override
 	public void focusGained(FocusEvent e) {
-		if (this.focusManager != null) {
-			if (this.rc != null) {
-				this.focusManager.performedFocusGain(this.rc.getCanvas());
-			}
+		if (this.focusManager != null && this.rc != null && !this.started_stop) {
+			this.focusManager.performedFocusGain(this.rc.getCanvas());
 		}
 	}
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		if (this.focusManager != null) {
-			if (this.rc != null) {
-				this.focusManager.performedFocusLost(this.rc.getCanvas());
-			}
+		if (this.focusManager != null && this.rc != null && !this.started_stop) {
+			this.focusManager.performedFocusLost(this.rc.getCanvas());
 		}
 	}
 }

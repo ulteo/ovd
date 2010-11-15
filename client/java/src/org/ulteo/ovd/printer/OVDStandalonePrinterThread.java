@@ -48,7 +48,7 @@ public class OVDStandalonePrinterThread implements OVDPrinterThread, Runnable{
 	}
 
 	@Override
-	public int getState() {
-		return OVDPrinterThread.PRINTER_THREAD_STATE_LOADED;
-	}
+	public boolean hasFocus() {
+		return false;
+	}	
 }

@@ -37,6 +37,7 @@ public class PrinterApplet extends Applet implements Runnable {
 	private static final long serialVersionUID = 1L;
 	private BlockingQueue<OVDJob> spool;
 	private boolean running = false;
+	private boolean hasfocus = true;
 	private Thread thread = null;
 	
 	public void init() {
@@ -50,11 +51,16 @@ public class PrinterApplet extends Applet implements Runnable {
 	public void start() {
 		System.out.println("Start PDF Printer");
 		
+		this.setFocusable(false);
 		if (! this.isRunning()) {
 			this.setRunning(true);
 			this.thread = new Thread(this);
 			this.thread.start();
 		}
+	}
+
+	public boolean hasFocus() {
+		return this.hasfocus;
 	}
 	
 	public void stop() {
@@ -72,7 +78,9 @@ public class PrinterApplet extends Applet implements Runnable {
 		while (this.isRunning()) {
 			OVDJob job = null;
 			try {
+				this.hasfocus = false;
 				job = (OVDJob)spool.take();
+				this.hasfocus = true;
 			}
 			catch (InterruptedException e) {
 				job = null;
@@ -83,6 +91,7 @@ public class PrinterApplet extends Applet implements Runnable {
 			else
 				System.out.println("Invalid job");
 		}
+		this.hasfocus = false;
 	}
 	
 	//it is the only method, we can use for inter-applet communication

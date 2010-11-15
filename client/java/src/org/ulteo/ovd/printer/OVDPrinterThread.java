@@ -21,9 +21,6 @@
 package org.ulteo.ovd.printer;
 
 public interface OVDPrinterThread{
-	public static int PRINTER_THREAD_STATE_UNLOADED = 0x01;
-	public static int PRINTER_THREAD_STATE_LOADING = 0x02;
-	public static int PRINTER_THREAD_STATE_LOADED = 0x03;
 
 	public String printerName = "";
 	public String pdfFilename = "";
@@ -31,5 +28,5 @@ public interface OVDPrinterThread{
 	
 	public abstract void printPages(String printerName, String pdfFilename);
 	
-	public abstract int getState();
+	public abstract boolean hasFocus();
 }
