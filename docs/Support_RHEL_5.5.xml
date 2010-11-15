@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"> 
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop</title>
+    <subtitle>Red Hat Enterprise Linux 5.5 support</subtitle>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>2010</year>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
+    </copyright>
+  </articleinfo>
+
+  <para>
+    The purpose of this document is to describe how the different
+    pieces of Ulteo OVD are supported on Red Hat Enterprise Linux (RHEL) 5.5 system.
+  </para>
+
+  <section>
+    <title>Prerequisites: Red Hat Enterprise Linux (RHEL) 5.5</title>
+
+    <para>
+      All operation have to be done as super user (root).
+    </para>
+
+    <simplesect>
+      <title id="repository_title">Repository</title>
+
+      <para id="repository_para">
+        RHEL use the RPM packaging systemsystem. So you need to have
+        an internet connexion on your RHEL system and add an Ulteo
+        RPM repository into your system.
+      </para>
+
+      <itemizedlist>
+        <listitem id="repo_step_1">
+          <para>
+            The first step is to configure yum to enable the Ulteo rpm repository.
+            Create the file <emphasis>/etc/yum.repos.d/ovd.repo</emphasis> with:</para>
+            <screen><![CDATA[
+[ovd-3.0]
+name=Ulteo OVD 3.0
+baseurl=http://archive.ulteo.com/ovd/3.0/rhel/5.5/
+enabled=1
+gpgcheck=1
+gpgkey=http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key]]>
+            </screen>
+        </listitem>
+
+        <listitem id="repo_step_2">
+          <para>
+            Install the keyring package to validate the repository
+            using gpg:
+          </para>
+          <screen>
+            <![CDATA[
+# rpm --import http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key]]>
+          </screen>
+        </listitem>
+
+      </itemizedlist>
+    </simplesect>
+
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="warning_name_examples" />
+
+    <simplesect id="seLinux">
+      <title>SELinux</title>
+      <para>
+        Ulteo OVD is not compatible with SELinux yet.
+      </para>
+      <para>
+        So please disable SELinux support:
+      </para>
+      <screen>
+        <![CDATA[
+# yum remove selinux-policy]]>
+      </screen>
+    </simplesect>
+  </section>
+
+  <section id="sm">
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm_title" />
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm_first_para" />
+
+    <section id="sql">
+      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sql_title" />
+      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sql_para" />
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Install the <emphasis>mysql-server</emphasis> package:
+	  </para>
+          <screen>
+            <![CDATA[
+# yum install mysql mysql-server]]>
+          </screen>
+        </listitem>
+
+	<listitem>
+	  <para>
+	    To start automatically MySQL when the system boots up
+	  </para>
+	  <screen>
+	    <![CDATA[
+# chkconfig mysqld on]]>
+	  </screen>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Start the service
+	  </para>
+	  <screen>
+	    <![CDATA[
+# service mysql start]]>
+	  </screen>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Define the root mysql password
+	  </para>
+	  <screen>
+	    <![CDATA[
+# mysqladmin -u root password 'mysql_root_password']]>
+	  </screen>
+	</listitem>
+
+        <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="mysql_createdb" />
+      </itemizedlist>
+   </section>
+   
+   <section id="sm_install">
+     <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm_install_title" />
+
+     <itemizedlist>
+       <listitem>
+         <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm_install_package" />
+         <screen><![CDATA[
+# yum install ulteo-ovd-session-manager]]>
+         </screen>
+       </listitem>
+
+       <listitem>
+         <para>Launch the configuration tool</para>
+         <screen><![CDATA[
+# sm-config
+Admin login: admin
+Password: 
+Retype password: 
+Chroot download url [http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0]: 
+Chroot destination [/var/cache/ulteo/sessionmanager/base.tar.gz]: 
+
+Options:
+* chroot download:  yes
+* chroot URI:       http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0
+* chroot directory: /var/cache/ulteo/sessionmanager/base.tar.gz
+
+Is this correct? [Y/n]]]>
+         </screen>
+       </listitem>
+
+       <listitem>
+         <para>Configure and start apache service</para>
+         <screen><![CDATA[
+# chkconfig httpd on
+# service httpd restart]]>
+         </screen>
+       </listitem>
+     </itemizedlist>
+     
+     <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm-config" />
+   </section>
+  </section>
+
+  <section id="subsystem">
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem_title" />
+
+    <itemizedlist>
+      <listitem>
+        <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem_package" />
+        <screen><![CDATA[
+# yum install ulteo-ovd-subsystem]]>
+        </screen>
+      </listitem>
+
+      <listitem>
+        <para>Launch the configuration tool</para>
+        <screen><![CDATA[
+# ovd-subsystem-config 
+Session Manager address : sm.ulteo.com
+Chroot destination [/opt/ulteo]:]]>
+        </screen>
+        <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem-sm-warning" />
+      </listitem>
+
+       <listitem>
+         <para>Configure and start apache service</para>
+         <screen><![CDATA[
+# chkconfig ulteo-ovd-subsystem on
+# service ulteo-ovd-subsystem restart]]>
+         </screen>
+       </listitem>
+    </itemizedlist>
+
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem_last_para" />
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem_last_screenshot" />
+  </section>
+
+  <section id="wc">
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_title" />
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_para_1" />
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_para_2" />
+
+    <itemizedlist>
+      <listitem>
+        <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_package" />
+        <screen>
+	  <![CDATA[
+# yum install ulteo-ovd-web-client]]>
+        </screen>
+      </listitem>
+    </itemizedlist>
+
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_last_1" />
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_last_2" />
+  </section>
+</article>
