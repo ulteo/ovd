@@ -24,14 +24,16 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 class SQL {
 	private static $instance = NULL;
 
-	private $pdo = false;
-	private $statement = false;
+	private $link = false;
+	private $db = NULL;
+	private $result = false;
 
 	public $sqltype;
 	public $sqlhost;
 	public $sqluser;
 	public $sqlpass;
 	public $sqlbase;
+
 	public $prefix;
 
 	private $total_queries = 0;
@@ -75,24 +77,14 @@ class SQL {
 	}
 
 	public function CheckLink($die_=true) {
-		if (is_object($this->pdo))
+		if ($this->link)
 			return;
 
 		$ev = new SqlFailure(array('host' => $this->sqlhost));
 
-		try {
-			switch ($this->sqltype) {
-				case 'mysql':
-					$this->pdo = new PDO('mysql:host='.$this->sqlhost.';dbname='.$this->sqlbase, $this->sqluser, $this->sqlpass);
-					$this->DoQuery('SET NAMES utf8');
-					break;
-				default:
-					throw new Exception('Unsupported SQL type \''.$this->sqltype.'\'');
-					break;
-			}
-		} catch (Exception $e) {
-			Logger::error('main', 'SQL::CheckLink - '.$e);
+		$this->link = @mysqli_connect($this->sqlhost, $this->sqluser, $this->sqlpass);
 
+		if (! $this->link) {
 			if ($die_) {
 				$ev->setAttribute('status', -1);
 				$ev->emit();
@@ -102,9 +94,40 @@ class SQL {
 			return false;
 		}
 
+		if ($this->SelectDB($this->sqlbase) === false) {
+			if ($die_) {
+				$ev->setAttribute('status', -1);
+				$ev->emit();
+				die_error('Could not select database.',__FILE__,__LINE__);
+			}
+
+			return false;
+		}
+
+		$this->DoQuery('SET NAMES utf8');
 		$ev->setAttribute('status', 1);
 		$ev->emit();
 		return true;
+	}
+
+	public function SelectDB($db) {
+		$this->CheckLink();
+
+		if (! mysqli_select_db($this->link, $db))
+			return false;
+
+		$this->db = $db;
+
+		return true;
+	}
+
+	private function CleanValue($value_) {
+		$this->CheckLink();
+
+		if (get_magic_quotes_gpc())
+			$value_ = stripslashes($value_);
+
+		return mysqli_real_escape_string($this->link, $value_);
 	}
 
 	public function DoQuery() {
@@ -114,63 +137,57 @@ class SQL {
 
 		$query = $args[0];
 
-		$query = preg_replace('/@([0-9]+)/se', '((! array_key_exists(\\1, $args))?\'@\\1\':(is_null($args[\\1])?\'NULL\':\'`\'.$args[\\1].\'`\'))', $query);
-		$query = preg_replace('/%([0-9]+)/se', '((! array_key_exists(\\1, $args))?\'%\\1\':(is_null($args[\\1])?\'NULL\':\'"\'.substr($this->pdo->quote($args[\\1]), 1, -1).\'"\'))', $query);
+		$query = preg_replace('/@([0-9]+)/se', '((! array_key_exists(\\1, $args))?\'@\\1\':(is_null($args[\\1])?\'NULL\':\'`\'.mysqli_real_escape_string($this->link, $args[\\1]).\'`\'))', $query);
+		$query = preg_replace('/%([0-9]+)/se', '((! array_key_exists(\\1, $args))?\'%\\1\':(is_null($args[\\1])?\'NULL\':\'"\'.$this->CleanValue($args[\\1]).\'"\'))', $query);
 
-		if (is_object($this->statement)) {
-			$this->statement->closeCursor();
-			$this->statement = false;
+		if (is_resource($this->result)) {
+			mysqli_free_result($this->result);
+			$this->result = false;
 		}
 
-		$this->statement = $this->pdo->prepare($query);
-		if (! is_object($this->statement))
-			die_error('<strong>Error:</strong><br />Unable to PDO::prepare()<br />Query: '.$query,__FILE__,__LINE__);
-
-		$result = $this->statement->execute();
-		if (! $result) {
-			$buf = $this->statement->errorInfo();
-			die_error('<strong>Error:</strong><br />('.$buf[0].' - '.$buf[1].') '.$buf[2].'<br />Query: '.$query,__FILE__,__LINE__);
-		}
+		$this->result = @mysqli_query($this->link, $query) or die_error('<strong>Error:</strong><br /> '.mysqli_error($this->link).'<br />Query: '.$query,__FILE__,__LINE__);
 
 		$this->total_queries += 1;
 
-		return true;
+		return $this->result;
 	}
 
 	public function FetchResult() {
 		$this->CheckLink();
 
-		if (! $this->statement)
+		if (! $this->result)
 			return false;
 
-		return $this->statement->fetch(PDO::FETCH_ASSOC);
+		return @mysqli_fetch_assoc($this->result);
 	}
 
 	public function FetchAllResults() {
 		$this->CheckLink();
 
-		if (! $this->statement)
+		if (! $this->result)
 			return false;
 
-		return $this->statement->fetchAll(PDO::FETCH_ASSOC);
+		$res = array();
+
+		while ($r = @mysqli_fetch_assoc($this->result))
+			$res[] = $r;
+
+		return $res;
 	}
 
 	public function NumRows() {
 		$this->CheckLink();
 
-		if (! $this->statement)
+		if (! $this->result)
 			return false;
 
-		return $this->statement->rowCount();
+		return @mysqli_num_rows($this->result);
 	}
 
-	public function InsertId($name_=NULL) {
+	public function InsertId() {
 		$this->CheckLink();
 
-		if (! is_null($name_))
-			return $this->pdo->lastInsertId($name_);
-
-		return $this->pdo->lastInsertId();
+		return @mysqli_insert_id($this->link);
 	}
 
 	public function TotalQueries() {
@@ -207,7 +224,7 @@ class SQL {
 				$query .= ')';
 			}
 			$query .= ') DEFAULT CHARSET=utf8;';
-			$ret = $this->DoQuery($query, $name_);
+			$ret = $this->DoQuery($query);
 			return $ret;
 			
 		}
@@ -260,9 +277,8 @@ class SQL {
 			return true;
 		}
 	}
-	
+
 	public function Quote($string_) {
-		$this->CheckLink();
-		return $this->pdo->quote($string_);
+		return '"'.$this->CleanValue($string_).'"';
 	}
 }
