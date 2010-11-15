@@ -31,7 +31,7 @@
 
       <para id="repository_para">
         SLES use the RPM packaging systemsystem. So you need to have
-        an internet connexion on your openSUSE system and add an Ulteo
+        an internet connexion on your SLES system and add an Ulteo
         RPM repository into your system.
       </para>
 
