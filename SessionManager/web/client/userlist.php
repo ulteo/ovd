@@ -21,6 +21,18 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
+$prefs = Preferences::getInstance();
+if (! $prefs) {
+	Logger::error('main', '(userlist) get Preferences failed');
+	die();
+}
+
+$web_interface_settings = $prefs->get('general', 'web_interface_settings');
+if (! array_key_exists('show_list_users', $web_interface_settings) || $web_interface_settings['show_list_users'] == 0) {
+	Logger::debug('main', '(userlist) Show list users is disabled, aborting');
+	die();
+}
+
 $userDB = UserDB::getInstance();
 
 $users = array();
