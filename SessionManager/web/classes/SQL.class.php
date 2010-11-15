@@ -227,7 +227,7 @@ class SQL {
 				$query .= ')';
 			}
 			$query .= ') DEFAULT CHARSET=utf8;';
-			$ret = $this->DoQuery($query);
+			$ret = $this->DoQuery($query, $name_);
 			return $ret;
 			
 		}
