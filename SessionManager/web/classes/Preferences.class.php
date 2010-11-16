@@ -174,7 +174,7 @@ class Preferences {
 
 		$this->addPrettyName('general',_('General configuration'));
 
-		$c = new ConfigElement_select('system_in_maintenance', _('System in maintenance mode'), _('System in maintenance mode'), _('System in maintenance mode'), 0);
+		$c = new ConfigElement_select('system_in_maintenance', _('System on maintenance mode'), _('System on maintenance mode'), _('System on maintenance mode'), 0);
 		$c->setContentAvailable(array(0=>_('no'), 1=>_('yes')));
 		$this->add($c,'general');
 

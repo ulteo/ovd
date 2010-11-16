@@ -370,7 +370,7 @@ $html="";
 $system_in_maintenance = $prefs->get('general', 'system_in_maintenance');
 if ($system_in_maintenance) {
 	unset($action);
-	popup_error(_('The system is in maintenance mode! Cannot apply changes.'));
+	popup_error(_('The system is on maintenance mode! Cannot apply changes.'));
 }
 
 if (isset($action)) {

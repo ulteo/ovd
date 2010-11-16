@@ -140,7 +140,7 @@ if ($show_configuration) {
 			if (isAuthorized('manageServers'))
 				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to switch the system to production mode?').'\');"><input type="hidden" name="name" value="System" /><input type="hidden" name="action" value="change" /><input type="hidden" name="switch_to" value="production" /><input style="background: #05a305; color: #fff; font-weight: bold;" type="submit" value="'._('Switch the system to production mode').'" /></form>';
 		} else {
-			echo '<span class="msg_ok">'._('The system is in production mode').'</span><br /><br />';
+			echo '<span class="msg_ok">'._('The system is on production mode').'</span><br /><br />';
 
 			if (isAuthorized('manageServers'))
 				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to switch the system to maintenance mode?').'\');"><input type="hidden" name="name" value="System" /><input type="hidden" name="action" value="change" /><input type="hidden" name="switch_to" value="maintenance" /><input type="submit" value="'._('Switch the system to maintenance mode').'" /></form>';

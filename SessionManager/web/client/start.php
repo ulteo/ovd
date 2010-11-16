@@ -127,7 +127,7 @@ if (! $prefs) {
 
 $system_in_maintenance = $prefs->get('general', 'system_in_maintenance');
 if ($system_in_maintenance == '1') {
-	Logger::error('main', '(startsession) The system is in maintenance mode');
+	Logger::error('main', '(startsession) The system is on maintenance mode');
 	throw_response(IN_MAINTENANCE);
 }
 
