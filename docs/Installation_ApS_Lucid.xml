@@ -119,7 +119,7 @@ Package: *
 Pin: origin archive.ulteo.com
 Pin-Priority: 1002
 
-Package: xfwm4 xfwm4-themes libexo-0.3-0 libxfcegui4-4
+Package: xfce4-terminal xfwm4 xfwm4-themes libexo-0.3-0 libxfcegui4-4
 Pin: release a=hardy
 Pin-Priority: 1001]]>
         </screen>
