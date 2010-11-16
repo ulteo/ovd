@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: uovdsmadmin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-09 11:21+0100\n"
+"POT-Creation-Date: 2010-11-16 10:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -513,7 +513,7 @@ msgstr ""
 #: ../../SessionManager/web/admin/applications.php:54
 #: ../../SessionManager/web/admin/includes/page_template.php:56
 #: ../../SessionManager/web/admin/includes/page_template.php:116
-#: ../../SessionManager/web/admin/sessions.php:66
+#: ../../SessionManager/web/admin/sessions.php:76
 #: ../../SessionManager/web/admin/sumup.php:195
 #: ../../SessionManager/web/classes/Preferences.class.php:348
 msgid "Applications"
@@ -672,8 +672,8 @@ msgstr ""
 #: ../../SessionManager/web/admin/index.php:158
 #: ../../SessionManager/web/admin/servers.php:78
 #: ../../SessionManager/web/admin/servers.php:394
-#: ../../SessionManager/web/admin/sessions.php:160
-#: ../../SessionManager/web/admin/sessions.php:205
+#: ../../SessionManager/web/admin/sessions.php:170
+#: ../../SessionManager/web/admin/sessions.php:220
 #: ../../SessionManager/web/admin/sumup.php:196
 #: ../../SessionManager/web/admin/tasks.php:70
 #: ../../SessionManager/web/admin/tasks.php:144
@@ -699,7 +699,7 @@ msgstr ""
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:388
 #: ../../SessionManager/web/admin/tasks.php:80
 #: ../../SessionManager/web/admin/tasks.php:155
-#: ../../SessionManager/web/classes/Session.class.php:218
+#: ../../SessionManager/web/classes/Session.class.php:334
 msgid "Error"
 msgstr ""
 
@@ -769,7 +769,7 @@ msgstr ""
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:570
 #: ../../SessionManager/web/admin/servers.php:186
 #: ../../SessionManager/web/admin/servers.php:302
-#: ../../SessionManager/web/admin/sessions.php:191
+#: ../../SessionManager/web/admin/sessions.php:206
 #: ../../SessionManager/web/admin/usersgroup.php:146
 #: ../../SessionManager/web/admin/users.php:109
 #: ../../SessionManager/web/admin/wizard.php:211
@@ -784,7 +784,7 @@ msgstr ""
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:571
 #: ../../SessionManager/web/admin/servers.php:187
 #: ../../SessionManager/web/admin/servers.php:303
-#: ../../SessionManager/web/admin/sessions.php:191
+#: ../../SessionManager/web/admin/sessions.php:206
 #: ../../SessionManager/web/admin/usersgroup.php:146
 #: ../../SessionManager/web/admin/users.php:110
 #: ../../SessionManager/web/admin/wizard.php:211
@@ -1306,14 +1306,14 @@ msgstr ""
 #: ../../SessionManager/web/admin/ha/classes/Cib.class.php:30
 #: ../../SessionManager/web/admin/ha/classes/Cib.class.php:31
 #: ../../SessionManager/web/admin/ha/classes/Cib.class.php:324
-#: ../../SessionManager/web/admin/sessions.php:68
+#: ../../SessionManager/web/admin/sessions.php:78
 #: ../../SessionManager/web/classes/NetworkFolder.class.php:114
 #: ../../SessionManager/web/classes/NetworkFolder.class.php:124
 #: ../../SessionManager/web/classes/Server.class.php:452
 #: ../../SessionManager/web/classes/Server.class.php:461
 #: ../../SessionManager/web/classes/Server.class.php:468
-#: ../../SessionManager/web/classes/Session.class.php:215
-#: ../../SessionManager/web/classes/Session.class.php:243
+#: ../../SessionManager/web/classes/Session.class.php:331
+#: ../../SessionManager/web/classes/Session.class.php:362
 msgid "Unknown"
 msgstr ""
 
@@ -1483,7 +1483,7 @@ msgid "Submit"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:373
-msgid "The system is in maintenance mode! Cannot apply changes."
+msgid "The system is on maintenance mode! Cannot apply changes."
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:387
@@ -1636,7 +1636,7 @@ msgid "Production"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/status.php:146
-#: ../../SessionManager/web/classes/Session.class.php:227
+#: ../../SessionManager/web/classes/Session.class.php:343
 msgid "Ready"
 msgstr ""
 
@@ -1702,7 +1702,7 @@ msgstr ""
 #: ../../SessionManager/web/admin/includes/page_template.php:75
 #: ../../SessionManager/web/admin/index.php:65
 #: ../../SessionManager/web/admin/servers.php:64
-#: ../../SessionManager/web/admin/sessions.php:158
+#: ../../SessionManager/web/admin/sessions.php:168
 #: ../../SessionManager/web/admin/tasks.php:69
 msgid "Servers"
 msgstr ""
@@ -1913,7 +1913,7 @@ msgid "Active sessions"
 msgstr ""
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:416
-#: ../../SessionManager/web/admin/sessions.php:73
+#: ../../SessionManager/web/admin/sessions.php:83
 #: ../../SessionManager/web/admin/users.php:369
 msgid "Not started yet"
 msgstr ""
@@ -2023,7 +2023,7 @@ msgid "Switch the system to production mode"
 msgstr ""
 
 #: ../../SessionManager/web/admin/index.php:143
-msgid "The system is in production mode"
+msgid "The system is on production mode"
 msgstr ""
 
 #: ../../SessionManager/web/admin/index.php:146
@@ -2429,72 +2429,72 @@ msgstr ""
 msgid "Servers:"
 msgstr ""
 
-#: ../../SessionManager/web/admin/sessions.php:61
+#: ../../SessionManager/web/admin/sessions.php:71
 msgid "User:"
 msgstr ""
 
-#: ../../SessionManager/web/admin/sessions.php:62
+#: ../../SessionManager/web/admin/sessions.php:72
 msgid "Type:"
 msgstr ""
 
-#: ../../SessionManager/web/admin/sessions.php:64
+#: ../../SessionManager/web/admin/sessions.php:74
 #: ../../SessionManager/web/classes/Preferences.class.php:348
 msgid "Desktop"
 msgstr ""
 
-#: ../../SessionManager/web/admin/sessions.php:70
+#: ../../SessionManager/web/admin/sessions.php:80
 msgid "Started:"
 msgstr ""
 
-#: ../../SessionManager/web/admin/sessions.php:77
+#: ../../SessionManager/web/admin/sessions.php:87
 msgid "Status:"
 msgstr ""
 
-#: ../../SessionManager/web/admin/sessions.php:81
+#: ../../SessionManager/web/admin/sessions.php:91
 msgid "Running applications"
 msgstr ""
 
-#: ../../SessionManager/web/admin/sessions.php:85
+#: ../../SessionManager/web/admin/sessions.php:95
 msgid "No running application"
 msgstr ""
 
-#: ../../SessionManager/web/admin/sessions.php:111
-#: ../../SessionManager/web/admin/sessions.php:116
+#: ../../SessionManager/web/admin/sessions.php:121
+#: ../../SessionManager/web/admin/sessions.php:126
 msgid "Kill this session"
 msgstr ""
 
-#: ../../SessionManager/web/admin/sessions.php:112
-#: ../../SessionManager/web/admin/sessions.php:178
+#: ../../SessionManager/web/admin/sessions.php:122
+#: ../../SessionManager/web/admin/sessions.php:193
 msgid "Are you sure you want to kill this session?"
 msgstr ""
 
-#: ../../SessionManager/web/admin/sessions.php:128
+#: ../../SessionManager/web/admin/sessions.php:138
 #, php-format
 msgid "Sessions (total: %s)"
 msgstr ""
 
-#: ../../SessionManager/web/admin/sessions.php:157
+#: ../../SessionManager/web/admin/sessions.php:167
 msgid "Session"
 msgstr ""
 
-#: ../../SessionManager/web/admin/sessions.php:159
+#: ../../SessionManager/web/admin/sessions.php:169
 msgid "User"
 msgstr ""
 
-#: ../../SessionManager/web/admin/sessions.php:182
-#: ../../SessionManager/web/admin/sessions.php:196
+#: ../../SessionManager/web/admin/sessions.php:197
+#: ../../SessionManager/web/admin/sessions.php:211
 msgid "Kill"
 msgstr ""
 
-#: ../../SessionManager/web/admin/sessions.php:193
+#: ../../SessionManager/web/admin/sessions.php:208
 msgid "Are you sure you want to kill selected sessions?"
 msgstr ""
 
-#: ../../SessionManager/web/admin/sessions.php:206
+#: ../../SessionManager/web/admin/sessions.php:221
 msgid "Number of sessions"
 msgstr ""
 
-#: ../../SessionManager/web/admin/sessions.php:228
+#: ../../SessionManager/web/admin/sessions.php:243
 msgid "No active session"
 msgstr ""
 
@@ -3014,7 +3014,7 @@ msgid "Inactive"
 msgstr ""
 
 #: ../../SessionManager/web/classes/Preferences.class.php:177
-msgid "System in maintenance mode"
+msgid "System on maintenance mode"
 msgstr ""
 
 #: ../../SessionManager/web/classes/Preferences.class.php:178
@@ -3655,27 +3655,31 @@ msgstr ""
 msgid "Broken"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Session.class.php:221
+#: ../../SessionManager/web/classes/Session.class.php:337
 msgid "Created"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Session.class.php:224
+#: ../../SessionManager/web/classes/Session.class.php:340
 msgid "Initializing"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Session.class.php:230
+#: ../../SessionManager/web/classes/Session.class.php:346
 msgid "Logged"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Session.class.php:233
+#: ../../SessionManager/web/classes/Session.class.php:349
 msgid "Disconnected"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Session.class.php:236
+#: ../../SessionManager/web/classes/Session.class.php:352
 msgid "To destroy"
 msgstr ""
 
-#: ../../SessionManager/web/classes/Session.class.php:239
+#: ../../SessionManager/web/classes/Session.class.php:355
+msgid "Destroying"
+msgstr ""
+
+#: ../../SessionManager/web/classes/Session.class.php:358
 msgid "Destroyed"
 msgstr ""
 
@@ -3684,14 +3688,14 @@ msgstr ""
 msgid "Unable to submit Task to server '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/classes/User.class.php:312
+#: ../../SessionManager/web/classes/User.class.php:330
 #, php-format
 msgid ""
 "User '%s' has at least two groups with the same overriden rule but with "
 "different values, the result will be unpredictable."
 msgstr ""
 
-#: ../../SessionManager/web/client/start.php:286
+#: ../../SessionManager/web/client/start.php:285
 msgid "No available server"
 msgstr ""
 
