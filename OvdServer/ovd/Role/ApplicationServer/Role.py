@@ -190,7 +190,7 @@ class Role(AbstractRole):
 							# User has logged off
 							session.end_status = Session.SESSION_END_STATUS_NORMAL
 						
-						if session.status not in [Session.SESSION_STATUS_WAIT_DESTROY, Session.SESSION_STATUS_DESTROYED]:
+						if session.status not in [Session.SESSION_STATUS_WAIT_DESTROY, Session.SESSION_STATUS_DESTROYED, Session.SESSION_STATUS_ERROR]:
 							self.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
 							self.sessions_spooler.put(("destroy", session))
 					continue

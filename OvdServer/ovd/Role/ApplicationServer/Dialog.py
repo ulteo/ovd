@@ -350,7 +350,7 @@ class Dialog(AbstractDialog):
 	def req_session_destroy(self, session_id):
 		if self.role_instance.sessions.has_key(session_id):
 			session = self.role_instance.sessions[session_id]
-			if session.status not in [Platform.Session.SESSION_STATUS_WAIT_DESTROY, Platform.Session.SESSION_STATUS_DESTROYED]:
+			if session.status not in [Platform.Session.SESSION_STATUS_WAIT_DESTROY, Platform.Session.SESSION_STATUS_DESTROYED, Platform.Session.SESSION_STATUS_ERROR]:
 				# Switch the session status without warn the session manager
 				session.switch_status(Platform.Session.SESSION_STATUS_WAIT_DESTROY)
 				self.role_instance.sessions_spooler.put(("destroy", session))
