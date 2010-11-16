@@ -66,19 +66,19 @@ do_stop() {
 
 case $1 in
     start)
-	echo -n "Starting Ulteo OVD subsystem"
         do_start
-	rc_status -v
+        echo -n "Starting Ulteo OVD subsystem"
+        rc_status -v
         ;;
     stop)
-        echo -n "Stopping Ulteo OVD subsystem"
         do_stop
-	rc_status -v
+        echo -n "Stopping Ulteo OVD subsystem"
+        rc_status -v
         ;;
     restart|reload|force-reload)
-        echo -n "Re-starting Ulteo OVD subsystem"
         do_stop && sleep 1 && do_start
-	rc_status -v
+        echo -n "Re-starting Ulteo OVD subsystem"
+        rc_status -v
         ;;
     *)
         echo "Usage: $0 {start|stop|reload|restart}"

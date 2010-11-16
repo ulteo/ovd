@@ -43,24 +43,24 @@ do_stop() {
     chroot $CHROOTDIR /etc/init.d/xrdp stop
     chroot $CHROOTDIR /etc/init.d/cups stop
 
-    umount $CHROOTDIR/dev/pts
-    umount $CHROOTDIR/proc
+    umount $CHROOTDIR/dev/pts 2>/dev/null
+    umount $CHROOTDIR/proc 2>/dev/null
 }
 
 case $1 in
     start)
-        log_daemon_msg "Starting Ulteo OVD subsystem"
         do_start
+        log_daemon_msg "Starting Ulteo OVD subsystem"
         log_end_msg $?
         ;;
     stop)
-        log_daemon_msg "Stopping Ulteo OVD subsystem"
         do_stop
+        log_daemon_msg "Stopping Ulteo OVD subsystem"
         log_end_msg $?
         ;;
     restart|reload|force-reload)
-        log_daemon_msg "Re-starting Ulteo OVD subsystem"
         do_stop && sleep 1 && do_start
+        log_daemon_msg "Re-starting Ulteo OVD subsystem"
         log_end_msg $?
         ;;
     *)
