@@ -127,9 +127,6 @@ class SQL {
 
 		$this->CheckLink();
 
-		if (get_magic_quotes_gpc())
-			$value_ = stripslashes($value_);
-
 		return mysqli_real_escape_string($this->link, $value_);
 	}
 
