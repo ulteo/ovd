@@ -74,7 +74,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		try {
 			co.addOvdAppListener(this);
 		} catch (OvdException ex) {
-			this.logger.error(ex);
+			Logger.error(co.getServer()+": Failed to add ovd applications listener: "+ex);
 		}
 		
 		int applicationIncrement = 100 / co.getAppsList().size();
@@ -97,7 +97,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		try {
 			co.removeOvdAppListener(this);
 		} catch (OvdException ex) {
-			this.logger.error(ex);
+			Logger.error(co.getServer()+": Failed to remove ovd applications listener: "+ex);
 		}
 		this.uncustomizeRemoteAppsConnection(co);
 	}

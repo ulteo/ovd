@@ -29,7 +29,7 @@ import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
-import org.apache.log4j.Logger;
+import org.ulteo.Logger;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.News;
@@ -58,8 +58,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 		return map;
 	}
-
-	protected Logger logger = Logger.getLogger(OvdClient.class);
 
 	protected boolean graphic = false;
 
@@ -333,7 +331,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 	/* RdpListener */
 	public void connected(RdpConnection co) {
-		this.logger.info("Connected to "+co.getServer());
+		Logger.info("Connected to "+co.getServer());
 
 		this.performedConnections.add((RdpConnectionOvd) co);
 		this.addAvailableConnection((RdpConnectionOvd)co);
@@ -342,7 +340,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	}
 
 	public void connecting(RdpConnection co) {
-		this.logger.info("Connecting to "+co.getServer());
+		Logger.info("Connecting to "+co.getServer());
 
 	}
 
@@ -354,7 +352,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.hide(co);
 		this.performedConnections.remove((RdpConnectionOvd) co);
 		this.removeAvailableConnection((RdpConnectionOvd)co);
-		this.logger.info("Disconnected from "+co.getServer());
+		Logger.info("Disconnected from "+co.getServer());
 
 		if (this.sessionStatusMonitoringThread != null && this.sessionStatusMonitoringThread.isAlive()) {
 			// Break session status monitoring sleep to check with SessionManager ASAP
@@ -364,7 +362,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	}
 
 	public void failed(RdpConnection co, String msg) {
-		this.logger.error("Connection to "+co.getServer()+" failed: "+msg);
+		Logger.error("Connection to "+co.getServer()+" failed: "+msg);
 
 		this.performedConnections.add((RdpConnectionOvd) co);
 	}
@@ -374,7 +372,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		try {
 			((RdpConnectionOvd) rc).sendLogoff();
 		} catch (OvdException ex) {
-			this.logger.warn(rc.getServer()+": "+ex.getMessage());
+			Logger.warn(rc.getServer()+": "+ex.getMessage());
 		}
 	}
 

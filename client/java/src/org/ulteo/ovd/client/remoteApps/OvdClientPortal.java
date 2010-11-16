@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.propero.rdp.RdpConnection;
+import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.OvdException;
@@ -124,8 +125,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		try {
 			co.addOvdAppListener(this.portal.getRunningApplicationPanel());
 		} catch (OvdException ex) {
-			this.logger.error(ex);
-			ex.printStackTrace();
+			Logger.error(co.getServer()+": Failed to add ovd applications listener: "+ex);
 		}
 		this.obj.updateProgress(LoadingStatus.STATUS_CLIENT_WAITING_SERVER, 0);
 
