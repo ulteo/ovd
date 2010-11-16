@@ -82,8 +82,13 @@ class Profile(AbstractProfile):
 	def copySessionStart(self):
 		for f in [self.DesktopDir, self.DocumentsDir]:
 			d = os.path.join(self.mountPoint, f)
-			if not os.path.exists(d):
-				os.makedirs(d)
+
+			while not os.path.exists(d):
+				try:
+					os.makedirs(d)
+				except OSError, err:
+					Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
+					continue
 		
 		
 		d = os.path.join(self.mountPoint, "conf.Windows")

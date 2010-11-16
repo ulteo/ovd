@@ -102,8 +102,12 @@ class Profile(AbstractProfile):
 				src = os.path.join(self.profile_mount_point, d)
 				dst = os.path.join(self.homeDir, d)
 				
-				if not os.path.exists(src):
-					os.makedirs(src)
+				while not os.path.exists(src):
+					try:
+						os.makedirs(src)
+					except OSError, err:
+						Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
+						continue
 				
 				if not os.path.exists(dst):
 					os.makedirs(dst)
