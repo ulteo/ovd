@@ -229,7 +229,6 @@ class Session(AbstractSession):
 				"NonEnum",
 				"NoNetworkConnections",
 				"NoResolveSearch",
-				"NoRun",
 				"NoSetFolders",
 				"NoSetTaskbar",
 				"NoStartMenuSubFolders", # should remove the folders from startmenu but doesn't work
@@ -253,7 +252,22 @@ class Session(AbstractSession):
 			for item in restrictions:
 				_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 1)
 			_winreg.CloseKey(key)
+
+		# start menu customization
+		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"%(hiveName)
+		restrictions = ["Start_ShowRun"]
+		try:
+			Reg.CreateKeyR(_winreg.HKEY_USERS, path)
+			key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+		except:
+			key = None
 		
+		if key is None:
+			Logger.error("Unable to open key '%s'"%(path))
+		else:
+			for item in restrictions:
+				_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 0)
+			_winreg.CloseKey(key)
 		
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Policies\System"%(hiveName)
 		restrictions = ["DisableRegistryTools",
