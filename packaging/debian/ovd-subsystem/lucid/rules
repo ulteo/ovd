@@ -2,7 +2,7 @@
 
 include /usr/share/cdbs/1/rules/debhelper.mk
 
-DEB_DH_INSTALLINIT_ARGS := -- "defaults 98 02"
+DEB_UPDATE_RCD_PARAMS := "defaults 98 02"
 
 pre-build::
 	cp $(CURDIR)/ulteo-ovd-subsystem.init.deb $(CURDIR)/debian/ulteo-ovd-subsystem.init

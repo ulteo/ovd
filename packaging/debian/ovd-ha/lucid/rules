@@ -6,6 +6,7 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 DEB_CONFIGURE_EXTRA_FLAGS = --without-libchart --with-ha
 DEB_DH_INSTALL_SOURCEDIR = debian/tmp
 DEB_DH_INSTALLINIT_ARGS = --name=ulteo_ha
+DEB_UPDATE_RCD_PARAMS = "defaults 99 01"
 
 install/ulteo-ovd-ha::
 	cd ha/shell && make install DESTDIR=$(DEB_DESTDIR)
