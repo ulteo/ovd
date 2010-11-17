@@ -150,6 +150,12 @@ $REPOSITORIES = $_SESSION['ajxp']['repositories'];
 /*  Check i18n folder for available values.
 /*********************************************/
 $default_language="en";
+if (array_key_exists('session_language', $_SESSION)) {
+	if (file_exists(dirname(__FILE__).'/../../client/i18n/'.$_SESSION['session_language'].'.php'))
+		$default_language=$_SESSION['session_language'];
+	elseif (file_exists(dirname(__FILE__).'/../../client/i18n/'.substr($_SESSION['session_language'], 0, 2).'.php'))
+		$default_language=substr($_SESSION['session_language'], 0, 2);
+}
 
 
 /*********************************************/
