@@ -2507,7 +2507,7 @@ msgstr "Utilsation des Sessions"
 #: ../../SessionManager/web/admin/servers.php:142
 #: ../../SessionManager/web/admin/servers.php:425
 msgid "Disk usage"
-msgstr "Utiliwsation disque dur"
+msgstr "Utilisation disque dur"
 
 #: ../../SessionManager/web/admin/servers.php:203
 msgid "No server"
