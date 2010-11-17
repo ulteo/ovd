@@ -183,15 +183,14 @@
   </target>
 
   <target name="generate.lang">
-    <propertyregex property="po.lang" input="${po.file}"
-                   regexp="po/(.*).po$" select="\1" />
+    <basename property="po.lang" file="${po.file}" suffix=".po"/>
     <echo>Generate "${po.lang}" language</echo>
     <exec executable="msgfmt" dir=".">
       <arg value="--java2" />
       <arg value="-d"/> <arg value="build"/>
       <arg value="-r"/> <arg value="Messages"/>
       <arg value="-l"/> <arg value="${po.lang}"/>
-      <arg value="po/${po.lang}.po"/>
+      <arg value="${po.file}"/>
     </exec>
   </target>
 
