@@ -96,6 +96,9 @@ function get_users_list() {
 	}
 	natcasesort($users);
 
+	if (count($users) == 0)
+		return false;
+
 	return $users;
 }
 ?>
