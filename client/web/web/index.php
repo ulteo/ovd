@@ -589,11 +589,11 @@ checkSessionMode();
 														<img src="media/image/icons/use_popup.png" alt="" title="" />
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
-														<strong><?php echo _('Use pop-up'); ?></strong>
+														<strong><span id="use_popup_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="use_popup_true" name="popup" value="1"<?php if ($wi_use_popup == 1) echo ' checked="checked"'; ?> /> <span id="debug_yes_gettext">&nbsp;</span>
-														<input class="input_radio" type="radio" id="use_popup_false" name="popup" value="0"<?php if ($wi_use_popup == 0) echo ' checked="checked"'; ?> /> <span id="debug_no_gettext">&nbsp;</span>
+														<input class="input_radio" type="radio" id="use_popup_true" name="popup" value="1"<?php if ($wi_use_popup == 1) echo ' checked="checked"'; ?> /> <span id="use_popup_yes_gettext">&nbsp;</span>
+														<input class="input_radio" type="radio" id="use_popup_false" name="popup" value="0"<?php if ($wi_use_popup == 0) echo ' checked="checked"'; ?> /> <span id="use_popup_no_gettext">&nbsp;</span>
 													</td>
 												</tr>
 <?php
