@@ -126,8 +126,9 @@ class Abstract_Session {
 
 		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'sessions', 'id', $id);
 
-		foreach ($session_->servers as $server)
-			Abstract_Liaison::save('ServerSession', $server, $session_->id);
+		foreach ($session_->servers as $role => $servers)
+			foreach ($servers as $fqdn => $data)
+				Abstract_Liaison::save('ServerSession', $fqdn, $session_->id);
 
 		return true;
 	}
