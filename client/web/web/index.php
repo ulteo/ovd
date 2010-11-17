@@ -308,7 +308,7 @@ function get_users_list() {
 							<img src="media/image/ulteo.png" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" />
 						</td>
 						<td style="text-align: left; border-bottom: 1px solid #ccc;" class="title centered">
-							<h1><span id="welcome_gettext">&nbsp;</span></h1>
+							<h1><span id="user_displayname">&nbsp;</span><span id="welcome_gettext" style="display: none;">&nbsp;</span></h1>
 						</td>
 						<td style="width: 60%; border-bottom: 1px solid #ccc; text-align: left;" class="title centered">
 							<div id="newsContainer" style="padding-left: 5px; padding-right: 5px; height: 70px; overflow: auto;">

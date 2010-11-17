@@ -189,6 +189,14 @@ function onStartSessionSuccess(xml_) {
 	}
 	session_node = buffer[0];
 
+	var buffer = xml.getElementsByTagName('setting');
+	for (var i = 0; i < buffer.length; i++) {
+		try {
+			if (buffer[i].getAttribute('name') == 'user_displayname')
+				$('user_displayname').innerHTML = buffer[i].getAttribute('value');
+		} catch(e) {}
+	}
+
 	$('user_password').value = '';
 
 	var buffer = xml.getElementsByTagName('explorer');
