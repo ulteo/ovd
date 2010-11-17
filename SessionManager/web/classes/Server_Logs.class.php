@@ -67,7 +67,7 @@ class Server_Logs {
 			$since_ = time();
 
 		$ret = query_url($this->server->getWebservicesBaseURL().'/server/logs/since/'.$since_, false);
-		if (! $ret) {
+		if ($ret === false) {
 			$this->server->isUnreachable();
 			Logger::error('main', 'Server_Logs::fetchLogs server \''.$this->server->fqdn.'\' is unreachable');
 			return false;
