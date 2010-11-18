@@ -31,6 +31,11 @@ Description: Database user password:
  Please choose the password for the account that will be used to
  access the database hosting Ulteo Session Manager data.
 
+Template: ulteo-ovd-easy-install/mysql_dbrootpass
+Type: password
+Description: Database root password:
+ Indicate the mysql root password
+
 Template: ulteo-ovd-easy-install/display_sm_password
 Type: note
 Description: Session Manager administrator password
