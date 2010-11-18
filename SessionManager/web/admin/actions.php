@@ -895,7 +895,7 @@ if ($_REQUEST['name'] == 'User') {
 			popup_info(sprintf(_("Unable to import user '%s'"), $login), __FILE__, __LINE__);
 		
 		foreach($u->getAttributesList() as $attr) {
-			if (isset($_REQUEST[$attr])) {
+			if (isset($_REQUEST[$attr]) && (!($_REQUEST[$attr] === '' && $attr === 'password'))) {
 				$u->setAttribute($attr, $_REQUEST[$attr]);
 			}
 		}
