@@ -51,6 +51,11 @@ var Application = Class.create({
 		td_app.appendChild(this.app_span);
 		tr.appendChild(td_app);
 
+		var td_running = new Element('td');
+		td_running.setAttribute('id', 'running_'+this.id);
+		td_running.setAttribute('style', 'font-size: 0.9em; font-style: italic;');
+		tr.appendChild(td_running);
+
 		this.repaintNode();
 
 		return tr;

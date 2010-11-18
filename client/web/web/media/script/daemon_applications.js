@@ -35,10 +35,13 @@ var Applications = Class.create(Daemon, {
 
 		$('applicationsAppletContainer').innerHTML = '';
 
-		$('applicationsContainer').style.height = parseInt(this.my_height)-154+'px';
-		$('appsContainer').style.height = parseInt(this.my_height)-154+'px';
-		$('runningAppsContainer').style.height = parseInt(this.my_height)-154+'px';
-		$('fileManagerContainer').style.height = parseInt(this.my_height)-154+'px';
+		var remove_height = 114;
+		if (this.debug)
+			remove_height = 115;
+		$('applicationsContainer').style.height = parseInt(this.my_height)-remove_height+'px';
+		$('appsContainer').style.height = parseInt(this.my_height)-remove_height+'px';
+		$('runningAppsContainer').style.height = parseInt(this.my_height)-remove_height+'px';
+		$('fileManagerContainer').style.height = parseInt(this.my_height)-remove_height+'px';
 
 		this.applicationsPanel = new ApplicationsPanel($('appsContainer'));
 		this.runningApplicationsPanel = new ApplicationsPanel($('runningAppsContainer'));
@@ -200,6 +203,15 @@ var Applications = Class.create(Daemon, {
 			if (status_ == 'started') {
 				this.push_log('info', '[applications] applicationStatus(token: '+token_+', status: '+status_+') - Adding "running" application "'+token_+'" to running applications list');
 				this.runningApplicationsPanel.add(instance);
+
+				var running = 0;
+				if ($('running_'+app_id)) {
+					if ($('running_'+app_id).innerHTML != '' && typeof parseInt($('running_'+app_id).innerHTML) == 'number')
+						running += parseInt($('running_'+app_id).innerHTML);
+				}
+				running += 1;
+
+				$('running_'+app_id).innerHTML = running;
 			}
 		} else {
 			this.push_log('info', '[applications] applicationStatus(token: '+token_+', status: '+status_+') - Updating "running" application "'+token_+'" status: "'+app_status+'"');
@@ -210,6 +222,22 @@ var Applications = Class.create(Daemon, {
 			if (status_ == 'stopped') {
 				this.push_log('info', '[applications] applicationStatus(token: '+token_+', status: '+status_+') - Deleting "running" application "'+token_+'" from running applications list');
 				this.runningApplicationsPanel.del(instance);
+
+				var app_id = this.liaison_runningapplicationtoken_application.get(token_);
+				if (typeof app_id == 'undefined')
+					return false;
+
+				var running = 0;
+				if ($('running_'+app_id)) {
+					if ($('running_'+app_id).innerHTML != '' && typeof parseInt($('running_'+app_id).innerHTML) == 'number')
+						running = parseInt($('running_'+app_id).innerHTML);
+				}
+				running -= 1;
+
+				if (running > 0)
+					$('running_'+app_id).innerHTML = running;
+				else
+					$('running_'+app_id).innerHTML = '';
 			}
 		}
 

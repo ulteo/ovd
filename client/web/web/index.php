@@ -337,7 +337,7 @@ function get_users_list() {
 					<td style="width: 15%; text-align: left; vertical-align: top; background: #eee;">
 						<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 						<div>
-							<h2><span id="my_apps_gettext">&nbsp;</span></h2>
+							<h2 style="display: none;"><span id="my_apps_gettext">&nbsp;</span></h2>
 
 							<div id="appsContainer" style="overflow: auto;">
 							</div>
@@ -346,22 +346,22 @@ function get_users_list() {
 					</td>
 					<td style="width: 5px;">
 					</td>
-					<td style="width: 15%; text-align: left; vertical-align: top; background: #eee;">
+					<td style="width: 15%; text-align: left; vertical-align: top; background: #eee; display: none;">
 						<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 						<div>
-							<h2><span id="running_apps_gettext">&nbsp;</span></h2>
+							<h2 style="display: none;"><span id="running_apps_gettext">&nbsp;</span></h2>
 
 							<div id="runningAppsContainer" style="overflow: auto;">
 							</div>
 						</div>
 						</div>
 					</td>
-					<td style="width: 5px;">
+					<td style="width: 5px; display: none;">
 					</td>
 					<td style="text-align: left; vertical-align: top; background: #eee;">
 						<div id="fileManagerWrap" class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 						<div>
-							<h2><span id="my_files_gettext">&nbsp;</span></h2>
+							<h2 style="display: none;"><span id="my_files_gettext">&nbsp;</span></h2>
 
 							<div id="fileManagerContainer">
 							</div>
