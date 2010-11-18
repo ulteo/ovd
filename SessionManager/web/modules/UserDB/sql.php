@@ -302,8 +302,19 @@ class UserDB_sql extends UserDB  {
 			$attributes = $user_->getAttributesList();
 			$query = 'UPDATE `'.$this->table.'` SET ';
 			foreach ($attributes as $key){
-				if ($key == 'password')
-					$value = crypt($user_->getAttribute($key), md5($user_->getAttribute('login')));
+				if ($key == 'password') {
+					$user_ori = $this->import($user_->getAttribute('login'));
+					if (!is_object($user_ori)) {
+						Logger::error('main', 'UserDB::sql::update, change of login is not supported');
+						return false;
+					}
+					if ($user_ori->hasAttribute($key) and ($user_ori->getAttribute($key) != $user_->getAttribute($key))) {
+						$value = crypt($user_->getAttribute($key), md5($user_->getAttribute('login')));
+					}
+					else {
+						$value = $user_->getAttribute($key);
+					}
+				}
 				else
 					$value = $user_->getAttribute($key);
 
