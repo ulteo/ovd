@@ -121,32 +121,32 @@ function parse_session_create_XML($xml_) {
 
 $prefs = Preferences::getInstance();
 if (! $prefs) {
-	Logger::error('main', '(startsession) get Preferences failed');
+	Logger::error('main', '(client/start) get Preferences failed');
 	throw_response(INTERNAL_ERROR);
 }
 
 $system_in_maintenance = $prefs->get('general', 'system_in_maintenance');
 if ($system_in_maintenance == '1') {
-	Logger::error('main', '(startsession) The system is on maintenance mode');
+	Logger::error('main', '(client/start) The system is on maintenance mode');
 	throw_response(IN_MAINTENANCE);
 }
 
 $ret = parse_client_XML(@file_get_contents('php://input'));
 if (! $ret) {
-	Logger::error('main', '(startsession) Client does not send a valid XML');
+	Logger::error('main', '(client/start) Client does not send a valid XML');
 	throw_response(INTERNAL_ERROR);
 }
 
 if (! isset($_SESSION['login'])) {
 	$ret = do_login();
 	if (! $ret) {
-		Logger::error('main', '(startsession) Authentication failed');
+		Logger::error('main', '(client/start) Authentication failed');
 		throw_response(AUTH_FAILED);
 	}
 }
 
 if (! isset($_SESSION['login'])) {
-	Logger::error('main', '(startsession) Authentication failed');
+	Logger::error('main', '(client/start) Authentication failed');
 	throw_response(AUTH_FAILED);
 }
 
@@ -156,7 +156,7 @@ $userDB = UserDB::getInstance();
 
 $user = $userDB->import($user_login);
 if (! is_object($user)) {
-	Logger::error('main', '(startsession) User importation failed');
+	Logger::error('main', '(client/start) User importation failed');
 	throw_response(INVALID_USER);
 }
 
@@ -231,7 +231,7 @@ switch ($session_mode) {
 		break;
 }
 
-Logger::debug('main', '(startsession) Now checking for old session');
+Logger::debug('main', '(client/start) Now checking for old session');
 
 $ev = new SessionStart(array('user' => $user));
 
@@ -248,10 +248,10 @@ if ($sessions > 0) {
 				$user_password_fs = $session->settings['fs_access_password'];
 			}
 		} elseif ($session->isAlive()) {
-			Logger::error('main', '(startsession) User \''.$user->getAttribute('login').'\' already have an active session');
+			Logger::error('main', '(client/start) User \''.$user->getAttribute('login').'\' already have an active session');
 			throw_response(USER_WITH_ACTIVE_SESSION);
 		} else {
-			Logger::error('main', '(startsession) User \''.$user->getAttribute('login').'\' already have an active session');
+			Logger::error('main', '(client/start) User \''.$user->getAttribute('login').'\' already have an active session');
 			throw_response(USER_WITH_ACTIVE_SESSION);
 		}
 	}
@@ -266,7 +266,7 @@ if (isset($old_session_id)) {
 
 	$ret = true;
 
-	Logger::info('main', '(startsession) Resuming session for '.$user->getAttribute('login').' ('.$old_session_id.' => '.$session->server.')');
+	Logger::info('main', '(client/start) Resuming session for '.$user->getAttribute('login').' ('.$old_session_id.' => '.$session->server.')');
 } else {
 	$servers = array();
 
@@ -284,7 +284,7 @@ if (isset($old_session_id)) {
 		$ev->setAttribute('ok', false);
 		$ev->setAttribute('error', _('No available server'));
 		$ev->emit();
-		Logger::error('main', '(startsession) no server found for \''.$user->getAttribute('login').'\' -> abort');
+		Logger::error('main', '(client/start) no server found for \''.$user->getAttribute('login').'\' -> abort');
 		throw_response(SERVICE_NOT_AVAILABLE);
 	}
 
@@ -308,7 +308,7 @@ if (isset($old_session_id)) {
 					}
 				}
 				if (! $random_server) {
-					Logger::error('main', '(startsession) no "linux" desktop server found for \''.$user->getAttribute('login').'\' -> abort');
+					Logger::error('main', '(client/start) no "linux" desktop server found for \''.$user->getAttribute('login').'\' -> abort');
 					throw_response(SERVICE_NOT_AVAILABLE);
 				}
 				break;
@@ -324,7 +324,7 @@ if (isset($old_session_id)) {
 					}
 				}
 				if (! $random_server) {
-					Logger::error('main', '(startsession) no "windows" desktop server found for \''.$user->getAttribute('login').'\' -> abort');
+					Logger::error('main', '(client/start) no "windows" desktop server found for \''.$user->getAttribute('login').'\' -> abort');
 					throw_response(SERVICE_NOT_AVAILABLE);
 				}
 				break;
@@ -342,13 +342,13 @@ if (isset($old_session_id)) {
 			$netfolders = $user->getNetworkFolders();
 
 			if (! is_array($netfolders)) {
-				Logger::error('main', '(startsession) User::getNetworkFolders() failed');
+				Logger::error('main', '(client/start) User::getNetworkFolders() failed');
 				throw_response(INTERNAL_ERROR);
 			}
 
 			$profile_available = false;
 			if (count($netfolders) == 1) {
-				Logger::debug('main', '(startsession) User "'.$user_login_fs.'" already have a profile, using it');
+				Logger::debug('main', '(client/start) User "'.$user->getAttribute('login').'" already have a profile, using it');
 
 				$netfolder = array_pop($netfolders);
 
@@ -363,10 +363,10 @@ if (isset($old_session_id)) {
 					$servers[Server::SERVER_ROLE_FS][$profile_server] = array();
 				}
 			} else {
-				Logger::debug('main', '(startsession) User "'.$user_login_fs.'" does not have a profile for now, checking for auto-creation');
+				Logger::debug('main', '(client/start) User "'.$user->getAttribute('login').'" does not have a profile for now, checking for auto-creation');
 
 				if (isset($auto_create_profile) && $auto_create_profile == 1) {
-					Logger::debug('main', '(startsession) User "'.$user_login_fs.'" profile will be auto-created, and used');
+					Logger::debug('main', '(client/start) User "'.$user->getAttribute('login').'" profile will be auto-created, and used');
 
 					$fileserver = array_pop($fileservers);
 					$profile = new NetworkFolder();
@@ -375,12 +375,12 @@ if (isset($old_session_id)) {
 					Abstract_NetworkFolder::save($profile);
 
 					if (! $fileserver->createNetworkFolder($profile->id)) {
-						Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login_fs.'" failed (step 1)');
+						Logger::error('main', '(client/start) Auto-creation of profile for User "'.$user->getAttribute('login').'" failed (step 1)');
 						throw_response(INTERNAL_ERROR);
 					}
 
 					if (! $profile->addUser($user)) {
-						Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login_fs.'" failed (step 2)');
+						Logger::error('main', '(client/start) Auto-creation of profile for User "'.$user->getAttribute('login').'" failed (step 2)');
 						throw_response(INTERNAL_ERROR);
 					}
 
@@ -390,28 +390,28 @@ if (isset($old_session_id)) {
 
 					$servers[Server::SERVER_ROLE_FS][$profile_server] = array();
 				} else {
-					Logger::debug('main', '(startsession) Auto-creation of profile for User "'.$user_login_fs.'" disabled, checking for session without profile');
+					Logger::debug('main', '(client/start) Auto-creation of profile for User "'.$user->getAttribute('login').'" disabled, checking for session without profile');
 
 					if (isset($start_without_profile) && $start_without_profile == 1) {
-						Logger::debug('main', '(startsession) User "'.$user_login_fs.'" can start a session without a valid profile, proceeding');
+						Logger::debug('main', '(client/start) User "'.$user->getAttribute('login').'" can start a session without a valid profile, proceeding');
 
 						$profile_available = false;
 					} else {
-						Logger::error('main', '(startsession) User "'.$user_login_fs.'" does not have a valid profile, aborting');
+						Logger::error('main', '(client/start) User "'.$user->getAttribute('login').'" does not have a valid profile, aborting');
 
 						throw_response(INTERNAL_ERROR);
 					}
 				}
 			}
 		} else {
-			Logger::debug('main', '(startsession) FileServer not available for User "'.$user_login_fs.'", checking for session without profile');
+			Logger::debug('main', '(client/start) FileServer not available for User "'.$user->getAttribute('login').'", checking for session without profile');
 
 			if (isset($start_without_profile) && $start_without_profile == 1) {
-				Logger::debug('main', '(startsession) User "'.$user_login_fs.'" can start a session without a valid profile, proceeding');
+				Logger::debug('main', '(client/start) User "'.$user->getAttribute('login').'" can start a session without a valid profile, proceeding');
 
 				$profile_available = false;
 			} else {
-				Logger::error('main', '(startsession) User "'.$user_login_fs.'" does not have a valid profile, aborting');
+				Logger::error('main', '(client/start) User "'.$user->getAttribute('login').'" does not have a valid profile, aborting');
 
 				throw_response(INTERNAL_ERROR);
 			}
@@ -426,14 +426,14 @@ if (isset($old_session_id)) {
 			foreach ($sharedfolders as $sharedfolder) {
 				$sharedfolder_server = Abstract_Server::load($sharedfolder->server);
 				if (! $sharedfolder_server || ! $sharedfolder_server->isOnline()) {
-					Logger::error('main', '(startsession) Server "'.$sharedfolder->server.'" for shared folder "'.$sharedfolder->id.'" is not available');
+					Logger::error('main', '(client/start) Server "'.$sharedfolder->server.'" for shared folder "'.$sharedfolder->id.'" is not available');
 
 					if (isset($start_without_all_sharedfolders) && $start_without_all_sharedfolders == 1) {
-						Logger::debug('main', '(startsession) User "'.$user_login_fs.'" can start a session without all shared folders available, proceeding');
+						Logger::debug('main', '(client/start) User "'.$user->getAttribute('login').'" can start a session without all shared folders available, proceeding');
 
 						continue;
 					} else {
-						Logger::error('main', '(startsession) User "'.$user_login_fs.'" does not have all shared folders available, aborting');
+						Logger::error('main', '(client/start) User "'.$user->getAttribute('login').'" does not have all shared folders available, aborting');
 
 						throw_response(INTERNAL_ERROR);
 					}
@@ -464,7 +464,7 @@ if (isset($old_session_id)) {
 
 	$ret = true;
 
-	Logger::info('main', '(startsession) Creating new session for '.$user->getAttribute('login').' ('.$random_session_id.' => '.$random_server.')');
+	Logger::info('main', '(client/start) Creating new session for '.$user->getAttribute('login').' ('.$random_session_id.' => '.$random_server.')');
 }
 
 if ($ret === false)
@@ -489,7 +489,7 @@ if (isset($_REQUEST['start_apps']) && is_array($_REQUEST['start_apps'])) {
 		$app = $applicationDB->import($start_app['id']);
 
 		if (! is_object($app)) {
-			Logger::error('main', '(startsession) No such application for id \''.$start_app['id'].'\'');
+			Logger::error('main', '(client/start) No such application for id \''.$start_app['id'].'\'');
 			throw_response(SERVICE_NOT_AVAILABLE);
 		}
 
@@ -504,7 +504,7 @@ if (isset($_REQUEST['start_apps']) && is_array($_REQUEST['start_apps'])) {
 		}
 
 		if ($ok === false) {
-			Logger::error('main', '(startsession) Application not available for user \''.$user->getAttribute('login').'\' id \''.$start_app['id'].'\'');
+			Logger::error('main', '(client/start) Application not available for user \''.$user->getAttribute('login').'\' id \''.$start_app['id'].'\'');
 			throw_response(SERVICE_NOT_AVAILABLE);
 		}
 	}
@@ -534,10 +534,10 @@ if (isset($user_login_fs) && isset($user_password_fs)) {
 
 $save_session = Abstract_Session::save($session);
 if ($save_session === true) {
-	Logger::info('main', '(startsession) session \''.$session->id.'\' actually saved on DB for user \''.$user->getAttribute('login').'\'');
+	Logger::info('main', '(client/start) session \''.$session->id.'\' actually saved on DB for user \''.$user->getAttribute('login').'\'');
 }
 else {
-	Logger::error('main', '(startsession) failed to save session \''.$session->id.'\' for user \''.$user->getAttribute('login').'\'');
+	Logger::error('main', '(client/start) failed to save session \''.$session->id.'\' for user \''.$user->getAttribute('login').'\'');
 	throw_response(INTERNAL_ERROR);
 }
 
@@ -574,7 +574,7 @@ if (! isset($old_session_id)) {
 			continue;
 
 		if (! $server->orderFSAccessEnable($user_login_fs, $user_password_fs, $v)) {
-			Logger::error('main', '(startsession) Cannot enable FS access for User "'.$user_login_fs.'" on Server "'.$server->fqdn.'"');
+			Logger::error('main', '(client/start) Cannot enable FS access for User "'.$user->getAttribute('login').'" on Server "'.$server->fqdn.'"');
 			throw_response(INTERNAL_ERROR);
 		}
 	}
