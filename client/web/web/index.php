@@ -414,11 +414,11 @@ function get_users_list() {
 										setTimeout(function() {
 <?php
 if (! defined('SESSIONMANAGER_HOST') && (! isset($wi_sessionmanager_host) || $wi_sessionmanager_host == ''))
-	echo '$(\'sessionmanager_host\').focus();';
+	echo 'if ($(\'sessionmanager_host\') && $(\'sessionmanager_host\').visible()) $(\'sessionmanager_host\').focus();';
 elseif ($users !== false || (isset($wi_user_login) && $wi_user_login != ''))
-	echo '$(\'user_password\').focus();';
+	echo 'if ($(\'user_password\') && $(\'user_password\').visible()) $(\'user_password\').focus();';
 else
-	echo '$(\'user_login\').focus();';
+	echo 'if ($(\'user_login\') && $(\'user_login\').visible()) $(\'user_login\').focus();';
 ?>
 
 checkLogin();
@@ -443,7 +443,8 @@ checkSessionMode();
 															if ($('sessionmanager_host').value == '') {
 																$('sessionmanager_host').style.color = 'grey';
 																$('sessionmanager_host').value = sessionmanager_host_example;
-																setCaretPosition($('sessionmanager_host'), 0);
+																if ($('sessionmanager_host') && $('sessionmanager_host').visible())
+																	setCaretPosition($('sessionmanager_host'), 0);
 															}
 															Event.observe($('sessionmanager_host'), 'keypress', function() {
 																if ($('sessionmanager_host').value == sessionmanager_host_example) {
@@ -455,7 +456,8 @@ checkSessionMode();
 																if ($('sessionmanager_host').value == '') {
 																	$('sessionmanager_host').style.color = 'grey';
 																	$('sessionmanager_host').value = sessionmanager_host_example;
-																	setCaretPosition($('sessionmanager_host'), 0);
+																	if ($('sessionmanager_host') && $('sessionmanager_host').visible())
+																		setCaretPosition($('sessionmanager_host'), 0);
 																}
 															});
 														}, 1500);
