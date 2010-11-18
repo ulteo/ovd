@@ -325,7 +325,7 @@ function show_manage($id) {
   $userDB = UserDB::getInstance();
   $applicationsGroupDB = ApplicationsGroupDB::getInstance();
 
-  if ($userDB->isWriteable()) {
+  if ($usergroupdb_rw) {
     $usersList = new UsersList($_REQUEST);
     $users_all = $usersList->search();
     $search_form = $usersList->getForm(array('action' => 'manage', 'id' => $id, 'search_user' => true));
