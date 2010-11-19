@@ -16,6 +16,7 @@ Architecture: all
 Suggests: ulteo-ovd-debconf-database
 Pre-Depends: debconf
 Depends: mysql-server, wwwconfig-common,
- ulteo-ovd-session-manager, ulteo-ovd-web-client, ulteo-ovd-subsystem
+ ulteo-ovd-session-manager, ulteo-ovd-subsystem,
+ ulteo-ovd-web-client, ulteo-ovd-web-client-ajaxplorer
 Description: Ulteo Open Virtual Desktop - easy install
  Install quickly and easily the Ulteo OVD with a chroot system.
