@@ -30,6 +30,8 @@ var Applications = Class.create(Daemon, {
 
 	liaison_runningapplicationtoken_application: new Hash(),
 
+	progress_bar_step: 50,
+
 	initialize: function(applet_version_, applet_main_class_, in_popup_, debug_) {
 		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, in_popup_, debug_]);
 

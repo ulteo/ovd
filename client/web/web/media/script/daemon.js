@@ -62,6 +62,7 @@ var Daemon = Class.create({
 	error_message: '',
 
 	progressbar_value: 0,
+	progress_bar_step: 20,
 
 	initialize: function(applet_version_, applet_main_class_, in_popup_, debug_) {
 		this.applet_version = applet_version_;
@@ -181,7 +182,7 @@ var Daemon = Class.create({
 		if (this.progressbar_value > 100)
 			this.progressbar_value = 100;
 
-		this.progressbar_value += 20;
+		this.progressbar_value += this.progress_bar_step;
 
 		$('progressBarContent').style.width = this.progressbar_value+'%';
 
