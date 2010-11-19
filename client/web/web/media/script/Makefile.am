@@ -5,7 +5,6 @@ scripts_DATA = application.js \
                daemon.js \
                daemon_applications.js \
                daemon_desktop.js \
-               i18n.js.php \
                server.js \
                timezones.js
 
