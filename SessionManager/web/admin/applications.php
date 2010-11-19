@@ -135,6 +135,16 @@ function show_default($applicationDB) {
 
     echo '</table>';
     echo '</div>'; // apps_list
+    
+    echo '<div id="remove_orphan_application">';
+    echo '<h2>'._('Orphan Applications').'</h2>';
+    echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to remove orphan applications?').'\');">';
+    echo '<input type="hidden" name="action" value="remove_orphan" />';
+    echo '<input type="hidden" name="name" value="Application" />';
+    echo '<input type="submit" value="'._('Remove orphan applications').'"/>';
+    echo '</form>';
+    
+    echo '</div>'; // remove_orphan_application
   }
   echo '</div>'; // apps_list_div
   echo '</div>'; // general div

@@ -34,7 +34,7 @@ if (!isset($_REQUEST['name']))
 if (!isset($_REQUEST['action']))
 	redirect();
 
-if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'populate', 'publish', 'del_icon', 'unset_default', 'set_default', 'modify_rules')))
+if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'populate', 'publish', 'del_icon', 'unset_default', 'set_default', 'modify_rules', 'remove_orphan')))
 	redirect();
 
 if ($_REQUEST['name'] == 'System') {
@@ -170,6 +170,29 @@ if ($_REQUEST['name'] == 'Application') {
 				}
 			}
 			popup_info(sprintf(_("Application '%s' successfully modified"), $app->getAttribute('name')));
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'remove_orphan') {
+		$applicationsDB = ApplicationDB::getInstance();
+		$apps = $applicationsDB->getList();
+		$success = true;
+		if (is_array($apps)) {
+			foreach ($apps as $app) {
+				if ($app->isOrphan()) {
+					$ret = $applicationsDB->remove($app);
+					if ($ret !== true) {
+						$success = false;
+						break;
+					}
+				}
+			}
+			if ($success) {
+				popup_info(_("Orphan applications successfully removed"));
+			}
+			else {
+				popup_error(_("Problem while removing orphan applications"));
+			}
 		}
 	}
 }
