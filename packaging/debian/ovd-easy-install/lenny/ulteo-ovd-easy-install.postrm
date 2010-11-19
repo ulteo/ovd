@@ -5,14 +5,20 @@
 case "$1" in
 
     purge)
-        db_get ulteo-ovd-easy-install/mysql_dbuser   && dbuser=$RET
-        db_get ulteo-ovd-easy-install/mysql_dbname   && dbname=$RET
-        db_get ulteo-ovd-easy-install/mysql_dbpass   && dbpass=$RET
         db_get ulteo-ovd-easy-install/mysql_dbserver && dbserver=$RET
+        if ! db_get ulteo-ovd-debconf-database/mysql_root_password; then
+            db_fset ulteo-ovd-easy-install/mysql_dbrootpass seen false || true
+            db_input critical ulteo-ovd-easy-install/mysql_dbrootpass || true
+            db_go
+            db_get ulteo-ovd-easy-install/mysql_dbrootpass
+        fi
         dbadmin=root
-        db_get ulteo-ovd-debconf-database/mysql_root_password && dbadmpass=$RET
+        dbadmpass=$RET
 
+        db_get ulteo-ovd-easy-install/mysql_dbname && dbname=$RET
         . /usr/share/wwwconfig-common/mysql-dropdb.sh
+
+        db_get ulteo-ovd-easy-install/mysql_dbuser && dbuser=$RET
         . /usr/share/wwwconfig-common/mysql-dropuser.sh
     ;;
 
