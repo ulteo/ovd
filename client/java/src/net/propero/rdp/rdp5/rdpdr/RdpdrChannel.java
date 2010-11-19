@@ -32,6 +32,8 @@ package net.propero.rdp.rdp5.rdpdr;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
@@ -189,7 +191,14 @@ public class RdpdrChannel extends VChannel {
 			RdpPacket_Localised s;
 			int hostlen;
 
-			String g_rdpdr_clientname = this.opt.hostname;
+			String g_rdpdr_clientname = "";
+			try {
+				InetAddress localMachine = InetAddress.getLocalHost();
+				g_rdpdr_clientname = localMachine.getHostName();
+			}
+			catch (java.net.UnknownHostException e) {
+				System.err.println("Unable to get hostname of the machine");
+			}
 			hostlen = (g_rdpdr_clientname.length() + 1) * 2;
 
 			s = new RdpPacket_Localised( 16 + hostlen );
