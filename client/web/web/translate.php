@@ -113,5 +113,34 @@ foreach ($translations as $id => $string) {
 	$root->appendChild($node);
 }
 
+$js_translations = array(
+	'auth_failed'					=>	_('Authentication failed: please double-check your password and try again'),
+	'in_maintenance'				=>	_('The system is on maintenance mode, please contact your administrator for more information'),
+	'internal_error'				=>	_('An internal error occured, please contact your administrator'),
+	'invalid_user'					=>	_('You specified an invalid login, please double-check and try again'),
+	'service_not_available'			=>	_('The service is not available, please contact your administrator for more information'),
+	'unauthorized_session_mode'		=>	_('You are not authorized to launch a session in this mode'),
+	'user_with_active_session'		=>	_('You already have an active session'),
+
+	'session_expire_in_3_minutes'	=>	_('Your session is going to end in 3 minutes, please save all your data now!'),
+
+	'session_close_unexpected'		=>	_('Server: session closed unexpectedly'),
+	'session_end_ok'				=>	_('Your session has ended, you can now close the window'),
+	'session_end_unexpected'		=>	_('Your session has ended unexpectedly'),
+	'error_details'					=>	_('error details'),
+	'close_this_window'				=>	_('Close this window'),
+	'start_another_session'			=>	_('Click <a href="javascript:;" onclick="hideEnd(); showLogin(); return false;">here</a> to start a new session'),
+
+	'suspend'						=>	_('suspend'),
+	'resume'						=>	_('resume')
+);
+
+foreach ($js_translations as $id => $string) {
+	$node = $dom->createElement('js_translation');
+	$node->setAttribute('id', $id);
+	$node->setAttribute('string', $string);
+	$root->appendChild($node);
+}
+
 echo $dom->saveXML();
 die();
