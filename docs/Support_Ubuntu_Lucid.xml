@@ -426,7 +426,7 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
         </screen>
       </listitem>
 
-      <listitem>
+      <listitem id="wc_debconf_1">
 	<para>
 	  The installer asks if you want to plug the Web Client with
 	  an existing Session Manager. I depends if you want to use
@@ -445,7 +445,7 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
 	</para>
       </listitem>
       
-      <listitem>
+      <listitem id="wc_debconf_2">
 	<para>
 	  If you answered yes at the previous question, you now have
 	  to give the Session Manager host/IP address. In our

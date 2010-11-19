@@ -71,5 +71,28 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu hardy main]]>
 
   <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm" />
   <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem" />
-  <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc" />
+
+  <section id="wc">
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_title" />
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_para_1" />
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_para_2" />
+
+    <itemizedlist>
+      <listitem>
+        <para id="wc_package">
+	  Install the packages <emphasis>ulteo-ovd-web-client</emphasis> and <emphasis>ulteo-ovd-web-client-ajaxplorer</emphasis>:
+        </para>
+        <screen>
+	  <![CDATA[
+# apt-get install ulteo-ovd-web-client ulteo-ovd-web-client-ajaxplorer]]>
+        </screen>
+      </listitem>
+      
+      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_debconf_1" />
+      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_debconf_2" />
+    </itemizedlist>
+
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_last_1" />
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_last_2" />
+  </section>
 </article>

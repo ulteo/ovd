@@ -58,5 +58,5 @@ deb http://archive.ulteo.com/ovd/3.0/debian lenny main]]>
 
   <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm" />
   <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem" />
-  <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc" />
+  <xi:include href="Support_Ubuntu_Hardy.xml" xpointer="wc" />
 </article>

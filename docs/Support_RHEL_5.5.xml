@@ -202,10 +202,10 @@ Chroot destination [/opt/ulteo]:]]>
 
     <itemizedlist>
       <listitem>
-        <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_package" />
+        <xi:include href="Support_Ubuntu_Hardy.xml" xpointer="wc_package" />
         <screen>
 	  <![CDATA[
-# yum install ulteo-ovd-web-client]]>
+# yum install ulteo-ovd-web-client ulteo-ovd-web-client-ajaxplorer]]>
         </screen>
       </listitem>
     </itemizedlist>
