@@ -253,6 +253,21 @@ class Session(AbstractSession):
 				_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 1)
 			_winreg.CloseKey(key)
 
+		# Enable to use of lnk file from share without popup
+		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Policies\Associations"%(hiveName)
+	
+		try:
+			Reg.CreateKeyR(_winreg.HKEY_USERS, path)
+			key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+		except:
+			key = None
+		if key is None:
+			Logger.error("Unable to open key '%s'"%(path))
+		else:
+			_winreg.SetValueEx(key, "ModRiskFileTypes", 0, _winreg.REG_SZ, ".exe;.msi;.vbs")
+			_winreg.CloseKey(key)
+
+
 		# start menu customization
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"%(hiveName)
 		restrictions = ["Start_ShowRun"]
