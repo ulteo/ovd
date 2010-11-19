@@ -134,8 +134,7 @@ function show_default($applicationDB) {
     }
 
     echo '</table>';
-    echo '</div>';
-  echo '</div>';
+    echo '</div>'; // apps_list
   }
   echo '</div>'; // apps_list_div
   echo '</div>'; // general div
