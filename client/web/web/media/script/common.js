@@ -35,7 +35,6 @@ var date = new Date();
 var rand = Math.round(Math.random()*100)+date.getTime();
 var window_;
 
-var use_popup = false;
 var debug = false;
 var explorer = false;
 
@@ -51,10 +50,6 @@ function startSession() {
 	explorer = false;
 
 	startsession = false;
-
-	use_popup = false;
-	if ($('use_popup_true') && $('use_popup_true').checked)
-		use_popup = true;
 
 	debug = false;
 	if ($('debug_true') && $('debug_true').checked)
@@ -81,7 +76,6 @@ function startSession() {
 					keymap: $('session_keymap').value,
 					timezone: $('timezone').value,
 					desktop_fullscreen: desktop_fullscreen,
-					use_popup: ((use_popup)?1:0),
 					debug: ((debug)?1:0)
 				},
 				asynchronous: false,
@@ -94,7 +88,6 @@ function startSession() {
 			}
 		);
 	} else {
-		use_popup = false;
 		$('CheckSignedJava').ajaxRequest($('sessionmanager_host').value, $('session_mode').value, $('session_language').value, $('timezone').value, 'onStartSessionJavaRequest');
 		return false;
 	}
@@ -102,13 +95,7 @@ function startSession() {
 	if (! startsession)
 		return false;
 
-	if (use_popup) {
-		window_ = popupOpen(rand);
-		$('startsession').target = 'Ulteo'+rand;
-	} else
-		return false;
-
-	return true;
+	return false;
 }
 
 function hideSplash() {
@@ -205,77 +192,73 @@ function onStartSessionSuccess(xml_) {
 
 	startsession = true;
 
-	if (! use_popup) {
-		hideLogin();
-		showSplash();
+	hideLogin();
+	showSplash();
 
-		if (session_mode == 'Desktop') {
-			new Effect.Move($('desktopModeContainer'), { x: 0, y: -my_height });
-			setTimeout(function() {
-				$('desktopModeContainer').show();
-			}, 2000);
-		} else {
-			new Effect.Move($('applicationsModeContainer'), { x: 0, y: -my_height });
-			setTimeout(function() {
-				$('applicationsModeContainer').show();
-			}, 2000);
+	if (session_mode == 'Desktop') {
+		new Effect.Move($('desktopModeContainer'), { x: 0, y: -my_height });
+		setTimeout(function() {
+			$('desktopModeContainer').show();
+		}, 2000);
+	} else {
+		new Effect.Move($('applicationsModeContainer'), { x: 0, y: -my_height });
+		setTimeout(function() {
+			$('applicationsModeContainer').show();
+		}, 2000);
+	}
+
+	setTimeout(function() {
+		if (session_mode == 'Desktop')
+			daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.ovd.applet.Desktop', debug);
+		else
+			daemon = new Applications('ulteo-applet.jar', 'org.ulteo.ovd.applet.Applications', debug);
+		daemon.explorer = explorer;
+
+		if (daemon.explorer)
+			$('fileManagerWrap').show();
+
+		daemon.keymap = $('session_keymap').value;
+		try {
+			daemon.duration = parseInt(session_node.getAttribute('duration'));
+		} catch(e) {}
+		daemon.duration = parseInt(session_node.getAttribute('duration'));
+		daemon.multimedia = ((session_node.getAttribute('multimedia') == 1)?true:false);
+		daemon.redirect_client_printers = ((session_node.getAttribute('redirect_client_printers') == 1)?true:false);
+		if (session_mode == 'Desktop' && desktop_fullscreen)
+			daemon.fullscreen = true;
+
+		daemon.i18n['session_close_unexpected'] = i18n.get('session_close_unexpected');
+		daemon.i18n['session_end_ok'] = i18n.get('session_end_ok');
+		daemon.i18n['session_end_unexpected'] = i18n.get('session_end_unexpected');
+		daemon.i18n['error_details'] = i18n.get('error_details');
+		daemon.i18n['close_this_window'] = i18n.get('close_this_window');
+		daemon.i18n['start_another_session'] = i18n.get('start_another_session');
+
+		daemon.i18n['suspend'] = i18n.get('suspend');
+		daemon.i18n['resume'] = i18n.get('resume');
+
+		if (debug) {
+			if (session_mode == 'Desktop')
+				$('desktopModeContainer').style.height = daemon.my_height+'px';
+			else
+				$('applicationsModeContainer').style.height = daemon.my_height+'px';
 		}
 
-		setTimeout(function() {
-			if (session_mode == 'Desktop')
-				daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.ovd.applet.Desktop', false, debug);
-			else
-				daemon = new Applications('ulteo-applet.jar', 'org.ulteo.ovd.applet.Applications', false, debug);
-			daemon.explorer = explorer;
+		daemon.prepare();
+		daemon.loop();
+	}, 2500);
 
-			if (daemon.explorer)
-				$('fileManagerWrap').show();
+	setTimeout(function() {
+		if (session_mode == 'Desktop')
+				new Effect.Move($('desktopModeContainer'), { x: 0, y: my_height });
+		else
+				new Effect.Move($('applicationsModeContainer'), { x: 0, y: my_height });
+	}, 3000);
 
-			daemon.keymap = $('session_keymap').value;
-			try {
-				daemon.duration = parseInt(session_node.getAttribute('duration'));
-			} catch(e) {}
-			daemon.duration = parseInt(session_node.getAttribute('duration'));
-			daemon.multimedia = ((session_node.getAttribute('multimedia') == 1)?true:false);
-			daemon.redirect_client_printers = ((session_node.getAttribute('redirect_client_printers') == 1)?true:false);
-			if (session_mode == 'Desktop' && desktop_fullscreen)
-				daemon.fullscreen = true;
-
-			daemon.i18n['session_close_unexpected'] = i18n.get('session_close_unexpected');
-			daemon.i18n['session_end_ok'] = i18n.get('session_end_ok');
-			daemon.i18n['session_end_unexpected'] = i18n.get('session_end_unexpected');
-			daemon.i18n['error_details'] = i18n.get('error_details');
-			daemon.i18n['close_this_window'] = i18n.get('close_this_window');
-			daemon.i18n['start_another_session'] = i18n.get('start_another_session');
-
-			daemon.i18n['suspend'] = i18n.get('suspend');
-			daemon.i18n['resume'] = i18n.get('resume');
-
-			if (debug) {
-				if (session_mode == 'Desktop')
-					$('desktopModeContainer').style.height = daemon.my_height+'px';
-				else
-					$('applicationsModeContainer').style.height = daemon.my_height+'px';
-			}
-
-			daemon.prepare();
-			daemon.loop();
-		}, 2500);
-
-		setTimeout(function() {
-			if (session_mode == 'Desktop')
-					new Effect.Move($('desktopModeContainer'), { x: 0, y: my_height });
-			else
-					new Effect.Move($('applicationsModeContainer'), { x: 0, y: my_height });
-		}, 3000);
-
-		setTimeout(function() {
-			hideSplash();
-			enableLogin();
-		}, 5000);
-	} else {
+	setTimeout(function() {
+		hideSplash();
 		enableLogin();
-	}
+	}, 5000);
 
 	return true;
 }
@@ -334,19 +317,12 @@ function synchronize(data_, cookie_) {
 				language: $('session_language').value,
 				keymap: $('session_keymap').value,
 				timezone: $('timezone').value,
-				use_popup: ((use_popup)?1:0),
 				debug: ((debug)?1:0),
 				xml: data_
 			},
 			requestHeaders: new Array('Forward-Cookie', cookie_)
 		}
 	);
-}
-
-function popupOpen(rand_) {
-	var w = window.open('about:blank', 'Ulteo'+rand_, 'toolbar=no,status=no,top=0,left=0,width='+screen.width+',height='+screen.height+',scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
-
-	return w;
 }
 
 function offContent(container) {
@@ -713,9 +689,6 @@ function setCaretPosition(ctrl, pos) {
 
 function checkLogin() {
 	if ($('use_local_credentials_true') && $('use_local_credentials_true').checked) {
-		$('use_popup_true').disabled = true;
-		$('use_popup_false').disabled = true;
-		
 		$('user_login_local').innerHTML = $('CheckSignedJava').getUserLogin();
 		if ($('user_password'))
 			$('user_password').disabled = true;
@@ -724,9 +697,6 @@ function checkLogin() {
 		$('user_login_local').show();
 		$('password_row').hide();
 	} else {
-		$('use_popup_true').disabled = false;
-		$('use_popup_false').disabled = false;
-		
 		if ($('user_password'))
 			$('user_password').disabled = false;
 		

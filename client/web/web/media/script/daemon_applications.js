@@ -32,8 +32,8 @@ var Applications = Class.create(Daemon, {
 
 	progress_bar_step: 50,
 
-	initialize: function(applet_version_, applet_main_class_, in_popup_, debug_) {
-		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, in_popup_, debug_]);
+	initialize: function(applet_version_, applet_main_class_, debug_) {
+		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, debug_]);
 
 		$('applicationsAppletContainer').innerHTML = '';
 

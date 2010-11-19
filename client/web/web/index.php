@@ -61,10 +61,6 @@ $wi_desktop_fullscreen = 0;
 if (isset($_COOKIE['ovd-client']['desktop_fullscreen']))
 	$wi_desktop_fullscreen = (int)$_COOKIE['ovd-client']['desktop_fullscreen'];
 
-$wi_use_popup = 0;
-// if (isset($_COOKIE['ovd-client']['use_popup']))
-// 	$wi_use_popup = (int)$_COOKIE['ovd-client']['use_popup'];
-
 $wi_debug = 1;
 if (isset($_COOKIE['ovd-client']['debug']))
 	$wi_debug = (int)$_COOKIE['ovd-client']['debug'];
@@ -584,18 +580,6 @@ checkSessionMode();
 																	echo '<option value="'.$keymap['id'].'"'.(($keymap['id'] == $user_keymap || $keymap['id'] == substr($user_keymap, 0, 2))?' selected="selected"':'').'>'.$keymap['name'].'</option>';
 															?>
 														</select>
-													</td>
-												</tr>
-												<tr style="display: none;">
-													<td style="text-align: right; vertical-align: middle;">
-														<img src="media/image/icons/use_popup.png" alt="" title="" />
-													</td>
-													<td style="text-align: left; vertical-align: middle;">
-														<strong><span id="use_popup_gettext">&nbsp;</span></strong>
-													</td>
-													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="use_popup_true" name="popup" value="1"<?php if ($wi_use_popup == 1) echo ' checked="checked"'; ?> /> <span id="use_popup_yes_gettext">&nbsp;</span>
-														<input class="input_radio" type="radio" id="use_popup_false" name="popup" value="0"<?php if ($wi_use_popup == 0) echo ' checked="checked"'; ?> /> <span id="use_popup_no_gettext">&nbsp;</span>
 													</td>
 												</tr>
 <?php

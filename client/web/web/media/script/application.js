@@ -209,26 +209,9 @@ var Running_Application = Class.create(Application, {
 	},
 
 	suspend: function() {
-		new Ajax.Request(
-			'application_exit.php',
-			{
-				method: 'get',
-				parameters: {
-					access_id: this.pid
-				}
-			}
-		);
 	},
 
 	resume: function() {
-		var popup = this.popupOpen();
-
-		var app_pid = this.pid;
-		setTimeout(function() {
-			popup.location.href = 'resume.php?access_id='+app_pid;
-		}, 1000);
-
-		return true;
 	}
 });
 

@@ -25,7 +25,6 @@ var Daemon = Class.create({
 	applet_version: '',
 	applet_main_class: '',
 
-	in_popup: true,
 	debug: false,
 	explorer: false,
 
@@ -64,11 +63,10 @@ var Daemon = Class.create({
 	progressbar_value: 0,
 	progress_bar_step: 20,
 
-	initialize: function(applet_version_, applet_main_class_, in_popup_, debug_) {
+	initialize: function(applet_version_, applet_main_class_, debug_) {
 		this.applet_version = applet_version_;
 		this.applet_main_class = applet_main_class_;
 
-		this.in_popup = in_popup_;
 		this.debug = debug_;
 
 		this.protocol = window.location.protocol;
@@ -504,17 +502,9 @@ var Daemon = Class.create({
 
 			var close_container = document.createElement('div');
 			close_container.setAttribute('style', 'margin-top: 10px;');
-			if (this.in_popup == true) {
-				var close_button = document.createElement('input');
-				close_button.setAttribute('type', 'button');
-				close_button.setAttribute('value', this.i18n['close_this_window']);
-				close_button.setAttribute('onclick', 'window.close(); return false;');
-				close_container.appendChild(close_button);
-			} else {
-				var close_text = document.createElement('span');
-				close_text.innerHTML = this.i18n['start_another_session'];
-				close_container.appendChild(close_text);
-			}
+			var close_text = document.createElement('span');
+			close_text.innerHTML = this.i18n['start_another_session'];
+			close_container.appendChild(close_text);
 			buf.appendChild(close_container);
 
 			$('endContent').appendChild(buf);

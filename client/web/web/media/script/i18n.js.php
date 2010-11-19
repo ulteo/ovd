@@ -38,7 +38,6 @@ echo "i18n.set('session_end_unexpected', '"._('Your session has ended unexpected
 echo "i18n.set('error_details', '"._('error details')."');\n";
 echo "i18n.set('close_this_window', '"._('Close this window')."');\n";
 echo "i18n.set('start_another_session', '"._('Click <a href="javascript:;" onclick="hideEnd(); showLogin(); return false;">here</a> to start a new session')."');\n";
-echo "i18n.set('start_another_session_popup', '"._('Click <a href="index.php">here</a> to start a new session')."');\n";
 
 echo "i18n.set('suspend', '"._('suspend')."');\n";
 echo "i18n.set('resume', '"._('resume')."');\n";
