@@ -129,6 +129,7 @@ public class SystemWindows extends SystemAbstract {
 	@Override
 	protected void saveIcon(Application app) {
 		File output = new File(Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".ico");
+		BufferedImage buf = null;
 		if (! output.exists()) {
 			try {
 				output.createNewFile();
@@ -137,7 +138,14 @@ public class SystemWindows extends SystemAbstract {
 				return;
 			}
 		}
-		BufferedImage buf = new BufferedImage(app.getIcon().getIconWidth(), app.getIcon().getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+		try {
+			buf = new BufferedImage(app.getIcon().getIconWidth(), app.getIcon().getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+		}
+		catch (Exception ex) {
+			Logger.error("Error while creating "+app.getName()+" icon: "+ex.getMessage());
+			return;
+		}
+		
 		Graphics2D graph = buf.createGraphics();
 		graph.drawImage(app.getIcon().getImage(), 0, 0, null);
 		graph.dispose();
