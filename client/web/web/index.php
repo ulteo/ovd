@@ -475,7 +475,7 @@ checkSessionMode();
 													<?php
 														if (! defined('SESSIONMANAGER_HOST') || $users === false) {
 													?>
-													<input type="text" id="user_login" value="<?php echo $wi_user_login; ?>" onchange="checkLogin();" onkeyup="checkLogin();" onkeydown="if (window.event.keyCode == 13) return startSession();" />
+													<input type="text" id="user_login" value="<?php echo $wi_user_login; ?>" onchange="checkLogin();" onkeyup="checkLogin();" onkeydown="if (typeof window.event != 'undefined' && window.event.keyCode == 13) return startSession();" />
 													<?php
 														} else {
 													?>
@@ -499,7 +499,7 @@ checkSessionMode();
 													<strong><span id="password_gettext">&nbsp;</span></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
-													<input type="password" id="user_password" value="" onkeydown="if (window.event.keyCode == 13) return startSession();" />
+													<input type="password" id="user_password" value="" onkeydown="if (typeof window.event != 'undefined' && window.event.keyCode == 13) return startSession();" />
 												</td>
 											</tr>
 										</table>
