@@ -1055,6 +1055,8 @@ class fsAccessDriver extends AbstractAccessDriver
 		$mess = ConfService::getMessages();
 		$filename_new=Utils::processFileName($filename_new);
 		$old=$this->getPath()."/$filePath";
+		if ($this->isDir($old))
+			$old .= '/';
 		if(!$this->isWriteable($old))
 		{
 			return $mess[34]." ".$nom_fic." ".$mess[99];
@@ -1168,6 +1170,8 @@ class fsAccessDriver extends AbstractAccessDriver
 				return $mess[120];
 			}
 			$fileToDelete=$this->getPath().$selectedFile;
+			if ($this->isDir($fileToDelete))
+				$fileToDelete .= '/';
 			if(!file_exists($fileToDelete))
 			{
 				$logMessages[]=$mess[100]." ".SystemTextEncoding::toUTF8($selectedFile);
@@ -1193,6 +1197,10 @@ class fsAccessDriver extends AbstractAccessDriver
 		$mess = ConfService::getMessages();		
 		$destFile = $this->getPath().$destDir."/".basename($srcFile);
 		$realSrcFile = $this->getPath()."$srcFile";
+		if ($this->isDir($realSrcFile)) {
+			$isDir = true;
+			$realSrcFile .= '/';
+		}
 		$recycle = $this->repository->getOption("RECYCLE_BIN");		
 		if(!file_exists($realSrcFile))
 		{
@@ -1226,7 +1234,7 @@ class fsAccessDriver extends AbstractAccessDriver
 				$destFile = $this->getPath().$destDir."/".$newName;
 			}
 		}
-		if($this->isDir($realSrcFile))
+		if($this->isDir($realSrcFile) || (isset($isDir) && $isDir === true))
 		{
 			$errors = array();
 			$succFiles = array();
@@ -1303,13 +1311,14 @@ class fsAccessDriver extends AbstractAccessDriver
 	function dircopy($srcdir, $dstdir, &$errors, &$success, $verbose = false) 
 	{
 		$num = 0;
-		if(!$this->isDir($dstdir)) mkdir($dstdir);
-		if($curdir = opendir($srcdir.'/')) 
+		@mkdir($dstdir.'/');
+		if($curdir = opendir($srcdir)) 
 		{
 			while($file = readdir($curdir)) 
 			{
 				if($file != '.' && $file != '..') 
 				{
+					$num++;
 					$srcfile = $srcdir . DIRECTORY_SEPARATOR . $file;
 					$dstfile = $dstdir . DIRECTORY_SEPARATOR . $file;
 					if($this->isFile($srcfile))
@@ -1320,7 +1329,7 @@ class fsAccessDriver extends AbstractAccessDriver
 							if($verbose) echo "Copying '$srcfile' to '$dstfile'...";
 							if(copy($srcfile, $dstfile)) 
 							{
-								touch($dstfile, filemtime($srcfile)); $num++;
+								//touch($dstfile, filemtime($srcfile));
 								if($verbose) echo "OK\n";
 								$success[] = $srcfile;
 							}
