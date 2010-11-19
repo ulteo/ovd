@@ -28,6 +28,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
@@ -40,6 +41,8 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.OvdException;
+import org.ulteo.ovd.applet.LibraryLoader;
+import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -90,6 +93,15 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 	}
 
 	public static void main(String[] args) {
+		if (OSTools.isWindows()) {
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.LIB_WINDOW_PATH_NAME);
+			} catch (FileNotFoundException ex) {
+				System.err.println(ex.getMessage());
+				System.exit(2);
+			}
+		}
+
 		Params params = new Params();
 
 		BasicConfigurator.configure();
