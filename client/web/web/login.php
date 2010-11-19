@@ -25,7 +25,7 @@ function return_error($errno_, $errstr_) {
 	$dom = new DomDocument('1.0', 'utf-8');
 	$node = $dom->createElement('error');
 	$node->setAttribute('id', $errno_);
-	$node->setAttribute('message', $errstr_);
+	$node->setAttribute('error_id', $errstr_);
 	$dom->appendChild($node);
 	return $dom->saveXML();
 }
@@ -182,12 +182,12 @@ $_SESSION['interface']['debug'] = $_POST['debug'];
 header('Content-Type: text/xml; charset=utf-8');
 
 if (! array_key_exists('login', $_POST)) {
-	echo return_error(1, 'Usage: missing "login" parameter');
+	echo return_error(1, 'no_login_parameter');
 	die();
 }
 
 if (! array_key_exists('password', $_POST)) {
-	echo return_error(2, 'Usage: missing "password" parameter');
+	echo return_error(2, 'no_password_parameter');
 	die();
 }
 
@@ -210,65 +210,36 @@ if (! defined('SESSIONMANAGER_HOST')) {
 
 $xml = query_sm_start($sessionmanager_url.'/start.php', $dom->saveXML());
 if (! $xml) {
-	echo return_error(0, 'Unable to reach the Session Manager');
+	echo return_error(0, 'unable_to_reach_sm');
 	die();
 }
 
 $dom = new DomDocument('1.0', 'utf-8');
 $buf = @$dom->loadXML($xml);
 if (! $buf) {
-	echo return_error(0, 'An internal error occured, please contact your administrator');
+	echo return_error(0, 'internal_error');
 	die();
 }
 
 if (! $dom->hasChildNodes()) {
-	echo return_error(0, 'An internal error occured, please contact your administrator');
+	echo return_error(0, 'internal_error');
 	die();
 }
 
 $response_node = $dom->getElementsByTagName('response')->item(0);
 if (! is_null($response_node)) {
-	$response_code = $response_node->getAttribute('code');
-
-	switch ($response_code) {
-		case 'auth_failed':
-			$ret = _('Authentication failed: please double-check your password and try again');
-			break;
-		case 'in_maintenance':
-			$ret = _('The system is on maintenance mode, please contact your administrator for more information');
-			break;
-		case 'internal_error':
-			$ret = _('An internal error occured, please contact your administrator');
-			break;
-		case 'invalid_user':
-			$ret = _('You specified an invalid login, please double-check and try again');
-			break;
-		case 'service_not_available':
-			$ret = _('The service is not available, please contact your administrator for more information');
-			break;
-		case 'unauthorized_session_mode':
-			$ret = _('You are not authorized to launch a session in this mode');
-			break;
-		case 'user_with_active_session':
-			$ret = _('You already have an active session');
-			break;
-		default:
-			$ret = _('An error occured, please contact your administrator');
-			break;
-	}
-
-	echo return_error(-1, $ret);
+	echo return_error(-1, $response_node->getAttribute('code'));
 	die();
 }
 
 $session_node = $dom->getElementsByTagName('session');
 if (count($session_node) != 1) {
-	echo return_error(1, 'An internal error occured, please contact your administrator');
+	echo return_error(1, 'internal_error');
 	die();
 }
 $session_node = $session_node->item(0);
 if (! is_object($session_node)) {
-	echo return_error(1, 'An internal error occured, please contact your administrator');
+	echo return_error(1, 'internal_error');
 	die();
 }
 $_SESSION['session_id'] = $session_node->getAttribute('id');
@@ -283,19 +254,19 @@ $_SESSION['timeout'] = $session_node->getAttribute('timeout');
 
 $user_node = $session_node->getElementsByTagName('user');
 if (count($user_node) != 1) {
-	echo return_error(2, 'An internal error occured, please contact your administrator');
+	echo return_error(2, 'internal_error');
 	die();
 }
 $user_node = $user_node->item(0);
 if (! is_object($user_node)) {
-	echo return_error(2, 'An internal error occured, please contact your administrator');
+	echo return_error(2, 'internal_error');
 	die();
 }
 $_SESSION['session_displayname'] = $user_node->getAttribute('displayName');
 
 $server_nodes = $session_node->getElementsByTagName('server');
 if (count($server_nodes) < 1) {
-	echo return_error(3, 'An internal error occured, please contact your administrator');
+	echo return_error(3, 'internal_error');
 	die();
 }
 

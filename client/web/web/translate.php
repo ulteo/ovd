@@ -114,6 +114,10 @@ foreach ($translations as $id => $string) {
 }
 
 $js_translations = array(
+	'no_login_parameter'			=>	_('Usage: missing "login" parameter'),
+	'no_password_parameter'			=>	_('Usage: missing "password" parameter'),
+	'unable_to_reach_sm'			=>	_('Unable to reach the Session Manager'),
+
 	'auth_failed'					=>	_('Authentication failed: please double-check your password and try again'),
 	'in_maintenance'				=>	_('The system is on maintenance mode, please contact your administrator for more information'),
 	'internal_error'				=>	_('An internal error occured, please contact your administrator'),

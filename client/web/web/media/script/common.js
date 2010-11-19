@@ -163,7 +163,10 @@ function onStartSessionSuccess(xml_) {
 	var buffer = xml.getElementsByTagName('error');
 	if (buffer.length == 1) {
 		try {
-			showError(buffer[0].getAttribute('message'));
+			if (typeof i18n.get(buffer[0].getAttribute('error_id')) != 'undefined')
+				showError(i18n.get(buffer[0].getAttribute('error_id')));
+			else
+				showError(i18n.get('internal_error'));
 		} catch(e) {}
 		enableLogin();
 		return false;
