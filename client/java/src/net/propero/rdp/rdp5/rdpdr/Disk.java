@@ -338,46 +338,29 @@ public class Disk extends RdpdrDevice{
 
 	public int close(int handle) {
 		DEBUG("close");
-		/*g_notify_stamp = true;
-		FILEINFO pfinfo;
-		pfinfo = (FILEINFO)g_fileinfo.get(handle);
-		g_notify_stamp = true;
-		//rdpdr_abort_io(handle, 0, STATUS_CANCELLED);
-		if (pfinfo.pdir!=null && pfinfo.pdir!="") {
-			/*if (closedir(pfinfo->pdir) < 0)
-			{
-				perror("closedir");
-				return STATUS_INVALID_HANDLE;
-			}*/
-			/*if (pfinfo.delete_on_close) {
-				try{
-					File tempFile = new File(pfinfo.path);
-					tempFile.delete();
-				}catch(SecurityException e){
-					e.printStackTrace();
-					return STATUS_ACCESS_DENIED;
+		FILEINFO finfo = (FILEINFO)g_fileinfo.get(handle);
+		File fileToDelete = null;
+		
+		if (finfo == null)
+		{
+			return STATUS_NO_SUCH_FILE;
+		}
+		String path = finfo.get_path();
+		if (finfo.delete_on_close && path != null)
+		{
+			try {
+				fileToDelete = new File(finfo.get_path());
+				if (fileToDelete.exists()) {
+					fileToDelete.delete();
 				}
 			}
-			pfinfo.delete_on_close = false;
-		}
-		else {
-			/*if (close(handle) < 0)
-			{
-				perror("close");
-				return STATUS_INVALID_HANDLE;
-			}*/
-			/*if (pfinfo.delete_on_close) {
-				try{
-					File tempFile = new File(pfinfo.path);
-					tempFile.delete();
-				}catch(SecurityException e){
-					e.printStackTrace();
-					return STATUS_ACCESS_DENIED;
-				}
+			catch (Exception e) {
+				System.err.print("Unable to delete the file "+path);
+				return STATUS_INVALID_PARAMETER;
 			}
-			pfinfo.delete_on_close = false;
 		}
-		*/
+		g_fileinfo.remove(finfo);
+		
 		return STATUS_SUCCESS;
 	}
 	
@@ -471,16 +454,6 @@ public class Disk extends RdpdrDevice{
 				delete_on_close = in.getLittleEndian32();
 				if (delete_on_close > 0 ||(tempfinfo.accessmask & (FILE_DELETE_ON_CLOSE | FILE_COMPLETE_IF_OPLOCKED))>0){
 					tempfinfo.delete_on_close = true;
-					try{
-						File DeleteFile = getFileFromHandle(handle);
-						if(DeleteFile.exists()){
-							DeleteFile.deleteOnExit();
-							DeleteFile.delete();
-						}
-						
-					}catch(Exception e){
-						e.printStackTrace();
-					}
 				}
 				break; 
 				
