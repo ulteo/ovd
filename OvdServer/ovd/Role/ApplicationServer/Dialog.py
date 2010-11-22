@@ -249,7 +249,7 @@ class Dialog(AbstractDialog):
 					applications[app_id] = self.role_instance.applications_id_SM[app_id]
 				
 				elif self.role_instance.static_apps.applications.has_key(app_id):
-					applications[app_id] = self.role_instance.static_apps_lock.applications[app_id]
+					applications[app_id] = self.role_instance.applications.applications[app_id]
 				
 				else:
 					self.role_instance.applications_mutex.release()
