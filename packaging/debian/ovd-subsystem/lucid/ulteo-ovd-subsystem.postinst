@@ -61,11 +61,6 @@ if [ -e "$CHROOTCONF" ]; then
         echo "$HOSTTZ" > $CHROOTDIR/etc/timezone
     fi
 
-    # if we reinstall the ApS and the chroot is already there, the configs need to
-    # be written again
-    set_conf $CHROOTCONF "ROLES" "aps"
-    set_conf $CHROOTCONF "LOG_LEVEL" "warn error info debug"
-
     # session manager url
     db_get ulteo-ovd-subsystem/sm_address && URL="$RET"
     set_conf $CHROOTCONF "session_manager" "$URL"
