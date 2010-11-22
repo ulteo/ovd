@@ -533,10 +533,7 @@ if (isset($user_login_fs) && isset($user_password_fs)) {
 }
 
 $save_session = Abstract_Session::save($session);
-if ($save_session === true) {
-	Logger::info('main', '(client/start) session \''.$session->id.'\' actually saved on DB for user \''.$user->getAttribute('login').'\'');
-}
-else {
+if (! $save_session) {
 	Logger::error('main', '(client/start) failed to save session \''.$session->id.'\' for user \''.$user->getAttribute('login').'\'');
 	throw_response(INTERNAL_ERROR);
 }
