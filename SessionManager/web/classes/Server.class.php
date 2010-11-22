@@ -82,11 +82,6 @@ class Server {
 	}
 
 	public function getConfiguration() {
-		if (! $this->isOnline()) {
-			Logger::debug('main', 'Server::getConfiguration server "'.$this->fqdn.':'.$this->web_port.'" is not online');
-			return false;
-		}
-
 		$xml = query_url($this->getBaseURL().'/server/configuration');
 		if (! $xml) {
 			$this->isUnreachable();

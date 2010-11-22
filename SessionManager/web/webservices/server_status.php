@@ -78,9 +78,6 @@ if (! $server->isAuthorized()) {
 }
 
 if ($ret['status'] == Server::SERVER_STATUS_ONLINE) {
-	$server->setAttribute('status', $ret['status']);
-	Abstract_Server::save($server);
-
 	if (! $server->getConfiguration()) {
 		echo return_error(4, 'Server does not send a valid configuration');
 		die();
