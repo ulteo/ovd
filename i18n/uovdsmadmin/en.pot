@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: uovdsmadmin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-16 10:45+0100\n"
+"POT-Creation-Date: 2010-11-22 10:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,19 +38,19 @@ msgid "Application '%APPLICATION%' successfully deleted from server '%SERVER%'"
 msgstr ""
 
 #: ../../SessionManager/web/admin/actions.php:138
-#: ../../SessionManager/web/admin/actions.php:183
+#: ../../SessionManager/web/admin/actions.php:206
 msgid "ApplicationDB is not writeable"
 msgstr ""
 
 #: ../../SessionManager/web/admin/actions.php:145
 #: ../../SessionManager/web/admin/actions.php:150
-#: ../../SessionManager/web/admin/actions.php:228
+#: ../../SessionManager/web/admin/actions.php:251
 #, php-format
 msgid "Failed to delete application '%s'"
 msgstr ""
 
 #: ../../SessionManager/web/admin/actions.php:153
-#: ../../SessionManager/web/admin/actions.php:233
+#: ../../SessionManager/web/admin/actions.php:256
 #, php-format
 msgid "Application '%s' successfully deleted"
 msgstr ""
@@ -66,446 +66,454 @@ msgid "Unable to modify application '%s'"
 msgstr ""
 
 #: ../../SessionManager/web/admin/actions.php:172
-#: ../../SessionManager/web/admin/actions.php:282
+#: ../../SessionManager/web/admin/actions.php:305
 #, php-format
 msgid "Application '%s' successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:203
+#: ../../SessionManager/web/admin/actions.php:191
+msgid "Orphan applications successfully removed"
+msgstr ""
+
+#: ../../SessionManager/web/admin/actions.php:194
+msgid "Problem while removing orphan applications"
+msgstr ""
+
+#: ../../SessionManager/web/admin/actions.php:226
 msgid "Application is not ok"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:210
+#: ../../SessionManager/web/admin/actions.php:233
 #, php-format
 msgid "Failed to add application '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:213
+#: ../../SessionManager/web/admin/actions.php:236
 #, php-format
 msgid "Application '%s' successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:223
-#: ../../SessionManager/web/admin/actions.php:265
+#: ../../SessionManager/web/admin/actions.php:246
+#: ../../SessionManager/web/admin/actions.php:288
 #, php-format
 msgid "Unable to import application '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:244
+#: ../../SessionManager/web/admin/actions.php:267
 #, php-format
 msgid "'%s' application's icon was successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:277
+#: ../../SessionManager/web/admin/actions.php:300
 #, php-format
 msgid "Failed to modify application '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:349
-#: ../../SessionManager/web/admin/actions.php:359
+#: ../../SessionManager/web/admin/actions.php:372
+#: ../../SessionManager/web/admin/actions.php:382
 #, php-format
 msgid "ApplicationGroup '%s' successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:370
+#: ../../SessionManager/web/admin/actions.php:393
 msgid "Application Group Database is not writeable"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:381
+#: ../../SessionManager/web/admin/actions.php:404
 #, php-format
 msgid "Unable to create applications group '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:383
+#: ../../SessionManager/web/admin/actions.php:406
 #, php-format
 msgid "Applications group '%s' successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:395
+#: ../../SessionManager/web/admin/actions.php:418
 #, php-format
 msgid "Importing applications group '%s' failed"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:400
+#: ../../SessionManager/web/admin/actions.php:423
 #, php-format
 msgid "Unable to remove applications group '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:403
+#: ../../SessionManager/web/admin/actions.php:426
 #, php-format
 msgid "Applications group '%s' successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:414
+#: ../../SessionManager/web/admin/actions.php:437
 #, php-format
 msgid "Import of applications group '%s' failed"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:435
+#: ../../SessionManager/web/admin/actions.php:458
 #, php-format
 msgid "Unable to modify applications group '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:437
+#: ../../SessionManager/web/admin/actions.php:460
 #, php-format
 msgid "Applications group '%s' successfully modified"
 msgstr ""
 
 #. problem, what to do ?
-#: ../../SessionManager/web/admin/actions.php:454
-#: ../../SessionManager/web/admin/actions.php:458
-#: ../../SessionManager/web/admin/actions.php:469
-#: ../../SessionManager/web/admin/actions.php:473
-#: ../../SessionManager/web/admin/actions.php:744
+#: ../../SessionManager/web/admin/actions.php:477
+#: ../../SessionManager/web/admin/actions.php:481
+#: ../../SessionManager/web/admin/actions.php:492
+#: ../../SessionManager/web/admin/actions.php:496
+#: ../../SessionManager/web/admin/actions.php:767
 #, php-format
 msgid "UsersGroup '%s' successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:491
+#: ../../SessionManager/web/admin/actions.php:514
 msgid "Publication successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:493
+#: ../../SessionManager/web/admin/actions.php:516
 msgid "Unable to save the publication"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:496
+#: ../../SessionManager/web/admin/actions.php:519
 msgid "This publication already exists"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:504
+#: ../../SessionManager/web/admin/actions.php:527
 msgid "Publication successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:506
+#: ../../SessionManager/web/admin/actions.php:529
 msgid "Unable to delete the publication"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:509
+#: ../../SessionManager/web/admin/actions.php:532
 msgid "This publication does not exist"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:523
+#: ../../SessionManager/web/admin/actions.php:546
 msgid "You must define a name for your usergroup"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:529
+#: ../../SessionManager/web/admin/actions.php:552
 msgid "User Group Database is not writeable"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:537
+#: ../../SessionManager/web/admin/actions.php:560
 msgid "You must provide a value to each rule of your usergroup"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:555
+#: ../../SessionManager/web/admin/actions.php:578
 msgid "Unknow usergroup type"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:560
+#: ../../SessionManager/web/admin/actions.php:583
 msgid "Unable to create usergroup"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:563
+#: ../../SessionManager/web/admin/actions.php:586
 msgid "UserGroup successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:573
-#: ../../SessionManager/web/admin/actions.php:602
-#: ../../SessionManager/web/admin/actions.php:681
-#: ../../SessionManager/web/admin/actions.php:755
+#: ../../SessionManager/web/admin/actions.php:596
+#: ../../SessionManager/web/admin/actions.php:625
+#: ../../SessionManager/web/admin/actions.php:704
+#: ../../SessionManager/web/admin/actions.php:778
 #, php-format
 msgid "Failed to import Usergroup '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:579
-#: ../../SessionManager/web/admin/actions.php:597
+#: ../../SessionManager/web/admin/actions.php:602
+#: ../../SessionManager/web/admin/actions.php:620
 msgid "User Group Database not writeable"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:584
+#: ../../SessionManager/web/admin/actions.php:607
 #, php-format
 msgid "Unable to remove usergroup '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:587
+#: ../../SessionManager/web/admin/actions.php:610
 #, php-format
 msgid "UserGroup '%s' successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:632
-#: ../../SessionManager/web/admin/actions.php:705
+#: ../../SessionManager/web/admin/actions.php:655
+#: ../../SessionManager/web/admin/actions.php:728
 #, php-format
 msgid "Unable to update Usergroup '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:636
-#: ../../SessionManager/web/admin/actions.php:670
+#: ../../SessionManager/web/admin/actions.php:659
+#: ../../SessionManager/web/admin/actions.php:693
 #, php-format
 msgid "UserGroup '%s' successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:643
+#: ../../SessionManager/web/admin/actions.php:666
 msgid "Not enough rights"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:660
+#: ../../SessionManager/web/admin/actions.php:683
 #, php-format
 msgid "Failed to import group '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:667
+#: ../../SessionManager/web/admin/actions.php:690
 msgid "Unable to save prefs"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:688
+#: ../../SessionManager/web/admin/actions.php:711
 msgid "You must give a value to each rule of your usergroup"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:707
+#: ../../SessionManager/web/admin/actions.php:730
 #, php-format
 msgid "Rules of '%s' successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:813
+#: ../../SessionManager/web/admin/actions.php:836
 msgid "Usergroup successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:816
+#: ../../SessionManager/web/admin/actions.php:839
 msgid "Failed to modify usergroup"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:827
+#: ../../SessionManager/web/admin/actions.php:850
 msgid "User Database not writeable"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:833
+#: ../../SessionManager/web/admin/actions.php:856
 msgid "Unable to create user"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:843
+#: ../../SessionManager/web/admin/actions.php:866
 msgid "Unable to create user with an empty password"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:849
+#: ../../SessionManager/web/admin/actions.php:872
 #, php-format
 msgid "Unable to create user '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:853
+#: ../../SessionManager/web/admin/actions.php:876
 #, php-format
 msgid "User '%s' successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:863
+#: ../../SessionManager/web/admin/actions.php:886
 #, php-format
 msgid "Unable to delete user '%s' because he has an active session"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:868
-#: ../../SessionManager/web/admin/actions.php:879
+#: ../../SessionManager/web/admin/actions.php:891
+#: ../../SessionManager/web/admin/actions.php:902
 #, php-format
 msgid "Unable to delete user '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:882
+#: ../../SessionManager/web/admin/actions.php:905
 #, php-format
 msgid "User '%s' successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:895
+#: ../../SessionManager/web/admin/actions.php:918
 #, php-format
 msgid "Unable to import user '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:905
+#: ../../SessionManager/web/admin/actions.php:928
 #, php-format
 msgid "Unable to modify user '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:907
+#: ../../SessionManager/web/admin/actions.php:930
 #, php-format
 msgid "User '%s' successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:915
+#: ../../SessionManager/web/admin/actions.php:938
 msgid "No custom password given for populating the database."
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:926
+#: ../../SessionManager/web/admin/actions.php:949
 msgid "User database populated."
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:929
+#: ../../SessionManager/web/admin/actions.php:952
 msgid "User database population failed."
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:946
+#: ../../SessionManager/web/admin/actions.php:969
 #: ../../SessionManager/web/modules/ApplicationDB.php:32
 msgid "Module ApplicationDB must be enabled"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:987
+#: ../../SessionManager/web/admin/actions.php:1010
 msgid "Shared folder successfully renamed"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:989
+#: ../../SessionManager/web/admin/actions.php:1012
 msgid "A shared folder with that name already exists!"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1002
-#: ../../SessionManager/web/admin/actions.php:1007
-#: ../../SessionManager/web/admin/actions.php:1409
-#: ../../SessionManager/web/admin/actions.php:1430
+#: ../../SessionManager/web/admin/actions.php:1025
+#: ../../SessionManager/web/admin/actions.php:1030
+#: ../../SessionManager/web/admin/actions.php:1432
+#: ../../SessionManager/web/admin/actions.php:1453
 msgid "Shared folder successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1023
+#: ../../SessionManager/web/admin/actions.php:1046
 #, php-format
 msgid "Unable to delete network folder '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1025
+#: ../../SessionManager/web/admin/actions.php:1048
 #, php-format
 msgid "Network folder '%s' successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1037
+#: ../../SessionManager/web/admin/actions.php:1060
 msgid "Untitled"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1042
+#: ../../SessionManager/web/admin/actions.php:1065
 msgid "News successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1049
+#: ../../SessionManager/web/admin/actions.php:1072
 msgid "Unable to delete this news"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1051
+#: ../../SessionManager/web/admin/actions.php:1074
 msgid "News successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1061
+#: ../../SessionManager/web/admin/actions.php:1084
 msgid "Password is empty"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1064
+#: ../../SessionManager/web/admin/actions.php:1087
 msgid "Passwords are not identical"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1069
+#: ../../SessionManager/web/admin/actions.php:1092
 msgid "Password successfully changed"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1073
+#: ../../SessionManager/web/admin/actions.php:1096
 msgid "Password not changed"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1092
+#: ../../SessionManager/web/admin/actions.php:1115
 #, php-format
 msgid "Unable to delete session '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1096
+#: ../../SessionManager/web/admin/actions.php:1119
 #, php-format
 msgid "Session '%s' successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1114
+#: ../../SessionManager/web/admin/actions.php:1137
 #, php-format
 msgid ""
 "Unable to delete the server '%s' because there are active sessions on it."
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1122
+#: ../../SessionManager/web/admin/actions.php:1145
 #, php-format
 msgid "Server '%s' successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1140
+#: ../../SessionManager/web/admin/actions.php:1163
 #, php-format
 msgid "Server '%s' successfully registered"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1143
+#: ../../SessionManager/web/admin/actions.php:1166
 #, php-format
 msgid "Failed to register Server '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1165
-#: ../../SessionManager/web/admin/actions.php:1176
-#: ../../SessionManager/web/admin/actions.php:1187
+#: ../../SessionManager/web/admin/actions.php:1188
+#: ../../SessionManager/web/admin/actions.php:1199
+#: ../../SessionManager/web/admin/actions.php:1210
 #, php-format
 msgid "Server '%s' successfully modified"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1200
-#: ../../SessionManager/web/admin/actions.php:1253
+#: ../../SessionManager/web/admin/actions.php:1223
 #: ../../SessionManager/web/admin/actions.php:1276
+#: ../../SessionManager/web/admin/actions.php:1299
 msgid "Task successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1213
+#: ../../SessionManager/web/admin/actions.php:1236
 #, php-format
 msgid "Server '%s' is upgrading"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1247
-#: ../../SessionManager/web/admin/actions.php:1308
+#: ../../SessionManager/web/admin/actions.php:1270
+#: ../../SessionManager/web/admin/actions.php:1331
 msgid "Task successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1319
+#: ../../SessionManager/web/admin/actions.php:1342
 msgid "You must provide a name to your shared folder"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1325
+#: ../../SessionManager/web/admin/actions.php:1348
 msgid "A shared folder with this name already exists"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1341
+#: ../../SessionManager/web/admin/actions.php:1364
 msgid "No server avalaible for shared folder"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1349
+#: ../../SessionManager/web/admin/actions.php:1372
 msgid "Unable to add shared folder"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1355
+#: ../../SessionManager/web/admin/actions.php:1378
 #, php-format
 msgid "Unable to create shared folder on file server '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1360
+#: ../../SessionManager/web/admin/actions.php:1383
 #, php-format
 msgid "Shared folder '%s' successfully added"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1367
-#: ../../SessionManager/web/admin/actions.php:1385
+#: ../../SessionManager/web/admin/actions.php:1390
+#: ../../SessionManager/web/admin/actions.php:1408
 msgid "Unable to delete this shared folder"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1373
-#: ../../SessionManager/web/admin/actions.php:1379
+#: ../../SessionManager/web/admin/actions.php:1396
+#: ../../SessionManager/web/admin/actions.php:1402
 #, php-format
 msgid "Unable to delete shared folder on file server '%s'"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1389
+#: ../../SessionManager/web/admin/actions.php:1412
 msgid "Shared folder successfully deleted"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1396
+#: ../../SessionManager/web/admin/actions.php:1419
 msgid "Unable to create this shared folder access"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1403
-#: ../../SessionManager/web/admin/actions.php:1424
+#: ../../SessionManager/web/admin/actions.php:1426
+#: ../../SessionManager/web/admin/actions.php:1447
 msgid "Unable to load usergroup"
 msgstr ""
 
-#: ../../SessionManager/web/admin/actions.php:1417
+#: ../../SessionManager/web/admin/actions.php:1440
 msgid "Unable to delete this shared folder access"
 msgstr ""
 
@@ -545,7 +553,7 @@ msgstr ""
 
 #. echo '<th>'._('Status').'</th>';
 #: ../../SessionManager/web/admin/applications.php:67
-#: ../../SessionManager/web/admin/applications.php:244
+#: ../../SessionManager/web/admin/applications.php:253
 #: ../../SessionManager/web/admin/applications_static.php:75
 #: ../../SessionManager/web/admin/applications_static.php:337
 #: ../../SessionManager/web/admin/appsgroup.php:58
@@ -562,8 +570,8 @@ msgstr ""
 
 #. echo '<th>'._('Package').'</th>';
 #: ../../SessionManager/web/admin/applications.php:68
-#: ../../SessionManager/web/admin/applications.php:242
-#: ../../SessionManager/web/admin/applications.php:351
+#: ../../SessionManager/web/admin/applications.php:251
+#: ../../SessionManager/web/admin/applications.php:360
 #: ../../SessionManager/web/admin/applications_static.php:76
 #: ../../SessionManager/web/admin/applications_static.php:336
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:379
@@ -586,17 +594,29 @@ msgstr ""
 msgid "Manage"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:158
+#: ../../SessionManager/web/admin/applications.php:140
+msgid "Orphan Applications"
+msgstr ""
+
+#: ../../SessionManager/web/admin/applications.php:141
+msgid "Are you sure you want to remove orphan applications?"
+msgstr ""
+
+#: ../../SessionManager/web/admin/applications.php:144
+msgid "Remove orphan applications"
+msgstr ""
+
+#: ../../SessionManager/web/admin/applications.php:167
 msgid "Available"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:159
+#: ../../SessionManager/web/admin/applications.php:168
 #: ../../SessionManager/web/admin/appsgroup.php:157
 #: ../../SessionManager/web/admin/usersgroup.php:312
 msgid "Block"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:162
+#: ../../SessionManager/web/admin/applications.php:171
 #: ../../SessionManager/web/admin/appsgroup.php:68
 #: ../../SessionManager/web/admin/appsgroup.php:161
 #: ../../SessionManager/web/admin/usersgroup.php:107
@@ -604,57 +624,57 @@ msgstr ""
 msgid "Blocked"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:163
+#: ../../SessionManager/web/admin/applications.php:172
 msgid "Unblock"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:241
+#: ../../SessionManager/web/admin/applications.php:250
 msgid "Package"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:245
+#: ../../SessionManager/web/admin/applications.php:254
 msgid "Executable"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:260
+#: ../../SessionManager/web/admin/applications.php:269
 msgid "Are you sure you want to remove this application?"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:264
+#: ../../SessionManager/web/admin/applications.php:273
 msgid "This application is orphan"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:264
+#: ../../SessionManager/web/admin/applications.php:273
 msgid "Remove this application"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:295
+#: ../../SessionManager/web/admin/applications.php:304
 #: ../../SessionManager/web/admin/applications_static.php:456
 msgid "Servers with this application"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:308
+#: ../../SessionManager/web/admin/applications.php:317
 #: ../../SessionManager/web/admin/applications_static.php:464
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:303
 msgid "Are you sure you want to remove this application from this server?"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:313
+#: ../../SessionManager/web/admin/applications.php:322
 #: ../../SessionManager/web/admin/applications_static.php:469
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:308
 msgid "Remove from this server"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:338
+#: ../../SessionManager/web/admin/applications.php:347
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:344
 msgid "Install on this server"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:347
+#: ../../SessionManager/web/admin/applications.php:356
 msgid "Active tasks on this application"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:350
+#: ../../SessionManager/web/admin/applications.php:359
 #: ../../SessionManager/web/admin/ha/status.php:186
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:378
 #: ../../SessionManager/web/admin/tasks.php:140
@@ -662,7 +682,7 @@ msgid "ID"
 msgstr ""
 
 #. echo '<th>'._('Version').'</th>';
-#: ../../SessionManager/web/admin/applications.php:352
+#: ../../SessionManager/web/admin/applications.php:361
 #: ../../SessionManager/web/admin/appsgroup.php:59
 #: ../../SessionManager/web/admin/appsgroup.php:212
 #: ../../SessionManager/web/admin/ha/menu.inc.php:30
@@ -683,7 +703,7 @@ msgid "Status"
 msgstr ""
 
 #. echo '<th>'._('Version').'</th>';
-#: ../../SessionManager/web/admin/applications.php:353
+#: ../../SessionManager/web/admin/applications.php:362
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:381
 #: ../../SessionManager/web/admin/servers.php:78
 #: ../../SessionManager/web/admin/servers.php:236
@@ -693,7 +713,7 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:360
+#: ../../SessionManager/web/admin/applications.php:369
 #: ../../SessionManager/web/admin/configuration-profile.php:235
 #: ../../SessionManager/web/admin/ha/status.php:256
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:388
@@ -703,17 +723,17 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:378
+#: ../../SessionManager/web/admin/applications.php:387
 #: ../../SessionManager/web/admin/applications_static.php:496
 msgid "Groups with this application"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:386
+#: ../../SessionManager/web/admin/applications.php:395
 #: ../../SessionManager/web/admin/applications_static.php:503
 msgid "Are you sure you want to delete this application from this group?"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:391
+#: ../../SessionManager/web/admin/applications.php:400
 #: ../../SessionManager/web/admin/applications_static.php:508
 #: ../../SessionManager/web/admin/appsgroup.php:279
 #: ../../SessionManager/web/admin/usersgroup.php:603
@@ -721,7 +741,7 @@ msgstr ""
 msgid "Delete from this group"
 msgstr ""
 
-#: ../../SessionManager/web/admin/applications.php:407
+#: ../../SessionManager/web/admin/applications.php:416
 #: ../../SessionManager/web/admin/applications_static.php:523
 #: ../../SessionManager/web/admin/appsgroup.php:296
 #: ../../SessionManager/web/admin/usersgroup.php:620
