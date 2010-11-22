@@ -694,6 +694,8 @@ if (! isset($old_session_id)) {
 
 		$ret = parse_session_create_XML(query_url_post_xml($server->getBaseURL().'/aps/session/create', $xml));
 		if (! $ret) {
+			Logger::critical('main', '(client/start) Unable to create Session \''.$session->id.'\' for User \''.$session->user_login.'\' on Server \''.$server->fqdn.'\', aborting');
+
 			header('Content-Type: text/xml; charset=utf-8');
 			$dom = new DomDocument('1.0', 'utf-8');
 
@@ -809,6 +811,8 @@ if (! isset($old_session_id)) {
 
 			$ret = parse_session_create_XML(query_url_post_xml($server->getBaseURL().'/aps/session/create', $xml));
 			if (! $ret) {
+				Logger::critical('main', '(client/start) Unable to create Session \''.$session->id.'\' for User \''.$session->user_login.'\' on Server \''.$server->fqdn.'\', aborting');
+
 				header('Content-Type: text/xml; charset=utf-8');
 				$dom = new DomDocument('1.0', 'utf-8');
 
