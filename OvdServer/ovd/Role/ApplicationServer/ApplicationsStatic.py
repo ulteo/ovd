@@ -41,6 +41,7 @@ class ApplicationsStatic:
 	def synchronize(self):
 		response = self.communictionInstance.get("/applications/static")
 		if response is None:
+			Logger.error("ApplicationsStatic::synchronize request on SessionManager failed")
 			return False
 		
 		document = self.communictionInstance.get_response_xml(response)
