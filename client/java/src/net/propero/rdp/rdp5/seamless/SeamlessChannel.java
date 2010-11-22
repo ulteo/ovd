@@ -447,6 +447,10 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		}
 
 		SeamlessWindow f = this.windows.get(name);
+		if (f.sw_getExtendedState() == Frame.ICONIFIED) {
+			logger.warn("Try to resize window "+String.format("0x%08x", id)+" but it is iconified.");
+			return false;
+		}
 		f.sw_setMyPosition((int)x, (int)y, (int)width, (int)height);
 
 		return true;
