@@ -530,8 +530,22 @@ public class Disk extends RdpdrDevice{
 		            if(match_flag)
 		            	break;
 		        }
-			    if(!match_flag)
-			    	return STATUS_NO_MORE_FILES;
+			    if (! match_flag) {
+			    	if (pfinfo.pattern.equals("*")) {
+			    		if (! pfinfo.has_searched_file(".")) {
+			    			fullpath = dirname + File.separator + ".";
+			    			d_name = ".";
+			    			pfinfo.add_searched_file(".");
+			    		}
+			    		else if (! pfinfo.has_searched_file("..")) {
+			    			fullpath = dirname + File.separator + "..";
+			    			d_name = "..";
+			    			pfinfo.add_searched_file("..");			    		
+			    		}
+			    	}
+			    	else
+			    		return STATUS_NO_MORE_FILES;
+			    }
 			    
 			    //check file
 			    File this_file = new File(fullpath);
