@@ -97,24 +97,34 @@ function parse_client_XML($xml_) {
 }
 
 function parse_session_create_XML($xml_) {
-	if (! $xml_ || strlen($xml_) == 0)
+	if (! $xml_ || strlen($xml_) == 0) {
+		Logger::error('main', '(client/start) parse session create XML : empty content');
 		return false;
+	}
 
 	$dom = new DomDocument('1.0', 'utf-8');
 
 	$buf = @$dom->loadXML($xml_);
-	if (! $buf)
+	if (! $buf) {
+		Logger::error('main', '(client/start) parse session create XML : not an XML');
 		return false;
+	}
 
-	if (! $dom->hasChildNodes())
+	if (! $dom->hasChildNodes()) {
+		Logger::error('main', '(client/start) parse session create XML : empty XML');
 		return false;
+	}
 
 	$node = $dom->getElementsByTagname('session')->item(0);
-	if (is_null($node))
+	if (is_null($node)) {
+		Logger::error('main', '(client/start) parse session create XML : no session node');
 		return false;
+	}
 
-	if (! $node->hasAttribute('id'))
+	if (! $node->hasAttribute('id')) {
+		Logger::error('main', '(client/start) parse session create XML : no id attribute in session node');
 		return false;
+	}
 
 	return true;
 }
