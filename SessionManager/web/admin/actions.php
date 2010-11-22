@@ -1040,7 +1040,10 @@ if ($_REQUEST['name'] == 'NetworkFolders') {
 		foreach ($_REQUEST['ids'] as $id) {
 			$network_folder = Abstract_NetworkFolder::load($id);
 			if (is_object($network_folder))
-				$buf = Abstract_NetworkFolder::delete($network_folder);
+				if (! $network_folder->isUsed())
+					$buf = Abstract_NetworkFolder::delete($network_folder);
+				else
+					$buf = false;
 
 			if (! $buf)
 				popup_error(sprintf(_("Unable to delete network folder '%s'"), $network_folder->name));

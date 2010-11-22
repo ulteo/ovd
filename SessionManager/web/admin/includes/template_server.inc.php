@@ -504,25 +504,40 @@ function server_display_role_fs($server_, $var_) {
 	
 	foreach ($datas as $k => $data) {
 		if (is_array($data['folder']) && count($data['folder']) > 0 && is_array($data['usedby'])) {
+			if (count($data['folder']) > 1) {
+				$mass_action = false;
+				foreach ($data['folder'] as $a_networkfolder) {
+					if ($a_networkfolder->isUsed())
+						continue;
+
+					$mass_action = true;
+					break;
+				}
+			}
 			echo '<h3>'.$data['name'].'</h3>';
 			$count = 0;
 			echo '<table id="available_networkfolder_table_'.$k.'" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
 			echo '<tr class="title">';
-			if (count($data['folder']) > 1)
+			if (isset($mass_action) && $mass_action === true)
 				echo '<th class="unsortable"></th>';
 			if ($k != 0)
 				echo '<th>'._('Name').'</th>';
 			echo '<th class="unsortable">'.(($k == 0)?_('Owner'):_('Used by')).'</th>';
 			echo '<th>'._('Status').'</th>';
-			echo '<th class="unsortable"></th>';
+			if (isset($mass_action) && $mass_action === true)
+				echo '<th class="unsortable"></th>';
 			echo '</tr>';
 			
 			foreach ($data['folder'] as $a_networkfolder) {
 				
 				$content = 'content'.(($count++%2==0)?1:2);
 				echo '<tr class="'.$content.'">';
-				if (count($data['folder']) > 1)
-					echo '<td><input class="input_checkbox" type="checkbox" name="ids[]" value="'.$a_networkfolder->id.'" /></td>';
+				if (count($data['folder']) > 1 && isset($mass_action) && $mass_action === true) {
+					echo '<td>';
+					if (! $a_networkfolder->isUsed())
+						echo '<input class="input_checkbox" type="checkbox" name="ids[]" value="'.$a_networkfolder->id.'" />';
+					echo '</td>';
+				}
 				if ($k != 0) {
 					echo '<td>';
 					if ($data['page'] !== 'users') {
@@ -553,16 +568,20 @@ function server_display_role_fs($server_, $var_) {
 				echo '<td>';
 				echo '<span class="msg_'.NetworkFolder::colorStatus($a_networkfolder->status).'">'.NetworkFolder::textStatus($a_networkfolder->status).'</span>';
 				echo '</td>';
-				echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''.(($k == 0)?_('Are you sure you want to delete this user profile?'):_('Are you sure you want to delete this network folder?')).'\');">';
-				echo '<input type="hidden" name="name" value="NetworkFolders" />';
-				echo '<input type="hidden" name="action" value="del" />';
-				echo '<input type="hidden" name="ids[]" value="'.$a_networkfolder->id.'" />';
-				echo '<input type="submit" value="'._('Delete').'" />';
-				echo '</form></td>';
+				echo '<td>';
+				if (! $a_networkfolder->isUsed()) {
+					echo '<form action="actions.php" method="post" onsubmit="return confirm(\''.(($k == 0)?_('Are you sure you want to delete this user profile?'):_('Are you sure you want to delete this network folder?')).'\');">';
+					echo '<input type="hidden" name="name" value="NetworkFolders" />';
+					echo '<input type="hidden" name="action" value="del" />';
+					echo '<input type="hidden" name="ids[]" value="'.$a_networkfolder->id.'" />';
+					echo '<input type="submit" value="'._('Delete').'" />';
+					echo '</form>';
+				}
+				echo '</td>';
 				echo '</tr>';
 			}
 
-			if (count($data['folder']) > 1) {
+			if (count($data['folder']) > 1 && isset($mass_action) && $mass_action === true) {
 				$content = 'content'.(($count++%2==0)?1:2);
 				echo '<tfoot>';
 				echo '<tr class="'.$content.'">';

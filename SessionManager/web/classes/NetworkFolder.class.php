@@ -108,6 +108,13 @@ class NetworkFolder {
 		return get_class($this).'(id \''.$this->id.'\' name \''.$this->name.'\' server \''.$this->server.'\' status \''.$this->status.'\' )';
 	}
 
+	public function isUsed() {
+		if ($this->status == 2)
+			return true;
+
+		return false;
+	}
+
 	public function textStatus($status_=NetworkFolder::NF_STATUS_NOT_EXISTS) {
 		switch ($status_) {
 			case NetworkFolder::NF_STATUS_NOT_EXISTS:
