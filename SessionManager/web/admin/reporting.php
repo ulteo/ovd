@@ -338,6 +338,9 @@ function show_page($mode_) {
 	if ($session_number>0) {
 		$dataSet = new XYDataSet();
 		foreach($res_server as $fqdn => $c) {
+			if ($fqdn === "") {
+				$fqdn = _("unknown");
+			}
 			$tot = 0;
 			foreach($c as $k => $v)
 				$tot+= $v;
