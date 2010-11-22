@@ -33,6 +33,8 @@ do_start() {
 
     chroot $CHROOTDIR /etc/init.d/cups start
     chroot $CHROOTDIR /etc/init.d/xrdp start
+    chroot $CHROOTDIR service smbd start
+    chroot $CHROOTDIR /etc/init.d/apache2 start
     chroot $CHROOTDIR /etc/init.d/ovdSlaveServer start
 }
 
@@ -40,6 +42,8 @@ do_stop() {
     [ -d "$CHROOTDIR" ] || return 1
 
     chroot $CHROOTDIR /etc/init.d/ovdSlaveServer stop
+    chroot $CHROOTDIR /etc/init.d/apache2 stop
+    chroot $CHROOTDIR service smbd stop
     chroot $CHROOTDIR /etc/init.d/xrdp stop
     chroot $CHROOTDIR /etc/init.d/cups stop
 
