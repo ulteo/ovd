@@ -77,13 +77,16 @@ if (! $server->isAuthorized()) {
 	die();
 }
 
-$server->setStatus($ret['status']);
-if ($server->isOnline()) {
+if ($ret['status'] == Server::SERVER_STATUS_ONLINE) {
+	$server->setAttribute('status', $ret['status']);
+	Abstract_Server::save($server);
+
 	if (! $server->getConfiguration()) {
 		echo return_error(4, 'Server does not send a valid configuration');
 		die();
 	}
 }
+$server->setStatus($ret['status']);
 Abstract_Server::save($server);
 
 header('Content-Type: text/xml; charset=utf-8');
