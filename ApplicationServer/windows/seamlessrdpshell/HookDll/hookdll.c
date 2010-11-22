@@ -217,7 +217,7 @@ update_position(HWND hwnd)
 
 	vchannel_block();
 
-	if (IsZoomed(hwnd))
+	if (IsZoomed(hwnd) || IsIconic(hwnd))
 	{
 		goto end;
 	}
@@ -906,7 +906,7 @@ SafeMoveWindow(unsigned int serial, HWND hwnd, int x, int y, int width, int heig
 	else if ((rect.left != x) || (rect.top != y) || (rect.right != x + width)
 		 || (rect.bottom != y + height))
 		update_position(hwnd);
-	else
+	else if (! IsIconic(hwnd))
 		vchannel_write("POSITION", "0x%08lx,%d,%d,%d,%d,0x%08x", hwnd, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, 0);
 
 	WaitForSingleObject(g_mutex, INFINITE);
