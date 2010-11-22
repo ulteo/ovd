@@ -287,18 +287,6 @@ function show_manage($id, $applicationDB) {
 //   }
 
   // Server part
-  foreach($servers as $k2 => $server) {
-    $remove_in_progress = in_array($server->fqdn, $servers_in_remove);
-    if ($remove_in_progress) {
-      continue;
-    }
-    elseif ($server->isOnline()) {
-      continue;
-    }
-    else {
-      unset($servers[$k2]);
-    }
-  }
   if (count($servers) + count($servers_in_install) + count($servers_available) > 0) {
     echo '<div>';
     echo '<h2>'._('Servers with this application').'</h2>';
