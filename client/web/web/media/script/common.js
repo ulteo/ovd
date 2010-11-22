@@ -75,7 +75,7 @@ function startSession() {
 					language: $('session_language').value,
 					keymap: $('session_keymap').value,
 					timezone: $('timezone').value,
-					desktop_fullscreen: desktop_fullscreen,
+					desktop_fullscreen: ((desktop_fullscreen)?1:0),
 					debug: ((debug)?1:0)
 				},
 				asynchronous: false,

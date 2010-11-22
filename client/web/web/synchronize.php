@@ -41,4 +41,5 @@ setcookie('ovd-client[use_local_credentials]', 1, (time()+(60*60*24*7)));
 setcookie('ovd-client[session_mode]', $_POST['mode'], (time()+(60*60*24*7)));
 setcookie('ovd-client[session_language]', $_POST['language'], (time()+(60*60*24*7)));
 setcookie('ovd-client[session_keymap]', $_POST['keymap'], (time()+(60*60*24*7)));
+setcookie('ovd-client[desktop_fullscreen]', $_POST['desktop_fullscreen'], (time()+(60*60*24*7)));
 setcookie('ovd-client[debug]', $_POST['debug'], (time()+(60*60*24*7)));
