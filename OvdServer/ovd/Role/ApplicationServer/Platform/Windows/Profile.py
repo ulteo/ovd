@@ -137,8 +137,12 @@ class Profile(AbstractProfile):
 		
 		
 		d = os.path.join(self.mountPoint, "conf.Windows")
-		if not os.path.exists(d):
-			os.makedirs(d)
+		while not os.path.exists(d):
+			try:
+				os.makedirs(d)
+			except OSError, err:
+				Logger.debug2("conf.Windows mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
+				continue
 		
 		self.session.obainPrivileges()
 		

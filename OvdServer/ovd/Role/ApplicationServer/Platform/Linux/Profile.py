@@ -192,8 +192,12 @@ class Profile(AbstractProfile):
 			return
 		
 		d = os.path.join(self.profile_mount_point, "conf.Linux")
-		if not os.path.exists(d):
-			os.makedirs(d)
+		while not os.path.exists(d):
+			try:
+				os.makedirs(d)
+			except OSError, err:
+				Logger.debug2("conf.Linux mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
+				continue
 		
 		# Copy conf files
 		cmd = self.getRsyncMethod(self.homeDir, d)
