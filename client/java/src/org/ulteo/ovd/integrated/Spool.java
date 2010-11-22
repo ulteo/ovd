@@ -189,19 +189,16 @@ public class Spool implements Runnable {
 	}
 
 	public void stop() {
-		new Thread(new Runnable() {
-			public void run() {
-				spoolThread.interrupt();
+		spoolThread.interrupt();
 
-				while (spoolThread.isAlive()) {
-					try {
-						Thread.sleep(10);
-					} catch (InterruptedException ex) {}
-				}
-				
-				spoolThread = null;
-			}
-		}).start();
+		while (spoolThread.isAlive()) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException ex) {}
+		}
+
+		spoolThread = null;
+		org.ulteo.Logger.info("Spool thread stopped");
 	}
 
 	private Application findAppById(long id_) {

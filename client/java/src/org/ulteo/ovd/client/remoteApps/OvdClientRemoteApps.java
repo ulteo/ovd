@@ -69,6 +69,10 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		return this.spool.getInstanceName();
 	}
 
+	public Spool getSpool() {
+		return this.spool;
+	}
+
 	@Override
 	protected void customizeConnection(RdpConnectionOvd co) {
 		try {

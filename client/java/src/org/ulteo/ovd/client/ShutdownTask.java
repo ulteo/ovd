@@ -22,8 +22,10 @@ package org.ulteo.ovd.client;
 
 import java.io.File;
 import org.ulteo.Logger;
+import org.ulteo.ovd.client.remoteApps.OvdClientRemoteApps;
 import org.ulteo.utils.FilesOp;
 import org.ulteo.ovd.integrated.Constants;
+import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
 
 public class ShutdownTask extends Thread {
@@ -48,6 +50,12 @@ public class ShutdownTask extends Thread {
 		String instance = this.client.getInstance();
 		if (instance == null)
 			return;
+
+		if (this.client instanceof OvdClientRemoteApps) {
+			Spool spool = ((OvdClientRemoteApps) this.client).getSpool();
+			if (spool != null)
+				spool.stop();
+		}
 
 		File instance_dir = new File(Constants.PATH_REMOTE_APPS+Constants.FILE_SEPARATOR+instance);
 		if (! instance_dir.exists())
