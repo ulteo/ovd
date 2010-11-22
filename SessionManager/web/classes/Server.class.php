@@ -25,7 +25,7 @@ class Server {
 	const SERVER_ROLE_APS = "aps";
 	const SERVER_ROLE_FS = "fs";
 
-	const SERVER_STATUS_ONLINE = "online";
+	const SERVER_STATUS_ONLINE = "ready";
 	const SERVER_STATUS_OFFLINE = "down";
 	const SERVER_STATUS_BROKEN = "broken";
 
