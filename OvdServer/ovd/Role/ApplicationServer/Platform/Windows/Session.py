@@ -231,7 +231,7 @@ class Session(AbstractSession):
 				"NoResolveSearch",
 				"NoSetFolders",
 				"NoSetTaskbar",
-				"NoStartMenuSubFolders", # should remove the folders from startmenu but doesn't work
+				#"NoStartMenuSubFolders", # should remove the folders from startmenu but doesn't work + On 2008, start menu is empty if this key is set
 				"NoSMBalloonTip",
 				"NoStartMenuEjectPC",
 				"NoStartMenuNetworkPlaces",
