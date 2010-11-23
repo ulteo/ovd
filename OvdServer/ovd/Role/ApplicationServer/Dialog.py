@@ -114,6 +114,8 @@ class Dialog(AbstractDialog):
 			appNode.setAttribute("desktopfile", application["filename"])
 			if application.has_key("description"):
 				appNode.setAttribute("description", application["description"])
+			if application.has_key("package"):
+				appNode.setAttribute("package", application["package"])
 			exeNode = doc.createElement("executable")
 			exeNode.setAttribute("command", application["command"])
 			#if application.has_key("icon"):

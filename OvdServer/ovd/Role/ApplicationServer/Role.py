@@ -313,6 +313,9 @@ class Role(AbstractRole):
 				return
 		
 		applications = appsdetect.get()
+		if self.main_instance.ulteo_system:
+			appsdetect.getDebianPackage(applications)
+		
 		known_ids = []
 		
 		self.applications_mutex.acquire()

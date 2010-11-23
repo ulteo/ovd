@@ -246,3 +246,20 @@ class ApplicationsDetection():
 			return list2.values()[-1]
 		
 		return None
+	
+	
+	def getDebianPackage(self, applications):
+		for key in applications.keys():
+			application = applications[key]
+			
+			cmd = 'dpkg -S "%s"'%(application["filename"])
+			
+			status,out = commands.getstatusoutput(cmd)
+			if status != 0:
+				continue
+			
+			if not ":" in out:
+				continue
+			
+			(package, _) = out.split(":", 1)
+			application["package"] = package
