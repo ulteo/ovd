@@ -140,7 +140,7 @@ class User {
 		
 		$available_servers = Abstract_Server::load_available_by_role_sorted_by_load_balancing(Server::SERVER_ROLE_APS);
 		
-		$applications = $this->applications(NULL, false);
+		$applications = $this->applications(NULL, true);
 		$servers_to_use = array();
 		
 		foreach($available_servers as $fqdn => $server) {
