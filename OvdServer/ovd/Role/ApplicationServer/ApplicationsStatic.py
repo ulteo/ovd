@@ -98,7 +98,7 @@ class ApplicationsStatic:
 		f.writelines(application_["revision"])
 		f.close()
 		
-		application_["filename"] = getApplicationPath(application_["id"])
+		application_["filename"] = self.getApplicationPath(application_["id"])
 		self.applications[application_["id"]] = application_
 		
 		
