@@ -8,7 +8,7 @@ Group: Applications/web
 Vendor: Ulteo SAS
 Packager: Samuel Bovée <samuel@ulteo.com>
 URL: http://www.ulteo.com
-Distribution: SLES 11 SP1
+Distribution: RHEL 5.5
 
 Source: %{name}-%{version}.tar.gz
 Patch1: 01_no-image.diff
