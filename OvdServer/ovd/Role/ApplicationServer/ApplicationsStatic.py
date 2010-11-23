@@ -57,6 +57,7 @@ class ApplicationsStatic:
 		applications_old = self.getList()
 		applications_id_old = applications_old.keys()
 		applications_id_new = []
+		applications_new = {}
 		
 		for node in rootNode.getElementsByTagName("application"):
 			application = self.xml2application(node)
@@ -65,6 +66,8 @@ class ApplicationsStatic:
 				return False
 			
 			applications_id_new.append(application["id"])
+			application["filename"] = self.getApplicationPath(application["id"])
+			applications_new[application["id"]] = application
 			
 			if application["id"] not in applications_id_old or application["revision"] != applications_old[application["id"]]:
 				if not self.addApplication(application):
@@ -76,6 +79,7 @@ class ApplicationsStatic:
 			if application_id not in applications_id_new:
 				self.delApplication(application_id)
 		
+		self.applications = applications_new
 		return True
 	
 	
