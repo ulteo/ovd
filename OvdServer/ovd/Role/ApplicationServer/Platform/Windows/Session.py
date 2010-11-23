@@ -270,7 +270,7 @@ class Session(AbstractSession):
 
 		# start menu customization
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"%(hiveName)
-		restrictions = ["Start_ShowRun"]
+		restrictions = ["Start_ShowRun", "StartMenuAdminTools", "Start_AdminToolsRoot"]
 		try:
 			Reg.CreateKeyR(_winreg.HKEY_USERS, path)
 			key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
