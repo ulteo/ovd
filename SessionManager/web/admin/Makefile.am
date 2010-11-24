@@ -8,6 +8,7 @@ scripts_DATA = actions.php \
                applications.php \
                applications_static.php \
                appsgroup.php \
+               checkup.php \
                configuration.php \
                configuration-partial.php \
                configuration-profile.php \
