@@ -21,6 +21,9 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
+if (isset($_SERVER) && array_key_exists('REQUEST_METHOD', $_SERVER) && $_SERVER['REQUEST_METHOD'] == 'HEAD')
+	exit(0);
+
 define('AUTH_FAILED', 'auth_failed');
 define('IN_MAINTENANCE', 'in_maintenance');
 define('INTERNAL_ERROR', 'internal_error');
