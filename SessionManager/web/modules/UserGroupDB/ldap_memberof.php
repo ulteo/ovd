@@ -20,9 +20,22 @@
  **/
 class UserGroupDB_ldap_memberof {
 	public $cache;
+	protected $preferences;
 	
 	public function __construct() {
 		$this->cache = array();
+		
+		$prefs = Preferences::getInstance();
+		if (! $prefs)
+			die_error('get Preferences failed',__FILE__,__LINE__);
+		
+		$a_pref = $prefs->get('UserGroupDB', 'ldap_memberof');
+		if (is_array($a_pref)) {
+			$this->preferences = $a_pref;
+		}
+		else { // ugly...
+			$this->preferences = array();
+		}
 	}
 	
 	public function __toString() {
@@ -44,7 +57,11 @@ class UserGroupDB_ldap_memberof {
 		
 		$config_ldap = $prefs->get('UserDB','ldap');
 		
-		$config_ldap['match'] =  array('description' => 'description','name' => 'name');
+		$config_ldap['match'] = array();
+		if (array_key_exists('match', $this->preferences)) {
+			$config_ldap['match'] = $this->preferences['match'];
+		}
+		
 		if (str_endswith(strtolower($id_),strtolower($config_ldap['suffix'])) === true) {
 			$id2 = substr($id_,0, -1*strlen($config_ldap['suffix']) -1);
 		}
@@ -133,7 +150,12 @@ class UserGroupDB_ldap_memberof {
 			return NULL;
 		}
 		$config_ldap = $userDBAD->makeLDAPconfig();
-		$config_ldap['match'] =  array('description' => 'description','name' => 'name', 'member' => 'member');
+		
+		$config_ldap['match'] = array();
+		if (array_key_exists('match', $this->preferences)) {
+			$config_ldap['match'] = $this->preferences['match'];
+		}
+		
 		$ldap = new LDAP($config_ldap);
 		$contains = '*';
 		if ( $contains_ != '')
@@ -178,7 +200,10 @@ class UserGroupDB_ldap_memberof {
 	}
 	
 	public static function configuration() {
-		return array();
+		$ret = array();
+		$c = new ConfigElement_dictionary('match',_('Matching'), _('Matching'), _('Matching'), array('description' => 'description','name' => 'name', 'member' => 'member'));
+		$ret []= $c;
+		return $ret;
 	}
 	
 	public static function prefsIsValid($prefs_, &$log=array()) {

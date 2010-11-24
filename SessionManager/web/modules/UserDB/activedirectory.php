@@ -64,7 +64,6 @@ class UserDB_activedirectory  extends UserDB_ldap{
 			'password' => $config['password'],
 
 			'port'	=> '389',
-			'userbranch'	=> $config['ou'],
 			'uidprefix' => 'cn',
 			'protocol_version' => 3,
 			'filter' => '(&(objectCategory=person)(objectClass=user))',
@@ -87,8 +86,6 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		$ret []= $c;
 		$c = new ConfigElement_password('password', _('Administrator password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'), NULL);
 		$ret []= $c;
-		$c = new ConfigElement_input('ou', _('User branch DN'), _('User branch DN'), _('User branch DN'), 'cn=Users');
-		$ret []= $c;
 		$c = new ConfigElement_dictionary('match', _('match'), _('match'), _('match'), array());
 		$ret []= $c;
 		return $ret;
@@ -97,7 +94,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 	public static function prefsIsValid($prefs_, &$log=array()) {
 		$config_AD = $prefs_->get('UserDB','activedirectory');
 
-		$minimum_keys = array ('host', 'domain', 'login', 'password', 'domain', 'ou');
+		$minimum_keys = array ('host', 'domain', 'login', 'password', 'domain');
 		foreach ($minimum_keys as $m_key){
 			if (!isset($config_AD[$m_key])) {
 				$log['config_AD has key '.$m_key] = false;
@@ -137,13 +134,6 @@ class UserDB_activedirectory  extends UserDB_ldap{
 
 // 		$log['Connect to AD'] = true;
 
-		$ret = $LDAP2->branch_exists($config_AD['ou']);
-		if ( $ret == false) {
-			$log['LDAP user branch'] = false;
-		}
-		else {
-			$log['LDAP user branch'] = true;
-		}
 		$LDAP2->disconnect();
 		return true;
 	}
