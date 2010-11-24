@@ -1,6 +1,7 @@
 scripts_DATA = applications.png \
                appsgroup.php.png \
                configuration.png \
+               debug.png \
                logout.png \
                logs.php.png \
                main.png \

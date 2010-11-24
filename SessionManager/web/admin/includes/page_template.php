@@ -263,6 +263,26 @@ foreach (glob(dirname(dirname(__FILE__)).'/*/menu.inc.php') as $path) {
 	}
 }
 
+if (defined('SESSIONMANAGER_ADMIN_DEBUG') && ! isset($_SESSION['admin_ovd_user'])) {
+	$menu['debug'] = 
+		array('id' => 'debug',
+			  'name' => 'Debug Tools',
+			  'page' => 'configuration.php',
+			  'parent' => array());
+	
+	$menu['configuration_debug'] =
+		array('id' => 'configuration_debug',
+			  'name' => 'Configuration',
+			  'page' => 'configuration.php',
+			  'parent' => array('debug'));
+	
+	$menu['checkup'] =
+		array('id' => 'checkup',
+			  'name' => 'Checkup database',
+			  'page' => 'checkup.php',
+			  'parent' => array('debug'));
+}
+
 $menu['logout'] =
 	array('id' => 'logout',
 		  'name' => _('Logout').(isset($_SESSION['admin_ovd_user'])?' ('.$_SESSION['admin_login'].')':''),
