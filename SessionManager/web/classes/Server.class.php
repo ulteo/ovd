@@ -972,6 +972,8 @@ class Server {
 			$imagick = new Imagick();
 			$imagick->readImage($imgfile);
 		} catch (Exception $e) {
+			if (file_exists($imgfile))
+				@unlink($imgfile);
 			Logger::error('main', 'Server::getApplicationIcon('.$id_.') - Content received is not an image');
 			Logger::debug('main', 'Server::getApplicationIcon('.$id_.') - Content received : '.$ret);
 			return false;
