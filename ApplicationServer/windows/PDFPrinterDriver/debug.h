@@ -54,7 +54,7 @@
 
     // __declspec(selectany) ensures that even if this is defined in multiple compilation 
     // modules, they will all resolve to the same symbol in the linked DLL
-    __declspec(selectany) INT giDebugLevel = 2;
+    __declspec(selectany) INT giDebugLevel = 0;
 
     #define STRINGIZE(x) #x
     #define QUOTE(x) STRINGIZE(x)
