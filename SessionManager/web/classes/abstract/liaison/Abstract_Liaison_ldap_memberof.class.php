@@ -157,12 +157,10 @@ class Abstract_Liaison_ldap_memberof {
 	
 	public static function loadAll($type_) {
 		Logger::debug('main',"Abstract_Liaison_ldap_memberof::loadAll ($type_)");
-		echo "Abstract_Liaison_ldap_memberof::loadAll($type_)<br>";
 		return NULL;
 	}
 	public static function loadUnique($type_, $element_, $group_) {
 		Logger::debug('main',"Abstract_Liaison_ldap_memberof::loadUnique ($type_,$element_,$group_)");
-		echo "Abstract_Liaison_ldap_memberof::loadUnique($type_,$element_,$group_)<br>";
 		return NULL;
 	}
 	
