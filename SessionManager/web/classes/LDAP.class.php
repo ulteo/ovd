@@ -177,7 +177,7 @@ class LDAP {
 
 	public function search($filter_, $attribs_=NULL, $limit_=0) {
 		$this->check_link();
-		if ($this->userbranch == '') {
+		if ($this->userbranch == '' or is_null($this->userbranch)) {
 			$searchbase = $this->suffix;
 		}
 		else {
