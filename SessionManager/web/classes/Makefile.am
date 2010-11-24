@@ -22,6 +22,7 @@ scripts_DATA = Application.class.php \
                ServerReportItem.class.php \
                Session.class.php \
                SessionReportItem.class.php \
+               StartSession.class.php \
                Token.class.php \
                User.class.php \
                UsersGroup.class.php \

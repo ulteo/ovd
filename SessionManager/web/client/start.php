@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -48,130 +48,22 @@ function throw_response($response_code_) {
 	die();
 }
 
-function parse_client_XML($xml_) {
-	if (! $xml_ || strlen($xml_) == 0)
-		return false;
+$startsession = new StartSession();
 
-	$dom = new DomDocument('1.0', 'utf-8');
-
-	$buf = @$dom->loadXML($xml_);
-	if (! $buf)
-		return false;
-
-	if (! $dom->hasChildNodes())
-		return false;
-
-	$session_node = $dom->getElementsByTagname('session')->item(0);
-	if (is_null($session_node))
-		return false;
-
-	if ($session_node->hasAttribute('mode'))
-		$_SESSION['mode'] = $session_node->getAttribute('mode');
-
-	if ($session_node->hasAttribute('language'))
-		$_REQUEST['language'] = $session_node->getAttribute('language');
-
-	if ($session_node->hasAttribute('timezone'))
-		$_REQUEST['timezone'] = $session_node->getAttribute('timezone');
-
-	$user_node = $dom->getElementsByTagname('user')->item(0);
-	if (! is_null($user_node)) {
-		if ($user_node->hasAttribute('login'))
-			$_POST['login'] = $user_node->getAttribute('login');
-		if ($user_node->hasAttribute('password'))
-			$_POST['password'] = $user_node->getAttribute('password');
-	}
-
-	$start_node = $dom->getElementsByTagname('start')->item(0);
-	if (! is_null($start_node)) {
-		$application_nodes = $start_node->getElementsByTagname('application');
-		foreach ($application_nodes as $application_node) {
-			if (! isset($_REQUEST['start_apps']) || ! is_array($_REQUEST['start_apps']))
-				$_REQUEST['start_apps'] = array();
-
-			$_REQUEST['start_apps'][] = array(
-				'id'	=>	$application_node->getAttribute('id'),
-				'arg'	=>	(($application_node->hasAttribute('arg'))?$application_node->getAttribute('arg'):NULL)
-			);
-		}
-	}
-
-	return true;
-}
-
-function parse_session_create_XML($xml_) {
-	if (! $xml_ || strlen($xml_) == 0) {
-		Logger::error('main', '(client/start) parse session create XML : empty content');
-		return false;
-	}
-
-	$dom = new DomDocument('1.0', 'utf-8');
-
-	$buf = @$dom->loadXML($xml_);
-	if (! $buf) {
-		Logger::error('main', '(client/start) parse session create XML : not an XML');
-		return false;
-	}
-
-	if (! $dom->hasChildNodes()) {
-		Logger::error('main', '(client/start) parse session create XML : empty XML');
-		return false;
-	}
-
-	$node = $dom->getElementsByTagname('session')->item(0);
-	if (is_null($node)) {
-		Logger::error('main', '(client/start) parse session create XML : no session node');
-		return false;
-	}
-
-	if (! $node->hasAttribute('id')) {
-		Logger::error('main', '(client/start) parse session create XML : no id attribute in session node');
-		return false;
-	}
-
-	return true;
-}
-
-$prefs = Preferences::getInstance();
-if (! $prefs) {
-	Logger::error('main', '(client/start) get Preferences failed');
-	throw_response(INTERNAL_ERROR);
-}
-
-$system_in_maintenance = $prefs->get('general', 'system_in_maintenance');
-if ($system_in_maintenance == '1') {
-	Logger::error('main', '(client/start) The system is on maintenance mode');
-	throw_response(IN_MAINTENANCE);
-}
-
-$ret = parse_client_XML(@file_get_contents('php://input'));
+$client_request_xml = @file_get_contents('php://input');
+$ret = $startsession->parseClientRequest($client_request_xml);
 if (! $ret) {
 	Logger::error('main', '(client/start) Client does not send a valid XML');
 	throw_response(INTERNAL_ERROR);
 }
 
-if (! isset($_SESSION['login'])) {
-	$ret = do_login();
-	if (! $ret) {
-		Logger::error('main', '(client/start) Authentication failed');
-		throw_response(AUTH_FAILED);
-	}
-}
-
-if (! isset($_SESSION['login'])) {
+$ret = $startsession->authenticate();
+if (! $ret) {
 	Logger::error('main', '(client/start) Authentication failed');
 	throw_response(AUTH_FAILED);
 }
 
-$user_login = $_SESSION['login'];
-
-$userDB = UserDB::getInstance();
-
-$user = $userDB->import($user_login);
-if (! is_object($user)) {
-	Logger::error('main', '(client/start) User importation failed');
-	throw_response(INVALID_USER);
-}
+$user = $startsession->user;
 
 $default_settings = $user->getSessionSettings('session_settings_defaults');
 $session_mode = $default_settings['session_mode'];
@@ -695,7 +587,8 @@ if (! isset($old_session_id)) {
 
 		$xml = $dom->saveXML();
 
-		$ret = parse_session_create_XML(query_url_post_xml($server->getBaseURL().'/aps/session/create', $xml));
+		$session_create_xml = query_url_post_xml($server->getBaseURL().'/aps/session/create', $xml);
+		$ret = $startsession->parseSessionCreate($session_create_xml);
 		if (! $ret) {
 			Logger::critical('main', '(client/start) Unable to create Session \''.$session->id.'\' for User \''.$session->user_login.'\' on Server \''.$server->fqdn.'\', aborting');
 			$session->orderDeletion();
@@ -813,7 +706,8 @@ if (! isset($old_session_id)) {
 
 			$xml = $dom->saveXML();
 
-			$ret = parse_session_create_XML(query_url_post_xml($server->getBaseURL().'/aps/session/create', $xml));
+			$session_create_xml = query_url_post_xml($server->getBaseURL().'/aps/session/create', $xml);
+			$ret = $startsession->parseSessionCreate($session_create_xml);
 			if (! $ret) {
 				Logger::critical('main', '(client/start) Unable to create Session \''.$session->id.'\' for User \''.$session->user_login.'\' on Server \''.$server->fqdn.'\', aborting');
 				$session->orderDeletion();
