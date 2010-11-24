@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2009
+ * Author Samuel BOVEE <samuel@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -36,5 +37,24 @@ class AppsGroup {
 	
 	public function __toString() {
 		return get_class($this).'(id: \''.$this->id.'\' name: \''.$this->name.'\' description: \''.$this->description.'\' published: '.$this->published.')';
+	}
+
+	public function userGroups() {
+		Logger::debug('main', 'APPSGROUPS::userGroups (for id='.$this->id.')');
+		$UserGroupDB = UserGroupDB::getInstance();
+		$groups = Abstract_Liaison::load('UsersGroupApplicationsGroup', NULL, $this->id);
+		if (is_array($groups)) {
+			$result = array();
+			foreach ($groups as $UGAG_liaison){
+				$g = $UserGroupDB->import($UGAG_liaison->element);
+				if (is_object($g))
+					$result[$UGAG_liaison->element]= $g;
+			}
+			return $result;
+		}
+		else {
+			Logger::error('main', 'APPSGROUPS::userGroups (for id='.$this->id.') load liaison liaison failed');
+			return NULL;
+		}
 	}
 }

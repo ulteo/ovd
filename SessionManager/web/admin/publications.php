@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2009
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
+ * Author Samuel BOVEE <samuel@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -108,6 +109,8 @@ function show_default() {
     }
   }
 
+  $nb_groups_apps  = count($groups_apps);
+  $nb_groups_users = count($groups_users);
 
   if ($can_add_publish and $can_manage_publications) {
     $content = 'content'.(($count++%2==0)?1:2);
@@ -121,14 +124,16 @@ function show_default() {
     echo '<td>';
     echo '<select name="group_u">';
     foreach($groups_users as $group_users)
-      echo '<option value="'.$group_users->getUniqueID().'" >'.$group_users->name.'</option>';
+      if (count($group_users->appsGroups()) < $nb_groups_apps)
+        echo '<option value="'.$group_users->getUniqueID().'" >'.$group_users->name.'</option>';
     echo '</select>';
     echo '</td>';
 
     echo '<td>';
     echo '<select name="group_a">';
     foreach($groups_apps as $group_apps)
-      echo '<option value="'.$group_apps->id.'" >'.$group_apps->name.'</option>';
+      if (count($group_apps->userGroups()) < $nb_groups_users)
+        echo '<option value="'.$group_apps->id.'" >'.$group_apps->name.'</option>';
     echo '</select>';
     echo '</td>';
     echo '<td><input type="submit" value="'._('Add').'" /></td>';
