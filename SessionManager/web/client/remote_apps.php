@@ -73,6 +73,14 @@ $session_node->setAttribute('mode', Session::MODE_APPLICATIONS);
 $session_node->setAttribute('multimedia', false);
 $session_node->setAttribute('redirect_client_drives', false);
 $session_node->setAttribute('redirect_client_printers', false);
+$settings_node = $dom->createElement('settings');
+foreach ($session->settings as $setting_k => $setting_v) {
+	$setting_node = $dom->createElement('setting');
+	$setting_node->setAttribute('name', $setting_k);
+	$setting_node->setAttribute('value', $setting_v);
+	$settings_node->appendChild($setting_node);
+}
+$session_node->appendChild($settings_node);
 foreach ($session->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
 	$server = Abstract_Server::load($fqdn);
 	if (! $server)
