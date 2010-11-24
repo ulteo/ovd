@@ -28,10 +28,12 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <shlobj.h>
+#include <shlwapi.h>
 
 #define JAR_FILE "OVDNativeClient.jar"
 
 int launch(const char *command_line, ...);
+void change_directory(const LPSTR argv0);
 
 void usage(const char *name) {
     fprintf(stderr, "Usage: %s [-a jar-file]\n", name);
@@ -44,11 +46,7 @@ int main(int argc, LPSTR argv[]) {
     int ret;
     int i;
 
-    {
-        TCHAR pwd[MAX_PATH];
-        GetCurrentDirectory(MAX_PATH, pwd);
-        printf("Pwd: '%s'\n", pwd);
-    }
+    change_directory(argv[0]);
     
     sprintf(cmd_line, "jre\\bin\\java.exe -jar \"%s\"", JAR_FILE);
     for (i=1; i<argc; i++)
@@ -100,4 +98,35 @@ int launch(const char *command_line, ...) {
   CloseHandle(pi.hThread);
   
   return (int)lpExitCode;  
+}
+
+void change_directory(const LPSTR argv0) {
+    BOOL ret;
+    TCHAR pwd[MAX_PATH];
+    TCHAR path[MAX_PATH];
+    TCHAR path2[MAX_PATH];
+
+    GetCurrentDirectory(MAX_PATH, pwd);
+    snprintf(path, MAX_PATH, "%s", argv0);
+
+    ret = PathRemoveFileSpec(path);
+    if (ret == FALSE  || strlen(path)==0)
+        return;
+
+    ret = GetFullPathName(path, MAX_PATH, path2, NULL);
+    if (ret == FALSE) {
+        fprintf(stderr, "Unable to GetFullPathName of '%s'\n", path);
+        return;
+    }
+
+    if (strcmp(pwd, path2) == 0)
+        return;
+
+    ret = SetCurrentDirectory(path2);
+    if (ret == FALSE) {
+        fprintf(stderr, "Unable to cd into '%s'\n", path2);
+        return;
+    }
+
+    printf("Switched PWD from '%s' to '%s'\n", pwd, path2);
 }
