@@ -118,8 +118,8 @@ function show_default() {
     echo '<tfoot>';
     echo '<tr class="'.$content.'">';
     echo '<td>';
-    echo '<select id="select_group_u" name="group_u" onchange="ovdsm_publication_hook_select(this)" style="width:100%;" >';
-    echo '<option value="" >*</option>';
+    echo '<select id="select_group_u" name="group_u" onchange="ovdsm_publication_hook_select(this)" style="width: 100%;">';
+    echo '<option value="">*</option>';
     foreach($groups_users as $group_users)
       if (count($group_users->appsGroups()) < $nb_groups_apps)
         echo '<option value="'.$group_users->getUniqueID().'" >'.$group_users->name.'</option>';
@@ -127,7 +127,7 @@ function show_default() {
     echo '</td>';
 
     echo '<td>';
-    echo '<select id="select_group_a" name="group_a" onchange="ovdsm_publication_hook_select(this)" style="width:100%;" >';
+    echo '<select id="select_group_a" name="group_a" onchange="ovdsm_publication_hook_select(this)" style="width: 100%;">';
     echo '<option value="" >*</option>';
     foreach($groups_apps as $group_apps)
       if (count($group_apps->userGroups()) < $nb_groups_users)
@@ -139,7 +139,7 @@ function show_default() {
     echo '<input type="hidden" name="name" value="Publication" />';
     echo '<input type="hidden" name="group_u" value="" id="input_group_u" />';
     echo '<input type="hidden" name="group_a" value="" id="input_group_a" />';
-    echo '<input type="button" value="'._('Add').'" onclick="if(document.getElementById(\'input_group_u\').value == \'\') {alert('._('\'Please select an user group.\'').'); return;} if(document.getElementById(\'input_group_a\').value == \'\') {alert('._('\'Please select an application group\'').'); return;} this.form.submit();" />';
+    echo '<input type="button" value="'._('Add').'" onclick="if($(\'input_group_u\').value == \'\') {alert('._('\'Please select an user group.\'').'); return;} if($(\'input_group_a\').value == \'\') {alert('._('\'Please select an application group\'').'); return;} this.form.submit();" />';
     echo '</div></form>';
     echo '</td>';
     echo '</tr>';
