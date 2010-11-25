@@ -266,9 +266,9 @@ class Abstract_Session {
 		$SQL = SQL::getInstance();
 
 		if (! is_null($offset_))
-			$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 ORDER BY @4 DESC LIMIT '.((! is_null($start_))?$start_.',':'').$offset_, $SQL->prefix.'sessions', 'server', $fqdn_, 'timestamp');
+			$SQL->DoQuery('SELECT * FROM @1 WHERE @2 LIKE %3 ORDER BY @4 DESC LIMIT '.((! is_null($start_))?$start_.',':'').$offset_, $SQL->prefix.'sessions', 'servers', '%'.$fqdn_.'%', 'timestamp');
 		else
-			$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 ORDER BY @4 DESC', $SQL->prefix.'sessions', 'server', $fqdn_, 'timestamp');
+			$SQL->DoQuery('SELECT * FROM @1 WHERE @2 LIKE %3 ORDER BY @4 DESC', $SQL->prefix.'sessions', 'servers', '%'.$fqdn_.'%', 'timestamp');
 		$rows = $SQL->FetchAllResults();
 
 		$sessions = array();
