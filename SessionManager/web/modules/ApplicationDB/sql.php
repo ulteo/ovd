@@ -219,12 +219,16 @@ class ApplicationDB_sql extends ApplicationDB {
 		if (array_key_exists($a->getAttribute('id'), $this->cache)) {
 			unset($this->cache[$a->getAttribute('id')]);
 		}
-		// TODO remove also all liasons
 		if (is_object($a) && $a->hasAttribute('id') && is_numeric($a->getAttribute('id'))) {
 			$icon_path = $a->getIconPathRW();
 			if (file_exists($icon_path)) {
 				@unlink($icon_path);
 			}
+			
+			// remove liaisons
+			Abstract_Liaison::delete('ApplicationServer', $a->getAttribute('id'), NULL); // remove application on servers
+			Abstract_Liaison::delete('AppsGroup', $a->getAttribute('id'), NULL); // remove publication for a group
+			
 			$sql2 = SQL::getInstance();
 			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', APPLICATION_TABLE, 'id', $a->getAttribute('id'));
 			return ($res !== false);
