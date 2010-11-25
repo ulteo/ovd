@@ -73,6 +73,9 @@ function server_display_role_preparation_aps($server) {
 
 		if (! array_key_exists('aps', $v->roles) || $v->roles['aps'] !== true)
 			unset($servers_replication[$k]);
+
+		if ($server->hasAttribute('ulteo_system') == false || $server->getAttribute('ulteo_system') == 0)
+			unset($servers_replication[$k]);
 	}
 	$sessions = array();
 	$total = Abstract_Session::countByServer($_GET['fqdn']);
