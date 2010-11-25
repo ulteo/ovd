@@ -97,7 +97,7 @@ function show_default() {
       echo '<td><a href="appsgroup.php?action=manage&id='.$group_a->id.'">'.$group_a->name.'</a></td>';
 
 			if ($can_manage_publications) {
-				echo '<td><form action="actions.php" metthod="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');">';
+				echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');">';
 				echo '<input type="hidden" name="action" value="del" />';
 				echo '<input type="hidden" name="name" value="Publication" />';
 				echo '<input type="hidden" name="group_a" value="'.$group_a->id.'" />';
