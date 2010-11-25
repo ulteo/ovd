@@ -22,6 +22,7 @@ package org.ulteo.ovd.integrated.shorcut;
 
 import java.io.File;
 import net.jimmc.jshortcut.JShellLink;
+import org.ulteo.Logger;
 import org.ulteo.utils.FilesOp;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.integrated.Constants;
@@ -41,12 +42,20 @@ public class WindowsShortcut extends Shortcut {
 	}
 
 	private JShellLink shortcut = null;
+	private boolean launcherFound = true;
 
 	public WindowsShortcut() {
 		this.shortcut = new JShellLink();
 		this.shortcut.setFolder(Constants.PATH_SHORTCUTS);
 		this.shortcut.setWorkingDirectory("");
-		this.shortcut.setPath(System.getProperty("user.dir")+Constants.FILE_SEPARATOR+Constants.FILENAME_LAUNCHER);
+
+		String launcherPath = System.getProperty("user.dir")+Constants.FILE_SEPARATOR+Constants.FILENAME_LAUNCHER;
+		if (! (new File(launcherPath).exists())) {
+			this.launcherFound = false;
+			return;
+		}
+
+		this.shortcut.setPath(launcherPath);
 	}
 
 	@Override
@@ -55,6 +64,11 @@ public class WindowsShortcut extends Shortcut {
 			return null;
 
 		String appName = replaceForbiddenChars(app.getName());
+
+		if (! launcherFound) {
+			Logger.error("Failed to create the '"+app.getName()+"' shortcut: Unable to find Ulteo OVD Integrated Launcher");
+			return null;
+		}
 
 		File shorcutDirectory = new File(Constants.PATH_SHORTCUTS);
 		if (! shorcutDirectory.exists())
