@@ -65,9 +65,11 @@ if [ -e "$CHROOTCONF" ]; then
     db_get ulteo-ovd-subsystem/sm_address && URL="$RET"
     set_conf $CHROOTCONF "session_manager" "$URL"
 
-    # resolv.conf
-    [ -f /etc/resolv.conf ] && cp /etc/resolv.conf $CHROOTDIR/etc/resolv.conf
-    [ -f /etc/hosts ] && cp /etc/hosts $CHROOTDIR/etc/hosts
+    # get some conffile from host to chroot
+    HOSTCONFFILES="hostname hosts resolv.conf"
+    for file in $HOSTCONFFILES; do
+        [ -f /etc/$file ] && cp /etc/$file $CHROOTDIR/etc/
+    done
 
 else
     db_subst ulteo-ovd-subsystem/no_chroot_conf CHROOTCONF "$CHROOTCONF"
