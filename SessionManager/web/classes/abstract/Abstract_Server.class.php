@@ -250,7 +250,11 @@ class Abstract_Server {
 
 		$sessions_liaisons = Abstract_Liaison::load('ServerSession', $fqdn_, NULL);
 		foreach ($sessions_liaisons as $sessions_liaison) {
-			Abstract_Session::delete($sessions_liaison->group);
+			$session = Abstract_Session::load($sessions_liaison->group);
+			if (! $session)
+				continue;
+
+			$session->orderDeletion();
 		}
 		Abstract_Liaison::delete('ServerSession', $fqdn_, NULL);
 
