@@ -68,6 +68,7 @@ function ovdsm_publication_hook_select(select_src) {
 		for(j=0 ; j<apps.length ; j++) {
 			if (options_dst.item(i).firstChild.data == apps[j]) {
 				ovdsm_publication_saved_options[ind_row].push(select_dst.removeChild(options_dst.item(i)));
+				i--;
 				break;
 			}
 		}
