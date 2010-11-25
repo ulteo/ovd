@@ -323,18 +323,30 @@ function show_manage($id, $applicationDB) {
     }
 
     if (count($servers_available) > 0 and $can_manage_server and $app->getAttribute('type') == 'linux' and $app->hasAttribute('package') and $app->getAttribute('package') !== '') {
-      echo '<tr>';
-      echo '<form action="actions.php" method="post"><td>';
-      echo '<input type="hidden" name="name" value="Application_Server" />';
-      echo '<input type="hidden" name="action" value="add" />';
-      echo '<input type="hidden" name="application" value="'.$id.'" />';
-      echo '<select name="server">';
-      foreach ($servers_available as $server)
-        echo '<option value="'.$server->fqdn.'">'.$server->fqdn.'</option>';
-      echo '</select>';
-      echo '</td><td><input type="submit" value="'._('Install on this server').'" /></td>';
-      echo '</form>';
-      echo '</tr>';
+      $display_list = false;
+      foreach ($servers_available as $server) {
+        if ($server->hasAttribute('ulteo_system') && $server->getAttribute('ulteo_system') == 1) {
+          $display_list = true;
+          break;
+        }
+      }
+      if ($display_list) {
+        echo '<tr>';
+        echo '<form action="actions.php" method="post"><td>';
+        echo '<input type="hidden" name="name" value="Application_Server" />';
+        echo '<input type="hidden" name="action" value="add" />';
+        echo '<input type="hidden" name="application" value="'.$id.'" />';
+        echo '<select name="server">';
+        foreach ($servers_available as $server) {
+          if ($server->hasAttribute('ulteo_system') && $server->getAttribute('ulteo_system') == 1) {
+            echo '<option value="'.$server->fqdn.'">'.$server->fqdn.'</option>';
+          }
+        }
+        echo '</select>';
+        echo '</td><td><input type="submit" value="'._('Install on this server').'" /></td>';
+        echo '</form>';
+        echo '</tr>';
+      }
     }
     echo '</table>';
     echo "<div>\n";
