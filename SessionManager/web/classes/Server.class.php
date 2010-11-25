@@ -186,7 +186,6 @@ class Server {
 
 		$buf = $prefs->get('general', 'slave_server_settings');
 		$authorized_fqdn = $buf['authorized_fqdn'];
-		$fqdn_private_address = $buf['fqdn_private_address'];
 		$disable_fqdn_check = $buf['disable_fqdn_check'];
 
 		$address = $_SERVER['REMOTE_ADDR'];
@@ -217,7 +216,7 @@ class Server {
 		}
 
 		$reverse = @gethostbyaddr($address);
-		if (($reverse == $name) || (isset($fqdn_private_address[$name]) && $fqdn_private_address[$name] == $address))
+		if ($reverse == $name)
 			return true;
 
 		Logger::warning('main', '"'.$this->fqdn.'": reverse DNS is invalid! ('.$reverse.')');

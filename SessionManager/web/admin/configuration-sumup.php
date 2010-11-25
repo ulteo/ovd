@@ -104,15 +104,6 @@ if (is_array($slave_server_settings['authorized_fqdn']) && count($slave_server_s
 		echo '<li>'.$authorized_fqdn.'</li>';
 ?>
     </ul></li>
-
-    <li><strong><?php echo _('FQDN private address'); ?></strong>:<ul>
-<?php
-if (is_array($slave_server_settings['fqdn_private_address']) && count($slave_server_settings['fqdn_private_address']) > 0)
-	foreach ($slave_server_settings['fqdn_private_address'] as $name => $ip)
-		echo '<li>'.$name.' => '.$ip.'</li>';
-?>
-    </ul></li>
-
 	<li><strong><?php echo _('FQDN check'); ?></strong>:
 <?php
 if ($slave_server_settings['disable_fqdn_check'] == 1)
