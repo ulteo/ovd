@@ -71,8 +71,8 @@ function show_default() {
 
 	$can_manage_publications = isAuthorized('managePublications');
 
+  page_header(array('js_files' => array('media/script/publication.js')));
 
-  page_header();
 
   echo '<div>';
   echo '<h1>'._('Publications').'</h1>';
@@ -117,12 +117,9 @@ function show_default() {
 
     echo '<tfoot>';
     echo '<tr class="'.$content.'">';
-    echo '<form action="actions.php" method="post"><div>';
-    echo '<input type="hidden" name="action" value="add" />';
-    echo '<input type="hidden" name="name" value="Publication" />';
-
     echo '<td>';
-    echo '<select name="group_u">';
+    echo '<select id="select_group_u" name="group_u" onchange="ovdsm_publication_hook_select(this)" style="width:100%;" >';
+    echo '<option value="" >*</option>';
     foreach($groups_users as $group_users)
       if (count($group_users->appsGroups()) < $nb_groups_apps)
         echo '<option value="'.$group_users->getUniqueID().'" >'.$group_users->name.'</option>';
@@ -130,14 +127,21 @@ function show_default() {
     echo '</td>';
 
     echo '<td>';
-    echo '<select name="group_a">';
+    echo '<select id="select_group_a" name="group_a" onchange="ovdsm_publication_hook_select(this)" style="width:100%;" >';
+    echo '<option value="" >*</option>';
     foreach($groups_apps as $group_apps)
       if (count($group_apps->userGroups()) < $nb_groups_users)
         echo '<option value="'.$group_apps->id.'" >'.$group_apps->name.'</option>';
     echo '</select>';
-    echo '</td>';
-    echo '<td><input type="submit" value="'._('Add').'" /></td>';
+    echo '</td><td>';
+    echo '<form action="actions.php" method="post" ><div>';
+    echo '<input type="hidden" name="action" value="add" />';
+    echo '<input type="hidden" name="name" value="Publication" />';
+    echo '<input type="hidden" name="group_u" value="" id="input_group_u" />';
+    echo '<input type="hidden" name="group_a" value="" id="input_group_a" />';
+    echo '<input type="button" value="'._('Add').'" onclick="if(document.getElementById(\'input_group_u\').value == \'\') {alert('._('\'Please select an user group.\'').'); return;} if(document.getElementById(\'input_group_a\').value == \'\') {alert('._('\'Please select an application group\'').'); return;} this.form.submit();" />';
     echo '</div></form>';
+    echo '</td>';
     echo '</tr>';
     echo '</tfoot>';
   }
