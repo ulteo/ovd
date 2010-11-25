@@ -51,8 +51,8 @@ rm -rf %buildroot
 
 %files -n ulteo-ovd-subsystem
 %defattr(744,root,root)
-/usr/*
-/etc/*
+/etc/init.d/ulteo-ovd-subsystem
+/usr/sbin/ovd-subsystem-config
 
 %changelog -n ulteo-ovd-subsystem
 * Mon Sep 06 2010 Samuel Bovée <samuel@ulteo.com> 99.99.svn4430
