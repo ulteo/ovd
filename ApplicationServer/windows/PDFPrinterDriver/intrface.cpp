@@ -539,6 +539,7 @@ HRESULT __stdcall IOemPS::EnablePDEV(
 
     }
 
+    poempdev->spoolPSFileName = NULL;
     *pDevOem = (POEMPDEV) poempdev;
 
     return S_OK;
