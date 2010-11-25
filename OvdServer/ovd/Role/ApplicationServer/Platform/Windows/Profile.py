@@ -68,7 +68,7 @@ class Profile(AbstractProfile):
 	
 	def umount(self):
 		if self.mountPoint is None:
-			return
+			return True
 		
 		try:
 			win32wnet.WNetCancelConnection2(self.mountPoint, 0, True)
@@ -77,6 +77,8 @@ class Profile(AbstractProfile):
 			Logger.error("Unable to umount drive")
 			Logger.debug("WNetCancelConnection2 return %s"%(err))
 			Logger.debug("Unable to umount drive, net use command equivalent: '%s'"%("net use %s: /delete"%(self.mountPoint)))
+			return False
+		return True
 	
 	
 	def copySessionStart(self):
