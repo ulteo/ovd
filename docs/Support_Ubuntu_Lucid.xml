@@ -24,17 +24,17 @@
 
     <para>
       Ubuntu 10.04 (Lucid Lynx) is the latest LTS version of
-      Ubuntu. There are several edition: desktop/server, 32/64
+      Ubuntu. There are several editions: desktop/server, 32/64
       bits. This documentation has been done for the server edition
-      (32/64 bits) but it should also work for desktop edition. Ubuntu
-      system can be downloaded <ulink url="http://releases.ubuntu.com/10.04">here</ulink>.
+      (32/64 bits) but it should also work with the desktop edition. The Ubuntu
+      operating system can be downloaded <ulink url="http://releases.ubuntu.com/10.04">here</ulink>.
     </para>
 
     <simplesect id="sudo">
       <title>sudo</title>
 
       <para>
-        On Ubuntu system, we are not using the <emphasis>super
+        On Ubuntu systems, we are not using the <emphasis>super
         user</emphasis> (root) to log in and install packages. It is
         recomended to use <emphasis role="strong">sudo</emphasis>.
       </para>
@@ -53,10 +53,10 @@
       <title id="repository_title">Repository</title>
 
       <para id="repository_para">
-        Ubuntu is a Debian based system which use the same
+        Ubuntu is a Debian-based system which uses the same
         packaging system and tools: apt-get. So you need to have an
-        internet connexion on your Ubuntu system and add an Ulteo
-        Debian repository into your system.
+        internet connection on your Ubuntu system and add an Ulteo
+        Debian repository to your system.
       </para>
 
       <itemizedlist>
@@ -64,7 +64,7 @@
           <para>
 	    Edit
 	    the <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd.list</emphasis>
-	    file and put these lines:
+	    file and add these lines:
           </para>
           <screen>
 	  <![CDATA[
@@ -84,7 +84,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
             <para>
 	      GPG errors given by the previous command will be fixed
               in the next installation steps. They won't prevent the
-              installation to be successful.
+              installation to succeed.
             </para>
           </note>
         </listitem>
@@ -113,7 +113,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
       </para>
       
       <para>
-        You need to set those names according to your own domain names.
+        You need to set those names according to your own domain name.
       </para>
     </important>
   </section>
@@ -123,7 +123,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
 
     <para id="sm_first_para">
       The Session Manager is a LAMP (Linux Apache MySQL PHP) system
-      and could be used in an exising LAMP server.
+      and can be used on an exising LAMP server.
     </para>
 
     <section id="sql">
@@ -131,7 +131,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
 
       <para id="sql_para">
         The Session Manager needs access to a MySQL database. We
-        advice you to setup the MySQL server on the same machine as
+        advise you to setup the MySQL server on the same machine as
         the Session Manager to minimize access time.
       </para>
 
@@ -209,7 +209,7 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
         
         <listitem>
 	  <para>
-	    which have to be confirmed:
+	    which has to be confirmed:
 	  </para>
     	  <para>
 	    <inlinemediaobject>
@@ -228,8 +228,8 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
             According to the <emphasis>Archictecture</emphasis>
             documentation,
             a <emphasis role="strong">Susbsystem</emphasis> archive
-            can be installed on the SM to simplify the deployement of
-            Application Servers.
+            can be installed on the SM to simplify the Application Servers'
+	    deployements.
 	  </para>
     	  <para>
 	    <inlinemediaobject>
@@ -237,7 +237,7 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
                 <imagedata fileref="img/sm_install_chroot_location.png"/>
 	      </imageobject>
 	      <textobject>
-	        <phrase>Session Manager installation application system archive</phrase>
+	        <phrase>Session Manager application system archive installation</phrase>
 	      </textobject>
 	    </inlinemediaobject>
 	  </para>
@@ -260,7 +260,7 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
 	    <imagedata fileref="img/sm_www_admin_before_login.png"/>
 	  </imageobject>
 	  <textobject>
-	    <phrase>Session Manager into a web browser</phrase>
+	    <phrase>Session Manager within a web browser</phrase>
 	  </textobject>
         </inlinemediaobject>
       </para>
@@ -272,8 +272,8 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
 
       <para>
         The first step is to go to
-        <ulink url="http://sm.ulteo.com/ovd/admin"/> and autenticate
-        yourself with the login and password you provided during the
+        <ulink url="http://sm.ulteo.com/ovd/admin"/> and authenticate
+        yourself with the login and password you provided during
         installation.
       </para>
       <para>
@@ -348,7 +348,7 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
       <listitem>
         <para>
 	  The only question is about the host/IP address where the
-	  session manager can be accessed. (we use
+	  session manager can be accessed (we use
 	  <ulink url="sm.ulteo.com" /> here for the example, but of
 	  course, you have to set your own domain name).
 	</para>
@@ -406,8 +406,8 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
     </title>
       
     <para id="wc_para_1">
-      The Ulteo OVD Web client is no longer installed wcth the Session
-      Manager as it was on previous version (&lt; v3.0). So you have
+      The Ulteo OVD Web client is no longer installed with the Session
+      Manager as it was on previous versions (version number &lt; 3.0). So you have
       to install it manually on any server you want. Of course, it's
       possible to install it on the same machine as the Session Manager.
     </para>
@@ -429,7 +429,7 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
       <listitem id="wc_debconf_1">
 	<para>
 	  The installer asks if you want to plug the Web Client with
-	  an existing Session Manager. I depends if you want to use
+	  an existing Session Manager. It depends if you want to use
 	  this Web Client in a specific Ulteo OVD farm or if you
 	  want a generic web client.
 	</para>
@@ -439,7 +439,7 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
               <imagedata fileref="img/wc_install_plug_sm.png"/>
 	    </imageobject>
 	    <textobject>
-	      <phrase>Web Client install question #1</phrase>
+	      <phrase>Web Client installation question #1</phrase>
 	    </textobject>
 	  </inlinemediaobject>
 	</para>
@@ -448,7 +448,7 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
       <listitem id="wc_debconf_2">
 	<para>
 	  If you answered yes at the previous question, you now have
-	  to give the Session Manager host/IP address. In our
+	  to provide the Session Manager an host/IP address. In our
 	  example: <ulink url="sm.ulteo.com" />.
 	</para>
     	<para>
@@ -457,7 +457,7 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
               <imagedata fileref="img/wc_install_sm_host.png"/>
 	    </imageobject>
 	    <textobject>
-	      <phrase>Web Client install question #2</phrase>
+	      <phrase>Web Client installation question #2</phrase>
 	    </textobject>
 	  </inlinemediaobject>
 	</para>

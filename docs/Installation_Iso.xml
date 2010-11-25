@@ -15,17 +15,17 @@
   </articleinfo>
 
   <section id="launch_install_cd">
-    <title>Get and launch install CD</title>
+    <title>Get and launch the installation CD</title>
 
     <para>
-      If you haven't yet an Ulteo OVD DVD-ROM, please donwload the corresponding ISO file from
+      If you haven't an Ulteo OVD DVD-ROM yet, please donwload the corresponding ISO file from
       <ulink url="http://www.ulteo.com/main/downloads/ulteo-ovd-iso.php?suite=3.0">this place at www.ulteo.com</ulink> and burn it to a fresh DVD.
     </para>
 
     <para>
       Insert the Ulteo OVD DVD-ROM into your computer and restart it.
       If you selected the DVD-ROM as first boot device you'll see the
-      bootloader interface:
+      bootloader following interface:
     </para>
 
     <itemizedlist>
@@ -137,7 +137,7 @@
         <anchor id="ovd_configuration" />
         <para>
           Type a password and confirm it.
-          Usefull address is displayed to you for near future use of OVD.
+          Useful address is displayed to you for a near future use of OVD.
         </para>
         <para><screenshot>
           <screeninfo>ubiquity - step 7 - OVD configuration</screeninfo>
@@ -148,8 +148,8 @@
 
      <listitem>
         <para>
-          Now now carefully the installation summary.
-          Click on <emphasis>Install</emphasis>.
+          Now read carefully the installation summary, then
+          click on <emphasis>Install</emphasis>.
         </para>
         <para><screenshot>
   	      <screeninfo>ubiquity - step 8 - summary</screeninfo>
@@ -182,20 +182,20 @@
   <section id="system_boot">
     <title>First boot</title>
     <para>
-      Wait that the new OVD system reboots. It displays again the same
-      <ulink url="#splash_screen">boot splash screen</ulink> seen before.
+      Wait that the new OVD system has rebooted. It displays again the same
+      <ulink url="#splash_screen">boot splash screen</ulink> as seen before.
     </para>
     <para>
-      When the OVD has booted, it waits on the login prompt system.
-      OVD information usefull addresses are recalled to you.
+      Once the OVD has rebooted, it shows up the login prompt system and waits.
+      Useful OVD URL information is recalled to you.
     </para>
     <para><screenshot>
       <screeninfo>OVD system - first boot</screeninfo>
       <graphic fileref="img/iso/system_prompt.png"></graphic>
     </screenshot></para>
     <para>
-      Log in to OVD system is recommended to experiment users. Login id and password are
-      the same used during the <ulink url="#identity_info">fifth step</ulink> of install.
+      Logging in to the OVD system is recommended to experimented users. Login id and password are
+      the same as used during the <ulink url="#identity_info">fifth step</ulink> of installation.
     </para>
   </section>
 
@@ -210,7 +210,7 @@
 
       <para>
         The administrator login and password are both those filled at the
-        <ulink url="#ovd_configuration" >sixth step</ulink> of install.
+        <ulink url="#ovd_configuration" >sixth step</ulink> of installation.
       </para>
 
     <para>
@@ -225,7 +225,7 @@
     </para>
 
     <para>
-      Then you arrive on the main administrator menu of the Web interface.
+      Then you arrive at the main administrator menu in the Web interface.
     </para>
 
     <para>

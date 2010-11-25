@@ -14,16 +14,16 @@
   </articleinfo>
 
   <para>
-    The purpose of this document is to install a Ulteo OVD Application
-    Server on a Ubuntu 10.04 (Lucid Lynx) system without any
-    subsystem, using directly the locals applications.    
+    The purpose of this document is to install an Ulteo Open Virtual Desktop Application
+    Server on a Ubuntu 10.04 (Lucid Lynx) operating system without any
+    Ulteo OVD application subsystem, using directly the locals applications.    
   </para>
 
   <important>
     <para>
       This server won't support all OVD features because it's not
       using a Ulteo OVD subsystem. For instance, it won't be possible
-      to install/remove application of this server using the Ulteo OVD
+      to install/remove applications on/from this server using the Ulteo OVD
       Administration Console.
     </para>
   </important>
@@ -41,7 +41,7 @@
       
       <listitem>
         <para>
-          An internet connexion that allow HTTP or the Ulteo OVD DVD
+          An internet connection that allows HTTP or the Ulteo OVD DVD
           to install ubuntu packages.
         </para>
       </listitem>
@@ -55,10 +55,10 @@
 
     <important>
       <para>
-	The Application Server system have to be a dedicated system
-	for Ulteo OVD usage. It can also hosts another Ulteo OVD
-	roles. But we don't garantees the system will works if you are
-	using another services on ths system.
+	The Application Server system has to be a dedicated system
+	for Ulteo OVD usage. It can also host other Ulteo OVD
+	roles. But we don't garantee the system will work if you are
+	using another service on ths system.
       </para>
     </important>
 
@@ -70,8 +70,8 @@
       </para>
       
       <para>
-	You need to set that names according to your own domain
-	names.
+	You need to set that name according to your own domain
+	name.
       </para>
     </important>
 
@@ -97,7 +97,7 @@
       <listitem>
         <para>
 	  Edit the <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd.list</emphasis>
-	  file and put these lines:
+	  file and add these lines:
         </para>
         <screen>
 	  <![CDATA[
@@ -111,7 +111,7 @@ deb http://security.ubuntu.com/ubuntu/ hardy-security main]]>
       <listitem>
         <para>
 	  Edit the <emphasis>/etc/apt/preferences.d/01-ulteo-ovd</emphasis>
-	  file and put these lines:
+	  file and add these lines:
         </para>
         <screen>
 	  <![CDATA[
@@ -135,9 +135,9 @@ Pin-Priority: 1001]]>
         </screen>
         <note>
           <para>
-	    GPG errors given by the previous command will be fixed in
+	    GPG errors given by the previous command will be fixed during
             the next installation steps. They won't prevent the
-            installation to be successful.
+            installation to succeed.
           </para>
         </note>
       </listitem>
@@ -173,7 +173,7 @@ Pin-Priority: 1001]]>
       <listitem>
         <para>
 	  The only question is about the host/IP address where the
-	  session manager can be accessed. (we use
+	  session manager can be accessed (we use
 	  <ulink url="sm.ulteo.com" /> here for the example, but of
 	  course, you have to set your own domain name).
 	</para>
