@@ -93,17 +93,17 @@ function show_default() {
       $group_a = $publication['app'];
 
       echo '<tr class="'.$content.'">';
-      echo '<td><a href="usersgroup.php?action=manage&id='.$group_u->getUniqueID().'">'.$group_u->name.'</a></td>';
-      echo '<td><a href="appsgroup.php?action=manage&id='.$group_a->id.'">'.$group_a->name.'</a></td>';
+      echo '<td><a href="usersgroup.php?action=manage&amp;id='.$group_u->getUniqueID().'">'.$group_u->name.'</a></td>';
+      echo '<td><a href="appsgroup.php?action=manage&amp;id='.$group_a->id.'">'.$group_a->name.'</a></td>';
 
 			if ($can_manage_publications) {
-				echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');">';
+				echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');"><div>';
 				echo '<input type="hidden" name="action" value="del" />';
 				echo '<input type="hidden" name="name" value="Publication" />';
 				echo '<input type="hidden" name="group_a" value="'.$group_a->id.'" />';
 				echo '<input type="hidden" name="group_u" value="'.$group_u->getUniqueID().'" />';
 				echo '<input type="submit" value="'._('Delete').'"/>';
-				echo '</form></td>';
+				echo '</div></form></td>';
 			}
       echo '</tr>';
     }
@@ -117,7 +117,7 @@ function show_default() {
 
     echo '<tfoot>';
     echo '<tr class="'.$content.'">';
-    echo '<form action="actions.php" method="post">';
+    echo '<form action="actions.php" method="post"><div>';
     echo '<input type="hidden" name="action" value="add" />';
     echo '<input type="hidden" name="name" value="Publication" />';
 
@@ -137,7 +137,7 @@ function show_default() {
     echo '</select>';
     echo '</td>';
     echo '<td><input type="submit" value="'._('Add').'" /></td>';
-    echo '</form>';
+    echo '</div></form>';
     echo '</tr>';
     echo '</tfoot>';
   }
