@@ -3,6 +3,7 @@
 # Copyright (C) 2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author David LECHEVALIER <david@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -21,34 +22,53 @@
 import os
 import win32file
 
+FILE_ATTRIBUTE_SYSTEM =        0x4    #system file
+FILE_ATTRIBUTE_REPARSE_POINT = 0x400  #symbolic link
 
-def copyDirOverride(src, dst):
+def copyDirOverride(src, dst, exception=None):
 	if not os.path.isdir(src):
 		return
 	
-	if not os.path.isdir(dst):
-		os.makedirs(dst)
+	if exception is None:
+		exception = []
 	
 	try:
 		attr = win32file.GetFileAttributes(src)
+		if attr & FILE_ATTRIBUTE_SYSTEM and attr & FILE_ATTRIBUTE_REPARSE_POINT:
+			return 
 		win32file.SetFileAttributes(dst, attr)
 	except:
 		#print "Unable to setAttribute of",dst
 		pass
 	
-	for f in os.listdir(src):
+	if not os.path.isdir(dst):
+		os.makedirs(dst)
+
+	dirs = None
+	try:
+		dirs = os.listdir(src)
+	except Exception, err:
+		return
+	for f in dirs:
+		if f in exception:
+			continue
 		path_src = os.path.join(src, f)
 		path_dst = os.path.join(dst, f)
 		
 		if os.path.isdir(path_src):
-			copyDirOverride(path_src, path_dst) 
+			copyDirOverride(path_src, path_dst, exception) 
 		else:
+			if f.startswith("UsrClass.dat"):
+				continue
 			attr = None
 			if os.path.exists(path_dst):
 				attr = win32file.GetFileAttributes(path_dst)
 				os.remove(path_dst)
 			
-			win32file.CopyFile(path_src, path_dst, False)
+			try:
+				win32file.CopyFile(path_src, path_dst, False)
+			except:
+				pass
 			try:
 				if attr is not None:
 					win32file.SetFileAttributes(path_dst, attr)

@@ -21,6 +21,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
+import re
 import struct
 import win32api
 import win32con
@@ -290,6 +291,95 @@ def DeleteTree(key, subkey, deleteRoot = True):
 	
 	if deleteRoot:
 		win32api.RegDeleteKey(key, subkey)
+
+
+def TreeSearchExpression(hive, subpath, motif):
+	path = hive+"\\"+subpath
+	hkey = None
+	res = None
+	index = 0
+	flag_continue = True
+
+	try:
+		hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS)
+	except Exception, err:
+		pass
+	if hkey is None:
+		return None
+
+	while flag_continue:
+		try:			
+			subsubKey = win32api.RegEnumKey(hkey, index)
+			index+= 1
+			res = TreeSearchExpression(hive, subpath+"\\"+subsubKey, motif)
+			if res is not None:
+				return res
+		except Exception, err:
+			flag_continue = False
+	index = 0
+	flag_continue = True
+	while flag_continue:
+		try:
+			(value, obj, objType) = win32api.RegEnumValue(hkey, index)
+			if objType is not win32con.REG_DWORD:
+				res = None
+				res = re.search(motif, obj)
+				if res is not None:
+					res = res.group(0)
+					break
+
+			index+= 1
+			
+		except Exception, err:
+			if err[0] != 259:  #no more data available
+				Logger.error("TreeSearchExpression: %s"%(str(err)))
+			flag_continue = False
+		
+	win32api.RegCloseKey(hkey)
+
+	return res
+
+
+def TreeReplace(hive, subpath, src, dest):
+	index = 0
+	hkey = None
+	flag_continue = True
+	path = hive+"\\"+subpath
+
+	try:
+		hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS)
+	except Exception, err:
+		pass
+	if hkey is None:
+		return
+	
+	while flag_continue:
+		try:
+			subsubKey = win32api.RegEnumKey(hkey, index)
+			index+= 1
+			TreeReplace(hive, subpath+"\\"+subsubKey, src, dest)
+		except Exception, err:
+			flag_continue = False
+	index = 0
+	flag_continue = True
+	while flag_continue:
+		try:
+			(value, obj, objType) = win32api.RegEnumValue(hkey, index)
+			if objType is not win32con.REG_DWORD:
+				res = None
+				if src in obj:
+					res = obj.replace(src, dest)
+				if res is not None:
+					win32api.RegSetValueEx(hkey, value, 0, objType, res)
+
+			index+= 1
+			
+		except Exception, err:
+			if err[0] != 259:  #no more data available
+				Logger.error("TreeReplace: %s"%(str(err)))
+			flag_continue = False
+		
+	win32api.RegCloseKey(hkey)
 
 
 def LsTree(key, subkey, nb=0):

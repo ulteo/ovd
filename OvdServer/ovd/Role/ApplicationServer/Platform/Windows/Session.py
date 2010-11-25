@@ -4,6 +4,7 @@
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
+# Author David LECHEVALIER <david@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -66,6 +67,8 @@ class Session(AbstractSession):
 		self.windowsDesktopDir = shell.SHGetFolderPath(0, shellcon.CSIDL_DESKTOPDIRECTORY, logon, 0)
 		
 		self.appDataDir = shell.SHGetFolderPath(0, shellcon.CSIDL_APPDATA, logon, 0)
+		self.localAppDataDir = shell.SHGetFolderPath(0, shellcon.CSIDL_LOCAL_APPDATA, logon, 0)
+		Logger.debug("localAppdata: '%s'"%(self.localAppDataDir))
 		Logger.debug("appdata: '%s'"%(self.appDataDir))
 		
 		win32profile.UnloadUserProfile(logon, hkey)
@@ -330,7 +333,7 @@ class Session(AbstractSession):
 			Logger.debug("Unable to reset ActiveSetup: "+str(err))
 		
 		if self.profile is not None:
-			self.profile.overrideRegistry(hiveName)
+			self.profile.overrideRegistry(hiveName, self.user.name)
 		
 		
 		# Timezone override

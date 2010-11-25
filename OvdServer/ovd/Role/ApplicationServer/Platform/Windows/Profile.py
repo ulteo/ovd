@@ -4,6 +4,7 @@
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author David LECHEVALIER <david@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -95,6 +96,23 @@ class Profile(AbstractProfile):
 		
 		d = os.path.join(self.mountPoint, "conf.Windows")
 		if os.path.exists(d):
+
+			# clean temporary file used by windows to load registry
+			dirs = None
+			try:
+				dirs = os.listdir(d)
+			except Exception, err:
+				Logger.warn("Unable to list content of the directory %s (%s)"%(directory, str(err)))
+				return
+
+			for content in dirs:
+				if content.startswith(r"NTUSER.DAT.LOG") or content.startswith(r"NTUSER.DAT{"):
+					try :
+						path = os.path.join(d, content)
+						os.remove(path)
+					except Exception, err:
+						Logger.warn("Unable to delete %s (%s)"%(path, str(err)))
+			
 			# Copy user registry
 			self.session.obainPrivileges()
 			
@@ -128,10 +146,21 @@ class Profile(AbstractProfile):
 				dst = self.session.appDataDir
 				
 				try:
-					Util.copyDirOverride(src, dst)
+					Util.copyDirOverride(src, dst, ["Protect", "Start Menu", "Crypto", "ulteo", "Identities"])
 				except Exception, err:
 					Logger.error("Unable to copy appData from profile")
 					Logger.debug("Unable to copy appData from profile: %s"%(str(err)))
+
+			# Copy LocalAppData
+			src = os.path.join(d, "LocalAppData")
+			if os.path.exists(src):
+				dst = self.session.localAppDataDir
+				
+				try:
+					Util.copyDirOverride(src, dst, ["Temp", "Cache", "Temporary Internet Files", "History", "Credentials"])
+				except Exception, err:
+					Logger.error("Unable to copy LocalAppData from profile")
+					Logger.debug("Unable to copy LocalAppData from profile: %s"%(str(err)))
 	
 	
 	def copySessionStop(self):
@@ -164,13 +193,25 @@ class Profile(AbstractProfile):
 		src = self.session.appDataDir
 		dst = os.path.join(d, "AppData")
 		try:
-			Util.copyDirOverride(src, dst)
+			Util.copyDirOverride(src, dst, ["Protect", "Start Menu", "Crypto", "ulteo", "Identities"])
 		except Exception, err:
-			Logger.error("Unable to copy appData to profile")
+			Logger.error("Unable to copy appData to profile "+src+" "+dst)
 			Logger.debug("Unable to copy appData to profile: %s"%(str(err)))
+		
+		# Copy localAppData
+		src = self.session.localAppDataDir
+		dst = os.path.join(d, "LocalAppData")
+		try:
+			Util.copyDirOverride(src, dst, ["Temp", "Cache", "Temporary Internet Files", "History", "Credentials"])
+		except Exception, err:
+			Logger.error("Unable to copy localAppData to profile from "+src+" to "+dst)
+			Logger.debug("Unable to copy localAppData to profile: %s"%(str(err)))	
 	
 	
-	def overrideRegistry(self, hiveName):
+	def overrideRegistry(self, hiveName, username):
+		username_motif = r"u([a-zA-Z0-9\x00]{31}_\x00A\x00P\x00S\x00)"
+		subpath = "Software\Microsoft\Windows NT\CurrentVersion\Windows Messaging Subsystem\Profiles\Outlook"
+		
 		if self.profile is not None or len(self.sharedFolders)>0:
 			Reg.CreateKeyR(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo")
 			
@@ -197,7 +238,12 @@ class Profile(AbstractProfile):
 			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
 			win32api.RegSetValueEx(key, "_LabelFromReg", 0, win32con.REG_SZ, "Personal User Profile")
 			win32api.RegCloseKey(key)
-		
+			
+			lastUsername = Reg.TreeSearchExpression(hiveName, subpath, username_motif)
+			if lastUsername is not None:
+				uni_username = username.encode("UTF-16LE")
+				Reg.TreeReplace(hiveName, subpath, lastUsername, uni_username)
+
 		shareNum = 0
 		for share in self.sharedFolders:
 			path = hiveName+r"\Software\Ulteo\ovd\share_%d"%(shareNum)
