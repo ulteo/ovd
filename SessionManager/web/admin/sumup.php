@@ -51,11 +51,14 @@ if (is_null($us)){
 else{
 	if (count($us) > 0){
 		echo '<table id="users_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
+		echo '<thead>';
 		echo '<tr class="title">';
 		echo '<th>'._('login').'</th><th>'._('name').'</th><th>'._('in this user group').'</th><th>'._('in this application group').'</th><th>'._('access to these applications').'</th><th>'._('access to these network folders').'</th>';
 // 		<th>'._('Desktop File').'</th>
 		echo '<th>'._('Available servers').'</th>';
 		echo '</tr>';
+		echo '</thead>';
+		echo '<tbody>';
 		$count = 0;
 		foreach($us as $u){
 			echo '<tr class="content';
@@ -171,6 +174,7 @@ else{
 			echo '</tr>';
 			$count++;
 		}
+		echo '</tbody>';
 		echo '</table>';
 	}
 }
@@ -188,6 +192,7 @@ else{
 	else {
 		?>
 		<table id="servers_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">
+		<thead>
 		<tr class="title">
 			<th><?php echo _('FQDN');?></th>
 			<th><?php echo _('Type');?></th>
@@ -195,6 +200,8 @@ else{
 			<th><?php echo _('Applications');?></th>
 			<th><?php echo _('Status');?></th>
 		</tr>
+		</thead>
+		<tbody>
 		<?php
 		$count = 0;
 		foreach($servs_all as $server){
@@ -249,6 +256,7 @@ else{
 			$count++;
 			echo '</tr>';
 		}
+		echo '</tbody>';
 	echo '</table>';
 	}
 }

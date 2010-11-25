@@ -81,6 +81,7 @@ function show_default() {
     // echo '<th>'._('Applications(physical)'.</th>';
     echo '</tr>';
     echo '</thead>';
+    echo '<tbody>';
 
     $count = 0;
     foreach($a_servs as $s) {
@@ -177,6 +178,7 @@ function show_default() {
       }
       echo '</tr>';
     }
+    echo '</tbody>';
 
     if ($av_servers > 1 and $can_do_action) {
       $content = 'content'.(($count++%2==0)?1:2);
@@ -236,6 +238,7 @@ function show_unregistered() {
     echo '<th>'._('Details').'</th>';
     echo '</tr>';
     echo '</thead>';
+    echo '<tbody>';
 
     $count = 0;
     foreach($u_servs as $s) {
@@ -292,6 +295,7 @@ function show_unregistered() {
 
       echo '</tr>';
     }
+    echo '</tbody>';
 
     // Mass actions
     if (count($u_servs) > 1) {

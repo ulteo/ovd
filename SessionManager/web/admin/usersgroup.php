@@ -88,6 +88,7 @@ function show_default() {
        }
      }
     echo '<table class="main_sub sortable" id="usergroups_list" border="0" cellspacing="1" cellpadding="5">';
+    echo '<thead>';
     echo '<tr class="title">';
     if ( (!$all_static || $userGroupDB->isWriteable()) and $can_manage_usersgroups and count($groups) > 1) {
       echo '<th class="unsortable"></th>'; // masse action
@@ -97,6 +98,8 @@ function show_default() {
     echo '<th>'._('Status').'</th>';
     echo '<th>'._('Type').'</th>';
     echo '</tr>';
+    echo '</thead>';
+    echo '<tbody>';
 
     $count = 0;
     foreach($groups as $group){
@@ -139,6 +142,7 @@ function show_default() {
       }
       echo '</tr>';
     }
+    echo '</tbody>';
     $content = 'content'.(($count++%2==0)?1:2);
     if ( (!$all_static || $userGroupDB->isWriteable()) and $can_manage_usersgroups and count($groups) > 1) {
       echo '<tfoot>';

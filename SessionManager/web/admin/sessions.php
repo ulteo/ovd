@@ -161,6 +161,7 @@ else {
 			echo $pagechanger;
 		echo '<table style="width: 100%;" border="0" cellspacing="1" cellpadding="3"><tr><td style="vertical-align: top;">';
 		echo '<table style="margin-left: 0px; margin-right: auto;" class="main_sub sortable" id="sessions_list_table" border="0" cellspacing="1" cellpadding="3">';
+		echo '<thead>';
 		echo '	<tr class="title">';
 		if (count($sessions) > 1)
 			echo '		<th class="unsortable"></th>';
@@ -169,6 +170,8 @@ else {
 		echo '		<th>'._('User').'</th>';
 		echo '		<th>'._('Status').'</th>';
 		echo '	</tr>';
+		echo '</thead>';
+		echo '<tbody>';
 
 		$i = 0;
 		foreach ($sessions as $session) {
@@ -199,6 +202,7 @@ else {
 			echo '		</td>';
 			echo '	</tr>';
 		}
+		echo '</tbody>';
 		$css_class = 'content'.(($i++%2==0)?1:2);
 		if (count($sessions) > 1) {
 			echo '<tfoot>';

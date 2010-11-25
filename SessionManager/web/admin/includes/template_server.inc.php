@@ -520,6 +520,7 @@ function server_display_role_fs($server_, $var_) {
 			echo '<h3>'.$data['name'].'</h3>';
 			$count = 0;
 			echo '<table id="available_networkfolder_table_'.$k.'" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
+			echo '<thead>';
 			echo '<tr class="title">';
 			if (isset($mass_action) && $mass_action === true)
 				echo '<th class="unsortable"></th>';
@@ -530,7 +531,8 @@ function server_display_role_fs($server_, $var_) {
 			if (isset($mass_action) && $mass_action === true)
 				echo '<th class="unsortable"></th>';
 			echo '</tr>';
-			
+			echo '</thead>';
+			echo '<tbody>';
 			foreach ($data['folder'] as $a_networkfolder) {
 				
 				$content = 'content'.(($count++%2==0)?1:2);
@@ -583,6 +585,7 @@ function server_display_role_fs($server_, $var_) {
 				echo '</td>';
 				echo '</tr>';
 			}
+			echo '</tbody>';
 
 			if (count($data['folder']) > 1 && isset($mass_action) && $mass_action === true) {
 				$content = 'content'.(($count++%2==0)?1:2);

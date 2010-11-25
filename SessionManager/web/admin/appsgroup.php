@@ -51,6 +51,7 @@ function show_default() {
     echo _('No available application groups').'<br />';
   else {
     echo '<table class="main_sub sortable" id="appgroups_list" border="0" cellspacing="1" cellpadding="5">';
+    echo '<thead>';
     echo '<tr class="title">';
     if ($can_manage_applicationsgroups && count($groups) > 1)
         echo '<th class="unsortable"></th>';
@@ -58,6 +59,8 @@ function show_default() {
     echo '<th>'._('Description').'</th>';
     echo '<th>'._('Status').'</th>';
     echo '</tr>';
+    echo '</thead>';
+    echo '<tbody>';
 
     $count = 0;
     foreach($groups as $group){
@@ -90,8 +93,10 @@ function show_default() {
 			echo '</tr>';
 		}
     }
+	echo '</tbody>';
 	if ($can_manage_applicationsgroups && count($groups) > 1) {
 		$content = 'content'.(($count++%2==0)?1:2);
+		echo '<tfoot>';
 		echo '<tr class="'.$content.'">';
 		echo '<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'appgroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'appgroups_list\'); return false">'._('Unmark all').'</a></td>';
 		echo '<td>';
@@ -101,6 +106,8 @@ function show_default() {
 		echo '<input type="submit" value="'._('Delete').'"/>';
 		echo '</form>';
 		echo '</td>';
+		echo '</tr>';
+		echo '</tfoot>';
 	}
 	echo '</table>';
 

@@ -69,6 +69,7 @@ function show_default($applicationDB) {
     //echo '<th>'._('Status').'</th>';
     echo '</tr>';
     echo '</thead>';
+    echo '<tbody>';
     $count = 0;
     foreach($applications as $app) {
       $content = 'content'.(($count++%2==0)?1:2);
@@ -109,6 +110,7 @@ function show_default($applicationDB) {
       echo '</tr>';
     }
 
+    echo '</tbody>';
     if ($is_rw) {
 //       echo '<tfoot>';
       $content = 'content'.(($count++%2==0)?1:2);

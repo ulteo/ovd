@@ -334,7 +334,7 @@ function alternate(table) {
 		}
 	}
 }
-function repaint(table) {
+function repaint(table_) {
 	var tableBody = table_.getElementsByTagName('tbody');
 	tableBody = tableBody[0];
 

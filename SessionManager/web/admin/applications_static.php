@@ -76,6 +76,7 @@ function show_default($prefs, $applicationDB) {
 		echo '<th>'._('Type').'</th>';
 		echo '</tr>';
 		echo '</thead>';
+		echo '<tbody>';
 		$count = 0;
 		foreach($applications as $app) {
 			$content = 'content'.(($count++%2==0)?1:2);
@@ -119,6 +120,7 @@ function show_default($prefs, $applicationDB) {
 
 			echo '</tr>';
 		}
+		echo '</tbody>';
 		if (count($applications) > 1 and $is_rw and $can_manage_applications) {
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tfoot>';

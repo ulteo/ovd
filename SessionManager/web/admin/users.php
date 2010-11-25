@@ -66,12 +66,15 @@ function show_default($userDB) {
     echo _('No available user').'<br />';
   else {
     echo '<table class="main_sub sortable" id="user_list_table" border="0" cellspacing="1" cellpadding="5">';
+    echo '<thead>';
     echo '<tr class="title">';
     if ($userdb_rw and $can_manage_users and $total_us > 1)
       echo '<th class="unsortable"></th>';
     echo '<th>'._('Login').'</th>';
     echo '<th>'._('Display name').'</th>';
     echo '</tr>';
+    echo '</thead>';
+    echo '<tbody>';
 
     $count = 0;
     foreach($us as $u){
@@ -101,6 +104,7 @@ function show_default($userDB) {
       }
       echo '</tr>';
     }
+    echo '</tbody>';
     if ($userdb_rw and $can_manage_users and $total_us > 1) {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tfoot>';

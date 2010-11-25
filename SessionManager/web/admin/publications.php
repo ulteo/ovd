@@ -78,11 +78,14 @@ function show_default() {
   echo '<h1>'._('Publications').'</h1>';
 
   echo '<table class="main_sub sortable" id="publications_list_table" border="0" cellspacing="1" cellpadding="5">';
+  echo '<thead>';
   echo '<tr class="title">';
   echo '<th>'._('Users group').'</th>';
   echo '<th>'._('Applications group').'</th>';
   echo '</tr>';
+  echo '</thead>';
 
+  echo '<tbody>';
   if (! $has_publish) {
     $content = 'content'.(($count++%2==0)?1:2);
     echo '<tr class="'.$content.'"><td colspan="3">'._('No publication').'</td></tr>';
@@ -108,6 +111,7 @@ function show_default() {
       echo '</tr>';
     }
   }
+  echo '</tbody>';
 
   $nb_groups_apps  = count($groups_apps);
   $nb_groups_users = count($groups_users);

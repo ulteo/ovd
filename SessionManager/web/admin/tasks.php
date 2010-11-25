@@ -136,6 +136,7 @@ function show_default($tm) {
     echo '<h2>'._('List of tasks').'</h2>';
 
     echo '<table class="main_sub sortable" id="tasks_list_table" border="0" cellspacing="1" cellpadding="5">';
+    echo '<thead>';
     echo '<tr class="title">';
     echo '<th>'._('ID').'</th>';
     echo '<th>'._('Creation time').'</th>';
@@ -144,6 +145,8 @@ function show_default($tm) {
     echo '<th>'._('Status').'</th>';
     echo '<th>'._('Details').'</th>';
     echo '</tr>';
+    echo '</thead>';
+    echo '<tbody>';
     $count = 0;
     foreach($tm->tasks as $task) {
       $content = 'content'.(($count++%2==0)?1:2);
@@ -175,6 +178,7 @@ function show_default($tm) {
       }
       echo '</tr>';
     }
+    echo '</tbody>';
     echo '</table>';
     echo '</div>';
   }
