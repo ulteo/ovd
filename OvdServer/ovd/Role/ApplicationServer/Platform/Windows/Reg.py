@@ -90,8 +90,10 @@ def CopyTree(KeySrc, SubKey, KeyDest):
 		hkey_src = win32api.RegOpenKey(KeySrc, SubKey, 0, win32con.KEY_ALL_ACCESS)
 		hkey_dst = win32api.RegOpenKey(KeyDest, SubKey, 0, win32con.KEY_ALL_ACCESS)
 	except Exception, err:
-		Logger.warn("Unable to open key in order to proceed CopyTree")
-		Logger.error("Unable to open key in order to proceed CopyTree: %s"%(str(err)))
+		if err[0] == 5:     #Access denied
+			Logger.debug("Unable to open key in order to proceed CopyTree of %s: %s"%(SubKey, str(err)))
+		else:
+			Logger.warn("Unable to open key in order to proceed CopyTree of %s: %s"%(SubKey, str(err)))
 		if hkey_src is not None:
 			win32api.RegCloseKey(hkey_src)
 		if hkey_dst is not None:
@@ -106,9 +108,13 @@ def CopyTree(KeySrc, SubKey, KeyDest):
 #			print "CopyValue",string
 			win32api.RegSetValueEx(hkey_dst, string, 0, type, object)
 		except Exception, err:
-#			print "enum value except",err
-			break
-	
+			if err[0] == 259:   #No more data available
+				break;
+			if err[0] == 5:     #Access denied
+				Logger.debug("Unable to copy value (%s)"%(str(err)))
+			else:
+				Logger.warn("Unable to copy value (%s)"%(str(err)))
+
 	index = 0
 	while True:
 		try:
@@ -117,8 +123,12 @@ def CopyTree(KeySrc, SubKey, KeyDest):
 #			print "CopyKey",buf
 			CopyTree(hkey_src, buf, hkey_dst)
 		except Exception, err:
-#			print "enum key except",err
-			break
+			if err[0] == 259:   #No more data available
+				break;
+			if err[0] == 5:     #Access denied
+				Logger.debug("Unable to copy key (%s)"%(str(err)))
+			else:
+				Logger.warn("Unable to copy key (%s)"%(str(err)))
 
 	try:
 		win32api.RegCloseKey(hkey_src)
