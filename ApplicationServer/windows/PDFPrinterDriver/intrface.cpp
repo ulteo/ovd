@@ -213,30 +213,24 @@ BOOL IOemPS::isTSPrinter(HANDLE hPrinter){
 wchar_t* IOemPS::GetNewSpoolJobName()
 {
   BYTE tempDir[MAX_PATH + 1];
-  HKEY hkey;
-  DWORD len;
-  DWORD type;
-  HRESULT err;
   UUID uuid;
   WCHAR* wszUuid = NULL;
 
   wchar_t* spoolFileName = new wchar_t[MAX_PATH];
+  DWORD res = 0;
 
-  err = RegOpenKeyEx(HKEY_CURRENT_USER,
-        L"Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\"
-        L"Shell Folders", 0, KEY_READ, &hkey);
-  if (err != ERROR_SUCCESS)
+  res = GetEnvironmentVariable(L"TEMP", (LPWSTR)tempDir, MAX_PATH+1);
+
+  if (res == 0)
   {
-     return NULL;
+    ERR("IOemPS::GetNewSpoolJobName() Unable to get environment variable TEMP.\r\n");
+    return NULL;
   }
-  len = MAX_PATH;
-  err = RegQueryValueEx(hkey, L"Local AppData", NULL, &type, tempDir, &len);
-  if (err != ERROR_SUCCESS || len >= MAX_PATH)
+  if (res > 0 &&  tempDir[0] == NULL)
   {
-    RegCloseKey(hkey);
-  	return NULL;
+    ERR("IOemPS::GetNewSpoolJobName() Environment variable TEMP is more larger than a common path.\r\n");
+    return NULL;
   }
-  RegCloseKey(hkey);
 
   //uuid generation
   ::ZeroMemory(&uuid, sizeof(UUID));
