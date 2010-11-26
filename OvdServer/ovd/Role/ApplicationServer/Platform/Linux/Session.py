@@ -87,7 +87,7 @@ class Session(AbstractSession):
 			
 			shares_dir = os.path.join(d, "shares")
 			if not os.path.isdir(shares_dir):
-			  os.makedirs(shares_dir)
+				os.makedirs(shares_dir)
 			
 			self.profile.register_shares(shares_dir)
 		
