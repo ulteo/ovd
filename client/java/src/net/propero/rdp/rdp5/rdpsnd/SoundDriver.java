@@ -210,6 +210,8 @@ public class SoundDriver {
 				}
 			} catch(InterruptedException e) {
 				logger.info("Sound thread stopped");
+			} catch (IllegalMonitorStateException e) {
+				// This exception is threw at the session end
 			}
 		}
 	}
