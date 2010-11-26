@@ -314,7 +314,7 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 
 	@Override
 	public void disconnected(RdpConnection co) {
-		System.out.println("Disconneted from "+this.rc.getServer());
+		System.out.println("Disconnected from "+this.rc.getServer());
 		this.forwardJS(JS_API_F_SERVER, 0, JS_API_O_SERVER_DISCONNECTED);
 		this.stop();
 	}

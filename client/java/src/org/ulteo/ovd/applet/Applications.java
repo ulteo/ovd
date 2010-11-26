@@ -460,7 +460,7 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 		if (co == null || this.connections == null)
 			return;
 
-		System.out.println("Disconneted from "+co.getServer());
+		System.out.println("Disconnected from "+co.getServer());
 		
 		Integer server_id = null;
 		for (Integer i: this.connections.keySet()) {
