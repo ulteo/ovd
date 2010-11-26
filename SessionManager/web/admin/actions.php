@@ -507,6 +507,19 @@ if ($_REQUEST['name'] == 'Publication') {
 		redirect();
 
 	if ($_REQUEST['action'] == 'add') {
+		$usersGroupDB = UserGroupDB::getInstance();
+		$usergroup = $usersGroupDB->import($_REQUEST['group_u']);
+		if (is_object($usergroup) == false) {
+			popup_error(sprintf(_("Importing usergroup '%s' failed"), $_REQUEST['group_u']));
+			redirect();
+		}
+		$applicationsGroupDB = ApplicationsGroupDB::getInstance();
+		$applicationsgroup = $applicationsGroupDB->import($_REQUEST['group_a']);
+		if (is_object($applicationsgroup) == false) {
+			popup_error(sprintf(_("Importing applications group '%s' failed"), $_REQUEST['group_a']));
+			redirect();
+		}
+		
 		$l = Abstract_Liaison::load('UsersGroupApplicationsGroup', $_REQUEST['group_u'], $_REQUEST['group_a']);
 		if (is_null($l)) {
 			$ret = Abstract_Liaison::save('UsersGroupApplicationsGroup', $_REQUEST['group_u'], $_REQUEST['group_a']);
