@@ -119,7 +119,7 @@ class ApplicationsDetection:
 			if self.msi is not None:
 				application["command"] = self.msi.getTargetFromShortcut(filename)
 				if application["command"] is None:
-					application["command"] = shortcut.GetPath(0)[0]
+					application["command"] = unicode(shortcut.GetPath(0)[0], encoding)
 					if len(shortcut.GetArguments())>0:
 						application["command"]+= " "+shortcut.GetArguments()
 			
