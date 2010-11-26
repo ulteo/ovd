@@ -136,11 +136,11 @@ public class Rdesktop {
             default:
                 if (reason > 0x1000 && reason < 0x7fff)
                 {
-                    text = "Internal protocol error";
+                    text = "Internal protocol error "+String.format("0x%08x", reason);
                 }
                 else
                 {
-                    text = "Unknown reason";
+                    text = "Unknown reason "+String.format("0x%08x", reason);
                 }
         }
         return text;
