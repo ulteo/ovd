@@ -77,18 +77,19 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, 
 	}
 
 	public void processMouseEvent(MouseEvent e, int type) {
+		e.translatePoint(this.x, this.y);
 		switch (type) {
 			case MOUSE_PRESSED:
-				this.mousePressed(e);
+				this.mouseAdapter.mousePressed(e);
 				break;
 			case MOUSE_RELEASED:
-				this.mouseReleased(e);
+				this.mouseAdapter.mouseReleased(e);
 				break;
 			case MOUSE_MOVED:
-				this.mouseMoved(e);
+				this.mouseMotionAdapter.mouseMoved(e);
 				break;
 			case MOUSE_DRAGGED:
-				this.mouseDragged(e);
+				this.mouseMotionAdapter.mouseDragged(e);
 				break;
 			default:
 				break;

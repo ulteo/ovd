@@ -29,7 +29,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class SeamFrame extends Frame
-    implements SeamlessWindow, KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
+    implements SeamlessWindow {
 
 	protected static boolean capsLockOn = false;
 	protected static boolean numLockOn = false;
@@ -65,7 +65,8 @@ public class SeamFrame extends Frame
 	protected int icon_size, icon_offset;
 	protected byte[] icon_buffer;
 	protected WrappedImage backstore;
-	protected Input input;
+	protected MouseAdapter mouseAdapter = null;
+	protected MouseMotionAdapter mouseMotionAdapter = null;
 	protected Common common = null;
 	protected Rectangle maxBounds = null;
 
@@ -77,13 +78,18 @@ public class SeamFrame extends Frame
 		this.icon_size = 0;
 		this.icon_buffer = new byte[32 * 32 * 4];
 
-		input = this.common.canvas.getInput();
 		this.backstore = this.common.canvas.backstore;
-
-		addKeyListener(this);
-		addMouseWheelListener(this);
-		
 		this.common.canvas.addComponentListener(this);
+
+		// Set the key and mouse listeners
+		Input input = this.common.canvas.getInput();
+
+		this.mouseAdapter = input.getMouseAdapter();
+		this.mouseMotionAdapter = input.getMouseMotionAdapter();
+
+		this.addKeyListener(input.getKeyAdapter());
+		if (MouseInfo.getNumberOfButtons() > 3)
+			this.addMouseWheelListener(this.mouseAdapter);
 
 		this.setUndecorated(true);
 		this.sw_setMyPosition(-1, -1, 1, 1);
@@ -192,130 +198,6 @@ public class SeamFrame extends Frame
 		this.setVisible(false);
 		this.dispose();
 	}
-
-	public void keyPressed(KeyEvent e) {
-		input.lastKeyEvent = e;
-		input.modifiersValid = true;
-		long time = net.propero.rdp.Input.getTime();
-
-		input.pressedKeys.addElement(new Integer(e.getKeyCode()));
-
-		if (this.common.rdp != null) {
-			if (!input.handleSpecialKeys(time, e, true)) {
-				input.sendKeyPresses(input.newKeyMapper.getKeyStrokes(e));
-			}
-			// sendScancode(time, RDP_KEYPRESS, keys.getScancode(e));
-		}
-	}
-
-	public void keyReleased(KeyEvent e) {
-		Integer keycode = new Integer(e.getKeyCode());
-		if (!input.pressedKeys.contains(keycode)) {
-			this.keyPressed(e);
-		}
-
-		input.pressedKeys.removeElement(keycode);
-
-		input.lastKeyEvent = e;
-		input.modifiersValid = true;
-		long time = net.propero.rdp.Input.getTime();
-
-		input.pressedKeys.addElement(new Integer(e.getKeyCode()));
-
-		if (this.common.rdp != null) {
-			if (!input.handleSpecialKeys(time, e, true))
-				input.sendKeyPresses(input.newKeyMapper.getKeyStrokes(e));
-			// sendScancode(time, RDP_KEYPRESS, keys.getScancode(e));
-		}
-	
-	}
-
-	public void keyTyped(KeyEvent e) {
-		input.lastKeyEvent = e;
-		input.modifiersValid = true;
-		long time = net.propero.rdp.Input.getTime();
-
-		if (this.common.rdp != null) {
-			if (!input.handleSpecialKeys(time, e, false))
-				input.sendKeyPresses(input.newKeyMapper.getKeyStrokes(e));
-			// sendScancode(time, RDP_KEYRELEASE, keys.getScancode(e));
-		}
-	}
-
-	public void mousePressed(MouseEvent e) {
-		e.translatePoint(x,y);
-		//if(e.getY() != 0) ((RdesktopFrame_Localised) canvas.getParent()).hideMenu();
-			
-		int time = net.propero.rdp.Input.getTime();
-		if (this.common.rdp != null) {
-			if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-				this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_BUTTON1
-						| MOUSE_FLAG_DOWN, e.getX(), e.getY());
-			} else if ((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
-				this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_BUTTON2
-						| MOUSE_FLAG_DOWN, e.getX(), e.getY());
-			} else if ((e.getModifiers() & InputEvent.BUTTON2_MASK) == InputEvent.BUTTON2_MASK) {
-				this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_BUTTON3 | MOUSE_FLAG_DOWN, e.getX(), e.getY());
-			}
-		}
-	}
-
-	public void mouseReleased(MouseEvent e) {
-		e.translatePoint(x,y);
-		int time = net.propero.rdp.Input.getTime();
-		if (this.common.rdp != null) {
-			if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-				this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_BUTTON1, e
-						.getX(), e.getY());
-			} else if ((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
-				this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_BUTTON2, e
-						.getX(), e.getY());
-			} else if ((e.getModifiers() & InputEvent.BUTTON2_MASK) == InputEvent.BUTTON2_MASK) {
-				this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_BUTTON3, e.getX(), e.getY());
-			}
-		}
-	}
-
-	public void mouseMoved(MouseEvent e) {
-		e.translatePoint(x,y);
-		int time = net.propero.rdp.Input.getTime();
-
-		if (this.common.rdp != null) {
-			this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_MOVE, e.getX(),
-					e.getY());
-		}
-	}
-
-	public void mouseDragged(MouseEvent e) {
-		e.translatePoint(this.x, this.y);
-		int time = net.propero.rdp.Input.getTime();
-		if (this.common.rdp != null) {
-			this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_MOVE, e.getX(),
-					e.getY());
-		}
-	}
-
-	public void mouseWheelMoved(MouseWheelEvent e) {
-		int flag;
-		int time = net.propero.rdp.Input.getTime();
-		
-		if (e.getWheelRotation() < 0) 
-			flag = MOUSE_FLAG_BUTTON4;
-		else
-			flag = MOUSE_FLAG_BUTTON5;
-		if (this.common.rdp != null) {
-			this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, flag, 1, 1);
-		}
-	}
-
-
-	//
-	// Ignored events.
-	//
-
-	public void mouseClicked(MouseEvent evt) {}
-	public void mouseEntered(MouseEvent evt) {}
-	public void mouseExited(MouseEvent evt) {}
 
 	public void sw_setCursor(Cursor cursor) {
 		this.setCursor(cursor);

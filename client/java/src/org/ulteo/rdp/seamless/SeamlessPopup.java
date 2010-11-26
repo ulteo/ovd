@@ -25,18 +25,14 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.MouseInfo;
 import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
 import javax.swing.JDialog;
@@ -48,7 +44,7 @@ import net.propero.rdp.Input;
 import net.propero.rdp.WrappedImage;
 import net.propero.rdp.rdp5.seamless.SeamlessWindow;
 
-public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMovingResizing, KeyListener, MouseListener, MouseMotionListener, MouseWheelListener, FocusListener {
+public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMovingResizing, FocusListener {
 	public static AbstractFocusManager focusManager = null;
 
 	private Common common = null;
@@ -60,7 +56,8 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	private int width;
 	private int height;
 	protected Rectangle maxBounds = null;
-	private Input input = null;
+	private MouseAdapter mouseAdapter = null;
+	private MouseMotionAdapter mouseMotionAdapter = null;
 	private WrappedImage backstore = null;
 
 	private boolean modal = false;
@@ -77,16 +74,21 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 		this.parent = parent_;
 		this.maxBounds = maxBounds_;
 
-		this.input = this.common.canvas.getInput();
 		this.backstore = this.common.canvas.backstore;
-
-		addKeyListener(this);
-		addMouseWheelListener(this);
-
 		this.common.canvas.addComponentListener(this);
 
 		Dimension dim = new Dimension(this.backstore.getWidth(), this.backstore.getHeight());
 		this.rw = new RectWindow(this, dim, this.maxBounds);
+
+		// Set the key and mouse listeners
+		Input input = this.common.canvas.getInput();
+
+		this.mouseAdapter = input.getMouseAdapter();
+		this.mouseMotionAdapter = input.getMouseMotionAdapter();
+
+		this.addKeyListener(input.getKeyAdapter());
+		if (MouseInfo.getNumberOfButtons() > 3)
+			this.addMouseWheelListener(this.mouseAdapter);
 
 		this.parseFlags(flags);
 
@@ -228,118 +230,6 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 		return Frame.NORMAL;
 	}
 
-	public void keyTyped(KeyEvent ke) {
-		this.input.lastKeyEvent = ke;
-		this.input.modifiersValid = true;
-		long time = Input.getTime();
-
-		if (this.common.rdp != null) {
-			if (! this.input.handleSpecialKeys(time, ke, false))
-				this.input.sendKeyPresses(this.input.newKeyMapper.getKeyStrokes(ke));
-		}
-	}
-
-	public void keyPressed(KeyEvent ke) {
-		this.input.lastKeyEvent = ke;
-		this.input.modifiersValid = true;
-		long time = Input.getTime();
-
-		this.input.pressedKeys.addElement(new Integer(ke.getKeyCode()));
-
-		if (this.common.rdp != null) {
-			if (! this.input.handleSpecialKeys(time, ke, true)) {
-				this.input.sendKeyPresses(this.input.newKeyMapper.getKeyStrokes(ke));
-			}
-		}
-	}
-
-	public void keyReleased(KeyEvent ke) {
-		Integer keycode = new Integer(ke.getKeyCode());
-		if (! this.input.pressedKeys.contains(keycode)) {
-			this.keyPressed(ke);
-		}
-
-		this.input.pressedKeys.removeElement(keycode);
-
-		this.input.lastKeyEvent = ke;
-		this.input.modifiersValid = true;
-		long time = Input.getTime();
-
-		this.input.pressedKeys.addElement(new Integer(ke.getKeyCode()));
-
-		if (this.common.rdp != null) {
-			if (! this.input.handleSpecialKeys(time, ke, true))
-				this.input.sendKeyPresses(this.input.newKeyMapper.getKeyStrokes(ke));
-		}
-	}
-
-	public void mouseWheelMoved(MouseWheelEvent mwe) {
-		int flag;
-		int time = Input.getTime();
-
-		if (mwe.getWheelRotation() < 0)
-			flag = MOUSE_FLAG_BUTTON4;
-		else
-			flag = MOUSE_FLAG_BUTTON5;
-		if (this.common.rdp != null) {
-			this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, flag, 1, 1);
-		}
-	}
-
-	public void mousePressed(MouseEvent me) {
-		me.translatePoint(this.x, this.y);
-		int time = Input.getTime();
-
-		if (this.common.rdp != null) {
-			if ((me.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-				this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_BUTTON1
-						| MOUSE_FLAG_DOWN, me.getX(), me.getY());
-			} else if ((me.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
-				this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_BUTTON2
-						| MOUSE_FLAG_DOWN, me.getX(), me.getY());
-			} else if ((me.getModifiers() & InputEvent.BUTTON2_MASK) == InputEvent.BUTTON2_MASK) {
-				this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_BUTTON3 | MOUSE_FLAG_DOWN, me.getX(), me.getY());
-			}
-		}
-	}
-
-	public void mouseReleased(MouseEvent me) {
-		me.translatePoint(this.x, this.y);
-		int time = Input.getTime();
-
-		if (this.common.rdp != null) {
-			if ((me.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-				this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_BUTTON1, me.getX(), me.getY());
-			} else if ((me.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
-				this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_BUTTON2, me.getX(), me.getY());
-			} else if ((me.getModifiers() & InputEvent.BUTTON2_MASK) == InputEvent.BUTTON2_MASK) {
-				this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_BUTTON3, me.getX(), me.getY());
-			}
-		}
-	}
-
-	public void mouseDragged(MouseEvent me) {
-		me.translatePoint(this.x, this.y);
-		int time = Input.getTime();
-
-		if (this.common.rdp != null) {
-			this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_MOVE, me.getX(), me.getY());
-		}
-	}
-
-	public void mouseMoved(MouseEvent me) {
-		me.translatePoint(this.x, this.y);
-		int time = Input.getTime();
-
-		if (this.common.rdp != null) {
-			this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_MOVE, me.getX(), me.getY());
-		}
-	}
-
-	public void mouseClicked(MouseEvent me) {}
-	public void mouseEntered(MouseEvent me) {}
-	public void mouseExited(MouseEvent me) {}
-
 	public RectWindow getRectWindow() {
 		return this.rw;
 	}
@@ -363,18 +253,19 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	}
 
 	public void processMouseEvent(MouseEvent e, int type) {
+		e.translatePoint(this.x, this.y);
 		switch (type) {
 			case MOUSE_PRESSED:
-				this.mousePressed(e);
+				this.mouseAdapter.mousePressed(e);
 				break;
 			case MOUSE_RELEASED:
-				this.mouseReleased(e);
+				this.mouseAdapter.mouseReleased(e);
 				break;
 			case MOUSE_MOVED:
-				this.mouseMoved(e);
+				this.mouseMotionAdapter.mouseMoved(e);
 				break;
 			case MOUSE_DRAGGED:
-				this.mouseDragged(e);
+				this.mouseMotionAdapter.mouseDragged(e);
 				break;
 			default:
 				break;
