@@ -7,7 +7,7 @@
 
 Summary:       Extension to create and modify images using ImageMagick
 Name:          php-%{pecl_name}
-Version:       3.0.1RC2
+Version:       3.0.1
 Release:       1
 License:       PHP
 Group:         Development/Languages

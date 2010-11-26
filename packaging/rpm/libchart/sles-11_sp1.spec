@@ -1,5 +1,5 @@
 Name: libchart
-Version: 1.2.1
+Version: 1.2.2
 Release: 1
 
 Summary: Simple PHP chart drawing library
@@ -30,7 +30,7 @@ Requires: php5, php5-gd
 Libchart is a free chart creation PHP library, that is easy to use.
 
 %prep -n php5-libchart
-%setup -q
+%setup -q -n libchart
 %patch1 -p1
 
 %install -n php5-libchart
