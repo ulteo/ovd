@@ -55,6 +55,7 @@ class Profile(AbstractProfile):
 			if s != 0:
 				Logger.error("Profile mount failed")
 				Logger.debug("Profile mount failed (status: %d) => %s"%(s, o))
+				os.rmdir(self.profile_mount_point)
 			else:
 				self.profileMounted = True
 		
@@ -97,7 +98,7 @@ class Profile(AbstractProfile):
 					self.folderRedirection.append(dst)
 					self.addGTKBookmark(dst)
 		
-		if self.profile is not None:
+		if self.profile is not None and self.profileMounted:
 			for d in [self.DesktopDir, self.DocumentsDir]:
 				src = os.path.join(self.profile_mount_point, d)
 				dst = os.path.join(self.homeDir, d)
@@ -127,7 +128,7 @@ class Profile(AbstractProfile):
 	
 	
 	def umount(self):
-		if self.profile is not None:
+		if self.profile is not None and self.profileMounted:
 			self.copySessionStop()
 		
 		while len(self.folderRedirection)>0:
