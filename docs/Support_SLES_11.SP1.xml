@@ -53,7 +53,7 @@ zypper ar http://archive.ulteo.com/ovd/3.0/sles/11_SP1 ovd]]>
           </para>
           <screen>
             <![CDATA[
-# rpm --import http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key]]>
+# rpm --import http://archive.ulteo.com/ovd/keyring]]>
           </screen>
         </listitem>
 
