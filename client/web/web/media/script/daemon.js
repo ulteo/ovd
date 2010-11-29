@@ -87,8 +87,6 @@ var Daemon = Class.create({
 		if ($('progressBar') && $('progressBarContent'))
 			this.progressBar();
 
-		$('printingAppletContainer').innerHTML = '';
-
 		Event.observe(window, 'unload', this.client_exit.bind(this));
 	},
 
@@ -431,10 +429,6 @@ var Daemon = Class.create({
 		if ($(this.mode+'ModeContainer').visible())
 			$(this.mode+'ModeContainer').hide();
 
-		if ($('printingAppletContainer').visible())
-			$('printingAppletContainer').hide();
-		$('printingAppletContainer').innerHTML = '';
-
 		if (this.explorer) {
 			if ($('fileManagerWrap'))
 				$('fileManagerWrap').hide();
@@ -530,31 +524,5 @@ var Daemon = Class.create({
 		}
 
 		this.stopped = true;
-	},
-
-	load_printing_applet: function() {
-		try {
-			if (! $('ulteoapplet') || ! $('ulteoapplet').isActive()) {
-				setTimeout(this.load_printing_applet.bind(this), 5000);
-				return false;
-			}
-		} catch(e) {
-			setTimeout(this.load_printing_applet.bind(this), 5000);
-			return false;
-		}
-
-		this.push_log('debug', '[daemon] load_printing_applet()');
-
-		setTimeout(this.do_load_printing_applet.bind(this), 20000);
-	},
-
-	do_load_printing_applet: function() {
-		if (this.stopped)
-			return;
-
-		var applet = buildAppletNode('PrinterApplet', 'org.ulteo.ovd.printer.PrinterApplet', 'PDFPrinter.jar', new Hash());
-		applet.setAttribute('id', 'PrinterApplet');
-		$('printingAppletContainer').show();
-		$('printingAppletContainer').appendChild(applet);
 	}
 });

@@ -63,8 +63,6 @@ var Desktop = Class.create(Daemon, {
 			$('desktopAppletContainer').show();
 			$('desktopAppletContainer').appendChild(applet);
 
-			this.load_printing_applet();
-
 			return true;
 		}
 	}

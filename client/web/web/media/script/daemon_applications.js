@@ -92,8 +92,6 @@ var Applications = Class.create(Daemon, {
 		$('applicationsAppletContainer').show();
 		$('applicationsAppletContainer').appendChild(applet);
 
-		this.load_printing_applet();
-
 		return true;
 	},
 

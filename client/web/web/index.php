@@ -150,8 +150,6 @@ function get_users_list() {
 				$('applicationsModeContainer').hide();
 				$('applicationsAppletContainer').hide();
 
-				$('printingAppletContainer').hide();
-
 				$('fileManagerWrap').hide();
 
 				$('debugContainer').hide();
@@ -371,9 +369,6 @@ function get_users_list() {
 
 			<div id="applicationsAppletContainer" style="display: none;">
 			</div>
-		</div>
-
-		<div id="printingAppletContainer" style="display: none;">
 		</div>
 
 		<div id="debugContainer" class="no_debug info warning error" style="display: none;">
