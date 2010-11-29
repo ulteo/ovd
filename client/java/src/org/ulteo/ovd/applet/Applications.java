@@ -26,12 +26,11 @@ import java.io.FileNotFoundException;
 import org.ulteo.Logger;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.integrated.OSTools;
-import org.ulteo.ovd.printer.OVDAppletPrinterThread;
+import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 
 import java.applet.Applet;
-import java.applet.AppletContext;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -222,8 +221,7 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 		
 		buf = this.getParameter("redirect_client_printers");
 		if (buf != null){
-			AppletContext appletContext= getAppletContext();
-			OVDAppletPrinterThread appletPrinterThread = new OVDAppletPrinterThread(appletContext); 
+			OVDStandalonePrinterThread appletPrinterThread = new OVDStandalonePrinterThread(); 
 			OVDPrinter.setPrinterThread(appletPrinterThread);
 			focusManager = new AppletFocusManager(appletPrinterThread);
 			SeamlessFrame.focusManager = focusManager;

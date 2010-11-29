@@ -22,7 +22,6 @@
 package org.ulteo.ovd.applet;
 
 import java.applet.Applet;
-import java.applet.AppletContext;
 import java.awt.BorderLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -37,7 +36,7 @@ import netscape.javascript.JSObject;
 import org.ulteo.Logger;
 import org.ulteo.ovd.FullscreenWindow;
 import org.ulteo.ovd.integrated.OSTools;
-import org.ulteo.ovd.printer.OVDAppletPrinterThread;
+import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 import org.ulteo.utils.AbstractFocusManager;
@@ -109,8 +108,7 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 		if (this.map_local_printers){
 			System.out.println("Printer detection active");
 			flags |= RdpConnectionOvd.MOUNT_PRINTERS;
-			AppletContext appletContext= getAppletContext();
-			OVDAppletPrinterThread appletPrinterThread = new OVDAppletPrinterThread(appletContext); 
+			OVDStandalonePrinterThread appletPrinterThread = new OVDStandalonePrinterThread(); 
 			OVDPrinter.setPrinterThread(appletPrinterThread);
 			this.focusManager = new AppletFocusManager(appletPrinterThread);
 		}

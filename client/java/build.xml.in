@@ -258,6 +258,10 @@
       <classpath>
         <path refid="minimal.path" />
         <pathelement location="required_libraries/plugin.jar" />
+        <pathelement location="required_libraries/jai_codec.jar"/>
+        <pathelement location="required_libraries/jai_core.jar"/>
+        <pathelement location="required_libraries/js.jar"/>
+        <pathelement location="required_libraries/registry.jar" />
       </classpath>
     </javac>
     <exec executable="make" failonerror="true" dir="windowsPathsJNI">
@@ -273,6 +277,9 @@
           todir="build/resources/LinuxLibs/32" failonerror="false" />
     <copy file="required_libraries/libXClientArea/64/libXClientArea.so"
           todir="build/resources/LinuxLibs/64" failonerror="false" />
+    <copy todir="build/org/jpedal/res">
+      <fileset dir="src/org/jpedal/res"/>
+    </copy>
     <jar destfile="jars/ulteo-applet-${compile.release}.jar" basedir="build">
       <include name="**" />
     </jar>
@@ -290,7 +297,7 @@
   </target>
 
   <target name="applet.install" description="install applets"
-          depends="PDFPrinter.install, applet.jar">
+          depends="applet.jar">
     <copy todir="${applets.dir}">
       <filelist dir="jars" files="log4j-1.2.jar
          ulteo-applet-${compile.release}.jar CheckJava-${compile.release}.jar" />
