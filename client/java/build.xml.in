@@ -30,8 +30,11 @@
   <property name="sdist.name"   value="${sdist.source}-${version}" />
   <property name="sdist.dir"    location="${distdir}/${sdist.name}" />
 
-  <path id="minimal.path" path="required_libraries/log4j-1.2.jar:
-                                required_libraries/gnu-getopt.jar"/>
+  <path id="minimal.path">
+    <pathelement location="required_libraries/gnu-getopt.jar" />
+    <pathelement location="required_libraries/log4j-1.2.jar" />
+    <pathelement location="required_libraries/registry.jar" />
+  </path>
 
   <available file="windowsPathsJNI/Makefile" property="jni.exist"/>
   <target name="clean.jni" if="jni.exist" >
@@ -255,7 +258,6 @@
       <classpath>
         <path refid="minimal.path" />
         <pathelement location="required_libraries/plugin.jar" />
-        <pathelement location="required_libraries/registry.jar" />
       </classpath>
     </javac>
     <exec executable="make" failonerror="true" dir="windowsPathsJNI">
