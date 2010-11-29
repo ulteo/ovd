@@ -67,8 +67,6 @@ public class SystemWindows extends SystemAbstract {
 
 	@Override
 	public void install(Application app, boolean showDesktopIcon) {
-		Logger.debug("Installing the '"+app.getName()+"' shortcut");
-
 		String shortcutName = WindowsShortcut.replaceForbiddenChars(app.getName())+Constants.SHORTCUTS_EXTENSION;
 
 		File f = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+shortcutName);
@@ -84,10 +82,12 @@ public class SystemWindows extends SystemAbstract {
 			if (showDesktopIcon) {
 				File desktopShortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+shortcutName);
 				desktopStream = new BufferedOutputStream(new FileOutputStream(desktopShortcut), 4096);
+				Logger.debug("Installing the '"+app.getName()+"' shortcut on the desktop ("+desktopShortcut.getPath()+")");
 			}
 
 			File startMenuShortcut = new File(Constants.PATH_STARTMENU+Constants.FILE_SEPARATOR+shortcutName);
 			BufferedOutputStream startMenuStream = new BufferedOutputStream(new FileOutputStream(startMenuShortcut), 4096);
+			Logger.debug("Installing the '"+app.getName()+"' shortcut in the start menu ("+startMenuShortcut.getPath()+")");
 
 			int currentChar;
 			while ((currentChar = shortcutReader.read()) != -1) {
