@@ -54,8 +54,11 @@ public class Application implements Comparable<Application> {
 		this.connection = connection_;
 		this.id = id_;
 		this.name = name_;
-		this.icon = icon_;
 		this.iconName = UUID.randomUUID().toString()+"-"+this.id;
+		if (icon_ == null)
+			this.icon =  new ImageIcon(getClass().getResource("/pics/default_icon.png"));
+		else
+			this.icon = icon_;
 	}
 
 	public List<String> getSupportedMimeTypes() {

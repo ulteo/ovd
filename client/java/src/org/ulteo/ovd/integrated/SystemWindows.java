@@ -21,6 +21,7 @@
 package org.ulteo.ovd.integrated;
 
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -29,6 +30,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import javax.swing.ImageIcon;
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.integrated.mime.WindowsRegistry;
@@ -138,8 +140,26 @@ public class SystemWindows extends SystemAbstract {
 				return;
 			}
 		}
+
+		ImageIcon icon = app.getIcon();
+		if (icon == null) {
+			Logger.error("No icon for "+app.getName());
+			return;
+		}
+		Image img = icon.getImage();
+		if (img == null) {
+			Logger.error("No image for "+app.getName()+" icon");
+			return;
+		}
+		int width = img.getWidth(null);
+		int height = img.getHeight(null);
+		if (width <= 0 || height <= 0) {
+			Logger.error(app.getName()+" icon size is too small: "+width+"x"+height);
+			return;
+		}
+
 		try {
-			buf = new BufferedImage(app.getIcon().getIconWidth(), app.getIcon().getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+			buf = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		}
 		catch (Exception ex) {
 			Logger.error("Error while creating "+app.getName()+" icon: "+ex.getMessage());
@@ -147,7 +167,7 @@ public class SystemWindows extends SystemAbstract {
 		}
 		
 		Graphics2D graph = buf.createGraphics();
-		graph.drawImage(app.getIcon().getImage(), 0, 0, null);
+		graph.drawImage(img, 0, 0, null);
 		graph.dispose();
 		
 		

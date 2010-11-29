@@ -346,7 +346,11 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		if (! (obj instanceof ImageIcon) || obj == null)
 			return null;
 
-		return (ImageIcon) obj;
+		ImageIcon icon = (ImageIcon) obj;
+		if (icon.getIconHeight() <= 0 || icon.getIconWidth() <= 0)
+			return null;
+		
+		return icon;
 	}
 
 	private Object askWebservice(String webservice, String content_type, String method, String data, boolean showLog) throws SessionManagerException {

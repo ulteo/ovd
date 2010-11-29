@@ -31,6 +31,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.integrated.shorcut.LinuxShortcut;
@@ -134,6 +135,8 @@ public class SystemLinux extends SystemAbstract {
 
 	@Override
 	protected void saveIcon(Application app) {
+		BufferedImage buff = null;
+
 		File output = new File(Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".png");
 		if (! output.exists()) {
 			try {
@@ -143,11 +146,36 @@ public class SystemLinux extends SystemAbstract {
 				return;
 			}
 		}
+
+		ImageIcon icon = app.getIcon();
+		if (icon == null) {
+			Logger.error("No icon for "+app.getName());
+			return;
+		}
+		Image img = icon.getImage();
+		if (img == null) {
+			Logger.error("No image for "+app.getName()+" icon");
+			return;
+		}
+		int width = img.getWidth(null);
+		int height = img.getHeight(null);
+		if (width <= 0 || height <= 0) {
+			Logger.error(app.getName()+" icon size is too small: "+width+"x"+height);
+			return;
+		}
+
 		try {
-			Image icon = app.getIcon().getImage();
-			BufferedImage buff = new BufferedImage(icon.getWidth(null), icon.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-			Graphics2D g = buff.createGraphics();
-			g.drawImage(icon, null, null);
+			buff = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		}
+		catch (Exception ex) {
+			Logger.error("Error while creating "+app.getName()+" icon: "+ex.getMessage());
+			return;
+		}
+		
+		Graphics2D g = buff.createGraphics();
+		g.drawImage(img, null, null);
+
+		try {
 			ImageIO.write(buff, "png", output);
 		} catch (IOException ex) {
 			Logger.error("Error while converting "+app.getName()+" icon: "+ex.getMessage());
