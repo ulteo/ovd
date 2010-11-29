@@ -30,7 +30,7 @@ $(EXEC): org_ulteo_ovd_integrated_WindowsPaths.o org_ulteo_ovd_integrated_Window
 	$(CC) $(LDFLAGS) -shared -o $@ $^
 
 org_ulteo_ovd_integrated_WindowsPaths.h:
-	javac -classpath ../src -d . ../src/org/ulteo/ovd/integrated/WindowsPaths.java
+	javac -classpath ../src:../required_libraries/registry.jar -d . ../src/org/ulteo/ovd/integrated/WindowsPaths.java
 	javah org.ulteo.ovd.integrated.WindowsPaths
 
 %.o: %.c %.h
