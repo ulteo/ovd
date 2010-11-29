@@ -260,7 +260,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 	protected abstract void runSessionReady();
 
-	public void sessionTerminated() {
+	public synchronized void sessionTerminated() {
 		if (! this.connectionIsActive)
 			return;
 
