@@ -37,9 +37,11 @@ public class OVDStandalonePrinterThread implements OVDPrinterThread, Runnable{
 		OVDJob job = null;
 		try{
 			job = spool.take();
+			if (job != null) {
+				job.print();
+			}
 		}
 		catch (InterruptedException e){ }
-		job.print();
 	}
 	
 	public void printPages(String printerName, String pdfFilename) {
