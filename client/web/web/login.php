@@ -34,6 +34,7 @@ function query_sm_start($url_, $xml_) {
 	$socket = curl_init($url_);
 	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
+	curl_setopt($socket, CURLOPT_SSL_VERIFYHOST, 0);
 	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, 10);
 	curl_setopt($socket, CURLOPT_TIMEOUT, (10+5));
 
