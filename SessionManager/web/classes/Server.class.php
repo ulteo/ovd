@@ -968,8 +968,11 @@ class Server {
 		@file_put_contents($imgfile, $ret);
 
 		try {
-			$imagick = new Imagick();
-			$imagick->readImage($imgfile);
+			if (class_exists('Imagick')) {
+				$imagick = new Imagick();
+				$imagick->readImage($imgfile);
+			} else
+				return false;
 		} catch (Exception $e) {
 			if (file_exists($imgfile))
 				@unlink($imgfile);
