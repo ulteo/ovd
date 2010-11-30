@@ -119,6 +119,11 @@ stop_smbd()
 {
     log_daemon_msg "Stopping Samba daemon"
     log_progress_msg "smbd"
+    if [ ! -f  "$SMBD_PID" ]; then
+        log_warning_msg "NOT RUNNING"
+        log_end_msg 0
+        return;
+    fi
     start-stop-daemon --stop --quiet --pidfile $SMBD_PID
     sleep 1
     [ -f $SMBD_PID ] && ! ps h `cat $SMBD_PID` > /dev/null && rm -f $SMBD_PID
@@ -127,9 +132,9 @@ stop_smbd()
 
 restart_smbd()
 {
+    stop_smbd        
+    sleep 1
     start_smbd
-    sleep 2
-    stop_smbd
 }
 
 
