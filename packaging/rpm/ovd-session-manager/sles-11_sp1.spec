@@ -83,7 +83,8 @@ if [ ! -f $CONFDIR/ovd.key -o ! -f $CONFDIR/ovd.csr -o ! -f $CONFDIR/ovd.crt ]
 then
     echo "Auto-generate SSL configuration for Apache2 with self-signed certificate."
     openssl genrsa -out $CONFDIR/ovd.key 1024 2> /dev/null
-    openssl req -new -key $CONFDIR/ovd.key -out $CONFDIR/ovd.csr -batch
+    openssl req -new -subj /CN=$(hostname)/ -batch \
+        -key $CONFDIR/ovd.key -out $CONFDIR/ovd.csr
     openssl x509 -req -days 3650 -in $CONFDIR/ovd.csr \
         -signkey $CONFDIR/ovd.key -out $CONFDIR/ovd.crt 2> /dev/null
     chown root:root $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
