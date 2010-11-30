@@ -24,6 +24,7 @@ This package provides the subsystem for the Ulteo Open Virtual Desktop.
 Summary: Ulteo Open Virtual Desktop - Session Manager
 Group: Applications/System
 Requires: curl
+Conflicts: ulteo-ovd-slaveserver, samba, xrdp
 
 %description -n ulteo-ovd-subsystem
 This package provides the subsystem for the Ulteo Open Virtual Desktop.
