@@ -2,6 +2,7 @@
 /**
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
+ * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -128,15 +129,38 @@ function cleanup_liaison($type_, $element_, $group_) {
 	return false;
 }
 
-$liaisons_types = array('ApplicationServer', 'AppsGroup', 'ServerSession', 'UserGroupNetworkFolder', 'UserNetworkFolder', 'UsersGroup', 'UsersGroupApplicationsGroup', 'UsersGroupCached');
-if (isset($_POST['cleanup']) && $_POST['cleanup'] == 1) {
-	foreach ($liaisons_types as $liaisons_type) {
-		$liaisons = Abstract_Liaison::load($liaisons_type, NULL, NULL);
-		if (is_null($liaisons))
-			continue;
+function cleanup_preferences() {
+	$userGroupDB = UserGroupDB::getInstance();
+	$prefs = new Preferences_admin();
+	
+	$default_usergroup_id = $prefs->get('general', 'user_default_group');
+	if ($default_usergroup_id != '') {
+		$group = $userGroupDB->import($default_usergroup_id);
+		if (! is_object($group)) {
+			// unset the default usergroup
+			$mods_enable = $prefs->set('general', 'user_default_group', '');
+			$prefs->backup();
+		}
+	}
+}
 
-		foreach ($liaisons as $k => $liaison)
-			cleanup_liaison($liaisons_type, $liaison->element, $liaison->group);
+$liaisons_types = array('ApplicationServer', 'AppsGroup', 'ServerSession', 'UserGroupNetworkFolder', 'UserNetworkFolder', 'UsersGroup', 'UsersGroupApplicationsGroup', 'UsersGroupCached');
+if (isset($_POST['cleanup']) && $_POST['cleanup'] == 1 && array_key_exists('type', $_POST)) {
+	switch ($_POST['type']) {
+		case 'liaison':
+			foreach ($liaisons_types as $liaisons_type) {
+				$liaisons = Abstract_Liaison::load($liaisons_type, NULL, NULL);
+				if (is_null($liaisons))
+					continue;
+
+				foreach ($liaisons as $k => $liaison)
+					cleanup_liaison($liaisons_type, $liaison->element, $liaison->group);
+			}
+			break;
+		
+		case 'preferences':
+			cleanup_preferences();
+			break;
 	}
 
 	redirect('checkup.php');
@@ -193,6 +217,38 @@ foreach ($liaisons_types as $liaisons_type) {
 }
 
 if ($everything_ok === false)
-	echo '<br /><form action="" method="post"><input type="hidden" name="cleanup" value="1" /><input type="submit" value="'._('Cleanup').'" /></form>';
+	echo '<br /><form action="" method="post"><input type="hidden" name="cleanup" value="1" /><input type="hidden" name="type" value="liaison" /><input type="submit" value="'._('Cleanup liaisons').'" /></form>';
+
+
+$everything_ok = true; // reset
+
+echo '<br /><h2>'._('Configuration').'</h2>';
+
+$prefs = Preferences::getInstance();
+$userGroupDB = UserGroupDB::getInstance();
+
+echo '<h3>'._('Default usergroup').'</h3>';
+
+$default_usergroup_id = $prefs->get('general', 'user_default_group');
+if ($default_usergroup_id != '') {
+	$group = $userGroupDB->import($default_usergroup_id);
+	if (! is_object($group)) {
+		$everything_ok = false;
+		echo '<span class="msg_error">Usergroup "'.$default_usergroup_id.'" does not exist</span>';
+	}
+}
+if ($everything_ok) {
+	echo '<span class="msg_ok">OK</span>';
+}
+echo '<br />';
+
+if ($everything_ok === false) {
+	echo '<br />';
+	echo '<form action="" method="post">';
+	echo '<input type="hidden" name="cleanup" value="1" />';
+	echo '<input type="hidden" name="type" value="preferences" />';
+	echo '<input type="submit" value="'._('Cleanup configuration').'" />';
+	echo '</form>';
+}
 
 page_footer();
