@@ -38,8 +38,8 @@ require_once(dirname(__FILE__).'/functions.inc.php');
 $sessionmanager_url = NULL;
 if (defined('SESSIONMANAGER_HOST'))
 	$sessionmanager_url = 'https://'.SESSIONMANAGER_HOST.'/ovd/client/';
-elseif (array_key_exists('web-client', $_SESSION) && array_key_exists('sessionmanager_url', $_SESSION['web-client']))
-	$sessionmanager_url = $_SESSION['web-client']['sessionmanager_url'];
+elseif (array_key_exists('ovd-client', $_SESSION) && array_key_exists('sessionmanager_url', $_SESSION['ovd-client']))
+	$sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
 
 $debug_mode = false;
 if (defined('DEBUG_MODE') && DEBUG_MODE == 1)
