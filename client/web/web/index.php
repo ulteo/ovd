@@ -408,7 +408,7 @@ function get_users_list() {
 <?php
 if (! defined('SESSIONMANAGER_HOST') && (! isset($wi_sessionmanager_host) || $wi_sessionmanager_host == ''))
 	echo 'if ($(\'sessionmanager_host\') && $(\'sessionmanager_host\').visible()) $(\'sessionmanager_host\').focus();';
-elseif ($users !== false || (isset($wi_user_login) && $wi_user_login != ''))
+elseif ((isset($users) && $users !== false) || (isset($wi_user_login) && $wi_user_login != ''))
 	echo 'if ($(\'user_password\') && $(\'user_password\').visible()) $(\'user_password\').focus();';
 else
 	echo 'if ($(\'user_login\') && $(\'user_login\').visible()) $(\'user_login\').focus();';
