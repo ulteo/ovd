@@ -923,6 +923,8 @@ class fsAccessDriver extends AbstractAccessDriver
 		{
 			if($file==basename($this->getPath())) continue;
 			if(substr($file, 0, 5) == 'conf.') continue;
+			if(substr($file, -4) == '.lnk') continue;
+			if(substr($file, -8) == '.desktop') continue;
 			if($file!="." && $file!=".." && !(Utils::isHidden($file) && !$this->driverConf["SHOW_HIDDEN_FILES"]))
 			{
 				if($offset > 0 && $cursor < $offset){
