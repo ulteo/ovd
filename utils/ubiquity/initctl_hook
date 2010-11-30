@@ -6,8 +6,11 @@ set -u
 ${DEBIAN_SCRIPT_DEBUG:+ set -v -x}
 
 . /lib/lsb/init-functions
-ERR_LOGGER="logger -p daemon.err -t /etc/init.d/mysql -i"
-MYADMIN="/usr/bin/mysqladmin --defaults-file=/etc/mysql/debian.cnf"
+
+
+################ MYSQL #################
+
+MYSQL_ADMIN="/usr/bin/mysqladmin --defaults-file=/etc/mysql/debian.cnf"
 
 mysqld_get_param() {
         /usr/sbin/mysqld --print-defaults \
@@ -18,7 +21,7 @@ mysqld_get_param() {
 }
 
 mysqld_status () {
-    ping_output=`$MYADMIN ping 2>&1`; ping_alive=$(( ! $? ))
+    ping_output=`$MYSQL_ADMIN ping 2>&1`; ping_alive=$(( ! $? ))
 
     ps_alive=0
     pidfile=`mysqld_get_param pid-file`
@@ -29,7 +32,8 @@ mysqld_status () {
         return 0 # EXIT_SUCCESS
     else
         if [ "$2" = "warn" ]; then
-            echo -e "$ps_alive processes alive and '$MYADMIN ping' resulted in\n$ping_output\n" | $ERR_LOGGER -p daemon.debug
+            echo -e "$ps_alive processes alive and '$MYSQL_ADMIN ping' resulted in\n$ping_output\n" | \
+            logger -p daemon.err -t /etc/init.d/mysql -i -p daemon.debug
         fi
         return 1 # EXIT_FAILURE
     fi
@@ -71,7 +75,7 @@ stop_mysql()
         log_daemon_msg "Stopping MySQL database server" "mysqld"
         if ! mysqld_status check_dead nowarn; then
           set +e
-          shutdown_out=`$MYADMIN shutdown 2>&1`; r=$?
+          shutdown_out=`$MYSQL_ADMIN shutdown 2>&1`; r=$?
           set -e
           if [ "$r" -ne 0 ]; then
             log_end_msg 1
@@ -88,16 +92,49 @@ stop_mysql()
         fi
 }
 
-service=$1
-op=$(basename $0)
+restart_mysql()
+{
+	stop_mysql
+	start_mysql
+}
 
-if [ "$service" == "mysql" ]; then
-    case "$op" in
-        start) start_mysql ;;
-        stop) stop_mysql ;;
-        restart) stop_mysql ; start_mysql ;;
-        *) ;;
-    esac
-fi
+################ SMBD #################
+
+SMBD_PIDDIR=/var/run/samba
+SMBD_PID=$SMBD_PIDDIR/smbd.pid
+
+start_smbd()
+{
+    log_daemon_msg "Starting Samba daemon"
+    install -o root -g root -m 755 -d $SMBD_PIDDIR
+    log_progress_msg "smbd"
+    if ! start-stop-daemon --start --quiet --oknodo --exec /usr/sbin/smbd -- -D; then
+        log_end_msg 1
+        exit 1
+    fi
+    log_end_msg 0
+}
+
+stop_smbd()
+{
+    log_daemon_msg "Stopping Samba daemon"
+    log_progress_msg "smbd"
+    start-stop-daemon --stop --quiet --pidfile $SMBD_PID
+    sleep 1
+    [ -f $SMBD_PID ] && ! ps h `cat $SMBD_PID` > /dev/null && rm -f $SMBD_PID
+    log_end_msg 0
+}
+
+restart_smbd()
+{
+    start_smbd
+    sleep 2
+    stop_smbd
+}
+
+
+#######################################
+
+$(basename $0)_$1
 
 exit 0

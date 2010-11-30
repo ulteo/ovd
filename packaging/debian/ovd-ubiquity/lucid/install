@@ -1,6 +1,6 @@
 ubi-ovd.py         /usr/lib/ubiquity/plugins
 ovd-setup          /usr/lib/ubiquity/ovd-setup
-mysql-initctl      /usr/lib/ubiquity/ovd-setup
+initctl_hook       /usr/lib/ubiquity/ovd-setup
 stepUserInfo.xslt  /usr/lib/ubiquity/ovd-setup
 stepUlteo.ui       /usr/share/ubiquity/gtk
 OVD                /usr/share/themes
