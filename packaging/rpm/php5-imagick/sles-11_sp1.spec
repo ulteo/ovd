@@ -8,7 +8,7 @@
 Summary:       Extension to create and modify images using ImageMagick
 Name:          php5-%{pecl_name}
 Version:       3.0.1
-Release:       1
+Release:       2
 License:       PHP
 Group:         Development/Languages
 Vendor:        Ulteo SAS
@@ -48,8 +48,8 @@ pushd %{pecl_name}-%{version}
 %{__make} install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/php.d
-%{__cat} > %{buildroot}%{_sysconfdir}/php.d/%{name}.ini << 'EOF'
+%{__mkdir_p} %{buildroot}%{_sysconfdir}/php5/conf.d
+%{__cat} > %{buildroot}%{_sysconfdir}/php5/conf.d/%{name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension = %{pecl_name}.so
 
@@ -91,6 +91,7 @@ fi
 /usr/include/php5/ext/imagick/*.h
 
 %changelog
+* Thu Nov 25 2010 Samuel Bovee <samuel@ulteo.com> 3.0.1-1
 * Tue Sep 02 2010 Samuel Bovee <samuel@ulteo.com> 3.0.0-1
 * Mon Aug 09 2010 Samuel Bovée <samuel@ulteo.com> 2.3.0-1
 * Sat Dec 13 2008 Remi Collet <rpms@famillecollet.com> 2.2.1-1.fc#.remi.1

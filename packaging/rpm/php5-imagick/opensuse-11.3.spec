@@ -89,6 +89,7 @@ fi
 /usr/include/php5/ext/imagick/*.h
 
 %changelog
+* Thu Nov 25 2010 Samuel Bovee <samuel@ulteo.com> 3.0.1-1
 * Mon Sep 06 2010 Samuel Bovée <samuel@ulteo.com> 3.0.0-1
 * Sat Dec 13 2008 Remi Collet <rpms@famillecollet.com> 2.2.1-1.fc#.remi.1
 - rebuild with php 5.3.0-dev

@@ -93,6 +93,7 @@ fi
 
 
 %changelog
+* Thu Nov 25 2010 Samuel Bovee <samuel@ulteo.com> 3.0.1-1
 * Tue Aug 31 2010 Samuel Bovee <samuel@ulteo.com> 3.0.0-1
 * Mon Aug 09 2010 Samuel Bovee <samuel@ulteo.com> 2.3.0-1
 * Sat Dec 13 2008 Remi Collet <rpms@famillecollet.com> 2.2.1-1.fc#.remi.1
