@@ -261,7 +261,6 @@
         <pathelement location="required_libraries/jai_codec.jar"/>
         <pathelement location="required_libraries/jai_core.jar"/>
         <pathelement location="required_libraries/js.jar"/>
-        <pathelement location="required_libraries/registry.jar" />
       </classpath>
     </javac>
     <exec executable="make" failonerror="true" dir="windowsPathsJNI">
