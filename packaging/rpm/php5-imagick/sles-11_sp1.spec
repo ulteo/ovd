@@ -85,7 +85,7 @@ fi
 %defattr(-, root, root, 0755)
 %doc %{pecl_name}-%{version}/CREDITS %{pecl_name}-%{version}/TODO
 %doc %{pecl_name}-%{version}/examples
-%config(noreplace) %{_sysconfdir}/php.d/%{name}.ini
+%config(noreplace) %{_sysconfdir}/php5/conf.d/%{name}.ini
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 /usr/include/php5/ext/imagick/*.h
