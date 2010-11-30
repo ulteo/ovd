@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2009 Ulteo SAS
+# Copyright (C) 2008-2010 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com>
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2008-2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -193,7 +194,7 @@ class ApplicationsDetection():
 		return buffer
 	
 	def chooseBestIcon(self, pattern):
-		cmd = 'find /usr/share/pixmaps /usr/share/icons -iname "*%s*"'%(pattern)
+		cmd = 'find /usr/share/pixmaps /usr/share/icons -type f -iname "*%s*"'%(pattern)
 		s,o = commands.getstatusoutput(cmd)
 		if s != 0:
 			Logger.debug("chooseBestIcon cmd '%s' returned (%d): %s"%(cmd, s, o))
