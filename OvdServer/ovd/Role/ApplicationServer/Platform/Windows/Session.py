@@ -287,6 +287,25 @@ class Session(AbstractSession):
 				_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 0)
 			_winreg.CloseKey(key)
 		
+		if self.profile is not None:
+			# http://support.microsoft.com/kb/810869
+			# Do not show recycle bin
+			path = r"%s\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel"%(hiveName)
+			restrictions = ["{645FF040-5081-101B-9F08-00AA002F954E}"]
+			try:
+				Reg.CreateKeyR(_winreg.HKEY_USERS, path)
+				key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+			except:
+				key = None
+		
+			if key is None:
+				Logger.error("Unable to open key '%s'"%(path))
+			else:
+				for item in restrictions:
+					_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 1)
+				_winreg.CloseKey(key)
+	
+
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Policies\System"%(hiveName)
 		restrictions = ["DisableRegistryTools",
 				"DisableTaskMgr",
