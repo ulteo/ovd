@@ -215,8 +215,16 @@ class UserGroupDB_sql {
 				$networkfolder->delUserGroup($usergroup_);
 			}
 		}
+		
+		// third remove the preferences if it is default
+		if ($usergroup_->isDefault()) {
+			// unset the default usergroup
+			$prefs = new Preferences_admin();
+			$mods_enable = $prefs->set('general', 'user_default_group', '');
+			$prefs->backup();
+		}
 
-		// third we delete the group
+		// fourth we delete the group
 		$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', $this->table, 'id', $usergroup_->id);
 
 		return ($res !== false);

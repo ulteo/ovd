@@ -155,6 +155,12 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 	}
 	
 	public function remove($usergroup_){
+		if ($usergroup_->isDefault()) {
+			// unset the default usergroup
+			$prefs = new Preferences_admin();
+			$mods_enable = $prefs->set('general', 'user_default_group', '');
+			$prefs->backup();
+		}
 		return true;
 	}
 	
