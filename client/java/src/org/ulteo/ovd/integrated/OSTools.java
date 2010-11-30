@@ -22,6 +22,8 @@ package org.ulteo.ovd.integrated;
 
 
 public class OSTools {
+	public static boolean is_applet = false;
+
 	public static String detectOS() {
 		String osName = System.getProperty("os.name");
 		if (osName.startsWith("Windows") || osName.startsWith("Linux"))

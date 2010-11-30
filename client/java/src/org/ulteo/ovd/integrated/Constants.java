@@ -28,7 +28,8 @@ public final class Constants {
 	public static final String PATH_STARTMENU = (OSTools.isWindows()) ? WindowsPaths.getStartMenuPath() : "";
 	public static final String PATH_XDG_APPLICATIONS = Constants.HOMEDIR+Constants.FILE_SEPARATOR+".local/share/applications";
 	public static final String PATH_OVD_SPOOL_XDG_APPLICATIONS = "/var/spool/ulteo/ovd/"+System.getProperty("user.name")+"/xdg/applications";
-	public static final String PATH_DESKTOP = (OSTools.isWindows()) ? WindowsPaths.getDesktopPathFromRegistry() : LinuxPaths.getDesktopPath();
+	private static final String PATH_DESKTOP_WIN = (OSTools.is_applet) ? WindowsPaths.getDesktopPath() : WindowsRegistryPaths.getDesktopPath();
+	public static final String PATH_DESKTOP = (OSTools.isWindows()) ? PATH_DESKTOP_WIN : LinuxPaths.getDesktopPath();
 	public static final String PATH_DOCUMENT = (OSTools.isWindows()) ? WindowsPaths.getPersonalDataPath() : LinuxPaths.getDocumentPath();
 
 	public static final String FILENAME_LAUNCHER = "UlteoOVDIntegratedLauncher"+((OSTools.isWindows()) ? ".exe" : "");

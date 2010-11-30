@@ -70,6 +70,9 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 	@Override
 	public void init() {
 		System.out.println(this.getClass().toString() +"  init");
+
+		OSTools.is_applet = true;
+		
 		boolean status = this.checkSecurity();
 		if (! status) {
 			System.err.println(this.getClass().toString() +"  init: Not enought privileges, unable to continue");

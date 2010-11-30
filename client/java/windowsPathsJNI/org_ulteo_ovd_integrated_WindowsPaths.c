@@ -34,7 +34,7 @@ BOOL getPath(DWORD csidl, LPSTR path) {
     return TRUE;
 }
 
-JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_getStartMenuPath(JNIEnv *env, jclass class) {
+JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_nGetStartMenuPath(JNIEnv *env, jclass class) {
     jstring ret = NULL;
     TCHAR path[MAX_PATH];
 
@@ -44,7 +44,7 @@ JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_getStartMen
     return ret;
 }
 
-JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_getDesktopPath(JNIEnv *env, jclass class) {
+JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_nGetDesktopPath(JNIEnv *env, jclass class) {
     jstring ret = NULL;
     TCHAR path[MAX_PATH];
 
@@ -54,7 +54,7 @@ JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_getDesktopP
     return ret;
 }
 
-JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_getAppDataPath(JNIEnv *env, jclass class) {
+JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_nGetAppDataPath(JNIEnv *env, jclass class) {
     jstring ret = NULL;
     TCHAR path[MAX_PATH];
 
@@ -64,7 +64,7 @@ JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_getAppDataP
     return ret;
 }
 
-JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_getPersonalDataPath(JNIEnv *env, jclass class) {
+JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_nGetPersonalDataPath(JNIEnv *env, jclass class) {
     jstring ret = NULL;
     TCHAR path[MAX_PATH];
 
