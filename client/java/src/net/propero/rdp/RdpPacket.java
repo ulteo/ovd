@@ -355,7 +355,14 @@ public abstract class RdpPacket {
      */
     public void out_uint8p(String str, int length){
         byte[] bStr = str.getBytes();
-        this.copyFromByteArray(bStr,0,this.getPosition(),bStr.length);
+	if (bStr.length < length) {
+		byte[] tmp = new byte[length];
+		System.arraycopy(bStr, 0, tmp, 0, bStr.length);
+		for(int i = bStr.length; i < length; i++)
+			tmp[i] = 0;
+		bStr = tmp;
+	}
+        this.copyFromByteArray(bStr, 0, this.getPosition(), length);
         this.incrementPosition(length);
     }
 }
