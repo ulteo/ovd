@@ -200,12 +200,19 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 				System.out.println(ex.getMessage());
 			}
 		}
+
+		while (! this.connections.isEmpty()) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException ex) {}
+		}
 	}
 	
 	@Override
 	public void destroy() {
 		this.spoolOrder = null;
 		this.spoolThread = null;
+		this.connections.clear();
 		this.connections = null;
 	}
 	// End extends Applet
@@ -470,6 +477,10 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 				break;
 			}
 		}
+		if (server_id == null)
+			return;
+
+		this.connections.remove(server_id);
 		this.forwardJS(JS_API_F_SERVER, server_id, JS_API_O_SERVER_DISCONNECTED);
 	}
 	
@@ -501,13 +512,20 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 		
 		if (tryNumber > 1) {
 			Logger.error("checkRDPConnections "+co.getServer()+" -- Several try to connect failed.");
+			Integer server_id = null;
 			for (Integer o : this.connections.keySet()) {
 				if (this.connections.get(o) == co) {
-					this.forwardJS(JS_API_F_SERVER, o, JS_API_O_SERVER_FAILED);
-					return;
+					server_id = o;
+					break;
 				}
 			}
-			Logger.error("checkRDPConnections "+co.getServer()+" -- Failed to retrieve connection.");
+			if (server_id == null) {
+				Logger.error("checkRDPConnections "+co.getServer()+" -- Failed to retrieve connection.");
+				return;
+			}
+
+			this.connections.remove(server_id);
+			this.forwardJS(JS_API_F_SERVER, server_id, JS_API_O_SERVER_FAILED);
 			return;
 		}
 		
