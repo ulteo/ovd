@@ -157,7 +157,7 @@ class Profile(AbstractProfile):
 				dst = self.session.localAppDataDir
 				
 				try:
-					Util.copyDirOverride(src, dst, ["Temp", "Cache", "Temporary Internet Files", "History", "Credentials"])
+					Util.copyDirOverride(src, dst, ["Temp", "Cache", "Caches", "Temporary Internet Files", "History", "Credentials"])
 				except Exception, err:
 					Logger.error("Unable to copy LocalAppData from profile")
 					Logger.debug("Unable to copy LocalAppData from profile: %s"%(str(err)))
