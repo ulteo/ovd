@@ -40,9 +40,13 @@ ANW=$(SRC:.xml=.anw)
 all: $(DST) $(PDF)
 
 # Add the depends between sources
-Support_Debian_Lenny.xml: Support_Ubuntu_Lucid.xml
+Installation_Iso.xml: Easy_Installation.xml
+Installation_Sources.xml: Installation.xml Installation_RedHat.xml
+Support_Debian_Lenny.xml: Support_Ubuntu_Hardy.xml Support_Ubuntu_Lucid.xml 
 Support_Debian_Squeeze.xml: Support_Ubuntu_Lucid.xml
-Support_openSUSE_11.2.xml: Support_Ubuntu_Lucid.xml
+Support_openSUSE_11.2.xml: Support_SLES_11.SP1.xml
+Support_RHEL_5.5.xml: Support_Ubuntu_Hardy.xml Support_Ubuntu_Lucid.xml
+Support_SLES_11.SP1.xml: Support_Ubuntu_Hardy.xml Support_Ubuntu_Lucid.xml
 Support_Ubuntu_Hardy.xml: Support_Ubuntu_Lucid.xml
 
 
