@@ -132,8 +132,6 @@ if [ -n "$HOSTTZ" -a -f $TARGET/usr/share/zoneinfo/$HOSTTZ ]; then
 fi
 
 # write config in chroot
-set_conf $CHROOTCONF "ROLES" "aps"
-set_conf $CHROOTCONF "LOG_LEVEL" "warn error info debug"
 set_conf $CHROOTCONF "session_manager" "$SM"
 
 # resolv.conf
