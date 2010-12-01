@@ -87,26 +87,34 @@ public class SystemLinux extends SystemAbstract {
 				xdgStream.close();
 			}
 			else {
-				File desktopShortcut = null;
-				if (showDesktopIcon)
-					desktopShortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
-				File xdgShortcut = new File(Constants.PATH_XDG_APPLICATIONS+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
-
-				BufferedOutputStream desktopStream = null;
-				if (desktopShortcut != null)
+				if (showDesktopIcon) {
+					File desktopShortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
+					BufferedOutputStream desktopStream = null;
 					desktopStream = new BufferedOutputStream(new FileOutputStream(desktopShortcut), 4096);
-				BufferedOutputStream xdgStream = new BufferedOutputStream(new FileOutputStream(xdgShortcut), 4096);
-
-				int currentChar;
-				while ((currentChar = shortcutReader.read()) != -1) {
-					if (desktopStream != null)
-						desktopStream.write(currentChar);
-					xdgStream.write(currentChar);
+					byte[] buffer = new byte[1024];
+					int nbytes;
+					while ((nbytes = shortcutReader.read(buffer)) != -1) {
+						desktopStream.write(buffer, 0, nbytes);
+					}
+					desktopStream.flush();
+					desktopStream.close();
+					if (! desktopShortcut.setExecutable(true)) {
+						Logger.error("Failed to set executable "+desktopShortcut.getPath());
+					}
 				}
 
-				if (desktopStream != null)
-					desktopStream.close();
+				File xdgShortcut = new File(Constants.PATH_XDG_APPLICATIONS+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
+				BufferedOutputStream xdgStream = new BufferedOutputStream(new FileOutputStream(xdgShortcut), 4096);
+				byte[] buffer = new byte[1024];
+				int nbytes;
+				while ((nbytes = shortcutReader.read(buffer)) != -1) {
+					xdgStream.write(buffer, 0, nbytes);
+				}
+				xdgStream.flush();
 				xdgStream.close();
+				if (! xdgShortcut.setExecutable(true)) {
+					Logger.error("Failed to set executable "+xdgShortcut.getPath());
+				}
 			}
 			shortcutReader.close();
 		} catch(FileNotFoundException e) {
@@ -114,6 +122,9 @@ public class SystemLinux extends SystemAbstract {
 			return;
 		} catch(IOException e) {
 			Logger.error("An error occured during the shortcut '"+app.getId()+Constants.SHORTCUTS_EXTENSION+"' copy: "+e.getMessage());
+			return;
+		} catch(SecurityException e) {
+			Logger.error("An error occured while creating or setting the shortcut '"+app.getId()+Constants.SHORTCUTS_EXTENSION+"' executable: "+e.getMessage());
 			return;
 		}
 	}
