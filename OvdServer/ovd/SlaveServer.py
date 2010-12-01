@@ -145,6 +145,7 @@ class SlaveServer:
 			if not thread.isAlive():
 				Logger.warn("One thread stop")
 				Logger.debug("ToDo: be more specific. Make difference between Roles and main threads")
+				self.threads.remove(thread)
 				return False
 			
 			self.updateMonitoring()
