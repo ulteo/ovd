@@ -458,9 +458,15 @@ public class RdpConnection implements SeamListener, Runnable{
 						this.keep_running = false;
 						exit = 1;
 					}
-				}catch (Exception e) {
-					System.out.println(e.getClass().getName() + " " + e.getMessage());
-					e.printStackTrace();
+				} catch (Exception e) {
+					System.err.println("["+this.getServer()+"] An error occured: "+e.getClass().getName()+" "+e.getMessage());
+
+					this.keep_running = false;
+
+					if (this.state == STATE_CONNECTING)
+						this.fireFailed();
+					else
+						this.fireDisconnected();
 				}
 			} else
 				System.out.println("The communications layer could not be initiated!");
