@@ -43,6 +43,20 @@ public class WrappedImage {
     }
     
     public BufferedImage getSubimage(int x,int y, int width, int height){
+	int max_w = bi.getWidth();
+	int max_h = bi.getHeight();
+
+	if ((x + width) > max_w) {
+		String msg = "[Warning] Bad width("+width+") replaced by ";
+		width = max_w - x - 1;
+		System.err.println(msg+width);
+	}
+	if ((y + height) > max_h) {
+		String msg = "[Warning] Bad height("+height+") replaced by ";
+		height = max_h - y - 1;
+		System.err.println(msg+height);
+	}
+
         return bi.getSubimage(x,y,width,height);
     }
     
