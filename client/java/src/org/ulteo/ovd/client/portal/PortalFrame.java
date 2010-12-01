@@ -37,6 +37,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import org.ulteo.Logger;
 
 import org.ulteo.utils.I18n;
 import org.ulteo.ovd.client.authInterface.LogoutPopup;
@@ -79,7 +80,12 @@ public class PortalFrame extends JFrame implements WindowListener {
 		Image frameLogo = this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
 		
 		JLabel ulteoLogo = new JLabel(new ImageIcon(this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/logo_small.png"))));
-		this.systray = new IntegratedTrayIcon(this, frameLogo);
+		try {
+			this.systray = new IntegratedTrayIcon(this, frameLogo);
+		} catch (UnsupportedOperationException ex) {
+			Logger.error("Systray is not supported: "+ex.getMessage());
+			this.systray = null;
+		}
 		
 		this.setIconImage(frameLogo);
 		this.setTitle("OVD Remote Applications");
@@ -126,7 +132,8 @@ public class PortalFrame extends JFrame implements WindowListener {
 		gbc.insets.bottom = 20;
 		gbc.insets.right = 5;
 		this.add(runningAppsPanel, gbc);
-		this.systray.addSysTray();
+		if (this.systray != null)
+			this.systray.addSysTray();
 		this.validate();
 	}
 	
@@ -235,7 +242,7 @@ public class PortalFrame extends JFrame implements WindowListener {
 
 	@Override
 	public void windowIconified(WindowEvent arg0) {
-		if (OSTools.isWindows())
+		if (OSTools.isWindows() && this.systray != null)
 			this.setVisible(false);
 		/* Bug on linux, when frame is iconified,
 		 * it will never be deiconified by clicking on systray icon */

@@ -106,6 +106,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	
 	@Override
 	protected void runDisconnecting() {
+		if (this.portal.getSystray() == null)
+			return;
+		
 		ActionListener[] action = this.portal.getSystray().getActionListeners();
 		for (ActionListener each : action)
 			this.portal.getSystray().removeActionListener(each);
@@ -116,7 +119,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		super.runSessionTerminated();
 		
 		this.portal.setVisible(false);
-		this.portal.getSystray().removeSysTray();
+		if (this.portal.getSystray() != null)
+			this.portal.getSystray().removeSysTray();
 		this.portal.dispose();
 	}
 
