@@ -30,7 +30,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 
-
+import org.ulteo.Logger;
 
 public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 	private Frame portal = null;
@@ -55,7 +55,11 @@ public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 	}
 	
 	public void removeSysTray() {
-		this.systemTray.remove(this);
+		try {
+			this.systemTray.remove(this);
+		} catch (Exception ex) {
+			Logger.error("An error occured while removing the systray icon: "+ex.getMessage());
+		}
 	}
 	
 	public void actionPerformed(ActionEvent ae) {
