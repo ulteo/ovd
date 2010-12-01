@@ -5,7 +5,7 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 DEB_UPDATE_RCD_PARAMS := "defaults 98 02"
 
 pre-build::
-	cp $(CURDIR)/ulteo-ovd-subsystem.init.deb $(CURDIR)/debian/ulteo-ovd-subsystem.init
+	cp $(CURDIR)/init/debian/ulteo-ovd-subsystem $(CURDIR)/debian/ulteo-ovd-subsystem.init
 
 install/ulteo-ovd-subsystem::
 	CONFDIR=$(CURDIR)/debian/$(cdbs_curpkg)/etc/ulteo/ ; \

@@ -37,7 +37,7 @@ SBINDIR=%buildroot/usr/sbin
 INITDIR=%buildroot/etc/init.d
 mkdir -p $SBINDIR $INITDIR
 cp ovd-subsystem-config $SBINDIR
-cp ulteo-ovd-subsystem.init.rpm $INITDIR/ulteo-ovd-subsystem
+cp init/suse/ulteo-ovd-subsystem $INITDIR
 
 %preun
 service ulteo-ovd-subsystem stop

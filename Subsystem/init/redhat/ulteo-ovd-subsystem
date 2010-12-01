@@ -1,0 +1,85 @@
+#!/bin/sh
+# Copyright (c) 2010 Ulteo SAS.
+#
+# Author: Julien LANGLOIS <julien@ulteo.com>
+#
+### BEGIN INIT INFO
+# Provides:          ulteo-ovd-subsystem
+# Required-Start: $network $remote_fs
+# Required-Stop: $network $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start Ulteo OVD subsystem
+# Description:       Start Ulteo OVD subsystem and needed services
+### END INIT INFO
+
+. /etc/init.d/functions
+
+# useless for now...
+[ -f $sysconfdir/ulteo-ovd-subsystem ] && . $sysconfdir/ulteo-ovd-subsystem
+[ "$START" = no ] && exit 0
+
+CONFFILE=/etc/ulteo/subsystem.conf
+[ -f "$CONFFILE" ] && . $CONFFILE
+[ -z "$CHROOTDIR" ] && CHROOTDIR=/opt/ulteo
+
+test -d "$CHROOTDIR" || (failure; exit 5)
+
+do_start() {
+    [ -d "$CHROOTDIR" ] || return 1
+
+    # hack to hide a cups issue
+    MODKERNELDIR=$CHROOTDIR/lib/modules/$(uname -r)
+    mkdir -p $MODKERNELDIR
+    touch $MODKERNELDIR/modules.dep
+
+    mount -t proc none $CHROOTDIR/proc
+    mount -t devpts none $CHROOTDIR/dev/pts
+
+    chroot $CHROOTDIR /etc/init.d/cups start
+    chroot $CHROOTDIR /etc/init.d/xrdp start
+    chroot $CHROOTDIR service smbd start
+    chroot $CHROOTDIR /etc/init.d/apache2 start
+    chroot $CHROOTDIR /etc/init.d/ovdSlaveServer start
+}
+
+do_stop() {
+    [ -d "$CHROOTDIR" ] || return 1
+
+    chroot $CHROOTDIR /etc/init.d/ovdSlaveServer stop
+    chroot $CHROOTDIR /etc/init.d/apache2 stop
+    chroot $CHROOTDIR service smbd stop
+    chroot $CHROOTDIR /etc/init.d/xrdp stop
+    chroot $CHROOTDIR /etc/init.d/cups stop
+
+    umount $CHROOTDIR/dev/pts || true
+    umount $CHROOTDIR/proc || true
+}
+
+case $1 in
+    start)
+        do_start
+        echo -n "Starting Ulteo OVD subsystem: "
+        ;;
+    stop)
+        do_stop
+        echo -n "Stopping Ulteo OVD subsystem: "
+        ;;
+    restart|reload|force-reload)
+        do_stop && sleep 1 && do_start
+        echo -n "Re-starting Ulteo OVD subsystem: "
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|reload|restart}"
+        exit 1
+        ;;
+esac
+
+RETVAL=$?
+if [ $RETVAL -eq 0 ]; then
+    success
+else
+    failure
+fi
+echo
+exit $RETVAL
