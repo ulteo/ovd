@@ -103,10 +103,6 @@ function is_writable2($filename) {
 }
 
 function locale2unix($locale_) {
-	if (preg_match('/[a-z]+_[A-Z]+\.[a-zA-Z-0-9]+/', $locale_))
-		return $locale_;
-	
-	$locale = strtolower($locale_);
 	$locales = array(
 		'fr'	=>	'fr_FR',
 		'en'	=>	'en_US',
@@ -116,7 +112,11 @@ function locale2unix($locale_) {
 		'it'	=>	'it_IT'
 	);
 
-	if (!preg_match('/[a-zA-Z-_]/', $locale))
+	if (preg_match('/([a-z]+_[A-Z]+)\.[a-zA-Z-0-9]+/', $locale_, $matches))
+		$locale_ = $matches[1];
+
+	$locale = strtolower($locale_);
+	if (! preg_match('/[a-z-_]/', $locale))
 		$locale = $locales['en'];
 
 	if (strlen($locale) == 2) {
@@ -127,8 +127,6 @@ function locale2unix($locale_) {
 	}
 	elseif (strlen($locale) == 5)
 		$locale = substr($locale, 0, 2).'_'.strtoupper(substr($locale, -2));
-
-	$locale .= '.UTF-8';
 
 	return $locale;
 }
