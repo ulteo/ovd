@@ -26,7 +26,7 @@ import win32event
 import win32service
 import win32serviceutil
 
-from ovd.Communication.TwistedHttpServer import TwistedHttpServer as Communication
+from ovd.Communication.HttpServer import HttpServer as Communication
 from ovd import Config as ConfigModule
 from ovd.Config import Config
 from ovd.Logger import Logger
