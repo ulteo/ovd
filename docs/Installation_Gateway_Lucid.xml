@@ -207,7 +207,7 @@ deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/private/ubuntu lucid main]]>
            </listitem>
            <listitem>
              <para>
-               Install the keyring package to validate the repository using gpg:
+               Install the native client package:
              </para>
              <screen>
                <![CDATA[
