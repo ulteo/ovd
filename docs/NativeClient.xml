@@ -23,23 +23,19 @@
   </section>
 
   <section>
-    <title>Prerequisites: <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark></title>
+    <title>Prerequisites</title>
 
     <para>
       The OVD Native client can be installed on <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> XP or newer.
     </para>
-
     <para>
-      Sun java must be installed.
+      It can also be installed on Ubuntu 10.04 (Lucid Lynx)
     </para>
+
   </section>
   
-  <section id="installation">
-    <title id="installation_title">Installation</title>
-    
-    <para>
-      You have to install Oracle Java 1.6 before using the OVD Native Client. Go on <ulink url="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle's web site</ulink>, download and install the Java JRE.
-    </para>
+  <section id="installation_windows">
+    <title id="installation_windows_title">Installation on <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark></title>
     
     <para>
       Download and execute the Ulteo OVD Native Client installer.
@@ -53,7 +49,7 @@
     </para>
 
     <para>
-      Select where you want to copy the client's files
+      Select where you want to copy the client files
     </para>
 
     <para>
@@ -72,6 +68,79 @@
         <screeninfo>Native Client - Installation step 04</screeninfo>
         <graphic fileref="img/native/install04.png"></graphic>
       </screenshot>
+    </para>
+  </section>
+  
+  <section id="installation_linux">
+    <title id="installation_linux_title">Installation on Ubuntu 10.04</title>
+    <para>
+    <itemizedlist>
+      <listitem>
+        <para>
+          Edit the <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd.list</emphasis>
+          File and put this line:
+        </para>
+        <screen>
+          <![CDATA[
+deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
+        </screen>
+      </listitem>
+      
+      <listitem>
+        <para>
+         Edit the <emphasis>/etc/apt/sources.list.d/02-ulteo-ovd-private.list</emphasis>
+         file and put this line:
+        </para>
+        <screen>
+          <![CDATA[
+deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/private/ubuntu lucid main]]>
+        </screen>
+        <important>
+          <para>
+            You have to replace LOGIN and PASSWORD by your own.
+          </para>
+        </important>      
+      </listitem>
+
+      <listitem>
+        <para>
+          Update the package database:
+        </para>
+        <screen>
+          <![CDATA[
+# apt-get update]]>
+        </screen>
+        <note>
+          <para>
+            GPG errors given by the previous command will be fixed in
+            the next installation steps. They won't prevent the
+            installation to be successful.
+          </para>
+        </note>
+      </listitem>
+
+      <listitem>
+        <para>
+          Install the keyring package to validate the repository using
+          gpg:
+        </para>
+        <screen>
+          <![CDATA[
+# apt-get install ulteo-keyring
+# apt-get update]]>
+        </screen>
+      </listitem>
+
+      <listitem>
+        <para>
+          Install the Native client package:
+        </para>
+        <screen>
+          <![CDATA[
+# apt-get install ulteo-ovd-native-client]]>
+        </screen>
+      </listitem>
+    </itemizedlist>
     </para>
   </section>
   
