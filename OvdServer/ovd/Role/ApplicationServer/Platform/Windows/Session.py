@@ -102,7 +102,7 @@ class Session(AbstractSession):
 		
 		win32file.CopyFile(shortcut, dstFile, True)
 		
-		if self.parameters.has_key("desktop_icons"):
+		if self.parameters.has_key("desktop_icons") and self.mode == Session.MODE_DESKTOP:
 			if self.profile is not None and self.profile.mountPoint is not None:
 				d = os.path.join(self.profile.mountPoint, self.profile.DesktopDir)
 			else:
