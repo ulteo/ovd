@@ -1179,7 +1179,7 @@ if ($_REQUEST['name'] == 'Server') {
 					popup_info(sprintf(_("Server '%s' successfully registered"), $buf->getAttribute('fqdn')));
 				}
 				else {
-					popup_info(sprintf(_("Failed to register Server '%s'"), $buf->getAttribute('fqdn')));
+					popup_error(sprintf(_("Failed to register Server '%s'"), $buf->getAttribute('fqdn')));
 				}
 			}
 		}
