@@ -88,7 +88,13 @@ public class OvdClientDesktop extends OvdClient {
 	protected void uncustomizeConnection(RdpConnectionOvd co) {}
 
 	@Override
-	public void display(RdpConnection co) {}
+	public void display(RdpConnection co) {
+		RdesktopCanvas canvas = co.getCanvas();
+		this.desktop.setCanvas(canvas);
+		this.desktop.getContentPane().add(canvas);
+		canvas.validate();
+		this.desktop.pack();
+	}
 
 	@Override
 	public void hide(RdpConnection co) {
@@ -224,17 +230,6 @@ public class OvdClientDesktop extends OvdClient {
 		this.hide(co);
 
 		return false;
-	}
-
-	@Override
-	public void connecting(RdpConnection co) {
-		super.connecting(co);
-
-		RdesktopCanvas canvas = co.getCanvas();
-		this.desktop.setCanvas(canvas);
-		this.desktop.getContentPane().add(canvas);
-		canvas.validate();
-		this.desktop.pack();
 	}
 
 	@Override
