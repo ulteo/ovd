@@ -66,9 +66,9 @@ class Session(AbstractSession):
 		env_file_lines = []
 		# Set the language
 		if self.parameters.has_key("locale"):
-			env_file_lines.append("LANG=%s\n"%(self.parameters["locale"]))
-			env_file_lines.append("LC_ALL=%s\n"%(self.parameters["locale"]))
-			env_file_lines.append("LANGUAGE=%s\n"%(self.parameters["locale"]))
+			env_file_lines.append("LANG=%s.UTF-8\n"%(self.parameters["locale"]))
+			env_file_lines.append("LC_ALL=%s.UTF-8\n"%(self.parameters["locale"]))
+			env_file_lines.append("LANGUAGE=%s.UTF-8\n"%(self.parameters["locale"]))
 		
 		if self.parameters.has_key("timezone"):
 			tz_file = "/usr/share/zoneinfo/" + self.parameters["timezone"]
