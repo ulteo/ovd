@@ -612,11 +612,11 @@ class fsAccessDriver extends AbstractAccessDriver
 						if($bytesize < 0) $bytesize = sprintf("%u", $bytesize);
 						$atts[] = "filesize=\"".Utils::roundSize($bytesize)."\"";
 						$atts[] = "bytesize=\"".$bytesize."\"";
-						$atts[] = "filename=\"".Utils::xmlEntities( SystemTextEncoding::toUTF8($dir."/".$repIndex))."\"";
+						$atts[] = "filename=\"".Utils::xmlEntities( SystemTextEncoding::toUTF8($dir."/".($this->isFile($currentFile)?urldecode($repIndex):$repIndex)))."\"";
 						$atts[] = "icon=\"".($this->isFile($currentFile)?SystemTextEncoding::toUTF8($repName):($this->isDir($currentFile) ? "folder.png" : "mime-empty.png"))."\"";
 						
 						$attributes = join(" ", $atts);
-						$repName = $repIndex;
+						$repName = urldecode($repIndex);
 					}
 					else 
 					{
