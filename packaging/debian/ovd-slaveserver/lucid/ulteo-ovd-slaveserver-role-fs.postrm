@@ -9,7 +9,7 @@ A2SITESENDIR=/etc/apache2/sites-enabled
 [ "$1" != "upgrade" ] && ovd-slaveserver-role del FileServer
 
 # VHost webdav config
-[ -e $A2SITESENDIR/slaveserver-fs ] && a2dissite slaveserver-fs > /dev/null
+[ -e $A2SITESENDIR/slaveserver-fs ] && a2dissite slaveserver-fs > /dev/null 2>&1
 rm -f $A2SITESAVDIR/slaveserver-fs
 
 if [ "$1" = "purge" ] ; then
