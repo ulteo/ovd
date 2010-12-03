@@ -187,6 +187,34 @@ page_header();
 
 echo '<h1>'._('Checkup').'</h1>';
 
+echo '<h2>'._('PHP Modules').'</h2>';
+
+$PHP_modules = checkup_PHP_modules();
+if (in_array(false, $PHP_modules)) {
+	echo '<table border="0" cellspacing="1" cellpadding="3">';
+	$PHP_modules = checkup_PHP_modules();
+	foreach ($PHP_modules as $name => $available) {
+		echo '<tr>';
+		echo '<td><span style="color: #666; font-weight: bold;">'.$name.'</span></td>';
+		echo '<td>&nbsp;</td>';
+		echo '<td>';
+		if ($available === true)
+			echo '<span class="msg_ok">OK</span>';
+		else {
+			$module_failed = true;
+			echo '<span class="msg_error">ERROR</span>';
+		}
+		echo '</td>';
+		echo '</tr>';
+	}
+	echo '</table>';
+	page_footer();
+	die();
+} else {
+	echo '<span class="msg_ok">OK</span><br />';
+	echo '<br />';
+}
+
 echo '<h2>'._('Liaisons').'</h2>';
 
 $liaisons_types = array('ApplicationServer', 'AppsGroup', 'ServerSession', 'UserGroupNetworkFolder', 'UserNetworkFolder', 'UsersGroup', 'UsersGroupApplicationsGroup', 'UsersGroupCached');
@@ -265,23 +293,5 @@ if ($everything_ok === false) {
 	echo '<input type="submit" value="'._('Cleanup configuration').'" />';
 	echo '</form>';
 }
-
-echo '<br /><h2>'._('PHP Modules').'</h2>';
-
-echo '<table border="0" cellspacing="1" cellpadding="3">';
-$PHP_modules = checkup_PHP_modules();
-foreach ($PHP_modules as $name => $available) {
-	echo '<tr>';
-	echo '<td><span style="color: #666; font-weight: bold;">'.$name.'</span></td>';
-	echo '<td>&nbsp;</td>';
-	echo '<td>';
-	if ($available === true)
-		echo '<span class="msg_ok">OK</span>';
-	else
-		echo '<span class="msg_error">ERROR</span>';
-	echo '</td>';
-	echo '</tr>';
-}
-echo '</table>';
 
 page_footer();
