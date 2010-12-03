@@ -7,11 +7,30 @@ LOGDIR=/var/log/ulteo/ovd
 
 mkdir -p $LOGDIR
 
-if [ "$1" = "configure" ] && [ -z "$2" ] || [ "$1" = "reconfigure" ]
-then
+make_conf() {
     db_get ulteo-ovd-slaveserver/session_manager && SM=$RET
     sed -i "s/^session_manager.*/session_manager = $SM/" $CONFDIR/slaveserver.conf
-fi
+}
+
+case "$1" in
+    "configure")
+        [ -z "$2" ] && make_conf
+    ;;
+
+    "reconfigure")
+        make_conf
+    ;;
+
+    "triggered")
+        for triggername in $2; do
+            case "$triggername" in
+                "slaveserver-restart")
+                    service ovdSlaveServer restart
+                ;;
+            esac
+        done
+    ;;
+esac
 
 #DEBHELPER#
 
