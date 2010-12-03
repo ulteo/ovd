@@ -252,7 +252,7 @@ function show_default($prefs, $applicationDB) {
 			echo $type;
 			echo '</td>';
 			echo '<td>';
-			$apps = $applicationDB->getList(false, $type);
+			$apps = $applicationDB->getList(true, $type);
 			echo '<select id="browser_'.$type.'"  name="browser">';
 			echo '<option value="-1" >'._('None').'</option>';
 
