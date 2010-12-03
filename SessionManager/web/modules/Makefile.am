@@ -1,8 +1,18 @@
-SUBDIRS = UserDB ApplicationDB ApplicationsGroupDB UserGroupDB AuthMethod
+SUBDIRS = ApplicationDB \
+          ApplicationsGroupDB \
+          AuthMethod \
+          SessionManagement \
+          UserDB \
+          UserGroupDB
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/modules
-scripts_DATA = UserDB.php ApplicationDB.php ApplicationsGroupDB.php \
-			   UserGroupDB.php AuthMethod.php
+
+scripts_DATA = ApplicationDB.php \
+               ApplicationsGroupDB.php \
+               AuthMethod.php \
+               SessionManagement.php \
+               UserDB.php \
+               UserGroupDB.php
 
 if HA
 scripts_DATA += HA.php

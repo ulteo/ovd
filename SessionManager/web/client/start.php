@@ -48,22 +48,22 @@ function throw_response($response_code_) {
 	die();
 }
 
-$startsession = new StartSession();
+$sessionManagement = SessionManagement::getInstance();
 
 $client_request_xml = @file_get_contents('php://input');
-$ret = $startsession->parseClientRequest($client_request_xml);
+$ret = $sessionManagement->parseClientRequest($client_request_xml);
 if (! $ret) {
 	Logger::error('main', '(client/start) Client does not send a valid XML');
 	throw_response(INTERNAL_ERROR);
 }
 
-$ret = $startsession->authenticate();
+$ret = $sessionManagement->authenticate();
 if (! $ret) {
 	Logger::error('main', '(client/start) Authentication failed');
 	throw_response(AUTH_FAILED);
 }
 
-$user = $startsession->user;
+$user = $sessionManagement->user;
 
 $default_settings = $user->getSessionSettings('session_settings_defaults');
 $session_mode = $default_settings['session_mode'];
@@ -588,7 +588,7 @@ if (! isset($old_session_id)) {
 		$xml = $dom->saveXML();
 
 		$session_create_xml = query_url_post_xml($server->getBaseURL().'/aps/session/create', $xml);
-		$ret = $startsession->parseSessionCreate($session_create_xml);
+		$ret = $sessionManagement->parseSessionCreate($session_create_xml);
 		if (! $ret) {
 			Logger::critical('main', '(client/start) Unable to create Session \''.$session->id.'\' for User \''.$session->user_login.'\' on Server \''.$server->fqdn.'\', aborting');
 			$session->orderDeletion();
@@ -707,7 +707,7 @@ if (! isset($old_session_id)) {
 			$xml = $dom->saveXML();
 
 			$session_create_xml = query_url_post_xml($server->getBaseURL().'/aps/session/create', $xml);
-			$ret = $startsession->parseSessionCreate($session_create_xml);
+			$ret = $sessionManagement->parseSessionCreate($session_create_xml);
 			if (! $ret) {
 				Logger::critical('main', '(client/start) Unable to create Session \''.$session->id.'\' for User \''.$session->user_login.'\' on Server \''.$server->fqdn.'\', aborting');
 				$session->orderDeletion();

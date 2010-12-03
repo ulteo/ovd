@@ -18,11 +18,28 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-class StartSession {
-	private $prefs = false;
+abstract class SessionManagement extends Module {
+	protected static $instance = NULL;
+	protected $prefs = false;
 	public $user = false;
+
+	public static function getInstance() {
+		if (is_null(self::$instance)) {
+			$prefs = Preferences::getInstance();
+			if (! $prefs)
+				die_error('get Preferences failed', __FILE__, __LINE__);
+
+			$enabled_modules = $prefs->get('general','module_enable');
+			if (! in_array('SessionManagement', $enabled_modules))
+				die_error('SessionManagement module must be enabled', __FILE__, __LINE__);
+
+			$SessionManagement_module_name = 'SessionManagement_'.$prefs->get('SessionManagement', 'enable');
+			self::$instance = new $SessionManagement_module_name();
+		}
+
+		return self::$instance;
+	}
 
 	public function __construct() {
 		$this->prefs = Preferences::getInstance();
@@ -40,7 +57,7 @@ class StartSession {
 
 	public function parseClientRequest($xml_) {
 		if (! $xml_ || strlen($xml_) == 0) {
-			Logger::error('main', 'StartSession::parseClientRequest - Empty content');
+			Logger::error('main', 'SessionManagement::parseClientRequest - Empty content');
 			return false;
 		}
 
@@ -48,18 +65,18 @@ class StartSession {
 
 		$buf = @$dom->loadXML($xml_);
 		if (! $buf) {
-			Logger::error('main', 'StartSession::parseClientRequest - Not an XML');
+			Logger::error('main', 'SessionManagement::parseClientRequest - Not an XML');
 			return false;
 		}
 
 		if (! $dom->hasChildNodes()) {
-			Logger::error('main', 'StartSession::parseClientRequest - Empty XML');
+			Logger::error('main', 'SessionManagement::parseClientRequest - Empty XML');
 			return false;
 		}
 
 		$session_node = $dom->getElementsByTagname('session')->item(0);
 		if (is_null($session_node)) {
-			Logger::error('main', 'StartSession::parseClientRequest - No "session" node');
+			Logger::error('main', 'SessionManagement::parseClientRequest - No "session" node');
 			return false;
 		}
 
@@ -99,7 +116,7 @@ class StartSession {
 
 	public function parseSessionCreate($xml_) {
 		if (! $xml_ || strlen($xml_) == 0) {
-			Logger::error('main', 'StartSession::parseSessionCreate - Empty content');
+			Logger::error('main', 'SessionManagement::parseSessionCreate - Empty content');
 			return false;
 		}
 
@@ -107,73 +124,28 @@ class StartSession {
 
 		$buf = @$dom->loadXML($xml_);
 		if (! $buf) {
-			Logger::error('main', 'StartSession::parseSessionCreate - Not an XML');
+			Logger::error('main', 'SessionManagement::parseSessionCreate - Not an XML');
 			return false;
 		}
 
 		if (! $dom->hasChildNodes()) {
-			Logger::error('main', 'StartSession::parseSessionCreate - Empty XML');
+			Logger::error('main', 'SessionManagement::parseSessionCreate - Empty XML');
 			return false;
 		}
 
 		$node = $dom->getElementsByTagname('session')->item(0);
 		if (is_null($node)) {
-			Logger::error('main', 'StartSession::parseSessionCreate - No "session" node');
+			Logger::error('main', 'SessionManagement::parseSessionCreate - No "session" node');
 			return false;
 		}
 
 		if (! $node->hasAttribute('id')) {
-			Logger::error('main', 'StartSession::parseSessionCreate - No "id" attribute in "session" node');
+			Logger::error('main', 'SessionManagement::parseSessionCreate - No "id" attribute in "session" node');
 			return false;
 		}
 
 		return true;
 	}
 
-	public function authenticate() {
-		if (! in_array('UserDB', $this->prefs->get('general', 'module_enable'))) {
-			Logger::error('main', 'StartSession::authenticate - UserDB module is not enabled');
-			return false;
-		}
-
-		$userDB_module = 'UserDB_'.$this->prefs->get('UserDB', 'enable');
-		$userDB = new $userDB_module();
-
-		$authMethods = $this->prefs->get('AuthMethod', 'enable');
-		if (! is_array($authMethods)) {
-			Logger::error('main', 'StartSession::authenticate - No AuthMethod enabled');
-			return false;
-		}
-
-		foreach ($authMethods as $authMethod) {
-			$authMethod_module = 'AuthMethod_'.$authMethod;
-			$authMethod = new $authMethod_module($this->prefs, $userDB);
-
-			Logger::debug('main', 'StartSession::authenticate - Trying "'.$authMethod_module."'");
-
-			$user_login = $authMethod->get_login();
-			if (is_null($user_login)) {
-				Logger::debug('main', 'StartSession::authenticate - Unable to get a valid login, switching to next AuthMethod');
-				continue;
-			}
-
-			$this->user = $userDB->import($user_login);
-			if (! is_object($this->user)) {
-				Logger::debug('main', 'StartSession::authenticate - Unable to import a valid user with login "'.$user_login.'", switching to next AuthMethod');
-				continue;
-			}
-
-			$buf = $authMethod->authenticate($this->user);
-			if ($buf === true) {
-				Logger::debug('main', 'StartSession::authenticate - Now authenticated as "'.$user_login.'"');
-				return true;
-			}
-		}
-
-		Logger::error('main', 'StartSession::authenticate - Authentication failed');
-
-		$this->user = false;
-
-		return false;
-	}
+	abstract public function authenticate();
 }

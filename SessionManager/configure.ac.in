@@ -119,6 +119,7 @@ web/client/Makefile
 web/crons/Makefile
 web/webservices/Makefile
 web/modules/Makefile
+web/modules/SessionManagement/Makefile
 web/modules/AuthMethod/Makefile
 web/modules/UserGroupDB/Makefile
 web/modules/UserDB/Makefile
