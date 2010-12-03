@@ -137,17 +137,6 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 	}
 
-	private boolean isReachable() {
-		try {
-			InetAddress target = InetAddress.getByName(this.host);
-
-			return target.isReachable(TIMEOUT);
-		} catch (IOException ex) {
-			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		return false;
-	}
-
 	private String makeUrl(String service) {
 		return (this.use_https ? "https" : "http") + "://" + this.host + "/ovd/client/" + service;
 	}
@@ -357,16 +346,13 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		Object obj = null;
 		HttpURLConnection connexion = null;
 
-		if (! this.isReachable()) {
-			throw new SessionManagerException("Host is unreachable");
-		}
-		
 		try {
 			URL url = new URL(this.base_url+webservice);
 
 			if (showLog)
 				System.out.println("Connecting URL ... "+url);
 			connexion = (HttpURLConnection) url.openConnection();
+			connexion.setConnectTimeout(TIMEOUT);
 
 			if (this.use_https) {		
 				SSLContext sc = SSLContext.getInstance("SSL");
