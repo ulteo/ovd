@@ -143,6 +143,43 @@ function configuration_switch(object_,container,container_sub,id_element) {
 	return false;
 }
 
+function configuration_switch_references(object_, context_, references_) {
+	var selected = object_.options[object_.selectedIndex].value;
+	
+	for (var i = 0; i<object_.options.length; i++) {
+		var name = object_.options[i].value;
+		
+		if (typeof references_.get(name) == 'undefined')
+			continue;
+		
+		var ids = references_.get(name);
+		for (var j = 0; j < ids.length; j++) {
+			var id = context_ + "___" + ids[j];
+			if (! element_exists(id))
+				continue;
+			
+			var tr_node = search_first_tr_node($(id));
+			if (tr_node == null)
+				continue;
+			
+			if (name == selected)
+				tr_node.setAttribute("style", "");
+			else
+				tr_node.setAttribute("style", "display: none;");
+		}
+	}
+}
+
+function search_first_tr_node(node) {
+	if (node == null || node == document)
+		return null;
+	
+	if (node.nodeName.toLowerCase() == "tr")
+		return node;
+	
+	return search_first_tr_node(node.parentNode);
+}
+
 function configuration_switch_init() {
 	Event.observe(window, 'load', function() {
 		configuration_switch_init2();

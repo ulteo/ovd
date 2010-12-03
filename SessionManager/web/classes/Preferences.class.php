@@ -262,25 +262,34 @@ class Preferences {
 		$this->add($c,'general','sql');
 
 		$this->addPrettyName('mails_settings',_('Email settings'));
-		$c = new ConfigElement_select('send_type', _('Mail server type'), _('Mail server type'), _('Mail server type'),'mail');
-		$c->setContentAvailable(array('mail'=>_('Local'),'smtp'=>_('SMTP server')));
-		$this->add($c,'general','mails_settings');
+		$c_mail_type = new ConfigElement_select('send_type', _('Mail server type'), _('Mail server type'), _('Mail server type'),'mail');
+		$c_mail_type->setContentAvailable(array('mail'=>_('Local'),'smtp'=>_('SMTP server')));
+		$this->add($c_mail_type,'general','mails_settings');
+		
 		$c = new ConfigElement_input('send_from', _('From'), _('From'), _('From'), 'no-reply@'.@$_SERVER['SERVER_NAME']);
 		$this->add($c,'general','mails_settings');
+		
+		// SMTP conf
 		$c = new ConfigElement_input('send_host', _('Host'), _('Host'), _('Host'), '');
 		$this->add($c,'general','mails_settings');
+		$c_mail_type->addReference('smtp', $c);
 		$c = new ConfigElement_input('send_port', _('Port'), _('Port'), _('Port'), 25);
 		$this->add($c,'general','mails_settings');
+		$c_mail_type->addReference('smtp', $c);
 		$c = new ConfigElement_select('send_ssl', _('Use SSL with SMTP'), _('Use SSL with SMTP'), _('Use SSL with SMTP'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','mails_settings');
+		$c_mail_type->addReference('smtp', $c);
 		$c = new ConfigElement_select('send_auth', _('Authentication'), _('Authentication'), _('Authentication'),0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','mails_settings');
+		$c_mail_type->addReference('smtp', $c);
 		$c = new ConfigElement_input('send_username', _('SMTP username'), _('SMTP username'), _('SMTP username'), '');
 		$this->add($c,'general','mails_settings');
+		$c_mail_type->addReference('smtp', $c);
 		$c = new ConfigElement_password('send_password', _('SMTP password'), _('SMTP password'), _('SMTP password'), '');
 		$this->add($c,'general','mails_settings');
+		$c_mail_type->addReference('smtp', $c);
 
 		$this->addPrettyName('slave_server_settings',_('Slave Server settings'));
 		$c = new ConfigElement_list('authorized_fqdn', _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), array('*'));
@@ -317,20 +326,24 @@ class Preferences {
 
 		$this->addPrettyName('remote_desktop_settings', _('Remote Desktop settings'));
 
-		$c = new ConfigElement_select('enabled', _('Enable Remote Desktop'), _('Enable Remote Desktop'), _('Enable Remote Desktop'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
-		$this->add($c,'general','remote_desktop_settings');
+		$c_desktop_mode = new ConfigElement_select('enabled', _('Enable Remote Desktop'), _('Enable Remote Desktop'), _('Enable Remote Desktop'), 1);
+		$c_desktop_mode->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c_desktop_mode,'general','remote_desktop_settings');
 		$c = new ConfigElement_select('persistent', _('Sessions are persistent'), _('Sessions are persistent'), _('Sessions are persistent'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c_desktop_mode->addReference('1', $c);
 		$this->add($c,'general','remote_desktop_settings');
 		$c = new ConfigElement_select('desktop_icons', _('Show icons on user desktop'), _('Show icons on user desktop'), _('Show icons on user desktop'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c_desktop_mode->addReference('1', $c);
 		$this->add($c,'general','remote_desktop_settings');
 		$c = new ConfigElement_select('allow_external_applications', _('Allow external applications in Desktop'), _('Allow external applications in Desktop'), _('Allow external applications in Desktop'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c_desktop_mode->addReference('1', $c);
 		$this->add($c,'general','remote_desktop_settings');
 		$c = new ConfigElement_select('desktop_type', _('Desktop type'), _('Desktop type'), _('Desktop type'), 'any');
 		$c->setContentAvailable(array('any'=>_('Any'),'linux'=>_('Linux'),'windows'=>_('Windows')));
+		$c_desktop_mode->addReference('1', $c);
 		$this->add($c,'general','remote_desktop_settings');
 
 		$this->addPrettyName('remote_applications_settings', _('Remote Applications settings'));
@@ -381,20 +394,24 @@ class Preferences {
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
 
-		$c = new ConfigElement_select('enable_profiles', _('Enable user profiles'), _('Enable user profiles'), _('Enable user profiles'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
-		$this->add($c,'general','session_settings_defaults');
+		$c_user_profile = new ConfigElement_select('enable_profiles', _('Enable user profiles'), _('Enable user profiles'), _('Enable user profiles'), 1);
+		$c_user_profile->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c_user_profile,'general','session_settings_defaults');
 		$c = new ConfigElement_select('auto_create_profile', _('Auto-create user profiles when non-existant'), _('Auto-create user profile when non-existant'), _('Auto-create user profile when nonexistant'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c_user_profile->addReference('1', $c);
 		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_select('start_without_profile', _('Launch a session without a valid profile'), _('Launch a session without a valid profile'), _('Launch a session without a valid profile'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c_user_profile->addReference('1', $c);
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('enable_sharedfolders', _('Enable shared folders'), _('Enable shared folders'), _('Enable shared folders'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
-		$this->add($c,'general','session_settings_defaults');
+		
+		$c_shared_folder = new ConfigElement_select('enable_sharedfolders', _('Enable shared folders'), _('Enable shared folders'), _('Enable shared folders'), 1);
+		$c_shared_folder->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c_shared_folder,'general','session_settings_defaults');
 		$c = new ConfigElement_select('start_without_all_sharedfolders', _('Launch a session even when a shared folder\'s fileserver is missing'), _('Launch a session even when a shared folder\'s fileserver is missing'), _('Launch a session even when a shared folder\'s fileserver is missing'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c_shared_folder->addReference('1', $c);
 		$this->add($c,'general','session_settings_defaults');
 
 		$c = new ConfigElement_multiselect('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('session_mode', 'language'));
