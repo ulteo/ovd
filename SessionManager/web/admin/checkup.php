@@ -129,6 +129,21 @@ function cleanup_liaison($type_, $element_, $group_) {
 	return false;
 }
 
+function checkup_PHP_modules() {
+	try {
+		@include_once('libchart/classes/libchart.php');
+	} catch (Exception $e) {}
+
+	return array(
+		'cURL'		=>	(function_exists('curl_init')),
+		'Imagick'	=>	(class_exists('Imagick')),
+		'LDAP'		=>	(function_exists('ldap_connect')),
+		'libchart'	=>	(class_exists('LineChart')),
+		'MySQL'		=>	(function_exists('mysql_connect')),
+		'XML'		=>	(class_exists('DomDocument'))
+	);
+}
+
 function cleanup_preferences() {
 	$userGroupDB = UserGroupDB::getInstance();
 	$prefs = new Preferences_admin();
@@ -250,5 +265,23 @@ if ($everything_ok === false) {
 	echo '<input type="submit" value="'._('Cleanup configuration').'" />';
 	echo '</form>';
 }
+
+echo '<br /><h2>'._('PHP Modules').'</h2>';
+
+echo '<table border="0" cellspacing="1" cellpadding="3">';
+$PHP_modules = checkup_PHP_modules();
+foreach ($PHP_modules as $name => $available) {
+	echo '<tr>';
+	echo '<td><span style="color: #666; font-weight: bold;">'.$name.'</span></td>';
+	echo '<td>&nbsp;</td>';
+	echo '<td>';
+	if ($available === true)
+		echo '<span class="msg_ok">OK</span>';
+	else
+		echo '<span class="msg_error">ERROR</span>';
+	echo '</td>';
+	echo '</tr>';
+}
+echo '</table>';
 
 page_footer();
