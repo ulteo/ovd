@@ -21,6 +21,7 @@ package org.ulteo.ovd.disk;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.filechooser.FileSystemView;
 
@@ -39,8 +40,14 @@ public class WindowsDiskManager extends DiskManager {
 
 	/**************************************************************************/
 	public boolean init() {
-		addStaticDirectory(Constants.PATH_DESKTOP);
-		addStaticDirectory(Constants.PATH_DOCUMENT);
+		List<String> paths = new ArrayList<String>();
+		paths.add(Constants.PATH_DESKTOP);
+		paths.add(Constants.PATH_DOCUMENT);
+
+		for (String each : paths) {
+			if (each != null)
+				addStaticDirectory(each);
+		}
 		return true;		
 	}
 	

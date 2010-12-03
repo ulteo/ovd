@@ -28,48 +28,57 @@
 #include <shlobj.h>
 #include "org_ulteo_ovd_integrated_WindowsPaths.h"
 
-BOOL getPath(DWORD csidl, LPSTR path) {
-    if (SHGetSpecialFolderPath(NULL, path, csidl, 0) == FALSE)
-        return FALSE;
-    return TRUE;
+DWORD getPath(DWORD csidl, LPSTR path) {
+    if (SHGetSpecialFolderPath(NULL, path, csidl, 0) == FALSE) {
+        return GetLastError();
+    }
+    return -1;
 }
 
 JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_nGetStartMenuPath(JNIEnv *env, jclass class) {
-    jstring ret = NULL;
     TCHAR path[MAX_PATH];
+    DWORD error = getPath(CSIDL_STARTMENU, path);
+    if (error > -1) {
+        printf("Failed to get StartMenu path: error %lu(0x%08lx)", error, error);
+        return NULL;
+    }
 
-    if (getPath(CSIDL_STARTMENU, path) == TRUE)
-        ret = (*env)->NewStringUTF(env, path);
     printf("StartMenu path: %s\n", path);
-    return ret;
+    return (*env)->NewStringUTF(env, path);
 }
 
 JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_nGetDesktopPath(JNIEnv *env, jclass class) {
-    jstring ret = NULL;
     TCHAR path[MAX_PATH];
+    DWORD error = getPath(CSIDL_DESKTOP, path);
+    if (error > -1) {
+        printf("Failed to get Desktop path: error %lu(0x%08lx)", error, error);
+        return NULL;
+    }
 
-    if (getPath(CSIDL_DESKTOP, path) == TRUE)
-        ret = (*env)->NewStringUTF(env, path);
     printf("Desktop path: %s\n", path);
-    return ret;
+    return (*env)->NewStringUTF(env, path);
 }
 
 JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_nGetAppDataPath(JNIEnv *env, jclass class) {
-    jstring ret = NULL;
     TCHAR path[MAX_PATH];
+    DWORD error = getPath(CSIDL_APPDATA, path);
+    if (error > -1) {
+        printf("Failed to get AppData path: error %lu(0x%08lx)", error, error);
+        return NULL;
+    }
 
-    if (getPath(CSIDL_APPDATA, path) == TRUE)
-        ret = (*env)->NewStringUTF(env, path);
     printf("AppData path: %s\n", path);
-    return ret;
+    return (*env)->NewStringUTF(env, path);
 }
 
 JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_nGetPersonalDataPath(JNIEnv *env, jclass class) {
-    jstring ret = NULL;
     TCHAR path[MAX_PATH];
+    DWORD error = getPath(CSIDL_PERSONAL, path);
+    if (error > -1) {
+        printf("Failed to get PersonalData path: error %lu(0x%08lx)", error, error);
+        return NULL;
+    }
 
-    if (getPath(CSIDL_PERSONAL, path) == TRUE)
-        ret = (*env)->NewStringUTF(env, path);
-    printf("PersonalData path: %s\n", path);
-    return ret;
+    printf("%dPersonalData path: %s\n", error, path);
+    return (*env)->NewStringUTF(env, path);
 }
