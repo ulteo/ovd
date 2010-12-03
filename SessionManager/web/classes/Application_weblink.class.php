@@ -58,7 +58,7 @@ class Application_weblink extends Application{
 	public function toXML($ApS=NULL) {
 		$list_attr = $this->getAttributesList();
 		foreach ($list_attr as $k => $v) {
-			if (in_array($v, array('executable_path', 'icon_path')))
+			if (in_array($v, array('executable_path')))
 				unset($list_attr[$k]);
 		}
 		
@@ -72,15 +72,11 @@ class Application_weblink extends Application{
 				if (!is_object($browser)) {
 					Logger::error('main', 'Application_weblink::toXML failed to load browser (id='.$browser_id.')');
 				}
-				else {
-					$this->attributes['icon_path'] = $browser->getAttribute('icon_path');
-				}
 			}
 		}
 		else {// ugly 
 			echo "is NOT object(ApS)\n";
 			$this->attributes['type'] = 'linux';
-			$this->attributes['icon_path'] = 'firefox';
 		}
 		
 		$dom = new DomDocument('1.0', 'utf-8');
@@ -89,8 +85,6 @@ class Application_weblink extends Application{
 
 		if ( $this->hasAttribute('executable_path'))
 			$executable_node->setAttribute('command', 'firefox '.$this->attributes['executable_path']); // executable_path <=> url
-		if ( $this->hasAttribute('icon_path'))
-			$executable_node->setAttribute('icon', $this->attributes['icon_path']);
 
 		foreach ($list_attr as $attr_name) {
 			$application_node->setAttribute($attr_name, $this->attributes[$attr_name]);

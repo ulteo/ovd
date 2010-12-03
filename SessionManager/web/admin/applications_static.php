@@ -178,7 +178,7 @@ function show_default($prefs, $applicationDB) {
 			echo '<input type="hidden" name="action" value="add" />';
 			$count = 0;
 			foreach ($applicationDB->minimun_attributes() as $attr_name) {
-				if (in_array($attr_name, array('type', 'package', 'desktopfile', 'icon_path' )))
+				if (in_array($attr_name, array('type', 'package', 'desktopfile')))
 					continue;
 				$content = 'content'.(($count++%2==0)?1:2);
 				echo '<tr class="'.$content.'">';
@@ -397,7 +397,7 @@ function show_manage($id, $applicationDB) {
 		$app->unsetAttribute('name');
 		$attr_list = $app->getAttributesList();
 		foreach ($attr_list as $k => $v) {
-			if (in_array($v, array('id', 'type', 'static', 'published', 'desktopfile', 'package', 'icon_path', 'revision')))
+			if (in_array($v, array('id', 'type', 'static', 'published', 'desktopfile', 'package', 'revision')))
 				unset($attr_list[$k]);
 		}
 

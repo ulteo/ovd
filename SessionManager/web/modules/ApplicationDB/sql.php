@@ -129,8 +129,6 @@ class ApplicationDB_sql extends ApplicationDB {
 		else{
 			if (!isset($row['package']))
 				$row['package'] = NULL;
-			if (!isset($row['icon_path']))
-				$row['icon_path'] = NULL;
 			if ( $row['type'] == 'weblink') {
 				$r = new Application_weblink($row['id'], $row['name'],$row['description'], $row['executable_path']);
 				
@@ -140,13 +138,12 @@ class ApplicationDB_sql extends ApplicationDB {
 				unset($row['type']);
 				unset($row['executable_path']);
 				unset($row['package']);
-				unset($row['icon_path']);
 				unset($row['desktopfile']);
 				unset($row['mimetypes']);
 				
 			}
 			else {
-				$r = new Application($row['id'], $row['name'],$row['description'], $row['type'], $row['executable_path'], $row['package'], $row['icon_path'], $row['mimetypes'], $row['published']);
+				$r = new Application($row['id'], $row['name'],$row['description'], $row['type'], $row['executable_path'], $row['package'], $row['mimetypes'], $row['published']);
 				
 			}
 			foreach ($row as $key => $value){
@@ -273,7 +270,6 @@ class ApplicationDB_sql extends ApplicationDB {
 			'description' => 'text NOT NULL',
 			'type' => 'text  NOT NULL',
 			'executable_path' => 'text NOT NULL',
-			'icon_path' => 'text default NULL',
 			'package' => 'text NOT NULL',
 			'desktopfile' => 'text default NULL',
 			'mimetypes' => 'text default NULL',
@@ -299,6 +295,6 @@ class ApplicationDB_sql extends ApplicationDB {
 	}
 
 	public function minimun_attributes() {
-		return array('name', 'description', 'type', 'executable_path', 'icon_path', 'package', 'desktopfile');
+		return array('name', 'description', 'type', 'executable_path', 'package', 'desktopfile');
 	}
 }

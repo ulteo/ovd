@@ -24,14 +24,13 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 class Application {
 	protected $attributes;
 
-	public function __construct($id_=NULL, $name_=NULL, $description_=NULL, $type_=NULL, $executable_path_=NULL, $package_=NULL, $icon_path_=NULL, $mimetypes_=NULL, $published_=true, $desktopfile_=NULL) {
+	public function __construct($id_=NULL, $name_=NULL, $description_=NULL, $type_=NULL, $executable_path_=NULL, $package_=NULL, $mimetypes_=NULL, $published_=true, $desktopfile_=NULL) {
 		$this->attributes = array();
 		$this->attributes['id'] = $id_;
 		$this->attributes['name'] = $name_;
 		$this->attributes['description'] = $description_;
 		$this->attributes['type'] = $type_;
 		$this->attributes['executable_path'] = $executable_path_;
-		$this->attributes['icon_path'] = $icon_path_;
 		$this->attributes['package'] = $package_;
 		$this->attributes['published'] = (bool)($published_);
 		$this->attributes['desktopfile'] = $desktopfile_;
@@ -123,7 +122,7 @@ class Application {
 	public function toXML($ApS=NULL) {
 		$list_attr = $this->getAttributesList();
 		foreach ($list_attr as $k => $v) {
-			if (in_array($v, array('executable_path', 'icon_path')))
+			if (in_array($v, array('executable_path')))
 				unset($list_attr[$k]);
 		}
 
@@ -133,8 +132,6 @@ class Application {
 
 		if ( $this->hasAttribute('executable_path'))
 			$executable_node->setAttribute('command', $this->attributes['executable_path']);
-		if ( $this->hasAttribute('icon_path'))
-			$executable_node->setAttribute('icon', $this->attributes['icon_path']);
 		if ( $this->hasAttribute('mimetypes'))
 			$executable_node->setAttribute('mimetypes', $this->attributes['mimetypes']);
 
