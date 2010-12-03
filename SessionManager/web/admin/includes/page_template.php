@@ -278,7 +278,7 @@ if (defined('SESSIONMANAGER_ADMIN_DEBUG') && ! isset($_SESSION['admin_ovd_user']
 	
 	$menu['checkup'] =
 		array('id' => 'checkup',
-			  'name' => 'Checkup database',
+			  'name' => 'Checkup',
 			  'page' => 'checkup.php',
 			  'parent' => array('debug'));
 }
