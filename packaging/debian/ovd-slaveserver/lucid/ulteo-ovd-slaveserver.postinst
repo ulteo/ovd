@@ -10,6 +10,8 @@ mkdir -p $LOGDIR
 make_conf() {
     db_get ulteo-ovd-slaveserver/session_manager && SM=$RET
     sed -i "s/^session_manager.*/session_manager = $SM/" $CONFDIR/slaveserver.conf
+
+#DEBHELPER#
 }
 
 case "$1" in
@@ -31,7 +33,5 @@ case "$1" in
         done
     ;;
 esac
-
-#DEBHELPER#
 
 exit 0
