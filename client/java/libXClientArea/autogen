@@ -1,14 +1,15 @@
 #!/bin/sh
 
-ARCHS="32 64"
-
 # for packaging
-for arch in $ARCHS; do
-    if schroot -l | grep lucid$arch; then
-        schroot -c lucid$arch -- make clean
-        schroot -c lucid$arch -- make STATIC=yes
-    fi
-done
+if which schroot > /dev/null;  then
+    ARCHS="32 64"
+    for arch in $ARCHS; do
+        if schroot -l | grep lucid$arch; then
+            schroot -c lucid$arch -- make clean
+            schroot -c lucid$arch -- make STATIC=yes
+        fi
+    done
+fi
 
 # for devs
 [ ! -f $(getconf LONG_BIT)/libXClientArea.so ] && make clean && make
