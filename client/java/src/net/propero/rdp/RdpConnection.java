@@ -462,6 +462,7 @@ public class RdpConnection implements SeamListener, Runnable{
 					}
 				} catch (Exception e) {
 					System.err.println("["+this.getServer()+"] An error occured: "+e.getClass().getName()+" "+e.getMessage());
+					e.printStackTrace();
 
 					this.keep_running = false;
 
