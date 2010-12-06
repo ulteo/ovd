@@ -200,12 +200,12 @@ class UserGroupDB_sql {
 		}
 		// first we delete liaisons
 		$sql2 = SQL::getInstance();
-		$liaisons = Abstract_Liaison::load('UsersGroupApplicationsGroup', $usergroup_->id, NULL);
+		$liaisons = Abstract_Liaison::load('UsersGroupApplicationsGroup', $usergroup_->getUniqueID(), NULL);
 		foreach ($liaisons as $liaison) {
 			Abstract_Liaison::delete('UsersGroupApplicationsGroup', $liaison->element, $liaison->group);
 		}
 		foreach ($liaisons as $liaison) {
-			Abstract_Liaison::delete('UsersGroup', NULL, $usergroup_->id);
+			Abstract_Liaison::delete('UsersGroup', NULL, $usergroup_->getUniqueID());
 		}
 		
 		// second we delete sharedfolder acls for the group
