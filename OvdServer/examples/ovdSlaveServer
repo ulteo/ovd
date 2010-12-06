@@ -3,6 +3,7 @@
 # http://www.ulteo.com
 # Author Gauvain POCENTEK <gauvain@ulteo.com> 2008
 # Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010
+# Author Samuel BOVEE <samuel@ulteo.com> 2010
 #
 # All rights reserved.
 ### BEGIN INIT INFO
@@ -20,6 +21,7 @@
 NAME="Ulteo OVD SlaveServer"
 PROGRAM=ulteo-ovd-slaveserver
 PIDFILE=/var/run/ovd-slaveserver.pid
+LOGS=/var/log/ulteo/ovd/slaveserver.log
 
 waitpid() {
 	local pid=$1
@@ -51,8 +53,8 @@ do_start () {
 		fi
 	fi
 	
-	$PROGRAM --daemonize --pid-file $PIDFILE > /dev/null 2>&1
-	log_end_msg 0
+	$PROGRAM --daemonize --pid-file $PIDFILE >>$LOGS 2>&1
+	log_end_msg $?
 }
 
 do_stop () {
@@ -79,7 +81,6 @@ do_stop () {
 		fi
 	fi
 	
-	
 	log_end_msg 0
 }
 
@@ -99,3 +100,4 @@ case $1 in
 		log_success_msg "Usage: $0 {start|stop|force-reload|restart}";;
 esac
 
+exit 0
