@@ -404,7 +404,7 @@ class Server {
 					$this->setAttribute('status', 'ready');
 				}
 
-				if (is_array($this->roles) && array_key_exists(Server::SERVER_ROLE_APS, $this->roles))
+				if ($this->getAttribute('registered') && is_array($this->roles) && array_key_exists(Server::SERVER_ROLE_APS, $this->roles))
 					$this->updateApplications();
 				break;
 			case 'down':
