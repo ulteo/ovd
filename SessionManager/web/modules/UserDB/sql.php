@@ -233,7 +233,7 @@ class UserDB_sql extends UserDB  {
 	}
 
 	public function getAttributesList() {
-		return array('login', 'displayname', 'homedir', 'fileserver', 'password');
+		return array('login', 'displayname', 'password');
 	}
 	
 	public function add($user_){
