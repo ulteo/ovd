@@ -2120,7 +2120,7 @@ msgstr "Créer ce dossier partagé"
 
 #: ../../SessionManager/web/admin/index.php:47
 msgid "Users and Users groups"
-msgstr "Utilisateurs et gourpes d'utilisateurs"
+msgstr "Utilisateurs et groupes d'utilisateurs"
 
 # 90%
 #: ../../SessionManager/web/admin/index.php:52
