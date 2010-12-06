@@ -353,8 +353,8 @@ class UserDB_sql extends UserDB  {
 			else
 				$pass = $password;
 			$user->setAttribute('password', $pass);
-			$user_on_db = $this->import($user->getAttribute('login'));
-			if (!is_object($user_on_db)) {
+			$user_on_db = $this->exists($user->getAttribute('login'));
+			if ($user_on_db === false) {
 				$ret = $this->add($user);
 				if ($ret !== true) {
 					Logger::error('main', 'UserDB::sql::populate failed to add user \''.$user->getAttribute('login').'\'');
