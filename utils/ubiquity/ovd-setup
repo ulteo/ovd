@@ -14,6 +14,8 @@ test $is_apt_install_direct || rm $apt_install_direct
 unset LANG
 eth=$(ifconfig | grep ^eth | head -n 1 | cut -d' ' -f1)
 if [ -n "$eth" ]; then
-    ip=$(ifconfig eth0 | sed  -rn '/inet addr/ {s/.*addr:(.*)  Bcast.*/\1/;p}')
+    ip=$(ifconfig $eth | sed -rn '/inet addr/ {s/.*addr:(.*)  Bcast.*/\1/;p}')
     [ -n "$ip" ] && sed -i "s/-------/${ip}/" /target/etc/issue
 fi
+
+exit 0
