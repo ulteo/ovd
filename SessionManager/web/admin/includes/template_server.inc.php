@@ -507,8 +507,8 @@ function server_display_role_fs($server_, $var_) {
 	
 	foreach ($datas as $k => $data) {
 		if (is_array($data['folder']) && count($data['folder']) > 0 && is_array($data['usedby'])) {
+			$mass_action = false;
 			if (count($data['folder']) > 1) {
-				$mass_action = false;
 				foreach ($data['folder'] as $a_networkfolder) {
 					if ($a_networkfolder->isUsed())
 						continue;
