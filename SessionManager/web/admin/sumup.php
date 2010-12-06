@@ -61,6 +61,7 @@ else{
 		echo '<tbody>';
 		$count = 0;
 		foreach($us as $u){
+			$session_settings_defaults = $u->getSessionSettings('session_settings_defaults');
 			echo '<tr class="content';
 			if ($count % 2 == 0)
 				echo '1';
@@ -133,7 +134,16 @@ else{
 			echo '</td>';
 			
 			echo '<td>';
-			$networkfolder_s = array_merge($u->getSharedFolders(), $u->getNetworkFolders());
+			$folders = array();
+			if (array_key_exists('enable_sharedfolders', $session_settings_defaults) && $session_settings_defaults['enable_sharedfolders'] == 1) {
+				$folders = $u->getSharedFolders();
+			}
+			$profiles = array();
+			if (array_key_exists('enable_profiles', $session_settings_defaults) && $session_settings_defaults['enable_profiles'] == 1) {
+				$profiles = $u->getNetworkFolders();
+			}
+			$networkfolder_s = array_merge($folders, $profiles);
+			
 			if (count($networkfolder_s) > 0) {
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
 				foreach ($networkfolder_s as $a_networkfolder) {
