@@ -12,7 +12,7 @@ A2SITESAVDIR=/etc/apache2/sites-available
 [ -z "$2" ] && ovd-slaveserver-role add FileServer
 
 # add user ovd-fs
-getent passwd ovd-fs >/dev/null || adduser --system --group --home $HOMEDIR ovd-fs 2> /dev/null
+getent passwd ovd-fs >/dev/null || adduser --system --group --home $HOMEDIR ovd-fs >/dev/null 2>&1
 usermod -G ovd-fs www-data >/dev/null
 chown ovd-fs:ovd-fs $HOMEDIR
 

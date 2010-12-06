@@ -2,17 +2,39 @@
 
 . /usr/share/debconf/confmodule
 
-CONFDIR=/etc/ulteo/ovd
-LOGDIR=/var/log/ulteo/ovd
+case "$1" in
 
-mkdir -p $LOGDIR
+    configure|reconfigure)
+        CONFDIR=/etc/ulteo/ovd
+        LOGDIR=/var/log/ulteo/ovd
 
-if [ "$1" = "configure" ] && [ -z "$2" ] || [ "$1" = "reconfigure" ]
-then
-    db_get ulteo-ovd-slaveserver/session_manager && SM=$RET
-    sed -i "s/^session_manager.*/session_manager = $SM/" $CONFDIR/slaveserver.conf
-fi
+        mkdir -p $LOGDIR
+        if [ -z "$2" ]; then
+            db_get ulteo-ovd-slaveserver/session_manager && SM=$RET
+            sed -i "s/^session_manager.*/session_manager = $SM/" $CONFDIR/slaveserver.conf
+        fi
+        #DEBHELPER#
+    ;;
 
-#DEBHELPER#
+    triggered)
+        for triggername in $2; do
+            case "$triggername" in
+                "slaveserver-restart")
+                    service ovdSlaveServer restart
+                ;;
+            esac
+        done
+    ;;
 
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+
+esac
+
+db_stop
 exit 0
