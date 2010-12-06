@@ -18,4 +18,10 @@ if [ -n "$eth" ]; then
     [ -n "$ip" ] && sed -i "s/-------/${ip}/" /target/etc/issue
 fi
 
+# add ulteo repository
+cat > /target/etc/apt/sources.list.d/ovd.list << EOF
+# OVD repository
+deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main
+EOF
+
 exit 0
