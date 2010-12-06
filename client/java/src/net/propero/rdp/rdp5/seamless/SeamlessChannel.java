@@ -47,7 +47,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.Hashtable;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
@@ -77,8 +77,8 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	
 	protected int seamlessSerial = 0;
 	
-    protected Hashtable<String, SeamlessWindow> windows;
-	protected Hashtable<String, Integer> stateOrdersHistory = null;
+	protected ConcurrentHashMap<String, SeamlessWindow> windows;
+	protected ConcurrentHashMap<String, Integer> stateOrdersHistory = null;
 	
 	protected static Logger logger = Logger.getLogger("net.propero.rdp");
 
@@ -89,8 +89,8 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	public SeamlessChannel(Options opt_, Common common_) {
 		super(opt_, common_);
 		logger.debug("Seamless Channel created");		
-		this.windows = new Hashtable<String, SeamlessWindow>();
-		this.stateOrdersHistory = new Hashtable<String, Integer>();
+		this.windows = new ConcurrentHashMap<String, SeamlessWindow>();
+		this.stateOrdersHistory = new ConcurrentHashMap<String, Integer>();
 	}
 	public void setMainFrame(Frame f_) {
 		this.main_window = f_;
