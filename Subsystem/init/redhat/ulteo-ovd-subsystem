@@ -2,11 +2,14 @@
 # Copyright (c) 2010 Ulteo SAS.
 #
 # Author: Julien LANGLOIS <julien@ulteo.com>
+#         Samuel BOVEE <samuel@ulteo.com>
 #
 ### BEGIN INIT INFO
 # Provides:          ulteo-ovd-subsystem
-# Required-Start: $network $remote_fs
-# Required-Stop: $network $remote_fs
+# Required-Start:    $local_fs $network
+# Required-Start:    $local_fs $network
+# Should-Start:      apache2
+# Should-Stop:       apache2
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Start Ulteo OVD subsystem
