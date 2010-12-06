@@ -218,17 +218,11 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 			unset($this->cache[$group_->id]);
 		}
 		// first we delete liaison
-		$sql2 = SQL::getInstance();
-		$liaisons = Abstract_Liaison::load('UsersGroupApplicationsGroup', NULL, $group_->id);
-		foreach ($liaisons as $liaison) {
-			Abstract_Liaison::delete('UsersGroupApplicationsGroup', $liaison->element, $liaison->group);
-		}
-		$liaisons = Abstract_Liaison::load('ApplicationServer', NULL, $group_->id);
-		foreach ($liaisons as $liaison) {
-			Abstract_Liaison::delete('ApplicationServer', $liaison->element, $liaison->group);
-		}
+		Abstract_Liaison::delete('UsersGroupApplicationsGroup', NULL, $group_->id);
+		Abstract_Liaison::delete('AppsGroup', NULL, $group_->id);
 		
 		// second we delete the group
+		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', $this->table, 'id', $group_->id);
 		return ($res !== false);
 	}
