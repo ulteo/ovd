@@ -68,7 +68,6 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 		if not SlaveServer.init(self):
 			Logger.error("Unable to initialize SlaveServer")
 			SlaveServer.stop(self)
-			self.ReportServiceStatus(win32service.SERVICE_STOPPED)
 			return
 		
 		self.ReportServiceStatus(win32service.SERVICE_RUNNING)
@@ -84,7 +83,6 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 			SlaveServer.stop(self)
 		
 		Logger.info("SlaveServer stopped")
-		self.ReportServiceStatus(win32service.SERVICE_STOPPED)
 	
 	def SvcStop(self):
 		Logger.info("Stopping SlaveServer")
