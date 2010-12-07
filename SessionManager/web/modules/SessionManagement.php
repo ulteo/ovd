@@ -44,13 +44,13 @@ abstract class SessionManagement extends Module {
 	public function __construct() {
 		$this->prefs = Preferences::getInstance();
 		if (! $this->prefs) {
-			Logger::critical('main', 'StartSession::__construct - get Preferences failed');
+			Logger::critical('main', 'SessionManagement::__construct - get Preferences failed');
 			throw_response(INTERNAL_ERROR);
 		}
 
 		$system_in_maintenance = $this->prefs->get('general', 'system_in_maintenance');
 		if ($system_in_maintenance == '1') {
-			Logger::error('main', 'StartSession::__construct - The system is on maintenance mode');
+			Logger::error('main', 'SessionManagement::__construct - The system is on maintenance mode');
 			throw_response(IN_MAINTENANCE);
 		}
 	}
