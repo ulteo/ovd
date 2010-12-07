@@ -625,12 +625,47 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 	public void run() {
 		this.isCancelled = false;
+		boolean valuesChecked = false;
 
-		if (this.launchConnection() || this.opts.autostart) {
-			this.continueMainThread = false;
+		if (! this.opts.autostart && this.authFrame != null) {
+			try {
+				this.getFormValuesFromGui();
+				valuesChecked = true;
+
+				this.getBackupEntries();
+			} catch (IllegalArgumentException ex) {
+				org.ulteo.Logger.warn(ex.getMessage());
+				JOptionPane.showMessageDialog(null, I18n._(ex.getMessage()), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE);
+			}
 		}
-		else {
-			this.authFrame.showWindow();
+
+		boolean exit = false;
+		if (valuesChecked) {
+			try {
+				exit = this.launchConnection();
+			} catch (IOException ex) {
+				org.ulteo.Logger.error(ex.getMessage());
+				JOptionPane.showMessageDialog(null, I18n._(ex.getMessage()), I18n._("Error!"), JOptionPane.WARNING_MESSAGE);
+
+				this.disableLoadingMode();
+			} catch (UnsupportedOperationException ex) {
+				org.ulteo.Logger.error(ex.getMessage());
+				JOptionPane.showMessageDialog(null, ex.getMessage(), I18n._("Error!"), JOptionPane.WARNING_MESSAGE);
+
+				this.disableLoadingMode();
+			} catch (SessionManagerException ex) {
+				String errormsg = I18n._("Unable to reach the Session Manager!");
+				org.ulteo.Logger.error(errormsg+": "+ex.getMessage());
+				JOptionPane.showMessageDialog(null, errormsg, I18n._("Error!"), JOptionPane.WARNING_MESSAGE);
+
+				this.disableLoadingMode();
+			}
+			
+			if (exit || this.opts.autostart) {
+				this.continueMainThread = false;
+			} else {
+				this.authFrame.showWindow();
+			}
 		}
 		this.thread = null;
 	}
@@ -693,7 +728,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.discFrame.setVisible(false);
 	}
 
-	public boolean getFormValuesFromGui() {
+	public void getFormValuesFromGui() throws IllegalArgumentException {
 		this.opts.username = this.authFrame.getLogin().getText();
 		this.opts.server = this.authFrame.getHost().getText();
 		this.opts.sessionMode =  Properties.MODE_ANY;
@@ -721,24 +756,17 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.authFrame.getPassword().setText("");
 		
 		if (this.opts.server.equals("")) {
-			JOptionPane.showMessageDialog(null, I18n._("You must specify the host field!"), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE);
-			this.disableLoadingMode();
-			return false;
+			throw new IllegalArgumentException(I18n._("You must specify the host field!"));
 		}
 		
 		if (this.opts.nltm == false) {
 			if (this.opts.username.equals("")) {
-				JOptionPane.showMessageDialog(null, I18n._("You must specify a username!"), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE);
-				this.disableLoadingMode();
-				return false;
+				throw new IllegalArgumentException(I18n._("You must specify a username!"));
 			}
 			if (this.opts.password.equals("")) {
-				JOptionPane.showMessageDialog(null, I18n._("You must specify a password!"), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE);
-				this.disableLoadingMode();
-				return false;
+				throw new IllegalArgumentException(I18n._("You must specify a password!"));
 			}
 		}
-		return true;
 	}
 	
 	public void getBackupEntries() {
@@ -751,15 +779,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		}
 	}
 	
-	public boolean launchConnection() {
-		boolean exit = false;
-
-		if (! this.opts.autostart) {
-			if (! this.getFormValuesFromGui())
-				return exit;
-			this.getBackupEntries();
-		}
-
+	public boolean launchConnection() throws IOException, UnsupportedOperationException, SessionManagerException {
 		if (this.opts.showProgressBar)
 			SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, true));
 
@@ -773,27 +793,14 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		request.setLang(this.opts.lang);
 		request.setTimeZone(Calendar.getInstance().getTimeZone().getID());
 
-		try {
-			boolean ret = false;
-			if (this.opts.nltm)
-				ret = dialog.askForSession(request);
-			else
-				ret = dialog.askForSession(this.opts.username, this.opts.password, request);
+		boolean ret = false;
+		if (this.opts.nltm)
+			ret = dialog.askForSession(request);
+		else
+			ret = dialog.askForSession(this.opts.username, this.opts.password, request);
 
-			if (ret == false) {
-				this.disableLoadingMode();
-				return exit;
-			}
-		} catch (SessionManagerException ex) {
-			System.err.println(ex.getMessage());
-
-			String errormsg = I18n._("Unable to reach the Session Manager!");
-			if (ex.getMessage().equals("Host is unreachable"))
-				errormsg = I18n._("Host is unreachable!");
-			JOptionPane.showMessageDialog(null, errormsg, I18n._("Warning!"), JOptionPane.WARNING_MESSAGE);
-
-			this.disableLoadingMode();
-			return exit;
+		if (ret == false) {
+			throw new IOException(I18n._("Failed to ask the session manager for a session"));
 		}
 		this.updateProgress(LoadingStatus.STATUS_SM_START, 0);
 		
@@ -803,11 +810,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		Properties response = dialog.getResponseProperties();
 		
 		if ((this.opts.sessionMode != Properties.MODE_ANY) && (response.getMode() != request.getMode())) {
-			this.disableLoadingMode();
-			JOptionPane.showMessageDialog(null, I18n._("Internal error: unsupported session mode"), I18n._("Error"), JOptionPane.WARNING_MESSAGE);
-			System.err.println("Error: No valid session mode received");
-
-			return exit;
+			throw new UnsupportedOperationException(I18n._("Internal error: Bad session mode return"));
 		}
 		
 		// Session timeout management
@@ -845,12 +848,11 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				this.client = new OvdClientPortal(dialog, response.getUsername(), this.opts.autopublish, response.isDesktopIcons(), this.opts.autostart, this);
 				break;
 			default:
-				JOptionPane.showMessageDialog(null, I18n._("Internal error: unsupported session mode"), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE);
-				this.disableLoadingMode();
-				return exit;
+				throw new UnsupportedOperationException(I18n._("Internal error: unsupported session mode"));
 		}
 		this.client.setKeymap(this.opts.keymap);
 
+		boolean exit = false;
 		if (! this.isCancelled) {
 			Runtime.getRuntime().addShutdownHook(new ShutdownTask(this.client));
 			exit = this.client.perform();
