@@ -2,6 +2,7 @@
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -20,6 +21,7 @@
 
 package org.ulteo.ovd.client.authInterface;
 
+import java.awt.AWTKeyStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -27,8 +29,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -36,6 +40,8 @@ import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -286,6 +292,18 @@ public class AuthFrame implements ActionListener, Runnable {
 		gbc.fill = GridBagConstraints.NONE;
 		mainFrame.add(startButton, gbc);
 		
+		this.initKeyActions();
+		
+		// Load the language strings
+		(new ChangeLanguage(this)).run();
+		
+		mainFrame.pack();
+		mainFrame.setLocationRelativeTo(null);
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.showWindow();
+	}
+
+	private void initKeyActions() {
 		KeyListener keyListener = new KeyListener() {
 
 			public synchronized void keyTyped(KeyEvent ke) {
@@ -299,18 +317,32 @@ public class AuthFrame implements ActionListener, Runnable {
 
 		};
 		for (Component c : this.mainFrame.getContentPane().getComponents()) {
-			if (c.getClass() != JLabel.class && c != this.startButton) {
-				c.addKeyListener(keyListener);
+			if (c.getClass() != JLabel.class) {
+				if (c != this.startButton) {
+					for (KeyListener each : c.getKeyListeners())
+						c.removeKeyListener(each);
+					c.addKeyListener(keyListener);
+				}
+				this.setFocusTraversalKeys(c);
 			}
 		}
-		
-		// Load the language strings
-		(new ChangeLanguage(this)).run();
-		
-		mainFrame.pack();
-		mainFrame.setLocationRelativeTo(null);
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.showWindow();
+	}
+
+	private void setFocusTraversalKeys(Component c) {
+		c.setFocusTraversalKeysEnabled(true);
+
+		AWTKeyStroke backward = AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK);
+		HashSet<AWTKeyStroke> backwardSet = new HashSet<AWTKeyStroke>();
+		backwardSet.add(backward);
+		c.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, backwardSet);
+
+		AWTKeyStroke forward = AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_TAB, 0);
+		HashSet<AWTKeyStroke> forwardSet = new HashSet<AWTKeyStroke>();
+		forwardSet.add(forward);
+		c.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, forwardSet);
+
+		c.setFocusTraversalKeys(KeyboardFocusManager.DOWN_CYCLE_TRAVERSAL_KEYS, Collections.EMPTY_SET);
+		c.setFocusTraversalKeys(KeyboardFocusManager.UP_CYCLE_TRAVERSAL_KEYS, Collections.EMPTY_SET);
 	}
 
 	private void startJob(int job) {
@@ -367,6 +399,7 @@ public class AuthFrame implements ActionListener, Runnable {
 						org.ulteo.Logger.error("Failed to remove more options components: "+ex.getMessage());
 					}
 				}
+				this.initKeyActions();
 				break;
 			case JOB_START:
 				this.startButtonClicked = true;
