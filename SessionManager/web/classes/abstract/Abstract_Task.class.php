@@ -92,7 +92,7 @@ class Abstract_Task {
 		$id = $task_->id;
 
 		if (! Abstract_Task::exists($id)) {
-			Logger::info('main', "Abstract_Task::save($task_) task does NOT exist, we must create it");
+			Logger::debug('main', "Abstract_Task::save($task_) task does NOT exist, we must create it");
 
 			if (! Abstract_Task::create($task_)) {
 				Logger::error('main', "Abstract_Task::save($task_) Abstract_Task::create failed");

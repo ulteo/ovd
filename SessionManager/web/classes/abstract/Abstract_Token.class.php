@@ -88,7 +88,7 @@ class Abstract_Token {
 		$id = $token_->id;
 
 		if (! Abstract_Token::exists($id)) {
-			Logger::info('main', "Abstract_Token::save($token_) token does NOT exist, we must create it");
+			Logger::debug('main', "Abstract_Token::save($token_) token does NOT exist, we must create it");
 
 			if (! Abstract_Token::create($token_)) {
 				Logger::error('main', "Abstract_Token::save($token_) Abstract_Token::create failed");

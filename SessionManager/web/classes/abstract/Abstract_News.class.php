@@ -74,7 +74,7 @@ class Abstract_News {
 		$id = $news_->id;
 
 		if (! Abstract_News::load($id)) {
-			Logger::info('main', "Abstract_News::save($news_) unable to load news, we must create it");
+			Logger::debug('main', "Abstract_News::save($news_) unable to load news, we must create it");
 
 			$id = Abstract_News::create($news_);
 			if (! $id) {

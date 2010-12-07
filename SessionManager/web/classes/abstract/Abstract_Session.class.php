@@ -96,7 +96,7 @@ class Abstract_Session {
 		$id = $session_->id;
 
 		if (! Abstract_Session::exists($id)) {
-			Logger::info('main', "Abstract_Session::save($session_) session does NOT exist, we must create it");
+			Logger::debug('main', "Abstract_Session::save($session_) session does NOT exist, we must create it");
 
 			if (! Abstract_Session::create($session_)) {
 				Logger::error('main', "Abstract_Session::save($session_) failed to create session");
