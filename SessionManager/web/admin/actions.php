@@ -1035,12 +1035,10 @@ if ($_REQUEST['name'] == 'SharedFolder_ACL') {
 
 	if ($_REQUEST['action'] == 'add' && isset($_REQUEST['sharedfolder_id']) && isset($_REQUEST['usergroup_id'])) {
 		action_add_sharedfolder_acl($_REQUEST['sharedfolder_id'], $_REQUEST['usergroup_id']);
-		popup_info(_('Shared folder successfully modified'));
 		redirect();
 	}
 	elseif ($_REQUEST['action'] == 'del' && isset($_REQUEST['sharedfolder_id']) && isset($_REQUEST['usergroup_id'])) {
 		action_del_sharedfolder_acl($_REQUEST['sharedfolder_id'], $_REQUEST['usergroup_id']);
-		popup_info(_('Shared folder successfully modified'));
 		redirect();
 	}
 }
@@ -1444,10 +1442,14 @@ function action_add_sharedfolder_acl($sharedfolder_id_, $usergroup_id_) {
 	}
 	
 	$ret = $sharedfolder->addUserGroup($group);
-	if ($ret === true)
+	if ($ret === true) {
 		popup_info(_('Shared folder successfully modified'));
-	
-	return true;
+		return true;
+	}
+	else {
+		popup_error(sprintf(_("Unable to modify shared folder named '%s'"), $sharedfolder->name));
+		return false;
+	}
 }
 
 function action_del_sharedfolder_acl($sharedfolder_id_, $usergroup_id_) {
@@ -1465,9 +1467,14 @@ function action_del_sharedfolder_acl($sharedfolder_id_, $usergroup_id_) {
 	}
 	
 	$ret = $sharedfolder->delUserGroup($group);
-	if ($ret === true)
+	if ($ret === true) {
 		popup_info(_('Shared folder successfully modified'));
-	return true;
+		return true;
+	}
+	else {
+		popup_error(sprintf(_("Unable to modify shared folder named '%s'"), $sharedfolder->name));
+		return false;
+	}
 }
 
 redirect();
