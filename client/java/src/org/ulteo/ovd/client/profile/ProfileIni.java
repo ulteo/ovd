@@ -189,27 +189,28 @@ public class ProfileIni extends Profile {
 		
 		value = ini.get(INI_SECTION_SCREEN, FIELD_SCREENSIZE);
 		if (value != null) {
-			int pos = value.indexOf("x");
-
-			if (pos != -1 && value.lastIndexOf("x") == pos) {
-				try {
-					Dimension dim = new Dimension();
-					dim.width = Integer.parseInt(value.substring(0, pos));
-					dim.height = Integer.parseInt(value.substring(pos + 1, value.length()));
-
-					properties.setScreenSize(dim);
-				} catch (NumberFormatException ex) {
-					Logger.error("Failed to parse screen size value: '"+value+"'");
-				}
-			}
-			else if (value.equalsIgnoreCase(VALUE_MAXIMIZED)) {
+			if (value.equalsIgnoreCase(VALUE_MAXIMIZED)) {
 				properties.setScreenSize(DesktopFrame.MAXIMISED);
 			}
 			else if (value.equalsIgnoreCase(VALUE_FULLSCREEN)) {
 				properties.setScreenSize(DesktopFrame.FULLSCREEN);
 			}
 			else {
-				Logger.error("Failed to parse screen size value: '"+value+"'");
+				int pos = value.indexOf("x");
+				if (pos != -1 && value.lastIndexOf("x") == pos) {
+					Dimension dim = new Dimension();
+					try {
+						dim.width = Integer.parseInt(value.substring(0, pos));
+						dim.height = Integer.parseInt(value.substring(pos + 1, value.length()));
+
+						properties.setScreenSize(dim);
+					} catch (NumberFormatException ex) {
+						Logger.error("Failed to parse screen size value: '"+value+"'");
+					}
+				}
+				else {
+					Logger.error("Bad screen size value: '"+value+"'");
+				}
 			}
 		}
 		

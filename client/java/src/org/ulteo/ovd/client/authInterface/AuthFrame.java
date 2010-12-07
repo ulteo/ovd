@@ -572,10 +572,12 @@ public class AuthFrame implements ActionListener, Runnable {
 		if (res != null) {
 			boolean resFound = false;
 			for (Dimension d : defaultRes) {
-				if (d.width == res.width && d.height == res.height)
+				if (d.equals(res)) {
 					resFound = true;
+					break;
+				}
 			}
-			if (! resFound)
+			if (! resFound && ! res.equals(DesktopFrame.FULLSCREEN) && ! res.equals(DesktopFrame.MAXIMISED))
 				defaultRes.add(res);
 		}
 
@@ -595,8 +597,9 @@ public class AuthFrame implements ActionListener, Runnable {
 				Logger.error("resolutions["+i+"] is null: it should never appear");
 			}
 
-			if (resolutions[i] == res)
+			if (resolutions[i].equals(res)) {
 				position = i;
+			}
 
 			defaultRes.remove(tmp);
 		}
@@ -604,7 +607,14 @@ public class AuthFrame implements ActionListener, Runnable {
 		defaultRes = null;
 
 		int sliderLength = resolutions.length + 2; // resolutions.length + 2 (Maximized + Fullscreen)
-
+		
+		if (res != null) {
+			if (res.equals(DesktopFrame.FULLSCREEN))
+				position = sliderLength - 1;
+			else if (res.equals(DesktopFrame.MAXIMISED))
+				position = sliderLength - 2;
+		}
+		
 		this.resBar = new JSlider(JSlider.HORIZONTAL, 0, sliderLength - 1, position);
 		this.resBar.setMajorTickSpacing(1);
 		this.resBar.setPaintTicks(true);
