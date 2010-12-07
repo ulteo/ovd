@@ -217,7 +217,6 @@ if (in_array(false, $PHP_modules)) {
 
 echo '<h2>'._('Liaisons').'</h2>';
 
-$liaisons_types = array('ApplicationServer', 'AppsGroup', 'ServerSession', 'UserGroupNetworkFolder', 'UserNetworkFolder', 'UsersGroup', 'UsersGroupApplicationsGroup', 'UsersGroupCached');
 foreach ($liaisons_types as $liaisons_type) {
 	$liaisons = Abstract_Liaison::load($liaisons_type, NULL, NULL);
 	if (is_null($liaisons))
