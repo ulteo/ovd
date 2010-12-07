@@ -68,7 +68,7 @@ public class DiskUpdater extends TimerTask {
 			logger.debug("Share path : "+sharePath);
 			if (! diskManager.testDir(sharePath)) {
 				logger.debug("Unmount : "+sharePath);
-				diskManager.unmount(device.get_local_path());
+				diskManager.unmount(device.get_name(), device.get_local_path());
 			}
 		}
 

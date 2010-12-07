@@ -128,15 +128,6 @@ public abstract class DiskManager {
 
 	
 	/**************************************************************************/
-	public boolean unmount(String sharePath) {
-		String shareName = getShareName(sharePath);
-		if (shareName.equals("")) {
-			return false;
-		}
-		return rdpdrChannel.unmountDrive(shareName, sharePath);
-	}
-
-	/**************************************************************************/
 	public boolean unmount(String shareName, String sharePath) {
 		if (shareName.equals("")) {
 			return false;
