@@ -22,17 +22,74 @@ require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
 Logger::debug('main', 'Starting ajax/installable_applications.php');
 
-if (! isset($_GET['fqdn'])) {
-	Logger::error('main', '(ajax/installable_applications) Missing parameter : fqdn');
-	die('ERROR - NO $_GET[\'fqdn\']');
+if (isset($_REQUEST['task']))
+	do_refresh_task($_REQUEST['task']);
+elseif (isset($_GET['fqdn']))
+	do_create_task($_GET['fqdn']);
+else {
+	Logger::error('main', '(ajax/installable_applications) Missing parameter : fqdn or task');
+	die('ERROR - NO $_GET[\'fqdn\'] or $_GET[\'task\']');
 }
 
-$server = Abstract_Server::load($_GET['fqdn']);
-if (! is_object($server)) {
-	Logger::error('main', '(ajax/installable_applications) Server '.$_GET['fqdn'].' not found');
-	die('Server not found');
+function do_create_task($fqdn_) {
+	$server = Abstract_Server::load($fqdn_);
+	if (! is_object($server)) {
+		Logger::error('main', '(ajax/installable_applications) Server '.$fqdn_.' not found');
+
+		header('Content-Type: text/xml; charset=utf-8');
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$node = $dom->createElement('usage');
+		$node->setAttribute('status', 'server not found');
+		$dom->appendChild($node);
+
+		die($dom->saveXML());
+	}
+	
+	$task = new Task_available_applications('', $fqdn_);
+	$manager = new Tasks_Manager();
+	$manager->add($task);
+	
+	header('Content-Type: text/xml; charset=utf-8');
+	$dom = new DomDocument('1.0', 'utf-8');
+
+	$node = $dom->createElement('task');
+	$node->setAttribute('id', $task->id);
+	$dom->appendChild($node);
+
+	die($dom->saveXML());
 }
 
-header('Content-Type: text/xml; charset=utf-8');
+function do_refresh_task($task_id_) {
+	$task = Abstract_Task::load($task_id_);
+	if (! is_object($task)) {
+		Logger::error('main', '(ajax/installable_applications) Task '.$task_id_.' not found');
 
-echo $server->getInstallableApplications();
+		header('Content-Type: text/xml; charset=utf-8');
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$node = $dom->createElement('usage');
+		$node->setAttribute('status', 'task not found');
+		$dom->appendChild($node);
+
+		die($dom->saveXML());
+	}
+	
+	$task->refresh();
+	
+	if (! $task->succeed()) {
+		header('Content-Type: text/xml; charset=utf-8');
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$node = $dom->createElement('task');
+		$node->setAttribute('status', $task->status);
+		$dom->appendChild($node);
+
+		die($dom->saveXML());
+	}
+
+	$ret = $task->get_AllInfos();
+
+	header('Content-Type: text/xml; charset=utf-8');
+	die($ret['stdout']);
+}

@@ -162,6 +162,9 @@ class Abstract_Task {
 			case 'remove':
 				$buf = new Task_remove((string)$id, (string)$server, unserialize($applications));
 				break;
+			case 'available':
+				$buf = new Task_available_applications((string)$id, (string)$server);
+				break;
 		}
 		$buf->type = (string)$type;
 		$buf->job_id = (string)$job_id;

@@ -19,9 +19,13 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import commands
+import glob
 import os
+import ConfigParser
 from Queue import Queue
 from threading import Thread
+from xml.dom import minidom
+from xml.dom.minidom import Document
 
 from ovd.Logger import Logger
 
@@ -31,6 +35,7 @@ class Apt(Thread):
 		
 		self.directory = "/var/spool/ulteo/ovd/apt"
 		self.queue = Queue()
+		self.requests = {}
 		
 		self.i = 0
 	
@@ -42,38 +47,68 @@ class Apt(Thread):
 			s,o = commands.getstatusoutput("rm -rf %s/*"%(self.directory))
 	
 	
-	def pushRequest(self, request):
-		self.queue.put(request)
-	
-	
-	def createRequest(self):
-		request = {}
-		request["id"] = str(self.i)
-		os.mkdir(self.directory+"/"+request["id"])
+	def add(self, request):
+		rid = str(self.i)
 		self.i+= 1
 		
-		return request
+		request.init(os.path.join(self.directory, rid))
+		self.requests[rid] = request
+		self.queue.put(request)
+		
+		return rid
 	
-	def getRequestStatus(self, rid):
-		d = self.directory+"/"+rid
-		if not os.path.exists(d):
-			return "unknown"
-		
-		f = d+"/status"
-		if not os.path.exists(f):
-			return "in progress"
-		
-		f = file(f, "r")
-		buf = f.read().strip()
-		f.close()
-		
-		if buf != "0":
-			return "error"
-		
-		return "success"
 	
-	def getRequestLog(self, rid, log):
-		f = self.directory+"/"+rid+"/"+log
+	def get(self, rid):
+		try:
+			return self.requests[rid]
+		except KeyError, err:
+			pass
+		return None
+	
+	
+	def run(self):
+		while True:
+			request = self.queue.get()
+			print "perform request: ",request
+			request.status = "in progress"
+			ret = request.perform()
+			if not ret:
+				request.status = "error"
+				Logger.error("Apt error on request: "+str(request))
+			else:
+				request.status = "success"
+				Logger.debug("Apt finish request succefully")
+
+
+
+class Request:
+	def __init__(self):
+		self.directory = None
+		self.status = "created"
+	
+	def getStatus(self):
+		return self.status
+	
+	def init(self, directory_):
+		self.directory = directory_
+	
+	def perform(self):
+		raise NotImplementedError();
+	
+	def getLog(self, log):
+		raise NotImplementedError();
+	
+
+
+class Request_Packages(Request):
+	def __init__(self, order_, packages_):
+		Request.__init__(self)
+		self.order = order_
+		self.packages = packages_
+	
+	
+	def getLog(self, log):
+		f = self.directory+"/"+log
 		if not os.path.exists(f):
 			return None
 		
@@ -83,46 +118,101 @@ class Apt(Thread):
 		
 		return buf
 	
-	
-	def run(self):
-		while True:
-			request = self.queue.get()
-			print "perform request: ",request
-			
-			if request["order"] == "upgrade":
-				command = "dist-upgrade"
-			
-			elif request["order"] == "install":
-				command = "install "+" ".join(request["packages"])
-			
-			elif request["order"] == "remove":
-				command = "autoremove --purge "+" ".join(request["packages"])
-			
-			ret = self.perform(request, command)
-			if not ret:
-				Logger.error("Apt error on request: "+str(request))
-			else:
-				Logger.debug("Apt finish request succefully")
-	
-	
-	def perform(self, request, command):
-		d = os.path.join(self.directory, request["id"])
+	def perform(self):
+		os.mkdir(self.directory)
+		if self.order == "upgrade":
+			command = "dist-upgrade"
+		elif self.order == "install":
+			command = "install "+" ".join(self.packages)
+		elif self.order == "remove":
+			command = "autoremove --purge "+" ".join(self.packages)
 		
-		cmd = "apt-get update >>%s/stdout 2>>%s/stderr"%(d, d)
+		cmd = "apt-get update >>%s/stdout 2>>%s/stderr"%(self.directory, self.directory)
 		ret,o = commands.getstatusoutput(cmd)
 		if ret != 0:
-			f = file("%s/status"%(d), "w")
-			f.write(str(ret))
-			f.close()
 			return False
 		
-		cmd = "DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical DEBCONF_NONINTERACTIVE_SEEN=true apt-get --yes --force-yes %s >>%s/stdout 2>>%s/stderr"%(command, d, d)
+		cmd = "DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical DEBCONF_NONINTERACTIVE_SEEN=true apt-get --yes --force-yes %s >>%s/stdout 2>>%s/stderr"%(command, self.directory, self.directory)
 		ret, o = commands.getstatusoutput(cmd)
 		if ret != 0:
-		#	Logger.error(...)
 			return False
-			
-		f= file("%s/status"%(d), "w")
-		f.write(str(ret))
-		f.close()
+		
 		return True
+
+		
+class Request_Available(Request):
+	def __init__(self):
+		Request.__init__(self)
+		self.applications = None
+	
+	
+	def perform(self):
+		ban_categories = [' ', 'GTK', 'GNOME', 'Qt', 'KDE', 'X-KDE-More', 'TextEditor', 'Core', 'X-KDE-Utilities-PIM', 'X-KDE-settings-sound', 'X-Ximian-Main', 'X-Novell-Main', 'X-Red-Hat-Base', 'Gtk', 'X-GGZ', 'X-KDE-settings-components', 'X-KDE-settings-hardware', 'X-Fedora', 'X-Red-Hat-Extra', 'X-GNOME-SystemSettings', 'X-GNOME-NetworkSettings', 'X-KDE-Utilities-Desktop', 'X-KDE-systemsettings-network', 'X-KDE-settings-security', 'X-KDE-settings-webbrowsing', 'X-KDE-information', 'X-KDE-settings-system', 'X-KDE-settings-accessibility', 'X-KDE-settings-peripherals', 'X-KDE-KDevelopIDE', 'X-KDE-systemsettings-lookandfeel-appearance', 'X-KDE-Edu-Language', 'X-KDE-settings-desktop', 'X-KDE-settings-looknfeel', 'X-KDE-Edu-Misc', 'X-KDE-settings-power', 'X-GNOME-PersonalSettings', 'X-SuSE-Sequencer', 'QT', 'X-Red-Hat-ServerConfig', 'X-Debian-Games-Arcade', 'X-SuSE-Core-System', 'X-KDE-systemsettings-advancedadministration', 'X-SuSE-Core-Game']
+		applications = {}
+		desktop_files = glob.glob("/usr/share/app-install/desktop/*.desktop")
+		
+		for a_desktop_file in desktop_files:
+			parser = ConfigParser.ConfigParser()
+			try:
+				parser.read(a_desktop_file)
+			except ConfigParser.MissingSectionHeaderError:
+				continue
+			
+			if not parser.has_section('Desktop Entry'):
+				continue
+			
+			if not parser.has_option('Desktop Entry', 'Type'):
+				continue
+			if not parser.get('Desktop Entry','Type') == "Application":
+				# the spec define three type: Application, Link and
+				# Directory
+				continue
+		
+			if not parser.has_option('Desktop Entry', "Name"):
+				continue
+			
+			if not parser.has_option('Desktop Entry', "Categories"):
+				continue
+			
+			if not parser.has_option('Desktop Entry', "X-AppInstall-Package"):
+				continue
+	
+			name = parser.get('Desktop Entry', "Name")
+			categories = parser.get('Desktop Entry', "Categories")
+			package = parser.get('Desktop Entry', "X-AppInstall-Package")
+			
+			cats = categories.split(";")
+			cat = "Others"
+			for c in cats:
+				if c not in ban_categories:
+					cat = c
+					break
+			
+			if not applications.has_key(cat):
+				applications[cat] = {}
+			
+			applications[cat][name]= package
+		
+		self.applications = applications
+		return True
+	
+	
+	def getLog(self, log):
+		if self.applications is None:
+			return ""
+		
+		doc = Document()
+		categories_node = doc.createElement('categories')
+				
+		for category in self.applications.keys():
+			category_node = doc.createElement("category")
+			category_node.setAttribute("name", category)
+			for (name, package) in self.applications[category].items():
+				application_node = doc.createElement("application")
+				application_node.setAttribute("name", name)
+				application_node.setAttribute("package", package)
+				category_node.appendChild(application_node)
+			
+			categories_node.appendChild(category_node)
+		
+		return categories_node.toxml()

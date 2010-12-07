@@ -27,6 +27,7 @@ from ovd.Logger import Logger
 from ovd import util
 from ovd.Communication.Dialog import Dialog as AbstractDialog
 
+import Apt
 from Platform import Platform
 
 class Dialog(AbstractDialog):
@@ -455,7 +456,7 @@ class Dialog(AbstractDialog):
 				raise Exception("invalid root node")
 			
 			request = rootNode.getAttribute("request")
-			if request not in ["upgrade", "install", "remove"]:
+			if request not in ["upgrade", "install", "remove", "available"]:
 				raise Exception("usage")
 			
 			packageNodes = rootNode.getElementsByTagName("package")
@@ -474,29 +475,33 @@ class Dialog(AbstractDialog):
 			doc.appendChild(rootNode)
 			return self.req_answer(doc)
 		
+		if request == "available":
+			req = Apt.Request_Available()
+		else:
+			req = Apt.Request_Packages(request, packages)
 		
-		deb_req = self.role_instance.apt.createRequest()
-		deb_req["order"] = request
-		deb_req["packages"] = packages
+		req_id = self.role_instance.apt.add(req)
 		
-		self.role_instance.apt.pushRequest(deb_req)
-		
-		return self.req_answer(self.debian_request2xml(deb_req["id"], "created"))
+		return self.req_answer(self.debian_request2xml(req_id, req))
 	
 		
 	def req_debian_id(self, req):
 		try:
 			(rid, request) = req.split("/", 2)
+			req = self.role_instance.apt.get(rid)
+			if req is None:
+				req = Apt.Request()
+				req.status = "unknown"
+				return self.req_answer(self.debian_request2xml(rid, req))
 			
 			if request == "status":
-				status = self.role_instance.apt.getRequestStatus(rid)
-				return self.req_answer(self.debian_request2xml(rid, status))
+				return self.req_answer(self.debian_request2xml(rid, req))
 			
 			elif request in ["stdout", "stderr"]:
 				response = {}
 				response["code"] = httplib.OK
 				response["Content-Type"] = "text/plain"
-				response["data"] = self.role_instance.apt.getRequestLog(rid, request)
+				response["data"] = req.getLog(request)
 				return response
 			
 			else:
@@ -522,11 +527,11 @@ class Dialog(AbstractDialog):
 	
 	
 	@staticmethod
-	def debian_request2xml(rid, status):
+	def debian_request2xml(rid, request):
 		doc = Document()
 		rootNode = doc.createElement('debian_request')
 		rootNode.setAttribute("id", rid)
-		rootNode.setAttribute("status", status)
+		rootNode.setAttribute("status", request.getStatus())
 		doc.appendChild(rootNode)
 		
 		return doc

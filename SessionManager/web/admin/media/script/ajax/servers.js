@@ -35,9 +35,54 @@ function fetchInstallableApplicationsList(fqdn_) {
 				var xml = transport.responseXML;
 				var list = {};
 				
+				if (xml.documentElement.nodeName != "task") {
+					InstallableApplicationsError();
+					return;
+				}
+				
+				try {
+					var id = xml.documentElement.getAttribute("id");
+				} catch(err) {
+					InstallableApplicationsError();
+					return;
+				}
+				
+				setTimeout(function() {
+					InstallableApplicationsWait(id);
+				}, 2000);
+			},
+			onFailure: function(transport) {
+				InstallableApplicationsError();
+				
+			}
+		}
+	);
+}
+
+
+function InstallableApplicationsWait(task) {
+	new Ajax.Request(
+		'ajax/installable_applications.php',
+		{
+			method: 'get',
+			parameters: {
+				task: task
+			},
+			onSuccess: function(transport) {
+				var xml = transport.responseXML;
+				
+				if (xml.documentElement.nodeName == "task") {
+					setTimeout(function() {
+						InstallableApplicationsWait(task);
+					}, 2000);
+					return;
+				}
+				
+				var list = {};
+				
 				buffer = xml.getElementsByTagName('categories');
 				if (buffer.length != 1) {
-					$('installableApplicationsList_content').innerHTML = '<br /><img src="media/image/error.png" width="16" height="16" alt="" title=""> Internal error<br />';
+					InstallableApplicationsError();
 					return;
 				}
 				
@@ -45,7 +90,7 @@ function fetchInstallableApplicationsList(fqdn_) {
 				
 				categories = buffer.getElementsByTagName('category');
 				if (categories.length < 1) {
-					$('installableApplicationsList_content').innerHTML = '<br /><img src="media/image/error.png" width="16" height="16" alt="" title="">  No installable application found<br />';
+					InstallableApplicationsError();
 					return;
 				}
 				
@@ -75,6 +120,12 @@ function fetchInstallableApplicationsList(fqdn_) {
 		}
 	);
 }
+
+
+function InstallableApplicationsError() {
+	$('installableApplicationsList_content').innerHTML = '<br /><img src="media/image/error.png" width="16" height="16" alt="" title=""> Internal error<br />';
+}
+
 
 function InstallableApplicationsInitList() {
 	var buffer = '';
