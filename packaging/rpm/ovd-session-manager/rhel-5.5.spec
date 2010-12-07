@@ -110,9 +110,9 @@ if [ "$1" = "0" ]; then
           $A2CONFDIR/ovd-admin.conf
     rm -f $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
     rm -f /etc/cron.hourly/sessionmanager
-    rm -rf /var/spool/ulteo/sessionmanager \
-           /var/cache/ulteo/sessionmanager \
-           /var/log/ulteo/sessionmanager
+    rm -rf /var/spool/ulteo/sessionmanager/* \
+           /var/cache/ulteo/sessionmanager/* \
+           /var/log/ulteo/sessionmanager/*
 
     if apachectl configtest 2>/dev/null; then
         service apache2 restart || true

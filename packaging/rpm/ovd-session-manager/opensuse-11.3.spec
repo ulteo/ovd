@@ -111,20 +111,23 @@ sed -i "s/@APACHE_USER@/${A2USER}/" $CONFDIR/sessionmanager.cron
 ln -sfT $CONFDIR/sessionmanager.cron /etc/cron.d/sessionmanager
 
 %postun -n ulteo-ovd-session-manager
-A2CONFDIR=/etc/apache2/conf.d
-CONFDIR=/etc/ulteo/sessionmanager
-rm -f $A2CONFDIR/sessionmanager-vhost-server.conf
-rm -f $A2CONFDIR/sessionmanager-vhost-ssl.conf
-rm -f $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
-rm -rf /var/spool/ulteo/sessionmanager \
-       /var/cache/ulteo/sessionmanager \
-       /var/log/ulteo/sessionmanager
+if [ "$1" = "0" ]; then
+    A2CONFDIR=/etc/apache2/conf.d
+    CONFDIR=/etc/ulteo/sessionmanager
+    rm -f $A2CONFDIR/sessionmanager-vhost-server.conf \
+          $A2CONFDIR/sessionmanager-vhost-ssl.conf \
+          $A2CONFDIR/ovd-admin.conf
+    rm -f $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+    rm -f /etc/cron.hourly/sessionmanager
+    rm -rf /var/spool/ulteo/sessionmanager/* \
+           /var/cache/ulteo/sessionmanager/* \
+           /var/log/ulteo/sessionmanager/*
 
-# restart apache2
-if apache2ctl configtest 2>/dev/null; then
-    service apache2 restart || true
-else
-    echo "Apache configuration broken: correct the issue and restart the apache2 server"
+    if apache2ctl configtest 2>/dev/null; then
+        service apache2 restart || true
+    else
+        echo "Apache configuration broken: correct the issue and restart the apache2 server"
+    fi
 fi
 
 %clean -n ulteo-ovd-session-manager
