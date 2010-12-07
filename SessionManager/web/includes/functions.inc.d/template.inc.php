@@ -38,7 +38,7 @@ function die_error($error_=false, $file_=NULL, $line_=NULL, $display_=false) {
 
 	$file_ = substr(str_replace(SESSIONMANAGER_ROOT, '', $file_), 1);
 
-	Logger::error('main', 'die_error() called with message \''.$error_.'\' in '.$file_.':'.$line_);
+	Logger::critical('main', 'die_error() called with message \''.$error_.'\' in '.$file_.':'.$line_);
 
 	header('Content-Type: text/xml; charset=utf-8');
 
