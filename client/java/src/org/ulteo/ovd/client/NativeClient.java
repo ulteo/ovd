@@ -535,18 +535,22 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.init();
 
 		if (! this.opts.autostart) {
-			this.authFrame = new AuthFrame(this, this.opts.geometry);
-			this.authFrame.getLanguageBox().addActionListener(this);
-			this.loadOptions();
-			this.authFrame.setRememberMeChecked((this.flags & NativeClient.FLAG_OPTION_REMEMBER_ME) != 0);
-			this.authFrame.showWindow();
-			this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
+			this.initAuthFrame();
 		}
 	}
 	
 	public void init() {
 		this.loadingFrame = new LoadingFrame(this);
 		this.discFrame = new DisconnectionFrame();
+	}
+
+	private void initAuthFrame() {
+		this.authFrame = new AuthFrame(this, this.opts.geometry);
+		this.authFrame.getLanguageBox().addActionListener(this);
+		this.loadOptions();
+		this.authFrame.setRememberMeChecked((this.flags & NativeClient.FLAG_OPTION_REMEMBER_ME) != 0);
+		this.authFrame.showWindow();
+		this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
 	}
 
 	private void loadOptions() {
@@ -641,6 +645,9 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 		boolean exit = false;
 		if (valuesChecked) {
+			this.authFrame.hideWindow();
+			this.authFrame = null;
+			
 			try {
 				exit = this.launchConnection();
 			} catch (IOException ex) {
@@ -664,8 +671,11 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			if (exit || this.opts.autostart) {
 				this.continueMainThread = false;
 			} else {
-				this.authFrame.showWindow();
+				this.initAuthFrame();
 			}
+		}
+		else {
+			this.authFrame.reset();
 		}
 		this.thread = null;
 	}
@@ -942,8 +952,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	public void sessionConnected() {
 		if ((this.loadingFrame != null && this.loadingFrame.isVisible()) || (this.authFrame != null && this.authFrame.getMainFrame().isVisible())) {
 			this.disableLoadingMode();
-			if (! this.opts.autostart)
-				this.authFrame.hideWindow();
 		}
 	}
 

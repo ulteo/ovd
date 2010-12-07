@@ -345,6 +345,10 @@ public class AuthFrame implements ActionListener, Runnable {
 		c.setFocusTraversalKeys(KeyboardFocusManager.UP_CYCLE_TRAVERSAL_KEYS, Collections.EMPTY_SET);
 	}
 
+	public void reset() {
+		this.startButtonClicked = false;
+	}
+
 	private void startJob(int job) {
 		this.jobsList.add(new Integer(job));
 		new Thread(this).start();
@@ -636,7 +640,7 @@ public class AuthFrame implements ActionListener, Runnable {
 	}
 	
 	public void hideWindow() {
-		SwingTools.invokeLater(GUIActions.setVisible(this.mainFrame, false));
+		SwingTools.invokeLater(GUIActions.disposeWindow(this.mainFrame));
 	}
 	
 	public JTextField getLogin() {

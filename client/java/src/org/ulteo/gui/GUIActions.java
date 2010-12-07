@@ -61,6 +61,24 @@ public class GUIActions {
 		}
 
 	}
+
+	/* DisposeWindow */
+	public static Runnable disposeWindow(Window wnd_) {
+		return Actions.new DisposeWindow(wnd_);
+	}
+
+	private class DisposeWindow implements Runnable {
+		private Window wnd = null;
+
+		public DisposeWindow(Window wnd_) {
+			this.wnd = wnd_;
+		}
+
+		public void run() {
+			setVisible(this.wnd, false).run();
+			this.wnd.dispose();
+		}
+	}
 	
 	/* SetCursor */
 	public static Runnable setCursor(Component component_, Cursor cursor_) {
