@@ -33,7 +33,7 @@ class SessionManagement_internal extends SessionManagement {
 			$authMethod_module = 'AuthMethod_'.$authMethod;
 			$authMethod = new $authMethod_module($this->prefs, $userDB);
 
-			Logger::debug('main', 'SessionManagement_internal::authenticate - Trying "'.$authMethod_module."'");
+			Logger::debug('main', 'SessionManagement_internal::authenticate - Trying "'.$authMethod_module.'"');
 
 			$user_login = $authMethod->get_login();
 			if (is_null($user_login)) {
