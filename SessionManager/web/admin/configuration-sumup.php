@@ -44,7 +44,10 @@ if (! $prefs) {
   <div>
   <h2><?php echo _('Last save'); ?></h2>
 <?php
-echo date('m/d/Y H:i:s', filemtime(SESSIONMANAGER_CONFFILE_SERIALIZED));
+  if (file_exists(SESSIONMANAGER_CONFFILE_SERIALIZED))
+    echo date('m/d/Y H:i:s', @filemtime(SESSIONMANAGER_CONFFILE_SERIALIZED));
+  else
+    echo _('Unknown');
 ?>
   </div>
   </div>
