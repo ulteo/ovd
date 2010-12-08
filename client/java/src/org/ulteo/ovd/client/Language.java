@@ -66,7 +66,7 @@ public class Language {
 //			{"Slovak", "Slovenčina", "sk"},
 //			{"Slovenian", "", "sl"},
 //			{"Sorbian", "", "sb"},
-//			{"Spanish", "Español", "es"},
+			{"Spanish", "Español", "es"},
 //			{"Spanish (Spain)", "Español (España)", "es-es"},
 //			{"Swedish", "Svenska", "sv"},
 //			{"Thai", "", "th"},
