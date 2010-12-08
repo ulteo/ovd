@@ -36,6 +36,14 @@ function fetchInstallableApplicationsList(fqdn_) {
 				var xml = transport.responseXML;
 				var list = {};
 				
+				try {   
+					xml.documentElement.nodeName;                        
+				}
+				catch(err) {
+					InstallableApplicationsError();
+					return;
+				}
+				
 				if (xml.documentElement.nodeName != "task") {
 					InstallableApplicationsError();
 					return;
@@ -70,6 +78,14 @@ function InstallableApplicationsWait(task) {
 			},
 			onSuccess: function(transport) {
 				var xml = transport.responseXML;
+				
+				try {   
+					xml.documentElement.nodeName;                        
+				}
+				catch(err) {
+					InstallableApplicationsError();
+					return;
+				}
 				
 				if (xml.documentElement.nodeName == "task") {
 					setTimeout(function() {
@@ -116,6 +132,9 @@ function InstallableApplicationsWait(task) {
 				$('installableApplicationsList_content').innerHTML = $('installableApplicationsListDefault').innerHTML;
 				
 				InstallableApplicationsInitList();
+			},
+			onFailure: function(transport) {
+				InstallableApplicationsError();
 			}
 		}
 	);
