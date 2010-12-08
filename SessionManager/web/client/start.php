@@ -173,73 +173,28 @@ if (isset($old_session_id)) {
 
 	Logger::info('main', '(client/start) Resuming session for '.$user->getAttribute('login').' ('.$old_session_id.' => '.$session->server.')');
 } else {
-	$servers = array();
-
 	$user_login_aps = 'u'.time().gen_string(5).'_APS'; //hardcoded
 	$user_password_aps = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-	$servers[Server::SERVER_ROLE_APS] = array();
 	if ((isset($enable_profiles) && $enable_profiles == 1) || (isset($enable_sharedfolders) && $enable_sharedfolders == 1)) {
 		$user_login_fs = 'u'.time().gen_string(6).'_FS'; //hardcoded
 		$user_password_fs = $user_password_aps;
-		$servers[Server::SERVER_ROLE_FS] = array();
 	}
 
-	$buf_servers = $user->getAvailableServers();
-	if (is_null($buf_servers) || count($buf_servers) == 0) {
-		$ev->setAttribute('ok', false);
-		$ev->setAttribute('error', _('No available server'));
-		$ev->emit();
-		Logger::error('main', '(client/start) no server found for \''.$user->getAttribute('login').'\' -> abort');
+	if (! $sessionManagement->buildServersList()) {
+		Logger::error('main', '(client/start) No server found for User "'.$user->getAttribute('login').'", aborting');
 		throw_response(SERVICE_NOT_AVAILABLE);
 	}
+	$servers = $sessionManagement->servers;
 
-	foreach ($buf_servers as $buf_server) {
-		$servers[Server::SERVER_ROLE_APS][$buf_server->fqdn] = array(
-			'status' => Session::SESSION_STATUS_CREATED
-		);
-	}
 	$random_server = false;
 	if ($session_mode == Session::MODE_DESKTOP && (isset($remote_desktop_settings) && array_key_exists('desktop_type', $remote_desktop_settings))) {
-		switch ($remote_desktop_settings['desktop_type']) {
-			case 'linux':
-				foreach ($servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
-					$server = Abstract_Server::load($fqdn);
-					if (! $server)
-						continue;
-
-					if ($server->getAttribute('type') == 'linux') {
-						$random_server = $fqdn;
-						break;
-					}
-				}
-				if (! $random_server) {
-					Logger::error('main', '(client/start) no "linux" desktop server found for \''.$user->getAttribute('login').'\' -> abort');
-					throw_response(SERVICE_NOT_AVAILABLE);
-				}
-				break;
-			case 'windows':
-				foreach ($servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
-					$server = Abstract_Server::load($fqdn);
-					if (! $server)
-						continue;
-
-					if ($server->getAttribute('type') == 'windows') {
-						$random_server = $fqdn;
-						break;
-					}
-				}
-				if (! $random_server) {
-					Logger::error('main', '(client/start) no "windows" desktop server found for \''.$user->getAttribute('login').'\' -> abort');
-					throw_response(SERVICE_NOT_AVAILABLE);
-				}
-				break;
-			case 'any':
-			default:
-				$random_server = array_rand($servers[Server::SERVER_ROLE_APS]);
-				break;
+		$random_server = $sessionManagement->getDesktopServer($remote_desktop_settings['desktop_type']);
+		if (! $random_server) {
+			Logger::error('main', '(client/start) No desktop server found for User "'.$user->getAttribute('login').'", aborting');
+			throw_response(SERVICE_NOT_AVAILABLE);
 		}
 	} else
-		$random_server = array_rand($servers[Server::SERVER_ROLE_APS]);
+		$random_server = $servers[Server::SERVER_ROLE_APS][array_rand($servers[Server::SERVER_ROLE_APS])];
 
 	if (isset($enable_profiles) && $enable_profiles == 1) {
 		$fileservers = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_FS);
@@ -369,7 +324,7 @@ if (isset($old_session_id)) {
 
 	$ret = true;
 
-	Logger::info('main', '(client/start) Creating new session for '.$user->getAttribute('login').' ('.$random_session_id.' => '.$random_server.')');
+	Logger::info('main', '(client/start) Creating new session for '.$user->getAttribute('login').' ('.$random_session_id.')');
 }
 
 if ($ret === false)

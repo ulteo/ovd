@@ -23,6 +23,8 @@ abstract class SessionManagement extends Module {
 	protected static $instance = NULL;
 	protected $prefs = false;
 	public $user = false;
+	public $desktop_server = false;
+	public $servers = array();
 
 	public static function getInstance() {
 		if (is_null(self::$instance)) {
@@ -148,4 +150,83 @@ abstract class SessionManagement extends Module {
 	}
 
 	abstract public function authenticate();
+
+	public function buildServersList() {
+		if (! $this->user) {
+			Logger::error('main', 'SessionManagement::buildServersList - User is not authenticated, aborting');
+			throw_response(AUTH_FAILED);
+		}
+
+		$this->servers = array();
+
+		$servers = $this->user->getAvailableServers();
+		if (is_null($servers) || count($servers) == 0) {
+			$event = new SessionStart(array('user' => $this->user));
+			$event->setAttribute('ok', false);
+			$event->setAttribute('error', _('No available server'));
+			$event->emit();
+
+			Logger::error('main', 'SessionManagement::buildServersList - No server found for User "'.$this->user->getAttribute('login').'", aborting');
+			return false;
+		}
+
+		$this->servers[Server::SERVER_ROLE_APS] = array();
+		foreach ($servers as $server) {
+			$this->servers[Server::SERVER_ROLE_APS][$server->fqdn] = array(
+				'status' => Session::SESSION_STATUS_CREATED
+			);
+		}
+
+		$this->servers[Server::SERVER_ROLE_FS] = array();
+
+		return true;
+	}
+
+	public function getDesktopServer($type_='any') {
+		if (! $this->user) {
+			Logger::error('main', 'SessionManagement::getDesktopServer("'.$type_.'") - User is not authenticated, aborting');
+			throw_response(AUTH_FAILED);
+		}
+
+		$this->desktop_server = false;
+
+		switch ($type_) {
+			case 'linux':
+			case 'windows':
+				foreach ($this->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
+					$server = Abstract_Server::load($fqdn);
+					if (! $server)
+						continue;
+
+					if ($server->getAttribute('type') == $type_) {
+						$this->desktop_server = $server->fqdn;
+						break;
+					}
+				}
+
+				if (! $this->desktop_server) {
+					Logger::error('main', 'SessionManagement::getDesktopServer("'.$type_.'") - No "'.$type_.'" desktop server found for User "'.$this->user->getAttribute('login').'", aborting');
+					return false;
+				}
+				break;
+			case 'any':
+			default:
+				foreach ($this->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
+					$server = Abstract_Server::load($fqdn);
+					if (! $server)
+						continue;
+
+					$this->desktop_server = $server->fqdn;
+					break;
+				}
+
+				if (! $this->desktop_server) {
+					Logger::error('main', 'SessionManagement::getDesktopServer("'.$type_.'") - No desktop server found for User "'.$this->user->getAttribute('login').'", aborting');
+					return false;
+				}
+				break;
+		}
+
+		return $this->desktop_server;
+	}
 }
