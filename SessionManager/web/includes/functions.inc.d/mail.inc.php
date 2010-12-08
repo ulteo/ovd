@@ -28,8 +28,6 @@ function sendamail($to_, $subject_, $message_) {
 	if (! $prefs)
 		die_error('get Preferences failed',__FILE__,__LINE__);
 
-	$web_interface_settings = $prefs->get('general', 'web_interface_settings');
-
 	$buf = $prefs->get('general', 'mails_settings');
 
 	$method = $buf['send_type'];

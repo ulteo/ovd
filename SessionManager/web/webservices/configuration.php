@@ -59,7 +59,6 @@ $debug = 0;
 
 $default_settings = $prefs->get('general', 'web_interface_settings');
 $web_interface_settings = $default_settings;
-$use_popup = $default_settings['use_popup'];
 
 $mods_enable = $prefs->get('general', 'module_enable');
 if (!in_array('UserDB', $mods_enable))
@@ -96,7 +95,7 @@ if (!is_array($advanced_settings_webinterface))
 	$advanced_settings_webinterface = array();
 
 $advanced_settings = array_merge($advanced_settings_session, $advanced_settings_webinterface);
-$default_settings = array_merge($session_settings_defaults, $web_interface_settings, array('debug' => 0, 'popup' => $use_popup));
+$default_settings = array_merge($session_settings_defaults, $web_interface_settings, array('debug' => 0));
 
 $forceable_parameters = array();
 
