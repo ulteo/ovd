@@ -43,11 +43,13 @@ cp init/suse/ulteo-ovd-subsystem $INITDIR
 service ulteo-ovd-subsystem stop
 
 %postun -n ulteo-ovd-subsystem
-SUBCONF=/etc/ulteo/subsystem.conf
-CHROOTDIR=/opt/ulteo
-[ -f $SUBCONF ] && . $SUBCONF
-rm -rf $CHROOTDIR
-rm -f $SUBCONF
+if [ "$1" = "0" ]; then
+    SUBCONF=/etc/ulteo/subsystem.conf
+    CHROOTDIR=/opt/ulteo
+    [ -f $SUBCONF ] && . $SUBCONF
+    rm -rf $CHROOTDIR
+    rm -f $SUBCONF
+fi
 
 %clean -n ulteo-ovd-subsystem
 rm -rf %buildroot
