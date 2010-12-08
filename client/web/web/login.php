@@ -205,7 +205,7 @@ $session_node->appendChild($user_node);
 $dom->appendChild($session_node);
 
 if (! defined('SESSIONMANAGER_HOST')) {
-	$_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$_POST['sessionmanager_host'].'/ovd/client/';
+	$_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$_POST['sessionmanager_host'].'/ovd/client';
 	$sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
 }
 
