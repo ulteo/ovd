@@ -1,8 +1,9 @@
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>, 2009
+ * Author Jeremy DESVAGES <jeremy@ulteo.com>, 2009
+ * Author Julien LANGLOIS <julien@ulteo.com>, 2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -53,7 +54,6 @@ function fetchInstallableApplicationsList(fqdn_) {
 			},
 			onFailure: function(transport) {
 				InstallableApplicationsError();
-				
 			}
 		}
 	);
