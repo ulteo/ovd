@@ -192,7 +192,7 @@ else {
 			echo '		</ul></td>';
 			echo '		<td><a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</td>';
 			echo '		<td>'.$session->stringStatus().'</td>';
-			echo '		<td>';
+			echo '		<td style="vertical-align: middle;">';
 			echo '		<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
 			echo '  		<input type="hidden" name="name" value="Session" />';
 			echo '			<input type="hidden" name="action" value="del" />';
