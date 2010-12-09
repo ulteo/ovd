@@ -1,4 +1,5 @@
-scripts_DATA = icon.php \
+scripts_DATA = get_cookie.php \
+               icon.php \
                logout.php \
                news.php \
                remote_apps.php \
