@@ -151,33 +151,41 @@ abstract class SessionManagement extends Module {
 
 	abstract public function authenticate();
 
-	public function buildServersList() {
+	public function buildServersList($roles_=array(Server::SERVER_ROLE_APS, Server::SERVER_ROLE_FS)) {
 		if (! $this->user) {
 			Logger::error('main', 'SessionManagement::buildServersList - User is not authenticated, aborting');
 			throw_response(AUTH_FAILED);
 		}
 
-		$this->servers = array();
+		$this->servers = array(
+			Server::SERVER_ROLE_APS	=>	array(),
+			Server::SERVER_ROLE_FS	=>	array()
+		);
 
-		$servers = $this->user->getAvailableServers();
-		if (is_null($servers) || count($servers) == 0) {
-			$event = new SessionStart(array('user' => $this->user));
-			$event->setAttribute('ok', false);
-			$event->setAttribute('error', _('No available server'));
-			$event->emit();
+		foreach ($roles_ as $role) {
+			switch ($role) {
+				case Server::SERVER_ROLE_APS:
+					$servers = $this->user->getAvailableServers();
+					if (is_null($servers) || count($servers) == 0) {
+						$event = new SessionStart(array('user' => $this->user));
+						$event->setAttribute('ok', false);
+						$event->setAttribute('error', _('No available server'));
+						$event->emit();
 
-			Logger::error('main', 'SessionManagement::buildServersList - No server found for User "'.$this->user->getAttribute('login').'", aborting');
-			return false;
+						Logger::error('main', 'SessionManagement::buildServersList - No server found for User "'.$this->user->getAttribute('login').'", aborting');
+						return false;
+					}
+
+					foreach ($servers as $server) {
+						$this->servers[Server::SERVER_ROLE_APS][$server->fqdn] = array(
+							'status' => Session::SESSION_STATUS_CREATED
+						);
+					}
+					break;
+				case Server::SERVER_ROLE_FS:
+					break;
+			}
 		}
-
-		$this->servers[Server::SERVER_ROLE_APS] = array();
-		foreach ($servers as $server) {
-			$this->servers[Server::SERVER_ROLE_APS][$server->fqdn] = array(
-				'status' => Session::SESSION_STATUS_CREATED
-			);
-		}
-
-		$this->servers[Server::SERVER_ROLE_FS] = array();
 
 		return true;
 	}

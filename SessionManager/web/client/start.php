@@ -180,8 +180,8 @@ if (isset($old_session_id)) {
 		$user_password_fs = $user_password_aps;
 	}
 
-	if (! $sessionManagement->buildServersList()) {
-		Logger::error('main', '(client/start) No server found for User "'.$user->getAttribute('login').'", aborting');
+	if (! $sessionManagement->buildServersList(array(Server::SERVER_ROLE_APS))) {
+		Logger::error('main', '(client/start) No "'.Server::SERVER_ROLE_APS.'" server found for User "'.$user->getAttribute('login').'", aborting');
 		throw_response(SERVICE_NOT_AVAILABLE);
 	}
 	$servers = $sessionManagement->servers;
