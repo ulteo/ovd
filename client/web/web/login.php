@@ -30,8 +30,8 @@ function return_error($errno_, $errstr_) {
 	return $dom->saveXML();
 }
 
-function query_sm_start($url_, $xml_) {
-	$socket = curl_init($url_);
+function query_sm_start($base_url_, $script_, $xml_) {
+	$socket = curl_init($base_url_.'/'.'get_cookie.php');
 	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
 	curl_setopt($socket, CURLOPT_SSL_VERIFYHOST, 0);
@@ -52,7 +52,7 @@ function query_sm_start($url_, $xml_) {
 	$_SESSION['sessionmanager']['session_var'] = $matches[1];
 	$_SESSION['sessionmanager']['session_id'] = $matches[2];
 
-	return query_sm_post_xml($url_, $xml_);
+	return query_sm_post_xml($base_url_.'/'.$script_, $xml_);
 }
 
 function generateAjaxplorerActionsXML($application_nodes_) {
@@ -209,7 +209,7 @@ if (! defined('SESSIONMANAGER_HOST')) {
 	$sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
 }
 
-$xml = query_sm_start($sessionmanager_url.'/start.php', $dom->saveXML());
+$xml = query_sm_start($sessionmanager_url, 'start.php', $dom->saveXML());
 if (! $xml) {
 	echo return_error(0, 'unable_to_reach_sm');
 	die();
