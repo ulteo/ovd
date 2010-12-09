@@ -6,9 +6,12 @@ It was downloaded from:
 
     http://www.ulteo.com/
 
-Upstream Author(s):
+Upstream Authors:
 
-    Julien Langlois
+    Julien Langlois <julien@ulteo.com> 2010
+    Thomas MOUTON <thomas@ulteo.com> 2010
+    Samuel BOVEE <samuel@ulteo.com> 2010
+    Guillaume DUPAS <guillaume@ulteo.com> 2010
 
 Copyright:
 
@@ -34,7 +37,7 @@ Public License version 2 can be found in "/usr/share/common-licenses/GPL-2".
 
 The Debian packaging is:
 
-    Copyright (C) 2010 Samuel Bovée <samuel@ulteo.com>
+    Copyright (C) 2010 - Ulteo SAS
 
 you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -1,15 +1,23 @@
-This package was debianized by Samuel Bovée <samuel@ulteo.com> on
-Tue, 16 Feb 2010 16:22:48 +0100.
+This package was debianized by:
 
-It was downloaded from <http://www.ulteo.com>
+    Samuel Bovée <samuel@ulteo.com> on Tue, 16 Feb 2010 16:22:48 +0100
 
-Upstream Author: 
+It was downloaded from:
 
-    Julien Langlois <julien@ulteo.com>
+    http://www.ulteo.com
 
-Copyright: 
+Upstream Authors:
 
-    Copyright (C) 2009-2010 Ulteo SAS
+    Julien LANGLOIS <julien@ulteo.com> 2010
+    Laurent CLOUET <laurent@ulteo.com> 2010
+    Samuel BOVEE <julien@ulteo.com> 2010
+    Jeremy DESVAGES <jeremy@ulteo.com> 2010
+    David LECHEVALIER <david@ulteo.com> 2010
+    Thomas MOUTON <thomas@ulteo.com> 2010
+
+Copyright:
+
+    Copyright (C) 2010, Ulteo SAS
 
 License:
 
@@ -17,5 +25,5 @@ License:
     under the terms of the GNU General Public License as published by the Free
     Software Foundation; version 2 of the License.
 
-The Debian packaging is (C) 2010, Samuel Bovée <samuel@ulteo.com> and
+The Debian packaging is Copyright (C) 2010, Ulteo SAS and
 is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
