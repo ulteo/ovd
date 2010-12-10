@@ -2,6 +2,7 @@
 
 # Copyright (C) 2010 Ulteo SAS
 # http://www.ulteo.com
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -183,7 +184,7 @@ class ReverseProxy(asyncore.dispatcher):
 			
 		if path.startswith("/ovd/client/start.php"):
 			senderHTTP(self.FPEM, receiverXMLRewriter(conn, r, self), self.REMOTE_SM_FQDN, self.REMOTE_SM_PORT)
-		elif path.startswith("/ovd/client/"):
+		elif path.startswith("/ovd/"):
 			senderHTTP(self.FPEM, receiver(conn, r), self.REMOTE_SM_FQDN, self.REMOTE_SM_PORT)
 		else:
 			self.close()
