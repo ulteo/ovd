@@ -20,7 +20,7 @@ case "$1" in
         for triggername in $2; do
             case "$triggername" in
                 "slaveserver-restart")
-                    service ovdSlaveServer restart
+                    /etc/init.d/ovdSlaveServer restart
                 ;;
             esac
         done
