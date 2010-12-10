@@ -2,6 +2,7 @@
 
 # Copyright (C) 2009,2010 Ulteo SAS
 # http://www.ulteo.com
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -76,7 +77,7 @@ class InstancesManager(threading.Thread):
 							local_path = self.folders.getPathFromID(job[4])
 						
 						if local_path is not None:
-							arg = os.path.join(local_path, job[5])
+							arg = os.path.join(local_path, job[5].replace("/", os.path.sep))
 							cmd+=' "%s"'%(arg)
 					instance = self.launch(cmd)
 					
