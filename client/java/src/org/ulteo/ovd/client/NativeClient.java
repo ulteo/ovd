@@ -637,6 +637,9 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				valuesChecked = true;
 
 				this.getBackupEntries();
+
+				this.authFrame.hideWindow();
+				this.authFrame = null;
 			} catch (IllegalArgumentException ex) {
 				org.ulteo.Logger.warn(ex.getMessage());
 				JOptionPane.showMessageDialog(null, I18n._(ex.getMessage()), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE);
@@ -644,10 +647,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		}
 
 		boolean exit = false;
-		if (valuesChecked) {
-			this.authFrame.hideWindow();
-			this.authFrame = null;
-			
+		if (this.opts.autostart || valuesChecked) {
 			try {
 				exit = this.launchConnection();
 			} catch (IOException ex) {
