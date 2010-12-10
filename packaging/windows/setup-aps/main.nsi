@@ -112,6 +112,9 @@
 
 ;Include String Functions
   !include String.nsh
+  
+;Include User Functions
+  !include User.nsh
 
 ## First Dialog
 Function InputBoxPageShow
@@ -208,6 +211,9 @@ Section "un.pre" UnPostCmd
   DetailPrint "Removing Service"
   nsExec::execToStack 'sc delete OVD'
 
+  DetailPrint "Removing OVDAdmin user"
+  UserMgr::DeleteAccount "OVDAdmin"
+  
   DetailPrint "Remove PDF printer driver"
   nsExec::execToStack 'rundll32 printui.dll,PrintUIEntry /dd /m "Ulteo TS Printer Driver"'
   DeleteRegKey HKLM "SOFTWARE\GPL Ghostscript\8.71"
@@ -270,11 +276,26 @@ Section "post" PostCmd
     DetailPrint "Installing PDF printer driver"
     nsExec::execToStack 'rundll32 printui.dll,PrintUIEntry /ia /m "Ulteo TS Printer Driver" /f ulteodll.inf'
  
-  DetailPrint "Creating Service"
-  nsExec::execToStack 'sc create OVD BinPath= "$INSTDIR\OVDWin32Service.exe" DisplayName= "Ulteo Open Virtual Desktop agent" depend= EventLog/winmgmt start= auto'
+  DetailPrint "Check if the service is already installed"
+  ClearErrors
+  UserMgr::GetUserInfo "OVDAdmin" "EXISTS"
+  Pop $0
+  StrCmp $0 "OK" exist
+  
+  DetailPrint "Generating random password"
+  Var /GLOBAL pass
+  pwgen::GeneratePassword 10
+  Pop $pass
 
-  DetailPrint "Launch service"
-  nsExec::execToStack 'sc start OVD'
+  !insertmacro CreateUser "" "OVDAdmin" "$pass" "OVDAdmin" "OVDAdmin" "" 544
+  UserMgr::SetUserInfo "OVDAdmin" "PASSWD_NEVER_EXPIRES" "YES"
+  UserMgr::AddPrivilege "OVDAdmin" "SeServiceLogonRight" 
+	
+  nsExec::execToStack 'sc create OVD BinPath= "$INSTDIR\OVDWin32Service.exe" DisplayName= "Ulteo Open Virtual Desktop agent" obj= ".\\OVDAdmin" password= "$pass" depend= EventLog/winmgmt start= auto'
+
+  exist:
+    DetailPrint "Starting service"
+    nsExec::execToStack 'sc start OVD'
 SectionEnd
 
 Section "Shortcut Section" SecShortcut
