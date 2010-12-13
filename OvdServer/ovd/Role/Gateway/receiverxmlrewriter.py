@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2010 Ulteo SAS
 # http://www.ulteo.com
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -58,6 +59,9 @@ class receiverXMLRewriter(asyncore.dispatcher):
 			self.close()
 
 	def writable(self):
+		return (len(str(self.to_remote_buffer)) > 0)
+	
+	def outputModification(self):
 		try:
 			if not self.hasRewrited:
 				pattern = re.compile("<error.+\/>", re.I | re.U)
@@ -65,7 +69,7 @@ class receiverXMLRewriter(asyncore.dispatcher):
 				
 				if test:
 					self.hasRewrited = True
-					return (len(str(self.to_remote_buffer)) > 0)
+					return True
 				
 				pattern = re.compile("<session.+<\/session>", re.I | re.U)
 				test = re.search(pattern, str(self.to_remote_buffer))
@@ -74,23 +78,38 @@ class receiverXMLRewriter(asyncore.dispatcher):
 					self.hasRewrited = True
 					newxml = self.rewriteXML(test.group())
 					
+					xml_length_before = len(self.to_remote_buffer)
 					try:
 						self.to_remote_buffer = pattern.sub(newxml, str(self.to_remote_buffer), count = 1)
 					except:
 						Logger.error('receiverXMLRewriter:: XML detected but replace failed')
-					return (len(str(self.to_remote_buffer)) > 0)
+						return False
 					
+					xml_length_after = len(self.to_remote_buffer)
+					
+					try:
+						pattern_contentlength = re.compile("Content-Length: ([0-9]+)", re.I | re.U)
+						finded = re.findall(pattern_contentlength, str(self.to_remote_buffer))
+						if len(finded) >= 1:
+							contentlenght_before = int(finded[0])
+							self.to_remote_buffer = pattern_contentlength.sub("Content-Length: " + str(contentlenght_before + xml_length_after - xml_length_before), str(self.to_remote_buffer), count = 1)
+					except Exception, err:
+						Logger.error('receiverXMLRewriter:: header modification failed')
+						return False
+					
+					return True
 				else:
-					return (False)
+					return True
 				
 			else:
-				return (len(str(self.to_remote_buffer)) > 0)
+				return True
 			
 		except:
 			Logger.error('receiverXMLRewriter:: Rewriting XML failed')
-			return (False)
+			return False
 
 	def handle_write(self):
+		self.outputModification()
 		sent = self.send(self.to_remote_buffer)
 		self.to_remote_buffer = self.to_remote_buffer[sent:]
 
