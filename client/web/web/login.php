@@ -182,6 +182,11 @@ $_SESSION['interface']['debug'] = $_POST['debug'];
 
 header('Content-Type: text/xml; charset=utf-8');
 
+if (! defined('SESSIONMANAGER_HOST') && ! array_key_exists('sessionmanager_host', $_POST)) {
+	echo return_error(1, 'Usage: missing "sessionmanager_host" parameter');
+	die();
+}
+
 if (! array_key_exists('login', $_POST)) {
 	echo return_error(1, 'no_login_parameter');
 	die();
@@ -204,10 +209,12 @@ $user_node->setAttribute('password', $_POST['password']);
 $session_node->appendChild($user_node);
 $dom->appendChild($session_node);
 
-if (! defined('SESSIONMANAGER_HOST')) {
-	$_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$_POST['sessionmanager_host'].'/ovd/client';
-	$sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
-}
+if (defined('SESSIONMANAGER_HOST'))
+	$_SESSION['ovd-client']['server'] = SESSIONMANAGER_HOST;
+else
+	$_SESSION['ovd-client']['server'] = $_POST['sessionmanager_host'];
+$_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$_SESSION['ovd-client']['server'].'/ovd/client';
+$sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
 
 $xml = query_sm_start($sessionmanager_url, 'start.php', $dom->saveXML());
 if (! $xml) {
@@ -252,6 +259,12 @@ $_SESSION['redirect_client_printers'] = $session_node->getAttribute('redirect_cl
 if ($_SESSION['session_mode'] == 'desktop')
 	$_SESSION['desktop_fullscreen'] = $_POST['desktop_fullscreen'];
 $_SESSION['timeout'] = $session_node->getAttribute('timeout');
+
+$_SESSION['gateway'] = false;
+if ($session_node->hasAttribute('mode_gateway')) {
+	if ($session_node->getAttribute('mode_gateway') == 'on')
+		$_SESSION['gateway'] = true;
+}
 
 $user_node = $session_node->getElementsByTagName('user');
 if (count($user_node) != 1) {
