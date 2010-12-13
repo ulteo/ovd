@@ -758,7 +758,6 @@ if ($session->mode == Session::MODE_DESKTOP) {
 		$application_node = $dom->createElement('application');
 		$application_node->setAttribute('id', $application->getAttribute('id'));
 		$application_node->setAttribute('name', $application->getAttribute('name'));
-		$application_node->setAttribute('server', $server->getAttribute('external_name'));
 		foreach (explode(';', $application->getAttribute('mimetypes')) as $mimetype) {
 			if ($mimetype == '')
 				continue;
@@ -807,7 +806,6 @@ if ($session->mode == Session::MODE_DESKTOP) {
 			$application_node = $dom->createElement('application');
 			$application_node->setAttribute('id', $application->getAttribute('id'));
 			$application_node->setAttribute('name', $application->getAttribute('name'));
-			$application_node->setAttribute('server', $server->getAttribute('external_name'));
 			foreach (explode(';', $application->getAttribute('mimetypes')) as $mimetype) {
 				if ($mimetype == '')
 					continue;
