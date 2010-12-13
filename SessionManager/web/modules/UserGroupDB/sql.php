@@ -204,7 +204,8 @@ class UserGroupDB_sql {
 		Abstract_Liaison::delete('UsersGroup', NULL, $usergroup_->getUniqueID());
 		
 		// second we delete sharedfolder acls for the group
-		$networkfolders = Abstract_NetworkFolder::load_from_usergroup($usergroup_->getUniqueID());
+		$sharedfolderdb = SharedFolderDB::getInstance();
+		$networkfolders = $sharedfolderdb->importFromUsergroup($usergroup_->getUniqueID());
 		if (is_array($networkfolders) && count($networkfolders) > 0) {
 			foreach ($networkfolders as $networkfolder) {
 				$networkfolder->delUserGroup($usergroup_);

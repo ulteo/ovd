@@ -57,26 +57,28 @@ function checkup_liaison($type_, $element_, $group_) {
 				return 'Session "'.$group_.'" does not exist';
 			break;
 
-		case 'UserGroupNetworkFolder':
+		case 'UserGroupSharedFolder':
+			$sharedfolderdb = SharedFolderDB::getInstance();
 			$userGroupDB = UserGroupDB::getInstance();
 			$buf = $userGroupDB->import($element_);
 			if (! is_object($buf))
 				return 'UserGroup "'.$element_.'" does not exist';
 
-			$buf = Abstract_NetworkFolder::load($group_);
+			$buf = $sharedfolderdb->import($group_);
 			if (! $buf)
-				return 'NetworkFolder "'.$group_.'" does not exist';
+				return 'SharedFolder "'.$group_.'" does not exist';
 			break;
 
-		case 'UserNetworkFolder':
+		case 'UserProfile':
+			$profiledb = ProfileDB::getInstance();
 			$userDB = UserDB::getInstance();
 			$buf = $userDB->import($element_);
 			if (! is_object($buf))
 				return 'User "'.$element_.'" does not exist';
 
-			$buf = Abstract_NetworkFolder::load($group_);
+			$buf = $profiledb->import($group_);
 			if (! $buf)
-				return 'NetworkFolder "'.$group_.'" does not exist';
+				return 'Profile "'.$group_.'" does not exist';
 			break;
 
 		case 'UsersGroup':
@@ -159,7 +161,7 @@ function cleanup_preferences() {
 	}
 }
 
-$liaisons_types = array('ApplicationServer', 'AppsGroup', 'ServerSession', 'UserGroupNetworkFolder', 'UserNetworkFolder', 'UsersGroup', 'UsersGroupApplicationsGroup', 'UsersGroupCached');
+$liaisons_types = array('ApplicationServer', 'AppsGroup', 'ServerSession', 'UserGroupSharedFolder', 'UserProfile', 'UsersGroup', 'UsersGroupApplicationsGroup', 'UsersGroupCached');
 if (isset($_POST['cleanup']) && $_POST['cleanup'] == 1 && array_key_exists('type', $_POST)) {
 	switch ($_POST['type']) {
 		case 'liaison':

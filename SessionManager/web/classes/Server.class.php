@@ -843,22 +843,38 @@ class Server {
 			return false;
 		}
 		
-		$folders_on_sm = Abstract_NetworkFolder::load_from_server($this->fqdn);
-		if (is_array($folders_on_sm) === false) {
-			Logger::error('main', 'Server::updateNetworkFolders Abstract_NetworkFolder::load_from_server failed for fqdn='.$this->fqdn);
-			return false;
+		$profiledb = ProfileDB::getInstance();
+		$sharedfolderdb = SharedFolderDB::getInstance();
+		
+		$folders_on_sm1 = $profiledb->importFromServer($this->fqdn);
+		$folders_on_sm2 = $sharedfolderdb->importFromServer($this->fqdn);
+		
+		$folders_on_sm = array();
+		if (is_array($folders_on_sm1)) {
+			$folders_on_sm = array_merge($folders_on_sm, $folders_on_sm1);
+		}
+		if (is_array($folders_on_sm2)) {
+			$folders_on_sm = array_merge($folders_on_sm, $folders_on_sm2);
 		}
 		
 		foreach ($forders_on_server as $folder_id) {
-			$folder = Abstract_NetworkFolder::load($folder_id);
+			$folder = $sharedfolderdb->import($folder_id);
+			if ($folder) {
+				$db = $sharedfolderdb;
+			}
+			else {
+				$folder = $profiledb->import($share['id']);
+				$db = $profiledb;
+			}
+			
 			if (is_object($folder) === false) {
-				// networkfolder does not exist -> create it
+				// networkfolder does not exist
 				$folder = new NetworkFolder();
-				$folder->type = NetworkFolder::NF_TYPE_NETWORKFOLDER;
 				$folder->id = $folder_id;
 				$folder->name = $folder_id;
 				$folder->server = $this->fqdn;
-				Abstract_NetworkFolder::save($folder);
+				$profiledb->remove($folder);
+				$sharedfolderdb->remove($folder);
 			}
 		}
 		
@@ -894,18 +910,26 @@ class Server {
 		$dom = new DomDocument('1.0', 'utf-8');
 
 		$buf = @$dom->loadXML($xml);
-		if (! $buf)
+		if (! $buf) {
+			Logger::error('main', 'Server::createNetworkFolder server \''.$this->fqdn.'\' returned content is not an XML '.serialize($xml));
 			return false;
+		}
 
-		if (! $dom->hasChildNodes())
+		if (! $dom->hasChildNodes()) {
+			Logger::error('main', 'Server::createNetworkFolder server \''.$this->fqdn.'\' XML returned has no childnodes xml: '.$xml);
 			return false;
+		}
 
 		$node = $dom->getElementsByTagname('share')->item(0);
-		if (is_null($node))
+		if (is_null($node)) {
+			Logger::error('main', 'Server::createNetworkFolder server \''.$this->fqdn.'\' XML returned has not child \'share\' xml: '.$xml);
 			return false;
+		}
 
-		if (! $node->hasAttribute('id'))
+		if (! $node->hasAttribute('id')) {
+			Logger::error('main', 'Server::createNetworkFolder server \''.$this->fqdn.'\' XML returned childnode \'share\' has no attribute \'id\' xml: '.$xml);
 			return false;
+		}
 
 		return true;
 	}

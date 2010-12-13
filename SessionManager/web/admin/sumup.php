@@ -140,7 +140,7 @@ else{
 			}
 			$profiles = array();
 			if (array_key_exists('enable_profiles', $session_settings_defaults) && $session_settings_defaults['enable_profiles'] == 1) {
-				$profiles = $u->getNetworkFolders();
+				$profiles = $u->getProfiles();
 			}
 			$networkfolder_s = array_merge($folders, $profiles);
 			
@@ -148,8 +148,19 @@ else{
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
 				foreach ($networkfolder_s as $a_networkfolder) {
 					echo '<tr>';
-					echo '<td>'.$a_networkfolder->type.'</td>';
-					echo '<td><a href="sharedfolders.php?action=manage&id='.$a_networkfolder->id.'">'.$a_networkfolder->name.'</a></td>';
+					echo '<td>'.$a_networkfolder->prettyName().'</td>';
+					if (isset($a_networkfolder->name) && $a_networkfolder->name !== '')
+						$name = $a_networkfolder->name;
+					else
+						$name = $a_networkfolder->id;
+					echo '<td>';
+					if (isset($a_networkfolder->name)) {
+						$page = 'sharedfolders';
+					}
+					else {
+						$page = 'profiles';
+					}
+					echo '<a href="'.$page.'.php?action=manage&id='.$a_networkfolder->id.'">'.$name.'</a></td>';
 					echo '</tr>';
 				}
 				echo '</table>';

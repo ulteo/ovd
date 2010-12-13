@@ -33,7 +33,8 @@ if (isset($_REQUEST['action'])) {
 	show_default();
 
 function show_default() {
-	$sharedfolders = Abstract_NetworkFolder::load_by_type(NetworkFolder::NF_TYPE_NETWORKFOLDER);
+	$sharedfolderdb = SharedFolderDB::getInstance();
+	$sharedfolders = $sharedfolderdb->getList();
 	
 	$can_manage_sharedfolders = isAuthorized('manageSharedFolders');
 	$can_manage_configuration = isAuthorized('manageConfiguration');
@@ -53,7 +54,7 @@ function show_default() {
 			echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this shared folder?').'\');">';
 			echo '<input type="hidden" name="name" value="SharedFolder" />';
 			echo '<input type="hidden" name="action" value="del" />';
-			echo '<input type="hidden" name="id" value="'.$sharedfolder->id.'" />';
+			echo '<input type="hidden" name="ids[]" value="'.$sharedfolder->id.'" />';
 			echo '<input type="submit" value="'._('Delete this shared folder').'" />';
 			echo '</form></td>';
 		}
@@ -80,7 +81,8 @@ function show_default() {
 }
 
 function show_manage($sharedfolder_id_) {
-	$sharedfolder = Abstract_NetworkFolder::load($sharedfolder_id_);
+	$sharedfolderdb = SharedFolderDB::getInstance();
+	$sharedfolder = $sharedfolderdb->import($sharedfolder_id_);
 
 	if (! is_object($sharedfolder))
 		redirect('sharedfolders.php');

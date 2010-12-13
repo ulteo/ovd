@@ -1,7 +1,9 @@
 SUBDIRS = ApplicationDB \
           ApplicationsGroupDB \
           AuthMethod \
+          ProfileDB \
           SessionManagement \
+          SharedFolderDB \
           UserDB \
           UserGroupDB
 
@@ -10,7 +12,9 @@ scriptsdir = $(datadir)/ulteo/sessionmanager/modules
 scripts_DATA = ApplicationDB.php \
                ApplicationsGroupDB.php \
                AuthMethod.php \
+               ProfileDB.php \
                SessionManagement.php \
+               SharedFolderDB.php \
                UserDB.php \
                UserGroupDB.php
 

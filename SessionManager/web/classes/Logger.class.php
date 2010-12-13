@@ -63,6 +63,7 @@ class Logger {
 		$msg = @date('M j H:i:s').' - '.@$_SERVER['REMOTE_ADDR'].' - '.strtoupper($level_).' - ';
 		if (is_null($this->level_flags))
 			$msg.=  'NOPREFS - ';
+		$msg .= @$_SERVER['REQUEST_URI'].' - ';
 		$msg.= $data_."\r\n";
 
 		@fwrite($this->fd, $msg);

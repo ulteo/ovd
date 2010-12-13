@@ -281,9 +281,15 @@ class Abstract_Server {
 			$tm->remove($a_task->id);
 		}
 		
-		$folders = Abstract_NetworkFolder::load_from_server($fqdn_);
+		$profiledb = ProfileDB::getInstance();
+		$folders = $profiledb->importFromServer($fqdn_);
 		foreach ($folders as $a_folder) {
-			Abstract_NetworkFolder::delete($a_folder);
+			$profiledb->remove($a_folder);
+		}
+		$sharedfolderdb = SharedFolderDB::getInstance();
+		$folders = $sharedfolderdb->importFromServer($fqdn_);
+		foreach ($folders as $a_folder) {
+			$profiledb->remove($a_folder);
 		}
 
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);

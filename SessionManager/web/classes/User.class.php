@@ -218,8 +218,9 @@ class User {
 		return $my_applications;
 	}
 	
-	public function getNetworkFolders() {
-		return Abstract_NetworkFolder::load_from_user($this->getAttribute('login'));
+	public function getProfiles() {
+		$profiledb = ProfileDB::getInstance();
+		return $profiledb->importFromUser($this->getAttribute('login'));
 	}
 	
 	public function getSharedFolders() {
@@ -238,6 +239,7 @@ class User {
 			Logger::error('main', 'User::getSharedFolders usersGroups failed for user (login='.$this->getAttribute('login').')');
 		}
 		else {
+			$sharedfolderdb = SharedFolderDB::getInstance();
 			foreach ($usergroups as $group) {
 				$prefs_of_a_group_unsort = Abstract_UserGroup_Preferences::loadByUserGroupId($group->getUniqueID(), 'general',  'session_settings_defaults');
 				if (array_key_exists('enable_sharedfolders', $prefs_of_a_group_unsort)) {
@@ -248,7 +250,7 @@ class User {
 						continue;
 					}
 				}
-				$networkfolders = Abstract_NetworkFolder::load_from_usergroup($group->getUniqueID());
+				$networkfolders = $sharedfolderdb->importFromUsergroup($group->getUniqueID());
 				foreach ($networkfolders as $a_networkfolder) {
 					$sharedfolders[] = $a_networkfolder;
 				}

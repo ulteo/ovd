@@ -19,6 +19,7 @@ scripts_DATA = actions.php \
                logs.php \
                news.php \
                password.php \
+               profiles.php \
                publications.php \
                reporting.php \
                servers.php \

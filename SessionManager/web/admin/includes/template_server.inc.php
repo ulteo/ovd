@@ -438,30 +438,20 @@ function server_display_role_aps($server, $var) {
 function server_display_role_preparation_fs($server_) {
 	$ret = array();
 	
-	$networkfolders = Abstract_NetworkFolder::load_from_server($server_->getAttribute('fqdn'));
+	$sharedfolderdb = SharedFolderDB::getInstance();
+	$profiledb = ProfileDB::getInstance();
+	
+	$networkfolders = $sharedfolderdb->importFromServer($server_->getAttribute('fqdn'));
+	$profiles = $profiledb->importFromServer($server_->getAttribute('fqdn'));
+	
 	$ret['NetworkFolders'] =  array();
 	$ret['profiles'] =  array();
 	$ret['sharedfolders'] =  array();
 	$ret['used by profiles'] = array();
 	$ret['used by sharedfolders'] = array();
 	
-	foreach ($networkfolders as $a_networkfolder) {
-		if ($a_networkfolder->type == NetworkFolder::NF_TYPE_PROFILE) {
-			$ret['profiles'][$a_networkfolder->id] = $a_networkfolder;
-			if (isset($ret['used by profiles'][$a_networkfolder->id]) === false) {
-				$ret['used by profiles'][$a_networkfolder->id] = array();
-			}
-			
-			$users = $a_networkfolder->getUsers();
-			if (is_array($users) && count($users) > 0) {
-				foreach ($users as $a_user) {
-					$buf = array();
-					$buf['id'] =  $a_user->getAttribute('login');
-					$buf['name'] = $a_user->getAttribute('displayname');
-					$ret['used by profiles'][$a_networkfolder->id] []= $buf;
-				}
-			}
-		} elseif ($a_networkfolder->type == NetworkFolder::NF_TYPE_NETWORKFOLDER) {
+	if (is_array($networkfolders)) {
+		foreach ($networkfolders as $a_networkfolder) {
 			$ret['sharedfolders'][$a_networkfolder->id] = $a_networkfolder;
 			if (isset($ret['used by sharedfolders'][$a_networkfolder->id]) === false) {
 				$ret['used by sharedfolders'][$a_networkfolder->id] = array();
@@ -476,10 +466,28 @@ function server_display_role_preparation_fs($server_) {
 					$ret['used by sharedfolders'][$a_networkfolder->id] []= $buf;
 				}
 			}
-		} else {
-			$ret['NetworkFolders'][$a_networkfolder->id] = $a_networkfolder;
 		}
 	}
+	
+	if (is_array($profiles)) {
+		foreach ($profiles as $a_networkfolder) {
+			$ret['profiles'][$a_networkfolder->id] = $a_networkfolder;
+			if (isset($ret['used by profiles'][$a_networkfolder->id]) === false) {
+				$ret['used by profiles'][$a_networkfolder->id] = array();
+			}
+			
+			$users = $a_networkfolder->getUsers();
+			if (is_array($users) && count($users) > 0) {
+				foreach ($users as $a_user) {
+					$buf = array();
+					$buf['id'] =  $a_user->getAttribute('login');
+					$buf['name'] = $a_user->getAttribute('displayname');
+					$ret['used by profiles'][$a_networkfolder->id] []= $buf;
+				}
+			}
+		}
+	}
+	
 	return $ret;
 }
 
@@ -496,12 +504,6 @@ function server_display_role_fs($server_, $var_) {
 			'folder' => $var_['sharedfolders'],
 			'usedby' => $var_['used by sharedfolders'],
 			'page' => 'usersgroup',
-		),
-		2 => array(
-			'name' => _('Network folders on the server'),
-			'folder' => $var_['NetworkFolders'],
-			'usedby' => array(),
-			'page' => NULL,
 		)
 	);
 	
@@ -576,7 +578,7 @@ function server_display_role_fs($server_, $var_) {
 				echo '<td>';
 				if (! $a_networkfolder->isUsed()) {
 					echo '<form action="actions.php" method="post" onsubmit="return confirm(\''.(($k == 0)?_('Are you sure you want to delete this user profile?'):_('Are you sure you want to delete this network folder?')).'\');">';
-					echo '<input type="hidden" name="name" value="NetworkFolders" />';
+					echo '<input type="hidden" name="name" value="'.(($k == 0)?'Profile':'SharedFolder').'" />';
 					echo '<input type="hidden" name="action" value="del" />';
 					echo '<input type="hidden" name="ids[]" value="'.$a_networkfolder->id.'" />';
 					echo '<input type="submit" value="'._('Delete').'" />';
@@ -597,7 +599,7 @@ function server_display_role_fs($server_, $var_) {
 				echo '</td>';
 				echo '<td>';
 				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''.(($k == 0)?_('Are you sure you want to delete these user profiles?'):_('Are you sure you want to delete these network folders?')).'\') && updateMassActionsForm(this, \'available_networkfolder_table_'.$k.'\');">';
-				echo '<input type="hidden" name="name" value="NetworkFolders" />';
+				echo '<input type="hidden" name="name" value="'.(($k == 0)?'Profile':'SharedFolder').'" />';
 				echo '<input type="hidden" name="action" value="del" />';
 				echo '<input type="submit" name="to_production" value="'._('Delete').'"/>';
 				echo '</form>';

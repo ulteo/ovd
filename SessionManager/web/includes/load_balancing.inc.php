@@ -127,8 +127,10 @@ class DecisionCriterion_disk extends DecisionCriterion {
 
 class DecisionCriterion_networkfolder extends DecisionCriterion {
 	public function get() {
-		$total = Abstract_NetworkFolder::count_all();
-		$used = Abstract_NetworkFolder::count_from_server($this->server->fqdn);
+		$sharedfolderdb = SharedFolderDB::getInstance();
+		$profiledb = ProfileDB::getInstance();
+		$total = $sharedfolderdb->count() + $profiledb->count();
+		$used = $sharedfolderdb->countOnServer($this->server->fqdn);
 		
 		if ($total == 0) {
 			return 0;

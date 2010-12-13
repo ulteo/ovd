@@ -96,6 +96,13 @@ if (isAuthorized('viewSharedFolders'))
 			  'page' => 'sharedfolders.php',
 			  'parent' => array('servers'));
 
+if (isAuthorized('viewSharedFolders')) // it should be viewProfile
+	$menu['profile'] = 
+		array('id' => 'profiles',
+			  'name' => _('Profiles'),
+			  'page' => 'profiles.php',
+			  'parent' => array('servers'));
+
 if (isAuthorized('viewUsers'))
 	$menu['user_child'] = 
 		array('id' => 'user_child',

@@ -726,11 +726,12 @@ if (count($users_all) > 0 || count($users) > 0) {
 	echo '</div>';
 	echo '<br/>';
 
-    $all_sharedfolders = Abstract_NetworkFolder::load_by_type(NetworkFolder::NF_TYPE_NETWORKFOLDER);
+    $sharedfolderdb = SharedFolderDB::getInstance();
+    $all_sharedfolders = $sharedfolderdb->getList();
 
     if (count($all_sharedfolders) > 0) {
 		$available_sharedfolders = array();
-		$used_sharedfolders = Abstract_NetworkFolder::load_from_usergroup($group->getUniqueID());
+		$used_sharedfolders = $sharedfolderdb->importFromUsergroup($group->getUniqueID());
 		foreach ($all_sharedfolders as $sharedfolder) {
 			if (in_array($sharedfolder->id, array_keys($used_sharedfolders)))
 				continue;

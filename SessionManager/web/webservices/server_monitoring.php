@@ -219,9 +219,22 @@ if (array_key_exists('sessions', $ret) && is_array($ret['sessions'])) {
 }
 
 if (array_key_exists('shares', $ret) && is_array($ret['shares'])) {
+	$profiledb = ProfileDB::getInstance();
+	$sharedfolderdb = SharedFolderDB::getInstance();
 	$disabled_users = array();
 	foreach ($ret['shares'] as $share) {
-		$buf = Abstract_NetworkFolder::load($share['id']);
+		if ($sharedfolderdb->exists($share['id'])) {
+			$buf = $sharedfolderdb->import($share['id']);
+			$db = $sharedfolderdb;
+		}
+		else if ($profiledb->exists($share['id'])) {
+			$buf = $profiledb->import($share['id']);
+			$db = $profiledb;
+		}
+		else {
+			$buf = false;
+		}
+		
 		if (! $buf) {
 			$server = Abstract_Server::load($ret['server']);
 			if (! $server)
@@ -265,7 +278,7 @@ if (array_key_exists('shares', $ret) && is_array($ret['shares'])) {
 		}
 
 		if ($modified === true)
-			Abstract_NetworkFolder::save($buf);
+			$db->update($buf);
 	}
 }
 
