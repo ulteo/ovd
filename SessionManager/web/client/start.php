@@ -194,11 +194,9 @@ if (isset($old_session_id)) {
 		$random_server = $servers[Server::SERVER_ROLE_APS][array_rand($servers[Server::SERVER_ROLE_APS])];
 
 	if (isset($enable_profiles) && $enable_profiles == 1) {
-		Logger::debug('main', '(startsession) 100 profile enable');
 		$fileservers = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_FS);
 		if (count($fileservers) > 0) {
 			$netfolders = $user->getProfiles();
-			Logger::debug('main', '(startsession) 110 $netfolders '.serialize($netfolders));
 
 			if (! is_array($netfolders)) {
 				Logger::error('main', '(client/start) User::getProfiles() failed');
@@ -227,10 +225,11 @@ if (isset($old_session_id)) {
 				if (isset($auto_create_profile) && $auto_create_profile == 1) {
 					Logger::debug('main', '(client/start) User "'.$user->getAttribute('login').'" profile will be auto-created, and used');
 
+					$profileDB = ProfileDB::getInstance();
+
 					$fileserver = array_pop($fileservers);
 					$profile = new Profile();
 					$profile->server = $fileserver->getAttribute('fqdn');
-					$profiledb = ProfileDB::getInstance();
 
 					if (! $profiledb->addToServer($profile, $fileserver)) {
 						Logger::error('main', '(client/start) Auto-creation of profile for User "'.$user->getAttribute('login').'" failed (step 1)');
