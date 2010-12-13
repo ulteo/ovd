@@ -407,7 +407,10 @@ var Daemon = Class.create({
 				var mode_gateway = false;
 				var port = 3389;
 				try {
-					serverNodes[i].getAttribute('token');
+					var token = serverNodes[i].getAttribute('token');
+					if (token == null)
+						go_to_the_catch_please(); //call a function which does not exist to throw an exception and go to the catch()
+
 					mode_gateway = true;
 					port = 443;
 				} catch(e) {}
