@@ -160,7 +160,7 @@ public class OvdClientDesktop extends OvdClient {
 				Logger.error("Unable to create RdpConnectionOvd SSLWrapper: " + ex.getMessage());
 				return false;
 			} catch(UnknownHostException ex) {
-				Logger.error("Undefine error during creation of RdpConnectionOvd SSLWrapper: " + ex.getMessage());
+				Logger.error("Undefined error during creation of RdpConnectionOvd SSLWrapper: " + ex.getMessage());
 				return false;
 			}
 		}
