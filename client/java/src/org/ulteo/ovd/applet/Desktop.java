@@ -26,6 +26,7 @@ import java.awt.BorderLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.FileNotFoundException;
+import java.net.UnknownHostException;
 
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdesktopException;
@@ -35,6 +36,8 @@ import netscape.javascript.JSObject;
 
 import org.ulteo.Logger;
 import org.ulteo.ovd.FullscreenWindow;
+import org.ulteo.ovd.OvdException;
+import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.rdp.RdpConnectionOvd;
@@ -46,10 +49,12 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 	private boolean fullscreenMode = false;
 	private FullscreenWindow externalWindow = null;
 	
+	private int port = 0;
 	private String server = null;
 	private String username = null;
 	private String password = null;
 	private String keymap = null;
+	private String token = null;
 	private boolean multimedia_mode = false;
 	private boolean map_local_printers = false;
 	
@@ -132,6 +137,18 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 		this.rc.setServer(this.server);
 		this.rc.setCredentials(this.username, this.password);
 
+		if (this.token != null) {
+			rc.setCookieElement("token", this.token);
+
+			try {
+				rc.useSSLWrapper(this.server, this.port);
+			} catch(OvdException ex) {
+				Logger.error("Unable to create SSLWrapper: " + ex.getMessage());
+			} catch(UnknownHostException ex) {
+				Logger.error("Undefined error during creation of SSLWrapper: " + ex.getMessage());
+			}
+		}
+		
 		// Ensure that width is a multiple of 4
 		// to prevent artifacts
 		int w = this.getWidth();
@@ -242,6 +259,15 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 			this.username = this.getParameterNonEmpty("username");
 			this.password = this.getParameterNonEmpty("password");
 			this.keymap = this.getParameterNonEmpty("keymap");
+			this.token = this.getParameter("token");
+			String strPort = this.getParameterNonEmpty("port");
+			try {
+				this.port = Integer.parseInt(strPort);
+			}
+			catch (NumberFormatException e) {
+				Logger.error("Unable to get valid port from applet parameters: "+e.getMessage());
+				return false;
+			}
 		}
 		catch(Exception e) {
 			return false;
