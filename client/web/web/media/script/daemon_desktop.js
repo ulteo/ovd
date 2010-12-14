@@ -48,7 +48,7 @@ var Desktop = Class.create(Daemon, {
 
 			var applet_params = new Hash();
 			applet_params.set('server', server.fqdn);
-			applet_params.set('port', '3389');
+			applet_params.set('port', server.port);
 			if (server.token != null)
 				applet_params.set('token', server.token);
 			applet_params.set('username', server.username);
