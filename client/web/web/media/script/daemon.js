@@ -78,6 +78,7 @@ var Daemon = Class.create({
 		this.refresh_body_size();
 
 		if (this.debug) {
+			$('debugContainer').innerHTML = '';
 			$('debugContainer').show();
 			$('debugContainer').style.display = 'inline';
 			$('debugLevels').show();
