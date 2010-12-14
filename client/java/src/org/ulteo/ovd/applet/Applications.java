@@ -36,6 +36,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import net.propero.rdp.RdesktopException;
 
 import net.propero.rdp.RdpConnection;
@@ -104,7 +105,7 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 	private boolean multimedia_mode = false;
 	private boolean map_local_printers = false;
 	
-	private HashMap<Integer, RdpConnectionOvd> connections = null;
+	private ConcurrentHashMap<Integer, RdpConnectionOvd> connections = null;
 	private List<Order> spoolOrder = null;
 	private Thread spoolThread = null;
 	private AbstractFocusManager focusManager;
@@ -172,7 +173,7 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 		
 		this.spoolOrder = new ArrayList<Order>();
 		this.spoolThread = new Thread(this);
-		this.connections = new HashMap<Integer, RdpConnectionOvd>();
+		this.connections = new ConcurrentHashMap<Integer, RdpConnectionOvd>();
 		this.finished_init = true;
 	}
 	
