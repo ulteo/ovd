@@ -28,10 +28,6 @@ var Daemon = Class.create({
 	debug: false,
 	explorer: false,
 
-	protocol: '',
-	server: '',
-	port: '',
-
 	my_width: 0,
 	my_height: 0,
 
@@ -68,12 +64,6 @@ var Daemon = Class.create({
 		this.applet_main_class = applet_main_class_;
 
 		this.debug = debug_;
-
-		this.protocol = window.location.protocol;
-		this.server = window.location.host;
-		this.port = window.location.port;
-		if (this.port == '')
-			this.port = 80;
 
 		this.refresh_body_size();
 
