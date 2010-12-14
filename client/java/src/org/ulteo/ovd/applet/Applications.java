@@ -309,9 +309,8 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 				
 				rc.setServer(order.host, order.port);
 				rc.setCredentials(order.login, order.password);
-				// Ensure that width is multiple of 4
-				// Prevent artifact on screen with a with resolution
-				// not divisible by 4
+				// Ensure that width is a multiple of 4
+				// to prevent artifacts
 				rc.setGraphic(dim.width & ~3, dim.height, RdpConnectionOvd.DEFAULT_BPP);
 				rc.setGraphicOffset(dim.x, dim.y);
 				rc.setKeymap(keymap);
