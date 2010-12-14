@@ -306,7 +306,7 @@ function show_manage($id, $applicationDB) {
 			$groups_available[]= $group;
 	}
 
-	$servers_all = Abstract_Server::load_all();
+	$servers_all = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_APS);
 	$liaisons = Abstract_Liaison::load('ApplicationServer', $app->getAttribute('id'), NULL);
 	$servers_id = array();
 	foreach ($liaisons as $liaison)
