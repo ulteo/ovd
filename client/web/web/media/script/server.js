@@ -22,7 +22,7 @@ var Server = Class.create({
 	id: '',
 	fqdn: '',
 	port: 0,
-	token: false,
+	token: null,
 	username: '',
 	password: '',
 
@@ -46,10 +46,10 @@ var Server = Class.create({
 		if (this.connected)
 			return true;
 
-		if (! this.token)
-			$('ulteoapplet').serverConnect(this.java_id, this.fqdn, this.port, this.username, this.password);
-		else
+		if (this.token != null)
 			$('ulteoapplet').serverConnect(this.java_id, this.fqdn, this.port, this.token, this.username, this.password);
+		else
+			$('ulteoapplet').serverConnect(this.java_id, this.fqdn, this.port, this.username, this.password);
 
 		return true;
 	},
