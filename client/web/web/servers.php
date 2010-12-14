@@ -44,36 +44,11 @@ if (! $dom->hasChildNodes()) {
 	die();
 }
 
-$servers = array();
 $server_nodes = $dom->getElementsByTagName('server');
 foreach ($server_nodes as $server_node) {
-	$server = array(
-		'fqdn'		=>	$server_node->getAttribute('fqdn'),
-		'login'		=>	$server_node->getAttribute('login'),
-		'password'	=>	$server_node->getAttribute('password')
-	);
-
-	if (array_key_exists('gateway', $_SESSION) && $_SESSION['gateway'] === true) {
-		$server['fqdn'] = $_SESSION['ovd-client']['server'];
-		$server['token'] = $server_node->getAttribute('token');
-	}
-
-	$servers[] = $server;
+	if (array_key_exists('gateway', $_SESSION) && $_SESSION['gateway'] === true)
+		$server_node->setAttribute('fqdn', $_SESSION['ovd-client']['server']);
 }
-
-$dom = new DomDocument('1.0', 'utf-8');
-
-$servers_node = $dom->createElement('servers');
-foreach ($servers as $server) {
-	$server_node = $dom->createElement('server');
-	$server_node->setAttribute('fqdn', $server['fqdn']);
-	if (isset($server['token']))
-		$server_node->setAttribute('token', $server['token']);
-	$server_node->setAttribute('login', $server['login']);
-	$server_node->setAttribute('password', $server['password']);
-	$servers_node->appendChild($server_node);
-}
-$dom->appendChild($servers_node);
 
 $xml = $dom->saveXML();
 

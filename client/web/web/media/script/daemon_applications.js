@@ -70,8 +70,6 @@ var Applications = Class.create(Daemon, {
 	do_started: function() {
 		this.push_log('debug', '[applications] do_started()');
 
-		this.list_apps();
-
 		this.load_explorer();
 		this.display_news();
 
@@ -95,50 +93,67 @@ var Applications = Class.create(Daemon, {
 		return true;
 	},
 
-	list_apps: function() {
-		this.push_log('debug', '[applications] list_apps()');
-
-		new Ajax.Request(
-			'apps.php',
-			{
-				method: 'get',
-				onSuccess: this.parse_list_apps.bind(this)
-			}
-		);
-	},
-
-	parse_list_apps: function(transport) {
-		this.push_log('debug', '[applications] parse_list_apps(transport@list_apps())');
+	parse_list_servers: function(transport) {
+		this.push_log('debug', '[applications] parse_list_servers(transport@list_servers())');
 
 		var xml = transport.responseXML;
 
-		var buffer = xml.getElementsByTagName('applications');
+		var sessionNode = xml.getElementsByTagName('session');
 
-		if (buffer.length != 1) {
-			this.push_log('error', '[applications] parse_list_apps(transport@list_apps()) - Invalid XML (No "applications" node)');
+		if (sessionNode.length != 1) {
+			this.push_log('error', '[applications] parse_list_servers(transport@list_servers()) - Invalid XML (No "session" node)');
 			return;
 		}
 
-		var applicationNodes = xml.getElementsByTagName('application');
+		var serverNodes = xml.getElementsByTagName('server');
 
-		for (var i=0; i < applicationNodes.length; i++) {
+		for (var i=0; i<serverNodes.length; i++) {
 			try { // IE does not have hasAttribute in DOM API...
-				this.push_log('info', '[applications] parse_list_apps(transport@list_apps()) - Adding application "'+applicationNodes[i].getAttribute('id')+'" to applications list');
+				this.push_log('info', '[applications] parse_list_servers(transport@list_servers()) - Adding server "'+serverNodes[i].getAttribute('fqdn')+'" to servers list');
 
-				var server_id = applicationNodes[i].getAttribute('server');
+				var mode_gateway = false;
+				var port = 3389;
+				try {
+					var token = serverNodes[i].getAttribute('token');
+					if (token == null)
+						go_to_the_catch_please(); //call a function which does not exist to throw an exception and go to the catch()
 
-				if (typeof this.liaison_server_applications.get(server_id) == 'undefined')
-					continue;
+					mode_gateway = true;
+					port = 443;
+				} catch(e) {}
 
-				var application = new Application(applicationNodes[i].getAttribute('id'), applicationNodes[i].getAttribute('name'), server_id);
-				this.applications.set(application.id, application);
-				this.applicationsPanel.add(application);
-				this.liaison_server_applications.get(server_id).push(application.id);
+				var server = new Server(i, i, serverNodes[i].getAttribute('fqdn'), port, serverNodes[i].getAttribute('login'), serverNodes[i].getAttribute('password'));
+				if (mode_gateway)
+					server.setToken(serverNodes[i].getAttribute('token'));
+
+				this.servers.set(server.id, server);
+				this.liaison_server_applications.set(server.id, new Array());
+
+				var applicationNodes = serverNodes[i].getElementsByTagName('application');
+
+				for (var j=0; j<applicationNodes.length; j++) {
+					try { // IE does not have hasAttribute in DOM API...
+						this.push_log('info', '[applications] parse_list_servers(transport@list_servers()) - Adding application "'+applicationNodes[j].getAttribute('id')+'" to applications list');
+
+						if (typeof this.liaison_server_applications.get(server.id) == 'undefined')
+							continue;
+
+						var application = new Application(applicationNodes[j].getAttribute('id'), applicationNodes[j].getAttribute('name'), server.id);
+						this.applications.set(application.id, application);
+						this.applicationsPanel.add(application);
+						this.liaison_server_applications.get(server.id).push(application.id);
+					} catch(e) {
+						this.push_log('error', '[applications] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "application" node '+j+')');
+						return;
+					}
+				}
 			} catch(e) {
-				this.push_log('error', '[applications] parse_list_apps(transport@list_apps()) - Invalid XML (Missing argument for "application" node '+i+')');
+				this.push_log('error', '[applications] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "server" node '+i+')');
 				return;
 			}
 		}
+
+		this.ready = true;
 	},
 
 	list_running_apps: function(applicationsNode_) {

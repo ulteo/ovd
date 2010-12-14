@@ -386,50 +386,6 @@ var Daemon = Class.create({
 		);
 	},
 
-	parse_list_servers: function(transport) {
-		this.push_log('debug', '[daemon] parse_list_servers(transport@list_servers())');
-
-		var xml = transport.responseXML;
-
-		var buffer = xml.getElementsByTagName('servers');
-
-		if (buffer.length != 1) {
-			this.push_log('error', '[daemon] parse_list_servers(transport@list_servers()) - Invalid XML (No "servers" node)');
-			return;
-		}
-
-		var serverNodes = xml.getElementsByTagName('server');
-
-		for (var i=0; i<serverNodes.length; i++) {
-			try { // IE does not have hasAttribute in DOM API...
-				this.push_log('info', '[daemon] parse_list_servers(transport@list_servers()) - Adding server "'+serverNodes[i].getAttribute('fqdn')+'" to servers list');
-
-				var mode_gateway = false;
-				var port = 3389;
-				try {
-					var token = serverNodes[i].getAttribute('token');
-					if (token == null)
-						go_to_the_catch_please(); //call a function which does not exist to throw an exception and go to the catch()
-
-					mode_gateway = true;
-					port = 443;
-				} catch(e) {}
-
-				var server = new Server(serverNodes[i].getAttribute('fqdn'), i, serverNodes[i].getAttribute('fqdn'), port, serverNodes[i].getAttribute('login'), serverNodes[i].getAttribute('password'));
-				if (mode_gateway)
-					server.setToken(serverNodes[i].getAttribute('token'));
-
-				this.servers.set(server.id, server);
-				this.liaison_server_applications.set(server.id, new Array());
-			} catch(e) {
-				this.push_log('error', '[daemon] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "server" node '+i+')');
-				return;
-			}
-		}
-
-		this.ready = true;
-	},
-
 	do_ended: function() {
 		this.push_log('debug', '[daemon] do_ended()');
 
