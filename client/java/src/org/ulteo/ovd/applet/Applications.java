@@ -22,6 +22,7 @@
 package org.ulteo.ovd.applet;
 
 import java.io.FileNotFoundException;
+import java.net.UnknownHostException;
 
 import org.ulteo.Logger;
 import org.ulteo.ovd.OvdException;
@@ -59,17 +60,19 @@ class OrderServer extends Order {
 	public int port;
 	public String login;
 	public String password;
+	public String token;
 	
-	public OrderServer(int id, String host, int port, String login, String password) {
+	public OrderServer(int id, String host, int port, String token, String login, String password) {
 		this.id = id;
 		this.host = host;
 		this.port = port;
+		this.token = token;
 		this.login = login;
 		this.password = password;
 	}
 	
 	public String toString() {
-		return "Server (id: "+this.id+ ", host: "+this.host+")";
+		return "Server (id: "+this.id+ ", host: "+this.host+", token: "+this.token+")";
 	}
 }
 
@@ -308,6 +311,18 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 				}
 				
 				rc.setServer(order.host, order.port);
+				if (order.token != null) {
+					rc.setCookieElement("token", order.token);
+
+					try {
+						rc.useSSLWrapper(order.host, order.port);
+					} catch(OvdException ex) {
+						Logger.error("Unable to create SSLWrapper: " + ex.getMessage());
+					} catch(UnknownHostException ex) {
+						Logger.error("Undefined error during creation of SSLWrapper: " + ex.getMessage());
+					}
+				}
+
 				rc.setCredentials(order.login, order.password);
 				// Ensure that width is a multiple of 4
 				// to prevent artifacts
@@ -369,7 +384,13 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 	
 	public boolean serverConnect(int id, String host, int port, String login, String password) {
 		System.out.println("serverConnect: ask for "+host);
-		this.pushOrder(new OrderServer(id, host, port, login, password));
+		this.pushOrder(new OrderServer(id, host, port, null, login, password));
+		return true;
+	}
+	
+	public boolean serverConnect(int id, String host, int port, String token, String login, String password) {
+		System.out.println("serverConnect through a gateway: ask for "+host);
+		this.pushOrder(new OrderServer(id, host, port, token, login, password));
 		return true;
 	}
 	
