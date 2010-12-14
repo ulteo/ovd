@@ -60,7 +60,10 @@ var Applications = Class.create(Daemon, {
 
 		var servers = this.servers.values();
 		for (var i=0; i < servers.length; i++) {
-			this.push_log('info', '[applications] connect_servers() - Connecting to server "'+servers[i].id+'"');
+			if (servers[i].token != null)
+				this.push_log('info', '[applications] connect_servers() - Connecting to server "'+servers[i].id+'"');
+			else
+				this.push_log('info', '[applications] connect_servers() - Connecting to server "'+servers[i].fqdn+'"');
 			servers[i].connect();
 		}
 
