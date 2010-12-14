@@ -109,8 +109,6 @@ var Applications = Class.create(Daemon, {
 
 		for (var i=0; i<serverNodes.length; i++) {
 			try { // IE does not have hasAttribute in DOM API...
-				this.push_log('info', '[applications] parse_list_servers(transport@list_servers()) - Adding server "'+serverNodes[i].getAttribute('fqdn')+'" to servers list');
-
 				var mode_gateway = false;
 				var port = 3389;
 				try {
@@ -126,6 +124,10 @@ var Applications = Class.create(Daemon, {
 				if (mode_gateway)
 					server.setToken(serverNodes[i].getAttribute('token'));
 
+				if (mode_gateway)
+					this.push_log('info', '[applications] parse_list_servers(transport@list_servers()) - Adding server "'+server.id+'" to servers list');
+				else
+					this.push_log('info', '[applications] parse_list_servers(transport@list_servers()) - Adding server "'+server.fqdn+'" to servers list');
 				this.servers.set(server.id, server);
 				this.liaison_server_applications.set(server.id, new Array());
 
