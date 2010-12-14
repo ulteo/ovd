@@ -132,9 +132,8 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 		this.rc.setServer(this.server);
 		this.rc.setCredentials(this.username, this.password);
 
-		// Ensure that width is multiple of 4
-		// Prevent artifact on screen with a with resolution
-		// not divisible by 4
+		// Ensure that width is a multiple of 4
+		// to prevent artifacts
 		int w = this.getWidth();
 		int h = this.getHeight();
 		if (this.fullscreenMode) {
