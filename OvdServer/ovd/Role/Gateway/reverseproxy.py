@@ -128,7 +128,7 @@ class ReverseProxy(asyncore.dispatcher):
 			r = conn.recv(4096)
 		except:
 			Logger.error('Accepting connexion failed, client could not connect')
-			self.exit()
+			return
 		
 		requestline=r.splitlines()[0]
 		
