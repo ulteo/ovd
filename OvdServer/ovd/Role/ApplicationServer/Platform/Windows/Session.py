@@ -324,6 +324,24 @@ class Session(AbstractSession):
 				_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 1)
 			_winreg.CloseKey(key)
 		
+		
+		# Remove Windows startup sound
+		keys = ["SystemStart"]
+		for k in keys:
+			path = r"%s\AppEvents\Schemes\Apps\.Default\%s\.Current"%(hiveName, k)
+			
+			try:
+				Reg.CreateKeyR(_winreg.HKEY_USERS, path)
+				key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+			except:
+				key = None
+			if key is None:
+				Logger.error("Unable to open key '%s'"%(path))
+			else:
+				_winreg.SetValueEx(key, None, 0, _winreg.REG_EXPAND_SZ, "")
+				_winreg.CloseKey(key)
+		
+		
 		# Desktop customization
 		path = r"%s\Control Panel\Desktop"%(hiveName)
 		items = ["ScreenSaveActive", "ScreenSaverIsSecure"]
