@@ -326,7 +326,9 @@ class Session(AbstractSession):
 		
 		
 		# Remove Windows startup sound
-		keys = ["SystemStart"]
+		keys = ["WindowsLogon", "WindowsLogoff",
+			"SystemStart", # old Windows 2003, not used anymore in 2008
+			]
 		for k in keys:
 			path = r"%s\AppEvents\Schemes\Apps\.Default\%s\.Current"%(hiveName, k)
 			
