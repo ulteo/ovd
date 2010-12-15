@@ -25,6 +25,7 @@ abstract class SessionManagement extends Module {
 	public $user = false;
 	public $desktop_server = false;
 	public $servers = array();
+	public $credentials = array();
 
 	public static function getInstance() {
 		if (is_null(self::$instance)) {
@@ -189,6 +190,8 @@ abstract class SessionManagement extends Module {
 
 		return true;
 	}
+
+	abstract public function generateCredentials($roles_=array(Server::SERVER_ROLE_APS, Server::SERVER_ROLE_FS));
 
 	public function getDesktopServer($type_='any') {
 		if (! $this->user) {

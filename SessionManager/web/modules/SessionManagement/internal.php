@@ -63,6 +63,33 @@ class SessionManagement_internal extends SessionManagement {
 		return false;
 	}
 
+	public function generateCredentials($roles_=array(Server::SERVER_ROLE_APS, Server::SERVER_ROLE_FS)) {
+		if (! $this->user) {
+			Logger::error('main', 'SessionManagement_internal::generateCredentials - User is not authenticated, aborting');
+			throw_response(AUTH_FAILED);
+		}
+
+		$this->credentials = array(
+			Server::SERVER_ROLE_APS	=>	array(),
+			Server::SERVER_ROLE_FS	=>	array()
+		);
+
+		foreach ($roles_ as $role) {
+			switch ($role) {
+				case Server::SERVER_ROLE_APS:
+					$this->credentials[Server::SERVER_ROLE_APS]['login'] = 'u'.time().gen_string(5).'_APS'; //hardcoded
+					$this->credentials[Server::SERVER_ROLE_APS]['password'] = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+					break;
+				case Server::SERVER_ROLE_FS:
+					$this->credentials[Server::SERVER_ROLE_FS]['login'] = 'u'.time().gen_string(6).'_FS'; //hardcoded
+					$this->credentials[Server::SERVER_ROLE_FS]['password'] = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+					break;
+			}
+		}
+
+		return true;
+	}
+
 	/* Module methods */
 	public static function configuration() {
 		return array();
