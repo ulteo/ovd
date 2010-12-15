@@ -19,6 +19,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
+if (! is_array($_POST) || count($_POST) == 0) {
+	header('Location: index.php');
+	die();
+}
+
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 function return_error($errno_, $errstr_) {
