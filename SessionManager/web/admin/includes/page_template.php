@@ -545,39 +545,48 @@ function page_menu(){
 }
 
 function page_sub_menu() {
+	echo '<table style="width: 98.9%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
+	echo '<tr>';
+
 	global $menu;
 	$menu2 = $menu; // bug in php 5.1.6 (redhat 5.2)
 
 	$position = get_menu_entry();
 	$parent = $menu2[$position]['parent'];
-	if ($parent == Null)
-		return;
-	elseif(is_array($parent))
-		$parent = $parent[0];
-
-	echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
-	echo '<tr>';
-	echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\''.ROOT_ADMIN_URL.'/media/image/submenu_bg.png\') repeat-y right;">';
-
-	foreach($menu2 as $id => $entrie) {
-		if (is_array($entrie['parent'])) {
-			if (! in_array($parent, $entrie['parent']))
-				continue;
-		} else {
-			if ($parent != $entrie['parent'])
-				continue;
-		}
-
-		if ($id == $position)
-			echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
+	if (is_array($parent)) {
+		if (count($parent) > 0)
+			$parent = $parent[0];
 		else
-			echo '<div class="container">';
-
-		echo '<a href="'.ROOT_ADMIN_URL.'/'.$entrie['page'].'">'.$entrie['name'].'</a>';
-		echo '</div>';
+			$parent = NULL;
 	}
 
-	echo '</td>';
-	echo '<td style="text-align: left; vertical-align: top; background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
+	if (! is_null($parent)) {
+		echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\''.ROOT_ADMIN_URL.'/media/image/submenu_bg.png\') repeat-y right;">';
+
+		foreach($menu2 as $id => $entrie) {
+			if (is_array($entrie['parent'])) {
+				if (! in_array($parent, $entrie['parent']))
+					continue;
+			} else {
+				if ($parent != $entrie['parent'])
+					continue;
+			}
+
+			if ($id == $position)
+				echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
+			else
+				echo '<div class="container">';
+
+			echo '<a href="'.ROOT_ADMIN_URL.'/'.$entrie['page'].'">'.$entrie['name'].'</a>';
+			echo '</div>';
+		}
+
+		echo '</td>';
+	}
+
+	echo '<td style="text-align: left; vertical-align: top; background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;';
+	if (is_null($parent))
+		echo ' border-left: 1px solid #ccc;';
+	echo '">';
 	echo '<div class="container">';
 }
