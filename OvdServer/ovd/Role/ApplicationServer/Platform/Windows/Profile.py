@@ -271,8 +271,8 @@ class Profile(AbstractProfile):
 			path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
 			
 			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
-			win32api.RegSetValueEx(key, "Desktop",  0, win32con.REG_SZ, os.path.join(r"\\%s"%(self.profile["server"]), self.profile["dir"], self.DesktopDir))
-			win32api.RegSetValueEx(key, "Personal", 0, win32con.REG_SZ, os.path.join(r"\\%s"%(self.profile["server"]), self.profile["dir"], self.DocumentsDir))
+			win32api.RegSetValueEx(key, "Desktop",  0, win32con.REG_SZ, r"U:\%s"%(self.DesktopDir))
+			win32api.RegSetValueEx(key, "Personal", 0, win32con.REG_SZ, r"U:\%s"%(self.DocumentsDir))
 			win32api.RegCloseKey(key)
 	
 	
