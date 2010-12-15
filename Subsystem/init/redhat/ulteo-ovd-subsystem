@@ -1,9 +1,26 @@
 #!/bin/sh
-# Copyright (c) 2010 Ulteo SAS.
+
+# Copyright (C) 2008-2010 Ulteo SAS
+# http://www.ulteo.com
+# Author Gauvain POCENTEK <gpocentek@linutop.com> 2008-2009
+# Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
+# Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010
 #
-# Author: Julien LANGLOIS <julien@ulteo.com>
-#         Samuel BOVEE <samuel@ulteo.com>
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License
 #
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 ### BEGIN INIT INFO
 # Provides:          ulteo-ovd-subsystem
 # Required-Start:    $local_fs $network
