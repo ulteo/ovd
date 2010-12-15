@@ -188,7 +188,7 @@ $_SESSION['interface']['debug'] = $_POST['debug'];
 header('Content-Type: text/xml; charset=utf-8');
 
 if (! defined('SESSIONMANAGER_HOST') && ! array_key_exists('sessionmanager_host', $_POST)) {
-	echo return_error(1, 'Usage: missing "sessionmanager_host" parameter');
+	echo return_error(0, 'no_sessionmanager_host');
 	die();
 }
 

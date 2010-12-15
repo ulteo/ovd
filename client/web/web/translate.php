@@ -114,6 +114,7 @@ foreach ($translations as $id => $string) {
 }
 
 $js_translations = array(
+	'no_sessionmanager_host'		=>	_('Usage: missing "sessionmanager_host" parameter'),
 	'no_login_parameter'			=>	_('Usage: missing "login" parameter'),
 	'no_password_parameter'			=>	_('Usage: missing "password" parameter'),
 	'unable_to_reach_sm'			=>	_('Unable to reach the Session Manager'),
