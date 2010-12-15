@@ -78,6 +78,10 @@ var Daemon = Class.create({
 		if ($('progressBar') && $('progressBarContent'))
 			this.progressBar();
 
+		window.onbeforeunload = function(e) {
+			return '';
+		}
+
 		Event.observe(window, 'unload', this.client_exit.bind(this));
 	},
 
