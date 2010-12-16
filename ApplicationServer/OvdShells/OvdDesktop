@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Gauvain POCENTEK <gauvain@ulteo.com> 2009
@@ -113,6 +113,8 @@ def main(startExplorer):
 	
 	# Applications to auto starts
 	Util.manageAutoStartApplication(user_sdir)
+	
+	Util.startModules()
 	
 	if startExplorer:
 		Platform.startDesktop()

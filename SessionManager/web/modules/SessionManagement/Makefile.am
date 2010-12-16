@@ -1,4 +1,5 @@
-scripts_DATA = internal.php
+scripts_DATA = internal.php \
+               novell.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/modules/SessionManagement
 

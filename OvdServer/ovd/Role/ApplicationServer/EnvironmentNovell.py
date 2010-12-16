@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: UTF-8 -*-
 
 # Copyright (C) 2010 Ulteo SAS
 # http://www.ulteo.com
@@ -18,43 +18,22 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import glob
-import os
 
-from ovd_shells.Platform import _platform as Platform
-from ovd_shells.Platform.Novell import Novell
-
-def loadUserEnv(d):
-	path = os.path.join(d, "env")
-	try:
-		f = file(path, "r")
-	except:
-		return
+class EnvironmentNovell:
+	def __init__(self):
+		self.session = None
+		self.account = {}
 	
-	lines = f.readlines()
-	f.close()
 	
-	for line in lines:
-		line = line.strip()
+	def parse(self, node):
 		try:
-			key,value = line.split("=", 1)
-		except:
-			continue
+			for item in ["login", "password", "tree", "server"]:
+				self.account[item] = node.getAttribute(item)
+		except Exception, err:
+			return False
 		
-		os.environ[key] = value
-
-def manageAutoStartApplication(d):
-	for path in glob.glob(os.path.join(d, "to_start", "*")):
-		f = file(path, "r")
-		lines = f.readlines()
-		f.close()
-		
-		cmd = "startovdapp %s"%(lines[0].strip())
-		if len(lines) > 1:
-			cmd+= ' "%s"'%(lines[1].strip())
-		
-		Platform.launch(cmd)
-
-def startModules():
-	novell = Novell()
-	novell.perform()
+		return True
+	
+	
+	def setSession(self, session):
+		self.session = session

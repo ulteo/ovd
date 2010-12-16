@@ -2,7 +2,7 @@
 
 # Copyright (C) 2008-2010 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2008
+# Author Julien LANGLOIS <julien@ulteo.com> 2008-2010
 # Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -199,6 +199,7 @@ class Dialog(AbstractDialog):
 		return response
 	
 	def req_session_create(self, request):
+		environment = None
 		try:
 			document = minidom.parseString(request["data"])
 			sessionNode = document.documentElement
@@ -230,6 +231,18 @@ class Dialog(AbstractDialog):
 			else:
 				raise Exception("Missing attribute id")
 			
+			nodes = sessionNode.getElementsByTagName("environment")
+			if len(nodes)>0:
+				environmentNode = nodes[0]
+				name = environmentNode.getAttribute("id")
+				
+				if name == "Microsoft":
+					pass
+				elif name == "Novell":
+					environment = Platform.EnvironmentNovell()
+					ret = environment.parse(environmentNode)
+					if ret is False:
+						raise Exception("invalid Novell environment schema")
 			
 			userNode = sessionNode.getElementsByTagName("user")[0]
 			
@@ -315,6 +328,8 @@ class Dialog(AbstractDialog):
 		session = Platform.Session(session["id"], session["mode"], user, session["parameters"], applications.values())
 		if external_apps_token is not None:
 			session.setExternalAppsToken(external_apps_token)
+		if environment is not None:
+			session.setEnvironment(environment)
 		
 		session.setApplicationToStart(application_to_start)
 		session.init()

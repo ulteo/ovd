@@ -374,6 +374,8 @@ class Session(AbstractSession):
 		if self.profile is not None:
 			self.profile.overrideRegistry(hiveName, self.user.name)
 		
+		if self.environment is not None:
+			self.environment.do_change_registry(hiveName)
 		
 		# Timezone override
 		if self.parameters.has_key("timezone"):

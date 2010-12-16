@@ -63,6 +63,8 @@ class Session:
 		self.external_apps_token = None
 		self.end_status = None
 		
+		self.environment = None
+		
 		self.log = []
 		self.switch_status(Session.SESSION_STATUS_INIT)
 	
@@ -135,6 +137,10 @@ class Session:
 	
 	def setExternalAppsToken(self, external_apps_token):
 		self.external_apps_token = external_apps_token
+	
+	def setEnvironment(self, environment):
+		self.environment = environment
+		self.environment.setSession(self)
 	
 	def install_client(self):
 		pass

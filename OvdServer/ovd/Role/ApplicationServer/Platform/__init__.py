@@ -34,6 +34,7 @@ if Platform is None:
 	elif p == "windows":
 		from Windows.ApplicationsDetection import ApplicationsDetection
 		from Windows.ApplicationsStatic import ApplicationsStatic
+		from Windows.EnvironmentNovell import EnvironmentNovell
 		from Windows.Profile import Profile
 		from Windows.Session import Session
 		from Windows.TS import TS
@@ -47,6 +48,7 @@ if Platform is None:
 	Platform = _Platform()
 	Platform.ApplicationsDetection = ApplicationsDetection
 	Platform.ApplicationsStatic = ApplicationsStatic
+	Platform.EnvironmentNovell = EnvironmentNovell
 	Platform.Profile = Profile
 	Platform.Session = Session
 	Platform.TS = TS

@@ -59,6 +59,8 @@ def main():
 	# Applications to auto starts
 	Util.manageAutoStartApplication(user_sdir)
 	
+	Util.startModules()
+	
 	app_channel = OvdAppChannel(im)
 	app_channel.run(vchannel)
 	
