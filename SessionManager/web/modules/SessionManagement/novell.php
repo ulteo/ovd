@@ -20,54 +20,18 @@
  **/
 
 class SessionManagement_novell extends SessionManagement {
-	public function authenticate() {
+	public static function getAuthMethods() {
+		return array('Password');
+	}
+
+	public function initialize() {
 		$userDB_enabled = $this->prefs->get('UserDB', 'enable');
 		if ($userDB_enabled != 'ldap') {
 			Logger::error('main', 'SessionManagement_novell::authenticate - UserDB module is not set to use LDAP');
 			return false;
 		}
 
-		$userDB = UserDB::getInstance();
-
-		$authMethods = $this->prefs->get('AuthMethod', 'enable');
-		if (! is_array($authMethods)) {
-			Logger::error('main', 'SessionManagement_novell::authenticate - No AuthMethod enabled');
-			return false;
-		}
-
-		if (! in_array('Password', $authMethods)) {
-			Logger::error('main', 'SessionManagement_novell::authenticate - No "Password" AuthMethod enabled');
-			return false;
-		}
-
-		$authMethod_module = 'AuthMethod_Password';
-		$authMethod = new $authMethod_module($this->prefs, $userDB);
-
-		Logger::debug('main', 'SessionManagement_novell::authenticate - Trying "'.$authMethod_module.'"');
-
-		$user_login = $authMethod->get_login();
-		if (is_null($user_login)) {
-			Logger::debug('main', 'SessionManagement_novell::authenticate - Unable to get a valid login');
-			continue;
-		}
-
-		$this->user = $userDB->import($user_login);
-		if (! is_object($this->user)) {
-			Logger::debug('main', 'SessionManagement_novell::authenticate - Unable to import a valid user with login "'.$user_login.'"');
-			continue;
-		}
-
-		$buf = $authMethod->authenticate($this->user);
-		if ($buf === true) {
-			Logger::debug('main', 'SessionManagement_novell::authenticate - Now authenticated as "'.$user_login.'"');
-			return true;
-		}
-
-		Logger::error('main', 'SessionManagement_novell::authenticate - Authentication failed for "'.$user_login.'"');
-
-		$this->user = false;
-
-		return false;
+		return true;
 	}
 
 	public function buildServersList($roles_=array(Server::SERVER_ROLE_APS)) {

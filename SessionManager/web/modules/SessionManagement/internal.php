@@ -20,47 +20,10 @@
  **/
 
 class SessionManagement_internal extends SessionManagement {
-	public function authenticate() {
-		$userDB = UserDB::getInstance();
+	public static function getAuthMethods() {
+		$prefs = Preferences::getInstance();
 
-		$authMethods = $this->prefs->get('AuthMethod', 'enable');
-		if (! is_array($authMethods)) {
-			Logger::error('main', 'SessionManagement_internal::authenticate - No AuthMethod enabled');
-			return false;
-		}
-
-		foreach ($authMethods as $authMethod) {
-			$authMethod_module = 'AuthMethod_'.$authMethod;
-			$authMethod = new $authMethod_module($this->prefs, $userDB);
-
-			Logger::debug('main', 'SessionManagement_internal::authenticate - Trying "'.$authMethod_module.'"');
-
-			$user_login = $authMethod->get_login();
-			if (is_null($user_login)) {
-				Logger::debug('main', 'SessionManagement_internal::authenticate - Unable to get a valid login, switching to next AuthMethod');
-				continue;
-			}
-
-			$this->user = $userDB->import($user_login);
-			if (! is_object($this->user)) {
-				Logger::debug('main', 'SessionManagement_internal::authenticate - Unable to import a valid user with login "'.$user_login.'", switching to next AuthMethod');
-				continue;
-			}
-
-			$buf = $authMethod->authenticate($this->user);
-			if ($buf === true) {
-				Logger::debug('main', 'SessionManagement_internal::authenticate - Now authenticated as "'.$user_login.'"');
-				return true;
-			}
-
-			Logger::error('main', 'SessionManagement_internal::authenticate - Authentication failed for "'.$user_login.'", switching to next AuthMethod');
-		}
-
-		Logger::error('main', 'SessionManagement_internal::authenticate - Authentication failed');
-
-		$this->user = false;
-
-		return false;
+		return $prefs->get('AuthMethod', 'enable');
 	}
 
 	public function generateCredentials($roles_=array(Server::SERVER_ROLE_APS, Server::SERVER_ROLE_FS)) {

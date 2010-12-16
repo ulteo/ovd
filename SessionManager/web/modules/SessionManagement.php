@@ -22,6 +22,7 @@
 abstract class SessionManagement extends Module {
 	protected static $instance = NULL;
 	protected $prefs = false;
+	protected $authMethod = false;
 	public $user = false;
 	public $desktop_server = false;
 	public $servers = array();
@@ -56,6 +57,10 @@ abstract class SessionManagement extends Module {
 			Logger::error('main', 'SessionManagement::__construct - The system is on maintenance mode');
 			throw_response(IN_MAINTENANCE);
 		}
+	}
+
+	public function initialize() {
+		return true;
 	}
 
 	public function parseClientRequest($xml_) {
@@ -150,7 +155,61 @@ abstract class SessionManagement extends Module {
 		return true;
 	}
 
-	abstract public function authenticate();
+	public function authenticate() {
+		$userDB = UserDB::getInstance();
+
+		$authMethods_enabled = $this->prefs->get('AuthMethod', 'enable');
+		if (! is_array($authMethods_enabled)) {
+			Logger::error('main', 'SessionManagement::authenticate - No AuthMethod enabled');
+			return false;
+		}
+
+		$authMethods = array();
+		foreach ($this->getAuthMethods() as $authMethod_name_) {
+			if (! in_array($authMethod_name_, $authMethods_enabled)) {
+				Logger::debug('main', 'SessionManagement::authenticate - AuthMethod "'.$authMethod_name_.'" is not enabled');
+				continue;
+			}
+
+			$authMethods[] = $authMethod_name_;
+		}
+
+		foreach ($authMethods as $authMethod_name_) {
+			$authMethod_module = 'AuthMethod_'.$authMethod_name_;
+			$authMethod = new $authMethod_module($this->prefs, $userDB);
+
+			Logger::debug('main', 'SessionManagement::authenticate - Trying "'.$authMethod_module.'"');
+
+			$user_login = $authMethod->get_login();
+			if (is_null($user_login)) {
+				Logger::debug('main', 'SessionManagement::authenticate - Unable to get a valid login');
+				return false;
+			}
+
+			$this->user = $userDB->import($user_login);
+			if (! is_object($this->user)) {
+				Logger::debug('main', 'SessionManagement::authenticate - Unable to import a valid user with login "'.$user_login.'"');
+				return false;
+			}
+
+			$buf = $authMethod->authenticate($this->user);
+			if ($buf === true) {
+				$this->authMethod = $authMethod;
+
+				Logger::debug('main', 'SessionManagement::authenticate - Now authenticated as "'.$user_login.'"');
+				return true;
+			}
+
+			Logger::error('main', 'SessionManagement::authenticate - Authentication failed for "'.$user_login.'"');
+			return false;
+		}
+
+		Logger::error('main', 'SessionManagement::authenticate - Authentication failed');
+
+		$this->user = false;
+
+		return false;
+	}
 
 	public function buildServersList($roles_=array(Server::SERVER_ROLE_APS, Server::SERVER_ROLE_FS)) {
 		if (! $this->user) {

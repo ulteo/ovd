@@ -46,6 +46,10 @@ function throw_response($response_code_) {
 }
 
 $sessionManagement = SessionManagement::getInstance();
+if (! $sessionManagement->initialize()) {
+	Logger::error('main', '(client/start) SessionManagement initialization failed');
+	throw_response(INTERNAL_ERROR);
+}
 
 $client_request_xml = @file_get_contents('php://input');
 $ret = $sessionManagement->parseClientRequest($client_request_xml);
