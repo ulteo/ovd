@@ -195,7 +195,7 @@ if (isset($old_session_id)) {
 			throw_response(SERVICE_NOT_AVAILABLE);
 		}
 	} else
-		$random_server = $servers[Server::SERVER_ROLE_APS][array_rand($servers[Server::SERVER_ROLE_APS])];
+		$random_server = array_rand($servers[Server::SERVER_ROLE_APS]);
 
 	if (isset($enable_profiles) && $enable_profiles == 1) {
 		$fileservers = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_FS);
