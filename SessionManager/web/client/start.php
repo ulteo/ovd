@@ -541,6 +541,8 @@ if (! isset($old_session_id)) {
 
 		$dom->appendChild($session_node);
 
+		$sessionManagement->appendToSessionCreateXML($dom);
+
 		$xml = $dom->saveXML();
 
 		$session_create_xml = query_url_post_xml($server->getBaseURL().'/aps/session/create', $xml);
@@ -659,6 +661,8 @@ if (! isset($old_session_id)) {
 			}
 
 			$dom->appendChild($session_node);
+
+			$sessionManagement->appendToSessionCreateXML($dom);
 
 			$xml = $dom->saveXML();
 
