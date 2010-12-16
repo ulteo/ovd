@@ -185,7 +185,7 @@ if (isset($old_session_id)) {
 		$user_password_fs = $sessionManagement->credentials[Server::SERVER_ROLE_FS]['password'];
 	}
 
-	if (! $sessionManagement->buildServersList(array(Server::SERVER_ROLE_APS))) {
+	if (! $sessionManagement->buildServersList()) {
 		Logger::error('main', '(client/start) No "'.Server::SERVER_ROLE_APS.'" server found for User "'.$user->getAttribute('login').'", aborting');
 		throw_response(SERVICE_NOT_AVAILABLE);
 	}

@@ -24,6 +24,8 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 class Server {
 	const SERVER_ROLE_APS = "aps";
 	const SERVER_ROLE_FS = "fs";
+	const SERVER_TYPE_LINUX = "linux";
+	const SERVER_TYPE_WINDOWS = "windows";
 
 	const SERVER_STATUS_ONLINE = "ready";
 	const SERVER_STATUS_OFFLINE = "down";

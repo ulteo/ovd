@@ -211,28 +211,41 @@ abstract class SessionManagement extends Module {
 		return false;
 	}
 
-	public function buildServersList($roles_=array(Server::SERVER_ROLE_APS, Server::SERVER_ROLE_FS)) {
+	public function buildServersList() {
 		if (! $this->user) {
 			Logger::error('main', 'SessionManagement::buildServersList - User is not authenticated, aborting');
 			throw_response(AUTH_FAILED);
 		}
 
-		$this->servers = array(
-			Server::SERVER_ROLE_APS	=>	array(),
-			Server::SERVER_ROLE_FS	=>	array()
-		);
+		$serverRoles = $this->getServerRoles();
 
-		foreach ($roles_ as $role) {
+		$this->servers = array();
+
+		foreach ($serverRoles as $role) {
+			if (! array_key_exists($role, $this->servers))
+				$this->servers[$role] = array();
+
 			switch ($role) {
 				case Server::SERVER_ROLE_APS:
-					$servers = $this->user->getAvailableServers();
-					if (is_null($servers) || count($servers) == 0) {
+					$applicationServerTypes = $this->getApplicationServerTypes();
+
+					$servers = array();
+
+					foreach ($applicationServerTypes as $type) {
+						$buf = $this->user->getAvailableServers($type);
+						if (is_null($buf) || ! is_array($buf))
+							continue;
+
+						$servers = array_merge($servers, $buf);
+					}
+
+					if (count($servers) == 0) {
 						$event = new SessionStart(array('user' => $this->user));
 						$event->setAttribute('ok', false);
 						$event->setAttribute('error', _('No available server'));
 						$event->emit();
 
-						Logger::error('main', 'SessionManagement::buildServersList - No server found for User "'.$this->user->getAttribute('login').'", aborting');
+						Logger::error('main', 'SessionManagement::buildServersList - No "'.$role.'" server found for User "'.$this->user->getAttribute('login').'", aborting');
 						return false;
 					}
 

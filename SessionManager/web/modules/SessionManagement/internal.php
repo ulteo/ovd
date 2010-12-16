@@ -26,6 +26,14 @@ class SessionManagement_internal extends SessionManagement {
 		return $prefs->get('AuthMethod', 'enable');
 	}
 
+	public static function getServerRoles() {
+		return array(Server::SERVER_ROLE_APS, Server::SERVER_ROLE_FS);
+	}
+
+	public static function getApplicationServerTypes() {
+		return array(Server::SERVER_TYPE_LINUX, Server::SERVER_TYPE_WINDOWS);
+	}
+
 	public function generateCredentials($roles_=array(Server::SERVER_ROLE_APS, Server::SERVER_ROLE_FS)) {
 		if (! $this->user) {
 			Logger::error('main', 'SessionManagement_internal::generateCredentials - User is not authenticated, aborting');

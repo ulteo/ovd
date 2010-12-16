@@ -24,48 +24,19 @@ class SessionManagement_novell extends SessionManagement {
 		return array('Password');
 	}
 
+	public static function getServerRoles() {
+		return array(Server::SERVER_ROLE_APS);
+	}
+
+	public static function getApplicationServerTypes() {
+		return array(Server::SERVER_TYPE_WINDOWS);
+	}
+
 	public function initialize() {
 		$userDB_enabled = $this->prefs->get('UserDB', 'enable');
 		if ($userDB_enabled != 'ldap') {
 			Logger::error('main', 'SessionManagement_novell::authenticate - UserDB module is not set to use LDAP');
 			return false;
-		}
-
-		return true;
-	}
-
-	public function buildServersList($roles_=array(Server::SERVER_ROLE_APS)) {
-		if (! $this->user) {
-			Logger::error('main', 'SessionManagement_novell::buildServersList - User is not authenticated, aborting');
-			throw_response(AUTH_FAILED);
-		}
-
-		$this->servers = array(
-			Server::SERVER_ROLE_APS	=>	array(),
-			Server::SERVER_ROLE_FS	=>	array()
-		);
-
-		foreach ($roles_ as $role) {
-			switch ($role) {
-				case Server::SERVER_ROLE_APS:
-					$servers = $this->user->getAvailableServers('windows');
-					if (is_null($servers) || count($servers) == 0) {
-						$event = new SessionStart(array('user' => $this->user));
-						$event->setAttribute('ok', false);
-						$event->setAttribute('error', _('No available server'));
-						$event->emit();
-
-						Logger::error('main', 'SessionManagement_novell::buildServersList - No "windows" server found for User "'.$this->user->getAttribute('login').'", aborting');
-						return false;
-					}
-
-					foreach ($servers as $server) {
-						$this->servers[Server::SERVER_ROLE_APS][$server->fqdn] = array(
-							'status' => Session::SESSION_STATUS_CREATED
-						);
-					}
-					break;
-			}
 		}
 
 		return true;
