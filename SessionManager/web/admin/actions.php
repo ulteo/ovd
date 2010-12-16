@@ -995,6 +995,11 @@ if ($_REQUEST['name'] == 'default_browser') {
 }
 
 if ($_REQUEST['name'] == 'SharedFolder') {
+	if (Preferences::moduleIsEnabled('SharedFolderDB') == false) {
+		popup_error(_('Shared folder management is not enabled'));
+		redirect();
+	}
+	
 	if (! checkAuthorization('manageSharedFolders'))
 		redirect();
 
@@ -1049,6 +1054,11 @@ if ($_REQUEST['name'] == 'SharedFolder') {
 }
 
 if ($_REQUEST['name'] == 'SharedFolder_ACL') {
+	if (Preferences::moduleIsEnabled('SharedFolderDB') == false) {
+		popup_error(_('Shared folder management is not enabled'));
+		redirect();
+	}
+	
 	if (! checkAuthorization('manageSharedFolders'))
 		redirect();
 
@@ -1063,6 +1073,11 @@ if ($_REQUEST['name'] == 'SharedFolder_ACL') {
 }
 
 if ($_REQUEST['name'] == 'Profile') {
+	if (Preferences::moduleIsEnabled('ProfileDB') == false) {
+		popup_error(_('Profile management is not enabled'));
+		redirect();
+	}
+	
 	if (! checkAuthorization('manageServers'))
 		redirect();
 

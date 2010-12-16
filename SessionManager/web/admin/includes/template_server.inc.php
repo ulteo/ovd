@@ -438,11 +438,21 @@ function server_display_role_aps($server, $var) {
 function server_display_role_preparation_fs($server_) {
 	$ret = array();
 	
-	$sharedfolderdb = SharedFolderDB::getInstance();
-	$profiledb = ProfileDB::getInstance();
+	if (Preferences::moduleIsEnabled('ProfileDB') == false && Preferences::moduleIsEnabled('SharedFolderDB') == false) {
+		return $ret;
+	}
 	
-	$networkfolders = $sharedfolderdb->importFromServer($server_->getAttribute('fqdn'));
-	$profiles = $profiledb->importFromServer($server_->getAttribute('fqdn'));
+	$networkfolders = false;
+	if (Preferences::moduleIsEnabled('SharedFolderDB')) {
+		$sharedfolderdb = SharedFolderDB::getInstance();
+		$networkfolders = $sharedfolderdb->importFromServer($server_->getAttribute('fqdn'));
+	}
+	
+	$profiles = false;
+	if (Preferences::moduleIsEnabled('ProfileDB')) {
+		$profiledb = ProfileDB::getInstance();
+		$profiles = $profiledb->importFromServer($server_->getAttribute('fqdn'));
+	}
 	
 	$ret['NetworkFolders'] =  array();
 	$ret['profiles'] =  array();
@@ -492,6 +502,9 @@ function server_display_role_preparation_fs($server_) {
 }
 
 function server_display_role_fs($server_, $var_) {
+	if (Preferences::moduleIsEnabled('ProfileDB') == false && Preferences::moduleIsEnabled('SharedFolderDB') == false) {
+		return;
+	}
 	$datas = array(
 		0 => array(
 			'name' => _('User profiles on the server'),

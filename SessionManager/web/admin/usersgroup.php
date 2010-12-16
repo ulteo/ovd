@@ -726,56 +726,58 @@ if (count($users_all) > 0 || count($users) > 0) {
 	echo '</div>';
 	echo '<br/>';
 
-    $sharedfolderdb = SharedFolderDB::getInstance();
-    $all_sharedfolders = $sharedfolderdb->getList();
+    if (Preferences::moduleIsEnabled('SharedFolderDB')) {
+		$sharedfolderdb = SharedFolderDB::getInstance();
+		$all_sharedfolders = $sharedfolderdb->getList();
 
-    if (count($all_sharedfolders) > 0) {
-		$available_sharedfolders = array();
-		$used_sharedfolders = $sharedfolderdb->importFromUsergroup($group->getUniqueID());
-		foreach ($all_sharedfolders as $sharedfolder) {
-			if (in_array($sharedfolder->id, array_keys($used_sharedfolders)))
-				continue;
+		if (count($all_sharedfolders) > 0) {
+			$available_sharedfolders = array();
+			$used_sharedfolders = $sharedfolderdb->importFromUsergroup($group->getUniqueID());
+			foreach ($all_sharedfolders as $sharedfolder) {
+				if (in_array($sharedfolder->id, array_keys($used_sharedfolders)))
+					continue;
 
-			$available_sharedfolders[] = $sharedfolder;
-		}
-
-        echo '<br />';
-		echo '<div>';
-		echo '<h2>'._('Shared folders').'</h1>';
-
-		echo '<table border="0" cellspacing="1" cellpadding="3">';
-		foreach ($used_sharedfolders as $sharedfolder) {
-			echo '<tr>';
-			echo '<td><a href="sharedfolders.php?action=manage&amp;id='.$sharedfolder->id.'">'.$sharedfolder->name.'</a></td>';
-			if ($can_manage_sharedfolders) {
-				echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this shared folder access?').'\');">';
-				echo '<input type="hidden" name="name" value="SharedFolder_ACL" />';
-				echo '<input type="hidden" name="action" value="del" />';
-				echo '<input type="hidden" name="sharedfolder_id" value="'.$sharedfolder->id.'" />';
-				echo '<input type="hidden" name="usergroup_id" value="'.$group->getUniqueID().'" />';
-				echo '<input type="submit" value="'._('Delete access to this shared folder').'" />';
-				echo '</form></td>';
+				$available_sharedfolders[] = $sharedfolder;
 			}
-			echo '</tr>';
-		}
 
-		if (count($available_sharedfolders) > 0 && $can_manage_sharedfolders) {
-			echo '<tr><form action="actions.php" method="post"><td>';
-			echo '<input type="hidden" name="name" value="SharedFolder_ACL" />';
-			echo '<input type="hidden" name="action" value="add" />';
-			echo '<input type="hidden" name="usergroup_id" value="'.$group->getUniqueID().'" />';
-			echo '<select name="sharedfolder_id">';
-			foreach($available_sharedfolders as $sharedfolder)
-				echo '<option value="'.$sharedfolder->id.'" >'.$sharedfolder->name.'</option>';
-			echo '</select>';
-			echo '</td><td><input type="submit" value="'._('Add access to this shared folder').'" /></td>';
-			echo '</form></tr>';
+			echo '<br />';
+			echo '<div>';
+			echo '<h2>'._('Shared folders').'</h1>';
+
+			echo '<table border="0" cellspacing="1" cellpadding="3">';
+			foreach ($used_sharedfolders as $sharedfolder) {
+				echo '<tr>';
+				echo '<td><a href="sharedfolders.php?action=manage&amp;id='.$sharedfolder->id.'">'.$sharedfolder->name.'</a></td>';
+				if ($can_manage_sharedfolders) {
+					echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this shared folder access?').'\');">';
+					echo '<input type="hidden" name="name" value="SharedFolder_ACL" />';
+					echo '<input type="hidden" name="action" value="del" />';
+					echo '<input type="hidden" name="sharedfolder_id" value="'.$sharedfolder->id.'" />';
+					echo '<input type="hidden" name="usergroup_id" value="'.$group->getUniqueID().'" />';
+					echo '<input type="submit" value="'._('Delete access to this shared folder').'" />';
+					echo '</form></td>';
+				}
+				echo '</tr>';
+			}
+
+			if (count($available_sharedfolders) > 0 && $can_manage_sharedfolders) {
+				echo '<tr><form action="actions.php" method="post"><td>';
+				echo '<input type="hidden" name="name" value="SharedFolder_ACL" />';
+				echo '<input type="hidden" name="action" value="add" />';
+				echo '<input type="hidden" name="usergroup_id" value="'.$group->getUniqueID().'" />';
+				echo '<select name="sharedfolder_id">';
+				foreach($available_sharedfolders as $sharedfolder)
+					echo '<option value="'.$sharedfolder->id.'" >'.$sharedfolder->name.'</option>';
+				echo '</select>';
+				echo '</td><td><input type="submit" value="'._('Add access to this shared folder').'" /></td>';
+				echo '</form></tr>';
+			}
+			echo '</table>';
+			echo '</div>';
 		}
-		echo '</table>';
-		echo '</div>';
-    }
-	
-	echo '<br />';
+		
+		echo '<br />';
+	}
 	echo '<div>'; // Session settings configuration
 	echo '<h2>';
 	echo _('Session settings configuration');

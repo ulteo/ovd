@@ -89,19 +89,25 @@ if (isAuthorized('viewServers')) {
 			  'parent' => array('servers'));
 }
 
-if (isAuthorized('viewSharedFolders'))
-	$menu['sharedfolders'] = 
-		array('id' => 'sharedfolders',
-			  'name' => _('Shared folders'),
-			  'page' => 'sharedfolders.php',
-			  'parent' => array('servers'));
+if (isAuthorized('viewSharedFolders')) {
+	if (Preferences::moduleIsEnabled('SharedFolderDB')) {
+		$menu['sharedfolders'] = 
+			array('id' => 'sharedfolders',
+				'name' => _('Shared folders'),
+				'page' => 'sharedfolders.php',
+				'parent' => array('servers'));
+	}
+}
 
-if (isAuthorized('viewSharedFolders')) // it should be viewProfile
-	$menu['profile'] = 
-		array('id' => 'profiles',
-			  'name' => _('Profiles'),
-			  'page' => 'profiles.php',
-			  'parent' => array('servers'));
+if (isAuthorized('viewSharedFolders')) { // it should be viewProfile
+	if (Preferences::moduleIsEnabled('ProfileDB')) {
+		$menu['profile'] = 
+			array('id' => 'profiles',
+				'name' => _('Profiles'),
+				'page' => 'profiles.php',
+				'parent' => array('servers'));
+	}
+}
 
 if (isAuthorized('viewUsers'))
 	$menu['user_child'] = 

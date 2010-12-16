@@ -219,12 +219,18 @@ class User {
 	}
 	
 	public function getProfiles() {
+		if (Preferences::moduleIsEnabled('ProfileDB') == false) {
+			return array();
+		}
 		$profiledb = ProfileDB::getInstance();
 		return $profiledb->importFromUser($this->getAttribute('login'));
 	}
 	
 	public function getSharedFolders() {
 		$sharedfolders = array();
+		if (Preferences::moduleIsEnabled('SharedFolderDB') == false) {
+			return array();
+		}
 		$prefs = Preferences::getInstance();
 		$session_settings_defaults = $prefs->get('general', 'session_settings_defaults');
 		if (array_key_exists('enable_sharedfolders', $session_settings_defaults)) {

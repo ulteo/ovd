@@ -219,15 +219,21 @@ if (array_key_exists('sessions', $ret) && is_array($ret['sessions'])) {
 }
 
 if (array_key_exists('shares', $ret) && is_array($ret['shares'])) {
-	$profiledb = ProfileDB::getInstance();
-	$sharedfolderdb = SharedFolderDB::getInstance();
+	$profiledb = null;
+	if (Preferences::moduleIsEnabled('ProfileDB')) {
+		$profiledb = ProfileDB::getInstance();
+	}
+	$sharedfolderdb = null;
+	if (Preferences::moduleIsEnabled('SharedFolderDB')) {
+		$sharedfolderdb = SharedFolderDB::getInstance();
+	}
 	$disabled_users = array();
 	foreach ($ret['shares'] as $share) {
-		if ($sharedfolderdb->exists($share['id'])) {
+		if (is_object($sharedfolderdb) && $sharedfolderdb->exists($share['id'])) {
 			$buf = $sharedfolderdb->import($share['id']);
 			$db = $sharedfolderdb;
 		}
-		else if ($profiledb->exists($share['id'])) {
+		else if (is_object($profiledb) && $profiledb->exists($share['id'])) {
 			$buf = $profiledb->import($share['id']);
 			$db = $profiledb;
 		}
