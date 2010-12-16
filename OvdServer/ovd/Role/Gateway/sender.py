@@ -18,40 +18,63 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-from ovd.Logger import Logger
-import socket
+from OpenSSL import SSL
+
 import asyncore
+import socket
+
+from ovd.Logger import Logger
+
 
 class sender(asyncore.dispatcher):
-	def __init__(self, receiver, remoteip, remoteport):
+
+	def __init__(self, remoteip, remoteport, receiver):
+		asyncore.dispatcher.__init__(self)
+		self.receiver = receiver
+		receiver.sender = self
+
+		self.set_socket(self.make_socket())
 		try:
-			asyncore.dispatcher.__init__(self)
-			self.receiver = receiver
-			receiver.sender = self
-			self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
 			self.connect((remoteip, remoteport))
-		except:
-			Logger.error('sender:: Core sender module error...')
-			exit()
+		except Exception:
+			Logger.error('%s:: socket connection failed' % self.__class__.__name__)
+
+
+	def make_socket(self):
+		return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 
 	def handle_read(self):
-		read = self.recv(8192)
-		self.receiver.to_remote_buffer += read #appends read to the remote buffer
+		try:
+			read = self.recv(8192)
+			self.receiver.to_remote_buffer += read 
+		except:
+			self.close()
+
 
 	def writable(self):
-		return (len(self.receiver.from_remote_buffer) > 0)
+		return len(self.receiver.from_remote_buffer) > 0
+
 
 	def handle_write(self):
 		try:
 			sent = self.send(self.receiver.from_remote_buffer)
 			self.receiver.from_remote_buffer = self.receiver.from_remote_buffer[sent:]
 		except:
-			Logger.error('sender:: Handle_write error')
-			exit()
+			Logger.error('%s::handle_write error' % self.__class__.__name__)
+			self.close()
+
 
 	def handle_close(self):
-		try:
-			self.close()
+		self.close()
+		if self.receiver:
 			self.receiver.close()
-		except:
-			Logger.error('sender:: close connexion !!')
+
+class senderHTTP(sender):
+
+	def __init__(self, remoteip, remoteport, receiver, ssl_ctx):
+		self.ssl_ctx = ssl_ctx
+		sender.__init__(self, remoteip, remoteport, receiver)
+
+	def make_socket(self):
+		return SSL.Connection(self.ssl_ctx, sender.make_socket(self))

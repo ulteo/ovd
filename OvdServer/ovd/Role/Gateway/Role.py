@@ -7,7 +7,7 @@
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
 #
-# This program is free software; you can redistribute it and/or 
+# This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; version 2
 # of the License
@@ -26,11 +26,17 @@ from ovd.Config import Config
 from ovd.Logger import Logger
 from Dialog import Dialog
 from reverseproxy import *
+
 import os
 
+
 class Role(AbstractRole):
-	session_manager = None
-	
+
+	@staticmethod
+	def getName():
+		return "Gateway"
+
+
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
 		self.dialog = Dialog(self)
@@ -38,29 +44,23 @@ class Role(AbstractRole):
 		self.REMOTE_SM_FQDN = ""
 		self.HTTPS_PORT = 443
 		self.RDP_PORT = 3389
+		self.session_manager = None
+
 
 	def init(self):
 		Logger.info("Initiate Gateway")
-
-		if not self.init_config():
-			return False
-		return True
-
-	@staticmethod
-	def getName():
-		return "Gateway"
-
-	def stop(self):
-		Logger.warn('Closing ovdSlaveServer')
-		self.has_run = False
-		asyncore.ExitNow()
-
-	def init_config(self):
 		if not Config.infos.has_key("session_manager"):
 			Logger.error("Role %s need a 'session_manager' config key"%(self.getName()))
 			return False
 		self.session_manager =  Config.session_manager
 		return True
+
+
+	def stop(self):
+		Logger.info('Gateway:: closing')
+		self.has_run = False
+		asyncore.ExitNow()
+
 
 	def run(self):
 		self.has_run = True
@@ -73,8 +73,7 @@ class Role(AbstractRole):
 			asyncore.loop()
 		else:
 			Logger.error("Role %s need a certificate at %s !"%(self.getName(), pem))
-		Logger.info('Closing gateway...')
-	
-	
+
+
 	def getReporting(self, node):
 		pass

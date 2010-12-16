@@ -28,10 +28,9 @@ import threading
 from receiver import *
 from receiverxmlrewriter import *
 from sender import *
-from senderhttp import *
 
 class ReverseProxy(asyncore.dispatcher):
-	def __init__(self, fpem_location, GATEWAY_PORT, REMOTE_SM_FQDN, HTTPS_PORT, RDP_PORT, backlog = 5):
+	def __init__(self, fpem, GATEWAY_PORT, REMOTE_SM_FQDN, HTTPS_PORT, RDP_PORT, backlog = 5):
 		asyncore.dispatcher.__init__(self)
 		self.protocol="HTTP"
 		self.flagRDP = False
@@ -42,13 +41,13 @@ class ReverseProxy(asyncore.dispatcher):
 		self.RDP_PORT = RDP_PORT
 		self.lock = threading.Lock()
 		self.database = {}
-		self.FPEM = fpem_location
+
+		self.ssl_ctx = SSL.Context(SSL.SSLv23_METHOD)
+		self.ssl_ctx.use_privatekey_file(fpem)
+		self.ssl_ctx.use_certificate_file(fpem)
 
 		try:
-			ctx = SSL.Context(SSL.SSLv23_METHOD)
-			ctx.use_privatekey_file(self.FPEM)
-			ctx.use_certificate_file(self.FPEM)
-			sock = SSL.Connection(ctx, socket.socket(socket.AF_INET, socket.SOCK_STREAM))
+			sock = SSL.Connection(self.ssl_ctx, socket.socket(socket.AF_INET, socket.SOCK_STREAM))
 			self.set_socket(sock)
 			self.socket.setblocking(0)
 			self.connected = True
@@ -156,7 +155,7 @@ class ReverseProxy(asyncore.dispatcher):
 
 						if fqdn:
 							try:
-								sender(receiver(conn, r), fqdn, self.RDP_PORT)
+								sender(fqdn, self.RDP_PORT, receiver(conn, r))
 							except:
 								self.close()
 						else:
@@ -183,9 +182,9 @@ class ReverseProxy(asyncore.dispatcher):
 			self.close()
 			
 		if path.startswith("/ovd/client/start.php"):
-			senderHTTP(self.FPEM, receiverXMLRewriter(conn, r, self), self.REMOTE_SM_FQDN, self.REMOTE_SM_PORT)
+			senderHTTP(self.REMOTE_SM_FQDN, self.REMOTE_SM_PORT, receiverXMLRewriter(conn, r, self), self.ssl_ctx)
 		elif path.startswith("/ovd/"):
-			senderHTTP(self.FPEM, receiver(conn, r), self.REMOTE_SM_FQDN, self.REMOTE_SM_PORT)
+			senderHTTP(self.REMOTE_SM_FQDN, self.REMOTE_SM_PORT, receiver(conn, r), self.ssl_ctx)
 		else:
 			self.close()
 
