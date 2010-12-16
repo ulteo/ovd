@@ -42,7 +42,7 @@ page_header();
 <table style="width: 100%;" border="0" cellspacing="3" cellpadding="5">
 	<tr>
 		<td style="width: 30%; text-align: left; vertical-align: top;">
-<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
+<div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
 	<h2><?php echo _('Users and Users groups'); ?></h2>
 
@@ -60,7 +60,7 @@ page_header();
 		<td style="width: 20px;">
 		</td>
 		<td style="width: 30%; text-align: left; vertical-align: top;">
-<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
+<div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
 	<h2><?php echo _('Servers'); ?></h2>
 <?php
@@ -79,7 +79,7 @@ if ($show_servers) {
 		<td style="width: 20px;">
 		</td>
 		<td style="padding-right: 20px; text-align: left; vertical-align: top;">
-<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
+<div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
 	<h2><?php echo _('Configuration'); ?></h2>
 <?php
@@ -101,7 +101,7 @@ if ($show_configuration) {
 	</tr>
 	<tr>
 		<td style="text-align: left; vertical-align: top;">
-<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
+<div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
 	<h2><?php echo _('Applications and applications groups'); ?></h2>
 
@@ -123,7 +123,7 @@ if ($show_configuration) {
 		<td style="width: 20px;">
 		</td>
 		<td style="padding-right: 20px; text-align: left; vertical-align: top;">
-<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
+<div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
 	<h2><?php echo _('System'); ?></h2>
 
@@ -153,7 +153,7 @@ if ($show_configuration) {
 		<td style="width: 20px;">
 		</td>
 		<td style="padding-right: 20px; text-align: left; vertical-align: top;">
-<div class="container rounded" style="background: #fff; width: 99%; margin-left: auto; margin-right: auto;">
+<div class="container rounded" style="background: #eee; width: 99%; margin-left: auto; margin-right: auto;">
 <div>
 	<h2><?php echo _('Status'); ?></h2>
 <?php
