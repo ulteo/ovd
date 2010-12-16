@@ -4,6 +4,7 @@
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
+# Author Samuel BOVEE <samuel@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -26,7 +27,6 @@ from OpenSSL import SSL
 import xml.etree.ElementTree as parser
 import threading
 from receiver import *
-from receiverxmlrewriter import *
 from sender import *
 
 class ReverseProxy(asyncore.dispatcher):
