@@ -19,7 +19,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
-
+	public function __construct() {
+		parent::__construct();
+		
+		$prefs = Preferences::getInstance();
+		if (! $prefs)
+			die_error('get Preferences failed',__FILE__,__LINE__);
+		
+		$a_pref = $prefs->get('UserGroupDB', 'activedirectory');
+		if (is_array($a_pref)) {
+			$this->preferences = $a_pref;
+		}
+		else { // ugly...
+			$this->preferences = array();
+		}
+	}
+	
 	public function import($id_) {
 		Logger::debug('main',"UserGroupDB::activedirectory::import (id = $id_)");
 		// cache 
