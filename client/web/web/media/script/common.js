@@ -496,8 +496,13 @@ function showLock() {
 }
 
 function hideLock() {
-	if ($('lockWrap').visible() && (! $('errorWrap').visible() && ! $('okWrap').visible() && ! $('infoWrap').visible()))
+	if ($('lockWrap').visible() && (! $('errorWrap').visible() && ! $('okWrap').visible() && ! $('infoWrap').visible())) {
+		if ($('user_password')) {
+			$('user_password').value = '';
+			$('user_password').focus();
+		}
 		$('lockWrap').hide();
+	}
 }
 
 function showError(errormsg) {
