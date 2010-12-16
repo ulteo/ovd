@@ -42,24 +42,9 @@ class SessionManagement_novell extends SessionManagement {
 		return true;
 	}
 
-	public function generateCredentials($roles_=array(Server::SERVER_ROLE_APS)) {
-		if (! $this->user) {
-			Logger::error('main', 'SessionManagement_novell::generateCredentials - User is not authenticated, aborting');
-			throw_response(AUTH_FAILED);
-		}
-
-		$this->credentials = array(
-			Server::SERVER_ROLE_APS	=>	array()
-		);
-
-		foreach ($roles_ as $role) {
-			switch ($role) {
-				case Server::SERVER_ROLE_APS:
-					$this->credentials[Server::SERVER_ROLE_APS]['login'] = $_POST['login'];
-					$this->credentials[Server::SERVER_ROLE_APS]['password'] = $_POST['password'];
-					break;
-			}
-		}
+	public function generateApplicationServerCredentials() {
+		$this->credentials[Server::SERVER_ROLE_APS]['login'] = $_POST['login'];
+		$this->credentials[Server::SERVER_ROLE_APS]['password'] = $_POST['password'];
 
 		return true;
 	}

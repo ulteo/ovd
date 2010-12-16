@@ -263,7 +263,40 @@ abstract class SessionManagement extends Module {
 		return true;
 	}
 
-	abstract public function generateCredentials($roles_=array(Server::SERVER_ROLE_APS, Server::SERVER_ROLE_FS));
+	public function generateCredentials() {
+		if (! $this->user) {
+			Logger::error('main', 'SessionManagement::generateCredentials - User is not authenticated, aborting');
+			throw_response(AUTH_FAILED);
+		}
+
+		$serverRoles = $this->getServerRoles();
+
+		$this->credentials = array();
+
+		foreach ($serverRoles as $role) {
+			if (! array_key_exists($role, $this->credentials))
+				$this->credentials[$role] = array();
+
+			switch ($role) {
+				case Server::SERVER_ROLE_APS:
+					$this->generateApplicationServerCredentials();
+					break;
+				case Server::SERVER_ROLE_FS:
+					$this->generateFileServerCredentials();
+					break;
+			}
+		}
+
+		return true;
+	}
+
+	public function generateApplicationServerCredentials() {
+		return false;
+	}
+
+	public function generateFileServerCredentials() {
+		return false;
+	}
 
 	public function getDesktopServer($type_='any') {
 		if (! $this->user) {

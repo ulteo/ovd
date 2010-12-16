@@ -174,15 +174,19 @@ if (isset($old_session_id)) {
 
 	Logger::info('main', '(client/start) Resuming session for '.$user->getAttribute('login').' ('.$old_session_id.' => '.$session->server.')');
 } else {
-	if (! $sessionManagement->generateCredentials(array(Server::SERVER_ROLE_APS, Server::SERVER_ROLE_FS))) {
+	if (! $sessionManagement->generateCredentials()) {
 		Logger::error('main', '(client/start) Unable to generate access credentials for User "'.$user->getAttribute('login').'", aborting');
 		throw_response(SERVICE_NOT_AVAILABLE);
 	}
-	$user_login_aps = $sessionManagement->credentials[Server::SERVER_ROLE_APS]['login'];
-	$user_password_aps = $sessionManagement->credentials[Server::SERVER_ROLE_APS]['password'];
+	if (array_key_exists(Server::SERVER_ROLE_APS, $sessionManagement->credentials)) {
+		$user_login_aps = $sessionManagement->credentials[Server::SERVER_ROLE_APS]['login'];
+		$user_password_aps = $sessionManagement->credentials[Server::SERVER_ROLE_APS]['password'];
+	}
 	if ((isset($enable_profiles) && $enable_profiles == 1) || (isset($enable_sharedfolders) && $enable_sharedfolders == 1)) {
-		$user_login_fs = $sessionManagement->credentials[Server::SERVER_ROLE_FS]['login'];
-		$user_password_fs = $sessionManagement->credentials[Server::SERVER_ROLE_FS]['password'];
+		if (array_key_exists(Server::SERVER_ROLE_FS, $sessionManagement->credentials)) {
+			$user_login_fs = $sessionManagement->credentials[Server::SERVER_ROLE_FS]['login'];
+			$user_password_fs = $sessionManagement->credentials[Server::SERVER_ROLE_FS]['password'];
+		}
 	}
 
 	if (! $sessionManagement->buildServersList()) {

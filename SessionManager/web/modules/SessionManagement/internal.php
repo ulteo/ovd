@@ -34,29 +34,16 @@ class SessionManagement_internal extends SessionManagement {
 		return array(Server::SERVER_TYPE_LINUX, Server::SERVER_TYPE_WINDOWS);
 	}
 
-	public function generateCredentials($roles_=array(Server::SERVER_ROLE_APS, Server::SERVER_ROLE_FS)) {
-		if (! $this->user) {
-			Logger::error('main', 'SessionManagement_internal::generateCredentials - User is not authenticated, aborting');
-			throw_response(AUTH_FAILED);
-		}
+	public function generateApplicationServerCredentials() {
+		$this->credentials[Server::SERVER_ROLE_APS]['login'] = 'u'.time().gen_string(5).'_APS'; //hardcoded
+		$this->credentials[Server::SERVER_ROLE_APS]['password'] = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 
-		$this->credentials = array(
-			Server::SERVER_ROLE_APS	=>	array(),
-			Server::SERVER_ROLE_FS	=>	array()
-		);
+		return true;
+	}
 
-		foreach ($roles_ as $role) {
-			switch ($role) {
-				case Server::SERVER_ROLE_APS:
-					$this->credentials[Server::SERVER_ROLE_APS]['login'] = 'u'.time().gen_string(5).'_APS'; //hardcoded
-					$this->credentials[Server::SERVER_ROLE_APS]['password'] = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-					break;
-				case Server::SERVER_ROLE_FS:
-					$this->credentials[Server::SERVER_ROLE_FS]['login'] = 'u'.time().gen_string(6).'_FS'; //hardcoded
-					$this->credentials[Server::SERVER_ROLE_FS]['password'] = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-					break;
-			}
-		}
+	public function generateFileServerCredentials() {
+		$this->credentials[Server::SERVER_ROLE_FS]['login'] = 'u'.time().gen_string(6).'_FS'; //hardcoded
+		$this->credentials[Server::SERVER_ROLE_FS]['password'] = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 
 		return true;
 	}
