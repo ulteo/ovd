@@ -597,5 +597,12 @@ class Preferences {
 		$this->prettyName[$key_] = $prettyName_;
 	}
 
-
+	public static function moduleIsEnabled($name_) {
+		$prefs = Preferences::getInstance();
+		if (! $prefs)
+			die_error('get Preferences failed', __FILE__, __LINE__);
+			
+		$mods_enable = $prefs->get('general', 'module_enable');
+		return in_array($name_, $mods_enable);
+	}
 }
