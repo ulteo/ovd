@@ -3,6 +3,7 @@
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author David LECHEVALIER <david@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -143,7 +144,7 @@ class HttpRequest {
 
 		$this->responseBody = curl_exec($ch);
 		$i = 1;
-		while (curl_errno($ch) == CURLE_GOT_NOTHING && $i < $this->max_requests) {
+		while ((curl_errno($ch) == CURLE_GOT_NOTHING || curl_errno($ch) == CURLE_RECV_ERROR) && $i < $this->max_requests) {
 			usleep(rand(1000000, 3000000));
 			$this->responseBody = curl_exec($ch);
 			$i++;
