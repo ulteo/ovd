@@ -34,7 +34,7 @@ class SessionManagement_ldap extends SessionManagement_internal {
 	}
 
 	public static function isDefault() {
-		return true;
+		return false;
 	}
 
 	public static function init($prefs_) {
