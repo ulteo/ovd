@@ -77,7 +77,6 @@ public abstract class DiskManager {
 	public boolean testDir(String directoryName) {
 		File directory = new File(directoryName);
 		return (directory.isDirectory() && 
-				directory.canWrite() && 
 				directory.canRead());
 	}
 
