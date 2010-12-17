@@ -52,6 +52,7 @@ class sender(asyncore.dispatcher):
                 except SSL.ZeroReturnError:
 			pass
 		except:
+			Logger.error('%s::handle_read error' % self.__class__.__name__)
 			self.close()
 
 

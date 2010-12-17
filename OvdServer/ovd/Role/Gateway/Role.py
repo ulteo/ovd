@@ -68,7 +68,7 @@ class Role(AbstractRole):
 		pem = os.path.join(Config.conf_dir, "gateway.pem")
 		if os.path.exists(pem):
 			ReverseProxy(pem, self.HTTPS_PORT, self.REMOTE_SM_FQDN, self.HTTPS_PORT, self.RDP_PORT)
-			Logger.info('Gateway is running !')
+			Logger.info('Gateway:: running')
 			self.status = Role.STATUS_RUNNING
 			asyncore.loop()
 		else:

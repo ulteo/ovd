@@ -107,7 +107,7 @@ class receiverXMLRewriter(receiver):
 		if self.hasRewrited:
 			return True
 
-		pattern = re.compile("<error.+\/>", re.I | re.U)
+		pattern = re.compile("<response.+\/>", re.I | re.U)
 		if pattern.search(self.to_remote_buffer):
 			self.hasRewrited = True
 			return True
