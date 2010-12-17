@@ -117,6 +117,28 @@ class Configuration_mode_novell extends Configuration_mode {
     // Set the Session Management module
     $prefs->set('SessionManagement', 'enable', 'novell');
 
+    // Disable the unused module
+    $module_to_disable = array('ProfileDB', 'SharedFolderDB');
+    
+    $module_enabled = $prefs->get('general', 'module_enable');
+    foreach ($module_to_disable as $a_module_name) {
+      $key = array_search($a_module_name, $module_enabled);
+      if ($key !== false) {
+        unset($module_enabled[$key]);
+      }
+    }
+    $prefs->set('general', 'module_enable', $module_enabled);
+    
+    // for now disable profile and sharedlfolder on session settings
+    $session_settings_defaults = $prefs->get('general', 'session_settings_defaults');
+    if (array_key_exists('enable_profiles', $session_settings_defaults)) {
+      $session_settings_defaults['enable_profiles'] = '0';
+    }
+    if (array_key_exists('enable_sharedfolders', $session_settings_defaults)) {
+      $session_settings_defaults['enable_sharedfolders'] = '0';
+    }
+    $prefs->set('general', 'session_settings_defaults', $session_settings_defaults);
+    
     return True;
   }
 
