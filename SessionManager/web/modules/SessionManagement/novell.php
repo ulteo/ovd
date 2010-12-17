@@ -78,7 +78,7 @@ class SessionManagement_novell extends SessionManagement {
 	}
 
 	public static function isDefault() {
-		return true;
+		return false;
 	}
 
 	public static function init($prefs_) {
