@@ -23,6 +23,7 @@ abstract class SessionManagement extends Module {
 	protected static $instance = NULL;
 	protected $prefs = false;
 	protected $authMethod = false;
+	protected $userDB = false;
 	public $user = false;
 	public $desktop_server = false;
 	public $servers = array();
@@ -156,7 +157,7 @@ abstract class SessionManagement extends Module {
 	}
 
 	public function authenticate() {
-		$userDB = UserDB::getInstance();
+		$this->userDB = UserDB::getInstance();
 
 		$authMethods_enabled = $this->prefs->get('AuthMethod', 'enable');
 		if (! is_array($authMethods_enabled)) {
@@ -176,7 +177,7 @@ abstract class SessionManagement extends Module {
 
 		foreach ($authMethods as $authMethod_name_) {
 			$authMethod_module = 'AuthMethod_'.$authMethod_name_;
-			$authMethod = new $authMethod_module($this->prefs, $userDB);
+			$authMethod = new $authMethod_module($this->prefs, $this->userDB);
 
 			Logger::debug('main', 'SessionManagement::authenticate - Trying "'.$authMethod_module.'"');
 
@@ -186,7 +187,7 @@ abstract class SessionManagement extends Module {
 				return false;
 			}
 
-			$this->user = $userDB->import($user_login);
+			$this->user = $this->userDB->import($user_login);
 			if (! is_object($this->user)) {
 				Logger::debug('main', 'SessionManagement::authenticate - Unable to import a valid user with login "'.$user_login.'"');
 				return false;

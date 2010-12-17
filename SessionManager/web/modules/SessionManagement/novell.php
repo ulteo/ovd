@@ -50,12 +50,10 @@ class SessionManagement_novell extends SessionManagement {
 	}
 
 	public function appendToSessionCreateXML($dom_) {
-		$userDB = UserDB::getInstance();
-
 		$environment_node = $dom_->createElement('environment');
 		$environment_node->setAttribute('id', 'Novell');
-		$environment_node->setAttribute('server', $userDB->config['host']);
-		$environment_node->setAttribute('tree', suffix2domain($userDB->config['suffix']));
+		$environment_node->setAttribute('server', $this->userDB->config['host']);
+		$environment_node->setAttribute('tree', suffix2domain($this->userDB->config['suffix']));
 		$environment_node->setAttribute('login', $_POST['login']);
 		$environment_node->setAttribute('password', $_POST['password']);
 
