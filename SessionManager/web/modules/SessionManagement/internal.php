@@ -48,10 +48,6 @@ class SessionManagement_internal extends SessionManagement {
 		return true;
 	}
 
-	public function appendToSessionCreateXML($dom_) {
-		return;
-	}
-
 	/* Module methods */
 	public static function configuration() {
 		return array();

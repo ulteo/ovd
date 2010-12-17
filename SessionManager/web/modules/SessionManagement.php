@@ -346,5 +346,7 @@ abstract class SessionManagement extends Module {
 		return $this->desktop_server;
 	}
 
-	abstract public function appendToSessionCreateXML($dom_);
+	public function appendToSessionCreateXML($dom_) {
+		return;
+	}
 }
