@@ -2,6 +2,7 @@
 /**
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
+ * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Arnaud LEGRAND <arnaud@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -60,7 +61,7 @@ class HA_high_availability  extends HA {
 	}
 	
 	public static function isDefault() {
-		return false;
+		return true;
 	}
 
 	public static function init($prefs_) {
