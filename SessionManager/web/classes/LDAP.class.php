@@ -96,32 +96,7 @@ class LDAP {
 				$log['LDAP anonymous bind'] = true;
 		}
 		else {
-			$pos1 = strpos($this->login, ',');
-			$pos2 = strpos($this->login, '=');
-			if ( $pos2 === false && $pos1 === false) {
-				$dn = $this->uidprefix.'=';
-			}
-			else {
-				if ( $pos2 > $pos1) {
-					$dn = $this->uidprefix.'=';
-				}
-				else {
-					$dn = '';
-				}
-			}
-			
-			if (strtolower(substr($this->login, -1*strlen($this->suffix))) == strtolower($this->suffix)) {
-				$dn .= $this->login;
-			}
-			else {
-				if ( $this->userbranch != '') {
-					$dn .= $this->login.','.$this->userbranch.','.$this->suffix;
-				}
-				else {
-					$dn .= $this->login.','.$this->suffix;
-				}
-			}
-			$buf_bind = $this->bind($dn, $this->password);
+			$buf_bind = $this->bind($this->login, $this->password);
 			if ($buf_bind === false) {
 				Logger::error('main', 'LDAP::connect bind failed');
 				$log['LDAP bind'] = false;
