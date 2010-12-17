@@ -41,33 +41,35 @@ class Role(AbstractRole):
 		AbstractRole.__init__(self, main_instance)
 		self.dialog = Dialog(self)
 		self.has_run = False
-		self.REMOTE_SM_FQDN = ""
+
 		self.HTTPS_PORT = 443
+		self.REMOTE_SM_FQDN = None
 		self.RDP_PORT = 3389
-		self.session_manager = None
+
+		self.rproxy = None
 
 
 	def init(self):
-		Logger.info("Initiate Gateway")
+		Logger.info("Gateway init")
 		if not Config.infos.has_key("session_manager"):
 			Logger.error("Role %s need a 'session_manager' config key"%(self.getName()))
 			return False
-		self.session_manager =  Config.session_manager
+		self.REMOTE_SM_FQDN =  Config.session_manager
 		return True
 
 
 	def stop(self):
-		Logger.info('Gateway:: closing')
 		self.has_run = False
+		if self.rproxy:
+			self.rproxy.close()
 		asyncore.ExitNow()
 
 
 	def run(self):
 		self.has_run = True
-		self.REMOTE_SM_FQDN = self.session_manager
 		pem = os.path.join(Config.conf_dir, "gateway.pem")
 		if os.path.exists(pem):
-			ReverseProxy(pem, self.HTTPS_PORT, self.REMOTE_SM_FQDN, self.HTTPS_PORT, self.RDP_PORT)
+			self.rproxy = ReverseProxy(pem, self.HTTPS_PORT, self.REMOTE_SM_FQDN, self.HTTPS_PORT, self.RDP_PORT)
 			Logger.info('Gateway:: running')
 			self.status = Role.STATUS_RUNNING
 			asyncore.loop()

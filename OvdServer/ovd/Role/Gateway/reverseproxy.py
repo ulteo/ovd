@@ -84,9 +84,9 @@ class ReverseProxy(asyncore.dispatcher):
 		conn, addr = self.accept()
 		try:
 			r = conn.recv(4096)
-                except SSL.ZeroReturnError:
-                        pass
-                except:
+		except SSL.ZeroReturnError:
+			pass
+		except:
 			Logger.debug('ReverseProxy::handle_accept error')
 			conn.close()
 			return
