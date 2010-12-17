@@ -96,6 +96,7 @@ class Configuration_mode_novell extends Configuration_mode {
     $ad_ar['login'] = $admin_dn;
     $ad_ar['password'] = $form['admin_password'];
     $ad_ar['uidprefix'] = 'cn';
+    $ad_ar['filter'] = '(&(objectCategory=person)(objectClass=user))';
 
 
     $ad_ar['match'] = array();
