@@ -144,7 +144,7 @@ class Configuration_mode_novell extends Configuration_mode {
 
   public function config2form($prefs) {
     $form = array();
-    $config = $prefs->get('UserDB', 'activedirectory');
+    $config = $prefs->get('UserDB', 'ldap');
 
     $form['host'] = $config['host'];
     $form['domain'] = $config['domain'];
