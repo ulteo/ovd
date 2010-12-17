@@ -48,8 +48,8 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 		
 		$userGroupDB = UserGroupDB::getInstance();
 		
-		$userDBAD = new UserDB_activedirectory();
-		$userDBAD2 = UserDB::getInstance();
+		$userDBAD2 = new UserDB_activedirectory();
+		$userDBAD = UserDB::getInstance();
 		if ( get_class($userDBAD) == get_class($userDBAD2)) {
 			$userDBAD = $userDBAD2; // for cache
 		}

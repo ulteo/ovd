@@ -66,8 +66,8 @@ class Abstract_Liaison_activedirectory {
 		$elements = array();
 		$id_ = $group->id;
 		
-		$userDBAD = new UserDB_activedirectory();
-		$userDBAD2 = UserDB::getInstance();
+		$userDBAD2 = new UserDB_activedirectory();
+		$userDBAD = UserDB::getInstance();
 		if ( get_class($userDBAD) == get_class($userDBAD2)) {
 			$userDBAD = $userDBAD2; // for cache
 		}
