@@ -27,8 +27,8 @@ class Configuration_mode_internal extends Configuration_mode {
     return _('Internal');
   }
 
-  public function careAbout($userDB) {
-    return in_array($userDB, array('sql'));
+  public function careAbout($sessionmanagement_) {
+    return $sessionmanagement_ == 'internal';
   }
 
   public function has_change($oldprefs, $newprefs) {

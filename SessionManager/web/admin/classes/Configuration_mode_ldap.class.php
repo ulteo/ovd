@@ -27,8 +27,8 @@ class Configuration_mode_ldap extends Configuration_mode {
     return _('Lightweight Directory Access Protocol (LDAP)');
   }
 
-  public function careAbout($userDB) {
-    return 'ldap' == $userDB;
+  public function careAbout($sessionmanagement_) {
+    return 'ldap' == $sessionmanagement_;
   }
 
   public function has_change($oldprefs, $newprefs) {

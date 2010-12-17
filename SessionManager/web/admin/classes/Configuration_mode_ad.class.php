@@ -27,8 +27,8 @@ class Configuration_mode_ad extends Configuration_mode {
     return _('Active Directory');
   }
 
-  public function careAbout($userDB) {
-    return 'activedirectory' == $userDB;
+  public function careAbout($sessionmanagement_) {
+    return 'microsoft' == $sessionmanagement_;
   }
 
   public function has_change($oldprefs, $newprefs) {
