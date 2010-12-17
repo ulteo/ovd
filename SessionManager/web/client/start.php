@@ -51,15 +51,12 @@ if (! $sessionManagement->initialize()) {
 	throw_response(INTERNAL_ERROR);
 }
 
-$client_request_xml = @file_get_contents('php://input');
-$ret = $sessionManagement->parseClientRequest($client_request_xml);
-if (! $ret) {
+if (! $sessionManagement->parseClientRequest(@file_get_contents('php://input'))) {
 	Logger::error('main', '(client/start) Client does not send a valid XML');
 	throw_response(INTERNAL_ERROR);
 }
 
-$ret = $sessionManagement->authenticate();
-if (! $ret) {
+if (! $sessionManagement->authenticate()) {
 	Logger::error('main', '(client/start) Authentication failed');
 	throw_response(AUTH_FAILED);
 }
