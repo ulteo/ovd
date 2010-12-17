@@ -165,7 +165,7 @@ class Configuration_mode_novell extends Configuration_mode {
     $form['admin_password'] = $config['password'];
 
 	$form['admin_branch_ou'] = '';
-	if($config['login'] == 'cn='.$admin_login.',cn=Users')
+	if($config['login'] == $config['uidprefix'].'='.$admin_login.',cn=Users,'.$config['suffix'])
 		$form['admin_branch'] = 'default';
 	else {
 		$form['admin_branch'] = 'specific';
