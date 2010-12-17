@@ -87,7 +87,7 @@ class Configuration_mode_novell extends Configuration_mode {
         $abranch = implode(',ou=', $buffer);
       }
     
-    $admin_dn = 'cn='.$form['admin_login'].',ou='.$abranch.','.domain2suffix($form['domain']);
+      $admin_dn = 'cn='.$form['admin_login'].',ou='.$abranch.','.domain2suffix($form['domain']);
     }
 
     $ad_ar = array();
