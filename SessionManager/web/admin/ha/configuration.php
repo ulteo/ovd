@@ -2,6 +2,7 @@
 /**
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
+ * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Arnaud LEGRAND <arnaud@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -264,7 +265,7 @@ function disable_hostDB($SQL, $table, $id_host) {
 function getUnregisteredServer($id_host,$hostname, $fqdn, $timestamp) {
 	$html="";
 	$html.= '<div id="ha_unregistered_servers'.$id_host.'">';
-	$html.= '<form onsubmit="return confirm(\''._("When enabling the slave server, the master server and slave server are going to restart their services to load the new configurations. It takes less than 3 minutes. During this time the web interface will be disabled.").'\')" action="configuration.php" method="post" enctype="multipart/form-data">';
+	$html.= '<form onsubmit="return confirm(\''._("When enabling the slave server, the master server and slave server are going to restart their services to load the new configuration. It takes less than 3 minutes. During this time the web interface will be disabled.").'\')" action="configuration.php" method="post" enctype="multipart/form-data">';
 	$html.= '<input type="hidden" name="action" value="enable" />';
 	$html.= '<input type="hidden" name="id_host" value="'.$id_host.'" />';
 	$html.= '<table id="ha_config"  style="" class="main_sub" border="0" cellpadding="3" cellspacing="1">';
@@ -301,7 +302,7 @@ function getUnregisteredServer($id_host,$hostname, $fqdn, $timestamp) {
 function getRegisteredServer($id_host,$hostname, $fqdn, $timestamp) {
 	$html="";
 	$html.= '<div id="ha_registered_servers'.$id_host.'">';
-	$html.= '<form onsubmit="return confirm(\''._("When enabling the slave server, the master server is going to restart their services to load the new configurations. It takes less than 3 minutes. During this time the web interface will be disabled.").'\');"  action="configuration.php" method="post" enctype="multipart/form-data">';
+	$html.= '<form onsubmit="return confirm(\''._("When enabling the slave server, the master server is going to restart their services to load the new configuration. It takes less than 3 minutes. During this time the web interface will be disabled.").'\');"  action="configuration.php" method="post" enctype="multipart/form-data">';
 	$html.= '<input type="hidden" name="action" value="disable" />';
 	$html.= '<input type="hidden" name="id_host" value="'.$id_host.'" />';
 	$html.= '<table id="ha_config"  style="" class="main_sub" border="0" cellpadding="3" cellspacing="1">';
