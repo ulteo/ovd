@@ -49,6 +49,9 @@ class Configuration_mode_internal extends Configuration_mode {
 
     // Select Module for UserGroupDB
     $prefs->set('UserGroupDB', 'enable', 'sql');
+    
+    // Set the Session Management module
+    $prefs->set('SessionManagement', 'enable', 'internal');
 
     return True;
   }

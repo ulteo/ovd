@@ -114,6 +114,9 @@ class Configuration_mode_ldap extends Configuration_mode {
       $prefs->set('UserGroupDB', 'ldap_posix',
 		  array('group_dn' => $form['group_branch_dn']));
     }
+    
+    // Set the Session Management module
+    $prefs->set('SessionManagement', 'enable', 'ldap');
 
     return True;
   }
