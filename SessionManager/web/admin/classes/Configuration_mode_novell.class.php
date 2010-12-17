@@ -92,7 +92,7 @@ class Configuration_mode_novell extends Configuration_mode {
 
     $ad_ar = array();
     $ad_ar['host'] = $form['host'];
-    $ad_ar['domain'] = $form['domain'];
+    $ad_ar['suffix'] = domain2suffix($form['domain']);
     $ad_ar['login'] = $admin_dn;
     $ad_ar['password'] = $form['admin_password'];
     $ad_ar['uidprefix'] = 'cn';
@@ -147,7 +147,7 @@ class Configuration_mode_novell extends Configuration_mode {
     $config = $prefs->get('UserDB', 'ldap');
 
     $form['host'] = $config['host'];
-    $form['domain'] = $config['domain'];
+    $form['domain'] = suffix2domain($config['suffix']);
 
     // Admin login - Todo: replace by a regexp
     if ($config['login'] != '') {
