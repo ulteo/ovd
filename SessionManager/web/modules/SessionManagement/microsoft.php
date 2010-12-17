@@ -20,6 +20,10 @@
  **/
 
 class SessionManagement_microsoft extends SessionManagement {
+	public static function getUserDB() {
+		return array('activedirectory');
+	}
+
 	/* Module methods */
 	public static function configuration() {
 		return array();

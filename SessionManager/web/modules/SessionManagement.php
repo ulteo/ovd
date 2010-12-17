@@ -61,6 +61,12 @@ abstract class SessionManagement extends Module {
 	}
 
 	public function initialize() {
+		$userDB_enabled = $this->prefs->get('UserDB', 'enable');
+		if (! in_array($userDB_enabled, $this->getUserDB())) {
+			Logger::error('main', 'SessionManagement::initialize - UserDB "'.$userDB_enabled.'" is not compatible with the current integration settings');
+			return false;
+		}
+
 		return true;
 	}
 

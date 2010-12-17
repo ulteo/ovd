@@ -20,6 +20,10 @@
  **/
 
 class SessionManagement_ldap extends SessionManagement_internal {
+	public static function getUserDB() {
+		return array('ldap');
+	}
+
 	/* Module methods */
 	public static function configuration() {
 		return array();

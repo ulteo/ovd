@@ -20,6 +20,10 @@
  **/
 
 class SessionManagement_novell extends SessionManagement {
+	public static function getUserDB() {
+		return array('ldap');
+	}
+
 	public static function getAuthMethods() {
 		return array('Password');
 	}
@@ -30,16 +34,6 @@ class SessionManagement_novell extends SessionManagement {
 
 	public static function getApplicationServerTypes() {
 		return array(Server::SERVER_TYPE_WINDOWS);
-	}
-
-	public function initialize() {
-		$userDB_enabled = $this->prefs->get('UserDB', 'enable');
-		if ($userDB_enabled != 'ldap') {
-			Logger::error('main', 'SessionManagement_novell::authenticate - UserDB module is not set to use LDAP');
-			return false;
-		}
-
-		return true;
 	}
 
 	public function generateApplicationServerCredentials() {

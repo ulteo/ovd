@@ -20,6 +20,10 @@
  **/
 
 class SessionManagement_internal extends SessionManagement {
+	public static function getUserDB() {
+		return array('sql');
+	}
+
 	public static function getAuthMethods() {
 		$prefs = Preferences::getInstance();
 
