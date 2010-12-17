@@ -2,6 +2,7 @@
 
 # Copyright (C) 2010 Ulteo SAS
 # http://www.ulteo.com
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -27,6 +28,7 @@ if Platform is None:
 	if p == "linux":
 		from Linux.ApplicationsDetection import ApplicationsDetection
 		from Linux.ApplicationsStatic import ApplicationsStatic
+		from Linux.EnvironmentNovell import EnvironmentNovell
 		from Linux.Profile import Profile
 		from Linux.Session import Session
 		from Linux.TS import TS
