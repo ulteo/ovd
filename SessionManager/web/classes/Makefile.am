@@ -16,12 +16,14 @@ scripts_DATA = Application.class.php \
                SQL.class.php \
                News.class.php \
                Preferences.class.php \
+               Profile.class.php \
                ReportItems.class.php \
                Server.class.php \
                Server_Logs.class.php \
                ServerReportItem.class.php \
                Session.class.php \
                SessionReportItem.class.php \
+               SharedFolder.class.php \
                Token.class.php \
                User.class.php \
                UsersGroup.class.php \
