@@ -865,7 +865,7 @@ class Server {
 				$db = $sharedfolderdb;
 			}
 			else {
-				$folder = $profiledb->import($share['id']);
+				$folder = $profiledb->import($folder_id);
 				$db = $profiledb;
 			}
 			
