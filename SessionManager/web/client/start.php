@@ -240,7 +240,7 @@ if (isset($old_session_id)) {
 					$profile = new Profile();
 					$profile->server = $fileserver->getAttribute('fqdn');
 
-					if (! $profiledb->addToServer($profile, $fileserver)) {
+					if (! $profileDB->addToServer($profile, $fileserver)) {
 						Logger::error('main', '(client/start) Auto-creation of profile for User "'.$user->getAttribute('login').'" failed (step 1)');
 						throw_response(INTERNAL_ERROR);
 					}
