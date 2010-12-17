@@ -307,8 +307,8 @@ abstract class SessionManagement extends Module {
 		$this->desktop_server = false;
 
 		switch ($type_) {
-			case 'linux':
-			case 'windows':
+			case Server::SERVER_TYPE_LINUX:
+			case Server::SERVER_TYPE_WINDOWS:
 				foreach ($this->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
 					$server = Abstract_Server::load($fqdn);
 					if (! $server)
