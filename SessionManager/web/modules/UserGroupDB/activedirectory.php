@@ -141,6 +141,9 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 			if (!isset($buf['description']))
 				$buf['description'] = '';
 			
+			if (!isset($buf['name']))
+				$buf['name'] = $dn;
+			
 			$ug = new UsersGroup($dn, $buf['name'], $buf['description'], true);
 			$ug->extras = $extras;
 			$groups[$dn] = $ug;
