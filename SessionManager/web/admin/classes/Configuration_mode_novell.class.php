@@ -36,7 +36,7 @@ class Configuration_mode_novell extends Configuration_mode {
     $new = $newprefs->get('UserDB', 'ldap');
 
     $change_ad = False;
-    foreach(array('host', 'domain') as $key) {
+    foreach(array('host', 'suffix') as $key) {
       if ($old[$key] != $new[$key]) {
 	$change_ad = True;
 	break;
