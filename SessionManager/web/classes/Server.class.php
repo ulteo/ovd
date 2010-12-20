@@ -1106,7 +1106,6 @@ class Server {
 			$app_description = '';
 			$app_path_exe = '';
 			$app_path_args = NULL;
-			$app_path_icon = NULL;
 			$app_package = NULL;
 			$app_desktopfile = NULL;
 			$app_mimetypes = NULL;
@@ -1126,8 +1125,6 @@ class Server {
 				$command = str_replace(array("%U","%u","%c","%i","%f","%m",'"'),"",$command);
 				$app_path_exe = trim($command);
 			}
-			if ($exe_node->hasAttribute("icon"))
-				$app_path_icon =  ($exe_node->getAttribute("icon"));
 			if ($exe_node->hasAttribute("mimetypes"))
 				$app_mimetypes = $exe_node->getAttribute("mimetypes");
 
