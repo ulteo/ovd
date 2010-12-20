@@ -74,7 +74,7 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 		$buf['name'] = '';
 		$buf['description'] = '';
 		$ldap = new LDAP($config_ldap);
-		$sr = $ldap->search($expl[0], array_keys($config_ldap['match']));
+		$sr = $ldap->search($expl[0], array_values($config_ldap['match']));
 		if ($sr === false) {
 			Logger::error('main',"UserGroupDB::activedirectory::import search failed for ($id_)");
 			return NULL;
@@ -114,7 +114,7 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 		}
 
 		$ldap = new LDAP($config_ldap);
-		$sr = $ldap->search('(objectClass=group)', array_keys($config_ldap['match']));
+		$sr = $ldap->search('(objectClass=group)', array_values($config_ldap['match']));
 		if ($sr === false) {
 			Logger::error('main',"UserGroupDB::activedirectory::getList search failed");
 			return NULL;
