@@ -29,7 +29,7 @@ class Drives(AbstractDrives):
 	def getDrivesList():
 		l = []
 		
-		for path in glob.glob("/mnt/*") + glob.glob("/media/*")
+		for path in glob.glob("/mnt/*") + glob.glob("/media/*"):
 			if os.path.ismount(path):
 				l.append(path)
 		
