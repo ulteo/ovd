@@ -19,9 +19,10 @@
  */
 package org.ulteo.ovd.disk;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -34,11 +35,15 @@ import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 
 public class LinuxDiskManager extends DiskManager {
 	private static Logger logger = Logger.getLogger(LinuxDiskManager.class);
+
+	private static String mtabFilename = "/etc/mtab";
+	private ArrayList<String> mtabList = null;
 	
 	
 	/**************************************************************************/
 	public LinuxDiskManager(OVDRdpdrChannel diskChannel) {
 		super(diskChannel);
+		this.mtabList = new ArrayList<String>();
 	}
 	
 	/**************************************************************************/
@@ -51,11 +56,53 @@ public class LinuxDiskManager extends DiskManager {
 	}
 
 	/**************************************************************************/
+	public boolean testDir(String directoryName) {
+		File directory = new File(directoryName);
+		if (directory.isDirectory() && directory.canRead()) {
+			for(String entry : this.mtabList) {
+				if (entry.equals(directoryName))
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	/**************************************************************************/
+	private void updateMtab() {
+		this.mtabList.clear();
+		File file = new File(mtabFilename);
+		BufferedReader br = null;
+		FileReader fr = null;
+		
+		try {
+			fr = new FileReader(file);
+			br = new BufferedReader(fr);
+
+			String line = br.readLine();
+			while(line != null) {
+				String[] lineContent = line.split(" ");
+				if (lineContent.length > 2)
+					this.mtabList.add(lineContent[1]);
+				line = br.readLine();
+			}
+			br.close();
+			fr.close();
+		}
+		catch (FileNotFoundException e) {
+			logger.warn("Unable to find "+mtabFilename);
+		}
+		catch (IOException e) {
+			logger.warn("Error while reading "+mtabFilename);
+		}
+	}
+	
+	/**************************************************************************/
 	public ArrayList<String> getNewDrive() {
 		ArrayList<String> newDrives = new ArrayList<String>();
 		String dirPath;
 		File dir = null;
 		
+		updateMtab();
 		logger.debug("Searching for new drive");
 		for (String toInspect : this.directoryToInspect) {
 			dir = new File(toInspect);
