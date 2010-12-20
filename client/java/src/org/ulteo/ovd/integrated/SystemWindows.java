@@ -25,10 +25,12 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.ImageIcon;
 import org.ulteo.Logger;
@@ -178,5 +180,32 @@ public class SystemWindows extends SystemAbstract {
 		} catch (IOException ex) {
 			Logger.error("Error while converting "+app.getName()+" icon: "+ex.getMessage());
 		}
+	}
+	
+	public static String KNOWN_ULTEO_TAG_FILE = ".ulteo.id";
+	
+	public static String getKnownDrivesUUIDFromPath(String path) {
+		String shareID = null;
+		String driveLetter = path.substring(0, 3);
+		String ulteoTag = driveLetter+SystemWindows.KNOWN_ULTEO_TAG_FILE;
+		File ulteoTagFile = new File(ulteoTag);
+		
+		if (ulteoTagFile.exists()) {
+			try {
+				BufferedReader br = new BufferedReader(new FileReader(ulteoTagFile));
+				char[] buff = new char[16];
+				if (br.read(buff, 0, 16) != 16) {
+					Logger.warn("Error while reading ulteo id file");
+					return null;
+				}
+				shareID  = new String(buff);
+			} catch (FileNotFoundException e) {
+				Logger.warn("Unable to find the file "+ulteoTag+" ["+e.getMessage()+"]");
+			}
+			catch (IOException e) {
+				Logger.warn("Error while opening the file "+ulteoTag+" ["+e.getMessage()+"]");
+			}
+		}
+		return shareID;
 	}
 }

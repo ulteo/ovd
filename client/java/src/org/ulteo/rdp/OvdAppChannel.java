@@ -46,13 +46,16 @@ public class OvdAppChannel extends VChannel {
 	public static final int ORDER_STOP	= 0x05;
 	public static final int ORDER_CANT_START= 0x06;
 	public static final int	ORDER_START_WITH_ARG= 0x07;
+	public static final int	ORDER_KNOWN_DRIVES = 0x20;
 	
 	public static final int DIR_TYPE_SHARED_FOLDER = 0X01;
 	public static final int DIR_TYPE_RDP_DRIVE     = 0x02;
+	public static final int DIR_TYPE_KNOWN_DRIVE  = 0x03;
 	
 	private boolean channel_open = false;
 	
 	private List<OvdAppListener> listener = null;
+	private List<String> known_folers = null;
 
 	private HashMap<RdpdrDevice, List<Integer>> sharesUsedByApps = null;
 	
@@ -61,6 +64,7 @@ public class OvdAppChannel extends VChannel {
 
 		this.sharesUsedByApps = new HashMap<RdpdrDevice, List<Integer>>();
 		this.listener = new CopyOnWriteArrayList<OvdAppListener>();
+		this.known_folers = new CopyOnWriteArrayList<String>();
 	}
 	
 	public int flags() {
@@ -87,6 +91,26 @@ public class OvdAppChannel extends VChannel {
 				
 				break;
 			
+			case ORDER_KNOWN_DRIVES:
+				int folder_count = data.getLittleEndian32();
+				known_folers.clear();
+
+				for(int i = 0 ; i < folder_count ; i++) {
+					int drive_uid_length = data.getLittleEndian32();
+					byte[] stringData = new byte[drive_uid_length];
+					
+					data.copyToByteArray(stringData, 0, data.getPosition(), drive_uid_length);
+					data.incrementPosition(drive_uid_length);
+					
+					try {
+						known_folers.add(new String(stringData, "UTF-16LE"));
+					} catch (UnsupportedEncodingException ex) {
+						logger.error("Failed to send startapp: UTF-16LE is not supported by your JVM: "+ex.getMessage());
+						break;
+					}
+				}
+				break;
+
 			case ORDER_STARTED:
 				instance = data.getLittleEndian32();
 				

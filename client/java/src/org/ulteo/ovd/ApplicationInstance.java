@@ -27,6 +27,8 @@ import net.propero.rdp.crypto.CryptoException;
 import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
 import org.ulteo.Logger;
 import org.ulteo.ovd.integrated.Constants;
+import org.ulteo.ovd.integrated.OSTools;
+import org.ulteo.ovd.integrated.SystemWindows;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 import org.ulteo.rdp.rdpdr.DeviceListener;
@@ -109,47 +111,62 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 	}
 
 	public void startApp() throws RdesktopException, IOException, CryptoException {
+		OvdAppChannel ovdApp = this.app.getConnection().getOvdAppChannel();
+		
 		if (this.arg == null) {
 			this.app.getConnection().getOvdAppChannel().sendStartApp(this.token, this.app.getId());
+			this.state = STARTING;
+			return; 
 		}
-		else {
-			OVDRdpdrChannel rdpdr = this.app.getConnection().getRdpdrChannel();
-			try {
-				this.waitedDevice = rdpdr.getDeviceFromFile(arg);
-			} catch (InvalidParameterException ex) {
-				Logger.error("Unable to get a drive for '"+this.arg+"': "+ex.getMessage());
-				this.waitedDevice = null;
+		
+		if (OSTools.isWindows()) {
+			String ulteoID = SystemWindows.getKnownDrivesUUIDFromPath(this.arg);
+			if (ulteoID != null) {
+				String relativePath = this.arg.substring(3);
+
+				ovdApp.addOvdAppListener(this);
+				ovdApp.sendStartApp(this.token, this.app.getId(), ovdApp.DIR_TYPE_KNOWN_DRIVE, ulteoID, relativePath);
+				this.state = STARTING;
 				return;
 			}
+		}
+		
+		OVDRdpdrChannel rdpdr = this.app.getConnection().getRdpdrChannel();
+		try {
+			this.waitedDevice = rdpdr.getDeviceFromFile(arg);
+		} catch (InvalidParameterException ex) {
+			Logger.error("Unable to get a drive for '"+this.arg+"': "+ex.getMessage());
+			this.waitedDevice = null;
+			return;
+		}
 
+		if (this.waitedDevice == null) {
+			rdpdr.addDeviceListener(this);
+			this.waitedDevice = rdpdr.mountDeviceFromFile(arg);
 			if (this.waitedDevice == null) {
-				rdpdr.addDeviceListener(this);
-				this.waitedDevice = rdpdr.mountDeviceFromFile(arg);
-				if (this.waitedDevice == null) {
-					Logger.error("Unable to mount a drive for: '"+this.arg+"'");
-					rdpdr.removeDeviceListener(this);
-					return;
-				}
-			}
-
-			if (! this.parseArg()) {
-				Logger.error("Failed to parse arg: '"+this.arg+"'");
-				this.waitedDevice = null;
-				if (rdpdr.getDeviceListeners().contains(this))
-					rdpdr.removeDeviceListener(this);
+				Logger.error("Unable to mount a drive for: '"+this.arg+"'");
+				rdpdr.removeDeviceListener(this);
 				return;
 			}
-
-			if (! this.waitedDevice.connected) {
-				Logger.info("Waiting for device mount: "+this.waitedDevice.handle);
-				return;
-			}
-
-			OvdAppChannel ovdApp = this.app.getConnection().getOvdAppChannel();
-
-			ovdApp.addOvdAppListener(this);
-			ovdApp.sendStartApp(this.token, this.app.getId(), ovdApp.DIR_TYPE_RDP_DRIVE, this.sharename, this.path);
 		}
+
+		if (! this.parseArg()) {
+			Logger.error("Failed to parse arg: '"+this.arg+"'");
+			this.waitedDevice = null;
+			if (rdpdr.getDeviceListeners().contains(this))
+				rdpdr.removeDeviceListener(this);
+			return;
+		}
+
+		if (! this.waitedDevice.connected) {
+			Logger.info("Waiting for device mount: "+this.waitedDevice.handle);
+			return;
+		}
+
+		
+
+		ovdApp.addOvdAppListener(this);
+		ovdApp.sendStartApp(this.token, this.app.getId(), ovdApp.DIR_TYPE_RDP_DRIVE, this.sharename, this.path);
 		this.state = STARTING;
 	}
 

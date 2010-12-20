@@ -27,11 +27,12 @@ import time
 from OvdAppChannel import OvdAppChannel
 
 class InstancesManager(threading.Thread):
-	def __init__(self, vchannel, folders):
+	def __init__(self, vchannel, folders, drives):
 		threading.Thread.__init__(self)
 		
 		self.vchannel = vchannel
 		self.folders = folders
+		self.drives = drives
 		self.jobs = []
 		self.instances = []
 
@@ -57,6 +58,9 @@ class InstancesManager(threading.Thread):
 		return None
 	
 	def run(self):
+		self.drives.rebuild()
+		self.vchannel.Write(OvdAppChannel.getDrivesMessage(self.drives.getListUID()))
+		
 		t_init = 0
 		while True:
 			t0 = time.time()
@@ -73,6 +77,13 @@ class InstancesManager(threading.Thread):
 						dir_type = job[3]
 						if dir_type == OvdAppChannel.DIR_TYPE_RDP_DRIVE:
 							local_path = self.shareName2path(job[4])
+						
+						elif dir_type == OvdAppChannel.DIR_TYPE_KNOWN_DRIVES:
+							local_path = self.drives.getPath(job[4])
+							if local_path is None:
+								 print "Unknown drive ID %s"%(local_path)
+								 continue
+						
 						else:
 							local_path = self.folders.getPathFromID(job[4])
 						
@@ -112,6 +123,10 @@ class InstancesManager(threading.Thread):
 			if t_init > 5:
 				# We send channel init time to time to manage the reconnection
 				self.vchannel.Write(OvdAppChannel.getInitPacket())
+				
+				if self.drives.rebuild():
+					self.vchannel.Write(OvdAppChannel.getDrivesMessage(self.drives.getListUID()))
+				
 				t_init = 0
 	
 	def stop(self):

@@ -26,6 +26,7 @@ import time
 
 from ovd_shells.OvdAppChannel import OvdAppChannel
 from ovd_shells.Platform import _platform as Platform
+from ovd_shells.Platform.Drives import Drives
 from ovd_shells.Platform.Folders import Folders
 from ovd_shells.Platform.InstancesManager import InstancesManager
 from ovd_shells.Platform.VirtualChannel import VirtualChannel
@@ -46,6 +47,8 @@ def main():
 	folders = Folders()
 	folders.registerShares()
 	
+	drives = Drives()
+	
 	seamlessPid = Platform.launch("seamlessrdpshell", False)
 	
 	vchannel = VirtualChannel(OvdAppChannel.NAME)
@@ -53,7 +56,7 @@ def main():
 	
 	vchannel.Write(OvdAppChannel.getInitPacket())
 	
-	im = InstancesManager(vchannel, folders)
+	im = InstancesManager(vchannel, folders, drives)
 	im.start()
 	
 	# Applications to auto starts

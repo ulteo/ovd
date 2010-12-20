@@ -34,9 +34,11 @@ class OvdAppChannel:
 	ORDER_STOP	= 0x05
 	ORDER_CANT_START= 0x06
 	ORDER_START_WITH_ARGS = 0x07
+	ORDER_KNOWN_DRIVES  = 0x20
 	
 	DIR_TYPE_SHARED_FOLDER = 0X01
 	DIR_TYPE_RDP_DRIVE     = 0x02
+	DIR_TYPE_KNOWN_DRIVES  = 0x03
 	
 	def __init__(self, instance_manager):
 		self.im = instance_manager
@@ -49,6 +51,18 @@ class OvdAppChannel:
 	@staticmethod
 	def getInitPacket():
 		return struct.pack(">B", OvdAppChannel.ORDER_INIT)
+		
+	
+	@staticmethod
+	def getDrivesMessage(uids):
+		buf = struct.pack(">B", OvdAppChannel.ORDER_KNOWN_DRIVES)
+		buf+= struct.pack("<I", len(uids))
+		for uid in uids:
+			d = uid.encode("UTF-16LE")
+			buf+= struct.pack("<I", len(d))
+			buf+= d
+		
+		return buf
 	
 	
 	def run(self, vchannel):
@@ -117,7 +131,7 @@ class OvdAppChannel:
 		app_id = struct.unpack('<I', packet[5:9])[0]
 		
 		dir_type = struct.unpack('>B', packet[9])[0]
-		if dir_type not in [self.DIR_TYPE_SHARED_FOLDER, self.DIR_TYPE_RDP_DRIVE]:
+		if dir_type not in [self.DIR_TYPE_SHARED_FOLDER, self.DIR_TYPE_RDP_DRIVE, self.DIR_TYPE_KNOWN_DRIVES]:
 			print "Message ORDER_START_WITH_ARGS: unknown dir type %X"%(dir_type)
 			return
 		
@@ -136,6 +150,17 @@ class OvdAppChannel:
 			print "Message ORDER_START_WITH_ARGS: share argument is not UTF-16-LE srting"
 			return
 		ptr+= l
+		
+		#elif dir_type == self.DIR_TYPE_KNOWN_DRIVES:
+			#if len(packet) < ptr + 16:
+				#print "Packet length error"
+				#return
+			#share = packet[ptr:ptr+16]
+			#ptr+= 16
+		
+		#else:
+			#print "Message ORDER_START_WITH_ARGS: unknown dir type %X"%(dir_type)
+			#return
 		
 		l = struct.unpack('<I', packet[ptr:ptr+4])[0]
 		if len(packet) < ptr + l:
