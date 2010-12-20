@@ -845,11 +845,17 @@ class Server {
 			return false;
 		}
 		
-		$profiledb = ProfileDB::getInstance();
-		$sharedfolderdb = SharedFolderDB::getInstance();
+		$folders_on_sm1 = array();
+		if (Preferences::moduleIsEnabled('ProfileDB')) {
+			$profiledb = ProfileDB::getInstance();
+			$folders_on_sm1 = $profiledb->importFromServer($this->fqdn);
+		}
 		
-		$folders_on_sm1 = $profiledb->importFromServer($this->fqdn);
-		$folders_on_sm2 = $sharedfolderdb->importFromServer($this->fqdn);
+		$folders_on_sm2 = array();
+		if (Preferences::moduleIsEnabled('SharedFolderDB')) {
+			$sharedfolderdb = SharedFolderDB::getInstance();
+			$folders_on_sm2 = $sharedfolderdb->importFromServer($this->fqdn);
+		}
 		
 		$folders_on_sm = array();
 		if (is_array($folders_on_sm1)) {
@@ -860,13 +866,17 @@ class Server {
 		}
 		
 		foreach ($forders_on_server as $folder_id) {
-			$folder = $sharedfolderdb->import($folder_id);
-			if ($folder) {
-				$db = $sharedfolderdb;
+			if (Preferences::moduleIsEnabled('SharedFolderDB')) {
+				$folder = $sharedfolderdb->import($folder_id);
+				if ($folder) {
+					$db = $sharedfolderdb;
+				}
 			}
-			else {
-				$folder = $profiledb->import($folder_id);
-				$db = $profiledb;
+			if (Preferences::moduleIsEnabled('ProfileDB')) {
+				if (! $folder) {
+					$folder = $profiledb->import($folder_id);
+					$db = $profiledb;
+				}
 			}
 			
 			if (is_object($folder) === false) {

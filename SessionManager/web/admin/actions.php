@@ -904,11 +904,13 @@ if ($_REQUEST['name'] == 'User') {
 						popup_error(sprintf(_("Unable to delete user '%s'"), $user_login));
 						redirect();
 					}
-					$profiledb = ProfileDB::getInstance();
-					$netfolders = $u->getProfiles();
-					if (is_array($netfolders)) {
-						foreach ($netfolders as $netfolder)
-							$profiledb->remove($netfolder->id);
+					if (Preferences::moduleIsEnabled('ProfileDB')) {
+						$profiledb = ProfileDB::getInstance();
+						$netfolders = $u->getProfiles();
+						if (is_array($netfolders)) {
+							foreach ($netfolders as $netfolder)
+								$profiledb->remove($netfolder->id);
+						}
 					}
 					$res = $userDB->remove($u);
 					

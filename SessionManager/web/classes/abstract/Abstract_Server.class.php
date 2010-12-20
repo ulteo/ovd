@@ -281,15 +281,19 @@ class Abstract_Server {
 			$tm->remove($a_task->id);
 		}
 		
-		$profiledb = ProfileDB::getInstance();
-		$folders = $profiledb->importFromServer($fqdn_);
-		foreach ($folders as $a_folder) {
-			$profiledb->remove($a_folder);
+		if (Preferences::moduleIsEnabled('ProfileDB')) {
+			$profiledb = ProfileDB::getInstance();
+			$folders = $profiledb->importFromServer($fqdn_);
+			foreach ($folders as $a_folder) {
+				$profiledb->remove($a_folder);
+			}
 		}
-		$sharedfolderdb = SharedFolderDB::getInstance();
-		$folders = $sharedfolderdb->importFromServer($fqdn_);
-		foreach ($folders as $a_folder) {
-			$profiledb->remove($a_folder);
+		if (Preferences::moduleIsEnabled('SharedFolderDB')) {
+			$sharedfolderdb = SharedFolderDB::getInstance();
+			$folders = $sharedfolderdb->importFromServer($fqdn_);
+			foreach ($folders as $a_folder) {
+				$profiledb->remove($a_folder);
+			}
 		}
 
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);
