@@ -276,7 +276,7 @@ foreach (glob(dirname(dirname(__FILE__)).'/*/menu.inc.php') as $path) {
 	}
 }
 
-if (defined('SESSIONMANAGER_ADMIN_DEBUG') && ! isset($_SESSION['admin_ovd_user'])) {
+if (defined('SESSIONMANAGER_ADMIN_DEBUG') && SESSIONMANAGER_ADMIN_DEBUG === true && ! isset($_SESSION['admin_ovd_user'])) {
 	$menu['debug'] = 
 		array('id' => 'debug',
 			  'name' => 'Debug Tools',
