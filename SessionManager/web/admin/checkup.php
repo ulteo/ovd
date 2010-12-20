@@ -161,7 +161,14 @@ function cleanup_preferences() {
 	}
 }
 
-$liaisons_types = array('ApplicationServer', 'AppsGroup', 'ServerSession', 'UserGroupSharedFolder', 'UserProfile', 'UsersGroup', 'UsersGroupApplicationsGroup', 'UsersGroupCached');
+$liaisons_types = array('ApplicationServer', 'AppsGroup', 'ServerSession', 'UsersGroup', 'UsersGroupApplicationsGroup', 'UsersGroupCached');
+if (Preferences::moduleIsEnabled('ProfileDB')) {
+	$liaisons_types []= 'UserProfile';
+}
+if (Preferences::moduleIsEnabled('SharedFolderDB')) {
+	$liaisons_types []= 'UserGroupSharedFolder';
+}
+ksort($liaisons_types);
 if (isset($_POST['cleanup']) && $_POST['cleanup'] == 1 && array_key_exists('type', $_POST)) {
 	switch ($_POST['type']) {
 		case 'liaison':
