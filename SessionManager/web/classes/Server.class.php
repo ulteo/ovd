@@ -1131,7 +1131,7 @@ class Server {
 			if ($exe_node->hasAttribute("mimetypes"))
 				$app_mimetypes = $exe_node->getAttribute("mimetypes");
 
-			$a = new Application(NULL,$app_name,$app_description,$this->getAttribute('type'),$app_path_exe,$app_package,$app_path_icon,$app_mimetypes,true,$app_desktopfile);
+			$a = new Application(NULL,$app_name,$app_description,$this->getAttribute('type'),$app_path_exe,$app_package,$app_mimetypes,true,$app_desktopfile);
 			$a_search = $applicationDB->search($app_name,$app_description,$this->getAttribute('type'),$app_path_exe);
 			if (is_object($a_search)){
 				//already in DB
