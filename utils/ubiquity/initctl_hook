@@ -1,5 +1,6 @@
 #!/bin/bash
 # Copyright (c) 2009 Alon Swartz <alon@turnkeylinux.org> - all rights reserved
+# Author Samuel BOVEE <samuel@ulteo.com> 2010
 
 set -e
 set -u

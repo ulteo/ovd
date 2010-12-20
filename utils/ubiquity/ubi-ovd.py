@@ -9,6 +9,7 @@
 # - Colin Watson <cjwatson@ubuntu.com>
 # - Evan Dandrea <evand@ubuntu.com>
 # - Roman Shtylman <shtylman@gmail.com>
+# - Samuel BOVEE <samuel@ulteo.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
