@@ -66,7 +66,7 @@ class receiver(asyncore.dispatcher):
 		except SSL.ZeroReturnError:
 			pass
 		except:
-			Logger.debug('%s::handle_read error' % self.__class__.__name__)
+			Logger.warn('%s::handle_read error' % self.__class__.__name__)
 			self.close()
 
 
@@ -81,7 +81,7 @@ class receiver(asyncore.dispatcher):
 		except SSL.WantWriteError:
 			pass
 		except:
-			Logger.debug('%s::handle_write error' % self.__class__.__name__)
+			Logger.warn('%s::handle_write error' % self.__class__.__name__)
 			self.close()
 
 
@@ -99,7 +99,7 @@ class receiverXMLRewriter(receiver):
 		self.hasRewrited = False
 		self.proxy = proxy
 
-	
+
 	def writable(self):
 		if len(self.to_remote_buffer) == 0:
 			return False

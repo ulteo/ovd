@@ -48,11 +48,11 @@ class sender(asyncore.dispatcher):
 	def handle_read(self):
 		try:
 			read = self.recv(8192)
-			self.receiver.to_remote_buffer += read 
-                except SSL.ZeroReturnError:
+			self.receiver.to_remote_buffer += read
+		except SSL.ZeroReturnError:
 			pass
 		except:
-			Logger.error('%s::handle_read error' % self.__class__.__name__)
+			Logger.warn('%s::handle_read error' % self.__class__.__name__)
 			self.close()
 
 
@@ -67,7 +67,7 @@ class sender(asyncore.dispatcher):
 		except SSL.WantWriteError:
 			pass
 		except:
-			Logger.error('%s::handle_write error' % self.__class__.__name__)
+			Logger.warn('%s::handle_write error' % self.__class__.__name__)
 			self.close()
 
 
