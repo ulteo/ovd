@@ -23,11 +23,11 @@
 from OpenSSL import SSL
 
 import asyncore
-from random import Random
 import re
 import socket
 import string
 import threading
+import uuid
 import xml.etree.ElementTree as parser
 
 from ovd.Logger import Logger
@@ -54,6 +54,7 @@ class ReverseProxy(asyncore.dispatcher):
 
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.set_socket(SSL.Connection(self.ssl_ctx, sock))
+		#self.set_reuse_addr()
 
 		try:
 			self.bind(("0.0.0.0", GATEWAY_PORT))
@@ -66,22 +67,19 @@ class ReverseProxy(asyncore.dispatcher):
 
 
 	def insertToken(self, fqdn):
+		token = str(uuid.uuid4())
 		try:
-			token = ''.join(Random().sample(string.letters + string.digits, 16))
 			self.lock.acquire()
-			if not self.database.has_key(token):
-				self.database[token] = fqdn
-				Logger.debug('token %s inserted' % token)
-				return token
-			else:
-				Logger.error('token %s already present in database' % gen)
-				return None
+			self.database[token] = fqdn
 		finally:
 			self.lock.release()
+		Logger.debug('token %s inserted' % token)
+		return token
 
 
 	def handle_accept(self):
-		conn, addr = self.accept()
+		conn, peer = self.accept()
+		addr, port = peer
 		try:
 			r = conn.recv(4096)
 		except SSL.ZeroReturnError:
@@ -91,9 +89,12 @@ class ReverseProxy(asyncore.dispatcher):
 			conn.close()
 			return
 
-		# find protocol
 		request = r.split('\n', 1)[0]
-		rdp = re.match('\x03\x00(.*)Cookie: mstshash=(\w+);token=(\w+);', request)
+		utf8_request = request.rstrip('\n\r').decode("utf-8", "replace")
+		Logger.debug("Gateway:: request: %s (%s,%d)" % (utf8_request, addr, port))
+
+		# find protocol
+		rdp = re.match('\x03\x00(.*)Cookie: mstshash=(\w+);token=([\-\w]+);', request)
 		http = re.match('((?:HEAD)|(?:GET)|(?:POST)) (.*) HTTP/(.\..)', request)
 
 		try:
