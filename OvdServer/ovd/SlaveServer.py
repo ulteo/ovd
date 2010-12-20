@@ -143,7 +143,7 @@ class SlaveServer:
 	def loop_procedure(self):
 		for thread in self.threads:
 			if not thread.isAlive():
-				Logger.warn("One thread stop")
+				Logger.warn("Thread '%s' stop"%(thread.getName()))
 				Logger.debug("ToDo: be more specific. Make difference between Roles and main threads")
 				self.threads.remove(thread)
 				return False
