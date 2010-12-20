@@ -76,15 +76,17 @@ fi
 %postun -n ulteo-ovd-web-client
 A2CONFDIR=/etc/httpd/conf.d
 
-if [ -e $A2CONFDIR/webclient.conf ]; then
-    rm -f $A2CONFDIR/webclient.conf
-    if apachectl configtest 2>/dev/null; then
-        /etc/init.d/httpd reload || true
-    else
-        echo << EOF
+if [ "$1" = "0" ]; then
+    if [ -e $A2CONFDIR/webclient.conf ]; then
+        rm -f $A2CONFDIR/webclient.conf
+        if apache2ctl configtest 2>/dev/null; then
+            service apache2 reload || true
+        else
+            echo << EOF
 "Your apache configuration is broken!
 Correct it and restart apache."
 EOF
+        fi
     fi
 fi
 
