@@ -185,7 +185,7 @@ if (isAuthorized('viewConfiguration')) {
 
 	$menu['configuration_profiles'] = 
 		array('id' => 'configuration_profiles',
-			  'name' => _('Profile settings'),
+			  'name' => _('Domain integration settings'),
 			  'page' => 'configuration-profile.php',
 			  'parent' => array('configuration'));
 	
