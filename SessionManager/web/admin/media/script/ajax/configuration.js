@@ -19,24 +19,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-function changeNames(row, index) {
-	var re = /(_{3})([0-9+])(_{3})(.+)$/;
-	var rt = '$1'+index+'$3$4';
-
-	function update(type) {
-		var elements = row.getElementsByTagName('input');
-		for (var i = 0, n = elements.length; i < n; i++) {
-			var newname = elements[i].name.replace(re, rt );
-			elements[i].setAttribute('name', newname);
-			elements[i].setAttribute('id', newname);
-			if (elements[i].getAttribute('type') == 'hidden') {
-				elements[i].setAttribute('value', index);
-			}
-		}
-	}
-	update('text');
-	update('hidden');
-}
 function configuration4_mod(js) {
 	function copy_and_init(oldrow,newrow) {
 		var oelements = oldrow.getElementsByTagName('input');
@@ -59,6 +41,25 @@ function configuration4_mod(js) {
 			}
 		}
 		return true;
+	}
+
+	function changeNames(row, index) {
+		var re = /(_{3})([0-9+])(_{3})(.+)$/;
+		var rt = '$1'+index+'$3$4';
+
+		function update(type) {
+			var elements = row.getElementsByTagName('input');
+			for (var i = 0, n = elements.length; i < n; i++) {
+				var newname = elements[i].name.replace(re, rt );
+				elements[i].setAttribute('name', newname);
+				elements[i].setAttribute('id', newname);
+				if (elements[i].getAttribute('type') == 'hidden') {
+					elements[i].setAttribute('value', index);
+				}
+			}
+		}
+		update('text');
+		update('hidden');
 	}
 
 	var div,td,tr,table;
