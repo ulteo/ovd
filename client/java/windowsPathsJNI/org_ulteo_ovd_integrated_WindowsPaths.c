@@ -79,6 +79,6 @@ JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_nGetPersona
         return NULL;
     }
 
-    printf("%dPersonalData path: %s\n", error, path);
+    printf("PersonalData path: %s\n", path);
     return (*env)->NewStringUTF(env, path);
 }
