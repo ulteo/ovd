@@ -27,7 +27,7 @@
 # Required-Stop:     $local_fs $network
 # Should-Start:      apache2
 # Should-Stop:       apache2
-# Default-Start:     2 3 4 5
+# Default-Start:     2 3 5
 # Default-Stop:      0 1 6
 # Short-Description: Start Ulteo OVD subsystem
 # Description:       Start Ulteo OVD subsystem and needed services
