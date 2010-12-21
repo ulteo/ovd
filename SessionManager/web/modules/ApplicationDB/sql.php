@@ -193,15 +193,15 @@ class ApplicationDB_sql extends ApplicationDB {
 	
 	public function add($a){
 		if (is_object($a)){
-			$query_keys = "";
-			$query_values = "";
+			$query_keys = array();
+			$query_values = array();
 			$attributes = $a->getAttributesList();
 			foreach ($attributes as $key){
-				$query_keys .= '`'.$key.'`,';
-				$query_values .= '"'.mysql_escape_string($a->getAttribute($key)).'",';
+				$query_keys   []= '`'.$key.'`';
+				$query_values []= '"'.mysql_escape_string($a->getAttribute($key)).'"';
 			}
-			$query_keys = substr($query_keys, 0, -1); // del the last ,
-			$query_values = substr($query_values, 0, -1); // del the last ,
+			$query_keys = implode(', ', $query_keys);
+			$query_values = implode(', ', $query_values);
 			$sql2 = SQL::getInstance();
 			$res = $sql2->DoQuery('INSERT INTO @1 ( '.$query_keys.' ) VALUES ('.$query_values.' )',APPLICATION_TABLE);
 			$id = $sql2->InsertId();
