@@ -121,7 +121,11 @@ class Dialog(AbstractDialog):
 			exeNode.setAttribute("command", application["command"])
 			#if application.has_key("icon"):
 			#	exeNode.setAttribute("icon", application["icon"])
-			exeNode.setAttribute("mimetypes", ";".join(application["mimetypes"])+";")
+			for mime in application["mimetypes"]:
+				mimeNode = doc.createElement("mime")
+				mimeNode.setAttribute("type", mime)
+				appNode.appendChild(mimeNode)
+			
 			appNode.appendChild(exeNode)
 			
 			rootNode.appendChild(appNode)

@@ -1125,8 +1125,16 @@ class Server {
 				$command = str_replace(array("%U","%u","%c","%i","%f","%m",'"'),"",$command);
 				$app_path_exe = trim($command);
 			}
-			if ($exe_node->hasAttribute("mimetypes"))
-				$app_mimetypes = $exe_node->getAttribute("mimetypes");
+			
+			$mimetypes = array();
+			$mime_nodes = $app_node->getElementsByTagName('mime');
+			foreach($mime_nodes as $mime_node){
+				if (! $mime_node->hasAttribute("type"))
+					continue;
+				
+				$mimetypes[]= $mime_node->getAttribute("type");
+			}
+			$app_mimetypes = implode(";", $mimetypes);
 
 			$a = new Application(NULL,$app_name,$app_description,$this->getAttribute('type'),$app_path_exe,$app_package,$app_mimetypes,true,$app_desktopfile);
 			$a_search = $applicationDB->search($app_name,$app_description,$this->getAttribute('type'),$app_path_exe);
