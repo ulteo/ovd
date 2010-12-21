@@ -221,6 +221,9 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		do {
 			// Waiting for all the RDP connections are performed
 			while (this.performedConnections.size() < this.connections.size()) {
+				if (! this.connectionIsActive)
+					break;
+				
 				try {
 					Thread.sleep(50);
 				} catch (InterruptedException ex) {}
