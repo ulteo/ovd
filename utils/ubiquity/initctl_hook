@@ -141,6 +141,9 @@ restart_smbd()
 
 #######################################
 
-$(basename $0)_$1
-
-exit 0
+fn=$(basename $0)_$1
+if type -t $fn >/dev/null; then
+    $fn
+else
+    exit 0
+fi
