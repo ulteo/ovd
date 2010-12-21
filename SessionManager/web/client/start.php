@@ -38,7 +38,7 @@ function throw_response($response_code_) {
 	$response_node->setAttribute('code', $response_code_);
 	$dom->appendChild($response_node);
 
-	Logger::error('main', "(client/start) throw_response($response_code_)");
+	Logger::debug('main', "(client/start) throw_response($response_code_)");
 
 	echo $dom->saveXML();
 
