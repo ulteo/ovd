@@ -37,7 +37,7 @@ public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 	private SystemTray systemTray = null;
 
 
-	public IntegratedTrayIcon(Frame portal, Image logo) {
+	public IntegratedTrayIcon(Frame portal, Image logo) throws UnsupportedOperationException {
 		super(logo, "Open Virtual Desktop");
 		this.setImage(logo);
 		this.portal = portal;
