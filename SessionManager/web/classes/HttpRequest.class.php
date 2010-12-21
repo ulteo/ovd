@@ -144,7 +144,7 @@ class HttpRequest {
 
 		$this->responseBody = curl_exec($ch);
 		$i = 1;
-		while ((curl_errno($ch) == CURLE_COULDNT_CONNECT || curl_errno($ch) == CURLE_RECV_ERROR || curl_errno($ch) == CURLE_OPERATION_TIMEOUTED || curl_errno($ch) == CURLE_GOT_NOTHING) && $i < $this->max_requests) {
+		while ((curl_errno($ch) == CURLE_COULDNT_CONNECT || curl_errno($ch) == CURLE_RECV_ERROR || curl_errno($ch) == CURLE_OPERATION_TIMEOUTED || curl_errno($ch) == CURLE_GOT_NOTHING) && $i < $this->max_requests) {
 			usleep(rand(1000000, 3000000));
 			$this->responseBody = curl_exec($ch);
 			$i++;
