@@ -5,6 +5,7 @@
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
  * Author Thomas MOUTON <thomas@ulteo.com> 2009-2010
+ * Author Samuel BOVEE <samuel@ulteo.com> 2010
  * 
  * Revision: $Revision: 0.2 $
  * Author: $Author: arnauvp $

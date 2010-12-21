@@ -3,6 +3,7 @@
  * 
  * Revision: $Revision: 1.1.1.1 $
  * Author: $Author: suvarov $
+ * Author Samuel BOVEE <samuel@ulteo.com> 2010
  * Date: $Date: 2007/03/08 00:26:41 $
  *
  * Copyright (c) 2005 Propero Limited

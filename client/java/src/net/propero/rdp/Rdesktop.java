@@ -5,6 +5,7 @@
  * Author: $Author: suvarov $
  * Author: tomqq <hekong@gmail.com> 2009
  * Author: Julien LANGLOIS <julien@ulteo.com> 2009
+ * Author: Samuel BOVEE <samuel@ulteo.com> 2010
  * Date: $Date: 2007/03/08 00:26:22 $
  *
  * Copyright (c) 2005 Propero Limited
