@@ -133,7 +133,7 @@ stop_smbd()
 
 restart_smbd()
 {
-    stop_smbd        
+    stop_smbd
     sleep 1
     start_smbd
 }
