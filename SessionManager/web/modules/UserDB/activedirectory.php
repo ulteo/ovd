@@ -57,7 +57,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		);
 
 		$config_ldap = array(
-			'host' =>  $config['host'],
+			'hosts' =>  $config['hosts'],
 			'suffix' => $ldap_suffix,
 
 			'login' => $config['login'],
@@ -78,7 +78,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 
 	public static function configuration() {
 		$ret = array();
-		$c = new ConfigElement_input('host', _('Server host address'), _('The address of your Active Directory server.'), _('The address of your Active Directory server.'),  NULL);
+		$c = new ConfigElement_list('hosts', _('Server host address'), _('The address of your Active Directory server.'), _('The address of your Active Directory server.'),  array());
 		$ret []= $c;
 		$c = new ConfigElement_input('domain', _('Domain name'), _('Domain name used by Active Directory'), _('Domain name used by Active Directory'), NULL);
 		$ret []= $c;
@@ -94,7 +94,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 	public static function prefsIsValid($prefs_, &$log=array()) {
 		$config_AD = $prefs_->get('UserDB','activedirectory');
 
-		$minimum_keys = array ('host', 'domain', 'login', 'password', 'domain');
+		$minimum_keys = array('hosts', 'domain', 'login', 'password', 'domain');
 		foreach ($minimum_keys as $m_key){
 			if (!isset($config_AD[$m_key])) {
 				$log['config_AD has key '.$m_key] = false;

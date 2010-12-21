@@ -28,7 +28,7 @@ class LDAP {
 	private $buf_errno;
 	private $buf_error;
 
-	private $host;
+	private $hosts = array();
 	private $port;
 	private $login;
 	private $password;
@@ -40,8 +40,8 @@ class LDAP {
 
 	public function __construct($config_){
 		Logger::debug('main', 'LDAP - construct');
-		if (isset($config_['host']))
-			$this->host = $config_['host'];
+		if (isset($config_['hosts']))
+			$this->hosts = $config_['hosts'];
 		if (isset($config_['port']))
 			$this->port = $config_['port'];
 		if (isset($config_['login']))
@@ -72,9 +72,10 @@ class LDAP {
 		}
 	}
 
-	public function connect(&$log=array()) {
-		Logger::debug('main', 'LDAP - connect(\''.$this->host.'\', \''.$this->port.'\')');
-		$buf = @ldap_connect($this->host, $this->port);
+	private function connect_on_one_host($host, &$log=array()) {
+		Logger::debug('main', 'LDAP - connect(\''.$host.'\', \''.$this->port.'\')');
+		$buf = false;
+		$buf = @ldap_connect($host, $this->port);
 		if (!$buf) {
 			Logger::error('main', 'Link to LDAP server failed. Please try again later.');
 			$log['LDAP connect'] = false;
@@ -107,6 +108,20 @@ class LDAP {
 		return $buf_bind;
 	}
 
+	public function connect(&$log=array()) {
+		Logger::debug('main', 'LDAP - connect(\''.serialize($this->hosts).'\', \''.$this->port.'\')');
+		$buf = false;
+		foreach ($this->hosts as $host) {
+			if ($host === '')
+				continue;
+			$buf = $this->connect_on_one_host($host, $log);
+			if ($buf !== false) {
+				break;
+			}
+		}
+		return $buf;
+	}
+
 	public function disconnect() {
 		Logger::debug('main', 'LDAP - disconnect()');
 
@@ -120,7 +135,7 @@ class LDAP {
 		if (!$buf) {
 			Logger::error('main', "LDAP::bind bind($dn_,$pwd_) failed : (error:".$this->errno().')');
 			$searchbase =$this->userbranch.','.$this->suffix;
-			$ldapsearch = 'ldapsearch -x -h "'.$this->host.'" -p '.$this->port.'  -P '.$this->protocol_version.' -W -D "'.$dn_.'" -LLL -b "'.$searchbase.'"';
+			$ldapsearch = 'ldapsearch -x -h "'.$this->hosts[0].'" -p '.$this->port.'  -P '.$this->protocol_version.' -W -D "'.$dn_.'" -LLL -b "'.$searchbase.'"';
 			Logger::error('main', 'LDAP - failed to validate the configuration please try this bash command : '.$ldapsearch);
 			return false;
 		}

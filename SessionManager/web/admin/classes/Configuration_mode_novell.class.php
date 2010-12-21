@@ -91,7 +91,7 @@ class Configuration_mode_novell extends Configuration_mode {
     }
 
     $ad_ar = array();
-    $ad_ar['host'] = $form['host'];
+    $ad_ar['hosts'] = array($form['host'], $form['host2']);
     $ad_ar['suffix'] = domain2suffix($form['domain']);
     $ad_ar['login'] = $admin_dn;
     $ad_ar['password'] = $form['admin_password'];
@@ -147,7 +147,12 @@ class Configuration_mode_novell extends Configuration_mode {
     $form = array();
     $config = $prefs->get('UserDB', 'ldap');
 
-    $form['host'] = $config['host'];
+    $form['host'] = '';
+    if (isset($config['hosts'][0]))
+      $form['host'] = $config['hosts'][0];
+    $form['host2'] = '';
+    if (isset($config['hosts'][1]))
+      $form['host2'] = $config['hosts'][1];
     $form['domain'] = suffix2domain($config['suffix']);
 
     // Admin login - Todo: replace by a regexp
@@ -189,7 +194,10 @@ class Configuration_mode_novell extends Configuration_mode {
     $str.= '<div class="section">';
     $str.= '<h3>Server</h3>';
     $str.= '<table>';
-    $str.= '<tr><td>'._('Server Host:').'</td><td><input type="text" name="host" value="'.$form['host'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Primary Host:').'</td><td><input type="text" name="host" value="'.$form['host'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Secondary Host:').'</td><td><input type="text" name="host2" value="'.$form['host2'].'" /></td>';
+    $str.= '<td><span style="font-size: 0.9em; font-style: italic;">('._('optional').')</span></td>';
+    $str.= '</tr>';
     $str.= '<tr><td>'._('Domain:').'</td><td><input type="text" name="domain" value="'.$form['domain'].'" /></td></tr>';
     $str.= '</table>';
     $str.= '</div>';

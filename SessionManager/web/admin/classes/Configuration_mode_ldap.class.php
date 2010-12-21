@@ -36,7 +36,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $new = $newprefs->get('UserDB', 'ldap');
 
     $changed = False;
-    foreach(array('host', 'suffix', 'userbranch', 'uidprefix') as $key) {
+    foreach(array('hosts', 'suffix', 'userbranch', 'uidprefix') as $key) {
       if ($old[$key] != $new[$key]) {
 	$changed = True;
 	break;
@@ -72,7 +72,7 @@ class Configuration_mode_ldap extends Configuration_mode {
 
   public function form_read($form, $prefs) {
     $config = array();
-    $config['host'] = $form['host'];
+    $config['hosts'] = array($form['host'], $form['host2']);
     $config['suffix'] = $form['suffix'];
     $config['port'] = $form['port'];
     $config['protocol_version'] = $form['proto'];
@@ -125,7 +125,12 @@ class Configuration_mode_ldap extends Configuration_mode {
     $form = array();
     $config = $prefs->get('UserDB', 'ldap');
 
-    $form['host'] = $config['host'];
+    $form['host'] = '';
+    if (isset($config['hosts'][0]))
+      $form['host'] = $config['hosts'][0];
+    $form['host2'] = '';
+    if (isset($config['hosts'][1]))
+      $form['host2'] = $config['hosts'][1];
     $form['suffix'] = $config['suffix'];
     $form['port'] = ($config['port']=='')?'389':$config['port'];
     $form['proto'] = ($config['protocol_version']=='')?'3':$config['protocol_version'];
@@ -179,7 +184,10 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '<div class="section">';
     $str.= '<h3>Server</h3>';
     $str.= '<table>';
-    $str.= '<tr><td>'._('Server Host:').'</td><td><input type="text" name="host" value="'.$form['host'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Primary Host:').'</td><td><input type="text" name="host" value="'.$form['host'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Secondary Host:').'</td><td><input type="text" name="host2" value="'.$form['host2'].'" /></td>';
+    $str.= '<td><span style="font-size: 0.9em; font-style: italic;">('._('optional').')</span></td>';
+    $str.= '</tr>';
     $str.= '<tr><td>'._('Server Port:').'</td><td><input type="text" name="port" value="'.$form['port'].'" /></td></tr>';
     $str.= '<tr><td>'._('Protocol version:').'</td><td><input type="text" name="proto" value="'.$form['proto'].'" /></td></tr>';
     $str.= '<tr><td>'._('Base DN:').'</td><td><input type="text" name="suffix" value="'.$form['suffix'].'" /></td></tr>';

@@ -281,7 +281,7 @@ class UserDB_ldap  extends UserDB {
 
 	public static function configuration() {
 		$ret = array();
-		$c = new ConfigElement_input('host', _('Server host address'), _('The address of your LDAP server.'), _('The address of your LDAP server.'), 'servldap.example.com');
+		$c = new ConfigElement_list('hosts', _('Server host address'), _('The address of your LDAP server.'), _('The address of your LDAP server.'), array('servldap.example.com'));
 		$ret []= $c;
 		$c = new ConfigElement_input('port', _('Server port'), _('The port number used by your LDAP server.'), _('The port use by your LDAP server.'),'389');
 		$ret []= $c;
