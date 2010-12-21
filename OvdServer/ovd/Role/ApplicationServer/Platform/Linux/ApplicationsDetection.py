@@ -194,7 +194,7 @@ class ApplicationsDetection():
 		return buffer
 	
 	def chooseBestIcon(self, pattern):
-		cmd = 'find /usr/share/pixmaps /usr/share/icons -type f -iname "*%s*"'%(pattern)
+		cmd = 'find /usr/share/pixmaps /usr/share/icons -xtype f -iname "*%s*"'%(pattern)
 		s,o = commands.getstatusoutput(cmd)
 		if s != 0:
 			Logger.debug("chooseBestIcon cmd '%s' returned (%d): %s"%(cmd, s, o))
