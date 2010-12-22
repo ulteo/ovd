@@ -135,8 +135,14 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		
 		for (int i=0; i<numTokens; i++) {
 			String tmp = st.nextToken().trim();
-			if (tmp.startsWith("0x"))
-				tmp = Long.toString(Long.parseLong(tmp.substring(2), 16));
+			if (tmp.startsWith("0x")) {
+				try {
+					tmp = Long.toString(Long.parseLong(tmp.substring(2), 16));
+				} catch(NumberFormatException ex) {
+					logger.error("Failed to parse message: '"+line+"': "+ex.getMessage());
+					return false;
+				}
+			}
 			tokens[i] = tmp;
 //			logger.debug("Token " + i + ": " + tokens[i]);
 		}
