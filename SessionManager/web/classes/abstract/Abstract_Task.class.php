@@ -108,19 +108,13 @@ class Abstract_Task {
 	private static function create($task_) {
 		Logger::debug('main', 'Starting Abstract_Task::create for \''.$task_->id.'\'');
 
-		$SQL = SQL::getInstance();
-
-		$id = $task_->id;
-
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'tasks', 'id', $id);
-		$total = $SQL->NumRows();
-
-		if ($total != 0) {
-			Logger::error('main', "Abstract_Task::create($task_) task already exist (NumRows == $total)");
+		if (Abstract_Task::exists($task_->id)) {
+			Logger::error('main', 'Abstract_Task::create(\''.$task_->id.'\') task already exists');
 			return false;
 		}
 
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'tasks', 'id', $id);
+		$SQL = SQL::getInstance();
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'tasks', 'id', $task_->id);
 
 		return true;
 	}

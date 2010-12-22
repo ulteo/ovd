@@ -70,16 +70,12 @@ class Abstract_ReportSession {
 	public static function create($report_) {
 		Logger::debug('main', 'Abstract_ReportSession::create');
 		
-		$sql = SQL::getInstance();
-
-		$sql->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', SESSIONS_HISTORY_TABLE, 'id', $report_->getID());
-		$total = $sql->NumRows();
-
-		if ($total != 0) {
+		if (Abstract_ReportSession::exists($report_->getID())) {
 			Logger::error('main', 'Abstract_ReportSession::create(\''.$report_->getID().'\') report already exists');
 			return false;
 		}
 
+		$sql = SQL::getInstance();
 		$res = $sql->DoQuery('INSERT INTO @1 (@2,@3,@4,@5) VALUES (%6,%7,%8,%9)', SESSIONS_HISTORY_TABLE, 'id', 'user', 'server', 'data',  $report_->getID(), $report_->user, $report_->server, '');
 		return $res;
 	}

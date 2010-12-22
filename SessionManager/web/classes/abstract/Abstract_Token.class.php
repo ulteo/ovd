@@ -104,19 +104,13 @@ class Abstract_Token {
 	private static function create($token_) {
 		Logger::debug('main', 'Starting Abstract_Token::create for \''.$token_->id.'\'');
 
-		$SQL = SQL::getInstance();
-
-		$id = $token_->id;
-
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'tokens', 'id', $id);
-		$total = $SQL->NumRows();
-
-		if ($total != 0) {
-			Logger::error('main', "Abstract_Token::create($token_) token already exist (NumRows == $total)");
+		if (Abstract_Token::exists($token_->id)) {
+			Logger::error('main', 'Abstract_Token::create(\''.$token_->id.'\') token already exists');
 			return false;
 		}
 
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'tokens', 'id', $id);
+		$SQL = SQL::getInstance();
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'tokens', 'id', $token_->id);
 
 		return true;
 	}

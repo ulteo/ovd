@@ -178,19 +178,13 @@ class Abstract_Server {
 	private static function create($server_) {
 		Logger::debug('main', 'Starting Abstract_Server::create for \''.$server_->fqdn.'\'');
 
-		$SQL = SQL::getInstance();
-
-		$fqdn = $server_->fqdn;
-
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);
-		$total = $SQL->NumRows();
-
-		if ($total != 0) {
-			Logger::error('main', "Abstract_Server::create($server_) server already exist (NumRows == $total)");
+		if (Abstract_Server::exists($server_->fqdn)) {
+			Logger::error('main', 'Abstract_Server::create(\''.$server_->fqdn.'\') server already exists');
 			return false;
 		}
 
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'servers', 'fqdn', $fqdn);
+		$SQL = SQL::getInstance();
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'servers', 'fqdn', $server_->fqdn);
 
 		return true;
 	}

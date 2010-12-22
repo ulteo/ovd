@@ -112,19 +112,13 @@ class Abstract_Session {
 	private static function create($session_) {
 		Logger::debug('main', 'Starting Abstract_Session::create for \''.$session_->id.'\'');
 
-		$SQL = SQL::getInstance();
-
-		$id = $session_->id;
-
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sessions', 'id', $id);
-		$total = $SQL->NumRows();
-
-		if ($total != 0) {
-			Logger::error('main', "Abstract_Session::create($session_) session already exists (NumRows == $total)");
+		if (Abstract_Session::exists($session_->id)) {
+			Logger::error('main', 'Abstract_Session::create(\''.$session_->id.'\') session already exists');
 			return false;
 		}
 
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'sessions', 'id', $id);
+		$SQL = SQL::getInstance();
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'sessions', 'id', $session_->id);
 
 		foreach ($session_->servers[Server::SERVER_ROLE_APS] as $fqdn => $data)
 			Abstract_Liaison::save('ServerSession', $fqdn, $session_->id);
