@@ -136,7 +136,10 @@ class LDAP {
 		if (!$buf) {
 			Logger::error('main', "LDAP::bind bind($dn_,$pwd_) failed : (error:".$this->errno().')');
 			$searchbase =$this->userbranch.','.$this->suffix;
-			$ldapsearch = 'ldapsearch -x -h "'.$this->hosts[0].'" -p '.$this->port.'  -P '.$this->protocol_version.' -W -D "'.$dn_.'" -LLL -b "'.$searchbase.'"';
+			$protocol_version = '';
+			if (array_key_exists('LDAP_OPT_PROTOCOL_VERSION', $this->options))
+				$protocol_version = '-P '.$this->options['LDAP_OPT_PROTOCOL_VERSION'];
+			$ldapsearch = 'ldapsearch -x -h "'.$this->hosts[0].'" -p '.$this->port.' '.$protocol_version.' -W -D "'.$dn_.'" -LLL -b "'.$searchbase.'"';
 			Logger::error('main', 'LDAP - failed to validate the configuration please try this bash command : '.$ldapsearch);
 			return false;
 		}
