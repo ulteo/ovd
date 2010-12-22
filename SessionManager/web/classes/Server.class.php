@@ -1019,8 +1019,10 @@ class Server {
 			if (class_exists('Imagick')) {
 				$imagick = new Imagick();
 				$imagick->readImage($imgfile);
-			} else
+			} else {
+				Logger::error('main', 'Imagick support is not available, fetching applications icons may not work properly');
 				return false;
+			}
 		} catch (Exception $e) {
 			if (file_exists($imgfile))
 				@unlink($imgfile);
