@@ -53,6 +53,7 @@ public interface SeamlessWindow {
 	void sw_setTitle(String title);
 	int sw_getExtendedState();
 	void sw_setExtendedState(int state);
+	void sw_requestFocus();
 	void sw_setIconImage(Image image);
 	void sw_addWindowStateListener(WindowStateListener l);
 	void sw_addWindowListener(WindowListener l);

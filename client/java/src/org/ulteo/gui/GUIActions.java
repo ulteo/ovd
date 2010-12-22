@@ -62,6 +62,32 @@ public class GUIActions {
 
 	}
 
+	/* RequestFocus */
+	public static Runnable requestFocus(Component component) {
+		return Actions.new RequestFocus(component);
+	}
+
+	private class RequestFocus implements Runnable {
+		private Component component = null;
+		private boolean visible;
+
+		public RequestFocus(Component component_) {
+			this.component = component_;
+		}
+
+		public void run() {
+			if (this.component == null)
+				return;
+
+			this.component.requestFocus();
+			if (this.component instanceof Window)
+				((Window) this.component).toFront();
+			else
+				this.component.requestFocusInWindow();
+		}
+
+	}
+
 	/* DisposeWindow */
 	public static Runnable disposeWindow(Window wnd_) {
 		return Actions.new DisposeWindow(wnd_);

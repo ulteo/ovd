@@ -43,6 +43,8 @@ import net.propero.rdp.Common;
 import net.propero.rdp.Input;
 import net.propero.rdp.WrappedImage;
 import net.propero.rdp.rdp5.seamless.SeamlessWindow;
+import org.ulteo.gui.GUIActions;
+import org.ulteo.gui.SwingTools;
 
 public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMovingResizing, FocusListener {
 	public static AbstractFocusManager focusManager = null;
@@ -212,6 +214,9 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	public void sw_setExtendedState(int state) {
 		if (! this.isVisible())
 			this.setVisible(true);
+	}
+	public void sw_requestFocus() {
+		SwingTools.invokeLater(GUIActions.requestFocus(this));
 	}
 	public void sw_setIconImage(Image image) {
 		this.setIconImage(image);

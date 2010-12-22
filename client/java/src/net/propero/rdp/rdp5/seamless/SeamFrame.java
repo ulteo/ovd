@@ -27,6 +27,8 @@ import net.propero.rdp.WrappedImage;
 
 import java.awt.*;
 import java.awt.event.*;
+import org.ulteo.gui.GUIActions;
+import org.ulteo.gui.SwingTools;
 
 public class SeamFrame extends Frame
     implements SeamlessWindow {
@@ -213,6 +215,9 @@ public class SeamFrame extends Frame
 			this.setVisible(true);
 		}
 		this.setExtendedState(state);
+	}
+	public void sw_requestFocus() {
+		SwingTools.invokeLater(GUIActions.requestFocus(this));
 	}
 	public void sw_setIconImage(Image image) {
 		this.setIconImage(image);
