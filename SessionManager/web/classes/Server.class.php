@@ -414,12 +414,24 @@ class Server {
 					Logger::warning('main', 'Status set to "down" for server \''.$this->fqdn.'\'');
 					$this->setAttribute('status', 'down');
 				}
+
+				$sessions = Abstract_Session::getByServer($this->fqdn);
+				foreach ($sessions as $session) {
+					Logger::warning('main', 'Server \''.$this->fqdn.'\' status is now "down", killing Session \''.$session->id.'\'');
+					$session->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_END_STATUS_SERVER_DOWN);
+				}
 				break;
 			case 'broken':
 			default:
 				if ($this->getAttribute('status') != 'broken') {
 					Logger::error('main', 'Status set to "broken" for server \''.$this->fqdn.'\'');
 					$this->setAttribute('status', 'broken');
+				}
+
+				$sessions = Abstract_Session::getByServer($this->fqdn);
+				foreach ($sessions as $session) {
+					Logger::warning('main', 'Server \''.$this->fqdn.'\' status is now "broken", killing Session \''.$session->id.'\'');
+					$session->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_END_STATUS_SERVER_BROKEN);
 				}
 				break;
 		}

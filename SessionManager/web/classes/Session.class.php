@@ -38,6 +38,8 @@ class Session {
 	const SESSION_END_STATUS_TIMEOUT = "timeout";
 	const SESSION_END_STATUS_UNUSED = "unused";
 	const SESSION_END_STATUS_ERROR = "error";
+	const SESSION_END_STATUS_SERVER_DOWN = "server_down";
+	const SESSION_END_STATUS_SERVER_BROKEN = "server_broken";
 
 	const MODE_DESKTOP = "desktop";
 	const MODE_APPLICATIONS = "applications";
