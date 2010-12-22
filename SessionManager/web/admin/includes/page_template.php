@@ -279,19 +279,19 @@ foreach (glob(dirname(dirname(__FILE__)).'/*/menu.inc.php') as $path) {
 if (defined('SESSIONMANAGER_ADMIN_DEBUG') && SESSIONMANAGER_ADMIN_DEBUG === true && ! isset($_SESSION['admin_ovd_user'])) {
 	$menu['debug'] = 
 		array('id' => 'debug',
-			  'name' => 'Debug Tools',
+			  'name' => _('Debug Tools'),
 			  'page' => 'configuration.php',
 			  'parent' => array());
 	
 	$menu['configuration_debug'] =
 		array('id' => 'configuration_debug',
-			  'name' => 'Configuration',
+			  'name' => _('Configuration'),
 			  'page' => 'configuration.php',
 			  'parent' => array('debug'));
 	
 	$menu['checkup'] =
 		array('id' => 'checkup',
-			  'name' => 'Checkup',
+			  'name' => _('Checkup'),
 			  'page' => 'checkup.php',
 			  'parent' => array('debug'));
 }
