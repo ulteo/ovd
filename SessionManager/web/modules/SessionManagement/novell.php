@@ -2,6 +2,7 @@
 /**
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
+ * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -61,7 +62,7 @@ class SessionManagement_novell extends SessionManagement {
 		return array();
 	}
 
-	public static function prefsIsValid($prefs_) {
+	public static function prefsIsValid($prefs_, &$log=array()) {
 		return true;
 	}
 

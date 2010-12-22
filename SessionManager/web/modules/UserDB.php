@@ -66,7 +66,7 @@ abstract class UserDB extends Module  {
 	public function getAttributesList() {
 		return array();
 	}
-	public function populate() {
+	public function populate($override, $password = NULL) {
 		// populate with sample users
 		return false;
 	}
