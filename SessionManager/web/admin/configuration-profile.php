@@ -42,13 +42,15 @@ function do_auto_clean_db($new_prefs) {
   $has_changed_u = False;
   $has_changed_ug = False;
 
+  $userGroupDB = UserGroupDB::getInstance();
+
   if ($old_profile == $new_profile) {
     $p = new $new_profile();
     list($has_changed_u, $has_changed_ug) = $p->has_change($prefs, $new_prefs);
   }
 
   // If UserDB module change
-  if ($old_u != $new_u || $has_changed_u) {
+  if (($old_u != $new_u || $has_changed_u) && $userGroupDB->isWriteable()) {
     // Remove Users from user groups
     Abstract_Liaison::delete('UsersGroup', NULL, NULL) or
       popup_error('Unable to remove Users from UserGroups');
