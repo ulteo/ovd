@@ -35,7 +35,7 @@ class LDAP {
 	private $suffix;
 	private $userbranch;
 	private $uidprefix;
-	private $protocol_version;
+	private $options = array();
 	private $attribs = array();
 
 	public function __construct($config_){
@@ -54,8 +54,8 @@ class LDAP {
 			$this->userbranch = $config_['userbranch'];
 		if (isset($config_['uidprefix']))
 			$this->uidprefix = $config_['uidprefix'];
-		if (isset($config_['protocol_version']))
-			$this->protocol_version = $config_['protocol_version'];
+		if (isset($config_['options']))
+			$this->options = $config_['options'];
 
 	}
 	public function __sleep() {
@@ -84,8 +84,9 @@ class LDAP {
 		$log['LDAP connect'] = true;
 
 		$this->link = $buf;
-		if (!is_null($this->protocol_version))
-			@ldap_set_option($this->link, LDAP_OPT_PROTOCOL_VERSION, $this->protocol_version);
+		foreach ($this->options as $an_option => $an_value) {
+			@ldap_set_option($this->link, constant($an_option), $an_value);
+		}
 
 		if ($this->login == '') {
 			$buf_bind = $this->bind();

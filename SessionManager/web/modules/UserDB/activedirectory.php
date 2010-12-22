@@ -65,7 +65,10 @@ class UserDB_activedirectory  extends UserDB_ldap{
 
 			'port'	=> '389',
 			'uidprefix' => 'cn',
-			'protocol_version' => 3,
+			'options' => array(
+				'LDAP_OPT_PROTOCOL_VERSION' => '3',
+				'LDAP_OPT_REFERRALS' => 0,
+				),
 			'filter' => '(&(objectCategory=person)(objectClass=user))',
 			'match' => array_merge($match_minimal, $config['match'])
 			);

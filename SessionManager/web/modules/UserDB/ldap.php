@@ -295,7 +295,7 @@ class UserDB_ldap  extends UserDB {
 		$ret []= $c;
 		$c = new ConfigElement_input('uidprefix','uidprefix','uidprefix','uidprefix','uid');
 		$ret []= $c;
-		$c = new ConfigElement_input('protocol_version', _('Protocol version'),  _('The protocol version used by your LDAP server.'), _('The protocol version used by your LDAP server.'), '3');
+		$c = new ConfigElement_dictionary('options', _('Options given to ldap object'),  _('Options given to ldap object.'), _('Options given to ldap object.'), array('LDAP_OPT_PROTOCOL_VERSION' => '3', 'LDAP_OPT_REFERRALS' => 0));
 		$ret []= $c;
 		$c = new ConfigElement_dictionary('match',_('Matching'), _('Matching'), _('Matching'), array('login' => 'uid', 'uid' => 'uidnumber',  'displayname' => 'displayname', 'distinguishedname' => 'distinguishedname'));
 		$ret []= $c;

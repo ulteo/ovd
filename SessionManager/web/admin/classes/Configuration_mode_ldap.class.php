@@ -52,7 +52,7 @@ class Configuration_mode_ldap extends Configuration_mode {
 
   public function form_valid($form) {
     $fields =  array('host', 'suffix', 'user_branch',
-		     'port', 'proto',
+		     'port', 
 		     'bind_dn', 'bind_password',
 		     'field_rdn', 'field_displayname', 'field_countrycode', 'field_filter',
 		     'group_branch_dn',
@@ -75,7 +75,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $config['hosts'] = array($form['host'], $form['host2']);
     $config['suffix'] = $form['suffix'];
     $config['port'] = $form['port'];
-    $config['protocol_version'] = $form['proto'];
+    $config['options'] = array('LDAP_OPT_PROTOCOL_VERSION' => '3');
 
 
     if (isset($form['bind_anonymous'])) {
@@ -133,7 +133,6 @@ class Configuration_mode_ldap extends Configuration_mode {
       $form['host2'] = $config['hosts'][1];
     $form['suffix'] = $config['suffix'];
     $form['port'] = ($config['port']=='')?'389':$config['port'];
-    $form['proto'] = ($config['protocol_version']=='')?'3':$config['protocol_version'];
 
     if ($config['login'] == '')
       $form['bind_anonymous'] = 1;
@@ -189,7 +188,6 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '<td><span style="font-size: 0.9em; font-style: italic;">('._('optional').')</span></td>';
     $str.= '</tr>';
     $str.= '<tr><td>'._('Server Port:').'</td><td><input type="text" name="port" value="'.$form['port'].'" /></td></tr>';
-    $str.= '<tr><td>'._('Protocol version:').'</td><td><input type="text" name="proto" value="'.$form['proto'].'" /></td></tr>';
     $str.= '<tr><td>'._('Base DN:').'</td><td><input type="text" name="suffix" value="'.$form['suffix'].'" /></td></tr>';
     $str.= '</table>';
     $str.= '</div>';

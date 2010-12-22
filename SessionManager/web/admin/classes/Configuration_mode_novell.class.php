@@ -98,6 +98,7 @@ class Configuration_mode_novell extends Configuration_mode {
     $ad_ar['uidprefix'] = 'cn';
     $ad_ar['filter'] = '(&(objectCategory=person)(objectClass=user))';
     $ad_ar['userbranch'] = '';
+    $ad_ar['options'] = array('LDAP_OPT_PROTOCOL_VERSION' => '3');
 
 
     $ad_ar['match'] = array();
