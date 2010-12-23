@@ -5,7 +5,6 @@ _Description: Session manager address/hostname
 
 Template: ulteo-ovd-subsystem/tarball_uri
 Type: string
-Default: file:///var/cache/ulteo/sessionmanager/base.tar.gz
 _Description: Retrieve the chroot tarball from this location:
  If you want to use a tarball application not located on the session manager
  you can define its location here.
