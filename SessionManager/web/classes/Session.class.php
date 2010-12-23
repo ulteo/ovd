@@ -153,8 +153,10 @@ class Session {
 
 		$current_status = $this->servers[Server::SERVER_ROLE_APS][$server_]['status'];
 
-		if ($status_ == $current_status)
+		if ($status_ == $current_status) {
+			Abstract_Session::save($this);
 			return false; // status is already the same...
+		}
 
 		if (array_key_exists($status_, $states) && array_key_exists($current_status, $states)) {
 			if ($states[$status_] < $states[$current_status])
