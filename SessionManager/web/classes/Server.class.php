@@ -419,6 +419,7 @@ class Server {
 				foreach ($sessions as $session) {
 					Logger::warning('main', 'Server \''.$this->fqdn.'\' status is now "down", killing Session \''.$session->id.'\'');
 					$session->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_END_STATUS_SERVER_DOWN);
+					Abstract_Session::delete($session->id);
 				}
 				break;
 			case 'broken':
@@ -432,6 +433,7 @@ class Server {
 				foreach ($sessions as $session) {
 					Logger::warning('main', 'Server \''.$this->fqdn.'\' status is now "broken", killing Session \''.$session->id.'\'');
 					$session->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_END_STATUS_SERVER_BROKEN);
+					Abstract_Session::delete($session->id);
 				}
 				break;
 		}
