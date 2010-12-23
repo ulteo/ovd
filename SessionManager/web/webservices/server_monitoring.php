@@ -194,6 +194,10 @@ Abstract_Server::save($server); //update Server cache timestamp
 
 if (array_key_exists('sessions', $ret) && is_array($ret['sessions'])) {
 	foreach ($ret['sessions'] as $session) {
+		$buf = Abstract_Session::exists($session['id']);
+		if (! $buf)
+			continue;
+
 		$buf = Abstract_Session::load($session['id']);
 		if (! $buf)
 			continue;
