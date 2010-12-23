@@ -385,8 +385,12 @@ class Server {
 		if (! $node->hasAttribute('status'))
 			return false;
 
-		if ($node->getAttribute('status') != $this->getAttribute('status'))
-			$this->setStatus($node->getAttribute('status'));
+		if ($node->getAttribute('status') == $this->getAttribute('status')) {
+			Abstract_Server::save($this);
+			return false; // status is already the same...
+		}
+
+		$this->setStatus($node->getAttribute('status'));
 
 		return true;
 	}
