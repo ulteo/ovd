@@ -24,7 +24,7 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 class Configuration_mode_ad extends Configuration_mode {
 
   public function getPrettyName() {
-    return _('Active Directory');
+    return _('Microsoft');
   }
 
   public function careAbout($sessionmanagement_) {
@@ -176,7 +176,7 @@ class Configuration_mode_ad extends Configuration_mode {
   }
 
   public function display($form) {
-    $str= '<h1>'._('Active Directory integration').'</h1>';
+    $str= '<h1>'._('Microsoft integration').'</h1>';
 
     $str.= '<div class="section">';
     $str.= '<h3>Server</h3>';
