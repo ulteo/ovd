@@ -41,7 +41,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		else
 			$config = $this->config_ad;
 
-		$ldap_suffix = self::domain2suffix($config['domain']);
+		$ldap_suffix = domain2suffix($config['domain']);
 		if (! $ldap_suffix)
 			die_error('Active Directory configuration not valid (domain2suffix error)2',__FILE__,__LINE__);
 
@@ -75,10 +75,6 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		return $config_ldap;
 	}
 
-	protected function domain2suffix($domain_) {
-		return domain2suffix($domain_);
-	}
-
 	public static function configuration() {
 		$ret = array();
 		$c = new ConfigElement_list('hosts', _('Server host address'), _('The address of your Active Directory server.'), _('The address of your Active Directory server.'),  array());
@@ -108,7 +104,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 // 			}
 		}
 
-		$ldap_suffix = self::domain2suffix($config_AD['domain']);
+		$ldap_suffix = domain2suffix($config_AD['domain']);
 		if (! $ldap_suffix) {
 			$log ['domain2suffix for \''.$config_AD['domain'].'\''] = false;
 			return false;
