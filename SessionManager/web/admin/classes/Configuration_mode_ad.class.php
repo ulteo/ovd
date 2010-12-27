@@ -101,6 +101,10 @@ class Configuration_mode_ad extends Configuration_mode {
     if ($form['user_group'] == 'activedirectory')
       $ad_ar['match']['memberof'] = 'memberOf';
 
+    // Enable modules
+    $module_to_enable = array('UserDB', 'UserGroupDB');
+    $module_enabled = $prefs->get('general', 'module_enable');
+    $prefs->set('general', 'module_enable', array_unique(array_merge($module_enabled, $module_to_enable)));
 
     // Select AD as UserDB
     $prefs->set('UserDB', 'enable', 'activedirectory');
