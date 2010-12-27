@@ -74,8 +74,18 @@ class Configuration_mode_novell extends Configuration_mode {
   }
 
   public function form_read($form, $prefs) {
+    if (array_key_exists('dsfw', $form)) {
+      $default_user_branch = 'cn=Users,';
+      $domain_separator = 'dc';
+      $uidprefix = 'cn';
+    }
+    else {
+      $default_user_branch = ''; //'ou=users,';
+      $domain_separator = 'o';
+      $uidprefix = 'cn';
+    }
     if ($form['admin_branch'] == 'default')
-      $admin_dn = 'cn='.$form['admin_login'].',cn=Users,'.domain2suffix($form['domain']);
+      $admin_dn = $uidprefix.'='.$form['admin_login'].','.$default_user_branch.domain2suffix($form['domain'], $domain_separator);
     elseif ($form['admin_branch'] == 'specific') {
       $abranch = $form['admin_branch_ou'];
       if (strstr($abranch, ',') != False) {
@@ -87,21 +97,24 @@ class Configuration_mode_novell extends Configuration_mode {
         $abranch = implode(',ou=', $buffer);
       }
     
-      $admin_dn = 'cn='.$form['admin_login'].',ou='.$abranch.','.domain2suffix($form['domain']);
+      $admin_dn = $uidprefix.'='.$form['admin_login'].',ou='.$abranch.','.domain2suffix($form['domain'], $domain_separator);
     }
 
     $ad_ar = array();
     $ad_ar['hosts'] = array($form['host'], $form['host2']);
-    $ad_ar['suffix'] = domain2suffix($form['domain']);
+    $ad_ar['suffix'] = domain2suffix($form['domain'], $domain_separator);
     $ad_ar['login'] = $admin_dn;
     $ad_ar['password'] = $form['admin_password'];
-    $ad_ar['filter'] = '(&(objectCategory=person)(objectClass=user))';
+    $ad_ar['filter'] = '(objectClass=person)';
     $ad_ar['userbranch'] = '';
     $ad_ar['options'] = array('LDAP_OPT_PROTOCOL_VERSION' => '3');
+    $ad_ar['extra'] = array();
+    if (isset($form['dsfw']))
+       $ad_ar['extra']['dsfw'] = 'dsfw';
 
 
     $ad_ar['match'] = array();
-    $ad_ar['match']['login'] = 'cn';
+    $ad_ar['match']['login'] = $uidprefix;
     $ad_ar['match']['displayname'] = 'fullName';
     $ad_ar['match']['memberof'] = 'memberOf';
 
@@ -146,6 +159,14 @@ class Configuration_mode_novell extends Configuration_mode {
   public function config2form($prefs) {
     $form = array();
     $config = $prefs->get('UserDB', 'ldap');
+    if (isset($config['extra']['dsfw'])) {
+      $default_user_branch = 'cn=Users,';
+      $domain_separator = 'dc';
+    }
+    else {
+      $default_user_branch = ''; //'ou=users,';
+      $domain_separator = 'o';
+    }
 
     $form['host'] = '';
     if (isset($config['hosts'][0]))
@@ -153,7 +174,7 @@ class Configuration_mode_novell extends Configuration_mode {
     $form['host2'] = '';
     if (isset($config['hosts'][1]))
       $form['host2'] = $config['hosts'][1];
-    $form['domain'] = suffix2domain($config['suffix']);
+    $form['domain'] = suffix2domain($config['suffix'], $domain_separator);
 
     // Admin login - Todo: replace by a regexp
     if ($config['login'] != '') {
@@ -174,7 +195,7 @@ class Configuration_mode_novell extends Configuration_mode {
     $form['admin_password'] = $config['password'];
 
 	$form['admin_branch_ou'] = '';
-	if($config['login'] == $uidprefix.'='.$admin_login.',cn=Users,'.$config['suffix'])
+	if($config['login'] == $uidprefix.'='.$admin_login.','.$default_user_branch.$config['suffix'])
 		$form['admin_branch'] = 'default';
 	else {
 		$form['admin_branch'] = 'specific';
@@ -187,6 +208,10 @@ class Configuration_mode_novell extends Configuration_mode {
 			$buffer[$i] = $buf[1];
 		}
 		$form['admin_branch_ou'] = implode(',', array_reverse($buffer));
+	}
+	
+	if (isset($config['extra']['dsfw'])) {
+		$form['dsfw'] = 'dsfw';
 	}
 
     return $form;
@@ -203,6 +228,10 @@ class Configuration_mode_novell extends Configuration_mode {
     $str.= '<td><span style="font-size: 0.9em; font-style: italic;">('._('optional').')</span></td>';
     $str.= '</tr>';
     $str.= '<tr><td>'._('Domain:').'</td><td><input type="text" name="domain" value="'.$form['domain'].'" /></td></tr>';
+    $disabled = '';
+    if (isset($form['dsfw']) && ($form['dsfw'] == 'dsfw'))
+      $disabled = 'checked="checked"';
+    $str.= '<tr><td>'._('DSFW:').'</td><td><input class="input_checkbox" type="checkbox" '.$disabled.' name="dsfw" value="dsfw" /></td></tr>';
     $str.= '</table>';
     $str.= '</div>';
 

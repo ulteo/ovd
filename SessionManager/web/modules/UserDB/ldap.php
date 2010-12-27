@@ -301,6 +301,9 @@ class UserDB_ldap  extends UserDB {
 		$c = new ConfigElement_input('filter', _('Filter (optional)'), _('Filter, example (&(distinguishedname=mike*)(uid=42*))'), _('Filter, example (&(distinguishedname=mike*)(uid=42*))'), '');
 		$ret []= $c;
 
+		$c = new ConfigElement_dictionary('extra',_('extra'), _('extra'), _('extra'), array());
+		$ret []= $c;
+
 		return $ret;
 	}
 
