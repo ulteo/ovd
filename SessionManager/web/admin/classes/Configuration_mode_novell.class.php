@@ -95,7 +95,6 @@ class Configuration_mode_novell extends Configuration_mode {
     $ad_ar['suffix'] = domain2suffix($form['domain']);
     $ad_ar['login'] = $admin_dn;
     $ad_ar['password'] = $form['admin_password'];
-    $ad_ar['uidprefix'] = 'cn';
     $ad_ar['filter'] = '(&(objectCategory=person)(objectClass=user))';
     $ad_ar['userbranch'] = '';
     $ad_ar['options'] = array('LDAP_OPT_PROTOCOL_VERSION' => '3');
@@ -166,12 +165,16 @@ class Configuration_mode_novell extends Configuration_mode {
 		$admin_login = '';
 		$admin_ou = '';
     }
+    
+    $uidprefix = 'cn';
+    if (isset($config['match']['login']))
+      $uidprefix = $config['match']['login'];
 
     $form['admin_login'] = $admin_login;
     $form['admin_password'] = $config['password'];
 
 	$form['admin_branch_ou'] = '';
-	if($config['login'] == $config['uidprefix'].'='.$admin_login.',cn=Users,'.$config['suffix'])
+	if($config['login'] == $uidprefix.'='.$admin_login.',cn=Users,'.$config['suffix'])
 		$form['admin_branch'] = 'default';
 	else {
 		$form['admin_branch'] = 'specific';

@@ -34,7 +34,6 @@ class LDAP {
 	private $password;
 	private $suffix;
 	private $userbranch;
-	private $uidprefix;
 	private $options = array();
 	private $attribs = array();
 
@@ -52,8 +51,6 @@ class LDAP {
 			$this->suffix = $config_['suffix'];
 		if (isset($config_['userbranch']))
 			$this->userbranch = $config_['userbranch'];
-		if (isset($config_['uidprefix']))
-			$this->uidprefix = $config_['uidprefix'];
 		if (isset($config_['options']))
 			$this->options = $config_['options'];
 

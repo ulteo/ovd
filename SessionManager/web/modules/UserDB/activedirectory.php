@@ -64,7 +64,6 @@ class UserDB_activedirectory  extends UserDB_ldap{
 			'password' => $config['password'],
 
 			'port'	=> '389',
-			'uidprefix' => 'cn',
 			'options' => array(
 				'LDAP_OPT_PROTOCOL_VERSION' => '3',
 				'LDAP_OPT_REFERRALS' => 0,

@@ -90,7 +90,6 @@ class Configuration_mode_ldap extends Configuration_mode {
     }
 
     $config['userbranch'] = $form['user_branch'];
-    $config['uidprefix'] = $form['field_rdn'];
     $config['filter'] = $form['field_filter'];
     $config['match'] = array();
     $config['match']['login'] = $form['field_rdn'];
@@ -146,7 +145,9 @@ class Configuration_mode_ldap extends Configuration_mode {
     //$form['user_branch_recursive'] = No Yet Implementd
 
 
-    $form['field_rdn'] = $config['uidprefix'];
+    $form['field_rdn'] = '';
+    if (isset($config['match']['login']))
+      $form['field_rdn'] = $config['match']['login'];
     if (isset($config['match']['displayname']))
       $form['field_displayname'] = $config['match']['displayname'];
     else
