@@ -69,7 +69,6 @@ public class GUIActions {
 
 	private class RequestFocus implements Runnable {
 		private Component component = null;
-		private boolean visible;
 
 		public RequestFocus(Component component_) {
 			this.component = component_;
