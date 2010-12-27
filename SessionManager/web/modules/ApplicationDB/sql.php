@@ -196,7 +196,10 @@ class ApplicationDB_sql extends ApplicationDB {
 			$query_keys = array();
 			$query_values = array();
 			$attributes = $a->getAttributesList();
-			unset($attributes[array_search('id', $attributes)]); // the id is an auto_increment
+			$result = array_search('id', $attributes);
+			if ($result !== false) {
+				unset($attributes[$result]); // the id is an auto_increment
+			}
 			foreach ($attributes as $key){
 				$query_keys   []= '`'.$key.'`';
 				$query_values []= '"'.mysql_escape_string($a->getAttribute($key)).'"';
