@@ -191,35 +191,41 @@ public class WindowsRegistry extends FileAssociate {
 	}
 
 	public void removeAppAction(Application app) {
-		for (String ext : this.created_exts.get(app)) {
-			try {
-				this.removeUserClass("."+ext);
-			} catch (Exception ex) {
-				Logger.error("Failed to remove user extension '"+ext+"': "+ex.getMessage());
-				continue;
+		if (this.created_exts.containsKey(app)) {
+			for (String ext : this.created_exts.get(app)) {
+				try {
+					this.removeUserClass("."+ext);
+				} catch (Exception ex) {
+					Logger.error("Failed to remove user extension '"+ext+"': "+ex.getMessage());
+					continue;
+				}
 			}
+			this.created_exts.remove(app);
 		}
-		this.created_exts.remove(app);
 
-		for (String shell : this.created_shells.get(app)) {
-			try {
-				this.removeUserClass(shell);
-			} catch (Exception ex) {
-				Logger.error("Failed to remove user shell '"+shell+"': "+ex.getMessage());
-				continue;
+		if (this.created_shells.containsKey(app)) {
+			for (String shell : this.created_shells.get(app)) {
+				try {
+					this.removeUserClass(shell);
+				} catch (Exception ex) {
+					Logger.error("Failed to remove user shell '"+shell+"': "+ex.getMessage());
+					continue;
+				}
 			}
+			this.created_shells.remove(app);
 		}
-		this.created_shells.remove(app);
 
-		for (String target : this.created_targets.get(app)) {
-			try {
-				this.removeUserClass(target);
-			} catch (Exception ex) {
-				Logger.error("Failed to remove user target '"+target+"': "+ex.getMessage());
-				continue;
+		if (this.created_targets.containsKey(app)) {
+			for (String target : this.created_targets.get(app)) {
+				try {
+					this.removeUserClass(target);
+				} catch (Exception ex) {
+					Logger.error("Failed to remove user target '"+target+"': "+ex.getMessage());
+					continue;
+				}
 			}
+			this.created_targets.remove(app);
 		}
-		this.created_targets.remove(app);
 	}
 	
 	public void removeAppAction_alt(Application app) {
