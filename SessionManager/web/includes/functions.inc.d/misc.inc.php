@@ -262,7 +262,7 @@ function set_cache($data_, $subdir_, $id_) {
 	return file_put_contents($file, $tmp, LOCK_EX);
 }
 
-function domain2suffix($domain_) {
+function domain2suffix($domain_, $separator='dc') {
 		$domain_ = strtolower($domain_);
 		$buf = explode('.', $domain_);
 		if (! count($buf))
@@ -270,23 +270,23 @@ function domain2suffix($domain_) {
 
 		$str='';
 		foreach($buf as $d)
-			$str.='dc='.$d.',';
+			$str.=$separator.'='.$d.',';
 
 		$str = substr($str, 0,-1);
 		return $str;
 }
 
-function suffix2domain($suffix_) {
+function suffix2domain($suffix_, $separator='dc') {
 	$buf = explode(',', $suffix_);
 	if (! count($buf))
 		return;
 
 	$build = array();
 	foreach($buf as $s) {
-		if (! str_startswith($s, 'dc='))
+		if (! str_startswith($s, $separator.'='))
 			return;
 
-		$build[] = strtoupper(substr($s, 3));
+		$build[] = strtoupper(substr($s, strlen($separator)+1));
 	}
 
 	$str = implode('.', $build);
