@@ -125,8 +125,14 @@ class Configuration_mode_novell extends Configuration_mode {
     $prefs->set('UserDB', 'ldap', $ad_ar);
 
     // Select Module for UserGroupDB
-    $prefs->set('UserGroupDB', 'enable', 'activedirectory');
-    $prefs->set('UserGroupDB', 'activedirectory', array('match' => array('description' => 'description','name' => 'sAMAccountName', 'member' => 'member')));
+    if (isset($form['dsfw'])) { // Active Directory mode
+      $prefs->set('UserGroupDB', 'enable', 'activedirectory');
+      $prefs->set('UserGroupDB', 'activedirectory', array('match' => array('description' => 'description','name' => 'sAMAccountName', 'member' => 'member')));
+    }
+    else {
+      $prefs->set('UserGroupDB', 'enable', 'ldap_posix');
+      $prefs->set('UserGroupDB', 'ldap_posix', array('group_dn' => '', 'match' => array('name' => 'cn', 'member' => 'member')));
+    }
     
     // Set the Session Management module
     $prefs->set('SessionManagement', 'enable', 'novell');

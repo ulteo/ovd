@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -60,73 +60,31 @@ class Abstract_Liaison_ldap_posix {
 		$userGroupDB = UserGroupDB::getInstance();
 		$userDB = UserDB::getInstance();
 		
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed',__FILE__,__LINE__);
 		
-		$configLDAP = $prefs->get('UserDB','ldap');
-		
-		$conf = $prefs->get('UserGroupDB', $prefs->get('UserGroupDB','enable'));
-		if (! is_array($conf)) {
-			Logger::error('main', "Abstract_Liaison_ldap_posix::loadElements  UserGroupDB::$mod_usergroup_name have not configuration");
-			die_error("Abstract_Liaison_ldap_posix::loadElements UserGroupDB::$mod_usergroup_name have not configuration",__FILE__,__LINE__);
+		$ug = $userGroupDB->import('static_'.$group_);
+		if (isset($ug->extras) === false) {
+			// ???
+			return array();
 		}
-		
-		if (isset($conf['group_dn'])) {
-			$configLDAP['userbranch'] = $conf['group_dn'];
-		}
-		else {
-			Logger::error('main', "Abstract_Liaison_ldap_posix::loadElements  UserGroupDB::$mod_usergroup_name have not correct configuration");
-			die_error("Abstract_Liaison_ldap_posix::loadElements UserGroupDB::$mod_usergroup_name have not correct configuration",__FILE__,__LINE__);
-		}
-		
-		$ldap = new LDAP($configLDAP);
-		$sr = $ldap->search('cn='.$group_, NULL);
-		$infos = $ldap->get_entries($sr);
-		if (!is_array($infos)) {
-			Logger::error('main', "Abstract_Liaison_ldap_posix::loadElements($type_,$group_) ldap->get_entries is not an array");
-			return NULL;
-		}
-		if ($infos == array()) {
-			Logger::error('main', "Abstract_Liaison_ldap_posix::loadElements($type_,$group_) ldap->get_entries is empty");
-			return NULL;
-		}
-		
-		$keys = array_keys($infos);
-		$dn = $keys[0];
-		$info = $infos[$dn];
-		
-		if (! isset($info['cn'])) {
-			Logger::error('main', 'Abstract_Liaison_ldap_posix::loadElements no cn');
-			return NULL;
-		}
-		$cn = '';
-		if ( is_string($info['cn'])) {
-			$cn = $info['cn'];
-		}
-		elseif (is_array($info['cn'])) {
-			if (isset($info['cn'][0])) {
-				$cn = $info['cn'][0];
-			}
-		}
-		$userGroupDB = UserGroupDB::getInstance();
-		$ug = $userGroupDB->import('static_'.$cn);
-		if (!is_object($ug)) {
-			Logger::error('main', 'Abstract_Liaison_ldap_posix::loadElements load UserGroup ('.'static_'.$cn.') failed');
-			return NULL;
-		}
-		$elements = array();
-		if (isset($info['memberUid'])) {
-			unset($info['memberUid']['count']);
-			foreach ($info['memberUid'] as $memberuid) {
-				$u = $userDB->import($memberuid);
+		elseif (is_array($ug->extras) && array_key_exists('member', $ug->extras)) {
+			$members = $ug->extras['member'];
+			$elements = array();
+			
+			foreach ($members as $memberuid) {
+				$u = $userDB->importFromDN($memberuid);
+				if (is_object($u) == false) {
+					$u = $userDB->import($memberuid);
+				}
 				if (is_object($u)) {
 					$l = new Liaison($u->getAttribute('login'), $group_);
 					$elements[$l->element] = $l;
 				}
 			}
+			return $elements;
 		}
-		return $elements;
+		else {
+			return array();
+		}
 	}
 	
 	public static function loadGroups($type_, $element_) {
