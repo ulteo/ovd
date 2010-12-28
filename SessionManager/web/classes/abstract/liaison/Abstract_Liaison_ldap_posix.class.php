@@ -143,7 +143,7 @@ class Abstract_Liaison_ldap_posix {
 		}
 		foreach ($groups_all as $a_group) {
 			if (in_array($element_, $a_group->usersLogin())) {
-				$l = new Liaison($element_,$a_group->id);
+				$l = new Liaison($element_,$a_group->getUniqueID());
 				$groups[$l->group] = $l;
 			}
 		}
