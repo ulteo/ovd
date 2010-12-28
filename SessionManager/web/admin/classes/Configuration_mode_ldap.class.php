@@ -36,7 +36,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $new = $newprefs->get('UserDB', 'ldap');
 
     $changed = False;
-    foreach(array('hosts', 'suffix', 'userbranch', 'uidprefix') as $key) {
+    foreach(array('hosts', 'suffix', 'userbranch') as $key) {
       if ($old[$key] != $new[$key]) {
 	$changed = True;
 	break;
