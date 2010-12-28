@@ -145,7 +145,7 @@ class Abstract_Liaison_ldap_memberof {
 			foreach ($memberof as $id_group) {
 				$g = $userGroupDB->import($id_group);
 				if (is_object($g)) {
-					$l = new Liaison($element_,$g->id);
+					$l = new Liaison($element_,$g->getUniqueID());
 					$groups[$l->group] = $l;
 				}
 			}
