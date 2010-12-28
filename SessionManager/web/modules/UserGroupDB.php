@@ -68,7 +68,13 @@ class UserGroupDB extends Module {
 		Logger::debug('main', 'UserGroupDB::getList');
 		$result = array();
 		foreach ($this->instance_type as $key => $value) {
-			$result = array_merge($result, $value->getList());
+			$buffer = $value->getList();
+			if (is_array($buffer) === false) {
+				Logger::debug('main', 'UserGroupDB::getList instance '.$this->instance_type.' did not return an array (returned: '.serialize($buffer).')');
+				continue;
+			}
+			
+			$result = array_merge($result, $buffer);
 		}
 		$unique = array_unique($result);
 		if ($sort_) {
@@ -160,6 +166,10 @@ class UserGroupDB extends Module {
 		$limit_to_get = $limit_;
 		foreach ($this->instance_type as $key => $value) {
 			list($groups1, $sizelimit_exceeded1) = $value->getGroupsContains($contains_, $attributes_, $limit_to_get);
+			if (is_array($groups1) === false) {
+				Logger::debug('main', 'UserGroupDB::getGroupsContains instance '.$this->instance_type.' did not return an array (returned: '.serialize($groups1).')');
+				continue;
+			}
 			$groups = array_merge($groups, $groups1);
 			
 			$sizelimit_exceeded = $sizelimit_exceeded or $sizelimit_exceeded1;
