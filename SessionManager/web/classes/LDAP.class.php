@@ -70,7 +70,7 @@ class LDAP {
 	}
 
 	private function connect_on_one_host($host, &$log=array()) {
-		Logger::debug('main', 'LDAP - connect(\''.$host.'\', \''.$this->port.'\')');
+		Logger::debug('main', 'LDAP - connect_on_one_host(\''.$host.'\', \''.$this->port.'\')');
 		$buf = false;
 		$buf = @ldap_connect($host, $this->port);
 		if (!$buf) {
