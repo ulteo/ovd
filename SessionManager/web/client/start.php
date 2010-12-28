@@ -770,10 +770,7 @@ if ($session->mode == Session::MODE_DESKTOP) {
 		$application_node = $dom->createElement('application');
 		$application_node->setAttribute('id', $application->getAttribute('id'));
 		$application_node->setAttribute('name', $application->getAttribute('name'));
-		foreach (explode(';', $application->getAttribute('mimetypes')) as $mimetype) {
-			if ($mimetype == '')
-				continue;
-
+		foreach ($application->getMimeTypes() as $mimetype) {
 			$mimetype_node = $dom->createElement('mime');
 			$mimetype_node->setAttribute('type', $mimetype);
 			$application_node->appendChild($mimetype_node);
@@ -818,10 +815,7 @@ if ($session->mode == Session::MODE_DESKTOP) {
 			$application_node = $dom->createElement('application');
 			$application_node->setAttribute('id', $application->getAttribute('id'));
 			$application_node->setAttribute('name', $application->getAttribute('name'));
-			foreach (explode(';', $application->getAttribute('mimetypes')) as $mimetype) {
-				if ($mimetype == '')
-					continue;
-
+			foreach ($application->getMimeTypes() as $mimetype) {
 				$mimetype_node = $dom->createElement('mime');
 				$mimetype_node->setAttribute('type', $mimetype);
 				$application_node->appendChild($mimetype_node);

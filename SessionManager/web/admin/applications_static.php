@@ -203,15 +203,6 @@ function show_default($prefs, $applicationDB) {
 			}
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'">';
-			echo '<td>';
-			echo _('MimeTypes');
-			echo '</td>';
-			echo '<td>';
-			echo '<input type="text" name="mimetypes" value="" size="50"/>';
-			echo '<input type="hidden" name="attributes_send[]" value="mimetypes" />';
-			echo '</td>';
-			$content = 'content'.(($count++%2==0)?1:2);
-			echo '<tr class="'.$content.'">';
 			echo '<td colspan="2">';
 			echo '<input type="submit" value="'._('Add').'" />';
 			echo '<input type="hidden" name="published" value="1" />';
@@ -324,6 +315,15 @@ function show_manage($id, $applicationDB) {
 		else
 			$servers_available[]= $server;
 	}
+	
+	$mimes = $applicationDB->getAllMimeTypes();
+	$mimeliste1 = $app->getMimeTypes();
+	$mimeliste2 = array();
+	foreach($mimes as $mime) {
+		if (! in_array($mime, $mimeliste1))
+			$mimeliste2 []= $mime;
+	}
+	
 
 	$can_manage_server = isAuthorized('manageServers');
 
@@ -529,6 +529,58 @@ function show_manage($id, $applicationDB) {
 		echo '</table>';
 		echo "<div>\n";
 	}
+	
+	// Mime-Type part
+	echo '<div>';
+	echo '<h2>'._('Mime-Types').'</h2>';
+	echo '<div>';
+	echo '<table border="0" cellspacing="1" cellpadding="3">';
+	foreach($mimeliste1 as $mime) {
+		echo '<tr><td>';
+		echo '<a href="mimetypes.php?action=manage&id='.urlencode($mime).'">'.$mime.'</a>';
+		echo '</td>';
+		echo '<td>';
+		echo '<form action="actions.php" method="post">';
+		echo '<input type="hidden" name="name" value="Application_MimeType" />';
+		echo '<input type="hidden" name="action" value="del" />';
+		echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+		echo '<input type="hidden" name="mime" value="'.$mime.'" />';
+		echo '<input type="submit" value="'._('Del').'"/>';
+		echo '</form>';
+		echo '</td>';
+		echo '</tr>';
+	}
+	echo '<tr>';
+	echo '<form action="actions.php" method="post">';
+	echo '<input type="hidden" name="name" value="Application_MimeType" />';
+	echo '<input type="hidden" name="action" value="add" />';
+	echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+	echo '<td>';
+	echo '<select name="mime">';
+	foreach($mimeliste2 as $mime)
+		echo '<option>'.$mime.'</option>';
+	echo '</select>';
+	echo '</td>';
+	echo '<td>';
+	echo '<input type="submit" value="'._('Add').'"/>';
+	echo '</td>';
+	echo '</form>';
+	echo '</tr>';
+	echo '<tr>';
+	echo '<form action="actions.php" method="post">';
+	echo '<input type="hidden" name="name" value="Application_MimeType" />';
+	echo '<input type="hidden" name="action" value="add" />';
+	echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+	echo '<td>'._('Custom Mime-Type: ').'<input type="text" name="mime" /></td>';
+	echo '<td>';
+	echo '<input type="submit" value="'._('Add').'"/>';
+	echo '</td>';
+	echo '</form>';
+	echo '</tr>';
+	
+	echo '</table>';
+	echo '</div>';
+	echo '</div>'; // mime div
 
 	echo '</div>';
 	echo '</div>';

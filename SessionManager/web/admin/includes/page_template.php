@@ -137,12 +137,18 @@ if (isAuthorized('viewApplicationsGroups'))
 			  'page' => 'appsgroup.php',
 			  'parent' => array('applications'));
 
-if (isAuthorized('viewApplications'))
+if (isAuthorized('viewApplications')) {
+	$menu['mime_types'] = 
+		array('id' => 'mime_types',
+			  'name' => _('Mime-Types'),
+			  'page' => 'mimetypes.php',
+			  'parent' => array('applications'));
 	$menu['applications_static'] = 
 		array('id' => 'applications_static',
 			  'name' => _('Static applications'),
 			  'page' => 'applications_static.php',
 			  'parent' => array('applications'));
+}
 
 if (isAuthorized('viewPublications'))
 	$menu['publications'] = 

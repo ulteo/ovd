@@ -359,6 +359,53 @@ if ($_REQUEST['name'] == 'Application_static') {
 	}
 }
 
+if ($_REQUEST['name'] == 'Application_MimeType') {
+	if (! checkAuthorization('manageApplications'))
+		redirect();
+	
+	$applicationDB = ApplicationDB::getInstance();
+	if (! $applicationDB->isWriteable()) {
+		die_error(_('ApplicationDB is not writeable'),__FILE__,__LINE__);
+	}
+	
+	if ($_REQUEST['action'] == 'add') {
+		if (isset($_REQUEST['id']) && isset($_REQUEST['mime'])) {
+			$app = $applicationDB->import($_REQUEST['id']);
+			if (!is_object($app)) {
+				die_error(sprintf(_("Unable to import application '%s'"), $_REQUEST['id']), __FILE__, __LINE__);
+			}
+			
+			$mimes = $app->getMimeTypes();
+			if (! in_array($_REQUEST['mime'], $mimes)) {
+				$mimes []= $_REQUEST['mime'];
+				$app->setMimeTypes($mimes);
+				
+				$ret = $applicationDB->update($app);
+				if (! $ret)
+					popup_error(sprintf(_("Failed to modify application '%s'"), $app->getAttribute('name')));
+			}
+		}
+	}
+	if ($_REQUEST['action'] == 'del') {
+		if (isset($_REQUEST['id']) && isset($_REQUEST['mime'])) {
+			$app = $applicationDB->import($_REQUEST['id']);
+			if (!is_object($app)) {
+				die_error(sprintf(_("Unable to import application '%s'"), $_REQUEST['id']), __FILE__, __LINE__);
+			}
+			
+			$mimes = $app->getMimeTypes();
+			if (in_array($_REQUEST['mime'], $mimes)) {
+				unset($mimes[array_search($_REQUEST['mime'], $mimes)]);
+				$app->setMimeTypes($mimes);
+				
+				$ret = $applicationDB->update($app);
+				if (! $ret)
+					popup_error(sprintf(_("Failed to modify application '%s'"), $app->getAttribute('name')));
+			}
+		}
+	}
+}
+
 if ($_REQUEST['name'] == 'Application_ApplicationGroup') {
 	if (! checkAuthorization('manageApplicationsGroups'))
 		redirect();

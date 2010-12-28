@@ -423,6 +423,25 @@ function show_manage($id, $applicationDB) {
     echo '</table>';
     echo "<div>\n";
   }
+  
+	// Mime-Type part
+	echo '<div>';
+	echo '<h2>'._('Mime-Types').'</h2>';
+	echo '<div>';
+	if (count($app->getMimeTypes()) == 0) {
+		echo _('No available mimes-type').'<br />';
+	}
+	else {
+		echo '<table border="0" cellspacing="1" cellpadding="3">';
+		foreach($app->getMimeTypes() as $mime) {
+			echo '<tr><td>';
+			echo '<a href="mimetypes.php?action=manage&id='.urlencode($mime).'">'.$mime.'</a>';
+			echo '</td></tr>';
+		}
+		echo '</table>';
+	}
+	echo '</div>';
+	echo '</div>'; // mime div
 
   echo '</div>';
   echo '</div>';

@@ -1128,7 +1128,6 @@ class Server {
 			$app_path_args = NULL;
 			$app_package = NULL;
 			$app_desktopfile = NULL;
-			$app_mimetypes = NULL;
 			if ($app_node->hasAttribute("name"))
 				$app_name = $app_node->getAttribute("name");
 			if ($app_node->hasAttribute("description"))
@@ -1154,9 +1153,9 @@ class Server {
 				
 				$mimetypes[]= $mime_node->getAttribute("type");
 			}
-			$app_mimetypes = implode(";", $mimetypes);
 
-			$a = new Application(NULL,$app_name,$app_description,$this->getAttribute('type'),$app_path_exe,$app_package,$app_mimetypes,true,$app_desktopfile);
+			$a = new Application(NULL,$app_name,$app_description,$this->getAttribute('type'),$app_path_exe,$app_package,true,$app_desktopfile);
+			$a->setMimeTypes($mimetypes);
 			$a_search = $applicationDB->search($app_name,$app_description,$this->getAttribute('type'),$app_path_exe);
 			if (is_object($a_search)){
 				//already in DB

@@ -47,6 +47,13 @@ function checkup_liaison($type_, $element_, $group_) {
 				return 'ApplicationsGroup "'.$group_.'" does not exist';
 			break;
 
+		case 'ApplicationMimeType':
+			$applicationDB = ApplicationDB::getInstance();
+			$buf = $applicationDB->import($element_);
+			if (! is_object($buf))
+				return 'Application "'.$element_.'" does not exist';
+			break;
+
 		case 'ServerSession':
 			$buf = Abstract_Server::load($element_);
 			if (! $buf)
@@ -161,7 +168,7 @@ function cleanup_preferences() {
 	}
 }
 
-$liaisons_types = array('ApplicationServer', 'AppsGroup', 'ServerSession', 'UsersGroup', 'UsersGroupApplicationsGroup', 'UsersGroupCached');
+$liaisons_types = array('ApplicationServer', 'AppsGroup', 'ApplicationMimeType', 'ServerSession', 'UsersGroup', 'UsersGroupApplicationsGroup', 'UsersGroupCached');
 if (Preferences::moduleIsEnabled('ProfileDB')) {
 	$liaisons_types []= 'UserProfile';
 }

@@ -17,6 +17,7 @@ scripts_DATA = actions.php \
                login.php \
                logout.php \
                logs.php \
+               mimetypes.php \
                news.php \
                password.php \
                profiles.php \

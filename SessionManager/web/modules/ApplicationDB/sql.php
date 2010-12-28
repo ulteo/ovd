@@ -139,12 +139,20 @@ class ApplicationDB_sql extends ApplicationDB {
 				unset($row['executable_path']);
 				unset($row['package']);
 				unset($row['desktopfile']);
-				unset($row['mimetypes']);
 				
 			}
 			else {
-				$r = new Application($row['id'], $row['name'],$row['description'], $row['type'], $row['executable_path'], $row['package'], $row['mimetypes'], $row['published']);
+				$r = new Application($row['id'], $row['name'],$row['description'], $row['type'], $row['executable_path'], $row['package'], $row['published']);
 				
+				Logger::debug('main', 'ApplicationDB::load_mimetypes');
+				$liaisons = Abstract_Liaison::load('ApplicationMimeType', $r->getAttribute('id'), NULL);
+				if (is_array($liaisons)) {
+					$mimetypes = array();
+					foreach($liaisons as $group => $liaison)
+						$mimetypes []= $group;
+					sort($mimetypes);
+					$r->setMimeTypes($mimetypes);
+				}
 			}
 			foreach ($row as $key => $value){
 				$r->setAttribute($key,$value);
@@ -210,8 +218,18 @@ class ApplicationDB_sql extends ApplicationDB {
 			$res = $sql2->DoQuery('INSERT INTO @1 ( '.$query_keys.' ) VALUES ('.$query_values.' )',APPLICATION_TABLE);
 			$id = $sql2->InsertId();
 			$a->setAttribute('id', $id);
+			if ($res === false)
+				return false;
+	
+			foreach($a->getMimeTypes() as $mimetype) {
+				if (!is_object(Abstract_Liaison::load('ApplicationMimeType', $a->getAttribute('id'), $mimetype))) {
+					$ret = Abstract_Liaison::save('ApplicationMimeType', $a->getAttribute('id'), $mimetype);
+					if ($ret === false)
+						return $ret;
+				}
+			}
 
-			return ($res !== false);
+			return true;
 		}
 		return false;
 
@@ -227,6 +245,7 @@ class ApplicationDB_sql extends ApplicationDB {
 			}
 			
 			// remove liaisons
+			Abstract_Liaison::delete('ApplicationMimeType', $a->getAttribute('id'), NULL); // remove mimetypes
 			Abstract_Liaison::delete('ApplicationServer', $a->getAttribute('id'), NULL); // remove application on servers
 			Abstract_Liaison::delete('AppsGroup', $a->getAttribute('id'), NULL); // remove publication for a group
 			
@@ -254,7 +273,19 @@ class ApplicationDB_sql extends ApplicationDB {
 
 			$sql2 = SQL::getInstance();
 			$res = $sql2->DoQuery($query);
-			return ($res !== false);
+			if ($res === false)
+				return false;
+			
+			Abstract_Liaison::delete('ApplicationMimeType', $a->getAttribute('id'), NULL); 
+			foreach($a->getMimeTypes() as $mimetype) {
+				if (!is_object(Abstract_Liaison::load('ApplicationMimeType', $a->getAttribute('id'), $mimetype))) {
+					$ret = Abstract_Liaison::save('ApplicationMimeType', $a->getAttribute('id'), $mimetype);
+					if ($ret === false)
+						return $ret;
+				}
+			}
+			
+			return true;
 		}
 		return false;
 	}
@@ -276,7 +307,6 @@ class ApplicationDB_sql extends ApplicationDB {
 			'executable_path' => 'text NOT NULL',
 			'package' => 'text NOT NULL',
 			'desktopfile' => 'text default NULL',
-			'mimetypes' => 'text default NULL',
 			'published' => 'tinyint(1) default \'0\'',
 			'static' => 'tinyint(1) default \'0\'',
 			'revision' => 'int(8) default \'0\''
@@ -300,5 +330,40 @@ class ApplicationDB_sql extends ApplicationDB {
 
 	public function minimun_attributes() {
 		return array('name', 'description', 'type', 'executable_path', 'package', 'desktopfile');
+	}
+	
+	
+	public function getApplicationsWithMimetype($mimetype_) {
+		$applications = array();
+		
+		$liaisons = Abstract_Liaison::load('ApplicationMimeType', NULL, $mimetype_);
+		if (is_array($liaisons)) {
+			foreach($liaisons as $liaison) {
+				$app = $this->import($liaison->element);
+				if (! is_object($app)) {
+					Logger::error('main', 'Unknown application '.$liaison->element);
+					continue;
+				}
+				
+				$applications []= $app;
+			}
+		}
+		
+		return $applications;
+	}
+	
+	public static function getAllMimeTypes() {
+		$mimes = array();
+		
+		$liaisons = Abstract_Liaison::load('ApplicationMimeType', NULL, NULL);
+		if (is_array($liaisons)) {
+			foreach($liaisons as $elem) {
+				if (! in_array($elem->group, $mimes))
+					$mimes []= $elem->group;
+			}
+		}
+		
+		sort($mimes);
+		return $mimes;
 	}
 }
