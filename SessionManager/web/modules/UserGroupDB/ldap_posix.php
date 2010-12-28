@@ -201,30 +201,7 @@ class UserGroupDB_ldap_posix {
 	public function getList_nocache() {
 		Logger::debug('main','UserGroupDB::ldap_posix::getList_nocache');
 		
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed',__FILE__,__LINE__);
-		
-		$mods_enable = $prefs->get('general','module_enable');
-		if (! in_array('UserGroupDB',$mods_enable))
-			die_error(_('UserGroupDB module must be enabled'),__FILE__,__LINE__);
-		
-		$configLDAP = $prefs->get('UserDB','ldap');
-		
-		$conf = $prefs->get('UserGroupDB', $prefs->get('UserGroupDB','enable'));
-		if (! is_array($conf)) {
-			Logger::error('main', "UserGroupDB_ldap_posix::getList  UserGroupDB::$mod_usergroup_name have not configuration");
-			die_error("UserGroupDB_ldap_posix::getList UserGroupDB::$mod_usergroup_name have not configuration",__FILE__,__LINE__);
-		}
-		
-		if (isset($conf['group_dn'])) {
-			$configLDAP['userbranch'] = $conf['group_dn'];
-		}
-		else {
-			Logger::error('main', "UserGroupDB_ldap_posix::getList  UserGroupDB::$mod_usergroup_name have not correct configuration");
-			die_error("UserGroupDB_ldap_posix::getList UserGroupDB::$mod_usergroup_name have not correct configuration",__FILE__,__LINE__);
-		}
-		
+		$configLDAP = $this->makeLDAPconfig();
 		$ldap = new LDAP($configLDAP);
 		$sr = $ldap->search('cn=*', NULL);
 		$infos = $ldap->get_entries($sr);
