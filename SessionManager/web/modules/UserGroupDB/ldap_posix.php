@@ -190,6 +190,7 @@ class UserGroupDB_ldap_posix {
 		}
 		else {
 			$groups = $this->getList_nocache();
+			$this->cache_list = $groups;
 		}
 		
 		if ($sort_) {
