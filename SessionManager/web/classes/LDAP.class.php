@@ -194,7 +194,7 @@ class LDAP {
 		else
 			$searchbase =$this->userbranch;
 		
-		Logger::debug('main', 'LDAP - search(\''.$filter_.'\',\''.$attribs_.'\',\''.$searchbase.'\')');
+		Logger::debug('main', 'LDAP - searchDN(\''.$filter_.'\',\''.$attribs_.'\',\''.$searchbase.'\')');
 
 		if (is_null($attribs_))
 			$attribs_ = $this->attribs;
