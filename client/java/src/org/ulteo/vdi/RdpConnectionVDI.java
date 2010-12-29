@@ -54,9 +54,9 @@ public class RdpConnectionVDI extends RdpConnection {
 			this.initRdpdrChannel();
 			this.initClipChannel();
 			if (OSTools.isWindows()) {
-				diskManager = new WindowsDiskManager((OVDRdpdrChannel)rdpdrChannel);
+				diskManager = new WindowsDiskManager((OVDRdpdrChannel)rdpdrChannel, DiskManager.ALL_MOUNTING_ALLOWED);
 			} else if (OSTools.isLinux()) {
-				diskManager = new LinuxDiskManager((OVDRdpdrChannel)rdpdrChannel);
+				diskManager = new LinuxDiskManager((OVDRdpdrChannel)rdpdrChannel, DiskManager.ALL_MOUNTING_ALLOWED);
 			} else {
 				throw new RdesktopException("No supported system for mounting point");
 			}

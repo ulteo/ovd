@@ -41,8 +41,8 @@ public class LinuxDiskManager extends DiskManager {
 	
 	
 	/**************************************************************************/
-	public LinuxDiskManager(OVDRdpdrChannel diskChannel) {
-		super(diskChannel);
+	public LinuxDiskManager(OVDRdpdrChannel diskChannel, boolean mountingMode) {
+		super(diskChannel, mountingMode);
 		this.mtabList = new ArrayList<String>();
 	}
 	
@@ -50,8 +50,12 @@ public class LinuxDiskManager extends DiskManager {
 	public boolean init() {
 		addStaticDirectory(Constants.PATH_DOCUMENT);
 		addStaticDirectory(Constants.PATH_DESKTOP);
-		addDirectoryToInspect("/media");
-		addDirectoryToInspect("/mnt");
+
+		if (this.mountingMode == ALL_MOUNTING_ALLOWED) {
+			addDirectoryToInspect("/media");
+			addDirectoryToInspect("/mnt");
+		}
+		
 		return true;
 	}
 
@@ -70,6 +74,10 @@ public class LinuxDiskManager extends DiskManager {
 	/**************************************************************************/
 	private void updateMtab() {
 		this.mtabList.clear();
+
+		if (this.mountingMode == MOUNTING_RESTRICTED)
+			return;
+
 		File file = new File(mtabFilename);
 		BufferedReader br = null;
 		FileReader fr = null;
@@ -99,6 +107,9 @@ public class LinuxDiskManager extends DiskManager {
 	/**************************************************************************/
 	public ArrayList<String> getNewDrive() {
 		ArrayList<String> newDrives = new ArrayList<String>();
+		if (this.mountingMode == MOUNTING_RESTRICTED)
+			return newDrives;
+		
 		String dirPath;
 		File dir = null;
 		

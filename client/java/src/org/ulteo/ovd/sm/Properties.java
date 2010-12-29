@@ -24,6 +24,10 @@ public class Properties {
 	public static final int MODE_ANY = 0;
 	public static final int MODE_DESKTOP = 1;
 	public static final int MODE_REMOTEAPPS = 2;
+
+	public static final int REDIRECT_DRIVES_NO = 0;
+	public static final int REDIRECT_DRIVES_PARTIAL = 1;
+	public static final int REDIRECT_DRIVES_FULL = 2;
 	
 	private int mode = 0;
 	private String lang = null;
@@ -33,6 +37,7 @@ public class Properties {
 	
 	private boolean multimedia = false;
 	private boolean printers = false;
+	private int drives = REDIRECT_DRIVES_NO;
 
 	private boolean desktop_icons = false;
 	
@@ -86,6 +91,14 @@ public class Properties {
 	
 	public void setPrinters(boolean printers) {
 		this.printers = printers;
+	}
+
+	public int isDrives() {
+		return this.drives;
+	}
+
+	public void setDrives(int drives) {
+		this.drives = drives;
 	}
 	
 	public int getDuration() {

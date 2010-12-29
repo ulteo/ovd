@@ -25,19 +25,25 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.GridBagConstraints;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.Window;
 import java.util.List;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JSlider;
 import javax.swing.text.JTextComponent;
 
 public class GUIActions {
 	private static GUIActions Actions = new GUIActions();
+
+	public static final Image ULTEO_ICON = Toolkit.getDefaultToolkit().getImage(GUIActions.class.getClassLoader().getResource("pics/ulteo.png"));
 
 	/* SetVisible */
 	public static Runnable setVisible(Component component_, boolean visible_) {
@@ -102,6 +108,41 @@ public class GUIActions {
 		public void run() {
 			setVisible(this.wnd, false).run();
 			this.wnd.dispose();
+		}
+	}
+
+	/* CreateDialog */
+	public static Runnable createDialog(String message, String title) {
+		return Actions.new CreateDialog(message, title, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null);
+	}
+	public static Runnable createDialog(String message, String title, int messageType, int optionType) {
+		return Actions.new CreateDialog(message, title, messageType, optionType, null);
+	}
+	public static Runnable createDialog(String message, String title, int messageType, int optionType, Image icon) {
+		return Actions.new CreateDialog(message, title, messageType, optionType, icon);
+	}
+
+	private class CreateDialog implements Runnable {
+		private String message = null;
+		private String title = null;
+		private int messageType = JOptionPane.INFORMATION_MESSAGE;
+		private int optionType = JOptionPane.DEFAULT_OPTION;
+		private Image icon = null;
+
+		public CreateDialog(String message_, String title_, int messageType_, int optionType_, Image icon_) {
+			this.message = message_;
+			this.title = title_;
+			this.messageType = messageType_;
+			this.optionType = optionType_;
+			this.icon = (icon_ == null) ? ULTEO_ICON : icon_;
+		}
+
+		public void run() {
+			JOptionPane pane = new JOptionPane(this.message, this.messageType, this.optionType);
+			JDialog dialog = pane.createDialog(this.title);
+			dialog.setIconImage(this.icon);
+			setVisible(dialog, true).run();
+			requestFocus(dialog).run();
 		}
 	}
 	

@@ -43,10 +43,16 @@ public class SystemLinux extends SystemAbstract {
 	}
 
 	@Override
-	public String create(Application app) {
+	public String create(Application app, boolean associate) {
 		Logger.debug("Creating the '"+app.getName()+"' shortcut");
 		
 		this.saveIcon(app);
+
+		if (associate) {
+			// ToDo: File association for Linux system
+			Logger.debug("Should associate some mime types with application "+app.getName()+" but it is not implemented yet");
+		}
+
 		return this.shortcut.create(app);
 	}
 

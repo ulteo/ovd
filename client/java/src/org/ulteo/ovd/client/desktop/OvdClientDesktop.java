@@ -129,6 +129,11 @@ public class OvdClientDesktop extends OvdClient {
 		
 		if (properties.isPrinters())
 			flags |= RdpConnectionOvd.MOUNT_PRINTERS;
+
+		if (properties.isDrives() == Properties.REDIRECT_DRIVES_FULL)
+			flags |= RdpConnectionOvd.MOUNTING_MODE_FULL;
+		else if (properties.isDrives() == Properties.REDIRECT_DRIVES_PARTIAL)
+			flags |= RdpConnectionOvd.MOUNTING_MODE_PARTIAL;
 		
 		RdpConnectionOvd rc = null;
 		

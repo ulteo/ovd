@@ -46,11 +46,13 @@ public class SystemWindows extends SystemAbstract {
 	}
 
 	@Override
-	public String create(Application app) {
+	public String create(Application app, boolean associate) {
 		Logger.debug("Creating the '"+app.getName()+"' shortcut");
 		
 		this.saveIcon(app);
-		this.fileAssociate.createAppAction(app);
+		if (associate) {
+			this.fileAssociate.createAppAction(app);
+		}
 
 		return this.shortcut.create(app);
 	}

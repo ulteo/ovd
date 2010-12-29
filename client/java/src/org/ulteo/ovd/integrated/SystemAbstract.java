@@ -28,7 +28,7 @@ public abstract class SystemAbstract {
 	protected Shortcut shortcut = null;
 	protected FileAssociate fileAssociate = null;
 
-	public abstract String create(Application app);
+	public abstract String create(Application app, boolean associate);
 
 	public abstract void clean(Application app);
 

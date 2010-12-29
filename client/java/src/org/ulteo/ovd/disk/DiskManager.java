@@ -28,6 +28,9 @@ import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 
 
 public abstract class DiskManager {
+	public static final boolean ALL_MOUNTING_ALLOWED = true;
+	public static final boolean MOUNTING_RESTRICTED = false;
+
 	private static Logger logger = Logger.getLogger(DiskManager.class);
 	private static String invalidCharacter = ":\\/|*?<>";
 
@@ -36,10 +39,12 @@ public abstract class DiskManager {
 	protected ArrayList<String> directoryToInspect;
 	private Timer diskAction;
 	private boolean isStaticShareMounted = false;
+	protected boolean mountingMode = MOUNTING_RESTRICTED;
 	
 	/**************************************************************************/
-	public DiskManager(OVDRdpdrChannel diskChannel) {
+	public DiskManager(OVDRdpdrChannel diskChannel, boolean mountingMode_) {
 		this.rdpdrChannel = diskChannel;
+		this.mountingMode = mountingMode_;
 		this.staticShares = new ArrayList<String>();
 		this.directoryToInspect = new ArrayList<String>();
 	}
@@ -48,7 +53,7 @@ public abstract class DiskManager {
 	public void launch() {
 		diskAction = new Timer();
 		diskAction.schedule(new DiskUpdater(this, this.rdpdrChannel), 0, 5000);
-		
+
 	}
 	
 	public void stop() {
@@ -62,7 +67,10 @@ public abstract class DiskManager {
 	/**************************************************************************/
 	abstract public boolean init();
 	abstract public ArrayList<String> getNewDrive();
-	
+
+	public boolean getMountingMode() {
+		return this.mountingMode;
+	}
 
 	public String getValidName(String name) {
 		char[] characters = invalidCharacter.toCharArray();

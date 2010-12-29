@@ -82,8 +82,10 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		}
 		
 		int applicationIncrement = 100 / co.getAppsList().size();
+
+		boolean associate = (co.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
 		for (Application app : co.getAppsList()) {
-			if (this.system.create(app) == null)
+			if (this.system.create(app, associate) == null)
 				org.ulteo.Logger.error("The "+app.getName()+" shortcut could not be created");
 
 			int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
@@ -143,6 +145,11 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		
 		if (properties.isPrinters())
 			flags |= RdpConnectionOvd.MOUNT_PRINTERS;
+
+		if (properties.isDrives() == Properties.REDIRECT_DRIVES_FULL)
+			flags |= RdpConnectionOvd.MOUNTING_MODE_FULL;
+		else if (properties.isDrives() == Properties.REDIRECT_DRIVES_PARTIAL)
+			flags |= RdpConnectionOvd.MOUNTING_MODE_PARTIAL;
 		
 		List<ServerAccess> serversList = this.smComm.getServers();
 		this.numberOfApplication = 0;

@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.ApplicationInstance;
+import org.ulteo.ovd.integrated.RestrictedAccessException;
 
 public class ApplicationListener implements ActionListener{
 	private Logger logger = Logger.getLogger(ApplicationListener.class);
@@ -53,6 +54,8 @@ public class ApplicationListener implements ActionListener{
 
 		try {
 			ai.startApp();
+		} catch (RestrictedAccessException ex) {
+			org.ulteo.Logger.error("Weird: Should not appear: "+ex);
 		} catch (RdesktopException ex) {
 			this.logger.warn(ex);
 		} catch (IOException ex) {

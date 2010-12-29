@@ -28,12 +28,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import javax.swing.JOptionPane;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.crypto.CryptoException;
 import net.propero.rdp.RdpConnection;
 import org.apache.log4j.Logger;
+import org.ulteo.gui.GUIActions;
+import org.ulteo.gui.SwingTools;
 import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.rdp.RdpConnectionOvd;
+import org.ulteo.utils.I18n;
 
 public class Spool implements Runnable {
 	private final static String PREFIX_ID = "id = ";
@@ -232,6 +236,15 @@ public class Spool implements Runnable {
 		this.appInstances.add(ai);
 		try {
 			ai.startApp();
+		} catch (RestrictedAccessException ex) {
+			arg_ = arg_.replaceAll("\\\\", "\\\\\\\\");
+			
+			String msg = I18n._("Cannot open '%PATH%'");
+			msg = msg.replaceFirst("%PATH%", arg_);
+			msg += "\n"+ex.getMessage();
+			
+			org.ulteo.Logger.error(msg);
+			SwingTools.invokeLater(GUIActions.createDialog(msg, I18n._("Error"), JOptionPane.ERROR_MESSAGE, JOptionPane.DEFAULT_OPTION));
 		} catch (RdesktopException ex) {
 			this.logger.error(ex);
 		} catch (IOException ex) {

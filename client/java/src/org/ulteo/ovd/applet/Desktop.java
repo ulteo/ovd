@@ -41,6 +41,7 @@ import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
+import org.ulteo.ovd.sm.Properties;
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 import org.ulteo.utils.AbstractFocusManager;
@@ -58,6 +59,7 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 	private String token = null;
 	private boolean multimedia_mode = false;
 	private boolean map_local_printers = false;
+	private int mount_local_drives = Properties.REDIRECT_DRIVES_NO;
 	
 	private RdpConnectionOvd rc = null;
 	
@@ -121,6 +123,11 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 			OVDPrinter.setPrinterThread(appletPrinterThread);
 			this.focusManager = new AppletFocusManager(appletPrinterThread);
 		}
+		
+		if (this.mount_local_drives == Properties.REDIRECT_DRIVES_FULL)
+			flags |= RdpConnectionOvd.MOUNTING_MODE_FULL;
+		else if (this.mount_local_drives == Properties.REDIRECT_DRIVES_PARTIAL)
+			flags |= RdpConnectionOvd.MOUNTING_MODE_PARTIAL;
 
 		try {
 			this.rc = new RdpConnectionOvd(flags);
@@ -280,6 +287,16 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 		buf = this.getParameter("redirect_client_printers");
 		if (buf != null)
 			this.map_local_printers = buf.equalsIgnoreCase("true");
+
+		buf = this.getParameter("redirect_client_drives");
+		if (buf != null) {
+			if (buf.equalsIgnoreCase("full"))
+				this.mount_local_drives = Properties.REDIRECT_DRIVES_FULL;
+			else if (buf.equalsIgnoreCase("partial"))
+				this.mount_local_drives = Properties.REDIRECT_DRIVES_PARTIAL;
+			else
+				this.mount_local_drives = Properties.REDIRECT_DRIVES_NO;
+		}
 		
 		buf = this.getParameter("fullscreen");
 		if (buf != null)
@@ -287,7 +304,7 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 		
 		return true;
     }
-	
+
 	private void switch2session() {
 		RdesktopCanvas canvas = this.rc.getCanvas();
 		canvas.setLocation(0, 0);

@@ -43,6 +43,7 @@ import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
 import netscape.javascript.JSObject;
+import org.ulteo.ovd.sm.Properties;
 
 import org.ulteo.utils.AbstractFocusManager;
 import org.ulteo.utils.jni.WorkArea;
@@ -105,6 +106,7 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 	public String keymap = null;
 	private boolean multimedia_mode = false;
 	private boolean map_local_printers = false;
+	private int mount_local_drives = Properties.REDIRECT_DRIVES_NO;
 	
 	private ConcurrentHashMap<Integer, RdpConnectionOvd> connections = null;
 	private List<Order> spoolOrder = null;
@@ -243,6 +245,17 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 			SeamlessPopup.focusManager = focusManager;
 			this.map_local_printers = buf.equalsIgnoreCase("true");
 		}
+
+		buf = this.getParameter("redirect_client_drives");
+		if (buf != null) {
+			if (buf.equalsIgnoreCase("full"))
+				this.mount_local_drives = Properties.REDIRECT_DRIVES_FULL;
+			else if (buf.equalsIgnoreCase("partial"))
+				this.mount_local_drives = Properties.REDIRECT_DRIVES_PARTIAL;
+			else
+				this.mount_local_drives = Properties.REDIRECT_DRIVES_NO;
+		}
+
 		
 		return true;
 	}
@@ -298,6 +311,10 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 					flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
 				if (this.map_local_printers)
 					flags |= RdpConnectionOvd.MOUNT_PRINTERS;
+				if (this.mount_local_drives == Properties.REDIRECT_DRIVES_FULL)
+					flags |= RdpConnectionOvd.MOUNTING_MODE_FULL;
+				else if (this.mount_local_drives == Properties.REDIRECT_DRIVES_PARTIAL)
+					flags |= RdpConnectionOvd.MOUNTING_MODE_PARTIAL;
 				
 				RdpConnectionOvd rc;
 				try {

@@ -43,12 +43,17 @@ import org.ulteo.rdp.TCPSSLSocketFactory;
 
 public class RdpConnectionOvd extends RdpConnection {
 
-	public static final byte MODE_DESKTOP = 0x01;
-	public static final byte MODE_APPLICATION = 0x02;
-	public static final byte MODE_MULTIMEDIA = 0x04;
-	public static final byte MOUNT_PRINTERS = 0x08;
+	public static final int MODE_DESKTOP =		0x00000001;
+	public static final int MODE_APPLICATION =	0x00000002;
+	public static final int MODE_MULTIMEDIA =	0x00000004;
+	public static final int MOUNT_PRINTERS =	0x00000008;
 
-	private byte flags = 0x00;
+	/* Flags value between 0x00000010 and 0x000000f0 are reserved for drives modes mounting*/
+	public static final int MOUNTING_MODE_FULL =	0x00000010;
+	public static final int MOUNTING_MODE_PARTIAL =	0x00000020;
+	public static final int MOUNTING_MODE_MASK =	0x000000F0;
+
+	private int flags = 0x00;
 	private ArrayList<Application> appsList = null;
 	private OvdAppChannel ovdAppChannel = null;
 	private DiskManager diskManager = null;
@@ -61,7 +66,7 @@ public class RdpConnectionOvd extends RdpConnection {
 	 *	- 24 bits
 	 *	- Clip channel
 	 */
-	public RdpConnectionOvd(byte flags_) throws OvdException, RdesktopException {
+	public RdpConnectionOvd(int flags_) throws OvdException, RdesktopException {
 		super(new Options(), new Common());
 
 		this.flags = flags_;
@@ -88,6 +93,14 @@ public class RdpConnectionOvd extends RdpConnection {
 	}
 
 	/**
+	 * Return the connection flags
+	 * @return int flags
+	 */
+	public int getFlags() {
+		return this.flags;
+	}
+
+	/**
 	 * Register all secondary channels requested. They could be:
 	 *	- sound channel
 	 *	- rdpdr channel
@@ -95,10 +108,12 @@ public class RdpConnectionOvd extends RdpConnection {
 	 */
 	public void initSecondaryChannels() throws OvdException, RdesktopException {
 		this.initClipChannel();
-		
-		this.mountLocalDrive();
+
 		if ((this.flags & MODE_MULTIMEDIA) != 0) {
 			this.setMultimediaMode();
+		}
+		if ((this.flags & MOUNTING_MODE_MASK) != 0) {
+			this.mountLocalDrive();
 		}
 		if ((this.flags & MOUNT_PRINTERS) != 0) {
 			this.mountLocalPrinters();
@@ -195,11 +210,25 @@ public class RdpConnectionOvd extends RdpConnection {
 	 */
 	private void mountLocalDrive() throws OvdException, RdesktopException {
 		this.initRdpdrChannel();
+
+		boolean mountingMode = DiskManager.MOUNTING_RESTRICTED;
+		int mountingModeFlag = this.flags & MOUNTING_MODE_MASK;
+		switch (mountingModeFlag) {
+			case MOUNTING_MODE_FULL:
+				mountingMode = DiskManager.ALL_MOUNTING_ALLOWED;
+				break;
+			case MOUNTING_MODE_PARTIAL:
+				break;
+			default:
+				Logger.error("mountLocalDrives: Unknown mounting mode flag "+String.format("0x%08x", mountingModeFlag));
+				return;
+		}
+
 		if (OSTools.isWindows()) {
-			diskManager = new WindowsDiskManager((OVDRdpdrChannel)rdpdrChannel);
+			diskManager = new WindowsDiskManager((OVDRdpdrChannel)rdpdrChannel, mountingMode);
 		}
 		else {
-			diskManager = new LinuxDiskManager((OVDRdpdrChannel)rdpdrChannel);
+			diskManager = new LinuxDiskManager((OVDRdpdrChannel)rdpdrChannel, mountingMode);
 		}
 		diskManager.init();
 		diskManager.launch();		
@@ -256,6 +285,14 @@ public class RdpConnectionOvd extends RdpConnection {
 	 */
 	public OVDRdpdrChannel getRdpdrChannel() {
 		return (OVDRdpdrChannel) this.rdpdrChannel;
+	}
+
+	/**
+	 * Return the current DiskManager instance
+	 * @return DiskManager instance
+	 */
+	public DiskManager getDiskManager() {
+		return this.diskManager;
 	}
 
 	public void sendLogoff() throws OvdException {

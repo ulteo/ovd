@@ -20,12 +20,14 @@
 
 package org.ulteo.ovd;
 
+import org.ulteo.ovd.integrated.RestrictedAccessException;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.crypto.CryptoException;
 import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
 import org.ulteo.Logger;
+import org.ulteo.ovd.disk.DiskManager;
 import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.integrated.SystemWindows;
@@ -34,6 +36,7 @@ import org.ulteo.rdp.OvdAppListener;
 import org.ulteo.rdp.rdpdr.DeviceListener;
 import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 import org.ulteo.rdp.rdpdr.OVDRdpdrDisk;
+import org.ulteo.utils.I18n;
 
 public class ApplicationInstance implements DeviceListener, OvdAppListener {
 	public static final int STOPPING = 0;
@@ -110,7 +113,7 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 		return false;
 	}
 
-	public void startApp() throws RdesktopException, IOException, CryptoException {
+	public void startApp() throws RdesktopException, IOException, CryptoException, RestrictedAccessException {
 		OvdAppChannel ovdApp = this.app.getConnection().getOvdAppChannel();
 		
 		if (this.arg == null) {
@@ -130,7 +133,7 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 				return;
 			}
 		}
-		
+
 		OVDRdpdrChannel rdpdr = this.app.getConnection().getRdpdrChannel();
 		try {
 			this.waitedDevice = rdpdr.getDeviceFromFile(arg);
@@ -141,6 +144,10 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 		}
 
 		if (this.waitedDevice == null) {
+			if (this.app.getConnection().getDiskManager().getMountingMode() != DiskManager.ALL_MOUNTING_ALLOWED) {
+				throw new RestrictedAccessException(I18n._("You did not have the permission to redirect this local drive"));
+			}
+
 			rdpdr.addDeviceListener(this);
 			this.waitedDevice = rdpdr.mountDeviceFromFile(arg);
 			if (this.waitedDevice == null) {

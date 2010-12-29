@@ -577,6 +577,14 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 				else
 					response.setPrinters(false);
 			}
+			if (rootNode.hasAttribute("redirect_client_drives")) {
+				if (rootNode.getAttribute("redirect_client_drives").equalsIgnoreCase("full"))
+					response.setDrives(Properties.REDIRECT_DRIVES_FULL);
+				else if (rootNode.getAttribute("redirect_client_drives").equalsIgnoreCase("partial"))
+					response.setDrives(Properties.REDIRECT_DRIVES_PARTIAL);
+				else
+					response.setDrives(Properties.REDIRECT_DRIVES_NO);
+			}
 
 			if (rootNode.hasAttribute("mode_gateway")) {
 				if (rootNode.getAttribute("mode_gateway").equals("on"))

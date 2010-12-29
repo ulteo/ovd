@@ -51,6 +51,9 @@ public class DiskUpdater extends TimerTask {
 			diskManager.mountStaticShare();
 		}
 
+		if (this.diskManager.getMountingMode() != DiskManager.ALL_MOUNTING_ALLOWED)
+			return;
+
 		for (RdpdrDevice device : this.rdpdr.g_rdpdr_device) {
 			if (device == null) {
 				continue;

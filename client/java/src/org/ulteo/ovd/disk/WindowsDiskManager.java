@@ -34,8 +34,8 @@ public class WindowsDiskManager extends DiskManager {
 	private static Logger logger = Logger.getLogger(WindowsDiskManager.class);
 
 	/**************************************************************************/
-	public WindowsDiskManager(OVDRdpdrChannel diskChannel) {
-		super(diskChannel);
+	public WindowsDiskManager(OVDRdpdrChannel diskChannel, boolean mountingMode) {
+		super(diskChannel, mountingMode);
 	}
 
 	/**************************************************************************/
@@ -54,6 +54,9 @@ public class WindowsDiskManager extends DiskManager {
 	/**************************************************************************/	
 	private ArrayList<String> getLogicalDrive() {
 		ArrayList<String> newDrives = new ArrayList<String>();
+		if (this.mountingMode == MOUNTING_RESTRICTED)
+			return newDrives;
+
 		File []drives = File.listRoots();
 		String driveString;
 		for (File drive : drives) {
@@ -68,6 +71,9 @@ public class WindowsDiskManager extends DiskManager {
 	/**************************************************************************/
 	public ArrayList<String> getNewDrive() {
 		ArrayList<String> newDrives = new ArrayList<String>();
+		if (this.mountingMode == MOUNTING_RESTRICTED)
+			return newDrives;
+
 		String dirPath;
 		File dir = null;
 
