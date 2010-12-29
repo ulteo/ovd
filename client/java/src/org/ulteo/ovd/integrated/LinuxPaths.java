@@ -73,4 +73,23 @@ public class LinuxPaths {
 	public static String getDocumentPath() {
 		return getPath("XDG_DOCUMENTS_DIR", "Documents");
 	}
+
+	public static boolean isXdgDir(String path) {
+		Properties xdgProperties = xdgOpen();
+		if (xdgProperties == null) {
+			if (path.startsWith(System.getProperty("user.home")))
+				return true;
+			return false;
+		}
+
+		for (String property : xdgProperties.stringPropertyNames()) {
+			String value = getXdgDir(xdgProperties, property, null);
+			if (path.startsWith(value))
+				return true;
+		}
+
+		xdgClose(xdgProperties);
+		
+		return false;
+	}
 }
