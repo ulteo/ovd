@@ -20,11 +20,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import pythoncom
 import pywintypes
 import time
 import win32api
-import win32com
+import win32security
 import win32ts
 
 from ovd.Logger import Logger
@@ -35,17 +34,13 @@ class TS(AbstractTS):
 	@staticmethod
 	def getUsersGroup():
 		try:
-			pythoncom.CoInitialize()
-			wmi = win32com.client.Dispatch("WbemScripting.SWbemLocator")
-			wmi_serv = wmi.ConnectServer(".")
-			windows_server = wmi_serv.ExecQuery("Select Name from Win32_Group where SID='S-1-5-32-555'")
-			
-			buffer = windows_server[0].Name
+			sid = win32security.ConvertStringSidToSid("S-1-5-32-555")
+			name, _, _ = win32security.LookupAccountSid(None, sid)
 		except Exception, err:
 			Logger.error("TS::getUsersGroup unable to found remote users group replacing by default name")
 			return "Remote Desktop Users"
 		
-		return buffer
+		return name
 	
 	@staticmethod
 	def getList():
@@ -67,8 +62,7 @@ class TS(AbstractTS):
 		if "@" in username_:
 			(username_, domain_) = username_.split("@", 1)
 		
-		if domain_ is None:
-			domain_ = win32api.GetComputerName()
+		localdomain = win32api.GetComputerName()
 		
 		sessions = win32ts.WTSEnumerateSessions(None)
 		session_closing = []
@@ -83,9 +77,14 @@ class TS(AbstractTS):
 					continue
 				
 				domain = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSDomainName)
-				if domain.lower() != domain_.lower():
-					Logger.debug("Session %s: ts session %d is not from the user %s but from a AD user"%(session["SessionId"], username_))
+				if domain_ is not None and domain.lower() == localdomain.lower():
+					Logger.debug("Ts session %d is not from the domain user %s but from a local user"%(session["SessionId"], username_))
 					continue
+				
+				elif domain_ is None and domain.lower() != localdomain.lower():
+					Logger.debug("Ts session %d is not from the local user %s but from a domain user"%(session["SessionId"], username_))
+					continue
+				
 			except pywintypes.error, err:
 				if err[0] == 7007: # A close operation is pending on the session.
 					session_closing.append(session)
