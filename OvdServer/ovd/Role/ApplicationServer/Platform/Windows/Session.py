@@ -21,25 +21,21 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
-import pythoncom
 import random
-import time
 import win32api
 from win32com.shell import shell, shellcon
 import win32con
 import win32file
-import win32net
 import win32profile
 import win32security
 import _winreg
 
 from ovd.Logger import Logger
+from ovd.Platform import Platform
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 
 import Langs
 import LnkFile
-from Msi import Msi
-from ovd.Platform import Platform
 import Reg
 
 class Session(AbstractSession):
