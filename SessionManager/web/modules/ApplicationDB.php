@@ -36,4 +36,38 @@ abstract class ApplicationDB extends Module {
 		}
 		return self::$instance;
 	}
+	
+	public function import($id_) {
+		return false;
+	}
+	public function search($app_name, $app_description, $app_type, $app_path_exe) {
+		return false;
+	}
+	public function getList($sort_=false, $type_=NULL) {
+		return false;
+	}
+	public function isWriteable() {
+		return false;
+	}
+	public function isOK($app_) {
+		return false;
+	}
+	public function add($a) {
+		return false;
+	}
+	public function remove($a) {
+		return false;
+	}
+	public function update($a) {
+		return false;
+	}
+	public static function init($prefs_) {
+		return false;
+	}
+	public static function enable() {
+		return false;
+	}
+	public function minimun_attributes() {
+		return array();
+	}
 }
