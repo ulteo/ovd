@@ -79,55 +79,16 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	private boolean connectionIsActive = true;
 	private boolean exitAfterLogout = false;
 
+	public OvdClient(Callback obj_) {
+		this.initMembers(null, true);
+
+		this.initCallback(obj_);
+	}
+
 	public OvdClient(SessionManagerCommunication smComm, Callback obj_) {
 		this.initMembers(smComm, true);
-		
-		if (obj_ != null) {
-			this.obj = obj_;
-		}
-		else {
-			this.obj = new Callback() {
-				@Override
-				public void reportBadXml(String data) {
-					org.ulteo.Logger.error("Callback::reportBadXml: "+data);
-				}
 
-				@Override
-				public void reportError(int code, String msg) {
-					org.ulteo.Logger.error("Callback::reportError: "+code+" => "+msg);
-				}
-
-				@Override
-				public void reportErrorStartSession(String code) {
-					org.ulteo.Logger.error("Callback::reportErrorStartSession: "+code);
-				}
-
-				@Override
-				public void reportNotFoundHTTPResponse(String moreInfos) {
-					org.ulteo.Logger.error("Callback::reportNotFoundHTTPResponse: "+moreInfos);
-				}
-
-				@Override
-				public void reportUnauthorizedHTTPResponse(String moreInfos) {
-					org.ulteo.Logger.error("Callback::reportUnauthorizedHTTPResponse: "+moreInfos);
-				}
-
-				@Override
-				public void sessionConnected() {
-					org.ulteo.Logger.info("Callback::sessionConnected");
-				}
-
-				@Override
-				public void sessionDisconnecting() {
-					org.ulteo.Logger.info("Callback::sessionDisconnected");
-				}
-
-				@Override
-				public void updateProgress(int status, int substatus) {
-					org.ulteo.Logger.info("Callback::updateProgress "+status+","+substatus);
-				}
-			};
-		}
+		this.initCallback(obj_);
 	}
 
 	private void initMembers(SessionManagerCommunication smComm, boolean graphic_) {
@@ -136,6 +97,55 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 		this.availableConnections = new ArrayList<RdpConnectionOvd>();
 		this.performedConnections = new CopyOnWriteArrayList<RdpConnectionOvd>();
+	}
+
+	private void initCallback(Callback obj_) {
+		if (obj_ != null) {
+			this.obj = obj_;
+			return;
+		}
+
+		this.obj = new Callback() {
+			@Override
+			public void reportBadXml(String data) {
+				org.ulteo.Logger.error("Callback::reportBadXml: "+data);
+			}
+
+			@Override
+			public void reportError(int code, String msg) {
+				org.ulteo.Logger.error("Callback::reportError: "+code+" => "+msg);
+			}
+
+			@Override
+			public void reportErrorStartSession(String code) {
+				org.ulteo.Logger.error("Callback::reportErrorStartSession: "+code);
+			}
+
+			@Override
+			public void reportNotFoundHTTPResponse(String moreInfos) {
+				org.ulteo.Logger.error("Callback::reportNotFoundHTTPResponse: "+moreInfos);
+			}
+
+			@Override
+			public void reportUnauthorizedHTTPResponse(String moreInfos) {
+				org.ulteo.Logger.error("Callback::reportUnauthorizedHTTPResponse: "+moreInfos);
+			}
+
+			@Override
+			public void sessionConnected() {
+				org.ulteo.Logger.info("Callback::sessionConnected");
+			}
+
+			@Override
+			public void sessionDisconnecting() {
+				org.ulteo.Logger.info("Callback::sessionDisconnected");
+			}
+
+			@Override
+			public void updateProgress(int status, int substatus) {
+				org.ulteo.Logger.info("Callback::updateProgress "+status+","+substatus);
+			}
+		};
 	}
 
 	private void addAvailableConnection(RdpConnectionOvd rc) {
@@ -214,10 +224,15 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 				rc.addRdpListener(this);
 			}
 
-			this.sessionStatusMonitoringThread = new Thread(this);
-			this.continueSessionStatusMonitoringThread = true;
-			this.sessionStatusMonitoringThread.start();
+			if (this.smComm != null) {
+				this.sessionStatusMonitoringThread = new Thread(this);
+				this.continueSessionStatusMonitoringThread = true;
+				this.sessionStatusMonitoringThread.start();
+			}
 		}
+
+		if (this.smComm == null)
+			return true;
 
 		do {
 			// Waiting for all the RDP connections are performed
@@ -235,7 +250,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 				break;
 			}
 		} while (this.performedConnections.size() < this.connections.size());
-		
+
 		while (this.connectionIsActive) {
 			try {
 				Thread.sleep(100);
@@ -402,21 +417,26 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 			}
 		};
 
-		Thread disconnectThread = new Thread(new Runnable() {
-			public void run() {
-				try {
-					smComm.askForLogout();
-				} catch (SessionManagerException ex) {
-					org.ulteo.Logger.error("Disconnection error: "+ex.getMessage());
+		long delay = 0;
+		if (this.smComm != null) {
+			Thread disconnectThread = new Thread(new Runnable() {
+				public void run() {
+					try {
+						smComm.askForLogout();
+					} catch (SessionManagerException ex) {
+						org.ulteo.Logger.error("Disconnection error: "+ex.getMessage());
+					}
+
+					forceDisconnectionTimer.cancel();
+					forceDisconnectionTask.run();
 				}
+			});
+			disconnectThread.start();
 
-				forceDisconnectionTimer.cancel();
-				forceDisconnectionTask.run();
-			}
-		});
+			delay = DISCONNECTION_MAX_DELAY;
+		}
 
-		forceDisconnectionTimer.schedule(forceDisconnectionTask, DISCONNECTION_MAX_DELAY);
-		disconnectThread.start();
+		forceDisconnectionTimer.schedule(forceDisconnectionTask, delay);
 	}
 	
 	public void exit(int return_code) {
