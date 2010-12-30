@@ -19,21 +19,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-class EnvironmentNovell:
-	def __init__(self):
-		self.session = None
-		self.account = {}
-	
-	
-	def parse(self, node):
-		try:
-			for item in ["login", "password", "tree", "server"]:
-				self.account[item] = node.getAttribute(item)
-		except Exception, err:
-			return False
-		
+from ovd.Role.ApplicationServer.DomainUlteo import DomainUlteo as AbstractDomainUlteo
+
+
+class DomainUlteo(AbstractDomainUlteo):
+	def doCustomizeRegistry(self, hive):
 		return True
-	
-	
-	def setSession(self, session):
-		self.session = session

@@ -61,19 +61,28 @@ def main(startExplorer):
 		user_sdir = os.environ["OVD_SESSION_DIR"]
 	else:
 		user_sdir = Platform.getUserSessionDir()
+		if user_sdir is None:
+			print "Exit because no OVD environment"
+			sys.exit(1)
+		
+		
+		path = os.path.join(user_sdir, "nolock")
+		if not os.path.isfile(path):
+			print "Switch to LOCK system untill OvdServer unlock it"
+			success = Platform.lock(60)
+			if not success or not os.path.isdir(user_sdir):
+				print "Exit because no OVD environment"
+				sys.exit(1)
+			print "Unlocked, continue"
+		
+		os.environ["OVD_SESSION_DIR"] = user_sdir
 	
 	# Load profile share
 	folders = Folders()
 	folders.registerShares()
 	
 	Util.loadUserEnv(user_sdir)
-	#if user_sdir is None:
-		#sys.exit(1)
 	
-	#if not os.path.isdir(user_sdir):
-		#sys.exit(1)
-	
-	os.environ["OVD_SESSION_DIR"] = user_sdir
 	
 	# launch the integrated client
 	sm_file = os.path.join(user_sdir, "sm")

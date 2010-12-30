@@ -348,6 +348,7 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 				rc.setGraphic(dim.width & ~3, dim.height, RdpConnectionOvd.DEFAULT_BPP);
 				rc.setGraphicOffset(dim.x, dim.y);
 				rc.setKeymap(keymap);
+				rc.setShell("OvdRemoteApps");
 				
 				rc.addRdpListener(this);
 				

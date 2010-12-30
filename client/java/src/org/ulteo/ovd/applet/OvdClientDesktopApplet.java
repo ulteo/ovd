@@ -132,7 +132,9 @@ public class OvdClientDesktopApplet extends OvdClient {
 	}
 
 	@Override
-	protected void customizeConnection(RdpConnectionOvd co) {}
+	protected void customizeConnection(RdpConnectionOvd co) {
+		co.setShell("OvdDestkop");
+	}
 
 	@Override
 	protected void runSessionReady() {}

@@ -23,10 +23,10 @@ import win32con
 
 import Reg
 
-from ovd.Role.ApplicationServer.EnvironmentNovell import EnvironmentNovell as AbstractEnvironmentNovell
+from ovd.Role.ApplicationServer.DomainNovell import DomainNovell as AbstractDomainNovell
 
-class EnvironmentNovell(AbstractEnvironmentNovell):
-	def do_change_registry(self, hive):
+class DomainNovell(AbstractDomainNovell):
+	def doCustomizeRegistry(self, hive):
 		path = hive+r"\Software\Ulteo\ovd\novell"
 		Reg.CreateKeyR(win32con.HKEY_USERS, path)
 		

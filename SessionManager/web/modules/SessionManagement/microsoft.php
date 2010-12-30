@@ -25,6 +25,35 @@ class SessionManagement_microsoft extends SessionManagement {
 		return array('activedirectory');
 	}
 
+	public static function getAuthMethods() {
+		return array('Password');
+	}
+
+	public static function getServerRoles() {
+		return array(Server::SERVER_ROLE_APS);
+	}
+
+	public static function getApplicationServerTypes() {
+		return array(Server::SERVER_TYPE_WINDOWS);
+	}
+
+	public function generateApplicationServerCredentials() {
+		$this->credentials[Server::SERVER_ROLE_APS]['login'] = $_POST['login'].'@'.$this->userDB->config_ad['domain'];
+		$this->credentials[Server::SERVER_ROLE_APS]['password'] = $_POST['password'];
+
+		return true;
+	}
+
+	public function appendToSessionCreateXML($dom_) {
+		$environment_node = $dom_->createElement('environment');
+		$environment_node->setAttribute('id', 'Microsoft');
+		$environment_node->setAttribute('domain', $this->userDB->config_ad['domain']);
+
+		$dom_->documentElement->appendChild($environment_node);
+
+		return;
+	}
+
 	/* Module methods */
 	public static function configuration() {
 		return array();

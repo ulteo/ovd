@@ -41,7 +41,7 @@ import Reg
 class Session(AbstractSession):
 	def init(self):
 		self.installedShortcut = []
-		self.succefully_installed = False
+		self.succefully_initialized = False
 	
 	
 	def install_client(self):
@@ -51,7 +51,6 @@ class Session(AbstractSession):
 		data["UserName"] = self.user.name
 		hkey = win32profile.LoadUserProfile(logon, data)
 		self.windowsProfileDir = win32profile.GetUserProfileDirectory(logon)
-		self.user.home = self.windowsProfileDir
 		
 		self.windowsProgramsDir = shell.SHGetFolderPath(0, shellcon.CSIDL_PROGRAMS, logon, 0)
 		Logger.debug("startmenu: %s"%(self.windowsProgramsDir))
@@ -70,26 +69,36 @@ class Session(AbstractSession):
 		win32profile.UnloadUserProfile(logon, hkey)
 		win32api.CloseHandle(logon)
 		
+		self.set_user_profile_directories(self.windowsProfileDir, self.appDataDir)
+		self.init_user_session_dir(os.path.join(self.appDataDir, "ulteo", "ovd"))
+		
 		if self.profile is not None and self.profile.hasProfile():
 			if not self.profile.mount():
 				return False
 			
 			self.profile.copySessionStart()
 		
-		
-		
-		self.init_user_session_dir(os.path.join(self.appDataDir, "ulteo", "ovd"))
+		self.install_desktop_shortcuts()
 		
 		self.overwriteDefaultRegistry(self.windowsProfileDir)
 		
 		if self.profile is not None and self.profile.hasProfile():
 			self.profile.umount()
 		
-		self.succefully_installed = True
+		self.succefully_initialized = True
 		return True
 	
 	
+	def set_user_profile_directories(self, userprofile, appDataDir):
+		self.user.home          = userprofile
+		self.appDataDir         = appDataDir
+		
+	
+	
 	def install_shortcut(self, shortcut):
+		if self.mode != Session.MODE_DESKTOP:
+			return
+		
 		self.installedShortcut.append(os.path.basename(shortcut))
 		
 		dstFile = os.path.join(self.windowsProgramsDir, os.path.basename(shortcut))
@@ -98,7 +107,7 @@ class Session(AbstractSession):
 		
 		win32file.CopyFile(shortcut, dstFile, True)
 		
-		if self.parameters.has_key("desktop_icons") and self.mode == Session.MODE_DESKTOP:
+		if self.parameters.has_key("desktop_icons"):
 			if self.profile is not None and self.profile.mountPoint is not None:
 				d = os.path.join(self.profile.mountPoint, self.profile.DesktopDir)
 			else:
@@ -122,7 +131,7 @@ class Session(AbstractSession):
 	
 	
 	def uninstall_client(self):
-		if not self.succefully_installed:
+		if not self.succefully_initialized:
 			return
 		
 		self.archive_shell_dump()
@@ -141,18 +150,8 @@ class Session(AbstractSession):
 				if not self.profile.umount():
 					Logger.error("Unable to umount profile at uninstall_client of session "+self.id)
 		
-		return True
-	
-	
-	def unload(self, sid):
-		try:
-			# Unload user reg
-			win32api.RegUnLoadKey(win32con.HKEY_USERS, sid)
-			win32api.RegUnLoadKey(win32con.HKEY_USERS, sid+'_Classes')
-		except Exception, e:
-			Logger.warn("Unable to unload user reg: %s"%(str(e)))
-			return False
 		
+		self.domain.onSessionEnd()
 		return True
 	
 	
@@ -370,8 +369,7 @@ class Session(AbstractSession):
 		if self.profile is not None:
 			self.profile.overrideRegistry(hiveName, self.user.name)
 		
-		if self.environment is not None:
-			self.environment.do_change_registry(hiveName)
+		self.domain.doCustomizeRegistry(hiveName)
 		
 		# Timezone override
 		if self.parameters.has_key("timezone"):
@@ -384,4 +382,3 @@ class Session(AbstractSession):
 		
 		# Unload the hive
 		win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName)
-

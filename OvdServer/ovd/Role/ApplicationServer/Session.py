@@ -62,8 +62,9 @@ class Session:
 		self.used_applications = {}
 		self.external_apps_token = None
 		self.end_status = None
+		self.user_session_dir = None
 		
-		self.environment = None
+		self.domain = None
 		
 		self.log = []
 		self.switch_status(Session.SESSION_STATUS_INIT)
@@ -97,17 +98,6 @@ class Session:
 			f.close()
 		
 		
-		for application in self.applications:
-			final_file = os.path.join(self.shortcutDirectory, self.get_target_file(application))
-			#Logger.debug("install_client %s %s %s"%(str(application["filename"]), str(final_file), str(application["id"])))
-			
-			ret = self.clone_shortcut(application["filename"], final_file, "startovdapp", [application["id"]])
-			if not ret:
-				Logger.warn("Unable to clone shortcut '%s' to '%s'"%(application["filename"], final_file))
-				continue
-			
-			self.install_shortcut(final_file)
-		
 		if self.external_apps_token is not None:
 			f = open(os.path.join(self.user_session_dir, "sm"), "w")
 			f.write(Config.session_manager+"\n")
@@ -132,15 +122,34 @@ class Session:
 				f.close()
 	
 	
+	def post_install(self):
+		if self.user_session_dir is not None:
+			f = file(os.path.join(self.user_session_dir, "nolock"), "w")
+			f.close()
+	
+	
+	def install_desktop_shortcuts(self):
+		for application in self.applications:
+			final_file = os.path.join(self.shortcutDirectory, self.get_target_file(application))
+			#Logger.debug("install_client %s %s %s"%(str(application["filename"]), str(final_file), str(application["id"])))
+			
+			ret = self.clone_shortcut(application["filename"], final_file, "startovdapp", [application["id"]])
+			if not ret:
+				Logger.warn("Unable to clone shortcut '%s' to '%s'"%(application["filename"], final_file))
+				continue
+			
+			self.install_shortcut(final_file)
+	
+	
 	def setApplicationToStart(self, application_to_start):
 		self.application_to_start = application_to_start
 	
 	def setExternalAppsToken(self, external_apps_token):
 		self.external_apps_token = external_apps_token
 	
-	def setEnvironment(self, environment):
-		self.environment = environment
-		self.environment.setSession(self)
+	def setDomain(self, domain):
+		self.domain = domain
+		self.domain.setSession(self)
 	
 	def install_client(self):
 		pass

@@ -51,6 +51,7 @@ class Role(AbstractRole):
 		self.dialog = Dialog(self)
 		self.sessions = {}
 		self.sessions_spooler = Queue()
+		self.sessions_spooler2 = Queue()
 		self.threads = []
 		
 		self.applications = {}
@@ -93,7 +94,7 @@ class Role(AbstractRole):
 		self.purgeArchives()
 		
 		for _ in xrange(1):
-			self.threads.append(SessionManagement(self, self.sessions_spooler))
+			self.threads.append(SessionManagement(self, self.sessions_spooler, self.sessions_spooler2))
 		
 		if self.canManageApplications():
 			self.apt = Apt()
@@ -117,7 +118,7 @@ class Role(AbstractRole):
 		for session in self.sessions.values():
 			session.switch_status(Session.SESSION_STATUS_WAIT_DESTROY)
 		
-		cleaner = SessionManagement(self, self.sessions_spooler)
+		cleaner = SessionManagement(self, None, None)
 		for session in self.sessions.values():
 			session.end_status = Session.SESSION_END_STATUS_SHUTDOWN
 			cleaner.destroy_session(session)
@@ -203,7 +204,10 @@ class Role(AbstractRole):
 				
 				if session.status == Session.SESSION_STATUS_INITED:
 					if ts_status is RolePlatform.TS.STATUS_LOGGED:
+						if not session.domain.manage_user():
+							self.sessions_spooler2.put(("manage_new", session))
 						self.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
+						
 						continue
 						
 					if ts_status is RolePlatform.TS.STATUS_DISCONNECTED:
@@ -215,7 +219,10 @@ class Role(AbstractRole):
 					continue
 				
 				if session.status == Session.SESSION_STATUS_INACTIVE and ts_status is RolePlatform.TS.STATUS_LOGGED:
+					if not session.domain.manage_user():
+						self.sessions_spooler2.put(("manage_new", session))
 					self.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
+					  
 					continue
 			
 			

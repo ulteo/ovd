@@ -28,7 +28,9 @@ if Platform is None:
 	if p == "linux":
 		from Linux.ApplicationsDetection import ApplicationsDetection
 		from Linux.ApplicationsStatic import ApplicationsStatic
-		from Linux.EnvironmentNovell import EnvironmentNovell
+		from Linux.DomainMicrosoft import DomainMicrosoft
+		from Linux.DomainNovell import DomainNovell
+		from Linux.DomainUlteo import DomainUlteo
 		from Linux.Profile import Profile
 		from Linux.Session import Session
 		from Linux.TS import TS
@@ -36,7 +38,9 @@ if Platform is None:
 	elif p == "windows":
 		from Windows.ApplicationsDetection import ApplicationsDetection
 		from Windows.ApplicationsStatic import ApplicationsStatic
-		from Windows.EnvironmentNovell import EnvironmentNovell
+		from Windows.DomainMicrosoft import DomainMicrosoft
+		from Windows.DomainNovell import DomainNovell
+		from Windows.DomainUlteo import DomainUlteo
 		from Windows.Profile import Profile
 		from Windows.Session import Session
 		from Windows.TS import TS
@@ -50,7 +54,9 @@ if Platform is None:
 	Platform = _Platform()
 	Platform.ApplicationsDetection = ApplicationsDetection
 	Platform.ApplicationsStatic = ApplicationsStatic
-	Platform.EnvironmentNovell = EnvironmentNovell
+	Platform.DomainMicrosoft = DomainMicrosoft
+	Platform.DomainNovell = DomainNovell
+	Platform.DomainUlteo = DomainUlteo
 	Platform.Profile = Profile
 	Platform.Session = Session
 	Platform.TS = TS

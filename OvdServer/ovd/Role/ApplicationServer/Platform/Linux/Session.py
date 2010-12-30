@@ -41,6 +41,7 @@ class Session(AbstractSession):
 	def install_client(self):
 		d = os.path.join(self.SPOOL_USER, self.user.name)
 		self.init_user_session_dir(d)
+		self.install_desktop_shortcuts()
 		
 		os.chown(self.instanceDirectory, pwd.getpwnam(self.user.name)[2], -1)
 		

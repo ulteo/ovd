@@ -30,20 +30,25 @@ from Session import Session
 
 
 class SessionManagement(Thread):
-	def __init__(self, aps_instance, queue):
+	def __init__(self, aps_instance, queue, queue2):
 		Thread.__init__(self)
 		self.setName("SessionManagement")
 		
 		self.aps_instance = aps_instance
 		self.queue = queue
+		self.queue2 = queue2
 	
 	def run(self):
 		while True:
 			#Logger.debug("%s wait job"%(str(self)))
+			
 			try:
-				(request, obj) = self.queue.get(True, 4)
+				(request, obj) = self.queue2.get_nowait()
 			except Queue.Empty, e:
-				continue
+				try:
+					(request, obj) = self.queue.get(True, 4)
+				except Queue.Empty, e:
+					continue
 			
 			if request == "create":
 				session = obj
@@ -54,46 +59,54 @@ class SessionManagement(Thread):
 			elif request == "logoff":
 				user = obj
 				self.destroy_user(user)
+			elif request == "manage_new":
+				session = obj
+				self.manage_new_session(session)
 	
 	
 	def create_session(self, session):
 		Logger.info("SessionManagement::create %s for user %s"%(session.id, session.user.name))
 		
-		if Platform.System.userExist(session.user.name):
-			Logger.error("unable to create session: user %s already exists"%(session.user.name))
-			session.end_status = Session.SESSION_END_STATUS_ERROR
-			self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
-			return self.destroy_session(session)
+		if session.domain.manage_user():
+			if Platform.System.userExist(session.user.name):
+				Logger.error("unable to create session: user %s already exists"%(session.user.name))
+				session.end_status = Session.SESSION_END_STATUS_ERROR
+				self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
+				return self.destroy_session(session)
+			
+			session.user.infos["groups"] = [self.aps_instance.ts_group_name, self.aps_instance.ovd_group_name]
+			
+			if session.mode == "desktop":
+				session.user.infos["shell"] = "OvdDesktop"
+			else:
+				session.user.infos["shell"] = "OvdRemoteApps"
+			
+			rr = session.user.create()
+			if rr is False:
+				Logger.error("unable to create session for user %s"%(session.user.name))
+				session.end_status = Session.SESSION_END_STATUS_ERROR
+				self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
+				return self.destroy_session(session)
+			
+			session.user.created = True
+			
+			try:
+				rr = session.install_client()
+			except Exception,err:
+				Logger.debug("Unable to initialize session %s: %s"%(session.id, str(err)))
+				rr = False
+			
+			if rr is False:
+				Logger.error("unable to initialize session %s"%(session.id))
+				session.end_status = Session.SESSION_END_STATUS_ERROR
+				self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
+				return self.destroy_session(session)
 		
-		
-		session.user.infos["groups"] = [self.aps_instance.ts_group_name, self.aps_instance.ovd_group_name]
-		
-		if session.mode == "desktop":
-			session.user.infos["shell"] = "OvdDesktop"
 		else:
-			session.user.infos["shell"] = "OvdRemoteApps"
+			# will be customize by a lock system when the users will connect in RDP
+			pass
 		
-		rr = session.user.create()
-		if rr is False:
-			Logger.error("unable to create session for user %s"%(session.user.name))
-			session.end_status = Session.SESSION_END_STATUS_ERROR
-			self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
-			return self.destroy_session(session)
-		
-		session.user.created = True
-		
-		try:
-			rr = session.install_client()
-		except Exception,err:
-			Logger.debug("Unable to initialize session %s: %s"%(session.id, str(err)))
-			rr = False
-		
-		if rr is False:
-			Logger.error("unable to initialize session %s"%(session.id))
-			session.end_status = Session.SESSION_END_STATUS_ERROR
-			self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
-			return self.destroy_session(session)
-		
+		session.post_install()
 		
 		self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_INITED)
 	
@@ -101,7 +114,7 @@ class SessionManagement(Thread):
 	def destroy_session(self, session):
 		Logger.info("SessionManagement::destroy %s"%(session.id))
 		
-		if session.user.created:
+		if session.user.created or not session.domain.manage_user():
 			# Doesn't have to destroy the session if the user was never created
 			
 			try:
@@ -118,7 +131,8 @@ class SessionManagement(Thread):
 			
 			session.uninstall_client()
 			
-			self.destroy_user(session.user)
+			if session.domain.manage_user():
+				self.destroy_user(session.user)
 		
 		if self.aps_instance.sessions.has_key(session.id):
 			del(self.aps_instance.sessions[session.id])
@@ -157,3 +171,9 @@ class SessionManagement(Thread):
 			self.logoff_user(user)
 		
 		user.destroy()
+	
+	
+	def manage_new_session(self, session):
+		Logger.info("SessionManagement::manage_new_session %s for user %s"%(session.id, session.user.name))
+		
+		session.domain.onSessionStarts()

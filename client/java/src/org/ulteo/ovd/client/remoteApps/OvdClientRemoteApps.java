@@ -92,6 +92,8 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			this.obj.updateProgress(LoadingStatus.STATUS_CLIENT_INSTALL_APPLICATION, subStatus);
 			this.ApplicationIndex++;
 		}
+		
+		co.setShell("OvdRemoteApps");
 
 		this.customizeRemoteAppsConnection(co);
 	}

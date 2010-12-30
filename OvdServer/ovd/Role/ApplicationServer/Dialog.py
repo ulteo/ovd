@@ -203,7 +203,7 @@ class Dialog(AbstractDialog):
 		return response
 	
 	def req_session_create(self, request):
-		environment = None
+		environment = Platform.DomainUlteo()
 		try:
 			document = minidom.parseString(request["data"])
 			sessionNode = document.documentElement
@@ -241,12 +241,16 @@ class Dialog(AbstractDialog):
 				name = environmentNode.getAttribute("id")
 				
 				if name == "Microsoft":
-					pass
+					environment = Platform.DomainMicrosoft()
 				elif name == "Novell":
-					environment = Platform.EnvironmentNovell()
-					ret = environment.parse(environmentNode)
-					if ret is False:
-						raise Exception("invalid Novell environment schema")
+					environment = Platform.DomainNovell()
+				else:
+					raise Exception("unknown environment '%s'"%(name))
+				
+				ret = environment.parse(environmentNode)
+				if ret is False:
+					raise Exception("invalid environment schema")
+			
 			
 			userNode = sessionNode.getElementsByTagName("user")[0]
 			
@@ -330,10 +334,9 @@ class Dialog(AbstractDialog):
 			user.infos["locale"] = session["parameters"]["locale"]
 		
 		session = Platform.Session(session["id"], session["mode"], user, session["parameters"], applications.values())
+		session.setDomain(environment)
 		if external_apps_token is not None:
 			session.setExternalAppsToken(external_apps_token)
-		if environment is not None:
-			session.setEnvironment(environment)
 		
 		session.setApplicationToStart(application_to_start)
 		session.init()

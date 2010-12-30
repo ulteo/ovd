@@ -18,7 +18,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-from ovd.Role.ApplicationServer.EnvironmentNovell import EnvironmentNovell as AbstractEnvironmentNovell
+from ovd.Role.ApplicationServer.DomainUlteo import DomainUlteo as AbstractDomainUlteo
 
-class EnvironmentNovell(AbstractEnvironmentNovell):
-	pass
+class DomainUlteo(AbstractDomainUlteo):
+	def manage_user(self):
+		return True

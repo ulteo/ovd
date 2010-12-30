@@ -20,6 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
+import time
 
 import pythoncom
 import win32api
@@ -161,3 +162,68 @@ def getSubProcess(ppid):
 	
 	return pids
 
+
+def lock(t):
+	pushLock()
+	
+	t0 = time.time()
+	
+	while isLocked():
+		if time.time() - t0 > t:
+			return False
+		
+		time.sleep(0.5)
+	
+	return True
+
+
+def isLocked():
+	try:
+		hkey = win32api.RegOpenKey(win32con.HKEY_CURRENT_USER, r"Software\Ulteo\ovd", 0, win32con.KEY_QUERY_VALUE)
+	except:
+		return False
+		
+	try:
+		win32api.RegQueryValueEx(hkey, "LOCK")
+	except Exception, err:
+		return False
+	finally:
+		win32api.RegCloseKey(hkey)
+	
+	return True
+
+
+def pushLock():
+	CreateKeyR(win32con.HKEY_CURRENT_USER, r"Software\Ulteo\ovd")
+	
+	try:
+		hkey = win32api.RegOpenKey(win32con.HKEY_CURRENT_USER, r"Software\Ulteo\ovd", 0, win32con.KEY_SET_VALUE)
+	except:
+		import traceback
+		print traceback.format_exc()
+		return False
+		
+	win32api.RegSetValueEx(hkey, "LOCK", 0, win32con.REG_SZ, "LOCK")
+	win32api.RegCloseKey(hkey)
+	
+	return True
+
+
+def CreateKeyR(hkey, path):
+	if path.endswith("\\"):
+		path = path[:-2]
+	
+	if "\\" in path:
+		(parents, name) = path.rsplit("\\", 1)
+		
+		try:
+			hkey2 = win32api.RegOpenKey(hkey, parents, 0, win32con.KEY_SET_VALUE)
+		except Exception, err:
+			CreateKeyR(hkey, parents)
+			hkey2 = win32api.RegOpenKey(hkey, parents, 0, win32con.KEY_SET_VALUE)
+	else:
+		name = path
+		hkey2 = hkey
+	
+	win32api.RegCreateKey(hkey2, name)
+	win32api.RegCloseKey(hkey2)
