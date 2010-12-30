@@ -47,10 +47,20 @@ class SessionManagement_novell extends SessionManagement {
 	public function appendToSessionCreateXML($dom_) {
 		$environment_node = $dom_->createElement('environment');
 		$environment_node->setAttribute('id', 'Novell');
-		$environment_node->setAttribute('server', $this->userDB->config['host']);
-		$environment_node->setAttribute('tree', suffix2domain($this->userDB->config['suffix']));
-		$environment_node->setAttribute('login', $_POST['login']);
-		$environment_node->setAttribute('password', $_POST['password']);
+		
+		#$dlu = ($this->config['dlu']==1); <== should work !!!
+		$config = $this->prefs->get('SessionManagement', 'novell');
+		$dlu = ($config['dlu']==1);
+		
+		if ($dlu) {
+			$environment_node->setAttribute('dlu', 'yes');
+		}
+		else {
+			$environment_node->setAttribute('server', $this->userDB->config['host']);
+			$environment_node->setAttribute('tree', suffix2domain($this->userDB->config['suffix']));
+			$environment_node->setAttribute('login', $_POST['login']);
+			$environment_node->setAttribute('password', $_POST['password']);
+		}
 
 		$dom_->documentElement->appendChild($environment_node);
 
@@ -59,7 +69,13 @@ class SessionManagement_novell extends SessionManagement {
 
 	/* Module methods */
 	public static function configuration() {
-		return array();
+		$ret = array();
+		
+		$c = new ConfigElement_select('dlu', _('Manage users by ZENworks DLU instead of native method'), _('Manage users by ZENworks DLU instead of native method'), _('Manage users by ZENworks DLU instead of native method'), 0);
+		$c->setContentAvailable(array(0=>_('no'), 1=>_('yes')));
+		$ret []= $c;
+		
+		return $ret;
 	}
 
 	public static function prefsIsValid($prefs_, &$log=array()) {

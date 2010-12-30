@@ -18,15 +18,41 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import time
 import win32api
 import win32con
 
 import Reg
+from Waiter import Waiter
 
 from ovd.Role.ApplicationServer.DomainNovell import DomainNovell as AbstractDomainNovell
 
 class DomainNovell(AbstractDomainNovell):
+	def onSessionStarts(self):
+		if not self.zenworks:
+			return True
+		
+		mylock = Waiter(self.session)
+		
+		t0 = time.time()
+		while mylock.init() is False:
+			d = time.time() - t0
+			if d>20:
+				return False
+			
+			time.sleep(0.5)
+		
+		self.session.set_user_profile_directories(mylock.userprofile, mylock.appdata)
+		
+		self.session.init_user_session_dir(os.path.join(mylock.appdata, "ulteo", "ovd"))
+		
+		return mylock.unlock()
+	
+	
 	def doCustomizeRegistry(self, hive):
+		if self.zenworks:
+			return True
+		
 		path = hive+r"\Software\Ulteo\ovd\novell"
 		Reg.CreateKeyR(win32con.HKEY_USERS, path)
 		
@@ -42,7 +68,7 @@ class DomainNovell(AbstractDomainNovell):
 			return True
 		
 		return self.configure_nici()
-	
+
 	
 	@staticmethod
 	def is_nici_well_configured():

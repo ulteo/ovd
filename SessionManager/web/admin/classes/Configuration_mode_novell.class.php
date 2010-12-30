@@ -136,6 +136,11 @@ class Configuration_mode_novell extends Configuration_mode {
     
     // Set the Session Management module
     $prefs->set('SessionManagement', 'enable', 'novell');
+    
+    $dlu = 0;
+    if (isset($form['dlu']) && ($form['dlu'] == 'dlu'))
+        $dlu = 1;
+    $prefs->set('SessionManagement', 'novell', array('dlu' => $dlu));
 
     // Disable the unused module
     $module_to_disable = array('ProfileDB', 'SharedFolderDB');
@@ -173,6 +178,9 @@ class Configuration_mode_novell extends Configuration_mode {
       $default_user_branch = ''; //'ou=users,';
       $domain_separator = 'o';
     }
+    
+    $config_session = $prefs->get('SessionManagement', 'novell');
+    
 
     $form['host'] = '';
     if (isset($config['hosts'][0]))
@@ -219,6 +227,8 @@ class Configuration_mode_novell extends Configuration_mode {
 	if (isset($config['extra']['dsfw'])) {
 		$form['dsfw'] = 'dsfw';
 	}
+	if ($config_session['dlu']==1)
+		$form['dlu'] = 'dlu';
 
     return $form;
   }
@@ -238,6 +248,11 @@ class Configuration_mode_novell extends Configuration_mode {
     if (isset($form['dsfw']) && ($form['dsfw'] == 'dsfw'))
       $disabled = 'checked="checked"';
     $str.= '<tr><td>'._('DSFW:').'</td><td><input class="input_checkbox" type="checkbox" '.$disabled.' name="dsfw" value="dsfw" /></td></tr>';
+    if (isset($form['dlu']) && ($form['dlu'] == 'dlu'))
+      $disabled = 'checked="checked"';
+    $str.= '<tr><td>'._('ZENworks:').'</td><td><input class="input_checkbox" type="checkbox" '.$disabled.' name="dlu" value="dlu" /></td>';
+    $str.= '<td>'._('If ZENworks is installed on your Applications Servers, it will manage the user by itself (DLU). OVD won\'t create user for the session. This behavior looks like the domain users from AD.').'</td>';   
+    $str.= '</tr>';
     $str.= '</table>';
     $str.= '</div>';
 

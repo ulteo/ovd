@@ -29,8 +29,9 @@ class DomainNovell(Domain):
 	
 	
 	def parse(self, node):
-		if node.getAttribute("zenworks"):
+		if node.hasAttribute("dlu"):
 			self.zenworks = True
+			return True
 		
 		try:
 			for item in ["login", "password", "tree", "server"]:
