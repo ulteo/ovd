@@ -27,30 +27,19 @@ import java.awt.BorderLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.FileNotFoundException;
-import java.net.UnknownHostException;
 
-import net.propero.rdp.RdesktopCanvas;
-import net.propero.rdp.RdesktopException;
-import net.propero.rdp.RdpConnection;
-import net.propero.rdp.RdpListener;
 import netscape.javascript.JSObject;
 
 import org.ulteo.Logger;
-import org.ulteo.ovd.FullscreenWindow;
-import org.ulteo.ovd.OvdException;
-import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.ovd.sm.Properties;
-import org.ulteo.rdp.RdpConnectionOvd;
+import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 import org.ulteo.utils.AbstractFocusManager;
 
-public class Desktop extends Applet implements RdpListener, FocusListener {
-
+public class Desktop extends Applet implements JSForwarder, FocusListener {
 	private boolean fullscreenMode = false;
-	private FullscreenWindow externalWindow = null;
-	
 	private int port = 0;
 	private String server = null;
 	private String username = null;
@@ -61,17 +50,11 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 	private boolean map_local_printers = false;
 	private int mount_local_drives = Properties.REDIRECT_DRIVES_NO;
 	
-	private RdpConnectionOvd rc = null;
+	private OvdClientDesktopApplet ovd = null;
 	
 	private boolean finished_init = false;
 	private boolean finished_start = false;
 	private boolean started_stop = false;
-	
-	public static final String JS_API_F_SERVER = "serverStatus";
-	public static final String JS_API_O_SERVER_CONNECTED = "connected";
-	public static final String JS_API_O_SERVER_DISCONNECTED = "disconnected";
-	public static final String JS_API_O_SERVER_FAILED = "failed";
-	public static final String JS_API_O_SERVER_READY = "ready";
 	
 	public AbstractFocusManager focusManager = null;
 
@@ -112,60 +95,34 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 			return;
 		}
 
-		byte flags = RdpConnectionOvd.MODE_DESKTOP;
-		if(this.multimedia_mode)
-			flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
+		Properties properties = new Properties(Properties.MODE_DESKTOP);
 
+		properties.setMultimedia(this.multimedia_mode);
+		properties.setPrinters(this.map_local_printers);
 		if (this.map_local_printers){
-			System.out.println("Printer detection active");
-			flags |= RdpConnectionOvd.MOUNT_PRINTERS;
-			OVDStandalonePrinterThread appletPrinterThread = new OVDStandalonePrinterThread(); 
+			OVDStandalonePrinterThread appletPrinterThread = new OVDStandalonePrinterThread();
 			OVDPrinter.setPrinterThread(appletPrinterThread);
 			this.focusManager = new AppletFocusManager(appletPrinterThread);
 		}
 		
-		if (this.mount_local_drives == Properties.REDIRECT_DRIVES_FULL)
-			flags |= RdpConnectionOvd.MOUNTING_MODE_FULL;
-		else if (this.mount_local_drives == Properties.REDIRECT_DRIVES_PARTIAL)
-			flags |= RdpConnectionOvd.MOUNTING_MODE_PARTIAL;
+		properties.setDrives(this.mount_local_drives);
+
+		ServerAccess aps = new ServerAccess(this.server, this.port, this.username, this.password);
+		if (this.token != null) {
+			aps.setModeGateway(true);
+			aps.setToken(this.token);
+		}
 
 		try {
-			this.rc = new RdpConnectionOvd(flags);
-		} catch (RdesktopException ex) {
-			System.err.println("ERROR: "+ex.getMessage());
+			this.ovd = new OvdClientDesktopApplet(aps, properties, this);
+		} catch (ClassCastException ex) {
+			Logger.error(ex.getMessage());
+			this.stop();
 			return;
 		}
-		try {
-			this.rc.initSecondaryChannels();
-		} catch (RdesktopException ex) {
-			System.err.println("WARNING: "+ex.getMessage());
-		}
-		this.rc.setKeymap(this.keymap);
-
-		this.rc.setServer(this.server);
-		this.rc.setCredentials(this.username, this.password);
-
-		if (this.token != null) {
-			rc.setCookieElement("token", this.token);
-
-			try {
-				rc.useSSLWrapper(this.server, this.port);
-			} catch(OvdException ex) {
-				Logger.error("Unable to create SSLWrapper: " + ex.getMessage());
-			} catch(UnknownHostException ex) {
-				Logger.error("Undefined error during creation of SSLWrapper: " + ex.getMessage());
-			}
-		}
-		
-		// Ensure that width is a multiple of 4
-		// to prevent artifacts
-		int w = this.getWidth();
-		int h = this.getHeight();
-		if (this.fullscreenMode) {
-			w = FullscreenWindow.getScreenSize().width;
-			h = FullscreenWindow.getScreenSize().height;
-		}
-		this.rc.setGraphic(w & ~3, h, RdpConnectionOvd.DEFAULT_BPP);
+		this.ovd.setKeymap(this.keymap);
+		this.ovd.setFullscreen(this.fullscreenMode);
+		this.ovd.perform();
 		
 		this.finished_init = true;
 		
@@ -179,8 +136,7 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 			return;	
 		System.out.println(this.getClass().toString() +" start");
 
-		this.rc.addRdpListener(this);
-		this.rc.connect();
+		this.ovd.sessionReady();
 		
 		this.finished_start = true;
 
@@ -195,39 +151,21 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 		System.out.println(this.getClass().toString()+" stop");
 		this.focusManager = null;
 
-		if (this.rc != null) {
-			try {
-				this.rc.interruptConnection();
-			} catch (RdesktopException ex) {
-				System.out.println(ex.getMessage());
-			}
-		}
-		
-		if (this.fullscreenMode) {
-			if (this.externalWindow != null) {
-				this.externalWindow.unFullscreen();
-				this.externalWindow.setVisible(false);
-				this.externalWindow = null;
-			}
-		}
-		else {
-			this.removeAll();
-		}
+		if (this.ovd != null)
+			this.ovd.performDisconnectAll();
+		else
+			this.forwardJS(JSForwarder.JS_API_F_SERVER, 0, JSForwarder.JS_API_O_SERVER_FAILED);
 	}
 	
 	@Override
 	public void destroy() {
-		this.rc = null;
+		this.ovd = null;
 		this.server = null;
 		this.username = null;
 		this.password = null;
 		
-		this.rc = null;
-		
 		System.gc();
 	}
-	
-	
 	
 	public boolean checkSecurity() {
 		try {
@@ -305,24 +243,6 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 		return true;
     }
 
-	private void switch2session() {
-		RdesktopCanvas canvas = this.rc.getCanvas();
-		canvas.setLocation(0, 0);
-		
-		if (this.fullscreenMode) {
-			this.externalWindow = new FullscreenWindow();
-			this.externalWindow.add(canvas);
-			this.externalWindow.setFullscreen();
-		}
-		else {
-			this.removeAll();
-			this.add(canvas);
-			this.validate();
-		}
-		canvas.addFocusListener(this);
-	}
-	
-
 	public void forwardJS(String functionName, Integer instance, String status) {
 		Object[] args = new Object[2];
 		args[0] = instance;
@@ -345,57 +265,16 @@ public class Desktop extends Applet implements RdpListener, FocusListener {
 	}
 
 	@Override
-	public void connected(RdpConnection co) {
-		System.out.println("Connected to "+this.rc.getServer());
-		this.switch2session();
-		this.forwardJS(JS_API_F_SERVER, 0, JS_API_O_SERVER_CONNECTED);
-	}
-
-	@Override
-	public void connecting(RdpConnection co) {
-		System.out.println("Connecting to "+this.rc.getServer());
-	}
-
-	@Override
-	public void disconnected(RdpConnection co) {
-		System.out.println("Disconnected from "+this.rc.getServer());
-		this.forwardJS(JS_API_F_SERVER, 0, JS_API_O_SERVER_DISCONNECTED);
-		this.stop();
-	}
-
-	@Override
-	public void failed(RdpConnection co, String msg) {
-		System.out.println("Connection  to "+this.rc.getServer()+" failed: "+msg);
-
-		int tryNumber = co.getTryNumber();
-		if (tryNumber < 1) {
-			Logger.debug("checkRDPConnections -- Bad try number("+tryNumber+"). Will continue normal process.");
-			return;
-		}
-
-		if (tryNumber > 1) {
-			Logger.error("checkRDPConnections -- Several try to connect to "+co.getServer()+" failed. Will exit.");
-			this.forwardJS(JS_API_F_SERVER, 0, JS_API_O_SERVER_FAILED);
-			return;
-		}
-
-		co.connect();
-	}
-
-	@Override
-	public void seamlessEnabled(RdpConnection co) {}
-
-	@Override
 	public void focusGained(FocusEvent e) {
-		if (this.focusManager != null && this.rc != null && !this.started_stop) {
-			this.focusManager.performedFocusGain(this.rc.getCanvas());
+		if (this.focusManager != null && !this.started_stop) {
+			this.focusManager.performedFocusGain(e.getComponent());
 		}
 	}
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		if (this.focusManager != null && this.rc != null && !this.started_stop) {
-			this.focusManager.performedFocusLost(this.rc.getCanvas());
+		if (this.focusManager != null && !this.started_stop) {
+			this.focusManager.performedFocusLost(e.getComponent());
 		}
 	}
 }
