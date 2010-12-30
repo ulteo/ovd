@@ -63,7 +63,9 @@ public class OvdClientDesktopApplet extends OvdClient {
 	}
 
 	@Override
-	protected void runInit() {}
+	protected void runInit() {
+		this.createRDPConnections();
+	}
 
 	@Override
 	protected boolean createRDPConnections() {
@@ -127,6 +129,8 @@ public class OvdClientDesktopApplet extends OvdClient {
 			rc.setKeymap(this.keymap);
 
 		this.connections.add(rc);
+
+		this.configureRDPConnection(rc);
 
 		return true;
 	}

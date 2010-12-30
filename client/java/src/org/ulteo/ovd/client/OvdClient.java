@@ -95,6 +95,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.smComm = smComm;
 		this.graphic = graphic_;
 
+		this.connections = new ArrayList<RdpConnectionOvd>();
 		this.availableConnections = new ArrayList<RdpConnectionOvd>();
 		this.performedConnections = new CopyOnWriteArrayList<RdpConnectionOvd>();
 	}
@@ -216,8 +217,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	
 	public boolean perform() {
 		this.runInit();
-
-		this.connections = new ArrayList<RdpConnectionOvd>();
 
 		if (this.smComm == null)
 			return true;
