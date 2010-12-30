@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2009
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009-2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
  *
@@ -23,32 +23,23 @@
 package org.ulteo.ovd.applet;
 
 import java.io.FileNotFoundException;
-import java.net.UnknownHostException;
 
 import org.ulteo.Logger;
-import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.rdp.OvdAppChannel;
-import org.ulteo.rdp.OvdAppListener;
 
 import java.applet.Applet;
-import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import net.propero.rdp.RdesktopException;
 
-import net.propero.rdp.RdpConnection;
-import net.propero.rdp.RdpListener;
 import netscape.javascript.JSObject;
 import org.ulteo.ovd.sm.Properties;
+import org.ulteo.ovd.sm.ServerAccess;
 
 import org.ulteo.utils.AbstractFocusManager;
 import org.ulteo.utils.jni.WorkArea;
 
-import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 import org.ulteo.rdp.seamless.SeamlessFrame;
 import org.ulteo.rdp.seamless.SeamlessPopup;
@@ -102,30 +93,17 @@ class OrderApplication extends Order {
 	}
 }
 
-public class Applications extends Applet implements Runnable, RdpListener, OvdAppListener {
+public class Applications extends Applet implements Runnable, JSForwarder/*RdpListener, OvdAppListener*/ {
 	public String keymap = null;
-	private boolean multimedia_mode = false;
-	private boolean map_local_printers = false;
-	private int mount_local_drives = Properties.REDIRECT_DRIVES_NO;
 	
-	private ConcurrentHashMap<Integer, RdpConnectionOvd> connections = null;
 	private List<Order> spoolOrder = null;
 	private Thread spoolThread = null;
 	private AbstractFocusManager focusManager;
 
+	private OvdClientApplicationsApplet ovd = null;
+
 	private boolean finished_init = false;
 	private boolean started_stop = false;
-	
-	public static final String JS_API_F_INSTANCE = "applicationStatus";
-	public static final String JS_API_O_INSTANCE_STARTED = "started";
-	public static final String JS_API_O_INSTANCE_STOPPED = "stopped";
-	public static final String JS_API_O_INSTANCE_ERROR = "error";
-	
-	public static final String JS_API_F_SERVER = "serverStatus";
-	public static final String JS_API_O_SERVER_CONNECTED = "connected";
-	public static final String JS_API_O_SERVER_DISCONNECTED = "disconnected";
-	public static final String JS_API_O_SERVER_FAILED = "failed";
-	public static final String JS_API_O_SERVER_READY = "ready";
 	
 	// Begin extends Applet
 	@Override
@@ -168,23 +146,35 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 			Logger.initInstance(true, null, true);
 		}
 
-		if (! this.readParameters()) {
+		Properties properties = this.readParameters();
+		if (properties == null) {
 			System.err.println(this.getClass().toString() +"  usage error");
 			this.stop();
 			return;
 		}
+
+		try {
+			this.ovd = new OvdClientApplicationsApplet(properties, this);
+		} catch (ClassCastException ex) {
+			Logger.error(ex.getMessage());
+			this.stop();
+			return;
+		}
+		this.ovd.setKeymap(this.keymap);
+		this.ovd.perform();
 		
 		this.spoolOrder = new ArrayList<Order>();
 		this.spoolThread = new Thread(this);
-		this.connections = new ConcurrentHashMap<Integer, RdpConnectionOvd>();
 		this.finished_init = true;
 	}
 	
 	@Override
-	public void start() {	
+	public void start() {
 		if (! this.finished_init || this.started_stop)
 			return;
 		System.out.println(this.getClass().toString() +" start");
+
+		this.ovd.sessionReady();
 		
 		this.spoolThread.start();
 	}
@@ -198,43 +188,31 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 		
 		if (this.spoolThread.isAlive())
 			this.spoolThread.interrupt();
-		
-		for (RdpConnectionOvd co: this.connections.values()) {
-			co.disconnect();
-			try {
-				co.interruptConnection();
-			} catch (RdesktopException ex) {
-				System.out.println(ex.getMessage());
-			}
-		}
 
-		while (! this.connections.isEmpty()) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException ex) {}
-		}
+		if (this.ovd != null)
+			this.ovd.performDisconnectAll();
 	}
 	
 	@Override
 	public void destroy() {
 		this.spoolOrder = null;
 		this.spoolThread = null;
-		this.connections.clear();
-		this.connections = null;
 	}
 	// End extends Applet
 	
-	public boolean readParameters() {
+	public Properties readParameters() {
+		Properties properties = new Properties(Properties.MODE_REMOTEAPPS);
+
 		String buf = this.getParameter("keymap");
 		if (buf == null || buf.equals("")) {
 			System.err.println("Parameter "+buf+": empty value");
-			return false;
+			return null;
 		}
 		this.keymap = buf;
 		
 		buf = this.getParameter("multimedia");
 		if (buf != null)
-			this.multimedia_mode = buf.equalsIgnoreCase("true");
+			properties.setMultimedia(buf.equalsIgnoreCase("true"));
 		
 		buf = this.getParameter("redirect_client_printers");
 		if (buf != null){
@@ -243,21 +221,22 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 			focusManager = new AppletFocusManager(appletPrinterThread);
 			SeamlessFrame.focusManager = focusManager;
 			SeamlessPopup.focusManager = focusManager;
-			this.map_local_printers = buf.equalsIgnoreCase("true");
+			
+			properties.setPrinters(buf.equalsIgnoreCase("true"));
 		}
 
 		buf = this.getParameter("redirect_client_drives");
 		if (buf != null) {
 			if (buf.equalsIgnoreCase("full"))
-				this.mount_local_drives = Properties.REDIRECT_DRIVES_FULL;
+				properties.setDrives(Properties.REDIRECT_DRIVES_FULL);
 			else if (buf.equalsIgnoreCase("partial"))
-				this.mount_local_drives = Properties.REDIRECT_DRIVES_PARTIAL;
+				properties.setDrives(Properties.REDIRECT_DRIVES_PARTIAL);
 			else
-				this.mount_local_drives = Properties.REDIRECT_DRIVES_NO;
+				properties.setDrives(Properties.REDIRECT_DRIVES_NO);
 		}
 
 		
-		return true;
+		return properties;
 	}
 	
 	public boolean checkSecurity() {
@@ -301,101 +280,29 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 			if (o instanceof OrderServer) {
 				OrderServer order = (OrderServer)o;
 				System.out.println("job "+order.host);
-				
-				Rectangle dim = WorkArea.getWorkAreaSize();
-				System.out.println("Width: "+dim.width);
-				System.out.println("Height: "+dim.height);
-				
-				byte flags = RdpConnectionOvd.MODE_APPLICATION;
-				if(this.multimedia_mode)
-					flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
-				if (this.map_local_printers)
-					flags |= RdpConnectionOvd.MOUNT_PRINTERS;
-				if (this.mount_local_drives == Properties.REDIRECT_DRIVES_FULL)
-					flags |= RdpConnectionOvd.MOUNTING_MODE_FULL;
-				else if (this.mount_local_drives == Properties.REDIRECT_DRIVES_PARTIAL)
-					flags |= RdpConnectionOvd.MOUNTING_MODE_PARTIAL;
-				
-				RdpConnectionOvd rc;
-				try {
-					rc = new RdpConnectionOvd(flags);
-				} catch (RdesktopException ex) {
-					System.err.println("ERROR: "+ex.getMessage());
-					continue;
-				}
-				try {
-					rc.initSecondaryChannels();
-				} catch (RdesktopException ex) {
-					System.err.println("WARNING: "+ex.getMessage());
-				}
-				
-				rc.setServer(order.host, order.port);
+
+				ServerAccess server = new ServerAccess(order.host, order.port, order.login, order.password);
 				if (order.token != null) {
-					rc.setCookieElement("token", order.token);
-
-					try {
-						rc.useSSLWrapper(order.host, order.port);
-					} catch(OvdException ex) {
-						Logger.error("Unable to create SSLWrapper: " + ex.getMessage());
-					} catch(UnknownHostException ex) {
-						Logger.error("Undefined error during creation of SSLWrapper: " + ex.getMessage());
-					}
+					server.setModeGateway(true);
+					server.setToken(order.token);
 				}
 
-				rc.setCredentials(order.login, order.password);
-				// Ensure that width is a multiple of 4
-				// to prevent artifacts
-				rc.setGraphic(dim.width & ~3, dim.height, RdpConnectionOvd.DEFAULT_BPP);
-				rc.setGraphicOffset(dim.x, dim.y);
-				rc.setKeymap(keymap);
-				rc.setShell("OvdRemoteApps");
-				
-				rc.addRdpListener(this);
-				
-				try {
-					rc.addOvdAppListener(this);
-				} catch (OvdException ex) {
-					System.err.println("ERROR: "+ex.getMessage());
+				if (! this.ovd.addServer(server, order.id))
 					continue;
-				}
-				
-				this.connections.put(new Integer(order.id), rc);
-				rc.connect();
-				
 			}
 			
 			else if (o instanceof OrderApplication) {
 				OrderApplication order = (OrderApplication)o;
 				System.out.println("job "+order);
-				
-				Integer server_id = null;
-				
-				for (Integer i: this.connections.keySet()) {
-					if (i.intValue() == order.server_id) {
-						server_id = i;
-						break;
-					}
-				}
-				
-				if (server_id == null) {
-					System.err.println("Unknown server for order "+order);
-					continue;
-				}
-				System.out.println("Server "+server_id);
-				
-				RdpConnectionOvd co = this.connections.get(server_id);
-				OvdAppChannel chan = co.getOvdAppChannel();
-				System.out.println("channel got "+chan);
-				if (! chan.isReady()) {
-					System.err.println("Channel not ready for order "+order);
-					continue;
-				}
-					
+				System.out.println("Server "+order.server_id);
+
 				if (order.path == null)
-					chan.sendStartApp(order.id, order.application_id);
+					this.ovd.startApplication(order.id, order.application_id, order.server_id);
+					//chan.sendStartApp(order.id, order.application_id);
 				else {
 					System.out.println("App: "+order.path);
-					chan.sendStartApp(order.id, order.application_id, chan.DIR_TYPE_SHARED_FOLDER, ""+order.repository, order.path);
+					this.ovd.startApplication(order.id, order.application_id, OvdAppChannel.DIR_TYPE_SHARED_FOLDER, ""+order.repository, order.path, order.server_id);
+					//chan.sendStartApp(order.id, order.application_id, chan.DIR_TYPE_SHARED_FOLDER, ""+order.repository, order.path);
 				}
 			}
 		}
@@ -450,129 +357,4 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 			System.err.println(this.getClass()+" error while execute '"+buffer+"' =>"+e.getMessage());
 		}
 	}
-	
-	// Begin implements OvdAppListener
-	@Override
-	public void ovdInited(OvdAppChannel channel) {
-		for (Integer i: this.connections.keySet()) {
-			if (this.connections.get(i).getOvdAppChannel() == channel) {
-				this.forwardJS(JS_API_F_SERVER, i, JS_API_O_SERVER_READY);
-				return;
-			}
-		}
-	}
-	
-	@Override
-	public void ovdInstanceError(int instance) {
-		this.forwardJS(JS_API_F_INSTANCE, new Integer(instance), JS_API_O_INSTANCE_ERROR);
-	}
-	
-	@Override
-	public void ovdInstanceStarted(int instance) {
-		this.forwardJS(JS_API_F_INSTANCE, new Integer(instance), JS_API_O_INSTANCE_STARTED);
-	}
-	
-	@Override
-	public void ovdInstanceStopped(int instance) {
-		this.forwardJS(JS_API_F_INSTANCE, new Integer(instance), JS_API_O_INSTANCE_STOPPED);
-	}
-	// End implements OvdAppListener
-	
-	@Override
-	public void connected(RdpConnection co) {
-		if (co == null || this.connections == null)
-			return;
-		
-		System.out.println("Connected to "+co.getServer());
-		
-		Integer server_id = null;
-		for (Integer i: this.connections.keySet()) {
-			if (this.connections.get(i) == co) {
-				server_id = i;
-				break;
-			}
-		}
-		this.forwardJS(JS_API_F_SERVER, server_id, JS_API_O_SERVER_CONNECTED);
-	}
-	
-	@Override
-	public void connecting(RdpConnection co) {
-		if (co == null || this.connections == null)
-			return;
-		
-		System.out.println("Connecting to "+co.getServer());
-	}
-	
-	@Override
-	public void disconnected(RdpConnection co) {
-		if (co == null || this.connections == null)
-			return;
-
-		System.out.println("Disconnected from "+co.getServer());
-		
-		Integer server_id = null;
-		for (Integer i: this.connections.keySet()) {
-			if (this.connections.get(i) == co) {
-				server_id = i;
-				break;
-			}
-		}
-		if (server_id == null)
-			return;
-
-		this.connections.remove(server_id);
-		this.forwardJS(JS_API_F_SERVER, server_id, JS_API_O_SERVER_DISCONNECTED);
-	}
-	
-	@Override
-	public void failed(RdpConnection co, String msg) {
-		if (co == null || this.connections == null)
-			return;
-		
-		System.out.println("Connection to "+co.getServer()+" failed: "+msg);
-		
-		boolean retry = false;
-		
-		int state = co.getState();
-		
-		if (state == RdpConnectionOvd.STATE_CONNECTED) {
-			return;
-		}
-		
-		if (state != RdpConnectionOvd.STATE_FAILED) {
-			Logger.debug("checkRDPConnections "+co.getServer()+" -- Bad connection state("+state+"). Will continue normal process.");
-			return;
-		}
-		
-		int tryNumber = co.getTryNumber();
-		if (tryNumber < 1) {
-			Logger.debug("checkRDPConnections "+co.getServer()+" -- Bad try number("+tryNumber+"). Will continue normal process.");
-			return;
-		}
-		
-		if (tryNumber > 1) {
-			Logger.error("checkRDPConnections "+co.getServer()+" -- Several try to connect failed.");
-			Integer server_id = null;
-			for (Integer o : this.connections.keySet()) {
-				if (this.connections.get(o) == co) {
-					server_id = o;
-					break;
-				}
-			}
-			if (server_id == null) {
-				Logger.error("checkRDPConnections "+co.getServer()+" -- Failed to retrieve connection.");
-				return;
-			}
-
-			this.connections.remove(server_id);
-			this.forwardJS(JS_API_F_SERVER, server_id, JS_API_O_SERVER_FAILED);
-			return;
-		}
-		
-		Logger.warn("checkRDPConnections "+co.getServer()+" -- Connection failed. Will try to reconnect.");
-		co.connect();
-	}
-	
-	@Override
-	public void seamlessEnabled(RdpConnection co) {}
 }

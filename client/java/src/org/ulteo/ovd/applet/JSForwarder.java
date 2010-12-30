@@ -26,6 +26,11 @@ public interface JSForwarder {
 	public static final String JS_API_O_SERVER_DISCONNECTED = "disconnected";
 	public static final String JS_API_O_SERVER_FAILED = "failed";
 	public static final String JS_API_O_SERVER_READY = "ready";
+
+	public static final String JS_API_F_INSTANCE = "applicationStatus";
+	public static final String JS_API_O_INSTANCE_STARTED = "started";
+	public static final String JS_API_O_INSTANCE_STOPPED = "stopped";
+	public static final String JS_API_O_INSTANCE_ERROR = "error";
 	
 	public void forwardJS(String functionName, Integer instance, String status);
 }

@@ -286,6 +286,8 @@
         <pathelement location="required_libraries/jai_codec.jar"/>
         <pathelement location="required_libraries/jai_core.jar"/>
         <pathelement location="required_libraries/js.jar"/>
+	<pathelement location="required_libraries/jshortcut.jar"/>
+	<pathelement location="required_libraries/image4j.jar"/>
       </classpath>
     </javac>
     <exec executable="make" failonerror="true" dir="windowsPathsJNI">

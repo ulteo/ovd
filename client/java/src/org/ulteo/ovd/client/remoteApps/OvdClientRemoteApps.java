@@ -52,6 +52,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	private int numberOfApplication = 0;
 	private int ApplicationIncrement = 0;
 	private int ApplicationIndex = 0;
+
+	private int flags = 0;
+	private Rectangle screensize = null;
 	
 	public OvdClientRemoteApps(SessionManagerCommunication smComm) {
 		super(smComm, null);
@@ -81,8 +84,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			Logger.error(co.getServer()+": Failed to add ovd applications listener: "+ex);
 		}
 		
-		int applicationIncrement = 100 / co.getAppsList().size();
-
 		boolean associate = (co.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
 		for (Application app : co.getAppsList()) {
 			if (this.system.create(app, associate) == null)
@@ -117,9 +118,11 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 	@Override
 	protected void runSessionTerminated() {
-		this.spool.stop();
-		this.spool.deleteTree();
-		this.spool = null;
+		if (this.spool != null) {
+			this.spool.stop();
+			this.spool.deleteTree();
+			this.spool = null;
+		}
 
 		for (RdpConnectionOvd co : this.connections) {
 			for (Application app : co.getAppsList())
@@ -132,26 +135,123 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	public void ovdInstanceStarted(int instance_) {}
 	public void ovdInstanceStopped(int instance_) {}
 	public void ovdInstanceError(int instance_) {}
-	
+
+	protected void configureRDP(Properties properties) {
+		this.screensize = WorkArea.getWorkAreaSize();
+
+		this.flags = 0x00;
+		this.flags |= RdpConnectionOvd.MODE_APPLICATION;
+
+		if (properties.isMultimedia())
+			this.flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
+
+		if (properties.isPrinters())
+			this.flags |= RdpConnectionOvd.MOUNT_PRINTERS;
+
+		if (properties.isDrives() == Properties.REDIRECT_DRIVES_FULL)
+			this.flags |= RdpConnectionOvd.MOUNTING_MODE_FULL;
+		else if (properties.isDrives() == Properties.REDIRECT_DRIVES_PARTIAL)
+			this.flags |= RdpConnectionOvd.MOUNTING_MODE_PARTIAL;
+	}
+
+	protected RdpConnectionOvd initRDPConnection(ServerAccess server) {
+		if (server == null)
+			return null;
+
+		if (this.screensize == null) {
+			Logger.error("Failed to initialize RDP connection: RDP configuration is not set");
+			return null;
+		}
+
+		RdpConnectionOvd rc = null;
+
+		try {
+			rc = new RdpConnectionOvd(this.flags);
+		} catch (RdesktopException ex) {
+			Logger.error("Unable to create RdpConnectionOvd object: "+ex.getMessage());
+			return null;
+		}
+
+		try {
+			rc.initSecondaryChannels();
+		} catch (RdesktopException ex) {
+			Logger.error("Unable to init channels of RdpConnectionOvd object: "+ex.getMessage());
+		}
+
+		if (server.getModeGateway()) {
+			if (server.getToken().equals("")) {
+					Logger.error("Server need a token to be identified on gateway, so token is empty !");
+					return null;
+			} else {
+				rc.setCookieElement("token", server.getToken());
+			}
+
+			try {
+				rc.useSSLWrapper(server.getHost(), server.getPort());
+			} catch(OvdException ex) {
+				Logger.error("Unable to create RdpConnectionOvd SSLWrapper: " + ex.getMessage());
+				return null;
+			} catch(UnknownHostException ex) {
+				Logger.error("Undefined error during creation of RdpConnectionOvd SSLWrapper: " + ex.getMessage());
+				return null;
+			}
+		}
+
+		rc.setServer(server.getHost());
+		rc.setCredentials(server.getLogin(), server.getPassword());
+		// Ensure that width is multiple of 4
+		// Prevent artifact on screen with a with resolution
+		// not divisible by 4
+		rc.setGraphic((int) this.screensize.width & ~3, (int) this.screensize.height, RdpConnectionOvd.DEFAULT_BPP);
+		rc.setGraphicOffset(this.screensize.x, this.screensize.y);
+
+		if (this.keymap != null)
+			rc.setKeymap(this.keymap);
+
+		for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
+			if (this.isCancelled)
+				return null;
+
+			try {
+				int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
+				this.obj.updateProgress(LoadingStatus.STATUS_SM_GET_APPLICATION, subStatus);
+
+				Application app = new Application(rc, appItem.getId(), appItem.getName(), appItem.getMimes(), this.smComm.askForIcon(Integer.toString(appItem.getId())));
+				rc.addApp(app);
+			} catch (SessionManagerException ex) {
+				Logger.warn("Cannot get the \""+appItem.getName()+"\" icon: "+ex.getMessage());
+			}
+			this.ApplicationIndex++;
+		}
+
+		this.connections.add(rc);
+
+		return rc;
+	}
+
+	protected Integer createRDPConnectionAndConnect(ServerAccess server) {
+		RdpConnectionOvd co = this.initRDPConnection(server);
+
+		if (co == null)
+			return null;
+
+		this.configureRDPConnection(co);
+
+		co.connect();
+		
+		return new Integer(this.connections.indexOf(co));
+	}
 
 	@Override
 	protected boolean createRDPConnections() {
+		if (this.smComm == null) {
+			Logger.error("[Programmer error] OvdclientRemoteApps.createRDPConnections() can be used only if 'smComm' variable is not null");
+			return false;
+		}
+		
 		Properties properties = this.smComm.getResponseProperties();
-		Rectangle screenSize = WorkArea.getWorkAreaSize();
-		
-		byte flags = 0x00;
-		flags |= RdpConnectionOvd.MODE_APPLICATION;
-		
-		if (properties.isMultimedia())
-			flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
-		
-		if (properties.isPrinters())
-			flags |= RdpConnectionOvd.MOUNT_PRINTERS;
 
-		if (properties.isDrives() == Properties.REDIRECT_DRIVES_FULL)
-			flags |= RdpConnectionOvd.MOUNTING_MODE_FULL;
-		else if (properties.isDrives() == Properties.REDIRECT_DRIVES_PARTIAL)
-			flags |= RdpConnectionOvd.MOUNTING_MODE_PARTIAL;
+		this.configureRDP(properties);
 		
 		List<ServerAccess> serversList = this.smComm.getServers();
 		this.numberOfApplication = 0;
@@ -166,70 +266,8 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			if (this.isCancelled)
 				return false;
 
-			RdpConnectionOvd rc = null;
-			
-			try {
-				rc = new RdpConnectionOvd(flags);
-			} catch (RdesktopException ex) {
-				Logger.error("Unable to create RdpConnectionOvd object: "+ex.getMessage());
+			if (this.initRDPConnection(server) == null)
 				return false;
-			}
-			
-			try {
-				rc.initSecondaryChannels();
-			} catch (RdesktopException ex) {
-				Logger.error("Unable to init channels of RdpConnectionOvd object: "+ex.getMessage());
-			}
-
-			if (server.getModeGateway()) {
-
-				if (server.getToken().equals("")) {
-						Logger.error("Server need a token to be identified on gateway, so token is empty !");
-						return false;
-				} else {
-					rc.setCookieElement("token", server.getToken());
-				}
-
-				try {
-					rc.useSSLWrapper(server.getHost(), server.getPort());
-				} catch(OvdException ex) {
-					Logger.error("Unable to create RdpConnectionOvd SSLWrapper: " + ex.getMessage());
-					return false;
-				} catch(UnknownHostException ex) {
-					Logger.error("Undefined error during creation of RdpConnectionOvd SSLWrapper: " + ex.getMessage());
-					return false;
-				}
-			}
-			
-			rc.setServer(server.getHost());
-			rc.setCredentials(server.getLogin(), server.getPassword());
-			// Ensure that width is multiple of 4
-			// Prevent artifact on screen with a with resolution
-			// not divisible by 4
-			rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, RdpConnectionOvd.DEFAULT_BPP);
-			rc.setGraphicOffset(screenSize.x, screenSize.y);
-			
-			if (this.keymap != null)
-				rc.setKeymap(this.keymap);
-			
-			for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
-				if (this.isCancelled)
-					return false;
-				
-				try {
-					int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
-					this.obj.updateProgress(LoadingStatus.STATUS_SM_GET_APPLICATION, subStatus);
-					
-					Application app = new Application(rc, appItem.getId(), appItem.getName(), appItem.getMimes(), this.smComm.askForIcon(Integer.toString(appItem.getId())));
-					rc.addApp(app);
-				} catch (SessionManagerException ex) {
-					ex.printStackTrace();
-					Logger.warn("Cannot get the \""+appItem.getName()+"\" icon: "+ex.getMessage());
-				}
-				this.ApplicationIndex++;
-			}
-			
-			this.connections.add(rc);
 		}
 		this.obj.updateProgress(LoadingStatus.STATUS_SM_GET_APPLICATION, 100);
 		this.ApplicationIndex = 0;

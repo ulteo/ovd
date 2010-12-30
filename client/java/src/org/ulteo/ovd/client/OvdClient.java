@@ -218,21 +218,19 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.runInit();
 
 		this.connections = new ArrayList<RdpConnectionOvd>();
-		if (this.createRDPConnections()) {
-			for (RdpConnectionOvd rc : this.connections) {
-				this.customizeConnection(rc);
-				rc.addRdpListener(this);
-			}
-
-			if (this.smComm != null) {
-				this.sessionStatusMonitoringThread = new Thread(this);
-				this.continueSessionStatusMonitoringThread = true;
-				this.sessionStatusMonitoringThread.start();
-			}
-		}
 
 		if (this.smComm == null)
 			return true;
+
+		if (this.createRDPConnections()) {
+			for (RdpConnectionOvd rc : this.connections) {
+				this.configureRDPConnection(rc);
+			}
+
+			this.sessionStatusMonitoringThread = new Thread(this);
+			this.continueSessionStatusMonitoringThread = true;
+			this.sessionStatusMonitoringThread.start();
+		}
 
 		do {
 			// Waiting for all the RDP connections are performed
@@ -258,6 +256,11 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		}
 
 		return this.exitAfterLogout;
+	}
+
+	public void configureRDPConnection(RdpConnectionOvd rc) {
+		this.customizeConnection(rc);
+		rc.addRdpListener(this);
 	}
 
 	public abstract boolean checkRDPConnections();
