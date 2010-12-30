@@ -43,7 +43,14 @@ import javax.swing.text.JTextComponent;
 public class GUIActions {
 	private static GUIActions Actions = new GUIActions();
 
-	public static final Image ULTEO_ICON = Toolkit.getDefaultToolkit().getImage(GUIActions.class.getClassLoader().getResource("pics/ulteo.png"));
+	public static Image ULTEO_ICON = null;
+
+	private static void initUlteoIcon() {
+		if (ULTEO_ICON != null)
+			return;
+		
+		ULTEO_ICON = Toolkit.getDefaultToolkit().getImage(GUIActions.class.getClassLoader().getResource("pics/ulteo.png"));
+	}
 
 	/* SetVisible */
 	public static Runnable setVisible(Component component_, boolean visible_) {
@@ -134,7 +141,14 @@ public class GUIActions {
 			this.title = title_;
 			this.messageType = messageType_;
 			this.optionType = optionType_;
-			this.icon = (icon_ == null) ? ULTEO_ICON : icon_;
+
+			if (icon_ != null) {
+				this.icon = icon_;
+				return;
+			}
+
+			GUIActions.initUlteoIcon();
+			this.icon = ULTEO_ICON;
 		}
 
 		public void run() {
