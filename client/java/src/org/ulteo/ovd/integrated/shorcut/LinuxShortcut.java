@@ -49,6 +49,7 @@ public class LinuxShortcut extends Shortcut {
 			PrintWriter pw = new PrintWriter(shortcut);
 			pw.println("[Desktop Entry]");
 			pw.println("Type=Application");
+			pw.println("Categories=Application"); // Gnome menu support
 			pw.println("Encoding=UTF-8");
 			pw.println("StartupNotify=false");
 			pw.println("Name="+app.getName());
