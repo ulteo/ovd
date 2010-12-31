@@ -29,8 +29,6 @@ import java.awt.GridBagLayout;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -64,29 +62,15 @@ public class MyApplicationPanel extends JPanel {
 			return;
 
 		for (Application app : appsList) {
-			JLabel appIcon = new JLabel(app.getIcon());
-			appIcon.setName(app.getName());
-			JLabel appName = new JLabel(app.getName());
-			appName.setName(app.getName());
-			ApplicationButton appButton = new ApplicationButton(app);
-			appButton.setName(app.getName());
-			appButton.addActionListener(new ApplicationListener(app, this.runningApps));
-			
+			ApplicationLink link = new ApplicationLink(app);
+			link.addActionListener(new ApplicationListener(app, this.runningApps));
 			
 			gbc.gridx = 0;
 			gbc.gridy = y;
 			gbc.anchor = GridBagConstraints.LINE_START;
 			gbc.insets.right = 5;
-			this.buttonPan.add(appIcon, gbc);
+			this.buttonPan.add(link, gbc);
 			
-			gbc.gridx = 1;
-			gbc.fill = GridBagConstraints.HORIZONTAL;
-			this.buttonPan.add(appName, gbc);
-			
-			gbc.gridx = 2;
-			gbc.fill = GridBagConstraints.NONE;
-			gbc.anchor = GridBagConstraints.CENTER;
-			this.buttonPan.add(appButton, gbc);
 			this.buttonPan.revalidate();
 			this.buttonPan.repaint();
 			y++;
@@ -94,15 +78,14 @@ public class MyApplicationPanel extends JPanel {
 			this.repaint();
 			this.revalidate();
 			
-			appName.setEnabled(false);
-			appButton.setEnabled(false);
+			link.setEnabled(false);
 		}
 	}
 	
 	public void toggleAppButton (Application app, boolean enable) {
-		ApplicationButton appButton = this.findButtonByApp(app);
+		ApplicationLink appLink = this.findLinkByApp(app);
 		
-		if (appButton == null)
+		if (appLink == null)
 			return;
 		
 		for (Component cmp : this.buttonPan.getComponents()) {
@@ -111,16 +94,16 @@ public class MyApplicationPanel extends JPanel {
 		}
 	}
 
-	private ApplicationButton findButtonByApp(Application app) {
+	private ApplicationLink findLinkByApp(Application app) {
 		int appCount = this.buttonPan.getComponentCount();
 
 		for (int i = 0; i < appCount; i++) {
 			
-			if (this.buttonPan.getComponent(i) instanceof JButton) {
-				ApplicationButton appButton = (ApplicationButton) this.buttonPan.getComponent(i);
+			if (this.buttonPan.getComponent(i) instanceof ApplicationLink) {
+				ApplicationLink link = (ApplicationLink) this.buttonPan.getComponent(i);
 
-				if (app.getName().equals(appButton.getName()) && (app.getConnection() == appButton.getConnection()))
-					return appButton;
+				if (app.getName().equals(link.getName()) && (app.getConnection() == link.getConnection()))
+					return link;
 			}
 		}
 		return null;
