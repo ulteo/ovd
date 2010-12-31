@@ -93,31 +93,35 @@ public class SystemLinux extends SystemAbstract {
 				xdgStream.close();
 			}
 			else {
+				BufferedOutputStream desktopStream = null;
+				File desktopShortcut = null;
 				if (showDesktopIcon) {
-					File desktopShortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
-					BufferedOutputStream desktopStream = null;
+					desktopShortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
 					desktopStream = new BufferedOutputStream(new FileOutputStream(desktopShortcut), 4096);
-					byte[] buffer = new byte[1024];
-					int nbytes;
-					while ((nbytes = shortcutReader.read(buffer)) != -1) {
-						desktopStream.write(buffer, 0, nbytes);
-					}
-					desktopStream.flush();
-					desktopStream.close();
-					if (! desktopShortcut.setExecutable(true)) {
-						Logger.error("Failed to set executable "+desktopShortcut.getPath());
-					}
 				}
 
 				File xdgShortcut = new File(Constants.PATH_XDG_APPLICATIONS+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
 				BufferedOutputStream xdgStream = new BufferedOutputStream(new FileOutputStream(xdgShortcut), 4096);
+
 				byte[] buffer = new byte[1024];
 				int nbytes;
 				while ((nbytes = shortcutReader.read(buffer)) != -1) {
+					if (desktopStream != null)
+						desktopStream.write(buffer, 0, nbytes);
 					xdgStream.write(buffer, 0, nbytes);
+				}
+
+				if (desktopStream != null) {
+					desktopStream.flush();
+					desktopStream.close();
+
+					if (! desktopShortcut.setExecutable(true)) {
+						Logger.error("Failed to set executable "+desktopShortcut.getPath());
+					}
 				}
 				xdgStream.flush();
 				xdgStream.close();
+
 				if (! xdgShortcut.setExecutable(true)) {
 					Logger.error("Failed to set executable "+xdgShortcut.getPath());
 				}
