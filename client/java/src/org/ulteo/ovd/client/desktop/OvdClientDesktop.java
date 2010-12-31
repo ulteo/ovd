@@ -188,6 +188,11 @@ public class OvdClientDesktop extends OvdClient {
 
 	@Override
 	public boolean checkRDPConnections() {
+		if (this.performedConnections.isEmpty()) {
+			Logger.debug("checkRDPConnections -- Any connections. Will continue normal process.");
+			return true;
+		}
+
 		RdpConnectionOvd co = this.performedConnections.get(0);
 		int state = co.getState();
 
