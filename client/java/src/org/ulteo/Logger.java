@@ -23,6 +23,7 @@ package org.ulteo;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -127,7 +128,35 @@ public class Logger {
 		return ""+((h<10)?"0":"")+h+":"+((m<10)?"0":"")+m+":"+((s<10)?"0":"")+s;
 	}
 
+	private static boolean createFile(String filename) {
+		File logFile_fd = new File(filename);
+		File logDir_fd = logFile_fd.getParentFile();
+
+		if (logDir_fd != null && ! logDir_fd.exists() && ! logDir_fd.mkdirs()) {
+			System.err.println("Failed to created the log directory('"+logDir_fd.getPath()+"')");
+			return false;
+		}
+
+		if (! logFile_fd.exists()) {
+			try {
+				logFile_fd.createNewFile();
+			} catch (IOException ex) {
+				System.err.println("Failed to create the log file('"+filename+"'): "+ex.getMessage());
+				return false;
+			}
+		}
+		else if (! logFile_fd.canWrite()) {
+			System.err.println("Cannot write to the log file('"+filename+"'): Permission denied");
+			return false;
+		}
+
+		return true;
+	}
+
 	public static boolean initInstance(boolean stdout, String filename, boolean redirectOut) {
+		if (! createFile(filename))
+				filename = null;
+		
 		try {
 			instance = new Logger(stdout, filename, redirectOut);
 		}

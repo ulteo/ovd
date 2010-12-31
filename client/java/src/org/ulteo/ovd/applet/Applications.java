@@ -143,7 +143,6 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 		
 		if (! Logger.initInstance(true, tempdir+"ulteo-ovd-"+Logger.getDate()+".log", true)) {
 			System.err.println(this.getClass().toString()+" Unable to iniatialize logger instance");
-			Logger.initInstance(true, null, true);
 		}
 
 		Properties properties = this.readParameters();

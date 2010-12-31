@@ -267,7 +267,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 		// Init Ulteo Logger instance
 		String log_dir = Constants.PATH_NATIVE_CLIENT_CONF + Constants.FILE_SEPARATOR + "logs";
-		(new File(log_dir)).mkdirs();
 		if (! org.ulteo.Logger.initInstance(true, log_dir+Constants.FILE_SEPARATOR +org.ulteo.Logger.getDate()+".log", true))
 			System.err.println("Unable to iniatialize logger instance");
 
