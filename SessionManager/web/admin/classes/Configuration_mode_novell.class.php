@@ -214,6 +214,9 @@ class Configuration_mode_novell extends Configuration_mode {
 	else {
 		$form['admin_branch'] = 'specific';
 		
+		if (str_endswith(strtoupper($admin_ou), strtoupper($config['suffix']))) {
+			$admin_ou = substr($admin_ou, 0, -1*(strlen($config['suffix']) + 1));
+		}
 		$buffer = explode(',', $admin_ou);
 		for($i=0; $i<count($buffer); $i++) {
 			$buf = explode('=', $buffer[$i], 2);
