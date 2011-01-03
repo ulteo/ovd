@@ -125,7 +125,10 @@ class Configuration_mode_novell extends Configuration_mode {
     $prefs->set('UserDB', 'ldap', $ad_ar);
 
     // Select Module for UserGroupDB
-    if (isset($form['dsfw'])) { // Active Directory mode
+    if ($form['user_group'] == 'internal') {
+      $prefs->set('UserGroupDB', 'enable', 'sql');
+    }
+    elseif (isset($form['dsfw'])) { // Active Directory mode
       $prefs->set('UserGroupDB', 'enable', 'activedirectory');
       $prefs->set('UserGroupDB', 'activedirectory', array('match' => array('description' => 'description','name' => 'sAMAccountName', 'member' => 'member')));
     }
@@ -232,6 +235,10 @@ class Configuration_mode_novell extends Configuration_mode {
 	}
 	if ($config_session['dlu']==1)
 		$form['dlu'] = 'dlu';
+	
+	
+	$buf = $prefs->get('UserGroupDB', 'enable');
+	$form['user_group'] = ($buf == 'sql')?'internal':'novell';
 
     return $form;
   }
@@ -281,6 +288,19 @@ class Configuration_mode_novell extends Configuration_mode {
     $str.= '</td></tr>';
     $str.= '</table>';
     $str.= '</div>';
+    
+    $str.= '<div class="section">';
+    $str.= '<h3>'._('User Groups').'</h3>';
+    $str.= '<input class="input_radio" type="radio" name="user_group" value="novell"';
+    if ($form['user_group'] == 'novell')
+      $str.= ' checked="checked"';
+    $str.= ' />'._('Use Novell eDirectory\'s User Groups').'<br/>';
+
+    $str.= '<input class="input_radio" type="radio" name="user_group" value="internal"';
+    if ($form['user_group'] == 'internal')
+      $str.= ' checked="checked"';
+    $str.= '/>'._('Use Internal User Groups');
+    $str.= '</div>';
 
     return $str;
   }
@@ -294,9 +314,7 @@ class Configuration_mode_novell extends Configuration_mode {
 
     $str.= '<li><strong>'._('Administrator account:').'</strong> '.$form['admin_login'].'</li>';
     
-    $str.= '<li><strong>'._('User Groups:').'</strong> ';
-    $str.= _('Novell User Groups');
-    $str.= '</li>';
+    $str.= '<li><strong>'._('User Groups:').'</strong> '.$form['user_group'].'</li>';
   
     $str.= '</ul>';
 
