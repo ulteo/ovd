@@ -70,9 +70,9 @@ $dom = new DomDocument('1.0', 'utf-8');
 $session_node = $dom->createElement('session');
 $session_node->setAttribute('id', $session->id);
 $session_node->setAttribute('mode', Session::MODE_APPLICATIONS);
-$session_node->setAttribute('multimedia', false);
-$session_node->setAttribute('redirect_client_drives', false);
-$session_node->setAttribute('redirect_client_printers', false);
+$session_node->setAttribute('multimedia', $session->settings['multimedia']);
+$session_node->setAttribute('redirect_client_drives', $session->settings['redirect_client_drives']);
+$session_node->setAttribute('redirect_client_printers', $session->settings['redirect_client_printers']);
 $settings_node = $dom->createElement('settings');
 foreach ($session->settings as $setting_k => $setting_v) {
 	$setting_node = $dom->createElement('setting');

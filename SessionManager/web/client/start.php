@@ -337,10 +337,13 @@ if ($ret === false)
 	throw_response(INTERNAL_ERROR);
 
 $default_args = array(
-	'user_login'		=>	$user->getAttribute('login'),
-	'user_displayname'	=>	$user->getAttribute('displayname'),
-	'locale'			=>	$locale,
-	'timeout'			=>	$timeout
+	'user_login'				=>	$user->getAttribute('login'),
+	'user_displayname'			=>	$user->getAttribute('displayname'),
+	'locale'					=>	$locale,
+	'timeout'					=>	$timeout,
+	'multimedia'				=>	$multimedia,
+	'redirect_client_drives'	=>	$redirect_client_drives,
+	'redirect_client_printers'	=>	$redirect_client_printers
 );
 
 $optional_args = array();
