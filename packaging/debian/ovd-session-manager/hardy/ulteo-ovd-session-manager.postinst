@@ -64,7 +64,6 @@ fi
 # create folders and change permissions
 mkdir -p $SPOOLDIR/reporting $LOGDIR
 chown $A2USER:$A2USER $SPOOLDIR $SPOOLDIR/reporting $LOGDIR $CONFFILE
-sed -i "s/@APACHE_USER@/${A2USER}/" $CONFDIR/sessionmanager.cron
 
 ############################### FIRST INSTALL #################################
 

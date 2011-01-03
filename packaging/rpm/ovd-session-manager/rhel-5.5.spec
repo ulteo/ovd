@@ -58,15 +58,19 @@ make
 
 %install -n ulteo-ovd-session-manager
 make DESTDIR=%{buildroot} install
+
 # install the logrotate example
 mkdir -p %{buildroot}/etc/logrotate.d
 install -m 0644 examples/ulteo-sm.logrotate %{buildroot}/etc/logrotate.d/sessionmanager
 
+# put the correct Apache user in cron file
+A2USER=apache
+sed -i "s/@APACHE_USER@/${A2USER}/" %{buildroot}/etc/ulteo/sessionmanager/sessionmanager.cron
+
+
 %post -n ulteo-ovd-session-manager
 A2CONFDIR=/etc/httpd/conf.d
 CONFDIR=/etc/ulteo/sessionmanager
-
-A2USER=apache
 
 # VHost server config
 if [ ! -e $A2CONFDIR/sessionmanager-vhost-server.conf ]; then
@@ -115,8 +119,6 @@ EOF
 fi
 
 # link crons
-chmod a+x $CONFDIR/sessionmanager.cron
-sed -i "s/@APACHE_USER@/${A2USER}/" $CONFDIR/sessionmanager.cron
 ln -sfT $CONFDIR/sessionmanager.cron /etc/cron.d/sessionmanager
 
 %postun -n ulteo-ovd-session-manager
@@ -146,8 +148,9 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 /usr/*
 %config /etc/ulteo/sessionmanager/*.conf
-%config /etc/ulteo/sessionmanager/sessionmanager.cron
 %config /etc/logrotate.d/sessionmanager
+%defattr(0744,root,root)
+%config /etc/ulteo/sessionmanager/sessionmanager.cron
 %defattr(0660,apache,apache)
 %config /etc/ulteo/sessionmanager/config.inc.php
 %defattr(2770,apache,apache)

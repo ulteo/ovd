@@ -56,17 +56,22 @@ make
 
 %install -n ulteo-ovd-session-manager
 make DESTDIR=$RPM_BUILD_ROOT install
+
 # install the logrotate example
 mkdir -p $RPM_BUILD_ROOT/etc/logrotate.d
 install -m 0644 examples/ulteo-sm.logrotate $RPM_BUILD_ROOT/etc/logrotate.d/sessionmanager
+
 # hack to not provide /usr/bin/php (zypper)
 sed -i -e 's,^#!/usr/bin/php$,#!/usr/bin/php5,' $(find $RPM_BUILD_ROOT -name *.php*)
+
+# put the correct Apache user in cron file
+A2USER=wwwrun
+sed -i "s/@APACHE_USER@/${A2USER}/" $RPM_BUILD_ROOT/etc/ulteo/sessionmanager/sessionmanager.cron
+
 
 %post -n ulteo-ovd-session-manager
 A2CONFDIR=/etc/apache2/conf.d
 CONFDIR=/etc/ulteo/sessionmanager
-
-A2USER=wwwrun
 
 a2enmod php5 > /dev/null
 
@@ -124,8 +129,6 @@ EOF
 fi
 
 # link crons
-chmod a+x $CONFDIR/sessionmanager.cron
-sed -i "s/@APACHE_USER@/${A2USER}/" $CONFDIR/sessionmanager.cron
 ln -sfT $CONFDIR/sessionmanager.cron /etc/cron.d/sessionmanager
 
 %postun -n ulteo-ovd-session-manager
@@ -155,8 +158,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 /usr/*
 %config /etc/ulteo/sessionmanager/*.conf
-%config /etc/ulteo/sessionmanager/sessionmanager.cron
 %config /etc/logrotate.d/sessionmanager
+%defattr(0744,root,root)
+%config /etc/ulteo/sessionmanager/sessionmanager.cron
 %defattr(0660,wwwrun,www)
 %config /etc/ulteo/sessionmanager/config.inc.php
 %defattr(2770,wwwrun,www)
