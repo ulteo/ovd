@@ -47,15 +47,13 @@ class SessionManagement_novell extends SessionManagement {
 	public function appendToSessionCreateXML($dom_) {
 		$environment_node = $dom_->createElement('environment');
 		$environment_node->setAttribute('id', 'Novell');
-		
-		#$dlu = ($this->config['dlu']==1); <== should work !!!
+
 		$config = $this->prefs->get('SessionManagement', 'novell');
-		$dlu = ($config['dlu']==1);
-		
+		$dlu = ($config['dlu'] == 1);
+
 		if ($dlu) {
 			$environment_node->setAttribute('dlu', 'yes');
-		}
-		else {
+		} else {
 			$environment_node->setAttribute('server', $this->userDB->config['host']);
 			$environment_node->setAttribute('tree', suffix2domain($this->userDB->config['suffix']));
 			$environment_node->setAttribute('login', $_POST['login']);
@@ -70,11 +68,11 @@ class SessionManagement_novell extends SessionManagement {
 	/* Module methods */
 	public static function configuration() {
 		$ret = array();
-		
+
 		$c = new ConfigElement_select('dlu', _('Manage users by ZENworks DLU instead of native method'), _('Manage users by ZENworks DLU instead of native method'), _('Manage users by ZENworks DLU instead of native method'), 0);
 		$c->setContentAvailable(array(0=>_('no'), 1=>_('yes')));
-		$ret []= $c;
-		
+		$ret[] = $c;
+
 		return $ret;
 	}
 

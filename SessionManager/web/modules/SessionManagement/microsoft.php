@@ -48,7 +48,6 @@ class SessionManagement_microsoft extends SessionManagement {
 		$environment_node = $dom_->createElement('environment');
 		$environment_node->setAttribute('id', 'Microsoft');
 		$environment_node->setAttribute('domain', $this->userDB->config_ad['domain']);
-
 		$dom_->documentElement->appendChild($environment_node);
 
 		return;
