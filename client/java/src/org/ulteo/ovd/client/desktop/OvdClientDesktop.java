@@ -82,7 +82,7 @@ public class OvdClientDesktop extends OvdClient {
 	protected void customizeConnection(RdpConnectionOvd co) {
 		if (! this.desktopLaunched)
 			this.initDesktop(co);
-		co.setShell("OvdDestkop");
+		co.setShell("OvdDesktop");
 	}
 
 	@Override

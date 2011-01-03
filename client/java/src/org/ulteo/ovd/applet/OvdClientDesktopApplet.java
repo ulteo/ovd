@@ -137,7 +137,7 @@ public class OvdClientDesktopApplet extends OvdClient {
 
 	@Override
 	protected void customizeConnection(RdpConnectionOvd co) {
-		co.setShell("OvdDestkop");
+		co.setShell("OvdDesktop");
 	}
 
 	@Override
