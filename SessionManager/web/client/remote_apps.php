@@ -105,9 +105,6 @@ foreach ($session->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
 	$server_node->setAttribute('login', $session->settings['aps_access_login']);
 	$server_node->setAttribute('password', $session->settings['aps_access_password']);
 	foreach ($user->applications() as $application) {
-		if ($application->getAttribute('static'))
-			continue;
-
 		if ($application->getAttribute('type') != $server->getAttribute('type'))
 			continue;
 
@@ -117,11 +114,7 @@ foreach ($session->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
 		$application_node = $dom->createElement('application');
 		$application_node->setAttribute('id', $application->getAttribute('id'));
 		$application_node->setAttribute('name', $application->getAttribute('name'));
-		$application_node->setAttribute('server', $server->getAttribute('external_name'));
-		foreach (explode(';', $application->getAttribute('mimetypes')) as $mimetype) {
-			if ($mimetype == '')
-				continue;
-
+		foreach ($application->getMimeTypes() as $mimetype) {
 			$mimetype_node = $dom->createElement('mime');
 			$mimetype_node->setAttribute('type', $mimetype);
 			$application_node->appendChild($mimetype_node);
