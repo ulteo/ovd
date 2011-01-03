@@ -251,6 +251,7 @@ class Configuration_mode_novell extends Configuration_mode {
     if (isset($form['dsfw']) && ($form['dsfw'] == 'dsfw'))
       $disabled = 'checked="checked"';
     $str.= '<tr><td>'._('DSFW:').'</td><td><input class="input_checkbox" type="checkbox" '.$disabled.' name="dsfw" value="dsfw" /></td></tr>';
+    $disabled = '';
     if (isset($form['dlu']) && ($form['dlu'] == 'dlu'))
       $disabled = 'checked="checked"';
     $str.= '<tr><td>'._('ZENworks:').'</td><td><input class="input_checkbox" type="checkbox" '.$disabled.' name="dlu" value="dlu" /></td>';
