@@ -56,6 +56,9 @@ if (isset($_GET['info'])) {
 	echo '<ul>';
 	echo '<li><strong>'._('Servers:').'</strong><ul>';
 	foreach ($session->getAttribute('servers') as $role => $servers) {
+		if (count($servers) == 0)
+			continue;
+
 		echo '<li>'.$role.'</li>';
 		echo '<ul>';
 		foreach ($servers as $fqdn => $data) {
@@ -183,6 +186,9 @@ else {
 			echo '		<td><a href="sessions.php?info='.$session->id.'">'.$session->id.'</td>';
 			echo '		<td><ul>';
 			foreach ($session->getAttribute('servers') as $role => $servers) {
+				if (count($servers) == 0)
+					continue;
+
 				echo '<li>'.$role.'</li>';
 				echo '<ul>';
 				foreach ($servers as $fqdn => $data)
