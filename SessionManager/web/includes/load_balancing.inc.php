@@ -127,10 +127,20 @@ class DecisionCriterion_disk extends DecisionCriterion {
 
 class DecisionCriterion_networkfolder extends DecisionCriterion {
 	public function get() {
-		$sharedfolderdb = SharedFolderDB::getInstance();
-		$profiledb = ProfileDB::getInstance();
-		$total = $sharedfolderdb->count() + $profiledb->count();
-		$used = $sharedfolderdb->countOnServer($this->server->fqdn);
+		$used = 0;
+		$total = 0;
+		
+		if (Preferences::moduleIsEnabled('ProfileDB')) {
+			$profiledb = ProfileDB::getInstance();
+			$total += $profiledb->count();
+			$used += $profiledb->countOnServer($this->server->fqdn);
+		}
+		
+		if (Preferences::moduleIsEnabled('SharedFolderDB')) {
+			$sharedfolderdb = SharedFolderDB::getInstance();
+			$total += $sharedfolderdb->count();
+			$used += $sharedfolderdb->countOnServer($this->server->fqdn);
+		}
 		
 		if ($total == 0) {
 			return 0;
