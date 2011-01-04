@@ -302,7 +302,7 @@ class Server {
 		));
 
 		Logger::critical('main', 'Server "'.$this->fqdn.':'.$this->web_port.'" is unreachable, status switched to "broken"');
-		$this->setAttribute('status', 'broken');
+		$this->setStatus(Server::SERVER_STATUS_BROKEN);
 
 		$ev->emit();
 
