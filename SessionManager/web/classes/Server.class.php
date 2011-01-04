@@ -27,6 +27,7 @@ class Server {
 	const SERVER_TYPE_LINUX = "linux";
 	const SERVER_TYPE_WINDOWS = "windows";
 
+	const SERVER_STATUS_PENDING = "pending";
 	const SERVER_STATUS_ONLINE = "ready";
 	const SERVER_STATUS_OFFLINE = "down";
 	const SERVER_STATUS_BROKEN = "broken";
@@ -407,6 +408,8 @@ class Server {
 		));
 
 		switch ($status_) {
+			case 'pending':
+				break;
 			case 'ready':
 				if ($this->getAttribute('status') != 'ready') {
 					Logger::info('main', 'Status set to "ready" for server \''.$this->fqdn.'\'');
@@ -459,7 +462,9 @@ class Server {
 			$string .= '<span class="msg_unknown">'._('Under maintenance').'</span> ';
 
 		$buf = $this->getAttribute('status');
-		if ($buf == 'ready')
+		if ($buf == 'pending')
+			$string .= '<span class="msg_warn">'._('Pending').'</span>';
+		elseif ($buf == 'ready')
 			$string .= '<span class="msg_ok">'._('Online').'</span>';
 		elseif ($buf == 'down')
 			$string .= '<span class="msg_warn">'._('Offline').'</span>';
