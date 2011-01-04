@@ -81,6 +81,14 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, 
 	}
 
 	@Override
+	public void sw_setMyPosition(int x, int y, int width, int height) {
+		super.sw_setMyPosition(x, y, width, height);
+
+		if (this.isMouseEventsLocked())
+			this.unlockMouseEvents();
+	}
+
+	@Override
 	public void sw_setExtendedState(int state) {
 		super.sw_setExtendedState(state);
 
