@@ -119,6 +119,33 @@ public class GUIActions {
 		}
 	}
 
+	/* SetIconImage */
+	public static Runnable setIconImage(Window wnd, Image icon) {
+		return Actions.new SetIconImage(wnd, icon);
+	}
+
+	private class SetIconImage implements Runnable {
+		private Window wnd = null;
+		private Image icon = null;
+
+		public SetIconImage(Window wnd_, Image icon_) {
+			this.wnd = wnd_;
+			this.icon = icon_;
+		}
+
+		public void run() {
+			if (this.wnd == null)
+				return;
+
+			if (this.icon == null) {
+				GUIActions.initUlteoIcon();
+				this.icon = ULTEO_ICON;
+			}
+
+			this.wnd.setIconImage(this.icon);
+		}
+	}
+
 	/* CreateDialog */
 	public static Runnable createDialog(String message, String title) {
 		return Actions.new CreateDialog(message, title, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null);
@@ -142,20 +169,13 @@ public class GUIActions {
 			this.title = title_;
 			this.messageType = messageType_;
 			this.optionType = optionType_;
-
-			if (icon_ != null) {
-				this.icon = icon_;
-				return;
-			}
-
-			GUIActions.initUlteoIcon();
-			this.icon = ULTEO_ICON;
+			this.icon = icon_;
 		}
 
 		public void run() {
 			JOptionPane pane = new JOptionPane(this.message, this.messageType, this.optionType);
 			JDialog dialog = pane.createDialog(this.title);
-			dialog.setIconImage(this.icon);
+			setIconImage(dialog, this.icon).run();
 			setVisible(dialog, true).run();
 			requestFocus(dialog).run();
 		}
