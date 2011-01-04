@@ -26,6 +26,7 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.util.List;
@@ -199,10 +200,36 @@ public class GUIActions {
 		public void run() {
 			if (this.components == null)
 				return;
-			
+
 			for (Component each : this.components) {
 				each.setEnabled(this.enabled);
 			}
+		}
+
+	}
+
+	/* SetBounds */
+	public static Runnable setBounds(Component component, int x, int y, int width, int height) {
+		return Actions.new SetBounds(component, new Rectangle(x, y, width, height));
+	}
+	public static Runnable setBounds(Component component, Rectangle bounds) {
+		return Actions.new SetBounds(component, bounds);
+	}
+
+	private class SetBounds implements Runnable {
+		private Component component = null;
+		Rectangle bounds = null;
+
+		public SetBounds(Component component_, Rectangle bounds_) {
+			this.component = component_;
+			this.bounds = bounds_;
+		}
+
+		public void run() {
+			if (this.component == null || this.bounds == null)
+				return;
+			
+			this.component.setBounds(this.bounds);
 		}
 
 	}

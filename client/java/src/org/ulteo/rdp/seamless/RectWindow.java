@@ -29,6 +29,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.MouseEvent;
+import org.ulteo.gui.GUIActions;
+import org.ulteo.gui.SwingTools;
 
 public class RectWindow extends Component {
 	private static final int BORDER_SIZE = 5;
@@ -268,10 +270,10 @@ public class RectWindow extends Component {
 		Rectangle r_top = new Rectangle(r.x, r.y, r.width, RectWindow.BORDER_SIZE);
 		Rectangle r_bottom = new Rectangle(r.x, r.y+r.height-RectWindow.BORDER_SIZE, r.width, RectWindow.BORDER_SIZE);
 
-		this.left.setBounds(r_left);
-		this.right.setBounds(r_right);
-		this.top.setBounds(r_top);
-		this.bottom.setBounds(r_bottom);
+		SwingTools.invokeLater(GUIActions.setBounds(this.left, r_left));
+		SwingTools.invokeLater(GUIActions.setBounds(this.right, r_right));
+		SwingTools.invokeLater(GUIActions.setBounds(this.top, r_top));
+		SwingTools.invokeLater(GUIActions.setBounds(this.bottom, r_bottom));
 	}
 
 	@Override
@@ -302,10 +304,10 @@ public class RectWindow extends Component {
 	
 	@Override
 	public void setVisible(boolean b) {
-		this.left.setVisible(b);
-		this.right.setVisible(b);
-		this.top.setVisible(b);
-		this.bottom.setVisible(b);
+		SwingTools.invokeLater(GUIActions.setVisible(this.left, b));
+		SwingTools.invokeLater(GUIActions.setVisible(this.right, b));
+		SwingTools.invokeLater(GUIActions.setVisible(this.top, b));
+		SwingTools.invokeLater(GUIActions.setVisible(this.bottom, b));
 		
 		if (! b) {
 			this.setOffsets(0, 0);
