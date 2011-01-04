@@ -29,7 +29,7 @@ class UserDB_sql extends UserDB  {
 		}
 	}
 	
-	protected function exists($login_) {
+	public function exists($login_) {
 		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('SELECT 1 FROM @1 WHERE @2=%3', $this->table, 'login', $login_);
 		return ($sql2->NumRows() == 1);

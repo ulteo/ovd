@@ -36,6 +36,11 @@ abstract class UserDB extends Module  {
 		}
 		return self::$instance;
 	}
+	
+	public function exists($login_) {
+		return is_object($this->import($login_));
+	}
+	
 	public function isOK($user_){
 		$minimun_attribute = array('login','displayname');
 		if (is_object($user_)){
