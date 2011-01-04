@@ -96,6 +96,7 @@
   </target>
 
   <target name="rdpClient.jar" depends="rdpClient">
+    <copy file="icons/ulteo.png" todir="build/pics" />
     <jar destfile="jars/RDPClient.jar" basedir="build">
       <manifest>
         <attribute name="Main-Class" value="org.ulteo.rdp.RdpClient"/>
