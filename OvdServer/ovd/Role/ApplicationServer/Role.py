@@ -93,7 +93,17 @@ class Role(AbstractRole):
 		
 		self.purgeArchives()
 		
-		for _ in xrange(1):
+		if Config.aps_multithread:
+			cpuInfos = Platform.System.getCPUInfos()
+			vcpu = cpuInfos[0]
+			ram_total = Platform.System.getRAMTotal()
+			ram = int(round(ram_total / 1024.0 / 1024.0))
+			
+			nb_thread = int(round(1 + (ram + vcpu * 2)/3))
+		else:
+			nb_thread = 1
+		
+		for _ in xrange(nb_thread):
 			self.threads.append(SessionManagement(self, self.sessions_spooler, self.sessions_spooler2))
 		
 		if self.canManageApplications():

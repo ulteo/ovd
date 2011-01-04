@@ -57,6 +57,8 @@ class Config:
 	SM_SERVER_PORT = 1111
 	SLAVE_SERVER_PORT = 1112
 	
+	aps_multithread = False
+	
 	@staticmethod
 	def read(filename):
 		try:
@@ -106,6 +108,9 @@ class Config:
 		
 		if Config.infos.has_key("LOG_THREADED"):
 			Config.log_threaded = (Config.infos["LOG_THREADED"].lower() == "true")
+		
+		if Config.infos.has_key("APS_MULTITHREAD"):
+			Config.aps_multithread = (Config.infos["APS_MULTITHREAD"].lower() == "true")
 		
 		return True
 	
