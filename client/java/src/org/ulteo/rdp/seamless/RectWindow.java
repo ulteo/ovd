@@ -283,6 +283,22 @@ public class RectWindow extends Component {
 		r.height = this.bottom.getY() + this.bottom.getHeight() - r.y;
 		return r;
 	}
+
+	@Override
+	public boolean isVisible() {
+		boolean isVisible1 = this.left.isVisible();
+		boolean isVisible2 = this.right.isVisible();
+		boolean isVisible3 = this.top.isVisible();
+		boolean isVisible4 = this.bottom.isVisible();
+
+		if (! (isVisible1 || isVisible2 || isVisible3 || isVisible4))
+			return false;
+
+		if (! (isVisible1 && isVisible2 && isVisible3 && isVisible4))
+			org.ulteo.Logger.error("Weird. Some parts of rect window are visible (left: "+isVisible1+", right: "+isVisible2+", top: "+isVisible3+", bottom: "+isVisible4+")");
+
+		return true;
+	}
 	
 	@Override
 	public void setVisible(boolean b) {
@@ -290,7 +306,7 @@ public class RectWindow extends Component {
 		this.right.setVisible(b);
 		this.top.setVisible(b);
 		this.bottom.setVisible(b);
-
+		
 		if (! b) {
 			this.setOffsets(0, 0);
 			this.resetClicks();

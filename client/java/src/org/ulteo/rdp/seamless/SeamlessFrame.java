@@ -22,6 +22,7 @@
 package org.ulteo.rdp.seamless;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Rectangle;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -74,6 +75,22 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, 
 
 	public boolean _isResizable() {
 		return this.isResizable();
+	}
+
+	@Override
+	public void sw_setExtendedState(int state) {
+		super.sw_setExtendedState(state);
+
+		if (state == Frame.ICONIFIED && this.rw.isVisible())
+			this.rw.setVisible(false);
+	}
+
+	@Override
+	public void sw_destroy() {
+		super.sw_destroy();
+
+		if (this.rw.isVisible())
+			this.rw.setVisible(false);
 	}
 
 	public void processMouseEvent(MouseEvent e, int type) {
