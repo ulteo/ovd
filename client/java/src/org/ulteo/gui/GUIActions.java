@@ -29,6 +29,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.Window;
+import java.net.URL;
 import java.util.List;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
@@ -40,6 +41,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JSlider;
 import javax.swing.text.JTextComponent;
+import org.ulteo.Logger;
 
 public class GUIActions {
 	private static GUIActions Actions = new GUIActions();
@@ -49,8 +51,14 @@ public class GUIActions {
 	private static void initUlteoIcon() {
 		if (ULTEO_ICON != null)
 			return;
-		
-		ULTEO_ICON = Toolkit.getDefaultToolkit().getImage(GUIActions.class.getClassLoader().getResource("pics/ulteo.png"));
+
+		URL url = GUIActions.class.getClassLoader().getResource("pics/ulteo.png");
+		if (url == null) {
+			Logger.error("Weird. The icon pics/ulteo.png was not found in the jar");
+			return;
+		}
+
+		ULTEO_ICON = Toolkit.getDefaultToolkit().getImage(url);
 	}
 
 	/* SetVisible */
