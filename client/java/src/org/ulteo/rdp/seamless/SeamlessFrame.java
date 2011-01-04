@@ -32,6 +32,7 @@ import org.ulteo.utils.AbstractFocusManager;
 
 import net.propero.rdp.Common;
 import net.propero.rdp.rdp5.seamless.SeamFrame;
+import org.ulteo.gui.GUIActions;
 
 
 public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, FocusListener {
@@ -48,6 +49,8 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, 
 		Dimension dim = new Dimension(this.backstore.getWidth(), this.backstore.getHeight());
 		this.rw = new RectWindow(this, dim, this.maxBounds);
 		this.addFocusListener(this);
+
+		GUIActions.setIconImage(this, null).run();
 	}
 
 	private void parseFlags(int flags) {
