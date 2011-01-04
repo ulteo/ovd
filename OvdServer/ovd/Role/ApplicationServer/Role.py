@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -122,8 +122,7 @@ class Role(AbstractRole):
 	
 	def stop(self):
 		for thread in self.threads:
-			if thread.isAlive():
-				thread._Thread__stop()
+			thread.order_stop()
 		
 		for session in self.sessions.values():
 			session.switch_status(Session.SESSION_STATUS_WAIT_DESTROY)
@@ -184,7 +183,7 @@ class Role(AbstractRole):
 		
 		self.status = Role.STATUS_RUNNING
 		
-		while 1:
+		while self.thread.thread_continue():
 			for session in self.sessions.values():
 				try:
 					ts_id = RolePlatform.TS.getSessionID(session.user.name)

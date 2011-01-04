@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2010 Ulteo SAS
+# Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -20,10 +20,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import Queue
-from threading import Thread
 
 from ovd.Logger import Logger
 from ovd.Platform import Platform
+from ovd.Thread import Thread
 
 from Platform import Platform as RolePlatform
 from Session import Session
@@ -38,8 +38,9 @@ class SessionManagement(Thread):
 		self.queue = queue
 		self.queue2 = queue2
 	
+	
 	def run(self):
-		while True:
+		while self.thread_continue():
 			#Logger.debug("%s wait job"%(str(self)))
 			
 			try:

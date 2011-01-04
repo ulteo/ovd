@@ -1,8 +1,8 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -23,11 +23,11 @@ import glob
 import os
 import ConfigParser
 from Queue import Queue
-from threading import Thread
 from xml.dom import minidom
 from xml.dom.minidom import Document
 
 from ovd.Logger import Logger
+from ovd.Thread import Thread
 
 class Apt(Thread):
 	def __init__(self):
@@ -67,7 +67,7 @@ class Apt(Thread):
 	
 	
 	def run(self):
-		while True:
+		while self.thread_continue():
 			request = self.queue.get()
 			print "perform request: ",request
 			request.status = "in progress"
@@ -78,7 +78,6 @@ class Apt(Thread):
 			else:
 				request.status = "success"
 				Logger.debug("Apt finish request succefully")
-
 
 
 class Request:

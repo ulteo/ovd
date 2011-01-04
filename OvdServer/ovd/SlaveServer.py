@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2010 Ulteo SAS
+# Copyright (C) 2008-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2008-2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2008-2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -21,7 +21,6 @@
 
 import os
 import time
-import threading
 import sys
 from xml.dom.minidom import Document
 
@@ -32,6 +31,7 @@ from ovd.Platform import Platform
 
 from Dialog import Dialog
 from SMRequestManager import SMRequestManager
+from Thread import Thread
 
 class SlaveServer:
 	def __init__(self, CommunicationClass):
@@ -93,7 +93,7 @@ class SlaveServer:
 			Logger.error("SlaveServer: unable to initialize communication class")
 			return False
 		
-		self.communication.ovd_thread = threading.Thread(name="Communication", target=self.communication.run)
+		self.communication.ovd_thread = Thread(name="Communication", target=self.communication.run)
 		self.threads.append(self.communication.ovd_thread)
 		
 		for role in self.roles:
@@ -104,7 +104,7 @@ class SlaveServer:
 				Logger.error("SlaveServer: unable to initialize role '%s' %s"%(role.getName(), str(e)))
 				return False
 			
-			role.thread = threading.Thread(name="role_%s"%(role.getName()), target=role.run)
+			role.thread = Thread(name="role_%s"%(role.getName()), target=role.run)
 			self.threads.append(role.thread)
 		
 		# Start 
@@ -165,10 +165,9 @@ class SlaveServer:
 		Logger.info("SlaveServer stop")
 		self.stopped = True
 		self.smRequestManager.switch_status(self.smRequestManager.STATUS_PENDING)
-			
+		
 		for thread in self.threads:
-			if thread.isAlive():
-				thread._Thread__stop()
+			thread.order_stop()
 		
 		Logger.info("Waiting for thread stop")
 		time.sleep(2)
