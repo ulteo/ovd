@@ -110,6 +110,11 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 
 		RdpClient.logger = Logger.getLogger(RdpClient.class);
 
+		// Init Ulteo Logger instance
+		String log_dir = ".";
+		if (! org.ulteo.Logger.initInstance(true, log_dir+System.getProperty("file.separator")+org.ulteo.Logger.getDate()+".log", true))
+			System.err.println("Unable to iniatialize logger instance");
+
 		LongOpt[] alo = new LongOpt[4];
 		alo[0] = new LongOpt("persistent-cache-location", LongOpt.REQUIRED_ARGUMENT, null, 0);
 		alo[1] = new LongOpt("persistent-cache-maxsize", LongOpt.REQUIRED_ARGUMENT, null, 1);
