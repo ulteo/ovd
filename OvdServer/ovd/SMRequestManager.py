@@ -131,7 +131,7 @@ class SMRequestManager():
 			response = self._send_packet(path, document)
 			while response == False and retry < self.REQUEST_RETRY :
 				time.sleep(0.2)
-				Logger.error("SMRequest::send_packet: one request FAILED [retry %i]"%(retry))
+				Logger.debug("SMRequest::send_packet: one request FAILED [retry %i]"%(retry))
 				response = self._send_packet(path, document)
 				retry += 1
 			return response
