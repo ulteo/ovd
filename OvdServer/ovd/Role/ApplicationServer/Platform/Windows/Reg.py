@@ -32,7 +32,6 @@ from ovd.Logger import Logger
 
 def testMe():
 	import os
-	import _winreg
 	directory = r"C:\Documents and Settings\tt"
 	
 	registryFile = os.path.join(directory, "NTUSER.DAT")
@@ -53,7 +52,7 @@ def testMe():
 	hiveName = "testme"
 	
 	# Load the hive
-	_winreg.LoadKey(win32con.HKEY_USERS, hiveName, registryFile)
+	win32api.RegLoadKey(win32con.HKEY_USERS, hiveName, registryFile)
 	
 	disableActiveSetup(hiveName)
 	

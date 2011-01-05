@@ -28,7 +28,6 @@ import win32file
 import win32netcon
 import win32security
 import win32wnet
-import _winreg
 
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Profile import Profile as AbstractProfile
@@ -123,10 +122,10 @@ class Profile(AbstractProfile):
 				rand = random.randrange(10000, 50000)
 				
 				hiveName_src = "OVD_%s_%d"%(str(self.session.id), rand)
-				_winreg.LoadKey(win32con.HKEY_USERS, hiveName_src, src)
+				win32api.RegLoadKey(win32con.HKEY_USERS, hiveName_src, src)
 				
 				hiveName_dst = "OVD_%s_%d"%(str(self.session.id), rand+1)
-				_winreg.LoadKey(win32con.HKEY_USERS, hiveName_dst, dst)
+				win32api.RegLoadKey(win32con.HKEY_USERS, hiveName_dst, dst)
 				
 				hkey_src = win32api.RegOpenKey(win32con.HKEY_USERS, r"%s"%(hiveName_src), 0, win32con.KEY_ALL_ACCESS)
 				hkey_dst = win32api.RegOpenKey(win32con.HKEY_USERS, r"%s"%(hiveName_dst), 0, win32con.KEY_ALL_ACCESS)

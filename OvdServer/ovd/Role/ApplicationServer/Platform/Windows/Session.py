@@ -28,7 +28,6 @@ import win32con
 import win32file
 import win32profile
 import win32security
-import _winreg
 
 from ovd.Logger import Logger
 from ovd.Platform import Platform
@@ -177,12 +176,12 @@ class Session(AbstractSession):
 		hiveName = "OVD_%s_%d"%(str(self.id), random.randrange(10000, 50000))
 		
 		# Load the hive
-		_winreg.LoadKey(win32con.HKEY_USERS, hiveName, registryFile)
+		win32api.RegLoadKey(win32con.HKEY_USERS, hiveName, registryFile)
 		
 		# Set the OVD Environnment
 		path = r"%s\Environment"%(hiveName)
 		try:
-			Reg.CreateKeyR(_winreg.HKEY_USERS, path)
+			Reg.CreateKeyR(win32con.HKEY_USERS, path)
 			hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
 		except:
 			hkey = None
@@ -195,7 +194,7 @@ class Session(AbstractSession):
 		# Set the language
 		if self.parameters.has_key("locale"):
 			path = r"%s\Control Panel\Desktop"%(hiveName)
-			key = win32api.RegOpenKey(_winreg.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
 			win32api.RegSetValueEx(key, "MUILanguagePending", 0, win32con.REG_DWORD, Langs.getLCID(self.parameters["locale"]))
 			win32api.RegSetValueEx(key, "MultiUILanguageId", 0, win32con.REG_DWORD, Langs.getLCID(self.parameters["locale"]))
 			win32api.RegCloseKey(key)
@@ -239,39 +238,38 @@ class Session(AbstractSession):
 				#"StartMenuLogOff",
 				]
 		try:
-			Reg.CreateKeyR(_winreg.HKEY_USERS, path)
-			key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+			Reg.CreateKeyR(win32con.HKEY_USERS, path)
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
 		except:
 			key = None
-		
 		if key is None:
 			Logger.error("Unable to open key '%s'"%(path))
 		else:
 			for item in restrictions:
-				_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 1)
-			_winreg.CloseKey(key)
+				win32api.RegSetValueEx(key, item, 0, win32con.REG_DWORD, 1)
+			win32api.RegCloseKey(key)
 
 		# Enable to use of lnk file from share without popup
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Policies\Associations"%(hiveName)
 	
 		try:
-			Reg.CreateKeyR(_winreg.HKEY_USERS, path)
-			key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+			Reg.CreateKeyR(win32con.HKEY_USERS, path)
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
 		except:
 			key = None
 		if key is None:
 			Logger.error("Unable to open key '%s'"%(path))
 		else:
-			_winreg.SetValueEx(key, "ModRiskFileTypes", 0, _winreg.REG_SZ, ".exe;.msi;.vbs")
-			_winreg.CloseKey(key)
+			win32api.RegSetValueEx(key, "ModRiskFileTypes", 0, win32con.REG_SZ, ".exe;.msi;.vbs")
+			win32api.RegCloseKey(key)
 
 
 		# start menu customization
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"%(hiveName)
 		restrictions = ["Start_ShowRun", "StartMenuAdminTools", "Start_AdminToolsRoot"]
 		try:
-			Reg.CreateKeyR(_winreg.HKEY_USERS, path)
-			key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+			Reg.CreateKeyR(win32con.HKEY_USERS, path)
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
 		except:
 			key = None
 		
@@ -279,8 +277,8 @@ class Session(AbstractSession):
 			Logger.error("Unable to open key '%s'"%(path))
 		else:
 			for item in restrictions:
-				_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 0)
-			_winreg.CloseKey(key)
+				win32api.RegSetValueEx(key, item, 0, win32con.REG_DWORD, 0)
+			win32api.RegCloseKey(key)
 		
 		if self.profile is not None:
 			# http://support.microsoft.com/kb/810869
@@ -288,8 +286,8 @@ class Session(AbstractSession):
 			path = r"%s\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel"%(hiveName)
 			restrictions = ["{645FF040-5081-101B-9F08-00AA002F954E}"]
 			try:
-				Reg.CreateKeyR(_winreg.HKEY_USERS, path)
-				key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+				Reg.CreateKeyR(win32con.HKEY_USERS, path)
+				key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
 			except:
 				key = None
 		
@@ -297,8 +295,8 @@ class Session(AbstractSession):
 				Logger.error("Unable to open key '%s'"%(path))
 			else:
 				for item in restrictions:
-					_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 1)
-				_winreg.CloseKey(key)
+					win32api.RegSetValueEx(key, item, 0, win32con.REG_DWORD, 1)
+				win32api.RegCloseKey(key)
 	
 
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Policies\System"%(hiveName)
@@ -308,16 +306,16 @@ class Session(AbstractSession):
 				]
 		
 		try:
-			Reg.CreateKeyR(_winreg.HKEY_USERS, path)
-			key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+			Reg.CreateKeyR(win32con.HKEY_USERS, path)
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
 		except:
 			key = None
 		if key is None:
 			Logger.error("Unable to open key '%s'"%(path))
 		else:
 			for item in restrictions:
-				_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 1)
-			_winreg.CloseKey(key)
+				win32api.RegSetValueEx(key, item, 0, win32con.REG_DWORD, 1)
+			win32api.RegCloseKey(key)
 		
 		
 		# Remove Windows startup sound
@@ -328,15 +326,15 @@ class Session(AbstractSession):
 			path = r"%s\AppEvents\Schemes\Apps\.Default\%s\.Current"%(hiveName, k)
 			
 			try:
-				Reg.CreateKeyR(_winreg.HKEY_USERS, path)
-				key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+				Reg.CreateKeyR(win32con.HKEY_USERS, path)
+				key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
 			except:
 				key = None
 			if key is None:
 				Logger.error("Unable to open key '%s'"%(path))
 			else:
-				_winreg.SetValueEx(key, None, 0, _winreg.REG_EXPAND_SZ, "")
-				_winreg.CloseKey(key)
+				win32api.RegSetValueEx(key, None, 0, win32con.REG_EXPAND_SZ, "")
+				win32api.RegCloseKey(key)
 		
 		
 		# Desktop customization
@@ -344,16 +342,16 @@ class Session(AbstractSession):
 		items = ["ScreenSaveActive", "ScreenSaverIsSecure"]
 		
 		try:
-			Reg.CreateKeyR(_winreg.HKEY_USERS, path)
-			key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+			Reg.CreateKeyR(win32con.HKEY_USERS, path)
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
 		except:
 			key = None
 		if key is None:
 			Logger.error("Unable to open key '%s'"%(path))
 		else:
 			for item in items:
-				_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 0)
-			_winreg.CloseKey(key)
+				win32api.RegSetValueEx(key, item, 0, win32con.REG_DWORD, 0)
+			win32api.RegCloseKey(key)
 		
 		# Overwrite Active Setup: works partially
 		try:
