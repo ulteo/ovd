@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -37,6 +37,7 @@ class Share:
 	def __init__(self, name, directory):
 		self.name = name
 		self.directory = directory + "/" + name
+		self.group = "ovd_share_"+self.name
 		self.users = []
 		
 		self.active = False
@@ -82,9 +83,14 @@ class Share:
 	
 	
 	def enable(self):
-		users = ["%s:f"%(user) for user in self.users]
+		cmd = "groupadd  %s"%(self.group)
+		s, o = commands.getstatusoutput(cmd)
+		if s is not 0:
+			Logger.error("FS: unable to create group")
+			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
+			return False
 		
-		cmd = 'net usershare add %s "%s" %s %s,Everyone:d'%(self.name, self.directory, self.name, ",".join(users))
+		cmd = 'net usershare add %s "%s" %s %s:f,Everyone:d'%(self.name, self.directory, self.name, self.group)
 		s, o = commands.getstatusoutput(cmd)
 		if s is not 0:
 			Logger.error("FS: unable to add share")
@@ -129,25 +135,50 @@ class Share:
 			Logger.error("FS: unable to del share")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
 		
+		
+		cmd = "groupdel  %s"%(self.group)
+		s, o = commands.getstatusoutput(cmd)
+		if s is not 0:
+			ret = False
+			Logger.error("FS: unable to del group")
+			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
 
 		self.active = False
 		return ret
 	
 	
 	def add_user(self, user):
+		if not self.active:
+			self.enable()
+		
+		cmd = "adduser %s %s"%(user, self.group)
+		s, o = commands.getstatusoutput(cmd)
+		if s is not 0:
+			Logger.error("FS: unable to add user in group")
+			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
+			return False
+		
 		self.users.append(user)
-		return self.enable()
+		return True
 	
 	
 	def del_user(self, user):
 		if user not in self.users:
 			return True
 		
-		self.users.remove(user)
-		if len(self.users) > 0:
-			return True
+		ret = True
+		cmd = "deluser %s %s"%(user, self.group)
+		s, o = commands.getstatusoutput(cmd)
+		if s is not 0:
+			ret = False
+			Logger.error("FS: unable to del user in group")
+			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
 		
-		return self.disable()
+		self.users.remove(user)
+		if len(self.users) == 0:
+			return self.disable()
+		
+		return True
 	
 	
 	def has_user(self, user):
