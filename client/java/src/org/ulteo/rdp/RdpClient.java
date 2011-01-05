@@ -56,6 +56,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		public String username = null;
 		public String password = null;
 		public String server = null;
+		public int port = RdpConnection.RDP_PORT;
 		public int height = RdpConnection.DEFAULT_HEIGHT;
 		public int width = RdpConnection.DEFAULT_WIDTH;
 		public String shell = null;
@@ -181,8 +182,28 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		if (params.username == null || params.password == null)
 			usage();
 
-		if (opt.getOptind() < args.length)
-			params.server = new String(args[args.length - 1]);
+		if (opt.getOptind() < args.length) {
+			String tmp = new String(args[args.length - 1]);
+			int separatorPosition = tmp.indexOf(":");
+			if (separatorPosition == -1) {
+				params.server = tmp;
+			}
+			else {
+				params.server = tmp.substring(0, separatorPosition);
+				tmp = tmp.substring(separatorPosition + 1);
+				try {
+					int port = Integer.parseInt(tmp);
+					if (port < 1 || port > 65535) {
+						org.ulteo.Logger.error("Bad port range('"+port+"'): must be between 1 and 65535");
+						usage();
+					}
+					params.port = port;
+				} catch (NumberFormatException nfe) {
+					org.ulteo.Logger.error("Failed to parse the port number('"+tmp+"'): "+nfe.getMessage());
+					usage();
+				}
+			}
+		}
 		else
 			usage();
 
@@ -325,7 +346,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 			connection.getSeamlessChannel().setMainFrame(this);
 		}
 
-		connection.setServer(params.server, RdpConnection.RDP_PORT);
+		connection.setServer(params.server, params.port);
 		connection.setCredentials(params.username, params.password);
 		connection.setGraphic(params.width, params.height, params.bpp);
 
