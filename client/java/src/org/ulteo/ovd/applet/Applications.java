@@ -74,7 +74,7 @@ class OrderApplication extends Order {
 	public int id;
 	public int application_id;
 	public int server_id;
-	public int repository;
+	public String repository;
 	public String path = null;
 	
 	public OrderApplication(int id, int application_id, int server_id) {
@@ -83,7 +83,7 @@ class OrderApplication extends Order {
 		this.server_id = server_id;	
 	}
 	
-	public void setPath(int repository, String path) {
+	public void setPath(String repository, String path) {
 		this.repository = repository;
 		this.path = path;
 	}
@@ -300,7 +300,7 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 					//chan.sendStartApp(order.id, order.application_id);
 				else {
 					System.out.println("App: "+order.path);
-					this.ovd.startApplication(order.id, order.application_id, OvdAppChannel.DIR_TYPE_SHARED_FOLDER, ""+order.repository, order.path, order.server_id);
+					this.ovd.startApplication(order.id, order.application_id, OvdAppChannel.DIR_TYPE_SHARED_FOLDER, order.repository, order.path, order.server_id);
 					//chan.sendStartApp(order.id, order.application_id, chan.DIR_TYPE_SHARED_FOLDER, ""+order.repository, order.path);
 				}
 			}
@@ -329,7 +329,7 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 		this.pushOrder(new OrderApplication(token, id, new Integer(server)));
 	}
 	
-	public void startApplicationWithFile(int token, int id, int server, int repository, String path) {
+	public void startApplicationWithFile(int token, int id, int server, String repository, String path) {
 		OrderApplication o = new OrderApplication(token, id, new Integer(server));
 		o.setPath(repository, path);
 		
