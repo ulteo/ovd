@@ -58,7 +58,7 @@
 	The Application Server system has to be a dedicated system
 	for Ulteo OVD usage. It can also host other Ulteo OVD
 	roles. But we don't garantee the system will work if you are
-	using another service on ths system.
+	using another service on the system.
       </para>
     </important>
 
