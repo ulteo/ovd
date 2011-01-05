@@ -204,6 +204,9 @@ public class SeamFrame extends Frame
 	public void sw_setCursor(Cursor cursor) {
 		this.setCursor(cursor);
 	}
+	public String sw_getTitle() {
+		return this.getTitle();
+	}
 	public void sw_setTitle(String title) {
 		this.setTitle(title);
 	}

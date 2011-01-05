@@ -50,6 +50,7 @@ public interface SeamlessWindow {
 	void sw_setIconBuffer(byte[] buffer);
 
 	void sw_setCursor(Cursor cursor);
+	String sw_getTitle();
 	void sw_setTitle(String title);
 	int sw_getExtendedState();
 	void sw_setExtendedState(int state);

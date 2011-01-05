@@ -210,6 +210,9 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	public void sw_setCursor(Cursor cursor) {
 		this.setCursor(cursor);
 	}
+	public String sw_getTitle() {
+		return this.getTitle();
+	}
 	public void sw_setTitle(String title) {
 		this.setTitle(title);
 	}

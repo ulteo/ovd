@@ -32,6 +32,7 @@
 
 package org.ulteo.rdp.seamless;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.KeyboardFocusManager;
@@ -42,12 +43,20 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowEvent;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import net.propero.rdp.Common;
 import net.propero.rdp.Options;
 import net.propero.rdp.rdp5.seamless.SeamlessWindow;
+import org.ulteo.Logger;
+import org.ulteo.gui.GUIActions;
+import org.ulteo.gui.SwingTools;
+import org.ulteo.utils.I18n;
 
 
 public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChannel implements MouseListener, MouseMotionListener {
@@ -60,8 +69,12 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 
 	private Timer clickTimer = null;
 
+	protected ConcurrentHashMap<String, DestroyWindowTimer> closeHistory = null;
+
 	public SeamlessChannel(Options opt_, Common common_) {
 		super(opt_, common_);
+
+		this.closeHistory = new ConcurrentHashMap<String, DestroyWindowTimer>();
 	}
 
 	@Override
@@ -104,6 +117,131 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 		this.addFrame((SeamlessWindow)sf, name);
 
 		return true;
+	}
+	
+	protected boolean processDestroy(long id, long flags) {
+		String name = "w_"+id;
+		if (this.closeHistory.containsKey(name)) {
+			DestroyWindowTimer closeTimer = this.closeHistory.remove(name);
+			if (closeTimer == null) {
+				Logger.error("[processDestroy] Weird. No close timer for window '"+name+"'");
+				return false;
+			}
+
+			if (closeTimer.isStarted() || closeTimer.isDone()) {
+				Logger.debug("closeTimer is started or done");
+				return true;
+			}
+
+			closeTimer.cancel();
+			closeTimer.purge();
+		}
+
+		return super.processDestroy(id, flags);
+	}
+
+	@Override
+	public void windowClosing(WindowEvent we) {
+		Component c = we.getComponent();
+		if (! (c instanceof SeamlessWindow))
+			return;
+
+		SeamlessWindow wnd = (SeamlessWindow) c;
+		String name = "w_"+wnd.sw_getId();
+
+		if (this.closeHistory.containsKey(name))
+			return;
+
+		DestroyWindowTimer closeTimer = new DestroyWindowTimer(wnd);
+		closeTimer.schedule();
+
+		this.closeHistory.put(name, closeTimer);
+
+		super.windowClosing(we);
+	}
+
+	private class DestroyWindowTimer extends Timer {
+		private DestroyWindowTask task = null;
+
+		public DestroyWindowTimer(SeamlessWindow wnd) {
+			this.task = new DestroyWindowTask(wnd);
+		}
+
+		public void schedule() {
+			this.schedule(this.task, 2000);
+		}
+
+		public boolean isStarted() {
+			return (this.task.getState() == 1);
+		}
+
+		public boolean isDone() {
+			return (this.task.getState() == 2);
+		}
+	}
+
+	private class DestroyWindowTask extends TimerTask {
+		private SeamlessWindow wnd = null;
+		private int state = 0;
+
+		DestroyWindowTask(SeamlessWindow wnd_) {
+			super();
+
+			this.wnd = wnd_;
+		}
+
+		public int getState() {
+			return this.state;
+		}
+
+		@Override
+		public void run() {
+			this.state = 1;
+
+			String key = "w_"+this.wnd.sw_getId();
+			if (! windows.containsKey(key)) {
+				Logger.error("[DestroyWindowTask] Failed to find the window "+key);
+				return;
+			}
+
+			String[] choices = {I18n._("Yes"), I18n._("No")};
+
+			JOptionPane pane = new JOptionPane(I18n._("Would you force quit the application '"+this.wnd.sw_getTitle()+"'?"),
+					JOptionPane.WARNING_MESSAGE,
+					JOptionPane.YES_NO_OPTION,
+					null,
+					choices,
+					choices[1]);
+			final JDialog dialog = pane.createDialog(I18n._("Warning!"));
+			GUIActions.setIconImage(dialog, null).run();
+			try {
+				SwingTools.invokeAndWait(new Thread(new Runnable() {
+
+					public void run() {
+						GUIActions.setVisible(dialog, true).run();
+						GUIActions.requestFocus(dialog).run();
+					}
+				}));
+			} catch (Exception ex) {
+				Logger.error("[DestroyWindowTask] Failed to show the popup: "+ex.getMessage());
+				return;
+			}
+			Object r = pane.getValue();
+			if (! (r instanceof String)) {
+				Logger.error("[DestroyWindowTask] Popup result is not a string: "+r);
+				return;
+			}
+
+			if (! ((String) r).equalsIgnoreCase(I18n._("Yes"))) {
+				closeHistory.remove(key);
+				return;
+			}
+
+			windows.remove(key);
+			this.wnd.sw_destroy();
+			
+			this.state = 2;
+		}
 	}
 
 	private int detectCorner(MouseEvent e, Rectangle wndSize) {
