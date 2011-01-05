@@ -382,6 +382,8 @@ var Daemon = Class.create({
 	},
 
 	do_ended: function() {
+		window.onbeforeunload = function(e) {}
+
 		this.push_log('debug', '[daemon] do_ended()');
 
 		if ($('splashContainer').visible())
