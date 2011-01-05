@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Calendar;
 
@@ -67,7 +68,8 @@ public class Logger {
 	private BufferedWriter fileStream = null;
 	private String lineSeparator = null;
 	
-	private PrintStream stdout = null;                                        
+	private PrintStream stdout = null;
+	private OutputStream out = null;
 	
 	public Logger(boolean dump_stdout, String filename, boolean redirectOut) throws Exception{
 		this.lineSeparator = System.getProperty("line.separator"); 
@@ -83,9 +85,9 @@ public class Logger {
 		}
 		
 		if (this.redirectOut) {
-			LoggingOutputStream los = new LoggingOutputStream(this);
-			System.setOut(new PrintStream(los, true));
-		    System.setErr(new PrintStream(los, true));
+			this.out = new LoggingOutputStream(this);
+			System.setOut(new PrintStream(this.out, true));
+			System.setErr(new PrintStream(this.out, true));
 		}
 	}
 	
@@ -190,5 +192,12 @@ public class Logger {
 		if (instance == null)
 			return;
 		instance.write(msg, "debug");
+	}
+
+	public static OutputStream getOutputStream() {
+		if (instance == null)
+			return null;
+
+		return instance.out;
 	}
 }

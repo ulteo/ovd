@@ -29,6 +29,7 @@ import java.awt.Toolkit;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
@@ -40,8 +41,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -60,6 +59,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.ulteo.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -350,7 +350,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 			URL url = new URL(this.base_url+webservice);
 
 			if (showLog)
-				System.out.println("Connecting URL ... "+url);
+				Logger.debug("Connecting URL ... "+url);
 			connexion = (HttpURLConnection) url.openConnection();
 			connexion.setConnectTimeout(TIMEOUT);
 
@@ -376,7 +376,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 				out.write(data);
 				out.flush();
 				out.close();
-				System.out.println("Send: "+data);
+				Logger.debug("Send: "+data);
 			}
 			
 
@@ -385,7 +385,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 			String contentType = connexion.getContentType();
 
 			if (showLog)
-				System.out.println("Response "+r+ " ==> "+res+ " type: "+contentType);
+				Logger.debug("Response "+r+ " ==> "+res+ " type: "+contentType);
 
 			this.moreInfos_lastResponse = "\tResponse code: "+ r +"\n\tResponse message: "+ res +"\n\tContent type: "+ contentType;
 
@@ -421,7 +421,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 					BufferedInputStream stream = new BufferedInputStream(in);
 					int readed = stream.read(buffer);
 					if (readed != length)
-						System.err.println("askWebservice: Content-Length return "+length+" but read "+readed+" bytes");					
+						Logger.error("askWebservice: Content-Length return "+length+" but read "+readed+" bytes");
 					
 					obj = new ImageIcon(buffer);
 				}
@@ -431,7 +431,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 					for( int c = d.read(); c !=-1; c = d.read())
 						buffer+=(char)c;
 					
-					System.out.println("Unknown content-type: "+contentType+"buffer: \n"+buffer+"==\n");
+					Logger.warn("Unknown content-type: "+contentType+"buffer: \n"+buffer+"==\n");
 				}
 
 				String headerName=null;
@@ -542,7 +542,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 					return false;
 				}
 				catch(Exception err) {
-					System.out.println("Error: bad XML #1");
+					Logger.error("Error: bad XML #1");
 				}
 
 				for (Callback c : this.callbacks)
@@ -613,7 +613,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 							int val = Integer.parseInt(value);
 							response.setDesktopIcons(val > 0);
 						} catch (NumberFormatException ex) {
-							org.ulteo.Logger.error("Failed to parse value '"+value+"' (name: "+NAME_DESKTOP_ICONS+")");
+							Logger.error("Failed to parse value '"+value+"' (name: "+NAME_DESKTOP_ICONS+")");
 						}
 					}
 				}
@@ -675,17 +675,25 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	}
 
 	private void dumpXML(Document document, String msg) {
-		if (msg != null)
-			System.out.println(msg);
-		
+		OutputStream out = Logger.getOutputStream();
+		if (out == null) {
+			Logger.warn("[dumpXML] No output stream is available from Logger");
+			return;
+		}
+
 		try {
+			if (msg != null)
+				out.write(msg.getBytes());
+			
 			TransformerFactory tFactory = TransformerFactory.newInstance();
 			Transformer transformer = tFactory.newTransformer();
 			DOMSource source = new DOMSource(document);
-			StreamResult result = new StreamResult(System.out);
+			StreamResult result = new StreamResult(out);
 			transformer.transform(source, result);
-		} catch (TransformerException ex) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+
+			out.flush();
+		} catch (Exception ex) {
+			Logger.error("Failed to dump XML data: "+ex.getMessage());
 		}
 	}
 
