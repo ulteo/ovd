@@ -409,22 +409,36 @@ class Server {
 
 		switch ($status_) {
 			case 'pending':
+				Logger::warning('main', 'Status set to "pending" for server \''.$this->fqdn.'\'');
+				$this->setAttribute('status', 'pending');
 				break;
 			case 'ready':
-				if ($this->getAttribute('status') != 'ready') {
-					Logger::info('main', 'Status set to "ready" for server \''.$this->fqdn.'\'');
-					$this->setAttribute('status', 'ready');
-				}
+				Logger::info('main', 'Status set to "ready" for server \''.$this->fqdn.'\'');
+				$this->setAttribute('status', 'ready');
+				break;
+			case 'down':
+				Logger::warning('main', 'Status set to "down" for server \''.$this->fqdn.'\'');
+				$this->setAttribute('status', 'down');
+				break;
+			case 'broken':
+			default:
+				Logger::error('main', 'Status set to "broken" for server \''.$this->fqdn.'\'');
+				$this->setAttribute('status', 'broken');
+				break;
+		}
 
+		$ev->emit();
+
+		Abstract_Server::save($this);
+
+		switch ($this->getAttribute('status')) {
+			case 'pending':
+				break;
+			case 'ready':
 				if ($this->getAttribute('registered') && is_array($this->roles) && array_key_exists(Server::SERVER_ROLE_APS, $this->roles))
 					$this->updateApplications();
 				break;
 			case 'down':
-				if ($this->getAttribute('status') != 'down') {
-					Logger::warning('main', 'Status set to "down" for server \''.$this->fqdn.'\'');
-					$this->setAttribute('status', 'down');
-				}
-
 				$sessions = Abstract_Session::getByServer($this->fqdn);
 				foreach ($sessions as $session) {
 					Logger::warning('main', 'Server \''.$this->fqdn.'\' status is now "down", killing Session \''.$session->id.'\'');
@@ -434,11 +448,6 @@ class Server {
 				break;
 			case 'broken':
 			default:
-				if ($this->getAttribute('status') != 'broken') {
-					Logger::error('main', 'Status set to "broken" for server \''.$this->fqdn.'\'');
-					$this->setAttribute('status', 'broken');
-				}
-
 				$sessions = Abstract_Session::getByServer($this->fqdn);
 				foreach ($sessions as $session) {
 					Logger::warning('main', 'Server \''.$this->fqdn.'\' status is now "broken", killing Session \''.$session->id.'\'');
@@ -447,10 +456,6 @@ class Server {
 				}
 				break;
 		}
-
-		$ev->emit();
-
-		Abstract_Server::save($this);
 
 		return true;
 	}
