@@ -47,3 +47,6 @@ class Role:
 	
 	def getReporting(self, node):
 		raise NotImplementedError()
+	
+	def switch_to_production(self):
+		pass

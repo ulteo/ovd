@@ -72,11 +72,20 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 			return
 		
 		self.ReportServiceStatus(win32service.SERVICE_RUNNING)
-		Logger.info("SlaveServer started")
 		
+		inited = False
 		rc = win32event.WAIT_TIMEOUT
 		while rc == win32event.WAIT_TIMEOUT:
-			SlaveServer.loop_procedure(self)
+			if not inited:
+				ret = SlaveServer.push_production(self)
+				if ret:
+					inited = True
+					Logger.info("SlaveServer started")
+				else:
+					Logger.warn("Session Manager not connected. Sleeping for a while ...")
+			
+			if inited:
+				SlaveServer.loop_procedure(self)
 			
 			rc = win32event.WaitForSingleObject(self.hWaitStop, 30 * 1000)
 		

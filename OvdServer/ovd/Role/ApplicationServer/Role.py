@@ -111,13 +111,15 @@ class Role(AbstractRole):
 			self.apt.init()
 			self.threads.append(self.apt)
 		
-		self.static_apps.synchronize()
-		
 		return True
 	
 	@staticmethod
 	def getName():
 		return "ApplicationServer"
+	
+	
+	def switch_to_production(self):
+		self.setStaticAppsMustBeSync(True)
 	
 	
 	def stop(self):

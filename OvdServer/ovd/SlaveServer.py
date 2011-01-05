@@ -78,17 +78,6 @@ class SlaveServer:
 	def init(self):
 		Logger.debug("SlaveServer init")
 		
-		# Initialisation
-		try:
-			if not self.smRequestManager.initialize():
-				raise Exception()
-		except Exception, e:
-			Logger.error("SlaveServer: unable to initialize communication with Session Manager")
-			Logger.debug("smRequestManager initialize returned %s"%(str(e)))
-			return False
-		
-		self.updateMonitoring()
-		
 		if not self.communication.initialize():
 			Logger.error("SlaveServer: unable to initialize communication class")
 			return False
@@ -110,6 +99,7 @@ class SlaveServer:
 		# Start 
 		for thread in self.threads:
 			thread.start()
+		
 		
 		# Check each thread has started correctly (communication + roles)
 		t0 = time.time()
@@ -133,9 +123,26 @@ class SlaveServer:
 				Logger.info("Waiting for role %s status running"%(role.getName()))
 				time.sleep(1)
 		
+		self.updateMonitoring()
+		return True
+	
+	
+	def push_production(self):
+		# Initialisation
+		try:
+			if not self.smRequestManager.initialize():
+				raise Exception()
+		except Exception, e:
+			Logger.debug("smRequestManager initialize returned %s"%(str(e)))
+			
+			return False
+		
 		if not self.smRequestManager.switch_status(self.smRequestManager.STATUS_READY):
 			Logger.warn("SlaveServer::loop unable to send status ready")
 			return False
+		
+		for role in self.roles:
+			role.switch_to_production()
 		
 		return True
 	
