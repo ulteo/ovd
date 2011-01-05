@@ -101,7 +101,7 @@ foreach ($session->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
 		$available_applications[] = $server_application->getAttribute('id');
 
 	$server_node = $dom->createElement('server');
-	$server_node->setAttribute('fqdn', $server->fqdn);
+	$server_node->setAttribute('fqdn', $server->getAttribute('external_name'));
 	$server_node->setAttribute('login', $session->settings['aps_access_login']);
 	$server_node->setAttribute('password', $session->settings['aps_access_password']);
 	foreach ($user->applications() as $application) {
