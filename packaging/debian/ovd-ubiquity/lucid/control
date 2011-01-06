@@ -7,6 +7,6 @@ Standards-Version: 3.8.2
 
 Package: ubiquity-ovd
 Architecture: all
-Depends: ubiquity-frontend-gtk, gconf2, xsltproc
+Depends: ubiquity-frontend-gtk, ulteo-gnome-theme, xsltproc
 Description: OVD module for Ubiquity
  Module in Ubiquity used to install OVD with a Live CD

@@ -1,0 +1,7 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+
+install/ulteo-gnome-theme::
+	mkdir -p OVD
+	tar xzf ovd.tar.gz --strip 1 -C OVD

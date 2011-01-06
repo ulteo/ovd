@@ -3,5 +3,3 @@ ovd-setup          /usr/lib/ubiquity/ovd-setup
 initctl_hook       /usr/lib/ubiquity/ovd-setup
 stepUserInfo.xslt  /usr/lib/ubiquity/ovd-setup
 stepUlteo.ui       /usr/share/ubiquity/gtk
-OVD                /usr/share/themes
-ulteo-ubiquity.png /usr/share/wallpapers

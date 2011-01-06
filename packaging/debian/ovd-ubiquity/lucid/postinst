@@ -6,12 +6,6 @@ sed -i "/^AFTER/c AFTER = 'ovd'" /usr/lib/ubiquity/plugins/ubi-summary.py
 sed -i "s/ready_text_label/ovd_text_label/" /usr/share/ubiquity/gtk/stepLanguage.ui
 sed -i "s/'ready_text_label'/'ovd_text_label'/" /usr/lib/ubiquity/plugins/ubi-language.py
 
-gconftool-2 --direct --type string \
-  --config-source xml:readwrite:/etc/gconf/gconf.xml.mandatory \
-  --set /desktop/gnome/background/picture_filename /usr/share/wallpapers/ulteo-ubiquity.png \
-  --set /desktop/gnome/background/picture_options stretched \
-  --set /apps/metacity/general/theme OVD
-
 xsltproc -o /usr/share/ubiquity/gtk/stepUserInfo.ui /usr/lib/ubiquity/ovd-setup/stepUserInfo.xslt \
             /usr/share/ubiquity/gtk/stepUserInfo.ui
 

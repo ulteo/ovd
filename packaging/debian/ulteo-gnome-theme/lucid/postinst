@@ -1,0 +1,13 @@
+#! /bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+gconftool-2 --direct --type string \
+  --config-source xml:readwrite:/etc/gconf/gconf.xml.mandatory \
+  --set /desktop/gnome/background/picture_filename /usr/share/wallpapers/ulteo-ubiquity.png \
+  --set /desktop/gnome/background/picture_options stretched \
+  --set /apps/metacity/general/theme OVD
+
+#DEBHELPER#
+
+exit 0
