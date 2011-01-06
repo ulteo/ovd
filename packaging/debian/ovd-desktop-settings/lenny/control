@@ -14,7 +14,7 @@ Depends: gnome-icon-theme, gnome-icon-theme-crystal, dmz-cursor-theme,
 Conflicts: ulteo-ovd-xfce-default-settings, xubuntu-default-settings,
  thunar-settings (<< 0.9.0-4ulteo2)
 Description: Ulteo Open Virtual Desktop - Startup scripts and default settings
- This package provides :
+ This package provides:
  * default settings for the Xfce desktop on an Ulteo Open Virtual Desktop.
  * script that can be used to start an X session on an Open Virtual
  Desktop application server.
