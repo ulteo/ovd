@@ -19,7 +19,7 @@ Description: Ulteo Open Virtual Desktop - Startup scripts and default settings
  * script that can be used to start an X session on an Open Virtual
  Desktop application server.
 
-Package: ulteo-plymouth-theme-vdi
+Package: ulteo-plymouth-theme
 Architecture: all
 Depends: ${misc:Depends}, plymouth, plymouth-label
 Provides: plymouth-theme
