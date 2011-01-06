@@ -3,7 +3,6 @@
 # Copyright (C) 2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
-# Author David LECHEVALIER <david@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -20,7 +19,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import httplib
-import time
 import urllib2
 from xml.dom import minidom
 from xml.dom.minidom import Document
@@ -34,7 +32,6 @@ class SMRequestManager():
 	STATUS_READY = "ready"
 	STATUS_DOWN = "down"
 	STATUS_BROKEN = "broken"
-	REQUEST_RETRY = 5
 	
 	def __init__(self):
 		self.url = "http://%s:%d"%(Config.session_manager, Config.SM_SERVER_PORT)
@@ -126,19 +123,6 @@ class SMRequestManager():
 	
 	
 	def send_packet(self, path, document):
-		try:
-			retry = 0
-			response = self._send_packet(path, document)
-			while response == False and retry < self.REQUEST_RETRY :
-				time.sleep(0.2)
-				Logger.debug("SMRequest::send_packet: one request FAILED [retry %i]"%(retry))
-				response = self._send_packet(path, document)
-				retry += 1
-			return response
-		except Exception, e:
-			return False
-
-	def _send_packet(self, path, document):
 		rootNode = document.documentElement
 		rootNode.setAttribute("name", self.name)
 				
