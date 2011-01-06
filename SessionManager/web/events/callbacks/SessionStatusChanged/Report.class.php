@@ -25,8 +25,8 @@ require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 class SessionStatusChangedReport extends EventCallback {
     public function run () {
 		switch ($this->ev->status) {
-			/* session starts */
-			case Session::SESSION_STATUS_READY:
+			/* session created */
+			case Session::SESSION_STATUS_CREATED:
 				$token = $this->ev->id;
 				$sql_sessions = get_from_cache ('reports', 'sessids');
 				if (! is_array ($sql_sessions))

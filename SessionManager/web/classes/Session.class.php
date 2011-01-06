@@ -24,6 +24,7 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 class Session {
 	const SESSION_STATUS_UNKNOWN = "unknown";
 	const SESSION_STATUS_ERROR = "error";
+	const SESSION_STATUS_CREATING = "creating";
 	const SESSION_STATUS_CREATED = "created";
 	const SESSION_STATUS_INIT = "init";
 	const SESSION_STATUS_READY = "ready";
@@ -104,7 +105,7 @@ class Session {
 	}
 
 	public function getAllStates() {
-		return array(Session::SESSION_STATUS_UNKNOWN, Session::SESSION_STATUS_CREATED, Session::SESSION_STATUS_INIT, Session::SESSION_STATUS_READY, Session::SESSION_STATUS_ACTIVE, Session::SESSION_STATUS_INACTIVE, Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_STATUS_DESTROYING, Session::SESSION_STATUS_DESTROYED, Session::SESSION_STATUS_ERROR);
+		return array(Session::SESSION_STATUS_UNKNOWN, Session::SESSION_STATUS_CREATING, Session::SESSION_STATUS_CREATED, Session::SESSION_STATUS_INIT, Session::SESSION_STATUS_READY, Session::SESSION_STATUS_ACTIVE, Session::SESSION_STATUS_INACTIVE, Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_STATUS_DESTROYING, Session::SESSION_STATUS_DESTROYED, Session::SESSION_STATUS_ERROR);
 	}
 
 	public function getStatus() {
@@ -136,6 +137,7 @@ class Session {
 
 	public function setServerStatus($server_, $status_) {
 		$states = array(
+			Session::SESSION_STATUS_CREATING		=>	-1,
 			Session::SESSION_STATUS_CREATED			=>	0,
 			Session::SESSION_STATUS_INIT			=>	1,
 			Session::SESSION_STATUS_READY			=>	2,
@@ -234,6 +236,7 @@ class Session {
 			return false; // status is already the same...
 
 		$states = array(
+			Session::SESSION_STATUS_CREATING		=>	-1,
 			Session::SESSION_STATUS_CREATED			=>	0,
 			Session::SESSION_STATUS_INIT			=>	1,
 			Session::SESSION_STATUS_READY			=>	2,
@@ -337,6 +340,9 @@ class Session {
 			case Session::SESSION_STATUS_ERROR:
 				return _('Error');
 				break;
+			case Session::SESSION_STATUS_CREATING:
+				return _('Creating');
+				break;
 			case Session::SESSION_STATUS_CREATED:
 				return _('Created');
 				break;
@@ -373,6 +379,9 @@ class Session {
 				break;
 			case Session::SESSION_STATUS_ERROR:
 				return 'error';
+				break;
+			case Session::SESSION_STATUS_CREATING:
+				return 'warn';
 				break;
 			case Session::SESSION_STATUS_CREATED:
 				return 'warn';
@@ -422,7 +431,7 @@ class Session {
 		if (($buf = $this->getAttribute('status')) === false)
 			return false;
 
-		if (in_array($buf, array(Session::SESSION_STATUS_CREATED, Session::SESSION_STATUS_INIT, Session::SESSION_STATUS_READY, Session::SESSION_STATUS_ACTIVE)))
+		if (in_array($buf, array(Session::SESSION_STATUS_CREATING, Session::SESSION_STATUS_CREATED, Session::SESSION_STATUS_INIT, Session::SESSION_STATUS_READY, Session::SESSION_STATUS_ACTIVE)))
 			return true;
 
 		return false;

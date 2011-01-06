@@ -323,10 +323,16 @@ if (isset($old_session_id)) {
 	$session->server = $random_server;
 	$session->mode = $session_mode;
 	$session->type = $session_type;
-	$session->status = Session::SESSION_STATUS_CREATED;
+	$session->status = Session::SESSION_STATUS_CREATING;
 	$session->user_login = $user->getAttribute('login');
 	$session->user_displayname = $user->getAttribute('displayname');
 	$session->servers = $servers;
+	$save_session = Abstract_Session::save($session);
+	if (! $save_session) {
+		Logger::error('main', '(client/start) failed to save session \''.$session->id.'\' for user \''.$user->getAttribute('login').'\'');
+		throw_response(INTERNAL_ERROR);
+	}
+	$session->setStatus(Session::SESSION_STATUS_CREATED);
 
 	$ret = true;
 

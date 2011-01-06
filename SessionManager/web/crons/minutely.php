@@ -33,7 +33,7 @@ foreach ($sessions as $session) {
 		}
 	}
 
-	if (in_array($session->status, array(Session::SESSION_STATUS_CREATED, Session::SESSION_STATUS_INIT, Session::SESSION_STATUS_READY))) {
+	if (in_array($session->status, array(Session::SESSION_STATUS_CREATING, Session::SESSION_STATUS_CREATED, Session::SESSION_STATUS_INIT, Session::SESSION_STATUS_READY))) {
 		if ($session->start_time < time()-DEFAULT_UNUSED_SESSION_DURATION) {
 			Logger::info('main', '(minutely cron) Session \''.$session->id.'\' was never used, ending...');
 			$session->orderDeletion(true, Session::SESSION_END_STATUS_UNUSED);
