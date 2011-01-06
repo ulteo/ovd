@@ -110,6 +110,7 @@ class ReverseProxy(asyncore.dispatcher):
 					self.lock.release()
 					Logger.debug("Access Granted token: %s for fqdn: %s" % (token, fqdn))
 				else:
+					self.lock.release()
 					raise Exception('token authorization failed for: ' + token)
 
 				sender(fqdn, self.RDP_PORT, receiver(conn, r))
@@ -132,6 +133,5 @@ class ReverseProxy(asyncore.dispatcher):
 				raise Exception('bad first request line: ' + request)
 
 		except Exception, err:
-			self.lock.release()
 			Logger.debug("ReverseProxy::handle_accept error %s %s"%(type(err), err))
 			self.close()
