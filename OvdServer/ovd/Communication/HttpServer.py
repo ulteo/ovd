@@ -63,6 +63,10 @@ class HttpServer(AbstractCommunication):
 
 
 class ThreadPoolingHttpServer(HTTPServer):
+	# request_queue_size defines the number of concurrent connections
+	# By default, request_queue_size is 5.
+	request_queue_size = 255
+
 	def __init__(self, server_address, RequestHandlerClass, numberOfThread):
 		self.serverHasBeLanched = False
 		HTTPServer.__init__(self, server_address, RequestHandlerClass)
