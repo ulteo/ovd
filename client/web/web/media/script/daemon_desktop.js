@@ -56,6 +56,7 @@ var Desktop = Class.create(Daemon, {
 			applet_params.set('keymap', this.keymap);
 			applet_params.set('multimedia', this.multimedia);
 			applet_params.set('redirect_client_printers', this.redirect_client_printers);
+			applet_params.set('redirect_client_drives', this.redirect_client_drives);
 			if (this.fullscreen)
 				applet_params.set('fullscreen', 1);
 

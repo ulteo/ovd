@@ -227,6 +227,9 @@ function onStartSessionSuccess(xml_) {
 		daemon.duration = parseInt(session_node.getAttribute('duration'));
 		daemon.multimedia = ((session_node.getAttribute('multimedia') == 1)?true:false);
 		daemon.redirect_client_printers = ((session_node.getAttribute('redirect_client_printers') == 1)?true:false);
+		try {
+			daemon.redirect_client_drives = session_node.getAttribute('redirect_client_drives');
+		} catch(e) {}
 		if (session_mode == 'Desktop' && desktop_fullscreen)
 			daemon.fullscreen = true;
 
