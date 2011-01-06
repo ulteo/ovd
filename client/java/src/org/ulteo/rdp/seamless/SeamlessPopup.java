@@ -25,7 +25,6 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.MouseInfo;
 import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.FocusEvent;
@@ -89,9 +88,7 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 		this.mouseMotionAdapter = input.getMouseMotionAdapter();
 
 		this.addKeyListener(input.getKeyAdapter());
-		if (MouseInfo.getNumberOfButtons() > 3)
-			this.addMouseWheelListener(this.mouseAdapter);
-
+			
 		this.parseFlags(flags);
 
 		this.setUndecorated(true);
@@ -107,6 +104,10 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 			this.modal = true;
 		if ((flags & SeamlessChannel.WINDOW_CREATE_FIXEDSIZE) != 0)
 			this.setResizable(false);
+	}
+
+	public void sw_enableMouseWheel() {
+		this.addMouseWheelListener(this.mouseAdapter);
 	}
 
 	@Override

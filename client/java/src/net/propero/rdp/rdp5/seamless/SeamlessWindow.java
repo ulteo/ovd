@@ -48,6 +48,7 @@ public interface SeamlessWindow {
 	void sw_setIconOffset(int offset);
 	byte[] sw_getIconBuffer();
 	void sw_setIconBuffer(byte[] buffer);
+	void sw_enableMouseWheel();
 
 	void sw_setCursor(Cursor cursor);
 	String sw_getTitle();

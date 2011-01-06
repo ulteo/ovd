@@ -169,9 +169,10 @@ public abstract class Input {
 	protected void setInputListeners() {
 		this.mouseAdapter = new RdesktopMouseAdapter();
 		this.canvas.addMouseListener(this.mouseAdapter);
-		if (! OSTools.isMac() || MouseInfo.getNumberOfButtons() > 3)
+		if (! OSTools.isMac() || MouseInfo.getNumberOfButtons() > 3) {
+			this.opt.isMouseWheelEnabled = true;
 			this.canvas.addMouseWheelListener(this.mouseAdapter);
-		else
+		} else
 			this.logger.warn("No mouse wheel was detected");
 		this.mouseMotionAdapter = new RdesktopMouseMotionAdapter();
 		this.canvas.addMouseMotionListener(this.mouseMotionAdapter);

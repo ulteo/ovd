@@ -388,6 +388,9 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	}
 
 	protected void addFrame(SeamlessWindow f, String name) {
+		if (this.opt.isMouseWheelEnabled)
+			f.sw_enableMouseWheel();
+
 		f.sw_addWindowStateListener(this);
 		f.sw_addWindowListener(this);
 		f.sw_addFocusListener(this);

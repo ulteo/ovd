@@ -91,7 +91,8 @@ public class Options {
 		this.Bpp = (server_bpp_ + 7) / 8;
 		this.colour_model = new DirectColorModel(24,0xFF0000,0x00FF00,0x0000FF);
 	}
-	
+
+	public boolean isMouseWheelEnabled = false;
 	
 	public int server_rdp_version;
 	

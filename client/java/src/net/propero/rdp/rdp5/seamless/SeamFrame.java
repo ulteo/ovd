@@ -90,8 +90,6 @@ public class SeamFrame extends Frame
 		this.mouseMotionAdapter = input.getMouseMotionAdapter();
 
 		this.addKeyListener(input.getKeyAdapter());
-		if (MouseInfo.getNumberOfButtons() > 3)
-			this.addMouseWheelListener(this.mouseAdapter);
 
 		this.setUndecorated(true);
 		this.sw_setMyPosition(-1, -1, 1, 1);
@@ -140,6 +138,10 @@ public class SeamFrame extends Frame
 	public void sw_setIconOffset(int icon_offset_) {
 		if(icon_offset_ >= 0)
 			this.icon_offset = icon_offset_;
+	}
+
+	public void sw_enableMouseWheel() {
+		this.addMouseWheelListener(this.mouseAdapter);
 	}
 
 	public void sw_setMyPosition(int x, int y, int width, int height) {
