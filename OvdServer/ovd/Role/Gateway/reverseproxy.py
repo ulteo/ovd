@@ -136,5 +136,5 @@ class ReverseProxy(asyncore.dispatcher):
 			Logger.debug("ReverseProxy::handle_accept error %s %s"%(type(err), err))
 			try:
 				conn.close()
-			except : # conn is already close
+			except: # conn is already close
 				pass
