@@ -327,6 +327,7 @@ if (isset($old_session_id)) {
 	$session->user_login = $user->getAttribute('login');
 	$session->user_displayname = $user->getAttribute('displayname');
 	$session->servers = $servers;
+	$session->start_time = time();
 	$save_session = Abstract_Session::save($session);
 	if (! $save_session) {
 		Logger::error('main', '(client/start) failed to save session \''.$session->id.'\' for user \''.$user->getAttribute('login').'\'');
