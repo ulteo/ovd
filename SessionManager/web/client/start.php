@@ -453,7 +453,7 @@ if (! isset($old_session_id)) {
 		if (! is_array($server->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $server->roles))
 			continue;
 
-		if ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1) {
+		if ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1 && count($session->servers[Server::SERVER_ROLE_APS]) > 1) {
 			$external_apps_token = new Token(gen_unique_string());
 			$external_apps_token->type = 'external_apps';
 			$external_apps_token->link_to = $session->id;
