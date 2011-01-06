@@ -26,6 +26,9 @@ if (Preferences::fileExists() === false)
 //BEGIN Sessions expiration
 $sessions = Abstract_Session::load_all();
 foreach ($sessions as $session) {
+	if (! Abstract_Session::exists($session->id)) // avoid operation on an already deleted Session (parallel processing)
+		continue;
+
 	if ($session->start_time != 0 && array_key_exists('timeout', $session->settings) && $session->settings['timeout'] > 0) {
 		if ($session->start_time+$session->settings['timeout'] < time()) {
 			Logger::info('main', '(minutely cron) Session \''.$session->id.'\' has expired, ending...');
