@@ -336,7 +336,7 @@ if (isset($old_session_id)) {
 
 	$ret = true;
 
-	Logger::info('main', '(client/start) Creating new session for '.$user->getAttribute('login').' ('.$random_session_id.')');
+	Logger::info('main', '(client/start) Creating new session for '.$user->getAttribute('login').' ('.$session->id.')');
 }
 
 if ($ret === false)
