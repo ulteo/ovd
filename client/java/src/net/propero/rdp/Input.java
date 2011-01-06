@@ -29,6 +29,7 @@ import java.util.Map.Entry;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.KeyStroke;
+import org.ulteo.ovd.integrated.OSTools;
 
 public abstract class Input {
 
@@ -168,7 +169,7 @@ public abstract class Input {
 	protected void setInputListeners() {
 		this.mouseAdapter = new RdesktopMouseAdapter();
 		this.canvas.addMouseListener(this.mouseAdapter);
-		if (MouseInfo.getNumberOfButtons() > 3)
+		if (! OSTools.isMac() || MouseInfo.getNumberOfButtons() > 3)
 			this.canvas.addMouseWheelListener(this.mouseAdapter);
 		else
 			this.logger.warn("No mouse wheel was detected");
