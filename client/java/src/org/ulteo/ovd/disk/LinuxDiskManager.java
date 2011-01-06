@@ -92,8 +92,10 @@ public class LinuxDiskManager extends DiskManager {
 			String line = br.readLine();
 			while(line != null) {
 				String[] lineContent = line.split(" ");
+				// In the mtab file, space are replaced by "\040"
+				String path =  lineContent[1].replace("\\040", " ");
 				if (lineContent.length > 2)
-					this.mtabList.add(lineContent[1]);
+					this.mtabList.add(path);
 				line = br.readLine();
 			}
 			br.close();
