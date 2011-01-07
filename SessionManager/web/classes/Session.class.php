@@ -196,7 +196,7 @@ class Session {
 				break;
 			case Session::SESSION_STATUS_INACTIVE:
 				Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - Server "'.$server_.'" is now "'.$status_.'", switching Session status to "'.$status_.'"');
-				$this->setStatus(Session::SESSION_STATUS_INACTIVE);
+				$this->setStatus(Session::SESSION_STATUS_INACTIVE, Session::SESSION_END_STATUS_LOGOUT);
 				break;
 			case Session::SESSION_STATUS_WAIT_DESTROY:
 				Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - Server "'.$server_.'" is now "'.$status_.'", switching Session status to "'.$status_.'"');
