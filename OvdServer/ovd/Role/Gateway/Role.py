@@ -43,7 +43,6 @@ class Role(AbstractRole):
 		self.has_run = False
 
 		self.HTTPS_PORT = 443
-		self.REMOTE_SM_FQDN = None
 		self.RDP_PORT = 3389
 
 		self.rproxy = None
@@ -51,10 +50,12 @@ class Role(AbstractRole):
 
 	def init(self):
 		Logger.info("Gateway init")
-		if not Config.infos.has_key("session_manager"):
-			Logger.error("Role %s need a 'session_manager' config key"%(self.getName()))
+
+		self.pem = os.path.join(Config.conf_dir, "gateway.pem")
+		if os.path.exists(self.pem):
+			Logger.error("Role %s need a certificate at %s !"%(self.getName(), self.pem))
 			return False
-		self.REMOTE_SM_FQDN =  Config.session_manager
+
 		return True
 
 
@@ -67,14 +68,10 @@ class Role(AbstractRole):
 
 	def run(self):
 		self.has_run = True
-		pem = os.path.join(Config.conf_dir, "gateway.pem")
-		if os.path.exists(pem):
-			self.rproxy = ReverseProxy(pem, self.HTTPS_PORT, self.REMOTE_SM_FQDN, self.HTTPS_PORT, self.RDP_PORT)
-			Logger.info('Gateway:: running')
-			self.status = Role.STATUS_RUNNING
-			asyncore.loop()
-		else:
-			Logger.error("Role %s need a certificate at %s !"%(self.getName(), pem))
+		self.rproxy = ReverseProxy(self.pem, self.HTTPS_PORT, Config.session_manager, self.HTTPS_PORT, self.RDP_PORT)
+		Logger.info('Gateway:: running')
+		self.status = Role.STATUS_RUNNING
+		asyncore.loop()
 
 
 	def getReporting(self, node):
