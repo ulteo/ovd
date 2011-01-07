@@ -37,7 +37,7 @@ from sender import sender, senderHTTP
 
 class ReverseProxy(asyncore.dispatcher):
 
-	def __init__(self, FPEM, GATEWAY_PORT, REMOTE_SM_FQDN, HTTPS_PORT, RDP_PORT):
+	def __init__(self, FPEM, GATEWAY_ADDR, GATEWAY_PORT, REMOTE_SM_FQDN, HTTPS_PORT, RDP_PORT):
 		asyncore.dispatcher.__init__(self)
 
 		self.REMOTE_SM_FQDN = REMOTE_SM_FQDN
@@ -57,7 +57,7 @@ class ReverseProxy(asyncore.dispatcher):
 		#self.set_reuse_addr()
 
 		try:
-			self.bind(("0.0.0.0", GATEWAY_PORT))
+			self.bind((GATEWAY_ADDR, GATEWAY_PORT))
 		except:
 			Logger.error('Local Bind Error, Server at port %d is not ready' % GATEWAY_PORT)
 			exit()

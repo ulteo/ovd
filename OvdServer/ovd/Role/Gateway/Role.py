@@ -53,7 +53,7 @@ class Role(AbstractRole):
 
 		self.pem = os.path.join(Config.conf_dir, "gateway.pem")
 		if os.path.exists(self.pem):
-			Logger.error("Role %s need a certificate at %s !"%(self.getName(), self.pem))
+			Logger.error("Gateway role need a certificate (%s)" % self.pem)
 			return False
 
 		return True
