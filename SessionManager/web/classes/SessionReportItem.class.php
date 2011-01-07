@@ -23,8 +23,7 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 require_once(CLASSES_DIR.'/ReportItems.class.php');
 
 class SessionReportItem {
-	private $token;
-	private $sql_id = -1;
+	private $id = -1; // id of the report is also the id of the session
 	public $server;
 	public $user;
 	private $node;
@@ -33,7 +32,7 @@ class SessionReportItem {
 	public $stop_why;
 
 	public function __construct($token_) {
-		$this->token = $token_;
+		$this->id = $token_;
 		$session = Abstract_Session::load($token_);
 		if (is_object($session)) {
 			$this->server = $session->getAttribute('server');
@@ -43,11 +42,10 @@ class SessionReportItem {
 			Logger::error('main', "SessionReportItem::construct($token_) failed");
 		}
 		$this->current_apps = array();
-		$this->sql_id = $token_;
  	}
 
 	public function getId() {
-		return $this->sql_id;
+		return $this->id;
 	}
 
 	public function update($session_node_) {
@@ -120,7 +118,7 @@ class SessionReportItem {
 		$res = $sql->DoQuery(
 			'UPDATE @1 SET @2=NOW(), @3=%4 WHERE @5=%6',
 			SESSIONS_HISTORY_TABLE,'stop_stamp','data',$this->toXml(),
-			'id',$this->sql_id);
+			'id',$this->id);
 		return ($res !== false);
 	}
 
@@ -131,7 +129,7 @@ class SessionReportItem {
 	 * private methods
 	 */
 	private function saveSessionCurrentApps() {
-		$session = Abstract_Session::load($this->token);
+		$session = Abstract_Session::load($this->id);
 		if (is_object($session)) {
 			$session->setAttribute('applications', $this->current_apps);
 			Abstract_Session::save($session);
