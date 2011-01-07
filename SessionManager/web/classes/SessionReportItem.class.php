@@ -52,6 +52,10 @@ class SessionReportItem {
 
 	public function update($session_node_) {
 		$sessid = $session_node_->getAttribute('id');
+		$buf = Abstract_Session::exists($sessid);
+		if (! $buf)
+			return;
+
 		$session = Abstract_Session::load($sessid);
 		if (! $session)
 			return;
