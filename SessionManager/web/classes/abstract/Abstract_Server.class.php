@@ -248,7 +248,7 @@ class Abstract_Server {
 			if (! $session)
 				continue;
 
-			$session->orderDeletion();
+			$session->orderDeletion(true, Session::SESSION_END_STATUS_SERVER_DELETED);
 		}
 		Abstract_Liaison::delete('ServerSession', $fqdn_, NULL);
 

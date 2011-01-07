@@ -41,6 +41,7 @@ class Session {
 	const SESSION_END_STATUS_ERROR = "error";
 	const SESSION_END_STATUS_SERVER_DOWN = "server_down";
 	const SESSION_END_STATUS_SERVER_BROKEN = "server_broken";
+	const SESSION_END_STATUS_SERVER_DELETED = "server_deleted";
 
 	const MODE_DESKTOP = "desktop";
 	const MODE_APPLICATIONS = "applications";
