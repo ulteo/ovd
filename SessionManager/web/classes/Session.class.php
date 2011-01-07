@@ -200,7 +200,7 @@ class Session {
 				break;
 			case Session::SESSION_STATUS_WAIT_DESTROY:
 				Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - Server "'.$server_.'" is now "'.$status_.'", switching Session status to "'.$status_.'"');
-				$this->setStatus(Session::SESSION_STATUS_WAIT_DESTROY);
+				$this->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_END_STATUS_LOGOUT);
 				break;
 			case Session::SESSION_STATUS_DESTROYING:
 				Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - Server "'.$server_.'" is now "'.$status_.'", switching Session status to "'.$status_.'"');
@@ -458,6 +458,14 @@ class Session {
 
 		$total = count($this->servers[Server::SERVER_ROLE_APS]);
 		$destroyed = 0;
+
+		if (! is_null($reason_)) {
+			$report_session = Abstract_ReportSession::load($this->id);
+			if (is_object($report_session)) {
+				$report_session->stop_why = $reason_;
+				Abstract_ReportSession::update($report_session);
+			}
+		}
 
 		if ($request_servers_) {
 			foreach ($this->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
