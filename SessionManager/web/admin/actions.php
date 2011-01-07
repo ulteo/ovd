@@ -311,11 +311,11 @@ if ($_REQUEST['name'] == 'Application_static') {
 				if($upload['error']) {
 					switch ($upload['error']) {
 						case 1: // UPLOAD_ERR_INI_SIZE
-							popup_error('Oversized file for server rules');
+							popup_error(_('Oversized file for server rules'));
 							die();
 							break;
 						case 3: // UPLOAD_ERR_PARTIAL
-							popup_error('The file was corrupted while upload');
+							popup_error(_('The file was corrupted while upload'));
 							die();
 							break;
 						case 4: // UPLOAD_ERR_NO_FILE
@@ -341,7 +341,7 @@ if ($_REQUEST['name'] == 'Application_static') {
 								$mypicture->writeImage();
 							}
 							catch (Exception $e) {
-								popup_error('The icon is not an image');
+								popup_error(_('The icon is not an image'));
 								die();
 							}
 						}
