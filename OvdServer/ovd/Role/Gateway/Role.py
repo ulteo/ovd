@@ -52,7 +52,7 @@ class Role(AbstractRole):
 		Logger.info("Gateway init")
 
 		self.pem = os.path.join(Config.conf_dir, "gateway.pem")
-		if os.path.exists(self.pem):
+		if not os.path.exists(self.pem):
 			Logger.error("Gateway role need a certificate (%s)" % self.pem)
 			return False
 
