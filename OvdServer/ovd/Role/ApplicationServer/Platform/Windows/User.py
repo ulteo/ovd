@@ -31,7 +31,6 @@ import win32security
 import win32ts
 
 from ovd.Logger import Logger
-from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 from ovd.Role.ApplicationServer.User import User as AbstractUser
 
 import Langs
