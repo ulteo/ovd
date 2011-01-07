@@ -564,7 +564,7 @@ if (! isset($old_session_id)) {
 		$ret = $sessionManagement->parseSessionCreate($session_create_xml);
 		if (! $ret) {
 			Logger::critical('main', '(client/start) Unable to create Session \''.$session->id.'\' for User \''.$session->user_login.'\' on Server \''.$server->fqdn.'\', aborting');
-			$session->orderDeletion();
+			$session->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
 
 			header('Content-Type: text/xml; charset=utf-8');
 			$dom = new DomDocument('1.0', 'utf-8');
@@ -685,7 +685,7 @@ if (! isset($old_session_id)) {
 			$ret = $sessionManagement->parseSessionCreate($session_create_xml);
 			if (! $ret) {
 				Logger::critical('main', '(client/start) Unable to create Session \''.$session->id.'\' for User \''.$session->user_login.'\' on Server \''.$server->fqdn.'\', aborting');
-				$session->orderDeletion();
+				$session->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
 
 				header('Content-Type: text/xml; charset=utf-8');
 				$dom = new DomDocument('1.0', 'utf-8');
