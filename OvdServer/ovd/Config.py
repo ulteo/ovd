@@ -111,6 +111,11 @@ class Config:
 		
 		if Config.infos.has_key("APS_MULTITHREAD"):
 			Config.aps_multithread = (Config.infos["APS_MULTITHREAD"].lower() == "true")
+
+		if Config.infos.has_key("GATEWAY_ADDRESS"):
+			Config.gateway_address = Config.infos["GATEWAY_ADDRESS"]
+		else:
+			Config.gateway_address = "0.0.0.0"
 		
 		return True
 	

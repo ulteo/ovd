@@ -23,14 +23,21 @@ import platform
 import socket
 
 
-def isIP(address):
-	try:
-		socket.inet_ntoa(address)
-	except Exception:
+def isIP(address, format_='packed'):
+	if format_ == 'packed':
+		try:
+			socket.inet_ntoa(address)
+		except Exception:
+			return False
+	elif format_ == 'dotted':
+		try:
+			socket.inet_aton(address)
+		except Exception:
+			return False
+	else:
+		Logger.error("util:: isIP: unknown value '%s' for argument format" % format_)
 		return False
 	return True
-
-
 
 
 def array_flush(array):
