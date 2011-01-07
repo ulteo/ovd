@@ -23,7 +23,7 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 require_once(CLASSES_DIR.'/ReportItems.class.php');
 
 class SessionReportItem {
-	private $id = -1; // id of the report is also the id of the session
+	public $id = -1; // id of the report is also the id of the session
 	public $server;
 	public $user;
 	private $node;
@@ -31,16 +31,7 @@ class SessionReportItem {
 	private $apps_raw_data = array(); /* pid, id, running (ReportRunningItem) */
 	public $stop_why;
 
-	public function __construct($token_) {
-		$this->id = $token_;
-		$session = Abstract_Session::load($token_);
-		if (is_object($session)) {
-			$this->server = $session->getAttribute('server');
-			$this->user = $session->getAttribute('user_login');
-		}
-		else {
-			Logger::error('main', "SessionReportItem::construct($token_) failed");
-		}
+	public function __construct() {
 		$this->current_apps = array();
  	}
 

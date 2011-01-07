@@ -54,7 +54,23 @@ class Abstract_ReportSession {
 	public static function load($id_) {
 		Logger::debug('main', "Abstract_ReportSession::load($id_)");
 		
-		$report = new SessionReportItem($id_); // hoho...
+		$SQL = SQL::getInstance();
+
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sessions_history', 'id', $id_);
+		$total = $SQL->NumRows();
+
+		if ($total == 0) {
+			Logger::error('main', "Abstract_ReportSession::load($id_) failed: NumRows == 0");
+			return false;
+		}
+
+		$row = $SQL->FetchResult();
+		
+		$report = new SessionReportItem();
+		$report->id = $row['id'];
+		$report->user = $row['user'];
+		$report->server = $row['server'];
+		
 		return $report;
 	}
 	
