@@ -144,6 +144,10 @@ public class SeamFrame extends Frame
 		this.addMouseWheelListener(this.mouseAdapter);
 	}
 
+	public Rectangle sw_getMaximumBounds() {
+		return this.maxBounds;
+	}
+
 	public void sw_setMyPosition(int x, int y, int width, int height) {
 		this.x = x;
 		this.y = y;

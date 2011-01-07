@@ -22,6 +22,7 @@ package net.propero.rdp.rdp5.seamless;
 
 import java.awt.Cursor;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.FocusListener;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
@@ -42,6 +43,7 @@ public interface SeamlessWindow {
 	int sw_getId();
 	int sw_getGroup();
 	void sw_setMyPosition(int x, int y, int width, int height);
+	Rectangle sw_getMaximumBounds();
 	int sw_getIconSize();
 	boolean sw_setIconSize(int size);
 	int sw_getIconOffset();

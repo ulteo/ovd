@@ -33,6 +33,7 @@
 
 package net.propero.rdp.rdp5.seamless;
 
+import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Cursor;
 import java.awt.Rectangle;
@@ -81,6 +82,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	
 	protected ConcurrentHashMap<String, SeamlessWindow> windows;
 	protected ConcurrentHashMap<String, Integer> stateOrdersHistory = null;
+	protected ConcurrentHashMap<Integer, Integer> ackHistory = null;
 	
 	protected static Logger logger = Logger.getLogger("net.propero.rdp");
 
@@ -93,6 +95,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		logger.debug("Seamless Channel created");		
 		this.windows = new ConcurrentHashMap<String, SeamlessWindow>();
 		this.stateOrdersHistory = new ConcurrentHashMap<String, Integer>();
+		this.ackHistory = new ConcurrentHashMap<Integer, Integer>();
 	}
 	public void setMainFrame(Frame f_) {
 		this.main_window = f_;
@@ -117,7 +120,8 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	}
 
 	public Rectangle getMaximumWindowBounds() {
-		return new Rectangle(this.opt.x_offset, this.opt.y_offset, this.opt.width, this.opt.height);
+		// Subtracting 1 to the width, it prevents java maximize the window
+		return new Rectangle(this.opt.x_offset, this.opt.y_offset, this.opt.width - 1, this.opt.height);
 	}
 
 	public boolean processLine(String line)
@@ -325,16 +329,16 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		}
 		else if (tokens[0].equals("ACK"))
 		{
-			long serial;
+			int serial;
 		
 			try {
-				serial = Long.parseLong(tokens[2]);
+				serial = Integer.parseInt(tokens[2]);
 			} catch(NumberFormatException nfe) {
 				logger.error("Couldn't parse argument from " + tokens[0] + " seamless command.", nfe);
 				return false;
 			}
 	
-//			TODO: ui_seamless_ack(serial);
+			return this.processAck(serial);
 		}
 		else if (tokens[0].equals("HIDE"))
 		{
@@ -399,6 +403,28 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		else
 			logger.debug("Unable to add a focus listener to the window "+name);
 		this.windows.put(name, f);
+	}
+	
+	protected boolean processAck(int serial) {
+		Integer id = this.ackHistory.remove(serial);
+		if (id == null) {
+			logger.warn("[processAck] Unexpected ACK: "+serial);
+			return false;
+		}
+
+		String name = "w_"+id.intValue();
+		SeamlessWindow sw = this.windows.get(name);
+		if (sw == null) {
+			logger.error("[processAck] Window ID '"+String.format("0x%08x", id.intValue())+"' does not exist");
+			return false;
+		}
+
+		Rectangle bounds = sw.sw_getMaximumBounds();
+		sw.sw_setMyPosition(bounds.x, bounds.y, bounds.width, bounds.height);
+
+		((Component) sw).repaint();
+
+		return true;
 	}
 
 	protected boolean processDestroy(long id, long flags) {
@@ -704,7 +730,6 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 		this.processLine(order);
 	}
-	
 	protected void seamless_send(String command, String args) throws RdesktopException, IOException, CryptoException {
 		
 		if (this.opt.seamlessEnabled) {
@@ -738,6 +763,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	
 	public void	send_state(int id, int state, int flags) throws RdesktopException, IOException, CryptoException
 	{
+		this.ackHistory.put(this.seamlessSerial, id);
 		seamless_send("STATE", 
 				"0x" + Integer.toHexString(id) + "," + 
 				"0x" + Integer.toHexString(state) + "," + 
@@ -840,6 +866,24 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 			} catch(Exception e) {
 				System.err.println("send new state failed: "+e);
 			}
+			
+			return;
+		}
+
+		if (ev.getNewState() == Frame.MAXIMIZED_BOTH) {
+			f.sw_setExtendedState(Frame.NORMAL);
+
+			return;
+		}
+
+		if (ev.getNewState() == Frame.NORMAL && ev.getOldState() == Frame.MAXIMIZED_BOTH) {
+			try {
+				this.send_state(f.sw_getId(), SeamlessChannel.WINDOW_MAXIMIZED, 0);
+			} catch(Exception e) {
+				logger.error("send new state failed: "+e.getMessage());
+			}
+
+			return;
 		}
 	}
 	

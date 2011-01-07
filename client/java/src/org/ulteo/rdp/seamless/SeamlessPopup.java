@@ -136,6 +136,10 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 		return this.group;
 	}
 
+	public Rectangle sw_getMaximumBounds() {
+		return this.maxBounds;
+	}
+
 	public void sw_setMyPosition(int x, int y, int width, int height) {
 		this.x = x;
 		this.y = y;
