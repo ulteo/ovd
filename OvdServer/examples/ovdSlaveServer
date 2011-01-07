@@ -22,8 +22,10 @@
 
 ### BEGIN INIT INFO
 # Provides:          ulteo-ovd-slaveserver
-# Required-Start:    $network xrdp
-# Required-Stop:     $network xrdp
+# Required-Start:    $network
+# Required-Stop:     $network
+# Should-Start:      xrdp
+# Should-Stop:       xrdp
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Start Ulteo OVD slave server
