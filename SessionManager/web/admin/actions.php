@@ -312,11 +312,11 @@ if ($_REQUEST['name'] == 'Application_static') {
 					switch ($upload['error']) {
 						case 1: // UPLOAD_ERR_INI_SIZE
 							popup_error(_('Oversized file for server rules'));
-							die();
+							redirect();
 							break;
 						case 3: // UPLOAD_ERR_PARTIAL
 							popup_error(_('The file was corrupted while upload'));
-							die();
+							redirect();
 							break;
 						case 4: // UPLOAD_ERR_NO_FILE
 							$have_file = false;
@@ -326,8 +326,10 @@ if ($_REQUEST['name'] == 'Application_static') {
 				
 				if ($have_file) {
 					$source_file = $upload['tmp_name'];
-					if (! is_readable($source_file))
-						die('file is not readable');
+					if (! is_readable($source_file)) {
+						popup_error(_('The file is not readable'));
+						redirect();
+					}
 					
 					if ( get_classes_startwith('Imagick') != array()) {
 						
@@ -342,12 +344,12 @@ if ($_REQUEST['name'] == 'Application_static') {
 							}
 							catch (Exception $e) {
 								popup_error(_('The icon is not an image'));
-								die();
+								redirect();
 							}
 						}
 						else {
 							Logger::error('main', 'getIconPathRW ('.$path_rw.') is not writeable');
-							die();
+							redirect();
 						}
 					}
 					else {
