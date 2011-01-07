@@ -56,6 +56,7 @@ class SessionStatusChangedReport extends EventCallback {
 				break;
 
 			/* session ended */
+			case Session::SESSION_STATUS_WAIT_DESTROY:
 			case Session::SESSION_STATUS_DESTROYED:
 				$token = $this->ev->id;
 				$sql_sessions = get_from_cache ('reports', 'sessids');
