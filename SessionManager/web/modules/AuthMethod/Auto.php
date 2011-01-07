@@ -26,12 +26,21 @@ class AuthMethod_Auto extends AuthMethod {
 		if (! is_object($userDB))
 			return NULL;
 		
+		$prefs = Preferences::getInstance();
+		$config = $prefs->get('AuthMethod', 'Auto');
+		
+		if (array_key_exists('login', $_POST) && array_key_exists('uselogin', $config) && $config['uselogin'] == '1') {
+			$this->login = $_POST['login'];
+		}
+		else {
+			$this->login = 'u'.gen_unique_string();
+		}
+		
 		$u = new User();
-		$buf = gen_unique_string();
-		$u->setAttribute('login', 'u'.$buf);
+		$u->setAttribute('login', $this->login);
 		$u->setAttribute('password', $u->getAttribute('login'));
 		$u->setAttribute('displayname', 'user '.$u->getAttribute('login'));
-		if (  $userDB->add($u)) {
+		if ($userDB->add($u)) {
 			$user = $userDB->import($u->getAttribute('login'));
 		}
 		else {
@@ -72,6 +81,14 @@ class AuthMethod_Auto extends AuthMethod {
 
 	public static function enable() {
 		return true;
+	}
+	
+	public static function configuration() {
+		$ret = array();
+		$c = new ConfigElement_select('uselogin', _('Use the given login to generate user'), _('Use the given login to generate user.'), _('Use the given login to generate user.'), 0);
+		$c->setContentAvailable(array(0=>_('No'), 1=>_('Yes')));
+		$ret []= $c;
+		return $ret;
 	}
 }
  
