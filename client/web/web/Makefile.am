@@ -1,6 +1,7 @@
 SUBDIRS = applet includes media PEAR
 
-scripts_DATA = icon.php \
+scripts_DATA = external.php \
+               icon.php \
                index.php \
                login.php \
                logout.php \

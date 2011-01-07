@@ -423,6 +423,10 @@ class Preferences {
 		$c = new ConfigElement_select('show_list_users', _('Display users list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must provide his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must provide his login name.'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','web_interface_settings');
+		
+		$c = new ConfigElement_select('public_webservices_access', _('Public Webservices access'), _('Authorize non authenticated requests to get information about users authorized applications or get applications icons.'), _('Authorize non authenticated requests to get information about users authorized applications or get applications icons.'), 0);
+		$c->setContentAvailable(array(0=>_('no'), 1=>_('yes')));
+		$this->add($c,'general','web_interface_settings');
 
 		$this->getPrefsModules();
 		$this->getPrefsEvents();

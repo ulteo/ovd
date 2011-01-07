@@ -36,21 +36,31 @@ if (! array_key_exists('id', $_GET)) {
 	die();
 }
 
-if (! array_key_exists('session_id', $_SESSION)) {
-	echo return_error(2, 'Usage: missing "session_id" $_SESSION parameter');
-	die();
+$prefs = Preferences::getInstance();
+
+$web_interface_settings = $prefs->get('general', 'web_interface_settings');
+if (array_key_exists('public_webservices_access', $web_interface_settings) && $web_interface_settings['public_webservices_access'] == 1) {
+	// ok
 }
 
-$session = Abstract_Session::load($_SESSION['session_id']);
-if (! $session) {
-	echo return_error(3, 'No such session "'.$_SESSION['session_id'].'"');
-	die();
+elseif (array_key_exists('session_id', $_SESSION)) {
+	$session = Abstract_Session::load($_SESSION['session_id']);
+	if (! $session) {
+		echo return_error(3, 'No such session "'.$_SESSION['session_id'].'"');
+		die();
+	}
+	
+	/*if (! in_array($_GET['id'], $session->applications)) {
+		echo return_error(4, 'Unauthorized application');
+		die();
+	}*/
 }
 
-/*if (! in_array($_GET['id'], $session->applications)) {
-	echo return_error(4, 'Unauthorized application');
+else {
+	Logger::debug('main', '(client/applications) No Session id nor public_webservices_access');
+	echo return_error(7, 'No Session id nor public_webservices_access');
 	die();
-}*/
+}
 
 $applicationDB = ApplicationDB::getInstance();
 

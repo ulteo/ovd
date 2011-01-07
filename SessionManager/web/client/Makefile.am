@@ -1,4 +1,5 @@
-scripts_DATA = get_cookie.php \
+scripts_DATA = applications.php \
+               get_cookie.php \
                icon.php \
                logout.php \
                news.php \
