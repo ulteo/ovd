@@ -25,6 +25,11 @@ function UlteoOVD_start_Application(web_client_url, application_id) {
 	_UlteoOVDpopupOpen(url);
 }
 
+function UlteoOVD_start_Application_with_file(web_client_url, application_id, path) {
+	var url = web_client_url+'/external.php?app='+application_id+'path='+path;
+	
+	_UlteoOVDpopupOpen(url);
+}
 
 function _UlteoOVDpopupOpen(url) {
 	var my_width = 300;

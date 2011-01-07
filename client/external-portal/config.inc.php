@@ -24,3 +24,5 @@ define('ULTEO_OVD_SM_HOST', 'sm.ulteo.com');
 define('ULTEO_OVD_WEBCLIENT_URL', 'http://web.ulteo.com/ovd');
 
 define('ULTEO_OVD_DEFAULT_LOGIN', 'mwilson');
+
+define('GED_FOLDER', '/tmp');

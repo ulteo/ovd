@@ -35,6 +35,16 @@ else
 
 
 $apps = getApplications($user);
+$files = getFiles();
+
+foreach ($files as $name => $f) {
+	$files[$name]['applications'] = array();
+	
+	foreach($apps as $application) {
+		if (in_array($f['mimetype'], $application['mimetypes']))
+			$files[$name]['applications'] []= $application;
+	}
+}
 
 ?>
 <html>
@@ -72,32 +82,27 @@ $apps = getApplications($user);
 	<div>
 	<h2>Files</h2>
 	<table>
-		<tr><td>toto.txt</td>
+<?php
+		foreach($files as $f) {
+?>
+		<tr>
+		<td><?php echo $f['name']; ?></td>
+		<td><?php echo $f['mimetype']; ?></td>
+<?php
+			foreach($f['applications'] as $application) {
+?>
 		<td>
-		<form action="<?php echo $SM_URL; ?>/startsession.php" method="POST" onsubmit="return popupOpen(this); return false;">
-		<input type="hidden" name="client" value="browser" />
-		<input type="hidden" name="session_mode" value="external" />
-		<input type="hidden" name="start_app" value="30" />
-		<input type="hidden" name="start_app_args" value="toto.txt" />
-
-		<input type="hidden" name="token" value="external" />
-
-		<input type="submit" value="Open file with Mousepad" />
-		</form>
-		</td>
-		<td>
-			<form action="<?php echo $SM_URL; ?>/startsession.php" method="POST" onsubmit="return popupOpen(this);">
-			<input type="hidden" name="client" value="browser" />
-			<input type="hidden" name="session_mode" value="external" />
-			<input type="hidden" name="start_app" value="23" />
-			<input type="hidden" name="start_app_args" value="toto.txt" />
-
-			<input type="hidden" name="token" value="external" />
-
-			<input type="submit" value="Open file with OOWriter" />
+			<form onsubmit="UlteoOVD_start_Application_with_file('<?php echo ULTEO_OVD_WEBCLIENT_URL; ?>', '<?php echo $app['id']; ?>', '<?php echo $f['name']; ?>'); return false;">
+				<input type="submit" value="Open with <?php echo $application['name']; ?>" />
 			</form>
 		</td>
+<?php
+			}
+?>
 		</tr>
+<?php
+		}
+?>
 	</table>	
 	</div>
 	

@@ -75,3 +75,21 @@ function getApplications($user) {
 function getIconURL($app_id) {
 	return 'https://'.ULTEO_OVD_SM_HOST.'/ovd/client/icon.php?id='.$app_id;
 }
+
+
+function getFiles() {
+	$files = array();
+	
+	foreach (glob(GED_FOLDER.'/*') as $filename) {
+		if (is_dir($filename))
+			continue;
+		
+		$f = array();
+		$f['name'] = basename($filename);
+		$f['mimetype'] = mime_content_type($filename);
+		
+		$files[$f['name']] = $f;
+	}
+	
+	return $files;
+}
