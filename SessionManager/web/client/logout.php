@@ -68,7 +68,7 @@ if (! $ret)
 $session = Abstract_Session::load($_SESSION['session_id']);
 if (is_object($session)) {
 	if ($ret == 'suspend')
-		$session->setStatus(Session::SESSION_STATUS_INACTIVE);
+		$session->setStatus(Session::SESSION_STATUS_INACTIVE, Session::SESSION_END_STATUS_LOGOUT);
 	else
 		$session->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_END_STATUS_LOGOUT);
 }

@@ -268,7 +268,7 @@ class Session {
 			$this->setAttribute('start_time', time());
 		} elseif ($status_ == Session::SESSION_STATUS_INACTIVE) {
 			if ($this->mode != Session::MODE_DESKTOP || ! array_key_exists('persistent', $this->settings) || $this->settings['persistent'] == 0)
-				return $this->setStatus(Session::SESSION_STATUS_WAIT_DESTROY);
+				return $this->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, $reason_);
 		} elseif ($status_ == Session::SESSION_STATUS_WAIT_DESTROY) {
 			Logger::info('main', 'Session end : \''.$this->id.'\'');
 
