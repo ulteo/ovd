@@ -38,7 +38,7 @@ class SessionStatusChangedReport extends EventCallback {
 					}
 					else {
 						if (! Abstract_Session::exists($token)) {
-							Logger::error('main', "SessionStatusChangedReport::run failed to load session '$token'");
+							Logger::error('main', "SessionStatusChangedReport::run failed session '$token' does not exist");
 							return false;
 						}
 						$session = Abstract_Session::load($token);
