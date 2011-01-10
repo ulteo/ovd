@@ -476,6 +476,7 @@ function show_manage($id) {
 		}
     
 		if ($group->type == 'dynamiccached') {
+			echo '<br />';
 			echo '<form action="actions.php" method="post">';
 			echo '<input type="hidden" name="name" value="UserGroup" />';
 			echo '<input type="hidden" name="action" value="modify" />';
