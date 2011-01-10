@@ -357,7 +357,8 @@ function toggleContent(container) {
 Event.observe(window, 'load', function() {
 	refresh_body_size();
 
-	$('loginBox').hide();
+	if ($('loginBox'))
+		$('loginBox').hide();
 
 	$('lockWrap').hide();
 	$('lockWrap').style.width = my_width+'px';
@@ -384,9 +385,11 @@ Event.observe(window, 'load', function() {
 
 	testJava();
 
-	setTimeout(function() {
-		new Effect.Appear($('loginBox'));
-	}, 1000);
+	if ($('loginBox')) {
+		setTimeout(function() {
+			new Effect.Appear($('loginBox'));
+		}, 1000);
+	}
 });
 
 function showSystemTest() {
