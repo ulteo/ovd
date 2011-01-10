@@ -367,7 +367,9 @@ Event.observe(window, 'load', function() {
 	$('errorWrap').hide();
 	$('okWrap').hide();
 	$('infoWrap').hide();
-	$('newsWrap').hide();
+
+	if ($('newsWrap'))
+		$('newsWrap').hide();
 
 	Event.observe($('lockWrap'), 'click', function() {
 		if ($('errorWrap').visible())
@@ -379,7 +381,7 @@ Event.observe(window, 'load', function() {
 		if ($('infoWrap').visible())
 			hideInfo();
 
-		if ($('newsWrap').visible())
+		if ($('newsWrap') && $('newsWrap').visible())
 			hideNews();
 	});
 
