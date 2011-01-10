@@ -1,7 +1,8 @@
 /**
  * Copyright (C) 2011 Ulteo SAS
  * http://www.ulteo.com
- * Author julien LANGLOIS <julien@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,26 +19,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-
-function UlteoOVD_start_Application(web_client_url, application_id) {
-	var url = web_client_url+'/external.php?app='+application_id;
+function UlteoOVD_start_Application(web_client_url_, application_id_) {
+	var url = web_client_url_+'/external.php?app='+application_id_;
 	
 	_UlteoOVDpopupOpen(url);
 }
 
-function UlteoOVD_start_Application_with_file(web_client_url, application_id, path) {
-	var url = web_client_url+'/external.php?app='+application_id+'path='+path;
+function UlteoOVD_start_Application_with_file(web_client_url_, application_id_, path_) {
+	var url = web_client_url_+'/external.php?app='+application_id_+'path='+path_;
 	
 	_UlteoOVDpopupOpen(url);
 }
 
 function _UlteoOVDpopupOpen(url) {
-	var my_width = 300;
-	var my_height = 200;
+	var my_width = 436;
+	var my_height = 270;
 	var new_width = 0;
 	var new_height = 0;
-	var pos_top = screen.height - 200;
-	var pos_left = screen.width - 300;
+	var pos_top = screen.height - 270;
+	var pos_left = screen.width - 436;
 	
 	var date = new Date();
 	var rand_ = Math.round(Math.random()*100)+date.getTime();
