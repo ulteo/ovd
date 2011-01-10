@@ -408,6 +408,19 @@ class Server {
 		));
 
 		switch ($status_) {
+			case 'ready':
+				$this->setAttribute('status', 'ready');
+				if ($this->getAttribute('registered') && is_array($this->roles) && array_key_exists(Server::SERVER_ROLE_APS, $this->roles)) {
+					if (! $this->updateApplications()) {
+						Logger::critical('main', 'Server::setStatus('.$status_.') - updateApplications failed, status switched to "broken"');
+						$this->setStatus(Server::SERVER_STATUS_BROKEN);
+						return false;
+					}
+				}
+				break;
+		}
+
+		switch ($status_) {
 			case 'pending':
 				Logger::warning('main', 'Status set to "pending" for server \''.$this->fqdn.'\'');
 				$this->setAttribute('status', 'pending');
@@ -433,10 +446,6 @@ class Server {
 
 		switch ($this->getAttribute('status')) {
 			case 'pending':
-				break;
-			case 'ready':
-				if ($this->getAttribute('registered') && is_array($this->roles) && array_key_exists(Server::SERVER_ROLE_APS, $this->roles))
-					$this->updateApplications();
 				break;
 			case 'down':
 				$sessions = Abstract_Session::getByServer($this->fqdn);
