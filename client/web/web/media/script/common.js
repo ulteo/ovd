@@ -381,8 +381,10 @@ Event.observe(window, 'load', function() {
 		if ($('infoWrap').visible())
 			hideInfo();
 
-		if ($('newsWrap') && $('newsWrap').visible())
-			hideNews();
+		if ($('newsWrap')) {
+			if ($('newsWrap').visible())
+				hideNews();
+		}
 	});
 
 	testJava();
