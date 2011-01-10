@@ -19,11 +19,23 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
+
+require_once(dirname(__FILE__).'/includes/core.inc.php');
+
+$first = false;
+if (! array_key_exists('start_app', $_SESSION)) {
+	$first = true;
+	$_SESSION['start_app'] = array();
+}
+
+$_SESSION['start_app'][] = array(
+	'id'	=>	$_GET['app']
+);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>Ulteo Open Virtual Desktop - external mode</title>
+		<title>Ulteo Open Virtual Desktop</title>
 
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
@@ -47,17 +59,59 @@
 		<link rel="shortcut icon" type="image/png" href="media/image/favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 		<script type="text/javascript" src="media/script/common.js?<?php echo time(); ?>" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/external.js?<?php echo time(); ?>" charset="utf-8"></script>
 
 		<script type="text/javascript" src="media/script/daemon.js?<?php echo time(); ?>" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon_desktop.js?<?php echo time(); ?>" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon_applications.js?<?php echo time(); ?>" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/daemon_external.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/server.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/application.js?<?php echo time(); ?>" charset="utf-8"></script>
 
-		<script type="text/javascript" src="media/script/timezones.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			<?php
+				if (! $first) {
+			?>
+					Event.observe(window, 'load', function() {
+						window.close();
+					});
+			<?php
+				} else {
+			?>
+					var daemon;
+
+					Event.observe(window, 'load', function() {
+						translateInterface('en-us');
+						startExternalSession();
+					});
+			<?php
+				}
+			?>
+		</script>
 	</head>
 
 	<body style="margin: 10px; background: #ddd; color: #333;">
+		<div id="lockWrap" style="display: none;">
+		</div>
+
+		<div style="background: #2c2c2c; width: 0px; height: 0px;">
+			<div id="errorWrap" class="rounded" style="display: none;">
+			</div>
+			<div id="okWrap" class="rounded" style="display: none;">
+			</div>
+			<div id="infoWrap" class="rounded" style="display: none;">
+			</div>
+		</div>
+
+		<div id="applicationsModeContainer" style="display: none;">
+			<div id="appsContainer" style="overflow: auto; display: none;">
+			</div>
+
+			<div id="runningAppsContainer" style="overflow: auto; display: none;">
+			</div>
+
+			<div id="applicationsAppletContainer" style="display: none;">
+			</div>
+		</div>
+
 		<div id="splashContainer" class="rounded">
 			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 				<tr>
