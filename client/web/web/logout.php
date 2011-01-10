@@ -30,6 +30,9 @@ function return_error($errno_, $errstr_) {
 	return $dom->saveXML();
 }
 
+session_destroy();
+unset($_SESSION);
+
 header('Content-Type: text/xml; charset=utf-8');
 
 $dom = new DomDocument('1.0', 'utf-8');
