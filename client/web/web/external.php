@@ -101,6 +101,61 @@ $_SESSION['start_app'][] = array(
 			</div>
 		</div>
 
+		<div id="testJava">
+			<applet id="CheckJava" code="org.ulteo.ovd.applet.CheckJava" codebase="applet/" archive="CheckJava.jar" mayscript="true" width="1" height="1">
+				<param name="code" value="org.ulteo.ovd.applet.CheckJava" />
+				<param name="codebase" value="applet/" />
+				<param name="archive" value="CheckJava.jar" />
+				<param name="mayscript" value="true" />
+			</applet>
+		</div>
+
+		<div style="background: #2c2c2c; width: 0px; height: 0px;">
+			<div id="systemTestWrap" class="rounded" style="display: none;">
+				<div id="systemTest" class="rounded">
+					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
+						<tr>
+							<td style="text-align: left; vertical-align: top;">
+								<strong><span id="system_compatibility_check_1_gettext">&nbsp;</span></strong>
+								<div style="margin-top: 15px;">
+									<p id="system_compatibility_check_2_gettext">&nbsp;</p>
+									<p id="system_compatibility_check_3_gettext">&nbsp;</p>
+								</div>
+							</td>
+							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
+								<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+			<div id="systemTestErrorWrap" class="rounded" style="display: none;">
+				<div id="systemTestError" class="rounded">
+					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
+						<tr>
+							<td style="text-align: left; vertical-align: middle;">
+								<strong><span id="system_compatibility_error_1_gettext">&nbsp;</span></strong>
+								<div id="systemTestError1" style="margin-top: 15px; display: none;">
+									<p id="system_compatibility_error_2_gettext">&nbsp;</p>
+									<p id="system_compatibility_error_3_gettext">&nbsp;</p>
+								</div>
+
+								<div id="systemTestError2" style="margin-top: 15px; display: none;">
+									<p id="system_compatibility_error_4_gettext">&nbsp;</p>
+								</div>
+
+								<p id="system_compatibility_error_5_gettext">&nbsp;</p>
+							</td>
+							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
+								<img src="media/image/error.png" width="32" height="32" alt="" title="" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+
 		<div id="applicationsModeContainer" style="display: none;">
 			<div id="appsContainer" style="overflow: auto; display: none;">
 			</div>
