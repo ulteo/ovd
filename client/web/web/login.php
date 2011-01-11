@@ -327,7 +327,8 @@ $_SESSION['xml'] = $xml;
 
 if (array_key_exists('sessionmanager_host', $_POST))
 	setcookie('ovd-client[sessionmanager_host]', $_POST['sessionmanager_host'], (time()+(60*60*24*7)));
-setcookie('ovd-client[user_login]', $_POST['login'], (time()+(60*60*24*7)));
+if (array_key_exists('login', $_POST))
+	setcookie('ovd-client[user_login]', $_POST['login'], (time()+(60*60*24*7)));
 setcookie('ovd-client[use_local_credentials]', 0, (time()+(60*60*24*7)));
 setcookie('ovd-client[session_mode]', $_POST['mode'], (time()+(60*60*24*7)));
 setcookie('ovd-client[session_language]', $_POST['language'], (time()+(60*60*24*7)));
