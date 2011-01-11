@@ -110,6 +110,8 @@ abstract class SessionManagement extends Module {
 				$_POST['login'] = $user_node->getAttribute('login');
 			if ($user_node->hasAttribute('password'))
 				$_POST['password'] = $user_node->getAttribute('password');
+			if ($user_node->hasAttribute('token'))
+				$_REQUEST['token'] = $user_node->getAttribute('token');
 		}
 
 		$start_node = $dom->getElementsByTagname('start')->item(0);
