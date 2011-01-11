@@ -51,9 +51,23 @@ foreach ($files as $name => $f) {
 <head>
 <title>My portal</title>
 
+<script type="text/javascript" src="<?php echo ULTEO_OVD_WEBCLIENT_URL; ?>/media/script/lib/prototype/prototype.js" charset="utf-8"></script>
 <script type="text/javascript" src="<?php echo ULTEO_OVD_WEBCLIENT_URL; ?>/media/script/external.js" charset="utf-8"></script>
 
+<script type="text/javascript">
+function startApplication(app_id_) {
+	var UOVD_startApplication = new UlteoOVD_start_Application('<?php echo ULTEO_OVD_WEBCLIENT_URL; ?>', app_id_);
+	//UOVD_startApplication.setAuthPassword('<?php echo $user; ?>', '<?php echo $user; ?>');
+	UOVD_startApplication.setAuthToken('<?php echo base64_encode($user); ?>');
+	UOVD_startApplication.start();
+}
 
+function startApplicationWithPath(app_id_, path_) {
+	var UOVD_startApplication = new UlteoOVD_start_Application('<?php echo ULTEO_OVD_WEBCLIENT_URL; ?>', app_id_);
+	UOVD_startApplication.setPath(path_);
+	UOVD_startApplication.start();
+}
+</script>
 </head>
 <body>
 <h1>Welcome to My Portal</h1>
@@ -69,7 +83,7 @@ foreach ($files as $name => $f) {
 		<tr>
 			<td><img src="<?php echo getIconURL($app['id']); ?>"/></td>
 			<td><?php echo $app['name']; ?></td>
-			<td><form onsubmit="UlteoOVD_start_Application('<?php echo ULTEO_OVD_WEBCLIENT_URL; ?>', '<?php echo $app['id']; ?>'); return false;">
+			<td><form onsubmit="startApplication('<?php echo $app['id']; ?>'); return false;">
 				<input type="submit" value="Start instance" />
 			</form></td>
 		</tr>
@@ -92,7 +106,7 @@ foreach ($files as $name => $f) {
 			foreach($f['applications'] as $application) {
 ?>
 		<td>
-			<form onsubmit="UlteoOVD_start_Application_with_file('<?php echo ULTEO_OVD_WEBCLIENT_URL; ?>', '<?php echo $app['id']; ?>', '<?php echo $f['name']; ?>'); return false;">
+			<form onsubmit="startApplicationWithPath(''<?php echo $app['id']; ?>', '<?php echo $f['name']; ?>'); return false;">
 				<input type="submit" value="Open with <?php echo $application['name']; ?>" />
 			</form>
 		</td>
