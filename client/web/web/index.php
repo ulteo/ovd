@@ -402,8 +402,6 @@ function get_users_list() {
 									<script type="text/javascript">
 									var sessionmanager_host_example = '<?php echo _('Example: sm.ulteo.com'); ?>';
 									Event.observe(window, 'load', function() {
-										$('timezone').value = getTimezoneName();
-
 										setTimeout(function() {
 <?php
 if (! defined('SESSIONMANAGER_HOST') && (! isset($wi_sessionmanager_host) || $wi_sessionmanager_host == ''))
@@ -419,8 +417,6 @@ checkSessionMode();
 										}, 1500);
 									});</script>
 									<form id="startsession" action="launch.php" method="post" onsubmit="return startSession();">
-										<input type="hidden" id="timezone" name="timezone" value="" />
-
 										<table style="width: 100%; margin-left: auto; margin-right: auto; padding-top: 10px;" border="0" cellspacing="0" cellpadding="5">
 											<tr style="<?php echo ((defined('SESSIONMANAGER_HOST'))?'display: none;':'') ?>">
 												<td style="width: 22px; text-align: right; vertical-align: middle;">
