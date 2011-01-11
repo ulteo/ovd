@@ -59,12 +59,13 @@ $_SESSION['start_app'][] = array(
 		<link rel="shortcut icon" type="image/png" href="media/image/favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 		<script type="text/javascript" src="media/script/common.js?<?php echo time(); ?>" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/external.js?<?php echo time(); ?>" charset="utf-8"></script>
 
 		<script type="text/javascript" src="media/script/daemon.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/daemon_external.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/server.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/application.js?<?php echo time(); ?>" charset="utf-8"></script>
+
+		<script type="text/javascript" src="media/script/timezones.js" charset="utf-8"></script>
 
 		<script type="text/javascript">
 			<?php
@@ -77,9 +78,11 @@ $_SESSION['start_app'][] = array(
 				} else {
 			?>
 					var daemon;
+					var client_language = '<?php echo $user_language; ?>';
+					var client_keymap = '<?php echo $user_keymap; ?>';
 
 					Event.observe(window, 'load', function() {
-						translateInterface('en-us');
+						translateInterface(client_language);
 						startExternalSession();
 					});
 			<?php
