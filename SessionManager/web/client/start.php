@@ -30,6 +30,8 @@ define('UNAUTHORIZED_SESSION_MODE', 'unauthorized_session_mode');
 define('USER_WITH_ACTIVE_SESSION', 'user_with_active_session');
 
 function throw_response($response_code_) {
+	Logger::error('main', '(client/start) throw_response(\''.$response_code_.'\')');
+
 	header('Content-Type: text/xml; charset=utf-8');
 
 	$dom = new DomDocument('1.0', 'utf-8');
@@ -37,8 +39,6 @@ function throw_response($response_code_) {
 	$response_node = $dom->createElement('response');
 	$response_node->setAttribute('code', $response_code_);
 	$dom->appendChild($response_node);
-
-	Logger::debug('main', "(client/start) throw_response($response_code_)");
 
 	echo $dom->saveXML();
 
