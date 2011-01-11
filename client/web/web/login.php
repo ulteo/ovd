@@ -167,16 +167,6 @@ if (! defined('SESSIONMANAGER_HOST') && ! array_key_exists('sessionmanager_host'
 	die();
 }
 
-if (! array_key_exists('login', $_POST)) {
-	echo return_error(1, 'no_login_parameter');
-	die();
-}
-
-if (! array_key_exists('password', $_POST)) {
-	echo return_error(2, 'no_password_parameter');
-	die();
-}
-
 $dom = new DomDocument('1.0', 'utf-8');
 
 $session_node = $dom->createElement('session');
@@ -184,8 +174,10 @@ $session_node->setAttribute('mode', $_POST['mode']);
 $session_node->setAttribute('language', $_POST['language']);
 $session_node->setAttribute('timezone', $_POST['timezone']);
 $user_node = $dom->createElement('user');
-$user_node->setAttribute('login', $_POST['login']);
-$user_node->setAttribute('password', $_POST['password']);
+if (array_key_exists('login', $_POST))
+	$user_node->setAttribute('login', $_POST['login']);
+if (array_key_exists('password', $_POST))
+	$user_node->setAttribute('password', $_POST['password']);
 $session_node->appendChild($user_node);
 $dom->appendChild($session_node);
 
