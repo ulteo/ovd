@@ -358,13 +358,15 @@ if (array_key_exists('explorer', $_SESSION) && $_SESSION['explorer'] === true) {
 $xml = $dom->saveXML();
 $_SESSION['xml'] = $xml;
 
-setcookie('ovd-client[sessionmanager_host]', $_POST['sessionmanager_host'], (time()+(60*60*24*7)));
+if (array_key_exists('sessionmanager_host', $_POST))
+	setcookie('ovd-client[sessionmanager_host]', $_POST['sessionmanager_host'], (time()+(60*60*24*7)));
 setcookie('ovd-client[user_login]', $_POST['login'], (time()+(60*60*24*7)));
 setcookie('ovd-client[use_local_credentials]', 0, (time()+(60*60*24*7)));
 setcookie('ovd-client[session_mode]', $_POST['mode'], (time()+(60*60*24*7)));
 setcookie('ovd-client[session_language]', $_POST['language'], (time()+(60*60*24*7)));
 setcookie('ovd-client[session_keymap]', $_POST['keymap'], (time()+(60*60*24*7)));
-setcookie('ovd-client[desktop_fullscreen]', $_POST['desktop_fullscreen'], (time()+(60*60*24*7)));
+if (array_key_exists('desktop_fullscreen', $_POST))
+	setcookie('ovd-client[desktop_fullscreen]', $_POST['desktop_fullscreen'], (time()+(60*60*24*7)));
 setcookie('ovd-client[debug]', $_POST['debug'], (time()+(60*60*24*7)));
 
 echo $_SESSION['xml'];
