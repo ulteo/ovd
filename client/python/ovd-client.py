@@ -124,6 +124,14 @@ class Dialog:
         userNode.setAttribute("login", self.conf["login"])
         userNode.setAttribute("password", self.conf["password"])
         sessionNode.appendChild(userNode)
+        
+        if args.has_key("start-apps"): # launch applications at the session startup
+            startappsNode = doc.createElement("start")
+            for appid in args["start-apps"]:
+                appNode = doc.createElement("application")
+                appNode.setAttribute("id", appid)
+                startappsNode.appendChild(appNode)
+            sessionNode.appendChild(startappsNode)
         doc.appendChild(sessionNode)
         
         request = urllib2.Request(url, doc.toxml())
@@ -423,6 +431,7 @@ def usage():
     print
     print "Options:"
     print "\t--extra-startsession-opt=key:value[,key1:value1...]"
+    print "\t--start-apps=value[,value1,value2,...]"
     print "\t-f|--fullscreen"
     print "\t-g|--geometry=WIDTHxHEIGHT"
     print "\t-h|--help"
@@ -451,7 +460,8 @@ try:
                                                             'password=',
                                                             'quality=',
                                                             'quiet',
-                                                            'verbose'])
+                                                            'verbose',
+                                                            'start-apps='])
     
 except getopt.GetoptError, err:
     print >> sys.stderr, str(err)
@@ -499,6 +509,13 @@ for o, a in opts:
                 sys.exit(2)
             
             extra_args[k] = v
+    elif o == "--start-apps":
+        if a == "":
+            print >> sys.stderr, "Invalid start-apps option",a
+            usage()
+            sys.exit(2)
+        items = a.split(",")
+        extra_args['start-apps'] = items
     elif o == "--verbose":
         logger_flags |= Logger.DEBUG
         
