@@ -35,31 +35,6 @@ function return_error($errno_, $errstr_) {
 	return $dom->saveXML();
 }
 
-function query_sm_start($base_url_, $script_, $xml_) {
-	$socket = curl_init($base_url_.'/'.'get_cookie.php');
-	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
-	curl_setopt($socket, CURLOPT_SSL_VERIFYHOST, 0);
-	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, 10);
-	curl_setopt($socket, CURLOPT_TIMEOUT, (10+5));
-
-	curl_setopt($socket, CURLOPT_HEADER, 1);
-	curl_setopt($socket, CURLOPT_NOBODY, 1);
-
-	$ret = curl_exec($socket);
-	curl_close($socket);
-
-	preg_match('@Set-Cookie: (.*)=(.*);@', $ret, $matches);
-	if (count($matches) != 3)
-		return false;
-
-	$_SESSION['sessionmanager'] = array();
-	$_SESSION['sessionmanager']['session_var'] = $matches[1];
-	$_SESSION['sessionmanager']['session_id'] = $matches[2];
-
-	return query_sm_post_xml($base_url_.'/'.$script_, $xml_);
-}
-
 function generateAjaxplorerActionsXML($application_nodes_) {
 	$dom = new DomDocument('1.0', 'utf-8');
 
@@ -221,7 +196,7 @@ else
 $_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$_SESSION['ovd-client']['server'].'/ovd/client';
 $sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
 
-$xml = query_sm_start($sessionmanager_url, 'start.php', $dom->saveXML());
+$xml = query_sm_post_xml($sessionmanager_url.'/start.php', $dom->saveXML());
 if (! $xml) {
 	echo return_error(0, 'unable_to_reach_sm');
 	die();
