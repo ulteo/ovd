@@ -704,6 +704,8 @@ if (! isset($old_session_id)) {
 
 $_SESSION['session_id'] = $session->id;
 
+$sessionManagement->end();
+
 header('Content-Type: text/xml; charset=utf-8');
 $dom = new DomDocument('1.0', 'utf-8');
 

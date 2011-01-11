@@ -1,4 +1,5 @@
 scripts_DATA = applications.php \
+               auth.php \
                icon.php \
                logout.php \
                news.php \

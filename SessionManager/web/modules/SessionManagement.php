@@ -167,6 +167,16 @@ abstract class SessionManagement extends Module {
 	public function authenticate() {
 		$this->userDB = UserDB::getInstance();
 
+		if (isset($_SESSION) && is_array($_SESSION) && array_key_exists('user_login', $_SESSION)) {
+			$this->user = $this->userDB->import($_SESSION['user_login']);
+			if (! is_object($this->user)) {
+				Logger::debug('main', 'SessionManagement::authenticate - Unable to import a valid user with login "'.$_SESSION['user_login'].'"');
+				return false;
+			}
+
+			return true;
+		}
+
 		$authMethods_enabled = $this->prefs->get('AuthMethod', 'enable');
 		if (! is_array($authMethods_enabled)) {
 			Logger::error('main', 'SessionManagement::authenticate - No AuthMethod enabled');
@@ -356,6 +366,13 @@ abstract class SessionManagement extends Module {
 	}
 
 	public function appendToSessionCreateXML($dom_) {
+		return;
+	}
+
+	public function end() {
+		if (array_key_exists('user_login', $_SESSION))
+			unset($_SESSION['user_login']);
+
 		return;
 	}
 }
