@@ -19,30 +19,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-function UlteoOVD_start_Application(web_client_url_, application_id_) {
-	var url = web_client_url_+'/external.php?app='+application_id_;
-	
-	_UlteoOVDpopupOpen(url);
-}
+var UlteoOVD_start_Application = Class.create({
+	web_client_url: null,
+	application_id: null,
+	path: null,
 
-function UlteoOVD_start_Application_with_file(web_client_url_, application_id_, path_) {
-	var url = web_client_url_+'/external.php?app='+application_id_+'path='+path_;
-	
-	_UlteoOVDpopupOpen(url);
-}
+	initialize: function(web_client_url_, application_id_) {
+		this.web_client_url = web_client_url_;
+		this.application_id = application_id_;
+	},
 
-function _UlteoOVDpopupOpen(url_) {
-	var my_width = 436;
-	var my_height = 270;
-	var new_width = 0;
-	var new_height = 0;
-	var pos_top = screen.height - 270;
-	var pos_left = screen.width - 436;
-	
-	var date = new Date();
-	var rand_ = Math.round(Math.random()*100)+date.getTime();
-	
-	var w = window.open(url_, 'Ulteo'+rand_, 'toolbar=no,status=no,top='+pos_top+',left='+pos_left+',width='+my_width+',height='+my_height+',scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
-	
-	return true;
-}
+	setPath: function(path_) {
+		this.path = path_;
+	},
+
+	start: function() {
+		var url = this.web_client_url+'/external.php?app='+this.application_id;
+		if (this.path != null)
+			url += '&path='+this.path;
+
+		this.openPopup(url);
+	},
+
+	openPopup: function(url_) {
+		var my_width = 436;
+		var my_height = 270;
+		var new_width = 0;
+		var new_height = 0;
+		var pos_top = screen.height - 270;
+		var pos_left = screen.width - 436;
+
+		var date = new Date();
+		var rand_ = Math.round(Math.random()*100)+date.getTime();
+
+		var w = window.open(url_, 'Ulteo'+rand_, 'toolbar=no,status=no,top='+pos_top+',left='+pos_left+',width='+my_width+',height='+my_height+',scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
+
+		return true;
+	}
+});
