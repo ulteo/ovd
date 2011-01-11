@@ -25,6 +25,22 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 $first = false;
 if (! array_key_exists('start_app', $_SESSION)) {
 	$first = true;
+
+	$dom = new DomDocument('1.0', 'utf-8');
+
+	$session_node = $dom->createElement('session');
+	$user_node = $dom->createElement('user');
+	$user_node->setAttribute('login', $_REQUEST['login']);
+	$user_node->setAttribute('password', $_REQUEST['password']);
+	$session_node->appendChild($user_node);
+	$dom->appendChild($session_node);
+
+	$_SESSION['ovd-client']['server'] = SESSIONMANAGER_HOST;
+	$_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$_SESSION['ovd-client']['server'].'/ovd/client';
+	$sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
+
+	query_sm_post_xml($sessionmanager_url.'/auth.php', $dom->saveXML());
+
 	$_SESSION['start_app'] = array();
 }
 
