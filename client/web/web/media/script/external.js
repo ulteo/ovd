@@ -23,10 +23,20 @@ var UlteoOVD_start_Application = Class.create({
 	web_client_url: null,
 	application_id: null,
 	path: null,
+	extra_args: new Hash(),
 
 	initialize: function(web_client_url_, application_id_) {
 		this.web_client_url = web_client_url_;
 		this.application_id = application_id_;
+	},
+
+	setAuthPassword: function(login_, password_) {
+		this.extra_args.set('login', login_);
+		this.extra_args.set('password', password_);
+	},
+
+	setAuthToken: function(token_) {
+		this.extra_args.set('token', token_);
 	},
 
 	setPath: function(path_) {
@@ -37,6 +47,10 @@ var UlteoOVD_start_Application = Class.create({
 		var url = this.web_client_url+'/external.php?app='+this.application_id;
 		if (this.path != null)
 			url += '&path='+this.path;
+
+		var extra_args = this.extra_args.keys();
+		for (var i=0; i<extra_args.length; i++)
+			url += '&'+extra_args[i]+'='+this.extra_args.get(extra_args[i]);
 
 		this.openPopup(url);
 	},

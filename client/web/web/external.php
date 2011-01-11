@@ -30,8 +30,12 @@ if (! array_key_exists('start_app', $_SESSION)) {
 
 	$session_node = $dom->createElement('session');
 	$user_node = $dom->createElement('user');
-	$user_node->setAttribute('login', $_REQUEST['login']);
-	$user_node->setAttribute('password', $_REQUEST['password']);
+	if (array_key_exists('login', $_REQUEST))
+		$user_node->setAttribute('login', $_REQUEST['login']);
+	if (array_key_exists('password', $_REQUEST))
+		$user_node->setAttribute('password', $_REQUEST['password']);
+	if (array_key_exists('token', $_REQUEST))
+		$user_node->setAttribute('token', $_REQUEST['token']);
 	$session_node->appendChild($user_node);
 	$dom->appendChild($session_node);
 
