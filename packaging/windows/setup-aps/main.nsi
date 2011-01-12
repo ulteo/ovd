@@ -204,6 +204,11 @@ Section "Main Section" SecMain
 ;  SetOverwrite ifnewer
 SectionEnd
 
+Section "pre" PreCmd
+  DetailPrint "Stopping service"
+  nsExec::execToStack 'sc stop OVD'
+SectionEnd
+
 Section "un.pre" UnPostCmd
   DetailPrint "Stopping service"
   nsExec::execToStack 'sc stop OVD'
