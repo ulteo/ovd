@@ -588,6 +588,14 @@ function show_page($mode_) {
 			echo '<img src="?img=1&file='.$file_id3.'" />';
 	}
 
+	echo '<form action="session-reporting.php">';
+	echo '<input type="hidden" name="search_by[]" value="time" />';
+	echo '<input type="hidden" name="from" value="'.$t0.'" />';
+	echo '<input type="hidden" name="to" value="'.$t1.'" />';
+	echo '<input type="submit" value="'._('See archived sessions in this time range').'" />';
+	echo '</form>';
+
+
 	foreach($servers as $fqdn => $value) {
 		echo '<hr/>';
 		echo '<h2>'._('Server').' '.$fqdn.'</h2>';
