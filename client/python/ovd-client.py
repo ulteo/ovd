@@ -318,6 +318,8 @@ class Dialog:
             if status != old_status:
                 Logger.info("Status changed: %s -> %s"%(old_status, status))
                 old_status = status
+            if status == "ready":
+                time.sleep(55)
             time.sleep(5)
 
     def launch(self):
@@ -565,7 +567,7 @@ while status not in ["ready"]:
         Logger.error("Error in get status")
         sys.exit(5)
     
-    time.sleep(0.5)
+    time.sleep(2.0)
     if not status in ["init", "ready"]:
         Logger.error("Session not 'init' or 'ready' (%s) => exit"%(status))
         sys.exit(4)
