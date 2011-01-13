@@ -318,7 +318,7 @@ class Dialog:
             if status != old_status:
                 Logger.info("Status changed: %s -> %s"%(old_status, status))
                 old_status = status
-            if status == "ready":
+            if status == "logged":
                 time.sleep(55)
             time.sleep(5)
 
