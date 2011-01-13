@@ -832,6 +832,10 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		return "seamrdp";
 	}
 
+	protected void setFocusOnWindow(SeamlessWindow wnd) {
+		wnd.sw_requestFocus();
+	}
+
 	public void windowStateChanged(WindowEvent ev) {
 		SeamlessWindow f = (SeamlessWindow)ev.getWindow();
 
@@ -918,7 +922,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	public void windowActivated(WindowEvent we) {
 		SeamlessWindow wnd = (SeamlessWindow) we.getComponent();
 
-		wnd.sw_requestFocus();
+		this.setFocusOnWindow(wnd);
 	}
 	public void windowDeactivated(WindowEvent we) {}
 	public void focusLost(FocusEvent fe) {}

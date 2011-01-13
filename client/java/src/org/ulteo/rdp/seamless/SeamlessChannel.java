@@ -388,7 +388,14 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 
 	public void mouseEntered(MouseEvent me) {}
 	public void mouseExited(MouseEvent me) {}
-	public void mouseClicked(MouseEvent me) {}
+	public void mouseClicked(MouseEvent me) {
+		Component c = me.getComponent();
+		if (! (c instanceof SeamlessWindow))
+			return;
+		
+		SeamlessWindow wnd = (SeamlessWindow) me.getComponent();
+		this.setFocusOnWindow(wnd);
+	}
 
 	private void cancelClickTimer() {
 		if (this.clickTimer != null) {
