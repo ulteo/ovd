@@ -24,6 +24,7 @@ import cookielib
 import getopt
 import os
 import sys
+import time
 import urllib
 import urllib2
 from xml.dom import minidom
@@ -96,7 +97,7 @@ def getUserList(host):
 
 
 def usage():
-    print "Usage: %s [-h|--help] sm_host Number"%(sys.argv[0])
+    print "Usage: %s [-h|--help] sm_host NumberOfSession [TimeToWaitBetweenSession]"%(sys.argv[0])
     print
 
 
@@ -117,6 +118,9 @@ if not len(args)>1:
 
 host = args[0]
 number = args[1]
+timetowait = None
+if len(args) > 2:
+    timetowait = float(args[2])
 start = 0
 
 for o, a in opts:
@@ -147,6 +151,8 @@ for i in p[start:]:
     print "launch session %d a session for %s"%(j, i)
 #    launch_client(i, "", url)
     launch_client(i, i, host)
+    if timetowait is not None:
+        time.sleep(timetowait)
     j+=1
 
 print "end"
