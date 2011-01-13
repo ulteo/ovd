@@ -487,7 +487,8 @@ class Session {
 					}
 				}
 			}
-		}
+		} else
+			$destroyed = $total;
 
 		if ($destroyed == $total)
 			$this->setStatus(Session::SESSION_STATUS_DESTROYED, $reason_);
