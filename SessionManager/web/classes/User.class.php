@@ -122,7 +122,7 @@ class User {
 		return array_unique($apps_group_list);
 	}
 
-	public function getAvailableServers(){
+	public function getAvailableServers($type_=NULL) {
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
 			die_error('get Preferences failed',__FILE__,__LINE__);
@@ -144,6 +144,8 @@ class User {
 		$servers_to_use = array();
 		
 		foreach($available_servers as $fqdn => $server) {
+			if (! is_null($type_) && $server->getAttribute('type') != $type_)
+				continue;
 			if (count($applications) == 0)
 				break;
 			$applications_from_server = $server->getApplications();
