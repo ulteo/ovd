@@ -800,9 +800,9 @@ wndprocret_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 
 	if (msg == g_wm_seamless_focus)
 	{
-		/* FIXME: SetForegroundWindow() kills menus. Need to find a
-		   clean way to solve this. */
-		if ((GetForegroundWindow() != hwnd) && !get_parent(hwnd))
+		// GetForegroundWindow() return the parent window of the foreground/focused window
+		HWND foregroundWnd = GetForegroundWindow();
+		if ((foregroundWnd != hwnd) && (hwnd != get_parent(foregroundWnd)))
 			SetForegroundWindow(hwnd);
 
 		vchannel_write("ACK", "%u", g_blocked_focus_serial);
