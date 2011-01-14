@@ -265,6 +265,15 @@ function show_manage($id, $applicationDB) {
   echo '</tr>';
   echo '</table>';
   
+  echo '<br />';
+  echo '<form action="actions.php" method="post"">';
+  echo '<input type="hidden" name="name" value="Application" />';
+  echo '<input type="hidden" name="action" value="clone" />';
+  echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+  echo '<input type="submit" value="'._('Clone to static application').'"/>';
+  echo '</form>';
+  echo '<br />';
+  
   // orphan part
   if ($app->isOrphan() && !($app->getAttribute('static'))) {
     echo '<br />';

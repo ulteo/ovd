@@ -34,7 +34,7 @@ if (!isset($_REQUEST['name']))
 if (!isset($_REQUEST['action']))
 	redirect();
 
-if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'populate', 'publish', 'del_icon', 'unset_default', 'set_default', 'modify_rules', 'remove_orphan')))
+if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'clone', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'populate', 'publish', 'del_icon', 'unset_default', 'set_default', 'modify_rules', 'remove_orphan')))
 	redirect();
 
 if ($_REQUEST['name'] == 'System') {
@@ -194,6 +194,43 @@ if ($_REQUEST['name'] == 'Application') {
 				popup_error(_("Problem while removing orphan applications"));
 			}
 		}
+	}
+	
+	if ($_REQUEST['action'] == 'clone') {
+		$applicationsDB = ApplicationDB::getInstance();
+		$app = $applicationDB->import($_REQUEST['id']);
+		if (! is_object($app)) {
+			popup_error(sprintf(_("Failed to delete application '%s'"), $_REQUEST['id']));
+			redirect();
+		}
+		$icon_path = $app->getIconPath();
+		$servers_liaisons = Abstract_Liaison::load('ApplicationServer', $app->getAttribute('id'), NULL);
+		
+		$app->unsetAttribute('id');
+		$app->setAttribute('static', 1);
+		$app->setAttribute('revision', 1);
+		$ret = $applicationDB->add($app);
+		if (! $ret) {
+			popup_error(sprintf(_("Failed to add application '%s'"), $app->getAttribute('name')));
+			redirect();
+		}
+		popup_info(sprintf(_("Application '%s' successfully added"), $app->getAttribute('name')));
+		
+		// Clone Icon
+		$path_rw = $app->getIconPathRW();
+		if (is_writable2($path_rw)) {
+			@file_put_contents($path_rw, @file_get_contents($icon_path));
+		}
+		else {
+			Logger::error('main', 'Unable to copy application icon ('.$path_rw.') is not writeable');
+		}
+		
+		// Clone servers list
+		foreach ($servers_liaisons as $liaison) {
+			Abstract_Liaison::save('ApplicationServer', $app->getAttribute('id'), $liaison->group);
+		}
+		
+		redirect('applications_static.php?action=manage&id='.$app->getAttribute('id'));
 	}
 }
 
