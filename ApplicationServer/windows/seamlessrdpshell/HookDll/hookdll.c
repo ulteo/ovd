@@ -495,7 +495,7 @@ static void create_window(HWND hwnd){
 			parent = 0;
 
 		flags = 0;
-		if (style & DS_MODALFRAME)
+		if (style & DS_MODALFRAME || exstyle & WS_EX_DLGMODALFRAME)
 			flags |= SEAMLESS_CREATE_MODAL;
 		if ((style & WS_POPUP) || (exstyle & WS_EX_TOOLWINDOW)) {
 			flags |= SEAMLESS_CREATE_POPUP;
