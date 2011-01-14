@@ -406,7 +406,8 @@ function server_display_role_aps($server, $var) {
 	// Sessions part
 	if ($has_sessions) {
 		echo '<div>'; // div 1 has_sessions
-		echo '<h2>'._('Active sessions').'</h2>';
+		$total = count($sessions);
+		echo '<h2>'.sprintf(_('Active sessions (total: %s)'), $total).'</h2>';
 		echo '<div>';
 		if (isset($pagechanger))
 			echo $pagechanger;
