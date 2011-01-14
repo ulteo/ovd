@@ -505,17 +505,12 @@ static void create_window(HWND hwnd){
 				parent = 0xffffffffL;
 
 			if (GetClassName(hwnd, classname, 256)) {
-				if (strcmp(classname, TOOLTIPS_CLASS) == 0) {
-					debug("TOOLTIPS_CLASS");
+				if ((strcmp(classname, TOOLTIPS_CLASS) == 0)
+					|| (strcmp(classname, "Net UI Tool Window") == 0)
+					|| (strcmp(classname, "OfficeTooltip") == 0)) {
+					debug("%s", classname);
 					flags |= SEAMLESS_CREATE_TOOLTIP;
-				}
-				else if (strcmp(classname, "Net UI Tool Window") == 0) {
-					debug("Net UI Tool Window");
-					flags |= SEAMLESS_CREATE_TOOLTIP;
-				}
-				else if (strcmp(classname, "OfficeTooltip") == 0) {
-					debug("OfficeTooltip");
-					flags |= SEAMLESS_CREATE_TOOLTIP;
+					parent = 0xffffffffL;
 				}
 				else
 					debug("Unknown classname: %s style: 0x%08lx exstyle: 0x%08lx", classname, style, exstyle);
