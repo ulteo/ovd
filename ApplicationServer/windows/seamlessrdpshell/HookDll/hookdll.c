@@ -28,6 +28,7 @@
 
 #include <windows.h>
 #include <winuser.h>
+#include <CommCtrl.h>
 
 #include "../vchannel.h"
 
@@ -474,6 +475,7 @@ static void create_window(HWND hwnd){
 		LONG style;
 		HWND parent;
 		node* window;
+		TCHAR classname[256];
 
 		if (getWindowFromHistory(hwnd) != NULL) {
 			return;
@@ -501,6 +503,23 @@ static void create_window(HWND hwnd){
 			flags |= SEAMLESS_CREATE_POPUP;
 			if (! parent)
 				parent = 0xffffffffL;
+
+			if (GetClassName(hwnd, classname, 256)) {
+				if (strcmp(classname, TOOLTIPS_CLASS) == 0) {
+					debug("TOOLTIPS_CLASS");
+					flags |= SEAMLESS_CREATE_TOOLTIP;
+				}
+				else if (strcmp(classname, "Net UI Tool Window") == 0) {
+					debug("Net UI Tool Window");
+					flags |= SEAMLESS_CREATE_TOOLTIP;
+				}
+				else if (strcmp(classname, "OfficeTooltip") == 0) {
+					debug("OfficeTooltip");
+					flags |= SEAMLESS_CREATE_TOOLTIP;
+				}
+				else
+					debug("Unknown classname: %s style: 0x%08lx exstyle: 0x%08lx", classname, style, exstyle);
+			}
 		}
 		if (! (style & WS_SIZEBOX))
 			flags |= SEAMLESS_CREATE_FIXEDSIZE;

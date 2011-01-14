@@ -62,6 +62,7 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	private WrappedImage backstore = null;
 
 	private boolean modal = false;
+	private SeamlessWindow modalWindow = null;
 
 	private boolean lockMouseEvents = false;
 	private RectWindow rw = null;
@@ -104,6 +105,10 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 			this.modal = true;
 		if ((flags & SeamlessChannel.WINDOW_CREATE_FIXEDSIZE) != 0)
 			this.setResizable(false);
+		if ((flags & SeamlessChannel.WINDOW_CREATE_TOOLTIP) != 0) {
+			this.setFocusable(false);
+			this.setFocusableWindowState(false);
+		}
 	}
 
 	public void sw_enableMouseWheel() {
@@ -113,8 +118,10 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	@Override
 	public void setVisible(boolean b) {
 		super.setVisible(b);
-		if (this.modal)
+		if (this.modal) {
 			this.setModal(b);
+			((SeamlessWindow) this.parent).sw_setModalWindow(b ? this : null);
+		}
 	}
 
 	@Override
@@ -226,6 +233,9 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 			this.setVisible(true);
 	}
 	public void sw_requestFocus() {
+		if (! this.isFocusable())
+			return;
+
 		SwingTools.invokeLater(GUIActions.requestFocus(this));
 	}
 	public void sw_setIconImage(Image image) {
@@ -299,5 +309,17 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 		if (SeamlessPopup.focusManager != null)	{
 			SeamlessPopup.focusManager.performedFocusLost(this);
 		}
+	}
+
+	public SeamlessWindow sw_getModalWindow() {
+		return this.modalWindow;
+	}
+
+	public void sw_setModalWindow(SeamlessWindow modalWnd) {
+		if (modalWnd == null || ((Window) modalWnd).getOwner() != this) {
+			this.modalWindow = null;
+			return;
+		}
+		this.modalWindow = modalWnd;
 	}
 }

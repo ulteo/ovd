@@ -938,6 +938,12 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 				return;
 		}
 
+		SeamlessWindow modalWnd = wnd.sw_getModalWindow();
+		if (modalWnd != null) {
+			wnd.sw_requestFocus();
+			return;
+		}
+
 		for (Entry<String, SeamlessWindow> each : this.windows.entrySet()) {
 			if (wnd == each.getValue()) {
 				String name = each.getKey();

@@ -72,6 +72,8 @@ public class SeamFrame extends Frame
 	protected Common common = null;
 	protected Rectangle maxBounds = null;
 
+	private SeamlessWindow modalWindow = null;
+
 	public SeamFrame(int id_, int group_, Rectangle maxBounds_, Common common_) {
 		this.common = common_;
 		this.id = id_;
@@ -239,5 +241,15 @@ public class SeamFrame extends Frame
 	}
 	public void sw_addFocusListener(FocusListener l) {
 		this.addFocusListener(l);
+	}
+	public SeamlessWindow sw_getModalWindow() {
+		return this.modalWindow;
+	}
+	public void sw_setModalWindow(SeamlessWindow modalWnd) {
+		if (modalWnd == null || ((Window) modalWnd).getOwner() != this) {
+			this.modalWindow = null;
+			return;
+		}
+		this.modalWindow = modalWnd;
 	}
 }

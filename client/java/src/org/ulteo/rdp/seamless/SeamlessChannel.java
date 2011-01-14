@@ -64,6 +64,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 	public static final int WINDOW_CREATE_TOPMOST	= 0x0002;
 	public static final int WINDOW_CREATE_POPUP	= 0x0004;
 	public static final int WINDOW_CREATE_FIXEDSIZE	= 0x0008;
+	public static final int WINDOW_CREATE_TOOLTIP	= 0x0010;
 
 	private static final long CLICK_DELAY = 100;
 

@@ -62,4 +62,7 @@ public interface SeamlessWindow {
 	void sw_addWindowStateListener(WindowStateListener l);
 	void sw_addWindowListener(WindowListener l);
 	void sw_addFocusListener(FocusListener l);
+
+	SeamlessWindow sw_getModalWindow();
+	void sw_setModalWindow(SeamlessWindow modalWnd);
 }
