@@ -160,6 +160,9 @@ if (! $ret) {
 	die();
 }
 
+if (! Abstract_Server::exists($ret['server']))
+	die(); // An unknown Server should not send monitoring, so we reject it...
+
 $server = Abstract_Server::load($ret['server']);
 if (! $server) {
 	echo return_error(2, 'Server does not exist');
