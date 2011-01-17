@@ -88,12 +88,6 @@ function parse_monitoring_XML($xml_) {
 
 		switch ($role_node->getAttribute('name')) {
 			case 'ApplicationServer':
-				$sql_sessions = get_from_cache('reports', 'sessids');
-				if (! is_array($sql_sessions))
-					$sql_sessions = array();
-
-				$tmp = array();
-
 				$ret['sessions'] = array();
 
 				$session_nodes = $dom->getElementsByTagName('session');
@@ -114,18 +108,13 @@ function parse_monitoring_XML($xml_) {
 					}
 
 					$token = $session_node->getAttribute('id');
-					$tmp[] = $token;
 
-					if (array_key_exists($token, $sql_sessions))
-						$sql_sessions[$token]->update($session_node);
+					if (Abstract_ReportSession::exists($session_node->getAttribute('id'))) {
+						$report = Abstract_ReportSession::load($session_node->getAttribute('id'));
+						if (is_object($report))
+							$report->update($session_node);
+					}
 				}
-
-				foreach ($sql_sessions as $token => $session) {
-					if (! in_array($token, $tmp))
-						unset($sql_sessions[$token]);
-				}
-
-				set_cache($sql_sessions, 'reports', 'sessids');
 
 				$sri = new ServerReportItem($ret['server'], $xml_);
 				$sri->save();

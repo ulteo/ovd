@@ -28,56 +28,46 @@ class SessionStatusChangedReport extends EventCallback {
 			/* session created */
 			case Session::SESSION_STATUS_CREATED:
 				$token = $this->ev->id;
-				$sql_sessions = get_from_cache ('reports', 'sessids');
-				if (! is_array ($sql_sessions))
-					$sql_sessions = array ();
-				if (! array_key_exists($token, $sql_sessions)) {
-					$buf532 = Abstract_ReportSession::exists($token);
-					if ($buf532 == true) {
-						$sessitem = Abstract_ReportSession::load($token);
+
+				if (! Abstract_ReportSession::exists($token)) {
+					if (! Abstract_Session::exists($token)) {
+						Logger::error('main', "SessionStatusChangedReport::run failed session '$token' does not exist");
+						return false;
 					}
-					else {
-						if (! Abstract_Session::exists($token)) {
-							Logger::error('main', "SessionStatusChangedReport::run failed session '$token' does not exist");
-							return false;
-						}
-						$session = Abstract_Session::load($token);
-						
-						$sessitem = new SessionReportItem();
-						$sessitem->id = $session->id;
-						$sessitem->user = $session->user_login;
-						$sessitem->server = $session->server;
-						
-						$ret = Abstract_ReportSession::create($sessitem);
-						if (! $ret) {
-							Logger::error('main', "SessionStatusChangedReport::run failed to save SessionReportItem($token)");
-							return false;
-						}
+					$session = Abstract_Session::load($token);
+
+					$sessitem = new SessionReportItem();
+					$sessitem->id = $session->id;
+					$sessitem->user = $session->user_login;
+					$sessitem->server = $session->server;
+
+					$ret = Abstract_ReportSession::create($sessitem);
+					if (! $ret) {
+						Logger::error('main', "SessionStatusChangedReport::run failed to save SessionReportItem($token)");
+						return false;
 					}
-					if ($sessitem->getId() >= 0) {
-						$sql_sessions[$token] = $sessitem;
-					}
-					set_cache($sql_sessions, 'reports', 'sessids');
 				}
+				return true;
 				break;
 
 			/* session ended */
 			case Session::SESSION_STATUS_WAIT_DESTROY:
 			case Session::SESSION_STATUS_DESTROYED:
 				$token = $this->ev->id;
-				$sql_sessions = get_from_cache ('reports', 'sessids');
-				if (! is_array($sql_sessions) ||
-					! array_key_exists($token, $sql_sessions))
-						return true;
 
-				$sessitem = $sql_sessions[$token];
+				$sessitem = Abstract_ReportSession::load($token);
+				if (! is_object($sessitem)) {
+					Logger::error('main', "SessionStatusChangedReport::run failed to load SessionReportItem($token)");
+					return false;
+				}
+
 				$sessitem->end();
-				unset($sql_sessions[$token]);
 
 				return true;
-
+				break;
 			default:
 				return true;
+				break;
 		}
     }
 

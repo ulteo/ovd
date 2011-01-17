@@ -91,12 +91,6 @@ class ServerReportItem {
 		if ($sessions->length == 0)
 			return;
 
-		/* get the sql_id => session_token array */
-		$sql_sessions = get_from_cache ('reports', 'sessids');
-		if (! is_array($sql_sessions)) {
-			Logger::error('main', 'ServerReportItem::compute_sessions - get_from_cache(\'reports\', \'sessids\') failed');
-			return;
-		}
 		$apps_link = application_desktops_to_ids();
 
 		/* the interesting <session> nodes of the xml are like:
@@ -105,12 +99,7 @@ class ServerReportItem {
 			</session>
 		*/
 		foreach ($sessions as $session) {
-			$local_sessid = $session->getAttribute('id');
-			if (array_key_exists ($local_sessid, $sql_sessions))
-				$sessid = $sql_sessions[$session->getAttribute('id')]->getId();
-			else
-				/* FIXME: for now we're screwed */
-				$sessid = $local_sessid;
+			$sessid = $session->getAttribute('id');
 
 			$this->sessions[$sessid] = $session->getAttribute('user');
 
