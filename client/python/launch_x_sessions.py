@@ -157,7 +157,7 @@ for j in xrange(number):
     else:
         i = p[j+start]
 
-    print "launch session %d a session for %s"%(j, i)
+    print "launch session %d for %s"%(j, i)
 #    launch_client(i, "", url)
     launch_client(i, i, host)
     if timetowait is not None:
