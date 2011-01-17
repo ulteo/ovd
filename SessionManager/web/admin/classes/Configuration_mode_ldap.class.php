@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -100,6 +100,11 @@ class Configuration_mode_ldap extends Configuration_mode {
     if ($form['user_group'] == 'ldap_memberof')
       $config['match']['memberof'] = 'memberOf';
 
+    // Enable modules
+    $module_to_enable = array('SessionManagement', 'UserDB', 'UserGroupDB');
+    $module_enabled = $prefs->get('general', 'module_enable');
+    $prefs->set('general', 'module_enable', array_unique(array_merge($module_enabled, $module_to_enable)));
+    
     // Select LDAP as UserDB
     $prefs->set('UserDB', 'enable', 'ldap');
 

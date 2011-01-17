@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or
@@ -118,6 +118,11 @@ class Configuration_mode_novell extends Configuration_mode {
     $ad_ar['match']['displayname'] = 'fullName';
     $ad_ar['match']['memberof'] = 'memberOf';
 
+    // Enable modules
+    $module_to_enable = array('SessionManagement', 'UserDB', 'UserGroupDB');
+    $module_enabled = $prefs->get('general', 'module_enable');
+    $prefs->set('general', 'module_enable', array_unique(array_merge($module_enabled, $module_to_enable)));
+    
     // Select AD as UserDB
     $prefs->set('UserDB', 'enable', 'ldap');
 
