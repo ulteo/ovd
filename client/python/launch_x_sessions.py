@@ -98,13 +98,14 @@ def getUserList(host):
 
 def usage():
     print "Usage: %s [-h|--help] sm_host NumberOfSession [TimeToWaitBetweenSession]"%(sys.argv[0])
+    print "\t   --auto-users: do not request for SM users list"
     print
 
 
 conf = {}
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'hs:', ['help','start'])
+    opts, args = getopt.getopt(sys.argv[1:], 'hs:', ["help", "auto-users", "start"])
     
 except getopt.GetoptError, err:
     print >> sys.stderr, str(err)
@@ -122,11 +123,14 @@ timetowait = None
 if len(args) > 2:
     timetowait = float(args[2])
 start = 0
+auto_users = False
 
 for o, a in opts:
     if o in ("-h", "--help"):
         usage()
         sys.exit()
+    elif o in ("--auto-users"):
+        auto_users = True
     elif o in ("-s", "--start"):
         if not a.isdigit():
             print >> sys.stderr, a," is not a digit"
@@ -141,19 +145,23 @@ if not number.isdigit():
 
 number=int(number)
 
-p = getUserList(host)
+if auto_users is False:
+    p = getUserList(host)
+    if len(p) < number+start:
+        number = len(p) - start
+        print "Not enough users, reducing to %d sessions"
 
-j = 1
-for i in p[start:]:
-    if j>number:
-        break
+for j in xrange(number):
+    if auto_users:
+        i = "user_%d"%(j)
+    else:
+        i = p[j+start]
 
     print "launch session %d a session for %s"%(j, i)
 #    launch_client(i, "", url)
     launch_client(i, i, host)
     if timetowait is not None:
         time.sleep(timetowait)
-    j+=1
 
 print "end"
 
