@@ -52,6 +52,9 @@ function parse_monitoring_XML($xml_) {
 	if (! $server_node->hasAttribute('name'))
 		return false;
 
+	if (! Abstract_Server::exists($server_node->getAttribute('name')))
+		die(); // An unknown Server should not send monitoring, so we reject it...
+
 	$server = Abstract_Server::load($server_node->getAttribute('name'));
 	if (! $server)
 		return false;
