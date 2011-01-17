@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -68,7 +68,21 @@ class AuthMethod_Auto extends AuthMethod {
 	}
 
 	public static function prefsIsValid($prefs_, &$log=array()) {
-		return true;
+		$mods_enabled = $prefs_->get('general', 'module_enable');
+		
+		if (in_array('AuthMethod', $mods_enabled) == false) {
+			// Auth Module is not enabled
+			return false;
+		}
+		
+		if (in_array('UserDB', $mods_enabled) == false) {
+			// UserDB Module is not enabled
+			return false;
+		}
+		
+		$mod_app_name = 'UserDB_'.$prefs_->get('UserDB', 'enable');
+		$userdb = new $mod_app_name();
+		return $userdb->isWriteable();
 	}
 
 	public static function isDefault() {
