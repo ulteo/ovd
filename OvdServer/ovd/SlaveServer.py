@@ -194,7 +194,7 @@ class SlaveServer:
 	
 	
 	def getMonitoring(self):
-		rootNode = self.monitoring
+		rootNode = self.monitoring.cloneNode(True)
 		rootNode.setAttribute("name", self.smRequestManager.name)
 		
 		doc = Document()
