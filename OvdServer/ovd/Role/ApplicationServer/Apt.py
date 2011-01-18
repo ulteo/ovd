@@ -23,7 +23,6 @@ import glob
 import os
 import ConfigParser
 from Queue import Queue
-from xml.dom import minidom
 from xml.dom.minidom import Document
 
 from ovd.Logger import Logger

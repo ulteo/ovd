@@ -24,7 +24,6 @@ import httplib
 import cgi
 import base64
 import time
-from xml.dom import minidom
 from xml.dom.minidom import Document
 
 from ovd.Communication.Dialog import Dialog as AbstractDialog

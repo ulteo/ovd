@@ -19,13 +19,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-#import httplib
-#import urllib
-#import urllib2
-#import socket
-#from xml.dom import minidom
-#from xml.dom.minidom import Document
-
 from ovd.Logger import Logger
 from ovd import util
 from ovd.Communication.Dialog import Dialog as AbstractDialog
