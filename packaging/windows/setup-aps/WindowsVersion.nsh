@@ -91,6 +91,8 @@
 ;; changes setup
 Function .WindowsInstall
 
+  SetRebootFlag true
+
   !ifndef WINVERSION_SET
     !insertmacro WindowsVersionDetection ""
   !endif

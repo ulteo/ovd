@@ -75,9 +75,9 @@
   ; Installer parameters and pages order
   !define MUI_WELCOMEPAGE_TITLE_3LINES
   !define MUI_LICENSEPAGE_RADIOBUTTONS
-  !define MUI_FINISHPAGE_LINK "Visit our web site"
-  !define MUI_FINISHPAGE_LINK_LOCATION ${PRODUCT_WEB_SITE}
-  !define MUI_FINISHPAGE_TEXT "${PRODUCT_FULL_NAME} has been installed on your computer.\n\nClick Finish to close this wizard.\n\n\nThe software is installed as a service and is automatically started at computer boot."
+  ;!define MUI_FINISHPAGE_LINK "Visit our web site"
+  ;!define MUI_FINISHPAGE_LINK_LOCATION ${PRODUCT_WEB_SITE}
+  ;!define MUI_FINISHPAGE_TEXT "${PRODUCT_FULL_NAME} has been installed on your computer.\n\nClick Finish to close this wizard.\n\n\nThe software is installed as a service and is automatically started at computer boot."
 
   !insertmacro MUI_PAGE_WELCOME
   !insertmacro MUI_PAGE_LICENSE "media/LICENCE.txt"
