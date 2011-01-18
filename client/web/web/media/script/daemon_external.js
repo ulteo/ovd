@@ -18,16 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-var External = Class.create(Daemon, {
-	mode: 'applications',
-
-	applications: new Hash(),
-	applicationsPanel: null,
-	running_applications: new Hash(),
-	runningApplicationsPanel: null,
-
-	liaison_runningapplicationtoken_application: new Hash(),
-
+var External = Class.create(Applications, {
 	initialize: function(applet_version_, applet_main_class_, debug_) {
 		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, debug_]);
 
@@ -40,20 +31,7 @@ var External = Class.create(Daemon, {
 	connect_servers: function() {
 		this.push_log('debug', '[external] connect_servers()');
 
-		if (! $('ulteoapplet') || ! $('ulteoapplet').isActive()) {
-			this.push_log('warning', '[external] connect_servers() - Applet is not ready');
-			setTimeout(this.connect_servers.bind(this), 1000);
-			return;
-		}
-
-		var servers = this.servers.values();
-		for (var i=0; i < servers.length; i++) {
-			if (servers[i].token != null)
-				this.push_log('info', '[external] connect_servers() - Connecting to server "'+servers[i].id+'"');
-			else
-				this.push_log('info', '[external] connect_servers() - Connecting to server "'+servers[i].fqdn+'"');
-			servers[i].connect();
-		}
+		Applications.prototype.connect_servers.apply(this);
 
 		setTimeout(this.explorer_loop.bind(this), 5000);
 
@@ -66,87 +44,6 @@ var External = Class.create(Daemon, {
 		Daemon.prototype.do_started.apply(this);
 
 		setTimeout(this.connect_servers.bind(this), 1000);
-	},
-
-	parse_do_started: function(transport) {
-		this.push_log('debug', '[external] parse_do_started(transport@do_started())');
-
-		var applet_params = new Hash();
-		applet_params.set('keymap', this.keymap);
-		applet_params.set('multimedia', this.multimedia);
-		applet_params.set('redirect_client_printers', this.redirect_client_printers);
-		applet_params.set('redirect_client_drives', this.redirect_client_drives);
-
-		var applet = buildAppletNode('ulteoapplet', this.applet_main_class, 'log4j-1.2.jar,'+this.applet_version, applet_params);
-		$('applicationsAppletContainer').show();
-		$('applicationsAppletContainer').appendChild(applet);
-
-		return true;
-	},
-
-	parse_list_servers: function(transport) {
-		this.push_log('debug', '[external] parse_list_servers(transport@list_servers())');
-
-		var xml = transport.responseXML;
-
-		var sessionNode = xml.getElementsByTagName('session');
-
-		if (sessionNode.length != 1) {
-			this.push_log('error', '[external] parse_list_servers(transport@list_servers()) - Invalid XML (No "session" node)');
-			return;
-		}
-
-		var serverNodes = xml.getElementsByTagName('server');
-
-		for (var i=0; i<serverNodes.length; i++) {
-			try { // IE does not have hasAttribute in DOM API...
-				var mode_gateway = false;
-				var port = 3389;
-				try {
-					var token = serverNodes[i].getAttribute('token');
-					if (token == null)
-						go_to_the_catch_please(); //call a function which does not exist to throw an exception and go to the catch()
-
-					mode_gateway = true;
-					port = 443;
-				} catch(e) {}
-
-				var server = new Server(i, i, serverNodes[i].getAttribute('fqdn'), port, serverNodes[i].getAttribute('login'), serverNodes[i].getAttribute('password'));
-				if (mode_gateway)
-					server.setToken(serverNodes[i].getAttribute('token'));
-
-				if (mode_gateway)
-					this.push_log('info', '[external] parse_list_servers(transport@list_servers()) - Adding server "'+server.id+'" to servers list');
-				else
-					this.push_log('info', '[external] parse_list_servers(transport@list_servers()) - Adding server "'+server.fqdn+'" to servers list');
-				this.servers.set(server.id, server);
-				this.liaison_server_applications.set(server.id, new Array());
-
-				var applicationNodes = serverNodes[i].getElementsByTagName('application');
-
-				for (var j=0; j<applicationNodes.length; j++) {
-					try { // IE does not have hasAttribute in DOM API...
-						this.push_log('info', '[external] parse_list_servers(transport@list_servers()) - Adding application "'+applicationNodes[j].getAttribute('id')+'" to applications list');
-
-						if (typeof this.liaison_server_applications.get(server.id) == 'undefined')
-							continue;
-
-						var application = new Application(applicationNodes[j].getAttribute('id'), applicationNodes[j].getAttribute('name'), server.id);
-						this.applications.set(application.id, application);
-						this.applicationsPanel.add(application);
-						this.liaison_server_applications.get(server.id).push(application.id);
-					} catch(e) {
-						this.push_log('error', '[external] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "application" node '+j+')');
-						return;
-					}
-				}
-			} catch(e) {
-				this.push_log('error', '[external] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "server" node '+i+')');
-				return;
-			}
-		}
-
-		this.ready = true;
 	},
 
 	list_running_apps: function(applicationsNode_) {
@@ -219,31 +116,6 @@ var External = Class.create(Daemon, {
 		return true;
 	},
 
-	explorer_loop: function() {
-		this.push_log('debug', '[external] explorer_loop()');
-
-		this.check_start_app();
-
-		if (! this.is_stopped())
-			setTimeout(this.explorer_loop.bind(this), 2000);
-	},
-
-	check_start_app: function() {
-		this.push_log('debug', '[external] check_start_app()');
-
-		new Ajax.Request(
-			'start_app.php',
-			{
-				method: 'get',
-				parameters: {
-					check: true,
-					differentiator: Math.floor(Math.random()*50000)
-				},
-				onSuccess: this.parse_check_start_app.bind(this)
-			}
-		);
-	},
-
 	parse_check_start_app: function(transport) {
 		this.push_log('error', '[external] parse_check_start_app(transport@check_start_app())');//debug
 
@@ -260,9 +132,3 @@ var External = Class.create(Daemon, {
 		}
 	}
 });
-
-function applicationStatus(token_, status_) {
-	daemon.push_log('debug', '[proxy] applicationStatus(token: '+token_+', status: '+status_+')');
-
-	return daemon.applicationStatus(token_, status_);
-}
