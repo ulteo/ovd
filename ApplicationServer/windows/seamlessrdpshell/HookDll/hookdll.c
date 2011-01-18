@@ -797,7 +797,7 @@ wndprocret_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 	{
 		// GetForegroundWindow() return the parent window of the foreground/focused window
 		HWND foregroundWnd = GetForegroundWindow();
-		if ((foregroundWnd != hwnd) && (hwnd != get_parent(foregroundWnd)))
+		if ((foregroundWnd != hwnd) && (hwnd != get_parent(foregroundWnd)) && (foregroundWnd != get_parent(hwnd)))
 			SetForegroundWindow(hwnd);
 
 		vchannel_write("ACK", "%u", g_blocked_focus_serial);
