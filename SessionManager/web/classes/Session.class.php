@@ -39,6 +39,7 @@ class Session {
 	const SESSION_END_STATUS_TIMEOUT = "timeout";
 	const SESSION_END_STATUS_UNUSED = "unused";
 	const SESSION_END_STATUS_ERROR = "error";
+	const SESSION_END_STATUS_SHUTDOWN = "shutdown";
 	const SESSION_END_STATUS_SERVER_DOWN = "server_down";
 	const SESSION_END_STATUS_SERVER_BROKEN = "server_broken";
 	const SESSION_END_STATUS_SERVER_DELETED = "server_deleted";
@@ -136,7 +137,7 @@ class Session {
 		return $this->getAttribute('status');
 	}
 
-	public function setServerStatus($server_, $status_) {
+	public function setServerStatus($server_, $status_, $reason_=NULL) {
 		$states = array(
 			Session::SESSION_STATUS_CREATING		=>	-1,
 			Session::SESSION_STATUS_CREATED			=>	0,
@@ -204,7 +205,12 @@ class Session {
 				break;
 			case Session::SESSION_STATUS_DESTROYING:
 				Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - Server "'.$server_.'" is now "'.$status_.'", switching Session status to "'.$status_.'"');
-				$this->setStatus(Session::SESSION_STATUS_DESTROYING);
+				if (Abstract_ReportSession::exists($this->id)) {
+					$session_report = Abstract_ReportSession::load($this->id);
+					if (is_object($session_report) && ! is_null($session_report->stop_why))
+						$reason_ = $session_report->stop_why;
+				}
+				$this->setStatus(Session::SESSION_STATUS_DESTROYING, $reason_);
 				break;
 			case Session::SESSION_STATUS_DESTROYED:
 				$all_destroyed = true;
@@ -216,7 +222,12 @@ class Session {
 				}
 				if ($all_destroyed) {
 					Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - All servers are "'.$status_.'", switching Session status to "'.$status_.'"');
-					$this->setStatus(Session::SESSION_STATUS_DESTROYED);
+					if (Abstract_ReportSession::exists($this->id)) {
+						$session_report = Abstract_ReportSession::load($this->id);
+						if (is_object($session_report) && ! is_null($session_report->stop_why))
+							$reason_ = $session_report->stop_why;
+					}
+					$this->setStatus(Session::SESSION_STATUS_DESTROYED, $reason_);
 				}
 				break;
 			case Session::SESSION_STATUS_ERROR:

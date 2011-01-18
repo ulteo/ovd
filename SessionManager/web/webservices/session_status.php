@@ -80,7 +80,7 @@ if (! $session) {
 	die();
 }
 
-$session->setServerStatus($ret['server'], $ret['status']);
+$session->setServerStatus($ret['server'], $ret['status'], $ret['reason']);
 
 header('Content-Type: text/xml; charset=utf-8');
 $dom = new DomDocument('1.0', 'utf-8');
