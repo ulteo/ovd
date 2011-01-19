@@ -92,10 +92,18 @@ if ($_REQUEST['name'] == 'Application_Server') {
 			}
 		} else {
 			if ($_REQUEST['action'] == 'add') {
-				Abstract_Liaison::save('ApplicationServer', $id, $_REQUEST['server']);
+				$server = Abstract_Server::load($_REQUEST['server']);
+				if (is_object($server)) {
+					Abstract_Liaison::save('ApplicationServer', $id, $_REQUEST['server']);
 
-				$msg = _('Application \'%APPLICATION%\' successfully added to server \'%SERVER%\'');
-				popup_info(str_replace(array('%APPLICATION%', '%SERVER%'), array($id, $_REQUEST['server']), $msg));
+					$server->syncStaticApplications();
+
+					$msg = _('Application \'%APPLICATION%\' successfully added to server \'%SERVER%\'');
+					popup_info(str_replace(array('%APPLICATION%', '%SERVER%'), array($id, $_REQUEST['server']), $msg));
+				} else {
+					$msg = _('An error occured while adding application \'%APPLICATION%\' to server \'%SERVER%\'');
+					popup_error(str_replace(array('%APPLICATION%', '%SERVER%'), array($id, $_REQUEST['server']), $msg));
+				}
 			} elseif ($_REQUEST['action'] == 'del') {
 				Abstract_Liaison::delete('ApplicationServer', $id, $_REQUEST['server']);
 
@@ -228,6 +236,9 @@ if ($_REQUEST['name'] == 'Application') {
 		// Clone servers list
 		foreach ($servers_liaisons as $liaison) {
 			Abstract_Liaison::save('ApplicationServer', $app->getAttribute('id'), $liaison->group);
+			$buf_server = Abstract_Server::load($liaison->group);
+			if (is_object($buf_server))
+				$buf_server->syncStaticApplications();
 		}
 		
 		redirect('applications_static.php?action=manage&id='.$app->getAttribute('id'));
