@@ -1,8 +1,8 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2010 Ulteo SAS
+# Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Laurent CLOUET <laurent@ulteo.com> 2010
+# Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
 # Author David LECHEVALIER <david@ulteo.com> 2010
 #
@@ -106,7 +106,7 @@ class Session(AbstractSession):
 		
 		win32file.CopyFile(shortcut, dstFile, True)
 		
-		if self.parameters.has_key("desktop_icons"):
+		if self.parameters.has_key("desktop_icons") and self.parameters["desktop_icons"] == "1":
 			if self.profile is not None and self.profile.mountPoint is not None:
 				d = os.path.join(self.profile.mountPoint, self.profile.DesktopDir)
 			else:
