@@ -190,7 +190,12 @@ abstract class SessionManagement extends Module {
 				continue;
 			}
 
-			$authMethods[] = $authMethod_name_;
+			$authMethods[$authMethod_name_] = $authMethod_name_;
+		}
+
+		if (array_key_exists('Password', $authMethods)) {
+			unset($authMethods['Password']);
+			$authMethods['Password'] = 'Password';
 		}
 
 		foreach ($authMethods as $authMethod_name_) {
