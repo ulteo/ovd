@@ -104,34 +104,17 @@ class SMRequestManager():
 		return rootNode
 	
 	
-	def get(self, path):
-		url = "%s%s"%(self.url, path)
-		Logger.debug("SMRequest::get url %s"%(url))
-		
-		req = urllib2.Request(url)
-		
-		try:
-			stream = urllib2.urlopen(req)
-		except IOError, e:
-			Logger.debug("SMRequest::get error"+str(e))
-			return None
-		except httplib.BadStatusLine, err:
-			Logger.debug("SMRequest::get not receive HTTP response"+str(err))
-			return None
-		
-		return stream
-	
-	
-	def send_packet(self, path, document):
-		rootNode = document.documentElement
-		rootNode.setAttribute("name", self.name)
-				
+	def send_packet(self, path, document = None):
 		url = "%s%s"%(self.url, path)
 		Logger.debug("SMRequest::send_packet url %s"%(url))
 		
 		req = urllib2.Request(url)
 		req.add_header("Content-type", "text/xml; charset=UTF-8")
-		req.add_data(document.toxml())
+		
+		if document is not None:
+			rootNode = document.documentElement
+			rootNode.setAttribute("name", self.name)
+			req.add_data(document.toxml())
 		
 		try:
 			stream = urllib2.urlopen(req)

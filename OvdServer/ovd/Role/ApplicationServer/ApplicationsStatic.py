@@ -39,8 +39,8 @@ class ApplicationsStatic:
 	
 	
 	def synchronize(self):
-		response = self.communictionInstance.get("/applications/static")
-		if response is None:
+		response = self.communictionInstance.send_packet("/applications/static")
+		if response is False:
 			Logger.error("ApplicationsStatic::synchronize request on SessionManager failed")
 			return False
 		
