@@ -202,13 +202,13 @@ abstract class SessionManagement extends Module {
 			$user_login = $authMethod->get_login();
 			if (is_null($user_login)) {
 				Logger::debug('main', 'SessionManagement::authenticate - Unable to get a valid login');
-				return false;
+				continue;
 			}
 
 			$this->user = $this->userDB->import($user_login);
 			if (! is_object($this->user)) {
 				Logger::debug('main', 'SessionManagement::authenticate - Unable to import a valid user with login "'.$user_login.'"');
-				return false;
+				continue;
 			}
 
 			$buf = $authMethod->authenticate($this->user);
@@ -220,7 +220,7 @@ abstract class SessionManagement extends Module {
 			}
 
 			Logger::error('main', 'SessionManagement::authenticate - Authentication failed for "'.$user_login.'"');
-			return false;
+			continue;
 		}
 
 		Logger::error('main', 'SessionManagement::authenticate - Authentication failed');
