@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
+# Author Laurent CLOUET <laurent@ulteo.com> 2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -119,10 +120,10 @@ class SMRequestManager():
 		try:
 			stream = urllib2.urlopen(req)
 		except IOError, e:
-			Logger.debug("SMRequest::send_packet error"+str(e))
+			Logger.debug("SMRequest::send_packet path: "+path+" error: "+str(e))
 			return False
 		except httplib.BadStatusLine, err:
-			Logger.debug("SMRequest::send_packet not receive HTTP response"+str(err))
+			Logger.debug("SMRequest::send_packet path: "+path+" not receive HTTP response"+str(err))
 			return False
 		
 		return stream
