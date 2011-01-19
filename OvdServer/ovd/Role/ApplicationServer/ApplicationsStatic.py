@@ -165,7 +165,7 @@ class ApplicationsStatic:
 		contentType = response.headers["Content-Type"].split(";")[0]
 		if not contentType == "image/png":
 			Logger.error("content type: %s"%(contentType))
-			print stream.read()
+			print response.read()
 			return None
 		
 		data = response.read()
