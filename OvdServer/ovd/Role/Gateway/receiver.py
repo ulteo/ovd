@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Arnaud Legrand <arnaud@ulteo.com> 2010
-# Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author Arnaud Legrand <arnaud@ulteo.com> 2010
+# Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -23,7 +23,6 @@
 from OpenSSL import SSL
 
 import asyncore
-import socket
 import re
 import xml.etree.ElementTree as parser
 

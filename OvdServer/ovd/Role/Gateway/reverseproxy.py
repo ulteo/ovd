@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Laurent CLOUET <laurent@ulteo.com> 2010
+# Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
 #
@@ -25,10 +25,8 @@ from OpenSSL import SSL
 import asyncore
 import re
 import socket
-import string
 import threading
 import uuid
-import xml.etree.ElementTree as parser
 
 from ovd.Logger import Logger
 from receiver import receiver, receiverXMLRewriter
