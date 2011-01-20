@@ -80,8 +80,9 @@ class ReverseProxy(asyncore.dispatcher):
 		addr, port = peer
 		try:
 			r = conn.recv(4096)
-		except SSL.ZeroReturnError:
-			pass
+		except (SSL.SysCallError, SSL.ZeroReturnError):
+			conn.close()
+			return
 		except Exception, err:
 			Logger.debug('ReverseProxy::handle_accept error %s %s'%(type(err), err))
 			conn.close()

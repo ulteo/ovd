@@ -50,8 +50,8 @@ class sender(asyncore.dispatcher):
 		try:
 			read = self.recv(8192)
 			self.receiver.to_remote_buffer += read
-		except SSL.ZeroReturnError:
-			pass
+		except (SSL.SysCallError, SSL.ZeroReturnError):
+			self.handle_close()
 		except:
 			Logger.warn('%s::handle_read error' % self.__class__.__name__)
 			self.handle_close()
