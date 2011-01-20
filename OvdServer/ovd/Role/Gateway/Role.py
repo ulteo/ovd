@@ -69,7 +69,7 @@ class Role(AbstractRole):
 
 	def run(self):
 		self.has_run = True
-		self.rproxy = ReverseProxy(self.pem, Config.gateway_address, self.HTTPS_PORT, Config.session_manager, self.HTTPS_PORT, self.RDP_PORT)
+		self.rproxy = ReverseProxy(self.pem, Config.gateway_address, Config.gateway_port, Config.session_manager, self.HTTPS_PORT, self.RDP_PORT)
 		Logger.info('Gateway:: running')
 		self.status = Role.STATUS_RUNNING
 		asyncore.loop()

@@ -59,6 +59,9 @@ class Config:
 	
 	aps_multithread = False
 	
+	gateway_address = "0.0.0.0"
+	gateway_port    = 443
+	
 	@staticmethod
 	def read(filename):
 		try:
@@ -114,8 +117,12 @@ class Config:
 
 		if Config.infos.has_key("GATEWAY_ADDRESS"):
 			Config.gateway_address = Config.infos["GATEWAY_ADDRESS"]
-		else:
-			Config.gateway_address = "0.0.0.0"
+		
+		if Config.infos.has_key("GATEWAY_PORT"):
+			try:
+				Config.gateway_port = int(Config.infos["GATEWAY_PORT"])
+			except ValueError:
+				pass
 		
 		return True
 	
