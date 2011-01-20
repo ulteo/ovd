@@ -300,6 +300,9 @@ class Preferences {
 		$c = new ConfigElement_select('action_when_as_not_ready', _('Action when a server status is not ready anymore'), _('Action when a server status is not ready anymore'), _('Action when an server status is not ready anymore'), 0);
 		$c->setContentAvailable(array(0=>_('Do nothing'),1=>_('Switch to maintenance')));
 		$this->add($c,'general', 'slave_server_settings');
+		$c = new ConfigElement_select('auto_recover', _('Auto-recover server'), _('When a server status is down or broken, and it is sending monitoring, try to switch it back to ready ?'), _('When a server status is down or broken, and it is sending monitoring, try to switch it back to ready ?'), 1);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c,'general', 'slave_server_settings');
 		$c = new ConfigElement_select('remove_orphan', _('Remove orphan applications when the application server is deleted'), _('Remove orphan applications when the application server is deleted'), _('Remove orphan applications when the application server is deleted'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','slave_server_settings');

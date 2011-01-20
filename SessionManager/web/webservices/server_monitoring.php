@@ -185,6 +185,14 @@ if (array_key_exists('disk_size', $ret)) {
 	$server->setAttribute('disk_free', $ret['disk_size']['free']);
 }
 
+$slaveserver_settings = $prefs->get('general', 'slave_server_settings');
+if ($slaveserver_settings['auto_recover'] == 1) {
+	if (! $server->isOnline()) {
+		$server->setAttribute('status', Server::SERVER_STATUS_ONLINE);
+		$server->getStatus();
+	}
+}
+
 Abstract_Server::save($server); //update Server cache timestamp
 
 if (array_key_exists('sessions', $ret) && is_array($ret['sessions'])) {
