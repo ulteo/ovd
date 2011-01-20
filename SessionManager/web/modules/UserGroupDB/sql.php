@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -204,11 +204,13 @@ class UserGroupDB_sql {
 		Abstract_Liaison::delete('UsersGroup', NULL, $usergroup_->getUniqueID());
 		
 		// second we delete sharedfolder acls for the group
-		$sharedfolderdb = SharedFolderDB::getInstance();
-		$networkfolders = $sharedfolderdb->importFromUsergroup($usergroup_->getUniqueID());
-		if (is_array($networkfolders) && count($networkfolders) > 0) {
-			foreach ($networkfolders as $networkfolder) {
-				$networkfolder->delUserGroup($usergroup_);
+		if (Preferences::moduleIsEnabled('SharedFolderDB')) {
+			$sharedfolderdb = SharedFolderDB::getInstance();
+			$networkfolders = $sharedfolderdb->importFromUsergroup($usergroup_->getUniqueID());
+			if (is_array($networkfolders) && count($networkfolders) > 0) {
+				foreach ($networkfolders as $networkfolder) {
+					$networkfolder->delUserGroup($usergroup_);
+				}
 			}
 		}
 		
