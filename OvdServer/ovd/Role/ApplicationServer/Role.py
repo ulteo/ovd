@@ -221,7 +221,6 @@ class Role(AbstractRole):
 					if not session.domain.manage_user():
 						self.sessions_spooler2.put(("manage_new", session))
 					self.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
-					  
 					continue
 			
 			
