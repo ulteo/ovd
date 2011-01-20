@@ -66,7 +66,7 @@ class receiver(asyncore.dispatcher):
 			pass
 		except:
 			Logger.warn('%s::handle_read error' % self.__class__.__name__)
-			self.close()
+			self.handle_close()
 
 
 	def writable(self):
@@ -81,7 +81,7 @@ class receiver(asyncore.dispatcher):
 			pass
 		except:
 			Logger.warn('%s::handle_write error' % self.__class__.__name__)
-			self.close()
+			self.handle_close()
 
 
 	def handle_close(self):
