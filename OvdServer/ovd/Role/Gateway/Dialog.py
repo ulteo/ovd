@@ -31,5 +31,4 @@ class Dialog(AbstractDialog):
 		return "gateway"
 	
 	def process(self, request):
-		path = request["path"]
 		return None
