@@ -185,15 +185,17 @@ else {
 				echo '		<td><input class="input_checkbox" type="checkbox" name="selected_session[]" value="'.$session->id.'" /></td>';
 			echo '		<td><a href="sessions.php?info='.$session->id.'">'.$session->id.'</td>';
 			echo '		<td><ul>';
-			foreach ($session->getAttribute('servers') as $role => $servers) {
-				if (count($servers) == 0)
-					continue;
+			if (is_array($session->getAttribute('servers'))) {
+				foreach ($session->getAttribute('servers') as $role => $servers) {
+					if (count($servers) == 0)
+						continue;
 
-				echo '<li>'.$role.'</li>';
-				echo '<ul>';
-				foreach ($servers as $fqdn => $data)
-					echo '<li><a href="servers.php?action=manage&fqdn='.$fqdn.'">'.$fqdn.'</a></li>';
-				echo '</ul>';
+					echo '<li>'.$role.'</li>';
+					echo '<ul>';
+					foreach ($servers as $fqdn => $data)
+						echo '<li><a href="servers.php?action=manage&fqdn='.$fqdn.'">'.$fqdn.'</a></li>';
+					echo '</ul>';
+				}
 			}
 			echo '		</ul></td>';
 			echo '		<td><a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</td>';
