@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -167,7 +167,7 @@ class User {
 				return $servers_to_use;
 			}
 			else {
-				Logger::error('main' , "USER::getAvailableServer() no server found for user '".$this->getAttribute('login')."'");
+				Logger::error('main' , "USER::getAvailableServers() no server found for user '".$this->getAttribute('login')."'");
 				return NULL;
 			}
 		}
