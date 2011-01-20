@@ -41,7 +41,6 @@ from Platform import Platform as RolePlatform
 class Role(AbstractRole):
 	ts_group_name = RolePlatform.TS.getUsersGroup()
 	ovd_group_name = "OVDUsers"
-	session_manager = None
 	
 	sessions = {}
 	sessions_spooler = None
@@ -67,9 +66,6 @@ class Role(AbstractRole):
 	
 	def init(self):
 		Logger.debug("ApplicationServer init")
-		
-		if not self.init_config():
-			return False
 		
 		try:
 			RolePlatform.TS.getList()
@@ -136,14 +132,6 @@ class Role(AbstractRole):
 		
 		self.purgeGroup()
 	
-	
-	def init_config(self):
-		if not Config.infos.has_key("session_manager"):
-			Logger.error("Role %s need a 'session_manager' config key"%(self.getName()))
-			return False
-		
-		self.session_manager =  Config.session_manager
-		return True
 	
 	def send_session_status(self, session):
 		doc = Document()
@@ -275,15 +263,6 @@ class Role(AbstractRole):
 	def purgeArchives(self):
 		for path in glob.glob(os.path.join(Config.spool_dir, "sessions dump archive", "*")):
 			os.remove(path)
-	
-	
-	@staticmethod
-	def isMemberGroupOVD(login_):
-		members = Platform.System.groupMember(ApplicationServer.ovd_group_name)
-		if members is None:
-			return False
-		
-		return login_ in members
 	
 	
 	def setStaticAppsMustBeSync(self, value):
