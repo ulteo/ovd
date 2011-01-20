@@ -25,8 +25,9 @@ from ovd.Role.Role import Role as AbstractRole
 from ovd.Config import Config
 from ovd.Logger import Logger
 from Dialog import Dialog
-from reverseproxy import *
+from reverseproxy import ReverseProxy
 
+import asyncore
 import os
 
 
