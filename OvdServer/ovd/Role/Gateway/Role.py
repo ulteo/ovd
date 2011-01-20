@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Laurent CLOUET <laurent@ulteo.com> 2010
+# Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
-# Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -68,7 +68,7 @@ class Role(AbstractRole):
 
 	def run(self):
 		self.has_run = True
-		self.rproxy = ReverseProxy(self.pem, self.HTTPS_PORT, Config.session_manager, self.HTTPS_PORT, self.RDP_PORT)
+		self.rproxy = ReverseProxy(self.pem, Config.gateway_address, self.HTTPS_PORT, Config.session_manager, self.HTTPS_PORT, self.RDP_PORT)
 		Logger.info('Gateway:: running')
 		self.status = Role.STATUS_RUNNING
 		asyncore.loop()
