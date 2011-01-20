@@ -64,8 +64,8 @@ class receiver(asyncore.dispatcher):
 			self.from_remote_buffer += read
 		except SSL.ZeroReturnError:
 			pass
-		except:
-			Logger.warn('%s::handle_read error' % self.__class__.__name__)
+		except Exception, err:
+			Logger.warn('%s::handle_read error %s' %(self.__class__.__name__, err))
 			self.handle_close()
 
 
@@ -79,8 +79,8 @@ class receiver(asyncore.dispatcher):
 			self.to_remote_buffer = self.to_remote_buffer[sent:]
 		except SSL.WantWriteError:
 			pass
-		except:
-			Logger.warn('%s::handle_write error' % self.__class__.__name__)
+		except Exception, err:
+			Logger.warn('%s::handle_write error %s'%(self.__class__.__name__, err))
 			self.handle_close()
 
 
