@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
@@ -247,6 +247,10 @@ class Server {
 				switch ($role) {
 					case Server::SERVER_ROLE_APS:
 						$this->updateApplications();
+						$ram_total = $this->getAttribute('ram_total');
+						if ($ram_total > 0) {
+							$this->setAttribute('max_sessions', ceil($ram_total/1024/1024*20)); // 20 sessions / Giga Bytes of RAM
+						}
 						break;
 					case Server::SERVER_ROLE_FS:
 						$stats = $this->getStatisticsForFS();
