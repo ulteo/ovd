@@ -30,14 +30,14 @@ from ovd.Logger import Logger
 
 class sender(asyncore.dispatcher):
 
-	def __init__(self, remoteip, remoteport, receiver):
+	def __init__(self, remote, receiver):
 		asyncore.dispatcher.__init__(self)
 		self.receiver = receiver
 		receiver.sender = self
 
 		self.set_socket(self.make_socket())
 		try:
-			self.connect((remoteip, remoteport))
+			self.connect(remote)
 		except Exception:
 			Logger.error('%s:: socket connection failed' % self.__class__.__name__)
 
@@ -79,9 +79,9 @@ class sender(asyncore.dispatcher):
 
 class senderHTTP(sender):
 
-	def __init__(self, remoteip, remoteport, receiver, ssl_ctx):
+	def __init__(self, remote, receiver, ssl_ctx):
 		self.ssl_ctx = ssl_ctx
-		sender.__init__(self, remoteip, remoteport, receiver)
+		sender.__init__(self, remote, receiver)
 
 	def make_socket(self):
 		return SSL.Connection(self.ssl_ctx, sender.make_socket(self))

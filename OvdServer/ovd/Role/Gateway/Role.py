@@ -33,6 +33,9 @@ import os
 
 class Role(AbstractRole):
 
+	HTTPS_PORT = 443
+	RDP_PORT = 3389
+
 	@staticmethod
 	def getName():
 		return "Gateway"
@@ -42,10 +45,6 @@ class Role(AbstractRole):
 		AbstractRole.__init__(self, main_instance)
 		self.dialog = Dialog(self)
 		self.has_run = False
-
-		self.HTTPS_PORT = 443
-		self.RDP_PORT = 3389
-
 		self.rproxy = None
 
 
@@ -69,7 +68,11 @@ class Role(AbstractRole):
 
 	def run(self):
 		self.has_run = True
-		self.rproxy = ReverseProxy(self.pem, Config.gateway_address, Config.gateway_port, Config.session_manager, self.HTTPS_PORT, self.RDP_PORT)
+
+		gateway = (Config.gateway_address, Config.gateway_port)
+		sm = (Config.session_manager, self.HTTPS_PORT)
+		self.rproxy = ReverseProxy(self.pem, gateway, sm, self.RDP_PORT)
+
 		Logger.info('Gateway:: running')
 		self.status = Role.STATUS_RUNNING
 		asyncore.loop()

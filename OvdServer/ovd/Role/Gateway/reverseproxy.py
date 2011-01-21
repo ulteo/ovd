@@ -35,27 +35,25 @@ from sender import sender, senderHTTP
 
 class ReverseProxy(asyncore.dispatcher):
 
-	def __init__(self, FPEM, GATEWAY_ADDR, GATEWAY_PORT, REMOTE_SM_FQDN, HTTPS_PORT, RDP_PORT):
+	def __init__(self, fpem, gateway, sm, rdp_port):
 		asyncore.dispatcher.__init__(self)
 
-		self.REMOTE_SM_FQDN = REMOTE_SM_FQDN
-		self.REMOTE_SM_PORT = HTTPS_PORT
-		self.HTTPS_PORT = HTTPS_PORT
-		self.RDP_PORT = RDP_PORT
+		self.sm = sm
+		self.rdp_port = rdp_port
 
 		self.lock = threading.Lock()
 		self.database = {}
 
 		self.ssl_ctx = SSL.Context(SSL.SSLv23_METHOD)
-		self.ssl_ctx.use_privatekey_file(FPEM)
-		self.ssl_ctx.use_certificate_file(FPEM)
+		self.ssl_ctx.use_privatekey_file(fpem)
+		self.ssl_ctx.use_certificate_file(fpem)
 
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.set_socket(SSL.Connection(self.ssl_ctx, sock))
 		#self.set_reuse_addr()
 
 		try:
-			self.bind((GATEWAY_ADDR, GATEWAY_PORT))
+			self.bind(gateway)
 		except:
 			Logger.error('Local Bind Error, Server at port %d is not ready' % GATEWAY_PORT)
 			exit()
@@ -112,7 +110,7 @@ class ReverseProxy(asyncore.dispatcher):
 					self.lock.release()
 					raise Exception('token authorization failed for: ' + token)
 
-				sender(fqdn, self.RDP_PORT, receiver(conn, r))
+				sender((fqdn, self.rdp_port), receiver(conn, r))
 
 			# HTTP case
 			elif http:
@@ -125,7 +123,7 @@ class ReverseProxy(asyncore.dispatcher):
 					rec = receiverXMLRewriter(conn, r, self)
 				else:
 					rec = receiver(conn, r)
-				senderHTTP(self.REMOTE_SM_FQDN, self.REMOTE_SM_PORT, rec, self.ssl_ctx)
+				senderHTTP(self.sm, rec, self.ssl_ctx)
 
 			# protocol error
 			else:
