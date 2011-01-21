@@ -26,7 +26,6 @@ import time
 from xml.dom.minidom import Document
 from pyinotify import WatchManager, ThreadedNotifier
 
-from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.Platform import Platform
 from ovd.Role.Role import Role as AbstractRole
