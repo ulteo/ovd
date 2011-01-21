@@ -107,12 +107,12 @@ var Application = Class.create({
 		daemon.liaison_runningapplicationtoken_application.set(rand, this.id);
 	},
 
-	launch_with_file: function(network_folder_, path_) {
+	launch_with_file: function(type_, path_, share_) {
 		var date = new Date();
 		var rand = parseInt(date.getTime()/1000);
-
+		
 		var server = daemon.servers.get(this.server_id);
-		$('ulteoapplet').startApplicationWithFile(rand, this.id, server.java_id, network_folder_, path_);
+		$('ulteoapplet').startApplicationWithFile(rand, this.id, server.java_id, type_, path_, share_);
 		daemon.liaison_runningapplicationtoken_application.set(rand, this.id);
 	},
 

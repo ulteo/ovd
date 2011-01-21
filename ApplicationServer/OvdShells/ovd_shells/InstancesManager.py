@@ -24,6 +24,7 @@ import struct
 import threading
 import time
 
+from HttpFile import HttpFile
 from OvdAppChannel import OvdAppChannel
 
 class InstancesManager(threading.Thread):
@@ -72,9 +73,12 @@ class InstancesManager(threading.Thread):
 				if order == OvdAppChannel.ORDER_START:
 					(token, app) = job[1:3]
 					cmd = "startovdapp %d"%(app)
+					extra = None
 					
 					if len(job)>3:
 						dir_type = job[3]
+						local_path = None
+						
 						if dir_type == OvdAppChannel.DIR_TYPE_RDP_DRIVE:
 							local_path = self.shareName2path(job[4])
 						
@@ -83,6 +87,15 @@ class InstancesManager(threading.Thread):
 							if local_path is None:
 								 print "Unknown drive ID %s"%(local_path)
 								 continue
+						
+						elif dir_type == OvdAppChannel.DIR_TYPE_HTTP_URL:
+							http = HttpFile(job[4], job[5])
+							if not http.recv():
+								print "Unable to get file by HTTP"
+								continue
+							
+							local_path = os.path.dirname(http.path)
+							extra = http
 						
 						else:
 							local_path = self.folders.getPathFromID(job[4])
@@ -99,7 +112,7 @@ class InstancesManager(threading.Thread):
 					buf+= struct.pack("<I", token)
 					self.vchannel.Write(buf)
 					
-					self.instances.append((instance, token))
+					self.instances.append((instance, token, extra))
 				
 				elif order == OvdAppChannel.ORDER_STOP:
 					token = job[1]
@@ -166,3 +179,7 @@ class InstancesManager(threading.Thread):
 		buf = struct.pack("<B", OvdAppChannel.ORDER_STOPPED)
 		buf+= struct.pack("<I", instance[1])
 		self.vchannel.Write(buf)
+		
+		if instance[2] is not None:
+			# Backup file
+			instance[2].send()

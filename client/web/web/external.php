@@ -48,9 +48,18 @@ if (! array_key_exists('start_app', $_SESSION)) {
 	$_SESSION['start_app'] = array();
 }
 
-$_SESSION['start_app'][] = array(
-	'id'	=>	$_GET['app']
-);
+$order = array('id' => $_REQUEST['app']);
+
+if (array_key_exists('file', $_REQUEST)) {
+	$args = array();
+	$args['path'] = $_REQUEST['file'];
+	$args['share'] = base64_decode($_REQUEST['file_share']);
+	$args['type'] = $_REQUEST['file_type'];
+
+	$order['file'] = $args;
+}
+
+$_SESSION['start_app'][] = $order;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

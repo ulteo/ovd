@@ -86,10 +86,10 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	}
 	
 	public void startApplication(int token, int app_id, int server_id) {
-		this.startApplication(token, app_id, -1, null, null, server_id);
+		this.startApplication(token, app_id, server_id, -1, null, null);
 	}
 
-	public void startApplication(int token, int app_id, int shareType, String sharename, String path, int server_id) {
+	public void startApplication(int token, int app_id, int server_id, int shareType, String path, String sharename) {
 		Integer listId = this.matching.get(server_id);
 		if (listId == null) {
 			Logger.error("Cannot launch application "+app_id+"("+token+"): Bad server id");

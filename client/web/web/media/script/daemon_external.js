@@ -114,21 +114,5 @@ var External = Class.create(Applications, {
 		}
 
 		return true;
-	},
-
-	parse_check_start_app: function(transport) {
-		this.push_log('error', '[external] parse_check_start_app(transport@check_start_app())');//debug
-
-		var xml = transport.responseXML;
-
-		var buffer = xml.getElementsByTagName('start_app');
-
-		if (buffer.length == 0)
-			return;
-
-		for (var i=0; i<buffer.length; i++) {
-			var application = this.applications.get(parseInt(buffer[i].getAttribute('id')));
-			application.launch();
-		}
 	}
 });

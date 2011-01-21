@@ -74,8 +74,9 @@ class OrderApplication extends Order {
 	public int id;
 	public int application_id;
 	public int server_id;
-	public String repository;
-	public String path = null;
+	public String file_type = null;
+	public String file_path = null;
+	public String file_share = null;
 	
 	public OrderApplication(int id, int application_id, int server_id) {
 		this.id = id;
@@ -83,9 +84,10 @@ class OrderApplication extends Order {
 		this.server_id = server_id;	
 	}
 	
-	public void setPath(String repository, String path) {
-		this.repository = repository;
-		this.path = path;
+	public void setPath(String type, String path, String share) {
+		this.file_type = type;
+		this.file_path = path;
+		this.file_share = share;
 	}
 	
 	public String toString() {
@@ -295,12 +297,16 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 				System.out.println("job "+order);
 				System.out.println("Server "+order.server_id);
 
-				if (order.path == null)
+				if (order.file_path == null)
 					this.ovd.startApplication(order.id, order.application_id, order.server_id);
 					//chan.sendStartApp(order.id, order.application_id);
 				else {
-					System.out.println("App: "+order.path);
-					this.ovd.startApplication(order.id, order.application_id, OvdAppChannel.DIR_TYPE_SHARED_FOLDER, order.repository, order.path, order.server_id);
+					int type = OvdAppChannel.DIR_TYPE_SHARED_FOLDER;
+					if (order.file_type.equalsIgnoreCase("http"))
+						type =  OvdAppChannel.DIR_TYPE_HTTP_URL;
+					
+					System.out.println("App: "+order.file_path);
+					this.ovd.startApplication(order.id, order.application_id, order.server_id, type, order.file_path, order.file_share);
 					//chan.sendStartApp(order.id, order.application_id, chan.DIR_TYPE_SHARED_FOLDER, ""+order.repository, order.path);
 				}
 			}
@@ -329,9 +335,9 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 		this.pushOrder(new OrderApplication(token, id, new Integer(server)));
 	}
 	
-	public void startApplicationWithFile(int token, int id, int server, String repository, String path) {
+	public void startApplicationWithFile(int token, int id, int server, String type, String path, String share) {
 		OrderApplication o = new OrderApplication(token, id, new Integer(server));
-		o.setPath(repository, path);
+		o.setPath(type, path, share);
 		
 		this.pushOrder(o);
 	}

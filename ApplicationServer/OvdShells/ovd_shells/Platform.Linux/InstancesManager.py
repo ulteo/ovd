@@ -38,14 +38,16 @@ class InstancesManager(AbstractInstancesManager):
 	
 	def wait(self):
 		haveWorked = False
-		for (pid, instance) in self.instances:
+		for instance in self.instances:
+			pid = instance[0]
+			
 			os.waitpid(pid, os.P_NOWAIT)
 			
 			path = os.path.join("/proc", str(pid))
 			if os.path.isdir(path):
 				continue
 			
-			self.onInstanceExited((pid, instance))
+			self.onInstanceExited(instance)
 			haveWorked = True
 		
 		return haveWorked

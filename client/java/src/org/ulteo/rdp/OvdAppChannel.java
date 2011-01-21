@@ -51,6 +51,7 @@ public class OvdAppChannel extends VChannel {
 	public static final int DIR_TYPE_SHARED_FOLDER = 0X01;
 	public static final int DIR_TYPE_RDP_DRIVE     = 0x02;
 	public static final int DIR_TYPE_KNOWN_DRIVE  = 0x03;
+	public static final int DIR_TYPE_HTTP_URL  = 0x10;
 	
 	private boolean channel_open = false;
 	

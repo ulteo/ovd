@@ -40,9 +40,16 @@ var UlteoOVD_start_Application = Class.create({
 	},
 
 	setPath: function(path_) {
-		this.path = path_;
+		this.extra_args.set('file', path_);
+		this.extra_args.set('file_type', 'native');
 	},
 
+	setPathHTTP: function(url_, path_) {
+		this.extra_args.set('file', path_);
+		this.extra_args.set('file_share', url_);
+		this.extra_args.set('file_type', 'http');
+	},
+      
 	start: function() {
 		var url = this.web_client_url+'/external.php?app='+this.application_id;
 		if (this.path != null)

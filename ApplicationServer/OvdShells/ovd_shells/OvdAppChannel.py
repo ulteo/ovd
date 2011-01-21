@@ -39,6 +39,7 @@ class OvdAppChannel:
 	DIR_TYPE_SHARED_FOLDER = 0X01
 	DIR_TYPE_RDP_DRIVE     = 0x02
 	DIR_TYPE_KNOWN_DRIVES  = 0x03
+	DIR_TYPE_HTTP_URL      = 0x10
 	
 	def __init__(self, instance_manager):
 		self.im = instance_manager
@@ -131,7 +132,7 @@ class OvdAppChannel:
 		app_id = struct.unpack('<I', packet[5:9])[0]
 		
 		dir_type = struct.unpack('>B', packet[9])[0]
-		if dir_type not in [self.DIR_TYPE_SHARED_FOLDER, self.DIR_TYPE_RDP_DRIVE, self.DIR_TYPE_KNOWN_DRIVES]:
+		if dir_type not in [self.DIR_TYPE_SHARED_FOLDER, self.DIR_TYPE_RDP_DRIVE, self.DIR_TYPE_KNOWN_DRIVES, self.DIR_TYPE_HTTP_URL]:
 			print "Message ORDER_START_WITH_ARGS: unknown dir type %X"%(dir_type)
 			return
 		

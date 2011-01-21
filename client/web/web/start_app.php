@@ -33,10 +33,16 @@ if (array_key_exists('check', $_GET)) {
 	foreach ($_SESSION['start_app'] as $k => $v) {
 		$start_app_node = $dom->createElement('start_app');
 		$start_app_node->setAttribute('id', $v['id']);
-		if (array_key_exists('repository', $v))
-			$start_app_node->setAttribute('network_folder', $_SESSION['ajxp']['folders'][$v['repository']]);
-		if (array_key_exists('path', $v))
-			$start_app_node->setAttribute('path', $v['path']);
+		
+		if (array_key_exists('file', $v)) {
+			$file_node = $dom->createElement('file');
+			$file_node->setAttribute('type', $v['file']['type']);
+			$file_node->setAttribute('path', $v['file']['path']);
+			$file_node->setAttribute('share', $v['file']['share']);
+			
+			$start_app_node->appendChild($file_node);
+		}
+		
 		$start_apps_node->appendChild($start_app_node);
 
 		unset($_SESSION['start_app'][$k]);
@@ -51,6 +57,9 @@ if (array_key_exists('check', $_GET)) {
 
 $_SESSION['start_app'][] = array(
 	'id'			=>	$_POST['id'],
-	'repository'	=>	$_POST['repository'],
-	'path'			=>	substr($_POST['path'], 1)
+	'file' => array(
+		'path' => substr($_POST['path'], 1),
+		'type' => 'sharedfolder',
+		'share' => $_SESSION['ajxp']['folders'][$_POST['repository']],
+	)
 );
