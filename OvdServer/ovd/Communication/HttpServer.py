@@ -4,6 +4,7 @@
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author Samuel BOVEE <samuel@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License

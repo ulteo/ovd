@@ -3,7 +3,7 @@
 # Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
-# Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 # Author Laurent CLOUET <laurent@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
