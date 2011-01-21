@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010-2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -19,6 +19,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import win32api
+import win32con
+import win32file
 
 from ovd_shells.Drives import Drives as AbstractDrives
 
@@ -30,6 +32,10 @@ class Drives(AbstractDrives):
 		drives = win32api.GetLogicalDriveStrings()
 		drives = drives.split('\000')[:-1]
 		for drive in drives:
+			t = win32file.GetDriveType(drive)
+			if t != win32con.DRIVE_REMOTE:
+				continue
+			
 			l.append(drive)
 		
 		return l
