@@ -88,8 +88,12 @@ class ThreadPoolingHttpServer(HTTPServer):
 	def process_request_thread(self, request, client_address):
 		try:
 			self.finish_request(request, client_address)
-			self.close_request(request)
-		except:
+		except socket.error, (code, msg):
+			(addr, port) = client_address
+			Logger.debug("HTTPServer: %s (%s, %s)" % (msg, addr, port))
+		except Exception, e:
+			Logger.debug("HTTPServer: unknown exception %s: %s" % (type(e), e))
+		finally:
 			self.close_request(request)
 	
 	def process_request(self, request, client_address):
