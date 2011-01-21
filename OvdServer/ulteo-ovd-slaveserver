@@ -26,6 +26,7 @@ import os
 import signal
 import sys
 import time
+import threading
 
 from ovd.Communication.HttpServer import HttpServer as Communication
 from ovd.Config import Config
@@ -146,7 +147,9 @@ def main():
 	
 	
 	if not server.stopped:
-		server.stop()
+		t = threading.Thread(target=server.stop)
+		t.start()
+		t.join()
 	
 	if Config.log_threaded:
 		Logger.initialize("OVD", Config.log_level, Config.log_file, (not daemonize), False)
@@ -157,14 +160,11 @@ def main():
 
 
 def stop(Signum, Frame):
-	signal.signal(signal.SIGINT, stopping)
-	signal.signal(signal.SIGTERM, stopping)
-	
+	signal.signal(signal.SIGINT, signal.SIG_IGN)
+	signal.signal(signal.SIGTERM, signal.SIG_IGN)
 	Logger.info("Signal receive")
 	raise InterruptException()
 
-def stopping(Signum, Frame):
-	Logger.info("Signal previously received, do nothing")
 
 class InterruptException(Exception):
 	pass
