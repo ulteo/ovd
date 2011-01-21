@@ -32,8 +32,10 @@ if (isset($_REQUEST['action'])) {
   if ($_REQUEST['action']=='manage') {
     if (isset($_REQUEST['id']))
       show_manage($_REQUEST['id'], $applicationDB);
+  } elseif ($_REQUEST['action']=='icon') {
+    if (isset($_REQUEST['id']))
+      show_icon($_REQUEST['id'], $applicationDB);
   }
-
 }
 
 if (! isset($_GET['view']))
@@ -264,14 +266,24 @@ function show_manage($id, $applicationDB) {
   echo '<td>'.$app->getAttribute('executable_path').'</td>';
   echo '</tr>';
   echo '</table>';
-  
+
   echo '<br />';
+  echo '<table border="0" cellspacing="0" cellpadding="0">';
+  echo '<tr><td>';
+  echo '<form action="applications.php" method="get"">';
+  echo '<input type="hidden" name="action" value="icon" />';
+  echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+  echo '<input type="submit" value="'._('Set custom icon').'"/>';
+  echo '</form>';
+  echo '</td><td style="width: 10px;"></td><td>';
   echo '<form action="actions.php" method="post"">';
   echo '<input type="hidden" name="name" value="Application" />';
   echo '<input type="hidden" name="action" value="clone" />';
   echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
   echo '<input type="submit" value="'._('Clone to static application').'"/>';
   echo '</form>';
+  echo '</td></tr>';
+  echo '</table>';
   echo '<br />';
   
   // orphan part
@@ -460,4 +472,106 @@ function show_manage($id, $applicationDB) {
   echo '</div>';
   page_footer();
   die();
+}
+
+function show_icon($id, $applicationDB) {
+	$applicationsGroupDB = ApplicationsGroupDB::getInstance();
+	$app = $applicationDB->import($id);
+	if (!is_object($app))
+		return false;
+	//     die_error('Unable to import application "'.$id.'"',__FILE__,__LINE__);
+	if ( $app->getAttribute('static')) {
+		redirect('applications_static.php?action=manage&id='.$app->getAttribute('id'));
+	}
+	$is_rw = $applicationDB->isWriteable();
+
+	$liaisons = Abstract_Liaison::load('ApplicationServer', $app->getAttribute('id'), NULL);
+
+	$servers = array();
+	foreach ($liaisons as $liaison) {
+		$server = Abstract_Server::load($liaison->group);
+
+		if (! $server->isOnline())
+			continue;
+
+		$servers[] = $server;
+	}
+
+	page_header();
+
+	echo '<div>';
+	echo '<h1><img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> '.$app->getAttribute('name').'</h1>';
+
+	echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
+	echo '<tr class="title">';
+	echo '<th>'._('Package').'</th>';
+	echo '<th>'._('Type').'</th>';
+	//   echo '<th>'._('Status').'</th>';
+	echo '<th>'._('Description').'</th>';
+	echo '<th>'._('Executable').'</th>';
+	echo '</tr>';
+
+	echo '<tr class="content1">';
+	echo '<td>'.$app->getAttribute('package').'</td>';
+	echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
+	//   echo '<td>'.$status.'</td>';
+	echo '<td>'.$app->getAttribute('description').'</td>';
+	echo '<td>'.$app->getAttribute('executable_path').'</td>';
+	echo '</tr>';
+	echo '</table>';
+	echo '<br />';
+
+	echo '<h2>'._('Select an icon from an Application Server').'</h2>';
+	echo '<table border="0" cellspacing="1" cellpadding="5">';
+	foreach ($servers as $server) {
+		$ret = query_url($server->getBaseURL().'/aps/application/icon/'.$app->getAttribute('id'));
+		if (! $ret)
+			return false;
+
+		$imgfile = tempnam(NULL, 'ico');
+		@file_put_contents($imgfile, $ret);
+
+		try {
+			if (class_exists('Imagick')) {
+				$imagick = new Imagick();
+				$imagick->readImage($imgfile);
+			} else {
+				if (file_exists($imgfile))
+					@unlink($imgfile);
+				continue;
+			}
+		} catch (Exception $e) {
+			if (file_exists($imgfile))
+				@unlink($imgfile);
+			continue;
+		}
+
+		if (! file_exists($imgfile))
+			continue;
+
+		echo '<tr>';
+		echo '<td style="width: 32px;"><img src="media/image/temp_icon.php?tempnam='.basename($imgfile).'" /></td><td><a href="servers.php?action=manage&amp;fqdn='.$server->getAttribute('fqdn').'">'.$server->getAttribute('fqdn').'</a></td><td><form action="actions.php" method="post"><input type="hidden" name="name" value="Application" /><input type="hidden" name="action" value="icon" /><input type="hidden" name="id" value="'.$app->getAttribute('id').'" /><input type="hidden" name="server" value="'.$server->getAttribute('fqdn').'" /><input type="submit" value="'._('Select this icon').'" /></form></td>';
+		echo '</tr>';
+	}
+	echo '</table>';
+	echo '<br />';
+
+	echo '<h2>'._('Upload an icon').'</h2>';
+	echo '<table border="0" cellspacing="1" cellpadding="5">';
+	echo '<tr>';
+	echo '<td>';
+	echo '<form action="actions.php" method="post" enctype="multipart/form-data" >'; // form A
+	echo '<input type="hidden" name="name" value="Application" />';
+	echo '<input type="hidden" name="action" value="icon" />';
+	echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+	echo '<input type="file" name="file_icon" /> ';
+	echo '<input type="submit" value="'._('Upload this icon').'" />';
+	echo '</form>';
+	echo '</td>';
+	echo '</tr>';
+	echo '</table>';
+
+	echo '</div>';
+	page_footer();
+	die();
 }

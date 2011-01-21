@@ -34,7 +34,7 @@ if (!isset($_REQUEST['name']))
 if (!isset($_REQUEST['action']))
 	redirect();
 
-if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'clone', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'populate', 'publish', 'del_icon', 'unset_default', 'set_default', 'modify_rules', 'remove_orphan')))
+if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'clone', 'icon', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'populate', 'publish', 'del_icon', 'unset_default', 'set_default', 'modify_rules', 'remove_orphan')))
 	redirect();
 
 if ($_REQUEST['name'] == 'System') {
@@ -242,6 +242,86 @@ if ($_REQUEST['name'] == 'Application') {
 		}
 		
 		redirect('applications_static.php?action=manage&id='.$app->getAttribute('id'));
+	}
+
+	if ($_REQUEST['action'] == 'icon') {
+		$applicationsDB = ApplicationDB::getInstance();
+		$app = $applicationDB->import($_REQUEST['id']);
+		if (! is_object($app)) {
+			popup_error(sprintf(_("Failed to import application '%s'"), $_REQUEST['id']));
+			redirect();
+		}
+
+		if (array_key_exists('file_icon', $_FILES)) {
+			$upload = $_FILES['file_icon'];
+
+			$have_file = true;
+			if ($upload['error']) {
+				switch ($upload['error']) {
+					case 1: // UPLOAD_ERR_INI_SIZE
+						popup_error(_('Oversized file for server rules'));
+						redirect();
+						break;
+					case 3: // UPLOAD_ERR_PARTIAL
+						popup_error(_('The file was corrupted while upload'));
+						redirect();
+						break;
+					case 4: // UPLOAD_ERR_NO_FILE
+						$have_file = false;
+						break;
+				}
+			}
+
+			if ($have_file) {
+				$source_file = $upload['tmp_name'];
+				if (! is_readable($source_file)) {
+					popup_error(_('The file is not readable'));
+					redirect();
+				}
+
+				if (get_classes_startwith('Imagick') == array()) {
+					popup_error(_('No Imagick support found'));
+					redirect();
+				}
+
+				$path_rw = $app->getIconPathRW();
+				if (! is_writable2($path_rw)) {
+					popup_error(sprintf(_("Unable to write icon file for application '%s'"), $app->getAttribute('id')));
+					redirect();
+				}
+
+				try {
+					$mypicture = new Imagick();
+					$mypicture->readImage($source_file);
+					$mypicture->scaleImage(32, 0);
+					$mypicture->setImageFileName($app->getIconPathRW());
+					$mypicture->writeImage();
+				}
+				catch (Exception $e) {
+					popup_error(_('Uploaded file is not a valid image'));
+					redirect();
+				}
+			}
+
+			popup_info(sprintf(_("Icon for application '%s' has been successfully uploaded"), $app->getAttribute('id')));
+			redirect('applications.php?action=manage&id='.$app->getAttribute('id'));
+		}
+
+		if (array_key_exists('server', $_REQUEST)) {
+			$server = Abstract_Server::load($_REQUEST['server']);
+			if (! $server) {
+				popup_error(sprintf(_("Failed to load server '%s'"), $_REQUEST['server']));
+				redirect();
+			}
+
+			if ($server->isOnline())
+				$server->getApplicationIcon($app->getAttribute('id'));
+
+			popup_info(sprintf(_("Icon of application '%s' has been updated from server '%s'"), $app->getAttribute('id'), $server->getAttribute('fqdn')));
+			redirect('applications.php?action=manage&id='.$app->getAttribute('id'));
+		}
+
+		redirect();
 	}
 }
 
