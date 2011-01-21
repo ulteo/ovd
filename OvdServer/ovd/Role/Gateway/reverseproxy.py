@@ -97,15 +97,16 @@ class ReverseProxy(asyncore.dispatcher):
 				token = rdp.group(3)
 
 				# get FQDN
-				self.lock.acquire()
-				if self.database.has_key(token):
-					fqdn = self.database[token]
-					del self.database[token]
+				try:
+					self.lock.acquire()
+					if self.database.has_key(token):
+						fqdn = self.database[token]
+						del self.database[token]
+						Logger.debug("Access Granted token: %s for fqdn: %s" % (token, fqdn))
+					else:
+						raise Exception('token authorization failed for: ' + token)
+				finally:
 					self.lock.release()
-					Logger.debug("Access Granted token: %s for fqdn: %s" % (token, fqdn))
-				else:
-					self.lock.release()
-					raise Exception('token authorization failed for: ' + token)
 
 				sender((fqdn, self.rdp_port), receiver(conn, r))
 
