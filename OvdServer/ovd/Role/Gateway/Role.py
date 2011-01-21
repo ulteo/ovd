@@ -21,6 +21,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+from OpenSSL import SSL
+
 from ovd.Role.Role import Role as AbstractRole
 from ovd.Config import Config
 from ovd.Logger import Logger
@@ -51,8 +53,12 @@ class Role(AbstractRole):
 	def init(self):
 		Logger.info("Gateway init")
 
-		self.pem = os.path.join(Config.conf_dir, "gateway.pem")
-		if not os.path.exists(self.pem):
+		fpem = os.path.join(Config.conf_dir, "gateway.pem")
+		if os.path.exists(pem):
+			self.ssl_ctx = SSL.Context(SSL.SSLv23_METHOD)
+			self.ssl_ctx.use_privatekey_file(fpem)
+			self.ssl_ctx.use_certificate_file(fpem)
+		else:
 			Logger.error("Gateway role need a certificate (%s)" % self.pem)
 			return False
 
@@ -71,7 +77,7 @@ class Role(AbstractRole):
 
 		gateway = (Config.gateway_address, Config.gateway_port)
 		sm = (Config.session_manager, self.HTTPS_PORT)
-		self.rproxy = ReverseProxy(self.pem, gateway, sm, self.RDP_PORT)
+		self.rproxy = ReverseProxy(self.ssl_ctx, gateway, sm, self.RDP_PORT)
 
 		Logger.info('Gateway:: running')
 		self.status = Role.STATUS_RUNNING

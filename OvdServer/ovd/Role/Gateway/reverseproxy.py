@@ -35,18 +35,15 @@ from sender import sender, senderHTTP
 
 class ReverseProxy(asyncore.dispatcher):
 
-	def __init__(self, fpem, gateway, sm, rdp_port):
+	def __init__(self, ssl_ctx, gateway, sm, rdp_port):
 		asyncore.dispatcher.__init__(self)
 
 		self.sm = sm
 		self.rdp_port = rdp_port
+		self.ssl_ctx = ssl_ctx
 
 		self.lock = threading.Lock()
 		self.database = {}
-
-		self.ssl_ctx = SSL.Context(SSL.SSLv23_METHOD)
-		self.ssl_ctx.use_privatekey_file(fpem)
-		self.ssl_ctx.use_certificate_file(fpem)
 
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.set_socket(SSL.Connection(self.ssl_ctx, sock))
