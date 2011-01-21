@@ -25,14 +25,14 @@ import getopt
 import os
 import signal
 import sys
-import time
 import threading
+import time
 
 from ovd.Communication.HttpServer import HttpServer as Communication
 from ovd.Config import Config
 from ovd.Logger import Logger
-from ovd.SlaveServer import SlaveServer
 from ovd.Platform import Platform
+from ovd.SlaveServer import SlaveServer
 
 
 def usage():
@@ -115,7 +115,6 @@ def main():
 	
 	Logger.initialize("OVD", Config.log_level, Config.log_file, (not daemonize), Config.log_threaded)
 	
-	
 	server = SlaveServer(Communication)
 	signal.signal(signal.SIGINT, stop)
 	signal.signal(signal.SIGTERM, stop)
@@ -137,14 +136,10 @@ def main():
 		Logger.info("SlaveServer started")
 		while not server.stopped:
 			server.loop_procedure()
-			
 			time.sleep(30)
 
-	except InterruptException, err:
+	except (InterruptException, KeyboardInterrupt):
 		Logger.info("SlaveServer interruption")
-	except KeyboardInterrupt, err:
-		Logger.info("SlaveServer interruption")
-	
 	
 	if not server.stopped:
 		t = threading.Thread(target=server.stop)
