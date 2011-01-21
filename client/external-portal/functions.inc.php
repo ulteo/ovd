@@ -72,8 +72,19 @@ function getApplications($user) {
 	return $apps;
 }
 
-function getIconURL($app_id) {
-	return 'https://'.ULTEO_OVD_SM_HOST.'/ovd/client/icon.php?id='.$app_id;
+function getIcon($app_id) {
+	$ret = array();
+	
+	$socket = curl_init('https://'.ULTEO_OVD_SM_HOST.'/ovd/client/icon.php?id='.$app_id); /*?token=token');*/
+	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
+	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, 15);
+	curl_setopt($socket, CURLOPT_TIMEOUT, (15+5));
+	$ret['content_type'] = curl_getinfo($socket, CURLINFO_CONTENT_TYPE);
+	$ret['data'] = curl_exec($socket);
+	curl_close($socket);
+	
+	return $ret;
 }
 
 

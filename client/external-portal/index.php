@@ -84,7 +84,7 @@ function startApplicationWithPath(app_id_, path_, url_) {
 		foreach($apps as $app) {
 	?>
 		<tr>
-			<td><img src="<?php echo getIconURL($app['id']); ?>"/></td>
+			<td><img src="icon.php?id=<?php echo $app['id']; ?>"/></td>
 			<td><?php echo $app['name']; ?></td>
 			<td><form onsubmit="startApplication('<?php echo $app['id']; ?>'); return false;">
 				<input type="submit" value="Start instance" />
