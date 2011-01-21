@@ -150,7 +150,7 @@ if ($_REQUEST['name'] == 'Application') {
 		if (isset($_REQUEST['id'])) {
 			$app = $applicationDB->import($_REQUEST['id']);
 			if (! is_object($app)) {
-				popup_error(sprintf(_("Failed to delete application '%s'"), $_REQUEST['id']));
+				popup_error(sprintf(_("Failed to import application '%s'"), $_REQUEST['id']));
 				redirect();
 			}
 			$ret = $applicationDB->remove($app);
@@ -208,7 +208,7 @@ if ($_REQUEST['name'] == 'Application') {
 		$applicationsDB = ApplicationDB::getInstance();
 		$app = $applicationDB->import($_REQUEST['id']);
 		if (! is_object($app)) {
-			popup_error(sprintf(_("Failed to delete application '%s'"), $_REQUEST['id']));
+			popup_error(sprintf(_("Failed to import application '%s'"), $_REQUEST['id']));
 			redirect();
 		}
 		$icon_path = $app->getIconPath();
