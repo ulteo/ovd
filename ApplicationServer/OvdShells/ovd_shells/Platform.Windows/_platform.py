@@ -127,7 +127,8 @@ def detectJavaw():
 
 
 def startDesktop():
-	launch("explorer", True)
+	explorer_path = r"%s\explorer.exe"%(os.environ["windir"])
+	launch(explorer_path, True)
 
 def startSeamless():
 	launch("seamlessrdpshell")

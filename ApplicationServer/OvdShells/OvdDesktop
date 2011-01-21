@@ -56,7 +56,7 @@ def generateConfFile(path_file_, sm_, token_):
 	
 	return True
 
-def main(startExplorer):
+def main():
 	if os.environ.has_key("OVD_SESSION_DIR"):
 		user_sdir = os.environ["OVD_SESSION_DIR"]
 	else:
@@ -125,8 +125,7 @@ def main(startExplorer):
 	
 	Util.startModules()
 	
-	if startExplorer:
-		Platform.startDesktop()
+	Platform.startDesktop()
 	
 	sys.exit(0)
 
@@ -139,9 +138,4 @@ if __name__ == "__main__":
 		sys.stdout = buf
 		print "#################################################"
 	
-	noExplorer = False
-	for arg in sys.argv:
-		noExplorer = ("--NoExplorer" in arg)
-		if noExplorer:
-			break;
-	main((not noExplorer))
+	main()
