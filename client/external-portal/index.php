@@ -46,6 +46,7 @@ foreach ($files as $name => $f) {
 	}
 }
 
+$base_url_file = 'http://'.$_SERVER['HTTP_HOST'].(($_SERVER['SERVER_PORT']==80)?'':$_SERVER['SERVER_PORT']).dirname($_SERVER['REQUEST_URI']).'/file.php';
 ?>
 <html>
 <head>
@@ -62,9 +63,11 @@ function startApplication(app_id_) {
 	UOVD_startApplication.start();
 }
 
-function startApplicationWithPath(app_id_, path_) {
+function startApplicationWithPath(app_id_, path_, url_) {
 	var UOVD_startApplication = new UlteoOVD_start_Application('<?php echo ULTEO_OVD_WEBCLIENT_URL; ?>', app_id_);
-	UOVD_startApplication.setPath(path_);
+	//UOVD_startApplication.setAuthPassword('<?php echo $user; ?>', '<?php echo $user; ?>');
+	UOVD_startApplication.setAuthToken('<?php echo base64_encode($user); ?>');
+	UOVD_startApplication.setPathHTTP(url_, path_, null);
 	UOVD_startApplication.start();
 }
 </script>
@@ -106,7 +109,7 @@ function startApplicationWithPath(app_id_, path_) {
 			foreach($f['applications'] as $application) {
 ?>
 		<td>
-			<form onsubmit="startApplicationWithPath(''<?php echo $app['id']; ?>', '<?php echo $f['name']; ?>'); return false;">
+			<form onsubmit="startApplicationWithPath('<?php echo $application['id']; ?>', '<?php echo $f['name']; ?>', '<?php echo urlencode(base64_encode($base_url_file.'?path='.$f['name'])); ?>'); return false;">
 				<input type="submit" value="Open with <?php echo $application['name']; ?>" />
 			</form>
 		</td>
