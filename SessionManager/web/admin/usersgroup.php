@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com>
@@ -220,8 +220,8 @@ function show_default() {
 				echo '<tr class="content'.(($count++%2==0)?1:2).'">';
 				echo '<th>'._('Cached').'</th>';
 				echo '<td>';
-				echo '<input type="radio" name="cached" value="0" checked="checked" onchange="$(\'schedule_select\').hide();" /> '._('No');
-				echo '<input type="radio" name="cached" value="1" onchange="$(\'schedule_select\').show();" /> '._('Yes');
+				echo '<input type="radio" name="cached" value="0" checked="checked" onclick="$(\'schedule_select\').hide();" /> '._('No');
+				echo '<input type="radio" name="cached" value="1" onclick="$(\'schedule_select\').show();" /> '._('Yes');
 				echo ' <span id="schedule_select" style="display: none;"><br />'._('Time between two updates:').' <select name="schedule">';
 				foreach ($schedules as $interval => $text)
 					echo '<option value="'.$interval.'">'.$text.'</option>';
