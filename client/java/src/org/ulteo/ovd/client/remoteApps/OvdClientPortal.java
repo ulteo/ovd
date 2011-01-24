@@ -150,10 +150,11 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	@Override
 	public void ovdInited(OvdAppChannel o) {
 		for (RdpConnectionOvd rc : this.availableConnections) {
+			boolean associate = (rc.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
 			if (rc.getOvdAppChannel() == o) {
 				for (Application app : rc.getAppsList()) {
 					if (this.autoPublish)
-						this.system.install(app, this.showDesktopIcons);
+						this.system.install(app, this.showDesktopIcons, associate);
 
 					if (! this.portal.isVisible()) {
 						if (this.appsListToEnable == null)
@@ -204,8 +205,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	public void publish() {
 		for (RdpConnectionOvd co : this.getAvailableConnections()) {
+			boolean associate = (co.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
 			for (Application app : co.getAppsList()) {
-				this.system.install(app, this.showDesktopIcons);
+				this.system.install(app, this.showDesktopIcons, associate);
 			}
 		}
 		

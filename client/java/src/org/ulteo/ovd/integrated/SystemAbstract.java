@@ -28,7 +28,7 @@ public abstract class SystemAbstract {
 	protected Shortcut shortcut = null;
 	protected FileAssociate fileAssociate = null;
 
-	public abstract String create(Application app, boolean associate);
+	public abstract String create(Application app);
 
 	public abstract void clean(Application app);
 
@@ -39,9 +39,22 @@ public abstract class SystemAbstract {
 			SystemLinux.cleanAll();
 	}
 
-	public abstract void install(Application app, boolean showDesktopIcon);
+	protected abstract void installShortcuts(Application app, boolean showDesktopIcon);
+	protected abstract void associateMimeTypes(Application app);
 
-	public abstract void uninstall(Application app);
+	public final void install(Application app, boolean showDesktopIcon, boolean makeAssoc) {
+		this.installShortcuts(app, showDesktopIcon);
+		if (makeAssoc)
+			this.associateMimeTypes(app);
+	}
+
+	protected abstract void uninstallShortcuts(Application app);
+	protected abstract void disassociateMimeTypes(Application app);
+
+	public final void uninstall(Application app) {
+		this.disassociateMimeTypes(app);
+		this.uninstallShortcuts(app);
+	}
 
 	protected abstract void saveIcon(Application app);
 	

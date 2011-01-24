@@ -84,9 +84,8 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			Logger.error(co.getServer()+": Failed to add ovd applications listener: "+ex);
 		}
 		
-		boolean associate = (co.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
 		for (Application app : co.getAppsList()) {
-			if (this.system.create(app, associate) == null)
+			if (this.system.create(app) == null)
 				org.ulteo.Logger.error("The "+app.getName()+" shortcut could not be created");
 
 			int subStatus = this.ApplicationIndex * this.ApplicationIncrement;

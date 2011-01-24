@@ -94,8 +94,9 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 			if (rc.getOvdAppChannel() != o)
 				continue;
 
+			boolean associate = (rc.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
 			for (Application app : rc.getAppsList()) {
-				this.system.install(app, this.showDesktopIcons);
+				this.system.install(app, this.showDesktopIcons, associate);
 			}
 		}
 	}

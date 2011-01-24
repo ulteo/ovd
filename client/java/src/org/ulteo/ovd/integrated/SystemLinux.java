@@ -43,15 +43,10 @@ public class SystemLinux extends SystemAbstract {
 	}
 
 	@Override
-	public String create(Application app, boolean associate) {
+	public String create(Application app) {
 		Logger.debug("Creating the '"+app.getName()+"' shortcut");
 		
 		this.saveIcon(app);
-
-		if (associate) {
-			// ToDo: File association for Linux system
-			Logger.debug("Should associate some mime types with application "+app.getName()+" but it is not implemented yet");
-		}
 
 		return this.shortcut.create(app);
 	}
@@ -68,8 +63,7 @@ public class SystemLinux extends SystemAbstract {
 		LinuxShortcut.removeAll();
 	}
 
-	@Override
-	public void install(Application app, boolean showDesktopIcon) {
+	protected void installShortcuts(Application app, boolean showDesktopIcon) {
 		Logger.debug("Installing the '"+app.getName()+"' shortcut");
 		
 		File f = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
@@ -139,8 +133,7 @@ public class SystemLinux extends SystemAbstract {
 		}
 	}
 
-	@Override
-	public void uninstall(Application app) {
+	public void uninstallShortcuts(Application app) {
 		Logger.debug("Uninstalling the '"+app.getName()+"' shortcut");
 
 		File desktop = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
@@ -152,6 +145,16 @@ public class SystemLinux extends SystemAbstract {
 		if (xdgApps.exists())
 			xdgApps.delete();
 		xdgApps = null;
+	}
+
+	protected void associateMimeTypes(Application app) {
+		// ToDo: File association for Linux system
+		Logger.debug("Should associate some mime types with application "+app.getName()+" but it is not implemented yet");
+	}
+
+	protected void disassociateMimeTypes(Application app) {
+		// ToDo: File disassociation for Linux system
+		Logger.debug("Should disassociate some mime types with application "+app.getName()+" but it is not implemented yet");
 	}
 
 	@Override

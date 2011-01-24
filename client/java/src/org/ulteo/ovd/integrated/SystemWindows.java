@@ -46,13 +46,10 @@ public class SystemWindows extends SystemAbstract {
 	}
 
 	@Override
-	public String create(Application app, boolean associate) {
+	public String create(Application app) {
 		Logger.debug("Creating the '"+app.getName()+"' shortcut");
 		
 		this.saveIcon(app);
-		if (associate) {
-			this.fileAssociate.createAppAction(app);
-		}
 
 		return this.shortcut.create(app);
 	}
@@ -63,7 +60,6 @@ public class SystemWindows extends SystemAbstract {
 
 		this.uninstall(app);
 		this.shortcut.remove(app);
-		this.fileAssociate.removeAppAction(app);
 	}
 
 	public static void cleanAll() {
@@ -71,8 +67,7 @@ public class SystemWindows extends SystemAbstract {
 		WindowsRegistry.removeAll();
 	}
 
-	@Override
-	public void install(Application app, boolean showDesktopIcon) {
+	public void installShortcuts(Application app, boolean showDesktopIcon) {
 		String shortcutName = WindowsShortcut.replaceForbiddenChars(app.getName())+Constants.SHORTCUTS_EXTENSION;
 
 		File f = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+shortcutName);
@@ -115,8 +110,7 @@ public class SystemWindows extends SystemAbstract {
 		}
 	}
 
-	@Override
-	public void uninstall(Application app) {
+	public void uninstallShortcuts(Application app) {
 		Logger.debug("Uninstalling the '"+app.getName()+"' shortcut");
 
 		String shortcutName = WindowsShortcut.replaceForbiddenChars(app.getName())+Constants.SHORTCUTS_EXTENSION;
@@ -130,6 +124,14 @@ public class SystemWindows extends SystemAbstract {
 		if (menuItem.exists())
 			menuItem.delete();
 		menuItem = null;
+	}
+
+	protected void associateMimeTypes(Application app) {
+		this.fileAssociate.createAppAction(app);
+	}
+
+	protected void disassociateMimeTypes(Application app) {
+		this.fileAssociate.removeAppAction(app);
 	}
 
 	@Override
