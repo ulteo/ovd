@@ -170,6 +170,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			}
 		}
 
+		if (this.autoPublish)
+			this.system.refresh();
+
 		if (this.availableConnections.size() == this.connections.size())
 			this.portal.enableIconsButton();
 	}
@@ -210,6 +213,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 				this.system.install(app, this.showDesktopIcons, associate);
 			}
 		}
+		if (this.showDesktopIcons)
+			this.system.refresh();
 		
 		this.publicated = true;
 	}

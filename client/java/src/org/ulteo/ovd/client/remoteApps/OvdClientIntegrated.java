@@ -98,6 +98,8 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 			for (Application app : rc.getAppsList()) {
 				this.system.install(app, this.showDesktopIcons, associate);
 			}
+			if (this.showDesktopIcons)
+				this.system.refresh();
 		}
 	}
 

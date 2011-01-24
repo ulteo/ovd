@@ -127,6 +127,8 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			for (Application app : co.getAppsList())
 				this.system.clean(app);
 		}
+
+		this.system.refresh();
 	}
 
 	public abstract void ovdInited(OvdAppChannel o);

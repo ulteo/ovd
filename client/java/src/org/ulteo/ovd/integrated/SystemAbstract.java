@@ -64,4 +64,6 @@ public abstract class SystemAbstract {
 		if (this.fileAssociate != null)
 			this.fileAssociate.setToken(token);
 	}
+
+	public void refresh() {}
 }

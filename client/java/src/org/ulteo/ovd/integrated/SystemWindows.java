@@ -37,6 +37,7 @@ import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.integrated.mime.WindowsRegistry;
 import org.ulteo.ovd.integrated.shorcut.WindowsShortcut;
+import org.ulteo.utils.jni.WindowsTweaks;
 
 public class SystemWindows extends SystemAbstract {
 
@@ -211,5 +212,10 @@ public class SystemWindows extends SystemAbstract {
 			}
 		}
 		return shareID;
+	}
+
+	@Override
+	public void refresh() {
+		WindowsTweaks.rebuildIconCache();
 	}
 }

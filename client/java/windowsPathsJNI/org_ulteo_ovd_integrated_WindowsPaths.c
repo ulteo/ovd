@@ -27,6 +27,7 @@
 #include <windows.h>
 #include <shlobj.h>
 #include "org_ulteo_ovd_integrated_WindowsPaths.h"
+#include "org_ulteo_utils_jni_WindowsTweaks.h"
 
 DWORD getPath(DWORD csidl, LPSTR path) {
     if (SHGetSpecialFolderPath(NULL, path, csidl, 0) == FALSE) {
@@ -81,4 +82,8 @@ JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_nGetPersona
 
     printf("PersonalData path: %s\n", path);
     return (*env)->NewStringUTF(env, path);
+}
+
+JNIEXPORT void JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_nReloadWMSettings(JNIEnv *env, jclass class) {
+    SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, SPI_SETNONCLIENTMETRICS, 0, SMTO_ABORTIFHUNG, 100000, NULL);
 }

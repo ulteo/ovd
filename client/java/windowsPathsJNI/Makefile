@@ -27,20 +27,25 @@ EXEC=libWindowsPaths.dll
 
 all: $(EXEC)
 
-$(EXEC): org_ulteo_ovd_integrated_WindowsPaths.o org_ulteo_ovd_integrated_WindowsPaths.def 
+$(EXEC): org_ulteo_ovd_integrated_WindowsPaths.o org_ulteo_ovd_integrated_WindowsPaths.def
 	$(CC) $(LDFLAGS) -shared -o $@ $^
 
 org_ulteo_ovd_integrated_WindowsPaths.h:
 	javac -classpath ../src:../required_libraries/registry.jar -d . ../src/org/ulteo/ovd/integrated/WindowsPaths.java
 	javah org.ulteo.ovd.integrated.WindowsPaths
 
-%.o: %.c %.h
+org_ulteo_utils_jni_WindowsTweaks.h:
+	javac -classpath ../src:../required_libraries/registry.jar -d . ../src/org/ulteo/utils/jni/WindowsTweaks.java
+	javah org.ulteo.utils.jni.WindowsTweaks
+
+%.o: %.c %.h org_ulteo_utils_jni_WindowsTweaks.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
 	$(RM) *.o $(EXEC)
 	$(RM) *~
 	$(RM) org_ulteo_ovd_integrated_WindowsPaths.h
+	$(RM) org_ulteo_utils_jni_WindowsTweaks.h
 
 install: all
 	install $(EXEC) $(DIST)
