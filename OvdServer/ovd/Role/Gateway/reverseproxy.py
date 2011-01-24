@@ -114,7 +114,7 @@ class ReverseProxy(asyncore.dispatcher):
 			elif http:
 				path = http.group(2)
 
-				if not path.startswith("/ovd/"):
+				if not (path == '/ovd' or path.startswith("/ovd/")):
 					raise Exception('wrong HTTP path: ' + path)
 
 				if path == "/ovd/client/start.php":
