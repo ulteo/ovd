@@ -281,7 +281,7 @@ class Session {
 			if ($this->mode != Session::MODE_DESKTOP || ! array_key_exists('persistent', $this->settings) || $this->settings['persistent'] == 0)
 				return $this->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, $reason_);
 		} elseif ($status_ == Session::SESSION_STATUS_WAIT_DESTROY) {
-			Logger::info('main', 'Session end : \''.$this->id.'\'');
+			Logger::info('main', 'Session end : \''.$this->id.'\' (reason: \''.$reason_.'\')');
 
 			if ($status_ == Session::SESSION_STATUS_WAIT_DESTROY && ! is_null($reason_)) {
 				$report_session = Abstract_ReportSession::load($this->id);
@@ -299,7 +299,7 @@ class Session {
 				return false;
 			}
 		} elseif ($status_ == Session::SESSION_STATUS_DESTROYED) {
-			Logger::info('main', 'Session purge : \''.$this->id.'\'');
+			Logger::info('main', 'Session purge : \''.$this->id.'\' (reason: \''.$reason_.'\')');
 
 			if (array_key_exists(Server::SERVER_ROLE_FS, $this->servers)) {
 				foreach ($this->servers[Server::SERVER_ROLE_FS] as $fqdn => $data) {
