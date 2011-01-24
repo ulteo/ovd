@@ -2,6 +2,7 @@ scripts_DATA = applications.php \
                auth.php \
                icon.php \
                logout.php \
+               mimetype-icon.php \
                news.php \
                remote_apps.php \
                session_status.php \
