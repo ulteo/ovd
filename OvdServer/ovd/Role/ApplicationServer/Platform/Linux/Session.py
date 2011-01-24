@@ -44,6 +44,7 @@ class Session(AbstractSession):
 		self.install_desktop_shortcuts()
 		
 		os.chown(self.instanceDirectory, pwd.getpwnam(self.user.name)[2], -1)
+		os.chown(self.user_session_dir, pwd.getpwnam(self.user.name)[2], -1)
 		
 		xdg_dir = os.path.join(d, "xdg")
 		xdg_app_d = os.path.join(xdg_dir, "applications")

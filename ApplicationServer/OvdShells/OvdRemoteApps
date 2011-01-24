@@ -106,10 +106,5 @@ def tryOpenChannel(vchannel):
 
 
 if __name__ == "__main__":
-	if True:
-		path = os.path.join(os.path.expanduser('~'), "ovd-dump.txt")
-		buf = file(path, "a", 0)
-		sys.stderr = buf
-		sys.stdout = buf
-		print "#################################################"
+	Util.redirect_to_dump()
 	main()

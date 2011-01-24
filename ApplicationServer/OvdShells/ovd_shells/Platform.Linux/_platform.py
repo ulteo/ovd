@@ -71,7 +71,7 @@ def launchIntegratedClient(configuration_file_):
 	if os.path.exists(configuration_file_) == False:
 		return False
 	
-	launch("OVDExternalAppsClient -c %s"%(configuration_file_))
+	launch('OVDExternalAppsClient -c %s -o "%s"'%(configuration_file_, os.path.join(getUserSessionDir(), "dump-externalapps.txt")))
 	return True
 
 def launch(cmd, wait=False):

@@ -29,6 +29,7 @@ from ovd_shells.CheckFork import CheckFork
 from ovd_shells.CheckOpenOffice import CheckOpenOffice
 from ovd_shells.Monitoring import Monitoring
 from ovd_shells.Platform import _platform as Platform
+from ovd_shells import Util
 
 def main():
 	# stop if we don't have the needed env vars
@@ -81,10 +82,5 @@ def main():
 
 
 if __name__ == "__main__":
-	if True:
-		path = os.path.join(os.path.expanduser('~'), "ovd-dump.txt")
-		buf = file(path, "a", 0)
-		sys.stderr = buf
-		sys.stdout = buf
-		print "#################################################"
+	Util.redirect_to_dump()
 	main()

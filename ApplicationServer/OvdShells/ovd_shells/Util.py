@@ -20,9 +20,22 @@
 
 import glob
 import os
+import sys
 
 from ovd_shells.Platform import _platform as Platform
 from ovd_shells.Platform.Novell import Novell
+
+def redirect_to_dump():
+	path = os.path.join(Platform.getUserSessionDir(), "dump.txt")
+	try:
+		buf = file(path, "a", 0)
+	except IOError, err:
+		return
+	
+	sys.stderr = buf
+	sys.stdout = buf
+	print "#################################################"
+
 
 def loadUserEnv(d):
 	path = os.path.join(d, "env")

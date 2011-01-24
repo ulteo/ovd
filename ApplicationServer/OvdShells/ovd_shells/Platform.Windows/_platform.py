@@ -101,7 +101,7 @@ def launchIntegratedClient(configuration_file_):
 		return None
 	
 	java_cmd = java_cmd.replace("%1", jar_location)
-	java_cmd = java_cmd.replace("%*", '-c "%s" -o "%s"'%(configuration_file_, os.path.join(os.path.expanduser('~'), "ovd-externalapps-dump.txt")))
+	java_cmd = java_cmd.replace("%*", '-c "%s" -o "%s"'%(configuration_file_, os.path.join(getUserSessionDir(), "dump-externalapps.txt")))
 	
 	(hProcess, hThread, dwProcessId, dwThreadId) = win32process.CreateProcess(None, java_cmd, None , None, False, 0 , None, folder, win32process.STARTUPINFO())
 	win32file.CloseHandle(hProcess)
