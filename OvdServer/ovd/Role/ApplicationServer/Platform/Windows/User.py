@@ -32,6 +32,7 @@ import win32ts
 
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.User import User as AbstractUser
+import Util
 
 import Langs
 import Reg
@@ -83,12 +84,18 @@ class User(AbstractUser):
 		
 		
 		if self.infos.has_key("shell"):
-			shell = self.infos["shell"]
-			osVersion = 5
-			if getattr(sys, "getwindowsversion", None) is not None:
-				osVersion = sys.getwindowsversion()[0]
-			if osVersion > 5:
-				shell = "cmd /c \"start %s\""%(self.infos["shell"])
+			shell = "%s.exe"%(self.infos["shell"])
+			shell_path = None
+			
+			try:
+				shell_path = Util.get_from_PATH(shell)
+			except Exception, e:
+				Logger.error("unable to get path from '%s' [%s]"%(str(shell), str(e)))
+			
+			if shell_path is None:
+				Logger.warn("'%s' can not be started"%(str(shell)))
+			else:
+				shell = shell_path
 
 			win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigInitialProgram, shell)
 			win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigfInheritInitialProgram, False)

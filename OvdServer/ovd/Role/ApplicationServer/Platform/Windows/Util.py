@@ -75,3 +75,17 @@ def copyDirOverride(src, dst, exception=None):
 			except:
 				#print "Unable to setAttribute of",path_dst
 				pass
+
+
+def get_from_PATH(name):
+	try:
+		env_var = os.environ["PATH"]
+	except KeyError:
+		return None
+
+	for p in env_var.split(os.pathsep):
+		path = os.path.join(p, name)
+		if os.path.exists(path):
+			return path
+	
+	return None
