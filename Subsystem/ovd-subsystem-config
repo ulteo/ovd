@@ -124,7 +124,7 @@ if [ $? != 0 ]; then
     die "Chroot download failed, try again later"
 fi
 
-CHROOTCONF=$CHROOTDIR/etc/ulteo/ovd/slaveserver.conf
+CHROOTCONF=$TARGET/etc/ulteo/ovd/slaveserver.conf
 [ -e "$CHROOTCONF" ] || die "Chroot download is corrupt ; download it again"
 
 # set timezone
