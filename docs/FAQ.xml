@@ -40,19 +40,16 @@
 	  Linux Application server:
 	  <itemizedlist>
 	    <listitem><para>
-	      <emphasis>/opt/ulteo/var/log/ulteo-ovd.log</emphasis>
-	    </para></listitem>
-	    <listitem><para>
-	      <emphasis>/var/log/ulteo/applicationserver/main.log</emphasis>
+	      <emphasis>/opt/ulteo/var/log/ulteo/ovd/slaveserver.log</emphasis>
 	    </para></listitem>
 	  </itemizedlist>
 	</para></listitem>
 
 	<listitem><para>
-	  Windows Application server:
+	  Windows server:
 	  <itemizedlist>
 	    <listitem><para>
-	      <emphasis>C:\Documents and Settings\All Users\Application Data\Ulteo\ovd\main.log</emphasis>
+	      <emphasis>C:\Documents and Settings\All Users\Application Data\ulteo\ovd\log\slaveserver.log</emphasis>
 	    </para></listitem>
 	  </itemizedlist>
 	</para></listitem>
@@ -64,7 +61,7 @@
 	      session manager: <emphasis>/var/spool/ulteo/sessionmanager/config</emphasis>
 	    </para></listitem>
 	    <listitem><para>
-	      application server: <emphasis>/opt/ulteo/etc/ulteo-ovd.conf</emphasis>
+	      application server: <emphasis>/opt/ulteo/etc/ulteo/ovd/slaveserver.conf</emphasis>
 	    </para></listitem>
 	  </itemizedlist>
 	</para></listitem>
