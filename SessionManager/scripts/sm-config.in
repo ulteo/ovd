@@ -191,6 +191,7 @@ fi
 if [ -z "$NODOWNLOAD" ]; then
     case $URI in
     http://*|ftp://*)
+        mkdir -p $(dirname $TARGET)
         curl --retry 3 --connect-timeout 60 -L -f "$URI" > $TARGET || die An error occured while downloading the chroot. Aborting.
         # Create a symlink to $BASEDIR/base.tar.gz if this file doesn't exist
         [ ! -e "$BASEDIR/base.tar.gz" ] && ln -sf "$TARGET" "$BASEDIR/base.tar.gz"
