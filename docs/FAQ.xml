@@ -356,5 +356,23 @@ such file or directory]]>
      </para>
   </section>
 
+  <section id="detect_ie_outlook">
+    <title>
+      Why Internet Explorer and Outlook Express are not detected on my
+      Windows Application Server ?
+    </title>
 
+    <para>
+      Internet Explorer and Outlook Express shortcuts are not
+      installed in the <emphasis>All Users</emphasis> start menu
+      folder so Ulteo OVD cannot detect them.
+    </para>
+
+    <para>
+      The easiest way to have Internet Explorer and Outlook Express
+      icons appear as applications from the OVD administration console
+      is to copy the Windows shortcuts into the <emphasis>All
+      Users</emphasis> start menu folder and restart the OVD service.
+    </para>
+  </section>
 </article>
