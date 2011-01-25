@@ -105,6 +105,8 @@ function get_users_list() {
 
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
+		<meta http-equiv="X-UA-Compatible" content="IE=8" />
+
 		<script type="text/javascript" src="media/script/lib/prototype/prototype.js" charset="utf-8"></script>
 
 		<script type="text/javascript" src="media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>
