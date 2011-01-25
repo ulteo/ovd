@@ -255,53 +255,6 @@ $ getent hosts 192.168.0.19
     </para>
   </section>
 
-  <section id="err03_firewall">
-    <title>
-      Why do I get an <emphasis>Err03</emphasis> when I want to launch a
-      session?
-    </title>
-
-<!--
-      It's likely that you have a firewall setting that prevents the session to initiate correctly.
--->
-    <para>
-      This message append when you the preference <emphasis>SSH/ping
-      applet test</emphasis> is set and when the applet can not access
-      to the specific application server.
-    </para>
-
-    <para>
-      There are 2 possibles reasons having this message:
-    </para>
-    <itemizedlist>
-      <listitem>
-	<para>
-	  You have a firewall or another system that forbid you to
-	  access to the server.
-	</para>
-	<para>
-	  To launch a session, you need access to port tcp/80 and
-	  tcp/443 for an Application server.
-	</para>
-	<para>
-	  Port 80 is HTTP traffic and 443 is used for SSH.  Apache
-	  must NOT listen on the 443 TCP port on Application Servers.
-	</para>
-      </listitem>
-
-      <listitem>
-	<para>
-	  Your server <emphasis role="strong">Redirection
-	  name</emphasis> is not well configured as describe in the
-	  documentation.
-	</para>
-	<para>
-	  Please check the redirection part into the installation documentation .
-	</para>
-      </listitem>
-    </itemizedlist>
-  </section>
-
   <section id="ports">
     <title>
       What ports Ulteo Open Virtual Desktop 3.0 is using?
