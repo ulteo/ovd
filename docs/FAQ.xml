@@ -302,6 +302,79 @@ $ getent hosts 192.168.0.19
     </itemizedlist>
   </section>
 
+  <section id="ports">
+    <title>
+      What ports Ulteo Open Virtual Desktop 3.0 is using?
+    </title>
+    <para>
+       All ports are TCP
+    </para>
+    
+	<itemizedlist>
+		<listitem>
+			<para>
+				SessionManager: 
+				<itemizedlist>
+					<listitem>
+						<para>
+							80 (HTTP): communication with end user
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							443 (HTTPS): communication with end user
+						</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</listitem>
+		
+		<listitem>
+			<para>
+				ApplicationServer: 
+				<itemizedlist>
+					<listitem>
+						<para>
+							1111 (HTTP): communication between OVD server
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							3389 (RDP): communication with end user
+						</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</listitem>
+		
+		<listitem>
+			<para>
+				Fileserver: 
+				<itemizedlist>
+					<listitem>
+						<para>
+							1112 (HTTP): communication with SessionManager
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							1113 (HTTP): communication with ApplicationServer
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							445 (CIFS): communication with ApplicationServer
+						</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</listitem>
+	</itemizedlist>
+</section>
+
+
+
+
   <section id="class_not_found">
     <title>Why do I get a "Class XXXX not found"?</title>
     <para>
