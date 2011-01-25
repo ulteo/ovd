@@ -48,6 +48,8 @@ var Daemon = Class.create({
 	session_status_old: '',
 	sessionmanager_request_time: 2000,
 
+	loop_timer: null,
+
 	ready: false,
 	ready_lock: false,
 	started: false,
@@ -210,8 +212,14 @@ var Daemon = Class.create({
 			if (this.session_status == 'logged' && this.session_status_old != 'logged')
 				this.sessionmanager_request_time = 60000;
 
-			setTimeout(this.loop.bind(this), this.sessionmanager_request_time);
+			this.loop_timer = setTimeout(this.loop.bind(this), this.sessionmanager_request_time);
 		}
+	},
+
+	break_loop: function() {
+		this.push_log('debug', '[daemon] break_loop()');
+
+		clearTimeout(this.loop_timer);
 	},
 
 	suspend: function() {
@@ -491,6 +499,7 @@ var Daemon = Class.create({
 			this.progressbar_value = 0;
 		}
 
+		this.break_loop();
 		this.stopped = true;
 	}
 });

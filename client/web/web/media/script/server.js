@@ -72,6 +72,7 @@ var Server = Class.create({
 			this.ready = false;
 			this.connected = false;
 
+			daemon.break_loop();
 			daemon.sessionmanager_request_time = 2000;
 			daemon.loop();
 		} else if (status_ == 'failed') {
