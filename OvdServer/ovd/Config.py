@@ -147,7 +147,7 @@ class Config:
 			report_error("No session manager given")
 			return False
 		if " " in Config.session_manager:
-			report_error("Invlid session manager given")
+			report_error("Invalid session manager given")
 			return False
 	#	if not is_host(Config.session_manager):
 	#		return False
