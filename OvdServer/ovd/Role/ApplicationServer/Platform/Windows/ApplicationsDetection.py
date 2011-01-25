@@ -95,10 +95,6 @@ class ApplicationsDetection:
 			shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
 			shortcut.QueryInterface( pythoncom.IID_IPersistFile ).Load(filename)
 			
-			if not os.path.splitext(shortcut.GetPath(0)[0])[1].lower() == ".exe":
-				continue
-			
-			
 			name = os.path.basename(filename)[:-4]
 			if self.isBan(name):
 				continue
@@ -123,6 +119,8 @@ class ApplicationsDetection:
 					if len(shortcut.GetArguments())>0:
 						application["command"]+= " "+shortcut.GetArguments()
 			
+			if not application["command"].endswith(".exe") and ".exe " not in application["command"]:
+				continue
 			
 			application["mimetypes"] = self.mimetypes.get_mime_types_from_command(application["command"])
 			
