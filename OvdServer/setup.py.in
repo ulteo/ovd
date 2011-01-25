@@ -42,10 +42,6 @@ if sys.platform == "win32":
 	sys.argv.append("-p")
 	sys.argv.append("ovd.Role.ApplicationServer")
 
-	# Force to use twisted ...
-	sys.argv.append("-i")
-	sys.argv.append("twisted.web.resource")
-
 	try:
 		import modulefinder
 		import win32com,sys
