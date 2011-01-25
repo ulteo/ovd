@@ -60,6 +60,7 @@ elif sys.platform == "win32":
 
     setup_args["zipfile"] = "lib/shared.zip"
     setup_args["windows"] = ["OvdDesktop", "OvdRemoteApps", "startovdapp"]
+    setup_args["options"] = {"py2exe": {"dll_excludes": ["w9xpopen.exe"]}}
 
 else:
    raise Exception("No supported platform")

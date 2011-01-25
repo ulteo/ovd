@@ -69,6 +69,7 @@ if sys.platform == "win32":
 	setup_args["zipfile"] = "lib/shared.zip"
 	setup_args["console"] = ["ulteo-ovd-slaveserver"]
 	setup_args["service"] = [ServiceTarget()]
+	setup_args["options"] = {"py2exe": {"dll_excludes": ["w9xpopen.exe"]}}
 
 
 elif sys.platform == "linux2":
