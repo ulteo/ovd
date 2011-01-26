@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2010 Ulteo SAS
+# Copyright (C) 2008-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2008
+# Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2008-2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -149,7 +149,7 @@ if auto_users is False:
     p = getUserList(host)
     if len(p) < number+start:
         number = len(p) - start
-        print "Not enough users, reducing to %d sessions"
+        print "Not enough users, reducing to %d sessions"%(number)
 
 for j in xrange(number):
     if auto_users:
