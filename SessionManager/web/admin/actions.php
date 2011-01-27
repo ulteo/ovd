@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
@@ -378,7 +378,7 @@ if ($_REQUEST['name'] == 'Application_static') {
 				if (! $ret) {
 					popup_error(sprintf(_("Failed to delete application '%s'"), $app->getAttribute('name')));
 				}
-				$servers = Abstract_Server::load_available_by_type($app->getAttribute('type'));
+				$servers = Abstract_Server::load_available_by_type($app->getAttribute('type'), true);
 				foreach ($servers as $server)
 					$server->syncStaticApplications();
 				popup_info(sprintf(_("Application '%s' successfully deleted"), $app->getAttribute('name')));
@@ -427,7 +427,7 @@ if ($_REQUEST['name'] == 'Application_static') {
 			if (! $ret) {
 				popup_error(sprintf(_("Failed to modify application '%s'"), $app->getAttribute('name')));
 			}
-			$servers = Abstract_Server::load_available_by_type($app->getAttribute('type'));
+			$servers = Abstract_Server::load_available_by_type($app->getAttribute('type'), true);
 			foreach ($servers as $server)
 				$server->syncStaticApplications();
 			popup_info(sprintf(_("Application '%s' successfully modified"), $app->getAttribute('name')));

@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com> 2010
- * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -349,15 +349,17 @@ class Abstract_Server {
 		return $servers;
 	}
 
-	public static function load_available() {
+	public static function load_available($with_locked_=false) {
 		$servers = Abstract_Server::load_all();
 
 		foreach ($servers as $k => $server) {
 			if (! $server->getAttribute('registered'))
 				unset($servers[$k]);
 
-			if ($server->getAttribute('locked'))
-				unset($servers[$k]);
+			if ($with_locked_ === false) {
+				if ($server->getAttribute('locked'))
+					unset($servers[$k]);
+			}
 
 			if (! $server->isOnline())
 				unset($servers[$k]);
@@ -403,8 +405,8 @@ class Abstract_Server {
 		return $servers;
 	}
 
-	public static function load_available_by_type($type_) {
-		$servers = Abstract_Server::load_available();
+	public static function load_available_by_type($type_, $with_locked_=false) {
+		$servers = Abstract_Server::load_available($with_locked_);
 
 		foreach ($servers as $k => $server) {
 			if ($server->getAttribute('type') != $type_)
@@ -414,8 +416,8 @@ class Abstract_Server {
 		return $servers;
 	}
 
-	public static function load_available_by_role($role_) {
-		$servers = Abstract_Server::load_available();
+	public static function load_available_by_role($role_, $with_locked_=false) {
+		$servers = Abstract_Server::load_available($with_locked_);
 
 		foreach ($servers as $k => $server) {
 			if (! array_key_exists($role_, $server->roles))

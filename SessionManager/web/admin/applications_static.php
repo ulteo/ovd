@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -297,7 +297,7 @@ function show_manage($id, $applicationDB) {
 			$groups_available[]= $group;
 	}
 
-	$servers_all = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_APS);
+	$servers_all = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_APS, true);
 	$liaisons = Abstract_Liaison::load('ApplicationServer', $app->getAttribute('id'), NULL);
 	$servers_id = array();
 	foreach ($liaisons as $liaison)
