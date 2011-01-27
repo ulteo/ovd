@@ -197,7 +197,7 @@ class Session {
 				break;
 			case Session::SESSION_STATUS_INACTIVE:
 				Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - Server "'.$server_.'" is now "'.$status_.'", switching Session status to "'.$status_.'"');
-				$this->setStatus(Session::SESSION_STATUS_INACTIVE, Session::SESSION_END_STATUS_LOGOUT);
+				$this->setStatus(Session::SESSION_STATUS_INACTIVE);
 				break;
 			case Session::SESSION_STATUS_WAIT_DESTROY:
 				Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - Server "'.$server_.'" is now "'.$status_.'", switching Session status to "'.$status_.'"');
@@ -253,12 +253,12 @@ class Session {
 			Session::SESSION_STATUS_INIT			=>	1,
 			Session::SESSION_STATUS_READY			=>	2,
 			Session::SESSION_STATUS_ACTIVE			=>	3,
-			Session::SESSION_STATUS_INACTIVE		=>	4,
-			Session::SESSION_STATUS_WAIT_DESTROY	=>	5,
-			Session::SESSION_STATUS_DESTROYING		=>	6,
-			Session::SESSION_STATUS_DESTROYED		=>	7,
-			Session::SESSION_STATUS_ERROR			=>	7,
-			Session::SESSION_STATUS_UNKNOWN			=>	7
+			Session::SESSION_STATUS_INACTIVE		=>	3,
+			Session::SESSION_STATUS_WAIT_DESTROY	=>	4,
+			Session::SESSION_STATUS_DESTROYING		=>	5,
+			Session::SESSION_STATUS_DESTROYED		=>	6,
+			Session::SESSION_STATUS_ERROR			=>	6,
+			Session::SESSION_STATUS_UNKNOWN			=>	6
 		);
 
 		if (array_key_exists($status_, $states) && array_key_exists($this->getAttribute('status'), $states)) {
