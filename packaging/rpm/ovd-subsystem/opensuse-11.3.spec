@@ -65,6 +65,8 @@ if [ "$1" = "0" ]; then
     [ -f $SUBCONF ] && . $SUBCONF
     rm -rf $CHROOTDIR
     rm -f $SUBCONF
+
+    chkconfig --del ulteo-ovd-subsystem
 fi
 
 %clean -n ulteo-ovd-subsystem
