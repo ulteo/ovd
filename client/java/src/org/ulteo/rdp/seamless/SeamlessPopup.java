@@ -120,7 +120,8 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 		super.setVisible(b);
 		if (this.modal) {
 			this.setModal(b);
-			((SeamlessWindow) this.parent).sw_setModalWindow(b ? this : null);
+			if (this.parent instanceof SeamlessWindow)
+				((SeamlessWindow) this.parent).sw_setModalWindow(b ? this : null);
 		}
 	}
 
