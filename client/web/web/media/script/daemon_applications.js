@@ -20,6 +20,7 @@
 
 var Applications = Class.create(Daemon, {
 	mode: 'applications',
+	persistent: false,
 
 	applications: new Hash(),
 	applicationsPanel: null,
