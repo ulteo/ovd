@@ -34,7 +34,7 @@ header('Content-Type: text/xml; charset=utf-8');
 
 $dom = new DomDocument('1.0', 'utf-8');
 $logout_node = $dom->createElement('logout');
-$logout_node->setAttribute('mode', 'logout'); //$_POST['mode']
+$logout_node->setAttribute('mode', $_POST['mode']);
 $dom->appendChild($logout_node);
 
 $xml = $dom->saveXML();
