@@ -57,7 +57,7 @@ mkdir -p $SBINDIR $INITDIR
 cp ovd-subsystem-config $SBINDIR
 cp init/suse/ulteo-ovd-subsystem $INITDIR
 
-%preun
+%preun -n ulteo-ovd-subsystem
 service ulteo-ovd-subsystem stop
 
 %postun -n ulteo-ovd-subsystem
