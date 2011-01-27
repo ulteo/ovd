@@ -56,7 +56,10 @@ cp ovd-subsystem-config $SBINDIR
 cp init/suse/ulteo-ovd-subsystem $INITDIR
 
 %preun -n ulteo-ovd-subsystem
-service ulteo-ovd-subsystem stop
+if [ "$1" = "0" ]; then
+    service ulteo-ovd-subsystem stop
+    chkconfig --del ulteo-ovd-subsystem
+fi
 
 %postun -n ulteo-ovd-subsystem
 if [ "$1" = "0" ]; then
@@ -65,8 +68,6 @@ if [ "$1" = "0" ]; then
     [ -f $SUBCONF ] && . $SUBCONF
     rm -rf $CHROOTDIR
     rm -f $SUBCONF
-
-    chkconfig --del ulteo-ovd-subsystem
 fi
 
 %clean -n ulteo-ovd-subsystem
