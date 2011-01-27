@@ -85,7 +85,7 @@ var Daemon = Class.create({
 			return '';
 		}
 
-		Event.observe(window, 'unload', this.client_exit.bind(this));
+		//Event.observe(window, 'unload', this.client_exit.bind(this));
 	},
 
 	refresh_body_size: function() {
