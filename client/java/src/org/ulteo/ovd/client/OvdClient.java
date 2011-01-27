@@ -78,6 +78,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	protected boolean isCancelled = false;
 	private boolean connectionIsActive = true;
 	private boolean exitAfterLogout = false;
+	private boolean persistent = false;
 
 	public OvdClient(Callback obj_) {
 		this.initMembers(null, true);
@@ -85,9 +86,10 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.initCallback(obj_);
 	}
 
-	public OvdClient(SessionManagerCommunication smComm, Callback obj_) {
+	public OvdClient(SessionManagerCommunication smComm, Callback obj_, boolean persistent) {
 		this.initMembers(smComm, true);
 
+		this.persistent = persistent;
 		this.initCallback(obj_);
 	}
 
@@ -182,8 +184,9 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 				if (! status.equals(this.sessionStatus)) {
 					org.ulteo.Logger.info("session status switch from "+this.sessionStatus+" to "+status);
 					this.sessionStatus = status;
-					
-					if (this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED) || this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE)) {
+					if (this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED) || 
+							this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE) ||
+							(this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INACTIVE) && this.persistent)) {
 						if (! isActive) {
 							isActive = true;
 							this.sessionStatusSleepingTime = REQUEST_TIME_OCCASIONALLY;
@@ -420,6 +423,10 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		};
 
 		long delay = 0;
+		if (this.persistent) {
+			forceDisconnectionTimer.schedule(forceDisconnectionTask, 0);
+			return;
+		}
 		if (this.smComm != null) {
 			Thread disconnectThread = new Thread(new Runnable() {
 				public void run() {

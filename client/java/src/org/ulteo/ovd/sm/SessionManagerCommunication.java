@@ -70,6 +70,8 @@ import org.xml.sax.InputSource;
 public class SessionManagerCommunication implements HostnameVerifier, X509TrustManager {
 	public static final String SESSION_MODE_REMOTEAPPS = "applications";
 	public static final String SESSION_MODE_DESKTOP = "desktop";
+	
+	public static final String SESSION_MODE_PERSISTENT = "persistent";
 
 	private static final String WEBSERVICE_ICON = "icon.php";
 	private static final String WEBSERVICE_START_SESSION = "start.php";
@@ -614,6 +616,14 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 							response.setDesktopIcons(val > 0);
 						} catch (NumberFormatException ex) {
 							Logger.error("Failed to parse value '"+value+"' (name: "+NAME_DESKTOP_ICONS+")");
+						}
+					}
+					if (name.equalsIgnoreCase(SESSION_MODE_PERSISTENT)) {
+						try {
+							int val = Integer.parseInt(value);
+							response.setPersistent(val > 0);
+						} catch (NumberFormatException ex) {
+							Logger.error("Failed to parse value '"+value+"' (name: "+SESSION_MODE_PERSISTENT+")");
 						}
 					}
 				}

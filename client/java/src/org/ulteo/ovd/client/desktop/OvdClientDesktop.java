@@ -46,13 +46,13 @@ public class OvdClientDesktop extends OvdClient {
 	private boolean fullscreen = false;
 	
 	public OvdClientDesktop(SessionManagerCommunication smComm, Dimension resolution) {
-		super(smComm, null);
+		super(smComm, null, false);
 
 		this.init(resolution);
 	}
 
-	public OvdClientDesktop(SessionManagerCommunication smComm, Dimension resolution, Callback obj) {
-		super(smComm, obj);
+	public OvdClientDesktop(SessionManagerCommunication smComm, Dimension resolution, Callback obj, boolean persistent) {
+		super(smComm, obj, persistent);
 
 		this.init(resolution);
 	}

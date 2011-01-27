@@ -57,11 +57,11 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	private Rectangle screensize = null;
 	
 	public OvdClientRemoteApps(SessionManagerCommunication smComm) {
-		super(smComm, null);
+		super(smComm, null, false);
 	}
 
 	public OvdClientRemoteApps(SessionManagerCommunication smComm, Callback obj) {
-		super(smComm, obj);
+		super(smComm, obj, false);
 	}
 
 	@Override

@@ -37,6 +37,7 @@ public class Properties {
 	
 	private boolean multimedia = false;
 	private boolean printers = false;
+	private boolean persistent = false;
 	private int drives = REDIRECT_DRIVES_NO;
 
 	private boolean desktop_icons = false;
@@ -103,6 +104,14 @@ public class Properties {
 	
 	public int getDuration() {
 		return this.duration;
+	}
+	
+	public void setPersistent( boolean value) {
+		this.persistent = value; 
+	}
+	
+	public boolean isPersistent() {
+		return this.persistent;
 	}
 
 	public void setDuration(int duration_) {

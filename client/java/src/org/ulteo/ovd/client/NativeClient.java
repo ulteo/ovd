@@ -840,9 +840,10 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		
 		this.client = null;
 
+		boolean persistent = response.isPersistent();
 		switch (response.getMode()) {
 			case Properties.MODE_DESKTOP:
-				this.client = new OvdClientDesktop(dialog, this.opts.geometry, this);
+				this.client = new OvdClientDesktop(dialog, this.opts.geometry, this, persistent);
 				break;
 			case Properties.MODE_REMOTEAPPS:
 				if (OSTools.isLinux()) {
