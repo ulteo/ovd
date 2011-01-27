@@ -1,0 +1,9 @@
+* OVDIntegratedClient
+  * Windows
+    * add windows startup notification management
+    * add memory to clean up registry better
+  * Linux
+    * improve linux mime types management
+  * add shorcuts when receive HELLO
+  * remove shorcuts when server disconnect
+  * remove Rdesktop dedependancy

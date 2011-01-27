@@ -1,0 +1,41 @@
+
+== Depends ==
+
+ant, GNU gettext
+
+== To compile on Linux ==
+
+$ export CLASSPATH="/usr/lib/jvm/java-6-sun/jre/lib/:.:/usr/lib/jvm/java-6-sun/jre/:/usr/lib/jvm/java-6-sun/jre/lib/plugin.jar"
+$ ant
+
+== To generate new .pot file ==
+
+ * Generate .pot file
+   xgettext -k_ -o po/messages.pot src/Translatable.java
+
+ * Merge an existing .po file with a new .pot file
+   msgmerge -U po/de/messages.po po/messages.pot
+
+== External code licences ==
+
+ * jshortcut
+
+Extract from http://alumnus.caltech.edu/~jimmc/jshortcut/ on 2010-02-05:
+
+""" 
+As of version 0.4, it is licensed under the GNU Lesser General
+Public License, so is freely redistributable in both binary and source
+form.
+"""
+
+
+ * JNIRegistry
+
+Extract from http://www.trustice.com/java/jnireg/index.shtml on 2010-02-05:
+
+"""
+The com.ice.jni.registry package has been placed into the public
+domain. Thus, you have absolutely no licensing issues to consider. You
+may do anything you wish with the code. Of course, I always appreciate
+it when you properly credit my work.
+"""

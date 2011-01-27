@@ -1,0 +1,62 @@
+#! /usr/bin/python
+
+# Copyright (C) 2010 Ulteo SAS
+# http://www.ulteo.com
+# Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+import os
+import sys
+import pysvn
+import shutil
+from subprocess import Popen
+
+path = os.path.dirname( os.path.realpath( __file__ ) )
+
+# Detect the version
+if os.environ.has_key("OVD_VERSION"):
+	version = os.environ["OVD_VERSION"]
+else:
+	c = pysvn.Client()
+	revision = c.info(path)["revision"].number
+	version = "99.99+svn%05d"%(revision)
+
+f = file(os.path.join(path, "build.xml.in"), "r")
+content = f.read()
+f.close()
+
+content = content.replace("@VERSION@", str(version))
+
+f = file(os.path.join(path, "build.xml"), "w")
+f.write(content)
+f.close()
+
+if sys.platform == "linux2":
+    libdir = os.path.join(path, "libXClientArea")
+    dst = os.path.join(path, "required_libraries", "libXClientArea")
+    if os.path.exists(dst):
+        shutil.rmtree(dst)
+    p = Popen("./autogen", cwd=libdir)
+    p.wait()
+    os.makedirs(dst)
+    for arch in ['32','64']:
+        src = os.path.join(libdir, arch)
+        if os.path.exists(os.path.join(src, "libXClientArea.so")):
+            shutil.move(src, dst)
+    print libdir
+    p = Popen("make clean", cwd=libdir, shell=True)
+    p.wait()

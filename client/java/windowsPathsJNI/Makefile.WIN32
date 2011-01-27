@@ -1,6 +1,7 @@
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Thomas MOUTON <thomas@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -33,13 +34,17 @@ $(EXEC): org_ulteo_ovd_integrated_WindowsPaths.o org_ulteo_ovd_integrated_Window
 org_ulteo_ovd_integrated_WindowsPaths.h:
 	javah -classpath ../classes/ -d . org.ulteo.ovd.integrated.WindowsPaths
 
-%.o: %.c %.h
+org_ulteo_utils_jni_WindowsTweaks.h:
+	javah -classpath ../classes/:../required_libraries/registry.jar -d . org.ulteo.utils.jni.WindowsTweaks
+
+%.o: %.c %.h org_ulteo_utils_jni_WindowsTweaks.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
 	$(RM) *.o $(EXEC)
 	$(RM) *~
 	$(RM) org_ulteo_ovd_integrated_WindowsPaths.h
+	$(RM) org_ulteo_utils_jni_WindowsTweaks.h
 
 install: all
 	install $(EXEC) $(DIST)

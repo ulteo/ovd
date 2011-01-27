@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Ulteo OVD native client
+Comment=Open a Ulteo OVD session without using a web browser
+Type=Application
+Icon=ulteo-ovd-native-client
+Terminal=false
+Exec=java -jar /usr/share/java/OVDNativeClient.jar
+Version=1.0
+Categories=Network;
+Encoding=UTF-8
