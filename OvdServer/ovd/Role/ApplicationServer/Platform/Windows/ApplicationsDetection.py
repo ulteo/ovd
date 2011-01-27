@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
-# Copyright (C) 2009 Ulteo SAS
-# Author Laurent CLOUET <laurent@ulteo.com> 2009
-# Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Copyright (C) 2009-2011 Ulteo SAS
+# Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2009-2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -119,7 +119,7 @@ class ApplicationsDetection:
 					if len(shortcut.GetArguments())>0:
 						application["command"]+= " "+shortcut.GetArguments()
 			
-			if not application["command"].endswith(".exe") and ".exe " not in application["command"]:
+			if not application["command"].lower().endswith(".exe") and ".exe " not in application["command"].lower():
 				continue
 			
 			application["mimetypes"] = self.mimetypes.get_mime_types_from_command(application["command"])
