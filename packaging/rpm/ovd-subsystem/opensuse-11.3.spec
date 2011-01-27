@@ -49,11 +49,8 @@ This package provides the subsystem for the Ulteo Open Virtual Desktop.
 %setup -q
 
 %install -n ulteo-ovd-subsystem
-SBINDIR=%buildroot/usr/sbin
-INITDIR=%buildroot/etc/init.d
-mkdir -p $SBINDIR $INITDIR
-cp ovd-subsystem-config $SBINDIR
-cp init/suse/ulteo-ovd-subsystem $INITDIR
+install -D ovd-subsystem-config %buildroot/usr/sbin/ovd-subsystem-config
+install -D init/suse/ulteo-ovd-subsystem %buildroot/etc/init.d/ulteo-ovd-subsystem
 
 %preun -n ulteo-ovd-subsystem
 if [ "$1" = "0" ]; then
