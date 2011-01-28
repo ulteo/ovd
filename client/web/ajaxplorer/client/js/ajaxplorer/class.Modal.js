@@ -307,6 +307,7 @@ Modal = Class.create({
 	},
 	
 	updateLoadingProgress: function(state){	
+		return;
 		this.loadingStep --;
 		var percent = (1 - (this.loadingStep / this.loadingStepsCount));
 		var width = parseInt(parseInt($('progressBarBorder').getWidth()) * percent);
