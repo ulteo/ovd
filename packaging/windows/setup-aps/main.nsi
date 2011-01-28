@@ -1,5 +1,6 @@
-;; Copyright (C) 2009 - 2010 Ulteo SAS
+;; Copyright (C) 2009 - 2011 Ulteo SAS
 ;; http://www.ulteo.com
+;; Author Laurent CLOUET <laurent@ulteo.com> 2011
 ;; Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
 ;; Author Thomas MOUTON <thomas@ulteo.com> 2009, 2010
 ;;
@@ -296,7 +297,7 @@ Section "post" PostCmd
   UserMgr::SetUserInfo "OVDAdmin" "PASSWD_NEVER_EXPIRES" "YES"
   UserMgr::AddPrivilege "OVDAdmin" "SeServiceLogonRight" 
 	
-  nsExec::execToStack 'sc create OVD BinPath= "$INSTDIR\OVDWin32Service.exe" DisplayName= "Ulteo Open Virtual Desktop agent" obj= ".\\OVDAdmin" password= "$pass" depend= EventLog/winmgmt start= auto'
+  nsExec::execToStack 'sc create OVD BinPath= "$INSTDIR\OVDWin32Service.exe" DisplayName= "Ulteo Open Virtual Desktop agent" obj= ".\\OVDAdmin" password= "$pass" depend= EventLog/TermService/winmgmt start= auto'
 
   exist:
     DetailPrint "Starting service"
