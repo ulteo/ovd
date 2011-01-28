@@ -263,6 +263,20 @@ abstract class SessionManagement extends Module {
 						$servers = array_merge($servers, $buf);
 					}
 
+					$slave_server_settings = $this->prefs->get('general', 'slave_server_settings');
+					if (is_array($slave_server_settings) && array_key_exists('use_max_sessions_limit', $slave_server_settings) && $slave_server_settings['use_max_sessions_limit'] == 1) {
+						foreach ($servers as $k => $server) {
+							if (! isset($server->max_sessions) || $server->max_sessions == 0)
+								continue;
+
+							$total = Abstract_Session::countByServer($server->fqdn);
+							if ($total >= $server->max_sessions) {
+								Logger::warning('main', 'SessionManagement::buildServersList - Server \''.$server->fqdn.'\' has reached its "max sessions" limit, sessions cannot be launched on it anymore');
+								unset($servers[$k]);
+							}
+						}
+					}
+
 					if (count($servers) == 0) {
 						$event = new SessionStart(array('user' => $this->user));
 						$event->setAttribute('ok', false);

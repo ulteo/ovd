@@ -312,6 +312,9 @@ class Preferences {
 		$c = new ConfigElement_select('auto_switch_new_servers_to_production', _('Auto switch new servers to production mode'), _('Auto switch new servers to production mode'), _('Auto switch new servers to production mode'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','slave_server_settings');
+		$c = new ConfigElement_select('use_max_sessions_limit', _('When an Application Server have reached its "max sessions" limit, disable session launch on it ?'), _('When an Application Server have reached its "max sessions" limit, disable session launch on it ?'), _('When an Application Server have reached its "max sessions" limit, disable session launch on it ?'), 1);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c,'general','slave_server_settings');
 
 		$roles = array(Server::SERVER_ROLE_APS => _('Load Balancing policy for Application Servers'), Server::SERVER_ROLE_FS => _('Load Balancing policy for File Servers'));
 		foreach ($roles as $role => $text) {
