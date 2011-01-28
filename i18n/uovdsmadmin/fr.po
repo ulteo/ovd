@@ -1984,7 +1984,7 @@ msgstr "Impossible de lister les applications disponibles"
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:210
 msgid "Number of available sessions on this server"
-msgstr "Nombre d'applications disponibles sur ce serveur"
+msgstr "Nombre de sessions disponibles sur ce serveur"
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:222
 #: ../../SessionManager/web/admin/servers.php:452
