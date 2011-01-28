@@ -212,6 +212,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		if (this.keymap != null)
 			rc.setKeymap(this.keymap);
 
+		HashMap<Integer, ImageIcon> appsIcons = new HashMap<Integer, ImageIcon>();
 		List<String> mimesTypes = new ArrayList<String>();
 		for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
 			if (this.isCancelled)
@@ -221,7 +222,16 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 				int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
 				this.obj.updateProgress(LoadingStatus.STATUS_SM_GET_APPLICATION, subStatus);
 
-				Application app = new Application(rc, appItem.getId(), appItem.getName(), appItem.getMimes(), this.smComm.askForIcon(Integer.toString(appItem.getId())));
+				int appId = appItem.getId();
+				ImageIcon appIcon = this.system.getAppIcon(appId);
+				if (appIcon == null) {
+					appIcon = this.smComm.askForIcon(Integer.toString(appItem.getId()));
+
+					if (appIcon != null)
+						appsIcons.put(appId, appIcon);
+				}
+
+				Application app = new Application(rc, appId, appItem.getName(), appItem.getMimes(), appIcon);
 
 				for (String mimeType : app.getSupportedMimeTypes()) {
 					if (mimesTypes.contains(mimeType))
@@ -236,6 +246,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			}
 			this.ApplicationIndex++;
 		}
+		int updatedIcons = this.system.updateAppsIconsCache(appsIcons);
+		if (updatedIcons > 0)
+			Logger.info("Applications cache updated: "+updatedIcons+" icons");
 
 		HashMap<String, ImageIcon> mimeTypesIcons = new HashMap<String, ImageIcon>();
 		for (String each : mimesTypes) {
@@ -257,7 +270,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			mimeTypesIcons.put(each, icon);
 		}
 
-		int updatedIcons = this.system.updateMimeTypesIconsCache(mimeTypesIcons);
+		updatedIcons = this.system.updateMimeTypesIconsCache(mimeTypesIcons);
 		if (updatedIcons > 0)
 			Logger.info("Mime-types cache updated: "+updatedIcons+" icons");
 

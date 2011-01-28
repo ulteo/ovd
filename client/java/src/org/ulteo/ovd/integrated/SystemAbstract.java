@@ -30,6 +30,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
+import org.ulteo.ovd.client.cache.AppsIconsCache;
 import org.ulteo.ovd.client.cache.ContentManager;
 import org.ulteo.ovd.client.cache.MimeTypeIconsCache;
 import org.ulteo.ovd.integrated.mime.FileAssociate;
@@ -40,11 +41,13 @@ public abstract class SystemAbstract {
 	protected FileAssociate fileAssociate = null;
 
 	private ContentManager iconContentManager = null;
+	private AppsIconsCache cache_appsIcons = null;
 	private MimeTypeIconsCache cache_mimeTypeIcons = null;
 
 	public SystemAbstract(ContentManager iconContentManager_) {
 		this.iconContentManager = iconContentManager_;
 
+		this.cache_appsIcons = new AppsIconsCache(this.iconContentManager);
 		this.cache_mimeTypeIcons = new MimeTypeIconsCache(this.iconContentManager);
 	}
 
@@ -74,6 +77,46 @@ public abstract class SystemAbstract {
 	public final void uninstall(Application app) {
 		this.disassociateMimeTypes(app);
 		this.uninstallShortcuts(app);
+	}
+
+	public int updateAppsIconsCache(HashMap<Integer, ImageIcon> appsIcons) {
+		int updatedIcons = 0;
+
+		if (appsIcons == null || appsIcons.isEmpty())
+			return -1;
+
+		for (Integer each : appsIcons.keySet()) {
+			int appId = each.intValue();
+
+			if (this.cache_appsIcons.contains(appId))
+				continue;
+
+			ImageIcon icon = appsIcons.get(appId);
+			if (icon == null) {
+				Logger.warn("Application '"+appId+"' has no icon");
+				continue;
+			}
+			try {
+				if (this.cache_appsIcons.put(appId, icon))
+					updatedIcons++;
+			} catch (IOException ex) {
+				Logger.error("Failed to write application icon ("+appId+"): "+ex.getMessage());
+				continue;
+			}
+		}
+
+		return updatedIcons;
+	}
+
+	public ImageIcon getAppIcon(int appId) {
+		ImageIcon icon = null;
+		try {
+			icon = this.cache_appsIcons.get(appId);
+		} catch (IOException ex) {
+			Logger.error("Failed to read application icon ("+appId+"): "+ex.getMessage());
+			return null;
+		}
+		return icon;
 	}
 
 	public int updateMimeTypesIconsCache(HashMap<String, ImageIcon> mimeTypesIcons) {

@@ -39,6 +39,7 @@ public final class Constants {
 	public static final String PATH_NATIVE_CLIENT_CONF = Constants.PATH_OVD_CONF+Constants.FILE_SEPARATOR+"client";
 
 	public static final String PATH_CACHE = Constants.PATH_NATIVE_CLIENT_CONF+Constants.FILE_SEPARATOR+"cache";
+	public static final String PATH_CACHE_APPS_ICONS = Constants.PATH_CACHE+Constants.FILE_SEPARATOR+"apps_icons";
 	public static final String PATH_CACHE_MIMETYPES_ICONS = Constants.PATH_CACHE+Constants.FILE_SEPARATOR+"mimetypes_icons";
 
 	public static final String PATH_REMOTE_APPS = Constants.PATH_OVD_CONF+Constants.FILE_SEPARATOR+"remoteApps";
