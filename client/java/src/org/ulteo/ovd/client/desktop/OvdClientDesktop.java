@@ -189,7 +189,7 @@ public class OvdClientDesktop extends OvdClient {
 	@Override
 	public boolean checkRDPConnections() {
 		if (this.performedConnections.isEmpty()) {
-			Logger.debug("checkRDPConnections -- Any connections. Will abort normal process.");
+			Logger.debug("checkRDPConnections -- No connections. Will abort normal process.");
 			return false;
 		}
 
