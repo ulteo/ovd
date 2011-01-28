@@ -44,7 +44,7 @@ class Configuration_mode_internal extends Configuration_mode {
 
   public function form_read($form, $prefs) {
     // Enable modules
-    $module_to_enable = array('SessionManagement', 'UserDB', 'UserGroupDB');
+    $module_to_enable = array('SessionManagement', 'UserDB', 'UserGroupDB', 'UserGroupDBDynamic', 'UserGroupDBDynamicCached');
     $module_enabled = $prefs->get('general', 'module_enable');
     $prefs->set('general', 'module_enable', array_unique(array_merge($module_enabled, $module_to_enable)));
     
@@ -54,6 +54,12 @@ class Configuration_mode_internal extends Configuration_mode {
 
     // Select Module for UserGroupDB
     $prefs->set('UserGroupDB', 'enable', 'sql');
+    
+    // Select Module for UserGroupDB
+    $prefs->set('UserGroupDBDynamic', 'enable', 'internal');
+    
+    // Select Module for UserGroupDB
+    $prefs->set('UserGroupDBDynamicCached', 'enable', 'internal');
     
     // Set the Session Management module
     $prefs->set('SessionManagement', 'enable', 'internal');
