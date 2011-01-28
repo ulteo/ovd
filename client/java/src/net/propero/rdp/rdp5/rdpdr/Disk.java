@@ -78,6 +78,15 @@ public class Disk extends RdpdrDevice{
 		return name;
 	}
 	
+	private int getNewHandle() {
+		for (int i = 0 ; i< MAX_OPEN_FILES ; i++) {
+			if (this.g_fileinfo.get(i) == null) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	public int create(int device_id, int access_mask, int share_mode, 
 			int create_disposition, int flags_and_attributes, String filename, int[] result) {
 		DEBUG("create");
@@ -179,23 +188,25 @@ public class Disk extends RdpdrDevice{
 				return ret;
 			}
 		}
-		handle = java.lang.Math.abs(file1.hashCode());
+		handle = getNewHandle();
 		FILEINFO tempFILEINFO;
-		if(g_fileinfo.get(handle)!=null)
-			tempFILEINFO = (FILEINFO)g_fileinfo.get(handle);
-		else
-			tempFILEINFO = new FILEINFO();
+		tempFILEINFO = new FILEINFO();
 		tempFILEINFO.pdir = dirp;
 		tempFILEINFO.device_id = device_id;
 		tempFILEINFO.flags_and_attributes = flags_and_attributes;
 		tempFILEINFO.accessmask = accessmask;
 		tempFILEINFO.path = path;
 		tempFILEINFO.notify = new NOTIFY();
-		tempFILEINFO.delete_on_close = false;
+		if ((flags_and_attributes & FILE_DELETE_ON_CLOSE) > 0) {
+			tempFILEINFO.delete_on_close = true;
+		}
 		g_notify_stamp = true;
 		//Update/Add FILEINFO in g_fileinfo
-		g_fileinfo.put(handle, tempFILEINFO);
-		
+		if (handle < 0) {
+			System.out.println("The maximum number of opened file was reached");
+			return STATUS_INVALID_PARAMETER;
+		}
+		this.g_fileinfo.put(handle, tempFILEINFO);
 		result[0] = handle;
 		return STATUS_SUCCESS;
 	}
@@ -359,7 +370,8 @@ public class Disk extends RdpdrDevice{
 				return STATUS_INVALID_PARAMETER;
 			}
 		}
-		g_fileinfo.remove(finfo);
+		finfo = null;
+		g_fileinfo.remove(handle);
 		
 		return STATUS_SUCCESS;
 	}
