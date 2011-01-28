@@ -36,11 +36,14 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
+import org.ulteo.ovd.client.cache.PngManager;
 import org.ulteo.ovd.integrated.shorcut.LinuxShortcut;
 
 public class SystemLinux extends SystemAbstract {
 
 	public SystemLinux() {
+		super(new PngManager());
+
 		this.shortcut = new LinuxShortcut();
 	}
 

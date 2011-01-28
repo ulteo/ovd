@@ -38,6 +38,7 @@ import net.sf.image4j.codec.ico.ICODecoder;
 import net.sf.image4j.codec.ico.ICOEncoder;
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
+import org.ulteo.ovd.client.cache.IcoManager;
 import org.ulteo.ovd.integrated.mime.WindowsRegistry;
 import org.ulteo.ovd.integrated.shorcut.WindowsShortcut;
 import org.ulteo.utils.jni.WindowsTweaks;
@@ -45,6 +46,8 @@ import org.ulteo.utils.jni.WindowsTweaks;
 public class SystemWindows extends SystemAbstract {
 
 	public SystemWindows() {
+		super(new IcoManager());
+
 		this.shortcut = new WindowsShortcut();
 		this.fileAssociate = new WindowsRegistry();
 	}

@@ -30,13 +30,23 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
+import org.ulteo.ovd.client.cache.ContentManager;
+import org.ulteo.ovd.client.cache.MimeTypeIconsCache;
 import org.ulteo.ovd.integrated.mime.FileAssociate;
 import org.ulteo.ovd.integrated.shorcut.Shortcut;
-import org.ulteo.utils.MD5;
 
 public abstract class SystemAbstract {
 	protected Shortcut shortcut = null;
 	protected FileAssociate fileAssociate = null;
+
+	private ContentManager iconContentManager = null;
+	private MimeTypeIconsCache cache_mimeTypeIcons = null;
+
+	public SystemAbstract(ContentManager iconContentManager_) {
+		this.iconContentManager = iconContentManager_;
+
+		this.cache_mimeTypeIcons = new MimeTypeIconsCache(this.iconContentManager);
+	}
 
 	public abstract String create(Application app);
 
@@ -78,38 +88,19 @@ public abstract class SystemAbstract {
 		mimeTypesIconsCache = null;
 
 		for (String mimeType : mimeTypesIcons.keySet()) {
-			String md5sum = MD5.getMD5Sum(mimeType);
-			if (md5sum == null) {
-				Logger.error("Failed to create md5sum for '"+mimeType+"'");
+			if (this.cache_mimeTypeIcons.contains(mimeType))
 				continue;
-			}
-
-			File iconFile = new File(Constants.PATH_CACHE_MIMETYPES_ICONS+Constants.FILE_SEPARATOR+md5sum+Constants.ICONS_EXTENSION);
-			if (iconFile.exists()) {
-				if (iconFile.isFile()) {
-					Logger.debug("icon '"+iconFile.getPath()+"' already exists");
-					continue;
-				}
-
-				Logger.warn("Weird. '"+iconFile.getPath()+"' already exists but it is not a file.");
-				continue;
-			}
 
 			ImageIcon icon = mimeTypesIcons.get(mimeType);
 			if (icon == null) {
 				Logger.warn("Mime-type '"+mimeType+"' has no icon");
 				continue;
 			}
-			Image img = icon.getImage();
-			if (img == null) {
-				Logger.warn("Mime-type '"+mimeType+"' has no image");
-				continue;
-			}
 			try {
-				if (this.writeIcon(img, iconFile))
+				if (this.cache_mimeTypeIcons.put(mimeType, icon))
 					updatedIcons++;
-			} catch (Exception ex) {
-				Logger.error("Failed to write the '"+mimeType+"' icon to '"+iconFile.getPath()+"': "+ex.getMessage());
+			} catch (IOException ex) {
+				Logger.error("Failed to write mime-type icon ("+mimeType+"): "+ex.getMessage());
 				continue;
 			}
 		}
@@ -118,36 +109,17 @@ public abstract class SystemAbstract {
 	}
 
 	public ImageIcon getMimeTypeIcon(String mimeType) {
-		String md5sum = MD5.getMD5Sum(mimeType);
-		if (md5sum == null)
+		if (mimeType == null)
 			return null;
 
-		File iconFile = new File(Constants.PATH_CACHE_MIMETYPES_ICONS+Constants.FILE_SEPARATOR+md5sum+Constants.ICONS_EXTENSION);
-		if (! iconFile.exists())
-			return null;
-
-		List<BufferedImage> icons = null;
+		ImageIcon icon = null;
 		try {
-			icons = this.readIcon(iconFile);
+			icon = this.cache_mimeTypeIcons.get(mimeType);
 		} catch (IOException ex) {
-			Logger.error("Failed to read ico file '"+iconFile.getPath()+"': "+ex.getMessage());
+			Logger.error("Failed to read mime-type icon ("+mimeType+"): "+ex.getMessage());
 			return null;
 		}
-		if (icons == null || icons.isEmpty())
-			return null;
-
-		ImageIcon mimeTypeIcon = null;
-		for (Image each : icons) {
-			if (each.getWidth(null) != 32 || each.getHeight(null) != 32)
-				continue;
-
-			mimeTypeIcon = new ImageIcon(each);
-			break;
-		}
-		if (mimeTypeIcon == null)
-			mimeTypeIcon = new ImageIcon(icons.get(0));
-
-		return mimeTypeIcon;
+		return icon;
 	}
 
 	protected abstract boolean writeIcon(Image img, File out) throws FileNotFoundException, IOException;
