@@ -74,6 +74,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	public static final String SESSION_MODE_PERSISTENT = "persistent";
 
 	private static final String WEBSERVICE_ICON = "icon.php";
+	private static final String WEBSERVICE_MIMETYPE_ICON = "mimetype-icon.php";
 	private static final String WEBSERVICE_START_SESSION = "start.php";
 	private static final String WEBSERVICE_EXTERNAL_APPS = "remote_apps.php";
 	private static final String WEBSERVICE_SESSION_STATUS = "session_status.php";
@@ -341,6 +342,21 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		if (icon.getIconHeight() <= 0 || icon.getIconWidth() <= 0)
 			return null;
 		
+		return icon;
+	}
+
+	public ImageIcon askForMimeTypeIcon(String mimeType) throws SessionManagerException {
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put(FIELD_ICON_ID, mimeType);
+
+		Object obj = this.askWebservice(WEBSERVICE_MIMETYPE_ICON+"?"+concatParams(params), CONTENT_TYPE_FORM, REQUEST_METHOD_GET, null, true);
+		if (! (obj instanceof ImageIcon) || obj == null)
+			return null;
+
+		ImageIcon icon = (ImageIcon) obj;
+		if (icon.getIconHeight() <= 0 || icon.getIconWidth() <= 0)
+			return null;
+
 		return icon;
 	}
 

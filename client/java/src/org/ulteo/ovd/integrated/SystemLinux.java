@@ -30,6 +30,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import org.ulteo.Logger;
@@ -159,8 +161,6 @@ public class SystemLinux extends SystemAbstract {
 
 	@Override
 	protected void saveIcon(Application app) {
-		BufferedImage buff = null;
-
 		File output = new File(Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".png");
 		if (! output.exists()) {
 			try {
@@ -181,28 +181,44 @@ public class SystemLinux extends SystemAbstract {
 			Logger.error("No image for "+app.getName()+" icon");
 			return;
 		}
+
+		try {
+			this.writeIcon(img, output);
+		} catch (Exception ex) {
+			Logger.error("Failed to write the "+app.getName()+" icon to '"+output.getPath()+"': "+ex.getMessage());
+			return;
+		}
+	}
+
+	@Override
+	protected boolean writeIcon(Image img, File out) throws FileNotFoundException, IOException {
+		if (img == null || out == null)
+			return false;
+
 		int width = img.getWidth(null);
 		int height = img.getHeight(null);
 		if (width <= 0 || height <= 0) {
-			Logger.error(app.getName()+" icon size is too small: "+width+"x"+height);
-			return;
+			Logger.error("Icon size is too small: "+width+"x"+height);
+			return false;
 		}
 
-		try {
-			buff = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		}
-		catch (Exception ex) {
-			Logger.error("Error while creating "+app.getName()+" icon: "+ex.getMessage());
-			return;
-		}
-		
+		BufferedImage buff = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = buff.createGraphics();
 		g.drawImage(img, null, null);
 
-		try {
-			ImageIO.write(buff, "png", output);
-		} catch (IOException ex) {
-			Logger.error("Error while converting "+app.getName()+" icon: "+ex.getMessage());
-		}
+		ImageIO.write(buff, "png", out);
+
+		return true;
+	}
+
+	@Override
+	protected List<BufferedImage> readIcon(File in) throws IOException {
+		List<BufferedImage> iconsList = new ArrayList<BufferedImage>();
+
+		BufferedImage icon = ImageIO.read(in);
+		if (icon != null)
+			iconsList.add(icon);
+
+		return iconsList;
 	}
 }

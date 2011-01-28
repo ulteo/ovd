@@ -23,6 +23,7 @@ package org.ulteo.ovd.integrated;
 public final class Constants {
 	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
 	public static final String SHORTCUTS_EXTENSION = (OSTools.isWindows() ? ".lnk" : ".desktop");
+	public static final String ICONS_EXTENSION = (OSTools.isWindows() ? ".ico" : ".png");
 
 	public static final String HOMEDIR = System.getProperty("user.home");
 	public static final String PATH_STARTMENU = (OSTools.isWindows()) ? WindowsPaths.getStartMenuPath() : "";
@@ -36,6 +37,9 @@ public final class Constants {
 	public static final String PATH_CONF = ((OSTools.isWindows()) ? WindowsPaths.getAppDataPath()+Constants.FILE_SEPARATOR : Constants.HOMEDIR+Constants.FILE_SEPARATOR+".") + "ulteo";
 	public static final String PATH_OVD_CONF = Constants.PATH_CONF+Constants.FILE_SEPARATOR+"ovd";
 	public static final String PATH_NATIVE_CLIENT_CONF = Constants.PATH_OVD_CONF+Constants.FILE_SEPARATOR+"client";
+
+	public static final String PATH_CACHE = Constants.PATH_NATIVE_CLIENT_CONF+Constants.FILE_SEPARATOR+"cache";
+	public static final String PATH_CACHE_MIMETYPES_ICONS = Constants.PATH_CACHE+Constants.FILE_SEPARATOR+"mimetypes_icons";
 
 	public static final String PATH_REMOTE_APPS = Constants.PATH_OVD_CONF+Constants.FILE_SEPARATOR+"remoteApps";
 	public static final String PATH_ICONS = Constants.PATH_REMOTE_APPS+Constants.FILE_SEPARATOR+"icons";

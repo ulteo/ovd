@@ -24,15 +24,18 @@ import com.ice.jni.registry.RegStringValue;
 import com.ice.jni.registry.Registry;
 import com.ice.jni.registry.RegistryException;
 import com.ice.jni.registry.RegistryKey;
+import java.io.File;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.utils.I18n;
 import org.ulteo.ovd.integrated.Constants;
+import org.ulteo.utils.MD5;
 
 public class WindowsRegistry extends FileAssociate {
 	
@@ -42,14 +45,18 @@ public class WindowsRegistry extends FileAssociate {
 	private static final String TARGET_PREFIX = "ovdTarget_";
 	private static final String OPEN_PREFIX = I18n._("Open with ");
 
+	private boolean overrideDefaultIcon = false;
+
 	private HashMap<Application, List<String>> created_exts = null;
 	private HashMap<Application, List<String>> created_shells = null;
 	private HashMap<Application, List<String>> created_targets = null;
+	private HashMap<Application, HashMap<String, String>> default_icons_changed = null;
 
 	public WindowsRegistry() {
 		this.created_exts = new HashMap<Application, List<String>>();
 		this.created_shells = new HashMap<Application, List<String>>();
 		this.created_targets = new HashMap<Application, List<String>>();
+		this.default_icons_changed = new HashMap<Application, HashMap<String, String>>();
 	}
 
 	private ArrayList<String> findExtByMimeType(String mime_) {
@@ -104,7 +111,7 @@ public class WindowsRegistry extends FileAssociate {
 		WindowsRegistry.removeKey(key, userClass);
 	}
 
-	private void associateApplicationWithExtension(Application app, String ext) throws Exception {
+	private void associateApplicationWithExtension(Application app, String ext, String mimeType) throws Exception {
 		String target = TARGET_PREFIX + app.getId();
 		RegistryKey key = Registry.openSubkey(Registry.HKEY_CLASSES_ROOT, "."+ext, RegistryKey.ACCESS_READ);
 		
@@ -142,6 +149,48 @@ public class WindowsRegistry extends FileAssociate {
 
 		key = key.createSubKey(target, "");
 
+		String md5sum = MD5.getMD5Sum(mimeType);
+		if (md5sum != null) {
+			String iconPath = Constants.PATH_CACHE_MIMETYPES_ICONS+Constants.FILE_SEPARATOR+md5sum+Constants.ICONS_EXTENSION;
+			File iconFile = new File(iconPath);
+			if (iconFile.exists()) {
+				boolean defaultIconIsDefined = false;
+				RegistryKey defaultIcon = null;
+
+				try {
+					defaultIcon = Registry.openSubkey(Registry.HKEY_CLASSES_ROOT, target+"\\DefaultIcon", RegistryKey.ACCESS_READ);
+					defaultIcon.closeKey();
+
+					defaultIconIsDefined = true;
+				} catch (Exception ex) {}
+
+
+
+				try {
+					defaultIcon = key.openSubKey("DefaultIcon", RegistryKey.ACCESS_ALL);
+
+					defaultIconIsDefined = true;
+
+					if (this.overrideDefaultIcon) {
+						HashMap<String, String> defaultIconsPath = this.default_icons_changed.get(app);
+						if (defaultIconsPath == null) {
+							defaultIconsPath = new HashMap<String, String>();
+							this.default_icons_changed.put(app, defaultIconsPath);
+						}
+						defaultIconsPath.put(target, defaultIcon.getStringValue(""));
+					}
+				} catch (Exception ex) {
+					if (this.overrideDefaultIcon || (! defaultIconIsDefined)) {
+						defaultIcon = key.createSubKey("DefaultIcon", "");
+					}
+				}
+
+				if (this.overrideDefaultIcon || (! defaultIconIsDefined)) {
+					defaultIcon.setValue(new RegStringValue(defaultIcon, "", iconPath));
+				}
+			}
+		}
+
 		RegistryKey ovdShell = key.createSubKey("shell", "");
 		ovdShell = ovdShell.createSubKey(KEY_PREFIX + app.getId(), "");
 		ovdShell.setValue(new RegStringValue(ovdShell, "", OPEN_PREFIX + app.getName()));
@@ -164,7 +213,7 @@ public class WindowsRegistry extends FileAssociate {
 
 			for (String ext : extensions) {
 				try {
-					this.associateApplicationWithExtension(app, ext);
+					this.associateApplicationWithExtension(app, ext, mime);
 				} catch (Exception ex) {
 					Logger.error("Failed to associate application '"+app.getName()+"' with extension '"+ext+"': "+ex.getMessage());
 					continue;
@@ -179,7 +228,7 @@ public class WindowsRegistry extends FileAssociate {
 			ArrayList<String> extList = this.findExtByMimeType(mime);
 			for (String ext : extList) {
 				try {
-					this.associateApplicationWithExtension(app, ext);
+					this.associateApplicationWithExtension(app, ext, mime);
 				} catch (Exception ex) {
 					Logger.error("Failed to associate application '"+app.getName()+"' with extension '"+ext+"': "+ex.getMessage());
 					continue;
@@ -225,6 +274,30 @@ public class WindowsRegistry extends FileAssociate {
 				}
 			}
 			this.created_targets.remove(app);
+		}
+
+		if (this.default_icons_changed.containsKey(app)) {
+			HashMap<String, String> defaultIconPath = this.default_icons_changed.get(app);
+			for (Entry<String, String> each : defaultIconPath.entrySet())
+				this.restoreDefaultIcon(each.getKey(), each.getValue());
+			
+			this.default_icons_changed.remove(app);
+		}
+	}
+
+	private void restoreDefaultIcon(String target, String value) {
+		if (target == null || value == null)
+			return;
+
+		String keyPath = "Software\\Classes\\"+target+"\\DefaultIcon";
+		RegistryKey key = Registry.openSubkey(Registry.HKEY_CURRENT_USER, keyPath, RegistryKey.ACCESS_WRITE);
+		if (key == null)
+			return;
+		try {
+			key.setValue(new RegStringValue(key, "", value));
+		} catch (RegistryException ex) {
+			Logger.error("Failed to restore the default icon('"+value+"') from 'HKEY_CURRENT_USER\\"+keyPath+"'");
+			return;
 		}
 	}
 	

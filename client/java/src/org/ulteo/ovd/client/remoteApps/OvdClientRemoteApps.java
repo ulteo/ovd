@@ -39,7 +39,10 @@ import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 import org.ulteo.rdp.RdpConnectionOvd;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import javax.swing.ImageIcon;
 import org.ulteo.utils.jni.WorkArea;
 import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
@@ -209,6 +212,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		if (this.keymap != null)
 			rc.setKeymap(this.keymap);
 
+		List<String> mimesTypes = new ArrayList<String>();
 		for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
 			if (this.isCancelled)
 				return null;
@@ -218,12 +222,47 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 				this.obj.updateProgress(LoadingStatus.STATUS_SM_GET_APPLICATION, subStatus);
 
 				Application app = new Application(rc, appItem.getId(), appItem.getName(), appItem.getMimes(), this.smComm.askForIcon(Integer.toString(appItem.getId())));
+
+				for (String mimeType : app.getSupportedMimeTypes()) {
+					if (mimesTypes.contains(mimeType))
+						continue;
+
+					mimesTypes.add(mimeType);
+				}
+
 				rc.addApp(app);
 			} catch (SessionManagerException ex) {
 				Logger.warn("Cannot get the \""+appItem.getName()+"\" icon: "+ex.getMessage());
 			}
 			this.ApplicationIndex++;
 		}
+
+		HashMap<String, ImageIcon> mimeTypesIcons = new HashMap<String, ImageIcon>();
+		for (String each : mimesTypes) {
+			if (this.system.getMimeTypeIcon(each) != null)
+				continue;
+
+			ImageIcon icon = null;
+			try {
+				icon = this.smComm.askForMimeTypeIcon(each);
+			} catch (SessionManagerException ex) {
+				Logger.error("Failed to get "+each+" icon from session manager: "+ex.getMessage());
+				continue;
+			}
+			if (icon == null) {
+				Logger.error("Weird. Mime type "+each+" has no icon?");
+				continue;
+			}
+
+			mimeTypesIcons.put(each, icon);
+		}
+
+		int updatedIcons = this.system.updateMimeTypesIconsCache(mimeTypesIcons);
+		if (updatedIcons > 0)
+			Logger.info("Mime-types cache updated: "+updatedIcons+" icons");
+
+		mimeTypesIcons.clear();
+		mimeTypesIcons = null;
 
 		this.connections.add(rc);
 

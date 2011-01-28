@@ -32,7 +32,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import javax.swing.ImageIcon;
+import net.sf.image4j.codec.ico.ICODecoder;
+import net.sf.image4j.codec.ico.ICOEncoder;
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.integrated.mime.WindowsRegistry;
@@ -138,7 +141,6 @@ public class SystemWindows extends SystemAbstract {
 	@Override
 	protected void saveIcon(Application app) {
 		File output = new File(Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".ico");
-		BufferedImage buf = null;
 		if (! output.exists()) {
 			try {
 				output.createNewFile();
@@ -158,33 +160,46 @@ public class SystemWindows extends SystemAbstract {
 			Logger.error("No image for "+app.getName()+" icon");
 			return;
 		}
+
+		try {
+			this.writeIcon(img, output);
+		} catch (Exception ex) {
+			Logger.error("Failed to write the "+app.getName()+" icon to '"+output.getPath()+"': "+ex.getMessage());
+			return;
+		}
+	}
+
+	protected boolean writeIcon(Image img, File out) throws FileNotFoundException, IOException {
+		if (img == null || out == null)
+			return false;
+
 		int width = img.getWidth(null);
 		int height = img.getHeight(null);
 		if (width <= 0 || height <= 0) {
-			Logger.error(app.getName()+" icon size is too small: "+width+"x"+height);
-			return;
+			Logger.error("Icon size is too small: "+width+"x"+height);
+			return false;
 		}
 
-		try {
-			buf = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		}
-		catch (Exception ex) {
-			Logger.error("Error while creating "+app.getName()+" icon: "+ex.getMessage());
-			return;
-		}
-		
+		BufferedImage buf = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graph = buf.createGraphics();
 		graph.drawImage(img, 0, 0, null);
 		graph.dispose();
-		
-		
-		try {
-			BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(output));
-			net.sf.image4j.codec.ico.ICOEncoder.write(buf, os);
-			os.close();
-		} catch (IOException ex) {
-			Logger.error("Error while converting "+app.getName()+" icon: "+ex.getMessage());
-		}
+
+		BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(out));
+		ICOEncoder.write(buf, os);
+		os.close();
+
+		return true;
+	}
+
+	protected List<BufferedImage> readIcon(File in) throws IOException {
+		if (in == null)
+			return null;
+
+		if (! in.exists() || in.isDirectory())
+			return null;
+
+		return ICODecoder.read(in);
 	}
 	
 	public static String KNOWN_ULTEO_TAG_FILE = ".ulteo.id";
