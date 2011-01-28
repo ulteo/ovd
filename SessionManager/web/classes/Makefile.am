@@ -27,8 +27,6 @@ scripts_DATA = Application.class.php \
                Token.class.php \
                User.class.php \
                UsersGroup.class.php \
-               UserGroupDBDynamic.class.php \
-               UserGroupDBDynamic_cached.class.php \
                UsersGroup_dynamic.class.php \
                UsersGroup_dynamic_cached.class.php \
                UserGroup_Preferences.class.php \

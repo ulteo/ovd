@@ -27,7 +27,9 @@ SUBDIRS = ApplicationDB \
           SessionManagement \
           SharedFolderDB \
           UserDB \
-          UserGroupDB
+          UserGroupDB \
+          UserGroupDBDynamic \
+          UserGroupDBDynamicCached
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/modules
 
@@ -38,7 +40,9 @@ scripts_DATA = ApplicationDB.php \
                SessionManagement.php \
                SharedFolderDB.php \
                UserDB.php \
-               UserGroupDB.php
+               UserGroupDB.php \
+               UserGroupDBDynamic.php \
+               UserGroupDBDynamicCached.php
 
 if HA
 scripts_DATA += HA.php

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -81,8 +81,6 @@ function init_db($prefs_) {
 	Abstract_UserGroup_Preferences::init($prefs_);
 	Abstract_UserGroup_Rule::init($prefs_);
 	
-	UserGroupDBDynamic::init($prefs_);
-	UserGroupDBDynamic_cached::init($prefs_);
 	return true;
 }
 

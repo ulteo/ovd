@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -19,19 +19,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-class UserGroupDBDynamic_cached extends UserGroupDBDynamic {
+class UserGroupDBDynamicCached_internal extends UserGroupDBDynamicCached {
+	public static $tablename="usergroup_dynamic_cached";
 	protected $table;
 	public function __construct() {
 		$prefs = Preferences::getInstance();
 		if ($prefs) {
 			$sql_conf = $prefs->get('general', 'sql');
 			if (is_array($sql_conf)) {
-				$this->table =  $sql_conf['prefix'].'usergroup_dynamic_cached';
+				$this->table =  $sql_conf['prefix'].UserGroupDBDynamicCached_internal::$tablename;
 			}
 			else
 				$this->table = NULL;
 		}
 	}
+
 	protected function isOK($usergroup_) {
 		if (is_object($usergroup_)) {
 			if ((!isset($usergroup_->id)) || (!isset($usergroup_->name)) || (!isset($usergroup_->type)) || ($usergroup_->name == '') || (!isset($usergroup_->published)) || (!isset($usergroup_->schedule)))
@@ -88,12 +90,13 @@ class UserGroupDBDynamic_cached extends UserGroupDBDynamic {
 			return NULL;
 		}
 	}
-	public function isWriteable() { // TODO
+	public function isWriteable() {
+		return true;
 	}
-	public function canShowList() { // TODO
+	public function canShowList() {
+		return true;
 	}
 	
-	// admin function
 	public function add($usergroup_){
 		Logger::debug('main', 'UserGroupDBDynamic_cached::add');
 		$sql2 = SQL::getInstance();
@@ -220,18 +223,13 @@ class UserGroupDBDynamic_cached extends UserGroupDBDynamic {
 	}
 	
 	public static function prefsIsValid($prefs_, &$log=array()) {
-		// dirty
-		$ret = self::prefsIsValid2($prefs_, $log);
-		if ( $ret != true) {
-			$ret = self::init($prefs_);
+		$ret = parent::prefsIsValid($prefs_, $log);
+		if ($ret === false) {
+			return false;
 		}
-		return $ret;
-	}
-	
-	public static function prefsIsValid2($prefs_, &$log=array()) {
+		
 		$sql_conf = $prefs_->get('general', 'sql');
 		if (!is_array($sql_conf)) {
-			
 			return false;
 		}
 		$table =  $sql_conf['prefix'].'usergroup_dynamic_cached';
@@ -252,7 +250,30 @@ class UserGroupDBDynamic_cached extends UserGroupDBDynamic {
 			return false;
 		}
 	}
+	
 	public static function prettyName() {
-		return 'UserGroupDBDynamic_cached';
+		return _('Internal');
+	}
+	
+	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0) {
+		$groups = array();
+		$count = 0;
+		$sizelimit_exceeded = false;
+		$list = $this->getList(false);
+		foreach ($list as $a_group) {
+			foreach ($attributes_ as $an_attribute) {
+				if ($contains_ == '' or (isset($a_group->$an_attribute) and is_string(strstr($a_group->$an_attribute, $contains_)))) {
+					$groups []= $a_group;
+					$count++;
+					if ($limit_ > 0 && $count >= $limit_) {
+						$sizelimit_exceeded = next($list) !== false; // is it the last element ?
+						return array($users, $sizelimit_exceeded);
+					}
+					break;
+				}
+			}
+		}
+		
+		return array($groups, $sizelimit_exceeded);
 	}
 }

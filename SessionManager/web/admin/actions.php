@@ -744,6 +744,16 @@ if ($_REQUEST['name'] == 'UserGroup') {
 				$g = new UsersGroup(NULL,$_REQUEST['name_group'], $_REQUEST['description_group'], 1);
 			}
 			elseif ($_REQUEST['type'] == 'dynamic') {
+				if (Preferences::moduleIsEnabled('UserGroupDBDynamic') == false && $_REQUEST['cached'] === '0') {
+					popup_error(_('UserGroupDBDynamic module must be enabled'));
+					redirect('usersgroup.php');
+				}
+				
+				if (Preferences::moduleIsEnabled('UserGroupDBDynamicCached') == false && $_REQUEST['cached'] !== '0') {
+					popup_error(_('UserGroupDBDynamicCached module must be enabled'));
+					redirect('usersgroup.php');
+				}
+				
 				$rules = array();
 				foreach ($_POST['rules'] as $rule) {
 					if ($rule['value'] == '') {

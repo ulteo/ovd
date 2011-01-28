@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
@@ -168,12 +168,15 @@ function cleanup_preferences() {
 	}
 }
 
-$liaisons_types = array('ApplicationServer', 'AppsGroup', 'ApplicationMimeType', 'ServerSession', 'UsersGroup', 'UsersGroupApplicationsGroup', 'UsersGroupCached');
+$liaisons_types = array('ApplicationServer', 'AppsGroup', 'ApplicationMimeType', 'ServerSession', 'UsersGroup', 'UsersGroupApplicationsGroup');
 if (Preferences::moduleIsEnabled('ProfileDB')) {
 	$liaisons_types []= 'UserProfile';
 }
 if (Preferences::moduleIsEnabled('SharedFolderDB')) {
 	$liaisons_types []= 'UserGroupSharedFolder';
+}
+if (Preferences::moduleIsEnabled('UsersGroupDBDynamic') || Preferences::moduleIsEnabled('UsersGroupDBDynamicCached')) {
+	$liaisons_types []= 'UsersGroupCached';
 }
 ksort($liaisons_types);
 if (isset($_POST['cleanup']) && $_POST['cleanup'] == 1 && array_key_exists('type', $_POST)) {

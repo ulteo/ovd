@@ -143,6 +143,8 @@ web/modules/Makefile
 web/modules/SessionManagement/Makefile
 web/modules/AuthMethod/Makefile
 web/modules/UserGroupDB/Makefile
+web/modules/UserGroupDBDynamic/Makefile
+web/modules/UserGroupDBDynamicCached/Makefile
 web/modules/UserDB/Makefile
 web/modules/ApplicationDB/Makefile
 web/modules/ApplicationsGroupDB/Makefile

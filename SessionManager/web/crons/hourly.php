@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com> 2008
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
@@ -33,17 +33,19 @@ foreach ($servers as $server) {
 //END Updating logs cache
 
 //BEGIN UserGroupDBDynamic_cached update
-$ugdbdc = new UserGroupDBDynamic_cached();
+if (Preferences::moduleIsEnabled('UserGroupDBDynamicCached')) {
+	$ugdbdc = UserGroupDBDynamicCached::getInstance();
 
-$groups = $ugdbdc->getList();
-if (! is_array($groups)) {
-	Logger::error('main', '(hourly cron) UserGroupDBDynamic_cached->getList() failed');
-}
-else {
-	foreach ($groups as $a_group) {
-		$ret = $ugdbdc->updateCache($a_group);
-		if ($ret !== true)
-			Logger::error('main', '(hourly cron) UserGroupDBDynamic_cached->updateCache for group \''.$a_group->getUniqueID().'\' failed');
+	$groups = $ugdbdc->getList();
+	if (! is_array($groups)) {
+		Logger::error('main', '(hourly cron) UserGroupDBDynamic_cached->getList() failed');
+	}
+	else {
+		foreach ($groups as $a_group) {
+			$ret = $ugdbdc->updateCache($a_group);
+			if ($ret !== true)
+				Logger::error('main', '(hourly cron) UserGroupDBDynamic_cached->updateCache for group \''.$a_group->getUniqueID().'\' failed');
+		}
 	}
 }
 //END UserGroupDBDynamic_cached update

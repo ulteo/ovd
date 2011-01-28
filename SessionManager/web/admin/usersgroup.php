@@ -163,15 +163,16 @@ function show_default() {
 
   echo '</div>';
 
+  $usergroup_types = array();
   if ($userGroupDB->isWriteable()) {
-    $usergroup_types = array('static' => _('Static'), 'dynamic' => _('Dynamic'));
+    $usergroup_types = array('static' => _('Static'));
   }
-  else {
-    $usergroup_types = array('dynamic' => _('Dynamic'));
+  if (Preferences::moduleIsEnabled('UserGroupDBDynamic') || Preferences::moduleIsEnabled('UserGroupDBDynamicCached')) {
+    $usergroup_types['dynamic'] = _('Dynamic');
   }
 
 
-	if ($can_manage_usersgroups) {
+	if ($can_manage_usersgroups && $usergroup_types != array()) {
 		echo '<div>';
 		echo '<h2>'._('Create a new group').'</h2>';
 
@@ -221,11 +222,13 @@ function show_default() {
 				echo '<th>'._('Cached').'</th>';
 				echo '<td>';
 				echo '<input type="radio" name="cached" value="0" checked="checked" onclick="$(\'schedule_select\').hide();" /> '._('No');
-				echo '<input type="radio" name="cached" value="1" onclick="$(\'schedule_select\').show();" /> '._('Yes');
-				echo ' <span id="schedule_select" style="display: none;"><br />'._('Time between two updates:').' <select name="schedule">';
-				foreach ($schedules as $interval => $text)
-					echo '<option value="'.$interval.'">'.$text.'</option>';
-				echo '</select></span>';
+				if (Preferences::moduleIsEnabled('UserGroupDBDynamicCached')) {
+					echo '<input type="radio" name="cached" value="1" onclick="$(\'schedule_select\').show();" /> '._('Yes');
+					echo ' <span id="schedule_select" style="display: none;"><br />'._('Time between two updates:').' <select name="schedule">';
+					foreach ($schedules as $interval => $text)
+						echo '<option value="'.$interval.'">'.$text.'</option>';
+					echo '</select></span>';
+				}
 				echo '</td>';
 				echo '</tr>';
 				echo '<tr class="content'.(($count++%2==0)?1:2).'">';

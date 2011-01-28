@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -82,16 +82,31 @@ class Abstract_Liaison_dynamic {
 	public static function loadGroups($type_, $element_) {
 		Logger::debug('main',"Abstract_Liaison_dynamic::loadGroups ($type_,$element_)");
 		
-		$userGroupDB_dynamic = new UserGroupDBDynamic();
 		$groups = array();
-		$usergroup_list = $userGroupDB_dynamic->getList();
-		foreach ($usergroup_list as $group) {
-			if (in_array($element_, $group->usersLogin())){
-				$l = new Liaison($element_,$group->getUniqueID());
-				$groups[$l->group] = $l;
+		if (Preferences::moduleIsEnabled('UserGroupDBDynamic')) {
+			$userGroupDB_dynamic = UserGroupDBDynamic::getInstance();
+			
+			$usergroup_list = $userGroupDB_dynamic->getList();
+			foreach ($usergroup_list as $group) {
+				if (in_array($element_, $group->usersLogin())){
+					$l = new Liaison($element_,$group->getUniqueID());
+					$groups[$l->group] = $l;
+				}
+			}
+		}
+		if (Preferences::moduleIsEnabled('UserGroupDBDynamicCached')) {
+			$userGroupDB_dynamic = UserGroupDBDynamicCached::getInstance();
+			
+			$usergroup_list = $userGroupDB_dynamic->getList();
+			foreach ($usergroup_list as $group) {
+				if (in_array($element_, $group->usersLogin())){
+					$l = new Liaison($element_,$group->getUniqueID());
+					$groups[$l->group] = $l;
+				}
 			}
 		}
 		return $groups;
+		
 	}
 	
 	public static function loadAll($type_) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -141,11 +141,6 @@ class Preferences_admin extends Preferences {
 			return _('Modules configuration not valid');
 		}
 		
-		$ug_dynamic = UserGroupDBDynamic::prefsIsValid($this);
-		if ( $ug_dynamic === false) {
-			Logger::error('main', 'PREFERENCESADMIN::isValid module UserGroupDBDynamic');
-			return _('Modules configuration not valid');
-		}
 		return true;
 	}
 

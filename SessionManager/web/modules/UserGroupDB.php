@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -35,9 +35,13 @@ class UserGroupDB extends Module {
 		$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
 		$a_userGroupDB = new $mod_usergroup_name();
 		$this->instance_type['static'] = $a_userGroupDB;
-		$this->instance_type['dynamiccached'] = new UserGroupDBDynamic_cached();
-		$this->instance_type['dynamic'] = new UserGroupDBDynamic();
 		
+		if (Preferences::moduleIsEnabled('UserGroupDBDynamic')) {
+			$this->instance_type['dynamic'] = UserGroupDBDynamic::getInstance();
+		}
+		if (Preferences::moduleIsEnabled('UserGroupDBDynamicCached')) {
+			$this->instance_type['dynamiccached'] = UserGroupDBDynamicCached::getInstance();
+		}
 	}
 	public static function getInstance() {
 		if (is_null(self::$instance)) {
@@ -77,6 +81,7 @@ class UserGroupDB extends Module {
 			$result = array_merge($result, $buffer);
 		}
 		$unique = array_unique($result);
+		
 		if ($sort_) {
 			usort($unique, "usergroup_cmp");
 		}
@@ -91,7 +96,15 @@ class UserGroupDB extends Module {
 	public function canShowList() {}
 	
 	public function isDynamic() {
-		return true;
+		if (array_key_exists('dynamic', $this->instance_type)) {
+			return true;
+		}
+		
+		if (array_key_exists('dynamiccached', $this->instance_type)) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	// admin function
