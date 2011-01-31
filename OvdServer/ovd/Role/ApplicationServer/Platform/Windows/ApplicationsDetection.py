@@ -23,6 +23,7 @@ import os
 import pythoncom
 import re
 import tempfile
+import pywintypes
 import win32api
 from win32com.shell import shell, shellcon
 import win32event
@@ -105,8 +106,11 @@ class ApplicationsDetection:
 			application["command"] = unicode(shortcut.GetPath(0)[0], encoding)
 			application["filename"] = filename
 			
-			if len(shortcut.GetDescription())>0:
-				application["description"] = unicode(shortcut.GetDescription(), encoding)
+			try:
+				if len(shortcut.GetDescription())>0:
+					application["description"] = unicode(shortcut.GetDescription(), encoding)
+			except pywintypes.com_error:
+				Logger.debug("ApplicationsDetection::get unable to get description for %s"%(application["filename"]))
 				
 			if len(shortcut.GetIconLocation()[0])>0:
 				application["icon"]  = unicode(shortcut.GetIconLocation()[0], encoding)
