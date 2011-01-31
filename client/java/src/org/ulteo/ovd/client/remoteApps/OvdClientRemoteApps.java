@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.ImageIcon;
+import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.utils.jni.WorkArea;
 import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
@@ -86,14 +87,16 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		} catch (OvdException ex) {
 			Logger.error(co.getServer()+": Failed to add ovd applications listener: "+ex);
 		}
-		
-		for (Application app : co.getAppsList()) {
-			if (this.system.create(app) == null)
-				org.ulteo.Logger.error("The "+app.getName()+" shortcut could not be created");
 
-			int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
-			this.obj.updateProgress(LoadingStatus.STATUS_CLIENT_INSTALL_APPLICATION, subStatus);
-			this.ApplicationIndex++;
+		if (! OSTools.is_applet) {
+			for (Application app : co.getAppsList()) {
+				if (this.system.create(app) == null)
+					org.ulteo.Logger.error("The "+app.getName()+" shortcut could not be created");
+
+				int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
+				this.obj.updateProgress(LoadingStatus.STATUS_CLIENT_INSTALL_APPLICATION, subStatus);
+				this.ApplicationIndex++;
+			}
 		}
 		
 		co.setShell("OvdRemoteApps");
@@ -126,12 +129,14 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			this.spool = null;
 		}
 
-		for (RdpConnectionOvd co : this.connections) {
-			for (Application app : co.getAppsList())
-				this.system.clean(app);
-		}
+		if (! OSTools.is_applet) {
+			for (RdpConnectionOvd co : this.connections) {
+				for (Application app : co.getAppsList())
+					this.system.clean(app);
+			}
 
-		this.system.refresh();
+			this.system.refresh();
+		}
 	}
 
 	public abstract void ovdInited(OvdAppChannel o);
@@ -212,70 +217,72 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		if (this.keymap != null)
 			rc.setKeymap(this.keymap);
 
-		HashMap<Integer, ImageIcon> appsIcons = new HashMap<Integer, ImageIcon>();
-		List<String> mimesTypes = new ArrayList<String>();
-		for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
-			if (this.isCancelled)
-				return null;
+		if (! OSTools.is_applet) {
+			HashMap<Integer, ImageIcon> appsIcons = new HashMap<Integer, ImageIcon>();
+			List<String> mimesTypes = new ArrayList<String>();
+			for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
+				if (this.isCancelled)
+					return null;
 
-			try {
-				int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
-				this.obj.updateProgress(LoadingStatus.STATUS_SM_GET_APPLICATION, subStatus);
+				try {
+					int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
+					this.obj.updateProgress(LoadingStatus.STATUS_SM_GET_APPLICATION, subStatus);
 
-				int appId = appItem.getId();
-				ImageIcon appIcon = this.system.getAppIcon(appId);
-				if (appIcon == null) {
-					appIcon = this.smComm.askForIcon(Integer.toString(appItem.getId()));
+					int appId = appItem.getId();
+					ImageIcon appIcon = this.system.getAppIcon(appId);
+					if (appIcon == null) {
+						appIcon = this.smComm.askForIcon(Integer.toString(appItem.getId()));
 
-					if (appIcon != null)
-						appsIcons.put(appId, appIcon);
+						if (appIcon != null)
+							appsIcons.put(appId, appIcon);
+					}
+
+					Application app = new Application(rc, appId, appItem.getName(), appItem.getMimes(), appIcon);
+
+					for (String mimeType : app.getSupportedMimeTypes()) {
+						if (mimesTypes.contains(mimeType))
+							continue;
+
+						mimesTypes.add(mimeType);
+					}
+
+					rc.addApp(app);
+				} catch (SessionManagerException ex) {
+					Logger.warn("Cannot get the \""+appItem.getName()+"\" icon: "+ex.getMessage());
+				}
+				this.ApplicationIndex++;
+			}
+			int updatedIcons = this.system.updateAppsIconsCache(appsIcons);
+			if (updatedIcons > 0)
+				Logger.info("Applications cache updated: "+updatedIcons+" icons");
+
+			HashMap<String, ImageIcon> mimeTypesIcons = new HashMap<String, ImageIcon>();
+			for (String each : mimesTypes) {
+				if (this.system.getMimeTypeIcon(each) != null)
+					continue;
+
+				ImageIcon icon = null;
+				try {
+					icon = this.smComm.askForMimeTypeIcon(each);
+				} catch (SessionManagerException ex) {
+					Logger.error("Failed to get "+each+" icon from session manager: "+ex.getMessage());
+					continue;
+				}
+				if (icon == null) {
+					Logger.error("Weird. Mime type "+each+" has no icon?");
+					continue;
 				}
 
-				Application app = new Application(rc, appId, appItem.getName(), appItem.getMimes(), appIcon);
-
-				for (String mimeType : app.getSupportedMimeTypes()) {
-					if (mimesTypes.contains(mimeType))
-						continue;
-
-					mimesTypes.add(mimeType);
-				}
-
-				rc.addApp(app);
-			} catch (SessionManagerException ex) {
-				Logger.warn("Cannot get the \""+appItem.getName()+"\" icon: "+ex.getMessage());
+				mimeTypesIcons.put(each, icon);
 			}
-			this.ApplicationIndex++;
+
+			updatedIcons = this.system.updateMimeTypesIconsCache(mimeTypesIcons);
+			if (updatedIcons > 0)
+				Logger.info("Mime-types cache updated: "+updatedIcons+" icons");
+
+			mimeTypesIcons.clear();
+			mimeTypesIcons = null;
 		}
-		int updatedIcons = this.system.updateAppsIconsCache(appsIcons);
-		if (updatedIcons > 0)
-			Logger.info("Applications cache updated: "+updatedIcons+" icons");
-
-		HashMap<String, ImageIcon> mimeTypesIcons = new HashMap<String, ImageIcon>();
-		for (String each : mimesTypes) {
-			if (this.system.getMimeTypeIcon(each) != null)
-				continue;
-
-			ImageIcon icon = null;
-			try {
-				icon = this.smComm.askForMimeTypeIcon(each);
-			} catch (SessionManagerException ex) {
-				Logger.error("Failed to get "+each+" icon from session manager: "+ex.getMessage());
-				continue;
-			}
-			if (icon == null) {
-				Logger.error("Weird. Mime type "+each+" has no icon?");
-				continue;
-			}
-
-			mimeTypesIcons.put(each, icon);
-		}
-
-		updatedIcons = this.system.updateMimeTypesIconsCache(mimeTypesIcons);
-		if (updatedIcons > 0)
-			Logger.info("Mime-types cache updated: "+updatedIcons+" icons");
-
-		mimeTypesIcons.clear();
-		mimeTypesIcons = null;
 
 		this.connections.add(rc);
 
