@@ -535,7 +535,7 @@ class Preferences {
 		unset($events);
 	}
 
-	protected function getAvailableModule(){
+	public function getAvailableModule(){
 		$ret = array();
 		$files = glob(MODULES_DIR.'/*');
 		foreach ($files as $path){

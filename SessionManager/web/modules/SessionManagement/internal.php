@@ -22,7 +22,9 @@
 
 class SessionManagement_internal extends SessionManagement {
 	public static function getUserDB() {
-		return array('sql');
+		$prefs = Preferences::getInstance();
+		$available_modules = $prefs->getAvailableModule();
+		return array_keys($available_modules['UserDB']);
 	}
 
 	public static function getAuthMethods() {
