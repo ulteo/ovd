@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
@@ -51,5 +51,21 @@ public class OSTools {
 
 	public static boolean is64() {
 		return System.getProperty("os.arch").contains("64");
+	}
+
+	public static final class OSInfos {
+		public String name = null;
+		public String version = null;
+		public String arch = null;
+	}
+
+	public static OSInfos getOSInfos() {
+		OSInfos os_infos = new OSInfos();
+		
+		os_infos.name = System.getProperty("os.name");
+		os_infos.version = System.getProperty("os.version");
+		os_infos.arch = System.getProperty("os.arch");
+
+		return os_infos;
 	}
 }

@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2009-2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
  *
@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import netscape.javascript.JSObject;
+import org.ulteo.ovd.client.ClientInfos;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
 
@@ -113,6 +114,8 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 		System.out.println(this.getClass().toString() +"  init");
 
 		OSTools.is_applet = true;
+
+		ClientInfos.showClientInfos();
 
 		boolean status = this.checkSecurity();
 		if (! status) {

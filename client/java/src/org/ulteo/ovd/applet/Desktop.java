@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2009-2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
  *
@@ -31,6 +31,7 @@ import java.io.FileNotFoundException;
 import netscape.javascript.JSObject;
 
 import org.ulteo.Logger;
+import org.ulteo.ovd.client.ClientInfos;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.ovd.sm.Properties;
@@ -63,6 +64,8 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 		System.out.println(this.getClass().toString() +"  init");
 
 		OSTools.is_applet = true;
+
+		ClientInfos.showClientInfos();
 		
 		boolean status = this.checkSecurity();
 		if (! status) {

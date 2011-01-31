@@ -1,9 +1,9 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -238,6 +238,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		ClientInfos.showClientInfos();
+
 		if (OSTools.isWindows()) {
 			try {
 				LibraryLoader.LoadLibrary(LibraryLoader.LIB_WINDOW_PATH_NAME);
