@@ -49,7 +49,7 @@ public class OSTools {
 		return System.getProperty("os.name").startsWith("MAC");
 	}
 
-    public static boolean is64() {
-        return System.getProperty("os.arch").contains("64");
-    }
+	public static boolean is64() {
+		return System.getProperty("os.arch").contains("64");
+	}
 }
