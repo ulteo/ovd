@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -211,6 +211,28 @@ class Preferences {
 
 		$c = new ConfigElement_text('user_default_group', _('Default user group'), _('Default user group'), _('Default user group'), '');
 		$this->add($c,'general');
+
+		$c = new ConfigElement_select('domain_integration', _('Domain integration'), _('Domain integration'), _('Domain integration'), 'internal');
+		$domain_integration_select = array();
+		if (function_exists('get_classes_startwith_admin')) { // are we on /admin ?
+			$domain_integration_classes = get_classes_startwith_admin('Configuration_mode_');
+			foreach($domain_integration_classes as $a_class) {
+				if (class_exists($a_class)) { // can not call class->getPrettyName(); because we might be on the admin
+					$b = new $a_class();
+					$name = substr($a_class, strlen('Configuration_mode_'));
+					$domain_integration_select[$name] = $b->getPrettyName();
+				}
+				else {
+					$name = substr($a_class, strlen('Configuration_mode_'));
+					$domain_integration_select[$name] = $name; 
+				}
+			}
+		}
+		else {
+			$domain_integration_select['internal'] = _('Internal');
+		}
+		$c->setContentAvailable($domain_integration_select);
+		$this->add($c, 'general');
 
 		$c = new ConfigElement_input('max_items_per_page', _('Maximum items per page'), _('The maximum number of items that can be displayed.'), _('The maximum number of items that can be displayed.'), 100);
 		$this->add($c,'general');

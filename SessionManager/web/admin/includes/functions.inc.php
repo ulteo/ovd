@@ -330,14 +330,9 @@ function get_classes_startwith_admin($start_name) {
 }
 
 function getProfileMode($prefs) {
-  $sessionmanagement_mode = $prefs->get('SessionManagement', 'enable');
-
-  $classes = get_classes_startwith_admin('Configuration_mode_');
-  foreach($classes as $c) {
-    $b = new $c();
-
-    if ($b->careAbout($sessionmanagement_mode))
-      return $c;
+  $domain_integration = $prefs->get('general', 'domain_integration');
+  if (class_exists('Configuration_mode_'.$domain_integration)) {
+    return 'Configuration_mode_'.$domain_integration;
   }
 
   // Should never be called !!!
