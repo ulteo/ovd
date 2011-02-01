@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -21,6 +21,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 require_once(dirname(__FILE__).'/../../includes/core-minimal.inc.php');
+require_once(dirname(__FILE__).'/functions.inc.php');
 
 $buf = 'en_GB';
 $prefs = Preferences::getInstance();
