@@ -316,8 +316,8 @@ function formToArray_cleanup(&$buf) {
 	}
 }
 
-function get_classes_startwith_2($start_name) {
-	$files = glob('classes/'.$start_name.'*.class.php');
+function get_classes_startwith_admin($start_name) {
+	$files = glob(ADMIN_CLASSES_DIR.'/'.$start_name.'*.class.php');
 
 	$ret = array();
 	foreach ($files as $file) {
@@ -332,7 +332,7 @@ function get_classes_startwith_2($start_name) {
 function getProfileMode($prefs) {
   $sessionmanagement_mode = $prefs->get('SessionManagement', 'enable');
 
-  $classes = get_classes_startwith_2('Configuration_mode_');
+  $classes = get_classes_startwith_admin('Configuration_mode_');
   foreach($classes as $c) {
     $b = new $c();
 

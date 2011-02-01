@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -173,7 +173,7 @@ if (isset($_POST['config'])) {
   $has_previous = $name;
 }
 
-$classes = get_classes_startwith_2('Configuration_mode_');
+$classes = get_classes_startwith_admin('Configuration_mode_');
 $profiles = array();
 foreach($classes as $c) {
   $b = new $c();
