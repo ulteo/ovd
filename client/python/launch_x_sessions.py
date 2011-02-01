@@ -32,8 +32,11 @@ from xml.dom.minidom import Document
 from xml.parsers.expat import ExpatError
 
 
-def launch_client(user, password, host):
-    cmd_args = ["/usr/bin/xterm", "-e", "./ovd-client.py --verbose -l %s -p \"%s\" %s; sleep 1h"%(user, password, host)]
+def launch_client(user, password, host, withxterm=False):
+    if withxterm:
+        cmd_args = ["/usr/bin/xterm", "-e", "./ovd-client.py --verbose -l %s -p \"%s\" %s; sleep 1h"%(user, password, host)]
+    else:
+        cmd_args = ["./ovd-client.py",  "--verbose",  "-l",  user, "-p",  password,  host]
 
     # Fork a child process, using a new pseudo-terminal as the child's controlling terminal.
     pid =  os.fork()
@@ -99,13 +102,14 @@ def getUserList(host):
 def usage():
     print "Usage: %s [-h|--help] sm_host NumberOfSession [TimeToWaitBetweenSession]"%(sys.argv[0])
     print "\t   --auto-users: do not request for SM users list"
+    print "\t   --with-xterm: launch each client on a separate xterm"
     print
 
 
 conf = {}
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'hs:', ["help", "auto-users", "start"])
+    opts, args = getopt.getopt(sys.argv[1:], 'hs:', ["help", "auto-users", "start", "with-xterm"])
     
 except getopt.GetoptError, err:
     print >> sys.stderr, str(err)
@@ -124,6 +128,7 @@ if len(args) > 2:
     timetowait = float(args[2])
 start = 0
 auto_users = False
+withxterm = False
 
 for o, a in opts:
     if o in ("-h", "--help"):
@@ -131,6 +136,8 @@ for o, a in opts:
         sys.exit()
     elif o in ("--auto-users"):
         auto_users = True
+    elif o in ("--with-xterm"):
+        withxterm = True
     elif o in ("-s", "--start"):
         if not a.isdigit():
             print >> sys.stderr, a," is not a digit"
@@ -159,7 +166,7 @@ for j in xrange(number):
 
     print "launch session %d for %s"%(j, i)
 #    launch_client(i, "", url)
-    launch_client(i, i, host)
+    launch_client(i, i, host, withxterm)
     if timetowait is not None:
         time.sleep(timetowait)
 
