@@ -651,11 +651,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		if (this.opts.autostart || valuesChecked) {
 			try {
 				exit = this.launchConnection();
-			} catch (IOException ex) {
-				org.ulteo.Logger.error(ex.getMessage());
-				JOptionPane.showMessageDialog(null, I18n._(ex.getMessage()), I18n._("Error!"), JOptionPane.WARNING_MESSAGE);
-
-				this.disableLoadingMode();
 			} catch (UnsupportedOperationException ex) {
 				org.ulteo.Logger.error(ex.getMessage());
 				JOptionPane.showMessageDialog(null, ex.getMessage(), I18n._("Error!"), JOptionPane.WARNING_MESSAGE);
@@ -790,7 +785,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		}
 	}
 	
-	public boolean launchConnection() throws IOException, UnsupportedOperationException, SessionManagerException {
+	public boolean launchConnection() throws UnsupportedOperationException, SessionManagerException {
 		if (this.opts.showProgressBar)
 			SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, true));
 
@@ -811,8 +806,10 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			ret = dialog.askForSession(this.opts.username, this.opts.password, request);
 
 		if (ret == false) {
-			throw new IOException(I18n._("Failed to ask the session manager for a session"));
+			this.disableLoadingMode();
+			return false;
 		}
+		
 		this.updateProgress(LoadingStatus.STATUS_SM_START, 0);
 		
 		if (this.opts.showProgressBar)
