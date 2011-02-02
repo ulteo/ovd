@@ -54,7 +54,7 @@ class Role(AbstractRole):
 		Logger.info("Gateway init")
 
 		fpem = os.path.join(Config.conf_dir, "gateway.pem")
-		if os.path.exists(pem):
+		if os.path.exists(fpem):
 			self.ssl_ctx = SSL.Context(SSL.SSLv23_METHOD)
 			self.ssl_ctx.use_privatekey_file(fpem)
 			self.ssl_ctx.use_certificate_file(fpem)
