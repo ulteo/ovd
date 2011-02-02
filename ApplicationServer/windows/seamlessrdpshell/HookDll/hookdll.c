@@ -507,7 +507,8 @@ static void create_window(HWND hwnd){
 			if (GetClassName(hwnd, classname, 256)) {
 				if ((strcmp(classname, TOOLTIPS_CLASS) == 0)
 					|| (strcmp(classname, "Net UI Tool Window") == 0)
-					|| (strcmp(classname, "OfficeTooltip") == 0)) {
+					|| (strcmp(classname, "OfficeTooltip") == 0)
+					|| (strcmp(classname, "DUIListViewHost") == 0)) {
 					debug("%s", classname);
 					flags |= SEAMLESS_CREATE_TOOLTIP;
 					parent = 0xffffffffL;
