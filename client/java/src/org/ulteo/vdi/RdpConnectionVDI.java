@@ -27,16 +27,13 @@ import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 
-import org.ulteo.ovd.disk.DiskManager;
-import org.ulteo.ovd.disk.LinuxDiskManager;
-import org.ulteo.ovd.disk.WindowsDiskManager;
-import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 import org.ulteo.rdp.seamless.SeamlessChannel;
 
+
 public class RdpConnectionVDI extends RdpConnection {
 
-	private DiskManager diskManager = null;
+	private DiskManager diskManager;
 
 	public RdpConnectionVDI() throws VdiException {
 
@@ -53,14 +50,8 @@ public class RdpConnectionVDI extends RdpConnection {
 			this.initSoundChannel();
 			this.initRdpdrChannel();
 			this.initClipChannel();
-			if (OSTools.isWindows()) {
-				diskManager = new WindowsDiskManager((OVDRdpdrChannel)rdpdrChannel, DiskManager.ALL_MOUNTING_ALLOWED);
-			} else if (OSTools.isLinux()) {
-				diskManager = new LinuxDiskManager((OVDRdpdrChannel)rdpdrChannel, DiskManager.ALL_MOUNTING_ALLOWED);
-			} else {
-				throw new RdesktopException("No supported system for mounting point");
-			}
-			diskManager.init();
+			
+			diskManager = new DiskManager(this.rdpdrChannel);
 			diskManager.launch();
 		} catch (RdesktopException e) {
 			e.printStackTrace();
@@ -91,4 +82,5 @@ public class RdpConnectionVDI extends RdpConnection {
 		super.fireDisconnected();
 		diskManager.stop();
 	}
+	
 }
