@@ -39,13 +39,7 @@ class TS (AbstractTS):
 	
 	@staticmethod
 	def getSessionID(username_):
-		sessions = xrdp.SessionGetList()
-		for session in sessions.values():
-			login = session["username"]
-			if login == username_:
-				return session["id"]
-			
-		return None
+		return xrdp.SessionGetId(username_)
 	
 	
 	@staticmethod
