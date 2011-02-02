@@ -53,7 +53,7 @@ class Configuration_mode_ad extends Configuration_mode {
   public function form_valid($form) {
     $fields = array('host', 'domain', 
 		    'admin_login', 'admin_password',
-		    'admin_branch', 'user_group');
+		    'admin_branch', 'user_group', 'sessionmanagement');
 
     foreach($fields as $field) {
       if (! isset($form[$field])) {
@@ -121,7 +121,7 @@ class Configuration_mode_ad extends Configuration_mode {
     }
     
     // Set the Session Management module
-    $prefs->set('SessionManagement', 'enable', 'microsoft');
+    $prefs->set('SessionManagement', 'enable', $form['sessionmanagement']);
 
     return True;
   }
@@ -171,6 +171,8 @@ class Configuration_mode_ad extends Configuration_mode {
 
     $buf = $prefs->get('UserGroupDB', 'enable');
     $form['user_group'] = ($buf == 'activedirectory')?'activedirectory':'sql';
+    
+    $form['sessionmanagement'] = $prefs->get('SessionManagement', 'enable');
 
     return $form;
   }
@@ -233,6 +235,19 @@ class Configuration_mode_ad extends Configuration_mode {
     $str.= '<input class="input_radio" type="radio" name="ts_link" value="no" />'._('no');
     $str.= '</div>';
     */
+    
+    $str.= '<div class="section">';
+    $str.= '<h3>'._('User on Application Server').'</h3>';
+    $str.= '<input class="input_radio" type="radio" name="sessionmanagement" value="microsoft"';
+    if ($form['sessionmanagement'] == 'microsoft')
+      $str.= ' checked="checked"';
+    $str.= ' />'._('Use Active Directory users').'<br/>';
+
+    $str.= '<input class="input_radio" type="radio" name="sessionmanagement" value="internal"';
+    if ($form['sessionmanagement'] == 'internal')
+      $str.= ' checked="checked"';
+    $str.= '/>'._('Use temporary generated user');
+    $str.= '</div>';
 
     return $str;
   }
