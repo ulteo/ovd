@@ -20,41 +20,38 @@
 
 package org.ulteo.ovd.disk;
 
-import java.io.File;
 import java.util.TimerTask;
-
-import org.apache.log4j.Logger;
 
 import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
 
+import org.apache.log4j.Logger;
+
 public class DiskUpdater extends TimerTask {
 	Logger logger = Logger.getLogger(DiskUpdater.class);
 	private DiskManager diskManager = null;
-	private RdpdrChannel rdpdr = null;
 	
 	/**************************************************************************/
-	public DiskUpdater(DiskManager dm, RdpdrChannel rdpdr_) {
+	public DiskUpdater(DiskManager dm) {
 		this.diskManager = dm;
-		this.rdpdr = rdpdr_;
 	}
 	
 	/**************************************************************************/
 	public void run() {
 		String sharePath;
 		
- 		if (! diskManager.rdpdrChannel.isReady()) {
+ 		if (! this.diskManager.rdpdrChannel.isReady()) {
  			return;
  		}
 		logger.debug("Update drive list");
-		if( !diskManager.isStaticShareMounted()) {
-			diskManager.mountStaticShare();
+		if( !this.diskManager.isStaticShareMounted()) {
+			this.diskManager.mountStaticShare();
 		}
 
 		if (this.diskManager.getMountingMode() != DiskManager.ALL_MOUNTING_ALLOWED)
 			return;
 
-		for (RdpdrDevice device : this.rdpdr.g_rdpdr_device) {
+		for (RdpdrDevice device : this.diskManager.rdpdrChannel.g_rdpdr_device) {
 			if (device == null) {
 				continue;
 			}
@@ -69,17 +66,17 @@ public class DiskUpdater extends TimerTask {
 			
 			sharePath = device.get_local_path();
 			logger.debug("Share path : "+sharePath);
-			if (! diskManager.testDir(sharePath)) {
+			if (! this.diskManager.testDir(sharePath)) {
 				logger.debug("Unmount : "+sharePath);
-				diskManager.unmount(device.get_name(), device.get_local_path());
+				this.diskManager.unmount(device.get_name(), device.get_local_path());
 			}
 		}
 
 		//search new drive to mount
-		for (String drivePath : diskManager.getNewDrive()) {
+		for (String drivePath : this.diskManager.getNewDrive()) {
 			logger.debug("Mount "+drivePath);
-			if (! diskManager.isMounted(drivePath))
-				diskManager.mount(drivePath);
+			if (! this.diskManager.isMounted(drivePath))
+				this.diskManager.mount(drivePath);
 		}
 	}
 }

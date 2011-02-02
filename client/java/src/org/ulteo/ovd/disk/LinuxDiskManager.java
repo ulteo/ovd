@@ -25,7 +25,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.integrated.Constants;
@@ -47,7 +46,7 @@ public class LinuxDiskManager extends DiskManager {
 	}
 	
 	/**************************************************************************/
-	public boolean init() {
+	public void init() {
 		addStaticDirectory(Constants.PATH_DOCUMENT);
 		addStaticDirectory(Constants.PATH_DESKTOP);
 
@@ -55,8 +54,6 @@ public class LinuxDiskManager extends DiskManager {
 			addDirectoryToInspect("/media");
 			addDirectoryToInspect("/mnt");
 		}
-		
-		return true;
 	}
 
 	/**************************************************************************/

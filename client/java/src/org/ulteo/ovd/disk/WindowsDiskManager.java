@@ -39,7 +39,7 @@ public class WindowsDiskManager extends DiskManager {
 	}
 
 	/**************************************************************************/
-	public boolean init() {
+	public void init() {
 		List<String> paths = new ArrayList<String>();
 		paths.add(Constants.PATH_DESKTOP);
 		paths.add(Constants.PATH_DOCUMENT);
@@ -48,7 +48,6 @@ public class WindowsDiskManager extends DiskManager {
 			if (each != null)
 				addStaticDirectory(each);
 		}
-		return true;		
 	}
 	
 	/**************************************************************************/	

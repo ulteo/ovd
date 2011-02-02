@@ -51,21 +51,20 @@ public abstract class DiskManager {
 	
 	/**************************************************************************/
 	public void launch() {
-		diskAction = new Timer();
-		diskAction.schedule(new DiskUpdater(this, this.rdpdrChannel), 0, 5000);
-
+		this.diskAction = new Timer();
+		this.diskAction.schedule(new DiskUpdater(this), 0, 5000);
 	}
 	
 	public void stop() {
-		if (diskAction == null)
+		if (this.diskAction == null)
 			return;
 		
-		diskAction.cancel();
-		diskAction = null;
+		this.diskAction.cancel();
+		this.diskAction = null;
 	}
 
 	/**************************************************************************/
-	abstract public boolean init();
+	abstract public void init();
 	abstract public ArrayList<String> getNewDrive();
 
 	public boolean getMountingMode() {
