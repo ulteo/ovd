@@ -36,8 +36,12 @@ if (! array_key_exists('show_list_users', $web_interface_settings) || $web_inter
 $userDB = UserDB::getInstance();
 
 $users = array();
-if ($userDB->canShowList())
+if ($userDB->canShowList()) {
 	$users = $userDB->getList();
+	
+	if (! is_array($users))
+		$users = array();
+}
 
 $dom = new DomDocument('1.0', 'utf-8');
 
