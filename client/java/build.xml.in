@@ -282,6 +282,7 @@
            target="1.5" source="1.5" includes="org/ulteo/ovd/applet/**.java" >
       <classpath>
         <path refid="minimal.path" />
+        <pathelement location="${java.home}/lib/plugin.jar"/>
         <pathelement location="required_libraries/jai_codec.jar"/>
         <pathelement location="required_libraries/jai_core.jar"/>
         <pathelement location="required_libraries/js.jar"/>
