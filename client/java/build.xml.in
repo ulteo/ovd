@@ -166,7 +166,6 @@
       <classpath>
         <fileset dir="required_libraries">
           <include name="*.jar" />
-          <exclude name="plugin.jar" />
         </fileset>
       </classpath>
     </javac>
@@ -206,7 +205,6 @@
       <classpath>
         <fileset dir="required_libraries">
           <include name="*.jar" />
-          <exclude name="plugin.jar" />
         </fileset>
       </classpath>
     </javac>
@@ -284,7 +282,6 @@
            target="1.5" source="1.5" includes="org/ulteo/ovd/applet/**.java" >
       <classpath>
         <path refid="minimal.path" />
-        <pathelement location="required_libraries/plugin.jar" />
         <pathelement location="required_libraries/jai_codec.jar"/>
         <pathelement location="required_libraries/jai_core.jar"/>
         <pathelement location="required_libraries/js.jar"/>
