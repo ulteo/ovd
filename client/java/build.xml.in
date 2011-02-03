@@ -161,8 +161,8 @@
    <target name="ovdExternalAppsClient">
    <antcall target="precompile" />
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
-	   target="1.5" source="1.5"
-	   includes="org/ulteo/ovd/client/ExternalAppsClient.java">
+           target="1.5" source="1.5"
+           includes="org/ulteo/ovd/client/ExternalAppsClient.java">
       <classpath>
         <fileset dir="required_libraries">
           <include name="*.jar" />
@@ -179,7 +179,7 @@
      <unjar src="required_libraries/gnu-getopt.jar" dest="build">
        <filelist dir="required_libraries"
                  files="log4j-1.2.jar,registry.jar
-			            jshortcut.jar,image4j.jar,ini4j.jar" />
+                        jshortcut.jar,image4j.jar,ini4j.jar" />
      </unjar>
      <jar destfile="jars/OVDExternalAppsClient.jar" basedir="build">
        <manifest>
@@ -288,8 +288,8 @@
         <pathelement location="required_libraries/jai_codec.jar"/>
         <pathelement location="required_libraries/jai_core.jar"/>
         <pathelement location="required_libraries/js.jar"/>
-	<pathelement location="required_libraries/jshortcut.jar"/>
-	<pathelement location="required_libraries/image4j.jar"/>
+        <pathelement location="required_libraries/jshortcut.jar"/>
+        <pathelement location="required_libraries/image4j.jar"/>
       </classpath>
     </javac>
     <exec executable="make" failonerror="true" dir="windowsPathsJNI">
