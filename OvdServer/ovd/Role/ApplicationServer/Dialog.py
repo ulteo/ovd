@@ -29,6 +29,7 @@ from ovd.Communication.Dialog import Dialog as AbstractDialog
 
 import Apt
 from Platform import Platform
+from Session import Session
 
 class Dialog(AbstractDialog):
 	def __init__(self, role_instance):
@@ -96,6 +97,10 @@ class Dialog(AbstractDialog):
 		rootNode = doc.createElement('session')
 		rootNode.setAttribute("id", session.id)
 		rootNode.setAttribute("status", session.status)
+
+		if session.status == Session.SESSION_STATUS_DESTROYED and session.end_status is not None:
+			rootNode.setAttribute("reason", session.end_status)
+		
 		doc.appendChild(rootNode)
 		
 		return doc
