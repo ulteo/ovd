@@ -115,78 +115,78 @@
 
   <!-- PDFPrinter part -->
 
- <target name="PDFPrinter" description="compile PDFPrinter classes">
-   <antcall target="precompile" />
-   <javac srcdir="src" destdir="build" encoding="UTF8" target="1.5" source="1.5"
-          includes="org/ulteo/ovd/printer/PrinterApplet.java">
-     <classpath>
-       <pathelement location="required_libraries/jai_codec.jar"/>
-       <pathelement location="required_libraries/jai_core.jar"/>
-       <pathelement location="required_libraries/js.jar"/>
-     </classpath>
-   </javac>
- </target>
+  <target name="PDFPrinter" description="compile PDFPrinter classes">
+    <antcall target="precompile" />
+    <javac srcdir="src" destdir="build" encoding="UTF8" target="1.5" source="1.5"
+           includes="org/ulteo/ovd/printer/PrinterApplet.java">
+      <classpath>
+        <pathelement location="required_libraries/jai_codec.jar"/>
+        <pathelement location="required_libraries/jai_core.jar"/>
+        <pathelement location="required_libraries/js.jar"/>
+      </classpath>
+    </javac>
+  </target>
 
- <target name="PDFPrinter.jar" depends="PDFPrinter" description="create PDFPrinter jar">
-   <copy todir="build/org/jpedal/res">
-     <fileset dir="src/org/jpedal/res"/>
-   </copy>
-   <jar destfile="jars/PDFPrinter.jar" basedir="build">
-     <include name="**"/>
-     <manifest>
-       <attribute name="Main-Class" value="org.ulteo.ovd.printer.PrinterApplet"/>
-     </manifest>
-   </jar>
-   <signjar jar="jars/PDFPrinter.jar"
-            alias="ulteo"
-            storepass="${keystore.password}"
-            keystore="${build.cert}/keystore"
-            signedjar="jars/PDFPrinter-${compile.release}.jar"/>
- </target>
+  <target name="PDFPrinter.jar" depends="PDFPrinter" description="create PDFPrinter jar">
+    <copy todir="build/org/jpedal/res">
+      <fileset dir="src/org/jpedal/res"/>
+    </copy>
+    <jar destfile="jars/PDFPrinter.jar" basedir="build">
+      <include name="**"/>
+      <manifest>
+        <attribute name="Main-Class" value="org.ulteo.ovd.printer.PrinterApplet"/>
+      </manifest>
+    </jar>
+    <signjar jar="jars/PDFPrinter.jar"
+             alias="ulteo"
+             storepass="${keystore.password}"
+             keystore="${build.cert}/keystore"
+             signedjar="jars/PDFPrinter-${compile.release}.jar"/>
+  </target>
 
- <target name="PDFPrinter.install" depends="PDFPrinter.jar"
-         description="install PDFPrinter" >
-   <copy file="jars/PDFPrinter-${compile.release}.jar" todir="${applets.dir}" />
-   <symlink link="${applets.dir}/PDFPrinter.jar"
-            resource="PDFPrinter-${compile.release}.jar"/>
- </target>
+  <target name="PDFPrinter.install" depends="PDFPrinter.jar"
+          description="install PDFPrinter" >
+    <copy file="jars/PDFPrinter-${compile.release}.jar" todir="${applets.dir}" />
+    <symlink link="${applets.dir}/PDFPrinter.jar"
+             resource="PDFPrinter-${compile.release}.jar"/>
+  </target>
 
 
   <!-- Ovd External Apps Client -->
 
-   <target name="ovdExternalAppsClient">
-   <antcall target="precompile" />
+  <target name="ovdExternalAppsClient">
+  <antcall target="precompile" />
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
-           target="1.5" source="1.5"
-           includes="org/ulteo/ovd/client/ExternalAppsClient.java">
+          target="1.5" source="1.5"
+          includes="org/ulteo/ovd/client/ExternalAppsClient.java">
       <classpath>
         <fileset dir="required_libraries" includes="*.jar" />
       </classpath>
     </javac>
   </target>
 
-   <target name="ovdExternalAppsClient.jar" depends="ovdExternalAppsClient">
-     <copy todir="build/org/jpedal/res">
-       <fileset dir="src/org/jpedal/res"/>
-     </copy>
-     <unjar src="required_libraries/gnu-getopt.jar" dest="build">
-       <filelist dir="required_libraries"
-                 files="log4j-1.2.jar,registry.jar
-                        jshortcut.jar,image4j.jar,ini4j.jar" />
-     </unjar>
-     <jar destfile="jars/OVDExternalAppsClient.jar" basedir="build">
-       <manifest>
-         <attribute name="Main-Class"
-                    value="org.ulteo.ovd.client.ExternalAppsClient"/>
-       </manifest>
-     </jar>
-   </target>
+  <target name="ovdExternalAppsClient.jar" depends="ovdExternalAppsClient">
+    <copy todir="build/org/jpedal/res">
+      <fileset dir="src/org/jpedal/res"/>
+    </copy>
+    <unjar src="required_libraries/gnu-getopt.jar" dest="build">
+      <filelist dir="required_libraries"
+                files="log4j-1.2.jar,registry.jar
+                       jshortcut.jar,image4j.jar,ini4j.jar" />
+    </unjar>
+    <jar destfile="jars/OVDExternalAppsClient.jar" basedir="build">
+      <manifest>
+        <attribute name="Main-Class"
+                   value="org.ulteo.ovd.client.ExternalAppsClient"/>
+      </manifest>
+    </jar>
+  </target>
 
-   <target name="ovdExternalAppsClient.install"
-           depends="ovdExternalAppsClient.jar">
-     <copy file="jars/OVDExternalAppsClient.jar" todir="${install.dir}" />
-     <copy file="scripts/OVDExternalAppsClient" todir="${bindir}" />
-   </target>
+  <target name="ovdExternalAppsClient.install"
+          depends="ovdExternalAppsClient.jar">
+    <copy file="jars/OVDExternalAppsClient.jar" todir="${install.dir}" />
+    <copy file="scripts/OVDExternalAppsClient" todir="${bindir}" />
+  </target>
 
 
   <!-- OVD native client part -->
