@@ -179,6 +179,11 @@ function onStartSessionSuccess(xml_) {
 	}
 	session_node = buffer[0];
 
+	try {
+		session_mode = session_node.getAttribute('mode');
+		session_mode = session_mode.substr(0, 1).toUpperCase()+session_mode.substr(1, session_mode.length-1);
+	} catch(e) {}
+
 	var buffer = xml.getElementsByTagName('setting');
 	for (var i = 0; i < buffer.length; i++) {
 		try {
