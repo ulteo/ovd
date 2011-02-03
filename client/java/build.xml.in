@@ -146,11 +146,7 @@
 
  <target name="PDFPrinter.install" description="install applets"
          depends="PDFPrinter.jar">
-   <copy todir="${applets.dir}">
-     <fileset dir="jars">
-       <include name="PDFPrinter-${compile.release}.jar" />
-     </fileset>
-   </copy>
+   <copy file="jars/PDFPrinter-${compile.release}.jar" todir="${applets.dir}" />
    <symlink link="${applets.dir}/PDFPrinter.jar"
             resource="PDFPrinter-${compile.release}.jar"/>
  </target>
@@ -164,9 +160,7 @@
            target="1.5" source="1.5"
            includes="org/ulteo/ovd/client/ExternalAppsClient.java">
       <classpath>
-        <fileset dir="required_libraries">
-          <include name="*.jar" />
-        </fileset>
+        <fileset dir="required_libraries" includes="*.jar" />
       </classpath>
     </javac>
   </target>
@@ -203,9 +197,7 @@
            target="1.5" source="1.5"
            includes="org/ulteo/ovd/client/NativeClient.java">
       <classpath>
-        <fileset dir="required_libraries">
-          <include name="*.jar" />
-        </fileset>
+        <fileset dir="required_libraries" includes="*.jar" />
       </classpath>
     </javac>
   </target>
