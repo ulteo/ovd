@@ -115,7 +115,7 @@
 
   <!-- PDFPrinter part -->
 
- <target name="PDFPrinter" description="compile all PDFPrinter class">
+ <target name="PDFPrinter" description="compile PDFPrinter classes">
    <antcall target="precompile" />
    <javac srcdir="src" destdir="build" encoding="UTF8" target="1.5" source="1.5"
           includes="org/ulteo/ovd/printer/PrinterApplet.java">
@@ -127,7 +127,7 @@
    </javac>
  </target>
 
- <target name="PDFPrinter.jar" depends="PDFPrinter" description="create jar file">
+ <target name="PDFPrinter.jar" depends="PDFPrinter" description="create PDFPrinter jar">
    <copy todir="build/org/jpedal/res">
      <fileset dir="src/org/jpedal/res"/>
    </copy>
@@ -144,8 +144,8 @@
             signedjar="jars/PDFPrinter-${compile.release}.jar"/>
  </target>
 
- <target name="PDFPrinter.install" description="install applets"
-         depends="PDFPrinter.jar">
+ <target name="PDFPrinter.install" depends="PDFPrinter.jar"
+         description="install PDFPrinter" />
    <copy file="jars/PDFPrinter-${compile.release}.jar" todir="${applets.dir}" />
    <symlink link="${applets.dir}/PDFPrinter.jar"
             resource="PDFPrinter-${compile.release}.jar"/>
