@@ -43,7 +43,7 @@ class Session:
 	SESSION_STATUS_WAIT_DESTROY = "wait_destroy"
 	SESSION_STATUS_DESTROYED = "destroyed"
 	
-	SESSION_END_STATUS_NORMAL = "exit"
+	SESSION_END_STATUS_NORMAL = "logout"
 	SESSION_END_STATUS_SHUTDOWN = "shutdown"
 	SESSION_END_STATUS_ERROR = "internal"
 	
