@@ -543,13 +543,13 @@ public class ItextFunctions {
 			Rectangle newSize = null;
 			if(orientation.equals(Messages.getMessage("PdfViewerNUPOption.Auto"))){
 				if(coloumns > rows)
-					newSize = new Rectangle(pageSize.height(), pageSize.width());	
+					newSize = new Rectangle(pageSize.getHeight(), pageSize.getWidth());	
 					else
-					newSize = new Rectangle(pageSize.width(), pageSize.height());
+					newSize = new Rectangle(pageSize.getWidth(), pageSize.getHeight());
 			}else if(orientation.equals("Portrait")){
-				newSize = new Rectangle(pageSize.width(), pageSize.height());
+				newSize = new Rectangle(pageSize.getWidth(), pageSize.getHeight());
 			}else if(orientation.equals("Landscape")){
-				newSize = new Rectangle(pageSize.height(), pageSize.width());
+				newSize = new Rectangle(pageSize.getHeight(), pageSize.getWidth());
 			}
 			
 			String scale=extractPage.getScale();
@@ -563,12 +563,12 @@ public class ItextFunctions {
 			if(scale.equals("Auto")){
 				float totalHorizontalSpacing = (coloumns - 1) * horizontalSpacing;
 				
-				int totalWidth = (int) (newSize.width() - leftRightMargin * 2 - totalHorizontalSpacing);
+				int totalWidth = (int) (newSize.getWidth() - leftRightMargin * 2 - totalHorizontalSpacing);
 				int unitWidth = totalWidth / coloumns;
 				
 				float totalVerticalSpacing = (rows - 1) * verticalSpacing;
 				
-				int totalHeight = (int) (newSize.height() - topBottomMargin * 2 - totalVerticalSpacing);
+				int totalHeight = (int) (newSize.getHeight() - topBottomMargin * 2 - totalVerticalSpacing);
 				int unitHeight = totalHeight / rows;
 				
 				unitSize = new Rectangle(unitWidth, unitHeight);
@@ -623,27 +623,27 @@ public class ItextFunctions {
 							currentColoumn = currentUnit / rows;
 							currentRow = currentUnit % rows;
 							
-							offsetX = unitSize.width() * currentColoumn;
-							offsetY = newSize.height() - (unitSize.height() * (currentRow + 1));
+							offsetX = unitSize.getWidth() * currentColoumn;
+							offsetY = newSize.getHeight() - (unitSize.getHeight() * (currentRow + 1));
 							
 						}else if(order == ORDER_ACCROS){
 							currentColoumn = currentUnit % coloumns;
 							currentRow = currentUnit / coloumns;
 							
-							offsetX = unitSize.width() * currentColoumn;
-							offsetY = newSize.height() - (unitSize.height() * ((currentUnit / coloumns) + 1));
+							offsetX = unitSize.getWidth() * currentColoumn;
+							offsetY = newSize.getHeight() - (unitSize.getHeight() * ((currentUnit / coloumns) + 1));
 							
 						}  
 						
-						factor = Math.min(unitSize.width() / currentSize.width(), unitSize.height() / currentSize.height());
+						factor = Math.min(unitSize.getWidth() / currentSize.getWidth(), unitSize.getHeight() / currentSize.getHeight());
 						
 						float widthFactor = factor, heightFactor = factor;
 						if(!isProportional){
-							widthFactor = unitSize.width() / currentSize.width();
-							heightFactor = unitSize.height() / currentSize.height();
+							widthFactor = unitSize.getWidth() / currentSize.getWidth();
+							heightFactor = unitSize.getHeight() / currentSize.getHeight();
 						}else{
-							offsetX += ((unitSize.width() - (currentSize.width() * factor)) / 2f);
-							offsetY += ((unitSize.height() - (currentSize.height() * factor)) / 2f);
+							offsetX += ((unitSize.getWidth() - (currentSize.getWidth() * factor)) / 2f);
+							offsetY += ((unitSize.getHeight() - (currentSize.getHeight() * factor)) / 2f);
 						}
 						
 						offsetX += (horizontalSpacing * currentColoumn) + leftRightMargin;
@@ -681,7 +681,7 @@ public class ItextFunctions {
 							c = (float) (Math.sin(rotation) * widthFactor);
 							d = 0;
 							e = offsetX + (mediaBoxY * widthFactor);
-							f = ((currentSize.height() * heightFactor) + offsetY) - (mediaBoxX * heightFactor);
+							f = ((currentSize.getHeight() * heightFactor) + offsetY) - (mediaBoxX * heightFactor);
 							
 							cb.addTemplate(importedPage, a, b, c, d, e, f);
 							
@@ -691,8 +691,8 @@ public class ItextFunctions {
 							b = 0;
 							c = 0;
 							d = (float) (Math.cos(rotation) * heightFactor);
-							e = (offsetX + (currentSize.width() * widthFactor)) - (mediaBoxX * widthFactor);
-							f = ((currentSize.height() * heightFactor) + offsetY) - (mediaBoxY * heightFactor);
+							e = (offsetX + (currentSize.getWidth() * widthFactor)) - (mediaBoxX * widthFactor);
+							f = ((currentSize.getHeight() * heightFactor) + offsetY) - (mediaBoxY * heightFactor);
 							
 							cb.addTemplate(importedPage, a, b, c, d, e, f);
 							
@@ -702,7 +702,7 @@ public class ItextFunctions {
 							b = (float) (Math.sin(rotation) * -heightFactor);
 							c = (float) (Math.sin(rotation) * widthFactor);
 							d = 0;
-							e = (offsetX + (currentSize.width() * widthFactor)) - (mediaBoxY * widthFactor);
+							e = (offsetX + (currentSize.getWidth() * widthFactor)) - (mediaBoxY * widthFactor);
 							f = offsetY + (mediaBoxX * heightFactor);
 							
 							cb.addTemplate(importedPage, a, b, c, d, e, f);
@@ -775,19 +775,19 @@ public class ItextFunctions {
 			while (i < n) {
 				i++;
 				Rectangle rect = reader.getPageSizeWithRotation(i);
-				float factorx = (x2 - x1) / rect.width();
-				float factory = (y1[p] - y2[p]) / rect.height();
+				float factorx = (x2 - x1) / rect.getWidth();
+				float factory = (y1[p] - y2[p]) / rect.getHeight();
 				float factor = (factorx < factory ? factorx : factory);
-				float dx = (factorx == factor ? 0f : ((x2 - x1) - rect.width()
+				float dx = (factorx == factor ? 0f : ((x2 - x1) - rect.getWidth()
 						* factor) / 2f);
 				float dy = (factory == factor ? 0f : ((y1[p] - y2[p]) - rect
-						.height()
+						.getHeight()
 						* factor) / 2f);
 				page = writer.getImportedPage(reader, i);
 				rotation = reader.getPageRotation(i);
 				if (rotation == 90 || rotation == 270) {
 					cb.addTemplate(page, 0, -factor, factor, 0, x1 + dx, y2[p]
-							+ dy + rect.height() * factor);
+							+ dy + rect.getHeight() * factor);
 				} else {
 					cb.addTemplate(page, factor, 0, 0, factor, x1 + dx, y2[p]
 							+ dy);
@@ -799,8 +799,8 @@ public class ItextFunctions {
 					cb.moveTo(x3, l);
 					cb.lineTo(x4, l);
 				}
-				cb.rectangle(x1 + dx, y2[p] + dy, rect.width() * factor, rect
-						.height()
+				cb.rectangle(x1 + dx, y2[p] + dy, rect.getWidth() * factor, rect
+						.getHeight()
 						* factor);
 				cb.stroke();
 
@@ -993,9 +993,9 @@ public class ItextFunctions {
 						newCrop[2] = currentRightCrop - newCrop[2];
 						newCrop[3] = currentTopCrop - newCrop[3];
 					} else {
-						newCrop[2] = reader.getPageSize(page).width()
+						newCrop[2] = reader.getPageSize(page).getWidth()
 								- newCrop[2];
-						newCrop[3] = reader.getPageSize(page).height()
+						newCrop[3] = reader.getPageSize(page).getHeight()
 								- newCrop[3];
 					}
 
@@ -1201,11 +1201,11 @@ public class ItextFunctions {
 
 					float startx, starty;
 					if (chosenVerticalPosition.equals("From the top")) {
-						starty = pageSize.height()
-								- ((img.height() * (chosenHeightScale / 100)) / 2);
+						starty = pageSize.getHeight()
+								- ((img.getHeight() * (chosenHeightScale / 100)) / 2);
 					} else if (chosenVerticalPosition.equals("Centered")) {
-						starty = (pageSize.height() / 2)
-								- ((img.height() * (chosenHeightScale / 100)) / 2);
+						starty = (pageSize.getHeight() / 2)
+								- ((img.getHeight() * (chosenHeightScale / 100)) / 2);
 					} else {
 						starty = 0;
 					}
@@ -1213,11 +1213,11 @@ public class ItextFunctions {
 					if (chosenHorizontalPosition.equals("From the left")) {
 						startx = 0;
 					} else if (chosenHorizontalPosition.equals("Centered")) {
-						startx = (pageSize.width() / 2)
-								- ((img.width() * (chosenWidthScale / 100)) / 2);
+						startx = (pageSize.getWidth() / 2)
+								- ((img.getWidth() * (chosenWidthScale / 100)) / 2);
 					} else {
-						startx = pageSize.width()
-								- ((img.width() * (chosenWidthScale / 100)) / 2);
+						startx = pageSize.getWidth()
+								- ((img.getWidth() * (chosenWidthScale / 100)) / 2);
 					}
 
 					img.setAbsolutePosition(startx + chosenHorizontalOffset,
@@ -1316,9 +1316,9 @@ public class ItextFunctions {
 						float starty;
 
 						if (chosenVerticalPosition.equals("From the top")) {
-							starty = pageSize.height();
+							starty = pageSize.getHeight();
 						} else if (chosenVerticalPosition.equals("Centered")) {
-							starty = pageSize.height() / 2;
+							starty = pageSize.getHeight() / 2;
 						} else {
 							starty = 0;
 						}
@@ -1326,9 +1326,9 @@ public class ItextFunctions {
 						if (chosenHorizontalPosition.equals("From the left")) {
 							startx = 0;
 						} else if (chosenHorizontalPosition.equals("Centered")) {
-							startx = pageSize.width() / 2;
+							startx = pageSize.getWidth() / 2;
 						} else {
-							startx = pageSize.width();
+							startx = pageSize.getWidth();
 						}
 
 						cb.showTextAligned(Element.ALIGN_CENTER, chosenText,
@@ -1438,22 +1438,22 @@ public class ItextFunctions {
 					Rectangle pageSize = reader.getPageSizeWithRotation(page);
 
 					cb.showTextAligned(Element.ALIGN_LEFT, textCopy[0],
-							chosenLeftRightMargin, pageSize.height()
+							chosenLeftRightMargin, pageSize.getHeight()
 									- chosenTopBottomMargin, 0);
 					cb.showTextAligned(Element.ALIGN_CENTER, textCopy[1],
-							pageSize.width() / 2, pageSize.height()
+							pageSize.getWidth() / 2, pageSize.getHeight()
 									- chosenTopBottomMargin, 0);
 					cb.showTextAligned(Element.ALIGN_RIGHT, textCopy[2],
-							pageSize.width() - chosenLeftRightMargin, pageSize
-									.height()
+							pageSize.getWidth() - chosenLeftRightMargin, pageSize
+									.getHeight()
 									- chosenTopBottomMargin, 0);
 
 					cb.showTextAligned(Element.ALIGN_LEFT, textCopy[3],
 							chosenLeftRightMargin, chosenTopBottomMargin, 0);
 					cb.showTextAligned(Element.ALIGN_CENTER, textCopy[4],
-							pageSize.width() / 2, chosenTopBottomMargin, 0);
+							pageSize.getWidth() / 2, chosenTopBottomMargin, 0);
 					cb.showTextAligned(Element.ALIGN_RIGHT, textCopy[5],
-							pageSize.width() - chosenLeftRightMargin,
+							pageSize.getWidth() - chosenLeftRightMargin,
 							chosenTopBottomMargin, 0);
 
 					cb.endText();
