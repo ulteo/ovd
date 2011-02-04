@@ -1,5 +1,4 @@
 scripts_DATA = internal.php \
-               ldap.php \
                microsoft.php \
                novell.php
 
