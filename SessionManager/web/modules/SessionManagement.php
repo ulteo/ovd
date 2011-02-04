@@ -67,6 +67,15 @@ abstract class SessionManagement extends Module {
 			return false;
 		}
 
+		$max_sessions_number = $this->prefs->get('general', 'max_sessions_number');
+		if ($max_sessions_number != 0) {
+			$session_number = Abstract_Session::countByStatus();
+			if ($session_number >= $max_sessions_number) {
+				Logger::error('main', 'SessionManagement::buildServersList - Maximum number of sessions already started '.$session_number);
+				throw_response(SERVICE_NOT_AVAILABLE);
+			}
+		}
+
 		return true;
 	}
 
