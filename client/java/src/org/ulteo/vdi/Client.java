@@ -33,8 +33,6 @@ import java.awt.Rectangle;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Client implements RdpListener, Runnable {
 
@@ -44,7 +42,6 @@ public class Client implements RdpListener, Runnable {
 	private Thread readingpipe;
 	private SeamlessChannel seamchannel;
 	private String fifodir = "/var/cache/ulteo/vdi/host/fifo/";
-	private Timer timeout = new Timer();
 
 	public Client(String fqdn_, String login_, String password_, String namedpipe_) {
 
@@ -74,13 +71,6 @@ public class Client implements RdpListener, Runnable {
 		rc.setShell("seamlessrdpshell");
 		rc.addRdpListener(this);
 		rc.connect();
-		
-		TimerTask task = new TimerTask() {
-			public void run() {
-				//rc.disconnect();
-			}
-		};
-		timeout.schedule(task, 20000);
 	}
 
 	public void connected(RdpConnection co) {
@@ -104,15 +94,15 @@ public class Client implements RdpListener, Runnable {
 	public void disconnected(RdpConnection co) {
 		logger.info("Disconnected from " + rc.getUsername() + "@" + rc.getServer());
 		if (readingpipe != null) readingpipe.interrupt();
+		System.exit(0);
 	}
 
 	public void failed(RdpConnection co, String msg) {
 		logger.error("Connection to "+rc.getUsername() + "@" + rc.getServer() + " failed: "+msg);
-		System.exit(1);
+		System.exit(0);
 	}
 
 	public void seamlessEnabled(RdpConnection co) {
-		timeout.cancel();
 		logger.info("SeamlessChannel OK");
 		readingpipe = new Thread(this);
 		readingpipe.start();
@@ -133,11 +123,11 @@ public class Client implements RdpListener, Runnable {
 				}
 			}
 		} catch (IOException e) {
-			this.disconnected(rc);
 			logger.error("named pipe " + pipe + " error");
-		} catch (InterruptedException e) {
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("untreated error");
+		} finally {
+			this.disconnected(rc);
 		}
 	}
 
