@@ -77,65 +77,114 @@ public class SystemLinux extends SystemAbstract {
 			return;
 		}
 
+		BufferedInputStream shortcutReader;
 		try {
-			BufferedInputStream shortcutReader = new BufferedInputStream(new FileInputStream(f), 4096);
-			
-			if (new File(Constants.PATH_OVD_SPOOL_XDG_APPLICATIONS).exists()) {
-				File xdgShortcut = new File(Constants.PATH_OVD_SPOOL_XDG_APPLICATIONS+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
+			shortcutReader = new BufferedInputStream(new FileInputStream(f), 4096);
+		} catch (FileNotFoundException ex) {
+			Logger.error("Cannot read the '"+app.getId()+Constants.SHORTCUTS_EXTENSION+"' shortcut: The file does not exist ("+f.getPath()+")");
+			return;
+		}
+
+		if (new File(Constants.PATH_OVD_SPOOL_XDG_APPLICATIONS).exists()) {
+			File xdgShortcut = new File(Constants.PATH_OVD_SPOOL_XDG_APPLICATIONS+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
+			try {
 				BufferedOutputStream xdgStream = new BufferedOutputStream(new FileOutputStream(xdgShortcut), 4096);
 
 				int currentChar;
-				while ((currentChar = shortcutReader.read()) != -1) {
-					xdgStream.write(currentChar);
+				try {
+					while ((currentChar = shortcutReader.read()) != -1) {
+						xdgStream.write(currentChar);
+					}
+				} catch (IOException ex) {
+					Logger.error("Error while copying '"+app.getId()+Constants.SHORTCUTS_EXTENSION+"' shortcut to "+xdgShortcut.getPath()+": "+ex.getMessage());
 				}
 
 				xdgStream.close();
+
+			} catch (FileNotFoundException ex) {
+				Logger.error("Cannot create file "+xdgShortcut.getPath()+": "+ex.getMessage());
+			} catch (IOException ex) {
+				Logger.error("Error while closing file "+xdgShortcut.getPath()+": "+ex.getMessage());
 			}
-			else {
-				BufferedOutputStream desktopStream = null;
-				File desktopShortcut = null;
-				if (showDesktopIcon) {
-					desktopShortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
+		}
+		else {
+			BufferedOutputStream desktopStream = null;
+			File desktopShortcut = null;
+			if (showDesktopIcon) {
+				desktopShortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
+				try {
 					desktopStream = new BufferedOutputStream(new FileOutputStream(desktopShortcut), 4096);
+				} catch (FileNotFoundException ex) {
+					Logger.error("Cannot create file "+desktopShortcut.getPath()+": "+ex.getMessage());
+					showDesktopIcon = false;
+					desktopStream = null;
 				}
+			}
 
-				File xdgShortcut = new File(Constants.PATH_XDG_APPLICATIONS+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
-				BufferedOutputStream xdgStream = new BufferedOutputStream(new FileOutputStream(xdgShortcut), 4096);
+			File xdgShortcut = new File(Constants.PATH_XDG_APPLICATIONS+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
+			BufferedOutputStream xdgStream = null;
+			try {
+				xdgStream = new BufferedOutputStream(new FileOutputStream(xdgShortcut), 4096);
+			} catch (FileNotFoundException ex) {
+				Logger.error("Cannot create file "+xdgShortcut.getPath()+": "+ex.getMessage());
+				xdgStream = null;
+			}
 
+			if (xdgStream != null || desktopStream != null) {
 				byte[] buffer = new byte[1024];
 				int nbytes;
-				while ((nbytes = shortcutReader.read(buffer)) != -1) {
-					if (desktopStream != null)
-						desktopStream.write(buffer, 0, nbytes);
-					xdgStream.write(buffer, 0, nbytes);
-				}
+				try {
+					while ((nbytes = shortcutReader.read(buffer)) != -1) {
+						if (desktopStream != null)
+							desktopStream.write(buffer, 0, nbytes);
 
-				if (desktopStream != null) {
-					desktopStream.flush();
-					desktopStream.close();
-
-					if (! desktopShortcut.setExecutable(true)) {
-						Logger.error("Failed to set executable "+desktopShortcut.getPath());
+						if (xdgStream != null)
+							xdgStream.write(buffer, 0, nbytes);
 					}
-				}
-				xdgStream.flush();
-				xdgStream.close();
-
-				if (! xdgShortcut.setExecutable(true)) {
-					Logger.error("Failed to set executable "+xdgShortcut.getPath());
+				} catch (IOException ex) {
+					Logger.error("Error while copying '"+app.getId()+Constants.SHORTCUTS_EXTENSION+"' shortcut: "+ex.getMessage());
 				}
 			}
-			shortcutReader.close();
-		} catch(FileNotFoundException e) {
-			Logger.error("This file does not exists: "+e.getMessage());
-			return;
-		} catch(IOException e) {
-			Logger.error("An error occured during the shortcut '"+app.getId()+Constants.SHORTCUTS_EXTENSION+"' copy: "+e.getMessage());
-			return;
-		} catch(SecurityException e) {
-			Logger.error("An error occured while creating or setting the shortcut '"+app.getId()+Constants.SHORTCUTS_EXTENSION+"' executable: "+e.getMessage());
-			return;
+
+			if (desktopStream != null) {
+				try {
+					desktopStream.flush();
+				} catch (IOException ex) {
+					Logger.error("Error while flushing file "+desktopShortcut.getPath()+": "+ex.getMessage());
+				}
+				try {
+					desktopStream.close();
+				} catch (IOException ex) {
+					Logger.error("Error while closing file "+desktopShortcut.getPath()+": "+ex.getMessage());
+				}
+
+				if (! desktopShortcut.setExecutable(true)) {
+					Logger.error("Failed to set executable "+desktopShortcut.getPath());
+				}
+			}
+			if (xdgStream != null) {
+				try {
+					xdgStream.flush();
+				} catch (IOException ex) {
+					Logger.error("Error while flushing file "+xdgShortcut.getPath()+": "+ex.getMessage());
+				}
+				try {
+					xdgStream.close();
+				} catch (IOException ex) {
+					Logger.error("Error while closing file "+xdgShortcut.getPath()+": "+ex.getMessage());
+				}
+			}
+
+			if (! xdgShortcut.setExecutable(true)) {
+				Logger.error("Failed to set executable "+xdgShortcut.getPath());
+			}
 		}
+		try {
+			shortcutReader.close();
+		} catch (IOException ex) {
+			Logger.error("Error while closing file "+f.getPath()+": "+ex.getMessage());
+		}
+
 	}
 
 	public void uninstallShortcuts(Application app) {
