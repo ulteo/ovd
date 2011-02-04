@@ -4,7 +4,7 @@
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
-# Author David LECHEVALIER <david@ulteo.com> 2010
+# Author David LECHEVALIER <david@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -194,11 +194,18 @@ class Session(AbstractSession):
 		# Set the language
 		if self.parameters.has_key("locale"):
 			path = r"%s\Control Panel\Desktop"%(hiveName)
-			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
-			win32api.RegSetValueEx(key, "MUILanguagePending", 0, win32con.REG_DWORD, Langs.getLCID(self.parameters["locale"]))
-			win32api.RegSetValueEx(key, "MultiUILanguageId", 0, win32con.REG_DWORD, Langs.getLCID(self.parameters["locale"]))
-			win32api.RegCloseKey(key)
-		
+			try:
+				Reg.CreateKeyR(win32con.HKEY_USERS, path)
+				hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+			except:
+				hkey = None
+			if hkey is None:
+				Logger.error("Unable to open key '%s'"%(path))
+			else:
+				win32api.RegSetValueEx(hkey, "MUILanguagePending", 0, win32con.REG_DWORD, Langs.getLCID(self.parameters["locale"]))
+				win32api.RegSetValueEx(hkey, "MultiUILanguageId", 0, win32con.REG_DWORD, Langs.getLCID(self.parameters["locale"]))
+				win32api.RegCloseKey(hkey)
+				
 		# Policies update
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer"%(hiveName)
 		restrictions = ["DisableFavoritesDirChange",
