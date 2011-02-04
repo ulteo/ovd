@@ -968,7 +968,7 @@ public class AuthFrame implements ActionListener, Runnable {
 			this.authFrame.mode.setText(I18n._("Mode"));
 			this.authFrame.resolution.setText(I18n._("Resolution"));
 			this.authFrame.language.setText(I18n._("Language"));
-			this.authFrame.keyboard.setText(I18n._("keyboard"));
+			this.authFrame.keyboard.setText(I18n._("Keyboard"));
 			this.authFrame.login.setText(I18n._("Login"));
 			
 			this.authFrame.itemModeAuto.setText(I18n._("Auto"));
