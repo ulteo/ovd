@@ -100,8 +100,13 @@ class ApplicationsDetection:
 			if self.isBan(name):
 				continue
 			
+			try:
+				local_id = hashlib.md5(filename.encode(encoding)).hexdigest()
+			except UnicodeEncodeError, err:
+				local_id = hashlib.md5(filename.encode('utf-8')).hexdigest()
+			
 			application = {}
-			application["local_id"] = hashlib.md5(filename.encode(encoding)).hexdigest()
+			application["local_id"] = local_id
 			application["name"] = name
 			application["command"] = unicode(shortcut.GetPath(0)[0], encoding)
 			application["filename"] = filename
