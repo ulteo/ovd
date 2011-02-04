@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Gauvain Pocentek <gauvain@ulteo.com> 2009
- * Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -70,6 +70,9 @@ class Abstract_ReportSession {
 		$report->id = $row['id'];
 		$report->user = $row['user'];
 		$report->server = $row['server'];
+		if (is_null($row['stop_why']) === false and $row['stop_why'] !== '') {
+			$report->stop_why = $row['stop_why'];
+		}
 		
 		return $report;
 	}
