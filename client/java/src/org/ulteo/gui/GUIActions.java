@@ -40,6 +40,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JSlider;
+import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
 import org.ulteo.Logger;
 
@@ -183,9 +184,15 @@ public class GUIActions {
 		public void run() {
 			JOptionPane pane = new JOptionPane(this.message, this.messageType, this.optionType);
 			JDialog dialog = pane.createDialog(this.title);
+			dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			
 			setIconImage(dialog, this.icon).run();
 			setVisible(dialog, true).run();
 			requestFocus(dialog).run();
+			
+			// Wait the user click before dispose
+			pane.getValue();
+			dialog.dispose();
 		}
 	}
 	
