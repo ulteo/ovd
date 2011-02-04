@@ -22,12 +22,9 @@ package org.ulteo.ovd.printer;
 
 import java.applet.Applet;
 import java.applet.AppletContext;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.io.File;
 
 import org.apache.log4j.Logger;
-import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 
 public class OVDAppletPrinterThread implements OVDPrinterThread {

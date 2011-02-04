@@ -22,7 +22,6 @@ package org.ulteo.ovd.client.cache;
 
 import java.io.File;
 import java.io.IOException;
-import org.ulteo.Logger;
 import org.ulteo.ovd.integrated.Constants;
 
 public abstract class AbstractCache {

@@ -20,8 +20,6 @@
 
 package org.ulteo.ovd.client.profile;
 
-import java.io.IOException;
-
 public abstract class Profile {
 	protected static final String FIELD_LOGIN = "login";
 	protected static final String FIELD_LOCALCREDENTIALS = "use-local-credentials";

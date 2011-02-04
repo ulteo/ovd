@@ -33,7 +33,6 @@ import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpPacket;
 import net.propero.rdp.crypto.CryptoException;
 import net.propero.rdp.RdpPacket_Localised;
-import net.propero.rdp.rdp5.rdpdr.Disk;
 import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
 import org.ulteo.ovd.integrated.Constants;

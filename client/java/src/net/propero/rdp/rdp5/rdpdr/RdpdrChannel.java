@@ -33,12 +33,10 @@ package net.propero.rdp.rdp5.rdpdr;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 
-import net.propero.rdp.Input;
 import net.propero.rdp.Options;
 import net.propero.rdp.Common;
 import net.propero.rdp.RdesktopException;

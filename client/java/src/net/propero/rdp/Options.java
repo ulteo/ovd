@@ -14,7 +14,6 @@
  */
 package net.propero.rdp;
 
-import net.propero.rdp.rdp5.seamless.SeamlessChannel;
 import java.awt.image.DirectColorModel;
 
 public class Options {
