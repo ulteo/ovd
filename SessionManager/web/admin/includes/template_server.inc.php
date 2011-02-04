@@ -222,6 +222,7 @@ function server_display_role_aps($server, $var) {
 	echo '<input type="text" id="number" name="max_sessions" value="'.$server->getNbMaxSessions().'" size="3" onchange="field_check_integer(this);" />';
 	if ($var['can_do_action']) {
 		echo ' <input type="button" value="+" onclick="field_increase(\'number\', 1);" />';
+		echo ' <input type="button" value="'._('default').'" onclick="$(\'number\').value=\''.$server->getDefaultMaxSessions().'\';" />';
 		echo ' <input type="submit" value="'._('change').'" />';
 		echo '</form>';
 	}

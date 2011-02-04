@@ -247,10 +247,7 @@ class Server {
 				switch ($role) {
 					case Server::SERVER_ROLE_APS:
 						$this->updateApplications();
-						$ram_total = $this->getAttribute('ram_total');
-						if ($ram_total > 0) {
-							$this->setAttribute('max_sessions', ceil($ram_total/1024/1024*20)); // 20 sessions / Giga Bytes of RAM
-						}
+						$this->setAttribute('max_sessions', $this->getDefaultMaxSessions()); 
 						break;
 					case Server::SERVER_ROLE_FS:
 						$stats = $this->getStatisticsForFS();
@@ -267,6 +264,14 @@ class Server {
 		}
 
 		return true;
+	}
+
+	public function getDefaultMaxSessions() {
+		$ram_total = $this->getAttribute('ram_total');
+		if ($ram_total == 0)
+			return 20;
+
+		return ceil($ram_total/1024/1024*20); // 20 sessions / Giga Bytes of RAM
 	}
 
 	public function isOnline() {
