@@ -53,6 +53,7 @@ public class RdpConnectionVDI extends RdpConnection {
 			
 			diskManager = new DiskManager(this.rdpdrChannel);
 			diskManager.launch();
+
 		} catch (RdesktopException e) {
 			e.printStackTrace();
 		}
@@ -77,7 +78,7 @@ public class RdpConnectionVDI extends RdpConnection {
 		if (! this.addChannel(this.rdpdrChannel))
 			throw new RdesktopException("Unable to add rdpdr channel");
 	}
-
+	
 	protected void fireDisconnected() {
 		super.fireDisconnected();
 		diskManager.stop();

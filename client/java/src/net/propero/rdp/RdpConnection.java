@@ -580,6 +580,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	}
 	
 	protected void fireFailed() {
+		this.stop();
 		this.state = STATE_FAILED;
 		
 		for(RdpListener list : this.listener) {
@@ -588,6 +589,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	}
 	
 	protected synchronized void fireDisconnected() {
+		this.stop();
 		this.state = STATE_DISCONNECTED;
 		
 		for(RdpListener list : this.listener) {

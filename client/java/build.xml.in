@@ -120,9 +120,7 @@
     <javac srcdir="src" destdir="build" encoding="UTF8" target="1.5" source="1.5"
            includes="org/ulteo/ovd/printer/PrinterApplet.java">
       <classpath>
-        <pathelement location="required_libraries/jai_codec.jar"/>
-        <pathelement location="required_libraries/jai_core.jar"/>
-        <pathelement location="required_libraries/js.jar"/>
+        <pathelement location="required_libraries/jpedal.jar"/>
       </classpath>
     </javac>
   </target>
@@ -275,9 +273,7 @@
       <classpath>
         <path refid="minimal.path" />
         <pathelement location="${java.home}/lib/plugin.jar"/>
-        <pathelement location="required_libraries/jai_codec.jar"/>
-        <pathelement location="required_libraries/jai_core.jar"/>
-        <pathelement location="required_libraries/js.jar"/>
+        <pathelement location="required_libraries/jpedal.jar"/>
         <pathelement location="required_libraries/jshortcut.jar"/>
         <pathelement location="required_libraries/image4j.jar"/>
       </classpath>
@@ -309,7 +305,7 @@
     </jar>
     <signjar destdir="jars" alias="ulteo" storepass="${keystore.password}"
              keystore="${build.cert}/keystore" >
-        <fileset dir="required_libraries" includes="log4j-1.2.jar" />
+        <fileset dir="required_libraries" includes="log4j-1.2.jar jpedal.jar" />
         <fileset dir="jars" includes="ulteo-applet-${compile.release}.jar" />
     </signjar>
   </target>

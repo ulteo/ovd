@@ -65,13 +65,12 @@ public class SoundDriver {
 	private WaveFormatEx		format;
 	private boolean			dspBusy;
 	private boolean 		soundDown;		
-	private boolean 		playing;
 	private byte[]			buffer, outBuffer;
+	private Thread			playThread = null;
 	
 
 	public SoundDriver( SoundChannel sndChannel ) {
 		this.soundDown = false;
-		this.playing = true;
 		this.soundChannel = sndChannel;
 		this.dspBusy = false;
 		this.buffer = new byte[ BUFFER_SIZE ];
@@ -85,7 +84,20 @@ public class SoundDriver {
 	
 	public void stopDriver()
 	{
-		this.playing = false;
+		if (this.playThread == null)
+			return;
+
+		if (this.playThread.isAlive()) {
+			this.playThread.interrupt();
+			while (! this.playThread.isInterrupted()) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException ex) {
+					break;
+				}
+			}
+		}
+		this.playThread = null;
 	}
 
 	public boolean waveOutOpen() {
@@ -204,7 +216,7 @@ public class SoundDriver {
 	public class playThread extends Thread{
 		public void run(){
 			try {
-				while(playing){
+				while(true){
 						AudioPacket current = spool.take();
 						waveOutPlay(current);
 				}
@@ -218,6 +230,7 @@ public class SoundDriver {
 
 
 	public void start() {
-		new playThread().start();
+		this.playThread = new playThread();
+		this.playThread.start();
 	}
 }
