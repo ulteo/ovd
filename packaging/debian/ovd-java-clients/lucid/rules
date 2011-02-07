@@ -9,7 +9,7 @@ JAVA_HOME = /usr/lib/jvm/java-6-openjdk
 OVD_CERT_DIR = /usr/share/ulteo/ovd-cert/
 
 DEB_ANT_INSTALL_TARGET = applet.install ovdExternalAppsClient.install vdi.install
-DEB_ANT_ARGS += -Dprefix=/usr -Dbuild.type=stripped -Ddestdir=$(DEB_DESTDIR) -Dbuild.cert=$(OVD_CERT_DIR) -Dkeystore.password=$(shell cat $(OVD_CERT_DIR)/password)
+DEB_ANT_ARGS += -Dprefix=/usr -Dbuild.type=stripped -Ddestdir=$(DEB_DESTDIR) -Dbuild.cert=$(OVD_CERT_DIR) -Dkeystore.password=$(shell cat $(OVD_CERT_DIR)/password) -Dlanguages=true
 
 DEB_JARS += $(ANT_HOME)/lib/ant-nodeps.jar # debian bug #420287
 

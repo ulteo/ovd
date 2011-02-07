@@ -36,6 +36,7 @@
   <property name="keystore.password" value=""/>
   <property name="version"           value="@VERSION@" />
   <property name="mingw32.prefix"    value="i586-mingw32msvc-"/>
+  <property name="languages"         value="false" />
 
   <property name="destdir"      location="" />
   <property name="prefix"       location="/usr/local" />
@@ -208,10 +209,14 @@
     </exec>
   </target>
 
-  <target name="ovdNativeClient_jar">
+  <target name="generate.languages" if="${languages}">
     <foreach target="generate.lang" param="po.file" >
       <path><fileset dir="po" includes="*.po" /></path>
     </foreach>
+  </target>
+
+  <target name="ovdNativeClient_jar">
+    <antcall target="generate.languages" />
     <copy todir="build/pics">
       <fileset dir="icons" />
     </copy>
