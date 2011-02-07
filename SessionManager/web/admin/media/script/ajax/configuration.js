@@ -164,7 +164,7 @@ function configuration_switch_references(object_, context_, references_) {
 				continue;
 			
 			if (name == selected)
-				tr_node.setAttribute("style", "");
+				tr_node.setAttribute("style", "display: visible;");
 			else
 				tr_node.setAttribute("style", "display: none;");
 		}
