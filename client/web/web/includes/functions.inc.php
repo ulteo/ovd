@@ -77,11 +77,10 @@ function query_sm_post_xml($url_, $xml_) {
 
 	if (! array_key_exists('session_var', $_SESSION['sessionmanager']) || ! array_key_exists('session_id', $_SESSION['sessionmanager'])) {
 		preg_match('@Set-Cookie: (.*)=(.*);@', $headers, $matches);
-		if (count($matches) != 3)
-			return false;
-
-		$_SESSION['sessionmanager']['session_var'] = $matches[1];
-		$_SESSION['sessionmanager']['session_id'] = $matches[2];
+		if (count($matches) == 3) {
+			$_SESSION['sessionmanager']['session_var'] = $matches[1];
+			$_SESSION['sessionmanager']['session_id'] = $matches[2];
+		}
 	}
 
 	return $body;
