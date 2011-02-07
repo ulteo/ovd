@@ -533,7 +533,10 @@ public class RdpConnection implements SeamListener, Runnable{
 		}
 	}
 
-	public void stop() {
+	public synchronized void stop() {
+		if (! this.keep_running)
+			return;
+		
 		this.keep_running = false;
 
 		if (this.opt.seamlessEnabled && this.seamChannel != null) {
