@@ -488,6 +488,15 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 			logger.warn("Try to resize window "+String.format("0x%08x", id)+" but it is iconified.");
 			return false;
 		}
+
+		Rectangle maxBounds = this.getMaximumWindowBounds();
+		if (width >= maxBounds.width && height >= maxBounds.height) {
+			logger.warn("Receive a POSITION message instead of a STATE "+WINDOW_MAXIMIZED);
+			this.processState(id, WINDOW_MAXIMIZED, 0);
+
+			return true;
+		}
+		
 		f.sw_setMyPosition((int)x, (int)y, (int)width, (int)height);
 
 		return true;
