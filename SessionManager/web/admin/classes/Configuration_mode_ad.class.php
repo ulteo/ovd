@@ -103,6 +103,10 @@ class Configuration_mode_ad extends Configuration_mode {
 
     // Enable modules
     $module_to_enable = array('SessionManagement', 'UserDB', 'UserGroupDB');
+    if ($form['sessionmanagement'] == 'internal') {
+      $module_to_enable []= 'ProfileDB';
+      $module_to_enable []= 'SharedFolderDB';
+    }
     $module_enabled = $prefs->get('general', 'module_enable');
     $prefs->set('general', 'module_enable', array_unique(array_merge($module_enabled, $module_to_enable)));
 
