@@ -154,8 +154,13 @@ if ($sessions > 0) {
 			Logger::error('main', '(client/start) User \''.$user->getAttribute('login').'\' already have an active session');
 			throw_response(USER_WITH_ACTIVE_SESSION);
 		} else {
-			Logger::error('main', '(client/start) User \''.$user->getAttribute('login').'\' already have an active session');
-			throw_response(USER_WITH_ACTIVE_SESSION);
+			if (in_array($session->status, array(Session::SESSION_STATUS_DESTROYING, Session::SESSION_STATUS_DESTROYED))) {
+				$session->orderDeletion(false, Session::SESSION_END_STATUS_ERROR);
+				Abstract_Session::delete($session);
+			} else {
+				Logger::error('main', '(client/start) User \''.$user->getAttribute('login').'\' already have an active session');
+				throw_response(USER_WITH_ACTIVE_SESSION);
+			}
 		}
 	}
 }
