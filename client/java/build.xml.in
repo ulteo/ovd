@@ -32,16 +32,10 @@
     </classpath>
   </taskdef>
 
-  <property name="build.cert" value="certificate"/>
+  <property name="build.cert"        value="certificate"/>
   <property name="keystore.password" value=""/>
-  <property name="version" value="@VERSION@" />
-
-  <property name="compile.debug" value="false"/>
-  <property name="compile.deprecation" value="false"/>
-  <property name="compile.optimize" value="true"/>
-  <property name="compile.version" value="1.5"/>
-  <property name="compile.release" value="0.5.0"/>
-  <property name="mingw32.prefix" value="i586-mingw32msvc-"/>
+  <property name="version"           value="@VERSION@" />
+  <property name="mingw32.prefix"    value="i586-mingw32msvc-"/>
 
   <property name="destdir"      location="" />
   <property name="prefix"       location="/usr/local" />
