@@ -52,7 +52,7 @@ class ReverseProxy(asyncore.dispatcher):
 		try:
 			self.bind(gateway)
 		except:
-			Logger.error('Local Bind Error, Server at port %d is not ready' % GATEWAY_PORT)
+			Logger.error('Local Bind Error, Server at port %d is not ready' % gateway[1])
 			exit()
 
 		self.listen(5)
