@@ -59,6 +59,8 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 	private int flags = 0;
 	private Rectangle screensize = null;
+
+	private boolean debugSeamless = false;
 	
 	public OvdClientRemoteApps(SessionManagerCommunication smComm) {
 		super(smComm, null, false);
@@ -78,6 +80,10 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 	public Spool getSpool() {
 		return this.spool;
+	}
+
+	public final void setSeamlessDebugEnabled(boolean enabled) {
+		this.debugSeamless = enabled;
 	}
 
 	@Override
@@ -161,6 +167,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			this.flags |= RdpConnectionOvd.MOUNTING_MODE_FULL;
 		else if (properties.isDrives() == Properties.REDIRECT_DRIVES_PARTIAL)
 			this.flags |= RdpConnectionOvd.MOUNTING_MODE_PARTIAL;
+
+		if (this.debugSeamless)
+			this.flags |= RdpConnectionOvd.DEBUG_SEAMLESS;
 	}
 
 	protected RdpConnectionOvd initRDPConnection(ServerAccess server) {

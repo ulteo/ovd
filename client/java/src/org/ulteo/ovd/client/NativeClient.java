@@ -40,6 +40,7 @@ import java.io.FileNotFoundException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JLabel;
@@ -84,6 +85,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		public boolean showProgressBar = true;
 		public boolean autopublish = false;
 		public boolean autostart = false;
+		public boolean debugSeamless = false;
 	}
 
 	public static Options main_options = null;
@@ -285,7 +287,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		alo[3] = new LongOpt("ntlm", LongOpt.NO_ARGUMENT, null, 3);
 		alo[4] = new LongOpt("progress-bar", LongOpt.REQUIRED_ARGUMENT, null, 4);
 		alo[5] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 5);
-		Getopt opt = new Getopt(OvdClient.productName, args, "c:p:u:m:g:k:l:s:h", alo);
+		Getopt opt = new Getopt(OvdClient.productName, args, "c:p:u:m:g:k:l:s:hd:", alo);
 
 		int c;
 		while ((c = opt.getopt()) != -1) {
@@ -382,6 +384,17 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 					NativeClient.optionMask |= NativeClient.FLAG_OPTION_SERVER;
 					break;
+				case 'd':
+					String items = new String(opt.getOptarg());
+
+					StringTokenizer tok = new StringTokenizer(items, ",");
+					while (tok.hasMoreTokens()) {
+						String item = tok.nextToken();
+						if (item.equalsIgnoreCase("seamless")) {
+							NativeClient.main_options.debugSeamless = true;
+						}
+					}
+					break;
 				default:
 					usage(RETURN_CODE_BAD_ARGUMENTS);
 					break;
@@ -454,6 +467,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		System.err.println("\t--progress-bar [show|hide]	Set the progress bar visibility");
 		System.err.println("\t--auto-integration		Enable auto integration");
 		System.err.println("\t--auto-start			Enable auto start");
+		System.err.println("\t-d [seamless]			Enable debug (use comma as delimiter)");
 		System.err.println("Examples:");
 		System.err.println("\tClassic use:");
 		System.err.println("\t\tjava -jar OVDNativeClient.jar -c config.ovd -p password");
@@ -855,6 +869,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				}
 				
 				this.client = new OvdClientPortal(dialog, response.getUsername(), this.opts.autopublish, response.isDesktopIcons(), this.opts.autostart, this);
+				((OvdClientPortal) this.client).setSeamlessDebugEnabled(this.opts.debugSeamless);
 				break;
 			default:
 				throw new UnsupportedOperationException(I18n._("Internal error: unsupported session mode"));

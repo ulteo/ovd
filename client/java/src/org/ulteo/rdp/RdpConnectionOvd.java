@@ -53,6 +53,10 @@ public class RdpConnectionOvd extends RdpConnection {
 	public static final int MOUNTING_MODE_PARTIAL =	0x00000020;
 	public static final int MOUNTING_MODE_MASK =	0x000000F0;
 
+	/* Flags value between 0x10000000 and 0xf0000000 are reserved for debug*/
+	public static final int DEBUG_SEAMLESS =	0x10000000;
+	public static final int DEBUG_MASK =		0xf0000000;
+
 	private int flags = 0x00;
 	private ArrayList<Application> appsList = null;
 	private OvdAppChannel ovdAppChannel = null;
@@ -73,6 +77,9 @@ public class RdpConnectionOvd extends RdpConnection {
 
 		if ((this.flags & MODE_DESKTOP) != 0 && (this.flags & MODE_APPLICATION) != 0)
 			throw new OvdException("Unable to create connection: Desktop and Application modes can't work together");
+
+		if ((this.flags & DEBUG_MASK) == DEBUG_SEAMLESS)
+			this.opt.debug_seamless = true;
 
 		this.opt.bitmap_compression = true;
 		this.setVolatileCaching(true);

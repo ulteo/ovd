@@ -63,6 +63,7 @@ import net.propero.rdp.crypto.CryptoException;
 import net.propero.rdp.rdp5.cliprdr.ClipChannel;
 import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
+import org.apache.log4j.Level;
 
 
 public class SeamlessChannel extends VChannel implements WindowStateListener, WindowListener, FocusListener {
@@ -84,7 +85,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	protected ConcurrentHashMap<String, Integer> stateOrdersHistory = null;
 	protected ConcurrentHashMap<Integer, Integer> ackHistory = null;
 	
-	protected static Logger logger = Logger.getLogger("net.propero.rdp");
+	protected static Logger logger = Logger.getLogger(SeamlessChannel.class);
 
 	private Frame main_window = null;
 	private ClipChannel clipChannel = null;
@@ -92,6 +93,10 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
     
 	public SeamlessChannel(Options opt_, Common common_) {
 		super(opt_, common_);
+
+		if (this.opt.debug_seamless)
+			logger.setLevel(Level.DEBUG);
+
 		logger.debug("Seamless Channel created");		
 		this.windows = new ConcurrentHashMap<String, SeamlessWindow>();
 		this.stateOrdersHistory = new ConcurrentHashMap<String, Integer>();
