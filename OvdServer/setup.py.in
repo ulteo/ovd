@@ -28,7 +28,7 @@ setup_args = {}
 setup_args["name"] = "@NAME@"
 setup_args["description"] = "OVD slaveserver"
 setup_args["author"] = "Julien Langlois"
-setup_args["author_email"] = "julient@ulteo.com"
+setup_args["author_email"] = "julien@ulteo.com"
 setup_args["url"] = "http://www.ulteo.com/"
 setup_args["version"] = "@VERSION@"
 
