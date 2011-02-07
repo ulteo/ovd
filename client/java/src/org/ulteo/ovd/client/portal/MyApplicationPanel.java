@@ -26,6 +26,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -63,7 +64,6 @@ public class MyApplicationPanel extends JPanel {
 
 		for (Application app : appsList) {
 			ApplicationLink link = new ApplicationLink(app);
-			link.addActionListener(new ApplicationListener(app, this.runningApps));
 			
 			gbc.gridx = 0;
 			gbc.gridy = y;
@@ -89,8 +89,20 @@ public class MyApplicationPanel extends JPanel {
 			return;
 		
 		for (Component cmp : this.buttonPan.getComponents()) {
-			if (cmp.getName().equals(app.getName()))
-				cmp.setEnabled(enable);
+			if (cmp.getName().equals(app.getName())) {
+				if (! (cmp instanceof ApplicationLink))
+					continue;
+
+				ApplicationLink link = (ApplicationLink) cmp;
+
+				for (ActionListener each : link.getListeners(ActionListener.class))
+					link.removeActionListener(each);
+
+				link.setEnabled(enable);
+
+				if (enable)
+					link.addActionListener(new ApplicationListener(app, this.runningApps));
+			}
 		}
 	}
 
