@@ -842,5 +842,10 @@ if ($session->mode == Session::MODE_DESKTOP) {
 }
 $dom->appendChild($session_node);
 
-echo $dom->saveXML();
+$buf = $dom->saveXML();
+
+header('Content-Length: '.strlen($buf)); // disable the HTTP/1.1 Content-Length chunked because the gateway does not handle this.
+
+echo $buf;
+
 exit(0);
