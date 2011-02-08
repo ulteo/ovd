@@ -163,9 +163,15 @@ function onStartSessionSuccess(xml_) {
 	var buffer = xml.getElementsByTagName('error');
 	if (buffer.length == 1) {
 		try {
-			if (typeof i18n.get(buffer[0].getAttribute('error_id')) != 'undefined')
-				showError(i18n.get(buffer[0].getAttribute('error_id')));
-			else
+			if (typeof i18n.get(buffer[0].getAttribute('error_id')) != 'undefined') {
+				var errormsg = i18n.get(buffer[0].getAttribute('error_id'));
+				try {
+					var errormore = buffer[0].getAttribute('more');
+					if (errormore != null)
+						errormsg += ' ('+errormore+')';
+				} catch(e) {}
+				showError(errormsg);
+			} else
 				showError(i18n.get('internal_error'));
 		} catch(e) {}
 		enableLogin();

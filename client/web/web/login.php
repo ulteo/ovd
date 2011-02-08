@@ -26,11 +26,13 @@ if (! is_array($_POST) || count($_POST) == 0) {
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-function return_error($errno_, $errstr_) {
+function return_error($errno_, $errstr_, $errmore_=NULL) {
 	$dom = new DomDocument('1.0', 'utf-8');
 	$node = $dom->createElement('error');
 	$node->setAttribute('id', $errno_);
 	$node->setAttribute('error_id', $errstr_);
+	if (! is_null($errmore_) && $errmore_ != '')
+		$node->setAttribute('more', $errmore_);
 	$dom->appendChild($node);
 	return $dom->saveXML();
 }
@@ -190,7 +192,7 @@ $sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
 
 $xml = query_sm_post_xml($sessionmanager_url.'/start.php', $dom->saveXML());
 if (! $xml) {
-	echo return_error(0, 'unable_to_reach_sm');
+	echo return_error(0, 'unable_to_reach_sm', $sessionmanager_url.'/start.php');
 	die();
 }
 
