@@ -375,4 +375,23 @@ such file or directory]]>
       Users</emphasis> start menu folder and restart the OVD service.
     </para>
   </section>
+
+  <section id="session_recovery">
+    <title>
+      Why I don't recover my session when I exit it without log off ?
+      Is there any session recovery in Ulteo OVD ?
+    </title>
+
+    <para>
+      A desktop session can be recovered in Ulteo OVD 3. To enable
+      that feature, you have to change a setting in the OVD
+      Administration Console.
+    </para>
+    <para>
+      From the <emphasis>Configuration</emphasis> page, go into
+      <emphasis>Session settings</emphasis> and set
+      <emphasis>Yes</emphasis> on the <emphasis role="strong">Sessions
+      are persistent</emphasis> settings.
+    </para>
+  </section>
 </article>
