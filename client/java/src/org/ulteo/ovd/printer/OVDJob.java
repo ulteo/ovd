@@ -23,10 +23,6 @@ import java.awt.print.PageFormat;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import javax.print.DocFlavor;
 import javax.print.PrintService;
@@ -46,37 +42,15 @@ public class OVDJob{
 	private String pdfFilename = null;
 	private String printerName = null;
 
-	/********/
-	/**flag to output information for debugging the code*/
-	private static boolean debugCode=false;
-	/**the decoder object which decodes the pdf and returns a data object*/
-	private PdfDecoder decode_pdf = null;
-	/**number of pages in the document*/
-	private int pageCount;
-
-	
 	public OVDJob(String pdfFilename, String printerName) {
 		this.printerName = printerName;
 		this.pdfFilename = pdfFilename;
 		if (this.printerName != null && ! this.printerName.equals(OVDPrinterThread.filePrinterName))
 			return;
 		
-		this.printerName = null;
-		//Create a file chooser
-		int returnVal = 0;
-		JFileChooser fc = null;
-		try {
-			fc = new JFileChooser();
-			returnVal = fc.showOpenDialog(null);
-		}
-		catch (Exception e){
-			e.printStackTrace();
-		}
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
+		JFileChooser fc = new JFileChooser();
+		if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
-			// Destination directory 
-			File pdf = new File(this.pdfFilename);
-			// Move file to new directory
 			if (file.exists()){
 				int ret = JOptionPane.showConfirmDialog(null, 
 						"The file "+file.getPath()+" already exixt, do you want to overwrite it",
@@ -86,14 +60,14 @@ public class OVDJob{
 				);
 				if (ret == JOptionPane.YES_OPTION){
 					file.delete();
-				}
-				else {
+				} else {
 					System.out.println("Nothing to do, the user abort printing");
 					return;
 				}
 			}
-			boolean success = moveTo(pdf, file);
-			if (!success) { 
+			
+			File src = new File(this.pdfFilename);
+			if (! src.renameTo(file)) { 
 				System.err.println("Unable to save file ["+this.pdfFilename+"] to ["+file.getPath()+"]");
 				return;
 			}
@@ -132,15 +106,13 @@ public class OVDJob{
 			System.out.println("Unable to find the printer");
 			return false;
 		}
+		PdfDecoder decode_pdf = new PdfDecoder(true);
 		try {
-			decode_pdf = new PdfDecoder(true);
 			decode_pdf.openPdfFile(this.pdfFilename);
-
-			/**get number of pages*/
-			pageCount=decode_pdf.getPageCount();
 		} catch (Exception e) {
 			System.out.println("Exception " + e + " in pdf code");
 		}
+		int pageCount = decode_pdf.getPageCount();
 		if ((decode_pdf.isEncrypted()) && (!decode_pdf.isExtractionAllowed())) {
 			System.out.println("Encrypted settings");
 			return false;
@@ -184,46 +156,6 @@ public class OVDJob{
 	}
 	
 	
-	private boolean moveTo(File src, File dest) {
-		FileInputStream srcBuf = null;
-		FileOutputStream destBuf = null;
-		try {
-			srcBuf = new FileInputStream(src);
-		} catch (FileNotFoundException e) {
-			System.out.println("Unable to find file ["+src.getAbsolutePath()+"]");
-			return false;
-		}
-		try {
-			dest.createNewFile();
-		} 
-		catch (IOException e) {
-			System.out.println("Unable to create file ["+dest.getAbsolutePath()+"]");
-			return false;
-		}
-		try {
-			destBuf = new FileOutputStream(dest);
-		} 
-		catch (FileNotFoundException e) {
-			System.out.println("Unable to find file ["+dest.getAbsolutePath()+"]");
-		}
-		byte[] buf = new byte[1024];
-		int len;
-		try {
-			while ((len = srcBuf.read(buf)) > 0) {
-				destBuf.write(buf, 0, len);
-			}
-			srcBuf.close();
-			destBuf.close();
-		}
-		catch (IOException e) {
-			System.out.println("Error while copying file from ["+src.getAbsolutePath()+"] to ["+dest.getAbsolutePath()+"]");
-			return false;
-		}
-		src.delete();
-		return true;
-	}
-
-	
 	public static void main (String[] args) {
 		if (args.length != 1) {
 			System.err.println("This sample take one argument : the PDF file to print");
@@ -242,6 +174,5 @@ public class OVDJob{
 			System.err.println("Error while printing the file["+pdfFile+"] : "+e.getMessage());
 		}		
 	}
-	
 	
 }
