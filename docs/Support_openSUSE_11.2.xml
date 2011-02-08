@@ -9,6 +9,7 @@
 
     <copyright>
       <year>2010</year>
+      <year>2011</year>
       <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
     </copyright>
   </articleinfo>
@@ -18,7 +19,7 @@
     pieces of Ulteo OVD are supported on openSUSE 11.2 system.
   </para>
 
-  <section>
+  <section id="prerequisites">
     <title>Prerequisites: openSUSE 11.2</title>
 
     <para>
@@ -27,39 +28,70 @@
       downloaded <ulink url="http://software.opensuse.org">here</ulink>.
     </para>
 
-    <para>
-      All operation have to be done as super user (root).
-    </para>
+    <xi:include href="Support_Debian_Squeeze.xml" xpointer="prerequisites_root" />
 
-    <simplesect>
-      <title id="repository_title">Repository</title>
+    <xi:include href="Support_SLES_11.SP1.xml" xpointer="warning_name_examples" />
 
-      <para id="repository_para">
-        openSUSE use the RPM packaging systemsystem. So you need to
-        have an internet connexion on your openSUSE system and add an
-        Ulteo RPM repository into your system.
-      </para>
+    <xi:include href="Support_SLES_11.SP1.xml" xpointer="seLinux" />
+  </section>
+
+  <section id="repository">
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_title" />
+
+    <xi:include href="Support_SLES_11.SP1.xml" xpointer="repository_para" />
+
+    <section id="repository_online">
+      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_title" />
+      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_para" />
 
       <itemizedlist>
-        <listitem id="repo_step_1">
-          <para>
-            Add the ovd repository:
-          </para>
+        <listitem>
+          <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_step1_para" />
           <screen>
             <![CDATA[
 zypper ar http://archive.ulteo.com/ovd/3.0/opensuse/11.2 ovd]]>
           </screen>
         </listitem>
         
-        <xi:include href="Support_SLES_11.SP1.xml" xpointer="repo_step_2" />
-        
-        <xi:include href="Support_SLES_11.SP1.xml" xpointer="repo_step_3" />
+        <xi:include href="Support_SLES_11.SP1.xml" xpointer="repository_online_step2" />
       </itemizedlist>
-    </simplesect>
+    </section>
 
-    <xi:include href="Support_SLES_11.SP1.xml" xpointer="warning_name_examples" />
-    <xi:include href="Support_SLES_11.SP1.xml" xpointer="seLinux" />
-  </section>
+    <section id="repository_offline">
+      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_title" />
+
+     <itemizedlist>
+        <listitem id="repository_offline_step1">
+         <para>
+           The offline repository is an archive named
+           <emphasis>openuse-11.2.tar.gz</emphasis>.
+         </para>
+
+         <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_step1_para" />
+       </listitem>
+
+       <listitem id="repository_offline_step2">
+         <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_step2_para" />
+          <screen>
+            <![CDATA[
+# tar xzf openuse-11.2.tar.gz]]>
+          </screen>
+        </listitem>
+
+        <listitem id="repository_offline_step3">
+          <para id="repository_offline_step3_para">
+            Add the ovd repository:
+          </para>
+          <screen>
+            <![CDATA[
+# zypper ar file:///root/opensuse-11.2 ovd-offline]]>
+          </screen>
+        </listitem>
+     </itemizedlist>
+    </section>
+
+    <xi:include href="Support_SLES_11.SP1.xml" xpointer="repository_common" />
+</section>
 
   <xi:include href="Support_SLES_11.SP1.xml" xpointer="sm" />
   <xi:include href="Support_SLES_11.SP1.xml" xpointer="subsystem" />

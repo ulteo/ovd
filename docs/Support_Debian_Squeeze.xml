@@ -9,6 +9,7 @@
 
     <copyright>
       <year>2010</year>
+      <year>2011</year>
       <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
     </copyright>
   </articleinfo>
@@ -26,33 +27,63 @@
       be downloaded <ulink url="http://www.debian.org/">here</ulink>.
     </para>
 
-    <para>
+    <para id="prerequisites_root">
       All operation have to be done as super user (root).
     </para>
 
-    <simplesect>
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_title" />
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_para" />
-     
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="warning_name_examples" />
+  </section>
+
+  <section id="repository">
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_title" />
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_para" />
+
+    <section id="repository_online">
+      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_title" />
+      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_para" />
+
       <itemizedlist>
         <listitem>
-          <para>
-	    Edit
-	    the <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd.list</emphasis>
-	    file and put these lines:
-          </para>
+          <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_step1_para" />
           <screen>
 	  <![CDATA[
 deb http://archive.ulteo.com/ovd/3.0/debian squeeze main]]>
           </screen>
         </listitem>
-
-         <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_step2" />
-         <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_step3" />
       </itemizedlist>
-    </simplesect>
+    </section>
 
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="warning_name_examples" />
+    <section id="repository_offline">
+      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_title" />
+
+      <itemizedlist>
+        <listitem>
+          <para>
+            The offline repository is an archive named
+            <emphasis>debian-squeeze.tar.gz</emphasis>.
+          </para>
+          <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_step1_para" />
+        </listitem>
+
+        <listitem>
+          <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_step2_para" />
+          <screen>
+            <![CDATA[
+# tar xzf debian-squeeze.tar.gz]]>
+          </screen>
+        </listitem>
+
+        <listitem>
+          <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_step3_para" />
+          <screen>
+            <![CDATA[
+deb file:///root/debian-squeeze squeeze main]]>
+          </screen>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_common" />
   </section>
 
 

@@ -9,6 +9,7 @@
 
     <copyright>
       <year>2010</year>
+      <year>2011</year>
       <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
     </copyright>
   </articleinfo>
@@ -19,34 +20,53 @@
     (SLES) 11 SP1 system.
   </para>
 
-  <section>
+  <section id="prerequisites">
     <title>Prerequisites: SUSE Linux Enterprise Server (SLES) 11 SP1</title>
 
-    <para>
-      All operation have to be done as super user (root).
+    <xi:include href="Support_Debian_Squeeze.xml" xpointer="prerequisites_root" />
+
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="warning_name_examples" />
+
+    <simplesect id="seLinux">
+      <title id="seLinux_title">SELinux</title>
+      <para id="seLinux_para1">
+        Ulteo OVD is not compatible with SELinux yet.
+      </para>
+      <para id="seLinux_para2">
+        So please disable SELinux support:
+      </para>
+      <screen>
+        <![CDATA[
+# zypper remove selinux-policy]]>
+      </screen>
+    </simplesect>
+  </section>
+
+  <section id="repository">
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_title" />
+
+    <para id="repository_para">
+      SUSE systems use the RPM packaging system. So you need to have
+      an internet connexion on your SUSE system and add an Ulteo RPM
+      repository into your system.
     </para>
 
-    <simplesect>
-      <title id="repository_title">Repository</title>
-
-      <para id="repository_para">
-        SLES use the RPM packaging system. So you need to have
-        an internet connexion on your SLES system and add an Ulteo
-        RPM repository into your system.
-      </para>
+    <section id="repository_online">
+      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_title" />
+      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_para" />
 
       <itemizedlist>
-        <listitem id="repo_step_1">
-          <para>
+        <listitem id="repository_online_step1">
+          <para id="repository_online_step1_para">
             Add the ovd repository:
           </para>
           <screen>
 	  <![CDATA[
-zypper ar http://archive.ulteo.com/ovd/3.0/sles/11_SP1 ovd]]>
+# zypper ar http://archive.ulteo.com/ovd/3.0/sles/11_SP1 ovd]]>
           </screen>
         </listitem>
 
-        <listitem id="repo_step_2">
+        <listitem id="repository_online_step2">
           <para>
             Install the keyring package to validate the repository
             using gpg:
@@ -56,11 +76,48 @@ zypper ar http://archive.ulteo.com/ovd/3.0/sles/11_SP1 ovd]]>
 # rpm --import http://archive.ulteo.com/ovd/keyring]]>
           </screen>
         </listitem>
+      </itemizedlist>
+    </section>
 
-        <listitem id="repo_step_3">
-          <para>
-	    Update the package database:
+    <section id="repository_offline">
+      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_title" />
+
+      <itemizedlist>
+        <listitem id="repository_offline_step1">
+         <para>
+           The offline repository is an archive named
+           <emphasis>sles-11_sp1.tar.gz</emphasis>.
+         </para>
+
+         <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_step1_para" />
+       </listitem>
+
+       <listitem id="repository_offline_step2">
+         <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_step2_para" />
+          <screen>
+            <![CDATA[
+# tar xzf sles-11_sp1.tar.gz]]>
+          </screen>
+        </listitem>
+
+        <listitem id="repository_offline_step3">
+          <para id="repository_offline_step3_para">
+            Add the ovd repository:
           </para>
+          <screen>
+            <![CDATA[
+# zypper ar file:///root/sles-11_sp1 ovd-offline]]>
+          </screen>
+        </listitem>
+     </itemizedlist>
+    </section>
+
+    <simplesect id="repository_common">
+      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_common_title" />
+
+      <itemizedlist>
+        <listitem>
+          <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_common_step1_para" />
           <screen>
 	    <![CDATA[
 # zypper refresh]]>
@@ -68,23 +125,8 @@ zypper ar http://archive.ulteo.com/ovd/3.0/sles/11_SP1 ovd]]>
         </listitem>
       </itemizedlist>
     </simplesect>
-
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="warning_name_examples" />
-
-    <simplesect id="seLinux">
-      <title>SELinux</title>
-      <para>
-        Ulteo OVD is not compatible with SELinux yet.
-      </para>
-      <para>
-        So please disable SELinux support:
-      </para>
-      <screen>
-        <![CDATA[
-# zypper remove selinux-policy]]>
-      </screen>
-    </simplesect>
   </section>
+
 
   <section id="sm">
     <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm_title" />

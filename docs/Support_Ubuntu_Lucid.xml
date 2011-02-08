@@ -9,6 +9,7 @@
 
     <copyright>
       <year>2010</year>
+      <year>2011</year>
       <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
     </copyright>
   </articleinfo>
@@ -49,40 +50,111 @@
       </para>
     </simplesect>
 
-    <simplesect>
-      <title id="repository_title">Repository</title>
-
-      <para id="repository_para">
-        Ubuntu is a Debian-based system which uses the same
-        packaging system and tools: apt-get. So you need to have an
-        internet connection on your Ubuntu system and add an Ulteo
-        Debian repository to your system.
+    <important id="warning_name_examples">
+      <para>
+        In this document, we are using
+        <emphasis>sm.ulteo.com</emphasis> for the Session Manager
+        address, <emphasis>aps.ulteo.com</emphasis> for the
+        Application Server and <emphasis>web.ulteo.com</emphasis> for
+        the Web Client.
       </para>
+      
+      <para>
+        You need to set those names according to your own domain name.
+      </para>
+    </important>
+  </section>
 
+  <section id="repository">
+    <title id="repository_title">Repository</title>
+
+    <para id="repository_para">
+      Ubuntu is a Debian-based system which uses the same packaging
+      system and tools: apt-get. So you need to have an internet
+      connection on your Ubuntu system and add an Ulteo Debian
+      repository to your system.
+    </para>
+      
+    <section id="repository_online">
+      <title id="repository_online_title">Online method</title>
+      
+      <para id="repository_online_para">
+        The following method describe the repository process when your
+        servers can access to Internet. If not, please read the
+        offline method.
+      </para>
+      
       <itemizedlist>
         <listitem id="repository_step1">
-          <para>
-	    Edit
-	    the <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd.list</emphasis>
-	    file and add these lines:
+          <para id="repository_online_step1_para">
+            Edit the
+            <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd.list</emphasis>
+            file and add these lines:
           </para>
           <screen>
-	  <![CDATA[
+            <![CDATA[
 deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
           </screen>
         </listitem>
+      </itemizedlist>
+    </section>
 
-        <listitem id="repository_step2">
-          <para>
-	    Update the package database:
+    <section id="repository_offline">
+      <title id="repository_offline_title">Offline Method</title>
+
+     <itemizedlist>
+       <listitem id="repository_offline_step1">
+         <para>
+           The offline repository is an archive named
+           <emphasis>ubuntu-lucid.tar.gz</emphasis>.
+         </para>
+
+         <para id="repository_offline_step1_para">
+           Get this archive from <ulink
+           url="http://archive.ulteo.com/ovd/3.0/offline/">the Ulteo
+           website</ulink> or from the Ulteo OVD DVD and copy it in
+           the <emphasis>/root</emphasis> of your machine.
+         </para>
+       </listitem>
+
+       <listitem id="repository_offline_step2">
+          <para id="repository_offline_step2_para">
+            Uncompress the archive:
           </para>
           <screen>
-	    <![CDATA[
+            <![CDATA[
+# tar xzf ubuntu-lucid.tar.gz]]>
+          </screen>
+        </listitem>
+
+        <listitem id="repository_offline_step3">
+          <para id="repository_offline_step3_para">
+            Edit the
+            <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd-offline.list</emphasis>
+            file and add these lines:
+          </para>
+          <screen>
+            <![CDATA[
+deb file:///root/ubuntu-lucid lucid main]]>
+          </screen>
+        </listitem>
+     </itemizedlist>
+    </section>
+
+    <simplesect id="repository_common">
+      <title id="repository_common_title">Finish with any method</title>
+      <itemizedlist>
+        <listitem>
+          <para id="repository_common_step1_para">
+            Update the package database:
+          </para>
+          <screen>
+            <![CDATA[
 # apt-get update]]>
           </screen>
           <note>
             <para>
-	      GPG errors given by the previous command will be fixed
+              GPG errors given by the previous command will be fixed
               in the next installation steps. They won't prevent the
               installation to succeed.
             </para>
@@ -102,20 +174,6 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
         </listitem>
       </itemizedlist>
     </simplesect>
-
-    <important id="warning_name_examples">
-      <para>
-        In this document, we are using
-        <emphasis>sm.ulteo.com</emphasis> for the Session Manager
-        address, <emphasis>aps.ulteo.com</emphasis> for the
-        Application Server and <emphasis>web.ulteo.com</emphasis> for
-        the Web Client.
-      </para>
-      
-      <para>
-        You need to set those names according to your own domain name.
-      </para>
-    </important>
   </section>
 
   <section id="sm">

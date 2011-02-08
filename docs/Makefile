@@ -37,7 +37,8 @@ DST=$(SRC:.xml=.html)
 PDF=$(SRC:.xml=.pdf)
 ANW=$(SRC:.xml=.anw)
 
-all: $(DST) $(PDF)
+all: $(DST) 
+#$(PDF)
 
 # Add the depends between sources
 Installation_Iso.xml: Easy_Installation.xml

@@ -9,6 +9,7 @@
 
     <copyright>
       <year>2010</year>
+      <year>2011</year>
       <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
     </copyright>
   </articleinfo>
@@ -21,20 +22,34 @@
   <section>
     <title>Prerequisites: Red Hat Enterprise Linux (RHEL) 5.5</title>
 
-    <para>
-      All operation have to be done as super user (root).
-    </para>
+    <xi:include href="Support_Debian_Squeeze.xml" xpointer="prerequisites_root" />
 
     <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="warning_name_examples" />
 
-    <simplesect>
-      <title id="repository_title">Repository</title>
+    <simplesect id="seLinux">
+      <xi:include href="Support_SLES_11.SP1.xml" xpointer="seLinux_title" />
+      <xi:include href="Support_SLES_11.SP1.xml" xpointer="seLinux_para1" />
+      <xi:include href="Support_SLES_11.SP1.xml" xpointer="seLinux_para2" />
 
-      <para id="repository_para">
-        RHEL use the RPM packaging systemsystem. So you need to have
-        an internet connexion on your RHEL system and add an Ulteo
-        RPM repository into your system.
-      </para>
+      <screen>
+        <![CDATA[
+# yum remove selinux-policy]]>
+      </screen>
+    </simplesect>
+  </section>
+
+  <section id="repository">
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_title" />
+
+    <para id="repository_para">
+      Red Hat use the RPM packaging systemsystem. So you need to have
+      an internet connexion on your Red Hat system and add an Ulteo
+      RPM repository into your system.
+    </para>
+
+    <section id="repository_online">
+      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_title" />
+      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_para" />
 
       <para>
         The first step is to configure yum to enable the Ulteo rpm repository.
@@ -47,22 +62,46 @@ enabled=1
 gpgcheck=1
 gpgkey=http://archive.ulteo.com/ovd/keyring]]>
         </screen>
-    </simplesect>
+    </section>
 
-    <simplesect id="seLinux">
-      <title>SELinux</title>
-      <para>
-        Ulteo OVD is not compatible with SELinux yet.
-      </para>
-      <para>
-        So please disable SELinux support:
-      </para>
-      <screen>
-        <![CDATA[
-# yum remove selinux-policy]]>
-      </screen>
-    </simplesect>
+    <section id="repository_offline">
+      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_title" />
 
+      <itemizedlist>
+        <listitem id="repository_offline_step1">
+         <para>
+           The offline repository is an archive named
+           <emphasis>rhel-5.5.tar.gz</emphasis>.
+         </para>
+
+         <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_step1_para" />
+       </listitem>
+
+       <listitem id="repository_offline_step2">
+         <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_step2_para" />
+          <screen>
+            <![CDATA[
+# tar xzf rhel-5.5.tar.gz]]>
+          </screen>
+        </listitem>
+        <listitem>
+          <para>
+            The first step is to configure yum to enable the Ulteo rpm
+            repository.  Create the file
+            <emphasis>/etc/yum.repos.d/ovd.repo</emphasis>
+            with:
+          </para>
+          <screen>
+            <![CDATA[
+[ovd-3.0]
+name=Ulteo OVD 3.0 offline
+baseurl=file:///root/rhel-5.5/
+enabled=1
+gpgcheck=0]]>
+          </screen>
+        </listitem>
+     </itemizedlist>
+    </section>
   </section>
 
   <section id="sm">
