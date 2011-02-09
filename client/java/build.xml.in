@@ -309,7 +309,8 @@
     <antcall target="precompile" />
     <javac srcdir="src:src1.4" destdir="build" encoding="UTF8"
            target="1.5" source="1.5" includes="org/ulteo/vdi/Client.java">
-      <classpath refid="minimal.path" >
+      <classpath>
+        <path refid="minimal.path" />
         <pathelement location="required_libraries/jpedal.jar"/>
       </classpath>
     </javac>
