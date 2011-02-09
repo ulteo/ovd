@@ -85,7 +85,6 @@ class ReverseProxy(asyncore.dispatcher):
 
 		request = r.split('\n', 1)[0]
 		utf8_request = request.rstrip('\n\r').decode("utf-8", "replace")
-		Logger.debug("Gateway:: request: %s (%s,%d)" % (utf8_request, addr, port))
 
 		# find protocol
 		rdp = re.match('\x03\x00(.*)Cookie: mstshash=(\w+);token=([\-\w]+);', request)
@@ -112,6 +111,7 @@ class ReverseProxy(asyncore.dispatcher):
 
 			# HTTP case
 			elif http:
+				Logger.debug("Gateway:: request: http %s (%s,%d)" % (utf8_request, addr, port))
 				path = http.group(2)
 
 				if not (path == '/ovd' or path.startswith("/ovd/")):
