@@ -456,6 +456,41 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
       <screeninfo>Session Manager - server page</screeninfo>
       <graphic fileref="img/sm_admin_server_unregistered.png"></graphic>
     </screenshot>
+    
+    <simplesect id="aps_redirection_name">
+      <title>Set a redirection name</title>
+
+      <para>
+        The server <emphasis role="strong">redirection name</emphasis> is
+        optional. If all your machines are in the same network, you
+        don't have to change it.
+      </para>
+
+      <important>
+        <para>
+          If you have installed your Application Server on the same machine
+          as your Session Manager and you have followed our advices, you
+          have set <emphasis role="strong">127.0.0.1</emphasis> as server
+          name so you <emphasis role="strong">must</emphasis> define
+          a redirection name.
+        </para>
+      </important>
+
+      <para id="redirectionname_explain">
+        The <emphasis role="strong">redirection name</emphasis> is used
+        to launch sessions. When you launch a session, you are
+        redirected to an Application Server using the redirection name as
+        target host. In some cases the default redirection name is not 
+        valid. For instance, if you set up a private IP address and you 
+        want to connect to your Application Server from the internet.
+      </para>
+
+      <screenshot>
+        <screeninfo>Session Manager - server redirection name</screeninfo>
+          <graphic fileref="img/sm_admin_external_name.png"></graphic>
+      </screenshot>
+    </simplesect>
+    
   </section>
 
   <section id="wc">
