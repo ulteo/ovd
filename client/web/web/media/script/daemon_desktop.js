@@ -61,7 +61,7 @@ var Desktop = Class.create(Daemon, {
 			if (this.fullscreen)
 				applet_params.set('fullscreen', 1);
 
-			var applet = buildAppletNode('ulteoapplet', this.applet_main_class, 'log4j-1.2.jar,'+this.applet_version, applet_params);
+			var applet = buildAppletNode('ulteoapplet', this.applet_main_class, 'jpedal.jar,log4j-1.2.jar,'+this.applet_version, applet_params);
 			applet.setAttribute('width', applet_width);
 			applet.setAttribute('height', applet_height);
 			$('desktopAppletContainer').show();

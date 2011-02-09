@@ -5,7 +5,7 @@
  Author Gauvain POCENTEK <gpocentek@linutop.com> 2008-2009
  Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
  Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
- Author Samuel BOVEE <samuel@ulteo.com> 2010
+ Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
  Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  Author David LECHEVALIER <david@ulteo.com> 2010
  Author Guillaume DUPAS <guillaume@ulteo.com> 2010
@@ -114,21 +114,17 @@
     <javac srcdir="src" destdir="build" encoding="UTF8" target="1.5" source="1.5"
            includes="org/ulteo/ovd/printer/PrinterApplet.java">
       <classpath>
-        <pathelement location="required_libraries/jai_codec.jar"/>
-        <pathelement location="required_libraries/jai_core.jar"/>
-        <pathelement location="required_libraries/js.jar"/>
+        <pathelement location="required_libraries/jpedal.jar"/>
       </classpath>
     </javac>
   </target>
 
   <target name="PDFPrinter.jar" depends="PDFPrinter" description="create PDFPrinter jar">
-    <copy todir="build/org/jpedal/res">
-      <fileset dir="src/org/jpedal/res"/>
-    </copy>
     <jar destfile="jars/PDFPrinter.jar" basedir="build">
       <include name="**"/>
       <manifest>
         <attribute name="Main-Class" value="org.ulteo.ovd.printer.PrinterApplet"/>
+        <attribute name="Class-Path" value="jpedal.jar"/>
       </manifest>
     </jar>
     <signjar jar="jars/PDFPrinter.jar"
@@ -158,13 +154,10 @@
   </target>
 
   <target name="ovdExternalAppsClient.jar" depends="ovdExternalAppsClient">
-    <copy todir="build/org/jpedal/res">
-      <fileset dir="src/org/jpedal/res"/>
-    </copy>
     <unjar dest="build">
       <filelist dir="required_libraries"
                 files="gnu-getopt.jar, log4j-1.2.jar, registry.jar,
-                       jshortcut.jar, image4j.jar, ini4j.jar" />
+                       jshortcut.jar, image4j.jar, ini4j.jar, jpedal.jar" />
     </unjar>
     <jar destfile="jars/OVDExternalAppsClient.jar" basedir="build">
       <manifest>
@@ -217,9 +210,6 @@
     <copy todir="build/pics">
       <fileset dir="icons" />
     </copy>
-    <copy todir="build/org/jpedal/res">
-      <fileset dir="src/org/jpedal/res"/>
-    </copy>
   </target>
 
   <target name="ovdNativeClient_install">
@@ -234,7 +224,7 @@
     <unjar dest="build">
       <filelist dir="required_libraries"
                 files="gnu-getopt.jar, log4j-1.2.jar, registry.jar,
-                       jshortcut.jar, image4j.jar, ini4j.jar" />
+                       jshortcut.jar, image4j.jar, ini4j.jar, jpedal.jar" />
     </unjar>
     <antcall target="ovdNativeClient_jar" />
     <jar destfile="jars/OVDNativeClient.jar" basedir="build">
@@ -271,9 +261,7 @@
       <classpath>
         <path refid="minimal.path" />
         <pathelement location="${java.home}/lib/plugin.jar"/>
-        <pathelement location="required_libraries/jai_codec.jar"/>
-        <pathelement location="required_libraries/jai_core.jar"/>
-        <pathelement location="required_libraries/js.jar"/>
+        <pathelement location="required_libraries/jpedal.jar"/>
         <pathelement location="required_libraries/jshortcut.jar"/>
         <pathelement location="required_libraries/image4j.jar"/>
       </classpath>
@@ -305,7 +293,7 @@
     </jar>
     <signjar destdir="jars" alias="ulteo" storepass="${keystore.password}"
              keystore="${build.cert}/keystore" >
-        <fileset dir="required_libraries" includes="log4j-1.2.jar" />
+        <fileset dir="required_libraries" includes="jpedal.jar log4j-1.2.jar" />
         <fileset dir="jars" includes="ulteo-applet.jar" />
     </signjar>
   </target>
@@ -327,7 +315,9 @@
     </copy>
     <javac srcdir="src:src1.4" destdir="build" encoding="UTF8"
            target="1.5" source="1.5" includes="org/ulteo/vdi/Client.java">
-      <classpath refid="minimal.path" />
+      <classpath refid="minimal.path" >
+        <pathelement location="required_libraries/jpedal.jar"/>
+      </classpath>
     </javac>
   </target>
 
@@ -336,7 +326,7 @@
       <include name="**" />
       <manifest>
         <attribute name="Main-Class" value="org.ulteo.vdi.Client"/>
-        <attribute name="Class-Path" value="/usr/share/java/log4j-1.2.jar /usr/share/java/gnu-getopt.jar"/>
+        <attribute name="Class-Path" value="log4j-1.2.jar gnu-getopt.jar jpedal.jar"/>
       </manifest>
     </jar>
   </target>
