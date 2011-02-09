@@ -93,6 +93,7 @@ public class SeamFrame extends Frame
 
 		this.addKeyListener(input.getKeyAdapter());
 
+		this.setMaximizedBounds(this.maxBounds);
 		this.setUndecorated(true);
 		this.sw_setMyPosition(-1, -1, 1, 1);
 		this.setVisible(false);
@@ -159,17 +160,6 @@ public class SeamFrame extends Frame
 		this.setSize(width, height);
 		this.setLocation(x + this.maxBounds.x, y + this.maxBounds.y);
 		this.repaint();
-	}
-
-
-	@Override
-	public void setExtendedState(int state) {
-		if (state == Frame.MAXIMIZED_BOTH) {
-			this.sw_setMyPosition(0, 0, this.maxBounds.width, this.maxBounds.height);
-			return;
-		}
-
-		super.setExtendedState(state);
 	}
 
 	public void setParams(int id,int x,int y,int width,int height) {

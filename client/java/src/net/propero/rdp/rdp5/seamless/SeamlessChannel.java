@@ -47,6 +47,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -82,7 +83,6 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	protected int seamlessSerial = 0;
 	
 	protected ConcurrentHashMap<String, SeamlessWindow> windows;
-	protected ConcurrentHashMap<String, Integer> stateOrdersHistory = null;
 	protected ConcurrentHashMap<Integer, Integer> ackHistory = null;
 	
 	protected static Logger logger = Logger.getLogger(SeamlessChannel.class);
@@ -90,6 +90,8 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	private Frame main_window = null;
 	private ClipChannel clipChannel = null;
 	private ArrayList<SeamListener> listener = new ArrayList<SeamListener>();
+
+	private List<StateOrder> stateOrders = null;
     
 	public SeamlessChannel(Options opt_, Common common_) {
 		super(opt_, common_);
@@ -99,8 +101,9 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 		logger.debug("Seamless Channel created");		
 		this.windows = new ConcurrentHashMap<String, SeamlessWindow>();
-		this.stateOrdersHistory = new ConcurrentHashMap<String, Integer>();
 		this.ackHistory = new ConcurrentHashMap<Integer, Integer>();
+
+		this.stateOrders = new ArrayList<StateOrder>();
 	}
 	public void setMainFrame(Frame f_) {
 		this.main_window = f_;
@@ -125,8 +128,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	}
 
 	public Rectangle getMaximumWindowBounds() {
-		// Subtracting 1 to the width, it prevents java maximize the window
-		return new Rectangle(this.opt.x_offset, this.opt.y_offset, this.opt.width - 1, this.opt.height);
+		return new Rectangle(this.opt.x_offset, this.opt.y_offset, this.opt.width, this.opt.height);
 	}
 
 	public boolean processLine(String line)
@@ -549,8 +551,17 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 				break;
 		}
 
-		if (frame_state == Frame.ICONIFIED)
-			this.stateOrdersHistory.put(name, new Integer(frame_state));
+		if (f.sw_getExtendedState() == frame_state && ((Window) f).isVisible()) {
+			logger.debug("[processState] ID '"+String.format("0x%08x", id)+"' already has the state "+frame_state);
+			return true;
+		}
+
+		if (((Window) f).isVisible()) {
+			StateOrder order = new StateOrder();
+			order.window_id = id;
+			order.state = (int) state;
+			this.stateOrders.add(order);
+		}
 
 		f.sw_setExtendedState(frame_state);
 
@@ -777,7 +788,6 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	
 	public void	send_state(int id, int state, int flags) throws RdesktopException, IOException, CryptoException
 	{
-		this.ackHistory.put(this.seamlessSerial, id);
 		seamless_send("STATE", 
 				"0x" + Integer.toHexString(id) + "," + 
 				"0x" + Integer.toHexString(state) + "," + 
@@ -850,58 +860,65 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		wnd.sw_requestFocus();
 	}
 
-	public void windowStateChanged(WindowEvent ev) {
-		SeamlessWindow f = (SeamlessWindow)ev.getWindow();
+	public static int getSeamlessState(int state) {
+		logger.debug("[getSeamlessState] state before: "+state);
+		if (state != Frame.MAXIMIZED_BOTH) {
+			state &= ~Frame.MAXIMIZED_HORIZ;
+			state &= ~Frame.MAXIMIZED_VERT;
+		}
+		logger.debug("[getSeamlessState] state after: "+state);
 
-		if (ev.getOldState() == Frame.ICONIFIED) {
-			int state = SeamlessChannel.WINDOW_NORMAL;
-			switch(ev.getNewState()) {
+		switch (state) {
+			case Frame.ICONIFIED:
+				state = WINDOW_MINIMIZED;
+				break;
+			case Frame.NORMAL:
+				state = SeamlessChannel.WINDOW_NORMAL;
+				break;
 			case Frame.MAXIMIZED_BOTH:
 				state = SeamlessChannel.WINDOW_MAXIMIZED;
 				break;
 			default:
+				logger.warn("[getSeamlessState] Unknown state: "+state);
 				state = SeamlessChannel.WINDOW_NORMAL;
-			}
+				break;
+		}
 
-			try {
-				this.send_state(f.sw_getId(), state, 0);
-			} catch(Exception e) {
-				System.err.println("send new state failed: "+e);
-			}
+		return state;
+	}
+
+	public void windowStateChanged(WindowEvent ev) {
+		SeamlessWindow f = (SeamlessWindow)ev.getWindow();
+
+		int oldState = SeamlessChannel.getSeamlessState(ev.getOldState());
+		int newState = SeamlessChannel.getSeamlessState(ev.getNewState());
+
+		if (oldState == newState)
+			return;
+
+		if (newState == WINDOW_MAXIMIZED && (f instanceof SeamFrame)) {
+			SeamFrame sf = (SeamFrame) f;
+			Rectangle maximizedBounds = sf.getMaximizedBounds();
+			sf.setParams(f.sw_getId(), 0, 0, maximizedBounds.width, maximizedBounds.height);
+		}
+
+		StateOrder order = null;
+		for (StateOrder each : this.stateOrders) {
+			if (each.window_id != f.sw_getId() || each.state != newState)
+				continue;
+
+			order = each;
+			break;
+		}
+		if (order != null) {
+			this.stateOrders.remove(order);
 			return;
 		}
 
-		if (ev.getNewState() == Frame.ICONIFIED) {
-			String name = "w_"+f.sw_getId();
-
-			if (this.stateOrdersHistory.containsKey(name) && this.stateOrdersHistory.get(name).intValue() == Frame.ICONIFIED) {
-				this.stateOrdersHistory.remove(name);
-				return;
-			}
-
-			try {
-				this.send_state(f.sw_getId(), SeamlessChannel.WINDOW_MINIMIZED, 0);
-			} catch(Exception e) {
-				System.err.println("send new state failed: "+e);
-			}
-			
-			return;
-		}
-
-		if (ev.getNewState() == Frame.MAXIMIZED_BOTH) {
-			f.sw_setExtendedState(Frame.NORMAL);
-
-			return;
-		}
-
-		if (ev.getNewState() == Frame.NORMAL && ev.getOldState() == Frame.MAXIMIZED_BOTH) {
-			try {
-				this.send_state(f.sw_getId(), SeamlessChannel.WINDOW_MAXIMIZED, 0);
-			} catch(Exception e) {
-				logger.error("send new state failed: "+e.getMessage());
-			}
-
-			return;
+		try {
+			this.send_state(f.sw_getId(), newState, 0);
+		} catch(Exception e) {
+			logger.error("send new state failed: "+e.getMessage());
 		}
 	}
 	
@@ -944,13 +961,8 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	public void focusGained(FocusEvent fe) {
 		SeamlessWindow wnd = (SeamlessWindow) fe.getComponent();
 
-		switch (wnd.sw_getExtendedState()) {
-			case Frame.NORMAL:
-			case Frame.MAXIMIZED_BOTH:
-				break;
-			default:
-				return;
-		}
+		if (SeamlessChannel.getSeamlessState(wnd.sw_getExtendedState()) == SeamlessChannel.WINDOW_MINIMIZED)
+			return;
 
 		SeamlessWindow modalWnd = wnd.sw_getModalWindow();
 		if (modalWnd != null) {
@@ -983,5 +995,10 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 				return;
 			}
 		}
+	}
+
+	protected class StateOrder {
+		public long window_id;
+		public int state;
 	}
 }
