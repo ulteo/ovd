@@ -185,45 +185,4 @@ deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/private/ubuntu lucid main]]>
   </para>
   </section>
   
-  <section>
-    <title>Client installation</title>
-    <para>
-      Once you have installed the gateway, you need to have a client to launch session.
-    </para>
-  
-     <important>
-       <para>
-         At the moment, OVD Web Client is not supported by the gateway, you must use the native client
-       </para>
-     </important>
-
-     <para>
-       <para>For installation on Ubuntu Lucid:</para>
-         <itemizedlist>
-           <listitem>
-             <para>
-               Get the repository as previously showed
-             </para>
-           </listitem>
-           <listitem>
-             <para>
-               Install the native client package:
-             </para>
-             <screen>
-               <![CDATA[
-# apt-get install ulteo-ovd-native-client]]>
-             </screen>
-           </listitem>
-           <listitem>
-             <para>
-               Instead of using the adress of the SessionManager use gateway one.
-             </para>
-           </listitem>
-         </itemizedlist>
-       </para>
-       <para>
-         For installation on windows: see the <ulink url="WebClient.html">this documentation</ulink>
-       </para>
-  
-  </section>
 </article>
