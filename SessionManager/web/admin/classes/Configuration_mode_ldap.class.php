@@ -120,7 +120,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     }
     
     // Set the Session Management module
-    $prefs->set('SessionManagement', 'enable', 'ldap');
+    $prefs->set('SessionManagement', 'enable', 'internal');
 
     return True;
   }
