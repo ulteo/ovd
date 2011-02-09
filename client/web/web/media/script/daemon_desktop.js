@@ -95,7 +95,7 @@ var Desktop = Class.create(Daemon, {
 						go_to_the_catch_please(); //call a function which does not exist to throw an exception and go to the catch()
 
 					mode_gateway = true;
-					port = 443;
+					port = serverNodes[i].getAttribute('port');
 				} catch(e) {}
 
 				var server = new Server(i, i, serverNodes[i].getAttribute('fqdn'), port, serverNodes[i].getAttribute('login'), serverNodes[i].getAttribute('password'));

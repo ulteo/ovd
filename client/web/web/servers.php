@@ -46,8 +46,17 @@ if (! $dom->hasChildNodes()) {
 
 $server_nodes = $dom->getElementsByTagName('server');
 foreach ($server_nodes as $server_node) {
-	if (array_key_exists('gateway', $_SESSION) && $_SESSION['gateway'] === true)
-		$server_node->setAttribute('fqdn', $_SESSION['ovd-client']['server']);
+	if (array_key_exists('gateway', $_SESSION) && $_SESSION['gateway'] === true) {
+		$url = 'http://'.$_SESSION['ovd-client']['server'];
+
+		$host = parse_url($url, PHP_URL_HOST);
+		$port = parse_url($url, PHP_URL_PORT);
+		if (is_null($port))
+			$port = 443;
+
+		$server_node->setAttribute('fqdn', $host);
+		$server_node->setAttribute('port', $port);
+	}
 }
 
 $xml = $dom->saveXML();

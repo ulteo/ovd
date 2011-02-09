@@ -55,6 +55,12 @@ public class ProfileRegistry extends Profile {
 				else if (field.equalsIgnoreCase(FIELD_HOST)) {
 					properties.setHost(value);
 				}
+				else if (field.equalsIgnoreCase(FIELD_PORT)) {
+					try {
+						properties.setPort(Integer.parseInt(value));
+					}
+					catch (NumberFormatException err) {}
+				}
 				else if (field.equalsIgnoreCase(FIELD_MODE)) {
 					int mode = ProfileProperties.MODE_AUTO;
 

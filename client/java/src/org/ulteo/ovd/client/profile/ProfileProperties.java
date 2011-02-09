@@ -29,6 +29,7 @@ public class ProfileProperties {
 
 	private String login = System.getProperty("user.name");
 	private String host = null;
+	private int port;
 	private int sessionMode = -1;
 	private boolean autoPublish = false;
 	private boolean useLocalCredentials = false;
@@ -39,9 +40,10 @@ public class ProfileProperties {
 	
 	public ProfileProperties() {}
 
-	public ProfileProperties(String login_, String host_, int sessionMode_, boolean autoPublish_, boolean useLocalCredentials_, Dimension screensize_, String lang, String keymap) {
+	public ProfileProperties(String login_, String host_, int port_, int sessionMode_, boolean autoPublish_, boolean useLocalCredentials_, Dimension screensize_, String lang, String keymap) {
 		this.login = login_;
 		this.host = host_;
+		this.port = port_;
 		this.sessionMode = sessionMode_;
 		this.autoPublish = autoPublish_;
 		this.useLocalCredentials = useLocalCredentials_;
@@ -66,6 +68,14 @@ public class ProfileProperties {
 		this.host = host_;
 	}
 
+	public int getPort() {
+		return this.port;
+	}
+
+	public void setPort(int port_) {
+		this.port = port_;
+	}
+	
 	public int getSessionMode() {
 		return this.sessionMode;
 	}

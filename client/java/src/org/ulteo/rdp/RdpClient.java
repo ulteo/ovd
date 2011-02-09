@@ -245,7 +245,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		if (params.ovd_mode == Properties.MODE_REMOTEAPPS)
 			this.ovd_mode_application = true;
 		
-		SessionManagerCommunication sm = new SessionManagerCommunication(params.server, true);
+		SessionManagerCommunication sm = new SessionManagerCommunication(params.server, SessionManagerCommunication.DEFAULT_PORT, true);
 		try {
 			sm.askForSession(params.username, params.password, new Properties(params.ovd_mode));
 		} catch (SessionManagerException ex) {

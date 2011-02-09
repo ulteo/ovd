@@ -92,6 +92,7 @@ public class ProfileIni extends Profile {
 		ini.put(INI_SECTION_USER, FIELD_LOCALCREDENTIALS, properties.getUseLocalCredentials()?VALUE_TRUE:VALUE_FALSE);
 
 		ini.put(INI_SECTION_SERVER, FIELD_HOST, properties.getHost());
+		ini.put(INI_SECTION_SERVER, FIELD_PORT, properties.getPort());
 		
 		String mode = VALUE_MODE_AUTO;
 		if (properties.getSessionMode() == ProfileProperties.MODE_DESKTOP)
@@ -156,7 +157,15 @@ public class ProfileIni extends Profile {
 		value = ini.get(INI_SECTION_SERVER, FIELD_HOST);
 		if (value != null)
 			properties.setHost(value);
-
+		
+		value = ini.get(INI_SECTION_SERVER, FIELD_PORT);
+		if (value != null) {
+			try {
+				properties.setPort(Integer.parseInt(value));
+			}
+			catch (NumberFormatException err) {}
+		}
+		
 		value = ini.get(INI_SECTION_SESSION, FIELD_MODE);
 		if (value != null) {
 			int mode = ProfileProperties.MODE_AUTO;

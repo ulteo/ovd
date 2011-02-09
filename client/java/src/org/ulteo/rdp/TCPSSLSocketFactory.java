@@ -72,7 +72,8 @@ public class TCPSSLSocketFactory implements SocketFactory {
 			SSLContext sc = SSLContext.getInstance("SSLv3");
 			sc.init(null, trustAllCerts, null);
 			SSLSocketFactory ssf = sc.getSocketFactory();
-			rdpsock = ssf.createSocket(this.host, 443);
+			rdpsock = ssf.createSocket(this.host, this.port);
+			
 			SSLSession session = ((SSLSocket) rdpsock).getSession();
 		} catch (Exception e) {
 			throw new RdesktopException("Creating SSL context failed:" + e.getMessage());

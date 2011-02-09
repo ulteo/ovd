@@ -149,7 +149,7 @@ public class ExternalAppsClient {
 			System.exit(1);
 		}
 		
-		SessionManagerCommunication dialog = new SessionManagerCommunication(ovdServer, true);
+		SessionManagerCommunication dialog = new SessionManagerCommunication(ovdServer, SessionManagerCommunication.DEFAULT_PORT, true);
 		
 		Properties request = new Properties(Properties.MODE_REMOTEAPPS);
 		try {

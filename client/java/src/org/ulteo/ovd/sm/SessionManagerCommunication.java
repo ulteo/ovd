@@ -108,8 +108,10 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	public static final String SESSION_STATUS_DESTROYED = "destroyed";
 
 	private static final int TIMEOUT = 2000;
+	public static final int DEFAULT_PORT = 443;
 
 	private String host = null;
+	private int port;
 	private boolean use_https = false;
 
 	private String base_url = null;
@@ -124,12 +126,13 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 	private String moreInfos_lastResponse = "no more information";
 
-	public SessionManagerCommunication(String host_, boolean use_https_) {
+	public SessionManagerCommunication(String host_, int port_, boolean use_https_) {
 		this.servers = new  ArrayList<ServerAccess>();
 		this.callbacks = new CopyOnWriteArrayList<Callback>();
 
 		this.cookies = new ArrayList<String>();
 		this.host = host_;
+		this.port = port_;
 		this.use_https = use_https_;
 
 		this.base_url = this.makeUrl("");
@@ -137,7 +140,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	}
 
 	private String makeUrl(String service) {
-		return (this.use_https ? "https" : "http") + "://" + this.host + "/ovd/client/" + service;
+		return (this.use_https ? "https" : "http") + "://" + this.host +  (this.port==this.DEFAULT_PORT ? "" : ":"+this.port) + "/ovd/client/" + service;
 	}
 
 	private static String makeStringForPost(List<String> listParameter) {
@@ -603,7 +606,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 			if (rootNode.hasAttribute("mode_gateway")) {
 				if (rootNode.getAttribute("mode_gateway").equals("on"))
 					mode_gateway = true;
-					serverPort = 443;
+					serverPort = this.port;
 			}
 
 			if (rootNode.hasAttribute("duration"))

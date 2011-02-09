@@ -25,6 +25,7 @@ public abstract class Profile {
 	protected static final String FIELD_LOCALCREDENTIALS = "use-local-credentials";
 
 	protected static final String FIELD_HOST = "host";
+	protected static final String FIELD_PORT = "port";
 
 	protected static final String FIELD_MODE = "mode";
 	protected static final String VALUE_MODE_APPLICATIONS = "applications";
