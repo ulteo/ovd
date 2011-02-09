@@ -163,10 +163,10 @@
     <copy todir="build/org/jpedal/res">
       <fileset dir="src/org/jpedal/res"/>
     </copy>
-    <unjar src="required_libraries/gnu-getopt.jar" dest="build">
+    <unjar dest="build">
       <filelist dir="required_libraries"
-                files="log4j-1.2.jar,registry.jar
-                       jshortcut.jar,image4j.jar,ini4j.jar" />
+                files="gnu-getopt.jar, log4j-1.2.jar, registry.jar,
+                       jshortcut.jar, image4j.jar, ini4j.jar" />
     </unjar>
     <jar destfile="jars/OVDExternalAppsClient.jar" basedir="build">
       <manifest>
