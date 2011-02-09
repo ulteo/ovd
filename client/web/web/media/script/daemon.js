@@ -283,6 +283,13 @@ var Daemon = Class.create({
 
 	parse_check_status: function(transport) {
 		this.push_log('debug', '[daemon] parse_check_status(transport@check_status())');
+		
+		if (transport.responseText == '' || transport.responseXML == null) {
+			this.push_log('error', '[daemon] parse_check_status(transport@check_status()) - Unable to check session status from the Session Manager, aborting...');
+			this.stopped = true;
+			this.check_status_post();
+			return;
+		}
 
 		var xml = transport.responseXML;
 
