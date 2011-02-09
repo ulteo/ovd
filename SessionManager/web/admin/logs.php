@@ -200,7 +200,7 @@ function show_specific($where_, $name_, $server_=NULL, $flags_) {
 function download_log($where_, $name_, $server_=NULL) {
 	if ($where_ == 'sm') {
 		header('Content-Type: application/octet-stream');
-		header('Content-Disposition: attachment; filename=sm_'.$name_);
+		header('Content-Disposition: attachment; filename=sessionmanager_'.$name_);
 
 		$filename = SESSIONMANAGER_LOGS.'/main.log';
 
@@ -213,7 +213,7 @@ function download_log($where_, $name_, $server_=NULL) {
 		@fclose($fp);
 	} elseif ($where_ == 'aps') {
 		header('Content-Type: application/octet-stream');
-		header('Content-Disposition: attachment; filename=aps_'.$server_.'.log');
+		header('Content-Disposition: attachment; filename=slaveserver_'.$server_.'.log');
 
 		$server = Abstract_Server::load($server_);
 
