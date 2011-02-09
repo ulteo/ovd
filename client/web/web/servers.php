@@ -46,6 +46,8 @@ if (! $dom->hasChildNodes()) {
 
 $server_nodes = $dom->getElementsByTagName('server');
 foreach ($server_nodes as $server_node) {
+	$port = 3389;
+
 	if (array_key_exists('gateway', $_SESSION) && $_SESSION['gateway'] === true) {
 		$url = 'http://'.$_SESSION['ovd-client']['server'];
 
@@ -55,8 +57,9 @@ foreach ($server_nodes as $server_node) {
 			$port = 443;
 
 		$server_node->setAttribute('fqdn', $host);
-		$server_node->setAttribute('port', $port);
 	}
+	
+	$server_node->setAttribute('port', $port);
 }
 
 $xml = $dom->saveXML();

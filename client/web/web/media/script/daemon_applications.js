@@ -115,17 +115,15 @@ var Applications = Class.create(Daemon, {
 		for (var i=0; i<serverNodes.length; i++) {
 			try { // IE does not have hasAttribute in DOM API...
 				var mode_gateway = false;
-				var port = 3389;
 				try {
 					var token = serverNodes[i].getAttribute('token');
 					if (token == null)
 						go_to_the_catch_please(); //call a function which does not exist to throw an exception and go to the catch()
 
 					mode_gateway = true;
-					port = serverNodes[i].getAttribute('port');
 				} catch(e) {}
 
-				var server = new Server(i, i, serverNodes[i].getAttribute('fqdn'), port, serverNodes[i].getAttribute('login'), serverNodes[i].getAttribute('password'));
+				var server = new Server(i, i, serverNodes[i].getAttribute('fqdn'), serverNodes[i].getAttribute('port'), serverNodes[i].getAttribute('login'), serverNodes[i].getAttribute('password'));
 				if (mode_gateway)
 					server.setToken(serverNodes[i].getAttribute('token'));
 
