@@ -135,14 +135,12 @@
              alias="ulteo"
              storepass="${keystore.password}"
              keystore="${build.cert}/keystore"
-             signedjar="jars/PDFPrinter-${compile.release}.jar"/>
+             signedjar="jars/PDFPrinter.jar"/>
   </target>
 
   <target name="PDFPrinter.install" depends="PDFPrinter.jar"
           description="install PDFPrinter" >
-    <copy file="jars/PDFPrinter-${compile.release}.jar" todir="${applets.dir}" />
-    <symlink link="${applets.dir}/PDFPrinter.jar"
-             resource="PDFPrinter-${compile.release}.jar"/>
+    <copy file="jars/PDFPrinter.jar" todir="${applets.dir}" />
   </target>
 
 
@@ -296,10 +294,10 @@
     <copy todir="build/org/jpedal/res">
       <fileset dir="src/org/jpedal/res"/>
     </copy>
-    <jar destfile="jars/ulteo-applet-${compile.release}.jar" basedir="build">
+    <jar destfile="jars/ulteo-applet.jar" basedir="build">
       <include name="**" />
     </jar>
-    <jar destfile="jars/CheckJava-${compile.release}.jar" basedir="build/">
+    <jar destfile="jars/CheckJava.jar" basedir="build/">
       <include name="org/ulteo/ovd/applet/CheckJava.class"/>
       <manifest>
         <attribute name="Main-Class" value="org.ulteo.ovd.applet.CheckJava"/>
@@ -308,20 +306,15 @@
     <signjar destdir="jars" alias="ulteo" storepass="${keystore.password}"
              keystore="${build.cert}/keystore" >
         <fileset dir="required_libraries" includes="log4j-1.2.jar" />
-        <fileset dir="jars" includes="ulteo-applet-${compile.release}.jar" />
+        <fileset dir="jars" includes="ulteo-applet.jar" />
     </signjar>
   </target>
 
   <target name="applet.install" description="install applets"
           depends="applet.jar">
     <copy todir="${applets.dir}">
-      <filelist dir="jars" files="log4j-1.2.jar
-         ulteo-applet-${compile.release}.jar CheckJava-${compile.release}.jar" />
+      <filelist dir="jars" files="log4j-1.2.jar ulteo-applet.jar CheckJava.jar" />
     </copy>
-    <symlink link="${applets.dir}/ulteo-applet.jar"
-             resource="ulteo-applet-${compile.release}.jar"/>
-    <symlink link="${applets.dir}/CheckJava.jar"
-             resource="CheckJava-${compile.release}.jar"/>
   </target>
 
 
