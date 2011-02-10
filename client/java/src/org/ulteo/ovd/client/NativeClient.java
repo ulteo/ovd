@@ -143,6 +143,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		}
 		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_PORT) == 0) {
 			int port = properties.getPort();
+			if (port == 0)
+				port = SessionManagerCommunication.DEFAULT_PORT;
 			NativeClient.main_options.port = port;
 			NativeClient.optionMask |= NativeClient.FLAG_OPTION_PORT;
 		}

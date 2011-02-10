@@ -29,7 +29,7 @@ public class ProfileProperties {
 
 	private String login = System.getProperty("user.name");
 	private String host = null;
-	private int port;
+	private int port = 0;
 	private int sessionMode = -1;
 	private boolean autoPublish = false;
 	private boolean useLocalCredentials = false;
