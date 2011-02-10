@@ -772,6 +772,7 @@ if ($session->mode == Session::MODE_DESKTOP) {
 		$available_applications[] = $server_application->getAttribute('id');
 
 	$server_node = $dom->createElement('server');
+	$server_node->setAttribute('type', $server->getAttribute('type'));
 	$server_node->setAttribute('fqdn', $server->getAttribute('external_name'));
 	$server_node->setAttribute('login', $user_login_aps);
 	$server_node->setAttribute('password', $user_password_aps);
@@ -812,6 +813,7 @@ if ($session->mode == Session::MODE_DESKTOP) {
 			$available_applications[] = $server_application->getAttribute('id');
 
 		$server_node = $dom->createElement('server');
+		$server_node->setAttribute('type', $server->getAttribute('type'));
 		$server_node->setAttribute('fqdn', $server->getAttribute('external_name'));
 		$server_node->setAttribute('login', $user_login_aps);
 		$server_node->setAttribute('password', $user_password_aps);
