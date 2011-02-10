@@ -26,12 +26,13 @@
 -->
 
 <project name="ulteo" default="applet">
+
+  <property name="build.sysclasspath" value="last"/>
   <taskdef resource="net/sf/antcontrib/antcontrib.properties">
     <classpath>
       <pathelement location="required_libraries/ant-contrib-1.0b3.jar"/>
     </classpath>
   </taskdef>
-  <property name="build.sysclasspath" value="last"/>
 
   <property name="build.cert"        value="certificate"/>
   <property name="keystore.password" value=""/>
