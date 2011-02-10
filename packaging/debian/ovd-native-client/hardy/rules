@@ -8,5 +8,5 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 JAVA_HOME = $(shell readlink /etc/alternatives/java | sed -r 's/^(.*)jre.*/\1/')
 DEB_ANT_BUILD_TARGET = ovdNativeClient
 DEB_ANT_INSTALL_TARGET = ovdNativeClient.debian
-DEB_ANT_ARGS += -Dprefix=/usr -Dbuild.type=stripped -Ddestdir=$(DEB_DESTDIR)
+DEB_ANT_ARGS += -Dprefix=/usr -Dbuild.type=stripped -Ddestdir=$(DEB_DESTDIR) -Dlanguages=true
 DEB_JARS += $(ANT_HOME)/lib/ant-nodeps.jar # debian bug #420287
