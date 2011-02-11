@@ -351,7 +351,7 @@ function show_manage($fqdn) {
   if ($server_online) {
     $buf = $server->getMonitoring();
     if ($buf === false)
-      popup_error(_('Cannot get server monitoring'));
+      popup_error(sprintf(_('Cannot get server monitoring for \'%s\''), $server->getAttribute('fqdn')));
     Abstract_Server::save($server);
   }
 
