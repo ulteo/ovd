@@ -66,7 +66,7 @@ class Role(AbstractRole):
 		
 		wm = WatchManager()
 		self.inotify = ThreadedNotifier(wm)
-		wm.add_watch(path=Config.spool, mask=Rec.mask, proc_fun=Rec(), rec=True, auto_add=True)
+		wm.add_watch(path=Config.spool, mask=Rec.mask, proc_fun=Rec(), rec=False, auto_add=True)
 		
 		
 		self.shares = self.get_existing_shares()
