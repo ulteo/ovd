@@ -22,9 +22,6 @@ package org.ulteo.ovd.client.portal;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import net.propero.rdp.RdesktopException;
-import net.propero.rdp.crypto.CryptoException;
 import org.apache.log4j.Logger;
 
 import org.ulteo.ovd.Application;
