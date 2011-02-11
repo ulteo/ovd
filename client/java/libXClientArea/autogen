@@ -31,4 +31,8 @@ if which schroot > /dev/null;  then
 fi
 
 # for devs
-[ ! -f $(getconf LONG_BIT)/libXClientArea.so ] && make clean && make
+ARCH=$(getconf LONG_BIT)
+if [ ! -f $ARCH/libXClientArea.so ]; then
+    echo "* libXClientArea.so ${ARCH}bits"
+    make -s clean && make -s
+fi
