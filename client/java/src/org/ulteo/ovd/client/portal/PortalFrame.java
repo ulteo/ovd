@@ -33,7 +33,6 @@ import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import org.ulteo.Logger;
@@ -77,8 +76,6 @@ public class PortalFrame extends JFrame implements WindowListener {
 	
 	public void init() {
 		Image frameLogo = this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
-		
-		JLabel ulteoLogo = new JLabel(new ImageIcon(this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/logo_small.png"))));
 		try {
 			this.systray = new IntegratedTrayIcon(this, frameLogo);
 		} catch (UnsupportedOperationException ex) {
@@ -214,15 +211,12 @@ public class PortalFrame extends JFrame implements WindowListener {
 	}
 	
 	
-	@Override
 	public void windowActivated(WindowEvent arg0) {}
 
 
-	@Override
 	public void windowClosed(WindowEvent arg0) {}
 
 
-	@Override
 	public void windowClosing(WindowEvent arg0) {
 		if (this.rdpActions != null)
 			new LogoutPopup(this, this.rdpActions);
@@ -231,15 +225,12 @@ public class PortalFrame extends JFrame implements WindowListener {
 	}
 
 
-	@Override
 	public void windowDeactivated(WindowEvent arg0) {}
 
 
-	@Override
 	public void windowDeiconified(WindowEvent arg0) {}
 
 
-	@Override
 	public void windowIconified(WindowEvent arg0) {
 		if (OSTools.isWindows() && this.systray != null)
 			this.setVisible(false);
@@ -248,6 +239,5 @@ public class PortalFrame extends JFrame implements WindowListener {
 	}
 
 
-	@Override
 	public void windowOpened(WindowEvent arg0) {}
 }
