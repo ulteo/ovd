@@ -47,13 +47,14 @@ f.close()
 
 if sys.platform == "linux2":
 	libdir = os.path.join(path, "libXClientArea")
-	dst = os.path.join(path, "required_libraries", "libXClientArea")
-	if os.path.exists(dst):
-		shutil.rmtree(dst)
+	req_dir = os.path.join(path, "required_libraries", "libXClientArea")
+	if os.path.exists(req_dir):
+		shutil.rmtree(req_dir)
 	p = Popen("./autogen", cwd=libdir)
 	p.wait()
-	os.makedirs(dst)
 	for arch in ['32','64']:
 		src = os.path.join(libdir, arch)
 		if os.path.exists(os.path.join(src, "libXClientArea.so")):
+			dst = os.path.join(req_dir, arch)
+			os.makedirs(dst)
 			shutil.move(src, dst)
