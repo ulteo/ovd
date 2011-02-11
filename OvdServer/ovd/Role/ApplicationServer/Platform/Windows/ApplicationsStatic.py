@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -20,6 +20,7 @@
 
 import os
 import pythoncom
+import re
 from win32com.shell import shell
 
 from ovd.Logger import Logger
@@ -56,19 +57,43 @@ class ApplicationsStatic(AbstractApplicationsStatic):
 			Logger.warn("createShortcut: No ico file returned")
 			return False
 		
+		(executable, arguments) = self.extract_command(application_["command"])
+		
 		pythoncom.CoInitialize()
 		
 		shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
 		try:
-			shortcut.SetPath(application_["command"])
+			shortcut.SetPath(executable)
 		except:
-			Logger.warn("Unable to shortcut setPath. Check that the following command is available on the system: '%s'"%application_["command"])
+			Logger.warn("Unable to shortcut SetPath. Check if the following command is available on the system: '%s'"%(executable))
 			return False
 		
-		#shortcut.SetArguments(args)
+		if arguments is not None:
+			try:
+				shortcut.SetArguments(arguments)
+			except:
+				Logger.warn("Unable to shortcut SetArguments ('%s')"%(arguments))
+				return False
+		
 		shortcut.SetIconLocation(ico_file, 0)
 		#shortcut.SetWorkingDirectory(workingDirectory)
 		shortcut.SetDescription(application_["description"])
 		
 		shortcut.QueryInterface(pythoncom.IID_IPersistFile).Save(os.path.join(self.spool, application_["id"]+".lnk"), 0)
 		return True
+	
+	
+	@staticmethod
+	def extract_command(command):
+		l = [p for p in re.split("( |\\\".*?\\\"|'.*?')", command) if p.strip()]
+		
+		path = l[0]
+		if len(command)==1:
+			arguments = None
+		else:
+			arguments = " ".join(l[1:])
+		
+		if path[0] in ['"',"'"] and path[0] == path[-1]:
+			path = path[1:-1]
+		
+		return (path, arguments)
