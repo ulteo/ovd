@@ -48,18 +48,15 @@ import org.ulteo.rdp.RdpActions;
 public class PortalFrame extends JFrame implements WindowListener {
 
 	private RdpActions rdpActions = null;
-	private JLabel user = null;
-	private JLabel application = new JLabel(I18n._("My applications"));
-	private JLabel runningApps = new JLabel(I18n._("Running applications"));
+	private String username = null;
+	
 	private MyApplicationPanel appsPanel = null;
 	private RunningApplicationPanel runningAppsPanel = null;
 	private NewsPanel newsPanel = null;
-	private boolean newPanelAdded = false;
-	private GridBagConstraints gbc = null;
 	private SouthEastPanel sep = null;	
-	private Font font = new Font("Dialog", 1, 12);
 	private IntegratedTrayIcon systray = null;
 
+	private boolean newPanelAdded = false;
 	private boolean iconsButtonEnabled = false;
 	
 	public PortalFrame(String username) {
@@ -67,8 +64,9 @@ public class PortalFrame extends JFrame implements WindowListener {
 			username = "";
 		String displayName = I18n._("Welcome {user}");
 		displayName = displayName.replaceAll("\\{user\\}", username);
+		this.username = displayName;
+		
 		this.addWindowListener(this);
-		this.user = new JLabel(displayName);
 		this.init();
 		this.newsPanel = new NewsPanel();
 	}
@@ -85,39 +83,43 @@ public class PortalFrame extends JFrame implements WindowListener {
 		
 		this.setIconImage(frameLogo);
 		this.setTitle("OVD Remote Applications");
-		this.setSize(700,400);
+		this.setSize(700, 400);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		
-		this.user.setFont(new Font("Dialog", 1, 18));
-		this.user.setForeground(new Color(97, 99, 102));
-		this.application.setFont(font);
-		this.runningApps.setFont(font);
-		
-		this.runningAppsPanel = new RunningApplicationPanel();
-		this.appsPanel = new MyApplicationPanel(this.runningAppsPanel);
-		
+
 		this.setLayout(new GridBagLayout());
-		this.gbc = new GridBagConstraints();
-		
-		gbc.insets = new Insets(0, 0, 5, 20);
+		GridBagConstraints gbc = new GridBagConstraints();
+
+		JLabel user = new JLabel(this.username);
+		user.setFont(new Font("Dialog", 1, 18));
+		user.setForeground(new Color(97, 99, 102));
 		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.gridwidth = 2;
+		gbc.insets.bottom = 25;
+		gbc.anchor = GridBagConstraints.EAST;
+		this.add(user, gbc);
+		
+		JLabel application = new JLabel(I18n._("My applications"));
+		application.setBackground(Color.red);
+		application.setFont(new Font("Dialog", 1, 12));
+		gbc.insets = new Insets(0, 0, 5, 20);
 		gbc.gridy = 1;
+		gbc.gridwidth = 1;
 		gbc.anchor = GridBagConstraints.SOUTHWEST;
 		this.add(application, gbc);
-		
+
+		this.runningAppsPanel = new RunningApplicationPanel();
+		this.appsPanel = new MyApplicationPanel(this.runningAppsPanel);
 		gbc.gridy = 2;
 		gbc.anchor = GridBagConstraints.CENTER;
 		gbc.insets.bottom = 20;
 		this.add(appsPanel, gbc);
-		
+
+		JLabel runningApps = new JLabel(I18n._("Running applications"));
+		runningApps.setFont(new Font("Dialog", 1, 12));
 		gbc.gridx = 1;
-		gbc.gridy = 0;
-		gbc.gridheight = 1;
-		gbc.fill = GridBagConstraints.NONE;
-		this.add(user, gbc);
-		
 		gbc.gridy = 1;
 		gbc.insets.bottom = 5;
 		gbc.anchor = GridBagConstraints.SOUTHWEST;
@@ -128,6 +130,7 @@ public class PortalFrame extends JFrame implements WindowListener {
 		gbc.insets.bottom = 20;
 		gbc.insets.right = 5;
 		this.add(runningAppsPanel, gbc);
+		
 		if (this.systray != null)
 			this.systray.addSysTray();
 		this.validate();
@@ -135,12 +138,14 @@ public class PortalFrame extends JFrame implements WindowListener {
 	
 	public void initButtonPan(RdpActions _rdpActions) {
 		this.rdpActions = _rdpActions;
-		this.gbc.gridy = 4;
-		this.gbc.gridx = 1;
-		this.gbc.insets.bottom = 10;
-		this.gbc.anchor = GridBagConstraints.SOUTHEAST;
 		this.sep = new SouthEastPanel(_rdpActions);
 		this.enableIconsButton();
+		
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridy = 4;
+		gbc.gridx = 1;
+		gbc.insets.bottom = 10;
+		gbc.anchor = GridBagConstraints.SOUTHEAST;
 		this.add(sep, gbc);
 		this.validate();
 	}
