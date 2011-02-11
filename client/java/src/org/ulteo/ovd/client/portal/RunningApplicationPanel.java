@@ -136,13 +136,10 @@ public class RunningApplicationPanel extends JPanel implements OvdAppListener {
 		return null;
 	}
 	
-	@Override
 	public void ovdInited(OvdAppChannel o) {}
 
-	@Override
 	public void ovdInstanceError(int instance) {}
 
-	@Override
 	public void ovdInstanceStarted(int instance) {
 		ApplicationInstance ai = this.findApplicationInstanceByToken(instance);
 		if (ai == null) {
@@ -154,7 +151,6 @@ public class RunningApplicationPanel extends JPanel implements OvdAppListener {
 		this.add(ai);
 	}
 
-	@Override
 	public void ovdInstanceStopped(int instance) {
 		ApplicationInstance ai = this.findApplicationInstanceByToken(instance);
 		if (ai == null) {

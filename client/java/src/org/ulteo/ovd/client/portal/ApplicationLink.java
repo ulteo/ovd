@@ -44,7 +44,6 @@ public class ApplicationLink extends HyperLink {
 		return this.app.getConnection();
 	}
 
-	@Override
 	public void mouseEntered(MouseEvent me) {
 		if (! this.isEnabled())
 			return;
@@ -54,7 +53,6 @@ public class ApplicationLink extends HyperLink {
 		this.setText("<u>"+app.getName()+"</u>");
 	}
 
-	@Override
 	public void mouseExited(MouseEvent me) {
 		if (! this.isEnabled())
 			return;
