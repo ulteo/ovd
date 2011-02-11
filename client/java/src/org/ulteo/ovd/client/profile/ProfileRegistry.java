@@ -130,16 +130,21 @@ public class ProfileRegistry extends Profile {
 		ProfileProperties properties = new ProfileProperties();
 
 		RegistryKey key = null;
+		boolean keyFound = false;
 
 		key = Registry.openSubkey(Registry.HKEY_LOCAL_MACHINE, "Software\\Ulteo\\OVD\\NativeClient", RegistryKey.ACCESS_READ);
-		if (key != null)
+		if (key != null) {
 			properties = ProfileRegistry.extractPropertiesFromKey(key, properties);
+			keyFound = true;
+		}
 
 		key = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software\\Ulteo\\OVD\\NativeClient", RegistryKey.ACCESS_READ);
-		if (key != null)
+		if (key != null) {
 			properties = ProfileRegistry.extractPropertiesFromKey(key, properties);
+			keyFound = true;
+		}
 
-		if (key == null)
+		if (! keyFound)
 			return null;
 
 		return properties;
