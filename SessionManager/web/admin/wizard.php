@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com>
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008-2009
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -620,7 +620,9 @@ function do_validate() {
 
 	foreach ($usergroups as $usergroup) {
 		foreach ($appgroups as $appgroup) {
-			Abstract_Liaison::save('UsersGroupApplicationsGroup',$usergroup, $appgroup);
+			$exists = Abstract_Liaison::load('UsersGroupApplicationsGroup', $usergroup, $appgroup);
+			if (is_object($exists) === false)
+				Abstract_Liaison::save('UsersGroupApplicationsGroup', $usergroup, $appgroup);
 		}
 	}
 
