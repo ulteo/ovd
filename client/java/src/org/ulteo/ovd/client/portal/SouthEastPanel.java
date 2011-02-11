@@ -35,33 +35,36 @@ import org.ulteo.rdp.RdpActions;
 
 public class SouthEastPanel extends JPanel {
 	
-	private JButton disconnect = new JButton(I18n._("Disconnect"));
+	private JButton disconnect = null;
 	private JButton publishingButton = null;;
-	private RdpActions actions = null;
-	private GridBagConstraints gbc = null;
 	private static final String DISPLAY = I18n._("Display icons");
 	private static final String HIDE = I18n._("Hide icons");
 	
-	public SouthEastPanel(RdpActions rdpActions) {
+	public SouthEastPanel(final RdpActions rdpActions) {
 		this.setLayout(new GridBagLayout());
-		this.gbc = new GridBagConstraints();
-		this.actions = rdpActions;
-		publishingButton = (((OvdClientPortal)actions).isAutoPublish() ?  new JButton(HIDE) : new JButton(DISPLAY));
-		disconnect.addActionListener(new LogoutListener(rdpActions));
+		
+		disconnect = new JButton(I18n._("Disconnect"));
+		publishingButton = (((OvdClientPortal)rdpActions).isAutoPublish() ?  new JButton(HIDE) : new JButton(DISPLAY));
+		
+		disconnect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdpActions.disconnectAll();
+			}
+		});
 		publishingButton.addActionListener(new ActionListener() {
-			
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				publishingButton.setText((((OvdClientPortal)actions).togglePublications()) ? HIDE : DISPLAY);
+				publishingButton.setText((((OvdClientPortal)rdpActions).togglePublications()) ? HIDE : DISPLAY);
 			}
 		});
 		this.toggleIconsButton(false);
 
-		this.gbc.anchor = GridBagConstraints.LINE_END;
-		this.gbc.gridx = this.gbc.gridy = 0;
+		GridBagConstraints gbc = new GridBagConstraints();
+		
+		gbc.anchor = GridBagConstraints.LINE_END;
+		gbc.gridx = gbc.gridy = 0;
 		this.add(publishingButton, gbc);
 		
-		this.gbc.gridx = 1;
+		gbc.gridx = 1;
 		this.add(disconnect, gbc);
 	}
 
