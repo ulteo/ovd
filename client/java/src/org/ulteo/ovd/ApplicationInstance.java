@@ -113,7 +113,7 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 		return false;
 	}
 
-	public void startApp() throws RdesktopException, IOException, CryptoException, RestrictedAccessException {
+	public void startApp() throws RestrictedAccessException {
 		OvdAppChannel ovdApp = this.app.getConnection().getOvdAppChannel();
 		
 		if (this.arg == null) {

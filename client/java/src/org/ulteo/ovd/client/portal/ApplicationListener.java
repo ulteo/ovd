@@ -56,12 +56,6 @@ public class ApplicationListener implements ActionListener{
 			ai.startApp();
 		} catch (RestrictedAccessException ex) {
 			org.ulteo.Logger.error("Weird: Should not appear: "+ex);
-		} catch (RdesktopException ex) {
-			this.logger.warn(ex);
-		} catch (IOException ex) {
-			this.logger.warn(ex);
-		} catch (CryptoException ex) {
-			this.logger.warn(ex);
 		}
 
 	}

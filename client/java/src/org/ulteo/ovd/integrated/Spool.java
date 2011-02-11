@@ -245,12 +245,6 @@ public class Spool implements Runnable {
 			
 			org.ulteo.Logger.error(msg);
 			SwingTools.invokeLater(GUIActions.createDialog(msg, I18n._("Error"), JOptionPane.ERROR_MESSAGE, JOptionPane.DEFAULT_OPTION));
-		} catch (RdesktopException ex) {
-			this.logger.error(ex);
-		} catch (IOException ex) {
-			this.logger.error(ex);
-		} catch (CryptoException ex) {
-			this.logger.error(ex);
 		}
 	}
 
