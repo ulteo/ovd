@@ -130,7 +130,7 @@ public class AuthFrame implements ActionListener, Runnable {
 	public AuthFrame(ActionListener obj_, Dimension resolution_) {
 		this.obj = obj_;
 
-		this.jobsList = new CopyOnWriteArrayList();
+		this.jobsList = new CopyOnWriteArrayList<Integer>();
 		
 		Object[] items = new Object[3];
 		items[0] = this.itemModeAuto;
@@ -328,6 +328,7 @@ public class AuthFrame implements ActionListener, Runnable {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void setFocusTraversalKeys(Component c) {
 		c.setFocusTraversalKeysEnabled(true);
 
@@ -530,7 +531,7 @@ public class AuthFrame implements ActionListener, Runnable {
 			JComboLanguage lang = new JComboLanguage(img, name);
 			languageBox.addItem(lang);
 			
-			int ret = this.compareLocales(locale, locale2);
+			int ret = AuthFrame.compareLocales(locale, locale2);
 			if (ret > enabledLanguageScore) {
 				enabledLanguageScore = ret;
 				enabledLanguageIndex = i;
