@@ -22,9 +22,10 @@
 if which schroot > /dev/null;  then
     ARCHS="32 64"
     for arch in $ARCHS; do
-        if schroot -l | grep lucid$arch; then
-            schroot -c lucid$arch -- make clean
-            schroot -c lucid$arch -- make STATIC=yes
+        echo "* libXClientArea.so ${arch}bits"
+        if schroot -l | grep -q lucid$arch; then
+            schroot -c lucid$arch -- make -s clean
+            schroot -c lucid$arch -- make -s STATIC=yes
         fi
     done
 fi

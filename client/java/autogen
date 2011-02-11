@@ -57,6 +57,3 @@ if sys.platform == "linux2":
         src = os.path.join(libdir, arch)
         if os.path.exists(os.path.join(src, "libXClientArea.so")):
             shutil.move(src, dst)
-    print libdir
-    p = Popen("make clean", cwd=libdir, shell=True)
-    p.wait()
