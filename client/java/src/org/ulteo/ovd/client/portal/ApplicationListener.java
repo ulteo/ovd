@@ -22,14 +22,12 @@ package org.ulteo.ovd.client.portal;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import org.apache.log4j.Logger;
 
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.integrated.RestrictedAccessException;
 
 public class ApplicationListener implements ActionListener{
-	private Logger logger = Logger.getLogger(ApplicationListener.class);
 	Application app = null;
 	RunningApplicationPanel runningApps = null;
 	
@@ -38,12 +36,10 @@ public class ApplicationListener implements ActionListener{
 		this.runningApps = runningApps;
 	}
 	
-	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		int token = (int) (Math.random() * 1000000000);
 		ApplicationInstance ai = new ApplicationInstance(this.app, null, token);
 		ai.setLaunchedFromShortcut(false);
-
 		this.runningApps.addInstance(ai);
 
 		try {
@@ -51,6 +47,5 @@ public class ApplicationListener implements ActionListener{
 		} catch (RestrictedAccessException ex) {
 			org.ulteo.Logger.error("Weird: Should not appear: "+ex);
 		}
-
 	}
 }
