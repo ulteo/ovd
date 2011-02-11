@@ -40,10 +40,7 @@ public class ApplicationListener implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		long a = ((long)((Math.random()+1)*1000000));
-		long b = ((long)((Math.random()+1)*100000));
-		int token = (int)((a/b)*(long)((Math.random()+1)*10000));
-
+		int token = (int) (Math.random() * 1000000000);
 		ApplicationInstance ai = new ApplicationInstance(this.app, null, token);
 		ai.setLaunchedFromShortcut(false);
 
