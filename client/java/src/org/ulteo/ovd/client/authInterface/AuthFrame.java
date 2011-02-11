@@ -156,7 +156,7 @@ public class AuthFrame implements ActionListener, Runnable {
 		});
 	}
 	
-	public void init(Dimension resolution_) {
+	private void init(Dimension resolution_) {
 		this.optionClicked = false;
 
 		this.mainFrame.setVisible(false);
