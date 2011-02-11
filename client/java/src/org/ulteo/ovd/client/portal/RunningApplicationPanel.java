@@ -26,11 +26,9 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Toolkit;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -45,7 +43,7 @@ public class RunningApplicationPanel extends JPanel implements OvdAppListener {
 
 	private Logger logger = Logger.getLogger(RunningApplicationPanel.class);
 	
-	private static final ImageIcon KILL_ICON = new ImageIcon(Toolkit.getDefaultToolkit().getImage(RunningApplicationPanel.class.getClassLoader().getResource("pics/button_cancel.png")));
+	//private static final ImageIcon KILL_ICON = new ImageIcon(Toolkit.getDefaultToolkit().getImage(RunningApplicationPanel.class.getClassLoader().getResource("pics/button_cancel.png")));
 	private ArrayList<ApplicationInstance> runningApps = null;
 	private ArrayList<Component> components = null;
 	private JScrollPane listScroller = null;
