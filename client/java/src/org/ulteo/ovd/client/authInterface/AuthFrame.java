@@ -94,7 +94,6 @@ public class AuthFrame implements ActionListener, Runnable {
 	private JButton moreOption = new JButton();
 	private Image frameLogo = null;
 	private ImageIcon ulteoLogo = null;
-	private ImageIcon optionLogo = null;
 	private ImageIcon userLogo = null;
 	private ImageIcon passwordLogo = null;
 	private ImageIcon hostLogo = null;
@@ -166,7 +165,6 @@ public class AuthFrame implements ActionListener, Runnable {
 		mainFrame.setBackground(Color.white);
 		frameLogo = mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
 		ulteoLogo = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/logo_small.png")));
-		optionLogo = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/options.png")));
 		userLogo = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/users.png")));
 		passwordLogo = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/password.png")));
 		hostLogo = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/server.png")));
@@ -178,7 +176,6 @@ public class AuthFrame implements ActionListener, Runnable {
 		userLogoLabel.setIcon(userLogo);
 		passwordLogoLabel.setIcon(passwordLogo);
 		hostLogoLabel.setIcon(hostLogo);
-		optionLogoLabel.setIcon(optionLogo);
 		
 		moreOption.setIcon(showOption);
 		
