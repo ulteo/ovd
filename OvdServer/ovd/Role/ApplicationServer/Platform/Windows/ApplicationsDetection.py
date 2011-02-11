@@ -122,14 +122,18 @@ class ApplicationsDetection:
 			
 			
 			if self.msi is not None:
-				application["command"] = self.msi.getTargetFromShortcut(filename)
-				if application["command"] is None:
-					application["command"] = unicode(shortcut.GetPath(0)[0], encoding)
-					if len(shortcut.GetArguments())>0:
-						application["command"]+= " "+shortcut.GetArguments()
+				buf = self.msi.getTargetFromShortcut(filename)
+				if buf is not None:
+					application["command"] = buf
 			
 			if not application["command"].lower().endswith(".exe") and ".exe " not in application["command"].lower():
 				continue
+			
+			if " " in application["command"]:
+				application["command"] = '"%s"'%(application["command"])
+			
+			if len(shortcut.GetArguments())>0:
+				application["command"]+= " "+shortcut.GetArguments()
 			
 			application["mimetypes"] = self.mimetypes.get_mime_types_from_command(application["command"])
 			
