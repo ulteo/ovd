@@ -26,73 +26,61 @@
       <title>Hyper Text Transfert Protocol (HTTP)</title>
 
       <para>
-	The base communication protocol used is HTTP because Ulteo is a 
-	Web based solution.  But we also use HTTP for the
-	communication between servers: Session Manager to Application
-	Server and vice versa.  This protocol runs over TCP on the port
-	80.  We are not using HTTPS (443) at the moment.
+	The base communication protocol used in Ulteo OVD to negociate
+	session is HTTP over SSL. This protocol runs over TCP on the
+	port 443.
       </para>
 
       <para>
-	The Administration Console is web-based too.
+	Ulteo OVD use also HTTP for the communication between servers:
+	Session Manager to Application Server and vice versa. For this
+	usage, the TCP ports 1111 and 1112 (non standart service
+	ports) are used.
+      </para>
+
+      <para>
+	Several product of Ulteo OVD like the Administration Console
+	and Web Client are pure web-based and use HTTP because the
+	client is supposed to be a web browser.
       </para>
 
       <para><ulink url="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP on Wikipedia</ulink></para>
-    </section>
-
-    <section id="proto_rfb">
-      <title>Remote Frame Buffer (RFB)</title>
-
-      <para>
-	RFB is the protocol used to display the remote desktop and
-	applications within the Web broswer.  This protocol is used by
-	VNC.  VNC runs over TCP too.  A VNC server runs one instance by
-	desktop so one port for each display.  The classic port used
-	by VNC is 5900.
-      </para>
-
-      <para>
-	For Ulteo Open Virtual Desktop, we are using ports between 5900
-	and 6000.
-      </para>
-
-      <para><ulink url="http://en.wikipedia.org/wiki/RFB_protocol">RFB on Wikipedia</ulink></para>
-
-    </section>
-
-    <section id="proto_ssh">
-      <title>Secure Shell (SSH)</title>
-
-      <para>
-	SSH is a protocol used to access a machine securely over a network.  SSH
-	uses encryption to make sure that no one on the network can
-	decrypt what the user does.
-      </para>
-
-      <para>
-	We are using SSH to tunnel the RFB stream because RFB is not encprypted.
-      </para>
-
-
-      <para><ulink url="http://en.wikipedia.org/wiki/Secure_Shell">SSH on Wikipedia</ulink></para>
     </section>
 
     <section id="proto_rdp">
       <title>Remote Desktop Protocol (RDP)</title>
 
       <para>
-	RDP is the protocol used by <trademark
-	class="registered">Microsoft Corp.</trademark> to display the remote
-	desktop for their <trademark>Terminal Services</trademark>
-	software.
+	RDP is the remote display protocol used
+	by <trademark class="registered">Microsoft Corp.</trademark>
+	for their <trademark>Terminal Services</trademark> software.
       </para>
 
       <para>
-	RDP is used by Ulteo Open Virtual Desktop to display
-	<trademark>Windows</trademark> applications.
+	RDP is used by Ulteo Open Virtual Desktop to display desktop
+	and applications. 
+      </para>
+
+      <para>
+	RDP use the TCP port 3389.
       </para>
 
       <para><ulink url="http://en.wikipedia.org/wiki/Remote_Desktop_Protocol">RDP on Wikipedia</ulink></para>
+    </section>
+
+    <section id="proto_ssl">
+      <title>Secure Socket Layer (SSL)</title>
+
+      <para>
+	SSL is an cryptographic layer protocol that provide encription
+	between server and client.
+      </para>
+
+      <para>
+	SSL is used by Ulteo OVD to tunnelize HTTP and/or RDP.
+      </para>
+
+      <para><ulink url="http://en.wikipedia.org/wiki/Secure_Sockets_Layer">SSL on Wikipedia</ulink></para>
     </section>
   </section>
 
@@ -100,7 +88,9 @@
   <section id="server_comm">
     <title>Server Communication</title>
     <para>
-      Servers communicate by using HTTP webservices.
+      Servers communicate by using HTTP webservices (hosted by
+      Apache). The Session Manager listen on the TCP port 1111 and
+      Application Servers are using port 1112.
     </para>
 
     <para>
@@ -109,9 +99,8 @@
     </para>
 
     <para>
-      Applications Servers only answer to the Session Manager for which
-      the address is stored in a configuration file.
-      (<emphasis>SESSION_MANAGER_URL</emphasis>).
+      Applications Servers only answer to the Session Manager for
+      which the address is stored in a configuration file.
     </para>
 
     <section id="security">
@@ -142,26 +131,9 @@
 	  <listitem><para><emphasis
 	  role="strong">authorization:</emphasis> tests the match of the FQDN
 	  with one of the <emphasis>Authorized FQDN</emphasis> defined
-	  in the admin console.</para></listitem>
+	  in the administration console.</para></listitem>
 	</itemizedlist>
       </para>
-    </section>
-
-    <section id="windows_servers">
-      <title>Windows servers</title>
-      <para>
-	The Windows agent is using an embeded HTTP server instead of using
-	Apache (as on Linux servers) or <trademark>IIS</trademark> which is often installed by
-	default on <trademark>Windows Server 2003</trademark>.
-      </para>
-
-      <para>
-	As <trademark>IIS</trademark> is often installed, the
-	Windows agent doesn't use the standart HTTP port but the
-	<emphasis role="strong">8082</emphasis> port. Another port can be
-	set in the agent configuration file.
-      </para>
-
     </section>
 
     <section id="http_code">
@@ -196,340 +168,49 @@
 	</listitem>
       </itemizedlist>
     </section>
-
-    <section id="sm_webservices">
-      <title>Session Manager webservices</title>
-
-      <para>
-	The webservices used for the servers communication are in
-	<emphasis>/webservices</emphasis>.
-
-      </para>
-
-      <simplesect>
-	<title>server_status.php</title>
-
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis>
-	    <itemizedlist>
-	      <listitem><para>fqdn
-	      </para></listitem>
-	      <listitem><para>
-		status: ready/down/broken
-	      </para></listitem>
-	    </itemizedlist>
-	    </para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> GET</para>
-	  </listitem>
-	</itemizedlist>	  
-
-	<para>
-	  An application server sends his status at startup, when it stops or
-	  when an important error occured.  That's the way the system
-	  can know when an offline server is online again or when
-	  a server needs to be registered.
-	</para>
-      </simplesect>
-
-      <simplesect>
-	<title>server_monitoring.php</title>
-
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> POST</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis>
-	    <itemizedlist>
-	      <listitem><para>fqdn
-	      </para></listitem>
-	      <listitem><para>
-		xml: the monitoring XML file
-	      </para></listitem>
-	    </itemizedlist>
-	    </para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> nothing</para>
-	  </listitem>
-	</itemizedlist>	  
-
-	<para>
-	  Application Servers send periodically their system
-	  information so the status of each
-	  server is known. This is used for the session load balancing for
-	  instance.
-	</para>
-	<para>
-	  The monitoring contains the CPU and RAM load. But also
-	  running applications for each sessions.
-	</para>
-      </simplesect>
+  </section>
 
 
-      <simplesect>
-	<title>session_invite.php</title>
-	
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis>
-	    <itemizedlist>
-	      <listitem>
-		<para>fqdn</para>
-	      </listitem>
-	      <listitem>
-		<para>session: session id</para>
-	      </listitem>
-	      <listitem>
-		<para>email: the email address to send the invitation</para>
-	      </listitem>
-	      <listitem>
-		<para>mode: active|passive</para>
-	      </listitem>
-	    </itemizedlist>
-	    </para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> the token of this share in XML content</para>
-	  </listitem>
-	</itemizedlist>
+  <section id="desktop_session">
+    <title>OVD Client session</title>
 
-	<para>
-	  Application Servers send a request when a user want create
-	  invite someone.
-	</para>
-      </simplesect>
-
-
-      <simplesect>
-	<title>session_status.php</title>
-	
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis>
-	    <itemizedlist>
-	      <listitem>
-		<para>fqdn</para>
-	      </listitem>
-	      <listitem>
-		<para>session: session id</para>
-	      </listitem>
-	      <listitem>
-		<para>status: numerical status</para>
-	      </listitem>
-	    </itemizedlist>
-	    </para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> nothing</para>
-	  </listitem>
-	</itemizedlist>
-
-	<para>
-	  Application Servers send, for each session, their status
-	  each time it changes.
-	</para>
-      </simplesect>
-
-
-
-
-      <simplesect>
-	<title>session_token.php</title>
-	
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis>
-	    <itemizedlist>
-	      <listitem>
-		<para>fqdn</para>
-	      </listitem>
-	      <listitem>
-		<para>token: a random string</para>
-	      </listitem>
-	    </itemizedlist>
-	    </para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> session information as XML</para>
-	  </listitem>
-	</itemizedlist>
-
-	<para>
-	  When a user is launching a session, he is redirected
-	  with a token to an Application Server. To verify the user
-	  identity and get the session information, the Application
-	  Server sending this token to to the Session Manager. If it's valid,
-	  it gets information as XML content.
-	</para>
-      </simplesect>
-
-
-
-
-      <simplesect>
-	<title>icon.php</title>
-
-	<para><emphasis role="strong">Used for Windows applications</emphasis></para>	
-	
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis>
-	    <itemizedlist>
-	      <listitem>
-		<para>fqdn</para>
-	      </listitem>
-	      <listitem>
-		<para>id: an application id</para>
-	      </listitem>
-	    </itemizedlist>
-	    </para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> icon image in PNG</para>
-	  </listitem>
-	</itemizedlist>
-
-	<para>
-	  Gets the icon for an application so it can display it
-	  on the user desktop. The application server uses a cache
-	  system so an application icon is only asked once by a server.
-	</para>
-      </simplesect>
-
-      <simplesect>
-	<title>application.php</title>
-
-	<para><emphasis role="strong">Used for Virtual and Windows applications</emphasis></para>	
-	
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis>
-	    <itemizedlist>
-	      <listitem>
-		<para>fqdn</para>
-	      </listitem>
-	      <listitem>
-		<para>id: the application id</para>
-	      </listitem>
-	    </itemizedlist>
-	    </para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> application informations as XML content</para>
-	  </listitem>
-	</itemizedlist>
-
-	<para>
-	  Gets the application information from the id
-	  argument to create the application shortcut
-	  on the user's desktop.
-	</para>
-      </simplesect>
-
-    </section>
-
-
-    <section id="aps_webservices">
-      <title>Application Server webservices</title>
+    <section>
+      <title>A simple session establishement process</title>
       
       <para>
-	The webservices used for servers communication are in
-	<emphasis>/webservices</emphasis>.
+	The following schema describe the steps of the establishement
+	of a Ulteo OVD session.
       </para>
 
-      <simplesect>
-	<title>server_status.php</title>
+      <para>
+	In this example, only one Application Server is used, the
+	session do not use File Servers (internal or external) and the
+	client connect directly without an OVD Gateway.
+      </para>
+     
+      <inlinemediaobject>
+	<imageobject>
+	  <imagedata fileref="img/session.png"/>
+	</imageobject>
+      </inlinemediaobject>
+    </section>
 
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis> No</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> ready/down/broken</para>
-	  </listitem>
-	</itemizedlist>	  
+    <section id="sm_cleint_webservices">
+      <title>Session Manager client webservices</title>
 
-	<para>
-	  The Session Manager asks for the server status periodically to
-	  update its status, and detect down or broken states.
-	</para>
-      </simplesect>
+      <para>
+	Session Manager client webservices are used by client
+	softwares to negotiate and manage their session.
+      </para>
 
+      <para>
+	The base URL to access to these services is
+	<ulink url="https://sm.ulteo.com/ovd" />.
+      </para>
 
-      <simplesect>
-	<title>session_status.php</title>
-	
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis>
-	    <itemizedlist>
-	      <listitem>
-		<para>session: a session id</para>
-	      </listitem>
-	    </itemizedlist>
-	    </para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> numerical session status</para>
-	  </listitem>
-	</itemizedlist>
-
-	<para>
-	  The Session Manager asks for each session status periodically
-	  to detect servers/sessions craches.
-	</para>
-
-      </simplesect>
-
-
-      <simplesect>
-	<title>server_monotoring.php</title>
-	
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis> No</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> monitoring as XML content</para>
-	  </listitem>
-	</itemizedlist>
-	<para>
-	  Session Manager asks for the server monitoring when it
-	  detects too old cache information.
-	</para>
-      </simplesect>
-
+      <para>
+	Here is the list of availables webservices.
+      </para>
 
       <simplesect>
 	<title>applications.php</title>
@@ -539,314 +220,25 @@
 	    <para><emphasis role="strong">method:</emphasis> GET</para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis> No</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> applications list as XML content</para>
-	  </listitem>
-	</itemizedlist>
-
-	<para>
-	  Gets installed applications on the system.
-	</para>
-      </simplesect>
-
-
-      <simplesect>
-	<title>kill_session.php</title>
-	
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis>
-	    <itemizedlist>
-	      <listitem>
-		<para>session: a session id</para>
-	      </listitem>
-	    </itemizedlist>
-	    </para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> nothing</para>
-	  </listitem>
-	</itemizedlist>
-
-	<para>
-	  Force a specific session to exit without notifying the user.
-	</para>
-      </simplesect>
-
-
-      <simplesect>
-	<title>server_version.php</title>
-	
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis> No</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> version as plain/text content</para>
-	  </listitem>
-	</itemizedlist>
-
-	<para>
-	  Get the server version. On Windows, gets the Windows long
-	  version. On Linux, get the content of <emphasis>/etc/issue</emphasis>.
-	</para>
-
-      </simplesect>
-
-
-      <simplesect>
-	<title>server_type.php</title>
-	
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis> No</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> windows/linux</para>
-	  </listitem>
-	</itemizedlist>
-
-	<para>
-	  Gets the server type.
-	</para>
-      </simplesect>
-
-
-      <simplesect>
-	<title>icon.php</title>
-	
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis>
-	    <itemizedlist>
-	      <listitem>
-		<para>path: a file path</para>
-	      </listitem>
-	    </itemizedlist>
-	    </para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> a PNG image</para>
-	  </listitem>
-	</itemizedlist>
-
-	<para>
-	  Extracts the icon associated with an application.
-	</para>
-      </simplesect>
-
-
-      <simplesect>
-	<title>apt-get.php</title>
-	
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis>
-	    <itemizedlist>
-	      <listitem>
-		<para>path: request/status/show</para>
-	      </listitem>
-	      <listitem>
-		<para>request: an apt-get request</para>
-	      </listitem>
-	      <listitem>
-		<para>job: a job id</para>
-	      </listitem>
-	      <listitem>
-		<para>shows: status/stderr/stdout</para>
-	      </listitem>
-	    </itemizedlist>
-	    </para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> depends on action type
-	    <itemizedlist>
-	      <listitem><para>
-		<emphasis>request: </emphasis> job id
-	      </para></listitem>
-
-	      <listitem><para>
-		<emphasis>show: </emphasis> plain/text content
-	      </para></listitem>
-	      <listitem><para>
-		<emphasis>job: </emphasis> a job id
-	      </para></listitem>
-	      <listitem><para>
-		<emphasis>status: </emphasis> -3/-2/-1/0/1/2
-	      </para></listitem>
-	    </itemizedlist>
-	    </para>
-	  </listitem>
-	</itemizedlist>
-
-	<para>
-	  Used to install/remove applications.
-	</para>
-	<para>
-	  Gets job id from action request.
-	</para>
-      </simplesect>
-
-    </section>
-  </section>
-
-
-  <section id="desktop_session">
-    <title>Desktop Session</title>
-    <!--
-    <para> startsession.php: HTTP 302 -> redirection on the APS
-    external name with a token.  </para> <para> ApS connect to the SM
-    and use the token.  </para> <para> Client have to call
-    /startsession.php to init the session then the session is
-    initialize and start (a call to applet.php give the applet
-    configuration).  </para>
-    -->
-
-    <para>Here is the session launching process:</para>
-    <para>
-      
-      <inlinemediaobject>
-	<imageobject>
-	  <imagedata fileref="img/session.png"/>
-	</imageobject>
-      </inlinemediaobject>
-    </para>
-
-
-    <section id="desktop_comm">
-      <title>Client/Server communication</title>
-
-      <para>
-	Once the client is redirected to the Application Server, it
-	only requires this server, not the Session Manager, excepted
-	for session sharing as described below.
-      </para>
-
-      <para>
-	The session display is encapsulated in a SSH tunnel but
-	webservices are also used to communicate. For instance, for
-	printing.
-      </para>
-
-      <simplesect>
-        <title>Application Server first page informations</title>
-
-        <para>
-          the server provides some informations about the session. The
-          used content type is XML. Here is the XML used format:
-        </para>
-
-        <para>
-          The root node is
-          called <emphasis role="strong">session</emphasis> and contains
-          3 attributes:
-          <itemizedlist>
-	    <listitem>
-              <emphasis role="strong">shareable</emphasis>: <emphasis>true|false</emphasis>. Indicate
-              if the session is shareable or not.
-            </listitem>
-	    <listitem>
-              <emphasis role="strong">persistent</emphasis>: <emphasis>true|false</emphasis>. Indicate
-              if the session is persitent or not.
-            </listitem>
-	    <listitem>
-              <emphasis role="strong">mode</emphasis>: <emphasis>desktop|portal</emphasis>. Indicate
-              if the session is in remote desktop mode or in portal
-              mode.
-            </listitem>
-	  </itemizedlist>
-        </para>
-
-        <para>
-          The root node also contains a child node
-          called <emphasis role="strong">aps</emphasis> which have 4
-          attributes:
-          <itemizedlist>
-	    <listitem>
-              <emphasis role="strong">protocol</emphasis>: <emphasis>http|https</emphasis>
-            </listitem>
-	    <listitem>
-              <emphasis role="strong">server</emphasis>: the
-              Application Server hostname
-            </listitem>
-	    <listitem>
-              <emphasis role="strong">port</emphasis>: the Application
-              Server port of the service
-            </listitem>
-	    <listitem>
-              <emphasis role="strong">location</emphasis>: the
-              location of the Ulteo part on the HTTP server
-            </listitem>
-	  </itemizedlist>
-        </para>
-
-        <para>
-          Here is an example:
-          <screen><![CDATA[
-<?xml version="1.0" encoding="utf-8"?>
-<session mode="desktop" shareable="true" persistent="false">
-  <aps protocol="http" server="aps.ulteo.com" port="80" location="/applicationserver" />
-</session>]]>
-          </screen>
-        </para>
-
-        <para>
-          Thanks to the previous informations, it's possible to build
-          the base url to call the other webservices like
-          that: <emphasis><emphasis role="strong">protocol</emphasis>://<emphasis role="strong">server</emphasis>:<emphasis role="strong">port</emphasis><emphasis role="strong">location</emphasis></emphasis>.
-      </para>
-      </simplesect>
-
-
-      <simplesect>
-	<title>access.php</title>
-	
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis> 
-	      <itemizedlist>
-	        <listitem>
-		  <para>application_id: desktop|portal|application_pid</para>
-                  <para>
-                    An application_pid is an instance of a running application
-                  </para>
-	        </listitem>
-	      </itemizedlist>
+	    <para>
+	      <emphasis role="strong">arguments: none</emphasis>
+	      (except authentication, see auth.php)
 	    </para>
 	  </listitem>
 
 	  <listitem>
 	    <para>
-              <emphasis role="strong">returns:</emphasis> the
-	      session access as XML content
+              <emphasis role="strong">returns:</emphasis> an
+              applications list and details as XML content.
             </para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
-	  When <emphasis>whatsup.php</emphasis> give a session ready, the
-	  client has to call this one to get all the access to join
-	  the session: SSH port/login/password, VNC port/password ...
+	  This webservice provide the available applications list and
+	  details for the current authenticated user. The
+	  authentication can be done either by the dedicated service
+	  (auth.php) or directly into this one.
 	</para>
 
         <para>
@@ -854,86 +246,43 @@
 
           <itemizedlist>
             <listitem>
-              <emphasis role="strong">session</emphasis>
-              Root node
+              <emphasis role="strong">user</emphasis> Root node
 
               <itemizedlist>
-	        <listitem>
-                  <emphasis role="strong">parameters</emphasis>
-                  Node
-                  <itemizedlist>
-	            <listitem>
-                      <emphasis>height</emphasis> Attribute
-                    </listitem>
-	            <listitem>
-                      <emphasis>width</emphasis> Attribute
-                    </listitem>
-	            <listitem>
-                      <emphasis>share_desktop</emphasis> Attribute value: (yes|no)
-                    </listitem>
-	            <listitem>
-                      <emphasis>view_only</emphasis> Attribute value: (yes|no)
-                    </listitem>
-	          </itemizedlist>
+		<listitem>
+                  <emphasis>login</emphasis> Attribute
                 </listitem>
+	        <listitem>
+                  <emphasis role="strong">application nodes</emphasis>
+                </listitem>
+	      </itemizedlist>
+	    </listitem>
 
+	    <listitem>
+              <emphasis role="strong">application</emphasis> Node
+              <itemizedlist>
 	        <listitem>
-                  <emphasis role="strong">ssh</emphasis>
-                  Node
-                  <itemizedlist>
-	            <listitem>
-                      <emphasis>host</emphasis> Attribute
-                    </listitem>
-	            <listitem>
-                      <emphasis>passwd</emphasis> Attribute
-                    </listitem>
-	            <listitem>
-                      <emphasis>user</emphasis> Attribute
-                    </listitem>
-	            <listitem>
-                      <emphasis>ports</emphasis> Node
-                      <itemizedlist>
-	                <listitem>
-                          <emphasis>port</emphasis> Text node
-                        </listitem>
-	              </itemizedlist>
-                    </listitem>
-	          </itemizedlist>
+                  <emphasis>id</emphasis> Attribute
                 </listitem>
+	        <listitem>
+                  <emphasis>name</emphasis> Attribute
+                </listitem>
+	        <listitem>
+                  <emphasis>description</emphasis> Attribute
+                </listitem>
+		<listitem>
+                  <emphasis role="strong">mime nodes</emphasis>
+                </listitem>
+	      </itemizedlist>
+	    </listitem>
 
+            <listitem>
+              <emphasis>mime</emphasis> Node
+              <itemizedlist>
 	        <listitem>
-                  <emphasis role="strong">vnc</emphasis>
-                  Node <emphasis>Optional</emphasis> (only exist if application_id parameters
-                  <itemizedlist>
-	            <listitem>
-                      <emphasis>passwd</emphasis> Attribute
-                    </listitem>
-	            <listitem>
-                      <emphasis>port</emphasis> Attribute
-                    </listitem>
-	            <listitem>
-                      <emphasis>user</emphasis> Attribute
-                    </listitem>
-	            <listitem>
-                      <emphasis>quality</emphasis> Node
-                      <itemizedlist>
-	                <listitem>
-                          <emphasis>compression_level</emphasis> Attribute value: [0-9]
-                        </listitem>
-	                <listitem>
-                          <emphasis>encoding</emphasis> Attribute value: Tight
-                        </listitem>
-	                <listitem>
-                          <emphasis>jpeg_image_quality</emphasis> Attribute value: [0-9]
-                        </listitem>
-	                <listitem>
-                          <emphasis>restricted_colors</emphasis> Attribute value: (yes|no)
-                        </listitem>
-	              </itemizedlist>
-                    </listitem>
-	          </itemizedlist>
+                  <emphasis>type</emphasis> Attribute
                 </listitem>
-              </itemizedlist>
+	      </itemizedlist>
             </listitem>
 	  </itemizedlist>
         </para>
@@ -942,105 +291,87 @@
           Here is an example:
           <screen><![CDATA[
 <?xml version="1.0" encoding="utf-8"?>
-<session>
-  <parameters width="1674" height="920" share_desktop="true" view_only="No"/>
-  <ssh host="aps.ulteo.com" user="SSH3" passwd="3064396264626635">
-    <port>443</port>
-    <port>993</port>
-    <port>995</port>
-  </ssh>
-  <vnc port="5901" passwd="43bc4beb567bdaec">
-    <quality compression_level="1" restricted_colors="no" jpeg_image_quality="9" encoding="Tight"/>
-  </vnc>
-</session>]]>
+<user login="mwilson">
+    <application id="1850" name="AbiWord" description="Compose, edit,
+and view documents">   
+        <mime type="application/docbook+xml"/>
+        <mime type="application/msword"/>
+        <mime type="application/rtf"/>
+    </application>
+   
+    <application id="1857" name="Mousepad" description="Simple text editor">
+        <mime type="text/plain"/>
+    </application>
+</user>]]>
           </screen>
         </para>
       </simplesect>
 
       <simplesect>
-	<title>apps.php</title>
+	<title>auth.php</title>
 	
 	<itemizedlist>
 	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	    <para><emphasis role="strong">method:</emphasis> POST</para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis> NONE</para>
+	    <para>
+	      <emphasis role="strong">arguments: XML input (optionnal)</emphasis>
+	    </para>
 	  </listitem>
+
 	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> an
-	    applications list as XML content</para>
+	    <para>
+              <emphasis role="strong">returns:</emphasis> HTTP default return codes.
+            </para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
-	  The webservice provide the list of available applications
-	  for the current session.
+	  This is the dedicated authentication service. Authentication
+	  method depends of the enabled authentication module from the
+	  Administration console.
 	</para>
 
 	<para>
-          The XML root node is <emphasis>applications</emphasis> and
-          only contains child nodes
-          called <emphasis>application</emphasis>.
+	  The XML input is only used for password and token
+	  authentication mechanisms.
 	</para>
-
-	<para>
-          An application node only contains attributes:
-          <itemizedlist>
-            <listitem>
-              <para>
-                <emphasis>id:</emphasis> the application identifier
-                (useful to launch the application or get the icon for
-                instance)
-              </para>
-            </listitem>
-            <listitem>
-              <para><emphasis>name:</emphasis> the pretty name of the application</para>
-            </listitem>
-          </itemizedlist>
-        </para>
 
         <para>
-          Here is an example:
-          <screen><![CDATA[
-<?xml version="1.0" encoding="utf-8"?>
-<applications>
-  <application id="8" name="Firefox Web Browser"/>
-  <application id="9" name="GIMP Image Editor"/>
-</applications>]]>
-          </screen>
+          XML format: the root node and the XML tree doesn't matter
+          for this webservice. The system only check if
+          a <emphasis>user</emphasis> node exist and test it.
+
+          <itemizedlist>
+            <listitem>
+              <emphasis role="strong">user</emphasis> node
+
+              <itemizedlist>
+		<listitem>
+                  <emphasis>login</emphasis> Attribute
+                </listitem>
+		<listitem>
+                  <emphasis>password</emphasis> Attribute
+                </listitem>
+		<listitem>
+                  <emphasis>token</emphasis> Attribute
+                </listitem>
+	      </itemizedlist>
+	    </listitem>
+	  </itemizedlist>
         </para>
-      </simplesect>
-
-
-      <simplesect>
-	<title>exit.php</title>
-	
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> ANY</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis> NONE</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> bye</para>
-	  </listitem>
-	</itemizedlist>
 
 	<para>
-	  This webservice can be called when users close the session
-	  window to force the session to exit instead of waiting the
-	  timeout trigger.
+	  If the password module is enabled, it uses
+	  the <emphasis>login</emphasis>
+	  and <emphasis>password</emphasis> attributes.
 	</para>
-
 	<para>
-	  This is useful on session sharing for instance to be sure
-	  that when the client exits, all users sharing the session cannot
-      still access it.
+	  If the token module is enabled, it only uses
+	  the <emphasis>token</emphasis> attribute.
 	</para>
       </simplesect>
-
 
       <simplesect>
 	<title>icon.php</title>
@@ -1060,60 +391,46 @@
 	  </listitem>
 	  <listitem>
 	    <para><emphasis role="strong">returns:</emphasis> the
-	    application icon as image/png content-type</para>
+	    application icon as 32x32:32 image/png</para>
 	  </listitem>
 	</itemizedlist>
+
+	<para>
+	  This service provide an application icon from an application id.
+	</para>
+
+	<para>
+	  The authentication can be done either by the dedicated
+	  service (auth.php) or directly into this one. It also
+	  possible to access to any icon without anonymoulsy by enable
+	  the <emphasis>Public Webservices access</emphasis> access
+	  from the Administration Console.
+	</para>
       </simplesect>
 
-
       <simplesect>
-	<title>invite.php</title>
+	<title>logout.php</title>
 	
 	<itemizedlist>
 	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> POST</para>
+	    <para><emphasis role="strong">method:</emphasis> ANY</para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis> 
-	    <itemizedlist>
-	      <listitem>
-		<para>access_id: desktop|application_pid</para>
-                <para>
-                  An application_pid is an instance of a running application
-                </para>
-	      </listitem>
-	      <listitem>
-		<para>email: the email address to send the invitation</para>
-	      </listitem>
-	      <listitem>
-		<para>mode: active|passive</para>
-	      </listitem>
-	    </itemizedlist>
-	    </para>
+	    <para><emphasis role="strong">arguments:</emphasis> None</para>
 	  </listitem>
-
 	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> OK</para>
+	    <para><emphasis role="strong">returns:</emphasis> XML</para>
 	  </listitem>
 	</itemizedlist>
 
-        <para>
-          <emphasis>invite.php</emphasis> is called when the session
-          owner wants to invite someone. The Application Server ask to
-          the Session Manager to create the invitation and send the
-          email.
-        </para>
-
-        <para>
-          The <emphasis>passive</emphasis> mode is a view of the
-          session where you cannot move the mouse cursor or type keys
-          on your keyboard. It's a view only mode.
-        </para>
+	<para>
+	  This webservice can be called to becomde un-authenticated.
+	</para>
       </simplesect>
 
 
       <simplesect>
-	<title>print.php</title>
+	<title>mimetype-icon.php</title>
 	
 	<itemizedlist>
 	  <listitem>
@@ -1123,187 +440,42 @@
 	    <para><emphasis role="strong">arguments:</emphasis> 
 	    <itemizedlist>
 	      <listitem>
-		<para>timestamp: a time refered to the pdf file time to download</para>
-	      </listitem>
+		<para>id: a mime-type name</para>
+              </listitem>
 	    </itemizedlist>
 	    </para>
 	  </listitem>
-
 	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> a PDF file</para>
+	    <para><emphasis role="strong">returns:</emphasis> the
+	    application icon as 32x32:32 image/png</para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
-	  This webserice is the way to transport the print jobs from
-	  the session to the client.
-	</para>
-
-	<para>
-	  On ApS servers, there is a PDF printer that spools files in the
-	  session directory. When there is a new file,
-	  <emphasis>whatsup.php</emphasis> detects it, extracts the
-	  timestamp and alerts the client. Then the client has just to
-	  request a print with the timestamp to get the print job and
-	  use a mean to print localy (printing applet).
+	  This service provide an mime-type icon building it on the
+	  fly from the most appropriate application supporting that
+	  mime-type.
 	</para>
       </simplesect>
 
 
       <simplesect>
-	<title>start.php</title>
-	
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET|POST</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis> 
-	    <itemizedlist>
-	      <listitem>
-		<para>height: the desired height of the session</para>
-	      </listitem>
-	      <listitem>
-		<para>width: the desired width of the session</para>
-	      </listitem>
-	    </itemizedlist>
-	    </para>
-	  </listitem>
-
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> nothing</para>
-	  </listitem>
-	</itemizedlist>
-
-	<para>
-	  This webservice is called when <emphasis>whatsup</emphasis>
-	  returned 0 as session status. Startsession sets the session
-	  status to 1.
-	</para>
-      </simplesect>
-
-
-      <simplesect>
-	<title>start_app.php</title>
-	
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis> 
-	    <itemizedlist>
-	      <listitem>
-		<para>app_id: an application identifier</para>
-	      </listitem>
-	      <listitem>
-		<para>doc: <emphasis role="strong">Optional</emphasis>
-		an extra argument to give to the application (open a
-		file for instance)</para>
-	      </listitem>
-	      <listitem>
-		<para>size: the desired size of the session ([width]x[height])</para>
-	      </listitem>
-	    </itemizedlist>
-	    </para>
-	  </listitem>
-
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> either
-	    the application instance or an error. Both of them in
-	    XML.</para>
-	  </listitem>
-	</itemizedlist>
-
-	<para>
-          The XML root node is <emphasis>error</emphasis> the request didn't work.
-        </para>
-
-        <para>
-          If the command succeed, the XML root node
-          is <emphasis>access</emphasis> and contains one
-          attribute <emphasis>id</emphasis> that is the application
-          instance.
-	</para>
-
-	<para>
-          This webservice can take some time to answer (maximum 20 seconds)
-	</para>
-
-        <para>
-          Here is an example:
-          <screen><![CDATA[
-<?xml version="1.0" encoding="utf-8"?>
-<access id="gkFwi"/>]]>
-          </screen>
-        </para>
-      </simplesect>
-
-
-      <simplesect>
-	<title>suspend.php</title>
-	
-	<itemizedlist>
-	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> GET|POST</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis> NONE</para>
-	  </listitem>
-	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> nothing</para>
-	  </listitem>
-	</itemizedlist>
-
-	<para>
-	  This webservice is called to order a suspend of the current
-	  session.
-	</para>
-
-        <para>
-          This is available only if the session
-          is <emphasis role="strong">persistent</emphasis>.
-        </para>
-      </simplesect>
-
-
-      <simplesect>
-	<title>whatsup.php</title>
+	<title>session_status.php</title>
 	
 	<itemizedlist>
 	  <listitem>
 	    <para><emphasis role="strong">method:</emphasis> GET</para>
 	  </listitem>
           <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis> 
-	    <itemizedlist>
-	      <listitem>
-		<para>application_id: <emphasis role="strong">Optional</emphasis>
-		a running application instance
-                </para>
-	      </listitem>
-	    </itemizedlist>
+	    <para>
+	      <emphasis role="strong">arguments: None</emphasis> 
 	    </para>
 	  </listitem>
 	  <listitem>
 	    <para><emphasis role="strong">returns:</emphasis> session
-	    informations as XML content</para>
+	    status as XML content</para>
 	  </listitem>
 	</itemizedlist>
-
-	<para>
-	  The webservice has several uses. First of all, it's used to
-	  know that the user is still connected (a kind of ping
-	  timeout process).  Secondly, it allows the client to know
-	  session status changes. Finally, it is used to know when a
-	  new pdf file is ready for download and print.
-	</para>
-
-	<para>
-	  The client calls this webservice every 10 seconds
-	  top.
-	</para>
-
 
         <para>
           XML format: 
@@ -1314,198 +486,183 @@
               Root node
 
               <itemizedlist>
+		<listitem>
+                  <emphasis role="strong">id</emphasis> Attribute
+                </listitem>
                 <listitem>
                   <emphasis role="strong">status</emphasis> Attribute
                 </listitem>
-
-	        <listitem>
-                  <emphasis role="strong">applications</emphasis>
-                  Node
-                  <itemizedlist>
-                    <listitem>
-                      <emphasis>running</emphasis>
-                      Node (multiple)
-                      <itemizedlist>
-	                <listitem>
-                          <emphasis>app_id</emphasis> Attribute
-                        </listitem>
-	                <listitem>
-                          <emphasis>job</emphasis> Attribute
-                        </listitem>
-	                <listitem>
-                          <emphasis>status</emphasis> Attribute
-                        </listitem>
-	              </itemizedlist>
-                    </listitem>
-	          </itemizedlist>
-                </listitem>
-	        <listitem>
-                  <emphasis role="strong">sharing</emphasis>
-                  Node
-                  <itemizedlist>
-	            <listitem>
-                      <emphasis>count</emphasis> Attribute
-                    </listitem>
-                    <listitem>
-                      <emphasis>share</emphasis>
-                      Node (multiple)
-                      <itemizedlist>
-	                <listitem>
-                          <emphasis>alive</emphasis> Attribute (1|0)
-                        </listitem>
-	                <listitem>
-                          <emphasis>email</emphasis> Attribute
-                        </listitem>
-	                <listitem>
-                          <emphasis>mode</emphasis> Attribute (active|passive)
-                        </listitem>
-	              </itemizedlist>
-                    </listitem>
-	          </itemizedlist>
-                </listitem>
-              </itemizedlist>
+	      </itemizedlist>
             </listitem>
 	  </itemizedlist>
         </para>
+      </simplesect>
+
+      <simplesect>
+	<title>userlist.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      <emphasis role="strong">arguments: none</emphasis>
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+              <emphasis role="strong">returns:</emphasis> a
+              users list as XML content.
+            </para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  This webservice provide the available users list from the
+	  users base used by the Session Manager.
+	</para>
 
         <para>
-          Here is an example:
-          <screen><![CDATA[
-<?xml version="1.0" encoding="utf-8"?>
-<session status="2">
-	<applications>
-		<running job="gKjKg" app_id="15" status="2"/>
-		<running job="trV5v" app_id="9" status="2"/>
-	</applications>
-	<sharing count="1">
-		<share email="someone@ulteo.com" mode="passive" joined="1" alive="1"/>
-	</sharing>
-</session>]]>
-          </screen>
+          XML format: 
+
+          <itemizedlist>
+            <listitem>
+              <emphasis role="strong">users</emphasis> Root node
+
+              <itemizedlist>
+	        <listitem>
+                  <emphasis role="strong">user nodes</emphasis>
+                </listitem>
+	      </itemizedlist>
+	    </listitem>
+
+	    <listitem>
+              <emphasis role="strong">user</emphasis> Node
+              <itemizedlist>
+	        <listitem>
+                  <emphasis>login</emphasis> Attribute
+                </listitem>
+	        <listitem>
+                  <emphasis>displayname</emphasis> Attribute
+                </listitem>
+	      </itemizedlist>
+            </listitem>
+	  </itemizedlist>
         </para>
 
+	<para>
+	  The service only respond if the <emphasis>Display users
+	  list</emphasis> setting is enable from the Administration
+	  Console.
+	</para>
+	<para>
+	  The service limits to 100 items in the list (can be change
+	  from the Administration Console).
+	</para>
+      </simplesect>
 
+      <simplesect>
+	<title>start.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> POST</para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      <emphasis role="strong">arguments: XML content</emphasis> 
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="strong">returns:</emphasis> session
+	    parameters as XML content</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  This service is the one used by a client to negotiate a
+	  session. In the input XML, the client describe the parameter
+	  wanted for the session. According with the Administration
+	  Console policy, the Session Manager return either a session
+	  (with parameter and access) or an error message explaining
+	  why the session cannot be created.
+	</para>
+
+
+	<para>
+	  The error returned message can be:
+	  <itemizedlist>
+	    <listitem>
+	      <para><emphasis>auth_failed</emphasis></para>
+	    </listitem>
+	    <listitem>
+	      <para><emphasis>in_maintenance</emphasis></para>
+	    </listitem>
+	    <listitem>
+	      <para><emphasis>internal_error</emphasis></para>
+	    </listitem>
+	    <listitem>
+	      <para><emphasis>invalid_user</emphasis></para>
+	    </listitem>
+	    <listitem>
+	      <para><emphasis>service_not_available</emphasis></para>
+	    </listitem>
+	    <listitem>
+	      <para><emphasis>unauthorized_session_mode</emphasis></para>
+	    </listitem>
+	    <listitem>
+	      <para><emphasis>user_with_active_session</emphasis></para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
       </simplesect>
     </section>
+  </section>
+  
+  <section id="web_client">
+    <title>Web Client external API</title>
 
-    <section id="start">
-      <title>Startsession</title>
+    <para>
+      The Ulteo OVD Web Client has an Javascript API to easily start
+      an application or a desktop from another service.
+    </para>
 
-      <para>
-	The main page of the Session Manager is not a needed step to
-	launch a session, it's just an interface to call <emphasis
-	role="strong">startsession.php</emphasis>.
-      </para>
-
-      <para>
-	The goal of this section is to desbribe the API of
-	startsession.php in order to call it using an external HTML
-	file.
-      </para>
-
-      <itemizedlist>
-	<listitem>
-	  <para><emphasis role="strong">method:</emphasis> POST</para>
-	</listitem>
-	<listitem>
-	  <para><emphasis role="strong">needed arguments:</emphasis> 
-	  <itemizedlist>
-	    <listitem>
-	      <para>login</para>
-	    </listitem>
-	    <listitem>
-	      <para>password</para>
-	    </listitem>
-	  </itemizedlist>
-	  </para>
-	</listitem>
-	<listitem>
-	  <para><emphasis role="strong">optionnal arguments:</emphasis> 
-	  <itemizedlist>
-	    <listitem>
-              <para>app_with_desktop:
-                0|1 Launch a full desktop when start_app is used</para>
-            </listitem>
-            <listitem>
-              <para>client: browser|strict.
-                Define the client type. Default is strict
-              </para>
-            </listitem>
-            <listitem>
-              <para>debug: 0|1</para>
-            </listitem>
-            <listitem>
-              <para>desktop_icons:
-                0|1 Show application icons on the desktop</para>
-            </listitem>
-            <listitem>
-              <para>desktop_timeout: a number of second</para>
-            </listitem>
-            <listitem>
-              <para>language:
-                fr_FR.UTF-8|en_GB.UTF-8|en_US.UTF-8... Desired language and locale
-                for the session (in Unix format)</para>
-            </listitem>
-            <listitem>
-              <para>open_doc:
-                /some/file/path... A document path to open inside the OVD</para>
-            </listitem>
-            <listitem>
-              <para>quality:
-                lowest|medium|high|highest
-              </para>
-            </listitem>
-            <listitem>
-              <para>session_mode:
-                desktop|portal Request for a desktop or a portal session</para>
-            </listitem>
-            <listitem>
-              <para>size:
-                WIDTHxHEIGHT Specify the size of the session</para>
-            </listitem>
-            <listitem>
-              <para>start_app:
-                1|2... An application id to launch at
-                session start</para>
-            </listitem>
-            <listitem>
-              <para>timezone:
-                US/Eastern|Europe/London|Asia/Tokyo... Desired timezone for the session.
-                Default is server timezone
-              </para>
-            </listitem>
-            <listitem>
-              <para>windows_keymap:
-                en|fr|... Force the keymap for Windows applications</para>
-            </listitem>
-	  </itemizedlist>
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>
-	    <emphasis role="strong">return:</emphasis>
-	    <itemizedlist>
-	    <listitem>
-	      <para>if fails: a HTML message</para>
-	    </listitem>
-	    <listitem>
-	      <para>if success: a HTTP redirection (302) to an
-	      application server</para>
-	    </listitem>
-	  </itemizedlist>
-	  </para>
-	</listitem>
-      </itemizedlist>
-
-      <para>
-	Here is a example of a basic HTML page which start a
-	session:
-	<screen>
-	  <![CDATA[
+    <para>
+      Here is a simple example HTML page which start a seamless Ulteo
+      OVD application:
+    </para>
+    <screen>
+      <![CDATA[
 <html>
+  <head>
+    <!-- Load the Ulteo javascript files -->
+    <script type="text/javascript" 
+	    src="http://web.ulteo.com/media/script/lib/prototype/prototype.js" 
+	    charset="utf-8"></script>
+    <script type="text/javascript" 
+	    src="http://web.ulteo.com/media/script/external.js" 
+	    charset="utf-8"></script>
+
+    <script type="text/javascript">
+function start(form_) {
+	var ovd = new UlteoOVD_start_Application(
+                 'http://'+form_server.value+'/ovd', 
+                 form_.app.value
+             );
+        ovd.setAuthPassword(form_.login.value, form_.password.value);
+	ovd.start();
+}
+    </script>
+  </head>
   <body>
-<form action="http://sm.ulteo.com/ovd/client/start.php" method="post">
- <input type="hidden" name="client" value="browser" />
+
+<form action="#" onsubmit="start(this); return false;">
+ Server: 
+ <input type="text" name="server" value="web.ulteo.com" />
+ <br/>
 
  Login: 
  <input type="text" name="login" value="" />
@@ -1515,120 +672,14 @@
  <input type="password" name="password" value="" />
  <br/>
 
- Language: 
- <select name="locale">
-  <option value="en_GB.UTF-8">English</option>
-  <option value="fr_FR.UTF-8">French</option>
- </select>
+ Application id: 
+ <input type="text" name="app" value="2" />
  <br/>
 
  <input type="submit" value="Launch" />
-
 </form>
  </body>
 </html>]]>
-	</screen>
-      </para>
-
-
-    </section>
+    </screen>
   </section>
-
-
-  <section id="ids_matching">
-    <title>Numerical ID matching</title>
-
-    <section id="id_session_status">
-      <title>Session status</title>
-      
-      <para>
-	The status sent by webservices and used by both systems (Session
-	Manager and Application Server) are integer figures.
-      </para>
-
-      <itemizedlist>
-	<listitem>
-	  <para><emphasis role="strong">-1:</emphasis> session to create</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="strong">0:</emphasis> session created</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="strong">1:</emphasis> session to start</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="strong">22:</emphasis> session is starting</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="strong">2:</emphasis> session ready</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="strong">3:</emphasis> session to destroy</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="strong">4:</emphasis> unknown
-	  session/session destroyed</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="strong">9:</emphasis> session to suspend</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="strong">10:</emphasis> session suspended</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="strong">11:</emphasis> session to restore</para>
-	</listitem>
-      </itemizedlist>
-    </section>
-
-
-    <section id="id_jobs_status">
-      <title>Jobs status</title>
-      
-      <para>
-	When installing/removing applications using the
-	<emphasis>apt-get</emphasis> webservice, the Administration
-	console requests the ApS server to return the status of the job.
-      </para>
-
-      <itemizedlist>
-	<listitem>
-	  <para><emphasis role="strong">-3:</emphasis> server error</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="strong">-2:</emphasis> job made an
-	  error, system can switch in broken mode</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="strong">-1:</emphasis> job id not exist</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="strong">0:</emphasis> job is spooling</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="strong">1:</emphasis> job in progress</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="strong">2:</emphasis> job finished</para>
-	</listitem>
-
-
-      </itemizedlist>
-    </section>
-  </section>
-
 </article>
