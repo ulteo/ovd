@@ -290,7 +290,7 @@ Section "post" PostCmd
   
   DetailPrint "Generating random password"
   Var /GLOBAL pass
-  pwgen::GeneratePassword 10
+  pwgen::GeneratePassword 20
   Pop $pass
 
   !insertmacro CreateUser "" "OVDAdmin" "$pass" "OVDAdmin" "OVDAdmin" "" 544
