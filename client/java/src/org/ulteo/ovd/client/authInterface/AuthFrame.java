@@ -80,6 +80,7 @@ public class AuthFrame implements ActionListener, Runnable {
 	
 	private JFrame mainFrame = new JFrame();
 	private boolean desktopLaunched = false;
+	private boolean isGUILocked = false;
 	
 	private JLabel login = new JLabel();
 	private JLabel password = new JLabel();
@@ -126,8 +127,9 @@ public class AuthFrame implements ActionListener, Runnable {
 	
 	private ActionListener obj = null;
 	
-	public AuthFrame(ActionListener obj_, Dimension resolution_) {
+	public AuthFrame(ActionListener obj_, Dimension resolution_, boolean isGUILocked_) {
 		this.obj = obj_;
+		this.isGUILocked = isGUILocked_;
 
 		this.jobsList = new CopyOnWriteArrayList<Integer>();
 		
@@ -163,46 +165,51 @@ public class AuthFrame implements ActionListener, Runnable {
 		mainFrame.setSize(500,450);
 		mainFrame.setResizable(false);
 		mainFrame.setBackground(Color.white);
+		
 		frameLogo = mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
+		mainFrame.setIconImage(frameLogo);
+
 		ulteoLogo = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/logo_small.png")));
 		userLogo = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/users.png")));
 		passwordLogo = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/password.png")));
-		hostLogo = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/server.png")));
-		showOption = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/show.png")));
-		hideOption = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/hide.png")));
-		
-		mainFrame.setIconImage(frameLogo);
 		logoLabel.setIcon(ulteoLogo);
 		userLogoLabel.setIcon(userLogo);
 		passwordLogoLabel.setIcon(passwordLogo);
-		hostLogoLabel.setIcon(hostLogo);
-		
-		moreOption.setIcon(showOption);
-		
-		this.useLocalCredentials.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				startJob(JOB_LOCAL_CREDENTIALS);
-			}
-		});
 
-		this.initResolutionSlider(resolution_);
-		
-		optionListener = new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				startJob(JOB_OPTIONS);
-			}
-		};
-		
-		moreOption.addActionListener(optionListener);
-		
 		mainFrame.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		startButton.setPreferredSize(new Dimension(150, 25));
 		startButton.addActionListener(this.obj);
-		
+
+		this.initResolutionSlider(resolution_);
+
+		if (! this.isGUILocked) {
+			hostLogo = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/server.png")));
+			showOption = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/show.png")));
+			hideOption = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/hide.png")));
+
+			hostLogoLabel.setIcon(hostLogo);
+
+			moreOption.setIcon(showOption);
+
+			this.useLocalCredentials.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					startJob(JOB_LOCAL_CREDENTIALS);
+				}
+			});
+
+			optionListener = new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					startJob(JOB_OPTIONS);
+				}
+			};
+
+			moreOption.addActionListener(optionListener);
+		}
+
 		gbc.gridx = gbc.gridy = 0;
 		gbc.insets = new Insets(7, 7, 25, 0);
 		gbc.gridwidth = 2;
@@ -210,7 +217,7 @@ public class AuthFrame implements ActionListener, Runnable {
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 		mainFrame.add(logoLabel, gbc);
-		
+
 		gbc.gridwidth = 1;
 		gbc.anchor = GridBagConstraints.LINE_END;
 		gbc.gridx = 0;
@@ -219,41 +226,45 @@ public class AuthFrame implements ActionListener, Runnable {
 		gbc.insets.top = 0;
 		gbc.insets.bottom = 5;
 		mainFrame.add(userLogoLabel, gbc);
-		
+
 		gbc.gridy = 4;
 		mainFrame.add(passwordLogoLabel, gbc);
-		
+
 		int pos = 5;
-		if (this.displayUserLocalCredentials)
-			pos++;
-		
-		gbc.gridy = pos;
-		mainFrame.add(hostLogoLabel, gbc);
-		
+		if (! this.isGUILocked) {
+			if (this.displayUserLocalCredentials)
+				pos++;
+
+			gbc.gridy = pos;
+			mainFrame.add(hostLogoLabel, gbc);
+		}
+
 		pos = 1;
 		gbc.anchor = GridBagConstraints.LINE_START;
 		gbc.insets.left = 5;
 		gbc.gridx = 1;
 		gbc.gridy = 3;
 		mainFrame.add(login, gbc);
-		
+
 		gbc.gridy = 4;
-		mainFrame.add(password, gbc);      
-		
-		pos = 5;
-		if (this.displayUserLocalCredentials)
-			pos++;
-		
-		gbc.gridy = pos;
-		mainFrame.add(host, gbc);
-		
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		gbc.gridheight = GridBagConstraints.REMAINDER;
-		gbc.insets.top = 25;
-		gbc.gridx = 0;
-		gbc.gridy = 15;
-		mainFrame.add(moreOption, gbc);
-		
+		mainFrame.add(password, gbc);
+
+		if (! this.isGUILocked) {
+			pos = 5;
+			if (this.displayUserLocalCredentials)
+				pos++;
+
+			gbc.gridy = pos;
+			mainFrame.add(host, gbc);
+
+			gbc.gridwidth = GridBagConstraints.REMAINDER;
+			gbc.gridheight = GridBagConstraints.REMAINDER;
+			gbc.insets.top = 25;
+			gbc.gridx = 0;
+			gbc.gridy = 15;
+			mainFrame.add(moreOption, gbc);
+		}
+
 		gbc.gridwidth = 0;
 		gbc.gridheight = 1;
 		gbc.insets.top = 0;
@@ -265,32 +276,34 @@ public class AuthFrame implements ActionListener, Runnable {
 		gbc.weighty = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		mainFrame.add(loginTextField, gbc);
-		
+
 		gbc.gridy = 4;
 		mainFrame.add(passwordTextField, gbc);
-		
+
 		pos = 5;
-		if (this.displayUserLocalCredentials) {
+		if (! this.isGUILocked) {
+			if (this.displayUserLocalCredentials) {
+				gbc.gridy = pos++;
+				mainFrame.add(this.useLocalCredentials, gbc);
+			}
+
 			gbc.gridy = pos++;
-			mainFrame.add(this.useLocalCredentials, gbc);
+			mainFrame.add(hostTextField, gbc);
+
+			gbc.gridy = pos++;
+			gbc.anchor = GridBagConstraints.CENTER;
+			mainFrame.add(rememberMe, gbc);
 		}
-		
-		gbc.gridy = pos++;
-		mainFrame.add(hostTextField, gbc);
-		
-		gbc.gridy = pos++;
-		gbc.anchor = GridBagConstraints.CENTER;
-		mainFrame.add(rememberMe, gbc);
-		
+
 		gbc.gridx = 2;
 		gbc.gridy = pos++;
 		gbc.anchor = GridBagConstraints.LINE_START;
 		gbc.gridwidth = 1;
 		gbc.fill = GridBagConstraints.NONE;
 		mainFrame.add(startButton, gbc);
-		
+
 		this.initKeyActions();
-		
+
 		// Load the language strings
 		(new ChangeLanguage(this)).run();
 		
@@ -961,37 +974,39 @@ public class AuthFrame implements ActionListener, Runnable {
 		public void run() {
 			this.authFrame.login.setText(I18n._("Login"));
 			this.authFrame.password.setText(I18n._("Password"));
-			this.authFrame.host.setText(I18n._("Host"));
 			this.authFrame.startButton.setText(I18n._("Start!"));
-			this.authFrame.mode.setText(I18n._("Mode"));
-			this.authFrame.resolution.setText(I18n._("Resolution"));
-			this.authFrame.language.setText(I18n._("Language"));
-			this.authFrame.keyboard.setText(I18n._("Keyboard"));
-			this.authFrame.login.setText(I18n._("Login"));
-			
-			this.authFrame.itemModeAuto.setText(I18n._("Auto"));
-			this.authFrame.itemModeApplication.setText(I18n._("Application"));
-			this.authFrame.itemModeDesktop.setText(I18n._("Desktop"));
-			this.authFrame.rememberMe.setText(I18n._("Remember me"));
-			this.authFrame.autoPublish.setText(I18n._("Auto-publish shortcuts"));
-			this.authFrame.useLocalCredentials.setText(I18n._("Use local credentials"));
-			
-			String buf = I18n._("More options...");
-			if (this.authFrame.optionClicked)
-				buf = I18n._("Fewer options");
-			this.authFrame.moreOption.setText(buf);
-			
-			this.authFrame.RESOLUTION_MAXIMIZED = I18n._("Maximized");
-			this.authFrame.RESOLUTION_FULLSCREEN = I18n._("Fullscreen");
-			
-			if (this.authFrame.resolutionStrings.length >= 2) {
-				this.authFrame.resolutionStrings[this.authFrame.resolutionStrings.length - 2] = RESOLUTION_MAXIMIZED;
-				this.authFrame.resolutionStrings[this.authFrame.resolutionStrings.length - 1] = RESOLUTION_FULLSCREEN;
+
+			if (! isGUILocked) {
+				this.authFrame.host.setText(I18n._("Host"));
+				this.authFrame.mode.setText(I18n._("Mode"));
+				this.authFrame.resolution.setText(I18n._("Resolution"));
+				this.authFrame.language.setText(I18n._("Language"));
+				this.authFrame.keyboard.setText(I18n._("Keyboard"));
+
+				this.authFrame.itemModeAuto.setText(I18n._("Auto"));
+				this.authFrame.itemModeApplication.setText(I18n._("Application"));
+				this.authFrame.itemModeDesktop.setText(I18n._("Desktop"));
+				this.authFrame.rememberMe.setText(I18n._("Remember me"));
+				this.authFrame.autoPublish.setText(I18n._("Auto-publish shortcuts"));
+				this.authFrame.useLocalCredentials.setText(I18n._("Use local credentials"));
+
+				String buf = I18n._("More options...");
+				if (this.authFrame.optionClicked)
+					buf = I18n._("Fewer options");
+				this.authFrame.moreOption.setText(buf);
+
+				this.authFrame.RESOLUTION_MAXIMIZED = I18n._("Maximized");
+				this.authFrame.RESOLUTION_FULLSCREEN = I18n._("Fullscreen");
+
+				if (this.authFrame.resolutionStrings.length >= 2) {
+					this.authFrame.resolutionStrings[this.authFrame.resolutionStrings.length - 2] = RESOLUTION_MAXIMIZED;
+					this.authFrame.resolutionStrings[this.authFrame.resolutionStrings.length - 1] = RESOLUTION_FULLSCREEN;
+				}
+
+				int value = this.authFrame.resBar.getValue();
+				if (value < this.authFrame.resolutionStrings.length)
+					this.authFrame.resolutionValue.setText(this.authFrame.resolutionStrings[value]);
 			}
-			
-			int value = this.authFrame.resBar.getValue();
-			if (value < this.authFrame.resolutionStrings.length)
-				this.authFrame.resolutionValue.setText(this.authFrame.resolutionStrings[value]);
 			
 			this.authFrame.mainFrame.pack();
 		}

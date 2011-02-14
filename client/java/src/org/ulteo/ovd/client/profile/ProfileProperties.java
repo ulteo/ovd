@@ -37,6 +37,7 @@ public class ProfileProperties {
 	private String lang = null;
 	private String keymap = null;
 	private boolean showProgressbar = true;
+	private boolean isGUILocked = false;
 	
 	public ProfileProperties() {}
 
@@ -130,5 +131,13 @@ public class ProfileProperties {
 
 	public void setShowProgressbar(boolean showProgressbar_) {
 		this.showProgressbar = showProgressbar_;
+	}
+
+	public void setGUILocked(boolean guiLocked_) {
+		this.isGUILocked = guiLocked_;
+	}
+
+	public boolean isGUILocked() {
+		return this.isGUILocked;
 	}
 }

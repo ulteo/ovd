@@ -46,4 +46,6 @@ public abstract class Profile {
 	protected static final String VALUE_1280X678 = "1280x678";
 	protected static final String VALUE_MAXIMIZED = "maximized";
 	protected static final String VALUE_FULLSCREEN = "fullscreen";
+
+	protected static final String FIELD_GUI_LOCKED = "locked-gui";
 }

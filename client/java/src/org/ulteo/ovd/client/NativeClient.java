@@ -88,6 +88,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		public boolean autopublish = false;
 		public boolean autostart = false;
 		public boolean debugSeamless = false;
+		public boolean guiLocked = false;
 	}
 
 	public static Options main_options = null;
@@ -108,6 +109,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	public static final int FLAG_OPTION_AUTO_INTEGRATION = 0x00000200;
 	public static final int FLAG_OPTION_AUTO_START = 0x00000400;
 	public static final int FLAG_OPTION_REMEMBER_ME = 0x00004000;
+	public static final int FLAG_OPTION_GUI_LOCKED = 0x00008000;
 
 	public static final int FLAG_CMDLINE_OPTS = 0x00000800;
 	public static final int FLAG_FILE_OPTS = 0x00001000;
@@ -183,6 +185,10 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				NativeClient.main_options.geometry = geometry;
 				NativeClient.optionMask |= NativeClient.FLAG_OPTION_GEOMETRY;
 			}
+		}
+		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_GUI_LOCKED) == 0) {
+			NativeClient.main_options.guiLocked = properties.isGUILocked();
+			NativeClient.optionMask |= NativeClient.FLAG_OPTION_GUI_LOCKED;
 		}
 	}
 
@@ -570,7 +576,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	}
 
 	private void initAuthFrame() {
-		this.authFrame = new AuthFrame(this, this.opts.geometry);
+		this.authFrame = new AuthFrame(this, this.opts.geometry, this.opts.guiLocked);
 		this.authFrame.getLanguageBox().addActionListener(this);
 		this.loadOptions();
 		this.authFrame.setRememberMeChecked((this.flags & NativeClient.FLAG_OPTION_REMEMBER_ME) != 0);

@@ -119,6 +119,14 @@ public class ProfileRegistry extends Profile {
 				else if (field.equalsIgnoreCase(FIELD_KEYMAP)) {
 					properties.setKeymap(value);
 				}
+				else if (field.equalsIgnoreCase(FIELD_GUI_LOCKED)) {
+					boolean isGUILocked = false;
+
+					if (value.equalsIgnoreCase(VALUE_TRUE))
+						isGUILocked = true;
+
+					properties.setGUILocked(isGUILocked);
+				}
 			}
 		} catch (RegistryException ex) {
 			Logger.error("Getting profile preferencies from registry failed: "+ex.getMessage());

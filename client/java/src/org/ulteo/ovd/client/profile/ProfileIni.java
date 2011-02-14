@@ -36,6 +36,7 @@ public class ProfileIni extends Profile {
 	private static final String INI_SECTION_SESSION = "session";
 	private static final String INI_SECTION_PUBLICATION = "publication";
 	private static final String INI_SECTION_SCREEN = "screen";
+	private static final String INI_SECTION_GUI = "gui";
 	
 	private static final String PROFILE_EXT = ".conf";
 	public static final String DEFAULT_PROFILE = "default";
@@ -231,6 +232,9 @@ public class ProfileIni extends Profile {
 		if (value != null)
 			properties.setKeymap(value);
 
+		value = ini.get(INI_SECTION_GUI, FIELD_GUI_LOCKED);
+		if (value != null)
+			properties.setGUILocked(value.equalsIgnoreCase(VALUE_TRUE));
 
 		return properties;
 	}
