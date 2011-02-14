@@ -88,22 +88,13 @@ public class MyApplicationPanel extends JPanel {
 		if (appLink == null)
 			return;
 		
-		for (Component cmp : this.buttonPan.getComponents()) {
-			if (cmp.getName().equals(app.getName())) {
-				if (! (cmp instanceof ApplicationLink))
-					continue;
+		for (ActionListener each : appLink.getListeners(ApplicationListener.class))
+			appLink.removeActionListener(each);
 
-				ApplicationLink link = (ApplicationLink) cmp;
+		appLink.setEnabled(enable);
 
-				for (ActionListener each : link.getListeners(ActionListener.class))
-					link.removeActionListener(each);
-
-				link.setEnabled(enable);
-
-				if (enable)
-					link.addActionListener(new ApplicationListener(app, this.runningApps));
-			}
-		}
+		if (enable)
+			appLink.addActionListener(new ApplicationListener(app, this.runningApps));
 	}
 
 	private ApplicationLink findLinkByApp(Application app) {
@@ -114,7 +105,7 @@ public class MyApplicationPanel extends JPanel {
 			if (this.buttonPan.getComponent(i) instanceof ApplicationLink) {
 				ApplicationLink link = (ApplicationLink) this.buttonPan.getComponent(i);
 
-				if (app.getName().equals(link.getName()) && (app.getConnection() == link.getConnection()))
+				if (app.getId() == link.getApplication().getId())
 					return link;
 			}
 		}

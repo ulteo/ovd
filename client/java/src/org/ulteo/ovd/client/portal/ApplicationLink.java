@@ -37,6 +37,10 @@ public class ApplicationLink extends HyperLink {
 		this.setName(this.app.getName());
 	}
 
+	public Application getApplication() {
+		return this.app;
+	}
+
 	public RdpConnectionOvd getConnection() {
 		if (this.app == null)
 			return null;
