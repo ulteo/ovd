@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -35,6 +35,22 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		$this->config =  $this->makeLDAPconfig();
 	}
 
+	public function authenticate($user_, $password_){
+		Logger::debug('main','UserDB::activedirectory::authenticate '.$user_->getAttribute('login'));
+		$conf_ldap2 = $this->config;
+		$conf_ldap2['login'] = $user_->getAttribute('login').'@'.$this->config_ad['domain'];
+		$conf_ldap2['password'] = $password_;
+		
+		$LDAP2 = new LDAP($conf_ldap2);
+		$a = $LDAP2->connect();
+		$LDAP2->disconnect();
+		if ($a == false)
+			Logger::debug('main','USERDB::activedirectory::authenticate \''.$user_->getAttribute('login').'\' is not authenticate');
+		else
+			Logger::debug('main','USERDB::activedirectory::authenticate '.$user_->getAttribute('login').' result '.$a);
+		return $a;
+	}
+
 	public function makeLDAPconfig($config_=NULL) {
 		if ($config_ != NULL)
 			$config = $config_;
@@ -44,10 +60,6 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		$ldap_suffix = domain2suffix($config['domain']);
 		if (! $ldap_suffix)
 			die_error('Active Directory configuration not valid (domain2suffix error)2',__FILE__,__LINE__);
-
-		if (! str_endswith($config['login'], $ldap_suffix))
-			$config['login'] .= ','.$ldap_suffix;
-
 
 		$match_minimal  = array(
 					'login'	=> 'sAMAccountName',
@@ -60,7 +72,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 			'hosts' =>  $config['hosts'],
 			'suffix' => $ldap_suffix,
 
-			'login' => $config['login'],
+			'login' => $config['login'].'@'.$config['domain'],
 			'password' => $config['password'],
 
 			'port'	=> '389',
@@ -115,12 +127,6 @@ class UserDB_activedirectory  extends UserDB_ldap{
 			return false;
 		}
 		$log['isValidDN for \''.$ldap_suffix.'\''] = true;
-
-		if (! UserDB_ldap::isValidDN($config_AD['login'])) {
-			$log['isValidDN for \''.$config_AD['login'].'\''] = false;
-			return false;
-		}
-		$log['isValidDN for \''.$config_AD['login'].'\''] = true;
 
 		$config_ldap = self::makeLDAPconfig($config_AD);
 		$LDAP2 = new LDAP($config_ldap);
