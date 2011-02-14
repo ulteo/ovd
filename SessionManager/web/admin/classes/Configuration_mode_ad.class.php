@@ -186,16 +186,15 @@ class Configuration_mode_ad extends Configuration_mode {
     */
     
     $str.= '<div class="section">';
-    $str.= '<h3>'._('User on Application Server').'</h3>';
+    $str.= '<h3>'._('Domain users').'</h3>';
     $str.= '<input class="input_radio" type="radio" name="sessionmanagement" value="microsoft"';
     if ($form['sessionmanagement'] == 'microsoft')
       $str.= ' checked="checked"';
-    $str.= ' />'._('Use Active Directory users').'<br/>';
-
+    $str.= ' />'._('Use <strong>Active Directory</strong> to handle users in OVD sessions <em>(not compatible with Linux applications)</em>').'<br/>';
     $str.= '<input class="input_radio" type="radio" name="sessionmanagement" value="internal"';
     if ($form['sessionmanagement'] == 'internal')
       $str.= ' checked="checked"';
-    $str.= '/>'._('Use temporary generated user');
+    $str.= '/>'._('Use <strong>Internal</strong> method to handle users in OVD sessions');
     $str.= '</div>';
 
     return $str;
