@@ -329,6 +329,9 @@ deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/private/ubuntu lucid main]]>
               <listitem>
                 <para><emphasis role="strong">host</emphasis>, the server to connect to</para>
               </listitem>
+              <listitem>
+                <para><emphasis role="strong">port</emphasis>, the port to use if not default (443)</para>
+              </listitem>
             </itemizedlist>
           </listitem>
 
@@ -403,6 +406,19 @@ deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/private/ubuntu lucid main]]>
               </listitem>
             </itemizedlist>
           </listitem>
+
+         <listitem>
+            <para>Section <emphasis role="strong">gui</emphasis></para>
+            <itemizedlist>
+              <listitem>
+                <para>
+                  <emphasis role="strong">locked-gui</emphasis>,
+                  minimal interface with only login and password
+                  fields
+                </para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
         </itemizedlist>
       </para>
 
@@ -428,6 +444,10 @@ deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/private/ubuntu lucid main]]>
 
           <listitem>
             <para><emphasis role="strong">host</emphasis>, the server to connect to</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="strong">port</emphasis>, the port to use if not default (443)</para>
           </listitem>
 
           <listitem>
@@ -484,6 +504,12 @@ deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/private/ubuntu lucid main]]>
               <emphasis role="strong">show-progressbar</emphasis>, Can be
               <emphasis>true</emphasis> (default) or
               <emphasis>false</emphasis>.
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>
+              <emphasis role="strong">locked-gui</emphasis>, minimal interface with only login and password fields
             </para>
           </listitem>
         </itemizedlist>
