@@ -312,10 +312,10 @@ deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/private/ubuntu lucid main]]>
         The directory used to store the configuration file depends on the system:
         <itemizedlist>
           <listitem>
-            <para>On <trademark class="registered">Microsoft Windows</trademark> systems, it's <emphasis>Application Data\ulteo\ovd</emphasis></para>
+            <para>On <trademark class="registered">Microsoft Windows</trademark> systems, it's <emphasis>Application Data\ulteo\ovd\client</emphasis></para>
           </listitem>
           <listitem>
-            <para>On Linux systems, it's <emphasis>~/.ulteo/ovd</emphasis></para>
+            <para>On Linux systems, it's <emphasis>~/.ulteo/ovd/client</emphasis></para>
           </listitem>
         </itemizedlist>
       </para>
