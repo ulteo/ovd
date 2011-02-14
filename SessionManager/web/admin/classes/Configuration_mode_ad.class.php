@@ -163,16 +163,16 @@ class Configuration_mode_ad extends Configuration_mode {
     $str.= '</div>';
 
     $str.= '<div class="section">';
-    $str.= '<h3>'._('User Groups').'</h3>';
+    $str.= '<h3>'._('Usergroups').'</h3>';
     $str.= '<input class="input_radio" type="radio" name="user_group" value="activedirectory"';
     if ($form['user_group'] == 'activedirectory')
       $str.= ' checked="checked"';
-    $str.= ' />'._('Use Active Directory User Groups').'<br/>';
+    $str.= ' />'._('Use <strong>Active Directory</strong> usergroups').'<br/>';
 
     $str.= '<input class="input_radio" type="radio" name="user_group" value="sql"';
     if ($form['user_group'] == 'sql')
       $str.= ' checked="checked"';
-    $str.= '/>'._('Use Internal User Groups');
+    $str.= '/>'._('Use <strong>Internal</strong> usergroups');
     $str.= '</div>';
 
     /*
