@@ -67,7 +67,14 @@ class Configuration_mode_ad extends Configuration_mode {
 
   public function form_read($form, $prefs) {
     $ad_ar = array();
-    $ad_ar['hosts'] = array($form['host'], $form['host2']);
+    
+    $ad_ar['hosts'] = array();
+    if ($form['host'] == '')
+       $ad_ar['hosts'] []= $form['domain'];
+    else
+      $ad_ar['hosts'] []= $form['host'];
+    if ($form['host2'] != '')
+      $ad_ar['hosts'] []= $form['host2'];
     $ad_ar['domain'] = $form['domain'];
     $ad_ar['login'] = $form['admin_login'];
     $ad_ar['password'] = $form['admin_password'];
@@ -111,7 +118,7 @@ class Configuration_mode_ad extends Configuration_mode {
     $config = $prefs->get('UserDB', 'activedirectory');
 
     $form['host'] = '';
-    if (isset($config['hosts'][0]))
+    if (isset($config['hosts'][0]) and $config['hosts'][0] != $config['domain'])
       $form['host'] = $config['hosts'][0];
     $form['host2'] = '';
     if (isset($config['hosts'][1]))
@@ -136,11 +143,13 @@ class Configuration_mode_ad extends Configuration_mode {
     $str.= '<div class="section">';
     $str.= '<h3>Server</h3>';
     $str.= '<table>';
-    $str.= '<tr><td>'._('Primary Host:').'</td><td><input type="text" name="host" value="'.$form['host'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Domain:').'</td><td><input type="text" name="domain" value="'.$form['domain'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Primary Host:').'</td><td><input type="text" name="host" value="'.$form['host'].'" /></td>';
+    $str.= '<td><span style="font-size: 0.9em; font-style: italic;">('._('Optional: If the domain name is not registered in your DNS, fill in the Active Directory IP.').')</span></td>';
+    $str.= '</tr>';
     $str.= '<tr><td>'._('Secondary Host:').'</td><td><input type="text" name="host2" value="'.$form['host2'].'" /></td>';
     $str.= '<td><span style="font-size: 0.9em; font-style: italic;">('._('optional').')</span></td>';
     $str.= '</tr>';
-    $str.= '<tr><td>'._('Domain:').'</td><td><input type="text" name="domain" value="'.$form['domain'].'" /></td></tr>';
     $str.= '</table>';
     $str.= '</div>';
 
