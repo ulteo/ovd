@@ -239,7 +239,12 @@ if (isset($old_session_id)) {
 
 					$profileDB = ProfileDB::getInstance();
 
-					$fileserver = array_pop($fileservers);
+					$fileserver = $profileDB->chooseFileServer();
+					if (! is_object($fileserver)) {
+						Logger::error('main', '(client/start) Auto-creation of profile for User "'.$user->getAttribute('login').'" failed (step 0)');
+						throw_response(INTERNAL_ERROR);
+					}
+
 					$profile = new Profile();
 					$profile->server = $fileserver->getAttribute('fqdn');
 
