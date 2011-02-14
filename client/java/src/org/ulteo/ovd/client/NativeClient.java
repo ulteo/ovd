@@ -38,6 +38,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -296,38 +297,48 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		NativeClient.main_options = new Options();
 		NativeClient.optionMask = NativeClient.FLAG_CMDLINE_OPTS;
 
-		LongOpt[] alo = new LongOpt[6];
-		alo[0] = new LongOpt("reg", LongOpt.NO_ARGUMENT, null, 0);
-		alo[1] = new LongOpt("auto-start", LongOpt.NO_ARGUMENT, null, 1);
-		alo[2] = new LongOpt("auto-integration", LongOpt.NO_ARGUMENT, null, 2);
-		alo[3] = new LongOpt("ntlm", LongOpt.NO_ARGUMENT, null, 3);
-		alo[4] = new LongOpt("progress-bar", LongOpt.REQUIRED_ARGUMENT, null, 4);
-		alo[5] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 5);
+		final int nbOptions = 4;
+		List<LongOpt> systemDependantOptions = new ArrayList<LongOpt>();
+
+		if (OSTools.isWindows()) {
+			systemDependantOptions.add(new LongOpt("reg", LongOpt.NO_ARGUMENT, null, nbOptions + 1));
+			systemDependantOptions.add(new LongOpt("ntlm", LongOpt.NO_ARGUMENT, null, nbOptions + 2));
+		}
+
+		LongOpt[] alo = new LongOpt[nbOptions + systemDependantOptions.size()];
+		alo[0] = new LongOpt("auto-start", LongOpt.NO_ARGUMENT, null, 0);
+		alo[1] = new LongOpt("auto-integration", LongOpt.NO_ARGUMENT, null, 1);
+		alo[2] = new LongOpt("progress-bar", LongOpt.REQUIRED_ARGUMENT, null, 2);
+		alo[3] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 3);
+
+		for (int i = 4; i < alo.length; i++)
+			alo[i] = systemDependantOptions.remove(0);
+
 		Getopt opt = new Getopt(OvdClient.productName, args, "c:p:u:m:g:k:l:s:hd:", alo);
 
 		int c;
 		while ((c = opt.getopt()) != -1) {
 			switch (c) {
-				case 0: //--reg
+				case (nbOptions + 1): //--reg
 					NativeClient.optionMask |= NativeClient.FLAG_REGISTRY_OPTS;
 					break;
-				case 1: //--auto-start
+				case 0: //--auto-start
 					NativeClient.main_options.autostart = true;
 
 					NativeClient.optionMask |= NativeClient.FLAG_OPTION_AUTO_START;
 					break;
-				case 2: //--auto-integration
+				case 1: //--auto-integration
 					NativeClient.main_options.autopublish = true;
 
 					NativeClient.optionMask |= NativeClient.FLAG_OPTION_AUTO_INTEGRATION;
 					break;
-				case 3: //--ntlm
+				case (nbOptions + 2): //--ntlm
 					NativeClient.main_options.nltm = true;
 
 					NativeClient.optionMask |= NativeClient.FLAG_OPTION_NTLM;
 					NativeClient.optionMask |= NativeClient.FLAG_OPTION_USERNAME;
 					break;
-				case 4: //--progress-bar [show|hide]
+				case 2: //--progress-bar [show|hide]
 					String arg = new String(opt.getOptarg());
 					if (arg.equalsIgnoreCase("show"))
 						NativeClient.main_options.showProgressBar = true;
@@ -338,7 +349,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 					NativeClient.optionMask |= NativeClient.FLAG_OPTION_SHOW_PROGRESS_BAR;
 					break;
-				case 5: //--help
+				case 3: //--help
 				case 'h':
 					NativeClient.usage(RETURN_CODE_SUCCESS);
 					break;
@@ -471,11 +482,9 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		System.err.println(NativeClient.productName);
 		System.err.println("Usage: java -jar OVDNativeClient.jar [options]");
 		System.err.println("\t-c file				Load configuration from `file`");
-		System.err.println("\t--reg				Load configuration from registry");
 		System.err.println("\t-s server			Server");
 		System.err.println("\t-u username			Username");
 		System.err.println("\t-p password			Password");
-		System.err.println("\t--ntlm				Use NTLM authentication");
 		System.err.println("\t-m [auto|desktop|applications]	Session mode");
 		System.err.println("\t-g widthxheight			Geometry");
 		System.err.println("\t-k keymap			Keymap");
@@ -484,6 +493,10 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		System.err.println("\t--auto-integration		Enable auto integration");
 		System.err.println("\t--auto-start			Enable auto start");
 		System.err.println("\t-d [seamless]			Enable debug (use comma as delimiter)");
+		if (OSTools.isWindows()) {
+			System.err.println("\t--ntlm				Use NTLM authentication");
+			System.err.println("\t--reg				Load configuration from registry");
+		}
 		System.err.println("Examples:");
 		System.err.println("\tClassic use:");
 		System.err.println("\t\tjava -jar OVDNativeClient.jar -c config.ovd -p password");
