@@ -148,7 +148,7 @@ class Configuration_mode_ad extends Configuration_mode {
     $str.= '<td><span style="font-size: 0.9em; font-style: italic;">('._('Optional: If the domain name is not registered in your DNS, fill in the Active Directory IP.').')</span></td>';
     $str.= '</tr>';
     $str.= '<tr><td>'._('Secondary Host:').'</td><td><input type="text" name="host2" value="'.$form['host2'].'" /></td>';
-    $str.= '<td><span style="font-size: 0.9em; font-style: italic;">('._('optional').')</span></td>';
+    $str.= '<td><span style="font-size: 0.9em; font-style: italic;">('._('Optional').')</span></td>';
     $str.= '</tr>';
     $str.= '</table>';
     $str.= '</div>';
