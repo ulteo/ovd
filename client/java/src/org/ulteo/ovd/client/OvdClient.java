@@ -1,9 +1,9 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
- * Author Samuel BOVEE <samuel@ulteo.com> 2010
+ * Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,6 +32,7 @@ import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
 import org.ulteo.Logger;
 import org.ulteo.ovd.OvdException;
+import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.News;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -145,7 +146,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 			}
 
 			@Override
-			public void updateProgress(int status, int substatus) {
+			public void updateProgress(LoadingStatus status, int substatus) {
 				org.ulteo.Logger.info("Callback::updateProgress "+status+","+substatus);
 			}
 		};

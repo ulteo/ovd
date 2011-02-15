@@ -20,6 +20,8 @@
 
 package org.ulteo.ovd.sm;
 
+import org.ulteo.ovd.client.authInterface.LoadingStatus;
+
 public interface Callback {
 	public void reportError(int code, String msg);
 	public void reportErrorStartSession(String code);
@@ -28,5 +30,5 @@ public interface Callback {
 	public void reportNotFoundHTTPResponse(String moreInfos);
 	public void sessionConnected();
 	public void sessionDisconnecting();
-	public void updateProgress(int status, int substatus);
+	public void updateProgress(LoadingStatus clientInstallApplication, int subStatus);
 }

@@ -1,9 +1,10 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -131,7 +132,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		} catch (OvdException ex) {
 			Logger.error(co.getServer()+": Failed to add ovd applications listener: "+ex);
 		}
-		this.obj.updateProgress(LoadingStatus.STATUS_CLIENT_WAITING_SERVER, 0);
+		this.obj.updateProgress(LoadingStatus.CLIENT_WAITING_SERVER, 0);
 
 		for (Application app : co.getAppsList()) {
 			this.appsList.add(app);

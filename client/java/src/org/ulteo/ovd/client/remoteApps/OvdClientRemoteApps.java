@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -100,7 +101,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 					org.ulteo.Logger.error("The "+app.getName()+" shortcut could not be created");
 
 				int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
-				this.obj.updateProgress(LoadingStatus.STATUS_CLIENT_INSTALL_APPLICATION, subStatus);
+				this.obj.updateProgress(LoadingStatus.CLIENT_INSTALL_APPLICATION, subStatus);
 				this.ApplicationIndex++;
 			}
 		}
@@ -235,7 +236,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 				try {
 					int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
-					this.obj.updateProgress(LoadingStatus.STATUS_SM_GET_APPLICATION, subStatus);
+					this.obj.updateProgress(LoadingStatus.SM_GET_APPLICATION, subStatus);
 
 					int appId = appItem.getId();
 					ImageIcon appIcon = this.system.getAppIcon(appId);
@@ -338,7 +339,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			if (this.initRDPConnection(server) == null)
 				return false;
 		}
-		this.obj.updateProgress(LoadingStatus.STATUS_SM_GET_APPLICATION, 100);
+		this.obj.updateProgress(LoadingStatus.SM_GET_APPLICATION, 100);
 		this.ApplicationIndex = 0;
 		
 		return true;

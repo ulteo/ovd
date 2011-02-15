@@ -4,6 +4,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -250,6 +251,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	}
 
 	private static final int RETURN_CODE_SUCCESS = 0;
+	@SuppressWarnings("unused")
 	private static final int RETURN_CODE_ERROR = 1;
 	private static final int RETURN_CODE_BAD_ARGUMENTS = 2;
 	
@@ -859,7 +861,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		if (! this.opts.autostart)
 			dialog.addCallbackListener(this);
 
-		this.updateProgress(LoadingStatus.STATUS_SM_CONNECTION, 0);
+		this.updateProgress(LoadingStatus.SM_CONNECTION, 0);
 		Properties request = new Properties(this.opts.sessionMode);
 		request.setLang(this.opts.lang);
 		request.setTimeZone(Calendar.getInstance().getTimeZone().getID());
@@ -875,7 +877,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			return false;
 		}
 		
-		this.updateProgress(LoadingStatus.STATUS_SM_START, 0);
+		this.updateProgress(LoadingStatus.SM_START, 0);
 		
 		if (this.opts.showProgressBar)
 			this.loadingFrame.getCancelButton().setEnabled(true);
@@ -1009,7 +1011,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		org.ulteo.Logger.error(error+ "\n" + moreInfos);
 	}
 
-	public void updateProgress(int status, int subStatus) {
+	public void updateProgress(LoadingStatus status, int subStatus) {
 		if (this.opts.showProgressBar)
 			this.loadingFrame.updateProgression(status, subStatus);
 	}
