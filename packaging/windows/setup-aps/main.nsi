@@ -1,8 +1,9 @@
 ;; Copyright (C) 2009 - 2011 Ulteo SAS
 ;; http://www.ulteo.com
+;; Author David LECHEVALIER <david@ulteo.com> 2011
 ;; Author Laurent CLOUET <laurent@ulteo.com> 2011
 ;; Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
-;; Author Thomas MOUTON <thomas@ulteo.com> 2009, 2010
+;; Author Thomas MOUTON <thomas@ulteo.com> 2009, 2010, 2011
 ;;
 ;; This program is free software; you can redistribute it and/or 
 ;; modify it under the terms of the GNU General Public License
@@ -261,6 +262,8 @@ Section "post" PostCmd
 
   Call .WindowsInstall
 
+  SetOutPath "$INSTDIR\vcredist"
+  nsExec::execToStack 'vcredist_x86.exe /q:a /c:"msiexec /i vcredist.msi /qn"'
   
   Var /GLOBAL printerDir
   ClearErrors
