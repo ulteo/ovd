@@ -24,7 +24,10 @@ package org.ulteo.ovd.client.authInterface;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -42,7 +45,7 @@ public class LoadingFrame extends JDialog {
 	
 	private LoadingStatus loadingStatus = LoadingStatus.LOADING_START;
 
-	public LoadingFrame(ActionListener obj_) {
+	public LoadingFrame(final ActionListener listener) {
 
 		Image logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
 		this.setIconImage(logo);
@@ -57,8 +60,14 @@ public class LoadingFrame extends JDialog {
 		this.cancel.setPreferredSize(new Dimension(120, 10));
 		this.cancel.setSize(new Dimension(120, 10));
 		this.cancel.setEnabled(false);
-		this.cancel.addActionListener(obj_);
+		this.cancel.addActionListener(listener);
 
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				listener.actionPerformed(new ActionEvent(cancel, e.getID(), "cancel"));
+		    }
+		});
+		
 		this.aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL, 100);
 		this.aJProgressBar.setIndeterminate(false);
 		this.aJProgressBar.setValue(0);
