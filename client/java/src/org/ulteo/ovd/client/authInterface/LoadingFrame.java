@@ -43,11 +43,6 @@ public class LoadingFrame extends JDialog {
 	private LoadingStatus loadingStatus = LoadingStatus.LOADING_START;
 
 	public LoadingFrame(ActionListener obj_) {
-		this.cancel = new JButton(I18n._("Cancel"));
-		this.cancel.setPreferredSize(new Dimension(120, 10));
-		this.cancel.setSize(new Dimension(120, 10));
-		this.cancel.setEnabled(false);
-		this.cancel.addActionListener(obj_);
 
 		Image logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
 		this.setIconImage(logo);
@@ -57,17 +52,25 @@ public class LoadingFrame extends JDialog {
 		this.setPreferredSize(new Dimension(400,100));
 		this.setResizable(false);
 		this.setModal(true);
+		
+		this.cancel = new JButton(I18n._("Cancel"));
+		this.cancel.setPreferredSize(new Dimension(120, 10));
+		this.cancel.setSize(new Dimension(120, 10));
+		this.cancel.setEnabled(false);
+		this.cancel.addActionListener(obj_);
 
-		aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL, 100);
-		aJProgressBar.setIndeterminate(false);
-		aJProgressBar.setValue(0);
-		aJProgressBar.setStringPainted(true);
-		aJProgressBar.setPreferredSize(new Dimension(280, 20));
-		aJProgressBar.setLocation(10,45);
+		this.aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL, 100);
+		this.aJProgressBar.setIndeterminate(false);
+		this.aJProgressBar.setValue(0);
+		this.aJProgressBar.setStringPainted(true);
+		this.aJProgressBar.setPreferredSize(new Dimension(280, 20));
+		this.aJProgressBar.setLocation(10,45);
+		
 		this.jlabel = new JLabel(LoadingStatus.getMsg(LoadingStatus.SM_START));
-		this.add(BorderLayout.NORTH, aJProgressBar);
+		
+		this.add(BorderLayout.NORTH, this.aJProgressBar);
 		this.add(BorderLayout.EAST, this.cancel);
-		this.add(BorderLayout.SOUTH, jlabel);
+		this.add(BorderLayout.SOUTH, this.jlabel);
 		this.pack();
 	}
 
