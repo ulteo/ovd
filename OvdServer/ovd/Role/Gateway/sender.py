@@ -53,7 +53,7 @@ class sender(asyncore.dispatcher):
 		except SSL.SysCallError:
 			self.handle_close()
 		except SSL.ZeroReturnError:
-			pass
+			self.close()
 		except:
 			Logger.warn('%s::handle_read error' % self.__class__.__name__)
 			self.handle_close()
