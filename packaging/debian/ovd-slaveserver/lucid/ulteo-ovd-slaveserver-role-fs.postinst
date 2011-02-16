@@ -2,6 +2,7 @@
 
 . /usr/share/debconf/confmodule
 
+DATADIR=/usr/share/ulteo/ovd/slaveserver
 SPOOLDIR=/var/spool/ulteo/ovd/slaveserver
 HOMEDIR=/var/lib/ulteo/ovd/slaveserver/fs
 
