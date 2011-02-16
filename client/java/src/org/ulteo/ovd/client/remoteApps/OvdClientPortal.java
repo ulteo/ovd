@@ -217,6 +217,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		boolean doRefresh = false;
 
 		for (RdpConnectionOvd co : this.getAvailableConnections()) {
+			if (! co.getOvdAppChannel().isReady())
+				continue;
 			boolean associate = (co.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
 			if (associate)
 				doRefresh = true;
