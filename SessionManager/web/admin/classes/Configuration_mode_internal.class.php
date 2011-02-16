@@ -44,7 +44,7 @@ class Configuration_mode_internal extends Configuration_mode {
 
   public function form_read($form, $prefs) {
     // Enable modules
-    $module_to_enable = array('SessionManagement', 'UserDB', 'UserGroupDB', 'UserGroupDBDynamic', 'UserGroupDBDynamicCached');
+    $module_to_enable = array('SessionManagement', 'UserDB', 'UserGroupDB', 'UserGroupDBDynamic', 'UserGroupDBDynamicCached', 'ProfileDB', 'SharedFolderDB');
     $module_enabled = $prefs->get('general', 'module_enable');
     $prefs->set('general', 'module_enable', array_unique(array_merge($module_enabled, $module_to_enable)));
     
