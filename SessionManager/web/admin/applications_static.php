@@ -416,7 +416,7 @@ function show_manage($id, $applicationDB) {
 				echo '<td>'._($attr_name).'</td>';
 			}
 			echo '<td>';
-			echo '<input type="text" name="'.$attr_name.'" value="'.htmlentities($app->getAttribute($attr_name)).'" style="with:100%;"/>';
+			echo '<input type="text" name="'.$attr_name.'" value="'.htmlspecialchars($app->getAttribute($attr_name)).'" style="with:100%;"/>';
 			echo '<input type="hidden" name="attributes_send[]" value="'.$attr_name.'" />';
 			echo '</td>';
 			echo '</tr>';
