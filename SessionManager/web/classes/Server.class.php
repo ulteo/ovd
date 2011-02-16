@@ -1171,7 +1171,7 @@ class Server {
 			$exe_node = $app_node->getElementsByTagName('executable')->item(0);
 			if ($exe_node->hasAttribute("command")) {
 				$command = $exe_node->getAttribute("command");
-				$command = str_replace(array("%U","%u","%c","%i","%f","%m",'"'),"",$command);
+				$command = str_replace(array("%U","%u","%c","%i","%f","%m"),"",$command);
 				$app_path_exe = trim($command);
 			}
 			
