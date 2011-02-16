@@ -129,11 +129,11 @@ class SessionManagement(Thread):
 				session.user.infos["tsid"] = sessid
 			
 			self.logoff_user(session.user)
-			
-			session.uninstall_client()
-			
-			if session.domain.manage_user():
-				self.destroy_user(session.user)
+
+		session.uninstall_client()
+		
+		if session.domain.manage_user():
+			self.destroy_user(session.user)
 		
 		if self.aps_instance.sessions.has_key(session.id):
 			del(self.aps_instance.sessions[session.id])

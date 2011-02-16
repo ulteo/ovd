@@ -25,6 +25,7 @@ import win32api
 
 from Waiter import Waiter
 
+from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.DomainMicrosoft import DomainMicrosoft as AbstractDomainMicrosoft
 
 
@@ -40,12 +41,36 @@ class DomainMicrosoft(AbstractDomainMicrosoft):
 			
 			time.sleep(0.5)
 		
-		self.session.set_user_profile_directories(mylock.userprofile, mylock.appdata)
+		self.session.set_user_profile_directories(mylock.userprofile, mylock.userDir["AppData"])
 		
-		self.session.init_user_session_dir(os.path.join(mylock.appdata, "ulteo", "ovd"))
+		self.session.init_user_session_dir(os.path.join(mylock.userDir["AppData"], "ulteo", "ovd"))
 		
+		self.session.windowsProgramsDir = mylock.userDir["Programs"]
+		self.session.windowsDesktopDir = mylock.userDir["Desktop"]
+		self.session.install_desktop_shortcuts()
+		
+		self.session.succefully_initialized = True
 		return mylock.unlock()
 	
 	
 	def doCustomizeRegistry(self, hive):
 		return True
+
+	def onSessionEnd(self):
+		for shortcut in self.session.installedShortcut:
+			desktopShortcut = os.path.join(self.session.windowsDesktopDir, shortcut)
+			programShortcut = os.path.join(self.session.windowsProgramsDir, shortcut)
+			if os.path.exists(desktopShortcut):
+				try:
+					os.remove(desktopShortcut)
+				except Exception, e:
+					Logger.debug("Error while deleting the file %s [%s]"%(desktopShortcut), str(e))
+			
+			if os.path.exists(programShortcut):
+				try:
+					os.remove(programShortcut)
+				except:
+					Logger.debug("Error while deleting the file %s [%s]"%(programShortcut), str(e))
+
+		return True
+

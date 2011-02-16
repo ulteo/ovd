@@ -34,6 +34,7 @@ class Waiter():
 		self.sid = None
 		self.userprofile = None
 		self.appdata = None
+		self.userDir = {}
 	
 	
 	def init(self):
@@ -118,7 +119,7 @@ class Waiter():
 			return False
 		
 		error = False
-		for value in ["AppData"]: #, "Desktop", "LocalAppData", "Start Menu"]:
+		for value in ["AppData", "Desktop", "Programs"]:
 			try:
 				value_,type_ = win32api.RegQueryValueEx(hkey, value)
 			except:
@@ -129,7 +130,7 @@ class Waiter():
 				value_ = value_.replace("%USERPROFILE%", self.userprofile)
 			value_ = win32api.ExpandEnvironmentStrings(value_)
 			
-			self.appdata = value_
+			self.userDir[value] = value_
 		
 		win32api.RegCloseKey(hkey)
 		if error:
