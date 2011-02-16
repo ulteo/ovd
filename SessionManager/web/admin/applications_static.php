@@ -182,7 +182,7 @@ function show_default($prefs, $applicationDB) {
 					continue;
 				$content = 'content'.(($count++%2==0)?1:2);
 				echo '<tr class="'.$content.'">';
-				echo '<td>';
+				echo '<td style="text-transform: capitalize;">';
 				if ( $attr_name == 'executable_path') {
 					if (in_array($type, $regular_types))
 						echo _('Command');
@@ -192,8 +192,6 @@ function show_default($prefs, $applicationDB) {
 				else {
 					echo _($attr_name);
 				}
-				if ($attr_name == 'name')
-					$attr_name = 'application_name';
 				echo '</td>';
 				echo '<td>';
 				echo '<input type="text" name="'.$attr_name.'" value="" size="50"/>';
@@ -400,21 +398,27 @@ function show_manage($id, $applicationDB) {
 			if (in_array($v, array('id', 'type', 'static', 'published', 'desktopfile', 'package', 'revision')))
 				unset($attr_list[$k]);
 		}
-
+		asort($attr_list);
+		
 		foreach ($attr_list as $attr_name) {
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'">';
+			echo '<td style="text-transform: capitalize;">';
 			if ($attr_name == 'executable_path') {
 				if (in_array($app->getAttribute('type'), $regular_types)) {
-					echo '<td>'._('Command').'</td>';
+					echo _('Command');
 				}
 				else {
-					echo '<td>'._('URL').'</td>';
+					echo _('URL');
 				}
 			}
-			else {
-				echo '<td>'._($attr_name).'</td>';
+			else if ($attr_name == 'application_name') {
+				echo _('Name');
 			}
+			else {
+				echo _($attr_name);
+			}
+			echo '</td>';
 			echo '<td>';
 			echo '<input type="text" name="'.$attr_name.'" value="'.htmlspecialchars($app->getAttribute($attr_name)).'" style="with:100%;"/>';
 			echo '<input type="hidden" name="attributes_send[]" value="'.$attr_name.'" />';
