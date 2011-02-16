@@ -379,7 +379,7 @@ function show_manage($fqdn) {
       $var[$role] = $ret;
     }
     else {
-      Logger::error('main', 'server_display_role_preparation failed for server '.$server->fqdn.' role '.$role);
+      Logger::debug('main', 'server_display_role_preparation failed for server '.$server->fqdn.' role '.$role);
     }
   }
   $can_do_action = isAuthorized('manageServers');
