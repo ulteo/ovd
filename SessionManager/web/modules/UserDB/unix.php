@@ -113,7 +113,7 @@ class UserDB_unix extends UserDB {
 	}
 	
 	public static function prettyName() {
-		return _('unix');
+		return _('Unix');
 	}
 	
 	public static function isDefault() {
