@@ -54,6 +54,13 @@ function do_auto_clean_db($new_prefs) {
     // Remove Users from user groups
     Abstract_Liaison::delete('UsersGroup', NULL, NULL) or
       popup_error('Unable to remove Users from UserGroups');
+    
+     // check if profile must become orphan
+    $mods_enable = $prefs->get('general', 'module_enable');
+    $new_mods_enable = $new_prefs->get('general', 'module_enable');
+    if (in_array('ProfileDB', $mods_enable) || in_array('ProfileDB', $new_mods_enable)) {
+      Abstract_Liaison::delete('UserProfile', NULL, NULL);
+    }
   }
 
   // If UserGroupDB module change
@@ -64,6 +71,13 @@ function do_auto_clean_db($new_prefs) {
 
     // Unset default usersgroup
     $new_prefs->set('general', 'user_default_group', NULL);
+    
+    // check if sharedfolder must become orphan
+    $mods_enable = $prefs->get('general', 'module_enable');
+    $new_mods_enable = $new_prefs->get('general', 'module_enable');
+    if (in_array('SharedFolderDB', $mods_enable) || in_array('SharedFolderDB', $new_mods_enable)) {
+      Abstract_Liaison::delete('UserGroupSharedFolder', NULL, NULL);
+    }
   }
 }
 
