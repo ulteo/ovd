@@ -104,13 +104,13 @@ class UserGroupDB_sql_external extends UserGroupDB {
 		$ret = array();
 		$c = new ConfigElement_input('host', _('Server host address'), _('The address of your MySQL server.'), _('The address of your MySQL server.'), '');
 		$ret []= $c;
-		$c = new ConfigElement_input('login', _('User login'), _('The user login that must be used to access the database (to list users groups accounts).'), _('The user login that must be used to access the database (to list users groups accounts).'), '');
+		$c = new ConfigElement_input('login', _('User login'), _('The user login that must be used to access the database (to list users groups).'), _('The user login that must be used to access the database (to list users groups).'), '');
 		$ret []= $c;
-		$c = new ConfigElement_password('password', _('User password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'), '');
+		$c = new ConfigElement_password('password', _('User password'), _('The user password that must be used to access the database (to list users groups).'), _('The user password that must be used to access the database (to list users groups).'), '');
 		$ret []= $c;
 		$c = new ConfigElement_input('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), '');
 		$ret []= $c;
-		$c = new ConfigElement_input('table', _('table of usersgroup'), _('table of usersgroup'), _('table of usersgroup'), '');
+		$c = new ConfigElement_input('table', _('Database users groups table name'), _('The name of the database table which contains the users groups'), _('The name of the database table which contains the users groups'), '');
 		$ret []= $c;
 		$c = new ConfigElement_inputlist('match', _('Matching'), _('Matching'), _('Matching'), array('id' => 'id', 'name' => 'name', 'description' => 'description'));
 		$ret []= $c;
