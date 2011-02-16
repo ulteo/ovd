@@ -91,6 +91,23 @@ class Configuration_mode_ad extends Configuration_mode {
       $module_to_enable []= 'SharedFolderDB';
     }
     $module_enabled = $prefs->get('general', 'module_enable');
+    
+    if ($form['sessionmanagement'] == 'microsoft') {
+      // Disable the unused module
+      $module_to_disable = array('ProfileDB', 'SharedFolderDB');
+    
+      foreach ($module_to_disable as $a_module_name) {
+        $key = array_search($a_module_name, $module_enabled);
+        if ($key !== false) {
+          unset($module_enabled[$key]);
+        }
+      }
+    }
+    else if ($form['sessionmanagement'] == 'internal') {
+      $module_to_enable []= 'ProfileDB';
+      $module_to_enable []= 'SharedFolderDB';
+    }
+    
     $prefs->set('general', 'module_enable', array_unique(array_merge($module_enabled, $module_to_enable)));
 
     // Select AD as UserDB
