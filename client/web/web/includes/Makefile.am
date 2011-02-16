@@ -1,5 +1,6 @@
 scripts_DATA = core.inc.php \
-               functions.inc.php
+               functions.inc.php \
+               mime.inc.php
 
 scriptsdir = $(datadir)/ulteo/webclient/includes
 
