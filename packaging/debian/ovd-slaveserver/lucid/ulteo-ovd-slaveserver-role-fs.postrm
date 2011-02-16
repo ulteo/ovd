@@ -3,14 +3,8 @@
 . /usr/share/debconf/confmodule
 
 FSCACHEDIR=/var/lib/ulteo/ovd/slaveserver/fs
-A2SITESAVDIR=/etc/apache2/sites-available
-A2SITESENDIR=/etc/apache2/sites-enabled
 
 [ "$1" != "upgrade" ] && ovd-slaveserver-role del FileServer
-
-# VHost webdav config
-[ -e $A2SITESENDIR/slaveserver-fs ] && a2dissite slaveserver-fs >/dev/null
-rm -f $A2SITESAVDIR/slaveserver-fs
 
 if [ "$1" = "purge" ] ; then
     # delete fs user
