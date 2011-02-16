@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -35,6 +35,13 @@ import win32process
 def findProcessWithEnviron(pattern):
 	return None
 
+def existProcess(pid):
+	hProcess = win32api.OpenProcess(win32con.PROCESS_QUERY_INFORMATION, False, pid)
+	if hProcess is None:
+		return False
+	
+	win32file.CloseHandle(hProcess);
+	return True
 
 def launch(cmd, wait=False):
 	(hProcess, hThread, dwProcessId, dwThreadId) = win32process.CreateProcess(None, cmd, None , None, False, 0 , None, None, win32process.STARTUPINFO())

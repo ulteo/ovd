@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -56,6 +56,9 @@ def findProcessWithEnviron(pattern):
 		return this_pid
 	
 	return None
+
+def existProcess(pid):
+	return os.path.isdir(os.path.join("/proc", str(pid)))
 
 def getUserSessionDir():
 	return os.path.join("/var/spool/ulteo/ovd/", os.environ["USER"])

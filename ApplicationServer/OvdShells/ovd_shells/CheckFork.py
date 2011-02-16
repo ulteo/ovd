@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009,2010 Ulteo SAS
+# Copyright (C) 2009,2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -39,9 +39,10 @@ class CheckFork(Module):
 		p = self.findAProcess()
 		
 		while p is not None:
-			time.sleep(1)
+			time.sleep(3)
 			
-			p = self.findAProcess()
+			if not Platform.existProcess(p):
+				p = self.findAProcess()
 	
 
 	def findAProcess(self):
