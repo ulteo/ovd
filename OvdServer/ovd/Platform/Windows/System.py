@@ -168,9 +168,21 @@ class System(AbstractSystem):
 			if os.path.isdir(filename):
 				System.DeleteDirectory(filename)
 			else:
-				os.remove(filename)
+				try:
+					os.remove(filename)
+				except WindowsError, e:
+					if e[0] == 32 : # The file is used by an other processus
+						Logger.debug("The file %s is used by an other processus"%(filename))
+						continue
+					raise e
 		win32api.SetFileAttributes(path, win32con.FILE_ATTRIBUTE_NORMAL)
-		os.rmdir(path)
+		try:
+			os.rmdir(path)
+		except WindowsError, e:
+			if e[0] == 145 : # The directory is not empty
+				Logger.debug("The directory %s is not empty"%(path))
+				return
+			raise e
 	
 	@staticmethod
 	def groupCreate(name_):

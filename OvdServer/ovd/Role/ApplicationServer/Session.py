@@ -77,7 +77,11 @@ class Session:
 		if os.path.isdir(self.user_session_dir):
 			Platform.System.DeleteDirectory(self.user_session_dir)
 		
-		os.makedirs(self.user_session_dir)  
+		try:
+			os.makedirs(self.user_session_dir)
+		except WindowsError, e:
+			if e[0] == 183 : # The directory already exist
+				Logger.debug("The directory %s already exist"%(self.user_session_dir))
 		
 		self.instanceDirectory = os.path.join(self.user_session_dir, "instances")
 		self.matchingDirectory = os.path.join(self.user_session_dir, "matching")
