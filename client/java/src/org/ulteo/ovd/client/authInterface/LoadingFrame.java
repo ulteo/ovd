@@ -59,7 +59,6 @@ public class LoadingFrame extends JDialog {
 		this.cancel = new JButton(I18n._("Cancel"));
 		this.cancel.setPreferredSize(new Dimension(120, 10));
 		this.cancel.setSize(new Dimension(120, 10));
-		this.cancel.setEnabled(false);
 		this.cancel.addActionListener(listener);
 
 		this.addWindowListener(new WindowAdapter() {

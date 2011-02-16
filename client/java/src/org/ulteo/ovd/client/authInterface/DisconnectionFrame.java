@@ -42,7 +42,6 @@ public class DisconnectionFrame extends JDialog {
 		this.setSize(300, 50);
 		this.setPreferredSize(new Dimension(300,50));
 		this.setResizable(false);
-		this.setModal(true);
 
 		final JProgressBar aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL);
 		aJProgressBar.setIndeterminate(true);
@@ -69,4 +68,17 @@ public class DisconnectionFrame extends JDialog {
 			this.frame.setTitle(I18n._("Disconnecting!"));
 		}
 	}
+
+	@Override
+	public void setVisible(boolean b) {
+		if (b) {
+			super.setVisible(true);
+			this.setModal(true);
+		}
+		else {
+			this.setModal(false);
+			super.setVisible(false);
+		}
+	}
+
 }

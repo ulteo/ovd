@@ -666,7 +666,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		while(this.continueMainThread) {
 			int job = this.getJobMainThread();
 
-			if (job == JOB_DISCONNECT_CLI)
+			if (job == JOB_DISCONNECT_CLI && client != null)
 				this.client.performDisconnectAll();
 
 			else {
@@ -853,8 +853,11 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	}
 	
 	public boolean launchConnection() throws UnsupportedOperationException, SessionManagerException {
-		if (this.opts.showProgressBar)
+		if (this.opts.showProgressBar) {
+			this.loadingFrame.getCancelButton().setEnabled(true);
+			this.updateProgress(LoadingStatus.LOADING_START, 0);
 			SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, true));
+		}
 
 		// Start OVD session
 		SessionManagerCommunication dialog = new SessionManagerCommunication(this.opts.server, this.opts.port, true);
@@ -871,16 +874,12 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			ret = dialog.askForSession(request);
 		else
 			ret = dialog.askForSession(this.opts.username, this.opts.password, request);
-
 		if (ret == false) {
 			this.disableLoadingMode();
 			return false;
 		}
 		
 		this.updateProgress(LoadingStatus.SM_START, 0);
-		
-		if (this.opts.showProgressBar)
-			this.loadingFrame.getCancelButton().setEnabled(true);
 		
 		Properties response = dialog.getResponseProperties();
 		
@@ -952,7 +951,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 		if (this.opts.showProgressBar)
 			SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, false));
-		SwingTools.invokeLater(GUIActions.setVisible(this.discFrame, true));
+		discFrame.setVisible(true);
 	}
 	
 	public void checkDisconnectionSource() {
