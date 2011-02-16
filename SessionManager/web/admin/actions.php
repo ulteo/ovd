@@ -1636,7 +1636,7 @@ function action_del_sharedfolder($sharedfolder_id) {
 	}
 	
 	if ($sharedfolder->isUsed()) {
-		popup_error(sprintf(_("Unable to delete shared folder '%s' because it is by a session"), $sharedfolder->name));
+		popup_error(sprintf(_("Unable to delete shared folder '%s' because it is currently being used"), $sharedfolder->name));
 		return false;
 	}
 
