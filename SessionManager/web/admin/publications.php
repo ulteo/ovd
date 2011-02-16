@@ -143,7 +143,7 @@ function show_default() {
     echo '<input type="hidden" name="name" value="Publication" />';
     echo '<input type="hidden" name="group_u" value="" id="input_group_u" />';
     echo '<input type="hidden" name="group_a" value="" id="input_group_a" />';
-    echo '<input type="button" value="'._('Add').'" onclick="if($(\'input_group_u\').value == \'\') {alert('._('\'Please select an user group.\'').'); return;} if($(\'input_group_a\').value == \'\') {alert('._('\'Please select an application group\'').'); return;} this.form.submit();" />';
+    echo '<input type="button" value="'._('Add').'" onclick="if($(\'input_group_u\').value == \'\') {alert(\''._('Please select an users group').'\'); return;} if($(\'input_group_a\').value == \'\') {alert(\''._('Please select an applications group').'\'); return;} this.form.submit();" />';
     echo '</div></form>';
     echo '</td>';
     echo '</tr>';
