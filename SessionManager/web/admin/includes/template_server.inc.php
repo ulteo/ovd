@@ -44,6 +44,12 @@ function server_display_role_preparation_aps($server) {
 	
 	$server_online = $server->isOnline();
 	
+	if ($server_online) {
+		$buf = $server->updateApplications();
+		if (! $buf)
+			popup_error(_('Cannot list available applications'));
+	}
+	
 	$applicationDB = ApplicationDB::getInstance();
 	
 	$applications_all = $applicationDB->getList(true);
@@ -107,10 +113,6 @@ function server_display_role_preparation_aps($server) {
 		popup_error(sprintf(_('Server "%s": redirection name cannot be empty!'), $server->fqdn));
 	
 	if ($server_online) {
-		$buf = $server->updateApplications();
-		if (! $buf)
-			popup_error(_('Cannot list available applications'));
-
 		//FIX ME ?
 		$tm = new Tasks_Manager();
 		$tm->load_from_server($server->fqdn);
