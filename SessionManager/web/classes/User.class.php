@@ -167,7 +167,8 @@ class User {
 				return $servers_to_use;
 			}
 			else {
-				Logger::error('main' , "USER::getAvailableServers() no server found for user '".$this->getAttribute('login')."'");
+				$application = array_pop($applications);
+				Logger::error('main' , "USER::getAvailableServers() no server found for user '".$this->getAttribute('login')."'. User's publication are not right, at least application named '".$application->getAttribute('name')."' does not have an available server");
 				return NULL;
 			}
 		}
