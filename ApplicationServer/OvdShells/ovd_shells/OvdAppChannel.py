@@ -69,8 +69,8 @@ class OvdAppChannel:
 	def run(self, vchannel):
 		while True:
 			# Read a complete packet
-			# so we assume a maximum packet size is 512
-			packet = vchannel.Read(512)
+			# so we assume a maximum packet size is 2048
+			packet = vchannel.Read(2048)
 			if packet is None:
 				print "error at read"
 				time.sleep(0.5)
