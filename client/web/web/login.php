@@ -159,8 +159,8 @@ EOF;
 	return $xml;
 }
 
-$_SESSION['interface'] = array();
-$_SESSION['interface']['debug'] = $_POST['debug'];
+$_SESSION['ovd-client']['interface'] = array();
+$_SESSION['ovd-client']['interface']['debug'] = $_POST['debug'];
 
 header('Content-Type: text/xml; charset=utf-8');
 
@@ -224,20 +224,20 @@ if (! is_object($session_node)) {
 	echo return_error(1, 'internal_error');
 	die();
 }
-$_SESSION['session_id'] = $session_node->getAttribute('id');
-$_SESSION['session_mode'] = $session_node->getAttribute('mode');
-$_SESSION['session_language'] = $_POST['language'];
-$_SESSION['keyboard_layout'] = $_POST['keymap'];
-$_SESSION['multimedia'] = $session_node->getAttribute('multimedia');
-$_SESSION['redirect_client_printers'] = $session_node->getAttribute('redirect_client_printers');
-if ($_SESSION['session_mode'] == 'desktop')
-	$_SESSION['desktop_fullscreen'] = $_POST['desktop_fullscreen'];
-$_SESSION['timeout'] = $session_node->getAttribute('timeout');
+$_SESSION['ovd-client']['session_id'] = $session_node->getAttribute('id');
+$_SESSION['ovd-client']['session_mode'] = $session_node->getAttribute('mode');
+$_SESSION['ovd-client']['session_language'] = $_POST['language'];
+$_SESSION['ovd-client']['keyboard_layout'] = $_POST['keymap'];
+$_SESSION['ovd-client']['multimedia'] = $session_node->getAttribute('multimedia');
+$_SESSION['ovd-client']['redirect_client_printers'] = $session_node->getAttribute('redirect_client_printers');
+if ($_SESSION['ovd-client']['session_mode'] == 'desktop')
+	$_SESSION['ovd-client']['desktop_fullscreen'] = $_POST['desktop_fullscreen'];
+$_SESSION['ovd-client']['timeout'] = $session_node->getAttribute('timeout');
 
-$_SESSION['gateway'] = false;
+$_SESSION['ovd-client']['gateway'] = false;
 if ($session_node->hasAttribute('mode_gateway')) {
 	if ($session_node->getAttribute('mode_gateway') == 'on')
-		$_SESSION['gateway'] = true;
+		$_SESSION['ovd-client']['gateway'] = true;
 }
 
 $user_node = $session_node->getElementsByTagName('user');
@@ -250,7 +250,7 @@ if (! is_object($user_node)) {
 	echo return_error(2, 'internal_error');
 	die();
 }
-$_SESSION['session_displayname'] = $user_node->getAttribute('displayName');
+$_SESSION['ovd-client']['session_displayname'] = $user_node->getAttribute('displayName');
 
 $server_nodes = $session_node->getElementsByTagName('server');
 if (count($server_nodes) < 1) {
@@ -258,13 +258,13 @@ if (count($server_nodes) < 1) {
 	die();
 }
 
-$_SESSION['explorer'] = false;
+$_SESSION['ovd-client']['explorer'] = false;
 
 $profile_node = $session_node->getElementsByTagName('profile')->item(0);
 $sharedfolders_node = $session_node->getElementsByTagName('sharedfolders')->item(0);
 if (is_object($profile_node) || is_object($sharedfolders_node)) {
 	if (is_dir(dirname(__FILE__).'/ajaxplorer/'))
-		$_SESSION['explorer'] = true;
+		$_SESSION['ovd-client']['explorer'] = true;
 
 	$_SESSION['ovd-client']['ajxp'] = array();
 	$_SESSION['ovd-client']['ajxp']['applications'] = '';
@@ -272,7 +272,7 @@ if (is_object($profile_node) || is_object($sharedfolders_node)) {
 	$_SESSION['ovd-client']['ajxp']['folders'] = array();
 }
 
-if ($_SESSION['explorer'] === true) {
+if ($_SESSION['ovd-client']['explorer'] === true) {
 	$_SESSION['ovd-client']['ajxp']['applications'] = generateAjaxplorerActionsXML($session_node->getElementsByTagName('application'));
 
 	if (is_object($profile_node)) {
@@ -318,14 +318,14 @@ if ($_SESSION['explorer'] === true) {
 	}
 }
 
-if (array_key_exists('explorer', $_SESSION) && $_SESSION['explorer'] === true) {
+if (array_key_exists('explorer', $_SESSION['ovd-client']) && $_SESSION['ovd-client']['explorer'] === true) {
 	$explorer_node = $dom->createElement('explorer');
-	$explorer_node->setAttribute('enabled', (($_SESSION['explorer'] === true)?1:0));
+	$explorer_node->setAttribute('enabled', (($_SESSION['ovd-client']['explorer'] === true)?1:0));
 	$session_node->appendChild($explorer_node);
 }
 
 $xml = $dom->saveXML();
-$_SESSION['xml'] = $xml;
+$_SESSION['ovd-client']['xml'] = $xml;
 
 if (array_key_exists('sessionmanager_host', $_POST))
 	setcookie('ovd-client[sessionmanager_host]', $_POST['sessionmanager_host'], (time()+(60*60*24*7)));
@@ -339,5 +339,5 @@ if (array_key_exists('desktop_fullscreen', $_POST))
 	setcookie('ovd-client[desktop_fullscreen]', $_POST['desktop_fullscreen'], (time()+(60*60*24*7)));
 setcookie('ovd-client[debug]', $_POST['debug'], (time()+(60*60*24*7)));
 
-echo $_SESSION['xml'];
+echo $_SESSION['ovd-client']['xml'];
 die();

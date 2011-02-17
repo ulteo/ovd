@@ -76,6 +76,6 @@ $xml = $dom->saveXML();
 echo $xml;
 
 session_destroy();
-unset($_SESSION);
+unset($_SESSION['ovd-client']);
 
 die();

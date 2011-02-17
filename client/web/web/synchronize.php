@@ -34,7 +34,7 @@ foreach ($client_headers as $k => $v) {
 	}
 }
 
-$_SESSION['xml'] = $_POST['xml'];
+$_SESSION['ovd-client']['xml'] = $_POST['xml'];
 
 if (array_key_exists('sessionmanager_host', $_POST))
 	setcookie('ovd-client[sessionmanager_host]', $_POST['sessionmanager_host'], (time()+(60*60*24*7)));

@@ -33,7 +33,7 @@ function return_error($errno_, $errstr_) {
 header('Content-Type: text/xml; charset=utf-8');
 
 $dom = new DomDocument('1.0', 'utf-8');
-$buf = @$dom->loadXML($_SESSION['xml']);
+$buf = @$dom->loadXML($_SESSION['ovd-client']['xml']);
 if (! $buf) {
 	echo return_error(0, 'Invalid XML');
 	die();
@@ -48,7 +48,7 @@ $server_nodes = $dom->getElementsByTagName('server');
 foreach ($server_nodes as $server_node) {
 	$port = 3389;
 
-	if (array_key_exists('gateway', $_SESSION) && $_SESSION['gateway'] === true) {
+	if (array_key_exists('gateway', $_SESSION['ovd-client']) && $_SESSION['ovd-client']['gateway'] === true) {
 		$url = 'http://'.$_SESSION['ovd-client']['server'];
 
 		$host = parse_url($url, PHP_URL_HOST);
