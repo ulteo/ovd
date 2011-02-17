@@ -22,8 +22,8 @@
 require_once(dirname(__FILE__).'/core.inc.php');
 
 function query_sm($url_) {
-	if (! array_key_exists('sessionmanager', $_SESSION))
-		$_SESSION['sessionmanager'] = array();
+	if (! array_key_exists('sessionmanager', $_SESSION['ovd-client']))
+		$_SESSION['ovd-client']['sessionmanager'] = array();
 
 	$socket = curl_init($url_);
 	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
@@ -32,8 +32,8 @@ function query_sm($url_) {
 	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, 10);
 	curl_setopt($socket, CURLOPT_TIMEOUT, (10+5));
 
-	if (array_key_exists('session_var', $_SESSION['sessionmanager']) && array_key_exists('session_id', $_SESSION['sessionmanager']))
-		curl_setopt($socket, CURLOPT_COOKIE, $_SESSION['sessionmanager']['session_var'].'='.$_SESSION['sessionmanager']['session_id']);
+	if (array_key_exists('session_var', $_SESSION['ovd-client']['sessionmanager']) && array_key_exists('session_id', $_SESSION['ovd-client']['sessionmanager']))
+		curl_setopt($socket, CURLOPT_COOKIE, $_SESSION['ovd-client']['sessionmanager']['session_var'].'='.$_SESSION['ovd-client']['sessionmanager']['session_id']);
 
 	$string = curl_exec($socket);
 	$buf = curl_getinfo($socket, CURLINFO_HTTP_CODE);
@@ -46,8 +46,8 @@ function query_sm($url_) {
 }
 
 function query_sm_post_xml($url_, $xml_) {
-	if (! array_key_exists('sessionmanager', $_SESSION))
-		$_SESSION['sessionmanager'] = array();
+	if (! array_key_exists('sessionmanager', $_SESSION['ovd-client']))
+		$_SESSION['ovd-client']['sessionmanager'] = array();
 
 	$socket = curl_init($url_);
 	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
@@ -58,8 +58,8 @@ function query_sm_post_xml($url_, $xml_) {
 
 	curl_setopt($socket, CURLOPT_HEADER, 1);
 
-	if (array_key_exists('session_var', $_SESSION['sessionmanager']) && array_key_exists('session_id', $_SESSION['sessionmanager']))
-		curl_setopt($socket, CURLOPT_COOKIE, $_SESSION['sessionmanager']['session_var'].'='.$_SESSION['sessionmanager']['session_id']);
+	if (array_key_exists('session_var', $_SESSION['ovd-client']['sessionmanager']) && array_key_exists('session_id', $_SESSION['ovd-client']['sessionmanager']))
+		curl_setopt($socket, CURLOPT_COOKIE, $_SESSION['ovd-client']['sessionmanager']['session_var'].'='.$_SESSION['ovd-client']['sessionmanager']['session_id']);
 
 	curl_setopt($socket, CURLOPT_POSTFIELDS, $xml_);
 	curl_setopt($socket, CURLOPT_HTTPHEADER, array('Connection: close', 'Content-Type: text/xml'));
@@ -75,11 +75,11 @@ function query_sm_post_xml($url_, $xml_) {
 	$headers = substr($string, 0, $headers_size);
 	$body = substr($string, $headers_size);
 
-	if (! array_key_exists('session_var', $_SESSION['sessionmanager']) || ! array_key_exists('session_id', $_SESSION['sessionmanager'])) {
+	if (! array_key_exists('session_var', $_SESSION['ovd-client']['sessionmanager']) || ! array_key_exists('session_id', $_SESSION['ovd-client']['sessionmanager'])) {
 		preg_match('@Set-Cookie: (.*)=(.*);@', $headers, $matches);
 		if (count($matches) == 3) {
-			$_SESSION['sessionmanager']['session_var'] = $matches[1];
-			$_SESSION['sessionmanager']['session_id'] = $matches[2];
+			$_SESSION['ovd-client']['sessionmanager']['session_var'] = $matches[1];
+			$_SESSION['ovd-client']['sessionmanager']['session_id'] = $matches[2];
 		}
 	}
 

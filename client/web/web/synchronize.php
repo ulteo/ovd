@@ -27,9 +27,9 @@ foreach ($client_headers as $k => $v) {
 		$ret = $k.': '.$v;
 		preg_match('@Forward-Cookie: (.*)=(.*);@', $ret, $matches);
 		if (count($matches) == 3) {
-			$_SESSION['sessionmanager'] = array();
-			$_SESSION['sessionmanager']['session_var'] = $matches[1];
-			$_SESSION['sessionmanager']['session_id'] = $matches[2];
+			$_SESSION['ovd-client']['sessionmanager'] = array();
+			$_SESSION['ovd-client']['sessionmanager']['session_var'] = $matches[1];
+			$_SESSION['ovd-client']['sessionmanager']['session_id'] = $matches[2];
 		}
 	}
 }
