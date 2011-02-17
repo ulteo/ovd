@@ -236,6 +236,12 @@ table.main_sub tr.title {
 	text-align: center;
 }
 
+table.main_sub tr.title2 {
+	background: #ddd;
+	font-weight: bold;
+	text-align: center;
+}
+
 table.main_sub tr.title .sortheader {
 	color: #fff;
 }

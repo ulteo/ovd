@@ -49,6 +49,7 @@ scripts_DATA = actions.php \
                sharedfolders.php \
                session-reporting.php \
                sessions.php \
+               summary.php \
                sumup.php \
                tasks.php \
                users.php \

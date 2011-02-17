@@ -257,7 +257,7 @@ if (isAuthorized('viewSummary'))
 	$menu['sumup'] = 
 		array('id' => 'sumup',
 			  'name' => _('Summary'),
-			  'page' => 'sumup.php',
+			  'page' => 'summary.php',
 			  'parent' => array('status'));
 
 // extra modules

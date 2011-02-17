@@ -3,6 +3,7 @@ SUBDIRS = menu loadbalancing
 scripts_DATA = server-linux.png \
                server-windows.png \
                cache.php \
+               cancel.png \
                submenu_bg.png \
                download.png \
                empty.png \
@@ -13,6 +14,7 @@ scripts_DATA = server-linux.png \
                less.png \
                loader.gif \
                more.png \
+               ok.png \
                password.png \
                show.png \
                ulteo.png \
