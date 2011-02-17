@@ -118,7 +118,7 @@ $AUTH_DRIVER = array(
 /*   + Log in as "admin" and open the "Settings" Repository
 /*********************************************************/
 @session_start();
-$REPOSITORIES = $_SESSION['ajxp']['repositories'];
+$REPOSITORIES = $_SESSION['ovd-client']['ajxp']['repositories'];
 
 // DO NOT REMOVE THIS!
 // ADMIN REPOSITORY
