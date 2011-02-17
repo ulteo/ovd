@@ -50,7 +50,7 @@ class fsAccessDriver extends AbstractAccessDriver
 	}
 	
 	private function initUlteoActions() {
-		$this->xml_data = $_SESSION['ajxp']['applications'];
+		$this->xml_data = $_SESSION['ovd-client']['ajxp']['applications'];
 		$this->xml_parser = xml_parser_create( "UTF-8" );
 
 		//xml_parser_set_option( $this->xml_parser, XML_OPTION_CASE_FOLDING, false );
