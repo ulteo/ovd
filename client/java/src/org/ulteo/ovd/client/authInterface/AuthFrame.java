@@ -89,7 +89,7 @@ public class AuthFrame implements ActionListener, Runnable {
 	private JPasswordField passwordTextField = new JPasswordField();
 	private String loginStr = null;
 	
-	private JTextField hostTextField = new JTextField();
+	private JTextField serverTextField = new JTextField();
 	private JButton startButton = new JButton();
 	private boolean startButtonClicked = false;
 	private JButton moreOption = new JButton();
@@ -288,7 +288,7 @@ public class AuthFrame implements ActionListener, Runnable {
 			}
 
 			gbc.gridy = pos++;
-			mainFrame.add(hostTextField, gbc);
+			mainFrame.add(serverTextField, gbc);
 
 			gbc.gridy = pos++;
 			gbc.anchor = GridBagConstraints.CENTER;
@@ -679,15 +679,15 @@ public class AuthFrame implements ActionListener, Runnable {
 		return passwordTextField;
 	}
 
-	public JTextField getHost() {
-		return hostTextField;
+	public JTextField getServer() {
+		return serverTextField;
 	}
 
-	public void setHost(String host_) {
-		if (host_ == null)
+	public void setServer(String server_) {
+		if (server_ == null)
 			return;
 		
-		SwingTools.invokeLater(GUIActions.customizeTextComponent(this.hostTextField, host_));
+		SwingTools.invokeLater(GUIActions.customizeTextComponent(this.serverTextField, server_));
 	}
 
 	public Dimension getResolution() {
@@ -977,7 +977,7 @@ public class AuthFrame implements ActionListener, Runnable {
 			this.authFrame.startButton.setText(I18n._("Start!"));
 
 			if (! isGUILocked) {
-				this.authFrame.host.setText(I18n._("Host"));
+				this.authFrame.host.setText(I18n._("Server"));
 				this.authFrame.mode.setText(I18n._("Mode"));
 				this.authFrame.resolution.setText(I18n._("Resolution"));
 				this.authFrame.language.setText(I18n._("Language"));

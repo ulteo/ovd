@@ -79,7 +79,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		public String profile = null;
 		public String username = null;
 		public String password = null;
-		public String server = null;
+		public String host = null;
 		public int port = SessionManagerCommunication.DEFAULT_PORT;
 		public String keymap = null;
 		public String lang = null;
@@ -139,9 +139,9 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			}
 		}
 		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_SERVER) == 0) {
-			String server = properties.getHost();
-			if (server != null) {
-				NativeClient.main_options.server = server;
+			String host = properties.getHost();
+			if (host != null) {
+				NativeClient.main_options.host = host;
 				NativeClient.optionMask |= NativeClient.FLAG_OPTION_SERVER;
 			}
 		}
@@ -409,9 +409,30 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 					NativeClient.optionMask |= NativeClient.FLAG_OPTION_LANGUAGE;
 					break;
 				case 's':
-					NativeClient.main_options.server = new String(opt.getOptarg());
+					// the server address can be only the host string, or in the 
+					// "host:port" representation
+					String[] address = new String(opt.getOptarg()).split(":");
+					if (! (address.length == 1 || address.length == 2)) {
+						usage(RETURN_CODE_BAD_ARGUMENTS);
+					}
+					NativeClient.main_options.host = address[0];
+					
+					// check the port if exists
+					if (address.length == 2) {
+						try {
+							int port = new Integer(address[1]);
+							if (port > 0 && port <= 65536) {
+								NativeClient.main_options.port = port;
+							} else {
+								throw new NumberFormatException();
+							}
+						} catch (NumberFormatException e) {
+							usage(RETURN_CODE_BAD_ARGUMENTS);
+						}
+					}
 
 					NativeClient.optionMask |= NativeClient.FLAG_OPTION_SERVER;
+					NativeClient.optionMask |= NativeClient.FLAG_OPTION_PORT;
 					break;
 				case 'd':
 					String items = new String(opt.getOptarg());
@@ -461,7 +482,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 		if (NativeClient.main_options.autostart) {
-			if (((NativeClient.main_options.username == null || NativeClient.main_options.password == null) && !NativeClient.main_options.nltm) || NativeClient.main_options.server == null) {
+			if (((NativeClient.main_options.username == null || NativeClient.main_options.password == null) && !NativeClient.main_options.nltm) || NativeClient.main_options.host == null) {
 				org.ulteo.Logger.error("You must specify the server (-s) and your credentials (-u, -p or --ntlm)");
 				NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 			}
@@ -484,7 +505,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		System.err.println(NativeClient.productName);
 		System.err.println("Usage: java -jar OVDNativeClient.jar [options]");
 		System.err.println("\t-c file				Load configuration from `file`");
-		System.err.println("\t-s server			Server");
+		System.err.println("\t-s host[:port]			Server address");
 		System.err.println("\t-u username			Username");
 		System.err.println("\t-p password			Password");
 		System.err.println("\t-m [auto|desktop|applications]	Session mode");
@@ -618,12 +639,11 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		if (this.opts.password != null)
 			this.authFrame.getPassword().setText(this.opts.password);
 
-		if (this.opts.server != null) {
-			String buf = this.opts.server;
+		if (this.opts.host != null) {
+			String address = this.opts.host;
 			if (this.opts.port != SessionManagerCommunication.DEFAULT_PORT)
-				buf+= ":"+this.opts.port;
-			
-			this.authFrame.setHost(buf);
+				address += ":" + this.opts.port;
+			this.authFrame.setServer(address);
 		}
 		
 		if (this.opts.lang != null) {
@@ -790,7 +810,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		
 		URI u = null;
 		try {
-			u = new URI("http://"+this.authFrame.getHost().getText());
+			u = new URI("http://"+this.authFrame.getServer().getText());
 		}
 		catch( Exception err) {
 			throw new IllegalArgumentException(I18n._("Invalid host field!"));
@@ -799,7 +819,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		if (u.getHost() == null)
 			throw new IllegalArgumentException(I18n._("Invalid host field!"));
 		
-		this.opts.server = u.getHost();
+		this.opts.host = u.getHost();
 		this.opts.port = SessionManagerCommunication.DEFAULT_PORT;
 		if (u.getPort() != -1)
 			this.opts.port = u.getPort();
@@ -828,7 +848,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.opts.password = new String(this.authFrame.getPassword().getPassword());
 		this.authFrame.getPassword().setText("");
 		
-		if (this.opts.server.equals("")) {
+		if (this.opts.host.equals("")) {
 			throw new IllegalArgumentException(I18n._("You must specify the host field!"));
 		}
 		
@@ -860,7 +880,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		}
 
 		// Start OVD session
-		SessionManagerCommunication dialog = new SessionManagerCommunication(this.opts.server, this.opts.port, true);
+		SessionManagerCommunication dialog = new SessionManagerCommunication(this.opts.host, this.opts.port, true);
 		if (! this.opts.autostart)
 			dialog.addCallbackListener(this);
 
@@ -1021,7 +1041,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	}
 
 	private void saveProfile() throws IOException {
-		ProfileProperties properties = new ProfileProperties(this.opts.username, this.opts.server, this.opts.port, this.opts.sessionMode, this.opts.autopublish, this.opts.nltm, this.opts.geometry, this.opts.lang, this.opts.keymap);
+		ProfileProperties properties = new ProfileProperties(this.opts.username, this.opts.host, this.opts.port, this.opts.sessionMode, this.opts.autopublish, this.opts.nltm, this.opts.geometry, this.opts.lang, this.opts.keymap);
 
 		if ((this.flags & NativeClient.FLAG_REGISTRY_OPTS) != 0) {
 			ProfileRegistry.saveProfile(properties);
