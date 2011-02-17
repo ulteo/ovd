@@ -21,8 +21,8 @@
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-if (! array_key_exists('start_app', $_SESSION))
-	$_SESSION['start_app'] = array();
+if (! array_key_exists('start_app', $_SESSION['ovd-client']))
+	$_SESSION['ovd-client']['start_app'] = array();
 
 if (array_key_exists('check', $_GET)) {
 	header('Content-Type: text/xml; charset=utf-8');
@@ -30,7 +30,7 @@ if (array_key_exists('check', $_GET)) {
 	$dom = new DomDocument('1.0', 'utf-8');
 
 	$start_apps_node = $dom->createElement('start_apps');
-	foreach ($_SESSION['start_app'] as $k => $v) {
+	foreach ($_SESSION['ovd-client']['start_app'] as $k => $v) {
 		$start_app_node = $dom->createElement('start_app');
 		$start_app_node->setAttribute('id', $v['id']);
 		
@@ -45,7 +45,7 @@ if (array_key_exists('check', $_GET)) {
 		
 		$start_apps_node->appendChild($start_app_node);
 
-		unset($_SESSION['start_app'][$k]);
+		unset($_SESSION['ovd-client']['start_app'][$k]);
 	}
 	$dom->appendChild($start_apps_node);
 
@@ -55,7 +55,7 @@ if (array_key_exists('check', $_GET)) {
 	die();
 }
 
-$_SESSION['start_app'][] = array(
+$_SESSION['ovd-client']['start_app'][] = array(
 	'id'			=>	$_POST['id'],
 	'file' => array(
 		'path' => substr($_POST['path'], 1),

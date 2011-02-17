@@ -23,7 +23,7 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 $first = false;
-if (! array_key_exists('start_app', $_SESSION)) {
+if (! array_key_exists('start_app', $_SESSION['ovd-client'])) {
 	$first = true;
 
 	$dom = new DomDocument('1.0', 'utf-8');
@@ -45,7 +45,7 @@ if (! array_key_exists('start_app', $_SESSION)) {
 
 	query_sm_post_xml($sessionmanager_url.'/auth.php', $dom->saveXML());
 
-	$_SESSION['start_app'] = array();
+	$_SESSION['ovd-client']['start_app'] = array();
 }
 
 $order = array('id' => $_REQUEST['app']);
@@ -59,7 +59,7 @@ if (array_key_exists('file', $_REQUEST)) {
 	$order['file'] = $args;
 }
 
-$_SESSION['start_app'][] = $order;
+$_SESSION['ovd-client']['start_app'][] = $order;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
