@@ -495,7 +495,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	 * Launch a RdpConnection thread
 	 */
 	public void connect() {
-		this.connectionThread = new Thread(this);
+		this.connectionThread = new Thread(this, "RDP - " + this.opt.hostname);
 		this.connectionThread.start();
 	}
 
