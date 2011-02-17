@@ -423,6 +423,9 @@ class Preferences {
 		$c = new ConfigElement_select('redirect_client_printers', _('Redirect client printers'), _('Redirect client printers'), _('Redirect client printers'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
+		$c = new ConfigElement_select('enhance_user_experience', _('Enhance user experience'), _('Enhance user experience: graphic effects and optimizations'), _('Enhance user experience: graphic effects and optimizations'), 1);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c,'general','session_settings_defaults');
 
 		$c_user_profile = new ConfigElement_select('enable_profiles', _('Enable user profiles'), _('Enable user profiles'), _('Enable user profiles'), 1);
 		$c_user_profile->setContentAvailable(array(0=>_('no'),1=>_('yes')));

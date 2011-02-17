@@ -70,6 +70,7 @@ $allow_shell = $default_settings['allow_shell'];
 $multimedia = $default_settings['multimedia'];
 $redirect_client_drives = $default_settings['redirect_client_drives'];
 $redirect_client_printers = $default_settings['redirect_client_printers'];
+$enhance_user_experience = $default_settings['enhance_user_experience'];
 $enable_profiles = $default_settings['enable_profiles'];
 $auto_create_profile = $default_settings['auto_create_profile'];
 $start_without_profile = $default_settings['start_without_profile'];
@@ -358,7 +359,8 @@ $default_args = array(
 	'timeout'					=>	$timeout,
 	'multimedia'				=>	$multimedia,
 	'redirect_client_drives'	=>	$redirect_client_drives,
-	'redirect_client_printers'	=>	$redirect_client_printers
+	'redirect_client_printers'	=>	$redirect_client_printers,
+	'enhance_user_experience'	=>	$enhance_user_experience
 );
 
 $optional_args = array();
