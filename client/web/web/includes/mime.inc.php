@@ -19,13 +19,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-
 function getMimeTypefromExtension($extension_) {
 	global $Mime_DB;
-	if (isset($Mime_DB[$extension_]))
+
+	if (array_key_exists($extension_, $Mime_DB))
 		return $Mime_DB[$extension_];
 
-	return null;
+	return NULL;
 }
 
 $Mime_DB = array(
