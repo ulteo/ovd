@@ -26,7 +26,6 @@ package org.ulteo.ovd.client;
 import org.ulteo.utils.I18n;
 import org.ulteo.ovd.applet.LibraryLoader;
 import org.ulteo.ovd.client.profile.ProfileIni;
-import java.io.File;
 import java.io.IOException;
 
 import javax.swing.UIManager;
@@ -75,180 +74,12 @@ import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.Callback {
-	public static class Options {
-		public String profile = null;
-		public String username = null;
-		public String password = null;
-		public String host = null;
-		public int port = SessionManagerCommunication.DEFAULT_PORT;
-		public String keymap = null;
-		public String lang = null;
-		public Dimension geometry = null;
-		public int sessionMode = -1;
-		public boolean nltm = false;
-		public boolean showProgressBar = true;
-		public boolean autopublish = false;
-		public boolean autostart = false;
-		public boolean debugSeamless = false;
-		public boolean guiLocked = false;
-	}
-
-	public static Options main_options = null;
-
-	public static int optionMask = 0x00000000;
-	
-	public static final int FLAG_NO_OPTS = 0x00000000;
-	public static final int FLAG_OPTION_USERNAME = 0x00000001;
-	public static final int FLAG_OPTION_PASSWORD = 0x00000002;
-	public static final int FLAG_OPTION_SERVER = 0x00000004;
-	public static final int FLAG_OPTION_PORT = 0x00000600;
-	public static final int FLAG_OPTION_KEYMAP = 0x00000008;
-	public static final int FLAG_OPTION_LANGUAGE = 0x00000010;
-	public static final int FLAG_OPTION_GEOMETRY = 0x00000020;
-	public static final int FLAG_OPTION_SESSION_MODE = 0x00000040;
-	public static final int FLAG_OPTION_NTLM = 0x00000080;
-	public static final int FLAG_OPTION_SHOW_PROGRESS_BAR = 0x00000100;
-	public static final int FLAG_OPTION_AUTO_INTEGRATION = 0x00000200;
-	public static final int FLAG_OPTION_AUTO_START = 0x00000400;
-	public static final int FLAG_OPTION_REMEMBER_ME = 0x00004000;
-	public static final int FLAG_OPTION_GUI_LOCKED = 0x00008000;
 
 	public static final int FLAG_CMDLINE_OPTS = 0x00000800;
 	public static final int FLAG_FILE_OPTS = 0x00001000;
 	public static final int FLAG_REGISTRY_OPTS = 0x00002000;
 
 	public static final String productName = "Ulteo OVD Client";
-
-	private static void parseProperties(ProfileProperties properties) {
-		if (properties == null)
-			return;
-
-		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_SESSION_MODE) == 0) {
-			NativeClient.main_options.sessionMode =  Properties.MODE_ANY;
-			if (properties.getSessionMode() == ProfileProperties.MODE_APPLICATIONS)
-				NativeClient.main_options.sessionMode = Properties.MODE_REMOTEAPPS;
-			else if (properties.getSessionMode() == ProfileProperties.MODE_DESKTOP)
-				NativeClient.main_options.sessionMode = Properties.MODE_DESKTOP;
-		}
-
-		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_USERNAME) == 0) {
-			String username = properties.getLogin();
-			if (username != null) {
-				NativeClient.main_options.username = username;
-				NativeClient.optionMask |= NativeClient.FLAG_OPTION_USERNAME;
-			}
-		}
-		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_SERVER) == 0) {
-			String host = properties.getHost();
-			if (host != null) {
-				NativeClient.main_options.host = host;
-				NativeClient.optionMask |= NativeClient.FLAG_OPTION_SERVER;
-			}
-		}
-		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_PORT) == 0) {
-			int port = properties.getPort();
-			if (port == 0)
-				port = SessionManagerCommunication.DEFAULT_PORT;
-			NativeClient.main_options.port = port;
-			NativeClient.optionMask |= NativeClient.FLAG_OPTION_PORT;
-		}
-		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_NTLM) == 0) {
-			NativeClient.main_options.nltm = properties.getUseLocalCredentials();
-			NativeClient.optionMask |= NativeClient.FLAG_OPTION_NTLM;
-		}
-		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_AUTO_INTEGRATION) == 0) {
-			boolean auto_integration = properties.getAutoPublish();
-			if (! (auto_integration && NativeClient.main_options.sessionMode == Properties.MODE_DESKTOP)) {
-				NativeClient.main_options.autopublish = auto_integration;
-				NativeClient.optionMask |= NativeClient.FLAG_OPTION_AUTO_INTEGRATION;
-			}
-		}
-		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_LANGUAGE) == 0) {
-			String language = properties.getLang();
-			if (language != null) {
-				NativeClient.main_options.lang = language;
-				NativeClient.optionMask |= NativeClient.FLAG_OPTION_LANGUAGE;
-			}
-		}
-		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_KEYMAP) == 0) {
-			String keymap = properties.getKeymap();
-			if (keymap != null) {
-				NativeClient.main_options.keymap = keymap;
-				NativeClient.optionMask |= NativeClient.FLAG_OPTION_KEYMAP;
-			}
-		}
-		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_SHOW_PROGRESS_BAR) == 0) {
-			NativeClient.main_options.showProgressBar = properties.getShowProgressbar();
-			NativeClient.optionMask |= NativeClient.FLAG_OPTION_SHOW_PROGRESS_BAR;
-		}
-		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_GEOMETRY) == 0) {
-			Dimension geometry = properties.getScreenSize();
-			if (! (geometry != null && NativeClient.main_options.sessionMode == Properties.MODE_REMOTEAPPS)) {
-				NativeClient.main_options.geometry = geometry;
-				NativeClient.optionMask |= NativeClient.FLAG_OPTION_GEOMETRY;
-			}
-		}
-		if ((NativeClient.optionMask & NativeClient.FLAG_OPTION_GUI_LOCKED) == 0) {
-			NativeClient.main_options.guiLocked = properties.isGUILocked();
-			NativeClient.optionMask |= NativeClient.FLAG_OPTION_GUI_LOCKED;
-		}
-	}
-
-	public static ProfileProperties getProfileFromIni(String path) {
-		ProfileIni ini = new ProfileIni();
-		String profile = "";
-
-		if (path == null) {
-			List<String> profiles = ini.listProfiles();
-
-			if (profiles == null)
-				return null;
-
-			profile = ProfileIni.DEFAULT_PROFILE;
-
-			if (! profiles.contains(profile))
-				return null;
-		}
-		else {
-			File file = new File(path);
-			profile = file.getName();
-			path = file.getParent();
-		}
-
-		ProfileProperties properties = null;
-		try {
-			properties = ini.loadProfile(profile, path);
-		} catch (IOException ex) {
-			System.err.println("Unable to load \""+profile+"\" profile: "+ex.getMessage());
-			return null;
-		}
-
-		return properties;
-	}
-
-	public static boolean getFormValuesFromFile(String profile) {
-		ProfileProperties properties = getProfileFromIni(profile);
-		if (properties == null)
-			return false;
-
-		NativeClient.parseProperties(properties);
-
-		NativeClient.optionMask |= NativeClient.FLAG_OPTION_REMEMBER_ME;
-
-		return true;
-	}
-
-	private static boolean getFormValuesFromRegistry() {
-		ProfileProperties properties = ProfileRegistry.loadProfile();
-		if (properties == null)
-			return false;
-
-		NativeClient.parseProperties(properties);
-
-		NativeClient.optionMask |= NativeClient.FLAG_OPTION_REMEMBER_ME;
-
-		return true;
-	}
 
 	private static final int RETURN_CODE_SUCCESS = 0;
 	@SuppressWarnings("unused")
@@ -296,8 +127,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		//Cleaning up all useless OVD data
 		SystemAbstract.cleanAll();
 
-		NativeClient.main_options = new Options();
-		NativeClient.optionMask = NativeClient.FLAG_CMDLINE_OPTS;
+		Options opts = new Options(NativeClient.FLAG_CMDLINE_OPTS);
 
 		final int nbOptions = 4;
 		List<LongOpt> systemDependantOptions = new ArrayList<LongOpt>();
@@ -322,63 +152,63 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		while ((c = opt.getopt()) != -1) {
 			switch (c) {
 				case (nbOptions + 1): //--reg
-					NativeClient.optionMask |= NativeClient.FLAG_REGISTRY_OPTS;
+					opts.mask |= NativeClient.FLAG_REGISTRY_OPTS;
 					break;
 				case 0: //--auto-start
-					NativeClient.main_options.autostart = true;
+					opts.autostart = true;
 
-					NativeClient.optionMask |= NativeClient.FLAG_OPTION_AUTO_START;
+					opts.mask |= Options.FLAG_AUTO_START;
 					break;
 				case 1: //--auto-integration
-					NativeClient.main_options.autopublish = true;
+					opts.autopublish = true;
 
-					NativeClient.optionMask |= NativeClient.FLAG_OPTION_AUTO_INTEGRATION;
+					opts.mask |= Options.FLAG_AUTO_INTEGRATION;
 					break;
 				case (nbOptions + 2): //--ntlm
-					NativeClient.main_options.nltm = true;
+					opts.nltm = true;
 
-					NativeClient.optionMask |= NativeClient.FLAG_OPTION_NTLM;
-					NativeClient.optionMask |= NativeClient.FLAG_OPTION_USERNAME;
+					opts.mask |= Options.FLAG_NTLM;
+					opts.mask |= Options.FLAG_USERNAME;
 					break;
 				case 2: //--progress-bar [show|hide]
 					String arg = new String(opt.getOptarg());
 					if (arg.equalsIgnoreCase("show"))
-						NativeClient.main_options.showProgressBar = true;
+						opts.showProgressBar = true;
 					else if (arg.equalsIgnoreCase("hide"))
-						NativeClient.main_options.showProgressBar = false;
+						opts.showProgressBar = false;
 					else
 						NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 
-					NativeClient.optionMask |= NativeClient.FLAG_OPTION_SHOW_PROGRESS_BAR;
+					opts.mask |= Options.FLAG_SHOW_PROGRESS_BAR;
 					break;
 				case 3: //--help
 				case 'h':
 					NativeClient.usage(RETURN_CODE_SUCCESS);
 					break;
 				case 'c':
-					NativeClient.main_options.profile = new String(opt.getOptarg());
-					NativeClient.optionMask |= NativeClient.FLAG_FILE_OPTS;
+					opts.profile = new String(opt.getOptarg());
+					opts.mask |= NativeClient.FLAG_FILE_OPTS;
 					break;
 				case 'p':
-					NativeClient.main_options.password = new String(opt.getOptarg());
+					opts.password = new String(opt.getOptarg());
 
-					NativeClient.optionMask |= NativeClient.FLAG_OPTION_PASSWORD;
+					opts.mask |= Options.FLAG_PASSWORD;
 					break;
 				case 'u':
-					NativeClient.main_options.username = new String(opt.getOptarg());
+					opts.username = new String(opt.getOptarg());
 
-					NativeClient.optionMask |= NativeClient.FLAG_OPTION_USERNAME;
+					opts.mask |= Options.FLAG_USERNAME;
 					break;
 				case 'm':
 					String sessionMode = new String(opt.getOptarg());
 					if (sessionMode.equalsIgnoreCase("auto"))
-						NativeClient.main_options.sessionMode = Properties.MODE_ANY;
+						opts.sessionMode = Properties.MODE_ANY;
 					if (sessionMode.equalsIgnoreCase("desktop"))
-						NativeClient.main_options.sessionMode = Properties.MODE_DESKTOP;
+						opts.sessionMode = Properties.MODE_DESKTOP;
 					if (sessionMode.equalsIgnoreCase("applications"))
-						NativeClient.main_options.sessionMode = Properties.MODE_REMOTEAPPS;
+						opts.sessionMode = Properties.MODE_REMOTEAPPS;
 
-					NativeClient.optionMask |= NativeClient.FLAG_OPTION_SESSION_MODE;
+					opts.mask |= Options.FLAG_SESSION_MODE;
 					break;
 				case 'g':
 					String geometry = new String(opt.getOptarg());
@@ -388,25 +218,25 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 						NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 
 					try {
-						NativeClient.main_options.geometry = new Dimension();
-						NativeClient.main_options.geometry.width = Integer.parseInt(geometry.substring(0, pos));
-						NativeClient.main_options.geometry.height = Integer.parseInt(geometry.substring(pos + 1, geometry.length()));
+						opts.geometry = new Dimension();
+						opts.geometry.width = Integer.parseInt(geometry.substring(0, pos));
+						opts.geometry.height = Integer.parseInt(geometry.substring(pos + 1, geometry.length()));
 					} catch (NumberFormatException ex) {
 						System.err.println(ex.getMessage() + "\n" + ex.getStackTrace());
 						NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 					}
 
-					NativeClient.optionMask |= NativeClient.FLAG_OPTION_GEOMETRY;
+					opts.mask |= Options.FLAG_GEOMETRY;
 					break;
 				case 'k':
-					NativeClient.main_options.keymap = new String(opt.getOptarg());
+					opts.keymap = new String(opt.getOptarg());
 
-					NativeClient.optionMask |= NativeClient.FLAG_OPTION_KEYMAP;
+					opts.mask |= Options.FLAG_KEYMAP;
 					break;
 				case 'l':
-					NativeClient.main_options.lang = new String(opt.getOptarg());
+					opts.lang = new String(opt.getOptarg());
 
-					NativeClient.optionMask |= NativeClient.FLAG_OPTION_LANGUAGE;
+					opts.mask |= Options.FLAG_LANGUAGE;
 					break;
 				case 's':
 					// the server address can be only the host string, or in the 
@@ -415,14 +245,14 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 					if (! (address.length == 1 || address.length == 2)) {
 						usage(RETURN_CODE_BAD_ARGUMENTS);
 					}
-					NativeClient.main_options.host = address[0];
+					opts.host = address[0];
 					
 					// check the port if exists
 					if (address.length == 2) {
 						try {
 							int port = new Integer(address[1]);
 							if (port > 0 && port <= 65536) {
-								NativeClient.main_options.port = port;
+								opts.port = port;
 							} else {
 								throw new NumberFormatException();
 							}
@@ -431,8 +261,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 						}
 					}
 
-					NativeClient.optionMask |= NativeClient.FLAG_OPTION_SERVER;
-					NativeClient.optionMask |= NativeClient.FLAG_OPTION_PORT;
+					opts.mask |= Options.FLAG_SERVER;
+					opts.mask |= Options.FLAG_PORT;
 					break;
 				case 'd':
 					String items = new String(opt.getOptarg());
@@ -441,7 +271,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 					while (tok.hasMoreTokens()) {
 						String item = tok.nextToken();
 						if (item.equalsIgnoreCase("seamless")) {
-							NativeClient.main_options.debugSeamless = true;
+							opts.debugSeamless = true;
 						}
 					}
 					break;
@@ -451,49 +281,49 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			}
 		}
 
-		if ((NativeClient.optionMask & NativeClient.FLAG_FILE_OPTS) != 0 && (NativeClient.optionMask & NativeClient.FLAG_REGISTRY_OPTS) != 0) {
+		if ((opts.mask & NativeClient.FLAG_FILE_OPTS) != 0 && (opts.mask & NativeClient.FLAG_REGISTRY_OPTS) != 0) {
 			org.ulteo.Logger.error("You cannot use --reg with -c");
 			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 
-		if ((NativeClient.optionMask & NativeClient.FLAG_FILE_OPTS) != 0) {
-			if (! NativeClient.getFormValuesFromFile(NativeClient.main_options.profile))
-				org.ulteo.Logger.warn("The configuration file \""+NativeClient.main_options.profile+"\" does not exist.");
+		if ((opts.mask & NativeClient.FLAG_FILE_OPTS) != 0) {
+			if (! opts.getIniProfile(opts.profile))
+				org.ulteo.Logger.warn("The configuration file \""+opts.profile+"\" does not exist.");
 		}
-		else if ((NativeClient.optionMask & NativeClient.FLAG_REGISTRY_OPTS) != 0) {
-			if (! NativeClient.getFormValuesFromRegistry())
+		else if ((opts.mask & NativeClient.FLAG_REGISTRY_OPTS) != 0) {
+			if (! opts.getIniProfile())
 				org.ulteo.Logger.warn("No available configuration from registry");
 		}
 		else {
-			if (! NativeClient.getFormValuesFromFile(null))
+			if (! opts.getIniProfile(null))
 				org.ulteo.Logger.warn("The default configuration file does not exist.");
 		}
 
-		if (NativeClient.main_options.nltm && (NativeClient.main_options.username != null || NativeClient.main_options.password != null)) {
+		if (opts.nltm && (opts.username != null || opts.password != null)) {
 			org.ulteo.Logger.error("You cannot use --ntml with -u or -p");
 			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
-		if (NativeClient.main_options.sessionMode == Properties.MODE_DESKTOP && NativeClient.main_options.autopublish) {
+		if (opts.sessionMode == Properties.MODE_DESKTOP && opts.autopublish) {
 			org.ulteo.Logger.error("You cannot use --auto-integration in desktop mode");
 			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
-		if (NativeClient.main_options.sessionMode == Properties.MODE_REMOTEAPPS && NativeClient.main_options.geometry != null) {
+		if (opts.sessionMode == Properties.MODE_REMOTEAPPS && opts.geometry != null) {
 			org.ulteo.Logger.error("You cannot use -g in applications mode");
 			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
-		if (NativeClient.main_options.autostart) {
-			if (((NativeClient.main_options.username == null || NativeClient.main_options.password == null) && !NativeClient.main_options.nltm) || NativeClient.main_options.host == null) {
+		if (opts.autostart) {
+			if (((opts.username == null || opts.password == null) && !opts.nltm) || opts.host == null) {
 				org.ulteo.Logger.error("You must specify the server (-s) and your credentials (-u, -p or --ntlm)");
 				NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 			}
 
-			if (NativeClient.main_options.sessionMode == -1) {
-				NativeClient.main_options.sessionMode = Properties.MODE_ANY;
+			if (opts.sessionMode == -1) {
+				opts.sessionMode = Properties.MODE_ANY;
 			}
 		}
 
-		NativeClient s = new NativeClient(NativeClient.main_options, NativeClient.optionMask);
-		if (NativeClient.main_options.autostart) {
+		NativeClient s = new NativeClient(opts);
+		if (opts.autostart) {
 			s.startThread();
 		}
 		s.waitThread();
@@ -587,17 +417,13 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	private DisconnectionFrame discFrame = null;
 
 	private boolean isCancelled = false;
-	
 	private Thread thread = null;
-
 	private OvdClient client = null;
-
 	private Options opts = null;
-	private int flags = NativeClient.FLAG_NO_OPTS;
+	private int flags = Options.FLAG_NO_OPTS;
 
-	public NativeClient(Options opts_, int flags_) {
+	public NativeClient(Options opts_) {
 		this.opts = opts_;
-		this.flags = flags_;
 
 		this.init();
 
@@ -615,7 +441,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.authFrame = new AuthFrame(this, this.opts.geometry, this.opts.guiLocked);
 		this.authFrame.getLanguageBox().addActionListener(this);
 		this.loadOptions();
-		this.authFrame.setRememberMeChecked((this.flags & NativeClient.FLAG_OPTION_REMEMBER_ME) != 0);
+		this.authFrame.setRememberMeChecked((this.flags & Options.FLAG_REMEMBER_ME) != 0);
 		this.authFrame.showWindow();
 		this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
 	}
