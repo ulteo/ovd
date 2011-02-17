@@ -32,7 +32,7 @@ if (! $buf) {
 	die($xml);
 }
 
-$mime_type = null;
+$mime_type = NULL;
 if (isset($_REQUEST['filter_extension'])) {
 	require_once(dirname(__FILE__).'/includes/mime.inc.php');
 	$mime_type = getMimeTypefromExtension($_REQUEST['filter_extension']);
@@ -60,7 +60,5 @@ if (! is_null($mime_type)) {
 	$dom->appendChild($user_node_new);
 }
 
-
 header('Content-Type: text/xml');
 echo $dom->saveXML();
-
