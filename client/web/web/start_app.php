@@ -60,6 +60,6 @@ $_SESSION['start_app'][] = array(
 	'file' => array(
 		'path' => substr($_POST['path'], 1),
 		'type' => 'sharedfolder',
-		'share' => $_SESSION['ajxp']['folders'][$_POST['repository']],
+		'share' => $_SESSION['ovd-client']['ajxp']['folders'][$_POST['repository']],
 	)
 );

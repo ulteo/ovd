@@ -35,10 +35,13 @@ require_once(dirname(__FILE__).'/functions.inc.php');
 
 @session_start();
 
+if (! array_key_exists('ovd-client', $_SESSION))
+	$_SESSION['ovd-client'] = array();
+
 $sessionmanager_url = NULL;
 if (defined('SESSIONMANAGER_HOST'))
 	$sessionmanager_url = 'https://'.SESSIONMANAGER_HOST.'/ovd/client';
-elseif (array_key_exists('ovd-client', $_SESSION) && array_key_exists('sessionmanager_url', $_SESSION['ovd-client']))
+elseif (array_key_exists('sessionmanager_url', $_SESSION['ovd-client']))
 	$sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
 
 $debug_mode = false;

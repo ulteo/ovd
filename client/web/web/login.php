@@ -266,17 +266,17 @@ if (is_object($profile_node) || is_object($sharedfolders_node)) {
 	if (is_dir(dirname(__FILE__).'/ajaxplorer/'))
 		$_SESSION['explorer'] = true;
 
-	$_SESSION['ajxp'] = array();
-	$_SESSION['ajxp']['applications'] = '';
-	$_SESSION['ajxp']['repositories'] = array();
-	$_SESSION['ajxp']['folders'] = array();
+	$_SESSION['ovd-client']['ajxp'] = array();
+	$_SESSION['ovd-client']['ajxp']['applications'] = '';
+	$_SESSION['ovd-client']['ajxp']['repositories'] = array();
+	$_SESSION['ovd-client']['ajxp']['folders'] = array();
 }
 
 if ($_SESSION['explorer'] === true) {
-	$_SESSION['ajxp']['applications'] = generateAjaxplorerActionsXML($session_node->getElementsByTagName('application'));
+	$_SESSION['ovd-client']['ajxp']['applications'] = generateAjaxplorerActionsXML($session_node->getElementsByTagName('application'));
 
 	if (is_object($profile_node)) {
-		$_SESSION['ajxp']['repositories'][] = array(
+		$_SESSION['ovd-client']['ajxp']['repositories'][] = array(
 			'DISPLAY'					=>	_('Profile'),
 			'DRIVER'					=>	'fs',
 			'DRIVER_OPTIONS'			=>	array(
@@ -290,7 +290,7 @@ if ($_SESSION['explorer'] === true) {
 			),
 		);
 
-		$_SESSION['ajxp']['folders'][] = $profile_node->getAttribute('dir');
+		$_SESSION['ovd-client']['ajxp']['folders'][] = $profile_node->getAttribute('dir');
 	}
 
 	if (is_object($sharedfolders_node)) {
@@ -299,7 +299,7 @@ if ($_SESSION['explorer'] === true) {
 			if (! is_object($sharedfolder_node))
 				continue;
 
-			$_SESSION['ajxp']['repositories'][] = array(
+			$_SESSION['ovd-client']['ajxp']['repositories'][] = array(
 				'DISPLAY'					=>	$sharedfolder_node->getAttribute('name'),
 				'DRIVER'					=>	'fs',
 				'DRIVER_OPTIONS'			=>	array(
@@ -313,7 +313,7 @@ if ($_SESSION['explorer'] === true) {
 				),
 			);
 
-			$_SESSION['ajxp']['folders'][] = $sharedfolder_node->getAttribute('dir');
+			$_SESSION['ovd-client']['ajxp']['folders'][] = $sharedfolder_node->getAttribute('dir');
 		}
 	}
 }
