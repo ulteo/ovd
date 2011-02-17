@@ -360,6 +360,19 @@ function show_manage($login, $userDB, $userGroupDB) {
     echo "</div>\n";
   }
 
+  $apps_s = $u->applications();
+  if (is_array($apps_s) && count($apps_s) > 0) {
+    echo '<br />';
+    echo '<h2>'._('Published applications').'</h2>';
+    echo '<table border="0" cellspacing="1" cellpadding="3">';
+    foreach ($apps_s as $aaa) {
+      echo '<tr>';
+      echo '<td><img src="media/image/cache.php?id='.$aaa->getAttribute('id').'" alt="" title="" /></td>';
+      echo '<td><a href="applications.php?action=manage&id='.$aaa->getAttribute('id').'">'.$aaa->getAttribute('name').'</a></td>';
+      echo '</tr>';
+    }
+    echo '</table>';
+  }
 
   if ($has_sessions) {
     echo '<div>';
