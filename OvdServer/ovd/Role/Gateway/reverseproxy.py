@@ -87,13 +87,13 @@ class ReverseProxy(asyncore.dispatcher):
 		utf8_request = request.rstrip('\n\r').decode("utf-8", "replace")
 
 		# find protocol
-		rdp = re.match('\x03\x00(.*)Cookie: mstshash=(\w+);token=([\-\w]+);', request)
+		rdp = re.match('\x03\x00.*Cookie: .*token=([\-\w]+);.*', request)
 		http = re.match('((?:HEAD)|(?:GET)|(?:POST)) (.*) HTTP/(.\..)', request)
 
 		try:
 			# RDP case
 			if rdp:
-				token = rdp.group(3)
+				token = rdp.group(1)
 
 				# get FQDN
 				try:
