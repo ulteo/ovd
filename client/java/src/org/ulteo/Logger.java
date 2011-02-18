@@ -41,6 +41,7 @@ class LoggingOutputStream extends ByteArrayOutputStream {
 		this.lineSeparator = System.getProperty("line.separator");
 	}
 
+	@Override
 	public void flush() throws IOException {
 		String record;
 		synchronized(this) {
@@ -163,7 +164,7 @@ public class Logger {
 			instance = new Logger(stdout, filename, redirectOut);
 		}
 		catch(Exception e) {
-			e.printStackTrace();
+			System.err.println("Failed to initialize logger: "+e.getMessage());
 			return false;
 		}
 		
