@@ -46,7 +46,7 @@ class Manager:
 			doc.appendChild(rootNode)
 		except Exception, e:
 			print str(e)
-		print doc.toxml()
+		
 		response = self.smManager.send_packet("/session/status", doc)
 		Logger.debug2("ApplicationServer: send_session_status: %s"%(response))
 		if response is False:
