@@ -32,30 +32,30 @@ import java.util.Calendar;
 
 
 class LoggingOutputStream extends ByteArrayOutputStream { 
-    private String lineSeparator = null; 
-    private Logger logger = null;
+	private String lineSeparator = null;
+	private Logger logger = null;
 
-    public LoggingOutputStream(Logger logger) { 
-        super(); 
-        this.logger = logger; 
-        this.lineSeparator = System.getProperty("line.separator"); 
-    } 
-    
-    public void flush() throws IOException { 
-        String record; 
-        synchronized(this) { 
-            super.flush(); 
-            record = this.toString(); 
-            super.reset(); 
- 
-            if (record.length() == 0 || record.equals(lineSeparator)) { 
-                // avoid empty records 
-                return; 
-            } 
- 
-            logger.write(record);
-        } 
-    } 
+	public LoggingOutputStream(Logger logger) {
+		super();
+		this.logger = logger;
+		this.lineSeparator = System.getProperty("line.separator");
+	}
+
+	public void flush() throws IOException {
+		String record;
+		synchronized(this) {
+			super.flush();
+			record = this.toString();
+			super.reset();
+
+			if (record.length() == 0 || record.equals(lineSeparator)) {
+				// avoid empty records
+				return;
+			}
+
+			logger.write(record);
+		}
+	}
 }
 
 
