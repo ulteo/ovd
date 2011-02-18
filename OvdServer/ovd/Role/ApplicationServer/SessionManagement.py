@@ -156,8 +156,6 @@ class SessionManagement(Process):
 		if session.domain.manage_user():
 			self.destroy_user(session.user)
 		
-		if self.aps_instance.sessions.has_key(session.id):
-			del(self.aps_instance.sessions[session.id])
 		self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_DESTROYED)
 
 	def logoff_user(self, user):
