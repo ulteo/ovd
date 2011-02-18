@@ -53,7 +53,7 @@ class Manager:
 			Logger.warn("ApplicationServer: unable to send session status")
 		else:
 			response.close()
-			response = None				
+			response = None
 	
 	
 	def purgeGroup(self):
@@ -77,6 +77,6 @@ class Manager:
 	def session_switch_status(self, session, status):
 		session.switch_status(status)
 		Logger.info("Session %s switch status %s"%(session.id, session.status))
-		self.send_session_status(session)	
+		self.send_session_status(session)
 	
 
