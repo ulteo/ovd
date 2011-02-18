@@ -340,18 +340,29 @@ function getProfileMode($prefs) {
 }
 
 function isAuthorized($policy_) {
-	if (! isset($_SESSION['admin_ovd_user']))
+	if (! isset($_SESSION['admin_login'])) // not admin nor user logged
+		return false;
+	
+	if (isset($_SESSION['admin_ovd_user'])) { // is a user who is logged
+		$policy = $_SESSION['admin_ovd_user']->getPolicy();
+		return $policy[$policy_];
+	}
+	
+	if ($_SESSION['admin_login'] == SESSIONMANAGER_ADMIN_LOGIN) { // it is an admin who is logged
 		return true;
-
-	$policy = $_SESSION['admin_ovd_user']->getPolicy();
-	return $policy[$policy_];
+	}
+	
+	return false;
 }
 
 function checkAuthorization($policy_) {
 	if (isAuthorized($policy_))
 		return true;
 
-	Logger::warning('main', 'User(login='.$_SESSION['admin_ovd_user']->getAttribute('login').') is  not allowed to perform '.$policy_.'.');
+	if (array_key_exists('admin_ovd_user', $_SESSION)) 
+		Logger::warning('main', 'User(login='.$_SESSION['admin_ovd_user']->getAttribute('login').') is  not allowed to perform '.$policy_.'.');
+	else
+		Logger::warning('main', 'The ser is not logged so he is not allowed to perform '.$policy_.'.');
 	popup_error(_('You are not allowed to perform this action'));
 	return false;
 }
