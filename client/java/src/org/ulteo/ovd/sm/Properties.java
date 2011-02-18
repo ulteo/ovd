@@ -2,6 +2,7 @@
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,6 +42,7 @@ public class Properties {
 	private int drives = REDIRECT_DRIVES_NO;
 
 	private boolean desktop_icons = false;
+	private boolean desktop_effects = false;
 	
 	public Properties(int mode) {
 		this.mode = mode;
@@ -124,5 +126,13 @@ public class Properties {
 
 	public void setDesktopIcons(boolean desktop_icons_) {
 		this.desktop_icons = desktop_icons_;
+	}
+
+	public boolean isDesktopEffectsEnabled() {
+		return this.desktop_effects;
+	}
+
+	public void setDesktopEffects(boolean desktop_effects_) {
+		this.desktop_effects = desktop_effects_;
 	}
 }

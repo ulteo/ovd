@@ -217,6 +217,10 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 		buf = this.getParameter("multimedia");
 		if (buf != null)
 			properties.setMultimedia(buf.equalsIgnoreCase("true"));
+
+		buf = this.getParameter("enhance_user_experience");
+		if (buf != null)
+			properties.setDesktopEffects(buf.equalsIgnoreCase("true"));
 		
 		buf = this.getParameter("redirect_client_printers");
 		if (buf != null){

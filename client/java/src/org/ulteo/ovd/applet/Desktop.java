@@ -48,6 +48,7 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 	private String keymap = null;
 	private String token = null;
 	private boolean multimedia_mode = false;
+	private boolean enhance_user_experience = false;
 	private boolean map_local_printers = false;
 	private int mount_local_drives = Properties.REDIRECT_DRIVES_NO;
 	
@@ -100,6 +101,7 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 		Properties properties = new Properties(Properties.MODE_DESKTOP);
 
 		properties.setMultimedia(this.multimedia_mode);
+		properties.setDesktopEffects(this.enhance_user_experience);
 		properties.setPrinters(this.map_local_printers);
 		if (this.map_local_printers){
 			OVDStandalonePrinterThread appletPrinterThread = new OVDStandalonePrinterThread();
@@ -223,6 +225,10 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 		String buf = this.getParameter("multimedia");
 		if (buf != null)
 			this.multimedia_mode = buf.equalsIgnoreCase("true");
+
+		buf = this.getParameter("enhance_user_experience");
+		if (buf != null)
+			this.enhance_user_experience = buf.equalsIgnoreCase("true");
 		
 		buf = this.getParameter("redirect_client_printers");
 		if (buf != null)

@@ -9,12 +9,16 @@
  * Date: $Date: 2007/03/08 00:26:14 $
  *
  * Copyright (c) 2005 Propero Limited
+ * Copyright (C) 2011 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Thomas MOUTON <thomas@ulteo.com> 2011
  *
  * Purpose: Global static storage of user-definable options
  */
 package net.propero.rdp;
 
 import java.awt.image.DirectColorModel;
+import net.propero.rdp.rdp5.Rdp5;
 
 public class Options {
 	public static final int DIRECT_BITMAP_DECOMPRESSION = 0;
@@ -119,9 +123,9 @@ public class Options {
 	
 	public boolean use_ssl = false;
 	public boolean map_clipboard = true;
-	public int rdp5_performanceflags =   Rdp.RDP5_NO_CURSOR_SHADOW | Rdp.RDP5_NO_CURSORSETTINGS |
-						Rdp.RDP5_NO_FULLWINDOWDRAG | Rdp.RDP5_NO_MENUANIMATIONS |
-						/*Rdp.RDP5_NO_THEMING |*/ Rdp.RDP5_NO_WALLPAPER;
+	public int rdp5_performanceflags =   Rdp5.PERF_DISABLE_CURSOR_SHADOW | Rdp5.PERF_DISABLE_CURSORSETTINGS |
+						Rdp5.PERF_DISABLE_FULLWINDOWDRAG | Rdp5.PERF_DISABLE_MENUANIMATIONS |
+						/*Rdp.RDP5_NO_THEMING |*/ Rdp5.PERF_DISABLE_WALLPAPER;
 	public boolean save_graphics = false;
 
 	public boolean server_support_fastpath_output = false;

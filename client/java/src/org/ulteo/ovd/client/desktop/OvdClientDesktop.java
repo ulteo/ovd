@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
@@ -178,6 +178,9 @@ public class OvdClientDesktop extends OvdClient {
 		// not divisible by 4
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, RdpConnectionOvd.DEFAULT_BPP);
+
+		rc.setAllDesktopEffectsEnabled(this.smComm.getResponseProperties().isDesktopEffectsEnabled());
+
 		if (this.keymap != null)
 			rc.setKeymap(this.keymap);
 		

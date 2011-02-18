@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
@@ -228,6 +228,8 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			rc.setKeymap(this.keymap);
 
 		if (! OSTools.is_applet) {
+			rc.setAllDesktopEffectsEnabled(this.smComm.getResponseProperties().isDesktopEffectsEnabled());
+
 			HashMap<Integer, ImageIcon> appsIcons = new HashMap<Integer, ImageIcon>();
 			List<String> mimesTypes = new ArrayList<String>();
 			for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {

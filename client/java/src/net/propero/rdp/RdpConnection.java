@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2009-2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
@@ -89,6 +89,9 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.opt.height = DEFAULT_HEIGHT;
 		this.opt.set_bpp(DEFAULT_BPP);
 
+		this.opt.use_rdp5 = true;
+		this.opt.rdp5_performanceflags = Rdp5.PERF_DISABLE_ALL;
+
 		this.channels = new VChannels(this.opt);
 	}
 
@@ -172,6 +175,69 @@ public class RdpConnection implements SeamListener, Runnable{
 	public void setGraphicOffset(int x, int y) {
 		this.opt.x_offset = x;
 		this.opt.y_offset = y;
+	}
+
+	public void setWallpaperEnabled(boolean enabled) {
+		if (enabled)
+			this.opt.rdp5_performanceflags &= ~Rdp5.PERF_DISABLE_WALLPAPER;
+		else
+			this.opt.rdp5_performanceflags |= Rdp5.PERF_DISABLE_WALLPAPER;
+	}
+
+	public void setFullWindowDragEnabled(boolean enabled) {
+		if (enabled)
+			this.opt.rdp5_performanceflags &= ~Rdp5.PERF_DISABLE_FULLWINDOWDRAG;
+		else
+			this.opt.rdp5_performanceflags |= Rdp5.PERF_DISABLE_FULLWINDOWDRAG;
+	}
+
+	public void setMenuAnimationsEnabled(boolean enabled) {
+		if (enabled)
+			this.opt.rdp5_performanceflags &= ~Rdp5.PERF_DISABLE_MENUANIMATIONS;
+		else
+			this.opt.rdp5_performanceflags |= Rdp5.PERF_DISABLE_MENUANIMATIONS;
+	}
+
+	public void setThemingEnabled(boolean enabled) {
+		if (enabled)
+			this.opt.rdp5_performanceflags &= ~Rdp5.PERF_DISABLE_THEMING;
+		else
+			this.opt.rdp5_performanceflags |= Rdp5.PERF_DISABLE_THEMING;
+	}
+
+	public void setCursorShadowEnabled(boolean enabled) {
+		if (enabled)
+			this.opt.rdp5_performanceflags &= ~Rdp5.PERF_DISABLE_CURSOR_SHADOW;
+		else
+			this.opt.rdp5_performanceflags |= Rdp5.PERF_DISABLE_CURSOR_SHADOW;
+	}
+
+	public void setCursorSettingsEnabled(boolean enabled) {
+		if (enabled)
+			this.opt.rdp5_performanceflags &= ~Rdp5.PERF_DISABLE_CURSORSETTINGS;
+		else
+			this.opt.rdp5_performanceflags |= Rdp5.PERF_DISABLE_CURSORSETTINGS;
+	}
+
+	public void setFontSmoothingEnabled(boolean enabled) {
+		if (enabled)
+			this.opt.rdp5_performanceflags &= ~Rdp5.PERF_ENABLE_FONT_SMOOTHING;
+		else
+			this.opt.rdp5_performanceflags |= Rdp5.PERF_ENABLE_FONT_SMOOTHING;
+	}
+
+	public void setDesktopCompositionEnabled(boolean enabled) {
+		if (enabled)
+			this.opt.rdp5_performanceflags &= ~Rdp5.PERF_ENABLE_DESKTOP_COMPOSITION;
+		else
+			this.opt.rdp5_performanceflags |= Rdp5.PERF_ENABLE_DESKTOP_COMPOSITION;
+	}
+
+	public void setAllDesktopEffectsEnabled(boolean enabled) {
+		if (enabled)
+			this.opt.rdp5_performanceflags = Rdp5.PERF_ENABLE_ALL;
+		else
+			this.opt.rdp5_performanceflags = Rdp5.PERF_DISABLE_ALL;
 	}
 
 	private void initCanvas() throws RdesktopException {

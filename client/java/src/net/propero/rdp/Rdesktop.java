@@ -4,11 +4,14 @@
  * Revision: $Revision: 1.1.1.1 $
  * Author: $Author: suvarov $
  * Author: tomqq <hekong@gmail.com> 2009
- * Author: Julien LANGLOIS <julien@ulteo.com> 2009
- * Author: Samuel BOVEE <samuel@ulteo.com> 2010
  * Date: $Date: 2007/03/08 00:26:22 $
  *
  * Copyright (c) 2005 Propero Limited
+ * Copyright (C) 2009-2011 Ulteo SAS
+ * http://www.ulteo.com
+ * Author: Thomas MOUTON <thomas@ulteo.com> 2011
+ * Author: Julien LANGLOIS <julien@ulteo.com> 2009
+ * Author: Samuel BOVEE <samuel@ulteo.com> 2010
  *
  * Purpose: Main class, launches session
  */
@@ -606,7 +609,7 @@ public class Rdesktop {
 //				System.err.println("You cannot use -S and -A at the same time\n");
 //				return;
 //			}
-			opt.rdp5_performanceflags &= ~Rdp.RDP5_NO_FULLWINDOWDRAG;
+			opt.rdp5_performanceflags &= ~Rdp5.PERF_DISABLE_FULLWINDOWDRAG;
 			/*if (opt.width != 800 && opt.height != 600)
 			{
 				System.err.println("You cannot use -g and -A at the same time\n");

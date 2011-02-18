@@ -6,6 +6,9 @@
  * Date: $Date: 2007/03/08 00:26:39 $
  *
  * Copyright (c) 2005 Propero Limited
+ * Copyright (C) 2011 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Thomas MOUTON <thomas@ulteo.com> 2011
  *
  * Purpose: Handle RDP5 orders
  */
@@ -20,6 +23,32 @@ public class Rdp5 extends Rdp {
 	private static final int RDP5_COMPRESSED = 0x80;
 
 	private static final int RDP_MPPC_COMPRESSED = 0x20;
+
+	/* Disable desktop wallpaper */
+	public static final int PERF_DISABLE_WALLPAPER =		0x00000001;
+	/* Disable full-window drag (only the window outline is displayed when the window is moved) */
+	public static final int PERF_DISABLE_FULLWINDOWDRAG =		0x00000002;
+	/* Disable menu animations */
+	public static final int PERF_DISABLE_MENUANIMATIONS =		0x00000004;
+	/* Disable user interface themes */
+	public static final int PERF_DISABLE_THEMING =			0x00000008;
+	/* Disable mouse cursor shadows */
+	public static final int PERF_DISABLE_CURSOR_SHADOW =		0x00000020;
+	/* Disable cursor blinking */
+	public static final int PERF_DISABLE_CURSORSETTINGS =		0x00000040;
+	/* Enable font smoothing */
+	public static final int PERF_ENABLE_FONT_SMOOTHING =		0x00000080;
+	/* Enable Desktop Composition */
+	public static final int PERF_ENABLE_DESKTOP_COMPOSITION =	0x00000100;
+	/* Enable all server desktop shell features */
+	public static final int PERF_ENABLE_ALL = PERF_ENABLE_FONT_SMOOTHING | PERF_ENABLE_DESKTOP_COMPOSITION;
+	/* Disable all server desktop shell features */
+	public static final int PERF_DISABLE_ALL = PERF_DISABLE_WALLPAPER
+						| PERF_DISABLE_FULLWINDOWDRAG
+						| PERF_DISABLE_MENUANIMATIONS
+						| PERF_DISABLE_THEMING
+						| PERF_DISABLE_CURSOR_SHADOW
+						| PERF_DISABLE_CURSORSETTINGS;
 
     private VChannels channels;
 

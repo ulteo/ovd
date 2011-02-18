@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
  * Author David LECHEVALIER <david@ulteo.com> 2010 
@@ -90,6 +90,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	public static final String FIELD_VALUE = "value";
 
 	public static final String NAME_DESKTOP_ICONS = "desktop_icons";
+	public static final String NAME_USER_EXPERIENCE = "enhance_user_experience";
 
 	private static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
 	private static final String CONTENT_TYPE_XML = "text/xml";
@@ -639,6 +640,14 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 							response.setPersistent(val > 0);
 						} catch (NumberFormatException ex) {
 							Logger.error("Failed to parse value '"+value+"' (name: "+SESSION_MODE_PERSISTENT+")");
+						}
+					}
+					if (name.equalsIgnoreCase(NAME_USER_EXPERIENCE)) {
+						try {
+							int val = Integer.parseInt(value);
+							response.setDesktopEffects(val > 0);
+						} catch (NumberFormatException ex) {
+							Logger.error("Failed to parse value '"+value+"' (name: "+NAME_USER_EXPERIENCE+")");
 						}
 					}
 				}

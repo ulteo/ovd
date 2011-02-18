@@ -6,6 +6,9 @@
  * Date: $Date: 2007/03/08 00:26:19 $
  *
  * Copyright (c) 2005 Propero Limited
+ * Copyright (C) 2011 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Thomas MOUTON <thomas@ulteo.com> 2011
  *
  * Purpose: Rdp layer of communication
  */
@@ -27,23 +30,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 
 public class Rdp {
-
-    public static int RDP5_DISABLE_NOTHING = 0x00;
-
-    public static int RDP5_NO_WALLPAPER = 0x01;
-
-    public static int RDP5_NO_FULLWINDOWDRAG = 0x02;
-
-    public static int RDP5_NO_MENUANIMATIONS = 0x04;
-
-    public static int RDP5_NO_THEMING = 0x08;
-
-    public static int RDP5_NO_CURSOR_SHADOW = 0x20;
-
-    public static int RDP5_NO_CURSORSETTINGS = 0x40; /*
-                                                         * disables cursor
-                                                         * blinking
-                                                         */
 
     protected static Logger logger = Logger.getLogger(Rdp.class);
 
