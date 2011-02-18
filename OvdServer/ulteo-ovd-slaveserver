@@ -166,4 +166,9 @@ class InterruptException(Exception):
 
 
 if __name__ == "__main__":
+	# freeze_support must be the first line
+	import multiprocessing
+	multiprocessing.freeze_support()
+	
 	main()
+

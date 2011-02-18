@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2010 Ulteo SAS
+# Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author David LECHEVALIER <david@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
+# Author David LECHEVALIER <david@ulteo.com> 2010-2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -88,6 +88,8 @@ class TS(AbstractTS):
 			except pywintypes.error, err:
 				if err[0] == 7007: # A close operation is pending on the session.
 					session_closing.append(session)
+				if err[0] == 7022: # Session not found.
+					continue
 				else:
 					Logger.warn("Unable to list session %d"%(session["SessionId"]))
 					Logger.debug("WTSQuerySessionInformation returned %s"%(err))

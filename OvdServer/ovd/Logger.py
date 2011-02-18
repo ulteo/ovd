@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2010 Ulteo SAS
+# Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author David LECHEVALIER <david@ulteo.com> 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -22,10 +23,14 @@
 
 
 import logging.handlers
-from Queue import Queue
+from multiprocessing import queues as Queue
+import Queue
+
 import sys
 import time
 import threading
+import os
+import socket
 
 class Logger:
 	_instance = None
@@ -44,6 +49,7 @@ class Logger:
 		self.fileHandler = None
 		self.consoleHandler = None
 		
+		self.queue = None
 		self.filename = filename
 		
 		self.threaded = False
@@ -73,10 +79,13 @@ class Logger:
 			if self.consoleHandler is not None:
 				self.logging.removeHandler(self.consoleHandler)
 	
-	
+	def close(self):
+		if self.fileHandler.stream is not None:
+			self.fileHandler.stream.close()
+		self.fileHandler.stream = None
+
 	def setThreadedMode(self, mode):
 		if mode is True and self.threaded is False:
-			self.queue = Queue()
 			self.thread = threading.Thread(name="log", target=self.run)
 			self.threaded = True
 			self.thread.start()
@@ -87,16 +96,26 @@ class Logger:
 	
 	
 	def run(self):
-		while self.threaded:
-			(func, obj) = self.queue.get()
-			func(self, obj)
-	
+		try:
+			while True:
+				(func, obj) = self.queue.get()
+				f = getattr(self,func)
+				f(obj)
+		except (EOFError, socket.error):
+			return
 	
 	def process(self, func, obj):
+		obj = "[%d] "%(os.getpid())+obj
 		if self.threaded:
-			self.queue.put_nowait((func, obj))
+			try:
+				self.queue.put_nowait((func, obj))
+			except (EOFError, socket.error):
+				return
 		else:
-			func(self, obj)
+			if self.fileHandler.stream == None:
+				self.fileHandler.stream = self.fileHandler._open()
+			f = getattr(self,func)
+			f(obj)
 	
 
 	def log_info(self, message):
@@ -125,11 +144,21 @@ class Logger:
 	
 	# Static methods
 
+	def setQueue(self, queue, mode):
+		self.queue = queue
+		if mode is True:
+			self.thread = threading.Thread(name="log", target=self.run)
+			self.thread.start()
+			if self.thread is not None and self.thread.isAlive():
+				self.thread._Thread__stop()
+		else:
+			self.threaded = True
+
 	@staticmethod 
 	def initialize(name, loglevel, filename=None, stdout=False, threaded=False):
 		instance = Logger(name, loglevel, filename, stdout)
 		if threaded:
-			instance.setThreadedMode(True)
+			instance.setThreadedMode(threaded)
 		
 		Logger.setInstance(instance)
 		
@@ -150,7 +179,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.INFO != Logger.INFO:
 			return
 		
-		Logger._instance.process(Logger._instance.__class__.log_info, message)
+		Logger._instance.process('log_info', message)
 	
 	@staticmethod
 	def warn(message):
@@ -160,7 +189,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.WARN != Logger.WARN:
 			return
 		
-		Logger._instance.process(Logger._instance.__class__.log_warn, message)
+		Logger._instance.process('log_warn', message)
 	
 	@staticmethod
 	def error(message):
@@ -170,7 +199,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.ERROR != Logger.ERROR:
 			return
 		
-		Logger._instance.process(Logger._instance.__class__.log_error, message)
+		Logger._instance.process('log_error', message)
 	
 	
 	@staticmethod
@@ -181,7 +210,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.DEBUG != Logger.DEBUG:
 			return
 		
-		Logger._instance.process(Logger._instance.__class__.log_debug, message)
+		Logger._instance.process('log_debug', message)
 	
 	
 	@staticmethod
@@ -192,7 +221,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.DEBUG_2 != Logger.DEBUG_2:
 			return
 		
-		Logger._instance.process(Logger._instance.__class__.log_debug2, message)
+		Logger._instance.process('log_debug2', message)
 	
 	
 	@staticmethod
@@ -203,7 +232,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.DEBUG_3 != Logger.DEBUG_3:
 			return
 		
-		Logger._instance.process(Logger._instance.__class__.log_debug3, message)
+		Logger._instance.process('log_debug3', message)
 	
 	
 	def get_time_from_line(self, line):

@@ -2,9 +2,10 @@
 
 # Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
+# Author David LECHEVALIER <david@ulteo.com> 2011
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -21,8 +22,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import glob
+import multiprocessing
+from multiprocessing import queues as Queue
 import os
-from Queue import Queue
+import socket
 import time
 import threading
 from xml.dom.minidom import Document
@@ -36,22 +39,25 @@ from Apt import Apt
 from Dialog import Dialog
 from Session import Session
 from SessionManagement import SessionManagement
+from Manager import Manager
 from Platform import Platform as RolePlatform
 
 
 class Role(AbstractRole):
-	ts_group_name = RolePlatform.TS.getUsersGroup()
-	ovd_group_name = "OVDUsers"
-	
 	sessions = {}
 	sessions_spooler = None
 	
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
 		self.dialog = Dialog(self)
+		Logger._instance.close()
+		self.ipcmanager = multiprocessing.Manager()
 		self.sessions = {}
-		self.sessions_spooler = Queue()
-		self.sessions_spooler2 = Queue()
+		self.sessions_spooler = self.ipcmanager.Queue()
+		self.sessions_spooler2 = self.ipcmanager.Queue()
+		self.sessions_sync = self.ipcmanager.Queue()
+		self.manager = Manager(self.main_instance.smRequestManager)
+		self.logging_queue = self.ipcmanager.Queue()
 		self.threads = []
 		
 		self.applications = {}
@@ -75,16 +81,16 @@ class Role(AbstractRole):
 			Logger.debug("RDP server dialog: "+str(err))
 			return
 		
-		if not Platform.System.groupExist(self.ts_group_name):
-			Logger.error("The group '%s' doesn't exist"%(self.ts_group_name))
+		if not Platform.System.groupExist(self.manager.ts_group_name):
+			Logger.error("The group '%s' doesn't exist"%(self.manager.ts_group_name))
 			return False
 		
-		if not Platform.System.groupExist(self.ovd_group_name):
-			if not Platform.System.groupCreate(self.ovd_group_name):
+		if not Platform.System.groupExist(self.manager.ovd_group_name):
+			if not Platform.System.groupCreate(self.manager.ovd_group_name):
 				return False
 		
 		
-		if not self.purgeGroup():
+		if not self.manager.purgeGroup():
 			Logger.error("Unable to purge group")
 			return False
 		
@@ -99,9 +105,11 @@ class Role(AbstractRole):
 			nb_thread = int(round(1 + (ram + vcpu * 2)/3))
 		else:
 			nb_thread = 1
-		
+
+		Logger._instance.setQueue(self.logging_queue, True)
+		Logger._instance.close()
 		for _ in xrange(nb_thread):
-			self.threads.append(SessionManagement(self, self.sessions_spooler, self.sessions_spooler2))
+			self.threads.append(SessionManagement(self.manager, self.sessions_spooler, self.sessions_spooler2, self.sessions_sync, self.logging_queue))
 		
 		if self.canManageApplications():
 			self.apt = Apt()
@@ -121,33 +129,22 @@ class Role(AbstractRole):
 	
 	def stop(self):
 		for thread in self.threads:
-			thread.order_stop()
+			thread.terminate()
+		
+		for thread in self.threads:
+			thread.join()
+		self.ipcmanager.shutdown()
 		
 		for session in self.sessions.values():
-			session.switch_status(Session.SESSION_STATUS_WAIT_DESTROY)
+			self.manager.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
 		
-		cleaner = SessionManagement(self, None, None)
+		cleaner = SessionManagement(self.manager, None, None, None, None)
 		for session in self.sessions.values():
 			session.end_status = Session.SESSION_END_STATUS_SHUTDOWN
 			cleaner.destroy_session(session)
 		
-		self.purgeGroup()
+		self.manager.purgeGroup()
 	
-	
-	def send_session_status(self, session):
-		doc = Document()
-		rootNode = doc.createElement('session')
-		rootNode.setAttribute("id", session.id)
-		rootNode.setAttribute("status", session.status)
-		if session.status == Session.SESSION_STATUS_DESTROYED and session.end_status is not None:
-			rootNode.setAttribute("reason", session.end_status)
-		
-		doc.appendChild(rootNode)
-		
-		response = self.main_instance.smRequestManager.send_packet("/session/status", doc)
-		Logger.debug2("ApplicationServer: send_session_status: %s"%(response))
-		if response is False:
-			Logger.warn("ApplicationServer: unable to send session status")
 	
 	
 	def get_session_from_login(self, login_):
@@ -156,17 +153,13 @@ class Role(AbstractRole):
 				return session
 		
 		return None
-		
-	def session_switch_status(self, session, status):
-		session.switch_status(status)
-		Logger.info("Session %s switch status %s"%(session.id, session.status))
-		self.send_session_status(session)
 	
 	
 	def run(self):
 		self.updateApplications()
 		self.has_run = True
 		
+		Logger._instance.close()
 		for thread in self.threads:
 			thread.start()
 		
@@ -175,6 +168,20 @@ class Role(AbstractRole):
 		self.status = Role.STATUS_RUNNING
 		
 		while self.thread.thread_continue():
+			while True:
+				try:
+					session = self.sessions_sync.get_nowait()
+				except Queue.Empty, e:
+					break
+				except (EOFError, socket.error):
+					Logger.debug("Role stopping")
+					return
+				if session.status == RolePlatform.Session.SESSION_STATUS_DESTROYED:
+					if self.sessions.has_key(session.id):
+						del(self.sessions[session.id])
+				else:
+					self.sessions[session.id] = session
+
 			for session in self.sessions.values():
 				try:
 					ts_id = RolePlatform.TS.getSessionID(session.user.name)
@@ -192,7 +199,7 @@ class Role(AbstractRole):
 							session.end_status = Session.SESSION_END_STATUS_NORMAL
 						
 						if session.status not in [Session.SESSION_STATUS_WAIT_DESTROY, Session.SESSION_STATUS_DESTROYED, Session.SESSION_STATUS_ERROR]:
-							self.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
+							self.manager.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
 							self.sessions_spooler.put(("destroy", session))
 					continue
 				
@@ -207,16 +214,16 @@ class Role(AbstractRole):
 					if ts_status is RolePlatform.TS.STATUS_LOGGED:
 						if not session.domain.manage_user():
 							self.sessions_spooler2.put(("manage_new", session))
-						self.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
+						self.manager.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
 						
 						continue
 						
 					if ts_status is RolePlatform.TS.STATUS_DISCONNECTED:
-						self.session_switch_status(session, Session.SESSION_STATUS_INACTIVE)
+						self.manager.session_switch_status(session, Session.SESSION_STATUS_INACTIVE)
 						continue
 					
 				if session.status == Session.SESSION_STATUS_ACTIVE and ts_status is RolePlatform.TS.STATUS_DISCONNECTED:
-					self.session_switch_status(session, Session.SESSION_STATUS_INACTIVE)
+					self.manager.session_switch_status(session, Session.SESSION_STATUS_INACTIVE)
 					continue
 				
 				if session.status == Session.SESSION_STATUS_INACTIVE and ts_status is RolePlatform.TS.STATUS_LOGGED:
@@ -241,24 +248,6 @@ class Role(AbstractRole):
 			
 			#Logger.debug("ApplicationServer run loop")
 		self.status = Role.STATUS_STOP
-	
-	
-	def purgeGroup(self):
-		while True:
-			users = Platform.System.groupMember(self.ovd_group_name)
-			
-			if users is None:
-				return False
-			
-			if users == []:
-				return True
-			
-			for user in users:
-				# todo : check if the users is connected, if yes logoff his session
-				if not Platform.System.userRemove(user):
-					return False
-			
-		return False
 	
 	
 	def purgeArchives(self):

@@ -90,7 +90,9 @@ class SlaveServer:
 				if not role.init():
 					raise Exception()
 			except Exception, e:
+				import traceback
 				Logger.error("SlaveServer: unable to initialize role '%s' %s"%(role.getName(), str(e)))
+				Logger.error("SlaveServer: role execption %s"%(str(traceback.format_exc())))
 				return False
 			
 			role.thread = Thread(name="role_%s"%(role.getName()), target=role.run)

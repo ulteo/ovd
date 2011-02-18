@@ -1,9 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author David LECHEVALIER <david@ulteo.com> 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -20,6 +21,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import multiprocessing
 import os
 import sys
 import servicemanager
@@ -42,6 +44,11 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 	def __init__(self, args):
 		win32serviceutil.ServiceFramework.__init__(self, args)
 		
+		# Give the multiprocessing module a python interpreter to run
+		if sys.argv[0].endswith("exe"):
+			basedir = os.path.dirname(sys.argv[0])
+			multiprocessing.set_executable(os.path.join(basedir, "ulteo-ovd-slaveserver.exe"))
+	
 		# Init the logger instance
 		Win32Logger.initialize("OVD", Config.log_level, None)
 		ConfigModule.report_error = WinReport_error
@@ -138,4 +145,5 @@ def WinReport_error(message):
 
 
 if __name__=='__main__':
+	# when a service is produced by py2exe, this function is never called
 	win32serviceutil.HandleCommandLine(OVD)

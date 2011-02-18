@@ -3,6 +3,7 @@
 # Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
+# Author David LECHEVALIER <david@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -77,8 +78,12 @@ class Apt(Thread):
 			else:
 				request.status = "success"
 				Logger.debug("Apt finish request succefully")
-
-
+	
+	
+	def terminate(self):
+		self.order_stop()
+	
+	
 class Request:
 	def __init__(self):
 		self.directory = None

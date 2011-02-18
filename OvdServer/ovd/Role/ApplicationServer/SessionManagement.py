@@ -2,8 +2,9 @@
 
 # Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
+# Author David LECHEVALIER <david@ulteo.com> 2011
+# Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -19,50 +20,70 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import Queue
-
 from ovd.Logger import Logger
 from ovd.Platform import Platform
-from ovd.Thread import Thread
+from ovd.SingletonSynchronizer import SingletonSynchronizer
 
 from Platform import Platform as RolePlatform
 from Session import Session
 
+from multiprocessing import Process
+from multiprocessing import queues as Queue
+import signal
+import socket
+from multiprocessing import util
 
-class SessionManagement(Thread):
-	def __init__(self, aps_instance, queue, queue2):
-		Thread.__init__(self)
-		self.setName("SessionManagement")
+class SessionManagement(Process):
+	def __init__(self, aps_instance, queue, queue2, queue_sync, logging_queue):
+		Process.__init__(self)
 		
 		self.aps_instance = aps_instance
 		self.queue = queue
 		self.queue2 = queue2
-	
-	
+		self.queue_sync = queue_sync
+		self.logging_queue = logging_queue
+
+		self.synchronizer = SingletonSynchronizer()
+		self.synchronizer.backup()
+
 	def run(self):
-		while self.thread_continue():
-			#Logger.debug("%s wait job"%(str(self)))
-			
+		self.synchronizer.restore()
+		Logger._instance.setQueue(self.logging_queue, False)
+
+		# Prevent the process to be stop by a keyboard interruption
+		signal.signal(signal.SIGINT, signal.SIG_IGN)
+		
+		Logger.debug("Starting SessionManager process")
+		while True:
 			try:
 				(request, obj) = self.queue2.get_nowait()
+			except (EOFError, socket.error):
+				Logger.debug("Stopping SessionManager process")
+				return
 			except Queue.Empty, e:
 				try:
 					(request, obj) = self.queue.get(True, 4)
 				except Queue.Empty, e:
 					continue
+				except (EOFError, socket.error):
+					Logger.debug("Stopping SessionManager process")
+					return
 			
 			if request == "create":
 				session = obj
 				self.create_session(session)
+				self.queue_sync.put(session)
 			elif request == "destroy":
 				session = obj
 				self.destroy_session(session)
+				self.queue_sync.put(session)
 			elif request == "logoff":
 				user = obj
 				self.destroy_user(user)
 			elif request == "manage_new":
 				session = obj
 				self.manage_new_session(session)
+				self.queue_sync.put(session)
 	
 	
 	def create_session(self, session):

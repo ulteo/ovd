@@ -114,7 +114,7 @@ class SMRequestManager():
 		
 		if document is not None:
 			rootNode = document.documentElement
-			rootNode.setAttribute("name", self.name)
+			rootNode.setAttribute("name", str(self.name))
 			req.add_data(document.toxml())
 		
 		try:
