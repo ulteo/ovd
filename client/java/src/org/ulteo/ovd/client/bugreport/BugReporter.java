@@ -101,8 +101,11 @@ public class BugReporter implements ActionListener {
 			return;
 		
 		bug.toTxtFile(f);
+
+		String message = I18n._("Bug report saved to %s");
+		message = message.replaceFirst("%s", f.getPath());
 		try {
-			SwingTools.invokeAndWait(GUIActions.createDialog(I18n._("Bug report saved to " + f.getPath()), I18n._("Bug report saved"), JOptionPane.INFORMATION_MESSAGE, JOptionPane.CLOSED_OPTION));
+			SwingTools.invokeAndWait(GUIActions.createDialog(message, I18n._("Bug report saved"), JOptionPane.INFORMATION_MESSAGE, JOptionPane.CLOSED_OPTION));
 		} catch (Exception ex) {}
 		
 		SwingTools.invokeLater(GUIActions.disposeWindow(this.popup));

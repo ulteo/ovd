@@ -181,7 +181,7 @@ public class BugReportPopup extends JDialog {
 	}
 
 	private void initValues() {
-		SimpleDateFormat sdf = new SimpleDateFormat(I18n._("MM/dd/yy hh:mm:ss"));
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy hh:mm:ss");
 		this.setDate(sdf.format(Calendar.getInstance().getTime()));
 
 		ClientInfos clientInfos = ClientInfos.getClientInfos();
