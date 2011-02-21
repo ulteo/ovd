@@ -53,9 +53,32 @@ def findProcessWithEnviron(pattern):
 		if not pattern in buffer:
 			continue
 		
+		if isKnownProcess2Ignore(this_pid):
+			continue
+		
 		return this_pid
 	
 	return None
+
+
+def isKnownProcess2Ignore(pid):
+	names_db = ["dbus", "gconf"]
+	
+	path = "/proc/%s/status"%(str(pid))
+	try:
+		f = file(path, "r")
+	except IOError, err:
+		return False
+	
+	content = f.read()
+	f.close()
+	
+	for item in names_db:
+		if item in content:
+			return True
+	
+	return False
+
 
 def existProcess(pid):
 	return os.path.isdir(os.path.join("/proc", str(pid)))
