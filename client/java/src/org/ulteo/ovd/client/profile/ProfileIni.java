@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -236,6 +236,10 @@ public class ProfileIni extends Profile {
 		if (value != null)
 			properties.setGUILocked(value.equalsIgnoreCase(VALUE_TRUE));
 
+		value = ini.get(INI_SECTION_GUI, FIELD_SHOW_BUGREPORTER);
+		if (value != null)
+			properties.setBugReporterVisible(value.equalsIgnoreCase(VALUE_TRUE));
+		
 		return properties;
 	}
 }

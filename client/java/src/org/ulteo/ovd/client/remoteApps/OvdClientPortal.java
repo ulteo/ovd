@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
@@ -56,6 +56,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	private boolean autoPublish = false;
 	private boolean showDesktopIcons = false;
 	private boolean hiddenAtStart = false;
+	private boolean showBugReporter = false;
 	
 	public OvdClientPortal(SessionManagerCommunication smComm) {
 		super(smComm);
@@ -63,12 +64,13 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.init();
 	}
 
-	public OvdClientPortal(SessionManagerCommunication smComm, String login_, boolean autoPublish, boolean showDesktopIcons_, boolean hiddenAtStart_, Callback obj) {
+	public OvdClientPortal(SessionManagerCommunication smComm, String login_, boolean autoPublish, boolean showDesktopIcons_, boolean hiddenAtStart_, boolean showBugReporter_, Callback obj) {
 		super(smComm, obj);
 		this.username = login_;
 		this.autoPublish = autoPublish;
 		this.showDesktopIcons = showDesktopIcons_;
 		this.hiddenAtStart = hiddenAtStart_;
+		this.showBugReporter = showBugReporter_;
 		
 		this.init();
 	}
@@ -82,7 +84,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.spool.createShortcutDir();
 		this.system.setShortcutArgumentInstance(this.spool.getInstanceName());
 		this.spool.start();
-		this.portal = new PortalFrame(this.username);
+		this.portal = new PortalFrame(this.username, this.showBugReporter);
 		this.portal.addComponentListener(this);
 		this.portal.getRunningApplicationPanel().setSpool(spool);
 		this.unpublish();

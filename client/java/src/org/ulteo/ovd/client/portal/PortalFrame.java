@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -35,12 +36,14 @@ import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import org.ulteo.Logger;
 
 import org.ulteo.utils.I18n;
 import org.ulteo.ovd.client.authInterface.LogoutPopup;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
+import org.ulteo.ovd.client.bugreport.gui.BugReportButton;
 import org.ulteo.ovd.client.remoteApps.IntegratedTrayIcon;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.rdp.RdpActions;
@@ -58,13 +61,15 @@ public class PortalFrame extends JFrame implements WindowListener {
 
 	private boolean newPanelAdded = false;
 	private boolean iconsButtonEnabled = false;
+	private boolean showBugReporter = false;
 	
-	public PortalFrame(String username) {
+	public PortalFrame(String username, boolean showBugReporter_) {
 		if (username == null)
 			username = "";
 		String displayName = I18n._("Welcome {user}");
 		displayName = displayName.replaceAll("\\{user\\}", username);
 		this.username = displayName;
+		this.showBugReporter = showBugReporter_;
 		
 		this.addWindowListener(this);
 		this.init();
@@ -91,15 +96,22 @@ public class PortalFrame extends JFrame implements WindowListener {
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
+		JPanel headerPanel = new JPanel();
+
 		JLabel user = new JLabel(this.username);
 		user.setFont(new Font("Dialog", 1, 18));
 		user.setForeground(new Color(97, 99, 102));
+		headerPanel.add(user);
+
+		if (this.showBugReporter)
+			headerPanel.add(new BugReportButton());
+
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.gridwidth = 2;
 		gbc.insets.bottom = 25;
 		gbc.anchor = GridBagConstraints.EAST;
-		this.add(user, gbc);
+		this.add(headerPanel, gbc);
 		
 		JLabel application = new JLabel(I18n._("My applications"));
 		application.setBackground(Color.red);

@@ -438,7 +438,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	}
 
 	private void initAuthFrame() {
-		this.authFrame = new AuthFrame(this, this.opts.geometry, this.opts.guiLocked);
+		this.authFrame = new AuthFrame(this, this.opts.geometry, this.opts.guiLocked, this.opts.isBugReporterVisible);
 		this.authFrame.getLanguageBox().addActionListener(this);
 		this.loadOptions();
 		this.authFrame.setRememberMeChecked((this.flags & Options.FLAG_REMEMBER_ME) != 0);
@@ -765,7 +765,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 					}
 				}
 				
-				this.client = new OvdClientPortal(dialog, response.getUsername(), this.opts.autopublish, response.isDesktopIcons(), this.opts.autostart, this);
+				this.client = new OvdClientPortal(dialog, response.getUsername(), this.opts.autopublish, response.isDesktopIcons(), this.opts.autostart, this.opts.isBugReporterVisible, this);
 				((OvdClientPortal) this.client).setSeamlessDebugEnabled(this.opts.debugSeamless);
 				break;
 			default:

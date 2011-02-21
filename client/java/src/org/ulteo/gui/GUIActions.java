@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
@@ -43,11 +43,13 @@ import javax.swing.JSlider;
 import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
 import org.ulteo.Logger;
+import org.ulteo.utils.jni.WorkArea;
 
 public class GUIActions {
 	private static GUIActions Actions = new GUIActions();
 
 	public static Image ULTEO_ICON = null;
+	public static Rectangle SCREEN_BOUNDS = null;
 
 	private static void initUlteoIcon() {
 		if (ULTEO_ICON != null)
@@ -60,6 +62,13 @@ public class GUIActions {
 		}
 
 		ULTEO_ICON = Toolkit.getDefaultToolkit().getImage(url);
+	}
+
+	private static void initScreenBounds() {
+		if (SCREEN_BOUNDS != null)
+			return;
+
+		SCREEN_BOUNDS = WorkArea.getWorkAreaSize();
 	}
 
 	/* SetVisible */
@@ -585,6 +594,34 @@ public class GUIActions {
 				pos = this.c.getText().length();
 
 			this.c.setCaretPosition(pos);
+		}
+	}
+
+	/* AlignWindowToScreenCenter */
+	public static Runnable alignWindowToScreenCenter(Window wnd) {
+		return Actions.new AlignWindowToScreenCenter(wnd);
+	}
+
+	private class AlignWindowToScreenCenter implements Runnable {
+		private Window wnd = null;
+
+		public AlignWindowToScreenCenter(Window wnd) {
+			this.wnd = wnd;
+		}
+
+		public void run() {
+			if (this.wnd == null)
+				return;
+
+			initScreenBounds();
+
+			int availableWidth = SCREEN_BOUNDS.width - SCREEN_BOUNDS.x;
+			int availableHeight = SCREEN_BOUNDS.height - SCREEN_BOUNDS.y;
+
+			int x = (availableWidth / 2) - (wnd.getWidth() / 2);
+			int y = (availableHeight / 2) - (wnd.getHeight() / 2);
+
+			this.wnd.setLocation(x, y);
 		}
 	}
 }

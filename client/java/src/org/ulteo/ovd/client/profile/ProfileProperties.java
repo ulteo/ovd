@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,6 +38,7 @@ public class ProfileProperties {
 	private String keymap = null;
 	private boolean showProgressbar = true;
 	private boolean isGUILocked = false;
+	private boolean isBugReporterVisible = true;
 	
 	public ProfileProperties() {}
 
@@ -139,5 +140,13 @@ public class ProfileProperties {
 
 	public boolean isGUILocked() {
 		return this.isGUILocked;
+	}
+
+	public void setBugReporterVisible(boolean visible) {
+		this.isBugReporterVisible = visible;
+	}
+
+	public boolean isBugReporterVisible() {
+		return this.isBugReporterVisible;
 	}
 }

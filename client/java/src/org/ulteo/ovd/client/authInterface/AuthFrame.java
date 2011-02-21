@@ -1,8 +1,8 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -63,6 +63,7 @@ import org.ulteo.gui.SwingTools;
 
 import org.ulteo.utils.I18n;
 import org.ulteo.ovd.client.Language;
+import org.ulteo.ovd.client.bugreport.gui.BugReportButton;
 import org.ulteo.ovd.client.desktop.DesktopFrame;
 
 public class AuthFrame implements ActionListener, Runnable {
@@ -81,6 +82,7 @@ public class AuthFrame implements ActionListener, Runnable {
 	private JFrame mainFrame = new JFrame();
 	private boolean desktopLaunched = false;
 	private boolean isGUILocked = false;
+	private boolean showBugReporter = false;
 	
 	private JLabel login = new JLabel();
 	private JLabel password = new JLabel();
@@ -127,9 +129,10 @@ public class AuthFrame implements ActionListener, Runnable {
 	
 	private ActionListener obj = null;
 	
-	public AuthFrame(ActionListener obj_, Dimension resolution_, boolean isGUILocked_) {
+	public AuthFrame(ActionListener obj_, Dimension resolution_, boolean isGUILocked_, boolean showBugReporter_) {
 		this.obj = obj_;
 		this.isGUILocked = isGUILocked_;
+		this.showBugReporter = showBugReporter_;
 
 		this.jobsList = new CopyOnWriteArrayList<Integer>();
 		
@@ -217,6 +220,13 @@ public class AuthFrame implements ActionListener, Runnable {
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 		mainFrame.add(logoLabel, gbc);
+
+		if (this.showBugReporter) {
+			gbc.gridx = 1;
+			gbc.insets = new Insets(7, 0, 25, 7);
+			gbc.anchor = GridBagConstraints.NORTHEAST;
+			mainFrame.add(new BugReportButton(), gbc);
+		}
 
 		gbc.gridwidth = 1;
 		gbc.anchor = GridBagConstraints.LINE_END;

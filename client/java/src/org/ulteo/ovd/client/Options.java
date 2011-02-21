@@ -50,6 +50,7 @@ public class Options {
 	public static final int FLAG_AUTO_START = 0x00000400;
 	public static final int FLAG_REMEMBER_ME = 0x00004000;
 	public static final int FLAG_GUI_LOCKED = 0x00008000;
+	public static final int FLAG_SHOW_BURGREPORTER = 0x00006000;
 	
 	public int mask = 0x00000000;
 	
@@ -68,6 +69,7 @@ public class Options {
 	public boolean autostart = false;
 	public boolean debugSeamless = false;
 	public boolean guiLocked = false;
+	public boolean isBugReporterVisible = true;
 
 	
 	public Options(int optionMask) {
@@ -196,6 +198,10 @@ public class Options {
 		if ((this.mask & Options.FLAG_GUI_LOCKED) == 0) {
 			this.guiLocked = properties.isGUILocked();
 			this.mask |= Options.FLAG_GUI_LOCKED;
+		}
+		if ((this.mask & Options.FLAG_SHOW_BURGREPORTER) == 0) {
+			this.isBugReporterVisible = properties.isBugReporterVisible();
+			this.mask |= Options.FLAG_SHOW_BURGREPORTER;
 		}
 	}
 }

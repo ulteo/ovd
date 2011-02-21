@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
  * Author David LECHEVALIER <david@ulteo.com> 2009 
+ * Author Thomas MOUTON <thomas@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -21,9 +22,12 @@
 
 package org.ulteo;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -90,6 +94,43 @@ public class Logger {
 			System.setOut(new PrintStream(this.out, true));
 			System.setErr(new PrintStream(this.out, true));
 		}
+	}
+
+	public static String getLogContent() {
+		if (instance == null)
+			return null;
+		
+		return instance.readAll();
+	}
+
+	public synchronized String readAll() {
+		File logFile = new File(this.filename);
+		if (! logFile.exists())
+			return null;
+
+		String content = new String();
+
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader(logFile));
+		} catch (FileNotFoundException ex) {
+			return null;
+		}
+		try {
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				content += line + this.lineSeparator;
+			}
+		} catch (IOException ex) {
+			content += this.lineSeparator;
+			content += "An error occured while reading the log file('"+this.filename+"'): "+ex.getMessage() + this.lineSeparator;
+		} finally {
+			try {
+				reader.close();
+			} catch (IOException ex) {}
+		}
+
+		return content;
 	}
 	
 	public synchronized void write(String message) {
