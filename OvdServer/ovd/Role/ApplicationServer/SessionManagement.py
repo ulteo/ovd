@@ -58,7 +58,6 @@ class SessionManagement(Process):
 			try:
 				(request, obj) = self.queue2.get_nowait()
 			except (EOFError, socket.error):
-				Logger.debug("Stopping SessionManager process")
 				return
 			except Queue.Empty, e:
 				try:
@@ -66,7 +65,6 @@ class SessionManagement(Process):
 				except Queue.Empty, e:
 					continue
 				except (EOFError, socket.error):
-					Logger.debug("Stopping SessionManager process")
 					return
 			
 			if request == "create":
