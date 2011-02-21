@@ -409,7 +409,7 @@ function server_display_role_aps($server, $var) {
 	// Sessions part
 	if ($has_sessions) {
 		echo '<div>'; // div 1 has_sessions
-		$total = count($sessions);
+		$total = Abstract_Session::countByServer($server->fqdn);
 		echo '<h2>'.sprintf(_('Active sessions (total: %s)'), $total).'</h2>';
 		echo '<div>';
 		if (isset($pagechanger))
