@@ -38,6 +38,7 @@ var Daemon = Class.create({
 	multimedia: true,
 	redirect_client_printers: true,
 	redirect_client_drives: 'none',
+	enhance_user_experience: true,
 
 	servers: new Hash(),
 	liaison_server_applications: new Hash(),
