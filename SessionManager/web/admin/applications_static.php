@@ -3,6 +3,7 @@
  * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -166,16 +167,23 @@ function show_default($prefs, $applicationDB) {
 		}
 
 		foreach ($types as $type => $name) {
+			echo '<form action="actions.php" method="post">';
+			echo '<input type="hidden" name="name" value="Application_static" />';
+			echo '<input type="hidden" name="action" value="add" />';
+			
+			echo '<input type="hidden" name="published" value="1" />';
+			echo '<input type="hidden" name="attributes_send[]" value="published" />';
+			echo '<input type="hidden" name="static" value="1" />';
+			echo '<input type="hidden" name="attributes_send[]" value="static" />';
+			echo '<input type="hidden" name="type" value="'.$type.'" />';
+			echo '<input type="hidden" name="attributes_send[]" value="type" />';
+			
 			echo '<table id="table_'.$type.'"';
 			if ( $type != $first_type)
 				echo ' style="display: none" ';
 			else
 				echo ' style="display: visible" ';
 			echo ' border="0" class="main_sub" cellspacing="1" cellpadding="3" >';
-
-			echo '<form action="actions.php" method="post" enctype="multipart/form-data">';
-			echo '<input type="hidden" name="name" value="Application_static" />';
-			echo '<input type="hidden" name="action" value="add" />';
 			$count = 0;
 			foreach ($applicationDB->minimun_attributes() as $attr_name) {
 				if (in_array($attr_name, array('type', 'package', 'desktopfile')))
@@ -205,17 +213,11 @@ function show_default($prefs, $applicationDB) {
 			echo '<tr class="'.$content.'">';
 			echo '<td colspan="2">';
 			echo '<input type="submit" value="'._('Add').'" />';
-			echo '<input type="hidden" name="published" value="1" />';
-			echo '<input type="hidden" name="attributes_send[]" value="published" />';
-			echo '<input type="hidden" name="static" value="1" />';
-			echo '<input type="hidden" name="attributes_send[]" value="static" />';
-			echo '<input type="hidden" name="type" value="'.$type.'" />';
-			echo '<input type="hidden" name="attributes_send[]" value="type" />';
-			
 			echo '</td>';
 			echo '</tr>';
-			echo '</form>';
 			echo '</table>';
+			
+			echo '</form>';
 		}
 
 		echo '</div>'; // application_add
