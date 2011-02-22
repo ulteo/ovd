@@ -183,7 +183,7 @@ if (isset($old_session_id)) {
 		$user_login_aps = $sessionManagement->credentials[Server::SERVER_ROLE_APS]['login'];
 		$user_password_aps = $sessionManagement->credentials[Server::SERVER_ROLE_APS]['password'];
 	}
-	if ((isset($enable_profiles) && $enable_profiles == 1) || (isset($enable_sharedfolders) && $enable_sharedfolders == 1)) {
+	if (get_class($sessionManagement) == 'SessionManagement_internal' && ((isset($enable_profiles) && $enable_profiles == 1) || (isset($enable_sharedfolders) && $enable_sharedfolders == 1))) {
 		if (array_key_exists(Server::SERVER_ROLE_FS, $sessionManagement->credentials)) {
 			$user_login_fs = $sessionManagement->credentials[Server::SERVER_ROLE_FS]['login'];
 			$user_password_fs = $sessionManagement->credentials[Server::SERVER_ROLE_FS]['password'];
@@ -206,7 +206,7 @@ if (isset($old_session_id)) {
 	} else
 		$random_server = array_rand($servers[Server::SERVER_ROLE_APS]);
 
-	if (isset($enable_profiles) && $enable_profiles == 1) {
+	if (get_class($sessionManagement) == 'SessionManagement_internal' && isset($enable_profiles) && $enable_profiles == 1) {
 		$fileservers = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_FS);
 		if (count($fileservers) > 0) {
 			$netfolders = $user->getProfiles();
@@ -293,7 +293,7 @@ if (isset($old_session_id)) {
 		}
 	}
 
-	if (isset($enable_sharedfolders) && $enable_sharedfolders == 1) {
+	if (get_class($sessionManagement) == 'SessionManagement_internal' && isset($enable_sharedfolders) && $enable_sharedfolders == 1) {
 		$sharedfolders = $user->getSharedFolders();
 		$netshares = array();
 		$sharedfolders_available = false;
