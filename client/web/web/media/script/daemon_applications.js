@@ -53,7 +53,9 @@ var Applications = Class.create(Daemon, {
 	connect_servers: function() {
 		this.push_log('debug', '[applications] connect_servers()');
 
-		if (! $('ulteoapplet') || ! $('ulteoapplet').isActive()) {
+		try {
+			$('ulteoapplet').isActive();
+		} catch(e) {
 			this.push_log('warning', '[applications] connect_servers() - Applet is not ready');
 			setTimeout(this.connect_servers.bind(this), 1000);
 			return;
