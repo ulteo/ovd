@@ -275,6 +275,7 @@
   </target>
 
   <target name="applet.jar" description="sign jar applets" depends="applet" >
+    <copy file="icons/ulteo.png" todir="build/pics" />
     <copy file="windowsPathsJNI/libWindowsPaths.dll"
           todir="build/resources/WindowsLibs/32" />
     <copy file="required_libraries/libXClientArea/32/libXClientArea.so"
