@@ -26,18 +26,24 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class LinuxPaths {
+	private static boolean isXdgSupported = true;
 
 	
 	private static Properties xdgOpen() {
+		if (! LinuxPaths.isXdgSupported)
+			return null;
+
 		String xdgFile = System.getProperty("user.home")+"/.config/user-dirs.dirs";
 		Properties xdgProperties = new Properties();
 		try {
 			xdgProperties.load(new FileInputStream(xdgFile));
 		} catch (FileNotFoundException e) {
 			org.ulteo.Logger.debug("Unable to find the xdg file: "+xdgFile);
+			LinuxPaths.isXdgSupported = false;
 			return null;
 		} catch (IOException e) {
 			org.ulteo.Logger.debug("Unable to read xdg file: "+xdgFile);
+			LinuxPaths.isXdgSupported = false;
 			return null;
 		}
 		return xdgProperties;
