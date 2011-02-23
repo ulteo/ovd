@@ -527,37 +527,25 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 	public void run() {
 		this.isCancelled = false;
-		boolean valuesChecked = false;
 
-		if (! this.opts.autostart && this.authFrame != null) {
-			try {
+		try {
+			if (! this.opts.autostart) {
 				this.getFormValuesFromGui();
-				valuesChecked = true;
-
 				this.getBackupEntries();
-
 				this.authFrame.hideWindow();
-				this.authFrame = null;
-			} catch (IllegalArgumentException ex) {
-				org.ulteo.Logger.warn(ex.getMessage());
-				JOptionPane.showMessageDialog(null, I18n._(ex.getMessage()), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE);
 			}
-		}
-
-		boolean exit = false;
-		if (this.opts.autostart || valuesChecked) {
+		
+			boolean exit = false;
 			try {
 				exit = this.launchConnection();
 			} catch (UnsupportedOperationException ex) {
 				org.ulteo.Logger.error(ex.getMessage());
 				JOptionPane.showMessageDialog(null, ex.getMessage(), I18n._("Error!"), JOptionPane.WARNING_MESSAGE);
-
 				this.disableLoadingMode();
 			} catch (SessionManagerException ex) {
 				String errormsg = I18n._("Unable to reach the Session Manager!");
 				org.ulteo.Logger.error(errormsg+": "+ex.getMessage());
 				JOptionPane.showMessageDialog(null, errormsg, I18n._("Error!"), JOptionPane.WARNING_MESSAGE);
-
 				this.disableLoadingMode();
 			}
 			
@@ -566,9 +554,11 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			} else {
 				this.initAuthFrame();
 			}
-		}
-		else {
-			this.authFrame.reset();
+		} catch (IllegalArgumentException ex) {
+			org.ulteo.Logger.warn(ex.getMessage());
+			JOptionPane.showMessageDialog(null, I18n._(ex.getMessage()), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE);
+			if(! this.opts.autostart)
+				this.authFrame.reset();
 		}
 		this.thread = null;
 	}

@@ -300,7 +300,7 @@
   <target name="applet.install" description="install applets"
           depends="applet.jar">
     <copy todir="${applets.dir}">
-      <filelist dir="jars" files="log4j-1.2.jar ulteo-applet.jar CheckJava.jar" />
+      <filelist dir="jars" files="jpedal.jar log4j-1.2.jar ulteo-applet.jar CheckJava.jar" />
     </copy>
   </target>
 
