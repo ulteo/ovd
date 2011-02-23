@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
@@ -174,6 +175,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	}
 
 	protected RdpConnectionOvd initRDPConnection(ServerAccess server) {
+		int bpp = RdpConnectionOvd.DEFAULT_BPP;
 		if (server == null)
 			return null;
 
@@ -228,7 +230,10 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			rc.setKeymap(this.keymap);
 
 		if (! OSTools.is_applet) {
-			rc.setAllDesktopEffectsEnabled(this.smComm.getResponseProperties().isDesktopEffectsEnabled());
+			boolean desktopEffect = this.smComm.getResponseProperties().isDesktopEffectsEnabled();
+			rc.setAllDesktopEffectsEnabled(desktopEffect); 
+			if (desktopEffect)
+				bpp = 32;
 
 			HashMap<Integer, ImageIcon> appsIcons = new HashMap<Integer, ImageIcon>();
 			List<String> mimesTypes = new ArrayList<String>();
@@ -295,6 +300,12 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			mimeTypesIcons.clear();
 			mimeTypesIcons = null;
 		}
+
+		// Ensure that width is multiple of 4
+		// Prevent artifact on screen with a with resolution
+		// not divisible by 4
+		rc.setGraphic((int) this.screensize.width & ~3, (int) this.screensize.height, RdpConnectionOvd.DEFAULT_BPP);
+		rc.setGraphicOffset(this.screensize.x, this.screensize.y);
 
 		this.connections.add(rc);
 
