@@ -3,7 +3,6 @@ SUBDIRS = abstract \
           tasks configelements
 
 scripts_DATA = Application.class.php \
-               Application_weblink.class.php \
                AppsGroup.class.php \
                ConfigElement.class.php \
                FileTailer.class.php \

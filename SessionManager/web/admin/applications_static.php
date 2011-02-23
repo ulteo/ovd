@@ -24,8 +24,7 @@ require_once(dirname(__FILE__).'/includes/page_template.php');
 if (! checkAuthorization('viewApplications'))
 	redirect();
 
-$types = array('linux' => 'linux' , 'windows' => 'windows', 'weblink' => _('Web'));
-$regular_types = array('linux', 'windows');
+$types = array('linux' => 'linux' , 'windows' => 'windows');
 
 $applicationDB = ApplicationDB::getInstance();
 
@@ -43,7 +42,7 @@ if ($_GET['view'] == 'all')
   show_default($prefs, $applicationDB);
 
 function show_default($prefs, $applicationDB) {
-	global $types, $regular_types;
+	global $types;
 	$applications2 = $applicationDB->getList(true);
 	$applications = array();
 	foreach ($applications2 as $k => $v) {
@@ -184,10 +183,7 @@ function show_default($prefs, $applicationDB) {
 				echo '<tr class="'.$content.'">';
 				echo '<td style="text-transform: capitalize;">';
 				if ( $attr_name == 'executable_path') {
-					if (in_array($type, $regular_types))
-						echo _('Command');
-					else
-						echo _('URL');
+					echo _('Command');
 				}
 				else {
 					echo _($attr_name);
@@ -219,59 +215,13 @@ function show_default($prefs, $applicationDB) {
 		echo '</div>'; // application_add
 	}
 
-	echo '<br />';
-	echo '<h2>'._('Web links configuration').'</h2>';
-	echo _('Default browser for:');
-	$browsers = $prefs->get('general', 'default_browser');
-	if ( $browsers != array() && !is_null($browsers)) {
-		echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
-		foreach ($browsers as $type => $browser) {
-			$content = 'content'.(($count++%2==0)?1:2);
-			echo '<tr class="'.$content.'">';
-			if ($can_manage_applications) {
-				echo '<form action="actions.php" method="post">';
-				echo '<input type="hidden" name="action" value="Application_static" />';
-				echo '<input type="hidden" name="name" value="default_browser" />';
-				echo '<input type="hidden" name="attributes_send[]" value="application_name" />';
-				echo '<input type="hidden" name="action" value="add" />';
-				echo '<input type="hidden" name="type" value="'.$type.'" />';
-				echo '<input type="hidden" name="attributes_send[]" value="type" />';
-			}
-			echo '<td>';
-			echo $type;
-			echo '</td>';
-			echo '<td>';
-			$apps = $applicationDB->getList(true, $type);
-			echo '<select id="browser_'.$type.'"  name="browser">';
-			echo '<option value="-1" >'._('None').'</option>';
-
-			foreach ($apps as $mykey => $myval) {
-				echo '<option value="'.$mykey.'" ';
-				if (isset($browsers[$type]) && ($mykey == $browsers[$type]))
-					echo 'selected="selected" ';
-				echo '>'.$myval->getAttribute('name').'</option>';
-			}
-			echo '</select>';
-			echo '<input type="hidden" name="attributes_send[]" value="browser" />';
-
-			echo '</td>';
-			if ($can_manage_applications) {
-				echo '<td>';
-				echo '<input type="submit" value="'._('Update').'" />';
-				echo '</td>';
-				echo '</form>';
-			}
-			echo '</tr>';
-		}
-		echo '</table>';
-	}
 	echo '</div>'; // general div
 	page_footer();
 	die();
 }
 
 function show_manage($id, $applicationDB) {
-	global $types, $regular_types;
+	global $types;
 	$applicationsGroupDB = ApplicationsGroupDB::getInstance();
 	$app = $applicationDB->import($id);
 	if (!is_object($app))
@@ -335,10 +285,7 @@ function show_manage($id, $applicationDB) {
 // 	echo '<th>'._('Package').'</th>';
 	echo '<th>'._('Type').'</th>';
 	echo '<th>'._('Description').'</th>';
-	if (in_array($app->getAttribute('type'), $regular_types))
-		echo '<th>'._('Command').'</th>';
-	else
-		echo '<th>'._('URL').'</th>';
+	echo '<th>'._('Command').'</th>';
 
 	if ($is_rw and $can_manage_applications) {
 		echo '<th></th>';
@@ -351,10 +298,7 @@ function show_manage($id, $applicationDB) {
 	echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
 	echo '<td>'.$app->getAttribute('description').'</td>';
 	echo '<td>';
-	if (in_array($app->getAttribute('type'), $regular_types))
-		echo $app->getAttribute('executable_path');
-	else
-		echo '<a href="'.$app->getAttribute('executable_path').'">'.$app->getAttribute('executable_path').'</a>';
+	echo $app->getAttribute('executable_path');
 	echo '</td>';
 
 	if ($is_rw and $can_manage_applications) {
@@ -405,12 +349,7 @@ function show_manage($id, $applicationDB) {
 			echo '<tr class="'.$content.'">';
 			echo '<td style="text-transform: capitalize;">';
 			if ($attr_name == 'executable_path') {
-				if (in_array($app->getAttribute('type'), $regular_types)) {
-					echo _('Command');
-				}
-				else {
-					echo _('URL');
-				}
+				echo _('Command');
 			}
 			else if ($attr_name == 'application_name') {
 				echo _('Name');

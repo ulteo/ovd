@@ -129,31 +129,19 @@ class ApplicationDB_sql extends ApplicationDB {
 		else{
 			if (!isset($row['package']))
 				$row['package'] = NULL;
-			if ( $row['type'] == 'weblink') {
-				$r = new Application_weblink($row['id'], $row['name'],$row['description'], $row['executable_path']);
+			
+			$r = new Application($row['id'], $row['name'],$row['description'], $row['type'], $row['executable_path'], $row['package'], $row['published']);
 				
-				unset($row['id']);
-				unset($row['name']);
-				unset($row['description']);
-				unset($row['type']);
-				unset($row['executable_path']);
-				unset($row['package']);
-				unset($row['desktopfile']);
-				
+			Logger::debug('main', 'ApplicationDB::load_mimetypes');
+			$liaisons = Abstract_Liaison::load('ApplicationMimeType', $r->getAttribute('id'), NULL);
+			if (is_array($liaisons)) {
+				$mimetypes = array();
+				foreach($liaisons as $group => $liaison)
+					$mimetypes []= $group;
+				sort($mimetypes);
+				$r->setMimeTypes($mimetypes);
 			}
-			else {
-				$r = new Application($row['id'], $row['name'],$row['description'], $row['type'], $row['executable_path'], $row['package'], $row['published']);
-				
-				Logger::debug('main', 'ApplicationDB::load_mimetypes');
-				$liaisons = Abstract_Liaison::load('ApplicationMimeType', $r->getAttribute('id'), NULL);
-				if (is_array($liaisons)) {
-					$mimetypes = array();
-					foreach($liaisons as $group => $liaison)
-						$mimetypes []= $group;
-					sort($mimetypes);
-					$r->setMimeTypes($mimetypes);
-				}
-			}
+			
 			foreach ($row as $key => $value){
 				$r->setAttribute($key,$value);
 			}

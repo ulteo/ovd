@@ -237,9 +237,6 @@ class Preferences {
 		$c = new ConfigElement_input('max_items_per_page', _('Maximum items per page'), _('The maximum number of items that can be displayed.'), _('The maximum number of items that can be displayed.'), 100);
 		$this->add($c,'general');
 		
-		$c = new ConfigElement_inputlist('default_browser', _('Default browser'), _('Default browser'), _('Default browser'), array('linux' => NULL, 'windows' => NULL));
-		$this->add($c,'general');
-		
 		$c = new ConfigElement_multiselect('default_policy', _('Default policy'), _('Default policy'), _('Default policy'), array());
 		$c->setContentAvailable(array(
 			'canUseAdminPanel' => _('use Admin panel'),

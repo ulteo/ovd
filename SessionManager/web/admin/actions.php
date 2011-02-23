@@ -1158,31 +1158,6 @@ if ($_REQUEST['name'] == 'User') {
 	}
 }
 
-if ($_REQUEST['name'] == 'default_browser') {
-	if (! checkAuthorization('manageApplications'))
-		redirect();
-
-	if ($_REQUEST['action'] == 'add') {
-		$prefs = new Preferences_admin();
-		if (! $prefs)
-			die_error('get Preferences failed',__FILE__,__LINE__);
-
-		$mods_enable = $prefs->get('general','module_enable');
-		if (!in_array('ApplicationDB',$mods_enable)){
-			die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
-		}
-		$mod_app_name = 'ApplicationDB_'.$prefs->get('ApplicationDB','enable');
-		$applicationDB = new $mod_app_name();
-		$app = $applicationDB->import($_REQUEST['browser']);
-		if (is_object($app)) {
-			$browsers = $prefs->get('general', 'default_browser');
-			$browsers[$_REQUEST['type']] = $app->getAttribute('id');
-			$prefs->set('general', 'default_browser', $browsers);
-			$prefs->backup();
-		}
-	}
-}
-
 if ($_REQUEST['name'] == 'SharedFolder') {
 	if (Preferences::moduleIsEnabled('SharedFolderDB') == false) {
 		popup_error(_('Shared folder management is not enabled'));
