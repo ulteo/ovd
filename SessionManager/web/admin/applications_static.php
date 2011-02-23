@@ -188,6 +188,8 @@ function show_default($prefs, $applicationDB) {
 				else {
 					echo _($attr_name);
 				}
+				if ($attr_name == 'name')
+					$attr_name = 'application_name';
 				echo '</td>';
 				echo '<td>';
 				echo '<input type="text" name="'.$attr_name.'" value="" size="50"/>';
