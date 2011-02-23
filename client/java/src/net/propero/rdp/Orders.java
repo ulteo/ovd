@@ -3,9 +3,11 @@
  * 
  * Revision: $Revision: 1.1.1.1 $
  * Author: $Author: suvarov $
+ * Author: $Author: David LECHEVALIER <david@ulteo.com> $
  * Date: $Date: 2007/03/08 00:26:31 $
  *
  * Copyright (c) 2005 Propero Limited
+ * Copyright (C) 2011 Ulteo SAS
  *
  * Purpose: Encapsulates an RDP order
  */
@@ -57,7 +59,7 @@ public class Orders {
     private static final int RDP_ORDER_TRIBLT = 14;
     private static final int RDP_ORDER_POLYLINE = 22;
     private static final int RDP_ORDER_TEXT2 = 27;
-    private int rect_colour;
+    private int rect_colour = 0x0;
 
     /* secondary order types */
     private static final int RDP_ORDER_RAW_BMPCACHE = 0;
