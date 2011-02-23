@@ -89,9 +89,9 @@ function show_default() {
 			else {
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
 				foreach ($users_grps as $ugrp){
-					echo '<tr></td>';
-					echo '<a href="usersgroup.php?action=manage&id='.$ugrp->getUniqueID().'">'.$ugrp->name.'</a>';
-					echo '</td></tr>';
+					echo '<tr>';
+					echo '<td><a href="usersgroup.php?action=manage&id='.$ugrp->getUniqueID().'">'.$ugrp->name.'</a></td>';
+					echo '</tr>';
 				}
 				echo '</table>';
 			}
