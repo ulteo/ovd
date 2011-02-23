@@ -4,6 +4,7 @@
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011
+# Author Samuel BOVEE <samuel@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -135,7 +136,7 @@ class Request_Packages(Request):
 		if ret != 0:
 			return False
 		
-		cmd = "DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical DEBCONF_NONINTERACTIVE_SEEN=true apt-get --yes --force-yes %s >>%s/stdout 2>>%s/stderr"%(command, self.directory, self.directory)
+		cmd = "DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical DEBCONF_NONINTERACTIVE_SEEN=true apt-get --yes --force-yes --option DPkg::Options::=--force-confold %s >>%s/stdout 2>>%s/stderr"%(command, self.directory, self.directory)
 		ret, o = commands.getstatusoutput(cmd)
 		if ret != 0:
 			return False
