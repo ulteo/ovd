@@ -90,6 +90,7 @@ var Applications = Class.create(Daemon, {
 		applet_params.set('multimedia', this.multimedia);
 		applet_params.set('redirect_client_printers', this.redirect_client_printers);
 		applet_params.set('redirect_client_drives', this.redirect_client_drives);
+		applet_params.set('enhance_user_experience', this.enhance_user_experience);
 
 		var applet = buildAppletNode('ulteoapplet', this.applet_main_class, 'jpedal.jar,log4j-1.2.jar,'+this.applet_version, applet_params);
 		$('applicationsAppletContainer').show();

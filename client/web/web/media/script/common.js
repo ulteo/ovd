@@ -244,6 +244,19 @@ function onStartSessionSuccess(xml_) {
 		if (session_mode == 'Desktop' && desktop_fullscreen)
 			daemon.fullscreen = true;
 
+		var settings_node = session_node.getElementsByTagName('settings');
+		if (settings_node.length > 0) {
+			var setting_nodes = settings_node[0].getElementsByTagName('setting');
+			if (setting_nodes.length > 0) {
+				for (var i=0; i < setting_nodes.length; i++) {
+					try {
+						if (setting_nodes[i].getAttribute('name') == 'enhance_user_experience')
+							daemon.enhance_user_experience = ((setting_nodes[i].getAttribute('value') == 1)?true:false);
+					} catch(e) {}
+				}
+			}
+		}
+
 		daemon.i18n['session_close_unexpected'] = i18n.get('session_close_unexpected');
 		daemon.i18n['session_end_ok'] = i18n.get('session_end_ok');
 		daemon.i18n['session_end_unexpected'] = i18n.get('session_end_unexpected');
@@ -870,6 +883,19 @@ function onStartExternalSessionSuccess(xml_) {
 		try {
 			daemon.redirect_client_drives = session_node.getAttribute('redirect_client_drives');
 		} catch(e) {}
+
+		var settings_node = session_node.getElementsByTagName('settings');
+		if (settings_node.length > 0) {
+			var setting_nodes = settings_node[0].getElementsByTagName('setting');
+			if (setting_nodes.length > 0) {
+				for (var i=0; i < setting_nodes.length; i++) {
+					try {
+						if (setting_nodes[i].getAttribute('name') == 'enhance_user_experience')
+							daemon.enhance_user_experience = ((setting_nodes[i].getAttribute('value') == 1)?true:false);
+					} catch(e) {}
+				}
+			}
+		}
 
 		daemon.i18n['session_close_unexpected'] = i18n.get('session_close_unexpected');
 		daemon.i18n['session_end_ok'] = i18n.get('session_end_ok');
