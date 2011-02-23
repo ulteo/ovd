@@ -3,7 +3,7 @@
  * 
  * Revision: $Revision: 1.1.1.1 $
  * Author: $Author: suvarov $
- * Author: $Author: David LECHEVALIER <david@ulteo.com> $
+ * Author: David LECHEVALIER <david@ulteo.com> 2011
  * Date: $Date: 2007/03/08 00:26:31 $
  *
  * Copyright (c) 2005 Propero Limited
@@ -555,7 +555,7 @@ public class Orders {
 				bmpdata[i * Bpp+1] = (byte) ((pixel & 0x0000FF00) >> 8);
 				bmpdata[i * Bpp] = (byte) (pixel & 0x000000FF);
 			}
-			else if (Bpp == 3) {
+			else if (Bpp == 3 || Bpp == 4) {
 				bmpdata[i * Bpp] = (byte) (bmpdataInt[i] & 0x000000FF);
 				bmpdata[i * Bpp + 1] = (byte) ((bmpdataInt[i] & 0x0000FF00) >> 8);
 				bmpdata[i * Bpp + 2] = (byte) ((bmpdataInt[i] & 0x00FF0000) >> 16);
