@@ -861,12 +861,10 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	}
 
 	public static int getSeamlessState(int state) {
-		logger.debug("[getSeamlessState] state before: "+state);
 		if (state != Frame.MAXIMIZED_BOTH) {
 			state &= ~Frame.MAXIMIZED_HORIZ;
 			state &= ~Frame.MAXIMIZED_VERT;
 		}
-		logger.debug("[getSeamlessState] state after: "+state);
 
 		switch (state) {
 			case Frame.ICONIFIED:
