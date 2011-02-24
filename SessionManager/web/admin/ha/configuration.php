@@ -97,7 +97,7 @@ function makeConfiguration($slave_ip, $slave_hostname) {
 	$t=false;
 	$prefs_vars=extractVarsFromConfFile();
 	if (!count($prefs_vars)) {
-		popup_error(_('An error occured while reading configuration file, no values found!'));
+		popup_error(_('An error occured while reading the HA configuration!'));
 		return;
 	}
 	$prefs = Preferences::getInstance();
@@ -117,7 +117,7 @@ function updateVIP($vip) {
 	$t=false;
 	$prefs_vars=extractVarsFromConfFile();
 	if (!count($prefs_vars)) {
-		popup_error(_('Could not extract configuration values from file!'));
+		popup_error(_('An error occured while reading the HA configuration!'));
 		return false;
 	}
 	$prefs= Preferences::getInstance();
@@ -132,11 +132,11 @@ function updateVIP($vip) {
 			return true;
 		}
 		catch (Exception $e) {
-			popup_error(_('An error occured when updating the virtual IP!'));
+			popup_error(_('An error occured while updating the virtual IP address!'));
 		}
 		return false;
 	 } else {
-		popup_error(_('An error occured when updating the virtual IP!'));
+		popup_error(_('An error occured while updating the virtual IP address!'));
 	 }
 	 return false;
 }
@@ -146,7 +146,7 @@ function checkConfigurationHasChanged($apply) {
 	$v=false;
 	$prefs_vars=extractVarsFromConfFile();
 	if (!count($prefs_vars)) {
-		popup_error(_('An error occured while reading configuration file, no values found!'));
+		popup_error(_('An error occured while reading the HA configuration!'));
 		return;
 	}
 	$prefs = Preferences::getInstance();
@@ -170,7 +170,7 @@ function getRegistration($SQL, $table) {
 	$nb = $SQL->NumRows();
 	$html="";
 	if (! $nb) {
-		$html.= "<p>"._("No host has been registered yet.")."</p>";
+		$html.= "<p>"._("No host registered yet.")."</p>";
 		 return $html;
 	}
 	$rows = $SQL->FetchAllResults($res);
@@ -193,7 +193,7 @@ function getRegistration($SQL, $table) {
 }
 
 function getChangeConfigurationsForm() {
-	$html= '<form  onsubmit="return confirm(\''._("Your will have to change the virtual IP and then modify your url with the correct IP to reach the admin web interface!").'\');"  action="configuration.php" method="post" enctype="multipart/form-data">';
+	$html= '<form  onsubmit="return confirm(\''._("You will have to change the virtual IP address and then modify the URL in your web browser with the correct IP address to reach the admin interface!").'\');"  action="configuration.php" method="post" enctype="multipart/form-data">';
 	$html.= '<input type="hidden" name="action" value="reload_vip" />';
 	$html.= '<input style="background:#229630; color:#FFF; font-weight:bold" type="submit" name="submit" value="'._("Apply new virtual IP").'" />';
 	$html.= '</form>';
@@ -266,7 +266,7 @@ function disable_hostDB($SQL, $table, $id_host) {
 function getUnregisteredServer($id_host,$hostname, $fqdn, $timestamp) {
 	$html="";
 	$html.= '<div id="ha_unregistered_servers'.$id_host.'">';
-	$html.= '<form onsubmit="return confirm(\''._("When enabling the slave server, the master server and slave server are going to restart their services to load the new configuration. It takes less than 3 minutes. During this time the web interface will be disabled.").'\')" action="configuration.php" method="post" enctype="multipart/form-data">';
+	$html.= '<form onsubmit="return confirm(\''._("When enabling the slave SessionManager, both master and server are going to restart their services to load the new configuration. It should take less than 3 minutes. During this time the HA admin interface will be disabled.").'\')" action="configuration.php" method="post" enctype="multipart/form-data">';
 	$html.= '<input type="hidden" name="action" value="enable" />';
 	$html.= '<input type="hidden" name="id_host" value="'.$id_host.'" />';
 	$html.= '<table id="ha_config"  style="" class="main_sub" border="0" cellpadding="3" cellspacing="1">';
@@ -303,7 +303,7 @@ function getUnregisteredServer($id_host,$hostname, $fqdn, $timestamp) {
 function getRegisteredServer($id_host,$hostname, $fqdn, $timestamp) {
 	$html="";
 	$html.= '<div id="ha_registered_servers'.$id_host.'">';
-	$html.= '<form onsubmit="return confirm(\''._("When enabling the slave server, the master server is going to restart their services to load the new configuration. It takes less than 3 minutes. During this time the web interface will be disabled.").'\');"  action="configuration.php" method="post" enctype="multipart/form-data">';
+	$html.= '<form onsubmit="return confirm(\''._("When disabling the slave SessionManager, both master and server are going to restart their services to load the new configuration. It should take less than 3 minutes. During this time the HA admin interface will be disabled.").'\');"  action="configuration.php" method="post" enctype="multipart/form-data">';
 	$html.= '<input type="hidden" name="action" value="disable" />';
 	$html.= '<input type="hidden" name="id_host" value="'.$id_host.'" />';
 	$html.= '<table id="ha_config"  style="" class="main_sub" border="0" cellpadding="3" cellspacing="1">';
@@ -456,7 +456,7 @@ if (isset($action)) {
 					redirect("configuration.php");
 				}
 				else {
-					popup_error(sprintf(_('Virtual IP "%s" is not valid!'), $_POST["ha_vip"]));
+					popup_error(sprintf(_('Virtual IP address "%s" is not valid!'), $_POST["ha_vip"]));
 				}
 			}
 			break;
