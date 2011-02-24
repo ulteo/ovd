@@ -262,8 +262,7 @@ Section "post" PostCmd
 
   Call .WindowsInstall
 
-  SetOutPath "$INSTDIR\vcredist"
-  nsExec::execToStack 'VC_RED.msi /qn'
+  nsExec::ExecToStack  '"msiexec" /i "$INSTDIR\vcredist\vc_red.msi"'
   
   Var /GLOBAL printerDir
   ClearErrors
