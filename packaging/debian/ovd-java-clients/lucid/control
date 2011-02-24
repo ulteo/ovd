@@ -20,13 +20,6 @@ Description: Ulteo Open Virtual Desktop - integrated client
  This application is used in the Open Virtual Desktop to display the user
  session and launch applications via an all integrated client.
 
-Package: ulteo-vdi-rdp-client
-Architecture: all
-Depends: default-jre | sun-java6-jre, libgetopt-java, liblog4j1.2-java
-Description: Ulteo VDI - java RDP client
- This application is used in the VDI project to display seamless applications
- from vitual machines.
-
 Package: libovd-xclient-area
 Architecture: any
 Depends: ${shlibs:Depends}
