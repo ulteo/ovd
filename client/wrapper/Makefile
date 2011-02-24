@@ -1,6 +1,6 @@
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -49,12 +49,14 @@ $(EXE2): $(OBJ1)
 	$(RESC) -o $@ $<
 
 clean:
-	$(RM) $(EXE1) $(OBJ1)
+	$(RM) $(EXE1) $(EXE2) $(OBJ1)
 	$(RM) *~
 
 
 install: all
 	install $(EXE1) $(DIST)
+	install $(EXE2) $(DIST)
 
 uninstall:
-	$(RM) $(DIST)/$(EXE1)
+	$(RM) $(DIST)/$(EXE1) 
+	$(RM) $(DIST)/$(EXE2)
