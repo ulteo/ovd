@@ -3,6 +3,7 @@
  * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -422,6 +423,9 @@ class Preferences {
 		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_select('redirect_client_printers', _('Redirect client printers'), _('Redirect client printers'), _('Redirect client printers'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c,'general','session_settings_defaults');
+		$c = new ConfigElement_select('rdp_bpp', _('RDP bpp'), _('RDP color depth'), _('RDP color depth'), 16);
+		$c->setContentAvailable(array(16=>'16', 24=>'24', 32=>'32'));
 		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_select('enhance_user_experience', _('Enhance user experience'), _('Enhance user experience: graphic effects and optimizations (It decreases performances if used in a Wide Area Network)'), _('Enhance user experience: graphic effects and optimizations (It decreases performances if used in a Wide Area Network)'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));

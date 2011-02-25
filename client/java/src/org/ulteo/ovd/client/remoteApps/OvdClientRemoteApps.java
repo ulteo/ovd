@@ -171,16 +171,14 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			this.flags |= RdpConnectionOvd.MOUNTING_MODE_FULL;
 		else if (properties.isDrives() == Properties.REDIRECT_DRIVES_PARTIAL)
 			this.flags |= RdpConnectionOvd.MOUNTING_MODE_PARTIAL;
-
+		
 		if (this.debugSeamless)
 			this.flags |= RdpConnectionOvd.DEBUG_SEAMLESS;
 		
-		if (properties.isDesktopEffectsEnabled())
-			this.bpp = 32; 
+		this.bpp = properties.getRDPBpp();
 	}
 
 	protected RdpConnectionOvd initRDPConnection(ServerAccess server) {
-		
 		if (server == null)
 			return null;
 

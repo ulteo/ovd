@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -70,6 +71,7 @@ $allow_shell = $default_settings['allow_shell'];
 $multimedia = $default_settings['multimedia'];
 $redirect_client_drives = $default_settings['redirect_client_drives'];
 $redirect_client_printers = $default_settings['redirect_client_printers'];
+$rdp_bpp = $default_settings['rdp_bpp'];
 $enhance_user_experience = $default_settings['enhance_user_experience'];
 $enable_profiles = $default_settings['enable_profiles'];
 $auto_create_profile = $default_settings['auto_create_profile'];
@@ -360,6 +362,7 @@ $default_args = array(
 	'multimedia'				=>	$multimedia,
 	'redirect_client_drives'	=>	$redirect_client_drives,
 	'redirect_client_printers'	=>	$redirect_client_printers,
+	'rdp_bpp'			=>	$rdp_bpp,
 	'enhance_user_experience'	=>	$enhance_user_experience
 );
 

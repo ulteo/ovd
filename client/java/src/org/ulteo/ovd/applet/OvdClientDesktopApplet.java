@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -122,10 +123,8 @@ public class OvdClientDesktopApplet extends OvdClient {
 		rc.setServer(this.server.getHost());
 		rc.setCredentials(this.server.getLogin(), this.server.getPassword());
 		
-		int bpp = RdpConnectionOvd.DEFAULT_BPP;
-		if (this.properties.isDesktopEffectsEnabled())
-			bpp = 32;
-
+		int bpp = this.properties.getRDPBpp();
+		
 		// Ensure that width is multiple of 4
 		// Prevent artifact on screen with a with resolution
 		// not divisible by 4
