@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2008-2009
  *
@@ -41,6 +41,7 @@ elseif ($_GET['view'] == 'unregistered')
 function show_default() {
 //FIX ME ?
   $a_servs = Abstract_Server::load_registered(true);
+  usort($a_servs, "server_cmp");
   if (! is_array($a_servs))
     $a_servs = array();
 
@@ -216,6 +217,7 @@ function show_unregistered() {
   $u_servs = Abstract_Server::load_registered(false);
   if (! is_array($u_servs))
     $u_servs = array();
+  usort($u_servs, "server_cmp");
 
 	$can_do_action = isAuthorized('manageServers');
 
