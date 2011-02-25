@@ -5,6 +5,7 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -61,6 +62,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 	private int flags = 0;
 	private Rectangle screensize = null;
+	private int bpp = RdpConnectionOvd.DEFAULT_BPP;
 
 	private boolean debugSeamless = false;
 	
@@ -172,10 +174,13 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 		if (this.debugSeamless)
 			this.flags |= RdpConnectionOvd.DEBUG_SEAMLESS;
+		
+		if (properties.isDesktopEffectsEnabled())
+			this.bpp = 32; 
 	}
 
 	protected RdpConnectionOvd initRDPConnection(ServerAccess server) {
-		int bpp = RdpConnectionOvd.DEFAULT_BPP;
+		
 		if (server == null)
 			return null;
 
@@ -220,21 +225,11 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 		rc.setServer(server.getHost());
 		rc.setCredentials(server.getLogin(), server.getPassword());
-		// Ensure that width is multiple of 4
-		// Prevent artifact on screen with a with resolution
-		// not divisible by 4
-		rc.setGraphic((int) this.screensize.width & ~3, (int) this.screensize.height, RdpConnectionOvd.DEFAULT_BPP);
-		rc.setGraphicOffset(this.screensize.x, this.screensize.y);
 
 		if (this.keymap != null)
 			rc.setKeymap(this.keymap);
 
 		if (! OSTools.is_applet) {
-			boolean desktopEffect = this.smComm.getResponseProperties().isDesktopEffectsEnabled();
-			rc.setAllDesktopEffectsEnabled(desktopEffect); 
-			if (desktopEffect)
-				bpp = 32;
-
 			HashMap<Integer, ImageIcon> appsIcons = new HashMap<Integer, ImageIcon>();
 			List<String> mimesTypes = new ArrayList<String>();
 			for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
@@ -304,7 +299,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		// Ensure that width is multiple of 4
 		// Prevent artifact on screen with a with resolution
 		// not divisible by 4
-		rc.setGraphic((int) this.screensize.width & ~3, (int) this.screensize.height, RdpConnectionOvd.DEFAULT_BPP);
+		rc.setGraphic((int) this.screensize.width & ~3, (int) this.screensize.height, this.bpp);
 		rc.setGraphicOffset(this.screensize.x, this.screensize.y);
 
 		this.connections.add(rc);
