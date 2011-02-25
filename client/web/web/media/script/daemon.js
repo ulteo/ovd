@@ -1,7 +1,8 @@
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,10 +36,7 @@ var Daemon = Class.create({
 	keymap: 'en-us',
 	duration: -1,
 
-	multimedia: true,
-	redirect_client_printers: true,
-	redirect_client_drives: 'none',
-	enhance_user_experience: true,
+	settings: new Hash(),
 
 	servers: new Hash(),
 	liaison_server_applications: new Hash(),
@@ -502,5 +500,21 @@ var Daemon = Class.create({
 
 		this.break_loop();
 		this.stopped = true;
+	},
+	
+	parseSessionSettings: function(setting_nodes) {
+		this.push_log('debug', '[daemon] parseSessionSettings()');
+		
+		for (var i=0; i < setting_nodes.length; i++) {
+			var name, value;
+			try {
+				name = setting_nodes[i].getAttribute('name');
+				value = setting_nodes[i].getAttribute('value');
+			} catch(e) {
+				continue;
+			}
+			
+			this.settings.set(name, value);
+		}
 	}
 });

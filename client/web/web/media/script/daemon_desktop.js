@@ -1,7 +1,8 @@
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -55,13 +56,13 @@ var Desktop = Class.create(Daemon, {
 			applet_params.set('username', server.username);
 			applet_params.set('password', server.password);
 			applet_params.set('keymap', this.keymap);
-			applet_params.set('multimedia', this.multimedia);
-			applet_params.set('redirect_client_printers', this.redirect_client_printers);
-			applet_params.set('redirect_client_drives', this.redirect_client_drives);
-			applet_params.set('enhance_user_experience', this.enhance_user_experience);
 			if (this.fullscreen)
 				applet_params.set('fullscreen', 1);
 
+			this.settings.each(function(pair) {
+				applet_params.set('setting_'+pair.key, pair.value);
+			});
+			
 			var applet = buildAppletNode('ulteoapplet', this.applet_main_class, 'jpedal.jar,log4j-1.2.jar,'+this.applet_version, applet_params);
 			applet.setAttribute('width', applet_width);
 			applet.setAttribute('height', applet_height);

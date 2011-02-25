@@ -1,7 +1,8 @@
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -236,25 +237,14 @@ function onStartSessionSuccess(xml_) {
 			daemon.duration = parseInt(session_node.getAttribute('duration'));
 		} catch(e) {}
 		daemon.duration = parseInt(session_node.getAttribute('duration'));
-		daemon.multimedia = ((session_node.getAttribute('multimedia') == 1)?true:false);
-		daemon.redirect_client_printers = ((session_node.getAttribute('redirect_client_printers') == 1)?true:false);
-		try {
-			daemon.redirect_client_drives = session_node.getAttribute('redirect_client_drives');
-		} catch(e) {}
+
 		if (session_mode == 'Desktop' && desktop_fullscreen)
 			daemon.fullscreen = true;
 
 		var settings_node = session_node.getElementsByTagName('settings');
 		if (settings_node.length > 0) {
 			var setting_nodes = settings_node[0].getElementsByTagName('setting');
-			if (setting_nodes.length > 0) {
-				for (var i=0; i < setting_nodes.length; i++) {
-					try {
-						if (setting_nodes[i].getAttribute('name') == 'enhance_user_experience')
-							daemon.enhance_user_experience = ((setting_nodes[i].getAttribute('value') == 1)?true:false);
-					} catch(e) {}
-				}
-			}
+			daemon.parseSessionSettings(setting_nodes);
 		}
 
 		daemon.i18n['session_close_unexpected'] = i18n.get('session_close_unexpected');
@@ -887,14 +877,7 @@ function onStartExternalSessionSuccess(xml_) {
 		var settings_node = session_node.getElementsByTagName('settings');
 		if (settings_node.length > 0) {
 			var setting_nodes = settings_node[0].getElementsByTagName('setting');
-			if (setting_nodes.length > 0) {
-				for (var i=0; i < setting_nodes.length; i++) {
-					try {
-						if (setting_nodes[i].getAttribute('name') == 'enhance_user_experience')
-							daemon.enhance_user_experience = ((setting_nodes[i].getAttribute('value') == 1)?true:false);
-					} catch(e) {}
-				}
-			}
+			daemon.parseSessionSettings(setting_nodes);
 		}
 
 		daemon.i18n['session_close_unexpected'] = i18n.get('session_close_unexpected');

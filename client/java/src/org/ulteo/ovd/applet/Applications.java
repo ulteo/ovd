@@ -2,7 +2,7 @@
  * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or 
@@ -156,6 +156,14 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 			this.stop();
 			return;
 		}
+		
+		if (properties.isPrinters()) {
+			OVDStandalonePrinterThread appletPrinterThread = new OVDStandalonePrinterThread(); 
+			OVDPrinter.setPrinterThread(appletPrinterThread);
+			focusManager = new AppletFocusManager(appletPrinterThread);
+			SeamlessFrame.focusManager = focusManager;
+			SeamlessPopup.focusManager = focusManager;
+		}
 
 		try {
 			this.ovd = new OvdClientApplicationsApplet(properties, this);
@@ -214,35 +222,7 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 		}
 		this.keymap = buf;
 		
-		buf = this.getParameter("multimedia");
-		if (buf != null)
-			properties.setMultimedia(buf.equalsIgnoreCase("true"));
-
-		buf = this.getParameter("enhance_user_experience");
-		if (buf != null)
-			properties.setDesktopEffects(buf.equalsIgnoreCase("true"));
-		
-		buf = this.getParameter("redirect_client_printers");
-		if (buf != null){
-			OVDStandalonePrinterThread appletPrinterThread = new OVDStandalonePrinterThread(); 
-			OVDPrinter.setPrinterThread(appletPrinterThread);
-			focusManager = new AppletFocusManager(appletPrinterThread);
-			SeamlessFrame.focusManager = focusManager;
-			SeamlessPopup.focusManager = focusManager;
-			
-			properties.setPrinters(buf.equalsIgnoreCase("true"));
-		}
-
-		buf = this.getParameter("redirect_client_drives");
-		if (buf != null) {
-			if (buf.equalsIgnoreCase("full"))
-				properties.setDrives(Properties.REDIRECT_DRIVES_FULL);
-			else if (buf.equalsIgnoreCase("partial"))
-				properties.setDrives(Properties.REDIRECT_DRIVES_PARTIAL);
-			else
-				properties.setDrives(Properties.REDIRECT_DRIVES_NO);
-		}
-
+		OptionParser.readParameters(this, properties);
 		
 		return properties;
 	}
