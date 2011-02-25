@@ -60,8 +60,22 @@ elif sys.platform == "win32":
         # no build path setup, no worries.
         pass
 
+    class Target:
+        def __init__(self, script, description):
+            self.script = script
+            self.description = description
+            self.company_name = "Ulteo SAS"
+            self.copyright = "Copyright (C) @YEAR@ Ulteo SAS"
+            self.name = "Ulteo OVD"
+            self.icon_resources = [(0, "media\\ulteo.ico")]
+
+
     setup_args["zipfile"] = "lib/shared.zip"
-    setup_args["windows"] = ["OvdDesktop", "OvdRemoteApps", "startovdapp"]
+    setup_args["windows"] = [
+		Target("OvdDesktop", "Desktop OVD session shell"),
+		Target("OvdRemoteApps", "RemoteApps OVD session shell"),
+		Target("startovdapp", "OVD application wrapper"),
+    ]
     setup_args["options"] = {"py2exe": {"dll_excludes": ["w9xpopen.exe"]}}
 
 else:

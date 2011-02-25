@@ -59,18 +59,27 @@ if sys.platform == "win32":
 	except ImportError:
 		# no build path setup, no worries.
 		pass
-
+	
 	class ServiceTarget:
-		def __init__(self, **kw):
-			self.version = setup_args["version"]
-			self.company_name = "Ulteo"
-			self.copyright = "GPLv2"
-			self.name = setup_args["name"]
-			self.description = setup_args["description"]
+		def __init__(self):
+			self.description = "Ulteo OVD service"
 			self.modules = ["OVDWin32Service"]
+			self.company_name = "Ulteo SAS"
+			self.copyright = "Copyright (C) @YEAR@ Ulteo SAS"
+			self.name = "Ulteo OVD"
+			self.icon_resources = [(0, "media\\ulteo.ico")]
+	
+	class ConsoleTarget:
+		def __init__(self):
+			self.script = "ulteo-ovd-slaveserver"
+			self.description = "Ulteo OVD alternate service"
+			self.company_name = "Ulteo SAS"
+			self.copyright = "Copyright (C) @YEAR@ Ulteo SAS"
+			self.name = "Ulteo OVD"
+			self.icon_resources = [(0, "media\\ulteo.ico")]
 
 	setup_args["zipfile"] = "lib/shared.zip"
-	setup_args["console"] = ["ulteo-ovd-slaveserver"]
+	setup_args["console"] = [ConsoleTarget()]
 	setup_args["service"] = [ServiceTarget()]
 	setup_args["options"] = {"py2exe": {"dll_excludes": ["w9xpopen.exe"]}}
 	
