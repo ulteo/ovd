@@ -87,16 +87,10 @@ public class SoundDriver {
 		if (this.playThread == null)
 			return;
 
-		if (this.playThread.isAlive()) {
-			this.playThread.interrupt();
-			while (! this.playThread.isInterrupted()) {
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException ex) {
-					break;
-				}
-			}
-		}
+		this.playThread.interrupt();
+		try {
+			this.playThread.join();
+		} catch (InterruptedException e) {}
 		this.playThread = null;
 	}
 
