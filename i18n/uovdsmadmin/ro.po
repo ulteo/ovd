@@ -1,0 +1,4758 @@
+# Romanian translations for uovdsmadmin package.
+# Copyright (C) 2011 Ulteo SAS.
+# This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
+# Automatically generated, 2011.
+# Author: Catalin Florin RUSSEN <cfrussen@yahoo.co.uk>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: uovdsmadmin\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-02-21 15:23+0100\n"
+"PO-Revision-Date: 2011-02-28 14:32+0200\n"
+"Last-Translator: Catalin Florin RUSSEN\n"
+"Language-Team: Romanian\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2);;\n"
+"X-Generator: Pootle 2.1.5\n"
+
+#: ../../SessionManager/web/admin/actions.php:83
+msgid ""
+"Task to add application '%APPLICATION%' on server '%SERVER%' was "
+"successfully added"
+msgstr ""
+"Sarcina de adăugare a aplicației „%APPLICATION%” pe serverul „%SERVER%” s-a "
+"încheiat cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:90
+msgid ""
+"Task to remove application '%APPLICATION%' from server '%SERVER%' was "
+"successfully added"
+msgstr ""
+"Sarcina de înlăturare a aplicației „%APPLICATION%” de pe serverul „%SERVER%” "
+"s-a încheiat cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:101
+msgid "Application '%APPLICATION%' successfully added to server '%SERVER%'"
+msgstr ""
+"Aplicația „%APPLICATION%” a fost adăugată cu succes serverului „%SERVER%”"
+
+#: ../../SessionManager/web/admin/actions.php:104
+msgid ""
+"An error occured while adding application '%APPLICATION%' to server '%SERVER"
+"%'"
+msgstr ""
+"S-a produs o eroare în cursul adăugării aplicației „%APPLICATION%” pe "
+"serverul „%SERVER%”"
+
+#: ../../SessionManager/web/admin/actions.php:110
+msgid "Application '%APPLICATION%' successfully deleted from server '%SERVER%'"
+msgstr ""
+"Aplicația „%APPLICATION%” a fost ștearsă cu succes de pe serverul „%SERVER%”"
+
+#: ../../SessionManager/web/admin/actions.php:146
+#: ../../SessionManager/web/admin/actions.php:334
+#: ../../SessionManager/web/admin/actions.php:498
+msgid "ApplicationDB is not writeable"
+msgstr "ApplicationDB nu poate fi scrisă"
+
+#: ../../SessionManager/web/admin/actions.php:153
+#: ../../SessionManager/web/admin/actions.php:211
+#: ../../SessionManager/web/admin/actions.php:251
+#, php-format
+msgid "Failed to import application '%s'"
+msgstr "Importarea aplicației „%s” a eșuat"
+
+#: ../../SessionManager/web/admin/actions.php:158
+#: ../../SessionManager/web/admin/actions.php:379
+#, php-format
+msgid "Failed to delete application '%s'"
+msgstr "Ștergerea aplicației „%s” a eșuat"
+
+#: ../../SessionManager/web/admin/actions.php:161
+#: ../../SessionManager/web/admin/actions.php:384
+#, php-format
+msgid "Application '%s' successfully deleted"
+msgstr "Aplicația „%s” a fost ștearsă cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:170
+#, php-format
+msgid "Unable to import application %s"
+msgstr "Nu se poate importa aplicația %s"
+
+#: ../../SessionManager/web/admin/actions.php:177
+#, php-format
+msgid "Unable to modify application '%s'"
+msgstr "Nu se poate modifica aplicația „%s”"
+
+# 88%
+#: ../../SessionManager/web/admin/actions.php:180
+#: ../../SessionManager/web/admin/actions.php:433
+#, php-format
+msgid "Application '%s' successfully modified"
+msgstr "Aplicația „%s” a fost modificată cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:199
+msgid "Orphan applications successfully removed"
+msgstr "Aplicațiile orfane au fost înlăturate cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:202
+msgid "Problem while removing orphan applications"
+msgstr "S-a produs o eroare în cursul înlăturării aplicațiilor orfane"
+
+#: ../../SessionManager/web/admin/actions.php:222
+#: ../../SessionManager/web/admin/actions.php:361
+#, php-format
+msgid "Failed to add application '%s'"
+msgstr "Adăugarea aplicației „%s” a eșuat"
+
+#: ../../SessionManager/web/admin/actions.php:225
+#: ../../SessionManager/web/admin/actions.php:364
+#, php-format
+msgid "Application '%s' successfully added"
+msgstr "Aplicația „%s” a fost adăugată cu succes"
+
+#. UPLOAD_ERR_INI_SIZE
+#: ../../SessionManager/web/admin/actions.php:262
+#: ../../SessionManager/web/admin/actions.php:442
+msgid "Oversized file for server rules"
+msgstr "Fișier prea voluminos pentru politica serverului"
+
+#. UPLOAD_ERR_PARTIAL
+#: ../../SessionManager/web/admin/actions.php:266
+#: ../../SessionManager/web/admin/actions.php:446
+msgid "The file was corrupted while upload"
+msgstr "Fișierul a fost corupt în cursul încărcării"
+
+#: ../../SessionManager/web/admin/actions.php:278
+#: ../../SessionManager/web/admin/actions.php:458
+msgid "The file is not readable"
+msgstr "Fișierul nu este lizibil"
+
+#: ../../SessionManager/web/admin/actions.php:283
+msgid "No Imagick support found"
+msgstr "Suportul Imagick nu a fost găsit"
+
+#: ../../SessionManager/web/admin/actions.php:289
+#, php-format
+msgid "Unable to write icon file for application '%s'"
+msgstr "Nu se poate scrie fișierul pictogramă pentru aplicația „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:301
+msgid "Uploaded file is not a valid image"
+msgstr "Fișierul încărcat nu este o imagine validă"
+
+#: ../../SessionManager/web/admin/actions.php:306
+#, php-format
+msgid "Icon for application '%s' has been successfully uploaded"
+msgstr "Pictograma pentru aplicația „%s” a fost încărcată cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:313
+#, php-format
+msgid "Failed to load server '%s'"
+msgstr "Încărcarea serverului „%s” a eșuat"
+
+#: ../../SessionManager/web/admin/actions.php:320
+#, php-format
+msgid "Icon of application '%s' has been updated from server '%s'"
+msgstr "Pictograma aplicației „%s” a fost actualizată de pe serverul „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:354
+msgid "Application is not ok"
+msgstr "Aplicația nu este validă"
+
+#: ../../SessionManager/web/admin/actions.php:374
+#: ../../SessionManager/web/admin/actions.php:416
+#: ../../SessionManager/web/admin/actions.php:505
+#: ../../SessionManager/web/admin/actions.php:523
+#, php-format
+msgid "Unable to import application '%s'"
+msgstr "Nu se poate importa aplicația „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:395
+#, php-format
+msgid "'%s' application's icon was successfully deleted"
+msgstr "Pictograma aplicației „%s” a fost ștearsă cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:428
+#: ../../SessionManager/web/admin/actions.php:515
+#: ../../SessionManager/web/admin/actions.php:533
+#, php-format
+msgid "Failed to modify application '%s'"
+msgstr "Modificarea aplicației „%s” a eșuat"
+
+#: ../../SessionManager/web/admin/actions.php:474
+msgid "The icon is not an image"
+msgstr "Pictograma nu este o imagine"
+
+#: ../../SessionManager/web/admin/actions.php:549
+#: ../../SessionManager/web/admin/actions.php:559
+#, php-format
+msgid "ApplicationGroup '%s' successfully modified"
+msgstr "Grupul aplicației „%s” a fost modificat cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:570
+msgid "Application Group Database is not writeable"
+msgstr "Baza de date a grupurilor de aplicații nu poate fi scrisă"
+
+#: ../../SessionManager/web/admin/actions.php:581
+#, php-format
+msgid "Unable to create applications group '%s'"
+msgstr "Nu se poate crea grupul de aplicații „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:583
+#, php-format
+msgid "Applications group '%s' successfully added"
+msgstr "Grupul de aplicații „%s” a fost adăugat cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:595
+#: ../../SessionManager/web/admin/actions.php:696
+#, php-format
+msgid "Importing applications group '%s' failed"
+msgstr "Importarea grupului de aplicații „%s” a eșuat"
+
+#: ../../SessionManager/web/admin/actions.php:600
+#, php-format
+msgid "Unable to remove applications group '%s'"
+msgstr "Nu se poate înlătura grupul de aplicații „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:603
+#, php-format
+msgid "Applications group '%s' successfully deleted"
+msgstr "Grupul de aplicații „%s” a fost șters cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:614
+#, php-format
+msgid "Import of applications group '%s' failed"
+msgstr "Importul grupului de aplicații „%s” a eșuat"
+
+#: ../../SessionManager/web/admin/actions.php:635
+#, php-format
+msgid "Unable to modify applications group '%s'"
+msgstr "Nu se poate modifica grupul de aplicații „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:637
+#, php-format
+msgid "Applications group '%s' successfully modified"
+msgstr "Grupul de aplicații „%s” a fost modificat cu succes"
+
+#. problem, what to do ?
+#: ../../SessionManager/web/admin/actions.php:654
+#: ../../SessionManager/web/admin/actions.php:658
+#: ../../SessionManager/web/admin/actions.php:669
+#: ../../SessionManager/web/admin/actions.php:673
+#: ../../SessionManager/web/admin/actions.php:967
+#, php-format
+msgid "UsersGroup '%s' successfully modified"
+msgstr "Grupul de utilizatori „%s” a fost modificat cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:690
+#, php-format
+msgid "Importing usergroup '%s' failed"
+msgstr "Importarea grupului de utilizatori „%s” a eșuat"
+
+#: ../../SessionManager/web/admin/actions.php:704
+msgid "Publication successfully added"
+msgstr "Publicație adăugată cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:706
+msgid "Unable to save the publication"
+msgstr "Nu se poate salva publicația"
+
+#: ../../SessionManager/web/admin/actions.php:709
+msgid "This publication already exists"
+msgstr "Această publicație există deja"
+
+# 78%
+#: ../../SessionManager/web/admin/actions.php:717
+msgid "Publication successfully deleted"
+msgstr "Publicația a fost ștearsă cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:719
+msgid "Unable to delete the publication"
+msgstr "Nu se poate șterge publicația"
+
+#: ../../SessionManager/web/admin/actions.php:722
+msgid "This publication does not exist"
+msgstr "Această publicație nu există"
+
+#: ../../SessionManager/web/admin/actions.php:736
+msgid "You must define a name for your usergroup"
+msgstr "Grupul vostru de utilizatori trebuie să aibă un nume"
+
+#: ../../SessionManager/web/admin/actions.php:742
+msgid "User Group Database is not writeable"
+msgstr "Baza de date a grupurilor de utilizatori nu poate fi scrisă"
+
+#: ../../SessionManager/web/admin/actions.php:748
+#: ../../SessionManager/web/modules/UserGroupDBDynamic.php:32
+msgid "UserGroupDBDynamic module must be enabled"
+msgstr "Modulul UserGroupDBDynamic trebuie activat"
+
+#: ../../SessionManager/web/admin/actions.php:753
+#: ../../SessionManager/web/modules/UserGroupDBDynamicCached.php:32
+msgid "UserGroupDBDynamicCached module must be enabled"
+msgstr "Modulul UserGroupDBDynamicCached trebuie activat"
+
+#: ../../SessionManager/web/admin/actions.php:760
+msgid "You must provide a value to each rule of your usergroup"
+msgstr ""
+"Trebuie să furnizați o valoare pentru fiecare regulă a grupului vostru de "
+"utilizatori"
+
+#: ../../SessionManager/web/admin/actions.php:778
+msgid "Unknow usergroup type"
+msgstr "Tip necunoscut de grup de utilizatori"
+
+#: ../../SessionManager/web/admin/actions.php:783
+msgid "Unable to create usergroup"
+msgstr "Nu se poate crea grupul de utilizatori"
+
+#: ../../SessionManager/web/admin/actions.php:786
+msgid "UserGroup successfully added"
+msgstr "Grupul de utilizatori a fost adăugat cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:796
+#: ../../SessionManager/web/admin/actions.php:825
+#: ../../SessionManager/web/admin/actions.php:904
+#: ../../SessionManager/web/admin/actions.php:978
+#, php-format
+msgid "Failed to import Usergroup '%s'"
+msgstr "Importarea grupului de utilizatori „%s” a eșuat"
+
+#: ../../SessionManager/web/admin/actions.php:802
+#: ../../SessionManager/web/admin/actions.php:820
+msgid "User Group Database not writeable"
+msgstr "Baza de date a grupurilor de utilizatori nu poate fi scrisă"
+
+#: ../../SessionManager/web/admin/actions.php:807
+#, php-format
+msgid "Unable to remove usergroup '%s'"
+msgstr "Nu se poate înlătura grupul de utilizatori „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:810
+#, php-format
+msgid "UserGroup '%s' successfully deleted"
+msgstr "Grupul de utilizatori „%s” a fost șters cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:855
+#: ../../SessionManager/web/admin/actions.php:928
+#, php-format
+msgid "Unable to update Usergroup '%s'"
+msgstr "Nu se poate actualiza grupul de utilizatori „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:859
+#: ../../SessionManager/web/admin/actions.php:893
+#, php-format
+msgid "UserGroup '%s' successfully modified"
+msgstr "Grupul de utilizatori „%s” a fost modificat cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:866
+msgid "Not enough rights"
+msgstr "Drepturi insuficiente"
+
+#: ../../SessionManager/web/admin/actions.php:883
+#, php-format
+msgid "Failed to import group '%s'"
+msgstr "Importarea grupului „%s” a eșuat"
+
+#: ../../SessionManager/web/admin/actions.php:890
+msgid "Unable to save prefs"
+msgstr "Nu se pot salva preferințele"
+
+#: ../../SessionManager/web/admin/actions.php:911
+msgid "You must give a value to each rule of your usergroup"
+msgstr ""
+"Trebuie să furnizați o valoare pentru fiecare regulă a grupului vostru de "
+"utilizatori"
+
+#: ../../SessionManager/web/admin/actions.php:930
+#, php-format
+msgid "Rules of '%s' successfully modified"
+msgstr "Regulile lui „%s” au fost modificate cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1036
+msgid "Usergroup successfully modified"
+msgstr "Grupul de utilizatori a fost modificat cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1039
+msgid "Failed to modify usergroup"
+msgstr "Modificarea grupului de utilizatori a eșuat"
+
+#: ../../SessionManager/web/admin/actions.php:1050
+msgid "User Database not writeable"
+msgstr "Baza de date cu utilizatori nu poate fi scrisă"
+
+#: ../../SessionManager/web/admin/actions.php:1056
+msgid "Unable to create user"
+msgstr "Nu se poate crea utilizatorul"
+
+#: ../../SessionManager/web/admin/actions.php:1066
+msgid "Unable to create user with an empty password"
+msgstr "Nu se poate crea un utilizator cu o parolă vidă"
+
+#: ../../SessionManager/web/admin/actions.php:1072
+#, php-format
+msgid "Unable to create user '%s'"
+msgstr "Nu se poate crea utilizatorul „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:1076
+#, php-format
+msgid "User '%s' successfully added"
+msgstr "Utilizatorul „%s” a fost adăugat cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1086
+#, php-format
+msgid "Unable to delete user '%s' because he has an active session"
+msgstr "Nu se poate șterge utilizatorul „%s” deoarece are o sesiune activă"
+
+#: ../../SessionManager/web/admin/actions.php:1091
+#: ../../SessionManager/web/admin/actions.php:1105
+#, php-format
+msgid "Unable to delete user '%s'"
+msgstr "Nu se poate șterge utilizatorul „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:1108
+#, php-format
+msgid "User '%s' successfully deleted"
+msgstr "Utilizatorul „%s” a fost șters cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1121
+#, php-format
+msgid "Unable to import user '%s'"
+msgstr "Nu se poate importa utilizatorul „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:1131
+#, php-format
+msgid "Unable to modify user '%s'"
+msgstr "Nu se poate modifica utilizatorul „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:1133
+#, php-format
+msgid "User '%s' successfully modified"
+msgstr "Utilizatorul „%s” a fost modificat cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1141
+msgid "No custom password given for populating the database."
+msgstr "Nu s-a furnizat nici o parolă pentru popularea bazei de date."
+
+#: ../../SessionManager/web/admin/actions.php:1152
+msgid "User database populated."
+msgstr "Baza de date cu utilizatori a fost populată."
+
+#: ../../SessionManager/web/admin/actions.php:1155
+msgid "User database population failed."
+msgstr "Popularea bazei de date cu utilizatori a eșuat."
+
+#: ../../SessionManager/web/admin/actions.php:1172
+#: ../../SessionManager/web/modules/ApplicationDB.php:32
+msgid "Module ApplicationDB must be enabled"
+msgstr "Modulul ApplicationDB trebuie activat"
+
+#: ../../SessionManager/web/admin/actions.php:1188
+#: ../../SessionManager/web/admin/actions.php:1247
+msgid "Shared folder management is not enabled"
+msgstr "Gestiunea dosarelor partajate nu este activată"
+
+#: ../../SessionManager/web/admin/actions.php:1209
+#, php-format
+msgid "Unable to delete network folder '%s'"
+msgstr "Nu se poate șterge dosarul în rețea „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:1212
+#, php-format
+msgid "Unable to delete network folder with id '%s'"
+msgstr "Nu se poate șterge dosarul în rețea cu identificatorul „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:1217
+msgid "Network folders successfully deleted"
+msgstr "Dosarele în rețea au fost șterse cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1234
+msgid "Shared folder successfully renamed"
+msgstr "Dosarul partajat a fost redenumit cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1236
+msgid "Update of the shared folder failed"
+msgstr "Actualizarea dosarului partajat a eșuat"
+
+#: ../../SessionManager/web/admin/actions.php:1238
+msgid "A shared folder with that name already exists!"
+msgstr "Există deja un dosar partajat cu acest nume!"
+
+#: ../../SessionManager/web/admin/actions.php:1266
+msgid "Profile management is not enabled"
+msgstr "Gestiunea pofilelor nu este activată"
+
+#: ../../SessionManager/web/admin/actions.php:1284
+#, php-format
+msgid "Unable to delete profile '%s'"
+msgstr "Nu se poate șterge profilul „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:1286
+#, php-format
+msgid "Profile '%s' successfully deleted"
+msgstr "Profilul „%s” a fost șters cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1289
+#, php-format
+msgid "Unable to load profile '%s'"
+msgstr "Nu se poate încărca profilul „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:1302
+msgid "Untitled"
+msgstr "Neintitulat"
+
+#: ../../SessionManager/web/admin/actions.php:1307
+msgid "News successfully added"
+msgstr "Știre adăugată cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1314
+msgid "Unable to delete this news"
+msgstr "Nu se poate șterge această știre"
+
+#: ../../SessionManager/web/admin/actions.php:1316
+msgid "News successfully deleted"
+msgstr "Știrea a fost ștearsă cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1326
+msgid "Password is empty"
+msgstr "Parola este vidă"
+
+#: ../../SessionManager/web/admin/actions.php:1329
+msgid "Passwords are not identical"
+msgstr "Parolele nu sînt identice"
+
+#: ../../SessionManager/web/admin/actions.php:1334
+msgid "Password successfully changed"
+msgstr "Parola a fost schimbată cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1338
+msgid "Password not changed"
+msgstr "Parola nu a fost schimbată"
+
+#: ../../SessionManager/web/admin/actions.php:1357
+#, php-format
+msgid "Unable to delete session '%s'"
+msgstr "Nu se poate șterge sesiunea „%s”"
+
+# 78%
+#: ../../SessionManager/web/admin/actions.php:1361
+#, php-format, 
+msgid "Session '%s' successfully deleted"
+msgstr "Sesiunea „%s” a fost ștearsă cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1379
+#, php-format
+msgid ""
+"Unable to delete the server '%s' because there are active sessions on it."
+msgstr "Nu se poate șterge serverul „%s” pentru că are sesiuni active."
+
+#: ../../SessionManager/web/admin/actions.php:1387
+#, php-format
+msgid "Server '%s' successfully deleted"
+msgstr "Serverul „%s” a fost șters cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1405
+#, php-format
+msgid "Server '%s' successfully registered"
+msgstr "Serverul „%s” a fost înregistrat cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1408
+#, php-format
+msgid "Failed to register Server '%s'"
+msgstr "Înregistrarea serverului „%s” a eșuat"
+
+#: ../../SessionManager/web/admin/actions.php:1430
+#: ../../SessionManager/web/admin/actions.php:1441
+#: ../../SessionManager/web/admin/actions.php:1452
+#, php-format
+msgid "Server '%s' successfully modified"
+msgstr "Serverul „%s” a fost modificat cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1465
+#: ../../SessionManager/web/admin/actions.php:1518
+#: ../../SessionManager/web/admin/actions.php:1541
+msgid "Task successfully added"
+msgstr "Sarcina a fost adăugată cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1478
+#, php-format
+msgid "Server '%s' is upgrading"
+msgstr "Serverul „%s” este în curs de actualizare majoră"
+
+#: ../../SessionManager/web/admin/actions.php:1512
+#: ../../SessionManager/web/admin/actions.php:1573
+msgid "Task successfully deleted"
+msgstr "Sarcina a fost ștearsă cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1586
+msgid "You must provide a name to your shared folder"
+msgstr "Trebuie să furnizați un nume pentru dosarul vostru partajat"
+
+#: ../../SessionManager/web/admin/actions.php:1592
+msgid "A shared folder with this name already exists"
+msgstr "Există deja un dosar partajat cu acest nume"
+
+#: ../../SessionManager/web/admin/actions.php:1607
+msgid "No server avalaible for shared folder"
+msgstr "Nici un server disponibil pentru dosarul partajat"
+
+#: ../../SessionManager/web/admin/actions.php:1615
+msgid "Unable to add shared folder"
+msgstr "Nu se poate adăuga dosarul partajat"
+
+#: ../../SessionManager/web/admin/actions.php:1619
+#, php-format
+msgid "Shared folder '%s' successfully added"
+msgstr "Dosarul partajat „%s” a fost adăugat cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1628
+#: ../../SessionManager/web/admin/actions.php:1651
+msgid "Unable to delete this shared folder"
+msgstr "Nu se poate șterge acest dosar partajat"
+
+#: ../../SessionManager/web/admin/actions.php:1634
+#: ../../SessionManager/web/admin/actions.php:1645
+#, php-format
+msgid "Unable to delete shared folder on file server '%s'"
+msgstr "Nu se poate șterge dosarul partajat pe serverul de fișiere „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:1639
+#, php-format
+msgid "Unable to delete shared folder '%s' because it is currently being used"
+msgstr ""
+"Nu se poate șterge dosarul partajat „%s” deoarece este în curs de utilizare"
+
+#: ../../SessionManager/web/admin/actions.php:1655
+msgid "Shared folder successfully deleted"
+msgstr "Dosarul partajat a fost șters cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1664
+msgid "Unable to create this shared folder access"
+msgstr "Nu se poate crea un acces la acest dosar partajat"
+
+# 83%
+#: ../../SessionManager/web/admin/actions.php:1671
+#: ../../SessionManager/web/admin/actions.php:1697
+msgid "Unable to load usergroup"
+msgstr "Nu se poate încărca grupul de utilizatori"
+
+#: ../../SessionManager/web/admin/actions.php:1677
+#: ../../SessionManager/web/admin/actions.php:1703
+msgid "Shared folder successfully modified"
+msgstr "Dosarul partajat a fost modificat cu succes"
+
+#: ../../SessionManager/web/admin/actions.php:1681
+#: ../../SessionManager/web/admin/actions.php:1707
+#, php-format
+msgid "Unable to modify shared folder named '%s'"
+msgstr "Nu se poate modifica dosarul partajat „%s”"
+
+#: ../../SessionManager/web/admin/actions.php:1690
+msgid "Unable to delete this shared folder access"
+msgstr "Nu se poate șterge accesul la acest dosar partajat"
+
+#. general div
+#: ../../SessionManager/web/admin/applications.php:56
+#: ../../SessionManager/web/admin/includes/page_template.php:56
+#: ../../SessionManager/web/admin/includes/page_template.php:129
+#: ../../SessionManager/web/admin/sessions.php:79
+#: ../../SessionManager/web/admin/summary.php:58
+#: ../../SessionManager/web/admin/sumup.php:221
+#: ../../SessionManager/web/classes/Preferences.class.php:386
+msgid "Applications"
+msgstr "Aplicații"
+
+#: ../../SessionManager/web/admin/applications.php:60
+#: ../../SessionManager/web/admin/applications_static.php:65
+#: ../../SessionManager/web/admin/wizard.php:159
+#: ../../SessionManager/web/admin/wizard.php:309
+msgid "No available application"
+msgstr "Nici o aplicație disponibilă"
+
+#. if ($is_rw)
+#. echo '<th class="unsortable"></th>';
+#: ../../SessionManager/web/admin/applications.php:68
+#: ../../SessionManager/web/admin/applications_static.php:74
+#: ../../SessionManager/web/admin/applications_static.php:416
+#: ../../SessionManager/web/admin/appsgroup.php:58
+#: ../../SessionManager/web/admin/appsgroup.php:126
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:76
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:547
+#: ../../SessionManager/web/admin/mimetypes.php:56
+#: ../../SessionManager/web/admin/mimetypes.php:101
+#: ../../SessionManager/web/admin/sharedfolders.php:120
+#: ../../SessionManager/web/admin/summary.php:64
+#: ../../SessionManager/web/admin/usersgroup.php:96
+#: ../../SessionManager/web/admin/usersgroup.php:211
+#: ../../SessionManager/web/admin/usersgroup.php:803
+#: ../../SessionManager/web/admin/wizard.php:261
+#: ../../SessionManager/web/admin/wizard.php:411
+msgid "Name"
+msgstr "Nume"
+
+#. echo '<th>'._('Status').'</th>';
+#: ../../SessionManager/web/admin/applications.php:69
+#: ../../SessionManager/web/admin/applications.php:257
+#: ../../SessionManager/web/admin/applications.php:510
+#: ../../SessionManager/web/admin/applications_static.php:75
+#: ../../SessionManager/web/admin/applications_static.php:337
+#: ../../SessionManager/web/admin/appsgroup.php:59
+#: ../../SessionManager/web/admin/appsgroup.php:131
+#: ../../SessionManager/web/admin/appsgroup.php:218
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:80
+#: ../../SessionManager/web/admin/usersgroup.php:97
+#: ../../SessionManager/web/admin/usersgroup.php:216
+#: ../../SessionManager/web/admin/usersgroup.php:414
+#: ../../SessionManager/web/admin/wizard.php:266
+#: ../../SessionManager/web/admin/wizard.php:416
+msgid "Description"
+msgstr "Descriere"
+
+#. echo '<th>'._('Package').'</th>';
+#: ../../SessionManager/web/admin/applications.php:70
+#: ../../SessionManager/web/admin/applications.php:255
+#: ../../SessionManager/web/admin/applications.php:383
+#: ../../SessionManager/web/admin/applications.php:508
+#: ../../SessionManager/web/admin/applications_static.php:76
+#: ../../SessionManager/web/admin/applications_static.php:336
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:385
+#: ../../SessionManager/web/admin/servers.php:75
+#: ../../SessionManager/web/admin/servers.php:235
+#: ../../SessionManager/web/admin/servers.php:401
+#: ../../SessionManager/web/admin/sumup.php:219
+#: ../../SessionManager/web/admin/tasks.php:68
+#: ../../SessionManager/web/admin/tasks.php:143
+#: ../../SessionManager/web/admin/usersgroup.php:99
+msgid "Type"
+msgstr "Tip"
+
+#: ../../SessionManager/web/admin/applications.php:100
+#: ../../SessionManager/web/admin/applications_static.php:106
+#: ../../SessionManager/web/admin/appsgroup.php:81
+#: ../../SessionManager/web/admin/servers.php:153
+#: ../../SessionManager/web/admin/usersgroup.php:127
+#: ../../SessionManager/web/admin/users.php:92
+msgid "Manage"
+msgstr "Gestionează"
+
+#: ../../SessionManager/web/admin/applications.php:144
+msgid "Orphan Applications"
+msgstr "Aplicații orfane"
+
+# 88%
+#: ../../SessionManager/web/admin/applications.php:145
+msgid "Are you sure you want to remove orphan applications?"
+msgstr "Sigur doriți să înlăturați aplicațiile orfane? "
+
+#: ../../SessionManager/web/admin/applications.php:148
+msgid "Remove orphan applications"
+msgstr "Înlătură aplicațiile orfane"
+
+#: ../../SessionManager/web/admin/applications.php:171
+msgid "Available"
+msgstr "Disponibil"
+
+#: ../../SessionManager/web/admin/applications.php:172
+#: ../../SessionManager/web/admin/appsgroup.php:164
+#: ../../SessionManager/web/admin/usersgroup.php:319
+msgid "Block"
+msgstr "Blochează"
+
+#: ../../SessionManager/web/admin/applications.php:175
+#: ../../SessionManager/web/admin/appsgroup.php:71
+#: ../../SessionManager/web/admin/appsgroup.php:168
+#: ../../SessionManager/web/admin/usersgroup.php:110
+#: ../../SessionManager/web/admin/usersgroup.php:323
+msgid "Blocked"
+msgstr "Blocat"
+
+#: ../../SessionManager/web/admin/applications.php:176
+msgid "Unblock"
+msgstr "Deblochează"
+
+#: ../../SessionManager/web/admin/applications.php:254
+#: ../../SessionManager/web/admin/applications.php:507
+msgid "Package"
+msgstr "Pachet"
+
+#: ../../SessionManager/web/admin/applications.php:258
+#: ../../SessionManager/web/admin/applications.php:511
+msgid "Executable"
+msgstr "Executabil"
+
+#: ../../SessionManager/web/admin/applications.php:276
+msgid "Set custom icon"
+msgstr "Personalizează pictograma"
+
+#: ../../SessionManager/web/admin/applications.php:283
+msgid "Clone to static application"
+msgstr "Clonează în aplicație statică"
+
+#: ../../SessionManager/web/admin/applications.php:292
+msgid "Are you sure you want to remove this application?"
+msgstr "Sigur doriți să înlăturați această aplicație? "
+
+#: ../../SessionManager/web/admin/applications.php:296
+msgid "This application is orphan"
+msgstr "Această aplicație este orfană"
+
+#: ../../SessionManager/web/admin/applications.php:296
+msgid "Remove this application"
+msgstr "Înlătură această aplicație"
+
+# 82%
+#: ../../SessionManager/web/admin/applications.php:315
+#: ../../SessionManager/web/admin/applications_static.php:462
+msgid "Servers with this application"
+msgstr "Servere ce conțin această aplicație"
+
+#: ../../SessionManager/web/admin/applications.php:328
+#: ../../SessionManager/web/admin/applications_static.php:470
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:309
+msgid "Are you sure you want to remove this application from this server?"
+msgstr "Sigur doriți să înlăturați această aplicație de pe acest server? "
+
+#: ../../SessionManager/web/admin/applications.php:333
+#: ../../SessionManager/web/admin/applications_static.php:475
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:314
+msgid "Remove from this server"
+msgstr "Înlătură de pe acest server"
+
+#: ../../SessionManager/web/admin/applications.php:369
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:350
+msgid "Install on this server"
+msgstr "Instalează pe acest server"
+
+#: ../../SessionManager/web/admin/applications.php:379
+msgid "Active tasks on this application"
+msgstr "Sarcini active pentru această aplicație"
+
+#: ../../SessionManager/web/admin/applications.php:382
+#: ../../SessionManager/web/admin/ha/status.php:186
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:384
+#: ../../SessionManager/web/admin/tasks.php:141
+msgid "ID"
+msgstr "ID"
+
+#. echo '<th>'._('Version').'</th>';
+#: ../../SessionManager/web/admin/applications.php:384
+#: ../../SessionManager/web/admin/appsgroup.php:60
+#: ../../SessionManager/web/admin/appsgroup.php:219
+#: ../../SessionManager/web/admin/ha/menu.inc.php:30
+#: ../../SessionManager/web/admin/includes/page_template.php:68
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:386
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:549
+#: ../../SessionManager/web/admin/index.php:158
+#: ../../SessionManager/web/admin/servers.php:78
+#: ../../SessionManager/web/admin/servers.php:401
+#: ../../SessionManager/web/admin/sessions.php:174
+#: ../../SessionManager/web/admin/sessions.php:232
+#: ../../SessionManager/web/admin/sumup.php:222
+#: ../../SessionManager/web/admin/tasks.php:70
+#: ../../SessionManager/web/admin/tasks.php:145
+#: ../../SessionManager/web/admin/usersgroup.php:98
+#: ../../SessionManager/web/admin/usersgroup.php:415
+msgid "Status"
+msgstr "Stare"
+
+#. echo '<th>'._('Version').'</th>';
+#: ../../SessionManager/web/admin/applications.php:385
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:387
+#: ../../SessionManager/web/admin/servers.php:78
+#: ../../SessionManager/web/admin/servers.php:238
+#: ../../SessionManager/web/admin/servers.php:402
+#: ../../SessionManager/web/admin/tasks.php:71
+#: ../../SessionManager/web/admin/tasks.php:146
+msgid "Details"
+msgstr "Detalii"
+
+#: ../../SessionManager/web/admin/applications.php:392
+#: ../../SessionManager/web/admin/configuration-profile.php:252
+#: ../../SessionManager/web/admin/ha/status.php:256
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:394
+#: ../../SessionManager/web/admin/tasks.php:80
+#: ../../SessionManager/web/admin/tasks.php:158
+#: ../../SessionManager/web/classes/Session.class.php:353
+msgid "Error"
+msgstr "Eroare"
+
+#: ../../SessionManager/web/admin/applications.php:410
+#: ../../SessionManager/web/admin/applications_static.php:502
+msgid "Groups with this application"
+msgstr "Grupuri ce conțin această aplicație"
+
+#: ../../SessionManager/web/admin/applications.php:418
+#: ../../SessionManager/web/admin/applications_static.php:509
+msgid "Are you sure you want to delete this application from this group?"
+msgstr "Sigur doriți să ștergeți această aplicație din acest grup?"
+
+#: ../../SessionManager/web/admin/applications.php:423
+#: ../../SessionManager/web/admin/applications_static.php:514
+#: ../../SessionManager/web/admin/appsgroup.php:286
+#: ../../SessionManager/web/admin/usersgroup.php:611
+#: ../../SessionManager/web/admin/users.php:341
+msgid "Delete from this group"
+msgstr "Șterge din acest grup"
+
+#: ../../SessionManager/web/admin/applications.php:439
+#: ../../SessionManager/web/admin/applications_static.php:529
+#: ../../SessionManager/web/admin/appsgroup.php:303
+#: ../../SessionManager/web/admin/usersgroup.php:628
+#: ../../SessionManager/web/admin/users.php:356
+msgid "Add to this group"
+msgstr "Adaugă la acest grup"
+
+#: ../../SessionManager/web/admin/applications.php:450
+#: ../../SessionManager/web/admin/applications_static.php:539
+#: ../../SessionManager/web/admin/includes/page_template.php:143
+#: ../../SessionManager/web/admin/mimetypes.php:47
+msgid "Mime-Types"
+msgstr "Tipuri MIME"
+
+#: ../../SessionManager/web/admin/applications.php:453
+#: ../../SessionManager/web/admin/mimetypes.php:51
+msgid "No available mimes-type"
+msgstr "Nici un tip MIME disponibil"
+
+#: ../../SessionManager/web/admin/applications.php:524
+msgid "Select an icon from an Application Server"
+msgstr "Selectează o pictogramă de pe un server de aplicații"
+
+# 81%
+#: ../../SessionManager/web/admin/applications.php:553
+msgid "Select this icon"
+msgstr "Selectează această pictogramă"
+
+#: ../../SessionManager/web/admin/applications.php:559
+msgid "Upload an icon"
+msgstr "Încarcă o pictogramă"
+
+#: ../../SessionManager/web/admin/applications.php:568
+msgid "Upload this icon"
+msgstr "Încarcă această pictogramă"
+
+#: ../../SessionManager/web/admin/applications_static.php:27
+msgid "Web"
+msgstr "Web"
+
+#. general div
+#: ../../SessionManager/web/admin/applications_static.php:61
+msgid "Static Applications"
+msgstr "Aplicații statice"
+
+#: ../../SessionManager/web/admin/applications_static.php:112
+#: ../../SessionManager/web/admin/applications_static.php:362
+#: ../../SessionManager/web/admin/appsgroup.php:281
+msgid "Are you sure you want to delete this application?"
+msgstr "Sigur doriți să ștergeți această aplicație?"
+
+#: ../../SessionManager/web/admin/applications_static.php:116
+#: ../../SessionManager/web/admin/applications_static.php:136
+#: ../../SessionManager/web/admin/applications_static.php:366
+#: ../../SessionManager/web/admin/appsgroup.php:88
+#: ../../SessionManager/web/admin/appsgroup.php:106
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:601
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:621
+#: ../../SessionManager/web/admin/publications.php:108
+#: ../../SessionManager/web/admin/servers.php:294
+#: ../../SessionManager/web/admin/servers.php:323
+#: ../../SessionManager/web/admin/servers.php:491
+#: ../../SessionManager/web/admin/tasks.php:97
+#: ../../SessionManager/web/admin/tasks.php:175
+#: ../../SessionManager/web/admin/usersgroup.php:135
+#: ../../SessionManager/web/admin/usersgroup.php:155
+#: ../../SessionManager/web/admin/users.php:99
+#: ../../SessionManager/web/admin/users.php:120
+msgid "Delete"
+msgstr "Șterge"
+
+#: ../../SessionManager/web/admin/applications_static.php:129
+#: ../../SessionManager/web/admin/appsgroup.php:101
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:614
+#: ../../SessionManager/web/admin/servers.php:188
+#: ../../SessionManager/web/admin/servers.php:309
+#: ../../SessionManager/web/admin/sessions.php:218
+#: ../../SessionManager/web/admin/usersgroup.php:150
+#: ../../SessionManager/web/admin/users.php:113
+#: ../../SessionManager/web/admin/wizard.php:211
+#: ../../SessionManager/web/admin/wizard.php:230
+#: ../../SessionManager/web/admin/wizard.php:356
+#: ../../SessionManager/web/admin/wizard.php:375
+msgid "Mark all"
+msgstr "Selectează tot"
+
+#: ../../SessionManager/web/admin/applications_static.php:130
+#: ../../SessionManager/web/admin/appsgroup.php:101
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:615
+#: ../../SessionManager/web/admin/servers.php:189
+#: ../../SessionManager/web/admin/servers.php:310
+#: ../../SessionManager/web/admin/sessions.php:218
+#: ../../SessionManager/web/admin/usersgroup.php:150
+#: ../../SessionManager/web/admin/users.php:114
+#: ../../SessionManager/web/admin/wizard.php:211
+#: ../../SessionManager/web/admin/wizard.php:230
+#: ../../SessionManager/web/admin/wizard.php:356
+#: ../../SessionManager/web/admin/wizard.php:375
+msgid "Unmark all"
+msgstr "Deselectează tot"
+
+#: ../../SessionManager/web/admin/applications_static.php:133
+msgid "Are you sure you want to delete these static applications?"
+msgstr "Sigur doriți să ștergeți aceste aplicații statice?"
+
+#: ../../SessionManager/web/admin/applications_static.php:147
+msgid "Add a static application"
+msgstr "Adaugă o aplicație statică"
+
+#: ../../SessionManager/web/admin/applications_static.php:188
+#: ../../SessionManager/web/admin/applications_static.php:339
+#: ../../SessionManager/web/admin/applications_static.php:409
+msgid "Command"
+msgstr "Comandă"
+
+#: ../../SessionManager/web/admin/applications_static.php:190
+#: ../../SessionManager/web/admin/applications_static.php:341
+#: ../../SessionManager/web/admin/applications_static.php:412
+msgid "URL"
+msgstr "URL"
+
+#: ../../SessionManager/web/admin/applications_static.php:205
+#: ../../SessionManager/web/admin/applications_static.php:569
+#: ../../SessionManager/web/admin/applications_static.php:580
+#: ../../SessionManager/web/admin/appsgroup.php:144
+#: ../../SessionManager/web/admin/publications.php:146
+#: ../../SessionManager/web/admin/usersgroup.php:271
+#: ../../SessionManager/web/admin/users.php:130
+#: ../../SessionManager/web/admin/users.php:150
+msgid "Add"
+msgstr "Adaugă"
+
+#: ../../SessionManager/web/admin/applications_static.php:223
+msgid "Web links configuration"
+msgstr "Configurarea legăturilor Web"
+
+# 75%
+#: ../../SessionManager/web/admin/applications_static.php:224
+msgid "Default browser for:"
+msgstr "Navigatorul implicit pentru:"
+
+#: ../../SessionManager/web/admin/applications_static.php:246
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "None"
+msgstr "Neant"
+
+#: ../../SessionManager/web/admin/applications_static.php:260
+msgid "Update"
+msgstr "Actualizează"
+
+#: ../../SessionManager/web/admin/applications_static.php:376
+#: ../../SessionManager/web/admin/applications_static.php:450
+#: ../../SessionManager/web/admin/news.php:126
+#: ../../SessionManager/web/admin/news.php:135
+msgid "Modify"
+msgstr "Modifică"
+
+#: ../../SessionManager/web/admin/applications_static.php:432
+msgid "Icon"
+msgstr "Pictogramă"
+
+#: ../../SessionManager/web/admin/applications_static.php:436
+msgid "Delete this icon"
+msgstr "Șterge această pictogramă"
+
+#: ../../SessionManager/web/admin/applications_static.php:436
+msgid "Are you sure you want to delete this icon?"
+msgstr "Sigur doriți să ștergeți această pictogramă?"
+
+#: ../../SessionManager/web/admin/applications_static.php:492
+msgid "Add to this server"
+msgstr "Adaugă la acest server"
+
+#: ../../SessionManager/web/admin/applications_static.php:552
+msgid "Del"
+msgstr "Șterge"
+
+#: ../../SessionManager/web/admin/applications_static.php:578
+msgid "Custom Mime-Type: "
+msgstr "Tip MIME personalizat: "
+
+#: ../../SessionManager/web/admin/appsgroup.php:47
+msgid "Application groups"
+msgstr "Grupurile aplicației"
+
+#: ../../SessionManager/web/admin/appsgroup.php:51
+msgid "No available application groups"
+msgstr "Nici un grup de aplicații disponibile"
+
+#: ../../SessionManager/web/admin/appsgroup.php:69
+#: ../../SessionManager/web/admin/appsgroup.php:163
+#: ../../SessionManager/web/admin/usersgroup.php:108
+#: ../../SessionManager/web/admin/usersgroup.php:318
+msgid "Enabled"
+msgstr "Activat"
+
+#: ../../SessionManager/web/admin/appsgroup.php:87
+#: ../../SessionManager/web/admin/appsgroup.php:231
+#: ../../SessionManager/web/admin/usersgroup.php:133
+#: ../../SessionManager/web/admin/usersgroup.php:446
+msgid "Are you sure you want to delete this group?"
+msgstr "Sigur doriți să ștergeți acest grup?"
+
+#: ../../SessionManager/web/admin/appsgroup.php:103
+#: ../../SessionManager/web/admin/usersgroup.php:152
+msgid "Are you sure you want to delete these groups?"
+msgstr "Sigur doriți să ștergeți aceste grupuri?"
+
+#: ../../SessionManager/web/admin/appsgroup.php:119
+#: ../../SessionManager/web/admin/usersgroup.php:177
+msgid "Create a new group"
+msgstr "Creează un grup nou"
+
+#: ../../SessionManager/web/admin/appsgroup.php:169
+#: ../../SessionManager/web/admin/ha/configuration.php:294
+#: ../../SessionManager/web/admin/usersgroup.php:324
+msgid "Enable"
+msgstr "Activează"
+
+#: ../../SessionManager/web/admin/appsgroup.php:215
+msgid "Application groups management"
+msgstr "Gestionarea grupurilor aplicației"
+
+#: ../../SessionManager/web/admin/appsgroup.php:230
+#: ../../SessionManager/web/admin/usersgroup.php:427
+#: ../../SessionManager/web/admin/users.php:263
+msgid "Settings"
+msgstr "Parametri"
+
+#: ../../SessionManager/web/admin/appsgroup.php:232
+#: ../../SessionManager/web/admin/usersgroup.php:447
+msgid "Delete this group"
+msgstr "Șterge acest grup"
+
+#: ../../SessionManager/web/admin/appsgroup.php:254
+#: ../../SessionManager/web/admin/usersgroup.php:468
+msgid "Update the name"
+msgstr "Actualizează numele"
+
+#: ../../SessionManager/web/admin/appsgroup.php:263
+#: ../../SessionManager/web/admin/usersgroup.php:477
+msgid "Update the description"
+msgstr "Actualizează descrierea"
+
+#: ../../SessionManager/web/admin/appsgroup.php:271
+msgid "List of applications in this group"
+msgstr "Lista aplicațiilor din acest grup"
+
+#: ../../SessionManager/web/admin/appsgroup.php:358
+#: ../../SessionManager/web/admin/usersgroup.php:645
+msgid "List of publications for this group"
+msgstr "Lista publicațiilor pentru acest grup"
+
+#: ../../SessionManager/web/admin/appsgroup.php:368
+#: ../../SessionManager/web/admin/publications.php:103
+#: ../../SessionManager/web/admin/usersgroup.php:654
+msgid "Are you sure you want to delete this publication?"
+msgstr "Sigur doriți să ștergeți această publicație?"
+
+#: ../../SessionManager/web/admin/appsgroup.php:373
+#: ../../SessionManager/web/admin/usersgroup.php:659
+msgid "Delete this publication"
+msgstr "Șterge această publicație"
+
+#: ../../SessionManager/web/admin/appsgroup.php:390
+#: ../../SessionManager/web/admin/usersgroup.php:676
+msgid "Add this publication"
+msgstr "Adaugă această publicație"
+
+#: ../../SessionManager/web/admin/checkup.php:207
+#: ../../SessionManager/web/admin/includes/page_template.php:300
+msgid "Checkup"
+msgstr "Verificări"
+
+#: ../../SessionManager/web/admin/checkup.php:209
+msgid "PHP Modules"
+msgstr "Module PHP"
+
+#: ../../SessionManager/web/admin/checkup.php:237
+msgid "Liaisons"
+msgstr "Legături"
+
+#: ../../SessionManager/web/admin/checkup.php:281
+msgid "Cleanup liaisons"
+msgstr "Curăță legăturile"
+
+#. reset
+#. conf not valid
+#: ../../SessionManager/web/admin/checkup.php:286
+#: ../../SessionManager/web/admin/configuration-partial.php:53
+#: ../../SessionManager/web/admin/configuration-partial.php:60
+#: ../../SessionManager/web/admin/configuration.php:69
+#: ../../SessionManager/web/admin/configuration.php:81
+#: ../../SessionManager/web/admin/ha/configuration.php:469
+#: ../../SessionManager/web/admin/ha/menu.inc.php:32
+#: ../../SessionManager/web/admin/includes/page_template.php:62
+#: ../../SessionManager/web/admin/includes/page_template.php:294
+#: ../../SessionManager/web/admin/index.php:84
+#: ../../SessionManager/web/admin/servers.php:445
+#: ../../SessionManager/web/admin/sharedfolders.php:115
+msgid "Configuration"
+msgstr "Configurație"
+
+# 94%
+#: ../../SessionManager/web/admin/checkup.php:291
+msgid "Default usergroup"
+msgstr "Grupul de utilizatori implicit"
+
+#: ../../SessionManager/web/admin/checkup.php:311
+msgid "Cleanup configuration"
+msgstr "Curăță configurația"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:27
+#: ../../SessionManager/web/modules/SessionManagement/microsoft.php:66
+msgid "Microsoft"
+msgstr "Microsoft"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:158
+msgid "Microsoft integration"
+msgstr "Integrare Microsoft"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:163
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:225
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:261
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:318
+msgid "Domain:"
+msgstr "Domeniu:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:164
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:192
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:257
+msgid "Primary Host:"
+msgstr "Gazda principală: "
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:165
+msgid ""
+"Optional: If the domain name is not registered in your DNS, fill in the "
+"Active Directory IP."
+msgstr ""
+"Opțional: dacă numele de domeniu nu este înregistrat în DNS, indicați adresa "
+"serverului Active Directory"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:167
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:193
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:258
+msgid "Secondary Host:"
+msgstr "Gazda secundară: "
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:168
+msgid "Optional"
+msgstr "Opțional"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:174
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:218
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:267
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:276
+msgid "Administrator account"
+msgstr "Contul administrator"
+
+# 83%
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:176
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:278
+msgid "Login:"
+msgstr "Identificator:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:177
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:279
+msgid "Password:"
+msgstr "Parolă:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:183
+msgid "Usergroups"
+msgstr "Grupuri de utilizatori"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:187
+msgid "Use <strong>Active Directory</strong> usergroups"
+msgstr "Utilizează grupurile de utilizatori <strong>Active Directory</strong>"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:192
+msgid "Use <strong>Internal</strong> usergroups"
+msgstr "Utilizează grupurile de utilizatori <strong>interne</strong>"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:206
+msgid "Domain users"
+msgstr "Utilizatorii domeniului"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:210
+msgid ""
+"Use <strong>Active Directory</strong> to handle users in OVD sessions <em>"
+"(not compatible with Linux applications)</em>"
+msgstr ""
+"Utilizează <strong>Active Directory</strong> pentru gestionarea "
+"utilizatorilor din sesiunile OVD <em>(nu este compatibilă cu aplicațiile "
+"Linux)</em>"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:214
+msgid "Use <strong>Internal</strong> method to handle users in OVD sessions"
+msgstr ""
+"Utilizează metoda <strong>internă</strong> pentru a gestiona utilizatorii "
+"din sesiunile OVD"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:227
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:320
+msgid "Administrator account:"
+msgstr "Cont de administrator:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:229
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:270
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:322
+msgid "User Groups:"
+msgstr "Grupurile de utilizatori:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:231
+msgid "Active Directory User Groups"
+msgstr "Grupurile de utilizatori Active Directory"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:233
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:250
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:276
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:307
+msgid "Use Internal User Groups"
+msgstr "Utilizează grupurile de utilizatori interne"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:27
+#: ../../SessionManager/web/classes/Preferences.class.php:232
+#: ../../SessionManager/web/modules/ProfileDB/internal.php:26
+#: ../../SessionManager/web/modules/SessionManagement/internal.php:78
+#: ../../SessionManager/web/modules/SharedFolderDB/internal.php:27
+#: ../../SessionManager/web/modules/UserGroupDBDynamicCached/internal.php:255
+#: ../../SessionManager/web/modules/UserGroupDBDynamic/internal.php:248
+msgid "Internal"
+msgstr "Intern"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:79
+msgid "Internal Database Profiles"
+msgstr "Profilele interne ale bazei de date"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:82
+msgid ""
+"This is the default profile manager. This profile manager saves all the data "
+"into a the same SQL database as you defined it in the system configuration."
+msgstr ""
+"Acesta este gestionarul de profile implicit. Acest gestionar de profile "
+"salvează toate datele în aceeași bază de date SQL pe care ați definit-o în "
+"configurația sistemului."
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:93
+msgid "Use a dynamic internal User Group"
+msgstr "Utilizează un grup dinamic de utilizatori interni"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:27
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:187
+#: ../../SessionManager/web/modules/UserDB/ldap.php:344
+msgid "Lightweight Directory Access Protocol (LDAP)"
+msgstr "Lightweight Directory Access Protocol (LDAP)"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:194
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:212
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:259
+msgid "optional"
+msgstr "opțional"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:196
+msgid "Server Port:"
+msgstr "Portul serverului:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:197
+msgid "Base DN:"
+msgstr "DN de bază:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:202
+#: ../../SessionManager/web/admin/includes/page_template.php:50
+#: ../../SessionManager/web/admin/includes/page_template.php:115
+#: ../../SessionManager/web/admin/summary.php:57
+#: ../../SessionManager/web/admin/users.php:59
+msgid "Users"
+msgstr "Utilizatori"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:204
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:268
+msgid "User branch:"
+msgstr "Branșa utilizatori:"
+
+#. Not yet Implemented
+#. $str.= '<tr><td style="text-align: right;"><input class="input_checkbox" type="checkbox" name="user_branch_recursive"/></td>';
+#. $str.= '<td>'._('Recursive Mode').'</td></tr>';
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:210
+msgid "Distinguished name field:"
+msgstr "Cîmpul nume distins de afișat:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:211
+msgid "Display name field:"
+msgstr "Cîmpul nume de afișat:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:212
+msgid "Locale field"
+msgstr "Cîmpul localei"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:213
+msgid "Filter:"
+msgstr "Filtru:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:224
+msgid "Anonymous bind"
+msgstr "Legături anonime"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:226
+msgid "Bind DN (without suffix):"
+msgstr "DN de legătură (fără sufix):"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:227
+msgid "Bind password:"
+msgstr "Parolă de legătură:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:232
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:298
+msgid "User Groups"
+msgstr "Grupuri de utilizatori"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:236
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:272
+msgid "Use LDAP User Groups using the MemberOf field"
+msgstr "Utilizează grupurile de utilizatori LDAP bazate pe cîmpul MemberOf"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:241
+msgid "Use LDAP User Groups using Posix groups"
+msgstr "Utilizează grupurile de utilizatori LDAP bazate pe grupurile Posix"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:243
+msgid "Group Branch DN:"
+msgstr "DN al branșei grupurilor:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:266
+msgid "Server:"
+msgstr "Server:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:274
+msgid "Use LDAP User Groups using Posix group"
+msgstr "Utilizează grupurile de utilizatori LDAP bazate pe grupul Posix"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:27
+#: ../../SessionManager/web/modules/SessionManagement/novell.php:84
+msgid "Novell"
+msgstr "Novell"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:252
+msgid "Novell integration"
+msgstr "Integrare Novell"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:265
+msgid "DSFW:"
+msgstr "DSFW:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:269
+msgid "ZENworks:"
+msgstr "ZENworks:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:270
+msgid ""
+"If ZENworks is installed on your Applications Servers, it will manage the "
+"user by itself (DLU). OVD won't create user for the session. This behavior "
+"looks like the domain users from AD."
+msgstr ""
+"Dacă ZENworks este instalat pe serverul de aplicații, acesta va gestiona el "
+"însuși utilizatorii (DLU). OVD nu va crea utilizator pentru sesiune. Acest "
+"comportament se aseamănă cu utilizatorii din AD."
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:285
+msgid "Default user branch"
+msgstr "Branșa de utilizatori implicită"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:290
+msgid "Specific Organization Unit:"
+msgstr "Unitatea de organizație specifică:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:302
+msgid "Use Novell eDirectory's User Groups"
+msgstr "Utilizează grupurile de utilizatori din Novell eDirectory"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:88
+msgid "Please install CURL support for PHP"
+msgstr "Instalați suportul CURL pentru PHP"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:93
+msgid "SQL configuration not valid(2)"
+msgstr "Configurația SQL nu este validă(2)"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:99
+msgid "SQL configuration not valid"
+msgstr "Configurația SQL nu este validă"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:105
+msgid "Initialization failed"
+msgstr "Inițializare eșuată"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:119
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:129
+msgid "prefs is not valid for module"
+msgstr "prefs nu este valid pentru modul"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:141
+msgid "Modules configuration not valid"
+msgstr "Configurația modulelor nu este validă"
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:68
+msgid "Search for users groups pattern: "
+msgstr "Căutare de grupuri de utilizatori după acest model: "
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:70
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:71
+#: ../../SessionManager/web/admin/session-reporting.php:171
+msgid "Search"
+msgstr "Caută"
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:72
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:73
+msgid "Search in: "
+msgstr "Caută în: "
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:87
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:88
+#: ../../SessionManager/web/admin/session-reporting.php:182
+#, php-format
+msgid ""
+"<strong>Partial content:</strong> Only <strong>%d result</strong> displayed "
+"but there are more. Please restrict your search field."
+msgid_plural ""
+"<strong>Partial content:</strong> Only <strong>%d results</strong> displayed "
+"but there are more. Please restrict your search field."
+msgstr[0] ""
+"<strong>Conținut parțial:</strong> Numai <strong>%d rezultat</strong> afișat "
+"dar sînt mai multe. Reduceți cîmpul de căutare."
+msgstr[1] ""
+"<strong>Conținut parțial:</strong> Numai <strong>%d rezultate</strong> "
+"afișate dar sînt mai multe. Reduceți cîmpul de căutare."
+msgstr[2] ""
+"<strong>Conținut parțial:</strong> Numai <strong>%d de rezultate</strong> "
+"afișate dar sînt mai multe. Reduceți cîmpul de căutare."
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:91
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:92
+#, php-format
+msgid "<strong>%d</strong> result for \"%s\"."
+msgid_plural "<strong>%d</strong> results for \"%s\"."
+msgstr[0] "<strong>%d</strong> rezultat pentru „%s”."
+msgstr[1] "<strong>%d</strong> rezultate pentru „%s”."
+msgstr[2] "<strong>%d</strong> de rezultate pentru „%s”."
+
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:69
+msgid "Search for user pattern: "
+msgstr "Căutare de utilizatori după acest model: "
+
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:77
+#: ../../SessionManager/web/admin/login.php:125
+#: ../../SessionManager/web/admin/summary.php:63
+#: ../../SessionManager/web/admin/users.php:73
+#: ../../SessionManager/web/admin/users.php:240
+msgid "Login"
+msgstr "Identificator"
+
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:81
+#: ../../SessionManager/web/admin/users.php:74
+#: ../../SessionManager/web/admin/users.php:285
+msgid "Display name"
+msgstr "Numele afișat"
+
+#. configuration saved
+#: ../../SessionManager/web/admin/configuration-partial.php:49
+#: ../../SessionManager/web/admin/configuration.php:65
+msgid "Configuration successfully saved"
+msgstr "Configurație salvată cu succes"
+
+#: ../../SessionManager/web/admin/configuration-partial.php:111
+#: ../../SessionManager/web/admin/configuration.php:109
+#: ../../SessionManager/web/admin/configuration-profile.php:243
+#: ../../SessionManager/web/admin/includes/functions.inc.php:205
+msgid "Save"
+msgstr "Salvează"
+
+#: ../../SessionManager/web/admin/configuration-partial.php:118
+#: ../../SessionManager/web/admin/configuration.php:131
+msgid "Preferences not loaded"
+msgstr "Preferințe neîncărcate"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:237
+msgid "Saved successfully"
+msgstr "Salvare reușită"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:244
+msgid "Test"
+msgstr "Test"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:252
+msgid "OK"
+msgstr "OK"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:258
+msgid "Success"
+msgstr "Succes"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:45
+msgid "Last save"
+msgstr "Ultima salvare"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:50
+#: ../../SessionManager/web/admin/ha/classes/Cib.class.php:30
+#: ../../SessionManager/web/admin/ha/classes/Cib.class.php:31
+#: ../../SessionManager/web/admin/ha/classes/Cib.class.php:324
+#: ../../SessionManager/web/admin/sessions.php:81
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:56
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:66
+#: ../../SessionManager/web/classes/Server.class.php:494
+#: ../../SessionManager/web/classes/Server.class.php:503
+#: ../../SessionManager/web/classes/Server.class.php:510
+#: ../../SessionManager/web/classes/Session.class.php:350
+#: ../../SessionManager/web/classes/Session.class.php:384
+msgid "Unknown"
+msgstr "Necunoscut"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:76
+#: ../../SessionManager/web/admin/ha/menu.inc.php:31
+#: ../../SessionManager/web/admin/includes/page_template.php:238
+#: ../../SessionManager/web/admin/logs.php:113
+#: ../../SessionManager/web/admin/logs.php:172
+#: ../../SessionManager/web/admin/logs.php:176
+msgid "Logs"
+msgstr "Jurnale"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:98
+msgid "Slave Server"
+msgstr "Server secundar"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:103
+msgid "Authorized FQDN"
+msgstr "FQDN autorizat"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:110
+msgid "FQDN check"
+msgstr "Verificare de FQDN"
+
+#: ../../SessionManager/web/admin/ha/classes/GRNode.class.php:65
+msgid "Group"
+msgstr "Grup"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:66
+msgid "Master/Slaves"
+msgstr "Primar/Secundar"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:70
+msgid "Master"
+msgstr "Primar"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:71
+msgid "Slaves"
+msgstr "Sclavi"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:72
+msgid "Stopped"
+msgstr "Oprit"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:73
+msgid "Failed"
+msgstr "Eșuat"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:112
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:120
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:107
+msgid "Resources configured"
+msgstr "Resurse configurate"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:114
+msgid "No master"
+msgstr "Fără server primar"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:122
+msgid "No slaves"
+msgstr "Fără sclavi"
+
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:108
+msgid "Started on"
+msgstr "Pornit pe"
+
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:109
+msgid "Stopped on"
+msgstr "Oprit pe"
+
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:110
+msgid "Failed on"
+msgstr "Eșec pe"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:100
+#: ../../SessionManager/web/admin/ha/configuration.php:149
+msgid "An error occured while reading configuration file, no values found!"
+msgstr ""
+"S-a produs o eroare în cursul citirii fișierului de configurare, nu s-au "
+"găsit valori!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:120
+msgid "Could not extract configuration values from file!"
+msgstr "Nu se pot extrage valorile de configurare din fișier!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:135
+#: ../../SessionManager/web/admin/ha/configuration.php:139
+msgid "An error occured when updating the virtual IP!"
+msgstr "S-a produs o eroare în cursul actualizării adresei IP virtuale!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:173
+msgid "No host has been registered yet."
+msgstr "Nici o gazdă nu a fost încă înregistrată."
+
+#: ../../SessionManager/web/admin/ha/configuration.php:189
+msgid "Delete unregistered servers"
+msgstr "Șterge serverele neînregistrate"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:196
+msgid ""
+"Your will have to change the virtual IP and then modify your url with the "
+"correct IP to reach the admin web interface!"
+msgstr ""
+"Va trebui să modificați adresa IP virtuală și apoi să modificați adresa URL "
+"cu adresa IP corectă pentru a vă conecta la interfața web de administrare!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:198
+msgid "Apply new virtual IP"
+msgstr "Aplică noua adresă IP virtuală"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:208
+#, php-format
+msgid "%s server(s) has been successfully removed!"
+msgstr "Serverul %s a fost înlăturat cu succes!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:210
+msgid "An error occured, no unregistered server deleted!"
+msgstr "S-a produs o eroare, nu s-a șters nici un server neînregistrat!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:219
+msgid "Cannot enable host because one is already enabled!"
+msgstr "Nu se poate activa gazda pentru că există una deja activată!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:230
+#: ../../SessionManager/web/admin/ha/configuration.php:253
+msgid "Cannot disable host because it is not enabled!"
+msgstr "Nu se poate dezactiva gazda pentru că nu este activată!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:241
+msgid "Host has been enabled!"
+msgstr "Gazda a fost activată!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:244
+msgid "An error occured during activation, can not enable host!"
+msgstr "S-a produs o eroare în cursul activării, gazda nu poate fi activată!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:259
+msgid "Host has been disabled!"
+msgstr "Gazda a fost dezactivată!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:262
+msgid "An error occured during disabling host, cannot disable host!"
+msgstr ""
+"S-a produs o eroare în cursul dezactivării, gazda nu poate fi dezactivată!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:269
+msgid ""
+"When enabling the slave server, the master server and slave server are going "
+"to restart their services to load the new configuration. It takes less than "
+"3 minutes. During this time the web interface will be disabled."
+msgstr ""
+"Cînd activați un server secundar, serverul principal și secundar își vor "
+"reporni serviciile pentru a încărca noua configurație. Durează mai puțin de "
+"3 minute. În acest interval de timp interfața web va fi dezactivată."
+
+#: ../../SessionManager/web/admin/ha/configuration.php:275
+msgid "Unregistered Server"
+msgstr "Server neînregistrat"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:279
+#: ../../SessionManager/web/admin/ha/configuration.php:316
+msgid "Hostname"
+msgstr "Nume de gazdă"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:284
+#: ../../SessionManager/web/admin/ha/configuration.php:321
+msgid "address"
+msgstr "adresă"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:289
+#: ../../SessionManager/web/admin/news.php:63
+#: ../../SessionManager/web/admin/session-reporting.php:270
+msgid "Date"
+msgstr "Dată"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:306
+msgid ""
+"When enabling the slave server, the master server is going to restart their "
+"services to load the new configuration. It takes less than 3 minutes. During "
+"this time the web interface will be disabled."
+msgstr ""
+"Cînd activați serverul secundar, serverul principal își va reporni "
+"serviciile pentru a încărca noua configurație. Durează mai puțin de 3 "
+"minute. În acest interval de timp interfața web va fi dezactivată."
+
+#: ../../SessionManager/web/admin/ha/configuration.php:312
+msgid "Registered Server"
+msgstr "Server înregistrat"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:326
+msgid "Disable"
+msgstr "Dezactivează"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:340
+msgid "Update HA configuration"
+msgstr "Actualizează configurația HA"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:340
+msgid "Submit"
+msgstr "Trimite"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:375
+msgid "The system is on maintenance mode! Cannot apply changes."
+msgstr "Sistemul este în regim de mentenanță! Nu se pot aplica modificările."
+
+#: ../../SessionManager/web/admin/ha/configuration.php:389
+msgid "Cannot enable host because no host found in DB!"
+msgstr ""
+"Nu se poate activa gazda deoarece nu s-a găsit nici o gazdă în baza de date!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:399
+#, php-format
+msgid "Host %s at address %s has been notifyed succesfully!"
+msgstr "Gazda %s cu adresa %s a fost modificată cu succes!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:402
+#: ../../SessionManager/web/admin/ha/configuration.php:428
+#, php-format
+msgid "Cannot query slave host at address %s"
+msgstr "Nu se poate interoga gazda sclavă cu adresa %s"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:422
+#, php-format
+msgid "Host %s has been set in standby and master %s will restart Heartbeat!"
+msgstr ""
+"Gazda %s a fost trecută în așteptare și serverul primar %s va reporni "
+"Heartbeat!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:432
+msgid "An error occured during disabling, can not disable host!"
+msgstr ""
+"S-a produs o eroare în cursul dezactivării, gazda nu poate fi dezactivată!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:443
+msgid "Changing configuration... Please wait a few seconds"
+msgstr "Se schimbă configurația... Așteptați cîteva secunde"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:446
+msgid ""
+"Changing configuration failded... Verify configuration at field HA::Virtual "
+"IP"
+msgstr ""
+"Schimbarea configurației a eșuat... Verificați configurația la cîmpul "
+"HA::Virtual IP"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:459
+#, php-format
+msgid "Virtual IP \"%s\" is not valid!"
+msgstr "Adresa IP virtuală „%s” nu este validă!"
+
+#: ../../SessionManager/web/admin/ha/logs.php:68
+msgid "High Availability logs"
+msgstr "Jurnalele pentru înalta disponibilitate"
+
+#: ../../SessionManager/web/admin/ha/logs.php:74
+#: ../../SessionManager/web/admin/ha/logs.php:77
+msgid "Show alerts"
+msgstr "Afișează alertele"
+
+#: ../../SessionManager/web/admin/ha/logs.php:80
+msgid "Show information"
+msgstr "Afișează informațiile"
+
+#: ../../SessionManager/web/admin/ha/logs.php:83
+msgid "Show informations"
+msgstr "Afișează informațiile"
+
+#: ../../SessionManager/web/admin/ha/logs.php:89
+msgid "Cleanup logs"
+msgstr "Curăță jurnalele"
+
+#: ../../SessionManager/web/admin/ha/logs.php:91
+#, php-format
+msgid "%s logs"
+msgstr "jurnalele %s"
+
+#: ../../SessionManager/web/admin/ha/menu.inc.php:29
+msgid "High Availability"
+msgstr "Înaltă disponibilitate (HA)"
+
+#: ../../SessionManager/web/admin/ha/registration.php:49
+msgid "Host has been already registered!"
+msgstr "Gazda a fost deja înregistrată!"
+
+#: ../../SessionManager/web/admin/ha/registration.php:85
+msgid "Host activation has been done successfully!"
+msgstr "Activarea gazdei a fost efectuată cu succes!"
+
+#: ../../SessionManager/web/admin/ha/registration.php:88
+msgid "An error occured in POST request activation!"
+msgstr "S-a produs o eroare la activarea cererii POST!"
+
+#: ../../SessionManager/web/admin/ha/registration.php:93
+msgid "Deleting host has been done successfully!"
+msgstr "Ștergerea gazdei a fost efectuată cu succes!"
+
+#: ../../SessionManager/web/admin/ha/registration.php:96
+#: ../../SessionManager/web/admin/ha/registration.php:100
+msgid "Request is not well formatted!"
+msgstr "Cererea nu este formatată corect!"
+
+#: ../../SessionManager/web/admin/ha/status.php:78
+msgid "General Status"
+msgstr "Stare generală"
+
+#: ../../SessionManager/web/admin/ha/status.php:80
+msgid "Last time update of this page and included information"
+msgstr "Ultima actualizare a acestei pagini și a informațiilor sale"
+
+#: ../../SessionManager/web/admin/ha/status.php:80
+msgid "Last update"
+msgstr "Ultima actualizare"
+
+#: ../../SessionManager/web/admin/ha/status.php:85
+msgid ""
+"The DC (Designated Coordinator) has elected a node in the cluster. It is "
+"responsible for actions of each cluster element."
+msgstr ""
+"DC (coordonatorul desemnat) a ales un nod din gruparea de servere. Este "
+"responsabil pentru acțiunile fiecărui element din grupare."
+
+#: ../../SessionManager/web/admin/ha/status.php:85
+msgid "Current DC"
+msgstr "DC curent"
+
+#: ../../SessionManager/web/admin/ha/status.php:90
+msgid "Number of nodes provided and configured in the cluster"
+msgstr "Numărul nodurilor furnizate și configurate din gruparea de servere"
+
+#: ../../SessionManager/web/admin/ha/status.php:90
+msgid "Nodes configured"
+msgstr "Noduri configurate"
+
+#: ../../SessionManager/web/admin/ha/status.php:95
+msgid "Number of resources configured for all nodes"
+msgstr "Numărul resurselor configurate pentru toate nodurile"
+
+#: ../../SessionManager/web/admin/ha/status.php:105
+msgid "Ressources Status"
+msgstr "Starea resurselor"
+
+#: ../../SessionManager/web/admin/ha/status.php:114
+msgid "Ressources errors"
+msgstr "Erorile resurselor"
+
+#: ../../SessionManager/web/admin/ha/status.php:127
+#: ../../SessionManager/web/admin/ha/status.php:129
+#: ../../SessionManager/web/admin/ha/status.php:162
+#: ../../SessionManager/web/admin/ha/status.php:163
+msgid "Out of Network"
+msgstr "În afara rețelei"
+
+#: ../../SessionManager/web/admin/ha/status.php:141
+#: ../../SessionManager/web/admin/ha/status.php:145
+#: ../../SessionManager/web/classes/Server.class.php:488
+msgid "Online"
+msgstr "Conectat"
+
+#: ../../SessionManager/web/admin/ha/status.php:142
+msgid "Production"
+msgstr "Producție"
+
+#: ../../SessionManager/web/admin/ha/status.php:146
+#: ../../SessionManager/web/classes/Session.class.php:365
+msgid "Ready"
+msgstr "Gata"
+
+#: ../../SessionManager/web/admin/ha/status.php:154
+msgid "Standby"
+msgstr "În așteptare"
+
+#: ../../SessionManager/web/admin/ha/status.php:172
+msgid "An error has occured, please call your administrator!"
+msgstr "S-a produs o eroare, contactați administratorul!"
+
+#: ../../SessionManager/web/admin/ha/status.php:176
+#: ../../SessionManager/web/admin/logs.php:117
+msgid "Session Manager"
+msgstr "Gestionar de sesiune"
+
+#: ../../SessionManager/web/admin/ha/status.php:182
+msgid "Unpaused"
+msgstr "Reactivat"
+
+#: ../../SessionManager/web/admin/ha/status.php:184
+msgid "Paused"
+msgstr "Suspendat"
+
+#: ../../SessionManager/web/admin/ha/status.php:193
+msgid "Pause"
+msgstr "Suspendă"
+
+#: ../../SessionManager/web/admin/ha/status.php:201
+msgid "Set it online"
+msgstr "Conectează-l"
+
+#: ../../SessionManager/web/admin/ha/status.php:229
+msgid "High Availability Status"
+msgstr "Starea înaltei disponibilități"
+
+#: ../../SessionManager/web/admin/ha/status.php:256
+msgid "Waiting for Heartbeat's CIB..."
+msgstr "Se așteaptă Heartbeat CIB..."
+
+#: ../../SessionManager/web/admin/ha/status.php:256
+msgid ""
+"Please check permissions on ulteo-ovd.conf or if \"cibadmin -Q\" works fine! "
+"Apache could have been started by another user than www-data."
+msgstr ""
+"Verificați permisiunile fișierului ulteo-ovd.conf sau dacă „cibadmin -Q” "
+"funcționează corect! Apache poate a fost pornit cu un alt utilizator decît "
+"www-data."
+
+#: ../../SessionManager/web/admin/includes/core.inc.php:59
+#: ../../SessionManager/web/admin/index.php:138
+#: ../../SessionManager/web/webservices/configuration.php:32
+msgid "The system is on maintenance mode"
+msgstr "Sistemul este în regim de mentenanță"
+
+#: ../../SessionManager/web/admin/includes/functions.inc.php:366
+msgid "You are not allowed to perform this action"
+msgstr "Nu sînteți autorizat să executați această acțiune"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:37
+#: ../../SessionManager/web/admin/index.php:41
+msgid "Index"
+msgstr "Index"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:44
+#: ../../SessionManager/web/admin/includes/page_template.php:75
+#: ../../SessionManager/web/admin/index.php:65
+#: ../../SessionManager/web/admin/servers.php:64
+#: ../../SessionManager/web/admin/sessions.php:172
+#: ../../SessionManager/web/admin/tasks.php:69
+msgid "Servers"
+msgstr "Servere"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:81
+#: ../../SessionManager/web/admin/servers.php:225
+msgid "Unregistered servers"
+msgstr "Servere neînregistrate"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:87
+#: ../../SessionManager/web/admin/tasks.php:132
+msgid "Tasks"
+msgstr "Sarcini"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:96
+#: ../../SessionManager/web/admin/sharedfolders.php:45
+#: ../../SessionManager/web/admin/usersgroup.php:749
+msgid "Shared folders"
+msgstr "Dosare partajate"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:106
+msgid "Profiles"
+msgstr "Profile"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:122
+msgid "Users Groups"
+msgstr "Grupuri de utilizatori"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:136
+msgid "Applications Groups"
+msgstr "Grupuri de aplicații"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:148
+msgid "Static applications"
+msgstr "Aplicații statice"
+
+# 75%
+#: ../../SessionManager/web/admin/includes/page_template.php:156
+#: ../../SessionManager/web/admin/publications.php:78
+msgid "Publications"
+msgstr "Publicații"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:163
+#: ../../SessionManager/web/admin/index.php:116
+msgid "Publication wizard"
+msgstr "Asistentul de publicare"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:170
+msgid "Sum up"
+msgstr "Rezumat"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:176
+msgid "Database settings"
+msgstr "Configurările bazei de date"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:182
+msgid "System settings"
+msgstr "Parametri sistem"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:188
+msgid "Server settings"
+msgstr "Parametri server"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:194
+msgid "Domain integration settings"
+msgstr "Parametri de integrare în domeniu"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:200
+msgid "Authentication settings"
+msgstr "Parametri de autentificare"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:206
+msgid "Session settings"
+msgstr "Parametri de sesiune"
+
+#. Events settings
+#: ../../SessionManager/web/admin/includes/page_template.php:212
+#: ../../SessionManager/web/classes/Preferences.class.php:534
+msgid "Events settings"
+msgstr "Parametrii evenimentelor"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:218
+#: ../../SessionManager/web/classes/Preferences.class.php:454
+msgid "Web interface settings"
+msgstr "Parametrii interfeței web"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:224
+#: ../../SessionManager/web/admin/password.php:36
+msgid "Change Administrator password"
+msgstr "Schimbă parola administratorului"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:232
+msgid "Sessions"
+msgstr "Sesiuni"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:244
+#: ../../SessionManager/web/admin/reporting.php:309
+#: ../../SessionManager/web/admin/reporting.php:464
+msgid "Reporting"
+msgstr "Rapoarte"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:252
+#: ../../SessionManager/web/admin/news.php:59
+msgid "News"
+msgstr "Știri"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:259
+msgid "Summary"
+msgstr "Rezumat"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:288
+msgid "Debug Tools"
+msgstr "Unelte de depanare"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:307
+msgid "Logout"
+msgstr "Deconectare"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:314
+#: ../../SessionManager/web/admin/login.php:93
+#: ../../SessionManager/web/includes/functions.inc.d/template.inc.php:69
+#: ../../SessionManager/web/includes/functions.inc.d/template.inc.php:113
+msgid "Administration"
+msgstr "Administrare"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:440
+#: ../../SessionManager/web/includes/functions.inc.d/template.inc.php:135
+msgid "powered by"
+msgstr "realizat de"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:50
+msgid "Cannot list available applications"
+msgstr "Nu se pot lista aplicațiile disponibile"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:111
+#: ../../SessionManager/web/admin/servers.php:51
+#, php-format
+msgid "Server \"%s\": redirection name may be invalid!"
+msgstr "Server „%s”: numele de redirecționare pare invalid!"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:113
+#: ../../SessionManager/web/admin/servers.php:53
+#, php-format
+msgid "Server \"%s\": redirection name cannot be empty!"
+msgstr "Server „%s”: numele de redirecționare nu poate fi vid!"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:215
+msgid "Number of available sessions on this server"
+msgstr "Numărul sesiunilor disponibile pe acest server"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:227
+msgid "default"
+msgstr "implicit"
+
+# 83%
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:228
+#: ../../SessionManager/web/admin/servers.php:459
+msgid "change"
+msgstr "schimbă"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:237
+msgid "Install an application"
+msgstr "Instalează o aplicație"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:243
+msgid "Install from a package name"
+msgstr "Instalează după numele pachetului"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:248
+msgid "more options"
+msgstr "mai multe opțiuni"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:260
+msgid "Category"
+msgstr "Categorie"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:265
+msgid "Application"
+msgstr "Aplicație"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:267
+#: ../../SessionManager/web/admin/tasks.php:198
+msgid "Install"
+msgstr "Instalează"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:276
+#: ../../SessionManager/web/admin/tasks.php:212
+msgid "Upgrade"
+msgstr "Actualizează"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:281
+#: ../../SessionManager/web/admin/tasks.php:201
+msgid "Upgrade the internal system and applications"
+msgstr "Actualizează aplicațiile și sistemul intern"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:290
+msgid "Applications available on this server"
+msgstr "Aplicații disponibile pe acest server"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:332
+msgid "install in progress"
+msgstr "instalare în curs"
+
+# 81%
+#. div replication
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:361
+msgid "Replication"
+msgstr "Replicare"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:373
+msgid "Replicate on those servers"
+msgstr "Replică pe aceste servere"
+
+#. div tasks
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:381
+msgid "Active tasks on this server"
+msgstr "Sarcini active pe acest server"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:413
+#, php-format
+msgid "Active sessions (total: %s)"
+msgstr "Sesiuni active (total: %s)"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:423
+#: ../../SessionManager/web/admin/sessions.php:86
+#: ../../SessionManager/web/admin/users.php:386
+msgid "Not started yet"
+msgstr "Nu este încă pornit"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:430
+#: ../../SessionManager/web/admin/users.php:393
+msgid "Information about this session"
+msgstr "Informații despre această sesiune"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:514
+msgid "User profiles on the server"
+msgstr "Profile utilizator pe server"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:520
+msgid "Shared folders on the server"
+msgstr "Dosare partajate pe server"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:548
+msgid "Owner"
+msgstr "Proprietar"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:548
+#: ../../SessionManager/web/admin/profiles.php:101
+msgid "Used by"
+msgstr "Utilizat de"
+
+# 84%
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:597
+msgid "Are you sure you want to delete this user profile?"
+msgstr "Sigur doriți să ștergeți profilul acestui utilizator?"
+
+# 86%
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:597
+msgid "Are you sure you want to delete this network folder?"
+msgstr "Sigur doriți să ștergeți acest dosar în rețea?"
+
+# 80%
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:618
+msgid "Are you sure you want to delete these user profiles?"
+msgstr "Sigur doriți să ștergeți aceste profile utilizatori?"
+
+# 81%
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:618
+msgid "Are you sure you want to delete these network folders?"
+msgstr "Sigur doriți să ștergeți aceste dosare în rețea?"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:634
+#: ../../SessionManager/web/admin/usersgroup.php:806
+msgid "Action"
+msgstr "Acțiune"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:641
+#: ../../SessionManager/web/admin/sharedfolders.php:69
+msgid "Create this shared folder"
+msgstr "Creează acest dosar partajat"
+
+#: ../../SessionManager/web/admin/index.php:47
+msgid "Users and Users groups"
+msgstr "Utilizatori și grupuri de utilizatori"
+
+#: ../../SessionManager/web/admin/index.php:52
+msgid "Users list"
+msgstr "Lista utilizatorilor"
+
+#: ../../SessionManager/web/admin/index.php:54
+msgid "Users groups list"
+msgstr "Lista grupurilor de utilizatori"
+
+#: ../../SessionManager/web/admin/index.php:70
+msgid "Servers list"
+msgstr "Lista serverelor"
+
+#: ../../SessionManager/web/admin/index.php:71
+msgid "Unregistered servers list"
+msgstr "Lista serverelor neînregistrate"
+
+#: ../../SessionManager/web/admin/index.php:89
+#: ../../SessionManager/web/classes/Preferences.class.php:175
+msgid "General configuration"
+msgstr "Configurație generală"
+
+#: ../../SessionManager/web/admin/index.php:106
+msgid "Applications and applications groups"
+msgstr "Aplicații și grupuri de aplicații"
+
+#: ../../SessionManager/web/admin/index.php:111
+msgid "Applications list"
+msgstr "Lista aplicațiilor"
+
+# 75%
+#: ../../SessionManager/web/admin/index.php:113
+msgid "Applications groups list"
+msgstr "Lista grupurilor de aplicații"
+
+#: ../../SessionManager/web/admin/index.php:115
+msgid "Publications list"
+msgstr "Lista publicațiilor"
+
+#: ../../SessionManager/web/admin/index.php:128
+msgid "System"
+msgstr "Sistem"
+
+#: ../../SessionManager/web/admin/index.php:141
+msgid "Are you sure you want to switch the system to production mode?"
+msgstr "Sigur doriți să treceți sistemul în regim de producție?"
+
+#: ../../SessionManager/web/admin/index.php:141
+msgid "Switch the system to production mode"
+msgstr "Trece sistemul în regim de producție"
+
+#: ../../SessionManager/web/admin/index.php:143
+msgid "The system is on production mode"
+msgstr "Sistemul este în regim de producție"
+
+#: ../../SessionManager/web/admin/index.php:146
+msgid "Are you sure you want to switch the system to maintenance mode?"
+msgstr "Sigur doriți să treceți sistemul în regim de mentenanță?"
+
+#: ../../SessionManager/web/admin/index.php:146
+msgid "Switch the system to maintenance mode"
+msgstr "Trece sistemul în regim de mentenanță"
+
+# 93%
+#: ../../SessionManager/web/admin/index.php:175
+msgid "active sessions"
+msgstr "sesiuni active"
+
+# 86%
+#: ../../SessionManager/web/admin/index.php:177
+msgid "active session"
+msgstr "sesiune activă"
+
+#: ../../SessionManager/web/admin/index.php:185
+msgid "online servers"
+msgstr "servere conectate"
+
+#: ../../SessionManager/web/admin/index.php:187
+msgid "online server"
+msgstr "server conectat"
+
+#: ../../SessionManager/web/admin/index.php:195
+msgid "offline servers"
+msgstr "servere deconectate"
+
+#: ../../SessionManager/web/admin/index.php:197
+msgid "offline server"
+msgstr "server deconectat"
+
+#: ../../SessionManager/web/admin/index.php:205
+msgid "broken servers"
+msgstr "servere defecte"
+
+#: ../../SessionManager/web/admin/index.php:207
+msgid "broken server"
+msgstr "server defect"
+
+#. the user does not exist
+#: ../../SessionManager/web/admin/login.php:38
+#: ../../SessionManager/web/admin/login.php:45
+msgid "There was an error with your authentication"
+msgstr "S-a produs o eroare la autentificarea voastră"
+
+#: ../../SessionManager/web/admin/login.php:57
+msgid "Unauthorized access"
+msgstr "Acces neautorizat"
+
+#: ../../SessionManager/web/admin/login.php:101
+#: ../../SessionManager/web/admin/login.php:141
+msgid "Log in"
+msgstr "Conexiune"
+
+#: ../../SessionManager/web/admin/login.php:133
+msgid "Password"
+msgstr "Parolă"
+
+#: ../../SessionManager/web/admin/logs.php:121
+#: ../../SessionManager/web/admin/logs.php:139
+msgid "View full log file online"
+msgstr "Vizualizarea jurnalului complet în direct"
+
+#: ../../SessionManager/web/admin/logs.php:122
+#: ../../SessionManager/web/admin/logs.php:140
+#: ../../SessionManager/web/admin/logs.php:173
+#: ../../SessionManager/web/admin/logs.php:177
+msgid "Download full log file"
+msgstr "Descarcă fișierul jurnal complet"
+
+#: ../../SessionManager/web/admin/logs.php:131
+msgid "Application Servers"
+msgstr "Serverele aplicației"
+
+# 75%
+#: ../../SessionManager/web/admin/logs.php:138
+msgid "Log"
+msgstr "Jurnal"
+
+#: ../../SessionManager/web/admin/mimetypes.php:68
+msgid "More information"
+msgstr "Mai multe informații"
+
+#: ../../SessionManager/web/admin/mimetypes.php:92
+msgid "Mime-Type"
+msgstr "Tipuri MIME"
+
+#: ../../SessionManager/web/admin/mimetypes.php:96
+msgid "No application with this mime-type"
+msgstr "Nici o aplicație cu acest tip MIME"
+
+#: ../../SessionManager/web/admin/mimetypes.php:102
+msgid "OS"
+msgstr "SO"
+
+#: ../../SessionManager/web/admin/news.php:39
+msgid "News successfully modified"
+msgstr "Știre modificată cu succes"
+
+#: ../../SessionManager/web/admin/news.php:63
+msgid "Title"
+msgstr "Titlu"
+
+#: ../../SessionManager/web/admin/news.php:63
+msgid "Content"
+msgstr "Conținut"
+
+#: ../../SessionManager/web/admin/news.php:76
+msgid "Are you sure you want to delete this news?"
+msgstr "Sigur doriți să ștergeți această știre?"
+
+#: ../../SessionManager/web/admin/news.php:80
+msgid "Delete this news"
+msgstr "Șterge această știre"
+
+#: ../../SessionManager/web/admin/news.php:90
+msgid "Add news"
+msgstr "Adaugă o știre"
+
+#: ../../SessionManager/web/admin/news.php:101
+msgid "Add this news"
+msgstr "Adaugă această știre"
+
+#: ../../SessionManager/web/admin/password.php:25
+msgid "User not authorized to manage configuration"
+msgstr "Utilizator neautorizat pentru gestionarea configurației"
+
+#: ../../SessionManager/web/admin/password.php:30
+msgid "No action found"
+msgstr "Nici o acțiune găsită"
+
+#: ../../SessionManager/web/admin/password.php:43
+#: ../../SessionManager/web/admin/users.php:292
+msgid "New password"
+msgstr "Parola nouă"
+
+#: ../../SessionManager/web/admin/password.php:48
+msgid "Retype password"
+msgstr "Retastați parola"
+
+#: ../../SessionManager/web/admin/password.php:53
+msgid "Change"
+msgstr "Schimbă"
+
+#: ../../SessionManager/web/admin/profiles.php:50
+msgid "Profile"
+msgstr "Profil"
+
+# 91%
+#: ../../SessionManager/web/admin/profiles.php:59
+msgid "Are you sure you want to delete this profile?"
+msgstr "Sigur doriți să ștergeți acest profil?"
+
+# 78%
+#: ../../SessionManager/web/admin/profiles.php:63
+msgid "Delete this profile"
+msgstr "Șterge acest profil"
+
+#: ../../SessionManager/web/admin/profiles.php:91
+#, php-format
+msgid "Profile: %s"
+msgstr "Profil: %s"
+
+#: ../../SessionManager/web/admin/publications.php:83
+msgid "Users group"
+msgstr "Grup de utilizatori"
+
+# 89%
+#: ../../SessionManager/web/admin/publications.php:84
+msgid "Applications group"
+msgstr "Grup de aplicații"
+
+#: ../../SessionManager/web/admin/publications.php:91
+msgid "No publication"
+msgstr "Nici o publicație"
+
+#: ../../SessionManager/web/admin/publications.php:146
+msgid "Please select an users group"
+msgstr "Selectați un grup de utilizatori"
+
+#: ../../SessionManager/web/admin/publications.php:146
+msgid "Please select an applications group"
+msgstr "Selectați un grup de aplicații"
+
+#: ../../SessionManager/web/admin/reporting.php:106
+msgid "Day"
+msgstr "Zi"
+
+#: ../../SessionManager/web/admin/reporting.php:135
+msgid "Hour"
+msgstr "Oră"
+
+#: ../../SessionManager/web/admin/reporting.php:165
+msgid "Minute"
+msgstr "Minut"
+
+#: ../../SessionManager/web/admin/reporting.php:292
+#: ../../SessionManager/web/admin/reporting.php:708
+msgid "Error: \"from\" date is after \"to\" date, switching"
+msgstr "Eroare: data „de la” este mai recentă ca data „pînă la”, inversare"
+
+# 91%
+#: ../../SessionManager/web/admin/reporting.php:299
+msgid "Error: \"to\" field is in the future, switching to current time"
+msgstr ""
+"Eroare: cîmpul „pînă la” indică o dată în viitor, se schimbă cu ora curentă"
+
+#: ../../SessionManager/web/admin/reporting.php:307
+#, php-format
+msgid "%s is not writable"
+msgstr "%s nu poate fi scris"
+
+#: ../../SessionManager/web/admin/reporting.php:332
+#: ../../SessionManager/web/admin/reporting.php:397
+msgid "Number of launched sessions"
+msgstr "Numărul sesiunilor lansate"
+
+#: ../../SessionManager/web/admin/reporting.php:342
+msgid "unknown"
+msgstr "necunoscut"
+
+#: ../../SessionManager/web/admin/reporting.php:349
+msgid "%FQDN% (%TOTAL% session)"
+msgstr "%FQDN% (%TOTAL% sesiune)"
+
+#: ../../SessionManager/web/admin/reporting.php:349
+msgid "%FQDN% (%TOTAL% sessions)"
+msgstr "%FQDN% (%TOTAL% sesiuni)"
+
+#: ../../SessionManager/web/admin/reporting.php:354
+msgid "Session repartition"
+msgstr "Repartizarea sesiunii"
+
+#: ../../SessionManager/web/admin/reporting.php:363
+#: ../../SessionManager/web/admin/reporting.php:406
+msgid "%STATUS% (%TOTAL% session)"
+msgstr "%STATUS% (%TOTAL% sesiune)"
+
+#: ../../SessionManager/web/admin/reporting.php:363
+#: ../../SessionManager/web/admin/reporting.php:406
+msgid "%STATUS% (%TOTAL% sessions)"
+msgstr "%STATUS% (%TOTAL% sesiuni)"
+
+#: ../../SessionManager/web/admin/reporting.php:368
+#: ../../SessionManager/web/admin/reporting.php:411
+msgid "Session end status"
+msgstr "Starea de sfîrșit a sesiunii"
+
+#: ../../SessionManager/web/admin/reporting.php:435
+#: ../../SessionManager/web/admin/servers.php:129
+#: ../../SessionManager/web/admin/servers.php:418
+msgid "CPU usage"
+msgstr "Utilizare CPU"
+
+#: ../../SessionManager/web/admin/reporting.php:456
+#: ../../SessionManager/web/admin/servers.php:131
+#: ../../SessionManager/web/admin/servers.php:420
+msgid "RAM usage"
+msgstr "Utilizare RAM"
+
+#: ../../SessionManager/web/admin/reporting.php:511
+#: ../../SessionManager/web/admin/session-reporting.php:150
+#: ../../SessionManager/web/classes/Preferences.class.php:291
+msgid "From"
+msgstr "De la"
+
+#: ../../SessionManager/web/admin/reporting.php:523
+msgid "to"
+msgstr "pînă la"
+
+#: ../../SessionManager/web/admin/reporting.php:535
+msgid "step"
+msgstr "pas"
+
+#: ../../SessionManager/web/admin/reporting.php:551
+msgid "Refresh"
+msgstr "Împrospătează"
+
+#: ../../SessionManager/web/admin/reporting.php:559
+#: ../../SessionManager/web/admin/reporting.php:572
+#: ../../SessionManager/web/admin/reporting.php:608
+#: ../../SessionManager/web/admin/reporting.php:629
+#: ../../SessionManager/web/admin/reporting.php:644
+msgid "Abscissa: day of the month"
+msgstr "Abscisă: ziua lunii"
+
+#: ../../SessionManager/web/admin/reporting.php:561
+#: ../../SessionManager/web/admin/reporting.php:574
+#: ../../SessionManager/web/admin/reporting.php:610
+#: ../../SessionManager/web/admin/reporting.php:631
+#: ../../SessionManager/web/admin/reporting.php:646
+msgid "Abscissa: hour of the day"
+msgstr "Abscisă: ora zilei"
+
+#: ../../SessionManager/web/admin/reporting.php:563
+#: ../../SessionManager/web/admin/reporting.php:576
+#: ../../SessionManager/web/admin/reporting.php:612
+#: ../../SessionManager/web/admin/reporting.php:633
+#: ../../SessionManager/web/admin/reporting.php:648
+msgid "Abscissa: minute of the hour"
+msgstr "Abscisă: minutul orei"
+
+#: ../../SessionManager/web/admin/reporting.php:565
+#: ../../SessionManager/web/admin/reporting.php:578
+#: ../../SessionManager/web/admin/reporting.php:614
+msgid "Ordinate: number of sessions"
+msgstr "Ordonată: numărul sesiunilor"
+
+#: ../../SessionManager/web/admin/reporting.php:595
+msgid "See archived sessions in this time range"
+msgstr "Vedeți sesiunile arhivate în această perioadă de timp"
+
+#: ../../SessionManager/web/admin/reporting.php:601
+#: ../../SessionManager/web/admin/tasks.php:144
+msgid "Server"
+msgstr "Server"
+
+#: ../../SessionManager/web/admin/reporting.php:635
+msgid "Ordinate: CPU usage in percent"
+msgstr "Ordonată: utilizarea CPU în procente"
+
+#: ../../SessionManager/web/admin/reporting.php:651
+msgid "Ordinate: RAM usage in percent"
+msgstr "Ordonată: utilizarea RAM în procente"
+
+#: ../../SessionManager/web/admin/reporting.php:682
+msgid "Number of active sessions"
+msgstr "Numărul sesiunilor active"
+
+#: ../../SessionManager/web/admin/reporting.php:715
+msgid "Error: \"to\" field is in the future, switch to the current time"
+msgstr ""
+"Eroare: cîmpul „pînă la” indică o dată în viitor, se schimbă cu ora curentă"
+
+#: ../../SessionManager/web/admin/servers.php:75
+#: ../../SessionManager/web/admin/servers.php:235
+#: ../../SessionManager/web/admin/sumup.php:218
+msgid "FQDN"
+msgstr "FQDN"
+
+#: ../../SessionManager/web/admin/servers.php:76
+#: ../../SessionManager/web/admin/servers.php:236
+#: ../../SessionManager/web/admin/sumup.php:220
+msgid "Roles"
+msgstr "Roluri"
+
+#: ../../SessionManager/web/admin/servers.php:80
+#: ../../SessionManager/web/admin/servers.php:397
+#: ../../SessionManager/web/admin/servers.php:404
+msgid "Monitoring"
+msgstr "Supraveghere"
+
+#: ../../SessionManager/web/admin/servers.php:92
+#: ../../SessionManager/web/admin/servers.php:195
+#: ../../SessionManager/web/admin/servers.php:366
+msgid "Switch to production"
+msgstr "Trece în producție"
+
+#: ../../SessionManager/web/admin/servers.php:96
+#: ../../SessionManager/web/admin/servers.php:196
+#: ../../SessionManager/web/admin/servers.php:370
+#: ../../SessionManager/web/classes/Preferences.class.php:323
+msgid "Switch to maintenance"
+msgstr "Trece în mentenanță"
+
+#: ../../SessionManager/web/admin/servers.php:120
+#: ../../SessionManager/web/admin/servers.php:271
+#: ../../SessionManager/web/admin/servers.php:412
+msgid "CPU"
+msgstr "CPU"
+
+#: ../../SessionManager/web/admin/servers.php:121
+#: ../../SessionManager/web/admin/servers.php:272
+#: ../../SessionManager/web/admin/servers.php:413
+msgid "cores"
+msgstr "nuclee"
+
+#: ../../SessionManager/web/admin/servers.php:121
+#: ../../SessionManager/web/admin/servers.php:272
+#: ../../SessionManager/web/admin/servers.php:413
+msgid "core"
+msgstr "nucleu"
+
+#: ../../SessionManager/web/admin/servers.php:123
+#: ../../SessionManager/web/admin/servers.php:274
+#: ../../SessionManager/web/admin/servers.php:414
+msgid "RAM"
+msgstr "RAM"
+
+#: ../../SessionManager/web/admin/servers.php:123
+#: ../../SessionManager/web/admin/servers.php:414
+msgid "MB"
+msgstr "MO"
+
+#: ../../SessionManager/web/admin/servers.php:139
+#: ../../SessionManager/web/admin/servers.php:428
+msgid "Sessions usage"
+msgstr "Utilizarea sesiunilor"
+
+#: ../../SessionManager/web/admin/servers.php:143
+#: ../../SessionManager/web/admin/servers.php:432
+msgid "Disk usage"
+msgstr "Utilizarea discului"
+
+#: ../../SessionManager/web/admin/servers.php:205
+msgid "No server"
+msgstr "Nici un server"
+
+#: ../../SessionManager/web/admin/servers.php:284
+#: ../../SessionManager/web/admin/servers.php:316
+msgid "Register"
+msgstr "Înregistrare"
+
+#: ../../SessionManager/web/admin/servers.php:290
+#: ../../SessionManager/web/admin/servers.php:487
+msgid "Are you sure you want to delete this server?"
+msgstr "Sigur doriți să ștergeți acest server?"
+
+#: ../../SessionManager/web/admin/servers.php:334
+msgid "No unregistered server"
+msgstr "Nici un server neînregistrat"
+
+#: ../../SessionManager/web/admin/servers.php:354
+#, php-format
+msgid "Cannot get server monitoring for '%s'"
+msgstr "Nu se poate obține supravegherea serverului „%s”"
+
+#: ../../SessionManager/web/admin/servers.php:360
+msgid "Warning: server is offline"
+msgstr "Avertisment: serverul este deconectat"
+
+#: ../../SessionManager/web/admin/servers.php:362
+msgid "Warning: server is broken"
+msgstr "Avertisment: serverul este defect"
+
+#: ../../SessionManager/web/admin/servers.php:401
+msgid "Version"
+msgstr "Versiune"
+
+#: ../../SessionManager/web/admin/servers.php:449
+msgid "Redirection name for this server"
+msgstr "Numele de redirecționare pentru acest server"
+
+#: ../../SessionManager/web/admin/servers.php:503
+#, php-format
+msgid "Role: %s"
+msgstr "Rol: %s"
+
+#: ../../SessionManager/web/admin/session-reporting.php:132
+msgid "Sessions Reporting"
+msgstr "Raportul sesiunilor"
+
+#: ../../SessionManager/web/admin/session-reporting.php:138
+msgid "Search for archived sessions :"
+msgstr "Căutare de sesiuni arhivate: "
+
+#: ../../SessionManager/web/admin/session-reporting.php:142
+msgid "By user"
+msgstr "După utilizator"
+
+#: ../../SessionManager/web/admin/session-reporting.php:144
+msgid "user login"
+msgstr "identificator utilizator"
+
+#: ../../SessionManager/web/admin/session-reporting.php:149
+msgid "By time"
+msgstr "După dată"
+
+#: ../../SessionManager/web/admin/session-reporting.php:160
+msgid "To"
+msgstr "Pînă la"
+
+# 75%
+#: ../../SessionManager/web/admin/session-reporting.php:173
+#, php-format, 
+msgid "<strong>%d</strong> result."
+msgid_plural "<strong>%d</strong> results."
+msgstr[0] "<strong>%d</strong> rezultat."
+msgstr[1] "<strong>%d</strong> rezultate."
+msgstr[2] "<strong>%d</strong> de rezultate."
+
+#: ../../SessionManager/web/admin/session-reporting.php:175
+msgid "No result found!"
+msgstr "Nici un rezultat găsit!"
+
+#: ../../SessionManager/web/admin/session-reporting.php:268
+msgid "Session id"
+msgstr "ID de sesiune"
+
+#: ../../SessionManager/web/admin/session-reporting.php:269
+#: ../../SessionManager/web/admin/sessions.php:173
+msgid "User"
+msgstr "Utilizator"
+
+#: ../../SessionManager/web/admin/session-reporting.php:282
+msgid "Get more information"
+msgstr "Obține mai multe informații"
+
+#: ../../SessionManager/web/admin/session-reporting.php:311
+#, php-format
+msgid "Unknown session %s"
+msgstr "Sesiune necunoscută %s"
+
+#: ../../SessionManager/web/admin/session-reporting.php:348
+msgid "Archived session - %ID%"
+msgstr "Sesiune arhivată - %ID%"
+
+#: ../../SessionManager/web/admin/session-reporting.php:351
+#: ../../SessionManager/web/admin/sessions.php:74
+msgid "User:"
+msgstr "Utilizator:"
+
+#: ../../SessionManager/web/admin/session-reporting.php:355
+msgid "Not existing anymore"
+msgstr "Nu mai există"
+
+#: ../../SessionManager/web/admin/session-reporting.php:358
+#: ../../SessionManager/web/admin/sessions.php:83
+msgid "Started:"
+msgstr "Început:"
+
+#: ../../SessionManager/web/admin/session-reporting.php:361
+msgid "Stopped:"
+msgstr "Sfîrșit:"
+
+#: ../../SessionManager/web/admin/session-reporting.php:370
+msgid "Used applications"
+msgstr "Aplicații utilizate"
+
+#: ../../SessionManager/web/admin/session-reporting.php:379
+msgid "not existing anymore"
+msgstr "nu mai există"
+
+#: ../../SessionManager/web/admin/sessions.php:52
+msgid "Session - %ID%"
+msgstr "Sesiune - %ID%"
+
+#: ../../SessionManager/web/admin/sessions.php:54
+msgid "Information"
+msgstr "Informații"
+
+#: ../../SessionManager/web/admin/sessions.php:57
+msgid "Servers:"
+msgstr "Servere:"
+
+#: ../../SessionManager/web/admin/sessions.php:75
+msgid "Type:"
+msgstr "Tip:"
+
+#: ../../SessionManager/web/admin/sessions.php:77
+#: ../../SessionManager/web/classes/Preferences.class.php:386
+msgid "Desktop"
+msgstr "Birou"
+
+#: ../../SessionManager/web/admin/sessions.php:90
+msgid "Status:"
+msgstr "Stare:"
+
+#: ../../SessionManager/web/admin/sessions.php:94
+msgid "Running applications"
+msgstr "Aplicații în curs"
+
+#: ../../SessionManager/web/admin/sessions.php:98
+msgid "No running application"
+msgstr "Nici o aplicație în curs"
+
+#: ../../SessionManager/web/admin/sessions.php:124
+#: ../../SessionManager/web/admin/sessions.php:129
+msgid "Kill this session"
+msgstr "Omoară această sesiune"
+
+#: ../../SessionManager/web/admin/sessions.php:125
+#: ../../SessionManager/web/admin/sessions.php:204
+msgid "Are you sure you want to kill this session?"
+msgstr "Sigur doriți să omorîți această sesiune?"
+
+#: ../../SessionManager/web/admin/sessions.php:141
+#, php-format
+msgid "Sessions (total: %s)"
+msgstr "Sesiuni (total: %s)"
+
+#: ../../SessionManager/web/admin/sessions.php:171
+#: ../../SessionManager/web/admin/summary.php:60
+msgid "Session"
+msgstr "Sesiune"
+
+#: ../../SessionManager/web/admin/sessions.php:208
+#: ../../SessionManager/web/admin/sessions.php:223
+msgid "Kill"
+msgstr "Omoară"
+
+#: ../../SessionManager/web/admin/sessions.php:220
+msgid "Are you sure you want to kill selected sessions?"
+msgstr "Sigur doriți să omorîți sesiunile selectate? "
+
+#: ../../SessionManager/web/admin/sessions.php:233
+msgid "Number of sessions"
+msgstr "Numărul sesiunilor"
+
+#: ../../SessionManager/web/admin/sessions.php:255
+msgid "No active session"
+msgstr "Nici o sesiune activă"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:54
+msgid "Are you sure you want to delete this shared folder?"
+msgstr "Sigur doriți să ștergeți acest dosar partajat?"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:58
+msgid "Delete this shared folder"
+msgstr "Șterge acest dosar partajat"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:130
+msgid "Rename"
+msgstr "Redenumește"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:141
+msgid "ACL"
+msgstr "ACL"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:149
+#: ../../SessionManager/web/admin/usersgroup.php:756
+msgid "Are you sure you want to delete this shared folder access?"
+msgstr "Sigur doriți să ștergeți accesul la acest dosar partajat?"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:154
+#: ../../SessionManager/web/admin/usersgroup.php:761
+msgid "Delete access to this shared folder"
+msgstr "Șterge accesul la acest dosar partajat"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:169
+#: ../../SessionManager/web/admin/usersgroup.php:776
+msgid "Add access to this shared folder"
+msgstr "Adaugă un acces la acest dosar partajat"
+
+#: ../../SessionManager/web/admin/summary.php:47
+#: ../../SessionManager/web/admin/sumup.php:44
+msgid "List of users"
+msgstr "Lista utilizatorilor"
+
+#: ../../SessionManager/web/admin/summary.php:52
+#: ../../SessionManager/web/admin/users.php:66
+#: ../../SessionManager/web/admin/wizard.php:157
+#: ../../SessionManager/web/webservices/configuration.php:80
+msgid "No available user"
+msgstr "Nici un utilizator disponibil"
+
+#: ../../SessionManager/web/admin/summary.php:59
+msgid "Folders"
+msgstr "Dosare"
+
+#: ../../SessionManager/web/admin/summary.php:65
+msgid "In these users groups"
+msgstr "În aceste grupuri de utilizatori"
+
+#: ../../SessionManager/web/admin/summary.php:66
+msgid "Published applications groups"
+msgstr "Grupuri de aplicații publicate"
+
+#: ../../SessionManager/web/admin/summary.php:67
+msgid "Access to these applications"
+msgstr "Acces la aceste aplicații"
+
+#: ../../SessionManager/web/admin/summary.php:68
+msgid "Access to these folders"
+msgstr "Acces la aceste dosare"
+
+# 80%
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "login"
+msgstr "autentificare"
+
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "name"
+msgstr "nume"
+
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "in this user group"
+msgstr "în acest grup de utilizatori"
+
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "in this application group"
+msgstr "în acest grup de aplicații"
+
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "access to these applications"
+msgstr "acces la aceste aplicații"
+
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "access to these network folders"
+msgstr "acces la aceste dosare în rețea"
+
+#. <th>'._('Desktop File').'</th>
+#: ../../SessionManager/web/admin/sumup.php:58
+msgid "Available servers"
+msgstr "Servere disponibile"
+
+#: ../../SessionManager/web/admin/sumup.php:84
+#: ../../SessionManager/web/admin/sumup.php:108
+#: ../../SessionManager/web/admin/usersgroup.php:226
+#: ../../SessionManager/web/admin/users.php:173
+#: ../../SessionManager/web/modules/AuthMethod/Auto.php:103
+#: ../../SessionManager/web/webservices/configuration.php:107
+#: ../../SessionManager/web/webservices/configuration.php:109
+#: ../../SessionManager/web/webservices/configuration.php:110
+#: ../../SessionManager/web/webservices/configuration.php:111
+msgid "Yes"
+msgstr "Da"
+
+#. $seconds => $text
+#. $forceable_parameters['shareable'] = array('0' => _('No'), '1' => _('Yes'));
+#: ../../SessionManager/web/admin/sumup.php:86
+#: ../../SessionManager/web/admin/sumup.php:110
+#: ../../SessionManager/web/admin/usersgroup.php:224
+#: ../../SessionManager/web/admin/users.php:174
+#: ../../SessionManager/web/modules/AuthMethod/Auto.php:103
+#: ../../SessionManager/web/webservices/configuration.php:107
+#: ../../SessionManager/web/webservices/configuration.php:109
+#: ../../SessionManager/web/webservices/configuration.php:110
+#: ../../SessionManager/web/webservices/configuration.php:111
+msgid "No"
+msgstr "Nu"
+
+#: ../../SessionManager/web/admin/sumup.php:203
+msgid "List of servers"
+msgstr "Lista serverelor"
+
+#: ../../SessionManager/web/admin/sumup.php:207
+#: ../../SessionManager/web/admin/sumup.php:211
+msgid "No server available"
+msgstr "Nici un server disponibil"
+
+#: ../../SessionManager/web/admin/tasks.php:63
+msgid "Tasks managment"
+msgstr "Gestiunea sarcinilor"
+
+#: ../../SessionManager/web/admin/tasks.php:67
+#: ../../SessionManager/web/admin/tasks.php:142
+msgid "Creation time"
+msgstr "Data creației"
+
+#: ../../SessionManager/web/admin/tasks.php:72
+msgid "Job id"
+msgstr "Id sarcină"
+
+#: ../../SessionManager/web/admin/tasks.php:78
+#: ../../SessionManager/web/admin/tasks.php:156
+msgid "Finished"
+msgstr "Terminat"
+
+#: ../../SessionManager/web/admin/tasks.php:136
+msgid "List of tasks"
+msgstr "Lista sarcinilor"
+
+#: ../../SessionManager/web/admin/tasks.php:160
+msgid "In progress"
+msgstr "În curs"
+
+#: ../../SessionManager/web/admin/tasks.php:187
+msgid "Install an application from a package name"
+msgstr "Instalează o aplicație după numele pachetului"
+
+#: ../../SessionManager/web/admin/usersgroup.php:32
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "1 hour"
+msgstr "1 oră"
+
+#: ../../SessionManager/web/admin/usersgroup.php:33
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "1 day"
+msgstr "1 zi"
+
+#: ../../SessionManager/web/admin/usersgroup.php:34
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "1 week"
+msgstr "1 săptămînă"
+
+#: ../../SessionManager/web/admin/usersgroup.php:74
+msgid "User groups"
+msgstr "Grupuri de utilizatori"
+
+#: ../../SessionManager/web/admin/usersgroup.php:81
+msgid "No available user group"
+msgstr "Nici un grup de utilizatori disponibil"
+
+#: ../../SessionManager/web/admin/usersgroup.php:168
+msgid "Static"
+msgstr "Static"
+
+#: ../../SessionManager/web/admin/usersgroup.php:171
+msgid "Dynamic"
+msgstr "Dinamic"
+
+#: ../../SessionManager/web/admin/usersgroup.php:222
+msgid "Cached"
+msgstr "Prestocat"
+
+#: ../../SessionManager/web/admin/usersgroup.php:227
+msgid "Time between two updates:"
+msgstr "Durata între două actualizări:"
+
+#: ../../SessionManager/web/admin/usersgroup.php:235
+#: ../../SessionManager/web/admin/usersgroup.php:517
+msgid "Validation type"
+msgstr "Tip de validare"
+
+#: ../../SessionManager/web/admin/usersgroup.php:236
+#: ../../SessionManager/web/admin/usersgroup.php:521
+msgid "All"
+msgstr "Toate"
+
+#: ../../SessionManager/web/admin/usersgroup.php:236
+#: ../../SessionManager/web/admin/usersgroup.php:524
+msgid "At least one"
+msgstr "Cel puțin una"
+
+#: ../../SessionManager/web/admin/usersgroup.php:240
+#: ../../SessionManager/web/admin/usersgroup.php:528
+msgid "Filters"
+msgstr "Filtre"
+
+#: ../../SessionManager/web/admin/usersgroup.php:296
+msgid "Failed to load usergroup"
+msgstr "Încărcarea grupului de utilizatori a eșuat"
+
+#: ../../SessionManager/web/admin/usersgroup.php:410
+msgid "User groups management"
+msgstr "Gestiunea grupurilor de utilizatori"
+
+#: ../../SessionManager/web/admin/usersgroup.php:432
+msgid "Remove from default"
+msgstr "Înlătură din implicite"
+
+#: ../../SessionManager/web/admin/usersgroup.php:435
+msgid "Define as default"
+msgstr "Definește ca implicit"
+
+#: ../../SessionManager/web/admin/usersgroup.php:496
+msgid "Update the schedule"
+msgstr "Actualizează planificarea"
+
+#: ../../SessionManager/web/admin/usersgroup.php:507
+msgid "Rules"
+msgstr "Reguli"
+
+#: ../../SessionManager/web/admin/usersgroup.php:586
+msgid "Update rules"
+msgstr "Actualizează regulile"
+
+#: ../../SessionManager/web/admin/usersgroup.php:597
+msgid "List of users in this group"
+msgstr "Lista utilizatorilor din acest grup"
+
+#: ../../SessionManager/web/admin/usersgroup.php:606
+#: ../../SessionManager/web/admin/users.php:98
+#: ../../SessionManager/web/admin/users.php:266
+msgid "Are you sure you want to delete this user?"
+msgstr "Sigur doriți să ștergeți acest utilizator?"
+
+#: ../../SessionManager/web/admin/usersgroup.php:686
+msgid "Policy of this group"
+msgstr "Politica acestui grup"
+
+#: ../../SessionManager/web/admin/usersgroup.php:694
+msgid "extend from default"
+msgstr "extinde din parametrii impliciți"
+
+#: ../../SessionManager/web/admin/usersgroup.php:700
+msgid "Are you sure you want to delete this rule?"
+msgstr "Sigur doriți să ștergeți această regulă?"
+
+#: ../../SessionManager/web/admin/usersgroup.php:705
+msgid "Delete this rule"
+msgstr "Șterge această regulă"
+
+#: ../../SessionManager/web/admin/usersgroup.php:725
+msgid "Add this rule"
+msgstr "Adaugă această regulă"
+
+#: ../../SessionManager/web/admin/usersgroup.php:787
+msgid "Session settings configuration"
+msgstr "Configurarea parametrilor sesiunii"
+
+#: ../../SessionManager/web/admin/usersgroup.php:804
+msgid "Default value"
+msgstr "Valoarea implicită"
+
+#: ../../SessionManager/web/admin/usersgroup.php:805
+msgid "Value"
+msgstr "Valoare"
+
+#: ../../SessionManager/web/admin/usersgroup.php:828
+msgid "Remove this overriden setting"
+msgstr "Înlătură acest supra-parametru"
+
+#: ../../SessionManager/web/admin/usersgroup.php:843
+msgid "Save settings"
+msgstr "Salvează parametrii"
+
+#: ../../SessionManager/web/admin/usersgroup.php:864
+msgid "Add this setting"
+msgstr "Adaugă acest parametru"
+
+#: ../../SessionManager/web/admin/users.php:117
+msgid "Are you sure you want to delete selected users?"
+msgstr "Sigur doriți să ștergeți utilizatorii selectați?"
+
+#: ../../SessionManager/web/admin/users.php:159
+#: ../../SessionManager/web/admin/users.php:189
+msgid "Populate"
+msgstr "Populează"
+
+#: ../../SessionManager/web/admin/users.php:162
+msgid ""
+"This feature is useful to create default accounts. It is mainly used when "
+"you want to test the system quickly. It is not recommended to use those "
+"default accounts on a production system because it is very easy to delete "
+"them by mistake using this \"populate\" feature."
+msgstr ""
+"Această funcționalitate este folositoare pentru crearea conturilor "
+"implicite. Este utilizată în principal cînd se dorește testarea rapidă a "
+"sistemului. Nu este recomandată utilizarea acestor conturi implicite într-un "
+"sistem de producție deoarece se pot șterge foarte ușor din greșeală prin "
+"utilizarea acestei funcționalități de „populare”."
+
+#: ../../SessionManager/web/admin/users.php:171
+msgid "Overwrite existing: "
+msgstr "Suprascrie existentul: "
+
+#: ../../SessionManager/web/admin/users.php:177
+msgid "Password management:"
+msgstr "Gestiune parolă:"
+
+#: ../../SessionManager/web/admin/users.php:184
+msgid "Same as username"
+msgstr "La fel cu numele utilizatorului"
+
+#: ../../SessionManager/web/admin/users.php:185
+msgid "Custom:"
+msgstr "Personalizat:"
+
+#: ../../SessionManager/web/admin/users.php:218
+msgid "Error while requesting usergroups"
+msgstr "Eroare la interogarea grupurilor de utilizatori"
+
+#: ../../SessionManager/web/admin/users.php:244
+msgid "Locale"
+msgstr "Locală"
+
+#: ../../SessionManager/web/admin/users.php:267
+msgid "Delete this user"
+msgstr "Șterge acest utilizator"
+
+#: ../../SessionManager/web/admin/users.php:311
+msgid "Save changes"
+msgstr "Salvează modificările"
+
+#: ../../SessionManager/web/admin/users.php:323
+msgid "User groups with this user"
+msgstr "Grupuri de utilizatori ce conțin acest utilizator"
+
+#: ../../SessionManager/web/admin/users.php:336
+msgid "Are you sure you want to delete this user from this group?"
+msgstr "Sigur doriți să ștergeți acest utilizator din acest grup?"
+
+#: ../../SessionManager/web/admin/users.php:366
+msgid "Published applications"
+msgstr "Aplicații publicate"
+
+#: ../../SessionManager/web/admin/users.php:379
+msgid "Active sessions"
+msgstr "Sesiuni active"
+
+#: ../../SessionManager/web/admin/wizard.php:39
+msgid "No user group selected"
+msgstr "Nici un grup de utilizatori selectat"
+
+#: ../../SessionManager/web/admin/wizard.php:49
+msgid "No user selected"
+msgstr "Nici un utilizator selectat"
+
+#: ../../SessionManager/web/admin/wizard.php:63
+#: ../../SessionManager/web/admin/wizard.php:109
+msgid "No group name"
+msgstr "Nici un nume de grup"
+
+#: ../../SessionManager/web/admin/wizard.php:87
+msgid "No application group selected"
+msgstr "Nici un grup de aplicații selectat"
+
+#: ../../SessionManager/web/admin/wizard.php:95
+msgid "No application selected"
+msgstr "Nici o aplicație selectată"
+
+#: ../../SessionManager/web/admin/wizard.php:161
+msgid "Unable to display users list: too many users"
+msgstr "Nu se poate afișa lista utilizatorilor: prea mulți utilizatori"
+
+#: ../../SessionManager/web/admin/wizard.php:167
+#: ../../SessionManager/web/admin/wizard.php:253
+#: ../../SessionManager/web/admin/wizard.php:313
+#: ../../SessionManager/web/admin/wizard.php:403
+#: ../../SessionManager/web/admin/wizard.php:446
+msgid "Publication Wizard"
+msgstr "Asistent de publicare"
+
+#: ../../SessionManager/web/admin/wizard.php:167
+msgid "User/group selection"
+msgstr "Selectare utilizator/grup"
+
+#: ../../SessionManager/web/admin/wizard.php:179
+msgid "Create a group with users"
+msgstr "Creează un grup cu utilizatori"
+
+#: ../../SessionManager/web/admin/wizard.php:185
+msgid "Use usergroups"
+msgstr "Utilizează grupuri de utilizatori"
+
+#: ../../SessionManager/web/admin/wizard.php:237
+#: ../../SessionManager/web/admin/wizard.php:257
+#: ../../SessionManager/web/admin/wizard.php:278
+#: ../../SessionManager/web/admin/wizard.php:318
+#: ../../SessionManager/web/admin/wizard.php:388
+#: ../../SessionManager/web/admin/wizard.php:407
+#: ../../SessionManager/web/admin/wizard.php:428
+msgid "Next"
+msgstr "Următorul"
+
+#: ../../SessionManager/web/admin/wizard.php:253
+msgid "Create usergroup"
+msgstr "Creează un grup de utilizatori"
+
+#: ../../SessionManager/web/admin/wizard.php:275
+#: ../../SessionManager/web/admin/wizard.php:384
+#: ../../SessionManager/web/admin/wizard.php:425
+#: ../../SessionManager/web/admin/wizard.php:557
+msgid "Previous"
+msgstr "Precedentul"
+
+#: ../../SessionManager/web/admin/wizard.php:313
+msgid "Applications/groups selection"
+msgstr "Selectare aplicații/grupuri"
+
+#: ../../SessionManager/web/admin/wizard.php:325
+msgid "Create a group with applications"
+msgstr "Creează un grup cu aplicații"
+
+#: ../../SessionManager/web/admin/wizard.php:329
+msgid "Use an application group"
+msgstr "Utilizează un grup de aplicații"
+
+# 77%
+#: ../../SessionManager/web/admin/wizard.php:403
+msgid "Create application group"
+msgstr "Creează un grup de aplicații"
+
+#: ../../SessionManager/web/admin/wizard.php:446
+msgid "Confirmation"
+msgstr "Confirmare"
+
+#: ../../SessionManager/web/admin/wizard.php:448
+msgid "Are you sure that you want to create this publication?"
+msgstr "Sigur doriți să creați această publicație?"
+
+#: ../../SessionManager/web/admin/wizard.php:459
+msgid "Between this users group"
+msgstr "Între acest grup de utilizatori"
+
+#: ../../SessionManager/web/admin/wizard.php:461
+msgid "Between these users groups"
+msgstr "Între aceste grupuri de utilizatori"
+
+#: ../../SessionManager/web/admin/wizard.php:479
+msgid "Between this newly created users group"
+msgstr "Între acest grup de utilizatori nou creat"
+
+#: ../../SessionManager/web/admin/wizard.php:483
+#: ../../SessionManager/web/admin/wizard.php:529
+msgid "Name:"
+msgstr "Nume:"
+
+#: ../../SessionManager/web/admin/wizard.php:484
+#: ../../SessionManager/web/admin/wizard.php:530
+msgid "Description: "
+msgstr "Descriere: "
+
+#: ../../SessionManager/web/admin/wizard.php:485
+msgid "Users:"
+msgstr "Utilizatori:"
+
+#: ../../SessionManager/web/admin/wizard.php:509
+msgid "and this applications group"
+msgstr "și acest grup de aplicații"
+
+#: ../../SessionManager/web/admin/wizard.php:511
+msgid "and these applications groups"
+msgstr "și aceste grupuri de aplicații"
+
+#: ../../SessionManager/web/admin/wizard.php:525
+msgid "and this newly created applications group"
+msgstr "și acest grup de aplicații nou creat"
+
+#: ../../SessionManager/web/admin/wizard.php:531
+msgid "Applications:"
+msgstr "Aplicații:"
+
+#: ../../SessionManager/web/admin/wizard.php:560
+msgid "Confirm"
+msgstr "Confirmă"
+
+#: ../../SessionManager/web/admin/wizard.php:588
+msgid "Cannot create usergroup"
+msgstr "Nu se poate crea grupul de utilizatori"
+
+#: ../../SessionManager/web/admin/wizard.php:609
+msgid "Cannot create application group"
+msgstr "Nu se poate crea grupul aplicației"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:38
+msgid "Factor impact"
+msgstr "Impactul factorului"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:45
+msgid "less"
+msgstr "mai puțin"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:45
+msgid "more"
+msgstr "mai mult"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:123
+msgid "Back to default"
+msgstr "Reglaje implicite"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:129
+msgid "Examples"
+msgstr "Exemple"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:139
+msgid ""
+"Full CPU: only CPU usage is used as a criteria to choose the best\n"
+"server to use for an incoming user."
+msgstr ""
+"Numai CPU: utilizarea procesorului este singurul criteriu de selecție\n"
+"pentru utilizarea unui server în cazul unei noi conexiuni."
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:153
+msgid "Both CPU and RAM are used as criterias, with a little randomization..."
+msgstr "Ambele CPU și RAM sînt utilizate ca criterii, cu puțină randomizare..."
+
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:59
+msgid "Active"
+msgstr "Activ"
+
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:62
+msgid "Inactive"
+msgstr "Inactiv"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:177
+msgid "System on maintenance mode"
+msgstr "Sistem în regim de mentenanță"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:178
+#: ../../SessionManager/web/classes/Preferences.class.php:302
+#: ../../SessionManager/web/classes/Preferences.class.php:306
+#: ../../SessionManager/web/classes/Preferences.class.php:320
+#: ../../SessionManager/web/classes/Preferences.class.php:326
+#: ../../SessionManager/web/classes/Preferences.class.php:329
+#: ../../SessionManager/web/classes/Preferences.class.php:332
+#: ../../SessionManager/web/classes/Preferences.class.php:335
+#: ../../SessionManager/web/classes/Preferences.class.php:338
+#: ../../SessionManager/web/classes/Preferences.class.php:358
+#: ../../SessionManager/web/classes/Preferences.class.php:361
+#: ../../SessionManager/web/classes/Preferences.class.php:365
+#: ../../SessionManager/web/classes/Preferences.class.php:369
+#: ../../SessionManager/web/classes/Preferences.class.php:380
+#: ../../SessionManager/web/classes/Preferences.class.php:411
+#: ../../SessionManager/web/classes/Preferences.class.php:414
+#: ../../SessionManager/web/classes/Preferences.class.php:418
+#: ../../SessionManager/web/classes/Preferences.class.php:421
+#: ../../SessionManager/web/classes/Preferences.class.php:424
+#: ../../SessionManager/web/classes/Preferences.class.php:427
+#: ../../SessionManager/web/classes/Preferences.class.php:431
+#: ../../SessionManager/web/classes/Preferences.class.php:434
+#: ../../SessionManager/web/classes/Preferences.class.php:438
+#: ../../SessionManager/web/classes/Preferences.class.php:443
+#: ../../SessionManager/web/classes/Preferences.class.php:446
+#: ../../SessionManager/web/classes/Preferences.class.php:457
+#: ../../SessionManager/web/classes/Preferences.class.php:461
+#: ../../SessionManager/web/modules/SessionManagement/novell.php:73
+msgid "no"
+msgstr "nu"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:178
+#: ../../SessionManager/web/classes/Preferences.class.php:302
+#: ../../SessionManager/web/classes/Preferences.class.php:306
+#: ../../SessionManager/web/classes/Preferences.class.php:320
+#: ../../SessionManager/web/classes/Preferences.class.php:326
+#: ../../SessionManager/web/classes/Preferences.class.php:329
+#: ../../SessionManager/web/classes/Preferences.class.php:332
+#: ../../SessionManager/web/classes/Preferences.class.php:335
+#: ../../SessionManager/web/classes/Preferences.class.php:338
+#: ../../SessionManager/web/classes/Preferences.class.php:358
+#: ../../SessionManager/web/classes/Preferences.class.php:361
+#: ../../SessionManager/web/classes/Preferences.class.php:365
+#: ../../SessionManager/web/classes/Preferences.class.php:369
+#: ../../SessionManager/web/classes/Preferences.class.php:380
+#: ../../SessionManager/web/classes/Preferences.class.php:411
+#: ../../SessionManager/web/classes/Preferences.class.php:414
+#: ../../SessionManager/web/classes/Preferences.class.php:418
+#: ../../SessionManager/web/classes/Preferences.class.php:424
+#: ../../SessionManager/web/classes/Preferences.class.php:427
+#: ../../SessionManager/web/classes/Preferences.class.php:431
+#: ../../SessionManager/web/classes/Preferences.class.php:434
+#: ../../SessionManager/web/classes/Preferences.class.php:438
+#: ../../SessionManager/web/classes/Preferences.class.php:443
+#: ../../SessionManager/web/classes/Preferences.class.php:446
+#: ../../SessionManager/web/classes/Preferences.class.php:457
+#: ../../SessionManager/web/classes/Preferences.class.php:461
+#: ../../SessionManager/web/modules/SessionManagement/novell.php:73
+msgid "yes"
+msgstr "da"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:181
+msgid "Administration console language"
+msgstr "Limba consolei de administrare"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:183
+msgid "Autodetect"
+msgstr "Autodetectare"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:199
+msgid "Debug options list"
+msgstr "Lista opțiunilor de depanare"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:199
+msgid "Select debug options you want to enable."
+msgstr "Selectați opțiunile de depanare pe care doriți să le activați."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:200
+msgid "debug"
+msgstr "depanare"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:200
+msgid "info"
+msgstr "info"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:200
+msgid "warning"
+msgstr "avertisment"
+
+# 80%
+#: ../../SessionManager/web/classes/Preferences.class.php:200
+msgid "error"
+msgstr "eroare"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:200
+msgid "critical"
+msgstr "critic"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:202
+msgid "Cache logs update interval"
+msgstr "Intervalul de actualizare al jurnalului de prestocare"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+msgid "30 seconds"
+msgstr "30 de secunde"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "1 minute"
+msgstr "1 minut"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "5 minutes"
+msgstr "5 minute"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "15 minutes"
+msgstr "15 minute"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "30 minutes"
+msgstr "30 de minute"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "2 hours"
+msgstr "2 ore"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:205
+msgid "Cache logs expiry time"
+msgstr "Durata de expirare a jurnalelor de prestocare"
+
+# 80%
+#: ../../SessionManager/web/classes/Preferences.class.php:206
+msgid "A day"
+msgstr "O zi"
+
+# 83%
+#: ../../SessionManager/web/classes/Preferences.class.php:206
+msgid "A week"
+msgstr "O săptămînă"
+
+# 85%
+#: ../../SessionManager/web/classes/Preferences.class.php:206
+msgid "A month"
+msgstr "O lună"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:206
+msgid "A year"
+msgstr "Un an"
+
+#. $c = new ConfigElement_input('start_app','start_app','start_app_des','');
+#. $this->add('general',$c);
+#: ../../SessionManager/web/classes/Preferences.class.php:212
+msgid "Default user group"
+msgstr "Grupul de utilizatori implicit"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:215
+msgid "Domain integration"
+msgstr "Integrare cu domeniul"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:237
+msgid "Maximum items per page"
+msgstr "Numărul maxim de elemente pe pagină"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:237
+msgid "The maximum number of items that can be displayed."
+msgstr "Numărul maxim de elemente ce poate fi afișat."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:240
+msgid "Default browser"
+msgstr "Navigator implicit"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:243
+msgid "Default policy"
+msgstr "Politica implicită"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:245
+msgid "use Admin panel"
+msgstr "utilizează panoul de administrare"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:246
+msgid "view Servers"
+msgstr "afișează serverele"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:247
+msgid "manage Servers"
+msgstr "gestionează serverele"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:248
+msgid "view Shared folders"
+msgstr "afișează dosarele partajate"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:249
+msgid "manage Shared folders"
+msgstr "gestionează dosarele partajate"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:250
+msgid "view Users"
+msgstr "afișează utilizatorii"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:251
+msgid "manage Users"
+msgstr "gestionează utilizatorii"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:252
+msgid "view Usergroups"
+msgstr "afișează grupurile de utilizatori"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:253
+msgid "manage Usergroups"
+msgstr "gestionează grupurile de utilizatori"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:254
+msgid "view Applications"
+msgstr "afișează aplicațiile"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:255
+msgid "manage Applications"
+msgstr "gestionează aplicațiile"
+
+# 78%
+#: ../../SessionManager/web/classes/Preferences.class.php:256
+msgid "view Application groups"
+msgstr "afișează grupurile de aplicații"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:257
+msgid "manage Application groups"
+msgstr "gestionează grupurile de aplicații"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:258
+msgid "view Publications"
+msgstr "afișează publicațiile"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:259
+msgid "manage Publications"
+msgstr "gestionează publicațiile"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:260
+msgid "view Configuration"
+msgstr "afișează configurația"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:261
+msgid "manage Configuration"
+msgstr "gestionează configurația"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:262
+msgid "view Status"
+msgstr "afișează starea"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:263
+msgid "view Summary"
+msgstr "afișează rezumatul"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:264
+msgid "view News"
+msgstr "afișează știrile"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:265
+msgid "manage News"
+msgstr "gestionează știrile"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:269
+msgid "Policy for administration delegation"
+msgstr "Politica pentru delegarea administrației"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:271
+msgid "SQL configuration"
+msgstr "configurația SQL"
+
+# 76%
+#: ../../SessionManager/web/classes/Preferences.class.php:272
+msgid "Database type"
+msgstr "Tipul bazei de date"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:272
+msgid "The type of your database."
+msgstr "Tipul bazei voastre de date."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:273
+#: ../../SessionManager/web/modules/ApplicationDB/sql.php:195
+#: ../../SessionManager/web/modules/ApplicationsGroupDB/sql.php:171
+#: ../../SessionManager/web/modules/UserDB/sql.php:228
+#: ../../SessionManager/web/modules/UserGroupDB/sql.php:164
+msgid "MySQL"
+msgstr "MySQL"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:275
+msgid "Database host address"
+msgstr "Adresa serverului de bază de date"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:275
+msgid ""
+"The address of your database host. This database contains adminstration "
+"console data. Example: localhost or db.mycorporate.com."
+msgstr ""
+"Adresa serverului vostru de bază de date. Această bază de date conține "
+"datele consolei de administrare. Exemplu: localhost sau db.mycorporate.com."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:277
+msgid "Database username"
+msgstr "Utilizatorul (identificatorul) bazei de date"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:277
+msgid "The username that must be used to access the database."
+msgstr ""
+"Numele utilizatorului (identificatorul) care trebuie utilizat pentru "
+"accesarea bazei de date."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:277
+msgid "The user name that must be used to access the database."
+msgstr ""
+"Numele utilizatorului (identificatorul) care trebuie utilizat pentru "
+"accesarea bazei de date."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:279
+msgid "Database password"
+msgstr "Parola bazei de date"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:279
+msgid "The user password that must be used to access the database."
+msgstr ""
+"Parola utilizatorului care trebuie utilizat pentru accesarea bazei de date."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:281
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:200
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:111
+msgid "Database name"
+msgstr "Numele bazei de date"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:281
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:200
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:111
+msgid "The name of the database."
+msgstr "Numele bazei de date."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:283
+msgid "Table prefix"
+msgstr "Prefixul tabelei"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:283
+msgid "The table prefix for the database."
+msgstr "Prefixul tabelei bazei de date."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:286
+msgid "Email settings"
+msgstr "Parametri poștă electronică"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:287
+msgid "Mail server type"
+msgstr "Tipul serverului de poștă electronică"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:288
+msgid "Local"
+msgstr "Local"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:288
+msgid "SMTP server"
+msgstr "Server SMTP"
+
+#. SMTP conf
+#: ../../SessionManager/web/classes/Preferences.class.php:295
+msgid "Host"
+msgstr "Gazdă"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:298
+msgid "Port"
+msgstr "Port"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:301
+msgid "Use SSL with SMTP"
+msgstr "Utilizează SSL cu SMTP"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:305
+msgid "Authentication"
+msgstr "Autentificare"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:309
+msgid "SMTP username"
+msgstr "Utilizator SMTP"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:312
+msgid "SMTP password"
+msgstr "Parolă SMTP"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:316
+msgid "Slave Server settings"
+msgstr "Parametrii serverului secundar"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:317
+msgid "Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)"
+msgstr ""
+"Mașini autorizate (FQDN sau IP - utilizarea metacaracterelor (*.) este "
+"permisă)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:319
+msgid "Disable reverse FQDN checking"
+msgstr "Dezactivează verificarea inversă FQDN"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:319
+msgid ""
+"Enable this option if you don't want to check that the result of the reverse "
+"FQDN address fits the one that was registered."
+msgstr ""
+"Activați această opțiune dacă nu doriți să verificați că rezultatul adresei "
+"inverse FQDN corespunde cu adresa înregistrată."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:322
+msgid "Action when a server status is not ready anymore"
+msgstr "Acțiunea cînd starea unui server nu mai este gata"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:322
+msgid "Action when an server status is not ready anymore"
+msgstr "Acțiunea cînd starea unui server nu mai este gata"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:323
+msgid "Do nothing"
+msgstr "Nu fă nimic"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:325
+msgid "Auto-recover server"
+msgstr "Recuperare automată a serverului"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:325
+msgid ""
+"When a server status is down or broken, and it is sending monitoring, try to "
+"switch it back to ready ?"
+msgstr ""
+"Trebuie să reîncercăm să trecem un server în producție cînd starea lui este "
+"deconectat sau defect, dar este activ în supraveghere?"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:328
+msgid "Remove orphan applications when the application server is deleted"
+msgstr "Înlătură aplicațiile orfane cînd se șterge un server de aplicații"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:331
+msgid "Auto register new servers"
+msgstr "Înregistrare automată a noilor servere"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:334
+msgid "Auto switch new servers to production mode"
+msgstr "Trece automat în regim de producție serverele noi"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:337
+msgid ""
+"When an Application Server have reached its \"max sessions\" limit, disable "
+"session launch on it ?"
+msgstr ""
+"Trebuie să dezactivăm lansarea de noi sesiuni cînd un server de aplicații a "
+"atins limita numărului maxim de sesiuni?"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "Load Balancing policy for Application Servers"
+msgstr "Politica de echilibrare de sarcină pentru serverele de aplicații"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "Load Balancing policy for File Servers"
+msgstr "Politica de echilibrare de sarcină pentru serverele de fișiere"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:355
+msgid "Remote Desktop settings"
+msgstr "Parametrii biroului distant"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:357
+msgid "Enable Remote Desktop"
+msgstr "Activează biroul distant"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:360
+msgid "Sessions are persistent"
+msgstr "Sesiunile sînt persistente"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:364
+msgid "Show icons on user desktop"
+msgstr "Afișează pictogramele pe biroul utilizatorului"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:368
+msgid "Allow external applications in Desktop"
+msgstr "Permite aplicațiile externe pe birou"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:372
+msgid "Desktop type"
+msgstr "Tip de birou"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:373
+msgid "Any"
+msgstr "Orice"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:373
+msgid "Linux"
+msgstr "Linux"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:373
+msgid "Windows"
+msgstr "Windows"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:377
+msgid "Remote Applications settings"
+msgstr "Parametrii aplicațiilor distante"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:379
+msgid "Enable Remote Applications"
+msgstr "Activează aplicațiile distante"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:383
+msgid "Sessions settings"
+msgstr "Parametri de sesiune"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:385
+msgid "Default mode for session"
+msgstr "Modul implicit pentru sesiune"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:389
+msgid "Default language for session"
+msgstr "Limba implicită pentru sesiune"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:405
+msgid "Default timeout for session"
+msgstr "Durata implicită pentru sesiune"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "2 minutes"
+msgstr "2 minute"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "10 minutes"
+msgstr "10 minute"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "5 hours"
+msgstr "5 ore"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "12 hours"
+msgstr "12 ore"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "2 days"
+msgstr "2 zile"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "1 month"
+msgstr "1 lună"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:408
+msgid "Maximum number of running sessions"
+msgstr "Numărul maxim de sesiuni simultane"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:408
+msgid ""
+"The maximum number of session that can be started on the farm (0 is "
+"unlimited)."
+msgstr ""
+"Numărul maxim de sesiuni ce pot fi lansate simultan pe fermă (0 pentru "
+"nelimitat)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:410
+msgid ""
+"User can launch a session even if some of his published applications are not "
+"available"
+msgstr ""
+"Utilizatorul poate lansa o sesiune chiar dacă unele din aplicațiile sale "
+"publicate nu sînt disponibile"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:413
+msgid "User can use a console in the session"
+msgstr "Utilizatorul poate utiliza o consolă în sesiune"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:417
+msgid "Multimedia"
+msgstr "Multimedia"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:420
+msgid "Redirect client drives"
+msgstr "Redirecționează discurile client locale"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:421
+msgid "partial"
+msgstr "parțial"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:421
+msgid "full"
+msgstr "complet"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:423
+msgid "Redirect client printers"
+msgstr "Redirecționează imprimantele client locale"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:426
+msgid "Enhance user experience"
+msgstr "Ameliorează experiența utilizatorului"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:426
+msgid ""
+"Enhance user experience: graphic effects and optimizations (It decreases "
+"performances if used in a Wide Area Network)"
+msgstr ""
+"Ameliorează experiența utilizatorului: efecte grafice și optimizări (reduce "
+"performanțele dacă se utilizează un WAN)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:430
+msgid "Enable user profiles"
+msgstr "Activează pofilele utilizator"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:433
+msgid "Auto-create user profiles when non-existant"
+msgstr "Creează automat profilele utilizator cînd nu există"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:433
+msgid "Auto-create user profile when non-existant"
+msgstr "Creează automat profilul utilizatorului cînd nu există"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:433
+msgid "Auto-create user profile when nonexistant"
+msgstr "Creează automat profilul utilizatorului cînd nu există"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:437
+msgid "Launch a session without a valid profile"
+msgstr "Lansează o sesiune fără un profil valid"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:442
+msgid "Enable shared folders"
+msgstr "Activează dosarele partajate"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:445
+msgid "Launch a session even when a shared folder's fileserver is missing"
+msgstr ""
+"Lansează o sesiune chiar și atunci cînd lipsește serverul dosarului partajat"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:450
+msgid "Forceable paramaters by users"
+msgstr "Parametri modificabili de către utilizatori"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:450
+msgid ""
+"Choose Advanced Settings options you want to make available to users before "
+"they launch a session."
+msgstr ""
+"Alegeți parametri avansați pe care doriți să-i faceți disponibili "
+"utilizatorilor înainte de a lansa sesiunea."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:451
+msgid "session mode"
+msgstr "regim de sesiune"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:451
+msgid "language"
+msgstr "limbă"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:451
+msgid "server"
+msgstr "server"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:451
+msgid "timeout"
+msgstr "expirare"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:456
+msgid "Display users list"
+msgstr "Afișează lista utilizatorilor"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:456
+msgid ""
+"Display the list of users from the corporate directory in the login box. If "
+"the list is not displayed, the user must provide his login name."
+msgstr ""
+"Afișează lista utilizatorilor din anuarul întreprinderii în fereastra de "
+"autentificare. Dacă lista nu se afișează, utilizatorul va trebui să "
+"furnizeze identificatorul său."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:460
+msgid "Public Webservices access"
+msgstr "Acces public la serviciile web"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:460
+msgid ""
+"Authorize non authenticated requests to get information about users "
+"authorized applications or get applications icons."
+msgstr ""
+"Autorizează cererile neautentificate să obțină lista aplicațiilor autorizate "
+"pentru un utilizator sau să recupereze pictogramele aplicațiilor."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:486
+msgid "Modules activation"
+msgstr "Activarea modulelor"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:486
+msgid "Choose the modules you want to enable."
+msgstr "Alegeți modulele pe care doriți să le activați."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:536
+msgid "Email addresses to send alerts to"
+msgstr "Adresa de poștă electronică la care se trimit alertele"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:536
+msgid "On system alerts, emails will be sent to these addresses"
+msgstr "În caz de alerte sistem, se vor trimite mesaje la următoarele adrese"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:561
+msgid "Activated callbacks"
+msgstr "Reapelări activate"
+
+#: ../../SessionManager/web/classes/Server.class.php:294
+msgid "is NOT online!"
+msgstr "nu este conectat!"
+
+#: ../../SessionManager/web/classes/Server.class.php:482
+msgid "Under maintenance"
+msgstr "În mentenanță"
+
+#: ../../SessionManager/web/classes/Server.class.php:486
+msgid "Pending"
+msgstr "În așteptare"
+
+#: ../../SessionManager/web/classes/Server.class.php:490
+msgid "Offline"
+msgstr "Deconectat"
+
+#: ../../SessionManager/web/classes/Server.class.php:492
+msgid "Broken"
+msgstr "Defect"
+
+#: ../../SessionManager/web/classes/Session.class.php:356
+msgid "Creating"
+msgstr "În curs de creare"
+
+#: ../../SessionManager/web/classes/Session.class.php:359
+msgid "Created"
+msgstr "Creat"
+
+#: ../../SessionManager/web/classes/Session.class.php:362
+msgid "Initializing"
+msgstr "Inițializare"
+
+#: ../../SessionManager/web/classes/Session.class.php:368
+msgid "Logged"
+msgstr "Conectat"
+
+#: ../../SessionManager/web/classes/Session.class.php:371
+msgid "Disconnected"
+msgstr "Deconectat"
+
+#: ../../SessionManager/web/classes/Session.class.php:374
+msgid "To destroy"
+msgstr "De distrus"
+
+#: ../../SessionManager/web/classes/Session.class.php:377
+msgid "Destroying"
+msgstr "Distrugere în curs"
+
+#: ../../SessionManager/web/classes/Session.class.php:380
+msgid "Destroyed"
+msgstr "Distrusă"
+
+#: ../../SessionManager/web/classes/tasks/Task.class.php:68
+#, php-format
+msgid "Unable to submit Task to server '%s'"
+msgstr "Nu se poate trimite sarcina la serverul „%s”"
+
+#: ../../SessionManager/web/classes/User.class.php:341
+#, php-format
+msgid ""
+"User '%s' has at least two groups with the same overriden rule but with "
+"different values, the result will be unpredictable."
+msgstr ""
+"Utilizatorul „%s” are cel puțin două grupuri cu aceeași supra-regulă dar cu "
+"valori diferite, rezultatul va fi imprevizibil."
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Mail.class.php:46
+#, php-format
+msgid "OVD Alert: %s is offline"
+msgstr "Alertă OVD: %s este deconectat"
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Mail.class.php:48
+#, php-format
+msgid "OVD End Alert: %s is up again"
+msgstr "Alertă OVD de încheiere: %s este din nou funcțional"
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Mail.class.php:57
+#: ../../SessionManager/web/events/callbacks/SqlFailure/Mail.class.php:59
+msgid "Send an email"
+msgstr "Trimite un mesaj"
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Task.class.php:53
+msgid "Clean up tasks"
+msgstr "Curăță sarcinile"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:49
+#, php-format
+msgid "OVD Session alert: %s couldn't log in"
+msgstr "Alertă de sesiune OVD: %s nu s-a putut autentifica"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:53
+msgid "The following error happened:\n"
+msgstr "S-a produs următoarea eroare:\n"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:55
+msgid "No error given"
+msgstr "Nici o informație despre eroare"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:64
+msgid "Send an email on login problem"
+msgstr "Trimite un mesaj în caz de problemă de autentificare"
+
+#: ../../SessionManager/web/events/callbacks/SqlFailure/Mail.class.php:46
+#, php-format
+msgid "OVD Alert: MySQL %s is offline"
+msgstr "Alertă OVD: MySQL %s este deconectat"
+
+#: ../../SessionManager/web/events/callbacks/SqlFailure/Mail.class.php:49
+#, php-format
+msgid "OVD End Alert: MySQL %s is up again"
+msgstr "Alertă OVD de încheiere: MySQL %s este din nou funcțional"
+
+#: ../../SessionManager/web/events/ServerStatusChanged.class.php:30
+msgid "Server status changed"
+msgstr "Starea serverului s-a schimbat"
+
+#: ../../SessionManager/web/events/SessionStart.class.php:26
+msgid "Session startup"
+msgstr "Pornirea sesiunii"
+
+#: ../../SessionManager/web/events/SessionStatusChanged.class.php:26
+msgid "Session status changed"
+msgstr "Starea sesiunii s-a schimbat"
+
+#: ../../SessionManager/web/events/SqlFailure.class.php:26
+msgid "Sql failure"
+msgstr "Eșec SQL"
+
+#: ../../SessionManager/web/includes/defaults.inc.php:26
+msgid "Open Virtual Desktop"
+msgstr "Open Virtual Desktop"
+
+#: ../../SessionManager/web/modules/ApplicationsGroupDB.php:32
+msgid "Module ApplicationsGroupDB must be enabled"
+msgstr "Modulul ApplicationsGroupDB trebuie activat"
+
+#: ../../SessionManager/web/modules/ApplicationsGroupDB/sql.php:198
+msgid "Applications group already exists"
+msgstr "Grupul de aplicații există deja"
+
+# 78%
+#: ../../SessionManager/web/modules/AuthMethod/Auto.php:67
+msgid "Auto authentication"
+msgstr "Autentificare automată"
+
+#: ../../SessionManager/web/modules/AuthMethod/Auto.php:102
+msgid "Use the given login to generate user"
+msgstr "Utilizează identificatorul dat pentru generarea utilizatorului"
+
+#: ../../SessionManager/web/modules/AuthMethod/Auto.php:102
+msgid "Use the given login to generate user."
+msgstr "Utilizează identificatorul dat pentru a genera utilizatorul."
+
+#: ../../SessionManager/web/modules/AuthMethod/CAS.php:72
+msgid "CAS authentication"
+msgstr "Autentificare CAS"
+
+#: ../../SessionManager/web/modules/AuthMethod/CAS.php:86
+msgid "CAS server URL"
+msgstr "Asresa URL a serverului CAS"
+
+#: ../../SessionManager/web/modules/AuthMethod/Password.php:48
+msgid "Login/Password authentication"
+msgstr "Autentificare cu identificator/parolă"
+
+#: ../../SessionManager/web/modules/AuthMethod/RemoteUser.php:47
+msgid "RemoteUser authentication"
+msgstr "Autentificare utilizator distant"
+
+#: ../../SessionManager/web/modules/AuthMethod/RemoteUser.php:63
+msgid "SERVER variable for SSO"
+msgstr "Variabila SERVER pentru SSO"
+
+# 75%
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:69
+msgid "Token authentication"
+msgstr "Autentificare cu jeton"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:95
+msgid "Token validation URL"
+msgstr "Adresa URL pentru validarea jetonului"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:95
+msgid ""
+"If a token argument is sent to startsession, the system tries to get an user "
+"login by requesting the token validation url.<br /><br />Put here the url to "
+"request if a token argument is sent to <i>startsession</i> instead of login/"
+"password.<br /><br />The special string <b>%TOKEN%</b> needs to be set "
+"because it's replaced by the token argument when the URL is requested."
+msgstr ""
+"Dacă un jeton este plasat ca argument lui startsession, sistemul încearcă să "
+"recupereze un identificator de utilizator prin interogarea adresei URL de "
+"validare a jetonului.<br /><br />Introduceți aici adresa URL de utilizat "
+"dacă se oferă ca argument un jeton lui <i>startsession</i> în locul unui "
+"cuplu utilizator/parolă.<br /><br />Șirul special <b>%TOKEN%</b> trebuie să "
+"fie definit deoarece este înlocuit de argumentul jeton cînd este interogată "
+"adresa URL."
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:96
+msgid "Token XML user node name"
+msgstr "Numele nodului XML utilizatorului de jeton "
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:96
+msgid "The id of the XML node that contains the user login"
+msgstr "ID-ul nodului XML ce conține identificatorul utilizatorului"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:97
+msgid "Token XML login attribute name"
+msgstr "Numele atributului XML identificatorului de jeton"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:97
+msgid ""
+"The name of the XML attribute which contains the user login (in the "
+"previously defined XML node)"
+msgstr ""
+"Numele atributului XML ce conține identificatorul utilizatorului (din nodul "
+"XML definit precedent)"
+
+#: ../../SessionManager/web/modules/HA/high_availability.php:50
+msgid "Virtual IP"
+msgstr "IP virtuală"
+
+# 75%
+#: ../../SessionManager/web/modules/HA/high_availability.php:60
+msgid "HA configuration"
+msgstr "Configurație HA"
+
+#: ../../SessionManager/web/modules/HA.php:31
+#: ../../SessionManager/web/modules/UserDB.php:32
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_memberof.php:119
+#: ../../SessionManager/web/webservices/configuration.php:65
+msgid "UserDB module must be enabled"
+msgstr "Modulul UserDB trebuie activat"
+
+#: ../../SessionManager/web/modules/ProfileDB/internal.php:209
+#, php-format
+msgid "ProfileDB::internal Unable to create shared folder on file server '%s'"
+msgstr ""
+"ProfileDB::internal nu se poate crea un dosar partajat pe serverul de "
+"fișiere „%s”"
+
+#: ../../SessionManager/web/modules/ProfileDB.php:32
+msgid "ProfileDB module must be enabled"
+msgstr "Modulul ProfileDB trebuie activat"
+
+#: ../../SessionManager/web/modules/SessionManagement/internal.php:66
+msgid "Which login should be used for the ApplicationServer's generated user?"
+msgstr ""
+"Ce identificator trebuie utilizat pentru utilizatorul generat de serverul de "
+"aplicații?"
+
+#: ../../SessionManager/web/modules/SessionManagement/internal.php:67
+msgid "Use given login"
+msgstr "Uzitează identificatorul dat"
+
+#: ../../SessionManager/web/modules/SessionManagement/internal.php:67
+msgid "Auto-generate"
+msgstr "Generează automat"
+
+#: ../../SessionManager/web/modules/SessionManagement/novell.php:72
+msgid "Manage users by ZENworks DLU instead of native method"
+msgstr "Gestionează utilizatorii via ZENworks DLU în locul metodei native"
+
+#: ../../SessionManager/web/modules/SessionManagement.php:292
+msgid "No available server"
+msgstr "Nici un server disponibil"
+
+#: ../../SessionManager/web/modules/SharedFolderDB/internal.php:273
+#, php-format
+msgid ""
+"SharedFolderDB::internal Unable to create shared folder on file server '%s'"
+msgstr ""
+"SharedFolderDB::internal nu se poate crea un dosar partajat pe serverul de "
+"fișiere „%s”"
+
+#: ../../SessionManager/web/modules/SharedFolderDB.php:32
+msgid "SharedFolderDB module must be enabled"
+msgstr "Modulul SharedFolderDB trebuie activat"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:91
+#: ../../SessionManager/web/modules/UserDB/ldap.php:284
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:194
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:105
+msgid "Server host address"
+msgstr "Adresa serverului gazdă"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:91
+msgid "The address of your Active Directory server."
+msgstr "Adresa serverului vostru Active Directory."
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:93
+msgid "Domain name"
+msgstr "Nume de domeniu"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:93
+msgid "Domain name used by Active Directory"
+msgstr "Numele de domeniu utilizat de Active Directory"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:95
+msgid "Administrator DN"
+msgstr "Numele de domeniu al administratorului"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:95
+#: ../../SessionManager/web/modules/UserDB/ldap.php:288
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:196
+msgid ""
+"The user login that must be used to access the database (to list users "
+"accounts)."
+msgstr ""
+"Identificatorul utilizatorului ce trebuie utilizat pentru accesarea bazei de "
+"date (pentru listarea conturilor utilizatorilor)."
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:97
+msgid "Administrator password"
+msgstr "Parola administratorului"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:97
+#: ../../SessionManager/web/modules/UserDB/ldap.php:290
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:198
+msgid ""
+"The user password that must be used to access the database (to list users "
+"accounts)."
+msgstr ""
+"Parola utilizatorului care trebuie utilizat pentru accesarea bazei de date "
+"(pentru a lista conturile utilizatorilor)."
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:99
+msgid "match"
+msgstr "corespunde"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:146
+#: ../../SessionManager/web/modules/UserGroupDB/activedirectory.php:160
+msgid "Active Directory"
+msgstr "Active Directory"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:284
+msgid "The address of your LDAP server."
+msgstr "Adresa serverului vostru LDAP."
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:286
+msgid "Server port"
+msgstr "Portul serverului"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:286
+msgid "The port number used by your LDAP server."
+msgstr "Numărul portului utilizat de serverul vostru LDAP."
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:286
+msgid "The port use by your LDAP server."
+msgstr "Portul utilizat de serverul vostru LDAP."
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:288
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:196
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:107
+msgid "User login"
+msgstr "Identificator utilizator"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:290
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:198
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:109
+msgid "User password"
+msgstr "Parolă utilizator"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:296
+msgid "Options given to ldap object"
+msgstr "Opțiuni furnizate obiectului LDAP"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:296
+msgid "Options given to ldap object."
+msgstr "Opțiuni furnizate obiectului LDAP."
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:298
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:204
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_memberof.php:204
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:253
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:115
+msgid "Matching"
+msgstr "Potrivire"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:301
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:255
+msgid "Filter (optional)"
+msgstr "Filtru (opțional)"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:301
+msgid "Filter, example (&(distinguishedname=mike*)(uid=42*))"
+msgstr "Filtru, exemplu (&(distinguishedname=mike*)(uid=42*))"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:304
+msgid "extra"
+msgstr "extra"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:194
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:105
+msgid "The address of your MySQL server."
+msgstr "Adresa serverului vostru MySQL."
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:202
+msgid "Table of users"
+msgstr "Tabela utilizatorilor"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:206
+msgid "Hash method"
+msgstr "Metodă de Hash"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:207
+msgid "MD5"
+msgstr "MD5"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:207
+msgid "Crypt"
+msgstr "Criptează"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:207
+msgid "Plain"
+msgstr "Plan"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:229
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:137
+msgid "MySQL external"
+msgstr "MySQL extern"
+
+#: ../../SessionManager/web/modules/UserDB/sql.php:246
+msgid "User already exists"
+msgstr "Utilizatorul există deja"
+
+#: ../../SessionManager/web/modules/UserDB/unix.php:116
+#: ../../SessionManager/web/modules/UserGroupDB/unix.php:110
+msgid "Unix"
+msgstr "Unix"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_memberof.php:215
+msgid "LDAP using memberOf"
+msgstr "LDAP utilizînd memberOf"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:251
+msgid "Group Branch DN"
+msgstr "Numele de domeniu al branșei grupurilor"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:251
+msgid "Use LDAP users groups using Posix groups, Group Branch DN:"
+msgstr ""
+"Utilizează grupurile de utilizatori LDAP care de bazează pe grupuri Posix. "
+"Numele de domeniu al branșei grupurilor:"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:255
+#, php-format
+msgid "Filter (example: %s)"
+msgstr "Filtru (exemplu: %s)"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:261
+msgid "LDAP using Posix groups"
+msgstr "LDAP pe bază de grupuri Posix"
+
+#: ../../SessionManager/web/modules/UserGroupDB.php:32
+#: ../../SessionManager/web/modules/UserGroupDB.php:167
+msgid "UserGroupDB module must be enabled"
+msgstr "Modulul UserGroupDB trebuie activat"
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:107
+msgid ""
+"The user login that must be used to access the database (to list users "
+"groups)."
+msgstr ""
+"Identificatorul utilizatorului ce trebuie utilizat pentru accesarea bazei de "
+"date (pentru a lista grupurile de utilizatori)."
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:109
+msgid ""
+"The user password that must be used to access the database (to list users "
+"groups)."
+msgstr ""
+"Parola utilizatorului ce trebuie utilizat pentru accesarea bazei de date "
+"(pentru listarea grupurilor de utilizatori)."
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:113
+msgid "Database users groups table name"
+msgstr "Numele tabelei grupurilor de utilizatori din baza de date"
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:113
+msgid "The name of the database table which contains the users groups"
+msgstr "Numele tabelei bazei de date care conține grupurile de utilizatori"
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql.php:183
+msgid "Users group already exists"
+msgstr "Grupul de utilizatori există deja"
+
+#: ../../SessionManager/web/webservices/configuration.php:26
+msgid "Internal error"
+msgstr "Eroare internă"
+
+#: ../../SessionManager/web/webservices/configuration.php:39
+msgid "Maximum"
+msgstr "Maximum"
+
+#: ../../SessionManager/web/webservices/configuration.php:78
+msgid "Getting userlist failed"
+msgstr "Obținerea listei de utilizatori a eșuat"
