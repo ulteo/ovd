@@ -49,7 +49,7 @@ public abstract class Input {
 
     protected static long last_mousemove = 0;
     
-	/* VK_CODES list is here: http://msdn.microsoft.com/en-us/library/dd375731(v=vs.85).aspx */
+	// VK_CODES list is here: http://msdn.microsoft.com/en-us/library/dd375731(v=vs.85).aspx
 
 	// Using this flag value (0x0001) seems to do nothing, and after running
 	// through other possible values, the RIGHT flag does not appear to be
