@@ -49,6 +49,8 @@ public abstract class Input {
 
     protected static long last_mousemove = 0;
     
+	/* VK_CODES list is here: http://msdn.microsoft.com/en-us/library/dd375731(v=vs.85).aspx */
+
 	// Using this flag value (0x0001) seems to do nothing, and after running
 	// through other possible values, the RIGHT flag does not appear to be
 	// implemented
@@ -62,7 +64,7 @@ public abstract class Input {
 
 	protected static int SCANCODE_EXTENDED = 0x80;
 
-	protected static final int KBD_ALT_KEY = 0x38;
+	protected static final int KBD_ALT_KEY = 0x12;
 	protected static final int KBD_ALTGR_KEY = SCANCODE_EXTENDED | KBD_ALT_KEY;
 	
 	protected static final int RDP_KEYPRESS = 0;
@@ -299,7 +301,7 @@ public abstract class Input {
      */
 	public void sendScancode(long time, int flags, int scancode) {
 
-        if(scancode == 0x38){ // be careful with alt
+        if(scancode == KBD_ALT_KEY){ // be careful with alt
             if((flags & RDP_KEYRELEASE) != 0){
                 //logger.info("Alt release, serverAltDown = " + serverAltDown);
                 serverAltDown = false;
