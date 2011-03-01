@@ -155,7 +155,10 @@ public class AuthFrame implements ActionListener, Runnable {
 		this.mainFrame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent evt) {
-				SwingTools.invokeLater(GUIActions.textComponentRequestFocus(passwordTextField));
+				if (loginTextField.getText().isEmpty())
+					SwingTools.invokeLater(GUIActions.textComponentRequestFocus(loginTextField));
+				else
+					SwingTools.invokeLater(GUIActions.textComponentRequestFocus(passwordTextField));
 			}
 		});
 	}
