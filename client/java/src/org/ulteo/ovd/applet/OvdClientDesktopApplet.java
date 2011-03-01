@@ -69,6 +69,24 @@ public class OvdClientDesktopApplet extends OvdClient {
 		this.createRDPConnections();
 	}
 
+	public Dimension getDesktopSize() {
+		if (this.connections.isEmpty())
+			return null;
+
+		return this.connections.get(0).getGraphics();
+	}
+
+	public void setDesktopSize(Dimension desktopSize) {
+		if (this.connections.isEmpty())
+			return;
+
+		RdpConnectionOvd co = this.connections.get(0);
+		if (co.getState() != RdpConnectionOvd.STATE_DISCONNECTED)
+			return;
+
+		co.setGraphic(desktopSize.width, desktopSize.height);
+	}
+
 	@Override
 	protected boolean createRDPConnections() {
 		byte flags = 0x00;
