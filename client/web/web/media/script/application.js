@@ -100,7 +100,7 @@ var Application = Class.create({
 
 	launch: function() {
 		var date = new Date();
-		var rand = parseInt(date.getTime()/1000);
+		var rand = parseInt(date.getTime()/10000);
 
 		var server = daemon.servers.get(this.server_id);
 		$('ulteoapplet').startApplication(rand, this.id, server.java_id);
@@ -109,8 +109,8 @@ var Application = Class.create({
 
 	launch_with_file: function(type_, path_, share_) {
 		var date = new Date();
-		var rand = parseInt(date.getTime()/1000);
-		
+		var rand = parseInt(date.getTime()/10000);
+
 		var server = daemon.servers.get(this.server_id);
 		$('ulteoapplet').startApplicationWithFile(rand, this.id, server.java_id, type_, path_, share_);
 		daemon.liaison_runningapplicationtoken_application.set(rand, this.id);
