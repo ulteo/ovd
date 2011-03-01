@@ -85,7 +85,7 @@ class InstancesManager(threading.Thread):
 						elif dir_type == OvdAppChannel.DIR_TYPE_KNOWN_DRIVES:
 							local_path = self.drives.getPath(job[4])
 							if local_path is None:
-								 print "Unknown drive ID %s"%(local_path)
+								 print "Unknown drive ID %s"%(job[4])
 								 continue
 						
 						elif dir_type == OvdAppChannel.DIR_TYPE_HTTP_URL:
