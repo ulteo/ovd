@@ -456,7 +456,9 @@ function testJava() {
 	}
 
 	try {
-		$('CheckJava').isActive();
+		var checkjava_isactive = $('CheckJava').isActive();
+		if (! checkjava_isactive)
+				throw "applet is not ready";
 	} catch(e) {
 		testJava_t1 = (new Date()).getTime();
 		if (testJava_t1 - testJava_t0 > 10000)
