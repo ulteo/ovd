@@ -21,7 +21,7 @@
 
 package org.ulteo.ovd;
 
-import org.ulteo.ovd.integrated.RestrictedAccessException;
+import java.io.File;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import net.propero.rdp.RdesktopException;
@@ -31,6 +31,7 @@ import org.ulteo.Logger;
 import org.ulteo.ovd.disk.DiskManager;
 import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.OSTools;
+import org.ulteo.ovd.integrated.RestrictedAccessException;
 import org.ulteo.ovd.integrated.SystemWindows;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
