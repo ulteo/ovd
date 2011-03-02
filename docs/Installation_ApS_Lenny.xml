@@ -88,27 +88,26 @@
     <itemizedlist>
       <listitem>
         <para>
-	  Edit the <emphasis>/etc/apt/sources.list</emphasis> and add
-	  these lines at the end:
+	  Edit the <emphasis>/etc/apt/sources.list.d/ulteo-ovd.list</emphasis> and add
+	  these lines:
         </para>
         <screen>
 	  <![CDATA[
 deb http://archive.ulteo.com/ovd/3.0/debian lenny main
-
-deb http://ftp.debian.org/debian/ lenny main non-free]]>
+deb http://archive.ulteo.com/ovd/desktop hardy main universe ulteo]]>
         </screen>
       </listitem>
 
       <listitem>
         <para>
-	  Edit the <emphasis>/etc/apt/preferences</emphasis>
-	  file and put these lines:
+	  Edit the <emphasis>/etc/apt/preferences.d/ulteo-ovd</emphasis>
+	  file and add these lines:
         </para>
         <screen>
 	  <![CDATA[
 Package: *
 Pin: origin archive.ulteo.com
-Pin-Priority: 1002]]>
+Pin-Priority: 1001]]>
         </screen>
       </listitem>
 

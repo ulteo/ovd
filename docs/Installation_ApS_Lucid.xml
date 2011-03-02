@@ -96,31 +96,25 @@
     <itemizedlist>
       <listitem>
         <para>
-	  Edit the <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd.list</emphasis>
+	  Edit the <emphasis>/etc/apt/sources.list.d/ulteo-ovd.list</emphasis>
 	  file and add these lines:
         </para>
         <screen>
 	  <![CDATA[
 deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main
-
-deb http://archive.ubuntu.com/ubuntu/ hardy main universe
-deb http://security.ubuntu.com/ubuntu/ hardy-security main]]>
+deb http://archive.ulteo.com/ovd/desktop hardy main universe ulteo]]>
         </screen>
       </listitem>
 
       <listitem>
         <para>
-	  Edit the <emphasis>/etc/apt/preferences.d/01-ulteo-ovd</emphasis>
+	  Edit the <emphasis>/etc/apt/preferences.d/ulteo-ovd</emphasis>
 	  file and add these lines:
         </para>
         <screen>
 	  <![CDATA[
 Package: *
 Pin: origin archive.ulteo.com
-Pin-Priority: 1002
-
-Package: xfce4-terminal xfwm4 xfwm4-themes libexo-0.3-0 libxfcegui4-4
-Pin: release a=hardy
 Pin-Priority: 1001]]>
         </screen>
       </listitem>
