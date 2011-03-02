@@ -176,11 +176,15 @@ FunctionEnd
 !include WindowsVersion.nsh
 
 Function .onInit
+  !insertmacro setRegViewFromArch
+
   ; to install for all user
     SetShellVarContext all
 FunctionEnd
 
 Function un.onInit
+  !insertmacro setRegViewFromArch
+  
   ; to uninstall for all user
     SetShellVarContext all
 FunctionEnd
