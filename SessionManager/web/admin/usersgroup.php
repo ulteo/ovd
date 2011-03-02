@@ -325,12 +325,13 @@ function show_manage($id) {
     $status_change_value = 1;
   }
 
-  $users = $group->usersLogin();
-  sort($users);
-  $has_users = (count($users) > 0);
-
   $userDB = UserDB::getInstance();
   $applicationsGroupDB = ApplicationsGroupDB::getInstance();
+
+  if ($group->isDefault() == false) {
+    $users = $group->usersLogin();
+    sort($users);
+    $has_users = (count($users) > 0);
 
   if ($usergroupdb_rw) {
     $usersList = new UsersList($_REQUEST);
@@ -338,25 +339,32 @@ function show_manage($id) {
     $search_form = $usersList->getForm(array('action' => 'manage', 'id' => $id, 'search_user' => true));
     if (is_null($users_all))
       $users_all = array();
-    $users_available = array();
-    foreach($users_all as $user) {
-      $found = false;
-      foreach($users as $user2) {
-        if ($user2 == $user->getAttribute('login'))
-          $found = true;
-      }
+      $users_available = array();
+      foreach($users_all as $user) {
+        $found = false;
+        foreach($users as $user2) {
+          if ($user2 == $user->getAttribute('login'))
+            $found = true;
+       }
 
       if (! $found)
         $users_available[]= $user->getAttribute('login');
+      }
+    }
+    else {
+      $users_available = array();
+      $users_all = array();
+      foreach($users as $a_login) {
+        $users_all [] = $userDB->import($a_login);
+      }
+      usort($users_all, "user_cmp");
     }
   }
   else {
+    $users = array();
     $users_available = array();
     $users_all = array();
-    foreach($users as $a_login) {
-      $users_all [] = $userDB->import($a_login);
-    }
-    usort($users_all, "user_cmp");
+    $search_form = null;
   }
 
   // Default usergroup
@@ -592,27 +600,31 @@ echo '<br />';
   }
 
   // Users list
-if (count($users_all) > 0 || count($users) > 0) {
+if ((count($users_all) > 0 || count($users) > 0) || ($group->isDefault())) {
     echo '<div>';
     echo '<h2>'._('List of users in this group').'</h2>';
-    echo '<table border="0" cellspacing="1" cellpadding="3">';
+    if ($group->isDefault()) {
+      echo _('All available users are in this group.');
+    }
+    else {
+      echo '<table border="0" cellspacing="1" cellpadding="3">';
 
-    if (count($users) > 0) {
-      foreach($users as $user) {
-	echo '<tr>';
-	echo '<td><a href="users.php?action=manage&id='.$user.'">'.$user.'</td>';
-	echo '<td>';
-	if ($usergroupdb_rw && $group->type == 'static' && !$group->isDefault() and $can_manage_usersgroups) {
-		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
-		echo '<input type="hidden" name="action" value="del" />';
-		echo '<input type="hidden" name="name" value="User_UserGroup" />';
-		echo '<input type="hidden" name="group" value="'.$id.'" />';
-		echo '<input type="hidden" name="element" value="'.$user.'" />';
-		echo '<input type="submit" value="'._('Delete from this group').'" />';
-		echo '</form>';
-		echo '</td>';
-	}
-	echo '</tr>';
+      if (count($users) > 0) {
+        foreach($users as $user) {
+          echo '<tr>';
+          echo '<td><a href="users.php?action=manage&id='.$user.'">'.$user.'</td>';
+          echo '<td>';
+          if ($usergroupdb_rw && $group->type == 'static' && !$group->isDefault() and $can_manage_usersgroups) {
+            echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
+            echo '<input type="hidden" name="action" value="del" />';
+            echo '<input type="hidden" name="name" value="User_UserGroup" />';
+            echo '<input type="hidden" name="group" value="'.$id.'" />';
+            echo '<input type="hidden" name="element" value="'.$user.'" />';
+            echo '<input type="submit" value="'._('Delete from this group').'" />';
+            echo '</form>';
+            echo '</td>';
+          }
+        echo '</tr>';
       }
     }
 
@@ -638,6 +650,7 @@ if (count($users_all) > 0 || count($users) > 0) {
     echo '</div>';
     echo '<br/>';
   }
+}
 
   // Publications part
   if (count($groups_apps_all)>0) {
