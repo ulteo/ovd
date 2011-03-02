@@ -1,6 +1,7 @@
 ;; Copyright (C) 2009 - 2011 Ulteo SAS
 ;; http://www.ulteo.com
 ;; Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
+;; Author David LECHEVALIER <david@ulteo.com> 2011
 ;; Author Thomas MOUTON <thomas@ulteo.com> 2009, 2010
 ;;
 ;; This program is free software; you can redistribute it and/or 
@@ -78,8 +79,7 @@
   !define MUI_FINISHPAGE_LINK_LOCATION ${PRODUCT_WEB_SITE}
   !define MUI_FINISHPAGE_TEXT "${PRODUCT_FULL_NAME} has been installed on your computer.\n\nClick Finish to close this wizard.\n\n\nWarning: please be sure that you have correctly installed Sun Java before using this software"
   !define MUI_FINISHPAGE_TEXT_LARGE
-  !define MUI_FINISHPAGE_RUN "javaw"
-  !define MUI_FINISHPAGE_RUN_PARAMETERS "-jar $\"$INSTDIR/${EXE_NAME}$\""
+  !define MUI_FINISHPAGE_RUN "$INSTDIR/OvdNativeClientw.exe"
   !define MUI_FINISHPAGE_RUN_NOTCHECKED
   
   !insertmacro MUI_PAGE_WELCOME
