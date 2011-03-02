@@ -42,7 +42,6 @@ while [ ! -e "$CHROOTCONF" ]; do
     db_subst ulteo-ovd-subsystem/download_error CHROOTDIR "$CHROOTDIR"
     db_input critical ulteo-ovd-subsystem/download_error || true
     db_go
-    db_reset ulteo-ovd-subsystem/download_error
     rm -rf $CHROOTDIR
 
     db_fset ulteo-ovd-subsystem/tarball_uri seen false || true
@@ -75,7 +74,6 @@ else
     db_subst ulteo-ovd-subsystem/no_chroot_conf CHROOTCONF "$CHROOTCONF"
     db_input high ulteo-ovd-subsystem/no_chroot_conf || true
     db_go
-    db_fset ulteo-ovd-subsystem/no_chroot_conf seen false || true
     CHROOTDIR=""
 fi
 
