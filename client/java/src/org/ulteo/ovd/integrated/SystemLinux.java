@@ -279,6 +279,51 @@ public class SystemLinux extends SystemAbstract {
 		return iconsList;
 	}
 	
+	
+	public static String getKnownDrivesUUIDPathFromPath(String path) {
+		String[] composants = path.split(File.separator);
+		String tempPath = "/";
+
+		for (String composant: composants) {
+			tempPath += composant+"/";
+			String ulteoTag = tempPath + SystemLinux.KNOWN_ULTEO_TAG_FILE;
+			File ulteoTagFile = new File(ulteoTag);
+			
+			if (ulteoTagFile.exists()) {
+				return tempPath;
+			}
+		}
+		return null;		
+	}
+	
+	public static String getKnownDrivesUUIDFromPath(String UUIDpath) {
+		String shareID = null;
+		if (UUIDpath == null) {
+			return null;
+		}
+		
+		String ulteoTag = UUIDpath+"/"+SystemLinux.KNOWN_ULTEO_TAG_FILE;
+		File ulteoTagFile = new File(ulteoTag);
+		if (ulteoTagFile.exists()) {
+			try {
+				BufferedReader br = new BufferedReader(new FileReader(ulteoTagFile));
+				char[] buff = new char[16];
+				if (br.read(buff, 0, 16) != 16) {
+					Logger.warn("Error while reading ulteo id file");
+					return null;
+				}
+				shareID  = new String(buff);
+				return shareID;
+			} catch (FileNotFoundException e) {
+				Logger.warn("Unable to find the file "+ulteoTag+" ["+e.getMessage()+"]");
+			}
+			catch (IOException e) {
+				Logger.warn("Error while opening the file "+ulteoTag+" ["+e.getMessage()+"]");
+			}
+		}
+		return null;
+	}
+
 	public void refresh() {
 		File issueFile = new File("/etc/issue");
 		String issue = "";

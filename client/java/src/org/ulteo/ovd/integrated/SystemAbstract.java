@@ -37,6 +37,8 @@ import org.ulteo.ovd.integrated.mime.FileAssociate;
 import org.ulteo.ovd.integrated.shorcut.Shortcut;
 
 public abstract class SystemAbstract {
+	public static final String KNOWN_ULTEO_TAG_FILE = ".ulteo.id";
+
 	protected Shortcut shortcut = null;
 	protected FileAssociate fileAssociate = null;
 
