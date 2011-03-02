@@ -20,7 +20,7 @@ conf_mysql()
     fi
     dbadmin=root
     dbadmpass=$RET
-    db_set ulteo-ovd-easy-install/mysql_dbrootpass ""
+    db_reset ulteo-ovd-easy-install/mysql_dbrootpass
 
     . /usr/share/wwwconfig-common/mysql-createuser.sh
     . /usr/share/wwwconfig-common/mysql-createdb.sh

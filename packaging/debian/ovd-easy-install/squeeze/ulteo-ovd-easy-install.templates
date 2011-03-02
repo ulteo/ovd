@@ -36,6 +36,10 @@ Type: password
 Description: Database root password:
  Indicate the mysql root password
 
+Template: ulteo-ovd-easy-install/wrong_msql_password
+Type: error
+Description: Wrong MySQL password, try again !
+
 Template: ulteo-ovd-easy-install/display_sm_password
 Type: note
 Description: Session Manager administrator password
