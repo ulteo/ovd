@@ -120,6 +120,10 @@ public class Rdp {
 
     private static final int RDP_CAPLEN_GENERAL = 0x18;
 
+    private static final int RDP_CAPSET_INPUT = 13;
+
+    private static final int RDP_CAPLEN_INPUT = 0x58;
+
     private static final int OS_MAJOR_TYPE_UNIX = 4;
 
     private static final int OS_MINOR_TYPE_XSERVER = 7;
@@ -191,6 +195,26 @@ public class Rdp {
 
     private static final int PDU_FLAG_LAST = 0x02;
 
+    /* RDP Input constants */
+    private static final int INPUT_FLAG_SCANCODES =		0x0001;		/* Indicates support for using scancodes
+										  in the Keyboard Event notifications */
+    private static final int INPUT_FLAG_MOUSEX =		0x0004;		/* Indicates support for Extended Mouse Event notifications */
+    private static final int INPUT_FLAG_FASTPATH_INPUT =	0x0008;		/* Advertised by RDP 5.0 and 5.1 servers. RDP 5.2, 6.0, 6.1, 
+										and 7.0 servers advertise the INPUT_FLAG_FASTPATH_INPUT2 flag
+										to indicate support for fast-path input. */
+    private static final int INPUT_FLAG_UNICODE =		0x0010;		/* Indicates support for Unicode Keyboard Event notifications */
+    private static final int INPUT_FLAG_FASTPATH_INPUT2 =	0x0020;		/* Advertised by RDP 5.2, 6.0, 6.1, and 7.0 servers. Clients that
+										do not support this flag will not be able to use fast-path input
+										when connecting to RDP 5.2, 6.0, 6.1, and 7.0 servers. */
+
+    /* RDP Keyboard Type Constants */
+    private static final int KEYBOARD_TYPE_IBM_PC_XT =		0x00000001;	/* IBM PC/XT or compatible (83-key) keyboard */
+    private static final int KEYBOARD_TYPE_OLIVETTI_ICO =	0x00000002;	/* Olivetti "ICO" (102-key) keyboard */
+    private static final int KEYBOARD_TYPE_IBM_PC_AT =		0x00000003;	/* IBM PC/AT (84-key) or similar keyboard */
+    private static final int KEYBOARD_TYPE_IBM_ENHANCED =	0x00000004;	/* IBM enhanced (101- or 102-key) keyboard */
+    private static final int KEYBOARD_TYPE_NOKIA_1050 =		0x00000005;	/* Nokia 1050 and similar keyboards */
+    private static final int KEYBOARD_TYPE_NOKIA_9140 =		0x00000006;	/* Nokia 9140 and similar keyboards */
+    private static final int KEYBOARD_TYPE_JAPANESE =		0x00000007;	/* Japanese keyboard */
 
     private static final byte[] RDP_SOURCE = { (byte) 0x4D, (byte) 0x53,
             (byte) 0x54, (byte) 0x53, (byte) 0x43, (byte) 0x00 }; // string
@@ -280,15 +304,6 @@ public class Rdp {
             (byte) 0xFE, 0x00, 0x40, 0x00, (byte) 0xFE, 0x00, (byte) 0x80,
             0x00, (byte) 0xFE, 0x00, 0x00, 0x01, 0x40, 0x00, 0x00, 0x08, 0x00,
             0x01, 0x00, 0x01, 0x02, 0x00, 0x00, 0x00 };
-
-    static byte caps_0x0d[] = { 0x01, 0x00, 0x00, 0x00, 0x09, 0x04, 0x00, 0x00,
-            0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
     static byte caps_0x0c[] = { 0x01, 0x00, 0x00, 0x00 };
 
@@ -1108,6 +1123,8 @@ public class Rdp {
         this.sendBitmapCaps(data);
         this.sendOrderCaps(data);
 
+	this.sendInputCaps(data);
+
         if (this.opt.use_rdp5) {
         	this.sendBitmapcache2Caps(data);
         	this.sendNewPointerCaps(data);
@@ -1126,8 +1143,6 @@ public class Rdp {
 		this.sendVirtualChannelCaps(data);
 	}
 
-	// Input capabilities
-        this.sendUnknownCaps(data, 0x0d, 0x58, caps_0x0d);
 	// Sound capabilities
         this.sendUnknownCaps(data, 0x0c, 0x08, caps_0x0c);
 	// Font capabilities
@@ -1164,6 +1179,22 @@ public class Rdp {
         data.setLittleEndian16(0); /* Compression level */
         data.setLittleEndian16(0); /* Pad */
     }
+
+	private void sendInputCaps(RdpPacket_Localised data) {
+		data.setLittleEndian16(RDP_CAPSET_INPUT);		/* capabilitySetType */
+		data.setLittleEndian16(RDP_CAPLEN_INPUT);		/* lengthCapability */
+
+		data.setLittleEndian16(INPUT_FLAG_SCANCODES);		/* inputFlags */
+		data.setLittleEndian16(0);				/* pad2octetsA */
+		data.setLittleEndian32(0x00000409);			/* keyboardLayout: 0x00000409 is English_United_States */
+		data.setLittleEndian32(KEYBOARD_TYPE_IBM_ENHANCED);	/* keyboardType */
+		data.setLittleEndian32(0);				/* keyboardSubType */
+		data.setLittleEndian32(12);				/* keyboardFunctionKey */
+
+		byte[] imeFileName = new byte[64];			/* imeFileName */
+		data.copyFromByteArray(imeFileName, 0, data.getPosition(), imeFileName.length);
+		data.incrementPosition(imeFileName.length);
+	}
 
     private void sendBitmapCaps(RdpPacket_Localised data) {
 
