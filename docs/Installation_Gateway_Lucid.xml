@@ -81,66 +81,112 @@
 
   <section>
     <title>Ubuntu packages configuration</title>
-
-    <itemizedlist>
-      <listitem>
-        <para>
-	  Edit the <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd.list</emphasis>
-	  file and put this line:
-        </para>
-        <screen>
-	  <![CDATA[
-deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
-        </screen>
-      </listitem>
       
-      <listitem>
-        <para>
-	  Edit the <emphasis>/etc/apt/sources.list.d/02-ulteo-ovd-private.list</emphasis>
-	  file and put this line:
-        </para>
-        <screen>
-	  <![CDATA[
-deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/private/ubuntu lucid main]]>
-        </screen>
-      </listitem>
-
-      <important>
-        <para>
-          You have to replace LOGIN and PASSWORD by your own.
-        </para>
-      </important>      
-
-      <listitem>
-        <para>
-	  Update the package database:
-        </para>
-        <screen>
-	  <![CDATA[
-# apt-get update]]>
-        </screen>
-        <note>
-          <para>
-	    GPG errors given by the previous command will be fixed in
-            the next installation steps. They won't prevent the
-            installation to be successful.
+     <section id="repository_online">
+      <title id="repository_online_title">Online method</title>
+      
+      <para id="repository_online_para">
+        The following method describe the repository process when your
+        servers can access to Internet. If not, please read the
+        offline method.
+      </para>
+      
+      <itemizedlist>
+        <listitem id="repository_step1">
+          <para id="repository_online_step1_para">
+            Edit the
+            <emphasis>/etc/apt/sources.list.d/ulteo-ovd.list</emphasis>
+            file and add this line:
           </para>
-        </note>
-      </listitem>
+          <important>
+            <para>
+              You have to replace LOGIN and PASSWORD by your own.
+            </para>
+          </important>
+          <screen>
+            <![CDATA[
+deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main
+deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/private/ubuntu lucid main]]>
+          </screen>
+        </listitem>
+      </itemizedlist>
+    </section>
 
-      <listitem>
-        <para>
-          Install the keyring package to validate the repository using
-          gpg:
-        </para>
-        <screen>
-          <![CDATA[
+    <section id="repository_offline">
+      <title id="repository_offline_title">Offline Method</title>
+
+     <itemizedlist>
+       
+       <listitem id="repository_offline_step2">
+         <para id="repository_offline_step2_para">
+           The offline repository are two archives you can download from the Ulteo website 
+           <ulink url="http://archive.ulteo.com/ovd/3.0/offline/ovd-3.0-ubuntu-lucid.tar.gz">here</ulink> and 
+           <ulink url="http://archive.ulteo.com/ovd/3.0/private/offline/ovd-3.0-private-ubuntu-lucid.tar.gz">there</ulink>, 
+           or from the Ulteo OVD DVD and copy it in
+           the <emphasis>/root</emphasis> of your machine.
+         </para>
+       </listitem>
+
+       <listitem id="repository_offline_step3">
+          <para id="repository_offline_step3_para">
+            Uncompress the archive:
+          </para>
+          <screen>
+            <![CDATA[
+# tar xzf ovd-3.0-*ubuntu-lucid.tar.gz]]>
+          </screen>
+        </listitem>
+
+        <listitem id="repository_offline_step4">
+          <para id="repository_offline_step4_para">
+            Edit the
+            <emphasis>/etc/apt/sources.list.d/ulteo-ovd.list</emphasis>
+            file and add these lines:
+          </para>
+          <screen>
+            <![CDATA[
+deb file:///root/ovd-3.0-ubuntu-lucid lucid main
+deb file:///root/ovd-3.0-private-ubuntu-lucid lucid main]]>
+          </screen>
+        </listitem>
+     </itemizedlist>
+    </section>
+
+    <simplesect id="repository_common">
+      <title id="repository_common_title">Finish with any method</title>
+      <itemizedlist>
+        <listitem>
+          <para id="repository_common_step1_para">
+            Update the package database:
+          </para>
+          <screen>
+            <![CDATA[
+# apt-get update]]>
+          </screen>
+          <note>
+            <para>
+              GPG errors given by the previous command will be fixed
+              in the next installation steps. They won't prevent the
+              installation to succeed.
+            </para>
+          </note>
+        </listitem>
+
+        <listitem id="repository_step3">
+          <para>
+            Install the keyring package to validate the repository
+            using gpg:
+          </para>
+          <screen>
+            <![CDATA[
 # apt-get install ulteo-keyring
 # apt-get update]]>
-        </screen>
-      </listitem>
-    </itemizedlist>
-  </section>
+          </screen>
+        </listitem>
+      </itemizedlist>
+    </simplesect>
+
+</section>
 
   <section>
     <title>Packages installation</title>

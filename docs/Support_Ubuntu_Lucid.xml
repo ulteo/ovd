@@ -88,7 +88,7 @@
         <listitem id="repository_step1">
           <para id="repository_online_step1_para">
             Edit the
-            <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd.list</emphasis>
+            <emphasis>/etc/apt/sources.list.d/ulteo-ovd.list</emphasis>
             file and add these lines:
           </para>
           <screen>
@@ -103,13 +103,25 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
       <title id="repository_offline_title">Offline Method</title>
 
      <itemizedlist>
+     
        <listitem id="repository_offline_step1">
+         <para id="repository_offline_step1_para">
+           The OVD offline repositories are jointly used with the 
+           <ulink url="http://www.ubuntu.com/desktop/get-ubuntu/alternative-download#dvd">Ubuntu Lucid DVD</ulink>
+           . When the DVD is mount in the system, add the DVD repository:
+          <screen>
+            <![CDATA[
+# apt-cdrom add]]>
+          </screen>
+         </para>
+       </listitem>
+     
+       <listitem id="repository_offline_step2">
          <para>
            The offline repository is an archive named
-           <emphasis>ubuntu-lucid.tar.gz</emphasis>.
+           <emphasis>ulteo-ovd-ubuntu-lucid.tar.gz</emphasis>.
          </para>
-
-         <para id="repository_offline_step1_para">
+         <para id="repository_offline_step2_para">
            Get this archive from <ulink
            url="http://archive.ulteo.com/ovd/3.0/offline/">the Ulteo
            website</ulink> or from the Ulteo OVD DVD and copy it in
@@ -117,8 +129,8 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
          </para>
        </listitem>
 
-       <listitem id="repository_offline_step2">
-          <para id="repository_offline_step2_para">
+       <listitem id="repository_offline_step3">
+          <para id="repository_offline_step3_para">
             Uncompress the archive:
           </para>
           <screen>
@@ -127,10 +139,10 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
           </screen>
         </listitem>
 
-        <listitem id="repository_offline_step3">
-          <para id="repository_offline_step3_para">
+        <listitem id="repository_offline_step4">
+          <para id="repository_offline_step4_para">
             Edit the
-            <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd-offline.list</emphasis>
+            <emphasis>/etc/apt/sources.list.d/ulteo-ovd-offline.list</emphasis>
             file and add these lines:
           </para>
           <screen>
