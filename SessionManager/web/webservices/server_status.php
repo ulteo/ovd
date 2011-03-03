@@ -87,7 +87,7 @@ if ($ret['status'] == Server::SERVER_STATUS_ONLINE) {
 	}
 }
 
-// check if server's roles have been changes
+// check if server's roles have been changed
 $new_roles = $server->getAttribute('roles');
 foreach ($old_roles as $a_role => $enable) {
 	if (array_key_exists($a_role, $new_roles) == false) {
