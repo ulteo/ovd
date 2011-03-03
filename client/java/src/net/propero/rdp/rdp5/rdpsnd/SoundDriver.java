@@ -87,6 +87,7 @@ public class SoundDriver {
 		if (this.playThread == null)
 			return;
 
+		this.waveOutClose();
 		this.playThread.interrupt();
 		try {
 			this.playThread.join();
