@@ -221,7 +221,7 @@ function application_cmp($o1, $o2) {
 	if (!is_object($o1) || !is_object($o2))
 		return 0;
 	
-	return strcmp($o1->getAttribute('name'), $o2->getAttribute('name'));
+	return strcasecmp($o1->getAttribute('name'), $o2->getAttribute('name'));
 }
 
 function appsgroup_cmp($o1, $o2) {
