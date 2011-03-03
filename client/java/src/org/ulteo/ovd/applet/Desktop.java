@@ -226,14 +226,22 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 		return true;
     }
 
+	@SuppressWarnings("deprecation")
 	public void forwardJS(String functionName, Integer instance, String status) {
 		Object[] args = new Object[2];
 		args[0] = instance;
 		args[1] = status;
 		
 		try {
-			JSObject win = JSObject.getWindow(this);
-			win.call(functionName, args);
+			try {
+				JSObject win = JSObject.getWindow(this);
+				win.call(functionName, args);
+			} catch (ClassCastException e) {
+				// a cast exception is raised when the applet is executed by the 
+				// appletViewer class (used by some IDEs) and with OpenJDK JVM. This will 
+				// not execute the JS, so it not possible to run an OVD session
+				throw new netscape.javascript.JSException(e.getMessage());
+			}
 		}
 		catch (netscape.javascript.JSException e) {
 			String buffer = functionName+"(";
