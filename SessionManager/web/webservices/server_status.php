@@ -2,7 +2,8 @@
 /**
  * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
+ * Author Laurent CLOUET <laurent@ulteo.com> 2011
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -77,12 +78,24 @@ if (! $server->isAuthorized()) {
 	die();
 }
 
+$old_roles = $server->getAttribute('roles');
+
 if ($ret['status'] == Server::SERVER_STATUS_ONLINE) {
 	if (! $server->getConfiguration()) {
 		echo return_error(4, 'Server does not send a valid configuration');
 		die();
 	}
 }
+
+// check if server's roles have been changes
+$new_roles = $server->getAttribute('roles');
+foreach ($old_roles as $a_role => $enable) {
+	if (array_key_exists($a_role, $new_roles) == false) {
+		// the server has not anymore the role
+		Abstract_Server::removeRole($server->getAttribute('fqdn'), $a_role);
+	}
+}
+
 $server->setStatus($ret['status']);
 Abstract_Server::save($server);
 

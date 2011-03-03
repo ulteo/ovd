@@ -218,21 +218,9 @@ class Abstract_Server {
 		if (substr($fqdn_, -1) == '.')
 			$fqdn_ = substr($fqdn_, 0, (strlen($fqdn_)-1));
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed',__FILE__,__LINE__);
-		
-		$slave_server_settings = $prefs->get('general', 'slave_server_settings');
-		$remove_orphan = (bool)$slave_server_settings['remove_orphan'];
-
 		$SQL = SQL::getInstance();
 
 		$fqdn = $fqdn_;
-
-		if ($remove_orphan) {
-			$a_server = Abstract_Server::load($fqdn_);
-			$apps = $a_server->getApplications();
-		}
 
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);
 		$total = $SQL->NumRows();
@@ -251,48 +239,96 @@ class Abstract_Server {
 			$session->orderDeletion(true, Session::SESSION_END_STATUS_SERVER_DELETED);
 		}
 		Abstract_Liaison::delete('ServerSession', $fqdn_, NULL);
+		
+		$a_server = Abstract_Server::load($fqdn_);
+		$roles = $a_server->getAttribute('roles');
+		if (is_array($roles)) {
+			foreach ($roles as $a_role) {
+				Abstract_Server::removeRole($fqdn_, $a_role);
+			}
+		}
 
-		Abstract_Liaison::delete('ApplicationServer', NULL, $fqdn_);
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3', $SQL->prefix.'servers_properties', 'fqdn', $fqdn);
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);
+
+		return true;
+	}
+
+	public static function removeRole($fqdn_, $role_) {
+		Logger::debug('main', "Starting Abstract_Server::removeRole for '$fqdn_' removing '$role_'");
 		
+		if (substr($fqdn_, -1) == '.')
+			$fqdn_ = substr($fqdn_, 0, (strlen($fqdn_)-1));
 		
-		if ($remove_orphan) {
-			$applicationDB = ApplicationDB::getInstance();
-			
-			// remove the orphan applications
-			if (is_array($apps)) {
-				foreach ($apps as $an_application) {
-					if ($an_application->isOrphan()) {
-						Logger::debug('main', "Abstract_Server::delete $an_application is orphan");
-						$applicationDB->remove($an_application);
+		$a_server = Abstract_Server::load($fqdn_);
+		if (is_object($a_server) == false) {
+			Logger::error('main', "Starting Abstract_Server::removeRole error failed to load server '$fqdn_'");
+			return false;
+		}
+		
+		$roles = $a_server->getAttribute('roles');
+		if (is_array($roles) == false) {
+			return false;
+		}
+		
+		if (in_array($role_, $roles) == false) {
+			return false;
+		}
+		
+		switch ($role_) {
+			case Server::SERVER_ROLE_APS:
+				$prefs = Preferences::getInstance();
+				if (! $prefs)
+					die_error('get Preferences failed',__FILE__,__LINE__);
+				
+				$slave_server_settings = $prefs->get('general', 'slave_server_settings');
+				$remove_orphan = (bool)$slave_server_settings['remove_orphan'];
+				
+				Abstract_Liaison::delete('ApplicationServer', NULL, $fqdn_);
+				if ($remove_orphan) {
+					$apps = $a_server->getApplications();
+					$applicationDB = ApplicationDB::getInstance();
+					
+					// remove the orphan applications
+					if (is_array($apps)) {
+						foreach ($apps as $an_application) {
+							if ($an_application->isOrphan()) {
+								Logger::debug('main', "Abstract_Server::delete $an_application is orphan");
+								$applicationDB->remove($an_application);
+							}
+						}
 					}
 				}
-			}
+				
+				$tm = new Tasks_Manager();
+				$tm->load_from_server($fqdn_);
+				foreach ($tm->tasks as $a_task) {
+					$tm->remove($a_task->id);
+				}
+			break;
+			
+			case Server::SERVER_ROLE_FS:
+				if (Preferences::moduleIsEnabled('ProfileDB')) {
+					$profiledb = ProfileDB::getInstance();
+					$folders = $profiledb->importFromServer($fqdn_);
+					foreach ($folders as $a_folder) {
+						$profiledb->remove($a_folder->id);
+					}
+				}
+				
+				if (Preferences::moduleIsEnabled('SharedFolderDB')) {
+					$sharedfolderdb = SharedFolderDB::getInstance();
+					$folders = $sharedfolderdb->importFromServer($fqdn_);
+					foreach ($folders as $a_folder) {
+						$profiledb->remove($a_folder->id);
+					}
+				}
+				
+			break;
+			
+// 			case Server::SERVER_ROLE_GATEWAY:
+// 			break;
 		}
-		
-		$tm = new Tasks_Manager();
-		$tm->load_from_server($fqdn_);
-		foreach ($tm->tasks as $a_task) {
-			$tm->remove($a_task->id);
-		}
-		
-		if (Preferences::moduleIsEnabled('ProfileDB')) {
-			$profiledb = ProfileDB::getInstance();
-			$folders = $profiledb->importFromServer($fqdn_);
-			foreach ($folders as $a_folder) {
-				$profiledb->remove($a_folder);
-			}
-		}
-		if (Preferences::moduleIsEnabled('SharedFolderDB')) {
-			$sharedfolderdb = SharedFolderDB::getInstance();
-			$folders = $sharedfolderdb->importFromServer($fqdn_);
-			foreach ($folders as $a_folder) {
-				$profiledb->remove($a_folder);
-			}
-		}
-
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3', $SQL->prefix.'servers_properties', 'fqdn', $fqdn);
-
 		return true;
 	}
 
