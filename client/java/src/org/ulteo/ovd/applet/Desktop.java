@@ -91,7 +91,7 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 		Properties properties = new Properties(Properties.MODE_DESKTOP);
 		
 		if (! readParameters(properties)) {
-			System.err.println(this.getClass().toString() +"  usage error");
+			System.err.println(this.getClass().toString() +" usage error");
 			this.stop();
 			return;
 		}
@@ -251,7 +251,7 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 				buffer = buffer.substring(0, buffer.length()-2);
 			buffer+=")";
 			
-			System.err.println(this.getClass()+" error while execute '"+buffer+"' =>"+e.getMessage());
+			System.err.println(this.getClass()+" error while execute '"+buffer+"' => "+e.getMessage());
 		}
 	}
 
