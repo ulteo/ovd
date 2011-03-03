@@ -207,7 +207,7 @@ public class SoundDriver {
 	/*
 	 * Use a single Thread to play sound, suggestions of Julien
 	 * */
-	public class playThread extends Thread{
+	public class PlayThread extends Thread{
 		public void run(){
 			try {
 				while(true){
@@ -224,7 +224,7 @@ public class SoundDriver {
 
 
 	public void start() {
-		this.playThread = new playThread();
+		this.playThread = new PlayThread();
 		this.playThread.start();
 	}
 }
