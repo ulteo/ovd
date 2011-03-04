@@ -58,7 +58,7 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 
 	@Override
 	public void init() {
-		System.out.println(this.getClass().toString() +"  init");
+		System.out.println(this.getClass().toString() +" init");
 
 		OSTools.is_applet = true;
 
@@ -66,7 +66,7 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 		
 		boolean status = this.checkSecurity();
 		if (! status) {
-			System.err.println(this.getClass().toString() +"  init: Not enought privileges, unable to continue");
+			System.err.println(this.getClass().toString() +" init: Not enought privileges, unable to continue");
 			this.stop();
 			return;
 		}
@@ -187,7 +187,7 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 	public String getParameter(String key, boolean required) throws Exception {
 		String buffer = this.getParameterNonEmpty(key);
 
-		if (required &&  buffer == null) {
+		if (required && buffer == null) {
 			System.err.println("Missing parameter key '"+key+"'");
 			throw new Exception();
 		}
@@ -223,7 +223,7 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 			this.fullscreenMode = true;
 		
 		return true;
-    }
+	}
 
 	@SuppressWarnings("deprecation")
 	public void forwardJS(String functionName, Integer instance, String status) {
