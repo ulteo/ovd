@@ -25,28 +25,41 @@ package org.ulteo.ovd.integrated;
 public class OSTools {
 	public static boolean is_applet = false;
 
-	public static String detectOS() {
-		String osName = System.getProperty("os.name");
-		if (osName.startsWith("Windows") || osName.startsWith("Linux"))
-			return osName;
+	private final static String LINUX = "Linux";
+	private final static String MAC = "Mac";
+	private final static String WINDOWS = "Windows";
+	private static String os_name = null;
 
-		return null;
+	public static String detectOS() {
+		if (OSTools.os_name == null)
+			OSTools.os_name = System.getProperty("os.name");
+
+		return OSTools.os_name;
 	}
 
 	public static boolean isSupportedOS() {
-		return (OSTools.detectOS() != null);
+		return (OSTools.isWindows() || OSTools.isLinux() || OSTools.isMac());
 	}
 
 	public static boolean isWindows() {
-		return System.getProperty("os.name").startsWith("Windows");
+		if (OSTools.detectOS() == null)
+			return false;
+
+		return OSTools.os_name.substring(0, WINDOWS.length()).equalsIgnoreCase(WINDOWS);
 	}
 
 	public static boolean isLinux() {
-		return System.getProperty("os.name").startsWith("Linux");
+		if (OSTools.detectOS() == null)
+			return false;
+
+		return OSTools.os_name.substring(0, LINUX.length()).equalsIgnoreCase(LINUX);
 	}
 
 	public static boolean isMac() {
-		return System.getProperty("os.name").startsWith("MAC");
+		if (OSTools.detectOS() == null)
+			return false;
+
+		return OSTools.os_name.substring(0, MAC.length()).equalsIgnoreCase(MAC);
 	}
 
 	public static boolean is64() {
