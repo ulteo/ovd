@@ -251,11 +251,19 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 				break;
 			}
 		} while (this.performedConnections.size() < this.connections.size());
-
-		while (this.connectionIsActive) {
+		
+		while (! this.performedConnections.isEmpty() && this.connectionIsActive) {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException ex) {}
+		}
+		
+		if (this.smComm != null) {
+			try {
+				this.smComm.askForLogout();
+			} catch (SessionManagerException e) {
+				Logger.error("Failed to inform the session manager about the RDP session ending.");
+			}
 		}
 
 		return this.exitAfterLogout;
