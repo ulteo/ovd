@@ -51,7 +51,6 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 	private OvdClientDesktopApplet ovd = null;
 	
 	private boolean finished_init = false;
-	private boolean finished_start = false;
 	private boolean started_stop = false;
 	
 	public AbstractFocusManager focusManager = null;
@@ -135,8 +134,6 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 
 		this.ovd.sessionReady();
 		
-		this.finished_start = true;
-
 		System.out.println(this.getClass().toString() +" started");
 	}
 	
