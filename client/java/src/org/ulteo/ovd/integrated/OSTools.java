@@ -45,21 +45,21 @@ public class OSTools {
 		if (OSTools.detectOS() == null)
 			return false;
 
-		return OSTools.os_name.substring(0, WINDOWS.length()).equalsIgnoreCase(WINDOWS);
+		return OSTools.os_name.toLowerCase().startsWith(WINDOWS.toLowerCase());
 	}
 
 	public static boolean isLinux() {
 		if (OSTools.detectOS() == null)
 			return false;
 
-		return OSTools.os_name.substring(0, LINUX.length()).equalsIgnoreCase(LINUX);
+		return OSTools.os_name.toLowerCase().startsWith(LINUX.toLowerCase());
 	}
 
 	public static boolean isMac() {
 		if (OSTools.detectOS() == null)
 			return false;
 
-		return OSTools.os_name.substring(0, MAC.length()).equalsIgnoreCase(MAC);
+		return OSTools.os_name.toLowerCase().startsWith(MAC.toLowerCase());
 	}
 
 	public static boolean is64() {
