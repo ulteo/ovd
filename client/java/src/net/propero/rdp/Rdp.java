@@ -9,6 +9,7 @@
  * Copyright (C) 2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2011
+ * Author david LECHEVALIER <david@ulteo.com> 2011
  *
  * Purpose: Rdp layer of communication
  */
@@ -498,6 +499,8 @@ public class Rdp {
      */
     private void sendData(RdpPacket_Localised data, int data_pdu_type)
             throws RdesktopException, IOException, CryptoException {
+        if (! this.SecureLayer.ready)
+        	return;
 
         CommunicationMonitor.lock(this);
 
