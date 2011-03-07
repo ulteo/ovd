@@ -1,0 +1,537 @@
+# Romanian translations for uovdclient package.
+# Copyright (C) 2011 Ulteo SAS.
+# This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
+# Automatically generated, 2011.
+# Author: Catalin Florin RUSSEN <cfrussen@yahoo.co.uk>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: uovdclient\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-02-21 16:14+0100\n"
+"PO-Revision-Date: 2011-02-28 16:23+0200\n"
+"Last-Translator: Catalin Florin RUSSEN\n"
+"Language-Team: Romanian\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2);;\n"
+"X-Generator: Pootle 2.1.5\n"
+
+#. { //persistent session
+#. ?>
+#. <td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.suspend(); return false;"><img src="media/image/suspend.png" width="32" height="32" alt="" title="" /><br /><span id="suspend_gettext">&nbsp;</span></a></td>
+#. <?php
+#. }
+#: ../../client/web/web/index.php:405
+msgid "Example: sm.ulteo.com"
+msgstr "Exemplu: sm.ulteo.com"
+
+#: ../../client/web/web/translate.php:65
+msgid "Close"
+msgstr "Închide"
+
+#: ../../client/web/web/translate.php:67
+msgid "Session Manager"
+msgstr "Gestionar de sesiune"
+
+#: ../../client/web/web/translate.php:68
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:985
+msgid "Login"
+msgstr "Identificator"
+
+#: ../../client/web/web/translate.php:69
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:986
+msgid "Password"
+msgstr "Parolă"
+
+#: ../../client/web/web/translate.php:70
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1001
+msgid "Use local credentials"
+msgstr "Utilizează acreditările locale"
+
+#: ../../client/web/web/translate.php:71 ../../client/web/web/translate.php:77
+#: ../../client/web/web/translate.php:82
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
+msgid "Yes"
+msgstr "Da"
+
+#: ../../client/web/web/translate.php:72 ../../client/web/web/translate.php:78
+#: ../../client/web/web/translate.php:83
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
+msgid "No"
+msgstr "Nu"
+
+#: ../../client/web/web/translate.php:73
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:991
+msgid "Mode"
+msgstr "Regim"
+
+#: ../../client/web/web/translate.php:74
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:998
+msgid "Desktop"
+msgstr "Birou"
+
+#: ../../client/web/web/translate.php:75
+msgid "Portal"
+msgstr "Portal"
+
+#: ../../client/web/web/translate.php:76
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:78
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1009
+msgid "Fullscreen"
+msgstr "Pe tot ecranul"
+
+#: ../../client/web/web/translate.php:79
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:993
+msgid "Language"
+msgstr "Limbă"
+
+#: ../../client/web/web/translate.php:80
+msgid "Keyboard layout"
+msgstr "Dispunerea tastaturii"
+
+#: ../../client/web/web/translate.php:81
+msgid "Debug"
+msgstr "Depanează"
+
+#: ../../client/web/web/translate.php:86
+msgid "Advanced settings"
+msgstr "Configurări avansate"
+
+#: ../../client/web/web/translate.php:87
+msgid "Connect"
+msgstr "Conectează"
+
+#: ../../client/web/web/translate.php:89
+msgid "Checking for system compatibility"
+msgstr "Verificarea compatibilității sistemului vostru"
+
+#: ../../client/web/web/translate.php:90
+msgid ""
+"If this is your first time here, a Java security window will show up and you "
+"have to accept it to use the service."
+msgstr ""
+"Dacă este prima voastră accesare aici, o fereastră de securitate Java va "
+"apărea și va trebui s-o acceptați pentru a utiliza acest serviciu"
+
+#: ../../client/web/web/translate.php:91
+msgid ""
+"You are advised to check the \"<em>Always trust content from this publisher</"
+"em>\" checkbox."
+msgstr ""
+"Sînteți sfătuit să bifați căsuța \"<em>Acordă întotdeauna încredere "
+"conținutului acestui editor</em>\"."
+
+#: ../../client/web/web/translate.php:93
+msgid "System compatibility error"
+msgstr "Editor de compatibilitate a sistemului"
+
+#: ../../client/web/web/translate.php:94
+msgid "Java is not available either on your system or in your web browser."
+msgstr "Java nu este disponibilă în sistem sau în navigatorul vostru."
+
+#: ../../client/web/web/translate.php:95
+msgid ""
+"Please install Java extension for your web browser or contact your "
+"administrator."
+msgstr ""
+"Instalați extensia Java pentru navigatorul vostru Internet sau contactați-vă "
+"administratorul."
+
+#: ../../client/web/web/translate.php:96
+msgid "You have not accepted the Java security window."
+msgstr "Nu ați acceptat fereastra de securitate Java."
+
+#: ../../client/web/web/translate.php:97
+msgid "You <strong>cannot</strong> have access to this service."
+msgstr "<strong>Nu puteți</strong> accesa acest serviciu."
+
+#: ../../client/web/web/translate.php:99
+msgid "Loading Open Virtual Desktop"
+msgstr "Se încarcă Open Virtual Desktop"
+
+#: ../../client/web/web/translate.php:100
+msgid "Welcome!"
+msgstr "Bine ați venit!"
+
+#: ../../client/web/web/translate.php:101
+msgid "Suspend"
+msgstr "Suspendă"
+
+#: ../../client/web/web/translate.php:102
+msgid "Logout"
+msgstr "Deconectare"
+
+#: ../../client/web/web/translate.php:104
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:116
+msgid "My applications"
+msgstr "Aplicațiile mele"
+
+#: ../../client/web/web/translate.php:105
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:132
+msgid "Running applications"
+msgstr "Aplicații în curs"
+
+#: ../../client/web/web/translate.php:106
+msgid "My files"
+msgstr "Fișierele mele"
+
+#: ../../client/web/web/translate.php:117
+msgid "Usage: missing \"sessionmanager_host\" parameter"
+msgstr "Utilizare: lipsește parametrul „sessionmanager_host”"
+
+#: ../../client/web/web/translate.php:118
+msgid "Usage: missing \"login\" parameter"
+msgstr "Utilizare: lipsește parametrul „login”"
+
+#: ../../client/web/web/translate.php:119
+msgid "Usage: missing \"password\" parameter"
+msgstr "Utilizare: lipsește parametrul „password”"
+
+#: ../../client/web/web/translate.php:120
+msgid "Unable to reach the Session Manager"
+msgstr "Nu se poate contacta gestionarul de sesiune"
+
+#: ../../client/web/web/translate.php:122
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:376
+msgid "Authentication failed: please double-check your password and try again"
+msgstr "Autentificare eșuată: reverificați-vă parola și încercați din nou"
+
+#: ../../client/web/web/translate.php:123
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:378
+msgid ""
+"The system is on maintenance mode, please contact your administrator for "
+"more information"
+msgstr ""
+"Sistemul este în regim de mentenanță, contactați-vă administratorul pentru "
+"informații suplimentare"
+
+#: ../../client/web/web/translate.php:124
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:380
+msgid "An internal error occured, please contact your administrator"
+msgstr "S-a produs o eroare internă, contactați-vă administratorul"
+
+#: ../../client/web/web/translate.php:125
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:382
+msgid "You specified an invalid login, please double-check and try again"
+msgstr "Identificatorul este invalid, reverificați și încercați din nou"
+
+#: ../../client/web/web/translate.php:126
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:384
+msgid ""
+"The service is not available, please contact your administrator for more "
+"information"
+msgstr ""
+"Serviciul nu este disponibil, contactați-vă administratorul pentru "
+"informații suplimentare"
+
+#: ../../client/web/web/translate.php:127
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:386
+msgid "You are not authorized to launch a session in this mode"
+msgstr "Nu sînteți autorizat să lansați o sesiune în acest regim"
+
+#: ../../client/web/web/translate.php:128
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:388
+msgid "You already have an active session"
+msgstr "Aveți deja o sesiune activă"
+
+#: ../../client/web/web/translate.php:130
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:745
+msgid ""
+"Your session is going to end in 3 minutes, please save all your data now!"
+msgstr ""
+"Sesiunea voastră se va încheia în 3 minute, salvați-vă toate documentele "
+"acum!"
+
+#: ../../client/web/web/translate.php:132
+msgid "Server: session closed unexpectedly"
+msgstr "Server: închidere neașteptată de sesiune"
+
+#: ../../client/web/web/translate.php:133
+msgid "Your session has ended, you can now close the window"
+msgstr "Sesiunea voastră s-a terminat, acum puteți închide fereastra"
+
+#: ../../client/web/web/translate.php:134
+msgid "Your session has ended unexpectedly"
+msgstr "Sesiunea voastră s-a terminat în mod neașteptat"
+
+#: ../../client/web/web/translate.php:135
+msgid "error details"
+msgstr "detaliile erorii"
+
+#: ../../client/web/web/translate.php:136
+msgid "Close this window"
+msgstr "Închide această fereastră"
+
+#: ../../client/web/web/translate.php:137
+msgid ""
+"Click <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
+"false;\">here</a> to start a new session"
+msgstr ""
+"Apăsați <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
+"false;\">aici</a> pentru a începe o sesiune nouă"
+
+#: ../../client/web/web/translate.php:139
+msgid "suspend"
+msgstr "veghe"
+
+#: ../../client/web/web/translate.php:140
+msgid "resume"
+msgstr "reluare"
+
+#: ../../client/web/web/login.php:280
+msgid "Profile"
+msgstr "Profil"
+
+#: ../../client/web/web/external.php:212
+msgid "Do not close this Ulteo OVD window!"
+msgstr "Nu închideți această fereastră Ulteo OVD!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:390
+msgid "An error occured, please contact your administrator"
+msgstr "S-a produs o eroare, contactați-vă administratorul"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:543
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:45
+msgid "Warning!"
+msgstr "Atenție!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:553
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:559
+msgid "Error!"
+msgstr "Eroare!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:557
+msgid "Unable to reach the Session Manager!"
+msgstr "Nu se poate contacta gestionarul de sesiune!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:642
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:646
+msgid "Invalid host field!"
+msgstr "Cîmp de gazdă invalid!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:678
+msgid "You must specify the host field!"
+msgstr "Trebuie să specificați cîmpul gazdei!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:683
+msgid "You must specify a username!"
+msgstr "Trebuie să specificați un utilizator!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:686
+msgid "You must specify a password!"
+msgstr "Trebuie să specificați o parolă!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:733
+msgid "Internal error: Bad session mode return"
+msgstr "Eroare internă: s-a întors un regim de sesiune greșit"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:745
+msgid "Session is going to end"
+msgstr "Sesiunea se va termina"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:772
+msgid "Internal error: unsupported session mode"
+msgstr "Eroare internă: regim de sesiune nesuportat"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:807
+msgid "You have been disconnected"
+msgstr "Ați fost deconectat"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:807
+msgid "Your session has ended"
+msgstr "Sesiunea voastră s-a terminat"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:823
+msgid "Protocol xml error: "
+msgstr "Eroare de protocol XML: "
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:823
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:830
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:840
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:847
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:854
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+msgid "Error"
+msgstr "Eroare"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/NewsFrame.java:49
+msgid "OVD News"
+msgstr "Știri OVD"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:69
+msgid "Welcome {user}"
+msgstr "Bine ați venit {user}"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:40
+msgid "Display icons"
+msgstr "Afișează pictogramele"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:41
+msgid "Hide icons"
+msgstr "Ascunde pictogramele"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:46
+msgid "Disconnect"
+msgstr "Deconectează"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:52
+msgid "Start loading session"
+msgstr "Începutul încărcării sesiunii"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:54
+msgid "Connecting to the session manager"
+msgstr "Conectare la gestionarul de sesiune"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:56
+msgid "Get session information from session manager"
+msgstr "Recuperează informațiile sesiunii de la gestionarul de sesiune"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:58
+msgid "Get application data from session manager"
+msgstr "Recuperează datele aplicațiilor de la gestionarul de sesiune"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:60
+msgid "Installing application data on client"
+msgstr "Se instalează datele aplicațiilor pe client"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:62
+msgid "Waiting server for session"
+msgstr "Se așteaptă serverul pentru sesiune"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:64
+msgid "Invalid status"
+msgstr "Stare invalidă"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:77
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1008
+msgid "Maximized"
+msgstr "Maximizat"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:824
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1005
+msgid "Fewer options"
+msgstr "Mai puține opțiuni"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:906
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1003
+msgid "More options..."
+msgstr "Mai multe opțiuni..."
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:987
+msgid "Start!"
+msgstr "Start!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:990
+msgid "Server"
+msgstr "Server"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:992
+msgid "Resolution"
+msgstr "Rezoluție"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:994
+msgid "Keyboard"
+msgstr "Tastatură"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:996
+msgid "Auto"
+msgstr "Auto"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:997
+msgid "Application"
+msgstr "Aplicație"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:999
+msgid "Remember me"
+msgstr "Ține-mă minte"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1000
+msgid "Auto-publish shortcuts"
+msgstr "Publică automat comenzile rapide"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
+msgid "Go back to authentication"
+msgstr "Revino la autentificare"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:44
+msgid "Do you really want to close the window?"
+msgstr "Sigur doriți să închideți fereastra?"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionFrame.java:40
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionFrame.java:68
+msgid "Disconnecting!"
+msgstr "Se deconectează!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:52
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:109
+msgid "Now loading"
+msgstr "Se încarcă"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:59
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:108
+msgid "Cancel"
+msgstr "Anulează"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportButton.java:44
+msgid "Report a bug"
+msgstr "Raportează o eroare"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:73
+msgid "Ulteo OVD Bug Report"
+msgstr "Raportare de erori Ulteo OVD"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:117
+msgid "Validate"
+msgstr "Validează"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:128
+msgid "Date"
+msgstr "Dată"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:130
+msgid "Version"
+msgstr "Versiunea"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:132
+msgid "System"
+msgstr "Sistem"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:134
+msgid "JVM"
+msgstr "JVM"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:168
+msgid "Description and steps to reproduce:"
+msgstr "Descriere și pașii de reprodus:"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:184
+msgid "MM/dd/yy hh:mm:ss"
+msgstr "dd/MM/yy hh:mm:ss"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:85
+msgid "Text file (*.txt)"
+msgstr "Fișier text (*.txt)"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+msgid "An error occured. Please try again."
+msgstr "S-a produs o eroare. Încercați din nou."
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
+msgid "Bug report saved to "
+msgstr "Raport de eroare salvat în "
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
+msgid "Bug report saved"
+msgstr "Raport de eroare salvat"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:120
+msgid "Please fill description field."
+msgstr "Completați cîmpul de descriere."
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:120
+msgid "Empty field"
+msgstr "Cîmp vid"

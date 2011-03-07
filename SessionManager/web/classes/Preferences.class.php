@@ -191,6 +191,7 @@ class Preferences {
 			'ja_JP'=>'日本語',
 			'nl_NL'=>'Nederlands',
 			'pt_BR'=>'Português (Brasil)',
+			'ro_RO'=>'Română',
 			'ru_RU'=>'Русский',
 			'zh_CN'=>'中文简体',
 		));
@@ -395,6 +396,7 @@ class Preferences {
 			'ja_JP'=>'日本語',
 			'nl_NL'=>'Nederlands',
 			'pt_BR'=>'Português (Brasil)',
+			'ro_RO'=>'Română',
 			'ru_RU'=>'Русский',
 			'zh_CN'=>'中文简体',
 		));

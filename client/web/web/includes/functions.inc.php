@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -126,7 +127,7 @@ function get_available_languages() {
 // 		array('id' => 'pl', 'english_name' => 'Polish', 'local_name' => 'Polski'),
 // 		array('id' => 'pt', 'english_name' => 'Portuguese', 'local_name' => 'Português'),
 		array('id' => 'pt-br', 'english_name' => 'Portuguese (Brazil)', 'local_name' => 'Português (Brasil)'),
-// 		array('id' => 'ro', 'english_name' => 'Romanian', 'local_name' => 'Română'),
+		array('id' => 'ro', 'english_name' => 'Romanian', 'local_name' => 'Română'),
 		array('id' => 'ru', 'english_name' => 'Russian', 'local_name' => 'Русский'),
 // 		array('id' => 'sk', 'english_name' => 'Slovak', 'local_name' => 'Slovenčina'),
 // 		array('id' => 'sl', 'english_name' => 'Slovenian'),
