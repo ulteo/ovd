@@ -333,7 +333,8 @@ public class SystemLinux extends SystemAbstract {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(issueFile));
 			issue = br.readLine();
-			if (issue.startsWith(Constants.OVD_ISSUE)) {
+			issue = issue.toLowerCase();
+			if (issue.startsWith(Constants.OVD_ISSUE.toLowerCase())) {
 				xdg_dir = Constants.PATH_OVD_SPOOL_XDG_APPLICATIONS;
 				ulteoSystem = true;
 			}
