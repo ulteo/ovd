@@ -90,8 +90,11 @@ $desktop_icons = $remote_desktop_settings['desktop_icons'];
 $remote_applications_settings = $user->getSessionSettings('remote_applications_settings');
 $remote_applications_enabled = (($remote_applications_settings['enabled'] == 1)?true:false);
 
-if (isset($_SESSION['mode']))
+if (isset($_SESSION['mode'])) {
+	if (! in_array('session_mode', $advanced_settings) && $_SESSION['mode'] != $session_mode)
+		throw_response(UNAUTHORIZED_SESSION_MODE);
 	$session_mode = $_SESSION['mode'];
+}
 
 $locale = $user->getLocale();
 
