@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
@@ -33,6 +34,8 @@ import org.ulteo.ovd.client.profile.ProfileRegistry;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 
+import net.propero.rdp.RdpConnection;
+
 public class Options {
 
 	public static final int FLAG_NO_OPTS = 0x00000000;
@@ -61,7 +64,7 @@ public class Options {
 	public int port = SessionManagerCommunication.DEFAULT_PORT;
 	public String keymap = null;
 	public String lang = null;
-	public Dimension geometry = null;
+	public Dimension geometry = new Dimension(RdpConnection.DEFAULT_WIDTH, RdpConnection.DEFAULT_HEIGHT);
 	public int sessionMode = -1;
 	public boolean nltm = false;
 	public boolean showProgressBar = true;
