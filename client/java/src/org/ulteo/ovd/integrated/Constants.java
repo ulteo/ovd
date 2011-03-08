@@ -1,6 +1,7 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
@@ -48,4 +49,5 @@ public final class Constants {
 	
 	public static final String DIRNAME_INSTANCES = "instances";
 	public static final String DIRNAME_TO_LAUNCH = "to_launch";
+	public static final String OVD_ISSUE = "Ulteo OVD";
 }

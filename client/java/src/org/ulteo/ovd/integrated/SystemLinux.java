@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,10 +26,12 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +43,8 @@ import org.ulteo.ovd.client.cache.PngManager;
 import org.ulteo.ovd.integrated.shorcut.LinuxShortcut;
 
 public class SystemLinux extends SystemAbstract {
+	private final String graphic_refresh_application = "xrefresh";
+	private final String desktop_refresh_application = "update-desktop-database";
 
 	public SystemLinux() {
 		super(new PngManager());
@@ -272,5 +277,38 @@ public class SystemLinux extends SystemAbstract {
 			iconsList.add(icon);
 
 		return iconsList;
+	}
+	
+	public void refresh() {
+		File issueFile = new File("/etc/issue");
+		String issue = "";
+		String xdg_dir = Constants.PATH_XDG_APPLICATIONS;
+		
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(issueFile));
+			issue = br.readLine();
+			issue = issue.toLowerCase();
+			if (issue.startsWith(Constants.OVD_ISSUE.toLowerCase())) {
+				xdg_dir = Constants.PATH_OVD_SPOOL_XDG_APPLICATIONS;
+			}
+		}
+		catch (FileNotFoundException e) {
+			Logger.debug("Enable to find the issue file at "+issueFile);
+		} catch (IOException e) {
+			Logger.warn("Failed to read the issue file: "+issueFile);
+		}
+		
+		try {
+			Runtime runtime = Runtime.getRuntime();
+			
+			runtime.exec(this.graphic_refresh_application);
+			runtime.exec(this.desktop_refresh_application+" "+xdg_dir);
+		}
+		catch (SecurityException e) {
+			Logger.error("Unable to refresh desktop, this process is not allowed to start a process ["+e.getMessage()+"]");
+		} 
+		catch (IOException e) {
+			Logger.error("Unable to refresh desktop ["+e.getMessage()+"]");	
+		}
 	}
 }

@@ -4,6 +4,7 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
@@ -87,7 +88,6 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.portal = new PortalFrame(this.username, this.showBugReporter);
 		this.portal.addComponentListener(this);
 		this.portal.getRunningApplicationPanel().setSpool(spool);
-		this.unpublish();
 		this.publicated = this.autoPublish;
 	}
 
