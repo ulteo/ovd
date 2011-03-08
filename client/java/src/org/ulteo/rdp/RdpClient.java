@@ -31,7 +31,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JFrame;
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdesktopException;
@@ -313,7 +312,6 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 			this.co.add(rc);
 		}
 
-		List<ServerAccess> servers = sm.getServers();
 		for (RdpConnectionOvd rc : this.co) {
 			if (! this.ovd_mode_application)
 				rc.setGraphic(params.width, params.height);
