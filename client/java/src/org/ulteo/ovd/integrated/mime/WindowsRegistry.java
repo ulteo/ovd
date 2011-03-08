@@ -68,13 +68,13 @@ public class WindowsRegistry extends FileAssociate {
 			return exts;
 
 		try {
-			Enumeration enumKeys = key.keyElements();
+			Enumeration<?> enumKeys = key.keyElements();
 			while (enumKeys.hasMoreElements()) {
 				String keyStr = (String) enumKeys.nextElement();
 
 				RegistryKey subKey = Registry.openSubkey(key, keyStr, RegistryKey.ACCESS_READ);
 
-				Enumeration enumValues = subKey.valueElements();
+				Enumeration<?> enumValues = subKey.valueElements();
 				while (enumValues.hasMoreElements()) {
 					String valueStr = (String) enumValues.nextElement();
 					if (!valueStr.equals("Extension"))
@@ -120,7 +120,7 @@ public class WindowsRegistry extends FileAssociate {
 			this.created_exts.get(app).add(ext);
 		}
 		else {
-			Enumeration values = key.valueElements();
+			Enumeration<?> values = key.valueElements();
 			String val = null;
 
 			while (values.hasMoreElements()) {
@@ -315,7 +315,7 @@ public class WindowsRegistry extends FileAssociate {
 				try {
 					String target = key.getStringValue("");
 					key = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software\\Classes\\"+target+"\\shell", RegistryKey.ACCESS_ALL);
-					Enumeration enumKeys = key.keyElements();
+					Enumeration<?> enumKeys = key.keyElements();
 					List<String> subkeysToRemove = new ArrayList<String>();
 					while (enumKeys.hasMoreElements()) {
 						String subKeyStr = (String) enumKeys.nextElement();
@@ -341,7 +341,7 @@ public class WindowsRegistry extends FileAssociate {
 		if (subKey == null)
 			return;
 
-		Enumeration enumKeys;
+		Enumeration<?> enumKeys;
 		try {
 			enumKeys = subKey.keyElements();
 			List<String> toRemove = new ArrayList<String>();
@@ -380,7 +380,7 @@ public class WindowsRegistry extends FileAssociate {
 		try {
 			List<String> keysToRemove = new ArrayList<String>();
 
-			Enumeration enumKeys = key.keyElements();
+			Enumeration<?> enumKeys = key.keyElements();
 			while (enumKeys.hasMoreElements()) {
 				boolean keep = false;
 				
@@ -402,7 +402,7 @@ public class WindowsRegistry extends FileAssociate {
 
 					List<String> shellsToRemove = new ArrayList<String>();
 
-					Enumeration enumShells = targetKey.keyElements();
+					Enumeration<?> enumShells = targetKey.keyElements();
 					while (enumShells.hasMoreElements()) {
 						String shellStr = (String) enumShells.nextElement();
 						

@@ -31,7 +31,7 @@ public class WindowsRegistryPaths extends WindowsPaths {
 		RegistryKey key = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders", RegistryKey.ACCESS_READ);
 		if (key != null) {
 			try {
-				Enumeration enumValues = key.valueElements();
+				Enumeration<?> enumValues = key.valueElements();
 				while (enumValues.hasMoreElements()) {
 					String valueStr = (String) enumValues.nextElement();
 					if (! valueStr.equals("Desktop"))

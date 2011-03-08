@@ -36,7 +36,7 @@ public class ProfileRegistry extends Profile {
 			return null;
 
 		try {
-			Enumeration fieldsEnum = key.valueElements();
+			Enumeration<?> fieldsEnum = key.valueElements();
 			while (fieldsEnum.hasMoreElements()) {
 				String field = (String) fieldsEnum.nextElement();
 				String value = key.getStringValue(field);
