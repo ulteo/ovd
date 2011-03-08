@@ -115,7 +115,7 @@ public class Options {
 	}
 
 	
-	public boolean getIniProfile() {
+	public boolean getRegistryProfile() {
 		ProfileProperties properties = ProfileRegistry.loadProfile();
 		if (properties == null)
 			return false;
