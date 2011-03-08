@@ -136,7 +136,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	}
 
 	private String makeUrl(String service) {
-		return (this.use_https ? "https" : "http") + "://" + this.host +  (this.port==this.DEFAULT_PORT ? "" : ":"+this.port) + "/ovd/client/" + service;
+		return (this.use_https ? "https" : "http") + "://" + this.host + (this.port==SessionManagerCommunication.DEFAULT_PORT ? "" : ":"+this.port) + "/ovd/client/" + service;
 	}
 
 	private static String makeStringForPost(List<String> listParameter) {

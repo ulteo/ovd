@@ -193,7 +193,7 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 		
 
 		ovdApp.addOvdAppListener(this);
-		ovdApp.sendStartApp(this.token, this.app.getId(), ovdApp.DIR_TYPE_RDP_DRIVE, this.sharename, this.path);
+		ovdApp.sendStartApp(this.token, this.app.getId(), OvdAppChannel.DIR_TYPE_RDP_DRIVE, this.sharename, this.path);
 		this.state = STARTING;
 	}
 
@@ -222,7 +222,7 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 		OvdAppChannel ovdApp = this.app.getConnection().getOvdAppChannel();
 
 		ovdApp.addOvdAppListener(this);
-		ovdApp.sendStartApp(this.token, this.app.getId(), ovdApp.DIR_TYPE_RDP_DRIVE, this.sharename, this.path);
+		ovdApp.sendStartApp(this.token, this.app.getId(), OvdAppChannel.DIR_TYPE_RDP_DRIVE, this.sharename, this.path);
 		this.state = STARTING;
 
 		this.app.getConnection().getRdpdrChannel().removeDeviceListener(this);
