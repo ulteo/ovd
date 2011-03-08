@@ -39,8 +39,6 @@ import org.ulteo.utils.MD5;
 
 public class WindowsRegistry extends FileAssociate {
 	
-	private static final String KEY_DEFAULT_ICON = "DefaultIcon";
-
 	private static final String KEY_PREFIX = "ovdShell_";
 	private static final String TARGET_PREFIX = "ovdTarget_";
 	private static final String OPEN_PREFIX = I18n._("Open with ");
