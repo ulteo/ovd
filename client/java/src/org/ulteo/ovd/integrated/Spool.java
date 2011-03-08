@@ -45,7 +45,6 @@ public class Spool implements Runnable {
 
 	private Logger logger = Logger.getLogger(Spool.class);
 	private OvdClient client = null;
-	private String os = null;
 	private File instancesDir = null;
 	private File toLaunchDir = null;
 	private ArrayList<ApplicationInstance> appInstances = null;
