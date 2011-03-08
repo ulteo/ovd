@@ -215,6 +215,7 @@ public class Spool implements Runnable {
 		return null;
 	}
 
+	@SuppressWarnings("unused")
 	private ApplicationInstance findAppInstanceByToken(long token_) {
 		for (ApplicationInstance ai : this.appInstances) {
 			if (ai.getToken() == token_)

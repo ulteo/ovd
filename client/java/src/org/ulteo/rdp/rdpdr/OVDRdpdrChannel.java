@@ -44,6 +44,7 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 	private static final int DRIVE_CAPABILITY_VERSION_02 = 0x00000002;
 
 	private static final int CAP_GENERAL_TYPE = 0x00000001;
+	@SuppressWarnings("unused")
 	private static final int GENERAL_CAPABILITY_VERSION_01 = 0x00000001;
 	private static final int GENERAL_CAPABILITY_VERSION_02 = 0x00000002;
 	private static final int RDPDR_DEVICE_REMOVE_PDUS = 0x00000001;
