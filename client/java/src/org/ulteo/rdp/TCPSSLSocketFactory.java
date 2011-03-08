@@ -24,14 +24,10 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import net.propero.rdp.RdesktopException;
 import net.propero.rdp.SocketFactory;
 
 public class TCPSSLSocketFactory implements SocketFactory {
@@ -43,8 +39,7 @@ public class TCPSSLSocketFactory implements SocketFactory {
 		this.port = port;
 	}
 
-	public Socket createSocket() throws IOException,RdesktopException {
-		Socket rdpsock= null;
+	public Socket createSocket() throws IOException {
 		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
 
 			public X509Certificate[] getAcceptedIssuers() {
@@ -62,22 +57,14 @@ public class TCPSSLSocketFactory implements SocketFactory {
 			}
 		}};
 
-		HostnameVerifier trustAllHosts = new HostnameVerifier() {
-			public boolean verify(String hostname, SSLSession session) {
-				return true;
-			}
-		};
-		
+		SSLContext sc;
 		try {
-			SSLContext sc = SSLContext.getInstance("SSLv3");
+			sc = SSLContext.getInstance("SSLv3");
 			sc.init(null, trustAllCerts, null);
-			SSLSocketFactory ssf = sc.getSocketFactory();
-			rdpsock = ssf.createSocket(this.host, this.port);
-			
-			SSLSession session = ((SSLSocket) rdpsock).getSession();
 		} catch (Exception e) {
-			throw new RdesktopException("Creating SSL context failed:" + e.getMessage());
+			throw new IOException("Creating SSL context failed:" + e.getMessage());
 		}
-		return rdpsock;
+		SSLSocketFactory ssf = sc.getSocketFactory();
+		return ssf.createSocket(this.host, this.port);
 	}
 }
