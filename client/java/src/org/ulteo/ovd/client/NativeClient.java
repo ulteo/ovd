@@ -420,7 +420,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	private Thread thread = null;
 	private OvdClient client = null;
 	private Options opts = null;
-	private int flags = Options.FLAG_NO_OPTS;
 
 	public NativeClient(Options opts_) {
 		this.opts = opts_;
@@ -441,7 +440,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.authFrame = new AuthFrame(this, this.opts.geometry, this.opts.guiLocked, this.opts.isBugReporterVisible);
 		this.authFrame.getLanguageBox().addActionListener(this);
 		this.loadOptions();
-		this.authFrame.setRememberMeChecked((this.flags & Options.FLAG_REMEMBER_ME) != 0);
+		this.authFrame.setRememberMeChecked((this.opts.mask & Options.FLAG_REMEMBER_ME) != 0);
 		this.authFrame.showWindow();
 		this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
 	}
@@ -859,14 +858,14 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	private void saveProfile() throws IOException {
 		ProfileProperties properties = new ProfileProperties(this.opts.username, this.opts.host, this.opts.port, this.opts.sessionMode, this.opts.autopublish, this.opts.nltm, this.opts.geometry, this.opts.lang, this.opts.keymap);
 
-		if ((this.flags & NativeClient.FLAG_REGISTRY_OPTS) != 0) {
+		if ((this.opts.mask & NativeClient.FLAG_REGISTRY_OPTS) != 0) {
 			ProfileRegistry.saveProfile(properties);
 			return;
 		}
 
 		ProfileIni ini = new ProfileIni();
 
-		if ((this.flags & NativeClient.FLAG_FILE_OPTS) != 0) {
+		if ((this.opts.mask & NativeClient.FLAG_FILE_OPTS) != 0) {
 
 			String path = null;
 			String profile = this.opts.profile;
