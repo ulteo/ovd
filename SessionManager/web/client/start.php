@@ -80,8 +80,7 @@ $enable_sharedfolders = $default_settings['enable_sharedfolders'];
 $start_without_all_sharedfolders = $default_settings['start_without_all_sharedfolders'];
 
 $advanced_settings = array();
-$buf = $prefs->get('general', 'session_settings_defaults');
-foreach ($buf['advanced_settings_startsession'] as $v)
+foreach ($default_settings['advanced_settings_startsession'] as $v)
 	$advanced_settings[] = $v;
 
 $remote_desktop_settings = $user->getSessionSettings('remote_desktop_settings');
