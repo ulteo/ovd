@@ -1,8 +1,9 @@
-#!/bin/sh
+#! /usr/bin/python
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,18 +19,54 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-# get version
-if [ -n "$OVD_VERSION" ]; then
-    version="$OVD_VERSION"
-else
-    if [ -d .svn ]; then
-      revision=$(LC_ALL=C svn info . | awk '/^Revision: / {printf "%05d\n", $2}')
-    else
-      revision=0
-    fi
-    version="99.99+svn$revison"
-fi
+import os
+import pysvn
+import sys
+import time
 
-sed -e "s/@VERSION@/${version}/g" < configure.ac.in > configure.in
+path = os.path.dirname( os.path.realpath( __file__ ) )
 
-autoreconf -vfi && ./configure $@
+# Detect the version
+if os.environ.has_key("OVD_VERSION"):
+	version = os.environ["OVD_VERSION"]
+else:
+	c = pysvn.Client()
+	revision = c.info(path)["revision"].number
+	if sys.platform == "win32":
+		version = "99.99.0.%05d"%(revision)
+	else:
+		version = "99.99+svn%05d"%(revision)
+
+
+transform_files = []
+if sys.platform == "linux2":
+	transform_files.append("configure.ac")
+elif sys.platform == "win32":
+	transform_files.append("ressources.rc")
+else:
+	raise Exception("No supported platform")
+
+
+for name in transform_files:
+	f = file(os.path.join(path, name+".in"), "r")
+	content = f.read()
+	f.close()
+	
+	content = content.replace("@VERSION@", version)
+	content = content.replace("@VERSION_STYLE_C@", version.replace(".", ","))
+	content = content.replace("@YEAR@", time.strftime("%Y"))
+	
+	f = file(os.path.join(path, name), "w")
+	f.write(content)
+	f.close()
+
+
+
+if sys.platform == "linux2":
+	cmd = "autoreconf -vfi && ./configure "+ " ".join('"%s"'%(i) for i in sys.argv[1:])
+	ret = os.system(cmd)
+	if ret!=0:
+		sys.exit(ret)
+else:
+	import shutil
+	shutil.copyfile("Makefile.WIN32", "Makefile")
