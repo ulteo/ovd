@@ -128,7 +128,7 @@ function show_all($flags_) {
 	echo '</div>';
 
 	echo '<div class="section">';
-	echo '<h1>'._('Application Servers').'</h1>';
+	echo '<h1>'._('Slave Servers').'</h1>';
 
 	foreach ($display2 as $fqdn => $logs) {
 		$server = Abstract_Server::load($fqdn);
