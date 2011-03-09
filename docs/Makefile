@@ -31,7 +31,6 @@ DIRS=xsl2 \
 
 DST=$(SRC:.xml=.html)
 PDF=$(SRC:.xml=.pdf)
-ANW=$(SRC:.xml=.anw)
 
 all: $(DST) $(PDF)
 
@@ -52,14 +51,9 @@ Support_Ubuntu_Hardy.xml: Support_Ubuntu_Lucid.xml
 %.pdf:  %.xml 
 	dblatex -t pdf -T db2latex -p style/latex.xsl $<
 
-%.anw: %.xml
-	xsltproc --xinclude style/anw.xsl $< >$@
-	sed -i 's/<!DOCTYPE.*//' $@
-
 clean:
 	$(RM) $(DST)
 	$(RM) $(PDF)
-	$(RM) $(ANW)
 	$(RM) *~
 
 install: all
