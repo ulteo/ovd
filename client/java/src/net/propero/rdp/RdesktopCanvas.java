@@ -1242,26 +1242,26 @@ public abstract class RdesktopCanvas extends Canvas {
     			k[0] += 1;
     			break;
     		case 15:
-    			color = xormask[pxormask + k[0]];
-    			red = ((color >> 7) & 0xf8) | ((color >> 12) & 0x7); 
-    			green = ((color >> 2) & 0xf8) | ((color >> 8) & 0x7);
-    			blue = ((color << 3) & 0xf8) | ((color >> 2) & 0x7);
+    			color = ((xormask[pxormask + k[0] + 1] << 8) & 0x0000ff00) | (xormask[pxormask + k[0]] & 0x000000ff);
+    			red = ((color >> 8) & 0xf8) ; 
+    			green = ((color >> 3) & 0xf8);
+    			blue = ((color << 3) & 0xff) ;
     			
     			rv = ((red << 16) & 0x00ff0000) | 
     			     ((green << 8) & 0x0000ff00) | 
     			     blue & 0x000000ff;
-    			k[0] += 1;
+    			k[0] += 2;
     			break;
     		case 16:
-    			color = xormask[pxormask + k[0]];
-    			red = ((color >> 7) & 0xf8) | ((color >> 12) & 0x7); 
-    			green = ((color >> 2) & 0xfc) | ((color >> 8) & 0x3);
-    			blue = ((color << 3) & 0xf8) | ((color >> 2) & 0x7);
+    			color = ((xormask[pxormask + k[0] + 1] << 8) & 0x0000ff00) | (xormask[pxormask + k[0]] & 0x000000ff);
+    			red = ((color >> 8) & 0xf8) ; 
+    			green = ((color >> 3) & 0xfc);
+    			blue = ((color << 3) & 0xff) ;
     			
     			rv = ((red << 16) & 0x00ff0000) | 
     			     ((green << 8) & 0x0000ff00) | 
     			     blue & 0x000000ff;
-    			k[0] += 1;
+    			k[0] += 2;
     			break;
     		case 24:
                 rv = ((xormask[pxormask + k[0] + 2] << 16) & 0x00ff0000) |
