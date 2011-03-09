@@ -119,6 +119,7 @@
     </para>
   </section>
 
+<!--
   <section>
     <title>High Availability / Failover</title>
 
@@ -132,4 +133,5 @@
       project.
     </para>
   </section>
+-->
 </article>
