@@ -9,8 +9,7 @@
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
-      <year>2009</year>
-      <year>2010</year>
+      <year>@YEAR@</year>
       <holder>Ulteo SAS</holder>
     </copyright>
   </articleinfo>

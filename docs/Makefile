@@ -45,11 +45,14 @@ Support_SLES_11.SP1.xml: Support_Ubuntu_Hardy.xml Support_Ubuntu_Lucid.xml
 Support_Ubuntu_Hardy.xml: Support_Ubuntu_Lucid.xml
 
 
-%.html: %.xml
-	xsltproc --xinclude style/xhtml.xsl $< >$@
+%.html: %.xml.out
+	xsltproc style/xhtml.xsl $< >$@
 
-%.pdf:  %.xml 
-	dblatex -t pdf -T db2latex -p style/latex.xsl $<
+%.pdf:  %.xml.out
+	dblatex -t pdf -T db2latex -p style/latex.xsl $< -o $@
+
+%.xml.out: %.xml
+	xmllint --xinclude $< | ./transform >$@
 
 clean:
 	$(RM) $(DST)

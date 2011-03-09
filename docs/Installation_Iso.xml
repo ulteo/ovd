@@ -9,7 +9,7 @@
     <subtitle>Installation from the DVD-ROM</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
     <copyright>
-      <year>2009</year>
+      <year>@YEAR@</year>
       <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
     </copyright>
   </articleinfo>
