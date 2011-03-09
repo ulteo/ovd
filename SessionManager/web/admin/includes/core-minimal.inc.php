@@ -35,6 +35,9 @@ if ($buf == 'auto') {
 	} else
 		$buf = 'en_GB';
 }
+
+Preferences::removeInstance();
+
 $language = locale2unix($buf);
 setlocale(LC_ALL, $language.'.UTF-8');
 putenv('LANGUAGE='.$language);
