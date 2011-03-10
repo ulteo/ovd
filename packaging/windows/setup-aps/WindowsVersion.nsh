@@ -1,4 +1,4 @@
-;; Copyright (C) 2009 Ulteo SAS
+;; Copyright (C) 2009-2011 Ulteo SAS
 ;; http://www.ulteo.com
 ;; Author Thomas MOUTON <thomas@ulteo.com>
 ;;
@@ -29,82 +29,20 @@
 !define WINDOWSVERSION_FUNCTION
 
 !include String.nsh
+!include VersionCompare.nsh
 
-!macro WindowsVersionDetection un
 
-  !ifndef ${un}WINVERSION_SET
-    !define ${un}WINVERSION_SET
-
-    Var /GLOBAL ${un}WinVersionNum
-    Var /GLOBAL ${un}WinVersionLbl
-
-    ReadRegStr $${un}WinVersionNum HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
-
-    ${Switch} $${un}WinVersionNum
-      ;Windows XP
-      ${Case} '5.1'
-        StrCpy $${un}WinVersionLbl "XP"
-        ${Break}
-
-      ;Windows 2003
-      ${Case} '5.2'
-        StrCpy $${un}WinVersionLbl "2003"
-        ${Break}
-
-      ${Case} 6.0
-        !insertmacro DifferenciateVistaAnd2008 "${un}"
-        Pop $R0
-        ${If} $R0 == '0'
-          ;Windows Vista
-          StrCpy $${un}WinVersionLbl "Vista"
-        ${Else}
-          ;Windows 2008
-          StrCpy $${un}WinVersionLbl "2008"
-        ${EndIf}
-        ${Break}
-
-      ${Default}
-        ${Break}
-    ${EndSwitch}
-
-  !endif
-
-!macroend
-
-;Detecting the OS version between Vista and 2008
-!macro DifferenciateVistaAnd2008 un
-
-    Var /GLOBAL ${un}prodName
-    Var /GLOBAL ${un}strSize
-
-    ReadRegStr $${un}prodName HKLM "Software\Microsoft\Windows NT\CurrentVersion" ProductName
-
-    Push $${un}prodName
-    Push "2008"
-    !insertmacro SubStr
-    Pop $R0
-    StrLen $${un}strSize $R0
-    Push $${un}strSize
-
-!macroend
-
-;; changes setup
 Function .WindowsInstall
+   Var /GLOBAL WinVersionNum
+   ReadRegStr $WinVersionNum HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
 
-  SetRebootFlag true
+   ${VersionCompare} $WinVersionNum "6.0" $1
+   IntCmp $1 2 done remoteapps done
 
-  !ifndef WINVERSION_SET
-    !insertmacro WindowsVersionDetection ""
-  !endif
+   remoteapps:
+      SetRebootFlag true
+      CopyFiles "$INSTDIR\wrapper\*.exe" "$SYSDIR"
 
-  ${Switch} $WinVersionLbl
-    ${Case} "XP"
-      ;Change the default Shell for Windows XP
-      DetailPrint "Change Default Shell"
-      WriteRegStr HKLM "Software\Microsoft\Windows NT\CurrentVersion\WinLogon" "Shell" "seamlessrdpshell.exe"
-      ${Break}
-
-    ${Case} "2008"
       ; If you apply local modification on the user environment variable "path", 
       ; this modification can't be applied in seamless mode.
       ; When you try to connect in seamless mode you end up getting a full-screen 
@@ -112,54 +50,44 @@ Function .WindowsInstall
       ; It's not possible to modify the path environment variable for 
       ; remote application users even if you use Group policy object.
       ; This solution helps also to keep the control on the explorer for administrative tasks.
-      !define REG_REMOTEAPP "Software\Microsoft\Windows NT\CurrentVersion\Terminal Server\TsAppAllowList\Applications\seamlessrdpshell"
 
-      CopyFiles $INSTDIR\rdp\* $SYSDIR
+      !define REG_DESKTOP "Software\Microsoft\Windows NT\CurrentVersion\Terminal Server\TsAppAllowList\Applications\OvdDesktop"
+      WriteRegDWORD HKLM "${REG_DESKTOP}" "CommandLineSetting" "1"
+      WriteRegDWORD HKLM "${REG_DESKTOP}" "IconIndex" "0"
+      WriteRegStr HKLM "${REG_DESKTOP}" "IconPath" "$SYSDIR\OvdDesktop.exe"
+      WriteRegStr HKLM "${REG_DESKTOP}" "Name" "OvdDesktop.exe"
+      WriteRegStr HKLM "${REG_DESKTOP}" "Path" "$SYSDIR\OvdDesktop.exe"
+      WriteRegStr HKLM "${REG_DESKTOP}" "RequiredCommandLine" ""
+      WriteRegStr HKLM "${REG_DESKTOP}" "ShortPath" ""
+      WriteRegDWORD HKLM "${REG_DESKTOP}" "ShowInTSWA" "0"
+      WriteRegStr HKLM "${REG_DESKTOP}" "VPath" ""
 
+      !define REG_REMOTEAPP "Software\Microsoft\Windows NT\CurrentVersion\Terminal Server\TsAppAllowList\Applications\OvdRemoteApps"
       WriteRegDWORD HKLM "${REG_REMOTEAPP}" "CommandLineSetting" "1"
       WriteRegDWORD HKLM "${REG_REMOTEAPP}" "IconIndex" "0"
-      WriteRegStr HKLM "${REG_REMOTEAPP}" "IconPath" "$SYSDIR\seamlessrdpshell.exe"
-      WriteRegStr HKLM "${REG_REMOTEAPP}" "Name" "seamlessrdpshell.exe"
-      WriteRegStr HKLM "${REG_REMOTEAPP}" "Path" "$SYSDIR\seamlessrdpshell.exe"
+      WriteRegStr HKLM "${REG_REMOTEAPP}" "IconPath" "$SYSDIR\OvdRemoteApps.exe"
+      WriteRegStr HKLM "${REG_REMOTEAPP}" "Name" "OvdRemoteApps.exe"
+      WriteRegStr HKLM "${REG_REMOTEAPP}" "Path" "$SYSDIR\OvdRemoteApps.exe"
       WriteRegStr HKLM "${REG_REMOTEAPP}" "RequiredCommandLine" ""
       WriteRegStr HKLM "${REG_REMOTEAPP}" "ShortPath" ""
       WriteRegDWORD HKLM "${REG_REMOTEAPP}" "ShowInTSWA" "0"
       WriteRegStr HKLM "${REG_REMOTEAPP}" "VPath" ""
-
-      ${Break}
-
-    ${Default}
-      ${Break}
-  ${EndSwitch}
-
+   done:
 FunctionEnd
 
-;; changes uninstall
+
 Function un.WindowsInstall
+   Var /GLOBAL unWinVersionNum
+   ReadRegStr $unWinVersionNum HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
 
-  SetRebootFlag true
+   ${un.VersionCompare} $unWinVersionNum "6.0" $1
+   IntCmp $1 2 done remoteapps done
 
-  !ifndef UNWINVERSION_SET
-    !insertmacro WindowsVersionDetection "UN"
-  !endif
-
-  ${Switch} $UNWinVersionLbl
-    ${Case} "XP"
-      ;Change the default Shell for Windows XP
-      DetailPrint "Restore Default Shell"
-      WriteRegStr HKLM "Software\Microsoft\Windows NT\CurrentVersion\WinLogon" "Shell" "explorer.exe"
-      ${Break}
-
-    ${Case} "2008"
-      Delete "$SYSDIR\seamlessrdpshell.exe"
-      Delete "$SYSDIR\seamlessrdpshell.dll"
-      Delete "$SYSDIR\vchannel.dll"
-      ${Break}
-
-    ${Default}
-      ${Break}
-  ${EndSwitch}
-
+   remoteapps:
+      SetRebootFlag true
+      Delete "$SYSDIR\OvdDesktop.exe"
+      Delete "$SYSDIR\OvdRemoteApps.dll"
+  done:
 FunctionEnd
 
 !endif
