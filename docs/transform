@@ -1,0 +1,85 @@
+#! /usr/bin/python
+# -*- coding: UTF-8 -*-
+
+# Copyright (C) 2011 Ulteo SAS
+# http://www.ulteo.com
+# Author Julien LANGLOIS <julien@ulteo.com> 2011
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+import getopt
+import os
+import sys
+import time
+
+
+def perform_transform(content):
+	content = content.replace("@YEAR@", time.strftime("%Y"))
+	
+	return content
+
+
+def usage():
+	print "Usage: %s [-i|--input input-file|- [-o|--output output-file] [-h|--help]"%(sys.argv[0])
+	print "\t-h|--help: print this help"
+	print
+
+
+def main():
+	infile = None
+	outfile = None
+
+	try:
+		opts, args = getopt.getopt(sys.argv[1:], 'i:ho:', [('input=', 'help', 'output=')])
+	
+	except getopt.GetoptError, err:
+		print >> sys.stderr, str(err)
+		usage()
+		sys.exit(2)
+	
+	for o, a in opts:
+		if o in ("-h", "--help"):
+			usage()
+			sys.exit()
+		elif o in ("-i", "--input"):
+			if a != "-":
+				infile = a
+		elif o in ("-o", "--output"):
+			if a != "-":
+				outfile = a
+	
+	if infile is None:
+		content = sys.stdin.read()
+	else:
+		try:
+			f = file(infile, "r")
+		except IOError, err:
+			print >> sys.stderr, "No such file", args[0]
+			sys.exit(2)
+		content = f.read()
+		f.close()
+	
+        content = perform_transform(content)
+	
+	if outfile is None:
+		print content
+	else:
+		f = file(outfile, "w")
+		f.write(content)
+		f.close()
+
+
+if __name__ == "__main__":
+	main()
