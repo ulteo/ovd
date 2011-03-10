@@ -81,7 +81,7 @@ while [ -n "$1" ]; do
         --help|-h)
             usage
             exit 0;;
-        --version|-h)
+        --version|-v)
             echo $PROGRAM @PKG_VERSION@
             exit 0;;
         *)
