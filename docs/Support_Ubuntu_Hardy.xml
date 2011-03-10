@@ -56,7 +56,7 @@
 
       <itemizedlist>
         <listitem>
-          <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_step1_para" />
+          <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_step1_para" />
           <screen>
 	  <![CDATA[
 deb http://archive.ulteo.com/ovd/3.0/ubuntu hardy main]]>
