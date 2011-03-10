@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-                 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"> 
+                 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
+                 [<!ENTITY parent "Support_SLES_11.SP1.xml">]> 
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <title>Ulteo Open Virtual Desktop</title>
@@ -27,37 +28,37 @@
       downloaded <ulink url="http://software.opensuse.org">here</ulink>.
     </para>
 
-    <xi:include href="Support_Debian_Squeeze.xml" xpointer="prerequisites_root" />
+    <xi:include href="&parent;" xpointer="prerequisites_root" />
 
-    <xi:include href="Support_SLES_11.SP1.xml" xpointer="warning_name_examples" />
+    <xi:include href="&parent;" xpointer="warning_name_examples" />
 
-    <xi:include href="Support_SLES_11.SP1.xml" xpointer="seLinux" />
+    <xi:include href="&parent;" xpointer="seLinux" />
   </section>
 
   <section id="repository">
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_title" />
+    <xi:include href="&parent;" xpointer="repository_title" />
 
-    <xi:include href="Support_SLES_11.SP1.xml" xpointer="repository_para" />
+    <xi:include href="&parent;" xpointer="repository_para" />
 
     <section id="repository_online">
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_title" />
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_para" />
+      <xi:include href="&parent;" xpointer="repository_online_title" />
+      <xi:include href="&parent;" xpointer="repository_online_para" />
 
       <itemizedlist>
         <listitem>
-          <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_step1_para" />
+          <xi:include href="&parent;" xpointer="repository_online_step1_para" />
           <screen>
             <![CDATA[
 zypper ar http://archive.ulteo.com/ovd/3.0/opensuse/11.2 ovd]]>
           </screen>
         </listitem>
         
-        <xi:include href="Support_SLES_11.SP1.xml" xpointer="repository_online_step2" />
+        <xi:include href="&parent;" xpointer="repository_online_step2" />
       </itemizedlist>
     </section>
 
     <section id="repository_offline">
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_title" />
+      <xi:include href="&parent;" xpointer="repository_offline_title" />
 
      <itemizedlist>
         <listitem id="repository_offline_step1">
@@ -66,11 +67,11 @@ zypper ar http://archive.ulteo.com/ovd/3.0/opensuse/11.2 ovd]]>
            <emphasis>openuse-11.2.tar.gz</emphasis>.
          </para>
 
-         <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_step1_para" />
+         <xi:include href="&parent;" xpointer="repository_offline_step1_para" />
        </listitem>
 
        <listitem id="repository_offline_step2">
-         <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_step2_para" />
+         <xi:include href="&parent;" xpointer="repository_offline_step2_para" />
           <screen>
             <![CDATA[
 # tar xzf openuse-11.2.tar.gz]]>
@@ -89,11 +90,11 @@ zypper ar http://archive.ulteo.com/ovd/3.0/opensuse/11.2 ovd]]>
      </itemizedlist>
     </section>
 
-    <xi:include href="Support_SLES_11.SP1.xml" xpointer="repository_common" />
+    <xi:include href="&parent;" xpointer="repository_common" />
 </section>
 
-  <xi:include href="Support_SLES_11.SP1.xml" xpointer="sm" />
-  <xi:include href="Support_SLES_11.SP1.xml" xpointer="subsystem" />
-  <xi:include href="Support_SLES_11.SP1.xml" xpointer="wc" />
+  <xi:include href="&parent;" xpointer="sm" />
+  <xi:include href="&parent;" xpointer="subsystem" />
+  <xi:include href="&parent;" xpointer="wc" />
 
 </article>
