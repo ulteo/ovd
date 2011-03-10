@@ -45,7 +45,7 @@ die () {
 usage ()
 {
     echo << EOF "\
-Usage: $PROGRAM [--chroot-uri uri] [--copy] [--chroot-dir dir] [--version|-v] [--help|-h]
+Usage: $PROGRAM [--chroot-uri] [--chroot-dir] [--sm-address] [--force] [--version|-v] [--help|-h]
 Configure an Ulteo Subsystem (Open Virtual Desktop)
 
   --chroot-uri <uri>   get the chroot from 'uri'
