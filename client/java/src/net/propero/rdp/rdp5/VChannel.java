@@ -6,6 +6,9 @@
  * Date: $Date: 2007/03/08 00:26:39 $
  *
  * Copyright (c) 2005 Propero Limited
+ * Copyright (C) 2011 Ulteo SAS
+ * http://www.ulteo.com
+ * Author david LECHEVALIER <david@ulteo.com> 2011
  *
  * Purpose: Abstract class for RDP5 channels
  */
@@ -100,7 +103,11 @@ public abstract class VChannel {
      */
 	public void send_packet(RdpPacket_Localised data) throws RdesktopException, IOException, CryptoException
 	{
-		if(this.common.secure == null) return;
+		if(this.common.secure == null) 
+			return;
+		if (! this.common.secure.ready) 
+			return;
+
 		int length = data.size();
 		
 		int data_offset = 0;

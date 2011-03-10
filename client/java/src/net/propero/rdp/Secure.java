@@ -6,6 +6,9 @@
  * Date: $Date: 2007/03/08 00:26:35 $
  *
  * Copyright (c) 2005 Propero Limited
+ * Copyright (C) 2011 Ulteo SAS
+ * http://www.ulteo.com
+ * Author david LECHEVALIER <david@ulteo.com> 2011
  *
  * Purpose: Secure layer of communication
  */
@@ -98,6 +101,7 @@ public class Secure {
     private VChannels channels;
     private Options opt = null;
     private Common common = null;
+    public boolean ready = false;
     
     /**
      * Initialise Secure layer of communications
@@ -121,6 +125,7 @@ public class Secure {
 	sec_decrypt_update_key = new byte[16]; // changed from 8 - rdesktop 1.2.0
 	sec_encrypt_update_key = new byte[16]; // changed from 8 - rdesktop 1.2.0
 	sec_crypted_random = new byte[64];
+	this.ready = false;
 	
     }
     
@@ -975,6 +980,7 @@ public class Secure {
 
 			if ((sec_flags & SEC_LICENCE_NEG) != 0) {
 				licence.process(buffer);
+				this.ready = true;
 				continue;
 			}
 			if ((sec_flags & SEC_ENCRYPT) != 0) {
