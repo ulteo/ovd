@@ -39,8 +39,12 @@ class Preferences {
 		}
 	}
 
+	public static function removeInstance() {
+		self::$instance = null;
+	}
+
 	public static function hasInstance() {
-		return isset(self::$instance);
+		return isset(self::$instance) and self::$instance != null;
 	}
 
 	public static function getInstance() {
