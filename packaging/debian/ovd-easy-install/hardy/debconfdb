@@ -5,7 +5,7 @@ ulteo-ovd-session-manager	ulteo-ovd-session-manager/admin_password_again	passwor
 ulteo-ovd-session-manager	ulteo-ovd-session-manager/admin_password	password	admin
 ulteo-ovd-session-manager	ulteo-ovd-session-manager/ssl_disable_warning	note	
 ulteo-ovd-session-manager	ulteo-ovd-session-manager/mysql_setup	boolean	false
-ulteo-ovd-session-manager	ulteo-ovd-session-manager/tarball_url	string	http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0
+ulteo-ovd-session-manager	ulteo-ovd-session-manager/tarball_url	string	http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=trunk
 ulteo-ovd-web-client	ulteo-ovd-web-client/link_session_manager	boolean	true
 ulteo-ovd-web-client	ulteo-ovd-web-client/session_manager_ip	string	127.0.0.1
 ulteo-ovd-subsystem	ulteo-ovd-subsystem/tarball_uri	string	file:///var/cache/ulteo/sessionmanager/base.tar.gz
