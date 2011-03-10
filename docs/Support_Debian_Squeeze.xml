@@ -4,7 +4,7 @@
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <title>Ulteo Open Virtual Desktop</title>
-    <subtitle>Debian Lenny support</subtitle>
+    <subtitle>Debian Squeeze support</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
