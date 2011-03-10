@@ -1,6 +1,6 @@
-;; Copyright (C) 2009 - 2010 Ulteo SAS
+;; Copyright (C) 2009 - 2011 Ulteo SAS
 ;; http://www.ulteo.com
-;; Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
+;; Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 ;; Author David LECHEVALIER <david@ulteo.com> 2011
 ;; Author Thomas MOUTON <thomas@ulteo.com> 2009, 2010
 ;;
@@ -19,7 +19,6 @@
 ;; Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 !define PRODUCT_NAME "OVD Native Client"
-!define PRODUCT_LONGVERSION "${PRODUCT_VERSION}.0.0"
 !define PRODUCT_PUBLISHER "Ulteo"
 !define PRODUCT_WEB_SITE "http://www.ulteo.com"
 !define PRODUCT_FULL_NAME "${PRODUCT_PUBLISHER} ${PRODUCT_NAME}"
@@ -30,7 +29,7 @@
 !define SHORTCUT_ICON "ulteo.ico"
 !define UNINSTALL_SHORTCUT "Uninstall - ${PRODUCT_NAME}.lnk"
 
-!define UNINSTALL_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Ulteo\ovd-native-client"
+!define UNINSTALL_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Ulteo-ovd-native-client"
 
 ;Include Modern UI
   !include "MUI.nsh"
@@ -52,7 +51,7 @@
   Name "${PRODUCT_FULL_NAME}"
   OutFile "${OUT_DIR}\${SETUP_NAME}.exe"
 
-  BrandingText "Copyright Ulteo SAS"
+  BrandingText "Copyright (C) ${COPYRIGHT_YEAR} Ulteo SAS"
   ;Default installation folder
   InstallDir "$PROGRAMFILES\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}"
 
@@ -63,9 +62,9 @@
   VIAddVersionKey CompanyName "${PRODUCT_PUBLISHER}"
   VIAddVersionKey ProductVersion "${PRODUCT_VERSION}"
   VIAddVersionKey FileVersion "${PRODUCT_VERSION}"
-  VIAddVersionKey FileDescription "An agent to plug a Windows TS on an Ulteo OVD architecture"
-  VIAddVersionKey LegalCopyright "Copyright @ 2010 ${PRODUCT_PUBLISHER}"
-  VIProductVersion "${PRODUCT_LONGVERSION}"
+  VIAddVersionKey FileDescription "Ulteo OVD Native Client"
+  VIAddVersionKey LegalCopyright "Copyright (C) ${COPYRIGHT_YEAR} Ulteo SAS"
+  VIProductVersion "${PRODUCT_VERSION}"
 
 ;--------------------------------
 ;Interface Settings

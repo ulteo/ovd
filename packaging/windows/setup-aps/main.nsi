@@ -2,7 +2,7 @@
 ;; http://www.ulteo.com
 ;; Author David LECHEVALIER <david@ulteo.com> 2011
 ;; Author Laurent CLOUET <laurent@ulteo.com> 2011
-;; Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
+;; Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 ;; Author Thomas MOUTON <thomas@ulteo.com> 2009, 2010, 2011
 ;;
 ;; This program is free software; you can redistribute it and/or 
@@ -20,7 +20,6 @@
 ;; Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 !define PRODUCT_NAME "OVD Application Server"
-!define PRODUCT_LONGVERSION "${PRODUCT_VERSION}.0.0"
 !define PRODUCT_PUBLISHER "Ulteo"
 !define PRODUCT_WEB_SITE "http://www.ulteo.com"
 !define PRODUCT_FULL_NAME "${PRODUCT_PUBLISHER} ${PRODUCT_NAME}"
@@ -53,7 +52,7 @@
   Name "${PRODUCT_FULL_NAME}"
   OutFile "${OUT_DIR}\${SETUP_NAME}.exe"
 
-  BrandingText "Copyright Ulteo SAS"
+  BrandingText "Copyright (C) ${COPYRIGHT_YEAR} Ulteo SAS"
   ;Default installation folder
   InstallDir "$PROGRAMFILES\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}"
 
@@ -64,9 +63,9 @@
   VIAddVersionKey CompanyName "${PRODUCT_PUBLISHER}"
   VIAddVersionKey ProductVersion "${PRODUCT_VERSION}"
   VIAddVersionKey FileVersion "${PRODUCT_VERSION}"
-  VIAddVersionKey FileDescription "An agent to plug a Windows TS on an Ulteo OVD architecture"
-  VIAddVersionKey LegalCopyright "Copyright @ 2010 ${PRODUCT_PUBLISHER}"
-  VIProductVersion "${PRODUCT_LONGVERSION}"
+  VIAddVersionKey FileDescription "Ulteo OVD Application Server service"
+  VIAddVersionKey LegalCopyright "Copyright (C) ${COPYRIGHT_YEAR} Ulteo SAS"
+  VIProductVersion "${PRODUCT_VERSION}"
 
 ;--------------------------------
 ;Interface Settings
