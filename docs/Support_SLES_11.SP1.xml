@@ -255,6 +255,7 @@ Chroot destination [/opt/ulteo]:]]>
 
     <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem_last_para" />
     <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem_last_screenshot" />
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="aps_redirection_name" />
   </section>
 
   <section id="wc">
