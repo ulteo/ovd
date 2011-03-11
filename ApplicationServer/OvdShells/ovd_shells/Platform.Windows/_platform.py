@@ -83,7 +83,7 @@ def launchIntegratedClient(configuration_file_):
 			path = os.path.join(d, r"jre\bin\javaw.exe")
 			if os.path.exists(path):
 				print "Found java in '%s'"%(path)
-				java_cmd = '"'+path+'" -jar "%1" %*'
+				java_cmd = '"'+path+'" -Xrs -jar "%1" %*'
 				break
 		
 		if java_cmd is None:
