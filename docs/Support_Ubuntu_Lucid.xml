@@ -87,7 +87,7 @@
         <listitem id="repository_step1">
           <para id="repository_online_step1_para">
             Edit the
-            <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd.list</emphasis>
+            <emphasis>/etc/apt/sources.list.d/ulteo-ovd.list</emphasis>
             file and add these lines:
           </para>
           <screen>
@@ -102,12 +102,23 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
       <title id="repository_offline_title">Offline Method</title>
 
      <itemizedlist>
+       <listitem id="repository_offline_step0">
+         <para id="repository_offline_step0_para">
+           The OVD offline repositories are jointly used with the 
+           <ulink url="http://www.ubuntu.com/desktop/get-ubuntu/alternative-download#dvd">Ubuntu Lucid DVD</ulink>
+           . When the DVD is mount in the system, add the DVD repository:
+          <screen>
+            <![CDATA[
+# apt-cdrom add]]>
+          </screen>
+         </para>
+       </listitem>
+     
        <listitem id="repository_offline_step1">
          <para>
            The offline repository is an archive named
-           <emphasis>ubuntu-lucid.tar.gz</emphasis>.
+           <emphasis>ulteo-ovd-ubuntu-lucid.tar.gz</emphasis>.
          </para>
-
          <para id="repository_offline_step1_para">
            Get this archive from <ulink
            url="http://archive.ulteo.com/ovd/3.0/offline/">the Ulteo
@@ -129,7 +140,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
         <listitem id="repository_offline_step3">
           <para id="repository_offline_step3_para">
             Edit the
-            <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd-offline.list</emphasis>
+            <emphasis>/etc/apt/sources.list.d/ulteo-ovd-offline.list</emphasis>
             file and add these lines:
           </para>
           <screen>
