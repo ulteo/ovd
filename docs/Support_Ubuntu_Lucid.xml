@@ -117,7 +117,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
        <listitem id="repository_offline_step1">
          <para>
            The offline repository is an archive named
-           <emphasis>ulteo-ovd-ubuntu-lucid.tar.gz</emphasis>.
+           <emphasis>ovd-3.0-ubuntu-lucid.tar.gz</emphasis>.
          </para>
          <para id="repository_offline_step1_para">
            Get this archive from <ulink
@@ -133,7 +133,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
           </para>
           <screen>
             <![CDATA[
-# tar xzf ubuntu-lucid.tar.gz]]>
+# tar xzf ovd-3.0-ubuntu-lucid.tar.gz]]>
           </screen>
         </listitem>
 
@@ -145,7 +145,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
           </para>
           <screen>
             <![CDATA[
-deb file:///root/ubuntu-lucid lucid main]]>
+deb file:///root/ovd-3.0-ubuntu-lucid lucid main]]>
           </screen>
         </listitem>
      </itemizedlist>

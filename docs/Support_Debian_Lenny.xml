@@ -68,7 +68,7 @@ deb http://archive.ulteo.com/ovd/3.0/debian lenny main]]>
         <listitem>
           <para>
             The offline repository is an archive named
-            <emphasis>debian-lenny.tar.gz</emphasis>.
+            <emphasis>ovd-3.0-debian-lenny.tar.gz</emphasis>.
           </para>
           <xi:include href="&parent;" xpointer="repository_offline_step1_para" />
         </listitem>
@@ -77,7 +77,7 @@ deb http://archive.ulteo.com/ovd/3.0/debian lenny main]]>
           <xi:include href="&parent;" xpointer="repository_offline_step2_para" />
           <screen>
             <![CDATA[
-# tar xzf debian-lenny.tar.gz]]>
+# tar xzf ovd-3.0-debian-lenny.tar.gz]]>
           </screen>
         </listitem>
 
@@ -85,7 +85,7 @@ deb http://archive.ulteo.com/ovd/3.0/debian lenny main]]>
           <xi:include href="&parent;" xpointer="repository_offline_step3_para" />
           <screen>
             <![CDATA[
-deb file:///root/debian-lenny lenny main]]>
+deb file:///root/ovd-3.0-debian-lenny lenny main]]>
           </screen>
         </listitem>
       </itemizedlist>

@@ -64,7 +64,7 @@ zypper ar http://archive.ulteo.com/ovd/3.0/opensuse/11.2 ovd]]>
         <listitem id="repository_offline_step1">
          <para>
            The offline repository is an archive named
-           <emphasis>openuse-11.2.tar.gz</emphasis>.
+           <emphasis>ovd-3.0-openuse-11.2.tar.gz</emphasis>.
          </para>
 
          <xi:include href="&parent;" xpointer="repository_offline_step1_para" />
@@ -74,7 +74,7 @@ zypper ar http://archive.ulteo.com/ovd/3.0/opensuse/11.2 ovd]]>
          <xi:include href="&parent;" xpointer="repository_offline_step2_para" />
           <screen>
             <![CDATA[
-# tar xzf openuse-11.2.tar.gz]]>
+# tar xzf ovd-3.0-openuse-11.2.tar.gz]]>
           </screen>
         </listitem>
 
@@ -84,7 +84,7 @@ zypper ar http://archive.ulteo.com/ovd/3.0/opensuse/11.2 ovd]]>
           </para>
           <screen>
             <![CDATA[
-# zypper ar file:///root/opensuse-11.2 ovd-offline]]>
+# zypper ar file:///root/ovd-3.0-opensuse-11.2 ovd-offline]]>
           </screen>
         </listitem>
      </itemizedlist>
