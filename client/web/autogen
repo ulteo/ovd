@@ -30,6 +30,6 @@ else
     version="99.99+svn$revision"
 fi
 
-sed -e "s/@VERSION@/${version}/g" < configure.ac.in > configure.ac
+sed -e "s/@VERSION@/${version}/g" configure.ac.in > configure.ac
 
 autoreconf -vfi && ./configure --without-ulteo-applets $@
