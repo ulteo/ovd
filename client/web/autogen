@@ -27,7 +27,7 @@ else
     else
       revision=0
     fi
-    version="99.99+svn$revison"
+    version="99.99+svn$revision"
 fi
 
 sed -e "s/@VERSION@/${version}/g" < configure.ac.in > configure.ac
