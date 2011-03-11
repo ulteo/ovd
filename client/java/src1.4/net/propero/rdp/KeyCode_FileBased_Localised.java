@@ -13,7 +13,6 @@ package net.propero.rdp;
 
 import java.awt.event.KeyEvent;
 import java.io.InputStream;
-import java.util.HashMap;
 
 import net.propero.rdp.keymapping.KeyCode_FileBased;
 import net.propero.rdp.keymapping.KeyMapException;
@@ -21,7 +20,6 @@ import net.propero.rdp.keymapping.KeyMapException;
 
 public class KeyCode_FileBased_Localised extends KeyCode_FileBased {
 
-	private HashMap keysCurrentlyDown = new HashMap();
 	private Options opt = null;
 	
 	/**
