@@ -30,6 +30,8 @@ import org.ulteo.Logger;
 import org.ulteo.ovd.disk.DiskManager;
 import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.OSTools;
+import org.ulteo.ovd.integrated.SystemLinux;
+import org.ulteo.ovd.integrated.RestrictedAccessException;
 import org.ulteo.ovd.integrated.SystemWindows;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
@@ -126,9 +128,25 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 			String ulteoID = SystemWindows.getKnownDrivesUUIDFromPath(this.arg);
 			if (ulteoID != null) {
 				String relativePath = this.arg.substring(3);
+				ovdApp.addOvdAppListener(this);
+				ovdApp.sendStartApp(this.token, this.app.getId(), OvdAppChannel.DIR_TYPE_KNOWN_DRIVE, ulteoID, relativePath);
+				this.state = STARTING;
+				return;
+			}
+		}
+		
+		if (OSTools.isLinux()) {
+			File args = new File(this.arg);
+			String ulteoIDPath = SystemLinux.getKnownDrivesUUIDPathFromPath(args.getAbsolutePath());
+			String ulteoID = SystemLinux.getKnownDrivesUUIDFromPath(ulteoIDPath);
+			
+			if (ulteoID != null) {
+				String relativePath = args.getAbsolutePath().replace(new File(ulteoIDPath).getAbsolutePath(), "");
+				if (relativePath.startsWith("/"))
+					relativePath = relativePath.replaceFirst("/", "");
 
 				ovdApp.addOvdAppListener(this);
-				ovdApp.sendStartApp(this.token, this.app.getId(), ovdApp.DIR_TYPE_KNOWN_DRIVE, ulteoID, relativePath);
+				ovdApp.sendStartApp(this.token, this.app.getId(), OvdAppChannel.DIR_TYPE_KNOWN_DRIVE, ulteoID, relativePath);
 				this.state = STARTING;
 				return;
 			}
