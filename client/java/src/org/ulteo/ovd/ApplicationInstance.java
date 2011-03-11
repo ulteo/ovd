@@ -32,6 +32,7 @@ import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.integrated.SystemLinux;
 import org.ulteo.ovd.integrated.RestrictedAccessException;
+import java.io.File;
 import org.ulteo.ovd.integrated.SystemWindows;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
