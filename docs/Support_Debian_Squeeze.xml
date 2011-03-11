@@ -19,7 +19,7 @@
     pieces of Ulteo OVD are supported on Debian Squeeze system.
   </para>
 
-  <section>
+  <section id="prerequisites">
     <title>Prerequisites: Debian Squeeze</title>
 
     <para>

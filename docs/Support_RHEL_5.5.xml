@@ -19,7 +19,7 @@
     pieces of Ulteo OVD are supported on Red Hat Enterprise Linux (RHEL) 5.5 system.
   </para>
 
-  <section>
+  <section id="prerequisites">
     <title>Prerequisites: Red Hat Enterprise Linux (RHEL) 5.5</title>
 
     <xi:include href="&parent;" xpointer="prerequisites_root" />
