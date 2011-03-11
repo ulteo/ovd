@@ -31,10 +31,11 @@ BLOCK "StringFileInfo"
 BLOCK "0C0C04E4"
 {
 VALUE "ProductName", "OVD Native Client\0"
+VALUE "ProductVersion", "@VERSION@\0"
 VALUE "CompanyName", "Ulteo\0"
 VALUE "FileVersion", "@VERSION@\0"
 VALUE "InternalName", "OVD Integrated Launcher\0"
-VALUE "LegalCopyright", "Copyright (C) @YEAR@ Ulteo\0"
+VALUE "LegalCopyright", "Copyright (C) @YEAR@ Ulteo SAS\0"
 VALUE "FileDescription", "Ulteo Open Virtual Desktop\0"
 }
 }
