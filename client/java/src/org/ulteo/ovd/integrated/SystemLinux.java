@@ -43,7 +43,7 @@ import org.ulteo.ovd.client.cache.PngManager;
 import org.ulteo.ovd.integrated.shorcut.LinuxShortcut;
 
 public class SystemLinux extends SystemAbstract {
-	private final String graphic_refresh_application = "xrefresh";
+	private final String ulteo_graphic_refresh_application = "xfdesktop --reload";
 	private final String desktop_refresh_application = "update-desktop-database";
 
 	public SystemLinux() {
@@ -327,6 +327,7 @@ public class SystemLinux extends SystemAbstract {
 	public void refresh() {
 		File issueFile = new File("/etc/issue");
 		String issue = "";
+		boolean ulteoSystem = false;
 		String xdg_dir = Constants.PATH_XDG_APPLICATIONS;
 		
 		try {
@@ -335,6 +336,7 @@ public class SystemLinux extends SystemAbstract {
 			issue = issue.toLowerCase();
 			if (issue.startsWith(Constants.OVD_ISSUE.toLowerCase())) {
 				xdg_dir = Constants.PATH_OVD_SPOOL_XDG_APPLICATIONS;
+				ulteoSystem = true;
 			}
 		}
 		catch (FileNotFoundException e) {
@@ -346,8 +348,9 @@ public class SystemLinux extends SystemAbstract {
 		try {
 			Runtime runtime = Runtime.getRuntime();
 			
-			runtime.exec(this.graphic_refresh_application);
 			runtime.exec(this.desktop_refresh_application+" "+xdg_dir);
+			if (ulteoSystem)
+				runtime.exec(this.ulteo_graphic_refresh_application	);
 		}
 		catch (SecurityException e) {
 			Logger.error("Unable to refresh desktop, this process is not allowed to start a process ["+e.getMessage()+"]");
