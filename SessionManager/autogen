@@ -47,7 +47,8 @@ else
     version="99.99.svn$revision"
 fi
 
-sed "s/@MODULE@/${module}/g" < configure.ac.in | \
-sed "s/@VERSION@/${version}/g" > configure.ac
+sed -e "s/@MODULE@/${module}/g" \
+    -e "s/@VERSION@/${version}/g" \
+    configure.ac.in > configure.ac
 
 autoreconf -vfi && ./configure $args
