@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,7 +34,7 @@
 #define JAR_FILE "OVDNativeClient.jar"
 
 int launch(const char *command_line, ...);
-void change_directory(const LPSTR argv0);
+void change_directory();
 
 void usage(const char *name) {
     fprintf(stderr, "Usage: %s [-a jar-file]\n", name);
@@ -46,7 +47,7 @@ int main(int argc, LPSTR argv[]) {
     int ret;
     int i;
 
-    change_directory(argv[0]);
+    change_directory();
     
     sprintf(cmd_line, "jre\\bin\\java.exe -jar \"%s\"", JAR_FILE);
     for (i=1; i<argc; i++)
@@ -100,33 +101,31 @@ int launch(const char *command_line, ...) {
   return (int)lpExitCode;  
 }
 
-void change_directory(const LPSTR argv0) {
+void change_directory() {
     BOOL ret;
     TCHAR pwd[MAX_PATH];
     TCHAR path[MAX_PATH];
-    TCHAR path2[MAX_PATH];
 
     GetCurrentDirectory(MAX_PATH, pwd);
-    snprintf(path, MAX_PATH, "%s", argv0);
+
+    ret = GetModuleFileName(NULL, path, MAX_PATH);
+    if (ret <= 0) {
+        fprintf(stderr, "Unable to GetModuleFileName ... (code: %d)\n", ret);
+        return ;
+    }
 
     ret = PathRemoveFileSpec(path);
     if (ret == FALSE  || strlen(path)==0)
         return;
 
-    ret = GetFullPathName(path, MAX_PATH, path2, NULL);
+    if (strcmp(pwd, path) == 0)
+        return;
+
+    ret = SetCurrentDirectory(path);
     if (ret == FALSE) {
-        fprintf(stderr, "Unable to GetFullPathName of '%s'\n", path);
+        fprintf(stderr, "Unable to cd into '%s'\n", path);
         return;
     }
 
-    if (strcmp(pwd, path2) == 0)
-        return;
-
-    ret = SetCurrentDirectory(path2);
-    if (ret == FALSE) {
-        fprintf(stderr, "Unable to cd into '%s'\n", path2);
-        return;
-    }
-
-    printf("Switched PWD from '%s' to '%s'\n", pwd, path2);
+    printf("Switched PWD from '%s' to '%s'\n", pwd, path);
 }
