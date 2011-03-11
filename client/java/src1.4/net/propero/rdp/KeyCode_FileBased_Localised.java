@@ -38,6 +38,7 @@ public class KeyCode_FileBased_Localised extends KeyCode_FileBased {
 		this.opt = opt_;
 	}
 	
+	@SuppressWarnings("unused")
 	private void updateCapsLock(KeyEvent e){
 		if(this.opt.useLockingKeyState){
 			try {

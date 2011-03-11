@@ -23,6 +23,7 @@ import net.propero.rdp.keymapping.KeyCode_FileBased;
 public class Input_Localised extends Input {
 	private Options opt = null;
 	
+	@SuppressWarnings("unchecked")
 	public Input_Localised(RdesktopCanvas c, Rdp r, KeyCode_FileBased k, Options opt_){
 		super(c,r,k,opt_);
 		this.opt = opt_;
@@ -30,6 +31,7 @@ public class Input_Localised extends Input {
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().setDefaultFocusTraversalKeys (KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Input_Localised(RdesktopCanvas c, Rdp r, String k, Options opt_, Common common_){
 		super(c,r,k,opt_,common_);
 		this.opt = opt_;
@@ -106,6 +108,7 @@ public class Input_Localised extends Input {
 		return true;
 	}
 	
+	@SuppressWarnings("unused")
 	private class RdesktopMouseWheelAdapter implements MouseWheelListener {
 		public void mouseWheelMoved (MouseWheelEvent e){
 				 int time = getTime();
