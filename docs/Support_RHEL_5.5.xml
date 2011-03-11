@@ -1,51 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-                 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
-                 [<!ENTITY parent "Support_SLES_11.SP1.xml">]> 
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
+	  [<!ENTITY parent "Support_SLES_11.SP1.xml">]> 
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
-  <articleinfo>
-    <title>Ulteo Open Virtual Desktop</title>
-    <subtitle>Red Hat Enterprise Linux 5.5 support</subtitle>
-    <graphic fileref="img/ovd.png" align="center"/>
+  <transform_var name="distrib_pretty_name" value="Red Hat Enterprise Linux (RHEL) 5.5"/>
+  <transform_var name="distrib_name" value="rhel" />
+  <transform_var name="distrib_version" value="5.5"/>
+  <transform_var name="rpm_install_cmd" value="yum"/>
+  <transform_var name="rpm_mysql_packages" value="mysql mysql-server"/>
+  <transform_var name="mysql_service" value="mysqld"/>
+  <transform_var name="apache_service" value="httpd"/>
 
-    <copyright>
-      <year>@YEAR@</year>
-      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
-    </copyright>
-  </articleinfo>
-
-  <para>
-    The purpose of this document is to describe how the different
-    pieces of Ulteo OVD are supported on Red Hat Enterprise Linux (RHEL) 5.5 system.
-  </para>
-
+  <xi:include href="&parent;" xpointer="header" />
+  <xi:include href="&parent;" xpointer="first_para" />
+ 
   <section id="prerequisites">
-    <title>Prerequisites: Red Hat Enterprise Linux (RHEL) 5.5</title>
+    <xi:include href="&parent;" xpointer="prerequisites_title" />
 
     <xi:include href="&parent;" xpointer="prerequisites_root" />
 
     <xi:include href="&parent;" xpointer="warning_name_examples" />
 
-    <simplesect id="seLinux">
-      <xi:include href="&parent;" xpointer="seLinux_title" />
-      <xi:include href="&parent;" xpointer="seLinux_para1" />
-      <xi:include href="&parent;" xpointer="seLinux_para2" />
-
-      <screen>
-        <![CDATA[
-# yum remove selinux-policy]]>
-      </screen>
-    </simplesect>
+    <xi:include href="&parent;" xpointer="seLinux" />
   </section>
 
   <section id="repository">
     <xi:include href="&parent;" xpointer="repository_title" />
 
-    <para id="repository_para">
-      Red Hat use the RPM packaging systemsystem. So you need to have
-      an internet connexion on your Red Hat system and add an Ulteo
-      RPM repository into your system.
-    </para>
+    <xi:include href="&parent;" xpointer="repository_para" />
 
     <section id="repository_online">
       <xi:include href="&parent;" xpointer="repository_online_title" />
@@ -68,22 +50,8 @@ gpgkey=http://archive.ulteo.com/ovd/keyring]]>
       <xi:include href="&parent;" xpointer="repository_offline_title" />
 
       <itemizedlist>
-        <listitem id="repository_offline_step1">
-         <para>
-           The offline repository is an archive named
-           <emphasis>ovd-3.0-rhel-5.5.tar.gz</emphasis>.
-         </para>
-
-         <xi:include href="&parent;" xpointer="repository_offline_step1_para" />
-       </listitem>
-
-       <listitem id="repository_offline_step2">
-         <xi:include href="&parent;" xpointer="repository_offline_step2_para" />
-          <screen>
-            <![CDATA[
-# tar xzf ovd-3.0-rhel-5.5.tar.gz]]>
-          </screen>
-        </listitem>
+        <xi:include href="&parent;" xpointer="repository_offline_step1" />
+        <xi:include href="&parent;" xpointer="repository_offline_step2" />
         <listitem>
           <para>
             The first step is to configure yum to enable the Ulteo rpm
@@ -104,153 +72,7 @@ gpgcheck=0]]>
     </section>
   </section>
 
-  <section id="sm">
-    <xi:include href="&parent;" xpointer="sm_title" />
-    <xi:include href="&parent;" xpointer="sm_first_para" />
-
-    <section id="sql">
-      <xi:include href="&parent;" xpointer="sql_title" />
-      <xi:include href="&parent;" xpointer="sql_para" />
-
-      <itemizedlist>
-	<listitem>
-	  <para>
-	    Install the <emphasis>mysql-server</emphasis> package:
-	  </para>
-          <screen>
-            <![CDATA[
-# yum install mysql mysql-server]]>
-          </screen>
-        </listitem>
-
-	<listitem>
-	  <para>
-	    To start automatically MySQL when the system boots up
-	  </para>
-	  <screen>
-	    <![CDATA[
-# chkconfig mysqld on]]>
-	  </screen>
-	</listitem>
-
-	<listitem>
-	  <para>
-	    Start the service
-	  </para>
-	  <screen>
-	    <![CDATA[
-# service mysqld start]]>
-	  </screen>
-	</listitem>
-
-	<listitem>
-	  <para>
-	    Define the root mysql password
-	  </para>
-	  <screen>
-	    <![CDATA[
-# mysqladmin -u root password 'mysql_root_password']]>
-	  </screen>
-	</listitem>
-
-        <xi:include href="&parent;" xpointer="mysql_createdb" />
-      </itemizedlist>
-   </section>
-   
-   <section id="sm_install">
-     <xi:include href="&parent;" xpointer="sm_install_title" />
-
-     <itemizedlist>
-       <listitem>
-         <xi:include href="&parent;" xpointer="sm_install_package" />
-         <screen><![CDATA[
-# yum install ulteo-ovd-session-manager]]>
-         </screen>
-       </listitem>
-
-       <listitem>
-         <para>Launch the configuration tool</para>
-         <screen><![CDATA[
-# sm-config
-Admin login: admin
-Password: 
-Retype password: 
-Chroot download url [http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0]: 
-Chroot destination [/var/cache/ulteo/sessionmanager/base.tar.gz]: 
-
-Options:
-* chroot download:  yes
-* chroot URI:       http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0
-* chroot directory: /var/cache/ulteo/sessionmanager/base.tar.gz
-
-Is this correct? [Y/n]]]>
-         </screen>
-       </listitem>
-
-       <listitem>
-         <para>Configure and start apache service</para>
-         <screen><![CDATA[
-# chkconfig httpd on
-# service httpd restart]]>
-         </screen>
-       </listitem>
-     </itemizedlist>
-     
-     <xi:include href="&parent;" xpointer="sm-config" />
-   </section>
-  </section>
-
-  <section id="subsystem">
-    <xi:include href="&parent;" xpointer="subsystem_title" />
-
-    <itemizedlist>
-      <listitem>
-        <xi:include href="&parent;" xpointer="subsystem_package" />
-        <screen><![CDATA[
-# yum install ulteo-ovd-subsystem]]>
-        </screen>
-      </listitem>
-
-      <listitem>
-        <para>Launch the configuration tool</para>
-        <screen><![CDATA[
-# ovd-subsystem-config 
-Session Manager address : sm.ulteo.com
-Chroot destination [/opt/ulteo]:]]>
-        </screen>
-        <xi:include href="&parent;" xpointer="subsystem-sm-warning" />
-      </listitem>
-
-       <listitem>
-         <para>Configure and start apache service</para>
-         <screen><![CDATA[
-# chkconfig ulteo-ovd-subsystem on
-# service ulteo-ovd-subsystem restart]]>
-         </screen>
-       </listitem>
-    </itemizedlist>
-
-    <xi:include href="&parent;" xpointer="subsystem_last_para" />
-    <xi:include href="&parent;" xpointer="subsystem_last_screenshot" />
-    <xi:include href="&parent;" xpointer="aps_redirection_name" />
-  </section>
-
-  <section id="wc">
-    <xi:include href="&parent;" xpointer="wc_title" />
-    <xi:include href="&parent;" xpointer="wc_para_1" />
-    <xi:include href="&parent;" xpointer="wc_para_2" />
-
-    <itemizedlist>
-      <listitem>
-        <xi:include href="&parent;" xpointer="wc_package" />
-        <screen>
-	  <![CDATA[
-# yum install ulteo-ovd-web-client ulteo-ovd-web-client-ajaxplorer]]>
-        </screen>
-      </listitem>
-    </itemizedlist>
-
-    <xi:include href="&parent;" xpointer="wc_last_1" />
-    <xi:include href="&parent;" xpointer="wc_last_2" />
-  </section>
+  <xi:include href="&parent;" xpointer="sm" />
+  <xi:include href="&parent;" xpointer="subsystem" />
+  <xi:include href="&parent;" xpointer="wc" />
 </article>

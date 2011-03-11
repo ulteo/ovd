@@ -3,27 +3,19 @@
 	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
 	  [<!ENTITY parent "Support_Ubuntu_Lucid.xml">]>
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
-  <articleinfo>
-    <title>Ulteo Open Virtual Desktop</title>
-    <subtitle>Debian Squeeze support</subtitle>
-    <graphic fileref="img/ovd.png" align="center"/>
+  <transform_var name="distrib_pretty_name" value="Debian Squeeze (6.0)"/>
+  <transform_var name="distrib_name" value="debian" />
+  <transform_var name="distrib_version" value="squeeze"/>
+  <transform_var name="distrib_dvd_url" value="http://www.debian.org/CD/"/>
 
-    <copyright>
-      <year>@YEAR@</year>
-      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
-    </copyright>
-  </articleinfo>
-
-  <para>
-    The purpose of this document is to describe how the different
-    pieces of Ulteo OVD are supported on Debian Squeeze system.
-  </para>
+  <xi:include href="&parent;" xpointer="header" />
+  <xi:include href="&parent;" xpointer="first_para" />
 
   <section id="prerequisites">
-    <title>Prerequisites: Debian Squeeze</title>
+    <xi:include href="&parent;" xpointer="prerequisites_title" />
 
     <para>
-      Debian Squeeze is the latest stable version of Debian. It can
+      @distrib_pretty_name@ is the latest stable version of Debian. It can
       be downloaded <ulink url="http://www.debian.org/">here</ulink>.
     </para>
 
@@ -34,58 +26,7 @@
     <xi:include href="&parent;" xpointer="warning_name_examples" />
   </section>
 
-  <section id="repository">
-    <xi:include href="&parent;" xpointer="repository_title" />
-    <xi:include href="&parent;" xpointer="repository_para" />
-
-    <section id="repository_online">
-      <xi:include href="&parent;" xpointer="repository_online_title" />
-      <xi:include href="&parent;" xpointer="repository_online_para" />
-
-      <itemizedlist>
-        <listitem>
-          <xi:include href="&parent;" xpointer="repository_online_step1_para" />
-          <screen>
-	  <![CDATA[
-deb http://archive.ulteo.com/ovd/3.0/debian squeeze main]]>
-          </screen>
-        </listitem>
-      </itemizedlist>
-    </section>
-
-    <section id="repository_offline">
-      <xi:include href="&parent;" xpointer="repository_offline_title" />
-
-      <itemizedlist>
-        <listitem>
-          <para>
-            The offline repository is an archive named
-            <emphasis>ovd-3.0-debian-squeeze.tar.gz</emphasis>.
-          </para>
-          <xi:include href="&parent;" xpointer="repository_offline_step1_para" />
-        </listitem>
-
-        <listitem>
-          <xi:include href="&parent;" xpointer="repository_offline_step2_para" />
-          <screen>
-            <![CDATA[
-# tar xzf ovd-3.0-debian-squeeze.tar.gz]]>
-          </screen>
-        </listitem>
-
-        <listitem>
-          <xi:include href="&parent;" xpointer="repository_offline_step3_para" />
-          <screen>
-            <![CDATA[
-deb file:///root/ovd-3.0-debian-squeeze squeeze main]]>
-          </screen>
-        </listitem>
-      </itemizedlist>
-    </section>
-
-    <xi:include href="&parent;" xpointer="repository_common" />
-  </section>
-
+  <xi:include href="&parent;" xpointer="repository" />
 
   <xi:include href="&parent;" xpointer="sm" />
   <xi:include href="&parent;" xpointer="subsystem" />

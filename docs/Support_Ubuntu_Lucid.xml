@@ -2,9 +2,14 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
 	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
-  <articleinfo>
+  <transform_var name="distrib_pretty_name" value="Ubuntu 10.04 (Lucid Lynx)"/>
+  <transform_var name="distrib_name" value="ubuntu" />
+  <transform_var name="distrib_version" value="lucid"/>
+  <transform_var name="distrib_dvd_url" value="http://www.ubuntu.com/desktop/get-ubuntu/alternative-download#dvd"/>
+
+  <articleinfo id="header">
     <title>Ulteo Open Virtual Desktop</title>
-    <subtitle>Ubuntu 10.04 (Lucid Lynx) support</subtitle>
+    <subtitle>@distrib_pretty_name@ support</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
@@ -13,17 +18,16 @@
     </copyright>
   </articleinfo>
 
-  <para>
+  <para id="first_para">
     The purpose of this document is to describe how the different
-    pieces of Ulteo OVD are supported on Ubuntu 10.04 (Lucid Lynx)
-    system.
+    pieces of Ulteo OVD are supported on @distrib_pretty_name@ system.
   </para>
 
   <section id="prerequisites">
-    <title>Prerequisites: Ubuntu 10.04 (Lucid Lynx)</title>
+    <title id="prerequisites_title">Prerequisites: @distrib_pretty_name@</title>
 
     <para>
-      Ubuntu 10.04 (Lucid Lynx) is the latest LTS version of
+      @distrib_pretty_name@ is the latest LTS version of
       Ubuntu. There are several editions: desktop/server, 32/64
       bits. This documentation has been done for the server edition
       (32/64 bits) but it should also work with the desktop edition. The Ubuntu
@@ -68,10 +72,10 @@
     <title id="repository_title">Repository</title>
 
     <para id="repository_para">
-      Ubuntu is a Debian-based system which uses the same packaging
-      system and tools: apt-get. So you need to have an internet
-      connection on your Ubuntu system and add an Ulteo Debian
-      repository to your system.
+      @distrib_pretty_name@ is a Debian-based system which uses the
+      same packaging system and tools: apt-get. So you need to have an
+      internet connection on your @distrib_pretty_name@ system and add
+      an Ulteo Debian repository to your system.
     </para>
       
     <section id="repository_online">
@@ -92,7 +96,7 @@
           </para>
           <screen>
             <![CDATA[
-deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
+deb http://archive.ulteo.com/ovd/3.0/@distrib_name@ @distrib_version@ main]]>
           </screen>
         </listitem>
       </itemizedlist>
@@ -105,7 +109,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
        <listitem id="repository_offline_step0">
          <para id="repository_offline_step0_para">
            The OVD offline repositories are jointly used with the 
-           <ulink url="http://www.ubuntu.com/desktop/get-ubuntu/alternative-download#dvd">Ubuntu Lucid DVD</ulink>
+           <ulink url="@distrib_dvd_url@">@distrib_pretty_name@ DVD</ulink>
            . When the DVD is mount in the system, add the DVD repository:
           <screen>
             <![CDATA[
@@ -117,7 +121,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
        <listitem id="repository_offline_step1">
          <para>
            The offline repository is an archive named
-           <emphasis>ovd-3.0-ubuntu-lucid.tar.gz</emphasis>.
+           <emphasis>ovd-3.0-@distrib_name@-@distrib_version@.tar.gz</emphasis>.
          </para>
          <para id="repository_offline_step1_para">
            Get this archive from <ulink
@@ -133,7 +137,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
           </para>
           <screen>
             <![CDATA[
-# tar xzf ovd-3.0-ubuntu-lucid.tar.gz]]>
+# tar xzf ovd-3.0-@distrib_name@-@distrib_version@.tar.gz]]>
           </screen>
         </listitem>
 
@@ -145,7 +149,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
           </para>
           <screen>
             <![CDATA[
-deb file:///root/ovd-3.0-ubuntu-lucid lucid main]]>
+deb file:///root/ovd-3.0-@distrib_name@-@distrib_version@ @distrib_version@ main]]>
           </screen>
         </listitem>
      </itemizedlist>

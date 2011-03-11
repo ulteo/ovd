@@ -23,10 +23,32 @@ import getopt
 import os
 import sys
 import time
+from xml.dom import minidom
 
 
 def perform_transform(content):
-	content = content.replace("@YEAR@", time.strftime("%Y"))
+	transform_vars = {"YEAR": time.strftime("%Y")}
+
+	try:
+		document = minidom.parseString(content)
+	except Exception, err:
+		print err
+		sys.exit(1)
+	
+	rootNode = document.documentElement
+	nodes = rootNode.getElementsByTagName("transform_var")
+	for node in nodes:
+		if not node.hasAttribute("name") or not node.hasAttribute("value"):
+			print >> sys.stderr, "Invalid var"
+		else:
+			transform_vars[node.getAttribute("name")] = node.getAttribute("value")
+		
+		node.parentNode.removeChild(node)
+	
+	content = document.toxml()
+	
+	for (k, v) in transform_vars.items():
+		content = content.replace("@"+k+"@", v)
 	
 	return content
 

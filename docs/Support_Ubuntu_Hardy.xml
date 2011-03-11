@@ -3,33 +3,23 @@
 	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
 	  [<!ENTITY parent "Support_Ubuntu_Lucid.xml">]>
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
-  <articleinfo>
-    <title>Ulteo Open Virtual Desktop</title>
-    <subtitle>Ubuntu 08.04 (Hardy Heron) support</subtitle>
-    <graphic fileref="img/ovd.png" align="center"/>
+  <transform_var name="distrib_pretty_name" value="Ubuntu 08.04 (Hardy Heron)"/>
+  <transform_var name="distrib_name" value="ubuntu" />
+  <transform_var name="distrib_version" value="hardy"/>
+  <transform_var name="distrib_dvd_url" value="http://www.ubuntu.com/desktop/get-ubuntu/alternative-download#dvd"/>
 
-    <copyright>
-      <year>@YEAR@</year>
-      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
-    </copyright>
-  </articleinfo>
-
-  <para>
-    The purpose of this document is to describe how the different
-    pieces of Ulteo OVD are supported on Ubuntu 08.04 (Hardy Heron)
-    system.
-  </para>
+  <xi:include href="&parent;" xpointer="header" />
+  <xi:include href="&parent;" xpointer="first_para" />
 
   <section id="prerequisites">
-    <title>Prerequisites: Ubuntu 08.04 (Hardy Heron)</title>
+    <xi:include href="&parent;" xpointer="prerequisites_title" />
 
     <para>
-      Ubuntu 08.04 (Hardy Heron) was the LTS version of Ubuntu untill
-      2010. There are several edition: desktop/server, 32/64
-      bits. This documentation has been done for the server edition
-      (32/64 bits) but it should also work for desktop edition. Ubuntu
-      system can be
-      downloaded <ulink url="http://releases.ubuntu.com/08.04">here</ulink>.
+      @distrib_pretty_name@ was the LTS version of Ubuntu untill 2010. There are
+      several edition: desktop/server, 32/64 bits. This documentation
+      has been done for the server edition (32/64 bits) but it should
+      also work for desktop edition. Ubuntu system can be downloaded
+      <ulink url="http://releases.ubuntu.com/08.04">here</ulink>.
     </para>
 
     <important>
@@ -46,57 +36,7 @@
     <xi:include href="&parent;" xpointer="warning_name_examples" />
   </section>
 
-  <section id="repository">
-    <xi:include href="&parent;" xpointer="repository_title" />
-    <xi:include href="&parent;" xpointer="repository_para" />
-     
-    <section id="repository_online">
-      <xi:include href="&parent;" xpointer="repository_online_title" />
-      <xi:include href="&parent;" xpointer="repository_online_para" />
-
-      <itemizedlist>
-        <listitem>
-          <xi:include href="&parent;" xpointer="repository_online_step1_para" />
-          <screen>
-	  <![CDATA[
-deb http://archive.ulteo.com/ovd/3.0/ubuntu hardy main]]>
-          </screen>
-        </listitem>
-      </itemizedlist>
-    </section>
-
-    <section id="repository_offline">
-      <xi:include href="&parent;" xpointer="repository_offline_title" />
-
-      <itemizedlist>
-        <listitem>
-          <para>
-            The offline repository is an archive named
-            <emphasis>ovd-3.0-ubuntu-hardy.tar.gz</emphasis>.
-          </para>
-          <xi:include href="&parent;" xpointer="repository_offline_step1_para" />
-        </listitem>
-
-        <listitem>
-          <xi:include href="&parent;" xpointer="repository_offline_step2_para" />
-          <screen>
-            <![CDATA[
-# tar xzf ovd-3.0-ubuntu-hardy.tar.gz]]>
-          </screen>
-        </listitem>
-
-        <listitem>
-          <xi:include href="&parent;" xpointer="repository_offline_step3_para" />
-          <screen>
-            <![CDATA[
-deb file:///root/ovd-3.0-ubuntu-hardy hardy main]]>
-          </screen>
-        </listitem>
-      </itemizedlist>
-    </section>
-
-    <xi:include href="&parent;" xpointer="repository_common" />
-  </section>
+  <xi:include href="&parent;" xpointer="repository" />
 
   <xi:include href="&parent;" xpointer="sm" />
   <xi:include href="&parent;" xpointer="subsystem" />
