@@ -60,7 +60,7 @@ if [ -n "$SM" ]; then
             $CONFFILE
 else
     echo "You have not filled the Session Manager address field, the Web Client will not be linked to it"
-    sed -i '/SESSIONMANAGER_HOST/ s,^define,//define,' $CONFFILE
+    sed -i '/SESSIONMANAGER_HOST/ s,^define,// define,' $CONFFILE
 fi
 
 

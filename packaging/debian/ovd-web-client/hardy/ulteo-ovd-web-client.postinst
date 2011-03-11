@@ -13,7 +13,7 @@ then
         db_get ulteo-ovd-web-client/session_manager_ip && SM_IP=$RET
         sed -i "/SESSIONMANAGER_HOST/ s/, *'.*' *);/, '${SM_IP}');/" $CONFDIR/config.inc.php
     else
-        sed -i '/SESSIONMANAGER_HOST/ s,^define,//define,' $CONFDIR/config.inc.php
+        sed -i '/SESSIONMANAGER_HOST/ s,^define,// define,' $CONFDIR/config.inc.php
     fi
 fi
 
