@@ -30,6 +30,7 @@ import net.propero.rdp.compress.RdpCompressionException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 
+@SuppressWarnings("unused")
 public class Rdp {
 
     protected static Logger logger = Logger.getLogger(Rdp.class);

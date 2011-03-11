@@ -53,14 +53,18 @@ public abstract class RdesktopCanvas extends Canvas {
 
     private static final int ROP2_NXOR = 0x9;
 
+    @SuppressWarnings("unused")
     private static final int ROP2_OR = 0xe;
 
     private static final int MIX_TRANSPARENT = 0;
 
+    @SuppressWarnings("unused")
     private static final int MIX_OPAQUE = 1;
 
+    @SuppressWarnings("unused")
     private static final int TEXT2_VERTICAL = 0x04;
 
+    @SuppressWarnings("unused")
     private static final int TEXT2_IMPLICIT_X = 0x20;
 
     public KeyCode keys = null;

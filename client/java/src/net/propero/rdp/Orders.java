@@ -35,6 +35,7 @@ public class Orders {
     private static final int MODE_MASK = 0x0038;
     private static final int SQUARE = 0x0080;
     private static final int PERSIST = 0x0100;
+    @SuppressWarnings("unused")
     private static final int FLAG_51_UNKNOWN = 0x0800;
     private static final int MODE_SHIFT = 3;
     private static final int LONG_FORMAT = 0x80;
@@ -68,6 +69,7 @@ public class Orders {
     private static final int RDP_ORDER_FONTCACHE = 3;
     private static final int RDP_ORDER_RAW_BMPCACHE2 = 4;
     private static final int RDP_ORDER_BMPCACHE2 = 5;
+    @SuppressWarnings("unused")
     private static final int MIX_TRANSPARENT = 0;
     private static final int MIX_OPAQUE = 1;
     private static final int TEXT2_VERTICAL = 0x04;

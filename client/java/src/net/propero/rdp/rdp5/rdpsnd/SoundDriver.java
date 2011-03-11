@@ -61,13 +61,14 @@ public class SoundDriver {
 	private SoundChannel		soundChannel;
 	private static final int	BUFFER_SIZE	= 65536;
 	private SourceDataLine		oDevice;
-	private int				volume;
 	private WaveFormatEx		format;
 	private boolean			dspBusy;
 	private boolean 		soundDown;		
 	private byte[]			buffer, outBuffer;
 	private Thread			playThread = null;
 	
+	@SuppressWarnings("unused")
+	private int			volume;
 
 	public SoundDriver( SoundChannel sndChannel ) {
 		this.soundDown = false;
