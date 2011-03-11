@@ -106,7 +106,7 @@
           <screen>
             <![CDATA[
 deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main
-deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/private/ubuntu lucid main]]>
+deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/gold/ubuntu lucid main]]>
           </screen>
         </listitem>
       </itemizedlist>
@@ -121,7 +121,7 @@ deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/private/ubuntu lucid main]]>
          <para id="repository_offline_step2_para">
            The offline repository are two archives you can download from the Ulteo website 
            <ulink url="http://archive.ulteo.com/ovd/3.0/offline/ovd-3.0-ubuntu-lucid.tar.gz">here</ulink> and 
-           <ulink url="http://archive.ulteo.com/ovd/3.0/private/offline/ovd-3.0-private-ubuntu-lucid.tar.gz">there</ulink>, 
+           <ulink url="http://archive.ulteo.com/ovd/3.0/gold/offline/ovd-3.0-gold-ubuntu-lucid.tar.gz">there</ulink>, 
            or from the Ulteo OVD DVD and copy it in
            the <emphasis>/root</emphasis> of your machine.
          </para>
@@ -146,7 +146,7 @@ deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/private/ubuntu lucid main]]>
           <screen>
             <![CDATA[
 deb file:///root/ovd-3.0-ubuntu-lucid lucid main
-deb file:///root/ovd-3.0-private-ubuntu-lucid lucid main]]>
+deb file:///root/ovd-3.0-gold-ubuntu-lucid lucid main]]>
           </screen>
         </listitem>
      </itemizedlist>
