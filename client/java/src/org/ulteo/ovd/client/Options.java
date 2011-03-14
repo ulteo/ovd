@@ -38,24 +38,23 @@ import net.propero.rdp.RdpConnection;
 
 public class Options {
 
-	public static final int FLAG_PROFILE_INI = 0x00001000;
-	public static final int FLAG_PROFILE_REG = 0x00002000;
-
-	public static final int FLAG_USERNAME = 0x00000001;
-	public static final int FLAG_PASSWORD = 0x00000002;
-	public static final int FLAG_SERVER = 0x00000004;
-	public static final int FLAG_PORT = 0x00000600;
-	public static final int FLAG_KEYMAP = 0x00000008;
-	public static final int FLAG_LANGUAGE = 0x00000010;
-	public static final int FLAG_GEOMETRY = 0x00000020;
-	public static final int FLAG_SESSION_MODE = 0x00000040;
-	public static final int FLAG_NTLM = 0x00000080;
-	public static final int FLAG_SHOW_PROGRESS_BAR = 0x00000100;
-	public static final int FLAG_AUTO_INTEGRATION = 0x00000200;
-	public static final int FLAG_AUTO_START = 0x00000400;
-	public static final int FLAG_REMEMBER_ME = 0x00004000;
-	public static final int FLAG_GUI_LOCKED = 0x00008000;
-	public static final int FLAG_SHOW_BURGREPORTER = 0x00006000;
+	public static final int FLAG_PROFILE_INI       = 0x00000001;
+	public static final int FLAG_PROFILE_REG       = 0x00000002;
+	public static final int FLAG_USERNAME          = 0x00000004;
+	public static final int FLAG_PASSWORD          = 0x00000008;
+	public static final int FLAG_SERVER            = 0x00000010;
+	public static final int FLAG_PORT              = 0x00000020;
+	public static final int FLAG_KEYMAP            = 0x00000040;
+	public static final int FLAG_LANGUAGE          = 0x00000080;
+	public static final int FLAG_GEOMETRY          = 0x00000100;
+	public static final int FLAG_SESSION_MODE      = 0x00000200;
+	public static final int FLAG_NTLM              = 0x00000400;
+	public static final int FLAG_SHOW_PROGRESS_BAR = 0x00000800;
+	public static final int FLAG_AUTO_INTEGRATION  = 0x00001000;
+	public static final int FLAG_AUTO_START        = 0x00002000;
+	public static final int FLAG_REMEMBER_ME       = 0x00004000;
+	public static final int FLAG_GUI_LOCKED        = 0x00008000;
+	public static final int FLAG_SHOW_BURGREPORTER = 0x00010000;
 	
 	public int mask = 0x00000000;
 	
