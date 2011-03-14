@@ -59,8 +59,7 @@ gpgkey=http://archive.ulteo.com/ovd/keyring]]>
             <emphasis>/etc/yum.repos.d/ovd.repo</emphasis>
             with:
           </para>
-          <screen>
-            <![CDATA[
+          <screen><![CDATA[
 [ovd-3.0]
 name=Ulteo OVD 3.0 offline
 baseurl=file:///root/ovd-3.0-rhel-5.5/
