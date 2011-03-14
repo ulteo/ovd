@@ -99,7 +99,7 @@ def main():
 		print content.encode("UTF-8")
 	else:
 		f = file(outfile, "w")
-		f.write(content.encode("UTF-8")
+		f.write(content.encode("UTF-8"))
 		f.close()
 
 
