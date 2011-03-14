@@ -66,6 +66,8 @@ public abstract class Input {
 
 	protected static final int KBD_ALT_KEY = 0x12;
 	protected static final int KBD_ALTGR_KEY = SCANCODE_EXTENDED | KBD_ALT_KEY;
+	protected static final int KBD_KEY_WINDOWS_LEFT = SCANCODE_EXTENDED | 0x5B; // Left Windows key
+	protected static final int KBD_KEY_WINDOWS_RIGHT = SCANCODE_EXTENDED | 0x5C; // Right Windows key
 	
 	protected static final int RDP_KEYPRESS = 0;
 	protected static final int RDP_KEYRELEASE = KBD_FLAG_DOWN | KBD_FLAG_UP;
@@ -667,6 +669,13 @@ public abstract class Input {
 				rdp.sendInput((int) time, RDP_INPUT_SCANCODE, RDP_KEYRELEASE,
 						0x1d, 0);
 			}
+			break;
+		case KeyEvent.VK_WINDOWS:
+			int scancode = KBD_KEY_WINDOWS_LEFT;
+			if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_RIGHT)
+				scancode = KBD_KEY_WINDOWS_RIGHT;
+
+			this.sendScancode(time, pressed ? RDP_KEYPRESS : RDP_KEYRELEASE, scancode);
 			break;
 
 		// Removed, as java on MacOS send the option key as VK_META
