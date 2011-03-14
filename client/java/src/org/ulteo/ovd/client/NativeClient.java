@@ -85,9 +85,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	private static final int RETURN_CODE_ERROR = 1;
 	private static final int RETURN_CODE_BAD_ARGUMENTS = 2;
 	
-	/**
-	 * @param args
-	 */
+
 	public static void main(String[] args) {
 		ClientInfos.showClientInfos();
 
