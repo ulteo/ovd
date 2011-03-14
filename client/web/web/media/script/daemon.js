@@ -61,6 +61,8 @@ var Daemon = Class.create({
 	progressbar_value: 0,
 	progress_bar_step: 20,
 
+	application_token: 0,
+
 	initialize: function(applet_version_, applet_main_class_, debug_) {
 		this.applet_version = applet_version_;
 		this.applet_main_class = applet_main_class_;
