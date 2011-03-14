@@ -39,7 +39,7 @@ public class Protocol {
 	
 	public static final String NAME_DESKTOP_ICONS = "desktop_icons";
 	public static final String NAME_USER_EXPERIENCE = "enhance_user_experience";
-	public static final String NAME_RDP_BPP = "rdp_bpp";
+	public static final String NAME_ATTR_RDP_BPP = "rdp_bpp";
 	
 	public static final String[] settingsNames = { 
 						NAME_DESKTOP_ICONS,
@@ -48,6 +48,7 @@ public class Protocol {
 						NAME_ATTR_MULTIMEDIA,
 						NAME_ATTR_PRINTERS,
 						NAME_ATTR_DRIVES,
+						NAME_ATTR_RDP_BPP,
 	};
 
 	public static boolean parseSessionSettings(Properties properties, String name, String value) {
@@ -75,7 +76,14 @@ public class Protocol {
 				Logger.error("Failed to parse value '"+value+"' (name: "+NAME_USER_EXPERIENCE+")");
 			}
 		}
-		
+		if (name.equalsIgnoreCase(NAME_ATTR_RDP_BPP)) {
+			try {
+				int val = Integer.parseInt(value);
+				properties.setRDPBpp(val);
+			} catch (NumberFormatException ex) {
+				Logger.error("Failed to parse value '"+value+"' (name: "+NAME_ATTR_RDP_BPP+")");
+			}
+		}
 		if (name.equalsIgnoreCase(NAME_ATTR_MULTIMEDIA)) {
 			try {
 				int val = Integer.parseInt(value);

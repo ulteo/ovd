@@ -4,6 +4,7 @@
  * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -175,9 +176,7 @@ public class OvdClientDesktop extends OvdClient {
 		rc.setServer(server.getHost());
 		rc.setCredentials(server.getLogin(), server.getPassword());
 		
-		int bpp = RdpConnectionOvd.DEFAULT_BPP;
-		if (this.smComm.getResponseProperties().isDesktopEffectsEnabled())
-			bpp = 32;
+		int bpp = this.smComm.getResponseProperties().getRDPBpp();
 		
 		// Ensure that width is multiple of 4
 		// Prevent artifact on screen with a with resolution

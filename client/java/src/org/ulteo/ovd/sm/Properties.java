@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@
  */
 
 package org.ulteo.ovd.sm;
+
+import org.ulteo.rdp.RdpConnectionOvd;
 
 public class Properties {
 	public static final int MODE_ANY = 0;
@@ -43,6 +45,8 @@ public class Properties {
 
 	private boolean desktop_icons = false;
 	private boolean desktop_effects = false;
+	
+	private int rdp_bpp = RdpConnectionOvd.DEFAULT_BPP;
 	
 	public Properties(int mode) {
 		this.mode = mode;
@@ -134,5 +138,13 @@ public class Properties {
 
 	public void setDesktopEffects(boolean desktop_effects_) {
 		this.desktop_effects = desktop_effects_;
+	}
+	
+	public int getRDPBpp() {
+		return this.rdp_bpp;
+	}
+
+	public void setRDPBpp(int rdp_bpp_) {
+		this.rdp_bpp = rdp_bpp_;
 	}
 }
