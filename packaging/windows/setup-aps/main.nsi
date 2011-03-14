@@ -117,6 +117,9 @@
 ;Include User Functions
   !include User.nsh
 
+;Include Visual C++ redistribuable deployment Functions
+  !include "VCredist.nsh"
+
 ## First Dialog
 Function InputBoxPageShow
   Var /GLOBAL sm_address
@@ -261,7 +264,7 @@ Section "post" PostCmd
 
   Call .WindowsInstall
 
-  nsExec::ExecToStack  '"msiexec" /i "$INSTDIR\vcredist\vc_red.msi"'
+  !insertmacro VCRedistInstall
   
   Var /GLOBAL printerDir
   ClearErrors
