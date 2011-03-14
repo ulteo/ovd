@@ -1,6 +1,6 @@
 EXTRA_DIST = sm-config.in sm-config.8.in
 
-bin_SCRIPTS = sm-config
+sbin_SCRIPTS = sm-config
 man_MANS = sm-config.8
 
 sm-config:
@@ -15,6 +15,6 @@ sm-config.8:
 		< $(srcdir)/sm-config.8.in > $@
 
 clean-local:
-	rm -f $(bin_SCRIPTS) $(man_MANS)
+	rm -f $(sbin_SCRIPTS) $(man_MANS)
 
 .PHONY: sm-config.8 sm-config
