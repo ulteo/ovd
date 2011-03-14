@@ -82,7 +82,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	public static final String productName = "Ulteo OVD Client";
 
 	private static final int RETURN_CODE_SUCCESS = 0;
-	@SuppressWarnings("unused")
 	private static final int RETURN_CODE_ERROR = 1;
 	private static final int RETURN_CODE_BAD_ARGUMENTS = 2;
 	
@@ -97,7 +96,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				LibraryLoader.LoadLibrary(LibraryLoader.LIB_WINDOW_PATH_NAME);
 			} catch (FileNotFoundException ex) {
 				System.err.println(ex.getMessage());
-				System.exit(2);
+				System.exit(RETURN_CODE_ERROR);
 			}
 		}
 		
@@ -787,14 +786,14 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				JOptionPane.showMessageDialog(null, I18n._("You have been disconnected"), I18n._("Your session has ended"), JOptionPane.INFORMATION_MESSAGE);
 			else {
 				System.err.println("You have been disconnected");
-				System.exit(0);
+				System.exit(RETURN_CODE_SUCCESS);
 			}
 		}
 		else {
 			this.disableDisconnectingMode();
 			
 			if (this.opts.autostart)
-				System.exit(0);
+				System.exit(RETURN_CODE_SUCCESS);
 		}
 	}
 	
