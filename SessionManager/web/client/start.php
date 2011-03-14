@@ -724,9 +724,6 @@ $dom = new DomDocument('1.0', 'utf-8');
 $session_node = $dom->createElement('session');
 $session_node->setAttribute('id', $session->id);
 $session_node->setAttribute('mode', $session->mode);
-$session_node->setAttribute('multimedia', $multimedia);
-$session_node->setAttribute('redirect_client_drives', $redirect_client_drives);
-$session_node->setAttribute('redirect_client_printers', $redirect_client_printers);
 if ($timeout > 0)
 	$session_node->setAttribute('duration', $timeout);
 $settings_node = $dom->createElement('settings');

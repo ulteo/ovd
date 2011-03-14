@@ -2,7 +2,7 @@
  * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,10 +47,6 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 	private String password = null;
 	private String keymap = null;
 	private String token = null;
-	private boolean multimedia_mode = false;
-	private boolean enhance_user_experience = false;
-	private boolean map_local_printers = false;
-	private int mount_local_drives = Properties.REDIRECT_DRIVES_NO;
 	
 	private OvdClientDesktopApplet ovd = null;
 	
@@ -92,24 +88,19 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 			System.err.println(this.getClass().toString()+" Unable to iniatialize logger instance");
 		}
 
-		if (! readParameters()) {
+		Properties properties = new Properties(Properties.MODE_DESKTOP);
+		
+		if (! readParameters(properties)) {
 			System.err.println(this.getClass().toString() +"  usage error");
 			this.stop();
 			return;
 		}
 
-		Properties properties = new Properties(Properties.MODE_DESKTOP);
-
-		properties.setMultimedia(this.multimedia_mode);
-		properties.setDesktopEffects(this.enhance_user_experience);
-		properties.setPrinters(this.map_local_printers);
-		if (this.map_local_printers){
+		if (properties.isPrinters()){
 			OVDStandalonePrinterThread appletPrinterThread = new OVDStandalonePrinterThread();
 			OVDPrinter.setPrinterThread(appletPrinterThread);
 			this.focusManager = new AppletFocusManager(appletPrinterThread);
 		}
-		
-		properties.setDrives(this.mount_local_drives);
 
 		ServerAccess aps = new ServerAccess(this.server, this.port, this.username, this.password);
 		if (this.token != null) {
@@ -203,7 +194,7 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 	}
 
 
-	public boolean readParameters() {
+	public boolean readParameters(Properties properties) {
 		try {
 			this.server = this.getParameterNonEmpty("server");
 			this.username = this.getParameterNonEmpty("username");
@@ -222,29 +213,10 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 		catch(Exception e) {
 			return false;
 		}
-		String buf = this.getParameter("multimedia");
-		if (buf != null)
-			this.multimedia_mode = buf.equalsIgnoreCase("true");
-
-		buf = this.getParameter("enhance_user_experience");
-		if (buf != null)
-			this.enhance_user_experience = buf.equalsIgnoreCase("true");
 		
-		buf = this.getParameter("redirect_client_printers");
-		if (buf != null)
-			this.map_local_printers = buf.equalsIgnoreCase("true");
-
-		buf = this.getParameter("redirect_client_drives");
-		if (buf != null) {
-			if (buf.equalsIgnoreCase("full"))
-				this.mount_local_drives = Properties.REDIRECT_DRIVES_FULL;
-			else if (buf.equalsIgnoreCase("partial"))
-				this.mount_local_drives = Properties.REDIRECT_DRIVES_PARTIAL;
-			else
-				this.mount_local_drives = Properties.REDIRECT_DRIVES_NO;
-		}
+		OptionParser.readParameters(this, properties);
 		
-		buf = this.getParameter("fullscreen");
+		String buf = this.getParameter("fullscreen");
 		if (buf != null)
 			this.fullscreenMode = true;
 		

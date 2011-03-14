@@ -3,7 +3,7 @@
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
- * Author Julien LANGLOIS <julien@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
  * Author David LECHEVALIER <david@ulteo.com> 2010 
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  *
@@ -66,8 +66,6 @@ import org.xml.sax.InputSource;
 public class SessionManagerCommunication implements HostnameVerifier, X509TrustManager {
 	public static final String SESSION_MODE_REMOTEAPPS = "applications";
 	public static final String SESSION_MODE_DESKTOP = "desktop";
-	
-	public static final String SESSION_MODE_PERSISTENT = "persistent";
 
 	private static final String WEBSERVICE_ICON = "icon.php";
 	private static final String WEBSERVICE_MIMETYPE_ICON = "mimetype-icon.php";
@@ -88,9 +86,6 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 	public static final String FIELD_NAME = "name";
 	public static final String FIELD_VALUE = "value";
-
-	public static final String NAME_DESKTOP_ICONS = "desktop_icons";
-	public static final String NAME_USER_EXPERIENCE = "enhance_user_experience";
 
 	private static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
 	private static final String CONTENT_TYPE_XML = "text/xml";
@@ -583,27 +578,6 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 			Properties response = new Properties(mode);
 
-			if (rootNode.hasAttribute("multimedia")) {
-				if (rootNode.getAttribute("multimedia").equals("1"))
-					response.setMultimedia(true);
-				else 
-					response.setMultimedia(false);
-			}
-			if (rootNode.hasAttribute("redirect_client_printers")) {
-				if (rootNode.getAttribute("redirect_client_printers").equals("1"))
-					response.setPrinters(true);
-				else
-					response.setPrinters(false);
-			}
-			if (rootNode.hasAttribute("redirect_client_drives")) {
-				if (rootNode.getAttribute("redirect_client_drives").equalsIgnoreCase("full"))
-					response.setDrives(Properties.REDIRECT_DRIVES_FULL);
-				else if (rootNode.getAttribute("redirect_client_drives").equalsIgnoreCase("partial"))
-					response.setDrives(Properties.REDIRECT_DRIVES_PARTIAL);
-				else
-					response.setDrives(Properties.REDIRECT_DRIVES_NO);
-			}
-
 			if (rootNode.hasAttribute("mode_gateway")) {
 				if (rootNode.getAttribute("mode_gateway").equals("on"))
 					mode_gateway = true;
@@ -620,36 +594,14 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 				settingsNodeList = settingsNode.getElementsByTagName(NODE_SETTING);
 				for (int i = 0; i < settingsNodeList.getLength(); i++) {
 					Element setting = (Element) settingsNodeList.item(i);
-
-					String name = setting.getAttribute(FIELD_NAME);
-					if (name == null)
-						continue;
-					String value = setting.getAttribute(FIELD_VALUE);
-
-					if (name.equalsIgnoreCase(NAME_DESKTOP_ICONS)) {
-						try {
-							int val = Integer.parseInt(value);
-							response.setDesktopIcons(val > 0);
-						} catch (NumberFormatException ex) {
-							Logger.error("Failed to parse value '"+value+"' (name: "+NAME_DESKTOP_ICONS+")");
-						}
+					
+					try {
+						String name = setting.getAttribute(FIELD_NAME);
+						String value = setting.getAttribute(FIELD_VALUE);
+						
+						Protocol.parseSessionSettings(response, name, value);
 					}
-					if (name.equalsIgnoreCase(SESSION_MODE_PERSISTENT)) {
-						try {
-							int val = Integer.parseInt(value);
-							response.setPersistent(val > 0);
-						} catch (NumberFormatException ex) {
-							Logger.error("Failed to parse value '"+value+"' (name: "+SESSION_MODE_PERSISTENT+")");
-						}
-					}
-					if (name.equalsIgnoreCase(NAME_USER_EXPERIENCE)) {
-						try {
-							int val = Integer.parseInt(value);
-							response.setDesktopEffects(val > 0);
-						} catch (NumberFormatException ex) {
-							Logger.error("Failed to parse value '"+value+"' (name: "+NAME_USER_EXPERIENCE+")");
-						}
-					}
+					catch(org.w3c.dom.DOMException err) {}
 				}
 			}
 			
