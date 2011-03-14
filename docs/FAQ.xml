@@ -85,7 +85,7 @@
       <programlisting><![CDATA[
       $list_languages = array(
       'en_GB.UTF-8'	=>	'English',
-      'fr_FR.UTF-8'	=>	'Français'
+      'fr_FR.UTF-8'	=>	'French'
       );
       $desktop_locale = 'en_GB.UTF-8';]]>
       </programlisting>

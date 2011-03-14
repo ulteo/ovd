@@ -20,6 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import getopt
+import locale
 import os
 import sys
 import time
@@ -96,10 +97,10 @@ def main():
         content = perform_transform(content)
 	
 	if outfile is None:
-		print content
+		print content.encode(locale.getpreferredencoding())
 	else:
 		f = file(outfile, "w")
-		f.write(content)
+		f.write(content.encode(locale.getpreferredencoding()))
 		f.close()
 
 
