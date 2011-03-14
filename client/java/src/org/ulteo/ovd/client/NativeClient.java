@@ -75,9 +75,6 @@ import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.Callback {
 
-	public static final int FLAG_FILE_OPTS = 0x00001000;
-	public static final int FLAG_REGISTRY_OPTS = 0x00002000;
-
 	public static final String productName = "Ulteo OVD Client";
 
 	private static final int RETURN_CODE_SUCCESS = 0;
@@ -148,7 +145,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		while ((c = opt.getopt()) != -1) {
 			switch (c) {
 				case (nbOptions + 1): //--reg
-					opts.mask |= NativeClient.FLAG_REGISTRY_OPTS;
+					opts.mask |= Options.FLAG_PROFILE_REG;
 					break;
 				case 0: //--auto-start
 					opts.autostart = true;
@@ -183,7 +180,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 					break;
 				case 'c':
 					opts.profile = new String(opt.getOptarg());
-					opts.mask |= NativeClient.FLAG_FILE_OPTS;
+					opts.mask |= Options.FLAG_PROFILE_INI;
 					break;
 				case 'p':
 					opts.password = new String(opt.getOptarg());
@@ -277,16 +274,16 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			}
 		}
 
-		if ((opts.mask & NativeClient.FLAG_FILE_OPTS) != 0 && (opts.mask & NativeClient.FLAG_REGISTRY_OPTS) != 0) {
+		if ((opts.mask & Options.FLAG_PROFILE_INI) != 0 && (opts.mask & Options.FLAG_PROFILE_REG) != 0) {
 			org.ulteo.Logger.error("You cannot use --reg with -c");
 			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 
-		if ((opts.mask & NativeClient.FLAG_FILE_OPTS) != 0) {
+		if ((opts.mask & Options.FLAG_PROFILE_INI) != 0) {
 			if (! opts.getIniProfile(opts.profile))
 				org.ulteo.Logger.warn("The configuration file \""+opts.profile+"\" does not exist.");
 		}
-		else if ((opts.mask & NativeClient.FLAG_REGISTRY_OPTS) != 0) {
+		else if ((opts.mask & Options.FLAG_PROFILE_REG) != 0) {
 			if (! opts.getRegistryProfile())
 				org.ulteo.Logger.warn("No available configuration from registry");
 		}
@@ -845,14 +842,14 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	private void saveProfile() {
 		ProfileProperties properties = new ProfileProperties(this.opts.username, this.opts.host, this.opts.port, this.opts.sessionMode, this.opts.autopublish, this.opts.nltm, this.opts.geometry, this.opts.lang, this.opts.keymap);
 
-		if ((this.opts.mask & NativeClient.FLAG_REGISTRY_OPTS) != 0) {
+		if ((this.opts.mask & Options.FLAG_PROFILE_REG) != 0) {
 			ProfileRegistry.saveProfile(properties);
 			return;
 		}
 
 		ProfileIni ini = new ProfileIni();
 
-		if ((this.opts.mask & NativeClient.FLAG_FILE_OPTS) != 0) {
+		if ((this.opts.mask & Options.FLAG_PROFILE_INI) != 0) {
 
 			String path = null;
 			String profile = this.opts.profile;

@@ -38,6 +38,9 @@ import net.propero.rdp.RdpConnection;
 
 public class Options {
 
+	public static final int FLAG_PROFILE_INI = 0x00001000;
+	public static final int FLAG_PROFILE_REG = 0x00002000;
+
 	public static final int FLAG_USERNAME = 0x00000001;
 	public static final int FLAG_PASSWORD = 0x00000002;
 	public static final int FLAG_SERVER = 0x00000004;
