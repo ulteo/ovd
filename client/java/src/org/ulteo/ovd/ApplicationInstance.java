@@ -1,6 +1,7 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
@@ -129,6 +130,7 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 			String ulteoID = SystemWindows.getKnownDrivesUUIDFromPath(this.arg);
 			if (ulteoID != null) {
 				String relativePath = this.arg.substring(3);
+				relativePath = relativePath.replace(File.separator, "/");
 				ovdApp.addOvdAppListener(this);
 				ovdApp.sendStartApp(this.token, this.app.getId(), OvdAppChannel.DIR_TYPE_KNOWN_DRIVE, ulteoID, relativePath);
 				this.state = STARTING;
