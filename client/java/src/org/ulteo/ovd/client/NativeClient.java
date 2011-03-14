@@ -75,7 +75,6 @@ import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.Callback {
 
-	public static final int FLAG_CMDLINE_OPTS = 0x00000800;
 	public static final int FLAG_FILE_OPTS = 0x00001000;
 	public static final int FLAG_REGISTRY_OPTS = 0x00002000;
 
@@ -124,7 +123,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		//Cleaning up all useless OVD data
 		SystemAbstract.cleanAll();
 
-		Options opts = new Options(NativeClient.FLAG_CMDLINE_OPTS);
+		Options opts = new Options();
 
 		final int nbOptions = 4;
 		List<LongOpt> systemDependantOptions = new ArrayList<LongOpt>();

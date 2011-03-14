@@ -74,8 +74,7 @@ public class Options {
 	public boolean isBugReporterVisible = true;
 
 	
-	public Options(int optionMask) {
-		this.mask = optionMask;
+	public Options() {
 	}
 
 
