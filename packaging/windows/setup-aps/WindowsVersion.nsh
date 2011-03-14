@@ -31,6 +31,21 @@
 !include String.nsh
 !include VersionCompare.nsh
 
+!macro setRegViewFromArch
+   ; Set the registry view.
+   ; On x64 systems, the registry view is in HKLM\SOFTWARE\WOW64 for x86 programs
+   ClearErrors
+   ReadEnvStr $0 "PROGRAMW6432"
+   IfErrors x86 amd64
+
+   x86:
+      SetRegView 32
+      goto end
+   amd64:
+      SetRegView 64
+   
+   end:
+!macroend
 
 Function .WindowsInstall
    Var /GLOBAL WinVersionNum
