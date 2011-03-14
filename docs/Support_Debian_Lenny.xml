@@ -23,9 +23,19 @@
     <title>Prerequisites: Debian Lenny</title>
 
     <para>
-      Debian Lenny is the latest stable version of Debian. It can be
-      downloaded <ulink url="http://www.debian.org/">here</ulink>.
+      Debian Lenny is the old stable version of Debian since the
+      release of Squeeze in february 2011. It can be downloaded <ulink
+      url="http://www.debian.org/">here</ulink>.
     </para>
+
+    <important>
+      <para>
+        The new version is Debian 6.0 Squeeze. If you don't really
+        need to use Debian 5.0 Lenny version, it's higly recommanded
+        to use the latest stable version: Debian 6.0 Squeeze and read
+        the Debian 6.0 Squeeze documentation.
+    </para>
+    </important>
 
     <xi:include href="&parent;" xpointer="prerequisites_root" />
 
