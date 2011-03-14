@@ -131,8 +131,7 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 			return;	
 		System.out.println(this.getClass().toString() +" start");
 
-		if (! this.ovd.getDesktopSize().equals(this.getSize()))
-			this.ovd.setDesktopSize(this.getSize());
+		this.ovd.adjustDesktopSize();
 
 		this.ovd.sessionReady();
 		

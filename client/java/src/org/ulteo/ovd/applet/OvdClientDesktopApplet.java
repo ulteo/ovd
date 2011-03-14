@@ -69,22 +69,26 @@ public class OvdClientDesktopApplet extends OvdClient {
 		this.createRDPConnections();
 	}
 
-	public Dimension getDesktopSize() {
-		if (this.connections.isEmpty())
-			return null;
-
-		return this.connections.get(0).getGraphics();
-	}
-
-	public void setDesktopSize(Dimension desktopSize) {
-		if (this.connections.isEmpty())
+	public void adjustDesktopSize() {
+		if (this.connections == null || this.connections.isEmpty())
 			return;
 
-		RdpConnectionOvd co = this.connections.get(0);
-		if (co.getState() != RdpConnectionOvd.STATE_DISCONNECTED)
+		if (this.properties == null)
 			return;
 
-		co.setGraphic(desktopSize.width, desktopSize.height);
+		RdpConnectionOvd rc = this.connections.get(0);
+
+		// Prevent greometry modification while the connection is active
+		if (rc.getState() != RdpConnectionOvd.STATE_DISCONNECTED)
+			return;
+
+		int bpp = this.properties.getRDPBpp();
+
+		// Ensure that width is multiple of 4
+		// Prevent artifact on screen with a with resolution
+		// not divisible by 4
+		Dimension screenSize = (this.isFullscreen) ? Toolkit.getDefaultToolkit().getScreenSize() : this.applet.getSize();
+		rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, bpp);
 	}
 
 	@Override
@@ -141,14 +145,6 @@ public class OvdClientDesktopApplet extends OvdClient {
 		rc.setServer(this.server.getHost());
 		rc.setCredentials(this.server.getLogin(), this.server.getPassword());
 		
-		int bpp = this.properties.getRDPBpp();
-		
-		// Ensure that width is multiple of 4
-		// Prevent artifact on screen with a with resolution
-		// not divisible by 4
-		Dimension screenSize = (this.isFullscreen) ? Toolkit.getDefaultToolkit().getScreenSize() : this.applet.getSize();
-		rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, bpp);
-
 		rc.setAllDesktopEffectsEnabled(this.properties.isDesktopEffectsEnabled());
 
 		if (this.keymap != null)
