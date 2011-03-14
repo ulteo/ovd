@@ -1,27 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-                 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
-                 [<!ENTITY parent "Support_Debian_Squeeze.xml">]> 
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
+	  [<!ENTITY parent "Support_Debian_Squeeze.xml">]>
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
-  <articleinfo>
-    <title>Ulteo Open Virtual Desktop</title>
-    <subtitle>SUSE Linux Enterprise Server 11 SP1 support</subtitle>
-    <graphic fileref="img/ovd.png" align="center"/>
+  <transform_var name="distrib_pretty_name" value="SUSE Linux Enterprise Server (SLES) 11 SP1"/>
+  <transform_var name="distrib_name" value="sles" />
+  <transform_var name="distrib_version" value="11_sp1"/>
+  <transform_var name="rpm_install_cmd" value="zypper"/>
+  <transform_var name="rpm_mysql_packages" value="mysql"/>
+  <transform_var name="mysql_service" value="mysql"/>
+  <transform_var name="apache_service" value="apache2"/>
 
-    <copyright>
-      <year>@YEAR@</year>
-      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
-    </copyright>
-  </articleinfo>
-
-  <para>
-    The purpose of this document is to describe how the different
-    pieces of Ulteo OVD are supported on SUSE Linux Enterprise Server
-    (SLES) 11 SP1 system.
-  </para>
+  <xi:include href="&parent;" xpointer="header" />
+  <xi:include href="&parent;" xpointer="first_para" />
 
   <section id="prerequisites">
-    <title>Prerequisites: SUSE Linux Enterprise Server (SLES) 11 SP1</title>
+    <xi:include href="&parent;" xpointer="prerequisites_title" />
 
     <xi:include href="&parent;" xpointer="prerequisites_root" />
 
@@ -37,7 +31,7 @@
       </para>
       <screen>
         <![CDATA[
-# zypper remove selinux-policy]]>
+# @rpm_install_cmd@ remove selinux-policy]]>
       </screen>
     </simplesect>
   </section>
@@ -46,9 +40,9 @@
     <xi:include href="&parent;" xpointer="repository_title" />
 
     <para id="repository_para">
-      SUSE systems use the RPM packaging system. So you need to have
-      an internet connexion on your SUSE system and add an Ulteo RPM
-      repository into your system.
+      @distrib_pretty_name@ use the RPM packaging system. So you need
+      to have an internet connexion on your @distrib_pretty_name@
+      system and add an Ulteo RPM repository into your system.
     </para>
 
     <section id="repository_online">
@@ -62,7 +56,7 @@
           </para>
           <screen>
 	  <![CDATA[
-# zypper ar http://archive.ulteo.com/ovd/3.0/sles/11_SP1 ovd]]>
+# zypper ar http://archive.ulteo.com/ovd/3.0/@distrib_name@/@distrib_version@ ovd]]>
           </screen>
         </listitem>
 
@@ -83,22 +77,8 @@
       <xi:include href="&parent;" xpointer="repository_offline_title" />
 
       <itemizedlist>
-        <listitem id="repository_offline_step1">
-         <para>
-           The offline repository is an archive named
-           <emphasis>ovd-3.0-sles-11_sp1.tar.gz</emphasis>.
-         </para>
-
-         <xi:include href="&parent;" xpointer="repository_offline_step1_para" />
-       </listitem>
-
-       <listitem id="repository_offline_step2">
-         <xi:include href="&parent;" xpointer="repository_offline_step2_para" />
-          <screen>
-            <![CDATA[
-# tar xzf ovd-3.0-sles-11_sp1.tar.gz]]>
-          </screen>
-        </listitem>
+        <xi:include href="&parent;" xpointer="repository_offline_step1" />
+        <xi:include href="&parent;" xpointer="repository_offline_step2" />
 
         <listitem id="repository_offline_step3">
           <para id="repository_offline_step3_para">
@@ -106,7 +86,7 @@
           </para>
           <screen>
             <![CDATA[
-# zypper ar file:///root/ovd-3.0-sles-11_sp1 ovd-offline]]>
+# zypper ar file:///root/ovd-3.0-@distrib_name@-@distrib_version@ ovd-offline]]>
           </screen>
         </listitem>
      </itemizedlist>
@@ -143,7 +123,7 @@
 	  </para>
           <screen>
             <![CDATA[
-# zypper install mysql]]>
+# @rpm_install_cmd@ install @rpm_mysql_packages@]]>
           </screen>
         </listitem>
 
@@ -153,7 +133,7 @@
 	  </para>
 	  <screen>
 	    <![CDATA[
-# chkconfig mysql on]]>
+# chkconfig @mysql_service@ on]]>
 	  </screen>
 	</listitem>
 
@@ -163,7 +143,7 @@
 	  </para>
 	  <screen>
 	    <![CDATA[
-# service mysql start]]>
+# service @mysql_service@ start]]>
 	  </screen>
 	</listitem>
 
@@ -188,7 +168,7 @@
        <listitem>
          <xi:include href="&parent;" xpointer="sm_install_package" />
          <screen><![CDATA[
-# zypper install ulteo-ovd-session-manager]]>
+# @rpm_install_cmd@ install ulteo-ovd-session-manager]]>
          </screen>
        </listitem>
 
@@ -214,8 +194,8 @@ Is this correct? [Y/n]]]>
        <listitem>
          <para>Configure and start apache service</para>
          <screen><![CDATA[
-# chkconfig apache2 on
-# service apache2 restart]]>
+# chkconfig @apache_service@ on
+# service @apache_service@ restart]]>
          </screen>
        </listitem>
      </itemizedlist>
@@ -231,7 +211,7 @@ Is this correct? [Y/n]]]>
       <listitem>
         <xi:include href="&parent;" xpointer="subsystem_package" />
         <screen><![CDATA[
-# zypper install ulteo-ovd-subsystem]]>
+# @rpm_install_cmd@ install ulteo-ovd-subsystem]]>
         </screen>
       </listitem>
 
@@ -246,7 +226,7 @@ Chroot destination [/opt/ulteo]:]]>
       </listitem>
 
        <listitem>
-         <para>Configure and start apache service</para>
+         <para>Configure and start the Ulteo service</para>
          <screen><![CDATA[
 # chkconfig ulteo-ovd-subsystem on
 # service ulteo-ovd-subsystem restart]]>
@@ -270,7 +250,7 @@ Chroot destination [/opt/ulteo]:]]>
         <xi:include href="Support_Ubuntu_Hardy.xml" xpointer="wc_package" />
         <screen>
 	  <![CDATA[
-# zypper install ulteo-ovd-web-client ulteo-ovd-web-client-ajaxplorer]]>
+# @rpm_install_cmd@ install ulteo-ovd-web-client ulteo-ovd-web-client-ajaxplorer]]>
         </screen>
       </listitem>
     </itemizedlist>

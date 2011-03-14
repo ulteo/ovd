@@ -1,29 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-                 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
-                 [<!ENTITY parent "Support_SLES_11.SP1.xml">]> 
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
+	  [<!ENTITY parent "Support_SLES_11.SP1.xml">]> 
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
-  <articleinfo>
-    <title>Ulteo Open Virtual Desktop</title>
-    <subtitle>openSUSE 11.2 support</subtitle>
-    <graphic fileref="img/ovd.png" align="center"/>
+  <transform_var name="distrib_pretty_name" value="openSUSE 11.2"/>
+  <transform_var name="distrib_name" value="opensuse" />
+  <transform_var name="distrib_version" value="11.2"/>
+  <transform_var name="rpm_install_cmd" value="zypper"/>
+  <transform_var name="rpm_mysql_packages" value="mysql"/>
+  <transform_var name="mysql_service" value="mysql"/>
+  <transform_var name="apache_service" value="apache2"/>
 
-    <copyright>
-      <year>@YEAR@</year>
-      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
-    </copyright>
-  </articleinfo>
-
-  <para>
-    The purpose of this document is to describe how the different
-    pieces of Ulteo OVD are supported on openSUSE 11.2 system.
-  </para>
+  <xi:include href="&parent;" xpointer="header" />
+  <xi:include href="&parent;" xpointer="first_para" />
 
   <section id="prerequisites">
-    <title>Prerequisites: openSUSE 11.2</title>
+    <xi:include href="&parent;" xpointer="prerequisites_title" />
 
     <para>
-      openSUSE 11.2 was the latest stable version until August
+      @distrib_pretty_name@ was the latest stable version until August
       2010. It can be
       downloaded <ulink url="http://software.opensuse.org">here</ulink>.
     </para>
@@ -35,63 +30,7 @@
     <xi:include href="&parent;" xpointer="seLinux" />
   </section>
 
-  <section id="repository">
-    <xi:include href="&parent;" xpointer="repository_title" />
-
-    <xi:include href="&parent;" xpointer="repository_para" />
-
-    <section id="repository_online">
-      <xi:include href="&parent;" xpointer="repository_online_title" />
-      <xi:include href="&parent;" xpointer="repository_online_para" />
-
-      <itemizedlist>
-        <listitem>
-          <xi:include href="&parent;" xpointer="repository_online_step1_para" />
-          <screen>
-            <![CDATA[
-zypper ar http://archive.ulteo.com/ovd/3.0/opensuse/11.2 ovd]]>
-          </screen>
-        </listitem>
-        
-        <xi:include href="&parent;" xpointer="repository_online_step2" />
-      </itemizedlist>
-    </section>
-
-    <section id="repository_offline">
-      <xi:include href="&parent;" xpointer="repository_offline_title" />
-
-     <itemizedlist>
-        <listitem id="repository_offline_step1">
-         <para>
-           The offline repository is an archive named
-           <emphasis>ovd-3.0-openuse-11.2.tar.gz</emphasis>.
-         </para>
-
-         <xi:include href="&parent;" xpointer="repository_offline_step1_para" />
-       </listitem>
-
-       <listitem id="repository_offline_step2">
-         <xi:include href="&parent;" xpointer="repository_offline_step2_para" />
-          <screen>
-            <![CDATA[
-# tar xzf ovd-3.0-openuse-11.2.tar.gz]]>
-          </screen>
-        </listitem>
-
-        <listitem id="repository_offline_step3">
-          <para id="repository_offline_step3_para">
-            Add the ovd repository:
-          </para>
-          <screen>
-            <![CDATA[
-# zypper ar file:///root/ovd-3.0-opensuse-11.2 ovd-offline]]>
-          </screen>
-        </listitem>
-     </itemizedlist>
-    </section>
-
-    <xi:include href="&parent;" xpointer="repository_common" />
-</section>
+  <xi:include href="&parent;" xpointer="repository" />
 
   <xi:include href="&parent;" xpointer="sm" />
   <xi:include href="&parent;" xpointer="subsystem" />
