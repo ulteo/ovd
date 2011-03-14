@@ -530,7 +530,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		try {
 			if (! this.opts.autostart) {
 				this.getFormValuesFromGui();
-				this.getBackupEntries();
+				if (this.authFrame.isRememberMeChecked())
+					this.saveProfile();
 				this.authFrame.hideWindow();
 			}
 		
@@ -673,16 +674,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			}
 			if (this.opts.password.equals("")) {
 				throw new IllegalArgumentException(I18n._("You must specify a password!"));
-			}
-		}
-	}
-	
-	public void getBackupEntries() {
-		if (this.authFrame.isRememberMeChecked()) {
-			try {
-				this.saveProfile();
-			} catch (IOException ex) {
-				System.err.println("Unable to save profile: "+ex.getMessage());
 			}
 		}
 	}
@@ -855,7 +846,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		}
 	}
 
-	private void saveProfile() throws IOException {
+	private void saveProfile() {
 		ProfileProperties properties = new ProfileProperties(this.opts.username, this.opts.host, this.opts.port, this.opts.sessionMode, this.opts.autopublish, this.opts.nltm, this.opts.geometry, this.opts.lang, this.opts.keymap);
 
 		if ((this.opts.mask & NativeClient.FLAG_REGISTRY_OPTS) != 0) {
@@ -881,6 +872,10 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		else {
 			ini.setProfile(null, null);// Default profile
 		}
-		ini.saveProfile(properties);
+		try {
+			ini.saveProfile(properties);
+		} catch (IOException e) {
+			System.err.println("Unable to save profile: " + e.getMessage());
+		}
 	}
 }
