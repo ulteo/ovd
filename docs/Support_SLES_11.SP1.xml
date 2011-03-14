@@ -86,7 +86,7 @@
         <listitem id="repository_offline_step1">
          <para>
            The offline repository is an archive named
-           <emphasis>sles-11_sp1.tar.gz</emphasis>.
+           <emphasis>ovd-3.0-sles-11_sp1.tar.gz</emphasis>.
          </para>
 
          <xi:include href="&parent;" xpointer="repository_offline_step1_para" />
@@ -96,7 +96,7 @@
          <xi:include href="&parent;" xpointer="repository_offline_step2_para" />
           <screen>
             <![CDATA[
-# tar xzf sles-11_sp1.tar.gz]]>
+# tar xzf ovd-3.0-sles-11_sp1.tar.gz]]>
           </screen>
         </listitem>
 
@@ -106,7 +106,7 @@
           </para>
           <screen>
             <![CDATA[
-# zypper ar file:///root/sles-11_sp1 ovd-offline]]>
+# zypper ar file:///root/ovd-3.0-sles-11_sp1 ovd-offline]]>
           </screen>
         </listitem>
      </itemizedlist>

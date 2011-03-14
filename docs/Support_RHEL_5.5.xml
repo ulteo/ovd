@@ -71,7 +71,7 @@ gpgkey=http://archive.ulteo.com/ovd/keyring]]>
         <listitem id="repository_offline_step1">
          <para>
            The offline repository is an archive named
-           <emphasis>rhel-5.5.tar.gz</emphasis>.
+           <emphasis>ovd-3.0-rhel-5.5.tar.gz</emphasis>.
          </para>
 
          <xi:include href="&parent;" xpointer="repository_offline_step1_para" />
@@ -81,7 +81,7 @@ gpgkey=http://archive.ulteo.com/ovd/keyring]]>
          <xi:include href="&parent;" xpointer="repository_offline_step2_para" />
           <screen>
             <![CDATA[
-# tar xzf rhel-5.5.tar.gz]]>
+# tar xzf ovd-3.0-rhel-5.5.tar.gz]]>
           </screen>
         </listitem>
         <listitem>
@@ -95,7 +95,7 @@ gpgkey=http://archive.ulteo.com/ovd/keyring]]>
             <![CDATA[
 [ovd-3.0]
 name=Ulteo OVD 3.0 offline
-baseurl=file:///root/rhel-5.5/
+baseurl=file:///root/ovd-3.0-rhel-5.5/
 enabled=1
 gpgcheck=0]]>
           </screen>
