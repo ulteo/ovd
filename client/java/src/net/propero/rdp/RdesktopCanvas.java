@@ -3,9 +3,11 @@
  * 
  * Revision: $Revision: 1.3 $
  * Author: $Author: suvarov $
+ * Author: David LECHEVALIER <david@ulteo.com> 2011
  * Date: $Date: 2007/03/15 23:16:33 $
  *
  * Copyright (c) 2005 Propero Limited
+ * Copyright (C) 2011 Ulteo SAS
  *
  * Purpose: Canvas component, handles drawing requests from server,
  *          and passes user input to Input class.
@@ -426,7 +428,7 @@ public abstract class RdesktopCanvas extends Canvas {
         color = new Bitmap(this.opt).convertTo24(color);
 
         // correction for 24-bit colour
-        if (Bpp == 3)
+        if (Bpp == 3 || Bpp == 4)
             color = ((color & 0xFF) << 16) | (color & 0xFF00)
                     | ((color & 0xFF0000) >> 16);
 
@@ -1089,7 +1091,7 @@ public abstract class RdesktopCanvas extends Canvas {
         int Bpp = this.opt.Bpp;
 
         // correction for 24-bit colour
-        if (Bpp == 3)
+        if (Bpp == 3 ||Bpp == 4)
             color = ((color & 0xFF) << 16) | (color & 0xFF00)
                     | ((color & 0xFF0000) >> 16);
 
@@ -1128,7 +1130,7 @@ public abstract class RdesktopCanvas extends Canvas {
         bgcolor = bmp.convertTo24(bgcolor);
 
         // correction for 24-bit colour
-        if (Bpp == 3) {
+        if (Bpp == 3 || Bpp == 4) {
             fgcolor = ((fgcolor & 0xFF) << 16) | (fgcolor & 0xFF00) | ((fgcolor & 0xFF0000) >> 16);
             bgcolor = ((bgcolor & 0xFF) << 16) | (bgcolor & 0xFF00) | ((bgcolor & 0xFF0000) >> 16);
         }

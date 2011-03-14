@@ -3,9 +3,11 @@
  * 
  * Revision: $Revision: 1.1.1.1 $
  * Author: $Author: suvarov $
+ * Author: David LECHEVALIER <david@ulteo.com> 2011
  * Date: $Date: 2007/03/08 00:26:25 $
  *
  * Copyright (c) 2005 Propero Limited
+ * Copyright (C) 2011 Ulteo SAS
  *
  * Purpose: Provide a class for storage of Bitmap images, along with
  *          static methods for decompression and conversion of bitmaps.
@@ -162,7 +164,7 @@ public class Bitmap {
 			else if (Bpp == 2)
 				out[i] = ((bitmap[i * Bpp + 1] & 0xFF) << 8)
 						| (bitmap[i * Bpp] & 0xFF);
-			else if (Bpp == 3)
+			else if (Bpp == 3 || Bpp == 4)
 				out[i] = ((bitmap[i * Bpp + 2] & 0xFF) << 16)
 						| ((bitmap[i * Bpp + 1] & 0xFF) << 8)
 						| (bitmap[i * Bpp] & 0xFF);
@@ -1095,6 +1097,10 @@ public class Bitmap {
      */
 	public int[] decompressInt(int width, int height, int size, RdpPacket_Localised data, int Bpp) throws RdesktopException {
 
+		if (Bpp == 4) {
+			return this.decompress32(data, width, height);
+		}
+		
 		byte[] compressed_pixel = new byte[size];
 		data.copyToByteArray(compressed_pixel, 0, data.getPosition(), size);
 		data.incrementPosition(size);
@@ -1906,5 +1912,78 @@ public class Bitmap {
 		bmpCount++;
 
 		return pixel;
+	}
+	
+	
+	/* decompress a colour plane */
+	int[] decompress32(RdpPacket_Localised in, int width, int height)
+	{
+		int[] out = new int[width*height];
+		int code = 0;
+		int collen = 0;
+		int color = 0;
+		int data_pos = 0;
+		int index_out = 0;
+		int indexh = 0;
+		int indexw = 0;
+		int last_line_index = 0;
+		int replen = 0;
+		int revcode = 0;
+		int x = 0;
+		int this_line_index = 0;
+		
+		code = in.get8();
+		if (code != 0x10) {
+			return null;
+		}
+
+		for (int increment = 24 ; increment >=0; increment -=8) {
+			data_pos = 0;
+			indexh = 0;
+			x = 0;
+			while (indexh < height)
+			{
+				index_out = (width * height) - ((indexh + 1) * width);
+	
+				color = 0;
+				this_line_index = index_out;
+				indexw = 0;
+				while (indexw < width) {
+					code = in.get8();
+					data_pos++;
+	
+					replen = code & 0xf;
+					collen = (code >> 4) & 0xf;
+					revcode = (replen << 4) | collen;
+					if ((revcode <= 47) && (revcode >= 16)) {
+						replen = revcode;
+						collen = 0;
+					}
+					while (collen > 0) {
+						x =  in.get8();
+						data_pos++;
+						if (last_line_index != 0) {
+							color = (x & 1) > 0 ? -((x >> 1)+ 1) : x >> 1;
+							x = (out[last_line_index + indexw]>>increment) + color;
+						}
+						out[index_out] |= (x & 0xFF)<<increment;
+						index_out ++;
+						indexw++;
+						collen--;
+					}
+					while (replen > 0) {
+						if (last_line_index != 0)
+							x = (out[last_line_index + indexw]>>increment) + color;
+						out[index_out]  |= (x & 0xFF)<<increment;
+						index_out ++;
+						indexw++;
+						replen--;
+					}
+				}
+				indexh++;
+				last_line_index = this_line_index;
+			}
+		}
+		return out;
 	}
 }
