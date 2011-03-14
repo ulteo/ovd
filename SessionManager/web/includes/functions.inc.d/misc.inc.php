@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009,2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -229,6 +229,13 @@ function appsgroup_cmp($o1, $o2) {
 		return 0;
 	
 	return strcmp($o1->name, $o2->name);
+}
+
+function server_cmp($o1, $o2) {
+	if (!is_object($o1) || !is_object($o2))
+		return 0;
+	
+	return ip2long($o1->getAttribute('fqdn')) > ip2long($o2->getAttribute('fqdn'));
 }
 
 /* caching helpers */
