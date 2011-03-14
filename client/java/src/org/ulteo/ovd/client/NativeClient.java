@@ -145,23 +145,23 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		while ((c = opt.getopt()) != -1) {
 			switch (c) {
 				case (nbOptions + 1): //--reg
-					opts.mask |= Options.FLAG_PROFILE_REG;
+					opts.setFlag(Options.FLAG_PROFILE_REG);
 					break;
 				case 0: //--auto-start
 					opts.autostart = true;
 
-					opts.mask |= Options.FLAG_AUTO_START;
+					opts.setFlag(Options.FLAG_AUTO_START);
 					break;
 				case 1: //--auto-integration
 					opts.autopublish = true;
 
-					opts.mask |= Options.FLAG_AUTO_INTEGRATION;
+					opts.setFlag(Options.FLAG_AUTO_INTEGRATION);
 					break;
 				case (nbOptions + 2): //--ntlm
 					opts.nltm = true;
 
-					opts.mask |= Options.FLAG_NTLM;
-					opts.mask |= Options.FLAG_USERNAME;
+					opts.setFlag(Options.FLAG_NTLM);
+					opts.setFlag(Options.FLAG_USERNAME);
 					break;
 				case 2: //--progress-bar [show|hide]
 					String arg = new String(opt.getOptarg());
@@ -172,7 +172,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 					else
 						NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 
-					opts.mask |= Options.FLAG_SHOW_PROGRESS_BAR;
+					opts.setFlag(Options.FLAG_SHOW_PROGRESS_BAR);
 					break;
 				case 3: //--help
 				case 'h':
@@ -180,17 +180,17 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 					break;
 				case 'c':
 					opts.profile = new String(opt.getOptarg());
-					opts.mask |= Options.FLAG_PROFILE_INI;
+					opts.setFlag(Options.FLAG_PROFILE_INI);
 					break;
 				case 'p':
 					opts.password = new String(opt.getOptarg());
 
-					opts.mask |= Options.FLAG_PASSWORD;
+					opts.setFlag(Options.FLAG_PASSWORD);
 					break;
 				case 'u':
 					opts.username = new String(opt.getOptarg());
 
-					opts.mask |= Options.FLAG_USERNAME;
+					opts.setFlag(Options.FLAG_USERNAME);
 					break;
 				case 'm':
 					String sessionMode = new String(opt.getOptarg());
@@ -201,7 +201,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 					if (sessionMode.equalsIgnoreCase("applications"))
 						opts.sessionMode = Properties.MODE_REMOTEAPPS;
 
-					opts.mask |= Options.FLAG_SESSION_MODE;
+					opts.setFlag(Options.FLAG_SESSION_MODE);
 					break;
 				case 'g':
 					String geometry = new String(opt.getOptarg());
@@ -219,17 +219,17 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 						NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 					}
 
-					opts.mask |= Options.FLAG_GEOMETRY;
+					opts.setFlag(Options.FLAG_GEOMETRY);
 					break;
 				case 'k':
 					opts.keymap = new String(opt.getOptarg());
 
-					opts.mask |= Options.FLAG_KEYMAP;
+					opts.setFlag(Options.FLAG_KEYMAP);
 					break;
 				case 'l':
 					opts.lang = new String(opt.getOptarg());
 
-					opts.mask |= Options.FLAG_LANGUAGE;
+					opts.setFlag(Options.FLAG_LANGUAGE);
 					break;
 				case 's':
 					// the server address can be only the host string, or in the 
@@ -254,8 +254,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 						}
 					}
 
-					opts.mask |= Options.FLAG_SERVER;
-					opts.mask |= Options.FLAG_PORT;
+					opts.setFlag(Options.FLAG_SERVER);
+					opts.setFlag(Options.FLAG_PORT);
 					break;
 				case 'd':
 					String items = new String(opt.getOptarg());
@@ -274,21 +274,21 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			}
 		}
 
-		if ((opts.mask & Options.FLAG_PROFILE_INI) != 0 && (opts.mask & Options.FLAG_PROFILE_REG) != 0) {
+		if (opts.getFlag(Options.FLAG_PROFILE_INI) && opts.getFlag(Options.FLAG_PROFILE_REG)) {
 			org.ulteo.Logger.error("You cannot use --reg with -c");
 			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 
-		if ((opts.sessionMode == Properties.MODE_REMOTEAPPS) && (opts.mask & Options.FLAG_GEOMETRY) != 0) {
+		if ((opts.sessionMode == Properties.MODE_REMOTEAPPS) && opts.getFlag(Options.FLAG_GEOMETRY)) {
 			org.ulteo.Logger.error("You cannot use -g in applications mode");
 			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 
-		if ((opts.mask & Options.FLAG_PROFILE_INI) != 0) {
+		if (opts.getFlag(Options.FLAG_PROFILE_INI)) {
 			if (! opts.getIniProfile(opts.profile))
 				org.ulteo.Logger.warn("The configuration file \""+opts.profile+"\" does not exist.");
 		}
-		else if ((opts.mask & Options.FLAG_PROFILE_REG) != 0) {
+		else if (opts.getFlag(Options.FLAG_PROFILE_REG)) {
 			if (! opts.getRegistryProfile())
 				org.ulteo.Logger.warn("No available configuration from registry");
 		}
@@ -434,7 +434,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.authFrame = new AuthFrame(this, this.opts.geometry, this.opts.guiLocked, this.opts.isBugReporterVisible);
 		this.authFrame.getLanguageBox().addActionListener(this);
 		this.loadOptions();
-		this.authFrame.setRememberMeChecked((this.opts.mask & Options.FLAG_REMEMBER_ME) != 0);
+		this.authFrame.setRememberMeChecked(this.opts.getFlag(Options.FLAG_REMEMBER_ME));
 		this.authFrame.showWindow();
 		this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
 	}
@@ -843,14 +843,14 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	private void saveProfile() {
 		ProfileProperties properties = new ProfileProperties(this.opts.username, this.opts.host, this.opts.port, this.opts.sessionMode, this.opts.autopublish, this.opts.nltm, this.opts.geometry, this.opts.lang, this.opts.keymap);
 
-		if ((this.opts.mask & Options.FLAG_PROFILE_REG) != 0) {
+		if (this.opts.getFlag(Options.FLAG_PROFILE_REG)) {
 			ProfileRegistry.saveProfile(properties);
 			return;
 		}
 
 		ProfileIni ini = new ProfileIni();
 
-		if ((this.opts.mask & Options.FLAG_PROFILE_INI) != 0) {
+		if (this.opts.getFlag(Options.FLAG_PROFILE_INI)) {
 
 			String path = null;
 			String profile = this.opts.profile;

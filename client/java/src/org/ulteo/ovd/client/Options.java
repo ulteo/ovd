@@ -56,7 +56,7 @@ public class Options {
 	public static final int FLAG_GUI_LOCKED        = 0x00008000;
 	public static final int FLAG_SHOW_BURGREPORTER = 0x00010000;
 	
-	public int mask = 0x00000000;
+	private int mask = 0x00000000;
 	
 	public String profile = null;
 	public String username = null;
@@ -79,6 +79,13 @@ public class Options {
 	public Options() {
 	}
 
+	public void setFlag (int flag) {
+		this.mask |= flag;
+	}
+	
+	public boolean getFlag (int flag) {
+		return (this.mask & flag) != 0;
+	}
 
 	public boolean getIniProfile(String path) {
 		ProfileIni ini = new ProfileIni();
