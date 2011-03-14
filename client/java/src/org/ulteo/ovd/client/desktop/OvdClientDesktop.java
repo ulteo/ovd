@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  *
@@ -111,7 +112,7 @@ public class OvdClientDesktop extends OvdClient {
 			Insets inset = null;
 			inset = this.desktop.getInsets();
 			this.desktop.setLocationRelativeTo(null);
-			co.setGraphic((this.desktop.getWidth()-(inset.left+inset.right)+2), (this.desktop.getHeight()-(inset.bottom+inset.top)+2));
+			co.setGraphic((this.desktop.getWidth()-(inset.left+inset.right)+2), (this.desktop.getHeight()-(inset.bottom+inset.top)+2), co.getBpp());
 		}
 		this.desktopLaunched = true;
 	}
@@ -173,11 +174,16 @@ public class OvdClientDesktop extends OvdClient {
 
 		rc.setServer(server.getHost());
 		rc.setCredentials(server.getLogin(), server.getPassword());
+		
+		int bpp = RdpConnectionOvd.DEFAULT_BPP;
+		if (this.smComm.getResponseProperties().isDesktopEffectsEnabled())
+			bpp = 32;
+		
 		// Ensure that width is multiple of 4
 		// Prevent artifact on screen with a with resolution
 		// not divisible by 4
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, RdpConnectionOvd.DEFAULT_BPP);
+		rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, bpp);
 
 		rc.setAllDesktopEffectsEnabled(this.smComm.getResponseProperties().isDesktopEffectsEnabled());
 
