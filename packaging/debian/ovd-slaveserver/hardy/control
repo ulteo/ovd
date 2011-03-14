@@ -17,7 +17,7 @@ Package: ulteo-ovd-slaveserver-role-aps
 Architecture: all
 Depends: ${python:Depends},
  ulteo-ovd-slaveserver, ulteo-ovd-shells, ulteo-ovd-externalapps-client,
- xrdp-python, xrdp-seamrdp, xrdp-disk, xrdp-printer, xrdp-sound, xrdp-clipboard,
+ xrdp-python, xrdp-seamrdp, xrdp-rdpdr, xrdp-printer, xrdp-sound, xrdp-clipboard,
  tightvncserver, desktop-file-utils, imagemagick, passwd, adduser, rsync, smbfs
 Description: Ulteo Open Virtual Desktop - application server role for slave server
  Application server role for the Ulteo OVD slave server
