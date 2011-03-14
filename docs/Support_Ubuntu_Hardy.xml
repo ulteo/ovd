@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
-	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
+	  [<!ENTITY parent "Support_Ubuntu_Lucid.xml">]>
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <title>Ulteo Open Virtual Desktop</title>
@@ -41,21 +42,21 @@
     </warning>
 
 
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sudo" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="warning_name_examples" />
+    <xi:include href="&parent;" xpointer="sudo" />
+    <xi:include href="&parent;" xpointer="warning_name_examples" />
   </section>
 
   <section id="repository">
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_title" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_para" />
+    <xi:include href="&parent;" xpointer="repository_title" />
+    <xi:include href="&parent;" xpointer="repository_para" />
      
     <section id="repository_online">
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_title" />
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_para" />
+      <xi:include href="&parent;" xpointer="repository_online_title" />
+      <xi:include href="&parent;" xpointer="repository_online_para" />
 
       <itemizedlist>
         <listitem>
-          <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_step1_para" />
+          <xi:include href="&parent;" xpointer="repository_online_step1_para" />
           <screen>
 	  <![CDATA[
 deb http://archive.ulteo.com/ovd/3.0/ubuntu hardy main]]>
@@ -65,7 +66,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu hardy main]]>
     </section>
 
     <section id="repository_offline">
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_title" />
+      <xi:include href="&parent;" xpointer="repository_offline_title" />
 
       <itemizedlist>
         <listitem>
@@ -73,11 +74,11 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu hardy main]]>
             The offline repository is an archive named
             <emphasis>ubuntu-hardy.tar.gz</emphasis>.
           </para>
-          <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_step1_para" />
+          <xi:include href="&parent;" xpointer="repository_offline_step1_para" />
         </listitem>
 
         <listitem>
-          <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_step2_para" />
+          <xi:include href="&parent;" xpointer="repository_offline_step2_para" />
           <screen>
             <![CDATA[
 # tar xzf ubuntu-hardy.tar.gz]]>
@@ -85,7 +86,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu hardy main]]>
         </listitem>
 
         <listitem>
-          <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_step3_para" />
+          <xi:include href="&parent;" xpointer="repository_offline_step3_para" />
           <screen>
             <![CDATA[
 deb file:///root/ubuntu-hardy hardy main]]>
@@ -94,16 +95,16 @@ deb file:///root/ubuntu-hardy hardy main]]>
       </itemizedlist>
     </section>
 
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_common" />
+    <xi:include href="&parent;" xpointer="repository_common" />
   </section>
 
-  <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm" />
-  <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem" />
+  <xi:include href="&parent;" xpointer="sm" />
+  <xi:include href="&parent;" xpointer="subsystem" />
 
   <section id="wc">
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_title" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_para_1" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_para_2" />
+    <xi:include href="&parent;" xpointer="wc_title" />
+    <xi:include href="&parent;" xpointer="wc_para_1" />
+    <xi:include href="&parent;" xpointer="wc_para_2" />
 
     <itemizedlist>
       <listitem>
@@ -116,11 +117,11 @@ deb file:///root/ubuntu-hardy hardy main]]>
         </screen>
       </listitem>
       
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_debconf_1" />
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_debconf_2" />
+      <xi:include href="&parent;" xpointer="wc_debconf_1" />
+      <xi:include href="&parent;" xpointer="wc_debconf_2" />
     </itemizedlist>
 
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_last_1" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_last_2" />
+    <xi:include href="&parent;" xpointer="wc_last_1" />
+    <xi:include href="&parent;" xpointer="wc_last_2" />
   </section>
 </article>

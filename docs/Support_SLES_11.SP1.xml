@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-                 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"> 
+                 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
+                 [<!ENTITY parent "Support_Debian_Squeeze.xml">]> 
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <title>Ulteo Open Virtual Desktop</title>
@@ -22,9 +23,9 @@
   <section id="prerequisites">
     <title>Prerequisites: SUSE Linux Enterprise Server (SLES) 11 SP1</title>
 
-    <xi:include href="Support_Debian_Squeeze.xml" xpointer="prerequisites_root" />
+    <xi:include href="&parent;" xpointer="prerequisites_root" />
 
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="warning_name_examples" />
+    <xi:include href="&parent;" xpointer="warning_name_examples" />
 
     <simplesect id="seLinux">
       <title id="seLinux_title">SELinux</title>
@@ -42,7 +43,7 @@
   </section>
 
   <section id="repository">
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_title" />
+    <xi:include href="&parent;" xpointer="repository_title" />
 
     <para id="repository_para">
       SUSE systems use the RPM packaging system. So you need to have
@@ -51,8 +52,8 @@
     </para>
 
     <section id="repository_online">
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_title" />
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_online_para" />
+      <xi:include href="&parent;" xpointer="repository_online_title" />
+      <xi:include href="&parent;" xpointer="repository_online_para" />
 
       <itemizedlist>
         <listitem id="repository_online_step1">
@@ -79,7 +80,7 @@
     </section>
 
     <section id="repository_offline">
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_title" />
+      <xi:include href="&parent;" xpointer="repository_offline_title" />
 
       <itemizedlist>
         <listitem id="repository_offline_step1">
@@ -88,11 +89,11 @@
            <emphasis>sles-11_sp1.tar.gz</emphasis>.
          </para>
 
-         <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_step1_para" />
+         <xi:include href="&parent;" xpointer="repository_offline_step1_para" />
        </listitem>
 
        <listitem id="repository_offline_step2">
-         <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_offline_step2_para" />
+         <xi:include href="&parent;" xpointer="repository_offline_step2_para" />
           <screen>
             <![CDATA[
 # tar xzf sles-11_sp1.tar.gz]]>
@@ -112,11 +113,11 @@
     </section>
 
     <simplesect id="repository_common">
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_common_title" />
+      <xi:include href="&parent;" xpointer="repository_common_title" />
 
       <itemizedlist>
         <listitem>
-          <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_common_step1_para" />
+          <xi:include href="&parent;" xpointer="repository_common_step1_para" />
           <screen>
 	    <![CDATA[
 # zypper refresh]]>
@@ -128,12 +129,12 @@
 
 
   <section id="sm">
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm_title" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm_first_para" />
+    <xi:include href="&parent;" xpointer="sm_title" />
+    <xi:include href="&parent;" xpointer="sm_first_para" />
 
     <section id="sql">
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sql_title" />
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sql_para" />
+      <xi:include href="&parent;" xpointer="sql_title" />
+      <xi:include href="&parent;" xpointer="sql_para" />
 
       <itemizedlist>
 	<listitem>
@@ -176,16 +177,16 @@
 	  </screen>
 	</listitem>
 
-        <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="mysql_createdb" />
+        <xi:include href="&parent;" xpointer="mysql_createdb" />
       </itemizedlist>
    </section>
    
    <section id="sm_install">
-     <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm_install_title" />
+     <xi:include href="&parent;" xpointer="sm_install_title" />
 
      <itemizedlist>
        <listitem>
-         <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm_install_package" />
+         <xi:include href="&parent;" xpointer="sm_install_package" />
          <screen><![CDATA[
 # zypper install ulteo-ovd-session-manager]]>
          </screen>
@@ -219,16 +220,16 @@ Is this correct? [Y/n]]]>
        </listitem>
      </itemizedlist>
      
-     <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm-config" />
+     <xi:include href="&parent;" xpointer="sm-config" />
    </section>
   </section>
 
   <section id="subsystem">
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem_title" />
+    <xi:include href="&parent;" xpointer="subsystem_title" />
 
     <itemizedlist>
       <listitem>
-        <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem_package" />
+        <xi:include href="&parent;" xpointer="subsystem_package" />
         <screen><![CDATA[
 # zypper install ulteo-ovd-subsystem]]>
         </screen>
@@ -241,7 +242,7 @@ Is this correct? [Y/n]]]>
 Session Manager address : sm.ulteo.com
 Chroot destination [/opt/ulteo]:]]>
         </screen>
-        <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem-sm-warning" />
+        <xi:include href="&parent;" xpointer="subsystem-sm-warning" />
       </listitem>
 
        <listitem>
@@ -253,15 +254,15 @@ Chroot destination [/opt/ulteo]:]]>
        </listitem>
     </itemizedlist>
 
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem_last_para" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem_last_screenshot" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="aps_redirection_name" />
+    <xi:include href="&parent;" xpointer="subsystem_last_para" />
+    <xi:include href="&parent;" xpointer="subsystem_last_screenshot" />
+    <xi:include href="&parent;" xpointer="aps_redirection_name" />
   </section>
 
   <section id="wc">
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_title" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_para_1" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_para_2" />
+    <xi:include href="&parent;" xpointer="wc_title" />
+    <xi:include href="&parent;" xpointer="wc_para_1" />
+    <xi:include href="&parent;" xpointer="wc_para_2" />
 
     <itemizedlist>
       <listitem>
@@ -273,7 +274,7 @@ Chroot destination [/opt/ulteo]:]]>
       </listitem>
     </itemizedlist>
 
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_last_1" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_last_2" />
+    <xi:include href="&parent;" xpointer="wc_last_1" />
+    <xi:include href="&parent;" xpointer="wc_last_2" />
   </section>
 </article>
