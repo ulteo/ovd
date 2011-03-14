@@ -32,9 +32,9 @@ def perform_transform(content):
 
 
 def usage():
-	print "Usage: %s [-i|--input input-file|- [-o|--output output-file] [-h|--help]"%(sys.argv[0])
-	print "\t-h|--help: print this help"
-	print
+	print >> sys.stderr, "Usage: %s [-i|--input input-file|- [-o|--output output-file] [-h|--help]"%(sys.argv[0])
+	print >> sys.stderr, "\t-h|--help: print this help"
+	print >> sys.stderr, ""
 
 
 def main():
