@@ -37,6 +37,10 @@ ANW=$(SRC:.xml=.anw)
 
 all: $(DST) $(PDF)
 
+html: $(DST)
+
+pdf: $(PDF)
+
 # Add the depends between sources
 Installation_Iso.xml: Easy_Installation.xml
 Installation_Sources.xml: Installation.xml Installation_RedHat.xml
