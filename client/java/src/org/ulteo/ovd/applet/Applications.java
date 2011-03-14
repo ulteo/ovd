@@ -238,6 +238,9 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 	}
 	
 	public synchronized Order popOrder() {
+		if (this.spoolOrder == null)
+			return null;
+
 		if (this.spoolOrder.size() == 0)
 			return null;
 		
@@ -245,6 +248,11 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 	}
 	
 	public synchronized void pushOrder(Order o) {
+		if (this.spoolOrder == null) {
+			Logger.warn("Order "+o+" not added: The spool order is not initialized");
+			return;
+		}
+
 		this.spoolOrder.add(o);
 	}
 	
