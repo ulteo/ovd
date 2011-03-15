@@ -254,6 +254,15 @@ Chroot destination [/opt/ulteo]:]]>
       </listitem>
 
       <listitem>
+        <para>Launch the configuration tool</para>
+        <screen><![CDATA[
+# ovd-webclient-config
+Do you want to link the web client to a specific Session Manager ? ([yes]/no): 
+Session Manager address [127.0.0.1]: sm.ulteo.com]]>
+        </screen>
+       </listitem>
+
+      <listitem>
         <xi:include xpointer="xpointer(//*[@id='sm_configure_apache_service']/node())" /> 
       </listitem>
     </itemizedlist>
