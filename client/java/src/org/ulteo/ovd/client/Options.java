@@ -117,7 +117,7 @@ public class Options {
 		
 		this.parseProperties(properties);
 
-		this.mask |= Options.FLAG_REMEMBER_ME;
+		this.setFlag(Options.FLAG_REMEMBER_ME);
 
 		return true;
 	}
@@ -130,7 +130,7 @@ public class Options {
 
 		this.parseProperties(properties);
 
-		this.mask |= Options.FLAG_REMEMBER_ME;
+		this.setFlag(Options.FLAG_REMEMBER_ME);
 
 		return true;
 	}
@@ -140,78 +140,76 @@ public class Options {
 		if (properties == null)
 			return;
 
-		if ((this.mask & Options.FLAG_SESSION_MODE) == 0) {
+		if (!this.getFlag(Options.FLAG_SESSION_MODE)) {
 			this.sessionMode =  Properties.MODE_ANY;
 			if (properties.getSessionMode() == ProfileProperties.MODE_APPLICATIONS)
 				this.sessionMode = Properties.MODE_REMOTEAPPS;
 			else if (properties.getSessionMode() == ProfileProperties.MODE_DESKTOP)
 				this.sessionMode = Properties.MODE_DESKTOP;
 		}
-
-		if ((this.mask & Options.FLAG_NTLM) == 0) {
+		if (!this.getFlag(Options.FLAG_NTLM)) {
 			this.nltm = properties.getUseLocalCredentials();
-			this.mask |= Options.FLAG_NTLM;
-		}
-		else if ((this.mask & Options.FLAG_USERNAME) == 0) {
+			this.setFlag(Options.FLAG_NTLM);
+		} else if (!this.getFlag(Options.FLAG_USERNAME)) {
 			String username = properties.getLogin();
 			if (username != null) {
 				this.username = username;
-				this.mask |= Options.FLAG_USERNAME;
+				this.setFlag(Options.FLAG_USERNAME);
 			}
 		}
-		if ((this.mask & Options.FLAG_SERVER) == 0) {
+		if (!this.getFlag(Options.FLAG_SERVER)) {
 			String host = properties.getHost();
 			if (host != null) {
 				this.host = host;
-				this.mask |= Options.FLAG_SERVER;
+				this.setFlag(Options.FLAG_SERVER);
 			}
 		}
-		if ((this.mask & Options.FLAG_PORT) == 0) {
+		if (!this.getFlag(Options.FLAG_PORT)) {
 			int port = properties.getPort();
 			if (port == 0)
 				port = SessionManagerCommunication.DEFAULT_PORT;
 			this.port = port;
-			this.mask |= Options.FLAG_PORT;
+			this.setFlag(Options.FLAG_PORT);
 		}
-		if ((this.mask & Options.FLAG_AUTO_INTEGRATION) == 0) {
+		if (!this.getFlag(Options.FLAG_AUTO_INTEGRATION)) {
 			boolean auto_integration = properties.getAutoPublish();
 			if (! (auto_integration && this.sessionMode == Properties.MODE_DESKTOP)) {
 				this.autopublish = auto_integration;
-				this.mask |= Options.FLAG_AUTO_INTEGRATION;
+				this.setFlag(Options.FLAG_AUTO_INTEGRATION);
 			}
 		}
-		if ((this.mask & Options.FLAG_LANGUAGE) == 0) {
+		if (!this.getFlag(Options.FLAG_LANGUAGE)) {
 			String language = properties.getLang();
 			if (language != null) {
 				lang = language;
-				this.mask |= Options.FLAG_LANGUAGE;
+				this.setFlag(Options.FLAG_LANGUAGE);
 			}
 		}
-		if ((this.mask & Options.FLAG_KEYMAP) == 0) {
+		if (!this.getFlag(Options.FLAG_KEYMAP)) {
 			String keymap = properties.getKeymap();
 			if (keymap != null) {
 				this.keymap = keymap;
-				this.mask |= Options.FLAG_KEYMAP;
+				this.setFlag(Options.FLAG_KEYMAP);
 			}
 		}
-		if ((this.mask & Options.FLAG_SHOW_PROGRESS_BAR) == 0) {
+		if (!this.getFlag(Options.FLAG_SHOW_PROGRESS_BAR)) {
 			this.showProgressBar = properties.getShowProgressbar();
-			this.mask |= Options.FLAG_SHOW_PROGRESS_BAR;
+			this.setFlag(Options.FLAG_SHOW_PROGRESS_BAR);
 		}
-		if ((this.mask & Options.FLAG_GEOMETRY) == 0) {
+		if (!this.getFlag(Options.FLAG_GEOMETRY)) {
 			Dimension geometry = properties.getScreenSize();
 			if (! (geometry != null && this.sessionMode == Properties.MODE_REMOTEAPPS)) {
 				this.geometry = geometry;
-				this.mask |= Options.FLAG_GEOMETRY;
+				this.setFlag(Options.FLAG_GEOMETRY);
 			}
 		}
-		if ((this.mask & Options.FLAG_GUI_LOCKED) == 0) {
+		if (!this.getFlag(Options.FLAG_GUI_LOCKED)) {
 			this.guiLocked = properties.isGUILocked();
-			this.mask |= Options.FLAG_GUI_LOCKED;
+			this.setFlag(Options.FLAG_GUI_LOCKED);
 		}
-		if ((this.mask & Options.FLAG_SHOW_BURGREPORTER) == 0) {
+		if (!this.getFlag(Options.FLAG_SHOW_BURGREPORTER)) {
 			this.isBugReporterVisible = properties.isBugReporterVisible();
-			this.mask |= Options.FLAG_SHOW_BURGREPORTER;
+			this.setFlag(Options.FLAG_SHOW_BURGREPORTER);
 		}
 	}
 }
