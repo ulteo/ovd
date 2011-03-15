@@ -39,6 +39,8 @@ public interface SeamlessWindow {
 	public static final int MOUSE_FLAG_BUTTON4 = 0x0280;
 	public static final int MOUSE_FLAG_BUTTON5 = 0x0380;
 
+	public static final int STATE_FULLSCREEN = 8;
+
 	void sw_destroy();
 	int sw_getId();
 	int sw_getGroup();
@@ -65,4 +67,6 @@ public interface SeamlessWindow {
 
 	SeamlessWindow sw_getModalWindow();
 	void sw_setModalWindow(SeamlessWindow modalWnd);
+
+	boolean isFullscreenEnabled();
 }
