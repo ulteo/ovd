@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
  * Author Antoine WALTER <anw@ulteo.com> 2008
  *
@@ -132,7 +132,16 @@ class LDAP {
 
 		if (!$buf) {
 			Logger::error('main', "LDAP::bind bind($dn_,$pwd_) failed : (error:".$this->errno().')');
-			$searchbase =$this->userbranch.','.$this->suffix;
+			
+			$searchbase_array = array();
+			if ($this->userbranch != '') {
+				$searchbase_array []= $this->userbranch;
+			}
+			if ($this->suffix != '') {
+				$searchbase_array []= $this->suffix;
+			}
+			$searchbase = implode(',', $searchbase_array);
+			
 			$protocol_version = '';
 			if (array_key_exists('LDAP_OPT_PROTOCOL_VERSION', $this->options))
 				$protocol_version = '-P '.$this->options['LDAP_OPT_PROTOCOL_VERSION'];
