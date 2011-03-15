@@ -415,7 +415,6 @@ else
 	echo 'if ($(\'user_login\') && $(\'user_login\').visible()) $(\'user_login\').focus();';
 ?>
 
-checkLogin();
 checkSessionMode();
 										}, 1500);
 									});</script>
