@@ -294,8 +294,7 @@ if ($_REQUEST['name'] == 'Application') {
 					$mypicture = new Imagick();
 					$mypicture->readImage($source_file);
 					$mypicture->scaleImage(32, 0);
-					$mypicture->setImageFileName($app->getIconPathRW());
-					$mypicture->writeImage();
+					$mypicture->writeImage($app->getIconPathRW());
 				}
 				catch (Exception $e) {
 					popup_error(_('Uploaded file is not a valid image'));
