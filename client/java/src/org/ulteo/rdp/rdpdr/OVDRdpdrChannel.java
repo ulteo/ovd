@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author David Lechevalier <david@ulteo.com> 2010
+ * Author David Lechevalier <david@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -312,6 +312,10 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		logger.info("mount a new drive "+name+" => "+path);
 		String magic = "rDAD";
 		int index = getNextFreeSlot();
+		if (index < 0) {
+			return false;
+		}
+		
 		OVDRdpdrDisk d = new OVDRdpdrDisk(this, path, name);
 		
 		RdpPacket_Localised s;
