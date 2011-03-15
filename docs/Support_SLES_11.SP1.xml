@@ -191,7 +191,7 @@ Is this correct? [Y/n]]]>
          </screen>
        </listitem>
 
-       <listitem>
+       <listitem id="sm_configure_apache_service">
          <para>Configure and start apache service</para>
          <screen><![CDATA[
 # chkconfig @apache_service@ on
@@ -251,6 +251,10 @@ Chroot destination [/opt/ulteo]:]]>
 	  <![CDATA[
 # @rpm_install_cmd@ install ulteo-ovd-web-client ulteo-ovd-web-client-ajaxplorer]]>
         </screen>
+      </listitem>
+
+      <listitem>
+        <xi:include xpointer="xpointer(//*[@id='sm_configure_apache_service']/node())" /> 
       </listitem>
     </itemizedlist>
 
