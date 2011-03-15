@@ -37,7 +37,8 @@ unset SM
 while [ -n "$1" ]; do
     case $1 in
         --sm-address)
-            SM="$2"
+            DEFAULT_SM="$2"
+            LINK=yes
             shift;;
         --help|-h)
             usage
@@ -52,16 +53,21 @@ while [ -n "$1" ]; do
     shift
 done
 
-echo -n "Session Manager address : " && read SM
+while [ ! \( "$LINK" = "yes" -o "$LINK" = "no" \) ]; do
+    echo -n "Do you want to link the web client to a specific Session Manager ? ([yes]/no): " && read LINK
+    LINK=$(echo "$LINK" | tr 'A-Z' 'a-z')
+    [ -z "$LINK" ] && LINK=yes
+done
 
-if [ -n "$SM" ]; then
+if [ "$LINK" = "yes" ]; then
+    [ -z "$DEFAULT_SM" ] && DEFAULT_SM=$(expr "$(grep SESSIONMANAGER_HOST /etc/ulteo/webclient/config.inc.php)" : ".*'\(.*\)' *) *;.*")
+    echo -n "Session Manager address [$DEFAULT_SM]: " && read SM
+    [ -z "$SM" ] && SM=$DEFAULT_SM
      sed -i -e '/SESSIONMANAGER_HOST/ s,^// *,,' \
             -e "/SESSIONMANAGER_HOST/ s/, *'.*' *);/, '${SM}');/" \
             $CONFFILE
 else
-    echo "You have not filled the Session Manager address field, the Web Client will not be linked to it"
     sed -i '/SESSIONMANAGER_HOST/ s,^define,// define,' $CONFFILE
 fi
-
 
 exit 0
