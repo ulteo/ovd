@@ -297,7 +297,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				org.ulteo.Logger.warn("The default configuration file does not exist.");
 		}
 
-		if (opts.nltm && (opts.username != null || opts.password != null)) {
+		if (opts.nltm && (opts.getFlag(Options.FLAG_USERNAME) || opts.getFlag(Options.FLAG_PASSWORD))) {
 			org.ulteo.Logger.error("You cannot use --ntml with -u or -p");
 			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
