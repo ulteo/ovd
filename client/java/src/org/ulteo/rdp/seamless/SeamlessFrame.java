@@ -31,6 +31,7 @@ import java.awt.event.MouseEvent;
 import org.ulteo.utils.AbstractFocusManager;
 
 import net.propero.rdp.Common;
+import net.propero.rdp.Input;
 import net.propero.rdp.rdp5.seamless.SeamFrame;
 import org.ulteo.gui.GUIActions;
 
@@ -40,6 +41,8 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, 
 	
 	protected boolean lockMouseEvents = false;
 	protected RectWindow rw = null;
+	
+	private Input input = null;
 
 	public SeamlessFrame(int id_, int group_, Rectangle maxBounds_, int flags, Common common_) {
 		super(id_, group_, maxBounds_, common_);
@@ -49,6 +52,7 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, 
 		Dimension dim = new Dimension(this.backstore.getWidth(), this.backstore.getHeight());
 		this.rw = new RectWindow(this, dim, this.maxBounds);
 		this.addFocusListener(this);
+		input = this.common.canvas.getInput();
 
 		GUIActions.setIconImage(this, null).run();
 	}
@@ -134,6 +138,7 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, 
 
 	@Override
 	public void focusLost(FocusEvent e) {
+		input.lostFocus();
 		if (SeamlessFrame.focusManager != null)
 		{
 			SeamlessFrame.focusManager.performedFocusLost(this);
