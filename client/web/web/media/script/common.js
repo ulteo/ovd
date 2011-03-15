@@ -89,7 +89,7 @@ function startSession() {
 			}
 		);
 	} else {
-		$('CheckSignedJava').ajaxRequest($('sessionmanager_host').value, $('session_mode').value, $('session_language').value, $('timezone').value, 'onStartSessionJavaRequest');
+		$('CheckSignedJava').ajaxRequest($('sessionmanager_host').value, $('session_mode').value, $('session_language').value, getTimezoneName(), 'onStartSessionJavaRequest');
 		return false;
 	}
 
