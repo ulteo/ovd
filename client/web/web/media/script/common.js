@@ -336,7 +336,7 @@ function synchronize(data_, cookie_) {
 				mode: $('session_mode').value,
 				language: $('session_language').value,
 				keymap: $('session_keymap').value,
-				timezone: $('timezone').value,
+				timezone: getTimezoneName(),
 				debug: ((debug)?1:0),
 				xml: data_
 			},
