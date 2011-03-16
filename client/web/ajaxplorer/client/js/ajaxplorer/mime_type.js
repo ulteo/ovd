@@ -689,7 +689,7 @@ MimeType = {
 	'xaml': 'application/xaml+xml',
 	'xbap': 'application/x-ms-xbap',
 	'xbm': 'image/x-xbitmap',
-	'xcf': 'application/x-xcf',
+	'xcf': 'image/x-xcf',
 	'xdp': 'application/vnd.adobe.xdp+xml',
 	'xdr': 'application/xml',
 	'xfd': 'application/vnd.adobe.xfd+xml',
