@@ -287,6 +287,12 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		}
 
 		if ((opts.mask & NativeClient.FLAG_FILE_OPTS) != 0) {
+		if ((opts.sessionMode == Properties.MODE_REMOTEAPPS) && (opts.mask & Options.FLAG_GEOMETRY) != 0) {
+			org.ulteo.Logger.error("You cannot use -g in applications mode");
+			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
+		}
+
+		if ((opts.mask & Options.FLAG_PROFILE_INI) != 0) {
 			if (! opts.getIniProfile(opts.profile))
 				org.ulteo.Logger.warn("The configuration file \""+opts.profile+"\" does not exist.");
 		}
@@ -305,10 +311,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		}
 		if (opts.sessionMode == Properties.MODE_DESKTOP && opts.autopublish) {
 			org.ulteo.Logger.error("You cannot use --auto-integration in desktop mode");
-			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
-		}
-		if (opts.sessionMode == Properties.MODE_REMOTEAPPS && opts.geometry != null) {
-			org.ulteo.Logger.error("You cannot use -g in applications mode");
 			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 		if (opts.autostart) {
