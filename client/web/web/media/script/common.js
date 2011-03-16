@@ -89,7 +89,7 @@ function startSession() {
 			}
 		);
 	} else {
-		$('CheckSignedJava').ajaxRequest($('sessionmanager_host').value, $('session_mode').value, $('session_language').value, $('timezone').value, 'onStartSessionJavaRequest');
+		$('CheckSignedJava').ajaxRequest($('sessionmanager_host').value, $('session_mode').value, $('session_language').value, getTimezoneName(), 'onStartSessionJavaRequest');
 		return false;
 	}
 
@@ -336,7 +336,7 @@ function synchronize(data_, cookie_) {
 				mode: $('session_mode').value,
 				language: $('session_language').value,
 				keymap: $('session_keymap').value,
-				timezone: $('timezone').value,
+				timezone: getTimezoneName(),
 				debug: ((debug)?1:0),
 				xml: data_
 			},
