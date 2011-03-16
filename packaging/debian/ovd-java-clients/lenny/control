@@ -8,7 +8,7 @@ Standards-Version: 3.8.2
 
 Package: ulteo-ovd-applets
 Architecture: all
-Description: Ulteo Open Virtual Desktop - desktop applet
+Description: Ulteo Open Virtual Desktop - applets
  This applet is used in the Open Virtual Desktop to display the user session in
  a browser.
 

@@ -20,7 +20,7 @@ Name: ovd-java-clients
 Version: @VERSION@
 Release: @RELEASE@
 
-Summary: Ulteo Open Virtual Desktop - desktop applet
+Summary: Ulteo Open Virtual Desktop - applets
 License: GPL2
 Group: Applications/System
 Vendor: Ulteo SAS
