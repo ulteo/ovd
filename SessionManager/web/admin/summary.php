@@ -37,6 +37,7 @@ function show_default() {
 	$userDB = UserDB::getInstance();
 	$userGroupDB = UserGroupDB::getInstance();
 	$applicationsGroupDB = ApplicationsGroupDB::getInstance();
+	$sessionmanagement = SessionManagement::getInstance();
 
 	$usersList = new UsersList($_REQUEST);
 	$us = $usersList->search();
@@ -170,7 +171,17 @@ function show_default() {
 			echo '</td>';
 
 			echo '<td style="text-align: center;">'; // server
-			$serv_s = $u->getAvailableServers();
+			$serv_s = array();
+			$sessionmanagement2 = clone($sessionmanagement);
+			$sessionmanagement2->user = $u;
+			$applicationServerTypes = $sessionmanagement2->getApplicationServerTypes();
+			foreach ($applicationServerTypes as $type) {
+				$buf = $sessionmanagement2->user->getAvailableServers($type);
+				if (is_null($buf) || ! is_array($buf))
+					continue;
+				$serv_s = array_merge($serv_s, $buf);
+			}
+			
 			if (is_array($serv_s) && count($serv_s) > 0)
 				echo '<img src="media/image/ok.png" alt="" title="" />';
 			else
