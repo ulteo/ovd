@@ -696,7 +696,7 @@ class Server {
 
 	public function orderFSAccessEnable($login_, $password_, $netfolders_) {
 		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_FS, $this->roles)) {
-			Logger::critical('main', 'SERVER::orderFSAccessEnable - Not an FS');
+			Logger::critical('main', 'SERVER::orderFSAccessEnable - '.$this->fqdn.' is not an FS');
 			return false;
 		}
 
