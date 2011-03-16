@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
@@ -86,7 +86,7 @@ function show_manage($id, $tm) {
 	echo '<td>'.get_class($task).'</td>';
 	echo '<td><a href="servers.php?action=manage&fqdn='.$task->server.'">'.$task->server.'</a></td>';
 	echo '<td>'.$status.'</td>';
-	echo '<td>'.$task->getRequest().'</td>';
+	echo '<td>'.implode(', ', $task->getPackages()).'</td>';
 	echo '<td>'.$task->job_id.'</td>';
 	if ($can_remove && $can_do_action) {
 		echo '<td>';
