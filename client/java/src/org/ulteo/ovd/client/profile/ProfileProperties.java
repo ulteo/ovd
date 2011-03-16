@@ -38,7 +38,7 @@ public class ProfileProperties {
 	private String keymap = null;
 	private boolean showProgressbar = true;
 	private boolean isGUILocked = false;
-	private boolean isBugReporterVisible = true;
+	private boolean isBugReporterVisible = false;
 	
 	public ProfileProperties() {}
 
