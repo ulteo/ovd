@@ -42,7 +42,7 @@ This is a web based client for Ulteo OVD.
 
 Summary: Ulteo Open Virtual Desktop - web client
 Group: Applications/System
-Requires: apache2-mod_php5, php5, php5-curl, php5-pear, ulteo-ovd-applets, ulteo-ovd-l10n
+Requires: apache2-mod_php5, php5, php5-curl, php5-gettext, php5-pear, ulteo-ovd-applets, ulteo-ovd-l10n
 
 %description -n ulteo-ovd-web-client
 This is a web based client for Ulteo OVD.
