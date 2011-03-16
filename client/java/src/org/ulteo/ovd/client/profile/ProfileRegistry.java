@@ -128,7 +128,7 @@ public class ProfileRegistry extends Profile {
 					properties.setGUILocked(isGUILocked);
 				}
 				else if (field.equalsIgnoreCase(FIELD_SHOW_BUGREPORTER)) {
-					properties.setGUILocked(value.equalsIgnoreCase(VALUE_TRUE));
+					properties.setBugReporterVisible(value.equalsIgnoreCase(VALUE_TRUE));
 				}
 			}
 		} catch (RegistryException ex) {
