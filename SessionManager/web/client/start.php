@@ -201,7 +201,7 @@ if (isset($old_session_id)) {
 	$servers = $sessionManagement->servers;
 
 	$random_server = false;
-	if ($session_mode == Session::MODE_DESKTOP && (isset($remote_desktop_settings) && array_key_exists('desktop_type', $remote_desktop_settings))) {
+	if ($session_mode == Session::MODE_DESKTOP && (isset($remote_desktop_settings) && array_key_exists('desktop_type', $remote_desktop_settings)))
 		$random_server = $sessionManagement->getDesktopServer($remote_desktop_settings['desktop_type']);
 	else
 		$random_server = array_rand($servers[Server::SERVER_ROLE_APS]);
