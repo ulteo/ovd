@@ -203,12 +203,13 @@ if (isset($old_session_id)) {
 	$random_server = false;
 	if ($session_mode == Session::MODE_DESKTOP && (isset($remote_desktop_settings) && array_key_exists('desktop_type', $remote_desktop_settings))) {
 		$random_server = $sessionManagement->getDesktopServer($remote_desktop_settings['desktop_type']);
-		if (! $random_server) {
-			Logger::error('main', '(client/start) No desktop server found for User "'.$user->getAttribute('login').'", aborting');
-			throw_response(SERVICE_NOT_AVAILABLE);
-		}
-	} else
+	else
 		$random_server = array_rand($servers[Server::SERVER_ROLE_APS]);
+
+	if (! $random_server) {
+		Logger::error('main', '(client/start) No desktop server found for User "'.$user->getAttribute('login').'", aborting');
+		throw_response(SERVICE_NOT_AVAILABLE);
+	}
 
 	if (get_class($sessionManagement) == 'SessionManagement_internal' && isset($enable_profiles) && $enable_profiles == 1) {
 		$fileservers = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_FS);
