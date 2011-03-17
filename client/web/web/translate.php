@@ -127,6 +127,8 @@ $js_translations = array(
 	'unauthorized_session_mode'		=>	_('You are not authorized to launch a session in this mode'),
 	'user_with_active_session'		=>	_('You already have an active session'),
 
+	'window_onbeforeunload'			=>	_('You will be disconnected from your OVD session.'),
+
 	'session_expire_in_3_minutes'	=>	_('Your session is going to end in 3 minutes, please save all your data now!'),
 
 	'session_close_unexpected'		=>	_('Server: session closed unexpectedly'),

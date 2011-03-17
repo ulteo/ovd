@@ -83,7 +83,7 @@ var Daemon = Class.create({
 			this.progressBar();
 
 		window.onbeforeunload = function(e) {
-			return '';
+			return i18n.get('window_onbeforeunload');
 		}
 
 		Event.observe(window, 'unload', this.client_exit.bind(this));
