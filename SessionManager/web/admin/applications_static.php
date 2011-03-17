@@ -3,7 +3,7 @@
  * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -376,6 +376,14 @@ function show_manage($id, $applicationDB) {
 	echo '</table>';
 
 	if ($is_rw and $can_manage_applications) {
+		echo '<br />';
+		echo '<form action="actions.php" method="post"">';
+		echo '<input type="hidden" name="name" value="Application" />';
+		echo '<input type="hidden" name="action" value="clone" />';
+		echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+		echo '<input type="submit" value="'._('Clone to new application').'"/>';
+		echo '</form>';
+	
 		echo '<br />';
 		echo '<h2>'._('Modify').'</h2>';
 		echo '<div id="application_modify">';
