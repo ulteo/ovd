@@ -55,7 +55,6 @@ Function .WindowsInstall
    IntCmp $1 2 done remoteapps done
 
    remoteapps:
-      SetRebootFlag true
       CopyFiles "$INSTDIR\wrapper\*.exe" "$SYSDIR"
 
       ; If you apply local modification on the user environment variable "path", 
@@ -88,6 +87,7 @@ Function .WindowsInstall
       WriteRegDWORD HKLM "${REG_REMOTEAPP}" "ShowInTSWA" "0"
       WriteRegStr HKLM "${REG_REMOTEAPP}" "VPath" ""
    done:
+      SetRebootFlag true
 FunctionEnd
 
 
@@ -99,10 +99,10 @@ Function un.WindowsInstall
    IntCmp $1 2 done remoteapps done
 
    remoteapps:
-      SetRebootFlag true
       Delete "$SYSDIR\OvdDesktop.exe"
       Delete "$SYSDIR\OvdRemoteApps.dll"
   done:
+      SetRebootFlag true
 FunctionEnd
 
 !endif
