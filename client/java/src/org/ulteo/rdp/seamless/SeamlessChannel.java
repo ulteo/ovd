@@ -325,7 +325,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 		if (((SeamlessMovingResizing) sw).isMouseEventsLocked()) {
 			Rectangle bounds = ((SeamlessMovingResizing) sw).getRectWindow().getBounds();
 			try {
-				this.send_position(((SeamlessWindow) sw).sw_getId(), bounds.x, bounds.y, bounds.width, bounds.height, 0);
+				this.send_position(((SeamlessWindow) sw).sw_getId(), bounds.x - this.opt.x_offset, bounds.y - this.opt.y_offset, bounds.width, bounds.height, 0);
 			} catch (Exception ex) {
 				org.ulteo.Logger.error("Position message not sent: "+ex.getMessage());
 			}
