@@ -32,6 +32,11 @@ class AuthMethod_RemoteUser extends AuthMethod {
 			return NULL;
 
 		$this->login = $_SERVER[$key];
+		if (array_key_exists('remove_domain_if_exists', $buf) && $buf['remove_domain_if_exists'] == 1) {
+			$atpos = strpos($this->login, '@');
+			if ($atpos !== false)
+				$this->login = substr($this->login, 0, $atpos+1);
+		}
 		return $this->login;
 	}
 
@@ -59,9 +64,16 @@ class AuthMethod_RemoteUser extends AuthMethod {
 	}
 
 	public static function configuration() {
-		return array(
-			new ConfigElement_input('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER')
-		);
+		$ret = array();
+
+		$c = new ConfigElement_input('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER');
+		$ret[] = $c;
+
+		$c = new ConfigElement_select('remove_domain_if_exists', _('Remove domain if exists'), _('Remove domain if exists'), _('Remove domain if exists'), 0);
+		$c->setContentAvailable(array(0=>_('No'), 1=>_('Yes')));
+		$ret[] = $c;
+
+		return $ret;
 	}
 	
 	public static function init($prefs_) {
