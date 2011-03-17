@@ -141,7 +141,11 @@ public class Options {
 				this.sessionMode = Properties.MODE_DESKTOP;
 		}
 
-		if ((this.mask & Options.FLAG_USERNAME) == 0) {
+		if ((this.mask & Options.FLAG_NTLM) == 0) {
+			this.nltm = properties.getUseLocalCredentials();
+			this.mask |= Options.FLAG_NTLM;
+		}
+		else if ((this.mask & Options.FLAG_USERNAME) == 0) {
 			String username = properties.getLogin();
 			if (username != null) {
 				this.username = username;
@@ -161,10 +165,6 @@ public class Options {
 				port = SessionManagerCommunication.DEFAULT_PORT;
 			this.port = port;
 			this.mask |= Options.FLAG_PORT;
-		}
-		if ((this.mask & Options.FLAG_NTLM) == 0) {
-			this.nltm = properties.getUseLocalCredentials();
-			this.mask |= Options.FLAG_NTLM;
 		}
 		if ((this.mask & Options.FLAG_AUTO_INTEGRATION) == 0) {
 			boolean auto_integration = properties.getAutoPublish();
