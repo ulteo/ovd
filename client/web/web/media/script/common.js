@@ -489,6 +489,7 @@ var ti = 0;
 function testUlteoApplet() {
 	try {
 		if (ulteo_applet_inited == true) {
+			checkLogin();
 			hideSystemTest();
 			return;
 		} else if (ulteo_applet_inited == false) {
