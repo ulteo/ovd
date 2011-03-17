@@ -1,8 +1,8 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
- * Author Thomas MOUTON <thomas@ulteo.com> 2009
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -160,7 +160,7 @@ public class SeamFrame extends Frame
 		this.height = height;
 
 		this.setSize(width, height);
-		this.setLocation(x + this.maxBounds.x, y + this.maxBounds.y);
+		this.setLocation(x, y);
 		this.repaint();
 	}
 
@@ -184,15 +184,15 @@ public class SeamFrame extends Frame
 	}
 	
 	public void paint(Graphics g) {
-		int x = Math.max(this.x,0);
-		int y = Math.max(this.y,0);
+		int x = Math.max(this.x, 0) - this.maxBounds.x;
+		int y = Math.max(this.y, 0) - this.maxBounds.y;
 		int w = Math.min(width,this.backstore.getWidth()-x);
 		int h = Math.min(height,this.backstore.getHeight()-y);
-		int dx = ((this.x + this.maxBounds.x) < 0) ? -(this.x + this.maxBounds.x) : 0;
-		int dy = ((this.y + this.maxBounds.y) < 0) ? -(this.y + this.maxBounds.y) : 0;
+		int dx = ((this.x) < 0) ? -(this.x) : 0;
+		int dy = ((this.y) < 0) ? -(this.y) : 0;
 
 		if (w>0 && h>0)
-			g.drawImage(this.backstore.getSubimage(x,y,w,h), dx , dy,null);
+			g.drawImage(this.backstore.getSubimage(x, y, w, h), dx , dy, null);
 	}
 
 
