@@ -3,9 +3,11 @@
  * 
  * Revision: $Revision: 1.0
  * Author: tomqq (hekong@gmail.com)
+ * Author David Lechavalier <david@ulteo.com> 2011
  * Date: 2009/05/16
  *
  * Copyright (c) tomqq
+ * Copyright (C) 2011 Ulteo SAS
  *
  *
  * Purpose: 
@@ -61,7 +63,7 @@ public class RdpdrChannel extends VChannel {
 	public static final int IRP_MN_QUERY_DIRECTORY           = 0x01;
 	public static final int IRP_MN_NOTIFY_CHANGE_DIRECTORY   = 0x02;
 	
-	public static final int RDPDR_MAX_DEVICES                = 0x10;
+	public static final int RDPDR_MAX_DEVICES                = 0x80;
 	public static final int DEVICE_TYPE_DISK                 = 0x08;
 	public static final int DEVICE_TYPE_SERIAL               = 0x01;
 	public static final int DEVICE_TYPE_PARALLEL             = 0x02;

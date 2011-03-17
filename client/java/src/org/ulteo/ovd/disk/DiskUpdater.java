@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author David Lechavalier <david@ulteo.com> 2010
+ * Author David Lechavalier <david@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -72,6 +72,10 @@ public class DiskUpdater extends TimerTask {
 			}
 		}
 
+ 		if (this.diskManager.rdpdrChannel.g_num_devices >= RdpdrChannel.RDPDR_MAX_DEVICES) {
+ 			return;
+ 		}
+		
 		//search new drive to mount
 		for (String drivePath : this.diskManager.getNewDrive()) {
 			logger.debug("Mount "+drivePath);
