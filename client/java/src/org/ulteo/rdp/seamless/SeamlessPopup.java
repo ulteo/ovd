@@ -66,6 +66,7 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	
 	private boolean lockMouseEvents = false;
 	private RectWindow rw = null;
+	private Input input = null; 
 
 	public SeamlessPopup(int id_, int group_, Window parent_, Rectangle maxBounds_, int flags, Common common_) {
 		super(parent_);
@@ -83,7 +84,7 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 		this.rw = new RectWindow(this, dim, this.maxBounds);
 
 		// Set the key and mouse listeners
-		Input input = this.common.canvas.getInput();
+		input = this.common.canvas.getInput();
 
 		this.mouseAdapter = input.getMouseAdapter();
 		this.mouseMotionAdapter = input.getMouseMotionAdapter();
@@ -299,7 +300,7 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	}
 
 	@Override
-	public void focusGained(FocusEvent e) {
+	public void focusGained(FocusEvent e) {	
 		if (SeamlessPopup.focusManager != null)	{
 			SeamlessPopup.focusManager.performedFocusLost(this);
 		}
@@ -307,6 +308,7 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 
 	@Override
 	public void focusLost(FocusEvent e) {
+		input.lostFocus();
 		if (SeamlessPopup.focusManager != null)	{
 			SeamlessPopup.focusManager.performedFocusLost(this);
 		}

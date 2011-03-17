@@ -237,10 +237,10 @@ public abstract class KeyCode_FileBased {
         state[SHIFT][BEFORE] = e.isShiftDown();
         state[SHIFT][AFTER] = theDef.isShiftDown();
 
-        state[CTRL][BEFORE] = e.isControlDown() || e.isAltGraphDown();
+        state[CTRL][BEFORE] = e.isControlDown();
         state[CTRL][AFTER] = theDef.isCtrlDown();
 
-        state[ALT][BEFORE] = e.isAltDown() || e.isAltGraphDown();
+        state[ALT][BEFORE] = e.isAltDown() ;
         state[ALT][AFTER] = theDef.isAltDown();
 
         updateCapsLock(e);
@@ -269,44 +269,6 @@ public abstract class KeyCode_FileBased {
                 changes += ((char) 0x2a) + up;
             else
                 changes += ((char) 0x2a) + down;
-        }
-
-        if (state[CTRL][BEFORE] != state[CTRL][AFTER]) {
-            if (state[CTRL][BEFORE])
-                changes += ((char) 0x1d) + up;
-            else
-                changes += ((char) 0x1d) + down;
-        }
-
-        if (this.opt.altkey_quiet) {
-
-            if (state[ALT][BEFORE] != state[ALT][AFTER]) {
-                if (state[ALT][BEFORE])
-                    changes += (char) 0x38 + quietup + ((char) 0x38)
-                            + quietdown + ((char) 0x38) + up;
-                else {
-                    if (e.getID() == KeyEvent.KEY_RELEASED) {
-                        altQuiet = true;
-                        changes += ((char) 0x38) + quietdown;
-                    } else {
-                        altQuiet = false;
-                        changes += ((char) 0x38) + down;
-                    }
-                }
-
-            } else if (state[ALT][AFTER] && altQuiet) {
-                altQuiet = false;
-                changes += (char) 0x38 + quietup + ((char) 0x38) + quietdown
-                        + ((char) 0x38) + up + ((char) 0x38) + down;
-            }
-
-        } else {
-            if (state[ALT][BEFORE] != state[ALT][AFTER]) {
-                if (state[ALT][BEFORE])
-                    changes += ((char) 0x38) + up;
-                else
-                    changes += ((char) 0x38) + down;
-            }
         }
 
         if (state[CAPSLOCK][BEFORE] != state[CAPSLOCK][AFTER]) {

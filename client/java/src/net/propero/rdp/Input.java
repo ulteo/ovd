@@ -46,6 +46,7 @@ public abstract class Input {
 	protected static boolean serverAltDown = false;
     protected static boolean altDown = false;
 	protected static boolean ctrlDown = false;
+	protected static boolean altgrDown = false;
 
     protected static long last_mousemove = 0;
     
@@ -64,7 +65,7 @@ public abstract class Input {
 
 	protected static int SCANCODE_EXTENDED = 0x80;
 
-	protected static final int KBD_ALT_KEY = 0x12;
+	protected static final int KBD_ALT_KEY = 0x38;
 	protected static final int KBD_ALTGR_KEY = SCANCODE_EXTENDED | KBD_ALT_KEY;
 	protected static final int KBD_KEY_WINDOWS_LEFT = SCANCODE_EXTENDED | 0x5B; // Left Windows key
 	protected static final int KBD_KEY_WINDOWS_RIGHT = SCANCODE_EXTENDED | 0x5C; // Right Windows key
@@ -325,28 +326,25 @@ public abstract class Input {
      * Release any modifier keys that may be depressed.
      */
 	public void clearKeys() {
-		if (!modifiersValid)
-			return;
-        
-        altDown = false;
-        ctrlDown = false;
-        
         if(lastKeyEvent == null) return;
         
 		if (lastKeyEvent.isShiftDown())
 			sendScancode(getTime(), RDP_KEYRELEASE, 0x2a); // shift
-		if (lastKeyEvent.isAltDown() || serverAltDown){
-            sendScancode(getTime(), RDP_KEYRELEASE, 0x38); // ALT
-            sendScancode(getTime(), RDP_KEYPRESS | KBD_FLAG_QUIET, 0x38); // ALT
-            sendScancode(getTime(), RDP_KEYRELEASE | KBD_FLAG_QUIET, 0x38); // l.alt
+		if (lastKeyEvent.isAltDown() || altDown) {
+			sendScancode(getTime(), RDP_KEYRELEASE, KBD_ALT_KEY); // l.alt
         }
-		if (lastKeyEvent.isControlDown()){
+		if (lastKeyEvent.isControlDown() ||  ctrlDown) {
             sendScancode(getTime(), RDP_KEYRELEASE, 0x1d); // l.ctrl    
             //sendScancode(getTime(), RDP_KEYPRESS | KBD_FLAG_QUIET, 0x1d); // Ctrl
             //sendScancode(getTime(), RDP_KEYRELEASE | KBD_FLAG_QUIET, 0x1d); // ctrl
         }
-		if (lastKeyEvent.isAltGraphDown())
-			sendScancode(getTime(), RDP_KEYRELEASE, KBD_ALTGR_KEY); // altgr    
+		if (lastKeyEvent.isAltGraphDown() || altgrDown)
+			sendScancode(getTime(), RDP_KEYRELEASE, KBD_ALTGR_KEY); // altgr
+		
+		altDown = false;
+		ctrlDown = false;
+		altgrDown = false;
+
 	}
 
     /**
@@ -378,12 +376,72 @@ public abstract class Input {
 			super();
 		}
 
+		boolean checkModifiers(KeyEvent e) {
+			if (OSTools.isLinux()) {
+				if (e.isAltGraphDown() && !altgrDown) {
+					altgrDown = true;
+					sendScancode(getTime(), RDP_KEYPRESS, KBD_ALTGR_KEY); // altGr
+				}
+				if (! e.isAltGraphDown() && altgrDown) {
+					altgrDown = false;
+					sendScancode(getTime(), RDP_KEYRELEASE, KBD_ALTGR_KEY); // altGr
+				}
+			}
+			if (e.getID() == KeyEvent.KEY_PRESSED) {
+				if (e.getKeyCode() == KeyEvent.VK_ALT){
+					if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_RIGHT) {
+						altgrDown = true;
+						if (ctrlDown) {
+							sendScancode(getTime(), RDP_KEYRELEASE, 0x1d); // l.ctrl
+							ctrlDown = false;
+						}
+						sendScancode(getTime(), RDP_KEYPRESS, KBD_ALTGR_KEY); // l.ctrl
+					}
+					else {
+						altDown = true;
+						sendScancode(getTime(), RDP_KEYPRESS, KBD_ALT_KEY); // l.alt
+					}
+					return true;
+				}
+				if (e.getKeyCode() == KeyEvent.VK_CONTROL){
+					ctrlDown = true;
+					sendScancode(getTime(), RDP_KEYPRESS, 0x1d); // l.ctrl
+					return true;
+				}
+			}
+			if (e.getID() == KeyEvent.KEY_RELEASED) {
+				if (e.getKeyCode() == KeyEvent.VK_ALT){
+					if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_RIGHT) {
+						altgrDown = false;
+						sendScancode(getTime(), RDP_KEYRELEASE, KBD_ALTGR_KEY); // l.altgr
+					}
+					else {
+						altDown = true;
+						sendScancode(getTime(), RDP_KEYRELEASE, KBD_ALT_KEY); // l.alt
+					}
+					return true;
+				}
+				if (e.getKeyCode() == KeyEvent.VK_CONTROL){
+					if (ctrlDown) {
+						ctrlDown = false;
+						sendScancode(getTime(), RDP_KEYRELEASE, 0x1d); // l.ctrl
+					}
+					return true;
+				}
+			}
+			return false;
+		}
+		
         /**
          * Handle a keyPressed event, sending any relevant keypresses to the server
          */
 		public void keyPressed(KeyEvent e) {
 			KeyStroke keystroke = KeyStroke.getKeyStrokeForEvent(e);
 
+			if (checkModifiers(e)) {
+				return;
+			}
+			
 			for (Entry<KeyStroke, Long> each : keystrokesList.entrySet()) {
 				if (each.getKey().equals(keystroke)) {
 					long time = System.currentTimeMillis();
@@ -424,6 +482,10 @@ public abstract class Input {
 			modifiersValid = true;
 			long time = getTime();
 
+			if (checkModifiers(e)) {
+				return;
+			}
+
 			// Some java versions have keys that don't generate keyPresses -
 			// here we add the key so we can later check if it happened
 			pressedKeys.addElement(new Integer(e.getKeyCode()));
@@ -439,19 +501,24 @@ public abstract class Input {
 						sendKeyPresses(keySeq);
 					}
 					else if (lastKeyEvent.getKeyChar() != ((char)-1)) {
-						KeyEvent ev = new KeyEvent((Component)lastKeyEvent.getSource(), KeyEvent.KEY_TYPED, lastKeyEvent.getWhen(), lastKeyEvent.getModifiers(), 0, lastKeyEvent.getKeyChar());
+						char lastKeyChar = Character.toLowerCase((char)lastKeyEvent.getKeyCode());
+						KeyEvent ev = new KeyEvent((Component)lastKeyEvent.getSource(), KeyEvent.KEY_TYPED, lastKeyEvent.getWhen(), 0, 0, lastKeyChar);
 						sendKeyPresses(newKeyMapper.getKeyStrokes(ev));
 					}
 				}
-				lastKeyEvent = e;
 				// sendScancode(time, RDP_KEYPRESS, keys.getScancode(e));
 			}
+			lastKeyEvent = e;
 		}
 
         /**
          * Handle a keyReleased event, sending any relevent key events to the server
          */
 		public void keyReleased(KeyEvent e) {
+			if (checkModifiers(e)) {
+				return;
+			}
+			
 			// Some java versions have keys that don't generate keyPresses -
 			// we added the key to the vector in keyPressed so here we check for
 			// it
@@ -482,8 +549,6 @@ public abstract class Input {
 					sendKeyPresses(newKeyMapper.getKeyStrokes(e));
 				// sendScancode(time, RDP_KEYRELEASE, keys.getScancode(e));
 			}
-			if (lastKeyEvent.isAltGraphDown())
-				sendScancode(getTime(), RDP_KEYRELEASE, KBD_ALTGR_KEY); // altgr    
 		}
 
 	}
@@ -589,23 +654,6 @@ public abstract class Input {
 					sendScancode(time, RDP_KEYRELEASE,
 							0x37 | KeyCode.SCANCODE_EXTENDED); // PrtSc
 					sendScancode(time, RDP_KEYPRESS, 0x1d); // Ctrl
-				}
-			}
-			break;
-		case KeyEvent.VK_ADD: // Ctrl + ALt + Plus (on NUM KEYPAD) = PrtSc
-		case KeyEvent.VK_EQUALS: // for laptops that can't do Ctrl-Alt+Plus
-			if (ctrlDown) {
-				if (pressed) {
-					sendScancode(time, RDP_KEYRELEASE, 0x38); // Alt
-					sendScancode(time, RDP_KEYRELEASE, 0x1d); // Ctrl
-					sendScancode(time, RDP_KEYPRESS,
-							0x37 | KeyCode.SCANCODE_EXTENDED); // PrtSc
-					logger.debug("shortcut pressed: sent PRTSC");
-				} else {
-					sendScancode(time, RDP_KEYRELEASE,
-							0x37 | KeyCode.SCANCODE_EXTENDED); // PrtSc
-					sendScancode(time, RDP_KEYPRESS, 0x1d); // Ctrl
-					sendScancode(time, RDP_KEYPRESS, 0x38); // Alt
 				}
 			}
 			break;

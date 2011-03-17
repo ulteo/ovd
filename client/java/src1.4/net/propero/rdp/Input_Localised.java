@@ -64,13 +64,6 @@ public class Input_Localised extends Input {
 				sendScancode(getTime(),RDP_KEYRELEASE,0x3a);
 		
 			}
-			if (tk.getLockingKeyState(KeyEvent.VK_NUM_LOCK) != numLockOn){
-				numLockOn = !numLockOn;
-				logger.debug("NUM LOCK toggle");
-				sendScancode(getTime(),RDP_KEYPRESS,0x45);
-				sendScancode(getTime(),RDP_KEYRELEASE,0x45);
-		
-			}
 			if (tk.getLockingKeyState(KeyEvent.VK_SCROLL_LOCK) != scrollLockOn){
 				scrollLockOn = !scrollLockOn;
 				logger.debug("SCROLL LOCK toggle");
