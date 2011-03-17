@@ -63,7 +63,7 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 
 	private boolean modal = false;
 	private SeamlessWindow modalWindow = null;
-
+	
 	private boolean lockMouseEvents = false;
 	private RectWindow rw = null;
 
@@ -322,5 +322,9 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 			return;
 		}
 		this.modalWindow = modalWnd;
+	}
+
+	public boolean isFullscreenEnabled() {
+		return false;
 	}
 }

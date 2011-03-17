@@ -74,6 +74,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	public static final int WINDOW_NORMAL = 0;
 	public static final int WINDOW_MINIMIZED = 1;
 	public static final int WINDOW_MAXIMIZED = 2;
+	public static final int WINDOW_FULLSCREEN = 3;
 	public static final int WINDOW_POSITION_TIMER = 200000;
 
 	public static final int WINDOW_HELLO_RECONNECT	= 0x0001;
@@ -491,8 +492,9 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		}
 
 		SeamlessWindow f = this.windows.get(name);
-		if (f.sw_getExtendedState() == Frame.ICONIFIED) {
-			logger.warn("Try to resize window "+String.format("0x%08x", id)+" but it is iconified.");
+		int state = f.sw_getExtendedState();
+		if (state == Frame.ICONIFIED || state == SeamlessWindow.STATE_FULLSCREEN) {
+			logger.warn("Try to resize window "+String.format("0x%08x", id)+" but it is iconified or in fullscreen state.");
 			return false;
 		}
 
@@ -542,6 +544,9 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		switch((int)state) {
 			case SeamlessChannel.WINDOW_MINIMIZED:
 				frame_state = Frame.ICONIFIED;
+				break;
+			case SeamlessChannel.WINDOW_FULLSCREEN:
+				frame_state = SeamlessWindow.STATE_FULLSCREEN;
 				break;
 			case SeamlessChannel.WINDOW_MAXIMIZED:
 				frame_state = Frame.MAXIMIZED_BOTH;
@@ -900,6 +905,9 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 			SeamFrame sf = (SeamFrame) f;
 			Rectangle maximizedBounds = sf.getMaximizedBounds();
 			sf.setParams(f.sw_getId(), 0, 0, maximizedBounds.width, maximizedBounds.height);
+
+			if (sf.isFullscreenEnabled())
+				return;
 		}
 
 		StateOrder order = null;

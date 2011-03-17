@@ -73,6 +73,8 @@ public class SeamFrame extends Frame
 	protected Rectangle maxBounds = null;
 
 	private SeamlessWindow modalWindow = null;
+	
+	private boolean isFullscreenEnabled = false;
 
 	public SeamFrame(int id_, int group_, Rectangle maxBounds_, Common common_) {
 		this.common = common_;
@@ -209,12 +211,23 @@ public class SeamFrame extends Frame
 		this.setTitle(title);
 	}
 	public int sw_getExtendedState() {
+		if (this.isFullscreenEnabled)
+			return SeamlessWindow.STATE_FULLSCREEN;
+
 		return this.getExtendedState();
 	}
 	public void sw_setExtendedState(int state) {
 		if (! this.isVisible()) {
 			this.setVisible(true);
 		}
+
+		if (state == SeamlessWindow.STATE_FULLSCREEN) {
+			this.isFullscreenEnabled = true;
+			state = Frame.MAXIMIZED_BOTH;
+		}
+		else
+			this.isFullscreenEnabled = false;
+
 		this.setExtendedState(state);
 	}
 	public void sw_requestFocus() {
@@ -241,5 +254,8 @@ public class SeamFrame extends Frame
 			return;
 		}
 		this.modalWindow = modalWnd;
+	}
+	public boolean isFullscreenEnabled() {
+		return this.isFullscreenEnabled;
 	}
 }
