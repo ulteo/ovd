@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author David Lechevalier <david@ulteo.com> 2010
+ * Author David Lechevalier <david@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,6 +36,9 @@ import javax.swing.JOptionPane;
 
 import org.jpedal.PdfDecoder;
 import org.jpedal.objects.PrinterOptions;
+import org.jpedal.io.ObjectStore;
+
+import org.ulteo.utils.FilesOp;
 
 public class OVDJob{
 	private static final long serialVersionUID = 1L;
@@ -143,7 +146,12 @@ public class OVDJob{
 	
 			//Print PDF document
 			printJob.print(attributeSet);
-			//new File(this.pdfFile).delete();
+			decode_pdf.closePdfFile();
+
+			//Temporary file cleaning
+			new File(this.pdfFilename).delete();
+			String jpedalDir = ObjectStore.temp_dir;
+			FilesOp.deleteDirectory(new File(jpedalDir));
 			return true;
 		} 
 		catch (PrinterException ee) {
