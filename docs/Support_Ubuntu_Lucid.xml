@@ -105,31 +105,32 @@ deb http://archive.ulteo.com/ovd/3.0/@distrib_name@ @distrib_version@ main]]>
     <section id="repository_offline">
       <title id="repository_offline_title">Offline Method</title>
 
+      <important id="repository_offline_warning">
+        <para>
+          The Ulteo OVD offline installation requires that the <ulink
+          url="@distrib_dvd_url@">@distrib_pretty_name@ DVD</ulink> is
+          registered on the system as a packages repository in order
+          to match package dependecies.
+        </para>
+
+        <para>
+          If the system is not set to get packages from the DVD, Ulteo
+          dependencies like Apache, for instance, won't be installed
+          and the Ulteo solution will not work.
+        </para>
+      </important>
+
      <itemizedlist>
-       <listitem id="repository_offline_step0">
-         <para id="repository_offline_step0_para">
-           The OVD offline repositories are jointly used with the 
-           <ulink url="@distrib_dvd_url@">@distrib_pretty_name@ DVD</ulink>
-           . When the DVD is mount in the system, add the DVD repository:
-          <screen>
-            <![CDATA[
-# apt-cdrom add]]>
-          </screen>
-         </para>
-       </listitem>
-     
        <listitem id="repository_offline_step1">
-         <para>
-           The offline repository is an archive named
-           <emphasis>ovd-3.0-@distrib_name@-@distrib_version@.tar.gz</emphasis>.
-         </para>
          <para id="repository_offline_step1_para">
-           Get this archive from <ulink
+           Get this
+           <emphasis>ovd-3.0-@distrib_name@-@distrib_version@.tar.gz</emphasis>
+           archive from <ulink
            url="http://archive.ulteo.com/ovd/3.0/offline/">the Ulteo
            website</ulink> or from the Ulteo OVD DVD and copy it in
            the <emphasis>/root</emphasis> of your machine.
          </para>
-       </listitem>
+        </listitem>
 
        <listitem id="repository_offline_step2">
           <para id="repository_offline_step2_para">
