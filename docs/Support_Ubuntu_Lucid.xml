@@ -217,11 +217,7 @@ deb file:///root/ovd-3.0-@distrib_name@-@distrib_version@ @distrib_version@ main
 	  <para>
 	    Now log in mysql and create a database:
 	  <screen><![CDATA[
-# mysql -u root -p
-Enter password:
-mysql> create database ovd;
- Query OK, 1 row affected (0.02 sec)
-mysql> exit]]>
+# mysql -u root -p -e 'create database ovd']]>
           </screen>
           <!--
 Should be replaced by something like that:
