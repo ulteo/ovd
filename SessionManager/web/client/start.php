@@ -742,8 +742,10 @@ $user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 $session_node->appendChild($user_node);
 
 if (isset($profile_available) && $profile_available === true) {
+	$profile_server_obj = Abstract_Server::load($profile_server);
+
 	$profile_node = $dom->createElement('profile');
-	$profile_node->setAttribute('server', $profile_server);
+	$profile_node->setAttribute('server', $profile_server_obj->getAttribute('external_name'));
 	$profile_node->setAttribute('dir', $profile_name);
 	$profile_node->setAttribute('login', $user_login_fs);
 	$profile_node->setAttribute('password', $user_password_fs);
@@ -753,8 +755,10 @@ if (isset($profile_available) && $profile_available === true) {
 if (isset($sharedfolders_available) && $sharedfolders_available === true) {
 	$sharedfolders_node = $dom->createElement('sharedfolders');
 	foreach ($netshares as $netshare) {
+		$sharedfolder_server_obj = Abstract_Server::load($netshare->server);
+
 		$sharedfolder_node = $dom->createElement('sharedfolder');
-		$sharedfolder_node->setAttribute('server', $netshare->server);
+		$sharedfolder_node->setAttribute('server', $sharedfolder_server_obj->getAttribute('external_name'));
 		$sharedfolder_node->setAttribute('dir', $netshare->id);
 		$sharedfolder_node->setAttribute('name', $netshare->name);
 		$sharedfolder_node->setAttribute('login', $user_login_fs);
