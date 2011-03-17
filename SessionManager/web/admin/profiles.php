@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ function show_default() {
 	page_header();
 
 	echo '<div id="profiles_div">';
-	echo '<h1>'._('Profile').'</h1>';
+	echo '<h1>'._('Profiles').'</h1>';
 
 	echo '<div id="profiles_list_div">';
 	echo '<table border="0" cellspacing="1" cellpadding="3">';
