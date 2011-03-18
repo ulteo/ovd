@@ -73,7 +73,7 @@ public class Options {
 	public boolean autostart = false;
 	public boolean debugSeamless = false;
 	public boolean guiLocked = false;
-	public boolean isBugReporterVisible = true;
+	public boolean isBugReporterVisible = false;
 
 	
 	public Options() {
