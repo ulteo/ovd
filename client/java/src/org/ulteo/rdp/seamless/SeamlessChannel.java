@@ -1,10 +1,10 @@
 /* SeamlessChannel.java
  * Component: UlteoRDP
  * 
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
- * Author Thomas MOUTON <thomas@ulteo.com> 2009-2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
  * 
  * Revision: $Revision: 0.2 $
  * Author: $Author: arnauvp $
