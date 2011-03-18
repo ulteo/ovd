@@ -304,7 +304,8 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 			this.sessionStatusMonitoringThread = null;
 		}
 
-		this.cleanConnections();
+		this.stopAllRDPConnections();
+		this.waitAllRDPServersLogout();
 	}
 
 	protected abstract void runSessionTerminated();
@@ -341,11 +342,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 				}
 			}
 		} while (rdpActivity);
-	}
-
-	private void cleanConnections() {
-		this.stopAllRDPConnections();
-		this.waitAllRDPServersLogout();
 	}
 
 	protected abstract void customizeConnection(RdpConnectionOvd co);
