@@ -194,9 +194,6 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 
 	@Override
-	protected void display(RdpConnection co) {}
-
-	@Override
 	protected void hide(RdpConnection co) {
 
 		for (Application app : ((RdpConnectionOvd)co).getAppsList()) {

@@ -108,12 +108,6 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 	}
 
 	@Override
-	protected void display(RdpConnection co) {
-		if (SystemTray.isSupported()) {
-		}
-	}
-
-	@Override
 	protected void hide(RdpConnection co) {
 		for (Application app : ((RdpConnectionOvd) co).getAppsList()) {
 			this.system.uninstall(app);

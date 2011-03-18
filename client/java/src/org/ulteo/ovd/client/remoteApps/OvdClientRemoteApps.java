@@ -27,6 +27,7 @@ package org.ulteo.ovd.client.remoteApps;
 import java.awt.Rectangle;
 
 import net.propero.rdp.RdesktopException;
+import net.propero.rdp.RdpConnection;
 
 import org.ulteo.Logger;
 import org.ulteo.ovd.OvdException;
@@ -430,4 +431,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 		return true;
 	}
+	
+	@Override
+	protected void display(RdpConnection co) {}
 }
