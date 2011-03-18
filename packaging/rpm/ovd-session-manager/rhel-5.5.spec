@@ -135,7 +135,7 @@ if [ "$1" = "0" ]; then
            /var/log/ulteo/sessionmanager/*
 
     if apachectl configtest 2>/dev/null; then
-        service apache2 restart || true
+        /etc/init.d/httpd restart || true
     else
         echo "Apache configuration broken: correct the issue and restart the apache2 server"
     fi
