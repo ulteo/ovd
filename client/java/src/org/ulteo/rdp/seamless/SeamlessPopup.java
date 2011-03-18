@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -156,7 +156,7 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 		this.height = height;
 
 		this.setSize(this.width, this.height);
-		this.setLocation(this.x + this.maxBounds.x, this.y + this.maxBounds.y);
+		this.setLocation(this.x, this.y);
 		this.repaint();
 	}
 
@@ -175,8 +175,8 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 
 	@Override
 	public void paint(Graphics g) {
-		int x_pos = Math.max(this.x, 0);
-		int y_pos = Math.max(this.y, 0);
+		int x_pos = Math.max(this.x, 0) - this.maxBounds.x;
+		int y_pos = Math.max(this.y, 0) - this.maxBounds.y;
 		int w = Math.min(width, this.backstore.getWidth() - x_pos);
 		int h = Math.min(height, this.backstore.getHeight() - y_pos);
 		int dx = ((this.x < 0) ? -this.x : 0);
