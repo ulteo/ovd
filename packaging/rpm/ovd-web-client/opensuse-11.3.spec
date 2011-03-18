@@ -77,8 +77,11 @@ fi
 A2CONFDIR=/etc/apache2/conf.d
 
 if [ "$1" = "0" ]; then
-    if [ -e $A2CONFDIR/webclient.conf ]; then
+    if [ -L $A2CONFDIR/webclient.conf ]; then
+        # remove apache2 link
         rm -f $A2CONFDIR/webclient.conf
+
+        # reload apache
         if apache2ctl configtest 2>/dev/null; then
             service apache2 reload || true
         else

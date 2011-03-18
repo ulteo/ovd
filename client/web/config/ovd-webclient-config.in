@@ -1,0 +1,73 @@
+#!/bin/sh
+
+# Copyright (C) 2011 Ulteo SAS
+# Author Samuel BOVEE <samuel@ulteo.com> 2011
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, version 2
+# of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+PROGRAM=$(basename $0)
+
+CONFFILE=/etc/ulteo/webclient/config.inc.php
+
+usage ()
+{
+    echo << EOF "\
+Usage: $PROGRAM [--sm-address] [--version|-v] [--help|-h]
+Configure an Ulteo Web client (Open Virtual Desktop)
+
+  --sm-address         Ulteo OVD Session Manager addresse
+  --help|-h            display this help
+  --version|-v         display version informations"
+EOF
+}
+
+unset SM
+while [ -n "$1" ]; do
+    case $1 in
+        --sm-address)
+            DEFAULT_SM="$2"
+            LINK=yes
+            shift;;
+        --help|-h)
+            usage
+            exit 0;;
+        --version|-v)
+            echo $PROGRAM @PKG_VERSION@
+            exit 0;;
+        *)
+            usage
+            exit 1;;
+    esac
+    shift
+done
+
+while [ ! \( "$LINK" = "yes" -o "$LINK" = "no" \) ]; do
+    echo -n "Do you want to link the web client to a specific Session Manager ? ([yes]/no): " && read LINK
+    LINK=$(echo "$LINK" | tr 'A-Z' 'a-z')
+    [ -z "$LINK" ] && LINK=yes
+done
+
+if [ "$LINK" = "yes" ]; then
+    [ -z "$DEFAULT_SM" ] && DEFAULT_SM=$(expr "$(grep SESSIONMANAGER_HOST /etc/ulteo/webclient/config.inc.php)" : ".*'\(.*\)' *) *;.*")
+    echo -n "Session Manager address [$DEFAULT_SM]: " && read SM
+    [ -z "$SM" ] && SM=$DEFAULT_SM
+     sed -i -e '/SESSIONMANAGER_HOST/ s,^// *,,' \
+            -e "/SESSIONMANAGER_HOST/ s/, *'.*' *);/, '${SM}');/" \
+            $CONFFILE
+else
+    sed -i '/SESSIONMANAGER_HOST/ s,^define,// define,' $CONFFILE
+fi
+
+exit 0
