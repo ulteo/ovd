@@ -21,12 +21,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+# chkconfig: 2345 90 10
+
 ### BEGIN INIT INFO
 # Provides:          ulteo-ovd-subsystem
 # Required-Start:    $local_fs $network
 # Required-Stop:     $local_fs $network
-# Should-Start:      apache2
-# Should-Stop:       apache2
+# Should-Start:      httpd
+# Should-Stop:       httpd
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Start Ulteo OVD subsystem
