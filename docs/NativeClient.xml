@@ -360,7 +360,7 @@ deb file:///root/ovd-3.0-gold-ubuntu-lucid lucid main]]>
         <itemizedlist>
           <listitem>
             <para>Section <emphasis role="strong">server</emphasis></para>
-            <itemizedlist>
+            <itemizedlist id="config-file-server">
               <listitem>
                 <para><emphasis role="strong">host</emphasis>, the server to connect to</para>
               </listitem>
@@ -372,7 +372,7 @@ deb file:///root/ovd-3.0-gold-ubuntu-lucid lucid main]]>
 
           <listitem>
             <para>Section <emphasis role="strong">user</emphasis></para>
-            <itemizedlist>
+            <itemizedlist id="config-file-user">
               <listitem>
                 <para><emphasis role="strong">login</emphasis>, the login you want to use</para>
               </listitem>
@@ -392,7 +392,7 @@ deb file:///root/ovd-3.0-gold-ubuntu-lucid lucid main]]>
 
           <listitem>
             <para>Section <emphasis role="strong">session</emphasis></para>
-            <itemizedlist>
+            <itemizedlist id="config-file-session">
               <listitem>
                 <para><emphasis role="strong">language</emphasis>, using the IETF lang code</para>
               </listitem>
@@ -408,12 +408,20 @@ deb file:///root/ovd-3.0-gold-ubuntu-lucid lucid main]]>
                   <emphasis>auto</emphasis> or <emphasis>desktop</emphasis>
                 </para>
               </listitem>
+
+              <listitem>
+                <para>
+                  <emphasis role="strong">show-progressbar</emphasis>, Can be
+                  <emphasis>true</emphasis> (default) or
+                  <emphasis>false</emphasis>.
+                </para>
+              </listitem>
             </itemizedlist>
           </listitem>
           
           <listitem>
             <para>Section <emphasis role="strong">publication</emphasis></para>
-            <itemizedlist>
+            <itemizedlist id="config-file-publication">
               <listitem>
                 <para>
                   <emphasis role="strong">auto-publish</emphasis>, for
@@ -428,7 +436,7 @@ deb file:///root/ovd-3.0-gold-ubuntu-lucid lucid main]]>
 
           <listitem>
             <para>Section <emphasis role="strong">screen</emphasis></para>
-            <itemizedlist>
+            <itemizedlist id="config-file-screen">
               <listitem>
                 <para>
                   <emphasis role="strong">size</emphasis>, for desktop mode
@@ -444,7 +452,7 @@ deb file:///root/ovd-3.0-gold-ubuntu-lucid lucid main]]>
 
          <listitem>
             <para>Section <emphasis role="strong">gui</emphasis></para>
-            <itemizedlist>
+            <itemizedlist id="config-file-gui">
               <listitem>
                 <para>
                   <emphasis role="strong">locked-gui</emphasis>,
@@ -473,80 +481,12 @@ deb file:///root/ovd-3.0-gold-ubuntu-lucid lucid main]]>
         </para>
 
         <itemizedlist>
-          <listitem>
-            <para><emphasis role="strong">login</emphasis>, the login you want to use</para>
-          </listitem>
-
-          <listitem>
-            <para><emphasis role="strong">host</emphasis>, the server to connect to</para>
-          </listitem>
-
-          <listitem>
-            <para><emphasis role="strong">port</emphasis>, the port to use if not default (443)</para>
-          </listitem>
-
-          <listitem>
-            <para><emphasis role="strong">language</emphasis>, using the IETF lang code</para>
-          </listitem>
-
-          <listitem>
-            <para><emphasis role="strong">keymap</emphasis>, using the IETF lang code</para>
-          </listitem>
-
-          <listitem>
-            <para>
-              <emphasis role="strong">mode</emphasis>, the session mode,
-              can be <emphasis>applications</emphasis>,
-              <emphasis>auto</emphasis> or <emphasis>desktop</emphasis>
-            </para>
-          </listitem>
-
-          <listitem>
-            <para>
-              <emphasis role="strong">size</emphasis>, for desktop mode
-              only. Can be <emphasis>800x600</emphasis>,
-              <emphasis>1024x768</emphasis> (default),
-              <emphasis>1280x678</emphasis>,
-              <emphasis>maximized</emphasis> or
-              <emphasis>fullscreen</emphasis>
-            </para>
-          </listitem>
-
-          <listitem>
-            <para>
-              <emphasis role="strong">auto-publish</emphasis>, for
-              applications mode only, add the application shortcuts on
-              the Desktop and perform file associations. Can be
-              <emphasis>true</emphasis> (default) or
-              <emphasis>false</emphasis>.
-            </para>
-          </listitem>
-
-          <listitem>
-            <para>
-              <emphasis role="strong">use-local-credentials</emphasis>, Can be
-              <emphasis>true</emphasis> or
-              <emphasis>false</emphasis> (default).
-            </para>
-            <para>
-              When this option is used, the <emphasis>login</emphasis>
-              attribute is useless.
-            </para>
-          </listitem>
-
-          <listitem>
-            <para>
-              <emphasis role="strong">show-progressbar</emphasis>, Can be
-              <emphasis>true</emphasis> (default) or
-              <emphasis>false</emphasis>.
-            </para>
-          </listitem>
-
-          <listitem>
-            <para>
-              <emphasis role="strong">locked-gui</emphasis>, minimal interface with only login and password fields
-            </para>
-          </listitem>
+          <xi:include xpointer="xpointer(//*[@id='config-file-server']/node())" />
+          <xi:include xpointer="xpointer(//*[@id='config-file-user']/node())" />
+          <xi:include xpointer="xpointer(//*[@id='config-file-session']/node())" />
+          <xi:include xpointer="xpointer(//*[@id='config-file-publication']/node())" />
+          <xi:include xpointer="xpointer(//*[@id='config-file-screen']/node())" />
+          <xi:include xpointer="xpointer(//*[@id='config-file-gui']/node())" />
         </itemizedlist>
       </simplesect>
     </section>
