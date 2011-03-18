@@ -61,7 +61,7 @@ do_start () {
 	log_begin_msg "Starting $NAME"
 
 	if [ -f $PIDFILE ]; then
-		if ps $(cat $PIDFILE); then
+		if ps $(cat $PIDFILE) >/dev/null; then
 			log_warning_msg "already running"
 			log_end_msg 1
 			return
