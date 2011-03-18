@@ -13,7 +13,10 @@
  *  Sound Channel Process Functions
  *  Copyright (C) Matthew Chapman 2003
  *  Copyright (C) GuoJunBo guojunbo@ict.ac.cn 2003
- *
+ *  Copyright (C) 2010-2011 Ulteo SAS
+ *  http://www.ulteo.com
+ *  Author David LECHEVALIER <david@ulteo.com> 2010-2011
+ *  
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -101,6 +104,7 @@ public class SoundDriver {
 	
 	public void waveOutClose() {
 		if( this.oDevice != null ) {
+			this.oDevice.drain();
 			this.oDevice.stop();
 			this.oDevice.flush();
 			this.oDevice.close();
