@@ -11,6 +11,9 @@
  *  Sound Channel Process Functions
  *  Copyright (C) Matthew Chapman 2003
  *  Copyright (C) GuoJunBo guojunbo@ict.ac.cn 2003
+ *  Copyright (C) 2010-2011 Ulteo SAS
+ *  http://www.ulteo.com
+ *  Author David LECHEVALIER <david@ulteo.com> 2010-2011
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -133,8 +136,9 @@ public class SoundChannel extends VChannel {
 				this.awaitingDataPacket = true;
 				break;
 			case RDPSND_CLOSE:
-				this.soundDriver.waveOutClose();
-				this.deviceOpen = false;
+				// Under Windows server 2008R2, there is a lose of packet if we do that.
+				//this.soundDriver.waveOutClose();
+				//this.deviceOpen = false;
 				break;
 			case RDPSND_NEGOTIATE:
 				negotiate( data );
