@@ -21,7 +21,6 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
-import java.awt.SystemTray;
 import java.util.HashMap;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
