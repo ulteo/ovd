@@ -35,6 +35,7 @@
   </taskdef>
 
   <property name="build.cert"        value="certificate"/>
+  <property name="javac.debug"       value="false"/>
   <property name="keystore.password" value=""/>
   <property name="version"           value="@VERSION@" />
   <property name="mingw32.prefix"    value="i586-mingw32msvc-"/>
@@ -87,7 +88,8 @@
   <target name="rdpClient">
     <antcall target="precompile" />
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
-           target="1.5" source="1.5" includes="org/ulteo/rdp/RdpClient.java">
+           target="1.5" source="1.5" includes="org/ulteo/rdp/RdpClient.java"
+           debug="${javac.debug}" debuglevel="lines,vars,source">
       <classpath refid="minimal.path" />
     </javac>
   </target>
@@ -114,7 +116,8 @@
   <target name="PDFPrinter" description="compile PDFPrinter classes">
     <antcall target="precompile" />
     <javac srcdir="src" destdir="build" encoding="UTF8" target="1.5" source="1.5"
-           includes="org/ulteo/ovd/printer/PrinterApplet.java">
+           includes="org/ulteo/ovd/printer/PrinterApplet.java"
+           debug="${javac.debug}" debuglevel="lines,vars,source">
       <classpath>
         <pathelement location="required_libraries/jpedal.jar"/>
       </classpath>
@@ -148,7 +151,8 @@
   <antcall target="precompile" />
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
           target="1.5" source="1.5"
-          includes="org/ulteo/ovd/client/ExternalAppsClient.java">
+          includes="org/ulteo/ovd/client/ExternalAppsClient.java"
+          debug="${javac.debug}" debuglevel="lines,vars,source">
       <classpath>
         <fileset dir="required_libraries" includes="*.jar" />
       </classpath>
@@ -182,7 +186,8 @@
     <antcall target="precompile" />
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
            target="1.5" source="1.5"
-           includes="org/ulteo/ovd/client/NativeClient.java">
+           includes="org/ulteo/ovd/client/NativeClient.java"
+           debug="${javac.debug}" debuglevel="lines,vars,source">
       <classpath>
         <fileset dir="required_libraries" includes="*.jar" />
       </classpath>
@@ -259,7 +264,8 @@
   <target name="applet">
     <antcall target="precompile" />
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
-           target="1.5" source="1.5" includes="org/ulteo/ovd/applet/**.java" >
+           target="1.5" source="1.5" includes="org/ulteo/ovd/applet/**.java"
+           debug="${javac.debug}" debuglevel="lines,vars,source">
       <classpath>
         <path refid="minimal.path" />
         <pathelement location="${java.home}/lib/plugin.jar"/>
@@ -311,7 +317,8 @@
   <target name="vdi">
     <antcall target="precompile" />
     <javac srcdir="src:src1.4" destdir="build" encoding="UTF8"
-           target="1.5" source="1.5" includes="org/ulteo/vdi/Client.java">
+           target="1.5" source="1.5" includes="org/ulteo/vdi/Client.java"
+           debug="${javac.debug}" debuglevel="lines,vars,source">
       <classpath>
         <path refid="minimal.path" />
         <pathelement location="required_libraries/jpedal.jar"/>
