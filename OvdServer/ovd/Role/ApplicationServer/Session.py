@@ -4,6 +4,7 @@
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
+# Author David LECHEVALIER <david@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -208,6 +209,10 @@ class Session:
 		if not os.path.exists(spool):
 			os.makedirs(spool)
 		
+		if self.user_session_dir is None:
+			Logger.warn("Unable to dump shell archive")
+			return
+
 		for path in glob.glob(os.path.join(self.user_session_dir, "dump*.txt")):
 			name = os.path.basename(path)
 			
