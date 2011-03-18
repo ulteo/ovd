@@ -53,27 +53,27 @@ do_start() {
     mkdir -p $MODKERNELDIR
     touch $MODKERNELDIR/modules.dep
 
-    mount -t proc none $CHROOTDIR/proc
-    mount -t devpts none $CHROOTDIR/dev/pts
+    mount -t proc none $CHROOTDIR/proc 2>/dev/null
+    mount -t devpts none $CHROOTDIR/dev/pts 2>/dev/null
 
-    chroot $CHROOTDIR /etc/init.d/cups start
-    chroot $CHROOTDIR /etc/init.d/xrdp start
+    chroot $CHROOTDIR service cups start
+    chroot $CHROOTDIR service xrdp start
     chroot $CHROOTDIR service smbd start
-    chroot $CHROOTDIR /etc/init.d/apache2 start
-    chroot $CHROOTDIR /etc/init.d/ovdSlaveServer start
+    chroot $CHROOTDIR service apache2 start
+    chroot $CHROOTDIR service ovdSlaveServer start
 }
 
 do_stop() {
     [ -d "$CHROOTDIR" ] || return 1
 
-    chroot $CHROOTDIR /etc/init.d/ovdSlaveServer stop
-    chroot $CHROOTDIR /etc/init.d/apache2 stop
+    chroot $CHROOTDIR service ovdSlaveServer stop
+    chroot $CHROOTDIR service apache2 stop
     chroot $CHROOTDIR service smbd stop
-    chroot $CHROOTDIR /etc/init.d/xrdp stop
-    chroot $CHROOTDIR /etc/init.d/cups stop
+    chroot $CHROOTDIR service xrdp stop
+    chroot $CHROOTDIR service cups stop
 
-    umount $CHROOTDIR/dev/pts || true
-    umount $CHROOTDIR/proc || true
+    umount $CHROOTDIR/dev/pts 2>/dev/null
+    umount $CHROOTDIR/proc 2>/dev/null
 }
 
 case $1 in
