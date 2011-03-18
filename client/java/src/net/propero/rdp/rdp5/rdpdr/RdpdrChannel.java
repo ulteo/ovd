@@ -78,6 +78,7 @@ public class RdpdrChannel extends VChannel {
 	public static final int STATUS_INVALID_PARAMETER	  = 0xc000000d;
 	public static final int STATUS_SUCCESS			      = 0x00000000;
 	public static final int STATUS_NOT_SUPPORTED          = 0xc00000bb;
+	public static final int FLAG_DEFAULTPRINTER           = 0xc0000002;
 	
 	public int g_num_devices = 0;
 	LinkedList g_iorequest = new LinkedList();
@@ -321,7 +322,10 @@ public class RdpdrChannel extends VChannel {
 					int bloblen = printerinfo.bloblen;
 
 					s.setLittleEndian32(24 + driverlen + printerlen + bloblen);
-					s.setLittleEndian32(0);
+					if (printerinfo.default_printer)
+						s.setLittleEndian32(FLAG_DEFAULTPRINTER);
+					else
+						s.setLittleEndian32(0);
 					s.incrementPosition(8);
 					s.setLittleEndian32(driverlen);
 					s.setLittleEndian32(printerlen);
