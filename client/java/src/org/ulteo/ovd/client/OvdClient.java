@@ -427,11 +427,12 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 			}
 		};
 
-		long delay = 0;
 		if (this.persistent) {
 			forceDisconnectionTimer.schedule(forceDisconnectionTask, 0);
 			return;
 		}
+		
+		long delay = 0;
 		if (this.smComm != null) {
 			Thread disconnectThread = new Thread(new Runnable() {
 				public void run() {
