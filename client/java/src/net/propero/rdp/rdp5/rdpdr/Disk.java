@@ -6,6 +6,23 @@
  * Date: 2009/05/16
  *
  * Copyright (c) tomqq
+ * Copyright (C) 2011 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David Lechevalier <david@ulteo.com> 2011
+ * 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * Purpose: Disk class, chanel
  */
@@ -315,6 +332,19 @@ public class Disk extends RdpdrDevice{
 			case 4://FileFsDeviceInformation:
 			case 6://FileFsControlInformation:
 			case 7://FileFsFullSizeInformation:
+				long length = tempFile.length();
+				
+				int low = (int) length;
+				int high = (int) (length >> 32);
+				out.setLittleEndian32(low);                 /* Total allocation units low */
+				out.setLittleEndian32(high);                /* Total allocation units high */
+				out.setLittleEndian32(low);                 /* Caller allocation units low */
+				out.setLittleEndian32(high);                /* Caller allocation units high */
+				out.setLittleEndian32(low);                 /* Available allocation units low */
+				out.setLittleEndian32(high);                /* Available allocation units high*/
+				out.setLittleEndian32((int)length / 0x200); /* Sectors per allocation unit */
+				out.setLittleEndian32(0x200);               /* Bytes per sector */
+				break;
 			case 8://FileFsObjectIdInformation:
 			case 10://FileFsMaximumInformation:*/
 
