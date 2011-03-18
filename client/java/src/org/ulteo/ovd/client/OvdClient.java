@@ -156,10 +156,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.availableConnections.add(rc);
 	}
 
-	private void removeAvailableConnection(RdpConnectionOvd rc) {
-		this.availableConnections.remove(rc);
-	}
-
 	protected int countAvailableConnection() {
 		return this.availableConnections.size();
 	}
@@ -383,8 +379,8 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.uncustomizeConnection((RdpConnectionOvd) co);
 
 		this.hide(co);
-		this.performedConnections.remove((RdpConnectionOvd) co);
-		this.removeAvailableConnection((RdpConnectionOvd)co);
+		this.performedConnections.remove(co);
+		this.availableConnections.remove(co);
 		Logger.info("Disconnected from "+co.getServer());
 
 		if (this.sessionStatusMonitoringThread != null && this.sessionStatusMonitoringThread.isAlive()) {
