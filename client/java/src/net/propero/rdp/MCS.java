@@ -337,6 +337,7 @@ public class MCS {
      */
     public void sendConnectInitial(RdpPacket_Localised data) throws IOException, RdesktopException {
         logger.debug("MCS.sendConnectInitial");
+       /*
     if(false){
         int length = 7 + (3 *34) + 4 + data.getEnd();
         RdpPacket_Localised buffer = IsoLayer.init(length+5);
@@ -360,6 +361,7 @@ public class MCS {
         IsoLayer.send(buffer);
         return;
     }
+    */
         
         
     logger.debug("MCS.sendConnectInitial");
