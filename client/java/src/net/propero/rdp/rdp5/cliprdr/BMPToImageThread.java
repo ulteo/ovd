@@ -13,7 +13,6 @@ package net.propero.rdp.rdp5.cliprdr;
 
 import java.awt.Image;
 import java.io.ByteArrayInputStream;
-import java.io.OutputStream;
 
 import net.propero.rdp.RdpPacket;
 	 public class BMPToImageThread extends Thread {
@@ -28,11 +27,9 @@ import net.propero.rdp.RdpPacket;
 	 	}
 	 	
 	 	public void run(){
-	 		String thingy = "";
-			OutputStream out = null;
-				
 			int origin = data.getPosition();
 			
+			@SuppressWarnings("unused")
 			int head_len = data.getLittleEndian32();
 
 			data.setPosition(origin);
