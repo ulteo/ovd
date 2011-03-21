@@ -231,7 +231,6 @@ public class Disk extends RdpdrDevice{
 	public static int disk_query_information(int handle, int info_class,
 			RdpPacket out){
 		DEBUG("disk_query_information");
-		String path;
 		File tempFile = getFileFromHandle(handle);
 		
 		/* Set file attributes */
@@ -409,12 +408,13 @@ public class Disk extends RdpdrDevice{
 	public int disk_set_information(
 			int handle, int info_class, RdpPacket in, RdpPacket out){
 		DEBUG("disk_set_information");
-		int length, file_attributes, delete_on_close;
+		int length, delete_on_close;
 		int[] ft_high = new int[1];
 		int[] ft_low = new int[1];
-		String newname, fullpath;
-		int mode;
-		long write_time, change_time, access_time, mod_time;
+		String newname;
+		long write_time, change_time, mod_time;
+		@SuppressWarnings("unused")
+		long access_time;
 		g_notify_stamp = true;
 		FILEINFO tempfinfo = (FILEINFO)g_fileinfo.get(handle);
 		
@@ -537,7 +537,7 @@ public class Disk extends RdpdrDevice{
 		int file_attributes;
 		int[] ft_low = new int[1]; int[] ft_high = new int[1];
 		String dirname, fullpath = "";
-		String pdir, pdirent, d_name="";
+		String pdir, d_name="";
 		FILEINFO pfinfo;
 		pfinfo = (FILEINFO)g_fileinfo.get(handle);
 		pdir = pfinfo.pdir;
