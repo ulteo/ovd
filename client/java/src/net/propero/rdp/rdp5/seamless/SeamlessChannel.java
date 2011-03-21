@@ -139,7 +139,6 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 	public boolean processLine(String line)
 	{
-		String p;
 		String[] tokens;
 		long id, flags;
 		int numTokens;
@@ -708,7 +707,6 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 	private static String getNextToken(RdpPacket data, boolean end) {
 		String word = "";
-		boolean found = false;
 
 		while (data.getPosition() < data.size()) {
 			char r = (char)data.get8();
