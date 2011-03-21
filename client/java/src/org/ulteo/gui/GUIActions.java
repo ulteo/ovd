@@ -111,9 +111,7 @@ public class GUIActions {
 				return;
 
 			this.component.requestFocus();
-			if (this.component instanceof Window)
-				((Window) this.component).toFront();
-			else
+			if (! (this.component instanceof Window))
 				this.component.requestFocusInWindow();
 		}
 
