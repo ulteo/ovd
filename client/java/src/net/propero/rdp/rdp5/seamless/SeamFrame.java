@@ -184,8 +184,8 @@ public class SeamFrame extends Frame
 	}
 	
 	public void paint(Graphics g) {
-		int x = Math.max(this.x, 0) - this.maxBounds.x;
-		int y = Math.max(this.y, 0) - this.maxBounds.y;
+		int x = Math.max(this.x - this.maxBounds.x, 0);
+		int y = Math.max(this.y - this.maxBounds.y, 0);
 		int w = Math.min(width,this.backstore.getWidth()-x);
 		int h = Math.min(height,this.backstore.getHeight()-y);
 		int dx = ((this.x) < 0) ? -(this.x) : 0;
