@@ -331,6 +331,9 @@ public abstract class Input {
 		if (lastKeyEvent.isShiftDown())
 			sendScancode(getTime(), RDP_KEYRELEASE, 0x2a); // shift
 		if (lastKeyEvent.isAltDown() || altDown) {
+			// with Openoffice, if no other keys are pressed at the ALT release sequence, a menu is displayed  
+			sendScancode(getTime(), RDP_KEYPRESS, 0x2a); // l.shift
+			sendScancode(getTime(), RDP_KEYRELEASE, 0x2a); // l.shift
 			sendScancode(getTime(), RDP_KEYRELEASE, KBD_ALT_KEY); // l.alt
         }
 		if (lastKeyEvent.isControlDown() ||  ctrlDown) {
