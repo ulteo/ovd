@@ -63,7 +63,6 @@ do_start () {
 	if [ -f $PIDFILE ]; then
 		if ps $(cat $PIDFILE) >/dev/null; then
 			log_warning_msg "already running"
-			log_end_msg 1
 			return
 		else
 			rm $PIDFILE
@@ -78,13 +77,13 @@ do_stop () {
 	log_begin_msg "Stopping $NAME"
 
 	if [ ! -f $PIDFILE ]; then
-		log_warning_msg "NOT RUNNING"
+		log_warning_msg "not running"
 		return 0
 	fi
 
 	pidofproc -p $PIDFILE >/dev/null
 	if [ $? -ne 0 ]; then
-		log_warning_msg "NOT RUNNING"
+		log_warning_msg "not running"
 		rm -f $PIDFILE
 
 	else
