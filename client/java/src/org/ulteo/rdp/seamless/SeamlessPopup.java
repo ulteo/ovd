@@ -175,8 +175,8 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 
 	@Override
 	public void paint(Graphics g) {
-		int x_pos = Math.max(this.x, 0) - this.maxBounds.x;
-		int y_pos = Math.max(this.y, 0) - this.maxBounds.y;
+		int x_pos = Math.max(this.x - this.maxBounds.x, 0);
+		int y_pos = Math.max(this.y - this.maxBounds.y, 0);
 		int w = Math.min(width, this.backstore.getWidth() - x_pos);
 		int h = Math.min(height, this.backstore.getHeight() - y_pos);
 		int dx = ((this.x < 0) ? -this.x : 0);
