@@ -262,8 +262,6 @@ public class SoundChannel extends VChannel {
 	}
 
 	private boolean checkRemaining( RdpPacket p, int required ) {
-		int a = p.getPosition();
-		int e = p.size();//p.getEnd();
 		return p.getPosition() + required <= p.size();//p.getEnd();
 	}
 
