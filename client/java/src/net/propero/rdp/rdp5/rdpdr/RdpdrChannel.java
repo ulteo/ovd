@@ -351,7 +351,6 @@ public class RdpdrChannel extends VChannel {
 	public void rdpdr_process_irp( RdpPacket s ) {
 		int[] result = new int[1];
 		String filename = "";
-		RdpPacket_Localised out;
 		boolean rw_blocking = true;
 		int status = STATUS_INVALID_DEVICE_REQUEST;
 		RdpdrDevice fns;
@@ -372,7 +371,7 @@ public class RdpdrChannel extends VChannel {
 		bytes_in,
 		bytes_out,
 		error_mode,
-		share_mode, disposition, total_timeout, interval_timeout, flags_and_attributes = 0;
+		share_mode, disposition, flags_and_attributes = 0;
 		result[0] = 0;
 		
 		//Get para from package
@@ -421,7 +420,6 @@ public class RdpdrChannel extends VChannel {
 				flags_and_attributes = s.getLittleEndian32();
 				length = s.getLittleEndian32();
 				
-				byte[] tempFileName = new byte[PATH_MAX];
 				if (length>0 && (length / 2) < 256){
 					char[] temp_array = new char[length/2];
 					rdp_in_unistr(s, temp_array, length);
