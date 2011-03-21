@@ -131,7 +131,7 @@ class LDAP {
 		$buf = @ldap_bind($this->link, $dn_, $pwd_);
 
 		if (!$buf) {
-			Logger::error('main', "LDAP::bind bind($dn_,$pwd_) failed : (error:".$this->errno().')');
+			Logger::error('main', "LDAP::bind bind with user '$dn_' failed : (error:".$this->errno().')');
 			
 			$searchbase_array = array();
 			if ($this->userbranch != '') {
