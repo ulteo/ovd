@@ -177,7 +177,6 @@ public class VChannels {
             throws RdesktopException, IOException, CryptoException {
 
         int length, flags;
-        int thislength = 0;
         VChannel channel = null;
 
         int i;
