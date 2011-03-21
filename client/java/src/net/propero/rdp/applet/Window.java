@@ -72,7 +72,7 @@ public class Window extends java.applet.Applet
 		height = Integer.parseInt(getParameter("H"));
 		id = Integer.parseInt(getParameter("ID"));
 		
-		rdpapplet = rdpapplet.refApplet;
+		rdpapplet = RdpApplet.refApplet;
 		rdp = Rdesktop.common.rdp;
 		input = Rdesktop.common.frame.getCanvas().getInput();
 
@@ -98,12 +98,12 @@ public class Window extends java.applet.Applet
 	public void paint(Graphics g) {
 		int x = Math.max(this.x,0);
 		int y = Math.max(this.y,0);
-		int w = Math.min(width,rdpapplet.backstore.getWidth()-x);
-		int h = Math.min(height,rdpapplet.backstore.getHeight()-y);
+		int w = Math.min(width,RdpApplet.backstore.getWidth()-x);
+		int h = Math.min(height,RdpApplet.backstore.getHeight()-y);
 		int dx = (this.x<0?-this.x:0);
 		int dy = (this.y<0?-this.y:0);
 		if (w>0 && h>0)
-			g.drawImage(rdpapplet.backstore.getSubimage(x,y,w,h), dx , dy,null);
+			g.drawImage(RdpApplet.backstore.getSubimage(x,y,w,h), dx , dy,null);
 	}
 
 	public void start() {
@@ -117,7 +117,7 @@ public class Window extends java.applet.Applet
 		while(thisThread == t) {
 			repaint();
 			try {
-				thisThread.sleep(50);
+				Thread.sleep(50);
 			} catch(Exception e) {
 				System.out.println("Window Applet error : " + e.toString() );
 			}

@@ -738,7 +738,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	
 	/* Split input into lines, and call linehandler for each line. */
 	public void process(RdpPacket data) throws RdesktopException, IOException, CryptoException {
-		String firstWord = this.getNextToken(data, false);
+		String firstWord = SeamlessChannel.getNextToken(data, false);
 		
 		if (firstWord.length()==0) {
 			logger.debug("Received an empty seamless packet");
@@ -748,16 +748,16 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		if (firstWord.equals("SETICON")) {
 			String tok[] = new String[6];
 			for (int i=0; i<6; i++) {
-				tok[i] = this.getNextToken(data, false);
+				tok[i] = SeamlessChannel.getNextToken(data, false);
 				if (tok[i].length()==0) {
 					logger.error("Invalid SETICON message");
 					return;
 				}
 			}
 			
-			String bitmap_hex = this.getNextToken(data, true); 
+			String bitmap_hex = SeamlessChannel.getNextToken(data, true); 
 //			int len = data.size() -data.getPosition();
-			byte bitmap[] = this.DecryptString_(bitmap_hex);
+			byte bitmap[] = SeamlessChannel.DecryptString_(bitmap_hex);
 //			data.copyToByteArray(bitmap, 0, data.getPosition(), len);
 
 			try

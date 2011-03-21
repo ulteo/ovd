@@ -585,7 +585,7 @@ public class Rdp {
 			flags |= Rdp.RDP_LOGON_COMPRESSION;
 			flags |= RdpCompressionConstants.FLAG_TYPE_64K;
 		} catch (RdpCompressionException ex) {
-			this.logger.warn("Can not use compression: "+ex.getMessage());
+			Rdp.logger.warn("Can not use compression: "+ex.getMessage());
 		}
 	}
 

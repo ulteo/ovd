@@ -75,8 +75,8 @@ public class SoundChannel extends VChannel {
 		this.tick = 0;
 		this.packetIndex = 0;
 		this.formatCount = 0;
-		this.formats = new WaveFormatEx[ this.MAX_FORMATS ];
-		for( int i = 0; i <this. MAX_FORMATS; i++ )
+		this.formats = new WaveFormatEx[ SoundChannel.MAX_FORMATS ];
+		for( int i = 0; i < SoundChannel.MAX_FORMATS; i++ )
 			this.formats[ i ] = new WaveFormatEx();
 		this.soundDriver = new SoundDriver( this );
 		
@@ -100,7 +100,7 @@ public class SoundChannel extends VChannel {
 		int type, length;
 
 		if( this.awaitingDataPacket ) {
-			if( this.format >= this.MAX_FORMATS ) {
+			if( this.format >= SoundChannel.MAX_FORMATS ) {
 				logger.error( "RDPSND: Invalid format index\n" );
 				return;
 			}

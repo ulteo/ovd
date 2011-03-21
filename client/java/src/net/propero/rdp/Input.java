@@ -178,7 +178,7 @@ public abstract class Input {
 			this.opt.isMouseWheelEnabled = true;
 			this.canvas.addMouseWheelListener(this.mouseAdapter);
 		} else
-			this.logger.warn("No mouse wheel was detected");
+			Input.logger.warn("No mouse wheel was detected");
 		this.mouseMotionAdapter = new RdesktopMouseMotionAdapter();
 		this.canvas.addMouseMotionListener(this.mouseMotionAdapter);
 		this.keyAdapter = new RdesktopKeyAdapter();

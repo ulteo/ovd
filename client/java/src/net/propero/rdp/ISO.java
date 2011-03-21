@@ -162,7 +162,7 @@ public abstract class ISO {
 			buffer.set8(DATA_TRANSFER);
 			buffer.set8(EOT);
 			buffer.copyToByteArray(packet, 0, 0, buffer.getEnd());
-			if(this.opt.debug_hexdump) dump.encode(packet, "SEND"/*System.out*/);
+			if(this.opt.debug_hexdump) HexDump.encode(packet, "SEND"/*System.out*/);
 			out.write(packet);
 			out.flush();
 		}
@@ -206,7 +206,7 @@ public abstract class ISO {
 		
 		in.readFully(packet,0,length);
 		
-		if(this.opt.debug_hexdump) dump.encode(packet, "RECEIVE" /*System.out*/);
+		if(this.opt.debug_hexdump) HexDump.encode(packet, "RECEIVE" /*System.out*/);
 			
 		if(p == null) {
 			buffer = new RdpPacket_Localised(length);

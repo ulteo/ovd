@@ -88,7 +88,7 @@ public class Disk extends RdpdrDevice{
 	}
 	
 	public int get_device_type(){
-		return this.DEVICE_TYPE;
+		return Disk.DEVICE_TYPE;
 	}
 	
 	public String get_device_name(){
@@ -97,7 +97,7 @@ public class Disk extends RdpdrDevice{
 	
 	private int getNewHandle() {
 		for (int i = 0 ; i< MAX_OPEN_FILES ; i++) {
-			if (this.g_fileinfo.get(i) == null) {
+			if (Disk.g_fileinfo.get(i) == null) {
 				return i;
 			}
 		}
@@ -223,7 +223,7 @@ public class Disk extends RdpdrDevice{
 			System.out.println("The maximum number of opened file was reached");
 			return STATUS_INVALID_PARAMETER;
 		}
-		this.g_fileinfo.put(handle, tempFILEINFO);
+		Disk.g_fileinfo.put(handle, tempFILEINFO);
 		result[0] = handle;
 		return STATUS_SUCCESS;
 	}
