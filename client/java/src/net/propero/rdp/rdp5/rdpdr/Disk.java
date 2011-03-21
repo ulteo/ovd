@@ -40,7 +40,7 @@ public class Disk extends RdpdrDevice{
 	///parameter
 	public static final int DEVICE_TYPE = 0x08;
 	static boolean g_notify_stamp = false;
-	static Map g_fileinfo = new HashMap();//a map which hold the all FILEINFO structure.
+	static Map<Integer, FILEINFO> g_fileinfo = new HashMap<Integer, FILEINFO>();//a map which hold the all FILEINFO structure.
 	//private String name = "f1o"; //!!!Notice:the name can only be 8 character, otherwise will cause overflow.
 	
 	//flags

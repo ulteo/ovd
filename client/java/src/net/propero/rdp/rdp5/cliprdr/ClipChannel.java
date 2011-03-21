@@ -205,7 +205,7 @@ public class ClipChannel extends VChannel implements ClipInterface, ClipboardOwn
 		s.setLittleEndian32(number_of_formats * 36);
 		
 		TypeHandler handler = null;
-		for(Iterator i = availableFormats.iterator(); i.hasNext();){
+		for(Iterator<?> i = availableFormats.iterator(); i.hasNext();){
 			handler = (TypeHandler) i.next();
 			s.setLittleEndian32(handler.preferredFormat());
 			s.incrementPosition(32);
@@ -330,7 +330,7 @@ public class ClipChannel extends VChannel implements ClipInterface, ClipboardOwn
 		// synchronise the clipboard types here, so the server knows what's available	
 		if(this.opt.use_rdp5){
 			TypeHandler handler;
-			for(Iterator i = allHandlers.iterator(); i.hasNext(); ) {
+			for(Iterator<?> i = allHandlers.iterator(); i.hasNext(); ) {
 				try {
 					handler = (TypeHandler) i.next();
 					if (handler.hasNewData(clipboard)) {

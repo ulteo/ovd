@@ -41,7 +41,7 @@ public abstract class RdpdrDevice {
 	public String local_path;
 	public boolean slotIsFree = false;
 	public boolean connected = false;
-	public Map pdevice_data = new HashMap(); //take of structured point func
+	public Map<Object, Object> pdevice_data = new HashMap<Object, Object>(); //take of structured point func
 	protected RdpdrChannel rdpdr = null;
 
 	public RdpdrDevice(RdpdrChannel rdpdr_){

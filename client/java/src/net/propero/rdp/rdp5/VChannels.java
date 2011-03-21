@@ -227,13 +227,13 @@ public class VChannels {
      * @return Expanded array
      */
     static Object arrayExpand(Object a, int amount) {
-        Class cl = a.getClass();
+        Class<? extends Object> cl = a.getClass();
         if (!cl.isArray())
             return null;
         int length = Array.getLength(a);
         int newLength = length + amount; // 50% more
 
-        Class componentType = a.getClass().getComponentType();
+        Class<?> componentType = a.getClass().getComponentType();
         Object newArray = Array.newInstance(componentType, newLength);
         System.arraycopy(a, 0, newArray, 0, length);
         return newArray;

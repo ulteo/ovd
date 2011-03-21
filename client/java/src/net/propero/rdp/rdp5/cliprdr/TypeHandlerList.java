@@ -19,7 +19,7 @@ import net.propero.rdp.RdpPacket;
 
 public class TypeHandlerList {
 	
-	ArrayList handlers = new ArrayList();
+	ArrayList<TypeHandler> handlers = new ArrayList<TypeHandler>();
 	private int count;
 	
 	public TypeHandlerList(){
@@ -33,7 +33,7 @@ public class TypeHandlerList {
 	
 	public TypeHandler getHandlerForFormat(int format){
 		TypeHandler handler = null;
-		for(Iterator i = handlers.iterator(); i.hasNext();){
+		for(Iterator<TypeHandler> i = handlers.iterator(); i.hasNext();){
 			handler = (TypeHandler)i.next();
 			if((handler != null) && handler.formatValid(format)) return handler;
 		}
@@ -44,7 +44,7 @@ public class TypeHandlerList {
 		TypeHandlerList outList = new TypeHandlerList();
 		
 		TypeHandler handler = null;
-		for(Iterator i = handlers.iterator(); i.hasNext();){
+		for(Iterator<TypeHandler> i = handlers.iterator(); i.hasNext();){
 			handler = (TypeHandler)i.next();
 			if(handler.mimeTypeValid(mimeType)) outList.add(handler);
 		}
@@ -55,7 +55,7 @@ public class TypeHandlerList {
 		TypeHandlerList outList = new TypeHandlerList();
 		
 		TypeHandler handler = null;
-		for(Iterator i = handlers.iterator(); i.hasNext();){
+		for(Iterator<TypeHandler> i = handlers.iterator(); i.hasNext();){
 			handler = (TypeHandler)i.next();
 			if(handler.clipboardValid(dataTypes)) outList.add(handler);
 		}
@@ -64,7 +64,7 @@ public class TypeHandlerList {
 	
 	public void writeTypeDefinitions(RdpPacket data){
 		TypeHandler handler = null;
-		for(Iterator i = handlers.iterator(); i.hasNext();){
+		for(Iterator<TypeHandler> i = handlers.iterator(); i.hasNext();){
 			handler = (TypeHandler)i.next();
 			data.setLittleEndian32(handler.preferredFormat());
 			data.incrementPosition(32);
@@ -81,7 +81,7 @@ public class TypeHandlerList {
 		else return null;
 	}
 	
-	public Iterator iterator(){
+	public Iterator<TypeHandler> iterator(){
 		return handlers.iterator();
 	}
 }

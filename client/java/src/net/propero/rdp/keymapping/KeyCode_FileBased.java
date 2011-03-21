@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
 
 public abstract class KeyCode_FileBased {
 
-    private Hashtable keysCurrentlyDown = new Hashtable();
+    private Hashtable<Integer, MapDef> keysCurrentlyDown = new Hashtable<Integer, MapDef>();
 
     private KeyEvent lastKeyEvent = null;
 
@@ -59,7 +59,7 @@ public abstract class KeyCode_FileBased {
 
     public boolean capsLockDown = false;
 
-    Vector keyMap = new Vector();
+    Vector<MapDef> keyMap = new Vector<MapDef>();
     
     private Options opt = null;
 
@@ -143,9 +143,9 @@ public abstract class KeyCode_FileBased {
             // Add a set of mappings for alphabet characters with ctrl and alt
             // pressed
 
-            Vector newMap = new Vector();
+            Vector<MapDef> newMap = new Vector<MapDef>();
 
-            Iterator i = keyMap.iterator();
+            Iterator<MapDef> i = keyMap.iterator();
             while (i.hasNext()) {
                 MapDef current = (MapDef) i.next();
                 if (current.isCharacterDef() && !(current.isAltDown() || current.isCtrlDown() || current.isShiftDown() || current.isCapslockOn())) {
@@ -290,7 +290,7 @@ public abstract class KeyCode_FileBased {
             FileOutputStream out = new FileOutputStream(filename);
             PrintStream p = new PrintStream(out);
 
-            Iterator i = keyMap.iterator();
+            Iterator<MapDef> i = keyMap.iterator();
 
             while (i.hasNext()) {
                 ((MapDef) i.next()).writeToStream(p);
@@ -318,7 +318,7 @@ public abstract class KeyCode_FileBased {
         if (c == KeyEvent.CHAR_UNDEFINED)
             return false;
 
-        Iterator i = keyMap.iterator();
+        Iterator<MapDef> i = keyMap.iterator();
         MapDef best = null;
 
         while (i.hasNext()) {
@@ -344,7 +344,7 @@ public abstract class KeyCode_FileBased {
      * @return Scancode of supplied key
      */
     public int charToScancode(char c, String[] mod) {
-        Iterator i = keyMap.iterator();
+        Iterator<MapDef> i = keyMap.iterator();
         int smallestDist = -1;
         MapDef best = null;
 
@@ -391,7 +391,7 @@ public abstract class KeyCode_FileBased {
 
         updateCapsLock(e);
 
-        Iterator i = keyMap.iterator();
+        Iterator<MapDef> i = keyMap.iterator();
         int smallestDist = -1;
         MapDef best = null;
 

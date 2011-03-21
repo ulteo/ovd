@@ -61,7 +61,7 @@ public class Printer extends RdpdrDevice{
 	public int bloblen = 0;
 	String path = null;//printer ps file 
 	public static String only_printer_file;
-	public static LinkedList job_list = new LinkedList();
+	public static LinkedList<RdpPacket_Localised> job_list = new LinkedList<RdpPacket_Localised>();
 	public static RdpPacket_Localised ps_buffer;
 
 	//status

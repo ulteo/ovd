@@ -81,7 +81,7 @@ public class RdpdrChannel extends VChannel {
 	public static final int FLAG_DEFAULTPRINTER           = 0xc0000002;
 	
 	public int g_num_devices = 0;
-	LinkedList g_iorequest = new LinkedList();
+	LinkedList<Object> g_iorequest = new LinkedList<Object>();
 	public RdpdrDevice[] g_rdpdr_device;
 	protected static Logger logger = Logger.getLogger(RdpdrChannel.class);
 	

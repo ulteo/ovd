@@ -37,7 +37,7 @@ public abstract class Input {
     
 	public KeyCode_FileBased newKeyMapper = null;
 
-	public Vector pressedKeys;
+	public Vector<Integer> pressedKeys;
 
 	protected static boolean capsLockOn = false;
 	protected static boolean numLockOn = false;
@@ -122,7 +122,7 @@ public abstract class Input {
 		if (this.opt.debug_keyboard)
 			logger.setLevel(Level.DEBUG);
 		this.setInputListeners();
-		pressedKeys = new Vector();
+		pressedKeys = new Vector<Integer>();
 		this.keystrokesList = new HashMap<KeyStroke, Long>();
 		this.inputListeners = new CopyOnWriteArrayList<InputListener>();
 	}
@@ -146,7 +146,7 @@ public abstract class Input {
 		if (this.opt.debug_keyboard)
 			logger.setLevel(Level.DEBUG);
 		this.setInputListeners();
-		pressedKeys = new Vector();
+		pressedKeys = new Vector<Integer>();
 		this.keystrokesList = new HashMap<KeyStroke, Long>();
 		this.inputListeners = new CopyOnWriteArrayList<InputListener>();
 	}
