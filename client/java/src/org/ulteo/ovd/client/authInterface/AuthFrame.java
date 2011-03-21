@@ -225,7 +225,7 @@ public class AuthFrame implements ActionListener, Runnable {
 		mainFrame.add(logoLabel, gbc);
 
 		if (this.showBugReporter) {
-			gbc.gridx = 1;
+			gbc.gridx = 2;
 			gbc.insets = new Insets(7, 0, 25, 7);
 			gbc.anchor = GridBagConstraints.NORTHEAST;
 			mainFrame.add(new BugReportButton(), gbc);
