@@ -40,9 +40,6 @@ public abstract class RdesktopCanvas extends Canvas {
 
     // Graphics backstore_graphics;
 
-    private Cursor previous_cursor = null; // for setBusyCursor and
-                                            // unsetBusyCursor
-
     private Input input = null;
 
     public static final int ROP2_COPY = 0xc;
