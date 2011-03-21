@@ -65,7 +65,6 @@ public class RasterOp {
 			int[] src, int srcwidth, int srcx, int srcy, int Bpp) {
 
 		if (src == null) { // special case - copy to self
-		    int[] imgSec = null;
 		    biDst.getGraphics().copyArea(srcx,srcy,cx,cy,x-srcx,y-srcy);
 		} else {
 			int[] rgbArray = new int[cx * cy];
