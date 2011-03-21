@@ -210,7 +210,7 @@
         Client prerequisites:
         <itemizedlist>
           <listitem>
-            Java 1.5/1.6 (Sun or OpenJDK)
+            Java 1.6 (Sun or OpenJDK)
           </listitem>
           <listitem>
             browser: Firefox 2+ or Internet Explorer 7+
