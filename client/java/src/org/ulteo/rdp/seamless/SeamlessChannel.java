@@ -284,10 +284,6 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 		return -1;
 	}
 
-	private MouseEvent setWorkspaceOffsets(MouseEvent me) {
-		return new MouseEvent(me.getComponent(), me.getID(), new Date().getTime(), me.getModifiers(), me.getX() - this.opt.x_offset, me.getY() - this.opt.y_offset, me.getClickCount(), me.isPopupTrigger(), me.getButton());
-	}
-
 	public void mousePressed(MouseEvent e) {
 		String name = e.getComponent().getName();
 		SeamlessMovingResizing sw = null;
@@ -312,7 +308,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 				this.clickTimer.schedule(new CheckClickTask(sw, me), CLICK_DELAY);
 			}
 		}
-		sw.processMouseEvent(this.setWorkspaceOffsets(e), SeamlessMovingResizing.MOUSE_PRESSED);
+		sw.processMouseEvent(e, SeamlessMovingResizing.MOUSE_PRESSED);
 	}
 
 	public void mouseReleased(MouseEvent e) {
@@ -336,7 +332,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 			((SeamlessMovingResizing) sw).unlockMouseEvents();
 			return;
 		}
-		((SeamlessMovingResizing) sw).processMouseEvent(this.setWorkspaceOffsets(e), SeamlessMovingResizing.MOUSE_RELEASED);
+		((SeamlessMovingResizing) sw).processMouseEvent(e, SeamlessMovingResizing.MOUSE_RELEASED);
 	}
 
 	public void mouseDragged(MouseEvent e) {
@@ -372,7 +368,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 			return;
 		}
 
-		sw.processMouseEvent(this.setWorkspaceOffsets(e), SeamlessMovingResizing.MOUSE_DRAGGED);
+		sw.processMouseEvent(e, SeamlessMovingResizing.MOUSE_DRAGGED);
 	}
 
 	public void mouseMoved(MouseEvent e) {
@@ -388,7 +384,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 		if (sw.isMouseEventsLocked())
 			return;
 
-		sw.processMouseEvent(this.setWorkspaceOffsets(e), SeamlessMovingResizing.MOUSE_MOVED);
+		sw.processMouseEvent(e, SeamlessMovingResizing.MOUSE_MOVED);
 	}
 
 	public void mouseEntered(MouseEvent me) {}
@@ -458,7 +454,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 				return;
 
 			MouseEvent me = new MouseEvent(this.evt.getComponent(), this.evt.getID(), new Date().getTime(), this.evt.getModifiers(), this.evt.getX(), this.evt.getY(), this.evt.getClickCount(), this.evt.isPopupTrigger(), this.evt.getButton());
-			this.sw.processMouseEvent(setWorkspaceOffsets(me), SeamlessMovingResizing.MOUSE_RELEASED);
+			this.sw.processMouseEvent(me, SeamlessMovingResizing.MOUSE_RELEASED);
 			this.sw.lockMouseEvents();
 		}
 	}

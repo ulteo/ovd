@@ -1,8 +1,8 @@
 /*
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
- * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -160,7 +160,7 @@ public class SeamFrame extends Frame
 		this.height = height;
 
 		this.setSize(width, height);
-		this.setLocation(x, y);
+		this.setLocation(x + this.maxBounds.x, y + this.maxBounds.y);
 		this.repaint();
 	}
 
@@ -184,8 +184,8 @@ public class SeamFrame extends Frame
 	}
 	
 	public void paint(Graphics g) {
-		int x = Math.max(this.x - this.maxBounds.x, 0);
-		int y = Math.max(this.y - this.maxBounds.y, 0);
+		int x = Math.max(this.x, 0);
+		int y = Math.max(this.y, 0);
 		int w = Math.min(width,this.backstore.getWidth()-x);
 		int h = Math.min(height,this.backstore.getHeight()-y);
 		int dx = ((this.x) < 0) ? -(this.x) : 0;
