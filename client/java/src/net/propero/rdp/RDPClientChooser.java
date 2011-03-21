@@ -39,7 +39,6 @@ public class RDPClientChooser {
 		logger.info("RDPClientChooser.RunNativeRDPClient");
 		
 		String os = System.getProperty("os.name");
-		String osvers = System.getProperty("os.version");
 		
 		// For Mac OS X we try to run the Microsoft Remote Desktop Connection RDP client if it exists
 
@@ -227,7 +226,7 @@ public class RDPClientChooser {
 		String[] appcopycmd = {"/bin/sh", "-c", "ditto -rsrc /Applications/Remote\\ Desktop\\ Connection/Remote\\ Desktop\\ Connection "+rdproot+"/ >/dev/null 2>/dev/null"};
 
 		try {
-			Process p = Runtime.getRuntime().exec(appcopycmd);
+			Runtime.getRuntime().exec(appcopycmd);
 		}
 		catch (IOException e) {
 			logger.warn("Unable to copy application to temporary directory");
@@ -311,7 +310,7 @@ public class RDPClientChooser {
 		String[] rmcmd = {"/bin/sh", "-c", "rm -r "+rdproot+" >/dev/null 2>/dev/null"};
 		
 		try {		
-			Process p = Runtime.getRuntime().exec(rmcmd);
+			Runtime.getRuntime().exec(rmcmd);
 		} 
 		catch (IOException e) {
 			logger.warn("Unable to remove temporary directory "+rdproot);
