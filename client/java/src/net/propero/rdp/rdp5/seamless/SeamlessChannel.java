@@ -422,7 +422,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	protected boolean processAck(int serial) {
 		Integer id = this.ackHistory.remove(serial);
 		if (id == null) {
-			logger.warn("[processAck] Unexpected ACK: "+serial);
+			logger.debug("[processAck] Unexpected ACK: "+serial);
 			return false;
 		}
 
