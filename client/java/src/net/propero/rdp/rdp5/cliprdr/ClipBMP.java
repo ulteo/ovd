@@ -295,6 +295,7 @@ public class ClipBMP extends Component {
 			//		| (((int) bf[3] & 0xff) << 8) | (int) bf[2] & 0xff;
 			//System.out.println("Size of file is :" + nsize);
 
+			@SuppressWarnings("unused")
 			int nbisize = (((int) bi[3] & 0xff) << 24)
 					| (((int) bi[2] & 0xff) << 16)
 					| (((int) bi[1] & 0xff) << 8) | (int) bi[0] & 0xff;
@@ -310,6 +311,7 @@ public class ClipBMP extends Component {
 					| (((int) bi[9] & 0xff) << 8) | (int) bi[8] & 0xff;
 			//System.out.println("Height is :" + nheight);
 
+			@SuppressWarnings("unused")
 			int nplanes = (((int) bi[13] & 0xff) << 8) | (int) bi[12] & 0xff;
 			//System.out.println("Planes is :" + nplanes);
 
@@ -317,6 +319,7 @@ public class ClipBMP extends Component {
 			//System.out.println("BitCount is :" + nbitcount);
 
 			// Look for non-zero values to indicate compression
+			@SuppressWarnings("unused")
 			int ncompression = (((int) bi[19]) << 24) | (((int) bi[18]) << 16)
 					| (((int) bi[17]) << 8) | (int) bi[16];
 			//System.out.println("Compression is :" + ncompression);
@@ -326,11 +329,13 @@ public class ClipBMP extends Component {
 					| (((int) bi[21] & 0xff) << 8) | (int) bi[20] & 0xff;
 			//System.out.println("SizeImage is :" + nsizeimage);
 
+			@SuppressWarnings("unused")
 			int nxpm = (((int) bi[27] & 0xff) << 24)
 					| (((int) bi[26] & 0xff) << 16)
 					| (((int) bi[25] & 0xff) << 8) | (int) bi[24] & 0xff;
 			//System.out.println("X-Pixels per meter is :" + nxpm);
 
+			@SuppressWarnings("unused")
 			int nypm = (((int) bi[31] & 0xff) << 24)
 					| (((int) bi[30] & 0xff) << 16)
 					| (((int) bi[29] & 0xff) << 8) | (int) bi[28] & 0xff;
@@ -341,6 +346,7 @@ public class ClipBMP extends Component {
 					| (((int) bi[33] & 0xff) << 8) | (int) bi[32] & 0xff;
 			//System.out.println("Colors used are :" + nclrused);
 
+			@SuppressWarnings("unused")
 			int nclrimp = (((int) bi[39] & 0xff) << 24)
 					| (((int) bi[38] & 0xff) << 16)
 					| (((int) bi[37] & 0xff) << 8) | (int) bi[36] & 0xff;
