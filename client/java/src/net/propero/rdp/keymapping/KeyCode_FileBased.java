@@ -53,8 +53,6 @@ public abstract class KeyCode_FileBased {
 
     private int mapCode = -1;
 
-    private boolean altQuiet = false;
-
     public boolean useLockingKeyState = true;
 
     public boolean capsLockDown = false;
@@ -254,11 +252,6 @@ public abstract class KeyCode_FileBased {
 
         String up = "" + ((char) UP);
         String down = "" + ((char) DOWN);
-        String quietup = up;
-        String quietdown = down;
-
-        quietup = "" + ((char) QUIETUP);
-        quietdown = "" + ((char) QUIETDOWN);
 
         if (state[SHIFT][BEFORE] != state[SHIFT][AFTER]) {
             if (state[SHIFT][BEFORE])
@@ -389,8 +382,6 @@ public abstract class KeyCode_FileBased {
         Iterator<MapDef> i = keyMap.iterator();
         int smallestDist = -1;
         MapDef best = null;
-
-        boolean noScanCode = !hasScancode(e.getKeyChar());
 
         while (i.hasNext()) {
             MapDef current = (MapDef) i.next();
