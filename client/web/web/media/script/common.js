@@ -526,7 +526,9 @@ function hideLock() {
 	if ($('lockWrap').visible() && (! $('errorWrap').visible() && ! $('okWrap').visible() && ! $('infoWrap').visible())) {
 		if ($('user_password') && $('user_password').visible() && $('user_password').disabled == false) {
 			$('user_password').value = '';
-			$('user_password').focus();
+			try {
+				$('user_password').focus();
+			} catch(e) {}
 		}
 		$('lockWrap').hide();
 	}
