@@ -154,8 +154,6 @@ public final class RC4 { // must be final for security reasons
     engineUpdate(byte[] in, int inOffset, int inLen, byte[] out, int outOffset) {
         if (inLen < 0) throw new IllegalArgumentException("inLen < 0");
 
-        boolean doEncrypt = (getState() == ENCRYPT);
-
         // Avoid overlapping input and output regions.
         if (in == out && (outOffset >= inOffset && outOffset < inOffset+inLen ||
                           inOffset >= outOffset && inOffset < outOffset+inLen)) {
