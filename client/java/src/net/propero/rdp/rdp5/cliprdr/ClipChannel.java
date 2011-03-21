@@ -121,12 +121,9 @@ public class ClipChannel extends VChannel implements ClipInterface, ClipboardOwn
 	 */	
 	public void process(RdpPacket data) throws RdesktopException, IOException, CryptoException {
 
-		int type, status;
-		int length, format;
-
-		type = data.getLittleEndian16();
-		status = data.getLittleEndian16();
-		length = data.getLittleEndian32();
+		int type = data.getLittleEndian16();
+		int status = data.getLittleEndian16();
+		int length = data.getLittleEndian32();
 			
 		if (status == CLIPRDR_ERROR)
 		{
@@ -245,7 +242,6 @@ public class ClipChannel extends VChannel implements ClipInterface, ClipboardOwn
 	{
 		int format = data.getLittleEndian32();
 		Transferable clipData = clipboard.getContents(this);
-		byte[] outData = null;
 		
 		TypeHandler outputHandler = allHandlers.getHandlerForFormat(format);
 		if(outputHandler != null){
