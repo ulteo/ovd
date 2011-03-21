@@ -127,7 +127,6 @@ public class PstCache {
     fd = new RandomAccessFile(g_pstcache_fd[cache_id], "rws");
     int offset = cache_idx * (g_pstcache_Bpp * MAX_CELL_SIZE + CELLHEADER.SIZE);
 
-    byte[] cellHeaderData = cellhdr.toBytes();
     fd.seek(offset);
     fd.write(cellhdr.toBytes(), 0, CELLHEADER.SIZE);
 
