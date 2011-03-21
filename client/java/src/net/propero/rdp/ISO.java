@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 
 public abstract class ISO {
 	static Logger logger = Logger.getLogger(ISO.class);
+	@SuppressWarnings("unused")
 	private HexDump dump = null;
 	protected Socket rdpsock = null;
 	private DataInputStream in = null;

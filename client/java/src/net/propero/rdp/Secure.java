@@ -672,6 +672,7 @@ public class Secure {
 	
 	}else{
 		//data.incrementPosition(4); // number of certificates
+		@SuppressWarnings("unused")
 		int num_certs = data.getLittleEndian32();
 		
 		int cacert_len = data.getLittleEndian32();

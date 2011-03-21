@@ -351,6 +351,7 @@ public class RdpdrChannel extends VChannel {
 	public void rdpdr_process_irp( RdpPacket s ) {
 		int[] result = new int[1];
 		String filename = "";
+		@SuppressWarnings("unused")
 		boolean rw_blocking = true;
 		int status = STATUS_INVALID_DEVICE_REQUEST;
 		RdpdrDevice fns;
@@ -368,10 +369,10 @@ public class RdpdrChannel extends VChannel {
 		minor,
 		device,
 		offset,
-		bytes_in,
 		bytes_out,
-		error_mode,
 		share_mode, disposition, flags_and_attributes = 0;
+		@SuppressWarnings("unused")
+		int error_mode, bytes_in;
 		result[0] = 0;
 		
 		//Get para from package

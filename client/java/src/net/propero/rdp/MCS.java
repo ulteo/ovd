@@ -428,6 +428,7 @@ public class MCS {
     };
     	
     int result=0;
+	@SuppressWarnings("unused")
 	int length=0;
 	
 	RdpPacket_Localised buffer = IsoLayer.receive(false);

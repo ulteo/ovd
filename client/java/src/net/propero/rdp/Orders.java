@@ -410,13 +410,13 @@ public class Orders {
      */
     private void processBitmapCache(RdpPacket_Localised data)
             throws RdesktopException {
-        int bufsize, pad2, row_size, final_size, size;
-        int pad1;
-
+        @SuppressWarnings("unused")
+		int bufsize, pad2, row_size, final_size, size;
         bufsize = pad2 = row_size = final_size = size = 0;
 
         int cache_id = data.get8();
-        pad1 = data.get8(); // pad
+        @SuppressWarnings("unused")
+		int pad1 = data.get8(); // pad
         int width = data.get8();
         int height = data.get8();
         int bpp = data.get8();

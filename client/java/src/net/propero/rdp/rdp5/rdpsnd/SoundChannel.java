@@ -97,8 +97,6 @@ public class SoundChannel extends VChannel {
 	}
 
 	public void process( RdpPacket data ) throws RdesktopException, IOException, CryptoException {
-		int type, length;
-
 		if( this.awaitingDataPacket ) {
 			if( this.format >= SoundChannel.MAX_FORMATS ) {
 				logger.error( "RDPSND: Invalid format index\n" );
@@ -124,9 +122,10 @@ public class SoundChannel extends VChannel {
 			return;
 		}
 
-		type = data.get8();
+		int type = data.get8();
 		data.get8(); // ? unknown ?
-		length = data.getLittleEndian16();
+		@SuppressWarnings("unused")
+		int length = data.getLittleEndian16();
 
 		switch( type ) {
 			case RDPSND_WRITE:

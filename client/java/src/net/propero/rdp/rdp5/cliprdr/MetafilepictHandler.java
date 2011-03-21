@@ -63,10 +63,13 @@ public class MetafilepictHandler extends TypeHandler {
 		OutputStream out = null;
 		
 		//System.out.print("Metafile mapping mode = ");
+		@SuppressWarnings("unused")
 		int mm = data.getLittleEndian32();
 		//System.out.print(mapping_modes[mm]);
+		@SuppressWarnings("unused")
 		int width = data.getLittleEndian32();
 		//System.out.print(", width = " + width);
+		@SuppressWarnings("unused")
 		int height = data.getLittleEndian32();
 		//System.out.println(", height = " + height);
 		
@@ -101,10 +104,13 @@ public class MetafilepictHandler extends TypeHandler {
 		OutputStream out = null;
 		
 		//System.out.print("Metafile mapping mode = ");
+		@SuppressWarnings("unused")
 		int mm = data.getLittleEndian32();
 		//System.out.print(mapping_modes[mm]);
+		@SuppressWarnings("unused")
 		int width = data.getLittleEndian32();
 		//System.out.print(", width = " + width);
+		@SuppressWarnings("unused")
 		int height = data.getLittleEndian32();
 		//System.out.println(", height = " + height);
 		

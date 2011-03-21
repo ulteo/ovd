@@ -243,6 +243,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		}
 		else if (tokens[0].equals("ZCHANGE"))
 		{
+			@SuppressWarnings("unused")
 			long behind;
 	
 			if (numTokens < 5)

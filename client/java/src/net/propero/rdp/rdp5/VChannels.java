@@ -176,7 +176,6 @@ public class VChannels {
     public void channel_process(RdpPacket_Localised data, int mcsChannel)
             throws RdesktopException, IOException, CryptoException {
 
-        int length, flags;
         VChannel channel = null;
 
         int i;
@@ -191,8 +190,9 @@ public class VChannels {
         if (i >= num_channels)
             return;
 
-        length = data.getLittleEndian32();
-        flags = data.getLittleEndian32();
+        @SuppressWarnings("unused")
+		int length = data.getLittleEndian32();
+        int flags = data.getLittleEndian32();
 
         if (((flags & CHANNEL_FLAG_FIRST) != 0)
                 && ((flags & CHANNEL_FLAG_LAST) != 0)) {
