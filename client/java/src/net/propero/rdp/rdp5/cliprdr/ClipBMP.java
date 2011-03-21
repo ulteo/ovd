@@ -29,9 +29,6 @@ public class ClipBMP extends Component {
 	private final static int BITMAPINFOHEADER_SIZE = 40;
 
 	//--- Private variable declaration
-	//--- Bitmap file header
-	private byte bitmapFileHeader[] = new byte[14];
-
 	private byte bfType[] = { 'B', 'M' };
 
 	private int bfSize = 0;
@@ -41,9 +38,6 @@ public class ClipBMP extends Component {
 	private int bfReserved2 = 0;
 
 	private int bfOffBits = BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE;
-
-	//--- Bitmap info header
-	private byte bitmapInfoHeader[] = new byte[40];
 
 	private int biSize = BITMAPINFOHEADER_SIZE;
 
