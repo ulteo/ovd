@@ -41,7 +41,6 @@ public class Secure {
 
     private static final int SEC_TAG_SRV_INFO = 0x0c01;
     private static final int SEC_TAG_SRV_CRYPT = 0x0c02;
-    private static final int SEC_TAG_SRV_3 = 0x0c03;
     private static final int SEC_TAG_SRV_CHANNELS = 0x0c03;
 
     private static final int SEC_TAG_CLI_INFO = 0xc001;
