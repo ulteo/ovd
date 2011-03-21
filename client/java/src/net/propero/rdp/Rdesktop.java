@@ -294,7 +294,6 @@ public class Rdesktop {
 		SeamlessChannel seamChannel = null;
 		SoundChannel soundChannel;
 		RdpdrChannel rdpdrChannel;
-		RdpdrChannel rdpdrChannelDisk;
 		HashMap<String, String> diskList = new HashMap<String, String>();
 
 		while ((c = g.getopt()) != -1) {
@@ -745,7 +744,6 @@ public class Rdesktop {
 			try {
 				keyMap = new KeyCode_FileBased_Localised(istr, opt);
 			} catch (KeyMapException kmEx) {
-				String[] msg = { (kmEx.getClass() + ": " + kmEx.getMessage()) };
 	            kmEx.printStackTrace();
 				Rdesktop.exit(0, null, null, true);
 			}
