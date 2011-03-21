@@ -20,7 +20,6 @@
 
 package net.propero.rdp.rdp5.seamless;
 
-import java.awt.Component;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
