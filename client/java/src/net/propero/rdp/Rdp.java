@@ -1233,7 +1233,7 @@ public class Rdp {
         order_caps[8] = 1; /* line */
         order_caps[9] = 1; /* line */
         order_caps[10] = 1; /* rect */
-        order_caps[11] = (Constants.desktop_save ? 1 : 0); /* desksave */
+        order_caps[11] = (byte) (Constants.desktop_save ? 1 : 0); /* desksave */
         order_caps[13] = 1; /* memblt */
         order_caps[14] = 1; /* triblt */
         order_caps[20] = (byte) (this.opt.polygon_ellipse_orders ? 1 : 0); /* polygon */
