@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -33,7 +33,7 @@ class UserGroupDB_sql_external extends UserGroupDB {
 		Logger::debug('main', "USERGROUPDB::MYSQL_external::fromDB (id = $id_)");		
 		$groups = array();
 		
-		$sql2 = new MySQL($this->config['host'], $this->config['login'], $this->config['password'], $this->config['database']);
+		$sql2 = new SQL($this->config);
 		$status = $sql2->CheckLink(false);
 		if ( $status == false) {
 			Logger::error('main', 'USERGROUPDB::MYSQL_external::getList link to mysql external failed');
@@ -69,7 +69,7 @@ class UserGroupDB_sql_external extends UserGroupDB {
 		Logger::debug('main','USERGROUPDB::MYSQL_external::getList');
 		$groups = array();
 		
-		$sql2 = new MySQL($this->config['host'], $this->config['login'], $this->config['password'], $this->config['database']);
+		$sql2 = new SQL($this->config);
 		$status = $sql2->CheckLink(false);
 		if ( $status == false) {
 			Logger::error('main', 'USERGROUPDB::MYSQL_external::getList link to mysql external failed');
@@ -104,7 +104,7 @@ class UserGroupDB_sql_external extends UserGroupDB {
 		$ret = array();
 		$c = new ConfigElement_input('host', _('Server host address'), _('The address of your MySQL server.'), _('The address of your MySQL server.'), '');
 		$ret []= $c;
-		$c = new ConfigElement_input('login', _('User login'), _('The user login that must be used to access the database (to list users groups).'), _('The user login that must be used to access the database (to list users groups).'), '');
+		$c = new ConfigElement_input('user', _('User login'), _('The user login that must be used to access the database (to list users groups).'), _('The user login that must be used to access the database (to list users groups).'), '');
 		$ret []= $c;
 		$c = new ConfigElement_password('password', _('User password'), _('The user password that must be used to access the database (to list users groups).'), _('The user password that must be used to access the database (to list users groups).'), '');
 		$ret []= $c;
@@ -128,7 +128,7 @@ class UserGroupDB_sql_external extends UserGroupDB {
 	
 	public static function prefsIsValid2($prefs_, &$log=array()) {
 		$config = $prefs_->get('UserGroupDB', 'sql_external');
-		$sql2 = new MySQL($config['host'], $config['login'], $config['password'], $config['database']);
+		$sql2 = new SQL($config);
 		$status = $sql2->CheckLink(false);
 		return $status;
 	}
