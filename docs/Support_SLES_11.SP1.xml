@@ -191,6 +191,15 @@ Options:
 
 Is this correct? [Y/n]]]>
          </screen>
+	 <note>
+	   <para>
+	     If you don't have access to Internet, please use the
+	     following command instead of the previous one:
+	     <screen><![CDATA[ # sm-config --no-download]]></screen>
+	     Then, please read <link linkend="sm_chroot">this</link>
+	     to manually get the subsystem archive.
+	   </para>
+	 </note>
        </listitem>
 
        <listitem id="sm_configure_apache_service">
@@ -203,6 +212,7 @@ Is this correct? [Y/n]]]>
      </itemizedlist>
      
      <xi:include href="&parent;" xpointer="sm-config" />
+     <xi:include href="&parent;" xpointer="sm_chroot" />
    </section>
   </section>
 
