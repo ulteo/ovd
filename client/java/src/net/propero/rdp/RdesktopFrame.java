@@ -200,7 +200,7 @@ public abstract class RdesktopFrame extends Frame {
 		}
 
 		public void windowClosing(WindowEvent e) {
-			hide();
+			setVisible(false);
 			Rdesktop.exit(0, rdp, (RdesktopFrame) e.getWindow(), true);
 		}
 
@@ -288,7 +288,7 @@ public abstract class RdesktopFrame extends Frame {
 				retry = true;
 			else
 				retry = false;
-			this.hide();
+			setVisible(false);
 			this.dispose();
 		}
 	}
@@ -323,7 +323,7 @@ public abstract class RdesktopFrame extends Frame {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			this.hide();
+			setVisible(false);
 			this.dispose();
 		}
 	}
@@ -336,7 +336,7 @@ public abstract class RdesktopFrame extends Frame {
 	public boolean showYesNoErrorDialog(String[] msg) {
 
 		YesNoDialog d = new YesNoDialog(this, "UlteoRDP error", msg);
-		d.show();
+		d.setVisible(true);
 		return d.retry;
 	}
 
@@ -346,7 +346,7 @@ public abstract class RdesktopFrame extends Frame {
      */
 	public void showErrorDialog(String[] msg) {
 		Dialog d = new OKDialog(this, "UlteoRDP error", msg);
-		d.show();
+		d.setVisible(true);
 	}
 
     /**

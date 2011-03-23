@@ -722,7 +722,7 @@ public class Rdesktop {
 		if (seamChannel != null)
 			seamChannel.setMainFrame(window);
 
-		window.show();
+		window.setVisible(true);
 		
 		// Configure a keyboard layout
 		InputStream istr = null;
@@ -808,7 +808,7 @@ public class Rdesktop {
 				// Remove to get rid of sendEvent tool
 				if (showTools) {
 					toolFrame = new SendEvent(RdpLayer);
-					toolFrame.show();
+					toolFrame.setVisible(true);
 				}
 				// End
 
