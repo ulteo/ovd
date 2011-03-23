@@ -370,14 +370,6 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.opt.persistent_caching_max_cells = (persistentCachingMaxSize * 1024 * 1024) / PstCache.MAX_CELL_SIZE;
 	}
 
-	/**
-	 * Specify the path where keymaps are
-	 * @param keymapPath
-	 */
-	public void setKeymapPath(String keymapPath_) {
-		this.keyMapPath = keymapPath_;
-	}
-
 	public void setKeymap(String keymap) {
 		this.mapFile = keymap;
 	}
@@ -566,10 +558,6 @@ public class RdpConnection implements SeamListener, Runnable{
 	
 	public RdesktopCanvas getCanvas() {
 		return this.canvas;
-	}
-	
-	public Common getCommon() {
-		return this.common;
 	}
 	
 	public SeamlessChannel getSeamlessChannel() {
