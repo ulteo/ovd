@@ -118,7 +118,7 @@ public class Rdp5 extends Rdp {
 
             if ((ctype & RDP_MPPC_COMPRESSED) != 0) {
                 try {
-                    ts = this.common.decompressor.decompress(s, length, ctype);
+                    ts = decompressor.decompress(s, length, ctype);
                 } catch (RdpCompressionException ex) {
                     logger.error(ex.getMessage());
 		    continue;

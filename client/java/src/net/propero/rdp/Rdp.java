@@ -26,6 +26,7 @@ import java.awt.image.*;
 import net.propero.rdp.compress.MPPCDecompressor;
 import net.propero.rdp.compress.RdpCompressionConstants;
 import net.propero.rdp.compress.RdpCompressionException;
+import net.propero.rdp.compress.RdpDecompressor;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
@@ -261,6 +262,8 @@ public class Rdp {
     
     protected Options opt = null;
     protected Common common = null;
+    
+	protected RdpDecompressor decompressor;
 
     /*
      * private final byte[] canned_caps = { (byte)0x01, (byte)0x00, (byte)0x00,
@@ -581,7 +584,7 @@ public class Rdp {
     private int configureCompression(int flags) {
 	if (this.opt.packet_compression) {
 		try {
-			this.common.decompressor = new MPPCDecompressor(RdpCompressionConstants.TYPE_64K);
+			decompressor = new MPPCDecompressor(RdpCompressionConstants.TYPE_64K);
 			flags |= Rdp.RDP_LOGON_COMPRESSION;
 			flags |= RdpCompressionConstants.FLAG_TYPE_64K;
 		} catch (RdpCompressionException ex) {
@@ -1003,7 +1006,7 @@ public class Rdp {
 
 	if ((ctype & PACKET_COMPRESSED) != 0) {
 		try {
-                    data = this.common.decompressor.decompress(data, clen, ctype);
+                    data = decompressor.decompress(data, clen, ctype);
                 } catch (RdpCompressionException ex) {
                     logger.error(ex.getMessage());
 		    return false;
