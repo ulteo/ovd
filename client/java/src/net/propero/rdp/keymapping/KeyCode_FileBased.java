@@ -13,12 +13,13 @@
 package net.propero.rdp.keymapping;
 
 import java.awt.event.KeyEvent;
-import java.io.DataInputStream;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -98,7 +99,7 @@ public abstract class KeyCode_FileBased {
     public void readMapFile(InputStream fstream) throws KeyMapException {
         // logger.info("Stream-based keycode reader");
         int lineNum = 0; // current line number being parsed
-        String line = ""; // contents of line being parsed
+        String line = null; // contents of line being parsed
 
         if (fstream == null)
             throw new KeyMapException("Could not find specified keymap file");
@@ -106,14 +107,10 @@ public abstract class KeyCode_FileBased {
         boolean mapCodeSet = false;
 
         try {
-            DataInputStream in = new DataInputStream(fstream);
+        	BufferedReader in = new BufferedReader(new InputStreamReader(fstream));
 
-            if (in == null)
-                logger.warn("in == null");
-
-            while (in.available() != 0) {
+            while ((line = in.readLine()) != null) {
                 lineNum++;
-                line = in.readLine();
 
                 char fc = 0x0;
                 if ((line != null) && (line.length() > 0))

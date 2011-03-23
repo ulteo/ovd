@@ -11,9 +11,10 @@
  */
 package net.propero.rdp.loader;
 
-import java.io.DataInputStream;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 import net.propero.rdp.OrderException;
@@ -59,9 +60,9 @@ public class JRdpLoader {
 			
 			// Open the file specified at the command-line
 			FileInputStream fstream = new FileInputStream(launchFile);
-			DataInputStream in = new DataInputStream(fstream);
-			while (in.available() != 0) {
-				String line = in.readLine();
+			BufferedReader in = new BufferedReader(new InputStreamReader(fstream));
+			String line = null;
+			while ((line = in.readLine()) != null) {
 				StringTokenizer stok = new StringTokenizer(line);
 				if(stok.hasMoreTokens()){
 					String identifier = stok.nextToken();
