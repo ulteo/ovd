@@ -27,8 +27,7 @@ from Module import Module
 class Monitoring(Module):
 	def beforeStartApp(self):
 		path = os.path.join(os.environ['OVD_SESSION_DIR'], "instances", "%d"%(os.getpid()))
-		buf = "%d %d%s"%(os.getpid(), self.application.id, os.linesep)
-
+		
 		f = file(path, 'w')
 		f.write("%d"%(self.application.id))
 		f.close()
