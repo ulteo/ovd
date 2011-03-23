@@ -501,6 +501,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		Rectangle maxBounds = this.getMaximumWindowBounds();
 		if (width >= maxBounds.width && height >= maxBounds.height) {
 			logger.warn("Receive a POSITION message instead of a STATE "+WINDOW_MAXIMIZED);
+			f.sw_setMyPosition((int)maxBounds.x, (int)maxBounds.y, (int)maxBounds.width, (int)maxBounds.height);
 			this.processState(id, WINDOW_MAXIMIZED, 0);
 
 			return true;
