@@ -136,14 +136,6 @@ public class Printer extends RdpdrDevice{
 		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
 		PrintService printService[] = PrintServiceLookup.lookupPrintServices(flavor, pras);
 		
-
-		String defaultPrinterName = null;
-		try{
-			PrintService default_p = PrintServiceLookup.lookupDefaultPrintService();
-			defaultPrinterName = default_p.getName();
-		}catch(Exception e){}
-
-
 		String[] names = new String[printService.length];
 
 		for(int i=0;i<printService.length;i++) {
