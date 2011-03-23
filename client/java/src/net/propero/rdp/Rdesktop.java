@@ -663,7 +663,6 @@ public class Rdesktop {
 			if (opt.soundEnabled) {
 				soundChannel = new SoundChannel(opt, common);
 				channels.register(soundChannel);
-				common.soundChannel = soundChannel;
 			}
 			if (opt.rdpdrEnabled) {
 				rdpdrChannel = new RdpdrChannel(opt, common);

@@ -14,7 +14,6 @@
 package net.propero.rdp;
 
 import net.propero.rdp.rdp5.Rdp5;
-import net.propero.rdp.rdp5.rdpsnd.SoundChannel;
 
 public class Common {
 
@@ -24,7 +23,6 @@ public class Common {
 	public MCS mcs;
 	public RdesktopFrame frame;
 	public RdesktopCanvas canvas;
-	public SoundChannel soundChannel;
 	public Cache cache = null;
 	public PstCache persistent_cache = null;
 }
