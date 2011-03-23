@@ -64,18 +64,15 @@ public class RdpConnectionVDI extends RdpConnection {
 			return;
 
 		this.seamChannel = new SeamlessChannel(this.opt, this.common);
-		if (this.addChannel(this.seamChannel))
-			this.seamChannel.addSeamListener(this);
-		else
-			throw new RdesktopException("Unable to add seamless channel");
+		this.addChannel(this.seamChannel);
+		this.seamChannel.addSeamListener(this);
 	}
 
 	protected void initRdpdrChannel() throws RdesktopException {
 		if (this.rdpdrChannel != null)
 			return;
 		this.rdpdrChannel = new OVDRdpdrChannel(this.opt, this.common);
-		if (! this.addChannel(this.rdpdrChannel))
-			throw new RdesktopException("Unable to add rdpdr channel");
+		this.addChannel(this.rdpdrChannel);
 	}
 
 	protected void fireDisconnected() {

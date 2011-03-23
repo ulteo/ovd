@@ -60,7 +60,7 @@ public class RdpConnection implements SeamListener, Runnable{
 
 	protected String keyMapPath = "/resources/keymaps/";
 
-	protected VChannels channels = null;
+	private VChannels channels = null;
 	protected RdpdrChannel rdpdrChannel = null;
 	protected SoundChannel soundChannel = null;
 	protected ClipChannel clipChannel = null;
@@ -250,15 +250,8 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.logger.info("Desktop size: "+this.opt.width+"x"+this.opt.height);
 	}
 	
-	protected boolean addChannel(VChannel channel) {
-		try {
-			this.channels.register(channel);
-		} catch (RdesktopException e) {
-			e.printStackTrace();
-			return false;
-		}
-		
-		return true;
+	protected void addChannel(VChannel channel) throws RdesktopException {
+		this.channels.register(channel);
 	}
 
 	protected void initSoundChannel() throws RdesktopException {
@@ -266,8 +259,7 @@ public class RdpConnection implements SeamListener, Runnable{
 			return;
 
 		this.soundChannel = new SoundChannel(this.opt, this.common);
-		if (! this.addChannel(this.soundChannel))
-			throw new RdesktopException("Unable to add sound channel");
+		this.addChannel(this.soundChannel);
 	}
 
 	protected void initRdpdrChannel() throws RdesktopException {
@@ -275,8 +267,7 @@ public class RdpConnection implements SeamListener, Runnable{
 			return;
 
 		this.rdpdrChannel = new RdpdrChannel(this.opt, this.common);
-		if (! this.addChannel(this.rdpdrChannel))
-			throw new RdesktopException("Unable to add rdpdr channel");
+		this.addChannel(this.rdpdrChannel);
 	}
 
 	/**
@@ -292,8 +283,7 @@ public class RdpConnection implements SeamListener, Runnable{
 			return;
 		}
 
-		if (! this.addChannel(this.clipChannel))
-			throw new RdesktopException("Unable to add clip channel");
+		this.addChannel(this.clipChannel);
 		if (this.seamChannel != null)
 			this.seamChannel.setClip(clipChannel);
 	}
@@ -304,10 +294,8 @@ public class RdpConnection implements SeamListener, Runnable{
 			return;
 
 		this.seamChannel = new SeamlessChannel(this.opt, this.common);
-		if (this.addChannel(this.seamChannel))
-			this.seamChannel.addSeamListener(this);
-		else
-			throw new RdesktopException("Unable to add seamless channel");
+		this.addChannel(this.seamChannel);
+		this.seamChannel.addSeamListener(this);
 	}
 
 	public void setShell(String shell) {

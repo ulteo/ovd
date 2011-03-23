@@ -131,14 +131,12 @@ public class RdpConnectionOvd extends RdpConnection {
 	protected void initSeamlessChannel() throws RdesktopException {
 		this.opt.seamlessEnabled = true;
 		this.seamChannel = new SeamlessChannel(this.opt, this.common);
-		if (! this.addChannel(this.seamChannel))
-			throw new RdesktopException("Unable to add seamless channel");
+		this.addChannel(this.seamChannel);
 	}
 
-	protected void initOvdAppChannel() throws OvdException {
+	protected void initOvdAppChannel() throws RdesktopException {
 		this.ovdAppChannel = new OvdAppChannel(this.opt, this.common);
-		if (! this.addChannel(this.ovdAppChannel))
-			throw new OvdException("Unable to add ovdapp channel");
+		this.addChannel(this.ovdAppChannel);
 	}
 
 	/**
@@ -177,8 +175,7 @@ public class RdpConnectionOvd extends RdpConnection {
 		if (this.rdpdrChannel != null)
 			return;
 		this.rdpdrChannel = new OVDRdpdrChannel(this.opt, this.common);
-		if (! this.addChannel(this.rdpdrChannel))
-			throw new RdesktopException("Unable to add rdpdr channel");
+		this.addChannel(this.rdpdrChannel);
 	}
 	
 	/**
