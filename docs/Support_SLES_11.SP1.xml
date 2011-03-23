@@ -5,7 +5,7 @@
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
   <transform_var name="distrib_pretty_name" value="SUSE Linux Enterprise Server (SLES) 11 SP1"/>
   <transform_var name="distrib_name" value="sles" />
-  <transform_var name="distrib_version" value="11_sp1"/>
+  <transform_var name="distrib_version" value="11_SP1"/>
   <transform_var name="distrib_dvd_url" value="http://www.novell.com//products/server/"/>
   <transform_var name="rpm_install_cmd" value="zypper"/>
   <transform_var name="rpm_mysql_packages" value="mysql"/>
