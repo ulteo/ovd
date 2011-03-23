@@ -426,7 +426,6 @@ public class RdpConnection implements SeamListener, Runnable{
 
 		this.tryNumber++;
 
-		/*main while*/
 		this.RdpLayer = new Rdp5(channels, this.opt, this.common);
 		this.common.rdp = this.RdpLayer;
 		this.RdpLayer.registerDrawingSurface(this.canvas);
@@ -466,7 +465,7 @@ public class RdpConnection implements SeamListener, Runnable{
 						if (!this.opt.readytosend)
 							System.out.println("The terminal server disconnected before licence negotiation completed.\nPossible cause: terminal server could not issue a licence.");
 					}
-				}catch(ConnectionException e){
+				} catch (ConnectionException e) {
 					this.failedMsg = e.getMessage();
 					this.keep_running = false;
 					exit = 1;
@@ -474,13 +473,13 @@ public class RdpConnection implements SeamListener, Runnable{
 					this.failedMsg = e.getMessage();
 					this.keep_running = false;
 					exit = 1;
-				}catch(SocketException s){
+				} catch (SocketException s) {
 					if(this.RdpLayer.isConnected()){
 						this.failedMsg = s.getMessage();
 						exit = 1;
 					}
 					this.keep_running = false;
-				}catch (RdesktopException e) {
+				} catch (RdesktopException e) {
 					this.failedMsg = e.getMessage();
 					
 					if (!this.opt.readytosend) {
