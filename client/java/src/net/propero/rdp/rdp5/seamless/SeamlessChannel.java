@@ -540,10 +540,10 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		}
 
 		SeamlessWindow f = this.windows.get(name);
-		int frame_state = Frame.NORMAL;
+		int frame_state = f.sw_getExtendedState();
 		switch((int)state) {
 			case SeamlessChannel.WINDOW_MINIMIZED:
-				frame_state = Frame.ICONIFIED;
+				frame_state |= Frame.ICONIFIED;
 				break;
 			case SeamlessChannel.WINDOW_FULLSCREEN:
 				frame_state = SeamlessWindow.STATE_FULLSCREEN;
