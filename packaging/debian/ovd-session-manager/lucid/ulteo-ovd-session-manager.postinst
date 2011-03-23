@@ -86,8 +86,8 @@ then
         mkdir -p $CACHEDIR
 
         # get the tarball url and quit if empty
-        db_get ulteo-ovd-session-manager/tarball_url && URL=$RET
-        [ -z $URL ] && break
+        db_get ulteo-ovd-session-manager/tarball_url && URL="$RET"
+        [ -z "$URL" ] && break
 
         # get the chroot
         CURLOPTS="--retry 3 --connect-timeout 60 --insecure -L"
