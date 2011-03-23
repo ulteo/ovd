@@ -2,6 +2,8 @@
 
 DIST?=dist
 
+SUBDIRS=img
+
 SRC=\
 	Architecture.xml \
 	Easy_Installation.xml \
@@ -67,8 +69,9 @@ install: all
 	install default.css	$(DIST)
 	install $(DST) 		$(DIST)
 	install $(PDF) 		$(DIST)
-	cp      -R img       	$(DIST)/img
-#	svn export --force img  $(DIST)/img
+	@for d in $(SUBDIRS); do \
+		$(MAKE) -w -C $$d $(MAKECMDGOALS) DIST=$(abspath $(DIST))/$$d; \
+	done
 
 uninstall:
 	rm 	-rf          	$(DIST)
