@@ -648,7 +648,7 @@ and view documents">
     <script type="text/javascript">
 function start(form_) {
 	var ovd = new UlteoOVD_start_Application(
-                 'http://'+form_server.value+'/ovd', 
+                 'http://'+form_.server.value+'/ovd', 
                  form_.app.value
              );
         ovd.setAuthPassword(form_.login.value, form_.password.value);
