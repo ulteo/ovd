@@ -402,11 +402,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	}
 	
 	public void run() {
-		int logonflags = Rdp.RDP_LOGON_NORMAL;
-		boolean[] deactivated = new boolean[1];
-		int[] ext_disc_reason = new int[1];
 		
-		logonflags |= Rdp.RDP_LOGON_AUTO;
 		try {
 			this.initCanvas();
 		} catch (RdesktopException ex) {
@@ -449,15 +445,18 @@ public class RdpConnection implements SeamListener, Runnable{
 			if (this.RdpLayer != null) {
 				// Attempt to connect to server on port Options.port
 				try {
-					this.RdpLayer.connect(this.opt.username, InetAddress.getByName(this.opt.hostname), logonflags, this.opt.domain, this.opt.password, this.opt.command, this.opt.directory);
+					this.RdpLayer.connect(this.opt.username, InetAddress.getByName(this.opt.hostname),
+							Rdp.RDP_LOGON_NORMAL | Rdp.RDP_LOGON_AUTO, this.opt.domain,
+							this.opt.password, this.opt.command, this.opt.directory);
 
 					if (this.keep_running) {
 						this.fireConnected();
 
+						boolean[] deactivated = new boolean[1];
+						int[] ext_disc_reason = new int[1];
 						this.RdpLayer.mainLoop(deactivated, ext_disc_reason);
 						if (! deactivated[0]) {
 							this.disconnect();
-
 							String reason = Rdesktop.textDisconnectReason(ext_disc_reason[0]);
 							System.out.println("Connection terminated: " + reason);
 						}
