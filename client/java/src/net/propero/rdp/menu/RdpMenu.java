@@ -19,19 +19,21 @@ import java.awt.MenuBar;
 import java.awt.MenuItem;
 
 import net.propero.rdp.Common;
+import net.propero.rdp.Rdesktop;
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdesktopFrame;
 
 public class RdpMenu extends MenuBar {
 	
 	RdesktopFrame parent;
+	@SuppressWarnings("unused")
 	private Common common = null;
 	
     /**
      * Initialise the properJavaRDP menu bar and attach to an RdesktopFrame
      * @param parent Menu is attached to this frame
      */
-	public RdpMenu(RdesktopFrame parent, Common common_){
+	public RdpMenu(final RdesktopFrame parent, Common common_){
 		MenuItem item;
 
 		this.parent = parent;
@@ -54,7 +56,7 @@ public class RdpMenu extends MenuBar {
 		item.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				common.exit();
+				Rdesktop.exit(0,parent.rdp, parent,true);
 			}
 		});
 		m.add(item);

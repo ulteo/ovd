@@ -28,13 +28,5 @@ public class Common {
 	public SoundChannel soundChannel;
 	public Cache cache = null;
 	public PstCache persistent_cache = null;
-
 	public RdpDecompressor decompressor = null;
-
-    /**
-     * Quit the application
-     */
-	public void exit(){
-		Rdesktop.exit(0,this.rdp,this.frame,true);
-	}
 }

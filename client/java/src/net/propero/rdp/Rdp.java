@@ -1510,15 +1510,15 @@ public class Rdp {
         } catch (RdesktopException r) {
             if (this.common.rdp.isConnected())
                 Rdesktop.error(r, this.common.rdp, this.common.frame, true);
-            this.common.exit();
+    		Rdesktop.exit(0,frame.rdp,this.frame,true);
         } catch (CryptoException c) {
             if (this.common.rdp.isConnected())
                 Rdesktop.error(c, this.common.rdp, this.common.frame, true);
-            this.common.exit();
+    		Rdesktop.exit(0,frame.rdp,this.frame,true);
         } catch (IOException i) {
             if (this.common.rdp.isConnected())
                 Rdesktop.error(i, this.common.rdp, this.common.frame, true);
-            this.common.exit();
+    		Rdesktop.exit(0,frame.rdp,this.frame,true);
         }
     }
 
