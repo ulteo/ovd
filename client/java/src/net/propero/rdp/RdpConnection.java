@@ -58,7 +58,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	public final static int STATE_CONNECTED = 2;
 	public final static int STATE_FAILED = 3;
 
-	protected String keyMapPath = "/resources/keymaps/";
+	private final static String KEYMAP_PATH = "/resources/keymaps/";
 
 	private VChannels channels = null;
 	protected RdpdrChannel rdpdrChannel = null;
@@ -374,43 +374,31 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.mapFile = keymap;
 	}
 
-	protected boolean loadKeymap() {
-		InputStream istr = null;
-		KeyCode_FileBased keyMap = null;
-
-		istr = RdpConnection.class.getResourceAsStream(this.keyMapPath + this.mapFile);
-
+	/**
+	 *  Load a keyboard layout
+	 * @throws KeyMapException 
+	 */
+	private void loadKeymap() throws KeyMapException {
+		InputStream istr = RdpConnection.class.getResourceAsStream(KEYMAP_PATH + this.mapFile);
 		if (istr == null) {
 			this.mapFile = this.mapFile.substring(0, this.mapFile.indexOf('-'));
-			istr = RdpConnection.class.getResourceAsStream(this.keyMapPath + this.mapFile);
+			istr = RdpConnection.class.getResourceAsStream(KEYMAP_PATH + this.mapFile);
 			if (istr == null) {
 				this.mapFile = "en-gb";
-				istr = RdpConnection.class.getResourceAsStream(this.keyMapPath + this.mapFile);
+				istr = RdpConnection.class.getResourceAsStream(KEYMAP_PATH + this.mapFile);
 			}
 		}
+
+		KeyCode_FileBased keyMap = new KeyCode_FileBased_Localised(istr, opt);
+		System.out.println("Autoselected keyboard map " + this.mapFile);
 
 		try {
-			keyMap = new KeyCode_FileBased_Localised(istr, opt);
-		} catch (KeyMapException kmEx) {
-			kmEx.printStackTrace();
-			return false;
-		}
-		System.out.println("Autoselected keyboard map "+this.mapFile);
-
-		if(istr != null) {
-			try {
-				istr.close();
-			} catch (IOException ioEx) {
-				System.err.println("Error: Unable to close keymap "+ this.mapFile +" : "+ ioEx);
-				ioEx.printStackTrace();
-			}
+			istr.close();
+		} catch (IOException ex) {
+			System.err.println("Error: Unable to close keymap " + this.mapFile +" : "+ ex);
 		}
 		this.opt.keylayout = keyMap.getMapCode();
-
-		if (keyMap != null)
-			this.canvas.registerKeyboard(keyMap);
-
-		return true;
+		this.canvas.registerKeyboard(keyMap);
 	}
 	
 	public void run() {
@@ -426,6 +414,13 @@ public class RdpConnection implements SeamListener, Runnable{
 			return;
 		}
 
+		try {
+			this.loadKeymap();
+		} catch (KeyMapException ex) {
+			this.logger.fatal(ex.getMessage());
+			return;
+		}
+		
 		if (this.opt.seamlessEnabled) {
 			this.backstoreFrame = new JFrame();
 			this.backstoreFrame.setVisible(false);
@@ -435,9 +430,6 @@ public class RdpConnection implements SeamListener, Runnable{
 
 		this.tryNumber++;
 
-		// Configure a keyboard layout
-		this.loadKeymap();
-		
 		/*main while*/
 		this.RdpLayer = new Rdp5(channels, this.opt, this.common);
 		this.common.rdp = this.RdpLayer;
