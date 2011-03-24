@@ -533,17 +533,6 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.connectionThread.start();
 	}
 
-	/**
-	 * Interrupt the thread launched by the connect() method
-	 */
-	public void interruptConnection() throws RdesktopException {
-		if (this.connectionThread == null)
-			throw new RdesktopException("Unable to interrupt the connection: The connection thread is not started");
-
-		if (this.connectionThread.isAlive())
-			this.connectionThread.interrupt();
-	}
-	
 	public RdesktopCanvas getCanvas() {
 		return this.canvas;
 	}
