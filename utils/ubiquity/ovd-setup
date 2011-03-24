@@ -39,7 +39,7 @@ fi
 # add ulteo repository
 cat > /target/etc/apt/sources.list.d/ovd.list << EOF
 # OVD repository
-deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main
+deb http://archive.ulteo.com/ovd/trunk/ubuntu lucid main
 EOF
 
 exit 0
