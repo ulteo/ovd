@@ -62,6 +62,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	protected SoundChannel soundChannel = null;
 	protected ClipChannel clipChannel = null;
 	protected SeamlessChannel seamChannel = null;
+	
 	protected Rdp5 RdpLayer = null;
 	protected Options opt = null;
 	protected Common common = null;
@@ -431,7 +432,8 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.opt.loggedon = false;
 		this.opt.readytosend = false;
 		this.opt.grab_keyboard = false;
-		if(this.opt.hostname.equalsIgnoreCase("localhost")) this.opt.hostname = "127.0.0.1";
+		if (this.opt.hostname.equalsIgnoreCase("localhost"))
+			this.opt.hostname = "127.0.0.1";
 		
 		this.keep_running = true;
 		int exit = 0;
