@@ -79,7 +79,7 @@ public class OvdClientDesktopApplet extends OvdClient {
 		RdpConnectionOvd rc = this.connections.get(0);
 
 		// Prevent greometry modification while the connection is active
-		if (rc.getState() != RdpConnectionOvd.STATE_DISCONNECTED)
+		if (rc.getState() != RdpConnection.State.DISCONNECTED)
 			return;
 
 		int bpp = this.properties.getRDPBpp();

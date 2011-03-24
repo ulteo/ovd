@@ -198,11 +198,11 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 
 	@Override
 	public void failed(RdpConnection co, String msg) {
-		int state = co.getState();
-		if (state == RdpConnectionOvd.STATE_CONNECTED) {
+		RdpConnection.State state = co.getState();
+		if (state == RdpConnection.State.CONNECTED) {
 			return;
 		}
-		if (state != RdpConnectionOvd.STATE_FAILED) {
+		if (state != RdpConnection.State.FAILED) {
 			Logger.debug("checkRDPConnections "+co.getServer()+" -- Bad connection state("+state+"). Will continue normal process.");
 			return;
 		}

@@ -389,14 +389,14 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			int nbAppsByServer = co.getAppsList().size();
 			nbApps += nbAppsByServer;
 
-			int state = co.getState();
+			RdpConnection.State state = co.getState();
 
-			if (state == RdpConnectionOvd.STATE_CONNECTED) {
+			if (state == RdpConnection.State.CONNECTED) {
 				nbAppsAvailable += nbAppsByServer;
 				continue;
 			}
 
-			if (state != RdpConnectionOvd.STATE_FAILED) {
+			if (state != RdpConnection.State.FAILED) {
 				Logger.debug("checkRDPConnections "+co.getServer()+" -- Bad connection state("+state+"). Will continue normal process.");
 				continue;
 			}

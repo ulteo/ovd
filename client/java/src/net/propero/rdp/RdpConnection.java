@@ -53,10 +53,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	public static final int DEFAULT_HEIGHT = 600;
 	public static final int DEFAULT_PERSISTENT_CACHE_SIZE = 100;
 
-	public final static int STATE_DISCONNECTED = 0;
-	public final static int STATE_CONNECTING = 1;
-	public final static int STATE_CONNECTED = 2;
-	public final static int STATE_FAILED = 3;
+	public static enum State {DISCONNECTED, CONNECTING, CONNECTED, FAILED};
 
 	private final static String KEYMAP_PATH = "/resources/keymaps/";
 
@@ -71,7 +68,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	private RdesktopCanvas_Localised canvas = null;
 	protected String mapFile = null;
 	private CopyOnWriteArrayList<RdpListener> listener = new CopyOnWriteArrayList<RdpListener>();
-	private int state = STATE_DISCONNECTED;
+	private State state = State.DISCONNECTED;
 	private int tryNumber = 0;
 	private String failedMsg = null;
 	private Thread connectionThread = null;
@@ -95,7 +92,7 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.channels = new VChannels(this.opt);
 	}
 
-	public int getState() {
+	public State getState() {
 		return this.state;
 	}
 
@@ -430,6 +427,7 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.common.rdp = this.RdpLayer;
 		this.RdpLayer.registerDrawingSurface(this.canvas);
 		this.canvas.registerCommLayer(this.RdpLayer);
+		
 		this.opt.loggedon = false;
 		this.opt.readytosend = false;
 		this.opt.grab_keyboard = false;
@@ -503,7 +501,7 @@ public class RdpConnection implements SeamListener, Runnable{
 
 					this.keep_running = false;
 
-					if (this.state == STATE_CONNECTING)
+					if (this.state == State.CONNECTING)
 						this.fireFailed();
 					else
 						this.fireDisconnected();
@@ -599,7 +597,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	}
 	
 	protected void fireConnected() {
-		this.state = STATE_CONNECTED;
+		this.state = State.CONNECTED;
 		
 		for(RdpListener list : this.listener) {
 			list.connected(this);
@@ -607,7 +605,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	}
 	
 	protected void fireConnecting() {
-		this.state = STATE_CONNECTING;
+		this.state = State.CONNECTING;
 
 		for(RdpListener list : this.listener) {
 			list.connecting(this);
@@ -616,7 +614,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	
 	protected void fireFailed() {
 		this.stop();
-		this.state = STATE_FAILED;
+		this.state = State.FAILED;
 		
 		for(RdpListener list : this.listener) {
 			list.failed(this, this.failedMsg);
@@ -625,7 +623,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	
 	protected synchronized void fireDisconnected() {
 		this.stop();
-		this.state = STATE_DISCONNECTED;
+		this.state = State.DISCONNECTED;
 		
 		for(RdpListener list : this.listener) {
 			list.disconnected(this);
