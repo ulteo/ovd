@@ -524,7 +524,12 @@ public class RdpConnection implements SeamListener, Runnable{
 			});
 		}
 
-		exit(exit);
+		this.disconnect();
+		System.gc();
+		if (exit == 0)
+			this.fireDisconnected();
+		else
+			this.fireFailed();
 	}
 
 	/**
@@ -568,17 +573,6 @@ public class RdpConnection implements SeamListener, Runnable{
 		}
 	}
 	
-	private void exit(int n) {
-		this.disconnect();
-
-		System.gc();
-
-		if (n == 0)
-			this.fireDisconnected();
-		else
-			this.fireFailed();
-	}
-
 	public void addRdpListener(RdpListener l) {
 		this.listener.add(l);
 	}
