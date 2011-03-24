@@ -447,23 +447,24 @@ public class RdpConnection implements SeamListener, Runnable{
 						Rdp.RDP_LOGON_NORMAL | Rdp.RDP_LOGON_AUTO, this.opt.domain,
 						this.opt.password, this.opt.command, this.opt.directory);
 
-				if (this.keep_running) {
-					this.fireConnected();
+				if (! this.keep_running)
+					break;
+				
+				this.fireConnected();
 
-					boolean[] deactivated = new boolean[1];
-					int[] ext_disc_reason = new int[1];
-					this.RdpLayer.mainLoop(deactivated, ext_disc_reason);
-					if (! deactivated[0]) {
-						this.disconnect();
-						String reason = Rdesktop.textDisconnectReason(ext_disc_reason[0]);
-						System.out.println("Connection terminated: " + reason);
-					}
-					
-					this.keep_running = false; // exited main loop
-					
-					if (!this.opt.readytosend)
-						System.out.println("The terminal server disconnected before licence negotiation completed.\nPossible cause: terminal server could not issue a licence.");
+				boolean[] deactivated = new boolean[1];
+				int[] ext_disc_reason = new int[1];
+				this.RdpLayer.mainLoop(deactivated, ext_disc_reason);
+				if (! deactivated[0]) {
+					this.disconnect();
+					String reason = Rdesktop.textDisconnectReason(ext_disc_reason[0]);
+					System.out.println("Connection terminated: " + reason);
 				}
+				
+				this.keep_running = false; // exited main loop
+				
+				if (!this.opt.readytosend)
+					System.out.println("The terminal server disconnected before licence negotiation completed.\nPossible cause: terminal server could not issue a licence.");
 			} catch (ConnectionException e) {
 				this.failedMsg = e.getMessage();
 				this.keep_running = false;
