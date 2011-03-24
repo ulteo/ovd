@@ -441,75 +441,72 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.fireConnecting();
 		
 		while (this.keep_running) {
-			if (this.RdpLayer != null) {
-				// Attempt to connect to server on port Options.port
-				try {
-					this.RdpLayer.connect(this.opt.username, InetAddress.getByName(this.opt.hostname),
-							Rdp.RDP_LOGON_NORMAL | Rdp.RDP_LOGON_AUTO, this.opt.domain,
-							this.opt.password, this.opt.command, this.opt.directory);
+			// Attempt to connect to server on port Options.port
+			try {
+				this.RdpLayer.connect(this.opt.username, InetAddress.getByName(this.opt.hostname),
+						Rdp.RDP_LOGON_NORMAL | Rdp.RDP_LOGON_AUTO, this.opt.domain,
+						this.opt.password, this.opt.command, this.opt.directory);
 
-					if (this.keep_running) {
-						this.fireConnected();
+				if (this.keep_running) {
+					this.fireConnected();
 
-						boolean[] deactivated = new boolean[1];
-						int[] ext_disc_reason = new int[1];
-						this.RdpLayer.mainLoop(deactivated, ext_disc_reason);
-						if (! deactivated[0]) {
-							this.disconnect();
-							String reason = Rdesktop.textDisconnectReason(ext_disc_reason[0]);
-							System.out.println("Connection terminated: " + reason);
-						}
-						
-						this.keep_running = false; // exited main loop
-						
-						if (!this.opt.readytosend)
-							System.out.println("The terminal server disconnected before licence negotiation completed.\nPossible cause: terminal server could not issue a licence.");
+					boolean[] deactivated = new boolean[1];
+					int[] ext_disc_reason = new int[1];
+					this.RdpLayer.mainLoop(deactivated, ext_disc_reason);
+					if (! deactivated[0]) {
+						this.disconnect();
+						String reason = Rdesktop.textDisconnectReason(ext_disc_reason[0]);
+						System.out.println("Connection terminated: " + reason);
 					}
-				} catch (ConnectionException e) {
-					this.failedMsg = e.getMessage();
-					this.keep_running = false;
-					exit = 1;
-				} catch (UnknownHostException e) {
-					this.failedMsg = e.getMessage();
-					this.keep_running = false;
-					exit = 1;
-				} catch (SocketException s) {
-					if(this.RdpLayer.isConnected()){
-						this.failedMsg = s.getMessage();
-						exit = 1;
-					}
-					this.keep_running = false;
-				} catch (RdesktopException e) {
-					this.failedMsg = e.getMessage();
 					
-					if (!this.opt.readytosend) {
-						// maybe the licence server was having a comms
-						// problem, retry?
-						System.out.println("The terminal server reset connection before licence negotiation completed.\nPossible cause: terminal server could not connect to licence server.");
-						
-						if (this.RdpLayer != null && this.RdpLayer.isConnected())
-							this.RdpLayer.disconnect();
-						this.fireDisconnected();
-						System.out.println("Retrying connection...");
-						this.keep_running = true; // retry
-						continue;
-					} else {
-						this.keep_running = false;
-						exit = 1;
-					}
-				} catch (Exception e) {
-					System.err.println("["+this.getServer()+"] An error occured: "+e.getClass().getName()+" "+e.getMessage());
-					e.printStackTrace();
-
-					this.keep_running = false;
-
-					if (this.state == State.CONNECTING)
-						this.fireFailed();
-					else
-						this.fireDisconnected();
+					this.keep_running = false; // exited main loop
+					
+					if (!this.opt.readytosend)
+						System.out.println("The terminal server disconnected before licence negotiation completed.\nPossible cause: terminal server could not issue a licence.");
 				}
-			} else
-				System.out.println("The communications layer could not be initiated!");
+			} catch (ConnectionException e) {
+				this.failedMsg = e.getMessage();
+				this.keep_running = false;
+				exit = 1;
+			} catch (UnknownHostException e) {
+				this.failedMsg = e.getMessage();
+				this.keep_running = false;
+				exit = 1;
+			} catch (SocketException s) {
+				if(this.RdpLayer.isConnected()){
+					this.failedMsg = s.getMessage();
+					exit = 1;
+				}
+				this.keep_running = false;
+			} catch (RdesktopException e) {
+				this.failedMsg = e.getMessage();
+				
+				if (!this.opt.readytosend) {
+					// maybe the licence server was having a comms
+					// problem, retry?
+					System.out.println("The terminal server reset connection before licence negotiation completed.\nPossible cause: terminal server could not connect to licence server.");
+					
+					if (this.RdpLayer != null && this.RdpLayer.isConnected())
+						this.RdpLayer.disconnect();
+					this.fireDisconnected();
+					System.out.println("Retrying connection...");
+					this.keep_running = true; // retry
+					continue;
+				} else {
+					this.keep_running = false;
+					exit = 1;
+				}
+			} catch (Exception e) {
+				System.err.println("["+this.getServer()+"] An error occured: "+e.getClass().getName()+" "+e.getMessage());
+				e.printStackTrace();
+
+				this.keep_running = false;
+
+				if (this.state == State.CONNECTING)
+					this.fireFailed();
+				else
+					this.fireDisconnected();
+			}
 		}
 
 		if (this.backstoreFrame != null) {
