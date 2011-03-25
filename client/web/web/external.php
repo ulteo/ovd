@@ -115,6 +115,15 @@ if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications') 
 					var client_keymap = '<?php echo $user_keymap; ?>';
 
 					Event.observe(window, 'load', function() {
+						if ('<?php echo $_REQUEST['mode']; ?>' == 'desktop')
+							new Effect.Center($('splashContainer'));
+
+						$('desktopModeContainer').hide();
+						$('desktopAppletContainer').hide();
+
+						$('applicationsModeContainer').hide();
+						$('applicationsAppletContainer').hide();
+
 						translateInterface(client_language);
 						startExternalSession('<?php echo $_REQUEST['mode']; ?>');
 					});
@@ -192,25 +201,6 @@ if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications') 
 			</div>
 		</div>
 
-		<div id="desktopModeContainer" style="display: none;">
-			<div id="desktopAppletContainer" style="display: none;">
-			</div>
-		</div>
-
-		<div id="applicationsModeContainer" style="display: none;">
-			<div id="appsContainer" style="overflow: auto; display: none;">
-			</div>
-
-			<div id="runningAppsContainer" style="overflow: auto; display: none;">
-			</div>
-
-			<div id="applicationsAppletContainer" style="display: none;">
-			</div>
-		</div>
-
-<?php
-if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications') {
-?>
 		<div id="splashContainer" class="rounded">
 			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -229,8 +219,21 @@ if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications') 
 				</tr>
 			</table>
 		</div>
-<?php
-}
-?>
+
+		<div id="desktopModeContainer" style="display: none;">
+			<div id="desktopAppletContainer" style="display: none;">
+			</div>
+		</div>
+
+		<div id="applicationsModeContainer" style="display: none;">
+			<div id="appsContainer" style="overflow: auto; display: none;">
+			</div>
+
+			<div id="runningAppsContainer" style="overflow: auto; display: none;">
+			</div>
+
+			<div id="applicationsAppletContainer" style="display: none;">
+			</div>
+		</div>
 	</body>
 </html>
