@@ -808,13 +808,13 @@ function buildAppletNode(name, code, archive, extra_params) {
 	return applet_node;
 }
 
-function startExternalSession() {
+function startExternalSession(mode_) {
 	new Ajax.Request(
 		'login.php',
 		{
 			method: 'post',
 			parameters: {
-				mode: 'applications',
+				mode: mode_,
 				language: client_language,
 				keymap: client_keymap,
 				timezone: getTimezoneName(),
@@ -860,10 +860,18 @@ function onStartExternalSessionSuccess(xml_) {
 		return false;
 	session_node = buffer[0];
 
+	try {
+		session_mode = session_node.getAttribute('mode');
+		session_mode = session_mode.substr(0, 1).toUpperCase()+session_mode.substr(1, session_mode.length-1);
+	} catch(e) {}
+
 	startsession = true;
 
 	setTimeout(function() {
-		daemon = new External('ulteo-applet.jar', 'org.ulteo.ovd.applet.Applications', false);
+		if (session_mode == 'Desktop')
+			daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.ovd.applet.Desktop', false);
+		else
+			daemon = new External('ulteo-applet.jar', 'org.ulteo.ovd.applet.Applications', false);
 
 		daemon.keymap = client_keymap;
 		try {
