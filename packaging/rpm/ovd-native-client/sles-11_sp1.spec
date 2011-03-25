@@ -56,11 +56,11 @@ session and launch applications via a native client.
 ant ovdNativeClient.install -Dbuild.type=stripped -Dprefix=/usr -Ddestdir=$RPM_BUILD_ROOT -Dlanguages=true
 
 %post -n ulteo-ovd-native-client
-ICONFILE=/usr/share/icons/ulteo-ovd-native-client.png
+ICONFILE=/usr/share/icons/ulteo.png
 xdg-icon-resource install --size 128 --mode system $ICONFILE ulteo-ovd-native-client
 
 %preun -n ulteo-ovd-native-client
-xdg-icon-resource uninstall --size 128 --mode system icon-ulteo
+xdg-icon-resource uninstall --size 128 --mode system ulteo-ovd-native-client
 
 %files -n ulteo-ovd-native-client
 %defattr(-,root,root)
