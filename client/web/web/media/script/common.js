@@ -467,7 +467,7 @@ function testJava() {
 			setTimeout(function() { testJava(); }, 500);
 		return;
 	}
-	
+
 	var applet_params = new Hash();
 	applet_params.set('onSuccess', 'appletSuccess');
 	applet_params.set('onFailure', 'appletFailure');
