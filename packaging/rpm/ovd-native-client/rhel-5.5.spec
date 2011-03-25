@@ -30,7 +30,7 @@ Distribution: RHEL 5.5
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Buildrequires: java-1_6_0-openjdk-devel, ant, ant-nodeps, gettext
+Buildrequires: java-1.6.0-openjdk-devel, ant, ant-nodeps, gettext
 Buildroot: %{buildroot}
 
 %description
@@ -43,7 +43,7 @@ session and launch applications via a native client.
 
 Summary: Ulteo Open Virtual Desktop - native client
 Group: Applications/System
-Requires: java-1_6_0-openjdk, xdg-utils
+Requires: java-1.6.0-openjdk, xdg-utils
 
 %description -n ulteo-ovd-native-client
 This application is used in the Open Virtual Desktop to display the user
