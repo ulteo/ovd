@@ -271,6 +271,8 @@
         <pathelement location="required_libraries/jpedal.jar"/>
         <pathelement location="required_libraries/jshortcut.jar"/>
         <pathelement location="required_libraries/image4j.jar"/>
+        <pathelement location="required_libraries/commons-httpclient-3.0.1.jar" />
+        <pathelement location="required_libraries/commons-logging-1.1.1.jar" />
       </classpath>
     </javac>
     <exec executable="make" failonerror="true" dir="windowsPathsJNI">
