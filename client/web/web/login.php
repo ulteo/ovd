@@ -231,7 +231,7 @@ $_SESSION['ovd-client']['keyboard_layout'] = $_POST['keymap'];
 $_SESSION['ovd-client']['multimedia'] = $session_node->getAttribute('multimedia');
 $_SESSION['ovd-client']['redirect_client_printers'] = $session_node->getAttribute('redirect_client_printers');
 if ($_SESSION['ovd-client']['session_mode'] == 'desktop')
-	$_SESSION['ovd-client']['desktop_fullscreen'] = $_POST['desktop_fullscreen'];
+	$_SESSION['ovd-client']['desktop_fullscreen'] = ((array_key_exists('desktop_fullscreen', $_POST))?$_POST['desktop_fullscreen']:0);
 $_SESSION['ovd-client']['timeout'] = $session_node->getAttribute('timeout');
 
 $_SESSION['ovd-client']['gateway'] = false;
