@@ -25,10 +25,7 @@ import java.net.ProxySelector;
 import java.net.Socket;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -74,12 +71,6 @@ public class TCPSSLSocketFactory implements SocketFactory {
 			}
 		}};
 
-		HostnameVerifier trustAllHosts = new HostnameVerifier() {
-			public boolean verify(String hostname, SSLSession session) {
-				return true;
-			}
-		};
-		
 		try {
 			SSLContext sc = SSLContext.getInstance("SSLv3");
 			sc.init(null, trustAllCerts, null);
@@ -94,7 +85,6 @@ public class TCPSSLSocketFactory implements SocketFactory {
 			else {
 				rdpsock = ssf.createSocket(this.host, this.port);
 			}
-			SSLSession session = ((SSLSocket) rdpsock).getSession();
 		} catch (Exception e) {
 			throw new RdesktopException("Creating SSL context failed:" + e.getMessage());
 		}
