@@ -11,6 +11,7 @@
  * http://www.ulteo.com
  * Author: Thomas MOUTON <thomas@ulteo.com> 2011
  * Author: Julien LANGLOIS <julien@ulteo.com> 2009
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author: Samuel BOVEE <samuel@ulteo.com> 2010
  *
  * Purpose: Main class, launches session
@@ -802,7 +803,7 @@ public class Rdesktop {
 			if (RdpLayer != null) {
 				// Attempt to connect to server on port opt.port
 				try {
-					RdpLayer.connect(opt.username, InetAddress.getByName(server), logonflags, opt.domain, opt.password, opt.command, opt.directory);
+					RdpLayer.connect(opt.username, server, logonflags, opt.domain, opt.password, opt.command, opt.directory);
 				
 				// Remove to get rid of sendEvent tool
 				if (showTools) {

@@ -1,6 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
@@ -20,26 +21,42 @@
 
 package org.ulteo.rdp;
 import java.io.IOException;
-import java.net.InetAddress;
+import java.net.ProxySelector;
 import java.net.Socket;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
+import org.ulteo.utils.ProxyManager;
+
+import net.propero.rdp.RdesktopException;
 import net.propero.rdp.SocketFactory;
 
 public class TCPSSLSocketFactory implements SocketFactory {
-	private InetAddress host;
+	private String host;
 	private int port;
 
-	public TCPSSLSocketFactory (InetAddress host,int port) {
+	public TCPSSLSocketFactory (String host, int port) {
 		this.host = host;
 		this.port = port;
 	}
 
-	public Socket createSocket() throws IOException {
+	public Socket createSocket() throws IOException,RdesktopException {
+		Socket rdpsock= null;
+		ProxyManager proxy = new ProxyManager();
+		if (! proxy.available())
+			proxy.detect(this.host);
+		
+		// Do not let java use a proxy 
+		ProxySelector ps = ProxySelector.getDefault();
+		ProxySelector.setDefault(null);
+		
 		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
 
 			public X509Certificate[] getAcceptedIssuers() {
@@ -57,14 +74,33 @@ public class TCPSSLSocketFactory implements SocketFactory {
 			}
 		}};
 
-		SSLContext sc;
+		HostnameVerifier trustAllHosts = new HostnameVerifier() {
+			public boolean verify(String hostname, SSLSession session) {
+				return true;
+			}
+		};
+		
 		try {
-			sc = SSLContext.getInstance("SSLv3");
+			SSLContext sc = SSLContext.getInstance("SSLv3");
 			sc.init(null, trustAllCerts, null);
+			SSLSocketFactory ssf = sc.getSocketFactory();
+			if (proxy.available()) {
+				Socket proxySock = proxy.connect(this.host, this.port);
+				if (proxySock == null)
+					throw new RdesktopException("Creating SSL context failed: Unable to open a connection to the proxy");
+				
+				rdpsock = ssf.createSocket(proxySock, this.host, this.port, false);
+			} 
+			else {
+				rdpsock = ssf.createSocket(this.host, this.port);
+			}
+			SSLSession session = ((SSLSocket) rdpsock).getSession();
 		} catch (Exception e) {
-			throw new IOException("Creating SSL context failed:" + e.getMessage());
+			throw new RdesktopException("Creating SSL context failed:" + e.getMessage());
 		}
-		SSLSocketFactory ssf = sc.getSocketFactory();
-		return ssf.createSocket(this.host, this.port);
+		finally {
+			ProxySelector.setDefault(ps);
+		}
+		return rdpsock;
 	}
 }

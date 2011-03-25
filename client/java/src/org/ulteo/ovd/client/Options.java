@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
@@ -31,8 +32,10 @@ import java.util.List;
 import org.ulteo.ovd.client.profile.ProfileIni;
 import org.ulteo.ovd.client.profile.ProfileProperties;
 import org.ulteo.ovd.client.profile.ProfileRegistry;
+import org.ulteo.ovd.client.profile.Profile.ProxyMode;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.utils.ProxyManager;
 
 import net.propero.rdp.RdpConnection;
 
@@ -211,5 +214,7 @@ public class Options {
 			this.isBugReporterVisible = properties.isBugReporterVisible();
 			this.setFlag(Options.FLAG_SHOW_BURGREPORTER);
 		}
+		
+		new ProxyManager().updateProxy(properties);
 	}
 }

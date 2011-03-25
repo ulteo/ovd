@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
@@ -21,6 +22,8 @@
 package org.ulteo.ovd.client.profile;
 
 public abstract class Profile {
+	public enum ProxyMode {none, auto, custom};
+	
 	protected static final String FIELD_LOGIN = "login";
 	protected static final String FIELD_LOCALCREDENTIALS = "use-local-credentials";
 
@@ -49,4 +52,11 @@ public abstract class Profile {
 
 	protected static final String FIELD_GUI_LOCKED = "locked-gui";
 	protected static final String FIELD_SHOW_BUGREPORTER = "show-bugreporter";
+	
+	protected static final String PROXY_TYPE = "type";
+	protected static final String PROXY_HOST = "host";
+	protected static final String PROXY_PORT = "port";
+	protected static final String PROXY_USERNAME = "username";
+	protected static final String PROXY_PASSWORD = "password";
+	
 }

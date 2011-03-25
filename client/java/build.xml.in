@@ -7,7 +7,7 @@
  Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
  Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
  Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
- Author David LECHEVALIER <david@ulteo.com> 2010
+ Author David LECHEVALIER <david@ulteo.com> 2010-2011
  Author Guillaume DUPAS <guillaume@ulteo.com> 2010
 
  This program is free software; you can redistribute it and/or
@@ -230,7 +230,7 @@
     <unjar dest="build">
       <filelist dir="required_libraries"
                 files="gnu-getopt.jar, log4j-1.2.jar, registry.jar,
-                       jshortcut.jar, image4j.jar, ini4j.jar, jpedal.jar" />
+                       jshortcut.jar, image4j.jar, ini4j.jar, jpedal.jar commons-httpclient-3.0.1.jar commons-logging-1.1.1.jar" />
     </unjar>
     <antcall target="ovdNativeClient_jar" />
     <jar destfile="jars/OVDNativeClient.jar" basedir="build">
@@ -280,6 +280,10 @@
   </target>
 
   <target name="applet.jar" description="sign jar applets" depends="applet" >
+    <unjar dest="build">
+      <filelist dir="required_libraries"
+                files="commons-httpclient-3.0.1.jar,commons-logging-1.1.1.jar" />
+    </unjar>
     <copy file="icons/ulteo.png" todir="build/pics" />
     <copy file="windowsPathsJNI/libWindowsPaths.dll"
           todir="build/resources/WindowsLibs/32" />

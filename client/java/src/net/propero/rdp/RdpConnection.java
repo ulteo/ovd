@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
  *
@@ -27,7 +28,6 @@ import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -443,7 +443,7 @@ public class RdpConnection implements SeamListener, Runnable{
 		while (this.keep_running) {
 			// Attempt to connect to server on port Options.port
 			try {
-				this.RdpLayer.connect(this.opt.username, InetAddress.getByName(this.opt.hostname),
+				this.RdpLayer.connect(this.opt.username, this.opt.hostname,
 						Rdp.RDP_LOGON_NORMAL | Rdp.RDP_LOGON_AUTO, this.opt.domain,
 						this.opt.password, this.opt.command, this.opt.directory);
 

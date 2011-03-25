@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
@@ -28,6 +29,7 @@ import java.awt.Dimension;
 import java.util.Enumeration;
 import org.ulteo.Logger;
 import org.ulteo.ovd.client.desktop.DesktopFrame;
+import org.ulteo.ovd.client.profile.Profile.ProxyMode;
 
 public class ProfileRegistry extends Profile {
 
@@ -130,6 +132,27 @@ public class ProfileRegistry extends Profile {
 				else if (field.equalsIgnoreCase(FIELD_SHOW_BUGREPORTER)) {
 					properties.setBugReporterVisible(value.equalsIgnoreCase(VALUE_TRUE));
 				}
+				else if (field.equalsIgnoreCase(PROXY_TYPE)) {
+					try {
+						ProxyMode v = ProxyMode.valueOf(value.toLowerCase());
+						properties.setProxyType(v);
+					}
+					catch (Exception e) {
+						properties.setProxyType(Profile.ProxyMode.none);
+					}
+				}
+				else if (field.equalsIgnoreCase(PROXY_HOST)) {
+					properties.setProxyHost(value);
+				}
+				else if (field.equalsIgnoreCase(PROXY_PORT)) {
+					properties.setProxyPort(value);
+				}
+				else if (field.equalsIgnoreCase(PROXY_USERNAME)) {
+					properties.setProxyUsername(value);
+				}
+				else if (field.equalsIgnoreCase(PROXY_PASSWORD)) {
+					properties.setProxyPassword(value);
+				}				
 			}
 		} catch (RegistryException ex) {
 			Logger.error("Getting profile preferencies from registry failed: "+ex.getMessage());

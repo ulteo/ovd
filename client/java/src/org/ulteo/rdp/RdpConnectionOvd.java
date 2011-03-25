@@ -1,6 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  *
@@ -36,7 +37,6 @@ import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDPrinterManager;
 import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 import org.ulteo.rdp.seamless.SeamlessChannel;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import org.ulteo.Logger;
 import org.ulteo.rdp.TCPSSLSocketFactory;
@@ -331,18 +331,10 @@ public class RdpConnectionOvd extends RdpConnection {
 	}
 
 	public void useSSLWrapper(String host, int port) throws OvdException, UnknownHostException {
-		InetAddress hostv = null;
-
-		try {
-			hostv = InetAddress.getByName(host);
-		} catch(Exception e) {
-			throw new OvdException("Could not convert String fqdn to InetAdress host : " + e.getMessage());
-		}
-
 		this.opt.port = port;
 
 		try {
-			this.opt.socketFactory = new TCPSSLSocketFactory(hostv, port);
+			this.opt.socketFactory = new TCPSSLSocketFactory(host, port);
 		} catch (Exception e2) {
 			throw new OvdException("Could not create TCPSSLSocketFactory : " + e2.getMessage());
 		}

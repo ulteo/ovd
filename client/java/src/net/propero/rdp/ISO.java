@@ -6,6 +6,23 @@
  * Date: $Date: 2007/03/08 00:26:21 $
  *
  * Copyright (c) 2005 Propero Limited
+ * Copyright (C) 2011 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
+ *
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * Purpose: ISO layer of communication
  */
@@ -70,7 +87,7 @@ public abstract class ISO {
 	 * @throws IOException
 	 */
 
-	protected void doSocketConnect(InetAddress host, int port) throws IOException, RdesktopException {
+	protected void doSocketConnect(String host, int port) throws IOException, RdesktopException {
 		
 		if (this.opt.socketFactory == null) {
 			this.opt.socketFactory = new TCPSocketFactory(host, port);
@@ -92,7 +109,7 @@ public abstract class ISO {
 	 * @throws OrderException
 	 * @throws CryptoException
 	 */
-	public void connect(InetAddress host, int port) throws IOException, RdesktopException, OrderException, CryptoException {
+	public void connect(String host, int port) throws IOException, RdesktopException, OrderException, CryptoException {
 		int[] code = new int[1];
 		doSocketConnect(host, port);
 		this.rdpsock.setTcpNoDelay(this.opt.low_latency);

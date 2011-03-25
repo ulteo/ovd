@@ -6,13 +6,33 @@
  * Date: $Date: 2007/03/08 00:26:14 $
  *
  * Copyright (c) 2005 Propero Limited
+ * Copyright (C) 2010-2011 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
+ * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
+ * Author Samuel BOVEE <samuel@ulteo.com> 2010
+ *
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * Purpose: MCS Layer of communication
  */
 package net.propero.rdp;
 
 import java.io.*;
-import java.net.*;
 
 import net.propero.rdp.crypto.CryptoException;
 import net.propero.rdp.rdp5.VChannels;
@@ -71,7 +91,7 @@ public class MCS {
      * @throws OrderException
      * @throws CryptoException
      */
-    public void connect(InetAddress host, int port, RdpPacket_Localised data)  throws IOException, RdesktopException, OrderException, CryptoException {
+    public void connect(String host, int port, RdpPacket_Localised data)  throws IOException, RdesktopException, OrderException, CryptoException {
 	logger.debug("MCS.connect");
     IsoLayer.connect(host, port);
 

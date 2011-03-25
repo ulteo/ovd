@@ -8,7 +8,7 @@
  * Copyright (c) 2005 Propero Limited
  * Copyright (C) 2011 Ulteo SAS
  * http://www.ulteo.com
- * Author david LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  *
  * Purpose: Secure layer of communication
  */
@@ -139,7 +139,7 @@ public class Secure {
      * @throws CryptoException
      * @throws OrderException
      */
-    public void connect(InetAddress host, int port) throws UnknownHostException, IOException, RdesktopException, SocketException, CryptoException, OrderException {
+    public void connect(String host, int port) throws UnknownHostException, IOException, RdesktopException, SocketException, CryptoException, OrderException {
 	if(this.opt.hostname==""){
 		InetAddress localhost = InetAddress.getLocalHost();
 		String name = localhost.getHostName();
@@ -166,7 +166,7 @@ public class Secure {
      * @throws OrderException
      * @throws CryptoException
      */
-    public void connect(InetAddress host) throws IOException, RdesktopException, OrderException, CryptoException {
+    public void connect(String host) throws IOException, RdesktopException, OrderException, CryptoException {
 	this.connect(host, this.opt.port);
     }
     

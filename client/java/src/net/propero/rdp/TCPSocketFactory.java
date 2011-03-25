@@ -1,6 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
@@ -24,13 +25,18 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class TCPSocketFactory implements SocketFactory {
 	private InetAddress host;
 	private int port;
 
-	public TCPSocketFactory(InetAddress host, int port) {
-		this.host = host;
+	public TCPSocketFactory(String host, int port) throws RdesktopException{
+		try {
+			this.host = InetAddress.getByName(host);
+		} catch (UnknownHostException e) {
+			throw new RdesktopException("Unable to connect to "+host+":"+port+", "+e.getMessage());
+		}
 		this.port = port;
 	}
 

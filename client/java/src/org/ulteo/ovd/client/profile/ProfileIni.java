@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
@@ -37,6 +38,7 @@ public class ProfileIni extends Profile {
 	private static final String INI_SECTION_PUBLICATION = "publication";
 	private static final String INI_SECTION_SCREEN = "screen";
 	private static final String INI_SECTION_GUI = "gui";
+	private static final String INI_SECTION_PROXY = "proxy";
 	
 	private static final String PROFILE_EXT = ".conf";
 	public static final String DEFAULT_PROFILE = "default";
@@ -125,6 +127,12 @@ public class ProfileIni extends Profile {
 		
 		ini.put(INI_SECTION_SESSION, FIELD_LANG, properties.getLang());
 		ini.put(INI_SECTION_SESSION, FIELD_KEYMAP, properties.getKeymap());
+		
+		ini.put(INI_SECTION_PROXY, PROXY_TYPE, properties.getProxyType().name());
+		ini.put(INI_SECTION_PROXY, PROXY_HOST, properties.getProxyHost());
+		ini.put(INI_SECTION_PROXY, PROXY_PORT, properties.getProxyPort());
+		ini.put(INI_SECTION_PROXY, PROXY_USERNAME, properties.getProxyUsername());
+		ini.put(INI_SECTION_PROXY, PROXY_PASSWORD, properties.getProxyPassword());
 		
 		ini.store();
 	}
@@ -240,6 +248,33 @@ public class ProfileIni extends Profile {
 		if (value != null)
 			properties.setBugReporterVisible(value.equalsIgnoreCase(VALUE_TRUE));
 		
+		value = ini.get(INI_SECTION_PROXY, PROXY_TYPE);
+		if (value != null) {
+			try {
+				ProxyMode v = ProxyMode.valueOf(value.toLowerCase());
+				properties.setProxyType(v);
+			}
+			catch (Exception e) {
+				Logger.error("Invalid proxy type: "+value);
+			}
+		}
+
+		value = ini.get(INI_SECTION_PROXY, PROXY_HOST);
+		if (value != null)
+			properties.setProxyHost(value);
+
+		value = ini.get(INI_SECTION_PROXY, PROXY_PORT);
+		if (value != null)
+			properties.setProxyPort(value);
+
+		value = ini.get(INI_SECTION_PROXY, PROXY_USERNAME);
+		if (value != null)
+			properties.setProxyUsername(value);
+
+		value = ini.get(INI_SECTION_PROXY, PROXY_PASSWORD);
+		if (value != null)
+			properties.setProxyPassword(value);
+
 		return properties;
 	}
 }

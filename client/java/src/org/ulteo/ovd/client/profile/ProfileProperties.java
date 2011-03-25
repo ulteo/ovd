@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
@@ -22,6 +23,8 @@ package org.ulteo.ovd.client.profile;
 
 import java.awt.Dimension;
 
+import org.ulteo.ovd.client.profile.Profile.ProxyMode;
+
 public class ProfileProperties {
 	public static final int MODE_AUTO = 0;
 	public static final int MODE_DESKTOP = 1;
@@ -39,6 +42,11 @@ public class ProfileProperties {
 	private boolean showProgressbar = true;
 	private boolean isGUILocked = false;
 	private boolean isBugReporterVisible = false;
+	private ProxyMode proxyType = ProxyMode.auto;
+	private String proxyHost = null;
+	private String proxyPort = null;
+	private String proxyUsername = null;
+	private String proxyPassword = null;
 	
 	public ProfileProperties() {}
 
@@ -148,5 +156,45 @@ public class ProfileProperties {
 
 	public boolean isBugReporterVisible() {
 		return this.isBugReporterVisible;
+	}
+
+	public void setProxyType(ProxyMode proxyType) {
+		this.proxyType = proxyType;
+	}
+
+	public ProxyMode getProxyType() {
+		return this.proxyType;
+	}
+
+	public void setProxyHost(String proxyHost) {
+		this.proxyHost = proxyHost;
+	}
+
+	public String getProxyHost() {
+		return this.proxyHost;
+	}
+
+	public void setProxyPort(String proxyPort) {
+		this.proxyPort = proxyPort;
+	}
+
+	public String getProxyPort() {
+		return this.proxyPort;
+	}
+
+	public void setProxyUsername(String proxyUsername) {
+		this.proxyUsername = proxyUsername;
+	}
+
+	public String getProxyUsername() {
+		return this.proxyUsername;
+	}
+
+	public void setProxyPassword(String proxyPassword) {
+		this.proxyPassword = proxyPassword;
+	}
+
+	public String getProxyPassword() {
+		return this.proxyPassword;
 	}
 }
