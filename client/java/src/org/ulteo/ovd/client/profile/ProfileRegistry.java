@@ -29,7 +29,6 @@ import java.awt.Dimension;
 import java.util.Enumeration;
 import org.ulteo.Logger;
 import org.ulteo.ovd.client.desktop.DesktopFrame;
-import org.ulteo.ovd.client.profile.Profile.ProxyMode;
 
 public class ProfileRegistry extends Profile {
 

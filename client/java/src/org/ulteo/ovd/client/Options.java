@@ -32,7 +32,6 @@ import java.util.List;
 import org.ulteo.ovd.client.profile.ProfileIni;
 import org.ulteo.ovd.client.profile.ProfileProperties;
 import org.ulteo.ovd.client.profile.ProfileRegistry;
-import org.ulteo.ovd.client.profile.Profile.ProxyMode;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.utils.ProxyManager;
