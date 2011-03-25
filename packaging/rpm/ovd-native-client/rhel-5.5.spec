@@ -70,5 +70,5 @@ xdg-icon-resource uninstall --size 128 --mode system icon-ulteo
 rm -rf %{buildroot}
 
 %changelog -n ulteo-ovd-native-client
-* Fri 25 Mar 2011 Samuel Bovée <samuel@ulteo.com> 99.99.svn6577
+* Fri Mar 25 2011 Samuel Bovée <samuel@ulteo.com> 99.99.svn6577
 - Initial release
