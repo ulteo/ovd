@@ -61,5 +61,5 @@ ant applet.install -Dbuild.type=stripped -Dprefix=/usr -Ddestdir=$RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT
 
 %changelog -n ulteo-ovd-applets
-* Fri Jan 02 2009 Gauvain Pocentek <gauvain@ulteo.com> 1.0~svn00130-1
+* Fri Aug 13 2010 Samuel Bovée <samuel@ulteo.com> 99.99.svn4145
 - Initial release
