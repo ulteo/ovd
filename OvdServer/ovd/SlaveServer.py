@@ -4,6 +4,7 @@
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2008-2011
+# Author David LECHEVALIER <david@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -90,9 +91,7 @@ class SlaveServer:
 				if not role.init():
 					raise Exception()
 			except Exception, e:
-				import traceback
 				Logger.error("SlaveServer: unable to initialize role '%s' %s"%(role.getName(), str(e)))
-				Logger.error("SlaveServer: role execption %s"%(str(traceback.format_exc())))
 				return False
 			
 			role.thread = Thread(name="role_%s"%(role.getName()), target=role.run)
