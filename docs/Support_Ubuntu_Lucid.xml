@@ -310,10 +310,13 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
 	      </textobject>
 	    </inlinemediaobject>
 	  </para>
-	  <para>
-	    If you don't have access to Internet or do not want to use
-	    Subsystems, keep this field empty.
-	  </para>
+	  <note>
+	    <para>
+	      If you don't have access to Internet, please read <link
+	      linkend="sm_chroot">this</link> to manually get the
+	      subsystem archive.
+	    </para>
+	  </note>
         </listitem>
       </itemizedlist>
 
@@ -397,6 +400,24 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
       The Session Manager is now installed. Please read other
       documentations to join servers or start sessions.
     </para>
+    
+    <simplesect id="sm_chroot">
+      <title>Setup the subsystem archive</title>
+
+      <para>
+	If you didn't specify an URL at the last question, you have to
+	copy a subsystem archive into <emphasis
+	role="strong">/var/cache/ulteo/sessionmanager/base.tar.gz</emphasis>.
+      </para>
+
+      <para>
+	Get this <emphasis>base.tar.gz</emphasis> archive from <ulink
+	url="http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0">the
+	Ulteo website</ulink> or from the Ulteo OVD DVD and copy it in
+	the <emphasis>/var/cache/ulteo/sessionmanager/</emphasis> of
+	your machine.
+      </para>
+    </simplesect>
   </section>
 
 
