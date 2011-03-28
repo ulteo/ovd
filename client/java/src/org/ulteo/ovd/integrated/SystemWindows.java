@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -234,6 +234,6 @@ public class SystemWindows extends SystemAbstract {
 
 	@Override
 	public void refresh() {
-		WindowsTweaks.rebuildIconCache();
+		WindowsTweaks.desktopRefresh();
 	}
 }
