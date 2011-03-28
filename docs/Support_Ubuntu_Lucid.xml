@@ -8,7 +8,7 @@
   <transform_var name="distrib_dvd_url" value="http://www.ubuntu.com/desktop/get-ubuntu/alternative-download#dvd"/>
 
   <articleinfo id="header">
-    <title>Ulteo Open Virtual Desktop</title>
+    <title>Ulteo Open Virtual Desktop v@VERSION@</title>
     <subtitle>@distrib_pretty_name@ support</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 

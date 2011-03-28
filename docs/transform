@@ -21,6 +21,7 @@
 
 import getopt
 import os
+import pysvn
 import sys
 import time
 from xml.dom import minidom
@@ -28,7 +29,15 @@ from xml.dom import minidom
 
 def perform_transform(content):
 	transform_vars = {"YEAR": time.strftime("%Y")}
-
+	
+	# Detect the version
+	if os.environ.has_key("OVD_VERSION"):
+		version = os.environ["OVD_VERSION"]
+	else:
+		c = pysvn.Client()
+		version = os.path.basename(os.path.dirname(c.info(".")["url"]))
+	transform_vars["VERSION"] = version
+	
 	try:
 		document = minidom.parseString(content)
 	except Exception, err:
