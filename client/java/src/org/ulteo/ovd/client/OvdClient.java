@@ -181,6 +181,9 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		while (this.continueSessionStatusMonitoringThread) {
 			try {
 				String status = this.smComm.askForSessionStatus();
+
+				if (status == null)
+					status = SessionManagerCommunication.SESSION_STATUS_UNKNOWN;
 				
 				if (! status.equals(this.sessionStatus)) {
 					org.ulteo.Logger.info("session status switch from "+this.sessionStatus+" to "+status);
