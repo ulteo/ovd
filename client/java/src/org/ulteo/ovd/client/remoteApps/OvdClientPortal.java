@@ -152,16 +152,12 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	@Override
 	public void ovdInited(OvdAppChannel o) {
-		boolean doRefresh = false;
-
 		for (RdpConnectionOvd rc : this.availableConnections) {
 			if (rc.getOvdAppChannel() == o) {
 				for (Application app : rc.getAppsList()) {
 					if (this.autoPublish) {
 						boolean associate = (rc.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
-						if (associate)
-							doRefresh = true;
-
+						
 						this.system.install(app, this.showDesktopIcons, associate);
 					}
 
@@ -179,8 +175,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			}
 		}
 
-		if (doRefresh)
-			this.system.refresh();
+		this.system.refresh();
 
 		if (this.availableConnections.size() == this.connections.size())
 			this.portal.enableIconsButton();
@@ -213,21 +208,17 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 
 	public void publish() {
-		boolean doRefresh = false;
-
 		for (RdpConnectionOvd co : this.getAvailableConnections()) {
 			if (! co.getOvdAppChannel().isReady())
 				continue;
 			boolean associate = (co.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
-			if (associate)
-				doRefresh = true;
 
 			for (Application app : co.getAppsList()) {
 				this.system.install(app, this.showDesktopIcons, associate);
 			}
 		}
-		if (doRefresh)
-			this.system.refresh();
+
+		this.system.refresh();
 		
 		this.publicated = true;
 	}

@@ -89,21 +89,18 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 
 	@Override
 	public void ovdInited(OvdAppChannel o) {
-		boolean doRefresh = false;
 		for (RdpConnectionOvd rc : this.availableConnections) {
 			if (rc.getOvdAppChannel() != o)
 				continue;
 
 			boolean associate = (rc.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
-			if (associate)
-				doRefresh = true;
 
 			for (Application app : rc.getAppsList()) {
 				this.system.install(app, this.showDesktopIcons, associate);
 			}
 		}
-		if (doRefresh)
-			this.system.refresh();
+
+		this.system.refresh();
 	}
 
 	@Override
