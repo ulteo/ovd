@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author David Lechavalier <david@ulteo.com> 2010
+ * Author David Lechavalier <david@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -36,7 +36,9 @@ public class LinuxPaths {
 		String xdgFile = System.getProperty("user.home")+"/.config/user-dirs.dirs";
 		Properties xdgProperties = new Properties();
 		try {
-			xdgProperties.load(new FileInputStream(xdgFile));
+			FileInputStream xdgStream = new FileInputStream(xdgFile); 
+			xdgProperties.load(xdgStream);
+			xdgStream.close();
 		} catch (FileNotFoundException e) {
 			org.ulteo.Logger.debug("Unable to find the xdg file: "+xdgFile);
 			LinuxPaths.isXdgSupported = false;
