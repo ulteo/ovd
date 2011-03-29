@@ -20,45 +20,6 @@
 
 package org.ulteo.utils.jni;
 
-import com.ice.jni.registry.NoSuchValueException;
-import com.ice.jni.registry.RegStringValue;
-import com.ice.jni.registry.Registry;
-import com.ice.jni.registry.RegistryException;
-import com.ice.jni.registry.RegistryKey;
-import org.ulteo.Logger;
-
 public class WindowsTweaks {
-	public synchronized static void rebuildIconCache() {
-		int iconSize = 32;
-
-		RegistryKey windowMetrics = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Control Panel\\Desktop\\WindowMetrics", RegistryKey.ACCESS_ALL);
-		try {
-			String shellIconSize = windowMetrics.getStringValue("Shell Icon Size");
-			iconSize = Integer.parseInt(shellIconSize);
-		} catch (NoSuchValueException ex) {
-		} catch (RegistryException ex) {
-			Logger.error("Failed to rebuild icons cache: "+ex.getMessage());
-			return;
-		}
-
-		try {
-			windowMetrics.setValue(new RegStringValue(windowMetrics, "Shell Icon Size", ""+(iconSize - 1)));
-		} catch (RegistryException ex) {
-			Logger.error("Failed to change the \"Shell Icon Size\" value: "+ex.getMessage());
-		}
-		WindowsTweaks.nReloadWMSettings();
-
-		try {
-			windowMetrics.setValue(new RegStringValue(windowMetrics, "Shell Icon Size", ""+iconSize));
-		} catch (RegistryException ex) {
-			Logger.error("Failed to change the \"Shell Icon Size\" value: "+ex.getMessage());
-		}
-		WindowsTweaks.nReloadWMSettings();
-	}
-
-	protected static void reloadWMSettings() {
-		WindowsTweaks.nReloadWMSettings();
-	}
-
-	protected static native void nReloadWMSettings();
+	public static native void desktopRefresh();
 }

@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -84,6 +84,6 @@ JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_nGetPersona
     return (*env)->NewStringUTF(env, path);
 }
 
-JNIEXPORT void JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_nReloadWMSettings(JNIEnv *env, jclass class) {
-    SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, SPI_SETNONCLIENTMETRICS, 0, SMTO_ABORTIFHUNG, 100000, NULL);
+JNIEXPORT void JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_desktopRefresh(JNIEnv *env, jclass class) {
+    InvalidateRect(HWND_BROADCAST, NULL, FALSE);
 }
