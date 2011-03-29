@@ -28,6 +28,10 @@ from ovd_shells.Platform.Novell import Novell
 def redirect_to_dump():
 	path = os.path.join(Platform.getUserSessionDir(), "dump.txt")
 	try:
+		dirname = os.path.dirname(path)
+		if not os.path.exists(dirname):
+			os.makedirs(dirname)
+		
 		buf = file(path, "a", 0)
 	except IOError, err:
 		return
