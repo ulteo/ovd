@@ -504,13 +504,19 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 			return false;
 		}
 
+		/* Some JVM implementations maximize windows if their size size is larger than the workarea size */
 		Rectangle maxBounds = this.getMaximumWindowBounds();
-		if (width >= maxBounds.width && height >= maxBounds.height) {
-			logger.warn("Receive a POSITION message instead of a STATE "+WINDOW_MAXIMIZED);
-			f.sw_setMyPosition((int)maxBounds.x, (int)maxBounds.y, (int)maxBounds.width, (int)maxBounds.height);
-			this.processState(id, WINDOW_MAXIMIZED, 0);
-
-			return true;
+		if (width >= maxBounds.width || height >= maxBounds.height) {
+			if (width >= maxBounds.width)
+				width = maxBounds.width - 1;
+			if (height >= maxBounds.height)
+				height = maxBounds.height - 1;
+			try {
+				this.send_position((int) id, (int) x, (int) y, (int) width, (int) height, (int) flags);
+			} catch (Exception ex) {
+				org.ulteo.Logger.error("Adjusted position message was not sent: "+ex.getMessage());
+				return false;
+			}
 		}
 
 		x += this.opt.x_offset;
