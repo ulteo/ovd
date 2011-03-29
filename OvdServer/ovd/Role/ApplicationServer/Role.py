@@ -212,9 +212,9 @@ class Role(AbstractRole):
 				
 				if session.status == Session.SESSION_STATUS_INITED:
 					if ts_status is RolePlatform.TS.STATUS_LOGGED:
+						self.manager.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
 						if not session.domain.manage_user():
 							self.sessions_spooler2.put(("manage_new", session))
-						self.manager.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
 						
 						continue
 						
@@ -227,9 +227,9 @@ class Role(AbstractRole):
 					continue
 				
 				if session.status == Session.SESSION_STATUS_INACTIVE and ts_status is RolePlatform.TS.STATUS_LOGGED:
+					self.manager.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
 					if not session.domain.manage_user():
 						self.sessions_spooler2.put(("manage_new", session))
-					self.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
 					continue
 			
 			
