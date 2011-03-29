@@ -62,7 +62,7 @@ def findProcessWithEnviron(pattern):
 
 
 def isKnownProcess2Ignore(pid):
-	names_db = ["dbus", "gconf"]
+	names_db = ["dbus", "gconf", "kded", "kdeinit", "knotify"]
 	
 	path = "/proc/%s/status"%(str(pid))
 	try:
