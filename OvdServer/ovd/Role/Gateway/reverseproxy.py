@@ -79,7 +79,7 @@ class ReverseProxy(asyncore.dispatcher):
 		addr, port = peer
 
 		r = None
-		while r is not None:
+		while r is None:
 			try:
 				r = conn.recv(4096)
 			except (SSL.SysCallError, SSL.ZeroReturnError):

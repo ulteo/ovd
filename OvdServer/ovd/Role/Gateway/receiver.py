@@ -117,7 +117,7 @@ class receiverXMLRewriter(receiver):
 
 		xml_length_before = len(self.to_remote_buffer)
 		newxml = self.rewriteXML(xml.group(), self.proxy)
-		self.to_remote_buffer = pattern.sub(newxml, self.to_remote_buffer, count=1)
+		self.to_remote_buffer = self.session_ptn.sub(newxml, self.to_remote_buffer, count=1)
 		xml_length_after = len(self.to_remote_buffer)
 
 		pattern = re.compile("Content-Length: ([0-9]+)", re.I | re.U)
