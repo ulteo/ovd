@@ -2,9 +2,7 @@
 
 DIST?=dist
 
-SRC=AccountsIntegration.xml \
-	AdminConsole.xml \
-	AD_Primary_Authentication.xml \
+SRC=\
 	Architecture.xml \
 	Easy_Installation.xml \
 	FAQ.xml \
@@ -23,7 +21,6 @@ SRC=AccountsIntegration.xml \
 	Support_SLES_11.SP1.xml \
 	Support_Ubuntu_Hardy.xml \
 	Support_Ubuntu_Lucid.xml \
-	SystemUpgrade.xml \
 	WebClient.xml
 
 DIRS=xsl2 \
@@ -46,13 +43,13 @@ pdf: $(PDF)
 
 # Add the depends between sources
 Installation_Iso.xml: Easy_Installation.xml
-Installation_Sources.xml: Installation.xml Installation_RedHat.xml
-Support_Debian_Lenny.xml: Support_Ubuntu_Hardy.xml Support_Ubuntu_Lucid.xml 
+Support_Debian_Lenny.xml: Support_Debian_Squeeze.xml Support_Ubuntu_Hardy.xml
 Support_Debian_Squeeze.xml: Support_Ubuntu_Lucid.xml
-Support_openSUSE_11.2.xml: Support_SLES_11.SP1.xml
-Support_RHEL_5.5.xml: Support_Ubuntu_Hardy.xml Support_Ubuntu_Lucid.xml
-Support_SLES_11.SP1.xml: Support_Ubuntu_Hardy.xml Support_Ubuntu_Lucid.xml
+Support_RHEL_5.5.xml: Support_SLES_11.SP1.xml
+Support_SLES_11.SP1.xml: Support_Debian_Squeeze.xml Support_Ubuntu_Hardy.xml
 Support_Ubuntu_Hardy.xml: Support_Ubuntu_Lucid.xml
+Support_openSUSE_11.2.xml: Support_SLES_11.SP1.xml
+Support_openSUSE_11.3.xml: Support_SLES_11.SP1.xml
 
 
 %.html: %.xml.out
