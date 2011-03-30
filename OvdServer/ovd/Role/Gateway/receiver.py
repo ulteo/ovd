@@ -2,7 +2,7 @@
 
 # Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 #
@@ -27,6 +27,7 @@ import re
 import xml.etree.ElementTree as parser
 
 from ovd.Logger import Logger
+from TokenDatabase import insertToken
 
 
 xmlError = {
@@ -91,10 +92,9 @@ class receiver(asyncore.dispatcher):
 
 class receiverXMLRewriter(receiver):
 
-	def __init__(self, conn, req, proxy):
+	def __init__(self, conn, req):
 		receiver.__init__(self, conn, req)
 		self.hasRewrited = False
-		self.proxy = proxy
 
 		self.response_ptn = re.compile("<response.+\/>", re.I | re.U)
 		self.session_ptn  = re.compile("<session .*>.+<\/session>", re.I | re.U)
@@ -116,7 +116,7 @@ class receiverXMLRewriter(receiver):
 			return False
 
 		xml_length_before = len(self.to_remote_buffer)
-		newxml = self.rewriteXML(xml.group(), self.proxy)
+		newxml = self.rewriteXML(xml.group())
 		self.to_remote_buffer = self.session_ptn.sub(newxml, self.to_remote_buffer, count=1)
 		xml_length_after = len(self.to_remote_buffer)
 
@@ -130,7 +130,7 @@ class receiverXMLRewriter(receiver):
 		return True
 
 
-	def rewriteXML(xml, proxy):
+	def rewriteXML(xml):
 		Logger.debug('receiverXMLRewriter::rewriteXML')
 		try:
 			xml = parser.XML(xml)
@@ -141,7 +141,7 @@ class receiverXMLRewriter(receiver):
 						subNodes = element.getchildren()
 						for node in subNodes:
 							if node.tag.upper() == "SERVER":
-								node.attrib["token"] = proxy.insertToken(node.attrib["fqdn"])
+								node.attrib["token"] = insertToken(node.attrib["fqdn"])
 								del node.attrib["fqdn"]
 						break
 				return parser.tostring(xml)

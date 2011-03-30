@@ -25,13 +25,12 @@ from OpenSSL import SSL
 import asyncore
 import re
 import socket
-import threading
 import time
-import uuid
 
 from ovd.Logger import Logger
 from receiver import receiver, receiverXMLRewriter
 from sender import sender, senderHTTP
+from TokenDatabase import digestToken
 
 
 class ReverseProxy(asyncore.dispatcher):
@@ -42,9 +41,6 @@ class ReverseProxy(asyncore.dispatcher):
 		self.sm = sm
 		self.rdp_port = rdp_port
 		self.ssl_ctx = ssl_ctx
-
-		self.lock = threading.Lock()
-		self.database = {}
 
 		self.rdp_ptn = re.compile('\x03\x00.*Cookie: .*token=([\-\w]+);.*')
 		self.http_ptn = re.compile('((?:HEAD)|(?:GET)|(?:POST)) (.*) HTTP/(.\..)')
@@ -61,17 +57,6 @@ class ReverseProxy(asyncore.dispatcher):
 
 		self.listen(5)
 		Logger.info('Gateway:: listening started')
-
-
-	def insertToken(self, fqdn):
-		token = str(uuid.uuid4())
-		try:
-			self.lock.acquire()
-			self.database[token] = fqdn
-		finally:
-			self.lock.release()
-		Logger.debug('token %s inserted' % token)
-		return token
 
 
 	def handle_accept(self):
@@ -99,19 +84,9 @@ class ReverseProxy(asyncore.dispatcher):
 			# RDP case
 			if rdp:
 				token = rdp.group(1)
-
-				# get FQDN
-				try:
-					self.lock.acquire()
-					if self.database.has_key(token):
-						fqdn = self.database[token]
-						del self.database[token]
-						Logger.debug("Access Granted token: %s for fqdn: %s" % (token, fqdn))
-					else:
-						raise Exception('token authorization failed for: ' + token)
-				finally:
-					self.lock.release()
-
+				fqdn = digestToken(token)
+				if not fqdn:
+					raise Exception('token authorization failed for: ' + token)
 				sender((fqdn, self.rdp_port), receiver(conn, r))
 
 			# HTTP case
@@ -123,7 +98,7 @@ class ReverseProxy(asyncore.dispatcher):
 					raise Exception('wrong HTTP path: ' + path)
 
 				if path == "/ovd/client/start.php":
-					rec = receiverXMLRewriter(conn, r, self)
+					rec = receiverXMLRewriter(conn, r)
 				else:
 					rec = receiver(conn, r)
 				senderHTTP(self.sm, rec, self.ssl_ctx)
