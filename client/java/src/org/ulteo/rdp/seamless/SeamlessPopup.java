@@ -233,6 +233,9 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	public void sw_setExtendedState(int state) {
 		if (! this.isVisible())
 			this.setVisible(true);
+
+		if (state == Frame.MAXIMIZED_BOTH)
+			this.sw_setMyPosition(0, 0, this.maxBounds.width, this.maxBounds.height);
 	}
 	public void sw_requestFocus() {
 		if (! this.isFocusable())
