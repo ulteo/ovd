@@ -152,7 +152,9 @@ public class Options {
 		if (!this.getFlag(Options.FLAG_NTLM)) {
 			this.nltm = properties.getUseLocalCredentials();
 			this.setFlag(Options.FLAG_NTLM);
-		} else if (!this.getFlag(Options.FLAG_USERNAME)) {
+		}
+		
+		if (! this.nltm && ! this.getFlag(Options.FLAG_USERNAME)) {
 			String username = properties.getLogin();
 			if (username != null) {
 				this.username = username;
