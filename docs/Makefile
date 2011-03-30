@@ -1,5 +1,7 @@
 .SUFFIXES: .xml .html
 
+DIST?=dist
+
 SRC=AccountsIntegration.xml \
 	AdminConsole.xml \
 	AD_Primary_Authentication.xml \
@@ -73,22 +75,15 @@ clean:
 	$(RM) *~
 
 install: all
-	install -d 		dist
-	install default.css	dist
-	install $(DST) 		dist
-	install $(PDF) 		dist
-
-	svn export --force img  dist/img
-
-	# Make the tarball
-	rm -rf doc/ doc.tar.gz
-	cp -R  dist doc
-	rm -f doc/doc.tar.gz
-	tar czf doc.tar.gz doc
-	install doc.tar.gz dist
+	install -d 		$(DIST)
+	install default.css	$(DIST)
+	install $(DST) 		$(DIST)
+	install $(PDF) 		$(DIST)
+	cp      -R img       	$(DIST)/img
+#	svn export --force img  $(DIST)/img
 
 uninstall:
-	rm -rf dist
+	rm 	-rf          	$(DIST)
 
 tarball: clean
 	rm -rf $(RELEASE_DIR)
