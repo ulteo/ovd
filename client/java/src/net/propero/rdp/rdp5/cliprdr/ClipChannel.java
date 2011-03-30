@@ -244,7 +244,14 @@ public class ClipChannel extends VChannel implements ClipInterface, ClipboardOwn
 	void handle_data_request(RdpPacket data) throws RdesktopException, IOException, CryptoException
 	{
 		int format = data.getLittleEndian32();
-		Transferable clipData = clipboard.getContents(this);
+		Transferable clipData = null; 
+		try {
+			clipData = clipboard.getContents(this);
+		}
+		catch (IllegalStateException e) {
+			logger.warn("Unable to clipboard content");
+			return;
+		}
 		byte[] outData = null;
 		
 		TypeHandler outputHandler = allHandlers.getHandlerForFormat(format);
