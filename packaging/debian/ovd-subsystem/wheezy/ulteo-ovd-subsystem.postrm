@@ -1,0 +1,21 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+rm -f /etc/ulteo/subsystem.conf
+
+if [ "$1" = "purge" ]; then
+
+    # ask the user if he wants to remove the chroot
+    if [ -d /opt/ulteo ]; then
+        db_input high ulteo-ovd-subsystem/postrm_remove_chroot || true
+        db_go
+        db_get ulteo-ovd-subsystem/postrm_remove_chroot
+        [ "$RET" = "true" ] && rm -rf /opt/ulteo
+    fi
+
+fi
+
+#DEBHELPER#
+
+exit 0

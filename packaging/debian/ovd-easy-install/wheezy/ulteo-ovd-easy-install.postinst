@@ -1,0 +1,69 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+conf_mysql()
+{
+    db_get ulteo-ovd-easy-install/mysql_dbserver && dbserver=$RET
+    db_get ulteo-ovd-easy-install/mysql_dbname   && dbname=$RET
+    db_get ulteo-ovd-easy-install/mysql_dbprefix && dbprefix=$RET
+    db_get ulteo-ovd-easy-install/mysql_dbuser   && dbuser=$RET
+    db_get ulteo-ovd-easy-install/mysql_dbpass   && dbpass=$RET
+
+    if [ -z "$dbpass" ]; then
+        dbpass=$(< /dev/urandom tr -dc _A-Za-z0-9 | head -c12)
+        db_set ulteo-ovd-easy-install/mysql_dbpass $dbpass
+    fi
+
+    if ! db_get ulteo-ovd-debconf-database/mysql_root_password; then
+        db_get ulteo-ovd-easy-install/mysql_dbrootpass
+    fi
+    dbadmin=root
+    dbadmpass=$RET
+    db_reset ulteo-ovd-easy-install/mysql_dbrootpass
+
+    . /usr/share/wwwconfig-common/mysql-createuser.sh
+    . /usr/share/wwwconfig-common/mysql-createdb.sh
+
+    su www-data -c "php /usr/share/ulteo/sessionmanager/admin/init/setup.php \
+        \"$dbserver\" \"$dbname\" \"$dbprefix\" \"$dbuser\" \"$dbpass\" \
+        2> /dev/null || true"
+
+    # hack for ISO: force restart apache2 and subsystem services
+    # -> invoke-rc.d doesn't work
+    if [ -f /sbin/initctl.REAL ]; then
+        /etc/init.d/apache2 restart
+        /etc/init.d/ulteo-ovd-subsystem start
+
+    # restart OVD slave server cause the DB was not ready before now
+    else
+        CONFFILE=/etc/ulteo/subsystem.conf
+        [ -f "$CONFFILE" ] && . $CONFFILE
+        [ -z "$CHROOTDIR" ] && CHROOTDIR=/opt/ulteo
+        chroot $CHROOTDIR /etc/init.d/ovdSlaveServer restart
+    fi
+
+    # hack: wait cause the first request in the SM can be corrupted
+    sleep 5
+
+    su www-data -c 'php /usr/share/ulteo/sessionmanager/admin/init/demo.php'
+}
+
+case "$1" in
+
+    configure)
+        conf_mysql
+    ;;
+
+    abort-*)
+        exit 1
+    ;;
+
+    *) ;;
+esac
+
+db_stop
+
+#DEBHELPER#
+
+exit 0

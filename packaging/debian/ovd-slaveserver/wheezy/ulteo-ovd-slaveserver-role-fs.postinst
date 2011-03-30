@@ -1,0 +1,39 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+DATADIR=/usr/share/ulteo/ovd/slaveserver
+SPOOLDIR=/var/spool/ulteo/ovd/slaveserver
+HOMEDIR=/var/lib/ulteo/ovd/slaveserver/fs
+
+# update slavesever config file
+[ -z "$2" ] && ovd-slaveserver-role add FileServer
+
+# add user ovd-fs
+getent passwd ovd-fs >/dev/null || adduser --system --group --home $HOMEDIR ovd-fs >/dev/null 2>&1
+usermod -G ovd-fs www-data >/dev/null
+chown ovd-fs:ovd-fs $HOMEDIR
+
+# create spool directory
+mkdir -p $SPOOLDIR
+chown ovd-fs:ovd-fs $SPOOLDIR
+
+# override samba config and restart it
+ID=$(< /dev/urandom tr -dc _A-Za-z0-9 | head -c12)
+sed -e "s/@RANDOM@/$ID/" $DATADIR/samba.conf > /etc/samba/smb.conf
+service samba restart
+
+# VHost webdav config
+a2ensite slaveserver-fs > /dev/null
+a2enmod dav_fs dav  >/dev/null
+if apache2ctl configtest 2>/dev/null; then
+    invoke-rc.d apache2 restart || true
+else
+    echo "Your apache2 configuration is broken: update it and restart apache2 manually."
+fi
+
+db_stop
+
+#DEBHELPER#
+
+exit 0

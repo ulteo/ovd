@@ -1,0 +1,18 @@
+#!/bin/sh
+set -e
+
+manager=/etc/xdg/ulteo/xinitrc
+
+case "$1" in
+  remove)
+
+    if test -x /usr/sbin/update-alternatives; then
+      update-alternatives --remove x-session-manager $manager
+    fi
+    ;;
+    
+  *)
+  ;;
+esac
+
+#DEBHELPER#

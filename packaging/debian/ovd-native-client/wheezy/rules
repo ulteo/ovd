@@ -1,0 +1,12 @@
+#!/usr/bin/make -f
+
+DEB_DH_INSTALL_SOURCEDIR = debian/ulteo-ovd-native-client
+
+include /usr/share/cdbs/1/class/ant.mk
+include /usr/share/cdbs/1/rules/debhelper.mk
+
+JAVA_HOME = /usr/lib/jvm/default-java
+DEB_ANT_BUILD_TARGET = ovdNativeClient
+DEB_ANT_INSTALL_TARGET = ovdNativeClient.debian
+DEB_ANT_ARGS += -Dprefix=/usr -Dbuild.type=stripped -Ddestdir=$(DEB_DESTDIR) -Dlanguages=true
+DEB_JARS += $(ANT_HOME)/lib/ant-nodeps.jar # debian bug #420287

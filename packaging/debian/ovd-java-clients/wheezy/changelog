@@ -1,0 +1,11 @@
+ovd-java-clients (0.2-1) trunk; urgency=low
+
+  * add libovd-xclient-area package
+
+ -- Samuel Bovée <samuel@ulteo.com>  Wed, 22 Sep 2010 15:46:49 +0200
+
+ovd-java-clients (0.1-1) trunk; urgency=low
+
+  * Initial release.
+
+ -- Samuel Bovée <samuel@ulteo.com>  Wed, 23 Jun 2010 15:21:21 +0200

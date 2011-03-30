@@ -1,0 +1,14 @@
+Source: ovd-subsystem
+Section: net
+Priority: extra
+Maintainer: Samuel Bovée <samuel@ulteo.com>
+Build-Depends: cdbs, debhelper (>= 6), intltool
+Standards-Version: 3.7.3
+
+Package: ulteo-ovd-subsystem
+Architecture: all
+Pre-Depends: ${misc:Depends}, po-debconf
+Depends: curl
+Conflicts: ulteo-ovd-application-server (<< 3), ulteo-ovd-slaveserver, samba, xrdp
+Description: Ulteo Open Virtual Desktop - Subsystem
+ This package provides the subsystem for the Ulteo Open Virtual Desktop.

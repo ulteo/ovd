@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+manager=/etc/xdg/ulteo/xinitrc
+
+case "$1" in
+    configure)
+       update-alternatives --install /usr/bin/x-session-manager \
+       x-session-manager $manager 100
+    ;;
+
+    abort-*)
+        exit 1
+    ;;
+
+    *)
+    ;;
+esac
+
+#DEBHELPER#

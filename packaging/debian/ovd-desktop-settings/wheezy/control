@@ -1,0 +1,38 @@
+Source: ovd-desktop-settings
+Section: x11
+Priority: extra
+Maintainer: Samuel Bovée <samuel@ulteo.com>
+Build-Depends: cdbs, cdbs-xfce, debhelper (>= 6), intltool,
+ libthunar-vfs-1-dev, libxfce4util-dev (>= 4.4), libxfcegui4-dev (>= 4.4),
+ xfce4-panel-dev (>= 4.4), xfce4-dev-tools, libgconf2-dev, libgtk2.0-dev
+Standards-Version: 3.7.3
+
+Package: ulteo-ovd-desktop-settings
+Architecture: all
+Depends: gnome-icon-theme, gnome-icon-theme-crystal, dmz-cursor-theme,
+ xfce4-icon-theme, gtk2-engines-xfce, gtk2-engines-mythbuntu
+Conflicts: ulteo-ovd-xfce-default-settings, xubuntu-default-settings,
+ thunar-settings (<< 0.9.0-4ulteo2)
+Description: Ulteo Open Virtual Desktop - Startup scripts and default settings
+ This package provides:
+ * default settings for the Xfce desktop on an Ulteo Open Virtual Desktop.
+ * script that can be used to start an X session on an Open Virtual
+ Desktop application server.
+
+Package: ulteo-plymouth-theme
+Architecture: all
+Depends: ${misc:Depends}, plymouth, plymouth-label
+Provides: plymouth-theme
+Description: Ulteo plymouth theme: graphical boot animation theme
+ Plymouth is an application that runs very early in the boot process
+ (even before the root filesystem is mounted!) that provides a graphical
+ boot animation while the boot process happens in the background.
+ .
+ This package contains the default ulteo logo theme.
+
+Package: ulteo-xfce4-restricted-menu-plugin
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Restricted menu for the xfce4 panel
+ This plugin for the Xfce panel allows the administrateur to restrict the
+ access to the available applications.

@@ -1,0 +1,86 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+CONFFILE=/etc/ulteo/subsystem.conf
+[ -f $CONFFILE ] && . $CONFFILE
+[ -z "$CHROOTDIR" ] && CHROOTDIR=/opt/ulteo
+CHROOTCONF=$CHROOTDIR/etc/ulteo/ovd/slaveserver.conf
+
+set_conf () {
+    # $1: configfile
+    # $2: field
+    # $3: value
+    touch $1
+    if grep -q "^$2 *=" $1 2>/dev/null; then
+        sed -i "/^$2 *=/c $2=$3" $1
+    else
+        echo "$2=$3" >> $1
+    fi
+}
+
+# download the chroot if needed
+while [ ! -e "$CHROOTCONF" ]; do
+
+    # get the tarball uri and quit if empty
+    db_get ulteo-ovd-subsystem/tarball_uri && URI="$RET"
+    [ -z "$URI" ] && break
+
+    # curl needs file://, make sure we have it if we deal with a file path
+    [ $(echo "$URI" | cut -c 1) = '/' ] && URI="file://$URI"
+
+    # get the chroot
+    CURLOPTS="--retry 3 --connect-timeout 60 --insecure -L"
+    if curl $CURLOPTS -f -s -I $URI > /dev/null; then
+        echo "Retrieving and uncompressing the chroot tarball..."
+        mkdir -p "$CHROOTDIR"
+        curl $CURLOPTS "$URI" | tar zx --numeric-owner -p -s -C "$CHROOTDIR" -f - && continue
+    fi
+
+    # chroot download failed
+    db_subst ulteo-ovd-subsystem/download_error URI "$URI"
+    db_subst ulteo-ovd-subsystem/download_error CHROOTDIR "$CHROOTDIR"
+    db_input critical ulteo-ovd-subsystem/download_error || true
+    db_go
+    rm -rf $CHROOTDIR
+
+    db_fset ulteo-ovd-subsystem/tarball_uri seen false || true
+    db_input high ulteo-ovd-subsystem/tarball_uri || true
+    db_go
+done
+
+
+if [ -e "$CHROOTCONF" ]; then
+    # set timezone
+    if [ -f /etc/timezone ]; then
+        HOSTTZ=$(head -n 1 /etc/timezone)
+    fi
+    if [ -n "$HOSTTZ" -a -f $CHROOTDIR/usr/share/zoneinfo/$HOSTTZ ]; then
+        cp /usr/share/zoneinfo/$HOSTTZ $CHROOTDIR/etc/localtime
+        echo "$HOSTTZ" > $CHROOTDIR/etc/timezone
+    fi
+
+    # session manager url
+    db_get ulteo-ovd-subsystem/sm_address && URL="$RET"
+    set_conf $CHROOTCONF "session_manager" "$URL"
+
+    # get some conffile from host to chroot
+    HOSTCONFFILES="hostname hosts resolv.conf"
+    for file in $HOSTCONFFILES; do
+        [ -f /etc/$file ] && cp /etc/$file $CHROOTDIR/etc/
+    done
+
+else
+    db_subst ulteo-ovd-subsystem/no_chroot_conf CHROOTCONF "$CHROOTCONF"
+    db_input high ulteo-ovd-subsystem/no_chroot_conf || true
+    db_go
+    CHROOTDIR=""
+fi
+
+set_conf $CONFFILE "CHROOTDIR" "$CHROOTDIR"
+
+db_stop
+
+#DEBHELPER#
+
+exit 0

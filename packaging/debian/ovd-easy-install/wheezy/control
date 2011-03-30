@@ -1,0 +1,22 @@
+Source: ovd-easy-install
+Section: net
+Priority: extra
+Maintainer: Samuel Bovée <samuel@ulteo.com>
+Standards-Version: 3.7.3
+Build-Depends: cdbs, debhelper (>= 6)
+
+Package: ulteo-ovd-debconf-database
+Architecture: all
+Depends: debconf-utils
+Description: Ulteo Open Virtual Desktop - debconf database
+ Debconf database used to make a quick install
+
+Package: ulteo-ovd-easy-install
+Architecture: all
+Suggests: ulteo-ovd-debconf-database
+Pre-Depends: debconf
+Depends: mysql-server, wwwconfig-common,
+ ulteo-ovd-session-manager, ulteo-ovd-subsystem,
+ ulteo-ovd-web-client, ulteo-ovd-web-client-ajaxplorer
+Description: Ulteo Open Virtual Desktop - easy install
+ Install quickly and easily the Ulteo OVD with a chroot system.

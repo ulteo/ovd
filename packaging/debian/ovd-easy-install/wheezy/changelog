@@ -1,0 +1,5 @@
+ovd-easy-install (0.1-) squeeze; urgency=low
+
+  * Initial release
+
+ -- Samuel Bovée <samuel@ulteo.com>  Wed, 27 Feb 2010 13:53:57 +0100

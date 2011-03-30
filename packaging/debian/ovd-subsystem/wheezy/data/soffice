@@ -1,0 +1,267 @@
+#!/bin/sh
+#*************************************************************************
+#
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+# 
+# Copyright 2008 by Sun Microsystems, Inc.
+#
+# OpenOffice.org - a multi-platform office productivity suite
+#
+# $RCSfile: soffice.sh,v $
+#
+# $Revision: 1.34 $
+#
+# This file is part of OpenOffice.org.
+#
+# OpenOffice.org is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License version 3
+# only, as published by the Free Software Foundation.
+#
+# OpenOffice.org is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License version 3 for more details
+# (a copy is included in the LICENSE file that accompanied this code).
+#
+# You should have received a copy of the GNU Lesser General Public License
+# version 3 along with OpenOffice.org.  If not, see
+# <http://www.openoffice.org/license.html>
+# for a copy of the LGPLv3 License.
+#
+#*************************************************************************
+
+# Ulteo hack begin
+export ULTEO_INSTANCE=ulteo-$$
+# Ulteo hack end
+
+#
+# STAR_PROFILE_LOCKING_DISABLED=1
+# export STAR_PROFILE_LOCKING_DISABLED
+#
+
+if test -z "$HOME"; then
+    HOME=$(getent passwd $(whoami) | cut -d":" -f6)
+fi
+
+# helper functions
+file_or_home_on_nfs()
+{
+    case $(stat -f -c %T $HOME) in nfs*|smb)
+        return 0
+    esac
+    for i; do
+       case "$i" in -*) continue; esac
+       [ -f "$i" ] || continue
+       case $(stat -f -c %T "$i") in nfs*|smb)
+            return 0
+       esac
+    done
+    return 1
+}
+
+# FIXME: this is conservative; allow more known working configurations
+working_opengl_support()
+{
+    if [ -n "$(lsmod | awk '/^(fglrx|nvidia)/ {print $1}')" ]; then
+	return 1
+    fi
+    return 0
+}
+
+# read config file
+
+FILE_LOCKING=auto
+OPENGL_SUPPORT=no
+if [ -f /etc/openoffice/soffice.sh ]; then
+    . /etc/openoffice/soffice.sh
+fi
+
+# sanity checks
+
+case "$FILE_LOCKING" in
+    auto|yes|no) ;;
+    *)
+        echo >&2 "unknown value '$FILE_LOCKING' for FILE_LOCKING parameter."
+	FILE_LOCKING=auto
+	echo >&2 "FILE_LOCKING reset to '$FILE_LOCKING'"
+esac
+    
+case "$OPENGL_SUPPORT" in
+    auto|yes|no) ;;
+    *)
+        echo >&2 "unknown value '$OPENGL_SUPPORT' for OPENGL_SUPPORT parameter."
+	OPENGL_SUPPORT=auto
+	echo >&2 "OPENGL_SUPPORT reset to '$OPENGL_SUPPORT'"
+esac
+
+# adjust environment
+
+if [ -z "$SAL_ENABLE_FILE_LOCKING" ]; then
+    case "$FILE_LOCKING" in
+	auto)
+        file_or_home_on_nfs "$@"
+        if [ $? -eq 0 ]; then
+            # file locking now enabled by default
+	    SAL_ENABLE_FILE_LOCKING=1
+	    export SAL_ENABLE_FILE_LOCKING
+	fi
+        ;;
+	yes)
+	SAL_ENABLE_FILE_LOCKING=1
+	export SAL_ENABLE_FILE_LOCKING
+        ;;
+	no)
+	SAL_ENABLE_FILE_LOCKING=0
+	export SAL_ENABLE_FILE_LOCKING
+    esac
+fi
+
+if [ -z "$SAL_NOOPENGL" ]; then
+    case "$OPENGL_SUPPORT" in
+	auto)
+        working_opengl_support
+        if [ $? -eq 0 ]; then
+	    SAL_NOOPENGL=true
+	    export SAL_NOOPENGL
+	fi
+        ;;
+	yes)
+	:
+	unset SAL_NOOPENGL
+	#export SAL_NOOPENGL
+        ;;
+	no)
+	SAL_NOOPENGL=true
+	export SAL_NOOPENGL
+    esac
+fi
+
+# the following test is needed on Linux PPC with IBM j2sdk142
+if [ "`uname -s`" = "Linux" -a "`uname -m`" = "ppc" ] ; then
+    JITC_PROCESSOR_TYPE=6
+    export JITC_PROCESSOR_TYPE
+fi
+
+# resolve installation directory
+sd_cwd="`pwd`"
+if [ -h "$0" ] ; then
+	sd_basename=`basename "$0"`
+ 	sd_script=`ls -l "$0" | sed "s/.*${sd_basename} -> //g"`
+    cd "`dirname "$0"`"
+    cd "`dirname "$sd_script"`"
+else
+    cd "`dirname "$0"`"
+fi
+sd_prog=`pwd`
+cd "$sd_cwd"
+
+sd_binary=`basename "$0"`.bin
+
+#collect all bootstrap variables specified on the command line
+#so that they can be passed as arguments to javaldx later on
+for arg in $@
+do
+  case "$arg" in
+       -env:*) BOOTSTRAPVARS=$BOOTSTRAPVARS" ""$arg";;
+  esac
+done
+
+# extend the ld_library_path for java: javaldx checks the sofficerc for us
+if [ -x "$sd_prog/../basis-link/ure-link/bin/javaldx" ] ; then
+    my_path=`"$sd_prog/../basis-link/ure-link/bin/javaldx" $BOOTSTRAPVARS \
+        "-env:INIFILENAME=vnd.sun.star.pathname:$sd_prog/redirectrc"`
+    if [ -n "$my_path" ] ; then
+        LD_LIBRARY_PATH=$my_path${LD_LIBRARY_PATH+:$LD_LIBRARY_PATH}
+        export LD_LIBRARY_PATH
+    fi
+fi
+
+unset XENVIRONMENT
+
+# uncomment line below to disable anti aliasing of fonts
+# SAL_ANTIALIAS_DISABLE=true; export SAL_ANTIALIAS_DISABLE
+
+# uncomment line below if you encounter problems starting soffice on your system
+# SAL_NO_XINITTHREADS=true; export SAL_NO_XINITTHREADS
+
+# pagein
+for sd_arg in ${1+"$@"} ; do
+    case ${sd_arg} in
+    -calc)
+        sd_pagein_args="${sd_pagein_args:+${sd_pagein_args} }@pagein-calc"
+        break;
+        ;;
+    -draw)
+        sd_pagein_args="${sd_pagein_args:+${sd_pagein_args} }@pagein-draw"
+        break;
+        ;;
+    -impress)
+        sd_pagein_args="${sd_pagein_args:+${sd_pagein_args} }@pagein-impress"
+        break;
+        ;;
+    -writer)
+        sd_pagein_args="${sd_pagein_args:+${sd_pagein_args} }@pagein-writer"
+        break;
+        ;;
+    *)
+        ;;
+    esac
+done
+
+# read database entries for Adabas D
+if [ -f /etc/adabasrc ]; then
+  . /etc/adabasrc
+fi
+
+sd_pagein_args="${sd_pagein_args:+${sd_pagein_args} }@pagein-common"
+"$sd_prog/../basis-link/program/pagein" -L"$sd_prog/../basis-link/program" \
+    ${sd_pagein_args}
+
+# Set PATH so that crash_report is found:
+PATH=$sd_prog${PATH+:$PATH}
+export PATH
+
+PYTHONPATH=$sd_prog/../basis-link/program${PYTHONPATH+:$PYTHONPATH}
+export PYTHONPATH
+
+# test for availability of the fast external splash
+for arg in $@; do
+	if [ "$arg" = "-nologo" -o "$arg" = "-no-oosplash" ]; then
+		no_oosplash=y
+	fi
+done
+if [ "$sd_binary" = "soffice.bin" -a -x "$sd_prog/oosplash.bin" ] && [ "$no_oosplash" != "y" ] ; then
+    sd_binary="oosplash.bin"
+fi
+
+# execute soffice binary
+"$sd_prog/$sd_binary" "$@" &
+trap 'kill -9 $!' TERM
+wait $!
+
+while [ $? -eq 79 ]
+do
+	"$sd_prog/$sd_binary" ""$BOOTSTRAPVARS"" &
+    wait $!
+done
+
+
+# Ulteo hack: search the soffice.bin instance
+for pid in $(ps ux | grep soffice.bin | grep -v grep | mawk '{ print $2 }'); do
+    echo $pid
+    grep -q "ULTEO_INSTANCE=$ULTEO_INSTANCE" /proc/$pid/environ
+    if [ $? -eq 0 ]; then
+	echo "found pid: $pid"
+	SOFFICE_PID=$pid
+    fi
+done
+
+if [ -n "$SOFFICE_PID" ]; then
+    # HACK
+    # Avoid this script to end and send OVD Portal the signal to close the window
+    while ps ux | grep $SOFFICE_PID | grep -v grep; do
+        sleep 1
+    done
+fi
+
+exit

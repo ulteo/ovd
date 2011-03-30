@@ -1,0 +1,20 @@
+Source: ovd-web-client
+Section: net
+Priority: extra
+Maintainer: Samuel Bovée <samuel@ulteo.com>
+Build-Depends: cdbs, debhelper (>= 6), intltool
+Standards-Version: 3.7.2
+
+Package: ulteo-ovd-web-client
+Architecture: all
+Depends: debconf, ulteo-ovd-applets, ulteo-ovd-l10n,
+ php5, php5-curl, php5-gd, php-gettext, php-pear
+Recommends: ulteo-ovd-web-client-ajaxplorer
+Description: Ulteo Open Virtual Desktop - web client
+ This is a web based client for Ulteo OVD.
+
+Package: ulteo-ovd-web-client-ajaxplorer
+Architecture: all
+Depends: ulteo-ovd-web-client
+Description: Ulteo Open Virtual Desktop - Ajaxplorer portal
+ Ajaxplorer portal for Ulteo OVD web client

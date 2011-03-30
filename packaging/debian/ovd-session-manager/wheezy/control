@@ -1,0 +1,27 @@
+Source: ovd-session-manager
+Section: net
+Priority: optional
+Maintainer: Samuel Bovée <samuel@ulteo.com>
+Build-Depends: debhelper (>= 6), cdbs, po-debconf, intltool
+Standards-Version: 3.7.3
+
+Package: ulteo-ovd-session-manager
+Architecture: all
+Pre-depends: debconf
+Depends:
+ ulteo-ovd-l10n,
+ apache2,
+ libapache2-mod-php5,
+ php5-cli,
+ php5-curl,
+ php5-mysql,
+ php5-ldap,
+ php-pear,
+ php5-imagick,
+ php-libchart,
+ curl,
+ openssl
+Suggests: mysql-server, mail-transport-agent
+Description: Ulteo Open Virtual Desktop - Session Manager
+ This package provides the Session Manager web services for the Ulteo Open
+ Virtual Desktop.

@@ -1,0 +1,7 @@
+#!/bin/sh -e
+
+[ -z "$2" ] && ovd-slaveserver-role add ApplicationServer
+
+#DEBHELPER#
+
+exit 0

@@ -1,0 +1,15 @@
+Source: ovd-native-client
+Section: utils
+Priority: optional
+Maintainer: Samuel Bovée <samuel@ulteo.com>
+Build-Depends: debhelper (>= 6), cdbs, default-jdk, ant, ant-optional, gettext
+Standards-Version: 3.8.2
+
+Package: ulteo-ovd-native-client
+Architecture: all
+Depends: default-jre | sun-java6-jre, libgetopt-java, liblog4j1.2-java,
+ libovd-xclient-area, xdg-utils
+Recommends: ulteo-ovd-integrated-launcher
+Description: Ulteo Open Virtual Desktop - native client
+ This application is used in the Open Virtual Desktop to display the user
+ session and launch applications via a native client.

@@ -1,0 +1,116 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+CONFDIR=/etc/ulteo/sessionmanager
+CACHEDIR=/var/cache/ulteo/sessionmanager
+SPOOLDIR=/var/spool/ulteo/sessionmanager
+LOGDIR=/var/log/ulteo/sessionmanager
+
+CONFFILE=$CONFDIR/config.inc.php
+
+############################# APACHE CONFIGURATION #############################
+
+A2SITESDIR=/etc/apache2/sites-available
+A2CONFDIR=/etc/apache2/conf.d
+
+A2USER=www-data
+
+# VHost server config
+if [ ! -e $A2SITESDIR/sessionmanager-vhost-server ]; then
+    ln -sfT $CONFDIR/apache2-vhost-server.conf \
+        $A2SITESDIR/sessionmanager-vhost-server
+    a2ensite sessionmanager-vhost-server > /dev/null
+    a2enmod rewrite >/dev/null
+fi
+
+# Alias admin
+if [ ! -e $A2CONFDIR/ovd-admin.conf ]; then
+    ln -sfT $CONFDIR/apache2-admin.conf $A2CONFDIR/ovd-admin.conf
+fi
+
+# VHost SSL config
+if [ ! -e $A2SITESDIR/sessionmanager-vhost-ssl ]; then
+    serverName=$(hostname -f 2>/dev/null || true)
+    [ -z "$serverName" ] && serverName=$(hostname) #Bad /etc/hosts configuration
+    sed -i -r "s/^( *ServerName).*$/\1 ${serverName}/" \
+        $CONFDIR/apache2-vhost-ssl.conf
+    ln -sfT $CONFDIR/apache2-vhost-ssl.conf $A2SITESDIR/sessionmanager-vhost-ssl
+    a2ensite sessionmanager-vhost-ssl > /dev/null
+    a2enmod ssl > /dev/null
+fi
+
+# SSL self-signed key generation
+if [ ! -f $CONFDIR/ovd.key -o ! -f $CONFDIR/ovd.csr -o ! -f $CONFDIR/ovd.crt ]
+then
+    echo "Auto-generate SSL configuration for Apache2 with self-signed certificate."
+    openssl genrsa -out $CONFDIR/ovd.key 1024 2> /dev/null
+    openssl req -new -subj /CN=$(hostname)/ -batch \
+        -key $CONFDIR/ovd.key -out $CONFDIR/ovd.csr
+    openssl x509 -req -days 3650 -in $CONFDIR/ovd.csr \
+        -signkey $CONFDIR/ovd.key -out $CONFDIR/ovd.crt 2> /dev/null
+    chown root:root $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+    chmod 600       $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+fi
+
+# restart apache server
+if apache2ctl configtest 2>/dev/null; then
+    invoke-rc.d apache2 restart || true
+else
+    db_input high ulteo-ovd-session-manager/ssl_disable_warning || true
+    db_go
+fi
+
+# create folders and change permissions
+mkdir -p $SPOOLDIR/reporting $LOGDIR
+chown $A2USER:$A2USER $SPOOLDIR $SPOOLDIR/reporting $LOGDIR $CONFFILE
+
+############################### FIRST INSTALL #################################
+
+if [ "$1" = "configure" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ])
+then
+    db_get ulteo-ovd-session-manager/admin_login && LOGIN="$RET"
+    db_get ulteo-ovd-session-manager/admin_password && \
+        PASSWD=$(echo -n $RET | md5sum | cut -d " " -f 1) && unset RET
+
+    # set the configuration
+    sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_LOGIN.*').*('.*)$,\1$LOGIN\2," $CONFFILE
+    sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_PASSWORD.*').*('.*)$,\1$PASSWD\2," $CONFFILE
+
+    # clear the password
+    db_reset ulteo-ovd-session-manager/admin_password
+    db_reset ulteo-ovd-session-manager/admin_password_again
+
+    # download the chroot if needed
+    while [ ! -e $CACHEDIR/base.tar.gz ]; do
+        mkdir -p $CACHEDIR
+
+        # get the tarball url and quit if empty
+        db_get ulteo-ovd-session-manager/tarball_url && URL="$RET"
+        [ -z "$URL" ] && break
+
+        # get the chroot
+        CURLOPTS="--retry 3 --connect-timeout 60 --insecure -L"
+        if curl $CURLOPTS -f -s -I "$URL" > /dev/null ; then
+            echo "Retrieving the chroot tarball..."
+            curl $CURLOPTS "$URL" > $CACHEDIR/base.tar.gz && continue
+        fi
+
+        # chroot download failed
+        rm -f $CACHEDIR/base.tar.gz
+
+        db_subst ulteo-ovd-session-manager/download_error URL "$URL"
+        db_input critical ulteo-ovd-session-manager/download_error || true
+        db_go
+
+        db_fset ulteo-ovd-session-manager/tarball_url seen false || true
+        db_input high ulteo-ovd-session-manager/tarball_url || true
+        db_go
+    done
+fi
+
+db_stop
+
+#DEBHELPER#
+
+exit 0
