@@ -8,7 +8,6 @@ SRC=\
 	Architecture.xml \
 	Easy_Installation.xml \
 	FAQ.xml \
-	Installation_ApS_Lucid.xml \
 	Installation_ApS_Windows.xml \
 	Installation_Gateway_Lucid.xml \
 	Installation_Iso.xml \
