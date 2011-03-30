@@ -488,8 +488,12 @@ function appletFailure() {
 var ti = 0;
 function testUlteoApplet() {
 	try {
-		if (ulteo_applet_inited == true) {
+		if (ulteo_applet_inited == true)
 			checkLogin();
+	} catch(e) {}
+
+	try {
+		if (ulteo_applet_inited == true) {
 			hideSystemTest();
 			return;
 		} else if (ulteo_applet_inited == false) {
