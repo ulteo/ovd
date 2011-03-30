@@ -166,9 +166,16 @@ class Profile(AbstractProfile):
 				Logger.error("Profile umount failed")
 				Logger.debug("Profile umount failed (status: %d) => %s"%(s, o))
 			
-			os.rmdir(self.profile_mount_point)
+			try:
+				os.rmdir(self.profile_mount_point)
+			except OSError, e:
+				Logger.error("Unable to delete mount point (%s): %s"%(self.profile_mount_point), str(e))
+
+		try:		
+			os.rmdir(self.cifs_dst)
+		except OSError, e:
+			Logger.error("Unable to delete profile (%s): %s"%(self.cifs_dst), str(e))
 		
-		os.rmdir(self.cifs_dst)
 	
 	def copySessionStart(self):
 		if self.homeDir is None or not os.path.isdir(self.homeDir):
