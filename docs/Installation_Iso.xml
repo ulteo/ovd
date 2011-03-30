@@ -4,7 +4,7 @@
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
 
   <articleinfo>
-    <title>Ulteo Open Virtual Desktop</title>
+    <title>Ulteo Open Virtual Desktop v@VERSION@</title>
     <subtitle>Installation from the DVD-ROM</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
     <copyright>

@@ -3,7 +3,7 @@
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article>
   <articleinfo>
-    <title>Ulteo Open Virtual Desktop</title>
+    <title>Ulteo Open Virtual Desktop v@VERSION@</title>
     <subtitle>Architecture Overview</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
