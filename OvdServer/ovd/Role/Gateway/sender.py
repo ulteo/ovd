@@ -81,6 +81,8 @@ class sender(asyncore.dispatcher):
 		if self.receiver:
 			self.receiver.close()
 
+
+
 class senderHTTP(sender):
 
 	def __init__(self, remote, receiver, ssl_ctx):

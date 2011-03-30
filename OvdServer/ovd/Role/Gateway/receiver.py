@@ -52,7 +52,7 @@ def getXMLError(id):
 class receiver(asyncore.dispatcher):
 
 	def __init__(self, conn, req):
-		asyncore.dispatcher.__init__(self,conn)
+		asyncore.dispatcher.__init__(self, conn)
 		self.to_remote_buffer = ''
 		self.from_remote_buffer = req
 		self.sender = None
