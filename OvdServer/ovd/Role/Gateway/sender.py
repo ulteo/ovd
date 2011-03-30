@@ -56,9 +56,6 @@ class sender(asyncore.dispatcher):
 			self.close()
 		except SSL.WantReadError:
 			pass
-		except:
-			Logger.warn('%s::handle_read error' % self.__class__.__name__)
-			self.handle_close()
 
 
 	def writable(self):
@@ -71,9 +68,6 @@ class sender(asyncore.dispatcher):
 			self.receiver.from_remote_buffer = self.receiver.from_remote_buffer[sent:]
 		except SSL.WantWriteError:
 			pass
-		except:
-			Logger.warn('%s::handle_write error' % self.__class__.__name__)
-			self.handle_close()
 
 
 	def handle_close(self):

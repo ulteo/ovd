@@ -26,6 +26,7 @@ import asyncore
 import re
 import socket
 import threading
+import time
 import uuid
 
 from ovd.Logger import Logger
@@ -73,15 +74,16 @@ class ReverseProxy(asyncore.dispatcher):
 	def handle_accept(self):
 		conn, peer = self.accept()
 		addr, port = peer
-		try:
-			r = conn.recv(4096)
-		except (SSL.SysCallError, SSL.ZeroReturnError):
-			conn.close()
-			return
-		except Exception, err:
-			Logger.debug('ReverseProxy::handle_accept error %s %s'%(type(err), err))
-			conn.close()
-			return
+
+		r = None
+		while r is not None:
+			try:
+				r = conn.recv(4096)
+			except (SSL.SysCallError, SSL.ZeroReturnError):
+				conn.close()
+				return
+			except SSL.WantReadError:
+				time.sleep(0.01)
 
 		request = r.split('\n', 1)[0]
 		utf8_request = request.rstrip('\n\r').decode("utf-8", "replace")
