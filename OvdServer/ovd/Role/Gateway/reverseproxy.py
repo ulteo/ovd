@@ -46,6 +46,9 @@ class ReverseProxy(asyncore.dispatcher):
 		self.lock = threading.Lock()
 		self.database = {}
 
+		self.rdp_ptn = re.compile('\x03\x00.*Cookie: .*token=([\-\w]+);.*')
+		self.http_ptn = re.compile('((?:HEAD)|(?:GET)|(?:POST)) (.*) HTTP/(.\..)')
+
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.set_socket(SSL.Connection(self.ssl_ctx, sock))
 		#self.set_reuse_addr()
@@ -89,8 +92,8 @@ class ReverseProxy(asyncore.dispatcher):
 		utf8_request = request.rstrip('\n\r').decode("utf-8", "replace")
 
 		# find protocol
-		rdp = re.match('\x03\x00.*Cookie: .*token=([\-\w]+);.*', request)
-		http = re.match('((?:HEAD)|(?:GET)|(?:POST)) (.*) HTTP/(.\..)', request)
+		rdp  = self.rdp_ptn.match(request)
+		http = self.http_ptn.match(request)
 
 		try:
 			# RDP case

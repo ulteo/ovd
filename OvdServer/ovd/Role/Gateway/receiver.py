@@ -96,6 +96,9 @@ class receiverXMLRewriter(receiver):
 		self.hasRewrited = False
 		self.proxy = proxy
 
+		self.response_ptn = re.compile("<response.+\/>", re.I | re.U)
+		self.session_ptn  = re.compile("<session .*>.+<\/session>", re.I | re.U)
+
 
 	def writable(self):
 		if len(self.to_remote_buffer) == 0:
@@ -104,13 +107,11 @@ class receiverXMLRewriter(receiver):
 		if self.hasRewrited:
 			return True
 
-		pattern = re.compile("<response.+\/>", re.I | re.U)
-		if pattern.search(self.to_remote_buffer):
+		if self.response_ptn.search(self.to_remote_buffer):
 			self.hasRewrited = True
 			return True
 
-		pattern = re.compile("<session .*>.+<\/session>", re.I | re.U)
-		xml = pattern.search(self.to_remote_buffer)
+		xml = self.session_ptn.search(self.to_remote_buffer)
 		if not xml:
 			return False
 
