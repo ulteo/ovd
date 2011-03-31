@@ -235,5 +235,16 @@ if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications') 
 			<div id="applicationsAppletContainer" style="display: none;">
 			</div>
 		</div>
+
+		<div id="debugContainer" class="no_debug info warning error" style="display: none;">
+		</div>
+
+		<div id="debugLevels" style="display: none;">
+			<span class="debug"><input type="checkbox" id="level_debug" onclick="daemon.switch_debug('debug');" value="10" /> Debug</span>
+			<span class="info"><input type="checkbox" id="level_info" onclick="daemon.switch_debug('info');" value="20" checked="checked" /> Info</span>
+			<span class="warning"><input type="checkbox" id="level_warning" onclick="daemon.switch_debug('warning');" value="30" checked="checked" /> Warning</span>
+			<span class="error"><input type="checkbox" id="level_error" onclick="daemon.switch_debug('error');" value="40" checked="checked" /> Error</span><br />
+			<input type="button" onclick="daemon.clear_debug(); return false;" value="Clear" />
+		</div>
 	</body>
 </html>
