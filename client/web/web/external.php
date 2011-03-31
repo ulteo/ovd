@@ -117,6 +117,7 @@ if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications') 
 					Event.observe(window, 'load', function() {
 						if ('<?php echo $_REQUEST['mode']; ?>' == 'desktop')
 							new Effect.Center($('splashContainer'));
+						new Effect.Center($('endContainer'));
 
 						$('desktopModeContainer').hide();
 						$('desktopAppletContainer').hide();
@@ -215,6 +216,20 @@ if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications') 
 					<td style="width: 20px"></td>
 					<td style="text-align: left; vertical-align: middle;">
 						<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div id="endContainer" class="rounded" style="display: none;">
+			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td style="text-align: center;">
+						<img src="media/image/ulteo.png" alt="" title="" />
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: center; vertical-align: middle; margin-top: 15px;" id="endContent">
 					</td>
 				</tr>
 			</table>
