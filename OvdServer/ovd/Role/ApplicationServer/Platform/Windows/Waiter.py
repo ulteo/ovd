@@ -1,8 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author David LECHEVALIER <david@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -23,6 +24,7 @@ import win32api
 import win32con
 import win32security
 
+import os
 import Reg
 
 from ovd.Logger import Logger
@@ -34,6 +36,7 @@ class Waiter():
 		self.sid = None
 		self.userprofile = None
 		self.appdata = None
+		self.lockFile = None
 		self.userDir = {}
 	
 	
@@ -43,49 +46,36 @@ class Waiter():
 			self.sid = win32security.ConvertSidToStringSid(sid)
 		except Exception, err:
 			return False
-		
-		if not self.is_locked():
-			return False
-		
 		if not self._get_userprofile_directory():
 			return False
 		
 		if not self._get_usershellfolders():
 			return False
 		
+		if not self._get_lockfile():
+			return False
+		
+		if not self.is_locked():
+			return False
 		return True
 	
 	
 	def is_locked(self):
-		path = self.sid+r"\Software\Ulteo\ovd"
-		
-		hkey = None
-		try:
-			hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_QUERY_VALUE)
-			win32api.RegQueryValueEx(hkey, "LOCK")
-		except:
-			return False
-		finally:
-			if hkey is not None:
-				win32api.RegCloseKey(hkey)
-		
+		if os.path.exists(self.lockFile):
+			return True
+		return False	
+
+
+	def _get_lockfile(self):
+		self.lockFile = os.path.join(self.userDir["AppData"], "ulteo", "ulock")
 		return True
 	
 	
 	def unlock(self):
-		path = self.sid+r"\Software\Ulteo\ovd"
-		
-		hkey = None
 		try:
-			hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS)
-			win32api.RegDeleteValue(hkey, "LOCK")
-		except:
-			return False
-		finally:
-			if hkey is not None:
-				win32api.RegCloseKey(hkey)
-		
-		Logger.debug("Session for client %s unlocked !"%(self.session.user.name))
+			os.remove(self.lockFile)
+		except Exception, e:
+			Logger.warn("Unable to remove lock "+str(e))
 		return True
 	
 	

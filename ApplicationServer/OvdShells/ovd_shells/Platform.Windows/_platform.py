@@ -4,6 +4,7 @@
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+# Author David LECHEVALIER <david@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -186,35 +187,21 @@ def lock(t):
 
 
 def isLocked():
-	try:
-		hkey = win32api.RegOpenKey(win32con.HKEY_CURRENT_USER, r"Software\Ulteo\ovd", 0, win32con.KEY_QUERY_VALUE)
-	except:
-		return False
-		
-	try:
-		win32api.RegQueryValueEx(hkey, "LOCK")
-	except Exception, err:
-		return False
-	finally:
-		win32api.RegCloseKey(hkey)
+	appdata = os.getenv("APPDATA")
+	lockFile = os.path.join(appdata, "ulteo", "ulock")
 	
-	return True
+	return os.path.exists(lockFile)
 
 
 def pushLock():
-	CreateKeyR(win32con.HKEY_CURRENT_USER, r"Software\Ulteo\ovd")
+	appdata = os.getenv("APPDATA")
+	lockFile = os.path.join(appdata, "ulteo", "ulock")
 	
 	try:
-		hkey = win32api.RegOpenKey(win32con.HKEY_CURRENT_USER, r"Software\Ulteo\ovd", 0, win32con.KEY_SET_VALUE)
-	except:
-		import traceback
-		print traceback.format_exc()
-		return False
-		
-	win32api.RegSetValueEx(hkey, "LOCK", 0, win32con.REG_SZ, "LOCK")
-	win32api.RegCloseKey(hkey)
-	
-	return True
+		handle = open(lockFile, 'w')
+		handle.close()
+	except Exception, e:
+		print "Unable to create lock: "+str(e)
 
 
 def CreateKeyR(hkey, path):
