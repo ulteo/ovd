@@ -102,7 +102,7 @@ if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications') 
 
 		<script type="text/javascript">
 			<?php
-				if (! $first) {
+				if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications' && ! $first) {
 			?>
 					Event.observe(window, 'load', function() {
 						window.close();
