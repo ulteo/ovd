@@ -115,7 +115,7 @@ function showEnd() {
 	if ($('endContainer').visible())
 		return;
 
-	if ($('loginBox').visible())
+	if ($('loginBox') && $('loginBox').visible())
 		return;
 
 	new Effect.Appear($('endContainer'));

@@ -475,12 +475,14 @@ var Daemon = Class.create({
 				buf.appendChild(error_toggle_div);
 			}
 
-			var close_container = document.createElement('div');
-			close_container.setAttribute('style', 'margin-top: 10px;');
-			var close_text = document.createElement('span');
-			close_text.innerHTML = this.i18n['start_another_session'];
-			close_container.appendChild(close_text);
-			buf.appendChild(close_container);
+			if ($('loginBox')) {
+				var close_container = document.createElement('div');
+				close_container.setAttribute('style', 'margin-top: 10px;');
+				var close_text = document.createElement('span');
+				close_text.innerHTML = this.i18n['start_another_session'];
+				close_container.appendChild(close_text);
+				buf.appendChild(close_container);
+			}
 
 			$('endContent').appendChild(buf);
 
