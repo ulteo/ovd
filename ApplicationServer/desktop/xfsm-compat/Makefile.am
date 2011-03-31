@@ -13,4 +13,5 @@ xfsm_compat_CFLAGS =						\
 xfsm_compat_LDADD =						\
 	$(LIBXFCE4UTIL_LIBS)						\
 	$(LIBXFCEGUI4_LIBS)						\
-	$(GCONF2_LIBS)
+	$(GCONF2_LIBS) \
+	-lX11
