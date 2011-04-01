@@ -53,7 +53,7 @@ Support_openSUSE_11.3.xml: Support_SLES_11.SP1.xml
 	xsltproc style/xhtml.xsl $< >$@
 
 %.pdf:  %.xml.out
-	dblatex -t pdf -T db2latex -p style/latex.xsl $< -o $@
+	dblatex -t pdf -T db2latex -p style/latex.xsl $< -o $@ >/dev/null 2>&1
 
 %.xml.out: %.xml
 	xmllint --xinclude $< | ./transform >$@
