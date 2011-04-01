@@ -152,7 +152,10 @@ function server_display_role_preparation_aps($server) {
 			if ($app->getAttribute('type') != $server->getAttribute('type'))
 				continue;
 			
-			$applications_available[]= $app;
+			if ($app->getAttribute('static') == 1)
+				$static_applications_available[] = $app;
+			else
+				$applications_available[] = $app;
 			}
 		}
 		$ret['tasks'] = $tasks;
@@ -171,6 +174,7 @@ function server_display_role_preparation_aps($server) {
 		$ret['pagechanger'] = $pagechanger;
 	$ret['applications'] = $applications;
 	$ret['applications_available'] = $applications_available;
+	$ret['static_applications_available'] = $static_applications_available;
 	$ret['applications_all'] = $applications_all;
 	$ret['servers_all'] = $servers_all;
 	$ret['servers_replication'] = $servers_replication;
@@ -184,6 +188,7 @@ function server_display_role_aps($server, $var) {
 	$server_online = $var['server_online'];
 	$applications = $var['applications'];
 	$applications_available = $var['applications_available'];
+	$static_applications_available = $var['static_applications_available'];
 	$applications_all = $var['applications_all'];
 	$servers_all = $var['servers_all'];
 	$servers_replication = $var['servers_replication'];
@@ -348,6 +353,24 @@ function server_display_role_aps($server, $var) {
 			
 			echo '</td>';
 			echo '<td><input type="submit" value="'._('Install on this server').'" /></td>';
+			echo '</form></tr>';
+		}
+		
+		if (count($static_applications_available) > 0 && $can_do_action && $can_use_apt) {
+			$content = 'content'.(($count++%2==0)?1:2);
+			echo '<tr class="'.$content.'"><form action="actions.php" method="post">';
+			echo '<input type="hidden" name="action" value="add" />';
+			echo '<input type="hidden" name="name" value="Application_Server" />';
+			echo '<input type="hidden" name="server" value="'.$server->fqdn.'" />';
+			echo '<td>';
+			
+			echo '<select name="application">';
+			foreach ($static_applications_available as $app)
+				echo '<option value="'.$app->getAttribute('id').'">'.$app->getAttribute('name').'</option>';
+			echo '</select>';
+			
+			echo '</td>';
+			echo '<td><input type="submit" value="'._('Add to this server').'" /></td>';
 			echo '</form></tr>';
 		}
 		
