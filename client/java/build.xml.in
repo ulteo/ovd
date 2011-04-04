@@ -90,24 +90,31 @@
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
            target="1.5" source="1.5" includes="org/ulteo/rdp/RdpClient.java"
            debug="${javac.debug}" debuglevel="lines,vars,source">
-      <classpath refid="minimal.path" />
+      <classpath>
+        <path refid="minimal.path" />
+        <pathelement location="required_libraries/jpedal.jar"/>
+        <pathelement location="required_libraries/commons-httpclient-3.0.1.jar" />
+        <pathelement location="required_libraries/commons-logging-1.1.1.jar" />
+      </classpath>
     </javac>
   </target>
 
   <target name="rdpClient.jar" depends="rdpClient">
+    <unjar dest="build">
+      <filelist dir="required_libraries"
+                files="gnu-getopt.jar, log4j-1.2.jar, jpedal.jar,
+                       commons-httpclient-3.0.1.jar, commons-logging-1.1.1.jar" />
+    </unjar>
     <copy file="icons/ulteo.png" todir="build/pics" />
     <jar destfile="jars/RDPClient.jar" basedir="build">
       <manifest>
         <attribute name="Main-Class" value="org.ulteo.rdp.RdpClient"/>
-        <attribute name="Class-Path" value="log4j-1.2.jar gnu-getopt.jar"/>
       </manifest>
     </jar>
   </target>
 
   <target name="rdpClient.install" depends="rdpClient.jar">
-    <copy file="jars/RDPClient.jar" todir="${install.dir}">
-      <filelist dir="required_libraries" files="gnu-getopt.jar log4j-1.2.jar" />
-    </copy>
+    <copy file="jars/RDPClient.jar" todir="${install.dir}" />
   </target>
 
 
