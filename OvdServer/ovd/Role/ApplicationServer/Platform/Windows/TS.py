@@ -3,7 +3,7 @@
 # Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2010-2011
 #
 # This program is free software; you can redistribute it and/or 
@@ -73,7 +73,7 @@ class TS(AbstractTS):
 			
 			try:
 				login = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSUserName)
-				if login != username_:
+				if login.lower() != username_.lower():
 					continue
 				
 				domain = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSDomainName)
