@@ -18,6 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import locale
 import time
 import win32api
 import win32con
@@ -118,6 +119,10 @@ class Waiter():
 		except:
 			return False
 		
+		(_, encoding) = locale.getdefaultlocale()
+		if encoding is None:
+			encoding = "UTF8"
+		
 		error = False
 		for value in ["AppData", "Desktop", "Programs"]:
 			try:
@@ -130,6 +135,9 @@ class Waiter():
 				value_ = value_.replace("%USERPROFILE%", self.userprofile)
 			value_ = win32api.ExpandEnvironmentStrings(value_)
 			
+			if type(value_) is not unicode:
+				value_ = unicode(value_, encoding)			
+
 			self.userDir[value] = value_
 		
 		win32api.RegCloseKey(hkey)
