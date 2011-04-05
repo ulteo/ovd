@@ -715,7 +715,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			
 			timeout.schedule(new TimerTask() {
 				public void run() {
-					JOptionPane.showMessageDialog(null, I18n._("Your session is going to end in 3 minutes, please save all your data now!"), I18n._("Session is going to end"), JOptionPane.INFORMATION_MESSAGE);
+					SwingTools.invokeLater(GUIActions.createDialog(I18n._("Your session is going to end in 3 minutes, please save all your data now!"), I18n._("Session is going to end"), JOptionPane.INFORMATION_MESSAGE, JOptionPane.CLOSED_OPTION));
 				}
 			}, duration);
 		}
@@ -777,7 +777,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			if (loadingFrame.isVisible())
 				disableLoadingMode();
 			if(! this.opts.autostart)
-				JOptionPane.showMessageDialog(null, I18n._("You have been disconnected"), I18n._("Your session has ended"), JOptionPane.INFORMATION_MESSAGE);
+				SwingTools.invokeLater(GUIActions.createDialog(I18n._("You have been disconnected"), I18n._("Your session has ended"), JOptionPane.INFORMATION_MESSAGE, JOptionPane.CLOSED_OPTION));
 			else {
 				System.err.println("You have been disconnected");
 				System.exit(RETURN_CODE_SUCCESS);
@@ -793,14 +793,14 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	
 	@Override
 	public void reportBadXml(String data) {
-		JOptionPane.showMessageDialog(null, I18n._("Protocol xml error: ")+data, I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+		SwingTools.invokeLater(GUIActions.createDialog(I18n._("Protocol xml error: ")+data, I18n._("Error"), JOptionPane.ERROR_MESSAGE, JOptionPane.CLOSED_OPTION));
 	}
 
 	@Override
 	public void reportErrorStartSession(String code) {
 
 		if (ResponseHandler.has(code)) {
-			JOptionPane.showMessageDialog(null, ResponseHandler.get(code), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+			SwingTools.invokeLater(GUIActions.createDialog(ResponseHandler.get(code), I18n._("Error"), JOptionPane.ERROR_MESSAGE, JOptionPane.CLOSED_OPTION));
 			return;
 		}
 
@@ -810,21 +810,21 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	@Override
 	public void reportError(int code, String message) {
 		String error = ResponseHandler.get(ERROR_DEFAULT);
-		JOptionPane.showMessageDialog(null, error, I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+		SwingTools.invokeLater(GUIActions.createDialog(error, I18n._("Error"), JOptionPane.ERROR_MESSAGE, JOptionPane.CLOSED_OPTION));
 		org.ulteo.Logger.error(error+ " (code: "+code+"):\n" + message);
 	}
 
 	@Override
 	public void reportUnauthorizedHTTPResponse(String moreInfos) {
 		String error = ResponseHandler.get(ERROR_AUTHENTICATION_FAILED);
-		JOptionPane.showMessageDialog(null, error, I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+		SwingTools.invokeLater(GUIActions.createDialog(error, I18n._("Error"), JOptionPane.ERROR_MESSAGE, JOptionPane.CLOSED_OPTION));
 		org.ulteo.Logger.error(error + "\n" + moreInfos);
 	}
 
 	@Override
 	public void reportNotFoundHTTPResponse(String moreInfos) {
 		String error = ResponseHandler.get(ERROR_DEFAULT);
-		JOptionPane.showMessageDialog(null, error, I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+		SwingTools.invokeLater(GUIActions.createDialog(error, I18n._("Error"), JOptionPane.ERROR_MESSAGE, JOptionPane.CLOSED_OPTION));
 		org.ulteo.Logger.error(error+ "\n" + moreInfos);
 	}
 
