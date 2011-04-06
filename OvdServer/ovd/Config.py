@@ -91,7 +91,7 @@ class Config:
 			Config.session_manager = Config.infos["session_manager"]
 		
 		if Config.infos.has_key("LOG_FILE"):
-			Config.log_level = Config.infos["LOG_FILE"]
+			Config.log_file = Config.infos["LOG_FILE"]
 			
 		if Config.infos.has_key("LOG_LEVEL"):
 			Config.log_level = 0
