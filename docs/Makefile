@@ -2,7 +2,7 @@
 
 DIST?=dist
 
-SUBDIRS=img
+SUBDIRS=img www
 
 SRC=\
 	Architecture.xml \
