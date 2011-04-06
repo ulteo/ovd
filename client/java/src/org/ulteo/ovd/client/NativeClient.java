@@ -168,7 +168,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 					opts.nltm = true;
 
 					opts.mask |= Options.FLAG_NTLM;
-					opts.mask |= Options.FLAG_USERNAME;
 					break;
 				case 2: //--progress-bar [show|hide]
 					String arg = new String(opt.getOptarg());

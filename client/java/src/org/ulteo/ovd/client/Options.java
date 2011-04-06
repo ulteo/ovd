@@ -145,7 +145,8 @@ public class Options {
 			this.nltm = properties.getUseLocalCredentials();
 			this.mask |= Options.FLAG_NTLM;
 		}
-		else if ((this.mask & Options.FLAG_USERNAME) == 0) {
+		
+		if (! this.nltm && (this.mask & Options.FLAG_USERNAME) == 0) {
 			String username = properties.getLogin();
 			if (username != null) {
 				this.username = username;
