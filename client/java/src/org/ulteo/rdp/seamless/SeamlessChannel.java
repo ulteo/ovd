@@ -95,7 +95,24 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 			// Special case for transient windows
 			if (parent == 0xffffffffL) {
 				logger.debug("[processCreate] Transient window: "+String.format("0x%08x", id));
-				sf_parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+
+				sf_parent = null;
+				Window active = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+				if ((active instanceof SeamlessWindow) && ((SeamlessWindow) active).sw_getGroup() == group) {
+					sf_parent = active;
+				}
+				else {
+					for (SeamlessWindow sw : this.windows.values()) {
+						if (sw.sw_getGroup() != group)
+							continue;
+
+						if (! (sw instanceof SeamlessWindow))
+							continue;
+
+						sf_parent = (Window) sw;
+						break;
+					}
+				}
 			}
 			else if(! this.windows.containsKey(parentName)) {
 			    logger.error("[processCreate] Parent window ID '"+String.format("0x%08x", parent)+"' does not exist");
