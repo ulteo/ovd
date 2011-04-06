@@ -973,6 +973,14 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		SeamlessWindow wnd = (SeamlessWindow) we.getComponent();
 
 		this.setFocusOnWindow(wnd);
+
+		if (we.getOppositeWindow() instanceof SeamlessWindow) {
+			SeamlessWindow opposite = (SeamlessWindow) we.getOppositeWindow();
+			if (opposite.sw_getGroup() == wnd.sw_getGroup())
+				return;
+		}
+		
+		((Window) wnd).toFront();
 	}
 	public void windowDeactivated(WindowEvent we) {}
 	public void focusLost(FocusEvent fe) {}
