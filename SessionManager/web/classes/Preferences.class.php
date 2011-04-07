@@ -421,7 +421,7 @@ class Preferences {
 		$c = new ConfigElement_select('multimedia', _('Multimedia'), _('Multimedia'), _('Multimedia'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('redirect_client_drives', _('Redirect client drives'), _('Redirect client drives'), _('Redirect client drives'), 'full');
+		$c = new ConfigElement_select('redirect_client_drives', _('Redirect client drives'), _('Redirect client drives'), _("- None: none of the client drives will be used in the OVD session<br />- Partial: Desktop and My Documents user directories will be available in the OVD session<br />- Full: all client drives (including Desktop and My Documents) will be available in the OVD session"), 'full');
 		$c->setContentAvailable(array('no'=>_('no'),'partial'=>_('partial'),'full'=>_('full')));
 		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_select('redirect_client_printers', _('Redirect client printers'), _('Redirect client printers'), _('Redirect client printers'), 1);
