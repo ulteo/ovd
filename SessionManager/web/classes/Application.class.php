@@ -66,6 +66,9 @@ class Application {
 	}
 	
 	public function getIconPathRW() {
+		if (! check_folder(CACHE_DIR.'/image') || ! check_folder(CACHE_DIR.'/image/application'))
+			return NULL;
+
 		if ($this->hasAttribute('id'))
 			return CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png';
 
