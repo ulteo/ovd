@@ -504,22 +504,24 @@ function show_manage($id, $applicationDB) {
 		echo '</td>';
 		echo '</tr>';
 	}
-	echo '<tr>';
-	echo '<form action="actions.php" method="post">';
-	echo '<input type="hidden" name="name" value="Application_MimeType" />';
-	echo '<input type="hidden" name="action" value="add" />';
-	echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
-	echo '<td>';
-	echo '<select name="mime">';
-	foreach($mimeliste2 as $mime)
-		echo '<option>'.$mime.'</option>';
-	echo '</select>';
-	echo '</td>';
-	echo '<td>';
-	echo '<input type="submit" value="'._('Add').'"/>';
-	echo '</td>';
-	echo '</form>';
-	echo '</tr>';
+	if (is_array($mimeliste2) && count($mimeliste2) > 0) {
+		echo '<tr>';
+		echo '<form action="actions.php" method="post">';
+		echo '<input type="hidden" name="name" value="Application_MimeType" />';
+		echo '<input type="hidden" name="action" value="add" />';
+		echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+		echo '<td>';
+		echo '<select name="mime">';
+		foreach($mimeliste2 as $mime)
+			echo '<option>'.$mime.'</option>';
+		echo '</select>';
+		echo '</td>';
+		echo '<td>';
+		echo '<input type="submit" value="'._('Add').'"/>';
+		echo '</td>';
+		echo '</form>';
+		echo '</tr>';
+	}
 	echo '<tr>';
 	echo '<form action="actions.php" method="post">';
 	echo '<input type="hidden" name="name" value="Application_MimeType" />';
