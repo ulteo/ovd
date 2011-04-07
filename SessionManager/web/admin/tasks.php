@@ -166,14 +166,16 @@ function show_default($tm) {
       echo '<td><a href="servers.php?action=manage&fqdn='.$task->server.'">'.$task->server.'</a></td>';
       echo '<td>'.$status.'</td>';
       echo '<td>'.$task->getRequest().'</td>';
-      if ($can_remove && $can_do_action) {
+      if ($can_do_action) {
 		echo '<td>';
-		echo '<form action="actions.php" method="post">';
-		echo '<input type="hidden" name="name" value="Task" />';
-		echo '<input type="hidden" name="action" value="del" />';
-		echo '<input type="hidden" name="checked_tasks[]" value="'.$task->id.'" />';
-		echo '<input type="submit" value="'._('Delete').'" />';
-		echo '</form>';
+		if ($can_remove) {
+			echo '<form action="actions.php" method="post">';
+			echo '<input type="hidden" name="name" value="Task" />';
+			echo '<input type="hidden" name="action" value="del" />';
+			echo '<input type="hidden" name="checked_tasks[]" value="'.$task->id.'" />';
+			echo '<input type="submit" value="'._('Delete').'" />';
+			echo '</form>';
+		}
 		echo '</td>';
       }
       echo '</tr>';
