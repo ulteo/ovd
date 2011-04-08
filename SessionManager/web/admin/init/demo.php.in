@@ -21,7 +21,7 @@
 require_once('@DATADIR@/ulteo/sessionmanager/admin/includes/core.inc.php');
 
 $server_external_name = "";
-$res1 = shell_exec('unset LANG; ifconfig -a | grep "inet addr" | cut -d: -f2 | cut -d\' \' -f1');
+$res1 = shell_exec('unset LANG ; PATH=$PATH:/sbin ; ifconfig -a | grep "inet addr" | cut -d: -f2 | cut -d\' \' -f1');
 $res2 = explode("\n", $res1);
 foreach ($res2 as $ip) {
 	if ($ip != '127.0.0.1') {
