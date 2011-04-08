@@ -178,8 +178,11 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 			}
 		}
 
-		if (params.username == null || params.password == null)
-			usage();
+		if (params.username == null)
+			params.username = "";
+		
+		if (params.password == null)
+			params.password = "";
 
 		if (opt.getOptind() < args.length) {
 			String tmp = new String(args[args.length - 1]);
