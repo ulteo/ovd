@@ -133,7 +133,7 @@ class ApplicationsDetection:
 				application["command"] = '"%s"'%(application["command"])
 			
 			if len(shortcut.GetArguments())>0:
-				application["command"]+= " "+shortcut.GetArguments()
+				application["command"]+= " "+unicode(shortcut.GetArguments(), encoding)
 			
 			application["mimetypes"] = self.mimetypes.get_mime_types_from_command(application["command"])
 			
