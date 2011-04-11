@@ -67,6 +67,8 @@ import net.propero.rdp.rdp5.cliprdr.ClipChannel;
 import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
 import org.apache.log4j.Level;
+import org.ulteo.gui.GUIActions;
+import org.ulteo.gui.SwingTools;
 
 
 public class SeamlessChannel extends VChannel implements WindowStateListener, WindowListener, FocusListener, ComponentListener {
@@ -294,6 +296,20 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 			return this.processState(id, state, flags);
 		}
+		else if (tokens[0].equals("FOCUS"))
+		{
+			if (numTokens < 3)
+				return false;
+
+			try {
+				id = Long.parseLong(tokens[2]);
+			} catch(NumberFormatException nfe) {
+				logger.error("Couldn't parse argument from " + tokens[0] + " seamless command.", nfe);
+				return false;
+			}
+
+			return this.processFocus(id);
+		}
 		else if (tokens[0].equals("DEBUG"))
 		{
 			logger.debug("SeamlessRDP Debug: " + line);
@@ -407,6 +423,8 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	protected void addFrame(SeamlessWindow f, String name) {
 		if (this.opt.isMouseWheelEnabled)
 			f.sw_enableMouseWheel();
+
+		((Window) f).setFocusableWindowState(false);
 
 		f.sw_addWindowStateListener(this);
 		f.sw_addWindowListener(this);
@@ -602,6 +620,23 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		}
 
 		f.sw_setExtendedState(frame_state);
+
+		return true;
+	}
+
+	protected boolean processFocus(long id) {
+		String name = "w_"+id;
+		if(! this.windows.containsKey(name)) {
+		    logger.error("[processFocus] ID '"+String.format("0x%08x", id)+"' doesn't exist");
+		    return false;
+		}
+
+		Window wnd = (Window) this.windows.get(name);
+
+		if (! wnd.isFocusableWindow())
+			wnd.setFocusableWindowState(true);
+
+		SwingTools.invokeLater(GUIActions.requestFocus(wnd));
 
 		return true;
 	}
