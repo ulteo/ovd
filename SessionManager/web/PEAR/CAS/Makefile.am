@@ -1,6 +1,7 @@
-SUBDIRS = PGTStorage languages
+SUBDIRS = languages PGTStorage Request
 
-scripts_DATA = client.php domxml-php4-php5.php
+scripts_DATA = client.php \
+               CookieJar.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/PEAR/CAS
 
