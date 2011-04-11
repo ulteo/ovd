@@ -61,6 +61,8 @@ unsigned int g_blocked_state_serial SHARED = 0;
 HWND g_blocked_state_hwnd SHARED = NULL;
 int g_blocked_state SHARED = -1;
 
+HWND g_last_focused_window = NULL;
+
 #pragma data_seg ()
 
 #pragma comment(linker, "/section:SHAREDDATA,rws")
@@ -788,7 +790,22 @@ wndprocret_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 					update_icon(hwnd, icon, 0);
 					DeleteObject(icon);
 				}
+				break;
 			}
+
+		case WM_SETFOCUS: // Focus gained
+			if (hwnd == g_last_focused_window)
+				break;
+
+			WaitForSingleObject(g_mutex, INFINITE);
+			g_last_focused_window = hwnd;
+			ReleaseMutex(g_mutex);
+
+			vchannel_block();
+			vchannel_write("FOCUS", "0x%08lx", hwnd);
+			vchannel_unblock();
+
+			break;
 
 		default:
 			break;
