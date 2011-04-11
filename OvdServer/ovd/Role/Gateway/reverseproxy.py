@@ -26,7 +26,6 @@ from OpenSSL import SSL
 import asyncore
 import re
 import socket
-import time
 
 from ovd.Logger import Logger
 from receiver import receiver, receiverXMLRewriter
