@@ -267,7 +267,7 @@ abstract class SessionManagement extends Module {
 					foreach ($applicationServerTypes as $type) {
 						$buf = $this->user->getAvailableServers($type);
 						if (is_null($buf) || ! is_array($buf))
-							continue;
+							return false;
 
 						$servers = array_merge($servers, $buf);
 					}
