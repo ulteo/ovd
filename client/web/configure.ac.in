@@ -108,6 +108,10 @@ web/media/script/lib/prototype/Makefile
 web/media/script/lib/scriptaculous/Makefile
 web/media/style/Makefile
 web/PEAR/Makefile
+web/PEAR/CAS/Makefile
+web/PEAR/CAS/languages/Makefile
+web/PEAR/CAS/PGTStorage/Makefile
+web/PEAR/CAS/Request/Makefile
 web/PEAR/HTTP/Makefile
 web/PEAR/HTTP/Request/Makefile
 web/PEAR/HTTP/WebDAV/Makefile
