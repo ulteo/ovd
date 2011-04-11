@@ -179,8 +179,9 @@ web/PEAR/Makefile
 web/PEAR/Auth/Makefile
 web/PEAR/Auth/SASL/Makefile
 web/PEAR/CAS/Makefile
-web/PEAR/CAS/PGTStorage/Makefile
 web/PEAR/CAS/languages/Makefile
+web/PEAR/CAS/PGTStorage/Makefile
+web/PEAR/CAS/Request/Makefile
 web/PEAR/Mail/Makefile
 web/PEAR/Net/Makefile
 web/events/Makefile
