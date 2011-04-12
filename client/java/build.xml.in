@@ -255,8 +255,9 @@
     <jar destfile="jars/OVDNativeClient.jar" basedir="build">
       <manifest>
         <attribute name="Main-Class" value="org.ulteo.ovd.client.NativeClient"/>
-        <attribute name="Class-Path" value="/usr/share/java/gnu-getopt.jar
-                                            /usr/share/java/log4j-1.2.jar"/>
+        <attribute name="Class-Path"
+                   value="/usr/share/java/gnu-getopt.jar /usr/share/java/log4j-1.2.jar
+                          /usr/share/java/commons-logging.jar /usr/share/java/commons-httpclient.jar"/>
       </manifest>
     </jar>
     <antcall target="ovdNativeClient_install" />

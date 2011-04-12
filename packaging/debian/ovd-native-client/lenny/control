@@ -8,7 +8,7 @@ Standards-Version: 3.8.2
 Package: ulteo-ovd-native-client
 Architecture: all
 Depends: sun-java6-jre | openjdk-6-jre, libgetopt-java, liblog4j1.2-java,
- libovd-xclient-area, desktop-file-utils, xdg-utils
+ libcommons-httpclient-java, libovd-xclient-area, desktop-file-utils, xdg-utils
 Recommends: ulteo-ovd-integrated-launcher
 Description: Ulteo Open Virtual Desktop - native client
  This application is used in the Open Virtual Desktop to display the user
