@@ -52,15 +52,22 @@ if (! $sessionManagement->initialize()) {
 	throw_response(INTERNAL_ERROR);
 }
 
-if (! $sessionManagement->parseClientRequest(@file_get_contents('php://input'))) {
+if (! array_key_exists('from_Client_start_XML', $_SESSION))
+	$_SESSION['from_Client_start_XML'] = @file_get_contents('php://input');
+
+if (! $sessionManagement->parseClientRequest($_SESSION['from_Client_start_XML'])) {
+	unset($_SESSION['from_Client_start_XML']);
 	Logger::error('main', '(client/start) Client does not send a valid XML');
 	throw_response(INTERNAL_ERROR);
 }
 
 if (! $sessionManagement->authenticate()) {
+	unset($_SESSION['from_Client_start_XML']);
 	Logger::error('main', '(client/start) Authentication failed');
 	throw_response(AUTH_FAILED);
 }
+
+unset($_SESSION['from_Client_start_XML']);
 
 $user = $sessionManagement->user;
 
