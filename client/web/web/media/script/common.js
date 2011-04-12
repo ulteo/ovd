@@ -179,6 +179,16 @@ function onStartSessionSuccess(xml_) {
 		return false;
 	}
 
+	var buffer = xml.getElementsByTagName('popup');
+	if (buffer.length == 1) {
+		try {
+			var url = buffer[0].getAttribute('location');
+			var w = window.open(url, '', 'width=640,height=480,top=100,left=100,toolbar=no,status=no,scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
+		} catch(e) {}
+		enableLogin();
+		return false;
+	}
+
 	var buffer = xml.getElementsByTagName('session');
 	if (buffer.length != 1) {
 		enableLogin();

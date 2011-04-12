@@ -37,6 +37,14 @@ function return_error($errno_, $errstr_, $errmore_=NULL) {
 	return $dom->saveXML();
 }
 
+function return_popup($location_='about:blank') {
+	$dom = new DomDocument('1.0', 'utf-8');
+	$node = $dom->createElement('popup');
+	$node->setAttribute('location', $location_);
+	$dom->appendChild($node);
+	return $dom->saveXML();
+}
+
 function generateAjaxplorerActionsXML($application_nodes_) {
 	$dom = new DomDocument('1.0', 'utf-8');
 
@@ -193,6 +201,18 @@ $sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
 $xml = query_sm_post_xml($sessionmanager_url.'/start.php', $dom->saveXML());
 if (! $xml) {
 	echo return_error(0, 'unable_to_reach_sm', $sessionmanager_url.'/start.php');
+	die();
+}
+
+if (is_array($xml) && count($xml) == 2) {
+	if ($xml[0] == 302) {
+		$protocol = parse_url($xml[1], PHP_URL_SCHEME);
+		$host = parse_url($xml[1], PHP_URL_HOST);
+		$port = parse_url($xml[1], PHP_URL_PORT);
+		$path = parse_url($xml[1], PHP_URL_PATH);
+	}
+
+	echo return_error(0, 'internal_error');
 	die();
 }
 

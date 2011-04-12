@@ -70,11 +70,11 @@ function query_sm_post_xml($url_, $xml_) {
 	$headers_size = curl_getinfo($socket, CURLINFO_HEADER_SIZE);
 	curl_close($socket);
 
-	if ($http_code != 200)
-		return false;
-
 	$headers = substr($string, 0, $headers_size);
 	$body = substr($string, $headers_size);
+
+	if (! in_array($http_code, array(200, 302)))
+		return false;
 
 	if (! array_key_exists('session_var', $_SESSION['ovd-client']['sessionmanager']) || ! array_key_exists('session_id', $_SESSION['ovd-client']['sessionmanager'])) {
 		preg_match('@Set-Cookie: (.*)=(.*);@', $headers, $matches);
@@ -82,6 +82,12 @@ function query_sm_post_xml($url_, $xml_) {
 			$_SESSION['ovd-client']['sessionmanager']['session_var'] = $matches[1];
 			$_SESSION['ovd-client']['sessionmanager']['session_id'] = $matches[2];
 		}
+	}
+
+	if ($http_code == 302) {
+		preg_match('@Location: (.*)\n@', $headers, $matches);
+		if (count($matches) == 2)
+			return array($http_code, $matches[1]);
 	}
 
 	return $body;
