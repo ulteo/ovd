@@ -39,7 +39,7 @@ class AuthMethod_CAS extends AuthMethod {
 			return NULL;
 		}
 
-		phpCAS::client(CAS_VERSION_2_0, parse_url($CAS_server_url, PHP_URL_HOST), parse_url($CAS_server_url, PHP_URL_PORT), parse_url($CAS_server_url, PHP_URL_PATH));
+		phpCAS::client(CAS_VERSION_2_0, parse_url($CAS_server_url, PHP_URL_HOST), parse_url($CAS_server_url, PHP_URL_PORT), parse_url($CAS_server_url, PHP_URL_PATH), false);
 		Logger::debug('main', 'AuthMethod_CAS::get_login() - Parsing URL - Host:"'.parse_url($CAS_server_url, PHP_URL_HOST).'" Port:"'.parse_url($CAS_server_url, PHP_URL_PORT).'" Path:"'.parse_url($CAS_server_url, PHP_URL_PATH).'"');
 		phpCAS::setNoCasServerValidation();
 
