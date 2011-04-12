@@ -21,8 +21,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-from OpenSSL import SSL
-
 import asyncore
 import re
 import socket
@@ -32,21 +30,19 @@ from receiver import receiver, receiverXMLRewriter
 from sender import sender, senderHTTP
 from TokenDatabase import digestToken
 
+from OpenSSL import SSL
+
 
 class ReverseProxy(asyncore.dispatcher):
 
 	def __init__(self, ssl_ctx, gateway, sm, rdp_port):
 		asyncore.dispatcher.__init__(self)
 
-		self.sm = sm
+		self.sm = (sm, ssl_ctx)
 		self.rdp_port = rdp_port
-		self.ssl_ctx = ssl_ctx
-
-		self.rdp_ptn = re.compile('\x03\x00.*Cookie: .*token=([\-\w]+);.*')
-		self.http_ptn = re.compile('((?:HEAD)|(?:GET)|(?:POST)) (.*) HTTP/(.\..)')
 
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.set_socket(SSL.Connection(self.ssl_ctx, sock))
+		self.set_socket(SSL.Connection(ssl_ctx, sock))
 		#self.set_reuse_addr()
 
 		try:
@@ -56,29 +52,35 @@ class ReverseProxy(asyncore.dispatcher):
 			exit()
 
 		self.listen(5)
-		Logger.info('Gateway:: listening started')
+		Logger.info('Gateway:: running on port %d' % gateway[1])
 
 
 	def handle_accept(self):
 		conn, peer = self.accept()
 		Logger.debug3("ReverseProxy: New connection => %s"%(str(peer)))
 		
-		ProtocolDetectDispatcher(conn, peer, self)
+		ProtocolDetectDispatcher(conn, self.sm, self.rdp_port)
+
 
 
 class ProtocolDetectDispatcher(asyncore.dispatcher):
-	def __init__(self, conn, peer, proxyInstance):
+
+	rdp_ptn = re.compile('\x03\x00.*Cookie: .*token=([\-\w]+);.*')
+	http_ptn = re.compile('((?:HEAD)|(?:GET)|(?:POST)) (.*) HTTP/(.\..)')
+
+	def __init__(self, conn, sm, rdp_port):
 		asyncore.dispatcher.__init__(self, conn)
-		self.peer = peer
-		self.proxyInstance = proxyInstance
+		self.sm = sm
+		self.rdp_port = rdp_port
+
 	
 	def writable(self):
 		return False
 		# This class doesn't have to write anything,
 		# It's just use to detect the protocol
+
 	
 	def handle_read(self):
-		Logger.debug3("ProtocolDetectDispatcher::handle_read on %s"%(repr(self)))
 		try:
 			r = self.recv(4096)
 			while self.socket.pending() > 0:
@@ -97,8 +99,8 @@ class ProtocolDetectDispatcher(asyncore.dispatcher):
 		utf8_request = request.rstrip('\n\r').decode("utf-8", "replace")
 
 		# find protocol
-		rdp  = self.proxyInstance.rdp_ptn.match(request)
-		http = self.proxyInstance.http_ptn.match(request)
+		rdp  = ProtocolDetectDispatcher.rdp_ptn.match(request)
+		http = ProtocolDetectDispatcher.http_ptn.match(request)
 
 		try:
 			# RDP case
@@ -107,12 +109,12 @@ class ProtocolDetectDispatcher(asyncore.dispatcher):
 				fqdn = digestToken(token)
 				if not fqdn:
 					raise Exception('token authorization failed for: ' + token)
-				sender((fqdn, self.proxyInstance.rdp_port), receiver(self.socket, r))
+				sender((fqdn, self.rdp_port), receiver(self.socket, r))
 				
 
 			# HTTP case
 			elif http:
-				Logger.debug("ProtocolDetectDispatcher:: request: http %s %s" % (utf8_request, str(self.peer)))
+				Logger.debug("ProtocolDetectDispatcher:: request: http %s" % request)
 				path = http.group(2)
 
 				if not (path == '/ovd' or path.startswith("/ovd/")):
@@ -122,7 +124,7 @@ class ProtocolDetectDispatcher(asyncore.dispatcher):
 					rec = receiverXMLRewriter(self.socket, r)
 				else:
 					rec = receiver(self.socket, r)
-				senderHTTP(self.proxyInstance.sm, rec, self.proxyInstance.ssl_ctx)
+				senderHTTP(self.sm, rec)
 
 			# protocol error
 			else:

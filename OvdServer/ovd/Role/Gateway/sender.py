@@ -69,9 +69,9 @@ class sender(asyncore.dispatcher):
 
 class senderHTTP(sender):
 
-	def __init__(self, remote, receiver, ssl_ctx):
-		self.ssl_ctx = ssl_ctx
-		sender.__init__(self, remote, receiver)
+	def __init__(self, remote, receiver):
+		sm, self.ssl_ctx = remote
+		sender.__init__(self, sm, receiver)
 
 	def handle_read(self):
 		try:

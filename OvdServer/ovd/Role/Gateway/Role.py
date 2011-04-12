@@ -79,7 +79,6 @@ class Role(AbstractRole):
 		sm = (Config.session_manager, self.HTTPS_PORT)
 		self.rproxy = ReverseProxy(self.ssl_ctx, gateway, sm, self.RDP_PORT)
 
-		Logger.info('Gateway:: running')
 		self.status = Role.STATUS_RUNNING
 		asyncore.loop()
 
