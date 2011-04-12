@@ -191,6 +191,8 @@ if (array_key_exists('password', $_POST))
 $session_node->appendChild($user_node);
 $dom->appendChild($session_node);
 
+$_SESSION['ovd-client']['to_SM_start_XML'] = $dom->saveXML();
+
 if (defined('SESSIONMANAGER_HOST'))
 	$_SESSION['ovd-client']['server'] = SESSIONMANAGER_HOST;
 else
@@ -198,10 +200,15 @@ else
 $_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$_SESSION['ovd-client']['server'].'/ovd/client';
 $sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
 
-$xml = query_sm_post_xml($sessionmanager_url.'/start.php', $dom->saveXML());
-if (! $xml) {
-	echo return_error(0, 'unable_to_reach_sm', $sessionmanager_url.'/start.php');
-	die();
+if (array_key_exists('from_SM_start_XML', $_SESSION['ovd-client'])) {
+	$xml = $_SESSION['ovd-client']['from_SM_start_XML'];
+	unset($_SESSION['ovd-client']['from_SM_start_XML']);
+} else {
+	$xml = query_sm_post_xml($sessionmanager_url.'/start.php', $_SESSION['ovd-client']['to_SM_start_XML']);
+	if (! $xml) {
+		echo return_error(0, 'unable_to_reach_sm', $sessionmanager_url.'/start.php');
+		die();
+	}
 }
 
 if (is_array($xml) && count($xml) == 2) {
