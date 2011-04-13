@@ -59,6 +59,7 @@ function server_display_role_preparation_aps($server) {
 	usort($applications, 'application_cmp');
 	
 	$applications_available = array();
+	$static_applications_available = array();
 	
 	if (!$server_online && count($applications) == 0)
 		$applications_all = array();
