@@ -269,6 +269,24 @@ $ getent hosts 192.168.0.19
 				<itemizedlist>
 					<listitem>
 						<para>
+							80 (HTTP): communication with administrator
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							443 (HTTPS): communication with administrator
+						</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</listitem>
+		
+		<listitem>
+			<para>
+				WebClient: 
+				<itemizedlist>
+					<listitem>
+						<para>
 							80 (HTTP): communication with end user
 						</para>
 					</listitem>
