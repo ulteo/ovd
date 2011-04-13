@@ -88,6 +88,29 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 
 		Window sf;
 
+		String timerToCancelName = null;
+		for (String each : this.closeHistory.keySet()) {
+			if (! this.windows.containsKey(each))
+				continue;
+
+			SeamlessWindow wnd = this.windows.get(each);
+			if (wnd == null)
+				continue;
+
+			if (wnd.sw_getGroup() != group)
+				continue;
+
+			timerToCancelName = each;
+		}
+		if (timerToCancelName != null) {
+			DestroyWindowTimer timerToCancel = this.closeHistory.remove(timerToCancelName);
+			if (timerToCancel != null) {
+				timerToCancel.cancel();
+				timerToCancel.purge();
+				timerToCancel = null;
+			}
+		}
+
 		if (parent != 0 && (flags & WINDOW_CREATE_POPUP) != 0) {
 			String parentName = "w_"+parent;
 			Window sf_parent;
