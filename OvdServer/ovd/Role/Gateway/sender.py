@@ -47,18 +47,8 @@ class sender(asyncore.dispatcher):
 
 
 	def handle_read(self):
-		try:
-			read = self.recv(8192)
-			self.receiver.to_remote_buffer += read
-		except SSL.SysCallError:
-			self.handle_close()
-		except SSL.ZeroReturnError:
-			self.close()
-		except SSL.WantReadError:
-			pass
-		except:
-			Logger.warn('%s::handle_read error' % self.__class__.__name__)
-			self.handle_close()
+		read = self.recv(8192)
+		self.receiver.to_remote_buffer += read
 
 
 	def writable(self):
@@ -66,14 +56,8 @@ class sender(asyncore.dispatcher):
 
 
 	def handle_write(self):
-		try:
-			sent = self.send(self.receiver.from_remote_buffer)
-			self.receiver.from_remote_buffer = self.receiver.from_remote_buffer[sent:]
-		except SSL.WantWriteError:
-			pass
-		except:
-			Logger.warn('%s::handle_write error' % self.__class__.__name__)
-			self.handle_close()
+		sent = self.send(self.receiver.from_remote_buffer)
+		self.receiver.from_remote_buffer = self.receiver.from_remote_buffer[sent:]
 
 
 	def handle_close(self):
@@ -86,6 +70,22 @@ class senderHTTP(sender):
 	def __init__(self, remote, receiver, ssl_ctx):
 		self.ssl_ctx = ssl_ctx
 		sender.__init__(self, remote, receiver)
+
+	def handle_read(self):
+		try:
+			sender.handle_read(self)
+		except SSL.SysCallError:
+			self.handle_close()
+		except SSL.ZeroReturnError:
+			self.close()
+		except SSL.WantReadError:
+			pass
+
+	def handle_write(self):
+		try:
+			sender.handle_write(self)
+		except SSL.WantWriteError:
+			pass
 
 	def make_socket(self):
 		return SSL.Connection(self.ssl_ctx, sender.make_socket(self))
