@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008,2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -29,7 +29,7 @@ class UserDB_sql_external extends UserDB {
 			die_error('get Preferences failed',__FILE__,__LINE__);
 		$config = $prefs->get('UserDB','sql_external');
 		
-		$sql2 = new MySQL($config['host'], $config['login'], $config['password'], $config['database']);
+		$sql2 = new SQL($config);
 		$status = $sql2->CheckLink(false);
 		if ( $status == false) {
 			Logger::error('main', 'USERDB::MYSQL_external::getList link to mysql external failed');
@@ -84,7 +84,7 @@ class UserDB_sql_external extends UserDB {
 			die_error('get Preferences failed',__FILE__,__LINE__);
 		$config = $prefs->get('UserDB','sql_external');
 		
-		$sql2 = new MySQL($config['host'], $config['login'], $config['password'], $config['database']);
+		$sql2 = new SQL($config);
 		$status = $sql2->CheckLink(false);
 		if ( $status == false) {
 			Logger::error('main', 'USERDB::MYSQL_external::getList link to mysql external failed');
@@ -193,7 +193,7 @@ class UserDB_sql_external extends UserDB {
 		$ret = array();
 		$c = new ConfigElement_input('host', _('Server host address'), _('The address of your MySQL server.'), _('The address of your MySQL server.'), '');
 		$ret []= $c;
-		$c = new ConfigElement_input('login', _('User login'), _('The user login that must be used to access the database (to list users accounts).'), _('The user login that must be used to access the database (to list users accounts).'), '');
+		$c = new ConfigElement_input('user', _('User login'), _('The user login that must be used to access the database (to list users accounts).'), _('The user login that must be used to access the database (to list users accounts).'), '');
 		$ret []= $c;
 		$c = new ConfigElement_password('password', _('User password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'), '');
 		$ret []= $c;
@@ -220,7 +220,7 @@ class UserDB_sql_external extends UserDB {
 	
 	public function prefsIsValid2($prefs_, &$log=array()) {
 		$config = $prefs_->get('UserDB','sql_external');
-		$sql2 = new MySQL($config['host'], $config['login'], $config['password'], $config['database']);
+		$sql2 = new SQL($config);
 		$status = $sql2->CheckLink(false);
 		return $status;
 	}
