@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-class UserGroupDB_sql_external extends UserGroupDB {
+class UserGroupDB_sql_external {
 	public function __construct(){
 		$prefs = Preferences::getInstance();
 		if ($prefs) {
@@ -163,5 +163,38 @@ class UserGroupDB_sql_external extends UserGroupDB {
 	
 	public static function enable() {
 		return true;
+	}
+	
+	public function isOK($usergroup_) {
+		if (is_object($usergroup_)) {
+			if ((!isset($usergroup_->id)) || (!isset($usergroup_->name)) || ($usergroup_->name == '') || (!isset($usergroup_->published)))
+				return false;
+			else
+				return true;
+		}
+		else
+			return false;
+	}
+	
+	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0) {
+		$groups = array();
+		$count = 0;
+		$sizelimit_exceeded = false;
+		$list = $this->getList(true);
+		foreach ($list as $a_group) {
+			foreach ($attributes_ as $an_attribute) {
+				if ($contains_ == '' or (isset($a_group->$an_attribute) and is_string(strstr($a_group->$an_attribute, $contains_)))) {
+					$groups []= $a_group;
+					$count++;
+					if ($limit_ > 0 && $count >= $limit_) {
+						$sizelimit_exceeded = next($list) !== false; // is it the last element ?
+						return array($users, $sizelimit_exceeded);
+					}
+					break;
+				}
+			}
+		}
+		
+		return array($groups, $sizelimit_exceeded);
 	}
 }
