@@ -2,7 +2,7 @@
  * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
- * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Guillaume DUPAS <guillaume@ulteo.com> 2010-2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
@@ -53,7 +53,7 @@ public class Options {
 	public static final int FLAG_AUTO_START = 0x00000400;
 	public static final int FLAG_REMEMBER_ME = 0x00004000;
 	public static final int FLAG_GUI_LOCKED = 0x00008000;
-	public static final int FLAG_SHOW_BURGREPORTER = 0x00006000;
+	public static final int FLAG_SHOW_BURGREPORTER = 0x00010000;
 	
 	public int mask = 0x00000000;
 	

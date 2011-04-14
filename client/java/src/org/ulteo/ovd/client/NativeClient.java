@@ -2,7 +2,7 @@
  * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
- * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Guillaume DUPAS <guillaume@ulteo.com> 2010-2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
@@ -441,7 +441,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.authFrame = new AuthFrame(this, this.opts.geometry, this.opts.guiLocked, this.opts.isBugReporterVisible);
 		this.authFrame.getLanguageBox().addActionListener(this);
 		this.loadOptions();
-		this.authFrame.setRememberMeChecked((this.flags & Options.FLAG_REMEMBER_ME) != 0);
+		this.authFrame.setRememberMeChecked((this.opts.mask & Options.FLAG_REMEMBER_ME) != 0);
 		this.authFrame.showWindow();
 		this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
 	}
