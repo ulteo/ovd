@@ -3,7 +3,7 @@
 # Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
 #
@@ -80,9 +80,10 @@ class Logger:
 				self.logging.removeHandler(self.consoleHandler)
 	
 	def close(self):
-		if self.fileHandler.stream is not None:
-			self.fileHandler.stream.close()
-		self.fileHandler.stream = None
+		if self.fileHandler is not None:
+			if self.fileHandler.stream is not None:
+				self.fileHandler.stream.close()
+			self.fileHandler.stream = None
 
 	def setThreadedMode(self, mode):
 		if mode is True and self.threaded is False:
@@ -112,7 +113,7 @@ class Logger:
 			except (EOFError, socket.error):
 				return
 		else:
-			if self.fileHandler.stream == None:
+			if self.fileHandler is not None and self.fileHandler.stream is None:
 				self.fileHandler.stream = self.fileHandler._open()
 			f = getattr(self,func)
 			f(obj)
