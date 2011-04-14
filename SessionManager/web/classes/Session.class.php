@@ -144,12 +144,12 @@ class Session {
 			Session::SESSION_STATUS_INIT			=>	1,
 			Session::SESSION_STATUS_READY			=>	2,
 			Session::SESSION_STATUS_ACTIVE			=>	3,
-			Session::SESSION_STATUS_INACTIVE		=>	4,
-			Session::SESSION_STATUS_WAIT_DESTROY	=>	5,
-			Session::SESSION_STATUS_DESTROYING		=>	6,
-			Session::SESSION_STATUS_DESTROYED		=>	7,
-			Session::SESSION_STATUS_ERROR			=>	7,
-			Session::SESSION_STATUS_UNKNOWN			=>	7
+			Session::SESSION_STATUS_INACTIVE		=>	3,
+			Session::SESSION_STATUS_WAIT_DESTROY	=>	4,
+			Session::SESSION_STATUS_DESTROYING		=>	5,
+			Session::SESSION_STATUS_DESTROYED		=>	6,
+			Session::SESSION_STATUS_ERROR			=>	6,
+			Session::SESSION_STATUS_UNKNOWN			=>	6
 		);
 
 		if (! array_key_exists($server_, $this->servers[Server::SERVER_ROLE_APS]))
