@@ -74,6 +74,8 @@ class senderHTTP(sender):
 	def handle_read(self):
 		try:
 			sender.handle_read(self)
+			while self.socket.pending() > 0:
+				sender.handle_read(self)
 		except SSL.SysCallError:
 			self.handle_close()
 		except SSL.ZeroReturnError:
