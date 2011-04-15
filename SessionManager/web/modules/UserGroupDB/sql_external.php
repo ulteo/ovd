@@ -188,7 +188,7 @@ class UserGroupDB_sql_external {
 					$count++;
 					if ($limit_ > 0 && $count >= $limit_) {
 						$sizelimit_exceeded = next($list) !== false; // is it the last element ?
-						return array($users, $sizelimit_exceeded);
+						return array($groups, $sizelimit_exceeded);
 					}
 					break;
 				}
