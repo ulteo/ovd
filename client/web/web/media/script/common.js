@@ -183,7 +183,7 @@ function onStartSessionSuccess(xml_) {
 	if (buffer.length == 1) {
 		try {
 			var url = buffer[0].getAttribute('location');
-			var w = window.open(url, '', 'width=640,height=480,top=100,left=100,toolbar=no,status=no,scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
+			showIFrame(url);
 		} catch(e) {}
 		enableLogin();
 		return false;
@@ -405,6 +405,9 @@ Event.observe(window, 'load', function() {
 		if ($('infoWrap').visible())
 			hideInfo();
 
+		if ($('iframeWrap').visible())
+			hideIFrame();
+
 		if ($('newsWrap')) {
 			if ($('newsWrap').visible())
 				hideNews();
@@ -418,6 +421,9 @@ Event.observe(window, 'load', function() {
 			new Effect.Appear($('loginBox'));
 		}, 1000);
 	}
+
+	if ($('iframeWrap'))
+		new Effect.Center($('iframeWrap'));
 });
 
 function showSystemTest() {
@@ -661,6 +667,22 @@ function hideNews() {
 	$('newsWrap_content').innerHTML = '';
 	$('newsWrap').style.width = '750px';
 	$('newsWrap').style.height = '';
+}
+
+function showIFrame(url_) {
+	showLock();
+
+	$('iframeContainer').src = url_;
+
+	new Effect.Appear($('iframeWrap'));
+}
+
+function hideIFrame() {
+	$('iframeWrap').hide();
+
+	$('iframeContainer').src = 'about:blank';
+
+	hideLock();
 }
 
 function translateInterface(lang_) {

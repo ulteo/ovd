@@ -1,7 +1,8 @@
 SUBDIRS = flags \
           icons
 
-scripts_DATA = cross.png \
+scripts_DATA = close-wrap.png \
+               cross.png \
                error.png \
                favicon.ico \
                hide.png \

@@ -228,6 +228,11 @@ function get_users_list() {
 				</div>
 			</div>
 
+			<div id="iframeWrap" class="rounded" style="display: none;">
+				<iframe id="iframeContainer" width="975" height="550"></iframe>
+				<a href="javascript:;" onclick="hideIFrame(); return false;"><div id="iframeCloseButton" class="rounded"></div></a>
+			</div>
+
 			<div id="newsWrap" class="rounded" style="display: none;">
 				<div id="newsWrapCont" class="rounded">
 					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
