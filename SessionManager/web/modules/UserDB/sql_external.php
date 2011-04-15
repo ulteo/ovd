@@ -210,15 +210,6 @@ class UserDB_sql_external extends UserDB {
 	}
 	
 	public static function prefsIsValid($prefs_, &$log=array()) {
-		// dirty
-		$ret = self::prefsIsValid2($prefs_, $log);
-		if ( $ret != true) {
-			$ret = UserDB_sql::init($prefs_);
-		}
-		return $ret;
-	}
-	
-	public function prefsIsValid2($prefs_, &$log=array()) {
 		$config = $prefs_->get('UserDB','sql_external');
 		$sql2 = new SQL($config);
 		$status = $sql2->CheckLink(false);
