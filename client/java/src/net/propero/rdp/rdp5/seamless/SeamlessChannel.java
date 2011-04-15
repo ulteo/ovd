@@ -110,8 +110,6 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		this.ackHistory = new ConcurrentHashMap<Integer, Integer>();
 
 		this.stateOrders = new ArrayList<StateOrder>();
-
-		PositionUpdater.seamlessChannel = this;
 	}
 	public void setMainFrame(Frame f_) {
 		this.main_window = f_;
@@ -1117,7 +1115,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		if (! (c instanceof SeamlessWindow))
 			return;
 
-		new PositionUpdater((SeamlessWindow) c).update();
+		new PositionUpdater(this, (SeamlessWindow) c).update();
 	}
 
 	public void componentMoved(ComponentEvent e) {
@@ -1125,7 +1123,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		if (! (c instanceof SeamlessWindow))
 			return;
 
-		new PositionUpdater((SeamlessWindow) c).update();
+		new PositionUpdater(this, (SeamlessWindow) c).update();
 	}
 
 	public void componentShown(ComponentEvent e) {}

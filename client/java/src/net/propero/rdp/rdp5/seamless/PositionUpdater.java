@@ -25,13 +25,13 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PositionUpdater extends TimerTask {
-	public static SeamlessChannel seamlessChannel = null;
-	
 	private static final ConcurrentHashMap<SeamlessWindow, Timer> positionsUpdates = new ConcurrentHashMap<SeamlessWindow, Timer>();
 
+	private SeamlessChannel seamchan = null;
 	private SeamlessWindow sw = null;
 
-	public PositionUpdater(SeamlessWindow sw_) {
+	public PositionUpdater(SeamlessChannel channel_, SeamlessWindow sw_) {
+		this.seamchan = channel_;
 		this.sw = sw_;
 	}
 
@@ -60,9 +60,9 @@ public class PositionUpdater extends TimerTask {
 			PositionUpdater.positionsUpdates.remove(this.sw);
 		}
 
-		if (PositionUpdater.seamlessChannel == null)
+		if (this.seamchan == null)
 			return;
 
-		PositionUpdater.seamlessChannel.updatePosition(this.sw);
+		this.seamchan.updatePosition(this.sw);
 	}
 }
