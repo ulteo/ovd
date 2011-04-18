@@ -246,16 +246,19 @@ if ($can_manage_configuration) {
 echo '</form>';
 
 if (isset($preview)) {
+  $global_status = true;
   echo '</td><td style="width: 30%; vertical-align: top;"><ul>';
   foreach($preview as $msg => $status) {
     $c = ($status)?'green':'red';
     $m = ($status)?_('OK'):_('Error');
 
     echo '<li style="color:'.$c.';">'.$msg.': <strong>'.$m.'</strong></li>';
+    if (!$status) 
+      $global_status = false;
   }
 
-  if (count($preview) > 0 && $status)
-    echo '<li style="color:'.$c.';">'.strtoupper(_('Success')).'</li>';
+  if ($global_status)
+    echo '<li style="color:'.(($global_status)?'green':'red').';">'.strtoupper(_('Success')).'</li>';
   echo '</ul>';
   echo '</td>';
   echo '</tr>';
