@@ -217,6 +217,18 @@ if (is_array($xml) && count($xml) == 2) {
 		$host = parse_url($xml[1], PHP_URL_HOST);
 		$port = parse_url($xml[1], PHP_URL_PORT);
 		$path = parse_url($xml[1], PHP_URL_PATH);
+
+		if (substr($path, 0, 5) == '/cas/') {
+			$protocol = 'https';
+
+			$CAS_server_url = $protocol.'://'.$host;
+			if ($port != 443)
+				$CAS_server_url .= ':'.$port;
+			$CAS_server_url .= '/cas';
+
+			echo return_popup('auth/cas/login.php?CAS_server_url='.urlencode($CAS_server_url));
+			die();
+		}
 	}
 
 	echo return_error(0, 'internal_error');

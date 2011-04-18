@@ -1,4 +1,4 @@
-SUBDIRS = applet includes media PEAR
+SUBDIRS = applet auth includes media PEAR
 
 scripts_DATA = applications.php \
                external.php \
