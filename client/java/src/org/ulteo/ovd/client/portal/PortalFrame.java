@@ -40,7 +40,7 @@ import javax.swing.JPanel;
 import org.ulteo.Logger;
 
 import org.ulteo.utils.I18n;
-import org.ulteo.ovd.client.authInterface.LogoutPopup;
+import org.ulteo.ovd.client.authInterface.NativeLogoutPopup;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
 import org.ulteo.ovd.client.bugreport.gui.BugReportButton;
@@ -236,7 +236,7 @@ public class PortalFrame extends JFrame implements WindowListener {
 
 	public void windowClosing(WindowEvent arg0) {
 		if (this.rdpActions != null)
-			new LogoutPopup(this, this.rdpActions);
+			new NativeLogoutPopup(this, this.rdpActions);
 		else
 			System.err.println("can't manage disconnection request: rdpAction is null");
 	}

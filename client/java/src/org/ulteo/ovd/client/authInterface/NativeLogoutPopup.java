@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -21,43 +22,35 @@
 package org.ulteo.ovd.client.authInterface;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import org.ulteo.ovd.client.AbstractLogoutPopup;
 
 import org.ulteo.utils.I18n;
 import org.ulteo.rdp.RdpActions;
 
-public class LogoutPopup extends JOptionPane {
-	
-	private JFrame frame = null;
-	private String[] choice = {I18n._("Yes"), I18n._("Go back to authentication"), I18n._("No")};
+public class NativeLogoutPopup extends AbstractLogoutPopup {
 	private RdpActions actions = null;
-
 	
-	public LogoutPopup(JFrame frame, RdpActions actions) {
-		this.frame = frame;
-		this.actions = actions;
+	public NativeLogoutPopup(JFrame frame_, RdpActions actions_) {
+		super(frame_);
+
+		this.actions = actions_;
+
+		this.setTitle(I18n._("Warning!"));
+		this.setText(I18n._("Do you really want to close the window?"));
+		this.setChoices(new String[] {I18n._("Yes"), I18n._("Go back to authentication"), I18n._("No")});
 		
 		this.showPopup();
 	}
 	
-	public void showPopup() {
-		int option = showOptionDialog(frame, I18n._("Do you really want to close the window?"), 
-				I18n._("Warning!"),
-				JOptionPane.YES_NO_CANCEL_OPTION,
-				JOptionPane.WARNING_MESSAGE,
-				null,
-				choice,
-				choice[2]);
-
-		switch (option) {
+	@Override
+	protected void processOption(int option_) {
+		switch (option_) {
 			case 0 :
 				this.actions.exit(0);
 				break;
-			
 			case 1 :
 				this.actions.disconnectAll();
 				break;
-			
 			default:
 				this.setVisible(true);
 				break;
