@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -26,15 +27,26 @@ import java.awt.event.FocusListener;
 import java.awt.GraphicsEnvironment;
 import java.awt.GraphicsDevice;
 import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.JFrame;
+import org.ulteo.Logger;
+import org.ulteo.ovd.applet.AppletLogoutPopup;
+import org.ulteo.rdp.RdpActions;
 
 
-public class FullscreenWindow extends JFrame implements FocusListener {
-	public FullscreenWindow() {
+public class FullscreenWindow extends JFrame implements FocusListener, WindowListener {
+	private RdpActions actions = null;
+
+	public FullscreenWindow(RdpActions actions_) {
 		super(null, GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration());
 
+		this.actions = actions_;
+
 		this.setUndecorated(true);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addFocusListener(this);
+		this.addWindowListener(this);
 	}
 	
 	public static Dimension getScreenSize() {
@@ -60,4 +72,22 @@ public class FullscreenWindow extends JFrame implements FocusListener {
 	public void focusLost(FocusEvent fe) {
 		this.setAlwaysOnTop(false);
 	}
+
+	public void windowClosing(WindowEvent we) {
+		if (we.getComponent() != this)
+			return;
+
+		if (this.actions == null) {
+			Logger.error("Can't manage disconnection request: rdpAction is null");
+			return;
+		}
+
+		new AppletLogoutPopup(this, this.actions);
+	}
+	public void windowClosed(WindowEvent we) {}
+	public void windowOpened(WindowEvent we) {}
+	public void windowIconified(WindowEvent we) {}
+	public void windowDeiconified(WindowEvent we) {}
+	public void windowActivated(WindowEvent we) {}
+	public void windowDeactivated(WindowEvent we) {}
 }

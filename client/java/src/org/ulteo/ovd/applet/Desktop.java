@@ -32,14 +32,17 @@ import netscape.javascript.JSObject;
 
 import org.ulteo.Logger;
 import org.ulteo.ovd.client.ClientInfos;
+import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
+import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
+import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 import org.ulteo.utils.AbstractFocusManager;
 
-public class Desktop extends Applet implements JSForwarder, FocusListener {
+public class Desktop extends Applet implements JSForwarder, FocusListener, Callback {
 	private boolean fullscreenMode = false;
 	private int port = 0;
 	private String server = null;
@@ -108,7 +111,7 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 		}
 
 		try {
-			this.ovd = new OvdClientDesktopApplet(aps, properties, this);
+			this.ovd = new OvdClientDesktopApplet(aps, properties, this, this);
 		} catch (ClassCastException ex) {
 			Logger.error(ex.getMessage());
 			this.stop();
@@ -264,4 +267,20 @@ public class Desktop extends Applet implements JSForwarder, FocusListener {
 			this.focusManager.performedFocusLost(e.getComponent());
 		}
 	}
+
+	public void sessionDisconnecting() {
+		if (this.ovd == null || this.ovd.getAvailableConnections() == null)
+			return;
+
+		for (RdpConnectionOvd co : this.ovd.getAvailableConnections())
+			co.disconnect();
+	}
+
+	public void reportError(int code, String msg) {}
+	public void reportErrorStartSession(String code) {}
+	public void reportBadXml(String data) {}
+	public void reportUnauthorizedHTTPResponse(String moreInfos) {}
+	public void reportNotFoundHTTPResponse(String moreInfos) {}
+	public void sessionConnected() {}
+	public void updateProgress(LoadingStatus clientInstallApplication, int subStatus) {}
 }

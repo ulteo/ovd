@@ -34,6 +34,7 @@ import org.ulteo.Logger;
 import org.ulteo.ovd.FullscreenWindow;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.client.OvdClient;
+import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.rdp.RdpConnectionOvd;
@@ -47,8 +48,8 @@ public class OvdClientDesktopApplet extends OvdClient {
 	private boolean isFullscreen = false;
 	private FullscreenWindow externalWindow = null;
 
-	public OvdClientDesktopApplet(ServerAccess server_, Properties properties_, Applet applet_) throws ClassCastException {
-		super(null);
+	public OvdClientDesktopApplet(ServerAccess server_, Properties properties_, Callback obj_, Applet applet_) throws ClassCastException {
+		super(obj_);
 
 		this.server = server_;
 		this.properties = properties_;
@@ -174,7 +175,7 @@ public class OvdClientDesktopApplet extends OvdClient {
 		canvas.setLocation(0, 0);
 
 		if (this.isFullscreen) {
-			this.externalWindow = new FullscreenWindow();
+			this.externalWindow = new FullscreenWindow(this);
 			this.externalWindow.add(canvas);
 			this.externalWindow.setFullscreen();
 		}
