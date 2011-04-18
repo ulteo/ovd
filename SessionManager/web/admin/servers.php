@@ -109,7 +109,9 @@ function show_default() {
       // echo '<td>'.$s->stringVersion().'</td>';
       echo '<td>';
       echo '<ul>';
-      foreach ($s->roles as $a_role => $role_enabled) {
+      $roles = $s->roles;
+      asort($roles);
+      foreach ($roles as $a_role => $role_enabled) {
         if ($role_enabled) {
           echo "<li>$a_role</li>";
         }
