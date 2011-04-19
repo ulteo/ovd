@@ -433,4 +433,27 @@ such file or directory]]>
       are persistent</emphasis> settings.
     </para>
   </section>
+  
+  <section id="grey_link">
+    <title>
+      When I launch a portal, I see applications but I cannot launch them. There are grey links instead.
+    </title>
+
+    <para>
+      Portal applications stay grey until the ApplicationServer's session is available. The session may never be up and running due to:
+    </para>
+    <itemizedlist>
+      <listitem>
+        <para>
+          Firewall issue: read <ulink url="#ports">ports used by OVD 3.0</ulink>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Wrong redirection name: check if <ulink url="img/sm_admin_external_name.png">the redirection name</ulink> is available for the end user.
+        </para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
 </article>
