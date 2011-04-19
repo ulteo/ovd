@@ -344,6 +344,23 @@ $ getent hosts 192.168.0.19
 				</itemizedlist>
 			</para>
 		</listitem>
+		<listitem>
+			<para>
+				Gateway: 
+				<itemizedlist>
+					<listitem>
+						<para>
+							1112 (HTTP): communication with SessionManager
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							443 (HTTPS): communication with end user
+						</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</listitem>
 	</itemizedlist>
 </section>
 
