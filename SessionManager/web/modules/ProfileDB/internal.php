@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -239,7 +239,9 @@ class ProfileDB_internal extends ProfileDB  {
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::$table, 'id', $profile->id);
 
 		$server = Abstract_Server::load($profile->server);
-		$server->deleteNetworkFolder($profile->id, true);
+		if (is_object($server)) {
+			$server->deleteNetworkFolder($profile->id, true);
+		}
 		
 		return true;
 	}
