@@ -1,0 +1,47 @@
+=TO COMPILE=
+==PREREQUITE==
+checkout the dokan project : https://svn.ulteo.com/ovd-lab/win-fs/dokan2
+
+go to the C:\Program Files\Microsoft SDKs\Windows\v6.0A\Lib
+copy
+ * C:\Program Files\Microsoft SDKs\Windows\v6.0A\Lib\winhttp.lib
+ * C:\Program Files\Microsoft SDKs\Windows\v6.0A\Lib\xmllite.lib
+to 
+ * $DDK\lib\wxp\i386
+
+ * C:\Program Files\Microsoft SDKs\Windows\v6.0A\Lib\x64\winhttp.lib
+ * C:\Program Files\Microsoft SDKs\Windows\v6.0A\Lib\x64\xmllite.lib
+to 
+ * $DDK\lib\wnet\amd64
+
+
+copy 
+ * C:\Program Files\Microsoft SDKs\Windows\v6.0A\Include\winhttp.h
+ * C:\Program Files\Microsoft SDKs\Windows\v6.0A\Include\xmllite.h
+to the directory
+ * $DDK\include\api
+
+
+==COMPILE==
+get the ulteo checkout of the dokan2
+go to the directory.
+start make.bat
+the result is in x86 directory and in AMD64 directory
+
+
+
+
+=TO INSTALL=
+ * install dokan 0.6
+ * reboot the system
+ * copy into c:\windows\system32\ the following file
+  * dokannp.dll
+  * davfs.exe
+ * go to the dokan install path
+ * type the following command (in order to install the dokan network provider.
+   * dockanctl.exe /i n 
+
+
+
+
+

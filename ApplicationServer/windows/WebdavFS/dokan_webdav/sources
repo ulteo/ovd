@@ -1,0 +1,38 @@
+TARGETNAME=davfs
+TARGETTYPE=PROGRAM
+
+USE_MSVCRT=1
+USE_ATL=1
+USE_STL=1
+STL_VER=70
+USE_NATIVE_EH=1 
+USE_IOSTREAM=0
+
+C_DEFINES=$(C_DEFINES) -DUNICODE -D_UNICODE
+#-D_STL70_ 
+
+INCLUDES= $(INCLUDES);..\dokan;C:\Program Files\Microsoft SDKs\Windows\v6.0A\Include
+	 
+
+LINKLIBS=..\$(_BUILDARCH)\dokan.lib
+
+TARGETLIBS=  $(TARGETLIBS) \
+             $(SDK_LIB_PATH)\Winhttp.lib \
+             $(SDK_LIB_PATH)\xmllite.lib \
+             $(SDK_LIB_PATH)\Shlwapi.lib \
+             $(SDK_LIB_PATH)\Ole32.lib
+
+SOURCES=mirror.cpp \
+		DavCache.cpp \
+		XMLDavParser.cpp \
+		DavEntry.cpp \
+		WebdavServer.cpp
+
+UMTYPE=console
+UMBASE=0x400000
+MSC_WARNING_LEVEL=/W4 /WX
+
+PRECOMPILED_CXX=1
+!IF "$(BUILD_PASS)" == "PASS2" || "$(BUILD_PASS)" == "PASSALL"
+NTTARGETFILES=COPYDOKANWEBDAV
+!ENDIF
