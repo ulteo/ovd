@@ -1,0 +1,5 @@
+DIRS= \
+	dokan \
+	dokan_np \
+	dokan_webdav
+
