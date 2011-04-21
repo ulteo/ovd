@@ -326,22 +326,22 @@ public abstract class Input {
      * Release any modifier keys that may be depressed.
      */
 	public void clearKeys() {
-        if(lastKeyEvent == null) return;
-        
-		if (lastKeyEvent.isShiftDown())
+		if(lastKeyEvent != null && lastKeyEvent.isShiftDown()) {
 			sendScancode(getTime(), RDP_KEYRELEASE, 0x2a); // shift
-		if (lastKeyEvent.isAltDown() || altDown) {
+		}
+
+		if (altDown) {
 			// with Openoffice, if no other keys are pressed at the ALT release sequence, a menu is displayed  
 			sendScancode(getTime(), RDP_KEYPRESS, 0x2a); // l.shift
 			sendScancode(getTime(), RDP_KEYRELEASE, 0x2a); // l.shift
 			sendScancode(getTime(), RDP_KEYRELEASE, KBD_ALT_KEY); // l.alt
         }
-		if (lastKeyEvent.isControlDown() ||  ctrlDown) {
+		if (ctrlDown) {
             sendScancode(getTime(), RDP_KEYRELEASE, 0x1d); // l.ctrl    
             //sendScancode(getTime(), RDP_KEYPRESS | KBD_FLAG_QUIET, 0x1d); // Ctrl
             //sendScancode(getTime(), RDP_KEYRELEASE | KBD_FLAG_QUIET, 0x1d); // ctrl
         }
-		if (lastKeyEvent.isAltGraphDown() || altgrDown)
+		if (altgrDown)
 			sendScancode(getTime(), RDP_KEYRELEASE, KBD_ALTGR_KEY); // altgr
 		
 		altDown = false;
