@@ -11,7 +11,7 @@ USE_IOSTREAM=0
 C_DEFINES=$(C_DEFINES) -DUNICODE -D_UNICODE
 #-D_STL70_ 
 
-INCLUDES= $(INCLUDES);..\dokan;C:\Program Files\Microsoft SDKs\Windows\v6.0A\Include
+INCLUDES= $(INCLUDES);..\dokan
 	 
 
 LINKLIBS=..\$(_BUILDARCH)\dokan.lib
