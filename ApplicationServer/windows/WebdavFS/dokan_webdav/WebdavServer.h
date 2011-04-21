@@ -59,9 +59,7 @@ private:
 	int port;
 
 	LPSTR getData( HINTERNET hRequest, PDWORD dwSize, PDWORD status);
-
-
-
+	BOOL path_join(WCHAR* dest_, WCHAR* prefixe_, WCHAR* path_);
 
 public:
 	WebdavServer(wchar_t* address, int port, wchar_t* prefixe, wchar_t* username, wchar_t* password, BOOL useHTTPS);
@@ -73,8 +71,6 @@ public:
 	HINTERNET requestNew(wchar_t* method, wchar_t* path );
 	BOOL requestDel(HINTERNET hRequest );
 	WCHAR* getRedirectPath(HINTERNET hRequest);
-
-
 
 
 	DAVFILEINFO DAVFSInfoNew();

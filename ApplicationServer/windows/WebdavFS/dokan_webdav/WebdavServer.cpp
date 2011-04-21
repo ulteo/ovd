@@ -195,6 +195,21 @@ BOOL WebdavServer::requestDel(HINTERNET hRequest ) {
 }
 
 
+BOOL WebdavServer::path_join(WCHAR* dest_, WCHAR* prefixe_, WCHAR* path_) {
+	if (dest_ == NULL || prefixe_ == NULL || path_ == NULL) {
+		return FALSE;
+	}
+
+	if (path_[0] == '/') {
+		swprintf_s(dest_, MAX_PATH, L"%s%s", prefixe_, path_);
+	}
+	else {
+		swprintf_s(dest_, MAX_PATH, L"%s/%s", prefixe_, path_);
+	}
+	return TRUE;
+}
+
+
 WCHAR* WebdavServer::getRedirectPath(HINTERNET hRequest)
 {
 	BOOL bResults;
@@ -384,8 +399,10 @@ DAVFILEINFO* WebdavServer::DAVGetFileInformations(LPCWSTR path, LPSTR davData ) 
 	}
 	else
 	{
-		swprintf_s(path2, MAX_PATH, L"%ls%ls", prefixe, path);
-
+		if (! path_join(path2, prefixe, (WCHAR*)path)) {
+			DbgPrint(L"Unable to merge %s and %s\n", prefixe, path);
+			return NULL;
+		}
 		data = DAVPROPFind(&path2, DEFAULT_PROPFIND, 0);
 		if (! data)
 		{
@@ -456,7 +473,10 @@ DAVFILEINFO** WebdavServer::DAVGetDirectoryList(LPCWSTR path, PDWORD count ) {
 	int filename_length = 0;
 
 	path2 = (WCHAR*)malloc(MAX_PATH*sizeof(WCHAR));
-	swprintf_s(path2, MAX_PATH, L"%ls%ls", prefixe, path);
+	if (! path_join(path2, prefixe, (WCHAR*)path)) {
+		DbgPrint(L"Unable to merge %s and %s\n", prefixe, path);
+		return NULL;
+	}
 
 	data = DAVPROPFind(&path2, DEFAULT_PROPFIND, 1);
 	parser = new XMLDavParser(data);
@@ -511,7 +531,7 @@ DAVFILEINFO** WebdavServer::DAVGetDirectoryList(LPCWSTR path, PDWORD count ) {
 			filename[filename_length-1] = '\0';
 		}
 		fsinfo->name = filename;
-		wprintf(L"filename : %s\n", filename);
+
 		if (index  > 0)
 			dirList[index-1] = fsinfo;
 		index ++;
@@ -528,8 +548,10 @@ BOOL WebdavServer::DAVOpen(wchar_t* path ) {
 	LPSTR data = NULL;
 
 	path2 = (WCHAR*)malloc(MAX_PATH*sizeof(WCHAR));
-
-	swprintf_s(path2, MAX_PATH, L"%ls%ls", prefixe, path);
+	if (! path_join(path2, prefixe, path)) {
+		DbgPrint(L"Unable to merge %s and %s\n", prefixe, path);
+		return FALSE;
+	}
 
 	data = DAVPROPFind(&path2, DEFAULT_PROPFIND, 0);
 	if (path2) {
@@ -559,7 +581,6 @@ LPSTR WebdavServer::DAVPROPFind(wchar_t** path, wchar_t* body, int depth) {
   {
   	return NULL;
   }
-  wprintf(L"path %s\n", path);
   //set Depth
   swprintf_s(depthProperty, 256, L"Depth: %i\r\n", depth);
 
@@ -626,7 +647,10 @@ BOOL WebdavServer::DAVGetFileContent(wchar_t* path, LPDWORD ReadLength, LONGLONG
 	  wcscpy_s(path2, MAX_PATH, path);
   }
   else {
-	  swprintf_s(path2, MAX_PATH, L"%ls%ls", prefixe, path);
+		if (! path_join(path2, prefixe, path)) {
+			DbgPrint(L"Unable to merge %s and %s\n", prefixe, path);
+			return FALSE;
+		}
   }
   hRequest = requestNew(L"GET", path2);
   if (! hRequest)
@@ -738,7 +762,10 @@ BOOL WebdavServer::DAVImportFileContent(wchar_t* remotePath, wchar_t* localPath,
 		wcscpy_s(path2, MAX_PATH, remotePath);
 	}
 	else {
-		swprintf_s(path2, MAX_PATH, L"%ls%ls", prefixe, remotePath);
+		if (! path_join(path2, prefixe, remotePath)) {
+			DbgPrint(L"Unable to merge %s and %s\n", prefixe, remotePath);
+			return FALSE;
+		}
 	}
 	hRequest = requestNew(L"GET", path2);
 
@@ -859,10 +886,13 @@ BOOL WebdavServer::DAVWriteFile(wchar_t* path, LPCVOID Buffer, LPDWORD NumberOfB
   	return FALSE;
 
   if (redirected) {
-	  wcscpy_s(path2, MAX_PATH, path);
+    wcscpy_s(path2, MAX_PATH, path);
   }
   else {
-	  swprintf_s(path2, MAX_PATH, L"%ls%ls", prefixe, path);
+    if (! path_join(path2, prefixe, path)) {
+      DbgPrint(L"Unable to merge %s and %s\n", prefixe, path);
+      return FALSE;
+    }
   }
 
   hRequest = requestNew(L"PUT", path2);
@@ -880,10 +910,10 @@ BOOL WebdavServer::DAVWriteFile(wchar_t* path, LPCVOID Buffer, LPDWORD NumberOfB
   bResults = WinHttpSendRequest( hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, (LPVOID)Buffer, NumberOfBytesToWrite, NumberOfBytesToWrite, 0);
   if (! bResults)
   {
-	  DbgPrint(L"Failed to send request with error %u\n", GetLastError());
-	  if (hRequest) WinHttpCloseHandle(hRequest);
-	  if (hConnect) WinHttpCloseHandle(hConnect);
-	  hConnect =NULL;
+    DbgPrint(L"Failed to send request with error %u\n", GetLastError());
+    if (hRequest) WinHttpCloseHandle(hRequest);
+    if (hConnect) WinHttpCloseHandle(hConnect);
+    hConnect =NULL;
   }
   bResults = WinHttpReceiveResponse( hRequest, NULL);
   // Keep checking for data until there is nothing left.
@@ -944,7 +974,10 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 		wcscpy_s(path2, MAX_PATH, remotePath);
 	}
 	else {
-		swprintf_s(path2, MAX_PATH, L"%ls%ls", prefixe, remotePath);
+		if (! path_join(path2, prefixe, remotePath)) {
+			DbgPrint(L"Unable to merge %s and %s\n", prefixe, remotePath);
+			return FALSE;
+		}
 	}
 
 	hRequest = requestNew(L"PUT", path2);
@@ -1047,7 +1080,10 @@ BOOL WebdavServer::DAVMKCOL(wchar_t* path, BOOL redirected ) {
 		wcscpy_s(path2, MAX_PATH, path);
 	}
 	else {
-		swprintf_s(path2, MAX_PATH, L"%ls%ls", prefixe, path);
+		if (! path_join(path2, prefixe, path)) {
+			DbgPrint(L"Unable to merge %s and %s\n", prefixe, path);
+			return FALSE;
+		}
 	}
 
   hRequest = requestNew(L"MKCOL", path2);
@@ -1117,7 +1153,10 @@ BOOL WebdavServer::DAVDELETE(wchar_t* path, BOOL redirected ) {
 		wcscpy_s(path2, MAX_PATH, path);
 	}
 	else {
-		swprintf_s(path2, MAX_PATH, L"%ls%ls", prefixe, path);
+		if (! path_join(path2, prefixe, path)) {
+			DbgPrint(L"Unable to merge %s and %s\n", prefixe, path);
+			return FALSE;
+		}
 	}
   hRequest = requestNew(L"DELETE", path2);
   if (! hRequest)
