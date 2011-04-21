@@ -25,6 +25,7 @@
 package org.ulteo.ovd.sm;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -58,6 +59,8 @@ import javax.xml.transform.stream.StreamResult;
 import org.ulteo.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
@@ -86,6 +89,8 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 	public static final String FIELD_NAME = "name";
 	public static final String FIELD_VALUE = "value";
+
+	public static final String VALUE_HIDDEN_PASSWORD = "****";
 
 	private static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
 	private static final String CONTENT_TYPE_XML = "text/xml";
@@ -389,7 +394,17 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 				out.write(data);
 				out.flush();
 				out.close();
-				Logger.debug("Send: "+data);
+
+				try {
+					DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+					DocumentBuilder domBuilder = domFactory.newDocumentBuilder();
+					InputStream source = new ByteArrayInputStream(data.getBytes());
+					Document xmlOut = domBuilder.parse(source);
+
+					this.dumpXML(xmlOut, "Sending XML data:");
+				} catch (Exception ex) {
+					Logger.debug("Send: "+data);
+				}
 			}
 			
 
@@ -670,6 +685,9 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		try {
 			if (msg != null)
 				out.write(msg.getBytes());
+
+			document = this.cloneDomDocument(document);
+			this.hidePassword(document);
 			
 			TransformerFactory tFactory = TransformerFactory.newInstance();
 			Transformer transformer = tFactory.newTransformer();
@@ -681,6 +699,60 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		} catch (Exception ex) {
 			Logger.error("Failed to dump XML data: "+ex.getMessage());
 		}
+	}
+
+	private Document cloneDomDocument(Document document) throws ParserConfigurationException {
+		DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder domBuilder = domFactory.newDocumentBuilder();
+
+		Node rootNode = document.getDocumentElement();
+
+		Document copiedDocument = domBuilder.newDocument();
+		Node copiedRoot = copiedDocument.importNode(rootNode, true);
+		copiedDocument.appendChild(copiedRoot);
+
+		return copiedDocument;
+	}
+
+	private void hidePassword(Document document) {
+		Element rootNode = document.getDocumentElement();
+
+		if (rootNode.getNodeName().equals("session")) {
+			String[] nodesWithPasswordAttribute = {"user", "profile", "server"};
+			NodeList nodes = null;
+
+			for (String each : nodesWithPasswordAttribute) {
+				nodes = rootNode.getElementsByTagName(each);
+				if (nodes.getLength() == 1) {
+					Element element = (Element) nodes.item(0);
+					if (element.hasAttribute(FIELD_PASSWORD)) {
+						NamedNodeMap attributes = element.getAttributes();
+						Node passwordAttribute = attributes.getNamedItem(FIELD_PASSWORD);
+						passwordAttribute.setTextContent(VALUE_HIDDEN_PASSWORD);
+					}
+				}
+			}
+
+			nodes = rootNode.getElementsByTagName(NODE_SETTINGS);
+			if (nodes.getLength() == 1) {
+				Element settingsNode = (Element) nodes.item(0);
+				NodeList settingNodeList = settingsNode.getElementsByTagName(NODE_SETTING);
+				for (int i = 0; i < settingNodeList.getLength(); i++) {
+					Element setting = (Element) settingNodeList.item(i);
+
+					if (! setting.hasAttribute(FIELD_NAME) || ! setting.hasAttribute(FIELD_VALUE))
+						continue;
+					NamedNodeMap settingAttributes = setting.getAttributes();
+
+					String settingName = settingAttributes.getNamedItem(FIELD_NAME).getTextContent();
+					if (settingName.equalsIgnoreCase("aps_access_password")
+						|| settingName.equalsIgnoreCase("fs_access_password")) {
+						Node passwordAttribute = settingAttributes.getNamedItem(FIELD_VALUE);
+						passwordAttribute.setTextContent(VALUE_HIDDEN_PASSWORD);
+					}
+				}
+			}
+ 		}
 	}
 
 	public void addCallbackListener(Callback c) {
