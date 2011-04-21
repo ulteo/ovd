@@ -27,7 +27,6 @@ import re
 import xml.etree.ElementTree as parser
 
 from ovd.Logger import Logger
-from TokenDatabase import insertToken
 
 
 xmlError = {
@@ -92,9 +91,10 @@ class receiver(asyncore.dispatcher):
 
 class receiverXMLRewriter(receiver):
 
-	def __init__(self, conn, req):
+	def __init__(self, conn, req, f_ctrl):
 		receiver.__init__(self, conn, req)
 		self.hasRewrited = False
+		self.f_ctrl = f_ctrl
 
 		self.response_ptn = re.compile("<response.+\/>", re.I | re.U)
 		self.session_ptn  = re.compile("<session .*>.+<\/session>", re.I | re.U)
@@ -130,7 +130,7 @@ class receiverXMLRewriter(receiver):
 		return True
 
 
-	def rewriteXML(xml):
+	def rewriteXML(self, xml):
 		Logger.debug('receiverXMLRewriter::rewriteXML')
 		try:
 			xml = parser.XML(xml)
@@ -141,13 +141,13 @@ class receiverXMLRewriter(receiver):
 						subNodes = element.getchildren()
 						for node in subNodes:
 							if node.tag.upper() == "SERVER":
-								node.attrib["token"] = insertToken(node.attrib["fqdn"])
+								cmd = ('insert_token', node.attrib["fqdn"])
+								node.attrib["token"] = self.f_ctrl.send(cmd)
 								del node.attrib["fqdn"]
 						break
 				return parser.tostring(xml)
 			else:
 				return getXMLError(501)
-		except:
+		except Exception, e:
+			print e
 			return getXMLError(500)
-
-	rewriteXML = staticmethod(rewriteXML)

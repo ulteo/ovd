@@ -73,11 +73,17 @@ class senderHTTP(sender):
 		sm, self.ssl_ctx = remote
 		sender.__init__(self, sm, receiver)
 
+
+	def readable(self):
+		# hack to support SSL layer
+		while self.socket.pending() > 0:
+			self.handle_read_event()
+		return True
+
+
 	def handle_read(self):
 		try:
 			sender.handle_read(self)
-			while self.socket.pending() > 0:
-				sender.handle_read(self)
 		except SSL.SysCallError:
 			self.handle_close()
 		except SSL.ZeroReturnError:
@@ -85,11 +91,13 @@ class senderHTTP(sender):
 		except SSL.WantReadError:
 			pass
 
+
 	def handle_write(self):
 		try:
 			sender.handle_write(self)
 		except SSL.WantWriteError:
 			pass
+
 
 	def make_socket(self):
 		return SSL.Connection(self.ssl_ctx, sender.make_socket(self))

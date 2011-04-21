@@ -19,16 +19,23 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import uuid
+import threading
 
 database = {}
+lock = threading.Lock()
 
 def insertToken(fqdn):
 	token = str(uuid.uuid4())
+	lock.acquire()
 	database[token] = fqdn
+	lock.release()
 	return token
 
 def digestToken(token):
 	try:
+		lock.acquire()
 		return database.pop(token)
 	except KeyError:
 		return None
+	finally:
+		lock.release()

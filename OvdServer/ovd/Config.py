@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009
 # Author David LECHEVALIER <david@ulteo.com> 2010
+# Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -61,7 +62,10 @@ class Config:
 	
 	gateway_address = "0.0.0.0"
 	gateway_port    = 443
-	
+	gateway_max_process = 10
+	gateway_max_connection = 100
+	gateway_process_timeout = 60
+
 	@staticmethod
 	def read(filename):
 		try:
@@ -123,7 +127,25 @@ class Config:
 				Config.gateway_port = int(Config.infos["GATEWAY_PORT"])
 			except ValueError:
 				pass
-		
+
+		if Config.infos.has_key("GATEWAY_MAX_PROCESS"):
+			try:
+				Config.gateway_max_process = int(Config.infos["GATEWAY_MAX_PROCESS"])
+			except ValueError:
+				pass
+
+		if Config.infos.has_key("GATEWAY_MAX_CONNECTION"):
+			try:
+				Config.gateway_max_connection = int(Config.infos["GATEWAY_MAX_CONNECTION"])
+			except ValueError:
+				pass
+
+		if Config.infos.has_key("GATEWAY_PROCESS_TIMEOUT"):
+			try:
+				Config.gateway_process_timeout = int(Config.infos["GATEWAY_PROCESS_TIMEOUT"])
+			except ValueError:
+				pass
+
 		return True
 	
 	

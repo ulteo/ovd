@@ -27,7 +27,7 @@ from ovd.Role.Role import Role as AbstractRole
 from ovd.Config import Config
 from ovd.Logger import Logger
 from Dialog import Dialog
-from reverseproxy import ReverseProxy
+from ReverseProxy import ReverseProxy
 
 import asyncore
 import os
@@ -69,7 +69,6 @@ class Role(AbstractRole):
 		self.has_run = False
 		if self.rproxy:
 			self.rproxy.close()
-		asyncore.ExitNow()
 
 
 	def run(self):
