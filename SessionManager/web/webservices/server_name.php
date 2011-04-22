@@ -33,8 +33,7 @@ function return_error($errno_, $errstr_) {
 }
 
 $server_name = $_SERVER['REMOTE_ADDR'];
-$server = Abstract_Server::load($server_name);
-if (! $server) {
+if (! Abstract_Server::exists($server_name)) {
 	$server = new Server($server_name);
 
 	$server->registered = false;
@@ -74,7 +73,8 @@ if (! $server) {
 	}
 */
 	Abstract_Server::save($server);
-}
+} else
+	$server = Abstract_Server::load($server_name);
 
 header('Content-Type: text/xml; charset=utf-8');
 $dom = new DomDocument('1.0', 'utf-8');
