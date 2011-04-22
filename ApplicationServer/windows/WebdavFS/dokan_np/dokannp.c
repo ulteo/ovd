@@ -202,7 +202,7 @@ StartDavModule(WCHAR* letter, WCHAR* remote, WCHAR* username, WCHAR* password)
     startupInfo.cb = sizeof(startupInfo);
 
     if (lstrlen(username) > 0)
-    	StringCchPrintfW(cmdLine, MAX_PATH, L"%s /l %s /u %s /o %s /w ", app, letter, remote, username, password );
+    	StringCchPrintfW(cmdLine, MAX_PATH, L"%s /l %s /u %s /o %s /w %s", app, letter, remote, username, password );
     else
     	StringCchPrintfW(cmdLine, MAX_PATH, L"%s /l %s /u %s ", app, letter, remote );
 
