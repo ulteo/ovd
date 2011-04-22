@@ -10,5 +10,6 @@ XS-Python-Version: >= 2.6
 Package: ulteo-ovd-slaveserver-role-gateway
 Architecture: all
 Depends: ${python:Depends}, ulteo-ovd-slaveserver, openssl, python-openssl, python-passfd
+XB-Python-Version: ${python:Versions}
 Description: Ulteo Open Virtual Desktop - gateway role for slave server
  Gateway role for the Ulteo OVD slave server
