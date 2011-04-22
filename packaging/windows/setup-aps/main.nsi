@@ -124,31 +124,10 @@
 Function InputBoxPageShow
   Var /GLOBAL sm_address
 
-  ; $R0 : File handle
-  ; $R1 : Line
-  ; $R2 : SubString
-  ClearErrors
-  FileOpen $R0 "${CONFIG_FILE}" r
-  IfErrors again
-
-  loop:
-    FileRead $R0 $R1
-    IfErrors close_file
-    Push $R1
-    Push "session_manager = "
-    Call StrStr
-    Pop $R2
-    ${IF} $R2 == ""
-      Goto loop
-    ${ENDIF}
-    
-    StrCpy $R2 $R2 "" 18
-    Push $R2
-    Call Trim
-    Pop $sm_address
-  
-  close_file:
-    FileClose $R0
+  ReadINIStr $sm_address ${CONFIG_FILE} "main" "session_manager"
+  Push $sm_address
+  Call Trim
+  Pop $sm_address
   
   again:
     !insertmacro MUI_HEADER_TEXT "Configuration" "Give the Session Manager address."
