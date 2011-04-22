@@ -43,7 +43,7 @@ DavCache* davCache = NULL;
 BOOL g_UseStdErr;
 BOOL g_DebugMode;
 
-static WCHAR MountPoint[MAX_PATH] = L"M:";
+static WCHAR MountPoint[MAX_PATH] = L"::";
 
 static void DbgPrint(LPCWSTR format, ...)
 {
@@ -761,6 +761,23 @@ MirrorUnmount(
 }
 
 
+WCHAR getNextFreeLetter() {
+	WCHAR drive[] = L"E:";
+	UINT result = 0;
+
+	for (int i = (int)L'E' ; i <= (int)L'Z'; i++) {
+		drive[0] = (WCHAR)i;
+
+		result = GetDriveType((LPCTSTR)drive);
+
+		if (result == DRIVE_NO_ROOT_DIR) {
+			return drive[0];
+		}
+	}
+	return L':';
+}
+
+
 
 int _cdecl
 main(ULONG argc, PCHAR argv[]) {
@@ -816,8 +833,6 @@ main(ULONG argc, PCHAR argv[]) {
 			command++;
 			MountPoint[0] =  argv[command][0];
 			dokanOptions->MountPoint = MountPoint;
-			wprintf(L"Pouet: %s\n", dokanOptions->MountPoint);
-
 			break;
 		case 't':
 			command++;
@@ -833,6 +848,14 @@ main(ULONG argc, PCHAR argv[]) {
 			fprintf(stderr, "unknown command: %s\n", argv[command]);
 			return -1;
 		}
+	}
+	if (MountPoint[0] == L':') {
+		MountPoint[0] =  getNextFreeLetter();
+		if (MountPoint[0] == L':') {
+			return DOKAN_DRIVE_LETTER_ERROR;
+		}
+		dokanOptions->MountPoint = MountPoint;
+		DbgPrint(L"Next free drive is %s\n", MountPoint);
 	}
 
 

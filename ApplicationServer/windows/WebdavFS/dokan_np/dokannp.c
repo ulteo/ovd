@@ -195,29 +195,49 @@ StartDavModule(WCHAR* letter, WCHAR* remote, WCHAR* username, WCHAR* password)
 	WCHAR cmdLine[MAX_PATH] = {0};
 	BOOL result = 0;
 	
-    PROCESS_INFORMATION processInformation;
-    STARTUPINFO startupInfo;
-    memset(&processInformation, 0, sizeof(processInformation));
-    memset(&startupInfo, 0, sizeof(startupInfo));
-    startupInfo.cb = sizeof(startupInfo);
+	PROCESS_INFORMATION processInformation;
+	STARTUPINFO startupInfo;
+	memset(&processInformation, 0, sizeof(processInformation));
+	memset(&startupInfo, 0, sizeof(startupInfo));
+	startupInfo.cb = sizeof(startupInfo);
 
-    if (lstrlen(username) > 0)
-    	StringCchPrintfW(cmdLine, MAX_PATH, L"%s /l %s /u %s /o %s /w %s", app, letter, remote, username, password );
-    else
-    	StringCchPrintfW(cmdLine, MAX_PATH, L"%s /l %s /u %s", app, letter, remote );
+	StringCchCopyW(cmdLine, MAX_PATH, app);
+	StringCchCatW(cmdLine, MAX_PATH, L" ");
+
+	if (lstrlen(letter) > 0) {
+		StringCchCatW(cmdLine, MAX_PATH, L" ");
+		StringCchCatW(cmdLine, MAX_PATH, L"/l ");
+		StringCchCatW(cmdLine, MAX_PATH, letter);
+	}
+	if (lstrlen(remote) > 0) {
+		StringCchCatW(cmdLine, MAX_PATH, L" ");
+		StringCchCatW(cmdLine, MAX_PATH, L"/u ");
+		StringCchCatW(cmdLine, MAX_PATH, remote);
+	}
+
+	if (lstrlen(username) > 0) {
+		StringCchCatW(cmdLine, MAX_PATH, L" ");
+		StringCchCatW(cmdLine, MAX_PATH, L"/o ");
+		StringCchCatW(cmdLine, MAX_PATH, username);
+	}
+
+	if (lstrlen(password) > 0) {
+		StringCchCatW(cmdLine, MAX_PATH, L" ");
+		StringCchCatW(cmdLine, MAX_PATH, L"/w ");
+		StringCchCatW(cmdLine, MAX_PATH, password);
+	}
 
 	result = CreateProcess(NULL, cmdLine, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS, NULL, NULL, &startupInfo, &processInformation);
-	
 
-    if (result == 0)
-    {
-        DbgPrintW(L"ERROR: CreateProcess failed! %08x", GetLastError());
-        result = WN_WINDOWS_ERROR;
-    }
-    else {
-    	DbgPrintW(L"Start: OK");
-    	result = WN_SUCCESS;
-    }
+	if (result == 0)
+	{
+		DbgPrintW(L"ERROR: CreateProcess failed! %08x", GetLastError());
+		result = WN_WINDOWS_ERROR;
+	}
+	else {
+		DbgPrintW(L"Start: OK");
+		result = WN_SUCCESS;
+	}
 	return result;
 }	
 
@@ -347,22 +367,24 @@ NPAddConnection3(
 	DbgPrintW(L"  Password: %s\n", Password);
 
 	ZeroMemory(local, sizeof(local));
-    if (_wcsnicmp(wpos, WEBDAVPREFFIX, lstrlen(WEBDAVPREFFIX)) != 0) {
-    	return WN_BAD_NETNAME;
-    }
-    if (lstrlen(NetResource->lpLocalName) <= 1 || NetResource->lpLocalName[1] != L':')
-    {
-    	return WN_BAD_LOCALNAME;
-    }
+	if (_wcsnicmp(wpos, WEBDAVPREFFIX, lstrlen(WEBDAVPREFFIX)) != 0) {
+		return WN_BAD_NETNAME;
+	}
 	wpos += lstrlen(WEBDAVPREFFIX);
 	StringCchPrintfW(remote, MAX_PATH*2, L"%s%s", L"HTTP", wpos);
 
-	local[0] = (WCHAR)toupper(NetResource->lpLocalName[0]);
-	local[1] = L':';
-	local[2] = L'\0';
+	if (NetResource->lpLocalName != NULL) {
+		if (lstrlen(NetResource->lpLocalName) <= 1 || NetResource->lpLocalName[1] != L':')
+		{
+			return WN_BAD_LOCALNAME;
+		}
 
-	status = StartDavModule(local, remote, UserName, Password);
-	return status;
+		local[0] = (WCHAR)toupper(NetResource->lpLocalName[0]);
+		local[1] = L':';
+		local[2] = L'\0';
+		return StartDavModule(local, remote, UserName, Password);
+	}
+	return StartDavModule(NULL, remote, UserName, Password);
 }
 
 DWORD APIENTRY
