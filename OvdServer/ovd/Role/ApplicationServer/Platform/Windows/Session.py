@@ -3,7 +3,7 @@
 # Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
-# Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
@@ -255,7 +255,40 @@ class Session(AbstractSession):
 			for item in restrictions:
 				win32api.RegSetValueEx(key, item, 0, win32con.REG_DWORD, 1)
 			win32api.RegCloseKey(key)
-
+		
+		
+		# Hide local drives
+		value = 0
+		
+		drives = win32api.GetLogicalDriveStrings()
+		drives = drives.split('\000')[:-1]
+		for drive in drives:
+			t = win32file.GetDriveType(drive)
+			if t not in [win32con.DRIVE_CDROM, win32con.DRIVE_REMOVABLE, win32con.DRIVE_FIXED]:
+				continue
+			
+			# Transform the drive letter into a bit value according to
+			# http://technet.microsoft.com/en-us/library/cc959437.aspx
+			d = drive.lower()[0].encode("hex")
+			d = int(d) - 61 # a in ascii
+			d = pow(2, d)
+			
+			value+= d
+		
+		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer"%(hiveName)
+		try:
+			Reg.CreateKeyR(win32con.HKEY_USERS, path)
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+		except:
+			key = None
+		if key is None:
+			Logger.error("Unable to open key '%s'"%(path))
+		else:
+			win32api.RegSetValueEx(key, "NoDrives", 0, win32con.REG_DWORD, value)
+			win32api.RegSetValueEx(key, "NoViewOnDrive", 0, win32con.REG_DWORD, value)
+			win32api.RegCloseKey(key)
+		
+		
 		# Enable to use of lnk file from share without popup
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Policies\Associations"%(hiveName)
 	
