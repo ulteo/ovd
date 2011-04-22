@@ -204,7 +204,7 @@ StartDavModule(WCHAR* letter, WCHAR* remote, WCHAR* username, WCHAR* password)
     if (lstrlen(username) > 0)
     	StringCchPrintfW(cmdLine, MAX_PATH, L"%s /l %s /u %s /o %s /w %s", app, letter, remote, username, password );
     else
-    	StringCchPrintfW(cmdLine, MAX_PATH, L"%s /l %s /u %s ", app, letter, remote );
+    	StringCchPrintfW(cmdLine, MAX_PATH, L"%s /l %s /u %s", app, letter, remote );
 
 	result = CreateProcess(NULL, cmdLine, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS, NULL, NULL, &startupInfo, &processInformation);
 	
