@@ -348,11 +348,11 @@ NPAddConnection3(
 
 	ZeroMemory(local, sizeof(local));
     if (_wcsnicmp(wpos, WEBDAVPREFFIX, lstrlen(WEBDAVPREFFIX)) != 0) {
-    	return status;
+    	return WN_BAD_NETNAME;
     }
     if (lstrlen(NetResource->lpLocalName) <= 1 || NetResource->lpLocalName[1] != L':')
     {
-    	return status;
+    	return WN_BAD_LOCALNAME;
     }
 	wpos += lstrlen(WEBDAVPREFFIX);
 	StringCchPrintfW(remote, MAX_PATH*2, L"%s%s", L"HTTP", wpos);
