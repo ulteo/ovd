@@ -257,7 +257,11 @@ class Configuration_mode_ldap extends Configuration_mode {
     $form = $this->config2form($prefs);
     $str = '';
 
-    $ldap_url = 'ldap://'.$form['host'];
+    if (in_array(strtolower(parse_url($form['host'], PHP_URL_SCHEME)), array('ldap', 'ldaps')))
+      $ldap_url = $form['host'];
+    else
+      $ldap_url = 'ldap://'.$form['host'];
+    
     if ($form['port'] != 389)
       $ldap_url.= ':'.$form['port'];
     $ldap_url.= '/'.$form['suffix'];
