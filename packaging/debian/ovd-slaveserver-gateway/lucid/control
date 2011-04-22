@@ -3,12 +3,12 @@ Section: net
 Priority: extra
 Maintainer: Samuel Bovée <samuel@ulteo.com>
 Build-Depends: cdbs, debhelper (>= 6),
- python (>= 2.6), python-central, python-passfd, python-svn
+ python (>= 2.6), python-central, python-svn
 Standards-Version: 3.7.3
 XS-Python-Version: >= 2.6
 
 Package: ulteo-ovd-slaveserver-role-gateway
 Architecture: all
-Depends: ${python:Depends}, ulteo-ovd-slaveserver, openssl, python-openssl
+Depends: ${python:Depends}, ulteo-ovd-slaveserver, openssl, python-openssl, python-passfd
 Description: Ulteo Open Virtual Desktop - gateway role for slave server
  Gateway role for the Ulteo OVD slave server
