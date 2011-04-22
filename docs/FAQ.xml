@@ -277,6 +277,11 @@ $ getent hosts 192.168.0.19
 							443 (HTTPS): communication with administrator
 						</para>
 					</listitem>
+					<listitem>
+						<para>
+							1111 (HTTP): communication with slaveserver
+						</para>
+					</listitem>
 				</itemizedlist>
 			</para>
 		</listitem>
@@ -305,7 +310,7 @@ $ getent hosts 192.168.0.19
 				<itemizedlist>
 					<listitem>
 						<para>
-							1111 (HTTP): communication between OVD server
+							1112 (HTTP): communication with SessionManager
 						</para>
 					</listitem>
 					<listitem>
