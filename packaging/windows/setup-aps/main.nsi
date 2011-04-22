@@ -248,14 +248,9 @@ Section "post" PostCmd
   SetOutPath "$APPDATA\ulteo\ovd"
 
   DetailPrint "Generating Config file"
-  FileOpen $4 "${CONFIG_FILE}" w
-  FileWrite $4 "session_manager = $sm_address"
-  FileWrite $4 "$\r$\n" 
-  FileWrite $4 "ROLES = aps"
-  FileWrite $4 "$\r$\n" 
-  FileWrite $4 'LOG_LEVEL = *'
-  FileWrite $4 "$\r$\n"
-  FileClose $4
+  WriteINIStr "${CONFIG_FILE}" "main" "session_manager" "$sm_address"
+  WriteINIStr "${CONFIG_FILE}" "main" "roles" "aps"
+  WriteINIStr "${CONFIG_FILE}" "log" "level" "*"
 
   SetOutPath "$APPDATA\ulteo\ovd\log"
   SetOverwrite ifnewer

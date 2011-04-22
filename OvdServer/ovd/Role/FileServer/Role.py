@@ -48,7 +48,7 @@ class Role(AbstractRole):
 	def init(self):
 		Logger.info("FileServer init")
 		
-		if not Config.init():
+		if not Config.init_role():
 			Logger.info("FileServer never initialized, creating repository on '%s'"%(Config.spool))
 			os.makedirs(Config.spool)
 		

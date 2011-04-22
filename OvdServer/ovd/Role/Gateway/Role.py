@@ -24,8 +24,8 @@
 from OpenSSL import SSL
 
 from ovd.Role.Role import Role as AbstractRole
-from ovd.Config import Config
 from ovd.Logger import Logger
+from Config import Config
 from Dialog import Dialog
 from ReverseProxy import ReverseProxy
 
@@ -53,7 +53,7 @@ class Role(AbstractRole):
 	def init(self):
 		Logger.info("Gateway init")
 
-		fpem = os.path.join(Config.conf_dir, "gateway.pem")
+		fpem = os.path.join(Config.general.conf_dir, "gateway.pem")
 		if os.path.exists(fpem):
 			self.ssl_ctx = SSL.Context(SSL.SSLv23_METHOD)
 			self.ssl_ctx.use_privatekey_file(fpem)
@@ -74,8 +74,8 @@ class Role(AbstractRole):
 	def run(self):
 		self.has_run = True
 
-		gateway = (Config.gateway_address, Config.gateway_port)
-		sm = (Config.session_manager, self.HTTPS_PORT)
+		gateway = (Config.address, Config.port)
+		sm = (Config.general.session_manager, self.HTTPS_PORT)
 		self.rproxy = ReverseProxy(self.ssl_ctx, gateway, sm, self.RDP_PORT)
 
 		self.status = Role.STATUS_RUNNING

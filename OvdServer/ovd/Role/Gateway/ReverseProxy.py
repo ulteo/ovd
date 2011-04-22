@@ -25,9 +25,10 @@ import signal
 import socket
 import threading
 
+from Config import Config
 from ConnectionPoolProcess import ConnectionPoolProcess
 from ControlProcess import ControlChildProcess
-from ovd.Config import Config
+
 from ovd.Logger import Logger
 
 from passfd import sendfd
@@ -55,10 +56,10 @@ def connection_pool_process(child_pipes, father_pipes, s_unix, ssl_ctx):
 		else:
 			p.was_lazy = False
 		global timer
-		timer = threading.Timer(Config.gateway_process_timeout, clean_process)
+		timer = threading.Timer(Config.process_timeout, clean_process)
 		timer.start()
 	global timer
-	timer = threading.Timer(Config.gateway_process_timeout, clean_process)
+	timer = threading.Timer(Config.process_timeout, clean_process)
 	timer.start()
 
 	def stop_process(signum, frame):
@@ -109,11 +110,11 @@ class ReverseProxy(asyncore.dispatcher):
 			proc = proc[0]
 			nb_conn = proc[1].send("nb_conn")
 			self.processes[pid][1] = nb_conn
-			if nb_conn < Config.gateway_max_connection:
+			if nb_conn < Config.max_connection:
 				s_unix = proc[2]
 				break
 		if s_unix is None:
-			if len(self.processes) < Config.gateway_max_process:
+			if len(self.processes) < Config.max_process:
 				pid = self.create_process()
 				s_unix = self.processes[pid][0][2]
 			else:
