@@ -862,6 +862,10 @@ main(ULONG argc, PCHAR argv[]) {
 	davCache = new DavCache();
 	davCache->init(server);
 
+	if (! server->DAVOpen(L"/")) {
+		return DOKAN_ERROR;
+	}
+
 //	if (g_DebugMode)
 //		dokanOptions->Options |= DOKAN_OPTION_DEBUG;
 //	if (g_UseStdErr)
