@@ -54,7 +54,7 @@ WebdavServer::~WebdavServer() {}
 
 HRESULT WebdavServer::init() {
 	DWORD dwErr = 0;
-	hSession = WinHttpOpen( L"test", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0 );
+	hSession = WinHttpOpen( L"Ulteo WebdavFS", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0 );
 
 	if( hSession == NULL)
 	{
