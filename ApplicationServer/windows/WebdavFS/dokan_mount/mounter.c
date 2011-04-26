@@ -1,4 +1,24 @@
 /*
+ * Copyright (C) 2011 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+/*
 
 Copyright (c) 2007, 2008 Hiroki Asakawa asakaw@gmail.com
 
@@ -167,12 +187,14 @@ static VOID DokanControl(PDOKAN_CONTROL Control)
 
 		DbgPrintW(L"DokanControl Mount\n");
 
-		if (DokanControlMount(Control->MountPoint, Control->DeviceName)) {
+//		if (DokanControlMount(Control->MountPoint, Control->DeviceName)) {
 			Control->Status = DOKAN_CONTROL_SUCCESS;
 			InsertMountEntry(Control);
-		} else {
-			Control->Status = DOKAN_CONTROL_FAIL;
-		}
+			DbgPrintW(L"DriveLetter: %c, DeviceName %s\n", Control->MountPoint[0], Control->DeviceName);
+
+//		} else {
+//			Control->Status = DOKAN_CONTROL_FAIL;
+//		}
 		break;
 
 	case DOKAN_CONTROL_UNMOUNT:
@@ -181,8 +203,7 @@ static VOID DokanControl(PDOKAN_CONTROL Control)
 
 		mountEntry = FindMountEntry(Control);
 		if (mountEntry == NULL) {
-			if (Control->Option == DOKAN_CONTROL_OPTION_FORCE_UNMOUNT &&
-				DokanControlUnmount(Control->MountPoint)) {
+			if (Control->Option == DOKAN_CONTROL_OPTION_FORCE_UNMOUNT ) {
 				Control->Status = DOKAN_CONTROL_SUCCESS;
 				break;
 			}
@@ -190,17 +211,17 @@ static VOID DokanControl(PDOKAN_CONTROL Control)
 			break;	
 		}
 
-		if (DokanControlUnmount(mountEntry->MountControl.MountPoint)) {
+//		if (DokanControlUnmount(mountEntry->MountControl.MountPoint)) {
 			Control->Status = DOKAN_CONTROL_SUCCESS;
 			if (wcslen(Control->DeviceName) == 0) {
 				wcscpy_s(Control->DeviceName, sizeof(Control->DeviceName) / sizeof(WCHAR),
 						mountEntry->MountControl.DeviceName);
 			}
 			RemoveMountEntry(mountEntry);
-		} else {
-			mountEntry->MountControl.Status = DOKAN_CONTROL_FAIL;
-			Control->Status = DOKAN_CONTROL_FAIL;
-		}
+//		} else {
+//			mountEntry->MountControl.Status = DOKAN_CONTROL_FAIL;
+//			Control->Status = DOKAN_CONTROL_FAIL;
+//		}
 
 		break;
 

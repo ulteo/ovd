@@ -1,4 +1,24 @@
 /*
+ * Copyright (C) 2011 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+/*
   Dokan : user-mode file system library for Windows
 
   Copyright (C) 2008 Hiroki Asakawa info@dokan-dev.net
@@ -115,6 +135,62 @@ CheckMountPoint(LPCWSTR	MountPoint)
 	return DOKAN_MOUNT_POINT_ERROR;
 }
 
+BOOL
+CreateDriveLetter(WCHAR DriveLetter, LPCWSTR DeviceName)
+{
+	WCHAR   dosDevice[] = L"\\\\.\\C:";
+	WCHAR   driveName[] = L"C:";
+	WCHAR	rawDeviceName[MAX_PATH] = L"\\Device";
+	HANDLE  device;
+
+	dosDevice[4] = DriveLetter;
+	driveName[0] = DriveLetter;
+	wcscat_s(rawDeviceName, MAX_PATH, DeviceName);
+
+	DokanDbgPrintW(L"DriveLetter: %c, DeviceName %s\n", DriveLetter, rawDeviceName);
+
+	device = CreateFile(
+		dosDevice,
+		GENERIC_READ | GENERIC_WRITE,
+		FILE_SHARE_READ | FILE_SHARE_WRITE,
+		NULL,
+		OPEN_EXISTING,
+		FILE_FLAG_NO_BUFFERING,
+		NULL
+		);
+
+    if (device != INVALID_HANDLE_VALUE) {
+    	DokanDbgPrintW(L"DokanControl Mount failed: %c: is alredy used\n", DriveLetter);
+		CloseHandle(device);
+        return FALSE;
+    }
+
+    if (!DefineDosDevice(DDD_RAW_TARGET_PATH, driveName, rawDeviceName)) {
+    	DokanDbgPrintW(L"DokanControl DefineDosDevice failed: %d\n", GetLastError());
+        return FALSE;
+    }
+
+	device = CreateFile(
+        dosDevice,
+        GENERIC_READ | GENERIC_WRITE,
+        FILE_SHARE_READ | FILE_SHARE_WRITE,
+        NULL,
+        OPEN_EXISTING,
+        FILE_FLAG_NO_BUFFERING,
+        NULL
+        );
+
+    if (device == INVALID_HANDLE_VALUE) {
+    	DokanDbgPrintW(L"DokanControl Mount %c failed:%d\n", DriveLetter, GetLastError());
+        DefineDosDevice(DDD_REMOVE_DEFINITION, dosDevice, NULL);
+        return FALSE;
+    }
+
+	CloseHandle(device);
+	return TRUE;
+}
+
+
 int DOKANAPI
 DokanMain(PDOKAN_OPTIONS DokanOptions, PDOKAN_OPERATIONS DokanOperations)
 {
@@ -205,6 +281,9 @@ DokanMain(PDOKAN_OPTIONS DokanOptions, PDOKAN_OPERATIONS DokanOperations)
 		DokanDbgPrint("Dokan Error: DefineDosDevice Failed\n");
 		return DOKAN_MOUNT_ERROR;
 	}
+
+	if (!CreateDriveLetter(instance->MountPoint[0], instance->DeviceName))
+		return DOKAN_MOUNT_ERROR;
 
 	DbgPrintW(L"mounted: %s -> %s\n", instance->MountPoint, instance->DeviceName);
 
