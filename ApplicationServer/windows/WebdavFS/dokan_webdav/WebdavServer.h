@@ -35,7 +35,7 @@
 
 
 typedef struct _DAVFILEINFO {
-	WCHAR* name;
+	WCHAR name[MAX_PATH];
 	BOOL isDir;
 	FILETIME creationTime;
 	FILETIME lastModified;
@@ -79,7 +79,7 @@ public:
 	HINTERNET DAVPROPFind(wchar_t** path, wchar_t* body, int depth);
 	BOOL DAVOpen(wchar_t* path );
 	DAVFILEINFO* DAVGetFileInformations(LPCWSTR path);
-	DAVFILEINFO** DAVGetDirectoryList(LPCWSTR path, PDWORD count );
+	DAVFILEINFO* DAVGetDirectoryList(LPCWSTR path, PDWORD count );
 
 
 	BOOL DAVGetFileContent(wchar_t* path, LPDWORD ReadLength, LONGLONG	Offset, DWORD BufferLength, LPVOID Buffer, BOOL redirected );

@@ -473,7 +473,7 @@ DAVFILEINFO* WebdavServer::DAVGetFileInformations(LPCWSTR path) {
 		filename[filename_length-1] = '\0';
 	}
 
-	fsinfo->name = filename;
+	wcscpy_s(fsinfo->name, MAX_PATH, filename);
 	pouet.release();
 
 	if (hRequest) requestDel(hRequest);
@@ -483,11 +483,11 @@ DAVFILEINFO* WebdavServer::DAVGetFileInformations(LPCWSTR path) {
 }
 
 
-DAVFILEINFO** WebdavServer::DAVGetDirectoryList(LPCWSTR path, PDWORD count ) {
+DAVFILEINFO* WebdavServer::DAVGetDirectoryList(LPCWSTR path, PDWORD count ) {
 	WCHAR* path2;
 	HINTERNET hRequest;
 	XMLDavParser* parser = NULL;
-	DAVFILEINFO** dirList;
+	DAVFILEINFO* dirList;
 	DavEntry::FileType type = DavEntry::file;
 	long long file_size;
 	int index = 0;
@@ -515,11 +515,14 @@ DAVFILEINFO** WebdavServer::DAVGetDirectoryList(LPCWSTR path, PDWORD count ) {
 
 	*count = result.size() - 1;
 
-	dirList = (DAVFILEINFO**)malloc(sizeof(DAVFILEINFO)*(*count));
+	dirList = (DAVFILEINFO*)malloc(sizeof(DAVFILEINFO)*(*count));
 	ZeroMemory(dirList, sizeof(DAVFILEINFO)*(*count));
 
 	for ( iter = result.begin(); iter != result.end( ); iter++ ) {
-		DAVFILEINFO* fsinfo = (DAVFILEINFO*)malloc(sizeof(DAVFILEINFO));
+		if (index == 0) {
+			iter++;
+		}
+		DAVFILEINFO* fsinfo = &dirList[index];
 		DavEntry &entry = (DavEntry&)*iter;
 		WCHAR* filename = NULL;
 
@@ -552,10 +555,8 @@ DAVFILEINFO** WebdavServer::DAVGetDirectoryList(LPCWSTR path, PDWORD count ) {
 		if (filename[filename_length-1] == '/') {
 			filename[filename_length-1] = '\0';
 		}
-		fsinfo->name = filename;
+		wcscpy_s(fsinfo->name, MAX_PATH, filename);
 
-		if (index  > 0)
-			dirList[index-1] = fsinfo;
 		index ++;
 	}
 	parser->release();

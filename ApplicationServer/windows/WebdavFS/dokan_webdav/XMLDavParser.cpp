@@ -89,7 +89,6 @@ DavEntry* XMLDavParser::readProp(void) {
 	const WCHAR* localName;
 	const WCHAR* namespaceUri;
 	const WCHAR* value;
-	WCHAR escaped[2048];
 	DWORD size;
 	DavEntry* entry = NULL;
 
@@ -106,11 +105,7 @@ DavEntry* XMLDavParser::readProp(void) {
 			case path:
 				value = GetNodeValue();
 				size = lstrlen(value) + 1;
-				if (FAILED(hr = UrlUnescape((LPWSTR)value, escaped, &size, URL_DONT_UNESCAPE_EXTRA_INFO))) {
-					DbgPrint(L"Unable to unescape string, error is %08.8lx  %i ", hr, size);
-					break;
-				}
-				entry = new DavEntry(escaped);
+				entry = new DavEntry(value);
 				break;
 
 			case type:

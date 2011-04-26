@@ -447,6 +447,8 @@ MirrorGetFileInformation(
 	HandleFileInformation->nFileSizeHigh = fsinfo->nFileSizeHigh;
 	HandleFileInformation->nFileSizeLow = fsinfo->nFileSizeLow;
 	DbgPrint(L"\tFindFiles OK, file size = %d\n", HandleFileInformation->nFileSizeLow);
+	if (fsinfo != NULL)
+		free(fsinfo);
 //	FindClose(handle);
 
 
@@ -463,7 +465,7 @@ MirrorFindFiles(
 	WCHAR	filePath[MAX_PATH];
 	WIN32_FIND_DATAW point;
 	DWORD	count = 0;
-	DAVFILEINFO** fileList = NULL;
+	DAVFILEINFO* fileList = NULL;
 	int i;
 
 	GetFilePath(FileName, filePath);
@@ -489,7 +491,7 @@ MirrorFindFiles(
 		ZeroMemory(&data, sizeof(WIN32_FIND_DATAW));
 		data.dwFileAttributes = FILE_ATTRIBUTE_NORMAL;
 
-		if (fileList[i]->isDir)
+		if (fileList[i].isDir)
 		{
 			data.dwFileAttributes = FILE_ATTRIBUTE_DIRECTORY;
 		}
@@ -499,13 +501,14 @@ MirrorFindFiles(
 		data.ftLastWriteTime.dwLowDateTime = 0;
 		data.ftLastWriteTime.dwHighDateTime = 0;
 
-		data.nFileSizeHigh = fileList[i]->nFileSizeHigh;
-		data.nFileSizeLow = fileList[i]->nFileSizeLow;
-
-		wcscpy_s(data.cFileName, MAX_PATH , fileList[i]->name);
+		data.nFileSizeHigh = fileList[i].nFileSizeHigh;
+		data.nFileSizeLow = fileList[i].nFileSizeLow;
+		wcscpy_s(data.cFileName, MAX_PATH , fileList[i].name);
 
 		FillFindData(&data, DokanFileInfo);
 	}
+	if (fileList != NULL)
+		free(fileList);
 	return 0;
 }
 
