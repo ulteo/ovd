@@ -236,6 +236,7 @@ StartDavModule(WCHAR* letter, WCHAR* remote, WCHAR* username, WCHAR* password)
 	WCHAR cmdLine[MAX_PATH] = {0};
 	BOOL result = 0;
 	WCHAR l[] = L"E:";
+	int timeout = WAIT_TIME;
 	
 	PROCESS_INFORMATION processInformation;
 	STARTUPINFO startupInfo;
@@ -260,7 +261,7 @@ StartDavModule(WCHAR* letter, WCHAR* remote, WCHAR* username, WCHAR* password)
 	}
 	StringCchCatW(cmdLine, MAX_PATH, L" ");
 	StringCchCatW(cmdLine, MAX_PATH, L"/l ");
-	StringCchCatW(cmdLine, MAX_PATH, letter);
+	StringCchCatW(cmdLine, MAX_PATH, l);
 
 	if (lstrlen(remote) > 0) {
 		StringCchCatW(cmdLine, MAX_PATH, L" ");
@@ -285,15 +286,21 @@ StartDavModule(WCHAR* letter, WCHAR* remote, WCHAR* username, WCHAR* password)
 	if (result == 0)
 	{
 		DbgPrintW(L"ERROR: CreateProcess failed! %08x", GetLastError());
-		result = WN_WINDOWS_ERROR;
+		return WN_WINDOWS_ERROR;
 	}
-	else {
-		DbgPrintW(L"Start: OK");
-		result = WN_SUCCESS;
+
+	while (timeout > 0) {
+		if (GetDriveType(l) != DRIVE_NO_ROOT_DIR) {
+			DbgPrintW(L"Start: OK");
+			return WN_SUCCESS;
+		}
+
+		Sleep(500);
+		timeout -= 500;
 	}
-	//query dos device
-	// mount
-	return result;
+
+	DbgPrintW(L"ERROR: Webdav failed to mount the drive");
+	return WN_BAD_NETNAME;
 }	
 
 DWORD APIENTRY

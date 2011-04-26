@@ -23,6 +23,7 @@
 #define DOKANNP_H_
 
 #define DEBUG 1
+#define WAIT_TIME               5000
 #define DOKAN_CONTROL_PIPE			L"\\\\.\\pipe\\DokanMounter"
 
 #define DOKAN_CONTROL_MOUNT		1
