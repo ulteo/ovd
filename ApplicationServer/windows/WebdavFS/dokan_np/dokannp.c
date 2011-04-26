@@ -18,6 +18,23 @@ DokanDbgPrintW(LPCWSTR format, ...)
 	OutputDebugStringW(buffer);
 }
 
+WCHAR 
+getNextFreeLetter() {
+	WCHAR drive[] = L"E:";
+	UINT result = 0;
+	int i = 0;
+
+	for (i = (int)L'E' ; i <= (int)L'Z'; i++) {
+		drive[0] = (WCHAR)i;
+
+		result = GetDriveType((LPCTSTR)drive);
+
+		if (result == DRIVE_NO_ROOT_DIR) {
+			return drive[0];
+		}
+	}
+	return L':';
+}
 
 BOOL
 SendToDevice(
@@ -194,21 +211,33 @@ StartDavModule(WCHAR* letter, WCHAR* remote, WCHAR* username, WCHAR* password)
 	WCHAR app[] = L"C:\\Windows\\System32\\davfs.exe";
 	WCHAR cmdLine[MAX_PATH] = {0};
 	BOOL result = 0;
+	WCHAR l[] = L"E:";
 	
 	PROCESS_INFORMATION processInformation;
 	STARTUPINFO startupInfo;
 	memset(&processInformation, 0, sizeof(processInformation));
 	memset(&startupInfo, 0, sizeof(startupInfo));
+	
 	startupInfo.cb = sizeof(startupInfo);
+	startupInfo.dwFlags = STARTF_USESHOWWINDOW;
+	startupInfo.wShowWindow = SW_HIDE;
 
 	StringCchCopyW(cmdLine, MAX_PATH, app);
 	StringCchCatW(cmdLine, MAX_PATH, L" ");
-
-	if (lstrlen(letter) > 0) {
-		StringCchCatW(cmdLine, MAX_PATH, L" ");
-		StringCchCatW(cmdLine, MAX_PATH, L"/l ");
-		StringCchCatW(cmdLine, MAX_PATH, letter);
+	
+	if (letter == NULL) {
+		l[0] = getNextFreeLetter();
+		if (l[0] == L':') {
+			return WN_BAD_LOCALNAME;
+		}
 	}
+	else {
+		l[0] = letter[0];
+	}
+	StringCchCatW(cmdLine, MAX_PATH, L" ");
+	StringCchCatW(cmdLine, MAX_PATH, L"/l ");
+	StringCchCatW(cmdLine, MAX_PATH, letter);
+
 	if (lstrlen(remote) > 0) {
 		StringCchCatW(cmdLine, MAX_PATH, L" ");
 		StringCchCatW(cmdLine, MAX_PATH, L"/u ");
@@ -238,6 +267,8 @@ StartDavModule(WCHAR* letter, WCHAR* remote, WCHAR* username, WCHAR* password)
 		DbgPrintW(L"Start: OK");
 		result = WN_SUCCESS;
 	}
+	//query dos device
+	// mount
 	return result;
 }	
 
