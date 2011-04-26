@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -36,7 +37,7 @@ import javax.swing.KeyStroke;
 import net.propero.rdp.InputListener;
 import net.propero.rdp.RdesktopCanvas;
 
-import org.ulteo.ovd.client.authInterface.LogoutPopup;
+import org.ulteo.ovd.client.authInterface.NativeLogoutPopup;
 import org.ulteo.rdp.RdpActions;
 
 public class DesktopFrame extends JFrame implements WindowListener, InputListener {
@@ -135,7 +136,7 @@ public class DesktopFrame extends JFrame implements WindowListener, InputListene
 	@Override
 	public void windowClosing(WindowEvent arg0) {
 		if (this.actions != null)
-			new LogoutPopup(this, this.actions);
+			new NativeLogoutPopup(this, this.actions);
 		else
 			System.err.println("Can't manage disconnection request: rdpAction is null");
 	}
