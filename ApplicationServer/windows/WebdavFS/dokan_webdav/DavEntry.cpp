@@ -37,6 +37,12 @@ DavEntry::DavEntry(const DavEntry &entry) {
 
 DavEntry::DavEntry(const WCHAR* path_) {
 	path = unicodeConvert(path_);
+	lastModifiedTime.dwLowDateTime = 0;
+	lastModifiedTime.dwHighDateTime = 0;
+	creationTime.dwLowDateTime = 0;
+	creationTime.dwHighDateTime = 0;
+	length = 0;
+	type = file;
 }
 
 
