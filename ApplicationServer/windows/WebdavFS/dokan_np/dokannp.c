@@ -568,7 +568,8 @@ NPEnumResource(
 	 __in LPDWORD BufferSize)
 {
 	DbgPrintW(L"NPEnumResource\n");
-	return WN_NOT_SUPPORTED;
+	*Count = 0;
+	return WN_SUCCESS;
 }
 
 DWORD APIENTRY
