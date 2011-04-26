@@ -3,7 +3,7 @@
 # Copyright (C) 2009 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -104,7 +104,6 @@ def CopyTree(KeySrc, SubKey, KeyDest):
 	while True:
 		try:
 			(string, object, type) = win32api.RegEnumValue(hkey_src, index)
-			index+= 1
 #			print "CopyValue",string
 			win32api.RegSetValueEx(hkey_dst, string, 0, type, object)
 		except Exception, err:
@@ -114,12 +113,12 @@ def CopyTree(KeySrc, SubKey, KeyDest):
 				Logger.debug("Unable to copy value (%s)"%(str(err)))
 			else:
 				Logger.warn("Unable to copy value (%s)"%(str(err)))
+		index+= 1
 
 	index = 0
 	while True:
 		try:
 			buf = win32api.RegEnumKey(hkey_src, index)
-			index+= 1
 #			print "CopyKey",buf
 			CopyTree(hkey_src, buf, hkey_dst)
 		except Exception, err:
@@ -129,6 +128,7 @@ def CopyTree(KeySrc, SubKey, KeyDest):
 				Logger.debug("Unable to copy key (%s)"%(str(err)))
 			else:
 				Logger.warn("Unable to copy key (%s)"%(str(err)))
+		index+= 1
 
 	try:
 		win32api.RegCloseKey(hkey_src)
