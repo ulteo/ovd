@@ -14,7 +14,7 @@ C_DEFINES=$(C_DEFINES) -DUNICODE -D_UNICODE
 INCLUDES= $(INCLUDES);..\dokan
 	 
 
-LINKLIBS=..\$(_BUILDARCH)\dokan.lib
+LINKLIBS=..\build\dokan.lib
 
 TARGETLIBS=  $(TARGETLIBS) \
              $(SDK_LIB_PATH)\Winhttp.lib \

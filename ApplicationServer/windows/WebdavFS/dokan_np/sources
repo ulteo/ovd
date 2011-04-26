@@ -7,7 +7,7 @@ C_DEFINES=$(C_DEFINES) -DUNICODE -D_UNICODE
 
 TARGETLIBS=$(SDK_LIB_PATH)\user32.lib \
 		$(SDK_LIB_PATH)\kernel32.lib \
-		..\$(_BUILDARCH)\dokan.lib
+		..\build\dokan.lib
 		
 
 INCLUDES=..\dokan; \

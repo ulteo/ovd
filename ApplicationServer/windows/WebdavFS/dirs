@@ -1,5 +1,6 @@
 DIRS= \
 	dokan \
-	dokan_np \
+	dokan_control \
+	dokan_mount \
 	dokan_webdav
 

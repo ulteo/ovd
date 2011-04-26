@@ -26,3 +26,6 @@ SOURCES=dokan.c \
 	dokan.rc
 
 
+!IF "$(BUILD_PASS)" == "PASS2" || "$(BUILD_PASS)" == "PASSALL"
+NTTARGETFILES=COPYDOKANSYS
+!ENDIF
