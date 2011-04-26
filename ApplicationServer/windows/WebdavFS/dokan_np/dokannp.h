@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2011 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2010
  *
