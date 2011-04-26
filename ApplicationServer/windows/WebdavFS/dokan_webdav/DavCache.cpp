@@ -56,7 +56,6 @@ WCHAR* DavCache::getCacheDir() {
 	  RegCloseKey(hkey);
 
 	  swprintf_s(cacheDir, MAX_PATH, L"%s\\%s", tempDir, DAV_CACHE_DIR_SUFFIXE);
-	  wprintf(L"cachedir %s\n", cacheDir);
 	  return cacheDir;
 }
 
@@ -141,8 +140,6 @@ ULONG64 DavCache::add(WCHAR* path)
 	WCHAR* localPath = NULL;
 	DAVCACHEENTRY* currentEntry = NULL;
 
-	wprintf(L"davCacheAdd \n");
-
 	if (count > DAV_CACHE_SIZE)
 	{
 		DbgPrint(L"Enable to add new element to cache, cache is full\n");
@@ -156,28 +153,9 @@ ULONG64 DavCache::add(WCHAR* path)
 	remotePath = (WCHAR*)malloc(MAX_PATH * sizeof(WCHAR));
 	localPath = (WCHAR*)malloc(MAX_PATH * sizeof(WCHAR));
 
-	if (!localPath)
-	{
-		DbgPrint(L"Unable to allocate memory\n");
-		if (remotePath)
-		{
-			free(remotePath);
-			return (ULONG64)-1;
-		}
-	}
-
-	wcscat(remotePath, path);
+	wcscpy_s(remotePath, MAX_PATH, path);
 	swprintf_s(localPath, MAX_PATH, L"%s\\%u", cacheDir, cacheHandle);
 
-	wprintf(L"davCacheAdd %ls\n", remotePath);
-	wprintf(L"davCacheAdd before import\n");
-	wprintf(L"import %s %s \n", path, localPath);
-	if (! davServer->DAVImportFileContent( path, localPath, FALSE ))
-	{
-		wprintf(L"Unable to add %s to local cache, Error while importing the file", remotePath);
-		return (ULONG64)-1;
-	}
-	DbgPrint(L"davCacheAdd after import\n");
 	cache[cacheHandle].cachePath = localPath;
 	cache[cacheHandle].remotePath = remotePath;
 	count++;
@@ -204,16 +182,16 @@ BOOL DavCache::remove(ULONG64 handle)
 		return FALSE;
 	}
 
-	if (!DeleteFile(currentEntry->cachePath))
-	{
-		DbgPrint(L"Error %u in WinHttpReadData.\n", GetLastError());
-		ret = FALSE;
-	}
-
 	if (! davServer->DAVExportFileContent(currentEntry->remotePath, currentEntry->cachePath, FALSE ))
 	{
 		DbgPrint(L"Unable to remove %s from local cache, Error while exporting the file", currentEntry->remotePath);
 		return -1;
+	}
+
+	if (!DeleteFile(currentEntry->cachePath))
+	{
+		DbgPrint(L"Error %u in WinHttpReadData.\n", GetLastError());
+		ret = FALSE;
 	}
 
 	if (!currentEntry->cachePath)
@@ -233,13 +211,13 @@ BOOL DavCache::remove(ULONG64 handle)
 
 DAVCACHEENTRY* DavCache::getFromHandle(ULONG64 handle)
 {
-	wprintf(L"cache handle%i\n", cache[handle]);
+	if (handle == -1)
+		return NULL;
 	return &cache[handle];
 }
 
 DAVCACHEENTRY* DavCache::getFromPath(WCHAR* path)
 {
-	wprintf(L"cache path%s\n", path);
 	int i = 0;
 	for (i = 0 ; i < DAV_CACHE_SIZE ; i++)
 	{
@@ -249,10 +227,23 @@ DAVCACHEENTRY* DavCache::getFromPath(WCHAR* path)
 		{
 			if (wcscmp(currentEntry->remotePath, path) == 0)
 			{
-				wprintf(L"cache handle%i\n", currentEntry);
 				return currentEntry;
 			}
 		}
 	}
 	return NULL;
+}
+
+ULONG64 DavCache::getHandleFromPath(WCHAR* path) {
+	int i = 0;
+	for (i = 0 ; i < DAV_CACHE_SIZE ; i++) {
+		//TODO save unsaved file
+		DAVCACHEENTRY* currentEntry = &cache[i];
+		if(currentEntry->isSet) {
+			if ( currentEntry->remotePath!= NULL && wcscmp(currentEntry->remotePath, path) == 0) {
+				return i;
+			}
+		}
+	}
+	return (ULONG64)-1;
 }

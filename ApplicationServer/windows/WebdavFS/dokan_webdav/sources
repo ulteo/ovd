@@ -24,6 +24,7 @@ TARGETLIBS=  $(TARGETLIBS) \
 
 SOURCES=mirror.cpp \
 		DavCache.cpp \
+		WinHTTPStream.cpp \
 		XMLDavParser.cpp \
 		DavEntry.cpp \
 		WebdavServer.cpp

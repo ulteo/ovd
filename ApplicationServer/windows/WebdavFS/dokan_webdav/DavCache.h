@@ -34,9 +34,6 @@ typedef struct _DAVCACHEENTRY
 } DAVCACHEENTRY, *PDAVCACHEENTRY;
 
 
-
-
-
 class DavCache {
 private:
 	WebdavServer *davServer;
@@ -57,6 +54,7 @@ public:
 	PDAVCACHEENTRY getFromPath(WCHAR* path);
 	WCHAR* getCacheDir();
 	ULONG64 getNextEmptyEntry();
+	ULONG64 DavCache::getHandleFromPath(WCHAR* path);
 
 };
 

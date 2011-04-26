@@ -60,6 +60,7 @@ private:
 
 	LPSTR getData( HINTERNET hRequest, PDWORD dwSize, PDWORD status);
 	BOOL path_join(WCHAR* dest_, WCHAR* prefixe_, WCHAR* path_);
+	void getAbsolutePath(WCHAR* dest, WCHAR* path);
 
 public:
 	WebdavServer(wchar_t* address, int port, wchar_t* prefixe, wchar_t* username, wchar_t* password, BOOL useHTTPS);
@@ -71,12 +72,13 @@ public:
 	HINTERNET requestNew(wchar_t* method, wchar_t* path );
 	BOOL requestDel(HINTERNET hRequest );
 	WCHAR* getRedirectPath(HINTERNET hRequest);
+	DWORD getStatus(HINTERNET hRequest);
 
 
 	DAVFILEINFO DAVFSInfoNew();
-	LPSTR DAVPROPFind(wchar_t** path, wchar_t* body, int depth);
+	HINTERNET DAVPROPFind(wchar_t** path, wchar_t* body, int depth);
 	BOOL DAVOpen(wchar_t* path );
-	DAVFILEINFO* DAVGetFileInformations(LPCWSTR path, LPSTR davData );
+	DAVFILEINFO* DAVGetFileInformations(LPCWSTR path);
 	DAVFILEINFO** DAVGetDirectoryList(LPCWSTR path, PDWORD count );
 
 
@@ -86,6 +88,7 @@ public:
 	BOOL DAVWriteFile(wchar_t* path, LPCVOID Buffer, LPDWORD ReadLength, LONGLONG	Offset, DWORD BufferLength, BOOL redirected );
 	BOOL DAVMKCOL(wchar_t* path, BOOL redirected );
 	BOOL DAVDELETE(wchar_t* path, BOOL redirected );
+	BOOL DAVMOVE(wchar_t* from, wchar_t* to, BOOL redirected, BOOL replaceIfExisting);
 };
 
 #endif /* WEBDAVSERVER_H_ */

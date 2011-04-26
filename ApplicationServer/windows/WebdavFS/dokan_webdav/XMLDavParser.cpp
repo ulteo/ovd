@@ -18,7 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 #include "XMLDavParser.h"
 #include "debug.h"
 
@@ -28,127 +27,116 @@ extern BOOL g_DebugMode;
 const WCHAR* XMLDavParser::TagElementString[TAG_ELEMENT_COUNT] = {L"multistatus", L"response", L"href", L"getcontenttype", L"creationdate", L"getlastmodified", L"getcontentlength", L"iscollection"};
 
 
-XMLDavParser::XMLDavParser(CHAR* xmlData) : currentEntry(NULL) {
-	int size = 0;
-
-	if (xmlData == NULL) {
-		hr = HRESULT(-1);
-		return;
-	}
-	size = strlen(xmlData);
-
-	hMem = ::GlobalAlloc(GMEM_MOVEABLE, size+1);
-	if (!hMem) {
-		DbgPrint(L"Unable to allocate data");
-	    hr = HRESULT(-1);
-	    return;
-	}
-
-	pOutBuffer = ::GlobalLock(hMem);
-	memcpy((void*)pOutBuffer, xmlData, size+1);
+XMLDavParser::XMLDavParser(HINTERNET hRequest_) : currentEntry(NULL) {
+	hRequest = hRequest_;
 	hr = S_OK;
 }
 
-HRESULT XMLDavParser::parse(void) {
-	XmlNodeType nodeType;
-	const WCHAR* pwszLocalName;
-	const WCHAR* pwszValue;
+
+bool XMLDavParser::ReadElement(LPCWSTR* namespaceUri, LPCWSTR* localName) {  
+	XmlNodeType nodeType = XmlNodeType_None;
+	const WCHAR* name;
+	while (S_OK == pReader->Read(&nodeType)){
+		pReader->GetLocalName(&name, NULL);
+		if(nodeType == XmlNodeType_Element){  
+			pReader->GetNamespaceUri(namespaceUri,NULL);  
+			pReader->GetLocalName(localName,NULL);  
+			return true;  
+		}  
+		else if(nodeType == XmlNodeType_EndElement) {
+			if (wcscmp((WCHAR*)name, L"response") == 0)
+				return false;
+			if (wcscmp((WCHAR*)name, L"multistatus") == 0)
+				return false;
+		}
+	}
+	return false;  
+}  
+
+
+void XMLDavParser::ReadElementToEnd(){
+	const WCHAR* local;
+	if (pReader->IsEmptyElement())  
+		return;  
+	XmlNodeType nodeType = XmlNodeType_None;  
+	while (S_OK == pReader->Read(&nodeType)) {
+		pReader->GetLocalName(&local, NULL);
+		if(nodeType==XmlNodeType_Element) {  
+			ReadElementToEnd();
+		}  
+		else if(nodeType==XmlNodeType_EndElement) {  
+			return;  
+		}  
+	}  
+}  
+
+
+const WCHAR* XMLDavParser::GetNodeValue() {  
+	XmlNodeType nodeType = XmlNodeType_None;
+	PCWSTR value = 0;
+	
+	do{  
+		pReader->Read(&nodeType);  
+	} while(nodeType == XmlNodeType_Whitespace || nodeType == XmlNodeType_Comment);
+	
+	if(nodeType==XmlNodeType_Text || nodeType==XmlNodeType_CDATA)  
+		pReader->GetValue(&value,NULL);  
+	return value;  
+}  
+
+
+DavEntry* XMLDavParser::readProp(void) {
+	const WCHAR* localName;
+	const WCHAR* namespaceUri;
+	const WCHAR* value;
 	WCHAR escaped[2048];
 	DWORD size;
-	TagElement current = unknow;
+	DavEntry* entry = NULL;
 
+	while(ReadElement(&namespaceUri,&localName)) {
+		
+		TagElement current = unknow;
+		for (int val = 0 ; val < TAG_ELEMENT_COUNT ; val++) {
+			if ( wcscmp(localName, XMLDavParser::TagElementString[val]) == 0) {
+				current = (TagElement)val;
+			}
+		}
 
-	if (FAILED(hr = pReader->Read(&nodeType))) {
-		DbgPrint(L"Error getting prefix, error is %08.8lx %08.8lx", hr, nodeType);
-	}
-	last = unknow;
-	// read until there are no more nodes
-	while (S_OK == (hr = pReader->Read(&nodeType))) {
-		switch (nodeType) {
-
-		case XmlNodeType_Element:
-			if (FAILED(hr = pReader->GetLocalName(&pwszLocalName, NULL))) {
-				DbgPrint(L"Error getting local name, error is %08.8lx", hr);
-				return -1;
-			}
-
-			if (pReader->IsEmptyElement()) {
-				break;
-			}
-
-			for (int val = 0 ; val < TAG_ELEMENT_COUNT ; val++) {
-				if ( wcscmp(pwszLocalName, XMLDavParser::TagElementString[val]) == 0) {
-					last = (TagElement)val;
-				}
-			}
-
-			if (FAILED(hr = pReader->MoveToElement())) {
-				DbgPrint(L"Error moving to the element that owns the current attribute node, error is %08.8lx", hr);
-				return -1;
-			}
-			break;
-
-		case XmlNodeType_EndElement:
-			if (FAILED(hr = pReader->GetLocalName(&pwszLocalName, NULL))) {
-				DbgPrint(L"Error getting local name, error is %08.8lx", hr);
-				return -1;
-			}
-			for (int val = 0 ; val < TAG_ELEMENT_COUNT ; val++) {
-				if ( wcscmp(pwszLocalName, XMLDavParser::TagElementString[val]) == 0) {
-					current = (TagElement)val;
-				}
-			}
-
-			if (current == response)
-			{
-				result.push_back(*currentEntry);
-				delete currentEntry;
-				currentEntry = NULL;
-			}
-
-			if (current == unknow) {
-				break;
-			}
-			if (current == last ) {
-				last = unknow;
-			}
-			break;
-
-		case XmlNodeType_Text:
-			if (FAILED(hr = pReader->GetValue(&pwszValue, NULL))) {
-				DbgPrint(L"Error getting value, error is %08.8lx", hr);
-				return -1;
-			}
-			switch (last) {
+		switch (current) {
 			case path:
-				size = lstrlen(pwszValue) + 1;
-
-				if (FAILED(hr = UrlUnescape((LPWSTR)pwszValue, escaped, &size, URL_DONT_UNESCAPE_EXTRA_INFO))) {
+				value = GetNodeValue();
+				size = lstrlen(value) + 1;
+				if (FAILED(hr = UrlUnescape((LPWSTR)value, escaped, &size, URL_DONT_UNESCAPE_EXTRA_INFO))) {
 					DbgPrint(L"Unable to unescape string, error is %08.8lx  %i ", hr, size);
 					break;
 				}
-				currentEntry = new DavEntry(escaped);
+				entry = new DavEntry(escaped);
 				break;
 
 			case type:
-				currentEntry->setType(pwszValue);
+				value = GetNodeValue();
+				entry->setType(value);
 				break;
 
 			case creationdate:
-				currentEntry->setCreationTime(pwszValue);
+				value = GetNodeValue();
+				entry->setCreationTime(value);
 				break;
 
 			case lastmodified:
-				currentEntry->setLastModifiedTime(pwszValue);
+				value = GetNodeValue();
+				entry->setLastModifiedTime(value);
 				break;
 
 			case length:
-				currentEntry->setLength(pwszValue);
+				value = GetNodeValue();
+				entry->setLength(value);
 				break;
 
 			case iscollection:
-				if (_wcsnicmp(pwszValue, L"true", lstrlen(L"true")) == 0) {
-					currentEntry->setType(DavEntry::directory);
+				value = GetNodeValue();
+				if (_wcsnicmp(value, L"true", lstrlen(L"true")) == 0) {
+					entry->setType(DavEntry::directory);
 				}
 				break;
 
@@ -157,8 +145,30 @@ HRESULT XMLDavParser::parse(void) {
 
 			default:
 				break;
+		}
+	}
+	return entry;
+}
+
+
+HRESULT XMLDavParser::parse(void) {
+	XmlNodeType nodeType;
+	const WCHAR* localName;
+	const WCHAR* namespaceUri;
+	DavEntry* entry = NULL;
+
+	if (FAILED(hr = pReader->Read(&nodeType))) {
+		DbgPrint(L"Error getting prefix, error is %08.8lx %08.8lx", hr, nodeType);
+	}
+	result.clear();
+	while(ReadElement(&namespaceUri,&localName)) {
+		if (wcscmp(localName, L"response") == 0) {
+			entry = readProp();
+			if (entry) {
+				result.push_back(*entry);
+				delete entry;
+				entry = NULL;
 			}
-			break;
 		}
 	}
 	return S_OK;
@@ -169,10 +179,10 @@ std::list<DavEntry> XMLDavParser::getResult(void) {
 }
 
 
-
 HRESULT XMLDavParser::init(void) {
-	hr = ::CreateStreamOnHGlobal(hMem,FALSE,&spStream);
-
+	WinHTTPStream *stream = new WinHTTPStream(hRequest);
+	spStream.Attach(stream);  
+	
 	if (FAILED(hr = CreateXmlReader(__uuidof(IXmlReader), (void**) &pReader, NULL))) {
 		DbgPrint(L"Error creating xml reader, error is %08.8lx", hr);
 		return hr;
@@ -193,14 +203,9 @@ HRESULT XMLDavParser::init(void) {
 
 HRESULT XMLDavParser::release(void) {
 	delete pReader;
-
-	::GlobalUnlock(hMem);
-
 	return S_OK;
 }
 
 HRESULT XMLDavParser::getLastError(void) {
 	return hr;
 }
-
-

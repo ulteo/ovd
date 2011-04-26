@@ -20,9 +20,8 @@
 
 #ifndef _XMLDAVPARSER_H_
 #define _XMLDAVPARSER_H_
-#include <objbase.h>
-#include <xmllite.h>
-#include <atlbase.h>
+
+#include "WinHTTPStream.h"
 #include "DavEntry.h"
 #include <list>
 
@@ -36,7 +35,9 @@ private:
 
 	TagElement last;
 	HRESULT hr;
+	HINTERNET hRequest;
 	CComPtr<IXmlReader> pReader;
+	
 	HGLOBAL	hMem;
 	void* pOutBuffer;
 	CComPtr<IStream> spStream;
@@ -46,10 +47,14 @@ private:
 
 
 public:
-	XMLDavParser(CHAR* xmlData);
+	XMLDavParser(HINTERNET hRequest_);
 	HRESULT init(void);
 	HRESULT release(void);
 	HRESULT parse(void);
+	bool ReadElement(LPCWSTR* namespaceUri, LPCWSTR* localName);
+	void ReadElementToEnd();
+	const WCHAR* GetNodeValue();
+	DavEntry* XMLDavParser::readProp(void);
 	HRESULT getLastError(void);
 	std::list<DavEntry> getResult(void);
 
