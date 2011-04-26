@@ -428,18 +428,15 @@ NPAddConnection3(
 	wpos += lstrlen(WEBDAVPREFFIX);
 	StringCchPrintfW(remote, MAX_PATH*2, L"%s%s", L"HTTP", wpos);
 
-	if (NetResource->lpLocalName != NULL) {
-		if (lstrlen(NetResource->lpLocalName) <= 1 || NetResource->lpLocalName[1] != L':')
-		{
-			return WN_BAD_LOCALNAME;
-		}
+	if (NetResource->lpLocalName == NULL)
+		local[0] = getNextFreeLetter();
+	else
+		local[0] = toupper(NetResource->lpLocalName[0]);
 
-		local[0] = (WCHAR)toupper(NetResource->lpLocalName[0]);
-		local[1] = L':';
-		local[2] = L'\0';
-		return StartDavModule(local, remote, UserName, Password);
-	}
-	return StartDavModule(NULL, remote, UserName, Password);
+	if (local[0] == ':')
+		return WN_BAD_NETNAME;
+
+	return StartDavModule(local, remote, UserName, Password);
 }
 
 DWORD APIENTRY
