@@ -24,6 +24,7 @@ import os
 import time
 
 import pythoncom
+import pywintypes
 import win32api
 import win32com.client
 from win32com.shell import shell, shellcon
@@ -37,7 +38,11 @@ def findProcessWithEnviron(pattern):
 	return None
 
 def existProcess(pid):
-	hProcess = win32api.OpenProcess(win32con.PROCESS_QUERY_INFORMATION, False, pid)
+	try:
+		hProcess = win32api.OpenProcess(win32con.PROCESS_QUERY_INFORMATION, False, pid)
+	except pywintypes.error, err:
+		return False
+	
 	if hProcess is None:
 		return False
 	
