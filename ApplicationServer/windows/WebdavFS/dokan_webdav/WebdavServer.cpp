@@ -490,7 +490,7 @@ DAVFILEINFO* WebdavServer::DAVGetDirectoryList(LPCWSTR path, PDWORD count ) {
 	WCHAR* path2;
 	HINTERNET hRequest;
 	XMLDavParser* parser = NULL;
-	DAVFILEINFO* dirList;
+	DAVFILEINFO* dirList = NULL;
 	FILETIME* time;
 	DavEntry::FileType type = DavEntry::file;
 	LARGE_INTEGER file_size;
@@ -518,7 +518,14 @@ DAVFILEINFO* WebdavServer::DAVGetDirectoryList(LPCWSTR path, PDWORD count ) {
 	std::list<DavEntry> result = parser->getResult();
 
 	*count = result.size() - 1;
+	if (*count <= 0) {
+		parser->release();
+		delete parser;
 
+		if (hRequest) requestDel(hRequest);
+		if (hConnect) disconnect();
+		return NULL;
+	}
 	dirList = (DAVFILEINFO*)malloc(sizeof(DAVFILEINFO)*(*count));
 	ZeroMemory(dirList, sizeof(DAVFILEINFO)*(*count));
 
