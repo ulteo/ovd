@@ -438,7 +438,7 @@ NPAddConnection3(
 	if (NetResource->lpLocalName == NULL)
 		local[0] = getNextFreeLetter();
 	else
-		local[0] = toupper(NetResource->lpLocalName[0]);
+		local[0] = NetResource->lpLocalName[0];
 
 	if (local[0] == ':')
 		return WN_BAD_NETNAME;
