@@ -208,6 +208,7 @@ MirrorCloseFile(
 		return 0;
 	}
 
+	DbgPrint(L"close %s\n", FileName);
 	if ( cacheHandle == -1)
 	{
 		DbgPrint(L"Handle is invalid %u", cacheHandle);
@@ -293,14 +294,16 @@ MirrorReadFile(
 	}
 	cacheEntry = davCache->getFromHandle(cacheHandle);
 	
-	if (cacheEntry == NULL)
-	{
+	if (cacheEntry == NULL) {
 		DbgPrint(L"Entry returned by the cache is NULL\n");
 		return -1;
 	}
-	if (! server->DAVImportFileContent( cacheEntry->remotePath, cacheEntry->cachePath, FALSE )) {
+	if (! cacheEntry->isSet) {
+		if (! server->DAVImportFileContent( cacheEntry->remotePath, cacheEntry->cachePath, FALSE )) {
 			DbgPrint(L"Unable to add %s to local cache, Error while importing the file\n", cacheEntry->remotePath);
 			return -1;
+		}
+		cacheEntry->isSet = TRUE;
 	}
 
 	if (wcscmp(cacheEntry->remotePath, filePath) != 0)
@@ -422,6 +425,7 @@ MirrorWriteFile(
 	} else {
 		DbgPrint(L"\twrite %d, offset %d %d %i\n\n", *NumberOfBytesWritten, offset, NumberOfBytesToWrite,GetLastError());
 	}
+	cacheEntry->isSet = TRUE;
 	FlushFileBuffers(handle);
 	CloseHandle(handle);
 	DokanFileInfo->Context = cacheHandle;

@@ -147,7 +147,7 @@ ULONG64 DavCache::add(WCHAR* path)
 	}
 	//TODO multithread operation
 	cacheHandle = getNextEmptyEntry();
-	cache[cacheHandle].isSet = TRUE;
+	cache[cacheHandle].isSet = FALSE;
 	currentEntry = &cache[cacheHandle];
 
 	remotePath = (WCHAR*)malloc(MAX_PATH * sizeof(WCHAR));
