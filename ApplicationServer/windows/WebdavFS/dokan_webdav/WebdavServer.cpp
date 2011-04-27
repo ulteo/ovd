@@ -978,7 +978,9 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 	BOOL ret = FALSE;
 	DWORD dwStatus = 0;
 	// DWORD readLength = 0;
+	LARGE_INTEGER fileLength;
 	DWORD NumberOfBytesWrite = 0;
+	DWORD NumberOfBytesWritten = 0;
 	HINTERNET  hRequest = NULL;
 //	WCHAR rangeProperty[256];
 	WCHAR path2[MAX_PATH];
@@ -1023,6 +1025,23 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 		DbgPrint(L"Unable to open the file %ls [error code = %u]\n", localPath, GetLastError());
 		return  -1;
 	}
+	bResults = GetFileSizeEx(handle, &fileLength);
+	if (! bResults) {
+		DbgPrint(L"Failed to get size of the file %s\n", localPath);
+		if (hRequest) WinHttpCloseHandle(hRequest);
+		if (hConnect) WinHttpCloseHandle(hConnect);
+		hConnect =NULL;
+		return -1;
+	}
+	
+	bResults = WinHttpSendRequest( hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, (DWORD)fileLength.QuadPart, 0);
+	if (! bResults) {
+		DbgPrint(L"Failed to send request with error %u\n", GetLastError());
+		if (hRequest) WinHttpCloseHandle(hRequest);
+		if (hConnect) WinHttpCloseHandle(hConnect);
+		hConnect =NULL;
+		return -1;
+	}
 
 	do {
 		if (!ReadFile(handle, buffer, DAV_DATA_CHUNCK, &NumberOfBytesWrite, NULL))
@@ -1034,7 +1053,7 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 		if (NumberOfBytesWrite == 0)
 			break;
 
-		bResults = WinHttpSendRequest( hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, (LPVOID)buffer, NumberOfBytesWrite, NumberOfBytesWrite, 0);
+		bResults = WinHttpWriteData( hRequest, (LPVOID)buffer, NumberOfBytesWrite, &NumberOfBytesWritten);
 
 		if (! bResults)
 		{
