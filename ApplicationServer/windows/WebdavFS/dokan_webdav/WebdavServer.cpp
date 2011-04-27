@@ -410,8 +410,9 @@ DAVFILEINFO* WebdavServer::DAVGetFileInformations(LPCWSTR path) {
 	WCHAR* path2;
 	DAVFILEINFO* fsinfo;
 	HINTERNET hRequest;
+	FILETIME* time;
 	DavEntry::FileType type = DavEntry::file;
-	long long file_size;
+	LARGE_INTEGER file_size;
 	int filename_length = 0;
 
 	fsinfo = (DAVFILEINFO*)malloc(sizeof(DAVFILEINFO));
@@ -453,19 +454,21 @@ DAVFILEINFO* WebdavServer::DAVGetFileInformations(LPCWSTR path) {
 		fsinfo->isDir = FALSE;
 		fsinfo->fileAttributes = FILE_ATTRIBUTE_NORMAL;
 	}
-	file_size = entry.getLength();
-	if (file_size == 0) {
+	file_size.QuadPart = entry.getLength();
+	if (file_size.QuadPart == 0) {
 		fsinfo->nFileSizeLow = 10 ;
 		fsinfo->nFileSizeHigh = 10 ;
 	}
 	else {
-		fsinfo->nFileSizeLow = file_size & MAXDWORD;
-		fsinfo->nFileSizeHigh = file_size>>16 & MAXDWORD;
+		fsinfo->nFileSizeLow = file_size.LowPart;
+		fsinfo->nFileSizeHigh = file_size.HighPart;
 	}
-	fsinfo->creationTime.dwLowDateTime = 10;
-	fsinfo->creationTime.dwHighDateTime = 10;
-	fsinfo->lastModified.dwLowDateTime = 10;
-	fsinfo->lastModified.dwHighDateTime = 10;
+	time = entry.getCreationTime();
+	fsinfo->creationTime.dwLowDateTime = time->dwLowDateTime;
+	fsinfo->creationTime.dwHighDateTime = time->dwHighDateTime;
+	time = entry.getLastModifiedTime();
+	fsinfo->lastModified.dwLowDateTime = time->dwLowDateTime;
+	fsinfo->lastModified.dwHighDateTime = time->dwHighDateTime;
 
 	filename = PathFindFileName(entry.getPath());
 	filename_length = lstrlen(filename);
@@ -488,8 +491,9 @@ DAVFILEINFO* WebdavServer::DAVGetDirectoryList(LPCWSTR path, PDWORD count ) {
 	HINTERNET hRequest;
 	XMLDavParser* parser = NULL;
 	DAVFILEINFO* dirList;
+	FILETIME* time;
 	DavEntry::FileType type = DavEntry::file;
-	long long file_size;
+	LARGE_INTEGER file_size;
 	int index = 0;
 	int filename_length = 0;
 
@@ -535,19 +539,22 @@ DAVFILEINFO* WebdavServer::DAVGetDirectoryList(LPCWSTR path, PDWORD count ) {
 			fsinfo->isDir = FALSE;
 			fsinfo->fileAttributes = FILE_ATTRIBUTE_NORMAL;
 		}
-		file_size = entry.getLength();
-		if (file_size == 0) {
+		file_size.QuadPart = entry.getLength();
+		if (file_size.QuadPart == 0) {
 			fsinfo->nFileSizeLow = 10 ;
 			fsinfo->nFileSizeHigh = 0 ;
 		}
 		else {
-			fsinfo->nFileSizeLow = file_size & MAXDWORD;
-			fsinfo->nFileSizeHigh = file_size>>16 & MAXDWORD;
+			fsinfo->nFileSizeLow = file_size.LowPart;
+			fsinfo->nFileSizeHigh = file_size.HighPart;
 		}
-		fsinfo->creationTime.dwLowDateTime = 100;
-		fsinfo->creationTime.dwHighDateTime = 100;
-		fsinfo->lastModified.dwLowDateTime = 100;
-		fsinfo->lastModified.dwHighDateTime = 100;
+
+		time = entry.getCreationTime();
+		fsinfo->creationTime.dwLowDateTime = time->dwLowDateTime;
+		fsinfo->creationTime.dwHighDateTime = time->dwHighDateTime;
+		time = entry.getLastModifiedTime();
+		fsinfo->lastModified.dwLowDateTime = time->dwLowDateTime;
+		fsinfo->lastModified.dwHighDateTime = time->dwHighDateTime;
 
 		filename = PathFindFileName(entry.getPath());
 
@@ -759,7 +766,6 @@ BOOL WebdavServer::DAVGetFileContent(wchar_t* path, LPDWORD ReadLength, LONGLONG
 
 BOOL WebdavServer::DAVImportFileContent(wchar_t* remotePath, wchar_t* localPath, BOOL redirected ) {
 	BOOL  bResults = FALSE;
-//	LPSTR pszBuffer;
 	DWORD dwStatus = 0;
 	HINTERNET  hRequest = NULL;
 	WCHAR path2[MAX_PATH];
@@ -768,7 +774,7 @@ BOOL WebdavServer::DAVImportFileContent(wchar_t* remotePath, wchar_t* localPath,
 	DWORD dwDownloaded = 0;
 	DWORD NumberOfBytesWritten = 0;
 	HANDLE	handle = 0;
-	char* buffer = NULL;
+	char buffer[DAV_DATA_CHUNCK] = {0};
 
 	if (! connect()) {
 		return FALSE;
@@ -825,7 +831,6 @@ BOOL WebdavServer::DAVImportFileContent(wchar_t* remotePath, wchar_t* localPath,
 		else
 		{
 			tempSize = 1;
-			buffer = (char*)malloc(DAV_DATA_CHUNCK);
 			if (!buffer)
 			{
 				DbgPrint(L"Unable to allocate memory for buffer\n");
@@ -978,7 +983,7 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 //	WCHAR rangeProperty[256];
 	WCHAR path2[MAX_PATH];
 //	DWORD dwUploaded = 0;
-	char* buffer = NULL;
+	char buffer[DAV_DATA_CHUNCK] = {0};
 	HANDLE handle = 0;
 
 	if (! connect())
@@ -1000,8 +1005,6 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 		return FALSE;
 	}
 
-
-	buffer = (char*)malloc(DAV_DATA_CHUNCK);
 	if (!buffer)
 	{
 		DbgPrint(L"Unable to allocate memory for buffer\n");
@@ -1015,7 +1018,7 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
                          OPEN_EXISTING,
                          FILE_ATTRIBUTE_NORMAL,
                          NULL);
-
+	
 	if (handle == INVALID_HANDLE_VALUE) {
 		DbgPrint(L"Unable to open the file %ls [error code = %u]\n", localPath, GetLastError());
 		return  -1;

@@ -23,6 +23,7 @@
 
 #include <objbase.h>
 #include <atlbase.h>
+#include <winhttp.h>
 
 #define FILE_TYPE_COUNT  3
 
@@ -54,11 +55,11 @@ public:
 
 	HRESULT setCreationTime(const WCHAR* creationTime_);
 	HRESULT setCreationTime(FILETIME creationTime_);
-	FILETIME getCreationTime();
+	FILETIME* getCreationTime();
 
 	HRESULT setLastModifiedTime(const WCHAR* lastModifiedTime_);
 	HRESULT setLastModifiedTime(FILETIME lastModifiedTime_);
-	FILETIME getLastModifiedTime();
+	FILETIME* getLastModifiedTime();
 
 	HRESULT DavEntry::setLength(const WCHAR* length_);
 	HRESULT DavEntry::setLength(long length_);

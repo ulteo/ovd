@@ -496,11 +496,9 @@ MirrorFindFiles(
 			data.dwFileAttributes = FILE_ATTRIBUTE_DIRECTORY;
 		}
 
-		data.ftCreationTime.dwLowDateTime = 0;
-		data.ftCreationTime.dwHighDateTime = 0;
-		data.ftLastWriteTime.dwLowDateTime = 0;
-		data.ftLastWriteTime.dwHighDateTime = 0;
-
+		data.ftCreationTime = fileList[i].creationTime;
+		data.ftLastAccessTime = fileList[i].lastModified;
+		data.ftLastWriteTime = fileList[i].lastModified;
 		data.nFileSizeHigh = fileList[i].nFileSizeHigh;
 		data.nFileSizeLow = fileList[i].nFileSizeLow;
 		wcscpy_s(data.cFileName, MAX_PATH , fileList[i].name);

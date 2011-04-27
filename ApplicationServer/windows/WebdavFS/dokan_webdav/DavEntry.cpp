@@ -101,10 +101,16 @@ long DavEntry::getLength() {
 
 
 HRESULT DavEntry::setCreationTime(const WCHAR* creationTime_) {
-	//TODO umplemented
-	UNREFERENCED_PARAMETER(creationTime_);
-	creationTime.dwLowDateTime = 10;
-	creationTime.dwHighDateTime = 10;
+	SYSTEMTIME time;
+
+	if (WinHttpTimeToSystemTime(creationTime_, &time)) {
+		if (SystemTimeToFileTime(&time, &creationTime)) {
+			return S_OK;
+		}		
+	}
+
+	creationTime.dwLowDateTime = 0;
+	creationTime.dwHighDateTime = 0;
 	return S_OK;
 }
 
@@ -113,15 +119,21 @@ HRESULT DavEntry::setCreationTime(FILETIME creationTime_) {
 	return S_OK;
 }
 
-FILETIME DavEntry::getCreationTime() {
-	return creationTime;
+FILETIME* DavEntry::getCreationTime() {
+	return &creationTime;
 }
 
 HRESULT DavEntry::setLastModifiedTime(const WCHAR* lastModifiedTime_) {
-	//TODO umplemented
-	UNREFERENCED_PARAMETER(lastModifiedTime_);
-	lastModifiedTime.dwLowDateTime = 10;
-	lastModifiedTime.dwHighDateTime = 10;
+	SYSTEMTIME time;
+
+	if (WinHttpTimeToSystemTime(lastModifiedTime_, &time)) {
+		if (SystemTimeToFileTime(&time, &lastModifiedTime)) {
+			return S_OK;
+		}
+	}
+
+	lastModifiedTime.dwLowDateTime = 0;
+	lastModifiedTime.dwHighDateTime = 0;
 	return S_OK;
 }
 
@@ -130,8 +142,8 @@ HRESULT DavEntry::setLastModifiedTime(FILETIME lastModifiedTime_) {
 	return S_OK;
 }
 
-FILETIME DavEntry::getLastModifiedTime() {
-	return lastModifiedTime;
+FILETIME* DavEntry::getLastModifiedTime() {
+	return &lastModifiedTime;
 }
 
 WCHAR* DavEntry::unicodeConvert(const WCHAR* str)
