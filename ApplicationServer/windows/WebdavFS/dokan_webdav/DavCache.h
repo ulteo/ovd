@@ -31,8 +31,9 @@
 typedef struct _DAVCACHEENTRY
 {
 	BOOLEAN isSet;
-	WCHAR* remotePath;
-	WCHAR* cachePath;
+	BOOLEAN needExport;
+	WCHAR remotePath[MAX_PATH];
+	WCHAR cachePath[MAX_PATH];
 } DAVCACHEENTRY, *PDAVCACHEENTRY;
 
 

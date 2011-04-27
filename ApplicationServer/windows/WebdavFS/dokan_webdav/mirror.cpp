@@ -200,24 +200,25 @@ MirrorCloseFile(
 {
 	DAVCACHEENTRY* cacheEntry = NULL;
 	ULONG64 cacheHandle = 0;
+	WCHAR filePath[MAX_PATH];
+	BOOL res = FALSE;
 
-	UNREFERENCED_PARAMETER(FileName);
+	GetFilePath(FileName, filePath);
 	cacheHandle = DokanFileInfo->Context;
 	if ( cacheHandle == 0)
 	{
 		return 0;
 	}
 
-	DbgPrint(L"close %s\n", FileName);
-	if ( cacheHandle == -1)
-	{
-		DbgPrint(L"Handle is invalid %u", cacheHandle);
-		return -1;
-	}
-	
-	if (cacheHandle != 0) {
+	cacheHandle = davCache->getHandleFromPath(filePath);
+	if (cacheHandle != -1) {
 		cacheEntry = davCache->getFromHandle(cacheHandle);
-		if (cacheEntry != NULL) {
+		if (cacheEntry != NULL && cacheEntry->needExport) {
+			res = server->DAVExportFileContent(cacheEntry->remotePath, cacheEntry->cachePath, FALSE );
+			if (!res) {
+				DbgPrint(L"Error while exporting the file %s", cacheEntry->remotePath);
+				return -1;
+			}
 			davCache->remove(cacheHandle);
 		}
 	}
@@ -231,31 +232,7 @@ MirrorCleanup(
 	LPCWSTR					FileName,
 	PDOKAN_FILE_INFO		DokanFileInfo)
 {
-	DAVCACHEENTRY* cacheEntry = NULL;
-	ULONG64 cacheHandle = 0;
-
-	UNREFERENCED_PARAMETER(FileName);
-
-	cacheHandle = DokanFileInfo->Context;
-	if ( cacheHandle == 0)
-	{
-		return 0;
-	}
-	if ( cacheHandle == -1)
-	{
-		DbgPrint(L"Handle is invalid %u", cacheHandle);
-		return -1;
-	}
-
-	if (cacheHandle != 0) {
-		cacheEntry = davCache->getFromHandle(cacheHandle);
-		if (cacheEntry != NULL) {
-			davCache->remove(cacheHandle);
-		}
-	}
-
-	DokanFileInfo->Context = 0;
-	return 0;
+	return MirrorCloseFile(FileName, DokanFileInfo);
 }
 
 
@@ -389,7 +366,8 @@ MirrorWriteFile(
 		DbgPrint(L"Entry returned by the cache is NULL\n");
 		return -1;
 	}
-	
+
+	cacheEntry->needExport = TRUE;
 	if (wcscmp(cacheEntry->remotePath, filePath) != 0)
 	{
 		DbgPrint(L"Entry did not match the file %ls", filePath);
@@ -531,8 +509,16 @@ MirrorDeleteFile(
 	PDOKAN_FILE_INFO	DokanFileInfo)
 {
 	WCHAR filePath[MAX_PATH];
-	GetFilePath(FileName, filePath);
+	ULONG64 cacheHandle = 0;
 
+	GetFilePath(FileName, filePath);
+	DbgPrint(L"MirrorDeleteFile : %ls\n", (WCHAR*)filePath);
+
+	cacheHandle = davCache->getHandleFromPath(filePath);
+
+	if (cacheHandle != -1) {
+		davCache->remove(cacheHandle);
+	}
 
 	DbgPrint(L"MirrorDeleteFile : %ls\n", (WCHAR*)filePath);
 

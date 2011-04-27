@@ -82,8 +82,9 @@ int DavCache::init(WebdavServer* server)
 	{
 		DAVCACHEENTRY* currentEntry = &cache[i];
 		currentEntry->isSet = FALSE;
-		currentEntry->remotePath = NULL;
-		currentEntry->cachePath = NULL;
+		currentEntry->needExport = FALSE;
+		currentEntry->remotePath[0] = '\0';
+		currentEntry->cachePath[0] = '\0';
 	}
 
 	cacheDir = getCacheDir();
@@ -114,16 +115,9 @@ void DavCache::clean(WebdavServer* server)
 		if(currentEntry->isSet)
 		{
 			currentEntry->isSet = FALSE;
-			if(currentEntry->remotePath != NULL)
-			{
-				free(currentEntry->remotePath);
-				currentEntry->remotePath = NULL;
-			}
-			if(currentEntry->cachePath != NULL)
-			{
-				free(currentEntry->cachePath);
-				currentEntry->cachePath = NULL;
-			}
+			currentEntry->needExport = FALSE;
+			currentEntry->remotePath[0] = '\0';
+			currentEntry->cachePath[0] = '\0';
 		}
 	}
 
@@ -136,9 +130,6 @@ void DavCache::clean(WebdavServer* server)
 ULONG64 DavCache::add(WCHAR* path)
 {
 	ULONG64 cacheHandle = (ULONG64)-1;
-	WCHAR* remotePath = NULL;
-	WCHAR* localPath = NULL;
-	DAVCACHEENTRY* currentEntry = NULL;
 
 	if (count > DAV_CACHE_SIZE)
 	{
@@ -148,16 +139,11 @@ ULONG64 DavCache::add(WCHAR* path)
 	//TODO multithread operation
 	cacheHandle = getNextEmptyEntry();
 	cache[cacheHandle].isSet = FALSE;
-	currentEntry = &cache[cacheHandle];
+	cache[cacheHandle].needExport = FALSE;
 
-	remotePath = (WCHAR*)malloc(MAX_PATH * sizeof(WCHAR));
-	localPath = (WCHAR*)malloc(MAX_PATH * sizeof(WCHAR));
+	wcscpy_s(cache[cacheHandle].remotePath, MAX_PATH, path);
+	swprintf_s(cache[cacheHandle].cachePath, MAX_PATH, L"%s\\%u", cacheDir, cacheHandle);
 
-	wcscpy_s(remotePath, MAX_PATH, path);
-	swprintf_s(localPath, MAX_PATH, L"%s\\%u", cacheDir, cacheHandle);
-
-	cache[cacheHandle].cachePath = localPath;
-	cache[cacheHandle].remotePath = remotePath;
 	count++;
 
 	return cacheHandle;
@@ -182,29 +168,16 @@ BOOL DavCache::remove(ULONG64 handle)
 		return FALSE;
 	}
 
-	if (! davServer->DAVExportFileContent(currentEntry->remotePath, currentEntry->cachePath, FALSE ))
-	{
-		DbgPrint(L"Unable to remove %s from local cache, Error while exporting the file", currentEntry->remotePath);
-		return -1;
-	}
-
 	if (!DeleteFile(currentEntry->cachePath))
 	{
-		DbgPrint(L"Error %u in WinHttpReadData.\n", GetLastError());
+		DbgPrint(L"Error %u while deleting the file %s.\n", GetLastError(), currentEntry->cachePath);
 		ret = FALSE;
 	}
 
-	if (!currentEntry->cachePath)
-	{
-		free(currentEntry->cachePath);
-	}
-	if (!currentEntry->remotePath)
-	{
-		free(currentEntry->remotePath);
-	}
+	currentEntry->cachePath[0] = '\0';
+	currentEntry->remotePath[0] = '\0';
 	currentEntry->isSet = FALSE;
-	currentEntry->cachePath = NULL;
-	currentEntry->remotePath = NULL;
+	currentEntry->needExport = FALSE;
 
 	return ret;
 }

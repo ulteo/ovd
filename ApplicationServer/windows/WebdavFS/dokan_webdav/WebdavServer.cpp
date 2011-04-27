@@ -1030,15 +1030,15 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 	
 	if (handle == INVALID_HANDLE_VALUE) {
 		DbgPrint(L"Unable to open the file %ls [error code = %u]\n", localPath, GetLastError());
-		return  -1;
+		return  FALSE;
 	}
 	bResults = GetFileSizeEx(handle, &fileLength);
 	if (! bResults) {
 		DbgPrint(L"Failed to get size of the file %s\n", localPath);
 		if (hRequest) WinHttpCloseHandle(hRequest);
 		if (hConnect) WinHttpCloseHandle(hConnect);
-		hConnect =NULL;
-		return -1;
+		hConnect = NULL;
+		return FALSE;
 	}
 	
 	bResults = WinHttpSendRequest( hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, (DWORD)fileLength.QuadPart, 0);
@@ -1046,8 +1046,8 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 		DbgPrint(L"Failed to send request with error %u\n", GetLastError());
 		if (hRequest) WinHttpCloseHandle(hRequest);
 		if (hConnect) WinHttpCloseHandle(hConnect);
-		hConnect =NULL;
-		return -1;
+		hConnect = NULL;
+		return FALSE;
 	}
 
 	do {
@@ -1073,12 +1073,10 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 	} while (NumberOfBytesWrite > 0);
 	bResults = WinHttpReceiveResponse( hRequest, NULL);
 	// Keep checking for data until there is nothing left.
-	if (bResults)
-	{
+	if (bResults) {
 		dwStatus = getStatus(hRequest);
-		if ((dwStatus > 200) && (dwStatus < 300))
-		{
-			ret = 0;
+		if ((dwStatus > 200) && (dwStatus < 300)) {
+			ret = TRUE;
 		}
 		if ((dwStatus > 300) && (dwStatus < 400))
 		{
