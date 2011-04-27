@@ -155,7 +155,7 @@ BOOL DavCache::remove(ULONG64 handle)
 	DAVCACHEENTRY* currentEntry = NULL;
 	BOOL ret = TRUE;
 
-	if (handle < 0 || handle > DAV_CACHE_SIZE) {
+	if (handle > DAV_CACHE_SIZE) {
 		DbgPrint(L"Enable to remove element from cache, invalid handle\n");
 		return FALSE;
 	}
