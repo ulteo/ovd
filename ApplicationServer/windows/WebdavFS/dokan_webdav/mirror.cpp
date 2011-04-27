@@ -24,6 +24,7 @@ THE SOFTWARE.
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
+#include <signal.h>
 #include <dokan.h>
 #include <fileinfo.h>
 
@@ -61,7 +62,16 @@ static void DbgPrint(LPCWSTR format, ...)
         }
 }
 
+void _cdecl
+sigint_handler(int sig ) {
+	UNREFERENCED_PARAMETER(sig);
 
+    // Unmount the drive
+	DbgPrint(L"SIG_INT HANDLED : unmount %s\n", MountPoint);
+
+	DefineDosDevice(DDD_REMOVE_DEFINITION, MountPoint, NULL);
+	exit(0);
+}
 
 static int replace(wchar_t* str, wchar_t oc, wchar_t nc)
 {
@@ -895,6 +905,8 @@ main(ULONG argc, PCHAR argv[]) {
 	dokanOperations->GetDiskFreeSpace = NULL;
 	dokanOperations->GetVolumeInformation = NULL;
 	dokanOperations->Unmount = MirrorUnmount;
+
+	signal( SIGINT, sigint_handler );
 
 	status = DokanMain(dokanOptions, dokanOperations);
 	switch (status) {
