@@ -32,10 +32,52 @@ import win32con
 import win32event
 import win32file
 import win32process
+import win32security
+
+import ProcessMonitoring
 
 
 def findProcessWithEnviron(pattern):
+	sid, _,_  = win32security.LookupAccountName(None, win32api.GetUserName())
+	pid = os.getpid()
+	
+	pids = win32process.EnumProcesses()
+	for this_pid in pids:
+		if not isProcessOwnerSID(this_pid, sid):
+			continue
+		
+		if this_pid == pid:
+			continue
+		
+		block = ProcessMonitoring.getEnvironnmentBlock(this_pid)
+		if block is None or pattern not in block:
+			continue
+		
+		return this_pid
+	
 	return None
+
+
+def isProcessOwnerSID(pid, sid):
+	try:
+		phandle = win32api.OpenProcess(win32con.PROCESS_QUERY_INFORMATION | win32con.PROCESS_VM_READ, False,  pid)
+	except pywintypes.error, err:
+		return False
+	
+	try:
+		hProcessToken = win32security.OpenProcessToken(phandle, win32con.TOKEN_READ)
+	except pywintypes.error, err:
+		win32api.CloseHandle(phandle)
+		return False
+	
+	p_sid  = win32security.GetTokenInformation(hProcessToken, win32security.TokenOwner)
+	ret = (p_sid == sid)
+	
+	win32api.CloseHandle(hProcessToken)
+	win32api.CloseHandle(phandle)
+	
+	return ret
+
 
 def existProcess(pid):
 	try:
