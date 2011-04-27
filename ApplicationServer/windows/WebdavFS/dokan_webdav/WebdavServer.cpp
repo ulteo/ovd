@@ -456,8 +456,8 @@ DAVFILEINFO* WebdavServer::DAVGetFileInformations(LPCWSTR path) {
 	}
 	file_size.QuadPart = entry.getLength();
 	if (file_size.QuadPart == 0) {
-		fsinfo->nFileSizeLow = 10 ;
-		fsinfo->nFileSizeHigh = 10 ;
+		fsinfo->nFileSizeLow = 0 ;
+		fsinfo->nFileSizeHigh = 0 ;
 	}
 	else {
 		fsinfo->nFileSizeLow = file_size.LowPart;
