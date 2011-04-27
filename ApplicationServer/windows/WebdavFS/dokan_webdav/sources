@@ -19,6 +19,7 @@ LINKLIBS=..\build\dokan.lib
 TARGETLIBS=  $(TARGETLIBS) \
              $(SDK_LIB_PATH)\Winhttp.lib \
              $(SDK_LIB_PATH)\xmllite.lib \
+			 $(SDK_LIB_PATH)\Shell32.lib \
              $(SDK_LIB_PATH)\Shlwapi.lib \
              $(SDK_LIB_PATH)\Ole32.lib
 

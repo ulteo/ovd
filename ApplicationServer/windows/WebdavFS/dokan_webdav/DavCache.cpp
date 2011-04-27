@@ -92,7 +92,7 @@ int DavCache::init(WebdavServer* server)
 		DbgPrint(L"Unable know where is the cache dir\n");
 		return -1;
 	}
-	if (FAILED(CreateDirectory(cacheDir, NULL))){
+	if (FAILED(SHCreateDirectoryEx(NULL, cacheDir, NULL))){
 		lastError = GetLastError();
 		if (lastError == ERROR_PATH_NOT_FOUND) {
 			DbgPrint(L"Unable to create %s\n", cacheDir);

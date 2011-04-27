@@ -21,7 +21,9 @@
 #ifndef DAVCACHE_H_
 #define DAVCACHE_H_
 
+#include<Shlobj.h>
 #include "WebdavServer.h"
+
 
 #define DAV_CACHE_SIZE          1024
 #define DAV_CACHE_DIR_SUFFIXE   L"Ulteo\\DavCache"
