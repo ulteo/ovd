@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: uovdclient\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-21 16:14+0100\n"
+"POT-Creation-Date: 2011-04-28 17:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 #. <td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.suspend(); return false;"><img src="media/image/suspend.png" width="32" height="32" alt="" title="" /><br /><span id="suspend_gettext">&nbsp;</span></a></td>
 #. <?php
 #. }
-#: ../../client/web/web/index.php:405
+#: ../../client/web/web/index.php:406
 msgid "Example: sm.ulteo.com"
 msgstr ""
 
@@ -34,39 +34,39 @@ msgid "Session Manager"
 msgstr ""
 
 #: ../../client/web/web/translate.php:68
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:985
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:988
 msgid "Login"
 msgstr ""
 
 #: ../../client/web/web/translate.php:69
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:986
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:989
 msgid "Password"
 msgstr ""
 
 #: ../../client/web/web/translate.php:70
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1001
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1004
 msgid "Use local credentials"
 msgstr ""
 
 #: ../../client/web/web/translate.php:71 ../../client/web/web/translate.php:77
 #: ../../client/web/web/translate.php:82
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:40
 msgid "Yes"
 msgstr ""
 
 #: ../../client/web/web/translate.php:72 ../../client/web/web/translate.php:78
 #: ../../client/web/web/translate.php:83
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:40
 msgid "No"
 msgstr ""
 
 #: ../../client/web/web/translate.php:73
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:991
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:994
 msgid "Mode"
 msgstr ""
 
 #: ../../client/web/web/translate.php:74
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:998
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1001
 msgid "Desktop"
 msgstr ""
 
@@ -76,12 +76,12 @@ msgstr ""
 
 #: ../../client/web/web/translate.php:76
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:78
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1009
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1012
 msgid "Fullscreen"
 msgstr ""
 
 #: ../../client/web/web/translate.php:79
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:993
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:996
 msgid "Language"
 msgstr ""
 
@@ -225,42 +225,46 @@ msgid "You already have an active session"
 msgstr ""
 
 #: ../../client/web/web/translate.php:130
+msgid "You will be disconnected from your OVD session."
+msgstr ""
+
+#: ../../client/web/web/translate.php:132
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:745
 msgid ""
 "Your session is going to end in 3 minutes, please save all your data now!"
 msgstr ""
 
-#: ../../client/web/web/translate.php:132
+#: ../../client/web/web/translate.php:134
 msgid "Server: session closed unexpectedly"
 msgstr ""
 
-#: ../../client/web/web/translate.php:133
+#: ../../client/web/web/translate.php:135
 msgid "Your session has ended, you can now close the window"
 msgstr ""
 
-#: ../../client/web/web/translate.php:134
+#: ../../client/web/web/translate.php:136
 msgid "Your session has ended unexpectedly"
 msgstr ""
 
-#: ../../client/web/web/translate.php:135
+#: ../../client/web/web/translate.php:137
 msgid "error details"
 msgstr ""
 
-#: ../../client/web/web/translate.php:136
+#: ../../client/web/web/translate.php:138
 msgid "Close this window"
 msgstr ""
 
-#: ../../client/web/web/translate.php:137
+#: ../../client/web/web/translate.php:139
 msgid ""
 "Click <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
 "false;\">here</a> to start a new session"
 msgstr ""
 
-#: ../../client/web/web/translate.php:139
+#: ../../client/web/web/translate.php:141
 msgid "suspend"
 msgstr ""
 
-#: ../../client/web/web/translate.php:140
+#: ../../client/web/web/translate.php:142
 msgid "resume"
 msgstr ""
 
@@ -277,7 +281,7 @@ msgid "An error occured, please contact your administrator"
 msgstr ""
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:543
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:45
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:38
 msgid "Warning!"
 msgstr ""
 
@@ -360,6 +364,14 @@ msgstr ""
 msgid "Disconnect"
 msgstr ""
 
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:39
+msgid "Do you really want to close the window?"
+msgstr ""
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:40
+msgid "Go back to authentication"
+msgstr ""
+
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:52
 msgid "Start loading session"
 msgstr ""
@@ -389,58 +401,50 @@ msgid "Invalid status"
 msgstr ""
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:77
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1008
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1011
 msgid "Maximized"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:824
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1005
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:827
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1008
 msgid "Fewer options"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:906
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1003
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:909
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1006
 msgid "More options..."
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:987
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:990
 msgid "Start!"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:990
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:993
 msgid "Server"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:992
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:995
 msgid "Resolution"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:994
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:997
 msgid "Keyboard"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:996
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:999
 msgid "Auto"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:997
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1000
 msgid "Application"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:999
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1002
 msgid "Remember me"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1000
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1003
 msgid "Auto-publish shortcuts"
-msgstr ""
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
-msgid "Go back to authentication"
-msgstr ""
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:44
-msgid "Do you really want to close the window?"
 msgstr ""
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionFrame.java:40
@@ -462,36 +466,32 @@ msgstr ""
 msgid "Report a bug"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:73
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:64
 msgid "Ulteo OVD Bug Report"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:117
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:108
 msgid "Validate"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:128
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:119
 msgid "Date"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:130
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:121
 msgid "Version"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:132
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:123
 msgid "System"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:134
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:125
 msgid "JVM"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:168
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:159
 msgid "Description and steps to reproduce:"
-msgstr ""
-
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:184
-msgid "MM/dd/yy hh:mm:ss"
 msgstr ""
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:85
@@ -503,17 +503,17 @@ msgid "An error occured. Please try again."
 msgstr ""
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
-msgid "Bug report saved to "
+msgid "Bug report saved to %s"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:108
 msgid "Bug report saved"
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:120
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
 msgid "Please fill description field."
 msgstr ""
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:120
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
 msgid "Empty field"
 msgstr ""

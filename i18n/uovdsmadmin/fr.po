@@ -1,7 +1,7 @@
 # French translations for uovdsmadmin package.
-# Copyright (C) 2010 Ulteo SAS.
+# Copyright (C) 2011 Ulteo SAS
 # This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
-# Automatically generated, 2010.
+# Automatically generated, 2011.
 # Author: Gauvain Pocentek <gauvain@ulteo.com>, 2009.
 # Author: Julien LANGLOIS <julien@ulteo.com>, 2010, 2011.
 #
@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: uovdsmadmin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-02-21 15:23+0100\n"
-"PO-Revision-Date: 2011-02-21 16:40+0200\n"
-"Last-Translator: Julien LANGLOIS <julien@ulteo.com>\n"
+"PO-Revision-Date: 2011-03-02 19:05+0200\n"
+"Last-Translator: Julien LANGLOIS\n"
 "Language-Team: French\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -4396,7 +4396,7 @@ msgstr "En maintenance"
 
 #: ../../SessionManager/web/classes/Server.class.php:486
 msgid "Pending"
-msgstr "En cours"
+msgstr "En attente"
 
 #: ../../SessionManager/web/classes/Server.class.php:490
 msgid "Offline"
@@ -4638,7 +4638,7 @@ msgstr "Le module ProfileDB doit être activé"
 #: ../../SessionManager/web/modules/SessionManagement/internal.php:66
 msgid "Which login should be used for the ApplicationServer's generated user?"
 msgstr ""
-"Quel identifiant doit être utiliser pour la générarion des utilisateurs sur "
+"Quel identifiant doit être utilisé pour la générarion des utilisateurs sur "
 "le serveur d'applications ?"
 
 #: ../../SessionManager/web/modules/SessionManagement/internal.php:67
