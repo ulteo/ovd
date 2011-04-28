@@ -26,12 +26,15 @@
 
 
 #define DAV_CACHE_SIZE          1024
+#define INVALID_CACHE_HANDLE    DAV_CACHE_SIZE
 #define DAV_CACHE_DIR_SUFFIXE   L"Ulteo\\DavCache"
 
 typedef struct _DAVCACHEENTRY
 {
 	BOOLEAN isSet;
 	BOOLEAN needExport;
+	BOOLEAN needImport;
+	BOOLEAN needRemove;
 	WCHAR remotePath[MAX_PATH];
 	WCHAR cachePath[MAX_PATH];
 } DAVCACHEENTRY, *PDAVCACHEENTRY;

@@ -68,7 +68,7 @@ ULONG64 DavCache::getNextEmptyEntry() {
 			return (ULONG64)i;
 		}
 	}
-	return (ULONG64)-1;
+	return INVALID_CACHE_HANDLE;
 }
 
 
@@ -83,6 +83,8 @@ int DavCache::init(WebdavServer* server)
 		DAVCACHEENTRY* currentEntry = &cache[i];
 		currentEntry->isSet = FALSE;
 		currentEntry->needExport = FALSE;
+		currentEntry->needImport = FALSE;
+		currentEntry->needRemove = FALSE;
 		currentEntry->remotePath[0] = '\0';
 		currentEntry->cachePath[0] = '\0';
 	}
@@ -116,6 +118,8 @@ void DavCache::clean(WebdavServer* server)
 		{
 			currentEntry->isSet = FALSE;
 			currentEntry->needExport = FALSE;
+			currentEntry->needImport = FALSE;
+			currentEntry->needRemove = FALSE;
 			currentEntry->remotePath[0] = '\0';
 			currentEntry->cachePath[0] = '\0';
 		}
@@ -129,17 +133,19 @@ void DavCache::clean(WebdavServer* server)
 
 ULONG64 DavCache::add(WCHAR* path)
 {
-	ULONG64 cacheHandle = (ULONG64)-1;
+	ULONG64 cacheHandle = INVALID_CACHE_HANDLE;
 
 	if (count > DAV_CACHE_SIZE)
 	{
 		DbgPrint(L"Enable to add new element to cache, cache is full\n");
-		return (ULONG64)-1;
+		return (ULONG64)INVALID_CACHE_HANDLE;
 	}
 	//TODO multithread operation
 	cacheHandle = getNextEmptyEntry();
-	cache[cacheHandle].isSet = FALSE;
+	cache[cacheHandle].isSet = TRUE;
 	cache[cacheHandle].needExport = FALSE;
+	cache[cacheHandle].needImport = FALSE;
+	cache[cacheHandle].needRemove = FALSE;
 
 	wcscpy_s(cache[cacheHandle].remotePath, MAX_PATH, path);
 	swprintf_s(cache[cacheHandle].cachePath, MAX_PATH, L"%s\\%u", cacheDir, cacheHandle);
@@ -161,25 +167,28 @@ BOOL DavCache::remove(ULONG64 handle)
 	}
 	//TODO multithread operation
 	currentEntry = &cache[handle];
-
-	if (!DeleteFile(currentEntry->cachePath))
-	{
-		DbgPrint(L"Error %u while deleting the file %s.\n", GetLastError(), currentEntry->cachePath);
-		ret = FALSE;
+	if (currentEntry->needRemove) {
+		if (!DeleteFile(currentEntry->cachePath)) {
+			DbgPrint(L"Error %u while deleting the file %s.\n", GetLastError(), currentEntry->cachePath);
+			ret = FALSE;
+		}
 	}
 
 	currentEntry->cachePath[0] = '\0';
 	currentEntry->remotePath[0] = '\0';
 	currentEntry->isSet = FALSE;
 	currentEntry->needExport = FALSE;
+	currentEntry->needRemove = FALSE;
+	currentEntry->needImport = FALSE;
 
 	return ret;
 }
 
 DAVCACHEENTRY* DavCache::getFromHandle(ULONG64 handle)
 {
-	if (handle == -1)
+	if (handle == INVALID_CACHE_HANDLE) {
 		return NULL;
+	}
 	return &cache[handle];
 }
 
@@ -212,5 +221,5 @@ ULONG64 DavCache::getHandleFromPath(WCHAR* path) {
 			}
 		}
 	}
-	return (ULONG64)-1;
+	return INVALID_CACHE_HANDLE;
 }
