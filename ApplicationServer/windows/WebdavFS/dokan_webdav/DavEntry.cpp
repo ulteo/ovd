@@ -168,3 +168,25 @@ WCHAR* DavEntry::unicodeConvert(const WCHAR* str)
 
 	return _wcsdup(wstr);
 }
+
+WCHAR* DavEntry::escapeURL(const WCHAR* str)
+{
+	WCHAR wstr[MAX_PATH] = {0};
+	CHAR  astr[MAX_PATH] = {0};
+	CHAR  escaped[MAX_PATH] = {0};
+	DWORD alen = 0;
+	DWORD wlen = 0;
+
+	wlen = lstrlen(str);
+
+	// Convertion from windows-UTF8 to AINSI
+	alen = WideCharToMultiByte(CP_UTF8, 0, str, wlen, 0, 0, 0, 0);
+	WideCharToMultiByte(CP_UTF8, 0, str, wlen, astr, alen, 0, 0);
+
+	alen = MAX_PATH;
+	UrlEscapeA(astr, escaped, &alen, URL_BROWSER_MODE);
+	// Convertion from utf-8 to Unicode
+	wlen = MultiByteToWideChar(CP_ACP, 0, (LPCSTR)escaped, -1, NULL, 0);
+	MultiByteToWideChar(CP_ACP, 0, (LPCSTR)escaped, -1, wstr, wlen);
+	return _wcsdup(wstr);
+}

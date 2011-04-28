@@ -103,6 +103,8 @@ HRESULT WebdavServer::init() {
 
 void WebdavServer::getAbsolutePath(WCHAR* dest, WCHAR* path) {
 	WCHAR prefix[MAX_PATH] = {0};
+	WCHAR* escaped = NULL;
+
 	if (useHTTPS)
 		wcscpy_s(prefix, sizeof(prefix), L"https://");
 	else
@@ -110,6 +112,12 @@ void WebdavServer::getAbsolutePath(WCHAR* dest, WCHAR* path) {
 
 	wcscat_s(prefix, sizeof(prefix), address);
 	swprintf_s(dest, MAX_PATH, L"%s:%i%s", prefix, port, path);
+	escaped = DavEntry::escapeURL(dest);
+	if (escaped == NULL) {
+		return;
+	}
+	wcscpy_s(dest, MAX_PATH, escaped);
+	free(escaped);
 }
 
 
@@ -152,6 +160,9 @@ HINTERNET WebdavServer::requestNew(wchar_t* method, wchar_t* path )
 	DWORD dwOptionValue = 0;
 	DWORD dwFlags = 0;
 	BOOL bSetOk = FALSE;
+	WCHAR* escaped = NULL;
+
+	escaped = DavEntry::escapeURL(path);
 
 	if (! hConnect) {
 		DbgPrint(L"No connection to server: %s:%i\n", address, port);
@@ -162,7 +173,7 @@ HINTERNET WebdavServer::requestNew(wchar_t* method, wchar_t* path )
 	{
 		dwFlags |= WINHTTP_FLAG_SECURE;
 	}
-	hRequest = WinHttpOpenRequest(hConnect, method, path, HTTP_VERSION, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, dwFlags );
+	hRequest = WinHttpOpenRequest(hConnect, method, escaped, HTTP_VERSION, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, dwFlags );
 
 	if (hRequest && user)
 	{

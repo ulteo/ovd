@@ -66,6 +66,7 @@ public:
 	long DavEntry::getLength();
 
 	WCHAR* unicodeConvert(const WCHAR* str);
+	static WCHAR* escapeURL(const WCHAR* str);
 
 };
 

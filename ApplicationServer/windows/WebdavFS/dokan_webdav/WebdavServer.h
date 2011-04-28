@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <Shlwapi.h>
 #include <windows.h>
 #include <winhttp.h>
 
