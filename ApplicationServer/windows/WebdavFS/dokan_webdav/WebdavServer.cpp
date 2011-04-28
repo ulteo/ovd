@@ -49,7 +49,10 @@ WebdavServer::WebdavServer(wchar_t* address_, int port_, wchar_t* prefixe_, wcha
 	}
 }
 
-WebdavServer::~WebdavServer() {}
+WebdavServer::~WebdavServer() {
+	if (hSession)
+		WinHttpCloseHandle(hSession);
+}
 
 
 HRESULT WebdavServer::init() {

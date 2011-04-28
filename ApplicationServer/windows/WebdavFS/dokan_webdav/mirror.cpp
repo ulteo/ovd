@@ -70,6 +70,16 @@ sigint_handler(int sig ) {
 	DbgPrint(L"SIG_INT HANDLED : unmount %s\n", MountPoint);
 
 	DefineDosDevice(DDD_REMOVE_DEFINITION, MountPoint, NULL);
+
+	if (davCache) {
+		davCache->clean();
+		delete davCache;
+	}
+	if (server) {
+		delete server;
+	}
+
+
 	exit(0);
 }
 
@@ -942,6 +952,14 @@ main(ULONG argc, PCHAR argv[]) {
 
 	free(dokanOptions);
 	free(dokanOperations);
+
+	if (davCache) {
+		davCache->clean();
+		delete davCache;
+	}
+	if (server) {
+		delete server;
+	}
 	return 0;
 }
 

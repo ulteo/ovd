@@ -21,7 +21,8 @@
 #ifndef DAVCACHE_H_
 #define DAVCACHE_H_
 
-#include<Shlobj.h>
+#include <Shlobj.h>
+#include <Shellapi.h>
 #include "WebdavServer.h"
 
 
@@ -53,12 +54,12 @@ public:
 	~DavCache();
 
 	int init(WebdavServer* server);
-	void clean(WebdavServer* server);
+	void clean();
 	ULONG64 add(WCHAR* path);
 	int remove(ULONG64 handle);
 	PDAVCACHEENTRY getFromHandle(ULONG64 handle);
 	PDAVCACHEENTRY getFromPath(WCHAR* path);
-	WCHAR* getCacheDir();
+	WCHAR* createCacheDir();
 	ULONG64 getNextEmptyEntry();
 	ULONG64 DavCache::getHandleFromPath(WCHAR* path);
 

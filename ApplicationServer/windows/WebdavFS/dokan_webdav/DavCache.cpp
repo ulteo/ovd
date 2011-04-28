@@ -30,12 +30,14 @@ DavCache::DavCache() {}
 DavCache::~DavCache() {}
 
 
-WCHAR* DavCache::getCacheDir() {
+WCHAR* DavCache::createCacheDir() {
 	  BYTE tempDir[MAX_PATH + 1];
 	  HKEY hkey;
 	  DWORD len;
 	  DWORD type;
 	  HRESULT err;
+	  UUID uuid;
+	  WCHAR* wszUuid = NULL;
 
 	  WCHAR* cacheDir = (WCHAR*)malloc(MAX_PATH * sizeof(WCHAR));
 
@@ -55,7 +57,20 @@ WCHAR* DavCache::getCacheDir() {
 	  }
 	  RegCloseKey(hkey);
 
-	  swprintf_s(cacheDir, MAX_PATH, L"%s\\%s", tempDir, DAV_CACHE_DIR_SUFFIXE);
+	  //uuid generation
+	  ZeroMemory(&uuid, sizeof(UUID));
+	  if (FAILED(UuidCreate(&uuid))) {
+		  return NULL;
+	  }
+	  if (FAILED(UuidToString(&uuid, &wszUuid))) {
+		  return NULL;
+	  }
+
+	  swprintf_s(cacheDir, MAX_PATH, L"%s\\%s\\%s", tempDir, DAV_CACHE_DIR_SUFFIXE, wszUuid);
+
+	  RpcStringFree(&wszUuid);
+	  wszUuid = NULL;
+
 	  return cacheDir;
 }
 
@@ -89,7 +104,7 @@ int DavCache::init(WebdavServer* server)
 		currentEntry->cachePath[0] = '\0';
 	}
 
-	cacheDir = getCacheDir();
+	cacheDir = createCacheDir();
 	if (cacheDir == NULL)
 	{
 		DbgPrint(L"Unable know where is the cache dir\n");
@@ -106,10 +121,11 @@ int DavCache::init(WebdavServer* server)
 }
 
 
-void DavCache::clean(WebdavServer* server)
+void DavCache::clean()
 {
 	int i = 0;
-	UNREFERENCED_PARAMETER(server);
+	SHFILEOPSTRUCT fileop;
+
 	for (i = 0 ; i < DAV_CACHE_SIZE ; i++)
 	{
 		//TODO save unsaved file
@@ -125,10 +141,20 @@ void DavCache::clean(WebdavServer* server)
 		}
 	}
 
-	if (cacheDir)
-	{
-		free(cacheDir);
+	fileop.hwnd=NULL;
+	fileop.wFunc=FO_DELETE;
+	fileop.pFrom=cacheDir;
+	fileop.pTo=NULL;
+	fileop.fAnyOperationsAborted=true;
+	fileop.fFlags=FOF_NOCONFIRMATION|FOF_SILENT ;
+	fileop.lpszProgressTitle=NULL;
+
+
+	if (FAILED(SHFileOperation(&fileop))) {
+		DbgPrint(L"Unable to remove cache directory %s\n", cacheDir);
 	}
+	if (cacheDir)
+		free(cacheDir);
 }
 
 ULONG64 DavCache::add(WCHAR* path)
