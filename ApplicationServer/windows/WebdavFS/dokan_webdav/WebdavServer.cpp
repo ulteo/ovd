@@ -633,8 +633,6 @@ HINTERNET WebdavServer::DAVPROPFind(wchar_t** path, wchar_t* body, int depth, BO
 	WCHAR depthProperty[256];
 	
 
-	if (! connect())
-		return NULL;
 	hRequest = requestNew(L"PROPFIND", *path, redirected);
 	if (! hRequest)
 	{
@@ -684,9 +682,6 @@ BOOL WebdavServer::DAVGetFileContent(wchar_t* path, LPDWORD ReadLength, LONGLONG
 //	HINTERNET hRequest2;
   char* buffer = (char*) Buffer;
 
-  if (! connect()) {
-  	return FALSE;
-  }
   if (redirected) {
 	  wcscpy_s(path2, MAX_PATH, path);
   }
@@ -793,10 +788,6 @@ BOOL WebdavServer::DAVImportFileContent(wchar_t* remotePath, wchar_t* localPath,
 	DWORD NumberOfBytesWritten = 0;
 	HANDLE	handle = 0;
 	char buffer[DAV_DATA_CHUNCK] = {0};
-
-	if (! connect()) {
-		return FALSE;
-	}
 
 	if (redirected) {
 		wcscpy_s(path2, MAX_PATH, remotePath);
@@ -916,9 +907,6 @@ BOOL WebdavServer::DAVWriteFile(wchar_t* path, LPCVOID Buffer, LPDWORD NumberOfB
   WCHAR rangeProperty[256];
   WCHAR path2[MAX_PATH];
 
-  if (! connect())
-  	return FALSE;
-
   if (redirected) {
     wcscpy_s(path2, MAX_PATH, path);
   }
@@ -998,9 +986,6 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 //	DWORD dwUploaded = 0;
 	char buffer[DAV_DATA_CHUNCK] = {0};
 	HANDLE handle = 0;
-
-	if (! connect())
-		return FALSE;
 
 	if (redirected) {
 		wcscpy_s(path2, MAX_PATH, remotePath);
@@ -1110,9 +1095,6 @@ BOOL WebdavServer::DAVMKCOL(wchar_t* path, BOOL redirected ) {
   WCHAR path2[MAX_PATH];
   BOOL ret = FALSE;
 
-  if (! connect())
-  	return FALSE;
-
 	if (redirected) {
 		wcscpy_s(path2, MAX_PATH, path);
 	}
@@ -1179,9 +1161,6 @@ BOOL WebdavServer::DAVDELETE(wchar_t* path, BOOL redirected ) {
   HINTERNET  hRequest = NULL;
   WCHAR path2[MAX_PATH];
   BOOL ret = FALSE;
-
-  if (! connect())
-  	return FALSE;
 
 	if (redirected) {
 		wcscpy_s(path2, MAX_PATH, path);
@@ -1251,9 +1230,6 @@ BOOL WebdavServer::DAVMOVE(wchar_t* from, wchar_t* to, BOOL redirected, BOOL rep
   WCHAR destination[MAX_PATH];
   
   BOOL ret = FALSE;
-
-  if (! connect())
-  	return FALSE;
 
 	if (redirected) {
 		wcscpy_s(from_path, MAX_PATH, from);
