@@ -26,11 +26,14 @@
 #include <winhttp.h>
 
 #define FILE_TYPE_COUNT  3
+#define ACCEPTABLE_URI_CHAR(c) ((c) >= 32 && (c) < 128 && (ACCEPTABLE_URI_CHARS[(c) - 32] & 0x08))
 
 class DavEntry {
 public:
 	enum FileType {file, directory, executableFile};
 	static const WCHAR* FileTypeString[FILE_TYPE_COUNT];
+	static const CHAR DavEntry::ACCEPTABLE_URI_CHARS[96];
+	static const CHAR DavEntry::HEX_CHARS[17];
 
 
 private:
@@ -65,8 +68,9 @@ public:
 	HRESULT DavEntry::setLength(long length_);
 	long DavEntry::getLength();
 
-	WCHAR* unicodeConvert(const WCHAR* str);
-	static WCHAR* escapeURL(const WCHAR* str);
+	static WCHAR* urldecode(const WCHAR* str);
+	static HRESULT convert_path(CHAR* path, CHAR* buffer);
+	static WCHAR* urlencode(const WCHAR* str);
 
 };
 

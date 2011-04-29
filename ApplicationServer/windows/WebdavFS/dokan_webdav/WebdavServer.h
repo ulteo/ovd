@@ -70,7 +70,7 @@ public:
 	HRESULT init();
 	BOOL connect();
 	BOOL disconnect();
-	HINTERNET requestNew(wchar_t* method, wchar_t* path );
+	HINTERNET requestNew(wchar_t* method, wchar_t* path, BOOL redirected);
 	BOOL requestDel(HINTERNET hRequest );
 	WCHAR* getRedirectPath(HINTERNET hRequest);
 	DWORD getStatus(HINTERNET hRequest);
@@ -82,7 +82,7 @@ public:
 	DAVFILEINFO* DAVGetFileInformations(LPCWSTR path);
 	DAVFILEINFO* DAVGetDirectoryList(LPCWSTR path, PDWORD count );
 
-
+	HINTERNET DAVPROPFind(wchar_t** path, wchar_t* body, int depth, BOOL redirected );
 	BOOL DAVGetFileContent(wchar_t* path, LPDWORD ReadLength, LONGLONG	Offset, DWORD BufferLength, LPVOID Buffer, BOOL redirected );
 	BOOL DAVImportFileContent(wchar_t* remotePath, wchar_t* localPath, BOOL redirected );
 	BOOL DAVExportFileContent(wchar_t* remotePath, wchar_t* locaPath, BOOL redirected );

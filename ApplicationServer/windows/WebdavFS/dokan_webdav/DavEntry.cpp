@@ -23,6 +23,24 @@
 
 const WCHAR* DavEntry::FileTypeString[FILE_TYPE_COUNT] = {L"unknow", L"httpd/unix-directory", L"application/x-msdos-program"};
 
+const CHAR DavEntry::ACCEPTABLE_URI_CHARS[96] = {
+  /*      !    "    #    $    %    &    '    (    )    *    +    ,    -    .    / */
+  0x00,0x3F,0x20,0x20,0x28,0x00,0x2C,0x3F,0x3F,0x3F,0x3F,0x2A,0x28,0x3F,0x3F,0x1C,
+  /* 0    1    2    3    4    5    6    7    8    9    :    ;    <    =    >    ? */
+  0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x38,0x20,0x20,0x2C,0x20,0x20,
+  /* @    A    B    C    D    E    F    G    H    I    J    K    L    M    N    O */
+  0x38,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,
+  /* P    Q    R    S    T    U    V    W    X    Y    Z    [    \    ]    ^    _ */
+  0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x20,0x20,0x20,0x20,0x3F,
+  /* `    a    b    c    d    e    f    g    h    i    j    k    l    m    n    o */
+  0x20,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,
+  /* p    q    r    s    t    u    v    w    x    y    z    {    |    }    ~  DEL */
+  0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x20,0x20,0x20,0x3F,0x20
+};
+
+const CHAR DavEntry::HEX_CHARS[17] = "0123456789ABCDEF";
+
+
 DavEntry::DavEntry() {}
 
 DavEntry::DavEntry(const DavEntry &entry) {
@@ -36,7 +54,7 @@ DavEntry::DavEntry(const DavEntry &entry) {
 
 
 DavEntry::DavEntry(const WCHAR* path_) {
-	path = unicodeConvert(path_);
+	path = urldecode(path_);
 	lastModifiedTime.dwLowDateTime = 0;
 	lastModifiedTime.dwHighDateTime = 0;
 	creationTime.dwLowDateTime = 0;
@@ -52,7 +70,7 @@ DavEntry::~DavEntry() {
 }
 
 HRESULT DavEntry::setPath(const WCHAR* path_) {
-	path = unicodeConvert(path_);
+	path = urldecode(path_);
 	return S_OK;
 }
 
@@ -146,8 +164,35 @@ FILETIME* DavEntry::getLastModifiedTime() {
 	return &lastModifiedTime;
 }
 
-WCHAR* DavEntry::unicodeConvert(const WCHAR* str)
-{
+HRESULT DavEntry::convert_path(CHAR* path, CHAR* buffer) {
+	int i = 0;
+	int buffer_len = 0;
+	int path_len = 0;
+	unsigned char c = 0;
+	char* t = 0;
+
+	path_len = strlen(path);
+	buffer_len = path_len * 3 + 1;
+
+	t = buffer;
+
+	/* copy the path component name */
+	for (i = 0 ; i< path_len ; i++) {
+		c = path[i];
+		if (!ACCEPTABLE_URI_CHAR (c) && (c != '\n')) {
+			*t++ = '%';
+			*t++ = HEX_CHARS[c >> 4];
+			*t++ = HEX_CHARS[c & 15];
+		}
+		else
+			*t++ = path[i];
+	}
+	*t = '\0';
+
+	return 0;
+}
+
+WCHAR* DavEntry::urldecode(const WCHAR* str) {
 	WCHAR wstr[MAX_PATH] = {0};
 	CHAR  astr[MAX_PATH] = {0};
 	DWORD alen = 0;
@@ -169,7 +214,7 @@ WCHAR* DavEntry::unicodeConvert(const WCHAR* str)
 	return _wcsdup(wstr);
 }
 
-WCHAR* DavEntry::escapeURL(const WCHAR* str)
+WCHAR* DavEntry::urlencode(const WCHAR* str)
 {
 	WCHAR wstr[MAX_PATH] = {0};
 	CHAR  astr[MAX_PATH] = {0};
@@ -184,9 +229,8 @@ WCHAR* DavEntry::escapeURL(const WCHAR* str)
 	WideCharToMultiByte(CP_UTF8, 0, str, wlen, astr, alen, 0, 0);
 
 	alen = MAX_PATH;
-	UrlEscapeA(astr, escaped, &alen, URL_BROWSER_MODE);
-	// Convertion from utf-8 to Unicode
-	wlen = MultiByteToWideChar(CP_ACP, 0, (LPCSTR)escaped, -1, NULL, 0);
-	MultiByteToWideChar(CP_ACP, 0, (LPCSTR)escaped, -1, wstr, wlen);
-	return _wcsdup(wstr);
+	convert_path(astr, escaped);
+	mbstowcs(wstr, escaped, strlen(escaped));
+
+	return _wcsdup((WCHAR*)wstr);
 }

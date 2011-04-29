@@ -115,7 +115,7 @@ void WebdavServer::getAbsolutePath(WCHAR* dest, WCHAR* path) {
 
 	wcscat_s(prefix, sizeof(prefix), address);
 	swprintf_s(dest, MAX_PATH, L"%s:%i%s", prefix, port, path);
-	escaped = DavEntry::escapeURL(dest);
+	escaped = DavEntry::urlencode(dest);
 	if (escaped == NULL) {
 		return;
 	}
@@ -157,15 +157,20 @@ BOOL WebdavServer::disconnect() {
 }
 
 
-HINTERNET WebdavServer::requestNew(wchar_t* method, wchar_t* path )
+HINTERNET WebdavServer::requestNew(wchar_t* method, wchar_t* path, BOOL redirected)
 {
 	HINTERNET hRequest = NULL;
 	DWORD dwOptionValue = 0;
 	DWORD dwFlags = 0;
 	BOOL bSetOk = FALSE;
 	WCHAR* escaped = NULL;
+	WCHAR* encodedPath = NULL;
 
-	escaped = DavEntry::escapeURL(path);
+	encodedPath = path;
+	if (! redirected) {
+		escaped = DavEntry::urlencode(path);
+		encodedPath = escaped;
+	}
 
 	if (! hConnect) {
 		DbgPrint(L"No connection to server: %s:%i\n", address, port);
@@ -176,7 +181,7 @@ HINTERNET WebdavServer::requestNew(wchar_t* method, wchar_t* path )
 	{
 		dwFlags |= WINHTTP_FLAG_SECURE;
 	}
-	hRequest = WinHttpOpenRequest(hConnect, method, escaped, HTTP_VERSION, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, dwFlags );
+	hRequest = WinHttpOpenRequest(hConnect, method, encodedPath, HTTP_VERSION, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, dwFlags );
 
 	if (hRequest && user)
 	{
@@ -199,10 +204,12 @@ HINTERNET WebdavServer::requestNew(wchar_t* method, wchar_t* path )
 		bSetOk = WinHttpSetOption(hRequest,	WINHTTP_OPTION_DISABLE_FEATURE,	&dwOptionValue,	sizeof(dwOptionValue));
 	}
 
+
+	if (escaped)
+		free(escaped);
+
 	if (hRequest)
-	{
 		return hRequest;
-	}
 
 	DbgPrint(L"Unable to create a DAV request for method %s\n", method );
 	return NULL;
@@ -437,7 +444,7 @@ DAVFILEINFO* WebdavServer::DAVGetFileInformations(LPCWSTR path) {
 		DbgPrint(L"Unable to merge %s and %s\n", prefixe, path);
 		return NULL;
 	}
-	hRequest = DAVPROPFind(&path2, DEFAULT_PROPFIND, 0);
+	hRequest = DAVPROPFind(&path2, DEFAULT_PROPFIND, 0, FALSE);
 	if (! hRequest) {
 		if (hRequest) requestDel(hRequest);
 		return NULL;
@@ -514,7 +521,7 @@ DAVFILEINFO* WebdavServer::DAVGetDirectoryList(LPCWSTR path, PDWORD count ) {
 		DbgPrint(L"Unable to merge %s and %s\n", prefixe, path);
 		return NULL;
 	}
-	hRequest = DAVPROPFind(&path2, DEFAULT_PROPFIND, 1);
+	hRequest = DAVPROPFind(&path2, DEFAULT_PROPFIND, 1, FALSE);
 	if (!hRequest)
 		DbgPrint(L"ERROR while DAVPROPFIND\n");
 	
@@ -603,7 +610,7 @@ BOOL WebdavServer::DAVOpen(wchar_t* path ) {
 		return FALSE;
 	}
 
-	hRequest = DAVPROPFind(&path2, DEFAULT_PROPFIND, 0);
+	hRequest = DAVPROPFind(&path2, DEFAULT_PROPFIND, 0, FALSE);
 	if (path2) {
 		free(path2);
 	}
@@ -618,7 +625,7 @@ BOOL WebdavServer::DAVOpen(wchar_t* path ) {
 	return FALSE;
 }
 
-HINTERNET WebdavServer::DAVPROPFind(wchar_t** path, wchar_t* body, int depth) {
+HINTERNET WebdavServer::DAVPROPFind(wchar_t** path, wchar_t* body, int depth, BOOL redirected ) {
 	BOOL  bResults = FALSE;
 	int bodyLength = 0;
 	int status;
@@ -628,7 +635,7 @@ HINTERNET WebdavServer::DAVPROPFind(wchar_t** path, wchar_t* body, int depth) {
 
 	if (! connect())
 		return NULL;
-	hRequest = requestNew(L"PROPFIND", *path);
+	hRequest = requestNew(L"PROPFIND", *path, redirected);
 	if (! hRequest)
 	{
 		return NULL;
@@ -655,7 +662,7 @@ HINTERNET WebdavServer::DAVPROPFind(wchar_t** path, wchar_t* body, int depth) {
 			free(*path);
 			*path = redirect;
 			DbgPrint(L"redirect to %ls\n", *path);
-			return DAVPROPFind(path, body, depth);
+			return DAVPROPFind(path, body, depth, TRUE);
 		}
 	}
 	
@@ -689,7 +696,7 @@ BOOL WebdavServer::DAVGetFileContent(wchar_t* path, LPDWORD ReadLength, LONGLONG
 			return FALSE;
 		}
   }
-  hRequest = requestNew(L"GET", path2);
+  hRequest = requestNew(L"GET", path2, redirected);
   if (! hRequest)
   {
   	return FALSE;
@@ -800,7 +807,7 @@ BOOL WebdavServer::DAVImportFileContent(wchar_t* remotePath, wchar_t* localPath,
 			return FALSE;
 		}
 	}
-	hRequest = requestNew(L"GET", path2);
+	hRequest = requestNew(L"GET", path2, redirected);
 
 	if (! hRequest)
 	{
@@ -922,7 +929,7 @@ BOOL WebdavServer::DAVWriteFile(wchar_t* path, LPCVOID Buffer, LPDWORD NumberOfB
     }
   }
 
-  hRequest = requestNew(L"PUT", path2);
+  hRequest = requestNew(L"PUT", path2, redirected);
   if (! hRequest) {
   	return FALSE;
   }
@@ -962,7 +969,7 @@ BOOL WebdavServer::DAVWriteFile(wchar_t* path, LPCVOID Buffer, LPDWORD NumberOfB
 			redirect = getRedirectPath(hRequest);
 			if (redirect)
 			{
-				ret = DAVWriteFile(redirect, Buffer, NumberOfBytesWritten, Offset, NumberOfBytesToWrite, FALSE );
+				ret = DAVWriteFile(redirect, Buffer, NumberOfBytesWritten, Offset, NumberOfBytesToWrite, TRUE );
 			}
 		}
 
@@ -1005,7 +1012,7 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 		}
 	}
 
-	hRequest = requestNew(L"PUT", path2);
+	hRequest = requestNew(L"PUT", path2, redirected);
 	if (! hRequest)
 	{
 		return FALSE;
@@ -1076,7 +1083,7 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 			if (redirect)
 			{
 				CloseHandle(handle);
-				ret = DAVExportFileContent(remotePath, localPath, FALSE );
+				ret = DAVExportFileContent(remotePath, localPath, TRUE );
 			}
 		}
 	}
@@ -1116,7 +1123,7 @@ BOOL WebdavServer::DAVMKCOL(wchar_t* path, BOOL redirected ) {
 		}
 	}
 
-  hRequest = requestNew(L"MKCOL", path2);
+  hRequest = requestNew(L"MKCOL", path2, redirected);
   if (! hRequest)
   {
   	return FALSE;
@@ -1185,7 +1192,7 @@ BOOL WebdavServer::DAVDELETE(wchar_t* path, BOOL redirected ) {
 			return FALSE;
 		}
 	}
-  hRequest = requestNew(L"DELETE", path2);
+  hRequest = requestNew(L"DELETE", path2, redirected);
   if (! hRequest)
   {
   	return FALSE;
@@ -1264,7 +1271,7 @@ BOOL WebdavServer::DAVMOVE(wchar_t* from, wchar_t* to, BOOL redirected, BOOL rep
 
 	}
 
-	hRequest = requestNew(L"MOVE", from_path);
+	hRequest = requestNew(L"MOVE", from_path, redirected);
 	if (! hRequest)
 		return FALSE;
 
