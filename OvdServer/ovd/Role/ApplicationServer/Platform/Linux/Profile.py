@@ -169,7 +169,7 @@ class Profile(AbstractProfile):
 			try:
 				os.rmdir(self.profile_mount_point)
 			except OSError, e:
-				Logger.error("Unable to delete mount point (%s): %s"%(self.profile_mount_point), str(e))
+				Logger.error("Unable to delete mount point (%s): %s"%(self.profile_mount_point, str(e)))
 
 		try:		
 			os.rmdir(self.cifs_dst)
