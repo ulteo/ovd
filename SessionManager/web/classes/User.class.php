@@ -158,8 +158,6 @@ class User {
 		}
 		$servers_to_use = array_unique($servers_to_use);
 		
-		// TODO: bug if the user have static application
-		
 		if (count($applications) == 0)
 			return $servers_to_use;
 		else {
