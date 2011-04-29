@@ -30,35 +30,6 @@ import win32security
 from ovd.Logger import Logger
 
 
-def testMe():
-	import os
-	directory = r"C:\Documents and Settings\tt"
-	
-	registryFile = os.path.join(directory, "NTUSER.DAT")
-	
-	# Get some privileges to load the hive
-	priv_flags = win32security.TOKEN_ADJUST_PRIVILEGES | win32security.TOKEN_QUERY
-	hToken = win32security.OpenProcessToken (win32api.GetCurrentProcess (), priv_flags)
-	backup_privilege_id = win32security.LookupPrivilegeValue (None, "SeBackupPrivilege")
-	restore_privilege_id = win32security.LookupPrivilegeValue (None, "SeRestorePrivilege")
-	win32security.AdjustTokenPrivileges (
-		hToken, 0, [
-		(backup_privilege_id, win32security.SE_PRIVILEGE_ENABLED),
-		(restore_privilege_id, win32security.SE_PRIVILEGE_ENABLED)
-		]
-	)
-
-
-	hiveName = "testme"
-	
-	# Load the hive
-	win32api.RegLoadKey(win32con.HKEY_USERS, hiveName, registryFile)
-	
-	disableActiveSetup(hiveName)
-	
-	win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName)
-
-
 def disableActiveSetup(rootPath):
 	path = r"Software\Microsoft\Active Setup"
 	hkey_src = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, path, 0, win32con.KEY_ALL_ACCESS)
@@ -86,7 +57,7 @@ def CopyTree(KeySrc, SubKey, KeyDest, blacklist = []):
 	hkey_dst = None
 	try:
 		win32api.RegCreateKey(KeyDest, SubKey)
-	
+		
 		hkey_src = win32api.RegOpenKey(KeySrc, SubKey, 0, win32con.KEY_ALL_ACCESS)
 		hkey_dst = win32api.RegOpenKey(KeyDest, SubKey, 0, win32con.KEY_ALL_ACCESS)
 	except Exception, err:
@@ -114,7 +85,7 @@ def CopyTree(KeySrc, SubKey, KeyDest, blacklist = []):
 			else:
 				Logger.warn("Unable to copy value (%s)"%(str(err)))
 		index+= 1
-
+	
 	index = 0
 	while True:
 		try:
@@ -145,7 +116,7 @@ def CopyTree(KeySrc, SubKey, KeyDest, blacklist = []):
 			else:
 				Logger.warn("Unable to copy key (%s)"%(str(err)))
 		index+= 1
-
+	
 	try:
 		win32api.RegCloseKey(hkey_src)
 		win32api.RegCloseKey(hkey_dst)
@@ -185,7 +156,7 @@ def ProcessActiveSetupEntry(BaseKey, Entry, Username, LocaleValue):
 	except:
 		if version :
 			win32api.RegSetValueEx(hkey, 'Locale', 0, win32con.REG_SZ, LocaleValue)
-
+	
 	try:
 		(string, type) = win32api.RegQueryValueEx(hkey, "IsInstalled")
 		if not (string == 1 or string == '\x01\x00\x00\x00'):
@@ -199,9 +170,10 @@ def ProcessActiveSetupEntry(BaseKey, Entry, Username, LocaleValue):
 			win32api.RegSetValueEx(hkey, 'Username', 0, win32con.REG_SZ, Username)
 	except :
 		pass
-
+	
 	win32api.RegCloseKey(hkey)
 	return True
+
 
 def GetLocaleValue(hkey_src):
 	index = 0
@@ -222,8 +194,9 @@ def GetLocaleValue(hkey_src):
 			index+= 1
 		except Exception, err:
 			flag_continue = False
-
+	
 	return "EN"
+
 
 def UpdateActiveSetup(Username, hiveName, active_setup_path):
 	# Overwrite Active Setup: works partially
@@ -251,7 +224,7 @@ def UpdateActiveSetup(Username, hiveName, active_setup_path):
 	keyToRemove = []
 	
 	localeValue = GetLocaleValue(hkey_src)
-
+	
 	index = 0
 	flag_continue = True
 	while flag_continue:
@@ -259,14 +232,15 @@ def UpdateActiveSetup(Username, hiveName, active_setup_path):
 			buf = win32api.RegEnumKey(hkey_src, index)
 			if ProcessActiveSetupEntry(hkey_src, buf, Username, localeValue) == False:
 				keyToRemove.append(buf)
-
+			
 			index+= 1
 		except Exception, err:
 			flag_continue = False
-
+	
 	for key in keyToRemove:
 		DeleteTree(hkey_src, key)
 	win32api.RegCloseKey(hkey_src)
+
 
 def DeleteTree(key, subkey, deleteRoot = True):
 	try:
@@ -314,14 +288,14 @@ def TreeSearchExpression(hive, subpath, motif):
 	res = None
 	index = 0
 	flag_continue = True
-
+	
 	try:
 		hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS)
 	except Exception, err:
 		pass
 	if hkey is None:
 		return None
-
+	
 	while flag_continue:
 		try:			
 			subsubKey = win32api.RegEnumKey(hkey, index)
@@ -342,7 +316,7 @@ def TreeSearchExpression(hive, subpath, motif):
 				if res is not None:
 					res = res.group(0)
 					break
-
+			
 			index+= 1
 			
 		except Exception, err:
@@ -351,7 +325,7 @@ def TreeSearchExpression(hive, subpath, motif):
 			flag_continue = False
 		
 	win32api.RegCloseKey(hkey)
-
+	
 	return res
 
 
@@ -360,7 +334,7 @@ def TreeReplace(hive, subpath, src, dest):
 	hkey = None
 	flag_continue = True
 	path = hive+"\\"+subpath
-
+	
 	try:
 		hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS)
 	except Exception, err:
@@ -386,7 +360,7 @@ def TreeReplace(hive, subpath, src, dest):
 					res = obj.replace(src, dest)
 				if res is not None:
 					win32api.RegSetValueEx(hkey, value, 0, objType, res)
-
+			
 			index+= 1
 			
 		except Exception, err:
@@ -429,7 +403,7 @@ def getActiveSetupKeys():
 	path = r"Software\Microsoft\Active Setup\Installed Components"
 	
 	keys = {}
-
+	
 	hkey = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, path, 0, win32con.KEY_ENUMERATE_SUB_KEYS|win32con.KEY_QUERY_VALUE)
 	index = 0
 	while True:
@@ -460,13 +434,14 @@ def getActiveSetupKeys():
 	
 	return keys
 
+
 def disableActiveSetup22(rootPath):
 	path = r"%s\Software\Microsoft\Active Setup"%(rootPath)
 	hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS)
 	
 	DeleteTree(hkey, "Installed Components", False)
 	win32api.RegCloseKey(hkey)
-
+	
 	objs = getActiveSetupKeys()
 	
 	for k,v in objs.items():

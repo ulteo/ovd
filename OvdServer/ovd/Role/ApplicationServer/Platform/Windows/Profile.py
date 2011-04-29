@@ -35,7 +35,7 @@ from ovd.Role.ApplicationServer.Profile import Profile as AbstractProfile
 import Reg
 import Util
 
-class Profile(AbstractProfile):	
+class Profile(AbstractProfile):
 	registry_copy_blacklist = [r"Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"]
 	
 	def init(self):
@@ -86,7 +86,7 @@ class Profile(AbstractProfile):
 	def copySessionStart(self):
 		for f in [self.DesktopDir, self.DocumentsDir]:
 			d = os.path.join(self.mountPoint, f)
-
+			
 			while not os.path.exists(d):
 				try:
 					os.makedirs(d)
@@ -97,7 +97,7 @@ class Profile(AbstractProfile):
 		
 		d = os.path.join(self.mountPoint, "conf.Windows")
 		if os.path.exists(d):
-
+			
 			# clean temporary file used by windows to load registry
 			dirs = None
 			try:
@@ -105,7 +105,7 @@ class Profile(AbstractProfile):
 			except Exception, err:
 				Logger.warn("Unable to list content of the directory %s (%s)"%(directory, str(err)))
 				return
-
+			
 			for content in dirs:
 				if content.startswith(r"NTUSER.DAT.LOG") or content.startswith(r"NTUSER.DAT{"):
 					try :
@@ -139,7 +139,7 @@ class Profile(AbstractProfile):
 				
 				win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName_src)
 				win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName_dst)
-				
+			
 			
 			# Copy AppData
 			src = os.path.join(d, "AppData")
@@ -151,7 +151,7 @@ class Profile(AbstractProfile):
 				except Exception, err:
 					Logger.error("Unable to copy appData from profile")
 					Logger.debug("Unable to copy appData from profile: %s"%(str(err)))
-
+			
 			# Copy LocalAppData
 			src = os.path.join(d, "LocalAppData")
 			if os.path.exists(src):
@@ -244,7 +244,7 @@ class Profile(AbstractProfile):
 			if lastUsername is not None:
 				uni_username = username.encode("UTF-16LE")
 				Reg.TreeReplace(hiveName, subpath, lastUsername, uni_username)
-
+		
 		shareNum = 0
 		for share in self.sharedFolders:
 			path = hiveName+r"\Software\Ulteo\ovd\share_%d"%(shareNum)
@@ -281,7 +281,7 @@ class Profile(AbstractProfile):
 		# ToDo: manage a global LOCK system to avoid two threads get the same result
 		
 		drives = win32api.GetLogicalDriveStrings().split('\x00')[:-1]
-	
+		
 		for i in "ZYXWVUTSRQPONMLKJIHGFEDCBA":
 			letter = "%s:\\"%(i.upper())
 			#print letter
