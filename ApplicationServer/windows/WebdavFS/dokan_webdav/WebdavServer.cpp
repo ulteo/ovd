@@ -148,9 +148,9 @@ BOOL WebdavServer::disconnect() {
 		return FALSE;
 	}
 	if ( hConnect) {
-	  WinHttpCloseHandle(hConnect);
-	  hConnect = NULL;
-	  return TRUE;
+		WinHttpCloseHandle(hConnect);
+		hConnect = NULL;
+		return TRUE;
 	}
 	DbgPrint(L"Failed to etablish conncetion to %s:%i\n", address, port );
 	return FALSE;
@@ -418,7 +418,7 @@ LPSTR WebdavServer::getData( HINTERNET hRequest, PDWORD dwSize, PDWORD status)
 			free(pszOutBuffer);
 			pszOutBuffer = NULL;
 
-  		}
+		}
 	};
 	if (pszBuffer)
 	{
@@ -669,56 +669,56 @@ HINTERNET WebdavServer::DAVPROPFind(wchar_t** path, wchar_t* body, int depth, BO
 
 
 BOOL WebdavServer::DAVGetFileContent(wchar_t* path, LPDWORD ReadLength, LONGLONG	Offset, DWORD BufferLength, LPVOID Buffer, BOOL redirected ) {
-  BOOL  bResults = FALSE;
+	BOOL  bResults = FALSE;
 //  LPSTR pszBuffer;
-  DWORD dwStatus = 0;
-  HINTERNET  hRequest = NULL;
-  WCHAR rangeProperty[256];
-  WCHAR path2[MAX_PATH];
-  DWORD tempSize = 0;
-  DWORD size = 0;
-  DWORD dwDownloaded = 0;
+	DWORD dwStatus = 0;
+	HINTERNET  hRequest = NULL;
+	WCHAR rangeProperty[256];
+	WCHAR path2[MAX_PATH];
+	DWORD tempSize = 0;
+	DWORD size = 0;
+	DWORD dwDownloaded = 0;
 //	LPSTR temp = NULL;
 //	HINTERNET hRequest2;
-  char* buffer = (char*) Buffer;
+	char* buffer = (char*) Buffer;
 
-  if (redirected) {
-	  wcscpy_s(path2, MAX_PATH, path);
-  }
-  else {
+	if (redirected) {
+		wcscpy_s(path2, MAX_PATH, path);
+	}
+	else {
 		if (! path_join(path2, prefixe, path)) {
 			DbgPrint(L"Unable to merge %s and %s\n", prefixe, path);
 			return FALSE;
 		}
-  }
-  hRequest = requestNew(L"GET", path2, redirected);
-  if (! hRequest)
-  {
-  	return FALSE;
-  }
+	}
+	hRequest = requestNew(L"GET", path2, redirected);
+	if (! hRequest)
+	{
+		return FALSE;
+	}
 
-  //set Range
-  swprintf_s(rangeProperty, 256, L"Range: bytes=%i-%i\r\n", (int)Offset, (int)(Offset+BufferLength));
-  DbgPrint(L"RANGE : %ls\n", rangeProperty);
+	//set Range
+	swprintf_s(rangeProperty, 256, L"Range: bytes=%i-%i\r\n", (int)Offset, (int)(Offset+BufferLength));
+	DbgPrint(L"RANGE : %ls\n", rangeProperty);
 
-  WinHttpAddRequestHeaders(hRequest, rangeProperty, (DWORD)-1, WINHTTP_ADDREQ_FLAG_REPLACE|WINHTTP_ADDREQ_FLAG_ADD);
-  bResults = WinHttpSendRequest( hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0);
-  if (! bResults) {
-  	fprintf(stderr, "Failed to send request with error %u\n", GetLastError());
-	  if (hRequest) WinHttpCloseHandle(hRequest);
-  }
-  bResults = WinHttpReceiveResponse( hRequest, NULL);
-  // Keep checking for data until there is nothing left.
-  if (bResults)
-  {
-  	size = sizeof(DWORD);
-  	bResults = WinHttpQueryHeaders(hRequest, WINHTTP_QUERY_STATUS_CODE| WINHTTP_QUERY_FLAG_NUMBER,
-  	                               NULL, &dwStatus, &size, NULL );
-  	if ((dwStatus <200) || (dwStatus >= 400))
-  	{
-  		DbgPrint(L"Status %i\n", dwStatus);
-  		return FALSE;
-  	}
+	WinHttpAddRequestHeaders(hRequest, rangeProperty, (DWORD)-1, WINHTTP_ADDREQ_FLAG_REPLACE|WINHTTP_ADDREQ_FLAG_ADD);
+	bResults = WinHttpSendRequest( hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0);
+	if (! bResults) {
+		fprintf(stderr, "Failed to send request with error %u\n", GetLastError());
+		if (hRequest) WinHttpCloseHandle(hRequest);
+	}
+	bResults = WinHttpReceiveResponse( hRequest, NULL);
+	// Keep checking for data until there is nothing left.
+	if (bResults)
+	{
+		size = sizeof(DWORD);
+		bResults = WinHttpQueryHeaders(hRequest, WINHTTP_QUERY_STATUS_CODE| WINHTTP_QUERY_FLAG_NUMBER,
+                                   NULL, &dwStatus, &size, NULL );
+		if ((dwStatus <200) || (dwStatus >= 400))
+		{
+			DbgPrint(L"Status %i\n", dwStatus);
+			return FALSE;
+		}
 		if ((dwStatus > 300) && (dwStatus < 400))
 		{
 			WCHAR* redirect;
@@ -770,10 +770,10 @@ BOOL WebdavServer::DAVGetFileContent(wchar_t* path, LPDWORD ReadLength, LONGLONG
 		{
 			DbgPrint(L"Error %d has occurred.\n", GetLastError());
 		}
-  }
-  // Close any open handles.
-  if (hRequest) requestDel(hRequest);
-  return bResults;
+	}
+	// Close any open handles.
+	if (hRequest) requestDel(hRequest);
+	return bResults;
 }
 
 
@@ -898,47 +898,47 @@ BOOL WebdavServer::DAVImportFileContent(wchar_t* remotePath, wchar_t* localPath,
 
 
 BOOL WebdavServer::DAVWriteFile(wchar_t* path, LPCVOID Buffer, LPDWORD NumberOfBytesWritten, LONGLONG	Offset, DWORD NumberOfBytesToWrite, BOOL redirected ) {
-  BOOL  bResults = FALSE;
-  BOOL ret = FALSE;
-  DWORD dwStatus = 0;
-  HINTERNET  hRequest = NULL;
-  WCHAR rangeProperty[256];
-  WCHAR path2[MAX_PATH];
+	BOOL  bResults = FALSE;
+	BOOL ret = FALSE;
+	DWORD dwStatus = 0;
+	HINTERNET  hRequest = NULL;
+	WCHAR rangeProperty[256];
+	WCHAR path2[MAX_PATH];
 
-  if (redirected) {
-    wcscpy_s(path2, MAX_PATH, path);
-  }
-  else {
-    if (! path_join(path2, prefixe, path)) {
-      DbgPrint(L"Unable to merge %s and %s\n", prefixe, path);
-      return FALSE;
-    }
-  }
+	if (redirected) {
+		wcscpy_s(path2, MAX_PATH, path);
+	}
+	else {
+		if (! path_join(path2, prefixe, path)) {
+			DbgPrint(L"Unable to merge %s and %s\n", prefixe, path);
+			return FALSE;
+		}
+	}
 
-  hRequest = requestNew(L"PUT", path2, redirected);
-  if (! hRequest) {
-  	return FALSE;
-  }
+	hRequest = requestNew(L"PUT", path2, redirected);
+	if (! hRequest) {
+		return FALSE;
+	}
 
-  //set Range
-  if (NumberOfBytesToWrite != 0){
-  	swprintf_s(rangeProperty, 256, L"Range: bytes=%i-%i\r\n", (int)Offset, (int)(Offset+NumberOfBytesToWrite));
-  	DbgPrint(L"RANGE : %ls\n", rangeProperty);
-  	WinHttpAddRequestHeaders(hRequest, rangeProperty, (DWORD)-1L, WINHTTP_ADDREQ_FLAG_REPLACE|WINHTTP_ADDREQ_FLAG_ADD);
-  }
+	//set Range
+	if (NumberOfBytesToWrite != 0){
+		swprintf_s(rangeProperty, 256, L"Range: bytes=%i-%i\r\n", (int)Offset, (int)(Offset+NumberOfBytesToWrite));
+		DbgPrint(L"RANGE : %ls\n", rangeProperty);
+		WinHttpAddRequestHeaders(hRequest, rangeProperty, (DWORD)-1L, WINHTTP_ADDREQ_FLAG_REPLACE|WINHTTP_ADDREQ_FLAG_ADD);
+	}
 
-  bResults = WinHttpSendRequest( hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, (LPVOID)Buffer, NumberOfBytesToWrite, NumberOfBytesToWrite, 0);
-  if (! bResults)
-  {
-    DbgPrint(L"Failed to send request with error %u\n", GetLastError());
-    if (hRequest) WinHttpCloseHandle(hRequest);
-  }
-  bResults = WinHttpReceiveResponse( hRequest, NULL);
-  // Keep checking for data until there is nothing left.
+	bResults = WinHttpSendRequest( hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, (LPVOID)Buffer, NumberOfBytesToWrite, NumberOfBytesToWrite, 0);
+	if (! bResults)
+	{
+		DbgPrint(L"Failed to send request with error %u\n", GetLastError());
+		if (hRequest) WinHttpCloseHandle(hRequest);
+	}
+	bResults = WinHttpReceiveResponse( hRequest, NULL);
+	// Keep checking for data until there is nothing left.
 
-  if (bResults)
-  {
-	  dwStatus = getStatus(hRequest);
+	if (bResults)
+	{
+		dwStatus = getStatus(hRequest);
 		if ((dwStatus > 200) && (dwStatus < 300))
 		{
 			*NumberOfBytesWritten = NumberOfBytesToWrite;
@@ -954,7 +954,7 @@ BOOL WebdavServer::DAVWriteFile(wchar_t* path, LPCVOID Buffer, LPDWORD NumberOfB
 			}
 		}
 
-  }
+	}
 	// Keep checking for data until there is nothing left.
 	// Report any errors.
 	if (!bResults)
@@ -1080,11 +1080,11 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 
 
 BOOL WebdavServer::DAVMKCOL(wchar_t* path, BOOL redirected ) {
-  BOOL  bResults = FALSE;
-  DWORD dwStatus = 0;
-  HINTERNET  hRequest = NULL;
-  WCHAR path2[MAX_PATH];
-  BOOL ret = FALSE;
+	BOOL  bResults = FALSE;
+	DWORD dwStatus = 0;
+	HINTERNET  hRequest = NULL;
+	WCHAR path2[MAX_PATH];
+	BOOL ret = FALSE;
 
 	if (redirected) {
 		wcscpy_s(path2, MAX_PATH, path);
@@ -1096,23 +1096,23 @@ BOOL WebdavServer::DAVMKCOL(wchar_t* path, BOOL redirected ) {
 		}
 	}
 
-  hRequest = requestNew(L"MKCOL", path2, redirected);
-  if (! hRequest)
-  {
-  	return FALSE;
-  }
+	hRequest = requestNew(L"MKCOL", path2, redirected);
+	if (! hRequest)
+	{
+		return FALSE;
+	}
 
-  //set Range
-  bResults = WinHttpSendRequest( hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0);
-  if (! bResults) {
-  	fprintf(stderr, "Failed to send request with error %u\n", GetLastError());
-	  if (hRequest) WinHttpCloseHandle(hRequest);
-	  ret = FALSE;
-  }
-  bResults = WinHttpReceiveResponse( hRequest, NULL);
-  // Keep checking for data until there is nothing left.
-  if (bResults)
-  {
+	//set Range
+	bResults = WinHttpSendRequest( hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0);
+	if (! bResults) {
+		fprintf(stderr, "Failed to send request with error %u\n", GetLastError());
+		if (hRequest) WinHttpCloseHandle(hRequest);
+		ret = FALSE;
+	}
+	bResults = WinHttpReceiveResponse( hRequest, NULL);
+	// Keep checking for data until there is nothing left.
+	if (bResults)
+	{
 		dwStatus = getStatus(hRequest);
 		if (dwStatus == 201)
 		{
@@ -1127,7 +1127,7 @@ BOOL WebdavServer::DAVMKCOL(wchar_t* path, BOOL redirected ) {
 				ret = DAVMKCOL(redirect ,TRUE);
 			}
 		}
-  }
+	}
 	// Keep checking for data until there is nothing left.
 	// Report any errors.
 	if (!bResults)
@@ -1140,11 +1140,11 @@ BOOL WebdavServer::DAVMKCOL(wchar_t* path, BOOL redirected ) {
 
 
 BOOL WebdavServer::DAVDELETE(wchar_t* path, BOOL redirected ) {
-  BOOL  bResults = FALSE;
-  DWORD dwStatus = 0;
-  HINTERNET  hRequest = NULL;
-  WCHAR path2[MAX_PATH];
-  BOOL ret = FALSE;
+	BOOL  bResults = FALSE;
+	DWORD dwStatus = 0;
+	HINTERNET  hRequest = NULL;
+	WCHAR path2[MAX_PATH];
+	BOOL ret = FALSE;
 
 	if (redirected) {
 		wcscpy_s(path2, MAX_PATH, path);
@@ -1155,24 +1155,24 @@ BOOL WebdavServer::DAVDELETE(wchar_t* path, BOOL redirected ) {
 			return FALSE;
 		}
 	}
-  hRequest = requestNew(L"DELETE", path2, redirected);
-  if (! hRequest)
-  {
-  	return FALSE;
-  }
+	hRequest = requestNew(L"DELETE", path2, redirected);
+	if (! hRequest)
+	{
+		return FALSE;
+	}
 
-  //set Range
-  bResults = WinHttpSendRequest( hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0);
-  if (! bResults) {
-	  DbgPrint(L"Failed to send request with error %u\n", GetLastError());
-	  if (hRequest) WinHttpCloseHandle(hRequest);
-	  ret = FALSE;
-  }
-  bResults = WinHttpReceiveResponse( hRequest, NULL);
-  // Keep checking for data until there is nothing left.
-  if (bResults)
-  {
-	  dwStatus = getStatus(hRequest);
+	//set Range
+	bResults = WinHttpSendRequest( hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0);
+	if (! bResults) {
+		DbgPrint(L"Failed to send request with error %u\n", GetLastError());
+		if (hRequest) WinHttpCloseHandle(hRequest);
+		ret = FALSE;
+	}
+	bResults = WinHttpReceiveResponse( hRequest, NULL);
+	// Keep checking for data until there is nothing left.
+	if (bResults)
+	{
+		dwStatus = getStatus(hRequest);
 		if (dwStatus == 204)
 		{
 			ret = TRUE;
@@ -1186,7 +1186,7 @@ BOOL WebdavServer::DAVDELETE(wchar_t* path, BOOL redirected ) {
 				ret = DAVDELETE(redirect, TRUE );
 			}
 		}
-  }
+	}
 	// Keep checking for data until there is nothing left.
 	// Report any errors.
 	if (!bResults)
@@ -1199,16 +1199,16 @@ BOOL WebdavServer::DAVDELETE(wchar_t* path, BOOL redirected ) {
 
 
 BOOL WebdavServer::DAVMOVE(wchar_t* from, wchar_t* to, BOOL redirected, BOOL replaceIfExisting) {
-  BOOL  bResults = FALSE;
-  DWORD dwStatus = 0;
-  int len = 0;
-  HINTERNET  hRequest = NULL;
-  WCHAR from_path[MAX_PATH];
-  WCHAR to_path[MAX_PATH];
-  WCHAR destination_property[MAX_PATH+15];
-  WCHAR destination[MAX_PATH];
-  
-  BOOL ret = FALSE;
+	BOOL  bResults = FALSE;
+	DWORD dwStatus = 0;
+	int len = 0;
+	HINTERNET  hRequest = NULL;
+	WCHAR from_path[MAX_PATH];
+	WCHAR to_path[MAX_PATH];
+	WCHAR destination_property[MAX_PATH+15];
+	WCHAR destination[MAX_PATH];
+
+	BOOL ret = FALSE;
 
 	if (redirected) {
 		wcscpy_s(from_path, MAX_PATH, from);
@@ -1237,7 +1237,7 @@ BOOL WebdavServer::DAVMOVE(wchar_t* from, wchar_t* to, BOOL redirected, BOOL rep
 		wcscat_s(destination, sizeof(from_path), L"/");
 
 	swprintf_s(destination_property, MAX_PATH, L"Destination: %s", destination);
-  
+
 	WinHttpAddRequestHeaders(hRequest, destination_property, (DWORD)-1, WINHTTP_ADDREQ_FLAG_REPLACE|WINHTTP_ADDREQ_FLAG_ADD);
 	if (replaceIfExisting)
 		WinHttpAddRequestHeaders(hRequest, L"Overwrite:T", (DWORD)-1, WINHTTP_ADDREQ_FLAG_REPLACE|WINHTTP_ADDREQ_FLAG_ADD);
