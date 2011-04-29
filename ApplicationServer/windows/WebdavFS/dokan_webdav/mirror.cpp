@@ -76,6 +76,7 @@ sigint_handler(int sig ) {
 		delete davCache;
 	}
 	if (server) {
+		server->disconnect();
 		delete server;
 	}
 
@@ -885,6 +886,9 @@ main(ULONG argc, PCHAR argv[]) {
 	server = new WebdavServer(urlComp.lpszHostName, urlComp.nPort, urlComp.lpszUrlPath, username, password, useHTTPS);
 
 	server->init();
+	if (!server->connect()) {
+		return DOKAN_ERROR;
+	}
 	davCache = new DavCache();
 	davCache->init(server);
 
@@ -958,6 +962,7 @@ main(ULONG argc, PCHAR argv[]) {
 		delete davCache;
 	}
 	if (server) {
+		server->disconnect();
 		delete server;
 	}
 	return 0;

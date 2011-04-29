@@ -440,7 +440,6 @@ DAVFILEINFO* WebdavServer::DAVGetFileInformations(LPCWSTR path) {
 	hRequest = DAVPROPFind(&path2, DEFAULT_PROPFIND, 0);
 	if (! hRequest) {
 		if (hRequest) requestDel(hRequest);
-		if (hConnect) disconnect();
 		return NULL;
 	}
 	
@@ -494,7 +493,6 @@ DAVFILEINFO* WebdavServer::DAVGetFileInformations(LPCWSTR path) {
 	pouet.release();
 
 	if (hRequest) requestDel(hRequest);
-	if (hConnect) disconnect();
 
 	return fsinfo;
 }
@@ -537,7 +535,6 @@ DAVFILEINFO* WebdavServer::DAVGetDirectoryList(LPCWSTR path, PDWORD count ) {
 		delete parser;
 
 		if (hRequest) requestDel(hRequest);
-		if (hConnect) disconnect();
 		return NULL;
 	}
 	dirList = (DAVFILEINFO*)malloc(sizeof(DAVFILEINFO)*(*count));
@@ -591,7 +588,6 @@ DAVFILEINFO* WebdavServer::DAVGetDirectoryList(LPCWSTR path, PDWORD count ) {
 	delete parser;
 
 	if (hRequest) requestDel(hRequest);
-	if (hConnect) disconnect();
 	return dirList;
 }
 
@@ -614,7 +610,6 @@ BOOL WebdavServer::DAVOpen(wchar_t* path ) {
 	if (hRequest) {
 		status = getStatus(hRequest);
 		if (hRequest) requestDel(hRequest);
-		if (hConnect) disconnect();
 		if (status != 207) {
 			return FALSE;
 		}
@@ -636,7 +631,6 @@ HINTERNET WebdavServer::DAVPROPFind(wchar_t** path, wchar_t* body, int depth) {
 	hRequest = requestNew(L"PROPFIND", *path);
 	if (! hRequest)
 	{
-		if (hConnect) disconnect();
 		return NULL;
 	}
 	//set Depth
@@ -648,7 +642,6 @@ HINTERNET WebdavServer::DAVPROPFind(wchar_t** path, wchar_t* body, int depth) {
 	if (! bResults) {
 		fprintf(stderr, "Failed to send request with error %u\n", GetLastError());
 		if (hRequest) WinHttpCloseHandle(hRequest);
-		if (hConnect) WinHttpCloseHandle(hConnect);
 	}
 	bResults = WinHttpReceiveResponse( hRequest, NULL);
 	status = getStatus(hRequest);
@@ -711,8 +704,6 @@ BOOL WebdavServer::DAVGetFileContent(wchar_t* path, LPDWORD ReadLength, LONGLONG
   if (! bResults) {
   	fprintf(stderr, "Failed to send request with error %u\n", GetLastError());
 	  if (hRequest) WinHttpCloseHandle(hRequest);
-	  if (hConnect) WinHttpCloseHandle(hConnect);
-	  hConnect =NULL;
   }
   bResults = WinHttpReceiveResponse( hRequest, NULL);
   // Keep checking for data until there is nothing left.
@@ -780,7 +771,6 @@ BOOL WebdavServer::DAVGetFileContent(wchar_t* path, LPDWORD ReadLength, LONGLONG
   }
   // Close any open handles.
   if (hRequest) requestDel(hRequest);
-  if (hConnect) disconnect();
   return bResults;
 }
 
@@ -822,9 +812,6 @@ BOOL WebdavServer::DAVImportFileContent(wchar_t* remotePath, wchar_t* localPath,
 		DbgPrint(L"Failed to send request with error %u\n", GetLastError());
 		if (hRequest)
 			WinHttpCloseHandle(hRequest);
-		if (hConnect)
-			WinHttpCloseHandle(hConnect);
-		hConnect =NULL;
 	}
 
 	bResults = WinHttpReceiveResponse( hRequest, NULL);
@@ -906,8 +893,7 @@ BOOL WebdavServer::DAVImportFileContent(wchar_t* remotePath, wchar_t* localPath,
 	// Close any open handles.
 	if (hRequest)
 		requestDel(hRequest);
-	if (hConnect)
-		disconnect();
+
 	return bResults;
 }
 
@@ -953,8 +939,6 @@ BOOL WebdavServer::DAVWriteFile(wchar_t* path, LPCVOID Buffer, LPDWORD NumberOfB
   {
     DbgPrint(L"Failed to send request with error %u\n", GetLastError());
     if (hRequest) WinHttpCloseHandle(hRequest);
-    if (hConnect) WinHttpCloseHandle(hConnect);
-    hConnect =NULL;
   }
   bResults = WinHttpReceiveResponse( hRequest, NULL);
   // Keep checking for data until there is nothing left.
@@ -990,7 +974,6 @@ BOOL WebdavServer::DAVWriteFile(wchar_t* path, LPCVOID Buffer, LPDWORD NumberOfB
 
 	// Close any open handles.
 	if (hRequest) requestDel(hRequest);
-	if (hConnect) disconnect();
 	return ret;
 }
 
@@ -1050,8 +1033,6 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 	if (! bResults) {
 		DbgPrint(L"Failed to get size of the file %s\n", localPath);
 		if (hRequest) WinHttpCloseHandle(hRequest);
-		if (hConnect) WinHttpCloseHandle(hConnect);
-		hConnect = NULL;
 		return FALSE;
 	}
 	
@@ -1059,8 +1040,6 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 	if (! bResults) {
 		DbgPrint(L"Failed to send request with error %u\n", GetLastError());
 		if (hRequest) WinHttpCloseHandle(hRequest);
-		if (hConnect) WinHttpCloseHandle(hConnect);
-		hConnect = NULL;
 		return FALSE;
 	}
 
@@ -1080,8 +1059,6 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 		{
 			DbgPrint(L"Failed to send request with error %u\n", GetLastError());
 			if (hRequest) WinHttpCloseHandle(hRequest);
-			if (hConnect) WinHttpCloseHandle(hConnect);
-			hConnect =NULL;
 		}
 
 	} while (NumberOfBytesWrite > 0);
@@ -1112,7 +1089,6 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 
 	// Close any open handles.
 	if (hRequest) requestDel(hRequest);
-	if (hConnect) disconnect();
 
 	return ret;
 }
@@ -1151,8 +1127,6 @@ BOOL WebdavServer::DAVMKCOL(wchar_t* path, BOOL redirected ) {
   if (! bResults) {
   	fprintf(stderr, "Failed to send request with error %u\n", GetLastError());
 	  if (hRequest) WinHttpCloseHandle(hRequest);
-	  if (hConnect) WinHttpCloseHandle(hConnect);
-	  hConnect =NULL;
 	  ret = FALSE;
   }
   bResults = WinHttpReceiveResponse( hRequest, NULL);
@@ -1186,7 +1160,6 @@ BOOL WebdavServer::DAVMKCOL(wchar_t* path, BOOL redirected ) {
 
 	// Close any open handles.
 	if (hRequest) requestDel(hRequest);
-	if (hConnect) disconnect();
 	return ret;
 }
 
@@ -1223,8 +1196,6 @@ BOOL WebdavServer::DAVDELETE(wchar_t* path, BOOL redirected ) {
   if (! bResults) {
 	  DbgPrint(L"Failed to send request with error %u\n", GetLastError());
 	  if (hRequest) WinHttpCloseHandle(hRequest);
-	  if (hConnect) WinHttpCloseHandle(hConnect);
-	  hConnect =NULL;
 	  ret = FALSE;
   }
   bResults = WinHttpReceiveResponse( hRequest, NULL);
@@ -1258,7 +1229,6 @@ BOOL WebdavServer::DAVDELETE(wchar_t* path, BOOL redirected ) {
 
 	// Close any open handles.
 	if (hRequest) requestDel(hRequest);
-	if (hConnect) disconnect();
 	return ret;
 }
 
@@ -1315,8 +1285,6 @@ BOOL WebdavServer::DAVMOVE(wchar_t* from, wchar_t* to, BOOL redirected, BOOL rep
 	if (! bResults) {
 		DbgPrint(L"Failed to send request with error %u\n", GetLastError());
 		if (hRequest) WinHttpCloseHandle(hRequest);
-		if (hConnect) WinHttpCloseHandle(hConnect);
-		hConnect =NULL;
 		ret = FALSE;
 	}
 	bResults = WinHttpReceiveResponse( hRequest, NULL);
@@ -1345,6 +1313,5 @@ BOOL WebdavServer::DAVMOVE(wchar_t* from, wchar_t* to, BOOL redirected, BOOL rep
 
 	// Close any open handles.
 	if (hRequest) requestDel(hRequest);
-	if (hConnect) disconnect();
 	return ret;
 }
