@@ -900,9 +900,7 @@ BOOL WebdavServer::DAVImportFileContent(wchar_t* remotePath, wchar_t* localPath,
 BOOL WebdavServer::DAVWriteFile(wchar_t* path, LPCVOID Buffer, LPDWORD NumberOfBytesWritten, LONGLONG	Offset, DWORD NumberOfBytesToWrite, BOOL redirected ) {
   BOOL  bResults = FALSE;
   BOOL ret = FALSE;
-  LPSTR pszBuffer;
   DWORD dwStatus = 0;
-  DWORD readLength = 0;
   HINTERNET  hRequest = NULL;
   WCHAR rangeProperty[256];
   WCHAR path2[MAX_PATH];
@@ -940,12 +938,7 @@ BOOL WebdavServer::DAVWriteFile(wchar_t* path, LPCVOID Buffer, LPDWORD NumberOfB
 
   if (bResults)
   {
-  	pszBuffer = getData(hRequest, &readLength, &dwStatus);
-  	if (pszBuffer)
-  	{
-  		free(pszBuffer);
-  		pszBuffer = NULL;
-  	}
+	  dwStatus = getStatus(hRequest);
 		if ((dwStatus > 200) && (dwStatus < 300))
 		{
 			*NumberOfBytesWritten = NumberOfBytesToWrite;
@@ -1088,9 +1081,7 @@ BOOL WebdavServer::DAVExportFileContent(wchar_t* remotePath, wchar_t* localPath,
 
 BOOL WebdavServer::DAVMKCOL(wchar_t* path, BOOL redirected ) {
   BOOL  bResults = FALSE;
-  LPSTR pszBuffer;
   DWORD dwStatus = 0;
-  DWORD dwSize = 0;
   HINTERNET  hRequest = NULL;
   WCHAR path2[MAX_PATH];
   BOOL ret = FALSE;
@@ -1122,12 +1113,7 @@ BOOL WebdavServer::DAVMKCOL(wchar_t* path, BOOL redirected ) {
   // Keep checking for data until there is nothing left.
   if (bResults)
   {
-		pszBuffer = getData(hRequest, &dwSize, &dwStatus);
-		if (pszBuffer)
-		{
-			free(pszBuffer);
-			pszBuffer = NULL;
-		}
+		dwStatus = getStatus(hRequest);
 		if (dwStatus == 201)
 		{
 			ret = TRUE;
@@ -1155,9 +1141,7 @@ BOOL WebdavServer::DAVMKCOL(wchar_t* path, BOOL redirected ) {
 
 BOOL WebdavServer::DAVDELETE(wchar_t* path, BOOL redirected ) {
   BOOL  bResults = FALSE;
-  LPSTR pszBuffer;
   DWORD dwStatus = 0;
-  DWORD dwSize = 0;
   HINTERNET  hRequest = NULL;
   WCHAR path2[MAX_PATH];
   BOOL ret = FALSE;
@@ -1188,12 +1172,7 @@ BOOL WebdavServer::DAVDELETE(wchar_t* path, BOOL redirected ) {
   // Keep checking for data until there is nothing left.
   if (bResults)
   {
-		pszBuffer = getData(hRequest, &dwSize, &dwStatus);
-		if (pszBuffer)
-		{
-			free(pszBuffer);
-			pszBuffer = NULL;
-		}
+	  dwStatus = getStatus(hRequest);
 		if (dwStatus == 204)
 		{
 			ret = TRUE;
