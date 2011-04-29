@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
@@ -81,7 +81,7 @@ def disableActiveSetup(rootPath):
 		win32api.RegCloseKey(hkey_dst)
 
 
-def CopyTree(KeySrc, SubKey, KeyDest):
+def CopyTree(KeySrc, SubKey, KeyDest, blacklist = []):
 	hkey_src = None
 	hkey_dst = None
 	try:
@@ -119,8 +119,24 @@ def CopyTree(KeySrc, SubKey, KeyDest):
 	while True:
 		try:
 			buf = win32api.RegEnumKey(hkey_src, index)
-#			print "CopyKey",buf
-			CopyTree(hkey_src, buf, hkey_dst)
+			
+			buf_is_blacklisted = False
+			context_blacklist = []
+			for b_item in blacklist:
+				parts = b_item.split("\\", 1)
+				if parts[0] != buf:
+					continue
+				
+				if len(parts) == 1 or len(parts[1]) == 0:
+					buf_is_blacklisted = True
+					#print "blacklisted",buf
+					break
+				else:
+					context_blacklist.append(parts[1])
+			
+			if not buf_is_blacklisted:
+				# print "CopyKey",buf
+				CopyTree(hkey_src, buf, hkey_dst, context_blacklist)
 		except Exception, err:
 			if err[0] == 259:   #No more data available
 				break;
