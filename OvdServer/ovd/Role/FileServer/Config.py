@@ -22,7 +22,6 @@ import grp
 import os
 import pwd
 
-from ovd.Config import Config
 from ovd.Logger import Logger
 
 class Config:
