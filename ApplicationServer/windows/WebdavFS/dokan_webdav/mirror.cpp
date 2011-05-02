@@ -31,6 +31,11 @@ THE SOFTWARE.
 
 #include "WebdavServer.h"
 #include "DavCache.h"
+#include "PROPFindRequest.h"
+#include "DELETERequest.h"
+#include "MKCOLRequest.h"
+#include "MOVERequest.h"
+#include "GETRequest.h"
 //#include "debug.h"
 #include <winhttp.h>
 
@@ -122,11 +127,10 @@ MirrorCreateFile(
 	PDOKAN_FILE_INFO		DokanFileInfo)
 {
 	WCHAR filePath[MAX_PATH];
-	int ret;
+	DWORD result = ERROR_SUCCESS;
 	ULONG64 cacheHandle = INVALID_CACHE_HANDLE;
 	DAVCACHEENTRY* cacheEntry = NULL;
 	BOOL exist = FALSE;
-	DWORD byteWritten;
 
 	UNREFERENCED_PARAMETER(FlagsAndAttributes);
 	UNREFERENCED_PARAMETER(ShareMode);
@@ -134,38 +138,38 @@ MirrorCreateFile(
 
 	GetFilePath(FileName, filePath);
 	DbgPrint(L"create file %s\n", filePath);
-
-	DbgPrint(L"DavOpen : '%s'\n", filePath);
-	exist = server->DAVOpen((WCHAR*)filePath);
-	if (! exist)
-		DbgPrint(L"\tUnable to find the filename %ls\n", filePath);
 	
-	ret = -1 * ERROR_FILE_NOT_FOUND;
+	if (! server->exist(filePath)) {
+		result = ERROR_FILE_NOT_FOUND;
+		DbgPrint(L"\tUnable to find the filename %ls\n", filePath);
+	}
+
 	switch (CreationDisposition) {
 	case CREATE_NEW:
 		if (exist) {
 			cacheHandle = davCache->add(filePath);
-			ret = -1 * ERROR_FILE_EXISTS;
+			result = ERROR_FILE_EXISTS;
 			break;
 		}
 
 	case CREATE_ALWAYS:
-		if (server->DAVWriteFile((WCHAR*)filePath,NULL, &byteWritten, 0, 0, FALSE)) {
+		result = server->touch(filePath);
+		if (result == ERROR_SUCCESS) {
 			cacheHandle = davCache->add(filePath);
-			ret = 0;
+			break;
 		}
-		break;	
+		break;
+
 	case OPEN_ALWAYS:
 		if (! exist) {
-			if (server->DAVWriteFile((WCHAR*)filePath,NULL, &byteWritten, 0, 0, FALSE)) {
-				ret = 0;
+			result = server->touch(filePath);
+			if (result == ERROR_SUCCESS) {
 				cacheHandle = davCache->add(filePath);
 				break;
 			}
 		}
-		ret = 0;
+		result = ERROR_SUCCESS;
 
-			
 	case OPEN_EXISTING:
 	case TRUNCATE_EXISTING:
 		if (exist) {
@@ -174,18 +178,17 @@ MirrorCreateFile(
 				cacheEntry = davCache->getFromHandle(cacheHandle);
 				cacheEntry->needImport = TRUE;
 			}
-			ret = 0;
+			result = ERROR_SUCCESS;
 		}
 		break;
 
 	default:
 		DbgPrint(L"\tInvalid create disposition %i\n", CreationDisposition);
-		ret = -1 * ERROR_INVALID_PARAMETER;
+		result = ERROR_INVALID_PARAMETER;
 		break;
 	}
-
 	DokanFileInfo->Context = (ULONG64)cacheHandle;
-	return ret;
+	return -1 * result;
 }
 
 
@@ -195,16 +198,21 @@ MirrorCreateDirectory(
 	PDOKAN_FILE_INFO		DokanFileInfo)
 {
 	WCHAR filePath[MAX_PATH];
-	//GetFilePath(filePath, FileName);
+	DWORD result;
 	GetFilePath(FileName, filePath);
 
-	if (! server->DAVMKCOL(filePath, FALSE )) {
-		DbgPrint(L"\tUnable to find the directory %ls\n", filePath);
-		return -2; // error codes are negated value of Windows System Error codes
+	MKCOLRequest req(filePath);
+	if (FAILED(server->sendRequest(req))) {
+		DbgPrint(L"MirrorDeleteFile, failed to send the request\n");
+		return -1;
 	}
+	
+	result = req.getWinStatus();
+	req.close();
+
 	// save the file handle in Context
 	DokanFileInfo->Context = INVALID_CACHE_HANDLE;
-	return 0;
+	return -1 * result;
 }
 
 
@@ -217,18 +225,15 @@ MirrorOpenDirectory(
 //	HANDLE handle;
 //	DWORD attr;
 	DbgPrint(L"MirrorOpenDirectory on %ls\n", FileName);
-
-	//GetFilePath(filePath, FileName);
-	GetFilePath(FileName, filePath);
-
-	DbgPrint(L"OpenDirectory : %s\n", filePath);
-	//test if it is a directory
-	if (! server->DAVOpen((wchar_t*)filePath)) {
-		DbgPrint(L"\tUnable to find the directory %ls\n", filePath);
-		return -2; // error codes are negated value of Windows System Error codes
-	}
 	DokanFileInfo->Context = INVALID_CACHE_HANDLE;
-	return 0;
+
+	GetFilePath(FileName, filePath);
+	DbgPrint(L"OpenDirectory : %s\n", filePath);
+
+	if (server->exist(filePath))
+		return ERROR_SUCCESS;
+
+	return ERROR_FILE_NOT_FOUND;
 }
 
 
@@ -247,7 +252,7 @@ MirrorCloseFile(
 	cacheEntry = davCache->getFromHandle(cacheHandle);
 	if (cacheEntry != NULL ) {
 		if (cacheEntry->needExport) {
-			res = server->DAVExportFileContent(cacheEntry->remotePath, cacheEntry->cachePath, FALSE );
+			res = server->exportPath(cacheEntry->remotePath, cacheEntry->cachePath);
 			if (!res) {
 				DbgPrint(L"Error while exporting the file %s\n", cacheEntry->remotePath);
 				return -1;
@@ -281,14 +286,15 @@ MirrorReadFile(
 	PDOKAN_FILE_INFO	DokanFileInfo)
 {
 	WCHAR filePath[MAX_PATH];
-	ULONG64 cacheHandle = DokanFileInfo->Context;
-	HANDLE	handle = 0;
-	ULONG	offset = (ULONG)Offset;
-	DAVCACHEENTRY* cacheEntry = NULL;
+	DWORD result;
+
+	UNREFERENCED_PARAMETER(DokanFileInfo);
+
 	DbgPrint(L"read file %s\n", FileName);
 	DbgPrint(L"BufferLength : %i\n", BufferLength);
 	DbgPrint(L"ReadLength : %i\n", *ReadLength);
 	DbgPrint(L"Offset : %i\n", Offset);
+
 	if (BufferLength == 0)
 	{
 		DbgPrint(L"Can not read zero length data");
@@ -300,53 +306,23 @@ MirrorReadFile(
 	DbgPrint(L"MirrorReadFile on %ls\n", filePath);
 	DbgPrint(L"ReadFile : %s\n", filePath);
 	
-	if ( cacheHandle == INVALID_CACHE_HANDLE)
-		return -1;
-
-	cacheEntry = davCache->getFromHandle(cacheHandle);
-
-	if (cacheEntry->needImport) {
-		if (! server->DAVImportFileContent( cacheEntry->remotePath, cacheEntry->cachePath, FALSE )) {
-			DbgPrint(L"Unable to add %s to local cache, Error while importing the file\n", cacheEntry->remotePath);
-			return -1;
-		}
-		cacheEntry->needRemove = TRUE;
-		cacheEntry->needImport = FALSE;
-	}
-
-	if (wcscmp(cacheEntry->remotePath, filePath) != 0) {
-		DbgPrint(L"Entry did not match the file %ls '%ls'\n", filePath, cacheEntry->remotePath );
+	GETRequest req(filePath, Offset, BufferLength);
+	if (FAILED(server->sendRequest(req))) {
+		DbgPrint(L"MirrorReadFile, failed to send the request\n");
 		return -1;
 	}
 
-	handle = CreateFile(cacheEntry->cachePath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_ALWAYS, 0, NULL);
-	if (handle == INVALID_HANDLE_VALUE) {
-		DbgPrint(L"CreateFile error : %u\n", GetLastError());
-		return -1;
+	result = req.getWinStatus();
+	if (FAILED(req.get(ReadLength, Buffer))) {
+		DbgPrint(L"MirrorReadFile, failed to get file content\n");
 	}
 
-	if (SetFilePointer(handle, offset, NULL, FILE_BEGIN) == 0xFFFFFFFF) {
-		DbgPrint(L"seek error, offset = %u\n\n", offset);
-		CloseHandle(handle);
-		return -1;
-	}
+	req.close();
 
-	if (!ReadFile(handle, Buffer, BufferLength, ReadLength,NULL)) {
-		DbgPrint(L"read error = %u, buffer length = %d, read length = %d\n", GetLastError(), BufferLength, *ReadLength);
-		CloseHandle(handle);
-		return -1;
-
-	}
-	else {
-		DbgPrint(L"\tread %d, offset %d\n\n", *ReadLength, offset);
-	}
-
-	if (*ReadLength > BufferLength) {
+	if (*ReadLength > BufferLength)
 		*ReadLength = BufferLength;
-	}
-	DbgPrint(L"size returned : %i\n", *ReadLength);
-	CloseHandle(handle);
-	return 0;
+
+	return  -1 * result;
 }
 
 
@@ -393,18 +369,21 @@ MirrorWriteFile(
 	}
 
 	cacheEntry->needExport = TRUE;
+
 	if (wcscmp(cacheEntry->remotePath, filePath) != 0) {
 		DbgPrint(L"Entry did not match the file %ls", filePath);
 		return -1;
 	}
+
 	if (cacheEntry->needImport == TRUE) {
 		cacheEntry->needImport = FALSE;
-		if (! server->DAVImportFileContent( cacheEntry->remotePath, cacheEntry->cachePath, FALSE )) {
+		if (FAILED(server->importURL(cacheEntry->remotePath, cacheEntry->cachePath))) {
 			DbgPrint(L"Unable to add %s to local cache, Error while importing the file\n", cacheEntry->remotePath);
 			return -1;
 		}
 		createDisposition = OPEN_ALWAYS;
 	}
+
 	cacheEntry->needRemove = TRUE;
 	handle = CreateFile(cacheEntry->cachePath, GENERIC_WRITE, 0, NULL, createDisposition, FILE_ATTRIBUTE_NORMAL, NULL);
 
@@ -419,7 +398,8 @@ MirrorWriteFile(
 			CloseHandle(handle);
 			return -1;
 		}
-	} else if (SetFilePointer(handle, offset, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER) {
+	}
+	else if (SetFilePointer(handle, offset, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER) {
 		DbgPrint(L"seek error, offset = %d, error = %u\n", offset, GetLastError());
 		CloseHandle(handle);
 		return -1;
@@ -449,33 +429,61 @@ MirrorGetFileInformation(
 	PDOKAN_FILE_INFO				DokanFileInfo)
 {
 	WCHAR	filePath[MAX_PATH];
-	DAVFILEINFO* fsinfo;
-	GetFilePath(FileName, filePath);
+	std::list<DavEntry> list;
+	LARGE_INTEGER file_size;
+	FILETIME* time;
+	DWORD result;
 
 	UNREFERENCED_PARAMETER(DokanFileInfo);
 
+	GetFilePath(FileName, filePath);
 	DbgPrint(L"MirrorGetFileInformation on %s\n", filePath);
-	fsinfo = server->DAVGetFileInformations(filePath);
-	if (fsinfo == NULL || fsinfo->isDir)
-	{
-		HandleFileInformation->dwFileAttributes = FILE_ATTRIBUTE_DIRECTORY;
-		return 0;
+	
+	PROPFINDRequest req(filePath, 0);
+	if (FAILED(server->sendRequest(req))) {
+		DbgPrint(L"GetFileInformation, failed to send the request\n");
+		return -1;
+	}
+
+	result = req.getWinStatus();
+	if (result != ERROR_SUCCESS) {
+		req.close();
+		return result;
+	}
+
+	if (FAILED(req.getResult(list))){
+		req.close();
+		return -1;
 	}
 	
+	if (list.size() == 0) {
+		return ERROR_FILE_NOT_FOUND;
+	}
+	req.close();
+	DavEntry &entry = list.front();
+	
+	HandleFileInformation->dwFileAttributes = FILE_ATTRIBUTE_NORMAL;
+	if (entry.getType() == DavEntry::directory)
+		HandleFileInformation->dwFileAttributes = FILE_ATTRIBUTE_DIRECTORY;
 
-	HandleFileInformation->dwFileAttributes = fsinfo->fileAttributes;
-	HandleFileInformation->ftCreationTime = fsinfo->creationTime;
-	HandleFileInformation->ftLastAccessTime = fsinfo->lastModified;
-	HandleFileInformation->ftLastWriteTime = fsinfo->lastModified;
-	HandleFileInformation->nFileSizeHigh = fsinfo->nFileSizeHigh;
-	HandleFileInformation->nFileSizeLow = fsinfo->nFileSizeLow;
-	DbgPrint(L"\tFindFiles OK, file size = %d\n", HandleFileInformation->nFileSizeLow);
-	if (fsinfo != NULL)
-		free(fsinfo);
-//	FindClose(handle);
+	file_size.QuadPart = entry.getLength();
+	HandleFileInformation->nFileSizeHigh = 0;
+	HandleFileInformation->nFileSizeLow = 0;
+	if (file_size.QuadPart != 0) {
+		HandleFileInformation->nFileSizeHigh = file_size.HighPart;
+		HandleFileInformation->nFileSizeLow = file_size.LowPart;
+	}
 
+	time = entry.getCreationTime();
+	HandleFileInformation->ftCreationTime.dwLowDateTime = time->dwLowDateTime;
+	HandleFileInformation->ftCreationTime.dwHighDateTime = time->dwHighDateTime;
+	time = entry.getLastModifiedTime();
+	HandleFileInformation->ftLastAccessTime.dwLowDateTime = time->dwLowDateTime;
+	HandleFileInformation->ftLastAccessTime.dwHighDateTime = time->dwHighDateTime;
+	HandleFileInformation->ftLastWriteTime.dwLowDateTime = time->dwLowDateTime;
+	HandleFileInformation->ftLastWriteTime.dwHighDateTime = time->dwHighDateTime;
 
-	return 0;
+	return ERROR_SUCCESS;
 }
 
 
@@ -485,18 +493,41 @@ MirrorFindFiles(
 	PFillFindData		FillFindData, // function pointer
 	PDOKAN_FILE_INFO	DokanFileInfo)
 {
-	WCHAR	filePath[MAX_PATH];
+	WCHAR filePath[MAX_PATH];
+	WCHAR* filename;
+	int filename_length = 0;
 	WIN32_FIND_DATAW point;
-	DWORD	count = 0;
-	DAVFILEINFO* fileList = NULL;
-	int i;
+	DavEntry* entry = NULL;
+	std::list<DavEntry> list;
+	std::list <DavEntry>::const_iterator iter;
+	LARGE_INTEGER file_size;
+	DWORD result;
+	int index = 0;
 
 	GetFilePath(FileName, filePath);
-	DbgPrint(L"MirrorFindFiles on %ls\n", FileName);
+	DbgPrint(L"MirrorFindFiles on %ls\n", filePath);
 
+	PROPFINDRequest req(filePath, 1);
+	if (FAILED(server->sendRequest(req))) {
+		DbgPrint(L"GetFileInformation, failed to send the request\n");
+		return FALSE;
+	}
 
-	DbgPrint(L"find %ls\n",filePath );
-	fileList = server->DAVGetDirectoryList(filePath, &count);
+	result = req.getWinStatus();
+	if (result != ERROR_SUCCESS) {
+		req.close();
+		return result;
+	}
+
+	if (FAILED(req.getResult(list))){
+		req.close();
+		return -1;
+	}
+
+	if (list.size() == 0) {
+		return ERROR_FILE_NOT_FOUND;
+	}
+	req.close();
 
 	ZeroMemory(&point, sizeof(WIN32_FIND_DATAW));
 	point.dwFileAttributes = FILE_ATTRIBUTE_DIRECTORY;
@@ -508,29 +539,43 @@ MirrorFindFiles(
 	wcscpy_s(point.cFileName, MAX_PATH , L"..");
 	FillFindData(&point, DokanFileInfo);
 
+	for ( iter = list.begin(); iter != list.end( ); iter++ ) {
+		if (index == 0) {
+			index++;
+			continue;
+		}
 
-	for(i=0 ; i < (int)count ; i++) {
 		WIN32_FIND_DATAW data;
 		ZeroMemory(&data, sizeof(WIN32_FIND_DATAW));
 		data.dwFileAttributes = FILE_ATTRIBUTE_NORMAL;
 
-		if (fileList[i].isDir)
-		{
+		entry = (DavEntry*)&*iter;
+		if (entry->getType() == DavEntry::directory)
 			data.dwFileAttributes = FILE_ATTRIBUTE_DIRECTORY;
+
+		file_size.QuadPart = entry->getLength();
+		data.nFileSizeHigh = 0;
+		data.nFileSizeLow = 0;
+		if (file_size.QuadPart != 0) {
+			data.nFileSizeHigh = file_size.HighPart;
+			data.nFileSizeLow = file_size.LowPart;
 		}
 
-		data.ftCreationTime = fileList[i].creationTime;
-		data.ftLastAccessTime = fileList[i].lastModified;
-		data.ftLastWriteTime = fileList[i].lastModified;
-		data.nFileSizeHigh = fileList[i].nFileSizeHigh;
-		data.nFileSizeLow = fileList[i].nFileSizeLow;
-		wcscpy_s(data.cFileName, MAX_PATH , fileList[i].name);
-
+		data.ftCreationTime = *entry->getCreationTime();
+		data.ftLastAccessTime = *entry->getLastModifiedTime();
+		data.ftLastWriteTime = *entry->getLastModifiedTime();
+		
+		filename = PathFindFileName(entry->getPath());
+		filename_length = lstrlen(filename);
+		if (filename[filename_length-1] == '/') {
+			filename[filename_length-1] = '\0';
+		}
+		wcscpy_s(data.cFileName, MAX_PATH , filename);
+		
 		FillFindData(&data, DokanFileInfo);
+		index++;
 	}
-	if (fileList != NULL)
-		free(fileList);
-	return 0;
+	return ERROR_SUCCESS;
 }
 
 
@@ -541,6 +586,7 @@ MirrorDeleteFile(
 {
 	WCHAR filePath[MAX_PATH];
 	ULONG64 cacheHandle = DokanFileInfo->Context;
+	DWORD result;
 
 	GetFilePath(FileName, filePath);
 	DbgPrint(L"MirrorDeleteFile : %ls\n", (WCHAR*)filePath);
@@ -551,14 +597,18 @@ MirrorDeleteFile(
 
 	DbgPrint(L"MirrorDeleteFile : %ls\n", (WCHAR*)filePath);
 
-	if (! server->DAVDELETE(filePath, FALSE )) {
-		DbgPrint(L"\tUnable to find the directory %ls\n", filePath);
-		return -2; // error codes are negated value of Windows System Error codes
+	DELETERequest req(filePath);
+	if (FAILED(server->sendRequest(req))) {
+		DbgPrint(L"MirrorDeleteFile, failed to send the request\n");
+		return -1;
 	}
+
+	result = req.getWinStatus();
+	req.close();
 
 	// save the file handle in Context
 	DokanFileInfo->Context = INVALID_CACHE_HANDLE;
-	return 0;
+	return -1 * result;
 }
 
 
@@ -568,20 +618,24 @@ MirrorDeleteDirectory(
 	PDOKAN_FILE_INFO	DokanFileInfo)
 {
 	WCHAR filePath[MAX_PATH];
-	//GetFilePath(filePath, FileName);
-	GetFilePath(FileName, filePath);
+	DWORD result;
 
+	GetFilePath(FileName, filePath);
 
 	DbgPrint(L"MirrorDeleteDirectory : %ls\n", (WCHAR*)filePath);
 
-	if (! server->DAVDELETE(filePath, FALSE )) {
-		DbgPrint(L"\tUnable to find the directory %ls\n", filePath);
-		return -2; // error codes are negated value of Windows System Error codes
+	DELETERequest req(filePath);
+	if (FAILED(server->sendRequest(req))) {
+		DbgPrint(L"MirrorDeleteFile, failed to send the request\n");
+		return -1;
 	}
+
+	result = req.getWinStatus();
+	req.close();
 
 	// save the file handle in Context
 	DokanFileInfo->Context = INVALID_CACHE_HANDLE;
-	return 0;
+	return -1 * result;
 
 
 }
@@ -594,22 +648,29 @@ MirrorMoveFile(
 	BOOL				ReplaceIfExisting,
 	PDOKAN_FILE_INFO	DokanFileInfo)
 {
-	WCHAR			filePath[MAX_PATH];
-	WCHAR			newFilePath[MAX_PATH];
-	// BOOL			status;
-	// HANDLE			handle;
+	WCHAR filePath[MAX_PATH];
+	WCHAR newFilePath[MAX_PATH];
+	WCHAR destinationURL[MAX_PATH]; 
+	DWORD result;
+
 	UNREFERENCED_PARAMETER(DokanFileInfo);
-	UNREFERENCED_PARAMETER(ReplaceIfExisting);
+
 	GetFilePath(FileName, filePath);
 	GetFilePath(NewFileName, newFilePath);
 	
 	DbgPrint(L"MoveFile %s -> %s\n\n", filePath, newFilePath);
 
-	// if (ReplaceIfExisting)
-		// status = MoveFileEx(filePath, newFilePath, MOVEFILE_REPLACE_EXISTING);
-	server->DAVMOVE(filePath, newFilePath, FALSE, ReplaceIfExisting);
+	server->getAbsolutePath(destinationURL, newFilePath);
+	MOVERequest req(filePath, destinationURL, ReplaceIfExisting);
+	if (FAILED(server->sendRequest(req))) {
+		DbgPrint(L"MirrorDeleteFile, failed to send the request\n");
+		return -1;
+	}
 
-	return 0;
+	result = req.getWinStatus();
+	req.close();
+
+	return -1 * result;
 }
 
 
@@ -620,33 +681,11 @@ MirrorLockFile(
 	LONGLONG			Length,
 	PDOKAN_FILE_INFO	DokanFileInfo)
 {
-//	WCHAR	filePath[MAX_PATH];
-	HANDLE	handle;
-	LARGE_INTEGER offset;
-	LARGE_INTEGER length;
-
 	UNREFERENCED_PARAMETER(FileName);
-
-	//GetFilePath(filePath, FileName);
-
-//	DbgPrint(L"LockFile %s\n", filePath);
-
-	handle = (HANDLE)DokanFileInfo->Context;
-	if (!handle || handle == INVALID_HANDLE_VALUE) {
-		DbgPrint(L"\tinvalid handle\n\n");
-		return -1;
-	}
-
-	length.QuadPart = Length;
-	offset.QuadPart = ByteOffset;
-
-	if (LockFile(handle, offset.HighPart, offset.LowPart, length.HighPart, length.LowPart)) {
-		DbgPrint(L"\tsuccess\n\n");
-		return 0;
-	} else {
-		DbgPrint(L"\tfail\n\n");
-		return -1;
-	}
+	UNREFERENCED_PARAMETER(ByteOffset);
+	UNREFERENCED_PARAMETER(Length);
+	UNREFERENCED_PARAMETER(DokanFileInfo);
+	return ERROR_SUCCESS;
 }
 
 
@@ -659,7 +698,7 @@ MirrorSetEndOfFile(
 	UNREFERENCED_PARAMETER(FileName);
 	UNREFERENCED_PARAMETER(ByteOffset);
 	UNREFERENCED_PARAMETER(DokanFileInfo);
-	return 0;
+	return ERROR_SUCCESS;
 }
 
 
@@ -672,7 +711,7 @@ MirrorSetAllocationSize(
 	UNREFERENCED_PARAMETER(FileName);
 	UNREFERENCED_PARAMETER(AllocSize);
 	UNREFERENCED_PARAMETER(DokanFileInfo);
-	return 0;
+	return ERROR_SUCCESS;
 }
 
 
@@ -685,7 +724,7 @@ MirrorSetFileAttributes(
 	UNREFERENCED_PARAMETER(FileName);
 	UNREFERENCED_PARAMETER(FileAttributes);
 	UNREFERENCED_PARAMETER(DokanFileInfo);
-	return 0;
+	return ERROR_SUCCESS;
 }
 
 
@@ -703,7 +742,7 @@ MirrorSetFileTime(
 	UNREFERENCED_PARAMETER(LastWriteTime);
 	UNREFERENCED_PARAMETER(DokanFileInfo);
 
-	return 0;
+	return ERROR_SUCCESS;
 }
 
 
@@ -715,33 +754,11 @@ MirrorUnlockFile(
 	LONGLONG			Length,
 	PDOKAN_FILE_INFO	DokanFileInfo)
 {
-	WCHAR	filePath[MAX_PATH];
-	HANDLE	handle;
-	LARGE_INTEGER	length;
-	LARGE_INTEGER	offset;
-
 	UNREFERENCED_PARAMETER(FileName);
-
-	GetFilePath(filePath, (WCHAR*)FileName);
-
-	DbgPrint(L"UnlockFile %s\n", filePath);
-
-	handle = (HANDLE)DokanFileInfo->Context;
-	if (!handle || handle == INVALID_HANDLE_VALUE) {
-		DbgPrint(L"\tinvalid handle\n\n");
-		return -1;
-	}
-
-	length.QuadPart = Length;
-	offset.QuadPart = ByteOffset;
-
-	if (UnlockFile(handle, offset.HighPart, offset.LowPart, length.HighPart, length.LowPart)) {
-		DbgPrint(L"\tsuccess\n\n");
-		return 0;
-	} else {
-		DbgPrint(L"\tfail\n\n");
-		return -1;
-	}
+	UNREFERENCED_PARAMETER(ByteOffset);
+	UNREFERENCED_PARAMETER(Length);
+	UNREFERENCED_PARAMETER(DokanFileInfo);
+	return ERROR_SUCCESS;
 }
 
 
@@ -752,7 +769,7 @@ MirrorUnmount(
 	UNREFERENCED_PARAMETER(DokanFileInfo);
 	wprintf(L"Unmount\n");
 
-	return 0;
+	return ERROR_SUCCESS;
 }
 
 
@@ -891,8 +908,7 @@ main(ULONG argc, PCHAR argv[]) {
 	}
 	davCache = new DavCache();
 	davCache->init(server);
-
-	if (! server->DAVOpen(L"/")) {
+	if (! server->exist(L"/")) {
 		return DOKAN_ERROR;
 	}
 

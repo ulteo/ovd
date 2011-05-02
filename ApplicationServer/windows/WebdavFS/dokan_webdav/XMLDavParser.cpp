@@ -169,6 +169,30 @@ HRESULT XMLDavParser::parse(void) {
 	return S_OK;
 }
 
+HRESULT XMLDavParser::parse(std::list<DavEntry> &list) {
+	XmlNodeType nodeType;
+	const WCHAR* localName;
+	const WCHAR* namespaceUri;
+	DavEntry* entry = NULL;
+
+	if (FAILED(hr = pReader->Read(&nodeType))) {
+		wprintf(L"Error getting prefix, error is %08.8lx %08.8lx", hr, nodeType);
+	}
+	list.clear();
+	while(ReadElement(&namespaceUri, &localName)) {
+		if (wcscmp(localName, L"response") == 0) {
+			entry = readProp();
+			if (entry) {
+				list.push_back(*entry);
+				delete entry;
+				entry = NULL;
+			}
+		}
+	}
+	return S_OK;
+}
+
+
 std::list<DavEntry> XMLDavParser::getResult(void) {
 	return result;
 }

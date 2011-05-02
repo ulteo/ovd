@@ -28,6 +28,14 @@ SOURCES=mirror.cpp \
 		DavCache.cpp \
 		WinHTTPStream.cpp \
 		XMLDavParser.cpp \
+		DavRequest.cpp \
+		PROPFINDRequest.cpp \
+		GETRequest.cpp \
+		DELETERequest.cpp \
+		MKCOLRequest.cpp \
+		GETRequest.cpp \
+		PUTRequest.cpp \
+		MOVERequest.cpp \
 		DavEntry.cpp \
 		WebdavServer.cpp
 

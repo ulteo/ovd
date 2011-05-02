@@ -41,11 +41,19 @@ const CHAR DavEntry::ACCEPTABLE_URI_CHARS[96] = {
 const CHAR DavEntry::HEX_CHARS[17] = "0123456789ABCDEF";
 
 
-DavEntry::DavEntry() {}
+DavEntry::DavEntry() {
+	path = NULL;
+	creationTime.dwLowDateTime = 0;
+	creationTime.dwHighDateTime = 0;
+	lastModifiedTime.dwLowDateTime = 0;
+	lastModifiedTime.dwHighDateTime = 0;
+	length = 0;
+	type = file;
+}
 
 DavEntry::DavEntry(const DavEntry &entry) {
-	if (entry.path != NULL)
-		path = _wcsdup(entry.path);
+	if (entry.path)
+		 path = _wcsdup(entry.path);
 	creationTime = entry.creationTime;
 	lastModifiedTime = entry.lastModifiedTime;
 	length = entry.length;

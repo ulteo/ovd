@@ -51,16 +51,14 @@ public:
 	HRESULT init(void);
 	HRESULT release(void);
 	HRESULT parse(void);
+	HRESULT parse(std::list<DavEntry> &list);
+
 	bool ReadElement(LPCWSTR* namespaceUri, LPCWSTR* localName);
 	void ReadElementToEnd();
 	const WCHAR* GetNodeValue();
 	DavEntry* XMLDavParser::readProp(void);
 	HRESULT getLastError(void);
 	std::list<DavEntry> getResult(void);
-
-//private:
-//	WCHAR* unicodeConvert(WCHAR* str, int len);
-
 
 };
 #endif
