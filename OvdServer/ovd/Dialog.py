@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2010 Ulteo SAS
+# Copyright (C) 2008-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2008
+# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2011
 # Author Laurent CLOUET <laurent@ulteo.com> 2009,2010
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
 #
@@ -21,13 +21,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import httplib
-import cgi
-import base64
 import time
 from xml.dom.minidom import Document
 
 from ovd.Communication.Dialog import Dialog as AbstractDialog
-from ovd.Config import Config
 from ovd.FileTailer import FileTailer
 from ovd.Logger import Logger
 from ovd.Platform import Platform
@@ -74,13 +71,6 @@ class Dialog(AbstractDialog):
 			return None
 		
 		return None
-	
-	
-	def response_error(self, code):
-		self.send_response(code)
-		self.send_header('Content-Type', 'text/html')
-		self.end_headers()
-		self.wfile.write('')
 	
 	
 	def req_server_status(self, request):
