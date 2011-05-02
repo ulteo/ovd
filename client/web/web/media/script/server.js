@@ -75,6 +75,9 @@ var Server = Class.create({
 			daemon.break_loop();
 			daemon.sessionmanager_request_time = 2000;
 			daemon.loop();
+
+			if (daemon.mode == 'desktop' && ! daemon.is_stopped())
+				daemon.logout();
 		} else if (status_ == 'failed') {
 			this.ready = false;
 			this.connected = false;
