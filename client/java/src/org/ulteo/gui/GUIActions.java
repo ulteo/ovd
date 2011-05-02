@@ -94,6 +94,32 @@ public class GUIActions {
 
 	}
 
+	/* SetAlwaysOnTop */
+	public static Runnable setAlwaysOnTop(Window wnd_, boolean top_) {
+		return Actions.new SetAlwaysOnTop(wnd_, top_);
+	}
+
+	private class SetAlwaysOnTop implements Runnable {
+		private Window window = null;
+		private boolean top;
+
+		public SetAlwaysOnTop(Window wnd_, boolean top_) {
+			this.window = wnd_;
+			this.top = top_;
+		}
+
+		public void run() {
+			if (this.window == null)
+				return;
+
+			if (this.window.isAlwaysOnTopSupported())
+				this.window.setAlwaysOnTop(this.top);
+			else
+				Logger.warn("Always on top not supported");
+		}
+
+	}
+
 	/* RequestFocus */
 	public static Runnable requestFocus(Component component) {
 		return Actions.new RequestFocus(component);

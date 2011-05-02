@@ -36,6 +36,8 @@ import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 import net.propero.rdp.InputListener;
 import net.propero.rdp.RdesktopCanvas;
+import org.ulteo.gui.GUIActions;
+import org.ulteo.gui.SwingTools;
 
 import org.ulteo.ovd.client.authInterface.NativeLogoutPopup;
 import org.ulteo.rdp.RdpActions;
@@ -81,7 +83,7 @@ public class DesktopFrame extends JFrame implements WindowListener, InputListene
 	}
 
 	private void initFullscreen() {
-		this.setAlwaysOnTop(this.fullscreen);
+		SwingTools.invokeLater(GUIActions.setAlwaysOnTop(this, this.fullscreen));
 		this.setUndecorated(this.fullscreen);
 
 		this.fullscreen_keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK);
