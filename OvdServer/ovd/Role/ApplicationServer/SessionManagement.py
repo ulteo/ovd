@@ -28,10 +28,8 @@ from Platform import Platform as RolePlatform
 from Session import Session
 
 from multiprocessing import Process
-from multiprocessing import queues as Queue
+import Queue
 import signal
-import socket
-from multiprocessing import util
 
 class SessionManagement(Process):
 	def __init__(self, aps_instance, queue, queue2, queue_sync, logging_queue):
@@ -49,29 +47,29 @@ class SessionManagement(Process):
 	def run(self):
 		self.synchronizer.restore()
 		Logger._instance.setQueue(self.logging_queue, False)
+		loop = True
 
 		# Prevent the process to be stop by a keyboard interruption
+		def quit(machin, truc):
+			global loop
+			loop = False
 		signal.signal(signal.SIGINT, signal.SIG_IGN)
+		signal.signal(signal.SIGTERM, quit)
 		
 		Logger.debug("Starting SessionManager process")
-		while True:
+		while loop:
 			try:
 				(request, obj) = self.queue2.get_nowait()
-			except (EOFError, socket.error):
-				return
-			# This error is due to the sigterm sended by the init script
-			except TypeError:
-				return
-			except Queue.Empty, e:
+			except Queue.Empty:
 				try:
 					(request, obj) = self.queue.get(True, 4)
 				except Queue.Empty, e:
 					continue
-	                        # This error is due to the sigterm sended by the init script
-        	                except TypeError:
-                	                return
-				except (EOFError, socket.error):
-					return
+				except IOError, e:
+					if e.errno == 4:
+						break
+					else:
+						raise e
 			
 			if request == "create":
 				session = obj

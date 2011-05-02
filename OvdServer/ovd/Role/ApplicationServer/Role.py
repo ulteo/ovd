@@ -23,7 +23,7 @@
 
 import glob
 import multiprocessing
-from multiprocessing import queues as Queue
+import Queue
 import os
 import socket
 import time
@@ -51,13 +51,13 @@ class Role(AbstractRole):
 		AbstractRole.__init__(self, main_instance)
 		self.dialog = Dialog(self)
 		Logger._instance.close()
-		self.ipcmanager = multiprocessing.Manager()
 		self.sessions = {}
-		self.sessions_spooler = self.ipcmanager.Queue()
-		self.sessions_spooler2 = self.ipcmanager.Queue()
-		self.sessions_sync = self.ipcmanager.Queue()
+		self.sessions_spooler = multiprocessing.Queue()
+		self.sessions_spooler2 = multiprocessing.Queue()
+		self.sessions_sync = multiprocessing.Queue()
+		self.logging_queue = multiprocessing.Queue()
+
 		self.manager = Manager(self.main_instance.smRequestManager)
-		self.logging_queue = self.ipcmanager.Queue()
 		self.threads = []
 		
 		self.applications = {}
@@ -133,7 +133,6 @@ class Role(AbstractRole):
 		
 		for thread in self.threads:
 			thread.join()
-		self.ipcmanager.shutdown()
 		
 		for session in self.sessions.values():
 			self.manager.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
