@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009
-# Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -31,6 +31,10 @@ from ovd.Logger import Logger
 
 from ovd.Platform.System import System as AbstractSystem
 
+# Remove language support from process to avoid to have translated 
+# error message, perl warning, unsupported languages and so on ...
+if "LANG" in os.environ:
+	del os.environ["LANG"]
 
 class System(AbstractSystem):
 	@staticmethod

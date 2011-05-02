@@ -56,9 +56,6 @@ def writePidFile(filename):
 
 
 def main():
-	if "LANG" in os.environ:
-		del os.environ["LANG"]
-
 	config_file = os.path.join(Platform.System.get_default_config_dir(), "slaveserver.conf")
 	daemonize = False
 	pidFile = None
