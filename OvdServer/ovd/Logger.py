@@ -23,8 +23,6 @@
 
 
 import logging.handlers
-from multiprocessing import queues as Queue
-import Queue
 
 import sys
 import time
