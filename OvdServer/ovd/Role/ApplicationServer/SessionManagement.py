@@ -86,6 +86,8 @@ class SessionManagement(Process):
 				session = obj
 				self.manage_new_session(session)
 				self.queue_sync.put(session)
+
+		Logger.debug("SessionManager process stopped")
 	
 	
 	def create_session(self, session):
