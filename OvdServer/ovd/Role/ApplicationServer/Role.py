@@ -252,7 +252,10 @@ class Role(AbstractRole):
 	
 	def purgeArchives(self):
 		for path in glob.glob(os.path.join(Config.general.spool_dir, "sessions dump archive", "*")):
-			os.remove(path)
+			try:
+				os.remove(path)
+			except OSError, err:
+				pass
 	
 	
 	def setStaticAppsMustBeSync(self, value):
