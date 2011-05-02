@@ -38,27 +38,23 @@ class Config:
 				Config.port = int(infos["port"])
 			except ValueError:
 				Logger.error("Invalid int number for port")
-				pass
-			
+		
 		if infos.has_key("max_process"):
 			try:
 				Config.max_process = int(infos["max_process"])
 			except ValueError:
 				Logger.error("Invalid int number for max_process")
-				pass
-
+		
 		if infos.has_key("max_connection"):
 			try:
 				Config.max_connection = int(infos["max_connection"])
 			except ValueError:
 				Logger.error("Invalid int number for max_process")
-				pass
 		
 		if infos.has_key("process_timeout"):
 			try:
 				Config.process_timeout = int(infos["process_timeout"])
 			except ValueError:
 				Logger.error("Invalid int number for process_timeout")
-				pass
 		    
 		return True
