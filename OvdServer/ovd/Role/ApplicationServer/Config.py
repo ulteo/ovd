@@ -28,6 +28,6 @@ class Config:
 	@staticmethod
 	def init(infos):
 		if infos.has_key("multithread"):
-			Config.listen_address = (infos["multithread"].lower() == True)
-		    
+			Config.multithread = (infos["multithread"].lower() == True)
+		
 		return True
