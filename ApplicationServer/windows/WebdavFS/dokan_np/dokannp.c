@@ -232,7 +232,6 @@ Unmount(LPCWSTR DeviceName, LPCWSTR letter)
 static DWORD
 StartDavModule(WCHAR* letter, WCHAR* remote, WCHAR* username, WCHAR* password)
 {
-	WCHAR app[] = L"C:\\Windows\\System32\\davfs.exe";
 	WCHAR cmdLine[MAX_PATH] = {0};
 	BOOL result = 0;
 	WCHAR l[] = L"E:";
@@ -248,7 +247,11 @@ StartDavModule(WCHAR* letter, WCHAR* remote, WCHAR* username, WCHAR* password)
 	startupInfo.dwFlags = STARTF_USESHOWWINDOW;
 	startupInfo.wShowWindow = SW_HIDE;
 
-	StringCchCopyW(cmdLine, MAX_PATH, app);
+	if (GetEnvironmentVariable(L"SYSTEMROOT", cmdLine, MAX_PATH) == 0) {
+		DbgPrintW(L"ERROR: Unable to get SYSTEMROOT environment variable: %08x", GetLastError());
+		return WN_WINDOWS_ERROR;
+	}
+	StringCchCatW(cmdLine, MAX_PATH, L"\\system32\\davfs.exe");
 	StringCchCatW(cmdLine, MAX_PATH, L" ");
 	
 	if (letter == NULL) {
