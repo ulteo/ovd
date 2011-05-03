@@ -80,7 +80,6 @@ class SlaveServer:
 		Logger.debug("SlaveServer init")
 		
 		if not self.communication.initialize():
-			Logger.error("SlaveServer: unable to initialize communication class")
 			return False
 		
 		self.communication.ovd_thread = Thread(name="Communication", target=self.communication.run)
