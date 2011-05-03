@@ -24,7 +24,6 @@ from xml.dom import minidom
 from xml.dom.minidom import Document
 
 from ovd.Logger import Logger
-from ovd import util
 from ovd.Communication.Dialog import Dialog as AbstractDialog
 
 import Apt
