@@ -20,12 +20,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import os
 import re
 import struct
 import win32api
 import win32con
-import win32security
 
 from ovd.Logger import Logger
 
@@ -79,7 +77,7 @@ def CopyTree(KeySrc, SubKey, KeyDest, blacklist = []):
 			win32api.RegSetValueEx(hkey_dst, string, 0, type, object)
 		except Exception, err:
 			if err[0] == 259:   #No more data available
-				break;
+				break
 			if err[0] == 5:     #Access denied
 				Logger.debug("Unable to copy value (%s)"%(str(err)))
 			else:
@@ -110,7 +108,7 @@ def CopyTree(KeySrc, SubKey, KeyDest, blacklist = []):
 				CopyTree(hkey_src, buf, hkey_dst, context_blacklist)
 		except Exception, err:
 			if err[0] == 259:   #No more data available
-				break;
+				break
 			if err[0] == 5:     #Access denied
 				Logger.debug("Unable to copy key (%s)"%(str(err)))
 			else:

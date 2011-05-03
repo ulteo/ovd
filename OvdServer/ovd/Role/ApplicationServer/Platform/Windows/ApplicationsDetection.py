@@ -21,7 +21,6 @@ import hashlib
 import locale
 import os
 import pythoncom
-import re
 import tempfile
 import pywintypes
 import win32api

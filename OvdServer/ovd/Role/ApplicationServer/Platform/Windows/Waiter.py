@@ -20,13 +20,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import locale
-import time
 import win32api
 import win32con
 import win32security
 
 import os
-import Reg
 
 from ovd.Logger import Logger
 
