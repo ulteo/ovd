@@ -2,7 +2,7 @@
 
 # Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 #
 # This program is free software; you can redistribute it and/or 
@@ -61,17 +61,17 @@ class System(AbstractSystem):
 	def getVersion():
 		try:
 			f = file("/etc/issue", "r")
-			buffer = f.readline()
-			buffer = buffer.replace("\\n", "")
-			buffer = buffer.replace("\\l", "")
-			buffer = buffer.replace("\n", "")
-			buffer = buffer.encode('utf-8')
+			buf = f.readline()
+			buf = buf.replace("\\n", "")
+			buf = buf.replace("\\l", "")
+			buf = buf.replace("\n", "")
+			buf = buf.encode('utf-8')
 		
 		except Exception, err:
 			Logger.warn("System::getVersion: version except '%s'"%(str(err)))
-			buffer = platform.version()
+			buf = platform.version()
 		
-		return buffer
+		return buf
 	
 	@staticmethod
 	def _getCPULoad():

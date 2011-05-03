@@ -222,11 +222,11 @@ class ApplicationsDetection:
 			return None
 		
 		f = open(path_png, 'rb')
-		buffer = f.read()
+		buf = f.read()
 		f.close()
 		
 		os.remove(path_png)
-		return buffer
+		return buf
 		
 	
 	@staticmethod	

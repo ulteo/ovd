@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2008,2009 Ulteo SAS
+# Copyright (C) 2008-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2008,2009
-# Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -118,9 +118,9 @@ class RequestHandler(Thread):
 	
 	
 	def sock2data(self, sock):
-		buffer = sock.recv(4)
+		buf = sock.recv(4)
 		try:
-			packet_len = struct.unpack('>I', buffer)[0]
+			packet_len = struct.unpack('>I', buf)[0]
 		except Exception:
 			Logger.warn("sock2data: packet recv syntax error")
 			return None
@@ -162,18 +162,18 @@ class RequestHandler(Thread):
 		return req
 		
 	def response2buffer(self, response):
-		buffer = ""
+		buf = ""
 		b = "%d %s"%(response["code"], httplib.responses[response["code"]])
-		buffer+= struct.pack('>I', len(b))
-		buffer+= b
+		buf+= struct.pack('>I', len(b))
+		buf+= b
 		
-		buffer+= struct.pack('>I', len(response["Content-Type"]))
-		buffer+= response["Content-Type"]
+		buf+= struct.pack('>I', len(response["Content-Type"]))
+		buf+= response["Content-Type"]
 		
-		buffer+= struct.pack('>I', len(response["data"]))
-		buffer+= response["data"]
+		buf+= struct.pack('>I', len(response["data"]))
+		buf+= response["data"]
 		
-		return buffer
+		return buf
 	
 	
 	def work(self, sock):

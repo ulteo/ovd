@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2010 Ulteo SAS
+# Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -68,15 +68,15 @@ class System(AbstractSystem):
 			wmi_serv = wmi.ConnectServer(".")
 			windows_server = wmi_serv.ExecQuery("Select Caption from Win32_OperatingSystem")
 			
-			buffer = windows_server[0].Caption
-			if buffer is unicode:
-				buffer = buffer.encode('utf-8')
+			buf = windows_server[0].Caption
+			if buf is unicode:
+				buf = buf.encode('utf-8')
 		
 		except Exception, err:
 			Logger.warn("System::getVersion: version except '%s'"%(str(err)))
-			buffer = platform.version()
+			buf = platform.version()
 		
-		return buffer
+		return buf
 	
 	@staticmethod
 	def getCPUInfos():
