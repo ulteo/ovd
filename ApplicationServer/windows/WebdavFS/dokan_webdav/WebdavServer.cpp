@@ -284,12 +284,13 @@ HRESULT WebdavServer::sendRequest(DavRequest &req) {
 	if (FAILED(req.create(this->hConnect, path, this->useHTTPS)))
 		return E_FAIL;
 
+	if (this->user)
+		req.setCredential(user, password);
+
 	if (FAILED(req.perform())) {
 		req.close();
 		return E_FAIL;
 	}
-	if (user)
-		req.setCredential(user, password);
 
 	status = req.getStatus();
 	if ((status == 301)) {
