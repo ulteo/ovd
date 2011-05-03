@@ -65,8 +65,6 @@ class Role(AbstractRole):
 		self.applications_id_SM = {}
 		self.applications_mutex = threading.Lock()
 		
-		self.has_run = False
-		
 		self.static_apps = RolePlatform.ApplicationsStatic(self.main_instance.smRequestManager)
 		self.static_apps_must_synced = False
 		self.static_apps_lock = threading.Lock()

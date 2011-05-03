@@ -28,6 +28,7 @@ class Role:
 	def __init__(self, main_instance):
 		self.main_instance = main_instance
 		self.status = Role.STATUS_INIT
+		self.has_run = False
 	
 	def init(self):
 		raise NotImplementedError()

@@ -46,7 +46,6 @@ class Role(AbstractRole):
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
 		self.dialog = Dialog(self)
-		self.has_run = False
 		self.rproxy = None
 
 
@@ -66,7 +65,6 @@ class Role(AbstractRole):
 
 
 	def stop(self):
-		self.has_run = False
 		if self.rproxy:
 			self.rproxy.close()
 
