@@ -121,7 +121,7 @@ class TS(AbstractTS):
 					
 					domain = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSDomainName)
 					if domain.lower() != domain_.lower():
-						Logger.debug("Session %s: ts session %d is not from the user %s but from a AD user"%(session["SessionId"], username_))
+						Logger.debug("Ts session %d is not from the user %s but from a AD user"%(session["SessionId"], username_))
 						continue
 					
 					shell = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSInitialProgram)
