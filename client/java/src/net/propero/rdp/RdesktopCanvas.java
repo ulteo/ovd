@@ -184,7 +184,13 @@ public abstract class RdesktopCanvas extends Canvas {
      */
     public void registerCommLayer(Rdp rdp) {
         this.rdp = rdp;
-        if (fbKeys != null)
+
+        if (fbKeys == null)
+        	return;
+
+        if (this.opt.supportUnicodeInput)
+            input = new UnicodeInput(this, rdp, fbKeys, this.opt);
+        else
             input = new Input_Localised(this, rdp, fbKeys, this.opt);
 
     }

@@ -414,6 +414,17 @@ public class Rdp {
         }
     }
 
+    
+    protected void processInputCaps(RdpPacket_Localised data, int cap_length) {
+    	int flags = data.getLittleEndian16();
+
+    	if ((flags & INPUT_FLAG_UNICODE) != 0)
+    		this.opt.supportUnicodeInput = true;
+
+    	this.surface.registerCommLayer(this);
+    }
+
+    
     /**
      * Process a bitmap capability set
      * @param data Packet containing capability set data at current read position
@@ -454,6 +465,9 @@ public class Rdp {
             case RDP_CAPSET_BITMAP:
                 processBitmapCaps(data);
                 break;
+            case RDP_CAPSET_INPUT:
+            	processInputCaps(data, capset_length);
+            	break;
             case RDP_CAPSET_VIRTUALCHANNEL:
                 processVirtualChannelCaps(data, capset_length - 4);
                 break;
@@ -1202,10 +1216,14 @@ public class Rdp {
     }
 
 	private void sendInputCaps(RdpPacket_Localised data) {
+		int inputFlags = INPUT_FLAG_SCANCODES;
+		if (this.opt.supportUnicodeInput)
+			inputFlags |= INPUT_FLAG_UNICODE;
+		
 		data.setLittleEndian16(RDP_CAPSET_INPUT);		/* capabilitySetType */
 		data.setLittleEndian16(RDP_CAPLEN_INPUT);		/* lengthCapability */
 
-		data.setLittleEndian16(INPUT_FLAG_SCANCODES);		/* inputFlags */
+		data.setLittleEndian16(inputFlags);			/* inputFlags */
 		data.setLittleEndian16(0);				/* pad2octetsA */
 		data.setLittleEndian32(0x00000409);			/* keyboardLayout: 0x00000409 is English_United_States */
 		data.setLittleEndian32(KEYBOARD_TYPE_IBM_ENHANCED);	/* keyboardType */
