@@ -44,21 +44,20 @@ class SessionManagement(Process):
 
 		self.synchronizer = SingletonSynchronizer()
 		self.synchronizer.backup()
+		self.looping = True
 
 	def run(self):
 		self.synchronizer.restore()
 		Logger._instance.setQueue(self.logging_queue, False)
-		loop = True
 
 		# Prevent the process to be stop by a keyboard interruption
 		def quit(machin, truc):
-			global loop
-			loop = False
+			self.looping = False
 		signal.signal(signal.SIGINT, signal.SIG_IGN)
 		signal.signal(signal.SIGTERM, quit)
 		
 		Logger.debug("Starting SessionManager process")
-		while loop:
+		while self.looping:
 			try:
 				(request, obj) = self.queue2.get_nowait()
 			except Queue.Empty:
