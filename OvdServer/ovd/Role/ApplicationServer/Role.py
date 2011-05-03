@@ -247,7 +247,6 @@ class Role(AbstractRole):
 			else:
 				time.sleep(1)
 			
-			#Logger.debug("ApplicationServer run loop")
 		self.status = Role.STATUS_STOP
 	
 	
