@@ -157,7 +157,7 @@ HRESULT DavRequest::setCredential(WCHAR* username, WCHAR* password) {
 	if (!this->hRequest)
 		return E_FAIL;
 
-	if (! WinHttpSetCredentials( hRequest, 	WINHTTP_AUTH_TARGET_SERVER,	WINHTTP_AUTH_SCHEME_BASIC, username, password, NULL ))
+	if (! WinHttpSetCredentials( this->hRequest, WINHTTP_AUTH_TARGET_SERVER, WINHTTP_AUTH_SCHEME_BASIC, username, password, NULL ))
 		return E_FAIL;
 	
 	return S_OK;
