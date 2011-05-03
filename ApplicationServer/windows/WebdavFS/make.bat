@@ -1,3 +1,5 @@
+@echo off
+
 cmd /C common.bat
 if not %errorlevel%==0 goto :error
 

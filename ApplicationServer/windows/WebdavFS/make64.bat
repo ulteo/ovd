@@ -1,3 +1,5 @@
+@echo off
+
 set INITIAL_DIR=%cd%
 
 call setenv.bat %WINDDK_PATH%  x64 fre WNET no_oacr
