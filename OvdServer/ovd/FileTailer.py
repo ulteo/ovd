@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -30,7 +30,7 @@ class FileTailer:
 		self.buffer_line = ""
 		self.buffer_lines = []
 		
-		self.pos = None;
+		self.pos = None
 		self.bufsize = 2048
 		self.end = False
 	
@@ -48,17 +48,17 @@ class FileTailer:
 			return False
 		
 		self.fd.seek(-1, os.SEEK_END)
-		self.size = self.fd.tell() + 1
+		size = self.fd.tell() + 1
 
 		last = self.fd.read(1)
 		if last == os.linesep:
-			self.size-= 1
+			size-= 1
 
-		if self.size < self.bufsize:
+		if size < self.bufsize:
 			self.pos = 0
-			self.bufsize = self.size
+			self.bufsize = size
 		else:
-			self.pos = self.size - self.bufsize
+			self.pos = size - self.bufsize
 		
 		return True
 	
