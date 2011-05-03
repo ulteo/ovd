@@ -97,10 +97,10 @@ class Request:
 		self.directory = directory_
 	
 	def perform(self):
-		raise NotImplementedError();
+		raise NotImplementedError()
 	
 	def getLog(self, log):
-		raise NotImplementedError();
+		raise NotImplementedError()
 	
 
 
