@@ -250,6 +250,19 @@ HRESULT WebdavServer::importURL(WCHAR* remotePath, WCHAR* localPath) {
 	return -1 * result;
 }
 
+HRESULT WebdavServer::test() {
+	HRESULT ret;
+	PROPFINDRequest req(L"/", 0);
+
+	if (FAILED(sendRequest(req))) {
+		DbgPrint(L"failed to send the request\n");
+		return E_FAIL;
+	}
+	ret = req.getWinStatus();
+	req.close();
+	return ret;
+}
+
 
 BOOL WebdavServer::exist(WCHAR* path) {
 	BOOL ret = FALSE;

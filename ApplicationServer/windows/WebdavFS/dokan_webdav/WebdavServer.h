@@ -79,6 +79,7 @@ public:
 	HRESULT exportPath(WCHAR* remotePath, WCHAR* localPath);
 	HRESULT touch(WCHAR* remotePath);
 	BOOL exist(WCHAR* path);
+	HRESULT test();
 	
 	void getAbsolutePath(WCHAR* dest, WCHAR* path);
 };

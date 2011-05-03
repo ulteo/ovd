@@ -795,6 +795,7 @@ int _cdecl
 main(ULONG argc, PCHAR argv[]) {
 	int status;
 	ULONG command;
+	HRESULT result;
 	WCHAR username[MAX_PATH] = L"";
 	WCHAR password[MAX_PATH] = L"";
 	WCHAR url[MAX_PATH] = L"";
@@ -908,8 +909,18 @@ main(ULONG argc, PCHAR argv[]) {
 	}
 	davCache = new DavCache();
 	davCache->init(server);
-	if (! server->exist(L"/")) {
-		return DOKAN_ERROR;
+
+	result = server->test();
+	if (result != ERROR_SUCCESS) {
+		if (davCache) {
+			davCache->clean();
+			delete davCache;
+		}
+		if (server) {
+			server->disconnect();
+			delete server;
+		}
+		return result;
 	}
 
 //	if (g_DebugMode)
@@ -981,6 +992,6 @@ main(ULONG argc, PCHAR argv[]) {
 		server->disconnect();
 		delete server;
 	}
-	return 0;
+	return status;
 }
 

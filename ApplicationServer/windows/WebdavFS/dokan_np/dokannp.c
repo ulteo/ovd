@@ -237,6 +237,7 @@ StartDavModule(WCHAR* letter, WCHAR* remote, WCHAR* username, WCHAR* password)
 	BOOL result = 0;
 	WCHAR l[] = L"E:";
 	int timeout = WAIT_TIME;
+	DWORD exitCode = 0;
 	
 	PROCESS_INFORMATION processInformation;
 	STARTUPINFO startupInfo;
@@ -295,8 +296,18 @@ StartDavModule(WCHAR* letter, WCHAR* remote, WCHAR* username, WCHAR* password)
 			return WN_SUCCESS;
 		}
 
-		Sleep(500);
-		timeout -= 500;
+		WaitForSingleObject(processInformation.hProcess, 300);
+		timeout -= 300;
+
+		GetExitCodeProcess(processInformation.hProcess, &exitCode);
+		DbgPrintW(L"Exit code: %d\n", exitCode);
+
+		if (exitCode == ERROR_ACCESS_DENIED) {
+			DbgPrintW(L"ERROR: Webdav failed to mount the drive, access denied");
+			return WN_ACCESS_DENIED;
+		}
+		if (exitCode != STILL_ACTIVE)
+			break;
 	}
 
 	DbgPrintW(L"ERROR: Webdav failed to mount the drive");
