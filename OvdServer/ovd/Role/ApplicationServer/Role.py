@@ -175,7 +175,7 @@ class Role(AbstractRole):
 				except Queue.Empty, e:
 					break
 				except (EOFError, socket.error):
-					Logger.debug("Role stopping")
+					Logger.debug("APS:: Role stopping")
 					return
 				if session.status == RolePlatform.Session.SESSION_STATUS_DESTROYED:
 					if self.sessions.has_key(session.id):
