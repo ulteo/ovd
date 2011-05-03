@@ -79,8 +79,6 @@ class Role(AbstractRole):
 	
 	
 	def stop(self):
-		Logger.info("FileServer:: stopping")
-		
 		self.cleanup_samba()
 		self.purgeGroup()
 		self.inotify.stop()
