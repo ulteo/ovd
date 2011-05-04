@@ -245,6 +245,7 @@ public class Orders {
             processed++;
         }
 
+	this.surface.repaint_order();
         if (! this.opt.bitmap_compression && (data.getPosition() != next_packet)) {
             throw new OrderException("End not reached!");
         }

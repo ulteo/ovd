@@ -38,6 +38,8 @@ public abstract class RdesktopCanvas extends Canvas {
 
     public WrappedImage backstore;
 
+    private Rectangle refresh_rect = new Rectangle();
+
     // Graphics backstore_graphics;
 
     private Input input = null;
@@ -151,11 +153,22 @@ public abstract class RdesktopCanvas extends Canvas {
     	this.ComponentListener.remove(c);
     }
 
+	public void repaint() {
+		if (this.ComponentListener.size() == 0)
+			super.repaint();
+		else {
+			for (Component c: this.ComponentListener)
+				c.repaint();
+		}
+	}
+
 	public void repaint(int x, int y, int width, int height) {
-		super.repaint(x, y, width, height);
-		
-		for (Component c: this.ComponentListener)
-			c.repaint(x, y, width, height);
+		if (this.ComponentListener.size() == 0)
+			super.repaint(x, y, width, height);
+		else {
+			for (Component c: this.ComponentListener)
+				c.repaint(x, y, width, height);
+		}
 	}
 
 
@@ -354,7 +367,7 @@ public abstract class RdesktopCanvas extends Canvas {
                                                 // offset needed
                 cx);
 
-        this.repaint(x, y, cx, cy);
+        this.prepare_repaint(x, y, cx, cy);
     }
 
     /**
@@ -464,7 +477,7 @@ public abstract class RdesktopCanvas extends Canvas {
 
         // if(logger.isInfoEnabled()) logger.info("rect
         // \t(\t"+x+",\t"+y+"),(\t"+(x+cx-1)+",\t"+(y+cy-1)+")");
-        this.repaint(x, y, cx, cy); // seems to be faster than Graphics.fillRect
+        this.prepare_repaint(x, y, cx, cy); // seems to be faster than Graphics.fillRect
                                     // according to JProbe
     }
 
@@ -551,7 +564,7 @@ public abstract class RdesktopCanvas extends Canvas {
         int y_min = y1 < y2 ? y1 : y2;
         int y_max = y1 > y2 ? y1 : y2;
 
-        this.repaint(x_min, y_min, x_max - x_min + 1, y_max - y_min + 1);
+        this.prepare_repaint(x_min, y_min, x_max - x_min + 1, y_max - y_min + 1);
     }
 
     /**
@@ -589,7 +602,7 @@ public abstract class RdesktopCanvas extends Canvas {
                         rop.do_pixel(opcode, backstore, x1 + i, y1, color);
                         pbackstore++;
                     }
-                    repaint(x1, y1, x2 - x1 + 1, 1);
+                    this.prepare_repaint(x1, y1, x2 - x1 + 1, 1);
                 } else { // x dec, y1=y2
                     if (x2 < this.left)
                         x2 = this.left;
@@ -600,7 +613,7 @@ public abstract class RdesktopCanvas extends Canvas {
                         rop.do_pixel(opcode, backstore, x2 + i, y1, color);
                         pbackstore--;
                     }
-                    repaint(x2, y1, x1 - x2 + 1, 1);
+                    this.prepare_repaint(x2, y1, x1 - x2 + 1, 1);
                 }
             }
         } else { // x1==x2 VERTICAL
@@ -615,7 +628,7 @@ public abstract class RdesktopCanvas extends Canvas {
                         rop.do_pixel(opcode, backstore, x1, y1 + i, color);
                         pbackstore += this.width;
                     }
-                    repaint(x1, y1, 1, y2 - y1 + 1);
+                    this.prepare_repaint(x1, y1, 1, y2 - y1 + 1);
                 } else { // x1=x2, y dec
                     if (y2 < this.top)
                         y2 = this.top;
@@ -626,7 +639,7 @@ public abstract class RdesktopCanvas extends Canvas {
                         rop.do_pixel(opcode, backstore, x1, y2 + i, color);
                         pbackstore -= this.width;
                     }
-                    repaint(x1, y2, 1, y1 - y2 + 1);
+                    this.prepare_repaint(x1, y2, 1, y1 - y2 + 1);
                 }
             }
         }
@@ -684,7 +697,7 @@ public abstract class RdesktopCanvas extends Canvas {
 
         rop.do_array(destblt.getOpcode(), backstore, this.width, x, y, cx, cy,
                 null, 0, 0, 0);
-        this.repaint(x, y, cx, cy);
+        this.prepare_repaint(x, y, cx, cy);
 
     }
 
@@ -725,7 +738,7 @@ public abstract class RdesktopCanvas extends Canvas {
 
         rop.do_array(screenblt.getOpcode(), backstore, this.width, x, y, cx,
                 cy, null, this.width, srcx, srcy);
-        this.repaint(x, y, cx, cy);
+        this.prepare_repaint(x, y, cx, cy);
 
     }
     
@@ -800,12 +813,13 @@ public abstract class RdesktopCanvas extends Canvas {
         try {
             Bitmap bitmap = cache.getBitmap(memblt.getCacheID(), memblt
                     .getCacheIDX());
+            
             // IndexColorModel cm = cache.get_colourmap(memblt.getColorTable());
             // should use the colormap, but requires high color backstore...
             rop.do_array(memblt.getOpcode(), backstore, this.width, x, y, cx,
                     cy, bitmap.getBitmapData(), bitmap.getWidth(), srcx, srcy);
 
-            this.repaint(x, y, cx, cy);
+            this.prepare_repaint(x, y, cx, cy);
         } catch (RdesktopException e) {
             logger.warn("Exception in drawMemBltOrder : " + e.getMessage());
         }
@@ -866,7 +880,7 @@ public abstract class RdesktopCanvas extends Canvas {
                 src[i] = fgcolor;
             rop.do_array(opcode, backstore, this.width, x, y, cx, cy, src, cx,
                     0, 0);
-            this.repaint(x, y, cx, cy);
+            this.prepare_repaint(x, y, cx, cy);
 
             break;
 
@@ -899,7 +913,7 @@ public abstract class RdesktopCanvas extends Canvas {
             }
             rop.do_array(opcode, backstore, this.width, x, y, cx, cy, src, cx,
                     0, 0);
-            this.repaint(x, y, cx, cy);
+            this.prepare_repaint(x, y, cx, cy);
             break;
         default:
             logger.warn("Unsupported brush style " + brush.getStyle());
@@ -1220,7 +1234,7 @@ public abstract class RdesktopCanvas extends Canvas {
 
         // if(logger.isInfoEnabled()) logger.info("glyph
         // \t(\t"+x+",\t"+y+"),(\t"+(x+cx-1)+",\t"+(y+cy-1)+")");
-        this.repaint(newx, newy, newcx, newcy);
+        this.prepare_repaint(newx, newy, newcx, newcy);
     }
 
     /**
@@ -1411,4 +1425,13 @@ public abstract class RdesktopCanvas extends Canvas {
     public Input getInput() {
         return (input);
     }
+
+	public void repaint_order() {
+		this.repaint(this.refresh_rect.x, this.refresh_rect.y, this.refresh_rect.width, this.refresh_rect.height);
+		this.refresh_rect = new Rectangle();
+	}
+	
+	public void prepare_repaint(int x, int y, int cx, int cy) {
+		this.refresh_rect = refresh_rect.union(new Rectangle(x, y, cx, cy)); 
+	}
 }
