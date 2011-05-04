@@ -18,6 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+unset LANG
 args="--without-libchart"
 
 # get module
@@ -40,7 +41,7 @@ if [ -n "$OVD_VERSION" ]; then
     version="$OVD_VERSION"
 else
     if [ -d .svn ]; then
-      revision=$(LC_ALL=C svn info . | awk '/^Revision: / {printf "%05d\n", $2}')
+      revision=$(svnversion -c $SVN_DIR | cut -d':' -f2)
     else
       revision=0
     fi
