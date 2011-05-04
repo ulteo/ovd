@@ -26,7 +26,6 @@ from OpenSSL import SSL
 from ovd.Role.Role import Role as AbstractRole
 from ovd.Logger import Logger
 from Config import Config
-from Dialog import Dialog
 from ReverseProxy import ReverseProxy
 
 import asyncore
@@ -45,7 +44,6 @@ class Role(AbstractRole):
 
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
-		self.dialog = Dialog(self)
 		self.rproxy = None
 
 

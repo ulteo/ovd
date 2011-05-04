@@ -139,9 +139,9 @@ class Dialog(AbstractDialog):
 		
 		rootNode.appendChild(cpuNode)
 		
-		for role in self.server.roles:
+		for role,dialog in self.server.role_dialogs:
 			roleNode = doc.createElement('role')
-			roleNode.setAttribute('name', role.dialog.getName())
+			roleNode.setAttribute('name', dialog.getName())
 			rootNode.appendChild(roleNode)
 		
 		doc.appendChild(rootNode)

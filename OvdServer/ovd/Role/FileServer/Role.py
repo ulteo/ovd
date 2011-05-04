@@ -32,7 +32,6 @@ from ovd.Platform import Platform
 from ovd.Role.Role import Role as AbstractRole
 
 from Config import Config
-from Dialog import Dialog
 from Rec import Rec
 from Share import Share
 from User import User
@@ -41,7 +40,6 @@ from User import User
 class Role(AbstractRole):
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
-		self.dialog = Dialog(self)
 		self.shares = {}
 	
 	def init(self):

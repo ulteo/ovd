@@ -37,7 +37,6 @@ from ovd.Platform import Platform
 
 from Apt import Apt
 from Config import Config
-from Dialog import Dialog
 from Session import Session
 from SessionManagement import SessionManagement
 from Manager import Manager
@@ -50,7 +49,6 @@ class Role(AbstractRole):
 	
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
-		self.dialog = Dialog(self)
 		Logger._instance.close()
 		self.sessions = {}
 		self.sessions_spooler = multiprocessing.Queue()

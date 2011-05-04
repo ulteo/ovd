@@ -40,6 +40,7 @@ class SlaveServer:
 		self.stopped = False
 		
 		self.roles = []
+		self.role_dialogs = []
 		self.monitoring = None
 		self.time_last_send_monitoring = 0
 		
@@ -56,20 +57,24 @@ class SlaveServer:
 		self.dialog = Dialog(self)
 		self.smRequestManager = SMRequestManager()
 		
+		dialogInstances = []
+		dialogInstances.append(self.dialog)
+		
 		for role in Config.roles:
 			try:
 				Role = __import__("ovd.Role.%s.Role"%(role), {}, {}, "Role")
+				RoleDialog = __import__("ovd.Role.%s.Dialog"%(role), {}, {}, "Dialog")
 			
 			except ImportError:
 				Logger.error("Unsupported role '%s'"%(role))
 				sys.exit(2)
 			
-			self.roles.append(Role.Role(self))
-		
-		dialogInstances = []
-		dialogInstances.append(self.dialog)
-		for role in self.roles:
-			dialogInstances.append(role.dialog)
+			role_instance = Role.Role(self)
+			dialog_instance = RoleDialog.Dialog(role_instance)
+			
+			self.roles.append(role_instance)
+			dialogInstances.append(dialog_instance)
+			self.role_dialogs.append((role_instance, dialog_instance))
 		
 		self.communication = CommunicationClass(dialogInstances)
 	
