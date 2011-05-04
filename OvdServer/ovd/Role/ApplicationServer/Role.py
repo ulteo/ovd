@@ -65,6 +65,8 @@ class Role(AbstractRole):
 		self.applications_id_SM = {}
 		self.applications_mutex = threading.Lock()
 		
+		self.loop = True
+
 		self.static_apps = RolePlatform.ApplicationsStatic(self.main_instance.smRequestManager)
 		self.static_apps_must_synced = False
 		self.static_apps_lock = threading.Lock()
@@ -87,7 +89,6 @@ class Role(AbstractRole):
 		if not Platform.System.groupExist(self.manager.ovd_group_name):
 			if not Platform.System.groupCreate(self.manager.ovd_group_name):
 				return False
-		
 		
 		if not self.manager.purgeGroup():
 			Logger.error("Unable to purge group")
@@ -134,6 +135,10 @@ class Role(AbstractRole):
 		for thread in self.threads:
 			thread.join()
 		
+		self.loop = False
+
+
+	def finalize(self):
 		for session in self.sessions.values():
 			self.manager.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
 		
@@ -143,7 +148,6 @@ class Role(AbstractRole):
 			cleaner.destroy_session(session)
 		
 		self.manager.purgeGroup()
-	
 	
 	
 	def get_session_from_login(self, login_):
@@ -166,7 +170,7 @@ class Role(AbstractRole):
 		
 		self.status = Role.STATUS_RUNNING
 		
-		while self.thread.thread_continue():
+		while self.loop:
 			while True:
 				try:
 					session = self.sessions_sync.get_nowait()

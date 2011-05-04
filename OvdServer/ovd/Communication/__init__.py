@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2011 Ulteo SAS
+# Copyright (C) 2009,2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
+# Author Samuel BOVEE <samuel@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -19,6 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import socket
+from threading import Thread
 
 from ovd.Config import Config
 from ovd.Logger import Logger
@@ -34,6 +36,7 @@ class Communication:
 		self.dialogInterfaces = dialogInterfaces
 		self.session_manager = Config.session_manager
 		self.status = Communication.STATUS_INIT
+		self.thread = Thread(name="Communication", target=self.run)
 	
 	def run(self):
 		pass

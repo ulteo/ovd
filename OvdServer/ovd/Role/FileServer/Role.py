@@ -78,18 +78,19 @@ class Role(AbstractRole):
 	
 	
 	def stop(self):
+		self.inotify.stop()
+
+
+	def finalize(self):
 		self.cleanup_samba()
 		self.purgeGroup()
-		self.inotify.stop()
 	
 	
 	def run(self):
 		self.has_run = True
-		self.inotify.start()
 		self.status = Role.STATUS_RUNNING
-		while 1:
-			time.sleep(30)
-			Logger.debug("FileServer run loop")
+		self.inotify.start()
+		self.inotify.join()
 		self.status = Role.STATUS_STOP
 	
 	

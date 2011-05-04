@@ -5,6 +5,7 @@
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2008-2011
 # Author David LECHEVALIER <david@ulteo.com> 2011
+# Author Samuel BOVEE <samuel@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -27,12 +28,10 @@ from xml.dom.minidom import Document
 
 from ovd.Config import Config
 from ovd.Logger import Logger
-
 from ovd.Platform import Platform
 
 from Dialog import Dialog
 from SMRequestManager import SMRequestManager
-from Thread import Thread
 
 class SlaveServer:
 	def __init__(self, CommunicationClass):
@@ -41,7 +40,6 @@ class SlaveServer:
 		self.stopped = False
 		
 		self.roles = []
-		self.threads = []
 		self.monitoring = None
 		self.time_last_send_monitoring = 0
 		
@@ -82,8 +80,7 @@ class SlaveServer:
 		if not self.communication.initialize():
 			return False
 		
-		self.communication.ovd_thread = Thread(name="Communication", target=self.communication.run)
-		self.threads.append(self.communication.ovd_thread)
+		self.communication.thread.start()
 		
 		for role in self.roles:
 			try:
@@ -93,20 +90,14 @@ class SlaveServer:
 				Logger.error("SlaveServer: unable to initialize role '%s' %s"%(role.getName(), str(e)))
 				return False
 			
-			role.thread = Thread(name="role_%s"%(role.getName()), target=role.run)
-			self.threads.append(role.thread)
-		
-		# Start 
-		for thread in self.threads:
-			thread.start()
-		
+			role.thread.start()
 		
 		# Check each thread has started correctly (communication + roles)
 		t0 = time.time()
 		while self.communication.getStatus() is not self.communication.STATUS_RUNNING:
 			t1 = time.time()
 			
-			if (t1-t0 > 20) or (not self.communication.ovd_thread.isAlive()) or self.communication.getStatus() is self.communication.STATUS_ERROR:
+			if (t1-t0 > 20) or (not self.communication.thread.isAlive()) or self.communication.getStatus() is self.communication.STATUS_ERROR:
 				Logger.warn("SlaveServer::init communication thread error")
 				return False
 			
@@ -148,15 +139,12 @@ class SlaveServer:
 	
 	
 	def loop_procedure(self):
-		for thread in self.threads:
-			if not thread.isAlive():
-				Logger.warn("Thread '%s' stopped"%(thread.getName()))
-				Logger.debug("ToDo: be more specific. Make difference between Roles and main threads")
-				self.threads.remove(thread)
-				return False
-			
-			self.updateMonitoring()
-			
+		for role in list(self.roles):
+			if not role.thread.isAlive():
+				Logger.warn("Thread '%s' stopped" % role.thread.getName())
+				self.roles.remove(role)
+		
+		self.updateMonitoring()
 		
 		t1 = time.time()
 		if t1-self.time_last_send_monitoring > 30:
@@ -173,24 +161,33 @@ class SlaveServer:
 		self.stopped = True
 		self.smRequestManager.switch_status(self.smRequestManager.STATUS_PENDING)
 		
-		for thread in self.threads:
-			thread.order_stop()
-		
-		Logger.info("Waiting for thread stop")
-		time.sleep(2)
-		for thread in self.threads:
-			if thread.isAlive():
-				thread._Thread__delete()
-		
 		for role in self.roles:
 			if role.has_run:
-				Logger.info("Stopping role %s"%(role.getName()))
+				Logger.debug("Stopping role %s" % role.getName())
 				role.stop()
-				
+		
+		for role in self.roles:
+			if role.thread.isAlive():
+				Logger.debug("Waiting %s will stop" % role.getName())
+				role.thread.join(10)
+				if role.thread.isAlive():
+					Logger.error("Role %s was stopped by using low force" % role.getName())
+					role.thread._Thread__stop()
+					role.thread.join(5)
+					if role.thread.isAlive():
+						Logger.error("Role %s was stopped by using force" % role.getName())
+						role.thread._Thread__delete()
+			
+			if role.has_run:
+				role.finalize()
+			
+			Logger.info("Role %s stopped" % role.getName())
+		
 		self.communication.stop()
+		if self.communication.thread.isAlive():
+			self.communication.thread.join()
+		
 		self.smRequestManager.switch_status(self.smRequestManager.STATUS_DOWN)
-	
-		return 0
 	
 	
 	def getMonitoring(self):
