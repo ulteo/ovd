@@ -65,12 +65,14 @@ DWORD DavRequest::getWinStatus() {
 	case 207:
 		return ERROR_SUCCESS;
 		break;
-	case 404:
-		return ERROR_FILE_NOT_FOUND;
-		break;
 	case 401:
 	case 403:
 		return ERROR_ACCESS_DENIED;
+	case 404:
+		return ERROR_FILE_NOT_FOUND;
+		break;
+	case 416:
+		return ERROR_MORE_DATA;
 	default:
 		return ERROR_INVALID_HANDLE;
 	}

@@ -313,6 +313,12 @@ MirrorReadFile(
 	}
 
 	result = req.getWinStatus();
+	if (result == ERROR_MORE_DATA) {
+		*ReadLength = 0;
+		req.close();
+		return  ERROR_SUCCESS;
+	}
+
 	if (FAILED(req.get(ReadLength, Buffer))) {
 		DbgPrint(L"MirrorReadFile, failed to get file content\n");
 	}
