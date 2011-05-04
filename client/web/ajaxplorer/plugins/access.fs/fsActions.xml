@@ -110,7 +110,7 @@
 				<serverCallback methodName="switchAction"></serverCallback>
 				</processing>
 		</action>
-		<action name="empty_recycle">
+		<!--<action name="empty_recycle">
 			<gui text="220" title="221" src="trashcan_empty.png" accessKey="empty_recycle_access_key" hasAccessKey="true">
 				<context selection="false" dir="true" recycle="only" actionBar="true" contextMenu="true" infoPanel="false" actionBarGroup="default"></context>
 			</gui>
@@ -122,7 +122,7 @@
 					]]></clientCallback>
 				<serverCallback methodName="switchAction"></serverCallback>
 				</processing>
-		</action>
+		</action>-->
 		<action name="mkdir">			
 			<gui text="154" title="155" src="folder_new.png" accessKey="folder_access_key" hasAccessKey="true">
 				<context selection="false" dir="true" recycle="hidden" actionBar="true" contextMenu="true" infoPanel="false" actionBarGroup="put" inZip="false"></context>
@@ -256,7 +256,7 @@ AJXP_MESSAGE[174]<br/>
 				<serverCallback methodName="switchAction"></serverCallback>
 				</processing>
 		</action>
-		<action name="compress">
+		<!--<action name="compress">
 			<gui text="313" title="314" src="archive_insert.png" accessKey="" hasAccessKey="false">
 				<context selection="true" dir="" recycle="false"
 					actionBar="false" contextMenu="true" infoPanel="true"
@@ -314,8 +314,8 @@ AJXP_MESSAGE[174]<br/>
 				]]></clientListener>				
 				<serverCallback methodName="switchAction"></serverCallback>
 				</processing>
-		</action>
-		<action name="public_url" fileDefault="false">
+		</action>-->
+		<!--<action name="public_url" fileDefault="false">
 			<gui text="292" title="292" src="public_url.png" hasAccessKey="false">
 				<context selection="true" dir="" recycle="false"
 					actionBar="true" contextMenu="true" infoPanel="true"
@@ -380,7 +380,7 @@ AJXP_MESSAGE[174]<br/>
 					</clientForm>					
 				<serverCallback methodName="switchAction"></serverCallback>
 				</processing>
-		</action>
+		</action>-->
 		<action name="edit">
 			<gui text="51" title="162" src="edit.png" accessKey="edit_access_key" hasAccessKey="true">
 				<context selection="true" dir="" recycle="hidden"  behaviour="hidden"
@@ -489,7 +489,7 @@ AJXP_MESSAGE[174]<br/>
 				<serverCallback methodName="switchAction"></serverCallback>
 				</processing>
 		</action>-->
-		<action name="restore">
+		<!--<action name="restore">
 			<gui text="222" title="223" src="folder1_important.png" accessKey="restore_access_key" hasAccessKey="true">
 				<context selection="true" dir="" recycle="only"
 					actionBar="true" contextMenu="true" infoPanel="false"
@@ -514,7 +514,7 @@ AJXP_MESSAGE[174]<br/>
 					]]></clientCallback>
 				<serverCallback methodName="switchAction"></serverCallback>
 				</processing>
-		</action>
+		</action>-->
 		<action name="rename">
 			<gui text="6" title="158" src="applix.png" accessKey="rename_access_key" hasAccessKey="true">
 				<context selection="true" dir="" recycle="hidden"
