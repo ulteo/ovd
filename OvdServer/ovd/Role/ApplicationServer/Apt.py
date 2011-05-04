@@ -21,24 +21,25 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import commands
+import ConfigParser
 import glob
 import os
-import ConfigParser
-from Queue import Queue
+import Queue
+from threading import Thread
 from xml.dom.minidom import Document
 
 from ovd.Logger import Logger
-from ovd.Thread import Thread
 
 class Apt(Thread):
 	def __init__(self):
 		Thread.__init__(self)
 		
 		self.directory = "/var/spool/ulteo/ovd/apt"
-		self.queue = Queue()
+		self.queue = Queue.Queue()
 		self.requests = {}
 		
 		self.i = 0
+		self.thread_continue = True
 	
 	
 	def init(self):
@@ -68,8 +69,11 @@ class Apt(Thread):
 	
 	
 	def run(self):
-		while self.thread_continue():
-			request = self.queue.get()
+		while self.thread_continue:
+			try:
+				request = self.queue.get(timeout=0.1)
+			except Queue.Empty:
+				continue
 			print "perform request: ",request
 			request.status = "in progress"
 			ret = request.perform()
@@ -82,7 +86,7 @@ class Apt(Thread):
 	
 	
 	def terminate(self):
-		self.order_stop()
+		self.thread_continue = False
 	
 	
 class Request:
