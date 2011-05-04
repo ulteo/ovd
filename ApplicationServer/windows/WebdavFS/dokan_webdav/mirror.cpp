@@ -388,7 +388,7 @@ MirrorWriteFile(
 			DbgPrint(L"Unable to add %s to local cache, Error while importing the file\n", cacheEntry->remotePath);
 			return -1;
 		}
-		createDisposition = OPEN_ALWAYS;
+		createDisposition = CREATE_ALWAYS;
 	}
 
 	cacheEntry->needRemove = TRUE;
