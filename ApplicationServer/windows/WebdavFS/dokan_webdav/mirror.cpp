@@ -138,8 +138,9 @@ MirrorCreateFile(
 
 	GetFilePath(FileName, filePath);
 	DbgPrint(L"create file %s\n", filePath);
-	
-	if (! server->exist(filePath)) {
+
+	exist = server->exist(filePath);
+	if (! exist) {
 		result = ERROR_FILE_NOT_FOUND;
 		DbgPrint(L"\tUnable to find the filename %ls\n", filePath);
 	}
