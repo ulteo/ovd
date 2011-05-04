@@ -45,8 +45,8 @@ import org.ulteo.utils.jni.WindowsTweaks;
 
 public class SystemWindows extends SystemAbstract {
 
-	public SystemWindows() {
-		super(new IcoManager());
+	public SystemWindows(String sm) {
+		super(new IcoManager(), sm);
 
 		this.shortcut = new WindowsShortcut();
 		this.fileAssociate = new WindowsRegistry();

@@ -28,8 +28,8 @@ import org.ulteo.ovd.integrated.Constants;
 
 public class AppsIconsCache extends AbstractCache {
 
-	public AppsIconsCache(ContentManager contentManager) {
-		super(Constants.PATH_CACHE_APPS_ICONS, contentManager);
+	public AppsIconsCache(ContentManager contentManager, String sm) {
+		super(Constants.PATH_CACHE_APPS_ICONS+Constants.FILE_SEPARATOR+sm, contentManager);
 	}
 
 	public boolean contains(int appId) {

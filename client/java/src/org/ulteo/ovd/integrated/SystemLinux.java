@@ -46,8 +46,8 @@ public class SystemLinux extends SystemAbstract {
 	private final String ulteo_graphic_refresh_application = "xfdesktop --reload";
 	private final String desktop_refresh_application = "update-desktop-database";
 
-	public SystemLinux() {
-		super(new PngManager());
+	public SystemLinux(String sm) {
+		super(new PngManager(), sm);
 
 		this.shortcut = new LinuxShortcut();
 	}
