@@ -182,8 +182,6 @@ if (isset($old_session_id)) {
 
 	$session->setStatus(Session::SESSION_STATUS_READY);
 
-	$ret = true;
-
 	Logger::info('main', '(client/start) Resuming session for '.$user->getAttribute('login').' ('.$old_session_id.' => '.$session->server.')');
 } else {
 	if (! $sessionManagement->generateCredentials()) {
@@ -356,13 +354,8 @@ if (isset($old_session_id)) {
 	}
 	$session->setStatus(Session::SESSION_STATUS_CREATED);
 
-	$ret = true;
-
 	Logger::info('main', '(client/start) Creating new session for '.$user->getAttribute('login').' ('.$session->id.')');
 }
-
-if ($ret === false)
-	throw_response(INTERNAL_ERROR);
 
 $default_args = array(
 	'user_login'				=>	$user->getAttribute('login'),
