@@ -20,6 +20,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import os
 import pywintypes
 import time
 import win32api
@@ -85,6 +86,11 @@ class TS(AbstractTS):
 					Logger.debug("Ts session %d is not from the local user %s but from a domain user"%(session["SessionId"], username_))
 					continue
 				
+				shell = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSInitialProgram)
+				if not os.path.basename(shell).lower().startswith("ovd"):
+					Logger.debug("Ts session %d is not relative to OVD"%(session["SessionId"]))
+					continue
+				
 			except pywintypes.error, err:
 				if err[0] == 7007: # A close operation is pending on the session.
 					session_closing.append(session)
@@ -117,6 +123,12 @@ class TS(AbstractTS):
 					if domain.lower() != domain_.lower():
 						Logger.debug("Session %s: ts session %d is not from the user %s but from a AD user"%(session["SessionId"], username_))
 						continue
+					
+					shell = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSInitialProgram)
+					if not os.path.basename(shell).lower().startswith("ovd"):
+						Logger.debug("Ts session %d is not relative to OVD"%(session["SessionId"]))
+						continue
+					
 				except pywintypes.error, err:
 					if err[0] == 7007: # A close operation is pending on the session.
 						Logger.debug("TS session %d close operation pending"%(session["SessionId"]))
