@@ -35,12 +35,14 @@ from ovd.Role.Role import Role as AbstractRole
 from ovd.Logger import Logger
 from ovd.Platform import Platform
 
+# hack: must be declare before all other OVD imports
+from Platform import Platform as RolePlatform
+
 from Apt import Apt
 from Config import Config
 from Session import Session
 from SessionManagement import SessionManagement
 from Manager import Manager
-from Platform import Platform as RolePlatform
 
 
 class Role(AbstractRole):
