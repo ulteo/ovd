@@ -39,7 +39,6 @@ class SlaveServer:
 		
 		self.stopped = False
 		
-		self.roles = []
 		self.role_dialogs = []
 		self.monitoring = None
 		self.time_last_send_monitoring = 0
@@ -72,7 +71,6 @@ class SlaveServer:
 			role_instance = Role.Role(self)
 			dialog_instance = RoleDialog.Dialog(role_instance)
 			
-			self.roles.append(role_instance)
 			dialogInstances.append(dialog_instance)
 			self.role_dialogs.append((role_instance, dialog_instance))
 		
@@ -87,7 +85,7 @@ class SlaveServer:
 		
 		self.communication.thread.start()
 		
-		for role in self.roles:
+		for (role, dialog) in self.role_dialogs:
 			try:
 				if not role.init():
 					raise Exception()
@@ -108,7 +106,7 @@ class SlaveServer:
 			
 			Logger.info("Waiting for communication status running")
 			time.sleep(1)
-		for role in self.roles:
+		for (role, dialog) in self.role_dialogs:
 			while role.getStatus() is not role.STATUS_RUNNING:
 				t1 = time.time()
 				
@@ -137,17 +135,18 @@ class SlaveServer:
 			Logger.warn("SlaveServer::loop unable to send status ready")
 			return False
 		
-		for role in self.roles:
+		for (role, dialog) in self.role_dialogs:
 			role.switch_to_production()
 		
 		return True
 	
 	
 	def loop_procedure(self):
-		for role in list(self.roles):
+		for role_dialog in list(self.role_dialogs):
+			role = role_dialog[0]
 			if not role.thread.isAlive():
 				Logger.warn("Thread '%s' stopped" % role.thread.getName())
-				self.roles.remove(role)
+				self.role_dialogs.remove(role_dialog)
 		
 		self.updateMonitoring()
 		
@@ -166,12 +165,12 @@ class SlaveServer:
 		self.stopped = True
 		self.smRequestManager.switch_status(self.smRequestManager.STATUS_PENDING)
 		
-		for role in self.roles:
+		for (role, dialog) in self.role_dialogs:
 			if role.has_run:
 				Logger.debug("Stopping role %s" % role.getName())
 				role.stop()
 		
-		for role in self.roles:
+		for (role, dialog) in self.role_dialogs:
 			if role.thread.isAlive():
 				Logger.debug("Waiting %s will stop" % role.getName())
 				role.thread.join(10)
@@ -200,7 +199,7 @@ class SlaveServer:
 		rootNode.setAttribute("name", self.smRequestManager.name)
 		
 		doc = Document()
-		for role in self.roles:
+		for (role, dialog) in self.role_dialogs:
 			node = doc.createElement("role")
 			
 			role.getReporting(node)
