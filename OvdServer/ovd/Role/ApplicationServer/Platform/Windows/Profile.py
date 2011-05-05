@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -36,6 +36,8 @@ import Reg
 import Util
 
 class Profile(AbstractProfile):	
+	registry_copy_blacklist = [r"Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"]
+	
 	def init(self):
 		self.mountPoint = None
 	
@@ -130,7 +132,7 @@ class Profile(AbstractProfile):
 				hkey_src = win32api.RegOpenKey(win32con.HKEY_USERS, r"%s"%(hiveName_src), 0, win32con.KEY_ALL_ACCESS)
 				hkey_dst = win32api.RegOpenKey(win32con.HKEY_USERS, r"%s"%(hiveName_dst), 0, win32con.KEY_ALL_ACCESS)
 				
-				Reg.CopyTree(hkey_src, "Software", hkey_dst)
+				Reg.CopyTree(hkey_src, "Software", hkey_dst, self.registry_copy_blacklist)
 				
 				win32api.RegCloseKey(hkey_src)
 				win32api.RegCloseKey(hkey_dst)
