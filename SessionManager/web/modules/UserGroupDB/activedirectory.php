@@ -69,6 +69,8 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 		}
 		$config_ldap['userbranch'] = $expl[1];
 
+		$buf = array();
+		$extras = array();
 		$buf = $config_ldap['match'];
 		$buf['id'] = $id_;
 		$buf['name'] = '';
@@ -125,6 +127,7 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 		
 		foreach ($infos as $dn => $info) {
 			$buf = array();
+			$extras = array();
 			foreach ($config_ldap['match'] as $attribut => $match_ldap) {
 				if (isset($info[$match_ldap][0])) {
 					$buf[$attribut] = $info[$match_ldap][0];
