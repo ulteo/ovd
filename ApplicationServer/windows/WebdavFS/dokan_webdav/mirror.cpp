@@ -782,6 +782,7 @@ MirrorGetVolumeInformation(
 {
 	UNREFERENCED_PARAMETER(DokanFileInfo);
 	UNREFERENCED_PARAMETER(FileSystemFlags);
+	UNREFERENCED_PARAMETER(VolumeSerialNumber);
 
 	wcscpy_s(VolumeNameBuffer, VolumeNameSize / sizeof(WCHAR), L"Ulteo Webdav FS");
 	*MaximumComponentLength = 256;
