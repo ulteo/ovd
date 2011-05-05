@@ -20,12 +20,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import commands
 import fcntl
 import locale
 import pwd
 import xrdp
 
+from ovd import commands
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.User import User as AbstractUser
 
@@ -157,7 +157,7 @@ class User(AbstractUser):
 			lock.release()
 		        if s == 0:
 		                return True
-                        if s == 3072:
+                        if s == 12:
                                 Logger.debug("mail dir error: '%s' return %d => %s"%(str(cmd), s, o))
                                 return True
 

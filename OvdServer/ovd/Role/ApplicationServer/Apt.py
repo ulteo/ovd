@@ -20,7 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import commands
 import ConfigParser
 import glob
 import os
@@ -28,6 +27,7 @@ import Queue
 from threading import Thread
 from xml.dom.minidom import Document
 
+from ovd import commands
 from ovd.Logger import Logger
 
 class Apt(Thread):
