@@ -84,8 +84,10 @@ function show_manage($sharedfolder_id_) {
 	$sharedfolderdb = SharedFolderDB::getInstance();
 	$sharedfolder = $sharedfolderdb->import($sharedfolder_id_);
 
-	if (! is_object($sharedfolder))
+	if (! is_object($sharedfolder)) {
+		popup_error(sprintf(_("Failed to import shared folder '%s'"), $sharedfolder_id_));
 		redirect('sharedfolders.php');
+	}
 
 	$userGroupDB = UserGroupDB::getInstance();
 	$all_groups = $userGroupDB->getList(true);
