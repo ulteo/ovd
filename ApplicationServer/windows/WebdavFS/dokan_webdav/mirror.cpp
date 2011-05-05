@@ -770,6 +770,28 @@ MirrorUnlockFile(
 
 
 static int
+MirrorGetVolumeInformation(
+        LPWSTR          VolumeNameBuffer,
+        DWORD           VolumeNameSize,
+        LPDWORD         VolumeSerialNumber,
+        LPDWORD         MaximumComponentLength,
+        LPDWORD         FileSystemFlags,
+        LPWSTR          FileSystemNameBuffer,
+        DWORD           FileSystemNameSize,
+        PDOKAN_FILE_INFO        DokanFileInfo)
+{
+	UNREFERENCED_PARAMETER(DokanFileInfo);
+	UNREFERENCED_PARAMETER(FileSystemFlags);
+
+	wcscpy_s(VolumeNameBuffer, VolumeNameSize / sizeof(WCHAR), L"Ulteo Webdav FS");
+	*MaximumComponentLength = 256;
+	wcscpy_s(FileSystemNameBuffer, FileSystemNameSize / sizeof(WCHAR), L"Ulteo Webdav FS");
+
+	return 0;
+}
+
+
+static int
 MirrorUnmount(
 	PDOKAN_FILE_INFO	DokanFileInfo)
 {
@@ -959,7 +981,7 @@ main(ULONG argc, PCHAR argv[]) {
 	dokanOperations->LockFile = MirrorLockFile;                          //OK
 	dokanOperations->UnlockFile = MirrorUnlockFile;                      //OK
 	dokanOperations->GetDiskFreeSpace = NULL;
-	dokanOperations->GetVolumeInformation = NULL;
+	dokanOperations->GetVolumeInformation = MirrorGetVolumeInformation;
 	dokanOperations->Unmount = MirrorUnmount;
 
 	signal( SIGINT, sigint_handler );
