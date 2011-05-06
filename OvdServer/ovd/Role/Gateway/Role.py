@@ -58,6 +58,8 @@ class Role(AbstractRole):
 		self.ssl_ctx = None
 		self.processes = {}
 
+		self.kill_mutex = threading.Lock()
+
 
 	def init(self):
 		Logger.info("Gateway init")
@@ -109,6 +111,8 @@ class Role(AbstractRole):
 					Logger.error("Gateway:: socket accept: %s" % e)
 					raise e
 
+			self.kill_mutex.acquire()
+			
 			s_unix = None
 			for pid, proc in self.processes.items():
 				proc = proc[0]
@@ -127,6 +131,8 @@ class Role(AbstractRole):
 					s_unix = self.processes[best_proc][0][2]
 
 			sendfd(s_unix, conn.fileno())
+
+			self.kill_mutex.release()
 			conn.close()
 
 		self.status = Role.STATUS_STOP
@@ -152,12 +158,16 @@ class Role(AbstractRole):
 
 
 	def kill_process(self, pid):
+		self.kill_mutex.acquire()
+
 		p = self.processes.pop(pid)[0]
 		p[0].terminate()
 		p[1].stop()
 		if p[1] is not threading.current_thread():
 			p[1].join()
 		p[0].join()
+
+		self.kill_mutex.release()
 
 
 	def getReporting(self, node):
