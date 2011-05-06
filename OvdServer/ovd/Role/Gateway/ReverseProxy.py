@@ -20,61 +20,16 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import asyncore
-from multiprocessing import Process, Pipe, current_process
-import signal
+from multiprocessing import Pipe
 import socket
 import threading
 
 from Config import Config
-from ConnectionPoolProcess import ConnectionPoolProcess
 from ControlProcess import ControlChildProcess
+from ConnectionPoolProcess import ConnectionPoolProcess
 
 from ovd.Logger import Logger
-
 from passfd import sendfd
-
-
-def connection_pool_process(child_pipes, father_pipes, s_unix, ssl_ctx):
-	Logger.info("New Gateway process started")
-
-	# close inherited father pipes
-	father_pipes[0].close()
-	father_pipes[1].close()
-
-	# do not inherit father's binded socket
-	asyncore.socket_map = {}
-
-	p = ConnectionPoolProcess(child_pipes, s_unix, ssl_ctx)
-
-	def clean_process():
-		if p.is_sleeping():
-			if p.was_lazy:
-				p.f_control.send(('stop_pid', current_process().pid))
-				return
-			else:
-				p.was_lazy = True
-		else:
-			p.was_lazy = False
-		global timer
-		timer = threading.Timer(Config.process_timeout, clean_process)
-		timer.start()
-	global timer
-	timer = threading.Timer(Config.process_timeout, clean_process)
-	timer.start()
-
-	def stop_process(signum, frame):
-		global timer
-		timer.cancel()
-		signal.signal(signal.SIGINT, signal.SIG_IGN)
-		if signum is signal.SIGTERM:
-			signal.signal(signal.SIGTERM, signal.SIG_IGN)
-			p.stop_asyncore()
-	signal.signal(signal.SIGINT, stop_process)
-	signal.signal(signal.SIGTERM, stop_process)
-
-	p.loop()
-	Logger.info("Gateway child process stopped")
-
 
 
 class ReverseProxy(asyncore.dispatcher):
@@ -133,7 +88,7 @@ class ReverseProxy(asyncore.dispatcher):
 		child_pipes = (p01, p00)
 		(s0, s1) = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
 
-		process = Process(target=connection_pool_process, args=(child_pipes, father_pipes, s1, self.ssl_ctx))
+		process = ConnectionPoolProcess(child_pipes, father_pipes, s1, self.ssl_ctx)
 		process.start()
 		child_pipes[0].close()
 		child_pipes[1].close()
