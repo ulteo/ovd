@@ -80,3 +80,8 @@ class Role(AbstractRole):
 
 	def getReporting(self, node):
 		pass
+
+
+	def finalize(self):
+		pass
+
