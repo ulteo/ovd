@@ -21,15 +21,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-from OpenSSL import SSL
+import os
 
 from ovd.Role.Role import Role as AbstractRole
 from ovd.Logger import Logger
 from Config import Config
 from ReverseProxy import ReverseProxy
 
-import asyncore
-import os
+from OpenSSL import SSL
 
 
 class Role(AbstractRole):
@@ -75,7 +74,7 @@ class Role(AbstractRole):
 		self.rproxy = ReverseProxy(self.ssl_ctx, gateway, sm, self.RDP_PORT)
 
 		self.status = Role.STATUS_RUNNING
-		asyncore.loop()
+		rproxy.loop()
 
 
 	def getReporting(self, node):

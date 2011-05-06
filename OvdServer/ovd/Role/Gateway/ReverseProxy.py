@@ -19,7 +19,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import asyncore
 from multiprocessing import Pipe
 import socket
 import threading
@@ -32,7 +31,7 @@ from ovd.Logger import Logger
 from passfd import sendfd
 
 
-class ReverseProxy(asyncore.dispatcher):
+class ReverseProxy():
 
 	def __init__(self, ssl_ctx, gateway, sm, rdp_port):
 		asyncore.dispatcher.__init__(self)
@@ -41,44 +40,52 @@ class ReverseProxy(asyncore.dispatcher):
 		self.ssl_ctx = ssl_ctx
 		self.rdp_port = rdp_port
 
+		self.sock = None
 		self.processes = {}
 
-		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.set_socket(sock)
-		self.set_reuse_addr()
-
 		try:
-			self.bind(gateway)
-		except:
-			Logger.error('Local Bind Error, Server at port %d is not ready' % gateway[1])
-			exit()
+                        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                        self.sock.bind((Config.address, Config.port))
+                        self.sock.listen(5)
+                except socket.error, e:
+                        Logger.error("Gateway:: socket init: %s" % e)
+			raise e
 
-		self.listen(5)
 		Logger.info('Gateway:: running on port %d' % gateway[1])
 
 
-	def handle_accept(self):
-		conn, peer = self.accept()
+        def loop(self):
 
-		s_unix = None
-		for pid, proc in self.processes.items():
-			proc = proc[0]
-			nb_conn = proc[1].send("nb_conn")
-			self.processes[pid][1] = nb_conn
-			if nb_conn < Config.max_connection:
-				s_unix = proc[2]
-				break
-		if s_unix is None:
-			if len(self.processes) < Config.max_process:
-				pid = self.create_process()
-				s_unix = self.processes[pid][0][2]
-			else:
-				best_proc = min(self.processes, key=lambda pid:self.processes[pid][1])
-				Logger.warn("Gateway service has reached the open connections limit")
-				s_unix = self.processes[best_proc][0][2]
+                while True:
+                        try:
+                                conn = self.sock.accept()[0]
+                        except socket.error, e:
+                                # common stop
+                                if e.errno is errno.EINVAL:
+                                        break
+                                else:
+                                        Logger.error("Gateway:: socket accept: %s" % e)
+                                        raise e
 
-		sendfd(s_unix, conn.fileno())
-		conn.close()
+                        s_unix = None
+                        for pid, proc in self.processes.items():
+                                proc = proc[0]
+                                nb_conn = proc[1].send("nb_conn")
+                                self.processes[pid][1] = nb_conn
+                                if nb_conn < Config.max_connection:
+                                        s_unix = proc[2]
+                                        break
+                        if s_unix is None:
+                                if len(self.processes) < Config.max_process:
+                                        pid = self.create_process()
+                                        s_unix = self.processes[pid][0][2]
+                                else:
+                                        best_proc = min(self.processes, key=lambda pid:self.processes[pid][1])
+                                        Logger.warn("Gateway service has reached the open connections limit")
+                                        s_unix = self.processes[best_proc][0][2]
+
+                        self.kill_mutex.release()
+                        conn.close()
 
 
 	def create_process(self):
@@ -110,6 +117,8 @@ class ReverseProxy(asyncore.dispatcher):
 
 
 	def close(self):
-		asyncore.dispatcher.close(self)
-		for pid in list(self.processes):
-			self.kill_process(pid)
+                if self.sock:
+                        self.sock.shutdown(socket.SHUT_RD)
+                        self.sock.close()
+                for pid in list(self.processes):
+                        self.kill_process(pid)
