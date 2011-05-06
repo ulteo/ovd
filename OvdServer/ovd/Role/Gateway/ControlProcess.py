@@ -19,48 +19,46 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import asyncore
-import threading
+from threading import Thread
 
 from TokenDatabase import digestToken, insertToken
 
 
-class ControlClassProcess():
+class ControlClassProcess(Thread):
 
 	def __init__(self, _class, pipes):
+		Thread.__init__(self)
 		self._class = _class
 		(self._pipe_s, self._pipe_m) = pipes
-		self.running = True
-
-		def control(pipe):
-			while True:
-				try:
-					cmd = pipe.recv()
-					if type(cmd) is type(""):
-						args = ()
-					elif type(cmd) is type(()):
-						args = cmd[1:]
-						cmd = cmd[0]
-					cmd = '_'+cmd
-					if hasattr(self, cmd):
-						attr = getattr(self, cmd)
-						pipe.send(attr(*args))
-					else:
-						pipe.send(None)
-				except (EOFError, IOError):
-					break
-
-		self.thread = threading.Thread(target=control, args=(self._pipe_s,))
-		self.thread.start()
 
 
-	def send(self, cmd):
-		self._pipe_m.send(cmd)
-		return self._pipe_m.recv()
+	def run(self):
+		while True:
+			try:
+				cmd = self._pipe_s.recv()
+				if type(cmd) is type(""):
+					args = ()
+				elif type(cmd) is type(()):
+					args = cmd[1:]
+					cmd = cmd[0]
+				cmd = '_'+cmd
+				if hasattr(self, cmd):
+					attr = getattr(self, cmd)
+					self._pipe_s.send(attr(*args))
+				else:
+					self._pipe_s.send(None)
+			except (EOFError, IOError):
+				break
 
 
 	def stop(self):
 		self._pipe_s.close()
 		self._pipe_m.close()
+
+
+	def send(self, cmd):
+		self._pipe_m.send(cmd)
+		return self._pipe_m.recv()
 
 
 

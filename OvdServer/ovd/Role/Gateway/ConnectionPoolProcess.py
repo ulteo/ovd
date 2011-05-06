@@ -43,6 +43,8 @@ class ConnectionPoolProcess():
 
 
 	def loop(self):
+		self.f_control.start()
+
 		while True:
 			try:
 				fd = recvfd(self.s_unix)[0]

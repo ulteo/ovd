@@ -139,6 +139,7 @@ class ReverseProxy(asyncore.dispatcher):
 		child_pipes[1].close()
 
 		control = ControlChildProcess(self, father_pipes)
+		control.start()
 
 		self.processes[process.pid] = [(process, control, s0), 0]
 		return process.pid
@@ -148,8 +149,8 @@ class ReverseProxy(asyncore.dispatcher):
 		p = self.processes.pop(pid)[0]
 		p[0].terminate()
 		p[1].stop()
-		if p[1].thread is not threading.current_thread():
-			p[1].thread.join()
+		if p[1] is not threading.current_thread():
+			p[1].join()
 		p[0].join()
 
 
