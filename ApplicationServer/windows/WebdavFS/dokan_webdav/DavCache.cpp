@@ -100,6 +100,7 @@ int DavCache::init(WebdavServer* server)
 		currentEntry->needExport = FALSE;
 		currentEntry->needImport = FALSE;
 		currentEntry->needRemove = FALSE;
+		currentEntry->handle = INVALID_HANDLE_VALUE;
 		currentEntry->remotePath[0] = '\0';
 		currentEntry->cachePath[0] = '\0';
 	}
@@ -136,6 +137,7 @@ void DavCache::clean()
 			currentEntry->needExport = FALSE;
 			currentEntry->needImport = FALSE;
 			currentEntry->needRemove = FALSE;
+			currentEntry->handle = INVALID_HANDLE_VALUE;
 			currentEntry->remotePath[0] = '\0';
 			currentEntry->cachePath[0] = '\0';
 		}
@@ -172,6 +174,7 @@ ULONG64 DavCache::add(WCHAR* path)
 	cache[cacheHandle].needExport = FALSE;
 	cache[cacheHandle].needImport = FALSE;
 	cache[cacheHandle].needRemove = FALSE;
+	cache[cacheHandle].handle = INVALID_HANDLE_VALUE;
 
 	wcscpy_s(cache[cacheHandle].remotePath, MAX_PATH, path);
 	swprintf_s(cache[cacheHandle].cachePath, MAX_PATH, L"%s\\%u", cacheDir, cacheHandle);
@@ -193,11 +196,10 @@ BOOL DavCache::remove(ULONG64 handle)
 	}
 	//TODO multithread operation
 	currentEntry = &cache[handle];
-	if (currentEntry->needRemove) {
-		if (!DeleteFile(currentEntry->cachePath)) {
-			DbgPrint(L"Error %u while deleting the file %s.\n", GetLastError(), currentEntry->cachePath);
-			ret = FALSE;
-		}
+	CloseHandle(currentEntry->handle);
+	if (!DeleteFile(currentEntry->cachePath)) {
+		DbgPrint(L"Error %u while deleting the file %s.\n", GetLastError(), currentEntry->cachePath);
+		ret = FALSE;
 	}
 
 	currentEntry->cachePath[0] = '\0';
@@ -206,6 +208,7 @@ BOOL DavCache::remove(ULONG64 handle)
 	currentEntry->needExport = FALSE;
 	currentEntry->needRemove = FALSE;
 	currentEntry->needImport = FALSE;
+	currentEntry->handle = INVALID_HANDLE_VALUE;
 
 	return ret;
 }

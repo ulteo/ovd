@@ -38,6 +38,7 @@ typedef struct _DAVCACHEENTRY
 	BOOLEAN needRemove;
 	WCHAR remotePath[MAX_PATH];
 	WCHAR cachePath[MAX_PATH];
+	HANDLE handle;
 } DAVCACHEENTRY, *PDAVCACHEENTRY;
 
 

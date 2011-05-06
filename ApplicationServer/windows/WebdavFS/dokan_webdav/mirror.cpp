@@ -189,6 +189,11 @@ MirrorCreateFile(
 		break;
 	}
 	DokanFileInfo->Context = (ULONG64)cacheHandle;
+	if (cacheHandle != INVALID_CACHE_HANDLE) {
+		cacheEntry = davCache->getFromHandle(cacheHandle);
+		cacheEntry->handle = CreateFile(cacheEntry->cachePath, AccessMode, ShareMode, NULL, CreationDisposition, FlagsAndAttributes, NULL);
+	}
+
 	return -1 * result;
 }
 
@@ -244,17 +249,18 @@ MirrorCloseFile(
 	PDOKAN_FILE_INFO		DokanFileInfo)
 {
 	UNREFERENCED_PARAMETER(FileName);
-	UNREFERENCED_PARAMETER(DokanFileInfo);
 
 	DAVCACHEENTRY* cacheEntry = NULL;
 	ULONG64 cacheHandle = DokanFileInfo->Context;
-	BOOL res = FALSE;
 
 	cacheEntry = davCache->getFromHandle(cacheHandle);
 	if (cacheEntry != NULL ) {
 		if (cacheEntry->needExport) {
-			res = server->exportPath(cacheEntry->remotePath, cacheEntry->cachePath);
-			if (!res) {
+
+			if (cacheEntry->handle != INVALID_HANDLE_VALUE)
+				CloseHandle(cacheEntry->handle);
+
+			if (FAILED(server->exportPath(cacheEntry->remotePath, cacheEntry->cachePath))) {
 				DbgPrint(L"Error while exporting the file %s\n", cacheEntry->remotePath);
 				return -1;
 			}
@@ -384,47 +390,50 @@ MirrorWriteFile(
 
 	if (cacheEntry->needImport == TRUE) {
 		cacheEntry->needImport = FALSE;
+
+		if (cacheEntry->handle != INVALID_HANDLE_VALUE) {
+			CloseHandle(cacheEntry->handle);
+			cacheEntry->handle = INVALID_HANDLE_VALUE;
+		}
+
 		if (FAILED(server->importURL(cacheEntry->remotePath, cacheEntry->cachePath))) {
 			DbgPrint(L"Unable to add %s to local cache, Error while importing the file\n", cacheEntry->remotePath);
 			return -1;
 		}
-		createDisposition = CREATE_ALWAYS;
+		createDisposition = OPEN_EXISTING;
 	}
 
 	cacheEntry->needRemove = TRUE;
-	handle = CreateFile(cacheEntry->cachePath, GENERIC_WRITE, 0, NULL, createDisposition, FILE_ATTRIBUTE_NORMAL, NULL);
-
-	if (handle == INVALID_HANDLE_VALUE) {
-		DbgPrint(L"CreateFile error : %u\n", GetLastError());
-		return ~GetLastError();
+	if (cacheEntry->handle == INVALID_HANDLE_VALUE) {
+		cacheEntry->handle = CreateFile(cacheEntry->cachePath, GENERIC_WRITE |GENERIC_READ, FILE_SHARE_READ |FILE_SHARE_WRITE, NULL, createDisposition, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (cacheEntry->handle == INVALID_HANDLE_VALUE) {
+			DbgPrint(L"CreateFile error : %u\n", GetLastError());
+			return ~GetLastError();
+		}
 	}
 
+	handle = cacheEntry->handle;
 	if (DokanFileInfo->WriteToEndOfFile) {
 		if (SetFilePointer(handle, 0, NULL, FILE_END) == INVALID_SET_FILE_POINTER) {
 			DbgPrint(L"seek error, offset = EOF, error = %u\n", GetLastError());
-			CloseHandle(handle);
 			return -1;
 		}
 	}
 	else if (SetFilePointer(handle, offset, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER) {
 		DbgPrint(L"seek error, offset = %d, error = %u\n", offset, GetLastError());
-		CloseHandle(handle);
 		return -1;
 	}
 
 	res = WriteFile(handle, Buffer, NumberOfBytesToWrite, NumberOfBytesWritten, NULL); 
 	if (res == FALSE) {
 		DbgPrint(L"write error = %u, buffer length = %d, write length = %d\n",	GetLastError(), NumberOfBytesToWrite, *NumberOfBytesWritten);
-		CloseHandle(handle);
 		return -1;
 
 	} else {
 		DbgPrint(L"\twrite %d, offset %d %d %i\n\n", *NumberOfBytesWritten, offset, NumberOfBytesToWrite,GetLastError());
 	}
 	cacheEntry->needRemove = TRUE;
-	FlushFileBuffers(handle);
-	CloseHandle(handle);
-	DokanFileInfo->Context = cacheHandle;
+
 	return 0;
 }
 
@@ -440,8 +449,8 @@ MirrorGetFileInformation(
 	LARGE_INTEGER file_size;
 	FILETIME* time;
 	DWORD result;
-
-	UNREFERENCED_PARAMETER(DokanFileInfo);
+	ULONG64 cacheHandle = DokanFileInfo->Context;
+	DAVCACHEENTRY* cacheEntry = NULL;
 
 	GetFilePath(FileName, filePath);
 	DbgPrint(L"MirrorGetFileInformation on %s\n", filePath);
@@ -479,6 +488,17 @@ MirrorGetFileInformation(
 	if (file_size.QuadPart != 0) {
 		HandleFileInformation->nFileSizeHigh = file_size.HighPart;
 		HandleFileInformation->nFileSizeLow = file_size.LowPart;
+	}
+
+	cacheEntry = davCache->getFromHandle(cacheHandle);
+	if (cacheEntry != NULL) {
+		if (cacheEntry->handle != INVALID_HANDLE_VALUE) {
+			GetFileSizeEx(cacheEntry->handle, &file_size);
+			if (file_size.QuadPart != 0){
+				HandleFileInformation->nFileSizeHigh = file_size.HighPart;
+				HandleFileInformation->nFileSizeLow = file_size.LowPart;
+			}
+		}
 	}
 
 	time = entry.getCreationTime();
@@ -702,9 +722,50 @@ MirrorSetEndOfFile(
 	LONGLONG			ByteOffset,
 	PDOKAN_FILE_INFO	DokanFileInfo)
 {
-	UNREFERENCED_PARAMETER(FileName);
-	UNREFERENCED_PARAMETER(ByteOffset);
-	UNREFERENCED_PARAMETER(DokanFileInfo);
+	ULONG64 cacheHandle = DokanFileInfo->Context;
+	DAVCACHEENTRY* cacheEntry = NULL;
+	HANDLE handle;
+	WCHAR filePath[MAX_PATH];
+	LARGE_INTEGER	offset;
+
+	GetFilePath(FileName, filePath);
+	DbgPrint(L"SetEndOfFile %s, %I64d\n", filePath, ByteOffset);
+
+	handle = (HANDLE)DokanFileInfo->Context;
+	cacheEntry = davCache->getFromHandle(cacheHandle);
+	if (cacheEntry != NULL) {
+		if (cacheEntry->needImport == TRUE) {
+			cacheEntry->needImport = FALSE;
+
+			if (cacheEntry->handle != INVALID_HANDLE_VALUE) {
+				CloseHandle(cacheEntry->handle);
+				cacheEntry->handle = INVALID_HANDLE_VALUE;
+			}
+
+			if (FAILED(server->importURL(cacheEntry->remotePath, cacheEntry->cachePath))) {
+				DbgPrint(L"Unable to add %s to local cache, Error while importing the file\n", cacheEntry->remotePath);
+				return -1;
+			}
+		}
+		if (cacheEntry->handle == INVALID_HANDLE_VALUE) {
+			cacheEntry->handle = CreateFile(cacheEntry->cachePath, GENERIC_WRITE |GENERIC_READ, FILE_SHARE_READ |FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+			if (cacheEntry->handle == INVALID_HANDLE_VALUE) {
+				DbgPrint(L"CreateFile error : %u\n", GetLastError());
+				return ~GetLastError();
+			}
+		}
+		offset.QuadPart = ByteOffset;
+		if (!SetFilePointerEx(cacheEntry->handle, offset, NULL, FILE_BEGIN)) {
+			DbgPrint(L"\tSetFilePointer error: %d, offset = %I64d\n\n", GetLastError(), ByteOffset);
+			return GetLastError() * -1;
+		}
+
+		if (!SetEndOfFile(cacheEntry->handle)) {
+			DWORD error = GetLastError();
+			DbgPrint(L"\terror code = %d\n\n", error);
+			return error * -1;
+		}
+	}
 	return ERROR_SUCCESS;
 }
 
