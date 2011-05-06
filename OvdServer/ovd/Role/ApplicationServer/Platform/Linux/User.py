@@ -67,7 +67,6 @@ class User(AbstractUser):
 		
 		retry = 5
 	        while retry !=0:
-			print "on try"
 		        if retry < 0:
 		                Logger.error("ERROR: unable to add a new user")
 		        lock.acquire()
