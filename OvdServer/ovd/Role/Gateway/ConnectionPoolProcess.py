@@ -63,20 +63,17 @@ class ConnectionPoolProcess():
 			ssl_conn = SSL.Connection(self.sm[1], sock)
 			ssl_conn.set_accept_state()
 			ProtocolDetectDispatcher(ssl_conn, self.f_control, self.sm, self.rdp_port)
-			self.reload_asyncore()
+
+			# reload asyncore if stopped
+                        if self.t_asyncore is None or not self.t_asyncore.is_alive():
+                                # timeout needed for more SSL layer reactivity
+                                self.t_asyncore = threading.Thread(target=lambda:asyncore.loop(timeout=0.01))
+                                self.t_asyncore.start()
 
 
 	def is_sleeping(self):
 		return not self.t_asyncore.is_alive()
 
-
-	def reload_asyncore(self):
-		def asyncore_loop():
-			asyncore.loop(timeout=0.01)
-			# timeout needed for more SSL layer reactivity
-		if self.t_asyncore is None or not self.t_asyncore.is_alive():
-			self.t_asyncore = threading.Thread(target=asyncore_loop)
-			self.t_asyncore.start()
 
 
 	def stop_asyncore(self):
