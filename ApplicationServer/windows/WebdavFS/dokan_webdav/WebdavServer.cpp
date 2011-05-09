@@ -187,6 +187,7 @@ HRESULT WebdavServer::touch(WCHAR* path) {
 		return -1;
 	}
 
+	req.send(NULL, 0, 0);
 	result = req.getWinStatus();
 	req.close();
 

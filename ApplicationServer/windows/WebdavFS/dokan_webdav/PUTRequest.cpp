@@ -51,11 +51,10 @@ HRESULT PUTRequest::perform() {
 
 
 HRESULT PUTRequest::send(LPVOID buffer, DWORD bufferLength, LPDWORD writted) {
-	if (! buffer)
-		return E_INVALIDARG;
-
-	if (! WinHttpWriteData( this->hRequest, (LPVOID)buffer, bufferLength, writted))
-		return E_FAIL;
+	if (buffer) {
+		if (! WinHttpWriteData( this->hRequest, (LPVOID)buffer, bufferLength, writted))
+			return E_FAIL;
+	}
 
 	WinHttpReceiveResponse(this->hRequest, NULL);
 	this->updateStatus();
