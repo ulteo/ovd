@@ -293,9 +293,9 @@ MirrorReadFile(
 	PDOKAN_FILE_INFO	DokanFileInfo)
 {
 	WCHAR filePath[MAX_PATH];
-	DWORD result;
-
-	UNREFERENCED_PARAMETER(DokanFileInfo);
+	ULONG64 cacheHandle = DokanFileInfo->Context;
+	DAVCACHEENTRY* cacheEntry = NULL;
+	ULONG offset = (ULONG)Offset;
 
 	DbgPrint(L"read file %s\n", FileName);
 	DbgPrint(L"BufferLength : %i\n", BufferLength);
@@ -312,30 +312,48 @@ MirrorReadFile(
 	GetFilePath(FileName, filePath);
 	DbgPrint(L"MirrorReadFile on %ls\n", filePath);
 	DbgPrint(L"ReadFile : %s\n", filePath);
+
+	cacheEntry = davCache->getFromHandle(cacheHandle);
+	if (cacheEntry == NULL) {
+		DbgPrint(L"Entry returned by the cache is invalid\n");
+		return ERROR_INVALID_PARAMETER;
+	}
 	
-	GETRequest req(filePath, Offset, BufferLength);
-	if (FAILED(server->sendRequest(req))) {
-		DbgPrint(L"MirrorReadFile, failed to send the request\n");
-		return -1;
+	if (cacheEntry->needImport == TRUE) {
+		cacheEntry->needImport = FALSE;
+
+		if (cacheEntry->handle != INVALID_HANDLE_VALUE) {
+			CloseHandle(cacheEntry->handle);
+			cacheEntry->handle = INVALID_HANDLE_VALUE;
+		}
+
+		if (FAILED(server->importURL(cacheEntry->remotePath, cacheEntry->cachePath))) {
+			DbgPrint(L"Unable to add %s to local cache, Error while importing the file\n", cacheEntry->remotePath);
+			return E_FAIL;
+		}
 	}
 
-	result = req.getWinStatus();
-	if (result == ERROR_MORE_DATA) {
-		*ReadLength = 0;
-		req.close();
-		return  ERROR_SUCCESS;
+	if (cacheEntry->handle == INVALID_HANDLE_VALUE) {
+		cacheEntry->handle = CreateFile(cacheEntry->cachePath, GENERIC_WRITE |GENERIC_READ, FILE_SHARE_READ |FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (cacheEntry->handle == INVALID_HANDLE_VALUE) {
+			DbgPrint(L"CreateFile error : %u\n", GetLastError());
+			return -1 * GetLastError();
+		}
 	}
 
-	if (FAILED(req.get(ReadLength, Buffer))) {
-		DbgPrint(L"MirrorReadFile, failed to get file content\n");
+	if (SetFilePointer(cacheEntry->handle, offset, NULL, FILE_BEGIN) == 0xFFFFFFFF) {
+		DbgPrint(L"\tseek error, offset = %d\n\n", offset);
+		return -1 * GetLastError();
 	}
 
-	req.close();
+	
+	if (!ReadFile(cacheEntry->handle, Buffer, BufferLength, ReadLength, NULL)) {
+		DbgPrint(L"Unable to read information: %u\n", GetLastError());
+		return -1 * GetLastError();
+	}
+	DbgPrint(L"ReadLength %i\n", *ReadLength);
 
-	if (*ReadLength > BufferLength)
-		*ReadLength = BufferLength;
-
-	return  -1 * result;
+	return  ERROR_SUCCESS;
 }
 
 
