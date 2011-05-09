@@ -842,11 +842,15 @@ MirrorGetVolumeInformation(
         PDOKAN_FILE_INFO        DokanFileInfo)
 {
 	UNREFERENCED_PARAMETER(DokanFileInfo);
-	UNREFERENCED_PARAMETER(FileSystemFlags);
 	UNREFERENCED_PARAMETER(VolumeSerialNumber);
 
 	wcscpy_s(VolumeNameBuffer, VolumeNameSize / sizeof(WCHAR), L"Ulteo Webdav FS");
 	*MaximumComponentLength = 256;
+	*FileSystemFlags = FILE_CASE_SENSITIVE_SEARCH | 
+						FILE_CASE_PRESERVED_NAMES | 
+						FILE_SUPPORTS_REMOTE_STORAGE |
+						FILE_UNICODE_ON_DISK |
+						FILE_PERSISTENT_ACLS;
 	wcscpy_s(FileSystemNameBuffer, FileSystemNameSize / sizeof(WCHAR), L"Ulteo Webdav FS");
 
 	return 0;
