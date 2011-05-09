@@ -68,11 +68,11 @@ class SSLCommunicator(Communicator):
 	def handle_read(self):
 		try:
 			Communicator.handle_read(self)
-		except SSL.SysCallError, e:
+		except SSL.SysCallError:
 			self.handle_close()
-		except SSL.ZeroReturnError, e:
+		except SSL.ZeroReturnError:
 			self.close()
-		except SSL.WantReadError, e:
+		except SSL.WantReadError:
 			return -1
 
 
