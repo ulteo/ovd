@@ -125,17 +125,14 @@ class SessionManagerCommunicator(SSLCommunicator, ServerCommunicator):
 
 
 class ClientCommunicator(SSLCommunicator):
-
-	def __init__(self, conn, req):
-		SSLCommunicator.__init__(self, conn)
-		self._buffer = req
+	pass
 
 
 
 class ClientCommunicatorRewriter(ClientCommunicator):
 
-	def __init__(self, conn, req, f_ctrl):
-		ClientCommunicator.__init__(self, conn, req)
+	def __init__(self, conn, f_ctrl):
+		ClientCommunicator.__init__(self, conn)
 		self.hasRewrited = False
 		self.f_ctrl = f_ctrl
 
