@@ -60,22 +60,10 @@ class receiverXMLRewriter(receiver):
 			return True
 
 		xml = self.session_ptn.search(self.communicator._buffer)
-		if not xml:
-			return False
+		if xml:
+			self.rewriteXML(xml)
+		return bool(xml)
 
-		xml_length_before = len(self.communicator._buffer)
-		newxml = self.rewriteXML(xml.group())
-		self.communicator._buffer = self.session_ptn.sub(newxml, self.communicator._buffer, count=1)
-		xml_length_after = len(self.communicator._buffer)
-
-		content_lenght = receiverXMLRewriter.contentlen_ptn.search(self.communicator._buffer)
-		if content_lenght:
-			new_content_length = int(content_lenght.group(1)) + xml_length_after - xml_length_before
-			self.communicator._buffer = receiverXMLRewriter.contentlen_ptn.sub( \
-				"Content-Length: %d" % new_content_length, self.communicator._buffer, count=1)
-
-		self.hasRewrited = True
-		return True
 
 
 	def rewriteXML(self, xml):
@@ -88,7 +76,9 @@ class receiverXMLRewriter(receiver):
 			rootnode.attrib["message"] = msg
 			return parser.tostring(rootnode)
 
-		xml = parser.XML(xml)
+		xml_length_before = len(self.communicator._buffer)
+
+		xml = parser.XML(xml.group())
 		if xml.tag.upper() == "SESSION" and xml.findall("server") and xml.findall("user"):
 			for element in xml.getiterator():
 				if element.tag.upper() == "SESSION":
@@ -100,6 +90,17 @@ class receiverXMLRewriter(receiver):
 							node.attrib["token"] = self.f_ctrl.send(cmd)
 							del node.attrib["fqdn"]
 					break
-			return parser.tostring(xml)
+			newxml = parser.tostring(xml)
 		else:
-			return getXMLError("Gateway failed to produce XML replacement")
+			newxml = getXMLError("Gateway failed to produce XML replacement")
+
+		self.communicator._buffer = self.session_ptn.sub(newxml, self.communicator._buffer, count=1)
+
+		xml_length_after = len(self.communicator._buffer)
+		content_lenght = receiverXMLRewriter.contentlen_ptn.search(self.communicator._buffer)
+		if content_lenght:
+			new_content_length = int(content_lenght.group(1)) + xml_length_after - xml_length_before
+			self.communicator._buffer = receiverXMLRewriter.contentlen_ptn.sub( \
+				"Content-Length: %d" % new_content_length, self.communicator._buffer, count=1)
+
+		self.hasRewrited = True
