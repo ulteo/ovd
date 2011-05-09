@@ -24,8 +24,7 @@ import re
 
 from Communicator import SSLCommunicator
 from ovd.Logger import Logger
-from Communicator import \
-	ClientCommunicator, ClientCommunicatorRewriter, \
+from Communicator import ClientCommunicator, \
 	OvdServerCommunicator, SessionManagerCommunicator
 
 
@@ -51,7 +50,10 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 		if SSLCommunicator.handle_read(self) is -1:
 			return
 
-		request = self._buffer.split('\n', 1)[0]
+		client = ClientCommunicator(self.socket)
+		client._buffer = self._buffer
+
+		request = client._buffer.split('\n', 1)[0]
 		request = request.rstrip('\n\r').decode("utf-8", "replace")
 
 		# find protocol
@@ -65,7 +67,6 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 				fqdn = self.f_ctrl.send(("digest_token", token))
 				if not fqdn:
 					raise Exception('token authorization failed for: ' + token)
-				client = ClientCommunicator(self.socket)
 				server = OvdServerCommunicator((fqdn, self.rdp_port), communicator=client)
 
 			# HTTP case
@@ -75,18 +76,14 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 
 				if not (path == '/ovd' or path.startswith("/ovd/")):
 					raise Exception('wrong HTTP path: ' + path)
-
 				if path == "/ovd/client/start.php":
-					client = ClientCommunicatorRewriter(self.socket, self.f_ctrl)
-				else:
-					client = ClientCommunicator(self.socket)
+					client.set_rewrite_xml(self.f_ctrl)
 				server = SessionManagerCommunicator(self.sm, communicator=client)
 
 			# protocol error
 			else:
 				raise Exception('bad first request line: ' + request)
 
-			client._buffer = self._buffer
 			client.set_communicator(server)
 
 		except Exception, err:

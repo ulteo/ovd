@@ -125,24 +125,23 @@ class SessionManagerCommunicator(SSLCommunicator, ServerCommunicator):
 
 
 class ClientCommunicator(SSLCommunicator):
-	pass
 
-
-
-class ClientCommunicatorRewriter(ClientCommunicator):
-
-	def __init__(self, conn, f_ctrl):
-		ClientCommunicator.__init__(self, conn)
+	def __init__(self, conn=None):
+		SSLCommunicator.__init__(self, conn)
 		self.hasRewrited = False
+		self.f_ctrl = None
+
+
+	def set_rewrite_xml(self, f_ctrl):
 		self.f_ctrl = f_ctrl
 
 
 	def writable(self):
-		if len(self.communicator._buffer) == 0:
+		if SSLCommunicator.writable(self):
+			if self.hasRewrited or not bool(self.f_ctrl):
+				return True
+		else:
 			return False
-
-		if self.hasRewrited:
-			return True
 
 		if XML.response_ptn.search(self.communicator._buffer):
 			self.hasRewrited = True
