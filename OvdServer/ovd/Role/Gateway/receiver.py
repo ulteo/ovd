@@ -27,26 +27,6 @@ from Communicator import SSLCommunicator
 from ovd.Logger import Logger
 
 
-xmlError = {
-	500 : "Gateway XML parsing failed",
-	501 : "Gateway failed to produce XML replacement",
-	-1 : "error message unknown",
-}
-
-
-def getXMLError(id):
-	rootnode = parser.Element("error")
-	rootnode.attrib["id"] = str(id)
-	try:
-		msg = xmlError[id]
-	except:
-		msg = xmlError[-1]
-	Logger.error(msg)
-	rootnode.attrib["message"] = msg
-	return parser.tostring(rootnode)
-
-
-
 class receiver(SSLCommunicator):
 
 	def __init__(self, conn, req):
@@ -100,22 +80,26 @@ class receiverXMLRewriter(receiver):
 
 	def rewriteXML(self, xml):
 		Logger.debug('receiverXMLRewriter::rewriteXML')
-		try:
-			xml = parser.XML(xml)
-			if xml.tag.upper() == "SESSION" and xml.findall("server") and xml.findall("user"):
-				for element in xml.getiterator():
-					if element.tag.upper() == "SESSION":
-						element.attrib["mode_gateway"] = "on"
-						subNodes = element.getchildren()
-						for node in subNodes:
-							if node.tag.upper() == "SERVER":
-								cmd = ('insert_token', node.attrib["fqdn"])
-								node.attrib["token"] = self.f_ctrl.send(cmd)
-								del node.attrib["fqdn"]
-						break
-				return parser.tostring(xml)
-			else:
-				return getXMLError(501)
-		except Exception, e:
-			print e
-			return getXMLError(500)
+
+		def getXMLError(msg):
+			rootnode = parser.Element("error")
+			rootnode.attrib["id"] = str(id)
+			Logger.error(msg)
+			rootnode.attrib["message"] = msg
+			return parser.tostring(rootnode)
+
+		xml = parser.XML(xml)
+		if xml.tag.upper() == "SESSION" and xml.findall("server") and xml.findall("user"):
+			for element in xml.getiterator():
+				if element.tag.upper() == "SESSION":
+					element.attrib["mode_gateway"] = "on"
+					subNodes = element.getchildren()
+					for node in subNodes:
+						if node.tag.upper() == "SERVER":
+							cmd = ('insert_token', node.attrib["fqdn"])
+							node.attrib["token"] = self.f_ctrl.send(cmd)
+							del node.attrib["fqdn"]
+					break
+			return parser.tostring(xml)
+		else:
+			return getXMLError("Gateway failed to produce XML replacement")
