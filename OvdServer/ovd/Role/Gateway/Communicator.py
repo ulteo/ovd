@@ -37,6 +37,10 @@ class Communicator(asyncore.dispatcher):
 		self._buffer = ''
 
 
+	def set_communicator(self, communicator):
+		self.communicator = communicator
+
+
 	def handle_read(self):
 		self._buffer += self.recv(8192)
 
@@ -87,10 +91,9 @@ class SSLCommunicator(Communicator):
 
 class ServerCommunicator(Communicator):
 
-	def __init__(self, remote, comm):
+	def __init__(self, remote, communicator=None):
 		Communicator.__init__(self)
-		self.communicator = comm
-		comm.communicator = self
+		self.communicator = communicator
 
 		self.set_socket(self.make_socket())
 		try:
@@ -111,9 +114,9 @@ class OvdServerCommunicator(ServerCommunicator):
 
 class SessionManagerCommunicator(SSLCommunicator, ServerCommunicator):
 
-	def __init__(self, remote, communicator):
+	def __init__(self, remote, communicator=None):
 		(sm, self.ssl_ctx) = remote
-		ServerCommunicator.__init__(self, sm, communicator)
+		ServerCommunicator.__init__(self, sm, communicator=communicator)
 
 
 	def make_socket(self):
