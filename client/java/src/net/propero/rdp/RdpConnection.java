@@ -462,7 +462,6 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.RdpLayer = new Rdp5(channels, this.opt, this.common);
 		this.common.rdp = this.RdpLayer;
 		this.RdpLayer.registerDrawingSurface(this.canvas);
-		this.canvas.registerCommLayer(this.RdpLayer);
 		this.opt.loggedon = false;
 		this.opt.readytosend = false;
 		this.opt.grab_keyboard = false;
