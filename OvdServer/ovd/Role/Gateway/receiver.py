@@ -57,13 +57,15 @@ class receiver(SSLCommunicator):
 
 class receiverXMLRewriter(receiver):
 
+	response_ptn = re.compile("<response.+\/>", re.I | re.U)
+	session_ptn  = re.compile("<session .*>.+<\/session>", re.I | re.U)
+	contentlen_ptn = re.compile("Content-Length: ([0-9]+)", re.I | re.U)
+
+
 	def __init__(self, conn, req, f_ctrl):
 		receiver.__init__(self, conn, req)
 		self.hasRewrited = False
 		self.f_ctrl = f_ctrl
-
-		self.response_ptn = re.compile("<response.+\/>", re.I | re.U)
-		self.session_ptn  = re.compile("<session .*>.+<\/session>", re.I | re.U)
 
 
 	def writable(self):
@@ -86,11 +88,11 @@ class receiverXMLRewriter(receiver):
 		self.communicator._buffer = self.session_ptn.sub(newxml, self.communicator._buffer, count=1)
 		xml_length_after = len(self.communicator._buffer)
 
-		pattern = re.compile("Content-Length: ([0-9]+)", re.I | re.U)
-		content_lenght = pattern.search(self.communicator._buffer)
+		content_lenght = receiverXMLRewriter.contentlen_ptn.search(self.communicator._buffer)
 		if content_lenght:
 			new_content_length = int(content_lenght.group(1)) + xml_length_after - xml_length_before
-			self.communicator._buffer = pattern.sub("Content-Length: %d" % new_content_length, self.communicator._buffer, count=1)
+			self.communicator._buffer = receiverXMLRewriter.contentlen_ptn.sub( \
+				"Content-Length: %d" % new_content_length, self.communicator._buffer, count=1)
 
 		self.hasRewrited = True
 		return True
