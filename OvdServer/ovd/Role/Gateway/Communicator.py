@@ -24,6 +24,7 @@ import asyncore
 import socket
 
 from ovd.Logger import Logger
+import XML
 
 from OpenSSL import SSL
 
@@ -99,4 +100,56 @@ class ServerCommunicator(Communicator):
 
 
 	def make_socket(self):
-		raise NotImplementedError()
+		return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+
+
+class OvdServerCommunicator(ServerCommunicator):
+	pass
+
+
+
+class SessionManagerCommunicator(SSLCommunicator, ServerCommunicator):
+
+	def __init__(self, remote, communicator):
+		(sm, self.ssl_ctx) = remote
+		ServerCommunicator.__init__(self, sm, communicator)
+
+
+	def make_socket(self):
+		return SSL.Connection(self.ssl_ctx, ServerCommunicator.make_socket(self))
+
+
+
+class ClientCommunicator(SSLCommunicator):
+
+	def __init__(self, conn, req):
+		SSLCommunicator.__init__(self, conn)
+		self._buffer = req
+
+
+
+class ClientCommunicatorRewriter(ClientCommunicator):
+
+	def __init__(self, conn, req, f_ctrl):
+		ClientCommunicator.__init__(self, conn, req)
+		self.hasRewrited = False
+		self.f_ctrl = f_ctrl
+
+
+	def writable(self):
+		if len(self.communicator._buffer) == 0:
+			return False
+
+		if self.hasRewrited:
+			return True
+
+		if XML.response_ptn.search(self.communicator._buffer):
+			self.hasRewrited = True
+			return True
+
+		xml = XML.session_ptn.search(self.communicator._buffer)
+		if xml:
+			self.communicator._buffer = XML.rewrite(self.communicator._buffer, xml, self.f_ctrl)
+			self.hasRewrited = True
+		return bool(xml)
