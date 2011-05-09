@@ -20,83 +20,25 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-from OpenSSL import SSL
-
-import asyncore
 import socket
 
-from ovd.Logger import Logger
+from Communicator import ServerCommunicator, SSLCommunicator
+
+from OpenSSL import SSL
 
 
-class sender(asyncore.dispatcher):
-
-	def __init__(self, remote, receiver):
-		asyncore.dispatcher.__init__(self)
-		self.receiver = receiver
-		receiver.sender = self
-
-		self.set_socket(self.make_socket())
-		try:
-			self.connect(remote)
-		except Exception:
-			Logger.error('%s:: socket connection failed' % self.__class__.__name__)
-
+class sender(ServerCommunicator):
 
 	def make_socket(self):
 		return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
-	def handle_read(self):
-		read = self.recv(8192)
-		self.receiver.to_remote_buffer += read
 
-
-	def writable(self):
-		return len(self.receiver.from_remote_buffer) > 0
-
-
-	def handle_write(self):
-		sent = self.send(self.receiver.from_remote_buffer)
-		self.receiver.from_remote_buffer = self.receiver.from_remote_buffer[sent:]
-
-
-	def handle_close(self):
-		self.close()
-		if self.receiver:
-			self.receiver.close()
-
-
-
-class senderHTTP(sender):
+class senderHTTP(SSLCommunicator, sender):
 
 	def __init__(self, remote, receiver):
-		sm, self.ssl_ctx = remote
+		(sm, self.ssl_ctx) = remote
 		sender.__init__(self, sm, receiver)
-
-
-	def readable(self):
-		# hack to support SSL layer
-		while self.socket.pending() > 0:
-			self.handle_read_event()
-		return True
-
-
-	def handle_read(self):
-		try:
-			sender.handle_read(self)
-		except SSL.SysCallError:
-			self.handle_close()
-		except SSL.ZeroReturnError:
-			self.close()
-		except SSL.WantReadError:
-			pass
-
-
-	def handle_write(self):
-		try:
-			sender.handle_write(self)
-		except SSL.WantWriteError:
-			pass
 
 
 	def make_socket(self):

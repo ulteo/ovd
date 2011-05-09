@@ -20,33 +20,24 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import asyncore
 import re
 
+from Communicator import SSLCommunicator
 from ovd.Logger import Logger
 from receiver import receiver, receiverXMLRewriter
 from sender import sender, senderHTTP
 
-from OpenSSL import SSL
 
-
-class ProtocolDetectDispatcher(asyncore.dispatcher):
+class ProtocolDetectDispatcher(SSLCommunicator):
 
 	rdp_ptn = re.compile('\x03\x00.*Cookie: .*token=([\-\w]+);.*')
 	http_ptn = re.compile('((?:HEAD)|(?:GET)|(?:POST)) (.*) HTTP/(.\..)')
 
 	def __init__(self, conn, f_ctrl, sm, rdp_port):
-		asyncore.dispatcher.__init__(self, conn)
+		SSLCommunicator.__init__(self, conn)
 		self.f_ctrl = f_ctrl
 		self.sm = sm
 		self.rdp_port = rdp_port
-
-
-	def readable(self):
-		# hack to support SSL layer
-		if self.socket.pending() > 0:
-			self.handle_read_event()
-		return True
 
 
 	def writable(self):
@@ -56,18 +47,10 @@ class ProtocolDetectDispatcher(asyncore.dispatcher):
 
 
 	def handle_read(self):
-		try:
-			r = self.recv(4096)
-		except SSL.SysCallError:
-			Logger.debug3("ProtocolDetectDispatcher::handle_read SSL.SysCallError")
-			self.handle_close()
-		except SSL.ZeroReturnError:
-			Logger.debug3("ProtocolDetectDispatcher::handle_read SSL.ZeroReturnError")
-			self.close()
-		except SSL.WantReadError:
+		if SSLCommunicator.handle_read(self) is -1:
 			return
 
-		request = r.split('\n', 1)[0]
+		request = self._buffer.split('\n', 1)[0]
 		request = request.rstrip('\n\r').decode("utf-8", "replace")
 
 		# find protocol
@@ -81,7 +64,7 @@ class ProtocolDetectDispatcher(asyncore.dispatcher):
 				fqdn = self.f_ctrl.send(("digest_token", token))
 				if not fqdn:
 					raise Exception('token authorization failed for: ' + token)
-				sender((fqdn, self.rdp_port), receiver(self.socket, r))
+				sender((fqdn, self.rdp_port), receiver(self.socket, self._buffer))
 
 			# HTTP case
 			elif http:
@@ -92,9 +75,9 @@ class ProtocolDetectDispatcher(asyncore.dispatcher):
 					raise Exception('wrong HTTP path: ' + path)
 
 				if path == "/ovd/client/start.php":
-					rec = receiverXMLRewriter(self.socket, r, self.f_ctrl)
+					rec = receiverXMLRewriter(self.socket, self._buffer, self.f_ctrl)
 				else:
-					rec = receiver(self.socket, r)
+					rec = receiver(self.socket, self._buffer)
 				senderHTTP(self.sm, rec)
 
 			# protocol error

@@ -20,12 +20,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-from OpenSSL import SSL
-
-import asyncore
 import re
 import xml.etree.ElementTree as parser
 
+from Communicator import SSLCommunicator
 from ovd.Logger import Logger
 
 
@@ -49,43 +47,11 @@ def getXMLError(id):
 
 
 
-class receiver(asyncore.dispatcher):
+class receiver(SSLCommunicator):
 
 	def __init__(self, conn, req):
-		asyncore.dispatcher.__init__(self, conn)
-		self.to_remote_buffer = ''
-		self.from_remote_buffer = req
-		self.sender = None
-
-
-	def handle_read(self):
-		try:
-			read = self.recv(8192)
-			self.from_remote_buffer += read
-		except SSL.SysCallError:
-			self.handle_close()
-		except SSL.ZeroReturnError:
-			self.close()
-		except SSL.WantReadError:
-			pass
-
-
-	def writable(self):
-		return len(self.to_remote_buffer) > 0
-
-
-	def handle_write(self):
-		try:
-			sent = self.send(self.to_remote_buffer)
-			self.to_remote_buffer = self.to_remote_buffer[sent:]
-		except SSL.WantWriteError:
-			pass
-
-
-	def handle_close(self):
-		self.close()
-		if self.sender:
-			self.sender.close()
+		SSLCommunicator.__init__(self, conn)
+		self._buffer = req
 
 
 
@@ -101,30 +67,30 @@ class receiverXMLRewriter(receiver):
 
 
 	def writable(self):
-		if len(self.to_remote_buffer) == 0:
+		if len(self.communicator._buffer) == 0:
 			return False
 
 		if self.hasRewrited:
 			return True
 
-		if self.response_ptn.search(self.to_remote_buffer):
+		if self.response_ptn.search(self.communicator._buffer):
 			self.hasRewrited = True
 			return True
 
-		xml = self.session_ptn.search(self.to_remote_buffer)
+		xml = self.session_ptn.search(self.communicator._buffer)
 		if not xml:
 			return False
 
-		xml_length_before = len(self.to_remote_buffer)
+		xml_length_before = len(self.communicator._buffer)
 		newxml = self.rewriteXML(xml.group())
-		self.to_remote_buffer = self.session_ptn.sub(newxml, self.to_remote_buffer, count=1)
-		xml_length_after = len(self.to_remote_buffer)
+		self.communicator._buffer = self.session_ptn.sub(newxml, self.communicator._buffer, count=1)
+		xml_length_after = len(self.communicator._buffer)
 
 		pattern = re.compile("Content-Length: ([0-9]+)", re.I | re.U)
-		content_lenght = pattern.search(self.to_remote_buffer)
+		content_lenght = pattern.search(self.communicator._buffer)
 		if content_lenght:
 			new_content_length = int(content_lenght.group(1)) + xml_length_after - xml_length_before
-			self.to_remote_buffer = pattern.sub("Content-Length: %d" % new_content_length, self.to_remote_buffer, count=1)
+			self.communicator._buffer = pattern.sub("Content-Length: %d" % new_content_length, self.communicator._buffer, count=1)
 
 		self.hasRewrited = True
 		return True
