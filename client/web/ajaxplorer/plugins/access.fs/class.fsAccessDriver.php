@@ -141,7 +141,7 @@ class fsAccessDriver extends AbstractAccessDriver
 				}
 				$zip = false;
 				if($selection->isUnique()){
-					if($this->isDir($this->getPath()."/".$selection->getUniqueFile())) {
+					if($this->isDir($this->getPath().SystemTextEncoding::fromUTF8($this->encodePath($selection->getUniqueFile())))) {
 						$zip = true;
 						$dir .= "/".basename($selection->getUniqueFile());
 					}
@@ -158,7 +158,7 @@ class fsAccessDriver extends AbstractAccessDriver
 					$localName = (basename($dir)==""?"Files":basename($dir)).".zip";
 					$this->readFile($file, "force-download", $localName, false, false);
 				}else{
-					$this->readFile($this->getPath()."/".$selection->getUniqueFile(), "force-download");
+					$this->readFile($this->getPath().SystemTextEncoding::fromUTF8($this->encodePath($selection->getUniqueFile())), "force-download");
 				}
 				exit(0);
 			break;
@@ -217,7 +217,7 @@ class fsAccessDriver extends AbstractAccessDriver
 					header("Content-Length: ".strlen($data[0]["content"]));
 					print($data[0]["content"]);
 				}else{
-					$this->readFile($this->getPath()."/".SystemTextEncoding::fromUTF8($file), "mp3");
+					$this->readFile($this->getPath().SystemTextEncoding::fromUTF8($this->encodePath($file)), "mp3");
 				}
 				exit(0);
 			break;
@@ -233,7 +233,7 @@ class fsAccessDriver extends AbstractAccessDriver
 					AJXP_Logger::logAction("Online Edition", array("file"=>SystemTextEncoding::fromUTF8($file)));
 					$code=stripslashes($code);
 					$code=str_replace("&lt;","<",$code);
-					$fileName = $this->getPath().SystemTextEncoding::fromUTF8("/$file");
+					$fileName = $this->getPath().SystemTextEncoding::fromUTF8($this->encodePath($file));
 					if(!$this->isFile($fileName) || !$this->isWriteable($fileName)){
 						header("Content-Type:text/plain");
 						print((!$this->isWriteable($fileName)?"1001":"1002"));
@@ -247,7 +247,7 @@ class fsAccessDriver extends AbstractAccessDriver
 				}
 				else 
 				{
-					$this->readFile($this->getPath()."/".SystemTextEncoding::fromUTF8($file), "plain");
+					$this->readFile($this->getPath().SystemTextEncoding::fromUTF8($this->encodePath($file)), "plain");
 				}
 				exit(0);
 			break;
@@ -334,7 +334,7 @@ class fsAccessDriver extends AbstractAccessDriver
 			        
 				$messtmp="";
 				$dirname=Utils::processFileName(SystemTextEncoding::fromUTF8($dirname));
-				$error = $this->mkDir($dir, $dirname);
+				$error = $this->mkDir($this->encodePath($dir, false), $this->encodePath($dirname, false));
 				if(isSet($error)){
 					$errorMessage = $error; break;
 				}
@@ -354,7 +354,7 @@ class fsAccessDriver extends AbstractAccessDriver
 			
 				$messtmp="";
 				$filename=Utils::processFileName(SystemTextEncoding::fromUTF8($filename));	
-				$error = $this->createEmptyFile($dir, $filename);
+				$error = $this->createEmptyFile($this->encodePath($dir, false), $this->encodePath($filename, false));
 				if(isSet($error)){
 					$errorMessage = $error; break;
 				}
@@ -399,7 +399,7 @@ class fsAccessDriver extends AbstractAccessDriver
 				}
 				if($dir!=""){$rep_source="/$dir";}
 				else $rep_source = "";
-				$destination=SystemTextEncoding::fromUTF8($this->getPath().$rep_source);
+				$destination=SystemTextEncoding::fromUTF8($this->getPath().$this->encodePath($dir));
 				if(!$this->isWriteable($destination))
 				{
                     global $_GET;
@@ -429,12 +429,12 @@ class fsAccessDriver extends AbstractAccessDriver
 					if(isSet($auto_rename)){
 						$userfile_name = fsDriver::autoRenameForDest($destination, $userfile_name);
 					}
-					if (!move_uploaded_file($boxData["tmp_name"], "$destination/".$userfile_name))
+					if (!move_uploaded_file($boxData["tmp_name"], $destination.'/'.$this->encodePath($userfile_name)))
 					{
 						$errorMessage=($fancyLoader?"411 ":"")."$mess[33] ".$userfile_name;
 						break;
 					}
-					$this->changeMode($destination."/".$userfile_name);
+					$this->changeMode($destination.'/'.$this->encodePath($userfile_name));
 					$logMessage.="$mess[34] ".SystemTextEncoding::toUTF8($userfile_name)." $mess[35] $dir";
 					AJXP_Logger::logAction("Upload File", array("file"=>SystemTextEncoding::fromUTF8($dir)."/".$userfile_name));
 				}
@@ -522,7 +522,7 @@ class fsAccessDriver extends AbstractAccessDriver
 						}else{							
 							$atts[] = "icon=\"client/images/foldericon.png\"";
 							$atts[] = "openicon=\"client/images/foldericon.png\"";
-							$atts[] = "src=\"content.php?dir=".urlencode(SystemTextEncoding::toUTF8($zipEntry["filename"]))."\"";
+							$atts[] = "src=\"content.php?dir=".SystemTextEncoding::toUTF8($zipEntry["filename"])."\"";
 						}						
 						print("<tree ".join(" ", $atts)."/>");
 					}
@@ -612,17 +612,16 @@ class fsAccessDriver extends AbstractAccessDriver
 						if($bytesize < 0) $bytesize = sprintf("%u", $bytesize);
 						$atts[] = "filesize=\"".Utils::roundSize($bytesize)."\"";
 						$atts[] = "bytesize=\"".$bytesize."\"";
-						$atts[] = "filename=\"".Utils::xmlEntities( SystemTextEncoding::toUTF8($dir."/".($this->isFile($currentFile)?urldecode($repIndex):$repIndex)))."\"";
+						$atts[] = "filename=\"".Utils::xmlEntities(SystemTextEncoding::toUTF8($this->decodePath($dir).'/'.$this->decodePath($repIndex)))."\"";
 						$atts[] = "icon=\"".($this->isFile($currentFile)?SystemTextEncoding::toUTF8($repName):($this->isDir($currentFile) ? "folder.png" : "mime-empty.png"))."\"";
 						
 						$attributes = join(" ", $atts);
-						$repName = urldecode($repIndex);
+						$repName = $repIndex;
 					}
 					else 
 					{
 						$folderBaseName = Utils::xmlEntities( $repName);
 						$link = SystemTextEncoding::toUTF8(SERVER_ACCESS."?dir=".$dir."/".$folderBaseName);
-						$link = urlencode($link);						
 						$folderFullName = Utils::xmlEntities( $dir)."/".$folderBaseName;
 						$parentFolderName = $dir;
 						if(!$completeMode){
@@ -631,10 +630,10 @@ class fsAccessDriver extends AbstractAccessDriver
 							if(preg_match("/\.zip$/",$repName)){
 								$icon = $openicon = CLIENT_RESOURCES_FOLDER."/images/crystal/actions/16/accessories-archiver.png";
 							}
-							$attributes = "icon=\"$icon\"  openicon=\"$openicon\" filename=\"".SystemTextEncoding::toUTF8($folderFullName)."\" src=\"$link\"";
+							$attributes = "icon=\"$icon\"  openicon=\"$openicon\" filename=\"".SystemTextEncoding::toUTF8($this->decodePath($folderFullName))."\" src=\"$link\"";
 						}
 					}
-					print("<tree text=\"".Utils::xmlEntities( SystemTextEncoding::toUTF8($repName))."\" $attributes>");
+					print("<tree text=\"".Utils::xmlEntities(SystemTextEncoding::toUTF8($this->decodePath($repName)))."\" $attributes>");
 					print("</tree>");
 				}
 				// ADD RECYCLE BIN TO THE LIST
@@ -752,7 +751,7 @@ class fsAccessDriver extends AbstractAccessDriver
 		}
 		else
 		{
-			$nom_rep="$racine/$dir";
+			$nom_rep=$racine.$this->encodePath($dir);
 		}
 		if(!file_exists($racine))
 		{
@@ -806,7 +805,7 @@ class fsAccessDriver extends AbstractAccessDriver
 		else
 		{
 			if(preg_match('/ MSIE /',$_SERVER['HTTP_USER_AGENT']) || preg_match('/ WebKit /',$_SERVER['HTTP_USER_AGENT'])){
-				$localName = str_replace("+", " ", urlencode(SystemTextEncoding::toUTF8($localName)));
+				$localName = str_replace("+", " ", SystemTextEncoding::toUTF8($localName));
 			}
 
 			if ($isFile) header("Accept-Ranges: bytes");
@@ -1027,7 +1026,7 @@ class fsAccessDriver extends AbstractAccessDriver
 	function copyOrMove($destDir, $selectedFiles, &$error, &$success, $move = false)
 	{
 		$mess = ConfService::getMessages();
-		if(!$this->isWriteable($this->getPath()."/".$destDir))
+		if(!$this->isWriteable($this->getPath().$this->encodePath($destDir)))
 		{
 			$error[] = $mess[38]." ".$destDir." ".$mess[99];
 			return ;
@@ -1035,7 +1034,7 @@ class fsAccessDriver extends AbstractAccessDriver
 				
 		foreach ($selectedFiles as $selectedFile)
 		{
-			if($move && !$this->isWriteable(dirname($this->getPath()."/".$selectedFile)))
+			if($move && !$this->isWriteable(dirname($this->getPath().$this->encodePath($selectedFile))))
 			{
 				$error[] = "\n".$mess[38]." ".dirname($selectedFile)." ".$mess[99];
 				continue;
@@ -1056,14 +1055,14 @@ class fsAccessDriver extends AbstractAccessDriver
 		$nom_fic=basename($filePath);
 		$mess = ConfService::getMessages();
 		$filename_new=Utils::processFileName($filename_new);
-		$old=$this->getPath()."/$filePath";
+		$old=$this->getPath().$this->encodePath($filePath);
 		if ($this->isDir($old))
 			$old .= '/';
 		if(!$this->isWriteable($old))
 		{
 			return $mess[34]." ".$nom_fic." ".$mess[99];
 		}
-		$new=dirname($old)."/".$filename_new;
+		$new=dirname($old).'/'.$this->encodePath($filename_new);
 		if($filename_new=="")
 		{
 			return "$mess[37]";
@@ -1171,7 +1170,7 @@ class fsAccessDriver extends AbstractAccessDriver
 			{
 				return $mess[120];
 			}
-			$fileToDelete=$this->getPath().$selectedFile;
+			$fileToDelete=$this->getPath().$this->encodePath($selectedFile);
 			if ($this->isDir($fileToDelete))
 				$fileToDelete .= '/';
 			if(!file_exists($fileToDelete))
@@ -1197,8 +1196,8 @@ class fsAccessDriver extends AbstractAccessDriver
 	function copyOrMoveFile($destDir, $srcFile, &$error, &$success, $move = false)
 	{
 		$mess = ConfService::getMessages();		
-		$destFile = $this->getPath().$destDir."/".basename($srcFile);
-		$realSrcFile = $this->getPath()."$srcFile";
+		$destFile = $this->getPath().$this->encodePath($destDir, false).'/'.$this->encodePath(basename($srcFile));
+		$realSrcFile = $this->getPath().$this->encodePath($srcFile);
 		if ($this->isDir($realSrcFile)) {
 			$isDir = true;
 			$realSrcFile .= '/';
@@ -1227,13 +1226,13 @@ class fsAccessDriver extends AbstractAccessDriver
 				// auto rename file
 				$i = 1;
 				$newName = $base;
-				while (file_exists($this->getPath().$destDir."/".$newName)) {
+				while (file_exists($this->getPath().$this->encodePath($destDir, false).'/'.$this->encodePath($newName))) {
 					$suffix = "-$i";
 					if(isSet($radic)) $newName = $radic . $suffix . $ext;
 					else $newName = $base.$suffix;
 					$i++;
 				}
-				$destFile = $this->getPath().$destDir."/".$newName;
+				$destFile = $this->getPath().$this->encodePath($destDir, false).'/'.$this->encodePath($newName);
 			}
 		}
 		if($this->isDir($realSrcFile) || (isset($isDir) && $isDir === true))
@@ -1500,6 +1499,25 @@ class fsAccessDriver extends AbstractAccessDriver
             return false;
 
         return true;
+    }
+
+    function encodePath($path_, $clean_=true)
+    {
+        $path = $path_;
+
+        if ($clean_) {
+            while (substr($path, 0, 1) == '/')
+                $path = substr($path, 1);
+        }
+
+        return str_replace('%2F', '/', rawurlencode($path));
+    }
+
+    function decodePath($path_)
+    {
+        $path = $path_;
+
+        return rawurldecode($path);
     }
 }
 
