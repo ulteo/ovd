@@ -80,11 +80,6 @@ $redirect_client_drives = $default_settings['redirect_client_drives'];
 $redirect_client_printers = $default_settings['redirect_client_printers'];
 $rdp_bpp = $default_settings['rdp_bpp'];
 $enhance_user_experience = $default_settings['enhance_user_experience'];
-$enable_profiles = $default_settings['enable_profiles'];
-$auto_create_profile = $default_settings['auto_create_profile'];
-$start_without_profile = $default_settings['start_without_profile'];
-$enable_sharedfolders = $default_settings['enable_sharedfolders'];
-$start_without_all_sharedfolders = $default_settings['start_without_all_sharedfolders'];
 
 $advanced_settings = array();
 foreach ($default_settings['advanced_settings_startsession'] as $v)
@@ -192,15 +187,13 @@ if (isset($old_session_id)) {
 		$user_login_aps = $sessionManagement->credentials[Server::SERVER_ROLE_APS]['login'];
 		$user_password_aps = $sessionManagement->credentials[Server::SERVER_ROLE_APS]['password'];
 	}
-	if (get_class($sessionManagement) == 'SessionManagement_internal' && ((isset($enable_profiles) && $enable_profiles == 1) || (isset($enable_sharedfolders) && $enable_sharedfolders == 1))) {
-		if (array_key_exists(Server::SERVER_ROLE_FS, $sessionManagement->credentials)) {
-			$user_login_fs = $sessionManagement->credentials[Server::SERVER_ROLE_FS]['login'];
-			$user_password_fs = $sessionManagement->credentials[Server::SERVER_ROLE_FS]['password'];
-		}
+	if (array_key_exists(Server::SERVER_ROLE_FS, $sessionManagement->credentials)) {
+		$user_login_fs = $sessionManagement->credentials[Server::SERVER_ROLE_FS]['login'];
+		$user_password_fs = $sessionManagement->credentials[Server::SERVER_ROLE_FS]['password'];
 	}
 
 	if (! $sessionManagement->buildServersList()) {
-		Logger::error('main', '(client/start) No "'.Server::SERVER_ROLE_APS.'" server found for User "'.$user->getAttribute('login').'", aborting');
+		Logger::error('main', '(client/start) Unable to build servers list for User "'.$user->getAttribute('login').'", aborting');
 		throw_response(SERVICE_NOT_AVAILABLE);
 	}
 	$servers = $sessionManagement->servers;
@@ -214,124 +207,6 @@ if (isset($old_session_id)) {
 	if (! $random_server) {
 		Logger::error('main', '(client/start) No desktop server found for User "'.$user->getAttribute('login').'", aborting');
 		throw_response(SERVICE_NOT_AVAILABLE);
-	}
-
-	if (get_class($sessionManagement) == 'SessionManagement_internal' && isset($enable_profiles) && $enable_profiles == 1) {
-		$fileservers = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_FS);
-		if (count($fileservers) > 0) {
-			$netfolders = $user->getProfiles();
-
-			if (! is_array($netfolders)) {
-				Logger::error('main', '(client/start) User::getProfiles() failed');
-				throw_response(INTERNAL_ERROR);
-			}
-
-			$profile_available = false;
-			if (count($netfolders) == 1) {
-				Logger::debug('main', '(client/start) User "'.$user->getAttribute('login').'" already have a profile, using it');
-
-				$netfolder = array_pop($netfolders);
-
-				foreach ($fileservers as $fileserver) {
-					if ($fileserver->fqdn != $netfolder->server)
-						continue;
-
-					$profile_available = true;
-					$profile_server = $netfolder->server;
-					$profile_name = $netfolder->id;
-
-					$servers[Server::SERVER_ROLE_FS][$profile_server] = array();
-				}
-			} else {
-				Logger::debug('main', '(client/start) User "'.$user->getAttribute('login').'" does not have a profile for now, checking for auto-creation');
-
-				if (isset($auto_create_profile) && $auto_create_profile == 1) {
-					Logger::debug('main', '(client/start) User "'.$user->getAttribute('login').'" profile will be auto-created, and used');
-
-					$profileDB = ProfileDB::getInstance();
-
-					$fileserver = $profileDB->chooseFileServer();
-					if (! is_object($fileserver)) {
-						Logger::error('main', '(client/start) Auto-creation of profile for User "'.$user->getAttribute('login').'" failed (step 0)');
-						throw_response(INTERNAL_ERROR);
-					}
-
-					$profile = new Profile();
-					$profile->server = $fileserver->getAttribute('fqdn');
-
-					if (! $profileDB->addToServer($profile, $fileserver)) {
-						Logger::error('main', '(client/start) Auto-creation of profile for User "'.$user->getAttribute('login').'" failed (step 1)');
-						throw_response(INTERNAL_ERROR);
-					}
-
-					if (! $profile->addUser($user)) {
-						Logger::error('main', '(client/start) Auto-creation of profile for User "'.$user->getAttribute('login').'" failed (step 2)');
-						throw_response(INTERNAL_ERROR);
-					}
-
-					$profile_available = true;
-					$profile_server = $profile->server;
-					$profile_name = $profile->id;
-
-					$servers[Server::SERVER_ROLE_FS][$profile_server] = array();
-				} else {
-					Logger::debug('main', '(client/start) Auto-creation of profile for User "'.$user->getAttribute('login').'" disabled, checking for session without profile');
-
-					if (isset($start_without_profile) && $start_without_profile == 1) {
-						Logger::debug('main', '(client/start) User "'.$user->getAttribute('login').'" can start a session without a valid profile, proceeding');
-
-						$profile_available = false;
-					} else {
-						Logger::error('main', '(client/start) User "'.$user->getAttribute('login').'" does not have a valid profile, aborting');
-
-						throw_response(INTERNAL_ERROR);
-					}
-				}
-			}
-		} else {
-			Logger::debug('main', '(client/start) FileServer not available for User "'.$user->getAttribute('login').'", checking for session without profile');
-
-			if (isset($start_without_profile) && $start_without_profile == 1) {
-				Logger::debug('main', '(client/start) User "'.$user->getAttribute('login').'" can start a session without a valid profile, proceeding');
-
-				$profile_available = false;
-			} else {
-				Logger::error('main', '(client/start) User "'.$user->getAttribute('login').'" does not have a valid profile, aborting');
-
-				throw_response(INTERNAL_ERROR);
-			}
-		}
-	}
-
-	if (get_class($sessionManagement) == 'SessionManagement_internal' && isset($enable_sharedfolders) && $enable_sharedfolders == 1) {
-		$sharedfolders = $user->getSharedFolders();
-		$netshares = array();
-		$sharedfolders_available = false;
-		if (is_array($sharedfolders) && count($sharedfolders) > 0) {
-			foreach ($sharedfolders as $sharedfolder) {
-				$sharedfolder_server = Abstract_Server::load($sharedfolder->server);
-				if (! $sharedfolder_server || ! $sharedfolder_server->isOnline()) {
-					Logger::error('main', '(client/start) Server "'.$sharedfolder->server.'" for shared folder "'.$sharedfolder->id.'" is not available');
-
-					if (isset($start_without_all_sharedfolders) && $start_without_all_sharedfolders == 1) {
-						Logger::debug('main', '(client/start) User "'.$user->getAttribute('login').'" can start a session without all shared folders available, proceeding');
-
-						continue;
-					} else {
-						Logger::error('main', '(client/start) User "'.$user->getAttribute('login').'" does not have all shared folders available, aborting');
-
-						throw_response(INTERNAL_ERROR);
-					}
-				}
-
-				$netshares[] = $sharedfolder;
-
-				$servers[Server::SERVER_ROLE_FS][$sharedfolder->server] = array();
-			}
-
-			if (count($netshares) > 0)
-				$sharedfolders_available = true;
-		}
 	}
 
 	$random_session_id = gen_unique_string();
@@ -439,32 +314,29 @@ $ev->setAttributes(array(
 $ev->emit();
 
 if (! isset($old_session_id)) {
-	$mounts = array();
+	if (array_key_exists(Server::SERVER_ROLE_FS, $servers)) {
+		$mounts = array();
 
-	if (isset($profile_available) && $profile_available === true) {
-		if (! array_key_exists($profile_server, $mounts))
-			$mounts[$profile_server] = array();
+		foreach ($servers[Server::SERVER_ROLE_FS] as $fqdn => $netfolders) {
+			foreach ($netfolders as $netfolder) {
+				if (! array_key_exists($netfolder['server']->fqdn, $mounts))
+					$mounts[$netfolder['server']->fqdn] = array();
 
-		$mounts[$profile_server][] = $profile_name;
-	}
-
-	if (isset($sharedfolders_available) && $sharedfolders_available === true) {
-		foreach ($netshares as $netshare) {
-			if (! array_key_exists($netshare->server, $mounts))
-				$mounts[$netshare->server] = array();
-
-			$mounts[$netshare->server][] = $netshare->id;
+				$mounts[$netfolder['server']->fqdn][] = $netfolder['dir'];
+			}
 		}
-	}
 
-	foreach ($mounts as $k => $v) {
-		$server = Abstract_Server::load($k);
-		if (! $server)
-			continue;
+		foreach ($mounts as $k => $v) {
+			$server = Abstract_Server::load($k);
+			if (! $server)
+				continue;
 
-		if (! $server->orderFSAccessEnable($user_login_fs, $user_password_fs, $v)) {
-			Logger::error('main', '(client/start) Cannot enable FS access for User "'.$user->getAttribute('login').'" on Server "'.$server->fqdn.'"');
-			throw_response(INTERNAL_ERROR);
+			if (! $server->orderFSAccessEnable($user_login_fs, $user_password_fs, $v)) {
+				Logger::error('main', '(client/start) Cannot enable FS access for User \''.$user->getAttribute('login').'\' on Server \''.$server->fqdn.'\', aborting');
+				$session->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
+
+				throw_response(INTERNAL_ERROR);
+			}
 		}
 	}
 
@@ -531,29 +403,18 @@ if (! isset($old_session_id)) {
 		$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 		$session_node->appendChild($user_node);
 
-		if (isset($profile_available) && $profile_available === true) {
-			$profile_fileserver = Abstract_Server::load($profile_server);
-			$profile_node = $dom->createElement('profile');
-			$profile_node->setAttribute('server', $profile_fileserver->external_name);
-			$profile_node->setAttribute('dir', $profile_name);
-			$profile_node->setAttribute('login', $user_login_fs);
-			$profile_node->setAttribute('password', $user_password_fs);
-			$session_node->appendChild($profile_node);
-		}
-
-		if (isset($netshares) && count($netshares) > 0) {
-			$sharedfolders_node = $dom->createElement('sharedfolders');
-			$session_node->appendChild($sharedfolders_node);
-
-			foreach ($netshares as $netshare) {
-				$netshare_fileserver = Abstract_Server::load($netshare->server);
-				$sharedfolder_node = $dom->createElement('sharedfolder');
-				$sharedfolder_node->setAttribute('server', $netshare_fileserver->external_name);
-				$sharedfolder_node->setAttribute('dir', $netshare->id);
-				$sharedfolder_node->setAttribute('name', $netshare->name);
-				$sharedfolder_node->setAttribute('login', $user_login_fs);
-				$sharedfolder_node->setAttribute('password', $user_password_fs);
-				$sharedfolders_node->appendChild($sharedfolder_node);
+		if (array_key_exists(Server::SERVER_ROLE_FS, $servers)) {
+			foreach ($servers[Server::SERVER_ROLE_FS] as $fqdn => $netfolders) {
+				foreach ($netfolders as $netfolder) {
+					$netfolder_node = $dom->createElement($netfolder['type']);
+					$netfolder_node->setAttribute('server', $netfolder['server']->getAttribute('external_name'));
+					$netfolder_node->setAttribute('dir', $netfolder['dir']);
+					if ($netfolder['type'] == 'sharedfolder')
+						$netfolder_node->setAttribute('name', $netfolder['name']);
+					$netfolder_node->setAttribute('login', $user_login_fs);
+					$netfolder_node->setAttribute('password', $user_password_fs);
+					$session_node->appendChild($netfolder_node);
+				}
 			}
 		}
 
@@ -599,16 +460,7 @@ if (! isset($old_session_id)) {
 			Logger::critical('main', '(client/start) Unable to create Session \''.$session->id.'\' for User \''.$session->user_login.'\' on Server \''.$server->fqdn.'\', aborting');
 			$session->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
 
-			header('Content-Type: text/xml; charset=utf-8');
-			$dom = new DomDocument('1.0', 'utf-8');
-
-			$node = $dom->createElement('error');
-			$node->setAttribute('id', 1);
-			$node->setAttribute('message', 'Server does not send a valid XML');
-			$dom->appendChild($node);
-
-			echo $dom->saveXML();
-			exit(1);
+			throw_response(INTERNAL_ERROR);
 		}
 	}
 }
@@ -637,31 +489,19 @@ $user_node = $dom->createElement('user');
 $user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 $session_node->appendChild($user_node);
 
-if (isset($profile_available) && $profile_available === true) {
-	$profile_server_obj = Abstract_Server::load($profile_server);
-
-	$profile_node = $dom->createElement('profile');
-	$profile_node->setAttribute('server', $profile_server_obj->getAttribute('external_name'));
-	$profile_node->setAttribute('dir', $profile_name);
-	$profile_node->setAttribute('login', $user_login_fs);
-	$profile_node->setAttribute('password', $user_password_fs);
-	$session_node->appendChild($profile_node);
-}
-
-if (isset($sharedfolders_available) && $sharedfolders_available === true) {
-	$sharedfolders_node = $dom->createElement('sharedfolders');
-	foreach ($netshares as $netshare) {
-		$sharedfolder_server_obj = Abstract_Server::load($netshare->server);
-
-		$sharedfolder_node = $dom->createElement('sharedfolder');
-		$sharedfolder_node->setAttribute('server', $sharedfolder_server_obj->getAttribute('external_name'));
-		$sharedfolder_node->setAttribute('dir', $netshare->id);
-		$sharedfolder_node->setAttribute('name', $netshare->name);
-		$sharedfolder_node->setAttribute('login', $user_login_fs);
-		$sharedfolder_node->setAttribute('password', $user_password_fs);
-		$sharedfolders_node->appendChild($sharedfolder_node);
+if (array_key_exists(Server::SERVER_ROLE_FS, $servers)) {
+	foreach ($servers[Server::SERVER_ROLE_FS] as $fqdn => $netfolders) {
+		foreach ($netfolders as $netfolder) {
+			$netfolder_node = $dom->createElement($netfolder['type']);
+			$netfolder_node->setAttribute('server', $netfolder['server']->getAttribute('external_name'));
+			$netfolder_node->setAttribute('dir', $netfolder['dir']);
+			if ($netfolder['type'] == 'sharedfolder')
+				$netfolder_node->setAttribute('name', $netfolder['name']);
+			$netfolder_node->setAttribute('login', $user_login_fs);
+			$netfolder_node->setAttribute('password', $user_password_fs);
+			$session_node->appendChild($netfolder_node);
+		}
 	}
-	$session_node->appendChild($sharedfolders_node);
 }
 
 if ($session->mode == Session::MODE_DESKTOP) {
