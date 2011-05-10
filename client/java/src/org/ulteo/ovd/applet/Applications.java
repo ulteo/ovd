@@ -127,6 +127,9 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 		String tempdir = System.getProperty("java.io.tmpdir");
 		if (! tempdir.endsWith(System.getProperty("file.separator"))) 
 			tempdir+= System.getProperty("file.separator");
+		if (! Logger.initInstance(true, tempdir+"ulteo-ovd-"+Logger.getDate()+".log", true)) {
+			System.err.println(this.getClass().toString()+" Unable to iniatialize logger instance");
+		}
 		
 		if (OSTools.isWindows()) {
 			try {
@@ -144,10 +147,6 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 				Logger.error(ex.getMessage());
 				WorkArea.disableLibraryLoading();
 			}
-		}
-		
-		if (! Logger.initInstance(true, tempdir+"ulteo-ovd-"+Logger.getDate()+".log", true)) {
-			System.err.println(this.getClass().toString()+" Unable to iniatialize logger instance");
 		}
 
 		Properties properties = this.readParameters();
