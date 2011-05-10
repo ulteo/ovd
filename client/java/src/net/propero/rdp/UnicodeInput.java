@@ -46,6 +46,7 @@ public class UnicodeInput extends Input {
      * @param r Rdp layer on which to send input messages
      * @param k Key map to use in handling keyboard events
      */
+	@SuppressWarnings("unchecked")
 	public UnicodeInput(RdesktopCanvas c, Rdp r, KeyCode_FileBased k, Options opt_) {
 		super(c,r,k,opt_);
 		this.scancode = new ScancodeConverter();
@@ -64,6 +65,7 @@ public class UnicodeInput extends Input {
      * @param r Rdp layer on which to send input messages
      * @param keymapFile Path to file containing keymap data
      */
+	@SuppressWarnings("unchecked")
 	public UnicodeInput(RdesktopCanvas c, Rdp r, String k, Options opt_, Common common_) {
 		super(c,r,k,opt_,common_);
  		scancode = new ScancodeConverter();
