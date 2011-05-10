@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2009
- * Author Julien LANGLOIS <julien@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ class AuthMethod_RemoteUser extends AuthMethod {
 		if (array_key_exists('remove_domain_if_exists', $buf) && $buf['remove_domain_if_exists'] == 1) {
 			$atpos = strpos($this->login, '@');
 			if ($atpos !== false)
-				$this->login = substr($this->login, 0, $atpos+1);
+				$this->login = substr($this->login, 0, $atpos);
 		}
 		return $this->login;
 	}
