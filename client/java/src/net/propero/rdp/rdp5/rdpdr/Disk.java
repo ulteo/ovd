@@ -367,9 +367,11 @@ public class Disk extends RdpdrDevice{
 	static long convert_1970_to_filetime(int[] high, int[] low) {
 		long ticks;
 		
+		// Java time is measured in milliseconds since the epoch (00:00:00 GMT, January 1, 1970) 
 		ticks = low[0] + (((long)high[0]) << 32);
 		ticks /= 10000000;
 		ticks -= 11644473600L;
+		ticks *= 1000L;
 
 		return ticks ;
 	}
