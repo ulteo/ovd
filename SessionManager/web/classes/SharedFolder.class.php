@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -30,7 +30,7 @@ class SharedFolder extends NetworkFolder {
 	public function getUserGroups() {
 		$liaisons = Abstract_Liaison::load('UserGroupSharedFolder', NULL, $this->id);
 		if (is_array($liaisons) == false) {
-			Logger::error('main', 'NetworkFolder::getUserGroups()');
+			Logger::error('main', 'SharedFolder::getUserGroups() load of liaison failed');
 			return false;
 		}
 		
