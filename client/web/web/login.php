@@ -300,7 +300,7 @@ if (count($server_nodes) < 1) {
 $_SESSION['ovd-client']['explorer'] = false;
 
 $profile_node = $session_node->getElementsByTagName('profile')->item(0);
-$sharedfolder_nodes = $session_node->getElementsByTagName('sharedfolder')->item(0);
+$sharedfolder_nodes = $session_node->getElementsByTagName('sharedfolder');
 if (is_object($profile_node) || is_array($sharedfolder_nodes)) {
 	if (is_dir(dirname(__FILE__).'/ajaxplorer/'))
 		$_SESSION['ovd-client']['explorer'] = true;
