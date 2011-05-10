@@ -159,7 +159,8 @@ MirrorCreateFile(
 			cacheHandle = davCache->add(filePath);
 			break;
 		}
-		break;
+		davCache->remove(cacheHandle);
+		return result;
 
 	case OPEN_ALWAYS:
 		if (! exist) {
