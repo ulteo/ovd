@@ -258,8 +258,10 @@ class User {
 					}
 				}
 				$networkfolders = $sharedfolderdb->importFromUsergroup($group->getUniqueID());
-				foreach ($networkfolders as $a_networkfolder) {
-					$sharedfolders[] = $a_networkfolder;
+				if (is_array($networkfolders)) {
+					foreach ($networkfolders as $a_networkfolder) {
+						$sharedfolders[] = $a_networkfolder;
+					}
 				}
 			}
 		}
