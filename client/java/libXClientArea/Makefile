@@ -19,7 +19,8 @@
 
 CC=gcc
 JAVAHOME?=/usr/lib/jvm/java-1.6.0-openjdk
-EXEC=libXClientArea.so
+LIB=libXClientArea.so
+EXE=libXClientArea
 DESTDIR?=.
 LIBDIR=$(DESTDIR)/usr/lib/
 ARCH=$(shell getconf LONG_BIT)
@@ -31,16 +32,19 @@ ifeq ($(ARCH), 64)
 LDFLAGS+=$(if $(STATIC), -Llib_pic)
 endif
 
-all: pre $(EXEC)
+all: pre $(EXE) $(LIB)
 
 pre:
 	mkdir -p $(ARCH)
 
-$(EXEC): org_ulteo_utils_jni_WorkArea.o
+$(EXE): org_ulteo_utils_jni_WorkArea.o
+	$(CC) -o $@ $? $(LDFLAGS)
+
+$(LIB): org_ulteo_utils_jni_WorkArea.o
 ifndef STATIC
 	$(CC) -o $(ARCH)/$@ -shared -Wl,-soname,$@ $? $(LDFLAGS)
 else
-	$(LD) -o $(ARCH)/$@ -share -soname $(EXEC) $^ --strip-all \
+	$(LD) -o $(ARCH)/$@ -share -soname $(LIB) $^ --strip-all \
 		-static $(LDFLAGS) -Bdynamic -lc
 endif
 
@@ -54,14 +58,14 @@ src/org_ulteo_utils_jni_WorkArea.h:
 clean:
 	$(RM) *~
 	$(RM) src/org_ulteo_utils_jni_WorkArea.h
-	$(RM) -rf org *.o $(EXEC) $(ARCH)
+	$(RM) -rf org *.o $(EXE) $(LIB) $(ARCH)
 
 install: all
 	mkdir -p $(LIBDIR)
-	install $(ARCH)/$(EXEC) $(LIBDIR)
+	install $(ARCH)/$(LIB) $(LIBDIR)
 
 uninstall:
-	$(RM) $(LIBDIR)/$(EXEC)
+	$(RM) $(LIBDIR)/$(LIB)
 
 dist: clean
 	DISTDIR=ovd-xclient-area-@VERSION@ ; \
