@@ -20,24 +20,16 @@
 
 package net.propero.rdp;
 
-import net.propero.rdp.Input.RdesktopKeyAdapter;
-import net.propero.rdp.Input.RdesktopMouseAdapter;
-import net.propero.rdp.Input.RdesktopMouseMotionAdapter;
 import net.propero.rdp.keymapping.KeyCode;
 import net.propero.rdp.keymapping.KeyCode_FileBased;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
 
 import java.awt.KeyboardFocusManager;
 import java.awt.MouseInfo;
 import java.awt.Toolkit;
 import java.awt.event.*;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import javax.swing.KeyStroke;
 import org.ulteo.ovd.integrated.OSTools;
 
 public class UnicodeInput extends Input {
