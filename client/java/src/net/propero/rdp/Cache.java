@@ -6,6 +6,24 @@
  * Date: $Date: 2007/03/08 00:26:27 $
  *
  * Copyright (c) 2005 Propero Limited
+ * 
+ * Copyright (C) 2011 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
+ * 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * Purpose: Handle caching of bitmaps, cursors, colour maps,
  *          text and fonts
@@ -117,11 +135,11 @@ public class Cache {
      * @throws RdesktopException
      */
 	public Bitmap getBitmap(int cache_id, int cache_idx) throws RdesktopException {
-		logger.debug("Cache.getBitmap: cache_id: "+cache_id+" cache_idx: "+cache_idx+" bitmapcache.length: "+bitmapcache.length+" bitmapcache[0].length: "+bitmapcache[0].length);
+		logger.debug("Cache.getBitmap: cache_id: "+cache_id+" cache_idx: "+cache_idx+" bitmapcache.length: "+bitmapcache.length+" bitmapcache["+cache_id+"].length: "+bitmapcache[cache_id].length);
 
 		Bitmap bitmap = null;
 
-		if ((cache_id < bitmapcache.length) && (cache_idx < bitmapcache[0].length)) {
+		if ((cache_id < bitmapcache.length) && (cache_idx < bitmapcache[cache_id].length)) {
 			bitmap = bitmapcache[cache_id][cache_idx];
 			try {
 				if (bitmap != null || (this.opt.persistent_bitmap_caching && this.common.persistent_cache.pstcache_load_bitmap(cache_id, cache_idx))){
@@ -159,9 +177,9 @@ public class Cache {
 			throws RdesktopException {
 
         //Bitmap old;
-		logger.debug("Cache.putBitmap: cache_id: "+cache_id+" cache_idx: "+cache_idx+" bitmapcache.length: "+bitmapcache.length+" bitmapcache[0].length: "+bitmapcache[0].length);
+		logger.debug("Cache.putBitmap: cache_id: "+cache_id+" cache_idx: "+cache_idx+" bitmapcache.length: "+bitmapcache.length+" bitmapcache["+cache_id+"].length: "+bitmapcache[cache_id].length);
         
-		if ((cache_id < bitmapcache.length) && (cache_idx < bitmapcache[0].length)) {
+		if ((cache_id < bitmapcache.length) && (cache_idx < bitmapcache[cache_id].length)) {
 			bitmapcache[cache_id][cache_idx] = bitmap;
 
 //It is not the client which decide to remove a part of it cache
