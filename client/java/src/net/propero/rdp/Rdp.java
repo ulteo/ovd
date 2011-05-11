@@ -1150,7 +1150,7 @@ public class Rdp {
         data.copyFromByteArray(RDP_SOURCE, 0, data.getPosition(),
                 RDP_SOURCE.length);
         data.incrementPosition(RDP_SOURCE.length);
-        data.setLittleEndian16(0xd); // num_caps
+        data.setLittleEndian16(0xe); // num_caps
         data.incrementPosition(2); // pad
 
         this.sendGeneralCaps(data);
