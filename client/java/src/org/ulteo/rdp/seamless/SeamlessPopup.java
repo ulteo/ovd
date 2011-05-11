@@ -81,6 +81,8 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 		this.common.canvas.addComponentListener(this);
 
 		Dimension dim = new Dimension(this.backstore.getWidth(), this.backstore.getHeight());
+
+		this.setUndecorated(true);
 		this.rw = new RectWindow(this, dim, this.maxBounds);
 
 		// Set the key and mouse listeners
@@ -93,7 +95,6 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 			
 		this.parseFlags(flags);
 
-		this.setUndecorated(true);
 		this.sw_setMyPosition(-1, -1, 1, 1);
 		this.setVisible(false);
 		this.addFocusListener(this);
