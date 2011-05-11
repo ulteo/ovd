@@ -108,27 +108,12 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 	private boolean finished_init = false;
 	private boolean started_stop = false;
 	
-	// Begin extends Applet
-	@Override
-	public void init() {
-		System.out.println(this.getClass().toString() +"  init");
-
-		OSTools.is_applet = true;
-
-		ClientInfos.showClientInfos();
-
-		boolean status = this.checkSecurity();
-		if (! status) {
-			System.err.println(this.getClass().toString() +"  init: Not enought privileges, unable to continue");
-			this.stop();
-			return;
-		}
-		
+	static {
 		String tempdir = System.getProperty("java.io.tmpdir");
-		if (! tempdir.endsWith(System.getProperty("file.separator"))) 
+		if (! tempdir.endsWith(System.getProperty("file.separator")))
 			tempdir+= System.getProperty("file.separator");
 		if (! Logger.initInstance(true, tempdir+"ulteo-ovd-"+Logger.getDate()+".log", true)) {
-			System.err.println(this.getClass().toString()+" Unable to iniatialize logger instance");
+			System.err.println(Applications.class.toString() + " Unable to iniatialize logger instance");
 		}
 		
 		if (OSTools.isWindows()) {
@@ -136,8 +121,6 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 				LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_WINDOWS, LibraryLoader.LIB_WINDOW_PATH_NAME);
 			} catch (FileNotFoundException ex) {
 				Logger.error(ex.getMessage());
-				this.stop();
-				return;
 			}
 		}
 		else if (OSTools.isLinux()) {
@@ -148,10 +131,27 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 				WorkArea.disableLibraryLoading();
 			}
 		}
+	}
+	
+	// Begin extends Applet
+	@Override
+	public void init() {
+		Logger.info("init");
+
+		OSTools.is_applet = true;
+
+		ClientInfos.showClientInfos();
+
+		boolean status = this.checkSecurity();
+		if (! status) {
+			Logger.error("init: Not enought privileges, unable to continue");
+			this.stop();
+			return;
+		}
 
 		Properties properties = this.readParameters();
 		if (properties == null) {
-			System.err.println(this.getClass().toString() +"  usage error");
+			Logger.error("usage error");
 			this.stop();
 			return;
 		}
