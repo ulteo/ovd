@@ -19,6 +19,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.IOException;
+import java.security.AccessControlException;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
@@ -80,7 +81,16 @@ public class ClipChannel extends VChannel implements ClipInterface, ClipboardOwn
 	// All type handlers available
 	TypeHandlerList allHandlers = null;
 	byte[] localClipData = null;
-	
+
+	public static final boolean isAccessClipboardPermissionSet() {
+		try {
+			Toolkit.getDefaultToolkit().getSystemClipboard();
+		} catch(AccessControlException e) {
+			return false;
+		}
+		return true;
+	}
+
 	public ClipChannel(Common common_, Options opt_){
 		super(opt_, common_);
 		this.clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();

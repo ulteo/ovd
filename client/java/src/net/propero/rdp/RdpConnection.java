@@ -286,6 +286,12 @@ public class RdpConnection implements SeamListener, Runnable{
 		if (this.clipChannel != null)
 			return;
 
+		if (! ClipChannel.isAccessClipboardPermissionSet()) {
+			System.out.println("Clipboard access is disabled.");
+			this.clipChannel = null;
+			return;
+		}
+
 		this.clipChannel = new ClipChannel(this.common, this.opt);
 		if (! this.clipChannel.isSupported()) {
 			this.clipChannel = null;
