@@ -608,10 +608,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			this.loadingFrame.setVisible(false);
 	}
 
-	public void disableDisconnectingMode() {
-		this.discFrame.setVisible(false);
-	}
-
 	public void getFormValuesFromGui() throws IllegalArgumentException {
 		this.opts.username = this.authFrame.getLogin().getText();
 		
@@ -780,10 +776,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				System.err.println("You have been disconnected");
 				System.exit(RETURN_CODE_SUCCESS);
 			}
-		}
-		else {
-			this.disableDisconnectingMode();
-			
+		} else {
+			this.discFrame.setVisible(false);
 			if (this.opts.autostart)
 				System.exit(RETURN_CODE_SUCCESS);
 		}
