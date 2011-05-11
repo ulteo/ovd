@@ -3,7 +3,7 @@
 # Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2011
-# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -20,6 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import httplib
+import socket
 import urllib2
 from xml.dom import minidom
 from xml.dom.minidom import Document
@@ -35,11 +36,23 @@ class SMRequestManager():
 	STATUS_BROKEN = "broken"
 	
 	def __init__(self):
-		self.url = "http://%s:%d"%(Config.session_manager, Config.SM_SERVER_PORT)
+		self.url = None
+		self.host = Config.session_manager
+		self.port = Config.SM_SERVER_PORT
 		self.name = None
 	
 	
 	def initialize(self):
+		try:
+			buf = socket.getaddrinfo(self.host, self.port, socket.AF_INET, 0, socket.SOL_TCP)
+		except socket.gaierror, err:
+			raise Exception("Unable to resolv %s in IPv4 address"%(self.host))
+		if len(buf)==0:
+			raise Exception("Unable to resolv %s in IPv4 address"%(self.host))
+		
+		(addr,port) = buf[0][4]
+		self.url = "http://%s:%d"%(addr, port)
+		
 		node = self.send_server_name()
 		if node is None:
 			raise Exception("invalid response")
@@ -83,6 +96,7 @@ class SMRequestManager():
 		Logger.debug('SMRequest::server_name url '+url)
 		
 		req = urllib2.Request(url)
+		req.add_header("Host", "%s:%s"%(self.host, self.port))
 		try:
 			f = urllib2.urlopen(req)
 		except IOError, e:
@@ -110,6 +124,7 @@ class SMRequestManager():
 		Logger.debug("SMRequest::send_packet url %s"%(url))
 		
 		req = urllib2.Request(url)
+		req.add_header("Host", "%s:%s"%(self.host, self.port))
 		req.add_header("Content-type", "text/xml; charset=UTF-8")
 		
 		if document is not None:
