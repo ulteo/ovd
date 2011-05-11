@@ -780,6 +780,14 @@ class Server {
 		if (! $dom->hasChildNodes())
 			return false;
 
+		$node = $dom->getElementsByTagname('user')->item(0);
+		if (! is_null($node)) {
+			if ($node->hasAttribute('status')) {
+				if ($node->getAttribute('status') == 'unknown')
+					return true;
+			}
+		}
+
 		$node = $dom->getElementsByTagname('session')->item(0);
 		if (is_null($node))
 			return false;
