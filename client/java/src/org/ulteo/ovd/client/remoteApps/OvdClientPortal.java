@@ -77,7 +77,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 
 	private void init() {
-		this.system = (System.getProperty("os.name").startsWith("Windows")) ? new SystemWindows() : new SystemLinux();
+		String sm = this.smComm.getHost();
+		this.system = (System.getProperty("os.name").startsWith("Windows")) ? new SystemWindows(sm) : new SystemLinux(sm);
 		this.appsList = new ArrayList<Application>();
 
 		this.spool = new Spool(this);

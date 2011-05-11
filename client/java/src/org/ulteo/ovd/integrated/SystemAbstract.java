@@ -46,10 +46,10 @@ public abstract class SystemAbstract {
 	private AppsIconsCache cache_appsIcons = null;
 	private MimeTypeIconsCache cache_mimeTypeIcons = null;
 
-	public SystemAbstract(ContentManager iconContentManager_) {
+	public SystemAbstract(ContentManager iconContentManager_, String sm_) {
 		this.iconContentManager = iconContentManager_;
 
-		this.cache_appsIcons = new AppsIconsCache(this.iconContentManager);
+		this.cache_appsIcons = new AppsIconsCache(this.iconContentManager, sm_);
 		this.cache_mimeTypeIcons = new MimeTypeIconsCache(this.iconContentManager);
 	}
 
