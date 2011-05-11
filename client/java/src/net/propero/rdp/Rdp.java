@@ -987,6 +987,8 @@ public class Rdp {
 	data.incrementPosition(len_src_descriptor);
 
 	this.processServerCaps(data, len_combined_caps);
+	
+	this.cache.init();
 
         this.sendConfirmActive();
 
@@ -1343,9 +1345,9 @@ public class Rdp {
         data.setBigEndian16(3); /* number of caches in this set */
 
         /* max cell size for cache 0 is 16x16, 1 = 32x32, 2 = 64x64, etc */
-        data.setLittleEndian32(BMPCACHE2_C0_CELLS); // out_uint32_le(s,
+        data.setLittleEndian32(this.cache.getCacheSize(0)); // out_uint32_le(s,
                                                     // BMPCACHE2_C0_CELLS);
-        data.setLittleEndian32(BMPCACHE2_C1_CELLS); // out_uint32_le(s,
+        data.setLittleEndian32(this.cache.getCacheSize(1)); // out_uint32_le(s,
                                                     // BMPCACHE2_C1_CELLS);
 
         // data.setLittleEndian32(PstCache.pstcache_init(2) ?
@@ -1358,7 +1360,7 @@ public class Rdp {
                     | BMPCACHE2_FLAG_PERSIST);
         } else {
             logger.info("Persistent cache not initialized");
-            data.setLittleEndian32(BMPCACHE2_C2_CELLS);
+            data.setLittleEndian32(this.cache.getCacheSize(2));
         }
         data.incrementPosition(20); // out_uint8s(s, 20); /* other bitmap caches
                                     // not used */

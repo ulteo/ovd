@@ -39,11 +39,21 @@ import org.apache.log4j.Logger;
 
 public class Cache {
 
+	public static final int BMPCACHE2_C0_MAX_CELLS = 600;
+	
+	public static final int BMPCACHE2_C1_MAX_CELLS = 600;
+	
+	public static final int BMPCACHE2_C2_MAX_CELLS = 2560;
+	
+	public static final int BMPCACHE2_C3_MAX_CELLS = 4096;
+	
+	public static final int BMPCACHE2_C4_MAX_CELLS = 2048;
+	
     protected static Logger logger = Logger.getLogger(Rdp.class);
 
 	private static final int RDPCACHE_COLOURMAPSIZE = 0x06; // unified patch
 
-	private Bitmap[][] bitmapcache = new Bitmap[3][0xa00];
+	private Bitmap[][] bitmapcache = null;
 
 	private Bitmap[] volatile_bc = new Bitmap[3];
 
@@ -66,7 +76,37 @@ public class Cache {
 		this.common = common_;
 		this.opt = opt_;
 	}
+	
+	public void setCacheEntry(int level1, int level2, int level3) {
+		this.bitmapcache = new Bitmap[3][];
+		this.bitmapcache[0] = new Bitmap[level1];
+		this.bitmapcache[1] = new Bitmap[level2];
+		this.bitmapcache[2] = new Bitmap[level3];
+	}
+	
+	public void init() {
+		long availableMemory = Runtime.getRuntime().maxMemory();
+		int cache3Size = Rdp.BMPCACHE2_C2_CELLS;
 
+		if (availableMemory > (512 * 1024 * 1024))
+			cache3Size = Cache.BMPCACHE2_C2_MAX_CELLS/3;
+
+		if (availableMemory > (1024 * 1024 * 1024))
+			cache3Size = Cache.BMPCACHE2_C2_MAX_CELLS;
+
+		this.bitmapcache = new Bitmap[3][];
+		this.bitmapcache[0] = new Bitmap[Rdp.BMPCACHE2_C0_CELLS];
+		this.bitmapcache[1] = new Bitmap[Rdp.BMPCACHE2_C1_CELLS];
+		this.bitmapcache[2] = new Bitmap[cache3Size];
+	}
+	
+	public int getCacheSize(int level) {
+		if (level > 2)
+			return 0;
+
+		return this.bitmapcache[level].length;
+	}
+	
     void TOUCH(int id, int idx){
         bitmapcache[id][idx].usage = ++this.common.persistent_cache.g_stamp;
     }
