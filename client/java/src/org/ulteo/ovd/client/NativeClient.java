@@ -513,8 +513,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				} catch (InterruptedException e) {}
 			}
 		}
-
-
 	}
 
 	public void run() {
