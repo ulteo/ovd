@@ -191,6 +191,10 @@ public class Rdp {
 
     private static final int RDP_CAPLEN_BMPCACHE2 = 0x28;
 
+    private static final int RDP_CAPSET_JPEGCACHE = 99;
+    
+    private static final int RDP_CAPLEN_JPEGCACHE = 0x06;
+
     private static final int RDP_CAPSET_VIRTUALCHANNEL = 20;
 
     private static final int RDP_CAPLEN_VIRTUALCHANNEL = 0x0C;
@@ -1128,6 +1132,7 @@ public class Rdp {
     		caplen += RDP_CAPLEN_BMPCACHE;
     		caplen += RDP_CAPLEN_POINTER;
     	}
+        caplen += RDP_CAPLEN_JPEGCACHE;
 
         int sec_flags = this.opt.encryption ? (RDP5_FLAG | Secure.SEC_ENCRYPT)
                 : RDP5_FLAG;
@@ -1150,7 +1155,7 @@ public class Rdp {
         data.copyFromByteArray(RDP_SOURCE, 0, data.getPosition(),
                 RDP_SOURCE.length);
         data.incrementPosition(RDP_SOURCE.length);
-        data.setLittleEndian16(0xe); // num_caps
+        data.setLittleEndian16(0xf); // num_caps
         data.incrementPosition(2); // pad
 
         this.sendGeneralCaps(data);
@@ -1184,6 +1189,8 @@ public class Rdp {
         this.sendUnknownCaps(data, 0x0e, 0x08, caps_0x0e);
 	// Glyph capabilities
         this.sendUnknownCaps(data, 0x10, 0x34, caps_0x10);
+
+        this.sendJPEGcacheCaps(data);
 
         data.markEnd();
         logger.debug("confirm active");
@@ -1315,6 +1322,13 @@ public class Rdp {
         data.setLittleEndian16(0x400); /* max cell size */
         data.setLittleEndian16(0x106); /* entries */
         data.setLittleEndian16(0x1000); /* max cell size */
+    }
+
+    private void sendJPEGcacheCaps(RdpPacket_Localised data) {
+        data.setLittleEndian16(RDP_CAPSET_JPEGCACHE);
+        data.setLittleEndian16(RDP_CAPLEN_JPEGCACHE);
+
+        data.setLittleEndian16(0x1); /* use jpegcache */
     }
 
     /* Output bitmap cache v2 capability set */

@@ -15,8 +15,12 @@ package net.propero.rdp;
 
 import org.apache.log4j.Logger;
 
+import java.awt.image.BufferedImage;
 import java.awt.image.IndexColorModel;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import net.propero.rdp.orders.*;
 
@@ -69,6 +73,8 @@ public class Orders {
     private static final int RDP_ORDER_FONTCACHE = 3;
     private static final int RDP_ORDER_RAW_BMPCACHE2 = 4;
     private static final int RDP_ORDER_BMPCACHE2 = 5;
+    private static final int RDP_ORDER_JPEGCACHE = 99;
+
     @SuppressWarnings("unused")
     private static final int MIX_TRANSPARENT = 0;
     private static final int MIX_OPAQUE = 1;
@@ -328,6 +334,16 @@ public class Orders {
                 throw new RdesktopException(e.getMessage());
             } /* compressed */
             break;
+        case RDP_ORDER_JPEGCACHE:
+        	logger.debug("Jpegcache Order");
+        	
+        	try {
+        		this.process_jpegcache(data, flags, true);
+        	} catch (IOException e) {
+        		throw new RdesktopException(e.getMessage());
+        	} /* compressed */
+        	break;
+            	
 
         default:
             logger.warn("Unimplemented 2ry Order type " + type);
@@ -474,6 +490,69 @@ public class Orders {
             else
                 logger.warn("Failed to decompress bitmap");
         }
+    }
+
+    /**
+     * Process a jpeg cache order, storing a bitmap in the main cache, and
+     * the persistant cache if so required
+@@ -486,6 +520,87 @@
+     * @throws RdesktopException
+     * @throws IOException
+     */
+    private void process_jpegcache(RdpPacket_Localised data, int flags, boolean compressed) throws RdesktopException, IOException {
+        Bitmap bitmap;
+        int cache_id, cache_idx_low, width, height, Bpp;
+        int cache_idx, bufsize;
+        byte[] bitmap_id;
+
+        bitmap_id = new byte[8]; /* prevent compiler warning */
+        cache_id = flags & ID_MASK;
+        Bpp = ((flags & MODE_MASK) >> MODE_SHIFT) - 2;
+        if ((flags & PERSIST) != 0) {
+            data.copyToByteArray(bitmap_id, 0, data.getPosition(), 8);
+            data.incrementPosition(8);
+    
+        }
+
+        if ((flags & SQUARE) != 0) {
+            width = data.get8(); // in_uint8(s, width);
+            height = width;
+        } else {
+            width = data.get8(); // in_uint8(s, width);
+            height = data.get8(); // in_uint8(s, height);
+        }
+
+        bufsize = data.getBigEndian16(); // in_uint16_be(s, bufsize);
+        bufsize &= BUFSIZE_MASK;
+
+        cache_idx = data.get8(); // in_uint8(s, cache_idx);
+
+        if ((cache_idx & LONG_FORMAT) != 0) {
+            cache_idx_low = data.get8(); // in_uint8(s, cache_idx_low);
+            cache_idx = ((cache_idx ^ LONG_FORMAT) << 8) + cache_idx_low;
+        }
+        logger.debug("JPEGCACHE(compr=" + compressed + ",flags=" + flags
+                + ",cx=" + width + ",cy=" + height + ",id=" + cache_id
+                + ",idx=" + cache_idx + ",Bpp=" + Bpp + ",bs=" + bufsize + ")");
+        
+        int[] bmpdataInt = new int[width * height];
+		byte[] compressed_pixel = new byte[bufsize];
+		
+		data.copyToByteArray(compressed_pixel, 0, data.getPosition(), bufsize);
+		data.incrementPosition(bufsize);
+		
+        ByteArrayInputStream bais = new ByteArrayInputStream(compressed_pixel);
+        BufferedImage bi = ImageIO.read(bais);
+        bmpdataInt = bi.getRGB(0, 0, width, height, null, 0, width);
+        bais.close();
+        bais = null;
+        
+        bitmap = new Bitmap(bmpdataInt, width, height, 0, 0, this.opt);
+
+        if (bitmap != null)
+        	this.common.cache.putBitmap(cache_id, cache_idx, bitmap, 0);
+        else
+            logger.debug("process_jpegcache: ui_create_bitmap failed");
     }
 
     /* Process a bitmap cache v2 order */
