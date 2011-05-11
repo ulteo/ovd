@@ -437,18 +437,16 @@ checkSessionMode();
 																if ($('sessionmanager_host') && $('sessionmanager_host').visible())
 																	setCaretPosition($('sessionmanager_host'), 0);
 															}
-															Event.observe($('sessionmanager_host'), 'keypress', function() {
+															Event.observe($('sessionmanager_host'), 'focus', function() {
 																if ($('sessionmanager_host').value == sessionmanager_host_example) {
 																	$('sessionmanager_host').style.color = 'black';
 																	$('sessionmanager_host').value = '';
 																}
 															});
-															Event.observe($('sessionmanager_host'), 'keyup', function() {
+															Event.observe($('sessionmanager_host'), 'blur', function() {
 																if ($('sessionmanager_host').value == '') {
 																	$('sessionmanager_host').style.color = 'grey';
 																	$('sessionmanager_host').value = sessionmanager_host_example;
-																	if ($('sessionmanager_host') && $('sessionmanager_host').visible())
-																		setCaretPosition($('sessionmanager_host'), 0);
 																}
 															});
 														}, 1500);
