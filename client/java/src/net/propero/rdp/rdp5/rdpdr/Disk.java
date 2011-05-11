@@ -118,6 +118,9 @@ public class Disk extends RdpdrDevice{
 		String path = this.rdpdr.g_rdpdr_device[device_id].local_path + filename;
 		//path = path.replace("//", "/");
 
+		if (path.length() == 0)
+			return STATUS_NO_SUCH_FILE;
+
 		File file1 = new File(path);
 		int flags = 0;
 		int handle = 0;//unsigned32 type
@@ -590,6 +593,9 @@ public class Disk extends RdpdrDevice{
 			    }
 			    
 			    //check file
+			    if (fullpath.length() == 0)
+				return STATUS_NO_SUCH_FILE;
+			    
 			    File this_file = new File(fullpath);
 			    if(!this_file.exists()){
 			    	out.set8(0);
