@@ -31,6 +31,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import org.ulteo.Logger;
+import org.ulteo.gui.GUIActions;
+import org.ulteo.gui.SwingTools;
 import org.ulteo.ovd.applet.AppletLogoutPopup;
 import org.ulteo.rdp.RdpActions;
 
@@ -67,10 +69,10 @@ public class FullscreenWindow extends JFrame implements FocusListener, WindowLis
 	}
 	
 	public void focusGained(FocusEvent fe) {
-		this.setAlwaysOnTop(true);
+		SwingTools.invokeLater(GUIActions.setAlwaysOnTop(this, true));
 	}
 	public void focusLost(FocusEvent fe) {
-		this.setAlwaysOnTop(false);
+		SwingTools.invokeLater(GUIActions.setAlwaysOnTop(this, false));
 	}
 
 	public void windowClosing(WindowEvent we) {

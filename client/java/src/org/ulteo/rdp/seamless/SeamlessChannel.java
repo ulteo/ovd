@@ -153,7 +153,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 		sf.addMouseListener(this);
 		sf.addMouseMotionListener(this);
 		if ((flags & SeamlessChannel.WINDOW_CREATE_TOPMOST) != 0)
-			sf.setAlwaysOnTop(true);
+			SwingTools.invokeLater(GUIActions.setAlwaysOnTop(sf, true));
 
 		this.addFrame((SeamlessWindow)sf, name);
 

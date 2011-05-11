@@ -320,7 +320,7 @@ public class RectWindow extends Component {
 		public LineWindow(Window f) {
 			super(f);
 
-			this.setAlwaysOnTop(true);
+			SwingTools.invokeLater(GUIActions.setAlwaysOnTop(this, true));
 			this.setBackground(Color.DARK_GRAY);
 		}
 
