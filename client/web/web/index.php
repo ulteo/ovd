@@ -551,7 +551,18 @@ checkSessionMode();
 														<strong><span id="language_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<span style="margin-right: 5px;"><img id="session_language_flag" /></span><script type="text/javascript">Event.observe(window, 'load', function() { translateInterface($('session_language').value); updateFlag($('session_language').value); updateKeymap($('session_language').value); });</script><select id="session_language" onchange="translateInterface($('session_language').value); updateFlag($('session_language').value); updateKeymap($('session_language').value);" onkeyup="translateInterface($('session_language').value); updateFlag($('session_language').value); updateKeymap($('session_language').value);">
+														<span style="margin-right: 5px;"><img id="session_language_flag" /></span>
+														<script type="text/javascript">
+															Event.observe(window, 'load', function() {
+																translateInterface($('session_language').value);
+																updateFlag($('session_language').value);
+																<?php
+																	if (! isset($wi_session_keymap))
+																		echo 'updateKeymap($(\'session_language\').value);';
+																?>
+															});
+														</script>
+														<select id="session_language" onchange="translateInterface($('session_language').value); updateFlag($('session_language').value); updateKeymap($('session_language').value);" onkeyup="translateInterface($('session_language').value); updateFlag($('session_language').value); updateKeymap($('session_language').value);">
 															<?php
 																foreach ($languages as $language)
 																	echo '<option value="'.$language['id'].'" style="background: url(\'media/image/flags/'.$language['id'].'.png\') no-repeat right;"'.(($language['id'] == $user_language || $language['id'] == substr($user_language, 0, 2))?' selected="selected"':'').'>'.$language['english_name'].((array_key_exists('local_name', $language))?' - '.$language['local_name']:'').'</option>';
