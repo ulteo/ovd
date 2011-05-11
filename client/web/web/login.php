@@ -261,8 +261,8 @@ if (count($server_nodes) < 1) {
 $_SESSION['ovd-client']['explorer'] = false;
 
 $profile_node = $session_node->getElementsByTagName('profile')->item(0);
-$sharedfolders_node = $session_node->getElementsByTagName('sharedfolders')->item(0);
-if (is_object($profile_node) || is_object($sharedfolders_node)) {
+$sharedfolder_nodes = $session_node->getElementsByTagName('sharedfolder');
+if (is_object($profile_node) || is_object($sharedfolder_nodes)) {
 	if (is_dir(dirname(__FILE__).'/ajaxplorer/'))
 		$_SESSION['ovd-client']['explorer'] = true;
 
@@ -293,8 +293,7 @@ if ($_SESSION['ovd-client']['explorer'] === true) {
 		$_SESSION['ovd-client']['ajxp']['folders'][] = $profile_node->getAttribute('dir');
 	}
 
-	if (is_object($sharedfolders_node)) {
-		$sharedfolder_nodes = $sharedfolders_node->getElementsByTagName('sharedfolder');
+	if (is_object($sharedfolder_nodes)) {
 		foreach ($sharedfolder_nodes as $sharedfolder_node) {
 			if (! is_object($sharedfolder_node))
 				continue;
