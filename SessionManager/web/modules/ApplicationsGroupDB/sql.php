@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -176,7 +176,7 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 	}
 	
 	public static function liaisonType() {
-		return 'sql';
+		return array(array('type' => 'UsersGroup', 'owner' => 'sql'));
 	}
 	
 	protected function generateFromRow($row_){

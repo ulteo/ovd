@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -266,7 +266,7 @@ class UserGroupDB_ldap_posix {
 	}
 	
 	public static function liaisonType() {
-		return 'ldap_posix';
+		return array(array('type' => 'UsersGroup', 'owner' => 'ldap_posix'));
 	}
 	
 	public function add($usergroup_){

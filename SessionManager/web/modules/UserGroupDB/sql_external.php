@@ -142,7 +142,7 @@ class UserGroupDB_sql_external {
 	}
 	
 	public static function liaisonType() {
-		return 'sql';
+		return array(array('type' => 'UsersGroup', 'owner' => 'sql'));
 	}
 	
 	public function add($usergroup_){

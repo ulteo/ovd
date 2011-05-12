@@ -246,6 +246,9 @@ class Preferences {
 		$c = new ConfigElement_inputlist('default_browser', _('Default browser'), _('Default browser'), _('Default browser'), array('linux' => NULL, 'windows' => NULL));
 		$this->add($c,'general');
 		
+		$c = new ConfigElement_dictionary('liaison', _('Liaisons'), _('Liaisons'), _('Liaisons'), array());
+		$this->add($c,'general');
+		
 		$c = new ConfigElement_multiselect('default_policy', _('Default policy'), _('Default policy'), _('Default policy'), array());
 		$c->setContentAvailable(array(
 			'canUseAdminPanel' => _('use Admin panel'),
@@ -651,5 +654,39 @@ class Preferences {
 			
 		$mods_enable = $prefs->get('general', 'module_enable');
 		return in_array($name_, $mods_enable);
+	}
+	
+	public static function liaisonsOwner() {
+		$types = array();
+		
+		$prefs = Preferences::getInstance();
+		if (! $prefs)
+			die_error('get Preferences failed', __FILE__, __LINE__);
+		
+		$modules_enable = $prefs->get('general', 'module_enable');
+		foreach ($modules_enable as $module_name) {
+			if (method_exists($module_name, 'getInstance')) {
+				$module_instance = call_user_func(array($module_name, 'getInstance'));
+				if (is_object($module_instance)) {
+					if (method_exists($module_instance, 'liaisonType')) {
+						$liaisons = $module_instance->liaisonType();
+						if (is_array($liaisons)) {
+							foreach ($liaisons as $liaison) {
+								if (is_array($liaison) && array_key_exists('type', $liaison) && array_key_exists('owner', $liaison)) {
+									$types[$liaison['type']] = $liaison['owner'];
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		$overwrited_liaisons = $prefs->get('general', 'liaison');
+		foreach ($overwrited_liaisons as $type => $owner) {
+			$types[$type] = $owner;
+		}
+		
+		return $types;
 	}
 }

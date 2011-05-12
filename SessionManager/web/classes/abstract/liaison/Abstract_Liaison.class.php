@@ -23,31 +23,21 @@ require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 class Abstract_Liaison {
 	public static function callMethod($method_name_, $type_, $element_=NULL, $group_=NULL) {
 		Logger::debug('main', "Abstract_Liaison::callMethod ('$method_name_', '$type_', '$element_', '$group_')");
-		if ($type_ != 'UsersGroup') {
-			$method_to_call = array('Abstract_Liaison_sql', $method_name_);
-			$class_to_use = 'Abstract_Liaison_sql';
+		
+		$liaison_owners = Preferences::liaisonsOwner();
+		
+		if (array_key_exists($type_, $liaison_owners)) {
+			$liaison_type = $liaison_owners[$type_];
 		}
 		else {
-			$prefs = Preferences::getInstance();
-			if (! $prefs) {
-				Logger::error('main', 'Abstract_Liaison::load get Preferences failed');
-				return NULL;
-			}
-			$mods_enable = $prefs->get('general','module_enable');
-			if (! in_array('UserGroupDB',$mods_enable)) {
-				Logger::error('main', 'Abstract_Liaison::load UserGroupDB module must be enabled');
-				return NULL;
-			}
-			
-			$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-			$liaison_type = call_user_func(array($mod_usergroup_name, 'liaisonType'));
-			
-			$method_to_call = array('Abstract_Liaison_'.$liaison_type, $method_name_);
-			$class_to_use = 'Abstract_Liaison_'.$liaison_type;
+			$liaison_type = 'sql';
 		}
 		
+		$method_to_call = array('Abstract_Liaison_'.$liaison_type, $method_name_);
+		$class_to_use = 'Abstract_Liaison_'.$liaison_type;
+		
 		if (!method_exists($class_to_use, $method_name_)) {
-			Logger::error('main', "Abstract_Liaison::callMethod method '$method_to_call' does not exist");
+			Logger::error('main', "Abstract_Liaison::callMethod method '".serialize($method_to_call)."' does not exist");
 			return NULL;
 		}
 		return call_user_func($method_to_call, $type_,  $element_, $group_);
