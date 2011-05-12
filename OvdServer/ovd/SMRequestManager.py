@@ -43,15 +43,7 @@ class SMRequestManager():
 	
 	
 	def initialize(self):
-		try:
-			buf = socket.getaddrinfo(self.host, self.port, socket.AF_INET, 0, socket.SOL_TCP)
-		except socket.gaierror, err:
-			raise Exception("Unable to resolv %s in IPv4 address"%(self.host))
-		if len(buf)==0:
-			raise Exception("Unable to resolv %s in IPv4 address"%(self.host))
-		
-		(addr,port) = buf[0][4]
-		self.url = "http://%s:%d"%(addr, port)
+		self.perform_dns_request()
 		
 		node = self.send_server_name()
 		if node is None:
@@ -62,6 +54,18 @@ class SMRequestManager():
 		
 		self.name = node.getAttribute("name")
 		return True
+	
+	
+	def perform_dns_request(self):
+		try:
+			buf = socket.getaddrinfo(self.host, self.port, socket.AF_INET, 0, socket.SOL_TCP)
+		except socket.gaierror, err:
+			raise Exception("Unable to resolv %s in IPv4 address"%(self.host))
+		if len(buf)==0:
+			raise Exception("Unable to resolv %s in IPv4 address"%(self.host))
+		
+		(addr,port) = buf[0][4]
+		self.url = "http://%s:%d"%(addr, port)
 	
 	
 	def switch_status(self, status):
@@ -92,6 +96,9 @@ class SMRequestManager():
 	
 	
 	def send_server_name(self):
+		if self.url is None:
+			self.perform_dns_request()
+		
 		url = "%s/server/name"%(self.url)
 		Logger.debug('SMRequest::server_name url '+url)
 		
@@ -120,6 +127,9 @@ class SMRequestManager():
 	
 	
 	def send_packet(self, path, document = None):
+		if self.url is None:
+			self.perform_dns_request()
+		
 		url = "%s%s"%(self.url, path)
 		Logger.debug("SMRequest::send_packet url %s"%(url))
 		
