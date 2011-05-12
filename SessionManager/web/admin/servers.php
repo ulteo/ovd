@@ -413,9 +413,9 @@ function show_manage($fqdn) {
 
   echo '<td>'.$server->stringVersion().'</td>';
   echo '<td>'.$server->stringStatus().'</td>';
-  echo '<td>'._('CPU').'; : '.$server->getAttribute('cpu_model').'  ('.$server->getAttribute('cpu_nb_cores').' ';
+  echo '<td>'._('CPU').': '.$server->getAttribute('cpu_model').'  ('.$server->getAttribute('cpu_nb_cores').' ';
   echo ($server->getAttribute('cpu_nb_cores') > 1)?_('cores'):_('core');
-  echo ')<br />'._('RAM').' : '.round($server->getAttribute('ram_total')/1024).' '._('MB').'</td>';
+  echo ')<br />'._('RAM').': '.round($server->getAttribute('ram_total')/1024).' '._('MB').'</td>';
 
   if ($server_online) {
     echo '<td>';
