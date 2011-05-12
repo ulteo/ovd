@@ -656,14 +656,10 @@ class Preferences {
 		return in_array($name_, $mods_enable);
 	}
 	
-	public static function liaisonsOwner() {
+	public function getLiaisonsOwner() {
 		$types = array();
 		
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed', __FILE__, __LINE__);
-		
-		$modules_enable = $prefs->get('general', 'module_enable');
+		$modules_enable = $this->get('general', 'module_enable');
 		foreach ($modules_enable as $module_name) {
 			if (method_exists($module_name, 'getInstance')) {
 				$module_instance = call_user_func(array($module_name, 'getInstance'));
@@ -682,11 +678,21 @@ class Preferences {
 			}
 		}
 		
-		$overwrited_liaisons = $prefs->get('general', 'liaison');
+		$overwrited_liaisons = $this->get('general', 'liaison');
 		foreach ($overwrited_liaisons as $type => $owner) {
 			$types[$type] = $owner;
 		}
 		
 		return $types;
+	}
+	
+	public static function liaisonsOwner() {
+		$types = array();
+		
+		$prefs = Preferences::getInstance();
+		if (! $prefs)
+			die_error('get Preferences failed', __FILE__, __LINE__);
+		
+		return $prefs->getLiaisonsOwner();
 	}
 }

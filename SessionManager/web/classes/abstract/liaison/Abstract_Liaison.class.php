@@ -53,15 +53,15 @@ class Abstract_Liaison {
 	}
 	
 	public static function init($prefs) {
-		$mods_enable = $prefs->get('general','module_enable');
-		if (in_array('UserGroupDB', $mods_enable)) {
-			if (! is_null($prefs->get('UserGroupDB','enable'))) {
-				$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-				$liaison_type = call_user_func(array($mod_usergroup_name, 'liaisonType'));
-				call_user_func(array('Abstract_Liaison_'.$liaison_type, 'init'), $prefs);
-			}
-			else {
-				Logger::info('main', 'Abstract_Liaison::init no module UserGroupDB enable');
+		$liaison_owners = Preferences::liaisonsOwner();
+		if (is_array($liaison_owners)) {
+			foreach ($liaison_owners as $type => $owner) {
+				$class_to_use = 'Abstract_Liaison_'.$owner;
+				$method_to_call = array($class_to_use, 'init');
+				if (method_exists($class_to_use, 'init')) {
+					Logger::critical('main', serialize($method_to_call));
+					call_user_func($method_to_call, $prefs);
+				}
 			}
 		}
 		Abstract_Liaison_sql::init($prefs);
