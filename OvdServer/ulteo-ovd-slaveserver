@@ -21,9 +21,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import signal
+# prevent an unexpected crash due to early signals reception
+signal.signal(signal.SIGINT, signal.SIG_IGN)
+signal.signal(signal.SIGTERM, signal.SIG_IGN)
+
 import getopt
 import os
-import signal
 import sys
 import threading
 import time
