@@ -246,9 +246,7 @@ class Role(AbstractRole):
 			
 			t1 = time.time()
 			if t1-t0_update_app > 30:
-				print "plip"
 				self.updateApplications()
-				print "plop"
 				
 				t0_update_app = time.time()
 			else:
