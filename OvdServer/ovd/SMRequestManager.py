@@ -135,11 +135,11 @@ class SMRequestManager():
 		
 		req = urllib2.Request(url)
 		req.add_header("Host", "%s:%s"%(self.host, self.port))
-		req.add_header("Content-type", "text/xml; charset=UTF-8")
 		
 		if document is not None:
 			rootNode = document.documentElement
 			rootNode.setAttribute("name", str(self.name))
+			req.add_header("Content-type", "text/xml; charset=UTF-8")
 			req.add_data(document.toxml())
 		
 		try:
