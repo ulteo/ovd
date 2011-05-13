@@ -96,24 +96,12 @@ class SMRequestManager():
 	
 	
 	def send_server_name(self):
-		if self.url is None:
-			self.perform_dns_request()
+		response = self.send_packet("/server/name")
+		if response is False:
+			Logger.warn("SMRequest::send_server_status Unable to send packet")
+			return False
 		
-		url = "%s/server/name"%(self.url)
-		Logger.debug('SMRequest::server_name url '+url)
-		
-		req = urllib2.Request(url)
-		req.add_header("Host", "%s:%s"%(self.host, self.port))
-		try:
-			f = urllib2.urlopen(req)
-		except IOError, e:
-			Logger.debug("SMRequest::server_status error"+str(e))
-			return None
-		except httplib.BadStatusLine, err:
-			Logger.debug("SMRequest::server_name not receive HTTP response"+str(err))
-			return None
-		
-		document = self.get_response_xml(f)
+		document = self.get_response_xml(response)
 		if document is None:
 			Logger.warn("SMRequest:send_server_name not XML response")
 			return None
