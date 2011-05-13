@@ -280,7 +280,3 @@ class System(AbstractSystem):
 	@staticmethod
 	def detachFatherProcess():
 		pass
-
-
-
-
