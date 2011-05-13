@@ -40,8 +40,10 @@ class UsersGroup {
 	
 	public function __toString() {
 		$ret = get_class($this).'(id: \''.$this->id.'\' name: \''.$this->name.'\' description: \''.$this->description.'\' published: '.$this->published.' extras: {';
-		foreach ($this->extras as $key => $value) {
-			$ret .= " $key => ".serialize($value)." ,";
+		if (isset($this->extras) && is_array($this->extras)) {
+			foreach ($this->extras as $key => $value) {
+				$ret .= " $key => ".serialize($value)." ,";
+			}
 		}
 		$ret .= '} )';
 		return $ret;
