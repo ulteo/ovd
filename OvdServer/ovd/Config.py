@@ -58,6 +58,7 @@ class Config:
 	session_manager = None
 	SM_SERVER_PORT = 1111
 	SLAVE_SERVER_PORT = 1112
+	server_allow_reuse_address = Platform.System.tcp_server_allow_reuse_address()
 
 	@staticmethod
 	def read(filename):
@@ -87,6 +88,14 @@ class Config:
 		
 		if Config.parser.has_option("main", "session_manager"):
 			Config.session_manager = Config.parser.get("main", "session_manager")
+		
+		if Config.parser.has_option("main", "server_allow_reuse_address"):
+			a = Config.parser.get("main", "server_allow_reuse_address").lower().strip()
+			if a not in ["true", "false"]:
+				report_error("invalid value for configuration key 'server_allow_reuse_address', allowed values are true/false")
+			
+			Config.server_allow_reuse_address = (a == "true")
+		
 		
 		if Config.parser.has_option("log", "file"):
 			Config.log_file = Config.parser.get("log", "file")

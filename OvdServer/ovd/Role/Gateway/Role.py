@@ -75,6 +75,9 @@ class Role(AbstractRole):
 
 		try:
 			self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			if Config.general.server_allow_reuse_address:
+				self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+			
 			self.sock.bind((Config.address, Config.port))
 			self.sock.listen(5)
 		except socket.error, e:

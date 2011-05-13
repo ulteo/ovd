@@ -3,7 +3,7 @@
 # Copyright (C) 2008-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
 #
@@ -68,10 +68,11 @@ class ThreadPoolingHttpServer(HTTPServer):
 	# request_queue_size defines the number of concurrent connections
 	# By default, request_queue_size is 5.
 	request_queue_size = 255
-	# On Windows, if we authorize the 'allow_reuse_address' parameter. Two servers can bind on the same ip
-	allow_reuse_address = False
-
+	
 	def __init__(self, server_address, RequestHandlerClass, numberOfThread):
+		# On Windows, if we authorize the 'allow_reuse_address' parameter. Two servers can bind on the same ip
+		self.allow_reuse_address = Config.server_allow_reuse_address
+		
 		self.serverHasBeLanched = False
 		HTTPServer.__init__(self, server_address, RequestHandlerClass)
 		self.threadNumber = numberOfThread
