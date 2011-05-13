@@ -117,7 +117,11 @@ class Role(AbstractRole):
 			self.apt.init()
 			self.threads.append(self.apt)
 		
+		Logger.info("ApplicationServer:: retrieve all applications installed (can make some time)")
+		self.updateApplications()
+
 		return True
+
 	
 	@staticmethod
 	def getName():
@@ -159,7 +163,6 @@ class Role(AbstractRole):
 	
 	
 	def run(self):
-		self.updateApplications()
 		self.has_run = True
 		
 		Logger._instance.close()
@@ -243,7 +246,9 @@ class Role(AbstractRole):
 			
 			t1 = time.time()
 			if t1-t0_update_app > 30:
+				print "plip"
 				self.updateApplications()
+				print "plop"
 				
 				t0_update_app = time.time()
 			else:
