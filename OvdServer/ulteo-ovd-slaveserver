@@ -1,11 +1,11 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2010 Ulteo SAS
+# Copyright (C) 2008-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2008-2010
-# Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -34,6 +34,7 @@ import time
 
 from ovd.Communication.HttpServer import HttpServer as Communication
 from ovd.Config import Config
+from ovd.Exceptions import InterruptedException
 from ovd.Logger import Logger
 from ovd.Platform import Platform
 from ovd.SlaveServer import SlaveServer
@@ -142,7 +143,7 @@ def main():
 			server.loop_procedure()
 			time.sleep(30)
 
-	except (InterruptException, KeyboardInterrupt):
+	except (InterruptedException, KeyboardInterrupt):
 		Logger.info("SlaveServer interruption")
 	
 	if not server.stopped:
@@ -162,11 +163,7 @@ def stop(Signum, Frame):
 	signal.signal(signal.SIGINT, signal.SIG_IGN)
 	signal.signal(signal.SIGTERM, signal.SIG_IGN)
 	Logger.info("Signal receive")
-	raise InterruptException()
-
-
-class InterruptException(Exception):
-	pass
+	raise InterruptedException()
 
 
 if __name__ == "__main__":

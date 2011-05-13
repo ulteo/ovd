@@ -27,6 +27,7 @@ import sys
 from xml.dom.minidom import Document
 
 from ovd.Config import Config
+from ovd.Exceptions import InterruptedException
 from ovd.Logger import Logger
 from ovd.Platform import Platform
 
@@ -89,6 +90,8 @@ class SlaveServer:
 			try:
 				if not role.init():
 					raise Exception()
+			except InterruptedException:
+				return False
 			except Exception, e:
 				Logger.error("SlaveServer: unable to initialize role '%s' %s"%(role.getName(), str(e)))
 				return False
