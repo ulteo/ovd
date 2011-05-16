@@ -51,7 +51,6 @@ class Role(AbstractRole):
 	
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
-		Logger._instance.close()
 		self.sessions = {}
 		self.sessions_spooler = multiprocessing.Queue()
 		self.sessions_spooler2 = multiprocessing.Queue()
@@ -108,7 +107,6 @@ class Role(AbstractRole):
 			nb_thread = 1
 
 		Logger._instance.setQueue(self.logging_queue, True)
-		Logger._instance.close()
 		for _ in xrange(nb_thread):
 			self.threads.append(SessionManagement(self.manager, self.sessions_spooler, self.sessions_spooler2, self.sessions_sync, self.logging_queue))
 		
