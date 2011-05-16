@@ -141,8 +141,6 @@ class Logger:
 		if self.logging is not None:
 			self.logging.debug(message)
 	
-	# Static methods
-
 	def setQueue(self, queue, mode):
 		self.queue = queue
 		if mode is True:
@@ -152,7 +150,9 @@ class Logger:
 				self.thread._Thread__stop()
 		else:
 			self.threaded = True
-
+	
+	# Static methods
+	
 	@staticmethod 
 	def initialize(name, loglevel, filename=None, stdout=False, threaded=False):
 		instance = Logger(name, loglevel, filename, stdout)
