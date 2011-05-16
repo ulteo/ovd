@@ -285,7 +285,7 @@ class Session(AbstractSession):
 			Logger.error("Unable to open key '%s'"%(path))
 		else:
 			win32api.RegSetValueEx(key, "NoDrives", 0, win32con.REG_DWORD, value)
-			win32api.RegSetValueEx(key, "NoViewOnDrive", 0, win32con.REG_DWORD, value)
+			# win32api.RegSetValueEx(key, "NoViewOnDrive", 0, win32con.REG_DWORD, value)
 			win32api.RegCloseKey(key)
 		
 		
