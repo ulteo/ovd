@@ -51,7 +51,7 @@ class SessionManagement(Process):
 		Logger._instance.setQueue(self.logging_queue, False)
 
 		# Prevent the process to be stop by a keyboard interruption
-		def quit(machin, truc):
+		def quit(signalnum, frame):
 			self.looping = False
 		signal.signal(signal.SIGINT, signal.SIG_IGN)
 		signal.signal(signal.SIGTERM, quit)
