@@ -5,7 +5,7 @@
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011
-# Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -52,6 +52,7 @@ class Logger:
 		
 		self.threaded = False
 		self.thread = None
+		self.lock = threading.Lock()
 		
 		if filename is not None or stdout is not False:	
 			formatter = logging.Formatter('%(asctime)s [%(levelname)s]: %(message)s')
@@ -114,7 +115,9 @@ class Logger:
 			if self.fileHandler is not None and self.fileHandler.stream is None:
 				self.fileHandler.stream = self.fileHandler._open()
 			f = getattr(self,func)
+			self.lock.acquire()
 			f(obj)
+			self.lock.release()
 	
 
 	def log_info(self, message):

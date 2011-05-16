@@ -165,9 +165,11 @@ class Role(AbstractRole):
 	def run(self):
 		self.has_run = True
 		
+		Logger._instance.lock.acquire()
 		Logger._instance.close()
 		for thread in self.threads:
 			thread.start()
+		Logger._instance.lock.release()
 		
 		t0_update_app = time.time()
 		
