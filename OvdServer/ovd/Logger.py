@@ -82,7 +82,7 @@ class Logger:
 		if self.fileHandler is not None:
 			if self.fileHandler.stream is not None:
 				self.fileHandler.stream.close()
-			self.fileHandler.stream = None
+				self.fileHandler.stream = None
 
 	def setThreadedMode(self, mode):
 		if mode is True and self.threaded is False:
