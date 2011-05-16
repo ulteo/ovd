@@ -701,12 +701,13 @@ public class Rdp {
      * RDP receive loop
      * @param deactivated On return, stores true in deactivated[0] if the session disconnected cleanly
      * @param ext_disc_reason On return, stores the reason for disconnection in ext_disc_reason[0]
+     * @param connected_callback
      * @throws IOException
      * @throws RdesktopException
      * @throws OrderException
      * @throws CryptoException
      */
-    public void mainLoop(boolean[] deactivated, int[] ext_disc_reason)
+    public void mainLoop(boolean[] deactivated, int[] ext_disc_reason, RdpConnection connected_callback)
             throws IOException, RdesktopException, OrderException,
             CryptoException {
         int[] type = new int[1];
@@ -741,6 +742,9 @@ public class Rdp {
                 	frame.triggerReadyToSend();
                 NDC.pop();
                 deactivated[0] = false;
+
+		if (connected_callback != null)
+			connected_callback.fireConnected();
                 break;
 
             case (Rdp.RDP_PDU_DEACTIVATE):

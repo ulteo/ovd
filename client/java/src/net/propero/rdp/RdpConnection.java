@@ -454,12 +454,10 @@ public class RdpConnection implements SeamListener, Runnable{
 
 				if (! this.keep_running)
 					break;
-				
-				this.fireConnected();
 
 				boolean[] deactivated = new boolean[1];
 				int[] ext_disc_reason = new int[1];
-				this.RdpLayer.mainLoop(deactivated, ext_disc_reason);
+				this.RdpLayer.mainLoop(deactivated, ext_disc_reason, this);
 				if (! deactivated[0]) {
 					this.disconnect();
 					String reason = Rdesktop.textDisconnectReason(ext_disc_reason[0]);
