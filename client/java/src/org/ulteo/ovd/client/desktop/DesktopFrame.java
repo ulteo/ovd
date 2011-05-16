@@ -22,10 +22,8 @@
 package org.ulteo.ovd.client.desktop;
 
 import java.awt.Dimension;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -41,6 +39,7 @@ import org.ulteo.gui.SwingTools;
 
 import org.ulteo.ovd.client.authInterface.NativeLogoutPopup;
 import org.ulteo.rdp.RdpActions;
+import org.ulteo.utils.jni.WorkArea;
 
 public class DesktopFrame extends JFrame implements WindowListener, InputListener {
 
@@ -48,12 +47,11 @@ public class DesktopFrame extends JFrame implements WindowListener, InputListene
 	private RdpActions actions = null;
 	public static int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 	public static int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-	private static GraphicsConfiguration gconf = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
-	private static Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(gconf);
+	private static Rectangle workarea_rect = WorkArea.getWorkAreaSize();
 	public static Dimension SMALL_RES = new Dimension(800,600);
 	public static Dimension MEDUIM_RES = new Dimension(1024,768);
 	public static Dimension HIGH_RES = new Dimension(1280,678);
-	public static Dimension MAXIMISED = new Dimension(screenWidth-insets.left-insets.right, screenHeight-insets.top-insets.bottom);
+	public static Dimension MAXIMISED = new Dimension(workarea_rect.width, workarea_rect.height);
 	public static Dimension FULLSCREEN = new Dimension(screenWidth, screenHeight);
 	public static Dimension DEFAULT_RES = DesktopFrame.FULLSCREEN;
 
