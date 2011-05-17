@@ -98,13 +98,13 @@ class Logger:
 	
 	
 	def run(self):
-		try:
-			while True:
+		while True:
+			try:
 				(func, obj) = self.queue.get()
-				f = getattr(self,func)
-				f(obj)
-		except (EOFError, socket.error):
-			return
+			except (EOFError, socket.error):
+				break
+			f = getattr(self,func)
+			f(obj)
 	
 	def process(self, func, obj):
 		obj = "[%d] "%(os.getpid())+obj
