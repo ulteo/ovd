@@ -119,6 +119,9 @@
 
 ;Include Visual C++ redistribuable deployment Functions
   !include "VCredist.nsh"
+  
+;Include Service library
+  !include servicelib.nsh
 
 ## First Dialog
 Function InputBoxPageShow
@@ -192,16 +195,49 @@ Section "Main Section" SecMain
 SectionEnd
 
 Section "pre" PreCmd
+  Push "installed"
+  Push "OVD"
+  Push ""
+  Call Service
+  Pop $0
+  ${If} $0 == "false"
+    Goto no_service
+  ${EndIf}
+  
   DetailPrint "Stopping service"
   nsExec::execToStack 'sc stop OVD'
+  
+  Push "OVD"
+  Push "stopped"
+  Call WaitServiceStatus
+  Pop $0
+  
+  no_service:
+
 SectionEnd
 
 Section "un.pre" UnPostCmd
+  Push "installed"
+  Push "OVD"
+  Push ""
+  Call un.Service
+  Pop $0
+  ${If} $0 == "false"
+    Goto no_service
+  ${EndIf}
+  
   DetailPrint "Stopping service"
   nsExec::execToStack 'sc stop OVD'
+  
+  Push "OVD"
+  Push "stopped"
+  Call un.WaitServiceStatus
+  Pop $0
 
   DetailPrint "Removing Service"
   nsExec::execToStack 'sc delete OVD'
+  
+  no_service:
 
   DetailPrint "Removing OVDAdmin user"
   UserMgr::DeleteAccount "OVDAdmin"
