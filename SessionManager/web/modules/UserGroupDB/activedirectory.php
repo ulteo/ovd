@@ -56,6 +56,13 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 		$config_ldap = $userDBAD->makeLDAPconfig();
 		
 		$config_ldap['match'] =  array('description' => 'description','name' => 'name', 'member' => 'member');
+		if (array_key_exists('match', $this->preferences)) {
+			$overright_match = $this->preferences['match'];
+			foreach ($overright_match as $key => $value) {
+				$config_ldap['match'][$key] = $value;
+			}
+		}
+		
 		if (str_endswith(strtolower($id_),strtolower($config_ldap['suffix'])) === true) {
 			$id2 = substr($id_,0, -1*strlen($config_ldap['suffix']) -1);
 		}
