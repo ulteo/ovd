@@ -107,7 +107,7 @@ class Logger:
 			f(obj)
 	
 	def process(self, func, obj):
-		obj = "[%d] "%(os.getpid())+obj
+		obj = "[%d] %s" % (os.getpid(), obj)
 		if self.isThreaded():
 			try:
 				self.queue.put_nowait((func, obj))
