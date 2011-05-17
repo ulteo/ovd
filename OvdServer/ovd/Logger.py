@@ -50,7 +50,6 @@ class Logger:
 		self.queue = None
 		self.filename = filename
 		
-		self.threaded = False
 		self.thread = None
 		self.lock = threading.Lock()
 		
@@ -85,14 +84,17 @@ class Logger:
 				self.fileHandler.stream = None
 
 	def setThreadedMode(self, mode):
-		if mode is True and self.threaded is False:
-			self.thread = threading.Thread(name="log", target=self.run)
-			self.threaded = True
-			self.thread.start()
+		if mode is True:
+			if not self.isThreaded():
+				self.thread = threading.Thread(name="log", target=self.run)
+				self.thread.start()
 		else:
-			self.threaded = False
-			if self.thread is not None and self.thread.isAlive():
+			if self.isThreaded():
 				self.thread._Thread__stop()
+	
+	
+	def isThreaded(self):
+		return self.thread is not None and self.thread.isAlive()
 	
 	
 	def run(self):
@@ -106,7 +108,7 @@ class Logger:
 	
 	def process(self, func, obj):
 		obj = "[%d] "%(os.getpid())+obj
-		if self.threaded:
+		if self.isThreaded():
 			try:
 				self.queue.put_nowait((func, obj))
 			except (EOFError, socket.error):
@@ -149,10 +151,8 @@ class Logger:
 		if mode is True:
 			self.thread = threading.Thread(name="log", target=self.run)
 			self.thread.start()
-			if self.thread is not None and self.thread.isAlive():
+			if self.isThreaded():
 				self.thread._Thread__stop()
-		else:
-			self.threaded = True
 	
 	# Static methods
 	
@@ -170,7 +170,7 @@ class Logger:
 		
 		Logger._instance = instance
 		
-		if old_instance is not None and old_instance.threaded:
+		if old_instance is not None and old_instance.isThreaded():
 			old_instance.setThreadedMode(False)
 	
 	@staticmethod
