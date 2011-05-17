@@ -104,7 +104,7 @@ class Logger:
 		while True:
 			try:
 				(func, obj) = self.queue.get()
-			except (EOFError, socket.error):
+			except (EOFError, IOError, socket.error):
 				break
 			f = getattr(self, func)
 			f(obj)

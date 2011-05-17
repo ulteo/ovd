@@ -184,10 +184,8 @@ class SlaveServer:
 					if role.thread.isAlive():
 						Logger.error("Role %s was stopped by using force" % role.getName())
 						role.thread._Thread__delete()
-			
-			if role.has_run:
-				role.finalize()
-			
+			role.finalize()
+
 			Logger.info("Role %s stopped" % role.getName())
 		
 		self.communication.stop()

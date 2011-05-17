@@ -137,12 +137,12 @@ class Role(AbstractRole):
 		for thread in self.threads:
 			thread.join()
 		
-		Logger._instance.setThreadedMode(False)
-		
 		self.loop = False
 
 
 	def finalize(self):
+		Logger._instance.setThreadedMode(False)
+		
 		for session in self.sessions.values():
 			self.manager.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
 		
