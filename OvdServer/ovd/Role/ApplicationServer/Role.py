@@ -137,6 +137,8 @@ class Role(AbstractRole):
 		for thread in self.threads:
 			thread.join()
 		
+		Logger._instance.setThreadedMode(False)
+		
 		self.loop = False
 
 

@@ -90,7 +90,7 @@ class Logger:
 				self.thread.start()
 		else:
 			if self.isThreaded():
-				self.thread._Thread__stop()
+				self.queue.close()
 	
 	
 	def isThreaded(self):
@@ -148,11 +148,7 @@ class Logger:
 	
 	def setQueue(self, queue, mode):
 		self.queue = queue
-		if mode is True:
-			self.thread = threading.Thread(name="log", target=self.run)
-			self.thread.start()
-			if self.isThreaded():
-				self.thread._Thread__stop()
+		self.setThreadedMode(mode)
 	
 	# Static methods
 	
