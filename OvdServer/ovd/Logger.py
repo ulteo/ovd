@@ -103,7 +103,7 @@ class Logger:
 				(func, obj) = self.queue.get()
 			except (EOFError, socket.error):
 				break
-			f = getattr(self,func)
+			f = getattr(self, func)
 			f(obj)
 	
 	def process(self, func, obj):
@@ -116,7 +116,7 @@ class Logger:
 		else:
 			if self.fileHandler is not None and self.fileHandler.stream is None:
 				self.fileHandler.stream = self.fileHandler._open()
-			f = getattr(self,func)
+			f = getattr(self, func)
 			self.lock.acquire()
 			f(obj)
 			self.lock.release()
