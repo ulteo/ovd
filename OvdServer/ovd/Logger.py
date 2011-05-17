@@ -85,7 +85,7 @@ class Logger:
 
 	def setThreadedMode(self, mode):
 		if mode is True:
-			if not self.isThreaded():
+			if not self.isThreaded() and self.queue is not None:
 				self.thread = threading.Thread(name="log", target=self.run)
 				self.thread.start()
 		else:
