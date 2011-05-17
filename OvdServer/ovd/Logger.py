@@ -167,10 +167,9 @@ class Logger:
 	@staticmethod 
 	def setInstance(instance):
 		old_instance = Logger._instance
-		
 		Logger._instance = instance
-		
-		if old_instance is not None and old_instance.isThreaded():
+
+		if old_instance is not None:
 			old_instance.setThreadedMode(False)
 	
 	@staticmethod
