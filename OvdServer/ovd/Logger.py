@@ -119,8 +119,9 @@ class Logger:
 			except (EOFError, socket.error):
 				return
 		else:
-			if self.fileHandler is not None and self.fileHandler.stream is None:
-				self.fileHandler.stream = self.fileHandler._open()
+			# TODO (6987) : useless ? So remove later 
+			#if self.fileHandler is not None and self.fileHandler.stream is None:
+			#	self.fileHandler.stream = self.fileHandler._open()
 			f = getattr(self, func)
 			f(obj)
 		self.lock.release()
