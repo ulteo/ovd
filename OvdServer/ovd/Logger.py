@@ -90,7 +90,10 @@ class Logger:
 				self.thread.start()
 		else:
 			if self.isThreaded():
+				self.lock.acquire()
 				self.queue.close()
+				self.thread.join()
+				self.lock.release()
 	
 	
 	def isThreaded(self):
@@ -108,18 +111,19 @@ class Logger:
 	
 	def process(self, func, obj):
 		obj = "[%d] %s" % (os.getpid(), obj)
+		
+		self.lock.acquire()
 		if self.isThreaded():
 			try:
 				self.queue.put_nowait((func, obj))
 			except (EOFError, socket.error):
 				return
 		else:
-			self.lock.acquire()
 			if self.fileHandler is not None and self.fileHandler.stream is None:
 				self.fileHandler.stream = self.fileHandler._open()
 			f = getattr(self, func)
 			f(obj)
-			self.lock.release()
+		self.lock.release()
 	
 
 	def log_info(self, message):
