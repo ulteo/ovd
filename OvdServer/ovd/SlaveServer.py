@@ -57,25 +57,36 @@ class SlaveServer:
 		self.dialog = Dialog(self)
 		self.smRequestManager = SMRequestManager()
 		
-		dialogInstances = []
-		dialogInstances.append(self.dialog)
-		
+		self.communication = CommunicationClass()
+		self.communication.dialogInterfaces.append(self.dialog)
+	
+	
+	def load_roles(self):
 		for role in Config.roles:
 			try:
-				Role = __import__("ovd.Role.%s.Role"%(role), {}, {}, "Role")
+				Role       = __import__("ovd.Role.%s.Role"  %(role), {}, {}, "Role")
 				RoleDialog = __import__("ovd.Role.%s.Dialog"%(role), {}, {}, "Dialog")
+				RoleConfig = __import__("ovd.Role.%s.Config"%(role), {}, {}, "Config")
 			
 			except ImportError:
 				Logger.error("Unsupported role '%s'"%(role))
-				sys.exit(2)
+				import traceback
+				Logger.debug(traceback.format_exc())
+				return False
+			
+			if not RoleConfig.Config.init(Config.get_role_dict(role)):
+				Logger.error("Unable to init configuration for role '%s'"%(role))
+				return False
+			
+			RoleConfig.Config.general = Config
 			
 			role_instance = Role.Role(self)
 			dialog_instance = RoleDialog.Dialog(role_instance)
 			
-			dialogInstances.append(dialog_instance)
+			self.communication.dialogInterfaces.append(dialog_instance)
 			self.role_dialogs.append((role_instance, dialog_instance))
 		
-		self.communication = CommunicationClass(dialogInstances)
+		return True
 	
 	
 	def init(self):

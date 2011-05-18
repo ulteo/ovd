@@ -1,11 +1,11 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2008,2009 Ulteo SAS
+# Copyright (C) 2008-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
 # Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -40,8 +40,8 @@ from threading import Thread
 from Queue import Queue
 
 class TwistedHttpServer(AbstractCommunication):
-	def __init__(self, dialogInterfaces):
-		AbstractCommunication.__init__(self, dialogInterfaces)
+	def __init__(self):
+		AbstractCommunication.__init__(self)
 		
 		self.tcp_port = Config.SLAVE_SERVER_PORT
 		

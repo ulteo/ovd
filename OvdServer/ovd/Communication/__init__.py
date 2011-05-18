@@ -32,8 +32,8 @@ class Communication:
 	STATUS_STOP    = 2
 	STATUS_ERROR   = 3
 	
-	def __init__(self, dialogInterfaces):
-		self.dialogInterfaces = dialogInterfaces
+	def __init__(self):
+		self.dialogInterfaces = []
 		self.session_manager = Config.session_manager
 		self.status = Communication.STATUS_INIT
 		self.thread = Thread(name="Communication", target=self.run)

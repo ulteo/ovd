@@ -128,27 +128,6 @@ class Config:
 			report_error("No role given")
 			return False
 		
-		for role in Config.roles:
-			try:
-				__import__("ovd.Role.%s.Role"%(role))
-				role_config = __import__("ovd.Role.%s.Config"%(role), {}, {}, "Config")
-			
-			except ImportError:
-				import traceback
-				print traceback.format_exc()
-				report_error("Unsupported role '%s'."%(role))
-				report_error("Please be sure this role exists and is correctly installed")
-				return False
-			
-			infos = {}
-			if Config.parser.has_section(role):
-				infos = dict(Config.parser.items(role))
-			
-			if not role_config.Config.init(infos):
-				return False
-			role_config.Config.general = Config
-		
-		
 		if Config.session_manager is None:
 			report_error("No session manager given")
 			return False
@@ -168,3 +147,10 @@ class Config:
 		
 		return True
 	
+	
+	@staticmethod
+	def get_role_dict(role):
+		if not Config.parser.has_section(role):
+			return {}
+		
+		return dict(Config.parser.items(role))

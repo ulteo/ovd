@@ -33,8 +33,8 @@ from ovd.Config import Config
 from ovd.Communication import Communication as AbstractCommunication
 
 class UnixSocketServer(AbstractCommunication):
-	def __init__(self, dialogInterfaces):
-		AbstractCommunication.__init__(self, dialogInterfaces)
+	def __init__(self):
+		AbstractCommunication.__init__(self)
 		
 		self.socket_filename = "/var/spool/ulteo/ovd.sock"
 		if Config.infos.has_key("server_socket_filename"):

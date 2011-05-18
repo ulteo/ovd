@@ -37,8 +37,8 @@ from threading import Thread
 from Queue import Queue
 
 class HttpServer(AbstractCommunication):
-	def __init__(self, dialogInterfaces):
-		AbstractCommunication.__init__(self, dialogInterfaces)
+	def __init__(self):
+		AbstractCommunication.__init__(self)
 		
 		self.webserver = None
 		self.tcp_port = Config.SLAVE_SERVER_PORT

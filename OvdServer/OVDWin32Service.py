@@ -3,7 +3,7 @@
 
 # Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
 #
@@ -66,6 +66,9 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 		
 		
 		SlaveServer.__init__(self, Communication)
+		
+		if not self.load_roles():
+			sys.exit(2)
 		self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
 	
 	
