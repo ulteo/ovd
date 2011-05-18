@@ -115,7 +115,7 @@ class Role(AbstractRole):
 			self.apt.init()
 			self.threads.append(self.apt)
 		
-		Logger.info("ApplicationServer:: retrieve all applications installed (can make some time)")
+		Logger.info("ApplicationServer:: retrieve all applications installed (can take some time)")
 		self.updateApplications()
 
 		return True
