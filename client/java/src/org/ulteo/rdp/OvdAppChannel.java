@@ -36,6 +36,7 @@ import net.propero.rdp.crypto.CryptoException;
 import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
 import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
+import org.ulteo.Logger;
 
 public class OvdAppChannel extends VChannel {
 	public static final int	ORDER_INIT	= 0x00;
@@ -82,7 +83,7 @@ public class OvdAppChannel extends VChannel {
 		switch( order ) {
 			case ORDER_INIT:
 				if (! this.channel_open) {
-					System.out.println("ovdapp channel init");
+					Logger.debug("[RDP - "+this.opt.hostname+"] OVDApp channel is ready");
 					this.channel_open = true;
 
 					for(OvdAppListener listener : this.listener) {
