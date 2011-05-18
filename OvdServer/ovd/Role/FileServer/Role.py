@@ -85,7 +85,6 @@ class Role(AbstractRole):
 	
 	
 	def run(self):
-		self.has_run = True
 		self.status = Role.STATUS_RUNNING
 		self.inotify.start()
 		self.inotify.join()

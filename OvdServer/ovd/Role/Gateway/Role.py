@@ -100,7 +100,6 @@ class Role(AbstractRole):
 		if not self.sock:
 			return
 
-		self.has_run = True
 		self.status = Role.STATUS_RUNNING
 
 		while True:

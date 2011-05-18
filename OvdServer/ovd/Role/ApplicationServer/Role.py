@@ -163,8 +163,6 @@ class Role(AbstractRole):
 	
 	
 	def run(self):
-		self.has_run = True
-		
 		Logger._instance.lock.acquire()
 		Logger._instance.close()
 		for thread in self.threads:

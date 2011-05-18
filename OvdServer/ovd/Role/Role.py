@@ -31,9 +31,6 @@ class Role:
 		self.main_instance = main_instance
 		self.status = Role.STATUS_INIT
 		self.thread = Thread(name="role_%s" % (self.getName()), target=self.run)
-
-		#TODO: check if this variable is really useful
-		self.has_run = False
 	
 	def init(self):
 		raise NotImplementedError()

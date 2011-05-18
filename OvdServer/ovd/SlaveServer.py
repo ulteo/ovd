@@ -169,7 +169,7 @@ class SlaveServer:
 		self.smRequestManager.switch_status(self.smRequestManager.STATUS_PENDING)
 		
 		for (role, dialog) in self.role_dialogs:
-			if role.has_run:
+			if role.getStatus() is role.STATUS_RUNNING:
 				Logger.debug("Stopping role %s" % role.getName())
 				role.stop()
 		
