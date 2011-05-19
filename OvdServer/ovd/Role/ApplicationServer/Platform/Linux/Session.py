@@ -3,7 +3,7 @@
 # Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
-# Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 # Author Thomas MOUTON <thomas@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -27,8 +27,6 @@ import shutil
 from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
-
-from ovd.Platform import Platform
 
 class Session(AbstractSession):
 	
