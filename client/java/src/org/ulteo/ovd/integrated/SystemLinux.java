@@ -340,7 +340,7 @@ public class SystemLinux extends SystemAbstract {
 			}
 		}
 		catch (FileNotFoundException e) {
-			Logger.debug("Enable to find the issue file at "+issueFile);
+			Logger.debug("Unable to find the issue file at "+issueFile);
 		} catch (IOException e) {
 			Logger.warn("Failed to read the issue file: "+issueFile);
 		}
