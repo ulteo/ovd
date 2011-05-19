@@ -35,6 +35,8 @@ from ovd.Platform import Platform
 import Platform as RolePlatform
 
 class Session:
+	Ulteo_apps = ["startovdapp", "UlteoOVDIntegratedLauncher"]
+	
 	SESSION_STATUS_UNKNOWN = "unknown"
 	SESSION_STATUS_ERROR = "error"
 	SESSION_STATUS_INIT = "init"
@@ -203,6 +205,45 @@ class Session:
 			self.used_applications = applications
 		return self.used_applications
 	
+	
+	def cleanupShortcut(self, path):
+		shortcut_ext = RolePlatform.Platform.ApplicationsDetection.shortcut_ext
+		
+		if not os.path.exists(path):
+			return
+		
+		try:
+			contents = os.listdir(path)
+		except Exception, err:
+			Logger.warn("Unable to list content of the directory %s (%s)"%(path, str(err)))
+			return
+		
+		for content in contents:
+			target = None
+			l = os.path.join(path, content)
+			if not os.path.isfile(l):
+				continue
+			
+			if not os.path.splitext(l)[1] == shortcut_ext:
+				continue
+			
+			try:
+				target = RolePlatform.Platform.ApplicationsDetection.getExec(l)
+			except Exception, e:
+				Logger.debug("Unable to get the desktop target of %s %s"%(l, str(e)))
+				target = None
+			
+			if target is None:
+				continue
+			
+			for app in self.Ulteo_apps:
+				if app.lower() in target.lower():
+					Logger.debug("removing shortcut %s"%(target))
+					try:
+						os.remove(l)
+					except Exception, e:
+						Logger.debug("Unable to delete the desktop target %s %s"%(l, str(e)))
+
 	
 	def archive_shell_dump(self):
 		spool = os.path.join(Config.spool_dir, "sessions dump archive")

@@ -36,6 +36,8 @@ from Msi import Msi
 
 
 class ApplicationsDetection:
+	shortcut_ext = ".lnk"
+	
 	def __init__(self):
 		(_, encoding) = locale.getdefaultlocale()
 		if encoding is None:
