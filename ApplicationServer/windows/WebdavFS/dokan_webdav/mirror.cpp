@@ -267,9 +267,10 @@ MirrorCloseFile(
 			}
 		}
 		davCache->remove(cacheHandle);
+		cacheHandle = INVALID_CACHE_HANDLE;
 	}
 	DokanFileInfo->Context = INVALID_CACHE_HANDLE;
-	return 0;
+	return ERROR_SUCCESS;
 }
 
 
@@ -278,8 +279,23 @@ MirrorCleanup(
 	LPCWSTR					FileName,
 	PDOKAN_FILE_INFO		DokanFileInfo)
 {
-	UNREFERENCED_PARAMETER(FileName);
 	UNREFERENCED_PARAMETER(DokanFileInfo);
+	WCHAR filePath[MAX_PATH];
+
+	if (DokanFileInfo->DeleteOnClose) {
+		GetFilePath(FileName, filePath);
+
+		DbgPrint(L"DeleteFile : %ls\n", (WCHAR*)filePath);
+
+		DELETERequest req(filePath);
+		if (FAILED(server->sendRequest(req))) {
+			DbgPrint(L"MirrorDeleteFile, failed to send the request\n");
+			return E_FAIL;
+		}
+
+		req.getWinStatus();
+		req.close();
+	}
 	return 0;
 }
 
@@ -629,32 +645,11 @@ static int
 MirrorDeleteFile(
 	LPCWSTR				FileName,
 	PDOKAN_FILE_INFO	DokanFileInfo)
+
 {
-	WCHAR filePath[MAX_PATH];
-	ULONG64 cacheHandle = DokanFileInfo->Context;
-	DWORD result;
-
-	GetFilePath(FileName, filePath);
-	DbgPrint(L"MirrorDeleteFile : %ls\n", (WCHAR*)filePath);
-
-	if (cacheHandle != INVALID_CACHE_HANDLE) {
-		davCache->remove(cacheHandle);
-	}
-
-	DbgPrint(L"MirrorDeleteFile : %ls\n", (WCHAR*)filePath);
-
-	DELETERequest req(filePath);
-	if (FAILED(server->sendRequest(req))) {
-		DbgPrint(L"MirrorDeleteFile, failed to send the request\n");
-		return -1;
-	}
-
-	result = req.getWinStatus();
-	req.close();
-
-	// save the file handle in Context
-	DokanFileInfo->Context = INVALID_CACHE_HANDLE;
-	return -1 * result;
+	UNREFERENCED_PARAMETER(FileName);
+	UNREFERENCED_PARAMETER(DokanFileInfo);
+	return ERROR_SUCCESS;
 }
 
 
@@ -663,27 +658,9 @@ MirrorDeleteDirectory(
 	LPCWSTR				FileName,
 	PDOKAN_FILE_INFO	DokanFileInfo)
 {
-	WCHAR filePath[MAX_PATH];
-	DWORD result;
-
-	GetFilePath(FileName, filePath);
-
-	DbgPrint(L"MirrorDeleteDirectory : %ls\n", (WCHAR*)filePath);
-
-	DELETERequest req(filePath);
-	if (FAILED(server->sendRequest(req))) {
-		DbgPrint(L"MirrorDeleteFile, failed to send the request\n");
-		return -1;
-	}
-
-	result = req.getWinStatus();
-	req.close();
-
-	// save the file handle in Context
-	DokanFileInfo->Context = INVALID_CACHE_HANDLE;
-	return -1 * result;
-
-
+	UNREFERENCED_PARAMETER(FileName);
+	UNREFERENCED_PARAMETER(DokanFileInfo);
+	return ERROR_SUCCESS;
 }
 
 
