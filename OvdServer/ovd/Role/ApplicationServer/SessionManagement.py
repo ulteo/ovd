@@ -41,15 +41,15 @@ class SessionManagement(Process):
 		self.queue2 = queue2
 		self.queue_sync = queue_sync
 		self.logging_queue = logging_queue
-
+		
 		self.synchronizer = SingletonSynchronizer()
 		self.synchronizer.backup()
 		self.looping = True
-
+	
 	def run(self):
 		self.synchronizer.restore()
 		Logger._instance.setQueue(self.logging_queue, False)
-
+		
 		# Prevent the process to be stop by a keyboard interruption
 		def quit(signalnum, frame):
 			self.looping = False
@@ -86,7 +86,7 @@ class SessionManagement(Process):
 				session = obj
 				self.manage_new_session(session)
 				self.queue_sync.put(session)
-
+		
 		Logger.debug("SessionManager process stopped")
 	
 	
@@ -154,30 +154,31 @@ class SessionManagement(Process):
 				session.user.infos["tsid"] = sessid
 			
 			self.logoff_user(session.user)
-
+		
 		session.uninstall_client()
 		
 		if session.domain.manage_user():
 			self.destroy_user(session.user)
 		
 		self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_DESTROYED)
-
+	
+	
 	def logoff_user(self, user):
 		Logger.info("SessionManagement::logoff_user %s"%(user.name))
-
+		
 		if user.infos.has_key("tsid"):
 			sessid = user.infos["tsid"]
-
+			
 			try:
 				status = TS.getState(sessid)
 			except Exception,err:
 				Logger.error("RDP server dialog failed ... ")
 				Logger.debug("SessionManagement::logoff_user: %s"%(str(err)))
 				return
-
+			
 			if status in [TS.STATUS_LOGGED, TS.STATUS_DISCONNECTED]:
 				Logger.info("must log off ts session %s user %s"%(sessid, user.name))
-
+				
 				try:
 					TS.logoff(sessid)
 				except Exception,err:

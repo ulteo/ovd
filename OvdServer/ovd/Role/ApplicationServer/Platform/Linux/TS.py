@@ -20,9 +20,7 @@
 
 import xrdp
 
-
 from ovd.Role.ApplicationServer.TS import TS as AbstractTS
-
 
 
 class TS (AbstractTS):
@@ -57,4 +55,3 @@ class TS (AbstractTS):
 	@staticmethod
 	def logoff(session_id):
 		return xrdp.SessionLogoff(session_id)
-

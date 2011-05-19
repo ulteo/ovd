@@ -89,5 +89,4 @@ class Config:
 			Logger.info("FileServer unable to write in '%s': %s"%(Config.dav_passwd_file, str(err)))
 			return False
 		
-		
 		return True

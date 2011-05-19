@@ -46,8 +46,10 @@ class Share:
 	def exists(self):
 		return os.path.isdir(self.directory)
 	
+	
 	def isActive(self):
 		return self.active
+	
 	
 	def status(self):
 		if not self.exists():
@@ -79,7 +81,6 @@ class Share:
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
 		
 		return s == 0
-	
 	
 	
 	def enable(self):
@@ -142,7 +143,7 @@ class Share:
 			ret = False
 			Logger.error("FS: unable to del group")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
-
+		
 		self.active = False
 		return ret
 	

@@ -120,6 +120,7 @@ def usage():
 	print >> sys.stderr, "Usage: %s [-m <conffile>] <add|del> <role>"%(sys.argv[0])
 	print >> sys.stderr, "       %s [-m <conffile>] ls"%(sys.argv[0])
 
+
 if __name__ == "__main__":
 	CONFFILE = "/etc/ulteo/ovd/slaveserver.conf"
 	

@@ -55,7 +55,8 @@ class DomainMicrosoft(AbstractDomainMicrosoft):
 	
 	def doCustomizeRegistry(self, hive):
 		return True
-
+	
+	
 	def onSessionEnd(self):
 		for shortcut in self.session.installedShortcut:
 			desktopShortcut = os.path.join(self.session.windowsDesktopDir, shortcut)
@@ -71,6 +72,5 @@ class DomainMicrosoft(AbstractDomainMicrosoft):
 					os.remove(programShortcut)
 				except:
 					Logger.debug("Error while deleting the file %s [%s]"%(programShortcut), str(e))
-
+		
 		return True
-

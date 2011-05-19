@@ -34,9 +34,11 @@ class Dialog(AbstractDialog):
 	def __init__(self, server_instance):
 		self.server = server_instance
 	
+	
 	@staticmethod
 	def getName():
 		return "server"
+	
 	
 	def process(self, request):
 		path = request["path"]
@@ -52,7 +54,7 @@ class Dialog(AbstractDialog):
 			
 			elif path == "/status":
 				return self.req_server_status(request)
-
+			
 			elif path.startswith("/logs"):
 				since = 0
 				extra = path[len("/logs"):]
@@ -81,7 +83,8 @@ class Dialog(AbstractDialog):
 		
 		doc.appendChild(rootNode)
 		return self.req_answer(doc)
-
+	
+	
 	def req_server_logs(self, request, since):
 		response = {}
 		response["code"] = httplib.OK
@@ -119,6 +122,7 @@ class Dialog(AbstractDialog):
 			return None
 		
 		return self.req_answer(doc)
+	
 	
 	def req_server_conf(self, request):
 		cpuInfos = System.getCPUInfos()

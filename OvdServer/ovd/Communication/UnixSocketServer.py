@@ -32,6 +32,7 @@ from ovd.Logger import Logger
 from ovd.Config import Config
 from ovd.Communication import Communication as AbstractCommunication
 
+
 class UnixSocketServer(AbstractCommunication):
 	def __init__(self):
 		AbstractCommunication.__init__(self)
@@ -40,9 +41,10 @@ class UnixSocketServer(AbstractCommunication):
 		if Config.infos.has_key("server_socket_filename"):
 			self.socket_filename = Config.infos["server_socket_filename"]
 		
-
+		
 		self.queue = Queue()
 		self.threads = []
+	
 	
 	def initialize(self):
 		if os.path.exists(self.socket_filename):
@@ -81,6 +83,7 @@ class UnixSocketServer(AbstractCommunication):
 			self.queue.put(sock)
 			Logger.debug("Communication dispatched job")
 	
+	
 	def stop(self):
 		self.server.close()
 		for thread in self.threads:
@@ -105,8 +108,10 @@ class RequestHandler(Thread):
 		self.queue = queue_
 		#Logger.debug("Processor init %s"%(str(self.id)))
 	
+	
 	def __str__(self):
 		return "RequestHandler "+str(self.id)
+	
 	
 	def run(self):
 		while True:
@@ -125,7 +130,7 @@ class RequestHandler(Thread):
 			Logger.warn("sock2data: packet recv syntax error")
 			return None
 		return sock.recv(packet_len)
-
+	
 	
 	def buffer2request(self, data):
 		req = {}
@@ -160,7 +165,8 @@ class RequestHandler(Thread):
 		index+= a_len
 		
 		return req
-		
+	
+	
 	def response2buffer(self, response):
 		buf = ""
 		b = "%d %s"%(response["code"], httplib.responses[response["code"]])
@@ -186,7 +192,7 @@ class RequestHandler(Thread):
 			if req is None:
 				sock.close()
 				return False
-		
+			
 			req["args"] = {}
 			if "?" in req["path"]:
 				req["path"], args = req["path"].split("?", 1)
@@ -205,11 +211,10 @@ class RequestHandler(Thread):
 				return False
 			
 			data = self.response2buffer(response)
-	
+			
 			
 			sock.send(struct.pack('>I', len(data)))
 			sock.send(data)
-
 		
 		except socket.error, err:
 			Logger.warn("process_req: error while comm: %s"%(str(err)))

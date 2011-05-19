@@ -53,13 +53,14 @@ class ApplicationsDetection:
 		self.mimetypes.load()
 		
 		pythoncom.CoInitialize()
-
+		
 		try:
 			self.path = shell.SHGetFolderPath(None, shellcon.CSIDL_COMMON_STARTMENU, 0, 0)
 		except:
 			Logger.error("getApplicationsXML_nocache : no  ALLUSERSPROFILE key in environnement")
 			self.path = os.path.join('c:\\', 'Documents and Settings', 'All Users', 'Start Menu')
-
+	
+	
 	def find_lnk(self):
 		ret = []
 		for root, dirs, files in os.walk(self.path):
@@ -70,6 +71,7 @@ class ApplicationsDetection:
 					
 		return ret
 	
+	
 	@staticmethod
 	def isBan(name_):
 		name = name_.lower()
@@ -77,13 +79,15 @@ class ApplicationsDetection:
 			if ban in name:
 				return True
 		return False
-
+	
+	
 	@staticmethod
 	def _compare_commands(cm1, cm2):
 		if cm1.lower().find(cm2.lower()) != -1:
 			return True
 		return False
-
+	
+	
 	def get(self):
 		applications = {}
 		
@@ -143,6 +147,7 @@ class ApplicationsDetection:
 		
 		return applications
 	
+	
 	@staticmethod
 	def getExec(filename):
 		Logger.debug("ApplicationsDetection::getExec %s"%(filename))
@@ -153,12 +158,12 @@ class ApplicationsDetection:
 		
 		return cmd
 	
+	
 	def getIcon(self, filename):
 		Logger.debug("ApplicationsDetection::getIcon %s"%(filename))
 		if not os.path.exists(filename):
 			Logger.warn("ApplicationsDetection::getIcon no such file")
 			return None
-		
 		
 		pythoncom.CoInitialize()
 		
@@ -229,9 +234,9 @@ class ApplicationsDetection:
 		
 		os.remove(path_png)
 		return buf
-		
 	
-	@staticmethod	
+	
+	@staticmethod
 	def execute(cmd, wait=False):
 		try:
 			(hProcess, hThread, dwProcessId, dwThreadId) = win32process.CreateProcess(None, cmd, None , None, False, 0 , None, None, win32process.STARTUPINFO())
@@ -249,6 +254,7 @@ class ApplicationsDetection:
 		win32file.CloseHandle(hThread)
 		
 		return retValue
+	
 	
 	@staticmethod
 	def ArrayUnique(ar):

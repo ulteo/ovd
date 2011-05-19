@@ -25,13 +25,13 @@ from TokenDatabase import digestToken, insertToken
 
 
 class ControlClassProcess(Thread):
-
+	
 	def __init__(self, _class, pipes):
 		Thread.__init__(self)
 		self._class = _class
 		(self._pipe_s, self._pipe_m) = pipes
-
-
+	
+	
 	def run(self):
 		while True:
 			try:
@@ -49,13 +49,13 @@ class ControlClassProcess(Thread):
 					self._pipe_s.send(None)
 			except (EOFError, IOError):
 				break
-
-
+	
+	
 	def stop(self):
 		self._pipe_s.close()
 		self._pipe_m.close()
-
-
+	
+	
 	def send(self, cmd):
 		self._pipe_m.send(cmd)
 		return self._pipe_m.recv()
@@ -63,31 +63,31 @@ class ControlClassProcess(Thread):
 
 
 class ControlFatherProcess(ControlClassProcess):
-
+	
 	def __init__(self, _class, pipes):
 		ControlClassProcess.__init__(self, _class, pipes)
-
+	
 	def _nb_conn(self):
 		return len(asyncore.socket_map) / 2
 
 
 
 class ControlChildProcess(ControlClassProcess):
-
+	
 	def __init__(self, _class, pipes):
 		ControlClassProcess.__init__(self, _class, pipes)
-
+	
 	def _get_sm(self):
 		return self._class.sm
-
+	
 	def _get_rdp_port(self):
 		return self._class.rdp_port
-
+	
 	def _digest_token(self, token):
 		return digestToken(token)
-
+	
 	def _insert_token(self, fqdn):
 		return insertToken(fqdn)
-
+	
 	def _stop_pid(self, pid):
 		self._class.kill_process(pid)

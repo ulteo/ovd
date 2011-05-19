@@ -295,7 +295,7 @@ class Session(AbstractSession):
 		
 		# Enable to use of lnk file from share without popup
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Policies\Associations"%(hiveName)
-	
+		
 		try:
 			Reg.CreateKeyR(win32con.HKEY_USERS, path)
 			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
@@ -306,8 +306,8 @@ class Session(AbstractSession):
 		else:
 			win32api.RegSetValueEx(key, "ModRiskFileTypes", 0, win32con.REG_SZ, ".exe;.msi;.vbs")
 			win32api.RegCloseKey(key)
-
-
+		
+		
 		# start menu customization
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"%(hiveName)
 		restrictions = ["Start_ShowRun", "StartMenuAdminTools", "Start_AdminToolsRoot"]
@@ -341,8 +341,8 @@ class Session(AbstractSession):
 				for item in restrictions:
 					win32api.RegSetValueEx(key, item, 0, win32con.REG_DWORD, 1)
 				win32api.RegCloseKey(key)
-	
-
+		
+		
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Policies\System"%(hiveName)
 		restrictions = ["DisableRegistryTools",
 				"DisableTaskMgr",

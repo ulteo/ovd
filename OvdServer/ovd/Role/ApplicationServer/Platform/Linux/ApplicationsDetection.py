@@ -33,7 +33,7 @@ class ApplicationsDetection():
 	
 	def __init__(self):
 		self.path = "/usr/share/applications"
-	
+		
 		self.desktop_keys_required = ['Name', 'Exec']
 		self.desktop_keys = {
 				'Name' : ['Name[en]',
@@ -51,7 +51,7 @@ class ApplicationsDetection():
 				l = os.path.join(root,name)
 				if not os.path.isfile(l):
 					continue
-	
+				
 				if not os.path.splitext(l)[1] == ".desktop":
 					continue
 				
@@ -82,17 +82,17 @@ class ApplicationsDetection():
 				parser.read(filename)
 			except ConfigParser.MissingSectionHeaderError:
 				continue
-		
+			
 			if not parser.has_section('Desktop Entry'):
 				continue
-		
+			
 			if not parser.has_option('Desktop Entry', 'Type'):
 				continue
 			if not parser.get('Desktop Entry','Type') == "Application":
 				# the spec define three type: Application, Link and
 				# Directory
 				continue
-		
+			
 			if not parser.has_option('Desktop Entry', "Name"):
 				continue
 			
@@ -127,8 +127,9 @@ class ApplicationsDetection():
 				application["description"] = parser.get('Desktop Entry', "GenericName")
 			
 			applications[application["local_id"]] = application
-			
+		
 		return applications
+	
 	
 	@staticmethod
 	def getExec(filename):
@@ -140,7 +141,7 @@ class ApplicationsDetection():
 		except ConfigParser.MissingSectionHeaderError:
 			Logger.warn("ApplicationsDetection::getExec invalid desktop file syntax")
 			return None
-	
+		
 		if not parser.has_section('Desktop Entry'):
 			Logger.warn("ApplicationsDetection::getExec invalid desktop file syntax")
 			return None	
@@ -161,7 +162,7 @@ class ApplicationsDetection():
 		except ConfigParser.MissingSectionHeaderError:
 			Logger.warn("ApplicationsDetection::getIcon invalid desktop file syntax")
 			return None
-	
+		
 		if not parser.has_section('Desktop Entry'):
 			Logger.warn("ApplicationsDetection::getIcon invalid desktop file syntax")
 			return None	
@@ -194,6 +195,7 @@ class ApplicationsDetection():
 		os.remove(bufFile)
 		
 		return buf
+	
 	
 	def chooseBestIcon(self, pattern):
 		cmd = 'find /usr/share/pixmaps /usr/share/icons -xtype f -iname "*%s*"'%(pattern)
@@ -240,7 +242,6 @@ class ApplicationsDetection():
 				list1[height] = image
 			else:
 				list2[height] = image
-		
 		
 		if len(list1) > 0:
 			return list1.values()[0]

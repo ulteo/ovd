@@ -34,6 +34,7 @@ from ovd.Platform.System import System
 from Dialog import Dialog
 from SMRequestManager import SMRequestManager
 
+
 class SlaveServer:
 	def __init__(self, CommunicationClass):
 		Logger.debug("SlaveServer construct")
@@ -196,7 +197,7 @@ class SlaveServer:
 						Logger.error("Role %s was stopped by using force" % role.getName())
 						role.thread._Thread__delete()
 			role.finalize()
-
+			
 			Logger.info("Role %s stopped" % role.getName())
 		
 		self.communication.stop()
@@ -225,7 +226,7 @@ class SlaveServer:
 	def updateMonitoring(self):
 		cpu_load = System.getCPULoad()
 		ram_used = System.getRAMUsed()
-
+		
 		doc = Document()
 		monitoring = doc.createElement('server')
 		

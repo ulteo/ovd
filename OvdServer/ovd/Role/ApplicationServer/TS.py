@@ -22,17 +22,20 @@ class TS:
 	STATUS_UNKNOWN = 1
 	STATUS_LOGGED = 3
 	STATUS_DISCONNECTED = 4
-
+	
+	
 	@staticmethod
 	def getList():
 		pass
-
+	
+	
 	@staticmethod
 	def getSessionID(username_):
 		pass
 	
+	
 	@staticmethod
-	def getState(session_id):		
+	def getState(session_id):
 		pass
 	
 	

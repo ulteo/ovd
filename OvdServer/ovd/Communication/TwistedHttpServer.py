@@ -39,6 +39,7 @@ from ovd.Communication import Communication as AbstractCommunication
 from threading import Thread
 from Queue import Queue
 
+
 class TwistedHttpServer(AbstractCommunication):
 	def __init__(self):
 		AbstractCommunication.__init__(self)
@@ -47,11 +48,13 @@ class TwistedHttpServer(AbstractCommunication):
 		
 		self.handler = HttpRequestHandler(self)
 	
+	
 	def initialize(self):
 		s = HttpRequestHandler(self)
 		self.site = server.Site(s)
 		
 		return True
+	
 	
 	def run(self):
 		try:
@@ -66,6 +69,7 @@ class TwistedHttpServer(AbstractCommunication):
 		reactor.run(installSignalHandlers=0)
 		self.status = AbstractCommunication.STATUS_STOP
 	
+	
 	def stop(self):
 		if reactor.running:
 			reactor.stop()
@@ -78,9 +82,11 @@ class HttpRequestHandler(resource.Resource):
 		resource.Resource.__init__(self)
 		self.comm_instance = comm_instance
 	
+	
 	def send_error(self, request, code):
 		request.setResponseCode(code)
 		return ""
+	
 	
 	def render_GET(self, request):
 		def render_GET_internal(response):
@@ -98,7 +104,7 @@ class HttpRequestHandler(resource.Resource):
 				request.finish()
 			except:
 				pass
-			
+		
 		req = {}
 		req["client"] = request.client.host
 		req["method"] = "GET"
@@ -113,7 +119,6 @@ class HttpRequestHandler(resource.Resource):
 		d = threads.deferToThread(self.comm_instance.process, req)
 		d.addCallback(render_GET_internal)
 		return server.NOT_DONE_YET
-	
 	
 	
 	

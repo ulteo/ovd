@@ -124,8 +124,8 @@ class Waiter():
 			value_ = win32api.ExpandEnvironmentStrings(value_)
 			
 			if type(value_) is not unicode:
-				value_ = unicode(value_, encoding)			
-
+				value_ = unicode(value_, encoding)
+			
 			self.userDir[value] = value_
 		
 		win32api.RegCloseKey(hkey)

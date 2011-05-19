@@ -42,7 +42,6 @@ class User:
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
 			return False
 		
-		
 		cmd = 'echo "%s\\n%s" | smbpasswd -s -a %s'%(password, password, self.login)
 		s,o = commands.getstatusoutput(cmd)
 		if s == 256:
@@ -62,7 +61,6 @@ class User:
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
 			return False
 		
-		
 		return True
 	
 	
@@ -75,7 +73,6 @@ class User:
 			Logger.error("FS: unable to update apache auth file")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
 			return False
-		
 		
 		cmd = 'smbpasswd -x %s'%(self.login)
 		s,o = commands.getstatusoutput(cmd)
@@ -101,13 +98,11 @@ class User:
 			Logger.warn("FS: unable to remove user %s in 'clean' process"%(self.login))
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
 		
-		
 		cmd = 'smbpasswd -x %s'%(self.login)
 		s,o = commands.getstatusoutput(cmd)
 		if s != 0:
 			Logger.warn("FS: unable to remove user %s in 'clean' process"%(self.login))
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
-		
 		
 		cmd = "userdel -f %s"%(self.login)
 		s,o = commands.getstatusoutput(cmd)

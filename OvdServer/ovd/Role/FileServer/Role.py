@@ -68,7 +68,7 @@ class Role(AbstractRole):
 		self.shares = self.get_existing_shares()
 		
 		return True
-
+	
 	
 	@staticmethod
 	def getName():
@@ -77,8 +77,8 @@ class Role(AbstractRole):
 	
 	def stop(self):
 		self.inotify.stop()
-
-
+	
+	
 	def finalize(self):
 		self.cleanup_samba()
 		self.purgeGroup()
@@ -89,7 +89,6 @@ class Role(AbstractRole):
 		self.inotify.start()
 		self.inotify.join()
 		self.status = Role.STATUS_STOP
-	
 	
 	
 	def cleanup_samba(self):
@@ -161,7 +160,6 @@ class Role(AbstractRole):
 		return shares
 	
 	
-	
 	def get_enabled_usershares(self):
 		s, o = commands.getstatusoutput("net usershare list")
 		if s is not 0:
@@ -200,5 +198,5 @@ class Role(AbstractRole):
 				userNode = doc.createElement("user")
 				userNode.setAttribute("login", user)
 				shareNode.appendChild(userNode)
-
+			
 			node.appendChild(shareNode)

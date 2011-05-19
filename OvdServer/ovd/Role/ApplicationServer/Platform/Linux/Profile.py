@@ -170,12 +170,12 @@ class Profile(AbstractProfile):
 				os.rmdir(self.profile_mount_point)
 			except OSError, e:
 				Logger.error("Unable to delete mount point (%s): %s"%(self.profile_mount_point, str(e)))
-
+		
 		try:		
 			os.rmdir(self.cifs_dst)
 		except OSError, e:
 			Logger.error("Unable to delete profile (%s): %s"%(self.cifs_dst, str(e)))
-		
+	
 	
 	def copySessionStart(self):
 		if self.homeDir is None or not os.path.isdir(self.homeDir):
@@ -216,6 +216,7 @@ class Profile(AbstractProfile):
 			Logger.error("Unable to copy conf to profile")
 			Logger.debug("Unable to copy conf to profile, cmd '%s' return %d: %s"%(cmd, s, o))
 	
+	
 	@staticmethod
 	def getRsyncMethod(src, dst, owner=False):
 		grep_cmd = " | ".join(['grep -v "/%s$"'%(word) for word in Profile.rsyncBlacklist()])
@@ -226,6 +227,7 @@ class Profile(AbstractProfile):
 			args.append("-o")
 		
 		return 'rsync %s $(%s) "%s/"'%(" ".join(args), find_cmd, dst)
+	
 	
 	@staticmethod
 	def rsyncBlacklist():

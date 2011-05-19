@@ -39,6 +39,7 @@ class Dialog(AbstractDialog):
 	def __init__(self, role_instance):
 		self.role_instance = role_instance
 	
+	
 	@staticmethod
 	def getName():
 		return "aps"
@@ -94,14 +95,15 @@ class Dialog(AbstractDialog):
 			return None
 		
 		return None
-
+	
+	
 	@staticmethod
 	def session2xmlstatus(session):
 		doc = Document()
 		rootNode = doc.createElement('session')
 		rootNode.setAttribute("id", session.id)
 		rootNode.setAttribute("status", session.status)
-
+		
 		if session.status == Session.SESSION_STATUS_DESTROYED and session.end_status is not None:
 			rootNode.setAttribute("reason", session.end_status)
 		
@@ -199,7 +201,7 @@ class Dialog(AbstractDialog):
 		app =  self.role_instance.applications_id_SM[app_id]
 		
 		self.role_instance.applications_mutex.release()
-
+		
 		appsdetect = ApplicationsDetection()
 		data = appsdetect.getIcon(app["filename"])
 		if data is None:
@@ -210,6 +212,7 @@ class Dialog(AbstractDialog):
 		response["Content-Type"] = "image/png"
 		response["data"] = data
 		return response
+	
 	
 	def req_session_create(self, request):
 		environment = DomainUlteo()
@@ -395,7 +398,6 @@ class Dialog(AbstractDialog):
 		return self.req_answer(self.session2xmlstatus(session))
 	
 	
-
 	def req_user_loggedin(self, request):
 		try:
 			document = minidom.parseString(request["data"])
@@ -479,6 +481,7 @@ class Dialog(AbstractDialog):
 		
 		return self.req_answer(document)
 	
+	
 	def req_debian(self, request):
 		try:
 			document = minidom.parseString(request["data"])
@@ -515,7 +518,7 @@ class Dialog(AbstractDialog):
 		
 		return self.req_answer(self.debian_request2xml(req_id, req))
 	
-		
+	
 	def req_debian_id(self, req):
 		try:
 			(rid, request) = req.split("/", 2)

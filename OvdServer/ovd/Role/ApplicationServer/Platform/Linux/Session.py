@@ -29,7 +29,6 @@ from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 
 class Session(AbstractSession):
-	
 	SPOOL_USER = "/var/spool/ulteo/ovd/"
 	
 	def init(self):
@@ -57,12 +56,11 @@ class Session(AbstractSession):
 		
 		
 		os.system('update-desktop-database "%s"'%(xdg_app_d))
-	
+		
 		if self.parameters.has_key("desktop_icons") and self.parameters["desktop_icons"] == "1":
 			path = os.path.join(xdg_app_d, ".show_on_desktop")
 			f = file(path, "w")
 			f.close()
-		
 		
 		env_file_lines = []
 		# Set the language
@@ -157,4 +155,3 @@ class Session(AbstractSession):
 			os.remove(dstFile)
 		
 		shutil.copyfile(shortcut, dstFile)
-

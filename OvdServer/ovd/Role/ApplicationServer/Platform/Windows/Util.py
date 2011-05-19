@@ -43,7 +43,7 @@ def copyDirOverride(src, dst, exception=None):
 	
 	if not os.path.isdir(dst):
 		os.makedirs(dst)
-
+	
 	dirs = None
 	try:
 		dirs = os.listdir(src)
@@ -82,7 +82,7 @@ def get_from_PATH(name):
 		env_var = os.environ["PATH"]
 	except KeyError:
 		return None
-
+	
 	for p in env_var.split(os.pathsep):
 		path = os.path.join(p, name)
 		if os.path.exists(path):

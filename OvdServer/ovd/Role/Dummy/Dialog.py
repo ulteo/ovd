@@ -25,9 +25,11 @@ class Dialog(AbstractDialog):
 	def __init__(self, role_instance):
 		self.role_instance = role_instance
 	
+	
 	@staticmethod
 	def getName():
 		return "dummy"
+	
 	
 	def process(self, request):
 		Logger.info("Dummy role Dialog::process(%s)"%(str(request)))

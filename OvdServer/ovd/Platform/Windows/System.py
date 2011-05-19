@@ -40,26 +40,31 @@ class System(AbstractSystem):
 	@staticmethod
 	def getName():
 		return "windows"
-
+	
+	
 	@staticmethod
 	def get_default_config_dir():
 		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
 		return os.path.join(d, "ulteo", "ovd")
+	
 	
 	@staticmethod
 	def get_default_spool_dir():
 		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
 		return os.path.join(d, "ulteo", "ovd", "spool")
 	
+	
 	@staticmethod
 	def get_default_data_dir():
 		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
 		return os.path.join(d, "ulteo", "ovd", "data")
 	
+	
 	@staticmethod
 	def get_default_log_dir():
 		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
 		return os.path.join(d, "ulteo", "ovd", "log")
+	
 	
 	@staticmethod
 	def getVersion():
@@ -79,19 +84,20 @@ class System(AbstractSystem):
 		
 		return buf
 	
+	
 	@staticmethod
 	def getCPUInfos():
 		pythoncom.CoInitialize()
 		wmi = win32com.client.Dispatch("WbemScripting.SWbemLocator")
 		wmi_serv = wmi.ConnectServer(".")
 		cpus = wmi_serv.ExecQuery("Select * from Win32_Processor")
-	
+		
 		try:
 			name = cpus[0].Name
 		except Exception, e:
 			Logger.error("getCPUInfos %s"%(str(e)))
 			return (1, "Unknown")
-
+		
 		nb_core = 0
 		for cpu in cpus:
 			try:
@@ -102,13 +108,14 @@ class System(AbstractSystem):
 		
 		return (nb_core, name)
 	
+	
 	@staticmethod
 	def getCPULoad():
 		pythoncom.CoInitialize()
 		wmi = win32com.client.Dispatch("WbemScripting.SWbemLocator")
 		wmi_serv = wmi.ConnectServer(".")
 		cpus = wmi_serv.ExecQuery("Select * from Win32_PerfFormattedData_PerfOS_Processor where Name='_Total'")
-	
+		
 		try:
 			load = 0.0
 			for cpu in cpus:
@@ -121,14 +128,15 @@ class System(AbstractSystem):
 		
 		return load
 	
+	
 	@staticmethod
 	def getRAMUsed():	
 		infos = win32api.GlobalMemoryStatusEx()
-	
+		
 		try:
 			total = infos["TotalPhys"]/1024
 			free = infos["AvailPhys"]/1024
-	
+		
 		except Exception, e:
 			Logger.warn("getRAMUsed: %s"%(str(e)))
 			return 0
@@ -159,7 +167,7 @@ class System(AbstractSystem):
 			return False
 			
 		return domain
-
+	
 	
 	@staticmethod
 	def DeleteDirectory(path):
@@ -185,6 +193,7 @@ class System(AbstractSystem):
 				return
 			raise e
 	
+	
 	@staticmethod
 	def groupCreate(name_):
 		try:
@@ -196,8 +205,9 @@ class System(AbstractSystem):
 		except win32net.error, e:
 			Logger.error("SessionManagement createGroupOVD: '%s'"%(str(e)))
 			return False
-	
+		
 		return True
+	
 	
 	@staticmethod
 	def groupExist(name_):
@@ -207,6 +217,7 @@ class System(AbstractSystem):
 			return False
 		
 		return True
+	
 	
 	@staticmethod
 	def groupMember(name_):
@@ -222,6 +233,7 @@ class System(AbstractSystem):
 			members.append(user["name"])
 		
 		return members
+	
 	
 	@staticmethod
 	def userRemove(user_):
@@ -245,18 +257,18 @@ class System(AbstractSystem):
 		userData['flags'] |= win32netcon.UF_NORMAL_ACCOUNT
 		userData['flags'] |= win32netcon.UF_PASSWD_CANT_CHANGE
 		userData['flags'] |= win32netcon.UF_SCRIPT
-
+		
 		userData['priv'] = win32netcon.USER_PRIV_USER
 		userData['primary_group_id'] = ntsecuritycon.DOMAIN_GROUP_RID_USERS
 		#userData['password_expired'] = 0 #le mot de passe n'expire pas
 		userData['acct_expires'] =  win32netcon.TIMEQ_FOREVER
-
+		
 		try:
 			win32net.NetUserAdd(None, 3, userData)
 		except Exception, e:
 			Logger.error("unable to create user: "+str(e))
 			raise e
-
+		
 		data = [ {'domainandname' : login_} ]
 		for group in groups_:
 			try:
@@ -266,7 +278,8 @@ class System(AbstractSystem):
 				raise e
 		
 		return True
-
+	
+	
 	@staticmethod
 	def userExist(name_):
 		try:

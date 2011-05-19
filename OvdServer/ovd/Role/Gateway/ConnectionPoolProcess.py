@@ -34,38 +34,37 @@ from passfd import recvfd
 
 
 class ConnectionPoolProcess(Process):
-
 	def __init__(self, child_pipes, father_pipes, s_unix, ssl_ctx):
 		Process.__init__(self)
-
+		
 		self.father_pipes = father_pipes
 		self.s_unix = s_unix
 		self.ssl_ctx = ssl_ctx
-
+		
 		self.f_control = ControlFatherProcess(self, child_pipes)
 		self.t_asyncore = None
-
+		
 		# use for process cleaning
 		self.was_lazy = False
 		self.clean_timer = threading.Timer(Config.process_timeout, self.clean)
-
-
+	
+	
 	def run(self):
 		Logger.info("Gateway:: new process started")
-
+		
 		# close inherited father pipes
 		self.father_pipes[0].close()
 		self.father_pipes[1].close()
-
+		
 		self.f_control.start()
 		self.clean_timer.start()
-
+		
 		signal.signal(signal.SIGINT, self.stop)
 		signal.signal(signal.SIGTERM, self.stop)
-
+		
 		self.sm = (self.f_control.send("get_sm"), self.ssl_ctx)
 		self.rdp_port = self.f_control.send("get_rdp_port")
-
+		
 		while True:
 			try:
 				fd = recvfd(self.s_unix)[0]
@@ -80,20 +79,20 @@ class ConnectionPoolProcess(Process):
 				break
 			sock = socket.fromfd(fd, socket.AF_INET, socket.SOCK_STREAM)
 			Logger.debug("Gateway:: new connection => %s" % str(sock.getpeername()))
-
+			
 			ssl_conn = SSL.Connection(self.sm[1], sock)
 			ssl_conn.set_accept_state()
 			ProtocolDetectDispatcher(ssl_conn, self.f_control, self.sm, self.rdp_port)
-
+			
 			# reload asyncore if stopped
 			if self.t_asyncore is None or not self.t_asyncore.is_alive():
 				# timeout needed for more SSL layer reactivity
 				self.t_asyncore = threading.Thread(target=lambda:asyncore.loop(timeout=0.01))
 				self.t_asyncore.start()
-
+		
 		Logger.info("Gateway:: child process stopped")
-
-
+	
+	
 	def stop(self, signum, frame):
 		self.clean_timer.cancel()
 		signal.signal(signal.SIGINT, signal.SIG_IGN)
@@ -106,7 +105,8 @@ class ConnectionPoolProcess(Process):
 			self.s_unix.shutdown(socket.SHUT_RD)
 			self.s_unix.close()
 			self.f_control.stop()
-
+	
+	
 	def clean(self):
 		if self.is_sleeping():
 			if self.was_lazy:
@@ -118,7 +118,7 @@ class ConnectionPoolProcess(Process):
 			self.was_lazy = False
 		self.clean_timer = threading.Timer(Config.process_timeout, self.clean)
 		self.clean_timer.start()
-
-
+	
+	
 	def is_sleeping(self):
 		return not self.t_asyncore.is_alive()

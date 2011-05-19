@@ -33,16 +33,16 @@ content_length_ptn = re.compile("Content-Length: ([0-9]+)", re.I | re.U)
 
 def rewrite(buf, xml, ctrl):
 	Logger.debug("Gateway:: rewrite XML")
-
+	
 	def getXMLError(msg):
 		rootnode = parser.Element("error")
 		rootnode.attrib["id"] = str(id)
 		Logger.error(msg)
 		rootnode.attrib["message"] = msg
 		return parser.tostring(rootnode)
-
+	
 	xml_length_before = len(buf)
-
+	
 	xml = parser.XML(xml.group())
 	if xml.tag.upper() == "SESSION" and xml.findall("server") and xml.findall("user"):
 		for element in xml.getiterator():
@@ -58,13 +58,13 @@ def rewrite(buf, xml, ctrl):
 		newxml = parser.tostring(xml)
 	else:
 		newxml = getXMLError("Gateway failed to produce XML replacement")
-
+	
 	buf = session_ptn.sub(newxml, buf, count=1)
-
+	
 	xml_length_after = len(buf)
 	content_lenght = content_length_ptn.search(buf)
 	if content_lenght:
 		new_content_length = int(content_lenght.group(1)) + xml_length_after - xml_length_before
 		buf = content_length_ptn.sub("Content-Length: %d" % new_content_length, buf, count=1)
-
+	
 	return buf

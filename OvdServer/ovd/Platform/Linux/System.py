@@ -41,21 +41,26 @@ class System(AbstractSystem):
 	def getName():
 		return "linux"
 	
+	
 	@staticmethod
 	def get_default_config_dir():
 		return "/etc/ulteo/ovd"
+	
 	
 	@staticmethod
 	def get_default_spool_dir():
 		return "/var/spool/ulteo/ovd/slaveserver"
 	
+	
 	@staticmethod
 	def get_default_data_dir():
 		return "/var/lib/ulteo/ovd/slaveserver"
 	
+	
 	@staticmethod
 	def get_default_log_dir():
 		return "/var/log/ulteo/ovd"
+	
 	
 	@staticmethod
 	def getVersion():
@@ -72,6 +77,7 @@ class System(AbstractSystem):
 			buf = platform.version()
 		
 		return buf
+	
 	
 	@staticmethod
 	def _getCPULoad():
@@ -91,6 +97,7 @@ class System(AbstractSystem):
 		
 		return (load, total)
 	
+	
 	@staticmethod
 	def getCPULoad():
 		(load1, total1) = System._getCPULoad()
@@ -101,6 +108,7 @@ class System(AbstractSystem):
 			return 0.0
 			
 		return ((load2 - load1) / (total2 - total1))
+	
 	
 	@staticmethod
 	def parseProcFile(filename_):
@@ -123,6 +131,7 @@ class System(AbstractSystem):
 		
 		return infos
 	
+	
 	@staticmethod
 	def getCPUInfos():
 		infos = System.parseProcFile("/proc/cpuinfo")
@@ -136,6 +145,7 @@ class System(AbstractSystem):
 			return (1, "Unknown")
 		
 		return (nb, name)
+	
 	
 	@staticmethod
 	def _getMeminfo():
@@ -162,6 +172,7 @@ class System(AbstractSystem):
 			infos[k.strip()] = v.strip()
 		
 		return infos
+	
 	
 	@staticmethod
 	def getRAMUsed():
@@ -202,9 +213,11 @@ class System(AbstractSystem):
 	def logoff(user, domain):
 		raise Exception("Not implementer")
 	
+	
 	@staticmethod
 	def DeleteDirectory(path):
 		os.system("rm -rf '%s'"%(path))
+	
 	
 	@staticmethod
 	def groupCreate(name_):
@@ -217,6 +230,7 @@ class System(AbstractSystem):
 		
 		return True
 	
+	
 	@staticmethod
 	def groupExist(name_):
 		try:
@@ -225,6 +239,7 @@ class System(AbstractSystem):
 			return False
 		
 		return True
+	
 	
 	@staticmethod
 	def groupMember(name_):
@@ -235,6 +250,7 @@ class System(AbstractSystem):
 			return None
 		
 		return group[3]
+	
 	
 	@staticmethod
 	def userRemove(name_):
@@ -248,6 +264,7 @@ class System(AbstractSystem):
 			return False
 		
 		return True
+	
 	
 	@staticmethod
 	def userAdd(login_, displayName_, password_, groups_):
@@ -273,7 +290,6 @@ class System(AbstractSystem):
 		return True
 	
 	
-	
 	@staticmethod
 	def userExist(name_):
 		try:
@@ -282,8 +298,8 @@ class System(AbstractSystem):
 			return False
 		
 		return True
-
-
+	
+	
 	@staticmethod
 	def detachFatherProcess():
 		os.setpgrp()

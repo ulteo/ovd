@@ -38,32 +38,32 @@ from passfd import sendfd
 
 
 class Role(AbstractRole):
-
+	
 	HTTPS_PORT = 443
 	RDP_PORT = 3389
-
-
+	
+	
 	@staticmethod
 	def getName():
 		return "Gateway"
-
-
+	
+	
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
-
+		
 		self.sm = (Config.general.session_manager, self.HTTPS_PORT)
 		self.rdp_port = self.RDP_PORT
-
+		
 		self.sock = None
 		self.ssl_ctx = None
 		self.processes = {}
-
+		
 		self.kill_mutex = threading.Lock()
-
-
+	
+	
 	def init(self):
 		Logger.info("Gateway init")
-
+		
 		fpem = os.path.join(Config.general.conf_dir, "gateway.pem")
 		if os.path.exists(fpem):
 			self.ssl_ctx = SSL.Context(SSL.SSLv23_METHOD)
@@ -72,7 +72,7 @@ class Role(AbstractRole):
 		else:
 			Logger.error("Gateway role need a certificate (%s)" % fpem)
 			return False
-
+		
 		try:
 			self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			if Config.general.server_allow_reuse_address:
@@ -83,25 +83,25 @@ class Role(AbstractRole):
 		except socket.error, e:
 			Logger.error("Gateway:: socket init: %s" % e)
 			return False
-
+		
 		Logger.info('Gateway:: running on (%s, %d)' % (Config.address, Config.port))
 		return True
-
-
+	
+	
 	def stop(self):
 		if self.sock:
 			self.sock.shutdown(socket.SHUT_RD)
 			self.sock.close()
 		for pid in list(self.processes):
 			self.kill_process(pid)
-
-
+	
+	
 	def run(self):
 		if not self.sock:
 			return
-
+		
 		self.status = Role.STATUS_RUNNING
-
+		
 		while True:
 			try:
 				conn = self.sock.accept()[0]
@@ -112,7 +112,7 @@ class Role(AbstractRole):
 				else:
 					Logger.error("Gateway:: socket accept: %s" % e)
 					raise e
-
+			
 			self.kill_mutex.acquire()
 			
 			s_unix = None
@@ -131,51 +131,50 @@ class Role(AbstractRole):
 					best_proc = min(self.processes, key=lambda pid:self.processes[pid][1])
 					Logger.warn("Gateway service has reached the open connections limit")
 					s_unix = self.processes[best_proc][0][2]
-
+			
 			sendfd(s_unix, conn.fileno())
-
+			
 			self.kill_mutex.release()
 			conn.close()
-
+		
 		self.status = Role.STATUS_STOP
-
-
+	
+	
 	def create_process(self):
 		(p00, p10) = Pipe() # for the father
 		(p01, p11) = Pipe() # for the child
 		father_pipes = (p10, p11)
 		child_pipes = (p01, p00)
 		(s0, s1) = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
-
+		
 		proc = ConnectionPoolProcess(child_pipes, father_pipes, s1, self.ssl_ctx)
 		proc.start()
 		child_pipes[0].close()
 		child_pipes[1].close()
-
+		
 		control = ControlChildProcess(self, father_pipes)
 		control.start()
-
+		
 		self.processes[proc.pid] = [(proc, control, s0), 0]
 		return proc.pid
-
-
+	
+	
 	def kill_process(self, pid):
 		self.kill_mutex.acquire()
-
+		
 		p = self.processes.pop(pid)[0]
 		p[0].terminate()
 		p[1].stop()
 		if p[1] is not threading.current_thread():
 			p[1].join()
 		p[0].join()
-
+		
 		self.kill_mutex.release()
-
-
+	
+	
 	def getReporting(self, node):
 		pass
-
-
+	
+	
 	def finalize(self):
 		pass
-

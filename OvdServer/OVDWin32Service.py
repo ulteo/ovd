@@ -48,7 +48,7 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 		if sys.argv[0].endswith("exe"):
 			basedir = os.path.dirname(sys.argv[0])
 			multiprocessing.set_executable(os.path.join(basedir, "ulteo-ovd-slaveserver.exe"))
-	
+		
 		# Init the logger instance
 		Win32Logger.initialize("OVD", Config.log_level, None)
 		ConfigModule.report_error = WinReport_error
@@ -57,7 +57,7 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 		if not Config.read(config_file):
 			Logger.error("invalid configuration file '%s'"%(config_file))
 			sys.exit(1)
-	
+		
 		if not Config.is_valid():
 			Logger.error("invalid config")
 			sys.exit(1)
@@ -104,17 +104,19 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 		
 		Logger.info("SlaveServer stopped")
 	
+	
 	def SvcStop(self):
 		Logger.info("Stopping SlaveServer")
 		self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
 		
 		win32event.SetEvent(self.hWaitStop)
 	
+	
 	def SvcShutdown(self):
 		# Reinit Logger because the Windows service manager logging system is already down
 		Logger.initialize("OVD", Config.log_level, Config.log_file, False)
 		Logger.info("Stopping SlaveServer (shutdown)")
-
+		
 		win32event.SetEvent(self.hWaitStop)
 
 
@@ -133,15 +135,18 @@ class Win32Logger(Logger):
 		Logger.log_warn(self, message)
 		servicemanager.LogWarningMsg(message)
 	
+	
 	def log_error(self, message):
 		Logger.log_error(self, message)
 		servicemanager.LogErrorMsg(message)
-
+	
+	
 	# Static methods
 	@staticmethod 
 	def initialize(name, loglevel, file=None, threaded=False):
 		instance = Win32Logger(name, loglevel, file)
 		Logger._instance = instance
+
 
 def WinReport_error(message):
 	Logger.error(message)

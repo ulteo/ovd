@@ -44,7 +44,7 @@ if sys.platform == "win32":
 	# Force the include of ApS because of dynamic imports
 	sys.argv.append("-p")
 	sys.argv.append("ovd.Role.ApplicationServer,ovd.Platform")
-
+	
 	try:
 		import modulefinder
 		import win32com,sys
@@ -55,7 +55,7 @@ if sys.platform == "win32":
 			m = sys.modules[extra]
 			for p in m.__path__[1:]:
 				modulefinder.AddPackagePath(extra, p)
-
+	
 	except ImportError:
 		# no build path setup, no worries.
 		pass
@@ -77,12 +77,11 @@ if sys.platform == "win32":
 			self.copyright = "Copyright (C) @YEAR@ Ulteo SAS"
 			self.name = "Ulteo OVD"
 			self.icon_resources = [(0, "media\\ulteo.ico")]
-
+	
 	setup_args["zipfile"] = "lib/shared.zip"
 	setup_args["console"] = [ConsoleTarget()]
 	setup_args["service"] = [ServiceTarget()]
 	setup_args["options"] = {"py2exe": {"dll_excludes": ["w9xpopen.exe"]}}
-	
 
 
 elif sys.platform == "linux2":
@@ -92,18 +91,18 @@ elif sys.platform == "linux2":
 		'ovd.Role.ApplicationServer.Platform',
 		'ovd.Role.ApplicationServer.Platform.Linux',
 		'ovd.Platform', 'ovd.Platform.Linux']
-
+	
 @EXTRA_MODULES@
-
+	
 	setup_args["data_files"] = [
 		('/usr/bin',['ulteo-ovd-slaveserver', 'ovd-slaveserver-role']),
 		('/etc/ulteo/ovd',['examples/slaveserver.conf']),
 		('/usr/share/ulteo/ovd/slaveserver',
 			['examples/samba.conf', 'examples/apache2.conf'])]
 
-
 else:
 	raise Exception("No supported platform")
+
 
 if __name__ == "__main__":
 	setup(**setup_args)

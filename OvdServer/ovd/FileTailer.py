@@ -49,11 +49,11 @@ class FileTailer:
 		
 		self.fd.seek(-1, os.SEEK_END)
 		size = self.fd.tell() + 1
-
+		
 		last = self.fd.read(1)
 		if last == os.linesep:
 			size-= 1
-
+		
 		if size < self.bufsize:
 			self.pos = 0
 			self.bufsize = size

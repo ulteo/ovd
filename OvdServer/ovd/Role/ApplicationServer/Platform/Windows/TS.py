@@ -43,6 +43,7 @@ class TS(AbstractTS):
 		
 		return name
 	
+	
 	@staticmethod
 	def getList():
 		l = []
@@ -147,7 +148,7 @@ class TS(AbstractTS):
 		state = win32ts.WTSQuerySessionInformation(None, session_id, win32ts.WTSConnectState)
 		if state in [win32ts.WTSActive, win32ts.WTSConnected, win32ts.WTSInit]:
 			return TS.STATUS_LOGGED
-
+		
 		if state == win32ts.WTSDisconnected:
 			return TS.STATUS_DISCONNECTED
 		

@@ -52,20 +52,19 @@ class User(AbstractUser):
 		userData['flags'] |= win32netcon.UF_NORMAL_ACCOUNT
 		userData['flags'] |= win32netcon.UF_PASSWD_CANT_CHANGE
 		userData['flags'] |= win32netcon.UF_SCRIPT
-
+		
 		userData['priv'] = win32netcon.USER_PRIV_USER
 		userData['primary_group_id'] = ntsecuritycon.DOMAIN_GROUP_RID_USERS
 		userData['password_expired'] = 0 # password never expire
 		userData['acct_expires'] =  win32netcon.TIMEQ_FOREVER
 		if self.infos.has_key("locale"):
 			userData['country_code'] =  Langs.getLCID(self.infos["locale"])
-
+		
 		try:
 			win32net.NetUserAdd(None, 3, userData)
 		except Exception, e:
 			Logger.error("unable to create user: "+str(e))
 			raise e
-		
 		
 		self.post_create()
 		return True
@@ -82,7 +81,6 @@ class User(AbstractUser):
 					Logger.error("unable to add user %s to group '%s'"%(self.name, group))
 					return False
 		
-		
 		if self.infos.has_key("shell"):
 			shell = "%s.exe"%(self.infos["shell"])
 			shell_path = None
@@ -96,7 +94,7 @@ class User(AbstractUser):
 				Logger.warn("'%s' can not be started"%(str(shell)))
 			else:
 				shell = shell_path
-
+			
 			win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigInitialProgram, shell)
 			win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigfInheritInitialProgram, False)
 	
@@ -120,7 +118,6 @@ class User(AbstractUser):
 			return None
 		
 		return sid
-	
 	
 	
 	def unload(self, sid):

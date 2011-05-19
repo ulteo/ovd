@@ -88,7 +88,6 @@ class System:
 	def userExist(name_):
 		raise NotImplementedError()
 	
-	
 	@staticmethod
 	def tcp_server_allow_reuse_address():
 		raise NotImplementedError()

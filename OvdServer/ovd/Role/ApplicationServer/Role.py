@@ -58,7 +58,7 @@ class Role(AbstractRole):
 		self.sessions_spooler2 = multiprocessing.Queue()
 		self.sessions_sync = multiprocessing.Queue()
 		self.logging_queue = multiprocessing.Queue()
-
+		
 		self.manager = Manager(self.main_instance.smRequestManager)
 		self.threads = []
 		
@@ -67,7 +67,7 @@ class Role(AbstractRole):
 		self.applications_mutex = threading.Lock()
 		
 		self.loop = True
-
+		
 		self.static_apps = ApplicationsStatic(self.main_instance.smRequestManager)
 		self.static_apps_must_synced = False
 		self.static_apps_lock = threading.Lock()
@@ -107,7 +107,7 @@ class Role(AbstractRole):
 			nb_thread = int(round(1 + (ram + vcpu * 2)/3))
 		else:
 			nb_thread = 1
-
+		
 		Logger._instance.setQueue(self.logging_queue, True)
 		for _ in xrange(nb_thread):
 			self.threads.append(SessionManagement(self.manager, self.sessions_spooler, self.sessions_spooler2, self.sessions_sync, self.logging_queue))
@@ -119,9 +119,9 @@ class Role(AbstractRole):
 		
 		Logger.info("ApplicationServer:: retrieve all applications installed (can take some time)")
 		self.updateApplications()
-
+		
 		return True
-
+	
 	
 	@staticmethod
 	def getName():
@@ -140,8 +140,8 @@ class Role(AbstractRole):
 			thread.join()
 		
 		self.loop = False
-
-
+	
+	
 	def finalize(self):
 		Logger._instance.setThreadedMode(False)
 		
@@ -189,7 +189,7 @@ class Role(AbstractRole):
 						del(self.sessions[session.id])
 				else:
 					self.sessions[session.id] = session
-
+			
 			for session in self.sessions.values():
 				try:
 					ts_id = TS.getSessionID(session.user.name)
@@ -253,7 +253,7 @@ class Role(AbstractRole):
 				t0_update_app = time.time()
 			else:
 				time.sleep(1)
-			
+		
 		self.status = Role.STATUS_STOP
 	
 	

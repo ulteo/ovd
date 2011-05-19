@@ -59,7 +59,8 @@ class Config:
 	SM_SERVER_PORT = 1111
 	SLAVE_SERVER_PORT = 1112
 	server_allow_reuse_address = System.tcp_server_allow_reuse_address()
-
+	
+	
 	@staticmethod
 	def read(filename):
 		Config.parser = ConfigParser.ConfigParser()

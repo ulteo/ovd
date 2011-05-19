@@ -35,6 +35,7 @@ class Dialog(AbstractDialog):
 	def __init__(self, role_instance):
 		self.role_instance = role_instance
 	
+	
 	@staticmethod
 	def getName():
 		return "fs"
@@ -152,6 +153,7 @@ class Dialog(AbstractDialog):
 		rootNode.setAttribute("status", str(share.status()))
 		doc.appendChild(rootNode)
 		return self.req_answer(doc)
+	
 	
 	def user2xml(self, user, exists):
 		doc = Document()

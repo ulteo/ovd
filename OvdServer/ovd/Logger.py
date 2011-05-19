@@ -62,7 +62,7 @@ class Logger:
 			self.fileHandler = logging.handlers.RotatingFileHandler(filename, maxBytes=1000000, backupCount=2)
 			self.fileHandler.setFormatter(formatter)
 			self.logging.addHandler(self.fileHandler)
-	
+		
 		if stdout is not False:
 			self.consoleHandler = logging.StreamHandler(sys.stdout)
 			self.consoleHandler.setFormatter(formatter)
@@ -73,16 +73,18 @@ class Logger:
 		if self.logging is not None:
 			if self.fileHandler is not None:
 				self.logging.removeHandler(self.fileHandler)
-
+			
 			if self.consoleHandler is not None:
 				self.logging.removeHandler(self.consoleHandler)
+	
 	
 	def close(self):
 		if self.fileHandler is not None:
 			if self.fileHandler.stream is not None:
 				self.fileHandler.stream.close()
 				self.fileHandler.stream = None
-
+	
+	
 	def setThreadedMode(self, mode):
 		if mode is True:
 			if not self.isThreaded() and self.queue is not None:
@@ -109,6 +111,7 @@ class Logger:
 			f = getattr(self, func)
 			f(obj)
 	
+	
 	def process(self, func, obj):
 		obj = "[%d] %s" % (os.getpid(), obj)
 		
@@ -131,25 +134,31 @@ class Logger:
 		if self.logging is not None:
 			self.logging.info(message)
 	
+	
 	def log_warn(self, message):
 		if self.logging is not None:
 			self.logging.warn(message)
+	
 	
 	def log_error(self, message):
 		if self.logging is not None:
 			self.logging.error(message)
 	
+	
 	def log_debug(self, message):
 		if self.logging is not None:
 			self.logging.debug(message)
+	
 	
 	def log_debug2(self, message):
 		if self.logging is not None:
 			self.logging.debug(message)
 	
+	
 	def log_debug3(self, message):
 		if self.logging is not None:
 			self.logging.debug(message)
+	
 	
 	def setQueue(self, queue, mode):
 		self.queue = queue
@@ -164,12 +173,12 @@ class Logger:
 			instance.setThreadedMode(threaded)
 		
 		Logger.setInstance(instance)
-		
+	
 	@staticmethod 
 	def setInstance(instance):
 		old_instance = Logger._instance
 		Logger._instance = instance
-
+		
 		if old_instance is not None:
 			old_instance.setThreadedMode(False)
 	
@@ -183,6 +192,7 @@ class Logger:
 		
 		Logger._instance.process('log_info', message)
 	
+	
 	@staticmethod
 	def warn(message):
 		if not Logger._instance:
@@ -192,6 +202,7 @@ class Logger:
 			return
 		
 		Logger._instance.process('log_warn', message)
+	
 	
 	@staticmethod
 	def error(message):

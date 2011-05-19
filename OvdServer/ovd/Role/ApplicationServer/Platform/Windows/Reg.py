@@ -275,7 +275,6 @@ def DeleteTree(key, subkey, deleteRoot = True):
 		
 	win32api.RegCloseKey(hkey)
 	
-	
 	if deleteRoot:
 		win32api.RegDeleteKey(key, subkey)
 
@@ -295,7 +294,7 @@ def TreeSearchExpression(hive, subpath, motif):
 		return None
 	
 	while flag_continue:
-		try:			
+		try:
 			subsubKey = win32api.RegEnumKey(hkey, index)
 			index+= 1
 			res = TreeSearchExpression(hive, subpath+"\\"+subsubKey, motif)
@@ -303,6 +302,7 @@ def TreeSearchExpression(hive, subpath, motif):
 				return res
 		except Exception, err:
 			flag_continue = False
+	
 	index = 0
 	flag_continue = True
 	while flag_continue:
@@ -321,7 +321,7 @@ def TreeSearchExpression(hive, subpath, motif):
 			if err[0] != 259:  #no more data available
 				Logger.error("TreeSearchExpression: %s"%(str(err)))
 			flag_continue = False
-		
+	
 	win32api.RegCloseKey(hkey)
 	
 	return res
@@ -347,6 +347,7 @@ def TreeReplace(hive, subpath, src, dest):
 			TreeReplace(hive, subpath+"\\"+subsubKey, src, dest)
 		except Exception, err:
 			flag_continue = False
+	
 	index = 0
 	flag_continue = True
 	while flag_continue:
@@ -365,7 +366,7 @@ def TreeReplace(hive, subpath, src, dest):
 			if err[0] != 259:  #no more data available
 				Logger.error("TreeReplace: %s"%(str(err)))
 			flag_continue = False
-		
+	
 	win32api.RegCloseKey(hkey)
 
 
@@ -393,7 +394,7 @@ def LsTree(key, subkey, nb=0):
 			print "%s * Value %s"%(" "*(nb+2)*2, value)
 		except Exception, err:
 			flag_continue = False
-		
+	
 	win32api.RegCloseKey(hkey)
 
 
@@ -444,7 +445,7 @@ def disableActiveSetup22(rootPath):
 	
 	for k,v in objs.items():
 		version = v
-	
+		
 		path = r"%s\Software\Microsoft\Active Setup\Installed Components"%(rootPath)
 		hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS)
 		win32api.RegCreateKey(hkey, k)

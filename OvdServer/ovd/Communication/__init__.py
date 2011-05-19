@@ -62,7 +62,7 @@ class Communication:
 		
 		Logger.warn("Unknown domain for request %s"%(str(request)))
 		return None
-
+	
 	
 	def isSessionManagerRequest(self, request):
 		buf = self.session_manager
@@ -79,4 +79,3 @@ class Communication:
 	
 	def getStatus(self):
 		return self.status
-

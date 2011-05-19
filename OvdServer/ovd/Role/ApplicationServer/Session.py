@@ -151,27 +151,35 @@ class Session:
 	def setApplicationToStart(self, application_to_start):
 		self.application_to_start = application_to_start
 	
+	
 	def setExternalAppsToken(self, external_apps_token):
 		self.external_apps_token = external_apps_token
+	
 	
 	def setDomain(self, domain):
 		self.domain = domain
 		self.domain.setSession(self)
 	
+	
 	def install_client(self):
 		pass
+	
 	
 	def uninstall_client(self):
 		pass
 	
+	
 	def clone_shortcut(self, src, dst, command, args):
 		pass
+	
 	
 	def install_shortcut(self, shortcut):
 		pass
 	
+	
 	def get_target_file(self, application):
 		pass
+	
 	
 	def switch_status(self, status_):
 		self.log.append((time.time(), status_))
@@ -201,7 +209,7 @@ class Session:
 				f.close()
 				
 				applications[name] = unicode(data, encoding)
-
+			
 			self.used_applications = applications
 		return self.used_applications
 	
@@ -243,7 +251,7 @@ class Session:
 						os.remove(l)
 					except Exception, e:
 						Logger.debug("Unable to delete the desktop target %s %s"%(l, str(e)))
-
+	
 	
 	def archive_shell_dump(self):
 		spool = os.path.join(Config.spool_dir, "sessions dump archive")
@@ -253,7 +261,7 @@ class Session:
 		if self.user_session_dir is None:
 			Logger.warn("Unable to dump shell archive")
 			return
-
+		
 		for path in glob.glob(os.path.join(self.user_session_dir, "dump*.txt")):
 			name = os.path.basename(path)
 			

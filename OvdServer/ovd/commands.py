@@ -32,7 +32,7 @@ def getstatusoutput(args):
 		shell = False
 	elif type(args) in [type(""), type(u"")]:
 		shell = True
-
+	
 	p = subprocess.Popen(args, preexec_fn=System.detachFatherProcess,
 		stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=shell)
 	p.wait()

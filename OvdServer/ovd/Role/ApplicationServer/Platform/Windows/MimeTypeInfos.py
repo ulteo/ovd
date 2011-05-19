@@ -26,6 +26,7 @@ class MimeTypeInfos():
 		self.mime_types = {}
 		self.file_extensions = {}
 	
+	
 	def load(self):
 		self.mime_types = self.extract_know_mime_ext_matching()
 		
@@ -323,5 +324,3 @@ if __name__ == "__main__":
 	print "For word: %d results in %.2fs"%(len(res), t1-t0)
 	for r in res:
 		print r
-	
-	

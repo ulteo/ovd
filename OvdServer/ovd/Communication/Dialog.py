@@ -29,6 +29,7 @@ class Dialog:
 	def process(self, request):
 		raise NotImplementedError('must be redeclared')
 	
+	
 	def req_answer(self, content, code=httplib.OK):
 		response = {}
 		response["code"] = code
@@ -36,7 +37,8 @@ class Dialog:
 		response["data"] = content.toxml("utf-8")
 		
 		return response
-
+	
+	
 	def req_answerText(self, content, code=httplib.OK):
 		response = {}
 		response["code"] = code
@@ -44,7 +46,8 @@ class Dialog:
 		response["data"] = content
 		
 		return response
-
+	
+	
 	def req_unauthorized(self):
 		response = {}
 		response["code"] = httplib.UNAUTHORIZED
@@ -52,7 +55,8 @@ class Dialog:
 		response["data"] = "Unauthorized"
 		
 		return response
-
+	
+	
 	def req_forbidden(self):
 		response = {}
 		response["code"] = httplib.FORBIDDEN
@@ -60,7 +64,8 @@ class Dialog:
 		response["data"] = "Forbidden"
 		
 		return response
-
+	
+	
 	def req_not_found(self):
 		response = {}
 		response["code"] = httplib.NOT_FOUND

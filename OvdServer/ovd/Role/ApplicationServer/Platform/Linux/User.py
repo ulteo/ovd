@@ -33,14 +33,14 @@ from ovd.Role.ApplicationServer.User import User as AbstractUser
 class FileLock():
 	def __init__(self, path):
 		self.path = path
-
+	
 	def acquire(self):
 		try:
 			self.fp = open(self.path, 'w')
 			self.lock = fcntl.flock(self.fp.fileno(),fcntl.LOCK_EX)
 		except Exception, err:
 			Logger.error("Error while acquiring user lock(%s)"%(str(err)))
-
+	
 	def release(self):
 		try:
 			self.lock = fcntl.flock(self.fp.fileno(),fcntl.LOCK_UN)
@@ -66,28 +66,27 @@ class User(AbstractUser):
 		cmd+= u" "+self.name
 		
 		retry = 5
-	        while retry !=0:
-		        if retry < 0:
-		                Logger.error("ERROR: unable to add a new user")
-		        lock.acquire()
-		        s,o = commands.getstatusoutput(cmd.encode(locale.getpreferredencoding()))
-		        lock.release()
-		        if s == 0:
-		                break
+		while retry !=0:
+			if retry < 0:
+				  Logger.error("ERROR: unable to add a new user")
+			lock.acquire()
+			s,o = commands.getstatusoutput(cmd.encode(locale.getpreferredencoding()))
+			lock.release()
+			if s == 0:
+				break
 			
-		        Logger.debug("Add user :retry %i"%(6-retry))
-		        if s == 2304: # user already exist
-		                Logger.error("User %s already exist"%(self.name))
-		                break;
-		        if s == 256: # an other process is creating a user
-		                Logger.error("An other process is creating a user")
-		                retry -=1
-		                time.sleep(0.2)
-		                continue
-		        if s != 0:
-		                Logger.error("UserAdd return %d (%s)"%(s, o))
-		                return False
-
+			Logger.debug("Add user :retry %i"%(6-retry))
+			if s == 2304: # user already exist
+				Logger.error("User %s already exist"%(self.name))
+				break;
+			if s == 256: # an other process is creating a user
+				Logger.error("An other process is creating a user")
+				retry -=1
+				time.sleep(0.2)
+				continue
+			if s != 0:
+				Logger.error("UserAdd return %d (%s)"%(s, o))
+				return False
 		
 		
 		if self.infos.has_key("password"):
@@ -101,22 +100,21 @@ class User(AbstractUser):
 				s,o = commands.getstatusoutput(cmd)
 				lock.release()
 				if s == 0:
-				        break
+					break
 				
-			        Logger.debug("Chpasswd of %s:retry %i"%(self.name, 6-retry))
+				Logger.debug("Chpasswd of %s:retry %i"%(self.name, 6-retry))
 				if s == 256 or s == 2560: # an other process is creating a user
-				        Logger.debug("An other process is creating a user")
-				        retry -=1
-				        time.sleep(0.2)
-				        continue
+					Logger.debug("An other process is creating a user")
+					retry -=1
+					time.sleep(0.2)
+					continue
 				if s != 0:
-				        Logger.error("chpasswd return %d (%s)"%(s, o))
-				        return False
-
+					Logger.error("chpasswd return %d (%s)"%(s, o))
+					return False
 		
 		return self.post_create()
 	
-
+	
 	def post_create(self):
 		if self.infos.has_key("shell"):
 			xrdp.UserSetShell(self.name, self.infos["shell"])
@@ -146,28 +144,28 @@ class User(AbstractUser):
 	
 	
 	def destroy(self):
-                lock = FileLock("/tmp/user.lock")
-
+		lock = FileLock("/tmp/user.lock")
+		
 		cmd = "userdel --force  --remove %s"%(self.name)
 		retry = 5
 		while retry !=0:
 			lock.acquire()
 			s,o = commands.getstatusoutput(cmd)
 			lock.release()
-		        if s == 0:
-		                return True
-                        if s == 12:
-                                Logger.debug("mail dir error: '%s' return %d => %s"%(str(cmd), s, o))
-                                return True
-
-		        Logger.debug("User delete of %s: retry %i"%(self.name, 6-retry))
-		        if s == 256 or s == 2560: # an other process is creating a user
-		                Logger.debug("An other process is creating a user")
-		                retry -=1
-		                time.sleep(0.2)
-		                continue
-		        if s != 0:
-		                Logger.error("userdel return %d (%s)"%(s, o))
-		                return False
-
+			if s == 0:
+				return True
+			if s == 12:
+				Logger.debug("mail dir error: '%s' return %d => %s"%(str(cmd), s, o))
+				return True
+			
+			Logger.debug("User delete of %s: retry %i"%(self.name, 6-retry))
+			if s == 256 or s == 2560: # an other process is creating a user
+				Logger.debug("An other process is creating a user")
+				retry -=1
+				time.sleep(0.2)
+				continue
+			if s != 0:
+				Logger.error("userdel return %d (%s)"%(s, o))
+				return False
+		
 		return True

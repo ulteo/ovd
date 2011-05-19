@@ -87,8 +87,9 @@ class Apt(Thread):
 	
 	def terminate(self):
 		self.thread_continue = False
-	
-	
+
+
+
 class Request:
 	def __init__(self):
 		self.directory = None
@@ -105,7 +106,7 @@ class Request:
 	
 	def getLog(self, log):
 		raise NotImplementedError()
-	
+
 
 
 class Request_Packages(Request):
@@ -125,6 +126,7 @@ class Request_Packages(Request):
 		f.close()
 		
 		return buf
+	
 	
 	def perform(self):
 		os.mkdir(self.directory)
@@ -147,7 +149,8 @@ class Request_Packages(Request):
 		
 		return True
 
-		
+
+
 class Request_Available(Request):
 	def __init__(self):
 		Request.__init__(self)
@@ -184,7 +187,7 @@ class Request_Available(Request):
 			
 			if not parser.has_option('Desktop Entry', "X-AppInstall-Package"):
 				continue
-	
+			
 			name = parser.get('Desktop Entry', "Name")
 			categories = parser.get('Desktop Entry', "Categories")
 			package = parser.get('Desktop Entry', "X-AppInstall-Package")

@@ -36,12 +36,14 @@ from ovd.Communication import Communication as AbstractCommunication
 from threading import Thread
 from Queue import Queue
 
+
 class HttpServer(AbstractCommunication):
 	def __init__(self):
 		AbstractCommunication.__init__(self)
 		
 		self.webserver = None
 		self.tcp_port = Config.SLAVE_SERVER_PORT
+	
 	
 	def initialize(self):
 		try:
@@ -52,6 +54,7 @@ class HttpServer(AbstractCommunication):
 		
 		self.webserver.comm_instance = self
 		return True
+	
 	
 	def run(self):
 		self.status = AbstractCommunication.STATUS_RUNNING
@@ -85,10 +88,12 @@ class ThreadPoolingHttpServer(HTTPServer):
 			self.threads.append(t)
 			t.start()
 	
+	
 	def thread_run(self):
 		while True:
 			(request, client_address) = self.spooler.get()
 			self.process_request_thread(request, client_address)
+	
 	
 	def process_request_thread(self, request, client_address):
 		try:
@@ -101,12 +106,15 @@ class ThreadPoolingHttpServer(HTTPServer):
 		finally:
 			self.close_request(request)
 	
+	
 	def process_request(self, request, client_address):
 		self.spooler.put((request, client_address))
+	
 	
 	def serve_forever(self):
 		self.serverHasBeLanched = True
 		HTTPServer.serve_forever(self)
+	
 	
 	def server_close(self):
 		if self.serverHasBeLanched:
@@ -126,14 +134,17 @@ class ThreadPoolingHttpServer(HTTPServer):
 			if t.isAlive():
 				t._Thread__delete()
 
+
 class HttpRequestHandler(SimpleHTTPRequestHandler):
 	def log_message(self, format, *args):
 		""" Override the parent log function"""
 		pass
-		
+	
+	
 	def log_error(self, format, *args):
 		""" Override the parent log function"""
 		Logger.debug("HTTPRequestHandler Error: %s"%(format%args))
+	
 	
 	def do_GET(self):
 		req = {}
@@ -150,8 +161,8 @@ class HttpRequestHandler(SimpleHTTPRequestHandler):
 			args = cgi.parse_qsl(args)
 			for (k,v) in args:
 				req["args"][k] = v
-	
-	
+		
+		
 		response = self.server.comm_instance.process(req)
 		if response is None:
 			self.send_error(httplib.NOT_FOUND)

@@ -28,7 +28,7 @@ class Msi:
 	
 	def __init__(self):
 		self.dll = ctypes.windll.LoadLibrary("msi.dll")
-
+	
 	def getTargetFromShortcut(self, path):
 		szShortcutTarget = ctypes.c_wchar_p(path)
 		szProductCode = ctypes.create_unicode_buffer(4096)

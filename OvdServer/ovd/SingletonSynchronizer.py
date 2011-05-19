@@ -23,18 +23,16 @@ from Config import Config
 from Logger import Logger
 
 class SingletonSynchronizer:
-
+	
 	def __init__(self):
 		self.config = {}
 		
 	def backup(self):
 		for k in Config.__dict__.keys():
 			self.config[k] = Config.__dict__[k]
-
+	
 	def restore(self):
 		for k in self.config.keys():
 			Config.__dict__[k] = self.config[k]
 		
 		Logger.initialize("OVD", Config.log_level)
-		
-

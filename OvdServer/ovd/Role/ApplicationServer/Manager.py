@@ -30,10 +30,11 @@ from xml.dom.minidom import Document
 class Manager:
 	ts_group_name = TS.getUsersGroup()
 	ovd_group_name = "OVDUsers"
-
+	
 	def __init__(self, smManager):
 		self.smManager = smManager
-
+	
+	
 	def send_session_status(self, session):
 		try:
 			doc = Document()
@@ -72,11 +73,9 @@ class Manager:
 					return False
 			
 		return False
-
-
+	
+	
 	def session_switch_status(self, session, status):
 		session.switch_status(status)
 		Logger.info("Session %s switch status %s"%(session.id, session.status))
 		self.send_session_status(session)
-	
-
