@@ -71,20 +71,8 @@ class Config:
 			return False
 		
 		if Config.parser.has_option("main", "roles"):
-			Config.roles = []
-			buf = Config.parser.get("main", "roles").split(' ')
-			for b in buf:
-				b = b.strip()
-				if len(b)==0:
-					continue
-				
-				if Config.ROLES_ALIASES.has_key(b):
-					b = Config.ROLES_ALIASES[b]
-				
-				if b in Config.roles:
-					continue
-				
-				Config.roles.append(b)
+			Config.roles = Config.parse_list(Config.parser.get("main", "roles"))
+			Config.manage_role_aliases(Config.roles)
 		
 		if Config.parser.has_option("main", "session_manager"):
 			Config.session_manager = Config.parser.get("main", "session_manager")
@@ -146,6 +134,35 @@ class Config:
 				return False
 		
 		return True
+	
+	
+	@staticmethod
+	def manage_role_aliases(l):
+		for item in list(l):
+			if not Config.ROLES_ALIASES.has_key(item):
+				continue
+			
+			l.remove(item)
+			v = Config.ROLES_ALIASES[item]
+			if v not in l:
+				l.append(v)
+	
+	
+	@staticmethod
+	def parse_list(data):
+		l = []
+		buf = data.split(' ')
+		for b in buf:
+			b = b.strip()
+			if len(b)==0:
+				continue
+			
+			if b in l:
+				continue
+			
+			l.append(b)
+		
+		return l
 	
 	
 	@staticmethod
