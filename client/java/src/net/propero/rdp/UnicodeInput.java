@@ -190,9 +190,14 @@ public class UnicodeInput extends Input {
 					+ ((char) e.getKeyCode()) + "'");
 
 			if (rdp != null) {
-				if (!handleSpecialKeys(time, e, true) && scancode.isSpecialKey(e)) {
-					sendScancode(time, RDP_KEYPRESS, scancode.get(e));
+				if (ctrlDown || altgrDown) {
+					String keySeq = newKeyMapper.getKeyStrokes(e);
+					sendKeyPresses(keySeq);
+					return;
 				}
+
+				if (!handleSpecialKeys(time, e, true) && scancode.isSpecialKey(e))
+					sendScancode(time, RDP_KEYPRESS, scancode.get(e));
 			}
 		}
 
@@ -204,7 +209,13 @@ public class UnicodeInput extends Input {
 					+ Integer.toHexString(e.getKeyCode()) + " char='"
 					+ ((char) e.getKeyCode()) + "'");
 			
-			if (Character.isDefined(e.getKeyChar()) && (! scancode.isSpecialKey(e))) {
+			if (scancode.isSpecialKey(e))
+				return;
+			
+			if (ctrlDown || altgrDown)
+				return;
+
+			if (Character.isDefined(e.getKeyChar())) {
 				rdp.sendInput(getTime(), RDP_INPUT_UNICODE, 0, e.getKeyChar(), 0);
 			}
 		}
@@ -222,6 +233,12 @@ public class UnicodeInput extends Input {
 					+ Integer.toHexString(e.getKeyCode()) + " char='"
 					+ ((char) e.getKeyCode()) + "'");
 			if (rdp != null) {
+				if (ctrlDown || altgrDown) {
+					String keySeq = newKeyMapper.getKeyStrokes(e);
+					sendKeyPresses(keySeq);
+					return;
+				}
+
 				if (!handleSpecialKeys(time, e, false) && scancode.isSpecialKey(e))
 					sendScancode(time, RDP_KEYRELEASE, scancode.get(e));
 			}
