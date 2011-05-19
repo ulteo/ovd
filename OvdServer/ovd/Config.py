@@ -25,7 +25,7 @@ import os
 import sys
 
 from ovd.Logger import Logger
-from ovd.Platform import Platform
+from ovd.Platform.System import System
 
 def report_error(message):
 	print >>sys.stderr, message
@@ -48,17 +48,17 @@ class Config:
 		}	
 	
 	log_level = Logger.INFO | Logger.WARN | Logger.ERROR | Logger.DEBUG
-	log_file = os.path.join(Platform.System.get_default_log_dir(), "slaveserver.log")
+	log_file = os.path.join(System.get_default_log_dir(), "slaveserver.log")
 	log_threaded = False
 	
-	conf_dir = Platform.System.get_default_config_dir()
-	spool_dir = Platform.System.get_default_spool_dir()
+	conf_dir = System.get_default_config_dir()
+	spool_dir = System.get_default_spool_dir()
 	
 	# OVD servers communication
 	session_manager = None
 	SM_SERVER_PORT = 1111
 	SLAVE_SERVER_PORT = 1112
-	server_allow_reuse_address = Platform.System.tcp_server_allow_reuse_address()
+	server_allow_reuse_address = System.tcp_server_allow_reuse_address()
 
 	@staticmethod
 	def read(filename):

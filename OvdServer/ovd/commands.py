@@ -3,6 +3,7 @@
 # Copyright (C) 2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -21,7 +22,7 @@
 import os
 import subprocess
 
-from ovd.Platform import Platform
+from ovd.Platform.System import System
 
 __all__ = ["getstatusoutput"]
 
@@ -32,7 +33,7 @@ def getstatusoutput(args):
 	elif type(args) in [type(""), type(u"")]:
 		shell = True
 
-	p = subprocess.Popen(args, preexec_fn=Platform.System.detachFatherProcess,
+	p = subprocess.Popen(args, preexec_fn=System.detachFatherProcess,
 		stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=shell)
 	p.wait()
 	output = p.communicate()[0]

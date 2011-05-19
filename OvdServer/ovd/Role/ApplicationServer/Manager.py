@@ -20,15 +20,15 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 from ovd.Logger import Logger
-from ovd.Platform import Platform
-from Platform import Platform as RolePlatform
+from ovd.Platform.System import System
+from Platform.TS import TS
 from Session import Session
 
 from xml.dom.minidom import Document
 
 
 class Manager:
-	ts_group_name = RolePlatform.TS.getUsersGroup()
+	ts_group_name = TS.getUsersGroup()
 	ovd_group_name = "OVDUsers"
 
 	def __init__(self, smManager):
@@ -58,7 +58,7 @@ class Manager:
 	
 	def purgeGroup(self):
 		while True:
-			users = Platform.System.groupMember(self.ovd_group_name)
+			users = System.groupMember(self.ovd_group_name)
 			
 			if users is None:
 				return False
@@ -68,7 +68,7 @@ class Manager:
 			
 			for user in users:
 				# todo : check if the users is connected, if yes logoff his session
-				if not Platform.System.userRemove(user):
+				if not System.userRemove(user):
 					return False
 			
 		return False

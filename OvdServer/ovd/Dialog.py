@@ -27,7 +27,7 @@ from xml.dom.minidom import Document
 from ovd.Communication.Dialog import Dialog as AbstractDialog
 from ovd.FileTailer import FileTailer
 from ovd.Logger import Logger
-from ovd.Platform import Platform
+from ovd.Platform.System import System
 
 
 class Dialog(AbstractDialog):
@@ -121,14 +121,14 @@ class Dialog(AbstractDialog):
 		return self.req_answer(doc)
 	
 	def req_server_conf(self, request):
-		cpuInfos = Platform.System.getCPUInfos()
-		ram_total = Platform.System.getRAMTotal()
+		cpuInfos = System.getCPUInfos()
+		ram_total = System.getRAMTotal()
 		
 		doc = Document()
 		rootNode = doc.createElement('configuration')
 		
-		rootNode.setAttribute("type", Platform.System.getName())
-		rootNode.setAttribute("version", Platform.System.getVersion())
+		rootNode.setAttribute("type", System.getName())
+		rootNode.setAttribute("version", System.getVersion())
 		rootNode.setAttribute("ram", str(ram_total))
 		rootNode.setAttribute("ulteo_system", str(self.server.ulteo_system).lower())
 		

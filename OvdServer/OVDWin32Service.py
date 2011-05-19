@@ -34,7 +34,7 @@ from ovd import Config as ConfigModule
 from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.SlaveServer import SlaveServer
-from ovd.Platform import Platform
+from ovd.Platform.System import System
 
 class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 	_svc_name_ = "OVD"
@@ -53,7 +53,7 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 		Win32Logger.initialize("OVD", Config.log_level, None)
 		ConfigModule.report_error = WinReport_error
 		
-		config_file = os.path.join(Platform.System.get_default_config_dir(), "slaveserver.conf")
+		config_file = os.path.join(System.get_default_config_dir(), "slaveserver.conf")
 		if not Config.read(config_file):
 			Logger.error("invalid configuration file '%s'"%(config_file))
 			sys.exit(1)

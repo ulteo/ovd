@@ -43,7 +43,7 @@ if sys.platform == "win32":
 	sys.argv.append("py2exe")
 	# Force the include of ApS because of dynamic imports
 	sys.argv.append("-p")
-	sys.argv.append("ovd.Role.ApplicationServer")
+	sys.argv.append("ovd.Role.ApplicationServer,ovd.Platform")
 
 	try:
 		import modulefinder

@@ -29,7 +29,7 @@ from xml.dom.minidom import Document
 from ovd.Config import Config
 from ovd.Exceptions import InterruptedException
 from ovd.Logger import Logger
-from ovd.Platform import Platform
+from ovd.Platform.System import System
 
 from Dialog import Dialog
 from SMRequestManager import SMRequestManager
@@ -223,8 +223,8 @@ class SlaveServer:
 	
 	
 	def updateMonitoring(self):
-		cpu_load = Platform.System.getCPULoad()
-		ram_used = Platform.System.getRAMUsed()
+		cpu_load = System.getCPULoad()
+		ram_used = System.getRAMUsed()
 
 		doc = Document()
 		monitoring = doc.createElement('server')

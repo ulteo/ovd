@@ -30,7 +30,7 @@ import win32profile
 import win32security
 
 from ovd.Logger import Logger
-from ovd.Platform import Platform
+from ovd.Platform.System import System
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 
 import Langs
@@ -55,7 +55,7 @@ class Session(AbstractSession):
 		Logger.debug("startmenu: %s"%(self.windowsProgramsDir))
 		# remove default startmenu
 		if os.path.exists(self.windowsProgramsDir):
-			Platform.System.DeleteDirectory(self.windowsProgramsDir)
+			System.DeleteDirectory(self.windowsProgramsDir)
 		os.makedirs(self.windowsProgramsDir)
 		
 		self.windowsDesktopDir = shell.SHGetFolderPath(0, shellcon.CSIDL_DESKTOPDIRECTORY, logon, 0)

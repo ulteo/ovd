@@ -33,14 +33,16 @@ from xml.dom.minidom import Document
 
 from ovd.Role.Role import Role as AbstractRole
 from ovd.Logger import Logger
-from ovd.Platform import Platform
+from ovd.Platform.System import System
 
 # hack: must be declare before all other OVD imports
-from Platform import Platform as RolePlatform
+from Platform.ApplicationsStatic import ApplicationsStatic
+from Platform.ApplicationsDetection import ApplicationsDetection
+from Platform.TS import TS
+from Platform.Session import Session
 
 from Apt import Apt
 from Config import Config
-from Session import Session
 from SessionManagement import SessionManagement
 from Manager import Manager
 
@@ -66,7 +68,7 @@ class Role(AbstractRole):
 		
 		self.loop = True
 
-		self.static_apps = RolePlatform.ApplicationsStatic(self.main_instance.smRequestManager)
+		self.static_apps = ApplicationsStatic(self.main_instance.smRequestManager)
 		self.static_apps_must_synced = False
 		self.static_apps_lock = threading.Lock()
 	
@@ -75,18 +77,18 @@ class Role(AbstractRole):
 		Logger.debug("ApplicationServer init")
 		
 		try:
-			RolePlatform.TS.getList()
+			TS.getList()
 		except Exception, err:
 			Logger.error("RDP server dialog failed ... exiting")
 			Logger.debug("RDP server dialog: "+str(err))
 			return
 		
-		if not Platform.System.groupExist(self.manager.ts_group_name):
+		if not System.groupExist(self.manager.ts_group_name):
 			Logger.error("The group '%s' doesn't exist"%(self.manager.ts_group_name))
 			return False
 		
-		if not Platform.System.groupExist(self.manager.ovd_group_name):
-			if not Platform.System.groupCreate(self.manager.ovd_group_name):
+		if not System.groupExist(self.manager.ovd_group_name):
+			if not System.groupCreate(self.manager.ovd_group_name):
 				return False
 		
 		if not self.manager.purgeGroup():
@@ -97,9 +99,9 @@ class Role(AbstractRole):
 			self.purgeArchives()
 		
 		if Config.multithread:
-			cpuInfos = Platform.System.getCPUInfos()
+			cpuInfos = System.getCPUInfos()
 			vcpu = cpuInfos[0]
-			ram_total = Platform.System.getRAMTotal()
+			ram_total = System.getRAMTotal()
 			ram = int(round(ram_total / 1024.0 / 1024.0))
 			
 			nb_thread = int(round(1 + (ram + vcpu * 2)/3))
@@ -182,7 +184,7 @@ class Role(AbstractRole):
 				except (EOFError, socket.error):
 					Logger.debug("APS:: Role stopping")
 					return
-				if session.status == RolePlatform.Session.SESSION_STATUS_DESTROYED:
+				if session.status == Session.SESSION_STATUS_DESTROYED:
 					if self.sessions.has_key(session.id):
 						del(self.sessions[session.id])
 				else:
@@ -190,7 +192,7 @@ class Role(AbstractRole):
 
 			for session in self.sessions.values():
 				try:
-					ts_id = RolePlatform.TS.getSessionID(session.user.name)
+					ts_id = TS.getSessionID(session.user.name)
 				except Exception, err:
 					Logger.error("RDP server dialog failed ... exiting")
 					Logger.debug("RDP server dialog: "+str(err))
@@ -210,29 +212,29 @@ class Role(AbstractRole):
 					continue
 				
 				try:
-					ts_status = RolePlatform.TS.getState(ts_id)
+					ts_status = TS.getState(ts_id)
 				except Exception,err:
 					Logger.error("RDP server dialog failed ... exiting")
 					Logger.debug("RDP server dialog: "+str(err))
 					return
 				
 				if session.status == Session.SESSION_STATUS_INITED:
-					if ts_status is RolePlatform.TS.STATUS_LOGGED:
+					if ts_status is TS.STATUS_LOGGED:
 						self.manager.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
 						if not session.domain.manage_user():
 							self.sessions_spooler2.put(("manage_new", session))
 						
 						continue
 						
-					if ts_status is RolePlatform.TS.STATUS_DISCONNECTED:
+					if ts_status is TS.STATUS_DISCONNECTED:
 						self.manager.session_switch_status(session, Session.SESSION_STATUS_INACTIVE)
 						continue
 					
-				if session.status == Session.SESSION_STATUS_ACTIVE and ts_status is RolePlatform.TS.STATUS_DISCONNECTED:
+				if session.status == Session.SESSION_STATUS_ACTIVE and ts_status is TS.STATUS_DISCONNECTED:
 					self.manager.session_switch_status(session, Session.SESSION_STATUS_INACTIVE)
 					continue
 				
-				if session.status == Session.SESSION_STATUS_INACTIVE and ts_status is RolePlatform.TS.STATUS_LOGGED:
+				if session.status == Session.SESSION_STATUS_INACTIVE and ts_status is TS.STATUS_LOGGED:
 					self.manager.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
 					if not session.domain.manage_user():
 						self.sessions_spooler2.put(("manage_new", session))
@@ -292,13 +294,13 @@ class Role(AbstractRole):
 	
 	def updateApplications(self):
 		try:
-			appsdetect = RolePlatform.ApplicationsDetection()
+			appsdetect = ApplicationsDetection()
 		except:
 			Logger.warn("Bug #3: Unable to access to registry in the same time a user access to a session")
 			appsdetect = None
 			for i in xrange(3):
 				try:
-				  	appsdetect = RolePlatform.ApplicationsDetection()
+				  	appsdetect = ApplicationsDetection()
 				  	break
 				except:
 					pass

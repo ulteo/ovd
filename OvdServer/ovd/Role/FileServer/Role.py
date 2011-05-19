@@ -28,7 +28,7 @@ from xml.dom.minidom import Document
 from pyinotify import WatchManager, ThreadedNotifier
 
 from ovd.Logger import Logger
-from ovd.Platform import Platform
+from ovd.Platform.System import System
 from ovd.Role.Role import Role as AbstractRole
 
 from Config import Config
@@ -128,7 +128,7 @@ class Role(AbstractRole):
 	
 	
 	def purgeGroup(self):
-		users = Platform.System.groupMember(Config.group)
+		users = System.groupMember(Config.group)
 		if users is None:
 			return False
 		

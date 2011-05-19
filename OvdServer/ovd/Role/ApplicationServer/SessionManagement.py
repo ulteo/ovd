@@ -22,11 +22,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 from ovd.Logger import Logger
-from ovd.Platform import Platform
+from ovd.Platform.System import System
 from ovd.SingletonSynchronizer import SingletonSynchronizer
 
-from Platform import Platform as RolePlatform
-from Session import Session
+from Platform.Session import Session
+from Platform.TS import TS
 
 from multiprocessing import Process
 import Queue
@@ -94,10 +94,10 @@ class SessionManagement(Process):
 		Logger.info("SessionManagement::create %s for user %s"%(session.id, session.user.name))
 		
 		if session.domain.manage_user():
-			if Platform.System.userExist(session.user.name):
+			if System.userExist(session.user.name):
 				Logger.error("unable to create session: user %s already exists"%(session.user.name))
 				session.end_status = Session.SESSION_END_STATUS_ERROR
-				self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
+				self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_ERROR)
 				return self.destroy_session(session)
 			
 			session.user.infos["groups"] = [self.aps_instance.ts_group_name, self.aps_instance.ovd_group_name]
@@ -111,7 +111,7 @@ class SessionManagement(Process):
 			if rr is False:
 				Logger.error("unable to create session for user %s"%(session.user.name))
 				session.end_status = Session.SESSION_END_STATUS_ERROR
-				self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
+				self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_ERROR)
 				return self.destroy_session(session)
 			
 			session.user.created = True
@@ -125,7 +125,7 @@ class SessionManagement(Process):
 			if rr is False:
 				Logger.error("unable to initialize session %s"%(session.id))
 				session.end_status = Session.SESSION_END_STATUS_ERROR
-				self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
+				self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_ERROR)
 				return self.destroy_session(session)
 		
 		else:
@@ -134,7 +134,7 @@ class SessionManagement(Process):
 		
 		session.post_install()
 		
-		self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_INITED)
+		self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_INITED)
 	
 	
 	def destroy_session(self, session):
@@ -144,7 +144,7 @@ class SessionManagement(Process):
 			# Doesn't have to destroy the session if the user was never created
 			
 			try:
-				sessid = RolePlatform.TS.getSessionID(session.user.name)
+				sessid = TS.getSessionID(session.user.name)
 			except Exception,err:
 				Logger.error("RDP server dialog failed ... ")
 				Logger.debug("SessionManagement::destroy_session: %s"%(str(err)))
@@ -160,7 +160,7 @@ class SessionManagement(Process):
 		if session.domain.manage_user():
 			self.destroy_user(session.user)
 		
-		self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_DESTROYED)
+		self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_DESTROYED)
 
 	def logoff_user(self, user):
 		Logger.info("SessionManagement::logoff_user %s"%(user.name))
@@ -169,17 +169,17 @@ class SessionManagement(Process):
 			sessid = user.infos["tsid"]
 
 			try:
-				status = RolePlatform.TS.getState(sessid)
+				status = TS.getState(sessid)
 			except Exception,err:
 				Logger.error("RDP server dialog failed ... ")
 				Logger.debug("SessionManagement::logoff_user: %s"%(str(err)))
 				return
 
-			if status in [RolePlatform.TS.STATUS_LOGGED, RolePlatform.TS.STATUS_DISCONNECTED]:
+			if status in [TS.STATUS_LOGGED, TS.STATUS_DISCONNECTED]:
 				Logger.info("must log off ts session %s user %s"%(sessid, user.name))
 
 				try:
-					RolePlatform.TS.logoff(sessid)
+					TS.logoff(sessid)
 				except Exception,err:
 					Logger.error("RDP server dialog failed ... ")
 					Logger.debug("SessionManagement::logoff_user: %s"%(str(err)))

@@ -19,7 +19,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import platform
 import socket
 
 from ovd.Logger import Logger
@@ -45,12 +44,3 @@ def array_flush(array):
 	array.reverse()
 	for _ in xrange(len(array)):
 		yield array.pop()
-
-
-def get_platform():
-	platform_ = platform.system().lower()
-	for key in ["windows","microsoft","microsoft windows"]:
-		if key in platform_:
-			return "windows"
-		
-	return "linux"

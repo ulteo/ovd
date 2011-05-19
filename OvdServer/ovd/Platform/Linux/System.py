@@ -29,7 +29,7 @@ import time
 
 from ovd.Logger import Logger
 
-from ovd.Platform.System import System as AbstractSystem
+from Base.System import System as AbstractSystem
 
 # Remove language support from process to avoid to have translated 
 # error message, perl warning, unsupported languages and so on ...

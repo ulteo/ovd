@@ -33,7 +33,7 @@ import win32netcon
 import win32net
 
 from ovd.Logger import Logger
-from ovd.Platform.System import System as AbstractSystem
+from Base.System import System as AbstractSystem
 
 
 class System(AbstractSystem):

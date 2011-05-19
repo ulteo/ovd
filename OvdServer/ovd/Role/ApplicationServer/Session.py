@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2010 Ulteo SAS
+# Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -30,9 +30,9 @@ import time
 
 from ovd.Config import Config
 from ovd.Logger import Logger
-from ovd.Platform import Platform
+from ovd.Platform.System import System
 
-import Platform as RolePlatform
+from Platform.ApplicationsDetection import ApplicationsDetection
 
 class Session:
 	Ulteo_apps = ["startovdapp", "UlteoOVDIntegratedLauncher"]
@@ -78,7 +78,7 @@ class Session:
 	def init_user_session_dir(self, user_session_dir):
 		self.user_session_dir = user_session_dir
 		if os.path.isdir(self.user_session_dir):
-			Platform.System.DeleteDirectory(self.user_session_dir)
+			System.DeleteDirectory(self.user_session_dir)
 		
 		try:
 			os.makedirs(self.user_session_dir)
@@ -95,7 +95,7 @@ class Session:
 		os.mkdir(self.shortcutDirectory)
 
 		for application in self.applications:
-			cmd = RolePlatform.Platform.ApplicationsDetection.getExec(application["filename"])
+			cmd = ApplicationsDetection.getExec(application["filename"])
 			if cmd is None:
 				Logger.error("Session::install_client unable to extract command from app_id %s (%s)"%(application["id"], application["filename"]))
 				continue
@@ -207,7 +207,7 @@ class Session:
 	
 	
 	def cleanupShortcut(self, path):
-		shortcut_ext = RolePlatform.Platform.ApplicationsDetection.shortcut_ext
+		shortcut_ext = ApplicationsDetection.shortcut_ext
 		
 		if not os.path.exists(path):
 			return
@@ -228,7 +228,7 @@ class Session:
 				continue
 			
 			try:
-				target = RolePlatform.Platform.ApplicationsDetection.getExec(l)
+				target = ApplicationsDetection.getExec(l)
 			except Exception, e:
 				Logger.debug("Unable to get the desktop target of %s %s"%(l, str(e)))
 				target = None

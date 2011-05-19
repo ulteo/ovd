@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2010 Ulteo SAS
+# Copyright (C) 2008-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2008-2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2010, 2011
 # Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -27,8 +27,13 @@ from ovd.Logger import Logger
 from ovd.Communication.Dialog import Dialog as AbstractDialog
 
 import Apt
-from Platform import Platform
-from Session import Session
+from Platform.DomainMicrosoft import DomainMicrosoft
+from Platform.DomainNovell import DomainNovell
+from Platform.DomainUlteo import DomainUlteo
+from Platform.Profile import Profile
+from Platform.TS import TS
+from Platform.Session import Session
+from Platform.User import User
 
 class Dialog(AbstractDialog):
 	def __init__(self, role_instance):
@@ -195,7 +200,7 @@ class Dialog(AbstractDialog):
 		
 		self.role_instance.applications_mutex.release()
 
-		appsdetect = Platform.ApplicationsDetection()
+		appsdetect = ApplicationsDetection()
 		data = appsdetect.getIcon(app["filename"])
 		if data is None:
 			return self.req_not_found()
@@ -207,7 +212,7 @@ class Dialog(AbstractDialog):
 		return response
 	
 	def req_session_create(self, request):
-		environment = Platform.DomainUlteo()
+		environment = DomainUlteo()
 		try:
 			document = minidom.parseString(request["data"])
 			sessionNode = document.documentElement
@@ -233,9 +238,9 @@ class Dialog(AbstractDialog):
 				raise Exception("Missing attribute id")
 			
 			if session["mode"] == "desktop":
-				session["mode"] = Platform.Session.MODE_DESKTOP
+				session["mode"] = Session.MODE_DESKTOP
 			elif session["mode"] == "applications":
-				session["mode"] = Platform.Session.MODE_APPLICATIONS
+				session["mode"] = Session.MODE_APPLICATIONS
 			else:
 				raise Exception("Missing attribute id")
 			
@@ -245,9 +250,9 @@ class Dialog(AbstractDialog):
 				name = environmentNode.getAttribute("id")
 				
 				if name == "Microsoft":
-					environment = Platform.DomainMicrosoft()
+					environment = DomainMicrosoft()
 				elif name == "Novell":
-					environment = Platform.DomainNovell()
+					environment = DomainNovell()
 				else:
 					raise Exception("unknown environment '%s'"%(name))
 				
@@ -333,11 +338,11 @@ class Dialog(AbstractDialog):
 			doc.appendChild(rootNode)
 			return self.req_answer(doc)
 		
-		user = Platform.User(session["login"], {"displayName": session["displayName"], "password": session["password"]})
+		user = User(session["login"], {"displayName": session["displayName"], "password": session["password"]})
 		if session["parameters"].has_key("locale"):
 			user.infos["locale"] = session["parameters"]["locale"]
 		
-		session = Platform.Session(session["id"], session["mode"], user, session["parameters"], applications.values())
+		session = Session(session["id"], session["mode"], user, session["parameters"], applications.values())
 		session.setDomain(environment)
 		if external_apps_token is not None:
 			session.setExternalAppsToken(external_apps_token)
@@ -346,7 +351,7 @@ class Dialog(AbstractDialog):
 		session.init()
 		
 		if profileNode is not None or len(sharedfolderNodes)>0:
-			profile = Platform.Profile(session)
+			profile = Profile(session)
 		
 		if profileNode is not None:
 			folder = {}
@@ -370,7 +375,7 @@ class Dialog(AbstractDialog):
 		if self.role_instance.sessions.has_key(session_id):
 			session = self.role_instance.sessions[session_id]
 		else:
-			session = Platform.Session(session_id, None, None, None, None)
+			session = Session(session_id, None, None, None, None)
 			session.status = "unknown"
 		
 		return self.req_answer(self.session2xmlstatus(session))
@@ -379,13 +384,13 @@ class Dialog(AbstractDialog):
 	def req_session_destroy(self, session_id):
 		if self.role_instance.sessions.has_key(session_id):
 			session = self.role_instance.sessions[session_id]
-			if session.status not in [Platform.Session.SESSION_STATUS_WAIT_DESTROY, Platform.Session.SESSION_STATUS_DESTROYED, Platform.Session.SESSION_STATUS_ERROR]:
+			if session.status not in [Session.SESSION_STATUS_WAIT_DESTROY, Session.SESSION_STATUS_DESTROYED, Session.SESSION_STATUS_ERROR]:
 				# Switch the session status without warn the session manager
-				session.switch_status(Platform.Session.SESSION_STATUS_WAIT_DESTROY)
+				session.switch_status(Session.SESSION_STATUS_WAIT_DESTROY)
 				self.role_instance.sessions_spooler.put(("destroy", session))
 		else:
-			session = Platform.Session(session_id, None, None, None, None)
-			session.status = Platform.Session.SESSION_STATUS_UNKNOWN
+			session = Session(session_id, None, None, None, None)
+			session.status = Session.SESSION_STATUS_UNKNOWN
 		
 		return self.req_answer(self.session2xmlstatus(session))
 	
@@ -413,7 +418,7 @@ class Dialog(AbstractDialog):
 			return self.req_answer(doc)
 		
 		try:
-			ret = Platform.TS.getSessionID(login)
+			ret = TS.getSessionID(login)
 		except Exception,err:
 			Logger.error("RDP server dialog failed ... ")
 			Logger.debug("Dialog::req_user_loggedin: %s"%(str(err)))
@@ -451,7 +456,7 @@ class Dialog(AbstractDialog):
 		
 		
 		try:
-			ret = Platform.TS.getSessionID(login)
+			ret = TS.getSessionID(login)
 		except Exception,err:
 			Logger.error("RDP server dialog failed ... ")
 			Logger.debug("Dialog::req_user_logout: %s"%(str(err)))
@@ -469,7 +474,7 @@ class Dialog(AbstractDialog):
 			
 			return self.req_answer(doc)
 		
-		user = Platform.User(login, {"tsid": ret})
+		user = User(login, {"tsid": ret})
 		self.role_instance.sessions_spooler.put(("logoff", user))
 		
 		return self.req_answer(document)
