@@ -150,19 +150,7 @@ class Config:
 	
 	@staticmethod
 	def parse_list(data):
-		l = []
-		buf = data.split(' ')
-		for b in buf:
-			b = b.strip()
-			if len(b)==0:
-				continue
-			
-			if b in l:
-				continue
-			
-			l.append(b)
-		
-		return l
+		return dict.fromkeys(data.split()).keys()
 	
 	
 	@staticmethod
