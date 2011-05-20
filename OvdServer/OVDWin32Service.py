@@ -60,12 +60,10 @@ class OVD(win32serviceutil.ServiceFramework):
 		
 		config_file = os.path.join(System.get_default_config_dir(), "slaveserver.conf")
 		if not Config.read(config_file):
-			Logger.error("invalid configuration file '%s'"%(config_file))
 			self.ReportServiceStatus(win32service.SERVICE_STOPPED)
 			return
 		
 		if not Config.is_valid():
-			Logger.error("invalid config")
 			self.ReportServiceStatus(win32service.SERVICE_STOPPED)
 			return
 		
@@ -152,7 +150,7 @@ class Win32Logger(Logger):
 
 
 def WinReport_error(message):
-	Logger.error(message)
+	Logger.error("Invalid configuration: "+message)
 
 
 if __name__=='__main__':

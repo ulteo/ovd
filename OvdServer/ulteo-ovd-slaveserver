@@ -90,11 +90,9 @@ def main():
 		sys.exit(2)
 	
 	if not Config.read(config_file):
-		print >> sys.stderr, "invalid configuration file '%s'"%(config_file)
 		sys.exit(1)
 	
 	if not Config.is_valid():
-		print >> sys.stderr, "invalid config"
 		sys.exit(1)
 	
 	if daemonize:

@@ -28,7 +28,7 @@ from ovd.Logger import Logger
 from ovd.Platform.System import System
 
 def report_error(message):
-	print >>sys.stderr, message
+	print >>sys.stderr, "Invalid configuration:",message
 
 
 class Config:
@@ -63,12 +63,15 @@ class Config:
 	
 	@staticmethod
 	def read(filename):
+		if not os.path.isfile(filename):
+			report_error("No such file '%s'"%(filename))
+			return False
+		
 		Config.parser = ConfigParser.ConfigParser()
-		try:
-			Config.parser.read(filename)
-		except Exception, err:
-			report_error("invalid configuration file '%s'"%(filename))
-			report_error(str(err))
+		Config.parser.read(filename)
+		
+		if "main" not in Config.parser.sections():
+			report_error("Unrecognized format on '%s'"%(filename))
 			return False
 		
 		if Config.parser.has_option("main", "roles"):
@@ -76,12 +79,14 @@ class Config:
 			Config.manage_role_aliases(Config.roles)
 		
 		if Config.parser.has_option("main", "session_manager"):
-			Config.session_manager = Config.parser.get("main", "session_manager")
+			a = Config.parser.get("main", "session_manager")
+			if len(a)>0:
+				Config.session_manager = a.strip()
 		
 		if Config.parser.has_option("main", "server_allow_reuse_address"):
 			a = Config.parser.get("main", "server_allow_reuse_address").lower().strip()
 			if a not in ["true", "false"]:
-				report_error("invalid value for configuration key 'server_allow_reuse_address', allowed values are true/false")
+				report_error("Invalid value for configuration key 'server_allow_reuse_address', allowed values are true/false")
 			
 			Config.server_allow_reuse_address = (a == "true")
 		
@@ -131,7 +136,7 @@ class Config:
 				f = file(Config.log_file, "a")
 				f.close()
 			except IOError:
-				report_error("Unable to write into '%s'"%(Config.log_file))
+				report_error("Unable to write into log file '%s'"%(Config.log_file))
 				return False
 		
 		return True
