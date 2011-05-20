@@ -35,7 +35,7 @@ from ovd.Logger import Logger
 from ovd.SlaveServer import SlaveServer
 from ovd.Platform.System import System
 
-class OVD(win32serviceutil.ServiceFramework, SlaveServer):
+class OVD(win32serviceutil.ServiceFramework):
 	_svc_name_ = "OVD"
 	_svc_display_name_ = "Ulteo OVD Slave Server"
 	_svc_description_ = "Ulteo OVD Slave Server"
@@ -64,9 +64,9 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 		Win32Logger.initialize("OVD", Config.log_level, Config.log_file)
 		
 		
-		SlaveServer.__init__(self, Communication)
+		self.slave = SlaveServer(Communication)
 		
-		if not self.load_roles():
+		if not self.slave.load_roles():
 			sys.exit(2)
 		self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
 	
@@ -75,9 +75,9 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 		self.ReportServiceStatus(win32service.SERVICE_START_PENDING)
 		#win32evtlogutil.ReportEvent(self.log_type, 2, eventType=win32evtlog.EVENTLOG_INFORMATION_TYPE, strings=["Message d'arret"])
 		
-		if not SlaveServer.init(self):
+		if not self.slave.init():
 			Logger.error("Unable to initialize SlaveServer")
-			SlaveServer.stop(self)
+			self.slave.stop()
 			return
 		
 		self.ReportServiceStatus(win32service.SERVICE_RUNNING)
@@ -86,7 +86,7 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 		rc = win32event.WAIT_TIMEOUT
 		while rc == win32event.WAIT_TIMEOUT:
 			if not inited:
-				ret = SlaveServer.push_production(self)
+				ret = self.slave.push_production()
 				if ret:
 					inited = True
 					Logger.info("SlaveServer started")
@@ -94,12 +94,12 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 					Logger.warn("Session Manager not connected. Sleeping for a while ...")
 			
 			if inited:
-				SlaveServer.loop_procedure(self)
+				self.slave.loop_procedure()
 			
 			rc = win32event.WaitForSingleObject(self.hWaitStop, 30 * 1000)
 		
-		if not self.stopped:
-			SlaveServer.stop(self)
+		if not self.slave.stopped:
+			self.slave.stop()
 		
 		Logger.info("SlaveServer stopped")
 	
