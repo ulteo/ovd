@@ -52,14 +52,22 @@ class OVD(win32serviceutil.ServiceFramework):
 		Win32Logger.initialize("OVD", Config.log_level, None)
 		ConfigModule.report_error = WinReport_error
 		
+		self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
+	
+	
+	def SvcDoRun(self):
+		self.ReportServiceStatus(win32service.SERVICE_START_PENDING)
+		
 		config_file = os.path.join(System.get_default_config_dir(), "slaveserver.conf")
 		if not Config.read(config_file):
 			Logger.error("invalid configuration file '%s'"%(config_file))
-			sys.exit(1)
+			self.ReportServiceStatus(win32service.SERVICE_STOPPED)
+			return
 		
 		if not Config.is_valid():
 			Logger.error("invalid config")
-			sys.exit(1)
+			self.ReportServiceStatus(win32service.SERVICE_STOPPED)
+			return
 		
 		Win32Logger.initialize("OVD", Config.log_level, Config.log_file)
 		
@@ -67,12 +75,8 @@ class OVD(win32serviceutil.ServiceFramework):
 		self.slave = SlaveServer(Communication)
 		
 		if not self.slave.load_roles():
-			sys.exit(2)
-		self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
-	
-	
-	def SvcDoRun(self):
-		self.ReportServiceStatus(win32service.SERVICE_START_PENDING)
+			self.ReportServiceStatus(win32service.SERVICE_STOPPED)
+			return
 		
 		if not self.slave.init():
 			Logger.error("Unable to initialize SlaveServer")
@@ -101,6 +105,7 @@ class OVD(win32serviceutil.ServiceFramework):
 			self.slave.stop()
 		
 		Logger.info("SlaveServer stopped")
+		self.ReportServiceStatus(win32service.SERVICE_STOPPED)
 	
 	
 	def SvcStop(self):
