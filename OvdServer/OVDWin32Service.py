@@ -73,7 +73,6 @@ class OVD(win32serviceutil.ServiceFramework):
 	
 	def SvcDoRun(self):
 		self.ReportServiceStatus(win32service.SERVICE_START_PENDING)
-		#win32evtlogutil.ReportEvent(self.log_type, 2, eventType=win32evtlog.EVENTLOG_INFORMATION_TYPE, strings=["Message d'arret"])
 		
 		if not self.slave.init():
 			Logger.error("Unable to initialize SlaveServer")
