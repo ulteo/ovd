@@ -99,7 +99,7 @@ class SMRequestManager():
 		response = self.send_packet("/server/name")
 		if response is False:
 			Logger.warn("SMRequest::send_server_status Unable to send packet")
-			return False
+			return None
 		
 		document = self.get_response_xml(response)
 		if document is None:
