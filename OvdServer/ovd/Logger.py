@@ -28,6 +28,7 @@ import sys
 import time
 import threading
 import os
+import Queue
 import socket
 
 class Logger:
@@ -105,9 +106,12 @@ class Logger:
 	def run(self):
 		while True:
 			try:
-				(func, obj) = self.queue.get()
+				# Request queue with a timeout or the close() method freeze on Windows
+				(func, obj) = self.queue.get(True, 4)
 			except (EOFError, IOError, socket.error):
 				break
+			except Queue.Empty, e:
+				continue
 			f = getattr(self, func)
 			f(obj)
 	
