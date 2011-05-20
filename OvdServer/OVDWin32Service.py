@@ -72,15 +72,15 @@ class OVD(win32serviceutil.ServiceFramework):
 		Win32Logger.initialize("OVD", Config.log_level, Config.log_file)
 		
 		
-		self.slave = SlaveServer(Communication)
+		slave = SlaveServer(Communication)
 		
-		if not self.slave.load_roles():
+		if not slave.load_roles():
 			self.ReportServiceStatus(win32service.SERVICE_STOPPED)
 			return
 		
-		if not self.slave.init():
+		if not slave.init():
 			Logger.error("Unable to initialize SlaveServer")
-			self.slave.stop()
+			slave.stop()
 			return
 		
 		self.ReportServiceStatus(win32service.SERVICE_RUNNING)
@@ -89,7 +89,7 @@ class OVD(win32serviceutil.ServiceFramework):
 		rc = win32event.WAIT_TIMEOUT
 		while rc == win32event.WAIT_TIMEOUT:
 			if not inited:
-				ret = self.slave.push_production()
+				ret = slave.push_production()
 				if ret:
 					inited = True
 					Logger.info("SlaveServer started")
@@ -97,12 +97,12 @@ class OVD(win32serviceutil.ServiceFramework):
 					Logger.warn("Session Manager not connected. Sleeping for a while ...")
 			
 			if inited:
-				self.slave.loop_procedure()
+				slave.loop_procedure()
 			
 			rc = win32event.WaitForSingleObject(self.hWaitStop, 30 * 1000)
 		
-		if not self.slave.stopped:
-			self.slave.stop()
+		if not slave.stopped:
+			slave.stop()
 		
 		Logger.info("SlaveServer stopped")
 		self.ReportServiceStatus(win32service.SERVICE_STOPPED)
