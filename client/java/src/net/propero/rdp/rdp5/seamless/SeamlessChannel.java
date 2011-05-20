@@ -538,9 +538,16 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		x += this.opt.x_offset;
 		y += this.opt.y_offset;
 
+		Rectangle position = new Rectangle((int) x, (int) y, (int) width, (int) height);
+
+		if (((Window) f).getBounds().equals(position)) {
+			logger.debug("[processPosition] ID '"+String.format("0x%08x", id)+"' already has the position/size specified");
+			return true;
+		}
+
 		PositionOrder order = new PositionOrder();
 		order.window_id = id;
-		order.position = new Rectangle((int) x, (int) y, (int) width, (int) height);
+		order.position = position;
 		synchronized(this.positionsOrders) {
 			PositionOrder twin = null;
 			for (PositionOrder each : this.positionsOrders) {
