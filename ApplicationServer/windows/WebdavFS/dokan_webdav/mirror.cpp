@@ -131,24 +131,29 @@ MirrorCreateFile(
 	ULONG64 cacheHandle = INVALID_CACHE_HANDLE;
 	DAVCACHEENTRY* cacheEntry = NULL;
 	BOOL exist = FALSE;
+	BOOL needImport = FALSE;
 
 	UNREFERENCED_PARAMETER(FlagsAndAttributes);
 	UNREFERENCED_PARAMETER(ShareMode);
 	UNREFERENCED_PARAMETER(AccessMode);
 
 	GetFilePath(FileName, filePath);
+	
+	cacheHandle = davCache->getHandleFromPath(filePath);
 	DbgPrint(L"create file %s\n", filePath);
 
-	exist = server->exist(filePath);
-	if (! exist) {
-		result = ERROR_FILE_NOT_FOUND;
-		DbgPrint(L"\tUnable to find the filename %ls\n", filePath);
+	exist = TRUE;
+	if (cacheHandle == INVALID_CACHE_HANDLE) {
+		exist = server->exist(filePath);
+		if (! exist) {
+			result = ERROR_FILE_NOT_FOUND;
+			DbgPrint(L"\tUnable to find the filename %ls\n", filePath);
+		}
 	}
 
 	switch (CreationDisposition) {
 	case CREATE_NEW:
 		if (exist) {
-			cacheHandle = davCache->add(filePath);
 			result = ERROR_FILE_EXISTS;
 			break;
 		}
@@ -156,32 +161,25 @@ MirrorCreateFile(
 	case CREATE_ALWAYS:
 		result = server->touch(filePath);
 		if (result == ERROR_SUCCESS) {
-			cacheHandle = davCache->add(filePath);
+			exist = TRUE;
 			break;
 		}
-		davCache->remove(cacheHandle);
 		return result;
 
 	case OPEN_ALWAYS:
 		if (! exist) {
 			result = server->touch(filePath);
 			if (result == ERROR_SUCCESS) {
-				cacheHandle = davCache->add(filePath);
+				exist = TRUE;
 				break;
 			}
+			return result;
 		}
-		result = ERROR_SUCCESS;
 
 	case OPEN_EXISTING:
 	case TRUNCATE_EXISTING:
-		if (exist) {
-			cacheHandle = davCache->add(filePath);
-			if (cacheHandle != INVALID_CACHE_HANDLE) {
-				cacheEntry = davCache->getFromHandle(cacheHandle);
-				cacheEntry->needImport = TRUE;
-			}
-			result = ERROR_SUCCESS;
-		}
+		if (exist)
+			needImport = TRUE;
 		break;
 
 	default:
@@ -189,12 +187,19 @@ MirrorCreateFile(
 		result = ERROR_INVALID_PARAMETER;
 		break;
 	}
-	DokanFileInfo->Context = (ULONG64)cacheHandle;
-	if (cacheHandle != INVALID_CACHE_HANDLE) {
+
+	if (exist && cacheHandle == INVALID_CACHE_HANDLE) {
+		cacheHandle = davCache->add(filePath);
+		if (cacheHandle == INVALID_CACHE_HANDLE)
+			return E_FAIL;
+
 		cacheEntry = davCache->getFromHandle(cacheHandle);
-		cacheEntry->handle = CreateFile(cacheEntry->cachePath, AccessMode, ShareMode, NULL, CreationDisposition, FlagsAndAttributes, NULL);
+		if (needImport)
+			cacheEntry->needImport = TRUE;
 	}
 
+	davCache->addRef(cacheHandle);
+	DokanFileInfo->Context = (ULONG64)cacheHandle;
 	return -1 * result;
 }
 
@@ -228,19 +233,10 @@ MirrorOpenDirectory(
 	LPCWSTR					FileName,
 	PDOKAN_FILE_INFO		DokanFileInfo)
 {
-	WCHAR	filePath[MAX_PATH];
-//	HANDLE handle;
-//	DWORD attr;
-	DbgPrint(L"MirrorOpenDirectory on %ls\n", FileName);
+	UNREFERENCED_PARAMETER(FileName);
+
 	DokanFileInfo->Context = INVALID_CACHE_HANDLE;
-
-	GetFilePath(FileName, filePath);
-	DbgPrint(L"OpenDirectory : %s\n", filePath);
-
-	if (server->exist(filePath))
-		return ERROR_SUCCESS;
-
-	return ERROR_FILE_NOT_FOUND;
+	return ERROR_SUCCESS;
 }
 
 
@@ -255,21 +251,22 @@ MirrorCloseFile(
 	ULONG64 cacheHandle = DokanFileInfo->Context;
 
 	cacheEntry = davCache->getFromHandle(cacheHandle);
-	if (cacheEntry != NULL ) {
-		if (cacheEntry->needExport) {
+	if (cacheEntry == NULL )
+		return ERROR_SUCCESS;
 
-			if (cacheEntry->handle != INVALID_HANDLE_VALUE)
-				CloseHandle(cacheEntry->handle);
-
-			if (FAILED(server->exportPath(cacheEntry->remotePath, cacheEntry->cachePath))) {
-				DbgPrint(L"Error while exporting the file %s\n", cacheEntry->remotePath);
-				return -1;
-			}
+	if (cacheEntry->needExport) {
+		cacheEntry->needExport = FALSE;
+		if (FAILED(server->exportPath(cacheEntry->remotePath, cacheEntry->cachePath))) {
+			DbgPrint(L"Error while exporting the file %s\n", cacheEntry->remotePath);
+			return -1;
 		}
-		davCache->remove(cacheHandle);
-		cacheHandle = INVALID_CACHE_HANDLE;
 	}
-	DokanFileInfo->Context = INVALID_CACHE_HANDLE;
+
+	davCache->delRef(cacheHandle);
+	if (! davCache->isExpired(cacheHandle))
+		return ERROR_SUCCESS;
+
+	davCache->remove(cacheHandle, FALSE);
 	return ERROR_SUCCESS;
 }
 
@@ -279,8 +276,8 @@ MirrorCleanup(
 	LPCWSTR					FileName,
 	PDOKAN_FILE_INFO		DokanFileInfo)
 {
-	UNREFERENCED_PARAMETER(DokanFileInfo);
 	WCHAR filePath[MAX_PATH];
+	ULONG64 cacheHandle = DokanFileInfo->Context;
 
 	if (DokanFileInfo->DeleteOnClose) {
 		GetFilePath(FileName, filePath);
@@ -295,6 +292,9 @@ MirrorCleanup(
 
 		req.getWinStatus();
 		req.close();
+
+		davCache->remove(cacheHandle, TRUE);
+		DokanFileInfo->Context = INVALID_CACHE_HANDLE;
 	}
 	return 0;
 }
@@ -313,6 +313,7 @@ MirrorReadFile(
 	ULONG64 cacheHandle = DokanFileInfo->Context;
 	DAVCACHEENTRY* cacheEntry = NULL;
 	ULONG offset = (ULONG)Offset;
+	HANDLE handle = NULL;
 
 	DbgPrint(L"read file %s\n", FileName);
 	DbgPrint(L"BufferLength : %i\n", BufferLength);
@@ -335,41 +336,33 @@ MirrorReadFile(
 		DbgPrint(L"Entry returned by the cache is invalid\n");
 		return ERROR_INVALID_PARAMETER;
 	}
-	
 	if (cacheEntry->needImport == TRUE) {
 		cacheEntry->needImport = FALSE;
-
-		if (cacheEntry->handle != INVALID_HANDLE_VALUE) {
-			CloseHandle(cacheEntry->handle);
-			cacheEntry->handle = INVALID_HANDLE_VALUE;
-		}
 
 		if (FAILED(server->importURL(cacheEntry->remotePath, cacheEntry->cachePath))) {
 			DbgPrint(L"Unable to add %s to local cache, Error while importing the file\n", cacheEntry->remotePath);
 			return E_FAIL;
 		}
 	}
-
-	if (cacheEntry->handle == INVALID_HANDLE_VALUE) {
-		cacheEntry->handle = CreateFile(cacheEntry->cachePath, GENERIC_WRITE |GENERIC_READ, FILE_SHARE_READ |FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		if (cacheEntry->handle == INVALID_HANDLE_VALUE) {
-			DbgPrint(L"CreateFile error : %u\n", GetLastError());
-			return -1 * GetLastError();
-		}
+	handle = CreateFile(cacheEntry->cachePath, GENERIC_WRITE |GENERIC_READ, FILE_SHARE_READ |FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (handle == INVALID_HANDLE_VALUE) {
+		return -1 * GetLastError();
 	}
 
-	if (SetFilePointer(cacheEntry->handle, offset, NULL, FILE_BEGIN) == 0xFFFFFFFF) {
-		DbgPrint(L"\tseek error, offset = %d\n\n", offset);
+	if (SetFilePointer(handle, offset, NULL, FILE_BEGIN) == 0xFFFFFFFF) {
+		DbgPrint(L"\tseek error, offset = %d %u \n\n", offset, GetLastError());
+		CloseHandle(handle);
 		return -1 * GetLastError();
 	}
 
 	
-	if (!ReadFile(cacheEntry->handle, Buffer, BufferLength, ReadLength, NULL)) {
+	if (!ReadFile(handle, Buffer, BufferLength, ReadLength, NULL)) {
 		DbgPrint(L"Unable to read information: %u\n", GetLastError());
+		CloseHandle(handle);
 		return -1 * GetLastError();
 	}
 	DbgPrint(L"ReadLength %i\n", *ReadLength);
-
+	CloseHandle(handle);
 	return  ERROR_SUCCESS;
 }
 
@@ -388,6 +381,7 @@ MirrorWriteFile(
 	HANDLE	handle = 0;
 	DWORD createDisposition = OPEN_ALWAYS;
 	ULONG	offset = (ULONG)Offset;
+	LONGLONG temp_size;
 	DAVCACHEENTRY* cacheEntry = NULL;
 	BOOL res = FALSE;
 
@@ -426,11 +420,6 @@ MirrorWriteFile(
 	if (cacheEntry->needImport == TRUE) {
 		cacheEntry->needImport = FALSE;
 
-		if (cacheEntry->handle != INVALID_HANDLE_VALUE) {
-			CloseHandle(cacheEntry->handle);
-			cacheEntry->handle = INVALID_HANDLE_VALUE;
-		}
-
 		if (FAILED(server->importURL(cacheEntry->remotePath, cacheEntry->cachePath))) {
 			DbgPrint(L"Unable to add %s to local cache, Error while importing the file\n", cacheEntry->remotePath);
 			return -1;
@@ -439,15 +428,12 @@ MirrorWriteFile(
 	}
 
 	cacheEntry->needRemove = TRUE;
-	if (cacheEntry->handle == INVALID_HANDLE_VALUE) {
-		cacheEntry->handle = CreateFile(cacheEntry->cachePath, GENERIC_WRITE |GENERIC_READ, FILE_SHARE_READ |FILE_SHARE_WRITE, NULL, createDisposition, FILE_ATTRIBUTE_NORMAL, NULL);
-		if (cacheEntry->handle == INVALID_HANDLE_VALUE) {
-			DbgPrint(L"CreateFile error : %u\n", GetLastError());
-			return ~GetLastError();
-		}
+	handle = CreateFile(cacheEntry->cachePath, GENERIC_WRITE |GENERIC_READ, FILE_SHARE_READ |FILE_SHARE_WRITE, NULL, createDisposition, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (handle == INVALID_HANDLE_VALUE) {
+		DbgPrint(L"CreateFile error : %u\n", GetLastError());
+		return ~GetLastError();
 	}
 
-	handle = cacheEntry->handle;
 	if (DokanFileInfo->WriteToEndOfFile) {
 		if (SetFilePointer(handle, 0, NULL, FILE_END) == INVALID_SET_FILE_POINTER) {
 			DbgPrint(L"seek error, offset = EOF, error = %u\n", GetLastError());
@@ -456,17 +442,23 @@ MirrorWriteFile(
 	}
 	else if (SetFilePointer(handle, offset, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER) {
 		DbgPrint(L"seek error, offset = %d, error = %u\n", offset, GetLastError());
+		CloseHandle(handle);
 		return -1;
 	}
 
-	res = WriteFile(handle, Buffer, NumberOfBytesToWrite, NumberOfBytesWritten, NULL); 
+	res = WriteFile(handle, Buffer, NumberOfBytesToWrite, NumberOfBytesWritten, NULL);
 	if (res == FALSE) {
 		DbgPrint(L"write error = %u, buffer length = %d, write length = %d\n",	GetLastError(), NumberOfBytesToWrite, *NumberOfBytesWritten);
+		CloseHandle(handle);
 		return -1;
 
 	} else {
 		DbgPrint(L"\twrite %d, offset %d %d %i\n\n", *NumberOfBytesWritten, offset, NumberOfBytesToWrite,GetLastError());
+		temp_size = (*NumberOfBytesWritten+ offset);
+		if ( temp_size > cacheEntry->file_size.QuadPart)
+			cacheEntry->file_size.QuadPart = temp_size;
 	}
+	CloseHandle(handle);
 	cacheEntry->needRemove = TRUE;
 
 	return 0;
@@ -482,6 +474,7 @@ MirrorGetFileInformation(
 	WCHAR	filePath[MAX_PATH];
 	std::list<DavEntry> list;
 	LARGE_INTEGER file_size;
+	HANDLE handle;
 	FILETIME* time;
 	DWORD result;
 	ULONG64 cacheHandle = DokanFileInfo->Context;
@@ -489,6 +482,39 @@ MirrorGetFileInformation(
 
 	GetFilePath(FileName, filePath);
 	DbgPrint(L"MirrorGetFileInformation on %s\n", filePath);
+	
+	cacheEntry = davCache->getFromHandle(cacheHandle);
+	if (cacheEntry == NULL)
+		return E_FAIL;
+
+	if (cacheEntry->type != DavEntry::unknow) {
+		HandleFileInformation->dwFileAttributes = FILE_ATTRIBUTE_NORMAL;
+		if (cacheEntry->type == DavEntry::directory)
+			HandleFileInformation->dwFileAttributes = FILE_ATTRIBUTE_DIRECTORY;
+
+		handle = CreateFile(cacheEntry->cachePath, GENERIC_WRITE |GENERIC_READ, FILE_SHARE_READ |FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (handle != INVALID_HANDLE_VALUE) {
+			GetFileSizeEx(handle, &file_size);
+			if (file_size.QuadPart != 0){
+				HandleFileInformation->nFileSizeHigh = file_size.HighPart;
+				HandleFileInformation->nFileSizeLow = file_size.LowPart;
+				cacheEntry->file_size.QuadPart = file_size.QuadPart;
+			}
+			CloseHandle(handle);
+		}
+		else {
+			file_size.QuadPart = cacheEntry->file_size.QuadPart;
+			HandleFileInformation->nFileSizeHigh = file_size.HighPart;
+			HandleFileInformation->nFileSizeLow = file_size.LowPart;
+		}
+		HandleFileInformation->ftCreationTime.dwLowDateTime = cacheEntry->creationTime.dwLowDateTime;
+		HandleFileInformation->ftCreationTime.dwHighDateTime = cacheEntry->creationTime.dwHighDateTime;
+		HandleFileInformation->ftLastAccessTime.dwLowDateTime = cacheEntry->lastModifiedTime.dwLowDateTime;
+		HandleFileInformation->ftLastAccessTime.dwHighDateTime = cacheEntry->lastModifiedTime.dwHighDateTime;
+		HandleFileInformation->ftLastWriteTime.dwLowDateTime = cacheEntry->lastModifiedTime.dwLowDateTime;
+		HandleFileInformation->ftLastWriteTime.dwHighDateTime = cacheEntry->lastModifiedTime.dwHighDateTime;
+		return ERROR_SUCCESS;
+	}
 	
 	PROPFINDRequest req(filePath, 0);
 	if (FAILED(server->sendRequest(req))) {
@@ -514,8 +540,11 @@ MirrorGetFileInformation(
 	DavEntry &entry = list.front();
 	
 	HandleFileInformation->dwFileAttributes = FILE_ATTRIBUTE_NORMAL;
-	if (entry.getType() == DavEntry::directory)
+	cacheEntry->type = DavEntry::file;
+	if (entry.getType() == DavEntry::directory) {
 		HandleFileInformation->dwFileAttributes = FILE_ATTRIBUTE_DIRECTORY;
+		cacheEntry->type = DavEntry::directory;
+	}
 
 	file_size.QuadPart = entry.getLength();
 	HandleFileInformation->nFileSizeHigh = 0;
@@ -525,26 +554,35 @@ MirrorGetFileInformation(
 		HandleFileInformation->nFileSizeLow = file_size.LowPart;
 	}
 
-	cacheEntry = davCache->getFromHandle(cacheHandle);
-	if (cacheEntry != NULL) {
-		if (cacheEntry->handle != INVALID_HANDLE_VALUE) {
-			GetFileSizeEx(cacheEntry->handle, &file_size);
-			if (file_size.QuadPart != 0){
-				HandleFileInformation->nFileSizeHigh = file_size.HighPart;
-				HandleFileInformation->nFileSizeLow = file_size.LowPart;
-			}
+	handle = CreateFile(cacheEntry->cachePath, GENERIC_WRITE |GENERIC_READ, FILE_SHARE_READ |FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (handle != INVALID_HANDLE_VALUE) {
+		GetFileSizeEx(handle, &file_size);
+		if (file_size.QuadPart != 0){
+			HandleFileInformation->nFileSizeHigh = file_size.HighPart;
+			HandleFileInformation->nFileSizeLow = file_size.LowPart;
 		}
+		CloseHandle(handle);
 	}
+
+	file_size.HighPart = HandleFileInformation->nFileSizeHigh;
+	file_size.LowPart = HandleFileInformation->nFileSizeLow;
+	cacheEntry->file_size.QuadPart = file_size.QuadPart;
 
 	time = entry.getCreationTime();
 	HandleFileInformation->ftCreationTime.dwLowDateTime = time->dwLowDateTime;
 	HandleFileInformation->ftCreationTime.dwHighDateTime = time->dwHighDateTime;
+	cacheEntry->creationTime.dwLowDateTime = HandleFileInformation->ftCreationTime.dwLowDateTime;
+	cacheEntry->creationTime.dwLowDateTime = HandleFileInformation->ftCreationTime.dwLowDateTime;
+	
 	time = entry.getLastModifiedTime();
 	HandleFileInformation->ftLastAccessTime.dwLowDateTime = time->dwLowDateTime;
 	HandleFileInformation->ftLastAccessTime.dwHighDateTime = time->dwHighDateTime;
 	HandleFileInformation->ftLastWriteTime.dwLowDateTime = time->dwLowDateTime;
 	HandleFileInformation->ftLastWriteTime.dwHighDateTime = time->dwHighDateTime;
-
+	
+	cacheEntry->lastModifiedTime.dwLowDateTime = HandleFileInformation->ftLastAccessTime.dwLowDateTime;
+	cacheEntry->lastModifiedTime.dwHighDateTime = HandleFileInformation->ftLastAccessTime.dwHighDateTime;
+	
 	return ERROR_SUCCESS;
 }
 
@@ -675,13 +713,17 @@ MirrorMoveFile(
 	WCHAR newFilePath[MAX_PATH];
 	WCHAR destinationURL[MAX_PATH]; 
 	DWORD result;
-
-	UNREFERENCED_PARAMETER(DokanFileInfo);
+	DAVCACHEENTRY* cacheEntry = NULL;
+	ULONG64 cacheHandle = DokanFileInfo->Context;
 
 	GetFilePath(FileName, filePath);
 	GetFilePath(NewFileName, newFilePath);
 	
 	DbgPrint(L"MoveFile %s -> %s\n\n", filePath, newFilePath);
+	cacheEntry = davCache->getFromHandle(cacheHandle);
+	if (cacheEntry != NULL) {
+		wcscpy_s(cacheEntry->remotePath, MAX_PATH, newFilePath);
+	}
 
 	server->getAbsolutePath(destinationURL, newFilePath);
 	MOVERequest req(filePath, destinationURL, ReplaceIfExisting);
@@ -733,34 +775,29 @@ MirrorSetEndOfFile(
 		if (cacheEntry->needImport == TRUE) {
 			cacheEntry->needImport = FALSE;
 
-			if (cacheEntry->handle != INVALID_HANDLE_VALUE) {
-				CloseHandle(cacheEntry->handle);
-				cacheEntry->handle = INVALID_HANDLE_VALUE;
-			}
-
 			if (FAILED(server->importURL(cacheEntry->remotePath, cacheEntry->cachePath))) {
 				DbgPrint(L"Unable to add %s to local cache, Error while importing the file\n", cacheEntry->remotePath);
 				return -1;
 			}
 		}
-		if (cacheEntry->handle == INVALID_HANDLE_VALUE) {
-			cacheEntry->handle = CreateFile(cacheEntry->cachePath, GENERIC_WRITE |GENERIC_READ, FILE_SHARE_READ |FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-			if (cacheEntry->handle == INVALID_HANDLE_VALUE) {
-				DbgPrint(L"CreateFile error : %u\n", GetLastError());
-				return ~GetLastError();
+
+		handle = CreateFile(cacheEntry->cachePath, GENERIC_WRITE |GENERIC_READ, FILE_SHARE_READ |FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (handle != INVALID_HANDLE_VALUE) {
+			offset.QuadPart = ByteOffset;
+			if (!SetFilePointerEx(handle, offset, NULL, FILE_BEGIN)) {
+				DbgPrint(L"\tSetFilePointer error: %d, offset = %I64d\n\n", GetLastError(), ByteOffset);
+				return GetLastError() * -1;
 			}
-		}
-		offset.QuadPart = ByteOffset;
-		if (!SetFilePointerEx(cacheEntry->handle, offset, NULL, FILE_BEGIN)) {
-			DbgPrint(L"\tSetFilePointer error: %d, offset = %I64d\n\n", GetLastError(), ByteOffset);
-			return GetLastError() * -1;
+
+			if (!SetEndOfFile(handle)) {
+				DWORD error = GetLastError();
+				DbgPrint(L"\terror code = %d\n\n", error);
+				return error * -1;
+			}
+			CloseHandle(handle);
 		}
 
-		if (!SetEndOfFile(cacheEntry->handle)) {
-			DWORD error = GetLastError();
-			DbgPrint(L"\terror code = %d\n\n", error);
-			return error * -1;
-		}
+		cacheEntry->file_size.QuadPart = ByteOffset;
 	}
 	return ERROR_SUCCESS;
 }
@@ -844,9 +881,7 @@ MirrorGetVolumeInformation(
 	*MaximumComponentLength = 256;
 	*FileSystemFlags = FILE_CASE_SENSITIVE_SEARCH | 
 						FILE_CASE_PRESERVED_NAMES | 
-						FILE_SUPPORTS_REMOTE_STORAGE |
-						FILE_UNICODE_ON_DISK |
-						FILE_PERSISTENT_ACLS;
+						FILE_UNICODE_ON_DISK;
 	wcscpy_s(FileSystemNameBuffer, FileSystemNameSize / sizeof(WCHAR), L"Ulteo Webdav FS");
 
 	return 0;

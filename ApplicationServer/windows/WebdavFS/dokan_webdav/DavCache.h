@@ -23,10 +23,12 @@
 
 #include <Shlobj.h>
 #include <Shellapi.h>
+#include <windows.h>
 #include "WebdavServer.h"
 
 
 #define DAV_CACHE_SIZE          1024
+#define CACHE_DURATION          5000 // 5 secondes
 #define INVALID_CACHE_HANDLE    DAV_CACHE_SIZE
 #define DAV_CACHE_DIR_SUFFIXE   L"Ulteo\\DavCache"
 
@@ -36,9 +38,17 @@ typedef struct _DAVCACHEENTRY
 	BOOLEAN needExport;
 	BOOLEAN needImport;
 	BOOLEAN needRemove;
+	
+	DWORD stamp;
+	DWORD ref;
+
+	DavEntry::FileType type;
+	LARGE_INTEGER file_size;
+	FILETIME creationTime;
+	FILETIME lastModifiedTime;
+
 	WCHAR remotePath[MAX_PATH];
 	WCHAR cachePath[MAX_PATH];
-	HANDLE handle;
 } DAVCACHEENTRY, *PDAVCACHEENTRY;
 
 
@@ -57,12 +67,15 @@ public:
 	int init(WebdavServer* server);
 	void clean();
 	ULONG64 add(WCHAR* path);
-	int remove(ULONG64 handle);
+	int remove(ULONG64 handle, BOOL force);
 	PDAVCACHEENTRY getFromHandle(ULONG64 handle);
 	PDAVCACHEENTRY getFromPath(WCHAR* path);
 	WCHAR* createCacheDir();
 	ULONG64 getNextEmptyEntry();
-	ULONG64 DavCache::getHandleFromPath(WCHAR* path);
+	ULONG64 getHandleFromPath(WCHAR* path);
+	BOOL isExpired(ULONG64 handle);
+	BOOL addRef(ULONG64 cacheHandle);
+	BOOL delRef(ULONG64 cacheHandle);
 
 };
 

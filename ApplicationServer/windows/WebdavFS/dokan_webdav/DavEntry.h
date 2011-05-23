@@ -30,7 +30,7 @@
 
 class DavEntry {
 public:
-	enum FileType {file, directory, executableFile};
+	enum FileType {file, directory, executableFile, unknow};
 	static const WCHAR* FileTypeString[FILE_TYPE_COUNT];
 	static const CHAR DavEntry::ACCEPTABLE_URI_CHARS[96];
 	static const CHAR DavEntry::HEX_CHARS[17];

@@ -100,9 +100,18 @@ int DavCache::init(WebdavServer* server)
 		currentEntry->needExport = FALSE;
 		currentEntry->needImport = FALSE;
 		currentEntry->needRemove = FALSE;
-		currentEntry->handle = INVALID_HANDLE_VALUE;
 		currentEntry->remotePath[0] = '\0';
 		currentEntry->cachePath[0] = '\0';
+
+		currentEntry->type = DavEntry::unknow;
+		currentEntry->file_size.QuadPart = -1;
+		currentEntry->creationTime.dwLowDateTime = 0;
+		currentEntry->creationTime.dwHighDateTime = 0;
+		currentEntry->lastModifiedTime.dwLowDateTime = 0;
+		currentEntry->lastModifiedTime.dwHighDateTime = 0;
+
+		currentEntry->stamp = 0;
+		currentEntry->ref = 0;
 	}
 
 	cacheDir = createCacheDir();
@@ -137,9 +146,18 @@ void DavCache::clean()
 			currentEntry->needExport = FALSE;
 			currentEntry->needImport = FALSE;
 			currentEntry->needRemove = FALSE;
-			currentEntry->handle = INVALID_HANDLE_VALUE;
 			currentEntry->remotePath[0] = '\0';
 			currentEntry->cachePath[0] = '\0';
+
+			currentEntry->type = DavEntry::unknow;
+			currentEntry->file_size.QuadPart = -1;
+			currentEntry->creationTime.dwLowDateTime = 0;
+			currentEntry->creationTime.dwHighDateTime = 0;
+			currentEntry->lastModifiedTime.dwLowDateTime = 0;
+			currentEntry->lastModifiedTime.dwHighDateTime = 0;
+
+			currentEntry->stamp = 0;
+			currentEntry->ref = 0;
 		}
 	}
 
@@ -170,14 +188,24 @@ ULONG64 DavCache::add(WCHAR* path)
 	}
 	//TODO multithread operation
 	cacheHandle = getNextEmptyEntry();
+	
 	cache[cacheHandle].isSet = TRUE;
 	cache[cacheHandle].needExport = FALSE;
 	cache[cacheHandle].needImport = FALSE;
 	cache[cacheHandle].needRemove = FALSE;
-	cache[cacheHandle].handle = INVALID_HANDLE_VALUE;
+
+	cache[cacheHandle].type = DavEntry::unknow;
+	cache[cacheHandle].file_size.QuadPart = -1;
+	cache[cacheHandle].creationTime.dwLowDateTime = 0;
+	cache[cacheHandle].creationTime.dwHighDateTime = 0;
+	cache[cacheHandle].lastModifiedTime.dwLowDateTime = 0;
+	cache[cacheHandle].lastModifiedTime.dwHighDateTime = 0;
 
 	wcscpy_s(cache[cacheHandle].remotePath, MAX_PATH, path);
 	swprintf_s(cache[cacheHandle].cachePath, MAX_PATH, L"%s\\%u", cacheDir, cacheHandle);
+
+	cache[cacheHandle].stamp = GetTickCount();
+	cache[cacheHandle].ref = 0;
 
 	count++;
 
@@ -185,7 +213,7 @@ ULONG64 DavCache::add(WCHAR* path)
 }
 
 
-BOOL DavCache::remove(ULONG64 handle)
+BOOL DavCache::remove(ULONG64 handle, BOOL force)
 {
 	DAVCACHEENTRY* currentEntry = NULL;
 	BOOL ret = TRUE;
@@ -196,8 +224,11 @@ BOOL DavCache::remove(ULONG64 handle)
 	}
 	//TODO multithread operation
 	currentEntry = &cache[handle];
-	CloseHandle(currentEntry->handle);
-	if (!DeleteFile(currentEntry->cachePath)) {
+
+	if (currentEntry->ref > 0 && !force)
+		return ret;
+
+	if (lstrlen(currentEntry->cachePath) > 0  && !DeleteFile(currentEntry->cachePath)) {
 		DbgPrint(L"Error %u while deleting the file %s.\n", GetLastError(), currentEntry->cachePath);
 		ret = FALSE;
 	}
@@ -208,9 +239,27 @@ BOOL DavCache::remove(ULONG64 handle)
 	currentEntry->needExport = FALSE;
 	currentEntry->needRemove = FALSE;
 	currentEntry->needImport = FALSE;
-	currentEntry->handle = INVALID_HANDLE_VALUE;
 
+	currentEntry->type = DavEntry::unknow;
+	currentEntry->file_size.QuadPart = -1;
+	currentEntry->creationTime.dwLowDateTime = 0;
+	currentEntry->creationTime.dwHighDateTime = 0;
+	currentEntry->lastModifiedTime.dwLowDateTime = 0;
+	currentEntry->lastModifiedTime.dwHighDateTime = 0;
+
+	currentEntry->stamp = 0;
 	return ret;
+}
+
+BOOL DavCache::isExpired(ULONG64 handle) {
+	DWORD temp = GetTickCount();
+
+	if (handle == INVALID_CACHE_HANDLE) {
+		return FALSE;
+	}
+	temp -= cache[handle].stamp;
+
+	return temp > CACHE_DURATION;
 }
 
 DAVCACHEENTRY* DavCache::getFromHandle(ULONG64 handle)
@@ -241,6 +290,7 @@ DAVCACHEENTRY* DavCache::getFromPath(WCHAR* path)
 
 ULONG64 DavCache::getHandleFromPath(WCHAR* path) {
 	int i = 0;
+	
 	for (i = 0 ; i < DAV_CACHE_SIZE ; i++) {
 		//TODO save unsaved file
 		DAVCACHEENTRY* currentEntry = &cache[i];
@@ -252,3 +302,21 @@ ULONG64 DavCache::getHandleFromPath(WCHAR* path) {
 	}
 	return INVALID_CACHE_HANDLE;
 }
+
+BOOL DavCache::addRef(ULONG64 cacheHandle) {
+	if (cacheHandle == INVALID_CACHE_HANDLE) {
+		return FALSE;
+	}
+	cache[cacheHandle].ref++;
+	return TRUE;
+}
+
+BOOL DavCache::delRef(ULONG64 cacheHandle) {
+	if (cacheHandle == INVALID_CACHE_HANDLE) {
+		return FALSE;
+	}
+	cache[cacheHandle].ref--;
+	return TRUE;
+}
+
+
