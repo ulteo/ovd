@@ -51,7 +51,7 @@ class ControlClassProcess(Thread):
 				break
 	
 	
-	def stop(self):
+	def terminate(self):
 		self._pipe_s.close()
 		self._pipe_m.close()
 	

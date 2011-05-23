@@ -34,6 +34,7 @@ from passfd import recvfd
 
 
 class ConnectionPoolProcess(Process):
+	
 	def __init__(self, child_pipes, father_pipes, s_unix, ssl_ctx):
 		Process.__init__(self)
 		
@@ -104,7 +105,7 @@ class ConnectionPoolProcess(Process):
 				self.t_asyncore.join()
 			self.s_unix.shutdown(socket.SHUT_RD)
 			self.s_unix.close()
-			self.f_control.stop()
+			self.f_control.terminate()
 	
 	
 	def clean(self):

@@ -164,7 +164,8 @@ class Role(AbstractRole):
 		
 		p = self.processes.pop(pid)[0]
 		p[0].terminate()
-		p[1].stop()
+		p[1].terminate()
+
 		if p[1] is not threading.current_thread():
 			p[1].join()
 		p[0].join()
