@@ -91,7 +91,7 @@ class ConnectionPoolProcess(Process):
 		signal.signal(signal.SIGINT, signal.SIG_IGN)
 		if signum is signal.SIGTERM:
 			signal.signal(signal.SIGTERM, signal.SIG_IGN)
-			Logger.debug("Gateway:: Stopping child process")
+			Logger.debug("Gateway:: stopping child process")
 			if self.t_asyncore.is_alive():
 				asyncore.close_all()
 				self.t_asyncore.join()
