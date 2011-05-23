@@ -20,8 +20,8 @@
 
 import asyncore
 from multiprocessing import Process, current_process
+import Queue
 import signal
-import socket
 import threading
 
 from Config import Config
@@ -30,20 +30,19 @@ from ovd.Logger import Logger
 from ProtocolDetectDispatcher import ProtocolDetectDispatcher
 
 from OpenSSL import SSL
-from passfd import recvfd
 
 
 class ConnectionPoolProcess(Process):
 	
-	def __init__(self, child_pipes, father_pipes, s_unix, ssl_ctx):
+	def __init__(self, child_pipes, father_pipes, ssl_ctx):
 		Process.__init__(self)
 		
 		self.father_pipes = father_pipes
-		self.s_unix = s_unix
 		self.ssl_ctx = ssl_ctx
 		
 		self.f_control = ControlFatherProcess(self, child_pipes)
 		self.t_asyncore = None
+		self.socks = Queue.Queue()
 		
 		# use for process cleaning
 		self.was_lazy = False
@@ -66,19 +65,12 @@ class ConnectionPoolProcess(Process):
 		self.sm = (self.f_control.send("get_sm"), self.ssl_ctx)
 		self.rdp_port = self.f_control.send("get_rdp_port")
 		
-		while True:
+		while self.f_control.is_alive() or not self.socks.empty():
 			try:
-				fd = recvfd(self.s_unix)[0]
-			except OSError, e:
-				if e.errno == 4:
-					# the child process receive a signal
-					# but it should not stop itself by this way
-					continue
-				else:
-					break
-			except RuntimeError:
-				break
-			sock = socket.fromfd(fd, socket.AF_INET, socket.SOCK_STREAM)
+				sock = self.socks.get(timeout=0.01)
+			except Queue.Empty:
+				continue
+			
 			Logger.debug("Gateway:: new connection => %s" % str(sock.getpeername()))
 			
 			ssl_conn = SSL.Connection(self.sm[1], sock)
@@ -98,13 +90,11 @@ class ConnectionPoolProcess(Process):
 		self.clean_timer.cancel()
 		signal.signal(signal.SIGINT, signal.SIG_IGN)
 		if signum is signal.SIGTERM:
-			Logger.debug("Gateway:: Stopping child process")
 			signal.signal(signal.SIGTERM, signal.SIG_IGN)
+			Logger.debug("Gateway:: Stopping child process")
 			if self.t_asyncore.is_alive():
 				asyncore.close_all()
 				self.t_asyncore.join()
-			self.s_unix.shutdown(socket.SHUT_RD)
-			self.s_unix.close()
 			self.f_control.terminate()
 	
 	

@@ -23,7 +23,9 @@
 
 import errno
 from multiprocessing import Pipe
+from multiprocessing.reduction import reduce_socket
 import os
+import pickle
 import socket
 import threading
 
@@ -34,7 +36,6 @@ from ovd.Logger import Logger
 from ovd.Role.Role import Role as AbstractRole
 
 from OpenSSL import SSL
-from passfd import sendfd
 
 
 class Role(AbstractRole):
@@ -115,24 +116,24 @@ class Role(AbstractRole):
 			
 			self.kill_mutex.acquire()
 			
-			s_unix = None
+			best_proc = None
 			for pid, proc in self.processes.items():
-				proc = proc[0]
-				nb_conn = proc[1].send("nb_conn")
+				ctrl = proc[0][1]
+				nb_conn = ctrl.send('nb_conn')
 				self.processes[pid][1] = nb_conn
 				if nb_conn < Config.max_connection:
-					s_unix = proc[2]
+					best_proc = pid
 					break
-			if s_unix is None:
+			if best_proc is None:
 				if len(self.processes) < Config.max_process:
-					pid = self.create_process()
-					s_unix = self.processes[pid][0][2]
+					best_proc = self.create_process()
 				else:
 					best_proc = min(self.processes, key=lambda pid:self.processes[pid][1])
 					Logger.warn("Gateway service has reached the open connections limit")
-					s_unix = self.processes[best_proc][0][2]
 			
-			sendfd(s_unix, conn.fileno())
+			ctrl = self.processes[best_proc][0][1]
+			pickled_sock = pickle.dumps(reduce_socket(conn))
+			ctrl.send(('socket', pickled_sock))
 			
 			self.kill_mutex.release()
 			conn.close()
@@ -145,9 +146,8 @@ class Role(AbstractRole):
 		(p01, p11) = Pipe() # for the child
 		father_pipes = (p10, p11)
 		child_pipes = (p01, p00)
-		(s0, s1) = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
 		
-		proc = ConnectionPoolProcess(child_pipes, father_pipes, s1, self.ssl_ctx)
+		proc = ConnectionPoolProcess(child_pipes, father_pipes, self.ssl_ctx)
 		proc.start()
 		child_pipes[0].close()
 		child_pipes[1].close()
@@ -155,17 +155,17 @@ class Role(AbstractRole):
 		ctrl = ControlChildProcess(self, father_pipes)
 		ctrl.start()
 		
-		self.processes[proc.pid] = [(proc, ctrl, s0), 0]
+		self.processes[proc.pid] = [(proc, ctrl), 0]
 		return proc.pid
 	
 	
 	def kill_process(self, pid):
 		self.kill_mutex.acquire()
 		
-		(proc, ctrl, s_unix) = self.processes.pop(pid)[0]
+		(proc, ctrl) = self.processes.pop(pid)[0]
 		proc.terminate()
 		ctrl.terminate()
-
+		
 		proc.join()
 		if ctrl is not threading.current_thread():
 			ctrl.join()

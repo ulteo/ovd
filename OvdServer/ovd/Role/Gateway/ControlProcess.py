@@ -19,6 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import asyncore
+import pickle
 from threading import Thread
 
 from TokenDatabase import digestToken, insertToken
@@ -69,6 +70,10 @@ class ControlFatherProcess(ControlClassProcess):
 	
 	def _nb_conn(self):
 		return len(asyncore.socket_map) / 2
+
+	def _socket(self, sock):
+		p = pickle.loads(sock)
+		self._class.socks.put(p[0](*p[1]))
 
 
 
