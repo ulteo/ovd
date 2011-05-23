@@ -33,6 +33,7 @@ import Queue
 import signal
 
 class SessionManagement(Process):
+	
 	def __init__(self, aps_instance, queue, queue2, queue_sync, logging_queue):
 		Process.__init__(self)
 		
@@ -45,6 +46,7 @@ class SessionManagement(Process):
 		self.synchronizer = SingletonSynchronizer()
 		self.synchronizer.backup()
 		self.looping = True
+	
 	
 	def run(self):
 		self.synchronizer.restore()
