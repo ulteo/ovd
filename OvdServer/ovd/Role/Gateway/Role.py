@@ -152,23 +152,23 @@ class Role(AbstractRole):
 		child_pipes[0].close()
 		child_pipes[1].close()
 		
-		control = ControlChildProcess(self, father_pipes)
-		control.start()
+		ctrl = ControlChildProcess(self, father_pipes)
+		ctrl.start()
 		
-		self.processes[proc.pid] = [(proc, control, s0), 0]
+		self.processes[proc.pid] = [(proc, ctrl, s0), 0]
 		return proc.pid
 	
 	
 	def kill_process(self, pid):
 		self.kill_mutex.acquire()
 		
-		p = self.processes.pop(pid)[0]
-		p[0].terminate()
-		p[1].terminate()
+		(proc, ctrl, s_unix) = self.processes.pop(pid)[0]
+		proc.terminate()
+		ctrl.terminate()
 
-		if p[1] is not threading.current_thread():
-			p[1].join()
-		p[0].join()
+		proc.join()
+		if ctrl is not threading.current_thread():
+			ctrl.join()
 		
 		self.kill_mutex.release()
 	
