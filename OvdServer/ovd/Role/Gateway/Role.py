@@ -123,9 +123,9 @@ class Role(AbstractRole):
 		proc.terminate()
 		ctrl.terminate()
 		
-		proc.join()
 		if ctrl is not threading.current_thread():
 			ctrl.join()
+		proc.join()
 		
 		self.kill_mutex.release()
 	
