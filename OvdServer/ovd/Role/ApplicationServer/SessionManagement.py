@@ -53,13 +53,11 @@ class SessionManagement(Process):
 		Logger._instance.setQueue(self.logging_queue, False)
 		
 		# Prevent the process to be stop by a keyboard interruption
-		def quit(signalnum, frame):
-			self.looping = False
 		signal.signal(signal.SIGINT, signal.SIG_IGN)
-		signal.signal(signal.SIGTERM, quit)
+		signal.signal(signal.SIGTERM, signal.SIG_IGN)
 		
 		Logger.debug("Starting SessionManager process")
-		while self.looping:
+		while True:
 			try:
 				(request, obj) = self.queue2.get_nowait()
 			except Queue.Empty:
@@ -88,8 +86,14 @@ class SessionManagement(Process):
 				session = obj
 				self.manage_new_session(session)
 				self.queue_sync.put(session)
+			elif request == "exit":
+				break
 		
 		Logger.debug("SessionManager process stopped")
+
+
+	def terminate(self):
+		self.queue.put(("exit", None))
 	
 	
 	def create_session(self, session):
