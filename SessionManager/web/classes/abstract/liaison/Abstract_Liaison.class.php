@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -47,7 +47,7 @@ class Abstract_Liaison {
 		}
 		
 		if (!method_exists($class_to_use, $method_name_)) {
-			Logger::error('main', "Abstract_Liaison::callMethod method '$methode_to_call' does not exist");
+			Logger::error('main', "Abstract_Liaison::callMethod method '$method_to_call' does not exist");
 			return NULL;
 		}
 		return call_user_func($method_to_call, $type_,  $element_, $group_);
