@@ -92,8 +92,6 @@ class SessionReportItem {
 				'running' => new ReportRunningItem()
 			);
 		}
-
-		$this->saveSessionCurrentApps();
 	}
 
 	public function end() {
@@ -119,14 +117,6 @@ class SessionReportItem {
 	/*
 	 * private methods
 	 */
-	private function saveSessionCurrentApps() {
-		$session = Abstract_Session::load($this->id);
-		if (is_object($session)) {
-			$session->setAttribute('applications', $this->current_apps);
-			Abstract_Session::save($session);
-		}
-	}
-
 	private function toXml() {
 		$dom = new DomDocument ('1.0', 'utf-8');
 	    $dom->formatOutput = true;
