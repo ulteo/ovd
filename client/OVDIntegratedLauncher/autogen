@@ -23,6 +23,7 @@ import os
 import pysvn
 import sys
 import time
+from subprocess import call
 
 path = os.path.dirname( os.path.realpath( __file__ ) )
 
@@ -63,9 +64,10 @@ for name in transform_files:
 
 
 if sys.platform == "linux2":
-	cmd = "autoreconf -vfi && ./configure "+ " ".join('"%s"'%(i) for i in sys.argv[1:])
-	ret = os.system(cmd)
-	if ret!=0:
+	ret = call(['autoreconf', '-vfi'], cwd=path)
+	if ret is 0:
+		ret = call(['./configure'] + sys.argv[1:], cwd=path)
+	if ret is not 0:
 		sys.exit(ret)
 else:
 	import shutil
