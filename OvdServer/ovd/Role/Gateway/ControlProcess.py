@@ -70,10 +70,13 @@ class ControlFatherProcess(ControlClassProcess):
 	
 	def _nb_conn(self):
 		return len(asyncore.socket_map) / 2
-
+	
 	def _socket(self, sock):
 		p = pickle.loads(sock)
 		self._class.socks.put(p[0](*p[1]))
+	
+	def _stop(self):
+		self._class.stop()
 
 
 

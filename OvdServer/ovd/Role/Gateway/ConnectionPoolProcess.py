@@ -52,15 +52,15 @@ class ConnectionPoolProcess(Process):
 	def run(self):
 		Logger.info("Gateway:: new process started")
 		
+		signal.signal(signal.SIGINT, signal.SIG_IGN)
+		signal.signal(signal.SIGTERM, signal.SIG_IGN)
+		
 		# close inherited father pipes
 		self.father_pipes[0].close()
 		self.father_pipes[1].close()
 		
 		self.f_control.start()
 		self.clean_timer.start()
-		
-		signal.signal(signal.SIGINT, self.stop)
-		signal.signal(signal.SIGTERM, self.stop)
 		
 		self.sm = (self.f_control.send("get_sm"), self.ssl_ctx)
 		self.rdp_port = self.f_control.send("get_rdp_port")
@@ -83,19 +83,21 @@ class ConnectionPoolProcess(Process):
 				self.t_asyncore = threading.Thread(target=lambda:asyncore.loop(timeout=0.01))
 				self.t_asyncore.start()
 		
+		if self.t_asyncore.is_alive():
+			asyncore.close_all()
+			self.t_asyncore.join()
+		
 		Logger.info("Gateway:: child process stopped")
 	
 	
-	def stop(self, signum, frame):
+	def stop(self):
+		Logger.debug("Gateway:: stopping child process")
 		self.clean_timer.cancel()
-		signal.signal(signal.SIGINT, signal.SIG_IGN)
-		if signum is signal.SIGTERM:
-			signal.signal(signal.SIGTERM, signal.SIG_IGN)
-			Logger.debug("Gateway:: stopping child process")
-			if self.t_asyncore.is_alive():
-				asyncore.close_all()
-				self.t_asyncore.join()
-			self.f_control.terminate()
+		self.f_control.terminate()
+	
+	
+	def terminate(self):
+		self.father_pipes[0].send('stop')
 	
 	
 	def clean(self):
