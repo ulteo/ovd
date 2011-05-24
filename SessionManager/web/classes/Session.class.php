@@ -522,6 +522,38 @@ class Session {
 	}
 
 	public function setRunningApplications($fqdn_, $running_apps_) {
+		if (! is_array($this->applications[$fqdn_]))
+			$this->applications[$fqdn_] = array();
+
+		$current_instances = array_keys($this->applications[$fqdn_]);
+		$new_instances = array_keys($running_apps_);
+
+		foreach ($new_instances as $new_instance) {
+			if (! in_array($new_instance, $current_instances)) {
+				$ev = new SessionApplicationInstance(array(
+					'id'		=>	$new_instance,
+					'app_id'	=>	$running_apps_[$new_instance],
+					'session_id'	=>	$this->getAttribute('id'),
+					'action'	=>	'start'
+				));
+
+				$ev->emit();
+			}
+		}
+
+		foreach ($current_instances as $current_instance) {
+			if (! in_array($current_instance, $new_instances)) {
+				$ev = new SessionApplicationInstance(array(
+					'id'		=>	$current_instance,
+					'app_id'	=>	$this->applications[$fqdn_][$current_instance],
+					'session_id'	=>	$this->getAttribute('id'),
+					'action'	=>	'stop'
+				));
+
+				$ev->emit();
+			}
+		}
+
 		$this->applications[$fqdn_] = $running_apps_;
 
 		return true;
