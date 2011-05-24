@@ -524,8 +524,8 @@ for o, a in opts:
         
 
 if conf["fullscreen"] == True:
-    (status, out) = commands.getstatusoutput('xrandr |head -n 1')
-    s = re.search('current ([0-9]+) x ([0-9]+)', out)
+    (status, out) = commands.getstatusoutput('xdpyinfo |grep dimensions:')
+    s = re.search('([0-9]+)x([0-9]+) pixels', out)
     if s is None:
         print >> sys.stderr, "Unable to get the screen resolution"
         sys.exit(2)
