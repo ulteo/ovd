@@ -5,6 +5,7 @@
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -130,7 +131,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 		Options opts = new Options();
 
-		final int nbOptions = 4;
+		final int nbOptions = 5;
 		List<LongOpt> systemDependantOptions = new ArrayList<LongOpt>();
 
 		if (OSTools.isWindows()) {
@@ -143,11 +144,12 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		alo[1] = new LongOpt("auto-integration", LongOpt.NO_ARGUMENT, null, 1);
 		alo[2] = new LongOpt("progress-bar", LongOpt.REQUIRED_ARGUMENT, null, 2);
 		alo[3] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 3);
+		alo[4] = new LongOpt("version", LongOpt.NO_ARGUMENT, null, 4);
 
-		for (int i = 4; i < alo.length; i++)
+		for (int i = nbOptions; i < alo.length; i++)
 			alo[i] = systemDependantOptions.remove(0);
 
-		Getopt opt = new Getopt(OvdClient.productName, args, "c:p:u:m:g:k:l:s:hd:", alo);
+		Getopt opt = new Getopt(OvdClient.productName, args, "c:p:u:m:g:k:l:s:hd:v", alo);
 
 		int c;
 		while ((c = opt.getopt()) != -1) {
@@ -184,6 +186,11 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				case 3: //--help
 				case 'h':
 					NativeClient.usage(RETURN_CODE_SUCCESS);
+					break;
+				case 4: //--version
+				case 'v':
+					System.out.println(ClientInfos.getOVDVersion());
+					System.exit(0);
 					break;
 				case 'c':
 					opts.profile = new String(opt.getOptarg());
@@ -347,6 +354,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		System.err.println("\t--auto-integration		Enable auto integration");
 		System.err.println("\t--auto-start			Enable auto start");
 		System.err.println("\t-d [seamless]			Enable debug (use comma as delimiter)");
+		System.err.println("\t-v|--version			Print the software version");
 		if (OSTools.isWindows()) {
 			System.err.println("\t--ntlm				Use NTLM authentication");
 			System.err.println("\t--reg				Load configuration from registry");
