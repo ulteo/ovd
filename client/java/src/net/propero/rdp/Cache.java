@@ -6,6 +6,24 @@
  * Date: $Date: 2007/03/08 00:26:27 $
  *
  * Copyright (c) 2005 Propero Limited
+ * 
+ * Copyright (C) 2011 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
+ * 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * Purpose: Handle caching of bitmaps, cursors, colour maps,
  *          text and fonts
@@ -21,11 +39,21 @@ import org.apache.log4j.Logger;
 
 public class Cache {
 
+	public static final int BMPCACHE2_C0_MAX_CELLS = 600;
+	
+	public static final int BMPCACHE2_C1_MAX_CELLS = 600;
+	
+	public static final int BMPCACHE2_C2_MAX_CELLS = 2560;
+	
+	public static final int BMPCACHE2_C3_MAX_CELLS = 4096;
+	
+	public static final int BMPCACHE2_C4_MAX_CELLS = 2048;
+	
     protected static Logger logger = Logger.getLogger(Rdp.class);
 
 	private static final int RDPCACHE_COLOURMAPSIZE = 0x06; // unified patch
 
-	private Bitmap[][] bitmapcache = new Bitmap[3][0xa00];
+	private Bitmap[][] bitmapcache = null;
 
 	private Bitmap[] volatile_bc = new Bitmap[3];
 
@@ -48,7 +76,37 @@ public class Cache {
 		this.common = common_;
 		this.opt = opt_;
 	}
+	
+	public void setCacheEntry(int level1, int level2, int level3) {
+		this.bitmapcache = new Bitmap[3][];
+		this.bitmapcache[0] = new Bitmap[level1];
+		this.bitmapcache[1] = new Bitmap[level2];
+		this.bitmapcache[2] = new Bitmap[level3];
+	}
+	
+	public void init() {
+		long availableMemory = Runtime.getRuntime().maxMemory();
+		int cache3Size = Rdp.BMPCACHE2_C2_CELLS;
 
+		if (availableMemory > (512 * 1024 * 1024))
+			cache3Size = Cache.BMPCACHE2_C2_MAX_CELLS/3;
+
+		if (availableMemory > (1024 * 1024 * 1024))
+			cache3Size = Cache.BMPCACHE2_C2_MAX_CELLS;
+
+		this.bitmapcache = new Bitmap[3][];
+		this.bitmapcache[0] = new Bitmap[Rdp.BMPCACHE2_C0_CELLS];
+		this.bitmapcache[1] = new Bitmap[Rdp.BMPCACHE2_C1_CELLS];
+		this.bitmapcache[2] = new Bitmap[cache3Size];
+	}
+	
+	public int getCacheSize(int level) {
+		if (level > 2)
+			return 0;
+
+		return this.bitmapcache[level].length;
+	}
+	
     void TOUCH(int id, int idx){
         bitmapcache[id][idx].usage = ++this.common.persistent_cache.g_stamp;
     }
@@ -117,11 +175,11 @@ public class Cache {
      * @throws RdesktopException
      */
 	public Bitmap getBitmap(int cache_id, int cache_idx) throws RdesktopException {
-		logger.debug("Cache.getBitmap: cache_id: "+cache_id+" cache_idx: "+cache_idx+" bitmapcache.length: "+bitmapcache.length+" bitmapcache[0].length: "+bitmapcache[0].length);
+		logger.debug("Cache.getBitmap: cache_id: "+cache_id+" cache_idx: "+cache_idx+" bitmapcache.length: "+bitmapcache.length+" bitmapcache["+cache_id+"].length: "+bitmapcache[cache_id].length);
 
 		Bitmap bitmap = null;
 
-		if ((cache_id < bitmapcache.length) && (cache_idx < bitmapcache[0].length)) {
+		if ((cache_id < bitmapcache.length) && (cache_idx < bitmapcache[cache_id].length)) {
 			bitmap = bitmapcache[cache_id][cache_idx];
 			try {
 				if (bitmap != null || (this.opt.persistent_bitmap_caching && this.common.persistent_cache.pstcache_load_bitmap(cache_id, cache_idx))){
@@ -159,9 +217,9 @@ public class Cache {
 			throws RdesktopException {
 
         //Bitmap old;
-		logger.debug("Cache.putBitmap: cache_id: "+cache_id+" cache_idx: "+cache_idx+" bitmapcache.length: "+bitmapcache.length+" bitmapcache[0].length: "+bitmapcache[0].length);
+		logger.debug("Cache.putBitmap: cache_id: "+cache_id+" cache_idx: "+cache_idx+" bitmapcache.length: "+bitmapcache.length+" bitmapcache["+cache_id+"].length: "+bitmapcache[cache_id].length);
         
-		if ((cache_id < bitmapcache.length) && (cache_idx < bitmapcache[0].length)) {
+		if ((cache_id < bitmapcache.length) && (cache_idx < bitmapcache[cache_id].length)) {
 			bitmapcache[cache_id][cache_idx] = bitmap;
 
 //It is not the client which decide to remove a part of it cache
