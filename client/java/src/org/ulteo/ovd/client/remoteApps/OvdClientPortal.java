@@ -199,13 +199,12 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 
 	public boolean togglePublications() {
-		if (publicated) {
+		if (this.publicated) {
 			this.unpublish();
-		}
-		else {
+		} else {
 			this.publish();
 		}
-		return publicated;
+		return this.publicated;
 	}
 
 	public void publish() {
