@@ -37,7 +37,7 @@ class ConnectionPoolProcess(Process):
 	def __init__(self, child_pipes, father_pipes, ssl_ctx):
 		Process.__init__(self)
 		
-		self.child_pipes = child_pipes
+		self.pipes = child_pipes
 		self.father_pipes = father_pipes
 		self.ssl_ctx = ssl_ctx
 		
@@ -65,7 +65,7 @@ class ConnectionPoolProcess(Process):
 		self.clean_timer = threading.Timer(Config.process_timeout, self.clean)
 		self.clean_timer.start()
 		
-		self.f_control = ControlFatherProcess(self, self.child_pipes)
+		self.f_control = ControlFatherProcess(self)
 		self.f_control.start()
 
 		self.sm = (self.f_control.send("get_sm"), self.ssl_ctx)

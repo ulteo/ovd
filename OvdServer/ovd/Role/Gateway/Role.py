@@ -101,15 +101,15 @@ class Role(AbstractRole):
 	def create_process(self):
 		(p00, p10) = Pipe() # for the father
 		(p01, p11) = Pipe() # for the child
-		father_pipes = (p10, p11)
+		self.pipes = (p10, p11)
 		child_pipes = (p01, p00)
 		
-		proc = ConnectionPoolProcess(child_pipes, father_pipes, self.ssl_ctx)
+		proc = ConnectionPoolProcess(child_pipes, self.pipes, self.ssl_ctx)
 		proc.start()
 		child_pipes[0].close()
 		child_pipes[1].close()
 		
-		ctrl = ControlChildProcess(self, father_pipes)
+		ctrl = ControlChildProcess(self)
 		ctrl.start()
 		
 		self.processes[proc.pid] = [(proc, ctrl), 0]

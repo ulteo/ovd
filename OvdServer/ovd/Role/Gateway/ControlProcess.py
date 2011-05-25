@@ -27,10 +27,10 @@ from TokenDatabase import digestToken, insertToken
 
 class ControlClassProcess(Thread):
 	
-	def __init__(self, _class, pipes):
+	def __init__(self, _class):
 		Thread.__init__(self)
 		self._class = _class
-		(self._pipe_s, self._pipe_m) = pipes
+		(self._pipe_s, self._pipe_m) = self._class.pipes
 	
 	
 	def run(self):
