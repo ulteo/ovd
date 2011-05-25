@@ -25,6 +25,7 @@
 package org.ulteo.ovd.client;
 
 import org.ulteo.utils.I18n;
+import org.ulteo.utils.KerberosConfiguration;
 import org.ulteo.ovd.applet.LibraryLoader;
 import org.ulteo.ovd.client.profile.ProfileIni;
 import java.io.IOException;
@@ -699,8 +700,11 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		request.setTimeZone(Calendar.getInstance().getTimeZone().getID());
 
 		boolean ret = false;
-		if (this.opts.nltm)
+		// This option is used for ntlm and kerberos authentication
+		if (this.opts.nltm) {
+			new KerberosConfiguration().initialize();
 			ret = dialog.askForSession(request);
+		}
 		else
 			ret = dialog.askForSession(this.opts.username, this.opts.password, request);
 		if (ret == false) {

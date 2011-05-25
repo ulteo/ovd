@@ -77,6 +77,8 @@
     <copy todir="build/resources/keymaps">
       <fileset dir="keymaps"/>
     </copy>
+    <copy file="misc/krb5.ini" todir="build/resources" />
+    <copy file="misc/login.conf" todir="build/resources" />
     <echo file="build/VERSION" message="${version}" />
     <mkdir dir="jars"/>
     <mkdir dir="dist"/>

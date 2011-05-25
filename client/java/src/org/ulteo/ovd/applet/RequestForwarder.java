@@ -20,7 +20,9 @@
 
 package org.ulteo.ovd.applet;
 
+import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.utils.KerberosConfiguration;
 
 import java.applet.Applet;
 import java.io.BufferedInputStream;
@@ -88,6 +90,9 @@ public class RequestForwarder implements Runnable, HostnameVerifier, X509TrustMa
 	
 	@Override
 	public void run() {
+		if (OSTools.isWindows())
+			new KerberosConfiguration().initialize();
+		
 		while(this.do_continue) {
 			AjaxOrder o = this.popOrder();
 			
