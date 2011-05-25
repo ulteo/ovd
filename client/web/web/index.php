@@ -51,7 +51,7 @@ if (isset($_COOKIE['ovd-client']['session_language']) && $_COOKIE['ovd-client'][
 	$user_language = $wi_session_language;
 }
 if (strlen($user_language) == 2)
-		$user_language = $user_language.'-'.$user_language;
+	$user_language = $user_language.'-'.$user_language;
 
 if (isset($_COOKIE['ovd-client']['session_keymap']) && $_COOKIE['ovd-client']['session_keymap'] != $user_keymap) {
 	$wi_session_keymap = (string)$_COOKIE['ovd-client']['session_keymap'];

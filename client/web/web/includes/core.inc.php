@@ -48,12 +48,10 @@ $debug_mode = false;
 if (defined('DEBUG_MODE') && DEBUG_MODE == 1)
 	$debug_mode = true;
 
+$user_language = 'en-us';
 if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 	$buf = explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
 	$buf = explode(';', $buf[0]);
 	$user_language = strtolower(str_replace('_', '-', $buf[0]));
-	$user_keymap = $user_language;
-} else {
-	$user_language = 'en-us';
-	$user_keymap = $user_language;
 }
+$user_keymap = $user_language;
