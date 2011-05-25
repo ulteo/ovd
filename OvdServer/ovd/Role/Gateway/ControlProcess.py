@@ -65,9 +65,6 @@ class ControlClassProcess(Thread):
 
 class ControlFatherProcess(ControlClassProcess):
 	
-	def __init__(self, _class, pipes):
-		ControlClassProcess.__init__(self, _class, pipes)
-	
 	def _nb_conn(self):
 		return len(asyncore.socket_map) / 2
 	
@@ -81,9 +78,6 @@ class ControlFatherProcess(ControlClassProcess):
 
 
 class ControlChildProcess(ControlClassProcess):
-	
-	def __init__(self, _class, pipes):
-		ControlClassProcess.__init__(self, _class, pipes)
 	
 	def _get_sm(self):
 		return self._class.sm
