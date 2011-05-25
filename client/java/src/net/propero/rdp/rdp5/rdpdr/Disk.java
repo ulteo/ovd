@@ -66,6 +66,7 @@ public class Disk extends RdpdrDevice{
 	/* NT status codes for RDPDR */
 	public static final int STATUS_ACCESS_DENIED		  = 0xc0000022;
 	public static final int STATUS_NO_SUCH_FILE           = 0xc000000f;
+	public static final int STATUS_DISK_FULL              = 0xc000007f;
 	public static final int STATUS_INVALID_PARAMETER	  = 0xc000000d;
 	public static final int STATUS_NO_MORE_FILES          = 0x80000006;
 	public static final int MAX_OPEN_FILES                = 0x100;
@@ -514,17 +515,18 @@ public class Disk extends RdpdrDevice{
 			case 20://FileEndOfFileInformation:
 				in.incrementPosition(28); /* unknown */
 				length = in.getLittleEndian32();
-
-				/* prevents start of writing if not enough space left on device */
-				/*if (STATFS_FN(g_rdpdr_device[pfinfo->device_id].local_path, &stat_fs) == 0)
-					if (stat_fs.f_bfree * stat_fs.f_bsize < length)
-						return STATUS_DISK_FULL;
-
-				if (ftruncate_growable(handle, length) != 0)
-				{
+				try {
+					RandomAccessFile raf = new RandomAccessFile(tempfinfo.get_path(), "rw");
+					raf.setLength(length);
+					raf.close();
+				} catch (FileNotFoundException e) {
+					System.err.print("Unable to find " +tempfinfo.get_path());
+					return STATUS_NO_SUCH_FILE;
+				}
+				catch(IOException e) {
+					System.err.print("Unable to set end of file of " +tempfinfo.get_path()+ ": "+e.getMessage());
 					return STATUS_DISK_FULL;
-				}*/
-
+				}
 				break;
 				
 			default:
