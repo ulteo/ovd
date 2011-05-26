@@ -58,7 +58,8 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	protected void runInit() {}
 
 	@Override
-	protected void customizeRemoteAppsConnection(RdpConnectionOvd co) {
+	protected void customizeConnection(RdpConnectionOvd co) {
+		super.customizeConnection(co);
 		co.setAllDesktopEffectsEnabled(this.properties.isDesktopEffectsEnabled());
 	}
 
@@ -70,9 +71,6 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 
 	@Override
 	protected void hide(RdpConnection co) {}
-
-	@Override
-	protected void uncustomizeRemoteAppsConnection(RdpConnectionOvd co) {}
 
 	public boolean addServer(ServerAccess server, int JSId) {
 		Integer listId = super.createRDPConnectionAndConnect(server);

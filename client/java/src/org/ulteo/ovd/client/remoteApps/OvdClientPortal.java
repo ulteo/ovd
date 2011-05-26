@@ -126,7 +126,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 
 	@Override
-	protected void customizeRemoteAppsConnection(RdpConnectionOvd co) {
+	protected void customizeConnection(RdpConnectionOvd co) {
+		super.customizeConnection(co);
+		
 		try {
 			co.addOvdAppListener(this.portal.getRunningApplicationPanel());
 		} catch (OvdException ex) {
@@ -140,7 +142,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 
 	@Override
-	protected void uncustomizeRemoteAppsConnection(RdpConnectionOvd co) {
+	protected void uncustomizeConnection(RdpConnectionOvd co) {
+		super.customizeConnection(co);
+		
 		try {
 			co.removeOvdAppListener(this.portal.getRunningApplicationPanel());
 		} catch (OvdException e) {

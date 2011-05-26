@@ -83,12 +83,6 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 	}
 
 	@Override
-	protected void customizeRemoteAppsConnection(RdpConnectionOvd co) {}
-
-	@Override
-	protected void uncustomizeRemoteAppsConnection(RdpConnectionOvd co) {}
-
-	@Override
 	public void ovdInited(OvdAppChannel o) {
 		for (RdpConnectionOvd rc : this.availableConnections) {
 			if (rc.getOvdAppChannel() != o)

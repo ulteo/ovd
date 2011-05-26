@@ -113,11 +113,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		}
 		
 		co.setShell("OvdRemoteApps");
-
-		this.customizeRemoteAppsConnection(co);
 	}
-
-	protected abstract void customizeRemoteAppsConnection(RdpConnectionOvd co);
 
 	@Override
 	protected void uncustomizeConnection(RdpConnectionOvd co) {
@@ -126,10 +122,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		} catch (OvdException ex) {
 			Logger.error(co.getServer()+": Failed to remove ovd applications listener: "+ex);
 		}
-		this.uncustomizeRemoteAppsConnection(co);
 	}
-
-	protected abstract void uncustomizeRemoteAppsConnection(RdpConnectionOvd co);
 	
 	@Override
 	protected void runDisconnecting() {}
