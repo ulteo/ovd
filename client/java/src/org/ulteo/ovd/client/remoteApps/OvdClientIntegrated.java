@@ -68,10 +68,7 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 	}
 
 	@Override
-	protected void runSessionReady() {}
-
-	@Override
-	protected void runExit() {
+	protected void runSessionReady() {
 		this.spool.start();
 		this.spool.waitThreadEnd();
 		this.exit(0);

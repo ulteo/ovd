@@ -75,9 +75,6 @@ public class OvdClientDesktop extends OvdClient {
 	}
 
 	@Override
-	protected void runExit() {}
-
-	@Override
 	protected void runSessionTerminated() {}
 
 	@Override

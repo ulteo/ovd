@@ -67,9 +67,6 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	protected void runSessionReady() {}
 
 	@Override
-	protected void runExit() {}
-
-	@Override
 	protected void hide(RdpConnection co) {}
 
 	public boolean addServer(ServerAccess server, int JSId) {

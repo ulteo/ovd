@@ -286,8 +286,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		}
 		
 		this.runSessionReady();
-
-		this.runExit();
 	}
 
 	protected abstract void runSessionReady();
@@ -334,8 +332,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 	protected abstract void runInit();
 
-	protected abstract void runExit();
-	
 	protected abstract void runDisconnecting();
 
 	protected abstract void customizeConnection(RdpConnectionOvd co);

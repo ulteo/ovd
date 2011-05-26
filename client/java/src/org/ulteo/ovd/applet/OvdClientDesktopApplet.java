@@ -167,9 +167,6 @@ public class OvdClientDesktopApplet extends OvdClient {
 	protected void runSessionReady() {}
 
 	@Override
-	protected void runExit() {}
-
-	@Override
 	protected void display(RdpConnection co) {
 		RdesktopCanvas canvas = co.getCanvas();
 		canvas.setLocation(0, 0);
