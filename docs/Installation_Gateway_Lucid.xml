@@ -2,6 +2,8 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
 	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
+  <transform_var name="gold_product_name" value="Gateway"/>
+
   <articleinfo>
     <title>Ulteo Open Virtual Desktop v@VERSION@</title>
     <subtitle>Gateway on Ubuntu 10.04 (Lucid Lynx) installation</subtitle>
@@ -17,7 +19,9 @@
     The purpose of this document is to install a Ulteo OVD Gateway
     on a Ubuntu 10.04 (Lucid Lynx).
   </para>
-
+  
+  <xi:include href="common.xml" xpointer="gold" />
+  
   <section>
     <title>Prerequisites</title>
 
