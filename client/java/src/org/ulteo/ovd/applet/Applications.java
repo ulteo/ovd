@@ -47,10 +47,10 @@ import org.ulteo.rdp.seamless.SeamlessPopup;
 
 
 abstract class Order {
+	public int id;
 }
 
 class OrderServer extends Order {
-	public int id;
 	public String host;
 	public int port;
 	public String login;
@@ -72,7 +72,6 @@ class OrderServer extends Order {
 }
 
 class OrderApplication extends Order {
-	public int id;
 	public int application_id;
 	public int server_id;
 	public String file_type = null;
