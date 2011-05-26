@@ -66,6 +66,8 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	private int bpp = RdpConnectionOvd.DEFAULT_BPP;
 
 	private boolean debugSeamless = false;
+	protected boolean publicated = false;
+	protected boolean showDesktopIcons = false;
 	
 	public OvdClientRemoteApps(SessionManagerCommunication smComm) {
 		super(smComm, null, false);
@@ -434,4 +436,37 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	
 	@Override
 	protected void display(RdpConnection co) {}
+	
+	public boolean togglePublications() {
+		if (this.publicated) {
+			this.unpublish();
+		} else {
+			this.publish();
+		}
+		return this.publicated;
+	}
+
+	private void publish() {
+		for (RdpConnectionOvd co : this.getAvailableConnections()) {
+			if (! co.getOvdAppChannel().isReady())
+				continue;
+			boolean associate = (co.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
+
+			for (Application app : co.getAppsList()) {
+				this.system.install(app, this.showDesktopIcons, associate);
+			}
+		}
+		this.system.refresh();
+		this.publicated = true;
+	}
+
+	private void unpublish() {
+		for (RdpConnectionOvd co : this.getAvailableConnections()) {
+			for (Application app : co.getAppsList()) {
+				this.system.uninstall(app);
+			}
+		}
+		this.system.refresh();
+		this.publicated = false;
+	}
 }
