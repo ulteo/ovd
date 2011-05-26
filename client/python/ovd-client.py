@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2010 Ulteo SAS
+# Copyright (C) 2008-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010, 2011
 # Author Laurent CLOUET <laurent@ulteo.com> 2009, 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -26,6 +26,7 @@ import datetime
 import getopt
 import getpass
 import os
+import re
 import signal
 import sys
 import threading
@@ -523,8 +524,8 @@ for o, a in opts:
         
 
 if conf["fullscreen"] == True:
-    (status, out) = commands.getstatusoutput('xrandr |head -n 1')
-    s = re.search('current ([0-9]+) x ([0-9]+)', out)
+    (status, out) = commands.getstatusoutput('xdpyinfo |grep dimensions:')
+    s = re.search('([0-9]+)x([0-9]+) pixels', out)
     if s is None:
         print >> sys.stderr, "Unable to get the screen resolution"
         sys.exit(2)
