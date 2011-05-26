@@ -43,8 +43,6 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 		return map;
 	}
 
-	protected boolean showDesktopIcons = false;
-
 	public OvdClientIntegrated(SessionManagerCommunication smComm) {
 		super(smComm);
 		
