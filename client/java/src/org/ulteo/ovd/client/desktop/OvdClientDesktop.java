@@ -177,6 +177,9 @@ public class OvdClientDesktop extends OvdClient {
 		if (this.keymap != null)
 			rc.setKeymap(this.keymap);
 		
+		if (this.inputMethod != null)
+			rc.setInputMethod(this.inputMethod);
+		
 		this.connections.add(rc);
 		
 		return true;

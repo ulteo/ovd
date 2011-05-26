@@ -39,6 +39,7 @@ public class ProfileProperties {
 	private Dimension screensize = null;
 	private String lang = null;
 	private String keymap = null;
+	private String inputMethod = null;
 	private boolean showProgressbar = true;
 	private boolean isGUILocked = false;
 	private boolean isBugReporterVisible = false;
@@ -50,7 +51,7 @@ public class ProfileProperties {
 	
 	public ProfileProperties() {}
 
-	public ProfileProperties(String login_, String host_, int port_, int sessionMode_, boolean autoPublish_, boolean useLocalCredentials_, Dimension screensize_, String lang, String keymap) {
+	public ProfileProperties(String login_, String host_, int port_, int sessionMode_, boolean autoPublish_, boolean useLocalCredentials_, Dimension screensize_, String lang, String keymap, String inputMethod) {
 		this.login = login_;
 		this.host = host_;
 		this.port = port_;
@@ -60,6 +61,7 @@ public class ProfileProperties {
 		this.screensize = screensize_;
 		this.lang = lang;
 		this.keymap = keymap;
+		this.inputMethod = inputMethod;
 	}
 
 	public String getLogin() {
@@ -132,6 +134,14 @@ public class ProfileProperties {
 	
 	public void setKeymap(String keymap) {
 		this.keymap = keymap;
+	}
+	
+	public String getInputMethod() {
+		return this.inputMethod;
+	}
+	
+	public void setInputMethod(String inputMethod) {
+		this.inputMethod = inputMethod;
 	}
 
 	public boolean getShowProgressbar() {

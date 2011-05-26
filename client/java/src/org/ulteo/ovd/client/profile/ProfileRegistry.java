@@ -120,6 +120,9 @@ public class ProfileRegistry extends Profile {
 				else if (field.equalsIgnoreCase(FIELD_KEYMAP)) {
 					properties.setKeymap(value);
 				}
+				else if (field.equalsIgnoreCase(FIELD_INPUT_METHOD)) {
+					properties.setInputMethod(value);
+				}
 				else if (field.equalsIgnoreCase(FIELD_GUI_LOCKED)) {
 					boolean isGUILocked = false;
 
@@ -217,6 +220,10 @@ public class ProfileRegistry extends Profile {
 			tmpStr = properties.getKeymap();
 			if (tmpStr != null)
 				key.setValue(new RegStringValue(key, FIELD_KEYMAP, tmpStr));
+
+			tmpStr = properties.getInputMethod();
+			if (tmpStr != null)
+				key.setValue(new RegStringValue(key, FIELD_INPUT_METHOD, tmpStr));
 
 			int sessionMode = properties.getSessionMode();
 			if (sessionMode > -1) {

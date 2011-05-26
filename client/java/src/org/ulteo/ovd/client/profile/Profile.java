@@ -59,4 +59,8 @@ public abstract class Profile {
 	protected static final String PROXY_USERNAME = "username";
 	protected static final String PROXY_PASSWORD = "password";
 	
+	protected static final String FIELD_INPUT_METHOD = "input-method";
+	protected static final String VALUE_SCANCODE_INPUT_METHOD = "scancode";
+	protected static final String VALUE_UNICODE_INPUT_METHOD = "unicode";
+	
 }
