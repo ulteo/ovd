@@ -132,7 +132,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	@Override
 	protected void uncustomizeConnection(RdpConnectionOvd co) {
-		super.customizeConnection(co);
+		super.uncustomizeConnection(co);
 		
 		try {
 			co.removeOvdAppListener(this.portal.getRunningApplicationPanel());
