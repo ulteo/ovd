@@ -79,9 +79,6 @@ public class OvdClientDesktop extends OvdClient {
 	}
 
 	@Override
-	protected void uncustomizeConnection(RdpConnectionOvd co) {}
-
-	@Override
 	public void display(RdpConnection co) {
 		RdesktopCanvas canvas = co.getCanvas();
 		this.desktop.setCanvas(canvas);

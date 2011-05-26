@@ -201,9 +201,6 @@ public class OvdClientDesktopApplet extends OvdClient {
 	}
 
 	@Override
-	protected void uncustomizeConnection(RdpConnectionOvd co) {}
-
-	@Override
 	public boolean checkRDPConnections() {
 		Logger.error("Weird -- The method checkRDPConnections() should not be called");
 		return true;

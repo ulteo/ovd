@@ -336,8 +336,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 	protected abstract void customizeConnection(RdpConnectionOvd co);
 
-	protected abstract void uncustomizeConnection(RdpConnectionOvd co);
-
 	protected abstract void display(RdpConnection co);
 
 	protected abstract void hide(RdpConnection co);
@@ -361,8 +359,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 	public void disconnected(RdpConnection co) {
 		co.removeRdpListener(this);
-
-		this.uncustomizeConnection((RdpConnectionOvd) co);
 
 		this.hide(co);
 		this.performedConnections.remove(co);
