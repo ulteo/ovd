@@ -81,10 +81,10 @@ def launchIntegratedClient(configuration_file_):
 		dirs.insert(0, os.path.abspath(os.path.curdir))
 		
 		for d in dirs:
-			path = os.path.join(d, r"jre\bin\javaw.exe")
+			path = os.path.join(d, r"jre\bin\java.exe")
 			if os.path.exists(path):
 				print "Found java in '%s'"%(path)
-				java_cmd = '"'+path+'" -Xrs -jar "%1" %*'
+				java_cmd = '"'+path+'" -jar "%1" %*'
 				break
 		
 		if java_cmd is None:
@@ -111,7 +111,7 @@ def launchIntegratedClient(configuration_file_):
 	java_cmd = java_cmd.replace("%1", jar_location)
 	java_cmd = java_cmd.replace("%*", '-c "%s" -o "%s"'%(configuration_file_, os.path.join(getUserSessionDir(), "dump-externalapps.txt")))
 	
-	(hProcess, hThread, dwProcessId, dwThreadId) = win32process.CreateProcess(None, java_cmd, None , None, False, 0 , None, folder, win32process.STARTUPINFO())
+	(hProcess, hThread, dwProcessId, dwThreadId) = win32process.CreateProcess(None, java_cmd, None , None, False, win32process.CREATE_NO_WINDOW , None, folder, win32process.STARTUPINFO())
 	win32file.CloseHandle(hProcess)
 	win32file.CloseHandle(hThread)
 	  
@@ -131,8 +131,10 @@ def detectJavaw():
 		if key is not None:
 			win32api.RegCloseKey(key)
 	
-	return data
+	if data is not None:
+		return data.replace("javaw", "java")
 
+	return None
 
 def startDesktop():
 	explorer_path = r"%s\explorer.exe"%(os.environ["windir"])
