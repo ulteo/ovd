@@ -101,15 +101,13 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			Logger.error(co.getServer()+": Failed to add ovd applications listener: "+ex);
 		}
 
-		if (! OSTools.is_applet) {
-			for (Application app : co.getAppsList()) {
-				if (this.system.create(app) == null)
-					org.ulteo.Logger.error("The "+app.getName()+" shortcut could not be created");
+		for (Application app : co.getAppsList()) {
+			if (this.system.create(app) == null)
+				org.ulteo.Logger.error("The "+app.getName()+" shortcut could not be created");
 
-				int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
-				this.obj.updateProgress(LoadingStatus.CLIENT_INSTALL_APPLICATION, subStatus);
-				this.ApplicationIndex++;
-			}
+			int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
+			this.obj.updateProgress(LoadingStatus.CLIENT_INSTALL_APPLICATION, subStatus);
+			this.ApplicationIndex++;
 		}
 		
 		co.setShell("OvdRemoteApps");
@@ -133,14 +131,11 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			this.spool = null;
 		}
 
-		if (! OSTools.is_applet) {
-			for (RdpConnectionOvd co : this.connections) {
-				for (Application app : co.getAppsList())
-					this.system.clean(app);
-			}
-
-			this.system.refresh();
+		for (RdpConnectionOvd co : this.connections) {
+			for (Application app : co.getAppsList())
+				this.system.clean(app);
 		}
+		this.system.refresh();
 	}
 
 	public abstract void ovdInited(OvdAppChannel o);
