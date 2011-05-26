@@ -47,10 +47,7 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 
 	public OvdClientIntegrated(SessionManagerCommunication smComm) {
 		super(smComm);
-		this.init();
-	}
-
-	private void init() {
+		
 		this.showDesktopIcons = this.smComm.getResponseProperties().isDesktopIcons();
 		this.spool = new Spool(this);
 	}

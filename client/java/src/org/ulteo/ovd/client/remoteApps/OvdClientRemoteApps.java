@@ -70,7 +70,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	protected boolean showDesktopIcons = false;
 	
 	public OvdClientRemoteApps(SessionManagerCommunication smComm) {
-		super(smComm, null, false);
+		this(smComm, null);
 	}
 
 	public OvdClientRemoteApps(SessionManagerCommunication smComm, Callback obj) {

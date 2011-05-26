@@ -48,6 +48,7 @@ import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public class OvdClientPortal extends OvdClientRemoteApps implements ComponentListener {
+	
 	private PortalFrame portal = null;
 	private String username = null;
 	private List<Application> appsList = null;
@@ -56,24 +57,15 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	private boolean hiddenAtStart = false;
 	private boolean showBugReporter = false;
 	
-	public OvdClientPortal(SessionManagerCommunication smComm) {
-		super(smComm);
-
-		this.init();
-	}
-
 	public OvdClientPortal(SessionManagerCommunication smComm, String login_, boolean autoPublish, boolean showDesktopIcons_, boolean hiddenAtStart_, boolean showBugReporter_, Callback obj) {
 		super(smComm, obj);
+		
 		this.username = login_;
-		this.autoPublish = autoPublish;
+		this.autoPublish = this.publicated = autoPublish;
 		this.showDesktopIcons = showDesktopIcons_;
 		this.hiddenAtStart = hiddenAtStart_;
 		this.showBugReporter = showBugReporter_;
 		
-		this.init();
-	}
-
-	private void init() {
 		String sm = this.smComm.getHost();
 		this.system = (System.getProperty("os.name").startsWith("Windows")) ? new SystemWindows(sm) : new SystemLinux(sm);
 		this.appsList = new ArrayList<Application>();
@@ -83,10 +75,10 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.spool.createShortcutDir();
 		this.system.setShortcutArgumentInstance(this.spool.getInstanceName());
 		this.spool.start();
+		
 		this.portal = new PortalFrame(this.username, this.showBugReporter);
 		this.portal.addComponentListener(this);
 		this.portal.getRunningApplicationPanel().setSpool(spool);
-		this.publicated = this.autoPublish;
 	}
 
 	@Override
