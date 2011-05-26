@@ -95,13 +95,15 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 
 	@Override
-	protected void runDisconnecting() {
+	public void performDisconnectAll() {
 		if (this.portal.getSystray() == null)
 			return;
 		
 		ActionListener[] action = this.portal.getSystray().getActionListeners();
 		for (ActionListener each : action)
 			this.portal.getSystray().removeActionListener(each);
+		
+		super.performDisconnectAll();
 	}
 
 	@Override

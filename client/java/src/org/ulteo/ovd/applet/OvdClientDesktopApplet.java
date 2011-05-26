@@ -207,9 +207,6 @@ public class OvdClientDesktopApplet extends OvdClient {
 	}
 
 	@Override
-	protected void runDisconnecting() {}
-
-	@Override
 	protected void runSessionTerminated() {}
 
 	@Override

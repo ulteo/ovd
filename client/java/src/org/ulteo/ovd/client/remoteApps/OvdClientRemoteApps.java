@@ -126,9 +126,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	}
 	
 	@Override
-	protected void runDisconnecting() {}
-
-	@Override
 	protected void runSessionTerminated() {
 		if (this.spool != null) {
 			this.spool.stop();

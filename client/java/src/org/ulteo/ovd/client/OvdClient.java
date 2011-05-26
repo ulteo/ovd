@@ -332,8 +332,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 	protected abstract void runInit();
 
-	protected abstract void runDisconnecting();
-
 	protected abstract void customizeConnection(RdpConnectionOvd co);
 
 	protected abstract void display(RdpConnection co);
@@ -398,8 +396,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	}
 
 	public void performDisconnectAll() {
-		this.runDisconnecting();
-
 		final Timer forceDisconnectionTimer = new Timer();
 
 		final TimerTask forceDisconnectionTask = new TimerTask() {

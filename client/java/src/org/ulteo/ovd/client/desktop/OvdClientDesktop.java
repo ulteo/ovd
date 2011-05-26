@@ -238,7 +238,4 @@ public class OvdClientDesktop extends OvdClient {
 
 		return false;
 	}
-
-	@Override
-	protected void runDisconnecting() {}
 }
