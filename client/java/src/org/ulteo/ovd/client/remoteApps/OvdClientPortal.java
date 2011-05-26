@@ -131,11 +131,11 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 
 	@Override
-	protected void disconnected(RdpConnectionOvd co) {
+	public void disconnected(RdpConnection co) {
 		super.disconnected(co);
 		
 		try {
-			co.removeOvdAppListener(this.portal.getRunningApplicationPanel());
+			((RdpConnectionOvd) co).removeOvdAppListener(this.portal.getRunningApplicationPanel());
 		} catch (OvdException e) {
 			e.printStackTrace();
 		}

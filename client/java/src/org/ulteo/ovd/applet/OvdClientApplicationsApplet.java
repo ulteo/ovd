@@ -189,7 +189,6 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 				return;
 			}
 		}
-
 		super.disconnected(co);
 	}
 

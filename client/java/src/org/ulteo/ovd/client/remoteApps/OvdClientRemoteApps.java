@@ -115,9 +115,10 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		co.setShell("OvdRemoteApps");
 	}
 
-	protected void disconnected(RdpConnectionOvd co) {
+	@Override
+	public void disconnected(RdpConnection co) {
 		try {
-			co.removeOvdAppListener(this);
+			((RdpConnectionOvd)co).removeOvdAppListener(this);
 		} catch (OvdException ex) {
 			Logger.error(co.getServer()+": Failed to remove ovd applications listener: "+ex);
 		}
