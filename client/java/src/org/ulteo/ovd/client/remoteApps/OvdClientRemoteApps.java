@@ -301,19 +301,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		return rc;
 	}
 
-	protected Integer createRDPConnectionAndConnect(ServerAccess server) {
-		RdpConnectionOvd co = this.initRDPConnection(server);
-
-		if (co == null)
-			return null;
-
-		this.configureRDPConnection(co);
-
-		co.connect();
-		
-		return new Integer(this.connections.indexOf(co));
-	}
-
 	@Override
 	protected boolean createRDPConnections() {
 		if (this.smComm == null) {
