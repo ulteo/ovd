@@ -41,7 +41,6 @@ import org.ulteo.ovd.client.portal.PortalFrame;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.News;
 import org.ulteo.ovd.integrated.Spool;
-import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.integrated.SystemLinux;
 import org.ulteo.ovd.integrated.SystemWindows;
 import org.ulteo.ovd.sm.Callback;
