@@ -196,10 +196,6 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		}
 	}
 
-	public SystemAbstract getSystem() {
-		return this.system;
-	}
-
 	public void componentShown(ComponentEvent ce) {
 		if (ce.getComponent() == this.portal) {
 			Collections.sort(this.appsList);
