@@ -65,12 +65,6 @@ public class OvdClientDesktopApplet extends OvdClient {
 		this.isFullscreen = isFullscreen_;
 	}
 
-	@Override
-	public boolean perform() {
-		this.createRDPConnections();
-		return super.perform();
-	}
-
 	public void adjustDesktopSize() {
 		if (this.connections == null || this.connections.isEmpty())
 			return;

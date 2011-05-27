@@ -171,7 +171,6 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 			return;
 		}
 		this.ovd.setKeymap(this.keymap);
-		this.ovd.perform();
 		
 		this.spoolOrder = new ArrayList<Order>();
 		this.spoolThread = new Thread(this);

@@ -119,7 +119,7 @@ public class Desktop extends Applet implements JSForwarder, FocusListener, Callb
 		}
 		this.ovd.setKeymap(this.keymap);
 		this.ovd.setFullscreen(this.fullscreenMode);
-		this.ovd.perform();
+		this.ovd.createRDPConnections();
 		
 		this.finished_init = true;
 		

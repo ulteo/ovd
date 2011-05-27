@@ -208,7 +208,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	
 	public boolean perform() {
 		if (this.smComm == null)
-			return true;
+			throw new NullPointerException("Client cannot be performed with a null SM communication");
 
 		if (this.createRDPConnections()) {
 			for (RdpConnectionOvd rc : this.connections) {
@@ -243,12 +243,10 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 			} catch (InterruptedException ex) {}
 		}
 		
-		if (this.smComm != null) {
-			try {
-				this.smComm.askForLogout();
-			} catch (SessionManagerException e) {
-				Logger.error("Failed to inform the session manager about the RDP session ending.");
-			}
+		try {
+			this.smComm.askForLogout();
+		} catch (SessionManagerException e) {
+			Logger.error("Failed to inform the session manager about the RDP session ending.");
 		}
 
 		return this.exitAfterLogout;
