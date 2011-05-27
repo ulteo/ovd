@@ -82,9 +82,6 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 
 	@Override
-	protected void runInit() {}
-
-	@Override
 	protected void runSessionReady() {
 		this.portal.initButtonPan(this);
 

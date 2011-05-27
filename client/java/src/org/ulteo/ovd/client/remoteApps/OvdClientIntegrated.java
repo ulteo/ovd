@@ -51,7 +51,7 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 	}
 
 	@Override
-	protected void runInit() {
+	public boolean perform() {
 		String sm = this.smComm.getHost();
 		this.spool.createIconsDir();
 		if (OSTools.isWindows()) {
@@ -65,6 +65,8 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 		}
 		
 		this.system.setShortcutArgumentInstance(this.spool.getInstanceName());
+		
+		return super.perform();
 	}
 
 	@Override

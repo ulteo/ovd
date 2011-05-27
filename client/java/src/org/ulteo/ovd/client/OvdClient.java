@@ -207,8 +207,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	}	
 	
 	public boolean perform() {
-		this.runInit();
-
 		if (this.smComm == null)
 			return true;
 
@@ -317,8 +315,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	protected abstract void runSessionReady();
 
 	protected abstract void runSessionTerminated();
-
-	protected abstract void runInit();
 
 	protected abstract void customizeConnection(RdpConnectionOvd co);
 

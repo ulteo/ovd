@@ -61,9 +61,6 @@ public class OvdClientDesktop extends OvdClient {
 	}
 
 	@Override
-	protected void runInit() {}
-
-	@Override
 	protected void runSessionReady() {
 		this.desktop.setVisible(true);
 	}

@@ -55,9 +55,6 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	}
 
 	@Override
-	protected void runInit() {}
-
-	@Override
 	protected void customizeConnection(RdpConnectionOvd co) {
 		super.customizeConnection(co);
 		co.setAllDesktopEffectsEnabled(this.properties.isDesktopEffectsEnabled());
