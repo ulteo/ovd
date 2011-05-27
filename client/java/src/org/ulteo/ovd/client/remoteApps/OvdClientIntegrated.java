@@ -22,7 +22,6 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
-import java.util.HashMap;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -30,14 +29,6 @@ import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public class OvdClientIntegrated extends OvdClientRemoteApps {
-
-	protected static HashMap<String, String> toMap(String token) {
-		HashMap<String, String> map = new HashMap<String, String>();
-
-		map.put(SessionManagerCommunication.FIELD_TOKEN, token);
-
-		return map;
-	}
 
 	public OvdClientIntegrated(SessionManagerCommunication smComm) {
 		super(smComm);
