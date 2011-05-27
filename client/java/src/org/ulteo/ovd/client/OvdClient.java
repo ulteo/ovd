@@ -81,74 +81,63 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	private boolean exitAfterLogout = false;
 	private boolean persistent = false;
 
-	public OvdClient(Callback obj_) {
-		this.initMembers(null);
-
-		this.initCallback(obj_);
+	public OvdClient(Callback obj) {
+		this(null, obj, false);
 	}
 
 	public OvdClient(SessionManagerCommunication smComm, Callback obj_, boolean persistent) {
-		this.initMembers(smComm);
-
-		this.persistent = persistent;
-		this.initCallback(obj_);
-	}
-
-	private void initMembers(SessionManagerCommunication smComm) {
 		this.smComm = smComm;
+		this.obj = obj_;
+		
+		if (this.obj == null) {
+			this.obj = new Callback() {
+				@Override
+				public void reportBadXml(String data) {
+					org.ulteo.Logger.error("Callback::reportBadXml: "+data);
+				}
+
+				@Override
+				public void reportError(int code, String msg) {
+					org.ulteo.Logger.error("Callback::reportError: "+code+" => "+msg);
+				}
+
+				@Override
+				public void reportErrorStartSession(String code) {
+					org.ulteo.Logger.error("Callback::reportErrorStartSession: "+code);
+				}
+
+				@Override
+				public void reportNotFoundHTTPResponse(String moreInfos) {
+					org.ulteo.Logger.error("Callback::reportNotFoundHTTPResponse: "+moreInfos);
+				}
+
+				@Override
+				public void reportUnauthorizedHTTPResponse(String moreInfos) {
+					org.ulteo.Logger.error("Callback::reportUnauthorizedHTTPResponse: "+moreInfos);
+				}
+
+				@Override
+				public void sessionConnected() {
+					org.ulteo.Logger.info("Callback::sessionConnected");
+				}
+
+				@Override
+				public void sessionDisconnecting() {
+					org.ulteo.Logger.info("Callback::sessionDisconnected");
+				}
+
+				@Override
+				public void updateProgress(LoadingStatus status, int substatus) {
+					org.ulteo.Logger.info("Callback::updateProgress "+status+","+substatus);
+				}
+			};
+		}
 
 		this.connections = new ArrayList<RdpConnectionOvd>();
 		this.availableConnections = new ArrayList<RdpConnectionOvd>();
 		this.performedConnections = new CopyOnWriteArrayList<RdpConnectionOvd>();
-	}
 
-	private void initCallback(Callback obj_) {
-		if (obj_ != null) {
-			this.obj = obj_;
-			return;
-		}
-
-		this.obj = new Callback() {
-			@Override
-			public void reportBadXml(String data) {
-				org.ulteo.Logger.error("Callback::reportBadXml: "+data);
-			}
-
-			@Override
-			public void reportError(int code, String msg) {
-				org.ulteo.Logger.error("Callback::reportError: "+code+" => "+msg);
-			}
-
-			@Override
-			public void reportErrorStartSession(String code) {
-				org.ulteo.Logger.error("Callback::reportErrorStartSession: "+code);
-			}
-
-			@Override
-			public void reportNotFoundHTTPResponse(String moreInfos) {
-				org.ulteo.Logger.error("Callback::reportNotFoundHTTPResponse: "+moreInfos);
-			}
-
-			@Override
-			public void reportUnauthorizedHTTPResponse(String moreInfos) {
-				org.ulteo.Logger.error("Callback::reportUnauthorizedHTTPResponse: "+moreInfos);
-			}
-
-			@Override
-			public void sessionConnected() {
-				org.ulteo.Logger.info("Callback::sessionConnected");
-			}
-
-			@Override
-			public void sessionDisconnecting() {
-				org.ulteo.Logger.info("Callback::sessionDisconnected");
-			}
-
-			@Override
-			public void updateProgress(LoadingStatus status, int substatus) {
-				org.ulteo.Logger.info("Callback::updateProgress "+status+","+substatus);
-			}
-		};
+		this.persistent = persistent;
 	}
 
 	private void addAvailableConnection(RdpConnectionOvd rc) {
