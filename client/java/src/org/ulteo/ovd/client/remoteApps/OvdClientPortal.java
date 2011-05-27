@@ -40,9 +40,6 @@ import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.portal.PortalFrame;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.News;
-import org.ulteo.ovd.integrated.Spool;
-import org.ulteo.ovd.integrated.SystemLinux;
-import org.ulteo.ovd.integrated.SystemWindows;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
@@ -66,16 +63,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.hiddenAtStart = hiddenAtStart_;
 		this.showBugReporter = showBugReporter_;
 		
-		String sm = this.smComm.getHost();
-		this.system = (System.getProperty("os.name").startsWith("Windows")) ? new SystemWindows(sm) : new SystemLinux(sm);
 		this.appsList = new ArrayList<Application>();
-
-		this.spool = new Spool(this);
-		this.spool.createIconsDir();
-		this.spool.createShortcutDir();
-		this.system.setShortcutArgumentInstance(this.spool.getInstanceName());
-		this.spool.start();
-		
 		this.portal = new PortalFrame(this.username, this.showBugReporter);
 		this.portal.addComponentListener(this);
 		this.portal.getRunningApplicationPanel().setSpool(spool);

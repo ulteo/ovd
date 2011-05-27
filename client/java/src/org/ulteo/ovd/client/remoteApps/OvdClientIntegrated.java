@@ -23,12 +23,7 @@ package org.ulteo.ovd.client.remoteApps;
 
 import java.util.HashMap;
 import net.propero.rdp.RdpConnection;
-import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
-import org.ulteo.ovd.integrated.OSTools;
-import org.ulteo.ovd.integrated.Spool;
-import org.ulteo.ovd.integrated.SystemLinux;
-import org.ulteo.ovd.integrated.SystemWindows;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
@@ -47,30 +42,10 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 		super(smComm);
 		
 		this.showDesktopIcons = this.smComm.getResponseProperties().isDesktopIcons();
-		this.spool = new Spool(this);
-	}
-
-	@Override
-	public boolean perform() {
-		String sm = this.smComm.getHost();
-		this.spool.createIconsDir();
-		
-		if (OSTools.isWindows()) {
-			this.system = new SystemWindows(sm);
-		} else if (OSTools.isLinux()) {
-			this.system = new SystemLinux(sm);
-		}else {
-			Logger.warn("This Operating System is not supported");
-		}
-		
-		this.system.setShortcutArgumentInstance(this.spool.getInstanceName());
-		
-		return super.perform();
 	}
 
 	@Override
 	protected void runSessionReady() {
-		this.spool.start();
 		this.spool.waitThreadEnd();
 		this.exit(0);
 	}

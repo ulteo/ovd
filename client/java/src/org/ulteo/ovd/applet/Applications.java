@@ -37,6 +37,7 @@ import netscape.javascript.JSObject;
 import org.ulteo.ovd.client.ClientInfos;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
+import org.ulteo.ovd.sm.SessionManagerCommunication;
 
 import org.ulteo.utils.AbstractFocusManager;
 import org.ulteo.utils.jni.WorkArea;
@@ -96,6 +97,8 @@ class OrderApplication extends Order {
 }
 
 public class Applications extends Applet implements Runnable, JSForwarder/*RdpListener, OvdAppListener*/ {
+	private int port = 0;
+	private String server = null;
 	public String keymap = null;
 	
 	private List<Order> spoolOrder = null;
@@ -163,8 +166,10 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 			SeamlessPopup.focusManager = focusManager;
 		}
 
+		SessionManagerCommunication smComm = new SessionManagerCommunication(this.server, this.port, true);
+		
 		try {
-			this.ovd = new OvdClientApplicationsApplet(properties, this);
+			this.ovd = new OvdClientApplicationsApplet(smComm, properties, this);
 		} catch (ClassCastException ex) {
 			Logger.error(ex.getMessage());
 			this.stop();

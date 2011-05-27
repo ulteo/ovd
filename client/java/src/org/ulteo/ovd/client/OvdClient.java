@@ -34,6 +34,7 @@ import net.propero.rdp.RdpListener;
 import org.ulteo.Logger;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
+import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.News;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -393,7 +394,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		}
 		
 		long delay = 0;
-		if (this.smComm != null) {
+		if (this.smComm != null && ! OSTools.is_applet) {
 			Thread disconnectThread = new Thread(new Runnable() {
 				public void run() {
 					try {

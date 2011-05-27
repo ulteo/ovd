@@ -29,6 +29,7 @@ import org.ulteo.Logger;
 import org.ulteo.ovd.client.remoteApps.OvdClientRemoteApps;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
+import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
@@ -40,8 +41,8 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 
 	private Applet applet = null;
 
-	public OvdClientApplicationsApplet(Properties properties_, Applet applet_) throws ClassCastException {
-		super(null);
+	public OvdClientApplicationsApplet(SessionManagerCommunication smComm, Properties properties_, Applet applet_) throws ClassCastException {
+		super(smComm);
 
 		this.properties = properties_;
 

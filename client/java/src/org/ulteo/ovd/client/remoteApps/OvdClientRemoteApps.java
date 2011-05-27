@@ -51,6 +51,8 @@ import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.utils.jni.WorkArea;
 import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
+import org.ulteo.ovd.integrated.SystemLinux;
+import org.ulteo.ovd.integrated.SystemWindows;
 
 public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppListener {
 
@@ -75,6 +77,21 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 	public OvdClientRemoteApps(SessionManagerCommunication smComm, Callback obj) {
 		super(smComm, obj, false);
+		
+		String sm = this.smComm.getHost();
+		if (OSTools.isWindows()) {
+			this.system = new SystemWindows(sm);
+		} else if (OSTools.isLinux()) {
+			this.system = new SystemLinux(sm);
+		} else {
+			Logger.warn("This Operating System is not supported");
+		}
+		
+		this.spool = new Spool(this);
+		this.spool.createIconsDir();
+		this.spool.createShortcutDir();
+		this.system.setShortcutArgumentInstance(this.spool.getInstanceName());
+		this.spool.start();
 	}
 
 	@Override
