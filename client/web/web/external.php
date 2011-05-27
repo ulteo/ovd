@@ -48,18 +48,20 @@ if (! array_key_exists('start_app', $_SESSION['ovd-client'])) {
 	$_SESSION['ovd-client']['start_app'] = array();
 }
 
-$order = array('id' => $_REQUEST['app']);
+if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications') {
+	$order = array('id' => $_REQUEST['app']);
 
-if (array_key_exists('file', $_REQUEST)) {
-	$args = array();
-	$args['path'] = $_REQUEST['file'];
-	$args['share'] = base64_decode($_REQUEST['file_share']);
-	$args['type'] = $_REQUEST['file_type'];
+	if (array_key_exists('file', $_REQUEST)) {
+		$args = array();
+		$args['path'] = $_REQUEST['file'];
+		$args['share'] = base64_decode($_REQUEST['file_share']);
+		$args['type'] = $_REQUEST['file_type'];
 
-	$order['file'] = $args;
+		$order['file'] = $args;
+	}
+
+	$_SESSION['ovd-client']['start_app'][] = $order;
 }
-
-$_SESSION['ovd-client']['start_app'][] = $order;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -90,6 +92,7 @@ $_SESSION['ovd-client']['start_app'][] = $order;
 		<script type="text/javascript" src="media/script/common.js?<?php echo time(); ?>" charset="utf-8"></script>
 
 		<script type="text/javascript" src="media/script/daemon.js?<?php echo time(); ?>" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/daemon_desktop.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/daemon_applications.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/daemon_external.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/server.js?<?php echo time(); ?>" charset="utf-8"></script>
@@ -99,7 +102,7 @@ $_SESSION['ovd-client']['start_app'][] = $order;
 
 		<script type="text/javascript">
 			<?php
-				if (! $first) {
+				if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications' && ! $first) {
 			?>
 					Event.observe(window, 'load', function() {
 						window.close();
@@ -112,8 +115,18 @@ $_SESSION['ovd-client']['start_app'][] = $order;
 					var client_keymap = '<?php echo $user_keymap; ?>';
 
 					Event.observe(window, 'load', function() {
+						if ('<?php echo $_REQUEST['mode']; ?>' == 'desktop')
+							new Effect.Center($('splashContainer'));
+						new Effect.Center($('endContainer'));
+
+						$('desktopModeContainer').hide();
+						$('desktopAppletContainer').hide();
+
+						$('applicationsModeContainer').hide();
+						$('applicationsAppletContainer').hide();
+
 						translateInterface(client_language);
-						startExternalSession();
+						startExternalSession('<?php echo $_REQUEST['mode']; ?>');
 					});
 			<?php
 				}
@@ -189,17 +202,6 @@ $_SESSION['ovd-client']['start_app'][] = $order;
 			</div>
 		</div>
 
-		<div id="applicationsModeContainer" style="display: none;">
-			<div id="appsContainer" style="overflow: auto; display: none;">
-			</div>
-
-			<div id="runningAppsContainer" style="overflow: auto; display: none;">
-			</div>
-
-			<div id="applicationsAppletContainer" style="display: none;">
-			</div>
-		</div>
-
 		<div id="splashContainer" class="rounded">
 			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -217,6 +219,47 @@ $_SESSION['ovd-client']['start_app'][] = $order;
 					</td>
 				</tr>
 			</table>
+		</div>
+
+		<div id="endContainer" class="rounded" style="display: none;">
+			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td style="text-align: center;">
+						<img src="media/image/ulteo.png" alt="" title="" />
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: center; vertical-align: middle; margin-top: 15px;" id="endContent">
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div id="desktopModeContainer" style="display: none;">
+			<div id="desktopAppletContainer" style="display: none;">
+			</div>
+		</div>
+
+		<div id="applicationsModeContainer" style="display: none;">
+			<div id="appsContainer" style="overflow: auto; display: none;">
+			</div>
+
+			<div id="runningAppsContainer" style="overflow: auto; display: none;">
+			</div>
+
+			<div id="applicationsAppletContainer" style="display: none;">
+			</div>
+		</div>
+
+		<div id="debugContainer" class="no_debug info warning error" style="display: none;">
+		</div>
+
+		<div id="debugLevels" style="display: none;">
+			<span class="debug"><input type="checkbox" id="level_debug" onclick="daemon.switch_debug('debug');" value="10" /> Debug</span>
+			<span class="info"><input type="checkbox" id="level_info" onclick="daemon.switch_debug('info');" value="20" checked="checked" /> Info</span>
+			<span class="warning"><input type="checkbox" id="level_warning" onclick="daemon.switch_debug('warning');" value="30" checked="checked" /> Warning</span>
+			<span class="error"><input type="checkbox" id="level_error" onclick="daemon.switch_debug('error');" value="40" checked="checked" /> Error</span><br />
+			<input type="button" onclick="daemon.clear_debug(); return false;" value="Clear" />
 		</div>
 	</body>
 </html>

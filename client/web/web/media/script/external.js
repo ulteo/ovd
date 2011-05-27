@@ -19,15 +19,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-var UlteoOVD_start_Application = Class.create({
+var UlteoOVD_start_External = Class.create({
+	mode: null,
+
 	web_client_url: null,
 	application_id: null,
 	path: null,
 	extra_args: new Hash(),
 
-	initialize: function(web_client_url_, application_id_) {
+	my_width: screen.width,
+	my_height: screen.height,
+	pos_top: 0,
+	pos_left: 0,
+
+	initialize: function(web_client_url_) {
 		this.web_client_url = web_client_url_;
-		this.application_id = application_id_;
 	},
 
 	setAuthPassword: function(login_, password_) {
@@ -39,19 +45,10 @@ var UlteoOVD_start_Application = Class.create({
 		this.extra_args.set('token', token_);
 	},
 
-	setPath: function(path_) {
-		this.extra_args.set('file', path_);
-		this.extra_args.set('file_type', 'native');
-	},
-
-	setPathHTTP: function(url_, path_) {
-		this.extra_args.set('file', path_);
-		this.extra_args.set('file_share', url_);
-		this.extra_args.set('file_type', 'http');
-	},
-      
 	start: function() {
-		var url = this.web_client_url+'/external.php?app='+this.application_id;
+		var url = this.web_client_url+'/external.php?mode='+this.mode;
+		if (this.application_id != null)
+			url += '&app='+this.application_id;
 		if (this.path != null)
 			url += '&path='+this.path;
 
@@ -63,18 +60,46 @@ var UlteoOVD_start_Application = Class.create({
 	},
 
 	openPopup: function(url_) {
-		var my_width = 436;
-		var my_height = 270;
-		var new_width = 0;
-		var new_height = 0;
-		var pos_top = screen.height - 270;
-		var pos_left = screen.width - 436;
-
 		var date = new Date();
-		var rand_ = Math.round(Math.random()*100)+date.getTime();
+		var rand = Math.round(Math.random()*100)+date.getTime();
 
-		var w = window.open(url_, 'Ulteo'+rand_, 'toolbar=no,status=no,top='+pos_top+',left='+pos_left+',width='+my_width+',height='+my_height+',scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
+		var w = window.open(url_, 'Ulteo'+rand, 'width='+this.my_width+',height='+this.my_height+',top='+this.pos_top+',left='+this.pos_left+',toolbar=no,status=no,scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
 
 		return true;
+	}
+});
+
+var UlteoOVD_start_Desktop = Class.create(UlteoOVD_start_External, {
+	mode: 'desktop',
+
+	my_width: screen.width,
+	my_height: screen.height,
+	pos_top: 0,
+	pos_left: 0
+});
+
+var UlteoOVD_start_Application = Class.create(UlteoOVD_start_External, {
+	mode: 'applications',
+
+	my_width: 436,
+	my_height: 270,
+	pos_top: (screen.height-270),
+	pos_left: (screen.width-436),
+
+	initialize: function(web_client_url_, application_id_) {
+		UlteoOVD_start_External.prototype.initialize.apply(this, [web_client_url_]);
+
+		this.application_id = application_id_;
+	},
+
+	setPath: function(path_) {
+		this.extra_args.set('file', path_);
+		this.extra_args.set('file_type', 'native');
+	},
+
+	setPathHTTP: function(url_, path_) {
+		this.extra_args.set('file', path_);
+		this.extra_args.set('file_share', url_);
+		this.extra_args.set('file_type', 'http');
 	}
 });
