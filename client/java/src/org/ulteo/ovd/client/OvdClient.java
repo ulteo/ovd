@@ -208,7 +208,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	
 	public boolean perform() {
 		if (this.smComm == null)
-			throw new NullPointerException("Client cannot be performed with a null SM communication");
+			throw new NullPointerException("Client cannot be performed with a non existent SM communication");
 
 		if (this.createRDPConnections()) {
 			for (RdpConnectionOvd rc : this.connections) {
