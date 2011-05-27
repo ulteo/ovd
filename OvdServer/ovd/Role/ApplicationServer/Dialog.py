@@ -27,6 +27,7 @@ from ovd.Logger import Logger
 from ovd.Communication.Dialog import Dialog as AbstractDialog
 
 import Apt
+from Platform.ApplicationsDetection import ApplicationsDetection
 from Platform.DomainMicrosoft import DomainMicrosoft
 from Platform.DomainNovell import DomainNovell
 from Platform.DomainUlteo import DomainUlteo
