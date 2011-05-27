@@ -100,6 +100,14 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				System.exit(2);
 			}
 		}
+		else if(OSTools.isLinux()) {
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.LIB_X_CLIENT_AREA);
+			} catch (FileNotFoundException ex) {
+				WorkArea.disableLibraryLoading();
+				org.ulteo.Logger.error(ex.getMessage());
+			}
+		}
 		
 		try {
 			UIManager.put("Slider.paintValue", Boolean.FALSE);
@@ -756,15 +764,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				this.client = new OvdClientDesktop(dialog, this.opts.geometry, this, response.isPersistent());
 				break;
 			case Properties.MODE_REMOTEAPPS:
-				if (OSTools.isLinux()) {
-					try {
-						LibraryLoader.LoadLibrary(LibraryLoader.LIB_X_CLIENT_AREA);
-					} catch (FileNotFoundException ex) {
-						WorkArea.disableLibraryLoading();
-						org.ulteo.Logger.error(ex.getMessage());
-					}
-				}
-				
 				this.client = new OvdClientPortal(dialog, response.getUsername(), this.opts.autopublish, response.isDesktopIcons(), this.opts.autostart, this.opts.isBugReporterVisible, this);
 				((OvdClientPortal) this.client).setSeamlessDebugEnabled(this.opts.debugSeamless);
 				break;
