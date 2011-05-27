@@ -87,6 +87,7 @@ public class RdpMenu extends MenuBar {
 	/**
 	 * @deprecated Replaced by action listeners.
 	 */
+	@Deprecated
 	public boolean action(Event event, Object arg) {
 /*
 		if(arg == "Turn Caps-Lock On") ((MenuItem) event.target).setLabel("Turn Caps-Lock Off");
