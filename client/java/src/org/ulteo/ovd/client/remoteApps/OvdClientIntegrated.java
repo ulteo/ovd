@@ -54,13 +54,12 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 	public boolean perform() {
 		String sm = this.smComm.getHost();
 		this.spool.createIconsDir();
+		
 		if (OSTools.isWindows()) {
 			this.system = new SystemWindows(sm);
-		}
-		else if (OSTools.isLinux()) {
+		} else if (OSTools.isLinux()) {
 			this.system = new SystemLinux(sm);
-		}
-		else {
+		}else {
 			Logger.warn("This Operating System is not supported");
 		}
 		
