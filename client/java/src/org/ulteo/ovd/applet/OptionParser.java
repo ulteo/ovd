@@ -2,6 +2,7 @@
  * Copyright (C) 2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -26,13 +27,12 @@ import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.Protocol;
 
 public class OptionParser {
-	public static boolean readParameters(Applet applet, Properties properties) {
+	
+	public static void readParameters(Applet applet, Properties properties) {
 		for (String setting : Protocol.settingsNames) {
 			String value = applet.getParameter("setting_"+setting);
 			if (value != null)
 				Protocol.parseSessionSettings(properties, setting, value);		
 		}
-		
-		return true;
     }
 }

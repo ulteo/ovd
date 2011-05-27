@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,6 +26,7 @@ import org.ulteo.Logger;
 
 
 public class Protocol {
+	
 	public static final String SESSION_MODE_PERSISTENT = "persistent";
 	public static final String NAME_ATTR_MULTIMEDIA = "multimedia";
 	public static final String NAME_ATTR_PRINTERS = "redirect_client_printers";
@@ -47,7 +49,7 @@ public class Protocol {
 						NAME_ATTR_RDP_BPP,
 	};
 
-	public static boolean parseSessionSettings(Properties properties, String name, String value) {
+	public static void parseSessionSettings(Properties properties, String name, String value) {
 		if (name.equalsIgnoreCase(NAME_DESKTOP_ICONS)) {
 			try {
 				int val = Integer.parseInt(value);
@@ -106,7 +108,5 @@ public class Protocol {
 			else
 				properties.setDrives(Properties.REDIRECT_DRIVES_NO);
 		}
-		
-		return true;
 	}
 }
