@@ -62,8 +62,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		return map;
 	}
 
-	protected boolean graphic = false;
-
 	protected Callback obj = null;
 
 	protected SessionManagerCommunication smComm = null;
@@ -84,21 +82,20 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	private boolean persistent = false;
 
 	public OvdClient(Callback obj_) {
-		this.initMembers(null, true);
+		this.initMembers(null);
 
 		this.initCallback(obj_);
 	}
 
 	public OvdClient(SessionManagerCommunication smComm, Callback obj_, boolean persistent) {
-		this.initMembers(smComm, true);
+		this.initMembers(smComm);
 
 		this.persistent = persistent;
 		this.initCallback(obj_);
 	}
 
-	private void initMembers(SessionManagerCommunication smComm, boolean graphic_) {
+	private void initMembers(SessionManagerCommunication smComm) {
 		this.smComm = smComm;
-		this.graphic = graphic_;
 
 		this.connections = new ArrayList<RdpConnectionOvd>();
 		this.availableConnections = new ArrayList<RdpConnectionOvd>();
