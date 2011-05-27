@@ -68,7 +68,7 @@ public class OvdClientDesktopApplet extends OvdClient {
 	@Override
 	public boolean perform() {
 		this.createRDPConnections();
-		return this.perform();
+		return super.perform();
 	}
 
 	public void adjustDesktopSize() {
