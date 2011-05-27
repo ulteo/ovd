@@ -108,7 +108,6 @@ public class OvdClientDesktop extends OvdClient {
 		Properties properties = this.smComm.getResponseProperties();
 		ServerAccess server = this.smComm.getServers().get(0);
 		
-		
 		byte flags = 0x00;
 		flags |= RdpConnectionOvd.MODE_DESKTOP;
 		
