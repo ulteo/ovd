@@ -825,7 +825,7 @@ public class Rdesktop {
 
 					logger.info("Connection successful");
 					// now show window after licence negotiation
-						RdpLayer.mainLoop(deactivated, ext_disc_reason);
+						RdpLayer.mainLoop(deactivated, ext_disc_reason, null);
                                            
                         if (deactivated[0])
                         {

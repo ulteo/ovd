@@ -485,9 +485,7 @@ public class RdpConnection implements SeamListener, Runnable{
 					this.RdpLayer.connect(this.opt.username, InetAddress.getByName(this.opt.hostname), logonflags, this.opt.domain, this.opt.password, this.opt.command, this.opt.directory);
 
 					if (this.keep_running) {
-						this.fireConnected();
-
-						this.RdpLayer.mainLoop(deactivated, ext_disc_reason);
+						this.RdpLayer.mainLoop(deactivated, ext_disc_reason, this);
 						if (! deactivated[0]) {
 							this.disconnect();
 

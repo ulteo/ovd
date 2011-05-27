@@ -153,21 +153,19 @@ public abstract class RdesktopCanvas extends Canvas {
     }
 
 	public void repaint() {
-		if (this.ComponentListener.size() == 0)
+		if (! this.opt.seamlessEnabled)
 			super.repaint();
-		else {
-			for (Component c: this.ComponentListener)
-				c.repaint();
-		}
+
+		for (Component c: this.ComponentListener)
+			c.repaint();
 	}
 
 	public void repaint(int x, int y, int width, int height) {
-		if (this.ComponentListener.size() == 0)
+		if (! this.opt.seamlessEnabled)
 			super.repaint(x, y, width, height);
-		else {
-			for (Component c: this.ComponentListener)
-				c.repaint(x, y, width, height);
-		}
+
+		for (Component c: this.ComponentListener)
+			c.repaint(x, y, width, height);
 	}
 
 
