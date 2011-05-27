@@ -65,6 +65,7 @@ do_start() {
 
     mount -t proc none $CHROOTDIR/proc 2>/dev/null
     mount -t devpts none $CHROOTDIR/dev/pts 2>/dev/null
+    mount -t tmpfs none $CHROOTDIR/dev/shm 2>/dev/null
 
     chroot $CHROOTDIR service cups start
     chroot $CHROOTDIR service xrdp start
@@ -82,6 +83,7 @@ do_stop() {
     chroot $CHROOTDIR service xrdp stop
     chroot $CHROOTDIR service cups stop
 
+    umount $CHROOTDIR/dev/shm 2>/dev/null
     umount $CHROOTDIR/dev/pts 2>/dev/null
     umount $CHROOTDIR/proc 2>/dev/null
 }
