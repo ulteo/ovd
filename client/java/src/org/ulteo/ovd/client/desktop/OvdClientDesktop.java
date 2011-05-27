@@ -5,6 +5,7 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
