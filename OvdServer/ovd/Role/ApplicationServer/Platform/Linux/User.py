@@ -23,6 +23,7 @@
 import fcntl
 import locale
 import pwd
+import time
 import xrdp
 
 from ovd import commands
