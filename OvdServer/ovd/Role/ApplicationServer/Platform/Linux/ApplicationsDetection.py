@@ -29,6 +29,8 @@ import tempfile
 from ovd.Logger import Logger
 
 class ApplicationsDetection():
+	shortcut_ext = ".desktop"
+	
 	def __init__(self):
 		self.path = "/usr/share/applications"
 	
