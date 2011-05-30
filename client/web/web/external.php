@@ -39,7 +39,7 @@ if (! array_key_exists('start_app', $_SESSION['ovd-client'])) {
 	$session_node->appendChild($user_node);
 	$dom->appendChild($session_node);
 
-	$_SESSION['ovd-client']['server'] = SESSIONMANAGER_HOST;
+	$_SESSION['ovd-client']['server'] = @SESSIONMANAGER_HOST; // If the WebClient is not linked to a SessionManager, JavaScript object will return an 'Usage: missing "sessionmanager_host" parameter' error
 	$_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$_SESSION['ovd-client']['server'].'/ovd/client';
 	$sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
 
