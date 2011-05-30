@@ -29,11 +29,9 @@ import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.rdp.OvdAppChannel;
 
-import java.applet.Applet;
 import java.util.ArrayList;
 import java.util.List;
 
-import netscape.javascript.JSObject;
 import org.ulteo.ovd.client.ClientInfos;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
@@ -96,7 +94,7 @@ class OrderApplication extends Order {
 	}
 }
 
-public class Applications extends Applet implements Runnable, JSForwarder/*RdpListener, OvdAppListener*/ {
+public class Applications extends OvdApplet implements Runnable {
 	private int port = 0;
 	private String server = null;
 	public String keymap = null;
@@ -337,26 +335,5 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 		o.setPath(type, path, share);
 		
 		this.pushOrder(o);
-	}
-	
-	public void forwardJS(String functionName, Integer instance, String status) {
-		Object[] args = new Object[2];
-		args[0] = instance;
-		args[1] = status;
-		
-		try {
-			JSObject win = JSObject.getWindow(this);
-			win.call(functionName, args);
-		}
-		catch (netscape.javascript.JSException e) {
-			String buffer = functionName+"(";
-			for(Object o: args)
-				buffer+= o+", ";
-			if (buffer.endsWith(", "))
-				buffer = buffer.substring(0, buffer.length()-2);
-			buffer+=")";
-			
-			System.err.println(this.getClass()+" error while execute '"+buffer+"' =>"+e.getMessage());
-		}
 	}
 }

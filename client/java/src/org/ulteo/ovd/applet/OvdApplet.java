@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +21,11 @@
 
 package org.ulteo.ovd.applet;
 
-public interface JSForwarder {
+import java.applet.Applet;
+import netscape.javascript.JSObject;
+
+public class OvdApplet extends Applet {
+	
 	public static final String JS_API_F_SERVER = "serverStatus";
 	public static final String JS_API_O_SERVER_CONNECTED = "connected";
 	public static final String JS_API_O_SERVER_DISCONNECTED = "disconnected";
@@ -31,6 +36,23 @@ public interface JSForwarder {
 	public static final String JS_API_O_INSTANCE_STARTED = "started";
 	public static final String JS_API_O_INSTANCE_STOPPED = "stopped";
 	public static final String JS_API_O_INSTANCE_ERROR = "error";
-	
-	public void forwardJS(String functionName, Integer instance, String status);
+
+	@SuppressWarnings("deprecation")
+	public void forwardJS(String functionName, Integer instance, String status) {
+		try {
+			try {
+				JSObject win = JSObject.getWindow(this);
+				Object[] args = {instance, status};
+				win.call(functionName, args);
+			} catch (ClassCastException e) {
+				// a cast exception is raised when the applet is executed by the 
+				// appletViewer class (used by some IDEs) and with OpenJDK JVM. This will 
+				// not execute the JS, so it not possible to run an OVD session
+				throw new netscape.javascript.JSException(e.getMessage());
+			}
+		} catch (netscape.javascript.JSException e) {
+			System.err.printf("%s error while execute %s(%d, %s) => %s",
+					this.getClass(), functionName, instance, status, e.getMessage());
+		}
+	}
 }

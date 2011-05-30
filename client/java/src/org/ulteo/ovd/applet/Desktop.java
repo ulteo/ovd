@@ -22,13 +22,10 @@
 
 package org.ulteo.ovd.applet;
 
-import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.FileNotFoundException;
-
-import netscape.javascript.JSObject;
 
 import org.ulteo.Logger;
 import org.ulteo.ovd.client.ClientInfos;
@@ -42,7 +39,8 @@ import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 import org.ulteo.utils.AbstractFocusManager;
 
-public class Desktop extends Applet implements JSForwarder, FocusListener, Callback {
+public class Desktop extends OvdApplet implements FocusListener, Callback {
+	
 	private boolean fullscreenMode = false;
 	private int port = 0;
 	private String server = null;
@@ -151,7 +149,7 @@ public class Desktop extends Applet implements JSForwarder, FocusListener, Callb
 		if (this.ovd != null)
 			this.ovd.performDisconnectAll();
 		else
-			this.forwardJS(JSForwarder.JS_API_F_SERVER, 0, JSForwarder.JS_API_O_SERVER_FAILED);
+			this.forwardJS(OvdApplet.JS_API_F_SERVER, 0, OvdApplet.JS_API_O_SERVER_FAILED);
 	}
 	
 	@Override
@@ -223,35 +221,6 @@ public class Desktop extends Applet implements JSForwarder, FocusListener, Callb
 			this.fullscreenMode = true;
 		
 		return true;
-	}
-
-	@SuppressWarnings("deprecation")
-	public void forwardJS(String functionName, Integer instance, String status) {
-		Object[] args = new Object[2];
-		args[0] = instance;
-		args[1] = status;
-		
-		try {
-			try {
-				JSObject win = JSObject.getWindow(this);
-				win.call(functionName, args);
-			} catch (ClassCastException e) {
-				// a cast exception is raised when the applet is executed by the 
-				// appletViewer class (used by some IDEs) and with OpenJDK JVM. This will 
-				// not execute the JS, so it not possible to run an OVD session
-				throw new netscape.javascript.JSException(e.getMessage());
-			}
-		}
-		catch (netscape.javascript.JSException e) {
-			String buffer = functionName+"(";
-			for(Object o: args)
-				buffer+= o+", ";
-			if (buffer.endsWith(", "))
-				buffer = buffer.substring(0, buffer.length()-2);
-			buffer+=")";
-			
-			System.err.println(this.getClass()+" error while execute '"+buffer+"' => "+e.getMessage());
-		}
 	}
 
 	@Override

@@ -23,7 +23,6 @@
 
 package org.ulteo.ovd.applet;
 
-import java.applet.Applet;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.FocusListener;
@@ -44,12 +43,12 @@ public class OvdClientDesktopApplet extends OvdClient {
 	private ServerAccess server = null;
 	private Properties properties = null;
 
-	private Applet applet = null;
+	private OvdApplet applet = null;
 
 	private boolean isFullscreen = false;
 	private FullscreenWindow externalWindow = null;
 
-	public OvdClientDesktopApplet(ServerAccess server_, Properties properties_, Callback obj_, Applet applet_) throws ClassCastException {
+	public OvdClientDesktopApplet(ServerAccess server_, Properties properties_, Callback obj_, OvdApplet applet_) throws ClassCastException {
 		super(obj_);
 
 		this.server = server_;
@@ -57,8 +56,6 @@ public class OvdClientDesktopApplet extends OvdClient {
 
 		if (! (applet_ instanceof FocusListener))
 			throw new ClassCastException("[Programmer error] The Applet class must implement FocusListener class");
-		if (! (applet_ instanceof JSForwarder))
-			throw new ClassCastException("[Programmer error] The Applet class must implement JSForwarder class");
 		this.applet = applet_;
 	}
 
@@ -211,16 +208,13 @@ public class OvdClientDesktopApplet extends OvdClient {
 	@Override
 	public void connected(RdpConnection co) {
 		super.connected(co);
-
-		((JSForwarder) this.applet).forwardJS(JSForwarder.JS_API_F_SERVER, 0, JSForwarder.JS_API_O_SERVER_CONNECTED);
+		this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, 0, OvdApplet.JS_API_O_SERVER_CONNECTED);
 	}
 
 	@Override
 	public void disconnected(RdpConnection co) {
 		super.disconnected(co);
-
-		((JSForwarder) this.applet).forwardJS(JSForwarder.JS_API_F_SERVER, 0, JSForwarder.JS_API_O_SERVER_DISCONNECTED);
-
+		this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, 0, OvdApplet.JS_API_O_SERVER_DISCONNECTED);
 		this.applet.stop();
 	}
 
@@ -236,7 +230,7 @@ public class OvdClientDesktopApplet extends OvdClient {
 
 		if (tryNumber > 1) {
 			Logger.error("checkRDPConnections -- Several try to connect to "+co.getServer()+" failed. Will exit.");
-			((JSForwarder) this.applet).forwardJS(JSForwarder.JS_API_F_SERVER, 0, JSForwarder.JS_API_O_SERVER_FAILED);
+			this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, 0, OvdApplet.JS_API_O_SERVER_FAILED);
 			return;
 		}
 
