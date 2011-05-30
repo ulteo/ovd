@@ -65,10 +65,10 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 	protected Callback obj = null;
 
+	private ArrayList<RdpConnectionOvd> availableConnections = null;
 	protected SessionManagerCommunication smComm = null;
 	protected Thread getStatus = null;
 	protected ArrayList<RdpConnectionOvd> connections = null;
-	protected ArrayList<RdpConnectionOvd> availableConnections = null;
 	protected CopyOnWriteArrayList<RdpConnectionOvd> performedConnections = null;
 	protected String keymap = null;
 	protected String inputMethod = null;

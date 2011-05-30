@@ -130,7 +130,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	@Override
 	public void ovdInited(OvdAppChannel o) {
-		for (RdpConnectionOvd rc : this.availableConnections) {
+		for (RdpConnectionOvd rc : this.getAvailableConnections()) {
 			if (rc.getOvdAppChannel() == o) {
 				for (Application app : rc.getAppsList()) {
 					if (this.autoPublish) {
@@ -155,7 +155,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 		this.system.refresh();
 
-		if (this.availableConnections.size() == this.connections.size())
+		if (this.getAvailableConnections().size() == this.connections.size())
 			this.portal.enableIconsButton();
 	}
 

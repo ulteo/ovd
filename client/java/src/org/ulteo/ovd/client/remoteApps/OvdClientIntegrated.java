@@ -44,7 +44,7 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 
 	@Override
 	public void ovdInited(OvdAppChannel o) {
-		for (RdpConnectionOvd rc : this.availableConnections) {
+		for (RdpConnectionOvd rc : this.getAvailableConnections()) {
 			if (rc.getOvdAppChannel() != o)
 				continue;
 
