@@ -364,7 +364,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		System.err.println("\t--auto-start			Enable auto start");
 		System.err.println("\t-d [seamless]			Enable debug (use comma as delimiter)");
 		System.err.println("\t-v|--version			Print the software version");
-		System.err.println("\t-i|--input-type		Custom the input method (unicode or scancode)");
+		System.err.println("\t-i|--input-method			Custom the input method (unicode or scancode)");
 		if (OSTools.isWindows()) {
 			System.err.println("\t--ntlm				Use NTLM authentication");
 			System.err.println("\t--reg				Load configuration from registry");
