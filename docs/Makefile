@@ -13,6 +13,7 @@ SRC=\
 	Installation_Iso.xml \
 	NativeClient.xml \
 	Protocol.xml \
+	Scalability.xml \
 	StartASession.xml \
 	Support_Debian_Lenny.xml \
 	Support_Debian_Squeeze.xml \

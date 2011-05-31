@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+	<articleinfo>
+		<title>Ulteo Open Virtual Desktop v@VERSION@</title>
+		<subtitle>How To - Scalability</subtitle>
+		<graphic fileref="img/ovd.png" align="center"/>
+
+		<copyright>
+			<year>@YEAR@</year>
+			<holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
+		</copyright>
+	</articleinfo>
+
+	<para>
+		The purpose of this documentation is to test the scalability of an Ulteo OVD infrastructure.
+	</para>
+
+	<section>
+		<title>Introduction</title>
+
+		<itemizedlist>
+			<listitem>
+				<para>
+					In order to do the scalability test of an Ulteo OVD infrastructure, we will need to tweak the Session Manager which will then be able to automatically create multiple OVD users.
+				</para>
+			</listitem>
+
+			<listitem>
+				<para>
+					Then, the scalability test client will be able to launch multiple sessions on the OVD installation.
+				</para>
+			</listitem>
+		</itemizedlist>
+	</section>
+
+	<section>
+		<title>Prerequisites</title>
+
+		<itemizedlist>
+			<listitem>
+				<para>
+					An installed and configured Ulteo OVD infrastructure, which means at least an Ulteo OVD Session Manager and an Ulteo OVD Application Server.
+				</para>
+
+				<note>
+					<para>
+						You can refer to the Ulteo OVD installation documentations if you need to install any of these elements.
+					</para>
+				</note>
+			</listitem>
+
+			<listitem>
+				<para>
+					A Linux-based machine which will operate as the scalability test client.
+				</para>
+			</listitem>
+		</itemizedlist>
+	</section>
+
+	<section>
+		<title>Session Manager configuration</title>
+
+		<itemizedlist>
+			<listitem>
+				<para>
+					You will now need to download a Session Manager module which will allow auto-creation of Ulteo OVD users, useful to launch many sessions.
+				</para>
+
+				<para>
+					<screen>
+<![CDATA[$ sudo -s
+# cd /usr/share/ulteo/sessionmanager
+# wget http://www.ulteo.com/main/ovd/downloads/auth.tar.gz
+# tar -xzf auth.tar.gz]]>
+					</screen>
+				</para>
+			</listitem>
+
+			<listitem>
+				<para>
+					Then you have to configure the Session Manager to use this module, go in "Configuration", then "Authentication settings" and check the "Auto authentication" checkbox.
+				</para>
+
+				<note>
+					<para>
+						It is strongly advised to uncheck all other authentication methods.
+					</para>
+				</note>
+
+				<para>
+					<inlinemediaobject>
+						<imageobject>
+							<imagedata fileref="img/scalability/admin_authmethod_auto.png"/>
+						</imageobject>
+						<textobject>
+							<phrase>Authentication Method Auto</phrase>
+						</textobject>
+					</inlinemediaobject>
+				</para>
+
+				<important>
+					<para>
+						Be sure that your Ulteo OVD infrastructure is using "Internal" domain integration settings, with users stored in a MySQL database. The Auto authentication module will create an user for each session launched in the scalability test.
+					</para>
+				</important>
+			</listitem>
+
+			<listitem>
+				<para>
+					You now have to define a default usergroup so the automatically created users will belong to this group, go in "Users", then "Users Groups", select the group you want to become the default one, and click the "Define as default" button.
+				</para>
+
+				<para>
+					<inlinemediaobject>
+						<imageobject>
+							<imagedata fileref="img/scalability/admin_default_usergroup.png"/>
+						</imageobject>
+						<textobject>
+							<phrase>Default UserGroup</phrase>
+						</textobject>
+					</inlinemediaobject>
+				</para>
+
+				<important>
+					<para>
+						The default usergroup must have valid application publications so the users are able to launch sessions.
+					</para>
+				</important>
+			</listitem>
+
+			<listitem>
+				<para>
+					We are now done configuring the Session Manager for scalability tests, you can try to launch a single session using the Web Client or Native Client to be sure that the system works.
+				</para>
+			</listitem>
+		</itemizedlist>
+	</section>
+
+	<section>
+		<title>Scalability test</title>
+
+		<itemizedlist>
+			<listitem>
+				<para>
+					GET THE SCALABILITY TEST PROGRAM
+				</para>
+
+				<para>
+					<screen>
+<![CDATA[$ wget http://www.ulteo.com/main/ovd/downloads/client.tar.gz
+$ tar -xzf client.tar.gz
+$ cd client/python]]>
+					</screen>
+				</para>
+
+				<important>
+					<para>
+						The scalability test program requires that xterm and rdesktop are installed on the test machine. If one of these programs is missing, the scalability test program will not work.
+					</para>
+				</important>
+			</listitem>
+
+			<listitem>
+				<para>
+					Now you can launch the scalability test program.
+				</para>
+
+				<para>
+					<screen>
+<![CDATA[$ python launch_x_sessions.py --auto-users SESSIONMANAGER_IP NUMBER_OF_SESSIONS TIME_TO_WAIT_BETWEEN_EACH_LAUNCH]]>
+					</screen>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</section>
+</article>
