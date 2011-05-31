@@ -22,6 +22,18 @@
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
+if (array_key_exists('language', $_REQUEST)) {
+	$available_languages = get_available_languages();
+	$languages = array();
+	foreach ($available_languages as $available_language)
+		$languages []= $available_language['id'];
+
+	if (in_array($_REQUEST['language'], $languages)) {
+		$user_language = $_REQUEST['language'];
+		$user_keymap = $user_language;
+	}
+}
+
 $first = false;
 if (! array_key_exists('start_app', $_SESSION['ovd-client'])) {
 	$first = true;
@@ -31,6 +43,8 @@ if (! array_key_exists('start_app', $_SESSION['ovd-client'])) {
 	$session_node = $dom->createElement('session');
 	if (array_key_exists('mode', $_REQUEST))
 		$session_node->setAttribute('mode', $_REQUEST['mode']);
+	if (array_key_exists('language', $_REQUEST))
+		$session_node->setAttribute('language', $_REQUEST['language']);
 	$user_node = $dom->createElement('user');
 	if (array_key_exists('login', $_REQUEST))
 		$user_node->setAttribute('login', $_REQUEST['login']);
