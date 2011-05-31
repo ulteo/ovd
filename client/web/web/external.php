@@ -29,6 +29,8 @@ if (! array_key_exists('start_app', $_SESSION['ovd-client'])) {
 	$dom = new DomDocument('1.0', 'utf-8');
 
 	$session_node = $dom->createElement('session');
+	if (array_key_exists('mode', $_REQUEST))
+		$session_node->setAttribute('mode', $_REQUEST['mode']);
 	$user_node = $dom->createElement('user');
 	if (array_key_exists('login', $_REQUEST))
 		$user_node->setAttribute('login', $_REQUEST['login']);
