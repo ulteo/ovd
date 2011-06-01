@@ -21,6 +21,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
+import pywintypes.error
 import random
 import win32api
 from win32com.shell import shell, shellcon
@@ -118,8 +119,15 @@ class Session(AbstractSession):
 			dstFile = os.path.join(d, os.path.basename(shortcut))
 			if os.path.exists(dstFile):
 				os.remove(dstFile)
-			
-			win32file.CopyFile(shortcut, dstFile, True)
+			try:
+				win32file.CopyFile(shortcut, dstFile, True)
+			except pywintypes.error, err:
+				if err[0] == 5: # Access is denied
+					Logger.error("Session::Windows::install_shortcut Access is denied on copy of '%s' to '%s'"%(shortcut, dstFile))
+					return
+				# other error
+				Logger.error("Session::Windows::install_shortcut error on copy of '%s' to '%s', wintypes error %s"%(shortcut, dstFile, err[0]))
+				return
 	
 	
 	def get_target_file(self, application):
