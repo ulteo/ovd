@@ -21,7 +21,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
-import pywintypes.error
+import pywintypes
 import random
 import win32api
 from win32com.shell import shell, shellcon
