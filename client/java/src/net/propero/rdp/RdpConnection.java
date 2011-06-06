@@ -52,6 +52,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	public static final int DEFAULT_WIDTH = 800;
 	public static final int DEFAULT_HEIGHT = 600;
 	public static final int DEFAULT_PERSISTENT_CACHE_SIZE = 100;
+	public static final String DEFAULT_KEYMAP = "en-us";
 
 	public static enum State {DISCONNECTED, CONNECTING, CONNECTED, FAILED};
 
@@ -391,10 +392,11 @@ public class RdpConnection implements SeamListener, Runnable{
 	private void loadKeymap() throws KeyMapException {
 		InputStream istr = RdpConnection.class.getResourceAsStream(KEYMAP_PATH + this.mapFile);
 		if (istr == null) {
-			this.mapFile = this.mapFile.substring(0, this.mapFile.indexOf('-'));
+			int idx = this.mapFile.indexOf('-');
+			this.mapFile = (idx == -1) ? DEFAULT_KEYMAP : this.mapFile.substring(0, idx);
 			istr = RdpConnection.class.getResourceAsStream(KEYMAP_PATH + this.mapFile);
 			if (istr == null) {
-				this.mapFile = "en-gb";
+				this.mapFile = DEFAULT_KEYMAP;
 				istr = RdpConnection.class.getResourceAsStream(KEYMAP_PATH + this.mapFile);
 			}
 		}
