@@ -49,7 +49,10 @@ foreach ($server_nodes as $server_node) {
 	$port = 3389;
 
 	if (array_key_exists('gateway', $_SESSION['ovd-client']) && $_SESSION['ovd-client']['gateway'] === true) {
-		$url = 'http://'.$_SESSION['ovd-client']['server'];
+		if (defined('GATEWAY_WAN_IP') && defined('GATEWAY_WAN_PORT') && defined('GATEWAY_LAN_IP') && defined('GATEWAY_LAN_PORT') && $_SERVER['REMOTE_ADDR'] == GATEWAY_LAN_IP)
+			$url = 'http://'.GATEWAY_WAN_IP.':'.GATEWAY_WAN_PORT;
+		else
+			$url = 'http://'.$_SESSION['ovd-client']['server'];
 
 		$host = parse_url($url, PHP_URL_HOST);
 		$port = parse_url($url, PHP_URL_PORT);
