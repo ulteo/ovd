@@ -306,10 +306,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 			return false;
 		
 		Object obj = this.askWebservice(WEBSERVICE_LOGOUT, CONTENT_TYPE_XML, REQUEST_METHOD_POST, data, true);
-		if (! (obj instanceof Document) || obj == null)
-			return false;
-
- 		return this.parseLogoutResponse((Document) obj);
+		return obj instanceof Document;
 	}
 
 	public String askForSessionStatus() throws SessionManagerException {
@@ -500,13 +497,6 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		}
 
 		return obj;
-	}
-
-	private boolean parseLogoutResponse(Document in) {
-		if (in == null)
-			return false;
-
-		return true;
 	}
 
 	private String parseSessionStatusResponse(Document in) throws SessionManagerException {
