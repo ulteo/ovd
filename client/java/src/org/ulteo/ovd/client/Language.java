@@ -44,7 +44,7 @@ public class Language {
 //			{"French (Switzerland)", "Français (Suisse)", "fr-ch"},
 			{"French", "Français", "fr"},
 //			{"French (Luxembourg)", "Français", "fr-lu"},
-//			{"German", "Deutsch", "de"},
+			{"German", "Deutsch", "de"},
 //			{"Greek", "", "el"},
 //			{"Hebrew", "עברית", "he"},
 //			{"Hindi", "", "hi"},
