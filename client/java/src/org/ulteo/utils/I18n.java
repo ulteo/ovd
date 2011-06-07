@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -20,6 +20,7 @@
 
 package org.ulteo.utils;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class I18n {
@@ -31,8 +32,21 @@ public class I18n {
 			catalog = ResourceBundle.getBundle("Messages");
 		}
 		catch(java.util.MissingResourceException e) {
-			System.err.println("Unable to load translation");
-			catalog = null;
+			if (Locale.getDefault().getLanguage().equals("in")) {
+				// Indonesian Locale does not comply with ISO 639
+				// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6457127
+				try {
+					catalog = ResourceBundle.getBundle("Messages_id");
+				}
+				catch(java.util.MissingResourceException e2) {
+					System.err.println("Unable to load Indonesian translations");
+					catalog = null;
+				}
+			}
+			else {
+				System.err.println("Unable to load translation");
+				catalog = null;
+			}
 		}
 	}
 
