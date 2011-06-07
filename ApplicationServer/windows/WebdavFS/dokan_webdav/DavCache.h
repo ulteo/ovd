@@ -41,6 +41,7 @@ typedef struct _DAVCACHEENTRY
 	
 	DWORD stamp;
 	DWORD ref;
+	BOOL deleteOnClose;
 
 	DavEntry::FileType type;
 	LARGE_INTEGER file_size;

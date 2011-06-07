@@ -102,6 +102,7 @@ int DavCache::init(WebdavServer* server)
 		currentEntry->needRemove = FALSE;
 		currentEntry->remotePath[0] = '\0';
 		currentEntry->cachePath[0] = '\0';
+		currentEntry->deleteOnClose = FALSE;
 
 		currentEntry->type = DavEntry::unknow;
 		currentEntry->file_size.QuadPart = -1;
@@ -148,6 +149,7 @@ void DavCache::clean()
 			currentEntry->needRemove = FALSE;
 			currentEntry->remotePath[0] = '\0';
 			currentEntry->cachePath[0] = '\0';
+			currentEntry->deleteOnClose = FALSE;
 
 			currentEntry->type = DavEntry::unknow;
 			currentEntry->file_size.QuadPart = -1;
@@ -200,6 +202,7 @@ ULONG64 DavCache::add(WCHAR* path)
 	cache[cacheHandle].creationTime.dwHighDateTime = 0;
 	cache[cacheHandle].lastModifiedTime.dwLowDateTime = 0;
 	cache[cacheHandle].lastModifiedTime.dwHighDateTime = 0;
+	cache[cacheHandle].deleteOnClose = FALSE;
 
 	wcscpy_s(cache[cacheHandle].remotePath, MAX_PATH, path);
 	swprintf_s(cache[cacheHandle].cachePath, MAX_PATH, L"%s\\%u", cacheDir, cacheHandle);
@@ -239,6 +242,7 @@ BOOL DavCache::remove(ULONG64 handle, BOOL force)
 	currentEntry->needExport = FALSE;
 	currentEntry->needRemove = FALSE;
 	currentEntry->needImport = FALSE;
+	currentEntry->deleteOnClose = FALSE;
 
 	currentEntry->type = DavEntry::unknow;
 	currentEntry->file_size.QuadPart = -1;

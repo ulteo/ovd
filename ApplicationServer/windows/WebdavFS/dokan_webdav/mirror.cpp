@@ -196,6 +196,9 @@ MirrorCreateFile(
 		cacheEntry = davCache->getFromHandle(cacheHandle);
 		if (needImport)
 			cacheEntry->needImport = TRUE;
+
+		if (FlagsAndAttributes & FILE_FLAG_DELETE_ON_CLOSE)
+			cacheEntry->deleteOnClose = TRUE;
 	}
 
 	davCache->addRef(cacheHandle);
@@ -245,10 +248,9 @@ MirrorCloseFile(
 	LPCWSTR					FileName,
 	PDOKAN_FILE_INFO		DokanFileInfo)
 {
-	UNREFERENCED_PARAMETER(FileName);
-
 	DAVCACHEENTRY* cacheEntry = NULL;
 	ULONG64 cacheHandle = DokanFileInfo->Context;
+	WCHAR filePath[MAX_PATH];
 
 	cacheEntry = davCache->getFromHandle(cacheHandle);
 	if (cacheEntry == NULL )
@@ -265,6 +267,20 @@ MirrorCloseFile(
 	davCache->delRef(cacheHandle);
 	if (! davCache->isExpired(cacheHandle))
 		return ERROR_SUCCESS;
+
+	if (cacheEntry->deleteOnClose && cacheEntry->ref == 0) {
+		GetFilePath(FileName, filePath);
+		DbgPrint(L"DeleteFile : %ls\n", (WCHAR*)filePath);
+
+		DELETERequest req(filePath);
+		if (FAILED(server->sendRequest(req))) {
+			DbgPrint(L"MirrorDeleteFile, failed to send the request\n");
+			return E_FAIL;
+		}
+
+		req.getWinStatus();
+		req.close();
+	}
 
 	davCache->remove(cacheHandle, FALSE);
 	return ERROR_SUCCESS;
