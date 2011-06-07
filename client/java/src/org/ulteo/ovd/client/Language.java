@@ -50,7 +50,7 @@ public class Language {
 //			{"Hindi", "", "hi"},
 //			{"Hungarian", "Magyar", "hu"},
 //			{"Icelandic", "", "is"},
-//			{"Indonesian", "Bahasa Indonesia", "id"},
+			{"Indonesian", "Bahasa Indonesia", "id"},
 			{"Italian", "Italiano", "it"},
 			{"Japanese", "日本語", "ja"},
 //			{"Korean", "한국어", "ko"},
