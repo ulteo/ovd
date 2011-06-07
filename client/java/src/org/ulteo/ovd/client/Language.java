@@ -48,7 +48,7 @@ public class Language {
 //			{"Greek", "", "el"},
 //			{"Hebrew", "עברית", "he"},
 //			{"Hindi", "", "hi"},
-//			{"Hungarian", "Magyar", "hu"},
+			{"Hungarian", "Magyar", "hu"},
 //			{"Icelandic", "", "is"},
 			{"Indonesian", "Bahasa Indonesia", "id"},
 			{"Italian", "Italiano", "it"},
