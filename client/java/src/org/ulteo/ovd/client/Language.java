@@ -32,7 +32,7 @@ public class Language {
 			{"Chinese", "中文", "zh", "cn"},
 //			{"Croatian", "", "hr"},
 //			{"Czech", "Česky", "cs"},
-//			{"Danish", "Dansk", "da"},
+			{"Danish", "Dansk", "da"},
 			{"Dutch", "Nederlands", "nl"},
 			{"English (US)", "", "en", "us"},
 			{"English (GB)", "", "en", "gb"},
