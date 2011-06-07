@@ -125,8 +125,6 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 	private List<String> cookies = null;
 
-	private String moreInfos_lastResponse = "no more information";
-
 	public SessionManagerCommunication(String host_, int port_, boolean use_https_) {
 		this.servers = new  ArrayList<ServerAccess>();
 		this.callbacks = new CopyOnWriteArrayList<Callback>();
@@ -419,7 +417,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 			if (showLog)
 				Logger.debug("Response "+r+ " ==> "+res+ " type: "+contentType);
 
-			this.moreInfos_lastResponse = "\tResponse code: "+ r +"\n\tResponse message: "+ res +"\n\tContent type: "+ contentType;
+			String http_infos = "\tResponse code: "+ r +"\n\tResponse message: "+ res +"\n\tContent type: "+ contentType;
 
 			if (r == HttpURLConnection.HTTP_OK) {
 				InputStream in = connexion.getInputStream();
@@ -483,11 +481,11 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 			}
 			else if (r == HttpURLConnection.HTTP_UNAUTHORIZED) {
 				for (Callback c : this.callbacks)
-					c.reportUnauthorizedHTTPResponse(this.getMoreInfos());
+					c.reportUnauthorizedHTTPResponse(http_infos);
 			}
 			else if (r == HttpURLConnection.HTTP_NOT_FOUND) {
 				for (Callback c : this.callbacks)
-					c.reportNotFoundHTTPResponse(this.getMoreInfos());
+					c.reportNotFoundHTTPResponse(http_infos);
 			}
 			else {
 				for (Callback c : this.callbacks)
@@ -773,10 +771,6 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 	public List<ServerAccess> getServers() {
 		return this.servers;
-	}
-
-	public String getMoreInfos() {
-		return this.moreInfos_lastResponse;
 	}
 
 	@Override
