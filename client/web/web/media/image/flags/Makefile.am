@@ -9,6 +9,7 @@ scripts_DATA = ad.png \
                ao.png \
                ar2.png \
                arg.png \
+               ar-ae.png \
                ar.png \
                as.png \
                at.png \
@@ -118,6 +119,7 @@ scripts_DATA = ad.png \
                ir.png \
                is.png \
                it.png \
+               ja-jp.png \
                ja.png \
                jm.png \
                jo.png \
