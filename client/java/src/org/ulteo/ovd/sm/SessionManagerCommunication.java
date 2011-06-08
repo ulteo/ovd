@@ -31,6 +31,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -109,6 +110,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	public static final String SESSION_STATUS_DESTROYED = "destroyed";
 
 	private static final int TIMEOUT = 2000;
+	private static final int MAX_REDIRECTION_TRY = 5;
 	public static final int DEFAULT_PORT = 443;
 
 	private String host = null;
@@ -358,16 +360,65 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 		return icon;
 	}
-
+	
+	
+	/**
+	 * send a customized request to the Session Manager 
+	 * @param webservice
+	 * 		the service path to join on the SM
+	 * @param content_type
+	 * 		the content type expected to receive
+	 * @param method
+	 * 		specify GET or POST for the HTTP request
+	 * @param data
+	 * 		some optional data to send during the request
+	 * @param showLog
+	 * 		verbosity of this function
+	 * @return
+	 * 		generic {@link Object} result sent by the Session Manager
+	 * @throws SessionManagerException
+	 * 		generic exception for all failure during the Session manager communication
+	 */
 	private Object askWebservice(String webservice, String content_type, String method, String data, boolean showLog) throws SessionManagerException {
+		try {
+			URL url = new URL(this.base_url + webservice);
+			return askWebservice(url, content_type, method, data, showLog, MAX_REDIRECTION_TRY);
+		} catch (MalformedURLException e) {
+			throw new SessionManagerException(e.getMessage());
+		}
+	}
+	
+	
+	/**
+	 * send a customized request to the Session Manager 
+	 * @param url
+	 * 		the complete {@link URL} to join on the SM
+	 * @param content_type
+	 * 		the content type expected to receive
+	 * @param method
+	 * 		specify GET or POST for the HTTP request
+	 * @param data
+	 * 		some optional data to send during the request
+	 * @param showLog
+	 * 		verbosity of this function
+	 * @param retry
+	 * 		indicate the maximum of redirected request to make 
+	 * @return
+	 * 		generic {@link Object} result sent by the Session Manager
+	 * @throws SessionManagerException
+	 * 		generic exception for all failure during the Session manager communication
+	 */
+	private Object askWebservice(URL url, String content_type, String method, String data, boolean showLog, int retry) throws SessionManagerException {
+		if (showLog)
+			Logger.debug("Connecting URL: " + url);
+		
+		if (retry == 0)
+			throw new SessionManagerException(MAX_REDIRECTION_TRY + " redirections has been done without success");
+		
 		Object obj = null;
 		HttpURLConnection connexion = null;
 
 		try {
-			URL url = new URL(this.base_url+webservice);
-
-			if (showLog)
-				Logger.debug("Connecting URL ... "+url);
 			connexion = (HttpURLConnection) url.openConnection();
 			connexion.setConnectTimeout(TIMEOUT);
 
@@ -388,6 +439,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 			connexion.setAllowUserInteraction(true);
 			connexion.setRequestMethod(method);
+			connexion.setInstanceFollowRedirects(false);
 			if (data != null) {
 				OutputStreamWriter out = new OutputStreamWriter(connexion.getOutputStream());
 				out.write(data);
@@ -475,6 +527,11 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 							this.cookies.add(cookie);
 					}
 				}
+			}
+			else if (r == HttpURLConnection.HTTP_MOVED_TEMP) {
+				URL location = new URL(connexion.getHeaderField("Location"));
+				Logger.debug("Redirection: " + location);
+				return askWebservice(location, content_type, method, data, showLog, retry-1);
 			}
 			else if (r == HttpURLConnection.HTTP_UNAUTHORIZED) {
 				for (Callback c : this.callbacks)
