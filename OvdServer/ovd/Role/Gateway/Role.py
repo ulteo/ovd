@@ -51,9 +51,6 @@ class Role(AbstractRole):
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
 		
-		self.sm = (Config.general.session_manager, self.HTTPS_PORT)
-		self.rdp_port = self.RDP_PORT
-		
 		self.server = None
 		self.ssl_ctx = None
 		self.processes = {}
@@ -104,7 +101,8 @@ class Role(AbstractRole):
 		self.pipes = (p10, p11)
 		child_pipes = (p01, p00)
 		
-		proc = ConnectionPoolProcess(child_pipes, self.pipes, self.ssl_ctx)
+		sm = ((Config.general.session_manager, self.HTTPS_PORT), self.ssl_ctx)
+		proc = ConnectionPoolProcess(child_pipes, self.pipes, sm, self.RDP_PORT)
 		proc.start()
 		child_pipes[0].close()
 		child_pipes[1].close()

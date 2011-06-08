@@ -34,12 +34,13 @@ from OpenSSL import SSL
 
 class ConnectionPoolProcess(Process):
 	
-	def __init__(self, child_pipes, father_pipes, ssl_ctx):
+	def __init__(self, child_pipes, father_pipes, sm, rdp_port):
 		Process.__init__(self)
 		
 		self.pipes = child_pipes
 		self.father_pipes = father_pipes
-		self.ssl_ctx = ssl_ctx
+		self.sm = sm
+		self.rdp_port = rdp_port
 		
 		self.f_control = None
 		self.t_asyncore = None
@@ -67,9 +68,6 @@ class ConnectionPoolProcess(Process):
 		
 		self.f_control = ControlFatherProcess(self)
 		self.f_control.start()
-
-		self.sm = (self.f_control.send("get_sm"), self.ssl_ctx)
-		self.rdp_port = self.f_control.send("get_rdp_port")
 		
 		while self.f_control.is_alive() or not self.socks.empty():
 			try:

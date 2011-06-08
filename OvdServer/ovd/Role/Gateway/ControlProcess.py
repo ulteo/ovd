@@ -79,12 +79,6 @@ class ControlFatherProcess(ControlClassProcess):
 
 class ControlChildProcess(ControlClassProcess):
 	
-	def _get_sm(self):
-		return self._class.sm
-	
-	def _get_rdp_port(self):
-		return self._class.rdp_port
-	
 	def _digest_token(self, token):
 		return digestToken(token)
 	
