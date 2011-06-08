@@ -475,8 +475,6 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 					InputSource source = new InputSource(in);
 					Document doc = domBuilder.parse(source);
 					
-					in.close();
-					
 					Element rootNode = doc.getDocumentElement();
 					if (rootNode.getNodeName().equalsIgnoreCase("error")) {
 						for (Callback each : this.callbacks) {
@@ -509,6 +507,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 					
 					Logger.warn("Unknown content-type: "+contentType+"buffer: \n"+buffer+"==\n");
 				}
+				in.close();
 
 				String headerName=null;
 				for (int i=1; (headerName = connexion.getHeaderFieldKey(i))!=null; i++) {
