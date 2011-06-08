@@ -233,7 +233,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 			return false;
 		
 		Object obj = this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_XML, REQUEST_METHOD_POST, data, true);
-		if (! (obj instanceof Document) || obj == null)
+		if (! (obj instanceof Document))
 			return false;
  		
  		return this.parseStartSessionResponse((Document) obj);
@@ -265,7 +265,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 			return false;
 			
 		Object obj = this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_XML, REQUEST_METHOD_POST, data, true);
-		if (! (obj instanceof Document) || obj == null)
+		if (! (obj instanceof Document))
 			return false;
 
  		return this.parseStartSessionResponse((Document) obj);
@@ -286,7 +286,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		params.put(FIELD_TOKEN, token);
 
 		Object obj = this.askWebservice(WEBSERVICE_EXTERNAL_APPS, CONTENT_TYPE_FORM, REQUEST_METHOD_POST, concatParams(params), true);
-		if (! (obj instanceof Document) || obj == null)
+		if (! (obj instanceof Document))
 			return false;
 
  		return this.parseStartSessionResponse((Document) obj);
@@ -315,7 +315,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 			return null;
 		
 		Object obj = this.askWebservice(WEBSERVICE_SESSION_STATUS, CONTENT_TYPE_FORM, REQUEST_METHOD_POST, null, false);
-		if (! (obj instanceof Document) || obj == null)
+		if (! (obj instanceof Document))
 			return null;
 		
  		return this.parseSessionStatusResponse((Document) obj);
@@ -323,7 +323,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 	public List<News> askForNews() throws SessionManagerException {
 		Object obj = this.askWebservice(WEBSERVICE_NEWS, CONTENT_TYPE_FORM, REQUEST_METHOD_POST, null, false);
-		if (! (obj instanceof Document) || obj == null)
+		if (! (obj instanceof Document))
 			return null;
 		
 		return this.parseNewsResponse((Document) obj);
@@ -334,7 +334,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		params.put(FIELD_ICON_ID, appId);
 
 		Object obj = this.askWebservice(WEBSERVICE_ICON+"?"+concatParams(params), CONTENT_TYPE_FORM, REQUEST_METHOD_GET, null, true);
-		if (! (obj instanceof ImageIcon) || obj == null)
+		if (! (obj instanceof ImageIcon))
 			return null;
 
 		ImageIcon icon = (ImageIcon) obj;
@@ -349,7 +349,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		params.put(FIELD_ICON_ID, mimeType);
 
 		Object obj = this.askWebservice(WEBSERVICE_MIMETYPE_ICON+"?"+concatParams(params), CONTENT_TYPE_FORM, REQUEST_METHOD_GET, null, true);
-		if (! (obj instanceof ImageIcon) || obj == null)
+		if (! (obj instanceof ImageIcon))
 			return null;
 
 		ImageIcon icon = (ImageIcon) obj;
