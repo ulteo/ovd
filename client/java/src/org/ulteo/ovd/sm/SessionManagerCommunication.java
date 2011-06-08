@@ -420,8 +420,16 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 		try {
 			connexion = (HttpURLConnection) url.openConnection();
+			connexion.setAllowUserInteraction(true);
 			connexion.setConnectTimeout(TIMEOUT);
-
+			connexion.setDoInput(true);
+			connexion.setDoOutput(true);
+			connexion.setInstanceFollowRedirects(false);
+			connexion.setRequestMethod(method);
+			connexion.setRequestProperty("Content-type", content_type);
+			for (String cookie : this.cookies) {
+				connexion.setRequestProperty("Cookie", cookie);
+			}
 			if (this.use_https) {		
 				SSLContext sc = SSLContext.getInstance("SSL");
 				sc.init(null, new TrustManager[] { this }, null);
@@ -430,16 +438,8 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 				((HttpsURLConnection)connexion).setHostnameVerifier(this);
 			}
-			connexion.setDoInput(true);
-			connexion.setDoOutput(true);
-			connexion.setRequestProperty("Content-type", content_type);
-			for (String cookie : this.cookies) {
-				connexion.setRequestProperty("Cookie", cookie);
-			}
+			connexion.connect();
 
-			connexion.setAllowUserInteraction(true);
-			connexion.setRequestMethod(method);
-			connexion.setInstanceFollowRedirects(false);
 			if (data != null) {
 				OutputStreamWriter out = new OutputStreamWriter(connexion.getOutputStream());
 				out.write(data);
@@ -458,7 +458,6 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 				}
 			}
 			
-
 			int r = connexion.getResponseCode();
 			String res = connexion.getResponseMessage();
 			String contentType = connexion.getContentType();
