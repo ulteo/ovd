@@ -22,10 +22,9 @@
 
 import re
 
-from Communicator import SSLCommunicator
-from ovd.Logger import Logger
-from Communicator import ClientCommunicator, \
+from Communicator import ClientCommunicator, SSLCommunicator, \
 	OvdServerCommunicator, SessionManagerCommunicator
+from ovd.Logger import Logger
 
 
 class ProtocolDetectDispatcher(SSLCommunicator):
