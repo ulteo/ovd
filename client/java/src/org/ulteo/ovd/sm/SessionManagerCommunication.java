@@ -435,7 +435,6 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 				sc.init(null, new TrustManager[] { this }, null);
 				SSLSocketFactory factory = sc.getSocketFactory();
 				((HttpsURLConnection)connexion).setSSLSocketFactory(factory);
-
 				((HttpsURLConnection)connexion).setHostnameVerifier(this);
 			}
 			connexion.connect();
@@ -451,7 +450,6 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 					DocumentBuilder domBuilder = domFactory.newDocumentBuilder();
 					InputStream source = new ByteArrayInputStream(data.getBytes());
 					Document xmlOut = domBuilder.parse(source);
-
 					this.dumpXML(xmlOut, "Sending XML data:");
 				} catch (Exception ex) {
 					Logger.debug("Send: "+data);
