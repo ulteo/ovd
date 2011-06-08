@@ -51,7 +51,7 @@ public class OvdApplet extends Applet {
 				throw new netscape.javascript.JSException(e.getMessage());
 			}
 		} catch (netscape.javascript.JSException e) {
-			System.err.printf("%s error while execute %s(%d, %s) => %s",
+			System.err.printf("%s: error while execute %s(%d, %s) => %s",
 					this.getClass(), functionName, instance, status, e.getMessage());
 		}
 	}
