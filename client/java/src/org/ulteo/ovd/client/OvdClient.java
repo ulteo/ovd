@@ -255,8 +255,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		return this.exitAfterLogout;
 	}
 
-	public abstract boolean checkRDPConnections();
-
 	public void sessionReady() {
 		org.ulteo.Logger.info("Session is ready");
 
@@ -319,6 +317,8 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	protected abstract void hide(RdpConnectionOvd co);
 	
 	protected abstract boolean createRDPConnections();
+
+	protected abstract boolean checkRDPConnections();
 
 	/* RdpListener */
 	public void connected(RdpConnection co) {
