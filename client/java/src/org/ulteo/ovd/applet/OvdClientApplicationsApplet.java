@@ -69,7 +69,8 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 		if (co == null)
 			return false;
 
-		this.configureRDPConnection(co);
+		this.customizeConnection(co);
+		co.addRdpListener(this);
 		co.connect();
 		this.matching.put(JSId, this.connections.indexOf(co));
 		

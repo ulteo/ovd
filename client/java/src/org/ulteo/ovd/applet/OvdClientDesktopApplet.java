@@ -138,7 +138,6 @@ public class OvdClientDesktopApplet extends OvdClient {
 
 		rc.setServer(this.server.getHost());
 		rc.setCredentials(this.server.getLogin(), this.server.getPassword());
-		
 		rc.setAllDesktopEffectsEnabled(this.properties.isDesktopEffectsEnabled());
 
 		if (this.keymap != null)
@@ -148,8 +147,8 @@ public class OvdClientDesktopApplet extends OvdClient {
 			rc.setInputMethod(this.inputMethod);
 
 		this.connections.add(rc);
-
-		this.configureRDPConnection(rc);
+		this.customizeConnection(rc);
+		rc.addRdpListener(this);
 
 		return true;
 	}
