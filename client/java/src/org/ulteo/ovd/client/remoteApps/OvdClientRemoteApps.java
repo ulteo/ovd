@@ -43,8 +43,8 @@ import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 import org.ulteo.rdp.RdpConnectionOvd;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import javax.swing.ImageIcon;
 import org.ulteo.ovd.integrated.OSTools;
@@ -236,8 +236,8 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		if (this.inputMethod != null)
 			rc.setInputMethod(this.inputMethod);
 
+		// application icon processing
 		HashMap<Integer, ImageIcon> appsIcons = new HashMap<Integer, ImageIcon>();
-		List<String> mimesTypes = new ArrayList<String>();
 		for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
 			if (this.isCancelled)
 				return null;
@@ -253,12 +253,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 					appsIcons.put(appId, appIcon);
 			}
 
-			for (String mimeType : appItem.getMimes()) {
-				if (mimesTypes.contains(mimeType))
-					continue;
-				mimesTypes.add(mimeType);
-			}
-
 			rc.addApp(new Application(rc, appId, appItem.getName(), appItem.getMimes(), appIcon));
 			this.ApplicationIndex++;
 		}
@@ -266,14 +260,18 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		if (updatedIcons > 0)
 			Logger.info("Applications cache updated: "+updatedIcons+" icons");
 
+		// mime-type icon processing
+		HashSet<String> mimesTypes = new HashSet<String>();
 		HashMap<String, ImageIcon> mimeTypesIcons = new HashMap<String, ImageIcon>();
-		for (String each : mimesTypes) {
-			if (this.system.getMimeTypeIcon(each) != null)
-				continue;
+		for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
+			for (String mimeType : appItem.getMimes()) {
+				if (! mimesTypes.add(mimeType) || (this.system.getMimeTypeIcon(mimeType) != null))
+					continue;
 
-			ImageIcon icon = this.smComm.askForMimeTypeIcon(each);
-			if (icon != null)
-				mimeTypesIcons.put(each, icon);
+				ImageIcon icon = this.smComm.askForMimeTypeIcon(mimeType);
+				if (icon != null)
+					mimeTypesIcons.put(mimeType, icon);
+			}
 		}
 		updatedIcons = this.system.updateMimeTypesIconsCache(mimeTypesIcons);
 		if (updatedIcons > 0)
