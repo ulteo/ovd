@@ -337,18 +337,17 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	 * @param appItem
 	 * 		Session Manager application item
 	 * @return
-	 * 		the icon, null if not found or if an error occurred
+	 * 		an icon, null if not found or if an error occurred
 	 */
 	public ImageIcon askForIcon(Application appItem) {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put(FIELD_ICON_ID, Integer.toString(appItem.getId()));
 
-		Object obj;
+		Object obj = null;
 		try {
 			obj = this.askWebservice(WEBSERVICE_ICON+"?"+concatParams(params), CONTENT_TYPE_FORM, REQUEST_METHOD_GET, null, true);
 		} catch (SessionManagerException e) {
-			Logger.warn("Cannot get the \"" + appItem.getName() + "\" icon: " + e.getMessage());
-			return null;
+			Logger.warn("Cannot get the \"" + appItem.getName() + "\" icon from Session Manager: " + e.getMessage());
 		}
 		
 		if (! (obj instanceof ImageIcon))
@@ -361,11 +360,24 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		return icon;
 	}
 
-	public ImageIcon askForMimeTypeIcon(String mimeType) throws SessionManagerException {
+	/**
+	 * get an mime-type's icon stored in the Session Manager
+	 * @param mimeType
+	 * 		specified mime-type
+	 * @return
+	 * 		an icon, null if not found or if an error occurred
+	 */
+	public ImageIcon askForMimeTypeIcon(String mimeType) {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put(FIELD_ICON_ID, mimeType);
 
-		Object obj = this.askWebservice(WEBSERVICE_MIMETYPE_ICON+"?"+concatParams(params), CONTENT_TYPE_FORM, REQUEST_METHOD_GET, null, true);
+		Object obj = null;
+		try {
+			obj = this.askWebservice(WEBSERVICE_MIMETYPE_ICON+"?"+concatParams(params), CONTENT_TYPE_FORM, REQUEST_METHOD_GET, null, true);
+		} catch (SessionManagerException e) {
+			Logger.error("Cannot get the mime type \"" + mimeType + "\" icon from Session Manager: " + e.getMessage());
+		}
+		
 		if (! (obj instanceof ImageIcon))
 			return null;
 

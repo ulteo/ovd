@@ -271,19 +271,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			if (this.system.getMimeTypeIcon(each) != null)
 				continue;
 
-			ImageIcon icon = null;
-			try {
-				icon = this.smComm.askForMimeTypeIcon(each);
-			} catch (SessionManagerException ex) {
-				Logger.error("Failed to get "+each+" icon from session manager: "+ex.getMessage());
-				continue;
-			}
-			if (icon == null) {
-				Logger.error("Weird. Mime type "+each+" has no icon?");
-				continue;
-			}
-
-			mimeTypesIcons.put(each, icon);
+			ImageIcon icon = this.smComm.askForMimeTypeIcon(each);
+			if (icon != null)
+				mimeTypesIcons.put(each, icon);
 		}
 		updatedIcons = this.system.updateMimeTypesIconsCache(mimeTypesIcons);
 		if (updatedIcons > 0)
