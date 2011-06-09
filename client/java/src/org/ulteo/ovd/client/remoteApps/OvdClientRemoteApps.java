@@ -410,36 +410,50 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	@Override
 	protected void display(RdpConnection co) {}
 	
+	/**
+	 * toggle all publish/unpublish applications from all {@link RdpConnectionOvd} in the 
+	 * current {@link OvdClientRemoteApps}
+	 * @return indicate the new publications state
+	 */
 	public boolean togglePublications() {
 		if (this.publicated) {
-			this.unpublish();
+			for (RdpConnectionOvd rc : this.getAvailableConnections())
+				this.unpublish(rc);
+			this.publicated = false;
 		} else {
-			this.publish();
+			for (RdpConnectionOvd rc : this.getAvailableConnections())
+				this.publish(rc);
+			this.publicated = true;
 		}
 		return this.publicated;
 	}
 
-	private void publish() {
-		for (RdpConnectionOvd co : this.getAvailableConnections()) {
-			if (! co.getOvdAppChannel().isReady())
-				continue;
-			boolean associate = (co.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
-
-			for (Application app : co.getAppsList()) {
+	/**
+	 * publish all application from a specified {@link RdpConnectionOvd}
+	 * @param {@link RdpConnectionOvd}
+	 */
+	protected void publish(RdpConnectionOvd rc) {
+		if (rc == null)
+			throw new NullPointerException("RdpConnectionOvd parameter cannot be null");
+		
+		if (rc.getOvdAppChannel().isReady()) {
+			boolean associate = (rc.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
+			for (Application app : rc.getAppsList()) {
 				this.system.install(app, this.showDesktopIcons, associate);
 			}
 		}
-		this.system.refresh();
-		this.publicated = true;
 	}
-
-	private void unpublish() {
-		for (RdpConnectionOvd co : this.getAvailableConnections()) {
-			for (Application app : co.getAppsList()) {
-				this.system.uninstall(app);
-			}
+	
+	/**
+	 * unpublish all application from a specified {@link RdpConnectionOvd}
+	 * @param {@link RdpConnectionOvd}
+	 */
+	protected void unpublish(RdpConnectionOvd rc) {
+		if (rc == null)
+			throw new NullPointerException("RdpConnectionOvd parameter cannot be null");
+		
+		for (Application app : rc.getAppsList()) {
+			this.system.uninstall(app);
 		}
-		this.system.refresh();
-		this.publicated = false;
 	}
 }
