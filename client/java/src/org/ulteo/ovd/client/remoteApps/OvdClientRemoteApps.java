@@ -298,9 +298,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			updatedIcons = this.system.updateMimeTypesIconsCache(mimeTypesIcons);
 			if (updatedIcons > 0)
 				Logger.info("Mime-types cache updated: "+updatedIcons+" icons");
-
-			mimeTypesIcons.clear();
-			mimeTypesIcons = null;
 		}
 
 		// Ensure that width is multiple of 4
