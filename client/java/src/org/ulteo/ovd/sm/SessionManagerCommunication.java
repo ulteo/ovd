@@ -627,7 +627,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		return newsList;
 	}
 
-	private boolean parseStartSessionResponse(Document document) throws SessionManagerException {
+	private boolean parseStartSessionResponse(Document document) {
 		Element rootNode = document.getDocumentElement();
 		int serverPort = 3389;
 
