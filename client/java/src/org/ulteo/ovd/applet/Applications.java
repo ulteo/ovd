@@ -22,25 +22,16 @@
 
 package org.ulteo.ovd.applet;
 
-import java.io.FileNotFoundException;
-
 import org.ulteo.Logger;
-import org.ulteo.ovd.integrated.OSTools;
-import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.rdp.OvdAppChannel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ulteo.ovd.client.ClientInfos;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 
-import org.ulteo.utils.AbstractFocusManager;
-import org.ulteo.utils.jni.WorkArea;
-
-import org.ulteo.rdp.rdpdr.OVDPrinter;
 import org.ulteo.rdp.seamless.SeamlessFrame;
 import org.ulteo.rdp.seamless.SeamlessPopup;
 
@@ -95,122 +86,45 @@ class OrderApplication extends Order {
 }
 
 public class Applications extends OvdApplet implements Runnable {
-	private int port = 0;
-	private String server = null;
-	public String keymap = null;
 	
 	private List<Order> spoolOrder = null;
 	private Thread spoolThread = null;
-	private AbstractFocusManager focusManager;
 
 	private OvdClientApplicationsApplet ovd = null;
-
-	private boolean finished_init = false;
-	private boolean started_stop = false;
 	
-	static {
-		String tempdir = System.getProperty("java.io.tmpdir");
-		if (! tempdir.endsWith(System.getProperty("file.separator")))
-			tempdir+= System.getProperty("file.separator");
-		if (! Logger.initInstance(true, tempdir+"ulteo-ovd-"+Logger.getDate()+".log", true)) {
-			System.err.println(Applications.class.toString() + " Unable to iniatialize logger instance");
-		}
-		
-		if (OSTools.isWindows()) {
-			try {
-				LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_WINDOWS, LibraryLoader.LIB_WINDOW_PATH_NAME);
-			} catch (FileNotFoundException ex) {
-				Logger.error(ex.getMessage());
-			}
-		}
-		else if (OSTools.isLinux()) {
-			try {
-				LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_LINUX, LibraryLoader.LIB_X_CLIENT_AREA);
-			} catch (FileNotFoundException ex) {
-				Logger.error(ex.getMessage());
-				WorkArea.disableLibraryLoading();
-			}
-		}
-	}
-	
-	// Begin extends Applet
 	@Override
-	public void init() {
-		Logger.info("init");
-
-		OSTools.is_applet = true;
-
-		ClientInfos.showClientInfos();
-
-		boolean status = this.checkSecurity();
-		if (! status) {
-			Logger.error("init: Not enought privileges, unable to continue");
-			this.stop();
-			return;
-		}
-
-		Properties properties = this.readParameters();
-		if (properties == null) {
-			Logger.error("usage error");
-			this.stop();
-			return;
-		}
-		
+	protected void _init(Properties properties) {
 		if (properties.isPrinters()) {
-			OVDStandalonePrinterThread appletPrinterThread = new OVDStandalonePrinterThread(); 
-			OVDPrinter.setPrinterThread(appletPrinterThread);
-			focusManager = new AppletFocusManager(appletPrinterThread);
 			SeamlessFrame.focusManager = focusManager;
 			SeamlessPopup.focusManager = focusManager;
 		}
 
 		SessionManagerCommunication smComm = new SessionManagerCommunication(this.server, this.port, true);
-		
-		try {
-			this.ovd = new OvdClientApplicationsApplet(smComm, properties, this);
-		} catch (ClassCastException ex) {
-			Logger.error(ex.getMessage());
-			this.stop();
-			return;
-		}
+		this.ovd = new OvdClientApplicationsApplet(smComm, properties, this);
 		this.ovd.setKeymap(this.keymap);
 		
 		this.spoolOrder = new ArrayList<Order>();
 		this.spoolThread = new Thread(this);
-		this.finished_init = true;
 	}
 	
+	
 	@Override
-	public void start() {
-		if (! this.finished_init || this.started_stop)
-			return;
-		System.out.println(this.getClass().toString() +" start");
-
-		this.ovd.sessionReady();
-		
+	protected void _start() {	
 		this.spoolThread.start();
 	}
 	
 	@Override
-	public void stop() {
-		if (this.started_stop)
-			return;
-		this.started_stop = true;
-		System.out.println(this.getClass().toString()+" stop");
-		
+	protected void _stop() {
 		if (this.spoolThread.isAlive())
 			this.spoolThread.interrupt();
-
-		if (this.ovd != null)
-			this.ovd.performDisconnectAll();
 	}
 	
 	@Override
-	public void destroy() {
+	protected void _destroy() {
 		this.spoolOrder = null;
 		this.spoolThread = null;
 	}
-	// End extends Applet
+	
 	
 	public Properties readParameters() {
 		Properties properties = new Properties(Properties.MODE_REMOTEAPPS);
@@ -225,16 +139,6 @@ public class Applications extends OvdApplet implements Runnable {
 		OptionParser.readParameters(this, properties);
 		
 		return properties;
-	}
-	
-	public boolean checkSecurity() {
-		try {
-			System.getProperty("user.home");
-		} catch(java.security.AccessControlException e) {
-			return false;
-		}
-		
-		return true;
 	}
 	
 	public synchronized Order popOrder() {
@@ -256,7 +160,6 @@ public class Applications extends OvdApplet implements Runnable {
 		this.spoolOrder.add(o);
 	}
 	
-	// Begin implements Runnable
 	public void run() {
 		System.out.println("Applet thread run");
 		while(true) {
@@ -294,7 +197,6 @@ public class Applications extends OvdApplet implements Runnable {
 
 				if (order.file_path == null)
 					this.ovd.startApplication(order.id, order.application_id, order.server_id);
-					//chan.sendStartApp(order.id, order.application_id);
 				else {
 					int type = OvdAppChannel.DIR_TYPE_SHARED_FOLDER;
 					if (order.file_type.equalsIgnoreCase("http"))
@@ -302,12 +204,14 @@ public class Applications extends OvdApplet implements Runnable {
 					
 					System.out.println("App: "+order.file_path);
 					this.ovd.startApplication(order.id, order.application_id, order.server_id, type, order.file_path, order.file_share);
-					//chan.sendStartApp(order.id, order.application_id, chan.DIR_TYPE_SHARED_FOLDER, ""+order.repository, order.path);
 				}
 			}
 		}
 	}
-	// End implements Runnable
+	
+	// ********
+	// Methods called by Javascript
+	// ********
 	
 	public boolean serverConnect(int id, String host, int port, String login, String password) {
 		System.out.println("serverConnect: ask for "+host);
@@ -321,11 +225,6 @@ public class Applications extends OvdApplet implements Runnable {
 		return true;
 	}
 	
-	/*public boolean serverDisconnect(int id) {
-		this.pushOrder(new OrderServer(id, host, port, login, password));
-		return true;
-	}*/
-	
 	public void startApplication(int token, int id, int server) {
 		this.pushOrder(new OrderApplication(token, id, new Integer(server)));
 	}
@@ -333,7 +232,6 @@ public class Applications extends OvdApplet implements Runnable {
 	public void startApplicationWithFile(int token, int id, int server, String type, String path, String share) {
 		OrderApplication o = new OrderApplication(token, id, new Integer(server));
 		o.setPath(type, path, share);
-		
 		this.pushOrder(o);
 	}
 }

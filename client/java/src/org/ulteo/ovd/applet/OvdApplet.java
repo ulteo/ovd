@@ -22,9 +22,31 @@
 package org.ulteo.ovd.applet;
 
 import java.applet.Applet;
+import java.io.FileNotFoundException;
+
+import org.ulteo.Logger;
+import org.ulteo.ovd.client.ClientInfos;
+import org.ulteo.ovd.client.OvdClient;
+import org.ulteo.ovd.integrated.OSTools;
+import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
+import org.ulteo.ovd.sm.Properties;
+import org.ulteo.rdp.rdpdr.OVDPrinter;
+import org.ulteo.utils.AbstractFocusManager;
+import org.ulteo.utils.jni.WorkArea;
+
 import netscape.javascript.JSObject;
 
-public class OvdApplet extends Applet {
+public abstract class OvdApplet extends Applet {
+	
+	protected int port = 0;
+	protected String server = null;
+	public String keymap = null;
+
+	protected boolean finished_init = false;
+	protected boolean started_stop = false;
+
+	protected AbstractFocusManager focusManager;
+	protected OvdClient ovd = null;
 	
 	public static final String JS_API_F_SERVER = "serverStatus";
 	public static final String JS_API_O_SERVER_CONNECTED = "connected";
@@ -36,6 +58,112 @@ public class OvdApplet extends Applet {
 	public static final String JS_API_O_INSTANCE_STARTED = "started";
 	public static final String JS_API_O_INSTANCE_STOPPED = "stopped";
 	public static final String JS_API_O_INSTANCE_ERROR = "error";
+	
+	public static String tempdir;
+	
+	static {
+		tempdir = System.getProperty("java.io.tmpdir");
+		if (! tempdir.endsWith(System.getProperty("file.separator")))
+			tempdir+= System.getProperty("file.separator");
+		
+		if (! Logger.initInstance(true, tempdir+"ulteo-ovd-"+Logger.getDate()+".log", true)) {
+			System.err.println(Applications.class.toString() + " Unable to iniatialize logger instance");
+		}
+		
+		if (OSTools.isWindows()) {
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_WINDOWS, LibraryLoader.LIB_WINDOW_PATH_NAME);
+			} catch (FileNotFoundException ex) {
+				Logger.error(ex.getMessage());
+			}
+		}
+		else if (OSTools.isLinux()) {
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_LINUX, LibraryLoader.LIB_X_CLIENT_AREA);
+			} catch (FileNotFoundException ex) {
+				Logger.error(ex.getMessage());
+				WorkArea.disableLibraryLoading();
+			}
+		}
+	}
+
+	protected abstract void _init(Properties properties) throws Exception;
+
+	protected abstract void _start();
+	
+	protected abstract void _stop();
+
+	protected abstract void _destroy();
+	
+	protected abstract Properties readParameters() throws Exception;
+	
+	
+	@Override
+	public final void init() {
+		Logger.error(this.getClass().toString() + "init");
+		OSTools.is_applet = true;
+		ClientInfos.showClientInfos();
+
+		try {
+			System.getProperty("user.home");
+			Properties properties = readParameters();
+			
+			if (properties.isPrinters()){
+				OVDStandalonePrinterThread appletPrinterThread = new OVDStandalonePrinterThread();
+				OVDPrinter.setPrinterThread(appletPrinterThread);
+				this.focusManager = new AppletFocusManager(appletPrinterThread);
+			}
+			
+			_init(properties);
+			this.finished_init = true;
+		}
+		catch (Exception e) {
+			Logger.error(this.getClass().toString() + e.getMessage());
+			this.stop();
+		}
+	}
+	
+	
+	@Override
+	public final void start() {	
+		if (! this.finished_init || this.started_stop)
+			return;	
+		
+		Logger.info(this.getClass().toString() +" start");
+		this.ovd.sessionReady();
+		_start();
+		Logger.info(this.getClass().toString() +" started");
+	}
+	
+	
+	@Override
+	public final void stop() {
+		if (this.started_stop)
+			return;
+
+		Logger.info(this.getClass().toString() +" stopped");
+		this.started_stop = true;
+		
+		_stop();
+
+		if (this.ovd != null)
+			this.ovd.performDisconnectAll();
+		else
+			this.forwardJS(OvdApplet.JS_API_F_SERVER, 0, OvdApplet.JS_API_O_SERVER_FAILED);
+		Logger.info(this.getClass().toString() +" stopped");
+	}
+	
+	
+	@Override
+	public final void destroy() {
+		this.ovd = null;
+		this.server = null;
+		this.keymap = null;
+		this.focusManager = null;
+		_destroy();
+		System.gc();
+	}
+	
 
 	@SuppressWarnings("deprecation")
 	public void forwardJS(String functionName, Integer instance, String status) {
@@ -51,8 +179,9 @@ public class OvdApplet extends Applet {
 				throw new netscape.javascript.JSException(e.getMessage());
 			}
 		} catch (netscape.javascript.JSException e) {
-			System.err.printf("%s: error while execute %s(%d, %s) => %s",
-					this.getClass(), functionName, instance, status, e.getMessage());
+			Logger.error(String.format("%s: error while execute %s(%d, %s) => %s",
+					this.getClass(), functionName, instance, status, e.getMessage()));
 		}
 	}
+
 }
