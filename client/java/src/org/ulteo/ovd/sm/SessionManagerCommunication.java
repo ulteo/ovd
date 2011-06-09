@@ -330,12 +330,27 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		
 		return this.parseNewsResponse((Document) obj);
 	}
-
-	public ImageIcon askForIcon(String appId) throws SessionManagerException {
+	
+	
+	/**
+	 * get an application's icon stored in the Session Manager
+	 * @param appItem
+	 * 		Session Manager application item
+	 * @return
+	 * 		the icon, null if not found or if an error occurred
+	 */
+	public ImageIcon askForIcon(Application appItem) {
 		HashMap<String, String> params = new HashMap<String, String>();
-		params.put(FIELD_ICON_ID, appId);
+		params.put(FIELD_ICON_ID, Integer.toString(appItem.getId()));
 
-		Object obj = this.askWebservice(WEBSERVICE_ICON+"?"+concatParams(params), CONTENT_TYPE_FORM, REQUEST_METHOD_GET, null, true);
+		Object obj;
+		try {
+			obj = this.askWebservice(WEBSERVICE_ICON+"?"+concatParams(params), CONTENT_TYPE_FORM, REQUEST_METHOD_GET, null, true);
+		} catch (SessionManagerException e) {
+			Logger.warn("Cannot get the \"" + appItem.getName() + "\" icon: " + e.getMessage());
+			return null;
+		}
+		
 		if (! (obj instanceof ImageIcon))
 			return null;
 

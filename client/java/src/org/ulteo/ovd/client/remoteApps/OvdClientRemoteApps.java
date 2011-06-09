@@ -243,32 +243,24 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 				if (this.isCancelled)
 					return null;
 
-				try {
-					int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
-					this.obj.updateProgress(LoadingStatus.SM_GET_APPLICATION, subStatus);
+				int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
+				this.obj.updateProgress(LoadingStatus.SM_GET_APPLICATION, subStatus);
 
-					int appId = appItem.getId();
-					ImageIcon appIcon = this.system.getAppIcon(appId);
-					if (appIcon == null) {
-						appIcon = this.smComm.askForIcon(Integer.toString(appItem.getId()));
-
-						if (appIcon != null)
-							appsIcons.put(appId, appIcon);
-					}
-
-					Application app = new Application(rc, appId, appItem.getName(), appItem.getMimes(), appIcon);
-
-					for (String mimeType : app.getSupportedMimeTypes()) {
-						if (mimesTypes.contains(mimeType))
-							continue;
-
-						mimesTypes.add(mimeType);
-					}
-
-					rc.addApp(app);
-				} catch (SessionManagerException ex) {
-					Logger.warn("Cannot get the \""+appItem.getName()+"\" icon: "+ex.getMessage());
+				int appId = appItem.getId();
+				ImageIcon appIcon = this.system.getAppIcon(appId);
+				if (appIcon == null) {
+					appIcon = this.smComm.askForIcon(appItem);
+					if (appIcon != null)
+						appsIcons.put(appId, appIcon);
 				}
+
+				for (String mimeType : appItem.getMimes()) {
+					if (mimesTypes.contains(mimeType))
+						continue;
+					mimesTypes.add(mimeType);
+				}
+
+				rc.addApp(new Application(rc, appId, appItem.getName(), appItem.getMimes(), appIcon));
 				this.ApplicationIndex++;
 			}
 			int updatedIcons = this.system.updateAppsIconsCache(appsIcons);

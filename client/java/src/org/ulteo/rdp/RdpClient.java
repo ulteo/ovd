@@ -303,14 +303,8 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 			// not divisible by 4
 			rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, RdpConnectionOvd.DEFAULT_BPP);
 
-			for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
-				try {
-					Application app = new Application(rc, appItem.getId(), appItem.getName(), appItem.getMimes(), sm.askForIcon(Integer.toString(appItem.getId())));
-					rc.addApp(app);
-				} catch (SessionManagerException ex) {
-					RdpClient.logger.warn("Cannot get the \""+appItem.getName()+"\" icon: "+ex.getMessage());
-				}
-			}
+			for (org.ulteo.ovd.sm.Application appItem : server.getApplications())
+				rc.addApp(new Application(rc, appItem.getId(), appItem.getName(), appItem.getMimes(), sm.askForIcon(appItem)));
 
 			this.co.add(rc);
 		}
