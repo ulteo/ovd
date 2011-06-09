@@ -39,6 +39,7 @@ import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.News;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
+import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpActions;
 import org.ulteo.rdp.RdpConnectionOvd;
 
@@ -319,7 +320,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 	protected abstract void display(RdpConnection co);
 
-	protected abstract void hide(RdpConnection co);
+	protected abstract void hide(RdpConnectionOvd co);
 	
 	protected abstract boolean createRDPConnections();
 
@@ -335,13 +336,12 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 	public void connecting(RdpConnection co) {
 		Logger.info("Connecting to "+co.getServer());
-
 	}
 
 	public void disconnected(RdpConnection co) {
 		co.removeRdpListener(this);
 
-		this.hide(co);
+		this.hide((RdpConnectionOvd)co);
 		this.performedConnections.remove(co);
 		this.availableConnections.remove(co);
 		Logger.info("Disconnected from "+co.getServer());
@@ -430,4 +430,18 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	}
 	
 	public void updateNews(List<News> newsList) {}
+	
+	/**
+	 * find the {@link RdpConnectionOvd} corresponding to a given {@link OvdAppChannel}
+	 * @param specific {@link OvdAppChannel}
+	 * @return {@link RdpConnectionOvd} if found, null instead
+	 */
+	protected RdpConnectionOvd find(OvdAppChannel channel) {
+		for (RdpConnectionOvd rc : this.getAvailableConnections()) {
+			if (rc.getOvdAppChannel() == channel)
+				return rc;
+		}
+		return null;
+	}
+	
 }

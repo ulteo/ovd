@@ -82,7 +82,7 @@ public class OvdClientDesktop extends OvdClient {
 	}
 
 	@Override
-	public void hide(RdpConnection co) {
+	public void hide(RdpConnectionOvd co) {
 		this.desktopLaunched = false;
 		this.desktop.destroy();
 		this.desktop = null;

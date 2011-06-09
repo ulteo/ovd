@@ -47,6 +47,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 		this.properties = properties_;
 		this.applet = applet_;
 		this.matching = new ConcurrentHashMap<Integer, Integer>();
+		this.showDesktopIcons = true;
 
 		this.configureRDP(this.properties);
 	}
@@ -61,7 +62,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	protected void runSessionReady() {}
 
 	@Override
-	protected void hide(RdpConnection co) {}
+	protected void hide(RdpConnectionOvd co) {}
 
 	public boolean addServer(ServerAccess server, int JSId) {
 		RdpConnectionOvd co = this.initRDPConnection(server);
@@ -120,6 +121,8 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 
 	@Override
 	public void ovdInited(OvdAppChannel channel) {
+		super.ovdInited(channel);
+		
 		for (Integer JSId : this.matching.keySet()) {
 			Integer listId = this.matching.get(JSId);
 			if (listId == null)

@@ -129,32 +129,26 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 
 	@Override
-	public void ovdInited(OvdAppChannel o) {
-		for (RdpConnectionOvd rc : this.getAvailableConnections()) {
-			if (rc.getOvdAppChannel() == o) {
-				for (Application app : rc.getAppsList()) {
-					if (this.autoPublish) {
-						boolean associate = (rc.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
-						
-						this.system.install(app, this.showDesktopIcons, associate);
-					}
-
-					if (! this.portal.isVisible()) {
-						if (this.appsListToEnable == null)
-							this.appsListToEnable = new ArrayList<Application>();
-						this.appsListToEnable.add(app);
-					}
-					else
-						this.portal.getApplicationPanel().toggleAppButton(app, true);
+	public void ovdInited(OvdAppChannel channel) {
+		if (this.autoPublish)
+			super.ovdInited(channel);
+		
+		RdpConnectionOvd rc = find(channel);
+		if (rc != null) {
+			for (Application app : rc.getAppsList()) {
+				if (! this.portal.isVisible()) {
+					if (this.appsListToEnable == null)
+						this.appsListToEnable = new ArrayList<Application>();
+					this.appsListToEnable.add(app);
 				}
-			}
-			if (this.obj != null ) {
-				this.obj.sessionConnected();
+				else
+					this.portal.getApplicationPanel().toggleAppButton(app, true);
 			}
 		}
-
-		this.system.refresh();
-
+		
+		if (this.obj != null )
+			this.obj.sessionConnected();
+		
 		if (this.getAvailableConnections().size() == this.connections.size())
 			this.portal.enableIconsButton();
 	}
@@ -167,9 +161,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 
 	@Override
-	protected void hide(RdpConnection co) {
-
-		for (Application app : ((RdpConnectionOvd)co).getAppsList()) {
+	protected void hide(RdpConnectionOvd rc) {
+		for (Application app : rc.getAppsList()) {
 			this.portal.getApplicationPanel().toggleAppButton(app, false);
 			this.system.uninstall(app);
 		}

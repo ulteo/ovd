@@ -183,7 +183,7 @@ public class OvdClientDesktopApplet extends OvdClient {
 	}
 
 	@Override
-	protected void hide(RdpConnection co) {
+	protected void hide(RdpConnectionOvd rc) {
 		if (this.isFullscreen) {
 			if (this.externalWindow != null) {
 				this.externalWindow.unFullscreen();

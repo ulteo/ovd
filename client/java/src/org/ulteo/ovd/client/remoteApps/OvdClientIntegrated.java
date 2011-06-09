@@ -22,10 +22,7 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
-import net.propero.rdp.RdpConnection;
-import org.ulteo.ovd.Application;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
-import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public class OvdClientIntegrated extends OvdClientRemoteApps {
@@ -43,26 +40,8 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 	}
 
 	@Override
-	public void ovdInited(OvdAppChannel o) {
-		for (RdpConnectionOvd rc : this.getAvailableConnections()) {
-			if (rc.getOvdAppChannel() != o)
-				continue;
-
-			boolean associate = (rc.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
-
-			for (Application app : rc.getAppsList()) {
-				this.system.install(app, this.showDesktopIcons, associate);
-			}
-		}
-
-		this.system.refresh();
-	}
-
-	@Override
-	protected void hide(RdpConnection co) {
-		for (Application app : ((RdpConnectionOvd) co).getAppsList()) {
-			this.system.uninstall(app);
-		}
+	protected void hide(RdpConnectionOvd rc) {
+		this.unpublish(rc);
 	}
 
 	@Override

@@ -155,7 +155,14 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		this.system.refresh();
 	}
 
-	public abstract void ovdInited(OvdAppChannel o);
+	public void ovdInited(OvdAppChannel channel) {
+		try {
+			this.publish(find(channel));
+			this.system.refresh();
+		} catch (NullPointerException e) {
+			Logger.warn(String.format("channel %s not found", channel.name()));
+		}
+	}
 
 	@Override
 	public void ovdInstanceStarted(int instance_) {}
