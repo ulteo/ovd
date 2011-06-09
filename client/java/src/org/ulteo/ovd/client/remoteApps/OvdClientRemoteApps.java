@@ -236,61 +236,58 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		if (this.inputMethod != null)
 			rc.setInputMethod(this.inputMethod);
 
-		if (! OSTools.is_applet) {
-			HashMap<Integer, ImageIcon> appsIcons = new HashMap<Integer, ImageIcon>();
-			List<String> mimesTypes = new ArrayList<String>();
-			for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
-				if (this.isCancelled)
-					return null;
+		HashMap<Integer, ImageIcon> appsIcons = new HashMap<Integer, ImageIcon>();
+		List<String> mimesTypes = new ArrayList<String>();
+		for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
+			if (this.isCancelled)
+				return null;
 
-				int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
-				this.obj.updateProgress(LoadingStatus.SM_GET_APPLICATION, subStatus);
+			int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
+			this.obj.updateProgress(LoadingStatus.SM_GET_APPLICATION, subStatus);
 
-				int appId = appItem.getId();
-				ImageIcon appIcon = this.system.getAppIcon(appId);
-				if (appIcon == null) {
-					appIcon = this.smComm.askForIcon(appItem);
-					if (appIcon != null)
-						appsIcons.put(appId, appIcon);
-				}
-
-				for (String mimeType : appItem.getMimes()) {
-					if (mimesTypes.contains(mimeType))
-						continue;
-					mimesTypes.add(mimeType);
-				}
-
-				rc.addApp(new Application(rc, appId, appItem.getName(), appItem.getMimes(), appIcon));
-				this.ApplicationIndex++;
-			}
-			int updatedIcons = this.system.updateAppsIconsCache(appsIcons);
-			if (updatedIcons > 0)
-				Logger.info("Applications cache updated: "+updatedIcons+" icons");
-
-			HashMap<String, ImageIcon> mimeTypesIcons = new HashMap<String, ImageIcon>();
-			for (String each : mimesTypes) {
-				if (this.system.getMimeTypeIcon(each) != null)
-					continue;
-
-				ImageIcon icon = null;
-				try {
-					icon = this.smComm.askForMimeTypeIcon(each);
-				} catch (SessionManagerException ex) {
-					Logger.error("Failed to get "+each+" icon from session manager: "+ex.getMessage());
-					continue;
-				}
-				if (icon == null) {
-					Logger.error("Weird. Mime type "+each+" has no icon?");
-					continue;
-				}
-
-				mimeTypesIcons.put(each, icon);
+			int appId = appItem.getId();
+			ImageIcon appIcon = this.system.getAppIcon(appId);
+			if (appIcon == null) {
+				appIcon = this.smComm.askForIcon(appItem);
+				if (appIcon != null)
+					appsIcons.put(appId, appIcon);
 			}
 
-			updatedIcons = this.system.updateMimeTypesIconsCache(mimeTypesIcons);
-			if (updatedIcons > 0)
-				Logger.info("Mime-types cache updated: "+updatedIcons+" icons");
+			for (String mimeType : appItem.getMimes()) {
+				if (mimesTypes.contains(mimeType))
+					continue;
+				mimesTypes.add(mimeType);
+			}
+
+			rc.addApp(new Application(rc, appId, appItem.getName(), appItem.getMimes(), appIcon));
+			this.ApplicationIndex++;
 		}
+		int updatedIcons = this.system.updateAppsIconsCache(appsIcons);
+		if (updatedIcons > 0)
+			Logger.info("Applications cache updated: "+updatedIcons+" icons");
+
+		HashMap<String, ImageIcon> mimeTypesIcons = new HashMap<String, ImageIcon>();
+		for (String each : mimesTypes) {
+			if (this.system.getMimeTypeIcon(each) != null)
+				continue;
+
+			ImageIcon icon = null;
+			try {
+				icon = this.smComm.askForMimeTypeIcon(each);
+			} catch (SessionManagerException ex) {
+				Logger.error("Failed to get "+each+" icon from session manager: "+ex.getMessage());
+				continue;
+			}
+			if (icon == null) {
+				Logger.error("Weird. Mime type "+each+" has no icon?");
+				continue;
+			}
+
+			mimeTypesIcons.put(each, icon);
+		}
+		updatedIcons = this.system.updateMimeTypesIconsCache(mimeTypesIcons);
+		if (updatedIcons > 0)
+			Logger.info("Mime-types cache updated: "+updatedIcons+" icons");
 
 		// Ensure that width is multiple of 4
 		// Prevent artifact on screen with a with resolution
