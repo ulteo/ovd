@@ -36,6 +36,10 @@ var UlteoOVD_start_External = Class.create({
 		this.web_client_url = web_client_url_;
 	},
 
+	setLanguage: function(language_) {
+		this.extra_args.set('language', language_);
+	},
+
 	setAuthPassword: function(login_, password_) {
 		this.extra_args.set('login', login_);
 		this.extra_args.set('password', password_);
