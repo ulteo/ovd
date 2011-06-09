@@ -26,6 +26,7 @@ import org.ulteo.Logger;
 import org.ulteo.rdp.OvdAppChannel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.ulteo.ovd.sm.Properties;
@@ -87,7 +88,7 @@ class OrderApplication extends Order {
 
 public class Applications extends OvdApplet implements Runnable {
 	
-	private List<Order> spoolOrder = null;
+	private List<Order> spoolOrder = Collections.synchronizedList(new ArrayList<Order>());
 	private Thread spoolThread = null;
 
 	private OvdClientApplicationsApplet ovd = null;
@@ -103,7 +104,6 @@ public class Applications extends OvdApplet implements Runnable {
 		this.ovd = new OvdClientApplicationsApplet(smComm, properties, this);
 		this.ovd.setKeymap(this.keymap);
 		
-		this.spoolOrder = new ArrayList<Order>();
 		this.spoolThread = new Thread(this);
 	}
 	
@@ -141,31 +141,13 @@ public class Applications extends OvdApplet implements Runnable {
 		return properties;
 	}
 	
-	public synchronized Order popOrder() {
-		if (this.spoolOrder == null)
-			return null;
-
-		if (this.spoolOrder.size() == 0)
-			return null;
-		
-		return this.spoolOrder.remove(0);
-	}
-	
-	public synchronized void pushOrder(Order o) {
-		if (this.spoolOrder == null) {
-			Logger.warn("Order "+o+" not added: The spool order is not initialized");
-			return;
-		}
-
-		this.spoolOrder.add(o);
-	}
-	
 	public void run() {
 		System.out.println("Applet thread run");
+		Order o;
 		while(true) {
-			Order o = this.popOrder();
-			
-			if (o == null) {
+			if (this.spoolOrder.size() > 0) {
+				o = this.spoolOrder.remove(0);
+			} else {
 				try {
 					Thread.sleep(200);
 				} catch (InterruptedException e) {
@@ -205,6 +187,8 @@ public class Applications extends OvdApplet implements Runnable {
 					System.out.println("App: "+order.file_path);
 					this.ovd.startApplication(order.id, order.application_id, order.server_id, type, order.file_path, order.file_share);
 				}
+			} else {
+				Logger.error("do not receive a good order");
 			}
 		}
 	}
@@ -215,23 +199,24 @@ public class Applications extends OvdApplet implements Runnable {
 	
 	public boolean serverConnect(int id, String host, int port, String login, String password) {
 		System.out.println("serverConnect: ask for "+host);
-		this.pushOrder(new OrderServer(id, host, port, null, login, password));
+		this.spoolOrder.add(new OrderServer(id, host, port, null, login, password));
 		return true;
 	}
 	
 	public boolean serverConnect(int id, String host, int port, String token, String login, String password) {
 		System.out.println("serverConnect through a gateway: ask for "+host);
-		this.pushOrder(new OrderServer(id, host, port, token, login, password));
+		this.spoolOrder.add(new OrderServer(id, host, port, token, login, password));
 		return true;
 	}
 	
 	public void startApplication(int token, int id, int server) {
-		this.pushOrder(new OrderApplication(token, id, new Integer(server)));
+		this.spoolOrder.add(new OrderApplication(token, id, new Integer(server)));
 	}
 	
 	public void startApplicationWithFile(int token, int id, int server, String type, String path, String share) {
 		OrderApplication o = new OrderApplication(token, id, new Integer(server));
 		o.setPath(type, path, share);
-		this.pushOrder(o);
+		this.spoolOrder.add(o);
 	}
+	
 }
