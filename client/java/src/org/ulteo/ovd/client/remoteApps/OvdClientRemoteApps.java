@@ -157,10 +157,16 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 	public abstract void ovdInited(OvdAppChannel o);
 
+	@Override
 	public void ovdInstanceStarted(int instance_) {}
+	
+	@Override
 	public void ovdInstanceStopped(int instance_) {}
+	
+	@Override
 	public void ovdInstanceError(int instance_) {}
-
+	
+	
 	protected void configureRDP(Properties properties) {
 		this.screensize = WorkArea.getWorkAreaSize();
 
