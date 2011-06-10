@@ -146,7 +146,7 @@ public class Applications extends OvdApplet implements Runnable {
 
 		String buf = this.getParameter("keymap");
 		if (buf == null || buf.equals("")) {
-			System.err.println("Parameter "+buf+": empty value");
+			Logger.error("Parameter "+buf+": empty value");
 			return null;
 		}
 		this.keymap = buf;
@@ -157,7 +157,6 @@ public class Applications extends OvdApplet implements Runnable {
 	}
 	
 	public void run() {
-		System.out.println("Applet thread run");
 		Order o;
 		while(true) {
 			if (this.spoolOrder.size() > 0) {
@@ -166,17 +165,15 @@ public class Applications extends OvdApplet implements Runnable {
 				try {
 					Thread.sleep(200);
 				} catch (InterruptedException e) {
-					System.err.println("thread interupted: stop");
 					return;
 				}
 				continue;
 			}
-			System.out.println("got job "+o);
+			Logger.info("Got job: "+o);
 			OvdClientApplicationsApplet ovd = (OvdClientApplicationsApplet) this.ovd;
 			
 			if (o instanceof OrderServer) {
 				OrderServer order = (OrderServer)o;
-				System.out.println("job "+order.host);
 
 				ServerAccess server = new ServerAccess(order.host, order.port, order.login, order.password);
 				if (order.gw_token != null) {
@@ -190,8 +187,6 @@ public class Applications extends OvdApplet implements Runnable {
 			
 			else if (o instanceof OrderApplication) {
 				OrderApplication order = (OrderApplication)o;
-				System.out.println("job "+order);
-				System.out.println("Server "+order.server_id);
 
 				if (order.file == null)
 					ovd.startApplication(order.token, order.app_id, order.server_id);
@@ -209,13 +204,11 @@ public class Applications extends OvdApplet implements Runnable {
 	// ********
 	
 	public boolean serverConnect(int id, String host, int port, String login, String password) {
-		System.out.println("serverConnect: ask for "+host);
 		this.spoolOrder.add(new OrderServer(id, host, port, null, login, password));
 		return true;
 	}
 	
 	public boolean serverConnect(int id, String host, int port, String token, String login, String password) {
-		System.out.println("serverConnect through a gateway: ask for "+host);
 		this.spoolOrder.add(new OrderServer(id, host, port, token, login, password));
 		return true;
 	}
