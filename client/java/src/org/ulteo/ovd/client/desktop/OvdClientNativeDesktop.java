@@ -156,7 +156,7 @@ public class OvdClientNativeDesktop extends OvdClientDesktop {
 		rc.setServer(server.getHost());
 		rc.setCredentials(server.getLogin(), server.getPassword());
 		
-		int bpp = this.smComm.getResponseProperties().getRDPBpp();
+		int bpp = properties.getRDPBpp();
 		
 		// Ensure that width is multiple of 4
 		// Prevent artifact on screen with a with resolution
@@ -164,7 +164,7 @@ public class OvdClientNativeDesktop extends OvdClientDesktop {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, bpp);
 
-		rc.setAllDesktopEffectsEnabled(this.smComm.getResponseProperties().isDesktopEffectsEnabled());
+		rc.setAllDesktopEffectsEnabled(properties.isDesktopEffectsEnabled());
 
 		if (this.keymap != null)
 			rc.setKeymap(this.keymap);
