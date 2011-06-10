@@ -191,8 +191,10 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 					}
 				}
 				
-				List<News> newsList = this.smComm.askForNews();
-				this.updateNews(newsList);
+				if (this instanceof Newser) {
+					List<News> newsList = this.smComm.askForNews();
+					((Newser)this).updateNews(newsList);
+				}
 			}
 			catch (SessionManagerException ex) {
 				org.ulteo.Logger.error("Session status monitoring: "+ex.getMessage());
@@ -426,8 +428,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	public void setInputMethod(String inputMehtod) {
 		this.inputMethod  = inputMehtod;
 	}
-	
-	public void updateNews(List<News> newsList) {}
 	
 	/**
 	 * find the {@link RdpConnectionOvd} corresponding to a given {@link OvdAppChannel}
