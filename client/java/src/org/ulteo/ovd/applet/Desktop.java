@@ -52,6 +52,7 @@ public class Desktop extends OvdApplet implements FocusListener, Callback {
 		this.ovd.setKeymap(this.keymap);
 		((OvdClientDesktopApplet)this.ovd).setFullscreen(this.fullscreenMode);
 		this.rc = ((OvdClientDesktopApplet)this.ovd).createRDPConnection(aps);
+		((OvdClientDesktopApplet)this.ovd).adjustDesktopSize(this.rc);
 		
 		BorderLayout layout = new BorderLayout();
 		this.setLayout(layout);

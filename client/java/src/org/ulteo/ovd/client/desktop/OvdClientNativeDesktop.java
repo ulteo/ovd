@@ -101,7 +101,26 @@ public class OvdClientNativeDesktop extends OvdClientDesktop {
 	}
 
 	@Override
-	protected RdpConnectionOvd createRDPConnection(ServerAccess server) {	
+	public void adjustDesktopSize(RdpConnectionOvd rc) {
+		if (rc == null)
+			return;
+
+		// Prevent greometry modification while the connection is active
+		if (rc.getState() != RdpConnection.State.DISCONNECTED)
+			return;
+
+		int bpp = this.smComm.getResponseProperties().getRDPBpp();
+		
+		// Ensure that width is multiple of 4
+		// Prevent artifact on screen with a with resolution
+		// not divisible by 4
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, bpp);
+
+	}
+	
+	@Override
+	protected RdpConnectionOvd createRDPConnection(ServerAccess server) {
 		Properties properties = this.smComm.getResponseProperties();
 		
 		byte flags = 0x00;
@@ -155,15 +174,6 @@ public class OvdClientNativeDesktop extends OvdClientDesktop {
 
 		rc.setServer(server.getHost());
 		rc.setCredentials(server.getLogin(), server.getPassword());
-		
-		int bpp = properties.getRDPBpp();
-		
-		// Ensure that width is multiple of 4
-		// Prevent artifact on screen with a with resolution
-		// not divisible by 4
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, bpp);
-
 		rc.setAllDesktopEffectsEnabled(properties.isDesktopEffectsEnabled());
 
 		if (this.keymap != null)

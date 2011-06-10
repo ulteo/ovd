@@ -26,6 +26,7 @@ package org.ulteo.ovd.client;
 
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.rdp.RdpConnectionOvd;
 
 public abstract class OvdClientDesktop extends OvdClient {
 
@@ -37,4 +38,6 @@ public abstract class OvdClientDesktop extends OvdClient {
 		super(smComm, obj, false);
 	}
 
+
+	protected abstract void adjustDesktopSize(RdpConnectionOvd rc);
 }
