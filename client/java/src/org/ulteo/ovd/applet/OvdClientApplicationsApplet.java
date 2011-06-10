@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.propero.rdp.RdpConnection;
 
 import org.ulteo.Logger;
-import org.ulteo.ovd.client.remoteApps.OvdClientRemoteApps;
+import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;

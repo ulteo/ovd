@@ -22,7 +22,6 @@ package org.ulteo.ovd.client;
 
 import java.io.File;
 import org.ulteo.Logger;
-import org.ulteo.ovd.client.remoteApps.OvdClientRemoteApps;
 import org.ulteo.utils.FilesOp;
 import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.Spool;

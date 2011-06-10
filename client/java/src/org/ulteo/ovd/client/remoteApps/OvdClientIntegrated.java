@@ -22,6 +22,7 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
+import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.rdp.RdpConnectionOvd;
 

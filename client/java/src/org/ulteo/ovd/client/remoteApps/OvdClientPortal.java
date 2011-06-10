@@ -36,6 +36,7 @@ import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.OvdException;
+import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.portal.PortalFrame;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
