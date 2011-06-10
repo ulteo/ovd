@@ -26,6 +26,7 @@ import java.awt.BorderLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
+import org.ulteo.ovd.client.OvdClientDesktop;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.Properties;
@@ -60,7 +61,7 @@ public class Desktop extends OvdApplet implements FocusListener, Callback {
 	
 	@Override
 	protected void _start() {	
-		((OvdClientDesktopApplet)this.ovd).adjustDesktopSize(this.rc);
+		((OvdClientDesktop)this.ovd).adjustDesktopSize(this.rc);
 	}
 	
 	@Override

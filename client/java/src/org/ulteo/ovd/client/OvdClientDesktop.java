@@ -39,5 +39,5 @@ public abstract class OvdClientDesktop extends OvdClient {
 	}
 
 
-	protected abstract void adjustDesktopSize(RdpConnectionOvd rc);
+	public abstract void adjustDesktopSize(RdpConnectionOvd rc);
 }
