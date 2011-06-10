@@ -571,20 +571,12 @@ public class AuthFrame implements ActionListener, Runnable {
 		
 		for (int i = 0; i < size; i++) {
 			item = new JComboBoxItem(Language.keymapList[i][0]);
-			if (Language.keymapList[i][1].contains(System.getProperty("user.language")) && Language.keymapList[i][1].contains("-")) {
-				if (Language.keymapList[i][1].equalsIgnoreCase(System.getProperty("user.language")+"-"+System.getProperty("user.country"))) {
-					sysKeymap = i;
-				}
-			}
-			else {
-				if (Language.keymapList[i][1].equals(System.getProperty("user.language"))) {
-					sysKeymap = i;
-				}
-			}
 			keyboardBox.addItem(item);
+			if (Language.keymapList[i][1].equals(Language.keymap_default))
+				sysKeymap = i;
 		}
 		
-		keyboardBox.setSelectedIndex(sysKeymap);
+		this.keyboardBox.setSelectedIndex(sysKeymap);
 	}
 
 	private void initResolutionSlider(Dimension res) {
@@ -802,10 +794,32 @@ public class AuthFrame implements ActionListener, Runnable {
 		return this.languageBox;
 	}
 	
-	public JComboBox getKeyboardBox() {
-		return this.keyboardBox;
+	public boolean setKeymap(String keymap) {
+		if (keymap == null)
+			return false;
+		
+		for (int i = 0; i < Language.keymapList.length; i++) {
+			if (
+				Language.keymapList[i][1].equalsIgnoreCase(keymap) ||
+				(Language.keymapList[i].length > 2 &&  Language.keymapList[i][2].equalsIgnoreCase(keymap))
+			) {
+			this.keyboardBox.setSelectedIndex(i);
+			return true;
+			}
+		}
+		
+		return false;
 	}
-
+	
+	public String getKeymap() {
+		int selected = this.keyboardBox.getSelectedIndex();
+		
+		if (selected>Language.keymapList.length)
+			selected = 0;
+		
+		return Language.keymapList[selected][1];
+	}
+	
 	/* MoreOptionsAction */
 	public static Runnable moreOptionsAction(AuthFrame authFrame_) {
 		return authFrame_.new MoreOptionsAction(authFrame_);

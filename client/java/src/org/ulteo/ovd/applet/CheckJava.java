@@ -22,6 +22,9 @@
 package org.ulteo.ovd.applet;
 
 import java.applet.Applet;
+
+import org.ulteo.utils.LayoutDetector;
+
 import netscape.javascript.JSObject;
 
 public class CheckJava extends Applet {
@@ -33,6 +36,7 @@ public class CheckJava extends Applet {
 	private Thread ajaxThread = null;
 	
 	private String userLogin = "";
+	private String userKeyboardLayout = null;
 	
 	@Override
 	public void init() {
@@ -61,6 +65,7 @@ public class CheckJava extends Applet {
 			} catch(java.security.AccessControlException e) {
 				System.err.println("AccessControl issue");
 			}
+			this.userKeyboardLayout = LayoutDetector.get();
 			
 			try {
 				JSObject win = JSObject.getWindow(this);
@@ -91,5 +96,9 @@ public class CheckJava extends Applet {
 	
 	public String getUserLogin() {
 		return this.userLogin;
+	}
+	
+	public String getDetectedKeyboardLayout() {
+		return this.userKeyboardLayout;
 	}
 }

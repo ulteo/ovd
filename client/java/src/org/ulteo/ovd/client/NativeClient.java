@@ -27,6 +27,7 @@ package org.ulteo.ovd.client;
 
 import org.ulteo.utils.I18n;
 import org.ulteo.utils.KerberosConfiguration;
+import org.ulteo.utils.LayoutDetector;
 import org.ulteo.ovd.applet.LibraryLoader;
 import org.ulteo.ovd.client.profile.ProfileIni;
 import java.io.IOException;
@@ -498,14 +499,27 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				}
 			}
 		}
-		if (this.opts.keymap != null) {
-			for (int i = 0; i < Language.keymapList.length; i++) {
-				if (this.opts.keymap.equals(Language.keymapList[i][1])) {
-					this.authFrame.getKeyboardBox().setSelectedIndex(i);
-					break;
+		
+		boolean keymapSet = this.authFrame.setKeymap(this.opts.keymap);
+		if (! keymapSet) {
+				keymapSet = this.authFrame.setKeymap(LayoutDetector.get());
+			
+			if (! keymapSet) {
+				String detected = System.getProperty("user.language")+"-"+System.getProperty("user.country");
+				org.ulteo.Logger.debug("Try to force keyboard layout with detected language "+detected);
+				keymapSet = this.authFrame.setKeymap(detected);
+				
+				if (! keymapSet) {
+					detected = System.getProperty("user.language");
+					org.ulteo.Logger.debug("Try to force keyboard layout with detected language (simplified) "+detected);
+					keymapSet = this.authFrame.setKeymap(detected);
+					
+					if (! keymapSet)
+						org.ulteo.Logger.warn("Unable to detect the keyboard layout. Very weird !");
 				}
 			}
 		}
+		
 		this.authFrame.setUseLocalCredentials(this.opts.nltm);
 		this.authFrame.setAutoPublishChecked(this.opts.autopublish);
 	}
@@ -672,7 +686,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.opts.lang = Language.languageList[this.authFrame.getLanguageBox().getSelectedIndex()][2];
 		if (Language.languageList[this.authFrame.getLanguageBox().getSelectedIndex()].length > 3)
 			this.opts.lang+= "_"+Language.languageList[this.authFrame.getLanguageBox().getSelectedIndex()][3].toUpperCase();
-		this.opts.keymap = Language.keymapList[this.authFrame.getKeyboardBox().getSelectedIndex()][1];
+		this.opts.keymap = this.authFrame.getKeymap();
 			
 		this.opts.password = new String(this.authFrame.getPassword().getPassword());
 		this.authFrame.getPassword().setText("");

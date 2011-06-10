@@ -504,13 +504,8 @@ function appletFailure() {
 var ti = 0;
 function testUlteoApplet() {
 	try {
-		if (ulteo_applet_inited == true)
-			checkLogin();
-	} catch(e) {}
-
-	try {
 		if (ulteo_applet_inited == true) {
-			hideSystemTest();
+			afterAppletTests();
 			return;
 		} else if (ulteo_applet_inited == false) {
 			showSystemTestError('systemTestError2');
@@ -529,6 +524,12 @@ function testUlteoApplet() {
 			}
 		}, 1000);
 	}
+}
+
+function afterAppletTests() {
+	checkLogin();
+	manageKeymap();
+	hideSystemTest();
 }
 
 function showLock() {
@@ -723,10 +724,17 @@ function updateFlag(id_) {
 }
 
 function updateKeymap(id_) {
+	if (id_ == null)
+		return false;
+	
 	for (var i = 0; i < $('session_keymap').length; i++) {
-		if ($('session_keymap')[i].value == id_ || $('session_keymap')[i].value == id_.substr(0, 2))
+		if ($('session_keymap')[i].value == id_) {
 			$('session_keymap')[i].selected = 'selected';
+			return true;
+		}
 	}
+	
+	return false;
 }
 
 switchsettings_lock = false;
@@ -783,6 +791,33 @@ function checkLogin() {
 		$('connect_gettext').disabled = false;
 	else
 		$('connect_gettext').disabled = true;
+}
+
+function manageKeymap() {
+	var keymapSet = updateKeymap(user_keymap);
+	if (! keymapSet) {
+		var detected = null;
+		try {
+			detected = $('CheckSignedJava').getDetectedKeyboardLayout();
+		}
+		catch(err) {
+//			Logger.warn("Not found function getDetectedKeyboardLayout: "+err);
+		}
+		
+		keymapSet = updateKeymap(detected);
+		if (! keymapSet) {
+			detected = $('session_language')[$('session_language').selectedIndex].value;
+			keymapSet = updateKeymap(detected);
+			
+			if (! keymapSet) {
+				detected = detected.substr(0, 2);
+				keymapSet = updateKeymap(detected);
+				
+//				if (! keymapSet)
+//					Logger.warn("Unable to detect the keyboard layout. Very weird !");
+			}
+		}
+	}
 }
 
 function checkSessionMode() {
