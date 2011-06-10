@@ -37,33 +37,6 @@ import org.ulteo.rdp.seamless.SeamlessFrame;
 import org.ulteo.rdp.seamless.SeamlessPopup;
 
 
-abstract class Order {
-	public int id;
-}
-
-
-class OrderServer extends Order {
-	public String host;
-	public int port;
-	public String login;
-	public String password;
-	public String token;
-	
-	public OrderServer(int id, String host, int port, String token, String login, String password) {
-		this.id = id;
-		this.host = host;
-		this.port = port;
-		this.token = token;
-		this.login = login;
-		this.password = password;
-	}
-	
-	public String toString() {
-		return "Server (id: "+this.id+ ", host: "+this.host+", token: "+this.token+")";
-	}
-}
-
-
 class FileApp {
 	int type;
 	String path;
@@ -78,23 +51,54 @@ class FileApp {
 		path = f_path;
 		share = f_share;
 	}
+	
+	public String toString() {
+		return String.format("file(type: %d, path: %s, share: %s)", this.type, this.path, this.share);
+	}
 }
 
 
+abstract class Order {}
+
+class OrderServer extends Order {
+	public int id;
+	public String host;
+	public int port;
+	public String login;
+	public String password;
+	public String gw_token;
+	
+	public OrderServer(int id, String host, int port, String gw_token, String login, String password) {
+		this.id = id;
+		this.host = host;
+		this.port = port;
+		this.gw_token = gw_token;
+		this.login = login;
+		this.password = password;
+	}
+	
+	public String toString() {
+		return String.format("Server (id: %s, host: %s, token: %s)",
+				this.id, this.host, this.gw_token);
+	}
+}
+
 class OrderApplication extends Order {
-	public int application_id;
+	public int token;
+	public int app_id;
 	public int server_id;
 	public FileApp file = null;
 	
-	public OrderApplication(int id, int application_id, int server_id, FileApp f) {
-		this.id = id;
-		this.application_id = application_id;
+	public OrderApplication(int token, int app_id, int server_id, FileApp f) {
+		this.token = token;
+		this.app_id = app_id;
 		this.server_id = server_id;	
 		file = f;
 	}
 	
 	public String toString() {
-		return "Application (id: "+this.id+", application: "+this.application_id+", server: "+this.server_id;
+		return String.format("Application (id: %s, application: %s, server: %s, %s)",
+				this.token, this.app_id, this.server_id, this.file);
 	}
 }
 
@@ -176,9 +180,9 @@ public class Applications extends OvdApplet implements Runnable {
 				System.out.println("job "+order.host);
 
 				ServerAccess server = new ServerAccess(order.host, order.port, order.login, order.password);
-				if (order.token != null) {
+				if (order.gw_token != null) {
 					server.setModeGateway(true);
-					server.setToken(order.token);
+					server.setToken(order.gw_token);
 				}
 
 				if (! this.ovd.addServer(server, order.id))
@@ -191,9 +195,9 @@ public class Applications extends OvdApplet implements Runnable {
 				System.out.println("Server "+order.server_id);
 
 				if (order.file == null)
-					this.ovd.startApplication(order.id, order.application_id, order.server_id);
+					this.ovd.startApplication(order.token, order.app_id, order.server_id);
 				else
-					this.ovd.startApplication(order.id, order.application_id, order.server_id, 
+					this.ovd.startApplication(order.token, order.app_id, order.server_id, 
 							order.file.type, order.file.path, order.file.share);
 			} else {
 				Logger.error("do not receive a good order");
@@ -217,13 +221,13 @@ public class Applications extends OvdApplet implements Runnable {
 		return true;
 	}
 	
-	public void startApplication(int token, int id, int server) {
-		this.spoolOrder.add(new OrderApplication(token, id, new Integer(server), null));
+	public void startApplication(int token, int app_id, int server_id) {
+		this.spoolOrder.add(new OrderApplication(token, app_id, new Integer(server_id), null));
 	}
 	
-	public void startApplicationWithFile(int id, int apps_id, int server_id, String f_type, String f_path, String f_share) {
+	public void startApplicationWithFile(int token, int app_id, int server_id, String f_type, String f_path, String f_share) {
 		FileApp f = new FileApp(f_type, f_path, f_share);
-		this.spoolOrder.add(new OrderApplication(id, apps_id, new Integer(server_id), f));
+		this.spoolOrder.add(new OrderApplication(token, app_id, new Integer(server_id), f));
 	}
 	
 }
