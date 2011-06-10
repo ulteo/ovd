@@ -43,7 +43,7 @@ public abstract class OvdClientDesktop extends OvdClient {
 	}
 
 	public OvdClientDesktop(SessionManagerCommunication smComm, Callback obj, boolean persistent) {
-		super(smComm, obj, false);
+		super(smComm, obj, persistent);
 	}
 
 	public abstract void adjustDesktopSize(RdpConnectionOvd rc);
