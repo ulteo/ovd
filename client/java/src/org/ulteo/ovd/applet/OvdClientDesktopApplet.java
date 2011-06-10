@@ -26,13 +26,10 @@ package org.ulteo.ovd.applet;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.FocusListener;
-import java.net.UnknownHostException;
 import net.propero.rdp.RdesktopCanvas;
-import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
 import org.ulteo.ovd.FullscreenWindow;
-import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.client.OvdClientDesktop;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.Properties;
@@ -81,70 +78,6 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 		// not divisible by 4
 		Dimension screenSize = (this.isFullscreen) ? Toolkit.getDefaultToolkit().getScreenSize() : this.applet.getSize();
 		rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, bpp);
-	}
-
-	@Override
-	public RdpConnectionOvd createRDPConnection(ServerAccess server) {
-		byte flags = 0x00;
-		flags |= RdpConnectionOvd.MODE_DESKTOP;
-
-		if (this.properties.isMultimedia())
-			flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
-
-		if (this.properties.isPrinters())
-			flags |= RdpConnectionOvd.MOUNT_PRINTERS;
-
-		if (this.properties.isDrives() == Properties.REDIRECT_DRIVES_FULL)
-			flags |= RdpConnectionOvd.MOUNTING_MODE_FULL;
-		else if (this.properties.isDrives() == Properties.REDIRECT_DRIVES_PARTIAL)
-			flags |= RdpConnectionOvd.MOUNTING_MODE_PARTIAL;
-
-		RdpConnectionOvd rc = null;
-
-		try {
-			rc = new RdpConnectionOvd(flags);
-		} catch (RdesktopException ex) {
-			Logger.error("Unable to create RdpConnectionOvd object: "+ex.getMessage());
-			return null;
-		}
-
-		try {
-			rc.initSecondaryChannels();
-		} catch (RdesktopException ex) {
-			Logger.error("Unable to init channels of RdpConnectionOvd object: "+ex.getMessage());
-		}
-
-		if (server.getModeGateway()) {
-
-			if (server.getToken().equals("")) {
-				Logger.error("Server need a token to be identified on gateway, so token is empty !");
-				return null;
-			} else {
-				rc.setCookieElement("token", server.getToken());
-			}
-
-			try {
-				rc.useSSLWrapper(server.getHost(), server.getPort());
-			} catch(OvdException ex) {
-				Logger.error("Unable to create RdpConnectionOvd SSLWrapper: " + ex.getMessage());
-				return null;
-			} catch(UnknownHostException ex) {
-				Logger.error("Undefined error during creation of RdpConnectionOvd SSLWrapper: " + ex.getMessage());
-				return null;
-			}
-		}
-
-		rc.setServer(server.getHost());
-		rc.setCredentials(server.getLogin(), server.getPassword());
-		rc.setAllDesktopEffectsEnabled(this.properties.isDesktopEffectsEnabled());
-
-		if (this.keymap != null)
-			rc.setKeymap(this.keymap);
-		
-		if (this.inputMethod != null)
-			rc.setInputMethod(this.inputMethod);
-
-		return rc;
 	}
 
 	public void createRDPConnections() {
@@ -196,6 +129,11 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 		}
 	}
 
+	@Override
+	protected Properties getProperties() {
+		return this.properties;
+	}
+	
 	@Override
 	public boolean checkRDPConnections() {
 		Logger.error("Weird -- The method checkRDPConnections() should not be called");

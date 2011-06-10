@@ -28,12 +28,9 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Toolkit;
 
-import java.net.UnknownHostException;
 import net.propero.rdp.RdesktopCanvas;
-import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
-import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.client.OvdClientDesktop;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -120,72 +117,6 @@ public class OvdClientNativeDesktop extends OvdClientDesktop {
 	}
 	
 	@Override
-	public RdpConnectionOvd createRDPConnection(ServerAccess server) {
-		Properties properties = this.smComm.getResponseProperties();
-		
-		byte flags = 0x00;
-		flags |= RdpConnectionOvd.MODE_DESKTOP;
-		
-		if (properties.isMultimedia())
-			flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
-		
-		if (properties.isPrinters())
-			flags |= RdpConnectionOvd.MOUNT_PRINTERS;
-
-		if (properties.isDrives() == Properties.REDIRECT_DRIVES_FULL)
-			flags |= RdpConnectionOvd.MOUNTING_MODE_FULL;
-		else if (properties.isDrives() == Properties.REDIRECT_DRIVES_PARTIAL)
-			flags |= RdpConnectionOvd.MOUNTING_MODE_PARTIAL;
-		
-		RdpConnectionOvd rc = null;
-		
-		try {
-			rc = new RdpConnectionOvd(flags);
-		} catch (RdesktopException ex) {
-			Logger.error("Unable to create RdpConnectionOvd object: "+ex.getMessage());
-			return null;
-		}
-		
-		try {
-			rc.initSecondaryChannels();
-		} catch (RdesktopException ex) {
-			Logger.error("Unable to init channels of RdpConnectionOvd object: "+ex.getMessage());
-		}
-		
-		if (server.getModeGateway()) {
-
-			if (server.getToken().equals("")) {
-				Logger.error("Server need a token to be identified on gateway, so token is empty !");
-				return null;
-			} else {
-				rc.setCookieElement("token", server.getToken());
-			}
-
-			try {
-				rc.useSSLWrapper(server.getHost(), server.getPort());
-			} catch(OvdException ex) {
-				Logger.error("Unable to create RdpConnectionOvd SSLWrapper: " + ex.getMessage());
-				return null;
-			} catch(UnknownHostException ex) {
-				Logger.error("Undefined error during creation of RdpConnectionOvd SSLWrapper: " + ex.getMessage());
-				return null;
-			}
-		}
-
-		rc.setServer(server.getHost());
-		rc.setCredentials(server.getLogin(), server.getPassword());
-		rc.setAllDesktopEffectsEnabled(properties.isDesktopEffectsEnabled());
-
-		if (this.keymap != null)
-			rc.setKeymap(this.keymap);
-		
-		if (this.inputMethod != null)
-			rc.setInputMethod(this.inputMethod);
-		
-		return rc;
-	}
-	
-	@Override
 	protected void createRDPConnections() {
 		ServerAccess server = this.smComm.getServers().get(0);
 		RdpConnectionOvd rc = createRDPConnection(server);
@@ -193,6 +124,11 @@ public class OvdClientNativeDesktop extends OvdClientDesktop {
 			adjustDesktopSize(rc);
 			this.connections.add(rc);
 		}
+	}
+
+	@Override
+	protected Properties getProperties() {
+		return this.smComm.getResponseProperties();
 	}
 
 	@Override
