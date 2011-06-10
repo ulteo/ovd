@@ -32,6 +32,7 @@ import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
 import org.ulteo.ovd.client.OvdClientDesktop;
+import org.ulteo.ovd.client.OvdClientPerformer;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.Properties;
@@ -39,7 +40,7 @@ import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.RdpConnectionOvd;
 
-public class OvdClientNativeDesktop extends OvdClientDesktop {
+public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClientPerformer {
 	
 	private DesktopFrame desktop = null;
 	private boolean desktopLaunched = false;
@@ -117,18 +118,21 @@ public class OvdClientNativeDesktop extends OvdClientDesktop {
 	}
 	
 	@Override
-	protected void createRDPConnections() {
+	protected Properties getProperties() {
+		return this.smComm.getResponseProperties();
+	}
+
+	
+	// interface OvdClientPerformer's methods 
+	
+	@Override
+	public void createRDPConnections() {
 		ServerAccess server = this.smComm.getServers().get(0);
 		RdpConnectionOvd rc = createRDPConnection(server);
 		if (rc != null) {
 			adjustDesktopSize(rc);
 			this.connections.add(rc);
 		}
-	}
-
-	@Override
-	protected Properties getProperties() {
-		return this.smComm.getResponseProperties();
 	}
 
 	@Override

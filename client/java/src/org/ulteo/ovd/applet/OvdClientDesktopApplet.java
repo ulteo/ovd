@@ -135,12 +135,6 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 	}
 	
 	@Override
-	public boolean checkRDPConnections() {
-		Logger.error("Weird -- The method checkRDPConnections() should not be called");
-		return true;
-	}
-
-	@Override
 	protected void runSessionTerminated() {}
 
 	@Override

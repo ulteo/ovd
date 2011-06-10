@@ -22,11 +22,12 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
+import org.ulteo.ovd.client.OvdClientPerformer;
 import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.rdp.RdpConnectionOvd;
 
-public class OvdClientIntegrated extends OvdClientRemoteApps {
+public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClientPerformer {
 
 	public OvdClientIntegrated(SessionManagerCommunication smComm) {
 		super(smComm);
@@ -49,4 +50,18 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 	public void ovdInstanceStopped(int instance_) {
 		this.spool.destroyInstance(instance_);
 	}
+	
+	
+	// interface OvdClientPerformer's methods 
+
+	@Override
+	public void createRDPConnections() {
+		_createRDPConnections();
+	}
+	
+	@Override
+	public boolean checkRDPConnections() {
+		return _checkRDPConnections();
+	}
+
 }

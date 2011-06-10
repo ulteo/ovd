@@ -300,8 +300,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		return rc;
 	}
 
-	@Override
-	protected void createRDPConnections() {
+	protected void _createRDPConnections() {
 		if (this.smComm == null) {
 			Logger.error("[Programmer error] OvdclientRemoteApps.createRDPConnections() can be used only if 'smComm' variable is not null");
 			return;
@@ -331,8 +330,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		this.ApplicationIndex = 0;
 	}
 
-	@Override
-	public boolean checkRDPConnections() {
+	protected boolean _checkRDPConnections() {
 		String session_status = null;
 		try {
 			session_status = this.smComm.askForSessionStatus();

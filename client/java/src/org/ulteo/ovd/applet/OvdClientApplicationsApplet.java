@@ -115,12 +115,6 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	}
 
 	@Override
-	public boolean checkRDPConnections() {
-		Logger.error("Weird -- The method checkRDPConnections() should not be called");
-		return true;
-	}
-
-	@Override
 	public void ovdInited(OvdAppChannel channel) {
 		super.ovdInited(channel);
 		

@@ -209,11 +209,14 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	 * not called by applet mode
 	 * @return
 	 */
-	public boolean perform() {
+	boolean perform() {
+		if (!(this instanceof OvdClientPerformer))
+			throw new ClassCastException("OvdClient must inherit from an OvdClientPerformer to use 'perform' action");
+		
 		if (this.smComm == null)
 			throw new NullPointerException("Client cannot be performed with a non existent SM communication");
 
-		this.createRDPConnections();
+		((OvdClientPerformer)this).createRDPConnections();
 		
 		for (RdpConnectionOvd rc : this.connections) {
 			this.customizeConnection(rc);
@@ -235,7 +238,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 				} catch (InterruptedException ex) {}
 			}
 
-			if (! this.checkRDPConnections()) {
+			if (! ((OvdClientPerformer)this).checkRDPConnections()) {
 				this.disconnectAll();
 				break;
 			}
@@ -318,10 +321,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	protected abstract void hide(RdpConnectionOvd co);
 	
 	public abstract RdpConnectionOvd createRDPConnection(ServerAccess server);
-	
-	protected abstract void createRDPConnections();
-
-	protected abstract boolean checkRDPConnections();
 
 	/* RdpListener */
 	public void connected(RdpConnection co) {

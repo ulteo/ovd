@@ -36,6 +36,7 @@ import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.OvdException;
+import org.ulteo.ovd.client.OvdClientPerformer;
 import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.portal.PortalFrame;
@@ -45,7 +46,7 @@ import org.ulteo.ovd.sm.Callback;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
-public class OvdClientPortal extends OvdClientRemoteApps implements ComponentListener {
+public class OvdClientPortal extends OvdClientRemoteApps implements ComponentListener, OvdClientPerformer {
 	
 	private PortalFrame portal = null;
 	private String username = null;
@@ -168,7 +169,11 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			this.system.uninstall(app);
 		}
 	}
+	
+	
+	// interface ComponentListener's methods 
 
+	@Override
 	public void componentShown(ComponentEvent ce) {
 		if (ce.getComponent() == this.portal) {
 			Collections.sort(this.appsList);
@@ -181,14 +186,22 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		}
 	}
 
+	@Override
 	public void componentResized(ComponentEvent ce) {}
+	
+	@Override
 	public void componentMoved(ComponentEvent ce) {}
+	
+	@Override
 	public void componentHidden(ComponentEvent ce) {}
 	
 	public boolean isAutoPublish() {
 		return this.autoPublish;
 	}
 
+	
+	// ---------------------------------------
+	
 	@Override
 	public void updateNews(List<News> newsList) {
 		if (newsList.size() == 0) {
@@ -203,4 +216,18 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			this.portal.getNewsPanel().updateNewsLinks(newsList);
 		}
 	}
+
+	
+	// interface OvdClientPerformer's methods 
+
+	@Override
+	public void createRDPConnections() {
+		_createRDPConnections();
+	}
+	
+	@Override
+	public boolean checkRDPConnections() {
+		return _checkRDPConnections();
+	}
+	
 }
