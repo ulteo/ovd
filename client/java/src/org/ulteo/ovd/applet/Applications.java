@@ -41,6 +41,7 @@ abstract class Order {
 	public int id;
 }
 
+
 class OrderServer extends Order {
 	public String host;
 	public int port;
@@ -62,29 +63,41 @@ class OrderServer extends Order {
 	}
 }
 
+
+class FileApp {
+	int type;
+	String path;
+	String share;
+
+	FileApp(String f_type, String f_path, String f_share) {
+		if (f_type.equalsIgnoreCase("http"))
+			type = OvdAppChannel.DIR_TYPE_HTTP_URL;
+		else
+			type = OvdAppChannel.DIR_TYPE_SHARED_FOLDER;
+		
+		path = f_path;
+		share = f_share;
+	}
+}
+
+
 class OrderApplication extends Order {
 	public int application_id;
 	public int server_id;
-	public String file_type = null;
-	public String file_path = null;
-	public String file_share = null;
+	public FileApp file = null;
 	
-	public OrderApplication(int id, int application_id, int server_id) {
+	public OrderApplication(int id, int application_id, int server_id, FileApp f) {
 		this.id = id;
 		this.application_id = application_id;
 		this.server_id = server_id;	
-	}
-	
-	public void setPath(String type, String path, String share) {
-		this.file_type = type;
-		this.file_path = path;
-		this.file_share = share;
+		file = f;
 	}
 	
 	public String toString() {
 		return "Application (id: "+this.id+", application: "+this.application_id+", server: "+this.server_id;
 	}
 }
+
 
 public class Applications extends OvdApplet implements Runnable {
 	
@@ -177,16 +190,11 @@ public class Applications extends OvdApplet implements Runnable {
 				System.out.println("job "+order);
 				System.out.println("Server "+order.server_id);
 
-				if (order.file_path == null)
+				if (order.file == null)
 					this.ovd.startApplication(order.id, order.application_id, order.server_id);
-				else {
-					int type = OvdAppChannel.DIR_TYPE_SHARED_FOLDER;
-					if (order.file_type.equalsIgnoreCase("http"))
-						type =  OvdAppChannel.DIR_TYPE_HTTP_URL;
-					
-					System.out.println("App: "+order.file_path);
-					this.ovd.startApplication(order.id, order.application_id, order.server_id, type, order.file_path, order.file_share);
-				}
+				else
+					this.ovd.startApplication(order.id, order.application_id, order.server_id, 
+							order.file.type, order.file.path, order.file.share);
 			} else {
 				Logger.error("do not receive a good order");
 			}
@@ -210,13 +218,12 @@ public class Applications extends OvdApplet implements Runnable {
 	}
 	
 	public void startApplication(int token, int id, int server) {
-		this.spoolOrder.add(new OrderApplication(token, id, new Integer(server)));
+		this.spoolOrder.add(new OrderApplication(token, id, new Integer(server), null));
 	}
 	
-	public void startApplicationWithFile(int token, int id, int server, String type, String path, String share) {
-		OrderApplication o = new OrderApplication(token, id, new Integer(server));
-		o.setPath(type, path, share);
-		this.spoolOrder.add(o);
+	public void startApplicationWithFile(int id, int apps_id, int server_id, String f_type, String f_path, String f_share) {
+		FileApp f = new FileApp(f_type, f_path, f_share);
+		this.spoolOrder.add(new OrderApplication(id, apps_id, new Integer(server_id), f));
 	}
 	
 }
