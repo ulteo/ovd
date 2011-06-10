@@ -107,8 +107,6 @@ public class Applications extends OvdApplet implements Runnable {
 	
 	private List<Order> spoolOrder = Collections.synchronizedList(new ArrayList<Order>());
 	private Thread spoolThread = null;
-
-	private OvdClientApplicationsApplet ovd = null;
 	
 	@Override
 	protected void _init(Properties properties) {
@@ -174,6 +172,7 @@ public class Applications extends OvdApplet implements Runnable {
 				continue;
 			}
 			System.out.println("got job "+o);
+			OvdClientApplicationsApplet ovd = (OvdClientApplicationsApplet) this.ovd;
 			
 			if (o instanceof OrderServer) {
 				OrderServer order = (OrderServer)o;
@@ -185,7 +184,7 @@ public class Applications extends OvdApplet implements Runnable {
 					server.setToken(order.gw_token);
 				}
 
-				if (! this.ovd.addServer(server, order.id))
+				if (! ovd.addServer(server, order.id))
 					continue;
 			}
 			
@@ -195,9 +194,9 @@ public class Applications extends OvdApplet implements Runnable {
 				System.out.println("Server "+order.server_id);
 
 				if (order.file == null)
-					this.ovd.startApplication(order.token, order.app_id, order.server_id);
+					ovd.startApplication(order.token, order.app_id, order.server_id);
 				else
-					this.ovd.startApplication(order.token, order.app_id, order.server_id, 
+					ovd.startApplication(order.token, order.app_id, order.server_id, 
 							order.file.type, order.file.path, order.file.share);
 			} else {
 				Logger.error("do not receive a good order");
