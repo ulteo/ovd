@@ -24,9 +24,12 @@
 
 package org.ulteo.ovd.client;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.net.UnknownHostException;
 
 import net.propero.rdp.RdesktopException;
+import net.propero.rdp.RdpConnection;
 
 import org.ulteo.Logger;
 import org.ulteo.ovd.OvdException;
@@ -46,9 +49,29 @@ public abstract class OvdClientDesktop extends OvdClient {
 		super(smComm, obj, persistent);
 	}
 
-	public abstract void adjustDesktopSize(RdpConnectionOvd rc);
-	
 	protected abstract Properties getProperties();
+	
+	public void adjustDesktopSize(RdpConnectionOvd rc) {
+		if (rc == null)
+			return;
+
+		// Prevent greometry modification while the connection is active
+		if (rc.getState() != RdpConnection.State.DISCONNECTED)
+			return;
+
+		int bpp = this.smComm.getResponseProperties().getRDPBpp();
+		
+		// Ensure that width is multiple of 4
+		// Prevent artifact on screen with a with resolution
+		// not divisible by 4
+		//Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension screenSize = getScreenSize();
+		rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, bpp);
+	}
+
+	protected Dimension getScreenSize() {
+		return Toolkit.getDefaultToolkit().getScreenSize();
+	}
 	
 	@Override
 	public RdpConnectionOvd createRDPConnection(ServerAccess server) {

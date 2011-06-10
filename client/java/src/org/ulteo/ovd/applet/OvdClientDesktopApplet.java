@@ -24,7 +24,6 @@
 package org.ulteo.ovd.applet;
 
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.FocusListener;
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdpConnection;
@@ -60,24 +59,6 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 
 	public void setFullscreen(boolean isFullscreen_) {
 		this.isFullscreen = isFullscreen_;
-	}
-
-	@Override
-	public void adjustDesktopSize(RdpConnectionOvd rc) {
-		if (rc == null || this.properties == null)
-			return;
-
-		// Prevent greometry modification while the connection is active
-		if (rc.getState() != RdpConnection.State.DISCONNECTED)
-			return;
-
-		int bpp = this.properties.getRDPBpp();
-
-		// Ensure that width is multiple of 4
-		// Prevent artifact on screen with a with resolution
-		// not divisible by 4
-		Dimension screenSize = (this.isFullscreen) ? Toolkit.getDefaultToolkit().getScreenSize() : this.applet.getSize();
-		rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, bpp);
 	}
 
 	public void createRDPConnections() {
@@ -132,6 +113,11 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 	@Override
 	protected Properties getProperties() {
 		return this.properties;
+	}
+	
+	@Override
+	protected Dimension getScreenSize() {
+		return (this.isFullscreen) ? super.getScreenSize() : this.applet.getSize();
 	}
 	
 	@Override

@@ -99,25 +99,6 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClien
 	}
 
 	@Override
-	public void adjustDesktopSize(RdpConnectionOvd rc) {
-		if (rc == null)
-			return;
-
-		// Prevent greometry modification while the connection is active
-		if (rc.getState() != RdpConnection.State.DISCONNECTED)
-			return;
-
-		int bpp = this.smComm.getResponseProperties().getRDPBpp();
-		
-		// Ensure that width is multiple of 4
-		// Prevent artifact on screen with a with resolution
-		// not divisible by 4
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, bpp);
-
-	}
-	
-	@Override
 	protected Properties getProperties() {
 		return this.smComm.getResponseProperties();
 	}
