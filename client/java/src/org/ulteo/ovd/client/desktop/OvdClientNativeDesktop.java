@@ -42,14 +42,14 @@ import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.RdpConnectionOvd;
 
-public class OvdClientDesktop extends OvdClient {
+public class OvdClientNativeDesktop extends OvdClient {
 	
 	private DesktopFrame desktop = null;
 	private boolean desktopLaunched = false;
 	private Dimension resolution = null;
 	private boolean fullscreen = false;
 	
-	public OvdClientDesktop(SessionManagerCommunication smComm, Dimension resolution_, Callback obj, boolean persistent) {
+	public OvdClientNativeDesktop(SessionManagerCommunication smComm, Dimension resolution_, Callback obj, boolean persistent) {
 		super(smComm, obj, persistent);
 		this.resolution = resolution_;
 

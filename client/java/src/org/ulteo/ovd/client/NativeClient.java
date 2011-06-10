@@ -60,7 +60,7 @@ import org.ulteo.ovd.client.authInterface.DisconnectionFrame;
 import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.desktop.DesktopFrame;
-import org.ulteo.ovd.client.desktop.OvdClientDesktop;
+import org.ulteo.ovd.client.desktop.OvdClientNativeDesktop;
 import org.ulteo.utils.jni.WorkArea;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
@@ -749,7 +749,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 		switch (response.getMode()) {
 			case Properties.MODE_DESKTOP:
-				this.client = new OvdClientDesktop(dialog, this.opts.geometry, this, response.isPersistent());
+				this.client = new OvdClientNativeDesktop(dialog, this.opts.geometry, this, response.isPersistent());
 				break;
 			case Properties.MODE_REMOTEAPPS:
 				this.client = new OvdClientPortal(dialog, response.getUsername(), this.opts.autopublish, response.isDesktopIcons(), this.opts.autostart, this.opts.isBugReporterVisible, this);
