@@ -84,10 +84,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	private boolean exitAfterLogout = false;
 	private boolean persistent = false;
 
-	public OvdClient(Callback obj) {
-		this(null, obj, false);
-	}
-
 	public OvdClient(SessionManagerCommunication smComm, Callback obj_, boolean persistent) {
 		this.smComm = smComm;
 		this.obj = obj_;
