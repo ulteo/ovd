@@ -120,7 +120,7 @@ public class OvdClientNativeDesktop extends OvdClientDesktop {
 	}
 	
 	@Override
-	protected RdpConnectionOvd createRDPConnection(ServerAccess server) {
+	public RdpConnectionOvd createRDPConnection(ServerAccess server) {
 		Properties properties = this.smComm.getResponseProperties();
 		
 		byte flags = 0x00;

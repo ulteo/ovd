@@ -317,7 +317,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 	protected abstract void hide(RdpConnectionOvd co);
 	
-	protected abstract RdpConnectionOvd createRDPConnection(ServerAccess server);
+	public abstract RdpConnectionOvd createRDPConnection(ServerAccess server);
 	
 	protected abstract void createRDPConnections();
 

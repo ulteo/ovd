@@ -80,7 +80,7 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 	}
 
 	@Override
-	protected RdpConnectionOvd createRDPConnection(ServerAccess server) {
+	public RdpConnectionOvd createRDPConnection(ServerAccess server) {
 		byte flags = 0x00;
 		flags |= RdpConnectionOvd.MODE_DESKTOP;
 

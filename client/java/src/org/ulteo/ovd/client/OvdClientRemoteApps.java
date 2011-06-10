@@ -196,7 +196,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		this.bpp = properties.getRDPBpp();
 	}
 
-	protected RdpConnectionOvd createRDPConnection(ServerAccess server) {
+	public RdpConnectionOvd createRDPConnection(ServerAccess server) {
 		if (server == null)
 			return null;
 
