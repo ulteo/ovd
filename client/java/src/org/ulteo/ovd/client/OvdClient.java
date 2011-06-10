@@ -37,6 +37,7 @@ import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.News;
+import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.OvdAppChannel;
@@ -208,20 +209,24 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		}
 	}	
 	
+	/**
+	 * not called by applet mode
+	 * @return
+	 */
 	public boolean perform() {
 		if (this.smComm == null)
 			throw new NullPointerException("Client cannot be performed with a non existent SM communication");
 
-		if (this.createRDPConnections()) {
-			for (RdpConnectionOvd rc : this.connections) {
-				this.customizeConnection(rc);
-				rc.addRdpListener(this);
-			}
-
-			this.sessionStatusMonitoringThread = new Thread(this);
-			this.continueSessionStatusMonitoringThread = true;
-			this.sessionStatusMonitoringThread.start();
+		this.createRDPConnections();
+		
+		for (RdpConnectionOvd rc : this.connections) {
+			this.customizeConnection(rc);
+			rc.addRdpListener(this);
 		}
+
+		this.sessionStatusMonitoringThread = new Thread(this);
+		this.continueSessionStatusMonitoringThread = true;
+		this.sessionStatusMonitoringThread.start();
 
 		do {
 			// Waiting for all the RDP connections are performed
@@ -316,7 +321,9 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 	protected abstract void hide(RdpConnectionOvd co);
 	
-	protected abstract boolean createRDPConnections();
+	protected abstract RdpConnectionOvd createRDPConnection(ServerAccess server);
+	
+	protected abstract void createRDPConnections();
 
 	protected abstract boolean checkRDPConnections();
 

@@ -101,9 +101,8 @@ public class OvdClientDesktop extends OvdClient {
 	}
 
 	@Override
-	protected boolean createRDPConnections() {	
+	protected RdpConnectionOvd createRDPConnection(ServerAccess server) {	
 		Properties properties = this.smComm.getResponseProperties();
-		ServerAccess server = this.smComm.getServers().get(0);
 		
 		byte flags = 0x00;
 		flags |= RdpConnectionOvd.MODE_DESKTOP;
@@ -125,7 +124,7 @@ public class OvdClientDesktop extends OvdClient {
 			rc = new RdpConnectionOvd(flags);
 		} catch (RdesktopException ex) {
 			Logger.error("Unable to create RdpConnectionOvd object: "+ex.getMessage());
-			return false;
+			return null;
 		}
 		
 		try {
@@ -138,7 +137,7 @@ public class OvdClientDesktop extends OvdClient {
 
 			if (server.getToken().equals("")) {
 				Logger.error("Server need a token to be identified on gateway, so token is empty !");
-				return false;
+				return null;
 			} else {
 				rc.setCookieElement("token", server.getToken());
 			}
@@ -147,10 +146,10 @@ public class OvdClientDesktop extends OvdClient {
 				rc.useSSLWrapper(server.getHost(), server.getPort());
 			} catch(OvdException ex) {
 				Logger.error("Unable to create RdpConnectionOvd SSLWrapper: " + ex.getMessage());
-				return false;
+				return null;
 			} catch(UnknownHostException ex) {
 				Logger.error("Undefined error during creation of RdpConnectionOvd SSLWrapper: " + ex.getMessage());
-				return false;
+				return null;
 			}
 		}
 
@@ -173,9 +172,15 @@ public class OvdClientDesktop extends OvdClient {
 		if (this.inputMethod != null)
 			rc.setInputMethod(this.inputMethod);
 		
-		this.connections.add(rc);
-		
-		return true;
+		return rc;
+	}
+	
+	@Override
+	protected void createRDPConnections() {
+		ServerAccess server = this.smComm.getServers().get(0);
+		RdpConnectionOvd rc = createRDPConnection(server);
+		if (rc != null)
+			this.connections.add(rc);
 	}
 
 	@Override
@@ -234,4 +239,5 @@ public class OvdClientDesktop extends OvdClient {
 
 		return false;
 	}
+
 }

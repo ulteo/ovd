@@ -65,7 +65,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	protected void hide(RdpConnectionOvd co) {}
 
 	public boolean addServer(ServerAccess server, int JSId) {
-		RdpConnectionOvd co = this.initRDPConnection(server);
+		RdpConnectionOvd co = createRDPConnection(server);
 		if (co == null)
 			return false;
 

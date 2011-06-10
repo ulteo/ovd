@@ -197,7 +197,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		this.bpp = properties.getRDPBpp();
 	}
 
-	protected RdpConnectionOvd initRDPConnection(ServerAccess server) {
+	protected RdpConnectionOvd createRDPConnection(ServerAccess server) {
 		if (server == null)
 			return null;
 
@@ -302,10 +302,10 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	}
 
 	@Override
-	protected boolean createRDPConnections() {
+	protected void createRDPConnections() {
 		if (this.smComm == null) {
 			Logger.error("[Programmer error] OvdclientRemoteApps.createRDPConnections() can be used only if 'smComm' variable is not null");
-			return false;
+			return;
 		}
 		
 		Properties properties = this.smComm.getResponseProperties();
@@ -323,15 +323,13 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 		for (ServerAccess server : serversList) {
 			if (this.isCancelled)
-				return false;
+				return;
 
-			if (this.initRDPConnection(server) == null)
-				return false;
+			if (this.createRDPConnection(server) == null)
+				continue;
 		}
 		this.obj.updateProgress(LoadingStatus.SM_GET_APPLICATION, 100);
 		this.ApplicationIndex = 0;
-		
-		return true;
 	}
 
 	@Override
