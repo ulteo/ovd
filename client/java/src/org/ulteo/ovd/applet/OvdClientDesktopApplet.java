@@ -61,14 +61,9 @@ public class OvdClientDesktopApplet extends OvdClient {
 		this.isFullscreen = isFullscreen_;
 	}
 
-	public void adjustDesktopSize() {
-		if (this.connections == null || this.connections.isEmpty())
+	public void adjustDesktopSize(RdpConnectionOvd rc) {
+		if (rc == null || this.properties == null)
 			return;
-
-		if (this.properties == null)
-			return;
-
-		RdpConnectionOvd rc = this.connections.get(0);
 
 		// Prevent greometry modification while the connection is active
 		if (rc.getState() != RdpConnection.State.DISCONNECTED)

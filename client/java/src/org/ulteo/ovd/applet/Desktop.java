@@ -38,6 +38,7 @@ public class Desktop extends OvdApplet implements FocusListener, Callback {
 	private String username = null;
 	private String password = null;
 	private String token = null;
+	private RdpConnectionOvd rc;
 	
 	@Override
 	protected void _init(Properties properties) {
@@ -50,7 +51,7 @@ public class Desktop extends OvdApplet implements FocusListener, Callback {
 		this.ovd = new OvdClientDesktopApplet(properties, this, this);
 		this.ovd.setKeymap(this.keymap);
 		((OvdClientDesktopApplet)this.ovd).setFullscreen(this.fullscreenMode);
-		((OvdClientDesktopApplet)this.ovd).createRDPConnection(aps);
+		this.rc = ((OvdClientDesktopApplet)this.ovd).createRDPConnection(aps);
 		
 		BorderLayout layout = new BorderLayout();
 		this.setLayout(layout);
@@ -59,7 +60,7 @@ public class Desktop extends OvdApplet implements FocusListener, Callback {
 	
 	@Override
 	protected void _start() {	
-		((OvdClientDesktopApplet)this.ovd).adjustDesktopSize();
+		((OvdClientDesktopApplet)this.ovd).adjustDesktopSize(this.rc);
 	}
 	
 	@Override
