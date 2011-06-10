@@ -46,11 +46,15 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 
 	private boolean isFullscreen = false;
 	private FullscreenWindow externalWindow = null;
+	
+	private ServerAccess server;
+	public RdpConnectionOvd rc;
 
-	public OvdClientDesktopApplet(Properties properties_, Callback obj_, OvdApplet applet_) throws ClassCastException {
+	public OvdClientDesktopApplet(Properties properties_, ServerAccess server, Callback obj_, OvdApplet applet_) throws ClassCastException {
 		super(obj_);
 
 		this.properties = properties_;
+		this.server = server;
 
 		if (! (applet_ instanceof FocusListener))
 			throw new ClassCastException("[Programmer error] The Applet class must implement FocusListener class");
@@ -140,14 +144,15 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 		if (this.inputMethod != null)
 			rc.setInputMethod(this.inputMethod);
 
-		this.connections.add(rc);
-		this.customizeConnection(rc);
-		rc.addRdpListener(this);
 		return rc;
 	}
 
-	// no meaning in applet mode
-	protected void createRDPConnections() {};
+	public void createRDPConnections() {
+		this.rc = createRDPConnection(this.server);
+		this.connections.add(rc);
+		this.customizeConnection(rc);
+		rc.addRdpListener(this);
+	};
 	
 	@Override
 	protected void customizeConnection(RdpConnectionOvd co) {
