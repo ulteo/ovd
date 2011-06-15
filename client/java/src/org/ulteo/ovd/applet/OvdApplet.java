@@ -40,7 +40,7 @@ public abstract class OvdApplet extends Applet {
 	
 	protected int port = 0;
 	protected String server = null;
-	public String keymap = null;
+	protected String keymap = null;
 
 	protected boolean finished_init = false;
 	protected boolean started_stop = false;
