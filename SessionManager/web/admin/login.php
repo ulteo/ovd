@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008-2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,6 +31,19 @@ function adminAuthenticate($login_, $password_) {
 function authenticate_ovd_user($login_, $password_) {
 	// it's not the login&password from the conf file in /etc
 	// let's try to login a real user
+	
+	if (Preferences::fileExists() === false) {
+		$_SESSION['admin_error'] = _('The system is not configured');
+		Logger::info('main', 'admin/login.php::authenticate_ovd_user the system is not configured');
+		return false;
+	}
+	
+	if (Preferences::moduleIsEnabled('UserDB') === false) {
+		$_SESSION['admin_error'] = _('The module UserDB is not enabled');
+		Logger::info('main', 'admin/login.php::authenticate_ovd_user module UserDB is not enabled');
+		return false;
+	}
+	
 	$userDB = UserDB::getInstance();
 	$user = $userDB->import($login_);
 	if (!is_object($user)) {
