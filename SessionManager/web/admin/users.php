@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008-2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -88,12 +88,6 @@ function show_default($userDB) {
       echo '</a></td>';
       echo '<td>'.$u->getAttribute('displayname').'</td>';
 
-      echo '<td><form action="users.php">';
-      echo '<input type="submit" value="'._('Manage').'"/>';
-      echo '<input type="hidden" name="action" value="manage" />';
-      echo '<input type="hidden" name="id" value="'.htmlspecialchars($u->getAttribute('login')).'" />';
-      echo '</form></td>';
-
       if ($userdb_rw and $can_manage_users) {
 	echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
 	echo '<input type="submit" value="'._('Delete').'"/>';
@@ -109,7 +103,7 @@ function show_default($userDB) {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tfoot>';
       echo '<tr class="'.$content.'">';
-      echo '<td colspan="4">';
+      echo '<td colspan="3">';
       echo '<a href="javascript:;" onclick="markAllRows(\'user_list_table\'); return false">'._('Mark all').'</a>';
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'user_list_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';

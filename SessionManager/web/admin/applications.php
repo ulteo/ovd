@@ -2,9 +2,9 @@
 /**
  * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com>
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008-2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -93,12 +93,6 @@ function show_default($applicationDB) {
       echo '<td>'.$app->getAttribute('description').'</td>';
       echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
 //       echo '<td>'.$status.'</td>';
-
-      echo '<td><form action="">';
-      echo '<input type="hidden" name="action" value="manage" />';
-      echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
-      echo '<input type="submit" value="'._('Manage').'"/>';
-      echo '</form></td>';
 
       /*if ($is_rw) {
 	echo '<td><form action="" method="post">';

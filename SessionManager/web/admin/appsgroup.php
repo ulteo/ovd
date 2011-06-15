@@ -77,12 +77,6 @@ function show_default() {
       echo '<td>'.$group->description.'</td>';
       echo '<td class="centered">'.$publish.'</td>';
 
-      echo '<td><form action="">';
-      echo '<input type="submit" value="'._('Manage').'"/>';
-      echo '<input type="hidden" name="action" value="manage" />';
-      echo '<input type="hidden" name="id" value="'.$group->id.'" />';
-      echo '</form></td>';
-
 		if ($can_manage_applicationsgroups) {
 			echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
 			echo '<input type="submit" value="'._('Delete').'"/>';
@@ -98,7 +92,7 @@ function show_default() {
 		$content = 'content'.(($count++%2==0)?1:2);
 		echo '<tfoot>';
 		echo '<tr class="'.$content.'">';
-		echo '<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'appgroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'appgroups_list\'); return false">'._('Unmark all').'</a></td>';
+		echo '<td colspan="4"><a href="javascript:;" onclick="markAllRows(\'appgroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'appgroups_list\'); return false">'._('Unmark all').'</a></td>';
 		echo '<td>';
 		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\') && updateMassActionsForm(this, \'appgroups_list\');">';
 		echo '<input type="hidden" name="name" value="ApplicationsGroup" />';

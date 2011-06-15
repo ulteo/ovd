@@ -151,13 +151,6 @@ function show_default() {
 	}
 	echo '</td>';
       }
-      echo '<td>';
-      echo '<form action="servers.php" method="get">';
-      echo '<input type="submit" value="'._('Manage').'"/>';
-      echo '<input type="hidden" name="action" value="manage" />';
-      echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
-      echo '</form>';
-      echo '</td>';
 
       if ($can_do_action) {
 	echo '<td>';
@@ -187,7 +180,7 @@ function show_default() {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tfoot>';
       echo '<tr class="'.$content.'">';
-      echo '<td colspan="'.(($nb_a_servs_online > 0)?8:7).'">';
+      echo '<td colspan="'.(($nb_a_servs_online > 0)?7:6).'">';
       echo '<a href="javascript:;" onclick="markAllRows(\'available_servers_table\'); return false">'._('Mark all').'</a>';
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'available_servers_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';

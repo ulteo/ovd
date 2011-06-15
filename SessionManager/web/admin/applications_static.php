@@ -101,13 +101,6 @@ function show_default($prefs, $applicationDB) {
 			echo '<td>'.$app->getAttribute('description').'</td>';
 			echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
 
-			echo '<td><form action="" method="get">';
-			echo '<input type="hidden" name="action" value="manage" />';
-			echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
-			echo '<input type="submit" value="'._('Manage').'"/>';
-			echo '</form>';
-			echo '</td>';
-
 			if ($can_manage_applications) {
 				echo '<td>';
 				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application?').'\');">';
@@ -126,7 +119,7 @@ function show_default($prefs, $applicationDB) {
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tfoot>';
 			echo '<tr class="'.$content.'">';
-			echo '<td colspan="5">';
+			echo '<td colspan="4">';
 			echo '<a href="javascript:;" onclick="markAllRows(\'applications_list_table\'); return false">'._('Mark all').'</a>';
 			echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'applications_list_table\'); return false">'._('Unmark all').'</a>';
 			echo '</td>';
