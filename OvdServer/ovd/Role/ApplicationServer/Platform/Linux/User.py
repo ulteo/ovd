@@ -24,6 +24,7 @@ import commands
 import fcntl
 import locale
 import pwd
+import time
 import xrdp
 
 from ovd.Logger import Logger
