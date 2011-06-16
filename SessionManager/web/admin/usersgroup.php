@@ -123,11 +123,6 @@ function show_default() {
       echo '<td class="centered">'.$publish.'</td>';
       echo '<td class="centered">'.$group->type.'</td>';
 
-      echo '<td><form action="">';
-      echo '<input type="submit" value="'._('Manage').'"/>';
-      echo '<input type="hidden" name="action" value="manage" />';
-      echo '<input type="hidden" name="id" value="'.$group->getUniqueID().'" />';
-      echo '</form></td>';
 
       if (($group->type != 'static' || $userGroupDB->isWriteable()) and $can_manage_usersgroups) {
         echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
@@ -147,7 +142,7 @@ function show_default() {
     if ( (!$all_static || $userGroupDB->isWriteable()) and $can_manage_usersgroups and count($groups) > 1) {
       echo '<tfoot>';
       echo '<tr class="'.$content.'">';
-      echo '<td colspan="6"><a href="javascript:;" onclick="markAllRows(\'usergroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'usergroups_list\'); return false">'._('Unmark all').'</a></td>';
+      echo '<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'usergroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'usergroups_list\'); return false">'._('Unmark all').'</a></td>';
 	  echo '<td>';
 	  echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\') && updateMassActionsForm(this, \'usergroups_list\');">';
 	  echo '<input type="hidden" name="name" value="UserGroup" />';
