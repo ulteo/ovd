@@ -67,13 +67,21 @@ public class FullscreenWindow extends JFrame implements FocusListener, WindowLis
 		gs.setFullScreenWindow(null);
 	}
 	
+	// FocusListener's method interface
+	
+	@Override
 	public void focusGained(FocusEvent fe) {
 		SwingTools.invokeLater(GUIActions.setAlwaysOnTop(this, true));
 	}
+	
+	@Override
 	public void focusLost(FocusEvent fe) {
 		SwingTools.invokeLater(GUIActions.setAlwaysOnTop(this, false));
 	}
 
+	// WindowListener method interface
+	
+	@Override
 	public void windowClosing(WindowEvent we) {
 		if (we.getComponent() != this)
 			return;
@@ -85,10 +93,17 @@ public class FullscreenWindow extends JFrame implements FocusListener, WindowLis
 
 		new AppletLogoutPopup(this, this.actions);
 	}
+	
+	@Override
 	public void windowClosed(WindowEvent we) {}
+	@Override
 	public void windowOpened(WindowEvent we) {}
+	@Override
 	public void windowIconified(WindowEvent we) {}
+	@Override
 	public void windowDeiconified(WindowEvent we) {}
+	@Override
 	public void windowActivated(WindowEvent we) {}
+	@Override
 	public void windowDeactivated(WindowEvent we) {}
 }
