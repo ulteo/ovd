@@ -93,8 +93,7 @@ public class Desktop extends OvdApplet implements FocusListener, Callback {
 		
 		OptionParser.readParameters(this, properties);
 		
-		String buf = this.getParameter("fullscreen");
-		if (buf != null)
+		if (this.getParameter("fullscreen") != null)
 			this.fullscreenMode = true;
 		
 		return properties;
