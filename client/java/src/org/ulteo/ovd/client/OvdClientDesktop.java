@@ -41,8 +41,8 @@ import org.ulteo.rdp.RdpConnectionOvd;
 
 public abstract class OvdClientDesktop extends OvdClient {
 
-	public OvdClientDesktop(Callback obj) {
-		this(null, obj, false);
+	public OvdClientDesktop() {
+		this(null, null, false);
 	}
 
 	public OvdClientDesktop(SessionManagerCommunication smComm, Callback obj, boolean persistent) {

@@ -27,13 +27,11 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 import org.ulteo.ovd.client.OvdClientDesktop;
-import org.ulteo.ovd.client.authInterface.LoadingStatus;
-import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.rdp.RdpConnectionOvd;
 
-public class Desktop extends OvdApplet implements FocusListener, Callback {
+public class Desktop extends OvdApplet implements FocusListener {
 	
 	private boolean fullscreenMode = false;
 	private String username = null;
@@ -49,7 +47,7 @@ public class Desktop extends OvdApplet implements FocusListener, Callback {
 			aps.setToken(this.token);
 		}
 
-		this.ovd = new OvdClientDesktopApplet(properties, aps, this, this);
+		this.ovd = new OvdClientDesktopApplet(properties, aps, this);
 		this.ovd.setKeymap(this.keymap);
 		((OvdClientDesktopApplet)this.ovd).setFullscreen(this.fullscreenMode);
 		((OvdClientDesktopApplet)this.ovd).createRDPConnections();
@@ -97,6 +95,8 @@ public class Desktop extends OvdApplet implements FocusListener, Callback {
 		if (this.getParameter("fullscreen") != null)
 			this.fullscreenMode = true;
 	}
+	
+	// FocusListener's method interface
 
 	@Override
 	public void focusGained(FocusEvent e) {
@@ -111,22 +111,5 @@ public class Desktop extends OvdApplet implements FocusListener, Callback {
 			this.focusManager.performedFocusLost(e.getComponent());
 		}
 	}
-
-	@Override
-	public void sessionDisconnecting() {
-		if (this.ovd == null || this.ovd.getAvailableConnections() == null)
-			return;
-
-		for (RdpConnectionOvd co : this.ovd.getAvailableConnections())
-			co.disconnect();
-	}
-
-	public void reportError(int code, String msg) {}
-	public void reportErrorStartSession(String code) {}
-	public void reportBadXml(String data) {}
-	public void reportUnauthorizedHTTPResponse(String moreInfos) {}
-	public void reportNotFoundHTTPResponse(String moreInfos) {}
-	public void sessionConnected() {}
-	public void updateProgress(LoadingStatus clientInstallApplication, int subStatus) {}
 
 }

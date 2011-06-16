@@ -33,16 +33,16 @@ import javax.swing.JFrame;
 import org.ulteo.Logger;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
-import org.ulteo.rdp.RdpActions;
+import org.ulteo.ovd.client.OvdClient;
 
 
 public class FullscreenWindow extends JFrame implements FocusListener, WindowListener {
-	private RdpActions actions = null;
+	private OvdClient client = null;
 
-	public FullscreenWindow(RdpActions actions_) {
+	public FullscreenWindow(OvdClient client_) {
 		super(null, GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration());
 
-		this.actions = actions_;
+		this.client = client_;
 
 		this.setUndecorated(true);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -86,12 +86,12 @@ public class FullscreenWindow extends JFrame implements FocusListener, WindowLis
 		if (we.getComponent() != this)
 			return;
 
-		if (this.actions == null) {
-			Logger.error("Can't manage disconnection request: rdpAction is null");
+		if (this.client == null) {
+			Logger.error("Can't manage disconnection request: ovdClient is null");
 			return;
 		}
 
-		new AppletLogoutPopup(this, this.actions);
+		new AppletLogoutPopup(this, this.client);
 	}
 	
 	@Override

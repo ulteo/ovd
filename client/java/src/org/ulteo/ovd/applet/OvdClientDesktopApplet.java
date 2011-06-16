@@ -29,7 +29,6 @@ import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
 import org.ulteo.ovd.client.OvdClientDesktop;
-import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.rdp.RdpConnectionOvd;
@@ -45,8 +44,8 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 	private ServerAccess server;
 	public RdpConnectionOvd rc;
 
-	public OvdClientDesktopApplet(Properties properties_, ServerAccess server, Callback obj_, OvdApplet applet_) throws ClassCastException {
-		super(obj_);
+	public OvdClientDesktopApplet(Properties properties_, ServerAccess server, OvdApplet applet_) throws ClassCastException {
+		super();
 
 		this.properties = properties_;
 		this.server = server;

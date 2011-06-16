@@ -22,16 +22,17 @@ package org.ulteo.ovd.applet;
 
 import javax.swing.JFrame;
 import org.ulteo.ovd.client.AbstractLogoutPopup;
-import org.ulteo.rdp.RdpActions;
+import org.ulteo.ovd.client.OvdClient;
+import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.utils.I18n;
 
 public class AppletLogoutPopup extends AbstractLogoutPopup {
-	RdpActions actions = null;
+	OvdClient client = null;
 
-	public AppletLogoutPopup(JFrame frame_, RdpActions actions_) {
+	public AppletLogoutPopup(JFrame frame_, OvdClient client_) {
 		super(frame_);
 
-		this.actions = actions_;
+		this.client = client_;
 
 		this.setTitle(I18n._("Warning!"));
 		this.setText(I18n._("Do you really want to close the window?"));
@@ -44,7 +45,8 @@ public class AppletLogoutPopup extends AbstractLogoutPopup {
 	protected void processOption(int option_) {
 		switch (option_) {
 			case 0 :
-				this.actions.disconnectAll();
+				for (RdpConnectionOvd co : this.client.getAvailableConnections())
+					co.disconnect();
 				break;
 			default:
 				this.setVisible(true);
