@@ -62,6 +62,7 @@ public class PortalFrame extends JFrame implements WindowListener {
 	private boolean newPanelAdded = false;
 	private boolean iconsButtonEnabled = false;
 	private boolean showBugReporter = false;
+	private Image frameLogo = null;
 	
 	public PortalFrame(String username, boolean showBugReporter_) {
 		if (username == null)
@@ -78,15 +79,9 @@ public class PortalFrame extends JFrame implements WindowListener {
 	
 	
 	public void init() {
-		Image frameLogo = this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
-		try {
-			this.systray = new IntegratedTrayIcon(this, frameLogo);
-		} catch (UnsupportedOperationException ex) {
-			Logger.error("Systray is not supported: "+ex.getMessage());
-			this.systray = null;
-		}
+		this.frameLogo = this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
 		
-		this.setIconImage(frameLogo);
+		this.setIconImage(this.frameLogo);
 		this.setTitle("OVD Remote Applications");
 		this.setSize(700, 400);
 		this.setResizable(false);
@@ -143,8 +138,6 @@ public class PortalFrame extends JFrame implements WindowListener {
 		gbc.insets.right = 5;
 		this.add(runningAppsPanel, gbc);
 		
-		if (this.systray != null)
-			this.systray.addSysTray();
 		this.validate();
 	}
 	
@@ -160,6 +153,18 @@ public class PortalFrame extends JFrame implements WindowListener {
 		gbc.anchor = GridBagConstraints.SOUTHEAST;
 		this.add(sep, gbc);
 		this.validate();
+		this.initSystray();
+	}
+	
+	public void initSystray() {
+		try {
+			this.systray = new IntegratedTrayIcon(this, this.frameLogo, this.rdpActions);
+		} catch (UnsupportedOperationException ex) {
+			Logger.error("Systray is not supported: "+ex.getMessage());
+			this.systray = null;
+		}
+		if (this.systray != null)
+			this.systray.addSysTray();
 	}
 		
 	public MyApplicationPanel getApplicationPanel() {

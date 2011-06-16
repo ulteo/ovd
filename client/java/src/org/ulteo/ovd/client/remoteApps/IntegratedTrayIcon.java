@@ -23,6 +23,8 @@ package org.ulteo.ovd.client.remoteApps;
 import java.awt.AWTException;
 import java.awt.Frame;
 import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
@@ -31,18 +33,21 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 
 import org.ulteo.Logger;
+import org.ulteo.rdp.RdpActions;
 
 public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 	private Frame portal = null;
 	private SystemTray systemTray = null;
+	private RdpActions rdpActions = null;
 
-
-	public IntegratedTrayIcon(Frame portal, Image logo) throws UnsupportedOperationException {
+	public IntegratedTrayIcon(Frame portal, Image logo, RdpActions actions) throws UnsupportedOperationException {
 		super(logo, "Open Virtual Desktop");
 		this.setImage(logo);
 		this.portal = portal;
 		this.setImageAutoSize(true);
 		this.addActionListener(this);
+		this.rdpActions = actions;
+		this.initPopupMenu();
 		this.systemTray = SystemTray.getSystemTray();
 	}
 
@@ -71,6 +76,29 @@ public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 			portal.setVisible(true);
 			portal.setState(JFrame.NORMAL);
 		}
+	}
+	
+	public void initPopupMenu() {
+		PopupMenu popup = new PopupMenu();
+		MenuItem itemClose = new MenuItem("Close");
+		MenuItem itemDisconnect = new MenuItem("Disconnect");
+		itemClose.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				rdpActions.exit(0);
+			}
+		});
+		itemDisconnect.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				rdpActions.disconnectAll();
+			}
+		});
+		popup.add(itemDisconnect);
+		popup.add(itemClose);
+		this.setPopupMenu(popup);
 	}
 
 }
