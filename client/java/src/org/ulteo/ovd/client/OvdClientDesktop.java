@@ -62,9 +62,7 @@ public abstract class OvdClientDesktop extends OvdClient {
 		int bpp = this.smComm.getResponseProperties().getRDPBpp();
 		
 		// Ensure that width is multiple of 4
-		// Prevent artifact on screen with a with resolution
-		// not divisible by 4
-		//Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		// Prevent artifact on screen with a with resolution not divisible by 4
 		Dimension screenSize = getScreenSize();
 		rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, bpp);
 	}
