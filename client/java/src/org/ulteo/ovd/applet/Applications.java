@@ -23,16 +23,11 @@
 package org.ulteo.ovd.applet;
 
 import org.ulteo.Logger;
-import org.ulteo.rdp.OvdAppChannel;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import org.ulteo.ovd.sm.Properties;
-import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 
+import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.seamless.SeamlessFrame;
 import org.ulteo.rdp.seamless.SeamlessPopup;
 
@@ -58,55 +53,9 @@ class FileApp {
 }
 
 
-abstract class Order {}
-
-class OrderServer extends Order {
-	public int id;
-	public String host;
-	public int port;
-	public String login;
-	public String password;
-	public String gw_token;
+public class Applications extends OvdApplet {
 	
-	public OrderServer(int id, String host, int port, String gw_token, String login, String password) {
-		this.id = id;
-		this.host = host;
-		this.port = port;
-		this.gw_token = gw_token;
-		this.login = login;
-		this.password = password;
-	}
-	
-	public String toString() {
-		return String.format("Server (id: %s, host: %s, token: %s)",
-				this.id, this.host, this.gw_token);
-	}
-}
-
-class OrderApplication extends Order {
-	public int token;
-	public int app_id;
-	public int server_id;
-	public FileApp file = null;
-	
-	public OrderApplication(int token, int app_id, int server_id, FileApp f) {
-		this.token = token;
-		this.app_id = app_id;
-		this.server_id = server_id;	
-		file = f;
-	}
-	
-	public String toString() {
-		return String.format("Application (id: %s, application: %s, server: %s, %s)",
-				this.token, this.app_id, this.server_id, this.file);
-	}
-}
-
-
-public class Applications extends OvdApplet implements Runnable {
-	
-	private List<Order> spoolOrder = Collections.synchronizedList(new ArrayList<Order>());
-	private Thread spoolThread = null;
+	private SpoolOrder spooler;
 	
 	@Override
 	protected void _init(Properties properties) {
@@ -119,29 +68,27 @@ public class Applications extends OvdApplet implements Runnable {
 		this.ovd = new OvdClientApplicationsApplet(smComm, properties, this);
 		this.ovd.setKeymap(this.keymap);
 		
-		this.spoolThread = new Thread(this);
+		this.spooler = new SpoolOrder((OvdClientApplicationsApplet) this.ovd);
 	}
-	
 	
 	@Override
 	protected void _start() {	
-		this.spoolThread.start();
+		this.spooler.start();
 	}
 	
 	@Override
 	protected void _stop() {
-		if (this.spoolThread.isAlive())
-			this.spoolThread.interrupt();
+		if (this.spooler.isAlive())
+			this.spooler.interrupt();
 	}
 	
 	@Override
 	protected void _destroy() {
-		this.spoolOrder = null;
-		this.spoolThread = null;
+		this.spooler = null;
 	}
 	
-	
-	public Properties readParameters() {
+	@Override
+	protected Properties readParameters() {
 		Properties properties = new Properties(Properties.MODE_REMOTEAPPS);
 
 		String buf = this.getParameter("keymap");
@@ -156,70 +103,27 @@ public class Applications extends OvdApplet implements Runnable {
 		return properties;
 	}
 	
-	public void run() {
-		Order o;
-		while(true) {
-			if (this.spoolOrder.size() > 0) {
-				o = this.spoolOrder.remove(0);
-			} else {
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-					return;
-				}
-				continue;
-			}
-			Logger.info("Got job: "+o);
-			OvdClientApplicationsApplet ovd = (OvdClientApplicationsApplet) this.ovd;
-			
-			if (o instanceof OrderServer) {
-				OrderServer order = (OrderServer)o;
-
-				ServerAccess server = new ServerAccess(order.host, order.port, order.login, order.password);
-				if (order.gw_token != null) {
-					server.setModeGateway(true);
-					server.setToken(order.gw_token);
-				}
-
-				if (! ovd.addServer(server, order.id))
-					continue;
-			}
-			
-			else if (o instanceof OrderApplication) {
-				OrderApplication order = (OrderApplication)o;
-
-				if (order.file == null)
-					ovd.startApplication(order.token, order.app_id, order.server_id);
-				else
-					ovd.startApplication(order.token, order.app_id, order.server_id, 
-							order.file.type, order.file.path, order.file.share);
-			} else {
-				Logger.error("do not receive a good order");
-			}
-		}
-	}
-	
 	// ********
 	// Methods called by Javascript
 	// ********
 	
 	public boolean serverConnect(int id, String host, int port, String login, String password) {
-		this.spoolOrder.add(new OrderServer(id, host, port, null, login, password));
+		this.spooler.add(new OrderServer(id, host, port, null, login, password));
 		return true;
 	}
 	
 	public boolean serverConnect(int id, String host, int port, String token, String login, String password) {
-		this.spoolOrder.add(new OrderServer(id, host, port, token, login, password));
+		this.spooler.add(new OrderServer(id, host, port, token, login, password));
 		return true;
 	}
 	
 	public void startApplication(int token, int app_id, int server_id) {
-		this.spoolOrder.add(new OrderApplication(token, app_id, new Integer(server_id), null));
+		this.spooler.add(new OrderApplication(token, app_id, new Integer(server_id), null));
 	}
 	
 	public void startApplicationWithFile(int token, int app_id, int server_id, String f_type, String f_path, String f_share) {
 		FileApp f = new FileApp(f_type, f_path, f_share);
-		this.spoolOrder.add(new OrderApplication(token, app_id, new Integer(server_id), f));
+		this.spooler.add(new OrderApplication(token, app_id, new Integer(server_id), f));
 	}
 	
 }
