@@ -125,7 +125,10 @@ class User(AbstractUser):
 			xrdp.UserAllowUserShellOverride(self.name, True)
 		
 		
-		self.home = pwd.getpwnam(self.name)[5]
+		try:		
+			self.home = pwd.getpwnam(self.name)[5]
+		except KeyError:
+			return False
 		return True
 	
 	
