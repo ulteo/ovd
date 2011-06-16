@@ -74,15 +74,6 @@ public class Desktop extends OvdApplet implements FocusListener, Callback {
 		this.token = null;
 	}
 	
-	public String getParameterNonEmpty(String key) throws Exception {
-		String buffer = super.getParameter(key);
-		if (buffer != null && buffer.equals("")) {
-			System.err.println("Parameter "+key+": empty value");
-			throw new Exception();
-		}
-
-		return buffer;
-	}
 
 	public Properties readParameters() throws Exception {
 		Properties properties = new Properties(Properties.MODE_DESKTOP);

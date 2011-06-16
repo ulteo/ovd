@@ -96,7 +96,22 @@ public abstract class OvdApplet extends Applet {
 	protected abstract void _destroy();
 	
 	protected abstract Properties readParameters() throws Exception;
+
 	
+	/**
+	 * get a parameter give to the applet
+	 * @param key
+	 * 		key of the parameter
+	 * @return
+	 * 		parameter expected
+	 * @throws Exception 
+	 */
+	public String getParameterNonEmpty(String key) throws Exception {
+		String param = super.getParameter(key);
+		if (param == null || param.isEmpty())
+			throw new Exception(String.format("Invalid parameter '%s'", key));
+		return param;
+	}
 	
 	@Override
 	public final void init() {

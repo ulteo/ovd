@@ -22,8 +22,6 @@
 
 package org.ulteo.ovd.applet;
 
-import org.ulteo.Logger;
-
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 
@@ -88,15 +86,10 @@ public class Applications extends OvdApplet {
 	}
 	
 	@Override
-	protected Properties readParameters() {
+	protected Properties readParameters() throws Exception {
 		Properties properties = new Properties(Properties.MODE_REMOTEAPPS);
 
-		String buf = this.getParameter("keymap");
-		if (buf == null || buf.equals("")) {
-			Logger.error("Parameter "+buf+": empty value");
-			return null;
-		}
-		this.keymap = buf;
+		this.keymap = this.getParameterNonEmpty("keymap");
 		
 		OptionParser.readParameters(this, properties);
 		
