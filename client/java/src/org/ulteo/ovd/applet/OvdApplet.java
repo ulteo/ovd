@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,6 +31,7 @@ import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.ovd.sm.Properties;
+import org.ulteo.ovd.sm.Protocol;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 import org.ulteo.utils.AbstractFocusManager;
 import org.ulteo.utils.jni.WorkArea;
@@ -94,8 +96,10 @@ public abstract class OvdApplet extends Applet {
 	protected abstract void _stop();
 
 	protected abstract void _destroy();
+
+	protected abstract int getMode();
 	
-	protected abstract Properties readParameters() throws Exception;
+	protected abstract void readParameters() throws Exception;
 
 	
 	/**
@@ -113,6 +117,7 @@ public abstract class OvdApplet extends Applet {
 		return param;
 	}
 	
+	
 	@Override
 	public final void init() {
 		Logger.error(this.getClass().toString() + "init");
@@ -121,7 +126,14 @@ public abstract class OvdApplet extends Applet {
 
 		try {
 			System.getProperty("user.home");
-			Properties properties = readParameters();
+			
+			this.readParameters();
+			Properties properties = new Properties(getMode());
+			for (String setting : Protocol.settingsNames) {
+				String value = this.getParameter("setting_"+setting);
+				if (value != null)
+					Protocol.parseSessionSettings(properties, setting, value);		
+			}
 			
 			if (properties.isPrinters()){
 				OVDStandalonePrinterThread appletPrinterThread = new OVDStandalonePrinterThread();

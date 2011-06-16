@@ -74,10 +74,13 @@ public class Desktop extends OvdApplet implements FocusListener, Callback {
 		this.token = null;
 	}
 	
-
-	public Properties readParameters() throws Exception {
-		Properties properties = new Properties(Properties.MODE_DESKTOP);
-		
+	@Override
+	protected int getMode() {
+		return Properties.MODE_DESKTOP;
+	}
+	
+	@Override
+	public void readParameters() throws Exception {
 		this.server = this.getParameterNonEmpty("server");
 		this.username = this.getParameterNonEmpty("username");
 		this.password = this.getParameterNonEmpty("password");
@@ -91,12 +94,8 @@ public class Desktop extends OvdApplet implements FocusListener, Callback {
 			throw new Exception("Unable to get valid port from applet parameters: "+e.getMessage());
 		}
 		
-		OptionParser.readParameters(this, properties);
-		
 		if (this.getParameter("fullscreen") != null)
 			this.fullscreenMode = true;
-		
-		return properties;
 	}
 
 	@Override
@@ -129,4 +128,5 @@ public class Desktop extends OvdApplet implements FocusListener, Callback {
 	public void reportNotFoundHTTPResponse(String moreInfos) {}
 	public void sessionConnected() {}
 	public void updateProgress(LoadingStatus clientInstallApplication, int subStatus) {}
+
 }

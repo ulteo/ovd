@@ -84,16 +84,15 @@ public class Applications extends OvdApplet {
 	protected void _destroy() {
 		this.spooler = null;
 	}
+
+	@Override
+	protected int getMode() {
+		return Properties.MODE_REMOTEAPPS;
+	}
 	
 	@Override
-	protected Properties readParameters() throws Exception {
-		Properties properties = new Properties(Properties.MODE_REMOTEAPPS);
-
+	protected void readParameters() throws Exception {
 		this.keymap = this.getParameterNonEmpty("keymap");
-		
-		OptionParser.readParameters(this, properties);
-		
-		return properties;
 	}
 	
 	// ********
