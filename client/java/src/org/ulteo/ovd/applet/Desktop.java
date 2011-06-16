@@ -84,18 +84,6 @@ public class Desktop extends OvdApplet implements FocusListener, Callback {
 		return buffer;
 	}
 
-	public String getParameter(String key, boolean required) throws Exception {
-		String buffer = this.getParameterNonEmpty(key);
-
-		if (required && buffer == null) {
-			System.err.println("Missing parameter key '"+key+"'");
-			throw new Exception();
-		}
-
-		return buffer;
-	}
-
-
 	public Properties readParameters() throws Exception {
 		Properties properties = new Properties(Properties.MODE_DESKTOP);
 		
