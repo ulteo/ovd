@@ -36,7 +36,7 @@ public class NativeLogoutPopup extends AbstractLogoutPopup {
 		this.actions = actions_;
 
 		this.setTitle(I18n._("Warning!"));
-		this.setText(I18n._("Do you really want to close the window?"));
+		this.setText(I18n._("This will close your session, do you really want to continue?"));
 		this.setChoices(new String[] {I18n._("Yes"), I18n._("Go back to authentication"), I18n._("No")});
 		
 		this.showPopup();
