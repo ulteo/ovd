@@ -59,11 +59,10 @@ public abstract class OvdClientDesktop extends OvdClient {
 		if (rc.getState() != RdpConnection.State.DISCONNECTED)
 			return;
 
-		int bpp = this.smComm.getResponseProperties().getRDPBpp();
-		
 		// Ensure that width is multiple of 4
 		// Prevent artifact on screen with a with resolution not divisible by 4
 		Dimension screenSize = getScreenSize();
+		int bpp = this.getProperties().getRDPBpp();
 		rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, bpp);
 	}
 
