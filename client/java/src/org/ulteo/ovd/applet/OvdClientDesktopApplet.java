@@ -28,7 +28,6 @@ import java.awt.event.FocusListener;
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
-import org.ulteo.ovd.FullscreenWindow;
 import org.ulteo.ovd.client.OvdClientDesktop;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.Properties;

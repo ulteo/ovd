@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package org.ulteo.ovd;
+package org.ulteo.ovd.applet;
 
 import java.awt.Dimension;
 import java.awt.event.FocusEvent;
@@ -33,7 +33,6 @@ import javax.swing.JFrame;
 import org.ulteo.Logger;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
-import org.ulteo.ovd.applet.AppletLogoutPopup;
 import org.ulteo.rdp.RdpActions;
 
 
