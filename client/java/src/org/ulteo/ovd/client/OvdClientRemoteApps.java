@@ -250,7 +250,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 		// application icon processing
 		HashMap<Integer, ImageIcon> appsIcons = new HashMap<Integer, ImageIcon>();
-		for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
+		for (org.ulteo.ovd.sm.Application appItem : server.applications) {
 			if (this.isCancelled)
 				return null;
 
@@ -275,7 +275,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		// mime-type icon processing
 		HashSet<String> mimesTypes = new HashSet<String>();
 		HashMap<String, ImageIcon> mimeTypesIcons = new HashMap<String, ImageIcon>();
-		for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
+		for (org.ulteo.ovd.sm.Application appItem : server.applications) {
 			for (String mimeType : appItem.getMimes()) {
 				if (! mimesTypes.add(mimeType) || (this.system.getMimeTypeIcon(mimeType) != null))
 					continue;
@@ -314,7 +314,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		this.numberOfApplication = 0;
 
 		for (ServerAccess server : serversList)
-			this.numberOfApplication += server.getApplications().size();
+			this.numberOfApplication += server.applications.size();
 
 		this.ApplicationIncrement = 100 / numberOfApplication;
 		this.ApplicationIndex = 0;

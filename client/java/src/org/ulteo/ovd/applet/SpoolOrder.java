@@ -35,24 +35,15 @@ abstract class Order {}
 
 class OrderServer extends Order {
 	public int id;
-	public String host;
-	public int port;
-	public String login;
-	public String password;
-	public String gw_token;
+	public ServerAccess server;
 	
-	public OrderServer(int id, String host, int port, String gw_token, String login, String password) {
-		this.id = id;
-		this.host = host;
-		this.port = port;
-		this.gw_token = gw_token;
-		this.login = login;
-		this.password = password;
+	public OrderServer(int JSId, ServerAccess server) {
+		this.id = JSId;
+		this.server = server;
 	}
 	
 	public String toString() {
-		return String.format("Server (id: %s, host: %s, token: %s)",
-				this.id, this.host, this.gw_token);
+		return String.format("Server (id: %s, server: [%s])", this.id, this.server);
 	}
 }
 
@@ -105,14 +96,7 @@ class SpoolOrder extends Thread {
 			
 			if (o instanceof OrderServer) {
 				OrderServer order = (OrderServer)o;
-
-				ServerAccess server = new ServerAccess(order.host, order.port, order.login, order.password);
-				if (order.gw_token != null) {
-					server.setModeGateway(true);
-					server.setToken(order.gw_token);
-				}
-
-				if (! client.addServer(order.id, server))
+				if (! client.addServer(order.id, order.server))
 					continue;
 			}
 			

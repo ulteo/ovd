@@ -22,12 +22,25 @@
 
 package org.ulteo.ovd.applet;
 
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.ulteo.Logger;
+import org.ulteo.ovd.sm.Application;
 import org.ulteo.ovd.sm.Properties;
+import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.seamless.SeamlessFrame;
 import org.ulteo.rdp.seamless.SeamlessPopup;
+import org.w3c.dom.Document;
 
 
 class FileApp {
@@ -55,6 +68,8 @@ public class Applications extends OvdApplet {
 	
 	private SpoolOrder spooler;
 	
+	private Map<Integer, ArrayList<Application>> serverApps;
+	
 	@Override
 	protected void _init(Properties properties) {
 		if (properties.isPrinters()) {
@@ -67,6 +82,7 @@ public class Applications extends OvdApplet {
 		this.ovd.setKeymap(this.keymap);
 		
 		this.spooler = new SpoolOrder((OvdClientApplicationsApplet) this.ovd);
+		this.serverApps = Collections.synchronizedMap(new HashMap<Integer, ArrayList<Application>>());
 	}
 	
 	@Override
@@ -83,6 +99,7 @@ public class Applications extends OvdApplet {
 	@Override
 	protected void _destroy() {
 		this.spooler = null;
+		this.serverApps = null;
 	}
 
 	@Override
@@ -98,14 +115,42 @@ public class Applications extends OvdApplet {
 	// ********
 	// Methods called by Javascript
 	// ********
-	
-	public boolean serverConnect(int id, String host, int port, String login, String password) {
-		this.spooler.add(new OrderServer(id, host, port, null, login, password));
-		return true;
+
+	/**
+	 * retrieve all informations about a server. This function is optional and must be called before connecting.
+	 * @param JSId
+	 * 		Javascript ID of the server
+	 * @param xml
+	 * 		XML information about the server
+	 */
+	public void serverPrepare(int JSId, String xml) {
+		Document doc = null;
+		try {
+			DocumentBuilder domBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			doc = domBuilder.parse(new ByteArrayInputStream(xml.getBytes()));
+		} catch (Exception e) {
+			Logger.warn("Error during 'serverPrepare' parsing: " + e.getMessage());
+			return;
+		}
+		serverApps.put(JSId, SessionManagerCommunication.parseApplications(doc.getDocumentElement()));
 	}
 	
-	public boolean serverConnect(int id, String host, int port, String token, String login, String password) {
-		this.spooler.add(new OrderServer(id, host, port, token, login, password));
+	public boolean serverConnect(int JSId, String host, int port, String login, String password) {
+		return this.serverConnect(JSId, host, port, null, login, password);
+	}
+	
+	public boolean serverConnect(int JSId, String host, int port, String gw_token, String login, String password) {
+		ServerAccess server = new ServerAccess(host, port, login, password);
+
+		ArrayList<Application> apps = serverApps.get(JSId);
+		if (apps != null)
+			server.applications = apps;
+		
+		if (gw_token != null) {
+			server.setToken(gw_token);
+			server.setModeGateway(true);
+		}
+		this.spooler.add(new OrderServer(JSId, server));
 		return true;
 	}
 	

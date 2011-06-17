@@ -718,23 +718,8 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 					server.setToken(serverNode.getAttribute("token"));
 					server.setModeGateway(true);
 				}
-
-				NodeList applicationsNodes = serverNode.getElementsByTagName("application");
-				for (int j = 0; j < applicationsNodes.getLength(); j++) {
-					Element applicationNode = (Element) applicationsNodes.item(j);
-
-					Application application = new Application(Integer.parseInt(applicationNode.getAttribute("id")),
-							applicationNode.getAttribute("name"));
-					
-					NodeList mimeNodes = applicationNode.getElementsByTagName("mime");
-					for (int k = 0; k < mimeNodes.getLength(); k++) {
-						Element mimeNode = (Element) mimeNodes.item(k);
-
-						application.addMime(mimeNode.getAttribute("type"));
- 					}
-
-					server.addApplication(application);
- 				}
+				
+				server.applications = parseApplications(serverNode);
 				this.servers.add(server);
  			}
  		}
@@ -745,6 +730,33 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		}
 
 		return true;
+	}
+	
+	/**
+	 * parse a DOM {@link Element} list of applications to a standard java {@link ArrayList}
+	 * @param serverNode
+	 * 		DOM {@link Element} to parse
+	 * @return
+	 * 		iterable {@link ArrayList} of {@link Application}
+	 */
+	public static ArrayList<Application> parseApplications(Element serverNode) {
+		ArrayList<Application> apps = new ArrayList<Application>();
+		
+		NodeList applicationsNodes = serverNode.getElementsByTagName("application");
+		for (int j = 0; j < applicationsNodes.getLength(); j++) {
+			Element applicationNode = (Element) applicationsNodes.item(j);
+
+			Application application = new Application(Integer.parseInt(applicationNode.getAttribute("id")),
+					applicationNode.getAttribute("name"));
+			
+			NodeList mimeNodes = applicationNode.getElementsByTagName("mime");
+			for (int k = 0; k < mimeNodes.getLength(); k++) {
+				Element mimeNode = (Element) mimeNodes.item(k);
+				application.addMime(mimeNode.getAttribute("type"));
+			}
+			apps.add(application);
+		}
+		return apps;
 	}
 
 	private void dumpXML(Document document, String msg) {

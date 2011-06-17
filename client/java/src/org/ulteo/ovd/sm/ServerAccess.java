@@ -31,7 +31,7 @@ public class ServerAccess {
 	private String token = null;
 	private boolean mode_gateway = false;
 
-	private List<Application> applications = null;
+	public List<Application> applications = null;
 	
 	public ServerAccess(String host, int port, String login, String password) {
 		this.host = host;
@@ -58,14 +58,6 @@ public class ServerAccess {
 		return this.password;
 	}
 	
-	public List<Application> getApplications() {
-		return this.applications;
-	}
-	
-	public void addApplication(Application application) {
-		this.applications.add(application);
-	}
-
 	public void setToken(String token_) {
 		this.token = token_;
 	}

@@ -303,7 +303,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 			// not divisible by 4
 			rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, RdpConnectionOvd.DEFAULT_BPP);
 
-			for (org.ulteo.ovd.sm.Application appItem : server.getApplications())
+			for (org.ulteo.ovd.sm.Application appItem : server.applications)
 				rc.addApp(new Application(rc, appItem.getId(), appItem.getName(), appItem.getMimes(), sm.askForIcon(appItem)));
 
 			this.co.add(rc);
