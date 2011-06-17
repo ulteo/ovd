@@ -23,6 +23,7 @@ package org.ulteo.ovd.client.desktop;
 
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
@@ -74,19 +75,16 @@ public class DesktopFrame extends JFrame implements WindowListener, InputListene
 		setVisible(false);
 		this.addWindowListener(this);
 
-		if (this.fullscreen)
-			this.initFullscreen();
+		if (this.fullscreen) {
+			SwingTools.invokeLater(GUIActions.setAlwaysOnTop(this, this.fullscreen));
+			this.setUndecorated(this.fullscreen);
+			this.fullscreen_keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK);
+			this.scrollFrame = new ScrollableDesktopFrame(this);
+		} else {
+			this.setLocationRelativeTo(null);
+		}
 		
 		pack();
-	}
-
-	private void initFullscreen() {
-		SwingTools.invokeLater(GUIActions.setAlwaysOnTop(this, this.fullscreen));
-		this.setUndecorated(this.fullscreen);
-
-		this.fullscreen_keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK);
-
-		this.scrollFrame = new ScrollableDesktopFrame(this);
 	}
 
 	public void destroy() {
@@ -99,7 +97,18 @@ public class DesktopFrame extends JFrame implements WindowListener, InputListene
 		this.setVisible(false);
 		this.dispose();
 	}
-
+	
+	/**
+	 * return size of the Frame without counting the external inset
+	 * @return
+	 * 		internal dimension of the frame
+	 */
+	public Dimension getInternalSize() {
+		Insets inset = this.getInsets();
+		return new Dimension(this.getWidth() - (inset.left + inset.right) + 2,
+				this.getHeight() - (inset.bottom + inset.top) + 2);
+	}
+	
 	public void setCanvas(RdesktopCanvas canvas_) {
 		this.canvas = canvas_;
 

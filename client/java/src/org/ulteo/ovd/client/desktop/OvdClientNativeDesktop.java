@@ -25,8 +25,6 @@
 package org.ulteo.ovd.client.desktop;
 
 import java.awt.Dimension;
-import java.awt.Insets;
-import java.awt.Toolkit;
 
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdpConnection;
@@ -44,14 +42,10 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClien
 	
 	private DesktopFrame desktop = null;
 	private Dimension resolution = null;
-	private boolean fullscreen = false;
 	
 	public OvdClientNativeDesktop(SessionManagerCommunication smComm, Dimension resolution_, Callback obj, boolean persistent) {
 		super(smComm, obj, persistent);
 		this.resolution = resolution_;
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		this.fullscreen = (this.resolution.width == screenSize.width && this.resolution.height == screenSize.height);
 	}
 
 	@Override
@@ -61,7 +55,16 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClien
 
 	@Override
 	protected void customizeConnection(RdpConnectionOvd co) {
-		this.initDesktop(co);
+		boolean isFullscreen = (this.resolution.width == getScreenSize().width &&
+				this.resolution.height == getScreenSize().height);
+
+		if (this.desktop == null)
+			this.desktop = new DesktopFrame(this.resolution, isFullscreen, this);
+
+		if (! isFullscreen) {
+			Dimension dim = this.desktop.getInternalSize();
+			co.setGraphic(dim.width, dim.height, co.getBpp());
+		}
 		co.setShell("OvdDesktop");
 	}
 
@@ -78,20 +81,6 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClien
 	public void hide(RdpConnectionOvd co) {
 		this.desktop.destroy();
 		this.desktop = null;
-	}
-
-	private void initDesktop(RdpConnectionOvd co) {
-		if (this.desktop != null)
-			return;
-		
-		this.desktop = new DesktopFrame(this.resolution, this.fullscreen, this);
-
-		if (! this.fullscreen) {
-			this.desktop.setLocationRelativeTo(null);
-			Insets inset = this.desktop.getInsets();
-			co.setGraphic((this.desktop.getWidth()-(inset.left+inset.right)+2),
-					(this.desktop.getHeight()-(inset.bottom+inset.top)+2), co.getBpp());
-		}
 	}
 
 	@Override
