@@ -37,7 +37,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	private Properties properties = null;
 
 	// matching variable associate the RDP connection list index with the JS RDP connection id
-	private ConcurrentHashMap<Integer, Integer> matching = null;
+	private ConcurrentHashMap<Integer, RdpConnectionOvd> matching = null;
 
 	private OvdApplet applet = null;
 
@@ -46,7 +46,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 
 		this.properties = properties_;
 		this.applet = applet_;
-		this.matching = new ConcurrentHashMap<Integer, Integer>();
+		this.matching = new ConcurrentHashMap<Integer, RdpConnectionOvd>();
 		this.showDesktopIcons = true;
 
 		this.configureRDP(this.properties);
@@ -81,7 +81,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 		this.customizeConnection(co);
 		co.addRdpListener(this);
 		co.connect();
-		this.matching.put(JSId, this.connections.indexOf(co));
+		this.matching.put(JSId, co);
 		
 		return true;
 	}
@@ -91,15 +91,9 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	}
 
 	public void startApplication(int token, int app_id, int server_id, int shareType, String path, String sharename) {
-		Integer listId = this.matching.get(server_id);
-		if (listId == null) {
-			Logger.error("Cannot launch application "+app_id+"("+token+"): Bad server id");
-			return;
-		}
-
-		RdpConnectionOvd co = this.connections.get(listId.intValue());
+		RdpConnectionOvd co = this.matching.get(server_id);
 		if (co == null) {
-			Logger.error("Cannot launch application "+app_id+"("+token+"): Weird. The server id exists but there is not RDP connection");
+			Logger.error("Cannot launch application "+app_id+"("+token+"): Bad server id");
 			return;
 		}
 
@@ -128,11 +122,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 		super.ovdInited(channel);
 		
 		for (Integer JSId : this.matching.keySet()) {
-			Integer listId = this.matching.get(JSId);
-			if (listId == null)
-				continue;
-
-			RdpConnectionOvd rc = this.connections.get(listId.intValue());
+			RdpConnectionOvd rc = this.matching.get(JSId);
 			if (rc == null)
 				continue;
 
@@ -164,11 +154,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 		super.connected(co);
 
 		for (Integer JSId: this.matching.keySet()) {
-			Integer listId = this.matching.get(JSId);
-			if (listId == null)
-				continue;
-
-			RdpConnectionOvd rc = this.connections.get(listId.intValue());
+			RdpConnectionOvd rc = this.matching.get(JSId);
 			if (rc == co) {
 				this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, JSId, OvdApplet.JS_API_O_SERVER_CONNECTED);
 				return;
@@ -179,11 +165,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	@Override
 	public void disconnected(RdpConnection co) {
 		for (Integer JSId: this.matching.keySet()) {
-			Integer listId = this.matching.get(JSId);
-			if (listId == null)
-				continue;
-
-			RdpConnectionOvd rc = this.connections.get(listId.intValue());
+			RdpConnectionOvd rc = this.matching.get(JSId);
 			if (rc == co) {
 				this.matching.remove(JSId);
 				this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, JSId, OvdApplet.JS_API_O_SERVER_DISCONNECTED);
@@ -213,11 +195,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 		if (tryNumber > 1) {
 			Logger.error("checkRDPConnections "+co.getServer()+" -- Several try to connect failed.");
 			for (Integer JSId : this.matching.keySet()) {
-				Integer listId = this.matching.get(JSId);
-				if (listId == null)
-					continue;
-
-				RdpConnectionOvd rc = this.connections.get(listId.intValue());
+				RdpConnectionOvd rc = this.matching.get(JSId);
 				if (rc == co) {
 					this.matching.remove(JSId);
 					this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, JSId, OvdApplet.JS_API_O_SERVER_FAILED);
