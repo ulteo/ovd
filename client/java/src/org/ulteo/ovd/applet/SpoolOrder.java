@@ -112,7 +112,7 @@ class SpoolOrder extends Thread {
 					server.setToken(order.gw_token);
 				}
 
-				if (! client.addServer(server, order.id))
+				if (! client.addServer(order.id, server))
 					continue;
 			}
 			

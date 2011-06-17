@@ -64,7 +64,16 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	@Override
 	protected void hide(RdpConnectionOvd co) {}
 
-	public boolean addServer(ServerAccess server, int JSId) {
+	/**
+	 * create a {@link RdpConnectionOvd} and add it to the connections list
+	 * @param JSId
+	 * 		ID used for referencing the server beside to the WebClient
+	 * @param server
+	 * 		information object needed to create the {@link RdpConnectionOvd}
+	 * @return
+	 * 		<code>true</code> if the function succeed, <code>false</code> instead
+	 */
+	public boolean addServer(int JSId, ServerAccess server) {
 		RdpConnectionOvd co = createRDPConnection(server);
 		if (co == null)
 			return false;
