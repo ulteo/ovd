@@ -43,7 +43,6 @@ import org.ulteo.rdp.RdpConnectionOvd;
 public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClientPerformer {
 	
 	private DesktopFrame desktop = null;
-	private boolean desktopLaunched = false;
 	private Dimension resolution = null;
 	private boolean fullscreen = false;
 	
@@ -62,8 +61,7 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClien
 
 	@Override
 	protected void customizeConnection(RdpConnectionOvd co) {
-		if (! this.desktopLaunched)
-			this.initDesktop(co);
+		this.initDesktop(co);
 		co.setShell("OvdDesktop");
 	}
 
@@ -78,12 +76,14 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClien
 
 	@Override
 	public void hide(RdpConnectionOvd co) {
-		this.desktopLaunched = false;
 		this.desktop.destroy();
 		this.desktop = null;
 	}
 
 	private void initDesktop(RdpConnectionOvd co) {
+		if (this.desktop != null)
+			return;
+		
 		this.desktop = new DesktopFrame(this.resolution, this.fullscreen, this);
 
 		if (! this.fullscreen) {
@@ -92,7 +92,6 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClien
 			co.setGraphic((this.desktop.getWidth()-(inset.left+inset.right)+2),
 					(this.desktop.getHeight()-(inset.bottom+inset.top)+2), co.getBpp());
 		}
-		this.desktopLaunched = true;
 	}
 
 	@Override
