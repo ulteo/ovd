@@ -135,4 +135,7 @@ public abstract class OvdClientDesktop extends OvdClient {
 		
 		return rc;
 	}
+
+	@Override
+	protected void runSessionTerminated() {}
 }

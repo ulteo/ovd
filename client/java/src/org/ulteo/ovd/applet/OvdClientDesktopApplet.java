@@ -117,9 +117,6 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 	}
 	
 	@Override
-	protected void runSessionTerminated() {}
-
-	@Override
 	public void connected(RdpConnection co) {
 		super.connected(co);
 		this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, 0, OvdApplet.JS_API_O_SERVER_CONNECTED);

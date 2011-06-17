@@ -61,9 +61,6 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClien
 	}
 
 	@Override
-	protected void runSessionTerminated() {}
-
-	@Override
 	protected void customizeConnection(RdpConnectionOvd co) {
 		if (! this.desktopLaunched)
 			this.initDesktop(co);
