@@ -108,8 +108,14 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 							}
 							return;
 						}
+						if (g_rdpdr_device[handle] != null) {
+							if (g_rdpdr_device[handle].device_type == DEVICE_TYPE_DISK)
+								Logger.debug("RDPDR: Server connected to disk resource ["+g_rdpdr_device[handle].local_path+"]");
 
-						Logger.debug("RDPDR: Server connected to resource "+handle);
+							if (g_rdpdr_device[handle].device_type == DEVICE_TYPE_PRINTER)
+								Logger.debug("RDPDR: Server connected to printer resource ["+((OVDPrinter)g_rdpdr_device[handle]).printer_name+"]");
+						}
+							
 
 						this.g_rdpdr_device[handle].connected = true;
 
