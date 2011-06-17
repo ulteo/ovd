@@ -87,10 +87,10 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClien
 		this.desktop = new DesktopFrame(this.resolution, this.fullscreen, this);
 
 		if (! this.fullscreen) {
-			Insets inset = null;
-			inset = this.desktop.getInsets();
 			this.desktop.setLocationRelativeTo(null);
-			co.setGraphic((this.desktop.getWidth()-(inset.left+inset.right)+2), (this.desktop.getHeight()-(inset.bottom+inset.top)+2), co.getBpp());
+			Insets inset = this.desktop.getInsets();
+			co.setGraphic((this.desktop.getWidth()-(inset.left+inset.right)+2),
+					(this.desktop.getHeight()-(inset.bottom+inset.top)+2), co.getBpp());
 		}
 		this.desktopLaunched = true;
 	}
