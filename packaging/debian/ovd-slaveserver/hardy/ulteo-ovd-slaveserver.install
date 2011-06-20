@@ -1,5 +1,4 @@
 /etc
-/usr/bin
 /usr/lib/python*/site-packages/ovd/*.py
 /usr/lib/python*/site-packages/ovd/Role/*.py
 /usr/lib/python*/site-packages/ovd/Platform/*

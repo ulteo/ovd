@@ -71,7 +71,7 @@ if sys.platform == "win32":
 	
 	class ConsoleTarget:
 		def __init__(self):
-			self.script = "ulteo-ovd-slaveserver"
+			self.script = "ulteo-ovd-slaveserver.py"
 			self.description = "Ulteo OVD alternate service"
 			self.company_name = "Ulteo SAS"
 			self.copyright = "Copyright (C) @YEAR@ Ulteo SAS"
@@ -95,10 +95,11 @@ elif sys.platform == "linux2":
 @EXTRA_MODULES@
 	
 	setup_args["data_files"] = [
-		('/usr/bin',['ulteo-ovd-slaveserver', 'ovd-slaveserver-role']),
-		('/etc/ulteo/ovd',['examples/slaveserver.conf']),
-		('/usr/share/ulteo/ovd/slaveserver',
-			['examples/samba.conf', 'examples/apache2.conf'])]
+		('/etc/ulteo/ovd', ['examples/slaveserver.conf']),
+		('/usr/share/ulteo/ovd/slaveserver', [
+			'ulteo-ovd-slaveserver.py', 'ovd-slaveserver-role.py',
+			'examples/samba.conf', 'examples/apache2.conf'])
+	]
 
 else:
 	raise Exception("No supported platform")
