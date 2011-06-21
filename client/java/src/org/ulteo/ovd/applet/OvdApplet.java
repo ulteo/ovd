@@ -64,6 +64,8 @@ public abstract class OvdApplet extends Applet {
 	public static String tempdir;
 	
 	static {
+		OSTools.is_applet = true;
+		
 		tempdir = System.getProperty("java.io.tmpdir");
 		if (! tempdir.endsWith(System.getProperty("file.separator")))
 			tempdir+= System.getProperty("file.separator");
@@ -120,9 +122,10 @@ public abstract class OvdApplet extends Applet {
 	
 	@Override
 	public final void init() {
-		Logger.error(this.getClass().toString() + " init");
-		OSTools.is_applet = true;
+		Logger.info(this.getClass().toString() + " init");
+		System.out.println("//--");
 		ClientInfos.showClientInfos();
+		System.out.println("--//");
 
 		try {
 			System.getProperty("user.home");
@@ -147,6 +150,9 @@ public abstract class OvdApplet extends Applet {
 		catch (Exception e) {
 			Logger.error(this.getClass().toString() + ": " + e.getMessage());
 			this.stop();
+		}
+		finally {
+			Logger.info(this.getClass().toString() + " inited");
 		}
 	}
 	

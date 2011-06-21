@@ -61,14 +61,11 @@ public final class ClientInfos {
 
 	public static void showClientInfos() {
 		ClientInfos infos = new ClientInfos();
-
 		System.out.println("OS name: "+infos.os_infos.name+" version: "+infos.os_infos.version+" arch: "+infos.os_infos.arch);
-
 		System.out.println("JRE vendor: "+infos.jvm_infos.jre_vendor+"("+infos.jvm_infos.jre_vendor_url+") version: "+infos.jvm_infos.jre_version);
 		System.out.println("JRE Specification vendor: "+infos.jvm_infos.jre_spec_vendor+" name: "+infos.jvm_infos.jre_spec_name+" version: "+infos.jvm_infos.jre_spec_version);
 		System.out.println("JVM vendor: "+infos.jvm_infos.jvm_vendor+" name: "+infos.jvm_infos.jvm_name+" version: "+infos.jvm_infos.jvm_version);
 		System.out.println("JVM Specification vendor: "+infos.jvm_infos.jvm_spec_vendor+" name: "+infos.jvm_infos.jvm_spec_name+" version: "+infos.jvm_infos.jvm_spec_version);
-
 		System.out.println("OVD version: "+ClientInfos.getOVDVersion());
 	}
 
