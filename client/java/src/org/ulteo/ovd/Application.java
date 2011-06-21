@@ -21,7 +21,6 @@
 
 package org.ulteo.ovd;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,27 +36,16 @@ public class Application implements Comparable<Application> {
 	private ImageIcon icon = null;
 	private String iconName = "";
 
-	public Application() {}
-
-	public Application(RdpConnectionOvd connection_, int id_, String name_, ImageIcon icon_) {
-		this.supportedMime = new ArrayList<String>();
-		this.init(connection_, id_, name_, icon_);
-	}
-
 	public Application(RdpConnectionOvd connection_, int id_, String name_, List<String> mimeType_, ImageIcon icon_) {
-		this.supportedMime = mimeType_;
-		this.init(connection_, id_, name_, icon_);
-	}
-
-	private void init(RdpConnectionOvd connection_, int id_, String name_, ImageIcon icon_) {
 		this.connection = connection_;
 		this.id = id_;
 		this.name = name_;
-		this.iconName = UUID.randomUUID().toString()+"-"+this.id;
+		this.supportedMime = mimeType_;
 		if (icon_ == null)
 			this.icon =  new ImageIcon(getClass().getResource("/pics/default_icon.png"));
 		else
 			this.icon = icon_;
+		this.iconName = UUID.randomUUID().toString()+"-"+this.id;
 	}
 
 	public List<String> getSupportedMimeTypes() {
