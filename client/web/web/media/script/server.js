@@ -63,7 +63,7 @@ var Server = Class.create({
 				serialized = this.xml.xml;
 			}
 
-			$('ulteoapplet').serverPrepare(this.java_id, this.xml);
+			$('ulteoapplet').serverPrepare(this.java_id, serialized);
 		}
 
 		if (this.token != null)
