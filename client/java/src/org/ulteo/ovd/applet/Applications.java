@@ -92,7 +92,7 @@ public class Applications extends OvdApplet {
 	
 	@Override
 	protected void _stop() {
-		if (this.spooler.isAlive())
+		if (this.spooler != null && this.spooler.isAlive())
 			this.spooler.interrupt();
 	}
 	
