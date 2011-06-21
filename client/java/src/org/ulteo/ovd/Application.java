@@ -31,7 +31,6 @@ import org.ulteo.rdp.RdpConnectionOvd;
 
 public class Application implements Comparable<Application> {
 	private int id = -1;
-	private String cmd = "";
 	private String name = "";
 	private List<String> supportedMime = null;
 	private RdpConnectionOvd connection = null;
@@ -69,50 +68,23 @@ public class Application implements Comparable<Application> {
 		return this.icon;
 	}
 
-	public void setIcon(ImageIcon icon) {
-		this.icon = icon;
-	}
-
 	public int getId() {
 		return this.id;
-	}
-
-	public void setId(int id_) {
-		this.id = id_;
-	}
-	
-	public void setIconName(String iconName) {
-		this.iconName = iconName;
 	}
 
 	public String getIconName() {
 		return this.iconName;
 	}
 
-	public String getCmd() {
-		return this.cmd;
-	}
-
-	public void setCmd(String cmd_) {
-		this.cmd = cmd_;
-	}
-
 	public String getName() {
 		return this.name;
-	}
-
-	public void setName(String name_) {
-		this.name = name_;
 	}
 
 	public RdpConnectionOvd getConnection() {
 		return this.connection;
 	}
 
-	public void setConnection(RdpConnectionOvd connection_) {
-		this.connection = connection_;
-	}
-
+	@Override
 	public int compareTo(Application t) {
 		return this.name.compareToIgnoreCase(t.name);
 	}
