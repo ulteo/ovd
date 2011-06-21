@@ -341,12 +341,13 @@ public class RdpConnectionOvd extends RdpConnection {
 			throw new InvalidParameterException("ServerAccess cannot be null");
 		
 		if (server.token == null || server.token.equals("")) {
-			Logger.warn("no token found in server access, gateway mode will not be activated");
-			return;
+			Logger.debug("gateway cannot be enable");
+		} else {
+			this.opt.rdpCookie.addCookieElement("token", server.token);
+			this.opt.port = server.getPort();
+			this.opt.socketFactory = new TCPSSLSocketFactory(server.getHost(), server.getPort());
+			Logger.debug("gateway enabled");
 		}
-
-		this.opt.rdpCookie.addCookieElement("token", server.token);
-		this.opt.port = server.getPort();
-		this.opt.socketFactory = new TCPSSLSocketFactory(server.getHost(), server.getPort());
 	}
+	
 }
