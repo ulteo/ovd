@@ -345,7 +345,7 @@ public class RdpConnectionOvd extends RdpConnection {
 			return;
 		}
 
-		this.setCookieElement("token", server.token);
+		this.opt.rdpCookie.addCookieElement("token", server.token);
 		this.opt.port = server.getPort();
 		this.opt.socketFactory = new TCPSSLSocketFactory(server.getHost(), server.getPort());
 	}

@@ -633,8 +633,4 @@ public class RdpConnection implements SeamListener, Runnable{
 	public void ackHello(SeamlessChannel channel) {
 		this.fireSeamlessEnabled();
 	}
-
-	public void setCookieElement(String fieldName, String fieldValue) {
-		this.opt.rdpCookie.addCookieElement(fieldName, fieldValue);
-	}
 }
