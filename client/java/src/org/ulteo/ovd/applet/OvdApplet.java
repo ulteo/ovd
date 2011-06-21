@@ -135,6 +135,8 @@ public abstract class OvdApplet extends Applet {
 			System.getProperty("user.home");
 			
 			this.readParameters();
+			this.keymap = this.getParameterNonEmpty("keymap");
+			
 			Properties properties = new Properties(getMode());
 			for (String setting : Protocol.settingsNames) {
 				String value = this.getParameter("setting_"+setting);

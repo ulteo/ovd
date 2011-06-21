@@ -108,9 +108,7 @@ public class Applications extends OvdApplet {
 	}
 	
 	@Override
-	protected void readParameters() throws Exception {
-		this.keymap = this.getParameterNonEmpty("keymap");
-	}
+	protected void readParameters() throws Exception {}
 	
 	// ********
 	// Methods called by Javascript

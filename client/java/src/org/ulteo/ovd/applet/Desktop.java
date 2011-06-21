@@ -79,7 +79,6 @@ public class Desktop extends OvdApplet implements FocusListener {
 		this.server = this.getParameterNonEmpty("server");
 		this.username = this.getParameterNonEmpty("username");
 		this.password = this.getParameterNonEmpty("password");
-		this.keymap = this.getParameterNonEmpty("keymap");
 		this.token = this.getParameter("token");
 		String strPort = this.getParameterNonEmpty("port");
 		try {
