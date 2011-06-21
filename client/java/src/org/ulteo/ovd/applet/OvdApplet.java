@@ -120,7 +120,7 @@ public abstract class OvdApplet extends Applet {
 	
 	@Override
 	public final void init() {
-		Logger.error(this.getClass().toString() + "init");
+		Logger.error(this.getClass().toString() + " init");
 		OSTools.is_applet = true;
 		ClientInfos.showClientInfos();
 
