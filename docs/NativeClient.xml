@@ -127,7 +127,7 @@ deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/gold/ubuntu lucid main]]>
           </para>
           <screen>
             <![CDATA[
-# tar xzf ovd-3.0-*ubuntu-lucid.tar.gz]]>
+# for f in ovd-3.0-*ubuntu-lucid.tar.gz; do tar xzf $f; done]]>
           </screen>
         </listitem>
 
