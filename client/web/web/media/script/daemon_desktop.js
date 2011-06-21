@@ -98,7 +98,7 @@ var Desktop = Class.create(Daemon, {
 					mode_gateway = true;
 				} catch(e) {}
 
-				var server = new Server(i, i, serverNodes[i].getAttribute('fqdn'), serverNodes[i].getAttribute('port'), serverNodes[i].getAttribute('login'), serverNodes[i].getAttribute('password'));
+				var server = new Server(i, i, serverNodes[i]);
 				if (mode_gateway)
 					server.setToken(serverNodes[i].getAttribute('token'));
 

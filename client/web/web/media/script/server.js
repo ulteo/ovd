@@ -20,6 +20,9 @@
 
 var Server = Class.create({
 	id: '',
+	java_id: '',
+	xml: null,
+
 	fqdn: '',
 	port: 0,
 	token: null,
@@ -29,13 +32,15 @@ var Server = Class.create({
 	connected: false,
 	ready: false,
 
-	initialize: function(id_, java_id_, fqdn_, port_, username_, password_) {
+	initialize: function(id_, java_id_, xml_) {
 		this.id = id_;
 		this.java_id = java_id_;
-		this.fqdn = fqdn_;
-		this.port = port_;
-		this.username = username_;
-		this.password = password_;
+		this.xml = xml_;
+
+		this.fqdn = xml_.getAttribute('fqdn');
+		this.port = xml_.getAttribute('port');
+		this.username = xml_.getAttribute('login');
+		this.password = xml_.getAttribute('password');
 	},
 
 	setToken: function(token_) {
@@ -45,6 +50,21 @@ var Server = Class.create({
 	connect: function() {
 		if (this.connected)
 			return true;
+
+		if (daemon.mode == 'applications') {
+			var serialized;
+
+			try {
+				// XMLSerializer exists in current Mozilla browsers
+				serializer = new XMLSerializer();
+				serialized = serializer.serializeToString(this.xml);
+			} catch (e) {
+				// Internet Explorer has a different approach to serializing XML
+				serialized = this.xml.xml;
+			}
+
+			$('ulteoapplet').serverPrepare(this.java_id, this.xml);
+		}
 
 		if (this.token != null)
 			$('ulteoapplet').serverConnect(this.java_id, this.fqdn, this.port, this.token, this.username, this.password);
