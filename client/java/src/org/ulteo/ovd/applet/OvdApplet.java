@@ -113,7 +113,7 @@ public abstract class OvdApplet extends Applet {
 	public String getParameterNonEmpty(String key) throws Exception {
 		String param = super.getParameter(key);
 		if (param == null || param.isEmpty())
-			throw new Exception(String.format("Invalid parameter '%s': ", key));
+			throw new Exception(String.format("Invalid parameter '%s'", key));
 		return param;
 	}
 	
@@ -145,7 +145,7 @@ public abstract class OvdApplet extends Applet {
 			this.finished_init = true;
 		}
 		catch (Exception e) {
-			Logger.error(this.getClass().toString() + e.getMessage());
+			Logger.error(this.getClass().toString() + ": " + e.getMessage());
 			this.stop();
 		}
 	}
