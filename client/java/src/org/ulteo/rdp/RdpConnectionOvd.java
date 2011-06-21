@@ -22,6 +22,7 @@
 
 package org.ulteo.rdp;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Locale;
 import net.propero.rdp.Common;
@@ -35,9 +36,9 @@ import org.ulteo.ovd.disk.WindowsDiskManager;
 import org.ulteo.ovd.disk.DiskManager;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDPrinterManager;
+import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 import org.ulteo.rdp.seamless.SeamlessChannel;
-import java.net.UnknownHostException;
 import org.ulteo.Logger;
 import org.ulteo.rdp.TCPSSLSocketFactory;
 
@@ -330,13 +331,22 @@ public class RdpConnectionOvd extends RdpConnection {
 		this.ovdAppChannel.removeOvdAppListener(listener);
 	}
 
-	public void useSSLWrapper(String host, int port) throws OvdException, UnknownHostException {
-		this.opt.port = port;
-
-		try {
-			this.opt.socketFactory = new TCPSSLSocketFactory(host, port);
-		} catch (Exception e2) {
-			throw new OvdException("Could not create TCPSSLSocketFactory : " + e2.getMessage());
+	/**
+	 * Unable the gateway mode
+	 * @param server
+	 * 		{@link ServerAccess} 
+	 */
+	public void enableGatewayMode(ServerAccess server) {
+		if (server == null)
+			throw new InvalidParameterException("ServerAccess cannot be null");
+		
+		if (server.token == null || server.token.equals("")) {
+			Logger.warn("no token found in server access, gateway mode will not be activated");
+			return;
 		}
+
+		this.setCookieElement("token", server.token);
+		this.opt.port = server.getPort();
+		this.opt.socketFactory = new TCPSSLSocketFactory(server.getHost(), server.getPort());
 	}
 }

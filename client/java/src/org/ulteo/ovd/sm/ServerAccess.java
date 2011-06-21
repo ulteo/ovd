@@ -28,9 +28,13 @@ public class ServerAccess {
 	private int port = 0;
 	private String login = null;
 	private String password = null;
-	private String token = null;
-	private boolean mode_gateway = false;
-
+	
+	/**
+	 * token use for the gateway mode.
+	 * if this variable is not null, the gateway mode will be used 
+	 */
+	public String token = null;
+	
 	public List<Application> applications = null;
 	
 	public ServerAccess(String host, int port, String login, String password) {
@@ -58,19 +62,11 @@ public class ServerAccess {
 		return this.password;
 	}
 	
-	public void setToken(String token_) {
-		this.token = token_;
+	@Override
+	public String toString() {
+		boolean gw = (token != null);
+		return String.format("(%s@%s:%d, GW:%b, %d apps)",
+				this.host, this.port, gw, this.applications.size());
 	}
-
-	public String getToken() {
-		return this.token;
-	}
-
-	public void setModeGateway(boolean mode_gateway_) {
-		this.mode_gateway = mode_gateway_;
-	}
-
-	public boolean getModeGateway() {
-		return this.mode_gateway;
-	}
+	
 }

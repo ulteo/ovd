@@ -705,19 +705,18 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 			for (int i = 0; i < serverNodes.getLength(); i++) {
 				Element serverNode = (Element) serverNodes.item(i);
-				String server_host = this.host;
 				
-				if (! mode_gateway) {
+				String server_host;
+				if (mode_gateway)
+					server_host = this.host;
+				else
 					server_host = serverNode.getAttribute("fqdn");
-				}
 				
 				ServerAccess server = new ServerAccess(server_host, serverPort,
 							serverNode.getAttribute("login"), serverNode.getAttribute("password"));
 				
-				if (mode_gateway) {
-					server.setToken(serverNode.getAttribute("token"));
-					server.setModeGateway(true);
-				}
+				if (mode_gateway)
+					server.token = serverNode.getAttribute("token");
 				
 				server.applications = parseApplications(serverNode);
 				this.servers.add(server);

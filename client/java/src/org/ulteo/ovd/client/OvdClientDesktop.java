@@ -26,13 +26,11 @@ package org.ulteo.ovd.client;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.net.UnknownHostException;
 
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 
 import org.ulteo.Logger;
-import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
@@ -103,26 +101,7 @@ public abstract class OvdClientDesktop extends OvdClient {
 			Logger.error("Unable to init channels of RdpConnectionOvd object: "+ex.getMessage());
 		}
 		
-		if (server.getModeGateway()) {
-
-			if (server.getToken().equals("")) {
-				Logger.error("Server need a token to be identified on gateway, so token is empty !");
-				return null;
-			} else {
-				rc.setCookieElement("token", server.getToken());
-			}
-
-			try {
-				rc.useSSLWrapper(server.getHost(), server.getPort());
-			} catch(OvdException ex) {
-				Logger.error("Unable to create RdpConnectionOvd SSLWrapper: " + ex.getMessage());
-				return null;
-			} catch(UnknownHostException ex) {
-				Logger.error("Undefined error during creation of RdpConnectionOvd SSLWrapper: " + ex.getMessage());
-				return null;
-			}
-		}
-
+		rc.enableGatewayMode(server);
 		rc.setServer(server.getHost());
 		rc.setCredentials(server.getLogin(), server.getPassword());
 		rc.setAllDesktopEffectsEnabled(properties.isDesktopEffectsEnabled());
