@@ -168,7 +168,7 @@ public abstract class OvdApplet extends Applet {
 		if (this.started_stop)
 			return;
 
-		Logger.info(this.getClass().toString() +" stopped");
+		Logger.info(this.getClass().toString() +" stopping");
 		this.started_stop = true;
 		
 		_stop();
