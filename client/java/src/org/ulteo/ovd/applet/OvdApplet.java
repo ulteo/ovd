@@ -101,6 +101,10 @@ public abstract class OvdApplet extends Applet {
 
 	protected abstract int getMode();
 	
+	/**
+	 * read personalize parameters
+	 * @throws Exception
+	 */
 	protected abstract void readParameters() throws Exception;
 
 	
