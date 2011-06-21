@@ -2,7 +2,7 @@
 
 # Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Laurent CLOUET <laurent@ulteo.com> 2010
+# Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
 # Author David LECHEVALIER <david@ulteo.com> 2011
 #
@@ -68,7 +68,6 @@ class User(AbstractUser):
 		
 		retry = 5
 	        while retry !=0:
-			print "on try"
 		        if retry < 0:
 		                Logger.error("ERROR: unable to add a new user")
 		        lock.acquire()
