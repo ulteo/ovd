@@ -66,7 +66,7 @@ public class ServerAccess {
 	public String toString() {
 		boolean gw = (token != null);
 		return String.format("(%s@%s:%d, GW:%b, %d apps)",
-				this.host, this.port, gw, this.applications.size());
+				this.login, this.host, this.port, gw, this.applications.size());
 	}
 	
 }
