@@ -299,7 +299,9 @@
       <filelist dir="required_libraries"
                 files="commons-httpclient-3.0.1.jar,commons-logging-1.1.1.jar" />
     </unjar>
-    <copy file="icons/ulteo.png" todir="build/pics" />
+    <copy todir="build/pics">
+      <filelist dir="icons" files="ulteo.png default_icon.png" />
+    </copy>
     <copy file="windowsPathsJNI/libWindowsPaths.dll"
           todir="build/resources/WindowsLibs/32" />
     <copy file="required_libraries/libXClientArea/32/libXClientArea.so"
