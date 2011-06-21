@@ -124,15 +124,13 @@ public class Applications extends OvdApplet {
 	 * 		XML information about the server
 	 */
 	public void serverPrepare(int JSId, String xml) {
-		Document doc = null;
 		try {
 			DocumentBuilder domBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			doc = domBuilder.parse(new ByteArrayInputStream(xml.getBytes()));
+			Document doc = domBuilder.parse(new ByteArrayInputStream(xml.getBytes()));
+			serverApps.put(JSId, SessionManagerCommunication.parseApplications(doc.getDocumentElement()));
 		} catch (Exception e) {
 			Logger.warn("Error during 'serverPrepare' parsing: " + e.getMessage());
-			return;
 		}
-		serverApps.put(JSId, SessionManagerCommunication.parseApplications(doc.getDocumentElement()));
 	}
 	
 	public boolean serverConnect(int JSId, String host, int port, String login, String password) {
