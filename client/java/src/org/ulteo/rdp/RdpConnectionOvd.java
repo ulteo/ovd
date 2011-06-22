@@ -41,6 +41,7 @@ import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 import org.ulteo.rdp.seamless.SeamlessChannel;
 import org.ulteo.Logger;
 import org.ulteo.rdp.TCPSSLSocketFactory;
+import org.ulteo.utils.LayoutDetector;
 
 public class RdpConnectionOvd extends RdpConnection {
 
@@ -97,6 +98,7 @@ public class RdpConnectionOvd extends RdpConnection {
 		}
 
 		this.appsList = new ArrayList<Application>();
+		this.mapFile = LayoutDetector.get();
 		this.detectKeymap();
 	}
 

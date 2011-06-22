@@ -393,7 +393,7 @@ public class RdpConnection implements SeamListener, Runnable{
 		InputStream istr = RdpConnection.class.getResourceAsStream(KEYMAP_PATH + this.mapFile);
 		if (istr == null) {
 			int idx = this.mapFile.indexOf('-');
-			this.mapFile = (idx == -1) ? DEFAULT_KEYMAP : this.mapFile.substring(0, idx);
+			this.mapFile = (idx == -1) ? DEFAULT_KEYMAP : this.mapFile.substring(idx+1, this.mapFile.length());
 			istr = RdpConnection.class.getResourceAsStream(KEYMAP_PATH + this.mapFile);
 			if (istr == null) {
 				this.mapFile = DEFAULT_KEYMAP;

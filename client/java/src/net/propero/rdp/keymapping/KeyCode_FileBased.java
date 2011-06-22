@@ -13,26 +13,29 @@
 package net.propero.rdp.keymapping;
 
 import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
 import java.util.Vector;
 
 import net.propero.rdp.Input;
 import net.propero.rdp.Options;
 
 import org.apache.log4j.Logger;
+import org.ulteo.utils.IniFile;
 
 public abstract class KeyCode_FileBased {
+	public static final String KEYCODE_SECTION = "keycode";
+	public static final String GLOBAL_SECTION = "global";
+	public static final String SHIFTCAPSLOCK_SECTION = "shiftcapslock";
+	public static final String CAPSLOCK_SECTION = "capslock";
+	public static final String SHIFT_SECTION = "shift";
+	public static final String NOSHIFT_SECTION = "noshift";
+	public static final String ALTGR_SECTION = "altgr";
 
     private Hashtable<Integer, MapDef> keysCurrentlyDown = new Hashtable<Integer, MapDef>();
 
@@ -57,6 +60,7 @@ public abstract class KeyCode_FileBased {
     public boolean useLockingKeyState = true;
 
     public boolean capsLockDown = false;
+    public IniFile binding = null;
 
     Vector<MapDef> keyMap = new Vector<MapDef>();
     
@@ -98,101 +102,122 @@ public abstract class KeyCode_FileBased {
      */
     public void readMapFile(InputStream fstream) throws KeyMapException {
         // logger.info("Stream-based keycode reader");
-        int lineNum = 0; // current line number being parsed
-        String line = null; // contents of line being parsed
+		String mapCodeString = null;
+		this.binding = new IniFile();
+		this.binding.load(fstream);
+		
+		if (this.binding == null)
+			throw new KeyMapException("Keymap file is empty");
 
-        if (fstream == null)
-            throw new KeyMapException("Could not find specified keymap file");
-
-        boolean mapCodeSet = false;
-
-        try {
-        	BufferedReader in = new BufferedReader(new InputStreamReader(fstream));
-
-            while ((line = in.readLine()) != null) {
-                lineNum++;
-
-                char fc = 0x0;
-                if ((line != null) && (line.length() > 0))
-                    fc = line.charAt(0);
-
-                // ignore blank and commented lines
-                if ((line != null) && (line.length() > 0) && (fc != '#') && (fc != 'c')) {
-                    keyMap.add(new MapDef(line)); // parse line into a MapDef
-                    // object and add to list
-
-                } else if (fc == 'c') {
-                    StringTokenizer st = new StringTokenizer(line);
-                    String s = st.nextToken();
-
-                    s = st.nextToken();
-                    mapCode = Integer.decode(s).intValue();
-                    mapCodeSet = true;
-                }
-            }
-
-            // Add a set of mappings for alphabet characters with ctrl and alt
-            // pressed
-
-            Vector<MapDef> newMap = new Vector<MapDef>();
-
-            Iterator<MapDef> i = keyMap.iterator();
-            while (i.hasNext()) {
-                MapDef current = (MapDef) i.next();
-                if (current.isCharacterDef() && !(current.isAltDown() || current.isCtrlDown() || current.isShiftDown() || current.isCapslockOn())) {
-                    int code = getCodeFromAlphaChar(current.getKeyChar());
-                    if (code > -1) {
-
-                        newMap.add(new MapDef(code, 0, current.getScancode(),
-                                true, false, false, false, this.opt));
-                        newMap.add(new MapDef(code, 0, current.getScancode(),
-                                false, false, true, false, this.opt));
-                    }
-                }
-            }
-            // Commit added mapping definitions
-            keyMap.addAll(newMap);
-                
-            in.close();
-        } catch (IOException e) {
-            throw new KeyMapException("File input error: " + e.getMessage());
-        } catch (NumberFormatException nfEx) {
-            throw new KeyMapException("" + nfEx.getMessage()
-                    + " is not numeric at line " + lineNum);
-        } catch (NoSuchElementException nseEx) {
-            throw new KeyMapException(
-                    "Not enough parameters in definition at line " + lineNum);
-        } catch (KeyMapException kmEx) {
-            throw new KeyMapException("Error parsing keymap file: "
-                    + kmEx.getMessage() + " at line " + lineNum);
-        } catch (Exception e) {
-            logger.error(e.getClass().getName() + ": " + e.getMessage());
-            e.printStackTrace();
-            throw new KeyMapException(e.getClass().getName() + ": "
-                    + e.getMessage());
-        }
-
-        if (!mapCodeSet)
-            throw new KeyMapException("No map identifier found in file");
+		mapCodeString = this.binding.getKeyValue(GLOBAL_SECTION, "code");
+		try {
+			this.mapCode = (int)Long.parseLong(mapCodeString.replace("0x", ""), 16);
+		}
+		catch (NumberFormatException e) {
+			throw new KeyMapException("Unable to get keymap code: "+mapCodeString);
+		}
     }
-
-    /**
-     * Given an alphanumeric character, return an AWT keycode
-     * @param keyChar Alphanumeric character
-     * @return  AWT keycode representing input character, -1 if character not alphanumeric
-     */
-    private int getCodeFromAlphaChar(char keyChar) {
-        if (('a' <= keyChar) && (keyChar <= 'z')) {
-            return KeyEvent.VK_A + keyChar - 'a';
-        }
-        if (('A' <= keyChar) && (keyChar <= 'Z')) {
-            return KeyEvent.VK_A + keyChar - 'A';
-        }
-
-        return -1;
-    }
-
-
+    
+    public int getSpecialKey(KeyEvent e) {
+		switch (e.getKeyCode()) {
+		case KeyEvent.VK_BACK_SPACE:
+			return 0xe;
+		case KeyEvent.VK_TAB:
+			return 0xf;
+		case KeyEvent.VK_ENTER:
+			return 0x1c;
+		case KeyEvent.VK_KP_DOWN:
+		case KeyEvent.VK_DOWN:
+			return 0x50 | KeyCode.SCANCODE_EXTENDED;
+		case KeyEvent.VK_KP_LEFT:
+		case KeyEvent.VK_LEFT:	
+			return 0x4b | KeyCode.SCANCODE_EXTENDED;
+		case KeyEvent.VK_KP_RIGHT:
+		case KeyEvent.VK_RIGHT:	
+			return 0x4d | KeyCode.SCANCODE_EXTENDED;
+		case KeyEvent.VK_KP_UP:
+		case KeyEvent.VK_UP:
+			return SCANCODE_EXTENDED|0x48;
+		case KeyEvent.VK_ESCAPE:
+			return 0x1;
+		case KeyEvent.VK_PAGE_DOWN:
+			return 0x51 | KeyCode.SCANCODE_EXTENDED;
+		case KeyEvent.VK_PAGE_UP:
+			return 0x49 | KeyCode.SCANCODE_EXTENDED;
+		case KeyEvent.VK_END:
+			return 0x4f | KeyCode.SCANCODE_EXTENDED;
+		case KeyEvent.VK_HOME:
+			return 0x47 | KeyCode.SCANCODE_EXTENDED;
+		case KeyEvent.VK_INSERT:
+			return SCANCODE_EXTENDED | 0x52;
+		case KeyEvent.VK_F1:
+			return 0x3b;
+		case KeyEvent.VK_F2:
+			return 0x3c;
+		case KeyEvent.VK_F3:
+			return 0x3d;
+		case KeyEvent.VK_F4:
+			return 0x3e;
+		case KeyEvent.VK_F5:
+			return 0x3f;
+		case KeyEvent.VK_F6:
+			return 0x40;
+		case KeyEvent.VK_F7:
+			return 0x41;
+		case KeyEvent.VK_F8:
+			return 0x42;
+		case KeyEvent.VK_F9:
+			return 0x43;
+		case KeyEvent.VK_F10:
+			return 0x44;
+		case KeyEvent.VK_F11:
+			return 0x57;
+		case KeyEvent.VK_F12:
+			return 0x58;
+		case KeyEvent.VK_DELETE:
+			return  SCANCODE_EXTENDED | 0x53;
+		case KeyEvent.VK_PROPS:
+		case KeyEvent.VK_CONTEXT_MENU:	
+			return SCANCODE_EXTENDED | 0xdd;
+		case KeyEvent.VK_NUMPAD0:
+			return 0x52;
+		case KeyEvent.VK_NUMPAD1:
+			return 0x4f;
+		case KeyEvent.VK_NUMPAD2:
+			return 0x50;
+		case KeyEvent.VK_NUMPAD3:
+			return 0x51;
+		case KeyEvent.VK_NUMPAD4:
+			return 0x4b;
+		case KeyEvent.VK_NUMPAD5:
+			return 0x4c;
+		case KeyEvent.VK_NUMPAD6:
+			return 0x4d;
+		case KeyEvent.VK_NUMPAD7:
+			return 0x47;
+		case KeyEvent.VK_NUMPAD8:
+			return 0x48;
+		case KeyEvent.VK_NUMPAD9:
+			return 0x49;
+		case KeyEvent.VK_MULTIPLY:
+			return 0x37;
+		case KeyEvent.VK_ADD:
+			return 0x4e;
+		case KeyEvent.VK_SUBTRACT:
+			return 0x4a;
+		case KeyEvent.VK_DECIMAL:
+			return 0x53;
+		case KeyEvent.VK_DIVIDE:
+			return 0x35 | KeyCode.SCANCODE_EXTENDED;
+		default:
+			return -1;
+		}
+	}
+    
+	public int getFromMap(String section, String key) {
+		return this.binding.getKeyIntValue(section, key, -1);
+	}
+    
     /**
      * Get the RDP code specifying the key map in use
      * @return ID for current key map
