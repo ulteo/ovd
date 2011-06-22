@@ -32,18 +32,17 @@ import org.ulteo.ovd.integrated.OSTools;
 public class KerberosConfiguration {
 	private static final String KRB5_FILE = "krb5.ini";
 	private static final String LOGIN_FILE = "login.conf";
+
+	private final String tmpDir = System.getProperty("java.io.tmpdir");
 	
-	private String realm = "";
+	private String realm;
 	private String kdc = "";
-	private String tmpDir = "";
 	
 	
 	public KerberosConfiguration() {
 //		System.setProperty("sun.security.krb5.debug", "true");   // very useful property
 		if (! OSTools.isWindows())
 			return;
-
-		this.tmpDir = System.getProperty("java.io.tmpdir");
 
 		this.realm = System.getenv("USERDNSDOMAIN");
 		String dcName = System.getenv("LOGONSERVER");
@@ -85,7 +84,7 @@ public class KerberosConfiguration {
 	
 	
 	public boolean initialize() {
-		if (this.realm.equals("")) {
+		if (this.realm == null) {
 			Logger.debug("No Realm available");
 			return true;
 		}
