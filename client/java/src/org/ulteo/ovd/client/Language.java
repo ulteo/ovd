@@ -103,5 +103,5 @@ public class Language {
 			{"Turkish", "tr"}
 	};
 	
-	public static final String keymap_default = "en-us";
+	public static final String keymap_default = "us";
 }
