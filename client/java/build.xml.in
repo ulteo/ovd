@@ -94,7 +94,6 @@
            debug="${javac.debug}" debuglevel="lines,vars,source">
       <classpath>
         <path refid="minimal.path" />
-	<pathelement location="required_libraries/ini4j.jar"/>
         <pathelement location="required_libraries/jpedal.jar"/>
         <pathelement location="required_libraries/commons-httpclient-3.0.1.jar" />
         <pathelement location="required_libraries/commons-logging-1.1.1.jar" />
@@ -106,7 +105,7 @@
     <unjar dest="build">
       <filelist dir="required_libraries"
                 files="gnu-getopt.jar, log4j-1.2.jar, jpedal.jar,
-                       commons-httpclient-3.0.1.jar, commons-logging-1.1.1.jar, ini4j.jar" />
+                       commons-httpclient-3.0.1.jar, commons-logging-1.1.1.jar" />
     </unjar>
     <copy file="icons/ulteo.png" todir="build/pics" />
     <jar destfile="jars/RDPClient.jar" basedir="build">
