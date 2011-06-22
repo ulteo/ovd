@@ -186,18 +186,18 @@ class Preferences {
 		$c = new ConfigElement_select('admin_language', _('Administration console language'), _('Administration console language'), _('Administration console language'), 'auto');
 		$c->setContentAvailable(array(
 			'auto'=>_('Autodetect'),
-			'ar_AE'=>'العربي',
-			'de_DE'=>'Deutsch',
+//			'ar_AE'=>'العربي',
+//			'de_DE'=>'Deutsch',
 			'en_GB'=>'English',
 			'es_ES'=>'Español',
 			'fr_FR'=>'Français',
-			'id_ID'=>'Bahasa Indonesia',
+//			'id_ID'=>'Bahasa Indonesia',
 			'it_IT'=>'Italiano',
 			'ja_JP'=>'日本語',
 			'nl_NL'=>'Nederlands',
 			'pt_BR'=>'Português (Brasil)',
 			'ro_RO'=>'Română',
-			'ru_RU'=>'Русский',
+//			'ru_RU'=>'Русский',
 			'zh_CN'=>'中文简体',
 		));
 		$this->add($c,'general');
@@ -391,18 +391,21 @@ class Preferences {
 
 		$c = new ConfigElement_select('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB');
 		$c->setContentAvailable(array(
-			'ar_AE'=>'العربي',
+//			'ar_AE'=>'العربي',
+			'da-dk'=>'Dansk',
 			'de_DE'=>'Deutsch',
 			'en_GB'=>'English',
 			'es_ES'=>'Español',
 			'fr_FR'=>'Français',
+			'hu_HU'=>'Magyar',
 			'id_ID'=>'Bahasa Indonesia',
 			'it_IT'=>'Italiano',
 			'ja_JP'=>'日本語',
 			'nl_NL'=>'Nederlands',
 			'pt_BR'=>'Português (Brasil)',
 			'ro_RO'=>'Română',
-			'ru_RU'=>'Русский',
+//			'ru_RU'=>'Русский',
+			'sk_SK'=>'Slovenčina',
 			'zh_CN'=>'中文简体',
 		));
 		$this->add($c,'general','session_settings_defaults');
