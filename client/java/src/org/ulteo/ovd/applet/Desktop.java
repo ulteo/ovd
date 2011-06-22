@@ -32,11 +32,14 @@ import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public class Desktop extends OvdApplet implements FocusListener {
-	
-	private boolean fullscreenMode = false;
+
+	protected int port = 0;
+	protected String server = null;
 	private String username = null;
 	private String password = null;
 	private String token = null;
+	private boolean fullscreenMode = false;
+	
 	private RdpConnectionOvd rc = null;
 	
 	@Override
@@ -64,6 +67,7 @@ public class Desktop extends OvdApplet implements FocusListener {
 	
 	@Override
 	protected void _destroy() {
+		this.server = null;
 		this.username = null;
 		this.password = null;
 		this.token = null;

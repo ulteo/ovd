@@ -40,8 +40,6 @@ import netscape.javascript.JSObject;
 
 public abstract class OvdApplet extends Applet {
 	
-	protected int port = 0;
-	protected String server = null;
 	protected String keymap = null;
 
 	protected boolean finished_init = false;
@@ -195,9 +193,8 @@ public abstract class OvdApplet extends Applet {
 	
 	@Override
 	public final void destroy() {
-		this.ovd = null;
-		this.server = null;
 		this.keymap = null;
+		this.ovd = null;
 		this.focusManager = null;
 		_destroy();
 		System.gc();

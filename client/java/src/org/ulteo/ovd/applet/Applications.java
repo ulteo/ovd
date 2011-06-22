@@ -66,6 +66,11 @@ class FileApp {
 
 public class Applications extends OvdApplet {
 	
+	/** SM address */
+	private String sm_host;
+	/** SM port */
+	private int sm_port;
+	
 	private SpoolOrder spooler;
 	
 	private Map<Integer, ArrayList<Application>> serverApps;
@@ -77,7 +82,7 @@ public class Applications extends OvdApplet {
 			SeamlessPopup.focusManager = focusManager;
 		}
 
-		SessionManagerCommunication smComm = new SessionManagerCommunication(this.server, this.port, true);
+		SessionManagerCommunication smComm = new SessionManagerCommunication(this.sm_host, this.sm_port, true);
 		this.ovd = new OvdClientApplicationsApplet(smComm, properties, this);
 		this.ovd.setKeymap(this.keymap);
 		
@@ -98,6 +103,7 @@ public class Applications extends OvdApplet {
 	
 	@Override
 	protected void _destroy() {
+		this.sm_host = null;
 		this.spooler = null;
 		this.serverApps = null;
 	}
@@ -108,7 +114,11 @@ public class Applications extends OvdApplet {
 	}
 	
 	@Override
-	protected void readParameters() throws Exception {}
+	protected void readParameters() throws Exception {
+		String[] address = getParameterNonEmpty("sessionmanager").split(":");
+		this.sm_host = address[0];
+		this.sm_port = Integer.parseInt(address[1]);
+	}
 	
 	// ********
 	// Methods called by Javascript
