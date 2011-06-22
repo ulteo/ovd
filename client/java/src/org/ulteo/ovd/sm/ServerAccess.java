@@ -23,7 +23,11 @@ package org.ulteo.ovd.sm;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * all necessary informations needed for connect to an APS
+ */
 public class ServerAccess {
+	
 	private String host = null;
 	private int port = 0;
 	private String login = null;
