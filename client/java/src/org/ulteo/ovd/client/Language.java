@@ -38,7 +38,7 @@ public class Language {
 			{"English (GB)", "", "en", "gb"},
 //			{"Estonian", "", "et"},
 //			{"Faeroese", "", "fo"},
-//			{"Finnish", "Suomi", "fi"},
+			{"Finnish", "Suomi", "fi"},
 //			{"French (Belgium)", "Français (Belgique)", "fr-be"},
 //			{"French (Canada)", "Français", "fr-ca"},
 //			{"French (Switzerland)", "Français (Suisse)", "fr-ch"},

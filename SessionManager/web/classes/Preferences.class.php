@@ -402,6 +402,7 @@ class Preferences {
 			'de_DE'=>'Deutsch',
 			'en_GB'=>'English',
 			'es_ES'=>'Español',
+			'fi_FI'=>'Suomi',
 			'fr_FR'=>'Français',
 			'hu_HU'=>'Magyar',
 			'id_ID'=>'Bahasa Indonesia',

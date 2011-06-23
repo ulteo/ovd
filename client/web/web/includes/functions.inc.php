@@ -109,7 +109,7 @@ function get_available_languages() {
 		array('id' => 'en-gb', 'english_name' => 'English (GB)'),
 // 		array('id' => 'et', 'english_name' => 'Estonian'),
 // 		array('id' => 'fo', 'english_name' => 'Faeroese'),
-// 		array('id' => 'fi', 'english_name' => 'Finnish', 'local_name' => 'Suomi'),
+		array('id' => 'fi', 'english_name' => 'Finnish', 'local_name' => 'Suomi'),
 // 		array('id' => 'fr-be', 'english_name' => 'French (Belgium)', 'local_name' => 'Français (Belgique)'),
 // 		array('id' => 'fr-ca', 'english_name' => 'French (Canada)', 'local_name' => 'Français'),
 // 		array('id' => 'fr-ch', 'english_name' => 'French (Switzerland)', 'local_name' => 'Français (Suisse)'),
