@@ -475,7 +475,8 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 				try {
 					DocumentBuilder domBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 					Document xmlOut = domBuilder.parse(new ByteArrayInputStream(data.getBytes()));
-					this.dumpXML(xmlOut, "Sending XML data:");
+					Logger.debug("Sending XML data: ");
+					dumpXML(xmlOut);
 				} catch (Exception ex) {
 					Logger.debug("Send: "+data);
 				}
@@ -507,8 +508,10 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 						obj = doc;
 					}
 
-					if (showLog)
-						this.dumpXML((Document) obj, "Receiving XML:");
+					if (showLog) {
+						Logger.debug("Receiving XML:");
+						this.dumpXML((Document) doc);
+					}
 				}
 				else if (contentType.startsWith(CONTENT_TYPE_PNG)) {
 					int length = connexion.getContentLength();
@@ -753,25 +756,25 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		return apps;
 	}
 
-	private void dumpXML(Document document, String msg) {
+	/**
+	 * display all XML data in the standard logger output
+	 * @param doc
+	 * 		XML {@link Document} to display
+	 */
+	private void dumpXML(Document doc) {
+		if (doc == null)
+			throw new NullPointerException("Document parameter must not be null");
+		
 		OutputStream out = Logger.getOutputStream();
-		if (out == null) {
-			Logger.warn("[dumpXML] No output stream is available from Logger");
-			return;
-		}
-
 		try {
-			if (msg != null)
-				out.write(msg.getBytes());
-
-			document = this.cloneDomDocument(document);
-			this.hidePassword(document);
+			if (out == null)
+				throw new NullPointerException("no output stream is available from Logger");
 			
-			TransformerFactory tFactory = TransformerFactory.newInstance();
-			Transformer transformer = tFactory.newTransformer();
-			DOMSource source = new DOMSource(document);
-			StreamResult result = new StreamResult(out);
-			transformer.transform(source, result);
+			doc = this.cloneDomDocument(doc);
+			this.hidePassword(doc);
+			
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			transformer.transform(new DOMSource(doc), new StreamResult(out));
 
 			out.flush();
 		} catch (Exception ex) {
@@ -780,15 +783,10 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	}
 
 	private Document cloneDomDocument(Document document) throws ParserConfigurationException {
-		DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder domBuilder = domFactory.newDocumentBuilder();
-
-		Node rootNode = document.getDocumentElement();
-
+		DocumentBuilder domBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		Document copiedDocument = domBuilder.newDocument();
-		Node copiedRoot = copiedDocument.importNode(rootNode, true);
+		Node copiedRoot = copiedDocument.importNode(document.getDocumentElement(), true);
 		copiedDocument.appendChild(copiedRoot);
-
 		return copiedDocument;
 	}
 
