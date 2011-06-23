@@ -473,10 +473,8 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 				out.close();
 
 				try {
-					DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-					DocumentBuilder domBuilder = domFactory.newDocumentBuilder();
-					InputStream source = new ByteArrayInputStream(data.getBytes());
-					Document xmlOut = domBuilder.parse(source);
+					DocumentBuilder domBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+					Document xmlOut = domBuilder.parse(new ByteArrayInputStream(data.getBytes()));
 					this.dumpXML(xmlOut, "Sending XML data:");
 				} catch (Exception ex) {
 					Logger.debug("Send: "+data);
@@ -496,11 +494,8 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 				InputStream in = connexion.getInputStream();
 
 				if (contentType.startsWith(CONTENT_TYPE_XML)) {
-					DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-					DocumentBuilder domBuilder = domFactory.newDocumentBuilder();
-					
-					InputSource source = new InputSource(in);
-					Document doc = domBuilder.parse(source);
+					DocumentBuilder domBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+					Document doc = domBuilder.parse(new InputSource(in));
 					
 					Element rootNode = doc.getDocumentElement();
 					if (rootNode.getNodeName().equalsIgnoreCase("error")) {
