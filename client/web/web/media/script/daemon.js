@@ -26,6 +26,8 @@ var Daemon = Class.create({
 	applet_version: '',
 	applet_main_class: '',
 
+	sessionmanager: null,
+
 	debug: false,
 	explorer: false,
 

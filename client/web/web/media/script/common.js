@@ -237,8 +237,15 @@ function onStartSessionSuccess(xml_) {
 			daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.ovd.applet.Desktop', debug);
 		else
 			daemon = new Applications('ulteo-applet.jar', 'org.ulteo.ovd.applet.Applications', debug);
-		daemon.explorer = explorer;
 
+		var sessionmanager_host = $('sessionmanager_host').value;
+		if (sessionmanager_host == '127.0.0.1' || sessionmanager_host == '127.0.1.1' || sessionmanager_host == 'localhost' || sessionmanager_host == 'localhost.localdomain')
+			sessionmanager_host = window.location.hostname;
+		if (sessionmanager_host.indexOf(':') == -1)
+			sessionmanager_host += ':443';
+		daemon.sessionmanager = sessionmanager_host;
+
+		daemon.explorer = explorer;
 		if (daemon.explorer)
 			$('fileManagerWrap').show();
 
