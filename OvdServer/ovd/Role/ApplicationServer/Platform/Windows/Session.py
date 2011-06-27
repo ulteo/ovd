@@ -205,6 +205,7 @@ class Session(AbstractSession):
 		
 		# Set the language
 		if self.parameters.has_key("locale"):
+			cl = Langs.getLCID(self.parameters["locale"])
 			wl = Langs.unixLocale2WindowsLocale(self.parameters["locale"])
 			
 			path = r"%s\Control Panel\Desktop"%(hiveName)
@@ -216,6 +217,7 @@ class Session(AbstractSession):
 			if hkey is None:
 				Logger.error("Unable to open key '%s'"%(path))
 			else:
+				win32api.RegSetValueEx(hkey, "MUILanguagePending", 0, win32con.REG_SZ, "%08X"%(cl))
 				win32api.RegSetValueEx(hkey, "PreferredUILanguagesPending", 0, win32con.REG_MULTI_SZ, [wl])
 				win32api.RegCloseKey(hkey)
 				
