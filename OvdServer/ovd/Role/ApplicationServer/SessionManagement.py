@@ -59,11 +59,17 @@ class SessionManagement(Process):
 				(request, obj) = self.queue2.get_nowait()
 			except (EOFError, socket.error):
 				return
+			# This error is due to the sigterm sended by the init script
+			except TypeError:
+				return
 			except Queue.Empty, e:
 				try:
 					(request, obj) = self.queue.get(True, 4)
 				except Queue.Empty, e:
 					continue
+	                        # This error is due to the sigterm sended by the init script
+        	                except TypeError:
+                	                return
 				except (EOFError, socket.error):
 					return
 			
