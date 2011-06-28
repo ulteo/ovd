@@ -51,6 +51,7 @@ import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.integrated.SystemLinux;
 import org.ulteo.ovd.integrated.SystemWindows;
+import org.ulteo.ovd.integrated.mime.MimetypesManager;
 
 public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppListener {
 
@@ -156,7 +157,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	public void ovdInited(OvdAppChannel channel) {
 		try {
 			this.publish(find(channel));
-			this.system.refresh();
 		} catch (NullPointerException e) {
 			Logger.warn(String.format("channel %s not found", channel.name()));
 		}
@@ -253,23 +253,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		if (updatedIcons > 0)
 			Logger.info("Applications cache updated: "+updatedIcons+" icons");
 
-		// mime-type icon processing
-		HashSet<String> mimesTypes = new HashSet<String>();
-		HashMap<String, ImageIcon> mimeTypesIcons = new HashMap<String, ImageIcon>();
-		for (org.ulteo.ovd.sm.Application appItem : server.applications) {
-			for (String mimeType : appItem.getMimes()) {
-				if (! mimesTypes.add(mimeType) || (this.system.getMimeTypeIcon(mimeType) != null))
-					continue;
-
-				ImageIcon icon = this.smComm.askForMimeTypeIcon(mimeType);
-				if (icon != null)
-					mimeTypesIcons.put(mimeType, icon);
-			}
-		}
-		updatedIcons = this.system.updateMimeTypesIconsCache(mimeTypesIcons);
-		if (updatedIcons > 0)
-			Logger.info("Mime-types cache updated: "+updatedIcons+" icons");
-
 		// Ensure that width is multiple of 4
 		// Prevent artifact on screen with a with resolution
 		// not divisible by 4
@@ -292,6 +275,10 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		this.configureRDP(properties);
 		
 		List<ServerAccess> serversList = this.smComm.getServers();
+
+		// Download mimetypes icons (launch in a separated thread)
+		new MimetypesManager(this.system, this.smComm, serversList).start();
+		
 		this.numberOfApplication = 0;
 
 		for (ServerAccess server : serversList)
@@ -424,6 +411,8 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			for (Application app : rc.getAppsList()) {
 				this.system.install(app, this.showDesktopIcons, associate);
 			}
+
+			this.system.refresh();
 		}
 	}
 	
@@ -438,5 +427,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		for (Application app : rc.getAppsList()) {
 			this.system.uninstall(app);
 		}
+
+		this.system.refresh();
 	}
 }
