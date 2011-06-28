@@ -30,9 +30,9 @@ import org.ulteo.Logger;
 import org.ulteo.ovd.integrated.OSTools;
 
 public class LibraryLoader {
-	public static final String RESOURCE_LIBRARY_DIRECTORY_WINDOWS = "/resources/WindowsLibs";
+	public static final String RESOURCE_LIBRARY_DIRECTORY_WINDOWS = "WindowsLibs";
+	public static final String RESOURCE_LIBRARY_DIRECTORY_LINUX = "LinuxLibs";
 	public static final String LIB_WINDOW_PATH_NAME = "libWindowsPaths.dll";
-	public static final String RESOURCE_LIBRARY_DIRECTORY_LINUX = "/resources/LinuxLibs";
 	public static final String LIB_X_CLIENT_AREA = "libXClientArea.so";
 
 	/**
