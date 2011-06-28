@@ -6,6 +6,9 @@
  * Date: $Date: 2007/03/08 00:26:37 $
  *
  * Copyright (c) 2005 Propero Limited
+ * 
+ * Author: David LECHEVALIER <david@ulteo.com> 2011
+ * Copyright (c) 2011 Ulteo SAS
  *
  * Purpose: Read and supply keymapping information
  *          from a file
