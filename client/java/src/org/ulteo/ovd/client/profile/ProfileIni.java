@@ -125,6 +125,7 @@ public class ProfileIni extends Profile {
 		
 		ini.put(INI_SECTION_SESSION, FIELD_LANG, properties.getLang());
 		ini.put(INI_SECTION_SESSION, FIELD_KEYMAP, properties.getKeymap());
+		ini.put(INI_SECTION_SESSION, FIELD_INPUT_METHOD, properties.getInputMethod());
 		
 		ini.store();
 	}
@@ -231,7 +232,11 @@ public class ProfileIni extends Profile {
 		value = ini.get(INI_SECTION_SESSION, FIELD_KEYMAP);
 		if (value != null)
 			properties.setKeymap(value);
-
+		
+		value = ini.get(INI_SECTION_SESSION, FIELD_INPUT_METHOD);
+		if (value != null)
+			properties.setInputMethod(value);
+		
 		value = ini.get(INI_SECTION_GUI, FIELD_GUI_LOCKED);
 		if (value != null)
 			properties.setGUILocked(value.equalsIgnoreCase(VALUE_TRUE));

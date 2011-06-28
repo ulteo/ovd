@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010-2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
@@ -137,7 +138,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 		Options opts = new Options(NativeClient.FLAG_CMDLINE_OPTS);
 
-		final int nbOptions = 4;
+		final int nbOptions = 5;
 		List<LongOpt> systemDependantOptions = new ArrayList<LongOpt>();
 
 		if (OSTools.isWindows()) {
@@ -150,8 +151,9 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		alo[1] = new LongOpt("auto-integration", LongOpt.NO_ARGUMENT, null, 1);
 		alo[2] = new LongOpt("progress-bar", LongOpt.REQUIRED_ARGUMENT, null, 2);
 		alo[3] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 3);
+		alo[4] = new LongOpt("input-method", LongOpt.REQUIRED_ARGUMENT, null, 4);
 
-		for (int i = 4; i < alo.length; i++)
+		for (int i = 5; i < alo.length; i++)
 			alo[i] = systemDependantOptions.remove(0);
 
 		Getopt opt = new Getopt(OvdClient.productName, args, "c:p:u:m:g:k:l:s:hd:", alo);
@@ -192,6 +194,12 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				case 'h':
 					NativeClient.usage(RETURN_CODE_SUCCESS);
 					break;
+				case 5: //--input-method [unicode|scancode]
+					String method = new String(opt.getOptarg());
+					opts.inputMethod = method;
+					opts.mask |= Options.FLAG_INPUT_METHOD;
+
+					break;					
 				case 'c':
 					opts.profile = new String(opt.getOptarg());
 					opts.mask |= NativeClient.FLAG_FILE_OPTS;
@@ -354,6 +362,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		System.err.println("\t--auto-integration		Enable auto integration");
 		System.err.println("\t--auto-start			Enable auto start");
 		System.err.println("\t-d [seamless]			Enable debug (use comma as delimiter)");
+		System.err.println("\t-i|--input-type		Custom the input method (unicode or scancode)");
 		if (OSTools.isWindows()) {
 			System.err.println("\t--ntlm				Use NTLM authentication");
 			System.err.println("\t--reg				Load configuration from registry");
@@ -771,6 +780,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				throw new UnsupportedOperationException(I18n._("Internal error: unsupported session mode"));
 		}
 		this.client.setKeymap(this.opts.keymap);
+		this.client.setInputMethod(this.opts.inputMethod);
 
 		boolean exit = false;
 		if (! this.isCancelled) {
@@ -866,7 +876,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	}
 
 	private void saveProfile() throws IOException {
-		ProfileProperties properties = new ProfileProperties(this.opts.username, this.opts.host, this.opts.port, this.opts.sessionMode, this.opts.autopublish, this.opts.nltm, this.opts.geometry, this.opts.lang, this.opts.keymap);
+		ProfileProperties properties = new ProfileProperties(this.opts.username, this.opts.host, this.opts.port, this.opts.sessionMode, this.opts.autopublish, this.opts.nltm, this.opts.geometry, this.opts.lang, this.opts.keymap, this.opts.inputMethod);
 
 		if ((this.flags & NativeClient.FLAG_REGISTRY_OPTS) != 0) {
 			ProfileRegistry.saveProfile(properties);

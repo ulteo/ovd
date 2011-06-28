@@ -226,6 +226,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 		if (this.keymap != null)
 			rc.setKeymap(this.keymap);
+		
+		if (this.inputMethod != null)
+			rc.setInputMethod(this.inputMethod);
 
 		if (! OSTools.is_applet) {
 			HashMap<Integer, ImageIcon> appsIcons = new HashMap<Integer, ImageIcon>();

@@ -11,6 +11,7 @@
  * Copyright (c) 2005 Propero Limited
  * Copyright (C) 2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2011
  *
  * Purpose: Global static storage of user-definable options
@@ -52,7 +53,7 @@ public class Options {
 	public boolean debug_keyboard = false;
 	public boolean debug_hexdump = false;
 	public boolean debug_seamless = false;
-	public boolean supportUnicodeInput = false;
+	public boolean supportUnicodeInput = true;
 
 	public boolean enable_menu = false;
 	//public boolean paste_hack = true;

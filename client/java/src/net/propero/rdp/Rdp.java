@@ -404,8 +404,10 @@ public class Rdp {
     protected void processInputCaps(RdpPacket_Localised data, int cap_length) {
     	int flags = data.getLittleEndian16();
 
-    	if ((flags & INPUT_FLAG_UNICODE) != 0)
+    	if ((flags & INPUT_FLAG_UNICODE) != 0 && this.opt.supportUnicodeInput)
     		this.opt.supportUnicodeInput = true;
+    	else
+    		this.opt.supportUnicodeInput = false;
 
     	this.surface.registerCommLayer(this);
     }

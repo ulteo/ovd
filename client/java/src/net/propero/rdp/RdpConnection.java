@@ -70,6 +70,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	protected Common common = null;
 	private RdesktopCanvas_Localised canvas = null;
 	protected String mapFile = null;
+	protected String inputMethod = null;
 	private CopyOnWriteArrayList<RdpListener> listener = new CopyOnWriteArrayList<RdpListener>();
 	private int state = STATE_DISCONNECTED;
 	private int tryNumber = 0;
@@ -398,6 +399,11 @@ public class RdpConnection implements SeamListener, Runnable{
 
 	public void setKeymap(String keymap) {
 		this.mapFile = keymap;
+	}
+	
+	public void setInputMethod(String inputMethod) {
+		if (inputMethod.equalsIgnoreCase("scancode"))
+			this.opt.supportUnicodeInput = false;
 	}
 
 	protected boolean loadKeymap() {

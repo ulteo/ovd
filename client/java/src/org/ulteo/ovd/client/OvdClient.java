@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
@@ -71,6 +72,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	protected ArrayList<RdpConnectionOvd> availableConnections = null;
 	protected CopyOnWriteArrayList<RdpConnectionOvd> performedConnections = null;
 	protected String keymap = null;
+	protected String inputMethod = null;
 	
 	protected Thread sessionStatusMonitoringThread = null;
 	protected boolean continueSessionStatusMonitoringThread = false;
@@ -468,6 +470,10 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	
 	public void setKeymap(String keymap) {
 		this.keymap = keymap;
+	}
+	
+	public void setInputMethod(String inputMehtod) {
+		this.inputMethod  = inputMehtod;
 	}
 	
 	public void updateNews(List<News> newsList) {}

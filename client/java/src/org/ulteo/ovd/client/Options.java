@@ -54,6 +54,7 @@ public class Options {
 	public static final int FLAG_REMEMBER_ME = 0x00004000;
 	public static final int FLAG_GUI_LOCKED = 0x00008000;
 	public static final int FLAG_SHOW_BURGREPORTER = 0x00010000;
+	public static final int FLAG_INPUT_METHOD      = 0x00020000;
 	
 	public int mask = 0x00000000;
 	
@@ -64,6 +65,7 @@ public class Options {
 	public int port = SessionManagerCommunication.DEFAULT_PORT;
 	public String keymap = null;
 	public String lang = null;
+	public String inputMethod = null;
 	public Dimension geometry = new Dimension(RdpConnection.DEFAULT_WIDTH, RdpConnection.DEFAULT_HEIGHT);
 	public int sessionMode = -1;
 	public boolean nltm = false;
@@ -186,6 +188,13 @@ public class Options {
 			if (keymap != null) {
 				this.keymap = keymap;
 				this.mask |= Options.FLAG_KEYMAP;
+			}
+		}
+		if ((this.mask & Options.FLAG_INPUT_METHOD) == 0) {
+			String inputMethod = properties.getInputMethod();
+			if (inputMethod != null) {
+				this.inputMethod = inputMethod;
+				this.mask |= Options.FLAG_INPUT_METHOD;
 			}
 		}
 		if ((this.mask & Options.FLAG_SHOW_PROGRESS_BAR) == 0) {
