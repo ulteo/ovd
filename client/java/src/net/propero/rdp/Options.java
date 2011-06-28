@@ -53,7 +53,7 @@ public class Options {
 	public boolean debug_keyboard = false;
 	public boolean debug_hexdump = false;
 	public boolean debug_seamless = false;
-	public boolean supportUnicodeInput = true;
+	public boolean supportUnicodeInput = false;
 
 	public boolean enable_menu = false;
 	//public boolean paste_hack = true;

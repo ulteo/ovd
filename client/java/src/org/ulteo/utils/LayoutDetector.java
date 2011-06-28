@@ -22,19 +22,49 @@ package org.ulteo.utils;
 
 import java.awt.im.InputContext;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.Runtime;
 import java.lang.Process;
 import java.util.Locale;
+import java.util.Properties;
 
 
+import org.ulteo.Logger;
 import org.ulteo.ovd.integrated.OSTools;
 
 public class LayoutDetector {
+	private final static String keymapLocation = "/resources/keymaps/listKeymap";
+	private static final String windows_cmd = "reg query " +"\"HKCU\\Keyboard Layout\\Preload\"  /v " + "1";
+	private static final String linux_cmd = "setxkbmap -print -verbose 10";
+	
+	
+	public static String getLayoutString(String code) {
+		InputStream keymapStream = LayoutDetector.class.getResourceAsStream(keymapLocation);
+		
+		Properties proper = new Properties();
+		try {
+			proper.load(keymapStream);
+		} catch (FileNotFoundException e) {
+			Logger.warn("Unable to find the resource["+LayoutDetector.keymapLocation+"]: "+e.getMessage());
+		} catch (IOException e) {
+			Logger.warn("Unable to load ["+LayoutDetector.keymapLocation+"]: "+e.getMessage());
+		}
+		return proper.getProperty(code);
+	}
+	
+	
 	public static String get() {
 		if (OSTools.isLinux()) {
 			String res = LayoutDetector.getLinuxSpecific();
+			if (res != null)
+				return res;
+		}
+
+		if (OSTools.isWindows()) {
+			String res = LayoutDetector.getWindowsSpecific();
 			if (res != null)
 				return res;
 		}
@@ -49,7 +79,6 @@ public class LayoutDetector {
 		return (l.getLanguage()+"-"+l.getCountry()).toLowerCase();
 	}
 	
-	public static final String linux_cmd = "setxkbmap -print -verbose 10";
 	
 	public static String getLinuxSpecific() {
 		String result = null;
@@ -81,5 +110,40 @@ public class LayoutDetector {
 		}
 		
 		return result;
+	}
+	
+	public static String getWindowsSpecific() {
+		Process process = null;
+		String line = null;
+		String layout = null;
+
+		try {
+			process = Runtime.getRuntime().exec(LayoutDetector.windows_cmd);
+			if (process == null)
+				return null;
+			
+			process.waitFor();
+			if (process.exitValue() != 0)
+				return null;
+			
+			BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			while ( (line = input.readLine()) != null) {
+				line = line.toLowerCase();
+				if (line.contains("reg_sz")) {
+					layout = line.split("reg_sz")[1];
+					layout = layout.trim();
+					while (layout.charAt(0) == '0')
+						layout = layout.replaceFirst("0", "");
+
+					return LayoutDetector.getLayoutString(layout);
+				}
+			}
+		}
+		catch (IOException e) {
+			Logger.warn("Unable to detect layout: "+e.getMessage());
+		} catch (InterruptedException e) {
+			Logger.warn("Unable to detect layout Operation stopped: "+e.getMessage());
+		}
+		return null;
 	}
 }

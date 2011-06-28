@@ -48,6 +48,7 @@ import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
+import org.ulteo.utils.LayoutDetector;
 
 public class RdpClient extends JFrame implements WindowListener, RdpListener {
 	public static class Params {
@@ -363,6 +364,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 
 		connection.addRdpListener(this);
 
+		connection.setKeymap(LayoutDetector.get());
 		this.co.add(connection);
 	}
 
