@@ -41,13 +41,13 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.OvdException;
-import org.ulteo.ovd.applet.LibraryLoader;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.utils.LayoutDetector;
+import org.ulteo.utils.LibraryLoader;
 
 public class RdpClient extends JFrame implements WindowListener, RdpListener {
 	public static class Params {

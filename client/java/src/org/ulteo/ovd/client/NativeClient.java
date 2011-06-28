@@ -28,7 +28,7 @@ package org.ulteo.ovd.client;
 import org.ulteo.utils.I18n;
 import org.ulteo.utils.KerberosConfiguration;
 import org.ulteo.utils.LayoutDetector;
-import org.ulteo.ovd.applet.LibraryLoader;
+import org.ulteo.utils.LibraryLoader;
 import org.ulteo.ovd.client.profile.ProfileIni;
 import java.io.IOException;
 

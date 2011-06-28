@@ -26,13 +26,14 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 import org.ini4j.Wini;
-import org.ulteo.ovd.applet.LibraryLoader;
 import org.ulteo.ovd.client.remoteApps.OvdClientIntegrated;
 import org.ulteo.ovd.integrated.OSTools;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 import java.io.FileNotFoundException;
+
+import org.ulteo.utils.LibraryLoader;
 import org.ulteo.utils.jni.WorkArea;
 import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;

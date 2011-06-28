@@ -20,13 +20,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package org.ulteo.ovd.applet;
+package org.ulteo.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import org.ulteo.Logger;
@@ -37,47 +34,24 @@ public class LibraryLoader {
 	public static final String LIB_WINDOW_PATH_NAME = "libWindowsPaths.dll";
 	public static final String RESOURCE_LIBRARY_DIRECTORY_LINUX = "/resources/LinuxLibs";
 	public static final String LIB_X_CLIENT_AREA = "libXClientArea.so";
-	
-	//This method is called from an applet
+
+	/**
+	 * load a library from an applet
+	 * @param resourceDirectory
+	 * 		directory where the library must be found
+	 * @param DLLName
+	 * 		name of the library
+	 * @throws FileNotFoundException
+	 * 		throw if the library wanted is not found
+	 */
 	public static void LoadLibrary(String resourceDirectory, String DLLName) throws FileNotFoundException {
-        if (OSTools.is64())
-            resourceDirectory += "/64";
-        else
-            resourceDirectory += "/32";
-
-		InputStream dllResource = LibraryLoader.class.getResourceAsStream(resourceDirectory+"/"+DLLName);
-		String fileSeparator= System.getProperty("file.separator");
-		//test the resource in order to know if client is started in applet mode
-		if (dllResource != null) {
-			String destFile = System.getProperty("java.io.tmpdir") + fileSeparator + DLLName;
-			try {
-				int c = 0;
-				File outputFile = new File(destFile);
-				FileOutputStream fos = new FileOutputStream(outputFile);
-
-				while ((c = dllResource.read()) != -1) {
-					fos.write(c);
-				}
-				fos.close();
-			} catch (FileNotFoundException e) {
-				Logger.error("Unable to find "+destFile+ e.getMessage());
-			} catch (IOException e) {
-				Logger.error("Error while creating "+destFile);
-			}
-			try {
-				System.load(destFile);
-			} catch (SecurityException e) {
-				Logger.error("Library loading generate an security exception: "+e.getMessage());
-			} catch (UnsatisfiedLinkError e) {
-				Logger.error("Error while loading library: "+e.getMessage());
-			} catch (NullPointerException e) {
-				Logger.error("Unable to load an empty library: "+e.getMessage());
-			}
-
-			return;
+        resourceDirectory += (OSTools.is64() ? "/64" : "/32");
+        File jarLib = FilesOp.exportJarResource(resourceDirectory + '/' + DLLName);
+		try {
+			System.load(jarLib.getPath());
+		} catch (Exception e) {
+			Logger.error(String.format("Unable to load the '%s' library: %s", DLLName, e.getMessage()));
 		}
-
-		throw new FileNotFoundException("Unable to find required library in the jar: "+resourceDirectory+"/"+DLLName);
 	}
 	
 	//This method is called from an non applet client

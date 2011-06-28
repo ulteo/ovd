@@ -34,6 +34,7 @@ import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.Protocol;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 import org.ulteo.utils.AbstractFocusManager;
+import org.ulteo.utils.LibraryLoader;
 import org.ulteo.utils.jni.WorkArea;
 
 import netscape.javascript.JSObject;
