@@ -53,10 +53,10 @@ if (isset($_COOKIE['ovd-client']['session_language']) && $_COOKIE['ovd-client'][
 if (strlen($user_language) == 2)
 		$user_language = $user_language.'-'.$user_language;
 
-if (isset($_COOKIE['ovd-client']['session_keymap']) && $_COOKIE['ovd-client']['session_keymap'] != $user_keymap) {
-	$wi_session_keymap = (string)$_COOKIE['ovd-client']['session_keymap'];
-	$user_keymap = $wi_session_keymap;
-}
+if (isset($_COOKIE['ovd-client']['session_keymap']))
+	$user_keymap = (string)$_COOKIE['ovd-client']['session_keymap'];
+else
+	$user_keymap = null;
 
 $wi_desktop_fullscreen = 0;
 if (isset($_COOKIE['ovd-client']['desktop_fullscreen']))
@@ -123,6 +123,7 @@ function get_users_list() {
 
 		<script type="text/javascript">
 			var i18n = new Hash();
+			var user_keymap = <?php echo (($user_keymap==null)?'null':'"'.$user_keymap.'"');?>;
 		</script>
 
 		<link rel="shortcut icon" type="image/png" href="media/image/favicon.ico" />
@@ -556,13 +557,9 @@ checkSessionMode();
 															Event.observe(window, 'load', function() {
 																translateInterface($('session_language').value);
 																updateFlag($('session_language').value);
-																<?php
-																	if (! isset($wi_session_keymap))
-																		echo 'updateKeymap($(\'session_language\').value);';
-																?>
 															});
 														</script>
-														<select id="session_language" onchange="translateInterface($('session_language').value); updateFlag($('session_language').value); updateKeymap($('session_language').value);" onkeyup="translateInterface($('session_language').value); updateFlag($('session_language').value); updateKeymap($('session_language').value);">
+														<select id="session_language" onchange="translateInterface($('session_language').value); updateFlag($('session_language').value);" onkeyup="translateInterface($('session_language').value); updateFlag($('session_language').value); ">
 															<?php
 																foreach ($languages as $language)
 																	echo '<option value="'.$language['id'].'" style="background: url(\'media/image/flags/'.$language['id'].'.png\') no-repeat right;"'.(($language['id'] == $user_language || $language['id'] == substr($user_language, 0, 2))?' selected="selected"':'').'>'.$language['english_name'].((array_key_exists('local_name', $language))?' - '.$language['local_name']:'').'</option>';
@@ -581,7 +578,7 @@ checkSessionMode();
 														<select id="session_keymap">
 															<?php
 																foreach ($keymaps as $keymap)
-																	echo '<option value="'.$keymap['id'].'"'.(($keymap['id'] == $user_keymap || $keymap['id'] == substr($user_keymap, 0, 2))?' selected="selected"':'').'>'.$keymap['name'].'</option>';
+																	echo '<option value="'.$keymap['id'].'"'.((isset($keymap['default']))?' selected="selected"':'').'>'.$keymap['name'].'</option>';
 															?>
 														</select>
 													</td>

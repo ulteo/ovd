@@ -82,11 +82,11 @@ public class Language {
 			{"Arabic", "ar"},
 			{"Danish", "da"},
 			{"German", "de"},
-			{"English (US)", "en-us"},
+			{"English (US)", "en-us", "en"},
 			{"English (GB)", "en-gb"},
 			{"Spanish", "es"},
 			{"Finnish", "fi"},
-			{"French", "fr-fr"},
+			{"French", "fr-fr", "fr"},
 			{"French (Belgium)", "fr-be"},
 			{"Croatian", "hr"},
 			{"Italian", "it"},
@@ -102,4 +102,6 @@ public class Language {
 			{"Swedish", "sv"},
 			{"Turkish", "tr"}
 	};
+	
+	public static final String keymap_default = "en-us";
 }

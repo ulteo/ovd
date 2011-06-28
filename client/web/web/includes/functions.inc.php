@@ -148,7 +148,7 @@ function get_available_keymaps() {
 		array('id' => 'ar', 'name' => 'Arabic'),
 		array('id' => 'da', 'name' => 'Danish'),
 		array('id' => 'de', 'name' => 'German'),
-		array('id' => 'en-us', 'name' => 'English (US)'),
+		array('id' => 'en-us', 'name' => 'English (US)', 'default' => 'default'),
 		array('id' => 'en-gb', 'name' => 'English (GB)'),
 		array('id' => 'es', 'name' => 'Spanish'),
 		array('id' => 'fi', 'name' => 'Finnish'),
