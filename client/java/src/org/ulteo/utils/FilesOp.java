@@ -57,8 +57,8 @@ public class FilesOp {
 		if (jarResource == null)
 			throw new FileNotFoundException(String.format("Unable to find required resource '%s' in the jar", path));
 
-		File outputFile = new File(System.getProperty("java.io.tmpdir") + 
-				System.getProperty("file.separator") + path);
+		String resName = path.split("/")[path.split("/").length - 1];
+		File outputFile = new File(System.getProperty("java.io.tmpdir") + File.pathSeparatorChar + resName);
 		try {
 			FileOutputStream fos = new FileOutputStream(outputFile);
 			int c = 0;
