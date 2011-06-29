@@ -53,9 +53,17 @@ public abstract class SystemAbstract {
 		this.cache_mimeTypeIcons = new MimeTypeIconsCache(this.iconContentManager);
 	}
 
-	public abstract String create(Application app);
+	public String create(Application app) {
+		Logger.debug("Creating the '"+app.getName()+"' shortcut");
+		this.saveIcon(app);
+		return this.shortcut.create(app);
+	}
 
-	public abstract void clean(Application app);
+	public void clean(Application app) {
+		Logger.debug("Deleting the '"+app.getName()+"' shortcut");
+		this.uninstall(app);
+		this.shortcut.remove(app);
+	}
 
 	public static void cleanAll() {
 		if (OSTools.isWindows())

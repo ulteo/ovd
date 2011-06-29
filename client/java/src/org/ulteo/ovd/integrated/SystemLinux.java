@@ -52,23 +52,6 @@ public class SystemLinux extends SystemAbstract {
 		this.shortcut = new LinuxShortcut();
 	}
 
-	@Override
-	public String create(Application app) {
-		Logger.debug("Creating the '"+app.getName()+"' shortcut");
-		
-		this.saveIcon(app);
-
-		return this.shortcut.create(app);
-	}
-
-	@Override
-	public void clean(Application app) {
-		Logger.debug("Deleting the '"+app.getName()+"' shortcut");
-
-		this.uninstall(app);
-		this.shortcut.remove(app);
-	}
-
 	public static void cleanAll() {
 		LinuxShortcut.removeAll();
 	}
