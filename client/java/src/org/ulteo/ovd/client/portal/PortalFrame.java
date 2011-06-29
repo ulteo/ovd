@@ -60,7 +60,6 @@ public class PortalFrame extends JFrame implements WindowListener {
 	private IntegratedTrayIcon systray = null;
 
 	private boolean newPanelAdded = false;
-	private boolean iconsButtonEnabled = false;
 	private boolean showBugReporter = false;
 	private Image frameLogo = null;
 	
