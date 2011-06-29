@@ -24,17 +24,17 @@ import java.util.HashMap;
 import java.util.List;
 import javax.swing.ImageIcon;
 import org.ulteo.Logger;
+import org.ulteo.ovd.Application;
 import org.ulteo.ovd.integrated.SystemAbstract;
-import org.ulteo.ovd.sm.Application;
-import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.rdp.RdpConnectionOvd;
 
 public class MimetypesManager extends Thread {
 	private SystemAbstract system = null;
 	private SessionManagerCommunication sm = null;
-	private List<ServerAccess> serversList = null;
+	private List<RdpConnectionOvd> serversList = null;
 
-	public MimetypesManager(SystemAbstract system_, SessionManagerCommunication sm_, List<ServerAccess> serversList_) {
+	public MimetypesManager(SystemAbstract system_, SessionManagerCommunication sm_, List<RdpConnectionOvd> serversList_) {
 		this.system = system_;
 		this.sm = sm_;
 		this.serversList = serversList_;
@@ -60,15 +60,15 @@ public class MimetypesManager extends Thread {
 		// mime-type icon processing
 		HashMap<String, ImageIcon> mimeTypesIcons = new HashMap<String, ImageIcon>();
 
-		for (ServerAccess server : this.serversList) {
+		for (RdpConnectionOvd server : this.serversList) {
 			if (server == null)
 				continue;
 
-			for (Application app : server.applications) {
+			for (Application app : server.getAppsList()) {
 				if (app == null)
 					continue;
 
-				for (String mime : app.getMimes()) {
+				for (String mime : app.getSupportedMimeTypes()) {
 					if (mime == null || mime.isEmpty())
 						continue;
 

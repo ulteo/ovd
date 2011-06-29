@@ -22,11 +22,17 @@ package org.ulteo.ovd.client.portal;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import org.ulteo.Logger;
 
 import org.ulteo.utils.I18n;
 import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
@@ -37,14 +43,20 @@ public class SouthEastPanel extends JPanel {
 	
 	private JButton disconnect = null;
 	private JButton publishingButton = null;;
+	private Icon rotateIcon = null;
 	private static final String DISPLAY = I18n._("Display icons");
 	private static final String HIDE = I18n._("Hide icons");
+
+	private RdpActions rdpActions = null;
 	
 	public SouthEastPanel(final RdpActions rdpActions) {
 		this.setLayout(new GridBagLayout());
-		
+
+		this.rdpActions = rdpActions;
 		disconnect = new JButton(I18n._("Disconnect"));
-		publishingButton = (((OvdClientPortal)rdpActions).isAutoPublish() ?  new JButton(HIDE) : new JButton(DISPLAY));
+		
+		this.initRotate();
+		publishingButton = new JButton(this.rotateIcon);
 		
 		disconnect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -53,10 +65,22 @@ public class SouthEastPanel extends JPanel {
 		});
 		publishingButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				publishingButton.setText((((OvdClientPortal)rdpActions).togglePublications()) ? HIDE : DISPLAY);
+				new Thread(new Runnable() {
+					public void run() {
+						publishingButton.setEnabled(false);
+						publishingButton.setIcon(rotateIcon);
+						publishingButton.setText(null);
+
+						boolean isPublished = ((OvdClientPortal)rdpActions).togglePublications();
+
+						publishingButton.setIcon(null);
+						publishingButton.setText(isPublished ? HIDE : DISPLAY);
+						publishingButton.setEnabled(true);
+					}
+				}).start();
 			}
 		});
-		this.toggleIconsButton(false);
+		this.publishingButton.setEnabled(false);
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		
@@ -68,7 +92,32 @@ public class SouthEastPanel extends JPanel {
 		this.add(disconnect, gbc);
 	}
 
-	public void toggleIconsButton(boolean enable) {
-		this.publishingButton.setEnabled(enable);
+	private void initRotate() {
+		URL url = SouthEastPanel.class.getClassLoader().getResource("pics/rotate.gif");
+		if (url == null) {
+			Logger.error("Weird. The icon pics/rotate.gif was not found in the jar");
+			return;
+		}
+
+		Image rotateImg = Toolkit.getDefaultToolkit().getImage(url);
+		if (rotateImg == null) {
+			Logger.error("Weird. Failed to create Image object from icon pics/rotate.gif");
+			return;
+		}
+
+		this.rotateIcon = new ImageIcon(rotateImg);
+		if (this.rotateIcon == null) {
+			Logger.error("Weird. Failed to create Icon object from icon pics/rotate.gif");
+			return;
+		}
+	}
+
+	public void initPublishingButton() {
+		if (this.publishingButton == null)
+			return;
+
+		this.publishingButton.setIcon(null);
+		this.publishingButton.setText(((OvdClientPortal) this.rdpActions).isAutoPublish() ?  HIDE : DISPLAY);
+		this.publishingButton.setEnabled(true);
 	}
 }

@@ -144,7 +144,6 @@ public class PortalFrame extends JFrame implements WindowListener {
 	public void initButtonPan(RdpActions _rdpActions) {
 		this.rdpActions = _rdpActions;
 		this.sep = new SouthEastPanel(_rdpActions);
-		this.enableIconsButton();
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridy = 4;
@@ -154,6 +153,13 @@ public class PortalFrame extends JFrame implements WindowListener {
 		this.add(sep, gbc);
 		this.validate();
 		this.initSystray();
+	}
+
+	public void initPublishingButton() {
+		if (this.sep == null)
+			return;
+
+		this.sep.initPublishingButton();
 	}
 	
 	public void initSystray() {
@@ -178,18 +184,6 @@ public class PortalFrame extends JFrame implements WindowListener {
 	public IntegratedTrayIcon getSystray() {
 		return this.systray;
 	}
-
-	public void enableIconsButton() {
-		if (this.iconsButtonEnabled)
-			return;
-
-		if (this.sep == null)
-			return;
-
-		this.iconsButtonEnabled = true;
-		this.sep.toggleIconsButton(true);
-	}
-
 	
 	public NewsPanel getNewsPanel() {
 		return this.newsPanel;

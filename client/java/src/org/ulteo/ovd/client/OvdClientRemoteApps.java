@@ -42,18 +42,18 @@ import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 import org.ulteo.rdp.RdpConnectionOvd;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import javax.swing.ImageIcon;
+import org.ulteo.ovd.integrated.DesktopIntegrationListener;
+import org.ulteo.ovd.integrated.DesktopIntegrator;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.utils.jni.WorkArea;
 import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.integrated.SystemLinux;
 import org.ulteo.ovd.integrated.SystemWindows;
-import org.ulteo.ovd.integrated.mime.MimetypesManager;
 
-public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppListener {
+public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppListener, DesktopIntegrationListener {
 
 	protected Spool spool = null;
 	protected SystemAbstract system = null;
@@ -69,6 +69,8 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	private boolean debugSeamless = false;
 	protected boolean publicated = false;
 	protected boolean showDesktopIcons = false;
+	protected DesktopIntegrator desktopIntegrator = null;
+
 	
 	public OvdClientRemoteApps(SessionManagerCommunication smComm) {
 		this(smComm, null);
@@ -116,11 +118,8 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		} catch (OvdException ex) {
 			Logger.error(co.getServer()+": Failed to add ovd applications listener: "+ex);
 		}
-
+		
 		for (Application app : co.getAppsList()) {
-			if (this.system.create(app) == null)
-				org.ulteo.Logger.error("The "+app.getName()+" shortcut could not be created");
-
 			int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
 			this.obj.updateProgress(LoadingStatus.CLIENT_INSTALL_APPLICATION, subStatus);
 			this.ApplicationIndex++;
@@ -155,11 +154,13 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	}
 
 	public void ovdInited(OvdAppChannel channel) {
+		RdpConnectionOvd co = find(channel);
+		if (co == null || this.desktopIntegrator == null || ! this.desktopIntegrator.isDesktopIntegrationDone(co))
+			return;
+
 		try {
-			this.publish(find(channel));
-		} catch (NullPointerException e) {
-			Logger.warn(String.format("channel %s not found", channel.name()));
-		}
+			this.publish(co);
+		} catch (NullPointerException e) {}
 	}
 
 	@Override
@@ -275,9 +276,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		this.configureRDP(properties);
 		
 		List<ServerAccess> serversList = this.smComm.getServers();
-
-		// Download mimetypes icons (launch in a separated thread)
-		new MimetypesManager(this.system, this.smComm, serversList).start();
 		
 		this.numberOfApplication = 0;
 
@@ -294,6 +292,11 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			if (this.createRDPConnection(server) == null)
 				continue;
 		}
+		
+		this.desktopIntegrator = new DesktopIntegrator(this.system, (List<RdpConnectionOvd>) this.connections.clone(), this.smComm);
+		this.desktopIntegrator.addDesktopIntegrationListener(this);
+		this.desktopIntegrator.start();
+
 		this.obj.updateProgress(LoadingStatus.SM_GET_APPLICATION, 100);
 		this.ApplicationIndex = 0;
 	}
@@ -379,6 +382,15 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	
 	@Override
 	protected void display(RdpConnection co) {}
+
+	public void shortcutGenerationIsDone(RdpConnectionOvd co) {
+		if (! co.getOvdAppChannel().isReady())
+			return;
+
+		try {
+			this.publish(co);
+		} catch (NullPointerException e) {}
+	}
 	
 	/**
 	 * toggle all publish/unpublish applications from all {@link RdpConnectionOvd} in the 

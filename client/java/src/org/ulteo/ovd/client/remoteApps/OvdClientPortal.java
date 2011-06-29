@@ -147,13 +147,13 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 				else
 					this.portal.getApplicationPanel().toggleAppButton(app, true);
 			}
+
+			if (this.desktopIntegrator != null && this.desktopIntegrator.isDesktopIntegrationDone(rc))
+				this.portal.initPublishingButton();
 		}
 		
 		if (this.obj != null )
 			this.obj.sessionConnected();
-		
-		if (this.getAvailableConnections().size() == this.connections.size())
-			this.portal.enableIconsButton();
 	}
 
 	@Override
@@ -198,6 +198,14 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	
 	public boolean isAutoPublish() {
 		return this.autoPublish;
+	}
+
+	@Override
+	public void shortcutGenerationIsDone(RdpConnectionOvd co) {
+		if (this.autoPublish)
+			super.shortcutGenerationIsDone(co);
+
+		this.portal.initPublishingButton();
 	}
 
 	
