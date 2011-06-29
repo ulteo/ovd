@@ -119,7 +119,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			Logger.error(co.getServer()+": Failed to add ovd applications listener: "+ex);
 		}
 		
-		for (Application app : co.getAppsList()) {
+		for (@SuppressWarnings("unused") Application app : co.getAppsList()) {
 			int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
 			this.obj.updateProgress(LoadingStatus.CLIENT_INSTALL_APPLICATION, subStatus);
 			this.ApplicationIndex++;
