@@ -151,15 +151,42 @@ class User {
 			$applications_from_server = $server->getApplications();
 			foreach ($applications_from_server as $k => $an_server_application) {
 				if (in_array($an_server_application, $applications)) {
-					$servers_to_use []= $server;
+					$servers_to_use[$server->getAttribute('fqdn')]= $server;
 					unset($applications[array_search($an_server_application, $applications)]);
 				}
 			}
 		}
 		$servers_to_use = array_unique($servers_to_use);
 		
-		if (count($applications) == 0)
+		if (count($applications) == 0) {
+			// remove useless server to minimise the number of servers to use
+			$servers_with_applications = array();
+			foreach ($servers_to_use as $fqdn => $server) {
+				$apps = $server->getApplications();
+				if (is_array($apps)) {
+					$servers_with_applications[$fqdn] = $apps;
+				}
+			}
+			
+			foreach ($servers_with_applications as $fqdn => $applications) {
+				$servers_with_applications2 = array_copy($servers_with_applications);
+				
+				unset($servers_with_applications2[$fqdn]);
+				foreach ($applications as $app_id) {
+					foreach ($servers_with_applications2 as $fqdn2 => $applications2) {
+						if (in_array($app_id, $applications2)) {
+							unset($servers_with_applications[$fqdn][$applications]);
+						}
+					}
+				}
+				if (count($servers_with_applications[$fqdn]) == 0) {
+					unset($servers_with_applications[$fqdn]);
+					unset($servers_to_use[$fqdn]);
+				}
+			}
+			
 			return $servers_to_use;
+		}
 		else {
 			if ($launch_without_apps == 1) {
 				return $servers_to_use;

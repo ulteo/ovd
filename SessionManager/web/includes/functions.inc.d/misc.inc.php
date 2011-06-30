@@ -98,6 +98,30 @@ function array_merge2( $a1, $a2) {
 	return $a1;
 }
 
+function array_copy($aSource) {
+	if (!is_array($aSource)) {
+		return false;
+	}
+	
+	$ret = array();
+	
+	$aKeys = array_keys($aSource);
+	$aVals = array_values($aSource);
+	
+	for ($x = 0; $x < count($aKeys); $x++) {
+		if (is_object($aVals[$x])) {
+			$ret[$aKeys[$x]] = clone $aVals[$x];
+		}
+		elseif (is_array($aVals[$x])) {
+			$ret[$aKeys[$x]] = array_copy($aVals[$x]);
+		} else {
+			$ret[$aKeys[$x]] = $aVals[$x];
+		}
+	}
+	
+	return $ret;
+}
+
 function is_writable2($filename) {
 	return ((is_file($filename) && is_writable($filename)) || (is_dir($filename) && is_writable($filename)) || is_writable(dirname($filename)));
 }
