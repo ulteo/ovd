@@ -1,8 +1,8 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -40,6 +40,10 @@ def getWinTimezone(tzid_):
 		return mappings[tzid_]
 	
 	return mappings["Europe/London"]
+
+
+def unixLocale2WindowsLocale(locale_):
+	return locale_.replace("_", "-").lower()
 
 
 def getMapping():
