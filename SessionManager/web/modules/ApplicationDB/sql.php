@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -108,10 +108,12 @@ class ApplicationDB_sql extends ApplicationDB {
 	}
 
 	public function isOK($app_){
-		$minimun_attribute = array('id','name','type','executable_path','published');
+		$minimun_attribute = array('name','type','executable_path','published');
 		if (is_object($app_)){
 			foreach ($minimun_attribute as $attribute){
 				if ($app_->hasAttribute($attribute) == false)
+					return false;
+				if ($app_->getAttribute($attribute) === "")
 					return false;
 			}
 			return true;
