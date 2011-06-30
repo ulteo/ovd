@@ -80,6 +80,7 @@ function init_db($prefs_) {
 	Abstract_ReportSession::init($prefs_);
 	Abstract_UserGroup_Preferences::init($prefs_);
 	Abstract_UserGroup_Rule::init($prefs_);
+	Abstract_VDI::init($prefs_);
 	
 	return true;
 }

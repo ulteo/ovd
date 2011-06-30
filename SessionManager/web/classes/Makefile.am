@@ -31,7 +31,10 @@ scripts_DATA = Application.class.php \
                UsersGroup_dynamic_cached.class.php \
                UserGroup_Preferences.class.php \
                UserGroup_Rule.class.php \
-               UserGroup_Rules.class.php
+               UserGroup_Rules.class.php \
+               VDI.class.php \
+               VDI_MasterOS.class.php \
+               VDI_VM.class.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/classes
 
