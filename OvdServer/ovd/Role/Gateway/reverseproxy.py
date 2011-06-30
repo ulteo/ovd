@@ -35,7 +35,7 @@ from sender import sender, senderHTTP
 
 class ReverseProxy(asyncore.dispatcher):
 
-	def __init__(self, ssl_ctx, gateway, sm, rdp_port):
+	def __init__(self, ssl_ctx, gateway, sm, rdp_port, server_allow_reuse_address):
 		asyncore.dispatcher.__init__(self)
 
 		self.sm = sm
@@ -47,7 +47,8 @@ class ReverseProxy(asyncore.dispatcher):
 
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.set_socket(SSL.Connection(self.ssl_ctx, sock))
-		#self.set_reuse_addr()
+		if server_allow_reuse_address:
+			self.set_reuse_addr()
 
 		try:
 			self.bind(gateway)

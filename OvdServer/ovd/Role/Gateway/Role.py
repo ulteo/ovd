@@ -77,7 +77,7 @@ class Role(AbstractRole):
 
 		gateway = (Config.gateway_address, Config.gateway_port)
 		sm = (Config.session_manager, self.HTTPS_PORT)
-		self.rproxy = ReverseProxy(self.ssl_ctx, gateway, sm, self.RDP_PORT)
+		self.rproxy = ReverseProxy(self.ssl_ctx, gateway, sm, self.RDP_PORT, Config.server_allow_reuse_address)
 
 		Logger.info('Gateway:: running')
 		self.status = Role.STATUS_RUNNING

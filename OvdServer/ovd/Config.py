@@ -57,6 +57,8 @@ class Config:
 	SM_SERVER_PORT = 1111
 	SLAVE_SERVER_PORT = 1112
 	
+	server_allow_reuse_address = False
+	
 	aps_multithread = False
 	
 	gateway_address = "0.0.0.0"
@@ -89,6 +91,13 @@ class Config:
 		
 		if Config.infos.has_key("session_manager"):
 			Config.session_manager = Config.infos["session_manager"]
+		
+		if Config.infos.has_key("server_allow_reuse_address"):
+			a = Config.infos["server_allow_reuse_address"].lower().strip()
+			if a not in ["true", "false"]:
+				report_error("invalid value for configuration key 'server_allow_reuse_address', allowed values are true/false")
+			
+			Config.server_allow_reuse_address = (a == "true")
 		
 		if Config.infos.has_key("LOG_FILE"):
 			Config.log_file = Config.infos["LOG_FILE"]
