@@ -41,6 +41,8 @@ import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 import org.ulteo.rdp.RdpConnectionOvd;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -293,7 +295,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 				continue;
 		}
 		
-		this.desktopIntegrator = new DesktopIntegrator(this.system, (List<RdpConnectionOvd>) this.connections.clone(), this.smComm);
+		this.desktopIntegrator = new DesktopIntegrator(this.system, new ArrayList<RdpConnectionOvd>(this.connections), this.smComm);
 		this.desktopIntegrator.addDesktopIntegrationListener(this);
 		this.desktopIntegrator.start();
 
