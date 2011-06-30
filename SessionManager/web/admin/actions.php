@@ -352,16 +352,18 @@ if ($_REQUEST['name'] == 'Application_static') {
 			if (! $applicationDB->isOK($a)) {
 				popup_error(_("Application is not ok"));
 			}
-			$a->unsetAttribute('id');
-			
-			$a->setAttribute('revision', 1);
-			$ret = $applicationDB->add($a);
-			if (! $ret) {
-				popup_error(sprintf(_("Failed to add application '%s'"), $a->getAttribute('name')));
+			else {
+				$a->unsetAttribute('id');
+				
+				$a->setAttribute('revision', 1);
+				$ret = $applicationDB->add($a);
+				if (! $ret) {
+					popup_error(sprintf(_("Failed to add application '%s'"), $a->getAttribute('name')));
+				}
+				
+				popup_info(sprintf(_("Application '%s' successfully added"), $a->getAttribute('name')));
+				redirect('applications_static.php?action=manage&id='.$a->getAttribute('id'));
 			}
-			
-			popup_info(sprintf(_("Application '%s' successfully added"), $a->getAttribute('name')));
-			redirect('applications_static.php?action=manage&id='.$a->getAttribute('id'));
 		}
 	}
 	
