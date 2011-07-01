@@ -50,6 +50,7 @@ import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.utils.jni.WorkArea;
 import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
+import org.ulteo.ovd.integrated.mime.MimetypesManager;
 
 public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppListener {
 
@@ -268,33 +269,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			int updatedIcons = this.system.updateAppsIconsCache(appsIcons);
 			if (updatedIcons > 0)
 				Logger.info("Applications cache updated: "+updatedIcons+" icons");
-
-			HashMap<String, ImageIcon> mimeTypesIcons = new HashMap<String, ImageIcon>();
-			for (String each : mimesTypes) {
-				if (this.system.getMimeTypeIcon(each) != null)
-					continue;
-
-				ImageIcon icon = null;
-				try {
-					icon = this.smComm.askForMimeTypeIcon(each);
-				} catch (SessionManagerException ex) {
-					Logger.error("Failed to get "+each+" icon from session manager: "+ex.getMessage());
-					continue;
-				}
-				if (icon == null) {
-					Logger.error("Weird. Mime type "+each+" has no icon?");
-					continue;
-				}
-
-				mimeTypesIcons.put(each, icon);
-			}
-
-			updatedIcons = this.system.updateMimeTypesIconsCache(mimeTypesIcons);
-			if (updatedIcons > 0)
-				Logger.info("Mime-types cache updated: "+updatedIcons+" icons");
-
-			mimeTypesIcons.clear();
-			mimeTypesIcons = null;
 		}
 
 		// Ensure that width is multiple of 4
@@ -333,6 +307,10 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		this.configureRDP(properties);
 		
 		List<ServerAccess> serversList = this.smComm.getServers();
+
+		// Download mimetypes icons (launch in a separated thread)
+		new MimetypesManager(this.system, this.smComm, serversList).start();
+		
 		this.numberOfApplication = 0;
 
 		for (ServerAccess server : serversList)

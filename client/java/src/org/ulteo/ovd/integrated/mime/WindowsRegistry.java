@@ -152,42 +152,39 @@ public class WindowsRegistry extends FileAssociate {
 		String md5sum = MD5.getMD5Sum(mimeType);
 		if (md5sum != null) {
 			String iconPath = Constants.PATH_CACHE_MIMETYPES_ICONS+Constants.FILE_SEPARATOR+md5sum+Constants.ICONS_EXTENSION;
-			File iconFile = new File(iconPath);
-			if (iconFile.exists()) {
-				boolean defaultIconIsDefined = false;
-				RegistryKey defaultIcon = null;
+			boolean defaultIconIsDefined = false;
+			RegistryKey defaultIcon = null;
 
-				try {
-					defaultIcon = Registry.openSubkey(Registry.HKEY_CLASSES_ROOT, target+"\\DefaultIcon", RegistryKey.ACCESS_READ);
-					defaultIcon.closeKey();
+			try {
+				defaultIcon = Registry.openSubkey(Registry.HKEY_CLASSES_ROOT, target+"\\DefaultIcon", RegistryKey.ACCESS_READ);
+				defaultIcon.closeKey();
 
-					defaultIconIsDefined = true;
-				} catch (Exception ex) {}
+				defaultIconIsDefined = true;
+			} catch (Exception ex) {}
 
 
 
-				try {
-					defaultIcon = key.openSubKey("DefaultIcon", RegistryKey.ACCESS_ALL);
+			try {
+				defaultIcon = key.openSubKey("DefaultIcon", RegistryKey.ACCESS_ALL);
 
-					defaultIconIsDefined = true;
+				defaultIconIsDefined = true;
 
-					if (this.overrideDefaultIcon) {
-						HashMap<String, String> defaultIconsPath = this.default_icons_changed.get(app);
-						if (defaultIconsPath == null) {
-							defaultIconsPath = new HashMap<String, String>();
-							this.default_icons_changed.put(app, defaultIconsPath);
-						}
-						defaultIconsPath.put(target, defaultIcon.getStringValue(""));
+				if (this.overrideDefaultIcon) {
+					HashMap<String, String> defaultIconsPath = this.default_icons_changed.get(app);
+					if (defaultIconsPath == null) {
+						defaultIconsPath = new HashMap<String, String>();
+						this.default_icons_changed.put(app, defaultIconsPath);
 					}
-				} catch (Exception ex) {
-					if (this.overrideDefaultIcon || (! defaultIconIsDefined)) {
-						defaultIcon = key.createSubKey("DefaultIcon", "");
-					}
+					defaultIconsPath.put(target, defaultIcon.getStringValue(""));
 				}
-
+			} catch (Exception ex) {
 				if (this.overrideDefaultIcon || (! defaultIconIsDefined)) {
-					defaultIcon.setValue(new RegStringValue(defaultIcon, "", iconPath));
+					defaultIcon = key.createSubKey("DefaultIcon", "");
 				}
+			}
+
+			if (this.overrideDefaultIcon || (! defaultIconIsDefined)) {
+				defaultIcon.setValue(new RegStringValue(defaultIcon, "", iconPath));
 			}
 		}
 
