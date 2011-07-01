@@ -193,13 +193,18 @@ $dom->appendChild($session_node);
 
 $_SESSION['ovd-client']['to_SM_start_XML'] = $dom->saveXML();
 
-if (defined('SESSIONMANAGER_HOST'))
-	if (defined('GATEWAY_WAN_IP') && defined('GATEWAY_WAN_PORT') && defined('GATEWAY_LAN_IP') && defined('GATEWAY_LAN_PORT') && $_SERVER['REMOTE_ADDR'] == GATEWAY_LAN_IP)
+if (defined('SESSIONMANAGER_HOST')) {
+	if (defined('GATEWAY_WAN_IP') && defined('GATEWAY_WAN_PORT') && defined('GATEWAY_LAN_IP') && defined('GATEWAY_LAN_PORT') && $_SERVER['REMOTE_ADDR'] == GATEWAY_LAN_IP) {
 		$_SESSION['ovd-client']['server'] = GATEWAY_LAN_IP.':'.GATEWAY_LAN_PORT;
-	else
+		$_SESSION['ovd-client']['sessionmanager_host'] = GATEWAY_WAN_IP.':'.GATEWAY_WAN_PORT;
+	} else {
 		$_SESSION['ovd-client']['server'] = SESSIONMANAGER_HOST;
-else
+		$_SESSION['ovd-client']['sessionmanager_host'] = SESSIONMANAGER_HOST;
+	}
+} else {
 	$_SESSION['ovd-client']['server'] = $_POST['sessionmanager_host'];
+	$_SESSION['ovd-client']['sessionmanager_host'] = $_POST['sessionmanager_host'];
+}
 $_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$_SESSION['ovd-client']['server'].'/ovd/client';
 $sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
 
@@ -266,6 +271,7 @@ if (! is_object($session_node)) {
 	echo return_error(1, 'internal_error');
 	die();
 }
+$session_node->setAttribute('sessionmanager', $_SESSION['ovd-client']['sessionmanager_host']);
 $_SESSION['ovd-client']['session_id'] = $session_node->getAttribute('id');
 $_SESSION['ovd-client']['session_mode'] = $session_node->getAttribute('mode');
 $_SESSION['ovd-client']['session_language'] = $_POST['language'];

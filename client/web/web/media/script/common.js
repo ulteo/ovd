@@ -196,6 +196,12 @@ function onStartSessionSuccess(xml_) {
 	}
 	session_node = buffer[0];
 
+	var sessionmanager_host = session_node.getAttribute('sessionmanager');
+	if (sessionmanager_host == '127.0.0.1' || sessionmanager_host == '127.0.1.1' || sessionmanager_host == 'localhost' || sessionmanager_host == 'localhost.localdomain')
+		sessionmanager_host = window.location.hostname;
+	if (sessionmanager_host.indexOf(':') == -1)
+		sessionmanager_host += ':443';
+
 	try {
 		session_mode = session_node.getAttribute('mode');
 		session_mode = session_mode.substr(0, 1).toUpperCase()+session_mode.substr(1, session_mode.length-1);
@@ -238,11 +244,6 @@ function onStartSessionSuccess(xml_) {
 		else
 			daemon = new Applications('ulteo-applet.jar', 'org.ulteo.ovd.applet.Applications', debug);
 
-		var sessionmanager_host = $('sessionmanager_host').value;
-		if (sessionmanager_host == '127.0.0.1' || sessionmanager_host == '127.0.1.1' || sessionmanager_host == 'localhost' || sessionmanager_host == 'localhost.localdomain')
-			sessionmanager_host = window.location.hostname;
-		if (sessionmanager_host.indexOf(':') == -1)
-			sessionmanager_host += ':443';
 		daemon.sessionmanager = sessionmanager_host;
 
 		daemon.explorer = explorer;
