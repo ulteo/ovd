@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -58,7 +59,7 @@ public class FilesOp {
 			throw new FileNotFoundException(String.format("Unable to find required resource '%s' in the jar", path));
 
 		String resName = path.split("/")[path.split("/").length - 1];
-		File outputFile = new File(System.getProperty("java.io.tmpdir") + File.pathSeparatorChar + resName);
+		File outputFile = new File(System.getProperty("java.io.tmpdir") + File.separatorChar + resName);
 		try {
 			FileOutputStream fos = new FileOutputStream(outputFile);
 			int c = 0;
