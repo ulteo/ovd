@@ -172,10 +172,10 @@ class User {
 				$servers_with_applications2 = array_copy($servers_with_applications);
 				
 				unset($servers_with_applications2[$fqdn]);
-				foreach ($applications as $app_id) {
+				foreach ($applications as $app_object) {
 					foreach ($servers_with_applications2 as $fqdn2 => $applications2) {
-						if (in_array($app_id, $applications2)) {
-							unset($servers_with_applications[$fqdn][$applications]);
+						if (in_array($app_object, $applications2) && array_key_exists($fqdn2, $servers_with_applications)) {
+							unset($servers_with_applications[$fqdn2][$app_object->getAttribute('id')]);
 						}
 					}
 				}
