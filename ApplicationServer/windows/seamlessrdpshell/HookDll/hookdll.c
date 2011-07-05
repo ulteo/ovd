@@ -83,6 +83,8 @@ static HANDLE g_mutex = NULL;
 typedef struct node_{
 	HWND windows;
 	unsigned short *title;
+	boolean focus;
+	boolean is_shown;
 	struct node_* next;
 }node;
 
@@ -114,6 +116,8 @@ static node* addHWDNToHistory(HWND hwnd){
 		hwdHistory = malloc(sizeof(node));
 		hwdHistory->windows = hwnd;
 		hwdHistory->title = NULL;
+		hwdHistory->focus = FALSE;
+		hwdHistory->is_shown = FALSE;
 		hwdHistory->next = NULL;
 		return hwdHistory;
 	}
@@ -126,6 +130,8 @@ static node* addHWDNToHistory(HWND hwnd){
 	newNode->windows = hwnd;
 	newNode->title = NULL;
 	newNode->next = NULL;
+	newNode->focus = FALSE;
+	newNode->is_shown = FALSE;
 	currentNode->next = newNode;
 	return newNode;
 }
@@ -479,14 +485,18 @@ static void create_window(HWND hwnd){
 		node* window;
 		TCHAR classname[256];
 
-		if (getWindowFromHistory(hwnd) != NULL) {
-			return;
+		window = getWindowFromHistory(hwnd);
+		if (window != NULL) {
+			if (window->is_shown)
+				return;
 		}
-		
-		window = addHWDNToHistory(hwnd);
-		if (window == NULL) {
-			return;
+		else {
+			window = addHWDNToHistory(hwnd);
+			if (window == NULL)
+				return;
 		}
+
+		window->is_shown = TRUE;
 
 		style = GetWindowLong(hwnd, GWL_STYLE);
 		vchannel_write("DEBUG","NEW WINDOWS");
@@ -565,6 +575,9 @@ static void create_window(HWND hwnd){
 		update_position(hwnd);
 		vchannel_write("STATE", "0x%08lx,0x%08x,0x%08x", hwnd,
 				   state, 0);
+
+		if (window->focus)
+			vchannel_write("FOCUS", "0x%08lx", hwnd);
 }
 
 static void destroy_window(HWND hwnd)
@@ -800,6 +813,20 @@ wndprocret_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 			WaitForSingleObject(g_mutex, INFINITE);
 			g_last_focused_window = hwnd;
 			ReleaseMutex(g_mutex);
+
+			{
+				node* window;
+
+				window = getWindowFromHistory(hwnd);
+				if (window == NULL) {
+					window = addHWDNToHistory(hwnd);
+					if (window == NULL)
+						goto end;
+
+					window->focus = TRUE;
+					goto end;
+				}
+			}
 
 			vchannel_block();
 			vchannel_write("FOCUS", "0x%08lx", hwnd);
