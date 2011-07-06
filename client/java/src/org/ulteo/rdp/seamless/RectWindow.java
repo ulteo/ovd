@@ -219,6 +219,10 @@ public class RectWindow extends Component {
 			default:
 				return;
 		}
+
+		if (r.width <= 0 || r.height <= 0)
+			return;
+
 		this.setBounds(r);
 	}
 
