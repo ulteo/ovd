@@ -54,7 +54,7 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, 
 		this.addFocusListener(this);
 		input = this.common.canvas.getInput();
 
-		GUIActions.setIconImage(this, null).run();
+		GUIActions.setIconImage(this, GUIActions.DEFAULT_APP_ICON).run();
 	}
 
 	private void parseFlags(int flags) {

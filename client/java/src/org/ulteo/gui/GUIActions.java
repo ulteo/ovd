@@ -48,8 +48,19 @@ import org.ulteo.utils.jni.WorkArea;
 public class GUIActions {
 	private static GUIActions Actions = new GUIActions();
 
+	public static Image DEFAULT_APP_ICON = null;
 	public static Image ULTEO_ICON = null;
 	public static Rectangle SCREEN_BOUNDS = null;
+
+	static {
+		URL url = GUIActions.class.getClassLoader().getResource("pics/default_icon.png");
+		if (url == null) {
+			Logger.error("Weird. The icon pics/default_icon.png was not found in the jar");
+		}
+		else {
+			DEFAULT_APP_ICON = Toolkit.getDefaultToolkit().getImage(url);
+		}
+	}
 
 	private static void initUlteoIcon() {
 		if (ULTEO_ICON != null)

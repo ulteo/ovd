@@ -99,7 +99,7 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 		this.setVisible(false);
 		this.addFocusListener(this);
 
-		GUIActions.setIconImage(this, null).run();
+		GUIActions.setIconImage(this, GUIActions.DEFAULT_APP_ICON).run();
 	}
 
 	private void parseFlags(int flags) {
