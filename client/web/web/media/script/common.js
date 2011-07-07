@@ -79,7 +79,6 @@ function startSession() {
 					desktop_fullscreen: ((desktop_fullscreen)?1:0),
 					debug: ((debug)?1:0)
 				},
-				asynchronous: false,
 				onSuccess: function(transport) {
 					onStartSessionSuccess(transport.responseXML);
 				},
@@ -899,7 +898,6 @@ function startExternalSession(mode_) {
 				timezone: getTimezoneName(),
 				debug: 0
 			},
-			asynchronous: false,
 			onSuccess: function(transport) {
 				onStartExternalSessionSuccess(transport.responseXML);
 			},
