@@ -55,21 +55,23 @@ public class DesktopIntegrator extends Thread {
 
 	@Override
 	public void run() {
+		// generate shortcuts
 		for (RdpConnectionOvd rc : this.connections) {
 			for (Application app : rc.getAppsList()) {
 				if (this.system.create(app) == null)
 					Logger.error("The "+app.getName()+" shortcut could not be created");
 			}
-			
+			this.integratedConnections.add(rc);
+			this.fireShortcutGenerationIsDone(rc);
+		}
+		
+		// download mimetypes icons
+		for (RdpConnectionOvd rc : this.connections) {
 			HashMap<String, ImageIcon> mime_types = getMimeTypes(rc);
 			int updatedIcons = this.system.updateMimeTypesIconsCache(mime_types);
 			if (updatedIcons > 0)
 				Logger.info("Mime-types cache updated: "+updatedIcons+" icons");
-
-			this.integratedConnections.add(rc);
-			this.fireShortcutGenerationIsDone(rc);
 		}
-
 		this.system.refresh();
 	}
 
