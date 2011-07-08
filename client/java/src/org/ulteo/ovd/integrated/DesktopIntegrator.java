@@ -22,11 +22,14 @@ package org.ulteo.ovd.integrated;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+
+import javax.swing.ImageIcon;
+
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
-import org.ulteo.ovd.integrated.mime.MimetypesManager;
-import org.ulteo.ovd.sm.SessionManagerCommunication;
+ import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public class DesktopIntegrator extends Thread {
@@ -50,27 +53,61 @@ public class DesktopIntegrator extends Thread {
 		this.integratedConnections = Collections.synchronizedList(new ArrayList<RdpConnectionOvd>());
 	}
 
+	@Override
 	public void run() {
-		this.generateShortcuts();
-		this.downloadMimetypesIcons();
-	}
-
-	private void downloadMimetypesIcons() {
-		// Download mimetypes icons
-		new MimetypesManager(this.system, this.sm, this.connections).run();
-	}
-
-	private void generateShortcuts() {
-		for (RdpConnectionOvd server : this.connections) {
-			for (Application app : server.getAppsList()) {
+		for (RdpConnectionOvd rc : this.connections) {
+			for (Application app : rc.getAppsList()) {
 				if (this.system.create(app) == null)
 					Logger.error("The "+app.getName()+" shortcut could not be created");
 			}
-
-			this.integratedConnections.add(server);
 			
-			this.fireShortcutGenerationIsDone(server);
+			HashMap<String, ImageIcon> mime_types = getMimeTypes(rc);
+			int updatedIcons = this.system.updateMimeTypesIconsCache(mime_types);
+			if (updatedIcons > 0)
+				Logger.info("Mime-types cache updated: "+updatedIcons+" icons");
+
+			this.integratedConnections.add(rc);
+			this.fireShortcutGenerationIsDone(rc);
 		}
+
+		this.system.refresh();
+	}
+
+	/**
+	 * get all mime-type needed
+	 * @param rc
+	 * 		the {@link RdpConnectionOvd} rc object to get mime-types 
+	 * @return
+	 * 		all new mime-types to update
+	 */
+	private HashMap<String, ImageIcon> getMimeTypes(RdpConnectionOvd rc) {
+		if (rc == null)
+			throw new NullPointerException("'generateMimeTypes' cannot receive a null paramater");
+			
+		HashMap<String, ImageIcon> mimeTypesIcons = new HashMap<String, ImageIcon>();
+
+		for (Application app : rc.getAppsList()) {
+			if (app == null)
+				continue;
+
+			for (String mime : app.getSupportedMimeTypes()) {
+				if (mime == null || mime.isEmpty())
+					continue;
+
+				if (mimeTypesIcons.containsKey(mime))
+					continue;
+
+				if (this.system.getMimeTypeIcon(mime) != null)
+					continue;
+
+				ImageIcon icon = this.sm.askForMimeTypeIcon(mime);
+				if (icon == null)
+					continue;
+
+				mimeTypesIcons.put(mime, icon);
+			}
+		}
+		return mimeTypesIcons;
 	}
 
 	public boolean isDesktopIntegrationDone(RdpConnectionOvd co_) {
