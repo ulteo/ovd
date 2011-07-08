@@ -39,33 +39,28 @@ public class DesktopIntegrator extends Thread {
 	private List<RdpConnectionOvd> integratedConnections = null;
 
 	public DesktopIntegrator(SystemAbstract system_, List<RdpConnectionOvd> connections_, SessionManagerCommunication sm_) {
+		if (system_ == null || connections_ == null || sm_ == null)
+			throw new NullPointerException("'DesktopIntegrator' does not accept a null parameter in constructor");
+		
 		this.system = system_;
 		this.connections = connections_;
 		this.sm = sm_;
 
 		this.listeners = Collections.synchronizedList(new ArrayList<DesktopIntegrationListener>());
-
 		this.integratedConnections = Collections.synchronizedList(new ArrayList<RdpConnectionOvd>());
 	}
 
 	public void run() {
 		this.generateShortcuts();
-		
 		this.downloadMimetypesIcons();
 	}
 
 	private void downloadMimetypesIcons() {
-		if (this.system == null || this.connections == null || this.sm == null)
-			return;
-
 		// Download mimetypes icons
 		new MimetypesManager(this.system, this.sm, this.connections).run();
 	}
 
 	private void generateShortcuts() {
-		if (this.system == null || this.connections == null)
-			return;
-
 		for (RdpConnectionOvd server : this.connections) {
 			for (Application app : server.getAppsList()) {
 				if (this.system.create(app) == null)
@@ -79,28 +74,25 @@ public class DesktopIntegrator extends Thread {
 	}
 
 	public boolean isDesktopIntegrationDone(RdpConnectionOvd co_) {
-		if (this.integratedConnections == null)
-			return false;
-
 		return this.integratedConnections.contains(co_);
 	}
 
 	public void addDesktopIntegrationListener(DesktopIntegrationListener listener_) {
-		if (this.listeners == null || listener_ == null)
+		if (listener_ == null)
 			return;
 
 		this.listeners.add(listener_);
 	}
 
 	public void removeDesktopIntegrationListener(DesktopIntegrationListener listener_) {
-		if (this.listeners == null || listener_ == null)
+		if (listener_ == null)
 			return;
 
 		this.listeners.remove(listener_);
 	}
 
 	private void fireShortcutGenerationIsDone(RdpConnectionOvd co) {
-		if (this.listeners == null || co == null)
+		if (co == null)
 			return;
 
 		for (DesktopIntegrationListener listener : this.listeners) {
