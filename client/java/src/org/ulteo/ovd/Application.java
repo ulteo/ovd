@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.swing.ImageIcon;
+import org.ulteo.gui.GUIActions;
 
 import org.ulteo.rdp.RdpConnectionOvd;
 
@@ -56,7 +57,7 @@ public class Application implements Comparable<Application> {
 		this.name = name_;
 		this.iconName = UUID.randomUUID().toString()+"-"+this.id;
 		if (icon_ == null)
-			this.icon =  new ImageIcon(getClass().getResource("/pics/default_icon.png"));
+			this.icon =  new ImageIcon(GUIActions.DEFAULT_APP_ICON);
 		else
 			this.icon = icon_;
 	}
