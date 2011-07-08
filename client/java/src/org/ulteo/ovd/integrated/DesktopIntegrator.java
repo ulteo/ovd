@@ -41,6 +41,7 @@ public class DesktopIntegrator extends Thread {
 	public DesktopIntegrator(SystemAbstract system_, List<RdpConnectionOvd> connections_, SessionManagerCommunication sm_) {
 		this.system = system_;
 		this.connections = connections_;
+		this.sm = sm_;
 
 		this.listeners = Collections.synchronizedList(new ArrayList<DesktopIntegrationListener>());
 
