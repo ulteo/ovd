@@ -86,6 +86,10 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 			return NULL;
 		}
 		$infos = $ldap->get_entries($sr);
+		if (count($infos) == 0) {
+			Logger::error('main',"UserGroupDB::activedirectory::import search failed for ($id_), no data found on the directory");
+			return NULL;
+		}
 		$keys = array_keys($infos);
 		$dn = $keys[0];
 		$info = $infos[$dn];
