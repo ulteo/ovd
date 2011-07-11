@@ -115,6 +115,9 @@ class Abstract_Liaison_activedirectory {
 			foreach ($buf['member'] as $member) {
 				$u = $userDBAD->importFromDN($member);
 				if (is_object($u)) {
+					if ($u->hasAttribute('objectclass') && in_array('user', $u->getAttribute('objectclass')) == false) {
+						continue;
+					}
 					$l = new Liaison($u->getAttribute('login'), $group_);
 					$elements[$l->element] = $l;
 				}
