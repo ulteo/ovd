@@ -975,7 +975,7 @@ if ($_REQUEST['name'] == 'UserGroup_settings') {
 		$unique_id = $_REQUEST['unique_id'];
 		$group = $userGroupDB->import($unique_id);
 		if (! is_object($group)) {
-			popup_error(sprintf(_("Failed to import Usergroup '%s'"), $id));
+			popup_error(sprintf(_("Failed to import Usergroup '%s'"), $unique_id));
 			redirect();
 		}
 		$ret = null;
