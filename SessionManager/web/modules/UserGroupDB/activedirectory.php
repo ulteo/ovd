@@ -43,9 +43,6 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 		}
 		// cache end
 		
-		if (isset($this->cache[$id_]))
-			return $this->cache[$id_];
-		
 		$userGroupDB = UserGroupDB::getInstance();
 		
 		$userDBAD2 = new UserDB_activedirectory();
