@@ -423,3 +423,15 @@ function array_keys_exists_not_empty($keys_, $array_) {
 	
 	return true;
 }
+
+function shadow($input_, $password_) {
+       preg_match('@^\$(.+)\$(.+)\$.+$@', $input_, $matches);
+       if (count($matches) != 3) {
+               return false;
+       }
+
+       $type = $matches[1];
+       $hash = $matches[2];
+
+       return (crypt($password_, '$'.$type.'$'.$hash.'$') == $input_);
+}
