@@ -180,6 +180,21 @@ deb file:///root/ovd-3.0-gold-ubuntu-lucid lucid main]]>
       </itemizedlist>
     </simplesect>
 
+    <section id="package_install">
+      <title>Package installation</title>
+      <itemizedlist>
+	<listitem>
+          <para>
+            Install the
+            package <emphasis>ulteo-ovd-native-client</emphasis>:
+          </para>
+          <screen>
+            <![CDATA[
+# apt-get install ulteo-ovd-native-client]]>
+          </screen>
+	</listitem>
+      </itemizedlist>
+    </section>
   </section>
   
   <section id="userinterface">
