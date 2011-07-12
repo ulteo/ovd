@@ -78,6 +78,7 @@ function init_db($prefs_) {
 	Abstract_Task::init($prefs_);
 	Abstract_ReportServer::init($prefs_);
 	Abstract_ReportSession::init($prefs_);
+	Abstract_User_Preferences::init($prefs_);
 	Abstract_UserGroup_Preferences::init($prefs_);
 	Abstract_UserGroup_Rule::init($prefs_);
 	Abstract_VDI::init($prefs_);

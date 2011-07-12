@@ -371,6 +371,17 @@ class User {
 				$overriden[$key] = true;
 			}
 		}
+		
+		$prefs_of_a_user_unsort = Abstract_User_Preferences::loadByUserLogin($this->getAttribute('login'), 'general', $container_);
+		foreach ($prefs_of_a_user_unsort as $key => $pref) {
+			$element = $pref->toConfigElement();
+			if (isset($overriden[$key]) && ($overriden[$key] == true) && ($element->content != $default_settings[$key])) {
+				Logger::debug("User '".$this->getAttribute('login')."' has at least overriden preferences but with different values, the result will be unpredictable.");
+			}
+			$default_settings[$key] = $element->content;
+			$overriden[$key] = true;
+		}
+		
 		return $default_settings;
 	}
 }

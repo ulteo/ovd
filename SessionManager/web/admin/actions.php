@@ -1158,6 +1158,80 @@ if ($_REQUEST['name'] == 'User') {
 	}
 }
 
+if ($_REQUEST['name'] == 'User_settings') {
+	$prefs = Preferences::getInstance();
+	$userDB = UserDB::getInstance();
+	if (isset($_REQUEST['unique_id']) && isset($_REQUEST['action'])) {
+		$login = $_REQUEST['unique_id'];
+		$user = $userDB->import($login);
+		if (! is_object($user)) {
+			popup_error(sprintf(_("Failed to import user '%s'"), $login));
+			redirect();
+		}
+		$ret = null;
+		if ($_REQUEST['action'] == 'add' && isset($_REQUEST['container']) && isset($_REQUEST['element_id'])) {
+			$container = $_REQUEST['container'];
+			$setting_to_add = $_REQUEST['element_id'];
+			$session_settings_defaults = $prefs->getElements('general', $container);
+			if (array_key_exists($setting_to_add, $session_settings_defaults) == false) {
+				Logger::error('main', "(action.php) User_settings, add unable to find '$setting_to_add' in '$container'");
+				popup_error(_("unable to find '$setting_to_add' in '$container'"));
+				redirect();
+			}
+			
+			$config_element = clone $session_settings_defaults[$setting_to_add];
+			$user_pref = new User_Preferences($user->getAttribute('login'), 'general', $container, $setting_to_add, $config_element->content);
+			$ret = Abstract_User_Preferences::save($user_pref);
+		}
+		else if ($_REQUEST['action'] == 'del' && isset($_REQUEST['container']) && isset($_REQUEST['element_id'])) {
+			$container = $_REQUEST['container'];
+			$element_id = $_REQUEST['element_id'];
+			$ret = Abstract_User_Preferences::delete($user->getAttribute('login'), 'general', $container, $element_id);
+		}
+		else if ($_REQUEST['action'] == 'modify' && isset($_REQUEST['container'])) {
+			$container = $_REQUEST['container'];
+			$formdata = array();
+			$sep = '___';
+			$sepkey = 'general'.$sep.$container;
+			foreach ($_REQUEST as $key2 =>  $value2) {
+				if ( substr($key2, 0, strlen($sepkey)) == $sepkey) {
+					$formdata[$key2] = $value2;
+				}
+			}
+			$formarray = formToArray($formdata);
+			if (isset($formarray['general'][$container])) {
+				$data = $formarray['general'][$container];
+				
+				// TODO: to be better...
+				$ret = null;
+				$todel = Abstract_User_Preferences::loadByUserLogin($user->getAttribute('login'), 'general', $container);
+				foreach ($todel as $key2 => $value2) {
+					$ret = Abstract_User_Preferences::delete($user->getAttribute('login'), 'general', $container, $value2->element_id);
+					if ( $ret !== true) {
+						break;
+					}
+				}
+				
+				foreach ($data as $element_id => $value) {
+					$user_pref = new User_Preferences($user->getAttribute('login'), 'general', $container, $element_id, $value);
+					$ret = Abstract_User_Preferences::save($user_pref);
+					if ( $ret !== true) {
+						break;
+					}
+				}
+			}
+		}
+		
+		if ($ret === true) {
+			popup_info(_('User successfully modified'));
+		}
+		else if ($ret === false) {
+			popup_error(_('Failed to modify user'));
+		}
+	}
+}
+
+
 if ($_REQUEST['name'] == 'default_browser') {
 	if (! checkAuthorization('manageApplications'))
 		redirect();

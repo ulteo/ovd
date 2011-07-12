@@ -353,6 +353,7 @@ function page_header($params_=array()) {
   echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/sortable.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/common.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/ajax/configuration.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/ajax/user.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/ajax/usergroup.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/ajax/add_del_rows.js" charset="utf-8"></script>';
 
