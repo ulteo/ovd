@@ -32,7 +32,7 @@ scripts_DATA = Application.class.php \
                UserGroup_Preferences.class.php \
                UserGroup_Rule.class.php \
                UserGroup_Rules.class.php \
-               User_Preferences.class \
+               User_Preferences.class.php \
                VDI.class.php \
                VDI_MasterOS.class.php \
                VDI_VM.class.php
