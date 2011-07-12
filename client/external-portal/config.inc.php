@@ -25,4 +25,4 @@ define('ULTEO_OVD_WEBCLIENT_URL', 'http://web.ulteo.com/ovd');
 
 define('ULTEO_OVD_DEFAULT_LOGIN', 'mwilson');
 
-define('GED_FOLDER', '/tmp');
+define('CMS_FOLDER', '/tmp');

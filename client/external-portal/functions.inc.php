@@ -91,7 +91,7 @@ function getIcon($app_id) {
 function getFiles() {
 	$files = array();
 	
-	foreach (glob(GED_FOLDER.'/*') as $filename) {
+	foreach (glob(CMS_FOLDER.'/*') as $filename) {
 		if (is_dir($filename))
 			continue;
 		

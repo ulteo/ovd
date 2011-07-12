@@ -26,7 +26,7 @@ if (! array_key_exists('path', $_REQUEST)) {
 	header('401 bad request');
 	die('bad request');
 }
-$path = GED_FOLDER.'/'.$_REQUEST['path'];
+$path = CMS_FOLDER.'/'.$_REQUEST['path'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if (count($_FILES) <= 0) {
