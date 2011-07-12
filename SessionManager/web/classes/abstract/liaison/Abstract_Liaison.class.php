@@ -59,7 +59,6 @@ class Abstract_Liaison {
 				$class_to_use = 'Abstract_Liaison_'.$owner;
 				$method_to_call = array($class_to_use, 'init');
 				if (method_exists($class_to_use, 'init')) {
-					Logger::critical('main', serialize($method_to_call));
 					call_user_func($method_to_call, $prefs);
 				}
 			}
