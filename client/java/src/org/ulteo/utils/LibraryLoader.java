@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author David  LECHEVALIER <david@ulteo.com> 2010
+ * Author David  LECHEVALIER <david@ulteo.com> 2010, 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
  *
@@ -56,10 +56,17 @@ public class LibraryLoader {
 	
 	//This method is called from an non applet client
 	public static void LoadLibrary(String LibName) throws FileNotFoundException {
+		String jarPath = System.getProperty("user.dir")+File.separator+System.getProperty("java.class.path");
+		String jarDirectory = new File(jarPath).getParent();
+		String jvmArch = System.getProperty("sun.arch.data.model");
+
+		String standaloneLibPath = jarDirectory+File.separator+"lib"+File.separator+jvmArch;
+		
 		String fileSeparator= System.getProperty("file.separator");
 		String libraryPaths = System.getProperty("java.library.path");
 
 		List<String> paths = new ArrayList<String>();
+		paths.add(standaloneLibPath);
 		paths.add(System.getProperty("user.dir"));
 		for (String each : libraryPaths.split(System.getProperty("path.separator")))
 			paths.add(each);

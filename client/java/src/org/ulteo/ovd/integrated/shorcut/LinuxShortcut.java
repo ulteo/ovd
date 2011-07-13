@@ -1,6 +1,7 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author David  LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
@@ -36,6 +37,14 @@ public class LinuxShortcut extends Shortcut {
 			Logger.error("Invalid application: null");
 			return null;
 		}
+		
+		String launcher = Constants.FILENAME_LAUNCHER;
+		
+		String jarPath = System.getProperty("user.dir")+File.separator+System.getProperty("java.class.path");
+		String jarDirectory = new File(jarPath).getParent();
+		File standaloneLauncher = new File(jarDirectory+File.separator+Constants.FILE_SEPARATOR+Constants.FILENAME_LAUNCHER);
+		if (standaloneLauncher.exists())
+			launcher = standaloneLauncher.getAbsolutePath();
 
 		File xfceShorcuts = new File(Constants.PATH_SHORTCUTS);
 		if (! xfceShorcuts.exists()) {
@@ -53,7 +62,7 @@ public class LinuxShortcut extends Shortcut {
 			pw.println("Encoding=UTF-8");
 			pw.println("StartupNotify=false");
 			pw.println("Name="+app.getName());
-			pw.println("Exec="+Constants.FILENAME_LAUNCHER+" "+this.token+" "+app.getId());
+			pw.println("Exec="+launcher+" "+this.token+" "+app.getId());
 			pw.println("Icon="+Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".png");
 			pw.print("MimeType=");
 			for (String mime : app.getSupportedMimeTypes()) {
