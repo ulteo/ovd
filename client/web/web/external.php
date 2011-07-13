@@ -101,6 +101,8 @@ if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications') 
 
 		<script type="text/javascript">
 			var i18n = new Hash();
+
+			var user_keymap = '<?php echo $user_keymap; ?>';
 		</script>
 
 		<link rel="shortcut icon" type="image/png" href="media/image/favicon.ico" />
