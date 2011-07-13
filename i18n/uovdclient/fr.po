@@ -569,6 +569,19 @@ msgstr "Veuillez remplir le champs de description."
 msgid "Empty field"
 msgstr "Champs vide"
 
+#: iPad OVDProfileViewController.m:493
+#: iPad OVDProfileViewController.m:498
+msgid "Network is down"
+msgstr "Réseau non disponible"
+
+#: iPad OVDProfileViewController.m:499
+msgid "A network issue prevents the dialog between the client and the server. You can wait until the connection is up again or logout now."
+msgstr "Un problème réseau empêche la communication entre le client et le serveur. Vous pouvez attendre que la connexion s'établisse à nouveau ou vous déconnectez maintenant."
+
+#: iPad OVDProfileViewController.m:300
+msgid "Help"
+msgstr "Aide"
+
 #~ msgid "Host"
 #~ msgstr "Serveur"
 

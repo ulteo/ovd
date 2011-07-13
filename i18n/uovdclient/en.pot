@@ -517,3 +517,68 @@ msgstr ""
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
 msgid "Empty field"
 msgstr ""
+
+#: iPad OVDProfileViewController.m:493
+#: iPad OVDProfileViewController.m:498
+msgid "Network is down"
+msgstr ""
+
+#: iPad OVDProfileViewController.m:499
+msgid "A network issue prevents the dialog between the client and the server. You can wait until the connection is up again or logout now."
+msgstr ""
+
+#: iPad OVDProfileViewController.m:300
+msgid "Help"
+msgstr ""
+
+#: iPad Help
+msgid "Main gestures"
+msgstr ""
+
+#: iPad Help
+msgid "Right click"
+msgstr ""
+
+#: iPad Help
+msgid "View gestures"
+msgstr ""
+
+#: iPad Help
+msgid "Gestures"
+msgstr ""
+
+#: iPad Help
+msgid "Show keyboard"
+msgstr ""
+
+#: iPad Help
+msgid "Toolbar"
+msgstr ""
+
+#: iPad Help
+msgid "To log in, you need to enter your login, your password and the server name you wish to connect."
+msgstr ""
+
+#: iPad Help
+msgid "Show toolbar"
+msgstr ""
+
+#: iPad Help
+msgid "Zoom"
+msgstr ""
+
+#: iPad Help
+msgid "Connection"
+msgstr ""
+
+#: iPad Help
+msgid "MoveView"
+msgstr ""
+
+#: iPad Help
+msgid "The question mark shows this help sheet. The cross exits the session."
+msgstr ""
+
+#: iPad Help
+msgid "Click"
+msgstr ""
