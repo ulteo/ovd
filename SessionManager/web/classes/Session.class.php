@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com> 2010
- * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -279,7 +279,7 @@ class Session {
 			$this->setAttribute('start_time', time());
 		} elseif ($status_ == Session::SESSION_STATUS_INACTIVE) {
 			if ($this->mode != Session::MODE_DESKTOP || ! array_key_exists('persistent', $this->settings) || $this->settings['persistent'] == 0)
-				return $this->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, $reason_);
+				return $this->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_END_STATUS_LOGOUT);
 		} elseif ($status_ == Session::SESSION_STATUS_WAIT_DESTROY) {
 			Logger::info('main', 'Session end : \''.$this->id.'\' (reason: \''.$reason_.'\')');
 
