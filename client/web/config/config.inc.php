@@ -14,6 +14,6 @@
 define('DEBUG_MODE', 0);
 
 // Select RDP input method
-// define('INPUT_METHOD', 'scancode'); // default
-// define('INPUT_METHOD', 'unicode');  // alternative method
+// define('RDP_INPUT_METHOD', 'scancode'); // default
+// define('RDP_INPUT_METHOD', 'unicode');  // alternative method
 
