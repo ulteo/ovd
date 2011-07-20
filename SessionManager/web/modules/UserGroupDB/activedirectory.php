@@ -28,10 +28,9 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 		
 		$a_pref = $prefs->get('UserGroupDB', 'activedirectory');
 		if (is_array($a_pref)) {
-			$this->preferences = $a_pref;
-		}
-		else { // ugly...
-			$this->preferences = array();
+			foreach($a_pref as $k => $v) {
+				$this->preferences[$k] = $v;
+			}
 		}
 	}
 	
