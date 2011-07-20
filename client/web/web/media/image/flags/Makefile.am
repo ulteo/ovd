@@ -55,7 +55,7 @@ scripts_DATA = ad.png \
                cx.png \
                cy.png \
                cz.png \
-               da.png \
+               da-dk.png \
                de.png \
                dj.png \
                dk.png \
