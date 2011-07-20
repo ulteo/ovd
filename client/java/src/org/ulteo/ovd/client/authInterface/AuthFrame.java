@@ -125,6 +125,7 @@ public class AuthFrame implements ActionListener, Runnable {
 	private JCheckBox autoPublish = new JCheckBox();
 	private JCheckBox useLocalCredentials = new JCheckBox();
 	private boolean displayUserLocalCredentials = (System.getProperty("os.name").startsWith("Windows"));
+	private boolean displayKeyboardLayoutChooser = true;
 	private ActionListener optionListener = null;
 	
 	private ActionListener obj = null;
@@ -811,6 +812,10 @@ public class AuthFrame implements ActionListener, Runnable {
 		return false;
 	}
 	
+	public void setShowKeyboardLayoutChooser(boolean value) {
+		this.displayKeyboardLayoutChooser = value;
+	}
+	
 	public String getKeymap() {
 		int selected = this.keyboardBox.getSelectedIndex();
 		
@@ -873,9 +878,11 @@ public class AuthFrame implements ActionListener, Runnable {
 			this.components.add(language);
 			this.gbcs.add((GridBagConstraints) constraints.clone());
 
-			constraints.gridy = 14;
-			this.components.add(keyboard);
-			this.gbcs.add((GridBagConstraints) constraints.clone());
+			if (displayKeyboardLayoutChooser) {
+				constraints.gridy = 14;
+				this.components.add(keyboard);
+				this.gbcs.add((GridBagConstraints) constraints.clone());
+			}
 
 			constraints.gridwidth = 2;
 			constraints.gridx = 2;
@@ -892,9 +899,11 @@ public class AuthFrame implements ActionListener, Runnable {
 			this.components.add(languageBox);
 			this.gbcs.add((GridBagConstraints) constraints.clone());
 
-			constraints.gridy = 14;
-			this.components.add(keyboardBox);
-			this.gbcs.add((GridBagConstraints) constraints.clone());
+			if (displayKeyboardLayoutChooser) {
+				constraints.gridy = 14;
+				this.components.add(keyboardBox);
+				this.gbcs.add((GridBagConstraints) constraints.clone());
+			}
 		}
 
 		public void run() {
