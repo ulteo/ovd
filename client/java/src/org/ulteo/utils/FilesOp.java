@@ -54,7 +54,8 @@ public class FilesOp {
 	 * 		if the resource wanted is not found
 	 */
 	public static File exportJarResource(String path) throws FileNotFoundException {
-		InputStream jarResource = FilesOp.class.getResourceAsStream("/resources/" + path);
+		path = "/resources/" + path;
+		InputStream jarResource = FilesOp.class.getResourceAsStream(path);
 		if (jarResource == null)
 			throw new FileNotFoundException(String.format("Unable to find required resource '%s' in the jar", path));
 
