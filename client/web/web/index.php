@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -66,6 +67,10 @@ if (isset($_COOKIE['ovd-client']['desktop_fullscreen']))
 $wi_debug = 1;
 if (isset($_COOKIE['ovd-client']['debug']))
 	$wi_debug = (int)$_COOKIE['ovd-client']['debug'];
+
+$rdp_input_unicode = null;
+if (defined('RDP_INPUT_METHOD'))
+	$rdp_input_unicode = RDP_INPUT_METHOD;
 
 function get_users_list() {
 	if (! defined('SESSIONMANAGER_HOST'))
@@ -142,6 +147,7 @@ function get_users_list() {
 
 		<script type="text/javascript">
 			var daemon;
+			var rdp_input_method = <?php echo (($rdp_input_unicode == null)?'null':'\''.$rdp_input_unicode.'\''); ?>;
 
 			Event.observe(window, 'load', function() {
 				new Effect.Center($('splashContainer'));

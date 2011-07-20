@@ -42,6 +42,7 @@ import netscape.javascript.JSObject;
 public abstract class OvdApplet extends Applet {
 	
 	protected String keymap = null;
+	protected String rdp_input_method = null;
 
 	protected boolean finished_init = false;
 	protected boolean started_stop = false;
@@ -135,6 +136,7 @@ public abstract class OvdApplet extends Applet {
 			
 			this.readParameters();
 			this.keymap = this.getParameterNonEmpty("keymap");
+			this.rdp_input_method = this.getParameter("rdp_input_method");
 			
 			Properties properties = new Properties(getMode());
 			for (String setting : Protocol.settingsNames) {
