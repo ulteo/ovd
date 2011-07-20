@@ -155,6 +155,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		this.system.refresh();
 	}
 
+
+	// OvdAppListener's listeners
+
 	public void ovdInited(OvdAppChannel channel) {
 		RdpConnectionOvd co = find(channel);
 		if (co == null || this.desktopIntegrator == null || ! this.desktopIntegrator.isDesktopIntegrationDone(co))
