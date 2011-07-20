@@ -388,6 +388,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	@Override
 	protected void display(RdpConnection co) {}
 
+	@Override
 	public void shortcutGenerationIsDone(RdpConnectionOvd co) {
 		if (! co.getOvdAppChannel().isReady())
 			return;
