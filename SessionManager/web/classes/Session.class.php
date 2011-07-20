@@ -522,7 +522,7 @@ class Session {
 	}
 
 	public function setRunningApplications($fqdn_, $running_apps_) {
-		if (! is_array($this->applications[$fqdn_]))
+		if (! array_key_exists($fqdn_, $this->applications) || ! is_array($this->applications[$fqdn_]))
 			$this->applications[$fqdn_] = array();
 
 		$current_instances = array_keys($this->applications[$fqdn_]);
