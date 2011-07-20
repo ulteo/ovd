@@ -1,0 +1,57 @@
+#! /usr/bin/python
+
+# Copyright (C) 2011 Ulteo SAS
+# http://www.ulteo.com
+# Author Julien LANGLOIS <julien@ulteo.com> 2011
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+import glob
+import sys
+from xml.dom import minidom
+from xml.dom.minidom import Document
+
+
+def parse_deps(filename_):
+	data = []
+	try:
+		document = minidom.parse(filename_)
+		nodes = document.getElementsByTagName("xi:include")
+		for node in nodes:
+			if not node.hasAttribute("href"):
+				continue
+			
+			d = node.getAttribute("href")
+			if d in data:
+				continue
+			
+			data.append(d)
+	
+	except Exception, err:
+		print >>sys.stderr, "Exception:", err
+	
+	return data
+
+
+if __name__ == "__main__":
+	g = glob.glob("*.xml")
+	g.sort()
+	
+	for f in g:
+		deps = parse_deps(f)
+		if len(deps) == 0:
+			continue
+		
+		print "%s.html %s.pdf: %s"%(f[:-4], f[:-4], " ".join(deps))

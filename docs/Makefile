@@ -40,14 +40,16 @@ html: $(DST)
 pdf: $(PDF)
 
 # Add the depends between sources
-Installation_Iso.xml: Easy_Installation.xml
-Support_Debian_Lenny.xml: Support_Debian_Squeeze.xml Support_Ubuntu_Hardy.xml
-Support_Debian_Squeeze.xml: Support_Ubuntu_Lucid.xml
-Support_RHEL_5.5.xml: Support_SLES_11.SP1.xml
-Support_SLES_11.SP1.xml: Support_Debian_Squeeze.xml Support_Ubuntu_Hardy.xml
-Support_Ubuntu_Hardy.xml: Support_Ubuntu_Lucid.xml
-Support_openSUSE_11.2.xml: Support_SLES_11.SP1.xml
-Support_openSUSE_11.3.xml: Support_SLES_11.SP1.xml
+Installation_Gateway_Lucid.html Installation_Gateway_Lucid.pdf: common.xml
+Installation_Iso.html Installation_Iso.pdf: Easy_Installation.xml
+NativeClient.html NativeClient.pdf: common.xml
+Support_Debian_Lenny.html Support_Debian_Lenny.pdf: Support_Debian_Squeeze.xml Support_Ubuntu_Hardy.xml
+Support_Debian_Squeeze.html Support_Debian_Squeeze.pdf: Support_Ubuntu_Lucid.xml
+Support_RHEL_5.5.html Support_RHEL_5.5.pdf: Support_SLES_11.SP1.xml
+Support_SLES_11.SP1.html Support_SLES_11.SP1.pdf: Support_Debian_Squeeze.xml Support_Ubuntu_Hardy.xml
+Support_Ubuntu_Hardy.html Support_Ubuntu_Hardy.pdf: Support_Ubuntu_Lucid.xml
+Support_openSUSE_11.2.html Support_openSUSE_11.2.pdf: Support_SLES_11.SP1.xml
+Support_openSUSE_11.3.html Support_openSUSE_11.3.pdf: Support_SLES_11.SP1.xml
 
 
 %.html: %.xml.out
