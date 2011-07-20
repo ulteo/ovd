@@ -694,6 +694,9 @@ function updateKeymap(id_) {
 	if (id_ == null)
 		return false;
 	
+	if (! $('session_keymap'))
+		return false;
+	
 	for (var i = 0; i < $('session_keymap').length; i++) {
 		if ($('session_keymap')[i].value == id_) {
 			$('session_keymap')[i].selected = 'selected';
@@ -737,6 +740,9 @@ function setCaretPosition(ctrl, pos) {
 }
 
 function checkLogin() {
+	if (! $('user_login') || ! $('user_login_local') || ! $('password_row'))
+		return;
+
 	if ($('use_local_credentials_true') && $('use_local_credentials_true').checked) {
 		$('user_login_local').innerHTML = $('CheckSignedJava').getUserLogin();
 		if ($('user_password'))
@@ -766,25 +772,27 @@ function manageKeymap() {
 		var detected = null;
 		try {
 			detected = $('CheckSignedJava').getDetectedKeyboardLayout();
-		}
-		catch(err) {
-//			Logger.warn("Not found function getDetectedKeyboardLayout: "+err);
-		}
+		} catch(e) {}
 		
 		keymapSet = updateKeymap(detected);
 		if (! keymapSet) {
-			detected = $('session_language')[$('session_language').selectedIndex].value;
-			keymapSet = updateKeymap(detected);
+			if (! $('session_language'))
+				return false;
 			
+			detected = $('session_language').value;
+			
+			keymapSet = updateKeymap(detected);
 			if (! keymapSet) {
 				detected = detected.substr(0, 2);
-				keymapSet = updateKeymap(detected);
 				
-//				if (! keymapSet)
-//					Logger.warn("Unable to detect the keyboard layout. Very weird !");
+				keymapSet = updateKeymap(detected);
+				if (! keymapSet)
+					return false;
 			}
 		}
 	}
+	
+	return true;
 }
 
 function checkSessionMode() {
