@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2009,2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -52,6 +52,15 @@ class Abstract_Liaison_activedirectory {
 		Logger::debug('main', "Abstract_Liaison_activedirectory::loadElements ($type_,$group_)");
 		
 		$userGroupDB = UserGroupDB::getInstance();
+		$userGroupDB_activedirectory = new UserGroupDB_activedirectory();
+		
+		$use_child_group = false;
+		$userGroupDB_activedirectory_preferences = $userGroupDB_activedirectory->preferences;
+		if (array_key_exists('use_child_group', $userGroupDB_activedirectory_preferences)) {
+			if ($userGroupDB_activedirectory_preferences['use_child_group'] == 1 || $userGroupDB_activedirectory_preferences['use_child_group'] == '1') {
+				$use_child_group = true;
+			}
+		}
 		
 		$group = $userGroupDB->import($group_);
 		if (! is_object($group)) {
@@ -115,11 +124,24 @@ class Abstract_Liaison_activedirectory {
 			foreach ($buf['member'] as $member) {
 				$u = $userDBAD->importFromDN($member);
 				if (is_object($u)) {
-					if ($u->hasAttribute('objectclass') && in_array('user', $u->getAttribute('objectclass')) == false) {
-						continue;
+					if ($u->hasAttribute('objectclass')) {
+						if (in_array('user', $u->getAttribute('objectclass'))) {
+							$l = new Liaison($u->getAttribute('login'), $group_);
+							$elements[$l->element] = $l;
+						}
+						else if (in_array('group', $u->getAttribute('objectclass')) && $use_child_group == true) {
+							 $ret1 = self::loadElements($type_, 'static_'.$member);
+							 if (is_array($ret1)) {
+								foreach ($ret1 as $element1 => $liaison1) {
+									$elements[$element1] = $liaison1;
+								}
+							 }
+						}
 					}
-					$l = new Liaison($u->getAttribute('login'), $group_);
-					$elements[$l->element] = $l;
+					else {
+						$l = new Liaison($u->getAttribute('login'), $group_);
+						$elements[$l->element] = $l;
+					}
 				}
 			}
 		}
