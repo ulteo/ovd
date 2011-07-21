@@ -575,7 +575,7 @@ checkSessionMode();
 														</select>
 													</td>
 												</tr>
-												<tr>
+												<tr<?php if ($rdp_input_unicode == 'unicode') echo ' style="display: none;"';?>>
 													<td style="text-align: right; vertical-align: middle;">
 														<img src="media/image/icons/keyboard_layout.png" alt="" title="" />
 													</td>
