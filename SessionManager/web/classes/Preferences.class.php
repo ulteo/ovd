@@ -196,6 +196,7 @@ class Preferences {
 			'ja_JP'=>'日本語',
 			'nl_NL'=>'Nederlands',
 			'pt_BR'=>'Português (Brasil)',
+			'sk_SK'=>'Slovenčina',
 			'ro_RO'=>'Română',
 //			'ru_RU'=>'Русский',
 			'zh_CN'=>'中文简体',
