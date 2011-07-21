@@ -57,6 +57,9 @@ HWND g_blocked_zchange[2] SHARED = { NULL, NULL };
 unsigned int g_blocked_focus_serial SHARED = 0;
 HWND g_blocked_focus SHARED = NULL;
 
+unsigned int g_blocked_focus_lost_serial = 0;
+HWND g_blocked_focus_lost = NULL;
+
 unsigned int g_blocked_state_serial SHARED = 0;
 HWND g_blocked_state_hwnd SHARED = NULL;
 int g_blocked_state SHARED = -1;
@@ -67,8 +70,12 @@ HWND g_last_focused_window = NULL;
 
 #pragma comment(linker, "/section:SHAREDDATA,rws")
 
-#define FOCUS_MSG_NAME "WM_SEAMLESS_FOCUS"
-static UINT g_wm_seamless_focus;
+#define FOCUS_REQUEST_MSG_NAME	"WM_SEAMLESS_FOCUS_REQUEST"
+#define FOCUS_RELEASE_MSG_NAME	"WM_SEAMLESS_FOCUS_RELEASE"
+static UINT g_wm_seamless_focus_request;
+static UINT g_wm_seamless_focus_release;
+
+static HWND g_internal_window = NULL;
 
 static HHOOK g_cbt_hook = NULL;
 static HHOOK g_wndproc_hook = NULL;
@@ -77,6 +84,8 @@ static HHOOK g_wndprocret_hook = NULL;
 static HINSTANCE g_instance = NULL;
 
 static HANDLE g_mutex = NULL;
+
+const char seamless_class[] = "InternalSeamlessClass";
 
 #define TITLE_SIZE 150
 
@@ -87,6 +96,16 @@ typedef struct node_{
 	boolean is_shown;
 	struct node_* next;
 }node;
+
+static void free_node(node * n_) {
+	if (n_ == NULL)
+		return;
+
+	if (n_->title != NULL)
+		free(n_->title);
+
+	free(n_);
+}
 
 static node* hwdHistory = NULL;
 
@@ -151,15 +170,22 @@ static BOOL removeHWNDFromHistory(HWND hwnd){
 	else
 		previousNode->next = currentNode->next;
 
-	if (currentNode->title != NULL)
-		free(currentNode->title);
-	free(currentNode);
+	free_node(currentNode);
 
 	return TRUE;
 }
 
 static int g_screen_width = 0;
 static int g_screen_height = 0;
+
+
+static BOOL is_seamless_internal_windows(HWND hwnd) {
+	return (hwnd == g_internal_window);
+}
+
+static HWND get_internal_window() {
+	return FindWindow(seamless_class, NULL);
+}
 
 static BOOL
 is_toplevel(HWND hwnd)
@@ -606,7 +632,7 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 	wparam = ((CWPSTRUCT *) details)->wParam;
 	lparam = ((CWPSTRUCT *) details)->lParam;
 
-	if (!is_toplevel(hwnd))
+	if (!is_toplevel(hwnd) || is_seamless_internal_windows(hwnd))
 	{
 		goto end;
 	}
@@ -712,7 +738,7 @@ wndprocret_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 	wparam = ((CWPRETSTRUCT *) details)->wParam;
 	lparam = ((CWPRETSTRUCT *) details)->lParam;
 
-	if (!is_toplevel(hwnd))
+	if (!is_toplevel(hwnd) || is_seamless_internal_windows(hwnd))
 	{
 		goto end;
 	}
@@ -841,16 +867,6 @@ wndprocret_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 
 		default:
 			break;
-	}
-
-	if (msg == g_wm_seamless_focus)
-	{
-		// GetForegroundWindow() return the parent window of the foreground/focused window
-		HWND foregroundWnd = GetForegroundWindow();
-		if ((foregroundWnd != hwnd) && (hwnd != get_parent(foregroundWnd)) && (foregroundWnd != get_parent(hwnd)) && (get_parent(hwnd) != (HWND) -1))
-			SetForegroundWindow(hwnd);
-
-		vchannel_write("ACK", "%u", g_blocked_focus_serial);
 	}
 
       end:
@@ -1000,14 +1016,30 @@ SafeZChange(unsigned int serial, HWND hwnd, HWND behind)
 }
 
 DLL_EXPORT void
-SafeFocus(unsigned int serial, HWND hwnd)
+SafeFocus(unsigned int serial, HWND hwnd, int action)
 {
+	UINT msg_type;
+	UINT *blocked_focus_serial;
+
+	switch (action) {
+		case SEAMLESS_FOCUS_REQUEST:
+			msg_type = g_wm_seamless_focus_request;
+			blocked_focus_serial = &g_blocked_focus_serial;
+			break;
+		case SEAMLESS_FOCUS_RELEASE:
+			msg_type = g_wm_seamless_focus_release;
+			blocked_focus_serial = &g_blocked_focus_lost_serial;
+			break;
+		default:
+			return;
+	}
+	
 	WaitForSingleObject(g_mutex, INFINITE);
-	g_blocked_focus_serial = serial;
+	*blocked_focus_serial = serial;
 	g_blocked_focus = hwnd;
 	ReleaseMutex(g_mutex);
 
-	SendMessage(hwnd, g_wm_seamless_focus, 0, 0);
+	SendMessage(hwnd, msg_type, 0, 0);
 
 	WaitForSingleObject(g_mutex, INFINITE);
 	g_blocked_focus = NULL;
@@ -1084,7 +1116,10 @@ DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpReserved)
 			++g_instance_count;
 			ReleaseMutex(g_mutex);
 
-			g_wm_seamless_focus = RegisterWindowMessage(FOCUS_MSG_NAME);
+			g_wm_seamless_focus_request = RegisterWindowMessage(FOCUS_REQUEST_MSG_NAME);
+			g_wm_seamless_focus_release = RegisterWindowMessage(FOCUS_RELEASE_MSG_NAME);
+
+			g_internal_window = get_internal_window();
 
 			vchannel_open();
 			getScreenSize();
