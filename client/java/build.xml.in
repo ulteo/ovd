@@ -73,6 +73,13 @@
 
   <target name="precompile">
     <delete dir="build"/>
+    <mkdir dir="build"/>
+    <mkdir dir="jars"/>
+    <mkdir dir="dist"/>
+  </target>
+
+  <target name="precompile_client">
+    <antcall target="precompile" />
     <mkdir dir="build/resources/keymaps"/>
     <copy todir="build/resources/keymaps">
       <fileset dir="keymaps"/>
@@ -80,15 +87,13 @@
     <copy file="misc/krb5.ini" todir="build/resources" />
     <copy file="misc/login.conf" todir="build/resources" />
     <echo file="build/VERSION" message="${version}" />
-    <mkdir dir="jars"/>
-    <mkdir dir="dist"/>
   </target>
 
 
   <!-- RDP Client part -->
 
   <target name="rdpClient">
-    <antcall target="precompile" />
+    <antcall target="precompile_client" />
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
            target="1.5" source="1.5" includes="org/ulteo/rdp/RdpClient.java"
            debug="${javac.debug}" debuglevel="lines,vars,source">
@@ -154,10 +159,30 @@
   </target>
 
 
+  <!-- Ovd Integrated Launcher -->
+
+  <target name="ovdIntegratedLauncher">
+    <antcall target="precompile" />
+    <javac srcdir="src" destdir="build" encoding="UTF8"
+           target="1.5" source="1.5"
+           includes="org/ulteo/ovd/integrated/Launcher.java"
+           debug="${javac.debug}" debuglevel="lines,vars,source">
+    </javac>
+  </target>
+
+  <target name="ovdIntegratedLauncher.jar" depends="ovdIntegratedLauncher">
+    <jar destfile="jars/ovdIntegratedLauncher.jar" basedir="build">
+      <manifest>
+        <attribute name="Main-Class" value="org.ulteo.ovd.integrated.Launcher"/>
+      </manifest>
+    </jar>
+  </target>
+
+
   <!-- Ovd External Apps Client -->
 
   <target name="ovdExternalAppsClient">
-  <antcall target="precompile" />
+    <antcall target="precompile_client" />
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
           target="1.5" source="1.5"
           includes="org/ulteo/ovd/client/ExternalAppsClient.java"
@@ -193,7 +218,7 @@
   <!-- OVD native client part -->
 
   <target name="ovdNativeClient">
-    <antcall target="precompile" />
+    <antcall target="precompile_client" />
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
            target="1.5" source="1.5"
            includes="org/ulteo/ovd/client/NativeClient.java"
@@ -274,7 +299,7 @@
   <!-- Applet part -->
 
   <target name="applet">
-    <antcall target="precompile" />
+    <antcall target="precompile_client" />
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
            target="1.5" source="1.5" includes="org/ulteo/ovd/applet/**.java"
            debug="${javac.debug}" debuglevel="lines,vars,source">
@@ -294,7 +319,7 @@
     </exec>
   </target>
 
-  <target name="applet.jar" description="sign jar applets" depends="applet" >
+  <target name="applet.jar" description="sign jar applets" depends="ovdIntegratedLauncher.jar,applet" >
     <unjar dest="build">
       <filelist dir="required_libraries"
                 files="commons-httpclient-3.0.1.jar,commons-logging-1.1.1.jar,jshortcut.jar,registry.jar,image4j.jar" />
@@ -314,6 +339,8 @@
           todir="build/resources/WindowsLibs/32" failonerror="false" />
     <copy file="required_libraries/ICE_JNIRegistry.dll"
           todir="build/resources/WindowsLibs/32" failonerror="false" />
+    <copy file="jars/ovdIntegratedLauncher.jar"
+          todir="build/resources" failonerror="false" />
     <jar destfile="jars/ulteo-applet.jar" basedir="build">
       <include name="**" />
     </jar>
@@ -341,7 +368,7 @@
   <!-- VDI part -->
 
   <target name="vdi">
-    <antcall target="precompile" />
+    <antcall target="precompile_client" />
     <javac srcdir="src:src1.4" destdir="build" encoding="UTF8"
            target="1.5" source="1.5" includes="org/ulteo/vdi/Client.java"
            debug="${javac.debug}" debuglevel="lines,vars,source">

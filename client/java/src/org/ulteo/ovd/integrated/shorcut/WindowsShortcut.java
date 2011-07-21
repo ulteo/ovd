@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,7 +26,10 @@ import net.jimmc.jshortcut.JShellLink;
 import org.ulteo.Logger;
 import org.ulteo.utils.FilesOp;
 import org.ulteo.ovd.Application;
+import org.ulteo.ovd.applet.Applications;
 import org.ulteo.ovd.integrated.Constants;
+import org.ulteo.ovd.integrated.OSTools;
+
 
 public class WindowsShortcut extends Shortcut {
 	
@@ -42,20 +46,21 @@ public class WindowsShortcut extends Shortcut {
 	}
 
 	private JShellLink shortcut = null;
-	private boolean launcherFound = true;
 
 	public WindowsShortcut() {
 		this.shortcut = new JShellLink();
 		this.shortcut.setFolder(Constants.PATH_SHORTCUTS);
 		this.shortcut.setWorkingDirectory("");
 
-		String launcherPath = System.getProperty("user.dir")+Constants.FILE_SEPARATOR+Constants.FILENAME_LAUNCHER;
-		if (! (new File(launcherPath).exists())) {
-			this.launcherFound = false;
-			return;
-		}
-
-		this.shortcut.setPath(launcherPath);
+		char fs = File.separatorChar;
+		String exec;
+		if (OSTools.is_applet)
+			exec = System.getProperty("java.home") + fs + "bin" + fs + "javaw.exe";
+		else
+			exec = System.getProperty("user.dir") + fs + Constants.FILENAME_LAUNCHER;
+		if (! (new File(exec).exists()))
+			Logger.warn("cannot found the launcher");
+		this.shortcut.setPath(exec);
 	}
 
 	@Override
@@ -65,18 +70,17 @@ public class WindowsShortcut extends Shortcut {
 
 		String appName = replaceForbiddenChars(app.getName());
 
-		if (! launcherFound) {
-			Logger.error("Failed to create the '"+app.getName()+"' shortcut: Unable to find Ulteo OVD Integrated Launcher");
-			return null;
-		}
-
 		File shorcutDirectory = new File(Constants.PATH_SHORTCUTS);
 		if (! shorcutDirectory.exists())
 			shorcutDirectory.mkdirs();
 		shorcutDirectory = null;
 
 		this.shortcut.setName(appName);
-		this.shortcut.setArguments(""+this.token+" "+app.getId());
+		String args = "";
+		if (OSTools.is_applet)
+			args += String.format("-jar %s ", Applications.integratedLauncher);
+		args += String.format("%s %s", this.token, app.getId());
+		this.shortcut.setArguments(args);
 		this.shortcut.setIconLocation(Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".ico");
 		this.shortcut.setIconIndex(0);
 		try {

@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,7 +25,6 @@ import com.ice.jni.registry.RegStringValue;
 import com.ice.jni.registry.Registry;
 import com.ice.jni.registry.RegistryException;
 import com.ice.jni.registry.RegistryKey;
-import java.io.File;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -34,7 +34,9 @@ import java.util.Map.Entry;
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.utils.I18n;
+import org.ulteo.ovd.applet.Applications;
 import org.ulteo.ovd.integrated.Constants;
+import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.utils.MD5;
 
 public class WindowsRegistry extends FileAssociate {
@@ -190,7 +192,12 @@ public class WindowsRegistry extends FileAssociate {
 		ovdShell = ovdShell.createSubKey(KEY_PREFIX + app.getId(), "");
 		ovdShell.setValue(new RegStringValue(ovdShell, "", OPEN_PREFIX + app.getName()));
 		ovdShell = ovdShell.createSubKey("command", "");
-		ovdShell.setValue(new RegStringValue(ovdShell, "", "\""+System.getProperty("user.dir")+Constants.FILE_SEPARATOR+Constants.FILENAME_LAUNCHER+"\" "+this.token+" "+app.getId()+" \"%1\""));
+		String cmd;
+		if (OSTools.is_applet)
+			cmd = String.format("javaw -jar \"%s\" %d \"%%1\"", Applications.integratedLauncher, app.getId());
+		else
+			cmd = String.format("\"%s\" %d \"%%1\"", System.getProperty("user.dir"), Constants.FILE_SEPARATOR, Constants.FILENAME_LAUNCHER, app.getId());
+		ovdShell.setValue(new RegStringValue(ovdShell, "", cmd));
 	}
 
 	public void createAppAction(Application app) {

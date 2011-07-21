@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author David  LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,7 +28,9 @@ import java.io.PrintWriter;
 import org.ulteo.Logger;
 import org.ulteo.utils.FilesOp;
 import org.ulteo.ovd.Application;
+import org.ulteo.ovd.applet.Applications;
 import org.ulteo.ovd.integrated.Constants;
+import org.ulteo.ovd.integrated.OSTools;
 
 public class LinuxShortcut extends Shortcut {
 
@@ -38,14 +41,19 @@ public class LinuxShortcut extends Shortcut {
 			return null;
 		}
 		
-		String launcher = Constants.FILENAME_LAUNCHER;
+		String launcher;
+		if (OSTools.is_applet)
+			launcher = "java -jar " + Applications.integratedLauncher;
+		else {
+			String jarPath = System.getProperty("user.dir")+File.separator+System.getProperty("java.class.path");
+			String jarDirectory = new File(jarPath).getParent();
+			File standaloneLauncher = new File(jarDirectory+File.separator+Constants.FILE_SEPARATOR+Constants.FILENAME_LAUNCHER);
+			if (standaloneLauncher.exists())
+				launcher = standaloneLauncher.getAbsolutePath();
+			else
+				launcher = Constants.FILENAME_LAUNCHER;
+		}
 		
-		String jarPath = System.getProperty("user.dir")+File.separator+System.getProperty("java.class.path");
-		String jarDirectory = new File(jarPath).getParent();
-		File standaloneLauncher = new File(jarDirectory+File.separator+Constants.FILE_SEPARATOR+Constants.FILENAME_LAUNCHER);
-		if (standaloneLauncher.exists())
-			launcher = standaloneLauncher.getAbsolutePath();
-
 		File xfceShorcuts = new File(Constants.PATH_SHORTCUTS);
 		if (! xfceShorcuts.exists()) {
 			xfceShorcuts.mkdirs();
@@ -62,7 +70,7 @@ public class LinuxShortcut extends Shortcut {
 			pw.println("Encoding=UTF-8");
 			pw.println("StartupNotify=false");
 			pw.println("Name="+app.getName());
-			pw.println("Exec="+launcher+" "+this.token+" "+app.getId());
+			pw.println(String.format("Exec= %s %s %d", launcher, this.token, app.getId()));
 			pw.println("Icon="+Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".png");
 			pw.print("MimeType=");
 			for (String mime : app.getSupportedMimeTypes()) {
