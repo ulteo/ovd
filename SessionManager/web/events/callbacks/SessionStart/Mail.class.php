@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Gauvain Pocentek <gauvain@ulteo.com>
+ * Author Gauvain Pocentek <gauvain@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -50,7 +51,7 @@ class SessionStartMail extends EventCallback {
 			                   $user);
 
 			if (isset($this->ev->error))
-				$message = _("The following error happened:\n").$this->ev->error;
+				$message = _('The following error happened:')."\n".$this->ev->error;
 			else
 				$message = _('No error given');
 
