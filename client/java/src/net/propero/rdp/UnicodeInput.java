@@ -121,16 +121,19 @@ public class UnicodeInput extends Input {
 		}
 
 		boolean checkModifiers(KeyEvent e) {
-			if (OSTools.isLinux()) {
-				if (e.isAltGraphDown() && !altgrDown) {
-					altgrDown = true;
-					sendScancode(getTime(), RDP_KEYPRESS, KBD_ALTGR_KEY); // altGr
-				}
-				if (! e.isAltGraphDown() && altgrDown) {
-					altgrDown = false;
-					sendScancode(getTime(), RDP_KEYRELEASE, KBD_ALTGR_KEY); // altGr
+			if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_NUMPAD && !e.isActionKey()) {
+				if (! numLockOn) {
+					numLockOn = true;
+					sendScancode(getTime(), RDP_KEYPRESS, 0x45);
+					sendScancode(getTime(), RDP_KEYRELEASE, 0x45);
 				}
 			}
+			if (e.getKeyCode() == KeyEvent.VK_NUM_LOCK ) {
+				numLockOn = !numLockOn;
+				sendScancode(getTime(), RDP_KEYPRESS, 0x45);
+				sendScancode(getTime(), RDP_KEYRELEASE, 0x45);
+			}
+			
 			if (e.getID() == KeyEvent.KEY_PRESSED) {
 				if (e.getKeyCode() == KeyEvent.VK_ALT){
 					if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_RIGHT) {
@@ -139,7 +142,6 @@ public class UnicodeInput extends Input {
 							sendScancode(getTime(), RDP_KEYRELEASE, 0x1d); // l.ctrl
 							ctrlDown = false;
 						}
-						sendScancode(getTime(), RDP_KEYPRESS, KBD_ALTGR_KEY); // l.ctrl
 					}
 					else {
 						altDown = true;
@@ -152,15 +154,18 @@ public class UnicodeInput extends Input {
 					sendScancode(getTime(), RDP_KEYPRESS, 0x1d); // l.ctrl
 					return true;
 				}
+				if (e.getKeyCode() == KeyEvent.VK_SHIFT){
+					shiftDown = true;
+					return true;
+				}
 			}
 			if (e.getID() == KeyEvent.KEY_RELEASED) {
 				if (e.getKeyCode() == KeyEvent.VK_ALT){
 					if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_RIGHT) {
 						altgrDown = false;
-						sendScancode(getTime(), RDP_KEYRELEASE, KBD_ALTGR_KEY); // l.altgr
 					}
 					else {
-						altDown = true;
+						altDown = false;
 						sendScancode(getTime(), RDP_KEYRELEASE, KBD_ALT_KEY); // l.alt
 					}
 					return true;
@@ -170,6 +175,10 @@ public class UnicodeInput extends Input {
 						ctrlDown = false;
 						sendScancode(getTime(), RDP_KEYRELEASE, 0x1d); // l.ctrl
 					}
+					return true;
+				}
+				if (e.getKeyCode() == KeyEvent.VK_SHIFT){
+					shiftDown = false;
 					return true;
 				}
 			}
@@ -184,20 +193,28 @@ public class UnicodeInput extends Input {
 				return;
 			}
 			long time = getTime();
-
+			int scan = -1;
+			
 			logger.debug("PRESSED keychar='" + e.getKeyChar() + "' keycode=0x"
 					+ Integer.toHexString(e.getKeyCode()) + " char='"
 					+ ((char) e.getKeyCode()) + "'");
-
+			
 			if (rdp != null) {
-				if (ctrlDown || altgrDown) {
-					String keySeq = newKeyMapper.getKeyStrokes(e);
-					sendKeyPresses(keySeq);
-					return;
+				scan = newKeyMapper.getSpecialKey(e);
+				if (!handleSpecialKeys(time, e, true) && scan != -1) {
+					if (shiftDown)
+						sendScancode(time, RDP_KEYPRESS, KBD_SHIFT_KEY);
+					sendScancode(time, RDP_KEYPRESS, scan);
+					proceedOnKeyPressed = true;
 				}
-
-				if (!handleSpecialKeys(time, e, true) && scancode.isSpecialKey(e))
-					sendScancode(time, RDP_KEYPRESS, scancode.get(e));
+				else {
+					if (ctrlDown || altDown) {
+						char c = Character.toLowerCase((char)e.getKeyCode());
+						scan = newKeyMapper.getFromMap(KeyCode_FileBased.NOSHIFT_SECTION, Integer.toString(c));
+						sendScancode(time, RDP_KEYPRESS, scan);
+						proceedOnKeyPressed = true;
+					}	
+				}
 			}
 		}
 
@@ -208,13 +225,15 @@ public class UnicodeInput extends Input {
 			logger.debug("TYPED keychar='" + e.getKeyChar() + "' keycode=0x"
 					+ Integer.toHexString(e.getKeyCode()) + " char='"
 					+ ((char) e.getKeyCode()) + "'");
-			
-			if (scancode.isSpecialKey(e))
+			if (proceedOnKeyPressed) {
+				proceedOnKeyPressed = false;
 				return;
-			
-			if (ctrlDown || altgrDown)
-				return;
+			}
+			int scan = newKeyMapper.getSpecialKey(e);
 
+			if (scan != -1)
+				return;
+			
 			if (Character.isDefined(e.getKeyChar())) {
 				rdp.sendInput(getTime(), RDP_INPUT_UNICODE, 0, e.getKeyChar(), 0);
 			}
@@ -228,19 +247,25 @@ public class UnicodeInput extends Input {
 				return;
 			}
 			long time = getTime();
+			int scan = -1;
 
 			logger.debug("RELEASED keychar='" + e.getKeyChar() + "' keycode=0x"
 					+ Integer.toHexString(e.getKeyCode()) + " char='"
 					+ ((char) e.getKeyCode()) + "'");
 			if (rdp != null) {
-				if (ctrlDown || altgrDown) {
-					String keySeq = newKeyMapper.getKeyStrokes(e);
-					sendKeyPresses(keySeq);
-					return;
+				scan = newKeyMapper.getSpecialKey(e);
+				if (!handleSpecialKeys(time, e, false) && scan != -1) {
+					sendScancode(time, RDP_KEYRELEASE, scan);
+					if (shiftDown)
+						sendScancode(time, RDP_KEYRELEASE, KBD_SHIFT_KEY);
 				}
-
-				if (!handleSpecialKeys(time, e, false) && scancode.isSpecialKey(e))
-					sendScancode(time, RDP_KEYRELEASE, scancode.get(e));
+				else {
+					if (ctrlDown || altDown) {
+						char c = Character.toLowerCase((char)e.getKeyCode());
+						scan = newKeyMapper.getFromMap(KeyCode_FileBased.NOSHIFT_SECTION, Integer.toString(c));
+						sendScancode(time, RDP_KEYRELEASE, scan);
+					}	
+				}
 			}
 		}
 
