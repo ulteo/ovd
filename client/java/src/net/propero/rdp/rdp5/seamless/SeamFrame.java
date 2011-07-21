@@ -31,7 +31,7 @@ import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
 
 public class SeamFrame extends Frame
-    implements SeamlessWindow {
+    implements SeamlessWindow, WindowStateListener {
 
 	protected static boolean capsLockOn = false;
 	protected static boolean numLockOn = false;
@@ -94,6 +94,8 @@ public class SeamFrame extends Frame
 		this.mouseMotionAdapter = input.getMouseMotionAdapter();
 
 		this.addKeyListener(input.getKeyAdapter());
+
+		this.addWindowStateListener(this);
 
 		this.setMaximizedBounds(this.maxBounds);
 		this.setUndecorated(true);
@@ -257,5 +259,22 @@ public class SeamFrame extends Frame
 	}
 	public boolean isFullscreenEnabled() {
 		return this.isFullscreenEnabled;
+	}
+
+	public void windowStateChanged(final WindowEvent we) {
+		new Thread(new Runnable() {
+			public void run() {
+				if (we.getWindow() != SeamFrame.this)
+					return;
+
+				int state = SeamlessChannel.getSeamlessState(we.getNewState());
+				if (state != SeamlessChannel.WINDOW_NORMAL)
+					return;
+
+				Rectangle bounds = SeamFrame.this.getBounds();
+				SeamFrame.this.setParams(SeamFrame.this.id, bounds.x, bounds.y, bounds.width, bounds.height);
+				SeamFrame.this.repaint();
+			}
+		}).start();
 	}
 }
