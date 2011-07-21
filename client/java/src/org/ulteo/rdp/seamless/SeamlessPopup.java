@@ -107,10 +107,6 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 			this.modal = true;
 		if ((flags & SeamlessChannel.WINDOW_CREATE_FIXEDSIZE) != 0)
 			this.setResizable(false);
-		if ((flags & SeamlessChannel.WINDOW_CREATE_TOOLTIP) != 0) {
-			this.setFocusable(false);
-			this.setFocusableWindowState(false);
-		}
 	}
 
 	public void sw_enableMouseWheel() {

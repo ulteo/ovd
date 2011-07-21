@@ -83,7 +83,9 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 	public static final int WINDOW_HELLO_RECONNECT	= 0x0001;
 	public static final int WINDOW_HELLO_HIDDEN	= 0x0002;
-	
+
+	public static final int FOCUS_REQUEST		= 0x0000;
+	public static final int FOCUS_RELEASE		= 0x0001;
 	
 	protected int seamlessSerial = 0;
 	
@@ -101,7 +103,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
     
 	public SeamlessChannel(Options opt_, Common common_) {
 		super(opt_, common_);
-
+		
 		if (this.opt.debug_seamless)
 			logger.setLevel(Level.DEBUG);
 
@@ -293,6 +295,20 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 			}
 
 			return this.processState(id, state, flags);
+		}
+		else if (tokens[0].equals("FOCUS"))
+		{
+			if (numTokens < 3)
+				return false;
+
+			try {
+				id = Long.parseLong(tokens[2]);
+			} catch(NumberFormatException nfe) {
+				logger.error("Couldn't parse argument from " + tokens[0] + " seamless command.", nfe);
+				return false;
+			}
+
+			return this.processFocus(id);
 		}
 		else if (tokens[0].equals("FOCUS"))
 		{
@@ -628,7 +644,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 		return true;
 	}
-
+	
 	protected boolean processFocus(long id) {
 		String name = "w_"+id;
 		if(! this.windows.containsKey(name)) {
@@ -637,12 +653,11 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		}
 
 		Window wnd = (Window) this.windows.get(name);
-
-		if (! wnd.isFocusableWindow())
+		if (! wnd.isFocusableWindow()) {
 			wnd.setFocusableWindowState(true);
-
-		SwingTools.invokeLater(GUIActions.requestFocus(wnd));
-
+			SwingTools.invokeLater(GUIActions.requestFocus(wnd));
+		}
+		
 		return true;
 	}
 
@@ -1045,11 +1060,41 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		
 		((Window) wnd).toFront();
 	}
-	public void windowDeactivated(WindowEvent we) {}
-	public void focusLost(FocusEvent fe) {}
+	public void windowDeactivated(WindowEvent we) {
+		if (we.getComponent().isFocusable())
+			return;
+		
+		FocusEvent fe = new FocusEvent(we.getWindow(), FocusEvent.FOCUS_LOST, false, we.getOppositeWindow());
+		this.focusLost(fe);
+	}
+	public void focusLost(FocusEvent fe) {
+		SeamlessWindow wnd = (SeamlessWindow) fe.getComponent();
+
+		Component opposite = fe.getOppositeComponent();
+
+		if ((opposite instanceof SeamlessWindow) ) {
+			if (((SeamlessWindow)opposite).sw_getGroup() == wnd.sw_getGroup()) {
+				logger.debug(String.format("Window 0x%08x gave the focus to its child 0x%08x, ignoring.", wnd.sw_getId(), ((SeamlessWindow) opposite).sw_getId()));
+				return;
+			}
+		}
+		
+		logger.debug(String.format("focusLost on window 0x%08x", wnd.sw_getId()));
+
+		String hexIdStr = String.format("0x%08x", wnd.sw_getId());
+		if (!fe.isTemporary())
+			return;
+		try {
+			logger.debug("Sending focus release message for window "+hexIdStr);
+			this.send_focus(wnd.sw_getId(), FOCUS_RELEASE);
+		} catch (Exception ex) {
+			logger.error("Send focus release message for window "+hexIdStr+" failed: "+ex.getMessage());
+		}
+	}
 	
 	public void focusGained(FocusEvent fe) {
 		SeamlessWindow wnd = (SeamlessWindow) fe.getComponent();
+		logger.debug(String.format("focusGained on window 0x%08x", wnd.sw_getId()));
 
 		if (SeamlessChannel.getSeamlessState(wnd.sw_getExtendedState()) == SeamlessChannel.WINDOW_MINIMIZED)
 			return;
@@ -1060,30 +1105,12 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 			return;
 		}
 
-		for (Entry<String, SeamlessWindow> each : this.windows.entrySet()) {
-			if (wnd == each.getValue()) {
-				String name = each.getKey();
-				if (name.length() < 3) {
-					logger.error("[sendFocusRequest] Bad window name: '"+name+"'");
-					return;
-				}
-				long id;
-				try {
-					id = Long.parseLong(name.substring(2));
-				} catch (NumberFormatException ex) {
-					logger.error("[sendFocusRequest] Failed to parse window name('"+name+"'): "+ex.getMessage());
-					return;
-				}
-				String hexIdStr = String.format("0x%08x", id);
-
-				try {
-					logger.debug("Sending focus message for window "+hexIdStr);
-					this.send_focus(wnd.sw_getId(), 0);
-				} catch (Exception ex) {
-					logger.error("Send focus message for window "+hexIdStr+" failed: "+ex.getMessage());
-				}
-				return;
-			}
+		String hexIdStr = String.format("0x%08x", wnd.sw_getId());
+		try {
+			logger.debug("Sending focus request message for window "+hexIdStr);
+			this.send_focus(wnd.sw_getId(), FOCUS_REQUEST);
+		} catch (Exception ex) {
+			logger.error("Send focus request message for window "+hexIdStr+" failed: "+ex.getMessage());
 		}
 	}
 

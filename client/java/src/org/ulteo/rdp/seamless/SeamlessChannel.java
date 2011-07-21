@@ -121,7 +121,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 
 				sf_parent = null;
 				Window active = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
-				if ((active instanceof SeamlessWindow) && ((SeamlessWindow) active).sw_getGroup() == group) {
+				if ((active instanceof SeamlessFrame) && ((SeamlessWindow) active).sw_getGroup() == group) {
 					sf_parent = active;
 				}
 				else {
@@ -129,7 +129,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 						if (sw.sw_getGroup() != group)
 							continue;
 
-						if (! (sw instanceof SeamlessWindow))
+						if (! (sw instanceof SeamlessFrame))
 							continue;
 
 						sf_parent = (Window) sw;
@@ -152,7 +152,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 		sf.setName(name);
 		sf.addMouseListener(this);
 		sf.addMouseMotionListener(this);
-		if ((flags & SeamlessChannel.WINDOW_CREATE_TOPMOST) != 0)
+		if ((flags & SeamlessChannel.WINDOW_CREATE_TOPMOST) != 0 && (sf instanceof SeamlessFrame))
 			SwingTools.invokeLater(GUIActions.setAlwaysOnTop(sf, true));
 
 		this.addFrame((SeamlessWindow)sf, name);
