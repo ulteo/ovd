@@ -91,6 +91,17 @@
 # zypper ar file:///root/ovd-3.0-@distrib_name@-@distrib_version@ ovd-offline]]>
           </screen>
         </listitem>
+
+        <listitem id="repository_offline_step4">
+          <para id="repository_offline_step4_para">
+            Install the keyring package to validate the repository using gpg:
+          </para>
+          <screen>
+            <![CDATA[
+# rpm --import ovd-3.0-@distrib_name@-@distrib_version@/keyring]]>
+          </screen>
+        </listitem>
+
      </itemizedlist>
     </section>
 
