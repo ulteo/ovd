@@ -806,6 +806,11 @@ wndprocret_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 				break;
 			}
 
+		case WM_ACTIVATE:
+			// http://msdn.microsoft.com/en-us/library/ms646274(VS.85).aspx
+			if (wparam == 0)  // WA_INACTIVE
+				break;
+
 		case WM_SETFOCUS: // Focus gained
 			if (hwnd == g_last_focused_window)
 				break;
