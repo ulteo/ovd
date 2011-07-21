@@ -405,6 +405,8 @@ public class RdpConnection implements SeamListener, Runnable{
 	public void setInputMethod(String inputMethod) {
 		if (inputMethod.equalsIgnoreCase("scancode"))
 			this.opt.supportUnicodeInput = false;
+		else if (inputMethod.equalsIgnoreCase("unicode"))
+			this.opt.supportUnicodeInput = true;
 	}
 
 	protected boolean loadKeymap() {
