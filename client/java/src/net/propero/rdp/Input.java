@@ -296,7 +296,8 @@ public abstract class Input {
      * Check locking key states.
      */
     public void gainedFocus() {
-		((sun.awt.im.InputContext)canvas.getInputContext()).disableNativeIM();
+		if (OSTools.isWindows())
+			((sun.awt.im.InputContext)canvas.getInputContext()).disableNativeIM();
     	
 		doLockKeys(); // ensure lock key states are correct
 	}
