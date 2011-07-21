@@ -98,6 +98,7 @@ class OrderApplication extends Order {
 
 public class Applications extends Applet implements Runnable, JSForwarder/*RdpListener, OvdAppListener*/ {
 	public String keymap = null;
+	private String rdp_input_method = null;
 	
 	private List<Order> spoolOrder = null;
 	private Thread spoolThread = null;
@@ -172,6 +173,9 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 			return;
 		}
 		this.ovd.setKeymap(this.keymap);
+		if (this.rdp_input_method != null)
+			this.ovd.setInputMethod(this.rdp_input_method);
+		
 		this.ovd.perform();
 		
 		this.spoolOrder = new ArrayList<Order>();
@@ -220,6 +224,7 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 			return null;
 		}
 		this.keymap = buf;
+		this.rdp_input_method = this.getParameter("rdp_input_method");
 		
 		OptionParser.readParameters(this, properties);
 		

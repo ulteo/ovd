@@ -49,6 +49,7 @@ public class Desktop extends Applet implements JSForwarder, FocusListener, Callb
 	private String username = null;
 	private String password = null;
 	private String keymap = null;
+	private String rdp_input_method = null;
 	private String token = null;
 	
 	private OvdClientDesktopApplet ovd = null;
@@ -119,6 +120,9 @@ public class Desktop extends Applet implements JSForwarder, FocusListener, Callb
 			return;
 		}
 		this.ovd.setKeymap(this.keymap);
+		if (this.rdp_input_method != null)
+			this.ovd.setInputMethod(this.rdp_input_method);
+		
 		this.ovd.setFullscreen(this.fullscreenMode);
 		this.ovd.perform();
 		
@@ -205,6 +209,7 @@ public class Desktop extends Applet implements JSForwarder, FocusListener, Callb
 			this.username = this.getParameterNonEmpty("username");
 			this.password = this.getParameterNonEmpty("password");
 			this.keymap = this.getParameterNonEmpty("keymap");
+			this.rdp_input_method = this.getParameter("rdp_input_method");
 			this.token = this.getParameter("token");
 			String strPort = this.getParameterNonEmpty("port");
 			try {

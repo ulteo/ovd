@@ -35,6 +35,7 @@ var Daemon = Class.create({
 	mode: '',
 	keymap: 'en-us',
 	duration: -1,
+	rdp_imput_method: null,
 
 	settings: new Hash(),
 
@@ -90,6 +91,10 @@ var Daemon = Class.create({
 			return i18n.get('window_onbeforeunload');
 		}
 
+		try {
+			this.rdp_input_method = rdp_input_method;
+		} catch(e) {}
+		
 		Event.observe(window, 'unload', this.client_exit.bind(this));
 	},
 

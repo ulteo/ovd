@@ -56,6 +56,8 @@ var Desktop = Class.create(Daemon, {
 			applet_params.set('username', server.username);
 			applet_params.set('password', server.password);
 			applet_params.set('keymap', this.keymap);
+			if (this.rdp_input_method != null)
+				applet_params.set('rdp_input_method', this.rdp_input_method);
 			if (this.fullscreen)
 				applet_params.set('fullscreen', 1);
 
