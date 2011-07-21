@@ -1035,7 +1035,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 		SeamlessWindow modalWnd = wnd.sw_getModalWindow();
 		if (modalWnd != null) {
-			this.setFocusOnWindow(wnd);
+			this.setFocusOnWindow(modalWnd);
 			return;
 		}
 
