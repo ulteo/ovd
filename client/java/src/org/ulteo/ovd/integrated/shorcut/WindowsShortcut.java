@@ -26,7 +26,6 @@ import net.jimmc.jshortcut.JShellLink;
 import org.ulteo.Logger;
 import org.ulteo.utils.FilesOp;
 import org.ulteo.ovd.Application;
-import org.ulteo.ovd.applet.Applications;
 import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.OSTools;
 
@@ -78,7 +77,7 @@ public class WindowsShortcut extends Shortcut {
 		this.shortcut.setName(appName);
 		String args = "";
 		if (OSTools.is_applet)
-			args += String.format("-jar %s ", Applications.integratedLauncher);
+			args += String.format("-jar %s ", Constants.JAVA_LAUNCHER);
 		args += String.format("%s %s", this.token, app.getId());
 		this.shortcut.setArguments(args);
 		this.shortcut.setIconLocation(Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".ico");

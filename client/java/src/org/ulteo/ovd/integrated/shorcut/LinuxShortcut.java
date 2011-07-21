@@ -28,7 +28,6 @@ import java.io.PrintWriter;
 import org.ulteo.Logger;
 import org.ulteo.utils.FilesOp;
 import org.ulteo.ovd.Application;
-import org.ulteo.ovd.applet.Applications;
 import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.OSTools;
 
@@ -43,7 +42,7 @@ public class LinuxShortcut extends Shortcut {
 		
 		String launcher;
 		if (OSTools.is_applet)
-			launcher = "java -jar " + Applications.integratedLauncher;
+			launcher = "java -jar " + Constants.JAVA_LAUNCHER;
 		else {
 			String jarPath = System.getProperty("user.dir")+File.separator+System.getProperty("java.class.path");
 			String jarDirectory = new File(jarPath).getParent();

@@ -34,7 +34,6 @@ import java.util.Map.Entry;
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.utils.I18n;
-import org.ulteo.ovd.applet.Applications;
 import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.utils.MD5;
@@ -194,7 +193,7 @@ public class WindowsRegistry extends FileAssociate {
 		ovdShell = ovdShell.createSubKey("command", "");
 		String cmd;
 		if (OSTools.is_applet)
-			cmd = String.format("javaw -jar \"%s\" %d \"%%1\"", Applications.integratedLauncher, app.getId());
+			cmd = String.format("javaw -jar \"%s\" %d \"%%1\"", Constants.JAVA_LAUNCHER, app.getId());
 		else
 			cmd = String.format("\"%s\" %d \"%%1\"", System.getProperty("user.dir"), Constants.FILE_SEPARATOR, Constants.FILENAME_LAUNCHER, app.getId());
 		ovdShell.setValue(new RegStringValue(ovdShell, "", cmd));

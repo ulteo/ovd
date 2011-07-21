@@ -34,6 +34,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.ulteo.Logger;
+import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.sm.Application;
 import org.ulteo.ovd.sm.Properties;
@@ -80,7 +81,6 @@ public class Applications extends OvdApplet {
 	
 	private Map<Integer, ArrayList<Application>> serverApps;
 	
-	public static String integratedLauncher;
 	private File jshortcut_dll;
 	private File registry_dll;
 	
@@ -106,7 +106,7 @@ public class Applications extends OvdApplet {
 		this.spooler = new SpoolOrder((OvdClientApplicationsApplet) this.ovd);
 		this.serverApps = Collections.synchronizedMap(new HashMap<Integer, ArrayList<Application>>());
 		
-		Applications.integratedLauncher = FilesOp.exportJarResource("ovdIntegratedLauncher.jar").getPath();
+		Constants.JAVA_LAUNCHER = FilesOp.exportJarResource("ovdIntegratedLauncher.jar").getPath();
 	}
 	
 	@Override
@@ -118,8 +118,8 @@ public class Applications extends OvdApplet {
 	protected void _stop() {
 		if (this.spooler != null && this.spooler.isAlive())
 			this.spooler.interrupt();
-		if (Applications.integratedLauncher != null)
-			new File(Applications.integratedLauncher).delete();
+		if (Constants.JAVA_LAUNCHER != null)
+			new File(Constants.JAVA_LAUNCHER).delete();
 		if (jshortcut_dll != null && jshortcut_dll.exists())
 			jshortcut_dll.delete();
 		if (registry_dll != null && registry_dll.exists())
