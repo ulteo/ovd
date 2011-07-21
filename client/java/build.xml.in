@@ -165,7 +165,9 @@
                 files="gnu-getopt.jar, log4j-1.2.jar, registry.jar,
                        jshortcut.jar, image4j.jar, ini4j.jar, jpedal.jar" />
     </unjar>
-    <copy file="icons/ulteo.png" todir="build/pics" />
+    <copy todir="build/pics">
+      <filelist dir="icons" files="ulteo.png default_icon.png" />
+    </copy>
     <jar destfile="jars/OVDExternalAppsClient.jar" basedir="build">
       <manifest>
         <attribute name="Main-Class"
