@@ -3,7 +3,7 @@
  * http://www.ulteo.com
  * Author David  LECHEVALIER <david@ulteo.com> 2010, 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
- * Author Samuel BOVEE <samuel@ulteo.com> 2010
+ * Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,6 +24,7 @@ package org.ulteo.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.ulteo.Logger;
@@ -35,6 +36,46 @@ public class LibraryLoader {
 	public static final String LIB_WINDOW_PATH_NAME = "libWindowsPaths.dll";
 	public static final String LIB_X_CLIENT_AREA = "libXClientArea.so";
 
+	/**
+	 * Ajoute un nouveau répertoire dans le java.library.path.
+	 * @param dir Le nouveau répertoire à ajouter.
+	 */
+	public static void addToJavaLibraryPath(File dir) {
+		final String LIBRARY_PATH = "java.library.path";
+		if (!dir.isDirectory()) {
+			throw new IllegalArgumentException(dir + " is not a directory.");
+		}
+		String javaLibraryPath = System.getProperty(LIBRARY_PATH);
+		System.setProperty(LIBRARY_PATH, javaLibraryPath + File.pathSeparatorChar + dir.getAbsolutePath());
+		
+		resetJavaLibraryPath();
+	}
+
+	/**
+	 * Supprime le cache du "java.library.path".
+	 * Cela forcera le classloader à revérifier sa valeur lors du prochaine chargement de librairie.
+	 * 
+	 * Attention : ceci est spécifique à la JVM de Sun et pourrait ne pas fonctionner
+	 * sur une autre JVM...
+	 */
+	public static void resetJavaLibraryPath() {
+		synchronized(Runtime.getRuntime()) {
+			try {
+				Field field = ClassLoader.class.getDeclaredField("usr_paths");
+				field.setAccessible(true);
+				field.set(null, null);
+				
+				field = ClassLoader.class.getDeclaredField("sys_paths");
+				field.setAccessible(true);
+				field.set(null, null);
+			} catch (NoSuchFieldException e) {
+				throw new RuntimeException(e);
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+	
 	/**
 	 * load a library from an applet
 	 * @param resourceDirectory

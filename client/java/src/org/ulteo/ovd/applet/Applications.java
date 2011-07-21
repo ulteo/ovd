@@ -23,6 +23,8 @@
 package org.ulteo.ovd.applet;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,6 +34,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.ulteo.Logger;
+import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.sm.Application;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
@@ -40,6 +43,8 @@ import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.seamless.SeamlessFrame;
 import org.ulteo.rdp.seamless.SeamlessPopup;
+import org.ulteo.utils.FilesOp;
+import org.ulteo.utils.LibraryLoader;
 import org.w3c.dom.Document;
 
 
@@ -75,11 +80,20 @@ public class Applications extends OvdApplet {
 	
 	private Map<Integer, ArrayList<Application>> serverApps;
 	
+	private File jshortcut_dll;
+	private File registry_dll;
+	
 	@Override
-	protected void _init(Properties properties) {
+	protected void _init(Properties properties) throws FileNotFoundException {
 		if (properties.isPrinters()) {
 			SeamlessFrame.focusManager = focusManager;
 			SeamlessPopup.focusManager = focusManager;
+		}
+		
+		if (OSTools.isWindows()) {
+			jshortcut_dll = FilesOp.exportJarResource("WindowsLibs/32/jshortcut.dll");
+			registry_dll = FilesOp.exportJarResource("WindowsLibs/32/ICE_JNIRegistry.dll");
+			LibraryLoader.addToJavaLibraryPath(registry_dll.getParentFile());
 		}
 
 		SessionManagerCommunication smComm = new SessionManagerCommunication(this.sm_host, this.sm_port, true);
@@ -101,6 +115,10 @@ public class Applications extends OvdApplet {
 	protected void _stop() {
 		if (this.spooler != null && this.spooler.isAlive())
 			this.spooler.interrupt();
+		if (jshortcut_dll != null && jshortcut_dll.exists())
+			jshortcut_dll.delete();
+		if (registry_dll != null && registry_dll.exists())
+			registry_dll.delete();
 	}
 	
 	@Override

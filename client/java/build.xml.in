@@ -297,7 +297,7 @@
   <target name="applet.jar" description="sign jar applets" depends="applet" >
     <unjar dest="build">
       <filelist dir="required_libraries"
-                files="commons-httpclient-3.0.1.jar,commons-logging-1.1.1.jar" />
+                files="commons-httpclient-3.0.1.jar,commons-logging-1.1.1.jar,jshortcut.jar,registry.jar,image4j.jar" />
     </unjar>
     <copy todir="build/pics">
       <filelist dir="icons" files="ulteo.png default_icon.png" />
@@ -308,6 +308,12 @@
           todir="build/resources/LinuxLibs/32" failonerror="false" />
     <copy file="required_libraries/libXClientArea/64/libXClientArea.so"
           todir="build/resources/LinuxLibs/64" failonerror="false" />
+    <copy file="required_libraries/libXClientArea/64/libXClientArea.so"
+          todir="build/resources/LinuxLibs/64" failonerror="false" />
+    <copy file="required_libraries/jshortcut.dll"
+          todir="build/resources/WindowsLibs/32" failonerror="false" />
+    <copy file="required_libraries/ICE_JNIRegistry.dll"
+          todir="build/resources/WindowsLibs/32" failonerror="false" />
     <jar destfile="jars/ulteo-applet.jar" basedir="build">
       <include name="**" />
     </jar>
