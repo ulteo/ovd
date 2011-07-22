@@ -32,6 +32,8 @@ import java.awt.Insets;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -57,6 +59,7 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.JTextComponent;
 import org.ulteo.Logger;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
@@ -66,7 +69,7 @@ import org.ulteo.ovd.client.Language;
 import org.ulteo.ovd.client.bugreport.gui.BugReportButton;
 import org.ulteo.ovd.client.desktop.DesktopFrame;
 
-public class AuthFrame implements ActionListener, Runnable {
+public class AuthFrame implements ActionListener, FocusListener, Runnable {
 
 	private static final int JOB_NOTHING = -1;
 	private static final int JOB_LOCAL_CREDENTIALS = 0;
@@ -182,6 +185,11 @@ public class AuthFrame implements ActionListener, Runnable {
 		logoLabel.setIcon(ulteoLogo);
 		userLogoLabel.setIcon(userLogo);
 		passwordLogoLabel.setIcon(passwordLogo);
+
+		// Registering JTextComponent objects to enable autoselection
+		loginTextField.addFocusListener(this);
+		passwordTextField.addFocusListener(this);
+		serverTextField.addFocusListener(this);
 
 		mainFrame.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -1046,5 +1054,19 @@ public class AuthFrame implements ActionListener, Runnable {
 			
 			this.authFrame.mainFrame.pack();
 		}
+	}
+
+	// JTextComponent autoselection management
+	public void focusGained(FocusEvent fe) {
+		if (! (fe.getComponent() instanceof JTextComponent))
+			return;
+
+		((JTextComponent) fe.getComponent()).selectAll();
+	}
+	public void focusLost(FocusEvent fe) {
+		if (! (fe.getComponent() instanceof JTextComponent))
+			return;
+
+		((JTextComponent) fe.getComponent()).select(0, 0);
 	}
 }
