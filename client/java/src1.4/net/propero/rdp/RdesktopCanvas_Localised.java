@@ -50,11 +50,16 @@ public class RdesktopCanvas_Localised extends RdesktopCanvas {
 	}
 	
 	public void movePointer(int x, int y){
-		Point p = this.getLocationOnScreen();
-		x = x + p.x;
-		y = y + p.y;
-		if (robot != null)
-			robot.mouseMove(x, y);
+		try {
+			Point p = this.getLocationOnScreen();
+			x = x + p.x;
+			y = y + p.y;
+			if (robot != null)
+				robot.mouseMove(x, y);
+		}
+		catch (IllegalStateException e) {
+			RdesktopCanvas_Localised.logger.debug("Unable to move pointer: "+e.getMessage());
+		}
 	}
 
 	protected Cursor createCustomCursor(Image wincursor, Point p, String s, int cache_idx){
