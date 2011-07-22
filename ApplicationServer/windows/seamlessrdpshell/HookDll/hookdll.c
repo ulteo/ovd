@@ -537,7 +537,9 @@ static void create_window(HWND hwnd){
 		flags = 0;
 		if (style & DS_MODALFRAME || exstyle & WS_EX_DLGMODALFRAME)
 			flags |= SEAMLESS_CREATE_MODAL;
-		if ((style & WS_POPUP) || (exstyle & WS_EX_TOOLWINDOW)) {
+
+		if (((style & WS_POPUP) || (exstyle & WS_EX_TOOLWINDOW))
+			&& (style & WS_MINIMIZEBOX) == 0 && (style & WS_MAXIMIZEBOX) == 0) {
 			flags |= SEAMLESS_CREATE_POPUP;
 			if (! parent)
 				parent = 0xffffffffL;
