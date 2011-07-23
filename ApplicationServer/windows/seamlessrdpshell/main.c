@@ -237,7 +237,7 @@ do_focus(unsigned int serial, HWND hwnd, int action)
 static void
 do_destroy(HWND hwnd)
 {
-	SendMessage(hwnd, WM_CLOSE, 0, 0);
+	PostMessage(hwnd, WM_CLOSE, 0, 0);
 }
 
 static void
