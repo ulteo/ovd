@@ -57,7 +57,7 @@ public class TextHandler extends TypeHandler {
 				s = (String)(in.getTransferData(DataFlavor.stringFlavor));
 			} 
 			catch (Exception e) {
-				s = e.toString();
+				s = "";
 			}
 			
 			// TODO: think of a better way of fixing this
@@ -95,7 +95,7 @@ public class TextHandler extends TypeHandler {
 				s = (String)(in.getTransferData(DataFlavor.stringFlavor));
 			} 
 			catch (Exception e) {
-				s = e.toString();
+				s = "";
 			}
 			
 			// TODO: think of a better way of fixing this
