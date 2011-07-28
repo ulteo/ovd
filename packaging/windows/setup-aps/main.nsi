@@ -25,7 +25,7 @@
 !define PRODUCT_FULL_NAME "${PRODUCT_PUBLISHER} ${PRODUCT_NAME}"
 
 !define BASENAME "${PRODUCT_NAME}"
-!define EXE_NAME "ovdSlaveServer.exe"
+!define EXE_NAME "ulteo-ovd-slaveserver.exe"
 !define CONFIG_FILE "$APPDATA\ulteo\ovd\slaveserver.conf"
 !define SHORTCUT "${BASENAME}.lnk"
 !define UNINSTALL_SHORTCUT "Uninstall - ${PRODUCT_NAME}.lnk"
