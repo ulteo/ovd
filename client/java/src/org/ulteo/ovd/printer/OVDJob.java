@@ -19,6 +19,8 @@
  */
 package org.ulteo.ovd.printer;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.print.PageFormat;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
@@ -32,6 +34,7 @@ import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.PageRanges;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.jpedal.PdfDecoder;
@@ -51,8 +54,13 @@ public class OVDJob{
 		if (this.printerName != null && ! this.printerName.equals(OVDPrinterThread.filePrinterName))
 			return;
 		
+		Image logo = Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
+		
 		JFileChooser fc = new JFileChooser();
-		if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+		JFrame frame = new JFrame();
+		frame.setIconImage(logo);
+		
+		if (fc.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
 			if (file.exists()){
 				int ret = JOptionPane.showConfirmDialog(null, 
