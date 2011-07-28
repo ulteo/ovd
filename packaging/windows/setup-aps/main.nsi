@@ -30,7 +30,7 @@
 !define SHORTCUT "${BASENAME}.lnk"
 !define UNINSTALL_SHORTCUT "Uninstall - ${PRODUCT_NAME}.lnk"
 
-!define UNINSTALL_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Ulteo\ovd-application-server"
+!define UNINSTALL_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_FULL_NAME}"
 
 ;Include Modern UI
   !include "MUI.nsh"
