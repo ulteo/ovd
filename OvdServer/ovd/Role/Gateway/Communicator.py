@@ -79,6 +79,13 @@ class SSLCommunicator(Communicator):
 			self.close()
 		except SSL.WantReadError:
 			return -1
+		except SSL.Error, e:
+			# hack for prevent incomprehensible 'SSL_UNDEFINED_CONST_FUNCTION' error,
+			# treated as same as an 'SSL.WantReadError' error
+			if e.args[0][0][1] == 'SSL_UNDEFINED_CONST_FUNCTION':
+				return -1
+			else:
+				raise
 
 
 	def handle_write(self):
