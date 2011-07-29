@@ -20,11 +20,35 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import httplib
 import re
 
 from Communicator import ClientCommunicator, SSLCommunicator, \
 	OvdServerCommunicator, SessionManagerCommunicator
 from ovd.Logger import Logger
+
+
+HTTP_RESPONSES = {
+	httplib.FORBIDDEN : "This page is forbidden by the administrator",
+	httplib.NOT_FOUND : "This page does not exists",
+	httplib.INTERNAL_SERVER_ERROR : "the server crashed for an unknown reason, try again..."
+}
+
+
+
+class HTTPException(Exception):
+
+	def __init__(self, code, path):
+		if not HTTP_RESPONSES.has_key(code):
+			self.code = httplib.INTERNAL_SERVER_ERROR
+		else:
+			self.code = code
+		self.path = path
+
+
+	def __str__(self):
+		return "%s (%s)" % (httplib.responses[self.code], self.path)
+
 
 
 class ProtocolDetectDispatcher(SSLCommunicator):
@@ -74,7 +98,7 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 				path = http.group(2)
 				
 				if not (path == '/ovd' or path.startswith("/ovd/")):
-					raise Exception('wrong HTTP path: ' + path)
+					raise HTTPException(httplib.NOT_FOUND, path)
 				if path == "/ovd/client/start.php":
 					client.set_rewrite_xml(self.f_ctrl)
 				server = SessionManagerCommunicator(self.sm, communicator=client)
@@ -85,6 +109,13 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 			
 			client.set_communicator(server)
 		
+		except HTTPException, e:
+			Logger.debug("Gateway:: ProtocolDetectDispatcher:: HTTP: %s" % e)
+			self.send(("HTTP/1.1 %d %s\r\n\r\n<head></head><body>%s</body>") % \
+				(e.code, httplib.responses[e.code], HTTP_RESPONSES[e.code]))
+			self.socket.sock_shutdown(socket.SHUT_WR)
+			self.handle_close()
+
 		except Exception, err:
 			Logger.error("ProtocolDetectDispatcher::handle_read error %s %s" % (type(err), err))
 			self.handle_close()
