@@ -18,15 +18,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import socket
+
 from ovd.Logger import Logger
 
 class Config:
 	general = None
 	address = "0.0.0.0"
-	port    = 443
+	port = 443
 	max_process = 10
 	max_connection = 100
 	process_timeout = 60
+	web_client = None
+	admin_redirection = False
 
 	@staticmethod
 	def init(infos):
@@ -56,5 +60,19 @@ class Config:
 				Config.process_timeout = int(infos["process_timeout"])
 			except ValueError:
 				Logger.error("Invalid int number for process_timeout")
-		    
+		
+		if infos.has_key("web_client"):
+			addr = infos["web_client"]
+			try:
+				socket.inet_aton(addr)
+				Config.web_client = addr
+			except socket.error:
+				Logger.error("Invalid IP for Web Client")
+		
+		if infos.has_key("admin_redirection"):
+			if infos["admin_redirection"].lower() == "true":
+				Config.admin_redirection = True
+			else:
+				Logger.error("Invalid value for 'admin_redirection' option")
+		
 		return True

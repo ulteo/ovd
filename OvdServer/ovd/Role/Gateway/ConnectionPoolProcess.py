@@ -34,12 +34,13 @@ from OpenSSL import SSL
 
 class ConnectionPoolProcess(Process):
 	
-	def __init__(self, child_pipes, father_pipes, sm, rdp_port):
+	def __init__(self, child_pipes, father_pipes, sm, wc, rdp_port):
 		Process.__init__(self)
 		
 		self.pipes = child_pipes
 		self.father_pipes = father_pipes
 		self.sm = sm
+		self.wc = wc
 		self.rdp_port = rdp_port
 		
 		self.f_control = None
@@ -79,7 +80,9 @@ class ConnectionPoolProcess(Process):
 			
 			ssl_conn = SSL.Connection(self.sm[1], sock)
 			ssl_conn.set_accept_state()
-			ProtocolDetectDispatcher(ssl_conn, self.f_control, self.sm, self.rdp_port)
+			proto = ProtocolDetectDispatcher(ssl_conn, self.f_control, self.sm, self.wc, self.rdp_port)
+			proto.set_admin_redirection(Config.admin_redirection)
+
 			
 			# reload asyncore if stopped
 			if self.t_asyncore is None or not self.t_asyncore.is_alive():

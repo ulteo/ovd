@@ -119,7 +119,7 @@ class OvdServerCommunicator(ServerCommunicator):
 
 
 
-class SessionManagerCommunicator(SSLCommunicator, ServerCommunicator):
+class HttpServerCommunicator(SSLCommunicator, ServerCommunicator):
 	
 	def __init__(self, remote, communicator=None):
 		(sm, self.ssl_ctx) = remote

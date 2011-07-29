@@ -22,9 +22,10 @@
 
 import httplib
 import re
+import socket
 
 from Communicator import ClientCommunicator, SSLCommunicator, \
-	OvdServerCommunicator, SessionManagerCommunicator
+	OvdServerCommunicator, HttpServerCommunicator
 from ovd.Logger import Logger
 
 
@@ -56,11 +57,14 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 	rdp_ptn = re.compile('\x03\x00.*Cookie: .*token=([\-\w]+);.*')
 	http_ptn = re.compile('((?:HEAD)|(?:GET)|(?:POST)) (.*) HTTP/(.\..)')
 	
-	def __init__(self, conn, f_ctrl, sm, rdp_port):
+	def __init__(self, conn, f_ctrl, sm, wc, rdp_port):
 		SSLCommunicator.__init__(self, conn)
 		self.f_ctrl = f_ctrl
 		self.sm = sm
+		self.wc = wc
 		self.rdp_port = rdp_port
+		
+		self.admin_redirection = False
 	
 	
 	def writable(self):
@@ -82,7 +86,7 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 		# find protocol
 		rdp  = ProtocolDetectDispatcher.rdp_ptn.match(request)
 		http = ProtocolDetectDispatcher.http_ptn.match(request)
-		
+
 		try:
 			# RDP case
 			if rdp:
@@ -97,12 +101,28 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 				Logger.debug("ProtocolDetectDispatcher:: request: http %s" % request)
 				path = http.group(2)
 				
-				if not (path == '/ovd' or path.startswith("/ovd/")):
+				# Session Manager
+				if path.startswith("/ovd/client/"):
+					server = HttpServerCommunicator(self.sm, communicator=client)
+
+				# Administration
+				elif path == "/ovd/admin" or path.startswith("/ovd/admin/"):
+					if not self.admin_redirection:
+						raise HTTPException(httplib.FORBIDDEN, path)
+					server = HttpServerCommunicator(self.sm, communicator=client)
+
+				# Web Client
+				elif path == '/ovd' or path.startswith("/ovd/"):
+					if not self.wc:
+						raise HTTPException(httplib.FORBIDDEN, path)
+					server = HttpServerCommunicator(self.wc, communicator=client)
+					if path == "/ovd/client/start.php":
+						client.set_rewrite_xml(self.f_ctrl)
+
+				# Unknown URL
+				else:
 					raise HTTPException(httplib.NOT_FOUND, path)
-				if path == "/ovd/client/start.php":
-					client.set_rewrite_xml(self.f_ctrl)
-				server = SessionManagerCommunicator(self.sm, communicator=client)
-			
+
 			# protocol error
 			else:
 				raise Exception('bad first request line: ' + request)
@@ -119,3 +139,8 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 		except Exception, err:
 			Logger.error("ProtocolDetectDispatcher::handle_read error %s %s" % (type(err), err))
 			self.handle_close()
+	
+	
+	def set_admin_redirection(self, _bool):
+		if isinstance(_bool, bool):
+			self.admin_redirection = _bool

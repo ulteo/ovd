@@ -102,7 +102,11 @@ class Role(AbstractRole):
 		child_pipes = (p01, p00)
 		
 		sm = ((Config.general.session_manager, self.HTTPS_PORT), self.ssl_ctx)
-		proc = ConnectionPoolProcess(child_pipes, self.pipes, sm, self.RDP_PORT)
+		if Config.web_client is not None:	
+			wc = ((Config.web_client, self.HTTPS_PORT), self.ssl_ctx)
+		else:
+			wc = None
+		proc = ConnectionPoolProcess(child_pipes, self.pipes, sm, wc, self.RDP_PORT)
 		proc.start()
 		child_pipes[0].close()
 		child_pipes[1].close()
