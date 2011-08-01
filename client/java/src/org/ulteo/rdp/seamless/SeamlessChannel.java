@@ -33,18 +33,11 @@
 package org.ulteo.rdp.seamless;
 
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.KeyboardFocusManager;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Window;
-import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,21 +52,21 @@ import org.ulteo.gui.SwingTools;
 import org.ulteo.utils.I18n;
 
 
-public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChannel implements MouseListener, MouseMotionListener {
+public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChannel implements MouseListener {
 	public static final int WINDOW_CREATE_MODAL	= 0x0001;
 	public static final int WINDOW_CREATE_TOPMOST	= 0x0002;
 	public static final int WINDOW_CREATE_POPUP	= 0x0004;
 	public static final int WINDOW_CREATE_FIXEDSIZE	= 0x0008;
 	public static final int WINDOW_CREATE_TOOLTIP	= 0x0010;
 
-	private static final long CLICK_DELAY = 100;
-
-	private Timer clickTimer = null;
+	protected WindowFrameManager windowFrameManager = null;
 
 	protected ConcurrentHashMap<String, DestroyWindowTimer> closeHistory = null;
 
 	public SeamlessChannel(Options opt_, Common common_) {
 		super(opt_, common_);
+
+		this.windowFrameManager = new WindowFrameManager(this);
 
 		this.closeHistory = new ConcurrentHashMap<String, DestroyWindowTimer>();
 	}
@@ -151,7 +144,8 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 		
 		sf.setName(name);
 		sf.addMouseListener(this);
-		sf.addMouseMotionListener(this);
+		sf.addMouseListener(this.windowFrameManager);
+		sf.addMouseMotionListener(this.windowFrameManager);
 		if ((flags & SeamlessChannel.WINDOW_CREATE_TOPMOST) != 0 && (sf instanceof SeamlessFrame))
 			SwingTools.invokeLater(GUIActions.setAlwaysOnTop(sf, true));
 
@@ -285,152 +279,8 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 		}
 	}
 
-	private int detectCorner(MouseEvent e, Rectangle wndSize) {
-		if (e == null)
-			return -1;
-
-		int xClick = e.getX();
-		int yClick = e.getY();
-
-		if (xClick >= 0 && xClick < RectWindow.SEAMLESS_CORNER_SIZE) {
-			if (yClick >= 0 && yClick < RectWindow.SEAMLESS_CORNER_SIZE) {
-				return RectWindow.CORNER_TOP_LEFT;
-			}
-			else if (yClick > (wndSize.height - RectWindow.SEAMLESS_CORNER_SIZE) && yClick <= wndSize.height) {
-				return RectWindow.CORNER_BOTTOM_LEFT;
-			}
-			else if (yClick >= 0 && yClick <= wndSize.height) {
-				return RectWindow.CORNER_LEFT;
-			}
-		}
-		else if (xClick > (wndSize.width - RectWindow.SEAMLESS_CORNER_SIZE) && xClick <= wndSize.width) {
-			if (yClick >= 0 && yClick < RectWindow.SEAMLESS_CORNER_SIZE) {
-				return RectWindow.CORNER_TOP_RIGHT;
-			}
-			else if (yClick > (wndSize.height - RectWindow.SEAMLESS_CORNER_SIZE) && yClick <= wndSize.height) {
-				return RectWindow.CORNER_BOTTOM_RIGHT;
-			}
-			else if (yClick >= 0 && yClick <= wndSize.height) {
-				return RectWindow.CORNER_RIGHT;
-			}
-		}
-		else if (yClick > (wndSize.height - RectWindow.SEAMLESS_BORDER_SIZE) && yClick <= wndSize.height) {
-			return RectWindow.CORNER_BOTTOM;
-		}
-		else if (yClick >= 0 && yClick < RectWindow.SEAMLESS_BORDER_SIZE) {
-			return RectWindow.CORNER_TOP;
-		}
-		
-		return -1;
-	}
-
-	private MouseEvent setWorkspaceOffsets(MouseEvent me) {
-		return new MouseEvent(me.getComponent(), me.getID(), new Date().getTime(), me.getModifiers(), me.getX() - this.opt.x_offset, me.getY() - this.opt.y_offset, me.getClickCount(), me.isPopupTrigger(), me.getButton());
-	}
-
-	public void mousePressed(MouseEvent e) {
-		String name = e.getComponent().getName();
-		SeamlessMovingResizing sw = null;
-		if (this.windows.containsKey(name))
-			sw = (SeamlessMovingResizing)this.windows.get(name);
-		if (sw == null) {
-			System.err.println("Bad window ("+name+")");
-			return;
-		}
-
-		if (sw.isMouseEventsLocked()) {
-			System.err.println("Weird behavior, should never appear (ref: 20)");
-			return;
-		}
-
-		if (e.getClickCount() == 1) {
-			if ((((SeamlessWindow)sw).sw_getExtendedState() != Frame.MAXIMIZED_BOTH) && ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK)) {
-				this.cancelClickTimer();
-
-				MouseEvent me = new MouseEvent(e.getComponent(), e.getID(), new Date().getTime(), e.getModifiers(), e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton());
-				this.clickTimer = new Timer();
-				this.clickTimer.schedule(new CheckClickTask(sw, me), CLICK_DELAY);
-			}
-		}
-		sw.processMouseEvent(this.setWorkspaceOffsets(e), SeamlessMovingResizing.MOUSE_PRESSED);
-	}
-
-	public void mouseReleased(MouseEvent e) {
-		this.cancelClickTimer();
-		
-		String name = e.getComponent().getName();
-		Window sw = null;
-		if (this.windows.containsKey(name))
-			sw = (Window) this.windows.get(name);
-		if (sw == null) {
-			System.err.println("Bad window ("+name+")");
-			return;
-		}
-		if (((SeamlessMovingResizing) sw).isMouseEventsLocked()) {
-			Rectangle bounds = ((SeamlessMovingResizing) sw).getRectWindow().getBounds();
-			try {
-				this.send_position(((SeamlessWindow) sw).sw_getId(), bounds.x - this.opt.x_offset, bounds.y - this.opt.y_offset, bounds.width, bounds.height, 0);
-			} catch (Exception ex) {
-				org.ulteo.Logger.error("Position message not sent: "+ex.getMessage());
-			}
-			((SeamlessMovingResizing) sw).unlockMouseEvents();
-			return;
-		}
-		((SeamlessMovingResizing) sw).processMouseEvent(this.setWorkspaceOffsets(e), SeamlessMovingResizing.MOUSE_RELEASED);
-	}
-
-	public void mouseDragged(MouseEvent e) {
-		String name = e.getComponent().getName();
-		SeamlessMovingResizing sw = null;
-		if (this.windows.containsKey(name))
-			sw = (SeamlessMovingResizing)this.windows.get(name);
-		if (sw == null) {
-			System.err.println("Bad window ("+name+")");
-			return;
-		}
-
-		RectWindow rw = sw.getRectWindow();
-
-		if (sw.isMouseEventsLocked()) {
-			if (rw.isResizing()) {
-				rw.setResizeClick(e);
-				rw.resize();
-			}
-			else if (rw.isMoving()) {
-				Dimension size = ((Window)sw).getSize();
-				Point offsets = rw.getOffsets();
-				int x_rw = e.getXOnScreen() - offsets.x;
-				int y_rw = e.getYOnScreen() - offsets.y;
-				rw.setBounds(new Rectangle(x_rw, y_rw, size.width, size.height));
-			}
-			return;
-		}
-
-		if (rw.isResizing() || rw.isMoving()) {
-			sw.lockMouseEvents();
-
-			return;
-		}
-
-		sw.processMouseEvent(this.setWorkspaceOffsets(e), SeamlessMovingResizing.MOUSE_DRAGGED);
-	}
-
-	public void mouseMoved(MouseEvent e) {
-		String name = e.getComponent().getName();
-		SeamlessMovingResizing sw = null;
-		if (this.windows.containsKey(name))
-			sw = (SeamlessMovingResizing)this.windows.get(name);
-		if (sw == null) {
-			System.err.println("Bad window ("+name+")");
-			return;
-		}
-
-		if (sw.isMouseEventsLocked())
-			return;
-
-		sw.processMouseEvent(this.setWorkspaceOffsets(e), SeamlessMovingResizing.MOUSE_MOVED);
-	}
-
+	public void mousePressed(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {}
 	public void mouseEntered(MouseEvent me) {}
 	public void mouseExited(MouseEvent me) {}
 	public void mouseClicked(MouseEvent me) {
@@ -440,66 +290,5 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 		
 		SeamlessWindow wnd = (SeamlessWindow) me.getComponent();
 		this.setFocusOnWindow(wnd);
-	}
-
-	private void cancelClickTimer() {
-		if (this.clickTimer != null) {
-			this.clickTimer.cancel();
-			this.clickTimer.purge();
-			this.clickTimer = null;
-		}
-	}
-
-
-	private class CheckClickTask extends TimerTask {
-		private MouseEvent evt = null;
-		private SeamlessMovingResizing sw = null;
-		private Rectangle wndBounds = null;
-
-		CheckClickTask(SeamlessMovingResizing sw_, MouseEvent evt_) {
-			super();
-
-			this.sw = sw_;
-			this.evt = evt_;
-
-			this.wndBounds = ((Window) this.sw).getBounds();
-		}
-
-		@Override
-		public void run() {
-			int xClick = this.evt.getX();
-			int yClick = this.evt.getY();
-			RectWindow rw = this.sw.getRectWindow();
-
-			if (	(xClick < RectWindow.SEAMLESS_BORDER_SIZE ||
-				xClick > (this.wndBounds.width - RectWindow.SEAMLESS_BORDER_SIZE) ||
-				yClick < RectWindow.SEAMLESS_BORDER_SIZE ||
-				yClick > (this.wndBounds.height - RectWindow.SEAMLESS_BORDER_SIZE))
-				&& this.sw._isResizable()
-			) {
-				rw.setResizeClick(this.evt);
-				int corner = detectCorner(this.evt, this.wndBounds);
-				rw.setCorner(corner);
-
-				rw.offsetsResize(this.evt, this.wndBounds);
-				rw.resize();
-			}
-			else if (
-				yClick >= RectWindow.SEAMLESS_BORDER_SIZE &&
-				yClick <= (RectWindow.SEAMLESS_BORDER_SIZE + RectWindow.SEAMLESS_TOP_BORDER_SIZE) &&
-				xClick >= RectWindow.SEAMLESS_BORDER_SIZE &&
-				xClick <= (((Window) this.sw).getWidth() - RectWindow.SEAMLESS_BORDER_SIZE)
-			) {
-				rw.setOffsets((this.evt.getXOnScreen() - this.wndBounds.x), (this.evt.getYOnScreen() - this.wndBounds.y));
-				rw.setBounds(this.wndBounds);
-				rw.setMoveClick(this.evt);
-			}
-			else
-				return;
-
-			MouseEvent me = new MouseEvent(this.evt.getComponent(), this.evt.getID(), new Date().getTime(), this.evt.getModifiers(), this.evt.getX(), this.evt.getY(), this.evt.getClickCount(), this.evt.isPopupTrigger(), this.evt.getButton());
-			this.sw.processMouseEvent(setWorkspaceOffsets(me), SeamlessMovingResizing.MOUSE_RELEASED);
-			this.sw.lockMouseEvents();
-		}
 	}
 }

@@ -948,6 +948,19 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		return "seamrdp";
 	}
 
+	public void updatePosition(SeamlessWindow sw, Rectangle bounds) {
+		if (! this.windows.contains(sw)) {
+			System.err.println("Bad window ("+((Window) sw).getName()+")");
+			return;
+		}
+
+		try {
+			this.send_position(sw.sw_getId(), bounds.x - this.opt.x_offset, bounds.y - this.opt.y_offset, bounds.width, bounds.height, 0);
+		} catch (Exception ex) {
+			logger.error("Failed to send position message: "+ex.getMessage());
+		}
+	}
+
 	protected void setFocusOnWindow(SeamlessWindow wnd) {
 		Window w = (Window) wnd;
 		if (w.isActive() || w.isFocused())
