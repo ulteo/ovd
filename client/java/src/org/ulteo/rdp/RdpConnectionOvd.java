@@ -25,6 +25,7 @@ package org.ulteo.rdp;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Locale;
+
 import net.propero.rdp.Common;
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopException;
@@ -62,8 +63,9 @@ public class RdpConnectionOvd extends RdpConnection {
 	private int flags = 0x00;
 	private ArrayList<Application> appsList = null;
 	private OvdAppChannel ovdAppChannel = null;
-	private DiskManager diskManager = null;
-
+	private static DiskManager diskManager = null;
+	private static OVDPrinterManager printerManager = null;
+	
 	/**
 	 * Instanciate a new RdpConnectionOvd with default options:
 	 *	- bitmap compression
@@ -96,7 +98,7 @@ public class RdpConnectionOvd extends RdpConnection {
 		else {
 			throw new OvdException("Unable to create connection: Neither desktop nor application mode specified");
 		}
-
+		
 		this.appsList = new ArrayList<Application>();
 		this.mapFile = LayoutDetector.get();
 		this.detectKeymap();
@@ -189,8 +191,16 @@ public class RdpConnectionOvd extends RdpConnection {
 	protected void fireDisconnected() {
 		super.fireDisconnected();
 
-		if (this.diskManager != null)
-			this.diskManager.stop();
+		if (RdpConnectionOvd.diskManager != null) {
+			RdpConnectionOvd.diskManager.stop();
+			RdpConnectionOvd.diskManager = null;
+		}
+		
+		if (RdpConnectionOvd.printerManager != null) {
+			RdpConnectionOvd.printerManager.stop();
+			RdpConnectionOvd.printerManager = null;
+		}
+		
 	}
 	
 	/**
@@ -199,15 +209,12 @@ public class RdpConnectionOvd extends RdpConnection {
 	 *	- Use a PrinterManager instance in order to register all local printers
 	 */
 	private void mountLocalPrinters() throws OvdException, RdesktopException {
-		OVDPrinterManager printerManager = new OVDPrinterManager(this.rdpdrChannel);
-		printerManager.searchAllPrinter();
-		if (printerManager.hasPrinter()) {
-			this.initRdpdrChannel();
-			System.out.println("Rdpdr channel added");
-			printerManager.registerAll(this.rdpdrChannel);
+		this.initRdpdrChannel();
+		if (RdpConnectionOvd.printerManager == null) {
+			RdpConnectionOvd.printerManager = new OVDPrinterManager();
+			RdpConnectionOvd.printerManager.launch();
 		}
-		else
-			throw new OvdException("Have to map local printers but no printer found ....");
+		RdpConnectionOvd.printerManager.register_connection(this.rdpdrChannel);
 	}
 
 	/**
@@ -264,9 +271,13 @@ public class RdpConnectionOvd extends RdpConnection {
 	public void stop() {
 		super.stop();
 
-		if (this.diskManager != null) {
-			this.diskManager.stop();
-			this.diskManager = null;
+		if (RdpConnectionOvd.diskManager != null) {
+			RdpConnectionOvd.diskManager.stop();
+			RdpConnectionOvd.diskManager = null;
+		}
+		if (RdpConnectionOvd.printerManager != null) {
+			RdpConnectionOvd.printerManager.stop();
+			RdpConnectionOvd.printerManager = null;
 		}
 	}
 

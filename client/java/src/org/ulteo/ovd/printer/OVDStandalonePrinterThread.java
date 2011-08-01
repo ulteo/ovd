@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author David Lechevalier <david@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -44,8 +44,8 @@ public class OVDStandalonePrinterThread implements OVDPrinterThread, Runnable{
 		catch (InterruptedException e){ }
 	}
 	
-	public void printPages(String printerName, String pdfFilename) {
-		this.spool.add(new OVDJob(pdfFilename, printerName));
+	public void printPages(String printerName, String pdfFilename, boolean externalMode) {
+		this.spool.add(new OVDJob(pdfFilename, printerName, externalMode));
 		new Thread(this).start();
 	}
 

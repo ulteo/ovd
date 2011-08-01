@@ -356,6 +356,55 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		return true;
 	}
 	
+	public boolean mountNewPrinter(OVDPrinter printer) {
+		logger.info("mount a new printer "+printer.name);
+		String magic = "rDAD";
+		int index = getNextFreeSlot();
+		if (index < 0) {
+			return false;
+		}
+		
+		RdpPacket_Localised s;
+		this.register(printer);
+		
+		s = new RdpPacket_Localised(200);
+		s.out_uint8p(magic, 4);
+		s.setLittleEndian32(1);   /* deviceCount */
+		
+		
+		s.setLittleEndian32(printer.device_type);
+		s.setLittleEndian32(index); /* RDP Device ID */
+
+		s.out_uint8p(printer.name, 8);
+		
+		String printerName = printer.get_display_name();
+		int driverlen = 2 * printer.driver.length() + 2;
+		int printerlen = 2 * printerName.length() + 2;
+		int bloblen = printer.bloblen;
+
+		s.setLittleEndian32(24 + driverlen + printerlen + bloblen);
+		if (printer.default_printer)
+			s.setLittleEndian32(FLAG_DEFAULTPRINTER);
+		else
+			s.setLittleEndian32(0);
+		s.incrementPosition(8);
+		s.setLittleEndian32(driverlen);
+		s.setLittleEndian32(printerlen);
+		s.setLittleEndian32(bloblen);
+		s.outUnicodeString(printer.driver, driverlen - 2);
+		s.outUnicodeString(printerName, printerlen - 2);
+
+		
+		s.markEnd();
+		try {
+			this.send_packet(s);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
 	public boolean unmountDrive(String name, String path) {
 		logger.info("unmount the drive "+name+ " => "+path);
 		String magic = "rDMD";
@@ -407,7 +456,6 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 
 	public void rdpdr_send_available() {
 		this.ready = true;
-		super.rdpdr_send_available();
 	}
 	
  	public boolean register(RdpdrDevice v) {

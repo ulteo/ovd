@@ -2,6 +2,7 @@
  * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or 
@@ -171,7 +172,8 @@ public class ExternalAppsClient {
 		}
 
 		OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
-
+		OVDPrinter.setExternalMode(true);
+		
 		OvdClient cli = new OvdClientIntegrated(dialog);
 		Runtime.getRuntime().addShutdownHook(new ShutdownTask(cli));
 		cli.perform();
