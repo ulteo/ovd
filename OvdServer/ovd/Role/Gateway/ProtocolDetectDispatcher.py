@@ -76,8 +76,16 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 	def handle_read(self):
 		if SSLCommunicator.handle_read(self) is -1:
 			return
-		
-		client = ClientCommunicator(self.socket)
+		try:
+			client = ClientCommunicator(self.socket)
+		except socket.error, e:
+			if e[0] == socket.EBADF:
+				# Connection closed before requesting anything
+				# Chrome tests url by opening ssl connection without requesting
+				self.handle_close()
+				return
+			raise e
+			
 		client._buffer = self._buffer
 		
 		request = client._buffer.split('\n', 1)[0]
