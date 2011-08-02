@@ -63,4 +63,5 @@
     <xi:include href="&parent;" xpointer="wc_last_1" />
     <xi:include href="&parent;" xpointer="wc_last_2" />
   </section>
+  <xi:include href="colophon.xml" />
 </article>

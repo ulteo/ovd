@@ -247,4 +247,5 @@
 
   <xi:include href="Easy_Installation.xml" xpointer="launch_session" />
 
+  <xi:include href="colophon.xml" />
 </article>

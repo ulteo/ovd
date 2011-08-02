@@ -76,4 +76,6 @@ gpgcheck=0]]>
   <xi:include href="&parent;" xpointer="sm" />
   <xi:include href="&parent;" xpointer="subsystem" />
   <xi:include href="&parent;" xpointer="wc" />
+
+  <xi:include href="colophon.xml" />
 </article>

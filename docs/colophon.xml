@@ -1,0 +1,14 @@
+<?xml version='1.0'?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<colophon>
+  <para>
+    For further informations, check our website <ulink url="http://www.ulteo.com">www.ulteo.com</ulink>.
+  </para>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="img/UlteoTextVert.pdf" width="7cm" align="center" valign="middle" />
+    </imageobject>
+  </mediaobject>
+</colophon>
+

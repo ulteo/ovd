@@ -529,4 +529,5 @@ deb file:///root/ovd-3.0-gold-ubuntu-lucid lucid main]]>
       </important>
     </section>
   </section>
+  <xi:include href="colophon.xml" />
 </article>

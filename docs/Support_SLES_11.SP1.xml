@@ -282,4 +282,5 @@ Session Manager address [127.0.0.1]: sm.ulteo.com]]>
     <xi:include href="&parent;" xpointer="wc_last_1" />
     <xi:include href="&parent;" xpointer="wc_last_2" />
   </section>
+  <xi:include href="colophon.xml" />
 </article>

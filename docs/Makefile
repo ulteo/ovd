@@ -4,6 +4,11 @@ DIST?=dist
 
 SUBDIRS=img www
 
+STYLE_LATEX=style/ulteo-style.sty
+STYLE_XSL_LATEX=style/latex.xsl
+
+STYLE_XSL_XHTML=style/xhtml.xsl
+
 SRC=\
 	Architecture.xml \
 	Easy_Installation.xml \
@@ -52,11 +57,12 @@ Support_openSUSE_11.2.html Support_openSUSE_11.2.pdf: Support_SLES_11.SP1.xml
 Support_openSUSE_11.3.html Support_openSUSE_11.3.pdf: Support_SLES_11.SP1.xml
 
 
-%.html: %.xml.out
-	xsltproc style/xhtml.xsl $< >$@
+%.html: %.xml.out $(STYLE_XSL_XHTML)
+	xsltproc $(STYLE_XSL_XHTML) $< >$@
 
-%.pdf:  %.xml.out
-	dblatex -t pdf -T db2latex -p style/latex.xsl $< -o $@ >/dev/null 2>&1
+%.pdf:  %.xml.out $(STYLE_XSL_LATEX) $(STYLE_LATEX)
+	dblatex -t pdf -T db2latex -p $(STYLE_XSL_LATEX) -s $(STYLE_LATEX) $< -o $@ > /dev/null 2>&1
+	# dblatex -B -d -D -v -t pdf -T db2latex -p $(STYLE_XSL_LATEX) -s $(STYLE_LATEX) $< -o $@
 
 %.xml.out: %.xml
 	xmllint --xinclude $< | ./transform >$@

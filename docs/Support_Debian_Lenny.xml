@@ -42,4 +42,6 @@
   <xi:include href="&parent;" xpointer="sm" />
   <xi:include href="&parent;" xpointer="subsystem" />
   <xi:include href="Support_Ubuntu_Hardy.xml" xpointer="wc" />
+
+  <xi:include href="colophon.xml" />
 </article>

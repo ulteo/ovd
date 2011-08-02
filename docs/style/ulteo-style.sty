@@ -1,0 +1,172 @@
+%%
+%% This is a DocBook LaTeX style example
+%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{dbsimple}[2003/04/11 Simple DocBook Style]
+
+% The defined options
+\DeclareOption{hyperlink}{ \def\DBKhyperlink{yes} }
+\DeclareOption{nohyperlink}{ \def\DBKhyperlink{no} }
+
+% Default values
+\ExecuteOptions{nohyperlink}
+
+% If defined, process the options
+\ProcessOptions\relax
+
+% Needed packages
+\usepackage{float}
+\usepackage{dbk_core}
+
+% LaTeX <othercredit> commands to define
+%
+% #1: mapped to <contrib>
+% #2: mapped to <firstname> <surname>
+%
+\def\DBKinditem#1#2{
+  #2  & #1 \tabularnewline
+  \hline
+}
+
+\newenvironment{DBKindtable}{
+  \begin{tabular}{ |l|l| }
+    \hline
+    \emph{Collaborator} & \emph{Contribution}
+    \hline
+}{
+  \end{tabular}
+}
+
+%
+% Latex <revhistory> table
+%
+\newenvironment{DBKrevtable}{
+  \begin{longtable}{ |l|l|l|l| }
+    \hline
+    Revision number & Date & Release Info & Author \tabularnewline
+    \hline
+    \endhead
+}{
+  \end{longtable}
+}
+
+%
+% <legalnotice> environment skip the information
+%
+\newenvironment{DBKlegalnotice}{
+}{
+}
+
+%
+% These floats must be defined to map <example> and <equation>
+%
+\usepackage{float}
+
+\floatstyle{ruled}
+\newfloat{example}{ht}{loe}[section]
+\floatname{example}{Example}
+
+\floatstyle{plain}
+\newfloat{dbequation}{ht}{loe}[section]
+\floatname{dbequation}{{\scshape Equation }}
+
+%
+% Nothing special for <note>, <caution>, <warning>
+%
+%% \newenvironment{DBKadmonition}[2] {
+%% }{
+%% }
+
+
+
+%
+% <sidebar> environment
+%
+\newenvironment{sidebar}[1][\textwidth]{
+  \hspace{0mm}\newline%
+  \noindent\begin{Sbox}\begin{minipage}{#1}
+}{
+  \end{minipage}\end{Sbox}\shadowbox{\TheSbox}%
+}
+
+
+
+%% Harold Leboulanger <harold@ulteo.com> 2011
+%% Change the default dblatex style
+
+%% Save the title for later use in the colophon page (see latex.xsl)
+\def\title#1{\gdef\@title{#1}\gdef\THETITLE{#1}}
+
+%% Margin
+\usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
+
+%% Delete tab before each paragraph, add space between paragraph
+\setlength{\parindent}{0.0in}        
+\setlength{\parskip}{0.1in}          
+
+%% Change to sans serif font
+\renewcommand{\familydefault}{\sfdefault}
+
+%% Listings
+\lstparamset
+\lstset{frame=single}
+
+%% Header/Footer
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+% Size
+\setlength{\headsep}{30pt}
+\setlength{\footskip}{30pt}
+
+% Title on the top-left, logo on the top-right
+\lhead{\footnotesize{\@title}}
+\chead{}
+\rhead{\includegraphics[width=2cm]{img/logoUlteoText.png}}
+
+% Size of the rulers
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+% Copyright on the bottom-left and page number on the bottom-right
+\lfoot{\footnotesize{\DBKcopyright}}
+\cfoot{}
+\rfoot{\footnotesize{Page \thepage}}
+
+%% Admonitions
+\usepackage{environ}  %% Better new environment command, easier and safer
+\usepackage{wrapfig}  %% Wrap text around a figure (here around the admonition icons)
+\usepackage{fancyvrb} %% Load the package here, needed to add program listing / screen inside admonition
+
+% Define a new envionment to color background
+% Useless here, but may be useful later
+%% \NewEnviron{colorboxenv}[1]{
+%%   \colorbox{#1}{\BODY}
+%% }
+
+% Redefine the dblatex envrionment DBKadmonition
+% Allow coloring the background
+\NewEnviron{DBKadmonition}[2] {
+
+  % Colors defintions 
+  \ifthenelse{\equal{Note}{#2}}{\definecolor{coloradmonition}{RGB}{228,233,245}}{}
+  \ifthenelse{\equal{Important}{#2}}{\definecolor{coloradmonition}{RGB}{225,220,175}}{}
+
+  \begin{center}
+    \noindent
+
+    \colorbox{coloradmonition}{     
+      
+      \begin{minipage}{\linewidth}
+        
+        % wrapfig is sexier than the minipage used before by dblatex
+        \begin{wrapfigure}[2]{l}{0.7cm}
+          \vspace{-12pt}
+          \includegraphics[width=0.8cm]{#1}
+        \end{wrapfigure}          
+        
+        \BODY
+      \end{minipage}
+    }
+  \end{center}    
+}
