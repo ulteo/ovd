@@ -219,24 +219,24 @@
       <itemizedlist>
 	<listitem><para>
 	  On an application server:
-	  <screen><![CDATA[
-$ getent hosts sm.ulteo.com]]>
+	  <screen>
+<![CDATA[$ getent hosts sm.ulteo.com]]>
 	  </screen>
 
-	  <screen><![CDATA[
-$ getent hosts the_ip_gets_from_the_previous_command]]>
+	  <screen>
+<![CDATA[$ getent hosts the_ip_gets_from_the_previous_command]]>
 	  </screen>
 	</para></listitem>
 
 	<listitem><para>
 	  On a Session Manager:
 
-	  <screen><![CDATA[
-$ getent hosts my_application_server]]>
+	  <screen>
+<![CDATA[$ getent hosts my_application_server]]>
 	  </screen>
 
-	  <screen><![CDATA[
-$ getent hosts the_ip_gets_from_the_previous_command]]>
+	  <screen>
+<![CDATA[$ getent hosts the_ip_gets_from_the_previous_command]]>
 	  </screen>
 	</para></listitem>
       </itemizedlist>
@@ -245,8 +245,8 @@ $ getent hosts the_ip_gets_from_the_previous_command]]>
     <para>
       The reverse DNS must be the same between the two sets of commands
       as you can see in that example:
-      <programlisting><![CDATA[
-$ getent hosts sm3.office.ulteo.com
+      <programlisting>
+<![CDATA[$ getent hosts sm3.office.ulteo.com
 192.168.0.19    sm3.office.ulteo.com
 $ getent hosts 192.168.0.19
 192.168.0.19    sm3.office.ulteo.com]]>
@@ -383,8 +383,8 @@ $ getent hosts 192.168.0.19
       Server?
     </title>
 
-     <programlisting><![CDATA[
-  * Starting Ulteo OVD SlaveServer
+     <programlisting>
+<![CDATA[  * Starting Ulteo OVD SlaveServer
 chroot: cannot change root directory to /etc/init.d/ovdSlaveServer: No
 such file or directory]]>
      </programlisting>

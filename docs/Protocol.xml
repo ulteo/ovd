@@ -288,8 +288,8 @@
 
         <para>
           Here is an example:
-          <screen><![CDATA[
-<?xml version="1.0" encoding="utf-8"?>
+          <screen>
+<![CDATA[<?xml version="1.0" encoding="utf-8"?>
 <user login="mwilson">
     <application id="1850" name="AbiWord" description="Compose, edit,
 and view documents">   
@@ -634,8 +634,7 @@ and view documents">
       OVD application:
     </para>
     <screen>
-      <![CDATA[
-<html>
+<![CDATA[<html>
   <head>
     <!-- Load the Ulteo javascript files -->
     <script type="text/javascript" 

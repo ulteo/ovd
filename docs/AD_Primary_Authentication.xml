@@ -80,8 +80,7 @@
     </important>
 
     <screen>
-      <![CDATA[
-# ktpass -princ HTTP/server_name@DOMAIN.NAME -mapuser apache -crypto
+<![CDATA[# ktpass -princ HTTP/server_name@DOMAIN.NAME -mapuser apache -crypto
 DES-CBC-MD5 +DesOnly -ptype KRB5_NT_PRINCIPAL -out
 /etc/apache2/service.keytab
 # chown www-data /etc/apache2/service.keytab
@@ -96,8 +95,7 @@ DES-CBC-MD5 +DesOnly -ptype KRB5_NT_PRINCIPAL -out
     <para>
       Install the auth_kerb module and enable it.
       <screen>
-        <![CDATA[
-# apt-get install libapache2-mod-auth-kerb
+<![CDATA[# apt-get install libapache2-mod-auth-kerb
 # a2enmod auth-kerb]]>
       </screen>
     </para>
@@ -109,8 +107,7 @@ DES-CBC-MD5 +DesOnly -ptype KRB5_NT_PRINCIPAL -out
       role="strong">Directory</emphasis>.
 
       <screen>
-        <![CDATA[
-AuthName "Kerberos Login"
+<![CDATA[AuthName "Kerberos Login"
 AuthType Kerberos
 Krb5Keytab /etc/apache2/service.keytab
 KrbAuthRealms DOMAIN.NAME
@@ -124,8 +121,7 @@ Require valid-user]]>
   <para>
     Restart Apache. 
     <screen>
-      <![CDATA[
-# /etc/init.d/apache2 reload]]>
+<![CDATA[# /etc/init.d/apache2 reload]]>
     </screen>
   </para>
   </section>

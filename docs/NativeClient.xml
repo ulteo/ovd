@@ -99,8 +99,7 @@
             </para>
           </important>
           <screen>
-            <![CDATA[
-deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main
+<![CDATA[deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main
 deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/gold/ubuntu lucid main]]>
           </screen>
         </listitem>
@@ -126,8 +125,7 @@ deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/gold/ubuntu lucid main]]>
             Uncompress the archive:
           </para>
           <screen>
-            <![CDATA[
-# for f in ovd-3.0-*ubuntu-lucid.tar.gz; do tar xzf $f; done]]>
+<![CDATA[# for f in ovd-3.0-*ubuntu-lucid.tar.gz; do tar xzf $f; done]]>
           </screen>
         </listitem>
 
@@ -138,8 +136,7 @@ deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/gold/ubuntu lucid main]]>
             file and add these lines:
           </para>
           <screen>
-            <![CDATA[
-deb file:///root/ovd-3.0-ubuntu-lucid lucid main
+<![CDATA[deb file:///root/ovd-3.0-ubuntu-lucid lucid main
 deb file:///root/ovd-3.0-gold-ubuntu-lucid lucid main]]>
           </screen>
         </listitem>
@@ -154,8 +151,7 @@ deb file:///root/ovd-3.0-gold-ubuntu-lucid lucid main]]>
             Update the package database:
           </para>
           <screen>
-            <![CDATA[
-# apt-get update]]>
+<![CDATA[# apt-get update]]>
           </screen>
           <note>
             <para>
@@ -172,8 +168,7 @@ deb file:///root/ovd-3.0-gold-ubuntu-lucid lucid main]]>
             using gpg:
           </para>
           <screen>
-            <![CDATA[
-# apt-get install ulteo-keyring
+<![CDATA[# apt-get install ulteo-keyring
 # apt-get update]]>
           </screen>
         </listitem>
@@ -189,8 +184,7 @@ deb file:///root/ovd-3.0-gold-ubuntu-lucid lucid main]]>
             package <emphasis>ulteo-ovd-native-client</emphasis>:
           </para>
           <screen>
-            <![CDATA[
-# apt-get install ulteo-ovd-native-client]]>
+<![CDATA[# apt-get install ulteo-ovd-native-client]]>
           </screen>
 	</listitem>
       </itemizedlist>

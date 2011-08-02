@@ -100,8 +100,7 @@
 	  file and add these lines:
         </para>
         <screen>
-	  <![CDATA[
-deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main
+<![CDATA[deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main
 deb http://archive.ulteo.com/ovd/desktop hardy main universe ulteo]]>
         </screen>
       </listitem>
@@ -112,8 +111,7 @@ deb http://archive.ulteo.com/ovd/desktop hardy main universe ulteo]]>
 	  file and add these lines:
         </para>
         <screen>
-	  <![CDATA[
-Package: *
+<![CDATA[Package: *
 Pin: origin archive.ulteo.com
 Pin-Priority: 1001]]>
         </screen>
@@ -124,8 +122,7 @@ Pin-Priority: 1001]]>
 	  Update the package database:
         </para>
         <screen>
-	  <![CDATA[
-# apt-get update]]>
+<![CDATA[# apt-get update]]>
         </screen>
         <note>
           <para>
@@ -142,8 +139,7 @@ Pin-Priority: 1001]]>
           gpg:
         </para>
         <screen>
-          <![CDATA[
-# apt-get install ulteo-keyring
+<![CDATA[# apt-get install ulteo-keyring
 # apt-get update]]>
         </screen>
       </listitem>
@@ -159,8 +155,7 @@ Pin-Priority: 1001]]>
 	  Install the package <emphasis>ulteo-ovd-subsystem</emphasis>:
         </para>
         <screen>
-	  <![CDATA[
-# apt-get install ulteo-ovd-desktop ulteo-ovd-slaveserver-role-aps xfonts-base xfonts-encodings]]>
+<![CDATA[# apt-get install ulteo-ovd-desktop ulteo-ovd-slaveserver-role-aps xfonts-base xfonts-encodings]]>
         </screen>
       </listitem>
 

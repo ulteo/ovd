@@ -44,8 +44,7 @@
 	    Update the package list:
 	  </para>
           <screen>
-	    <![CDATA[
-# apt-get update]]>
+<![CDATA[# apt-get update]]>
 	  </screen>
         </listitem>
         <listitem>
@@ -53,8 +52,7 @@
             Upgrade the system:
           </para>
           <screen>
-	  <![CDATA[
-# apt-get upgrade]]>
+<![CDATA[# apt-get upgrade]]>
 	  </screen>
         </listitem>
       </itemizedlist>
@@ -69,8 +67,7 @@
             Order an upgrade:
           </para>
           <screen>
-	    <![CDATA[
-# yum update]]>
+<![CDATA[# yum update]]>
           </screen>
         </listitem>
       </itemizedlist>
@@ -101,8 +98,7 @@
 	      Update the package list:
 	    </para>
             <screen>
-	      <![CDATA[
-# apt-get update]]>
+<![CDATA[# apt-get update]]>
 	    </screen>
           </listitem>
           <listitem>
@@ -110,8 +106,7 @@
               Upgrade the system:
             </para>
             <screen>
-	      <![CDATA[
-# apt-get upgrade]]>
+<![CDATA[# apt-get upgrade]]>
 	    </screen>
           </listitem>
         </itemizedlist>
@@ -126,8 +121,7 @@
               Order an upgrade:
             </para>
             <screen>
-	      <![CDATA[
-# yum update]]>
+<![CDATA[# yum update]]>
             </screen>
           </listitem>
         </itemizedlist>
