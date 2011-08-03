@@ -73,8 +73,11 @@ class Role(AbstractRole):
 		addr = (Config.address, Config.port)
 		try:
 			GatewayTCPHandler.role = self
-			self.server = TCPServer(addr, GatewayTCPHandler)
+			self.server = TCPServer(addr, GatewayTCPHandler, bind_and_activate=False)
 			self.server.allow_reuse_address = Config.general.server_allow_reuse_address
+			
+			self.server.server_bind()
+			self.server.server_activate()
 		except socket.error, e:
 			Logger.error("Gateway:: socket init: %s" % e)
 			return False
