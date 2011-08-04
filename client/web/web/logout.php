@@ -30,6 +30,9 @@ function return_error($errno_, $errstr_) {
 	return $dom->saveXML();
 }
 
+if (! array_key_exists('mode', $_POST))
+	$_POST['mode'] = 'logout';
+
 header('Content-Type: text/xml; charset=utf-8');
 
 $dom = new DomDocument('1.0', 'utf-8');
