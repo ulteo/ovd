@@ -272,7 +272,7 @@ function show_step2() {
   echo '<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">';
   echo '<tr>';
   	echo '<td style="text-align: left;">';
-  	echo '<input type="submit" name="submit_previous" value="'._('Previous').'" />';
+  	echo '<input type="button" name="submit_previous" value="'._('Previous').'" onclick="history.back();" />';
   	echo '</td>';
   	echo '<td style="text-align: right;">';
   	echo '<input type="submit" name="submit_next" value="'._('Next').'" />';
@@ -381,7 +381,7 @@ function show_step3() {
   echo '</tr>';
   echo '<tr>';
   echo '<td style="text-align: left;">';
-  echo '<input type="submit" name="submit_previous" value="'._('Previous').'" />';
+  echo '<input type="button" name="submit_previous" value="'._('Previous').'" onclick="history.back();" />';
   echo '</td>';
   echo '<td style="text-align: right;">';
   if ($has_applications)
@@ -422,7 +422,7 @@ function show_step4() {
   echo '<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">';
   echo '<tr>';
   	echo '<td style="text-align: left;">';
-  	echo '<input type="submit" name="submit_previous" value="'._('Previous').'" />';
+  	echo '<input type="button" name="submit_previous" value="'._('Previous').'" onclick="history.back();" />';
   	echo '</td>';
   	echo '<td style="text-align: right;">';
   	echo '<input type="submit" name="submit_next" value="'._('Next').'" />';
@@ -554,7 +554,7 @@ function show_step5() {
   echo '<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">';
   echo '<tr>';
   	echo '<td style="text-align: left;">';
-  	echo '<input type="submit" name="submit_previous" value="'._('Previous').'" />';
+  	echo '<input type="button" name="submit_previous" value="'._('Previous').'" onclick="history.back();" />';
   	echo '</td>';
   	echo '<td style="text-align: right;">';
   	echo '<input type="submit" name="submit_next" value="'._('Confirm').'" />';
