@@ -45,7 +45,7 @@ CONFFILE=/etc/ulteo/subsystem.conf
 [ -f "$CONFFILE" ] && . $CONFFILE
 [ -z "$CHROOTDIR" ] && CHROOTDIR=/opt/ulteo
 
-CHROOT="LANG=en_US.utf8 chroot $CHROOTDIR"
+CHROOT="env LANG=en_US.utf8 chroot $CHROOTDIR"
 
 do_start() {
     [ -d "$CHROOTDIR" ] || return 1
