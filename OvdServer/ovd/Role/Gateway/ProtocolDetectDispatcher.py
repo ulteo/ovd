@@ -111,6 +111,8 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 				
 				# Session Manager
 				if path.startswith("/ovd/client/"):
+					if path == "/ovd/client/start.php":
+						client.set_rewrite_xml(self.f_ctrl)
 					server = HttpServerCommunicator(self.sm, communicator=client)
 
 				# Administration
@@ -124,8 +126,6 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 					if not self.wc:
 						raise HTTPException(httplib.FORBIDDEN, path)
 					server = HttpServerCommunicator(self.wc, communicator=client)
-					if path == "/ovd/client/start.php":
-						client.set_rewrite_xml(self.f_ctrl)
 
 				# Unknown URL
 				else:
