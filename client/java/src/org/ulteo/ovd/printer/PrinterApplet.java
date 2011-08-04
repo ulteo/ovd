@@ -106,7 +106,7 @@ public class PrinterApplet extends Applet implements Runnable {
 		}
 		String printerName = spoolFile.getParentFile().getName();
 		try{
-			spool.put(new OVDJob(spoolPath, printerName));
+			spool.put(new OVDJob(spoolPath, printerName, false));
 		}
 		catch (InterruptedException e){
 		}
@@ -114,7 +114,7 @@ public class PrinterApplet extends Applet implements Runnable {
 	}
 	
 	public void spoolJob(String printerName, String pdfFilename) {
-		this.spool.add(new OVDJob(pdfFilename, printerName));
+		this.spool.add(new OVDJob(pdfFilename, printerName, false));
 	}
 	
 	private synchronized boolean isRunning() {

@@ -52,11 +52,8 @@ public class OVDAppletPrinterThread implements OVDPrinterThread {
 	}
 	
 	
-	public void run() {
-	}
-
-
-	public void printPages(String printerName, String pdfFilename) {
+	@Override
+	public void printPages(String printerName, String pdfFilename, boolean externalMode) {
 		if (printerName == null || printerName.equals("")) {
 			printerName = OVDAppletPrinterThread.filePrinterName;
 		}
