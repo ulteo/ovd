@@ -396,6 +396,7 @@ function server_display_role_aps($server, $var) {
 		}
 		echo '<tr><td></td><td><input type="submit" value="'._('Replicate on those servers').'" /></td></tr>';
 		echo '</table>';
+		echo '</form>';
 		echo "</div>"; // div replication
 	}
 
