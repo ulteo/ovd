@@ -310,7 +310,7 @@ public class RdpConnectionOvd extends RdpConnection {
 	 * @return DiskManager instance
 	 */
 	public DiskManager getDiskManager() {
-		return this.diskManager;
+		return RdpConnectionOvd.diskManager;
 	}
 
 	public void sendLogoff() throws OvdException {

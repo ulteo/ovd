@@ -137,7 +137,7 @@ public class OVDPrinter extends Printer {
 			logger.warn("No printer to process the job " + uuid + ".pdf");
 			return RdpdrChannel.STATUS_CANCELLED;
 		}
-		OVDPrinter.printerThread.printPages(this.printer_name, pdfFilename, this.externalMode);
+		OVDPrinter.printerThread.printPages(this.printer_name, pdfFilename, OVDPrinter.externalMode);
 		return RdpdrChannel.STATUS_SUCCESS;
 	}
 }
