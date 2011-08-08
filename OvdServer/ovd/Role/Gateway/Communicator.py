@@ -35,6 +35,7 @@ class Communicator(asyncore.dispatcher):
 		asyncore.dispatcher.__init__(self, sock=sock)
 		self.communicator = None
 		self._buffer = ''
+		self.closed = False
 	
 	
 	def set_communicator(self, communicator):
@@ -45,8 +46,17 @@ class Communicator(asyncore.dispatcher):
 		self._buffer += self.recv(8192)
 	
 	
+        def readable(self):
+		if self.communicator is not None:
+			return not self.communicator.closed
+		return True
+	
+	
 	def writable(self):
-		return len(self.communicator._buffer) > 0
+		_writable = len(self.communicator._buffer) > 0
+		if _writable is False and self.communicator.closed is True:
+			self.close()
+		return _writable
 	
 	
 	def handle_write(self):
@@ -56,14 +66,15 @@ class Communicator(asyncore.dispatcher):
 	
 	def handle_close(self):
 		self.close()
-		if self.communicator:
-			self.communicator.close()
+		self.closed = True
 
 
 
 class SSLCommunicator(Communicator):
 
 	def readable(self):
+		if Communicator.readable(self) is False:
+			return False
 		# hack to support SSL layer
 		while self.socket.pending() > 0:
 			self.handle_read_event()
@@ -76,7 +87,7 @@ class SSLCommunicator(Communicator):
 		except SSL.SysCallError:
 			self.handle_close()
 		except SSL.ZeroReturnError:
-			self.close()
+			self.handle_close()
 		except SSL.WantReadError:
 			return -1
 		except SSL.Error, e:
