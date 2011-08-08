@@ -121,6 +121,10 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			Logger.error(co.getServer()+": Failed to add ovd applications listener: "+ex);
 		}
 		
+		this.desktopIntegrator = new DesktopIntegrator(this.system, new ArrayList<RdpConnectionOvd>(this.connections), this.smComm);
+		this.desktopIntegrator.addDesktopIntegrationListener(this);
+		this.desktopIntegrator.start();
+		
 		for (@SuppressWarnings("unused") Application app : co.getAppsList()) {
 			int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
 			this.obj.updateProgress(LoadingStatus.CLIENT_INSTALL_APPLICATION, subStatus);
@@ -297,10 +301,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			if (this.createRDPConnection(server) == null)
 				continue;
 		}
-		
-		this.desktopIntegrator = new DesktopIntegrator(this.system, new ArrayList<RdpConnectionOvd>(this.connections), this.smComm);
-		this.desktopIntegrator.addDesktopIntegrationListener(this);
-		this.desktopIntegrator.start();
 
 		this.obj.updateProgress(LoadingStatus.SM_GET_APPLICATION, 100);
 		this.ApplicationIndex = 0;
