@@ -100,6 +100,7 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 			if rdp:
 				token = rdp.group(1)
 				fqdn = self.f_ctrl.send(("digest_token", token))
+				Logger.debug("ProtocolDetectDispatcher:: request: RDP (%s -> %s)" % (fqdn, token))
 				if not fqdn:
 					raise Exception('token authorization failed for: ' + token)
 				server = OvdServerCommunicator((fqdn, self.rdp_port), communicator=client)
