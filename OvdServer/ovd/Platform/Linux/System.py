@@ -278,11 +278,6 @@ class System(AbstractSystem):
 			return False
 		
 		return True
-
-
-	@staticmethod
-	def detachFatherProcess():
-		os.setpgrp()
 	
 	
 	@staticmethod

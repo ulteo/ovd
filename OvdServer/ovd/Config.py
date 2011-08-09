@@ -57,7 +57,7 @@ class Config:
 	SM_SERVER_PORT = 1111
 	SLAVE_SERVER_PORT = 1112
 	
-	server_allow_reuse_address = False
+	server_allow_reuse_address = Platform.System.tcp_server_allow_reuse_address()
 	
 	aps_multithread = False
 	
