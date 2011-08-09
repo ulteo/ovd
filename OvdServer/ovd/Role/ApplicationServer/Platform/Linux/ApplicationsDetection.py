@@ -75,9 +75,10 @@ class ApplicationsDetection():
 	def get(self):
 		applications = {}
 		files = self.find_files()
-		parser = ConfigParser.ConfigParser()
 		
 		for filename in files:
+			parser = ConfigParser.ConfigParser()
+			
 			try:
 				parser.read(filename)
 			except ConfigParser.MissingSectionHeaderError:
