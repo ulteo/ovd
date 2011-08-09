@@ -640,8 +640,9 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		Window wnd = (Window) this.windows.get(name);
 		if (! wnd.isFocusableWindow()) {
 			wnd.setFocusableWindowState(true);
-			SwingTools.invokeLater(GUIActions.requestFocus(wnd));
 		}
+		
+		SwingTools.invokeLater(GUIActions.requestFocus(wnd));
 		
 		return true;
 	}
