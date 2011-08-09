@@ -309,20 +309,6 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 			return this.processFocus(id);
 		}
-		else if (tokens[0].equals("FOCUS"))
-		{
-			if (numTokens < 3)
-				return false;
-
-			try {
-				id = Long.parseLong(tokens[2]);
-			} catch(NumberFormatException nfe) {
-				logger.error("Couldn't parse argument from " + tokens[0] + " seamless command.", nfe);
-				return false;
-			}
-
-			return this.processFocus(id);
-		}
 		else if (tokens[0].equals("DEBUG"))
 		{
 			logger.debug("SeamlessRDP Debug: " + line);
