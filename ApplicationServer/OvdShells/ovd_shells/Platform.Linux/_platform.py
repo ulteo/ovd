@@ -141,6 +141,9 @@ def transformCommand(cmd_, args_):
 		cmd = cmd_
 		args = args_
 		args.reverse()
+
+		if not "%" in cmd and len(args) > 0:
+			cmd +=" %f"
 		
 		while len(args)>0:
 			i = cmd.find("%")
