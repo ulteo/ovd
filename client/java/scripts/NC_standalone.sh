@@ -1,4 +1,5 @@
-#! /bin/sh -e
+#! /bin/sh
+set -e
 
 CURDIR=$(dirname $(readlink -f $0))/..
 NAME=ulteo-ovd-native-client-standalone
