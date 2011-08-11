@@ -23,9 +23,7 @@ install -m 744 $CURDIR/scripts/install_NC_standalone.sh $DESTDIR/install
 echo $OVD_VERSION > $DESTDIR/VERSION
 
 python autogen
-ant ovdNativeClient.install -Ddestdir=$TEMPDIR -Dprefix=/usr 
-
-#-Dlanguages=true
+ant ovdNativeClient.install -Ddestdir=$TEMPDIR -Dprefix=/usr -Dlanguages=true
 
 install -m 744 $CURDIR/scripts/OVDNativeClient_standalone $DESTDIR/OVDNativeClient
 cp $TEMPDIR/usr/share/java/OVDNativeClient.jar $DESTDIR
