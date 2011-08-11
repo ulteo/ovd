@@ -3,13 +3,15 @@ set -e
 
 CURDIR=$(dirname $(readlink -f $0))/..
 NAME=ulteo-ovd-native-client-standalone
-VERSION=99.99
 TEMPDIR=$CURDIR/temp
 
-if [ -z "$OVD_VERSION" -a -d .svn ]; then
-    export OVD_VERSION=$VERSION.svn$(svnversion -c $SVN_DIR | cut -d':' -f2)
-else
-    export OVD_VERSION=$VERSION
+if [ -z "$OVD_VERSION" ]; then
+    VERSION=99.99
+    if [ -d .svn ]; then
+        export OVD_VERSION=$VERSION.svn$(svnversion -c $SVN_DIR | cut -d':' -f2)
+    else
+        export OVD_VERSION=$VERSION
+    fi
 fi
 DESTDIR=$CURDIR/dist/$NAME-$OVD_VERSION
 
