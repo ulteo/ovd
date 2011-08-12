@@ -53,5 +53,6 @@ void       s_menu_refresh                (SMenu *sm);
 gboolean   s_menu_vfs_monitor_get_active (SMenu *sm);
 void       s_menu_vfs_monitor_set_active (SMenu *sm,
                                           gboolean active);
+gboolean menu_is_activated (GtkWidget *menu);
 
 #endif /* __S_MENU_H__ */
