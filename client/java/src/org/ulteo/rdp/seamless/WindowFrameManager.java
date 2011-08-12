@@ -87,24 +87,22 @@ public class WindowFrameManager implements MouseListener, MouseMotionListener {
 
 		RectWindow rw = sw.getRectWindow();
 
-		MouseClick click = null;
-		if (this.currentClick == null) {
+		MouseClick click = this.currentClick;
+		if (click == null)
 			click = new MouseClick(this.lastMouseEvent, this.properties);
-
-			MouseEvent releaseClick = click.getReleaseEvent();
-			sw.processMouseEvent(releaseClick, SeamlessMovingResizing.MOUSE_RELEASED);
-		}
-		else
-			click = this.currentClick;
-
+		
 		if (click.getType() != MouseClick.MOVING_CLICK
 			&& click.getType() != MouseClick.RESIZING_CLICK)
 		{
 			sw.processMouseEvent(me, SeamlessMovingResizing.MOUSE_DRAGGED);
 
 			this.currentClick = null;
-			this.lastMouseEvent = null;
 			return;
+		}
+
+		if (this.currentClick == null) {
+			MouseEvent releaseClick = click.getReleaseEvent();
+			sw.processMouseEvent(releaseClick, SeamlessMovingResizing.MOUSE_RELEASED);
 		}
 
 		click.update(me);
