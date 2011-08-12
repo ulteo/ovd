@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <jni.h>
 #include <X11/Xatom.h>
 #include <X11/X.h>
@@ -128,4 +129,50 @@ JNIEXPORT jintArray JNICALL Java_org_ulteo_utils_jni_WorkArea_getWorkAreaSizeFor
 	}
 
 	return area;
+}
+
+JNIEXPORT void JNICALL Java_org_ulteo_utils_jni_WorkArea_setFullscreenWindow(JNIEnv *env, jclass class, jlong window_id, jboolean enabled) {
+	Display* dpy;
+	Atom wmState;
+	Atom wmStateFs;
+	Window root, parent, *children = NULL;
+	unsigned int numchildren;
+	XEvent event;
+
+	dpy = XOpenDisplay("");
+	if (dpy == NULL) {
+		fprintf(stderr, "Cannot open the current display");
+		return;
+	}
+	
+	wmState = XInternAtom(dpy, "_NET_WM_STATE", False);
+	wmStateFs = XInternAtom(dpy, "_NET_WM_STATE_FULLSCREEN", False);
+
+	if (wmState == None || wmStateFs == None) {
+		fprintf(stderr, "State atoms not found\n");
+		return;
+	}
+
+	if (!XQueryTree(dpy, window_id, &root, &parent, &children, &numchildren)) {
+		fprintf(stderr, "XQueryTree failed\n");
+		return;
+	}
+
+	if (children != NULL) {
+		XFree(children);
+	}
+
+	memset(&event, 0, sizeof(event));
+	event.xclient.type = ClientMessage;
+	event.xclient.message_type = wmState;
+	event.xclient.display = dpy;
+	event.xclient.window = window_id;
+	event.xclient.format = 32;
+	event.xclient.data.l[0] = enabled ? 1 : 0; // 1==add, 0==remove
+	event.xclient.data.l[1] = wmStateFs;
+
+	XSendEvent(dpy, root, False, SubstructureRedirectMask | SubstructureNotifyMask, &event);
+	XSync(dpy, False);
+
+	XCloseDisplay(dpy);
 }

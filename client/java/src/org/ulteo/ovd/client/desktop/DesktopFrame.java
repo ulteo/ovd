@@ -118,11 +118,15 @@ public class DesktopFrame extends JFrame implements WindowListener, InputListene
 		this.canvas.getInput().addKeyStroke(this.fullscreen_keystroke);
 		this.canvas.getInput().addInputListener(this);
 		this.scrollFrame.setCanvas(this.canvas);
+
+		GUIActions.setFullscreen(this);
 	}
 
 	private void escapeFromFullsreen() {
 		if (! this.fullscreen || this.scrollFrame == null || ! this.isVisible() || this.scrollFrame.isVisible())
 			return;
+
+		GUIActions.unsetFullscreen(this);
 
 		this.setVisible(false);
 		this.scrollFrame.setVisible(true);

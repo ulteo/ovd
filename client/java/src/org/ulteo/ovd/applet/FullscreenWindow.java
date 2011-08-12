@@ -22,21 +22,17 @@
 package org.ulteo.ovd.applet;
 
 import java.awt.Dimension;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.GraphicsEnvironment;
-import java.awt.GraphicsDevice;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import org.ulteo.Logger;
 import org.ulteo.gui.GUIActions;
-import org.ulteo.gui.SwingTools;
 import org.ulteo.ovd.client.OvdClient;
 
 
-public class FullscreenWindow extends JFrame implements FocusListener, WindowListener {
+public class FullscreenWindow extends JFrame implements WindowListener {
 	private OvdClient client = null;
 
 	public FullscreenWindow(OvdClient client_) {
@@ -45,8 +41,8 @@ public class FullscreenWindow extends JFrame implements FocusListener, WindowLis
 		this.client = client_;
 
 		this.setUndecorated(true);
+		this.setAlwaysOnTop(true);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.addFocusListener(this);
 		this.addWindowListener(this);
 	}
 	
@@ -55,28 +51,11 @@ public class FullscreenWindow extends JFrame implements FocusListener, WindowLis
 	}
 	
 	public void setFullscreen() {
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		GraphicsDevice gs = ge.getDefaultScreenDevice();
-		gs.setFullScreenWindow(this);
-		this.validate();
+		GUIActions.setFullscreen(this);
 	}
 	
 	public void unFullscreen() {
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		GraphicsDevice gs = ge.getDefaultScreenDevice();
-		gs.setFullScreenWindow(null);
-	}
-	
-	// FocusListener's method interface
-	
-	@Override
-	public void focusGained(FocusEvent fe) {
-		SwingTools.invokeLater(GUIActions.setAlwaysOnTop(this, true));
-	}
-	
-	@Override
-	public void focusLost(FocusEvent fe) {
-		SwingTools.invokeLater(GUIActions.setAlwaysOnTop(this, false));
+		GUIActions.unsetFullscreen(this);
 	}
 
 	// WindowListener method interface

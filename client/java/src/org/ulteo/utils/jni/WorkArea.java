@@ -22,8 +22,10 @@ package org.ulteo.utils.jni;
 
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.awt.Window;
 import org.ulteo.Logger;
 import org.ulteo.ovd.integrated.OSTools;
+import sun.awt.X11.XBaseWindow;
 
 public class WorkArea {
 	private static boolean loadLibrary = true;
@@ -49,4 +51,23 @@ public class WorkArea {
 	}
 
 	private static native int[] getWorkAreaSizeForX();
+
+	public static long getX11WindowId(Window wnd) {
+		XBaseWindow peer = (XBaseWindow) wnd.getPeer();
+		if (peer != null) {
+		    return peer.getWindow();
+		}
+
+		return 0;
+	}
+
+	public static void setFullscreenWindow(Window wnd, boolean enabled) {
+		if (! WorkArea.loadLibrary || ! OSTools.isLinux())
+			return;
+
+		long x11_id = getX11WindowId(wnd);
+		WorkArea.setFullscreenWindow(x11_id, enabled);
+	}
+
+	private static native void setFullscreenWindow(long window_id, boolean enabled);
 }

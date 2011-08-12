@@ -24,6 +24,8 @@ package org.ulteo.gui;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -43,6 +45,7 @@ import javax.swing.JSlider;
 import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
 import org.ulteo.Logger;
+import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.utils.jni.WorkArea;
 
 public class GUIActions {
@@ -658,5 +661,36 @@ public class GUIActions {
 
 			this.wnd.setLocation(x, y);
 		}
+	}
+
+	public static void setFullscreen(Window wnd) {
+		if (! wnd.isVisible()) {
+			try {
+				SwingTools.invokeAndWait(GUIActions.setVisible(wnd, true));
+			} catch (Exception ex) {
+				Logger.error("[GUIActions.setFullscreen] Failed to make window visible: "+ex.getMessage());
+				return;
+			}
+		}
+
+		if (OSTools.isLinux()) {
+			WorkArea.setFullscreenWindow(wnd, true);
+			return;
+		}
+
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice gs = ge.getDefaultScreenDevice();
+		gs.setFullScreenWindow(wnd);
+	}
+
+	public static void unsetFullscreen(Window wnd) {
+		if (OSTools.isLinux()) {
+			WorkArea.setFullscreenWindow(wnd, false);
+			return;
+		}
+
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice gs = ge.getDefaultScreenDevice();
+		gs.setFullScreenWindow(null);
 	}
 }
