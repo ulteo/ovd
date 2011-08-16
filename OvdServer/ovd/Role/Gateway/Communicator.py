@@ -28,7 +28,7 @@ import xml.etree.ElementTree as parser
 from HttpMessage import HttpMessage, page_error
 from Config import Config
 from ovd.Logger import Logger
-from ovd.util import gunzip, gzip
+from Utils import gunzip, gzip
 
 from OpenSSL import SSL
 
