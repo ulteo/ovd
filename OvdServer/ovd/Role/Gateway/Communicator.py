@@ -46,7 +46,7 @@ class Communicator(asyncore.dispatcher):
 		self._buffer += self.recv(8192)
 	
 	
-        def readable(self):
+	def readable(self):
 		if self.communicator is not None:
 			return not self.communicator.closed
 		return True
