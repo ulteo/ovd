@@ -3,6 +3,7 @@
 # Copyright (C) 2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2011
+# Author Samuel BOVEE <samuel@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -24,13 +25,17 @@ from ovd.Logger import Logger
 
 class Config:
 	general = None
+
 	address = "0.0.0.0"
 	port = 443
+	https_port = 443
+	rdp_port = 3389
 	max_process = 10
 	max_connection = 100
 	process_timeout = 60
 	web_client = None
 	admin_redirection = False
+	http_keep_alive = True
 
 	@staticmethod
 	def init(infos):
@@ -72,7 +77,17 @@ class Config:
 		if infos.has_key("admin_redirection"):
 			if infos["admin_redirection"].lower() == "true":
 				Config.admin_redirection = True
+			elif infos["admin_redirection"].lower() == "false":
+				Config.admin_redirection = False
 			else:
 				Logger.error("Invalid value for 'admin_redirection' option")
+
+		if infos.has_key("http_keep_alive"):
+			if infos["http_keep_alive"].lower() == "false":
+				Config.http_keep_alive = False
+			elif infos["http_keep_alive"].lower() == "true":
+				Config.http_keep_alive = True
+			else:
+				Logger.error("Invalid value for 'http_keep_alive' option")
 		
 		return True

@@ -34,14 +34,12 @@ from OpenSSL import SSL
 
 class ConnectionPoolProcess(Process):
 	
-	def __init__(self, child_pipes, father_pipes, sm, wc, rdp_port):
+	def __init__(self, child_pipes, father_pipes, ssl_ctx):
 		Process.__init__(self)
 		
 		self.pipes = child_pipes
 		self.father_pipes = father_pipes
-		self.sm = sm
-		self.wc = wc
-		self.rdp_port = rdp_port
+		self.ssl_ctx = ssl_ctx
 		
 		self.f_control = None
 		self.t_asyncore = None
@@ -78,12 +76,10 @@ class ConnectionPoolProcess(Process):
 			
 			Logger.debug("Gateway:: new connection => %s" % str(sock.getpeername()))
 			
-			ssl_conn = SSL.Connection(self.sm[1], sock)
+			ssl_conn = SSL.Connection(self.ssl_ctx, sock)
 			ssl_conn.set_accept_state()
-			proto = ProtocolDetectDispatcher(ssl_conn, self.f_control, self.sm, self.wc, self.rdp_port)
-			proto.set_admin_redirection(Config.admin_redirection)
+			ProtocolDetectDispatcher(ssl_conn, self.f_control, self.ssl_ctx)
 
-			
 			# reload asyncore if stopped
 			if self.t_asyncore is None or not self.t_asyncore.is_alive():
 				# timeout needed for more SSL layer reactivity

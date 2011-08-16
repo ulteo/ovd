@@ -39,10 +39,6 @@ from OpenSSL import SSL
 
 class Role(AbstractRole):
 	
-	HTTPS_PORT = 443
-	RDP_PORT = 3389
-	
-	
 	@staticmethod
 	def getName():
 		return "Gateway"
@@ -104,12 +100,7 @@ class Role(AbstractRole):
 		self.pipes = (p10, p11)
 		child_pipes = (p01, p00)
 		
-		sm = ((Config.general.session_manager, self.HTTPS_PORT), self.ssl_ctx)
-		if Config.web_client is not None:	
-			wc = ((Config.web_client, self.HTTPS_PORT), self.ssl_ctx)
-		else:
-			wc = None
-		proc = ConnectionPoolProcess(child_pipes, self.pipes, sm, wc, self.RDP_PORT)
+		proc = ConnectionPoolProcess(child_pipes, self.pipes, self.ssl_ctx)
 		proc.start()
 		child_pipes[0].close()
 		child_pipes[1].close()
