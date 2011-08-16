@@ -48,8 +48,7 @@ def rewrite(buf, xml, ctrl):
 		for element in xml.getiterator():
 			if element.tag.upper() == "SESSION":
 				element.attrib["mode_gateway"] = "on"
-				subNodes = element.getchildren()
-				for node in subNodes:
+				for node in element.getchildren():
 					if node.tag.upper() == "SERVER":
 						cmd = ('insert_token', node.attrib["fqdn"])
 						node.attrib["token"] = ctrl.send(cmd)
