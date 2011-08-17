@@ -52,7 +52,7 @@ public class GUIActions {
 	private static GUIActions Actions = new GUIActions();
 
 	public static Image DEFAULT_APP_ICON = null;
-	public static Image ULTEO_ICON = null;
+	private static Image ULTEO_ICON = null;
 	public static Rectangle SCREEN_BOUNDS = null;
 
 	static {
@@ -76,6 +76,13 @@ public class GUIActions {
 		}
 
 		ULTEO_ICON = Toolkit.getDefaultToolkit().getImage(url);
+	}
+	
+	public static Image getUlteoIcon() {
+		if (ULTEO_ICON == null)
+			initUlteoIcon();
+		
+		return ULTEO_ICON;
 	}
 
 	private static void initScreenBounds() {
