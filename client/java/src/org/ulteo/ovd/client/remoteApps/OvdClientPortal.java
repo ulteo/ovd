@@ -167,8 +167,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	protected void hide(RdpConnectionOvd rc) {
 		for (Application app : rc.getAppsList()) {
 			this.portal.getApplicationPanel().toggleAppButton(app, false);
-			this.system.uninstall(app);
 		}
+		
+		this.unpublish(rc);
 	}
 	
 	
