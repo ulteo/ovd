@@ -54,13 +54,19 @@ public class FilesOp {
 	 * 		if the resource wanted is not found
 	 */
 	public static File exportJarResource(String path) throws FileNotFoundException {
+		return FilesOp.exportJarResource(path, System.getProperty("java.io.tmpdir"));
+	}
+	public static File exportJarResource(String path, String out_path) throws FileNotFoundException {
 		path = "/resources/" + path;
 		InputStream jarResource = FilesOp.class.getResourceAsStream(path);
 		if (jarResource == null)
 			throw new FileNotFoundException(String.format("Unable to find required resource '%s' in the jar", path));
 
 		String resName = path.split("/")[path.split("/").length - 1];
-		File outputFile = new File(System.getProperty("java.io.tmpdir") + File.separatorChar + resName);
+
+		if (! out_path.endsWith(File.separator))
+			out_path += File.separator;
+		File outputFile = new File(out_path + resName);
 		try {
 			FileOutputStream fos = new FileOutputStream(outputFile);
 			int c = 0;
