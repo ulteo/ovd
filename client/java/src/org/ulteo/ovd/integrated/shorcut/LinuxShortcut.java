@@ -71,6 +71,7 @@ public class LinuxShortcut extends Shortcut {
 			pw.println("Name="+app.getName());
 			pw.println(String.format("Exec= %s %s %d", launcher, this.token, app.getId()));
 			pw.println("Icon="+Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".png");
+			pw.println("Categories=OVD;");
 			pw.print("MimeType=");
 			for (String mime : app.getSupportedMimeTypes()) {
 				if (first)

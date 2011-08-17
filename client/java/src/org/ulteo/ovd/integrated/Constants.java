@@ -37,6 +37,7 @@ public final class Constants {
 	public static String JAVA_LAUNCHER; 
 	
 	public static final String PATH_CONF = ((OSTools.isWindows()) ? WindowsPaths.getAppDataPath()+Constants.FILE_SEPARATOR : Constants.HOMEDIR+Constants.FILE_SEPARATOR+".") + "ulteo";
+	public static final String PATH_ULTEO_TMP = Constants.PATH_CONF+Constants.FILE_SEPARATOR+"tmp";
 	public static final String PATH_OVD_CONF = Constants.PATH_CONF+Constants.FILE_SEPARATOR+"ovd";
 	public static final String PATH_NATIVE_CLIENT_CONF = Constants.PATH_OVD_CONF+Constants.FILE_SEPARATOR+"client";
 

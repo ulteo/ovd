@@ -38,18 +38,121 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import org.ulteo.Logger;
+import org.ulteo.gui.GUIActions;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.client.cache.PngManager;
 import org.ulteo.ovd.integrated.shorcut.LinuxShortcut;
+import org.ulteo.utils.FilesOp;
 
 public class SystemLinux extends SystemAbstract {
 	private final String ulteo_graphic_refresh_application = "xfdesktop --reload";
 	private final String desktop_refresh_application = "update-desktop-database";
 
+	private static String HOME_PATH;
+	static {
+		HOME_PATH = System.getProperty("user.home");
+		if (! HOME_PATH.endsWith(File.separator))
+			HOME_PATH += File.separator;
+	}
+
+	// Main menu constants - Begin
+	private static final String MENU_ICON_NAME = "ulteo-ovd.png";
+	private static final String APPLICATIONSMENU_FILE_NAME = "applications.menu";
+	private static final String MENU_FILE_NAME = "UlteoOVD.menu";
+	private static final String DIRECTORY_FILE_NAME = "UlteoOVD.directory";
+
+	private static final String INTEGRATION_PATH = "integration/linux/";
+
+	private static final String APPLICATIONSMENU_FILE_OUTPATH = HOME_PATH + ".config/menus/";
+	private static final String MENU_FILE_OUTPATH = APPLICATIONSMENU_FILE_OUTPATH + "applications-merged/";
+	private static final String DIRECTORY_FILE_OUTPATH = HOME_PATH + ".local/share/desktop-directories/";
+	// Main menu constants - End
+	
+	private boolean isApplicationsMenuExisting = true;
+
 	public SystemLinux(String sm) {
 		super(new PngManager(), sm);
 
 		this.shortcut = new LinuxShortcut();
+	}
+
+	public void installSystemMenu() {
+		// Create folders
+		new File(MENU_FILE_OUTPATH).mkdirs();
+		new File(DIRECTORY_FILE_OUTPATH).mkdirs();
+		
+		// applications.menu
+		if (! new File(APPLICATIONSMENU_FILE_OUTPATH + APPLICATIONSMENU_FILE_NAME).exists()) {
+			this.isApplicationsMenuExisting = false;
+			try {
+				FilesOp.exportJarResource(INTEGRATION_PATH + APPLICATIONSMENU_FILE_NAME, APPLICATIONSMENU_FILE_OUTPATH);
+			} catch (FileNotFoundException ex) {
+				Logger.error("Failed to create main menu section: "+ex.getMessage());
+				return;
+			}
+		}
+
+		// Ulteo menu
+		try {
+			FilesOp.exportJarResource(INTEGRATION_PATH + MENU_FILE_NAME, MENU_FILE_OUTPATH);
+			FilesOp.exportJarResource(INTEGRATION_PATH + DIRECTORY_FILE_NAME, DIRECTORY_FILE_OUTPATH);
+		} catch (FileNotFoundException ex) {
+			Logger.error("Failed to create menu section: "+ex.getMessage());
+			return;
+		}
+
+		// Ulteo menu icon
+		try {
+			Image img = GUIActions.getUlteoIcon();
+			int width = img.getWidth(null);
+			int height = img.getWidth(null);
+			
+			if (width != height) {
+				Logger.error("Failed to create menu icon: width != height");
+				return;
+			}
+			
+			BufferedImage buf = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+			buf.getGraphics().drawImage(img, 0, 0, null);
+			
+			File icon = new File(Constants.PATH_ULTEO_TMP + File.separator + MENU_ICON_NAME);
+			icon.getParentFile().mkdirs();
+			ImageIO.write(buf, "png", icon);
+			try {
+				Process proc = Runtime.getRuntime().exec("xdg-icon-resource install --context apps --size "+width+" "+icon.getPath());
+				proc.waitFor();
+			} catch (Exception ex) {
+				Logger.error("Failed to add menu icon: "+ex.getMessage());
+			}
+			icon.delete();
+		} catch (IOException ex) {
+			Logger.error("Failed to set the menu section icon: "+ex.getMessage());
+		}
+	}
+
+	public void clearSystemMenu() {
+		// applications.menu	
+		if (! this.isApplicationsMenuExisting) {
+			File applicationsMenu = new File(APPLICATIONSMENU_FILE_OUTPATH + APPLICATIONSMENU_FILE_NAME);
+			if (applicationsMenu.exists())
+				applicationsMenu.delete();
+		}
+		
+		// Ulteo menu
+		File menu = new File(MENU_FILE_OUTPATH + MENU_FILE_NAME);
+		if (menu.exists())
+			menu.delete();
+
+		File directory = new File(DIRECTORY_FILE_OUTPATH + DIRECTORY_FILE_NAME);
+		if (directory.exists())
+			directory.delete();
+
+		// Ulteo menu icon
+		try {
+			Runtime.getRuntime().exec("xdg-icon-resource uninstall --context apps --size 64 "+MENU_ICON_NAME.substring(0, MENU_ICON_NAME.length() - 4));
+		} catch (IOException ex) {
+			Logger.error("Failed to remove menu icon: "+ex.getMessage());
+		}
 	}
 
 	public static void cleanAll() {
@@ -110,6 +213,8 @@ public class SystemLinux extends SystemAbstract {
 			}
 
 			File xdgShortcut = new File(Constants.PATH_XDG_APPLICATIONS+Constants.FILE_SEPARATOR+app.getId()+Constants.SHORTCUTS_EXTENSION);
+			xdgShortcut.getParentFile().mkdirs();
+			
 			BufferedOutputStream xdgStream = null;
 			try {
 				xdgStream = new BufferedOutputStream(new FileOutputStream(xdgShortcut), 4096);

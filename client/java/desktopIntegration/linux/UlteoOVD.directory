@@ -1,0 +1,7 @@
+## This file have to be located in ~/.config/menus/applications-merged/
+
+[Desktop Entry]
+Name=Ulteo OVD Applications
+Comment=Ulteo OVD applications
+Icon=ulteo-ovd
+Type=Directory

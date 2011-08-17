@@ -1,0 +1,22 @@
+<!--
+This file have to be located in ~/.config/menus/applications-merged/
+-->
+
+<!DOCTYPE Menu
+  PUBLIC '-//freedesktop//DTD Menu 1.0//EN'
+  'http://standards.freedesktop.org/menu-spec/menu-1.0.dtd'>
+<Menu>
+	<Name>Applications</Name>
+
+	<!-- Ulteo OVD -->
+	<Menu>
+		<Name>Ulteo OVD applications</Name>
+		<Directory>UlteoOVD.directory</Directory>
+		<Include>
+			<And>
+				<Category>OVD</Category>
+			</And>
+		</Include>
+	</Menu>
+	<!-- End Ulteo OVD -->
+</Menu>
