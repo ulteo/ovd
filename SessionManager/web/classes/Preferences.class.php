@@ -399,6 +399,7 @@ class Preferences {
 		$c = new ConfigElement_select('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB');
 		$c->setContentAvailable(array(
 //			'ar_AE'=>'العربي',
+			'bg_BG'=>'Bulgarian'
 			'da-dk'=>'Dansk',
 			'de_DE'=>'Deutsch',
 			'en_GB'=>'English',
