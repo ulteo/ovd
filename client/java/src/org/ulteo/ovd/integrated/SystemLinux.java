@@ -294,16 +294,6 @@ public class SystemLinux extends SystemAbstract {
 		xdgApps = null;
 	}
 
-	protected void associateMimeTypes(Application app) {
-		// ToDo: File association for Linux system
-		Logger.debug("Should associate some mime types with application "+app.getName()+" but it is not implemented yet");
-	}
-
-	protected void disassociateMimeTypes(Application app) {
-		// ToDo: File disassociation for Linux system
-		Logger.debug("Should disassociate some mime types with application "+app.getName()+" but it is not implemented yet");
-	}
-
 	@Override
 	protected void saveIcon(Application app) {
 		File output = new File(Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".png");

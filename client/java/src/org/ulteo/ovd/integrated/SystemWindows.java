@@ -116,14 +116,6 @@ public class SystemWindows extends SystemAbstract {
 		menuItem = null;
 	}
 
-	protected void associateMimeTypes(Application app) {
-		this.fileAssociate.createAppAction(app);
-	}
-
-	protected void disassociateMimeTypes(Application app) {
-		this.fileAssociate.removeAppAction(app);
-	}
-
 	@Override
 	protected void saveIcon(Application app) {
 		File output = new File(Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".ico");

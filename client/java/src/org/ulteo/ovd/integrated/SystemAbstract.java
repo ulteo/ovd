@@ -72,8 +72,23 @@ public abstract class SystemAbstract {
 			SystemLinux.cleanAll();
 	}
 
+	private void associateMimeTypes(Application app) {
+		if (this.fileAssociate == null) {
+			Logger.debug("Should associate some mime types with application "+app.getName()+" but it is not implemented yet");
+			return;
+		}
+		this.fileAssociate.createAppAction(app);
+	}
+
+	private void disassociateMimeTypes(Application app) {
+		if (this.fileAssociate == null) {
+			Logger.debug("Should disassociate some mime types with application "+app.getName()+" but it is not implemented yet");
+			return;
+		}
+		this.fileAssociate.removeAppAction(app);
+	}
+
 	protected abstract void installShortcuts(Application app, boolean showDesktopIcon);
-	protected abstract void associateMimeTypes(Application app);
 
 	public final void install(Application app, boolean showDesktopIcon, boolean makeAssoc) {
 		this.installShortcuts(app, showDesktopIcon);
@@ -82,7 +97,6 @@ public abstract class SystemAbstract {
 	}
 
 	protected abstract void uninstallShortcuts(Application app);
-	protected abstract void disassociateMimeTypes(Application app);
 
 	public final void uninstall(Application app) {
 		this.disassociateMimeTypes(app);
