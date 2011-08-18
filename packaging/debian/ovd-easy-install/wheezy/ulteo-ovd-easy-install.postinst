@@ -43,9 +43,6 @@ conf_mysql()
         chroot $CHROOTDIR /etc/init.d/ovdSlaveServer restart
     fi
 
-    # hack: wait cause the first request in the SM can be corrupted
-    sleep 5
-
     su www-data -c 'php /usr/share/ulteo/sessionmanager/admin/init/demo.php'
 }
 
