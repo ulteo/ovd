@@ -1,8 +1,8 @@
 #! /usr/bin/python
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or
@@ -48,13 +48,19 @@ f.close()
 if sys.platform == "linux2":
 	libdir = os.path.join(path, "libXClientArea")
 	req_dir = os.path.join(path, "required_libraries", "libXClientArea")
-	if os.path.exists(req_dir):
-		shutil.rmtree(req_dir)
-	p = Popen("./autogen", cwd=libdir)
-	p.wait()
+	
 	for arch in ['32','64']:
+		dst = os.path.join(req_dir, arch)
+		
+		# clean
+		if os.path.exists(dst):
+			shutil.rmtree(dst)
+		
+		# generate libXclientArea
+		Popen(["./compile", arch], cwd=libdir).wait()
+		
+		# move files into "required libraries" folder
 		src = os.path.join(libdir, arch, "libXClientArea.so")
 		if os.path.exists(src):
-			dst = os.path.join(req_dir, arch)
 			os.makedirs(dst)
 			shutil.move(src, dst)

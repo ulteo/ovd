@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,21 +18,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+ARCH=$1
+[ -z "$ARCH" ] && ARCH=$(getconf LONG_BIT)
+
+echo "* libXClientArea.so ${ARCH}bits"
+
 # for packaging
-if which schroot > /dev/null;  then
-    ARCHS="32 64"
-    for arch in $ARCHS; do
-        echo "* libXClientArea.so ${arch}bits"
-        if schroot -l | grep -q lucid$arch; then
-            schroot -c lucid$arch -- make -s clean
-            schroot -c lucid$arch -- make -s STATIC=yes
-        fi
-    done
-fi
+if which schroot > /dev/null && schroot -l | grep -q ":lucid$ARCH$"; then
+    schroot -c lucid$ARCH -- make -s clean && \
+    schroot -c lucid$ARCH -- make -s STATIC=yes 2>/dev/null
 
 # for devs
-ARCH=$(getconf LONG_BIT)
-if [ ! -f $ARCH/libXClientArea.so ]; then
-    echo "* libXClientArea.so ${ARCH}bits"
-    make -s clean && make -s
+else
+    [ $ARCH = $(getconf LONG_BIT) ] && make -s clean && make -s 2>/dev/null
 fi
