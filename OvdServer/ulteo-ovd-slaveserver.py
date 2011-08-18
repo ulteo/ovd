@@ -27,9 +27,9 @@ signal.signal(signal.SIGINT, signal.SIG_IGN)
 signal.signal(signal.SIGTERM, signal.SIG_IGN)
 
 import getopt
+import multiprocessing
 import os
 import sys
-import threading
 import time
 
 from ovd.Communication.HttpServer import HttpServer as Communication
@@ -60,10 +60,89 @@ def writePidFile(filename):
 	return True
 
 
-def main():
+def main(queue, config_file, pid_file):
+	daemonize = bool(queue)
+	
+	def _exit(code, msg=''):
+		if daemonize:
+			queue.put((code, msg))
+		else:
+			return (code, msg)
+	
+	if not Config.read(config_file) and not Config.is_valid():
+		_exit(1, "wrong config file")
+	
+	Logger.initialize("OVD", Config.log_level, Config.log_file, not daemonize, Config.log_threaded)
+	
+	server = SlaveServer(Communication)
+	
+	signal.signal(signal.SIGINT, stop)
+	signal.signal(signal.SIGTERM, stop)
+	
+	try:
+		if pid_file is not None:
+			try:
+				f = open(pid_file, "w")
+				f.write(str(os.getpid()))
+				f.close()
+			except IOError:
+				raise InterruptedException(2, "Unable to write pid-file '%s'" % pid_file)
+		
+		if not server.load_roles():
+			raise InterruptedException(3, "Cannot load some Roles")
+		
+		if not server.init():
+			raise InterruptedException(4, "Server initialization failed")
+	
+	except InterruptedException, e:
+		code, msg = e.args
+		return _exit(code, msg)
+	
+	else:
+		try:
+			while server.push_production() is False:
+				Logger.warn("Session Manager not connected. Sleeping for a while ...")
+				time.sleep(60)
+			
+			_exit(0)
+			Logger.info("SlaveServer started")
+			
+			while not server.stopped:
+				server.loop_procedure()
+				time.sleep(30)
+		
+		except (InterruptedException, KeyboardInterrupt), e:
+			Logger.info("SlaveServer interruption")
+	
+	finally:
+		if not server.stopped:
+			server.stop()
+		
+		if Config.log_threaded:
+			Logger.initialize("OVD", Config.log_level, Config.log_file, not daemonize, False)
+		
+		Logger.info("SlaveServer stopped")
+		if pid_file is not None and os.path.exists(pid_file):
+			os.remove(pid_file)
+	
+	return _exit(0)
+
+
+
+def stop(Signum, Frame):
+	signal.signal(signal.SIGINT, signal.SIG_IGN)
+	signal.signal(signal.SIGTERM, signal.SIG_IGN)
+	Logger.info("Signal receive")
+	raise InterruptedException(0, '')
+
+
+if __name__ == "__main__":
+	# freeze_support must be the first line
+	multiprocessing.freeze_support()
+	
 	config_file = os.path.join(System.get_default_config_dir(), "slaveserver.conf")
 	daemonize = False
-	pidFile = None
+	pid_file = None
 	
 	try:
 		opts, args = getopt.getopt(sys.argv[1:], 'c:dhp:', ['config-file=', 'daemonize', 'help', 'pid-file='])
@@ -82,94 +161,24 @@ def main():
 			usage()
 			sys.exit()
 		elif o in ("-p", "--pid-file"):
-			pidFile = a
+			pid_file = a
 	
 	if len(args) > 0:
 		print >> sys.stderr, "Invalid argument '%s'"%(args[0])
 		usage()
 		sys.exit(2)
 	
-	if not Config.read(config_file):
-		sys.exit(1)
-	
-	if not Config.is_valid():
-		sys.exit(1)
-	
 	if daemonize:
-		pid = os.fork()
-		if pid < 0:
-			print >> sys.stderr, "Error when fork"
-			sys.exit(1)
-		if pid > 0:
-			sys.exit(0)
+		q = multiprocessing.Queue()
+		p = multiprocessing.Process(target=main, args=(q, config_file, pid_file))
+		p.start()
 		
-		pid = os.fork()
-		if pid < 0:
-			print >> sys.stderr, "Error when fork"
-			sys.exit(1)
-		if pid > 0:
-			sys.exit(0)
+		# hack: do not join children process at exit
+		multiprocessing.process._current_process._children.remove(p)
+		code, msg = q.get()
+	else:
+		code, msg = main(None, config_file, pid_file)
 	
-	
-	if pidFile is not None:
-		if not writePidFile(pidFile):
-			print >> sys.stderr, "Unable to write pid-file '%s'"%(pidFile)
-			sys.exit(1)
-	
-	Logger.initialize("OVD", Config.log_level, Config.log_file, (not daemonize), Config.log_threaded)
-	server = SlaveServer(Communication)
-	signal.signal(signal.SIGINT, stop)
-	signal.signal(signal.SIGTERM, stop)
-	
-	if not server.load_roles():
-		sys.exit(2)
-	
-	try:
-		ret = server.init()
-		if not ret:
-			print >> sys.stderr, "Server initialization failed"
-			server.stop()
-			if pidFile is not None and os.path.exists(pidFile):
-				os.remove(pidFile)
-			sys.exit(3)
-		
-		ret = server.push_production()
-		while ret is False:
-			Logger.warn("Session Manager not connected. Sleeping for a while ...")
-			time.sleep(60)
-			ret = server.push_production()
-		
-		Logger.info("SlaveServer started")
-		while not server.stopped:
-			server.loop_procedure()
-			time.sleep(30)
-
-	except (InterruptedException, KeyboardInterrupt):
-		Logger.info("SlaveServer interruption")
-	
-	if not server.stopped:
-		t = threading.Thread(target=server.stop)
-		t.start()
-		t.join()
-	
-	if Config.log_threaded:
-		Logger.initialize("OVD", Config.log_level, Config.log_file, (not daemonize), False)
-	
-	Logger.info("SlaveServer stopped")
-	if pidFile is not None and os.path.exists(pidFile):
-		os.remove(pidFile)
-
-
-def stop(Signum, Frame):
-	signal.signal(signal.SIGINT, signal.SIG_IGN)
-	signal.signal(signal.SIGTERM, signal.SIG_IGN)
-	Logger.info("Signal receive")
-	raise InterruptedException()
-
-
-if __name__ == "__main__":
-	# freeze_support must be the first line
-	import multiprocessing
-	multiprocessing.freeze_support()
-	
-	main()
+	if msg != '':
+		print >> sys.stderr, msg
+	sys.exit(code)
