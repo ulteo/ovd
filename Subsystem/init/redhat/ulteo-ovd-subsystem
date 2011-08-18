@@ -37,8 +37,6 @@
 
 . /etc/init.d/functions
 
-# useless for now...
-[ -f $sysconfdir/ulteo-ovd-subsystem ] && . $sysconfdir/ulteo-ovd-subsystem
 [ "$START" = no ] && exit 0
 
 CONFFILE=/etc/ulteo/subsystem.conf
