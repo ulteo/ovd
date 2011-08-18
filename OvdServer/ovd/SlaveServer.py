@@ -137,13 +137,10 @@ class SlaveServer:
 	
 	
 	def push_production(self):
-		# Initialisation
 		try:
-			if not self.smRequestManager.initialize():
-				raise Exception()
+			self.smRequestManager.initialize()
 		except Exception, e:
-			Logger.debug("smRequestManager initialize returned %s"%(str(e)))
-			
+			Logger.debug("smRequestManager initialize returned: %s" % e)
 			return False
 		
 		if not self.smRequestManager.switch_status(self.smRequestManager.STATUS_READY):

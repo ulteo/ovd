@@ -53,7 +53,6 @@ class SMRequestManager():
 			raise Exception("invalid response")
 		
 		self.name = node.getAttribute("name")
-		return True
 	
 	
 	def perform_dns_request(self):
