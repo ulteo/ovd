@@ -86,7 +86,7 @@
     </copy>
     <mkdir dir="build/resources/integration/linux/"/>
     <copy todir="build/resources/integration/linux/">
-      <fileset dir="desktopIntegration/linux"/>
+      <fileset dir="misc/desktopIntegration/linux"/>
     </copy>
     <copy file="misc/krb5.ini" todir="build/resources" />
     <copy file="misc/login.conf" todir="build/resources" />
@@ -412,7 +412,7 @@
         <include name="scripts/*" />
         <include name="icons/**" />
         <include name="po/*" />
-        <include name="misc/*" />
+        <include name="misc/**" />
         <include name="windowsPathsJNI/*" />
         <include name="libXClientArea/**" />
       </fileset>
