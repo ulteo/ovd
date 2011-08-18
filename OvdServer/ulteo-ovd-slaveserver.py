@@ -40,24 +40,11 @@ from ovd.Platform.System import System
 from ovd.SlaveServer import SlaveServer
 
 
-def usage():
-	print "Usage: %s [-c|--config-file= filename] [-d|--daemonize] [-h|--help] [-p|--pid-file= filename]"%(sys.argv[0])
-	print "\t-c|--config-file filename: load filename as configuration file instead default one"
-	print "\t-d|--daemonize: start in background"
-	print "\t-h|--help: print this help"
-	print "\t-p|--pid-file filename: write process id in specified file"
-	print
-
-
-def writePidFile(filename):
-	try:
-		f = file(filename, "w")
-	except:
-		return False
-	
-	f.write(str(os.getpid()))
-	f.close()
-	return True
+def stop(Signum, Frame):
+	signal.signal(signal.SIGINT, signal.SIG_IGN)
+	signal.signal(signal.SIGTERM, signal.SIG_IGN)
+	Logger.info("Signal receive")
+	raise InterruptedException(0, '')
 
 
 def main(queue, config_file, pid_file):
@@ -129,11 +116,13 @@ def main(queue, config_file, pid_file):
 
 
 
-def stop(Signum, Frame):
-	signal.signal(signal.SIGINT, signal.SIG_IGN)
-	signal.signal(signal.SIGTERM, signal.SIG_IGN)
-	Logger.info("Signal receive")
-	raise InterruptedException(0, '')
+def usage():
+	print "Usage: %s [-c|--config-file= filename] [-d|--daemonize] [-h|--help] [-p|--pid-file= filename]"%(sys.argv[0])
+	print "\t-c|--config-file filename: load filename as configuration file instead default one"
+	print "\t-d|--daemonize: start in background"
+	print "\t-h|--help: print this help"
+	print "\t-p|--pid-file filename: write process id in specified file"
+	print
 
 
 if __name__ == "__main__":
