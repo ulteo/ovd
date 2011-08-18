@@ -52,6 +52,7 @@ public class WorkArea {
 
 	private static native int[] getWorkAreaSizeForX();
 
+	@SuppressWarnings("deprecation")
 	public static long getX11WindowId(Window wnd) {
 		XBaseWindow peer = (XBaseWindow) wnd.getPeer();
 		if (peer != null) {
