@@ -19,13 +19,59 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import getopt
 import os
 import sys
 import pysvn
 import shutil
 from subprocess import Popen
 
+
 path = os.path.dirname( os.path.realpath( __file__ ) )
+jni = True
+
+
+def usage():
+	print "Usage: %s [--no-jni]" % sys.argv[0]
+	print "\t--no-jni: disable jni compilation"
+
+
+def make_jni():
+	libdir = os.path.join(path, "libXClientArea")
+	req_dir = os.path.join(path, "required_libraries", "libXClientArea")
+	
+	for arch in ['32','64']:
+		dst = os.path.join(req_dir, arch)
+		
+		# clean
+		if os.path.exists(dst):
+			shutil.rmtree(dst)
+		
+		# generate libXclientArea
+		Popen(["./compile", arch], cwd=libdir).wait()
+		
+		# move files into "required libraries" folder
+		src = os.path.join(libdir, arch, "libXClientArea.so")
+		if os.path.exists(src):
+			os.makedirs(dst)
+			shutil.move(src, dst)
+
+
+try:
+	opts, args = getopt.getopt(sys.argv[1:], '', ['no-jni'])
+except getopt.GetoptError, err:
+	print >> sys.stderr, str(err)
+	usage()
+	sys.exit(1)
+
+for o, a in opts:
+	if o in ("--no-jni"):
+		jni = False
+
+if len(args) > 0:
+	print >> sys.stderr, "Invalid argument '%s'" % args[0]
+	usage()
+	sys.exit(1)
 
 # Detect the version
 if os.environ.has_key("OVD_VERSION"):
@@ -45,22 +91,5 @@ f = file(os.path.join(path, "build.xml"), "w")
 f.write(content)
 f.close()
 
-if sys.platform == "linux2":
-	libdir = os.path.join(path, "libXClientArea")
-	req_dir = os.path.join(path, "required_libraries", "libXClientArea")
-	
-	for arch in ['32','64']:
-		dst = os.path.join(req_dir, arch)
-		
-		# clean
-		if os.path.exists(dst):
-			shutil.rmtree(dst)
-		
-		# generate libXclientArea
-		Popen(["./compile", arch], cwd=libdir).wait()
-		
-		# move files into "required libraries" folder
-		src = os.path.join(libdir, arch, "libXClientArea.so")
-		if os.path.exists(src):
-			os.makedirs(dst)
-			shutil.move(src, dst)
+if sys.platform == "linux2" and jni:
+	make_jni()
