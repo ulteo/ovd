@@ -29,6 +29,7 @@ import javax.swing.ImageIcon;
 
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
+import org.ulteo.ovd.integrated.mime.XDGMime;
  import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.rdp.RdpConnectionOvd;
 
@@ -60,6 +61,12 @@ public class DesktopIntegrator extends Thread {
 			for (Application app : rc.getAppsList()) {
 				if (this.system.create(app) == null)
 					Logger.error("The "+app.getName()+" shortcut could not be created");
+
+				if (this.system instanceof SystemLinux) {
+					for (String mimetype : app.getSupportedMimeTypes()) {
+						XDGMime.createMimeTypeFile(mimetype);
+					}
+				}
 			}
 			this.integratedConnections.add(rc);
 			this.fireShortcutGenerationIsDone(rc);

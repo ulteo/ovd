@@ -41,6 +41,7 @@ import org.ulteo.Logger;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.client.cache.PngManager;
+import org.ulteo.ovd.integrated.mime.XDGMime;
 import org.ulteo.ovd.integrated.shorcut.LinuxShortcut;
 import org.ulteo.utils.FilesOp;
 
@@ -74,6 +75,9 @@ public class SystemLinux extends SystemAbstract {
 		super(new PngManager(), sm);
 
 		this.shortcut = new LinuxShortcut();
+
+		new File(Constants.PATH_CACHE_MIMETYPES_FILES).mkdirs();
+		this.fileAssociate = new XDGMime();
 	}
 
 	public void installSystemMenu() {
@@ -157,6 +161,8 @@ public class SystemLinux extends SystemAbstract {
 
 	public static void cleanAll() {
 		LinuxShortcut.removeAll();
+
+		XDGMime.unregisterAllMimeTypes();
 	}
 
 	protected void installShortcuts(Application app, boolean showDesktopIcon) {
@@ -403,6 +409,8 @@ public class SystemLinux extends SystemAbstract {
 	}
 
 	public void refresh() {
+		XDGMime.updateDatabase();
+
 		File issueFile = new File("/etc/issue");
 		String issue = "";
 		boolean ulteoSystem = false;

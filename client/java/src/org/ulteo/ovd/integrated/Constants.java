@@ -29,6 +29,7 @@ public final class Constants {
 	public static final String HOMEDIR = System.getProperty("user.home");
 	public static final String PATH_STARTMENU = (OSTools.isWindows()) ? WindowsPaths.getStartMenuPath() : "";
 	public static final String PATH_XDG_APPLICATIONS = Constants.HOMEDIR+Constants.FILE_SEPARATOR+".local/share/applications";
+	public static final String PATH_XDG_MIME = Constants.HOMEDIR+Constants.FILE_SEPARATOR+".local/share/mime";
 	public static final String PATH_OVD_SPOOL_XDG_APPLICATIONS = "/var/spool/ulteo/ovd/"+System.getProperty("user.name")+"/xdg/applications";
 	public static final String PATH_DESKTOP = (OSTools.isWindows()) ? ((OSTools.is_applet) ? WindowsPaths.getDesktopPath() : WindowsRegistryPaths.getDesktopPath()) : LinuxPaths.getDesktopPath();
 	public static final String PATH_DOCUMENT = (OSTools.isWindows()) ? WindowsPaths.getPersonalDataPath() : LinuxPaths.getDocumentPath();
@@ -44,6 +45,7 @@ public final class Constants {
 	public static final String PATH_CACHE = Constants.PATH_NATIVE_CLIENT_CONF+Constants.FILE_SEPARATOR+"cache";
 	public static final String PATH_CACHE_APPS_ICONS = Constants.PATH_CACHE+Constants.FILE_SEPARATOR+"apps_icons";
 	public static final String PATH_CACHE_MIMETYPES_ICONS = Constants.PATH_CACHE+Constants.FILE_SEPARATOR+"mimetypes_icons";
+	public static final String PATH_CACHE_MIMETYPES_FILES = Constants.PATH_CACHE+Constants.FILE_SEPARATOR+"mimetypes_files";
 
 	public static final String PATH_REMOTE_APPS = Constants.PATH_OVD_CONF+Constants.FILE_SEPARATOR+"remoteApps";
 	public static final String PATH_ICONS = Constants.PATH_REMOTE_APPS+Constants.FILE_SEPARATOR+"icons";
