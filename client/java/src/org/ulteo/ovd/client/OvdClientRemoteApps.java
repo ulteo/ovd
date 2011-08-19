@@ -152,6 +152,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			this.spool = null;
 		}
 
+		if (this.system instanceof SystemLinux)
+			((SystemLinux) this.system).clearSystemMenu();
+
 		for (RdpConnectionOvd co : this.connections) {
 			for (Application app : co.getAppsList())
 				this.system.clean(app);
@@ -440,9 +443,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	protected void unpublish(RdpConnectionOvd rc) {
 		if (rc == null)
 			throw new NullPointerException("RdpConnectionOvd parameter cannot be null");
-
-		if (this.system instanceof SystemLinux)
-			((SystemLinux) this.system).clearSystemMenu();
 		
 		for (Application app : rc.getAppsList()) {
 			this.system.uninstall(app);
