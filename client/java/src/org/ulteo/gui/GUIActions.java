@@ -75,7 +75,17 @@ public class GUIActions {
 			return;
 		}
 
-		ULTEO_ICON = Toolkit.getDefaultToolkit().getImage(url);
+		Image img = Toolkit.getDefaultToolkit().getImage(url);
+		if (img == null) {
+			Logger.error("Unable to find ulteo.png in de jar");
+			return;
+		}
+		/* Hack:
+		 Make the image completely loaded (instead of use
+		 an ImageObserver that is not usable in this case) */
+		img = new ImageIcon(img).getImage();
+
+		ULTEO_ICON = img;
 	}
 	
 	public static Image getUlteoIcon() {
