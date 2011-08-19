@@ -280,7 +280,6 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	}
 
 	public void processMouseEvent(MouseEvent e, int type) {
-		e.translatePoint(this.x, this.y);
 		switch (type) {
 			case MOUSE_PRESSED:
 				this.mouseAdapter.mousePressed(e);

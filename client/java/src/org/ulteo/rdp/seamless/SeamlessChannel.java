@@ -66,7 +66,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 	public SeamlessChannel(Options opt_, Common common_) {
 		super(opt_, common_);
 
-		this.windowFrameManager = new WindowFrameManager(this);
+		this.windowFrameManager = new WindowFrameManager(this, this.opt);
 
 		this.closeHistory = new ConcurrentHashMap<String, DestroyWindowTimer>();
 	}
