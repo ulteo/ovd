@@ -496,38 +496,53 @@ abstract class SessionManagement extends Module {
 		switch ($type_) {
 			case Server::SERVER_TYPE_LINUX:
 			case Server::SERVER_TYPE_WINDOWS:
+				$user_applications = $this->user->applications($type_, true);
+
+				$usable_servers = array();
 				foreach ($this->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
 					$server = Abstract_Server::load($fqdn);
 					if (! $server)
 						continue;
 
 					if ($server->getAttribute('type') == $type_) {
-						$this->desktop_server = $server->fqdn;
-						break;
-					}
-				}
+						$usable_servers[$server->fqdn] = 0;
 
-				if (! $this->desktop_server) {
-					Logger::error('main', 'SessionManagement::getDesktopServer("'.$type_.'") - No "'.$type_.'" desktop server found for User "'.$this->user->getAttribute('login').'", aborting');
-					return false;
+						$server_applications = $server->getApplications();
+						foreach ($server_applications as $server_application) {
+							if (in_array($server_application, $user_applications))
+								$usable_servers[$server->fqdn] += 1;
+						}
+					}
 				}
 				break;
 			case 'any':
 			default:
+				$user_applications = $this->user->applications(NULL, true);
+
+				$usable_servers = array();
 				foreach ($this->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
 					$server = Abstract_Server::load($fqdn);
 					if (! $server)
 						continue;
 
-					$this->desktop_server = $server->fqdn;
-					break;
-				}
+					$usable_servers[$server->fqdn] = 0;
 
-				if (! $this->desktop_server) {
-					Logger::error('main', 'SessionManagement::getDesktopServer("'.$type_.'") - No desktop server found for User "'.$this->user->getAttribute('login').'", aborting');
-					return false;
+					$server_applications = $server->getApplications();
+					foreach ($server_applications as $server_application) {
+						if (in_array($server_application, $user_applications))
+							$usable_servers[$server->fqdn] += 1;
+					}
 				}
 				break;
+		}
+		arsort($usable_servers);
+
+		if (count($usable_servers) > 0)
+			$this->desktop_server = array_shift(array_keys($usable_servers));
+
+		if (! $this->desktop_server) {
+			Logger::error('main', 'SessionManagement::getDesktopServer("'.$type_.'") - No desktop server found for User "'.$this->user->getAttribute('login').'", aborting');
+			return false;
 		}
 
 		return $this->desktop_server;
