@@ -668,7 +668,10 @@ if ($_REQUEST['name'] == 'User_UserGroup') {
 			$userGroupDB = UserGroupDB::getInstance();
 			$group = $userGroupDB->import($_REQUEST['group']);
 			if (is_object($group)) {
-				popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $group->name));
+				if (! $group->isDefault())
+					popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $group->name));
+				else
+					popup_error(sprintf(_("Unable to remove an user from usergroup '%s' because it is the default usergroup"), $group->name));
 			}
 			else {
 				// problem, what to do ?
