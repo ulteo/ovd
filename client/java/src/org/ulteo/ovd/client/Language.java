@@ -27,7 +27,7 @@ public class Language {
 //			{"Afrikaans", "", "af"},
 //			{"Albanian", "", "sq"},
 //			{"Arabic", "العربية", "ar"}, 
-//			{"Bulgarian", "", "bg"}, 
+			{"Bulgarian", "Български", "bg"}, 
 //			{"Belarusian", "", "be"},
 			{"Chinese", "中文", "zh", "cn"},
 //			{"Croatian", "", "hr"},
