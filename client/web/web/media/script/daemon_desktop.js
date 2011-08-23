@@ -70,7 +70,7 @@ var Desktop = Class.create(Daemon, {
 			var applet = buildAppletNode('ulteoapplet', this.applet_main_class, 'jpedal.jar,log4j-1.2.jar,'+this.applet_version, applet_params);
 			applet.setAttribute('width', applet_width);
 			applet.setAttribute('height', applet_height);
-			$('desktopAppletContainer').setStyle({width: applet_width+'px', height: applet_height+'px'});
+			$('desktopAppletContainer').setStyle({width: applet_width+'px', height: applet_height+'px', top: 0+'px', left: 0+'px'});
 			$('desktopAppletContainer').show();
 			$('desktopAppletContainer').appendChild(applet);
 

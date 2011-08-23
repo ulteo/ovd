@@ -455,8 +455,12 @@ Event.observe(window, 'load', function() {
 
 	if ($('desktopAppletContainer')) {
 		Event.observe(window, 'resize', function() {
-			if ($('desktopAppletContainer').visible())
+			if ($('desktopAppletContainer').visible()) {
 				new Effect.Center($('desktopAppletContainer'));
+
+				if (daemon.debug)
+					new Effect.Move($('desktopAppletContainer'), { x: 0, y: -75, duration: 0.01 });
+			}
 		});
 	}
 });
