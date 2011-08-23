@@ -157,11 +157,15 @@ function get_users_list() {
 				$('endContainer').style.top = ($('endContainer').style.top-75) + 'px';
 
 				Event.observe(window, 'resize', function() {
-					new Effect.Center($('splashContainer'));
-					$('splashContainer').style.top = ($('splashContainer').style.top-75) + 'px';
+					if ($('splashContainer').visible()) {
+						new Effect.Center($('splashContainer'));
+						$('splashContainer').style.top = ($('splashContainer').style.top-75) + 'px';
+					}
 
-					new Effect.Center($('endContainer'));
-					$('endContainer').style.top = ($('endContainer').style.top-75) + 'px';
+					if ($('endContainer').visible()) {
+						new Effect.Center($('endContainer'));
+						$('endContainer').style.top = ($('endContainer').style.top-75) + 'px';
+					}
 				});
 
 				$('desktopModeContainer').hide();

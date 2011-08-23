@@ -452,6 +452,13 @@ Event.observe(window, 'load', function() {
 			}
 		});
 	}
+
+	if ($('desktopAppletContainer')) {
+		Event.observe(window, 'resize', function() {
+			if ($('desktopAppletContainer').visible())
+				new Effect.Center($('desktopAppletContainer'));
+		});
+	}
 });
 
 function showSystemTest() {
@@ -462,7 +469,8 @@ function showSystemTest() {
 	$('systemTestWrap').style.width = elementDimensions.width+'px';
 
 	Event.observe(window, 'resize', function() {
-		new Effect.Center($('systemTestWrap'));
+		if ($('systemTestWrap').visible())
+			new Effect.Center($('systemTestWrap'));
 	});
 
 	new Effect.Appear($('systemTestWrap'));
@@ -491,7 +499,8 @@ function showSystemTestError(error_id_) {
 	$('systemTestErrorWrap').style.width = elementDimensions.width+'px';
 
 	Event.observe(window, 'resize', function() {
-		new Effect.Center($('systemTestErrorWrap'));
+		if ($('systemTestErrorWrap').visible())
+			new Effect.Center($('systemTestErrorWrap'));
 	});
 
 	new Effect.Appear($('systemTestErrorWrap'));
@@ -604,6 +613,8 @@ function showError(errormsg) {
 	$('errorWrap').style.padding = '10px';
 
 	new Effect.Center($('errorWrap'));
+	var elementDimensions = Element.getDimensions($('errorWrap'));
+	$('errorWrap').style.width = elementDimensions.width+'px';
 
 	new Effect.Appear($('errorWrap'));
 
@@ -632,6 +643,8 @@ function showOk(okmsg) {
 	$('okWrap').style.padding = '10px';
 
 	new Effect.Center($('okWrap'));
+	var elementDimensions = Element.getDimensions($('okWrap'));
+	$('okWrap').style.width = elementDimensions.width+'px';
 
 	new Effect.Appear($('okWrap'));
 
@@ -664,6 +677,8 @@ function showInfo(infomsg) {
 	$('infoWrap').style.padding = '10px';
 
 	new Effect.Center($('infoWrap'));
+	var elementDimensions = Element.getDimensions($('infoWrap'));
+	$('infoWrap').style.width = elementDimensions.width+'px';
 
 	new Effect.Appear($('infoWrap'));
 
