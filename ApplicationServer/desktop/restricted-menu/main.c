@@ -186,7 +186,7 @@ btn_toggled (GtkWidget *b, gpointer data)
 {
     RmPlugin *rm = (RmPlugin *)data;
 
-    if (!ulteo_img_btn_get_active (ULTEO_IMG_BTN (b)))
+    if (!ulteo_img_btn_get_active (ULTEO_IMG_BTN (b)) && !menu_is_activated(rm->sm))
         return;
 
     xfce_panel_plugin_register_menu (rm->plugin, GTK_MENU (rm->sm));

@@ -244,15 +244,7 @@ ddir_updated (ThunarVfsMonitor *monitor,
         return;
     thunar_vfs_monitor_wait (monitor);
 
-    /*
-     * We don't refresh now if the menu is currently used.
-     * We set a flag and we will refresh the menu as soon
-     * as it is deactivated
-     */
-    if (sm->priv->active)
-        sm->priv->needs_refresh = TRUE;
-    else
-        s_menu_refresh (sm);
+    s_menu_refresh (sm);
 }
 
 static void
@@ -265,11 +257,12 @@ static void
 menu_deactivated (GtkWidget *menu, gpointer data)
 {
     S_MENU (menu)->priv->active = FALSE;
-    if (S_MENU (menu)->priv->needs_refresh)
-    {
-        S_MENU (menu)->priv->needs_refresh = FALSE;
-        s_menu_refresh (S_MENU (menu));
-    }
+}
+
+gboolean
+menu_is_activated (GtkWidget *menu)
+{
+    return S_MENU (menu)->priv->active;
 }
 
 /* public API */
