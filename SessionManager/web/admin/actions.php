@@ -577,8 +577,10 @@ if ($_REQUEST['name'] == 'ApplicationsGroup') {
 			
 			$g = new AppsGroup(NULL, $name, $description, 1);
 			$res = $applicationsGroupDB->add($g);
-			if (!$res)
-				die_error(sprintf(_("Unable to create applications group '%s'"), $name), __FILE__, __LINE__);
+			if (!$res) {
+				popup_error(sprintf(_("Unable to create applications group '%s'"), $name));
+				redirect('appsgroup.php');
+			}
 			
 			popup_info(sprintf(_("Applications group '%s' successfully added"), $name));
 			redirect('appsgroup.php?action=manage&id='.$g->id);
@@ -780,7 +782,8 @@ if ($_REQUEST['name'] == 'UserGroup') {
 			
 			$res = $userGroupDB->add($g);
 			if (!$res) {
-				die_error(_("Unable to create usergroup"), __FILE__, __LINE__);
+				popup_error(sprintf(_("Unable to create usergroup '%s'"), $_REQUEST['name_group']));
+				redirect('usersgroup.php');
 			}
 			
 			popup_info(_('UserGroup successfully added'));
