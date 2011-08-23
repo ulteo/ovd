@@ -46,6 +46,11 @@ var session_mode = false;
 var desktop_fullscreen = false;
 
 function startSession() {
+	if ($('errorWrap').visible()) {
+		hideError();
+		return false;
+	}
+
 	disableLogin();
 
 	explorer = false;
@@ -401,6 +406,11 @@ Event.observe(window, 'load', function() {
 
 	if ($('newsWrap'))
 		$('newsWrap').hide();
+
+	Event.observe(window, 'keypress', function() {
+		if ($('errorWrap').visible())
+			hideError();
+	});
 
 	Event.observe($('lockWrap'), 'click', function() {
 		if ($('errorWrap').visible())
