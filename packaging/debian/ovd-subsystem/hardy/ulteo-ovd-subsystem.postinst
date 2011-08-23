@@ -19,8 +19,13 @@ set_conf () {
     fi
 }
 
+is_valid_chroot () {
+    test -e "$CHROOTCONF"
+    return $?
+}
+
 # download the chroot if needed
-while [ ! -e "$CHROOTCONF" ]; do
+while :; do
 
     # get the tarball uri and quit if empty
     db_get ulteo-ovd-subsystem/tarball_uri && URI="$RET"
@@ -34,7 +39,8 @@ while [ ! -e "$CHROOTCONF" ]; do
     if curl $CURLOPTS -f -s -I $URI > /dev/null; then
         echo "Retrieving and uncompressing the chroot tarball..."
         mkdir -p "$CHROOTDIR"
-        curl $CURLOPTS "$URI" | tar zx --numeric-owner -p -s -C "$CHROOTDIR" -f - && continue
+        curl $CURLOPTS "$URI" | tar zx --numeric-owner -p -s -C "$CHROOTDIR" -f - && \
+            is_valid_chroot && break
     fi
 
     # chroot download failed
