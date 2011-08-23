@@ -95,5 +95,5 @@ function __autoload($class_name) { //what about NameSpaces ?
 }
 
 $autoload_die = false;
-session_start();
+@session_start();
 $autoload_die = true;
