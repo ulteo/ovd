@@ -330,8 +330,14 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 		if (opts.autostart) {
-			if (((opts.username == null || opts.password == null) && !opts.nltm) || opts.host == null) {
-				org.ulteo.Logger.error("You must specify the server (-s) and your credentials (-u, -p or --ntlm)");
+			opts.guiLocked = true;
+			
+			if (opts.host == null) {
+				org.ulteo.Logger.error("No server specified");
+				NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
+			}
+			if (! opts.nltm && opts.username == null) {
+				org.ulteo.Logger.error("No username specified");
 				NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 			}
 
@@ -560,7 +566,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.isCancelled = false;
 
 		try {
-			if (! this.opts.autostart) {
+			if (this.authFrame != null) {
 				this.getFormValuesFromGui();
 				if (this.authFrame.isRememberMeChecked())
 					this.saveProfile();
@@ -581,7 +587,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				this.disableLoadingMode();
 			}
 			
-			if (exit || this.opts.autostart) {
+			if (exit) {
 				this.continueMainThread = false;
 			} else {
 				this.initAuthFrame();
@@ -589,7 +595,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		} catch (IllegalArgumentException ex) {
 			org.ulteo.Logger.warn(ex.getMessage());
 			JOptionPane.showMessageDialog(null, I18n._(ex.getMessage()), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE);
-			if(! this.opts.autostart)
+			if (this.authFrame != null)
 				this.authFrame.reset();
 		}
 		this.thread = null;
@@ -717,8 +723,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 		// Start OVD session
 		SessionManagerCommunication dialog = new SessionManagerCommunication(this.opts.host, this.opts.port, true);
-		if (! this.opts.autostart)
-			dialog.addCallbackListener(this);
+		dialog.addCallbackListener(this);
 
 		this.updateProgress(LoadingStatus.SM_CONNECTION, 0);
 		Properties request = new Properties(this.opts.sessionMode);
