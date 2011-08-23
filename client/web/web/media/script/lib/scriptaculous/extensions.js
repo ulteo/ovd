@@ -35,7 +35,7 @@ Effect.Center = function(element) {
 
 	var elementDimensions = Element.getDimensions(element);
 
-	element.style.width = elementDimensions.width+'px';
+	//element.style.width = elementDimensions.width+'px';
 
 	var setX = ((my_width - elementDimensions.width)/2) - 12;
 	var setY = ((my_height - elementDimensions.height)/2) + scrollY;

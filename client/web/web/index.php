@@ -151,10 +151,18 @@ function get_users_list() {
 
 			Event.observe(window, 'load', function() {
 				new Effect.Center($('splashContainer'));
-				new Effect.Move($('splashContainer'), { x: 0, y: -75 });
+				$('splashContainer').style.top = ($('splashContainer').style.top-75) + 'px';
 
 				new Effect.Center($('endContainer'));
-				new Effect.Move($('endContainer'), { x: 0, y: -75 });
+				$('endContainer').style.top = ($('endContainer').style.top-75) + 'px';
+
+				Event.observe(window, 'resize', function() {
+					new Effect.Center($('splashContainer'));
+					$('splashContainer').style.top = ($('splashContainer').style.top-75) + 'px';
+
+					new Effect.Center($('endContainer'));
+					$('endContainer').style.top = ($('endContainer').style.top-75) + 'px';
+				});
 
 				$('desktopModeContainer').hide();
 				$('desktopAppletContainer').hide();
