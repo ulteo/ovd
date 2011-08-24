@@ -44,8 +44,8 @@ public class LinuxShortcut extends Shortcut {
 		if (OSTools.is_applet)
 			launcher = "java -jar " + Constants.JAVA_LAUNCHER;
 		else {
-			String jarPath = System.getProperty("user.dir")+File.separator+System.getProperty("java.class.path");
-			String jarDirectory = new File(jarPath).getParent();
+			String jarPath = System.getProperty("java.class.path");
+			String jarDirectory = new File(jarPath).getParentFile().getAbsolutePath();
 			File standaloneLauncher = new File(jarDirectory+File.separator+Constants.FILE_SEPARATOR+Constants.FILENAME_LAUNCHER);
 			if (standaloneLauncher.exists())
 				launcher = standaloneLauncher.getAbsolutePath();
