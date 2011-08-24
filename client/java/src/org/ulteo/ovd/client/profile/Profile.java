@@ -21,10 +21,17 @@
 
 package org.ulteo.ovd.client.profile;
 
+import java.io.IOException;
+import org.ulteo.crypto.AES;
+import org.ulteo.crypto.SymmetricCryptography;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
+
 public abstract class Profile {
 	public enum ProxyMode {none, auto, custom};
 	
 	protected static final String FIELD_LOGIN = "login";
+	protected static final String FIELD_PASSWORD = "password";
 	protected static final String FIELD_LOCALCREDENTIALS = "use-local-credentials";
 
 	protected static final String FIELD_HOST = "host";
@@ -63,4 +70,42 @@ public abstract class Profile {
 	protected static final String VALUE_SCANCODE_INPUT_METHOD = "scancode";
 	protected static final String VALUE_UNICODE_INPUT_METHOD = "unicode";
 	
+	private SymmetricCryptography crypto = null;
+
+	public Profile() {
+		this.crypto = new AES();
+	}
+	
+	protected abstract void storePassword(String password) throws IOException;
+	public final void savePassword(String password) throws IOException {
+		byte[] data = null;
+		String encryptedPassword = null;
+
+		if (password == null)
+			return;
+
+		data = this.crypto.encrypt(password.getBytes());
+		if (data == null)
+			return;
+		
+		encryptedPassword = new BASE64Encoder().encode(data);
+
+		this.storePassword(encryptedPassword);
+	}
+
+	protected abstract String loadPassword() throws IOException;
+	protected final String getPassword() throws IOException {
+		String hash = null;
+		byte[] data = null;
+		
+		hash = this.loadPassword();
+		if (hash == null)
+			return null;
+
+		data = this.crypto.decrypt(new BASE64Decoder().decodeBuffer(hash));
+		if (data == null)
+			return null;
+
+		return new String(data);
+	}
 }

@@ -31,6 +31,7 @@ public class ProfileProperties {
 	public static final int MODE_APPLICATIONS = 2;
 
 	private String login = System.getProperty("user.name");
+	private String password = null;
 	private String host = null;
 	private int port = 0;
 	private int sessionMode = -1;
@@ -70,6 +71,14 @@ public class ProfileProperties {
 
 	public void setLogin(String login_) {
 		this.login = login_;
+	}
+
+	public String getPassword() {
+		return this.password;
+	}
+
+	public void setPassword(String password_) {
+		this.password = password_;
 	}
 
 	public String getHost() {

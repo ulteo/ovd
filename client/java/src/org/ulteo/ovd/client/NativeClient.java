@@ -134,7 +134,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 		Options opts = new Options();
 
-		final int nbOptions = 6;
+		final int nbOptions = 7;
 		List<LongOpt> systemDependantOptions = new ArrayList<LongOpt>();
 
 		if (OSTools.isWindows()) {
@@ -149,6 +149,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		alo[3] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 3);
 		alo[4] = new LongOpt("version", LongOpt.NO_ARGUMENT, null, 4);
 		alo[5] = new LongOpt("input-method", LongOpt.REQUIRED_ARGUMENT, null, 5);
+		alo[6] = new LongOpt("save-password", LongOpt.NO_ARGUMENT, null, 6);
 
 		for (int i = nbOptions; i < alo.length; i++)
 			alo[i] = systemDependantOptions.remove(0);
@@ -201,7 +202,11 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 					opts.inputMethod = method;
 					opts.setFlag(Options.FLAG_INPUT_METHOD);
 
-					break;					
+					break;
+				case 6: //--save-password
+					opts.savePassword = true;
+					opts.setFlag(Options.FLAG_SAVE_PASSWORD);
+					break;
 				case 'c':
 					opts.profile = new String(opt.getOptarg());
 					opts.setFlag(Options.FLAG_PROFILE_INI);
@@ -362,6 +367,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		System.err.println("\t-s host[:port]			Server address");
 		System.err.println("\t-u username			Username");
 		System.err.println("\t-p password			Password");
+		System.err.println("\t--save-password			Save the password");
 		System.err.println("\t-m [auto|desktop|applications]	Session mode");
 		System.err.println("\t-g widthxheight			Geometry");
 		System.err.println("\t-k keymap			Keymap");
@@ -742,6 +748,9 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			this.disableLoadingMode();
 			return false;
 		}
+
+		if (this.opts.savePassword)
+			this.savePassword();
 		
 		this.updateProgress(LoadingStatus.SM_START, 0);
 		
@@ -878,7 +887,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		ProfileProperties properties = new ProfileProperties(this.opts.username, this.opts.host, this.opts.port, this.opts.sessionMode, this.opts.autopublish, this.opts.nltm, this.opts.geometry, this.opts.lang, this.opts.keymap, this.opts.inputMethod);
 
 		if (this.opts.getFlag(Options.FLAG_PROFILE_REG)) {
-			ProfileRegistry.saveProfile(properties);
+			ProfileRegistry registry = new ProfileRegistry();
+			registry.saveProfile(properties);
 			return;
 		}
 
@@ -904,6 +914,39 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			ini.saveProfile(properties);
 		} catch (IOException e) {
 			System.err.println("Unable to save profile: " + e.getMessage());
+		}
+	}
+
+	private void savePassword() {
+		try {
+			if (this.opts.getFlag(Options.FLAG_PROFILE_REG)) {
+				ProfileRegistry registry = new ProfileRegistry();
+				registry.savePassword(this.opts.password);
+				return;
+			}
+
+			ProfileIni ini = new ProfileIni();
+
+			if (this.opts.getFlag(Options.FLAG_PROFILE_INI)) {
+
+				String path = null;
+				String profile = this.opts.profile;
+				int idx = this.opts.profile.lastIndexOf(System.getProperty("file.separator"));
+
+				if (idx != -1) {
+					profile = this.opts.profile.substring(idx + 1, this.opts.profile.length());
+					path = this.opts.profile.substring(0, idx + 1);
+				}
+
+				ini.setProfile(profile, path);
+			}
+			else {
+				ini.setProfile(null, null);// Default profile
+			}
+			
+			ini.savePassword(this.opts.password);
+		} catch (IOException ex) {
+			org.ulteo.Logger.error("Failed to save password: "+ex.getMessage());
 		}
 	}
 }
