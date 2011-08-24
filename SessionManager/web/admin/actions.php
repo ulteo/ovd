@@ -1526,6 +1526,11 @@ if ($_REQUEST['name'] == 'Server') {
 	
 	if ($_REQUEST['action'] == 'external_name') {
 		if (isset($_REQUEST['external_name']) && isset($_REQUEST['fqdn'])) {
+			if (! validate_ip($_REQUEST['external_name']) && ! validate_fqdn($_REQUEST['external_name'])) {
+				popup_error(sprintf(_("Redirection name \"%s\" is invalid"), $_REQUEST['external_name']));
+				redirect();
+			}
+
 			$server = Abstract_Server::load($_REQUEST['fqdn']);
 			$server->setAttribute('external_name', $_REQUEST['external_name']);
 			Abstract_Server::save($server);
