@@ -62,6 +62,7 @@ class Role(AbstractRole):
 			self.ssl_ctx = SSL.Context(SSL.SSLv23_METHOD)
 			self.ssl_ctx.use_privatekey_file(fpem)
 			self.ssl_ctx.use_certificate_file(fpem)
+			self.ssl_ctx.load_verify_locations(fpem)
 		else:
 			Logger.error("Gateway role need a certificate (%s)" % fpem)
 			return False
