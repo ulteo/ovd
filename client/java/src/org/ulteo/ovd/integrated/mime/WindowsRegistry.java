@@ -26,6 +26,7 @@ import com.ice.jni.registry.Registry;
 import com.ice.jni.registry.RegistryException;
 import com.ice.jni.registry.RegistryKey;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -191,12 +192,16 @@ public class WindowsRegistry extends FileAssociate {
 		ovdShell = ovdShell.createSubKey(KEY_PREFIX + app.getId(), "");
 		ovdShell.setValue(new RegStringValue(ovdShell, "", OPEN_PREFIX + app.getName()));
 		ovdShell = ovdShell.createSubKey("command", "");
+		
 		String cmd;
 		if (OSTools.is_applet)
-			cmd = String.format("javaw -jar \"%s\" %d \"%%1\"", Constants.JAVA_LAUNCHER, app.getId());
+			cmd = String.format("\"%s%sbin%sjavaw.exe\" -jar \"%s\"",
+					System.getProperty("java.home"), File.separator, File.separator, Constants.JAVA_LAUNCHER);
 		else
-			cmd = String.format("\"%s\" %d \"%%1\"", System.getProperty("user.dir"), Constants.FILE_SEPARATOR, Constants.FILENAME_LAUNCHER, app.getId());
-		ovdShell.setValue(new RegStringValue(ovdShell, "", cmd));
+			cmd = String.format("\"%s%s%s\"",
+					System.getProperty("user.dir"), File.separator, Constants.FILENAME_LAUNCHER);
+		ovdShell.setValue(new RegStringValue(ovdShell, "",
+				String.format("%s %s %d \"%%1\"", cmd, this.token, app.getId())));
 	}
 
 	public void createAppAction(Application app) {
