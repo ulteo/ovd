@@ -182,6 +182,9 @@ class UserDB_sql_external extends UserDB {
 		else if ($method == 'md5') {
 			return (md5($password_) == $password_db);
 		}
+		else if ($method == 'shadow') {
+			return shadow($password_db, $password_);
+		}
 		else {
 			Logger::error('main', 'UserDB::sql_external::authenticate hash method \''.$method.'\' does not support');
 			return false;
@@ -204,7 +207,7 @@ class UserDB_sql_external extends UserDB {
 		$c = new ConfigElement_dictionary('match',_('Matching'), _('Matching'), _('Matching'), array('login' => 'login', 'displayname' => 'displayname'));
 		$ret []= $c;
 		$c = new ConfigElement_select('hash_method',_('Hash method'), _('Hash method'), _('Hash method'), 'plain');
-		$c->setContentAvailable(array('md5' => _('MD5'), 'crypt' => _('Crypt'), 'plain' => _('Plain')));
+		$c->setContentAvailable(array('md5' => _('MD5'), 'crypt' => _('Crypt'), 'shadow' => _('Shadow'), 'plain' => _('Plain')));
 		$ret []= $c;
 		return $ret;
 	}
