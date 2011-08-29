@@ -2,7 +2,8 @@
 
 . /usr/share/debconf/confmodule
 
-rm -f /etc/ulteo/subsystem.conf
+[ -f /etc/default/subsystem ] && . /etc/default/subsystem
+[ -f /etc/ulteo/subsystem.conf ] && . /etc/ulteo/subsystem.conf
 
 if [ "$1" = "purge" ]; then
 
@@ -11,7 +12,7 @@ if [ "$1" = "purge" ]; then
         db_input high ulteo-ovd-subsystem/postrm_remove_chroot || true
         db_go
         db_get ulteo-ovd-subsystem/postrm_remove_chroot
-        [ "$RET" = "true" ] && rm -rf /opt/ulteo
+        [ "$RET" = "true" ] && rm -rf $CHROOTDIR
     fi
 
 fi

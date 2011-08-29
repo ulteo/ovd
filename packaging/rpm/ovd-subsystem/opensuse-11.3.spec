@@ -49,8 +49,11 @@ This package provides the subsystem for the Ulteo Open Virtual Desktop.
 %setup -q
 
 %install -n ulteo-ovd-subsystem
-install -D ovd-subsystem-config %buildroot/usr/sbin/ovd-subsystem-config
+install -D conf/default.conf %buildroot/etc/default/subsystem
+install -D conf/subsystem.conf %buildroot/etc/ulteo/subsystem.conf
 install -D init/suse/ulteo-ovd-subsystem %buildroot/etc/init.d/ulteo-ovd-subsystem
+install -D ovd-subsystem-config %buildroot/usr/sbin/ovd-subsystem-config
+install -D script/uchroot %buildroot/usr/sbin/uchroot
 
 %preun -n ulteo-ovd-subsystem
 if [ "$1" = "0" ]; then
@@ -60,20 +63,21 @@ fi
 
 %postun -n ulteo-ovd-subsystem
 if [ "$1" = "0" ]; then
-    SUBCONF=/etc/ulteo/subsystem.conf
-    CHROOTDIR=/opt/ulteo
-    [ -f $SUBCONF ] && . $SUBCONF
+    [ -f /etc/default/subsystem ] && . /etc/default/subsystem
+    [ -f /etc/ulteo/subsystem.conf ] && . /etc/ulteo/subsystem.conf
     rm -rf $CHROOTDIR
-    rm -f $SUBCONF
 fi
 
 %clean -n ulteo-ovd-subsystem
 rm -rf %buildroot
 
 %files -n ulteo-ovd-subsystem
+%defattr(-,root,root)
+%config /etc/default/subsystem
+%config /etc/ulteo/subsystem.conf
 %defattr(744,root,root)
 /etc/init.d/ulteo-ovd-subsystem
-/usr/sbin/ovd-subsystem-config
+/usr/sbin/*
 
 %changelog -n ulteo-ovd-subsystem
 * Mon Sep 06 2010 Samuel Bovée <samuel@ulteo.com> 99.99.svn4430

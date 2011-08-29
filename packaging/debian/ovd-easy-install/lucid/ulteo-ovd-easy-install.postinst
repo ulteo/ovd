@@ -37,10 +37,7 @@ conf_mysql()
 
     # restart OVD slave server cause the DB was not ready before now
     else
-        CONFFILE=/etc/ulteo/subsystem.conf
-        [ -f "$CONFFILE" ] && . $CONFFILE
-        [ -z "$CHROOTDIR" ] && CHROOTDIR=/opt/ulteo
-        chroot $CHROOTDIR /etc/init.d/ovdSlaveServer restart
+        uchroot /etc/init.d/ovdSlaveServer restart
     fi
 
     su www-data -c 'php /usr/share/ulteo/sessionmanager/admin/init/demo.php'
