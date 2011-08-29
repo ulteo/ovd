@@ -229,7 +229,7 @@ class HttpClientCommunicator(HttpMetaCommunicator, SSLCommunicator):
 			self.communicator = HttpServerCommunicator(remote, communicator=self, ctrl=self.f_ctrl)
 		
 		# gateway header's tag
-		self.http.set_header('Gateway', 'on')
+		self.http.set_header('OVD-Gateway', 'on')
 		
 		# keep alive header handle
 		if not Config.http_keep_alive:
