@@ -52,7 +52,7 @@ This package provides the subsystem for the Ulteo Open Virtual Desktop.
 install -D conf/default.conf %buildroot/etc/default/subsystem
 install -D conf/subsystem.conf %buildroot/etc/ulteo/subsystem.conf
 install -D init/suse/ulteo-ovd-subsystem %buildroot/etc/init.d/ulteo-ovd-subsystem
-install -D ovd-subsystem-config %buildroot/usr/sbin/ovd-subsystem-config
+install -D script/ovd-subsystem-config %buildroot/usr/sbin/ovd-subsystem-config
 install -D script/uchroot %buildroot/usr/sbin/uchroot
 
 %preun -n ulteo-ovd-subsystem

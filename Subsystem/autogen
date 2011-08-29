@@ -30,4 +30,4 @@ else
     version="99.99.svn$revision"
 fi
 
-sed "s/@PKG_VERSION@/${version}/g" ovd-subsystem-config.in > ovd-subsystem-config
+sed "s/@PKG_VERSION@/${version}/g" script/ovd-subsystem-config.in > script/ovd-subsystem-config
