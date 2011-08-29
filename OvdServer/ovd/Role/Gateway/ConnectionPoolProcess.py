@@ -71,12 +71,11 @@ class ConnectionPoolProcess(Process):
 		while self.f_control.is_alive() or not self.socks.empty():
 			try:
 				sock = self.socks.get(timeout=0.01)
-			except Queue.Empty:
+				ssl_conn = SSL.Connection(self.ssl_ctx, sock)
+			except (IOError, Queue.Empty):
 				continue
 			
-			Logger.debug("Gateway:: new connection => %s" % str(sock.getpeername()))
-			
-			ssl_conn = SSL.Connection(self.ssl_ctx, sock)
+			Logger.debug("Gateway:: new connection => %s" % str(ssl_conn.getpeername()))
 			ssl_conn.set_accept_state()
 			ProtocolDetectDispatcher(ssl_conn, self.f_control, self.ssl_ctx)
 
