@@ -383,3 +383,11 @@ function change_admin_password($new_password_) {
 	$implode = implode("\n", $contents);
 	return file_put_contents(SESSIONMANAGER_CONF_FILE, $implode, LOCK_EX);
 }
+
+function validate_ip($ip_) {
+	return preg_match("/^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$/", $ip_);
+}
+
+function validate_fqdn($fqdn_) {
+	return preg_match("/(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)/", $fqdn_);
+}
