@@ -27,4 +27,9 @@ else
 fi
 [ -f /etc/ulteo/subsystem.conf ] && . /etc/ulteo/subsystem.conf
 
+if [ -z "$CHROOTLANG" -o -z "$CHROOTDIR" ]; then
+    echo "required option with empty value" >&2
+    exit 126
+fi
+
 env LANG=$CHROOTLANG LC_ALL=$CHROOTLANG chroot $CHROOTDIR $*
