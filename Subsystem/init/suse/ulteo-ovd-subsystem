@@ -49,7 +49,7 @@ rc_reset
 
 [ "$START" = no ] && exit 0
 
-[ -f /etc/default/subsystem ] && . /etc/default/subsystem
+[ -f /etc/default/ulteo-ovd-subsystem ] && . /etc/default/ulteo-ovd-subsystem
 [ -f /etc/ulteo/subsystem.conf ] && . /etc/ulteo/subsystem.conf
 
 do_start() {
