@@ -72,6 +72,8 @@ $rdp_input_unicode = null;
 if (defined('RDP_INPUT_METHOD'))
 	$rdp_input_unicode = RDP_INPUT_METHOD;
 
+$local_integration = (defined('PORTAL_LOCAL_INTEGRATION') && (PORTAL_LOCAL_INTEGRATION === true));
+
 function get_users_list() {
 	if (! defined('SESSIONMANAGER_HOST'))
 		return false;
@@ -148,6 +150,7 @@ function get_users_list() {
 		<script type="text/javascript">
 			var daemon;
 			var rdp_input_method = <?php echo (($rdp_input_unicode == null)?'null':'\''.$rdp_input_unicode.'\''); ?>;
+			var local_integration = <?php echo (($local_integration === true)?'true':'false'); ?>;
 
 			Event.observe(window, 'load', function() {
 				new Effect.Center($('splashContainer'));

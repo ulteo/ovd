@@ -82,6 +82,8 @@ if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications') 
 $rdp_input_unicode = null;
 if (defined('RDP_INPUT_METHOD'))
 	$rdp_input_unicode = RDP_INPUT_METHOD;
+
+$local_integration = (defined('PORTAL_LOCAL_INTEGRATION') && (PORTAL_LOCAL_INTEGRATION === true));
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -136,6 +138,7 @@ if (defined('RDP_INPUT_METHOD'))
 					var client_language = '<?php echo $user_language; ?>';
 					var client_keymap = '<?php echo $user_keymap; ?>';
 					var rdp_input_method = <?php echo (($rdp_input_unicode == null)?'null':'\''.$rdp_input_unicode.'\''); ?>;
+					var local_integration = <?php echo (($local_integration === true)?'true':'false'); ?>;
 
 					Event.observe(window, 'load', function() {
 						if ('<?php echo $_REQUEST['mode']; ?>' == 'desktop')

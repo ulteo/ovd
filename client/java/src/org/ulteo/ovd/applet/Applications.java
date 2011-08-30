@@ -84,8 +84,13 @@ public class Applications extends OvdApplet {
 	private File jshortcut_dll;
 	private File registry_dll;
 	
+	private boolean local_integration = false;
+	
 	@Override
 	protected void _init(Properties properties) throws FileNotFoundException {
+		properties.setDesktopIcons(this.local_integration);
+		System.out.println("Youpi ! !! properties.setDesktopIcons("+this.local_integration+");");
+		
 		if (properties.isPrinters()) {
 			SeamlessFrame.focusManager = focusManager;
 			SeamlessPopup.focusManager = focusManager;
@@ -100,6 +105,9 @@ public class Applications extends OvdApplet {
 		SessionManagerCommunication smComm = new SessionManagerCommunication(this.sm_host, this.sm_port, true);
 		this.ovd = new OvdClientApplicationsApplet(smComm, properties, this);
 		this.ovd.setKeymap(this.keymap);
+		
+		((OvdClientApplicationsApplet)this.ovd).setPerformDesktopIntegration(this.local_integration);
+		
 		if (this.rdp_input_method != null)
 			this.ovd.setInputMethod(this.rdp_input_method);
 		
@@ -143,6 +151,11 @@ public class Applications extends OvdApplet {
 		String[] address = getParameterNonEmpty("sessionmanager").split(":");
 		this.sm_host = address[0];
 		this.sm_port = Integer.parseInt(address[1]);
+		
+		
+		String param = this.getParameter("local_integration");
+		if (param != null && param.equalsIgnoreCase("true"))
+			this.local_integration = true;
 	}
 	
 	// ********

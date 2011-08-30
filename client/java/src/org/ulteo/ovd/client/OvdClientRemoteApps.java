@@ -71,6 +71,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	private boolean debugSeamless = false;
 	protected boolean publicated = false;
 	protected boolean showDesktopIcons = false;
+	protected boolean performDesktopIntegration = true;
 	protected DesktopIntegrator desktopIntegrator = null;
 
 	
@@ -121,9 +122,11 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			Logger.error(co.getServer()+": Failed to add ovd applications listener: "+ex);
 		}
 		
-		this.desktopIntegrator = new DesktopIntegrator(this.system, new ArrayList<RdpConnectionOvd>(this.connections), this.smComm);
-		this.desktopIntegrator.addDesktopIntegrationListener(this);
-		this.desktopIntegrator.start();
+		if (this.performDesktopIntegration) {
+			this.desktopIntegrator = new DesktopIntegrator(this.system, new ArrayList<RdpConnectionOvd>(this.connections), this.smComm);
+			this.desktopIntegrator.addDesktopIntegrationListener(this);
+			this.desktopIntegrator.start();
+		}
 		
 		for (@SuppressWarnings("unused") Application app : co.getAppsList()) {
 			int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
@@ -390,6 +393,10 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	
 	@Override
 	protected void display(RdpConnection co) {}
+	
+	public void setPerformDesktopIntegration(boolean value) {
+		this.performDesktopIntegration = value;
+	}
 
 	@Override
 	public void shortcutGenerationIsDone(RdpConnectionOvd co) {

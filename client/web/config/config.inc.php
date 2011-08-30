@@ -17,3 +17,7 @@ define('DEBUG_MODE', 0);
 // define('RDP_INPUT_METHOD', 'scancode'); // default
 // define('RDP_INPUT_METHOD', 'unicode');  // alternative method
 
+
+// Perform desktop integration in portal sessions
+//   publish destkop and start menu icons, mime type association, ...
+// define('PORTAL_LOCAL_INTEGRATION', true); // default is false

@@ -22,6 +22,7 @@
 var Applications = Class.create(Daemon, {
 	mode: 'applications',
 	persistent: false,
+	local_integration: false,
 
 	applications: new Hash(),
 	applicationsPanel: null,
@@ -49,6 +50,10 @@ var Applications = Class.create(Daemon, {
 
 		this.applicationsPanel = new ApplicationsPanel($('appsContainer'));
 		this.runningApplicationsPanel = new ApplicationsPanel($('runningAppsContainer'));
+		
+		try {
+			this.local_integration = local_integration;
+		} catch(e) {}
 	},
 
 	connect_servers: function() {
@@ -94,6 +99,8 @@ var Applications = Class.create(Daemon, {
 		applet_params.set('keymap', this.keymap);
 		if (this.rdp_input_method != null)
 			applet_params.set('rdp_input_method', this.rdp_input_method);
+		if (this.local_integration == true)
+			applet_params.set('local_integration', 'true');
 		if (this.sessionmanager != null)
 			applet_params.set('sessionmanager', this.sessionmanager);
 
