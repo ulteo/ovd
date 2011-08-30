@@ -989,14 +989,8 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		if (oldState == newState)
 			return;
 
-		if (newState == WINDOW_MAXIMIZED && (f instanceof SeamFrame)) {
-			SeamFrame sf = (SeamFrame) f;
-			Rectangle maximizedBounds = sf.getMaximizedBounds();
-			sf.setParams(f.sw_getId(), 0, 0, maximizedBounds.width, maximizedBounds.height);
-
-			if (sf.isFullscreenEnabled())
-				return;
-		}
+		if (newState == WINDOW_MAXIMIZED && (f instanceof SeamFrame) && ((SeamFrame) f).isFullscreenEnabled())
+			return;
 
 		StateOrder order = null;
 		for (StateOrder each : this.stateOrders) {

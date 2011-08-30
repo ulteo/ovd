@@ -52,10 +52,6 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	private int id;
 	private int group;
 	private Window parent;
-	private int x;
-	private int y;
-	private int width;
-	private int height;
 	protected Rectangle maxBounds = null;
 	private MouseAdapter mouseAdapter = null;
 	private MouseMotionAdapter mouseMotionAdapter = null;
@@ -147,13 +143,8 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	}
 
 	public void sw_setMyPosition(int x, int y, int width, int height) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-
-		this.setSize(this.width, this.height);
-		this.setLocation(this.x, this.y);
+		this.setSize(width, height);
+		this.setLocation(x, y);
 		this.repaint();
 	}
 
@@ -172,15 +163,17 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 
 	@Override
 	public void paint(Graphics g) {
-		int x_pos = Math.max(this.x - this.maxBounds.x, 0);
-		int y_pos = Math.max(this.y - this.maxBounds.y, 0);
-		int w = Math.min(width, this.backstore.getWidth() - x_pos);
-		int h = Math.min(height, this.backstore.getHeight() - y_pos);
-		int dx = ((this.x < 0) ? -this.x : 0);
-		int dy = ((this.y < 0) ? -this.y : 0);
+		Rectangle bounds = this.getBounds();
 
-		if ((w > 0) && (h > 0))
-			g.drawImage(this.backstore.getSubimage(x_pos, y_pos, w, h), dx , dy, null);
+		int x = Math.max(bounds.x - this.maxBounds.x, 0);
+		int y = Math.max(bounds.y - this.maxBounds.y, 0);
+		int width = Math.min(bounds.width, this.backstore.getWidth() - x);
+		int height = Math.min(bounds.height, this.backstore.getHeight() - y);
+		int dx = ((bounds.x < 0) ? - bounds.x : 0);
+		int dy = ((bounds.y < 0) ? - bounds.y : 0);
+
+		if ((width > 0) && (height > 0))
+			g.drawImage(this.backstore.getSubimage(x, y, width, height), dx , dy, null);
 	}
 
 	/* Icons support for Popups */

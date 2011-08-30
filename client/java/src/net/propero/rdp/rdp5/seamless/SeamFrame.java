@@ -62,7 +62,7 @@ public class SeamFrame extends Frame
 	protected static final int RDP_INPUT_VIRTKEY = 2;
 	protected static final int RDP_INPUT_SCANCODE = 4;
 
-	protected int id,x,y,width,height;
+	protected int id;
 	protected int group;
 	protected int icon_size, icon_offset;
 	protected byte[] icon_buffer;
@@ -154,22 +154,9 @@ public class SeamFrame extends Frame
 	}
 
 	public void sw_setMyPosition(int x, int y, int width, int height) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-
 		this.setSize(width, height);
 		this.setLocation(x, y);
 		this.repaint();
-	}
-
-	public void setParams(int id,int x,int y,int width,int height) {
-		this.id = id;
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
 	}
 	
 	public void update(Graphics g) {
@@ -184,15 +171,17 @@ public class SeamFrame extends Frame
 	}
 	
 	public void paint(Graphics g) {
-		int x = Math.max(this.x - this.maxBounds.x, 0);
-		int y = Math.max(this.y - this.maxBounds.y, 0);
-		int w = Math.min(width,this.backstore.getWidth()-x);
-		int h = Math.min(height,this.backstore.getHeight()-y);
-		int dx = ((this.x) < 0) ? -(this.x) : 0;
-		int dy = ((this.y) < 0) ? -(this.y) : 0;
+		Rectangle bounds = this.getBounds();
 
-		if (w>0 && h>0)
-			g.drawImage(this.backstore.getSubimage(x, y, w, h), dx , dy, null);
+		int x = Math.max(bounds.x - this.maxBounds.x, 0);
+		int y = Math.max(bounds.y - this.maxBounds.y, 0);
+		int weight = Math.min(bounds.width, this.backstore.getWidth() - x);
+		int height = Math.min(bounds.height, this.backstore.getHeight() - y);
+		int dx = ((bounds.x) < 0) ? -(bounds.x) : 0;
+		int dy = ((bounds.y) < 0) ? -(bounds.y) : 0;
+
+		if (weight > 0 && height > 0)
+			g.drawImage(this.backstore.getSubimage(x, y, weight, height), dx , dy, null);
 	}
 
 
