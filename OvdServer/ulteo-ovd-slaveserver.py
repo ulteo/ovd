@@ -87,11 +87,16 @@ def main(queue, config_file, pid_file):
 	
 	else:
 		try:
-			while server.push_production() is False:
+			registred = server.push_production()
+			if registred:
+				_exit(0)
+			else:
+				_exit(5, "Session manager was not reachable")
+			while not registred:
 				Logger.warn("Session Manager not connected. Sleeping for a while ...")
 				time.sleep(60)
+				registred = server.push_production()
 			
-			_exit(0)
 			Logger.info("SlaveServer started")
 			
 			while not server.stopped:
