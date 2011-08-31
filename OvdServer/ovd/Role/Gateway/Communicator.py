@@ -278,18 +278,18 @@ class HttpServerCommunicator(HttpMetaCommunicator, SecureServerCommunicator):
 	
 	
 	def rewrite_xml(self):
-			try:
-					session = parser.XML(self.http.body)
-					if session.tag.lower() != 'session':
-							raise Exception("not a 'session' XML response")
-			except Exception, e:
-					Logger.error("Gateway:: parsing XML session failed: %s" % e)
-					return None
-			
-			session.set('mode_gateway', 'on')
-			for server in session.findall('server'):
-					token = self.f_ctrl.send(('insert_token', server.attrib['fqdn']))
-					server.set('token', token)
-					del server.attrib['fqdn']
-			
-			return parser.tostring(session)
+		try:
+			session = parser.XML(self.http.body)
+			if session.tag.lower() != 'session':
+				raise Exception("not a 'session' XML response")
+		except Exception, e:
+			Logger.error("Gateway:: parsing XML session failed: %s" % e)
+			return None
+		
+		session.set('mode_gateway', 'on')
+		for server in session.findall('server'):
+			token = self.f_ctrl.send(('insert_token', server.attrib['fqdn']))
+			server.set('token', token)
+			del server.attrib['fqdn']
+		
+		return parser.tostring(session)
