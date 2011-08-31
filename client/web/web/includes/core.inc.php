@@ -39,12 +39,9 @@ if (! array_key_exists('ovd-client', $_SESSION))
 	$_SESSION['ovd-client'] = array();
 
 $sessionmanager_url = NULL;
-if (defined('SESSIONMANAGER_HOST')) {
-	if (defined('GATEWAY_WAN_IP') && defined('GATEWAY_WAN_PORT') && defined('GATEWAY_LAN_IP') && defined('GATEWAY_LAN_PORT') && $_SERVER['REMOTE_ADDR'] == GATEWAY_LAN_IP)
-		$sessionmanager_url = 'https://'.GATEWAY_LAN_IP.':'.GATEWAY_LAN_PORT.'/ovd/client';
-	else
-		$sessionmanager_url = 'https://'.SESSIONMANAGER_HOST.'/ovd/client';
-} elseif (array_key_exists('sessionmanager_url', $_SESSION['ovd-client']))
+if (defined('SESSIONMANAGER_HOST'))
+	$sessionmanager_url = 'https://'.SESSIONMANAGER_HOST.'/ovd/client';
+elseif (array_key_exists('sessionmanager_url', $_SESSION['ovd-client']))
 	$sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
 
 $debug_mode = false;

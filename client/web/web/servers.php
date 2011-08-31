@@ -48,11 +48,11 @@ $server_nodes = $dom->getElementsByTagName('server');
 foreach ($server_nodes as $server_node) {
 	$port = 3389;
 
-	if (array_key_exists('gateway', $_SESSION['ovd-client']) && $_SESSION['ovd-client']['gateway'] === true) {
-		if (defined('GATEWAY_WAN_IP') && defined('GATEWAY_WAN_PORT') && defined('GATEWAY_LAN_IP') && defined('GATEWAY_LAN_PORT') && $_SERVER['REMOTE_ADDR'] == GATEWAY_LAN_IP)
-			$url = 'http://'.GATEWAY_WAN_IP.':'.GATEWAY_WAN_PORT;
-		else
-			$url = 'http://'.$_SESSION['ovd-client']['server'];
+	if (array_key_exists('gateway', $_SESSION['ovd-client']) && $_SESSION['ovd-client']['gateway'] === true && array_key_exists('gateway_first', $_SESSION['ovd-client'])) {
+		if ($_SESSION['ovd-client']['gateway_first'] === true)
+			$url = 'http://'.$_POST['requested_host'].':'.$_POST['requested_port'];
+		elseif ($_SESSION['ovd-client']['gateway_first'] === false)
+			$url = 'http://'.$_SESSION['ovd-client']['sessionmanager_host'];
 
 		$host = parse_url($url, PHP_URL_HOST);
 		$port = parse_url($url, PHP_URL_PORT);

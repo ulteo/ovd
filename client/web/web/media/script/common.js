@@ -74,6 +74,8 @@ function startSession() {
 			{
 				method: 'post',
 				parameters: {
+					requested_host: window.location.hostname,
+					requested_port: ((window.location.port !=  '')?window.location.port:'443'),
 					sessionmanager_host: $('sessionmanager_host').value,
 					login: $('user_login').value,
 					password: $('user_password').value,

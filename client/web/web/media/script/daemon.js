@@ -396,7 +396,11 @@ var Daemon = Class.create({
 		new Ajax.Request(
 			'servers.php',
 			{
-				method: 'get',
+				method: 'post',
+				parameters: {
+					requested_host: window.location.hostname,
+					requested_port: ((window.location.port !=  '')?window.location.port:'443')
+				},
 				onSuccess: this.parse_list_servers.bind(this)
 			}
 		);
