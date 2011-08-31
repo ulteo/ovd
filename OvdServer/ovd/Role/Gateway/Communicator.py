@@ -136,12 +136,21 @@ class ServerCommunicator(Communicator):
 		return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
+
+class SecureServerCommunicator(ServerCommunicator, SSLCommunicator):
+
+	def make_socket(self):
+		return SSL.Connection(self.ssl_ctx, ServerCommunicator.make_socket(self))
+
+
+
 """
 RDP Communicators
 """
 
 class RdpClientCommunicator(SSLCommunicator):
 	pass
+
 
 
 class RdpServerCommunicator(ServerCommunicator):
@@ -239,18 +248,14 @@ class HttpClientCommunicator(HttpMetaCommunicator, SSLCommunicator):
 
 
 
-class HttpServerCommunicator(HttpMetaCommunicator, ServerCommunicator):
+class HttpServerCommunicator(HttpMetaCommunicator, SecureServerCommunicator):
 	
 	def __init__(self, remote, communicator=None, ctrl=None):
 		(addr, self.ssl_ctx) = remote
 		self.f_ctrl = ctrl
 
 		HttpMetaCommunicator.__init__(self)
-		ServerCommunicator.__init__(self, addr, communicator=communicator)
-	
-	
-	def make_socket(self):
-		return SSL.Connection(self.ssl_ctx, ServerCommunicator.make_socket(self))
+		SecureServerCommunicator.__init__(self, addr, communicator=communicator)
 	
 	
 	def process(self):
