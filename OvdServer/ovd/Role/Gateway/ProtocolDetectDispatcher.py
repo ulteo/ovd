@@ -30,6 +30,11 @@ from ovd.Logger import Logger
 from OpenSSL import SSL
 
 
+
+class ProtocolException(Exception):
+	pass
+
+
 class ProtocolDetectDispatcher(SSLCommunicator):
 	
 	rdp_ptn = re.compile('\x03\x00.*Cookie: .*token=([\-\w]+);.*')
@@ -73,7 +78,7 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 				fqdn = self.f_ctrl.send(("digest_token", token))
 				Logger.debug("ProtocolDetectDispatcher:: request: RDP (%s -> %s)" % (token, fqdn))
 				if not fqdn:
-					raise Exception('token authorization failed for: ' + token)
+					raise ProtocolException('token authorization failed for: ' + token)
 				
 				client = RdpClientCommunicator(self.socket)
 				client._buffer = self._buffer
@@ -88,8 +93,8 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 			
 			# protocol error
 			else:
-				raise Exception('bad first request line: ' + request)
+				raise ProtocolException('bad first request line: ' + request)
 		
-		except Exception, err:
-			Logger.error("ProtocolDetectDispatcher::handle_read error %s %s" % (type(err), err))
+		except ProtocolException, err:
+			Logger.error("ProtocolDetectDispatcher::handle_read: %s" % err)
 			self.handle_close()
