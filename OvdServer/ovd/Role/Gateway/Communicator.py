@@ -32,6 +32,9 @@ from Utils import gunzip, gzip
 
 from OpenSSL import SSL
 
+__all__ = ['SSLCommunicator', 'RdpClientCommunicator', 'RdpServerCommunicator',
+	'HttpClientCommunicator', 'HttpServerCommunicator', 'HttpsServerCommunicator']
+
 """
 Common communicators
 """
