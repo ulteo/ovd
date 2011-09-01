@@ -239,7 +239,7 @@ class HttpClientCommunicator(HttpMetaCommunicator, SSLCommunicator):
 			if self.communicator is not None:
 				self.communicator.close()
 			remote = ((redirection, Config.https_port), self.ssl_ctx)
-			self.communicator = HttpServerCommunicator(remote, communicator=self, ctrl=self.f_ctrl)
+			self.communicator = HttpsServerCommunicator(remote, self.f_ctrl, communicator=self)
 		
 		# gateway header's tag
 		self.http.set_header('OVD-Gateway', 'on')
@@ -252,14 +252,12 @@ class HttpClientCommunicator(HttpMetaCommunicator, SSLCommunicator):
 
 
 
-class HttpServerCommunicator(HttpMetaCommunicator, SecureServerCommunicator):
+class HttpMetaServerCommunicator(HttpMetaCommunicator):
 	
-	def __init__(self, remote, communicator=None, ctrl=None):
-		(addr, self.ssl_ctx) = remote
+	def __init__(self, ctrl):
 		self.f_ctrl = ctrl
 
 		HttpMetaCommunicator.__init__(self)
-		SecureServerCommunicator.__init__(self, addr, communicator=communicator)
 	
 	
 	def process(self):
@@ -297,3 +295,21 @@ class HttpServerCommunicator(HttpMetaCommunicator, SecureServerCommunicator):
 			del server.attrib['fqdn']
 		
 		return parser.tostring(session)
+
+
+
+class HttpServerCommunicator(HttpMetaServerCommunicator, ServerCommunicator):
+	
+	def __init__(self, addr, ctrl, communicator=None):
+		HttpMetaServerCommunicator.__init__(self, ctrl)
+		ServerCommunicator.__init__(self, addr, communicator=communicator)
+
+
+
+class HttpsServerCommunicator(HttpMetaServerCommunicator, SecureServerCommunicator):
+	
+	def __init__(self, remote, ctrl, communicator=None):
+		(addr, self.ssl_ctx) = remote
+
+		HttpMetaServerCommunicator.__init__(self, ctrl)
+		SecureServerCommunicator.__init__(self, addr, communicator=communicator)
