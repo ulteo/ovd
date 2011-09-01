@@ -137,7 +137,10 @@ class ServerCommunicator(Communicator):
 
 
 
-class SecureServerCommunicator(ServerCommunicator, SSLCommunicator):
+class SecureServerCommunicator(SSLCommunicator, ServerCommunicator):
+
+	def __init__(self, remote=None, communicator=None):
+		ServerCommunicator.__init__(self, remote=remote, communicator=communicator)
 
 	def make_socket(self):
 		return SSL.Connection(self.ssl_ctx, ServerCommunicator.make_socket(self))
@@ -161,9 +164,10 @@ class RdpServerCommunicator(ServerCommunicator):
 HTTP Communicators
 """
 
-class HttpMetaCommunicator(SSLCommunicator):
+class HttpMetaCommunicator(object):
 	
 	def __init__(self):
+		super(HttpMetaCommunicator, self).__init__()
 		self.http = HttpMessage()
 	
 	
@@ -174,7 +178,7 @@ class HttpMetaCommunicator(SSLCommunicator):
 			else:
 				return
 		
-		SSLCommunicator.handle_read(self)
+		super(HttpMetaCommunicator, self).handle_read()
 		if self.make_http_message() is None:
 			return
 		self._buffer = self.process()
