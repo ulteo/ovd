@@ -241,8 +241,12 @@ class HttpClientCommunicator(HttpMetaCommunicator, SSLCommunicator):
 		if redirection is not None:
 			if self.communicator is not None:
 				self.communicator.close()
-			remote = ((redirection, Config.https_port), self.ssl_ctx)
-			self.communicator = HttpsServerCommunicator(remote, self.f_ctrl, communicator=self)
+			if redirection[1] is Config.http_port:
+				self.communicator = HttpServerCommunicator(
+					redirection, self.f_ctrl, communicator=self)
+			elif redirection[1] is Config.https_port:
+				self.communicator = HttpsServerCommunicator(
+					(redirection, self.ssl_ctx), self.f_ctrl, communicator=self)
 		
 		# gateway header's tag
 		self.http.set_header('OVD-Gateway', 'on')

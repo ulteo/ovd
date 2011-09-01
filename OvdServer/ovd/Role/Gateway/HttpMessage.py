@@ -159,16 +159,16 @@ class HttpMessage():
 		if self.path.startswith("/ovd/client/") or \
 		   self.path == "/ovd/admin" or self.path.startswith("/ovd/admin/"):
 			if Config.general.session_manager != addr:
-				return Config.general.session_manager
+				return (Config.general.session_manager, Config.https_port)
 
 		# Web Client
 		elif self.path == '/ovd' or self.path.startswith("/ovd/"):
 			if Config.web_client != addr:
-				return Config.web_client
+				return (Config.web_client, Config.http_port)
 
 		# Unknown URL
 		else:
-			return Config.general.session_manager
+			return (Config.general.session_manager, Config.https_port)
 
 
 	def show(self):

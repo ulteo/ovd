@@ -28,6 +28,7 @@ class Config:
 
 	address = "0.0.0.0"
 	port = 443
+	http_port = 80
 	https_port = 443
 	rdp_port = 3389
 	max_process = 10
