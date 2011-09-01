@@ -5,6 +5,7 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -326,7 +327,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 	/* RdpListener */
 	public void connected(RdpConnection co) {
-		Logger.info("Connected to "+co.getServer());
+		Logger.info("Connected to "+co.getServer()+":"+co.getPort());
 
 		this.performedConnections.add((RdpConnectionOvd) co);
 		this.addAvailableConnection((RdpConnectionOvd)co);
@@ -335,7 +336,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	}
 
 	public void connecting(RdpConnection co) {
-		Logger.info("Connecting to "+co.getServer());
+		Logger.info("Connecting to "+co.getServer()+":"+co.getPort());
 	}
 
 	public void disconnected(RdpConnection co) {
@@ -344,7 +345,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.hide((RdpConnectionOvd)co);
 		this.performedConnections.remove(co);
 		this.availableConnections.remove(co);
-		Logger.info("Disconnected from "+co.getServer());
+		Logger.info("Disconnected from "+co.getServer()+":"+co.getPort());
 
 		if (this.sessionStatusMonitoringThread != null && this.sessionStatusMonitoringThread.isAlive()) {
 			// Break session status monitoring sleep to check with SessionManager ASAP
@@ -354,7 +355,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	}
 
 	public void failed(RdpConnection co, String msg) {
-		Logger.error("Connection to "+co.getServer()+" failed: "+msg);
+		Logger.error("Connection to "+co.getServer()+":"+co.getPort()+" failed: "+msg);
 
 		this.performedConnections.add((RdpConnectionOvd) co);
 	}
