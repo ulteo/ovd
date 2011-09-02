@@ -29,14 +29,13 @@ class Protocol:
 	HTTP = 80
 	HTTPS = 443
 	RDP = 3389
-	SSL = 443
 
 
 
 class Config:
 	general = None
 	address = "0.0.0.0"
-	port = Protocol.SSL
+	port = 443
 	max_process = 10
 	max_connection = 100
 	process_timeout = 60
