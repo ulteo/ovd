@@ -21,7 +21,7 @@
 import httplib
 import re
 
-from Config import Config
+from Config import Config, Protocol
 
 
 HTTP_RESPONSES = {
@@ -157,18 +157,18 @@ class HttpMessage():
 	def redirect(self, addr):
 		# Session Manager and administration
 		if self.path.startswith("/ovd/client/") or \
-		   self.path == "/ovd/admin" or self.path.startswith("/ovd/admin/"):
+			self.path == "/ovd/admin" or self.path.startswith("/ovd/admin/"):
 			if Config.general.session_manager != addr:
-				return (Config.general.session_manager, Config.https_port)
+				return Protocol.HTTPS, (Config.general.session_manager, Protocol.HTTPS)
 
 		# Web Client
 		elif self.path == '/ovd' or self.path.startswith("/ovd/"):
-			if Config.web_client != addr:
-				return (Config.web_client, Config.http_port)
+			if Config.web_client[1] != addr:
+				return Config.web_client[0], Config.web_client[1:]
 
 		# Unknown URL
 		else:
-			return (Config.general.session_manager, Config.https_port)
+			return Protocol.HTTPS, (Config.general.session_manager, Protocol.HTTPS)
 
 
 	def show(self):

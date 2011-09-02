@@ -25,7 +25,7 @@ import httplib
 import socket
 import xml.etree.ElementTree as parser
 
-from HttpMessage import HttpMessage, page_error
+from HttpMessage import HttpMessage, Protocol, page_error
 from Config import Config
 from ovd.Logger import Logger
 from Utils import gunzip, gzip
@@ -239,14 +239,15 @@ class HttpClientCommunicator(HttpMetaCommunicator, SSLCommunicator):
 			addr = self.communicator.getpeername()[0]
 		redirection = self.http.redirect(addr)
 		if redirection is not None:
+			(protocol, addr) = redirection
 			if self.communicator is not None:
 				self.communicator.close()
-			if redirection[1] is Config.http_port:
+			if protocol is Protocol.HTTP:
 				self.communicator = HttpServerCommunicator(
-					redirection, self.f_ctrl, communicator=self)
-			elif redirection[1] is Config.https_port:
+					addr, self.f_ctrl, communicator=self)
+			elif protocol is Protocol.HTTPS:
 				self.communicator = HttpsServerCommunicator(
-					(redirection, self.ssl_ctx), self.f_ctrl, communicator=self)
+					(addr, self.ssl_ctx), self.f_ctrl, communicator=self)
 		
 		# gateway header's tag
 		self.http.set_header('OVD-Gateway', 'on')

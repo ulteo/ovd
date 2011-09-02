@@ -20,17 +20,23 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import socket
+import re
 
 from ovd.Logger import Logger
 
+
+class Protocol:
+	HTTP = 80
+	HTTPS = 443
+	RDP = 3389
+	SSL = 443
+
+
+
 class Config:
 	general = None
-
 	address = "0.0.0.0"
-	port = 443
-	http_port = 80
-	https_port = 443
-	rdp_port = 3389
+	port = Protocol.SSL
 	max_process = 10
 	max_connection = 100
 	process_timeout = 60
@@ -68,12 +74,26 @@ class Config:
 				Logger.error("Invalid int number for process_timeout")
 		
 		if infos.has_key("web_client"):
-			addr = infos["web_client"]
+			r = re.match("(?P<protocol>https?)://(?P<host>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:(?P<port>\d+))?/?$",
+				infos["web_client"])
 			try:
-				socket.inet_aton(addr)
-				Config.web_client = addr
+				if r is None:
+					raise Exception("malformed")
+				socket.inet_aton(r.group('host'))
+				port = r.group('port')
+				if port is not None:
+					port = int(port)
+					if not (port > 0 and port < 65536):
+						raise Exception("incorrect port")
 			except socket.error:
-				Logger.error("Invalid IP for Web Client")
+				Logger.error("Invalid conf for Web Client: incorrect IP")
+			except Exception, e:
+				Logger.error("Invalid conf for Web Client: " + str(e))
+			else:
+				protocol = r.group('protocol')
+				if port is None:
+					port = getattr(Protocol, protocol.upper())
+				Config.web_client = (getattr(Protocol, protocol.upper()), r.group('host'), port)
 		
 		if infos.has_key("admin_redirection"):
 			if infos["admin_redirection"].lower() == "true":

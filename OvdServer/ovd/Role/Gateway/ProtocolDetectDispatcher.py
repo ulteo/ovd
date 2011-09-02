@@ -22,7 +22,7 @@
 
 import re
 
-from Config import Config
+from Config import Config, Protocol
 from Communicator import *
 from ovd.Logger import Logger
 
@@ -81,7 +81,7 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 				
 				client = RdpClientCommunicator(self.socket)
 				client._buffer = self._buffer
-				client.communicator = RdpServerCommunicator((fqdn, Config.rdp_port), communicator=client)
+				client.communicator = RdpServerCommunicator((fqdn, Protocol.RDP), communicator=client)
 			
 			# HTTP case
 			elif http:
