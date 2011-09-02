@@ -138,7 +138,9 @@ $js_translations = array(
 	'session_end_unexpected'		=>	_('Your session has ended unexpectedly'),
 	'error_details'					=>	_('error details'),
 	'close_this_window'				=>	_('Close this window'),
-	'start_another_session'			=>	_('Click <a href="javascript:;" onclick="hideEnd(); showLogin(); return false;">here</a> to start a new session'),
+	'start_another_session'		=>	str_replace(array('[A]', '[/A]'), 
+								array('<a href="javascript:;" onclick="hideEnd(); showLogin(); return false;">', '</a>'),
+								_('Click [A]here[/A] to start a new session')),
 
 	'suspend'						=>	_('suspend'),
 	'resume'						=>	_('resume')
