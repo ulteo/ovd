@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -71,7 +71,7 @@ class ApplicationsStatic:
 			
 			if application["id"] not in applications_id_old or application["revision"] != applications_old[application["id"]]:
 				if not self.addApplication(application):
-					Logger.error("uanble to add application")
+					Logger.error("unable to add application")
 					return False
 		
 		# Delete old applications no longer exists
