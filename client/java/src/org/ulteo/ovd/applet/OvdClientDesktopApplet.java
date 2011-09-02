@@ -24,6 +24,7 @@
 package org.ulteo.ovd.applet;
 
 import java.awt.Dimension;
+import java.awt.Window;
 import java.awt.event.FocusListener;
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdpConnection;
@@ -49,6 +50,10 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 		if (! (applet_ instanceof FocusListener))
 			throw new ClassCastException("[Programmer error] The Applet class must implement FocusListener class");
 		this.applet = applet_;
+	}
+
+	public Window getFullscreenWindow() {
+		return this.externalWindow;
 	}
 
 	public void setFullscreen(boolean isFullscreen_) {

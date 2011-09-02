@@ -23,6 +23,7 @@
 package org.ulteo.ovd.applet;
 
 import java.awt.BorderLayout;
+import java.awt.Frame;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
@@ -115,4 +116,9 @@ public class Desktop extends OvdApplet implements FocusListener {
 		}
 	}
 
+       public void switchBackFullscreenWindow() {
+		System.out.println("switch back fullscreen window requested by javascript");
+		Frame w = (Frame)((OvdClientDesktopApplet) this.ovd).getFullscreenWindow();
+		w.setExtendedState(Frame.NORMAL);
+       }
 }
