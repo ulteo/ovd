@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -49,7 +50,8 @@ function locale2unix($locale_) {
 	return $locale;
 }
 
-setlocale(LC_ALL, locale2unix($_REQUEST['lang']));
+if (array_key_exists('lang', $_REQUEST))
+	setlocale(LC_ALL, locale2unix($_REQUEST['lang']));
 $domain = 'uovdclient';
 bindtextdomain($domain, LOCALE_DIR);
 textdomain($domain);
