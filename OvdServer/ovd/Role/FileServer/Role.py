@@ -2,6 +2,7 @@
 
 # Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
+# Author David LECHEVALIER <david@ulteo.com> 2011 
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 # Author Samuel BOVEE <samuel@ulteo> 2011
 #
@@ -25,14 +26,13 @@ import os
 import statvfs
 import time
 from xml.dom.minidom import Document
-from pyinotify import WatchManager, ThreadedNotifier
 
 from ovd.Logger import Logger
 from ovd.Platform.System import System
 from ovd.Role.Role import Role as AbstractRole
 
 from Config import Config
-from Rec import Rec
+from DirectoryWatcher import DirectoryWatcher
 from Share import Share
 from User import User
 
@@ -41,6 +41,7 @@ class Role(AbstractRole):
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
 		self.shares = {}
+		self.wm = None
 	
 	def init(self):
 		Logger.info("FileServer init")
@@ -60,10 +61,7 @@ class Role(AbstractRole):
 			Logger.error("FileServer: unable to cleanup users")
 			return False
 		
-		wm = WatchManager()
-		self.inotify = ThreadedNotifier(wm)
-		wm.add_watch(path=Config.spool, mask=Rec.mask, proc_fun=Rec(), rec=False, auto_add=True)
-		
+		self.wm = DirectoryWatcher()
 		
 		self.shares = self.get_existing_shares()
 		
@@ -76,7 +74,7 @@ class Role(AbstractRole):
 	
 	
 	def stop(self):
-		self.inotify.stop()
+		self.wm.stop()
 	
 	
 	def finalize(self):
@@ -86,8 +84,7 @@ class Role(AbstractRole):
 	
 	def run(self):
 		self.status = Role.STATUS_RUNNING
-		self.inotify.start()
-		self.inotify.join()
+		self.wm.start()
 		self.status = Role.STATUS_STOP
 	
 	
