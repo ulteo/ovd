@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: uovdsmadmin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-02-21 15:23+0100\n"
-"PO-Revision-Date: 2011-02-24 22:32+0200\n"
+"PO-Revision-Date: 2011-09-05 10:33+0200\n"
 "Last-Translator: Giuliano Bordonaro\n"
 "Language-Team: Italian\n"
 "Language: it\n"
@@ -52,7 +52,7 @@ msgstr ""
 #: ../../SessionManager/web/admin/actions.php:110
 msgid "Application '%APPLICATION%' successfully deleted from server '%SERVER%'"
 msgstr ""
-"L'applicativo '%APPLICATON%' è stato cancellato correttamente dal server '%"
+"L'applicativo '%APPLICATION%' è stato cancellato correttamente dal server '%"
 "SERVER%'"
 
 #: ../../SessionManager/web/admin/actions.php:146
@@ -493,7 +493,7 @@ msgstr "Non riesco a cancellare questa cartella di rete '%s'"
 #: ../../SessionManager/web/admin/actions.php:1212
 #, php-format
 msgid "Unable to delete network folder with id '%s'"
-msgstr "Non riesco a cancellare questa cartella di rete"
+msgstr "Non riesco a cancellare la cartella di rete '%s'"
 
 # 94%
 # 100%
