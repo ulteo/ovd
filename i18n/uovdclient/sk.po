@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: uovdclient\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-02-21 16:14+0100\n"
-"PO-Revision-Date: 2011-06-02 12:50+0200\n"
+"PO-Revision-Date: 2011-06-14 08:09+0200\n"
 "Last-Translator: Martin Kusovsky\n"
 "Language-Team: Slovak\n"
 "Language: sk\n"
@@ -71,7 +71,7 @@ msgstr "Mód"
 #: ../../client/web/web/translate.php:74
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:998
 msgid "Desktop"
-msgstr "Desktop"
+msgstr "Plocha"
 
 #: ../../client/web/web/translate.php:75
 msgid "Portal"
@@ -151,7 +151,7 @@ msgstr "Nemáte <strong>prístup</strong> k tejto službe."
 
 #: ../../client/web/web/translate.php:99
 msgid "Loading Open Virtual Desktop"
-msgstr "Načítavam Desktop"
+msgstr "Načítavam virtuálnu pracovnú plochu"
 
 #: ../../client/web/web/translate.php:100
 msgid "Welcome!"
