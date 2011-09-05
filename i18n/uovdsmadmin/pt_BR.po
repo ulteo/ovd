@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: uovdsmadmin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-02-21 15:23+0100\n"
-"PO-Revision-Date: 2011-02-25 14:15+0200\n"
+"PO-Revision-Date: 2011-09-05 02:20+0200\n"
 "Last-Translator: Flávio Veras\n"
-"Language-Team: Portuguese translations\n"
+"Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -177,7 +177,7 @@ msgstr "Não foi possível importar a aplicação '%s'"
 #: ../../SessionManager/web/admin/actions.php:395
 #, php-format
 msgid "'%s' application's icon was successfully deleted"
-msgstr "ícone da aplicação '% s' foi excluído com êxito"
+msgstr "ícone da aplicação '%s' foi excluído com êxito"
 
 #: ../../SessionManager/web/admin/actions.php:428
 #: ../../SessionManager/web/admin/actions.php:515
@@ -632,7 +632,7 @@ msgstr "Não é possível adicinar pasta compartilhada"
 #: ../../SessionManager/web/admin/actions.php:1619
 #, php-format
 msgid "Shared folder '%s' successfully added"
-msgstr "As pastas compartilhadas 's%' foram adicionadas com sucesso"
+msgstr "As pastas compartilhadas '%s' foram adicionadas com sucesso"
 
 #: ../../SessionManager/web/admin/actions.php:1628
 #: ../../SessionManager/web/admin/actions.php:1651
@@ -2247,13 +2247,13 @@ msgstr "Não é possível listar os aplicativos disponíveis"
 #: ../../SessionManager/web/admin/servers.php:51
 #, php-format
 msgid "Server \"%s\": redirection name may be invalid!"
-msgstr "Servidor \"% s\": o nome de redirecionamento pode ser inválido!"
+msgstr "Servidor \"%s\": o nome de redirecionamento pode ser inválido!"
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:113
 #: ../../SessionManager/web/admin/servers.php:53
 #, php-format
 msgid "Server \"%s\": redirection name cannot be empty!"
-msgstr "Servidor \"% s\": nome do redirecionamento não pode estar vazio!"
+msgstr "Servidor \"%s\": nome do redirecionamento não pode estar vazio!"
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:215
 msgid "Number of available sessions on this server"
