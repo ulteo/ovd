@@ -368,7 +368,7 @@ msgstr "Piilota kuvakkeet"
 
 #: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:46
 msgid "Disconnect"
-msgstr "Yhteys katkaistu"
+msgstr "Katkaise yhteys"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:52
 msgid "Start loading session"
