@@ -37,7 +37,7 @@ if [ -n "$eth" ]; then
 fi
 
 # add ulteo repository
-cat > /target/etc/apt/sources.list.d/ovd.list << EOF
+cat > /target/etc/apt/sources.list.d/ulteo-ovd.list << EOF
 # OVD repository
 deb http://archive.ulteo.com/ovd/trunk/ubuntu lucid main
 EOF
