@@ -22,7 +22,7 @@
 
 import re
 
-from Config import Config, Protocol
+from Config import Protocol
 from Communicator import *
 from ovd.Logger import Logger
 
