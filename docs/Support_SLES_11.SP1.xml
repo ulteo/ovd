@@ -25,14 +25,44 @@
     <simplesect id="seLinux">
       <title id="seLinux_title">SELinux</title>
       <para id="seLinux_para1">
-        Ulteo OVD is not compatible with SELinux yet.
+        Ulteo OVD is not compatible with SELinux yet. So, if you have
+        SELinux installed and enabled on your system, you have to
+        disable it.
       </para>
       <para id="seLinux_para2">
-        So please disable SELinux support:
+        To disable SELinux:
+
+        <itemizedlist>
+          <listitem>
+            <para>
+              Edit the <emphasis>/etc/selinux/config</emphasis> file
+              and set the <emphasis>SELINUX</emphasis> variable to <emphasis>disabled</emphasis>.
+            </para>
+            <screen>
+<![CDATA[SELINUX=disabled]]>
+            </screen>
+          </listitem>
+
+          <listitem>
+            <para>
+              Reboot your system
+            </para>
+            <screen>
+<![CDATA[# reboot]]>
+            </screen>
+          </listitem>
+
+          <listitem>
+            <para>
+              Check SELinux is now disabled
+            </para>
+            <screen>
+<![CDATA[# sestatus
+SELinux status:              disabled]]>
+            </screen>
+          </listitem>
+        </itemizedlist>
       </para>
-      <screen>
-<![CDATA[# @rpm_install_cmd@ remove selinux-policy]]>
-      </screen>
     </simplesect>
   </section>
 
