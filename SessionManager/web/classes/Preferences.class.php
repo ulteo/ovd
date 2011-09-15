@@ -410,6 +410,7 @@ class Preferences {
 			'id_ID'=>'Bahasa Indonesia',
 			'it_IT'=>'Italiano',
 			'ja_JP'=>'日本語',
+			'nb_NO'=>'Norsk (bokmål)',
 			'nl_NL'=>'Nederlands',
 			'pt_BR'=>'Português (Brasil)',
 			'ro_RO'=>'Română',

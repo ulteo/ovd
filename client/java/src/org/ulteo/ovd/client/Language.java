@@ -57,7 +57,7 @@ public class Language {
 //			{"Latvian", "", "lv"},
 //			{"Lithuanian", "Lietuvių", "lt"},
 //			{"Maltese", "", "mt"},
-//			{"Norwegian (Bokmal)", "Norsk (Bokmål)", "no-nb"},
+			{"Norwegian (Bokmal)", "Norsk (Bokmål)", "nb", "no"},
 //			{"Norwegian (Nynorsk)", "", "no"},
 //			{"Polish", "Polski", "pl"},
 //			{"Portuguese", "Português", "pt"},

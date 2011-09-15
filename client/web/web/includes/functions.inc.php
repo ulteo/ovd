@@ -128,7 +128,7 @@ function get_available_languages() {
 // 		array('id' => 'lv', 'english_name' => 'Latvian'),
 // 		array('id' => 'lt', 'english_name' => 'Lithuanian', 'local_name' => 'Lietuvių'),
 // 		array('id' => 'mt', 'english_name' => 'Maltese'),
-// 		array('id' => 'no-nb', 'english_name' => 'Norwegian (Bokmal)', 'local_name' => 'Norsk (Bokmål)'),
+		array('id' => 'nb-no', 'english_name' => 'Norwegian (Bokmal)', 'local_name' => 'Norsk (Bokmål)'),
 // 		array('id' => 'no', 'english_name' => 'Norwegian (Nynorsk)'),
 // 		array('id' => 'pl', 'english_name' => 'Polish', 'local_name' => 'Polski'),
 // 		array('id' => 'pt', 'english_name' => 'Portuguese', 'local_name' => 'Português'),
