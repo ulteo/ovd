@@ -20,7 +20,7 @@ case "$1" in
         for triggername in $2; do
             case "$triggername" in
                 "slaveserver-restart")
-                    service ovdSlaveServer restart
+                    service ulteo-ovd-slaveserver restart
                 ;;
             esac
         done

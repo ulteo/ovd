@@ -10,5 +10,5 @@ include /usr/share/cdbs/1/class/python-distutils.mk
 
 # fix an issue: dh_installinit creates scripts after dh_pycentral
 binary-post-install/ulteo-ovd-slaveserver::
-	cp examples/ovdSlaveServer debian/ulteo-ovd-slaveserver.ovdSlaveServer.init
-	dh_installinit -pulteo-ovd-slaveserver --name=ovdSlaveServer
+	cp examples/ulteo-ovd-slaveserver.init debian
+	dh_installinit -pulteo-ovd-slaveserver
