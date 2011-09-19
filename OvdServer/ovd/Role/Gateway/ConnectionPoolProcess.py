@@ -73,11 +73,10 @@ class ConnectionPoolProcess(Process):
 				sock = self.socks.get(timeout=0.01)
 				ssl_conn = SSL.Connection(self.ssl_ctx, sock)
 				Logger.debug("Gateway:: new connection => %s" % str(ssl_conn.getpeername()))
+				ssl_conn.set_accept_state()
+				ProtocolDetectDispatcher(ssl_conn, self.f_control, self.ssl_ctx)
 			except (IOError, Queue.Empty):
 				continue
-			
-			ssl_conn.set_accept_state()
-			ProtocolDetectDispatcher(ssl_conn, self.f_control, self.ssl_ctx)
 
 			# reload asyncore if stopped
 			if self.t_asyncore is None or not self.t_asyncore.is_alive():
