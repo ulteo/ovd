@@ -173,7 +173,6 @@ scripts_DATA = ad.png \
                ng.png \
                ni.png \
                nl.png \
-               no-nb.png \
                no.png \
                np.png \
                nr.png \
