@@ -497,8 +497,14 @@ public abstract class RdesktopCanvas extends Canvas {
      *            the line
      */
     public void drawLine(int x1, int y1, int x2, int y2, int color, int opcode) {
+        int Bpp = this.opt.Bpp;
+
         // convert to 24-bit colour
         color = new Bitmap(this.opt).convertTo24(color);
+
+        // correction for 24-bit colour
+        if (Bpp == 3 || Bpp == 4)
+            color = ((color & 0xFF) << 16) | (color & 0xFF00) | ((color & 0xFF0000) >> 16);
 
         if (x1 == x2 || y1 == y2) {
             drawLineVerticalHorizontal(x1, y1, x2, y2, color, opcode);
@@ -1051,10 +1057,6 @@ public abstract class RdesktopCanvas extends Canvas {
         int datasize = polyline.getDataSize();
         byte[] databytes = polyline.getData();
         int lines = polyline.getLines();
-
-        // convert to 24-bit colour
-        fgcolor = new Bitmap(this.opt).convertTo24(fgcolor);
-
         // hack - data as single element byte array so can pass by ref to
         // parse_delta
         // see http://www.rgagnon.com/javadetails/java-0035.html
