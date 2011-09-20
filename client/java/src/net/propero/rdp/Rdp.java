@@ -85,7 +85,7 @@ public class Rdp {
 
     private static final int RDP_DATA_PDU_FONT2 = 39;
 
-    private static final int RDP_DATA_PDU_DISCONNECT = 47;
+    private static final int PDUTYPE2_SET_ERROR_INFO_PDU = 47;
 
     // Control PDU types
     private static final int RDP_CTL_REQUEST_CONTROL = 1;
@@ -484,11 +484,11 @@ public class Rdp {
     }
 
     /**
-     * Process a disconnect PDU
+     * Process an error PDU
      * @param data Packet containing disconnect PDU at current read position
      * @return Code specifying the reason for disconnection
      */
-    protected int processDisconnectPdu(RdpPacket_Localised data) {
+    protected int processErrorPdu(RdpPacket_Localised data) {
         logger.debug("Received disconnect PDU");
         return data.getLittleEndian32();
     }
@@ -1081,14 +1081,17 @@ public class Rdp {
             logger.debug("User logged on");
             this.opt.loggedon = true;
             break;
-        case RDP_DATA_PDU_DISCONNECT:
+        case (Rdp.PDUTYPE2_SET_ERROR_INFO_PDU):
             /*
              * Normally received when user logs out or disconnects from a
              * console session on Windows XP and 2003 Server
              */
-            ext_disc_reason[0] = processDisconnectPdu(data);
-            logger.debug(("Received disconnect PDU\n"));
-            return true;
+            ext_disc_reason[0] = processErrorPdu(data);
+            if (ext_disc_reason[0] != 0) {
+                logger.debug(("Received disconnect PDU\n"));
+                return true;
+            }
+            break;
 
         default:
             logger.warn("Unimplemented Data PDU type " + data_type);

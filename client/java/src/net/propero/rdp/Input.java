@@ -176,6 +176,10 @@ public abstract class Input {
     */
 	protected void setInputListeners() {
 		this.mouseAdapter = new RdesktopMouseAdapter();
+		MouseListener[] mlisteners = this.canvas.getMouseListeners();
+		for (int i=0 ; i < mlisteners.length; i++)
+			this.canvas.removeMouseListener(mlisteners[i]);
+			
 		this.canvas.addMouseListener(this.mouseAdapter);
 		if (! OSTools.isMac() || MouseInfo.getNumberOfButtons() > 3) {
 			this.opt.isMouseWheelEnabled = true;
@@ -184,7 +188,15 @@ public abstract class Input {
 			Input.logger.warn("No mouse wheel was detected");
 		this.mouseMotionAdapter = new RdesktopMouseMotionAdapter();
 		this.canvas.addMouseMotionListener(this.mouseMotionAdapter);
+		MouseMotionListener[] mmlisteners = this.canvas.getMouseMotionListeners();
+		for (int i=0 ; i < mlisteners.length; i++)
+			this.canvas.removeMouseMotionListener(mmlisteners[i]);
+		
 		this.keyAdapter = new RdesktopKeyAdapter();
+		KeyListener[] klisteners = this.canvas.getKeyListeners();
+		for (int i=0 ; i < klisteners.length; i++)
+			this.canvas.removeKeyListener(klisteners[i]);
+
 		this.canvas.addKeyListener(this.keyAdapter);
 	}
 
