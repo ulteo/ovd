@@ -231,6 +231,28 @@ get_parent(HWND hwnd)
 	return result;
 }
 
+static int getWindowState(HWND hwnd) {
+	if (IsZoomed(hwnd))
+		return 2;
+	else if (IsIconic(hwnd))
+		return 1;
+	else
+		return 0;
+}
+
+static BOOL setWindowState(HWND hwnd, int state) {
+	if (state == 0)
+		ShowWindow(hwnd, SW_RESTORE);
+	else if (state == 1)
+		ShowWindow(hwnd, SW_MINIMIZE);
+	else if (state == 2)
+		ShowWindow(hwnd, SW_MAXIMIZE);
+	else
+		return FALSE;
+
+	return TRUE;
+}
+
 static void
 getScreenSize() {
 	g_screen_width = GetSystemMetrics(SM_CXSCREEN);
@@ -593,12 +615,7 @@ static void create_window(HWND hwnd){
 			DeleteObject(icon);
 		}
 
-		if (style & WS_MAXIMIZE)
-			state = 2;
-		else if (style & WS_MINIMIZE)
-			state = 1;
-		else
-			state = 0;
+		state = getWindowState(hwnd);
 
 		update_position(hwnd);
 		vchannel_write("STATE", "0x%08lx,0x%08x,0x%08x", hwnd,
@@ -1051,19 +1068,11 @@ SafeFocus(unsigned int serial, HWND hwnd, int action)
 DLL_EXPORT void
 SafeSetState(unsigned int serial, HWND hwnd, int state)
 {
-	LONG style;
 	int curstate;
 
 	vchannel_block();
 
-	style = GetWindowLong(hwnd, GWL_STYLE);
-
-	if (style & WS_MAXIMIZE)
-		curstate = 2;
-	else if (style & WS_MINIMIZE)
-		curstate = 1;
-	else
-		curstate = 0;
+	curstate = getWindowState(hwnd);
 
 	if (state == curstate)
 	{
@@ -1080,13 +1089,7 @@ SafeSetState(unsigned int serial, HWND hwnd, int state)
 
 	vchannel_unblock();
 
-	if (state == 0)
-		ShowWindow(hwnd, SW_RESTORE);
-	else if (state == 1)
-		ShowWindow(hwnd, SW_MINIMIZE);
-	else if (state == 2)
-		ShowWindow(hwnd, SW_MAXIMIZE);
-	else
+	if (! setWindowState(hwnd, state))
 		debug("Invalid state %d sent.", state);
 
 	WaitForSingleObject(g_mutex, INFINITE);
