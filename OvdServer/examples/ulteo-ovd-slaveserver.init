@@ -81,13 +81,12 @@ do_stop () {
 		return 0
 	fi
 
-	pidofproc -p $PIDFILE >/dev/null
+	local pid=$(pidofproc -p $PIDFILE)
 	if [ $? -ne 0 ]; then
 		log_warning_msg "not running"
 		rm -f $PIDFILE
 
 	else
-		local pid=$(pidofproc -p $PIDFILE)
 		kill $pid
 		waitpid $pid 10
 		if [ $? -eq 1 ]; then
