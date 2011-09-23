@@ -1,0 +1,127 @@
+#!/bin/sh
+
+# Copyright (C) 2008-2011 Ulteo SAS
+# http://www.ulteo.com
+# Author Gauvain POCENTEK <gauvain@ulteo.com> 2008
+# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010
+# Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
+# Author Laurent CLOUET <laurent@ulteo.com> 2011
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+### BEGIN INIT INFO
+# Provides:          ulteo-ovd-slaveserver
+# Required-Start:    $network
+# Required-Stop:     $network
+# Should-Start:      xrdp
+# Should-Stop:       xrdp
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start Ulteo OVD slave server
+# Description:       Start Ulteo OVD slave server
+### END INIT INFO
+
+. /etc/rc.status
+
+NAME="Ulteo OVD SlaveServer"
+PROGRAM=ulteo-ovd-slaveserver
+PIDFILE=/var/run/ovd-slaveserver.pid
+LOGS=/var/log/ulteo/ovd/slaveserver.log
+
+waitpid() {
+	local pid=$1
+	local timeout=$2
+	local t0=$(date +"%s")
+
+	while [ -d /proc/$1 ]; do
+		sleep 0.5
+
+		if [ -n "$timeout" ]; then
+			local t1=$(date +"%s")
+			[ $(($t1-$t0)) -gt $2 ] && return 1
+		fi
+	done
+
+	return 0
+}
+
+do_start () {
+	echo -n "Starting $NAME"
+
+	if [ -f $PIDFILE ]; then
+		if ps $(cat $PIDFILE) >/dev/null; then
+			echo -n " (already running)"
+			return 0
+		else
+			rm $PIDFILE
+		fi
+	fi
+
+	$PROGRAM --daemonize --pid-file $PIDFILE >>$LOGS 2>&1 || return 1
+}
+
+do_stop () {
+	echo -n "Stopping $NAME"
+
+	if [ ! -f $PIDFILE ]; then
+		echo -n " (not running)"
+		return 0
+	fi
+
+	local pid=$(pidofproc -p $PIDFILE /usr/bin/python)
+	if [ $? -ne 0 ]; then
+		echo -n " (not running)"
+		rm -f $PIDFILE
+
+	else
+		kill $pid
+		waitpid $pid 10
+		if [ $? -eq 1 ]; then
+			echo -n " (force kill)"
+			kill -9 $pid
+			rm -f $PIDFILE
+		fi
+	fi
+	return 0
+}
+
+rc_reset
+
+case $1 in
+	start)
+		do_start
+		rc_status -v
+	;;
+
+	stop)
+		do_stop
+		rc_status -v
+	;;
+
+	restart|force-reload)
+		do_stop
+		rc_status -v
+		sleep 0.2
+		do_start
+		rc_status -v
+	;;
+
+	*)
+		echo "Usage: $0 {start|stop|force-reload|restart}"
+        	rc_failed 1
+	;;
+esac
+
+rc_exit

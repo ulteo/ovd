@@ -1,0 +1,65 @@
+#!/bin/sh
+
+# Copyright (C) 2011 Ulteo SAS
+# Author Samuel BOVEE <samuel@ulteo.com> 2011
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, version 2
+# of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+PROGRAM=$(basename $0)
+
+CONFFILE=/etc/ulteo/ovd/slaveserver.conf
+
+usage ()
+{
+    echo << EOF "\
+Usage: $PROGRAM [--sm-address] [--version|-v] [--help|-h]
+Configure an Ulteo Web client (Open Virtual Desktop)
+
+  --sm-address         Ulteo OVD Session Manager address
+  --help|-h            display this help
+  --version|-v         display version informations"
+EOF
+}
+
+unset SM
+while [ -n "$1" ]; do
+    case $1 in
+        --sm-address)
+            SM="$2"
+            shift;;
+        --help|-h)
+            usage
+            exit 0;;
+        --version|-v)
+            version=$(grep "^Version:" "$(find /usr/lib/python/site-packages/ -maxdepth 1 -name "ovd_slaveserver-*.egg-info" 2>/dev/null| head -n 1)" 2>/dev/null | cut -d ':' -f2 | tr -d ' ')
+            [ -z "$version" ] && version="unknown"
+            echo $version
+            exit 0;;
+        *)
+            usage
+            exit 1;;
+    esac
+    shift
+done
+
+if [ -z "$SM" ]; then
+    DEFAULT_SM=$(grep "^session_manager" $CONFFILE | cut -d '=' -f2 | tr -d ' ')
+    echo -n "Session Manager address [$DEFAULT_SM]: " && read SM
+    [ -z "$SM" ] && SM=$DEFAULT_SM
+fi
+
+sed -ri "/^session_manager/ s/(.*)=.*/\1= $SM/" $CONFFILE
+
+exit 0
