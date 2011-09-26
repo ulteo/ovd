@@ -41,6 +41,7 @@ import org.jpedal.PdfDecoder;
 import org.jpedal.objects.PrinterOptions;
 import org.jpedal.io.ObjectStore;
 
+import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.utils.FilesOp;
 
 public class OVDJob{
@@ -113,6 +114,12 @@ public class OVDJob{
 	
 	public boolean print(){
 		if (this.printerName == null) {
+			return true;
+		}
+		
+		if (OSTools.isLinux()) {
+			LinuxPrinter lp = new LinuxPrinter(this.printerName, this.pdfFilename);
+			new Thread(lp).start();
 			return true;
 		}
 		
