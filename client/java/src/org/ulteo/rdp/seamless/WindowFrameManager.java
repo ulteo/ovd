@@ -67,8 +67,6 @@ public class WindowFrameManager implements MouseListener, MouseMotionListener {
 	}
 
 	public void mousePressed(MouseEvent me) {
-		SeamlessMovingResizing sw = (SeamlessMovingResizing) me.getComponent();
-
 		this.lastMouseEvent = new MouseEvent(me.getComponent(), me.getID(), new Date().getTime(), me.getModifiers(), me.getX(), me.getY(), me.getClickCount(), me.isPopupTrigger(), me.getButton());
 
 		this.processMouseEvent(me, SeamlessMovingResizing.MOUSE_PRESSED);
