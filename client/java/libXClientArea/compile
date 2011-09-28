@@ -25,8 +25,8 @@ echo "* libXClientArea.so ${ARCH}bits"
 
 # for packaging
 if which schroot > /dev/null && schroot -l | cut -d ':' -f2 | grep -q "^lucid$ARCH$"; then
-    schroot -c lucid$ARCH -- make -s clean && \
-    schroot -c lucid$ARCH -- make -s STATIC=yes 2>/dev/null
+    schroot -q -c lucid$ARCH -- make -s clean && \
+    schroot -q -c lucid$ARCH -- make -s STATIC=yes 2>/dev/null
 
 # for devs
 else
