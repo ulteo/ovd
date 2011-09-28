@@ -182,9 +182,8 @@ class HttpMetaCommunicator(object):
 				return
 		
 		super(HttpMetaCommunicator, self).handle_read()
-		if self.make_http_message() is None:
-			return
-		self._buffer = self.process()
+		if self.make_http_message() is not None:
+			self._buffer = self.process()
 	
 	
 	def make_http_message(self):
@@ -199,8 +198,10 @@ class HttpMetaCommunicator(object):
 				return None
 		
 		if not self.http.is_body():
-			len_buf = self.http.put_body(self._buffer)
-			self._buffer = self._buffer[len_buf:]
+			self.http.put_body(self._buffer)
+			self._buffer = ''
+			#TODO: prefer this way (implement later)
+			#self._buffer = self._buffer[len_buf:]
 			if not self.http.is_body():
 				return None
 		

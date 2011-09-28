@@ -57,13 +57,17 @@ class HttpException(Exception):
 class HttpMessage():
 
 	http_ptn = re.compile('((?:HEAD)|(?:GET)|(?:POST)) (.*) HTTP/(.\..)')
+	chunk_ptn = re.compile("^(?P<size>[a-fA-F\d]+)\r\n(?P<data>.*)$", re.S)
+	DEFLATE = 1
+	CHUNKED = 2
 
 	def __init__(self):
 		self.headers = ''
 		self.body = ''
 
 		self.path = ''
-		self.len_body = -1
+		self.TE = HttpMessage.DEFLATE
+		self.len_body = 0
 		self.xml_rewrited = False
 
 
@@ -78,10 +82,6 @@ class HttpMessage():
 		return bool(self.headers)
 
 
-	def is_body(self):
-		return len(self.body) == self.len_body
-
-
 	def get_header(self, header):
 		if isinstance(header, str):
 			_re = self._get_re_header(header)
@@ -93,6 +93,7 @@ class HttpMessage():
 			return value.group(1).strip()
 		else:
 			return None
+	
 	
 	def set_header(self, header, value):
 		new_header = "%s: %s\r" % (header, value)
@@ -110,20 +111,68 @@ class HttpMessage():
 		res = HttpMessage.http_ptn.search(first_line)
 		if res is not None:
 			self.path = res.group(2)
-
-		len_body = self.get_header('Content-Length')
-		if len_body is not None:
-			self.len_body = int(len_body)
+		
+		TE = self.get_header('Transfer-Encoding')
+		if TE is not None and TE in 'chunked':
+			self.TE = HttpMessage.CHUNKED
 		else:
-			self.len_body = 0
-
+			self.TE = HttpMessage.DEFLATE
+			len_body = self.get_header('Content-Length')
+			if len_body is not None:
+				self.len_body = int(len_body)
+	
+	
+	def is_body(self):
+		if self.TE is HttpMessage.DEFLATE:
+			return len(self.body) == self.len_body
+		elif self.TE is HttpMessage.CHUNKED:
+			return bool(self.get_header('Content-Length'))
+	
 	
 	def put_body(self, body):
-		_len_body = len(self.body)
-		self.body += body[:(self.len_body - _len_body)]
-		return len(self.body) - _len_body
+		if self.TE is HttpMessage.DEFLATE:
+			_len_body = len(self.body)
+			self.body += body[:(self.len_body - _len_body)]
+			return len(self.body) - _len_body
+		
+		# http://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html#sec19.4.6
+		# HTTP chunked mode (experimental support)
+		elif self.TE is HttpMessage.CHUNKED:
+			self.chunk_body_tmp = body
+			self.len_chunk_body_tmp = len(self.chunk_body_tmp)
+			len_body = len(self.body)
 
+			def find_chunck_size(self):
+				while self.len_chunk_body_tmp > 0:
+					(chunck_size, s, self.chunk_body_tmp) = self.chunk_body_tmp.partition('\r\n')
+					self.len_chunk_body_tmp = len(self.chunk_body_tmp)
+					try:
+						chunck_size = int(chunck_size, 16)
+					except ValueError:
+						continue
+					else:
+						self.len_body += chunck_size
+						if chunck_size is 0:
+							self.set_header('Content-Length', self.len_body)
+							self.set_header('Transfer-Encoding', 'deflate')
+						return chunck_size
+				return -1
 
+			if len_body == self.len_body:
+				if find_chunck_size(self) is 0:
+					return
+
+			while len_body < self.len_body and self.len_chunk_body_tmp > 0:
+				self.body += self.chunk_body_tmp[:(self.len_body - len_body)]
+				len_body = len(self.body)
+				
+				self.chunk_body_tmp = self.chunk_body_tmp[self.chunk_body_tmp.find('\r\n')+2:]
+				self.len_chunk_body_tmp = len(self.chunk_body_tmp)
+				
+				if find_chunck_size(self) is 0:
+					return
+	
+	
 	def set_body(self, content):
 		self.body = content
 		self.len_body = len(self.body)
