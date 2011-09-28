@@ -61,7 +61,7 @@ public class WorkArea {
 
 		ClassLoader classLoader = WorkArea.class.getClassLoader();
 		try {
-			Class XBaseWindowClass = classLoader.loadClass("sun.awt.X11.XBaseWindow");
+			Class<?> XBaseWindowClass = classLoader.loadClass("sun.awt.X11.XBaseWindow");
 			Method getWindowMethod = XBaseWindowClass.getMethod("getWindow", (Class[]) null);
 
 			Long window_id = (Long) getWindowMethod.invoke(peer, (Object[]) null);
