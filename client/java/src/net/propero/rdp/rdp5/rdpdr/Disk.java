@@ -460,7 +460,7 @@ public class Disk extends RdpdrDevice{
 				
 				//Set mod time 
 				File tempFile = getFileFromHandle(handle);
-				if(tempFile.exists()){
+				if(tempFile.exists() && mod_time != 0){
 					try{
 						tempFile.setLastModified(mod_time);
 					}catch(SecurityException e){
