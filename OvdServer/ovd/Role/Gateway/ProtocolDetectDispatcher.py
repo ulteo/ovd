@@ -22,8 +22,9 @@
 
 import re
 
+from Communicator import RdpClientCommunicator, RdpServerCommunicator, \
+	HttpClientCommunicator, SSLCommunicator
 from Config import Protocol
-from Communicator import *
 from ovd.Logger import Logger
 
 from OpenSSL import SSL
