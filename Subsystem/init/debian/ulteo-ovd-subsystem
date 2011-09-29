@@ -40,6 +40,12 @@
 [ -f /etc/default/ulteo-ovd-subsystem ] && . /etc/default/ulteo-ovd-subsystem
 [ -f /etc/ulteo/subsystem.conf ] && . /etc/ulteo/subsystem.conf
 
+_print() {
+        RETVAL=$?
+        log_daemon_msg "$1"
+        log_end_msg $RETVAL
+}
+
 do_start() {
     [ -d "$CHROOTDIR" ] || return 1
 
@@ -52,10 +58,10 @@ do_start() {
     mount -t devpts none $CHROOTDIR/dev/pts 2>/dev/null
     mount -t tmpfs none $CHROOTDIR/dev/shm 2>/dev/null
 
-    uchroot service cups start
-    uchroot service xrdp start
-    uchroot service smbd start
-    uchroot service apache2 start
+    uchroot service cups start && \
+    uchroot service xrdp start && \
+    uchroot service smbd start && \
+    uchroot service apache2 start && \
     uchroot service ulteo-ovd-slaveserver start
 }
 
@@ -71,28 +77,27 @@ do_stop() {
     umount $CHROOTDIR/dev/shm 2>/dev/null
     umount $CHROOTDIR/dev/pts 2>/dev/null
     umount $CHROOTDIR/proc 2>/dev/null
+    
+    return 0
 }
 
 case $1 in
     start)
         do_start
-        log_daemon_msg "Starting Ulteo OVD subsystem"
-        log_end_msg $?
+        _print "Starting Ulteo OVD subsystem"
         ;;
     stop)
         do_stop
-        log_daemon_msg "Stopping Ulteo OVD subsystem"
-        log_end_msg $?
+        _print "Stopping Ulteo OVD subsystem"
         ;;
     restart|reload|force-reload)
         do_stop && sleep 1 && do_start
-        log_daemon_msg "Re-starting Ulteo OVD subsystem"
-        log_end_msg $?
+        _print "Re-starting Ulteo OVD subsystem"
         ;;
     *)
         log_action_msg "Usage: service ulteo-ovd-subsystem {start|stop|reload|restart}"
-        exit 1
+        RETVAL=1
         ;;
 esac
 
-exit 0
+exit $RETVAL

@@ -52,6 +52,12 @@ rc_reset
 [ -f /etc/default/ulteo-ovd-subsystem ] && . /etc/default/ulteo-ovd-subsystem
 [ -f /etc/ulteo/subsystem.conf ] && . /etc/ulteo/subsystem.conf
 
+_print() {
+    rc_check
+    echo -n "$1"
+    rc_status -v
+}
+
 do_start() {
     [ -d "$CHROOTDIR" ] || return 1
 
@@ -64,10 +70,10 @@ do_start() {
     mount -t devpts none $CHROOTDIR/dev/pts 2>/dev/null
     mount -t tmpfs none $CHROOTDIR/dev/shm 2>/dev/null
 
-    uchroot service cups start
-    uchroot service xrdp start
-    uchroot service smbd start
-    uchroot service apache2 start
+    uchroot service cups start && \
+    uchroot service xrdp start && \
+    uchroot service smbd start && \
+    uchroot service apache2 start && \
     uchroot service ulteo-ovd-slaveserver start
 }
 
@@ -83,28 +89,27 @@ do_stop() {
     umount $CHROOTDIR/dev/shm 2>/dev/null
     umount $CHROOTDIR/dev/pts 2>/dev/null
     umount $CHROOTDIR/proc 2>/dev/null
+
+    return 0
 }
 
 case $1 in
     start)
         do_start
-        echo -n "Starting Ulteo OVD subsystem"
-        rc_status -v
+        _print "Starting Ulteo OVD subsystem"
         ;;
     stop)
         do_stop
-        echo -n "Stopping Ulteo OVD subsystem"
-        rc_status -v
+        _print "Stopping Ulteo OVD subsystem"
         ;;
     restart|reload|force-reload)
         do_stop && sleep 1 && do_start
-        echo -n "Re-starting Ulteo OVD subsystem"
-        rc_status -v
+        _print "Re-starting Ulteo OVD subsystem"
         ;;
     *)
         echo "Usage: $0 {start|stop|reload|restart}"
-        exit 1
+        rc_failed
         ;;
 esac
 
-exit 0
+rc_exit
