@@ -103,7 +103,7 @@ while [ -z "$LOGIN" ]; do
 done
 
 stty_orig=$(stty -g)
-while true; do
+while [ -z "$PASS" ]; do
     while [ -z "$PASS1" ]; do
         echo -n "Password: "
         stty -echo
@@ -121,15 +121,12 @@ while true; do
 
     if [ "$PASS1" = "$PASS2" ]; then
         PASS=$(echo -n $PASS1 | md5sum | cut -d " " -f 1)
-        unset PASS1
-        unset PASS2
-        sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_LOGIN.*').*('.*)$,\1$LOGIN\2," \
-            $CONFFILE
-        sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_PASSWORD.*').*('.*)$,\1$PASS\2," \
-            $CONFFILE
-        break
+    else
+        echo "Passwords don't match... try again."
     fi
-    echo "Passwords don't match... try again."
+
+    unset PASS1
+    unset PASS2
 done
 
 if [ -z "$NODOWNLOAD" ]; then
@@ -187,6 +184,9 @@ if [ "$NOCONFIRM" -ne 1 ]; then
 fi
 
 [ -n "$OVDDEBUG" ] && exit 0
+
+sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_LOGIN.*').*('.*)$,\1$LOGIN\2," $CONFFILE
+sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_PASSWORD.*').*('.*)$,\1$PASS\2," $CONFFILE
 
 if [ -z "$NODOWNLOAD" ]; then
     case $URI in
