@@ -29,9 +29,9 @@ class Config:
 	@staticmethod
 	def init(infos):
 		if infos.has_key("multithread"):
-			Config.multithread = (infos["multithread"].lower() == True)
+			Config.multithread = (infos["multithread"].lower() == "true")
 		
 		if infos.has_key("clean_dump_archive"):
-			Config.clean_dump_archive = (infos["clean_dump_archive"].lower() == True)
+			Config.clean_dump_archive = (infos["clean_dump_archive"].lower() == "true")
 		
 		return True
