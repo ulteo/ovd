@@ -3,6 +3,7 @@
 # Copyright (C) 2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2011
+# Author David LECHEVALIER <david@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -23,6 +24,7 @@ from ovd.Logger import Logger
 class Config:
 	general = None
 	multithread = False
+	checkShell = False
 	clean_dump_archive = True
 	
 	
@@ -30,6 +32,9 @@ class Config:
 	def init(infos):
 		if infos.has_key("multithread"):
 			Config.multithread = (infos["multithread"].lower() == "true")
+		
+		if infos.has_key("checkshell"):
+			Config.checkShell = (infos["checkshell"].lower() == "true")
 		
 		if infos.has_key("clean_dump_archive"):
 			Config.clean_dump_archive = (infos["clean_dump_archive"].lower() == "true")
