@@ -234,8 +234,7 @@ class User {
 		if (Preferences::moduleIsEnabled('SharedFolderDB') == false) {
 			return array();
 		}
-		$prefs = Preferences::getInstance();
-		$session_settings_defaults = $prefs->get('general', 'session_settings_defaults');
+		$session_settings_defaults = $this->getSessionSettings('session_settings_defaults');
 		if (array_key_exists('enable_sharedfolders', $session_settings_defaults)) {
 			$enable_sharedfolders = $session_settings_defaults['enable_sharedfolders'];
 			if ($enable_sharedfolders == 0) {
