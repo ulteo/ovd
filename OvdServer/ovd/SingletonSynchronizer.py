@@ -26,13 +26,26 @@ class SingletonSynchronizer:
 	
 	def __init__(self):
 		self.config = {}
+		self.roleConfig = {}
 		
 	def backup(self):
 		for k in Config.__dict__.keys():
 			self.config[k] = Config.__dict__[k]
+		
+		for role in Config.roles:
+			RoleConfig = __import__("ovd.Role.%s.Config"%(role), {}, {}, "Config")
+
+			self.roleConfig[role] = {}
+			for k in RoleConfig.Config.__dict__.keys():
+				self.roleConfig[role][k] = RoleConfig.Config.__dict__[k]
 	
 	def restore(self):
 		for k in self.config.keys():
 			Config.__dict__[k] = self.config[k]
+		
+		for role in self.roleConfig.keys():
+			RoleConfig = __import__("ovd.Role.%s.Config"%(role), {}, {}, "Config")
+			for k in self.roleConfig[role].keys():
+				RoleConfig.Config.__dict__[k] = self.roleConfig[role][k]
 		
 		Logger.initialize("OVD", Config.log_level)
