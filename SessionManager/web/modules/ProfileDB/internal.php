@@ -2,7 +2,8 @@
 /**
  * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009 - 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -228,7 +229,7 @@ class ProfileDB_internal extends ProfileDB  {
 	}
 	
 	public function remove($profile_id_) {
-		Logger::error('main', "ProfileDB::internal::remove($profile_id_)");
+		Logger::debug('main', "ProfileDB::internal::remove($profile_id_)");
 		$profile = $this->import($profile_id_);
 		if (is_object($profile) == false ) {
 			Logger::error('main', "ProfileDB::internal::remove($profile_id_) failed, unable to import profile");
