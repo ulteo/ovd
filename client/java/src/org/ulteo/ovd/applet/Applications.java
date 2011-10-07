@@ -89,7 +89,6 @@ public class Applications extends OvdApplet {
 	@Override
 	protected void _init(Properties properties) throws FileNotFoundException {
 		properties.setDesktopIcons(this.local_integration);
-		System.out.println("Youpi ! !! properties.setDesktopIcons("+this.local_integration+");");
 		
 		if (properties.isPrinters()) {
 			SeamlessFrame.focusManager = focusManager;
