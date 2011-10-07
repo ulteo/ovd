@@ -333,7 +333,7 @@ function show_manage($login, $userDB, $userGroupDB) {
         echo $group->name;
       }
       echo '</td>';
-      if ($usergroupdb_rw and $can_manage_usersgroups) {
+      if ($usergroupdb_rw and $can_manage_usersgroups and ($group->isDefault() == false)) {
         echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user from this group?').'\');">';
         echo '<input type="hidden" name="name" value="User_UserGroup" />';
         echo '<input type="hidden" name="action" value="del" />';
