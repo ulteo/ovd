@@ -661,18 +661,23 @@ if ($_REQUEST['name'] == 'User_UserGroup') {
 	}
 
 	if ($_REQUEST['action'] == 'del') {
-		$ret = Abstract_Liaison::delete('UsersGroup', $_REQUEST['element'], $_REQUEST['group']);
-		if ($ret === true) {
-			$userGroupDB = UserGroupDB::getInstance();
-			$group = $userGroupDB->import($_REQUEST['group']);
-			if (is_object($group)) {
-				popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $group->name));
-			}
-			else {
-				// problem, what to do ?
-				popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $_REQUEST['group']));
-			}
+		$userGroupDB = UserGroupDB::getInstance();
+
+		$group = $userGroupDB->import($_REQUEST['group']);
+		if (! is_object($group)) {
+			popup_error(sprintf(_("Usergroup '%s' does not exist"), $_REQUEST['group']));
+			redirect();
 		}
+
+		if ($group->isDefault()) {
+			popup_error(sprintf(_("Unable to remove an user from usergroup '%s' because it is the default usergroup"), $group->name));
+			redirect();
+		}
+
+		Abstract_Liaison::delete('UsersGroup', $_REQUEST['element'], $_REQUEST['group']);
+		popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $group->name));
+		
+		redirect();
 	}
 }
 
