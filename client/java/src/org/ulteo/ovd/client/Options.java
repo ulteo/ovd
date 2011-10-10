@@ -25,13 +25,8 @@
 package org.ulteo.ovd.client;
 
 import java.awt.Dimension;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
-import org.ulteo.ovd.client.profile.ProfileIni;
 import org.ulteo.ovd.client.profile.ProfileProperties;
-import org.ulteo.ovd.client.profile.ProfileRegistry;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.utils.ProxyManager;
@@ -93,63 +88,7 @@ public class Options {
 		return (this.mask & flag) != 0;
 	}
 
-	public boolean getIniProfile(String path) {
-		ProfileIni ini = new ProfileIni();
-
-		if (path == null) {
-			List<String> profiles = ini.listProfiles();
-
-			if (profiles == null)
-				return false;
-
-			profile = ProfileIni.DEFAULT_PROFILE;
-
-			if (! profiles.contains(profile))
-				return false;
-		}
-		else {
-			File file = new File(path);
-			profile = file.getName();
-			path = file.getParent();
-		}
-
-		ProfileProperties properties = null;
-		try {
-			properties = ini.loadProfile(profile, path);
-		} catch (IOException ex) {
-			System.err.println("Unable to load \""+profile+"\" profile: "+ex.getMessage());
-			return false;
-		}
-		
-		this.parseProperties(properties);
-
-		this.setFlag(Options.FLAG_REMEMBER_ME);
-
-		return true;
-	}
-
-	
-	public boolean getRegistryProfile() {
-		ProfileRegistry registry = new ProfileRegistry();
-		ProfileProperties properties;
-		try {
-			properties = registry.loadProfile();
-		} catch (IOException ex) {
-			org.ulteo.Logger.error("Getting profile preferencies from registry failed: "+ex.getMessage());
-			return false;
-		}
-		if (properties == null)
-			return false;
-
-		this.parseProperties(properties);
-
-		this.setFlag(Options.FLAG_REMEMBER_ME);
-
-		return true;
-	}
-
-	
-	private void parseProperties(ProfileProperties properties) {
+	public void parseProperties(ProfileProperties properties) {
 		if (properties == null)
 			return;
 
