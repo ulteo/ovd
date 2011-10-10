@@ -24,6 +24,7 @@ define('WEB_CLIENT_ROOT', realpath(dirname(__FILE__).'/..'));
 $buf = @ini_get('include_path');
 @ini_set('include_path', $buf.':'.WEB_CLIENT_ROOT.'/PEAR');
 
+define('WEB_CLIENT_CONF_DIR', '/etc/ulteo/webclient');
 define('WEB_CLIENT_CONF_FILE', '/etc/ulteo/webclient/config.inc.php');
 
 if (file_exists(WEB_CLIENT_CONF_FILE))
