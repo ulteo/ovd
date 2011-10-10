@@ -445,6 +445,9 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	}
 
 	public void applyConfig(RdpConnectionOvd rc, Options opts) {
+		if (opts == null)
+			return;
+		
 		if (opts.usePacketCompression)
 			rc.setPacketCompression(opts.usePacketCompression);
 		

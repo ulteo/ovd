@@ -176,6 +176,6 @@ public class ExternalAppsClient {
 		
 		OvdClient cli = new OvdClientIntegrated(dialog);
 		Runtime.getRuntime().addShutdownHook(new ShutdownTask(cli));
-		cli.perform();
+		cli.perform(null);
 	}
 }
