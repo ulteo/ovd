@@ -39,6 +39,8 @@ public class ProfileIni extends Profile {
 	private static final String INI_SECTION_SCREEN = "screen";
 	private static final String INI_SECTION_GUI = "gui";
 	private static final String INI_SECTION_PROXY = "proxy";
+	private static final String INI_SECTION_RDP = "rdp";
+	private static final String INI_SECTION_PERSISTENT_CACHE = "persistentCache";
 	
 	private static final String PROFILE_EXT = ".conf";
 	public static final String DEFAULT_PROFILE = "default";
@@ -299,6 +301,39 @@ public class ProfileIni extends Profile {
 		value = ini.get(INI_SECTION_PROXY, PROXY_PASSWORD);
 		if (value != null)
 			properties.setProxyPassword(value);
+
+		value = ini.get(INI_SECTION_RDP, FIELD_RDP_PACKET_COMPRESSION);
+		if (value != null) {
+			boolean usePacketCompression = false;
+			if (value.equalsIgnoreCase(VALUE_TRUE))
+				usePacketCompression = true;
+			properties.setUsePacketCompression(usePacketCompression);
+		}
+		
+		value = ini.get(INI_SECTION_RDP, FIELD_RDP_PERSISTENT_CACHE);
+		if (value != null) {
+			boolean usePersistentCache = false;
+			if (value.equalsIgnoreCase(VALUE_TRUE))
+				usePersistentCache = true;
+			properties.setUsePersistantCache(usePersistentCache);
+		}
+		
+		value = ini.get(INI_SECTION_PERSISTENT_CACHE, FIELD_PERSISTENT_CACHE_PATH);
+		if (value != null) {
+			properties.setPersistentCachePath(value);
+		}
+		
+		value = ini.get(INI_SECTION_PERSISTENT_CACHE, FIELD_PERSISTENT_CACHE_MAX_CELLS);
+		if (value != null) {
+			int persistentCacheMaxCell = properties.getPersistentCacheMaxCells();
+			try {
+				Integer.parseInt(value);
+			}
+			catch (NumberFormatException e) {
+				Logger.error("Failed to parse peristent cache max cells: '"+value+"'");
+			}
+			properties.setPersistentCacheMaxCells(persistentCacheMaxCell);
+		}
 
 		return properties;
 	}

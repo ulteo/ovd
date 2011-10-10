@@ -852,7 +852,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		boolean exit = false;
 		if (! this.isCancelled) {
 			Runtime.getRuntime().addShutdownHook(new ShutdownTask(this.client));
-			exit = this.client.perform();
+			exit = this.client.perform(this.opts);
 		}
 		else
 			this.client.disconnectAll();

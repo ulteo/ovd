@@ -75,7 +75,10 @@ public class Options {
 	public boolean guiLocked = false;
 	public boolean isBugReporterVisible = false;
 	public boolean savePassword = false;
-
+	public boolean usePacketCompression = false;
+	public boolean usePersistantCache = false;
+	public String persistentCachePath = "";
+	public int persistentCacheMaxCells = 0;
 	
 	public Options() {
 	}
@@ -180,6 +183,16 @@ public class Options {
 		if (!this.getFlag(Options.FLAG_SHOW_BURGREPORTER)) {
 			this.isBugReporterVisible = properties.isBugReporterVisible();
 			this.setFlag(Options.FLAG_SHOW_BURGREPORTER);
+		}
+		
+		if (properties.isUsePacketCompression()) {
+			this.usePacketCompression = true;
+		}
+		if (properties.isUsePersistantCache()) {
+			this.usePersistantCache = true;
+			
+			this.persistentCachePath = properties.getPersistentCachePath();
+			this.persistentCacheMaxCells = properties.getPersistentCacheMaxCells();
 		}
 		
 		new ProxyManager().updateProxy(properties);

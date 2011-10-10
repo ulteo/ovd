@@ -212,7 +212,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	 * not called by applet mode
 	 * @return
 	 */
-	boolean perform() {
+	boolean perform(Options option) {
 		if (!(this instanceof OvdClientPerformer))
 			throw new ClassCastException("OvdClient must inherit from an OvdClientPerformer to use 'perform' action");
 		
@@ -223,6 +223,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		
 		for (RdpConnectionOvd rc : this.connections) {
 			this.customizeConnection(rc);
+			this.applyConfig(rc, option);
 			rc.addRdpListener(this);
 		}
 
@@ -442,5 +443,16 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		}
 		return null;
 	}
-	
+
+	public void applyConfig(RdpConnectionOvd rc, Options opts) {
+		if (opts.usePacketCompression)
+			rc.setPacketCompression(opts.usePacketCompression);
+		
+		if (opts.usePersistantCache) {
+			rc.setPersistentCaching(opts.usePersistantCache);
+			
+			rc.setPersistentCachingPath(opts.persistentCachePath);
+			rc.setPersistentCachingMaxSize(opts.persistentCacheMaxCells);
+		}
+	}
 }

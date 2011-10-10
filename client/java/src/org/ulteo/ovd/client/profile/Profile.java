@@ -70,6 +70,11 @@ public abstract class Profile {
 	protected static final String VALUE_SCANCODE_INPUT_METHOD = "scancode";
 	protected static final String VALUE_UNICODE_INPUT_METHOD = "unicode";
 	
+	protected static final String FIELD_RDP_PACKET_COMPRESSION = "usePacketCompression";
+	protected static final String FIELD_RDP_PERSISTENT_CACHE = "usePersistentCache";
+	protected static final String FIELD_PERSISTENT_CACHE_PATH = "cachePath";
+	protected static final String FIELD_PERSISTENT_CACHE_MAX_CELLS = "cacheMaxCell";
+	
 	private SymmetricCryptography crypto = null;
 
 	public Profile() {
