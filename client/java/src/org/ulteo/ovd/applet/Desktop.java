@@ -4,6 +4,7 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -55,6 +56,7 @@ public class Desktop extends OvdApplet implements FocusListener {
 		ServerAccess aps = new ServerAccess(this.server, this.port, this.username, this.password);
 		aps.token = this.token;
 		this.rc = ((OvdClientDesktopApplet)this.ovd).createRDPConnection(aps);
+		this.applyConfig(rc);
 		
 		BorderLayout layout = new BorderLayout();
 		this.setLayout(layout);
@@ -88,6 +90,7 @@ public class Desktop extends OvdApplet implements FocusListener {
 		this.username = this.getParameterNonEmpty("username");
 		this.password = this.getParameterNonEmpty("password");
 		this.token = this.getParameter("token");
+		this.wc = this.getParameter("wc_url");
 		String strPort = this.getParameterNonEmpty("port");
 		try {
 			this.port = Integer.parseInt(strPort);

@@ -4,6 +4,7 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -42,6 +43,7 @@ import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 
 import org.ulteo.rdp.OvdAppChannel;
+import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.rdp.seamless.SeamlessFrame;
 import org.ulteo.rdp.seamless.SeamlessPopup;
 import org.ulteo.utils.FilesOp;
@@ -105,6 +107,11 @@ public class Applications extends OvdApplet {
 		this.ovd = new OvdClientApplicationsApplet(smComm, properties, this);
 		this.ovd.setKeymap(this.keymap);
 		
+		ArrayList<RdpConnectionOvd> connections = this.ovd.getAvailableConnections();
+		for (RdpConnectionOvd c: connections) {
+			this.applyConfig(c);
+		}
+		
 		((OvdClientApplicationsApplet)this.ovd).setPerformDesktopIntegration(this.local_integration);
 		
 		if (this.rdp_input_method != null)
@@ -150,6 +157,7 @@ public class Applications extends OvdApplet {
 		String[] address = getParameterNonEmpty("sessionmanager").split(":");
 		this.sm_host = address[0];
 		this.sm_port = Integer.parseInt(address[1]);
+		this.wc = this.getParameter("wc_url");
 		
 		
 		String param = this.getParameter("local_integration");

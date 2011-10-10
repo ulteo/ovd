@@ -4,6 +4,7 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,11 +28,16 @@ import java.io.FileNotFoundException;
 
 import org.ulteo.Logger;
 import org.ulteo.ovd.client.ClientInfos;
+import org.ulteo.ovd.client.Options;
 import org.ulteo.ovd.client.OvdClient;
+import org.ulteo.ovd.client.WebClientCommunication;
+import org.ulteo.ovd.client.profile.ProfileProperties;
+import org.ulteo.ovd.client.profile.ProfileWeb;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.Protocol;
+import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 import org.ulteo.utils.AbstractFocusManager;
 import org.ulteo.utils.LibraryLoader;
@@ -49,6 +55,8 @@ public abstract class OvdApplet extends Applet {
 
 	protected AbstractFocusManager focusManager;
 	protected OvdClient ovd = null;
+	protected Options opts;
+	protected String wc = null;
 	
 	public static final String JS_API_F_SERVER = "serverStatus";
 	public static final String JS_API_O_SERVER_CONNECTED = "connected";
@@ -151,6 +159,12 @@ public abstract class OvdApplet extends Applet {
 				this.focusManager = new AppletFocusManager(appletPrinterThread);
 			}
 			
+			this.opts = new Options();
+			WebClientCommunication webComm = new WebClientCommunication(this.wc);
+			
+			if (!this.getWebProfile(webComm))
+				System.out.println("Unable to get webProfile");
+			
 			_init(properties);
 			this.finished_init = true;
 		}
@@ -222,5 +236,30 @@ public abstract class OvdApplet extends Applet {
 					this.getClass(), functionName, instance, status, e.getMessage()));
 		}
 	}
+	
+	public boolean getWebProfile(WebClientCommunication wcc) {
+		ProfileWeb webProfile = new ProfileWeb();
+		ProfileProperties properties;
+		properties = webProfile.loadProfile(wcc);
+		
+		if (properties == null)
+			return false;
+		
+		this.opts.parseProperties(properties);
+		
+		return true;
+	}
+	
+	public void applyConfig(RdpConnectionOvd c) {
+		if (this.opts.usePacketCompression) {
+			c.setPacketCompression(this.opts.usePacketCompression);
+		}
 
+		if (this.opts.usePersistantCache) {
+			c.setPersistentCaching(this.opts.usePersistantCache);
+			
+			c.setPersistentCachingPath(this.opts.persistentCachePath);
+			c.setPersistentCachingMaxSize(this.opts.persistentCacheMaxCells);
+		}
+	}
 }
