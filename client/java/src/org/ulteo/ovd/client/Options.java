@@ -76,6 +76,7 @@ public class Options {
 	public boolean isBugReporterVisible = false;
 	public boolean savePassword = false;
 	public boolean usePacketCompression = false;
+	public boolean useOffscreenCache = false;
 	public boolean usePersistantCache = false;
 	public String persistentCachePath = "";
 	public int persistentCacheMaxCells = 0;
@@ -187,6 +188,9 @@ public class Options {
 		
 		if (properties.isUsePacketCompression()) {
 			this.usePacketCompression = true;
+		}
+		if (properties.isUseOffscreenCache()) {
+			this.useOffscreenCache = true;
 		}
 		if (properties.isUsePersistantCache()) {
 			this.usePersistantCache = true;

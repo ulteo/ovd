@@ -99,6 +99,12 @@ public class ProfileWeb extends Profile {
 					else
 						properties.setUsePersistantCache(false);
 				}
+				if (keyName.equalsIgnoreCase(FIELD_RDP_USE_OFFSCREEN_CACHE)) {
+					if (valueName.equalsIgnoreCase(VALUE_TRUE) || valueName.equalsIgnoreCase("1"))
+						properties.setUseOffscreenCache(true);
+					else
+						properties.setUseOffscreenCache(false);
+				}
 			}
 
 			if (sectionName.equalsIgnoreCase(INI_SECTION_PERSISTENT_CACHE)) {

@@ -363,4 +363,8 @@ public class RdpConnectionOvd extends RdpConnection {
 		}
 	}
 	
+	public void setUseOffscreenCache(boolean value) {
+		this.opt.supportOffscreen = value;
+	}
+	
 }

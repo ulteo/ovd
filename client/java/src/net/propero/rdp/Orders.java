@@ -75,6 +75,35 @@ public class Orders {
     private static final int RDP_ORDER_BMPCACHE2 = 5;
     private static final int RDP_ORDER_JPEGCACHE = 99;
 
+    /* alternate order types (GDI+) */
+    private static final int RDP_ORDER_TS_ALTSEC_SWITCH_SURFACE = 0x0;
+    private static final int RDP_ORDER_TS_ALTSEC_CREATE_OFFSCR_BITMAP = 0x1;
+    
+	@SuppressWarnings("unused")
+	private static final int RDP_ORDER_TS_ALTSEC_STREAM_BITMAP_FIRST = 0x02;
+	@SuppressWarnings("unused")
+	private static final int RDP_ORDER_TS_ALTSEC_STREAM_BITMAP_NEXT = 0x03;
+	@SuppressWarnings("unused")
+	private static final int RDP_ORDER_TS_ALTSEC_CREATE_NINEGRID_BITMAP = 0x04;
+	@SuppressWarnings("unused")
+	private static final int RDP_ORDER_TS_ALTSEC_GDIP_FIRST = 0x05;
+	@SuppressWarnings("unused")
+	private static final int RDP_ORDER_TS_ALTSEC_GDIP_NEXT = 0x06;
+	@SuppressWarnings("unused")
+	private static final int RDP_ORDER_TS_ALTSEC_GDIP_END = 0x07;
+	@SuppressWarnings("unused")
+	private static final int RDP_ORDER_TS_ALTSEC_GDIP_CACHE_FIRST = 0x08;
+	@SuppressWarnings("unused")
+	private static final int RDP_ORDER_TS_ALTSEC_GDIP_CACHE_NEXT = 0x09;
+	@SuppressWarnings("unused")
+	private static final int RDP_ORDER_TS_ALTSEC_GDIP_CACHE_END = 0x0A;
+	@SuppressWarnings("unused")
+	private static final int RDP_ORDER_TS_ALTSEC_WINDOW= 0x0B;
+	@SuppressWarnings("unused")
+	private static final int RDP_ORDER_TS_ALTSEC_COMPDESK_FIRST = 0x0C;
+	@SuppressWarnings("unused")
+	private static final int RDP_ORDER_TS_ALTSEC_FRAME_MARKER = 0x0D;
+
     @SuppressWarnings("unused")
     private static final int MIX_TRANSPARENT = 0;
     private static final int MIX_OPAQUE = 1;
@@ -140,10 +169,10 @@ public class Orders {
             order_flags = data.get8();
 
             if ((order_flags & RDP_ORDER_STANDARD) == 0) {
-                throw new OrderException("Order parsing failed!");
+                this.processAlternateOrders(data, order_flags);
             }
 
-            if ((order_flags & RDP_ORDER_SECONDARY) != 0) {
+            else if ((order_flags & RDP_ORDER_SECONDARY) != 0) {
                 this.processSecondaryOrders(data);
             } else {
 
@@ -275,7 +304,69 @@ public class Orders {
         this.surface = surface;
         surface.registerCache(this.common.cache);
     }
+    
+    private void processSwitchSurface(RdpPacket_Localised data) throws RdesktopException {
+    	int cache_idx;
 
+    	cache_idx = data.getLittleEndian16();
+
+    	if (cache_idx < 0) {
+    		this.surface.backstore.setCurrent(null);
+    		return;
+    	}
+    	Bitmap bitmap = this.common.cache.getBitmap(255, cache_idx);
+    	this.surface.backstore.setCurrent(bitmap);
+    }
+
+    private void processCreateOffscrBitmap(RdpPacket_Localised data) throws RdesktopException {
+    	int cache_idx, cx, cy, count, idx;
+    	
+    	cache_idx = data.getLittleEndian16();
+    	cx = data.getLittleEndian16();
+    	cy = data.getLittleEndian16();
+
+    	// Check if there is deletion list
+    	if ((cache_idx & 0x8000) > 0) {
+    		count = data.getLittleEndian16();
+    		
+    		for (int i = 0; i < count; i++) {
+    			idx = data.getLittleEndian16();
+    			this.common.cache.putBitmap(255, idx, null, 0);
+    		}
+    	}
+    	cache_idx &= 0xFFFF;
+    	cache_idx &= ~0x8000;
+    	
+    	
+    	Bitmap cachedBitmap = this.common.cache.getBitmap(255, cache_idx);
+    	Bitmap b = new Bitmap(cx, cy, this.opt);
+    	if (cachedBitmap != null && this.surface.backstore.getCurrent() == cachedBitmap.getBufferedImage())
+    		this.surface.backstore.setCurrent(b);
+    	
+    	this.common.cache.putBitmap(255, cache_idx, b, 0);
+    }
+    
+    private void processAlternateOrders(RdpPacket_Localised data, int order_flags)
+            throws OrderException, RdesktopException {
+    	
+    	if ((order_flags & 0x2) == 0) {   // Check the class order
+    		logger.error("Parsing failed "+order_flags);
+    		throw new OrderException("Order parsing failed!");
+    	}
+    	order_flags >>= 2;
+    	switch (order_flags)
+    	{
+    		case RDP_ORDER_TS_ALTSEC_CREATE_OFFSCR_BITMAP:
+    			processCreateOffscrBitmap(data);
+    			break;
+    		case RDP_ORDER_TS_ALTSEC_SWITCH_SURFACE:
+    			processSwitchSurface(data);
+    			break;
+    		default:
+    			logger.debug("Unknow Alternate order "+order_flags);
+    	}
+    }
+    
     /**
      * Handle secondary, or caching, orders
      * @param data Packet containing secondary order

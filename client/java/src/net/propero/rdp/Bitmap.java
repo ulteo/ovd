@@ -24,8 +24,8 @@ import org.apache.log4j.Logger;
 public class Bitmap {
 
     public int usage;
-    
-	private int[] highdata = null;
+
+    private BufferedImage image = null;
 
 	private int width = 0;
 
@@ -186,12 +186,32 @@ public class Bitmap {
      */
 	public Bitmap(int[] data, int width, int height, int x, int y, Options opt_) {
 		this.opt = opt_;
-		this.highdata = data;
+		this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		this.image.setRGB(x, y, width, height, data, 0, width);
 		this.width = width;
 		this.height = height;
 		this.x = x;
 		this.y = y;
 	}
+
+	public Bitmap(BufferedImage img, Options opt_) {
+		this.opt = opt_;
+		this.image = img;
+		this.width = img.getWidth();
+		this.height = img.getHeight();
+		this.x = 0;
+		this.y = 0;
+	}
+
+	public Bitmap(int width, int height, Options opt_) {
+		this.opt = opt_;
+		this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		this.width = width;
+		this.height = height;
+		this.x = 0;
+		this.y = 0;
+	}
+	
     
     /**
      * Constructor for Bitmap based on 
@@ -204,7 +224,9 @@ public class Bitmap {
      */
     public Bitmap(byte[] data, int width, int height, int x, int y, int Bpp, Options opt_) {
         this.opt = opt_;
-    	this.highdata = this.convertImage(data,Bpp);
+        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        int[] idata = this.convertImage(data,Bpp);
+        this.image.setRGB(0, 0, width, height, idata, 0, this.width);
         this.width = width;
         this.height = height;
         this.x = x;
@@ -216,9 +238,13 @@ public class Bitmap {
      * @return Bitmap pixel data
      */
     public int[] getBitmapData() {
-		return this.highdata;
+		return this.image.getRGB(0, 0, this.width, this.height, null, 0, this.width);
 	}
 
+    public BufferedImage getBufferedImage() {
+    	return this.image;
+    }
+    
     /**
      * Retrieve width of the bitmap represented by this object
      * @return Bitmap width

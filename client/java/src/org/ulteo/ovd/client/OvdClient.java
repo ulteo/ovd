@@ -451,6 +451,9 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		if (opts.usePacketCompression)
 			rc.setPacketCompression(opts.usePacketCompression);
 		
+		if (opts.useOffscreenCache)
+			rc.setUseOffscreenCache(opts.usePacketCompression);
+		
 		if (opts.usePersistantCache) {
 			rc.setPersistentCaching(opts.usePersistantCache);
 			

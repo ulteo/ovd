@@ -50,6 +50,7 @@ public class ProfileProperties {
 	private String proxyUsername = null;
 	private String proxyPassword = null;
 	private boolean usePacketCompression = false;
+	private boolean useOffscreenCache = false;
 	private boolean usePersistantCache = false;
 	private String persistentCachePath = "";
 	private int persistentCacheMaxCells = 0;	
@@ -252,5 +253,13 @@ public class ProfileProperties {
 
 	public int getPersistentCacheMaxCells() {
 		return persistentCacheMaxCells;
+	}
+
+	public void setUseOffscreenCache(boolean useOffscreenCache) {
+		this.useOffscreenCache = useOffscreenCache;
+	}
+
+	public boolean isUseOffscreenCache() {
+		return useOffscreenCache;
 	}
 }
