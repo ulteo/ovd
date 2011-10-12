@@ -206,10 +206,6 @@ public class SeamFrame extends Frame
 		return this.getExtendedState();
 	}
 	public void sw_setExtendedState(int state) {
-		if (! this.isVisible()) {
-			this.setVisible(true);
-		}
-
 		if (state == SeamlessWindow.STATE_FULLSCREEN) {
 			this.isFullscreenEnabled = true;
 			state = Frame.MAXIMIZED_BOTH;

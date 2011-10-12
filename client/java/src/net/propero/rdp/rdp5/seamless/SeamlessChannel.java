@@ -618,12 +618,27 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 			return true;
 		}
 
-		if (((Window) f).isVisible()) {
-			StateOrder order = new StateOrder();
-			order.window_id = id;
-			order.state = (int) state;
-			this.stateOrders.add(order);
+		int count = 0;
+		while (! ((Window) f).isVisible()) {
+			if (count >= 20) {
+				SeamlessChannel.logger.error("Failed to make window "+String.format("0x%08x", f.sw_getId())+" visible after "+count+" trials");
+				return false;
+			}
+			try {
+				SwingTools.invokeAndWait(GUIActions.setVisible((Window) f, true));
+				Thread.sleep(50);
+			} catch (Exception ex) {
+				SeamlessChannel.logger.error("Failed to make window "+String.format("0x%08x", f.sw_getId())+" visible: "+ex.getMessage());
+				return false;
+			}
+			
+			count++;
 		}
+
+		StateOrder order = new StateOrder();
+		order.window_id = id;
+		order.state = (int) state;
+		this.stateOrders.add(order);
 
 		f.sw_setExtendedState(frame_state);
 
