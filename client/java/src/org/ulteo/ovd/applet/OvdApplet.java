@@ -265,5 +265,13 @@ public abstract class OvdApplet extends Applet {
 			c.setPersistentCachingPath(this.opts.persistentCachePath);
 			c.setPersistentCachingMaxSize(this.opts.persistentCacheMaxCells);
 		}
+		
+		if (this.opts.useBandwithLimitation) {
+			c.setUseBandWidthLimitation(true);
+			c.setSocketTimeout(this.opts.socketTimeout);
+			if (this.opts.useDiskBandwithLimitation) {
+				c.getRdpdrChannel().setSpoolable(true, this.opts.diskBandwidthLimit);
+			}
+		}
 	}
 }

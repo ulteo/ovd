@@ -32,7 +32,9 @@ import org.w3c.dom.NodeList;
 
 public class ProfileWeb extends Profile {
 	private static final String INI_SECTION_RDP = "rdp";
+	private static final String INI_SECTION_LIMITATION = "limitation";
 	private static final String INI_SECTION_PERSISTENT_CACHE = "persistentCache";
+	
 	
 	
 	@Override
@@ -104,6 +106,41 @@ public class ProfileWeb extends Profile {
 						properties.setUseOffscreenCache(true);
 					else
 						properties.setUseOffscreenCache(false);
+				}
+				if (keyName.equalsIgnoreCase(FIELD_RDP_USE_BANDWIDTH_LIMITATION)) {
+					if (valueName.equalsIgnoreCase(VALUE_TRUE) || valueName.equalsIgnoreCase("1"))
+						properties.setUseBandwithLimitation(true);
+					else
+						properties.setUseBandwithLimitation(false);
+				}
+				if (keyName.equalsIgnoreCase(FIELD_RDP_SOCKET_TIMEOUT)) {
+					int timeout = properties.getSocketTimeout();
+					try {
+						timeout = Integer.parseInt(valueName);	
+					}
+					catch (NumberFormatException e) {
+						Logger.warn("Unable to convert value " + valueName + ": "+e.getMessage());
+					}
+					properties.setSocketTimeout(timeout);
+				}
+			}
+			
+			if (sectionName.equalsIgnoreCase(INI_SECTION_LIMITATION)) {
+				if (keyName.equalsIgnoreCase(FIELD_LIMITATION_USE_DISK_LIMIT)) {
+					if (valueName.equalsIgnoreCase(VALUE_TRUE) || valueName.equalsIgnoreCase("1"))
+						properties.setUseDiskBandwithLimitation(true);
+					else
+						properties.setUseDiskBandwithLimitation(false);
+				}
+				if (keyName.equalsIgnoreCase(FIELD_LIMITATION_DISK_LIMIT)) {
+					int limit = properties.getDiskBandwidthLimit();
+					try {
+						limit = Integer.parseInt(valueName);	
+					}
+					catch (NumberFormatException e) {
+						Logger.warn("Unable to convert value " + valueName + ": "+e.getMessage());
+					}
+					properties.setDiskBandwidthLimit(limit);
 				}
 			}
 

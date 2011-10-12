@@ -15,11 +15,15 @@
 package net.propero.rdp;
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.net.*;
 import java.math.*;
 import org.apache.log4j.Logger;
 
 import net.propero.rdp.crypto.*;
+import net.propero.rdp.rdp5.SpooledPacket;
+import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
 
 public class Secure {
@@ -82,6 +86,8 @@ public class Secure {
     private byte[] modulus = null;
     private byte[] server_random = null;
     private byte[] client_random = new byte[SEC_RANDOM_SIZE];
+    
+    private BlockingQueue<SpooledPacket> spooledPacket;
 
     private static final byte[] pad_54 = {
 	54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54,
@@ -126,6 +132,7 @@ public class Secure {
 	sec_crypted_random = new byte[64];
 	this.ready = false;
 	
+	this.spooledPacket = new LinkedBlockingQueue<SpooledPacket>();
     }
     
     /**
@@ -464,6 +471,65 @@ public class Secure {
 	//McsLayer.send(sec_data);
     McsLayer.send_to_channel(sec_data,channel);
     }
+    
+    public void spool_packet(RdpPacket_Localised sec_data, int flags, int channel) throws RdesktopException, IOException, CryptoException {
+    	VChannel v = channels.find_channel_by_channelno(channel);
+
+    	if (v.packetStat < v.packetLimit) {
+    		v.send_packet(sec_data, false);
+    		v.packetStat += sec_data.size();
+    		return;
+    	}
+		
+    	SpooledPacket p = new SpooledPacket(sec_data, channel);
+
+    	try {
+    		this.spooledPacket.add(p);
+    		return;
+    	}
+    	catch (IllegalStateException e) {
+    		logger.debug("Packet spool is full, send it normally");
+    	}
+    	catch (ClassCastException e) {
+    		logger.error("Unable to spool packet, invalid packet");
+    	}
+    	catch (NullPointerException e) {
+    		logger.error("Unable to spool packet, packet is null");
+    	}
+    	catch (IllegalArgumentException e) {
+    		logger.error("Unable to spool packet, packet is not valid for the spool");
+    	}
+    	
+    	this.send_to_channel(sec_data, flags, channel);
+    }
+    
+    public void processSpooledPacket() throws RdesktopException, IOException, CryptoException {
+    	if (! this.opt.useBandwithLimitation)
+    		return;
+    	
+    	long currentTime = new GregorianCalendar().getTimeInMillis();
+
+    	if (! this.spooledPacket.isEmpty()) {
+    		SpooledPacket p = this.spooledPacket.peek();
+    		if (p == null)
+    			return;
+    		
+    		VChannel v = channels.find_channel_by_channelno(p.getChannel());
+			
+    		if (currentTime - v.lastTime >= 1000) {
+    			v.lastTime = currentTime;
+    			v.packetStat = 0;
+    		}
+
+    		if (v.packetStat > v.packetLimit)
+    			return;
+
+    		v.send_packet(p.getPacket(), false);
+    		v.packetStat += p.getPacket().size();
+    		spooledPacket.poll();
+    	}
+    }
+    
 
     /**
      * Generate MD5 signature
@@ -956,9 +1022,17 @@ public class Secure {
     public RdpPacket_Localised receive() throws RdesktopException, IOException, CryptoException, OrderException {
 	int sec_flags=0;
 	RdpPacket_Localised buffer=null;
+	
+	this.processSpooledPacket();
+	
 	while(true) {
 		int[] channel = new int[1];
-		buffer=McsLayer.receive(channel);
+		try {
+			buffer=McsLayer.receive(channel);
+		}catch (SocketTimeoutException e){
+			this.processSpooledPacket();
+			continue;
+		}
 		if(buffer==null) return null;
 
 		if (this.opt.server_rdp_version != 3) {

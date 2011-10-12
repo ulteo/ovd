@@ -113,6 +113,11 @@ public abstract class ISO {
 		int[] code = new int[1];
 		doSocketConnect(host, port);
 		this.rdpsock.setTcpNoDelay(this.opt.low_latency);
+		
+		if (this.opt.useBandwithLimitation) {
+			this.rdpsock.setSoTimeout(this.opt.socketTimeout);
+		}
+		
 		this.in = new DataInputStream(new BufferedInputStream(rdpsock.getInputStream()));
 		this.out= new DataOutputStream(new BufferedOutputStream(rdpsock.getOutputStream()));
 		send_connection_request();

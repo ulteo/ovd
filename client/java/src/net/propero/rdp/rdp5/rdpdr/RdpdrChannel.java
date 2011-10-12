@@ -656,7 +656,7 @@ public class RdpdrChannel extends VChannel {
 		s.markEnd();
 		
 		try {
-			this.send_packet(s);
+			this.send_packet(s, this.limitBandWidth);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -197,6 +197,9 @@ public class VChannels {
         if (((flags & CHANNEL_FLAG_FIRST) != 0)
                 && ((flags & CHANNEL_FLAG_LAST) != 0)) {
             // single fragment - pass straight up
+        	if (channel.limitBandWidth)
+        		channel.packetStat += data.size();
+        	
             channel.process(data);
         } else {
             // append to the defragmentation buffer
@@ -212,6 +215,9 @@ public class VChannels {
                 fullpacket.copyFromByteArray(fragment_buffer, 0, 0,
                         fragment_buffer.length);
                 // process the entire reconstructed packet
+                if (channel.limitBandWidth)
+                	channel.packetStat += data.size();
+                
                 channel.process(fullpacket);
                 fragment_buffer = null;
             }

@@ -41,6 +41,7 @@ public class ProfileIni extends Profile {
 	private static final String INI_SECTION_PROXY = "proxy";
 	private static final String INI_SECTION_RDP = "rdp";
 	private static final String INI_SECTION_PERSISTENT_CACHE = "persistentCache";
+	private static final String INI_SECTION_LIMITATION = "limitation";
 	
 	private static final String PROFILE_EXT = ".conf";
 	public static final String DEFAULT_PROFILE = "default";
@@ -308,6 +309,46 @@ public class ProfileIni extends Profile {
 			if (value.equalsIgnoreCase(VALUE_TRUE))
 				usePacketCompression = true;
 			properties.setUsePacketCompression(usePacketCompression);
+		}
+		
+		value = ini.get(INI_SECTION_RDP, FIELD_RDP_SOCKET_TIMEOUT);
+		if (value != null) {
+			int socketTimeout = properties.getSocketTimeout();
+			try {
+				Integer.parseInt(value);
+			}
+			catch (NumberFormatException e) {
+				Logger.error("Failed to parse the socket timeout: '"+value+"'");
+			}
+			properties.setSocketTimeout(socketTimeout);
+		}
+
+		value = ini.get(INI_SECTION_RDP, FIELD_RDP_USE_BANDWIDTH_LIMITATION);
+		if (value != null) {
+			boolean useBandwidthLimitation = false;
+			if (value.equalsIgnoreCase(VALUE_TRUE))
+				useBandwidthLimitation = true;
+			properties.setUseBandwithLimitation(useBandwidthLimitation);
+		}
+
+		value = ini.get(INI_SECTION_LIMITATION, FIELD_LIMITATION_USE_DISK_LIMIT);
+		if (value != null) {
+			boolean useDiskBandwidthLimitation = false;
+			if (value.equalsIgnoreCase(VALUE_TRUE))
+				useDiskBandwidthLimitation = true;
+			properties.setUseDiskBandwithLimitation(useDiskBandwidthLimitation);
+		}
+
+		value = ini.get(INI_SECTION_LIMITATION, FIELD_LIMITATION_DISK_LIMIT);
+		if (value != null) {
+			int diskLimit = properties.getDiskBandwidthLimit();
+			try {
+				Integer.parseInt(value);
+			}
+			catch (NumberFormatException e) {
+				Logger.error("Failed to parse the disk bandwidth limite: '"+value+"'");
+			}
+			properties.setDiskBandwidthLimit(diskLimit);
 		}
 		
 		value = ini.get(INI_SECTION_RDP, FIELD_RDP_USE_OFFSCREEN_CACHE);

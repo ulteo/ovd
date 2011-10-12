@@ -50,6 +50,10 @@ public class ProfileProperties {
 	private String proxyUsername = null;
 	private String proxyPassword = null;
 	private boolean usePacketCompression = false;
+	private int diskBandwidthLimit = 10000;   // In byte
+	private boolean useBandwithLimitation = false;
+	private boolean useDiskBandwithLimitation = false;
+	private int socketTimeout = 200;            // In millisecond
 	private boolean useOffscreenCache = false;
 	private boolean usePersistantCache = false;
 	private String persistentCachePath = "";
@@ -253,6 +257,38 @@ public class ProfileProperties {
 
 	public int getPersistentCacheMaxCells() {
 		return persistentCacheMaxCells;
+	}
+
+	public void setDiskBandwidthLimit(int diskBandwidthLimit) {
+		this.diskBandwidthLimit = diskBandwidthLimit;
+	}
+
+	public int getDiskBandwidthLimit() {
+		return diskBandwidthLimit;
+	}
+
+	public void setUseBandwithLimitation(boolean supportBandwithLimitation) {
+		this.useBandwithLimitation = supportBandwithLimitation;
+	}
+
+	public boolean isUseBandwithLimitation() {
+		return useBandwithLimitation;
+	}
+
+	public void setUseDiskBandwithLimitation(boolean supportDiskBandwithLimitation) {
+		this.useDiskBandwithLimitation = supportDiskBandwithLimitation;
+	}
+
+	public boolean isUseDiskBandwithLimitation() {
+		return useDiskBandwithLimitation;
+	}
+
+	public void setSocketTimeout(int socketTimeout) {
+		this.socketTimeout = socketTimeout;
+	}
+
+	public int getSocketTimeout() {
+		return socketTimeout;
 	}
 
 	public void setUseOffscreenCache(boolean useOffscreenCache) {
