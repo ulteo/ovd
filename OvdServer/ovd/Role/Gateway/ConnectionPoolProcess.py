@@ -84,7 +84,7 @@ class ConnectionPoolProcess(Process):
 				self.t_asyncore = threading.Thread(target=lambda:asyncore.loop(timeout=0.01))
 				self.t_asyncore.start()
 		
-		if self.t_asyncore.is_alive():
+		if self.t_asyncore is not None and self.t_asyncore.is_alive():
 			asyncore.close_all()
 			self.t_asyncore.join()
 		
@@ -115,4 +115,4 @@ class ConnectionPoolProcess(Process):
 	
 	
 	def is_sleeping(self):
-		return not self.t_asyncore.is_alive()
+		return self.t_asyncore is None or not self.t_asyncore.is_alive()
