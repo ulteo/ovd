@@ -2,7 +2,7 @@
 
 # Copyright (C) 2009 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -19,6 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import ConfigParser
 import os
 import sys
 
@@ -59,23 +60,19 @@ class Config:
 	
 	server_allow_reuse_address = Platform.System.tcp_server_allow_reuse_address()
 	
-	aps_multithread = False
-	
-	gateway_address = "0.0.0.0"
-	gateway_port    = 443
-	
 	@staticmethod
 	def read(filename):
+		Config.parser = ConfigParser.ConfigParser()
 		try:
-			Config.infos = Config.parse_file(filename)
+			Config.parser.read(filename)
 		except Exception, err:
 			report_error("invalid configuration file '%s'"%(filename))
 			report_error(str(err))
 			return False
 		
-		if Config.infos.has_key("ROLES"):
+		if Config.parser.has_option("main", "roles"):
 			Config.roles = []
-			buf = Config.infos["ROLES"].split(' ')
+			buf = Config.parser.get("main", "roles").split(' ')
 			for b in buf:
 				b = b.strip()
 				if len(b)==0:
@@ -89,24 +86,24 @@ class Config:
 				
 				Config.roles.append(b)
 		
-		if Config.infos.has_key("session_manager"):
-			Config.session_manager = Config.infos["session_manager"]
+		if Config.parser.has_option("main", "session_manager"):
+			Config.session_manager = Config.parser.get("main", "session_manager")
 		
-		if Config.infos.has_key("server_allow_reuse_address"):
-			a = Config.infos["server_allow_reuse_address"].lower().strip()
+		if Config.parser.has_option("log", "file"):
+			Config.log_file = Config.parser.get("log", "file")
+		
+		if Config.parser.has_option("main", "server_allow_reuse_address"):
+			a = Config.parser.get("server_allow_reuse_address").lower().strip()
 			if a not in ["true", "false"]:
 				report_error("invalid value for configuration key 'server_allow_reuse_address', allowed values are true/false")
 			
 			Config.server_allow_reuse_address = (a == "true")
 		
-		if Config.infos.has_key("LOG_FILE"):
-			Config.log_file = Config.infos["LOG_FILE"]
-			
-		if Config.infos.has_key("LOG_LEVEL"):
+		if Config.parser.has_option("log", "level"):
 			Config.log_level = 0
 			
 			debug_count = 0
-			for item in Config.infos["LOG_LEVEL"].split(' '):
+			for item in Config.parser.get("log", "level").split(' '):
 				item = item.lower()
 				if item == "debug":
 					debug_count+= 1
@@ -118,20 +115,8 @@ class Config:
 				if debug_count>=3:
 					Config.log_level|= Logger.DEBUG_3
 		
-		if Config.infos.has_key("LOG_THREADED"):
-			Config.log_threaded = (Config.infos["LOG_THREADED"].lower() == "true")
-		
-		if Config.infos.has_key("APS_MULTITHREAD"):
-			Config.aps_multithread = (Config.infos["APS_MULTITHREAD"].lower() == "true")
-
-		if Config.infos.has_key("GATEWAY_ADDRESS"):
-			Config.gateway_address = Config.infos["GATEWAY_ADDRESS"]
-		
-		if Config.infos.has_key("GATEWAY_PORT"):
-			try:
-				Config.gateway_port = int(Config.infos["GATEWAY_PORT"])
-			except ValueError:
-				pass
+		if Config.parser.has_option("log", "thread"):
+			Config.log_threaded = (Config.parser.get("log", "thread").lower() == "true")
 		
 		return True
 	
@@ -145,11 +130,22 @@ class Config:
 		for role in Config.roles:
 			try:
 				__import__("ovd.Role.%s.Role"%(role))
+				role_config = __import__("ovd.Role.%s.Config"%(role), {}, {}, "Config")
 			
 			except ImportError:
+				import traceback
+				print traceback.format_exc()
 				report_error("Unsupported role '%s'."%(role))
 				report_error("Please be sure this role exists and is correctly installed")
 				return False
+			
+			infos = {}
+			if Config.parser.has_section(role):
+				infos = dict(Config.parser.items(role))
+			
+			if not role_config.Config.init(infos):
+				return False
+			role_config.Config.general = Config
 		
 		
 		if Config.session_manager is None:
@@ -171,64 +167,3 @@ class Config:
 		
 		return True
 	
-	
-	@staticmethod
-	def parse_file(file_):
-		### Reconized syntax:
-		###	key = value
-		###     # a comment
-		###     key = value # comment
-		###     key = "value # or other value" # and a final comment
-		
-		f = file(file_, 'r')
-		lines = f.readlines()
-		f.close()
-		
-		infos = {}
-		for line in lines:
-			line = line.strip()
-		
-			if len(line) == 0:
-				continue
-		
-			if line.startswith("#"):
-				continue
-		
-			(key, value) = line.split('=', 1)
-			key = key.strip()
-			value = value.strip()
-			
-			if len(key) == 0 or len(value) == 0:
-				# Exception !
-				continue
-			
-			if value.startswith('"'):
-				loop = True
-				pos_end = 1
-				while loop:
-					pos_end = value.find('"', pos_end)
-					if pos_end == -1:
-						# Exception !
-						continue
-				
-					if value[pos_end - 1] != '\\':
-						loop = False
-				
-				if pos_end == -1:
-					continue
-				
-				buffer = value[:pos_end+1].strip()
-				if not buffer.startswith("#"):
-					# Exception !
-					continue
-				
-				value = value[1:pos_end]
-			
-			elif "#" in value:
-				value = value[:value.find("#")]
-			
-			
-			infos[key] = value
-		
-		return infos
-

@@ -25,6 +25,7 @@ import pwd
 from ovd.Logger import Logger
 
 class Config:
+	general = None
 	user  = "ovd-fs"
 	group = None
 	uid = None
@@ -36,7 +37,16 @@ class Config:
 	dav_passwd_file = "/var/spool/ulteo/ovd/fs.dav.passwd"
 	
 	@staticmethod
-	def init():
+	def init(infos):
+		if infos.has_key("user"):
+			Config.user = infos["user"]
+		
+		
+		return True
+	
+	
+	@staticmethod
+	def init_role():
 		try:
 			infos = pwd.getpwnam(Config.user)
 		except KeyError, err:

@@ -31,11 +31,11 @@ import threading
 from xml.dom.minidom import Document
 
 from ovd.Role.Role import Role as AbstractRole
-from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.Platform import Platform
 
 from Apt import Apt
+from Config import Config
 from Dialog import Dialog
 from Session import Session
 from SessionManagement import SessionManagement
@@ -96,7 +96,7 @@ class Role(AbstractRole):
 		
 		self.purgeArchives()
 		
-		if Config.aps_multithread:
+		if Config.multithread:
 			cpuInfos = Platform.System.getCPUInfos()
 			vcpu = cpuInfos[0]
 			ram_total = Platform.System.getRAMTotal()
@@ -253,7 +253,7 @@ class Role(AbstractRole):
 	
 	
 	def purgeArchives(self):
-		for path in glob.glob(os.path.join(Config.spool_dir, "sessions dump archive", "*")):
+		for path in glob.glob(os.path.join(Config.general.spool_dir, "sessions dump archive", "*")):
 			try:
 				os.remove(path)
 			except OSError, err:
