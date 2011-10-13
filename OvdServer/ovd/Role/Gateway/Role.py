@@ -25,6 +25,7 @@ from multiprocessing import Pipe
 import os
 import socket
 from SocketServer import TCPServer
+from sys import version_info as version
 import threading
 
 from Config import Config
@@ -56,6 +57,10 @@ class Role(AbstractRole):
 	
 	def init(self):
 		Logger.info("Gateway init")
+
+		if version[0] != 2 or version[1] < 6 or (version[1] == 7 and version[2] in [1, 2]):
+			Logger.error("Gateway:: incompatibility with current Python machine '%d.%d.%d'" % version[:3])
+			return False
 		
 		fpem = os.path.join(Config.general.conf_dir, "gateway.pem")
 		if os.path.exists(fpem):
