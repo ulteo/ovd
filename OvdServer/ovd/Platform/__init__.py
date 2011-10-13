@@ -20,7 +20,7 @@
 
 import sys
 
-if sys.platform == "linux2":
+if sys.platform.startswith('linux'):
 	platform_name = "Linux"
 elif sys.platform == "win32":
 	 platform_name = "Windows" 

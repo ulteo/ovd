@@ -84,7 +84,7 @@ if sys.platform == "win32":
 	setup_args["options"] = {"py2exe": {"dll_excludes": ["w9xpopen.exe"]}}
 
 
-elif sys.platform == "linux2":
+elif sys.platform.startswith('linux'):
 	setup_args["packages"] = [
 		'ovd', 'ovd.Communication', 'ovd.Role',
 		'ovd.Role.FileServer', 'ovd.Role.ApplicationServer',

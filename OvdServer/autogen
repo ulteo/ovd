@@ -40,7 +40,7 @@ else:
 
 
 # OS detection
-if sys.platform == "linux2":
+if sys.platform.startswith('linux'):
 	platform_dir = "Linux"
 elif sys.platform == "win32":
 	platform_dir = "Windows"
