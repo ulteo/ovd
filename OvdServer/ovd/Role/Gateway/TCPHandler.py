@@ -47,7 +47,7 @@ class GatewayTCPHandler(BaseRequestHandler):
 				Logger.warn("Gateway service has reached the open connections limit")
 		
 		ctrl = self.role.processes[best_proc][0][1]
-		pickled_sock = pickle.dumps(reduce_socket(self.request))
+		pickled_sock = pickle.dumps(reduce_socket(self.request)[1])
 		ctrl.send(('socket', pickled_sock))
 		
 		self.role.kill_mutex.release()

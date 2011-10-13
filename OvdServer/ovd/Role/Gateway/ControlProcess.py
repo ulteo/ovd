@@ -19,6 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import asyncore
+from multiprocessing.reduction import rebuild_socket
 import pickle
 from threading import Thread
 
@@ -68,9 +69,10 @@ class ControlFatherProcess(ControlClassProcess):
 	def _nb_conn(self):
 		return len(asyncore.socket_map) / 2
 	
-	def _socket(self, sock):
-		p = pickle.loads(sock)
-		self._class.socks.put(p[0](*p[1]))
+	def _socket(self, picklable):
+		args = pickle.loads(picklable)
+		sock = rebuild_socket(*args)
+		self._class.socks.put(sock)
 	
 	def _stop(self):
 		self._class.stop()
