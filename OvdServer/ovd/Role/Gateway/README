@@ -16,6 +16,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
+The Gateway role does NOT work on these versions of Python machine:
+ *  >= 3.0           (no compatibility with 3.0 Python language and API)
+ *  < 2.6            (multiprocessing incompatibility)
+ *  2.7.1 and 2.7.2  (multiprocessing incompatibility with 'recvfd' and 'sendfd')
+
 OVDServer Gateway need a certificate located to fpem directory :
 
 
