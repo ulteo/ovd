@@ -55,6 +55,8 @@ CONFFILE=/etc/ulteo/subsystem.conf
 [ -f "$CONFFILE" ] && . $CONFFILE
 [ -z "$CHROOTDIR" ] && CHROOTDIR=/opt/ulteo
 
+CHROOT="env LANG=en_US.utf8 LC_ALL=en_US.utf8 chroot $CHROOTDIR"
+
 do_start() {
     [ -d "$CHROOTDIR" ] || return 1
 
@@ -66,21 +68,21 @@ do_start() {
     mount -t proc none $CHROOTDIR/proc 2>/dev/null
     mount -t devpts none $CHROOTDIR/dev/pts 2>/dev/null
 
-    chroot $CHROOTDIR service cups start
-    chroot $CHROOTDIR service xrdp start
-    chroot $CHROOTDIR service smbd start
-    chroot $CHROOTDIR service apache2 start
-    chroot $CHROOTDIR service ovdSlaveServer start
+    $CHROOT service cups start
+    $CHROOT service xrdp start
+    $CHROOT service smbd start
+    $CHROOT service apache2 start
+    $CHROOT service ovdSlaveServer start
 }
 
 do_stop() {
     [ -d "$CHROOTDIR" ] || return 1
 
-    chroot $CHROOTDIR service ovdSlaveServer stop
-    chroot $CHROOTDIR service apache2 stop
-    chroot $CHROOTDIR service smbd stop
-    chroot $CHROOTDIR service xrdp stop
-    chroot $CHROOTDIR service cups stop
+    $CHROOT service ovdSlaveServer stop
+    $CHROOT service apache2 stop
+    $CHROOT service smbd stop
+    $CHROOT service xrdp stop
+    $CHROOT service cups stop
 
     umount $CHROOTDIR/dev/pts 2>/dev/null
     umount $CHROOTDIR/proc 2>/dev/null
