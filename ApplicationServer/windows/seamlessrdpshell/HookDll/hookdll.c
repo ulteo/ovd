@@ -31,6 +31,8 @@
 #include <CommCtrl.h>
 
 #include "../vchannel.h"
+#include "seamlessWindow.h"
+#include "seamlessWindowHistory.h"
 
 #define DLL_EXPORT __declspec(dllexport)
 
@@ -88,92 +90,6 @@ static HANDLE g_mutex = NULL;
 const char seamless_class[] = "InternalSeamlessClass";
 
 #define TITLE_SIZE 150
-
-typedef struct node_{
-	HWND windows;
-	unsigned short *title;
-	boolean focus;
-	boolean is_shown;
-	struct node_* next;
-}node;
-
-static void free_node(node * n_) {
-	if (n_ == NULL)
-		return;
-
-	if (n_->title != NULL)
-		free(n_->title);
-
-	free(n_);
-}
-
-static node* hwdHistory = NULL;
-
-static node* getWindowFromHistory(HWND hwnd){
-	node* currentNode = hwdHistory;
-	if (currentNode == NULL){
-		return (node*)NULL;
-	}
-	while(currentNode){
-		if( currentNode->windows == hwnd)
-			return currentNode;
-		currentNode = currentNode->next;
-	}
-	return (node*)NULL;
-}
-
-static node* addHWDNToHistory(HWND hwnd){
-	node* currentNode = NULL;
-	node* newNode = hwdHistory;
-	
-	currentNode = getWindowFromHistory(hwnd);
-	if(currentNode != NULL && currentNode->windows == hwnd){
-		return (node*) NULL;
-	}
-
-	if (hwdHistory == NULL){
-		hwdHistory = malloc(sizeof(node));
-		hwdHistory->windows = hwnd;
-		hwdHistory->title = NULL;
-		hwdHistory->focus = FALSE;
-		hwdHistory->is_shown = FALSE;
-		hwdHistory->next = NULL;
-		return hwdHistory;
-	}
-	
-	currentNode = hwdHistory;
-	while(currentNode->next){
-		currentNode = currentNode->next;
-	}
-	newNode = malloc(sizeof(node));
-	newNode->windows = hwnd;
-	newNode->title = NULL;
-	newNode->next = NULL;
-	newNode->focus = FALSE;
-	newNode->is_shown = FALSE;
-	currentNode->next = newNode;
-	return newNode;
-}
-
-static BOOL removeHWNDFromHistory(HWND hwnd){
-	node* currentNode = hwdHistory;
-	node* previousNode = NULL;
-
-	while(currentNode && currentNode->windows != hwnd){
-		previousNode = currentNode;
-		currentNode = currentNode->next;
-	}
-	if (! currentNode)
-		return FALSE;
-	if (previousNode == NULL)
-		hwdHistory = currentNode->next;
-	else
-		previousNode->next = currentNode->next;
-
-	free_node(currentNode);
-
-	return TRUE;
-}
 
 static int g_screen_width = 0;
 static int g_screen_height = 0;
@@ -530,7 +446,7 @@ static void create_window(HWND hwnd){
 		LONG exstyle;
 		LONG style;
 		HWND parent;
-		node* window;
+		SeamlessWindow* window;
 		TCHAR classname[256];
 
 		window = getWindowFromHistory(hwnd);
@@ -794,7 +710,7 @@ wndprocret_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 					BOOLEAN titleIsTheSame = TRUE;
 					int i = 0;
 					unsigned short *title;
-					node* window = getWindowFromHistory(hwnd);
+					SeamlessWindow* window = getWindowFromHistory(hwnd);
 					if (window == NULL) {
 						break;
 					}
@@ -865,7 +781,7 @@ wndprocret_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 			ReleaseMutex(g_mutex);
 
 			{
-				node* window;
+				SeamlessWindow* window;
 
 				window = getWindowFromHistory(hwnd);
 				if (window == NULL) {

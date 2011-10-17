@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="HookDll"
 	ProjectGUID="{8B343CDF-D7F6-480A-83B8-7F534675FFE6}"
+	RootNamespace="HookDll"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -186,6 +187,22 @@
 	<Files>
 		<File
 			RelativePath="hookdll.c"
+			>
+		</File>
+		<File
+			RelativePath=".\seamlessWindow.c"
+			>
+		</File>
+		<File
+			RelativePath=".\seamlessWindow.h"
+			>
+		</File>
+		<File
+			RelativePath=".\seamlessWindowHistory.c"
+			>
+		</File>
+		<File
+			RelativePath=".\seamlessWindowHistory.h"
 			>
 		</File>
 	</Files>
