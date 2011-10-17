@@ -212,7 +212,8 @@ public class PstCache {
         return false;
 
     g_pstcache_Bpp = this.opt.Bpp;
-    filename = this.opt.persistent_caching_path + "pstcache_" + cache_id + "_" + g_pstcache_Bpp;
+    
+    filename = this.opt.persistent_caching_path + this.opt.hostname + "-pstcache_" + cache_id + "_" + g_pstcache_Bpp;
     logger.debug("persistent bitmap cache file: " + filename);
     
     File cacheDir = new File(this.opt.persistent_caching_path);
