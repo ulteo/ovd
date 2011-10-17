@@ -31,10 +31,6 @@ ovd-webclient-config: ovd-webclient-config.in
 apache2.conf: apache2.conf.in
 	sed "s,@DATADIR@,$(datadir)," < $(srcdir)/$< > $@
 
-install-data-hook:
-	CONFFILE=$(DESTDIR)$(confdir)/config.inc.php ;\
-	sed -i "s/@SESSION_MANAGER@/127.0.0.1/" $$CONFFILE
-
 EXTRA_DIST = $(default_DATA) apache2.conf.in ovd-webclient-config.in
 
 clean-local:
