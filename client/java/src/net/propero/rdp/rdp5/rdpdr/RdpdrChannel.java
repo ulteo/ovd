@@ -35,6 +35,8 @@ package net.propero.rdp.rdp5.rdpdr;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
@@ -422,9 +424,8 @@ public class RdpdrChannel extends VChannel {
 				length = s.getLittleEndian32();
 				
 				if (length>0 && (length / 2) < 256){
-					char[] temp_array = new char[length/2];
-					rdp_in_unistr(s, temp_array, length);
-					filename = new String(temp_array).trim();
+					filename = rdp_in_unistr(s, length);
+					filename = filename.trim();
 				}
 				else{
 					filename = "";
@@ -536,9 +537,8 @@ public class RdpdrChannel extends VChannel {
 						length = s.getLittleEndian32();
 						s.incrementPosition(0x17);
 						if (length>0 && (length / 2) < 256){
-							char[] tempFileName2 = new char[length/2];
-							rdp_in_unistr(s, tempFileName2, length);
-							filename = new String(tempFileName2).trim();
+							filename = rdp_in_unistr(s, length);
+							filename = filename.trim();
 							//System.out.println("filename="+filename);
 						}
 						else{
@@ -631,13 +631,27 @@ public class RdpdrChannel extends VChannel {
 		}
 	}
 	
-	public static int rdp_in_unistr(RdpPacket s, char[] str, int len){
+	public static String rdp_in_unistr(RdpPacket s, int len){
 		int i = 0;
+		byte[] temp = new byte[len];
+		String ret = "";
+
+		s.copyToByteArray(temp, 0, s.getPosition(), len);
+		try {
+			ret = new String(temp, Charset.forName("UTF-16LE"));
+			return ret;
+		}
+		catch (UnsupportedCharsetException e) {
+			logger.warn("UTF-16LE is not supported");
+		}
+		
+		// Use the older method (this method can not manage chinease filename)
+		char[] str = new char[len/2];
 		while (i < len / 2){
 			str[i++] = (char)s.get8();
 			s.incrementPosition(1);
 		}
-		return i - 1;
+		return new String(str);
 	}
 	
 	void rdpdr_send_completion(int device, int id, int status, 
