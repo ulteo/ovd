@@ -136,8 +136,7 @@
             Uncompress the archive:
           </para>
           <screen>
-            <![CDATA[
-# tar xzf ovd-3.0-@distrib_name@-@distrib_version@.tar.gz]]>
+<![CDATA[# tar xzf ovd-3.0-@distrib_name@-@distrib_version@.tar.gz]]>
           </screen>
         </listitem>
 
@@ -207,7 +206,7 @@
       <itemizedlist>
 	<listitem>
 	  <para>Install the <emphasis>mysql-server</emphasis> package:</para>
-          <screen># apt-get install mysql-server</screen>
+          <screen><![CDATA[# apt-get install mysql-server]]></screen>
           <para>A password for <literal>root</literal> will be asked.</para>
         </listitem>
         <listitem id="mysql_createdb">
