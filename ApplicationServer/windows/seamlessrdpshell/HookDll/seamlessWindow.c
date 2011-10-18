@@ -30,5 +30,8 @@ void SeamlessWindow_free(SeamlessWindow * n_) {
 	if (n_->title != NULL)
 		free(n_->title);
 
+	if (n_->bounds != NULL)
+		free(n_->bounds);
+
 	free(n_);
 }

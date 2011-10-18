@@ -26,6 +26,7 @@
 typedef struct SeamlessWindow_ {
 	HWND windows;
 	unsigned short *title;
+	RECT *bounds;
 	BOOL focus;
 	BOOL is_shown;
 	struct SeamlessWindow_* next;

@@ -181,6 +181,12 @@ update_position(HWND hwnd)
 	RECT rect, blocked;
 	HWND blocked_hwnd;
 	unsigned int serial;
+	SeamlessWindow *sw = NULL;
+
+	// Check if the window exists
+	sw = getWindowFromHistory(hwnd);
+	if (! sw)
+		goto end;
 
 	WaitForSingleObject(g_mutex, INFINITE);
 	blocked_hwnd = g_block_move_hwnd;
@@ -219,6 +225,15 @@ update_position(HWND hwnd)
 
 		goto end;
 	}
+
+	// Check if the window has been moved or resized
+	if (sw->bounds && EqualRect(sw->bounds, &rect))
+		goto end;
+
+	// Store the new window bounds
+	if (! sw->bounds)
+		sw->bounds = malloc(sizeof(RECT));
+	memcpy(sw->bounds, &rect, sizeof(RECT));
 
 	vchannel_write("POSITION", "0x%08lx,%d,%d,%d,%d,0x%08x",
 		       hwnd,
@@ -460,6 +475,7 @@ static void create_window(HWND hwnd){
 				return;
 		}
 
+		window->bounds = NULL;
 		window->is_shown = TRUE;
 
 		style = GetWindowLong(hwnd, GWL_STYLE);
