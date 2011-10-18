@@ -23,6 +23,9 @@ define('ULTEO_OVD_SM_HOST', 'sm.ulteo.com');
 
 define('ULTEO_OVD_WEBCLIENT_URL', 'http://web.ulteo.com/ovd');
 
+// define('ULTEO_OVD_AUTH_TYPE', 'password');
+define('ULTEO_OVD_AUTH_TYPE', 'token');
+
 define('ULTEO_OVD_DEFAULT_LOGIN', 'mwilson');
 
 define('CMS_FOLDER', '/tmp');

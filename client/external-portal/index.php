@@ -65,17 +65,26 @@ $base_url_file.= 'file.php';
 <script type="text/javascript" src="<?php echo ULTEO_OVD_WEBCLIENT_URL; ?>/media/script/external.js" charset="utf-8"></script>
 
 <script type="text/javascript">
-function startApplication(app_id_) {
+
+function getBaseOVDObj(app_id_) {
 	var UOVD_startApplication = new UlteoOVD_start_Application('<?php echo ULTEO_OVD_WEBCLIENT_URL; ?>', app_id_);
-	//UOVD_startApplication.setAuthPassword('<?php echo $user; ?>', '<?php echo $user; ?>');
-	UOVD_startApplication.setAuthToken('<?php echo base64_encode($user); ?>');
+	
+<?php if (ULTEO_OVD_AUTH_TYPE == 'token') {?>
+	ovd.setAuthToken('<?php echo base64_encode($user); ?>');
+<?php } else {?>
+	ovd.setAuthPassword('<?php echo $user; ?>', '<?php echo $user; ?>');
+<?php } ?>
+	
+	return UOVD_startApplication;
+}
+
+function startApplication(app_id_) {
+	var UOVD_startApplication = getBaseOVDObj(app_id_);
 	UOVD_startApplication.start();
 }
 
 function startApplicationWithPath(app_id_, path_, url_) {
-	var UOVD_startApplication = new UlteoOVD_start_Application('<?php echo ULTEO_OVD_WEBCLIENT_URL; ?>', app_id_);
-	//UOVD_startApplication.setAuthPassword('<?php echo $user; ?>', '<?php echo $user; ?>');
-	UOVD_startApplication.setAuthToken('<?php echo base64_encode($user); ?>');
+	var UOVD_startApplication = getBaseOVDObj(app_id_);
 	UOVD_startApplication.setPathHTTP(url_, path_, null);
 	UOVD_startApplication.start();
 }
