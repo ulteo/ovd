@@ -104,3 +104,8 @@ function getFiles() {
 	
 	return $files;
 }
+
+
+function str_endswith($string_, $search_) {
+	return (substr($string_, (strlen($search_)*-1)) == $search_);
+}

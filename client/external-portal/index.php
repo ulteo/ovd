@@ -46,7 +46,16 @@ foreach ($files as $name => $f) {
 	}
 }
 
-$base_url_file = 'http://'.$_SERVER['HTTP_HOST'].(($_SERVER['SERVER_PORT']==80)?'':$_SERVER['SERVER_PORT']).dirname($_SERVER['REQUEST_URI']).'/file.php';
+$base_url_file = 'http://'.$_SERVER['HTTP_HOST'].(($_SERVER['SERVER_PORT']==80)?'':$_SERVER['SERVER_PORT']);
+if (str_endswith($_SERVER['REQUEST_URI'], basename(__FILE__)))
+	$base_url_file.= dirname($_SERVER['REQUEST_URI']);
+else
+	$base_url_file.= $_SERVER['REQUEST_URI'];
+
+if (str_endswith($base_url_file, '/'))
+	$base_url_file.= '/';
+
+$base_url_file.= 'file.php';
 ?>
 <html>
 <head>
