@@ -40,9 +40,11 @@ $files = getFiles();
 foreach ($files as $name => $f) {
 	$files[$name]['applications'] = array();
 	
-	foreach($apps as $application) {
-		if (in_array($f['mimetype'], $application['mimetypes']))
-			$files[$name]['applications'] []= $application;
+	if (is_array($apps)) {
+		foreach($apps as $application) {
+			if (in_array($f['mimetype'], $application['mimetypes']))
+				$files[$name]['applications'] []= $application;
+		}
 	}
 }
 
