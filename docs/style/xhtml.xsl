@@ -25,4 +25,31 @@
   <xsl:param name="html.stylesheet" select="'default.css'"/>
   <xsl:param name="html.cleanup">1</xsl:param>
   <xsl:param name="make.valid.html">1</xsl:param>
+
+
+  <!-- redefine colophon to remove title and add an hr tag -->
+  <xsl:template match="colophon">
+    <xsl:call-template name="id.warning"/>
+
+    <div>
+      <xsl:call-template name="common.html.attributes">
+	<xsl:with-param name="inherit" select="1"/>
+      </xsl:call-template>
+      <xsl:if test="$generate.id.attributes != 0">
+	<xsl:attribute name="id">
+	  <xsl:call-template name="object.id"/>
+	</xsl:attribute>
+      </xsl:if>
+
+      <xsl:call-template name="component.separator"/>
+      <xsl:element name="hr" />
+
+
+      <!-- <xsl:call-template name="component.title"/> -->
+      <!-- <xsl:call-template name="component.subtitle"/> -->
+
+      <xsl:apply-templates/>
+      <xsl:call-template name="process.footnotes"/>
+    </div>
+  </xsl:template>
 </xsl:stylesheet>

@@ -189,4 +189,6 @@
       Clicking to start another session gets you back to the login window.
     </para>
   </section>
+
+  <xi:include href="colophon.xml" />
 </article>

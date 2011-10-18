@@ -37,4 +37,6 @@
   <xi:include href="&parent;" xpointer="subsystem" />
   <xi:include href="&parent;" xpointer="wc" />
 
+  <xi:include href="colophon.xml" />
+
 </article>

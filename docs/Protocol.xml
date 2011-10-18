@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
-<article>
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <title>Ulteo Open Virtual Desktop v@VERSION@</title>
     <subtitle>Protocol Description</subtitle>
@@ -680,4 +680,6 @@ function start(form_) {
 </html>]]>
     </screen>
   </section>
+
+  <xi:include href="colophon.xml" />
 </article>
