@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 CC=gcc
-JAVAHOME?=/usr/lib/jvm/java-1.6.0-openjdk
+JAVAHOME?=$(realpath $(dir $(realpath $(shell which javah)))/..)
 EXEC=libXClientArea.so
 DESTDIR?=.
 LIBDIR=$(DESTDIR)/usr/lib/
