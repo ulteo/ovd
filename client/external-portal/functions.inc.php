@@ -97,12 +97,20 @@ function getFiles() {
 		
 		$f = array();
 		$f['name'] = basename($filename);
-		$f['mimetype'] = mime_content_type($filename);
+		$f['mimetype'] = getFileMimeType($filename);
 		
 		$files[$f['name']] = $f;
 	}
 	
 	return $files;
+}
+
+
+function getFileMimeType($filename_) {
+	if (function_exists('mime_content_type'))
+		return mime_content_type($filename);
+	
+	return 'text/plain';
 }
 
 

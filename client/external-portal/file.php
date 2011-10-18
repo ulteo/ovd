@@ -55,7 +55,7 @@ else {
 		die('404 Not Found');
 	}
 	
-	$m = mime_content_type($path);
+	$m = getFileMimeType($path);
 	header('Content-type: '.$m); 
 	$content = file_get_contents($path);
 	die($content);
