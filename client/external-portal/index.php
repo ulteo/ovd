@@ -125,19 +125,22 @@ function startApplicationWithPath(app_id_, path_, url_) {
 		<tr>
 		<td><?php echo $f['name']; ?></td>
 		<td><?php echo $f['mimetype']; ?></td>
+		</tr>
 <?php
 			foreach($f['applications'] as $application) {
 ?>
+		<tr>
+		<td></td><td></td>
+		<td><img src="icon.php?id=<?php echo $application['id']; ?>"/></td>
+		<td><?php echo $application['name']; ?></td>
 		<td>
 			<form onsubmit="startApplicationWithPath('<?php echo $application['id']; ?>', '<?php echo $f['name']; ?>', '<?php echo urlencode(base64_encode($base_url_file.'?path='.$f['name'])); ?>'); return false;">
-				<input type="submit" value="Open with <?php echo $application['name']; ?>" />
+				<input type="submit" value="Open" />
 			</form>
 		</td>
-<?php
-			}
-?>
 		</tr>
 <?php
+			}
 		}
 ?>
 	</table>	
