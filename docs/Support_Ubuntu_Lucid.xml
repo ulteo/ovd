@@ -49,7 +49,7 @@
       </para>
 
       <para>To log in as root:
-	<screen><![CDATA[$ sudo -s]]></screen>
+      <screen><![CDATA[$ sudo -s]]></screen>
       </para>
     </simplesect>
 
@@ -95,8 +95,7 @@
             file and add these lines:
           </para>
           <screen>
-            <![CDATA[
-deb http://archive.ulteo.com/ovd/3.0/@distrib_name@ @distrib_version@ main]]>
+<![CDATA[deb http://archive.ulteo.com/ovd/3.0/@distrib_name@ @distrib_version@ main]]>
           </screen>
         </listitem>
       </itemizedlist>
@@ -137,8 +136,7 @@ deb http://archive.ulteo.com/ovd/3.0/@distrib_name@ @distrib_version@ main]]>
             Uncompress the archive:
           </para>
           <screen>
-            <![CDATA[
-# tar xzf ovd-3.0-@distrib_name@-@distrib_version@.tar.gz]]>
+<![CDATA[# tar xzf ovd-3.0-@distrib_name@-@distrib_version@.tar.gz]]>
           </screen>
         </listitem>
 
@@ -149,11 +147,10 @@ deb http://archive.ulteo.com/ovd/3.0/@distrib_name@ @distrib_version@ main]]>
             file and add these lines:
           </para>
           <screen>
-            <![CDATA[
-deb file:///root/ovd-3.0-@distrib_name@-@distrib_version@ @distrib_version@ main]]>
+<![CDATA[deb file:///root/ovd-3.0-@distrib_name@-@distrib_version@ @distrib_version@ main]]>
           </screen>
         </listitem>
-     </itemizedlist>
+      </itemizedlist>
     </section>
 
     <simplesect id="repository_common">
@@ -164,8 +161,7 @@ deb file:///root/ovd-3.0-@distrib_name@-@distrib_version@ @distrib_version@ main
             Update the package database:
           </para>
           <screen>
-            <![CDATA[
-# apt-get update]]>
+<![CDATA[# apt-get update]]>
           </screen>
           <note>
             <para>
@@ -182,8 +178,7 @@ deb file:///root/ovd-3.0-@distrib_name@-@distrib_version@ @distrib_version@ main
             using gpg:
           </para>
           <screen>
-            <![CDATA[
-# apt-get install ulteo-keyring
+<![CDATA[# apt-get install ulteo-keyring
 # apt-get update]]>
           </screen>
         </listitem>
@@ -211,21 +206,21 @@ deb file:///root/ovd-3.0-@distrib_name@-@distrib_version@ @distrib_version@ main
       <itemizedlist>
 	<listitem>
 	  <para>Install the <emphasis>mysql-server</emphasis> package:</para>
-          <screen># apt-get install mysql-server</screen>
+          <screen><![CDATA[# apt-get install mysql-server]]></screen>
           <para>A password for <literal>root</literal> will be asked.</para>
         </listitem>
         <listitem id="mysql_createdb">
 	  <para>
 	    Now log in mysql and create a database:
-	  <screen><![CDATA[
-# mysql -u root -p -e 'create database ovd']]>
-          </screen>
-          <!--
-Should be replaced by something like that:
-CREATE USER 'ovd'@'%' IDENTIFIED BY  '***';
-GRANT USAGE ON * . * TO  'ovd'@'%' IDENTIFIED BY  '***' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;
-CREATE DATABASE IF NOT EXISTS  `ovd` ;
-GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
+	    <screen>
+<![CDATA[# mysql -u root -p -e 'create database ovd']]>
+	    </screen>
+	    <!--
+		Should be replaced by something like that:
+		CREATE USER 'ovd'@'%' IDENTIFIED BY  '***';
+		GRANT USAGE ON * . * TO  'ovd'@'%' IDENTIFIED BY  '***' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;
+		CREATE DATABASE IF NOT EXISTS  `ovd` ;
+		GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
             -->
 	  </para>
         </listitem>
@@ -239,8 +234,7 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
         <listitem>
 	  <para id="sm_install_package">Install the <emphasis>ulteo-ovd-session-manager</emphasis> package:</para>
           <screen>
-	    <![CDATA[
-# apt-get install ulteo-ovd-session-manager]]>
+<![CDATA[# apt-get install ulteo-ovd-session-manager]]>
 	  </screen>
         </listitem>
         
@@ -430,8 +424,7 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
 	  Install the package <emphasis>ulteo-ovd-subsystem</emphasis>:
         </para>
         <screen>
-	  <![CDATA[
-# apt-get install ulteo-ovd-subsystem]]>
+<![CDATA[# apt-get install ulteo-ovd-subsystem]]>
 	</screen>
       </listitem>
 
@@ -475,13 +468,12 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
       Once done, you just have to restart the service:
     </para>
     <screen>
-      <![CDATA[
-# /etc/init.d/ulteo-ovd-subsystem restart]]>
+<![CDATA[# /etc/init.d/ulteo-ovd-subsystem restart]]>
     </screen>
 
     <para id="subsystem_last_para">
       Your server should appear in the <emphasis
-	                                  role="strong">Unregistered server</emphasis> page.
+      role="strong">Unregistered server</emphasis> page.
     </para>
 
     <screenshot id="subsystem_last_screenshot">
@@ -546,8 +538,7 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
 	  Install the package <emphasis>ulteo-ovd-web-client</emphasis>:
         </para>
         <screen>
-	  <![CDATA[
-# apt-get install ulteo-ovd-web-client]]>
+<![CDATA[# apt-get install ulteo-ovd-web-client]]>
         </screen>
       </listitem>
 

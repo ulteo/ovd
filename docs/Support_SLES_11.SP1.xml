@@ -31,8 +31,7 @@
         So please disable SELinux support:
       </para>
       <screen>
-        <![CDATA[
-# @rpm_install_cmd@ remove selinux-policy]]>
+<![CDATA[# @rpm_install_cmd@ remove selinux-policy]]>
       </screen>
     </simplesect>
   </section>
@@ -56,8 +55,7 @@
             Add the ovd repository:
           </para>
           <screen>
-	  <![CDATA[
-# zypper ar http://archive.ulteo.com/ovd/3.0/@distrib_name@/@distrib_version@ ovd]]>
+<![CDATA[# zypper ar http://archive.ulteo.com/ovd/3.0/@distrib_name@/@distrib_version@ ovd]]>
           </screen>
         </listitem>
 
@@ -67,8 +65,7 @@
             using gpg:
           </para>
           <screen>
-            <![CDATA[
-# rpm --import http://archive.ulteo.com/ovd/keyring]]>
+<![CDATA[# rpm --import http://archive.ulteo.com/ovd/keyring]]>
           </screen>
         </listitem>
       </itemizedlist>
@@ -87,8 +84,7 @@
             Add the ovd repository:
           </para>
           <screen>
-            <![CDATA[
-# zypper ar file:///root/ovd-3.0-@distrib_name@-@distrib_version@ ovd-offline]]>
+<![CDATA[# zypper ar file:///root/ovd-3.0-@distrib_name@-@distrib_version@ ovd-offline]]>
           </screen>
         </listitem>
 
@@ -97,8 +93,7 @@
             Install the keyring package to validate the repository using gpg:
           </para>
           <screen>
-            <![CDATA[
-# rpm --import ovd-3.0-@distrib_name@-@distrib_version@/keyring]]>
+<![CDATA[# rpm --import ovd-3.0-@distrib_name@-@distrib_version@/keyring]]>
           </screen>
         </listitem>
 
@@ -112,8 +107,7 @@
         <listitem>
           <xi:include href="&parent;" xpointer="repository_common_step1_para" />
           <screen>
-	    <![CDATA[
-# zypper refresh]]>
+<![CDATA[# zypper refresh]]>
           </screen>
         </listitem>
       </itemizedlist>
@@ -135,8 +129,7 @@
 	    Install the <emphasis>mysql</emphasis> package:
 	  </para>
           <screen>
-            <![CDATA[
-# @rpm_install_cmd@ install @rpm_mysql_packages@]]>
+<![CDATA[# @rpm_install_cmd@ install @rpm_mysql_packages@]]>
           </screen>
         </listitem>
 
@@ -145,8 +138,7 @@
 	    To start automatically MySQL when the system boots up
 	  </para>
 	  <screen>
-	    <![CDATA[
-# chkconfig @mysql_service@ on]]>
+<![CDATA[# chkconfig @mysql_service@ on]]>
 	  </screen>
 	</listitem>
 
@@ -155,8 +147,7 @@
 	    Start the service
 	  </para>
 	  <screen>
-	    <![CDATA[
-# service @mysql_service@ start]]>
+<![CDATA[# service @mysql_service@ start]]>
 	  </screen>
 	</listitem>
 
@@ -165,8 +156,7 @@
 	    Define the root mysql password
 	  </para>
 	  <screen>
-	    <![CDATA[
-# mysqladmin -u root password 'mysql_root_password']]>
+<![CDATA[# mysqladmin -u root password 'mysql_root_password']]>
 	  </screen>
 	</listitem>
 
@@ -180,15 +170,15 @@
      <itemizedlist>
        <listitem>
          <xi:include href="&parent;" xpointer="sm_install_package" />
-         <screen><![CDATA[
-# @rpm_install_cmd@ install ulteo-ovd-session-manager]]>
+	 <screen>
+<![CDATA[# @rpm_install_cmd@ install ulteo-ovd-session-manager]]>
          </screen>
        </listitem>
 
        <listitem>
          <para>Launch the configuration tool</para>
-         <screen><![CDATA[
-# sm-config
+         <screen>
+<![CDATA[# sm-config
 Admin login: admin
 Password: 
 Retype password: 
@@ -215,8 +205,8 @@ Is this correct? [Y/n]]]>
 
        <listitem id="sm_configure_apache_service">
          <para>Configure and start apache service</para>
-         <screen><![CDATA[
-# chkconfig @apache_service@ on
+         <screen>
+<![CDATA[# chkconfig @apache_service@ on
 # service @apache_service@ restart]]>
          </screen>
        </listitem>
@@ -233,15 +223,15 @@ Is this correct? [Y/n]]]>
     <itemizedlist>
       <listitem>
         <xi:include href="&parent;" xpointer="subsystem_package" />
-        <screen><![CDATA[
-# @rpm_install_cmd@ install ulteo-ovd-subsystem]]>
+        <screen>
+<![CDATA[# @rpm_install_cmd@ install ulteo-ovd-subsystem]]>
         </screen>
       </listitem>
 
       <listitem>
         <para>Launch the configuration tool</para>
-        <screen><![CDATA[
-# ovd-subsystem-config 
+        <screen>
+<![CDATA[# ovd-subsystem-config 
 Session Manager address : sm.ulteo.com
 Chroot destination [/opt/ulteo]:]]>
         </screen>
@@ -250,8 +240,8 @@ Chroot destination [/opt/ulteo]:]]>
 
        <listitem>
          <para>Configure and start the Ulteo service</para>
-         <screen><![CDATA[
-# chkconfig ulteo-ovd-subsystem on
+         <screen>
+<![CDATA[# chkconfig ulteo-ovd-subsystem on
 # service ulteo-ovd-subsystem restart]]>
          </screen>
        </listitem>
@@ -271,15 +261,14 @@ Chroot destination [/opt/ulteo]:]]>
       <listitem>
         <xi:include href="Support_Ubuntu_Hardy.xml" xpointer="wc_package" />
         <screen>
-	  <![CDATA[
-# @rpm_install_cmd@ install ulteo-ovd-web-client ulteo-ovd-web-client-ajaxplorer]]>
+<![CDATA[# @rpm_install_cmd@ install ulteo-ovd-web-client ulteo-ovd-web-client-ajaxplorer]]>
         </screen>
       </listitem>
 
       <listitem>
         <para>Launch the configuration tool</para>
-        <screen><![CDATA[
-# ovd-webclient-config
+        <screen>
+<![CDATA[# ovd-webclient-config
 Do you want to link the web client to a specific Session Manager ? ([yes]/no): 
 Session Manager address [127.0.0.1]: sm.ulteo.com]]>
         </screen>

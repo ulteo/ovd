@@ -59,8 +59,7 @@
 	  Add the Ulteo repository to the repository list:
 	</para>
         <screen>
-	  <![CDATA[
-# echo "deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main" >> /etc/apt/sources.list.d/01-ulteo-ovd.list
+<![CDATA[# echo "deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main" >> /etc/apt/sources.list.d/01-ulteo-ovd.list
 # apt-get update]]>
 	</screen>
         <note>
@@ -78,8 +77,7 @@
           gpg:
         </para>
         <screen>
-	  <![CDATA[
-# apt-get install ulteo-keyring
+<![CDATA[# apt-get install ulteo-keyring
 # apt-get update]]>
 	</screen>
       </listitem>
@@ -87,16 +85,14 @@
       <listitem>
 	<para>Install the <emphasis>ulteo-ovd-debconf-database</emphasis> package:</para>
         <screen>
-	  <![CDATA[
-# apt-get install ulteo-ovd-debconf-database]]>
+<![CDATA[# apt-get install ulteo-ovd-debconf-database]]>
 	</screen>
       </listitem>
 
       <listitem>
 	<para>Install the <emphasis>ulteo-ovd-easy-install</emphasis> package:</para>
         <screen>
-	  <![CDATA[
-# apt-get install ulteo-ovd-easy-install]]>
+<![CDATA[# apt-get install ulteo-ovd-easy-install]]>
 	</screen>
         <important>
 	  <para>
@@ -121,8 +117,7 @@
           Once done, you just have to restart the service:
         </para>
         <screen>
-          <![CDATA[
-# /etc/init.d/ulteo-ovd-subsystem restart]]>
+<![CDATA[# /etc/init.d/ulteo-ovd-subsystem restart]]>
         </screen>
       </listitem>
     </itemizedlist>

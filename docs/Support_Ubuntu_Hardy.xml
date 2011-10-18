@@ -52,8 +52,7 @@
 	  Install the packages <emphasis>ulteo-ovd-web-client</emphasis> and <emphasis>ulteo-ovd-web-client-ajaxplorer</emphasis>:
         </para>
         <screen>
-	  <![CDATA[
-# apt-get install ulteo-ovd-web-client ulteo-ovd-web-client-ajaxplorer]]>
+<![CDATA[# apt-get install ulteo-ovd-web-client ulteo-ovd-web-client-ajaxplorer]]>
         </screen>
       </listitem>
       
