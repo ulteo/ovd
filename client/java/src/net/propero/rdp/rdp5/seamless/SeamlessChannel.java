@@ -1126,6 +1126,9 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		if (sw == null)
 			return;
 
+		if (sw.sw_getExtendedState() == Frame.MAXIMIZED_BOTH)
+			return;
+
 		Rectangle bounds = ((Component) sw).getBounds();
 
 		synchronized(this.positionsOrders) {
