@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -490,6 +491,12 @@ abstract class SessionManagement extends Module {
 			Logger::error('main', 'SessionManagement::getDesktopServer("'.$type_.'") - User is not authenticated, aborting');
 			throw_response(AUTH_FAILED);
 		}
+		
+		$allowed_servers = array();
+		
+		$remote_desktop_settings = $this->user->getSessionSettings('remote_desktop_settings');
+		if (array_key_exists('allowed_desktop_servers', $remote_desktop_settings))
+			$allowed_servers = $remote_desktop_settings['allowed_desktop_servers'];
 
 		$this->desktop_server = false;
 
@@ -503,6 +510,13 @@ abstract class SessionManagement extends Module {
 					$server = Abstract_Server::load($fqdn);
 					if (! $server)
 						continue;
+					
+					if (count($allowed_servers)>0) {
+						if (! in_array($fqdn, $allowed_servers)) {
+							Logger::info('main', 'SessionManagement::getDesktopServer("'.$type_.'") - can\'t used server "'.$fqdn.'" as desktop server because not in allowed desktop servers list');
+							continue;
+						}
+					}
 
 					if ($server->getAttribute('type') == $type_) {
 						$usable_servers[$server->fqdn] = 0;
@@ -524,6 +538,13 @@ abstract class SessionManagement extends Module {
 					$server = Abstract_Server::load($fqdn);
 					if (! $server)
 						continue;
+					
+					if (count($allowed_servers)>0) {
+						if (! in_array($fqdn, $allowed_servers)) {
+							Logger::info('main', 'SessionManagement::getDesktopServer("'.$type_.'") - can\'t used server "'.$fqdn.'" as desktop server because not in allowed desktop servers list');
+							continue;
+						}
+					}
 
 					$usable_servers[$server->fqdn] = 0;
 
