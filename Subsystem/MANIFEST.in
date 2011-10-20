@@ -1,0 +1,4 @@
+include conf/*.conf
+include script/ovd-subsystem-config script/uchroot
+recursive-include init *
+exclude setup.py README
