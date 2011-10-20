@@ -999,6 +999,12 @@ function onStartExternalSessionSuccess(xml_) {
 		return false;
 	session_node = buffer[0];
 
+	var sessionmanager_host = session_node.getAttribute('sessionmanager');
+	if (sessionmanager_host == '127.0.0.1' || sessionmanager_host == '127.0.1.1' || sessionmanager_host == 'localhost' || sessionmanager_host == 'localhost.localdomain')
+		sessionmanager_host = window.location.hostname;
+	if (sessionmanager_host.indexOf(':') == -1)
+		sessionmanager_host += ':443';
+	
 	try {
 		session_mode = session_node.getAttribute('mode');
 		session_mode = session_mode.substr(0, 1).toUpperCase()+session_mode.substr(1, session_mode.length-1);
@@ -1012,6 +1018,7 @@ function onStartExternalSessionSuccess(xml_) {
 		else
 			daemon = new External('ulteo-applet.jar', 'org.ulteo.ovd.applet.Applications', false);
 
+		daemon.sessionmanager = sessionmanager_host;
 		daemon.keymap = client_keymap;
 		try {
 			daemon.duration = parseInt(session_node.getAttribute('duration'));
