@@ -54,7 +54,7 @@ if (defined('OPTION_FORCE_SESSION_MODE'))
 elseif (isset($_COOKIE['ovd-client']['session_mode']))
 	$wi_session_mode = (string)$_COOKIE['ovd-client']['session_mode'];
 
-if (isset($_COOKIE['ovd-client']['session_language'])) {
+if (OPTION_FORCE_LANGUAGE !== true && isset($_COOKIE['ovd-client']['session_language'])) {
 	$user_language = (string)$_COOKIE['ovd-client']['session_language'];
 }
 if (strlen($user_language) == 2)
@@ -604,7 +604,7 @@ checkSessionMode();
 																updateFlag($('session_language').value);
 															});
 														</script>
-														<select id="session_language" onchange="translateInterface($('session_language').value); updateFlag($('session_language').value);" onkeyup="translateInterface($('session_language').value); updateFlag($('session_language').value);">
+														<select id="session_language" onchange="translateInterface($('session_language').value); updateFlag($('session_language').value);" onkeyup="translateInterface($('session_language').value); updateFlag($('session_language').value);"<?php if (OPTION_FORCE_LANGUAGE === true) echo ' disabled="disabled"';?>>
 															<?php
 																foreach ($languages as $language)
 																	echo '<option value="'.$language['id'].'" style="background: url(\'media/image/flags/'.$language['id'].'.png\') no-repeat right;"'.(($language['id'] == $user_language || $language['id'] == substr($user_language, 0, 2))?' selected="selected"':'').'>'.$language['english_name'].((array_key_exists('local_name', $language))?' - '.$language['local_name']:'').'</option>';

@@ -50,9 +50,22 @@ if (defined('DEBUG_MODE') && DEBUG_MODE == 1)
 	$debug_mode = true;
 
 $user_language = 'en-us';
-if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-	$buf = explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
-	$buf = explode(';', $buf[0]);
-	$user_language = strtolower(str_replace('_', '-', $buf[0]));
+if (defined('OPTION_LANGUAGE_DEFAULT'))
+	$user_language = OPTION_LANGUAGE_DEFAULT;
+
+if (! defined('OPTION_LANGUAGE_AUTO_DETECT'))
+	define('OPTION_LANGUAGE_AUTO_DETECT', true);
+
+if (! defined('OPTION_FORCE_LANGUAGE'))
+	define('OPTION_FORCE_LANGUAGE', false);
+
+
+if (OPTION_LANGUAGE_AUTO_DETECT === true) {
+	// Autodetect language from browser settings
+	if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+		$buf = explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
+		$buf = explode(';', $buf[0]);
+		$user_language = strtolower(str_replace('_', '-', $buf[0]));
+	}
 }
 $user_keymap = $user_language;
