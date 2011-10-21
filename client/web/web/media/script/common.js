@@ -956,7 +956,7 @@ function startExternalSession(mode_) {
 			parameters: {
 				mode: mode_,
 				language: client_language,
-				keymap: client_keymap,
+				keymap: user_keymap,
 				timezone: getTimezoneName(),
 				debug: 0
 			},
@@ -1019,7 +1019,7 @@ function onStartExternalSessionSuccess(xml_) {
 			daemon = new External('ulteo-applet.jar', 'org.ulteo.ovd.applet.Applications', false);
 
 		daemon.sessionmanager = sessionmanager_host;
-		daemon.keymap = client_keymap;
+		daemon.keymap = user_keymap;
 		try {
 			daemon.duration = parseInt(session_node.getAttribute('duration'));
 		} catch(e) {}

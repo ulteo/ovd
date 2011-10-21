@@ -136,7 +136,6 @@ $local_integration = (defined('PORTAL_LOCAL_INTEGRATION') && (PORTAL_LOCAL_INTEG
 			?>
 					var daemon;
 					var client_language = '<?php echo $user_language; ?>';
-					var client_keymap = '<?php echo $user_keymap; ?>';
 					var rdp_input_method = <?php echo (($rdp_input_unicode == null)?'null':'\''.$rdp_input_unicode.'\''); ?>;
 					var local_integration = <?php echo (($local_integration === true)?'true':'false'); ?>;
 
