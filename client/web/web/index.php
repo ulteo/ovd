@@ -61,10 +61,8 @@ if (strlen($user_language) == 2)
 	$user_language = $user_language.'-'.$user_language;
 
 $user_keymap = 'null';
-if (isset($_COOKIE['ovd-client']['session_keymap'])) {
-	$wi_session_keymap = (string)$_COOKIE['ovd-client']['session_language'];
-	$user_keymap = $wi_session_keymap;
-}
+if (isset($_COOKIE['ovd-client']['session_keymap']))
+	$user_keymap = (string)$_COOKIE['ovd-client']['session_language'];
 
 $wi_desktop_fullscreen = 0;
 if (defined('OPTION_FORCE_FULLSCREEN'))
