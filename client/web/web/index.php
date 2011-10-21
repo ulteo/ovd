@@ -44,7 +44,9 @@ if (isset($_COOKIE['ovd-client']['use_local_credentials']))
 	$wi_use_local_credentials = (int)$_COOKIE['ovd-client']['use_local_credentials'];
 
 $wi_session_mode = 'desktop';
-if (isset($_COOKIE['ovd-client']['session_mode']))
+if (defined('OPTION_FORCE_SESSION_MODE'))
+	$wi_session_mode = OPTION_FORCE_SESSION_MODE;
+elseif (isset($_COOKIE['ovd-client']['session_mode']))
 	$wi_session_mode = (string)$_COOKIE['ovd-client']['session_mode'];
 
 if (isset($_COOKIE['ovd-client']['session_language']) && $_COOKIE['ovd-client']['session_language'] != $user_language) {
@@ -61,7 +63,9 @@ if (isset($_COOKIE['ovd-client']['session_keymap'])) {
 }
 
 $wi_desktop_fullscreen = 0;
-if (isset($_COOKIE['ovd-client']['desktop_fullscreen']))
+if (defined('OPTION_FORCE_FULLSCREEN'))
+	$wi_desktop_fullscreen = ((OPTION_FORCE_FULLSCREEN==true)?1:0);
+elseif (isset($_COOKIE['ovd-client']['desktop_fullscreen']))
 	$wi_desktop_fullscreen = (int)$_COOKIE['ovd-client']['desktop_fullscreen'];
 
 $wi_debug = 1;
@@ -563,7 +567,7 @@ checkSessionMode();
 														<strong><span id="mode_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<select id="session_mode" onchange="checkSessionMode();" onclick="checkSessionMode();">
+														<select id="session_mode" onchange="checkSessionMode();" onclick="checkSessionMode();" <?php if (defined('OPTION_FORCE_SESSION_MODE')) echo ' disabled="disabled"';?>>
 															<option id="mode_desktop_gettext" value="desktop"<?php if ($wi_session_mode == 'desktop') echo ' selected="selected"'; ?>></option>
 															<option id="mode_portal_gettext" value="applications"<?php if ($wi_session_mode == 'applications') echo ' selected="selected"'; ?>></option>
 														</select>
@@ -577,8 +581,8 @@ checkSessionMode();
 														<strong><span id="fullscreen_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="desktop_fullscreen_true" name="desktop_fullscreen" value="1"<?php if ($wi_desktop_fullscreen == 1) echo ' checked="checked"'; ?> /> <span id="fullscreen_yes_gettext">&nbsp;</span>
-														<input class="input_radio" type="radio" id="desktop_fullscreen_false" name="desktop_fullscreen" value="0"<?php if ($wi_desktop_fullscreen == 0) echo ' checked="checked"'; ?> /> <span id="fullscreen_no_gettext">&nbsp;</span>
+														<input class="input_radio" type="radio" id="desktop_fullscreen_true" name="desktop_fullscreen" value="1"<?php if ($wi_desktop_fullscreen == 1) echo ' checked="checked"'; ?><?php if (defined('OPTION_FORCE_FULLSCREEN')) echo ' disabled="disabled"'; ?>/> <span id="fullscreen_yes_gettext">&nbsp;</span>
+														<input class="input_radio" type="radio" id="desktop_fullscreen_false" name="desktop_fullscreen" value="0"<?php if ($wi_desktop_fullscreen == 0) echo ' checked="checked"'; ?><?php if (defined('OPTION_FORCE_FULLSCREEN')) echo ' disabled="disabled"'; ?> /> <span id="fullscreen_no_gettext">&nbsp;</span>
 													</td>
 												</tr>
 												<tr>
