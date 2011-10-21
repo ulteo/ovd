@@ -55,8 +55,7 @@ elseif (isset($_COOKIE['ovd-client']['session_mode']))
 	$wi_session_mode = (string)$_COOKIE['ovd-client']['session_mode'];
 
 if (isset($_COOKIE['ovd-client']['session_language']) && $_COOKIE['ovd-client']['session_language'] != $user_language) {
-	$wi_session_language = (string)$_COOKIE['ovd-client']['session_language'];
-	$user_language = $wi_session_language;
+	$user_language = (string)$_COOKIE['ovd-client']['session_language'];
 }
 if (strlen($user_language) == 2)
 	$user_language = $user_language.'-'.$user_language;
