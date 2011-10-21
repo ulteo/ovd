@@ -861,7 +861,10 @@ function checkLogin() {
 }
 
 function manageKeymap() {
-	var keymapSet = updateKeymap(user_keymap);
+	var keymapSet = true;
+	if (OPTION_KEYMAP_AUTO_DETECT == true)
+		keymapSet = false;
+	
 	if (! keymapSet) {
 		var detected = null;
 		try {
