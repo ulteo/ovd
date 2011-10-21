@@ -40,8 +40,13 @@ if (isset($_COOKIE['ovd-client']['user_login']))
 	$wi_user_login = (string)$_COOKIE['ovd-client']['user_login'];
 
 $wi_use_local_credentials = 0;
-if (isset($_COOKIE['ovd-client']['use_local_credentials']))
+if (defined('OPTION_FORCE_USE_LOCAL_CREDENTIALS'))
+	$wi_use_local_credentials = ((OPTION_FORCE_USE_LOCAL_CREDENTIALS==true)?1:0);
+elseif (isset($_COOKIE['ovd-client']['use_local_credentials']))
 	$wi_use_local_credentials = (int)$_COOKIE['ovd-client']['use_local_credentials'];
+
+if (! defined('OPTION_SHOW_USE_LOCAL_CREDENTIALS'))
+	define('OPTION_SHOW_USE_LOCAL_CREDENTIALS', false);
 
 $wi_session_mode = 'desktop';
 if (defined('OPTION_FORCE_SESSION_MODE'))
@@ -547,7 +552,7 @@ checkSessionMode();
 ?>
 										<div id="advanced_settings" style="display: none;">
 											<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="5">
-												<tr>
+												<tr<?php if (OPTION_SHOW_USE_LOCAL_CREDENTIALS === false) echo ' style="display: none;"';?>>
 													<td style="text-align: right; vertical-align: middle;">
 														<img src="media/image/icons/use_local_credentials.png" alt="" title="" />
 													</td>
@@ -555,8 +560,8 @@ checkSessionMode();
 														<strong><span id="use_local_credentials_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="use_local_credentials_true" name="use_local_credentials" value="1"<?php if ($wi_use_local_credentials == 1) echo ' checked="checked"'; ?> onchange="checkLogin();" onclick="checkLogin();" /> <span id="use_local_credentials_yes_gettext">&nbsp;</span>
-														<input class="input_radio" type="radio" id="use_local_credentials_false" name="use_local_credentials" value="0"<?php if ($wi_use_local_credentials == 0) echo ' checked="checked"'; ?> onchange="checkLogin();" onclick="checkLogin();" /> <span id="use_local_credentials_no_gettext">&nbsp;</span>
+														<input class="input_radio" type="radio" id="use_local_credentials_true" name="use_local_credentials" value="1"<?php if ($wi_use_local_credentials == 1) echo ' checked="checked"'; ?><?php if (defined('OPTION_FORCE_USE_LOCAL_CREDENTIALS')) echo ' disabled="disabled"'; ?> onchange="checkLogin();" onclick="checkLogin();" /> <span id="use_local_credentials_yes_gettext">&nbsp;</span>
+														<input class="input_radio" type="radio" id="use_local_credentials_false" name="use_local_credentials" value="0"<?php if ($wi_use_local_credentials == 0) echo ' checked="checked"'; ?><?php if (defined('OPTION_FORCE_USE_LOCAL_CREDENTIALS')) echo ' disabled="disabled"'; ?> onchange="checkLogin();" onclick="checkLogin();" /> <span id="use_local_credentials_no_gettext">&nbsp;</span>
 													</td>
 												</tr>
 												<tr>

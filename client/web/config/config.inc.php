@@ -12,6 +12,16 @@
 // define('OPTION_FORCE_FULLSCREEN', false);
 // default: do not force any behavior
 
+// Option local credentials: show the option
+// define('OPTION_SHOW_USE_LOCAL_CREDENTIALS', true);
+// define('OPTION_SHOW_USE_LOCAL_CREDENTIALS', false);
+// default: do not force any behavior
+
+// Option local credentials: force the mode
+// define('OPTION_FORCE_USE_LOCAL_CREDENTIALS', true);
+// define('OPTION_FORCE_USE_LOCAL_CREDENTIALS', false);
+// default: do not force any behavior
+
 // Enable/disable debug mode
 define('DEBUG_MODE', 0);
 
