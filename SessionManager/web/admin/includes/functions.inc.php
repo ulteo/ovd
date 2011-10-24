@@ -362,7 +362,7 @@ function checkAuthorization($policy_) {
 	if (array_key_exists('admin_ovd_user', $_SESSION)) 
 		Logger::warning('main', 'User(login='.$_SESSION['admin_ovd_user']->getAttribute('login').') is  not allowed to perform '.$policy_.'.');
 	else
-		Logger::warning('main', 'The ser is not logged so he is not allowed to perform '.$policy_.'.');
+		Logger::warning('main', 'The user is not logged so he is not allowed to perform '.$policy_.'.');
 	popup_error(_('You are not allowed to perform this action'));
 	return false;
 }
