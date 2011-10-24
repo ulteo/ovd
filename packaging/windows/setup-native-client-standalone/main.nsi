@@ -26,7 +26,6 @@
 !define EXE_NAME "OVDNativeClientw.exe"
 !define SHORTCUT "${PRODUCT_NAME}.lnk"
 !define SHORTCUT_ICON "ulteo.ico"
-!define UNINSTALL_SHORTCUT "Uninstall - ${PRODUCT_NAME}.lnk"
 
 !define UNINSTALL_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Ulteo-ovd-native-client-standalone"
 
@@ -160,12 +159,10 @@ Section "Shortcut Section" SecShortcut
   CreateDirectory "$SMPROGRAMS\${PRODUCT_PUBLISHER}"
   WriteIniStr "$SMPROGRAMS\${PRODUCT_PUBLISHER}\Website.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
 
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${UNINSTALL_SHORTCUT}" "$INSTDIR\Uninstall.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${SHORTCUT}" "$INSTDIR\${EXE_NAME}"
 SectionEnd
 
 Section "un.Shortcut Section" SecUnShortcut
-  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${UNINSTALL_SHORTCUT}"
   Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${SHORTCUT}"
   
   ;Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\Website.url"
