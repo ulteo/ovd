@@ -116,9 +116,9 @@ class Session(AbstractSession):
 				d = os.path.join(self.profile.mountPoint, self.profile.DesktopDir)
 			else:
 				d = self.windowsDesktopDir
-				if  not os.path.exists(self.windowsDesktopDir):
+				if not os.path.exists(self.windowsDesktopDir):
 					os.makedirs(self.windowsDesktopDir)
-			  
+			
 			dstFile = os.path.join(d, os.path.basename(shortcut))
 			if os.path.exists(dstFile):
 				os.remove(dstFile)
