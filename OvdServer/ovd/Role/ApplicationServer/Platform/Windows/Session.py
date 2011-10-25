@@ -78,6 +78,10 @@ class Session(AbstractSession):
 			
 			self.profile.copySessionStart()
 		
+		if self.profile is not None and self.profile.mountPoint is not None:
+			d = os.path.join(self.profile.mountPoint, self.profile.DesktopDir)
+			self.cleanupShortcut(d)
+		
 		self.install_desktop_shortcuts()
 		
 		self.overwriteDefaultRegistry(self.windowsProfileDir)
@@ -110,7 +114,6 @@ class Session(AbstractSession):
 		if self.parameters.has_key("desktop_icons") and self.parameters["desktop_icons"] == "1":
 			if self.profile is not None and self.profile.mountPoint is not None:
 				d = os.path.join(self.profile.mountPoint, self.profile.DesktopDir)
-				self.cleanupShortcut(d)
 			else:
 				d = self.windowsDesktopDir
 				if  not os.path.exists(self.windowsDesktopDir):
