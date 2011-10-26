@@ -65,7 +65,7 @@ if (! array_key_exists('start_app', $_SESSION['ovd-client'])) {
 	$_SESSION['ovd-client']['start_app'] = array();
 }
 
-if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications') {
+if (array_key_exists('app', $_REQUEST)) {
 	$order = array('id' => $_REQUEST['app']);
 
 	if (array_key_exists('file', $_REQUEST)) {
