@@ -95,6 +95,7 @@ class Logger:
 			if self.isThreaded():
 				self.lock.acquire()
 				self.queue.close()
+				self.queue = None
 				self.thread.join()
 				self.lock.release()
 	
@@ -120,7 +121,7 @@ class Logger:
 		obj = "[%d] %s" % (os.getpid(), obj)
 		
 		self.lock.acquire()
-		if self.isThreaded():
+		if not self.isThreaded() and self.queue is not None:
 			try:
 				self.queue.put_nowait((func, obj))
 			except (EOFError, socket.error):
