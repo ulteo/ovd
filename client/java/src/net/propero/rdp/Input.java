@@ -337,8 +337,8 @@ public abstract class Input {
 
 		if (altDown) {
 			// with Openoffice, if no other keys are pressed at the ALT release sequence, a menu is displayed  
-			sendScancode(getTime(), RDP_KEYPRESS, KBD_SHIFT_KEY); // l.shift
-			sendScancode(getTime(), RDP_KEYRELEASE, KBD_SHIFT_KEY); // l.shift
+			sendScancode(getTime(), RDP_KEYPRESS, KBD_CTRL_KEY); // l.ctrl
+			sendScancode(getTime(), RDP_KEYRELEASE, KBD_CTRL_KEY); // l.ctrl
 			sendScancode(getTime(), RDP_KEYRELEASE, KBD_ALT_KEY); // l.alt
         }
 		if (ctrlDown) {
