@@ -37,7 +37,8 @@ class InstancesManager(AbstractInstancesManager):
 	
 	
 	def wait(self):
-		haveWorked = False
+		exited_instance = []
+		
 		for instance in self.instances:
 			pid = instance[0]
 			
@@ -47,10 +48,9 @@ class InstancesManager(AbstractInstancesManager):
 			if os.path.isdir(path):
 				continue
 			
-			self.onInstanceExited(instance)
-			haveWorked = True
+			exited_instance.append(instance)
 		
-		return haveWorked
+		return exited_instance
 	
 	
 	def kill(self, pid):

@@ -41,13 +41,6 @@ class OvdAppChannel:
 	DIR_TYPE_KNOWN_DRIVES  = 0x03
 	DIR_TYPE_HTTP_URL      = 0x10
 	
-	def __init__(self, instance_manager):
-		self.im = instance_manager
-		try:
-			self.encoding = locale.getpreferredencoding()
-		except locale.Error, err:
-			self.encoding = "UTF-8"
-	
 	
 	@staticmethod
 	def getInitPacket():
@@ -66,43 +59,53 @@ class OvdAppChannel:
 		return buf
 	
 	
-	def run(self, vchannel):
-		while True:
-			# Read a complete packet
-			# so we assume a maximum packet size is 2048
-			packet = vchannel.Read(2048)
-			if packet is None:
-				print "error at read"
-				time.sleep(0.5)
-				continue
-			
-			if len(packet) < 1:
-				print "Packet length error"
-				continue
-		  
-			if len(packet) < 1:
-				print "Packet length error"
-				return None
-			
-			order = struct.unpack('>B', packet[0])[0]
-			if order == self.ORDER_START:
-				self.packet_ORDER_START(packet)
-			
-			elif order == self.ORDER_START_WITH_ARGS:
-				self.packet_ORDER_START_WITH_ARGS(packet)
-			
-			elif order == self.ORDER_STOP:
-				self.packet_ORDER_STOP(packet)
-			
-			elif order == self.ORDER_EXIT:
-				# logoff
-				return
-			
-			else:
-				print "unknown message %X"%(order)
+	@classmethod
+	def build_packet_ORDER_CANT_START(cls, token):
+		buf = struct.pack("<B", cls.ORDER_CANT_START)
+		buf+= struct.pack("<I", token)
+		
+		return buf
 	
 	
-	def packet_ORDER_START(self, packet):
+	@classmethod
+	def build_packet_ORDER_STARTED(cls, token):
+		buf = struct.pack("<B", cls.ORDER_STARTED)
+		buf+= struct.pack("<I", token)
+		
+		return buf
+	
+	
+	@classmethod
+	def build_packet_ORDER_STOPPED(cls, token):
+		buf = struct.pack("<B", cls.ORDER_STOPPED)
+		buf+= struct.pack("<I", token)
+		
+		return buf
+	
+	
+	@classmethod
+	def parse_packet(cls, packet):
+		if len(packet) < 1:
+			return (None, "Packet length error")
+		
+		order = struct.unpack('>B', packet[0])[0]
+		if order == OvdAppChannel.ORDER_START:
+			return cls.packet_ORDER_START(packet)
+		
+		elif order == OvdAppChannel.ORDER_START_WITH_ARGS:
+			return cls.packet_ORDER_START_WITH_ARGS(packet)
+		
+		elif order == OvdAppChannel.ORDER_STOP:
+			return cls.packet_ORDER_STOP(packet)
+		
+		elif order == OvdAppChannel.ORDER_EXIT:
+			return (OvdAppChannel.ORDER_EXIT, None)
+		
+		return (None, "unknown message %X"%(order))
+	
+	
+	@classmethod
+	def packet_ORDER_START(cls, packet):
 		if len(packet) < 9:
 			print "Packet length error"
 			return
@@ -110,21 +113,26 @@ class OvdAppChannel:
 		token = struct.unpack('<I', packet[1:5])[0]
 		app_id = struct.unpack('<I', packet[5:9])[0]
 		
-		print "recv startapp order %d %d"%(token, app_id)
-		self.im.pushJob((self.ORDER_START, token, app_id))
+		return (cls.ORDER_START, (token, app_id))
 	
 	
-	def packet_ORDER_STOP(self, packet):
+	@classmethod
+	def packet_ORDER_STOP(cls, packet):
 		if len(packet) < 5:
 			print "Packet length error"
 			return
 		token = struct.unpack('<I', packet[1:5])[0]
 		
-		print "recv stop order %d"%(token)
-		self.im.pushJob((self.ORDER_STOP, token))
+		return (cls.ORDER_STOP, (token))
 	
 	
-	def packet_ORDER_START_WITH_ARGS(self, packet):
+	@classmethod
+	def packet_ORDER_START_WITH_ARGS(cls, packet):
+		try:
+			encoding = locale.getpreferredencoding()
+		except locale.Error, err:
+			encoding = "UTF-8"
+		
 		if len(packet) < 13 + 4 + 4:
 			print "Packet length error"
 			return
@@ -132,7 +140,7 @@ class OvdAppChannel:
 		app_id = struct.unpack('<I', packet[5:9])[0]
 		
 		dir_type = struct.unpack('>B', packet[9])[0]
-		if dir_type not in [self.DIR_TYPE_SHARED_FOLDER, self.DIR_TYPE_RDP_DRIVE, self.DIR_TYPE_KNOWN_DRIVES, self.DIR_TYPE_HTTP_URL]:
+		if dir_type not in [cls.DIR_TYPE_SHARED_FOLDER, cls.DIR_TYPE_RDP_DRIVE, cls.DIR_TYPE_KNOWN_DRIVES, cls.DIR_TYPE_HTTP_URL]:
 			print "Message ORDER_START_WITH_ARGS: unknown dir type %X"%(dir_type)
 			return
 		
@@ -146,7 +154,7 @@ class OvdAppChannel:
 		share = packet[ptr:ptr+l]
 		try:
 			share = share.decode("UTF-16LE")
-			share = share.encode(self.encoding)
+			share = share.encode(encoding)
 		except:
 			print "Message ORDER_START_WITH_ARGS: share argument is not UTF-16-LE srting"
 			return
@@ -172,12 +180,10 @@ class OvdAppChannel:
 		path = packet[ptr:ptr+l]
 		try:
 			path = path.decode("UTF-16LE")
-			path = path.encode(self.encoding)
+			path = path.encode(encoding)
 		except:
 			print "Message ORDER_START_WITH_ARGS: path argument is not UTF-16-LE srting"
 			return
 		ptr+=l
 		
-		job = (self.ORDER_START, token, app_id, dir_type, share, path)
-		print "recv startapp order %d %d %d %s %s"%(token, app_id, dir_type, share, path)
-		self.im.pushJob(job)
+		return (cls.ORDER_START_WITH_ARGS, (token, app_id, dir_type, share, path))

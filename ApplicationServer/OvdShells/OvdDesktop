@@ -1,11 +1,11 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2010 Ulteo SAS
+# Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Gauvain POCENTEK <gauvain@ulteo.com> 2009
-# Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -24,9 +24,11 @@
 import ConfigParser
 import os
 import sys
+import time
 
 from ovd_shells.Platform import _platform as Platform
 from ovd_shells.Platform.Folders import Folders
+from ovd_shells.Platform.InstancesManager import InstancesManager
 from ovd_shells import Util
 
 def generateConfFile(path_file_, sm_, token_):
@@ -119,13 +121,27 @@ def main():
 		except Exception, err:
 			print "Unable to start external apps", err
 	
+	im = InstancesManager()
+	im.setSharedFolderDB(folders)
 	
 	# Applications to auto starts
-	Util.manageAutoStartApplication(user_sdir)
+	Util.manageAutoStartApplication(user_sdir, im)
 	
 	Util.startModules()
 	
 	Platform.startDesktop()
+	
+	t0 = time.time()
+	im.kill_all_apps()
+	while im.has_running_instances():
+		if time.time() - t0 > 20:
+			print "Still running instances after 20 seconds, exiting anyway ..."
+			break
+		
+		im.get_exited_instances()
+		if im.has_running_instances():
+			im.kill_all_apps()
+			time.sleep(1)
 	
 	sys.exit(0)
 

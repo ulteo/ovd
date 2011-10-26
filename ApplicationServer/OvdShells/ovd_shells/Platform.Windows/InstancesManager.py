@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009,2010 Ulteo SAS
+# Copyright (C) 2009-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -34,25 +34,25 @@ class InstancesManager(AbstractInstancesManager):
 	
 	def wait(self):
 		if len(self.instances) == 0:
-			return False
+			return []
 		
 		handleList = [instance[0] for instance in self.instances] 
 		
 		res = win32event.WaitForMultipleObjects(handleList, False, 0)
 		
 		if res in [win32event.WAIT_TIMEOUT, win32event.WAIT_FAILED]:
-			return False
+			return []
 		
 		if res > win32event.WAIT_ABANDONED_0:
 			# todo: understand what it means!
-			return False
+			return []
 		
 		index = res - win32event.WAIT_OBJECT_0
 		
 		win32file.CloseHandle(handleList[index])
 		
-		self.onInstanceExited(self.instances[index])
-		return True
+		return [self.instances[index]]
+		
 	
 	def kill(self, handle):
 		ppid = win32process.GetProcessId(handle)

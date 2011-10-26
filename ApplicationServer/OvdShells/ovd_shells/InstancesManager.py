@@ -20,36 +20,32 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
-import struct
-import threading
-import time
 
 from HttpFile import HttpFile
-from OvdAppChannel import OvdAppChannel
 
-class InstancesManager(threading.Thread):
-	def __init__(self, vchannel, folders, drives):
-		threading.Thread.__init__(self)
+
+class InstancesManager:
+	DIR_TYPE_NATIVE        = 0
+	DIR_TYPE_SHARED_FOLDER = 1
+	DIR_TYPE_RDP_DRIVE     = 2
+	DIR_TYPE_KNOWN_DRIVES  = 3
+	DIR_TYPE_HTTP_URL      = 4
+	
+	
+	def __init__(self):
+		self.known_drives = None
+		self.shared_folders = None
 		
-		self.vchannel = vchannel
-		self.folders = folders
-		self.drives = drives
-		self.jobs = []
 		self.instances = []
-
-
-	def pushJob(self, job):
-		# todo mutex lock
-		self.jobs.append(job)
-		# todo mutex unlock
 	
 	
-	def popJob(self):
-		# todo mutex lock
-		if len(self.jobs) == 0:
-			return None
-		# todo mutex unlock
-		return self.jobs.pop()
+	def setDrivesDB(self, known_drives):
+		self.known_drives = known_drives
+	
+	
+	def setSharedFolderDB(self, shared_folders):
+		self.shared_folders = shared_folders
+	
 	
 	def getInstanceByToken(self, token):
 		for instance in self.instances:
@@ -58,102 +54,119 @@ class InstancesManager(threading.Thread):
 		
 		return None
 	
-	def run(self):
-		self.drives.rebuild()
-		self.vchannel.Write(OvdAppChannel.getDrivesMessage(self.drives.getListUID()))
-		
-		t_init = 0
-		while True:
-			t0 = time.time()
-			job = self.popJob()
-			if job is not None:
-				print "IM got job",job
-				
-				order = job[0]
-				if order == OvdAppChannel.ORDER_START:
-					(token, app) = job[1:3]
-					cmd = "startovdapp %d"%(app)
-					extra = None
-					
-					if len(job)>3:
-						dir_type = job[3]
-						local_path = None
-						
-						if dir_type == OvdAppChannel.DIR_TYPE_RDP_DRIVE:
-							local_path = self.shareName2path(job[4])
-						
-						elif dir_type == OvdAppChannel.DIR_TYPE_KNOWN_DRIVES:
-							local_path = self.drives.getPath(job[4])
-							if local_path is None:
-								 print "Unknown drive ID %s"%(job[4])
-								 continue
-						
-						elif dir_type == OvdAppChannel.DIR_TYPE_HTTP_URL:
-							http = HttpFile(job[4], job[5])
-							if not http.recv():
-								print "Unable to get file by HTTP"
-								continue
-							
-							local_path = os.path.dirname(http.path)
-							extra = http
-						
-						else:
-							local_path = self.folders.getPathFromID(job[4])
-						
-						if local_path is not None:
-							arg = os.path.join(local_path, job[5].replace("/", os.path.sep))
-							cmd+=' "%s"'%(arg)
-					instance = self.launch(cmd)
-					
-					# ToDo: sleep 0.5s and check if the process exist
-					# with startovdapp return status, get the error
-					
-					buf = struct.pack("<B", OvdAppChannel.ORDER_STARTED)
-					buf+= struct.pack("<I", token)
-					self.vchannel.Write(buf)
-					
-					self.instances.append((instance, token, extra))
-				
-				elif order == OvdAppChannel.ORDER_STOP:
-					token = job[1]
-					instance = self.getInstanceByToken(token)
-					
-					if instance is None:
-						print "Not existing token",token
-						continue
-					
-					self.kill(instance[0])
-					self.onInstanceExited(instance)
-			
-			ret = self.wait()
-			
-			if job is None and ret is False:
-				time.sleep(0.1)
-			
-					
-			t1 = time.time()
-			t_init+= (t1 - t0)
-			if t_init > 5:
-				# We send channel init time to time to manage the reconnection
-				self.vchannel.Write(OvdAppChannel.getInitPacket())
-				
-				if self.drives.rebuild():
-					self.vchannel.Write(OvdAppChannel.getDrivesMessage(self.drives.getListUID()))
-				
-				t_init = 0
 	
-	def stop(self):
-		if self.isAlive():
-			self._Thread__stop()
+	def start_app_empty(self, token, app_id):
+		cmd = "startovdapp %d"%(app_id)
+		extra = None
 		
+		instance = self.launch(cmd)
+		if token is None:
+			token = instance
+		
+		self.instances.append((instance, token, extra))
+		
+		return True
+	
+	
+	def start_app_with_arg(self, token, app_id, dir_type, f_path, f_share):
+		extra = None
+		
+		if dir_type == self.DIR_TYPE_NATIVE:
+			arg = f_path
+		
+		elif dir_type == self.DIR_TYPE_SHARED_FOLDER:
+			if self.shared_folders is None:
+				print "No Shared folders registered"
+				return False
+			
+			arg = os.path.join(local_path, f_path.replace("/", os.path.sep))
+		
+		elif dir_type == self.DIR_TYPE_RDP_DRIVE:
+			local_path = self.shareName2path(f_share)
+			arg = os.path.join(local_path, f_path.replace("/", os.path.sep))
+		
+		elif dir_type == self.DIR_TYPE_KNOWN_DRIVES:
+			if self.known_drives is None:
+				print "No Known drives registered"
+				return False
+			
+			local_path = self.known_drives.getPath(f_share)
+			if local_path is None:
+				  print "Unknown drive ID %s"%(f_share)
+				  return False
+			
+			arg = os.path.join(local_path, f_path.replace("/", os.path.sep))
+		
+		elif dir_type == self.DIR_TYPE_HTTP_URL:
+			http = HttpFile(f_share, f_path)
+			if not http.recv():
+				print "Unable to get file by HTTP"
+				return False
+			
+			local_path = os.path.dirname(http.path)
+			arg = os.path.join(local_path, f_path.replace("/", os.path.sep))
+			extra = http
+		
+		else:
+			print "Unknown type"
+			return False
+		
+		
+		cmd = 'startovdapp %d "%s"'%(app_id, arg)
+		
+		instance = self.launch(cmd)
+		if token is None:
+			token = instance
+		
+		# ToDo: sleep 0.5s and check if the process exist
+		# with startovdapp return status, get the error
+		
+		self.instances.append((instance, token, extra))
+		return True
+	
+	
+	def stop_app(self, token):
+		instance = self.getInstanceByToken(token)
+		if instance is None:
+			print "Not existing token",token
+			return False
+		
+		self.kill(instance[0])
+		
+		self.instances.remove(instance)
+		
+		return True
+	
+	
+	def has_running_instances(self):
+		return (len(self.instances) != 0)
+	
+	
+	def kill_all_apps(self):
 		for instance in self.instances:
 			self.kill(instance[0])
-			
-			buf = struct.pack("<B", OvdAppChannel.ORDER_STOPPED)
-			buf+= struct.pack("<I", instance[1])
-			self.vchannel.Write(buf)
 		
-		self.instances = []
+		return True
+	
+	
+	def get_exited_instances(self):
+		instances = self.wait()
+		
+		if len(instances) == 0:
+			return []
+		
+		tokens = []
+		
+		for instance in instances:
+			self.instances.remove(instance)
+			tokens.append(instance[1])
+			
+			if instance[2] is not None:
+				# Backup file
+				instance[2].send()
+		
+		return tokens
+	
 	
 	def wait(self):
 		"""
@@ -170,19 +183,3 @@ class InstancesManager(threading.Thread):
 	@staticmethod
 	def shareName2path(share):
 		raise NotImplementedError("must be redeclared")
-	
-	def onInstanceNotAvailable(self, token):
-		buf = struct.pack("<B", OvdAppChannel.ORDER_CANT_START)
-		buf+= struct.pack("<I", token)
-		self.vchannel.Write(buf)
-	
-	def onInstanceExited(self, instance):
-		self.instances.remove(instance)
-		
-		buf = struct.pack("<B", OvdAppChannel.ORDER_STOPPED)
-		buf+= struct.pack("<I", instance[1])
-		self.vchannel.Write(buf)
-		
-		if instance[2] is not None:
-			# Backup file
-			instance[2].send()

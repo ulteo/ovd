@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -60,17 +60,27 @@ def loadUserEnv(d):
 		
 		os.environ[key] = value
 
-def manageAutoStartApplication(d):
+def manageAutoStartApplication(d, im):
 	for path in glob.glob(os.path.join(d, "to_start", "*")):
 		f = file(path, "r")
 		lines = f.readlines()
 		f.close()
 		
-		cmd = "startovdapp %s"%(lines[0].strip())
-		if len(lines) > 1:
-			cmd+= ' "%s"'%(lines[1].strip())
+		try:
+			app_id = int(lines[0].strip())
+		except ValueError, err:
+			print "Invalid application id '%s'"%(lines[0].strip())
+			continue
 		
-		Platform.launch(cmd)
+		if len(lines)>1:
+			dir_type = im.DIR_TYPE_NATIVE
+			share = None
+			path  = lines[1].strip()
+			
+			im.start_app_with_arg(None, app_id, dir_type, share, path)
+			continue
+		
+		im.start_app_empty(None, app_id)
 
 def startModules():
 	novell = Novell()
