@@ -55,21 +55,6 @@ public class LinuxDiskManager extends DiskManager {
 			addDirectoryToInspect("/mnt");
 		}
 	}
-
-	/**************************************************************************/
-	public boolean testDir(String directoryName) {
-		File directory = new File(directoryName);
-		if (directory.isDirectory() && directory.canRead()) {
-			if (LinuxPaths.isXdgDir(directoryName))
-				return true;
-			
-			for(String entry : this.mtabList) {
-				if (entry.equals(directoryName))
-					return true;
-			}
-		}
-		return false;
-	}
 	
 	/**************************************************************************/
 	private void updateMtab() {
