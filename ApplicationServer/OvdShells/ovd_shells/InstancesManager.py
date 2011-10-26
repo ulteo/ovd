@@ -79,6 +79,7 @@ class InstancesManager:
 				print "No Shared folders registered"
 				return False
 			
+			local_path = self.shared_folders.getPathFromID(f_share)
 			arg = os.path.join(local_path, f_path.replace("/", os.path.sep))
 		
 		elif dir_type == self.DIR_TYPE_RDP_DRIVE:
