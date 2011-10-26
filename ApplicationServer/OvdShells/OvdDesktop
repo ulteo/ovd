@@ -129,7 +129,19 @@ def main():
 	
 	Util.startModules()
 	
-	Platform.startDesktop()
+	nodesktop = os.path.exists(os.path.join(user_sdir, "no_desktop_process"))
+	if nodesktop:
+		Platform.startWM()
+		time.sleep(5)
+		
+		while im.has_running_instances():
+			time.sleep(5)
+			
+			im.get_exited_instances()
+		
+		print "No anymore instances, exiting"
+	else:
+		Platform.startDesktop()
 	
 	t0 = time.time()
 	im.kill_all_apps()

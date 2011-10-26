@@ -127,6 +127,11 @@ class Session:
 				if (application.has_key("arg")):
 					f.write("\n"+application["arg"])
 				f.close()
+		
+		if self.parameters.has_key("no_desktop_process"):
+			f = open(os.path.join(self.user_session_dir, "no_desktop_process"), "w")
+			f.write("no_desktop_process\n")
+			f.close()
 	
 	
 	def post_install(self):

@@ -89,6 +89,7 @@ $remote_desktop_settings = $user->getSessionSettings('remote_desktop_settings');
 $remote_desktop_enabled = (($remote_desktop_settings['enabled'] == 1)?true:false);
 $persistent = $remote_desktop_settings['persistent'];
 $desktop_icons = $remote_desktop_settings['desktop_icons'];
+$authorize_no_desktop = ($remote_desktop_settings['authorize_no_desktop'] == 1);
 
 $remote_applications_settings = $user->getSessionSettings('remote_applications_settings');
 $remote_applications_enabled = (($remote_applications_settings['enabled'] == 1)?true:false);
@@ -275,6 +276,14 @@ if (isset($_REQUEST['start_apps']) && is_array($_REQUEST['start_apps'])) {
 			throw_response(SERVICE_NOT_AVAILABLE);
 		}
 	}
+	
+	# No_desktop option management
+	if (isset($_SESSION['no_desktop']) && $_SESSION['no_desktop'] === true) {
+		if ($authorize_no_desktop  === true)
+			$no_desktop_process = 1;
+		else
+			Logger::warning('main', '(client/start) Cannot apply no_desktop parameter because policy forbid it');
+	}
 }
 if (isset($persistent) && $persistent != '0')
 	$optional_args['persistent'] = 1;
@@ -388,7 +397,7 @@ if (! isset($old_session_id)) {
 		$session_node->setAttribute('mode', (($session->mode == Session::MODE_DESKTOP && $count_prepare_servers == 1)?Session::MODE_DESKTOP:Session::MODE_APPLICATIONS));
 		if (isset($external_apps_token))
 			$session_node->setAttribute('external_apps_token', $external_apps_token->id);
-		foreach (array('desktop_icons', 'locale', 'timezone') as $parameter) {
+		foreach (array('desktop_icons', 'locale', 'timezone', 'no_desktop_process') as $parameter) {
 			if (! isset($$parameter))
 				continue;
 

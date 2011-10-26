@@ -115,6 +115,9 @@ abstract class SessionManagement extends Module {
 		if ($session_node->hasAttribute('timezone'))
 			$_REQUEST['timezone'] = $session_node->getAttribute('timezone');
 
+		if ($session_node->hasAttribute('no_desktop'))
+			$_SESSION['no_desktop'] = true;
+		
 		$user_node = $dom->getElementsByTagname('user')->item(0);
 		if (! is_null($user_node)) {
 			if ($user_node->hasAttribute('login'))

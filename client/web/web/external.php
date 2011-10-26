@@ -54,6 +54,10 @@ if (! array_key_exists('start_app', $_SESSION['ovd-client'])) {
 	if (array_key_exists('token', $_REQUEST))
 		$user_node->setAttribute('token', $_REQUEST['token']);
 	$session_node->appendChild($user_node);
+	
+	if ($_REQUEST['mode'] == 'desktop' && array_key_exists('app', $_REQUEST))
+		$session_node->setAttribute('no_desktop', '1');
+	
 	$dom->appendChild($session_node);
 
 	$_SESSION['ovd-client']['server'] = @SESSIONMANAGER_HOST; // If the WebClient is not linked to a SessionManager, JavaScript object will return an 'Usage: missing "sessionmanager_host" parameter' error

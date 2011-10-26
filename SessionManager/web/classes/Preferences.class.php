@@ -387,6 +387,10 @@ class Preferences {
 		$c = new ConfigElement_list('allowed_desktop_servers', _('Server which are allowed to start desktop'), _('An empty list means all server can host a desktop (no restriction on desktop server choice)'), _('An empty list means all server can host a desktop (no restriction on desktop server choice)'), array());
 		$c_desktop_mode->addReference('1', $c);
 		$this->add($c,'general','remote_desktop_settings');
+		
+		$c = new ConfigElement_select('authorize_no_desktop', _('Authorize to launch a desktop session without desktop process'), _('Usefull for web integration starting a maximised application as only windows into the remote screen'), _('Usefull for web integration starting a maximised application as only windows into the remote screen'), 1);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c,'general','remote_desktop_settings');
 
 		$this->addPrettyName('remote_applications_settings', _('Remote Applications settings'));
 

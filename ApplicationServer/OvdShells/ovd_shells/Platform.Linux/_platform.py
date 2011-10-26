@@ -93,6 +93,12 @@ def startDesktop():
 	
 	os.system("x-session-manager")
 
+def startWM():
+	os.environ["XDG_DATA_DIRS"] = os.path.join(os.environ["OVD_SESSION_DIR"], "xdg")
+	
+	launch("x-window-manager")
+
+
 def launchIntegratedClient(configuration_file_):
 	if os.path.exists(configuration_file_) == False:
 		return False

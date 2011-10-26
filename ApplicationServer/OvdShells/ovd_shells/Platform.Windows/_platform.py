@@ -187,6 +187,9 @@ def startDesktop():
 	explorer_path = r"%s\explorer.exe"%(os.environ["windir"])
 	launch(explorer_path, True)
 
+def startWM():
+	pass
+
 def startSeamless():
 	launch("seamlessrdpshell")
 	
