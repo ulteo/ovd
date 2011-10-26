@@ -80,6 +80,10 @@ class InstancesManager:
 				return False
 			
 			local_path = self.shared_folders.getPathFromID(f_share)
+			if local_path is None:
+				print "Unknown shared folder '%s'"%(f_share)
+				return False
+			
 			arg = os.path.join(local_path, f_path.replace("/", os.path.sep))
 		
 		elif dir_type == self.DIR_TYPE_RDP_DRIVE:
