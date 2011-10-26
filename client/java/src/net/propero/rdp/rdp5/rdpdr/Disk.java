@@ -781,7 +781,7 @@ public class Disk extends RdpdrDevice{
 			//return STATUS_INVALID_PARAMETER;
 		
 		try{
-			RandomAccessFile raf = new RandomAccessFile(tempFile, "rw");
+			RandomAccessFile raf = new RandomAccessFile(tempFile, "r");
 			raf.seek(offset);
 			n = raf.read(data, 0, length);
 			if(n==-1){
