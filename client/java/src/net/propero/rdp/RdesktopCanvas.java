@@ -1137,7 +1137,6 @@ public abstract class RdesktopCanvas extends Canvas {
         int pdata = 0;
         int index = 0x80;
 
-        int bytes_per_row = (cx - 1) / 8 + 1;
         int newx, newy, newcx, newcy;
 
         int Bpp = this.opt.Bpp;
@@ -1175,10 +1174,10 @@ public abstract class RdesktopCanvas extends Canvas {
         else
             newy = y;
 
-        newcy = clipbottom - newy + 1;
+        newcy = clipbottom - y + 1;
 
         int pbackstore = (newy * this.width) + x;
-        pdata = bytes_per_row * (newy - y); // offset y, but not x
+        pdata = 0;
 
         if (mixmode == MIX_TRANSPARENT) { // FillStippled
             for (int i = 0; i < newcy; i++) {
@@ -1188,10 +1187,11 @@ public abstract class RdesktopCanvas extends Canvas {
                         index = 0x80;
                     }
 
-                    if ((data[pdata] & index) != 0) {
-                        if ((x + j >= newx) && (newx + j > 0) && (newy + i > 0))
-                            // since haven't offset x
-                            backstore.setRGB(newx + j, newy + i, fgcolor);
+                    if (x + j >= newx && y + i >= newy ) {
+                        if ((x + j >= 0) && (y + i >= 0)) {
+                            if ((data[pdata] & index) != 0)
+                                backstore.setRGB(x + j, y + i, fgcolor);
+                        }
                     }
                     index >>= 1;
                 }
@@ -1210,8 +1210,8 @@ public abstract class RdesktopCanvas extends Canvas {
                         index = 0x80;
                     }
 
-                    if (x + j >= newx) {
-                        if ((x + j > 0) && (y + i > 0)) {
+                    if (x + j >= newx && y + i >= newy ) {
+                        if ((x + j >= 0) && (y + i >= 0)) {
                             if ((data[pdata] & index) != 0)
                                 backstore.setRGB(x + j, y + i, fgcolor);
                             else
