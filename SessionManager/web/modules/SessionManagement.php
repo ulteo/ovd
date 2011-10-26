@@ -135,10 +135,21 @@ abstract class SessionManagement extends Module {
 				if (! isset($_REQUEST['start_apps']) || ! is_array($_REQUEST['start_apps']))
 					$_REQUEST['start_apps'] = array();
 
-				$_REQUEST['start_apps'][] = array(
-					'id'	=>	$application_node->getAttribute('id'),
-					'arg'	=>	(($application_node->hasAttribute('arg'))?$application_node->getAttribute('arg'):NULL)
-				);
+				$r = array('id' => $application_node->getAttribute('id'));
+				
+				if ($application_node->hasAttribute('file_type') && 
+				    $application_node->hasAttribute('file_location') && 
+				    $application_node->hasAttribute('file_path')) {
+					$b = $application_node->getAttribute('file_type')."\n";
+					$b.= $application_node->getAttribute('file_location')."\n";
+					$b.= $application_node->getAttribute('file_path');
+					
+					$r['arg'] = base64_encode($b);
+				}
+				else if ($application_node->hasAttribute('arg'))
+					$r['arg'] = $application_node->getAttribute('arg');
+				
+				$_REQUEST['start_apps'][] = $r;
 			}
 		}
 

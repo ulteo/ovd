@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011 
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -189,6 +190,26 @@ if (array_key_exists('login', $_POST))
 if (array_key_exists('password', $_POST))
 	$user_node->setAttribute('password', $_POST['password']);
 $session_node->appendChild($user_node);
+
+if ($_POST['mode'] == 'desktop' && array_key_exists('start_app', $_SESSION['ovd-client'])) {
+	$start_node = $dom->createElement('start');
+	
+	foreach($_SESSION['ovd-client']['start_app'] as $order) {
+		$instance_node = $dom->createElement('application');
+		$instance_node->setAttribute('id', $order['id']);
+		
+		if (array_key_exists('file', $order)) {
+			$instance_node->setAttribute('file_type', $order['file']['type']);
+			$instance_node->setAttribute('file_location', $order['file']['share']);
+			$instance_node->setAttribute('file_path', $order['file']['path']);
+		}
+		
+		$start_node->appendChild($instance_node);
+	}
+	
+	$session_node->appendChild($start_node);
+}
+
 $dom->appendChild($session_node);
 
 $_SESSION['ovd-client']['to_SM_start_XML'] = $dom->saveXML();

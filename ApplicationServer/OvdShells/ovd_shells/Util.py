@@ -18,6 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import base64
 import glob
 import os
 import sys
@@ -73,9 +74,32 @@ def manageAutoStartApplication(d, im):
 			continue
 		
 		if len(lines)>1:
-			dir_type = im.DIR_TYPE_NATIVE
-			share = None
-			path  = lines[1].strip()
+			d = base64.decodestring(lines[1].strip())
+			
+			o = d.splitlines()
+			if len(o) == 3:
+				f_type = o[0]
+				path = o[1]
+				share = o[2]
+				
+				if f_type == "native":
+					dir_type = im.DIR_TYPE_NATIVE
+				elif f_type == "shared_folder":
+					dir_type = im.DIR_TYPE_SHARED_FOLDER
+				elif f_type == "rdp_drive":
+					dir_type = im.DIR_TYPE_RDP_DRIVE
+				elif f_type == "known_drives":
+					dir_type = im.DIR_TYPE_KNOWN_DRIVES
+				elif f_type == "http":
+					dir_type = im.DIR_TYPE_HTTP_URL
+				else:
+					print "manageAutoStartApplication: unknown dir type %X"%(f_type)
+					return
+			
+			else:
+				dir_type = im.DIR_TYPE_NATIVE
+				share = None
+				path  = lines[1].strip()
 			
 			im.start_app_with_arg(None, app_id, dir_type, share, path)
 			continue
