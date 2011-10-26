@@ -129,6 +129,9 @@ abstract class SessionManagement extends Module {
 		if (! is_null($start_node)) {
 			$application_nodes = $start_node->getElementsByTagname('application');
 			foreach ($application_nodes as $application_node) {
+				if (! $application_node->hasAttribute('id'))
+					continue;
+				
 				if (! isset($_REQUEST['start_apps']) || ! is_array($_REQUEST['start_apps']))
 					$_REQUEST['start_apps'] = array();
 
