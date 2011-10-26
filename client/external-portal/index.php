@@ -63,13 +63,12 @@ $base_url_file.= 'file.php';
 <head>
 <title>My portal</title>
 
-<script type="text/javascript" src="<?php echo ULTEO_OVD_WEBCLIENT_URL; ?>/media/script/lib/prototype/prototype.js" charset="utf-8"></script>
 <script type="text/javascript" src="<?php echo ULTEO_OVD_WEBCLIENT_URL; ?>/media/script/external.js" charset="utf-8"></script>
 
 <script type="text/javascript">
 
-function getBaseOVDObj(app_id_) {
-	var ovd = new UlteoOVD_start_Application('<?php echo ULTEO_OVD_WEBCLIENT_URL; ?>', app_id_);
+function getBaseOVDObj(mode_) {
+	var ovd = new UlteoOVD_session('<?php echo ULTEO_OVD_WEBCLIENT_URL; ?>', mode_);
 	
 <?php if (ULTEO_OVD_AUTH_TYPE == 'token') {?>
 	ovd.setAuthToken('<?php echo base64_encode($user); ?>');
@@ -80,13 +79,20 @@ function getBaseOVDObj(app_id_) {
 	return ovd;
 }
 
-function startApplication(app_id_) {
-	var ovd = getBaseOVDObj(app_id_);
+function startEmptySession() {
+	var ovd = getBaseOVDObj(ULTEO_OVD_SESSION_MODE_APPLICATIONS);
 	ovd.start();
 }
 
-function startApplicationWithPath(app_id_, path_, url_) {
-	var ovd = getBaseOVDObj(app_id_);
+function startApplication(mode_, app_id_) {
+	var ovd = getBaseOVDObj(mode_);
+	ovd.setApplication(app_id_);
+	ovd.start();
+}
+
+function startApplicationWithPath(mode_, app_id_, path_, url_) {
+	var ovd = getBaseOVDObj(mode_);
+	ovd.setApplication(app_id_);
 	ovd.setPathHTTP(url_, path_, null);
 	ovd.start();
 }
@@ -96,6 +102,11 @@ function startApplicationWithPath(app_id_, path_, url_) {
 <h1>Welcome to My Portal</h1>
 
 <?php if ($apps !== false) {?>
+	<div>
+		<form onsubmit="startEmptySession(); return false;">
+			<input type="submit" value="Preload Ulteo seamless session" />
+		</form>
+	</div>
 
 	<div>
 	<h2>Available applications</h2>
@@ -106,8 +117,11 @@ function startApplicationWithPath(app_id_, path_, url_) {
 		<tr>
 			<td><img src="icon.php?id=<?php echo $app['id']; ?>"/></td>
 			<td><?php echo $app['name']; ?></td>
-			<td><form onsubmit="startApplication('<?php echo $app['id']; ?>'); return false;">
-				<input type="submit" value="Start instance" />
+			<td><form onsubmit="startApplication(ULTEO_OVD_SESSION_MODE_APPLICATIONS, '<?php echo $app['id']; ?>'); return false;">
+				<input type="submit" value="Start instance (seamless)" />
+			</form></td>
+			<td><form onsubmit="startApplication(ULTEO_OVD_SESSION_MODE_DESKTOP, '<?php echo $app['id']; ?>'); return false;">
+				<input type="submit" value="Start instance (browser)" />
 			</form></td>
 		</tr>
 	<?php
@@ -134,8 +148,13 @@ function startApplicationWithPath(app_id_, path_, url_) {
 		<td><img src="icon.php?id=<?php echo $application['id']; ?>"/></td>
 		<td><?php echo $application['name']; ?></td>
 		<td>
-			<form onsubmit="startApplicationWithPath('<?php echo $application['id']; ?>', '<?php echo $f['name']; ?>', '<?php echo urlencode(base64_encode($base_url_file.'?path='.$f['name'])); ?>'); return false;">
-				<input type="submit" value="Open" />
+			<form onsubmit="startApplicationWithPath(ULTEO_OVD_SESSION_MODE_APPLICATIONS, '<?php echo $application['id']; ?>', '<?php echo $f['name']; ?>', '<?php echo urlencode(base64_encode($base_url_file.'?path='.$f['name'])); ?>'); return false;">
+				<input type="submit" value="Open (seamless)" />
+			</form>
+		</td>
+		<td>
+			<form onsubmit="startApplicationWithPath(ULTEO_OVD_SESSION_MODE_DESKTOP, '<?php echo $application['id']; ?>', '<?php echo $f['name']; ?>', '<?php echo urlencode(base64_encode($base_url_file.'?path='.$f['name'])); ?>'); return false;">
+				<input type="submit" value="Open (browser)" />
 			</form>
 		</td>
 		</tr>
