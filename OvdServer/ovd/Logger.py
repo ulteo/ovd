@@ -95,8 +95,8 @@ class Logger:
 			if self.isThreaded():
 				self.lock.acquire()
 				self.queue.close()
-				self.queue = None
 				self.thread.join()
+				self.queue = None
 				self.lock.release()
 	
 	
