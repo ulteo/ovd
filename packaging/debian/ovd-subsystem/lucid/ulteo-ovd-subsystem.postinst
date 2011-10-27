@@ -2,9 +2,8 @@
 
 . /usr/share/debconf/confmodule
 
-CONFFILE=/etc/ulteo/subsystem.conf
-[ -f $CONFFILE ] && . $CONFFILE
-[ -z "$CHROOTDIR" ] && CHROOTDIR=/opt/ulteo
+[ -f /etc/default/ulteo-ovd-subsystem ] && . /etc/default/ulteo-ovd-subsystem
+[ -f /etc/ulteo/subsystem.conf ] && . /etc/ulteo/subsystem.conf
 CHROOTCONF=$CHROOTDIR/etc/ulteo/ovd/slaveserver.conf
 
 set_conf () {
@@ -12,8 +11,8 @@ set_conf () {
     # $2: field
     # $3: value
     touch $1
-    if grep -q "^$2 *=" $1 2>/dev/null; then
-        sed -i "/^$2 *=/c $2=$3" $1
+    if grep -q "$2 *=" $1 2>/dev/null; then
+        sed -i "/^[ #]*$2 *=/c $2=$3" $1
     else
         echo "$2=$3" >> $1
     fi
@@ -80,10 +79,7 @@ else
     db_subst ulteo-ovd-subsystem/no_chroot_conf CHROOTCONF "$CHROOTCONF"
     db_input high ulteo-ovd-subsystem/no_chroot_conf || true
     db_go
-    CHROOTDIR=""
 fi
-
-set_conf $CONFFILE "CHROOTDIR" "$CHROOTDIR"
 
 db_stop
 
