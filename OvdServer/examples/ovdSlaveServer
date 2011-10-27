@@ -44,49 +44,48 @@ waitpid() {
 	local pid=$1
 	local timeout=$2
 	local t0=$(date +"%s")
-	
+
 	while [ -d /proc/$1 ]; do
 		sleep 0.5
-	
+
 		if [ -n "$timeout" ]; then
 			local t1=$(date +"%s")
 			[ $(($t1-$t0)) -gt $2 ] && return 1
 		fi
 	done
-	
+
 	return 0
 }
 
 do_start () {
 	log_begin_msg "Starting $NAME"
-	
+
 	if [ -f $PIDFILE ]; then
-		if ps $(cat $PIDFILE); then
+		if ps $(cat $PIDFILE) >/dev/null; then
 			log_warning_msg "already running"
-			log_end_msg 1
 			return
 		else
 			rm $PIDFILE
 		fi
 	fi
-	
+
 	$PROGRAM --daemonize --pid-file $PIDFILE >>$LOGS 2>&1
 	log_end_msg $?
 }
 
 do_stop () {
 	log_begin_msg "Stopping $NAME"
-	
+
 	if [ ! -f $PIDFILE ]; then
-		log_warning_msg "NOT RUNNING"
+		log_warning_msg "not running"
 		return 0
 	fi
-	
+
 	pidofproc -p $PIDFILE >/dev/null
 	if [ $? -ne 0 ]; then
-		log_warning_msg "NOT RUNNING"
+		log_warning_msg "not running"
 		rm -f $PIDFILE
-	
+
 	else
 		local pid=$(pidofproc -p $PIDFILE)
 		kill $pid
@@ -97,17 +96,17 @@ do_stop () {
 			rm -f $PIDFILE
 		fi
 	fi
-	
+
 	log_end_msg 0
 }
 
 case $1 in
 	start)
 		do_start;;
-	
+
 	stop)
 		do_stop;;
-	
+
 	restart|force-reload)
 		do_stop
 		sleep 0.2
