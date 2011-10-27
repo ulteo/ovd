@@ -37,7 +37,7 @@ conf_mysql()
 
     # restart OVD slave server cause the DB was not ready before now
     else
-        uchroot /etc/init.d/ovdSlaveServer restart
+        uchroot /etc/init.d/ulteo-ovd-slaveserver restart
     fi
 
     # hack: wait cause the first request in the SM can be corrupted

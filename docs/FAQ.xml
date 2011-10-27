@@ -385,7 +385,7 @@ $ getent hosts 192.168.0.19
 
      <programlisting>
 <![CDATA[  * Starting Ulteo OVD SlaveServer
-chroot: cannot change root directory to /etc/init.d/ovdSlaveServer: No
+chroot: cannot change root directory to /etc/init.d/ulteo-ovd-slaveserver: No
 such file or directory]]>
      </programlisting>
 

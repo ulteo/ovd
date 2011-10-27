@@ -40,7 +40,7 @@ conf_mysql()
         CONFFILE=/etc/ulteo/subsystem.conf
         [ -f "$CONFFILE" ] && . $CONFFILE
         [ -z "$CHROOTDIR" ] && CHROOTDIR=/opt/ulteo
-        chroot $CHROOTDIR /etc/init.d/ovdSlaveServer restart
+        chroot $CHROOTDIR /etc/init.d/ulteo-ovd-slaveserver restart
     fi
 
     # hack: wait cause the first request in the SM can be corrupted
