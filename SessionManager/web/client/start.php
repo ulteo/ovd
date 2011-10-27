@@ -562,7 +562,7 @@ if (! isset($old_session_id)) {
 			foreach ($start_apps as $start_app) {
 				$application_node = $dom->createElement('application');
 				$application_node->setAttribute('id', $start_app['id']);
-				if (! is_null($start_app['arg']))
+				if (array_key_exists('arg', $start_app) && ! is_null($start_app['arg']))
 					$application_node->setAttribute('arg', $start_app['arg']);
 				$start_node->appendChild($application_node);
 			}
