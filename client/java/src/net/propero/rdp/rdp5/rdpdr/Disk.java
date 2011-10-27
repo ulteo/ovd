@@ -551,6 +551,7 @@ public class Disk extends RdpdrDevice{
 		file_attributes = 0;
 		
 		switch (info_class) {
+			case 12: //FileNameInformation
 			case 3://FileBothDirectoryInformation:
 				DEBUG("disk_query_directory---FileBothDirectoryInformation");
 				/* If a search pattern is received, remember this pattern, and restart search */
