@@ -37,10 +37,7 @@ conf_mysql()
 
     # restart OVD slave server cause the DB was not ready before now
     else
-        CONFFILE=/etc/ulteo/subsystem.conf
-        [ -f "$CONFFILE" ] && . $CONFFILE
-        [ -z "$CHROOTDIR" ] && CHROOTDIR=/opt/ulteo
-        chroot $CHROOTDIR /etc/init.d/ulteo-ovd-slaveserver restart
+        uchroot /etc/init.d/ulteo-ovd-slaveserver restart
     fi
 
     # hack: wait cause the first request in the SM can be corrupted
