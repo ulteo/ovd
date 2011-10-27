@@ -110,8 +110,7 @@ def main(queue, config_file, pid_file):
 		if not server.stopped:
 			server.stop()
 		
-		if Config.log_threaded:
-			Logger.initialize("OVD", Config.log_level, Config.log_file, not daemonize, False)
+		Logger._instance.setThreadedMode(False)
 		
 		Logger.info("SlaveServer stopped")
 		if pid_file is not None and os.path.exists(pid_file):
