@@ -1,10 +1,10 @@
 Template: ulteo-ovd-ha/hostname
-Type: text
+Type: string
 Description: Hostname
  No hostname found, please indicate it yourself
 
 Template: ulteo-ovd-ha/gateway
-Type: text
+Type: string
 Description: Gateway
  No gateway found, please indicate it yourself
 
@@ -16,7 +16,7 @@ Description: High Availability mode
  Choose the HA mode
 
 Template: ulteo-ovd-ha/no_nic
-Type: text
+Type: error
 Description: No NIC available
 
 Template: ulteo-ovd-ha/nic

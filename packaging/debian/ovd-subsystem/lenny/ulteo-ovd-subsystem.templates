@@ -30,7 +30,7 @@ _Description: Subsystem download error!
  used.
 
 Template: ulteo-ovd-subsystem/no_chroot_conf
-Type: note
+Type: error
 _Description: No chroot config found !
  Warning: the chroot configuration file is missing, the configuration will
  have to be done manually in ${CHROOTCONF}
