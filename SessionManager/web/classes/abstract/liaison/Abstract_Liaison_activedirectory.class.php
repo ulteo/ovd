@@ -3,6 +3,7 @@
  * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -153,6 +154,14 @@ class Abstract_Liaison_activedirectory {
 		$userGroupDB = UserGroupDB::getInstance();
 		$userDB = UserDB::getInstance();
 		
+		$use_child_group = false;
+		$userGroupDB_activedirectory = new UserGroupDB_activedirectory();
+		$userGroupDB_activedirectory_preferences = $userGroupDB_activedirectory->preferences;
+		if (array_key_exists('use_child_group', $userGroupDB_activedirectory_preferences)) {
+			if (in_array($userGroupDB_activedirectory_preferences['use_child_group'], array(1, '1')))
+				$use_child_group = true;
+		}
+		
 		$element_user = $userDB->import($element_);
 		if (! is_object($element_user)) {
 			Logger::error('main', "Abstract_Liaison_activedirectory::loadGroups load element ($element_) failed");
@@ -168,6 +177,14 @@ class Abstract_Liaison_activedirectory {
 				if (is_object($g)) {
 					$l = new Liaison($element_,$g->getUniqueID());
 					$groups[$l->group] = $l;
+					
+					if ($use_child_group === true) {
+						$gs = self::loadParentsGroups($id_group);
+						foreach ($gs as $g2) {
+							$l = new Liaison($element_, $g2->getUniqueID());
+							$groups[$l->group] = $l;
+						}
+					}
 				}
 			}
 			return $groups;
@@ -175,6 +192,45 @@ class Abstract_Liaison_activedirectory {
 		// no group found
 		return array();
 	}
+	
+	
+	public static function loadParentsGroups($group_) {
+		Logger::debug('main',"Abstract_Liaison_activedirectory::loadParentsGroups ($group_)");
+		
+		$userDBAD2 = new UserDB_activedirectory();
+		$userDBAD = UserDB::getInstance();
+		if ( get_class($userDBAD) == get_class($userDBAD2)) {
+			$userDBAD = $userDBAD2; // for cache
+		}
+		
+		$userGroupDB = UserGroupDB::getInstance();
+		$groups = array();
+		
+		$u = $userDBAD->importFromDN($group_);
+		if (is_null($u))
+			return $groups;
+		
+		if (! $u->hasAttribute('memberof'))
+			return $groups;
+		
+		$memberof = $u->getAttribute('memberof');
+		if (is_string($memberof))
+			$memberof = array($memberof);
+		
+		foreach ($memberof as $id_group) {
+			$g = $userGroupDB->import('static_'.$id_group);
+			if (! is_object($g))
+				continue;
+			
+			$groups[]= $g;
+			
+			$parent_groups = self::loadParentsGroups($id_group);
+			$groups = array_merge($groups, $parent_groups);
+		}
+		
+		return $groups;
+	}
+	
 	
 	public static function loadAll($type_) {
 		Logger::debug('main',"Abstract_Liaison_activedirectory::loadAll ($type_)");
