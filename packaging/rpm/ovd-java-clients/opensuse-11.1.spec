@@ -52,8 +52,13 @@ a browser
 %setup -q
 
 %install -n ulteo-ovd-applets
-OVD_CERT_DIR=/usr/share/ulteo/ovd-cert/
-ant applet.install -Dbuild.type=stripped -Dprefix=/usr -Ddestdir=$RPM_BUILD_ROOT -Dbuild.cert=$OVD_CERT_DIR -Dkeystore.password=$(cat $OVD_CERT_DIR/password) -Dmingw32.prefix=i686-pc-mingw32-
+OVD_CERT_DIR=/usr/share/ulteo/ovd-cert
+[ -z "$JKS_PATH" ] && JKS_PATH=$OVD_CERT_DIR/keystore
+[ -z "$JKS_PASSWD" ] && JKS_PASSWD=$OVD_CERT_DIR/password
+[ -z "$JKS_ALIAS" ] && JKS_ALIAS=ulteo
+
+ant applet.install -Dbuild.type=stripped -Dprefix=/usr -Ddestdir=$RPM_BUILD_ROOT -Dmingw32.prefix=i686-pc-mingw32- \
+	-Dkeystore.path=$JKS_PATH -Dkeystore.password="$(cat $JKS_PASSWD)" -Dkeystore.alias=$JKS_ALIAS
 
 %files -n ulteo-ovd-applets
 %defattr(-,root,root)

@@ -34,11 +34,13 @@
     </classpath>
   </taskdef>
 
-  <property name="build.cert"        value="certificate"/>
   <property name="javac.debug"       value="false"/>
-  <property name="keystore.password" value=""/>
   <property name="version"           value="@VERSION@" />
   <property name="mingw32.prefix"    value="i586-mingw32msvc-"/>
+
+  <property name="keystore.path"     value="certificate/keystore"/>
+  <property name="keystore.password" value="123456"/>
+  <property name="keystore.alias"    value="ulteo"/>
 
   <property name="destdir"      location="" />
   <property name="prefix"       location="/usr/local" />
@@ -150,11 +152,8 @@
         <attribute name="Class-Path" value="jpedal.jar"/>
       </manifest>
     </jar>
-    <signjar jar="jars/PDFPrinter.jar"
-             alias="ulteo"
-             storepass="${keystore.password}"
-             keystore="${build.cert}/keystore"
-             signedjar="jars/PDFPrinter.jar"/>
+    <signjar keystore="${keystore.path}" storepass="${keystore.password}" alias="${keystore.alias}"
+             jar="jars/PDFPrinter.jar" signedjar="jars/PDFPrinter.jar" />
   </target>
 
   <target name="PDFPrinter.install" depends="PDFPrinter.jar"
@@ -356,8 +355,8 @@
         <attribute name="Main-Class" value="org.ulteo.ovd.applet.CheckJava"/>
       </manifest>
     </jar>
-    <signjar destdir="jars" alias="ulteo" storepass="${keystore.password}"
-             keystore="${build.cert}/keystore" >
+    <signjar keystore="${keystore.path}" storepass="${keystore.password}" alias="${keystore.alias}"
+             destdir="jars" >
         <fileset dir="required_libraries" includes="jpedal.jar log4j-1.2.jar" />
         <fileset dir="jars" includes="ulteo-applet.jar" />
     </signjar>
