@@ -88,8 +88,6 @@ public final class XDGMimeTypesFile {
 		OutputStream out;
 		try {
 			out = new FileOutputStream(out_file);
-			if (out == null)
-				throw new NullPointerException("no output stream is available from "+out_file.getPath());
 
 			Transformer transformer = TransformerFactory.newInstance().newTransformer();
 			transformer.transform(new DOMSource(this.xml), new StreamResult(out));
