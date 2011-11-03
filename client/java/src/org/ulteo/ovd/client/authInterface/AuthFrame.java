@@ -663,10 +663,6 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 		this.mainFrame.setVisible(true);
 	}
 	
-	public boolean isVisible() {
-		return this.mainFrame.isVisible();
-	}
-	
 	@Override
 	public void actionPerformed(ActionEvent ev) {
 		if (ev.getSource() == this.sessionModeBox)

@@ -362,7 +362,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		
 		while (true) {
 			try {
-				if (s.authFrame != null && s.authFrame.isVisible()) {
+				if (s.authFrame != null && s.authFrame.getMainFrame().isVisible()) {
 					Thread.sleep(100);
 				} else if (s.thread != null && s.thread.isAlive()) {
 					s.thread.join();
