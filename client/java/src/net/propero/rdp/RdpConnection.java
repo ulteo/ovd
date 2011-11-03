@@ -96,6 +96,10 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.channels = new VChannels(this.opt);
 	}
 
+	public String toString() {
+		return this.opt.hostname+":"+this.opt.port;
+	}
+	
 	public State getState() {
 		return this.state;
 	}
@@ -106,10 +110,6 @@ public class RdpConnection implements SeamListener, Runnable{
 
 	public String getServer() {
 		return this.opt.hostname;
-	}
-	
-	public int getPort() {
-		return this.opt.port;
 	}
 	
 	public String getUsername() {

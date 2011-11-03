@@ -328,7 +328,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 	/* RdpListener */
 	public void connected(RdpConnection co) {
-		Logger.info("Connected to "+co.getServer()+":"+co.getPort());
+		Logger.info("Connected to "+co);
 
 		this.performedConnections.add((RdpConnectionOvd) co);
 		this.addAvailableConnection((RdpConnectionOvd)co);
@@ -337,7 +337,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	}
 
 	public void connecting(RdpConnection co) {
-		Logger.info("Connecting to "+co.getServer()+":"+co.getPort());
+		Logger.info("Connecting to "+co);
 	}
 
 	public void disconnected(RdpConnection co) {
@@ -346,7 +346,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.hide((RdpConnectionOvd)co);
 		this.performedConnections.remove(co);
 		this.availableConnections.remove(co);
-		Logger.info("Disconnected from "+co.getServer()+":"+co.getPort());
+		Logger.info("Disconnected from "+co);
 
 		if (this.sessionStatusMonitoringThread != null && this.sessionStatusMonitoringThread.isAlive()) {
 			// Break session status monitoring sleep to check with SessionManager ASAP
@@ -356,7 +356,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	}
 
 	public void failed(RdpConnection co, String msg) {
-		Logger.error("Connection to "+co.getServer()+":"+co.getPort()+" failed: "+msg);
+		Logger.error("Connection to "+co+" failed: "+msg);
 
 		this.performedConnections.add((RdpConnectionOvd) co);
 	}
