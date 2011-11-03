@@ -775,6 +775,9 @@ function translateInterface(lang_) {
 				var js_translations = xml.getElementsByTagName('js_translation');
 				for (var i = 0; i < js_translations.length; i++)
 					i18n.set(js_translations[i].getAttribute('id'), js_translations[i].getAttribute('string'));
+				
+				if (typeof window.updateSMHostField == 'function')
+					updateSMHostField();
 			}
 		}
 	);
@@ -854,7 +857,7 @@ function checkLogin() {
 		$('password_row').show();
 	}
 
-	if ($('sessionmanager_host').value != '' && $('sessionmanager_host').value != sessionmanager_host_example && ($('user_login').value != '' || ($('use_local_credentials_true') && $('use_local_credentials_true').checked)))
+	if ($('sessionmanager_host').value != '' && $('sessionmanager_host').value != i18n.get('sessionmanager_host_example') && ($('user_login').value != '' || ($('use_local_credentials_true') && $('use_local_credentials_true').checked)))
 		$('connect_gettext').disabled = false;
 	else
 		$('connect_gettext').disabled = true;
