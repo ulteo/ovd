@@ -513,18 +513,14 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	public NativeClient(Options opts_) {
 		this.opts = opts_;
 
-		this.init();
+		this.loadingFrame = new LoadingFrame(this);
+		this.discFrame = new DisconnectionFrame();
 
 		if (! this.opts.autostart) {
 			this.initAuthFrame();
 		}
 	}
 	
-	public void init() {
-		this.loadingFrame = new LoadingFrame(this);
-		this.discFrame = new DisconnectionFrame();
-	}
-
 	private void initAuthFrame() {
 		this.authFrame = new AuthFrame(this, this.opts.geometry, this.opts.guiLocked, this.opts.isBugReporterVisible);
 		this.authFrame.getLanguageBox().addActionListener(this);
