@@ -83,7 +83,6 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 	private List<Integer> jobsList = null;
 	
 	private JFrame mainFrame = new JFrame();
-	private boolean desktopLaunched = false;
 	private boolean isGUILocked = false;
 	private boolean showBugReporter = false;
 	
@@ -755,14 +754,6 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 	
 	public JFrame getMainFrame() {
 		return mainFrame;
-	}
-	
-	public boolean isDesktopLaunched() {
-		return desktopLaunched;
-	}
-	
-	public void setDesktopLaunched(boolean desktopLaunched) {
-		this.desktopLaunched = desktopLaunched;
 	}
 	
 	public boolean isRememberMeChecked() {
