@@ -522,8 +522,10 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	}
 	
 	private void initAuthFrame() {
-		this.authFrame = new AuthFrame(this, this.opts.geometry, this.opts.guiLocked, this.opts.isBugReporterVisible);
+		this.authFrame = new AuthFrame(this.opts.geometry, this.opts.guiLocked, this.opts.isBugReporterVisible);
 		this.authFrame.getLanguageBox().addActionListener(this);
+		this.authFrame.getStartButton().addActionListener(this);
+		
 		this.loadOptions();
 		this.authFrame.setRememberMeChecked(this.opts.getFlag(Options.FLAG_REMEMBER_ME));
 		this.authFrame.setShowKeyboardLayoutChooser((this.opts.inputMethod == null) || this.opts.inputMethod.equalsIgnoreCase("scancode"));

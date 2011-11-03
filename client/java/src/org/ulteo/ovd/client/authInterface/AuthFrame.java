@@ -130,10 +130,7 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 	private boolean displayKeyboardLayoutChooser = true;
 	private ActionListener optionListener = null;
 	
-	private ActionListener obj = null;
-	
-	public AuthFrame(ActionListener obj_, Dimension resolution_, boolean isGUILocked_, boolean showBugReporter_) {
-		this.obj = obj_;
+	public AuthFrame(Dimension resolution_, boolean isGUILocked_, boolean showBugReporter_) {
 		this.isGUILocked = isGUILocked_;
 		this.showBugReporter = showBugReporter_;
 
@@ -193,7 +190,6 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 		mainFrame.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		startButton.setPreferredSize(new Dimension(150, 25));
-		startButton.addActionListener(this.obj);
 
 		this.initResolutionSlider(resolution_);
 
