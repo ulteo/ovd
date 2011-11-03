@@ -660,7 +660,11 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 	public void showWindow() {
 		this.startButtonClicked = false;
 		this.toggleLocalCredentials();
-		SwingTools.invokeLater(GUIActions.setVisible(this.mainFrame, true));
+		this.mainFrame.setVisible(true);
+	}
+	
+	public boolean isVisible() {
+		return this.mainFrame.isVisible();
 	}
 	
 	@Override

@@ -354,11 +354,26 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		}
 
 		NativeClient s = new NativeClient(opts);
-		if (opts.autostart) {
-			s.startThread();
+		if (! opts.autostart) {
+			s.initAuthFrame();
+		} else {
+			s.start();
 		}
-		s.waitThread();
-
+		
+		while (true) {
+			try {
+				if (s.authFrame != null && s.authFrame.isVisible()) {
+					Thread.sleep(100);
+				} else if (s.thread != null && s.thread.isAlive()) {
+					s.thread.join();
+				} else {
+					throw new InterruptedException();
+				}
+			} catch (InterruptedException e) {
+				break;
+			}
+		}
+		
 		System.exit(RETURN_CODE_SUCCESS);
 	}
 
@@ -515,10 +530,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 		this.loadingFrame = new LoadingFrame(this);
 		this.discFrame = new DisconnectionFrame();
-
-		if (! this.opts.autostart) {
-			this.initAuthFrame();
-		}
 	}
 	
 	private void initAuthFrame() {
@@ -592,16 +603,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.authFrame.setAutoPublishChecked(this.opts.autopublish);
 	}
 	
-	private boolean continueMainThread = true;
-	
-	public void waitThread() {
-		while(this.continueMainThread) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {}
-		}
-	}
-
 	public void run() {
 		this.isCancelled = false;
 
@@ -613,9 +614,9 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				this.authFrame.hideWindow();
 			}
 		
-			boolean exit = false;
 			try {
-				exit = this.launchConnection();
+				if (! this.launchConnection())
+					this.initAuthFrame();
 			} catch (UnsupportedOperationException ex) {
 				org.ulteo.Logger.error(ex.getMessage());
 				SwingTools.invokeLater(GUIActions.createDialog(I18n._(ex.getMessage()), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
@@ -626,28 +627,16 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				SwingTools.invokeLater(GUIActions.createDialog(I18n._(errormsg), I18n._("Error!"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
 				this.disableLoadingMode();
 			}
-			
-			if (exit) {
-				this.continueMainThread = false;
-			} else {
-				this.initAuthFrame();
-			}
 		} catch (IllegalArgumentException ex) {
 			org.ulteo.Logger.warn(ex.getMessage());
 			SwingTools.invokeLater(GUIActions.createDialog(I18n._(ex.getMessage()), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
-			if (this.authFrame != null)
-				this.authFrame.reset();
+			this.authFrame.reset();
 		}
-		this.thread = null;
 	}
 
-	public void startThread() {
-		if (this.thread != null) {
-			System.err.println("Very weird: thread should not exist anymore!");
+	public void start() {
+		if (this.thread != null && this.thread.isAlive())
 			this.thread.interrupt();
-			this.thread = null;
-		}
-
 		this.thread = new Thread(this);
 		this.thread.start();
 	}
@@ -655,20 +644,15 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == this.loadingFrame.getCancelButton()) {
-			if (this.thread == null) {
-				System.err.println("Very weird: thread should exist!");
-			}
-			else {
-				this.isCancelled = true;
-				
-				if (this.client != null)
-					this.client.disconnectAll();
-			}
+			this.isCancelled = true;
+			
+			if (this.client != null)
+				this.client.disconnectAll();
 
 			this.loadingFrame.getCancelButton().setEnabled(false);
 		}
 		else if (e.getSource() == this.authFrame.getStartButton()) {
-			this.startThread();
+			this.start();
 		}
 		else if (e.getSource() == this.authFrame.getLanguageBox()) {
 			int i = this.authFrame.getLanguageBox().getSelectedIndex();
