@@ -594,34 +594,13 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.authFrame.setAutoPublishChecked(this.opts.autopublish);
 	}
 	
-	public static int JOB_NOTHING = 0;
-	public static int JOB_DISCONNECT_CLI = 1;
-
-	private int jobMainThread = 0;
 	private boolean continueMainThread = true;
 	
-	public synchronized void setJobMainThread(int job) {
-		this.jobMainThread = job;
-
-	}
-	private synchronized int getJobMainThread() {
-		int job = this.jobMainThread;
-		this.jobMainThread = JOB_NOTHING;
-		return job;
-	}
-
 	public void waitThread() {
 		while(this.continueMainThread) {
-			int job = this.getJobMainThread();
-
-			if (job == JOB_DISCONNECT_CLI && client != null)
-				this.client.performDisconnectAll();
-
-			else {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {}
-			}
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {}
 		}
 	}
 
@@ -867,8 +846,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	
 	@Override
 	public void sessionDisconnecting() {
-
-		this.setJobMainThread(JOB_DISCONNECT_CLI);
+		this.client.performDisconnectAll();
 
 		if (this.opts.showProgressBar)
 			SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, false));
