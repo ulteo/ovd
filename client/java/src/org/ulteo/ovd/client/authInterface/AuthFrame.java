@@ -782,10 +782,6 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 		return this.useLocalCredentials.isSelected();
 	}
 	
-	public JButton getOptionButton() {
-		return moreOption;
-	}
-	
 	public JButton GetStartButton() {
 		return this.startButton;
 	}
