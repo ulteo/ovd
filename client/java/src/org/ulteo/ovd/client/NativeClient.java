@@ -621,12 +621,12 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			} catch (UnsupportedOperationException ex) {
 				org.ulteo.Logger.error(ex.getMessage());
 				SwingTools.invokeLater(GUIActions.createDialog(I18n._(ex.getMessage()), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
-				this.disableLoadingMode();
+				this.loadingFrame.setVisible(false);
 			} catch (SessionManagerException ex) {
 				String errormsg = I18n._("Unable to reach the Session Manager!");
 				org.ulteo.Logger.error(errormsg+": "+ex.getMessage());
 				SwingTools.invokeLater(GUIActions.createDialog(I18n._(errormsg), I18n._("Error!"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
-				this.disableLoadingMode();
+				this.loadingFrame.setVisible(false);
 			}
 		} catch (IllegalArgumentException ex) {
 			org.ulteo.Logger.warn(ex.getMessage());
@@ -673,11 +673,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			SwingTools.invokeLater(LoadingFrame.changeLanguage(this.loadingFrame));
 			SwingTools.invokeLater(DisconnectionFrame.changeLanguage(this.discFrame));
 		}
-	}
-
-	private void disableLoadingMode() {
-		if (this.opts.showProgressBar)
-			this.loadingFrame.setVisible(false);
 	}
 
 	private void getFormValuesFromGui() throws IllegalArgumentException {
@@ -764,7 +759,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		else
 			ret = dialog.askForSession(this.opts.username, this.opts.password, request);
 		if (ret == false) {
-			this.disableLoadingMode();
+			this.loadingFrame.setVisible(false);
 			return false;
 		}
 
@@ -840,7 +835,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	public void checkDisconnectionSource() {
 		if (! this.discFrame.isVisible()) {
 			if (loadingFrame.isVisible())
-				disableLoadingMode();
+				this.loadingFrame.setVisible(false);
 			if(! this.opts.autostart)
 				SwingTools.invokeLater(GUIActions.createDialog(I18n._("You have been disconnected"), I18n._("Your session has ended"), JOptionPane.INFORMATION_MESSAGE, JOptionPane.CLOSED_OPTION));
 			else {
@@ -900,7 +895,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	@Override
 	public void sessionConnected() {
 		if ((this.loadingFrame != null && this.loadingFrame.isVisible()) || (this.authFrame != null && this.authFrame.getMainFrame().isVisible())) {
-			this.disableLoadingMode();
+			this.loadingFrame.setVisible(false);
 		}
 	}
 
