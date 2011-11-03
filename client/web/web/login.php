@@ -223,7 +223,7 @@ if (defined('SESSIONMANAGER_HOST')) {
 }
 
 $_SESSION['ovd-client']['gateway'] = false;
-$_SESSION['ovd-client']['gateway_first'] = true;
+$_SESSION['ovd-client']['gateway_first'] = false;
 $headers = apache_request_headers();
 if (is_array($headers) && array_key_exists('OVD-Gateway', $headers)) {
 	$_SESSION['ovd-client']['gateway'] = true;
@@ -312,7 +312,6 @@ $_SESSION['ovd-client']['timeout'] = $session_node->getAttribute('timeout');
 
 if ($session_node->hasAttribute('mode_gateway') && $session_node->getAttribute('mode_gateway') == 'on') {
 	$_SESSION['ovd-client']['gateway'] = true;
-	$_SESSION['ovd-client']['gateway_first'] = false;
 }
 
 $user_node = $session_node->getElementsByTagName('user');
