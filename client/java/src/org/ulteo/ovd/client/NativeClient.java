@@ -828,7 +828,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	
 	@Override
 	public void sessionDisconnecting() {
-		this.client.performDisconnectAll();
+		if (this.client != null)
+			this.client.performDisconnectAll();
 
 		if (this.opts.showProgressBar)
 			SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, false));
