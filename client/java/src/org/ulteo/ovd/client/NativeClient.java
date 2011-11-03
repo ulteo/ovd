@@ -602,7 +602,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.authFrame.setUseLocalCredentials(this.opts.nltm);
 		this.authFrame.setAutoPublishChecked(this.opts.autopublish);
 	}
-	
+
+	@Override
 	public void run() {
 		this.isCancelled = false;
 
@@ -674,12 +675,12 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		}
 	}
 
-	public void disableLoadingMode() {
+	private void disableLoadingMode() {
 		if (this.opts.showProgressBar)
 			this.loadingFrame.setVisible(false);
 	}
 
-	public void getFormValuesFromGui() throws IllegalArgumentException {
+	private void getFormValuesFromGui() throws IllegalArgumentException {
 		this.opts.username = this.authFrame.getLogin().getText();
 
 		this.opts.password = new String(this.authFrame.getPassword().getPassword());
@@ -890,11 +891,13 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		org.ulteo.Logger.error(error+ "\n" + moreInfos);
 	}
 
+	@Override
 	public void updateProgress(LoadingStatus status, int subStatus) {
 		if (this.opts.showProgressBar)
 			this.loadingFrame.updateProgression(status, subStatus);
 	}
 
+	@Override
 	public void sessionConnected() {
 		if ((this.loadingFrame != null && this.loadingFrame.isVisible()) || (this.authFrame != null && this.authFrame.getMainFrame().isVisible())) {
 			this.disableLoadingMode();
