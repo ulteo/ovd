@@ -665,7 +665,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 			this.loadingFrame.getCancelButton().setEnabled(false);
 		}
-		else if (e.getSource() == this.authFrame.GetStartButton()) {
+		else if (e.getSource() == this.authFrame.getStartButton()) {
 			this.startThread();
 		}
 		else if (e.getSource() == this.authFrame.getLanguageBox()) {
