@@ -1403,12 +1403,15 @@ if ($_REQUEST['name'] == 'News') {
 
 if ($_REQUEST['name'] == 'password') {
 	if ($_REQUEST['action'] == 'change') {
-		if (isset($_REQUEST['password']) && isset($_REQUEST['password_confirm'])) {
+		if (isset($_REQUEST['password_current']) && isset($_REQUEST['password']) && isset($_REQUEST['password_confirm'])) {
 			if ($_REQUEST['password'] == '') {
 				popup_error(_('Password is empty'));
 			}
 			else if ($_REQUEST['password'] != $_REQUEST['password_confirm']) {
 				popup_error(_('Passwords are not identical'));
+			}
+			else if(! defined('SESSIONMANAGER_ADMIN_PASSWORD') or SESSIONMANAGER_ADMIN_PASSWORD != md5($_REQUEST['password_current'])) {
+				popup_error(_('Current password is not correct'));
 			}
 			else {
 				$ret = change_admin_password($_REQUEST['password']);
