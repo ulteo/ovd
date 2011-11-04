@@ -128,6 +128,13 @@ function get_users_list() {
 		</script>
 
 		<script type="text/javascript">
+			function updateSMHostField() {
+				 if ($('sessionmanager_host').style.color != 'grey')
+					return;
+				
+				$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
+			}
+			
 			var i18n = new Hash();
 
 			var user_keymap = '<?php echo $user_keymap; ?>';
@@ -412,7 +419,6 @@ function get_users_list() {
 							<td style="text-align: center; vertical-align: top;">
 								<div id="loginForm" class="rounded">
 									<script type="text/javascript">
-									var sessionmanager_host_example = '<?php echo _('Example: sm.ulteo.com'); ?>';
 									Event.observe(window, 'load', function() {
 										setTimeout(function() {
 <?php
@@ -442,12 +448,12 @@ checkSessionMode();
 														setTimeout(function() {
 															if ($('sessionmanager_host').value == '') {
 																$('sessionmanager_host').style.color = 'grey';
-																$('sessionmanager_host').value = sessionmanager_host_example;
+																$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
 																if ($('sessionmanager_host') && $('sessionmanager_host').visible())
 																	setCaretPosition($('sessionmanager_host'), 0);
 															}
 															Event.observe($('sessionmanager_host'), 'focus', function() {
-																if ($('sessionmanager_host').value == sessionmanager_host_example) {
+																if ($('sessionmanager_host').value == i18n.get('sessionmanager_host_example')) {
 																	$('sessionmanager_host').style.color = 'black';
 																	$('sessionmanager_host').value = '';
 																}
@@ -455,7 +461,7 @@ checkSessionMode();
 															Event.observe($('sessionmanager_host'), 'blur', function() {
 																if ($('sessionmanager_host').value == '') {
 																	$('sessionmanager_host').style.color = 'grey';
-																	$('sessionmanager_host').value = sessionmanager_host_example;
+																	$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
 																}
 															});
 														}, 1500);
