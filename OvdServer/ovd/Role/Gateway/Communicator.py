@@ -118,6 +118,13 @@ class SSLCommunicator(Communicator):
 			Communicator.handle_write(self)
 		except SSL.WantWriteError:
 			pass
+		except SSL.Error, e:
+			# hack for prevent incomprehensible 'SSL_UNDEFINED_CONST_FUNCTION' error,
+			# treated as same as an 'SSL.WantWriteError' error
+			if e.args[0][0][1] == 'SSL_UNDEFINED_CONST_FUNCTION':
+				pass
+			else:
+				raise
 
 
 
