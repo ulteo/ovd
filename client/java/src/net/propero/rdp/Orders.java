@@ -638,11 +638,7 @@ public class Orders {
         bais = null;
         
         bitmap = new Bitmap(bmpdataInt, width, height, 0, 0, this.opt);
-
-        if (bitmap != null)
-        	this.common.cache.putBitmap(cache_id, cache_idx, bitmap, 0);
-        else
-            logger.debug("process_jpegcache: ui_create_bitmap failed");
+        this.common.cache.putBitmap(cache_id, cache_idx, bitmap, 0);
     }
 
     /* Process a bitmap cache v2 order */
@@ -759,15 +755,11 @@ public class Orders {
 
         // bitmap = ui_create_bitmap(width, height, bmpdata);
 
-        if (bitmap != null) {
-        	this.common.cache.putBitmap(cache_id, cache_idx, bitmap, 0);
-            // cache_put_bitmap(cache_id, cache_idx, bitmap, 0);
-            if ((flags & PERSIST) != 0 && this.opt.persistent_bitmap_caching)
-                this.common.persistent_cache.pstcache_put_bitmap(cache_id, cache_idx, bitmap_id,
-                        width, height, width * height * Bpp, bmpdata);
-        } else {
-            logger.debug("process_bmpcache2: ui_create_bitmap failed");
-        }
+    	this.common.cache.putBitmap(cache_id, cache_idx, bitmap, 0);
+        // cache_put_bitmap(cache_id, cache_idx, bitmap, 0);
+        if ((flags & PERSIST) != 0 && this.opt.persistent_bitmap_caching)
+            this.common.persistent_cache.pstcache_put_bitmap(cache_id, cache_idx, bitmap_id,
+                    width, height, width * height * Bpp, bmpdata);
 
         // xfree(bmpdata);
     }

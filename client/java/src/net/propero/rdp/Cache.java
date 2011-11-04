@@ -204,9 +204,6 @@ public class Cache {
 				if (logger.isDebugEnabled())
 					e.printStackTrace();
 			}
-
-			if (bitmap != null)
-				return bitmap;
 		}
 		else if ((cache_id < this.volatile_bc.length) && (cache_idx == 0x7fff)) {
 			if (this.volatile_bc[cache_id] != null)

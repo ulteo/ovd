@@ -920,9 +920,6 @@ public class Rdesktop {
                     e.printStackTrace();
                     error(e, RdpLayer, window, true);
                 }
-			} else { // closing bracket to if(!rdp==null)
-				logger
-						.fatal("The communications layer could not be initiated!");
 			}
 		}
 		Rdesktop.exit(0, RdpLayer, window, true);

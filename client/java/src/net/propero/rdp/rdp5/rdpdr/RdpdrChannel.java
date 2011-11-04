@@ -582,11 +582,6 @@ public class RdpdrChannel extends VChannel {
 				request = s.getLittleEndian32();
 				s.incrementPosition(0x14);
 				buffer = new RdpPacket_Localised(bytes_out + 0x14);
-				if (buffer==null)
-				{
-					status = STATUS_CANCELLED;
-					break;
-				}
 				int OldPosition5 = buffer.getPosition();
 				status = Disk.disk_device_control(file, request, s, buffer);
 				result[0] = buffer_len = buffer.getPosition() - OldPosition5;
