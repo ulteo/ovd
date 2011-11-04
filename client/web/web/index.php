@@ -158,10 +158,12 @@ function get_users_list() {
 
 			Event.observe(window, 'load', function() {
 				new Effect.Center($('splashContainer'));
-				new Effect.Move($('splashContainer'), { x: 0, y: -75 });
-
 				new Effect.Center($('endContainer'));
-				new Effect.Move($('endContainer'), { x: 0, y: -75 });
+
+				Event.observe(window, 'resize', function() {
+					new Effect.Center($('splashContainer'));
+					new Effect.Center($('endContainer'));
+				});
 
 				$('desktopModeContainer').hide();
 				$('desktopAppletContainer').hide();

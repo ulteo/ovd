@@ -417,12 +417,41 @@ Event.observe(window, 'load', function() {
 			new Effect.Appear($('loginBox'));
 		}, 1000);
 	}
+
+	if ($('lockWrap')) {
+		Event.observe(window, 'resize', function() {
+			if ($('lockWrap').visible()) {
+				refresh_body_size();
+
+				$('lockWrap').style.width = my_width+'px';
+				$('lockWrap').style.height = my_height+'px';
+			}
+		});
+	}
+
+	if ($('desktopAppletContainer')) {
+		Event.observe(window, 'resize', function() {
+			if ($('desktopAppletContainer').visible()) {
+				new Effect.Center($('desktopAppletContainer'));
+
+				if (daemon.debug)
+					new Effect.Move($('desktopAppletContainer'), { x: 0, y: -75, duration: 0.01 });
+			}
+		});
+	}
 });
 
 function showSystemTest() {
 	showLock();
 
 	new Effect.Center($('systemTestWrap'));
+	var elementDimensions = Element.getDimensions($('systemTestWrap'));
+	$('systemTestWrap').style.width = elementDimensions.width+'px';
+
+	Event.observe(window, 'resize', function() {
+		if ($('systemTestWrap').visible())
+			new Effect.Center($('systemTestWrap'));
+	});
 
 	new Effect.Appear($('systemTestWrap'));
 }
@@ -446,6 +475,13 @@ function showSystemTestError(error_id_) {
 	$(error_id_).show();
 
 	new Effect.Center($('systemTestErrorWrap'));
+	var elementDimensions = Element.getDimensions($('systemTestErrorWrap'));
+	$('systemTestErrorWrap').style.width = elementDimensions.width+'px';
+
+	Event.observe(window, 'resize', function() {
+		if ($('systemTestErrorWrap').visible())
+			new Effect.Center($('systemTestErrorWrap'));
+	});
 
 	new Effect.Appear($('systemTestErrorWrap'));
 }
@@ -557,6 +593,8 @@ function showError(errormsg) {
 	$('errorWrap').style.padding = '10px';
 
 	new Effect.Center($('errorWrap'));
+	var elementDimensions = Element.getDimensions($('errorWrap'));
+	$('errorWrap').style.width = elementDimensions.width+'px';
 
 	new Effect.Appear($('errorWrap'));
 
@@ -585,6 +623,8 @@ function showOk(okmsg) {
 	$('okWrap').style.padding = '10px';
 
 	new Effect.Center($('okWrap'));
+	var elementDimensions = Element.getDimensions($('okWrap'));
+	$('okWrap').style.width = elementDimensions.width+'px';
 
 	new Effect.Appear($('okWrap'));
 
@@ -617,6 +657,8 @@ function showInfo(infomsg) {
 	$('infoWrap').style.padding = '10px';
 
 	new Effect.Center($('infoWrap'));
+	var elementDimensions = Element.getDimensions($('infoWrap'));
+	$('infoWrap').style.width = elementDimensions.width+'px';
 
 	new Effect.Appear($('infoWrap'));
 
