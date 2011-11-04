@@ -45,7 +45,6 @@ import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.utils.FilesOp;
 
 public class OVDJob{
-	private static final long serialVersionUID = 1L;
 	private String pdfFilename = null;
 	private String printerName = null;
 
