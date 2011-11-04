@@ -36,7 +36,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
@@ -109,13 +108,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		try {
 			UIManager.put("Slider.paintValue", Boolean.FALSE);
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
