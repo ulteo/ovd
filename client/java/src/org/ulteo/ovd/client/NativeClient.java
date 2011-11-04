@@ -817,8 +817,17 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 		timeout.cancel();
 		
-		this.checkDisconnectionSource();
+		if (! this.opts.autostart) {
+			if (! this.discFrame.isVisible())
+				SwingTools.invokeLater(GUIActions.createDialog(I18n._("You have been disconnected"), I18n._("Your session has ended"), JOptionPane.INFORMATION_MESSAGE, JOptionPane.CLOSED_OPTION));
+		} else {
+			System.err.println("You have been disconnected");
+			System.exit(RETURN_CODE_SUCCESS);
+		}
 
+		this.loadingFrame.setVisible(false);
+		this.discFrame.setVisible(false);
+		
 		return exit;
 	}
 	
@@ -830,23 +839,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		if (this.opts.showProgressBar)
 			SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, false));
 		discFrame.setVisible(true);
-	}
-	
-	public void checkDisconnectionSource() {
-		if (! this.discFrame.isVisible()) {
-			if (loadingFrame.isVisible())
-				this.loadingFrame.setVisible(false);
-			if(! this.opts.autostart)
-				SwingTools.invokeLater(GUIActions.createDialog(I18n._("You have been disconnected"), I18n._("Your session has ended"), JOptionPane.INFORMATION_MESSAGE, JOptionPane.CLOSED_OPTION));
-			else {
-				System.err.println("You have been disconnected");
-				System.exit(RETURN_CODE_SUCCESS);
-			}
-		} else {
-			this.discFrame.setVisible(false);
-			if (this.opts.autostart)
-				System.exit(RETURN_CODE_SUCCESS);
-		}
 	}
 	
 	@Override
