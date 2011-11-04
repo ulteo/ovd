@@ -734,7 +734,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		}
 	}
 	
-	public boolean launchConnection() throws UnsupportedOperationException, SessionManagerException {
+	private boolean launchConnection() throws UnsupportedOperationException, SessionManagerException {
 		if (this.opts.showProgressBar) {
 			this.loadingFrame.getCancelButton().setEnabled(true);
 			this.updateProgress(LoadingStatus.LOADING_START, 0);
