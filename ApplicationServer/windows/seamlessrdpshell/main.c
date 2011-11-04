@@ -64,6 +64,21 @@ static HWND hwnd_internal;
 const char seamless_class[] = "InternalSeamlessClass";
 
 
+BOOL set_focus_on_window(HWND hwnd) {
+	BOOL ret;
+
+	// Attach foreground window thread
+	AttachThreadInput(GetWindowThreadProcessId(GetForegroundWindow(), NULL), GetCurrentThreadId(), TRUE);
+
+	ret = SetForegroundWindow(hwnd);
+	SetFocus(hwnd);
+
+	// Detach the attached thread
+	AttachThreadInput(GetWindowThreadProcessId(GetForegroundWindow(), NULL), GetCurrentThreadId(), FALSE);
+
+	return ret;
+}
+
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	HWND hwnd_to_focus = (HWND)wParam;
 
@@ -85,21 +100,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		return DefWindowProc(hwnd, msg, wParam, lParam);
 	}
 	return 0;
-}
-
-BOOL set_focus_on_window(HWND hwnd) {
-	BOOL ret;
-
-	// Attach foreground window thread
-	AttachThreadInput(GetWindowThreadProcessId(GetForegroundWindow(), NULL), GetCurrentThreadId(), TRUE);
-
-	ret = SetForegroundWindow(hwnd);
-	SetFocus(hwnd);
-
-	// Detach the attached thread
-	AttachThreadInput(GetWindowThreadProcessId(GetForegroundWindow(), NULL), GetCurrentThreadId(), FALSE);
-
-	return ret;
 }
 
 static void
