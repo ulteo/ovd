@@ -19,6 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import locale
+import Queue
 import time
 import threading
 
@@ -31,7 +32,7 @@ class RemoteAppsManager(threading.Thread):
 		self.vchannel = vchannel
 		self.drives = drives
 		
-		self.jobs = []
+		self.jobs = Queue.Queue()
 		
 		try:
 			self.encoding = locale.getpreferredencoding()
@@ -58,7 +59,7 @@ class RemoteAppsManager(threading.Thread):
 				(token, app_id) = data
 				
 				print "recv startapp order %d %d"%(token, app_id)
-				self.pushJob((order, token, app_id))
+				self.jobs.put((order, token, app_id))
 			
 			elif order == OvdAppChannel.ORDER_START_WITH_ARGS:
 				(token, app_id, dir_type, share, path) = data
@@ -76,13 +77,13 @@ class RemoteAppsManager(threading.Thread):
 					return
 				
 				print "recv startapp order %d %d %d %s %s"%(token, app_id, dir_type2, share, path)
-				self.pushJob((order, token, app_id, dir_type2, share, path))
+				self.jobs.put((order, token, app_id, dir_type2, share, path))
 			
 			elif order == OvdAppChannel.ORDER_STOP:
 				(token) = data
 				
 				print "recv stop order %d"%(token)
-				self.pushJob((order, token))
+				self.jobs.put((order, token))
 			
 			elif order == OvdAppChannel.ORDER_EXIT:
 				# logoff
@@ -97,7 +98,16 @@ class RemoteAppsManager(threading.Thread):
 		t_init = 0
 		while True:
 			t0 = time.time()
-			job = self.popJob()
+			try:
+				job = self.jobs.get_nowait()
+			except Queue.Empty, e:
+				job = None
+			except IOError, e:
+				if e.errno == 4:
+					break
+				else:
+					raise e
+			
 			if job is not None:
 				print "RemoteApps got job",job
 				
@@ -170,17 +180,3 @@ class RemoteAppsManager(threading.Thread):
 			if self.im.has_running_instances():
 				self.im.kill_all_apps()
 				time.sleep(1)
-	
-	
-	def pushJob(self, job):
-		# todo mutex lock
-		self.jobs.append(job)
-		# todo mutex unlock
-	
-	
-	def popJob(self):
-		# todo mutex lock
-		if len(self.jobs) == 0:
-			return None
-		# todo mutex unlock
-		return self.jobs.pop()
