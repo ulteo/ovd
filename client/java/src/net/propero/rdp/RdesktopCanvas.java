@@ -899,7 +899,8 @@ public abstract class RdesktopCanvas extends Canvas {
              * ipattern[ipattern.length-1-i] = pattern[i]; }
              */
 
-            int psrc = 0;
+            @SuppressWarnings("unused")
+			int psrc = 0;
             for (i = 0; i < cy; i++) {
                 for (int j = 0; j < cx; j++) {
                     if ((ipattern[(i + brushy) % 8] & (0x01 << ((j + brushx) % 8))) == 0)
@@ -1172,7 +1173,8 @@ public abstract class RdesktopCanvas extends Canvas {
 
         newcy = clipbottom - y + 1;
 
-        int pbackstore = (newy * this.width) + x;
+        @SuppressWarnings("unused")
+		int pbackstore = (newy * this.width) + x;
         pdata = 0;
 
         if (mixmode == MIX_TRANSPARENT) { // FillStippled

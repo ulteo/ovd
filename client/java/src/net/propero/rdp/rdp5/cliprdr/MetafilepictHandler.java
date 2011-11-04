@@ -100,6 +100,7 @@ public class MetafilepictHandler extends TypeHandler {
 	}
 
 	public void handleData(RdpPacket data, int length, ClipInterface c) {
+		@SuppressWarnings("unused")
 		String thingy = "";
 		OutputStream out = null;
 		

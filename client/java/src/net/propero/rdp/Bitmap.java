@@ -70,6 +70,7 @@ public class Bitmap {
         return (r24 << 16) | (g24 << 8) | b24;
     }
     
+	@SuppressWarnings("unused")
 	private static int bmpCount = 0;
 
     /**
@@ -1948,6 +1949,7 @@ public class Bitmap {
 		int code = 0;
 		int collen = 0;
 		int color = 0;
+		@SuppressWarnings("unused")
 		int data_pos = 0;
 		int index_out = 0;
 		int indexh = 0;

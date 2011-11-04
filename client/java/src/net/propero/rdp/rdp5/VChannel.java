@@ -139,6 +139,7 @@ public abstract class VChannel {
 		int length = data.size();
 		
 		int data_offset = 0;
+		@SuppressWarnings("unused")
 		int packets_sent = 0;
 		int num_packets = (length/this.opt.VCChunkMaxSize);
 		num_packets += length - (this.opt.VCChunkMaxSize)*num_packets;
