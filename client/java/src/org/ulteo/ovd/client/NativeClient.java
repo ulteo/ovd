@@ -25,6 +25,7 @@
 
 package org.ulteo.ovd.client;
 
+import org.ulteo.Logger;
 import org.ulteo.utils.I18n;
 import org.ulteo.utils.KerberosConfiguration;
 import org.ulteo.utils.LayoutDetector;
@@ -54,9 +55,6 @@ import java.util.TimerTask;
 import javax.swing.JLabel;
 
 import javax.swing.JOptionPane;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
 import org.ulteo.ovd.client.authInterface.AuthFrame;
 import org.ulteo.ovd.client.authInterface.DisconnectionFrame;
@@ -104,7 +102,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				LibraryLoader.LoadLibrary(LibraryLoader.LIB_X_CLIENT_AREA);
 			} catch (FileNotFoundException ex) {
 				WorkArea.disableLibraryLoading();
-				org.ulteo.Logger.error(ex.getMessage());
+				System.err.println(ex.getMessage());
 			}
 		}
 		
@@ -122,13 +120,12 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		}
 		
 		I18n.init();
-		BasicConfigurator.configure();
-		
-		Logger.getRootLogger().setLevel(Level.INFO);
+		org.apache.log4j.BasicConfigurator.configure();
+		org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.INFO);
 
 		// Init Ulteo Logger instance
 		String log_dir = Constants.PATH_NATIVE_CLIENT_CONF + Constants.FILE_SEPARATOR + "logs";
-		if (! org.ulteo.Logger.initInstance(true, log_dir+Constants.FILE_SEPARATOR +org.ulteo.Logger.getDate()+".log", true))
+		if (! Logger.initInstance(true, log_dir+Constants.FILE_SEPARATOR +Logger.getDate()+".log", true))
 			System.err.println("Unable to iniatialize logger instance");
 
 		//Cleaning up all useless OVD data
@@ -246,7 +243,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 						opts.geometry.width = Integer.parseInt(geometry.substring(0, pos));
 						opts.geometry.height = Integer.parseInt(geometry.substring(pos + 1, geometry.length()));
 					} catch (NumberFormatException ex) {
-						System.err.println(ex.getMessage() + "\n" + ex.getStackTrace());
+						Logger.error("bad geometry arguments");
 						NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 					}
 
@@ -306,45 +303,45 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		}
 
 		if (opts.getFlag(Options.FLAG_PROFILE_INI) && opts.getFlag(Options.FLAG_PROFILE_REG)) {
-			org.ulteo.Logger.error("You cannot use --reg with -c");
+			Logger.error("You cannot use --reg with -c");
 			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 
 		if ((opts.sessionMode == Properties.MODE_REMOTEAPPS) && opts.getFlag(Options.FLAG_GEOMETRY)) {
-			org.ulteo.Logger.error("You cannot use -g in applications mode");
+			Logger.error("You cannot use -g in applications mode");
 			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 
 		if (opts.getFlag(Options.FLAG_PROFILE_INI)) {
 			if (! NativeClient.getIniProfile(opts, opts.profile))
-				org.ulteo.Logger.warn("The configuration file \""+opts.profile+"\" does not exist.");
+				Logger.warn("The configuration file \""+opts.profile+"\" does not exist.");
 		}
 		else if (opts.getFlag(Options.FLAG_PROFILE_REG)) {
 			if (! NativeClient.getRegistryProfile(opts))
-				org.ulteo.Logger.warn("No available configuration from registry");
+				Logger.warn("No available configuration from registry");
 		}
 		else {
 			if (! NativeClient.getIniProfile(opts, null))
-				org.ulteo.Logger.warn("The default configuration file does not exist.");
+				Logger.warn("The default configuration file does not exist.");
 		}
 
 		if (opts.nltm && (opts.getFlag(Options.FLAG_USERNAME) || opts.getFlag(Options.FLAG_PASSWORD))) {
-			org.ulteo.Logger.error("You cannot use --ntml with -u or -p");
+			Logger.error("You cannot use --ntml with -u or -p");
 			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 		if (opts.sessionMode == Properties.MODE_DESKTOP && opts.autopublish) {
-			org.ulteo.Logger.error("You cannot use --auto-integration in desktop mode");
+			Logger.error("You cannot use --auto-integration in desktop mode");
 			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 		if (opts.autostart) {
 			opts.guiLocked = true;
 			
 			if (opts.host == null) {
-				org.ulteo.Logger.error("No server specified");
+				Logger.error("No server specified");
 				NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 			}
 			if (! opts.nltm && opts.username == null) {
-				org.ulteo.Logger.error("No username specified");
+				Logger.error("No username specified");
 				NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 			}
 
@@ -402,7 +399,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		try {
 			properties = ini.loadProfile(option.profile, path);
 		} catch (IOException ex) {
-			System.err.println("Unable to load \""+option.profile+"\" profile: "+ex.getMessage());
+			Logger.error("Unable to load \""+option.profile+"\" profile: "+ex.getMessage());
 			return false;
 		}
 		
@@ -419,7 +416,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		try {
 			properties = registry.loadProfile();
 		} catch (IOException ex) {
-			org.ulteo.Logger.error("Getting profile preferencies from registry failed: "+ex.getMessage());
+			Logger.error("Getting profile preferencies from registry failed: "+ex.getMessage());
 			return false;
 		}
 		if (properties == null)
@@ -585,16 +582,16 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			
 			if (! keymapSet) {
 				String detected = System.getProperty("user.language")+"-"+System.getProperty("user.country");
-				org.ulteo.Logger.debug("Try to force keyboard layout with detected language "+detected);
+				Logger.debug("Try to force keyboard layout with detected language "+detected);
 				keymapSet = this.authFrame.setKeymap(detected);
 				
 				if (! keymapSet) {
 					detected = System.getProperty("user.language");
-					org.ulteo.Logger.debug("Try to force keyboard layout with detected language (simplified) "+detected);
+					Logger.debug("Try to force keyboard layout with detected language (simplified) "+detected);
 					keymapSet = this.authFrame.setKeymap(detected);
 					
 					if (! keymapSet)
-						org.ulteo.Logger.warn("Unable to detect the keyboard layout. Very weird !");
+						Logger.warn("Unable to detect the keyboard layout. Very weird !");
 				}
 			}
 		}
@@ -619,17 +616,17 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				if (! this.launchConnection())
 					this.initAuthFrame();
 			} catch (UnsupportedOperationException ex) {
-				org.ulteo.Logger.error(ex.getMessage());
+				Logger.error(ex.getMessage());
 				SwingTools.invokeLater(GUIActions.createDialog(I18n._(ex.getMessage()), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
 				this.loadingFrame.setVisible(false);
 			} catch (SessionManagerException ex) {
 				String errormsg = I18n._("Unable to reach the Session Manager!");
-				org.ulteo.Logger.error(errormsg+": "+ex.getMessage());
+				Logger.error(errormsg+": "+ex.getMessage());
 				SwingTools.invokeLater(GUIActions.createDialog(I18n._(errormsg), I18n._("Error!"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
 				this.loadingFrame.setVisible(false);
 			}
 		} catch (IllegalArgumentException ex) {
-			org.ulteo.Logger.warn(ex.getMessage());
+			Logger.warn(ex.getMessage());
 			SwingTools.invokeLater(GUIActions.createDialog(I18n._(ex.getMessage()), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
 			this.authFrame.reset();
 		}
@@ -663,7 +660,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			if (Language.languageList[i].length > 3)
 				locale = new Locale(language[2], language[3]);
 			
-			System.out.println("Switch language from "+Locale.getDefault()+" to "+locale);
+			Logger.debug("Switch language from "+Locale.getDefault()+" to "+locale);
 			
 			Locale.setDefault(locale);
 			
@@ -706,7 +703,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 			this.opts.geometry = this.authFrame.getResolution();
 			if (this.opts.geometry == null) {
-				org.ulteo.Logger.error("No resolution selected: will select the default resolution");
+				Logger.error("No resolution selected: will select the default resolution");
 				this.opts.geometry = DesktopFrame.DEFAULT_RES;
 			}
 
@@ -821,7 +818,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			if (! this.discFrame.isVisible())
 				SwingTools.invokeLater(GUIActions.createDialog(I18n._("You have been disconnected"), I18n._("Your session has ended"), JOptionPane.INFORMATION_MESSAGE, JOptionPane.CLOSED_OPTION));
 		} else {
-			System.err.println("You have been disconnected");
+			Logger.debug("You have been disconnected");
 			System.exit(RETURN_CODE_SUCCESS);
 		}
 
@@ -861,21 +858,21 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	public void reportError(int code, String message) {
 		String error = ResponseHandler.get(ERROR_DEFAULT);
 		SwingTools.invokeLater(GUIActions.createDialog(error, I18n._("Error"), JOptionPane.ERROR_MESSAGE, JOptionPane.CLOSED_OPTION));
-		org.ulteo.Logger.error(error+ " (code: "+code+"):\n" + message);
+		Logger.error(error+ " (code: "+code+"):\n" + message);
 	}
 
 	@Override
 	public void reportUnauthorizedHTTPResponse(String moreInfos) {
 		String error = ResponseHandler.get(ERROR_AUTHENTICATION_FAILED);
 		SwingTools.invokeLater(GUIActions.createDialog(error, I18n._("Error"), JOptionPane.ERROR_MESSAGE, JOptionPane.CLOSED_OPTION));
-		org.ulteo.Logger.error(error + "\n" + moreInfos);
+		Logger.error(error + "\n" + moreInfos);
 	}
 
 	@Override
 	public void reportNotFoundHTTPResponse(String moreInfos) {
 		String error = ResponseHandler.get(ERROR_DEFAULT);
 		SwingTools.invokeLater(GUIActions.createDialog(error, I18n._("Error"), JOptionPane.ERROR_MESSAGE, JOptionPane.CLOSED_OPTION));
-		org.ulteo.Logger.error(error+ "\n" + moreInfos);
+		Logger.error(error+ "\n" + moreInfos);
 	}
 
 	@Override
@@ -921,7 +918,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		try {
 			ini.saveProfile(properties);
 		} catch (IOException e) {
-			System.err.println("Unable to save profile: " + e.getMessage());
+			Logger.warn("Unable to save profile: " + e.getMessage());
 		}
 	}
 
@@ -954,7 +951,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			
 			ini.savePassword(this.opts.password);
 		} catch (IOException ex) {
-			org.ulteo.Logger.error("Failed to save password: "+ex.getMessage());
+			Logger.error("Failed to save password: "+ex.getMessage());
 		}
 	}
 }
