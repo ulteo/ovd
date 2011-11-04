@@ -69,6 +69,8 @@ function startSession() {
 			{
 				method: 'post',
 				parameters: {
+					requested_host: window.location.hostname,
+					requested_port: ((window.location.port !=  '')?window.location.port:'443'),
 					sessionmanager_host: $('sessionmanager_host').value,
 					login: $('user_login').value,
 					password: $('user_password').value,
@@ -185,6 +187,12 @@ function onStartSessionSuccess(xml_) {
 	}
 	session_node = buffer[0];
 
+	var sessionmanager_host = session_node.getAttribute('sessionmanager');
+	if (sessionmanager_host == '127.0.0.1' || sessionmanager_host == '127.0.1.1' || sessionmanager_host == 'localhost' || sessionmanager_host == 'localhost.localdomain')
+		sessionmanager_host = window.location.hostname;
+	if (sessionmanager_host.indexOf(':') == -1)
+		sessionmanager_host += ':443';
+
 	try {
 		session_mode = session_node.getAttribute('mode');
 		session_mode = session_mode.substr(0, 1).toUpperCase()+session_mode.substr(1, session_mode.length-1);
@@ -226,8 +234,10 @@ function onStartSessionSuccess(xml_) {
 			daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.ovd.applet.Desktop', debug);
 		else
 			daemon = new Applications('ulteo-applet.jar', 'org.ulteo.ovd.applet.Applications', debug);
-		daemon.explorer = explorer;
 
+		daemon.sessionmanager = sessionmanager_host;
+
+		daemon.explorer = explorer;
 		if (daemon.explorer)
 			$('fileManagerWrap').show();
 

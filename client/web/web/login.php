@@ -183,10 +183,25 @@ if (array_key_exists('password', $_POST))
 $session_node->appendChild($user_node);
 $dom->appendChild($session_node);
 
-if (defined('SESSIONMANAGER_HOST'))
+if (defined('SESSIONMANAGER_HOST')) {
 	$_SESSION['ovd-client']['server'] = SESSIONMANAGER_HOST;
-else
+	$_SESSION['ovd-client']['sessionmanager_host'] = SESSIONMANAGER_HOST;
+} else {
 	$_SESSION['ovd-client']['server'] = $_POST['sessionmanager_host'];
+	$_SESSION['ovd-client']['sessionmanager_host'] = $_POST['sessionmanager_host'];
+}
+
+$_SESSION['ovd-client']['gateway'] = false;
+$_SESSION['ovd-client']['gateway_first'] = false;
+$headers = apache_request_headers();
+if (is_array($headers) && array_key_exists('OVD-Gateway', $headers)) {
+	$_SESSION['ovd-client']['gateway'] = true;
+	$_SESSION['ovd-client']['gateway_first'] = true;
+
+	$_SESSION['ovd-client']['server'] = $_SERVER['REMOTE_ADDR'].':'.$_POST['requested_port'];
+	$_SESSION['ovd-client']['sessionmanager_host'] = $_SERVER['REMOTE_ADDR'].':'.$_POST['requested_port'];
+}
+
 $_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$_SESSION['ovd-client']['server'].'/ovd/client';
 $sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
 
@@ -224,6 +239,7 @@ if (! is_object($session_node)) {
 	echo return_error(1, 'internal_error');
 	die();
 }
+$session_node->setAttribute('sessionmanager', $_SESSION['ovd-client']['sessionmanager_host']);
 $_SESSION['ovd-client']['session_id'] = $session_node->getAttribute('id');
 $_SESSION['ovd-client']['session_mode'] = $session_node->getAttribute('mode');
 $_SESSION['ovd-client']['session_language'] = $_POST['language'];
@@ -234,10 +250,8 @@ if ($_SESSION['ovd-client']['session_mode'] == 'desktop')
 	$_SESSION['ovd-client']['desktop_fullscreen'] = ((array_key_exists('desktop_fullscreen', $_POST))?$_POST['desktop_fullscreen']:0);
 $_SESSION['ovd-client']['timeout'] = $session_node->getAttribute('timeout');
 
-$_SESSION['ovd-client']['gateway'] = false;
-if ($session_node->hasAttribute('mode_gateway')) {
-	if ($session_node->getAttribute('mode_gateway') == 'on')
-		$_SESSION['ovd-client']['gateway'] = true;
+if ($session_node->hasAttribute('mode_gateway') && $session_node->getAttribute('mode_gateway') == 'on') {
+	$_SESSION['ovd-client']['gateway'] = true;
 }
 
 $user_node = $session_node->getElementsByTagName('user');

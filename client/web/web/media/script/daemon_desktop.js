@@ -60,6 +60,8 @@ var Desktop = Class.create(Daemon, {
 				applet_params.set('rdp_input_method', this.rdp_input_method);
 			if (this.fullscreen)
 				applet_params.set('fullscreen', 1);
+			if (this.sessionmanager != null)
+				applet_params.set('sessionmanager', this.sessionmanager);
 
 			this.settings.each(function(pair) {
 				applet_params.set('setting_'+pair.key, pair.value);

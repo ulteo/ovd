@@ -94,6 +94,9 @@ var Applications = Class.create(Daemon, {
 		applet_params.set('keymap', this.keymap);
 		if (this.rdp_input_method != null)
 			applet_params.set('rdp_input_method', this.rdp_input_method);
+		if (this.sessionmanager != null)
+			applet_params.set('sessionmanager', this.sessionmanager);
+
 		this.settings.each(function(pair) {
 			applet_params.set('setting_'+pair.key, pair.value);
 		});
