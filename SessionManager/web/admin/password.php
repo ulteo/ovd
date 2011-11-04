@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,6 +41,11 @@ if ($_REQUEST['action'] == 'change') {
 	
 	echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
 	echo '<tr class="content1">';
+	echo '<th>'._('Current password').'</th>';
+	echo '<td><input type="password" name="password_current" value="" /></td>';
+	echo '</tr>';
+	
+	echo '<tr class="content2">';
 	echo '<th>'._('New password').'</th>';
 	echo '<td><input type="password" name="password" value="" /></td>';
 	echo '</tr>';
