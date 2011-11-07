@@ -140,14 +140,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.persistent = persistent;
 	}
 
-	private void addAvailableConnection(RdpConnectionOvd rc) {
-		this.availableConnections.add(rc);
-	}
-
-	protected int countAvailableConnection() {
-		return this.availableConnections.size();
-	}
-
 	public ArrayList<RdpConnectionOvd> getAvailableConnections() {
 		return this.availableConnections;
 	}
@@ -331,7 +323,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		Logger.info("Connected to "+co);
 
 		this.performedConnections.add((RdpConnectionOvd) co);
-		this.addAvailableConnection((RdpConnectionOvd)co);
+		this.availableConnections.add((RdpConnectionOvd) co);
 
 		this.display(co);
 	}
