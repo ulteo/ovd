@@ -1,10 +1,11 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2009
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -49,13 +50,16 @@ function show_default() {
   }
 
 
-  foreach($groups_users as $group_users) {
-    foreach($group_users->appsGroups() as $group_apps) {
-          if (! $group_apps->published)
-	    continue;
-      $publications[]= array('user' => $group_users, 'app' => $group_apps);
-    }
-  }
+	// Starts from the applications groups instead of users groups because 
+	// it's possible to not be able to have the complete users groups list (LDAP)
+	foreach($groups_apps as $group_apps) {
+		foreach($group_apps->userGroups() as $group_users) {
+			if (! $group_users->published)
+				continue;
+			
+			$publications[]= array('user' => $group_users, 'app' => $group_apps);
+		}
+	}
 
   $has_publish = count($publications);
 
