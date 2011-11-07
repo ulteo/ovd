@@ -58,7 +58,7 @@ OVD_CERT_DIR=/usr/share/ulteo/ovd-cert
 [ -z "$JKS_ALIAS" ] && JKS_ALIAS=ulteo
 
 ant applet.install -Dbuild.type=stripped -Dprefix=/usr -Ddestdir=$RPM_BUILD_ROOT -Dmingw32.prefix=i686-pc-mingw32- \
-	-Dkeystore.path=$JKS_PATH -Dkeystore.password="$(cat $JKS_PASSWD)" -Dkeystore.alias=$JKS_ALIAS
+	-Dkeystore.path=$JKS_PATH -Dkeystore.password=\"$(cat $JKS_PASSWD)\" -Dkeystore.alias=$JKS_ALIAS
 
 %files -n ulteo-ovd-applets
 %defattr(-,root,root)
