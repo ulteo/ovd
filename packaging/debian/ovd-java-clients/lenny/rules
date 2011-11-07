@@ -6,10 +6,15 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/ant.mk
 
 JAVA_HOME = /usr/lib/jvm/java-6-sun
-OVD_CERT_DIR = /usr/share/ulteo/ovd-cert/
+
+OVD_CERT_DIR = /usr/share/ulteo/ovd-cert
+JKS_PATH ?= $(OVD_CERT_DIR)/keystore
+JKS_PASSWD ?= $(OVD_CERT_DIR)/password
+JKS_ALIAS ?= ulteo
 
 DEB_ANT_INSTALL_TARGET = applet.install ovdExternalAppsClient.install
-DEB_ANT_ARGS += -Dprefix=/usr -Dbuild.type=stripped -Ddestdir=$(DEB_DESTDIR) -Dbuild.cert=$(OVD_CERT_DIR) -Dkeystore.password=$(shell cat $(OVD_CERT_DIR)/password)
+DEB_ANT_ARGS += -Dprefix=/usr -Dbuild.type=stripped -Ddestdir=$(DEB_DESTDIR) \
+	-Dkeystore.path=$(JKS_PATH) -Dkeystore.password="$(shell cat $(JKS_PASSWD))" -Dkeystore.alias=$(JKS_ALIAS)
 
 DEB_JARS += $(ANT_HOME)/lib/ant-nodeps.jar # debian bug #420287
 
