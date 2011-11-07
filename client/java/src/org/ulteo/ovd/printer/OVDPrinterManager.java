@@ -20,7 +20,9 @@
 
 package org.ulteo.ovd.printer;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import javax.print.DocFlavor;
@@ -34,6 +36,7 @@ import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
 
 import org.apache.log4j.Logger;
+import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 
@@ -80,6 +83,14 @@ public class OVDPrinterManager {
 			isDefault = false;
 			String printerName = printService[i].getName();
 			logger.debug("Printer discovered: " + printerName);
+			if (OSTools.isLinux()) {
+				try {
+					printerName = URLDecoder.decode(printerName, "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					logger.warn("Unable to decode printer name ("+printerName+") :"+e.getMessage());
+				}
+			}
+			
 			if( printerName.equals(this.defaultPrinterName) )
 				isDefault = true;
 
