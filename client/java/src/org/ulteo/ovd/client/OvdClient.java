@@ -144,10 +144,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		return this.availableConnections;
 	}
 
-	public String getInstance() {
-		return null;
-	}
-
 	@Override
 	public void run() {
 		// session status monitoring

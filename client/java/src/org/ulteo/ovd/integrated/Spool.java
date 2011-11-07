@@ -170,8 +170,9 @@ public class Spool implements Runnable {
 			} 
 		} catch (InterruptedException ex) {
 			this.logger.info("Spool thread stopped");
-			return;
 		}
+		
+		this.deleteTree();
 	}
 	
 	private Thread spoolThread = null;

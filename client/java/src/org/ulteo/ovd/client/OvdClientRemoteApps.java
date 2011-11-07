@@ -98,14 +98,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		this.spool.start();
 	}
 
-	@Override
-	public String getInstance() {
-		if (this.spool == null)
-			return null;
-
-		return this.spool.getInstanceName();
-	}
-
 	public Spool getSpool() {
 		return this.spool;
 	}
@@ -151,7 +143,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	protected void runSessionTerminated() {
 		if (this.spool != null) {
 			this.spool.stop();
-			this.spool.deleteTree();
 			this.spool = null;
 		}
 
