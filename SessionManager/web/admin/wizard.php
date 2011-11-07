@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2009
- * Author Julien LANGLOIS <julien@ulteo.com> 2008-2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -134,7 +134,15 @@ function show_default() {
 
 function show_step1() {
   $usergroupdb = UserGroupDB::getInstance();
-  $usergroups = $usergroupdb->getList(true);
+	$usersgroupsList = new UsersGroupsList($_REQUEST);
+	$usergroups = $usersgroupsList->search();
+	if (! is_array($usergroups)) {
+		$usergroups = array();
+		popup_error(_("Failed to get users groups list"));
+	}
+	usort($usergroups, "usergroup_cmp");
+	$searchDiv = $usersgroupsList->getForm();
+  
   $has_usergroups = (count($usergroups) > 0);
 
   $usergroup_selected = false;
@@ -229,6 +237,7 @@ function show_step1() {
 	$content = 'content'.(($count++%2==0)?1:2);
 	echo '<tr class="'.$content.'"><td><a href="javascript:;" onclick="markAllRows(\'wizard_usergroups_list_table\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'wizard_usergroups_list_table\'); return false">'._('Unmark all').'</a></td></tr>';
 	echo '</table>';
+	echo $searchDiv;
   }
   echo '</td>';
   echo '</tr>';

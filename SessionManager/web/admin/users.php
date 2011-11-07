@@ -3,7 +3,7 @@
  * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2008-2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2010, 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -212,11 +212,13 @@ function show_manage($login, $userDB, $userGroupDB) {
     die_error(_('Error while requesting usergroups'),__FILE__,__LINE__);
   usort($groups_mine, 'usergroup_cmp');
 
-  $groups_all = $userGroupDB->getList(true);
   $groups_available = array();
-  foreach($groups_all as $group)
-    if (! in_array($group, $groups_mine))
-      $groups_available[]= $group;
+	if ($usergroupdb_rw) {
+		$groups_all = $userGroupDB->getList(true);
+		foreach($groups_all as $group)
+			if (! in_array($group, $groups_mine))
+				$groups_available[]= $group;
+	}
 
   // Sessions
   $sessions = Abstract_Session::getByUser($login);
@@ -339,7 +341,7 @@ function show_manage($login, $userDB, $userGroupDB) {
   }
 
   // User groups part
-  if (count($groups_all)>0) {
+  if (count($groups_mine)>0 or count($groups_all)>0) {
     echo '<div>';
     echo '<h2>'._('User groups with this user').'</h2>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';

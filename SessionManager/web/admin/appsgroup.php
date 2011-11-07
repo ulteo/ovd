@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
- * Author Julien LANGLOIS <julien@ulteo.com> 2008-2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -193,7 +193,15 @@ function show_manage($id) {
       $groups_users[]= $obj;
   }
 
-  $groups_users_all = $userGroupDB->getList(true);
+	$usersgroupsList = new UsersGroupsList($_REQUEST);
+	$groups_users_all = $usersgroupsList->search();
+	if (! is_array($groups_users_all)) {
+		$groups_users_all = array();
+		popup_error(_("Failed to get users groups list"));
+	}
+	usort($groups_users_all, "usergroup_cmp");
+	$searchDiv = $usersgroupsList->getForm(array('action' => 'manage', 'id' => $id));
+
   $groups_users_available = array();
   foreach($groups_users_all as $group_users) {
     if (! in_array($group_users, $groups_users))
@@ -386,6 +394,7 @@ function show_manage($id) {
     }
 
     echo '</table>';
+	echo $searchDiv;
     echo '</div>';
   }
 

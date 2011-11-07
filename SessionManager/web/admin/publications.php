@@ -42,8 +42,15 @@ function show_default() {
       unset($groups_apps[$i]);
   }
 
-  $usergroupdb = UserGroupDB::getInstance();
-  $groups_users = $usergroupdb->getList(true);
+	$usersgroupsList = new UsersGroupsList($_REQUEST);
+	$groups_users = $usersgroupsList->search();
+	if (! is_array($groups_users)) {
+		$groups_users = array();
+		popup_error(_("Failed to get users groups list"));
+	}
+	usort($groups_users, "usergroup_cmp");
+	$searchDiv = $usersgroupsList->getForm();
+
   foreach($groups_users as $i => $group_users) {
     if (! $group_users->published)
       unset($groups_users[$i]);
@@ -156,6 +163,7 @@ function show_default() {
 
   echo '</table>';
   echo '<br /><br /><br />';
+	echo $searchDiv;
   echo '</div>';
 
   echo '</div>';

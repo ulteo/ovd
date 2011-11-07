@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -89,8 +90,14 @@ function show_manage($sharedfolder_id_) {
 		redirect('sharedfolders.php');
 	}
 
-	$userGroupDB = UserGroupDB::getInstance();
-	$all_groups = $userGroupDB->getList(true);
+	$usersgroupsList = new UsersGroupsList($_REQUEST);
+	$all_groups = $usersgroupsList->search();
+	if (! is_array($all_groups)) {
+		$all_groups = array();
+		popup_error(_("Failed to get users groups list"));
+	}
+	usort($all_groups, "usergroup_cmp");
+	$searchDiv = $usersgroupsList->getForm(array('action' => 'manage', 'id' => $sharedfolder_id_));
 
 	$available_groups = array();
 	$used_groups = $sharedfolder->getUserGroups();
@@ -174,6 +181,7 @@ function show_manage($sharedfolder_id_) {
 
 	echo '</table>';
 
+	echo $searchDiv;
 	echo '</div>';
 
 	echo '</div>';
