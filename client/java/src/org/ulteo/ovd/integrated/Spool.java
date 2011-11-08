@@ -46,16 +46,16 @@ public class Spool implements Runnable {
 	private Logger logger = Logger.getLogger(Spool.class);
 	private OvdClient client = null;
 	private ArrayList<ApplicationInstance> appInstances = null;
-	private String instance = null;
+	private String id = null;
 
 	public Spool(OvdClient client_) {
 		this.client = client_;
 		this.appInstances = new ArrayList<ApplicationInstance>();
-		this.instance = this.randomString();
+		this.id = this.randomString();
 	}
 
 	public void run() {
-		File baseDirectory = new File(Constants.PATH_REMOTE_APPS + File.pathSeparator + this.instance);
+		File baseDirectory = new File(Constants.PATH_REMOTE_APPS + File.pathSeparator + this.id);
 		File instancesDir = new File(baseDirectory.getPath() + File.pathSeparator + Constants.DIRNAME_INSTANCES);
 		File toLaunchDir = new File(baseDirectory.getPath() + File.pathSeparator + Constants.DIRNAME_TO_LAUNCH);
 		
@@ -208,14 +208,14 @@ public class Spool implements Runnable {
 	}
 
 	public void destroyInstance(int token) {
-		File instanceFile = new File(Constants.PATH_REMOTE_APPS + File.pathSeparator + this.instance +
+		File instanceFile = new File(Constants.PATH_REMOTE_APPS + File.pathSeparator + this.id +
 				File.pathSeparator + Constants.DIRNAME_INSTANCES + File.pathSeparator + token);
 		if (! instanceFile.delete())
 			this.logger.error(String.format("Unable to remove instance file (%s)", instanceFile.getPath()));
 	}
 
-	public String getInstanceName() {
-		return this.instance;
+	public String getID() {
+		return this.id;
 	}
 
 	private String randomString() {
