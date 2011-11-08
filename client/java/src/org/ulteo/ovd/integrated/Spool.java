@@ -39,7 +39,7 @@ import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.utils.FilesOp;
 import org.ulteo.utils.I18n;
 
-public class Spool implements Runnable {
+public class Spool extends Thread {
 	private final static String PREFIX_ID = "id = ";
 	private final static String PREFIX_ARG = "arg = ";
 
@@ -54,6 +54,7 @@ public class Spool implements Runnable {
 		this.id = UUID.randomUUID().toString();
 	}
 
+	@Override
 	public void run() {
 		File baseDirectory = new File(Constants.PATH_REMOTE_APPS + File.pathSeparator + this.id);
 		File instancesDir = new File(baseDirectory.getPath() + File.pathSeparator + Constants.DIRNAME_INSTANCES);
@@ -67,103 +68,81 @@ public class Spool implements Runnable {
 
 		this.logger.info("Spool thread started");
 
-		try {
-			while (true) {
+		while (! Thread.interrupted()) {
+			try {
 				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				break;
+			}
 
-				File[] children = toLaunchDir.listFiles();
-				for (File todo : children) {
-					try {
-						int appId = -1;
-						String arg = null;
-						Scanner scanner = new Scanner(todo);
-						while (scanner.hasNextLine()) {
-							String line = scanner.nextLine().trim();
-							if(line.isEmpty())
-								continue;
+			File[] children = toLaunchDir.listFiles();
+			for (File todo : children) {
+				try {
+					int appId = -1;
+					String arg = null;
+					Scanner scanner = new Scanner(todo);
+					while (scanner.hasNextLine()) {
+						String line = scanner.nextLine().trim();
+						if(line.isEmpty())
+							continue;
 
-							if (line.startsWith(PREFIX_ID)) {
-								appId = Integer.parseInt(line.substring(PREFIX_ID.length()));
-								continue;
-							}
-
-							if (line.startsWith(PREFIX_ARG)) {
-								arg = line.substring(PREFIX_ARG.length());
-								continue;
-							}
-
-							org.ulteo.Logger.warn("File '"+todo.getName()+"': Unknown line content: "+line);
+						if (line.startsWith(PREFIX_ID)) {
+							appId = Integer.parseInt(line.substring(PREFIX_ID.length()));
+							continue;
 						}
-						this.startApp(appId, arg, todo.getName());
-						scanner.close();
-					} catch (FileNotFoundException ex) {
-						this.logger.error("No read file '" + todo.getAbsolutePath() + "'");
-					}
 
-					File instanceFile = new File(instancesDir.getAbsolutePath()+Constants.FILE_SEPARATOR+todo.getName());
-					try {
-						instanceFile.createNewFile();
-					} catch (IOException ex) {
-						this.logger.error(ex);
-					}
-
-					if (!todo.delete()) {
-						this.logger.error("No delete file '" + todo.getAbsolutePath() + "'");
-					}
-
-					if (todo.getName().equals("quit")) {
-						for (RdpConnection rc : this.client.getAvailableConnections()) {
-							try {
-								rc.getSeamlessChannel().send_spawn("logoff");
-							} catch (Exception e) {
-								this.logger.error(e);
-							}
+						if (line.startsWith(PREFIX_ARG)) {
+							arg = line.substring(PREFIX_ARG.length());
+							continue;
 						}
-						return;
+
+						org.ulteo.Logger.warn("File '"+todo.getName()+"': Unknown line content: "+line);
 					}
+					this.startApp(appId, arg, todo.getName());
+					scanner.close();
+				} catch (FileNotFoundException ex) {
+					this.logger.error("No read file '" + todo.getAbsolutePath() + "'");
 				}
-			} 
-		} catch (InterruptedException ex) {
-			this.logger.info("Spool thread stopped");
-		}
 
+				File instanceFile = new File(instancesDir.getAbsolutePath()+Constants.FILE_SEPARATOR+todo.getName());
+				try {
+					instanceFile.createNewFile();
+				} catch (IOException ex) {
+					this.logger.error(ex);
+				}
+
+				if (!todo.delete()) {
+					this.logger.error("No delete file '" + todo.getAbsolutePath() + "'");
+				}
+
+				if (todo.getName().equals("quit")) {
+					for (RdpConnection rc : this.client.getAvailableConnections()) {
+						try {
+							rc.getSeamlessChannel().send_spawn("logoff");
+						} catch (Exception e) {
+							this.logger.error(e);
+						}
+					}
+					return;
+				}
+			}
+		}
+		
+		this.logger.info("Spool thread stopped");
+		
 		// delete spooler folders
 		File[] toDeleteDirs = {baseDirectory, new File(Constants.PATH_ICONS), new File(Constants.PATH_SHORTCUTS)};
 		for (File dir : toDeleteDirs)
 			FilesOp.deleteDirectory(dir);
-		
 	}
 	
-	private Thread spoolThread = null;
-
-	public void start() {
-		this.spoolThread = new Thread(this);
-		this.spoolThread.start();
+	public void terminate() {
+		this.interrupt();
+		try {
+			this.join();
+		} catch (InterruptedException e) {}
 	}
-
-	public void waitThreadEnd() {
-		while (this.spoolThread != null && this.spoolThread.isAlive()) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException ex) {
-				this.logger.error(ex);
-			}
-		}
-	}
-
-	public void stop() {
-		spoolThread.interrupt();
-
-		while (spoolThread.isAlive()) {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException ex) {}
-		}
-
-		spoolThread = null;
-		org.ulteo.Logger.info("Spool thread stopped");
-	}
-
+	
 	public ApplicationInstance findAppInstanceByToken(long token_) {
 		for (ApplicationInstance ai : this.appInstances) {
 			if (ai.getToken() == token_)

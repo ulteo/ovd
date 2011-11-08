@@ -139,10 +139,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	
 	@Override
 	protected void runSessionTerminated() {
-		if (this.spool != null) {
-			this.spool.stop();
-			this.spool = null;
-		}
+		this.spool.terminate();
 
 		if (this.system instanceof SystemLinux)
 			((SystemLinux) this.system).clearSystemMenu();

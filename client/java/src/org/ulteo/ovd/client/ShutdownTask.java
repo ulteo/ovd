@@ -21,7 +21,6 @@
 package org.ulteo.ovd.client;
 
 import org.ulteo.Logger;
-import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
 
 public class ShutdownTask extends Thread {
@@ -44,9 +43,7 @@ public class ShutdownTask extends Thread {
 		SystemAbstract.cleanAll();
 
 		if (this.client instanceof OvdClientRemoteApps) {
-			Spool spool = ((OvdClientRemoteApps) this.client).getSpool();
-			if (spool != null)
-				spool.stop();
+			((OvdClientRemoteApps) this.client).getSpool().terminate();
 		}
 	}
 }

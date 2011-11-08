@@ -22,6 +22,7 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
+import org.ulteo.Logger;
 import org.ulteo.ovd.client.OvdClientPerformer;
 import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -37,7 +38,11 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 
 	@Override
 	protected void runSessionReady() {
-		this.spool.waitThreadEnd();
+		try {
+			this.spool.join();
+		} catch (InterruptedException e) {
+			Logger.error("Spooler endded unexpectedly");
+		}
 		this.exit(0);
 	}
 
