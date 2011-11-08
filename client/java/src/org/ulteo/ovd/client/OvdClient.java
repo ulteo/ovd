@@ -33,6 +33,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
 import org.ulteo.Logger;
+import org.ulteo.ovd.Application;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.integrated.OSTools;
@@ -428,6 +429,22 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		for (RdpConnectionOvd rc : this.getAvailableConnections()) {
 			if (rc.getOvdAppChannel() == channel)
 				return rc;
+		}
+		return null;
+	}
+	
+	/**
+	 * find the {@link Application} available in the several {@link RdpConnectionOvd}
+	 * @param id id of the {@link Application} to search
+	 * @return {@link Application} if found, null instead
+	 */
+	public Application findAppById(int id) {
+		for (RdpConnectionOvd rc : this.getAvailableConnections()) {
+			for (Application app : rc.getAppsList()) {
+				if (app.getId() == id) {
+					return app;
+				}
+			}
 		}
 		return null;
 	}

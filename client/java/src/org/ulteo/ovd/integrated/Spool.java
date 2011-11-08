@@ -36,7 +36,6 @@ import org.apache.log4j.Logger;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
 import org.ulteo.ovd.client.OvdClient;
-import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.utils.FilesOp;
 import org.ulteo.utils.I18n;
 
@@ -165,17 +164,6 @@ public class Spool implements Runnable {
 		org.ulteo.Logger.info("Spool thread stopped");
 	}
 
-	private Application findAppById(long id_) {
-		for (RdpConnectionOvd rc : this.client.getAvailableConnections()) {
-			for (Application app : rc.getAppsList()) {
-				if (app.getId() == id_) {
-					return app;
-				}
-			}
-		}
-		return null;
-	}
-
 	public ApplicationInstance findAppInstanceByToken(long token_) {
 		for (ApplicationInstance ai : this.appInstances) {
 			if (ai.getToken() == token_)
@@ -186,7 +174,7 @@ public class Spool implements Runnable {
 
 	private void startApp(int appId_, String arg_, String token_) {
 		this.logger.info("Start application "+appId_+" with arg '"+arg_+"'(token: "+token_+")");
-		Application app = this.findAppById(appId_);
+		Application app = this.client.findAppById(appId_);
 		if (app == null) {
 			this.logger.error("Can not start application (id: "+appId_+")");
 			return;
