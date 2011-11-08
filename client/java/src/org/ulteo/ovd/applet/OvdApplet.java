@@ -55,7 +55,7 @@ public abstract class OvdApplet extends Applet {
 
 	protected AbstractFocusManager focusManager;
 	protected OvdClient ovd = null;
-	protected Options opts;
+	protected Options opts = new Options();
 	
 	public static final String JS_API_F_SERVER = "serverStatus";
 	public static final String JS_API_O_SERVER_CONNECTED = "connected";
@@ -159,11 +159,12 @@ public abstract class OvdApplet extends Applet {
 				this.focusManager = new AppletFocusManager(appletPrinterThread);
 			}
 			
-			this.opts = new Options();
 			WebClientCommunication webComm = new WebClientCommunication(wc);
-			
-			if (!this.getWebProfile(webComm))
-				System.out.println("Unable to get webProfile");
+			ProfileProperties pproperties = new ProfileWeb().loadProfile(webComm);
+			if (pproperties != null)
+				this.opts.parseProperties(pproperties);
+			else
+				Logger.warn("Unable to get webProfile");
 			
 			_init(properties);
 			this.finished_init = true;
@@ -235,19 +236,6 @@ public abstract class OvdApplet extends Applet {
 			Logger.error(String.format("%s: error while execute %s(%d, %s) => %s",
 					this.getClass(), functionName, instance, status, e.getMessage()));
 		}
-	}
-	
-	public boolean getWebProfile(WebClientCommunication wcc) {
-		ProfileWeb webProfile = new ProfileWeb();
-		ProfileProperties properties;
-		properties = webProfile.loadProfile(wcc);
-		
-		if (properties == null)
-			return false;
-		
-		this.opts.parseProperties(properties);
-		
-		return true;
 	}
 	
 	public void applyConfig(RdpConnectionOvd c) {
