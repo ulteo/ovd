@@ -92,8 +92,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		}
 		
 		this.spool = new Spool(this);
-		this.spool.createIconsDir();
-		this.spool.createShortcutDir();
 		this.system.setShortcutArgumentInstance(this.spool.getInstanceName());
 		this.spool.start();
 	}

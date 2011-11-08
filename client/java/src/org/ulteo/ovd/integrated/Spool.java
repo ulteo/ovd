@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,6 +38,7 @@ import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
 import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.rdp.RdpConnectionOvd;
+import org.ulteo.utils.FilesOp;
 import org.ulteo.utils.I18n;
 
 public class Spool implements Runnable {
@@ -45,73 +47,25 @@ public class Spool implements Runnable {
 
 	private Logger logger = Logger.getLogger(Spool.class);
 	private OvdClient client = null;
-	private File instancesDir = null;
-	private File toLaunchDir = null;
 	private ArrayList<ApplicationInstance> appInstances = null;
 	private String instance = null;
-	private File baseDirectory = null;
 
 	public Spool(OvdClient client_) {
 		this.client = client_;
 		this.appInstances = new ArrayList<ApplicationInstance>();
 		this.instance = this.randomString();
-		this.baseDirectory = new File(Constants.PATH_REMOTE_APPS+Constants.FILE_SEPARATOR+this.instance);
-	}
-
-	public void createIconsDir() {
-		new File(Constants.PATH_ICONS).mkdirs();
-	}
-
-	public void createShortcutDir() {
-		new File(Constants.PATH_SHORTCUTS).mkdirs();
-	}
-
-	public void createTree() {
-		this.instancesDir = new File(this.baseDirectory.getAbsolutePath()+Constants.FILE_SEPARATOR+Constants.DIRNAME_INSTANCES);
-		this.instancesDir.mkdirs();
-
-		this.toLaunchDir = new File(this.baseDirectory.getAbsolutePath()+Constants.FILE_SEPARATOR+Constants.DIRNAME_TO_LAUNCH);
-		this.toLaunchDir.mkdirs();
-	}
-
-	public void delete(File path) throws IOException {
-		if (!path.exists()) throw new IOException("File not found '" + path.getAbsolutePath() + "'");
-
-		if (path.isDirectory()) {
-			File[] children = path.listFiles();
-			for (int i=0; children != null && i<children.length; i++)
-				this.delete(children[i]);
-			if (!path.delete())
-				throw new IOException("Could not delete folder '" + path.getAbsolutePath() + "'");
-		}
-		else if (!path.delete())
-			throw new IOException("Could not delete file '" + path.getAbsolutePath() + "'");
-	}
-
-	public void deleteTree() {
-		File[] toDelete = {this.baseDirectory, new File(Constants.PATH_ICONS), new File(Constants.PATH_SHORTCUTS)};
-		for (File each : toDelete) {
-			if (each.exists()) {
-				try {
-					this.delete(each);
-				} catch (IOException ioe) {
-					this.logger.error(ioe.getMessage());
-				}
-			}
-		}
-	}
-
-	private boolean existTree() {
-		if (this.instancesDir == null || this.toLaunchDir == null) {
-			return false;
-		}
-		return true;
 	}
 
 	public void run() {
-		if (! this.existTree()) {
-			this.createTree();
-		}
+		File baseDirectory = new File(Constants.PATH_REMOTE_APPS + File.pathSeparator + this.instance);
+		File instancesDir = new File(baseDirectory.getPath() + File.pathSeparator + Constants.DIRNAME_INSTANCES);
+		File toLaunchDir = new File(baseDirectory.getPath() + File.pathSeparator + Constants.DIRNAME_TO_LAUNCH);
+		
+		// create Spooler folders
+		File[] toCreateDirs = {instancesDir, toLaunchDir,
+				new File(Constants.PATH_ICONS), new File(Constants.PATH_SHORTCUTS) };
+		for (File f: toCreateDirs)
+			f.mkdirs();
 
 		this.logger.info("Spool thread started");
 
@@ -119,10 +73,7 @@ public class Spool implements Runnable {
 			while (true) {
 				Thread.sleep(100);
 
-				if (this.toLaunchDir == null)
-					continue;
-
-				File[] children = this.toLaunchDir.listFiles();
+				File[] children = toLaunchDir.listFiles();
 				for (File todo : children) {
 					try {
 						int appId = -1;
@@ -151,7 +102,7 @@ public class Spool implements Runnable {
 						this.logger.error("No read file '" + todo.getAbsolutePath() + "'");
 					}
 
-					File instanceFile = new File(this.instancesDir.getAbsolutePath()+Constants.FILE_SEPARATOR+todo.getName());
+					File instanceFile = new File(instancesDir.getAbsolutePath()+Constants.FILE_SEPARATOR+todo.getName());
 					try {
 						instanceFile.createNewFile();
 					} catch (IOException ex) {
@@ -171,8 +122,12 @@ public class Spool implements Runnable {
 		} catch (InterruptedException ex) {
 			this.logger.info("Spool thread stopped");
 		}
+
+		// delete spooler folders
+		File[] toDeleteDirs = {baseDirectory, new File(Constants.PATH_ICONS), new File(Constants.PATH_SHORTCUTS)};
+		for (File dir : toDeleteDirs)
+			FilesOp.deleteDirectory(dir);
 		
-		this.deleteTree();
 	}
 	
 	private Thread spoolThread = null;
@@ -250,17 +205,10 @@ public class Spool implements Runnable {
 	}
 
 	public void destroyInstance(int token) {
-		File instanceFile = new File(this.instancesDir.getAbsolutePath()+Constants.FILE_SEPARATOR+token);
-		if (! instanceFile.exists()) {
-			this.logger.error("Unable to remove instance file ("+this.instancesDir.getAbsolutePath()+Constants.FILE_SEPARATOR+token+") : does not exist");
-			return;
-		}
-		if (! instanceFile.isFile()) {
-			this.logger.error("Unable to remove instance file ("+this.instancesDir.getAbsolutePath()+Constants.FILE_SEPARATOR+token+") : is not a file");
-			return;
-		}
-
-		instanceFile.delete();
+		File instanceFile = new File(Constants.PATH_REMOTE_APPS + File.pathSeparator + this.instance +
+				File.pathSeparator + Constants.DIRNAME_INSTANCES + File.pathSeparator + token);
+		if (! instanceFile.delete())
+			this.logger.error(String.format("Unable to remove instance file (%s)", instanceFile.getPath()));
 	}
 
 	private void doLogoff() {
