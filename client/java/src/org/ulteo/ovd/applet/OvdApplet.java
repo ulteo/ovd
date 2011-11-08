@@ -56,7 +56,6 @@ public abstract class OvdApplet extends Applet {
 	protected AbstractFocusManager focusManager;
 	protected OvdClient ovd = null;
 	protected Options opts;
-	protected String wc = null;
 	
 	public static final String JS_API_F_SERVER = "serverStatus";
 	public static final String JS_API_O_SERVER_CONNECTED = "connected";
@@ -145,6 +144,7 @@ public abstract class OvdApplet extends Applet {
 			this.readParameters();
 			this.keymap = this.getParameterNonEmpty("keymap");
 			this.rdp_input_method = this.getParameter("rdp_input_method");
+			String wc = this.getParameter("wc_url");
 			
 			Properties properties = new Properties(getMode());
 			for (String setting : Protocol.settingsNames) {
@@ -160,7 +160,7 @@ public abstract class OvdApplet extends Applet {
 			}
 			
 			this.opts = new Options();
-			WebClientCommunication webComm = new WebClientCommunication(this.wc);
+			WebClientCommunication webComm = new WebClientCommunication(wc);
 			
 			if (!this.getWebProfile(webComm))
 				System.out.println("Unable to get webProfile");

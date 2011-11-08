@@ -157,8 +157,6 @@ public class Applications extends OvdApplet {
 		String[] address = getParameterNonEmpty("sessionmanager").split(":");
 		this.sm_host = address[0];
 		this.sm_port = Integer.parseInt(address[1]);
-		this.wc = this.getParameter("wc_url");
-		
 		
 		String param = this.getParameter("local_integration");
 		if (param != null && param.equalsIgnoreCase("true"))
