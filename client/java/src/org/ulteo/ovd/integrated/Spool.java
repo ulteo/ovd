@@ -27,8 +27,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
+import java.util.UUID;
+
 import javax.swing.JOptionPane;
 import net.propero.rdp.RdpConnection;
 import org.apache.log4j.Logger;
@@ -51,7 +52,7 @@ public class Spool implements Runnable {
 	public Spool(OvdClient client_) {
 		this.client = client_;
 		this.appInstances = new ArrayList<ApplicationInstance>();
-		this.id = this.randomString();
+		this.id = UUID.randomUUID().toString();
 	}
 
 	public void run() {
@@ -216,18 +217,5 @@ public class Spool implements Runnable {
 
 	public String getID() {
 		return this.id;
-	}
-
-	private String randomString() {
-		String base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		Random randomGenerator = new Random();
-
-		String ret = new String();
-		for (int i = 0; i < 5; i++){
-			int r = randomGenerator.nextInt(base.length());
-			ret+= (new Integer(r)).toString();
-		}
-
-		return ret;
 	}
 }
