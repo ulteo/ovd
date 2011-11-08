@@ -171,8 +171,7 @@ public class Spool implements Runnable {
 		return null;
 	}
 
-	@SuppressWarnings("unused")
-	private ApplicationInstance findAppInstanceByToken(long token_) {
+	public ApplicationInstance findAppInstanceByToken(long token_) {
 		for (ApplicationInstance ai : this.appInstances) {
 			if (ai.getToken() == token_)
 				return ai;
@@ -223,10 +222,6 @@ public class Spool implements Runnable {
 				this.logger.error(ex);
 			}
 		}
-	}
-
-	public ArrayList<ApplicationInstance> getAppInstance() {
-		return this.appInstances;
 	}
 
 	public String getInstanceName() {

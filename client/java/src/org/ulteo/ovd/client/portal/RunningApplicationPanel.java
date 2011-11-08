@@ -127,11 +127,7 @@ public class RunningApplicationPanel extends JPanel implements OvdAppListener {
 			if (ai.getToken() == token)
 				return ai;
 		}
-		for (ApplicationInstance ai : this.spool.getAppInstance()) {
-			if (ai.getToken() == token)
-				return ai;
-		}
-		return null;
+		return this.spool.findAppInstanceByToken(token);
 	}
 	
 	public void ovdInited(OvdAppChannel o) {}
