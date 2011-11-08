@@ -30,8 +30,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
-import net.propero.rdp.RdesktopException;
-import net.propero.rdp.crypto.CryptoException;
 import net.propero.rdp.RdpConnection;
 import org.apache.log4j.Logger;
 import org.ulteo.gui.GUIActions;
@@ -114,7 +112,13 @@ public class Spool implements Runnable {
 					}
 
 					if (todo.getName().equals("quit")) {
-						this.doLogoff();
+						for (RdpConnection rc : this.client.getAvailableConnections()) {
+							try {
+								rc.getSeamlessChannel().send_spawn("logoff");
+							} catch (Exception e) {
+								this.logger.error(e);
+							}
+						}
 						return;
 					}
 				}
@@ -208,20 +212,6 @@ public class Spool implements Runnable {
 				File.pathSeparator + Constants.DIRNAME_INSTANCES + File.pathSeparator + token);
 		if (! instanceFile.delete())
 			this.logger.error(String.format("Unable to remove instance file (%s)", instanceFile.getPath()));
-	}
-
-	private void doLogoff() {
-		for (RdpConnection rc : this.client.getAvailableConnections()) {
-			try {
-				rc.getSeamlessChannel().send_spawn("logoff");
-			} catch (RdesktopException ex) {
-				this.logger.error(ex);
-			} catch (IOException ex) {
-				this.logger.error(ex);
-			} catch (CryptoException ex) {
-				this.logger.error(ex);
-			}
-		}
 	}
 
 	public String getInstanceName() {
