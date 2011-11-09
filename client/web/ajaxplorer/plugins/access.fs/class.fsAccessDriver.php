@@ -1028,6 +1028,9 @@ class fsAccessDriver extends AbstractAccessDriver
 	
 	function date_modif($file)
 	{
+		if ($this->isDir($file))
+			$file.= "/";
+		
 		$tmp = @filemtime($file) or 0;
 		return $tmp;// date("d,m L Y H:i:s",$tmp);
 	}
