@@ -26,23 +26,23 @@ from ovd_shells.Drives import Drives as AbstractDrives
 
 
 class Drives(AbstractDrives):
-        mtabPath = "/etc/mtab"
-        acceptedType = ["cifs", "nfs"]
-
-
-        @staticmethod
-        def getDrivesList():
-                mtab = []
-                userID = os.getuid()
-
-                f = open(Drives.mtabPath, 'r')
-                for l in f.readlines():
-                        cols = l.split(" ")
-                        if cols[2] not in Drives.acceptedType:
-                                continue
-                        fs_info = os.stat(cols[1])
-                        if fs_info.st_uid == userID:
-                                mtab.append(cols[1])
-                return mtab
+	mtabPath = "/etc/mtab"
+	acceptedType = ["cifs", "nfs"]
+	
+	
+	@staticmethod
+	def getDrivesList():
+		mtab = []
+		userID = os.getuid()
+		
+		f = open(Drives.mtabPath, 'r')
+		for l in f.readlines():
+			cols = l.split(" ")
+			if cols[2] not in Drives.acceptedType:
+				continue
+			fs_info = os.stat(cols[1])
+			if fs_info.st_uid == userID:
+				mtab.append(cols[1])
+		return mtab
 
 
