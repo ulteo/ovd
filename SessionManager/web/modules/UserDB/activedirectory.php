@@ -2,7 +2,8 @@
 /**
  * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +20,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
+
+define('AD_LDAP_ERROR_PASSWORD_EXPIRED',     0x532);
+define('AD_LDAP_ERROR_PASSWORD_MUST_CHANGE', 0x773);
+
 
 class UserDB_activedirectory  extends UserDB_ldap{
 	public $config_ad;
@@ -43,6 +48,13 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		
 		$LDAP2 = new LDAP($conf_ldap2);
 		$a = $LDAP2->connect();
+		if ($a == false) {
+			if ($this->checkLDAPReturnedExpiredPasswordError($LDAP2)) {
+				Logger::info('main','USERDB::activedirectory::authenticate '.$user_->getAttribute('login').' expired password');
+				if ($this->config_ad['accept_expired_password'] == 1)
+					$a = true;
+			}
+		}
 		$LDAP2->disconnect();
 		if ($a == false)
 			Logger::debug('main','USERDB::activedirectory::authenticate \''.$user_->getAttribute('login').'\' is not authenticate');
@@ -98,6 +110,9 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		$c = new ConfigElement_password('password', _('Administrator password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'), NULL);
 		$ret []= $c;
 		$c = new ConfigElement_dictionary('match', _('match'), _('match'), _('match'), array());
+		$ret []= $c;
+		$c = new ConfigElement_select('accept_expired_password', _('Accept expired password'), _('Authorize user connection even if password has expired in order to the Windows server perform the password renew process'), _('Authorize user connection even if password has expired in order to the Windows server perform the password renew process'), 0);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$ret []= $c;
 		return $ret;
 	}
@@ -168,6 +183,23 @@ class UserDB_activedirectory  extends UserDB_ldap{
 	}
 	
 	public static function enable() {
+		return true;
+	}
+	
+	function checkLDAPReturnedExpiredPasswordError($ldap_) {
+		Logger::debug('main','UserDB::activedirectory::checkLDAPReturnedExpiredPasswordError');
+		$errno = $ldap_->errno();
+		if ($errno != LDAP_INVALID_CREDENTIALS)
+			return false;
+		
+		$error_string = $ldap_->error_string();
+		$ret = preg_match('/80090308: LdapErr:.*data (\w+).*/', $error_string, $matches);
+		if ($ret == 0)
+			return false;
+		
+		if (! in_array(hexdec($matches[1]), array(AD_LDAP_ERROR_PASSWORD_EXPIRED, AD_LDAP_ERROR_PASSWORD_MUST_CHANGE)))
+			return false;
+		
 		return true;
 	}
 }
