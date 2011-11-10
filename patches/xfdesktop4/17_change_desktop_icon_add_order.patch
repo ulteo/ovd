@@ -1,0 +1,38 @@
+--- a/src/xfdesktop-file-icon-manager.c	2011-11-10 11:38:59.000000000 +0100
++++ b/src/xfdesktop-file-icon-manager.c	2011-11-10 11:43:33.000000000 +0100
+@@ -2381,6 +2381,9 @@
+     /* clear out anything left in the icon view */
+     xfdesktop_icon_view_remove_all(fmanager->priv->icon_view);
+     
++    /* reload launchers */
++    xfdesktop_file_icon_manager_set_launchers(fmanager);
++    
+     /* add back the special icons */
+     for(i = 0; i <= XFDESKTOP_SPECIAL_FILE_ICON_TRASH; ++i) {
+         if(fmanager->priv->show_special[i])
+@@ -2391,9 +2394,6 @@
+     if(fmanager->priv->show_removable_media)
+         xfdesktop_file_icon_manager_load_removable_media(fmanager);
+     
+-    /* reload launchers */
+-    xfdesktop_file_icon_manager_set_launchers(fmanager);
+-
+     /* reload and add ~/Desktop/ */
+     xfdesktop_file_icon_manager_load_desktop_folder(fmanager);
+ }
+@@ -3005,13 +3005,14 @@
+     if(!xfdesktop_file_utils_dbus_init())
+         g_warning("Unable to initialise D-Bus.  Some xfdesktop features may be unavailable.");
+     
++    xfdesktop_file_icon_manager_set_launchers(fmanager);
++    
+     for(i = 0; i <= XFDESKTOP_SPECIAL_FILE_ICON_TRASH; ++i) {
+         if(fmanager->priv->show_special[i])
+             xfdesktop_file_icon_manager_add_special_file_icon(fmanager, i, NULL);
+     }
+     if(fmanager->priv->show_removable_media)
+         xfdesktop_file_icon_manager_load_removable_media(fmanager);
+-    xfdesktop_file_icon_manager_set_launchers(fmanager);
+     xfdesktop_file_icon_manager_load_desktop_folder(fmanager);
+ 
+ #ifdef HAVE_THUNARX
