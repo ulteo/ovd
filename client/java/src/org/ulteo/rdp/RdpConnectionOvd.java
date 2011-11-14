@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -99,6 +100,16 @@ public class RdpConnectionOvd extends RdpConnection {
 		this.appsList = new ArrayList<Application>();
 		this.mapFile = LayoutDetector.get();
 		this.detectKeymap();
+	}
+	
+	@Override
+	public String toString() {
+		if (this.opt.socketFactory != null && this.opt.socketFactory instanceof TCPSSLSocketFactory) {
+			TCPSSLSocketFactory s = (TCPSSLSocketFactory)this.opt.socketFactory;
+			return s.getHost()+":"+s.getPort();
+		}
+		
+		return super.toString();
 	}
 
 	/**

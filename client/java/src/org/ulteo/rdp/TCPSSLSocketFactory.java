@@ -2,6 +2,7 @@
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -79,5 +80,13 @@ public class TCPSSLSocketFactory implements SocketFactory {
 			throw new RdesktopException("Creating SSL context failed:" + e.getMessage());
 		}
 		return rdpsock;
+	}
+	
+	public String getHost() {
+		return this.host;
+	}
+	
+	public int getPort() {
+		return this.port;
 	}
 }
