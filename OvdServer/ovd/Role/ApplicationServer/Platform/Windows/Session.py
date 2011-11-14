@@ -109,7 +109,14 @@ class Session(AbstractSession):
 		if os.path.exists(dstFile):
 			os.remove(dstFile)
 		
-		win32file.CopyFile(shortcut, dstFile, True)
+		try:
+			win32file.CopyFile(shortcut, dstFile, True)
+		except pywintypes.error, err:
+			if err[0] == 5: # Access is denied
+				Logger.error("Session::Windows::install_shortcut Access is denied on copy of '%s' to '%s'"%(shortcut, dstFile))
+			else:
+				# other error
+				Logger.error("Session::Windows::install_shortcut error on copy of '%s' to '%s', wintypes error %s"%(shortcut, dstFile, err[0]))
 		
 		if self.parameters.has_key("desktop_icons") and self.parameters["desktop_icons"] == "1":
 			if self.profile is not None and self.profile.mountPoint is not None:
