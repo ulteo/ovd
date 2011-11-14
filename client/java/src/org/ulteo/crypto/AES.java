@@ -20,30 +20,29 @@
 
 package org.ulteo.crypto;
 
-import java.security.InvalidKeyException;
+import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import org.ulteo.Logger;
 
 public class AES implements SymmetricCryptography {
 
-	private static final byte[] key = {
+	public static final byte[] default_key = {
 		(byte) 0xd9, (byte) 0x61, (byte) 0x84, (byte) 0xf6,
 		(byte) 0x40, (byte) 0xa5, (byte) 0x6f, (byte) 0xba,
 		(byte) 0x22, (byte) 0x2e, (byte) 0xfb, (byte) 0x40,
 		(byte) 0x14, (byte) 0x76, (byte) 0xcd, (byte) 0x6f
 	};
 	
-	public AES() {
+	private SecretKeySpec skey;
+	
+	public AES(byte[] skey) {
+		this.skey = new SecretKeySpec(skey, "AES");
 	}
-
-	public byte[] generateKey() {
+	
+	public static byte[] generateKey() {
 		KeyGenerator kgen;
 		try {
 			kgen = KeyGenerator.getInstance("AES");
@@ -53,81 +52,20 @@ public class AES implements SymmetricCryptography {
 		}
 		// The big keys may not be available (> 128 bits)
 		kgen.init(128);
-
-		SecretKey skey = kgen.generateKey();
-		return skey.getEncoded();
+		return kgen.generateKey().getEncoded();
 	}
 
-	public byte[] encrypt(byte[] data) {
-		byte[] output = null;
-		SecretKeySpec keySpec = null;
-		Cipher cipher = null;
-
-		keySpec = new SecretKeySpec(AES.key, "AES");
-
-		try {
-			cipher = Cipher.getInstance("AES");
-		} catch (NoSuchAlgorithmException ex) {
-			Logger.error("AES algorithm is not supported: "+ex.getMessage());
-			return null;
-		} catch (NoSuchPaddingException ex) {
-			Logger.error("Padding mechanism is not supported: "+ex.getMessage());
-			return null;
-		}
-
-		try {
-			cipher.init(Cipher.ENCRYPT_MODE, keySpec);
-		} catch (InvalidKeyException ex) {
-			Logger.error("AES key is invalid: "+ex.getMessage());
-			return null;
-		}
-
-		try {
-			output = cipher.doFinal(data);
-		} catch (IllegalBlockSizeException ex) {
-			Logger.error("The length of data provided to a block cipher is incorrect: "+ex.getMessage());
-			return null;
-		} catch (BadPaddingException ex) {
-			Logger.error("Data is not padded properly: "+ex.getMessage());
-			return null;
-		}
-		return output;
+	@Override
+	public byte[] encrypt(byte[] data) throws GeneralSecurityException {
+		Cipher cipher = Cipher.getInstance("AES");
+		cipher.init(Cipher.ENCRYPT_MODE, this.skey);
+		return cipher.doFinal(data);
 	}
 
-	public byte[] decrypt(byte[] data) {
-		byte[] output = null;
-		SecretKeySpec keySpec = null;
-		Cipher cipher = null;
-
-		keySpec = new SecretKeySpec(AES.key, "AES");
-
-		try {
-			cipher = Cipher.getInstance("AES");
-		} catch (NoSuchAlgorithmException ex) {
-			Logger.error("AES algorithm is not supported: "+ex.getMessage());
-			return null;
-		} catch (NoSuchPaddingException ex) {
-			Logger.error("Padding mechanism is not supported: "+ex.getMessage());
-			return null;
-		}
-
-		try {
-			cipher.init(Cipher.DECRYPT_MODE, keySpec);
-		} catch (InvalidKeyException ex) {
-			Logger.error("AES key is invalid: "+ex.getMessage());
-			return null;
-		}
-
-		try {
-			output = cipher.doFinal(data);
-		} catch (IllegalBlockSizeException ex) {
-			Logger.error("The length of data provided to a block cipher is incorrect: "+ex.getMessage());
-			return null;
-		} catch (BadPaddingException ex) {
-			Logger.error("Data is not padded properly: "+ex.getMessage());
-			return null;
-		}
-
-		return output;
+	@Override
+	public byte[] decrypt(byte[] data) throws GeneralSecurityException {
+		Cipher  cipher = Cipher.getInstance("AES");
+		cipher.init(Cipher.DECRYPT_MODE, this.skey);
+		return cipher.doFinal(data);
 	}
 }

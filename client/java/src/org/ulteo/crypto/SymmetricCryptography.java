@@ -19,11 +19,11 @@
  */
 package org.ulteo.crypto;
 
+import java.security.GeneralSecurityException;
+
 public interface SymmetricCryptography {
 
-	public byte[] generateKey();
+	public byte[] encrypt(byte[] data) throws GeneralSecurityException;
 
-	public byte[] encrypt(byte[] data);
-
-	public byte[] decrypt(byte[] data);
+	public byte[] decrypt(byte[] data) throws GeneralSecurityException;
 }
