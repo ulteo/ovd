@@ -332,8 +332,14 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 		if (opts.autostart) {
-			if (((opts.username == null || opts.password == null) && !opts.nltm) || opts.host == null) {
-				org.ulteo.Logger.error("You must specify the server (-s) and your credentials (-u, -p or --ntlm)");
+			opts.guiLocked = true;
+			
+			if (opts.host == null) {
+				org.ulteo.Logger.error("No server specified");
+				NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
+			}
+			if (! opts.nltm && opts.username == null) {
+				org.ulteo.Logger.error("No username specified");
 				NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 			}
 
@@ -564,7 +570,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.isCancelled = false;
 
 		try {
-			if (! this.opts.autostart) {
+			if (this.authFrame != null) {
 				this.getFormValuesFromGui();
 				this.getBackupEntries();
 				this.authFrame.hideWindow();
@@ -584,7 +590,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				this.disableLoadingMode();
 			}
 			
-			if (exit || this.opts.autostart) {
+			if (exit) {
 				this.continueMainThread = false;
 			} else {
 				this.initAuthFrame();
@@ -592,7 +598,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		} catch (IllegalArgumentException ex) {
 			org.ulteo.Logger.warn(ex.getMessage());
 			SwingTools.invokeLater(GUIActions.createDialog(I18n._(ex.getMessage()), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
-			if(! this.opts.autostart)
+			if (this.authFrame != null)
 				this.authFrame.reset();
 		}
 		this.thread = null;
@@ -658,46 +664,48 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 	public void getFormValuesFromGui() throws IllegalArgumentException {
 		this.opts.username = this.authFrame.getLogin().getText();
-		
-		URI u = null;
-		try {
-			u = new URI("http://"+this.authFrame.getServer().getText());
-		}
-		catch( Exception err) {
-			throw new IllegalArgumentException(I18n._("Invalid host field!"));
-		}
-		
-		if (u.getHost() == null)
-			throw new IllegalArgumentException(I18n._("Invalid host field!"));
-		
-		this.opts.host = u.getHost();
-		this.opts.port = SessionManagerCommunication.DEFAULT_PORT;
-		if (u.getPort() != -1)
-			this.opts.port = u.getPort();
-			
-		this.opts.sessionMode =  Properties.MODE_ANY;
-		if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeApplication())
-			this.opts.sessionMode = Properties.MODE_REMOTEAPPS;
-		else if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeDesktop())
-			this.opts.sessionMode = Properties.MODE_DESKTOP;
-				
-		this.opts.geometry = this.authFrame.getResolution();
-		if (this.opts.geometry == null) {
-			org.ulteo.Logger.error("No resolution selected: will select the default resolution");
-			this.opts.geometry = DesktopFrame.DEFAULT_RES;
-		}
-		
-		this.opts.nltm = this.authFrame.isUseLocalCredentials();
 
-		this.opts.autopublish = this.authFrame.isAutoPublishChecked();
-		
-		this.opts.lang = Language.languageList[this.authFrame.getLanguageBox().getSelectedIndex()][2];
-		if (Language.languageList[this.authFrame.getLanguageBox().getSelectedIndex()].length > 3)
-			this.opts.lang+= "_"+Language.languageList[this.authFrame.getLanguageBox().getSelectedIndex()][3].toUpperCase();
-		this.opts.keymap = this.authFrame.getKeymap();
-			
 		this.opts.password = new String(this.authFrame.getPassword().getPassword());
 		this.authFrame.getPassword().setText("");
+
+		if (! this.opts.guiLocked) {
+			URI u = null;
+			try {
+				u = new URI("http://"+this.authFrame.getServer().getText());
+			}
+			catch( Exception err) {
+				throw new IllegalArgumentException(I18n._("Invalid host field!"));
+			}
+
+			if (u.getHost() == null)
+				throw new IllegalArgumentException(I18n._("Invalid host field!"));
+
+			this.opts.host = u.getHost();
+			this.opts.port = SessionManagerCommunication.DEFAULT_PORT;
+			if (u.getPort() != -1)
+				this.opts.port = u.getPort();
+
+			this.opts.sessionMode =  Properties.MODE_ANY;
+			if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeApplication())
+				this.opts.sessionMode = Properties.MODE_REMOTEAPPS;
+			else if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeDesktop())
+				this.opts.sessionMode = Properties.MODE_DESKTOP;
+
+			this.opts.geometry = this.authFrame.getResolution();
+			if (this.opts.geometry == null) {
+				org.ulteo.Logger.error("No resolution selected: will select the default resolution");
+				this.opts.geometry = DesktopFrame.DEFAULT_RES;
+			}
+
+			this.opts.nltm = this.authFrame.isUseLocalCredentials();
+
+			this.opts.autopublish = this.authFrame.isAutoPublishChecked();
+
+			this.opts.lang = Language.languageList[this.authFrame.getLanguageBox().getSelectedIndex()][2];
+			if (Language.languageList[this.authFrame.getLanguageBox().getSelectedIndex()].length > 3)
+				this.opts.lang+= "_"+Language.languageList[this.authFrame.getLanguageBox().getSelectedIndex()][3].toUpperCase();
+			this.opts.keymap = this.authFrame.getKeymap();
+		}
 		
 		if (this.opts.host.equals("")) {
 			throw new IllegalArgumentException(I18n._("You must specify the host field!"));
@@ -732,8 +740,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 		// Start OVD session
 		SessionManagerCommunication dialog = new SessionManagerCommunication(this.opts.host, this.opts.port, true);
-		if (! this.opts.autostart)
-			dialog.addCallbackListener(this);
+		dialog.addCallbackListener(this);
 
 		this.updateProgress(LoadingStatus.SM_CONNECTION, 0);
 		Properties request = new Properties(this.opts.sessionMode);
