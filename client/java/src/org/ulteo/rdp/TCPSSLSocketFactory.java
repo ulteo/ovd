@@ -83,7 +83,7 @@ public class TCPSSLSocketFactory implements SocketFactory {
 	}
 	
 	public String getHost() {
-		return this.host;
+		return this.host.getHostAddress();
 	}
 	
 	public int getPort() {
