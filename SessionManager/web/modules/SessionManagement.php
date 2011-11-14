@@ -434,7 +434,7 @@ abstract class SessionManagement extends Module {
 						if (count($sharedfolders) > 0) {
 							foreach ($sharedfolders as $sharedfolder) {
 								$fileserver = Abstract_Server::load($sharedfolder->server);
-								if (! $fileserver || ! $fileserver->isOnline()) {
+								if (! $fileserver || ! $fileserver->isOnline() || $fileserver->getAttribute('locked')) {
 									Logger::warning('main', 'SessionManagement::buildServersList - Server "'.$sharedfolder->server.'" for SharedFolder "'.$sharedfolder->id.'" is not available');
 
 									if (! $start_without_all_sharedfolders) {
