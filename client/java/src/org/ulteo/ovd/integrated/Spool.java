@@ -56,9 +56,9 @@ public class Spool extends Thread {
 
 	@Override
 	public void run() {
-		File baseDirectory = new File(Constants.PATH_REMOTE_APPS + File.pathSeparator + this.id);
-		File instancesDir = new File(baseDirectory.getPath() + File.pathSeparator + Constants.DIRNAME_INSTANCES);
-		File toLaunchDir = new File(baseDirectory.getPath() + File.pathSeparator + Constants.DIRNAME_TO_LAUNCH);
+		File baseDirectory = new File(Constants.PATH_REMOTE_APPS + File.separator + this.id);
+		File instancesDir = new File(baseDirectory.getPath() + File.separator + Constants.DIRNAME_INSTANCES);
+		File toLaunchDir = new File(baseDirectory.getPath() + File.separator + Constants.DIRNAME_TO_LAUNCH);
 		
 		// create Spooler folders
 		File[] toCreateDirs = {instancesDir, toLaunchDir,
