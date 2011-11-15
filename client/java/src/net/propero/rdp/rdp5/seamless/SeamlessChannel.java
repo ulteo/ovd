@@ -921,7 +921,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	
 	public void send_zchange(int id, int below, int flags) throws RdesktopException, IOException, CryptoException
 	{
-		seamless_send("STATE", 
+		seamless_send("ZCHANGE",
 				"0x" + Integer.toHexString(id) + "," + 
 				"0x" + Integer.toHexString(below) + "," + 
 				"0x" + Integer.toHexString(flags));
