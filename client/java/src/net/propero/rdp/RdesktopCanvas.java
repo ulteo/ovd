@@ -1313,13 +1313,84 @@ public abstract class RdesktopCanvas extends Canvas {
      */
     public Cursor createCursor(int x, int y, int w, int h, byte[] andmask,
             byte[] xormask, int cache_idx, int bpp) {
+        int size = w * h;
+        Point p = new Point(x, y);        
+        int[] cursor = new int[size];
+
+        if (bpp == 32) {
+            getCursor32(cursor, xormask, andmask, w, h, bpp);
+        } else {
+            getCursorClassic(cursor, xormask, andmask, w, h, bpp);
+        }
+
+        Image wincursor = this.createImage(new MemoryImageSource(w, h, cursor,
+                0, w));
+        return createCustomCursor(wincursor, p, "", cache_idx);
+    }
+
+    /**
+     * Get the next 24 bits cursor pixel from data in 32 bits
+     * @param data 
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param bpp
+     * @return pixel
+     */
+    int getPixel24From32(byte[] data, int x, int y, int w, int h, int bpp) {
+        int alpha;
+        int red;
+        int green;
+        int blue;
+        int index = 0;
+        
+        
+        // Java do not support alpha layer with more than 1 bits
+        index = (y * w + x) * 4;
+        alpha = data[index + 3] ;
+        blue = (1 - alpha) | (data[index] & alpha);
+        green = (1 - alpha) | (data[index + 1] & alpha);
+        red = (1 - alpha) | (data[index + 2] & alpha);
+
+        if (alpha != 0)
+            alpha = 1;
+        
+        return (alpha&0xff)<<24 | (blue&0xff)<< 16 | (green&0xff) << 8 | (red&0xff); 
+    }
+
+    /**
+     * Get 32 bits cursor data
+     * @param data
+     * @param xormask
+     * @param andmask
+     * @param width
+     * @param height
+     * @param bpp
+     */
+    void getCursor32(int[] data, byte[] xormask, byte[] andmask, int width, int height, int bpp) {
+        for (int j = 0; j < height; j++) {
+            for (int i = 0; i < width; i++) {
+                data[j * width + i] = getPixel24From32(xormask, i, (height - 1 - j), width, height, bpp);
+            }
+        }
+    }
+    
+    /**
+     * get old style cursor 
+     * @param cursor
+     * @param xormask
+     * @param andmask
+     * @param width
+     * @param height
+     * @param bpp
+     */
+    void getCursorClassic(int[] cursor, byte[] xormask, byte[] andmask, int w, int h, int bpp) {
         int pxormask = 0;
         int pandmask = 0;
-        Point p = new Point(x, y);        
         int size = w * h;
         int offset = 0;
         byte[] mask = new byte[size];
-        int[] cursor = new int[size];
         int pcursor = 0;
         int pmask = 0;
         int k[] = new int[1];
@@ -1370,10 +1441,6 @@ public abstract class RdesktopCanvas extends Canvas {
             }
             offset += delta;
         }
-
-        Image wincursor = this.createImage(new MemoryImageSource(w, h, cursor,
-                0, w));
-        return createCustomCursor(wincursor, p, "", cache_idx);
     }
 
     /**
