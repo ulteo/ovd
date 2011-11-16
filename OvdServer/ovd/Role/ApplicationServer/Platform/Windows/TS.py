@@ -28,6 +28,7 @@ import win32security
 import win32ts
 
 from ovd.Logger import Logger
+from ovd.Role.ApplicationServer.Config import Config
 from ovd.Role.ApplicationServer.TS import TS as AbstractTS
 
 
@@ -86,10 +87,11 @@ class TS(AbstractTS):
 					Logger.debug("Ts session %d is not from the local user %s but from a domain user"%(session["SessionId"], username_))
 					continue
 				
-				shell = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSInitialProgram)
-				if not os.path.basename(shell).lower().startswith("ovd"):
-					Logger.debug("Ts session %d is not relative to OVD"%(session["SessionId"]))
-					continue
+				if Config.checkShell:
+					shell = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSInitialProgram)
+					if not os.path.basename(shell).lower().startswith("ovd"):
+						Logger.debug("Ts session %d is not relative to OVD"%(session["SessionId"]))
+						continue
 				
 			except pywintypes.error, err:
 				if err[0] == 7007: # A close operation is pending on the session.
@@ -123,11 +125,12 @@ class TS(AbstractTS):
 					if domain.lower() != domain_.lower():
 						Logger.debug("Ts session %d is not from the user %s but from a AD user"%(session["SessionId"], username_))
 						continue
-					
-					shell = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSInitialProgram)
-					if not os.path.basename(shell).lower().startswith("ovd"):
-						Logger.debug("Ts session %d is not relative to OVD"%(session["SessionId"]))
-						continue
+
+					if Config.checkShell:
+						shell = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSInitialProgram)
+						if not os.path.basename(shell).lower().startswith("ovd"):
+							Logger.debug("Ts session %d is not relative to OVD"%(session["SessionId"]))
+							continue
 					
 				except pywintypes.error, err:
 					if err[0] == 7007: # A close operation is pending on the session.
