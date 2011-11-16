@@ -289,6 +289,15 @@ function onStartSessionSuccess(xml_) {
 		}
 
 		daemon.prepare();
+		if (! daemon.parse_list_servers(xml)) {
+			try {
+				showError(i18n.get('internal_error'));
+			} catch(e) {}
+			
+			enableLogin();
+			return false;
+		}
+		
 		daemon.loop();
 	}, 2500);
 
@@ -1053,6 +1062,15 @@ function onStartExternalSessionSuccess(xml_) {
 		daemon.i18n['resume'] = i18n.get('resume');
 
 		daemon.prepare();
+		if (! daemon.parse_list_servers(xml)) {
+			try {
+				showError(i18n.get('internal_error'));
+			} catch(e) {}
+			
+			enableLogin();
+			return false;
+		}
+		
 		daemon.loop();
 	}, 2500);
 

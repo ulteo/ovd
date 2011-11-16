@@ -333,7 +333,7 @@ var Daemon = Class.create({
 
 			this.push_log('info', '[daemon] check_status_post() - Now preparing session');
 
-			this.list_servers();
+			this.ready = true;
 		} else if (! this.is_started()) {
 			if (this.started_lock) {
 				this.push_log('debug', '[daemon] check_status_post() - Already in "is_started" state');
@@ -388,22 +388,6 @@ var Daemon = Class.create({
 		this.push_log('debug', '[daemon] parse_do_started(transport@do_started())');
 
 		this.started = true;
-	},
-
-	list_servers: function() {
-		this.push_log('debug', '[daemon] list_servers()');
-
-		new Ajax.Request(
-			'servers.php',
-			{
-				method: 'post',
-				parameters: {
-					requested_host: window.location.hostname,
-					requested_port: ((window.location.port !=  '')?window.location.port:'443')
-				},
-				onSuccess: this.parse_list_servers.bind(this)
-			}
-		);
 	},
 
 	do_ended: function() {

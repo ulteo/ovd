@@ -116,16 +116,14 @@ var Applications = Class.create(Daemon, {
 		return true;
 	},
 
-	parse_list_servers: function(transport) {
+	parse_list_servers: function(xml) {
 		this.push_log('debug', '[applications] parse_list_servers(transport@list_servers())');
-
-		var xml = transport.responseXML;
 
 		var sessionNode = xml.getElementsByTagName('session');
 
 		if (sessionNode.length != 1) {
 			this.push_log('error', '[applications] parse_list_servers(transport@list_servers()) - Invalid XML (No "session" node)');
-			return;
+			return false;
 		}
 
 		var serverNodes = xml.getElementsByTagName('server');
@@ -167,16 +165,16 @@ var Applications = Class.create(Daemon, {
 						this.liaison_server_applications.get(server.id).push(application.id);
 					} catch(e) {
 						this.push_log('error', '[applications] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "application" node '+j+')');
-						return;
+						return false;
 					}
 				}
 			} catch(e) {
 				this.push_log('error', '[applications] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "server" node '+i+')');
-				return;
+				return false;
 			}
 		}
 
-		this.ready = true;
+		return true;
 	},
 
 	list_running_apps: function(applicationsNode_) {

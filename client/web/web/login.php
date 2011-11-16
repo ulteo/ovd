@@ -300,6 +300,30 @@ if (! is_object($session_node)) {
 	die();
 }
 $session_node->setAttribute('sessionmanager', $_SESSION['ovd-client']['sessionmanager_host']);
+
+$server_nodes = $session_node->getElementsByTagName('server');
+foreach ($server_nodes as $server_node) {
+	$port = 3389;
+	
+	if ($_SESSION['ovd-client']['gateway'] === true) {
+		if ($_SESSION['ovd-client']['gateway_first'] === true) {
+			$host = $_POST['requested_host'];
+			$port = $_POST['requested_port'];
+		}
+		else {
+			$url = 'http://'.$_SESSION['ovd-client']['sessionmanager_host'];
+			$host = parse_url($url, PHP_URL_HOST);
+			$port = parse_url($url, PHP_URL_PORT);
+			if (is_null($port))
+				$port = 443;
+		}
+		$server_node->setAttribute('fqdn', $host);
+	}
+	
+	$server_node->setAttribute('port', $port);
+}
+
+
 $_SESSION['ovd-client']['session_id'] = $session_node->getAttribute('id');
 $_SESSION['ovd-client']['session_mode'] = $session_node->getAttribute('mode');
 $_SESSION['ovd-client']['session_language'] = $_POST['language'];

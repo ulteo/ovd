@@ -88,16 +88,14 @@ var Desktop = Class.create(Daemon, {
 		}
 	},
 
-	parse_list_servers: function(transport) {
+	parse_list_servers: function(xml) {
 		this.push_log('debug', '[desktop] parse_list_servers(transport@list_servers())');
-
-		var xml = transport.responseXML;
 
 		var sessionNode = xml.getElementsByTagName('session');
 
 		if (sessionNode.length != 1) {
 			this.push_log('error', '[desktop] parse_list_servers(transport@list_servers()) - Invalid XML (No "session" node)');
-			return;
+			return false;
 		}
 
 		var serverNodes = xml.getElementsByTagName('server');
@@ -125,10 +123,10 @@ var Desktop = Class.create(Daemon, {
 				this.liaison_server_applications.set(server.id, new Array());
 			} catch(e) {
 				this.push_log('error', '[desktop] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "server" node '+i+')');
-				return;
+				return false;
 			}
 		}
 
-		this.ready = true;
+		return true;
 	}
 });
