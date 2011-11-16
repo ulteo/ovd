@@ -128,7 +128,7 @@ public class Options {
 	}
 
 	
-	public boolean getIniProfile() {
+	public boolean getRegistryProfile() {
 		ProfileRegistry registry = new ProfileRegistry();
 		ProfileProperties properties;
 		try {

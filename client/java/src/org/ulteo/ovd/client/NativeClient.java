@@ -320,7 +320,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				org.ulteo.Logger.warn("The configuration file \""+opts.profile+"\" does not exist.");
 		}
 		else if (opts.getFlag(Options.FLAG_PROFILE_REG)) {
-			if (! opts.getIniProfile())
+			if (! opts.getRegistryProfile())
 				org.ulteo.Logger.warn("No available configuration from registry");
 		}
 		else {
