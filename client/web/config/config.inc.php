@@ -66,3 +66,11 @@ define('DEBUG_MODE', 0);
 // Perform desktop integration in portal sessions
 //   publish destkop and start menu icons, mime type association, ...
 // define('PORTAL_LOCAL_INTEGRATION', true); // default is false
+
+
+// Gateway port
+//   the port to use to contact the Gateway server in 'gateway_first' mode
+//   usefull if the port used by the client to connect to the Gateway is different 
+//    from the port binded by the Gateway (nat redirection)
+//   default is to use the same port as the client connection
+// define('GATEWAY_FORCE_PORT', 443);
