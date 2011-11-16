@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author David Lechevalier <david@ulteo.com> 2010-2011
+ * Author David LECHEVALIER <david@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -49,9 +49,13 @@ public class OVDJob{
 	private String pdfFilename = null;
 	private String printerName = null;
 
-	public OVDJob(String pdfFilename, String printerName) {
+	public OVDJob(String pdfFilename, String printerName, boolean externalMode) {
 		this.printerName = printerName;
 		this.pdfFilename = pdfFilename;
+		
+		if (externalMode)
+			return;
+		
 		if (this.printerName != null && ! this.printerName.equals(OVDPrinterThread.filePrinterName))
 			return;
 		
@@ -190,7 +194,7 @@ public class OVDJob{
 		}
 		System.out.println("Try to print the file ["+pdfFile.getPath()+"]");
 		try{
-			OVDJob printer = new OVDJob(args[0], null);
+			OVDJob printer = new OVDJob(args[0], null, true);
 			printer.print();
 		}
 		catch(Exception e) {

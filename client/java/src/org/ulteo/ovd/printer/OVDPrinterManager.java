@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author David Lechevalier <david@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -24,6 +24,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Timer;
 
 import javax.print.DocFlavor;
 import javax.print.PrintService;
@@ -33,11 +34,11 @@ import javax.print.attribute.PrintRequestAttributeSet;
 
 import net.propero.rdp.rdp5.rdpdr.Printer;
 import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
-import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
 
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
+import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 
 
 
@@ -46,21 +47,42 @@ public class OVDPrinterManager {
 	private static Logger logger = Logger.getLogger(OVDPrinterManager.class);
 	private ArrayList<OVDPrinter> printerList;
 	private String defaultPrinterName;
-	private RdpdrChannel rdpdr = null;
+	private ArrayList<RdpdrChannel> rdpdr_list = null;
 	public static URL URLPrintingApplet = null;
+	Timer printAction = null;
 	
-	public OVDPrinterManager(RdpdrChannel rdpdr_){
-		this.rdpdr = rdpdr_;
-
+	
+	public OVDPrinterManager(){
 		this.printerList = new ArrayList<OVDPrinter>();
 		this.defaultPrinterName = "";
+		rdpdr_list = new ArrayList<RdpdrChannel>();
 	}
 	
+	public void register_connection(RdpdrChannel channel) {
+		logger.debug("Register new rdpdr channel");
+		this.rdpdr_list.add(channel);
+	}
+	
+	public void launch() {
+		this.printAction = new Timer();
+		this.printAction.schedule(new PrinterUpdater(this), 0, 10000);
+	}
+	
+	public void stop() {
+		if (this.printAction == null)
+			return;
+		
+		this.printAction.cancel();
+		this.printAction = null;
+		this.rdpdr_list = new ArrayList<RdpdrChannel>();
+	}
 	
 	/*
 	 * search all known printer on the system
 	 */
-	public void searchAllPrinter() {
+	public ArrayList<OVDPrinter> searchNewPrinter() {
+		ArrayList<OVDPrinter> newPrinterList = new ArrayList<OVDPrinter>();
+		
 		boolean isDefault;
 		DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
 		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
@@ -75,14 +97,12 @@ public class OVDPrinterManager {
 			this.defaultPrinterName = default_p.getName();
 		}
 		catch(Exception e){
-			logger.warn("Unable to find the default printer");
 			isDefault = true;
 		}
 
 		for (int i=0 ; i<printService.length ; i++) {
 			isDefault = false;
 			String printerName = printService[i].getName();
-			logger.debug("Printer discovered: " + printerName);
 			if (OSTools.isLinux()) {
 				try {
 					printerName = URLDecoder.decode(printerName, "UTF-8");
@@ -95,12 +115,16 @@ public class OVDPrinterManager {
 				isDefault = true;
 
 			String displayName = getValideDisplayName(printerName);
-			printerList.add(i, new OVDPrinter(this.rdpdr, printerName, displayName,  isDefault));
+			if (this.getPrinterByPrinterName(printerName) == null)
+				newPrinterList.add(i, new OVDPrinter(null, printerName, displayName,  isDefault));
 			isDefault = false;
 		}
-		if (printerList.isEmpty()){
-			printerList.add(0, new OVDPrinter(this.rdpdr, OVDPrinterThread.filePrinterName, OVDPrinterThread.filePrinterName, true));
-		}		
+		
+		if (newPrinterList.isEmpty() && this.printerList.isEmpty() && !OVDPrinter.externalMode) {
+			newPrinterList.add(0, new OVDPrinter(null, OVDPrinterThread.filePrinterName, OVDPrinterThread.filePrinterName, true));
+		}
+		
+		return newPrinterList;
 	}
 	
 	/*
@@ -110,7 +134,7 @@ public class OVDPrinterManager {
 		for (String printerName : pList) {
 			if ( isExist(printerName) ){
 				String displayName = getValideDisplayName(printerName);
-				printerList.add(new OVDPrinter(this.rdpdr, printerName, displayName, true));
+				printerList.add(new OVDPrinter(null, printerName, displayName, true));
 			}
 		}
 	}
@@ -122,12 +146,16 @@ public class OVDPrinterManager {
 		return !this.printerList.isEmpty();
 	}
 
-	/*
-	 * register all printer on rdpdr channel
-	 */
-	public void registerAll(RdpdrChannel rdpdrChannel) {
-		for (RdpdrDevice printer: printerList)
-			rdpdrChannel.register(printer);
+	
+	public void mount(OVDPrinter p) {
+		logger.debug("Printer discovered: " + p.printer_name);
+		if (this.getPrinterByPrinterName(p.printer_name) != null)
+			return;
+		for(RdpdrChannel c: rdpdr_list) {
+			c.register(p);
+			((OVDRdpdrChannel)c).mountNewPrinter(p);
+			printerList.add(p);
+		}
 	}
 	
 	/*
@@ -160,6 +188,14 @@ public class OVDPrinterManager {
 		return null;
 	}
 	
+	private Printer getPrinterByPrinterName(String printerName){
+		for (Printer p : printerList){
+			if ( p.printer_name.equals(printerName))
+				return p;
+		}
+		return null;
+	}
+	
 	/*
 	 * test validity of a printer
 	 */
@@ -176,6 +212,19 @@ public class OVDPrinterManager {
  		}
  		return (myPrinter != null);
  	}
+	
+	public boolean isReady() {
+		boolean ret = true;
+
+		if (rdpdr_list.size() == 0)
+			return false;
+		
+		for(RdpdrChannel c: rdpdr_list) {
+			ret &= ((OVDRdpdrChannel)c).isReady(); 
+		}
+		
+		return ret;
+	}
 }
 
 

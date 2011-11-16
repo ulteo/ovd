@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author David Lechevalier <david@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,6 +38,7 @@ public class OVDPrinter extends Printer {
 	protected static Logger logger = Logger.getLogger(OVDPrinter.class);
 	public static LinkedList<UUID> jobs = new LinkedList<UUID>();
 	public static OVDPrinterThread printerThread = null;
+	public static boolean externalMode = false;
 	
 	
 	public OVDPrinter(RdpdrChannel rdpdr_, String name, String displayName, boolean isDefault) {
@@ -48,6 +49,10 @@ public class OVDPrinter extends Printer {
 	
 	public static void setPrinterThread(OVDPrinterThread ovdPrinter){
 		OVDPrinter.printerThread = ovdPrinter;
+	}
+	
+	public static void setExternalMode(boolean externalMode){
+		OVDPrinter.externalMode = externalMode;
 	}
 
 	public int create(int device, int desired_access, int share_mode, int disposition, int flags_and_attributes, String filename,int[] result){
@@ -132,7 +137,7 @@ public class OVDPrinter extends Printer {
 			logger.warn("No printer to process the job " + uuid + ".pdf");
 			return RdpdrChannel.STATUS_CANCELLED;
 		}
-		OVDPrinter.printerThread.printPages(this.printer_name, pdfFilename);
+		OVDPrinter.printerThread.printPages(this.printer_name, pdfFilename, this.externalMode);
 		return RdpdrChannel.STATUS_SUCCESS;
 	}
 }
