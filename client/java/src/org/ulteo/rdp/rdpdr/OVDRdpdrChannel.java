@@ -276,7 +276,7 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 			if (share_local_path.endsWith(Constants.FILE_SEPARATOR))
 				share_local_path = share_local_path.substring(0, share_local_path.length() - 1);
 			
-			if (share_local_path.equals(path) || path.startsWith(share_local_path))
+			if (share_local_path.equals(path) || path.startsWith(share_local_path + Constants.FILE_SEPARATOR))
 				return (OVDRdpdrDisk) device;
 		}
 		
