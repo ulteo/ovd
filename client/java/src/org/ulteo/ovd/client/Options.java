@@ -57,6 +57,7 @@ public class Options {
 	public static final int FLAG_GUI_LOCKED = 0x00008000;
 	public static final int FLAG_SHOW_BURGREPORTER = 0x00010000;
 	public static final int FLAG_INPUT_METHOD      = 0x00020000;
+	public static final int FLAG_SAVE_PASSWORD     = 0x00040000;
 	
 	private int mask = 0x00000000;
 	
@@ -77,6 +78,7 @@ public class Options {
 	public boolean debugSeamless = false;
 	public boolean guiLocked = false;
 	public boolean isBugReporterVisible = false;
+	public boolean savePassword = false;
 
 	
 	public Options() {
@@ -127,7 +129,14 @@ public class Options {
 
 	
 	public boolean getIniProfile() {
-		ProfileProperties properties = ProfileRegistry.loadProfile();
+		ProfileRegistry registry = new ProfileRegistry();
+		ProfileProperties properties;
+		try {
+			properties = registry.loadProfile();
+		} catch (IOException ex) {
+			org.ulteo.Logger.error("Getting profile preferencies from registry failed: "+ex.getMessage());
+			return false;
+		}
 		if (properties == null)
 			return false;
 
@@ -155,11 +164,20 @@ public class Options {
 			this.setFlag(Options.FLAG_NTLM);
 		}
 		
-		if (! this.nltm && ! this.getFlag(Options.FLAG_USERNAME)) {
-			String username = properties.getLogin();
-			if (username != null) {
-				this.username = username;
-				this.setFlag(Options.FLAG_USERNAME);
+		if (! this.nltm) {
+			if (! this.getFlag(Options.FLAG_USERNAME)) {
+				String username = properties.getLogin();
+				if (username != null) {
+					this.username = username;
+					this.setFlag(Options.FLAG_USERNAME);
+				}
+			}
+			if (! this.getFlag(Options.FLAG_PASSWORD)) {
+				String password = properties.getPassword();
+				if (password != null) {
+					this.password = password;
+					this.setFlag(Options.FLAG_PASSWORD);
+				}
 			}
 		}
 		if (!this.getFlag(Options.FLAG_SERVER)) {

@@ -20,8 +20,18 @@
 
 package org.ulteo.ovd.client.profile;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
+import org.ulteo.Logger;
+import org.ulteo.crypto.AES;
+import org.ulteo.crypto.SymmetricCryptography;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
+
 public abstract class Profile {
 	protected static final String FIELD_LOGIN = "login";
+	protected static final String FIELD_PASSWORD = "password";
 	protected static final String FIELD_LOCALCREDENTIALS = "use-local-credentials";
 
 	protected static final String FIELD_HOST = "host";
@@ -53,4 +63,41 @@ public abstract class Profile {
 	protected static final String VALUE_SCANCODE_INPUT_METHOD = "scancode";
 	protected static final String VALUE_UNICODE_INPUT_METHOD = "unicode";
 	
+	private SymmetricCryptography crypto = null;
+
+	public Profile() {
+		this.crypto = new AES(AES.default_key);
+	}
+	
+	protected abstract void storePassword(String password) throws IOException;
+	
+	public final void savePassword(String password) throws IOException {
+		if (password == null)
+			return;
+
+		try {
+			byte[] data = this.crypto.encrypt(password.getBytes());
+			String encryptedPassword = new BASE64Encoder().encode(data);
+			this.storePassword(encryptedPassword);
+		} catch (GeneralSecurityException e) {
+			Logger.error("saving password failed: " + e.getMessage());
+		}
+	}
+
+	protected abstract String loadPassword() throws IOException;
+	
+	protected final String getPassword() throws IOException {
+		String hash = this.loadPassword();
+		if (hash == null)
+			return null;
+
+		String password = null;
+		try {
+			byte[] data = this.crypto.decrypt(new BASE64Decoder().decodeBuffer(hash));
+			password = new String(data);
+		} catch (GeneralSecurityException e) {
+			Logger.error("getting password failed:" + e.getMessage());
+		}
+		return password;
+	}
 }
