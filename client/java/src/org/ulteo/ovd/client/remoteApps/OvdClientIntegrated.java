@@ -21,7 +21,6 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
-import java.awt.SystemTray;
 import java.util.HashMap;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
@@ -103,12 +102,6 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 		}
 
 		this.system.refresh();
-	}
-
-	@Override
-	protected void display(RdpConnection co) {
-		if (SystemTray.isSupported()) {
-		}
 	}
 
 	@Override

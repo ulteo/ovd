@@ -51,11 +51,9 @@ import org.ulteo.rdp.RdpConnectionOvd;
 public class OvdClientPortal extends OvdClientRemoteApps implements ComponentListener {
 	private PortalFrame portal = null;
 	private String username = null;
-	private boolean publicated = false;
 	private List<Application> appsList = null;
 	private List<Application> appsListToEnable = null;
 	private boolean autoPublish = false;
-	private boolean showDesktopIcons = false;
 	private boolean hiddenAtStart = false;
 	private boolean showBugReporter = false;
 	
@@ -190,57 +188,12 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 
 	@Override
-	protected void display(RdpConnection co) {}
-
-	@Override
 	protected void hide(RdpConnection co) {
 
 		for (Application app : ((RdpConnectionOvd)co).getAppsList()) {
 			this.portal.getApplicationPanel().toggleAppButton(app, false);
 			this.system.uninstall(app);
 		}
-	}
-
-	public boolean togglePublications() {
-		if (publicated) {
-			this.unpublish();
-		}
-		else {
-			this.publish();
-		}
-		return publicated;
-	}
-
-	public void publish() {
-		for (RdpConnectionOvd co : this.getAvailableConnections()) {
-			if (! co.getOvdAppChannel().isReady())
-				continue;
-			boolean associate = (co.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
-
-			for (Application app : co.getAppsList()) {
-				this.system.install(app, this.showDesktopIcons, associate);
-			}
-		}
-
-		this.system.refresh();
-		
-		this.publicated = true;
-	}
-
-	public void unpublish() {
-		for (RdpConnectionOvd co : this.getAvailableConnections()) {
-			for (Application app : co.getAppsList()) {
-				this.system.uninstall(app);
-			}
-		}
-
-		this.system.refresh();
-		
-		this.publicated = false;
-	}
-
-	public SystemAbstract getSystem() {
-		return this.system;
 	}
 
 	public void componentShown(ComponentEvent ce) {

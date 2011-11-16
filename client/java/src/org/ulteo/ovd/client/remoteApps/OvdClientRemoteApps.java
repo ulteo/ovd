@@ -27,6 +27,7 @@ package org.ulteo.ovd.client.remoteApps;
 import java.awt.Rectangle;
 
 import net.propero.rdp.RdesktopException;
+import net.propero.rdp.RdpConnection;
 
 import org.ulteo.Logger;
 import org.ulteo.ovd.OvdException;
@@ -66,6 +67,8 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	private int bpp = RdpConnectionOvd.DEFAULT_BPP;
 
 	private boolean debugSeamless = false;
+	protected boolean publicated = false;
+	protected boolean showDesktopIcons = false;
 	
 	public OvdClientRemoteApps(SessionManagerCommunication smComm) {
 		super(smComm, null, false);
@@ -152,10 +155,16 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 	public abstract void ovdInited(OvdAppChannel o);
 
+	@Override
 	public void ovdInstanceStarted(int instance_) {}
+	
+	@Override
 	public void ovdInstanceStopped(int instance_) {}
+	
+	@Override
 	public void ovdInstanceError(int instance_) {}
-
+	
+	
 	protected void configureRDP(Properties properties) {
 		this.screensize = WorkArea.getWorkAreaSize();
 
@@ -410,5 +419,55 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		Logger.warn("More than 50 percent of applications are available("+percent+"%). Will continue.");
 
 		return true;
+	}
+	
+	@Override
+	protected void display(RdpConnection co) {}
+	
+	/**
+	 * toggle all publish/unpublish applications from all {@link RdpConnectionOvd} in the 
+	 * current {@link OvdClientRemoteApps}
+	 * @return indicate the new publications state
+	 */
+	public boolean togglePublications() {
+		if (this.publicated) {
+			for (RdpConnectionOvd rc : this.getAvailableConnections())
+				this.unpublish(rc);
+			this.publicated = false;
+		} else {
+			for (RdpConnectionOvd rc : this.getAvailableConnections())
+				this.publish(rc);
+			this.publicated = true;
+		}
+		return this.publicated;
+	}
+
+	/**
+	 * publish all application from a specified {@link RdpConnectionOvd}
+	 * @param {@link RdpConnectionOvd}
+	 */
+	protected void publish(RdpConnectionOvd rc) {
+		if (rc == null)
+			throw new NullPointerException("RdpConnectionOvd parameter cannot be null");
+		
+		if (rc.getOvdAppChannel().isReady()) {
+			boolean associate = (rc.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
+			for (Application app : rc.getAppsList()) {
+				this.system.install(app, this.showDesktopIcons, associate);
+			}
+		}
+	}
+	
+	/**
+	 * unpublish all application from a specified {@link RdpConnectionOvd}
+	 * @param {@link RdpConnectionOvd}
+	 */
+	protected void unpublish(RdpConnectionOvd rc) {
+		if (rc == null)
+			throw new NullPointerException("RdpConnectionOvd parameter cannot be null");
+		
+		for (Application app : rc.getAppsList()) {
+			this.system.uninstall(app);
+		}
 	}
 }

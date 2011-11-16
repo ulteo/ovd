@@ -69,9 +69,6 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	protected void runExit() {}
 
 	@Override
-	protected void display(RdpConnection co) {}
-
-	@Override
 	protected void hide(RdpConnection co) {}
 
 	@Override
