@@ -28,7 +28,6 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.integrated.Constants;
-import org.ulteo.ovd.integrated.LinuxPaths;
 import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 
 
@@ -53,6 +52,8 @@ public class LinuxDiskManager extends DiskManager {
 		if (this.mountingMode == ALL_MOUNTING_ALLOWED) {
 			addDirectoryToInspect("/media");
 			addDirectoryToInspect("/mnt");
+			// Add support to gnome shares 
+			addDirectoryToInspect(Constants.HOMEDIR + "/.gvfs");
 		}
 	}
 	
