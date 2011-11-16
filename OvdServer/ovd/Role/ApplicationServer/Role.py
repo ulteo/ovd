@@ -94,7 +94,8 @@ class Role(AbstractRole):
 			Logger.error("Unable to purge group")
 			return False
 		
-		self.purgeArchives()
+		if Config.clean_dump_archive:
+			self.purgeArchives()
 		
 		if Config.multithread:
 			cpuInfos = Platform.System.getCPUInfos()

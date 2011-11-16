@@ -23,6 +23,7 @@ from ovd.Logger import Logger
 class Config:
 	general = None
 	multithread = False
+	clean_dump_archive = True
 	
 	
 	@staticmethod
@@ -30,4 +31,7 @@ class Config:
 		if infos.has_key("multithread"):
 			Config.listen_address = (infos["multithread"].lower() == True)
 		    
+		if infos.has_key("clean_dump_archive"):
+			Config.clean_dump_archive = (infos["clean_dump_archive"].lower() == True)
+		
 		return True
