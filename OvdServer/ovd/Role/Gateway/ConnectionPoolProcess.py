@@ -79,12 +79,12 @@ class ConnectionPoolProcess(Process):
 				continue
 
 			# reload asyncore if stopped
-			if self.t_asyncore is None or not self.t_asyncore.is_alive():
+			if self.is_sleeping():
 				# timeout needed for more SSL layer reactivity
 				self.t_asyncore = threading.Thread(target=lambda:asyncore.loop(timeout=0.01))
 				self.t_asyncore.start()
 		
-		if self.t_asyncore is not None and self.t_asyncore.is_alive():
+		if not self.is_sleeping():
 			asyncore.close_all()
 			self.t_asyncore.join()
 		
