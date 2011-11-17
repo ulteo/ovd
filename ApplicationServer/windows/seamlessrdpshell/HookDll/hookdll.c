@@ -33,6 +33,7 @@
 #include "../vchannel.h"
 #include "seamlessWindow.h"
 #include "seamlessWindowHistory.h"
+#include "../windowUtil.h"
 
 #define DLL_EXPORT __declspec(dllexport)
 
@@ -101,72 +102,6 @@ static BOOL is_seamless_internal_windows(HWND hwnd) {
 
 static HWND get_internal_window() {
 	return FindWindow(seamless_class, NULL);
-}
-
-static BOOL
-is_toplevel(HWND hwnd)
-{
-	BOOL toplevel;
-	HWND parent;
-	parent = GetAncestor(hwnd, GA_PARENT);
-
-	/* According to MS: "A window that has no parent, or whose
-	   parent is the desktop window, is called a top-level
-	   window." See http://msdn2.microsoft.com/en-us/library/ms632597(VS.85).aspx. */
-	toplevel = (!parent || parent == GetDesktopWindow());
-	return toplevel;
-}
-
-/* Determine the "parent" field for the CREATE response. */
-static HWND
-get_parent(HWND hwnd)
-{
-	HWND result;
-	HWND owner;
-	LONG exstyle;
-
-	/* Use the same logic to determine if the window should be
-	   "transient" (ie have no task icon) as MS uses. This is documented at 
-	   http://msdn2.microsoft.com/en-us/library/bb776822.aspx */
-	owner = GetWindow(hwnd, GW_OWNER);
-	exstyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-	if (!owner && !(exstyle & WS_EX_TOOLWINDOW))
-	{
-		/* display taskbar icon */
-		result = NULL;
-	}
-	else
-	{
-		/* no taskbar icon */
-		if (owner)
-			result = owner;
-		else
-			result = (HWND) - 1;
-	}
-
-	return result;
-}
-
-static int getWindowState(HWND hwnd) {
-	if (IsZoomed(hwnd))
-		return 2;
-	else if (IsIconic(hwnd))
-		return 1;
-	else
-		return 0;
-}
-
-static BOOL setWindowState(HWND hwnd, int state) {
-	if (state == 0)
-		ShowWindow(hwnd, SW_RESTORE);
-	else if (state == 1)
-		ShowWindow(hwnd, SW_MINIMIZE);
-	else if (state == 2)
-		ShowWindow(hwnd, SW_MAXIMIZE);
-	else
-		return FALSE;
-
-	return TRUE;
 }
 
 static void
@@ -286,137 +221,6 @@ update_zorder(HWND hwnd)
 	vchannel_unblock();
 }
 
-static HICON
-get_icon(HWND hwnd, int large)
-{
-	HICON icon;
-
-	if (!SendMessageTimeout(hwnd, WM_GETICON, large ? ICON_BIG : ICON_SMALL,
-				0, SMTO_ABORTIFHUNG, 1000, (PDWORD_PTR) & icon))
-		return NULL;
-
-	if (icon)
-		return icon;
-
-	/*
-	 * Modern versions of Windows uses the voodoo value of 2 instead of 0
-	 * for the small icons.
-	 */
-	if (!large)
-	{
-		if (!SendMessageTimeout(hwnd, WM_GETICON, 2,
-					0, SMTO_ABORTIFHUNG, 1000, (PDWORD_PTR) & icon))
-			return NULL;
-	}
-
-	if (icon)
-		return icon;
-
-	icon = (HICON) GetClassLong(hwnd, large ? GCL_HICON : GCL_HICONSM);
-
-	if (icon)
-		return icon;
-
-	return NULL;
-}
-
-static int
-extract_icon(HICON icon, char *buffer, int maxlen)
-{
-	ICONINFO info;
-	HDC hdc;
-	BITMAP mask_bmp, color_bmp;
-	BITMAPINFO bmi;
-	int size, i;
-	char *mask_buf, *color_buf;
-	char *o, *m, *c;
-	int ret = -1;
-
-	assert(buffer);
-	assert(maxlen > 0);
-
-	if (!GetIconInfo(icon, &info))
-		goto fail;
-
-	if (!GetObject(info.hbmMask, sizeof(BITMAP), &mask_bmp))
-		goto free_bmps;
-	if (!GetObject(info.hbmColor, sizeof(BITMAP), &color_bmp))
-		goto free_bmps;
-
-	if (mask_bmp.bmWidth != color_bmp.bmWidth)
-		goto free_bmps;
-	if (mask_bmp.bmHeight != color_bmp.bmHeight)
-		goto free_bmps;
-
-	if ((mask_bmp.bmWidth * mask_bmp.bmHeight * 4) > maxlen)
-		goto free_bmps;
-
-	size = (mask_bmp.bmWidth + 3) / 4 * 4;
-	size *= mask_bmp.bmHeight;
-	size *= 4;
-
-	mask_buf = malloc(size);
-	if (!mask_buf)
-		goto free_bmps;
-	color_buf = malloc(size);
-	if (!color_buf)
-		goto free_mbuf;
-
-	memset(&bmi, 0, sizeof(BITMAPINFO));
-
-	bmi.bmiHeader.biSize = sizeof(BITMAPINFO);
-	bmi.bmiHeader.biWidth = mask_bmp.bmWidth;
-	bmi.bmiHeader.biHeight = -mask_bmp.bmHeight;
-	bmi.bmiHeader.biPlanes = 1;
-	bmi.bmiHeader.biBitCount = 32;
-	bmi.bmiHeader.biCompression = BI_RGB;
-	bmi.bmiHeader.biSizeImage = size;
-
-	hdc = CreateCompatibleDC(NULL);
-	if (!hdc)
-		goto free_cbuf;
-
-	if (!GetDIBits(hdc, info.hbmMask, 0, mask_bmp.bmHeight, mask_buf, &bmi, DIB_RGB_COLORS))
-		goto del_dc;
-	if (!GetDIBits(hdc, info.hbmColor, 0, color_bmp.bmHeight, color_buf, &bmi, DIB_RGB_COLORS))
-		goto del_dc;
-
-	o = buffer;
-	m = mask_buf;
-	c = color_buf;
-	for (i = 0; i < size / 4; i++)
-	{
-		o[0] = c[2];
-		o[1] = c[1];
-		o[2] = c[0];
-
-		o[3] = ((int) (unsigned char) m[0] + (unsigned char) m[1] +
-			(unsigned char) m[2]) / 3;
-		o[3] = 0xff - o[3];
-
-		o += 4;
-		m += 4;
-		c += 4;
-	}
-
-	ret = size;
-
-      del_dc:
-	DeleteDC(hdc);
-
-      free_cbuf:
-	free(color_buf);
-      free_mbuf:
-	free(mask_buf);
-
-      free_bmps:
-	DeleteObject(info.hbmMask);
-	DeleteObject(info.hbmColor);
-
-      fail:
-	return ret;
-}
-
 #define ICON_CHUNK 400
 
 static void
@@ -426,7 +230,7 @@ update_icon(HWND hwnd, HICON icon, int large)
 	char buf[32 * 32 * 4];
 	char asciibuf[ICON_CHUNK * 2 + 1];
 
-	size = extract_icon(icon, buf, sizeof(buf));
+	size = WindowUtil_extractIcon(icon, buf, sizeof(buf));
 	if (size <= 0)
 		return;
 
@@ -484,7 +288,7 @@ static void create_window(HWND hwnd){
 		exstyle = GetWindowLong(hwnd, GWL_EXSTYLE);
 		GetWindowThreadProcessId(hwnd, &pid);
 
-		parent = get_parent(hwnd);
+		parent = WindowUtil_getParent(hwnd);
 		if (getWindowFromHistory(parent) == NULL)
 			parent = 0;
 
@@ -533,21 +337,21 @@ static void create_window(HWND hwnd){
 		}
 		window->title = title;
 
-		icon = get_icon(hwnd, 1);
+		icon = WindowUtil_getIcon(hwnd, 1);
 		if (icon)
 		{
 			update_icon(hwnd, icon, 1);
 			DeleteObject(icon);
 		}
 
-		icon = get_icon(hwnd, 0);
+		icon = WindowUtil_getIcon(hwnd, 0);
 		if (icon)
 		{
 			update_icon(hwnd, icon, 0);
 			DeleteObject(icon);
 		}
 
-		state = getWindowState(hwnd);
+		state = WindowUtil_getState(hwnd);
 
 		update_position(hwnd);
 		vchannel_write("STATE", "0x%08lx,0x%08x,0x%08x", hwnd,
@@ -583,7 +387,7 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 	wparam = ((CWPSTRUCT *) details)->wParam;
 	lparam = ((CWPSTRUCT *) details)->lParam;
 
-	if (!is_toplevel(hwnd) || is_seamless_internal_windows(hwnd))
+	if (! WindowUtil_isToplevel(hwnd) || is_seamless_internal_windows(hwnd))
 	{
 		goto end;
 	}
@@ -689,7 +493,7 @@ wndprocret_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 	wparam = ((CWPRETSTRUCT *) details)->wParam;
 	lparam = ((CWPRETSTRUCT *) details)->lParam;
 
-	if (!is_toplevel(hwnd) || is_seamless_internal_windows(hwnd))
+	if (! WindowUtil_isToplevel(hwnd) || is_seamless_internal_windows(hwnd))
 	{
 		goto end;
 	}
@@ -774,7 +578,7 @@ wndprocret_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 				 * So trigger a read of it every time the large one is
 				 * changed.
 				 */
-				icon = get_icon(hwnd, 0);
+				icon = WindowUtil_getIcon(hwnd, 0);
 				if (icon)
 				{
 					update_icon(hwnd, icon, 0);
@@ -1004,7 +808,7 @@ SafeSetState(unsigned int serial, HWND hwnd, int state)
 
 	vchannel_block();
 
-	curstate = getWindowState(hwnd);
+	curstate = WindowUtil_getState(hwnd);
 
 	if (state == curstate)
 	{
@@ -1021,7 +825,7 @@ SafeSetState(unsigned int serial, HWND hwnd, int state)
 
 	vchannel_unblock();
 
-	if (! setWindowState(hwnd, state))
+	if (! WindowUtil_setState(hwnd, state))
 		debug("Invalid state %d sent.", state);
 
 	WaitForSingleObject(g_mutex, INFINITE);

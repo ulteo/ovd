@@ -30,6 +30,7 @@
 #include <cchannel.h>
 
 #include "vchannel.h"
+#include "windowUtil.h"
 
 #include "resource.h"
 
@@ -64,21 +65,6 @@ static HWND hwnd_internal;
 const char seamless_class[] = "InternalSeamlessClass";
 
 
-BOOL set_focus_on_window(HWND hwnd) {
-	BOOL ret;
-
-	// Attach foreground window thread
-	AttachThreadInput(GetWindowThreadProcessId(GetForegroundWindow(), NULL), GetCurrentThreadId(), TRUE);
-
-	ret = SetForegroundWindow(hwnd);
-	SetFocus(hwnd);
-
-	// Detach the attached thread
-	AttachThreadInput(GetWindowThreadProcessId(GetForegroundWindow(), NULL), GetCurrentThreadId(), FALSE);
-
-	return ret;
-}
-
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	HWND hwnd_to_focus = (HWND)wParam;
 
@@ -93,7 +79,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
 	case WM_KILLFOCUS:
 		if (hwnd_to_focus != hwnd_internal && hwnd_to_focus != NULL)
-			set_focus_on_window(hwnd_to_focus);
+			WindowUtil_setFocus(hwnd_to_focus);
 		break;
 
 	default:
@@ -226,7 +212,7 @@ static void
 do_focus(unsigned int serial, HWND hwnd, int action)
 {
 	if (action == SEAMLESS_FOCUS_RELEASE ) {
-		set_focus_on_window(hwnd_internal);
+		WindowUtil_setFocus(hwnd_internal);
 		return;
 	}
 	SendMessage(hwnd_internal, WM_KILLFOCUS, (WPARAM)hwnd, (LPARAM)NULL);

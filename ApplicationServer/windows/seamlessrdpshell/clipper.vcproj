@@ -218,6 +218,14 @@
 			RelativePath=".\resource.h"
 			>
 		</File>
+		<File
+			RelativePath=".\windowUtil.c"
+			>
+		</File>
+		<File
+			RelativePath=".\windowUtil.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
