@@ -20,7 +20,7 @@
  **/
 class UserGroupDB_ldap_memberof {
 	public $cache;
-	protected $preferences;
+	public $preferences;
 	
 	public function __construct() {
 		$this->cache = array();
@@ -202,6 +202,9 @@ class UserGroupDB_ldap_memberof {
 	public static function configuration() {
 		$ret = array();
 		$c = new ConfigElement_dictionary('match',_('Matching'), _('Matching'), _('Matching'), array('description' => 'description','name' => 'name', 'member' => 'member'));
+		$ret []= $c;
+		$c = new ConfigElement_select('use_child_group', _('Use child groups'), _('Use child groups'), _('Use child groups'), 0);
+		$c->setContentAvailable(array(0 => _('No'), 1 => _('Yes')));
 		$ret []= $c;
 		return $ret;
 	}

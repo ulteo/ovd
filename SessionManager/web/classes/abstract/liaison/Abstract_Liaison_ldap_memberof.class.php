@@ -64,6 +64,16 @@ class Abstract_Liaison_ldap_memberof {
 			return NULL;
 		}
 		
+		$userGroupDB_ldap_memberof = new UserGroupDB_ldap_memberof();
+		$use_child_group = false;
+		
+		$$userGroupDB_ldap_memberof_preferences = $userGroupDB_ldap_memberof->preferences;
+		if (array_key_exists('use_child_group', $$userGroupDB_ldap_memberof_preferences)) {
+			if ($$userGroupDB_ldap_memberof_preferences['use_child_group'] == 1 || $$userGroupDB_ldap_memberof_preferences['use_child_group'] == '1') {
+				$use_child_group = true;
+			}
+		}
+		
 		$elements = array();
 		
 		if (is_base64url($group->id))
@@ -119,8 +129,24 @@ class Abstract_Liaison_ldap_memberof {
 					continue;
 				}
 				else {
-					$l = new Liaison($u->getAttribute('login'), $group->id);
-					$elements[$l->element] = $l;
+					if ($u->hasAttribute('objectclass')) {
+						if (in_array('user', $u->getAttribute('objectclass'))) {
+							$l = new Liaison($u->getAttribute('login'), $group_);
+							$elements[$l->element] = $l;
+						}
+						else if (in_array('group', $u->getAttribute('objectclass')) && $use_child_group == true) {
+							 $ret1 = self::loadElements($type_, 'static_'.$member);
+							 if (is_array($ret1)) {
+								foreach ($ret1 as $element1 => $liaison1) {
+									$elements[$element1] = $liaison1;
+								}
+							 }
+						}
+					}
+					else {
+						$l = new Liaison($u->getAttribute('login'), $group_);
+						$elements[$l->element] = $l;
+					}
 				}
 			}
 		}
