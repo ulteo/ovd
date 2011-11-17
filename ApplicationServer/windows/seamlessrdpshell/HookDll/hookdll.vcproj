@@ -190,19 +190,19 @@
 			>
 		</File>
 		<File
-			RelativePath=".\seamlessWindow.c"
+			RelativePath="..\seamlessWindow.c"
 			>
 		</File>
 		<File
-			RelativePath=".\seamlessWindow.h"
+			RelativePath="..\seamlessWindow.h"
 			>
 		</File>
 		<File
-			RelativePath=".\seamlessWindowHistory.c"
+			RelativePath="..\seamlessWindowHistory.c"
 			>
 		</File>
 		<File
-			RelativePath=".\seamlessWindowHistory.h"
+			RelativePath="..\seamlessWindowHistory.h"
 			>
 		</File>
 		<File

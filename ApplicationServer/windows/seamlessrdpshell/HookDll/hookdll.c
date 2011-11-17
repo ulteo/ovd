@@ -31,8 +31,8 @@
 #include <CommCtrl.h>
 
 #include "../vchannel.h"
-#include "seamlessWindow.h"
-#include "seamlessWindowHistory.h"
+#include "../seamlessWindow.h"
+#include "../seamlessWindowHistory.h"
 #include "../windowUtil.h"
 
 #define DLL_EXPORT __declspec(dllexport)
