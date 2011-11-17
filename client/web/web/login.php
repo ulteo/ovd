@@ -427,9 +427,6 @@ if (array_key_exists('explorer', $_SESSION['ovd-client']) && $_SESSION['ovd-clie
 	$session_node->appendChild($explorer_node);
 }
 
-$xml = $dom->saveXML();
-$_SESSION['ovd-client']['xml'] = $xml;
-
 if (array_key_exists('sessionmanager_host', $_POST))
 	setcookie('ovd-client[sessionmanager_host]', $_POST['sessionmanager_host'], (time()+(60*60*24*7)));
 if (array_key_exists('login', $_POST))
@@ -442,5 +439,5 @@ if (array_key_exists('desktop_fullscreen', $_POST))
 	setcookie('ovd-client[desktop_fullscreen]', $_POST['desktop_fullscreen'], (time()+(60*60*24*7)));
 setcookie('ovd-client[debug]', $_POST['debug'], (time()+(60*60*24*7)));
 
-echo $_SESSION['ovd-client']['xml'];
+echo $dom->saveXML();
 die();

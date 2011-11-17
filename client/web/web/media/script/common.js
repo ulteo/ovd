@@ -353,12 +353,12 @@ function onStartSessionJavaRequest(http_code_, content_type_, data_, cookies_) {
 			sm_session_cookie = cookies_[i];
 	} catch(e) {}
 
-	synchronize(data_, sm_session_cookie);
+	synchronize(sm_session_cookie);
 
 	onStartSessionSuccess(xml);
 }
 
-function synchronize(data_, cookie_) {
+function synchronize(cookie_) {
 	new Ajax.Request(
 		'synchronize.php',
 		{
@@ -370,8 +370,7 @@ function synchronize(data_, cookie_) {
 				language: $('session_language').value,
 				keymap: $('session_keymap').value,
 				timezone: getTimezoneName(),
-				debug: ((debug)?1:0),
-				xml: data_
+				debug: ((debug)?1:0)
 			},
 			requestHeaders: new Array('Forward-Cookie', cookie_)
 		}
