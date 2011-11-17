@@ -190,19 +190,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\seamlessWindow.c"
-			>
-		</File>
-		<File
-			RelativePath="..\seamlessWindow.h"
-			>
-		</File>
-		<File
-			RelativePath="..\seamlessWindowHistory.c"
-			>
-		</File>
-		<File
-			RelativePath="..\seamlessWindowHistory.h"
+			RelativePath=".\hookdll.h"
 			>
 		</File>
 		<File

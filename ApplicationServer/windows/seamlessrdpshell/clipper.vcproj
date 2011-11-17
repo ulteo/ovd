@@ -219,6 +219,22 @@
 			>
 		</File>
 		<File
+			RelativePath=".\seamlessWindow.c"
+			>
+		</File>
+		<File
+			RelativePath=".\seamlessWindow.h"
+			>
+		</File>
+		<File
+			RelativePath=".\seamlessWindowHistory.c"
+			>
+		</File>
+		<File
+			RelativePath=".\seamlessWindowHistory.h"
+			>
+		</File>
+		<File
 			RelativePath=".\windowUtil.c"
 			>
 		</File>

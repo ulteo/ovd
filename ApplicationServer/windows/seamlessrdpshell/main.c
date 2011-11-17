@@ -28,9 +28,13 @@
 #include <stdio.h>
 #include <wtsapi32.h>
 #include <cchannel.h>
+#include <CommCtrl.h>
 
+#include "HookDll/hookdll.h"
 #include "vchannel.h"
 #include "windowUtil.h"
+#include "seamlessWindow.h"
+#include "seamlessWindowHistory.h"
 
 #include "resource.h"
 
@@ -50,23 +54,286 @@ typedef void (*set_hooks_proc_t) ();
 typedef void (*remove_hooks_proc_t) ();
 typedef int (*get_instance_count_proc_t) ();
 
-typedef void (*move_window_proc_t) (unsigned int serial, HWND hwnd, int x, int y, int width,
-				    int height);
-typedef void (*zchange_proc_t) (unsigned int serial, HWND hwnd, HWND behind);
-typedef void (*focus_proc_t) (unsigned int serial, HWND hwnd, int action);
-typedef void (*set_state_proc_t) (unsigned int serial, HWND hwnd, int state);
-
-static move_window_proc_t g_move_window_fn = NULL;
-static zchange_proc_t g_zchange_fn = NULL;
-static focus_proc_t g_focus_fn = NULL;
-static set_state_proc_t g_set_state_fn = NULL;
-
 static HWND hwnd_internal;
 const char seamless_class[] = "InternalSeamlessClass";
 
+// blocks for locally generated events
+HWND g_block_move_hwnd = NULL;
+unsigned int g_block_move_serial = 0;
+RECT g_block_move = { 0, 0, 0, 0 };
+
+unsigned int g_blocked_zchange_serial = 0;
+HWND g_blocked_zchange[2] = { NULL, NULL };
+
+unsigned int g_blocked_focus_serial = 0;
+HWND g_blocked_focus = NULL;
+
+unsigned int g_blocked_focus_lost_serial = 0;
+HWND g_blocked_focus_lost = NULL;
+
+unsigned int g_blocked_state_serial = 0;
+HWND g_blocked_state_hwnd = NULL;
+int g_blocked_state = -1;
+
+static HWND g_last_focused_window = NULL;
+
+static HANDLE g_last_changes_mutex = NULL;
+
+// Screen size
+static int g_screen_width = 0;
+static int g_screen_height = 0;
+static void getScreenSize() {
+	g_screen_width = GetSystemMetrics(SM_CXSCREEN);
+	g_screen_height = GetSystemMetrics(SM_CYSCREEN);
+}
+
+static void
+update_zorder(HWND hwnd)
+{
+	HWND behind;
+	HWND block_hwnd, block_behind;
+	unsigned int serial;
+
+	WaitForSingleObject(g_last_changes_mutex, INFINITE);
+	serial = g_blocked_zchange_serial;
+	block_hwnd = g_blocked_zchange[0];
+	block_behind = g_blocked_zchange[1];
+	ReleaseMutex(g_last_changes_mutex);
+
+	vchannel_block();
+
+	behind = GetNextWindow(hwnd, GW_HWNDPREV);
+	while (behind)
+	{
+		LONG style;
+
+		style = GetWindowLong(behind, GWL_STYLE);
+
+		if ((!(style & WS_CHILD) || (style & WS_POPUP)) && (style & WS_VISIBLE))
+			break;
+
+		behind = GetNextWindow(behind, GW_HWNDPREV);
+	}
+
+	if ((hwnd == block_hwnd) && (behind == block_behind))
+		vchannel_write("ACK", "%u", serial);
+	else
+	{
+		int flags = 0;
+		LONG exstyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+		// handle always on top
+		if (exstyle & WS_EX_TOPMOST)
+			flags |= SEAMLESS_CREATE_TOPMOST;
+		vchannel_write("ZCHANGE", "0x%08lx,0x%08lx,0x%08x", hwnd, behind, flags);
+	}
+
+	vchannel_unblock();
+}
+
+static void update_position(HWND hwnd) {
+	RECT rect, blocked;
+	HWND blocked_hwnd;
+	unsigned int serial;
+	SeamlessWindow *sw = NULL;
+
+	// Check if the window exists
+	sw = getWindowFromHistory(hwnd);
+	if (! sw)
+		goto end;
+
+	WaitForSingleObject(g_last_changes_mutex, INFINITE);
+	blocked_hwnd = g_block_move_hwnd;
+	serial = g_block_move_serial;
+	memcpy(&blocked, &g_block_move, sizeof(RECT));
+	ReleaseMutex(g_last_changes_mutex);
+
+	vchannel_block();
+
+	if (IsZoomed(hwnd) || IsIconic(hwnd))
+	{
+		goto end;
+	}
+	else
+	{
+		if (!GetWindowRect(hwnd, &rect))
+		{
+			debug("GetWindowRect failed!\n");
+			goto end;
+		}
+	}
+
+	if ((hwnd == blocked_hwnd) && (rect.left == blocked.left) && (rect.top == blocked.top)
+	    && (rect.right == blocked.right) && (rect.bottom == blocked.bottom))
+		goto end;
+
+	if ((! IsZoomed(hwnd)) && (rect.left < 0 || rect.top < 0 || rect.bottom > g_screen_height || rect.right > g_screen_width)) {
+		int w = rect.right - rect.left;
+		int h = rect.bottom - rect.top;
+		int x = ((g_screen_width - rect.left) < w) ? (g_screen_width - w) : rect.left;
+		int y = ((g_screen_height - rect.top) < h) ? (g_screen_height - h) : rect.top;
+		x = (rect.left < 0) ? 0 : x;
+		y = (rect.top < 0) ? 0 : y;
+
+		SetWindowPos(hwnd, NULL, x, y, w, h, SWP_NOACTIVATE | SWP_NOZORDER);
+
+		goto end;
+	}
+
+	// Check if the window has been moved or resized
+	if (sw->bounds && EqualRect(sw->bounds, &rect))
+		goto end;
+
+	// Store the new window bounds
+	if (! sw->bounds)
+		sw->bounds = malloc(sizeof(RECT));
+	memcpy(sw->bounds, &rect, sizeof(RECT));
+
+	vchannel_write("POSITION", "0x%08lx,%d,%d,%d,%d,0x%08x",
+		       hwnd,
+		       rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, 0);
+
+      end:
+	vchannel_unblock();
+}
+
+#define ICON_CHUNK 400
+
+static void update_icon(HWND hwnd, HICON icon, int large) {
+	int i, j, size, chunks;
+	char buf[32 * 32 * 4];
+	char asciibuf[ICON_CHUNK * 2 + 1];
+
+	debug("update_icon");
+
+	size = WindowUtil_extractIcon(icon, buf, sizeof(buf));
+	if (size <= 0) {
+		debug("update_icon return 1");
+		return;
+	}
+
+	if ((!large && size != 16 * 16 * 4) || (large && size != 32 * 32 * 4))
+	{
+		debug("Unexpected icon size.");
+		return;
+	}
+
+	chunks = (size + ICON_CHUNK - 1) / ICON_CHUNK;
+	for (i = 0; i < chunks; i++)
+	{
+		for (j = 0; j < ICON_CHUNK; j++)
+		{
+			if (i * ICON_CHUNK + j >= size)
+				break;
+			sprintf(asciibuf + j * 2, "%02x",
+				(int) (unsigned char) buf[i * ICON_CHUNK + j]);
+		}
+
+		vchannel_write("SETICON", "0x%08lx,%d,RGBA,%d,%d,%s", hwnd, i,
+			       large ? 32 : 16, large ? 32 : 16, asciibuf);
+	}
+}
+
+static void create_window(HWND hwnd){
+		unsigned short *title;
+		int state;
+		DWORD pid;
+		int flags;
+		HICON icon;
+		LONG exstyle;
+		LONG style;
+		HWND parent;
+		SeamlessWindow* window;
+		TCHAR classname[256];
+
+		window = getWindowFromHistory(hwnd);
+		if (window != NULL) {
+			if (window->is_shown)
+				return;
+		}
+		else {
+			window = addHWDNToHistory(hwnd);
+			if (window == NULL)
+				return;
+		}
+
+		window->bounds = NULL;
+		window->is_shown = TRUE;
+
+		style = GetWindowLong(hwnd, GWL_STYLE);
+		vchannel_write("DEBUG","NEW WINDOWS");
+
+		exstyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+		GetWindowThreadProcessId(hwnd, &pid);
+
+		parent = WindowUtil_getParent(hwnd);
+		if (getWindowFromHistory(parent) == NULL)
+			parent = 0;
+
+		flags = 0;
+		if (style & DS_MODALFRAME || exstyle & WS_EX_DLGMODALFRAME)
+			flags |= SEAMLESS_CREATE_MODAL;
+
+		if (((style & WS_POPUP) || (exstyle & WS_EX_TOOLWINDOW))
+			&& (style & WS_MINIMIZEBOX) == 0 && (style & WS_MAXIMIZEBOX) == 0) {
+			flags |= SEAMLESS_CREATE_POPUP;
+			if (! parent)
+				parent = 0xffffffffL;
+
+			if (GetClassName(hwnd, classname, 256)) {
+				if ((strcmp(classname, TOOLTIPS_CLASS) == 0)
+					|| (strcmp(classname, "Net UI Tool Window") == 0)
+					|| (strcmp(classname, "OfficeTooltip") == 0)
+					|| (strcmp(classname, "DUIListViewHost") == 0)) {
+					debug("%s", classname);
+					flags |= SEAMLESS_CREATE_TOOLTIP;
+					parent = 0xffffffffL;
+				}
+				else
+					debug("Unknown classname: %s style: 0x%08lx exstyle: 0x%08lx", classname, style, exstyle);
+			}
+		}
+		if (! (style & WS_SIZEBOX))
+			flags |= SEAMLESS_CREATE_FIXEDSIZE;
+
+		// handle always on top
+		if (exstyle & WS_EX_TOPMOST)
+			flags |= SEAMLESS_CREATE_TOPMOST;
+
+		vchannel_write("CREATE", "0x%08lx,0x%08lx,0x%08lx,0x%08x",
+					   (long) hwnd, (long) pid, (long) parent, flags);
+
+		title = malloc(sizeof(unsigned short) * TITLE_SIZE);
+		if (title != NULL) {
+			GetWindowTextW(hwnd, title, TITLE_SIZE);
+
+			vchannel_write("TITLE", "0x%08lx,%s,0x%08x", hwnd, vchannel_strfilter_unicode(title), 0);
+		}
+		if (window->title) {
+			free(window->title);
+			window->title = NULL;
+		}
+		window->title = title;
+
+		icon = WindowUtil_getIcon(hwnd, 1);
+		if (icon)
+		{
+			update_icon(hwnd, icon, 1);
+			DeleteObject(icon);
+		}
+
+		state = WindowUtil_getState(hwnd);
+
+		update_position(hwnd);
+		vchannel_write("STATE", "0x%08lx,0x%08x,0x%08x", hwnd, state, 0);
+
+		if (window->focus)
+			vchannel_write("FOCUS", "0x%08lx", hwnd);
+}
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	HWND hwnd_to_focus = (HWND)wParam;
+	PCOPYDATASTRUCT data;
+	SeamlessWindow *sw = NULL;
 
 	switch(msg) {
 	case WM_CLOSE:
@@ -80,6 +347,179 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	case WM_KILLFOCUS:
 		if (hwnd_to_focus != hwnd_internal && hwnd_to_focus != NULL)
 			WindowUtil_setFocus(hwnd_to_focus);
+		break;
+
+	case WM_COPYDATA:
+		data = (PCOPYDATASTRUCT) lParam;
+		switch(data->dwData) {
+			case HOOK_MSG_STATE:
+				{
+					HookMsg_State *msg = (HookMsg_State *)(data->lpData);
+					int blocked;
+					HWND blocked_hwnd;
+					unsigned int serial;
+
+					sw = getWindowFromHistory(msg->wnd);
+					if (sw == NULL)
+						break;
+
+					WaitForSingleObject(g_last_changes_mutex, INFINITE);
+					blocked_hwnd = g_blocked_state_hwnd;
+					serial = g_blocked_state_serial;
+					blocked = g_blocked_state;
+					ReleaseMutex(g_last_changes_mutex);
+
+					if ((blocked_hwnd == msg->wnd) && (blocked == msg->state))
+						vchannel_write("ACK", "%u", serial);
+					else
+						vchannel_write("STATE", "0x%08lx,0x%08x,0x%08x", msg->wnd, msg->state, 0);
+				}
+				break;
+			case HOOK_MSG_FOCUS:
+				{
+					HookMsg_Focus *msg = (HookMsg_Focus *)(data->lpData);
+
+					sw = getWindowFromHistory(msg->wnd);
+					if (sw == NULL) {
+						sw = addHWDNToHistory(msg->wnd);
+						if (sw == NULL)
+							break;
+
+						sw->focus = TRUE;
+						break;
+					}
+
+					if (msg->wnd == g_last_focused_window)
+						break;
+
+					WaitForSingleObject(g_last_changes_mutex, INFINITE);
+					g_last_focused_window = msg->wnd;
+					ReleaseMutex(g_last_changes_mutex);
+
+					vchannel_write("FOCUS", "0x%08lx", msg->wnd);
+				}
+				break;
+			case HOOK_MSG_ICON:
+				{
+					HookMsg_Icon *msg = (HookMsg_Icon *)(data->lpData);
+					int size;
+
+					sw = getWindowFromHistory(msg->wnd);
+					if (sw == NULL)
+						break;
+
+					size = (msg->large) ? 32 : 16;
+
+					if (msg->haveToGetIcon) {
+						/*
+						 * Somehow, we never get WM_SETICON for the small icon.
+						 * So trigger a read of it every time the large one is
+						 * changed.
+						 */
+						msg->icon = WindowUtil_getIcon(hwnd, 0);
+						if (msg->icon)
+						{
+							update_icon(hwnd, msg->icon, 0);
+							DeleteObject(msg->icon);
+						}
+
+						break;
+					}
+
+					if (msg->icon == NULL) {
+						vchannel_write("DELICON", "0x%08lx,RGBA,%i,%i", msg->wnd, size, size);
+						break;
+					}
+					
+					update_icon(msg->wnd, msg->icon, msg->large);
+				}
+				break;
+			case HOOK_MSG_TITLE:
+				{
+					HookMsg_Title *msg = (HookMsg_Title *)(data->lpData);
+
+					sw = getWindowFromHistory(msg->wnd);
+					
+					if (sw == NULL){
+						create_window(msg->wnd);
+					}
+					else{
+						unsigned short *title;
+						BOOLEAN titleIsTheSame = TRUE;
+						int i = 0;
+						
+						title = malloc(sizeof(unsigned short) * TITLE_SIZE);
+						if (title == NULL)
+							break;
+
+						GetWindowTextW(sw->windows, title, TITLE_SIZE);
+
+						if (sw->title != NULL) {
+							for (i = 0; i < TITLE_SIZE; i++) {
+								if (title[i] != sw->title[i]) {
+									titleIsTheSame = FALSE;
+									break;
+								}
+							}
+						}
+						else {
+							titleIsTheSame = FALSE;
+						}
+
+						if (titleIsTheSame) {
+							free(title);
+							break;
+						}
+
+						vchannel_write("TITLE", "0x%08lx,%s,0x%08x", hwnd, vchannel_strfilter_unicode(title), 0);
+
+						if (sw->title) {
+							free(sw->title);
+							sw->title;
+						}
+						sw->title = title;
+					}
+				}
+				break;
+			case HOOK_MSG_DESTROY:
+				{
+					HookMsg_Destroy *msg = (HookMsg_Destroy *)(data->lpData);
+					
+					if (! removeHWNDFromHistory(msg->wnd))
+						break;
+
+					vchannel_write("DESTROY", "0x%08lx,0x%08x", msg->wnd, 0);
+				}
+				break;
+			case HOOK_MSG_POSITION:
+				{
+					HookMsg_Position *msg = (HookMsg_Position *)(data->lpData);
+
+					update_position(msg->wnd);
+				}
+				break;
+			case HOOK_MSG_SHOW:
+				{
+					HookMsg_Show *msg = (HookMsg_Show *)(data->lpData);
+
+					create_window(msg->wnd);
+				}
+				break;
+			case HOOK_MSG_DESTROYGRP:
+				{
+					HookMsg_DestroyGrp *msg = (HookMsg_DestroyGrp *)(data->lpData);
+
+					vchannel_write("DESTROYGRP", "0x%08lx, 0x%08lx", msg->pid, 0);
+				}
+				break;
+			case HOOK_MSG_ZCHANGE:
+				{
+					HookMsg_ZChange *msg = (HookMsg_ZChange *)(data->lpData);
+
+					update_zorder(msg->wnd);
+				}
+				break;
+		}
 		break;
 
 	default:
@@ -193,19 +633,89 @@ do_sync(void)
 static void
 do_state(unsigned int serial, HWND hwnd, int state)
 {
-	g_set_state_fn(serial, hwnd, state);
+	int curstate;
+
+	vchannel_block();
+
+	curstate = WindowUtil_getState(hwnd);
+
+	if (state == curstate)
+	{
+		vchannel_write("ACK", "%u", serial);
+		vchannel_unblock();
+		return;
+	}
+
+	WaitForSingleObject(g_last_changes_mutex, INFINITE);
+	g_blocked_state_hwnd = hwnd;
+	g_blocked_state_serial = serial;
+	g_blocked_state = state;
+	ReleaseMutex(g_last_changes_mutex);
+
+	vchannel_unblock();
+
+	if (! WindowUtil_setState(hwnd, state))
+		debug("Invalid state %d sent.", state);
+
+	WaitForSingleObject(g_last_changes_mutex, INFINITE);
+	g_blocked_state_hwnd = NULL;
+	g_blocked_state = -1;
+	ReleaseMutex(g_last_changes_mutex);
 }
 
 static void
 do_position(unsigned int serial, HWND hwnd, int x, int y, int width, int height)
 {
-	g_move_window_fn(serial, hwnd, x, y, width, height);
+	RECT rect;
+
+	if (IsZoomed(hwnd))
+		return;
+
+	WaitForSingleObject(g_last_changes_mutex, INFINITE);
+	g_block_move_hwnd = hwnd;
+	g_block_move_serial = serial;
+	g_block_move.left = x;
+	g_block_move.top = y;
+	g_block_move.right = x + width;
+	g_block_move.bottom = y + height;
+	ReleaseMutex(g_last_changes_mutex);
+
+	SetWindowPos(hwnd, NULL, x, y, width, height, SWP_NOACTIVATE | SWP_NOZORDER);
+
+	vchannel_write("ACK", "%u", serial);
+
+	if (!GetWindowRect(hwnd, &rect))
+		debug("GetWindowRect failed!\n");
+	else if ((rect.left != x) || (rect.top != y) || (rect.right != x + width)
+		 || (rect.bottom != y + height))
+		update_position(hwnd);
+	else if (! IsIconic(hwnd))
+		vchannel_write("POSITION", "0x%08lx,%d,%d,%d,%d,0x%08x", hwnd, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, 0);
+
+	WaitForSingleObject(g_last_changes_mutex, INFINITE);
+	g_block_move_hwnd = NULL;
+	memset(&g_block_move, 0, sizeof(RECT));
+	ReleaseMutex(g_last_changes_mutex);
 }
 
 static void
 do_zchange(unsigned int serial, HWND hwnd, HWND behind)
 {
-	g_zchange_fn(serial, hwnd, behind);
+	WaitForSingleObject(g_last_changes_mutex, INFINITE);
+	g_blocked_zchange_serial = serial;
+	g_blocked_zchange[0] = hwnd;
+	g_blocked_zchange[1] = behind;
+	ReleaseMutex(g_last_changes_mutex);
+
+	if (behind == NULL)
+		behind = HWND_TOP;
+
+	SetWindowPos(hwnd, behind, 0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE);
+
+	WaitForSingleObject(g_last_changes_mutex, INFINITE);
+	g_blocked_zchange[0] = NULL;
+	g_blocked_zchange[1] = NULL;
+	ReleaseMutex(g_last_changes_mutex);
 }
 
 static void
@@ -488,13 +998,8 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 	set_hooks_fn = (set_hooks_proc_t) GetProcAddress(hookdll, "SetHooks");
 	remove_hooks_fn = (remove_hooks_proc_t) GetProcAddress(hookdll, "RemoveHooks");
 	instance_count_fn = (get_instance_count_proc_t) GetProcAddress(hookdll, "GetInstanceCount");
-	g_move_window_fn = (move_window_proc_t) GetProcAddress(hookdll, "SafeMoveWindow");
-	g_zchange_fn = (zchange_proc_t) GetProcAddress(hookdll, "SafeZChange");
-	g_focus_fn = (focus_proc_t) GetProcAddress(hookdll, "SafeFocus");
-	g_set_state_fn = (set_state_proc_t) GetProcAddress(hookdll, "SafeSetState");
 
-	if (!set_hooks_fn || !remove_hooks_fn || !instance_count_fn || !g_move_window_fn
-	    || !g_zchange_fn || !g_focus_fn || !g_set_state_fn)
+	if (!set_hooks_fn || !remove_hooks_fn || !instance_count_fn)
 	{
 		FreeLibrary(hookdll);
 		message("Hook DLL doesn't contain the correct functions. Unable to continue.");
@@ -509,6 +1014,11 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 		return -1;
 	}
 
+	getScreenSize();
+
+	// Init mutex
+	g_last_changes_mutex = CreateMutex(NULL, FALSE, "Local\\SeamlessDLL");
+
 	ProcessIdToSessionId(GetCurrentProcessId(), &g_session_id);
 
 	build_startup_procs();
@@ -522,6 +1032,7 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 		debug("Failed to create seamless internal window");
 
 	vchannel_write("HELLO", "0x%08x", g_desktop_hidden ? SEAMLESS_HELLO_HIDDEN : 0);
+	debug("PID: %lu", GetCurrentProcessId());
 
 	set_hooks_fn();
 
@@ -590,6 +1101,9 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 	vchannel_close();
 
 	free_startup_procs();
+
+	// Close mutex
+	CloseHandle(g_last_changes_mutex);
 
 	return 1;
 }
