@@ -1,0 +1,4684 @@
+# Hungarian translations for uovdsmadmin package.
+# Copyright (C) 2011 Ulteo SAS
+# This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
+# Automatically generated, 2011.
+# Author: Istvan Bocskai <mail@bocskai.hu>, 2010, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: uovdsmadmin\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-02-21 15:23+0100\n"
+"PO-Revision-Date: 2011-11-03 12:19+0200\n"
+"Last-Translator: Istvan Bocskai\n"
+"Language-Team: Hungarian\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.1.6\n"
+
+#: ../../SessionManager/web/admin/actions.php:83
+msgid ""
+"Task to add application '%APPLICATION%' on server '%SERVER%' was "
+"successfully added"
+msgstr ""
+"A feladat, hogy az '%APPLICATION%' alkalmazást a '%SERVER%' szerverhez "
+"hozzáadjuk, sikeresen alkalmazva"
+
+#: ../../SessionManager/web/admin/actions.php:90
+msgid ""
+"Task to remove application '%APPLICATION%' from server '%SERVER%' was "
+"successfully added"
+msgstr ""
+"A feladat, hogy az '%APPLICATION%' alkalmazást a '%SERVER%' szerverről "
+"töröljük, sikeresen alkalmazva"
+
+#: ../../SessionManager/web/admin/actions.php:101
+msgid "Application '%APPLICATION%' successfully added to server '%SERVER%'"
+msgstr "A '%APPLICATION%' alkalmazás a '%SERVER%' szerverre sikeresen hozzáadva"
+
+#: ../../SessionManager/web/admin/actions.php:104
+msgid ""
+"An error occured while adding application '%APPLICATION%' to server '%SERVER"
+"%'"
+msgstr ""
+"Hiba lépett fel '%APPLICATION%' alkalmazás a '%SERVER%' szerverhez adás "
+"alatt."
+
+#: ../../SessionManager/web/admin/actions.php:110
+msgid "Application '%APPLICATION%' successfully deleted from server '%SERVER%'"
+msgstr "A '%APPLICATION%' alkalmazás a '%SERVER%' szerverről sikeresen törölve"
+
+#: ../../SessionManager/web/admin/actions.php:146
+#: ../../SessionManager/web/admin/actions.php:334
+#: ../../SessionManager/web/admin/actions.php:498
+msgid "ApplicationDB is not writeable"
+msgstr "Alkalmazás adatbázis nem írható"
+
+#: ../../SessionManager/web/admin/actions.php:153
+#: ../../SessionManager/web/admin/actions.php:211
+#: ../../SessionManager/web/admin/actions.php:251
+#, php-format
+msgid "Failed to import application '%s'"
+msgstr "Az alkalmazás '%s' importálására nem sikerült"
+
+#: ../../SessionManager/web/admin/actions.php:158
+#: ../../SessionManager/web/admin/actions.php:379
+#, php-format
+msgid "Failed to delete application '%s'"
+msgstr "Az alkalmazás '%s' törlésére nem sikerült"
+
+#: ../../SessionManager/web/admin/actions.php:161
+#: ../../SessionManager/web/admin/actions.php:384
+#, php-format
+msgid "Application '%s' successfully deleted"
+msgstr "Az alkalmazás '%s' sikeresen törölve"
+
+#: ../../SessionManager/web/admin/actions.php:170
+#, php-format
+msgid "Unable to import application %s"
+msgstr "Az alkalmazást '%s' nem lehet importálni"
+
+#: ../../SessionManager/web/admin/actions.php:177
+#, php-format
+msgid "Unable to modify application '%s'"
+msgstr "Az alkalmazást '%s' nem lehet módosítani"
+
+#: ../../SessionManager/web/admin/actions.php:180
+#: ../../SessionManager/web/admin/actions.php:433
+#, php-format
+msgid "Application '%s' successfully modified"
+msgstr "Az alkalmazás '%s' sikeresen módosítva"
+
+#: ../../SessionManager/web/admin/actions.php:199
+msgid "Orphan applications successfully removed"
+msgstr "Árva alkalmazás sikeresen törölve"
+
+#: ../../SessionManager/web/admin/actions.php:202
+msgid "Problem while removing orphan applications"
+msgstr "Hiba az árva alkalmazás törlése alatt"
+
+#: ../../SessionManager/web/admin/actions.php:222
+#: ../../SessionManager/web/admin/actions.php:361
+#, php-format
+msgid "Failed to add application '%s'"
+msgstr "Az alkalmazást '%s' nem sikerült hozzáadni"
+
+#: ../../SessionManager/web/admin/actions.php:225
+#: ../../SessionManager/web/admin/actions.php:364
+#, php-format
+msgid "Application '%s' successfully added"
+msgstr "Az alkalmazás '%s' sikeresen hozzáadva"
+
+#. UPLOAD_ERR_INI_SIZE
+#: ../../SessionManager/web/admin/actions.php:262
+#: ../../SessionManager/web/admin/actions.php:442
+msgid "Oversized file for server rules"
+msgstr "Túl nagy fájl méret"
+
+#. UPLOAD_ERR_PARTIAL
+#: ../../SessionManager/web/admin/actions.php:266
+#: ../../SessionManager/web/admin/actions.php:446
+msgid "The file was corrupted while upload"
+msgstr "Az adat a feltöltés alatt megsérült"
+
+#: ../../SessionManager/web/admin/actions.php:278
+#: ../../SessionManager/web/admin/actions.php:458
+msgid "The file is not readable"
+msgstr "A fájl nem olvasható"
+
+#: ../../SessionManager/web/admin/actions.php:283
+msgid "No Imagick support found"
+msgstr "Nem találtam Imagick támogatást"
+
+#: ../../SessionManager/web/admin/actions.php:289
+#, php-format
+msgid "Unable to write icon file for application '%s'"
+msgstr "Az ikonfájl írása a '%s' alkalmazáshoz nem sikerült"
+
+#: ../../SessionManager/web/admin/actions.php:301
+msgid "Uploaded file is not a valid image"
+msgstr "A feltöltött fájl nem érvényes kép fájl"
+
+#: ../../SessionManager/web/admin/actions.php:306
+#, php-format
+msgid "Icon for application '%s' has been successfully uploaded"
+msgstr "Az ikonfájl írása a '%s' alkalmazáshoz sikerült"
+
+#: ../../SessionManager/web/admin/actions.php:313
+#, php-format
+msgid "Failed to load server '%s'"
+msgstr "Szerver '%s' betöltés sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:320
+#, php-format
+msgid "Icon of application '%s' has been updated from server '%s'"
+msgstr "A '%s' alkalmazás ikonjai sikeresen frissítve a '%s' szerverről"
+
+#: ../../SessionManager/web/admin/actions.php:354
+msgid "Application is not ok"
+msgstr "Az alkalmazás hibás"
+
+#: ../../SessionManager/web/admin/actions.php:374
+#: ../../SessionManager/web/admin/actions.php:416
+#: ../../SessionManager/web/admin/actions.php:505
+#: ../../SessionManager/web/admin/actions.php:523
+#, php-format
+msgid "Unable to import application '%s'"
+msgstr "A '%s' alkalmazás importálása sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:395
+#, php-format
+msgid "'%s' application's icon was successfully deleted"
+msgstr "'%s' alkalmazás ikonja sikeresen törölve"
+
+#: ../../SessionManager/web/admin/actions.php:428
+#: ../../SessionManager/web/admin/actions.php:515
+#: ../../SessionManager/web/admin/actions.php:533
+#, php-format
+msgid "Failed to modify application '%s'"
+msgstr "Az alkalmazás '%s' módosítása nem sikerült"
+
+#: ../../SessionManager/web/admin/actions.php:474
+msgid "The icon is not an image"
+msgstr "Az ikon nem kép formátumú"
+
+#: ../../SessionManager/web/admin/actions.php:549
+#: ../../SessionManager/web/admin/actions.php:559
+#, php-format
+msgid "ApplicationGroup '%s' successfully modified"
+msgstr "Alkalmazáscsoport '%s' sikeresen modósítva"
+
+#: ../../SessionManager/web/admin/actions.php:570
+msgid "Application Group Database is not writeable"
+msgstr "Alkalmazáscsoport adatbázisa nem írható"
+
+#: ../../SessionManager/web/admin/actions.php:581
+#, php-format
+msgid "Unable to create applications group '%s'"
+msgstr "Alkalmazáscsoport '%s' létrehozása sikertelen "
+
+#: ../../SessionManager/web/admin/actions.php:583
+#, php-format
+msgid "Applications group '%s' successfully added"
+msgstr "Alkalmazáscsoport '%s' sikeresen létrehozva"
+
+#: ../../SessionManager/web/admin/actions.php:595
+#: ../../SessionManager/web/admin/actions.php:696
+#, php-format
+msgid "Importing applications group '%s' failed"
+msgstr "Alkalmazáscsoport '%s' importálása sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:600
+#, php-format
+msgid "Unable to remove applications group '%s'"
+msgstr "Alkalmazáscsoport '%s' törlése sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:603
+#, php-format
+msgid "Applications group '%s' successfully deleted"
+msgstr "Alkalmazáscsoport '%s' sikeresen törölve"
+
+#: ../../SessionManager/web/admin/actions.php:614
+#, php-format
+msgid "Import of applications group '%s' failed"
+msgstr "Alkalmazáscsoport '%s' importálása sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:635
+#, php-format
+msgid "Unable to modify applications group '%s'"
+msgstr "Alkalmazáscsoport '%s' módosítása sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:637
+#, php-format
+msgid "Applications group '%s' successfully modified"
+msgstr "Alkalmazáscsoport '%s' sikeresen módosítva"
+
+#. problem, what to do ?
+#: ../../SessionManager/web/admin/actions.php:654
+#: ../../SessionManager/web/admin/actions.php:658
+#: ../../SessionManager/web/admin/actions.php:669
+#: ../../SessionManager/web/admin/actions.php:673
+#: ../../SessionManager/web/admin/actions.php:967
+#, php-format
+msgid "UsersGroup '%s' successfully modified"
+msgstr "Felhasználói csoport '%s' sikeresen módosítva"
+
+#: ../../SessionManager/web/admin/actions.php:690
+#, php-format
+msgid "Importing usergroup '%s' failed"
+msgstr "Felhasználói csoport '%s' importálása sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:704
+msgid "Publication successfully added"
+msgstr "Közzététel sikeresen hozzáadva"
+
+#: ../../SessionManager/web/admin/actions.php:706
+msgid "Unable to save the publication"
+msgstr "Közzététel mentése sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:709
+msgid "This publication already exists"
+msgstr "Közzététel sikeresen törölve"
+
+#: ../../SessionManager/web/admin/actions.php:717
+msgid "Publication successfully deleted"
+msgstr "Közzététel sikeresen törölve"
+
+#: ../../SessionManager/web/admin/actions.php:719
+msgid "Unable to delete the publication"
+msgstr "Közzététel törlése sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:722
+msgid "This publication does not exist"
+msgstr "Ez a közzététel nem létezik"
+
+#: ../../SessionManager/web/admin/actions.php:736
+msgid "You must define a name for your usergroup"
+msgstr "Adjon meg nevet a felhasználói csoportnak"
+
+#: ../../SessionManager/web/admin/actions.php:742
+msgid "User Group Database is not writeable"
+msgstr "Felhasználói csoport adatbázis nem írható"
+
+#: ../../SessionManager/web/admin/actions.php:748
+#: ../../SessionManager/web/modules/UserGroupDBDynamic.php:32
+msgid "UserGroupDBDynamic module must be enabled"
+msgstr "Aktiválja a UserGroupDBDynamic modult "
+
+#: ../../SessionManager/web/admin/actions.php:753
+#: ../../SessionManager/web/modules/UserGroupDBDynamicCached.php:32
+msgid "UserGroupDBDynamicCached module must be enabled"
+msgstr "Aktiválja a UserGroupDBDynamicCached modult"
+
+#: ../../SessionManager/web/admin/actions.php:760
+msgid "You must provide a value to each rule of your usergroup"
+msgstr "Felhasználói csoportja összes szabályának értéket kell adnia"
+
+#: ../../SessionManager/web/admin/actions.php:778
+msgid "Unknow usergroup type"
+msgstr "Ismeretlen felhasználói csoport típus"
+
+#: ../../SessionManager/web/admin/actions.php:783
+msgid "Unable to create usergroup"
+msgstr "Felhasználói csoport létrehozása sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:786
+msgid "UserGroup successfully added"
+msgstr "Felhasználói csoport sikeresen hozzáadva"
+
+#: ../../SessionManager/web/admin/actions.php:796
+#: ../../SessionManager/web/admin/actions.php:825
+#: ../../SessionManager/web/admin/actions.php:904
+#: ../../SessionManager/web/admin/actions.php:978
+#, php-format
+msgid "Failed to import Usergroup '%s'"
+msgstr "Felhasználói csoport '%s' importálása sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:802
+#: ../../SessionManager/web/admin/actions.php:820
+msgid "User Group Database not writeable"
+msgstr "Felhasználói csoport adatbázis nem írható"
+
+#: ../../SessionManager/web/admin/actions.php:807
+#, php-format
+msgid "Unable to remove usergroup '%s'"
+msgstr "Felhasználói csoport '%s' törlése sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:810
+#, php-format
+msgid "UserGroup '%s' successfully deleted"
+msgstr "Felhasználói csoport '%s' sikeresen törölve"
+
+#: ../../SessionManager/web/admin/actions.php:855
+#: ../../SessionManager/web/admin/actions.php:928
+#, php-format
+msgid "Unable to update Usergroup '%s'"
+msgstr "Felhasználói csoport '%s' frissítése sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:859
+#: ../../SessionManager/web/admin/actions.php:893
+#, php-format
+msgid "UserGroup '%s' successfully modified"
+msgstr "Felhasználói csoport '%s' sikeresen módosítva"
+
+#: ../../SessionManager/web/admin/actions.php:866
+msgid "Not enough rights"
+msgstr "Nem rendelkezik elegendő jogosultsággal"
+
+#: ../../SessionManager/web/admin/actions.php:883
+#, php-format
+msgid "Failed to import group '%s'"
+msgstr "Csoport '%s' importálása sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:890
+msgid "Unable to save prefs"
+msgstr "Beállítások mentése sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:911
+msgid "You must give a value to each rule of your usergroup"
+msgstr "Felhasználói csoport összes szabályának értéket kell adnia"
+
+#: ../../SessionManager/web/admin/actions.php:930
+#, php-format
+msgid "Rules of '%s' successfully modified"
+msgstr "'%s' szabályai sikeresen módosítva"
+
+#: ../../SessionManager/web/admin/actions.php:1036
+msgid "Usergroup successfully modified"
+msgstr "Felhasználói csoport sikeresen módosítva"
+
+#: ../../SessionManager/web/admin/actions.php:1039
+msgid "Failed to modify usergroup"
+msgstr "Felhasználói csoport módosítása sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1050
+msgid "User Database not writeable"
+msgstr "Felhasználó adatbázis nem írható"
+
+#: ../../SessionManager/web/admin/actions.php:1056
+msgid "Unable to create user"
+msgstr "Felhasználó létrehozása sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1066
+msgid "Unable to create user with an empty password"
+msgstr "Felhasználó létrehozása jelszó nélkül nem lehetséges"
+
+#: ../../SessionManager/web/admin/actions.php:1072
+#, php-format
+msgid "Unable to create user '%s'"
+msgstr "'%s' felhasználó létrehozása sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1076
+#, php-format
+msgid "User '%s' successfully added"
+msgstr "Felhasználó '%s' sikeresen hozzáadva"
+
+#: ../../SessionManager/web/admin/actions.php:1086
+#, php-format
+msgid "Unable to delete user '%s' because he has an active session"
+msgstr "'%s' felhasználó törlése sikertelen, munkafolyamata aktív"
+
+#: ../../SessionManager/web/admin/actions.php:1091
+#: ../../SessionManager/web/admin/actions.php:1105
+#, php-format
+msgid "Unable to delete user '%s'"
+msgstr "'%s' felhasználó törlése sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1108
+#, php-format
+msgid "User '%s' successfully deleted"
+msgstr "'%s' felhasználó sikeresen törölve"
+
+#: ../../SessionManager/web/admin/actions.php:1121
+#, php-format
+msgid "Unable to import user '%s'"
+msgstr "'%s' felhasználó importálása sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1131
+#, php-format
+msgid "Unable to modify user '%s'"
+msgstr "'%s' felhasználó módosítása sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1133
+#, php-format
+msgid "User '%s' successfully modified"
+msgstr "'%s' felhasználó sikeresen módosítva"
+
+#: ../../SessionManager/web/admin/actions.php:1141
+msgid "No custom password given for populating the database."
+msgstr "Jelszó nem lett megadva az adatbázis feltöltéséhez"
+
+#: ../../SessionManager/web/admin/actions.php:1152
+msgid "User database populated."
+msgstr "Felhasználói adatbázis feltöltve"
+
+#: ../../SessionManager/web/admin/actions.php:1155
+msgid "User database population failed."
+msgstr "Felhasználói adatbázis feltöltése sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1172
+#: ../../SessionManager/web/modules/ApplicationDB.php:32
+msgid "Module ApplicationDB must be enabled"
+msgstr "ApplicationDB modult aktiválni kell"
+
+#: ../../SessionManager/web/admin/actions.php:1188
+#: ../../SessionManager/web/admin/actions.php:1247
+msgid "Shared folder management is not enabled"
+msgstr "Megosztott mappa menedzsment nincs aktiválva"
+
+#: ../../SessionManager/web/admin/actions.php:1209
+#, php-format
+msgid "Unable to delete network folder '%s'"
+msgstr "'%s' hálózati mappa törlése sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1212
+#, php-format
+msgid "Unable to delete network folder with id '%s'"
+msgstr "Hálózati mappa '%s' id-vel törlése sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1217
+msgid "Network folders successfully deleted"
+msgstr "Hálózati mappák törlése sikeres"
+
+#: ../../SessionManager/web/admin/actions.php:1234
+msgid "Shared folder successfully renamed"
+msgstr "Megosztott mappa átnevezése sikeres"
+
+#: ../../SessionManager/web/admin/actions.php:1236
+msgid "Update of the shared folder failed"
+msgstr "Megosztott mappa frissítése sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1238
+msgid "A shared folder with that name already exists!"
+msgstr "Megosztott mappa ezzel a névvel már létezik!"
+
+#: ../../SessionManager/web/admin/actions.php:1266
+msgid "Profile management is not enabled"
+msgstr "Profil menedzsment nincs aktiválva"
+
+#: ../../SessionManager/web/admin/actions.php:1284
+#, php-format
+msgid "Unable to delete profile '%s'"
+msgstr "'%s' profil törlése sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1286
+#, php-format
+msgid "Profile '%s' successfully deleted"
+msgstr "'%s' profil törlése sikeres"
+
+#: ../../SessionManager/web/admin/actions.php:1289
+#, php-format
+msgid "Unable to load profile '%s'"
+msgstr "'%s' profil betöltése sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1302
+msgid "Untitled"
+msgstr "Cím nélküli"
+
+#: ../../SessionManager/web/admin/actions.php:1307
+msgid "News successfully added"
+msgstr "Hírek sikeresen hozzáadva"
+
+#: ../../SessionManager/web/admin/actions.php:1314
+msgid "Unable to delete this news"
+msgstr "Hírek törlése sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1316
+msgid "News successfully deleted"
+msgstr "Hírek sikeresen törölve"
+
+#: ../../SessionManager/web/admin/actions.php:1326
+msgid "Password is empty"
+msgstr "Üres jelszó"
+
+#: ../../SessionManager/web/admin/actions.php:1329
+msgid "Passwords are not identical"
+msgstr "Jelszavak nem egyeznek"
+
+#: ../../SessionManager/web/admin/actions.php:1334
+msgid "Password successfully changed"
+msgstr "Jelszó sikeresen megváltoztatva"
+
+#: ../../SessionManager/web/admin/actions.php:1338
+msgid "Password not changed"
+msgstr "Jelszó nem változott"
+
+#: ../../SessionManager/web/admin/actions.php:1357
+#, php-format
+msgid "Unable to delete session '%s'"
+msgstr "'%s' munkafolyamat törlése sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1361
+#, php-format
+msgid "Session '%s' successfully deleted"
+msgstr "'%s' munkafolyamat törlése sikeres"
+
+#: ../../SessionManager/web/admin/actions.php:1379
+#, php-format
+msgid ""
+"Unable to delete the server '%s' because there are active sessions on it."
+msgstr "'%s' szerver törlése sikertelen, aktív munkafolyamatok miatt"
+
+#: ../../SessionManager/web/admin/actions.php:1387
+#, php-format
+msgid "Server '%s' successfully deleted"
+msgstr "'%s' szerver sikeresen törölve"
+
+#: ../../SessionManager/web/admin/actions.php:1405
+#, php-format
+msgid "Server '%s' successfully registered"
+msgstr "'%s' szerver sikeresen regisztrálva"
+
+#: ../../SessionManager/web/admin/actions.php:1408
+#, php-format
+msgid "Failed to register Server '%s'"
+msgstr "'%s' szerver regisztrálása sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1430
+#: ../../SessionManager/web/admin/actions.php:1441
+#: ../../SessionManager/web/admin/actions.php:1452
+#, php-format
+msgid "Server '%s' successfully modified"
+msgstr "'%s' szerver módosítása sikeres"
+
+#: ../../SessionManager/web/admin/actions.php:1465
+#: ../../SessionManager/web/admin/actions.php:1518
+#: ../../SessionManager/web/admin/actions.php:1541
+msgid "Task successfully added"
+msgstr "Feladat hozzáadása sikeres"
+
+#: ../../SessionManager/web/admin/actions.php:1478
+#, php-format
+msgid "Server '%s' is upgrading"
+msgstr "'%s' szerver frissül"
+
+#: ../../SessionManager/web/admin/actions.php:1512
+#: ../../SessionManager/web/admin/actions.php:1573
+msgid "Task successfully deleted"
+msgstr "Feladat sikeresen törölve"
+
+#: ../../SessionManager/web/admin/actions.php:1586
+msgid "You must provide a name to your shared folder"
+msgstr "Megosztott mappát el kell nevezni"
+
+#: ../../SessionManager/web/admin/actions.php:1592
+msgid "A shared folder with this name already exists"
+msgstr "Megosztott mappa ezzel a névvel már létezik"
+
+#: ../../SessionManager/web/admin/actions.php:1607
+msgid "No server avalaible for shared folder"
+msgstr "Nem létezik szerver megosztott mappa számára"
+
+#: ../../SessionManager/web/admin/actions.php:1615
+msgid "Unable to add shared folder"
+msgstr "Megosztott mappa hozzáadása sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1619
+#, php-format
+msgid "Shared folder '%s' successfully added"
+msgstr "'%s' megosztott mappa hozzáadása sikeres"
+
+#: ../../SessionManager/web/admin/actions.php:1628
+#: ../../SessionManager/web/admin/actions.php:1651
+msgid "Unable to delete this shared folder"
+msgstr "Megosztott mappa törlése sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1634
+#: ../../SessionManager/web/admin/actions.php:1645
+#, php-format
+msgid "Unable to delete shared folder on file server '%s'"
+msgstr "Megosztott mappa törlése '%s' a fájl szerveren sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1639
+#, php-format
+msgid "Unable to delete shared folder '%s' because it is currently being used"
+msgstr "'%s' megosztott mappa törlése sikertelen, használatban van"
+
+#: ../../SessionManager/web/admin/actions.php:1655
+msgid "Shared folder successfully deleted"
+msgstr "Megosztott mappa sikeresen törölve"
+
+#: ../../SessionManager/web/admin/actions.php:1664
+msgid "Unable to create this shared folder access"
+msgstr "Megosztott mappa hozzáférésének létrehozása sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1671
+#: ../../SessionManager/web/admin/actions.php:1697
+msgid "Unable to load usergroup"
+msgstr "Felhasználói csoport betöltése sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1677
+#: ../../SessionManager/web/admin/actions.php:1703
+msgid "Shared folder successfully modified"
+msgstr "Megosztott mappa sikeresen módosítva"
+
+#: ../../SessionManager/web/admin/actions.php:1681
+#: ../../SessionManager/web/admin/actions.php:1707
+#, php-format
+msgid "Unable to modify shared folder named '%s'"
+msgstr "'%s' megosztott mappa módosítása sikertelen"
+
+#: ../../SessionManager/web/admin/actions.php:1690
+msgid "Unable to delete this shared folder access"
+msgstr "Megosztott mappa hozzáférésének törlése sikertelen"
+
+#. general div
+#: ../../SessionManager/web/admin/applications.php:56
+#: ../../SessionManager/web/admin/includes/page_template.php:56
+#: ../../SessionManager/web/admin/includes/page_template.php:129
+#: ../../SessionManager/web/admin/sessions.php:79
+#: ../../SessionManager/web/admin/summary.php:58
+#: ../../SessionManager/web/admin/sumup.php:221
+#: ../../SessionManager/web/classes/Preferences.class.php:386
+msgid "Applications"
+msgstr "Alkalmazások"
+
+#: ../../SessionManager/web/admin/applications.php:60
+#: ../../SessionManager/web/admin/applications_static.php:65
+#: ../../SessionManager/web/admin/wizard.php:159
+#: ../../SessionManager/web/admin/wizard.php:309
+msgid "No available application"
+msgstr "Alkalmazások nem elérhetőek"
+
+#. if ($is_rw)
+#. echo '<th class="unsortable"></th>';
+#: ../../SessionManager/web/admin/applications.php:68
+#: ../../SessionManager/web/admin/applications_static.php:74
+#: ../../SessionManager/web/admin/applications_static.php:416
+#: ../../SessionManager/web/admin/appsgroup.php:58
+#: ../../SessionManager/web/admin/appsgroup.php:126
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:76
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:547
+#: ../../SessionManager/web/admin/mimetypes.php:56
+#: ../../SessionManager/web/admin/mimetypes.php:101
+#: ../../SessionManager/web/admin/sharedfolders.php:120
+#: ../../SessionManager/web/admin/summary.php:64
+#: ../../SessionManager/web/admin/usersgroup.php:96
+#: ../../SessionManager/web/admin/usersgroup.php:211
+#: ../../SessionManager/web/admin/usersgroup.php:803
+#: ../../SessionManager/web/admin/wizard.php:261
+#: ../../SessionManager/web/admin/wizard.php:411
+msgid "Name"
+msgstr "Név"
+
+#. echo '<th>'._('Status').'</th>';
+#: ../../SessionManager/web/admin/applications.php:69
+#: ../../SessionManager/web/admin/applications.php:257
+#: ../../SessionManager/web/admin/applications.php:510
+#: ../../SessionManager/web/admin/applications_static.php:75
+#: ../../SessionManager/web/admin/applications_static.php:337
+#: ../../SessionManager/web/admin/appsgroup.php:59
+#: ../../SessionManager/web/admin/appsgroup.php:131
+#: ../../SessionManager/web/admin/appsgroup.php:218
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:80
+#: ../../SessionManager/web/admin/usersgroup.php:97
+#: ../../SessionManager/web/admin/usersgroup.php:216
+#: ../../SessionManager/web/admin/usersgroup.php:414
+#: ../../SessionManager/web/admin/wizard.php:266
+#: ../../SessionManager/web/admin/wizard.php:416
+msgid "Description"
+msgstr "Leírás"
+
+#. echo '<th>'._('Package').'</th>';
+#: ../../SessionManager/web/admin/applications.php:70
+#: ../../SessionManager/web/admin/applications.php:255
+#: ../../SessionManager/web/admin/applications.php:383
+#: ../../SessionManager/web/admin/applications.php:508
+#: ../../SessionManager/web/admin/applications_static.php:76
+#: ../../SessionManager/web/admin/applications_static.php:336
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:385
+#: ../../SessionManager/web/admin/servers.php:75
+#: ../../SessionManager/web/admin/servers.php:235
+#: ../../SessionManager/web/admin/servers.php:401
+#: ../../SessionManager/web/admin/sumup.php:219
+#: ../../SessionManager/web/admin/tasks.php:68
+#: ../../SessionManager/web/admin/tasks.php:143
+#: ../../SessionManager/web/admin/usersgroup.php:99
+msgid "Type"
+msgstr "Típus"
+
+#: ../../SessionManager/web/admin/applications.php:100
+#: ../../SessionManager/web/admin/applications_static.php:106
+#: ../../SessionManager/web/admin/appsgroup.php:81
+#: ../../SessionManager/web/admin/servers.php:153
+#: ../../SessionManager/web/admin/usersgroup.php:127
+#: ../../SessionManager/web/admin/users.php:92
+msgid "Manage"
+msgstr "Kezelés"
+
+#: ../../SessionManager/web/admin/applications.php:144
+msgid "Orphan Applications"
+msgstr "Árva alkalmazások"
+
+#: ../../SessionManager/web/admin/applications.php:145
+msgid "Are you sure you want to remove orphan applications?"
+msgstr "Biztos törölni akarja az árva alkalmazásokat?"
+
+#: ../../SessionManager/web/admin/applications.php:148
+msgid "Remove orphan applications"
+msgstr "Árva alkalmazások eltávolítása"
+
+#: ../../SessionManager/web/admin/applications.php:171
+msgid "Available"
+msgstr "Elérhető"
+
+#: ../../SessionManager/web/admin/applications.php:172
+#: ../../SessionManager/web/admin/appsgroup.php:164
+#: ../../SessionManager/web/admin/usersgroup.php:319
+msgid "Block"
+msgstr "Zárol"
+
+#: ../../SessionManager/web/admin/applications.php:175
+#: ../../SessionManager/web/admin/appsgroup.php:71
+#: ../../SessionManager/web/admin/appsgroup.php:168
+#: ../../SessionManager/web/admin/usersgroup.php:110
+#: ../../SessionManager/web/admin/usersgroup.php:323
+msgid "Blocked"
+msgstr "Zárolva"
+
+#: ../../SessionManager/web/admin/applications.php:176
+msgid "Unblock"
+msgstr "Feloldás"
+
+#: ../../SessionManager/web/admin/applications.php:254
+#: ../../SessionManager/web/admin/applications.php:507
+msgid "Package"
+msgstr "Csomag"
+
+#: ../../SessionManager/web/admin/applications.php:258
+#: ../../SessionManager/web/admin/applications.php:511
+msgid "Executable"
+msgstr "Végrehajtható"
+
+#: ../../SessionManager/web/admin/applications.php:276
+msgid "Set custom icon"
+msgstr "Ikon beállítása"
+
+#: ../../SessionManager/web/admin/applications.php:283
+msgid "Clone to static application"
+msgstr "Statikus alkalmazás klónozása"
+
+#: ../../SessionManager/web/admin/applications.php:292
+msgid "Are you sure you want to remove this application?"
+msgstr "Biztosan eltávolítja ezt az alkalmazást?"
+
+#: ../../SessionManager/web/admin/applications.php:296
+msgid "This application is orphan"
+msgstr "Árva alkalmazás"
+
+#: ../../SessionManager/web/admin/applications.php:296
+msgid "Remove this application"
+msgstr "Alkalmazás eltávolítása"
+
+#: ../../SessionManager/web/admin/applications.php:315
+#: ../../SessionManager/web/admin/applications_static.php:462
+msgid "Servers with this application"
+msgstr "Szerverek ezzel az alkalmazással"
+
+#: ../../SessionManager/web/admin/applications.php:328
+#: ../../SessionManager/web/admin/applications_static.php:470
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:309
+msgid "Are you sure you want to remove this application from this server?"
+msgstr "Biztosan eltávolítja ezt az alkalmazást a szerverről?"
+
+#: ../../SessionManager/web/admin/applications.php:333
+#: ../../SessionManager/web/admin/applications_static.php:475
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:314
+msgid "Remove from this server"
+msgstr "Eltávolítás a szerverről"
+
+#: ../../SessionManager/web/admin/applications.php:369
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:350
+msgid "Install on this server"
+msgstr "Installálás a szerverre"
+
+#: ../../SessionManager/web/admin/applications.php:379
+msgid "Active tasks on this application"
+msgstr "Alkalmazás aktív feladatai"
+
+#: ../../SessionManager/web/admin/applications.php:382
+#: ../../SessionManager/web/admin/ha/status.php:186
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:384
+#: ../../SessionManager/web/admin/tasks.php:141
+msgid "ID"
+msgstr "ID"
+
+#. echo '<th>'._('Version').'</th>';
+#: ../../SessionManager/web/admin/applications.php:384
+#: ../../SessionManager/web/admin/appsgroup.php:60
+#: ../../SessionManager/web/admin/appsgroup.php:219
+#: ../../SessionManager/web/admin/ha/menu.inc.php:30
+#: ../../SessionManager/web/admin/includes/page_template.php:68
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:386
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:549
+#: ../../SessionManager/web/admin/index.php:158
+#: ../../SessionManager/web/admin/servers.php:78
+#: ../../SessionManager/web/admin/servers.php:401
+#: ../../SessionManager/web/admin/sessions.php:174
+#: ../../SessionManager/web/admin/sessions.php:232
+#: ../../SessionManager/web/admin/sumup.php:222
+#: ../../SessionManager/web/admin/tasks.php:70
+#: ../../SessionManager/web/admin/tasks.php:145
+#: ../../SessionManager/web/admin/usersgroup.php:98
+#: ../../SessionManager/web/admin/usersgroup.php:415
+msgid "Status"
+msgstr "Státusz"
+
+#. echo '<th>'._('Version').'</th>';
+#: ../../SessionManager/web/admin/applications.php:385
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:387
+#: ../../SessionManager/web/admin/servers.php:78
+#: ../../SessionManager/web/admin/servers.php:238
+#: ../../SessionManager/web/admin/servers.php:402
+#: ../../SessionManager/web/admin/tasks.php:71
+#: ../../SessionManager/web/admin/tasks.php:146
+msgid "Details"
+msgstr "Részletek"
+
+#: ../../SessionManager/web/admin/applications.php:392
+#: ../../SessionManager/web/admin/configuration-profile.php:252
+#: ../../SessionManager/web/admin/ha/status.php:256
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:394
+#: ../../SessionManager/web/admin/tasks.php:80
+#: ../../SessionManager/web/admin/tasks.php:158
+#: ../../SessionManager/web/classes/Session.class.php:353
+msgid "Error"
+msgstr "Hiba"
+
+#: ../../SessionManager/web/admin/applications.php:410
+#: ../../SessionManager/web/admin/applications_static.php:502
+msgid "Groups with this application"
+msgstr "Csoportok az alkalmazással"
+
+#: ../../SessionManager/web/admin/applications.php:418
+#: ../../SessionManager/web/admin/applications_static.php:509
+msgid "Are you sure you want to delete this application from this group?"
+msgstr "Biztosan eltávolítja a csoportból az alkalmazást?"
+
+#: ../../SessionManager/web/admin/applications.php:423
+#: ../../SessionManager/web/admin/applications_static.php:514
+#: ../../SessionManager/web/admin/appsgroup.php:286
+#: ../../SessionManager/web/admin/usersgroup.php:611
+#: ../../SessionManager/web/admin/users.php:341
+msgid "Delete from this group"
+msgstr "Törlés a csoportból"
+
+#: ../../SessionManager/web/admin/applications.php:439
+#: ../../SessionManager/web/admin/applications_static.php:529
+#: ../../SessionManager/web/admin/appsgroup.php:303
+#: ../../SessionManager/web/admin/usersgroup.php:628
+#: ../../SessionManager/web/admin/users.php:356
+msgid "Add to this group"
+msgstr "Hozzáadás a csoporthoz"
+
+#: ../../SessionManager/web/admin/applications.php:450
+#: ../../SessionManager/web/admin/applications_static.php:539
+#: ../../SessionManager/web/admin/includes/page_template.php:143
+#: ../../SessionManager/web/admin/mimetypes.php:47
+msgid "Mime-Types"
+msgstr "Mime-típusok"
+
+#: ../../SessionManager/web/admin/applications.php:453
+#: ../../SessionManager/web/admin/mimetypes.php:51
+msgid "No available mimes-type"
+msgstr "Nincs elérhető mime-típus"
+
+#: ../../SessionManager/web/admin/applications.php:524
+msgid "Select an icon from an Application Server"
+msgstr "Válasszon egy ikont az alkalmazás szerverről"
+
+#: ../../SessionManager/web/admin/applications.php:553
+msgid "Select this icon"
+msgstr "Az ikon kiválasztása"
+
+#: ../../SessionManager/web/admin/applications.php:559
+msgid "Upload an icon"
+msgstr "Ikon feltöltése"
+
+#: ../../SessionManager/web/admin/applications.php:568
+msgid "Upload this icon"
+msgstr "Ikon feltöltése"
+
+#: ../../SessionManager/web/admin/applications_static.php:27
+msgid "Web"
+msgstr "Hálózat"
+
+#. general div
+#: ../../SessionManager/web/admin/applications_static.php:61
+msgid "Static Applications"
+msgstr "Statikus alkalmazások"
+
+#: ../../SessionManager/web/admin/applications_static.php:112
+#: ../../SessionManager/web/admin/applications_static.php:362
+#: ../../SessionManager/web/admin/appsgroup.php:281
+msgid "Are you sure you want to delete this application?"
+msgstr "Biztosan eltávolítja ezt az alkalmazást?"
+
+#: ../../SessionManager/web/admin/applications_static.php:116
+#: ../../SessionManager/web/admin/applications_static.php:136
+#: ../../SessionManager/web/admin/applications_static.php:366
+#: ../../SessionManager/web/admin/appsgroup.php:88
+#: ../../SessionManager/web/admin/appsgroup.php:106
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:601
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:621
+#: ../../SessionManager/web/admin/publications.php:108
+#: ../../SessionManager/web/admin/servers.php:294
+#: ../../SessionManager/web/admin/servers.php:323
+#: ../../SessionManager/web/admin/servers.php:491
+#: ../../SessionManager/web/admin/tasks.php:97
+#: ../../SessionManager/web/admin/tasks.php:175
+#: ../../SessionManager/web/admin/usersgroup.php:135
+#: ../../SessionManager/web/admin/usersgroup.php:155
+#: ../../SessionManager/web/admin/users.php:99
+#: ../../SessionManager/web/admin/users.php:120
+msgid "Delete"
+msgstr "Törlés"
+
+#: ../../SessionManager/web/admin/applications_static.php:129
+#: ../../SessionManager/web/admin/appsgroup.php:101
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:614
+#: ../../SessionManager/web/admin/servers.php:188
+#: ../../SessionManager/web/admin/servers.php:309
+#: ../../SessionManager/web/admin/sessions.php:218
+#: ../../SessionManager/web/admin/usersgroup.php:150
+#: ../../SessionManager/web/admin/users.php:113
+#: ../../SessionManager/web/admin/wizard.php:211
+#: ../../SessionManager/web/admin/wizard.php:230
+#: ../../SessionManager/web/admin/wizard.php:356
+#: ../../SessionManager/web/admin/wizard.php:375
+msgid "Mark all"
+msgstr "Összes kijelölése"
+
+#: ../../SessionManager/web/admin/applications_static.php:130
+#: ../../SessionManager/web/admin/appsgroup.php:101
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:615
+#: ../../SessionManager/web/admin/servers.php:189
+#: ../../SessionManager/web/admin/servers.php:310
+#: ../../SessionManager/web/admin/sessions.php:218
+#: ../../SessionManager/web/admin/usersgroup.php:150
+#: ../../SessionManager/web/admin/users.php:114
+#: ../../SessionManager/web/admin/wizard.php:211
+#: ../../SessionManager/web/admin/wizard.php:230
+#: ../../SessionManager/web/admin/wizard.php:356
+#: ../../SessionManager/web/admin/wizard.php:375
+msgid "Unmark all"
+msgstr "Összes kijelölés visszavonása"
+
+#: ../../SessionManager/web/admin/applications_static.php:133
+msgid "Are you sure you want to delete these static applications?"
+msgstr "Biztosan eltávolítja ezeket a statikus alkalmazásokat?"
+
+#: ../../SessionManager/web/admin/applications_static.php:147
+msgid "Add a static application"
+msgstr "Statikus alkalmazás hozzáadása"
+
+#: ../../SessionManager/web/admin/applications_static.php:188
+#: ../../SessionManager/web/admin/applications_static.php:339
+#: ../../SessionManager/web/admin/applications_static.php:409
+msgid "Command"
+msgstr "Parancs"
+
+#: ../../SessionManager/web/admin/applications_static.php:190
+#: ../../SessionManager/web/admin/applications_static.php:341
+#: ../../SessionManager/web/admin/applications_static.php:412
+msgid "URL"
+msgstr "URL"
+
+#: ../../SessionManager/web/admin/applications_static.php:205
+#: ../../SessionManager/web/admin/applications_static.php:569
+#: ../../SessionManager/web/admin/applications_static.php:580
+#: ../../SessionManager/web/admin/appsgroup.php:144
+#: ../../SessionManager/web/admin/publications.php:146
+#: ../../SessionManager/web/admin/usersgroup.php:271
+#: ../../SessionManager/web/admin/users.php:130
+#: ../../SessionManager/web/admin/users.php:150
+msgid "Add"
+msgstr "Hozzáadás"
+
+#: ../../SessionManager/web/admin/applications_static.php:223
+msgid "Web links configuration"
+msgstr "Web linkek konfigurálása"
+
+#: ../../SessionManager/web/admin/applications_static.php:224
+msgid "Default browser for:"
+msgstr "Alapértelmezett böngésző:"
+
+#: ../../SessionManager/web/admin/applications_static.php:246
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "None"
+msgstr "Semmi"
+
+#: ../../SessionManager/web/admin/applications_static.php:260
+msgid "Update"
+msgstr "Frissít"
+
+#: ../../SessionManager/web/admin/applications_static.php:376
+#: ../../SessionManager/web/admin/applications_static.php:450
+#: ../../SessionManager/web/admin/news.php:126
+#: ../../SessionManager/web/admin/news.php:135
+msgid "Modify"
+msgstr "Módosít"
+
+#: ../../SessionManager/web/admin/applications_static.php:432
+msgid "Icon"
+msgstr "Ikon"
+
+#: ../../SessionManager/web/admin/applications_static.php:436
+msgid "Delete this icon"
+msgstr "Ikon törlése"
+
+#: ../../SessionManager/web/admin/applications_static.php:436
+msgid "Are you sure you want to delete this icon?"
+msgstr "Biztosan eltávolítja ezt az ikont?"
+
+#: ../../SessionManager/web/admin/applications_static.php:492
+msgid "Add to this server"
+msgstr "Hozzáadás a szerverhez"
+
+#: ../../SessionManager/web/admin/applications_static.php:552
+msgid "Del"
+msgstr "Törlés"
+
+#: ../../SessionManager/web/admin/applications_static.php:578
+msgid "Custom Mime-Type: "
+msgstr "Egyéni mime-típus"
+
+#: ../../SessionManager/web/admin/appsgroup.php:47
+msgid "Application groups"
+msgstr "Alkalmazás csoportok"
+
+#: ../../SessionManager/web/admin/appsgroup.php:51
+msgid "No available application groups"
+msgstr "Alkalmazás csoportok nem elérhetőek"
+
+#: ../../SessionManager/web/admin/appsgroup.php:69
+#: ../../SessionManager/web/admin/appsgroup.php:163
+#: ../../SessionManager/web/admin/usersgroup.php:108
+#: ../../SessionManager/web/admin/usersgroup.php:318
+msgid "Enabled"
+msgstr "Aktiválva"
+
+#: ../../SessionManager/web/admin/appsgroup.php:87
+#: ../../SessionManager/web/admin/appsgroup.php:231
+#: ../../SessionManager/web/admin/usersgroup.php:133
+#: ../../SessionManager/web/admin/usersgroup.php:446
+msgid "Are you sure you want to delete this group?"
+msgstr "Biztosan eltávolítja ezt a csoportot?"
+
+#: ../../SessionManager/web/admin/appsgroup.php:103
+#: ../../SessionManager/web/admin/usersgroup.php:152
+msgid "Are you sure you want to delete these groups?"
+msgstr "Biztosan eltávolítja ezeket a csoportokat?"
+
+#: ../../SessionManager/web/admin/appsgroup.php:119
+#: ../../SessionManager/web/admin/usersgroup.php:177
+msgid "Create a new group"
+msgstr "Új csoport létrehozása"
+
+#: ../../SessionManager/web/admin/appsgroup.php:169
+#: ../../SessionManager/web/admin/ha/configuration.php:294
+#: ../../SessionManager/web/admin/usersgroup.php:324
+msgid "Enable"
+msgstr "Aktiválni"
+
+#: ../../SessionManager/web/admin/appsgroup.php:215
+msgid "Application groups management"
+msgstr "Alkalmazás csoport menedzsment"
+
+#: ../../SessionManager/web/admin/appsgroup.php:230
+#: ../../SessionManager/web/admin/usersgroup.php:427
+#: ../../SessionManager/web/admin/users.php:263
+msgid "Settings"
+msgstr "Beállítások"
+
+#: ../../SessionManager/web/admin/appsgroup.php:232
+#: ../../SessionManager/web/admin/usersgroup.php:447
+msgid "Delete this group"
+msgstr "Csoport törlése"
+
+#: ../../SessionManager/web/admin/appsgroup.php:254
+#: ../../SessionManager/web/admin/usersgroup.php:468
+msgid "Update the name"
+msgstr "Név frissítése"
+
+#: ../../SessionManager/web/admin/appsgroup.php:263
+#: ../../SessionManager/web/admin/usersgroup.php:477
+msgid "Update the description"
+msgstr "Leírás frissítése"
+
+#: ../../SessionManager/web/admin/appsgroup.php:271
+msgid "List of applications in this group"
+msgstr "Csoport alkalmazások listája "
+
+#: ../../SessionManager/web/admin/appsgroup.php:358
+#: ../../SessionManager/web/admin/usersgroup.php:645
+msgid "List of publications for this group"
+msgstr "Csoport közzétételek listája"
+
+#: ../../SessionManager/web/admin/appsgroup.php:368
+#: ../../SessionManager/web/admin/publications.php:103
+#: ../../SessionManager/web/admin/usersgroup.php:654
+msgid "Are you sure you want to delete this publication?"
+msgstr "Biztosan eltávolítja ezt a közzétételt?"
+
+#: ../../SessionManager/web/admin/appsgroup.php:373
+#: ../../SessionManager/web/admin/usersgroup.php:659
+msgid "Delete this publication"
+msgstr "Közzététel eltávolítása"
+
+#: ../../SessionManager/web/admin/appsgroup.php:390
+#: ../../SessionManager/web/admin/usersgroup.php:676
+msgid "Add this publication"
+msgstr "Közzététel hozzáadása"
+
+#: ../../SessionManager/web/admin/checkup.php:207
+#: ../../SessionManager/web/admin/includes/page_template.php:300
+msgid "Checkup"
+msgstr "Ellenőrzés"
+
+#: ../../SessionManager/web/admin/checkup.php:209
+msgid "PHP Modules"
+msgstr "PHP modulok"
+
+#: ../../SessionManager/web/admin/checkup.php:237
+msgid "Liaisons"
+msgstr "Összeköttetések"
+
+#: ../../SessionManager/web/admin/checkup.php:281
+msgid "Cleanup liaisons"
+msgstr "Összeköttetések tisztítása"
+
+#. reset
+#. conf not valid
+#: ../../SessionManager/web/admin/checkup.php:286
+#: ../../SessionManager/web/admin/configuration-partial.php:53
+#: ../../SessionManager/web/admin/configuration-partial.php:60
+#: ../../SessionManager/web/admin/configuration.php:69
+#: ../../SessionManager/web/admin/configuration.php:81
+#: ../../SessionManager/web/admin/ha/configuration.php:469
+#: ../../SessionManager/web/admin/ha/menu.inc.php:32
+#: ../../SessionManager/web/admin/includes/page_template.php:62
+#: ../../SessionManager/web/admin/includes/page_template.php:294
+#: ../../SessionManager/web/admin/index.php:84
+#: ../../SessionManager/web/admin/servers.php:445
+#: ../../SessionManager/web/admin/sharedfolders.php:115
+msgid "Configuration"
+msgstr "Konfigurálás"
+
+#: ../../SessionManager/web/admin/checkup.php:291
+msgid "Default usergroup"
+msgstr "Alapértelmezett felhasználó csoport"
+
+#: ../../SessionManager/web/admin/checkup.php:311
+msgid "Cleanup configuration"
+msgstr "Tisztítási konfiguráció"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:27
+#: ../../SessionManager/web/modules/SessionManagement/microsoft.php:66
+msgid "Microsoft"
+msgstr "Microsoft"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:158
+msgid "Microsoft integration"
+msgstr "Microsoft integráció"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:163
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:225
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:261
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:318
+msgid "Domain:"
+msgstr "Domén"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:164
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:192
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:257
+msgid "Primary Host:"
+msgstr "Elsődleges host"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:165
+msgid ""
+"Optional: If the domain name is not registered in your DNS, fill in the "
+"Active Directory IP."
+msgstr ""
+"Tetszőleges: ha a domén név nem regisztrált az Ön DNS-ben, töltse ki az "
+"Active Directory IP-vel"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:167
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:193
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:258
+msgid "Secondary Host:"
+msgstr "Másodlagos host:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:168
+msgid "Optional"
+msgstr "Tetszőleges"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:174
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:218
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:267
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:276
+msgid "Administrator account"
+msgstr "Adminisztrátori fiók"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:176
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:278
+msgid "Login:"
+msgstr "Belépés:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:177
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:279
+msgid "Password:"
+msgstr "Jelszó:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:183
+msgid "Usergroups"
+msgstr "Felhasználói csoportok"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:187
+msgid "Use <strong>Active Directory</strong> usergroups"
+msgstr "<strong>Active Directory</strong> felhasználói csoportok használata"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:192
+msgid "Use <strong>Internal</strong> usergroups"
+msgstr "<strong>Belső</strong> felhasználói csoportok használata"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:206
+msgid "Domain users"
+msgstr "Domén felhasználók"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:210
+msgid ""
+"Use <strong>Active Directory</strong> to handle users in OVD sessions <em>"
+"(not compatible with Linux applications)</em>"
+msgstr ""
+"<strong>Active Directory</strong> használata OVD munkafolyamatok kezelésére "
+"<em>(Linux alkalmazásokkal nem kompatibilis)</em>"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:214
+msgid "Use <strong>Internal</strong> method to handle users in OVD sessions"
+msgstr "<strong>Belső</strong> módszer használata OVD munkafolyamatokhoz"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:227
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:320
+msgid "Administrator account:"
+msgstr "Adminisztrátor fiók:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:229
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:270
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:322
+msgid "User Groups:"
+msgstr "Felhasználó csoportok:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:231
+msgid "Active Directory User Groups"
+msgstr "Active Directory felhasználó csoportok"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:233
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:250
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:276
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:307
+msgid "Use Internal User Groups"
+msgstr "Belső felhasználó csoportok használata"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:27
+#: ../../SessionManager/web/classes/Preferences.class.php:232
+#: ../../SessionManager/web/modules/ProfileDB/internal.php:26
+#: ../../SessionManager/web/modules/SessionManagement/internal.php:78
+#: ../../SessionManager/web/modules/SharedFolderDB/internal.php:27
+#: ../../SessionManager/web/modules/UserGroupDBDynamicCached/internal.php:255
+#: ../../SessionManager/web/modules/UserGroupDBDynamic/internal.php:248
+msgid "Internal"
+msgstr "Belső"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:79
+msgid "Internal Database Profiles"
+msgstr "Belső adatbázis profilok"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:82
+msgid ""
+"This is the default profile manager. This profile manager saves all the data "
+"into a the same SQL database as you defined it in the system configuration."
+msgstr ""
+"Ez az alapértelmezett profil kezelő. A profil kezelő minden adatot a "
+"konfigurálásnál megadott SQL adatbázisba ment."
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:93
+msgid "Use a dynamic internal User Group"
+msgstr "Dinamikus belső felhasználó csoport használata"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:27
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:187
+#: ../../SessionManager/web/modules/UserDB/ldap.php:344
+msgid "Lightweight Directory Access Protocol (LDAP)"
+msgstr "Lightweight Directory Access Protocol (LDAP)"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:194
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:212
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:259
+msgid "optional"
+msgstr "tetszőleges"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:196
+msgid "Server Port:"
+msgstr "Server Port:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:197
+msgid "Base DN:"
+msgstr "Base DN:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:202
+#: ../../SessionManager/web/admin/includes/page_template.php:50
+#: ../../SessionManager/web/admin/includes/page_template.php:115
+#: ../../SessionManager/web/admin/summary.php:57
+#: ../../SessionManager/web/admin/users.php:59
+msgid "Users"
+msgstr "Felhasználók"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:204
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:268
+msgid "User branch:"
+msgstr "Felhasználói ág:"
+
+#. Not yet Implemented
+#. $str.= '<tr><td style="text-align: right;"><input class="input_checkbox" type="checkbox" name="user_branch_recursive"/></td>';
+#. $str.= '<td>'._('Recursive Mode').'</td></tr>';
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:210
+msgid "Distinguished name field:"
+msgstr "DN név mező:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:211
+msgid "Display name field:"
+msgstr "Név mező:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:212
+msgid "Locale field"
+msgstr "Lokális mező"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:213
+msgid "Filter:"
+msgstr "Szűrő"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:224
+msgid "Anonymous bind"
+msgstr "Névtelen kötés"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:226
+msgid "Bind DN (without suffix):"
+msgstr "Bind DN (suffix nélkül)"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:227
+msgid "Bind password:"
+msgstr "Bind jelszó:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:232
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:298
+msgid "User Groups"
+msgstr "Felhasználói csoportok"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:236
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:272
+msgid "Use LDAP User Groups using the MemberOf field"
+msgstr "LDAP felhasználói csoportok használata a MemberOf mezővel"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:241
+msgid "Use LDAP User Groups using Posix groups"
+msgstr "LDAP felhasználói csoportok használata Posix csoportokkal"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:243
+msgid "Group Branch DN:"
+msgstr "Csoport ág DN:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:266
+msgid "Server:"
+msgstr "Szerver:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:274
+msgid "Use LDAP User Groups using Posix group"
+msgstr "LDAP felhasználói csoportok használata Posix csoporttal"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:27
+#: ../../SessionManager/web/modules/SessionManagement/novell.php:84
+msgid "Novell"
+msgstr "Novell"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:252
+msgid "Novell integration"
+msgstr "Novell integráció"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:265
+msgid "DSFW:"
+msgstr "DSFW:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:269
+msgid "ZENworks:"
+msgstr "ZENworks:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:270
+msgid ""
+"If ZENworks is installed on your Applications Servers, it will manage the "
+"user by itself (DLU). OVD won't create user for the session. This behavior "
+"looks like the domain users from AD."
+msgstr ""
+"Ha ZENworks installálva van az alkalmazás szerverre, felhasználó kezeli "
+"(DLU). OVD nem hoz létre felhasználót a munkafolyamatra. A viselkedés AD "
+"domén felhasználóhoz hasonlít."
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:285
+msgid "Default user branch"
+msgstr "Alapértelmezett felhasználó ág"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:290
+msgid "Specific Organization Unit:"
+msgstr "Speciális szervezeti egység:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:302
+msgid "Use Novell eDirectory's User Groups"
+msgstr "Novell eDirectory felhasználói csoportok használata"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:88
+msgid "Please install CURL support for PHP"
+msgstr "Kérem installálja CURL támogatást a PHP-hez"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:93
+msgid "SQL configuration not valid(2)"
+msgstr "SQL konfiguráció nem érvényes(2)"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:99
+msgid "SQL configuration not valid"
+msgstr "SQL konfiguráció nem érvényes"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:105
+msgid "Initialization failed"
+msgstr "Inicializálás sikertelen"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:119
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:129
+msgid "prefs is not valid for module"
+msgstr "prefs nem érvényes a modulhoz"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:141
+msgid "Modules configuration not valid"
+msgstr "Modul konfiguráció nem érvényes"
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:68
+msgid "Search for users groups pattern: "
+msgstr "Felhasználó csoportok minta keresése:"
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:70
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:71
+#: ../../SessionManager/web/admin/session-reporting.php:171
+msgid "Search"
+msgstr "Keresés"
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:72
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:73
+msgid "Search in: "
+msgstr "Keresés ebben:"
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:87
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:88
+#: ../../SessionManager/web/admin/session-reporting.php:182
+#, php-format
+msgid ""
+"<strong>Partial content:</strong> Only <strong>%d result</strong> displayed "
+"but there are more. Please restrict your search field."
+msgid_plural ""
+"<strong>Partial content:</strong> Only <strong>%d results</strong> displayed "
+"but there are more. Please restrict your search field."
+msgstr[0] ""
+"<strong>Részletes tartalom:</strong> Csak <strong>%d eredmény</strong> "
+"jelenik meg, de több van. Kérem szűkítse a keresését."
+msgstr[1] ""
+"<strong>Részletes tartalom:</strong> Csak <strong>%d eredmények</strong> "
+"jelennek meg, de több van. Kérem szűkítse a keresését."
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:91
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:92
+#, php-format
+msgid "<strong>%d</strong> result for \"%s\"."
+msgid_plural "<strong>%d</strong> results for \"%s\"."
+msgstr[0] "<strong>%d</strong> \"%s\" eredménye."
+msgstr[1] "<strong>%d</strong> \"%s\" eredmények."
+
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:69
+msgid "Search for user pattern: "
+msgstr "Felhasználói minta keresése:"
+
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:77
+#: ../../SessionManager/web/admin/login.php:125
+#: ../../SessionManager/web/admin/summary.php:63
+#: ../../SessionManager/web/admin/users.php:73
+#: ../../SessionManager/web/admin/users.php:240
+msgid "Login"
+msgstr "Bejelentkezés"
+
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:81
+#: ../../SessionManager/web/admin/users.php:74
+#: ../../SessionManager/web/admin/users.php:285
+msgid "Display name"
+msgstr "Név"
+
+#. configuration saved
+#: ../../SessionManager/web/admin/configuration-partial.php:49
+#: ../../SessionManager/web/admin/configuration.php:65
+msgid "Configuration successfully saved"
+msgstr "Konfiguráció sikeresen elmentve"
+
+#: ../../SessionManager/web/admin/configuration-partial.php:111
+#: ../../SessionManager/web/admin/configuration.php:109
+#: ../../SessionManager/web/admin/configuration-profile.php:243
+#: ../../SessionManager/web/admin/includes/functions.inc.php:205
+msgid "Save"
+msgstr "Mentés"
+
+#: ../../SessionManager/web/admin/configuration-partial.php:118
+#: ../../SessionManager/web/admin/configuration.php:131
+msgid "Preferences not loaded"
+msgstr "Beállítások nincsenek betöltve"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:237
+msgid "Saved successfully"
+msgstr "Mentés sikeres"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:244
+msgid "Test"
+msgstr "Teszt"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:252
+msgid "OK"
+msgstr "OK"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:258
+msgid "Success"
+msgstr "Sikeres"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:45
+msgid "Last save"
+msgstr "Utolsó mentés"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:50
+#: ../../SessionManager/web/admin/ha/classes/Cib.class.php:30
+#: ../../SessionManager/web/admin/ha/classes/Cib.class.php:31
+#: ../../SessionManager/web/admin/ha/classes/Cib.class.php:324
+#: ../../SessionManager/web/admin/sessions.php:81
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:56
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:66
+#: ../../SessionManager/web/classes/Server.class.php:494
+#: ../../SessionManager/web/classes/Server.class.php:503
+#: ../../SessionManager/web/classes/Server.class.php:510
+#: ../../SessionManager/web/classes/Session.class.php:350
+#: ../../SessionManager/web/classes/Session.class.php:384
+msgid "Unknown"
+msgstr "Ismeretlen"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:76
+#: ../../SessionManager/web/admin/ha/menu.inc.php:31
+#: ../../SessionManager/web/admin/includes/page_template.php:238
+#: ../../SessionManager/web/admin/logs.php:113
+#: ../../SessionManager/web/admin/logs.php:172
+#: ../../SessionManager/web/admin/logs.php:176
+msgid "Logs"
+msgstr "Naplók"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:98
+msgid "Slave Server"
+msgstr "Slave szerver"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:103
+msgid "Authorized FQDN"
+msgstr "Engedélyezett FQDN"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:110
+msgid "FQDN check"
+msgstr "FQDN ellenőrzés"
+
+#: ../../SessionManager/web/admin/ha/classes/GRNode.class.php:65
+msgid "Group"
+msgstr "Csoport"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:66
+msgid "Master/Slaves"
+msgstr "Master/Slaves"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:70
+msgid "Master"
+msgstr "Master"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:71
+msgid "Slaves"
+msgstr "Slaves"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:72
+msgid "Stopped"
+msgstr "Leállítva"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:73
+msgid "Failed"
+msgstr "Sikertelen"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:112
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:120
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:107
+msgid "Resources configured"
+msgstr "Készlet konfigurálva"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:114
+msgid "No master"
+msgstr "Nincs master"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:122
+msgid "No slaves"
+msgstr "Nincs slave"
+
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:108
+msgid "Started on"
+msgstr "Elindítva a"
+
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:109
+msgid "Stopped on"
+msgstr "Megállítva a"
+
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:110
+msgid "Failed on"
+msgstr "Sikertelen a"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:100
+#: ../../SessionManager/web/admin/ha/configuration.php:149
+msgid "An error occured while reading configuration file, no values found!"
+msgstr "Hiba történt konfiguráció olvasása közben, érték nem található!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:120
+msgid "Could not extract configuration values from file!"
+msgstr "A fájlból konfigurációs értékek kibontása sikertelen!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:135
+#: ../../SessionManager/web/admin/ha/configuration.php:139
+msgid "An error occured when updating the virtual IP!"
+msgstr "Hiba történt a virtuális IP frissítése közben!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:173
+msgid "No host has been registered yet."
+msgstr "Host még nem regisztrált."
+
+#: ../../SessionManager/web/admin/ha/configuration.php:189
+msgid "Delete unregistered servers"
+msgstr "Nem regisztrált szerverek törlése."
+
+#: ../../SessionManager/web/admin/ha/configuration.php:196
+msgid ""
+"Your will have to change the virtual IP and then modify your url with the "
+"correct IP to reach the admin web interface!"
+msgstr ""
+"Meg kell változtatnia a virtuális IP-t és módosítani az URL-t a helyes IP-"
+"re, hogy elérje az adminisztrátori web interfészt!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:198
+msgid "Apply new virtual IP"
+msgstr "Új virtuális IP alkalmazása"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:208
+#, php-format
+msgid "%s server(s) has been successfully removed!"
+msgstr "'%s' szerver(ek) sikeresen törölve!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:210
+msgid "An error occured, no unregistered server deleted!"
+msgstr "Hiba történt, nem regisztrált szerverek törlése sikertelen!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:219
+msgid "Cannot enable host because one is already enabled!"
+msgstr "Host aktiválása sikertelen, mivel már aktiválva van egy!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:230
+#: ../../SessionManager/web/admin/ha/configuration.php:253
+msgid "Cannot disable host because it is not enabled!"
+msgstr "Host kikapcsolása sikertelen, mivel nincs aktiválva!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:241
+msgid "Host has been enabled!"
+msgstr "Host aktiválva!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:244
+msgid "An error occured during activation, can not enable host!"
+msgstr "Hiba történt az aktiválás alatt, host aktiválása sikertelen!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:259
+msgid "Host has been disabled!"
+msgstr "Host kikapcsolva!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:262
+msgid "An error occured during disabling host, cannot disable host!"
+msgstr "Hiba történt a host kikapcsolása alatt, host kikapcsolás sikertelen!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:269
+msgid ""
+"When enabling the slave server, the master server and slave server are going "
+"to restart their services to load the new configuration. It takes less than "
+"3 minutes. During this time the web interface will be disabled."
+msgstr ""
+"Slave szerver bekapcsolása közben, a master és a slave szerver újraindítja "
+"szolgáltatásait, az új beállítások betöltése miatt. Kevesebb mint 3 percig "
+"fog tartani. Ezalatt az idő alatt a webinterfész nem használható."
+
+#: ../../SessionManager/web/admin/ha/configuration.php:275
+msgid "Unregistered Server"
+msgstr "Nem regisztrált szerver"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:279
+#: ../../SessionManager/web/admin/ha/configuration.php:316
+msgid "Hostname"
+msgstr "Hostnév"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:284
+#: ../../SessionManager/web/admin/ha/configuration.php:321
+msgid "address"
+msgstr "Cím"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:289
+#: ../../SessionManager/web/admin/news.php:63
+#: ../../SessionManager/web/admin/session-reporting.php:270
+msgid "Date"
+msgstr "Dátum"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:306
+msgid ""
+"When enabling the slave server, the master server is going to restart their "
+"services to load the new configuration. It takes less than 3 minutes. During "
+"this time the web interface will be disabled."
+msgstr ""
+"Slave szerver bekapcsolása közben, a master szerver újraindítja "
+"szolgáltatásait, az új beállítások betöltése miatt. Kevesebb mint 3 percig "
+"fog tartani. Ezalatt az idő alatt a webinterfész nem használható."
+
+#: ../../SessionManager/web/admin/ha/configuration.php:312
+msgid "Registered Server"
+msgstr "Regisztrált szerver"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:326
+msgid "Disable"
+msgstr "Kikapcsol"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:340
+msgid "Update HA configuration"
+msgstr "HA konfiguráció frissítése"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:340
+msgid "Submit"
+msgstr "Elküld"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:375
+msgid "The system is on maintenance mode! Cannot apply changes."
+msgstr "A rendszer szerviz módban van! Változtatások alkalmazása sikertelen."
+
+#: ../../SessionManager/web/admin/ha/configuration.php:389
+msgid "Cannot enable host because no host found in DB!"
+msgstr "Host nem található az adatbázisban, aktiválása sikertelen!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:399
+#, php-format
+msgid "Host %s at address %s has been notifyed succesfully!"
+msgstr "%s host a %s címen sikeresen értesítve!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:402
+#: ../../SessionManager/web/admin/ha/configuration.php:428
+#, php-format
+msgid "Cannot query slave host at address %s"
+msgstr "Slave host a %s címen nem lekérdezhető "
+
+#: ../../SessionManager/web/admin/ha/configuration.php:422
+#, php-format
+msgid "Host %s has been set in standby and master %s will restart Heartbeat!"
+msgstr ""
+"%s host alvó állapotra átállítva, %s master újraindítja a Heartbeat-et! "
+
+#: ../../SessionManager/web/admin/ha/configuration.php:432
+msgid "An error occured during disabling, can not disable host!"
+msgstr "Probléma adódott a host leállításnál, leállítás sikertelen! "
+
+#: ../../SessionManager/web/admin/ha/configuration.php:443
+msgid "Changing configuration... Please wait a few seconds"
+msgstr "Konfiguráció változtatása... Kérem várjon"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:446
+msgid ""
+"Changing configuration failded... Verify configuration at field HA::Virtual "
+"IP"
+msgstr ""
+"Konfiguráció megváltoztatása sikertelen... Ellenőrizze a beállítást a "
+"HA::Virtual IP mezőben"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:459
+#, php-format
+msgid "Virtual IP \"%s\" is not valid!"
+msgstr "%s Virtual IP nem érvényes!"
+
+#: ../../SessionManager/web/admin/ha/logs.php:68
+msgid "High Availability logs"
+msgstr "High Availability naplók"
+
+#: ../../SessionManager/web/admin/ha/logs.php:74
+#: ../../SessionManager/web/admin/ha/logs.php:77
+msgid "Show alerts"
+msgstr "Riasztások mutatása"
+
+#: ../../SessionManager/web/admin/ha/logs.php:80
+msgid "Show information"
+msgstr "Információ mutatása"
+
+#: ../../SessionManager/web/admin/ha/logs.php:83
+msgid "Show informations"
+msgstr "Információk mutatása"
+
+#: ../../SessionManager/web/admin/ha/logs.php:89
+msgid "Cleanup logs"
+msgstr "Naplók rendezése"
+
+#: ../../SessionManager/web/admin/ha/logs.php:91
+#, php-format
+msgid "%s logs"
+msgstr "%s naplók"
+
+#: ../../SessionManager/web/admin/ha/menu.inc.php:29
+msgid "High Availability"
+msgstr "Magas rendelkezésre állás"
+
+#: ../../SessionManager/web/admin/ha/registration.php:49
+msgid "Host has been already registered!"
+msgstr "Host már regisztrálva"
+
+#: ../../SessionManager/web/admin/ha/registration.php:85
+msgid "Host activation has been done successfully!"
+msgstr "Host aktívásása sikeres!"
+
+#: ../../SessionManager/web/admin/ha/registration.php:88
+msgid "An error occured in POST request activation!"
+msgstr "Hiba történt a POST kérelem elküldésében!"
+
+#: ../../SessionManager/web/admin/ha/registration.php:93
+msgid "Deleting host has been done successfully!"
+msgstr "Host törlése sikeres!"
+
+#: ../../SessionManager/web/admin/ha/registration.php:96
+#: ../../SessionManager/web/admin/ha/registration.php:100
+msgid "Request is not well formatted!"
+msgstr "Kérelem formátuma nem megfelelő!"
+
+#: ../../SessionManager/web/admin/ha/status.php:78
+msgid "General Status"
+msgstr "Általános állapot"
+
+#: ../../SessionManager/web/admin/ha/status.php:80
+msgid "Last time update of this page and included information"
+msgstr "Utolsó frissítési időpontja a lapnak és a hozzátartózó információk"
+
+#: ../../SessionManager/web/admin/ha/status.php:80
+msgid "Last update"
+msgstr "Utolsó frissítés"
+
+#: ../../SessionManager/web/admin/ha/status.php:85
+msgid ""
+"The DC (Designated Coordinator) has elected a node in the cluster. It is "
+"responsible for actions of each cluster element."
+msgstr ""
+"A DC (Designated Coordinator) kiválasztott egy node-ot a fürtben. Mely "
+"felelős a fürt összes eleméért."
+
+#: ../../SessionManager/web/admin/ha/status.php:85
+msgid "Current DC"
+msgstr "Jelenlegi DC"
+
+#: ../../SessionManager/web/admin/ha/status.php:90
+msgid "Number of nodes provided and configured in the cluster"
+msgstr "Node-ok száma konfigurálva a fürtben"
+
+#: ../../SessionManager/web/admin/ha/status.php:90
+msgid "Nodes configured"
+msgstr "Node-ok konfigurálva"
+
+#: ../../SessionManager/web/admin/ha/status.php:95
+msgid "Number of resources configured for all nodes"
+msgstr "A készletek száma konfigurálva az össze node számára"
+
+#: ../../SessionManager/web/admin/ha/status.php:105
+msgid "Ressources Status"
+msgstr "Készlet állapot"
+
+#: ../../SessionManager/web/admin/ha/status.php:114
+msgid "Ressources errors"
+msgstr "Készlet hibák"
+
+#: ../../SessionManager/web/admin/ha/status.php:127
+#: ../../SessionManager/web/admin/ha/status.php:129
+#: ../../SessionManager/web/admin/ha/status.php:162
+#: ../../SessionManager/web/admin/ha/status.php:163
+msgid "Out of Network"
+msgstr "Hálózaton kívül"
+
+#: ../../SessionManager/web/admin/ha/status.php:141
+#: ../../SessionManager/web/admin/ha/status.php:145
+#: ../../SessionManager/web/classes/Server.class.php:488
+msgid "Online"
+msgstr "Online"
+
+#: ../../SessionManager/web/admin/ha/status.php:142
+msgid "Production"
+msgstr "Produktív"
+
+#: ../../SessionManager/web/admin/ha/status.php:146
+#: ../../SessionManager/web/classes/Session.class.php:365
+msgid "Ready"
+msgstr "Kész"
+
+#: ../../SessionManager/web/admin/ha/status.php:154
+msgid "Standby"
+msgstr "Alvó állapot"
+
+#: ../../SessionManager/web/admin/ha/status.php:172
+msgid "An error has occured, please call your administrator!"
+msgstr "Hiba történt, kérem értesítse a rendszergazdát!"
+
+#: ../../SessionManager/web/admin/ha/status.php:176
+#: ../../SessionManager/web/admin/logs.php:117
+msgid "Session Manager"
+msgstr "Munkafolyamat menedzser"
+
+#: ../../SessionManager/web/admin/ha/status.php:182
+msgid "Unpaused"
+msgstr "Megállítás felfüggesztve"
+
+#: ../../SessionManager/web/admin/ha/status.php:184
+msgid "Paused"
+msgstr "Megállítva"
+
+#: ../../SessionManager/web/admin/ha/status.php:193
+msgid "Pause"
+msgstr "Megállít"
+
+#: ../../SessionManager/web/admin/ha/status.php:201
+msgid "Set it online"
+msgstr "Beállítás online-ra"
+
+#: ../../SessionManager/web/admin/ha/status.php:229
+msgid "High Availability Status"
+msgstr "High Availability állapot"
+
+#: ../../SessionManager/web/admin/ha/status.php:256
+msgid "Waiting for Heartbeat's CIB..."
+msgstr "Várjon a heartbeat CIB-re..."
+
+#: ../../SessionManager/web/admin/ha/status.php:256
+msgid ""
+"Please check permissions on ulteo-ovd.conf or if \"cibadmin -Q\" works fine! "
+"Apache could have been started by another user than www-data."
+msgstr ""
+"Kérem ellenőrizze a jogosultságot az ulteo-ovd.conf-on vagy \"cibadmin -Q\" "
+"müködik e! Az apache talán nem a www-data nevében fut."
+
+#: ../../SessionManager/web/admin/includes/core.inc.php:59
+#: ../../SessionManager/web/admin/index.php:138
+#: ../../SessionManager/web/webservices/configuration.php:32
+msgid "The system is on maintenance mode"
+msgstr "A rendszer szerviz módban van"
+
+#: ../../SessionManager/web/admin/includes/functions.inc.php:366
+msgid "You are not allowed to perform this action"
+msgstr "Önnek nincs jogosultsága a folyamat végrehajtására"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:37
+#: ../../SessionManager/web/admin/index.php:41
+msgid "Index"
+msgstr "Index"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:44
+#: ../../SessionManager/web/admin/includes/page_template.php:75
+#: ../../SessionManager/web/admin/index.php:65
+#: ../../SessionManager/web/admin/servers.php:64
+#: ../../SessionManager/web/admin/sessions.php:172
+#: ../../SessionManager/web/admin/tasks.php:69
+msgid "Servers"
+msgstr "Szerverek"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:81
+#: ../../SessionManager/web/admin/servers.php:225
+msgid "Unregistered servers"
+msgstr "Nem regisztrált szerverek"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:87
+#: ../../SessionManager/web/admin/tasks.php:132
+msgid "Tasks"
+msgstr "Feladatok"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:96
+#: ../../SessionManager/web/admin/sharedfolders.php:45
+#: ../../SessionManager/web/admin/usersgroup.php:749
+msgid "Shared folders"
+msgstr "Megosztott mappák"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:106
+msgid "Profiles"
+msgstr "Profilok"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:122
+msgid "Users Groups"
+msgstr "Felhasználói csoportok"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:136
+msgid "Applications Groups"
+msgstr "Alkalmazás csoportok"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:148
+msgid "Static applications"
+msgstr "Statikus alkalmazások"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:156
+#: ../../SessionManager/web/admin/publications.php:78
+msgid "Publications"
+msgstr "Közzétételek"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:163
+#: ../../SessionManager/web/admin/index.php:116
+msgid "Publication wizard"
+msgstr "Közzététel varázsló"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:170
+msgid "Sum up"
+msgstr "Összeadd"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:176
+msgid "Database settings"
+msgstr "Adatbázis beállítások"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:182
+msgid "System settings"
+msgstr "Rendszer beállítások"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:188
+msgid "Server settings"
+msgstr "Szerver beállítások"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:194
+msgid "Domain integration settings"
+msgstr "Domén integrációs beállítások"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:200
+msgid "Authentication settings"
+msgstr "Hitelesítési beállítások"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:206
+msgid "Session settings"
+msgstr "Munkafolyamat beállítások"
+
+#. Events settings
+#: ../../SessionManager/web/admin/includes/page_template.php:212
+#: ../../SessionManager/web/classes/Preferences.class.php:534
+msgid "Events settings"
+msgstr "Esemény beállítások"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:218
+#: ../../SessionManager/web/classes/Preferences.class.php:454
+msgid "Web interface settings"
+msgstr "Web interfész beállítások"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:224
+#: ../../SessionManager/web/admin/password.php:36
+msgid "Change Administrator password"
+msgstr "Adminisztrátor jelszó módosítása"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:232
+msgid "Sessions"
+msgstr "Munkafolyamatok"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:244
+#: ../../SessionManager/web/admin/reporting.php:309
+#: ../../SessionManager/web/admin/reporting.php:464
+msgid "Reporting"
+msgstr "Jelentés"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:252
+#: ../../SessionManager/web/admin/news.php:59
+msgid "News"
+msgstr "Hírek"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:259
+msgid "Summary"
+msgstr "Összegzés"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:288
+msgid "Debug Tools"
+msgstr "Hibakereső eszközök"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:307
+msgid "Logout"
+msgstr "Kijelentkezés"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:314
+#: ../../SessionManager/web/admin/login.php:93
+#: ../../SessionManager/web/includes/functions.inc.d/template.inc.php:69
+#: ../../SessionManager/web/includes/functions.inc.d/template.inc.php:113
+msgid "Administration"
+msgstr "Adminisztrálás"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:440
+#: ../../SessionManager/web/includes/functions.inc.d/template.inc.php:135
+msgid "powered by"
+msgstr "powered by"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:50
+msgid "Cannot list available applications"
+msgstr "Elérhető alkalmazások listázása sikertelen"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:111
+#: ../../SessionManager/web/admin/servers.php:51
+#, php-format
+msgid "Server \"%s\": redirection name may be invalid!"
+msgstr "\"%s\" szerver: átirányítási név érvénytelen!"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:113
+#: ../../SessionManager/web/admin/servers.php:53
+#, php-format
+msgid "Server \"%s\": redirection name cannot be empty!"
+msgstr "\"%s\" szerver: átirányítási név nem lehet üres!"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:215
+msgid "Number of available sessions on this server"
+msgstr "Elérhető munkafolyamatok száma ezen a szerveren"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:227
+msgid "default"
+msgstr "alapértelmezés"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:228
+#: ../../SessionManager/web/admin/servers.php:459
+msgid "change"
+msgstr "változtat"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:237
+msgid "Install an application"
+msgstr "Alkalmazás telepítése"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:243
+msgid "Install from a package name"
+msgstr "Telepítés csomag névvel"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:248
+msgid "more options"
+msgstr "több beállitás"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:260
+msgid "Category"
+msgstr "Kategoria"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:265
+msgid "Application"
+msgstr "Alkalmazás"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:267
+#: ../../SessionManager/web/admin/tasks.php:198
+msgid "Install"
+msgstr "Telepítés"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:276
+#: ../../SessionManager/web/admin/tasks.php:212
+msgid "Upgrade"
+msgstr "Frissít"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:281
+#: ../../SessionManager/web/admin/tasks.php:201
+msgid "Upgrade the internal system and applications"
+msgstr "Belső rendszer és alkalmazások frissítése"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:290
+msgid "Applications available on this server"
+msgstr "Elérhető alkalmazások ezen a szerveren"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:332
+msgid "install in progress"
+msgstr "telepítés folyamatban"
+
+#. div replication
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:361
+msgid "Replication"
+msgstr "Reprodukció"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:373
+msgid "Replicate on those servers"
+msgstr "Reprodukció azokon a szervereken"
+
+#. div tasks
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:381
+msgid "Active tasks on this server"
+msgstr "Folyamatban lévő feladatok ezen a szerveren"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:413
+#, php-format
+msgid "Active sessions (total: %s)"
+msgstr "Aktív munkafolyamatok (összes: %s)"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:423
+#: ../../SessionManager/web/admin/sessions.php:86
+#: ../../SessionManager/web/admin/users.php:386
+msgid "Not started yet"
+msgstr "Még nem indítva"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:430
+#: ../../SessionManager/web/admin/users.php:393
+msgid "Information about this session"
+msgstr "Információk a munkafolyamatról"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:514
+msgid "User profiles on the server"
+msgstr "Felhasználói profilok a szerveren"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:520
+msgid "Shared folders on the server"
+msgstr "Megosztott mappák a szerveren"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:548
+msgid "Owner"
+msgstr "Tulajdonos"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:548
+#: ../../SessionManager/web/admin/profiles.php:101
+msgid "Used by"
+msgstr "Használatban "
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:597
+msgid "Are you sure you want to delete this user profile?"
+msgstr "Biztos benne hogy törli a felhasználó profilját?"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:597
+msgid "Are you sure you want to delete this network folder?"
+msgstr "Biztos benne hogy törli ezt a hálózati mappát?"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:618
+msgid "Are you sure you want to delete these user profiles?"
+msgstr "Biztos benne hogy törli a felhasználók profiljait?"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:618
+msgid "Are you sure you want to delete these network folders?"
+msgstr "Biztos benne hogy törli ezeket a hálózati mappákat?"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:634
+#: ../../SessionManager/web/admin/usersgroup.php:806
+msgid "Action"
+msgstr "Cselekvés"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:641
+#: ../../SessionManager/web/admin/sharedfolders.php:69
+msgid "Create this shared folder"
+msgstr "Megosztott mappa létrehozása"
+
+#: ../../SessionManager/web/admin/index.php:47
+msgid "Users and Users groups"
+msgstr "Felhasználók és felhasználói csoportok"
+
+#: ../../SessionManager/web/admin/index.php:52
+msgid "Users list"
+msgstr "Felhasználok listája"
+
+#: ../../SessionManager/web/admin/index.php:54
+msgid "Users groups list"
+msgstr "Felhasználói csoportok listája"
+
+#: ../../SessionManager/web/admin/index.php:70
+msgid "Servers list"
+msgstr "Szerverek listája"
+
+#: ../../SessionManager/web/admin/index.php:71
+msgid "Unregistered servers list"
+msgstr "Nem regisztrált szerverek listája"
+
+#: ../../SessionManager/web/admin/index.php:89
+#: ../../SessionManager/web/classes/Preferences.class.php:175
+msgid "General configuration"
+msgstr "Általános beállítások"
+
+#: ../../SessionManager/web/admin/index.php:106
+msgid "Applications and applications groups"
+msgstr "Alkalmazások és alkalmazás csoportok"
+
+#: ../../SessionManager/web/admin/index.php:111
+msgid "Applications list"
+msgstr "Alkalmazások listája"
+
+#: ../../SessionManager/web/admin/index.php:113
+msgid "Applications groups list"
+msgstr "Alkalmazás csoportok listája"
+
+#: ../../SessionManager/web/admin/index.php:115
+msgid "Publications list"
+msgstr "Közzétételek listája"
+
+#: ../../SessionManager/web/admin/index.php:128
+msgid "System"
+msgstr "Rendszer"
+
+#: ../../SessionManager/web/admin/index.php:141
+msgid "Are you sure you want to switch the system to production mode?"
+msgstr "Biztos benne hogy produktív módra vált?"
+
+#: ../../SessionManager/web/admin/index.php:141
+msgid "Switch the system to production mode"
+msgstr "Váltás produktív módra"
+
+#: ../../SessionManager/web/admin/index.php:143
+msgid "The system is on production mode"
+msgstr "A rendszer produktív módban van"
+
+#: ../../SessionManager/web/admin/index.php:146
+msgid "Are you sure you want to switch the system to maintenance mode?"
+msgstr "Biztos benne hogy szerviz módba kapcsol?"
+
+#: ../../SessionManager/web/admin/index.php:146
+msgid "Switch the system to maintenance mode"
+msgstr "A rendszer szerviz módba kapcsolása"
+
+#: ../../SessionManager/web/admin/index.php:175
+msgid "active sessions"
+msgstr "aktív munkafolyamatok"
+
+#: ../../SessionManager/web/admin/index.php:177
+msgid "active session"
+msgstr "aktív munkafolyamat"
+
+#: ../../SessionManager/web/admin/index.php:185
+msgid "online servers"
+msgstr "online szerverek"
+
+#: ../../SessionManager/web/admin/index.php:187
+msgid "online server"
+msgstr "online szerver"
+
+#: ../../SessionManager/web/admin/index.php:195
+msgid "offline servers"
+msgstr "offline szerverek"
+
+#: ../../SessionManager/web/admin/index.php:197
+msgid "offline server"
+msgstr "online szerver"
+
+#: ../../SessionManager/web/admin/index.php:205
+msgid "broken servers"
+msgstr "törött szerverek"
+
+#: ../../SessionManager/web/admin/index.php:207
+msgid "broken server"
+msgstr "törött szerver"
+
+#. the user does not exist
+#: ../../SessionManager/web/admin/login.php:38
+#: ../../SessionManager/web/admin/login.php:45
+msgid "There was an error with your authentication"
+msgstr "Hiba történt a hitelesítésében"
+
+#: ../../SessionManager/web/admin/login.php:57
+msgid "Unauthorized access"
+msgstr "Jogosulatlan hozzáférés"
+
+#: ../../SessionManager/web/admin/login.php:101
+#: ../../SessionManager/web/admin/login.php:141
+msgid "Log in"
+msgstr "Bejelentkezés"
+
+#: ../../SessionManager/web/admin/login.php:133
+msgid "Password"
+msgstr "Jelszó"
+
+#: ../../SessionManager/web/admin/logs.php:121
+#: ../../SessionManager/web/admin/logs.php:139
+msgid "View full log file online"
+msgstr "Napló fájl megtekintése online"
+
+#: ../../SessionManager/web/admin/logs.php:122
+#: ../../SessionManager/web/admin/logs.php:140
+#: ../../SessionManager/web/admin/logs.php:173
+#: ../../SessionManager/web/admin/logs.php:177
+msgid "Download full log file"
+msgstr "Napló fájl letöltés"
+
+#: ../../SessionManager/web/admin/logs.php:131
+msgid "Application Servers"
+msgstr "Alkalmazás szerverek"
+
+#: ../../SessionManager/web/admin/logs.php:138
+msgid "Log"
+msgstr "Napló"
+
+#: ../../SessionManager/web/admin/mimetypes.php:68
+msgid "More information"
+msgstr "Több információ"
+
+#: ../../SessionManager/web/admin/mimetypes.php:92
+msgid "Mime-Type"
+msgstr "Mime-Típus"
+
+#: ../../SessionManager/web/admin/mimetypes.php:96
+msgid "No application with this mime-type"
+msgstr "Ezzel a mime-típussal alkalmazás nem található"
+
+#: ../../SessionManager/web/admin/mimetypes.php:102
+msgid "OS"
+msgstr "OS"
+
+#: ../../SessionManager/web/admin/news.php:39
+msgid "News successfully modified"
+msgstr "Hírek sikeresen módosítva"
+
+#: ../../SessionManager/web/admin/news.php:63
+msgid "Title"
+msgstr "Cím"
+
+#: ../../SessionManager/web/admin/news.php:63
+msgid "Content"
+msgstr "Tartalom"
+
+#: ../../SessionManager/web/admin/news.php:76
+msgid "Are you sure you want to delete this news?"
+msgstr "Biztos benne hogy törli ezeket a híreket?"
+
+#: ../../SessionManager/web/admin/news.php:80
+msgid "Delete this news"
+msgstr "Hírek törlése"
+
+#: ../../SessionManager/web/admin/news.php:90
+msgid "Add news"
+msgstr "Hírek hozzáadása"
+
+#: ../../SessionManager/web/admin/news.php:101
+msgid "Add this news"
+msgstr "Hírek hozzáadása"
+
+#: ../../SessionManager/web/admin/password.php:25
+msgid "User not authorized to manage configuration"
+msgstr "Felhasználó nem jogosult a beállítások megváltoztatására"
+
+#: ../../SessionManager/web/admin/password.php:30
+msgid "No action found"
+msgstr "Nem találtam cselekményt"
+
+#: ../../SessionManager/web/admin/password.php:43
+#: ../../SessionManager/web/admin/users.php:292
+msgid "New password"
+msgstr "Új jelszó"
+
+#: ../../SessionManager/web/admin/password.php:48
+msgid "Retype password"
+msgstr "Üsse be újra a jelszót"
+
+#: ../../SessionManager/web/admin/password.php:53
+msgid "Change"
+msgstr "Változtat"
+
+#: ../../SessionManager/web/admin/profiles.php:50
+msgid "Profile"
+msgstr "Profil"
+
+#: ../../SessionManager/web/admin/profiles.php:59
+msgid "Are you sure you want to delete this profile?"
+msgstr "Biztos benne hogy törli ezt a profilt?"
+
+#: ../../SessionManager/web/admin/profiles.php:63
+msgid "Delete this profile"
+msgstr "Profil törlése"
+
+#: ../../SessionManager/web/admin/profiles.php:91
+#, php-format
+msgid "Profile: %s"
+msgstr "Profil: %s"
+
+#: ../../SessionManager/web/admin/publications.php:83
+msgid "Users group"
+msgstr "Felhasználók csoportja"
+
+#: ../../SessionManager/web/admin/publications.php:84
+msgid "Applications group"
+msgstr "Alkalmazások csoportja"
+
+#: ../../SessionManager/web/admin/publications.php:91
+msgid "No publication"
+msgstr "Közzététel nem található"
+
+#: ../../SessionManager/web/admin/publications.php:146
+msgid "Please select an users group"
+msgstr "Kérem válasszon egy felhasználói csoportot"
+
+#: ../../SessionManager/web/admin/publications.php:146
+msgid "Please select an applications group"
+msgstr "Kérem válasszon egy alkalmazás csoportot"
+
+#: ../../SessionManager/web/admin/reporting.php:106
+msgid "Day"
+msgstr "Nap"
+
+#: ../../SessionManager/web/admin/reporting.php:135
+msgid "Hour"
+msgstr "Óra"
+
+#: ../../SessionManager/web/admin/reporting.php:165
+msgid "Minute"
+msgstr "Perc"
+
+#: ../../SessionManager/web/admin/reporting.php:292
+#: ../../SessionManager/web/admin/reporting.php:708
+msgid "Error: \"from\" date is after \"to\" date, switching"
+msgstr "Hiba: \"tól\" dátum \"ig\" dátum után van, változtat"
+
+#: ../../SessionManager/web/admin/reporting.php:299
+msgid "Error: \"to\" field is in the future, switching to current time"
+msgstr "Hiba: \"ig\" mező a jövőben van, jelenlegi időre megváltoztatva"
+
+#: ../../SessionManager/web/admin/reporting.php:307
+#, php-format
+msgid "%s is not writable"
+msgstr "%s nem írható"
+
+#: ../../SessionManager/web/admin/reporting.php:332
+#: ../../SessionManager/web/admin/reporting.php:397
+msgid "Number of launched sessions"
+msgstr "Elindított munkafolyamtok száma"
+
+#: ../../SessionManager/web/admin/reporting.php:342
+msgid "unknown"
+msgstr "ismeretlen"
+
+#: ../../SessionManager/web/admin/reporting.php:349
+msgid "%FQDN% (%TOTAL% session)"
+msgstr "%FQDN% (%TOTAL% munkafolyamat)"
+
+#: ../../SessionManager/web/admin/reporting.php:349
+msgid "%FQDN% (%TOTAL% sessions)"
+msgstr "%FQDN% (%TOTAL% munkafolyamtok)"
+
+#: ../../SessionManager/web/admin/reporting.php:354
+msgid "Session repartition"
+msgstr "Munkafolyamat újra felosztása"
+
+#: ../../SessionManager/web/admin/reporting.php:363
+#: ../../SessionManager/web/admin/reporting.php:406
+msgid "%STATUS% (%TOTAL% session)"
+msgstr "%STATUS% (%TOTAL% munkafolyamat)"
+
+#: ../../SessionManager/web/admin/reporting.php:363
+#: ../../SessionManager/web/admin/reporting.php:406
+msgid "%STATUS% (%TOTAL% sessions)"
+msgstr "%STATUS% (%TOTAL% munkafolyamatok)"
+
+#: ../../SessionManager/web/admin/reporting.php:368
+#: ../../SessionManager/web/admin/reporting.php:411
+msgid "Session end status"
+msgstr "Munkafolyamat vég állapot"
+
+#: ../../SessionManager/web/admin/reporting.php:435
+#: ../../SessionManager/web/admin/servers.php:129
+#: ../../SessionManager/web/admin/servers.php:418
+msgid "CPU usage"
+msgstr "CPU használat"
+
+#: ../../SessionManager/web/admin/reporting.php:456
+#: ../../SessionManager/web/admin/servers.php:131
+#: ../../SessionManager/web/admin/servers.php:420
+msgid "RAM usage"
+msgstr "RAM használat"
+
+#: ../../SessionManager/web/admin/reporting.php:511
+#: ../../SessionManager/web/admin/session-reporting.php:150
+#: ../../SessionManager/web/classes/Preferences.class.php:291
+msgid "From"
+msgstr "Tól"
+
+#: ../../SessionManager/web/admin/reporting.php:523
+msgid "to"
+msgstr "ig"
+
+#: ../../SessionManager/web/admin/reporting.php:535
+msgid "step"
+msgstr "lépés"
+
+#: ../../SessionManager/web/admin/reporting.php:551
+msgid "Refresh"
+msgstr "Frissít"
+
+#: ../../SessionManager/web/admin/reporting.php:559
+#: ../../SessionManager/web/admin/reporting.php:572
+#: ../../SessionManager/web/admin/reporting.php:608
+#: ../../SessionManager/web/admin/reporting.php:629
+#: ../../SessionManager/web/admin/reporting.php:644
+msgid "Abscissa: day of the month"
+msgstr "Abszcissza: hónap napja"
+
+#: ../../SessionManager/web/admin/reporting.php:561
+#: ../../SessionManager/web/admin/reporting.php:574
+#: ../../SessionManager/web/admin/reporting.php:610
+#: ../../SessionManager/web/admin/reporting.php:631
+#: ../../SessionManager/web/admin/reporting.php:646
+msgid "Abscissa: hour of the day"
+msgstr "Abszcissza:a nap órája"
+
+#: ../../SessionManager/web/admin/reporting.php:563
+#: ../../SessionManager/web/admin/reporting.php:576
+#: ../../SessionManager/web/admin/reporting.php:612
+#: ../../SessionManager/web/admin/reporting.php:633
+#: ../../SessionManager/web/admin/reporting.php:648
+msgid "Abscissa: minute of the hour"
+msgstr "Abszcissza:az óra perce"
+
+#: ../../SessionManager/web/admin/reporting.php:565
+#: ../../SessionManager/web/admin/reporting.php:578
+#: ../../SessionManager/web/admin/reporting.php:614
+msgid "Ordinate: number of sessions"
+msgstr "Ordináta: munkafolyamatok száma"
+
+#: ../../SessionManager/web/admin/reporting.php:595
+msgid "See archived sessions in this time range"
+msgstr "Ez idő alatt tárolt munkafolyamatok megtekintése"
+
+#: ../../SessionManager/web/admin/reporting.php:601
+#: ../../SessionManager/web/admin/tasks.php:144
+msgid "Server"
+msgstr "Szerver"
+
+#: ../../SessionManager/web/admin/reporting.php:635
+msgid "Ordinate: CPU usage in percent"
+msgstr "Ordináta: CPU kihasználtság százalékban"
+
+#: ../../SessionManager/web/admin/reporting.php:651
+msgid "Ordinate: RAM usage in percent"
+msgstr "Ordináta: RAM kihasználtság százalékban"
+
+#: ../../SessionManager/web/admin/reporting.php:682
+msgid "Number of active sessions"
+msgstr "Aktív munkafolyamatok száma"
+
+#: ../../SessionManager/web/admin/reporting.php:715
+msgid "Error: \"to\" field is in the future, switch to the current time"
+msgstr "Hiba: \"ig\" mező a jövőben van,váltás a mostani időre"
+
+#: ../../SessionManager/web/admin/servers.php:75
+#: ../../SessionManager/web/admin/servers.php:235
+#: ../../SessionManager/web/admin/sumup.php:218
+msgid "FQDN"
+msgstr "FQDN"
+
+#: ../../SessionManager/web/admin/servers.php:76
+#: ../../SessionManager/web/admin/servers.php:236
+#: ../../SessionManager/web/admin/sumup.php:220
+msgid "Roles"
+msgstr "Szerepek"
+
+#: ../../SessionManager/web/admin/servers.php:80
+#: ../../SessionManager/web/admin/servers.php:397
+#: ../../SessionManager/web/admin/servers.php:404
+msgid "Monitoring"
+msgstr "Monitorozás"
+
+#: ../../SessionManager/web/admin/servers.php:92
+#: ../../SessionManager/web/admin/servers.php:195
+#: ../../SessionManager/web/admin/servers.php:366
+msgid "Switch to production"
+msgstr "Átváltás termelés módra"
+
+#: ../../SessionManager/web/admin/servers.php:96
+#: ../../SessionManager/web/admin/servers.php:196
+#: ../../SessionManager/web/admin/servers.php:370
+#: ../../SessionManager/web/classes/Preferences.class.php:323
+msgid "Switch to maintenance"
+msgstr "Átváltás szerviz módra"
+
+#: ../../SessionManager/web/admin/servers.php:120
+#: ../../SessionManager/web/admin/servers.php:271
+#: ../../SessionManager/web/admin/servers.php:412
+msgid "CPU"
+msgstr "CPU"
+
+#: ../../SessionManager/web/admin/servers.php:121
+#: ../../SessionManager/web/admin/servers.php:272
+#: ../../SessionManager/web/admin/servers.php:413
+msgid "cores"
+msgstr "magok"
+
+#: ../../SessionManager/web/admin/servers.php:121
+#: ../../SessionManager/web/admin/servers.php:272
+#: ../../SessionManager/web/admin/servers.php:413
+msgid "core"
+msgstr "mag"
+
+#: ../../SessionManager/web/admin/servers.php:123
+#: ../../SessionManager/web/admin/servers.php:274
+#: ../../SessionManager/web/admin/servers.php:414
+msgid "RAM"
+msgstr "RAM"
+
+#: ../../SessionManager/web/admin/servers.php:123
+#: ../../SessionManager/web/admin/servers.php:414
+msgid "MB"
+msgstr "MB"
+
+#: ../../SessionManager/web/admin/servers.php:139
+#: ../../SessionManager/web/admin/servers.php:428
+msgid "Sessions usage"
+msgstr "Munkafolyamat kihasználtság"
+
+#: ../../SessionManager/web/admin/servers.php:143
+#: ../../SessionManager/web/admin/servers.php:432
+msgid "Disk usage"
+msgstr "Lemez kihasználtság"
+
+#: ../../SessionManager/web/admin/servers.php:205
+msgid "No server"
+msgstr "Nincs szerver"
+
+#: ../../SessionManager/web/admin/servers.php:284
+#: ../../SessionManager/web/admin/servers.php:316
+msgid "Register"
+msgstr "Regisztrál"
+
+#: ../../SessionManager/web/admin/servers.php:290
+#: ../../SessionManager/web/admin/servers.php:487
+msgid "Are you sure you want to delete this server?"
+msgstr "Biztos benne, hogy törli ezt a szervert?"
+
+#: ../../SessionManager/web/admin/servers.php:334
+msgid "No unregistered server"
+msgstr "Nincsenek regisztrálatlan szerverek"
+
+#: ../../SessionManager/web/admin/servers.php:354
+#, php-format
+msgid "Cannot get server monitoring for '%s'"
+msgstr "Nem tudom '%s' szervert monitorozni"
+
+#: ../../SessionManager/web/admin/servers.php:360
+msgid "Warning: server is offline"
+msgstr "Figyelem: a szerver offline"
+
+#: ../../SessionManager/web/admin/servers.php:362
+msgid "Warning: server is broken"
+msgstr "Figyelem: a szerver hibás"
+
+#: ../../SessionManager/web/admin/servers.php:401
+msgid "Version"
+msgstr "Verzió"
+
+#: ../../SessionManager/web/admin/servers.php:449
+msgid "Redirection name for this server"
+msgstr "A szerver átirányítási neve"
+
+#: ../../SessionManager/web/admin/servers.php:503
+#, php-format
+msgid "Role: %s"
+msgstr "Szerep: %s"
+
+#: ../../SessionManager/web/admin/session-reporting.php:132
+msgid "Sessions Reporting"
+msgstr "Munkafolyamatok jelentése"
+
+#: ../../SessionManager/web/admin/session-reporting.php:138
+msgid "Search for archived sessions :"
+msgstr "Keresés tárolt munkafolyamtok után:"
+
+#: ../../SessionManager/web/admin/session-reporting.php:142
+msgid "By user"
+msgstr "Felhasználó által"
+
+#: ../../SessionManager/web/admin/session-reporting.php:144
+msgid "user login"
+msgstr "felhasználó bejelentkezés"
+
+#: ../../SessionManager/web/admin/session-reporting.php:149
+msgid "By time"
+msgstr "Idő által"
+
+#: ../../SessionManager/web/admin/session-reporting.php:160
+msgid "To"
+msgstr "ig"
+
+#: ../../SessionManager/web/admin/session-reporting.php:173
+#, php-format
+msgid "<strong>%d</strong> result."
+msgid_plural "<strong>%d</strong> results."
+msgstr[0] "<strong>%d</strong> eredmény."
+msgstr[1] "<strong>%d</strong> eredmények."
+
+#: ../../SessionManager/web/admin/session-reporting.php:175
+msgid "No result found!"
+msgstr "Nincs eredmény!"
+
+#: ../../SessionManager/web/admin/session-reporting.php:268
+msgid "Session id"
+msgstr "Munkafolyamat id"
+
+#: ../../SessionManager/web/admin/session-reporting.php:269
+#: ../../SessionManager/web/admin/sessions.php:173
+msgid "User"
+msgstr "Felhasználó"
+
+#: ../../SessionManager/web/admin/session-reporting.php:282
+msgid "Get more information"
+msgstr "Több információ"
+
+#: ../../SessionManager/web/admin/session-reporting.php:311
+#, php-format
+msgid "Unknown session %s"
+msgstr "Ismeretlen munkafolyamat %s"
+
+#: ../../SessionManager/web/admin/session-reporting.php:348
+msgid "Archived session - %ID%"
+msgstr "Tárolt munkafolyamat - %ID%"
+
+#: ../../SessionManager/web/admin/session-reporting.php:351
+#: ../../SessionManager/web/admin/sessions.php:74
+msgid "User:"
+msgstr "Felhasználó:"
+
+#: ../../SessionManager/web/admin/session-reporting.php:355
+msgid "Not existing anymore"
+msgstr "Nem létezik többé"
+
+#: ../../SessionManager/web/admin/session-reporting.php:358
+#: ../../SessionManager/web/admin/sessions.php:83
+msgid "Started:"
+msgstr "Indítva:"
+
+#: ../../SessionManager/web/admin/session-reporting.php:361
+msgid "Stopped:"
+msgstr "Leállítva"
+
+#: ../../SessionManager/web/admin/session-reporting.php:370
+msgid "Used applications"
+msgstr "Használt alkalmazások"
+
+#: ../../SessionManager/web/admin/session-reporting.php:379
+msgid "not existing anymore"
+msgstr "nem létezik többé"
+
+#: ../../SessionManager/web/admin/sessions.php:52
+msgid "Session - %ID%"
+msgstr "Munkafolyamat - %ID% "
+
+#: ../../SessionManager/web/admin/sessions.php:54
+msgid "Information"
+msgstr "Információ"
+
+#: ../../SessionManager/web/admin/sessions.php:57
+msgid "Servers:"
+msgstr "Szerverek:"
+
+#: ../../SessionManager/web/admin/sessions.php:75
+msgid "Type:"
+msgstr "Típus:"
+
+#: ../../SessionManager/web/admin/sessions.php:77
+#: ../../SessionManager/web/classes/Preferences.class.php:386
+msgid "Desktop"
+msgstr "Asztal"
+
+#: ../../SessionManager/web/admin/sessions.php:90
+msgid "Status:"
+msgstr "Státusz:"
+
+#: ../../SessionManager/web/admin/sessions.php:94
+msgid "Running applications"
+msgstr "Futó alkalmazások"
+
+#: ../../SessionManager/web/admin/sessions.php:98
+msgid "No running application"
+msgstr "Nincsenek futó alkalmazások"
+
+#: ../../SessionManager/web/admin/sessions.php:124
+#: ../../SessionManager/web/admin/sessions.php:129
+msgid "Kill this session"
+msgstr "Munkafolyamat megszüntetése"
+
+#: ../../SessionManager/web/admin/sessions.php:125
+#: ../../SessionManager/web/admin/sessions.php:204
+msgid "Are you sure you want to kill this session?"
+msgstr "Biztos benne, hogy megszünteti a munkafolyamatot?"
+
+#: ../../SessionManager/web/admin/sessions.php:141
+#, php-format
+msgid "Sessions (total: %s)"
+msgstr "Munkafolyamatok (összes: %s)"
+
+#: ../../SessionManager/web/admin/sessions.php:171
+#: ../../SessionManager/web/admin/summary.php:60
+msgid "Session"
+msgstr "Munkafolyamat"
+
+#: ../../SessionManager/web/admin/sessions.php:208
+#: ../../SessionManager/web/admin/sessions.php:223
+msgid "Kill"
+msgstr "Megszüntet"
+
+#: ../../SessionManager/web/admin/sessions.php:220
+msgid "Are you sure you want to kill selected sessions?"
+msgstr "Biztos benne, hogy megszünteti a választott munkafolyamatokat?"
+
+#: ../../SessionManager/web/admin/sessions.php:233
+msgid "Number of sessions"
+msgstr "Munkafolyamatok száma"
+
+#: ../../SessionManager/web/admin/sessions.php:255
+msgid "No active session"
+msgstr "Nincs aktív munkafolyamat"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:54
+msgid "Are you sure you want to delete this shared folder?"
+msgstr "Biztos benne, hogy törli a megosztott mappát?"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:58
+msgid "Delete this shared folder"
+msgstr "Megosztott mappa törlése"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:130
+msgid "Rename"
+msgstr "Átnevez"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:141
+msgid "ACL"
+msgstr "ACL"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:149
+#: ../../SessionManager/web/admin/usersgroup.php:756
+msgid "Are you sure you want to delete this shared folder access?"
+msgstr "Biztos benne, hogy törli a megosztott mappához tartozó hozzáférést?"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:154
+#: ../../SessionManager/web/admin/usersgroup.php:761
+msgid "Delete access to this shared folder"
+msgstr "Megosztott mappa hozzáférés törlése"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:169
+#: ../../SessionManager/web/admin/usersgroup.php:776
+msgid "Add access to this shared folder"
+msgstr "Megosztott mappához jogosultság hozzáadása"
+
+#: ../../SessionManager/web/admin/summary.php:47
+#: ../../SessionManager/web/admin/sumup.php:44
+msgid "List of users"
+msgstr "Felhasználók listája"
+
+#: ../../SessionManager/web/admin/summary.php:52
+#: ../../SessionManager/web/admin/users.php:66
+#: ../../SessionManager/web/admin/wizard.php:157
+#: ../../SessionManager/web/webservices/configuration.php:80
+msgid "No available user"
+msgstr "Nincs érvényes felhasználó"
+
+#: ../../SessionManager/web/admin/summary.php:59
+msgid "Folders"
+msgstr "Mappák"
+
+#: ../../SessionManager/web/admin/summary.php:65
+msgid "In these users groups"
+msgstr "Ezekben a felhasználói csoportokban"
+
+#: ../../SessionManager/web/admin/summary.php:66
+msgid "Published applications groups"
+msgstr "Közzétett alkalmazás csoportok"
+
+#: ../../SessionManager/web/admin/summary.php:67
+msgid "Access to these applications"
+msgstr "Jogosultság ezekhez az alkalmazásokhoz"
+
+#: ../../SessionManager/web/admin/summary.php:68
+msgid "Access to these folders"
+msgstr "Jogosultság ezekhez a mappákhoz"
+
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "login"
+msgstr "belépés"
+
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "name"
+msgstr "név"
+
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "in this user group"
+msgstr "ebben a felhasználói csoportban"
+
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "in this application group"
+msgstr "ebben az alkalmazás csoportban"
+
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "access to these applications"
+msgstr "hozzáférés ezekhez az alkalmazásokhoz"
+
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "access to these network folders"
+msgstr "hozzáférés ezekhez a hálózati mappákhoz"
+
+#. <th>'._('Desktop File').'</th>
+#: ../../SessionManager/web/admin/sumup.php:58
+msgid "Available servers"
+msgstr "Elérhető szerverek"
+
+#: ../../SessionManager/web/admin/sumup.php:84
+#: ../../SessionManager/web/admin/sumup.php:108
+#: ../../SessionManager/web/admin/usersgroup.php:226
+#: ../../SessionManager/web/admin/users.php:173
+#: ../../SessionManager/web/modules/AuthMethod/Auto.php:103
+#: ../../SessionManager/web/webservices/configuration.php:107
+#: ../../SessionManager/web/webservices/configuration.php:109
+#: ../../SessionManager/web/webservices/configuration.php:110
+#: ../../SessionManager/web/webservices/configuration.php:111
+msgid "Yes"
+msgstr "Igen"
+
+#. $seconds => $text
+#. $forceable_parameters['shareable'] = array('0' => _('No'), '1' => _('Yes'));
+#: ../../SessionManager/web/admin/sumup.php:86
+#: ../../SessionManager/web/admin/sumup.php:110
+#: ../../SessionManager/web/admin/usersgroup.php:224
+#: ../../SessionManager/web/admin/users.php:174
+#: ../../SessionManager/web/modules/AuthMethod/Auto.php:103
+#: ../../SessionManager/web/webservices/configuration.php:107
+#: ../../SessionManager/web/webservices/configuration.php:109
+#: ../../SessionManager/web/webservices/configuration.php:110
+#: ../../SessionManager/web/webservices/configuration.php:111
+msgid "No"
+msgstr "Nem"
+
+#: ../../SessionManager/web/admin/sumup.php:203
+msgid "List of servers"
+msgstr "Szerverek listája"
+
+#: ../../SessionManager/web/admin/sumup.php:207
+#: ../../SessionManager/web/admin/sumup.php:211
+msgid "No server available"
+msgstr "Nincs elérhető szerver"
+
+#: ../../SessionManager/web/admin/tasks.php:63
+msgid "Tasks managment"
+msgstr "Feladat kezelés"
+
+#: ../../SessionManager/web/admin/tasks.php:67
+#: ../../SessionManager/web/admin/tasks.php:142
+msgid "Creation time"
+msgstr "Létrehozás időpontja"
+
+#: ../../SessionManager/web/admin/tasks.php:72
+msgid "Job id"
+msgstr "Munka id"
+
+#: ../../SessionManager/web/admin/tasks.php:78
+#: ../../SessionManager/web/admin/tasks.php:156
+msgid "Finished"
+msgstr "Véget ért"
+
+#: ../../SessionManager/web/admin/tasks.php:136
+msgid "List of tasks"
+msgstr "Feladatok listája"
+
+#: ../../SessionManager/web/admin/tasks.php:160
+msgid "In progress"
+msgstr "Folyamatban"
+
+#: ../../SessionManager/web/admin/tasks.php:187
+msgid "Install an application from a package name"
+msgstr "Alkalmazás telepítése csomagnév alapján"
+
+#: ../../SessionManager/web/admin/usersgroup.php:32
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "1 hour"
+msgstr "1 óra"
+
+#: ../../SessionManager/web/admin/usersgroup.php:33
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "1 day"
+msgstr "1 nap"
+
+#: ../../SessionManager/web/admin/usersgroup.php:34
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "1 week"
+msgstr "1 hét"
+
+#: ../../SessionManager/web/admin/usersgroup.php:74
+msgid "User groups"
+msgstr "Felhasználó csoportok"
+
+#: ../../SessionManager/web/admin/usersgroup.php:81
+msgid "No available user group"
+msgstr "Nincs elérhető felhasználó csoport"
+
+#: ../../SessionManager/web/admin/usersgroup.php:168
+msgid "Static"
+msgstr "Statikus"
+
+#: ../../SessionManager/web/admin/usersgroup.php:171
+msgid "Dynamic"
+msgstr "Dinamikus"
+
+#: ../../SessionManager/web/admin/usersgroup.php:222
+msgid "Cached"
+msgstr "Cachelt"
+
+#: ../../SessionManager/web/admin/usersgroup.php:227
+msgid "Time between two updates:"
+msgstr "Két frissítés közötti idő:"
+
+#: ../../SessionManager/web/admin/usersgroup.php:235
+#: ../../SessionManager/web/admin/usersgroup.php:517
+msgid "Validation type"
+msgstr "Érvényesítés típusa"
+
+#: ../../SessionManager/web/admin/usersgroup.php:236
+#: ../../SessionManager/web/admin/usersgroup.php:521
+msgid "All"
+msgstr "Mind"
+
+#: ../../SessionManager/web/admin/usersgroup.php:236
+#: ../../SessionManager/web/admin/usersgroup.php:524
+msgid "At least one"
+msgstr "Legalább egyet"
+
+#: ../../SessionManager/web/admin/usersgroup.php:240
+#: ../../SessionManager/web/admin/usersgroup.php:528
+msgid "Filters"
+msgstr "Filterek"
+
+#: ../../SessionManager/web/admin/usersgroup.php:296
+msgid "Failed to load usergroup"
+msgstr "Hiba a felhasználó csoportok betöltésében"
+
+#: ../../SessionManager/web/admin/usersgroup.php:410
+msgid "User groups management"
+msgstr "Felhasználó csoportok kezelése"
+
+#: ../../SessionManager/web/admin/usersgroup.php:432
+msgid "Remove from default"
+msgstr "Alapértelmezésből eltávolít"
+
+#: ../../SessionManager/web/admin/usersgroup.php:435
+msgid "Define as default"
+msgstr "Alapértelmezetté tesz"
+
+#: ../../SessionManager/web/admin/usersgroup.php:496
+msgid "Update the schedule"
+msgstr "Táblázat frissítése"
+
+#: ../../SessionManager/web/admin/usersgroup.php:507
+msgid "Rules"
+msgstr "Szabályok"
+
+#: ../../SessionManager/web/admin/usersgroup.php:586
+msgid "Update rules"
+msgstr "Szabályok frissítése"
+
+#: ../../SessionManager/web/admin/usersgroup.php:597
+msgid "List of users in this group"
+msgstr "Felhasználok listája ebből a csoportból"
+
+#: ../../SessionManager/web/admin/usersgroup.php:606
+#: ../../SessionManager/web/admin/users.php:98
+#: ../../SessionManager/web/admin/users.php:266
+msgid "Are you sure you want to delete this user?"
+msgstr "Biztos benne hogy, törli ezt a felhasználót?"
+
+#: ../../SessionManager/web/admin/usersgroup.php:686
+msgid "Policy of this group"
+msgstr "Csoportházirend"
+
+#: ../../SessionManager/web/admin/usersgroup.php:694
+msgid "extend from default"
+msgstr "kibővítés alapértelmezés szerint"
+
+#: ../../SessionManager/web/admin/usersgroup.php:700
+msgid "Are you sure you want to delete this rule?"
+msgstr "Biztos benne hogy, töri ezt a szabályt?"
+
+#: ../../SessionManager/web/admin/usersgroup.php:705
+msgid "Delete this rule"
+msgstr "Szabály törlése"
+
+#: ../../SessionManager/web/admin/usersgroup.php:725
+msgid "Add this rule"
+msgstr "Szabály hozzáadása"
+
+#: ../../SessionManager/web/admin/usersgroup.php:787
+msgid "Session settings configuration"
+msgstr "Munkafolyamat beállítások konfigurálása"
+
+#: ../../SessionManager/web/admin/usersgroup.php:804
+msgid "Default value"
+msgstr "Alapértelmezett érték"
+
+#: ../../SessionManager/web/admin/usersgroup.php:805
+msgid "Value"
+msgstr "Érték"
+
+#: ../../SessionManager/web/admin/usersgroup.php:828
+msgid "Remove this overriden setting"
+msgstr "Felülírt beállítások eltávolítása"
+
+#: ../../SessionManager/web/admin/usersgroup.php:843
+msgid "Save settings"
+msgstr "Beállítások mentése"
+
+#: ../../SessionManager/web/admin/usersgroup.php:864
+msgid "Add this setting"
+msgstr "Beállítás hozzáadása"
+
+#: ../../SessionManager/web/admin/users.php:117
+msgid "Are you sure you want to delete selected users?"
+msgstr "Biztos benne hogy, törli a kiválasztott felhasználókat?"
+
+#: ../../SessionManager/web/admin/users.php:159
+#: ../../SessionManager/web/admin/users.php:189
+msgid "Populate"
+msgstr "Feltölt"
+
+#: ../../SessionManager/web/admin/users.php:162
+msgid ""
+"This feature is useful to create default accounts. It is mainly used when "
+"you want to test the system quickly. It is not recommended to use those "
+"default accounts on a production system because it is very easy to delete "
+"them by mistake using this \"populate\" feature."
+msgstr ""
+"Az a megoldás alapértelmezett fiókok létrehozására hasznos. Gyors rendszer "
+"tesztelésnél használatos. Nem ajánlott produktív szerveren használni, mivel "
+"könnyen törölhetők a fiókok a \"feltölt\" hibás használatával. "
+
+#: ../../SessionManager/web/admin/users.php:171
+msgid "Overwrite existing: "
+msgstr "Meglévő felülírása:"
+
+#: ../../SessionManager/web/admin/users.php:177
+msgid "Password management:"
+msgstr "Jelszó kezelés:"
+
+#: ../../SessionManager/web/admin/users.php:184
+msgid "Same as username"
+msgstr "Felhasználónévvel azonos"
+
+#: ../../SessionManager/web/admin/users.php:185
+msgid "Custom:"
+msgstr "Egyéni:"
+
+#: ../../SessionManager/web/admin/users.php:218
+msgid "Error while requesting usergroups"
+msgstr "Hiba a felhasználó csoportok lekérése alatt"
+
+#: ../../SessionManager/web/admin/users.php:244
+msgid "Locale"
+msgstr "Lokális"
+
+#: ../../SessionManager/web/admin/users.php:267
+msgid "Delete this user"
+msgstr "Felhasználó törlése"
+
+#: ../../SessionManager/web/admin/users.php:311
+msgid "Save changes"
+msgstr "Változások mentése"
+
+#: ../../SessionManager/web/admin/users.php:323
+msgid "User groups with this user"
+msgstr "Felhasználó csoportok ezzel a felhasználóval"
+
+#: ../../SessionManager/web/admin/users.php:336
+msgid "Are you sure you want to delete this user from this group?"
+msgstr "Biztos benne hogy, törli a felhasználót ebből a csoportból?"
+
+#: ../../SessionManager/web/admin/users.php:366
+msgid "Published applications"
+msgstr "Közzétett alkalmazások"
+
+#: ../../SessionManager/web/admin/users.php:379
+msgid "Active sessions"
+msgstr "Aktív munkafolyamatok"
+
+#: ../../SessionManager/web/admin/wizard.php:39
+msgid "No user group selected"
+msgstr "Felhasználó csoport nincs kiválasztva"
+
+#: ../../SessionManager/web/admin/wizard.php:49
+msgid "No user selected"
+msgstr "Felhasználó nincs kiválasztva"
+
+#: ../../SessionManager/web/admin/wizard.php:63
+#: ../../SessionManager/web/admin/wizard.php:109
+msgid "No group name"
+msgstr "Nincs csoport név"
+
+#: ../../SessionManager/web/admin/wizard.php:87
+msgid "No application group selected"
+msgstr "Alkalmazás csoport nincs kiválasztva"
+
+#: ../../SessionManager/web/admin/wizard.php:95
+msgid "No application selected"
+msgstr "Alkalmazás nincs kiválasztva"
+
+#: ../../SessionManager/web/admin/wizard.php:161
+msgid "Unable to display users list: too many users"
+msgstr "Felhasználó lista megjelenítése nem lehetséges: túl sok felhasználó"
+
+#: ../../SessionManager/web/admin/wizard.php:167
+#: ../../SessionManager/web/admin/wizard.php:253
+#: ../../SessionManager/web/admin/wizard.php:313
+#: ../../SessionManager/web/admin/wizard.php:403
+#: ../../SessionManager/web/admin/wizard.php:446
+msgid "Publication Wizard"
+msgstr "Közzététel varázsló"
+
+#: ../../SessionManager/web/admin/wizard.php:167
+msgid "User/group selection"
+msgstr "Felhasználó/csoport kiválasztás"
+
+#: ../../SessionManager/web/admin/wizard.php:179
+msgid "Create a group with users"
+msgstr "Csoport létrehozása felhasználokkal"
+
+#: ../../SessionManager/web/admin/wizard.php:185
+msgid "Use usergroups"
+msgstr "Felhasználócsoportok használata"
+
+#: ../../SessionManager/web/admin/wizard.php:237
+#: ../../SessionManager/web/admin/wizard.php:257
+#: ../../SessionManager/web/admin/wizard.php:278
+#: ../../SessionManager/web/admin/wizard.php:318
+#: ../../SessionManager/web/admin/wizard.php:388
+#: ../../SessionManager/web/admin/wizard.php:407
+#: ../../SessionManager/web/admin/wizard.php:428
+msgid "Next"
+msgstr "Következő"
+
+#: ../../SessionManager/web/admin/wizard.php:253
+msgid "Create usergroup"
+msgstr "Felhasználó csoportok létrehozása"
+
+#: ../../SessionManager/web/admin/wizard.php:275
+#: ../../SessionManager/web/admin/wizard.php:384
+#: ../../SessionManager/web/admin/wizard.php:425
+#: ../../SessionManager/web/admin/wizard.php:557
+msgid "Previous"
+msgstr "Előző"
+
+#: ../../SessionManager/web/admin/wizard.php:313
+msgid "Applications/groups selection"
+msgstr "Alkalmazások/csoport választás"
+
+#: ../../SessionManager/web/admin/wizard.php:325
+msgid "Create a group with applications"
+msgstr "Csoport létrehozása alkalmazásokkal"
+
+#: ../../SessionManager/web/admin/wizard.php:329
+msgid "Use an application group"
+msgstr "Alkalmazás csoport használata"
+
+#: ../../SessionManager/web/admin/wizard.php:403
+msgid "Create application group"
+msgstr "Alkalmazás csoport létrehozása"
+
+#: ../../SessionManager/web/admin/wizard.php:446
+msgid "Confirmation"
+msgstr "Megerősítés"
+
+#: ../../SessionManager/web/admin/wizard.php:448
+msgid "Are you sure that you want to create this publication?"
+msgstr "Biztos benne hogy, létrehozza ezt a közzétételt"
+
+#: ../../SessionManager/web/admin/wizard.php:459
+msgid "Between this users group"
+msgstr "Felhasználó csoportok közt"
+
+#: ../../SessionManager/web/admin/wizard.php:461
+msgid "Between these users groups"
+msgstr "A felhasználó csoportok között"
+
+#: ../../SessionManager/web/admin/wizard.php:479
+msgid "Between this newly created users group"
+msgstr "Az újonnan létrehozott felhasználó csoportok között"
+
+#: ../../SessionManager/web/admin/wizard.php:483
+#: ../../SessionManager/web/admin/wizard.php:529
+msgid "Name:"
+msgstr "Név:"
+
+#: ../../SessionManager/web/admin/wizard.php:484
+#: ../../SessionManager/web/admin/wizard.php:530
+msgid "Description: "
+msgstr "Leírás:"
+
+#: ../../SessionManager/web/admin/wizard.php:485
+msgid "Users:"
+msgstr "Felhasználók:"
+
+#: ../../SessionManager/web/admin/wizard.php:509
+msgid "and this applications group"
+msgstr "és ez az alkalmazás csoport"
+
+#: ../../SessionManager/web/admin/wizard.php:511
+msgid "and these applications groups"
+msgstr "és ezek az alkalmazás csoportok"
+
+#: ../../SessionManager/web/admin/wizard.php:525
+msgid "and this newly created applications group"
+msgstr "és ez a újonnan létrehozott alkalmazás csoport"
+
+#: ../../SessionManager/web/admin/wizard.php:531
+msgid "Applications:"
+msgstr "Alkalmazások:"
+
+#: ../../SessionManager/web/admin/wizard.php:560
+msgid "Confirm"
+msgstr "Megerősít"
+
+#: ../../SessionManager/web/admin/wizard.php:588
+msgid "Cannot create usergroup"
+msgstr "Felhasználói csoport létrehozása sikertelen"
+
+#: ../../SessionManager/web/admin/wizard.php:609
+msgid "Cannot create application group"
+msgstr "Alkalmazás csoport létrehozása sikertelen"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:38
+msgid "Factor impact"
+msgstr "Faktor befolyás"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:45
+msgid "less"
+msgstr "kevesebb"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:45
+msgid "more"
+msgstr "több"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:123
+msgid "Back to default"
+msgstr "Alapértelmezés visszaállítása"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:129
+msgid "Examples"
+msgstr "Példák"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:139
+msgid ""
+"Full CPU: only CPU usage is used as a criteria to choose the best\n"
+"server to use for an incoming user."
+msgstr ""
+"Teljes CPU:csak a CPU használat van megadva kritériumnak az új felhasználó "
+"szerver választásánál"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:153
+msgid "Both CPU and RAM are used as criterias, with a little randomization..."
+msgstr ""
+"Mindkettő CPU és RAM használat van kritériumként megadva, kevés "
+"véletlenszerűséggel"
+
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:59
+msgid "Active"
+msgstr "Aktív"
+
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:62
+msgid "Inactive"
+msgstr "Inaktív"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:177
+msgid "System on maintenance mode"
+msgstr "Rendszer szerviz módban"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:178
+#: ../../SessionManager/web/classes/Preferences.class.php:302
+#: ../../SessionManager/web/classes/Preferences.class.php:306
+#: ../../SessionManager/web/classes/Preferences.class.php:320
+#: ../../SessionManager/web/classes/Preferences.class.php:326
+#: ../../SessionManager/web/classes/Preferences.class.php:329
+#: ../../SessionManager/web/classes/Preferences.class.php:332
+#: ../../SessionManager/web/classes/Preferences.class.php:335
+#: ../../SessionManager/web/classes/Preferences.class.php:338
+#: ../../SessionManager/web/classes/Preferences.class.php:358
+#: ../../SessionManager/web/classes/Preferences.class.php:361
+#: ../../SessionManager/web/classes/Preferences.class.php:365
+#: ../../SessionManager/web/classes/Preferences.class.php:369
+#: ../../SessionManager/web/classes/Preferences.class.php:380
+#: ../../SessionManager/web/classes/Preferences.class.php:411
+#: ../../SessionManager/web/classes/Preferences.class.php:414
+#: ../../SessionManager/web/classes/Preferences.class.php:418
+#: ../../SessionManager/web/classes/Preferences.class.php:421
+#: ../../SessionManager/web/classes/Preferences.class.php:424
+#: ../../SessionManager/web/classes/Preferences.class.php:427
+#: ../../SessionManager/web/classes/Preferences.class.php:431
+#: ../../SessionManager/web/classes/Preferences.class.php:434
+#: ../../SessionManager/web/classes/Preferences.class.php:438
+#: ../../SessionManager/web/classes/Preferences.class.php:443
+#: ../../SessionManager/web/classes/Preferences.class.php:446
+#: ../../SessionManager/web/classes/Preferences.class.php:457
+#: ../../SessionManager/web/classes/Preferences.class.php:461
+#: ../../SessionManager/web/modules/SessionManagement/novell.php:73
+msgid "no"
+msgstr "nem"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:178
+#: ../../SessionManager/web/classes/Preferences.class.php:302
+#: ../../SessionManager/web/classes/Preferences.class.php:306
+#: ../../SessionManager/web/classes/Preferences.class.php:320
+#: ../../SessionManager/web/classes/Preferences.class.php:326
+#: ../../SessionManager/web/classes/Preferences.class.php:329
+#: ../../SessionManager/web/classes/Preferences.class.php:332
+#: ../../SessionManager/web/classes/Preferences.class.php:335
+#: ../../SessionManager/web/classes/Preferences.class.php:338
+#: ../../SessionManager/web/classes/Preferences.class.php:358
+#: ../../SessionManager/web/classes/Preferences.class.php:361
+#: ../../SessionManager/web/classes/Preferences.class.php:365
+#: ../../SessionManager/web/classes/Preferences.class.php:369
+#: ../../SessionManager/web/classes/Preferences.class.php:380
+#: ../../SessionManager/web/classes/Preferences.class.php:411
+#: ../../SessionManager/web/classes/Preferences.class.php:414
+#: ../../SessionManager/web/classes/Preferences.class.php:418
+#: ../../SessionManager/web/classes/Preferences.class.php:424
+#: ../../SessionManager/web/classes/Preferences.class.php:427
+#: ../../SessionManager/web/classes/Preferences.class.php:431
+#: ../../SessionManager/web/classes/Preferences.class.php:434
+#: ../../SessionManager/web/classes/Preferences.class.php:438
+#: ../../SessionManager/web/classes/Preferences.class.php:443
+#: ../../SessionManager/web/classes/Preferences.class.php:446
+#: ../../SessionManager/web/classes/Preferences.class.php:457
+#: ../../SessionManager/web/classes/Preferences.class.php:461
+#: ../../SessionManager/web/modules/SessionManagement/novell.php:73
+msgid "yes"
+msgstr "igen"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:181
+msgid "Administration console language"
+msgstr "Adminisztrációs konzol nyelve"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:183
+msgid "Autodetect"
+msgstr "Automata felismerés"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:199
+msgid "Debug options list"
+msgstr "Debug beállítási lista"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:199
+msgid "Select debug options you want to enable."
+msgstr "Válasszon a debug beállítások közül, amiket használni akar"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:200
+msgid "debug"
+msgstr "debug"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:200
+msgid "info"
+msgstr "info"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:200
+msgid "warning"
+msgstr "figyelem"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:200
+msgid "error"
+msgstr "hiba"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:200
+msgid "critical"
+msgstr "kritikus"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:202
+msgid "Cache logs update interval"
+msgstr "Cache log frissítési időköze"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+msgid "30 seconds"
+msgstr "30 másodperc"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "1 minute"
+msgstr "1 perc"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "5 minutes"
+msgstr "5 perc"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "15 minutes"
+msgstr "15 perc"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "30 minutes"
+msgstr "30 perc"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:203
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "2 hours"
+msgstr "2 óra"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:205
+msgid "Cache logs expiry time"
+msgstr "Cache napló lejárati ideje"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:206
+msgid "A day"
+msgstr "Egy nap"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:206
+msgid "A week"
+msgstr "Egy hét"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:206
+msgid "A month"
+msgstr "Egy hónap"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:206
+msgid "A year"
+msgstr "Egy év"
+
+#. $c = new ConfigElement_input('start_app','start_app','start_app_des','');
+#. $this->add('general',$c);
+#: ../../SessionManager/web/classes/Preferences.class.php:212
+msgid "Default user group"
+msgstr "Alapértelmezett felhasználó csoport"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:215
+msgid "Domain integration"
+msgstr "Domén integráció"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:237
+msgid "Maximum items per page"
+msgstr "Maximum tétel egy lapon"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:237
+msgid "The maximum number of items that can be displayed."
+msgstr "A maximum számú tétel amit meg lehet jeleníteni"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:240
+msgid "Default browser"
+msgstr "Alapértelmezett böngésző"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:243
+msgid "Default policy"
+msgstr "Alapértelmezett házirend"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:245
+msgid "use Admin panel"
+msgstr "Admin panel használata"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:246
+msgid "view Servers"
+msgstr "Szerverek megtekintése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:247
+msgid "manage Servers"
+msgstr "Szerverek kezelése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:248
+msgid "view Shared folders"
+msgstr "Megosztott mappák megtekintése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:249
+msgid "manage Shared folders"
+msgstr "Megosztott mappák kezelése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:250
+msgid "view Users"
+msgstr "Felhasználók megtekintése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:251
+msgid "manage Users"
+msgstr "Felhasználók kezelése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:252
+msgid "view Usergroups"
+msgstr "Felhasználói csoportok megtekintése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:253
+msgid "manage Usergroups"
+msgstr "Felhasználói csoportok kezelése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:254
+msgid "view Applications"
+msgstr "Alkalmazások megtekintése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:255
+msgid "manage Applications"
+msgstr "Alkalmazások kezelése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:256
+msgid "view Application groups"
+msgstr "Alkalmazás csoportok megtekintése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:257
+msgid "manage Application groups"
+msgstr "Alkalmazáscsoportok kezelése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:258
+msgid "view Publications"
+msgstr "Közzétételek megtekintése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:259
+msgid "manage Publications"
+msgstr "Közzétételek kezelése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:260
+msgid "view Configuration"
+msgstr "Konfiguráció megtekintése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:261
+msgid "manage Configuration"
+msgstr "Konfiguráció kezelése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:262
+msgid "view Status"
+msgstr "Státusz megtekintése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:263
+msgid "view Summary"
+msgstr "Összegzés megtekintése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:264
+msgid "view News"
+msgstr "Hírek megtekintése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:265
+msgid "manage News"
+msgstr "Hírek kezelése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:269
+msgid "Policy for administration delegation"
+msgstr "Házirend adminisztrátor delegálásához"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:271
+msgid "SQL configuration"
+msgstr "SQL beállítás"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:272
+msgid "Database type"
+msgstr "Adatbázis típus"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:272
+msgid "The type of your database."
+msgstr "Az adatbázisa típusa."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:273
+#: ../../SessionManager/web/modules/ApplicationDB/sql.php:195
+#: ../../SessionManager/web/modules/ApplicationsGroupDB/sql.php:171
+#: ../../SessionManager/web/modules/UserDB/sql.php:228
+#: ../../SessionManager/web/modules/UserGroupDB/sql.php:164
+msgid "MySQL"
+msgstr "MySQL"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:275
+msgid "Database host address"
+msgstr "Adatbázis host cím"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:275
+msgid ""
+"The address of your database host. This database contains adminstration "
+"console data. Example: localhost or db.mycorporate.com."
+msgstr ""
+"Az adatbázis host címe.Ez a host adminisztrációs konzol adatot tartalmaz. "
+"Példa: localhost vagy db.cegem.com"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:277
+msgid "Database username"
+msgstr "Adatbázis felhasználónév"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:277
+msgid "The username that must be used to access the database."
+msgstr "A felhasználónév amivel az adatbázist elérhető."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:277
+msgid "The user name that must be used to access the database."
+msgstr "A felhasználónév ami az adatbázis hozzáféréshez használunk"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:279
+msgid "Database password"
+msgstr "Adatbázis jelszó"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:279
+msgid "The user password that must be used to access the database."
+msgstr "A jelszó amit az adatbázis hozzáféréshez használunk."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:281
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:200
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:111
+msgid "Database name"
+msgstr "Adatbázis név"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:281
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:200
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:111
+msgid "The name of the database."
+msgstr "Az adatbázis neve."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:283
+msgid "Table prefix"
+msgstr "Tábla prefix"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:283
+msgid "The table prefix for the database."
+msgstr "Tábla prefix az adatbázishoz."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:286
+msgid "Email settings"
+msgstr "Email beállítások"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:287
+msgid "Mail server type"
+msgstr "Levelező szerver típus"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:288
+msgid "Local"
+msgstr "Lokális"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:288
+msgid "SMTP server"
+msgstr "SMTP szerver"
+
+#. SMTP conf
+#: ../../SessionManager/web/classes/Preferences.class.php:295
+msgid "Host"
+msgstr "Host"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:298
+msgid "Port"
+msgstr "Port"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:301
+msgid "Use SSL with SMTP"
+msgstr "SMTP használata SSL-vel"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:305
+msgid "Authentication"
+msgstr "Hitelesítés"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:309
+msgid "SMTP username"
+msgstr "SMTP felhasználónév"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:312
+msgid "SMTP password"
+msgstr "SMTP jelszó"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:316
+msgid "Slave Server settings"
+msgstr "Slave szerver beállitások"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:317
+msgid "Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)"
+msgstr ""
+"Hitelesített gépek (FQDN vagy IP - wildcard karakterek (*.) használata "
+"megengedett)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:319
+msgid "Disable reverse FQDN checking"
+msgstr "Fordított FQDN ellenőrzés kikapcsolása"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:319
+msgid ""
+"Enable this option if you don't want to check that the result of the reverse "
+"FQDN address fits the one that was registered."
+msgstr ""
+"Alkalmazza ezt a beállítást ha, nem akarja ellenőrizni a fordított FQDN cím "
+"megmegegyezik e a regisztrálttal."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:322
+msgid "Action when a server status is not ready anymore"
+msgstr "Alapértelmezett beállítás, ha a szerver státusz nem elérhető"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:322
+msgid "Action when an server status is not ready anymore"
+msgstr "Alapértelmezett beállítás, ha a szerver státusz nem elérhető"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:323
+msgid "Do nothing"
+msgstr "Ne csinálj semmit"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:325
+msgid "Auto-recover server"
+msgstr "Automata szerver visszaállítás"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:325
+msgid ""
+"When a server status is down or broken, and it is sending monitoring, try to "
+"switch it back to ready ?"
+msgstr ""
+"Ha a szerver státusz leállítva vagy törött és monitorozást küld, próbálja "
+"visszakapcsolni elérhetőbe ? "
+
+#: ../../SessionManager/web/classes/Preferences.class.php:328
+msgid "Remove orphan applications when the application server is deleted"
+msgstr "Árva alkalmazások törlése, ha az alkalmazásszerver  törölték"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:331
+msgid "Auto register new servers"
+msgstr "Automata új szerver regisztrálás"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:334
+msgid "Auto switch new servers to production mode"
+msgstr "Új szerverek automata átkapcsolása produktív módba"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:337
+msgid ""
+"When an Application Server have reached its \"max sessions\" limit, disable "
+"session launch on it ?"
+msgstr ""
+"Ha egy alkalmazás szerver elérte a \"max munkafolyamat\" értéket, ne lehessen "
+"újat indítani rajta ?"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "Load Balancing policy for Application Servers"
+msgstr "Mérlegelési házirend betöltése alkalmazás szerverekhez"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:341
+msgid "Load Balancing policy for File Servers"
+msgstr "Mérlegelési házirend betöltése fájlszerverekhez"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:355
+msgid "Remote Desktop settings"
+msgstr "Távoli asztal beállítások"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:357
+msgid "Enable Remote Desktop"
+msgstr "Távoli asztal bekapcsolása"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:360
+msgid "Sessions are persistent"
+msgstr "Munkafolyamatok állandóak"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:364
+msgid "Show icons on user desktop"
+msgstr "Mutassa az ikonokat a felhasználó asztalán"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:368
+msgid "Allow external applications in Desktop"
+msgstr "Külső alkalmazások engedélyezése az Asztalon"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:372
+msgid "Desktop type"
+msgstr "Asztal típus"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:373
+msgid "Any"
+msgstr "Bármely"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:373
+msgid "Linux"
+msgstr "Linux"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:373
+msgid "Windows"
+msgstr "Windows"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:377
+msgid "Remote Applications settings"
+msgstr "Távoli alkalmazások beállítása"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:379
+msgid "Enable Remote Applications"
+msgstr "Távoli alkalmazások bekapcsolása"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:383
+msgid "Sessions settings"
+msgstr "Munkafolyamatok beállításai"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:385
+msgid "Default mode for session"
+msgstr "Alapértelmezett munkafolyamat mód"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:389
+msgid "Default language for session"
+msgstr "Alapértelmezett munkafolyamat nyelv"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:405
+msgid "Default timeout for session"
+msgstr "Alapértelmezett munkafolyamat időtúllépés"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "2 minutes"
+msgstr "2 perc"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "10 minutes"
+msgstr "10 perc"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "5 hours"
+msgstr "5 óra"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "12 hours"
+msgstr "12 óra"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "2 days"
+msgstr "2 nap"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:406
+msgid "1 month"
+msgstr "1 hónap"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:408
+msgid "Maximum number of running sessions"
+msgstr "Maximum futó munkafolyamatok száma"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:408
+msgid ""
+"The maximum number of session that can be started on the farm (0 is "
+"unlimited)."
+msgstr "A maximális munkafolyamatok száma, ami indítható a farmon (0 végtelen)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:410
+msgid ""
+"User can launch a session even if some of his published applications are not "
+"available"
+msgstr ""
+"A felhasználó indíthat munkafolyamatot, akkor is ha pár közzétett "
+"alkalmazása nem elérhető"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:413
+msgid "User can use a console in the session"
+msgstr "Felhasználó használhat konzolt a munkafolyamatban"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:417
+msgid "Multimedia"
+msgstr "Multimédia"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:420
+msgid "Redirect client drives"
+msgstr "Kliens meghajtók átirányítása"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:421
+msgid "partial"
+msgstr "részleges"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:421
+msgid "full"
+msgstr "teljes"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:423
+msgid "Redirect client printers"
+msgstr "Kliens nyomtatók átirányítása"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:426
+msgid "Enhance user experience"
+msgstr "Felhasználói élmény növelése"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:426
+msgid ""
+"Enhance user experience: graphic effects and optimizations (It decreases "
+"performances if used in a Wide Area Network)"
+msgstr ""
+"Felhasználói élmény növelése: grafikus effektek és optimalizáció "
+"(Teljesítmény csökkenés várható WAN-ban) "
+
+#: ../../SessionManager/web/classes/Preferences.class.php:430
+msgid "Enable user profiles"
+msgstr "Felhasználó profil aktiválása"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:433
+msgid "Auto-create user profiles when non-existant"
+msgstr "Automata felhasználó profil létrehozása, ha nem létezik"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:433
+msgid "Auto-create user profile when non-existant"
+msgstr "Automata felhasználó profil létrehozása, ha nem létezik"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:433
+msgid "Auto-create user profile when nonexistant"
+msgstr "Automata felhasználó profil létrehozása, ha nem létezik"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:437
+msgid "Launch a session without a valid profile"
+msgstr "Munkafolyamat indítása érvényes profil nélkül"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:442
+msgid "Enable shared folders"
+msgstr "Megosztott mappák aktiválása"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:445
+msgid "Launch a session even when a shared folder's fileserver is missing"
+msgstr "Munkafolyamat indítása, ha a megosztott mappák fájlszervere hiányozik"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:450
+msgid "Forceable paramaters by users"
+msgstr "Felhasználó által erőltethető paraméterek"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:450
+msgid ""
+"Choose Advanced Settings options you want to make available to users before "
+"they launch a session."
+msgstr ""
+"Válasszon haladó bejelentkezési módot amit a felhasználó használhatnak "
+"bejelentkezés előtt "
+
+#: ../../SessionManager/web/classes/Preferences.class.php:451
+msgid "session mode"
+msgstr "munkafolyamat mód"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:451
+msgid "language"
+msgstr "nyelv"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:451
+msgid "server"
+msgstr "szerver"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:451
+msgid "timeout"
+msgstr "időtúllépés"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:456
+msgid "Display users list"
+msgstr "Felhasználói lista mutatása"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:456
+msgid ""
+"Display the list of users from the corporate directory in the login box. If "
+"the list is not displayed, the user must provide his login name."
+msgstr ""
+"Vállalati mappa felhasználó listájának megjelenítése, a bejelentkezésnél. Ha "
+"a lista nem jelenik meg, a felhasználónak kell a bejelentkezési nevet "
+"beírnia."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:460
+msgid "Public Webservices access"
+msgstr "Publikus webszerviz hozzáférés"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:460
+msgid ""
+"Authorize non authenticated requests to get information about users "
+"authorized applications or get applications icons."
+msgstr ""
+"Engedélyezze a nem hitelesített lekérdezéseket, a felhasználó engedélyezett "
+"alkalmazásairól vagy alkalmazás ikonokról."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:486
+msgid "Modules activation"
+msgstr "Modulok aktiválása"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:486
+msgid "Choose the modules you want to enable."
+msgstr "Válasszon mely modulokat akarja engedélyezni."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:536
+msgid "Email addresses to send alerts to"
+msgstr "Email címek ahová a figyelmeztetéseket küldeni kell"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:536
+msgid "On system alerts, emails will be sent to these addresses"
+msgstr "Rendszer figyelmeztetés e-mailjei ezekre a címekre lesznek elküldve"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:561
+msgid "Activated callbacks"
+msgstr "Aktivált visszahívások"
+
+#: ../../SessionManager/web/classes/Server.class.php:294
+msgid "is NOT online!"
+msgstr "NEM online!"
+
+#: ../../SessionManager/web/classes/Server.class.php:482
+msgid "Under maintenance"
+msgstr "Szerviz módban van"
+
+#: ../../SessionManager/web/classes/Server.class.php:486
+msgid "Pending"
+msgstr "Függőben"
+
+#: ../../SessionManager/web/classes/Server.class.php:490
+msgid "Offline"
+msgstr "Offline"
+
+#: ../../SessionManager/web/classes/Server.class.php:492
+msgid "Broken"
+msgstr "Törött"
+
+#: ../../SessionManager/web/classes/Session.class.php:356
+msgid "Creating"
+msgstr "Létrehozás"
+
+#: ../../SessionManager/web/classes/Session.class.php:359
+msgid "Created"
+msgstr "Létrehozva"
+
+#: ../../SessionManager/web/classes/Session.class.php:362
+msgid "Initializing"
+msgstr "Inicializálás"
+
+#: ../../SessionManager/web/classes/Session.class.php:368
+msgid "Logged"
+msgstr "Naplózva"
+
+#: ../../SessionManager/web/classes/Session.class.php:371
+msgid "Disconnected"
+msgstr "Szétkapcsolva"
+
+#: ../../SessionManager/web/classes/Session.class.php:374
+msgid "To destroy"
+msgstr "megsemmisít"
+
+#: ../../SessionManager/web/classes/Session.class.php:377
+msgid "Destroying"
+msgstr "Megsemmisítés folyamatban"
+
+#: ../../SessionManager/web/classes/Session.class.php:380
+msgid "Destroyed"
+msgstr "Megsemmisítve"
+
+#: ../../SessionManager/web/classes/tasks/Task.class.php:68
+#, php-format
+msgid "Unable to submit Task to server '%s'"
+msgstr "Feladatot nem sikerült '%s' szervernek közvetíteni"
+
+#: ../../SessionManager/web/classes/User.class.php:341
+#, php-format
+msgid ""
+"User '%s' has at least two groups with the same overriden rule but with "
+"different values, the result will be unpredictable."
+msgstr ""
+"'%s' felhasználónak legalább két csoporttagsága van ugyanazon felülírt "
+"szabállyal, de különböző értékkel, az eredmény nem előre látható. "
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Mail.class.php:46
+#, php-format
+msgid "OVD Alert: %s is offline"
+msgstr "OVD figyelmeztetés: %s offline"
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Mail.class.php:48
+#, php-format
+msgid "OVD End Alert: %s is up again"
+msgstr "OVD figyelmeztetés vége: %s online"
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Mail.class.php:57
+#: ../../SessionManager/web/events/callbacks/SqlFailure/Mail.class.php:59
+msgid "Send an email"
+msgstr "Levél küldése"
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Task.class.php:53
+msgid "Clean up tasks"
+msgstr "Feladatok tisztítása"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:49
+#, php-format
+msgid "OVD Session alert: %s couldn't log in"
+msgstr "OVD munkafolyamat figyelmeztetés: %s nem tudott bejelentkezni"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:53
+msgid "The following error happened:\n"
+msgstr "A következő hiba történt:\n"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:55
+msgid "No error given"
+msgstr "Nincs hiba megadva"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:64
+msgid "Send an email on login problem"
+msgstr "Levél küldése bejelentkezés problémánál"
+
+#: ../../SessionManager/web/events/callbacks/SqlFailure/Mail.class.php:46
+#, php-format
+msgid "OVD Alert: MySQL %s is offline"
+msgstr "OVD figyelmeztetés: MySQL %s offline"
+
+#: ../../SessionManager/web/events/callbacks/SqlFailure/Mail.class.php:49
+#, php-format
+msgid "OVD End Alert: MySQL %s is up again"
+msgstr "OVD figyelmeztetés vége: MySQL %s online"
+
+#: ../../SessionManager/web/events/ServerStatusChanged.class.php:30
+msgid "Server status changed"
+msgstr "Szerver státusz megváltozott"
+
+#: ../../SessionManager/web/events/SessionStart.class.php:26
+msgid "Session startup"
+msgstr "Munkafolyamat indítás"
+
+#: ../../SessionManager/web/events/SessionStatusChanged.class.php:26
+msgid "Session status changed"
+msgstr "Munkafolyamat státusz megváltozott"
+
+#: ../../SessionManager/web/events/SqlFailure.class.php:26
+msgid "Sql failure"
+msgstr "Sql hiba"
+
+#: ../../SessionManager/web/includes/defaults.inc.php:26
+msgid "Open Virtual Desktop"
+msgstr "Virtuális Asztal megnyitása"
+
+#: ../../SessionManager/web/modules/ApplicationsGroupDB.php:32
+msgid "Module ApplicationsGroupDB must be enabled"
+msgstr "ApplicationsGroupDB modul engedélyezve kell legyen"
+
+#: ../../SessionManager/web/modules/ApplicationsGroupDB/sql.php:198
+msgid "Applications group already exists"
+msgstr "Alkalmazáscsoport már létezik"
+
+#: ../../SessionManager/web/modules/AuthMethod/Auto.php:67
+msgid "Auto authentication"
+msgstr "Automata hitelesítés"
+
+#: ../../SessionManager/web/modules/AuthMethod/Auto.php:102
+msgid "Use the given login to generate user"
+msgstr "Megadott bejelentkezési név használata felhasználó létrehozáskor"
+
+#: ../../SessionManager/web/modules/AuthMethod/Auto.php:102
+msgid "Use the given login to generate user."
+msgstr "Megadott bejelentkezési név használata felhasználó létrehozáskor."
+
+#: ../../SessionManager/web/modules/AuthMethod/CAS.php:72
+msgid "CAS authentication"
+msgstr "CAS hitelesítés"
+
+#: ../../SessionManager/web/modules/AuthMethod/CAS.php:86
+msgid "CAS server URL"
+msgstr "CAS szerver URL"
+
+#: ../../SessionManager/web/modules/AuthMethod/Password.php:48
+msgid "Login/Password authentication"
+msgstr "Felhasználónév/Jelszó hitelesítés"
+
+#: ../../SessionManager/web/modules/AuthMethod/RemoteUser.php:47
+msgid "RemoteUser authentication"
+msgstr "Távoli felhasználó hitelesítés"
+
+#: ../../SessionManager/web/modules/AuthMethod/RemoteUser.php:63
+msgid "SERVER variable for SSO"
+msgstr "SERVER változó SSO-nak"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:69
+msgid "Token authentication"
+msgstr "Token hitelesítés"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:95
+msgid "Token validation URL"
+msgstr "Token érvényesítés URL-je"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:95
+msgid ""
+"If a token argument is sent to startsession, the system tries to get an user "
+"login by requesting the token validation url.<br /><br />Put here the url to "
+"request if a token argument is sent to <i>startsession</i> instead of login/"
+"password.<br /><br />The special string <b>%TOKEN%</b> needs to be set "
+"because it's replaced by the token argument when the URL is requested."
+msgstr ""
+"Ha egy token paraméter el lett küldve a startsession-nek, a rendszer "
+"megpróbál egy felhasználó bejelentkezést keresni, a token hitelesítés URL "
+"segítségével.<br /><br />Tegye ide az url-t , ha egy token paraméter ellett "
+"küldve a <i>startsession</i>, felhasználónév/jelszó helyet.<br /><br />A "
+"speciális string <b>%TOKEN%</b> legyen beállítva, mert be lesz helyettesítve "
+"a token paraméterrel amikor az URL-t lekérdezzük. "
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:96
+msgid "Token XML user node name"
+msgstr "Token XML felhasználó csomópont név"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:96
+msgid "The id of the XML node that contains the user login"
+msgstr "Az XML csomópont id-a ami tartalmazza a bejelentkezést"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:97
+msgid "Token XML login attribute name"
+msgstr "XML token bejelentkezési paraméter név"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:97
+msgid ""
+"The name of the XML attribute which contains the user login (in the "
+"previously defined XML node)"
+msgstr ""
+"Az XML paraméter neve, ami tartalmazza a bejelentkezési adatokat(az előzőleg "
+"definiált XML csomópontban)"
+
+#: ../../SessionManager/web/modules/HA/high_availability.php:50
+msgid "Virtual IP"
+msgstr "Virtuális IP"
+
+#: ../../SessionManager/web/modules/HA/high_availability.php:60
+msgid "HA configuration"
+msgstr "HA konfiguráció"
+
+#: ../../SessionManager/web/modules/HA.php:31
+#: ../../SessionManager/web/modules/UserDB.php:32
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_memberof.php:119
+#: ../../SessionManager/web/webservices/configuration.php:65
+msgid "UserDB module must be enabled"
+msgstr "UserDB modul legyen aktiválva"
+
+#: ../../SessionManager/web/modules/ProfileDB/internal.php:209
+#, php-format
+msgid "ProfileDB::internal Unable to create shared folder on file server '%s'"
+msgstr ""
+"ProfileDB::internal Megosztott mappa létrehozása '%s' szerveren, sikertelen"
+
+#: ../../SessionManager/web/modules/ProfileDB.php:32
+msgid "ProfileDB module must be enabled"
+msgstr "ProfileDB modul legyen aktiválva"
+
+#: ../../SessionManager/web/modules/SessionManagement/internal.php:66
+msgid "Which login should be used for the ApplicationServer's generated user?"
+msgstr ""
+"Melyik bejelentkezést használjuk az Alkalmazásszerver által generált "
+"felhasználókhoz?"
+
+#: ../../SessionManager/web/modules/SessionManagement/internal.php:67
+msgid "Use given login"
+msgstr "Megadott bejelentkezési adatok használata"
+
+#: ../../SessionManager/web/modules/SessionManagement/internal.php:67
+msgid "Auto-generate"
+msgstr "Automata generálás"
+
+#: ../../SessionManager/web/modules/SessionManagement/novell.php:72
+msgid "Manage users by ZENworks DLU instead of native method"
+msgstr "Felhasználók kezelése ZENworks DLU-val, natív mód helyett "
+
+#: ../../SessionManager/web/modules/SessionManagement.php:292
+msgid "No available server"
+msgstr "Nincs elérhető szerver"
+
+#: ../../SessionManager/web/modules/SharedFolderDB/internal.php:273
+#, php-format
+msgid ""
+"SharedFolderDB::internal Unable to create shared folder on file server '%s'"
+msgstr ""
+"SharedFolderDB::internal Megosztott mappa létrehozása '%s' szerveren "
+"sikertelen"
+
+#: ../../SessionManager/web/modules/SharedFolderDB.php:32
+msgid "SharedFolderDB module must be enabled"
+msgstr "SharedFolderDB legyen aktiválva"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:91
+#: ../../SessionManager/web/modules/UserDB/ldap.php:284
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:194
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:105
+msgid "Server host address"
+msgstr "Szerver host cím"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:91
+msgid "The address of your Active Directory server."
+msgstr "Az Active Directory szerver címe."
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:93
+msgid "Domain name"
+msgstr "Domén név"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:93
+msgid "Domain name used by Active Directory"
+msgstr "Active Directory által használ domén név"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:95
+msgid "Administrator DN"
+msgstr "Adminisztrátor DN"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:95
+#: ../../SessionManager/web/modules/UserDB/ldap.php:288
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:196
+msgid ""
+"The user login that must be used to access the database (to list users "
+"accounts)."
+msgstr ""
+"Az felhasználó akinek hozzáférése van az adatbázishoz(felhasználó fiókok "
+"listázásához)"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:97
+msgid "Administrator password"
+msgstr "Adminisztrátor jelszó"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:97
+#: ../../SessionManager/web/modules/UserDB/ldap.php:290
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:198
+msgid ""
+"The user password that must be used to access the database (to list users "
+"accounts)."
+msgstr ""
+"A felhasználó jelszó amivel elérhető az adatbázis ( felhasználó fiókok "
+"listázásához)"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:99
+msgid "match"
+msgstr "egyezés"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:146
+#: ../../SessionManager/web/modules/UserGroupDB/activedirectory.php:160
+msgid "Active Directory"
+msgstr "Active Directory"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:284
+msgid "The address of your LDAP server."
+msgstr "Az LDAP szerver címe"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:286
+msgid "Server port"
+msgstr "Szerver port"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:286
+msgid "The port number used by your LDAP server."
+msgstr "Az LDAP szerver port száma"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:286
+msgid "The port use by your LDAP server."
+msgstr "Az LDAP szerver által használt port"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:288
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:196
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:107
+msgid "User login"
+msgstr "Felhasználónév"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:290
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:198
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:109
+msgid "User password"
+msgstr "Felhasználó jelszó"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:296
+msgid "Options given to ldap object"
+msgstr "Ldap objektum opciói"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:296
+msgid "Options given to ldap object."
+msgstr "Ldap objektum opciói."
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:298
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:204
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_memberof.php:204
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:253
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:115
+msgid "Matching"
+msgstr "Egyezés"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:301
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:255
+msgid "Filter (optional)"
+msgstr "Szűrő (tetszőleges)"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:301
+msgid "Filter, example (&(distinguishedname=mike*)(uid=42*))"
+msgstr "Szűrő, példa (&(distinguishedname=mike*)(uid=42*))"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:304
+msgid "extra"
+msgstr "extra"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:194
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:105
+msgid "The address of your MySQL server."
+msgstr "A MySQL szerver címe."
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:202
+msgid "Table of users"
+msgstr "Felhasználók táblázata"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:206
+msgid "Hash method"
+msgstr "Hash mód"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:207
+msgid "MD5"
+msgstr "MD5"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:207
+msgid "Crypt"
+msgstr "Crypt"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:207
+msgid "Plain"
+msgstr "Sima"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:229
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:137
+msgid "MySQL external"
+msgstr "Külső MySQL"
+
+#: ../../SessionManager/web/modules/UserDB/sql.php:246
+msgid "User already exists"
+msgstr "A felhasználó már létezik"
+
+#: ../../SessionManager/web/modules/UserDB/unix.php:116
+#: ../../SessionManager/web/modules/UserGroupDB/unix.php:110
+msgid "Unix"
+msgstr "Unix"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_memberof.php:215
+msgid "LDAP using memberOf"
+msgstr "memberOf használata LDAP-pal"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:251
+msgid "Group Branch DN"
+msgstr "Csoport ág DN"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:251
+msgid "Use LDAP users groups using Posix groups, Group Branch DN:"
+msgstr ""
+"LDAP felhasználók csoportok használata akik posix csoportok, csoport ág DN:"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:255
+#, php-format
+msgid "Filter (example: %s)"
+msgstr "Szűrő (példa: %s)"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:261
+msgid "LDAP using Posix groups"
+msgstr "Posix csoportot használó LDAP"
+
+#: ../../SessionManager/web/modules/UserGroupDB.php:32
+#: ../../SessionManager/web/modules/UserGroupDB.php:167
+msgid "UserGroupDB module must be enabled"
+msgstr "UserGroupDB modul aktiválni kell"
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:107
+msgid ""
+"The user login that must be used to access the database (to list users "
+"groups)."
+msgstr ""
+"A felhasználó név amivel hozzáférhet az adatbázishoz(a felhasználó csoportok "
+"listázáshoz)."
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:109
+msgid ""
+"The user password that must be used to access the database (to list users "
+"groups)."
+msgstr ""
+"A felhasználó jelszó amivel hozzáférhet az adatbázishoz(a felhasználó "
+"csoportok listázáshoz)."
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:113
+msgid "Database users groups table name"
+msgstr "Adatbázis felhasználó csoportok tábla neve"
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:113
+msgid "The name of the database table which contains the users groups"
+msgstr "Az adatbázis tábla neve ami tartalmazza a felhasználók csoportjait"
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql.php:183
+msgid "Users group already exists"
+msgstr "Felhasználó csoport már létezik"
+
+#: ../../SessionManager/web/webservices/configuration.php:26
+msgid "Internal error"
+msgstr "Belső hiba"
+
+#: ../../SessionManager/web/webservices/configuration.php:39
+msgid "Maximum"
+msgstr "Maximum"
+
+#: ../../SessionManager/web/webservices/configuration.php:78
+msgid "Getting userlist failed"
+msgstr "Felhasználó lista lekérdezése sikertelen"

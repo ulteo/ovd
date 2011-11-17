@@ -191,6 +191,7 @@ class Preferences {
 			'en_GB'=>'English',
 			'es_ES'=>'Español',
 			'fr_FR'=>'Français',
+			'hu_HU'=>'Magyar',
 //			'id_ID'=>'Bahasa Indonesia',
 			'it_IT'=>'Italiano',
 			'ja_JP'=>'日本語',
