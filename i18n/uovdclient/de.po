@@ -1,16 +1,17 @@
 # German translations for uovdclient package.
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
 # Automatically generated, 2011.
 # Author: Michael Siepen <michael.siepen@aw-online.de>, 2010, 2011.
+# Author: Carsten Woodhouse <CWoodhou@pco-online.de>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: uovdclient\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-02-21 16:14+0100\n"
-"PO-Revision-Date: 2011-03-10 10:17+0200\n"
-"Last-Translator: Michael Siepen\n"
+"PO-Revision-Date: 2011-09-16 21:33+0200\n"
+"Last-Translator: Carsten Woodhouse\n"
 "Language-Team: German\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -35,12 +36,12 @@ msgstr "Schließen"
 
 #: ../../client/web/web/translate.php:67
 msgid "Session Manager"
-msgstr "Session Manager"
+msgstr "Sitzungsmanager"
 
 #: ../../client/web/web/translate.php:68
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:985
 msgid "Login"
-msgstr "Login"
+msgstr "Anmeldung"
 
 #: ../../client/web/web/translate.php:69
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:986
@@ -99,7 +100,7 @@ msgstr "Debug"
 
 #: ../../client/web/web/translate.php:86
 msgid "Advanced settings"
-msgstr "erweiterte Einstellungen"
+msgstr "Erweiterte Einstellungen"
 
 #: ../../client/web/web/translate.php:87
 msgid "Connect"
@@ -161,11 +162,11 @@ msgstr "Willkommen!"
 # 85%
 #: ../../client/web/web/translate.php:101
 msgid "Suspend"
-msgstr "sperren"
+msgstr "Sperren"
 
 #: ../../client/web/web/translate.php:102
 msgid "Logout"
-msgstr "Logout"
+msgstr "Abmelden"
 
 #: ../../client/web/web/translate.php:104
 #: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:116
@@ -196,7 +197,7 @@ msgstr "Fehlender Parameter \"password\""
 # 97%
 #: ../../client/web/web/translate.php:120
 msgid "Unable to reach the Session Manager"
-msgstr "Der Session Manager ist nicht erreichbar!"
+msgstr "Der Sitzungsmanager ist nicht erreichbar"
 
 #: ../../client/web/web/translate.php:122
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:376
@@ -269,7 +270,7 @@ msgstr "Ihre Session wurde unerwartet beendet"
 
 #: ../../client/web/web/translate.php:135
 msgid "error details"
-msgstr "Details zum Fehler"
+msgstr "Fehlerdetails"
 
 #: ../../client/web/web/translate.php:136
 msgid "Close this window"
@@ -314,7 +315,7 @@ msgstr "Warnung!"
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:553
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:559
 msgid "Error!"
-msgstr "Fehler"
+msgstr "Fehler!"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:557
 msgid "Unable to reach the Session Manager!"
@@ -323,11 +324,11 @@ msgstr "Der Session Manager ist nicht erreichbar!"
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:642
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:646
 msgid "Invalid host field!"
-msgstr "Ungültiger Eintrag im Feld \"Host\""
+msgstr "Ungültiger Host-Eintrag!"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:678
 msgid "You must specify the host field!"
-msgstr "Sie müssen das Feld Host ausfüllen"
+msgstr "Sie müssen das Feld Host ausfüllen!"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:683
 msgid "You must specify a username!"
@@ -338,9 +339,8 @@ msgid "You must specify a password!"
 msgstr "Sie müssen ein Passwort angeben!"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:733
-#, fuzzy
 msgid "Internal error: Bad session mode return"
-msgstr "Interner Fehler: Bad session mode return"
+msgstr "Interner Fehler: Unbekannter Sitzungsmodus"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:745
 msgid "Session is going to end"
@@ -348,7 +348,7 @@ msgstr "Die Sitzung wird beendet"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:772
 msgid "Internal error: unsupported session mode"
-msgstr "Interner Fehler: Session Modus wird nicht unterstützt"
+msgstr "Interner Fehler: Sitzungsmodus wird nicht unterstützt"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:807
 msgid "You have been disconnected"
@@ -360,7 +360,7 @@ msgstr "Ihre Sitzung wurde beendet"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:823
 msgid "Protocol xml error: "
-msgstr "Protokoll XML Fehler:"
+msgstr "Protokoll XML Fehler: "
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:823
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:830
@@ -537,7 +537,7 @@ msgstr "Es ist ein Fehler aufgetreten. Bitte versuchen sie es noch einmal."
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
 msgid "Bug report saved to "
-msgstr "Fehlerbericht gespeichert unter"
+msgstr "Fehlerbericht gespeichert unter "
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
 msgid "Bug report saved"
