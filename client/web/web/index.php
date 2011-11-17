@@ -40,11 +40,18 @@ if (isset($_COOKIE['ovd-client']['user_login']))
 	$wi_user_login = (string)$_COOKIE['ovd-client']['user_login'];
 
 $wi_use_local_credentials = 0;
-if (isset($_COOKIE['ovd-client']['use_local_credentials']))
+if (defined('OPTION_FORCE_USE_LOCAL_CREDENTIALS'))
+	$wi_use_local_credentials = ((OPTION_FORCE_USE_LOCAL_CREDENTIALS==true)?1:0);
+elseif (isset($_COOKIE['ovd-client']['use_local_credentials']))
 	$wi_use_local_credentials = (int)$_COOKIE['ovd-client']['use_local_credentials'];
 
+if (! defined('OPTION_SHOW_USE_LOCAL_CREDENTIALS'))
+	define('OPTION_SHOW_USE_LOCAL_CREDENTIALS', false);
+
 $wi_session_mode = 'desktop';
-if (isset($_COOKIE['ovd-client']['session_mode']))
+if (defined('OPTION_FORCE_SESSION_MODE'))
+	$wi_session_mode = OPTION_FORCE_SESSION_MODE;
+elseif (isset($_COOKIE['ovd-client']['session_mode']))
 	$wi_session_mode = (string)$_COOKIE['ovd-client']['session_mode'];
 
 if (isset($_COOKIE['ovd-client']['session_language']) && $_COOKIE['ovd-client']['session_language'] != $user_language) {
@@ -61,7 +68,9 @@ if (isset($_COOKIE['ovd-client']['session_keymap'])) {
 }
 
 $wi_desktop_fullscreen = 0;
-if (isset($_COOKIE['ovd-client']['desktop_fullscreen']))
+if (defined('OPTION_FORCE_FULLSCREEN'))
+	$wi_desktop_fullscreen = ((OPTION_FORCE_FULLSCREEN==true)?1:0);
+elseif (isset($_COOKIE['ovd-client']['desktop_fullscreen']))
 	$wi_desktop_fullscreen = (int)$_COOKIE['ovd-client']['desktop_fullscreen'];
 
 $wi_debug = 1;
@@ -522,7 +531,7 @@ checkSessionMode();
 ?>
 										<div id="advanced_settings" style="display: none;">
 											<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="5">
-												<tr>
+												<tr<?php if (OPTION_SHOW_USE_LOCAL_CREDENTIALS === false) echo ' style="display: none;"';?>>
 													<td style="text-align: right; vertical-align: middle;">
 														<img src="media/image/icons/use_local_credentials.png" alt="" title="" />
 													</td>
@@ -530,8 +539,8 @@ checkSessionMode();
 														<strong><span id="use_local_credentials_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="use_local_credentials_true" name="use_local_credentials" value="1"<?php if ($wi_use_local_credentials == 1) echo ' checked="checked"'; ?> onchange="checkLogin();" onclick="checkLogin();" /> <span id="use_local_credentials_yes_gettext">&nbsp;</span>
-														<input class="input_radio" type="radio" id="use_local_credentials_false" name="use_local_credentials" value="0"<?php if ($wi_use_local_credentials == 0) echo ' checked="checked"'; ?> onchange="checkLogin();" onclick="checkLogin();" /> <span id="use_local_credentials_no_gettext">&nbsp;</span>
+														<input class="input_radio" type="radio" id="use_local_credentials_true" name="use_local_credentials" value="1"<?php if ($wi_use_local_credentials == 1) echo ' checked="checked"'; ?><?php if (defined('OPTION_FORCE_USE_LOCAL_CREDENTIALS')) echo ' disabled="disabled"'; ?> onchange="checkLogin();" onclick="checkLogin();" /> <span id="use_local_credentials_yes_gettext">&nbsp;</span>
+														<input class="input_radio" type="radio" id="use_local_credentials_false" name="use_local_credentials" value="0"<?php if ($wi_use_local_credentials == 0) echo ' checked="checked"'; ?><?php if (defined('OPTION_FORCE_USE_LOCAL_CREDENTIALS')) echo ' disabled="disabled"'; ?> onchange="checkLogin();" onclick="checkLogin();" /> <span id="use_local_credentials_no_gettext">&nbsp;</span>
 													</td>
 												</tr>
 												<tr>
@@ -542,7 +551,7 @@ checkSessionMode();
 														<strong><span id="mode_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<select id="session_mode" onchange="checkSessionMode();" onclick="checkSessionMode();">
+														<select id="session_mode" onchange="checkSessionMode();" onclick="checkSessionMode();" <?php if (defined('OPTION_FORCE_SESSION_MODE')) echo ' disabled="disabled"';?>>
 															<option id="mode_desktop_gettext" value="desktop"<?php if ($wi_session_mode == 'desktop') echo ' selected="selected"'; ?>></option>
 															<option id="mode_portal_gettext" value="applications"<?php if ($wi_session_mode == 'applications') echo ' selected="selected"'; ?>></option>
 														</select>
@@ -556,8 +565,8 @@ checkSessionMode();
 														<strong><span id="fullscreen_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="desktop_fullscreen_true" name="desktop_fullscreen" value="1"<?php if ($wi_desktop_fullscreen == 1) echo ' checked="checked"'; ?> /> <span id="fullscreen_yes_gettext">&nbsp;</span>
-														<input class="input_radio" type="radio" id="desktop_fullscreen_false" name="desktop_fullscreen" value="0"<?php if ($wi_desktop_fullscreen == 0) echo ' checked="checked"'; ?> /> <span id="fullscreen_no_gettext">&nbsp;</span>
+														<input class="input_radio" type="radio" id="desktop_fullscreen_true" name="desktop_fullscreen" value="1"<?php if ($wi_desktop_fullscreen == 1) echo ' checked="checked"'; ?><?php if (defined('OPTION_FORCE_FULLSCREEN')) echo ' disabled="disabled"'; ?>/> <span id="fullscreen_yes_gettext">&nbsp;</span>
+														<input class="input_radio" type="radio" id="desktop_fullscreen_false" name="desktop_fullscreen" value="0"<?php if ($wi_desktop_fullscreen == 0) echo ' checked="checked"'; ?><?php if (defined('OPTION_FORCE_FULLSCREEN')) echo ' disabled="disabled"'; ?> /> <span id="fullscreen_no_gettext">&nbsp;</span>
 													</td>
 												</tr>
 												<tr>
