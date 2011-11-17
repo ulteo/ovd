@@ -21,28 +21,35 @@
 
 import glob
 import os
+import sys
 
 from ovd_shells.Drives import Drives as AbstractDrives
 
 
 class Drives(AbstractDrives):
-        mtabPath = "/etc/mtab"
-        acceptedType = ["cifs", "nfs"]
-
-
-        @staticmethod
-        def getDrivesList():
-                mtab = []
-                userID = os.getuid()
-
-                f = open(Drives.mtabPath, 'r')
-                for l in f.readlines():
-                        cols = l.split(" ")
-                        if cols[2] not in Drives.acceptedType:
-                                continue
-                        fs_info = os.stat(cols[1])
-                        if fs_info.st_uid == userID:
-                                mtab.append(cols[1])
-                return mtab
+	mtabPath = "/etc/mtab"
+	acceptedType = ["cifs", "nfs"]
+	
+	
+	@staticmethod
+	def getDrivesList():
+		mtab = []
+		userID = os.getuid()
+		
+		f = open(Drives.mtabPath, 'r')
+		for l in f.readlines():
+			cols = l.split(" ")
+			if cols[2] not in Drives.acceptedType:
+				continue
+			
+			try:
+				fs_info = os.stat(cols[1])
+			except OSError, e:
+				print >> sys.stderr,  "Invalid entry in the mtab: %s (%s)"%(cols[1], str(e))
+				continue
+			
+			if fs_info.st_uid == userID:
+				mtab.append(cols[1])
+		return mtab
 
 
