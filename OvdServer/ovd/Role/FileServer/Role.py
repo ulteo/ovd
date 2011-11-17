@@ -3,6 +3,7 @@
 # Copyright (C) 2009-2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
+# Author David LECHEVALIER <david@ulteo.com> 2011 
 # Author Samuel BOVEE <samuel@ulteo> 2011
 #
 # This program is free software; you can redistribute it and/or 
@@ -25,7 +26,6 @@ import os
 import statvfs
 import time
 from xml.dom.minidom import Document
-from pyinotify import WatchManager, ThreadedNotifier
 
 from ovd.Logger import Logger
 from ovd.Platform import Platform
@@ -33,7 +33,7 @@ from ovd.Role.Role import Role as AbstractRole
 
 from Config import Config
 from Dialog import Dialog
-from Rec import Rec
+from DirectoryWatcher import DirectoryWatcher
 from Share import Share
 from User import User
 
@@ -44,6 +44,7 @@ class Role(AbstractRole):
 		self.dialog = Dialog(self)
 		self.has_run = False
 		self.shares = {}
+		self.wm = None
 	
 	def init(self):
 		Logger.info("FileServer init")
@@ -64,10 +65,7 @@ class Role(AbstractRole):
 			Logger.error("FileServer: unable to cleanup users")
 			return False
 		
-		wm = WatchManager()
-		self.inotify = ThreadedNotifier(wm)
-		wm.add_watch(path=Config.spool, mask=Rec.mask, proc_fun=Rec(), rec=False, auto_add=True)
-		
+		self.wm = DirectoryWatcher()
 		
 		self.shares = self.get_existing_shares()
 		
@@ -80,17 +78,15 @@ class Role(AbstractRole):
 	
 	
 	def stop(self):
-		Logger.info("FileServer:: stopping")
-		
 		self.cleanup_samba()
 		self.purgeGroup()
-		self.inotify.stop()
+		self.wm.stop()
 	
 	
 	def run(self):
 		self.has_run = True
-		self.inotify.start()
 		self.status = Role.STATUS_RUNNING
+		self.wm.start()
 		while 1:
 			time.sleep(30)
 			Logger.debug("FileServer run loop")
