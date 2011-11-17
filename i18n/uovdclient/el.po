@@ -1,0 +1,601 @@
+# Greek translations for uovdclient package.
+# Copyright (C) 2011 Ulteo SAS
+# This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
+# Automatically generated, 2011.
+# Author: Nikolaos Benias <nikolaos_benias@zeuslinux.gr> 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: uovdclient\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-02-21 16:14+0100\n"
+"PO-Revision-Date: 2011-08-10 18:47+0200\n"
+"Last-Translator: Nikolaos Benias\n"
+"Language-Team: Greek\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.1.5\n"
+
+#. { //persistent session
+#. ?>
+#. <td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.suspend(); return false;"><img src="media/image/suspend.png" width="32" height="32" alt="" title="" /><br /><span id="suspend_gettext">&nbsp;</span></a></td>
+#. <?php
+#. }
+#: ../../client/web/web/index.php:405
+msgid "Example: sm.ulteo.com"
+msgstr "Παράδειγμα: sm.ulteo.com"
+
+# 80%
+#: ../../client/web/web/translate.php:65
+msgid "Close"
+msgstr "Κλείσιμο"
+
+# ενικός-πληθυντικός;
+#: ../../client/web/web/translate.php:67
+msgid "Session Manager"
+msgstr "Διαχειριστής συνεδριών"
+
+# Μήπως εννοεί Χρήστης;
+#: ../../client/web/web/translate.php:68
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:985
+msgid "Login"
+msgstr "Είσοδος"
+
+#: ../../client/web/web/translate.php:69
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:986
+msgid "Password"
+msgstr "Κωδικός"
+
+#: ../../client/web/web/translate.php:70
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1001
+msgid "Use local credentials"
+msgstr "Χρήση τοπικών πιστοποιήσεων"
+
+#: ../../client/web/web/translate.php:71 ../../client/web/web/translate.php:77
+#: ../../client/web/web/translate.php:82
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
+msgid "Yes"
+msgstr "Ναι"
+
+#: ../../client/web/web/translate.php:72 ../../client/web/web/translate.php:78
+#: ../../client/web/web/translate.php:83
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
+msgid "No"
+msgstr "Όχι"
+
+# 50%
+#: ../../client/web/web/translate.php:73
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:991
+msgid "Mode"
+msgstr "Λειτουργία"
+
+#: ../../client/web/web/translate.php:74
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:998
+msgid "Desktop"
+msgstr "Επιφάνεια Εργασίας"
+
+#: ../../client/web/web/translate.php:75
+msgid "Portal"
+msgstr "Πύλη"
+
+# πλήρη-πλήρης;
+#: ../../client/web/web/translate.php:76
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:78
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1009
+msgid "Fullscreen"
+msgstr "Πλήρης οθόνη"
+
+#: ../../client/web/web/translate.php:79
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:993
+msgid "Language"
+msgstr "Γλώσσα"
+
+#: ../../client/web/web/translate.php:80
+msgid "Keyboard layout"
+msgstr "Διάταξη πληκτρολογίου"
+
+#: ../../client/web/web/translate.php:81
+msgid "Debug"
+msgstr "Αποσφαλμάτωση"
+
+#: ../../client/web/web/translate.php:86
+msgid "Advanced settings"
+msgstr "Προχωρημένες ρυθμίσεις"
+
+#: ../../client/web/web/translate.php:87
+msgid "Connect"
+msgstr "Σύνδεση"
+
+#: ../../client/web/web/translate.php:89
+msgid "Checking for system compatibility"
+msgstr "Έλεγχος συμβατότητας συστήματος"
+
+# 0%
+#: ../../client/web/web/translate.php:90
+msgid ""
+"If this is your first time here, a Java security window will show up and you "
+"have to accept it to use the service."
+msgstr ""
+"Εάν είναι η πρώτη σας φορά εδώ , θα εμφανιστεί ένα παράθυρο ασφαλείας Java "
+"για την χρήση της υπηρεσίας , οφείλεται να το αποδεχθείτε για να είστε σε "
+"θέση να χρησιμοποιήσετε την υπηρεσία αυτή."
+
+# Το κείμενο στα <> είναι αγγλικό ή ελληνικό;
+#: ../../client/web/web/translate.php:91
+msgid ""
+"You are advised to check the \"<em>Always trust content from this publisher</"
+"em>\" checkbox."
+msgstr "() να () \"<em>Always trust content from this publisher</em>\" "
+
+#: ../../client/web/web/translate.php:93
+msgid "System compatibility error"
+msgstr "Σφάλμα συμβατότητας συστήματος"
+
+# 80%
+#: ../../client/web/web/translate.php:94
+msgid "Java is not available either on your system or in your web browser."
+msgstr ""
+" java δεν είναι διαθέσιμη ούτε στο σύστημά σας, ούτε στον περιηγητή σας."
+
+#: ../../client/web/web/translate.php:95
+msgid ""
+"Please install Java extension for your web browser or contact your "
+"administrator."
+msgstr ""
+"Παρακαλώ εγκαταστήστε πρόσθετο της Java στον περιηγητή σας ή επικοινωνήστε "
+"με τον διαχειριστή."
+
+#: ../../client/web/web/translate.php:96
+msgid "You have not accepted the Java security window."
+msgstr "Δεν έχετε κάνει αποδοχή του παραθύρου ασφαλείας της Java."
+
+#: ../../client/web/web/translate.php:97
+msgid "You <strong>cannot</strong> have access to this service."
+msgstr "<strong>Δεν</strong> μπορείτε να έχετε πρόσβαση σε αυτή την υπηρεσία."
+
+#: ../../client/web/web/translate.php:99
+msgid "Loading Open Virtual Desktop"
+msgstr "Φόρτωση Open Virtual Desktop"
+
+#: ../../client/web/web/translate.php:100
+msgid "Welcome!"
+msgstr "Καλώς ήλθες!"
+
+# 85%
+#: ../../client/web/web/translate.php:101
+msgid "Suspend"
+msgstr "Αναστολή"
+
+#: ../../client/web/web/translate.php:102
+msgid "Logout"
+msgstr "Αποσύνδεση"
+
+#: ../../client/web/web/translate.php:104
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:116
+msgid "My applications"
+msgstr "Οι εφαρμογές μου"
+
+# Τρέχουσες;
+#: ../../client/web/web/translate.php:105
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:132
+msgid "Running applications"
+msgstr "Εφαρμογές σε εκτέλεση"
+
+#: ../../client/web/web/translate.php:106
+msgid "My files"
+msgstr "Τα αρχεία μου"
+
+#: ../../client/web/web/translate.php:117
+msgid "Usage: missing \"sessionmanager_host\" parameter"
+msgstr ""
+
+#: ../../client/web/web/translate.php:118
+msgid "Usage: missing \"login\" parameter"
+msgstr ""
+
+#: ../../client/web/web/translate.php:119
+msgid "Usage: missing \"password\" parameter"
+msgstr ""
+
+# 97%
+#: ../../client/web/web/translate.php:120
+msgid "Unable to reach the Session Manager"
+msgstr "Αδύνατη η προσπέλαση του Διαχειριστή Διεργασιών!"
+
+#: ../../client/web/web/translate.php:122
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:376
+msgid "Authentication failed: please double-check your password and try again"
+msgstr ""
+"Αποτυχία πιστοποίησης: Παρακαλώ ελέγξτε τον κωδικό σας και προσπαθήστε ξανά"
+
+#: ../../client/web/web/translate.php:123
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:378
+msgid ""
+"The system is on maintenance mode, please contact your administrator for "
+"more information"
+msgstr ""
+"Το σύστημα βρίσκεται σε διαδικασία συντήρησης, παρακαλώ επικοινωνήστε με τον "
+"διαχειριστή για περαιτέρω πληροφορίες"
+
+# Προέκυψε
+#: ../../client/web/web/translate.php:124
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:380
+msgid "An internal error occured, please contact your administrator"
+msgstr ""
+"Συνέβη ένα εσωτερικό σφάλμα, παρακαλώ επικοινωνήστε με το διαχειριστή σας"
+
+#: ../../client/web/web/translate.php:125
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:382
+msgid "You specified an invalid login, please double-check and try again"
+msgstr ""
+"Έχετε πληκτρολογήσει λάθος στοιχεία , παρακαλώ ελέγξτε τα στοιχεία σας και "
+"προσπαθήστε ξανά"
+
+# Μη διαθέσιμη;
+#: ../../client/web/web/translate.php:126
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:384
+msgid ""
+"The service is not available, please contact your administrator for more "
+"information"
+msgstr ""
+"Αυτή η υπηρεσία δεν είναι διαθέσιμη, παρακαλώ επικοινωνήστε με τον "
+"διαχειριστή σας για περαιτέρω πληροφορίες"
+
+#: ../../client/web/web/translate.php:127
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:386
+msgid "You are not authorized to launch a session in this mode"
+msgstr "Δεν είστε εξουσιοδοτημένος να εκτελέσετε συνεδρία σε αυτή την κατάσταση"
+
+#: ../../client/web/web/translate.php:128
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:388
+msgid "You already have an active session"
+msgstr "Έχετε ήδη μία ενεργή συνεδρία"
+
+#: ../../client/web/web/translate.php:130
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:745
+msgid ""
+"Your session is going to end in 3 minutes, please save all your data now!"
+msgstr ""
+"Η συνεδρία σας θα τερματιστεί σε 3 λεπτά, παρακαλώ αποθηκεύσατε όλα τα "
+"δεδομένα τώρα!"
+
+#: ../../client/web/web/translate.php:132
+msgid "Server: session closed unexpectedly"
+msgstr "Διακομιστής: η συνεδρία τερματίστηκε απρόσμενα"
+
+#: ../../client/web/web/translate.php:133
+msgid "Your session has ended, you can now close the window"
+msgstr "Η συνεδρία σας τερματίστηκε, τώρα μπορείτε να κλείσετε το παράθυρο"
+
+#: ../../client/web/web/translate.php:134
+msgid "Your session has ended unexpectedly"
+msgstr "Η συνεδρία σας τερματίστηκε απρόσμενα"
+
+#: ../../client/web/web/translate.php:135
+msgid "error details"
+msgstr "λεπτομέρειες σφάλματος"
+
+#: ../../client/web/web/translate.php:136
+msgid "Close this window"
+msgstr "Κλείστε το παράθυρο"
+
+#: ../../client/web/web/translate.php:137
+msgid ""
+"Click <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
+"false;\">here</a> to start a new session"
+msgstr ""
+"Πατήστε <a href=\"javascript:;\"onclick=\"hideEnd();showLogin();return false;\"> "
+"εδώ </a> για να εκκινήσετε μία νέα συνεδρία"
+
+#: ../../client/web/web/translate.php:139
+msgid "suspend"
+msgstr "αναστολή"
+
+#: ../../client/web/web/translate.php:140
+msgid "resume"
+msgstr "επανάληψη"
+
+#: ../../client/web/web/login.php:280
+msgid "Profile"
+msgstr "Προφίλ"
+
+#: ../../client/web/web/external.php:212
+msgid "Do not close this Ulteo OVD window!"
+msgstr "Μην κλείσετε αυτό το Ulteo OVD παράθυρο!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:390
+msgid "An error occured, please contact your administrator"
+msgstr "Προέκυψε σφάλμα, παρακαλώ επικοινωνήστε με τον διαχειριστή"
+
+# Προσοχή!;;;;;;;;
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:543
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:45
+msgid "Warning!"
+msgstr "Προειδοποίηση!"
+
+# 83%
+# 100%
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:553
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:559
+msgid "Error!"
+msgstr "Σφάλμα!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:557
+msgid "Unable to reach the Session Manager!"
+msgstr "Αδύνατη η προσπέλαση του Διαχειριστή Διεργασιών!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:642
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:646
+msgid "Invalid host field!"
+msgstr "Μη έγκυρο πεδίο!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:678
+msgid "You must specify the host field!"
+msgstr "Πρέπει να καθορίσετε το πεδίο υποδοχής!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:683
+msgid "You must specify a username!"
+msgstr "Πρέπει να καθορίσετε όνομα χρήστη!"
+
+# καθορίσετε;;;;
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:686
+msgid "You must specify a password!"
+msgstr "Πρέπει να καθορίσετε κωδικό πρόσβασης!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:733
+msgid "Internal error: Bad session mode return"
+msgstr "Εσωτερικό σφάλμα: "
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:745
+msgid "Session is going to end"
+msgstr "Η διεργασία θα τερματιστεί"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:772
+msgid "Internal error: unsupported session mode"
+msgstr "Εσωτερικό σφάλμα: μη υποστηριζόμενη λειτουργία συνόδου"
+
+# Αποσυνδεθήκατε
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:807
+msgid "You have been disconnected"
+msgstr "Έχετε αποσυνδεθεί"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:807
+msgid "Your session has ended"
+msgstr "Η διεργασία σας έχει τερματιστεί"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:823
+msgid "Protocol xml error: "
+msgstr "Σφάλμα πρωτοκόλλου xml: "
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:823
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:830
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:840
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:847
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:854
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+msgid "Error"
+msgstr "Σφάλμα"
+
+# Ειδήσεις;;;;
+#: ../../client/java/src/org/ulteo/ovd/client/portal/NewsFrame.java:49
+msgid "OVD News"
+msgstr "Νέα του OVD"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:69
+msgid "Welcome {user}"
+msgstr "Καλώς ήρθες {χρήστη}"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:40
+msgid "Display icons"
+msgstr "Εμφάνιση εικονιδίων"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:41
+msgid "Hide icons"
+msgstr "Απόκρυψη εικονιδίων"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:46
+msgid "Disconnect"
+msgstr "Αποσύνδεση"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:52
+msgid "Start loading session"
+msgstr "Έναρξη φόρτωσης συνεδρίας"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:54
+msgid "Connecting to the session manager"
+msgstr "Σύνδεση με τον διαχειριστή διεργασιών"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:56
+msgid "Get session information from session manager"
+msgstr "Λήψη πληροφοριών συνεδρίας από τον διαχειριστή διεργασιών"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:58
+msgid "Get application data from session manager"
+msgstr "Λήψη δεδομένων εφαρμογής από τον διαχειριστή συνεδρίων"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:60
+msgid "Installing application data on client"
+msgstr "Εγκατάσταση δεδομένων εφαρμογής στον πελάτη"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:62
+msgid "Waiting server for session"
+msgstr "Αναμονή διακομιστή για διεργασία"
+
+# Λανθασμένη
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:64
+msgid "Invalid status"
+msgstr "Λανθάνουσα κατάσταση"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:77
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1008
+msgid "Maximized"
+msgstr "Μεγιστοποιημένο"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:824
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1005
+msgid "Fewer options"
+msgstr "Λιγότερες επιλογές"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:906
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1003
+msgid "More options..."
+msgstr "Περισσότερες επιλογές..."
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:987
+msgid "Start!"
+msgstr "Εκκίνηση!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:990
+msgid "Server"
+msgstr "Εξυπηρετητής"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:992
+msgid "Resolution"
+msgstr "Ανάλυση"
+
+# 87%
+# 100%
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:994
+msgid "Keyboard"
+msgstr "Πληκτρολόγιο"
+
+# σε τι;;;;;;;;;;;
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:996
+msgid "Auto"
+msgstr "Αυτόματο"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:997
+msgid "Application"
+msgstr "Εφαρμογή"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:999
+msgid "Remember me"
+msgstr "Θυμήσου με"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1000
+msgid "Auto-publish shortcuts"
+msgstr "Συντομεύσεις αυτόματης δημοσίευσης"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
+msgid "Go back to authentication"
+msgstr "Επιστροφή στην πιστοποίηση"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:44
+msgid "Do you really want to close the window?"
+msgstr "Σίγουρα θέλετε να κλείσετε το παράθυρο;"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionFrame.java:40
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionFrame.java:68
+msgid "Disconnecting!"
+msgstr "Αποσύνδεση!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:52
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:109
+msgid "Now loading"
+msgstr "Γίνεται φόρτωση"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:59
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:108
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportButton.java:44
+msgid "Report a bug"
+msgstr "Αναφορά προβλήματος"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:73
+msgid "Ulteo OVD Bug Report"
+msgstr "Αναφορά προβλήματος Ulteo OVD"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:117
+msgid "Validate"
+msgstr "Επικύρωση"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:128
+msgid "Date"
+msgstr "Ημερομηνία"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:130
+msgid "Version"
+msgstr "Έκδοση"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:132
+msgid "System"
+msgstr "Σύστημα"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:134
+msgid "JVM"
+msgstr "JVM"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:168
+msgid "Description and steps to reproduce:"
+msgstr "Περιγραφή και βήματα για ():"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:184
+msgid "MM/dd/yy hh:mm:ss"
+msgstr "ΜΜ/ηη/χχ ωω:λλ:δδ"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:85
+msgid "Text file (*.txt)"
+msgstr "Αρχείο κειμένου (*.txt)"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+msgid "An error occured. Please try again."
+msgstr "Προέκυψε σφάλμα. Παρακαλώ προσπαθήστε ξανά."
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
+msgid "Bug report saved to "
+msgstr "Η αναφορά προβλήματος αποθηκεύτηκε στη θέση"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
+msgid "Bug report saved"
+msgstr "Η αναφορά προβλήματος αποθηκεύθηκε"
+
+# ;;;
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:120
+msgid "Please fill description field."
+msgstr "Παρακαλώ συμπληρώστε το πεδίο περιγραφής."
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:120
+msgid "Empty field"
+msgstr "Κενό πεδίο"
+
+#~ msgid "Host"
+#~ msgstr "Κεντρικός υπολογιστής"
+
+#~ msgid "Host is unreachable!"
+#~ msgstr "Μη προσβάσιμος κεντρικός υπολογιστής!"
+
+#~ msgid "keyboard"
+#~ msgstr "πληκτρολόγιο"
+
+#~ msgid "close"
+#~ msgstr "κλείσιμο"
+
+#~ msgid "Loading:"
+#~ msgstr "Φόρτωση:"
+
+#, php-format
+#~ msgid "Welcome %s!"
+#~ msgstr "Καλώς ήρθες %s!"
+
+#~ msgid ""
+#~ "You are advised to check the \"<i>Always trust content from this publisher</"
+#~ "i>\" checkbox."
+#~ msgstr ""
+#~ "Συνιστάται να κάνετε κλικ στην επιλογή \"<i> Πάντα ασφαλές περιεχόμενο από "
+#~ "αυτόν τον εκδότη </i>\" του πλαισίου ελέγχου."
+
+#~ msgid "Java is neither available on your system nor in your web browser."
+#~ msgstr "Η java δεν είναι διαθέσιμη στο σύστημα σας ούτε στον περιηγητή σας."
+
+#~ msgid "Use pop-up"
+#~ msgstr "Χρήση pop-up"
+
+#~ msgid "Click <a href=\"index.php\">here</a> to start a new session"
+#~ msgstr ""
+#~ "Κάντε κλίκ στο <a href=\"index.php\">here</a> για να εκκινήσετε μία νέα "
+#~ "συνεδρία"

@@ -412,6 +412,7 @@ class Preferences {
 			'da-dk'=>'Dansk',
 			'de_DE'=>'Deutsch',
 			'en_GB'=>'English',
+			'el_GR'=>'Ελληνικά',
 			'es_ES'=>'Español',
 			'fi_FI'=>'Suomi',
 			'fr_FR'=>'Français',

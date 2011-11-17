@@ -67,6 +67,7 @@ scripts_DATA = ad.png \
                eg.png \
                eh.png \
                el.png \
+               el-gr.png \
                en-en.png \
                en-gb.png \
                en-us.png \
