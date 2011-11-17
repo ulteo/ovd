@@ -187,7 +187,7 @@ class Preferences {
 		$c->setContentAvailable(array(
 			'auto'=>_('Autodetect'),
 //			'ar_AE'=>'العربي',
-//			'de_DE'=>'Deutsch',
+			'de_DE'=>'Deutsch',
 			'en_GB'=>'English',
 			'es_ES'=>'Español',
 			'fr_FR'=>'Français',
