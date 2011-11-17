@@ -1,5 +1,3 @@
-python clean.py
-
 mkdir build
 vcbuild vchannel.vcproj Release
 vcbuild HookDll\hookdll.vcproj Release
