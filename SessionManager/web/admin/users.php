@@ -134,7 +134,7 @@ function show_default($userDB) {
     foreach ($minimun_attributes as $minimun_attribute) {
       echo '<tr class="content'.$content_color.'">';
       echo '<th>'._($minimun_attribute).'</th>';
-      echo '<td><input type="'.$minimun_attribute.'" name="'.$minimun_attribute.'" value="" /></td>';
+      echo '<td><input type="'.(($minimun_attribute=='password')?'password':'text').'" name="'.$minimun_attribute.'" value="" /></td>';
       echo '</tr>';
       $content_color = (($content_color++)%2)+1;
     }
