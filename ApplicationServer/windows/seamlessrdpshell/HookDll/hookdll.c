@@ -26,6 +26,7 @@
 
 #include "hookdll.h"
 #include "../windowUtil.h"
+#include "../internalWindow.h"
 
 #define DLL_EXPORT __declspec(dllexport)
 
@@ -54,13 +55,9 @@ static HHOOK g_wndprocret_hook = NULL;
 
 // Internal Window
 static HWND g_internal_window = NULL;
-const char seamless_class[] = "InternalSeamlessClass";
 
 static BOOL is_seamless_internal_windows(HWND hwnd) {
 	return (hwnd == g_internal_window);
-}
-static HWND get_internal_window() {
-	return FindWindow(seamless_class, NULL);
 }
 
 // Hook messages
@@ -408,7 +405,7 @@ DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpReserved)
 			++g_instance_count;
 			ReleaseMutex(g_mutex);
 
-			g_internal_window = get_internal_window();
+			g_internal_window = InternalWindow_getHandle();
 
 			break;
 

@@ -211,6 +211,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\internalWindow.c"
+			>
+		</File>
+		<File
+			RelativePath=".\internalWindow.h"
+			>
+		</File>
+		<File
 			RelativePath=".\main.c"
 			>
 		</File>
