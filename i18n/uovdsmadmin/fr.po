@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: uovdsmadmin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-02-21 15:23+0100\n"
-"PO-Revision-Date: 2011-03-02 19:05+0200\n"
+"PO-Revision-Date: 2011-07-27 15:09+0200\n"
 "Last-Translator: Julien LANGLOIS\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -2289,7 +2289,7 @@ msgstr "Serveur \"%s\": le nom de redirection ne peut être vide !"
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:215
 msgid "Number of available sessions on this server"
-msgstr "Nombre d'applications disponibles sur ce serveur"
+msgstr "Nombre de sessions disponibles sur ce serveur"
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:227
 msgid "default"
@@ -2649,7 +2649,7 @@ msgstr "Etes-vous certain de vouloir supprimer ce profil ?"
 # 100%
 #: ../../SessionManager/web/admin/profiles.php:63
 msgid "Delete this profile"
-msgstr "Supprimer cet profil"
+msgstr "Supprimer ce profil"
 
 #: ../../SessionManager/web/admin/profiles.php:91
 #, php-format
@@ -3159,7 +3159,6 @@ msgstr "Répertoires"
 # 92%
 # 76%
 # 100%
-# 100%
 #: ../../SessionManager/web/admin/summary.php:65
 msgid "In these users groups"
 msgstr "Dans ces groupes d'utilisateurs"
@@ -3169,7 +3168,6 @@ msgid "Published applications groups"
 msgstr "Groupes d'applications publiés"
 
 # 96%
-# 100%
 # 100%
 #: ../../SessionManager/web/admin/summary.php:67
 msgid "Access to these applications"
@@ -4240,7 +4238,7 @@ msgid ""
 "User can launch a session even if some of his published applications are not "
 "available"
 msgstr ""
-"Un utilisateur peut démarrer une session même lorsque certaine de ses "
+"Un utilisateur peut démarrer une session même lorsque certaines de ses "
 "applications publiées ne sont pas disponibles"
 
 #: ../../SessionManager/web/classes/Preferences.class.php:413
