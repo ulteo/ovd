@@ -369,14 +369,12 @@ $sharedfolder_nodes = $session_node->getElementsByTagName('sharedfolder');
 if (is_object($profile_node) || (is_object($sharedfolder_node) && is_object($sharedfolder_nodes))) {
 	if (is_dir(dirname(__FILE__).'/ajaxplorer/'))
 		$_SESSION['ovd-client']['explorer'] = true;
-
-	$_SESSION['ovd-client']['ajxp'] = array();
-	$_SESSION['ovd-client']['ajxp']['applications'] = '';
-	$_SESSION['ovd-client']['ajxp']['repositories'] = array();
-	$_SESSION['ovd-client']['ajxp']['folders'] = array();
 }
 
 if ($_SESSION['ovd-client']['explorer'] === true) {
+	$_SESSION['ovd-client']['ajxp'] = array();
+	$_SESSION['ovd-client']['ajxp']['repositories'] = array();
+	$_SESSION['ovd-client']['ajxp']['folders'] = array();
 	$_SESSION['ovd-client']['ajxp']['applications'] = generateAjaxplorerActionsXML($session_node->getElementsByTagName('application'));
 
 	if (is_object($profile_node)) {
