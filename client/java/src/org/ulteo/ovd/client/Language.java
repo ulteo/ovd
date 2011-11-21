@@ -45,7 +45,7 @@ public class Language {
 			{"French", "Français", "fr"},
 //			{"French (Luxembourg)", "Français", "fr-lu"},
 			{"German", "Deutsch", "de"},
-//			{"Greek", "", "el"},
+			{"Greek", "Ελληνικά", "el"},
 //			{"Hebrew", "עברית", "he"},
 //			{"Hindi", "", "hi"},
 			{"Hungarian", "Magyar", "hu"},

@@ -110,7 +110,7 @@ function get_available_languages() {
 		array('id' => 'fr', 'english_name' => 'French (France)', 'local_name' => 'Français'),
 // 		array('id' => 'fr-lu', 'english_name' => 'French (Luxembourg)', 'local_name' => 'Français'),
 		array('id' => 'de', 'english_name' => 'German', 'local_name' => 'Deutsch'),
-// 		array('id' => 'el', 'english_name' => 'Greek'),
+		array('id' => 'el-gr', 'english_name' => 'Greek', 'local_name' => 'Ελληνικά'),
 // 		array('id' => 'he', 'english_name' => 'Hebrew', 'local_name' => 'עברית'),
 // 		array('id' => 'hi', 'english_name' => 'Hindi'),
 		array('id' => 'hu', 'english_name' => 'Hungarian', 'local_name' => 'Magyar'),
