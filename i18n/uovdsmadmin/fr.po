@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: uovdsmadmin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-02-21 15:23+0100\n"
-"PO-Revision-Date: 2011-07-27 15:08+0200\n"
+"PO-Revision-Date: 2011-07-27 15:09+0200\n"
 "Last-Translator: Julien LANGLOIS\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -155,7 +155,7 @@ msgstr "Le fichier téléchargé n'est pas une image valide"
 #: ../../SessionManager/web/admin/actions.php:306
 #, php-format
 msgid "Icon for application '%s' has been successfully uploaded"
-msgstr "L'icône de l'application '%s' a été télécharger"
+msgstr "L'icône de l'application '%s' a été téléchargée"
 
 #: ../../SessionManager/web/admin/actions.php:313
 #, php-format
@@ -220,7 +220,7 @@ msgstr "Impossible de créer le groupe d'applications '%s'"
 #, php-format
 #, php-format,
 msgid "Applications group '%s' successfully added"
-msgstr "Goupe d'applications '%s' ajouté"
+msgstr "Groupe d'applications '%s' ajouté"
 
 # 92%
 #: ../../SessionManager/web/admin/actions.php:595
@@ -257,7 +257,7 @@ msgstr "Impossible de modifier le groupe d'applications '%s'"
 #, php-format
 #, php-format,
 msgid "Applications group '%s' successfully modified"
-msgstr "Goupe d'applications '%s' modifié"
+msgstr "Groupe d'applications '%s' modifié"
 
 #. problem, what to do ?
 #: ../../SessionManager/web/admin/actions.php:654
@@ -331,7 +331,7 @@ msgstr "Chaque règle de votre groupe utilisateur doit posséder une valeur"
 
 #: ../../SessionManager/web/admin/actions.php:778
 msgid "Unknow usergroup type"
-msgstr "Type de groupe d'utilisateurs inconnue"
+msgstr "Type de groupe d'utilisateurs inconnu"
 
 # 96%
 #: ../../SessionManager/web/admin/actions.php:783
@@ -530,7 +530,7 @@ msgstr "Un dossier partagé de ce nom existe déjà !"
 
 #: ../../SessionManager/web/admin/actions.php:1266
 msgid "Profile management is not enabled"
-msgstr "La gestion des Profiles n'est pas activé"
+msgstr "La gestion des Profiles n'est pas activée"
 
 # 79%
 # 100%
@@ -1065,7 +1065,7 @@ msgstr "Sélectionner tous"
 #: ../../SessionManager/web/admin/wizard.php:356
 #: ../../SessionManager/web/admin/wizard.php:375
 msgid "Unmark all"
-msgstr "Déselectionner tous"
+msgstr "Désélectionner tous"
 
 #: ../../SessionManager/web/admin/applications_static.php:133
 msgid "Are you sure you want to delete these static applications?"
@@ -1354,7 +1354,7 @@ msgstr "Utiliser les groupes d'utilisateurs <strong>Active Directory</strong>"
 
 #: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:192
 msgid "Use <strong>Internal</strong> usergroups"
-msgstr "Utiliser les groupes d'utilisateurs <strong>interne</strong>"
+msgstr "Utiliser les groupes d'utilisateurs <strong>internes</strong>"
 
 #: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:206
 msgid "Domain users"
@@ -1541,7 +1541,7 @@ msgid ""
 "looks like the domain users from AD."
 msgstr ""
 "Si ZENWorks est installé sur vos serveurs d'applications, il va s'occuper de "
-"la gestion des utilisateurst (DLU). OVD ne va pas créer d'utilisateur pour "
+"la gestion des utilisateurs (DLU). OVD ne va pas créer d'utilisateur pour "
 "la session. Ce comportement ressemble aux utilisateurs de domain dans AD."
 
 #: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:285
@@ -1755,11 +1755,11 @@ msgstr "Pas de serveurs Esclaves"
 
 #: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:108
 msgid "Started on"
-msgstr "Démarré"
+msgstr "Démarré sur"
 
 #: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:109
 msgid "Stopped on"
-msgstr "Arrêté"
+msgstr "Arrêté sur"
 
 #: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:110
 msgid "Failed on"
@@ -1853,7 +1853,7 @@ msgid ""
 msgstr ""
 "Lors de l'activation du serveur esclave, le serveur maitre et le serveur "
 "esclave vont redémarrer leurs services afin de charger la nouvelle "
-"configuration. Cela prends moins de 3 minutes. Pendant ce temps, l'interface "
+"configuration. Cela prend moins de 3 minutes. Pendant ce temps, l'interface "
 "web sera désactivée."
 
 #: ../../SessionManager/web/admin/ha/configuration.php:275
@@ -2025,7 +2025,7 @@ msgid ""
 "responsible for actions of each cluster element."
 msgstr ""
 "Le DC (Coordinateur Désigné) a élu un noeud dans le cluster. Il est "
-"responable des actions de chaque élément du cluster."
+"responsable des actions de chaque élément du cluster."
 
 #: ../../SessionManager/web/admin/ha/status.php:85
 msgid "Current DC"
@@ -2269,7 +2269,7 @@ msgstr "Administration"
 #: ../../SessionManager/web/admin/includes/page_template.php:440
 #: ../../SessionManager/web/includes/functions.inc.d/template.inc.php:135
 msgid "powered by"
-msgstr "une réalisation"
+msgstr "réalisé par"
 
 #: ../../SessionManager/web/admin/includes/template_server.inc.php:50
 msgid "Cannot list available applications"
@@ -2649,7 +2649,7 @@ msgstr "Etes-vous certain de vouloir supprimer ce profil ?"
 # 100%
 #: ../../SessionManager/web/admin/profiles.php:63
 msgid "Delete this profile"
-msgstr "Supprimer cet profil"
+msgstr "Supprimer ce profil"
 
 #: ../../SessionManager/web/admin/profiles.php:91
 #, php-format
@@ -2771,7 +2771,7 @@ msgstr "incrément"
 
 #: ../../SessionManager/web/admin/reporting.php:551
 msgid "Refresh"
-msgstr "Rafraichir"
+msgstr "Rafraîchir"
 
 #: ../../SessionManager/web/admin/reporting.php:559
 #: ../../SessionManager/web/admin/reporting.php:572
@@ -2826,7 +2826,7 @@ msgstr "Nombre de sessions actives"
 
 #: ../../SessionManager/web/admin/reporting.php:715
 msgid "Error: \"to\" field is in the future, switch to the current time"
-msgstr "Erreur : le champ \"à\" indique une date future, mise à l'heure courrante"
+msgstr "Erreur : le champ \"à\" indique une date future, mise à l'heure actuelle"
 
 #: ../../SessionManager/web/admin/servers.php:75
 #: ../../SessionManager/web/admin/servers.php:235
@@ -2914,7 +2914,7 @@ msgstr "Etes-vous certain de vouloir supprimer ce serveur ?"
 
 #: ../../SessionManager/web/admin/servers.php:334
 msgid "No unregistered server"
-msgstr "Pas de serveur non enregistré"
+msgstr "Aucun serveur non enregistré"
 
 # 75%
 # 100%
@@ -3159,7 +3159,6 @@ msgstr "Répertoires"
 # 92%
 # 76%
 # 100%
-# 100%
 #: ../../SessionManager/web/admin/summary.php:65
 msgid "In these users groups"
 msgstr "Dans ces groupes d'utilisateurs"
@@ -3169,7 +3168,6 @@ msgid "Published applications groups"
 msgstr "Groupes d'applications publiés"
 
 # 96%
-# 100%
 # 100%
 #: ../../SessionManager/web/admin/summary.php:67
 msgid "Access to these applications"
@@ -3201,7 +3199,7 @@ msgstr "accès à ces applications"
 
 #: ../../SessionManager/web/admin/sumup.php:56
 msgid "access to these network folders"
-msgstr "accès à ce dossier réseau"
+msgstr "accès à ces dossiers réseau"
 
 #. <th>'._('Desktop File').'</th>
 #: ../../SessionManager/web/admin/sumup.php:58
@@ -4360,8 +4358,8 @@ msgid ""
 "Authorize non authenticated requests to get information about users "
 "authorized applications or get applications icons."
 msgstr ""
-"Authauriser les requêtes non authentifiées pour récupérer la liste des "
-"applications authorisées pour un utilisateur ou pour récupérer les icônes "
+"Autoriser les requêtes non authentifiées pour récupérer la liste des "
+"applications autorisées pour un utilisateur ou pour récupérer les icônes "
 "d'applications."
 
 #: ../../SessionManager/web/classes/Preferences.class.php:486
@@ -4538,11 +4536,11 @@ msgstr "Authentification automatique"
 
 #: ../../SessionManager/web/modules/AuthMethod/Auto.php:102
 msgid "Use the given login to generate user"
-msgstr "Utiliser l'identifiant utilisateur fournis pour générer l'utilisateur"
+msgstr "Utiliser l'identifiant utilisateur fourni pour générer l'utilisateur"
 
 #: ../../SessionManager/web/modules/AuthMethod/Auto.php:102
 msgid "Use the given login to generate user."
-msgstr "Utiliser l'identifiant utilisateur fournis pour générer l'utilisateur."
+msgstr "Utiliser l'identifiant utilisateur fourni pour générer l'utilisateur."
 
 #: ../../SessionManager/web/modules/AuthMethod/CAS.php:72
 msgid "CAS authentication"
@@ -4580,7 +4578,7 @@ msgid ""
 "password.<br /><br />The special string <b>%TOKEN%</b> needs to be set "
 "because it's replaced by the token argument when the URL is requested."
 msgstr ""
-"Si un token est passé à startsession, le system essaie de récupérer un "
+"Si un token est passé à startsession, le système essaie de récupérer un "
 "identifiant utilisateur via une requête sur l'url de validation.<br /><br "
 "/>Saisissez ici l'url à utiliser si un token est fourni à la place d'un "
 "login/mot de passe.<br /><br />La valeur spéciale <b>%TOKEN%</b> doit être "
@@ -4638,7 +4636,7 @@ msgstr "Le module ProfileDB doit être activé"
 #: ../../SessionManager/web/modules/SessionManagement/internal.php:66
 msgid "Which login should be used for the ApplicationServer's generated user?"
 msgstr ""
-"Quel identifiant doit être utilisé pour la générarion des utilisateurs sur "
+"Quel identifiant doit être utilisé pour la génération des utilisateurs sur "
 "le serveur d'applications ?"
 
 #: ../../SessionManager/web/modules/SessionManagement/internal.php:67
