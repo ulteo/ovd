@@ -5,6 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
  * Author Antoine WALTER <anw@ulteo.com> 2008
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +23,9 @@
  **/
 if (!function_exists('ldap_connect'))
 	die_error('Please install LDAP support for PHP',__FILE__,__LINE__);
+
+if (! defined('LDAP_INVALID_CREDENTIALS'))
+	define('LDAP_INVALID_CREDENTIALS', 0x0031);
 
 class LDAP {
 	private $link=NULL;
@@ -175,6 +179,15 @@ class LDAP {
 		return @ldap_error($this->link);
 	}
 
+	public function error_string() {
+		Logger::debug('main', 'LDAP - error_string()');
+		
+		$this->check_link();
+		
+		@ldap_get_option($this->link, LDAP_OPT_ERROR_STRING, $error);
+		return $error;
+	}
+	
 	public function search($filter_, $attribs_=NULL, $limit_=0) {
 		$this->check_link();
 		if ($this->userbranch == '' or is_null($this->userbranch)) {
