@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2008-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
@@ -375,6 +375,10 @@ class Preferences {
 		$this->add($c,'general','remote_desktop_settings');
 		$c = new ConfigElement_select('desktop_type', _('Desktop type'), _('Desktop type'), _('Desktop type'), 'any');
 		$c->setContentAvailable(array('any'=>_('Any'),'linux'=>_('Linux'),'windows'=>_('Windows')));
+		$c_desktop_mode->addReference('1', $c);
+		$this->add($c,'general','remote_desktop_settings');
+		
+		$c = new ConfigElement_list('allowed_desktop_servers', _('Server which are allowed to start desktop'), _('An empty list means all server can host a desktop (no restriction on desktop server choice)'), _('An empty list means all server can host a desktop (no restriction on desktop server choice)'), array());
 		$c_desktop_mode->addReference('1', $c);
 		$this->add($c,'general','remote_desktop_settings');
 
