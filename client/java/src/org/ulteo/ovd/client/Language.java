@@ -26,7 +26,7 @@ public class Language {
 	public static String[][] languageList = {
 //			{"Afrikaans", "", "af"},
 //			{"Albanian", "", "sq"},
-//			{"Arabic", "العربية", "ar"}, 
+			{"Arabic", "العربية", "ar"}, 
 			{"Bulgarian", "Български", "bg"}, 
 //			{"Belarusian", "", "be"},
 			{"Chinese", "中文", "zh", "cn"},

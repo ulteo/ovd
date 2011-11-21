@@ -97,7 +97,7 @@ function get_available_languages() {
 	return array(
 // 		array('id' => 'af', 'english_name' => 'Afrikaans'),
 // 		array('id' => 'sq', 'english_name' => 'Albanian'),
-// 		array('id' => 'ar-ae', 'english_name' => 'Arabic', 'local_name' => 'العربية'),
+		array('id' => 'ar-ae', 'english_name' => 'Arabic', 'local_name' => 'العربية'),
  		array('id' => 'bg', 'english_name' => 'Bulgarian', 'local_name' => 'Български'),
 // 		array('id' => 'be', 'english_name' => 'Belarusian'),
 		array('id' => 'zh-cn', 'english_name' => 'Chinese', 'local_name' => '中文'),
