@@ -186,7 +186,7 @@ class Preferences {
 		$c = new ConfigElement_select('admin_language', _('Administration console language'), _('Administration console language'), _('Administration console language'), 'auto');
 		$c->setContentAvailable(array(
 			'auto'=>_('Autodetect'),
-//			'ar_AE'=>'العربي',
+			'ar_AE'=>'العربي',
 			'de_DE'=>'Deutsch',
 			'en_GB'=>'English',
 			'es_ES'=>'Español',
@@ -397,7 +397,7 @@ class Preferences {
 
 		$c = new ConfigElement_select('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB');
 		$c->setContentAvailable(array(
-//			'ar_AE'=>'العربي',
+			'ar_AE'=>'العربي',
 			'bg_BG'=>'Български',
 			'da-dk'=>'Dansk',
 			'de_DE'=>'Deutsch',
