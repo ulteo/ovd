@@ -227,6 +227,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\seamlessChannel.c"
+			>
+		</File>
+		<File
+			RelativePath=".\seamlessChannel.h"
+			>
+		</File>
+		<File
 			RelativePath=".\seamlessWindow.c"
 			>
 		</File>

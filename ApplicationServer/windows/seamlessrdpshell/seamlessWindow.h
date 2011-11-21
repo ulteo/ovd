@@ -32,6 +32,10 @@ typedef struct SeamlessWindow_ {
 	struct SeamlessWindow_* next;
 } SeamlessWindow;
 
+void SeamlessWindow_create(HWND hwnd);
 void SeamlessWindow_free(SeamlessWindow * n_);
+void SeamlessWindow_updateZOrder(SeamlessWindow *sw);
+void SeamlessWindow_updatePosition(SeamlessWindow *sw);
+void SeamlessWindow_updateIcon(SeamlessWindow *sw, HICON icon, int large);
 
 #endif // _SEAMLESSWINDOW_H_

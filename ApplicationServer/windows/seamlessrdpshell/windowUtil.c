@@ -22,6 +22,22 @@
 
 #include "assert.h"
 
+// Screen size
+static PSIZE g_screen_size = NULL;
+
+PSIZE WindowUtil_getScreenSize() {
+	if (! g_screen_size) {
+		g_screen_size = malloc(sizeof(SIZE));
+		if (! g_screen_size)
+			return NULL;
+
+		g_screen_size->cx = GetSystemMetrics(SM_CXSCREEN);
+		g_screen_size->cy = GetSystemMetrics(SM_CYSCREEN);
+	}
+
+	return g_screen_size;
+}
+
 BOOL WindowUtil_isToplevel(HWND hwnd) {
 	BOOL toplevel;
 	HWND parent;

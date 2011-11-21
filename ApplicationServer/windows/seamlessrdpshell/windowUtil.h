@@ -23,6 +23,9 @@
 
 #include <windows.h>
 
+#define TITLE_SIZE	150
+
+PSIZE WindowUtil_getScreenSize();
 BOOL WindowUtil_isToplevel(HWND hwnd);
 HWND WindowUtil_getParent(HWND hwnd);
 BOOL WindowUtil_setFocus(HWND hwnd);
