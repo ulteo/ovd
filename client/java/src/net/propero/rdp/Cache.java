@@ -54,6 +54,8 @@ public class Cache {
 	private static final int RDPCACHE_COLOURMAPSIZE = 0x06; // unified patch
 
 	private Bitmap[][] bitmapcache = null;
+	
+	private Bitmap[] offscreencache = null;
 
 	private Bitmap[] volatile_bc = new Bitmap[3];
 
@@ -98,6 +100,8 @@ public class Cache {
 		this.bitmapcache[0] = new Bitmap[Rdp.BMPCACHE2_C0_CELLS];
 		this.bitmapcache[1] = new Bitmap[Rdp.BMPCACHE2_C1_CELLS];
 		this.bitmapcache[2] = new Bitmap[cache3Size];
+		
+		this.offscreencache = new Bitmap[Rdp.OFFSCREEN_CACHE_SIZE];
 	}
 	
 	public int getCacheSize(int level) {
@@ -175,6 +179,13 @@ public class Cache {
      * @throws RdesktopException
      */
 	public Bitmap getBitmap(int cache_id, int cache_idx) throws RdesktopException {
+        if (cache_id == 255) {
+        	if (cache_idx >= offscreencache.length) {
+        		throw new RdesktopException("Could not get offscreen Bitmap!");
+        	}
+        	return offscreencache[cache_idx];
+        }
+		
 		logger.debug("Cache.getBitmap: cache_id: "+cache_id+" cache_idx: "+cache_idx+" bitmapcache.length: "+bitmapcache.length+" bitmapcache["+cache_id+"].length: "+bitmapcache[cache_id].length);
 
 		Bitmap bitmap = null;
@@ -216,6 +227,14 @@ public class Cache {
 	public void putBitmap(int cache_id, int cache_idx, Bitmap bitmap, int stamp)
 			throws RdesktopException {
 
+        if (cache_id == 255) {
+        	if (cache_idx >= offscreencache.length) {
+        		throw new RdesktopException("Could not put offscreen Bitmap!");
+        	}
+        	offscreencache[cache_idx] = bitmap;
+        	return;
+        }
+        
         //Bitmap old;
 		logger.debug("Cache.putBitmap: cache_id: "+cache_id+" cache_idx: "+cache_idx+" bitmapcache.length: "+bitmapcache.length+" bitmapcache["+cache_id+"].length: "+bitmapcache[cache_id].length);
         

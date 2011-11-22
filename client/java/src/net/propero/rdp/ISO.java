@@ -23,6 +23,7 @@ public abstract class ISO {
 	private DataInputStream in = null;
 	private DataOutputStream out = null;
 	protected Options opt = null;
+	@SuppressWarnings("unused")
 	private Common common = null;
 	
 	/* this for the ISO Layer */
@@ -30,6 +31,7 @@ public abstract class ISO {
 	private static final int CONNECTION_CONFIRM = 0xD0;
 	private static final int DISCONNECT_REQUEST = 0x80;
 	private static final int DATA_TRANSFER = 0xF0;
+	@SuppressWarnings("unused")
 	private static final int ERROR = 0x70;
 	private static final int PROTOCOL_VERSION = 0x03;
 	private static final int EOT = 0x80;

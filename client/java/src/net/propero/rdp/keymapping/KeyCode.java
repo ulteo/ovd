@@ -11,6 +11,7 @@
  */
 package net.propero.rdp.keymapping; 
 
+@SuppressWarnings("unused")
 public class KeyCode
 {
     /**

@@ -198,6 +198,7 @@ public class ClipBMP extends Component {
 	 * writeBitmapFileHeader writes the bitmap file header to the file.
 	 *  
 	 */
+	@SuppressWarnings("unused")
 	private void writeBitmapFileHeader() {
 		try {
 			fo.write(bfType);

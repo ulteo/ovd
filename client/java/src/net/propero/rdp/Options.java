@@ -71,6 +71,8 @@ public class Options {
 	public boolean seamlessEnabled = false;
 	public boolean soundEnabled = false;
 	
+	public boolean supportOffscreen = false;
+	
 	public boolean rdpdrEnabled = false;
 	public boolean diskEnabled = false;
 	public boolean printerEnabled = false;

@@ -275,6 +275,14 @@ public class ProfileIni extends Profile {
 			properties.setUsePacketCompression(usePacketCompression);
 		}
 		
+		value = ini.get(INI_SECTION_RDP, FIELD_RDP_USE_OFFSCREEN_CACHE);
+		if (value != null) {
+			boolean useOffscreenCache = false;
+			if (value.equalsIgnoreCase(VALUE_TRUE))
+				useOffscreenCache = true;
+			properties.setUseOffscreenCache(useOffscreenCache);
+		}
+		
 		value = ini.get(INI_SECTION_RDP, FIELD_RDP_PERSISTENT_CACHE);
 		if (value != null) {
 			boolean usePersistentCache = false;

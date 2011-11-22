@@ -374,4 +374,8 @@ public class RdpConnectionOvd extends RdpConnection {
 			throw new OvdException("Could not create TCPSSLSocketFactory : " + e2.getMessage());
 		}
 	}
+	public void setUseOffscreenCache(boolean value) {
+		this.opt.supportOffscreen = value;
+	}
+	
 }

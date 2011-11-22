@@ -30,6 +30,7 @@ import net.propero.rdp.compress.RdpCompressionException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 
+@SuppressWarnings("unused")
 public class Rdp {
 
     protected static Logger logger = Logger.getLogger(Rdp.class);
@@ -174,6 +175,10 @@ public class Rdp {
     private static final int RDP_CAPSET_BMPCACHE2 = 19;
 
     private static final int RDP_CAPLEN_BMPCACHE2 = 0x28;
+    
+    private static final int RDP_CAPSET_OFFSCREENCACHE = 0x0011;
+    
+    private static final int RDP_CAPLEN_OFFSCREENCACHE = 0x000C;
 
     private static final int RDP_CAPSET_JPEGCACHE = 99;
     
@@ -193,6 +198,10 @@ public class Rdp {
     public static final int BMPCACHE2_C2_CELLS = 0x150;
 
     public static final int BMPCACHE2_NUM_PSTCELLS = 0x9f6;
+    
+    public static final int OFFSCREEN_CACHE_SIZE = 100;
+    
+    public static final int OFFSCREEN_CACHE_LENGTH = 7680;
 
     private static final int RDP5_FLAG = 0x0030;
 
@@ -1117,6 +1126,7 @@ public class Rdp {
                                                                 // for W2k.
                                                                 // Purpose
                                                                 // unknown
+        int numcaps = 15;
         if (this.opt.use_rdp5) {
     		caplen += RDP_CAPLEN_BMPCACHE2;
     		caplen += RDP_CAPLEN_NEWPOINTER;
@@ -1127,6 +1137,11 @@ public class Rdp {
     	}
         caplen += RDP_CAPLEN_JPEGCACHE;
 
+        if (this.opt.supportOffscreen) {
+        	caplen += RDP_CAPLEN_OFFSCREENCACHE;
+        	numcaps++;
+        }
+        
         int sec_flags = this.opt.encryption ? (RDP5_FLAG | Secure.SEC_ENCRYPT)
                 : RDP5_FLAG;
 
@@ -1148,7 +1163,7 @@ public class Rdp {
         data.copyFromByteArray(RDP_SOURCE, 0, data.getPosition(),
                 RDP_SOURCE.length);
         data.incrementPosition(RDP_SOURCE.length);
-        data.setLittleEndian16(0xf); // num_caps
+        data.setLittleEndian16(numcaps); // num_caps
         data.incrementPosition(2); // pad
 
         this.sendGeneralCaps(data);
@@ -1183,6 +1198,9 @@ public class Rdp {
 	// Glyph capabilities
         this.sendUnknownCaps(data, 0x10, 0x34, caps_0x10);
 
+        if (this.opt.supportOffscreen)
+        	this.sendOffscreensCacheCaps(data);
+        
         this.sendJPEGcacheCaps(data);
 
         data.markEnd();
@@ -1435,6 +1453,16 @@ public class Rdp {
         data.incrementPosition(/* RDP_CAPLEN_UNKNOWN */length - 4);
     }
 
+    
+    private void sendOffscreensCacheCaps(RdpPacket_Localised data) {
+        data.setLittleEndian16(RDP_CAPSET_OFFSCREENCACHE);
+        data.setLittleEndian16(RDP_CAPLEN_OFFSCREENCACHE);
+        
+    	data.setLittleEndian32(1);
+    	data.setLittleEndian16(OFFSCREEN_CACHE_LENGTH);
+    	data.setLittleEndian16(OFFSCREEN_CACHE_SIZE);
+    }
+    
     /* Send persistent bitmap cache enumeration PDU's */
     private void enum_bmpcache2() {
 	RdpPacket_Localised s;

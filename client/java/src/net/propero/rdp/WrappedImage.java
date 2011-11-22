@@ -7,6 +7,24 @@
  *
  * Copyright (c) 2005 Propero Limited
  *
+ * Copyright (C) 2011 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
+ * 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
  * Purpose: Adds functionality to the BufferedImage class, allowing
  *          manipulation of colour indices, making the RGB values
  *          invisible (in the case of Indexed Colour only).
@@ -23,23 +41,41 @@ public class WrappedImage {
     static Logger logger = Logger.getLogger(RdesktopCanvas.class);
     IndexColorModel cm = null;
     BufferedImage bi = null;
+    BufferedImage currentSurface = null;
     
     public WrappedImage(int arg0, int arg1, int arg2) {
         bi = new BufferedImage(arg0, arg1, arg2);
+        this.currentSurface = bi;
     }
     
     public WrappedImage(int arg0, int arg1, int arg2, IndexColorModel cm) {
         bi = new BufferedImage(arg0,arg1,BufferedImage.TYPE_INT_RGB); //super(arg0, arg1, BufferedImage.TYPE_INT_RGB);
+        this.currentSurface = bi;
         this.cm = cm;
     }
     
-    public int getWidth(){ return bi.getWidth(); }
-    public int getHeight(){ return bi.getHeight(); }
+    public int getWidth(){ return this.currentSurface.getWidth(); }
+    public int getHeight(){ return this.currentSurface.getHeight(); } 
     
-    public BufferedImage getBufferedImage(){ return bi; }
+    public void setCurrent(Bitmap bitmap) {
+    	if (bitmap == null)
+    		this.currentSurface = this.bi;
+    	else
+    		this.currentSurface = bitmap.getBufferedImage();
+    }
+    
+    public BufferedImage getCurrent() {
+    	return this.currentSurface;
+    }
+    
+    public BufferedImage mainSurface() {
+    	return this.bi;
+    }
+    
+    public BufferedImage getBufferedImage(){ return this.currentSurface; }
     
     public Graphics getGraphics(){
-        return bi.getGraphics();
+        return this.currentSurface.getGraphics();
     }
     
     public BufferedImage getSubimage(int x,int y, int width, int height){
@@ -79,14 +115,14 @@ public class WrappedImage {
     }
     
     public void setRGB(int x, int y, int color){
-        x = Math.min(bi.getWidth()-1,x);
+        x = Math.min(this.currentSurface.getWidth()-1,x);
         x = Math.max(0,x);
-        y = Math.min(bi.getHeight()-1,y);
+        y = Math.min(this.currentSurface.getHeight()-1,y);
         y = Math.max(0,y);
         //if(x >= bi.getWidth() || x < 0 || y >= bi.getHeight() || y < 0) return;
         
         if (cm != null) color = cm.getRGB(color);
-        bi.setRGB(x,y,color);
+        this.currentSurface.setRGB(x,y,color);
     }
 
     /**
@@ -100,15 +136,16 @@ public class WrappedImage {
      * @param w width of a line in data (measured in pixels)
      */
     public void setRGBNoConversion(int x, int y, int cx, int cy, int[] data, int offset,int w){
-       bi.setRGB(x,y,cx,cy,data,offset,w);
+       this.currentSurface.setRGB(x,y,cx,cy,data,offset,w);
     }
     
-    public void setRGB(int x, int y, int cx, int cy, int[] data, int offset,int w){
+    public void setRGB(BufferedImage surface, int x, int y, int cx, int cy, int[] data, int offset,int w){
+    	
         if(cm != null && data != null && data.length > 0){
             for(int i = 0; i < data.length; i++)
                 data[i] = cm.getRGB(data[i]);
         }
-        bi.setRGB(x,y,cx,cy,data,offset,w);
+        surface.setRGB(x,y,cx,cy,data,offset,w);
     }
     
     public int[] getRGB(int x,
@@ -118,18 +155,18 @@ public class WrappedImage {
             int[] data,
             int offset,
             int width){
-        return bi.getRGB(x,y,cx,cy,data,offset,width);
+        return this.currentSurface.getRGB(x,y,cx,cy,data,offset,width);
     }
       
     public int getRGB(int x, int y){
         //if(x >= this.getWidth() || x < 0 || y >= this.getHeight() || y < 0) return 0;
         
-        if(cm == null) return bi.getRGB(x,y);
+        if(cm == null) return this.currentSurface.getRGB(x,y);
         else{
-            int pix = bi.getRGB(x,y) & 0xFFFFFF;
+            int pix = this.currentSurface.getRGB(x,y) & 0xFFFFFF;
             int[] vals = {(pix >> 16) & 0xFF,(pix >> 8) & 0xFF,(pix) & 0xFF};
             int out = cm.getDataElement(vals,0);
-            if(cm.getRGB(out) != bi.getRGB(x,y)) logger.info("Did not get correct colour value for color (" + Integer.toHexString(pix) + "), got (" + cm.getRGB(out) + ") instead");
+            if(cm.getRGB(out) != this.currentSurface.getRGB(x,y)) logger.info("Did not get correct colour value for color (" + Integer.toHexString(pix) + "), got (" + cm.getRGB(out) + ") instead");
             return out;
         }
     }

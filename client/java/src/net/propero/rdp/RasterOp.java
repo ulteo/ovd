@@ -7,11 +7,32 @@
  *
  * Copyright (c) 2005 Propero Limited
  *
+ * Copyright (C) 2011 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011
+ * 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
  * Purpose: Set of operations used in displaying raster graphics
  */
 // Created on 01-Jul-2003
 
 package net.propero.rdp;
+
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 import org.apache.log4j.Logger;
 
@@ -24,29 +45,20 @@ public class RasterOp {
 		this.opt = opt_;
 	}
 
-	private void ropInvert(WrappedImage biDst, int[] dest, int width, int x, int y, int cx, int cy,
-			int Bpp) {
+	private void ropInvert(WrappedImage biDst, BufferedImage dest, int width, int x, int y, int cx, int cy, int Bpp) {
 		int mask = this.opt.bpp_mask;
-		int pdest = (y * width + x);
+
 		for (int i = 0; i < cy; i++) {
 			for (int j = 0; j < cx; j++) {
                 if(biDst != null){
                     int c = biDst.getRGB(x+j,y+i);
                     biDst.setRGB(x+j,y+i,~c & mask);
-                }else dest[pdest] = (~dest[pdest]) & mask;
-				pdest++;
+                }else {
+                	int c = dest.getRGB(x+j,y+i);
+                	dest.setRGB(x+j, y+i, (~c) & mask);
+                }
 			}
-			pdest += (width - cx);
 		}
-	}
-
-	private void ropClear(WrappedImage biDst, int width, int x, int y, int cx, int cy,
-			int Bpp) {
-
-	    for(int i = x; i < x+cx; i++){
-	            for(int j = y; j < y+cy; j++)
-	                biDst.setRGB(i,j,0);
-	    }
 	}
 
 	private void ropSet(WrappedImage biDst, int width, int x, int y, int cx, int cy,
@@ -60,24 +72,6 @@ public class RasterOp {
             }
 
     }
-
-	private void ropCopy(WrappedImage biDst, int dstwidth, int x, int y, int cx, int cy,
-			int[] src, int srcwidth, int srcx, int srcy, int Bpp) {
-
-		if (src == null) { // special case - copy to self
-		    int[] imgSec = null;
-		    biDst.getGraphics().copyArea(srcx,srcy,cx,cy,x-srcx,y-srcy);
-		} else {
-			int[] rgbArray = new int[cx * cy];
-
-			for (int i = 0; i < cy; i++) {
-				for (int j = 0; j < cx; j++) {
-					rgbArray[i * cx + j] = src[(srcy + i) * srcwidth + (srcx + j)];
-				}
-			}
-			biDst.setRGB(x, y, cx, cy, rgbArray, 0, cx);
-		}
-	}
 
     /**
      * Perform an operation on a rectangular area of a WrappedImage, using an integer array of colour values as
@@ -95,14 +89,15 @@ public class RasterOp {
      * @param srcy Y-offset of source area within source data
      */
 	public void do_array(int opcode, WrappedImage biDst, int dstwidth, int x, int y,
-			int cx, int cy, int[] src, int srcwidth, int srcx, int srcy) {
+			int cx, int cy, BufferedImage src, int srcwidth, int srcx, int srcy) {
 		int Bpp = this.opt.Bpp;
         //int[] dst = null;
 		// System.out.println("do_array: opcode = 0x" +
 		// Integer.toHexString(opcode) );
+		Graphics g = biDst.getGraphics();
 		switch (opcode) {
 		case 0x0:
-			ropClear(biDst, dstwidth, x, y, cx, cy, Bpp);
+			g.clearRect(x, y, cx, cy);
 			break;
 		case 0x1:
 			ropNor(biDst, dstwidth, x, y, cx, cy, src, srcwidth, srcx, srcy, Bpp);
@@ -113,7 +108,12 @@ public class RasterOp {
 			break;
 		case 0x3: // CopyInverted
 			ropInvert(biDst, src, srcwidth, srcx, srcy, cx, cy, Bpp);
-			ropCopy(biDst, dstwidth, x, y, cx, cy, src, srcwidth, srcx, srcy, Bpp);
+			if (src == null) {// special case - copy to self
+				g.copyArea(srcx,srcy,cx,cy,x-srcx,y-srcy);
+			}
+			else {
+				g.drawImage(src, x, y, x+cx, y+cy, srcx, srcy, srcx+cx, srcy+cy, null);
+			}
 			break;
 		case 0x4: // AndReverse
 			ropInvert(biDst, null, dstwidth, x, y, cx, cy, Bpp);
@@ -142,7 +142,12 @@ public class RasterOp {
 					srcy, Bpp);
 			break;
 		case 0xc:
-			ropCopy(biDst, dstwidth, x, y, cx, cy, src, srcwidth, srcx, srcy, Bpp);
+			if (src == null) {// special case - copy to self
+				g.copyArea(srcx,srcy,cx,cy,x-srcx,y-srcy);
+			}
+			else {
+				g.drawImage(src, x, y, x+cx, y+cy, srcx, srcy, srcx+cx, srcy+cy, null);
+			}
 			break;
 		case 0xd: // OrReverse
 			ropInvert(biDst, null, dstwidth, x, y, cx, cy, Bpp);
@@ -198,123 +203,102 @@ public class RasterOp {
     }
 
 	private void ropNor(WrappedImage biDst, int dstwidth, int x, int y, int cx, int cy,
-			int[] src, int srcwidth, int srcx, int srcy, int Bpp) {
+			BufferedImage src, int srcwidth, int srcx, int srcy, int Bpp) {
 		// opcode 0x1
 		int mask = this.opt.bpp_mask;
-		int psrc = (srcy * srcwidth + srcx);
 
 		for (int row = 0; row < cy; row++) {
 			for (int col = 0; col < cx; col++) {
 				int c = biDst.getRGB(x+col,y+row);
-				biDst.setRGB(x+col,y+row,(~(c | src[psrc])) & mask);
-				psrc++;
+				biDst.setRGB(x+col,y+row,(~(c | src.getRGB(col, row))) & mask);
 			}
-			psrc += (srcwidth - cx);
 		}
 	}
 
 	private void ropAndInverted(WrappedImage biDst, int dstwidth, int x, int y, int cx,
-			int cy, int[] src, int srcwidth, int srcx, int srcy, int Bpp) {
+			int cy, BufferedImage src, int srcwidth, int srcx, int srcy, int Bpp) {
 		// opcode 0x2
 		int mask = this.opt.bpp_mask;
-		int psrc = (srcy * srcwidth + srcx);
 		for (int row = 0; row < cy; row++) {
 			for (int col = 0; col < cx; col++) {
 				int c = biDst.getRGB(x+col,y+row);
-				biDst.setRGB(x+col,y+row,c & ((~src[psrc]) & mask));
-				psrc++;
+				biDst.setRGB(x+col,y+row,c & ((~src.getRGB(col, row)) & mask));
 			}
-			psrc += (srcwidth - cx);
 		}
 	}
 
 	private void ropXor(WrappedImage biDst, int dstwidth, int x, int y, int cx, int cy,
-			int[] src, int srcwidth, int srcx, int srcy, int Bpp) {
+			BufferedImage src, int srcwidth, int srcx, int srcy, int Bpp) {
 		// opcode 0x6
 		int mask = this.opt.bpp_mask;
-		int psrc = (srcy * srcwidth + srcx);
+
+		cx = Math.min(cx, biDst.getWidth());
+		cy = Math.min(cy, biDst.getHeight());
 		for (int row = 0; row < cy; row++) {
 			for (int col = 0; col < cx; col++) {
 				int c = biDst.getRGB(x+col,y+row);
-				biDst.setRGB(x+col,y+row, c ^ ((src[psrc]) & mask));
-				psrc++;
+				biDst.setRGB(x+col,y+row, c ^ ((src.getRGB(col, row)) & mask));
 			}
-			psrc += (srcwidth - cx);
 		}
 	}
 
 	private void ropNand(WrappedImage biDst, int dstwidth, int x, int y, int cx, int cy,
-			int[] src, int srcwidth, int srcx, int srcy, int Bpp) {
+			BufferedImage src, int srcwidth, int srcx, int srcy, int Bpp) {
 		// opcode 0x7
 		int mask = this.opt.bpp_mask;
-		int psrc = (srcy * srcwidth + srcx);
 		for (int row = 0; row < cy; row++) {
 			for (int col = 0; col < cx; col++) {
 				int c = biDst.getRGB(x+col,y+row);
-				biDst.setRGB(x+col,y+row, (~(c & src[psrc])) & mask);
-				psrc++;
+				biDst.setRGB(x+col,y+row, (~(c & src.getRGB(col, row))) & mask);
 			}
-			psrc += (srcwidth - cx);
 		}
 	}
 
 	private void ropAnd(WrappedImage biDst, int dstwidth, int x, int y, int cx, int cy,
-			int[] src, int srcwidth, int srcx, int srcy, int Bpp) {
+			BufferedImage src, int srcwidth, int srcx, int srcy, int Bpp) {
 		// opcode 0x8
 		int mask = this.opt.bpp_mask;
-		int psrc = (srcy * srcwidth + srcx);
 		for (int row = 0; row < cy; row++) {
 			for (int col = 0; col < cx; col++) {
 				int c = biDst.getRGB(x+col,y+row);
-				biDst.setRGB(x+col,y+row, c & ((src[psrc]) & mask));
-				psrc++;
+				biDst.setRGB(x+col,y+row, c & ((src.getRGB(col, row)) & mask));
 			}
-			psrc += (srcwidth - cx);
 		}
 	}
 
 	private void ropEquiv(WrappedImage biDst, int dstwidth, int x, int y, int cx,
-			int cy, int[] src, int srcwidth, int srcx, int srcy, int Bpp) {
+			int cy, BufferedImage src, int srcwidth, int srcx, int srcy, int Bpp) {
 		// opcode 0x9
 		int mask = this.opt.bpp_mask;
-		int psrc = (srcy * srcwidth + srcx);
 		for (int row = 0; row < cy; row++) {
 			for (int col = 0; col < cx; col++) {
 				int c = biDst.getRGB(x+col,y+row);
-				biDst.setRGB(x+col,y+row, c ^ ((~src[psrc]) & mask));
-				psrc++;
+				biDst.setRGB(x+col,y+row, c ^ ((~src.getRGB(col, row)) & mask));
 			}
-			psrc += (srcwidth - cx);
 		}
 	}
 
 	private void ropOrInverted(WrappedImage biDst, int dstwidth, int x, int y, int cx,
-			int cy, int[] src, int srcwidth, int srcx, int srcy, int Bpp) {
+			int cy, BufferedImage src, int srcwidth, int srcx, int srcy, int Bpp) {
 		// opcode 0xb
 		int mask = this.opt.bpp_mask;
-		int psrc = (srcy * srcwidth + srcx);
 		for (int row = 0; row < cy; row++) {
 			for (int col = 0; col < cx; col++) {
 				int c = biDst.getRGB(x+col,y+row);
-				biDst.setRGB(x+col,y+row, c | ((~src[psrc]) & mask));
-				psrc++;
+				biDst.setRGB(x+col,y+row, c | ((~src.getRGB(col, row)) & mask));
 			}
-			psrc += (srcwidth - cx);
 		}
 	}
 
 	private void ropOr(WrappedImage biDst, int dstwidth, int x, int y, int cx, int cy,
-			int[] src, int srcwidth, int srcx, int srcy, int Bpp) {
+			BufferedImage src, int srcwidth, int srcx, int srcy, int Bpp) {
 		// opcode 0xe
 		int mask = this.opt.bpp_mask;
-		int psrc = (srcy * srcwidth + srcx);
 		for (int row = 0; row < cy; row++) {
 			for (int col = 0; col < cx; col++) {
 				int c = biDst.getRGB(x+col,y+row);
-				biDst.setRGB(x+col,y+row, c | (src[psrc] & mask));
-				psrc++;
+				biDst.setRGB(x+col,y+row, c | (src.getRGB(col, row) & mask));
 			}
-			psrc += (srcwidth - cx);
 		}
 	}
 }

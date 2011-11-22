@@ -155,6 +155,13 @@ public class ProfileRegistry extends Profile {
 				else if (field.equalsIgnoreCase(FIELD_SHOW_BUGREPORTER)) {
 					properties.setBugReporterVisible(value.equalsIgnoreCase(VALUE_TRUE));
 				}
+				else if (field.equalsIgnoreCase(FIELD_RDP_USE_OFFSCREEN_CACHE)) {
+					boolean useOffscreenCache = false;
+					if (value.equalsIgnoreCase(VALUE_TRUE))
+						useOffscreenCache = true;
+
+					properties.setUseOffscreenCache(useOffscreenCache);
+				}
 				else if (field.equalsIgnoreCase(FIELD_RDP_PACKET_COMPRESSION)) {
 					boolean usePacketCompression = false;
 					if (value.equalsIgnoreCase(VALUE_TRUE))

@@ -374,6 +374,7 @@ public class ClipChannel extends VChannel implements ClipInterface, ClipboardOwn
 	/*
 	 * Support methods
 	 */
+	@SuppressWarnings("unused")
 	private void reset_bool(boolean[] x){
 		for(int i = 0; i < x.length; i++) x[i] = false;
 	}
