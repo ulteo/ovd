@@ -428,10 +428,10 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	
 	/**
 	 * select input method
-	 * @param inputMehtod 
+	 * @param inputMethod 
 	 */
-	public void setInputMethod(String inputMehtod) {
-		this.inputMethod  = inputMehtod;
+	public void setInputMethod(String inputMethod) {
+		this.inputMethod = inputMethod;
 	}
 	
 	/**
