@@ -418,23 +418,34 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.disconnectAll();
 	}
 	
+	/**
+	 * select keyboard mapping to use
+	 * @param keymap specific keymap
+	 */
 	public void setKeymap(String keymap) {
 		this.keymap = keymap;
 	}
 	
+	/**
+	 * select input method
+	 * @param inputMehtod 
+	 */
 	public void setInputMethod(String inputMehtod) {
 		this.inputMethod  = inputMehtod;
 	}
 	
 	/**
-	 * unable packet compression
+	 * 
+	 * unable/disable packet compression
+	 * @param packetCompression
 	 */
 	public void setPacketCompression(boolean packetCompression) {
 		this.packetCompression = packetCompression;
 	}
 
 	/**
-	 * enable offscreen cache
+	 * enable/disable offscreen cache feature
+	 * @param offscreenCache 
 	 */
 	public void setOffscreenCache(boolean offscreenCache) {
 		this.offscreenCache = offscreenCache;
