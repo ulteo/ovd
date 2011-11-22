@@ -1014,3 +1014,8 @@ function onStartExternalSessionFailure() {
 
 	return false;
 }
+
+function getWebClientBaseURL() {
+	var url = window.location.href;
+	return url.replace(/\/[^\/]*$/, "")+"/";
+}

@@ -29,6 +29,8 @@ import org.ulteo.utils.I18n;
 import org.ulteo.utils.LayoutDetector;
 import org.ulteo.ovd.applet.LibraryLoader;
 import org.ulteo.ovd.client.profile.ProfileIni;
+
+import java.io.File;
 import java.io.IOException;
 
 import javax.swing.UIManager;
@@ -316,15 +318,15 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		}
 
 		if (opts.getFlag(Options.FLAG_PROFILE_INI)) {
-			if (! opts.getIniProfile(opts.profile))
+			if (! NativeClient.getIniProfile(opts, opts.profile))
 				org.ulteo.Logger.warn("The configuration file \""+opts.profile+"\" does not exist.");
 		}
 		else if (opts.getFlag(Options.FLAG_PROFILE_REG)) {
-			if (! opts.getRegistryProfile())
+			if (! NativeClient.getRegistryProfile(opts))
 				org.ulteo.Logger.warn("No available configuration from registry");
 		}
 		else {
-			if (! opts.getIniProfile(null))
+			if (! NativeClient.getIniProfile(opts, null))
 				org.ulteo.Logger.warn("The default configuration file does not exist.");
 		}
 
@@ -362,6 +364,61 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		System.exit(RETURN_CODE_SUCCESS);
 	}
 
+	
+	public static boolean getIniProfile(Options option, String path) {
+		ProfileIni ini = new ProfileIni();
+
+		if (path == null) {
+			List<String> profiles = ini.listProfiles();
+
+			if (profiles == null)
+				return false;
+
+			option.profile = ProfileIni.DEFAULT_PROFILE;
+
+			if (! profiles.contains(option.profile))
+				return false;
+		}
+		else {
+			File file = new File(path);
+			option.profile = file.getName();
+			path = file.getParent();
+		}
+
+		ProfileProperties properties = null;
+		try {
+			properties = ini.loadProfile(option.profile, path);
+		} catch (IOException ex) {
+			System.err.println("Unable to load \""+option.profile+"\" profile: "+ex.getMessage());
+			return false;
+		}
+		
+		option.parseProperties(properties);
+
+		option.setFlag(Options.FLAG_REMEMBER_ME);
+
+		return true;
+	}
+	
+	public static boolean getRegistryProfile(Options option) {
+		ProfileRegistry registry = new ProfileRegistry();
+		ProfileProperties properties;
+		try {
+			properties = registry.loadProfile();
+		} catch (IOException ex) {
+			org.ulteo.Logger.error("Getting profile preferencies from registry failed: "+ex.getMessage());
+			return false;
+		}
+		if (properties == null)
+			return false;
+
+		option.parseProperties(properties);
+
+		option.setFlag(Options.FLAG_REMEMBER_ME);
+
+		return true;
+	}
+	
 	public static void usage(int status) {
 		System.err.println(NativeClient.productName);
 		System.err.println("Usage: java -jar OVDNativeClient.jar [options]");
@@ -809,7 +866,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		boolean exit = false;
 		if (! this.isCancelled) {
 			Runtime.getRuntime().addShutdownHook(new ShutdownTask(this.client));
-			exit = this.client.perform();
+			exit = this.client.perform(this.opts);
 		}
 		else
 			this.client.disconnectAll();

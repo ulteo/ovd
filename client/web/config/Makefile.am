@@ -22,7 +22,7 @@ sbin_SCRIPTS = ovd-webclient-config
 default_DATA = config.inc.php
 defaultdir = $(datadir)/ulteo/webclient/default
 
-conf_DATA = config.inc.php apache2.conf
+conf_DATA = config.inc.php apache2.conf config.client.ini
 confdir = $(sysconfdir)/ulteo/webclient
 
 ovd-webclient-config: ovd-webclient-config.in
@@ -31,7 +31,7 @@ ovd-webclient-config: ovd-webclient-config.in
 apache2.conf: apache2.conf.in
 	sed "s,@DATADIR@,$(datadir)," < $(srcdir)/$< > $@
 
-EXTRA_DIST = $(default_DATA) apache2.conf.in ovd-webclient-config.in
+EXTRA_DIST = $(default_DATA) apache2.conf.in ovd-webclient-config.in config.client.ini
 
 clean-local:
 	rm -f apache2.conf ovd-webclient-config

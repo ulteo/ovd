@@ -4,6 +4,7 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -35,6 +36,10 @@ import java.util.List;
 
 import netscape.javascript.JSObject;
 import org.ulteo.ovd.client.ClientInfos;
+import org.ulteo.ovd.client.Options;
+import org.ulteo.ovd.client.WebClientCommunication;
+import org.ulteo.ovd.client.profile.ProfileProperties;
+import org.ulteo.ovd.client.profile.ProfileWeb;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
 
@@ -42,6 +47,7 @@ import org.ulteo.utils.AbstractFocusManager;
 import org.ulteo.utils.jni.WorkArea;
 
 import org.ulteo.rdp.rdpdr.OVDPrinter;
+import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.rdp.seamless.SeamlessFrame;
 import org.ulteo.rdp.seamless.SeamlessPopup;
 
@@ -99,11 +105,13 @@ class OrderApplication extends Order {
 public class Applications extends Applet implements Runnable, JSForwarder/*RdpListener, OvdAppListener*/ {
 	public String keymap = null;
 	private String rdp_input_method = null;
+	private String wc = null;
 	
 	private List<Order> spoolOrder = null;
 	private Thread spoolThread = null;
 	private AbstractFocusManager focusManager;
 
+	public Options opts;
 	private OvdClientApplicationsApplet ovd = null;
 
 	private boolean finished_init = false;
@@ -176,7 +184,12 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 		if (this.rdp_input_method != null)
 			this.ovd.setInputMethod(this.rdp_input_method);
 		
-		this.ovd.perform();
+		this.opts = new Options();
+		WebClientCommunication webComm = new WebClientCommunication(this.wc);
+		if (!this.getWebProfile(webComm))
+			System.out.println("Unable to get webProfile");
+		
+		this.ovd.perform(null);
 		
 		this.spoolOrder = new ArrayList<Order>();
 		this.spoolThread = new Thread(this);
@@ -225,6 +238,7 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 		}
 		this.keymap = buf;
 		this.rdp_input_method = this.getParameter("rdp_input_method");
+		this.wc = this.getParameter("wc_url");
 		
 		OptionParser.readParameters(this, properties);
 		
@@ -339,6 +353,19 @@ public class Applications extends Applet implements Runnable, JSForwarder/*RdpLi
 		o.setPath(type, path, share);
 		
 		this.pushOrder(o);
+	}
+	
+	public boolean getWebProfile(WebClientCommunication wcc) {
+		ProfileWeb webProfile = new ProfileWeb();
+		ProfileProperties properties;
+		properties = webProfile.loadProfile(wcc);
+		
+		if (properties == null)
+			return false;
+		
+		this.opts.parseProperties(properties);
+		
+		return true;
 	}
 	
 	public void forwardJS(String functionName, Integer instance, String status) {

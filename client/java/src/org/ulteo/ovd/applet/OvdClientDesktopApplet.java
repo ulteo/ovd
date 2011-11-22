@@ -157,6 +157,7 @@ public class OvdClientDesktopApplet extends OvdClient {
 		this.connections.add(rc);
 
 		this.configureRDPConnection(rc);
+		this.applyConfig(rc, ((Desktop)this.applet).opts);
 
 		return true;
 	}

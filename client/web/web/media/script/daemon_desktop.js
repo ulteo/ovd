@@ -49,6 +49,7 @@ var Desktop = Class.create(Daemon, {
 			var applet_height = (this.my_height*applet_width/this.my_width);
 
 			var applet_params = new Hash();
+			applet_params.set('wc_url', getWebClientBaseURL());
 			applet_params.set('server', server.fqdn);
 			applet_params.set('port', server.port);
 			if (server.token != null)

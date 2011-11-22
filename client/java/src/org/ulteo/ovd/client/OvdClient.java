@@ -33,6 +33,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
 import org.ulteo.Logger;
+import org.ulteo.ovd.Application;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.sm.Callback;
@@ -225,7 +226,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		}
 	}	
 	
-	public boolean perform() {
+	public boolean perform(Options option) {
 		this.runInit();
 
 		if (this.smComm == null)
@@ -234,6 +235,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		if (this.createRDPConnections()) {
 			for (RdpConnectionOvd rc : this.connections) {
 				this.configureRDPConnection(rc);
+			    this.applyConfig(rc, option);
 			}
 
 			this.sessionStatusMonitoringThread = new Thread(this);
@@ -478,4 +480,19 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	}
 	
 	public void updateNews(List<News> newsList) {}
+
+	public void applyConfig(RdpConnectionOvd rc, Options opts) {
+		if (opts == null)
+			return;
+		
+		if (opts.usePacketCompression)
+			rc.setPacketCompression(opts.usePacketCompression);
+		
+		if (opts.usePersistantCache) {
+			rc.setPersistentCaching(opts.usePersistantCache);
+			
+			rc.setPersistentCachingPath(opts.persistentCachePath);
+			rc.setPersistentCachingMaxSize(opts.persistentCacheMaxCells);
+		}
+	}
 }

@@ -4,6 +4,7 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -32,7 +33,11 @@ import netscape.javascript.JSObject;
 
 import org.ulteo.Logger;
 import org.ulteo.ovd.client.ClientInfos;
+import org.ulteo.ovd.client.Options;
+import org.ulteo.ovd.client.WebClientCommunication;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
+import org.ulteo.ovd.client.profile.ProfileProperties;
+import org.ulteo.ovd.client.profile.ProfileWeb;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.ovd.sm.Callback;
@@ -51,7 +56,9 @@ public class Desktop extends Applet implements JSForwarder, FocusListener, Callb
 	private String keymap = null;
 	private String rdp_input_method = null;
 	private String token = null;
-	
+	private String wc = null;
+
+	public Options opts;
 	private OvdClientDesktopApplet ovd = null;
 	
 	private boolean finished_init = false;
@@ -124,7 +131,13 @@ public class Desktop extends Applet implements JSForwarder, FocusListener, Callb
 			this.ovd.setInputMethod(this.rdp_input_method);
 		
 		this.ovd.setFullscreen(this.fullscreenMode);
-		this.ovd.perform();
+		
+		this.opts = new Options();
+		WebClientCommunication webComm = new WebClientCommunication(this.wc);
+		if (!this.getWebProfile(webComm))
+			System.out.println("Unable to get webProfile");
+		
+		this.ovd.perform(null);
 		
 		this.finished_init = true;
 		
@@ -211,6 +224,7 @@ public class Desktop extends Applet implements JSForwarder, FocusListener, Callb
 			this.keymap = this.getParameterNonEmpty("keymap");
 			this.rdp_input_method = this.getParameter("rdp_input_method");
 			this.token = this.getParameter("token");
+		    this.wc = this.getParameter("wc_url");
 			String strPort = this.getParameterNonEmpty("port");
 			try {
 				this.port = Integer.parseInt(strPort);
@@ -233,6 +247,19 @@ public class Desktop extends Applet implements JSForwarder, FocusListener, Callb
 		return true;
     }
 
+	public boolean getWebProfile(WebClientCommunication wcc) {
+		ProfileWeb webProfile = new ProfileWeb();
+		ProfileProperties properties;
+		properties = webProfile.loadProfile(wcc);
+		
+		if (properties == null)
+			return false;
+		
+		this.opts.parseProperties(properties);
+		
+		return true;
+	}
+	
 	public void forwardJS(String functionName, Integer instance, String status) {
 		Object[] args = new Object[2];
 		args[0] = instance;

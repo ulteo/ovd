@@ -103,6 +103,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/*
 /etc/*
 %config /etc/ulteo/webclient/apache2.conf
+%config /etc/ulteo/webclient/config.client.ini
 %config /etc/ulteo/webclient/config.inc.php
 
 %changelog -n ulteo-ovd-web-client

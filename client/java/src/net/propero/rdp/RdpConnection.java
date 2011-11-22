@@ -371,6 +371,9 @@ public class RdpConnection implements SeamListener, Runnable{
 	 * @param persistentCachingPath
 	 */
 	public void setPersistentCachingPath(String persistentCachingPath) {
+		if (persistentCachingPath == null || persistentCachingPath.equals(""))
+			return;
+		
 		String separator = System.getProperty("file.separator");
 
 		if (persistentCachingPath.lastIndexOf(separator) != persistentCachingPath.length()-1)
@@ -385,6 +388,9 @@ public class RdpConnection implements SeamListener, Runnable{
 	 * @param persistentCachingMaxSize (MB)
 	 */
 	public void setPersistentCachingMaxSize(int persistentCachingMaxSize) {
+		if (persistentCachingMaxSize == 0)
+			return;
+		
 		if(! System.getProperty("os.name").startsWith("Mac OS X")) {
 			int maxSize = (int) ((new File(System.getProperty("user.home")).getFreeSpace()) / 1024 /1024); // convert bytes to megabytes
 			if (maxSize > (persistentCachingMaxSize * 1.25))

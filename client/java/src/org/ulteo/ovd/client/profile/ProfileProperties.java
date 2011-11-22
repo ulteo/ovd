@@ -41,6 +41,11 @@ public class ProfileProperties {
 	private boolean showProgressbar = true;
 	private boolean isGUILocked = false;
 	private boolean isBugReporterVisible = false;
+	private boolean usePacketCompression = false;
+	private boolean usePersistantCache = false;
+	private String persistentCachePath = "";
+	private int persistentCacheMaxCells = 0;	
+
 	
 	public ProfileProperties() {}
 
@@ -167,5 +172,37 @@ public class ProfileProperties {
 
 	public boolean isBugReporterVisible() {
 		return this.isBugReporterVisible;
+	}
+
+	public void setUsePacketCompression(boolean usePacketCompression) {
+		this.usePacketCompression = usePacketCompression;
+	}
+
+	public boolean isUsePacketCompression() {
+		return usePacketCompression;
+	}
+
+	public void setUsePersistantCache(boolean usePersistantCache) {
+		this.usePersistantCache = usePersistantCache;
+	}
+
+	public boolean isUsePersistantCache() {
+		return usePersistantCache;
+	}
+
+	public void setPersistentCachePath(String persistentCachePath) {
+		this.persistentCachePath = persistentCachePath;
+	}
+
+	public String getPersistentCachePath() {
+		return persistentCachePath;
+	}
+
+	public void setPersistentCacheMaxCells(int persistentCacheMaxCells) {
+		this.persistentCacheMaxCells = persistentCacheMaxCells;
+	}
+
+	public int getPersistentCacheMaxCells() {
+		return persistentCacheMaxCells;
 	}
 }

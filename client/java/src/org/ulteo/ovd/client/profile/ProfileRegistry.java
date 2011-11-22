@@ -155,6 +155,33 @@ public class ProfileRegistry extends Profile {
 				else if (field.equalsIgnoreCase(FIELD_SHOW_BUGREPORTER)) {
 					properties.setBugReporterVisible(value.equalsIgnoreCase(VALUE_TRUE));
 				}
+				else if (field.equalsIgnoreCase(FIELD_RDP_PACKET_COMPRESSION)) {
+					boolean usePacketCompression = false;
+					if (value.equalsIgnoreCase(VALUE_TRUE))
+						usePacketCompression = true;
+
+					properties.setUsePacketCompression(usePacketCompression);
+				}
+				else if (field.equalsIgnoreCase(FIELD_RDP_PERSISTENT_CACHE)) {
+					boolean usePersistentCache = false;
+					if (value.equalsIgnoreCase(VALUE_TRUE))
+						usePersistentCache = true;
+
+					properties.setUsePersistantCache(usePersistentCache);
+				}
+				else if (field.equalsIgnoreCase(FIELD_PERSISTENT_CACHE_PATH)) {
+					properties.setPersistentCachePath(value);
+				}
+				else if (field.equalsIgnoreCase(FIELD_PERSISTENT_CACHE_MAX_CELLS)) {
+					int persistentCacheMaxCell = properties.getPersistentCacheMaxCells();
+					try {
+						Integer.parseInt(value);
+					}
+					catch (NumberFormatException e) {
+						Logger.error("Failed to parse peristent cache max cells: '"+value+"'");
+					}
+					properties.setPersistentCacheMaxCells(persistentCacheMaxCell);
+				}
 			}
 		} catch (RegistryException ex) {
 			throw new IOException(ex);
