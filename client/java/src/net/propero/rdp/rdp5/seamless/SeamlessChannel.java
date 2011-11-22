@@ -1,10 +1,10 @@
 /* SeamlessChannel.java
  * Component: UlteoRDP
  * 
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
- * Author Thomas MOUTON <thomas@ulteo.com> 2009-2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
  * 
  * Revision: $Revision: 0.2 $
@@ -38,6 +38,8 @@ import java.awt.Frame;
 import java.awt.Cursor;
 import java.awt.Rectangle;
 import java.awt.Window;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
@@ -69,7 +71,7 @@ import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
 
 
-public class SeamlessChannel extends VChannel implements WindowStateListener, WindowListener, FocusListener {
+public class SeamlessChannel extends VChannel implements WindowStateListener, WindowListener, FocusListener, ComponentListener {
 
 	// Seamless RDP constants
 	public static final int WINDOW_NOTYETMAPPED=-1;
@@ -95,6 +97,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	private ArrayList<SeamListener> listener = new ArrayList<SeamListener>();
 
 	private List<StateOrder> stateOrders = null;
+	private final List<PositionOrder> positionsOrders = new ArrayList<PositionOrder>();
     
 	public SeamlessChannel(Options opt_, Common common_) {
 		super(opt_, common_);
@@ -424,6 +427,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		f.sw_addWindowStateListener(this);
 		f.sw_addWindowListener(this);
 		f.sw_addFocusListener(this);
+		((Component) f).addComponentListener(this);
 		if (this.clipChannel != null)
 			f.sw_addFocusListener(this.clipChannel);
 		else
@@ -529,6 +533,26 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 				org.ulteo.Logger.error("Adjusted position message was not sent: "+ex.getMessage());
 				return false;
 			}
+		}
+
+		x += this.opt.x_offset;
+		y += this.opt.y_offset;
+
+		PositionOrder order = new PositionOrder();
+		order.window_id = id;
+		order.position = new Rectangle((int) x, (int) y, (int) width, (int) height);
+		synchronized(this.positionsOrders) {
+			PositionOrder twin = null;
+			for (PositionOrder each : this.positionsOrders) {
+				if (each.window_id != order.window_id)
+					continue;
+
+				twin = each;
+			}
+			if (twin == null)
+				this.positionsOrders.add(order);
+			else
+				twin.position = order.position;
 		}
 		
                 Rectangle position = new Rectangle((int) x, (int) y, (int) width, (int) height);
@@ -1066,8 +1090,62 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		}
 	}
 
+	public void updatePosition(SeamlessWindow sw) {
+		if (sw == null)
+			return;
+
+		Rectangle bounds = ((Component) sw).getBounds();
+
+		synchronized(this.positionsOrders) {
+			PositionOrder order = null;
+			for (PositionOrder each : this.positionsOrders) {
+				if (each.window_id != sw.sw_getId())
+					continue;
+
+				order = each;
+				break;
+			}
+			if (order != null) {
+				if (order.position.equals(bounds)) {
+					this.positionsOrders.remove(order);
+					return;
+				}
+			}
+		}
+
+		try {
+			this.send_position(sw.sw_getId(), bounds.x - this.opt.x_offset, bounds.y - this.opt.y_offset, bounds.width, bounds.height, 0);
+		} catch (Exception ex) {
+			logger.error("Failed to update window "+String.format("0x%08x", sw.sw_getId())+": Position message not sent: "+ex.getMessage());
+		}
+	}
+
+	public void componentResized(ComponentEvent e) {
+		Component c = e.getComponent();
+		if (! (c instanceof SeamlessWindow))
+			return;
+
+		new PositionUpdater(this, (SeamlessWindow) c).update();
+	}
+
+	public void componentMoved(ComponentEvent e) {
+		Component c = e.getComponent();
+		if (! (c instanceof SeamlessWindow))
+			return;
+
+		new PositionUpdater(this, (SeamlessWindow) c).update();
+	}
+
+	public void componentShown(ComponentEvent e) {}
+	public void componentHidden(ComponentEvent e) {}
+
 	protected class StateOrder {
 		public long window_id;
 		public int state;
+	}
+
+	protected class PositionOrder {
+		public long window_id;
+		public Rectangle position;
 	}
 }
