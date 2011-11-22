@@ -224,12 +224,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		rc.enableGatewayMode(server);
 		rc.setServer(server.getHost());
 		rc.setCredentials(server.getLogin(), server.getPassword());
-
-		if (this.keymap != null)
-			rc.setKeymap(this.keymap);
-		
-		if (this.inputMethod != null)
-			rc.setInputMethod(this.inputMethod);
+		this.configure(rc);
 
 		// application icon processing
 		HashMap<Integer, ImageIcon> appsIcons = new HashMap<Integer, ImageIcon>();

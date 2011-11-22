@@ -105,13 +105,7 @@ public abstract class OvdClientDesktop extends OvdClient {
 		rc.setServer(server.getHost());
 		rc.setCredentials(server.getLogin(), server.getPassword());
 		rc.setAllDesktopEffectsEnabled(properties.isDesktopEffectsEnabled());
-
-		if (this.keymap != null)
-			rc.setKeymap(this.keymap);
-		
-		if (this.inputMethod != null)
-			rc.setInputMethod(this.inputMethod);
-		
+		this.configure(rc);
 		return rc;
 	}
 

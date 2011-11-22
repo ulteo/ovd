@@ -43,7 +43,6 @@ import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 
 import org.ulteo.rdp.OvdAppChannel;
-import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.rdp.seamless.SeamlessFrame;
 import org.ulteo.rdp.seamless.SeamlessPopup;
 import org.ulteo.utils.FilesOp;
@@ -106,11 +105,6 @@ public class Applications extends OvdApplet {
 		SessionManagerCommunication smComm = new SessionManagerCommunication(this.sm_host, this.sm_port, true);
 		this.ovd = new OvdClientApplicationsApplet(smComm, properties, this);
 		this.ovd.setKeymap(this.keymap);
-		
-		ArrayList<RdpConnectionOvd> connections = this.ovd.getAvailableConnections();
-		for (RdpConnectionOvd c: connections) {
-			this.applyConfig(c);
-		}
 		
 		((OvdClientApplicationsApplet)this.ovd).setPerformDesktopIntegration(this.local_integration);
 		

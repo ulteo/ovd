@@ -28,7 +28,6 @@ import java.io.FileNotFoundException;
 
 import org.ulteo.Logger;
 import org.ulteo.ovd.client.ClientInfos;
-import org.ulteo.ovd.client.Options;
 import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.ovd.client.WebClientCommunication;
 import org.ulteo.ovd.client.profile.ProfileProperties;
@@ -37,7 +36,6 @@ import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.Protocol;
-import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 import org.ulteo.utils.AbstractFocusManager;
 import org.ulteo.utils.LibraryLoader;
@@ -55,7 +53,6 @@ public abstract class OvdApplet extends Applet {
 
 	protected AbstractFocusManager focusManager;
 	protected OvdClient ovd = null;
-	protected Options opts = new Options();
 	
 	public static final String JS_API_F_SERVER = "serverStatus";
 	public static final String JS_API_O_SERVER_CONNECTED = "connected";
@@ -159,14 +156,24 @@ public abstract class OvdApplet extends Applet {
 				this.focusManager = new AppletFocusManager(appletPrinterThread);
 			}
 			
+			_init(properties);
+			
+			// load web profile
 			WebClientCommunication webComm = new WebClientCommunication(wc);
 			ProfileProperties pproperties = new ProfileWeb().loadProfile(webComm);
-			if (pproperties != null)
-				this.opts.parseProperties(pproperties);
-			else
-				Logger.warn("Unable to get webProfile");
+			if (pproperties != null) {
+				this.ovd.setPacketCompression(pproperties.isUsePacketCompression());
+				this.ovd.setOffscreenCache(pproperties.isUseOffscreenCache());
+				if (pproperties.isUsePersistantCache())
+					this.ovd.setPersistentCaching(pproperties.getPersistentCacheMaxCells(), pproperties.getPersistentCachePath());
+				if (pproperties.isUseBandwithLimitation()) {
+					int diskBandwidthLimit = 0;
+					if (pproperties.isUseDiskBandwithLimitation())
+						diskBandwidthLimit = pproperties.getDiskBandwidthLimit();
+					this.ovd.setBandWidthLimitation(pproperties.getSocketTimeout(), diskBandwidthLimit);
+				}
+			}
 			
-			_init(properties);
 			this.finished_init = true;
 		}
 		catch (Exception e) {
@@ -238,28 +245,4 @@ public abstract class OvdApplet extends Applet {
 		}
 	}
 	
-	public void applyConfig(RdpConnectionOvd c) {
-		if (this.opts.usePacketCompression) {
-			c.setPacketCompression(this.opts.usePacketCompression);
-		}
-
-		if (this.opts.useOffscreenCache) {
-			c.setUseOffscreenCache(this.opts.useOffscreenCache);
-		}
-
-		if (this.opts.usePersistantCache) {
-			c.setPersistentCaching(this.opts.usePersistantCache);
-			
-			c.setPersistentCachingPath(this.opts.persistentCachePath);
-			c.setPersistentCachingMaxSize(this.opts.persistentCacheMaxCells);
-		}
-		
-		if (this.opts.useBandwithLimitation) {
-			c.setUseBandWidthLimitation(true);
-			c.setSocketTimeout(this.opts.socketTimeout);
-			if (this.opts.useDiskBandwithLimitation) {
-				c.getRdpdrChannel().setSpoolable(true, this.opts.diskBandwidthLimit);
-			}
-		}
-	}
 }

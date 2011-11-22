@@ -795,11 +795,21 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		}
 		this.client.setKeymap(this.opts.keymap);
 		this.client.setInputMethod(this.opts.inputMethod);
+		this.client.setPacketCompression(this.opts.usePacketCompression);
+		this.client.setOffscreenCache(this.opts.useOffscreenCache);
+		if (this.opts.usePersistantCache)
+			this.client.setPersistentCaching(this.opts.persistentCacheMaxCells, this.opts.persistentCachePath);
+		if (this.opts.useBandwithLimitation) {
+			int diskBandwidthLimit = 0;
+			if (this.opts.useDiskBandwithLimitation)
+				diskBandwidthLimit = this.opts.diskBandwidthLimit;
+			this.client.setBandWidthLimitation(this.opts.socketTimeout, diskBandwidthLimit);
+		}
 
 		boolean exit = false;
 		if (! this.isCancelled) {
 			Runtime.getRuntime().addShutdownHook(new ShutdownTask(this.client));
-			exit = this.client.perform(this.opts);
+			exit = this.client.perform();
 		}
 		else
 			this.client.disconnectAll();

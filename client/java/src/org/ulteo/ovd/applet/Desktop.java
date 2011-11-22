@@ -56,7 +56,6 @@ public class Desktop extends OvdApplet implements FocusListener {
 		ServerAccess aps = new ServerAccess(this.server, this.port, this.username, this.password);
 		aps.token = this.token;
 		this.rc = ((OvdClientDesktopApplet)this.ovd).createRDPConnection(aps);
-		this.applyConfig(rc);
 		
 		BorderLayout layout = new BorderLayout();
 		this.setLayout(layout);

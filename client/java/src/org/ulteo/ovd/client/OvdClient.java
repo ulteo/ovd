@@ -24,6 +24,7 @@
 
 package org.ulteo.ovd.client;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,8 +75,15 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	protected Thread getStatus = null;
 	protected ArrayList<RdpConnectionOvd> connections = null;
 	protected CopyOnWriteArrayList<RdpConnectionOvd> performedConnections = null;
-	protected String keymap = null;
-	protected String inputMethod = null;
+	
+	private String keymap = null;
+	private String inputMethod = null;
+	private boolean offscreenCache = false;
+	private boolean packetCompression = false;
+	private int persistentCacheMaxCells = 0;
+	private String persistentCachePath = null;
+	private int socketTimeout = 0;
+	private int diskBandwidthLimit = 0;
 	
 	protected Thread sessionStatusMonitoringThread = null;
 	protected boolean continueSessionStatusMonitoringThread = false;
@@ -201,7 +209,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	 * not called by applet mode
 	 * @return
 	 */
-	boolean perform(Options option) {
+	boolean perform() {
 		if (!(this instanceof OvdClientPerformer))
 			throw new ClassCastException("OvdClient must inherit from an OvdClientPerformer to use 'perform' action");
 		
@@ -212,7 +220,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		
 		for (RdpConnectionOvd rc : this.connections) {
 			this.customizeConnection(rc);
-			this.applyConfig(rc, option);
 			rc.addRdpListener(this);
 		}
 
@@ -421,6 +428,66 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	}
 	
 	/**
+	 * unable packet compression
+	 */
+	public void setPacketCompression(boolean packetCompression) {
+		this.packetCompression = packetCompression;
+	}
+
+	/**
+	 * enable offscreen cache
+	 */
+	public void setOffscreenCache(boolean offscreenCache) {
+		this.offscreenCache = offscreenCache;
+	}
+
+	/**
+	 * unable persistant cache
+	 * @param persistentCacheMaxCells maximum cells of the persistent cache
+	 * @param persistentCachePath temporary path of the persistent cache
+	 */
+	public void setPersistentCaching(int persistentCacheMaxCells, String persistentCachePath) {
+		this.persistentCacheMaxCells = persistentCacheMaxCells;
+		this.persistentCachePath = persistentCachePath;
+	}
+
+	/**
+	 * unable and set bandwith limitation
+	 * @param socketTimeout set socket timeout
+	 * @param diskBandwidthLimit if superior to 0, define disk bandwith limit
+	 */
+	public void setBandWidthLimitation(int socketTimeout, int diskBandwidthLimit) {
+		this.socketTimeout = socketTimeout;
+		this.diskBandwidthLimit = diskBandwidthLimit;
+	}
+
+	/**
+	 * configure a specific RdpConnection
+	 * @param rc
+	 */
+	protected void configure(RdpConnectionOvd rc) {
+		rc.setKeymap(this.keymap);
+		if (this.inputMethod != null)
+			rc.setInputMethod(this.inputMethod);
+		
+		rc.setUseOffscreenCache(this.offscreenCache);
+		rc.setPacketCompression(this.packetCompression);
+       
+		if (this.persistentCacheMaxCells != 0) {
+			rc.setPersistentCaching(true);
+			rc.setPersistentCachingMaxSize(this.persistentCacheMaxCells);
+			rc.setPersistentCachingPath(this.persistentCachePath);
+		}
+
+		if (this.socketTimeout != 0) {
+			rc.setUseBandWidthLimitation(true);
+			rc.setSocketTimeout(this.socketTimeout);
+			if (diskBandwidthLimit != 0)
+				rc.getRdpdrChannel().setSpoolable(true, this.diskBandwidthLimit);
+		}
+	}
+    
+	/**
 	 * find the {@link RdpConnectionOvd} corresponding to a given {@link OvdAppChannel}
 	 * @param specific {@link OvdAppChannel}
 	 * @return {@link RdpConnectionOvd} if found, null instead
@@ -449,30 +516,4 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		return null;
 	}
 
-	public void applyConfig(RdpConnectionOvd rc, Options opts) {
-		if (opts == null)
-			return;
-		
-		if (opts.usePacketCompression)
-			rc.setPacketCompression(opts.usePacketCompression);
-		
-		if (opts.useOffscreenCache)
-			rc.setUseOffscreenCache(opts.useOffscreenCache);
-		
-		if (opts.usePersistantCache) {
-			rc.setPersistentCaching(opts.usePersistantCache);
-			
-			rc.setPersistentCachingPath(opts.persistentCachePath);
-			rc.setPersistentCachingMaxSize(opts.persistentCacheMaxCells);
-		}
-
-		if (opts.useBandwithLimitation) {
-			rc.setUseBandWidthLimitation(true);
-			rc.setSocketTimeout(opts.socketTimeout);
-			
-			if (opts.useDiskBandwithLimitation) {
-				rc.getRdpdrChannel().setSpoolable(true, opts.diskBandwidthLimit);
-			}
-		}
-	}
 }
