@@ -47,10 +47,6 @@ public class Desktop extends OvdApplet implements FocusListener {
 	@Override
 	protected void _init(Properties properties) {
 		this.ovd = new OvdClientDesktopApplet(properties, this);
-		this.ovd.setKeymap(this.keymap);
-		if (this.rdp_input_method != null)
-			this.ovd.setInputMethod(this.rdp_input_method);
-		
 		((OvdClientDesktopApplet)this.ovd).setFullscreen(this.fullscreenMode);
 
 		ServerAccess aps = new ServerAccess(this.server, this.port, this.username, this.password);

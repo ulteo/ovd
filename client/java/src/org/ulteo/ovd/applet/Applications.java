@@ -104,12 +104,7 @@ public class Applications extends OvdApplet {
 
 		SessionManagerCommunication smComm = new SessionManagerCommunication(this.sm_host, this.sm_port, true);
 		this.ovd = new OvdClientApplicationsApplet(smComm, properties, this);
-		this.ovd.setKeymap(this.keymap);
-		
 		((OvdClientApplicationsApplet)this.ovd).setPerformDesktopIntegration(this.local_integration);
-		
-		if (this.rdp_input_method != null)
-			this.ovd.setInputMethod(this.rdp_input_method);
 		
 		this.spooler = new SpoolOrder((OvdClientApplicationsApplet) this.ovd);
 		this.serverApps = Collections.synchronizedMap(new HashMap<Integer, ArrayList<Application>>());

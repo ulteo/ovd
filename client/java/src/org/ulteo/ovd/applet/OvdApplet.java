@@ -45,9 +45,6 @@ import netscape.javascript.JSObject;
 
 public abstract class OvdApplet extends Applet {
 	
-	protected String keymap = null;
-	protected String rdp_input_method = null;
-
 	protected boolean finished_init = false;
 	protected boolean started_stop = false;
 
@@ -139,8 +136,8 @@ public abstract class OvdApplet extends Applet {
 			System.getProperty("user.home");
 			
 			this.readParameters();
-			this.keymap = this.getParameterNonEmpty("keymap");
-			this.rdp_input_method = this.getParameter("rdp_input_method");
+			String keymap = this.getParameterNonEmpty("keymap");
+			String rdp_input_method = this.getParameter("rdp_input_method");
 			String wc = this.getParameter("wc_url");
 			
 			Properties properties = new Properties(getMode());
@@ -157,6 +154,11 @@ public abstract class OvdApplet extends Applet {
 			}
 			
 			_init(properties);
+
+			// configure client
+			this.ovd.setKeymap(keymap);
+			if (rdp_input_method != null)
+				this.ovd.setInputMethod(rdp_input_method);
 			
 			// load web profile
 			WebClientCommunication webComm = new WebClientCommunication(wc);
@@ -218,7 +220,6 @@ public abstract class OvdApplet extends Applet {
 	
 	@Override
 	public final void destroy() {
-		this.keymap = null;
 		this.ovd = null;
 		this.focusManager = null;
 		_destroy();
