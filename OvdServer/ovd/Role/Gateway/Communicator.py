@@ -278,6 +278,13 @@ class HttpMetaServerCommunicator(HttpMetaCommunicator):
 	
 	def process(self):
 		
+		# in any case of redirection with HTTP protocol use
+		if self.http.is_redirection():
+			location = self.http.get_header("Location")
+			if location is not None and location.startswith("http://"):
+				location = location.replace("http", "https", 1)
+				self.http.set_header("Location", location)
+		
 		# XML rewriting on start.php request
 		if self.communicator.http.path == "/ovd/client/start.php" and \
 		   not self.communicator.http.xml_rewrited:

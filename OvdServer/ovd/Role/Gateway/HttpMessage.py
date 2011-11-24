@@ -56,7 +56,8 @@ class HttpException(Exception):
 
 class HttpMessage():
 
-	http_ptn = re.compile('((?:HEAD)|(?:GET)|(?:POST)) (.*) HTTP/(.\..)')
+	http_req_ptn = re.compile("((?:HEAD)|(?:GET)|(?:POST)) (.*) HTTP/(.\..)")
+	http_res_ptn = re.compile("HTTP/(?P<protocol>1\..) (?P<code>\d{3}) (?P<text>.*)\r")
 	chunk_ptn = re.compile("^(?P<size>[a-fA-F\d]+)\r\n(?P<data>.*)$", re.S)
 	DEFLATE = 1
 	CHUNKED = 2
@@ -108,7 +109,7 @@ class HttpMessage():
 		self.headers = headers
 
 		first_line = self.headers.split('\r\n', 1)[0]
-		res = HttpMessage.http_ptn.search(first_line)
+		res = HttpMessage.http_req_ptn.search(first_line)
 		if res is not None:
 			self.path = res.group(2)
 		
@@ -203,6 +204,14 @@ class HttpMessage():
 			return httplib.NOT_FOUND
 
 
+	def is_redirection(self):
+		top_header = HttpMessage.http_res_ptn.match(self.headers)
+		if top_header is not None:
+			code = int(top_header.group("code"))
+			return code >= 300 and code < 310
+		return False
+	
+	
 	def redirect(self, addr):
 		# Session Manager and administration
 		if self.path.startswith("/ovd/client/") or \
