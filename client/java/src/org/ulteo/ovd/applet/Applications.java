@@ -35,6 +35,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.ulteo.Logger;
+import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.sm.Application;
@@ -88,22 +89,13 @@ public class Applications extends OvdApplet {
 	private boolean local_integration = false;
 	
 	@Override
-	protected void _init(Properties properties) throws FileNotFoundException {
-		properties.setDesktopIcons(this.local_integration);
-		
-		if (properties.isPrinters()) {
-			SeamlessFrame.focusManager = focusManager;
-			SeamlessPopup.focusManager = focusManager;
-		}
-
+	protected void _init() throws FileNotFoundException {
 		if (OSTools.isWindows()) {
 			jshortcut_dll = FilesOp.exportJarResource("WindowsLibs/32/jshortcut.dll");
 			registry_dll = FilesOp.exportJarResource("WindowsLibs/32/ICE_JNIRegistry.dll");
 			LibraryLoader.addToJavaLibraryPath(registry_dll.getParentFile());
 		}
 
-		SessionManagerCommunication smComm = new SessionManagerCommunication(this.sm_host, this.sm_port, true);
-		this.ovd = new OvdClientApplicationsApplet(smComm, properties, this);
 		((OvdClientApplicationsApplet)this.ovd).setPerformDesktopIntegration(this.local_integration);
 		
 		this.spooler = new SpoolOrder((OvdClientApplicationsApplet) this.ovd);
@@ -150,6 +142,18 @@ public class Applications extends OvdApplet {
 		String param = this.getParameter("local_integration");
 		if (param != null && param.equalsIgnoreCase("true"))
 			this.local_integration = true;
+	}
+	
+	@Override
+	protected OvdClient createOvdClient(Properties properties) {
+		if (properties.isPrinters()) {
+			SeamlessFrame.focusManager = focusManager;
+			SeamlessPopup.focusManager = focusManager;
+		}
+		
+		properties.setDesktopIcons(this.local_integration);
+		SessionManagerCommunication smComm = new SessionManagerCommunication(this.sm_host, this.sm_port, true);
+		return new OvdClientApplicationsApplet(smComm, properties, this);
 	}
 	
 	// ********

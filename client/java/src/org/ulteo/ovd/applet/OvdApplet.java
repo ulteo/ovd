@@ -92,7 +92,7 @@ public abstract class OvdApplet extends Applet {
 		}
 	}
 
-	protected abstract void _init(Properties properties) throws Exception;
+	protected abstract void _init() throws Exception;
 
 	protected abstract void _start();
 	
@@ -108,6 +108,8 @@ public abstract class OvdApplet extends Applet {
 	 */
 	protected abstract void readParameters() throws Exception;
 
+	protected abstract OvdClient createOvdClient(Properties properties);
+	
 	
 	/**
 	 * get a parameter give to the applet
@@ -153,9 +155,8 @@ public abstract class OvdApplet extends Applet {
 				this.focusManager = new AppletFocusManager(appletPrinterThread);
 			}
 			
-			_init(properties);
-
 			// configure client
+			this.ovd = createOvdClient(properties);
 			this.ovd.setKeymap(keymap);
 			if (rdp_input_method != null)
 				this.ovd.setInputMethod(rdp_input_method);
@@ -175,6 +176,8 @@ public abstract class OvdApplet extends Applet {
 					this.ovd.setBandWidthLimitation(pproperties.getSocketTimeout(), diskBandwidthLimit);
 				}
 			}
+
+			_init();
 			
 			this.finished_init = true;
 		}

@@ -28,6 +28,7 @@ import java.awt.Frame;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
+import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.ovd.client.OvdClientDesktop;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
@@ -45,8 +46,7 @@ public class Desktop extends OvdApplet implements FocusListener {
 	private RdpConnectionOvd rc = null;
 	
 	@Override
-	protected void _init(Properties properties) {
-		this.ovd = new OvdClientDesktopApplet(properties, this);
+	protected void _init() {
 		((OvdClientDesktopApplet)this.ovd).setFullscreen(this.fullscreenMode);
 
 		ServerAccess aps = new ServerAccess(this.server, this.port, this.username, this.password);
@@ -95,6 +95,11 @@ public class Desktop extends OvdApplet implements FocusListener {
 		
 		if (this.getParameter("fullscreen") != null)
 			this.fullscreenMode = true;
+	}
+	
+	@Override
+	protected OvdClient createOvdClient(Properties properties) {
+		return new OvdClientDesktopApplet(properties, this);
 	}
 	
 	// FocusListener's method interface
