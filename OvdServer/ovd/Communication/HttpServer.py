@@ -103,6 +103,8 @@ class ThreadPoolingHttpServer(HTTPServer):
 			Logger.debug("HTTPServer: %s (%s, %s)" % (msg, addr, port))
 		except Exception, e:
 			Logger.debug("HTTPServer: unknown exception %s: %s" % (type(e), e))
+			import traceback
+			traceback.print_exc()
 		finally:
 			self.close_request(request)
 	
