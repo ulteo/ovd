@@ -3,6 +3,7 @@
 # Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+# Author David LECHEVALIER <david@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -33,7 +34,7 @@ def redirect_to_dump():
 		if not os.path.exists(dirname):
 			os.makedirs(dirname)
 		
-		buf = file(path, "a", 0)
+		buf = file(path, "w", 0)
 	except IOError, err:
 		return
 	
