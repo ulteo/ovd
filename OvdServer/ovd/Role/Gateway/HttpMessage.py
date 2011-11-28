@@ -207,7 +207,6 @@ class HttpMessage():
 
 		# root redirection
 		elif self.path == '/':
-			print Config.root_redirection
 			if Config.root_redirection is not None:
 				return httplib.FOUND
 			else:
