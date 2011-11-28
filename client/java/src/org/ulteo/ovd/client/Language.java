@@ -63,7 +63,7 @@ public class Language {
 //			{"Portuguese", "Português", "pt"},
 			{"Portuguese (Brazil)", "Português (Brasil)", "pt", "br"},
 			{"Romanian", "Română", "ro"},
-//			{"Russian", "Русский", "ru"},
+			{"Russian", "Русский", "ru"},
 			{"Slovak", "Slovenčina", "sk"},
 //			{"Slovenian", "", "sl"},
 //			{"Sorbian", "", "sb"},
