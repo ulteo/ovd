@@ -424,7 +424,7 @@ class Preferences {
 			'nl_NL'=>'Nederlands',
 			'pt_BR'=>'Português (Brasil)',
 			'ro_RO'=>'Română',
-//			'ru_RU'=>'Русский',
+			'ru_RU'=>'Русский',
 			'sk_SK'=>'Slovenčina',
 			'zh_CN'=>'中文简体',
 		));
