@@ -20,7 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import socket
-import re
+from urlparse import urlparse
 
 from ovd.Logger import Logger
 
@@ -73,26 +73,27 @@ class Config:
 				Logger.error("Invalid int number for process_timeout")
 		
 		if infos.has_key("web_client"):
-			r = re.match("(?P<protocol>https?)://(?P<host>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:(?P<port>\d+))?/?$",
-				infos["web_client"])
+			wc = infos["web_client"]
+			if wc[:wc.find("://")] not in ["http", "https"]:
+				wc = "http://" + infos["web_client"]
+			url = urlparse(wc)
 			try:
-				if r is None:
-					raise Exception("malformed")
-				socket.inet_aton(r.group('host'))
-				port = r.group('port')
-				if port is not None:
-					port = int(port)
-					if not (port > 0 and port < 65536):
-						raise Exception("incorrect port")
-			except socket.error:
+				if not url.hostname or url.params or url.query or url.fragment:
+					raise Exception("url malformed")
+				ip = socket.gethostbyname(url.hostname)
+				if url.port and url.port <= 0 and url.port > 65536:
+					raise Exception("incorrect port")
+			except socket.gaierror:
 				Logger.error("Invalid conf for Web Client: incorrect IP")
 			except Exception, e:
 				Logger.error("Invalid conf for Web Client: " + str(e))
 			else:
-				protocol = r.group('protocol')
-				if port is None:
-					port = getattr(Protocol, protocol.upper())
-				Config.web_client = (getattr(Protocol, protocol.upper()), r.group('host'), port)
+				protocol = getattr(Protocol, url.scheme.upper())
+				if url.port:
+					port = url.port
+				else:
+					port = protocol
+				Config.web_client = (protocol, ip, port)
 		
 		if infos.has_key("admin_redirection"):
 			if infos["admin_redirection"].lower() == "true":
