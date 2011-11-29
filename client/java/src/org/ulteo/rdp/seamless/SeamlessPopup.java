@@ -36,6 +36,7 @@ import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
 import javax.swing.JDialog;
 
+import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.utils.AbstractFocusManager;
 
 import net.propero.rdp.Common;
@@ -297,7 +298,8 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 
 	@Override
 	public void focusGained(FocusEvent e) {	
-		((sun.awt.im.InputContext)this.getInputContext()).disableNativeIM();
+		if (OSTools.isWindows())
+			((sun.awt.im.InputContext)this.getInputContext()).disableNativeIM();
 
 		if (SeamlessPopup.focusManager != null)	{
 			SeamlessPopup.focusManager.performedFocusLost(this);
