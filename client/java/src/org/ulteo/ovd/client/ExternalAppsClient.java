@@ -175,6 +175,9 @@ public class ExternalAppsClient {
 		
 		OvdClient cli = new OvdClientIntegrated(dialog);
 		Runtime.getRuntime().addShutdownHook(new ShutdownTask(cli));
+		
+		//  By default, activate unicode in external mode.
+		cli.setInputMethod("unicode");
 		cli.perform(null);
 	}
 }
