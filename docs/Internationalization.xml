@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop v@VERSION@</title>
+    <subtitle>Internationalization and Localization</subtitle>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>@YEAR@</year>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
+    </copyright>
+  </articleinfo>
+
+  <section id="intro">
+    <title>Introduction</title>
+
+    <para>
+      There is more than one language in the world and
+      many people do not speak English. This documentation explains
+      how Ulteo take care about internationalization and
+      localization into the Open Virtual Desktop solution.
+    </para>
+
+    <para>
+      Firstly, Ulteo is translated in many languages and is
+      opened to support any new one.
+    </para>
+    <para>
+      Secondly, as Ulteo software is a solution to access to desktops
+      and applications, the client can specify the requested language
+      for the session. But different operating systems and
+      applications have to support these different languages.
+    </para>
+    <para>
+      Finally, the user need to use the local keyboard and, there is
+      more than one keyboard layout in the world. Ulteo solutions
+      supports different behavior for keyboard mapping between clients
+      and servers.
+    </para>
+  </section>
+
+
+  <section id="translations">
+    <title>Ulteo OVD translations</title>
+    <para>
+      Two parts of the Ulteo OVD solution are translated: the
+      Administration Console and the client softwares.
+    </para>
+    
+    <note>
+      <para>
+        The Ulteo OVD translations are freely provided by the
+        community.
+      </para>
+      <para>
+        If your own language is lacking in the current Ulteo OVD
+        translations and you are motivated to translate solutions, you
+        are very welcome and contact us at this address:
+        <email>translations@ulteo.com</email>.
+      </para>
+    </note>
+
+    <section id="translations_admin">
+      <title>Administration Console</title>
+
+      <para>
+        The default behavior of the Administration Console is to
+        detect the client browser language. But it's also possible to
+        force your language if you prefer: from the
+        <emphasis>Configuration</emphasis> page, go into
+        <emphasis>System settings</emphasis> and change the
+        <emphasis>Administration Console language</emphasis> option.
+      </para>
+
+      <important id="admin_console_important">
+        <para>
+          After the language setting, the console could still
+          be in English. That's probably because your Linux server
+          system hosting the Session Manager does not support the
+          new language. So you have to add the language
+          support and restart the HTTP server.
+        </para>
+        <para>
+          Each Linux distribution has his own method to manage
+          language support. For instance, on Ubuntu system, it's a
+          <emphasis>language-pack-$LANG</emphasis> package to
+          install.
+        </para>
+      </important>
+
+      <para>
+        On the technical side, the Session Manager translations are
+        provided by the <emphasis>ulteo-ovd-l10n</emphasis>
+        package. This package contain both clients and Administration
+        Console translations into GNU Gettext files.
+      </para>
+    </section>
+
+    <section id="translations_web_client">
+      <title>Ulteo Web Client</title>
+
+      <para>
+        At the first connexion, the Web Client detects the client
+        language from the browser settings. But you can modify it by
+        clicking on <emphasis>Advanced Settings</emphasis> and modify
+        the <emphasis>Language</emphasis> option. When the option is
+        manually set by the user, it is stored into a COOKIE and is
+        re-use the selected language at next connections.
+      </para>
+      
+      <para>
+        The Web Client uses the same translation system than the Session
+        Manager Administration Console. So please <ulink
+        url="#admin_console_important">the Administration Console
+        note</ulink> part if you encounter any problem.
+      </para>
+    </section>
+
+    <section id="translations_native_client">
+      <title>Ulteo Native Client</title>
+      <para>
+        When the Native Clients started up, it detect the system
+        language and apply the translation if possible. It is
+        also possible to modify it manually by clicking on
+        <emphasis>More options</emphasis> and modify the
+        <emphasis>Language</emphasis> option.
+      </para>
+
+      <para>
+        When the option is manually set by the user, the selected
+        language is saved into a configuration file to keep your
+        setting for the next start of the Native Client. So it is also
+        possible to force the client language by editing the
+        setting file.
+      </para>
+    </section>
+  </section>
+
+  <section id="aps">
+    <title>Application Servers</title>
+    <para>
+      You are probably interested in starting non-English Ulteo
+      sessions on your OVD farm. Either because your users do not
+      speak English or users speak different (various) languages. Of
+      course, it is possible to select a language from the Ulteo
+      Client but the Application Server operating system must support
+      the selected language.
+    </para>
+
+    <para>
+      By default, both <trademark
+      class="registered">Windows</trademark> and Linux supports
+      English language. According to) the installation medium, it can
+      support another language out-of-the-box.  And, once installed,
+      it is still possible to add other languages support. But the
+      process is different between Linux and <trademark
+      class="registered">Windows</trademark>.
+    </para>
+
+    <section id="aps_linux">
+      <title>Linux</title>
+
+      <para>
+        Linux is a complete multilingual Operating System. The
+        packaging system provides translations pack for both system and
+        applications.
+      </para>
+
+      <para>
+        The Linux subsystem archive does not support any other language
+        than English on a new install.
+      </para>
+      <para>
+        To install a language support, you have to install some
+        packages.
+      </para>
+      <screen>
+        <![CDATA[
+# apt-get install language-pack-$LANG]]>
+      </screen>
+      <para>
+        To have a full language support for all
+        applications, there are some other packages to install.
+      </para>
+      <screen>
+        <![CDATA[
+# apt-get install language-pack-$LANG \
+                  language-support-$LANG \
+                  language-pack-gnome-$LANG \
+                  language-pack-kde-$LANG \
+                  kde-l10n-$LANG \
+                  openoffice.org-l10n-$LANG]]>
+      </screen>
+    </section>
+
+    <section id="aps_windows">
+      <title><trademark class="registered">Windows</trademark></title>
+      <para>
+        The <trademark class="registered">Microsoft
+        Windows</trademark> server 2003 and 2008 are installed in a
+        specific language but alternative languages could be
+        installed.
+      </para>
+
+      <para>
+        The process is different from <trademark
+        class="registered">Windows</trademark> server 2003 and 2008
+        (r2) but, for both systems, you have to get MUI language packs from
+        <trademark class="registered">Microsoft</trademark> website.
+      </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>
+            The <trademark class="registered">Windows</trademark> 2003
+            language packs are installable from a setup program (one
+            for each language). So select the language and execute the
+            setup.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            For <trademark class="registered">Windows</trademark>
+            2008, you have to go into the <emphasis>Control
+            Panel</emphasis>, then <emphasis>Region and
+            Language</emphasis>, select the <emphasis>Keyboards and
+            Languages</emphasis> tab and click on
+            <emphasis>Install/Uninstall Language</emphasis>. Then you
+            just have to browse to the <emphasis>lp.cab</emphasis> and
+            select it.
+          </para>
+        </listitem>
+      </itemizedlist>
+
+      <simplesect>
+        <title>Applications</title>
+        <para>
+          On <trademark class="registered">Microsoft
+          Windows</trademark>, each application manage its own
+          internationalization system. Some applications can be
+          installed in multilingual mode whereas some others supports only
+          one language.
+        </para>
+
+        <para>
+          For instance, Microsoft Office include only one language as
+          default afer the installation. But you can add language packs
+          separatly. The same process is also possible with OpenOffice
+          and many others applications.
+        </para>
+      </simplesect>
+    </section>
+  </section>
+  
+  <section id="keyboard">
+    <title>Keyboards layouts</title>
+    
+    <para>
+      Ulteo supports two type on input method: scancode and unicode.
+    </para>
+
+    <section id="keyboard_scancode">
+      <title>Scancode</title>
+
+      <para>
+        Scancode is a database where, from each keyboard layout, each
+        keyboard key has a different code. So the client send the
+        keyboard layout identifier at session start and transform each
+        keyboard input key into a scancode that is sent to the RDP
+        server.
+      </para>
+
+      <para>
+        This method is the default method used into Ulteo OVD.
+      </para>
+
+      <para>
+        The problem of this method is that each client and server have
+        to know the specifications of any existing keyboard layout in
+        the world ... which is not possible. So there is a set of the
+        most popular used keyboard included in the client.
+      </para>
+    </section>
+
+    <section id="keyboard_unicode">
+      <title>Unicode</title>
+
+      <para>
+        Unicode is an alternative method that send to client unicode
+        characters instead of keyboard key codes that saving server to
+        transform and manage each keyboard input.
+      </para>
+    </section>
+
+    <section id="keyboard_choose">
+      <title>Choosing the method and/or the keyboard layout</title>
+
+      <para>
+        By default, on both Native Client and Web Client, the scancode
+        method is set and the keyboard layout is auto detected on the
+        system. But, it's also possible to select it manually by
+        clicking on <emphasis>Advanced Settings</emphasis> and change
+        the <emphasis>Keyboard layout</emphasis> option.
+      </para>
+
+      <para>
+        The choosen keyboard layout is stored into the default
+        configuration file for the Native Client (default.conf) and
+        into a Cookie for the WebClient.
+      </para>
+
+      <para>
+        If the scancode method doesn't support your own keyboard
+        layout, you can try to enable the Unicode input method. To do
+        that, you have to set the <emphasis>input-method =
+        unicode</emphasis> option into the configuration file for the
+        Native Client configuration. Or uncomment the
+        <emphasis>define('RDP_INPUT_METHOD', 'unicode');</emphasis>
+        line into the <emphasis>config.inc.php</emphasis> file for the
+        WebClient.
+      </para>
+
+      <para>
+        In consequence, you won't see the keyboard layout switcher option
+        anymore in the client interface.
+      </para>
+    </section>
+  </section>
+</article>

@@ -16,6 +16,7 @@ SRC=\
 	Installation_ApS_Windows.xml \
 	Installation_Gateway_Lucid.xml \
 	Installation_Iso.xml \
+	Internationalization.xml \
 	NativeClient.xml \
 	Protocol.xml \
 	Scalability.xml \
