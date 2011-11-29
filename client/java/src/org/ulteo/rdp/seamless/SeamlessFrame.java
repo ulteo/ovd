@@ -28,6 +28,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 
+import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.utils.AbstractFocusManager;
 
 import net.propero.rdp.Common;
@@ -129,7 +130,8 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, 
 	
 	@Override
 	public void focusGained(FocusEvent e) {
-		((sun.awt.im.InputContext)this.getInputContext()).disableNativeIM();
+		if (OSTools.isWindows())
+			((sun.awt.im.InputContext)this.getInputContext()).disableNativeIM();
 
 		if (SeamlessFrame.focusManager != null)
 		{
