@@ -3,6 +3,7 @@
 # Copyright (C) 2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author David LECHEVALIER <david@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -27,9 +28,48 @@ from Waiter import Waiter
 
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.DomainMicrosoft import DomainMicrosoft as AbstractDomainMicrosoft
+from ApplicationsDetection import ApplicationsDetection
 
 
 class DomainMicrosoft(AbstractDomainMicrosoft):
+	# This function, in the future, will replace the function located in the Session class
+	def cleanupShortcut(self, path):
+		shortcut_ext = ApplicationsDetection.shortcut_ext
+		
+		if not os.path.exists(path):
+			return
+		
+		try:
+			contents = os.listdir(path)
+		except Exception, err:
+			Logger.warn("Unable to list content of the directory %s (%s)"%(path, str(err)))
+			return
+		
+		for content in contents:
+			target = None
+			l = os.path.join(path, content)
+			if not os.path.isfile(l):
+				continue
+			
+			if not os.path.splitext(l)[1] == shortcut_ext:
+				continue
+			
+			try:
+				target = ApplicationsDetection.getExec(l)
+			except Exception, e:
+				Logger.debug("Unable to get the desktop target of %s %s"%(l, str(e)))
+				target = None
+			
+			if target is None:
+				continue
+			if "startovdapp" in target:
+				Logger.debug("removing shortcut %s"%(l))
+				try:
+					os.remove(l)
+				except Exception, e:
+					Logger.debug("Unable to delete the desktop target %s %s"%(l, str(e)))
+
+
 	def onSessionStarts(self):
 		mylock = Waiter(self.session)
 		
@@ -47,6 +87,9 @@ class DomainMicrosoft(AbstractDomainMicrosoft):
 		
 		self.session.windowsProgramsDir = mylock.userDir["Programs"]
 		self.session.windowsDesktopDir = mylock.userDir["Desktop"]
+		self.cleanupShortcut(self.session.windowsProgramsDir)
+		self.cleanupShortcut(self.session.windowsDesktopDir)
+		
 		self.session.install_desktop_shortcuts()
 		
 		self.session.succefully_initialized = True
@@ -57,20 +100,5 @@ class DomainMicrosoft(AbstractDomainMicrosoft):
 		return True
 
 	def onSessionEnd(self):
-		for shortcut in self.session.installedShortcut:
-			desktopShortcut = os.path.join(self.session.windowsDesktopDir, shortcut)
-			programShortcut = os.path.join(self.session.windowsProgramsDir, shortcut)
-			if os.path.exists(desktopShortcut):
-				try:
-					os.remove(desktopShortcut)
-				except Exception, e:
-					Logger.debug("Error while deleting the file %s [%s]"%(desktopShortcut), str(e))
-			
-			if os.path.exists(programShortcut):
-				try:
-					os.remove(programShortcut)
-				except:
-					Logger.debug("Error while deleting the file %s [%s]"%(programShortcut), str(e))
-
 		return True
 
