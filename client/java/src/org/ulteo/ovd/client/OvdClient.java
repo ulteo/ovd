@@ -476,7 +476,8 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	 * @param rc
 	 */
 	protected void configure(RdpConnectionOvd rc) {
-		rc.setKeymap(this.keymap);
+		if (this.keymap != null)
+			rc.setKeymap(this.keymap);
 		if (this.inputMethod != null)
 			rc.setInputMethod(this.inputMethod);
 		
