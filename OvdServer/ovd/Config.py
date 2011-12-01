@@ -20,7 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import ConfigParser
 import os
 import sys
 
@@ -62,43 +61,41 @@ class Config:
 	
 	
 	@staticmethod
-	def read(filename):
-		if not os.path.isfile(filename):
-			report_error("No such file '%s'"%(filename))
+	def read(raw_data):
+		Config.raw_data = raw_data
+		
+		if not Config.raw_data.has_key("main") or type(Config.raw_data["main"]) is not dict:
+			report_error("Missing 'main' part")
 			return False
 		
-		Config.parser = ConfigParser.ConfigParser()
-		Config.parser.read(filename)
-		
-		if "main" not in Config.parser.sections():
-			report_error("Unrecognized format on '%s'"%(filename))
-			return False
-		
-		if Config.parser.has_option("main", "roles"):
-			Config.roles = Config.parse_list(Config.parser.get("main", "roles"))
+		if Config.raw_data["main"].has_key("roles"):
+			Config.roles = Config.parse_list(Config.raw_data["main"]["roles"])
 			Config.manage_role_aliases(Config.roles)
 		
-		if Config.parser.has_option("main", "session_manager"):
-			a = Config.parser.get("main", "session_manager")
+		if Config.raw_data["main"].has_key("session_manager"):
+			a = Config.raw_data["main"]["session_manager"]
 			if len(a)>0:
 				Config.session_manager = a.strip()
 		
-		if Config.parser.has_option("main", "server_allow_reuse_address"):
-			a = Config.parser.get("main", "server_allow_reuse_address").lower().strip()
+		if Config.raw_data["main"].has_key("server_allow_reuse_address"):
+			a = Config.raw_data["main"]["server_allow_reuse_address"].lower().strip()
 			if a not in ["true", "false"]:
 				report_error("Invalid value for configuration key 'server_allow_reuse_address', allowed values are true/false")
 			
 			Config.server_allow_reuse_address = (a == "true")
 		
 		
-		if Config.parser.has_option("log", "file"):
-			Config.log_file = Config.parser.get("log", "file")
+		if not Config.raw_data.has_key("log") or type(Config.raw_data["log"]) is not dict:
+			return True
+		
+		if Config.raw_data["log"].has_key("file"):
+			Config.log_file = Config.raw_data["log"]["file"]
 			
-		if Config.parser.has_option("log", "level"):
+		if Config.raw_data["log"].has_key("level"):
 			Config.log_level = 0
 			
 			debug_count = 0
-			for item in Config.parser.get("log", "level").split(' '):
+			for item in Config.raw_data["log"]["level"].split(' '):
 				item = item.lower()
 				if item == "debug":
 					debug_count+= 1
@@ -110,8 +107,8 @@ class Config:
 				if debug_count>=3:
 					Config.log_level|= Logger.DEBUG_3
 		
-		if Config.parser.has_option("log", "thread"):
-			Config.log_threaded = (Config.parser.get("log", "thread").lower() == "true")
+		if Config.raw_data["log"].has_key("thread"):
+			Config.log_threaded = (Config.raw_data["log"]["thread"].lower() == "true")
 		
 		return True
 	
@@ -161,7 +158,7 @@ class Config:
 	
 	@staticmethod
 	def get_role_dict(role):
-		if not Config.parser.has_section(role):
+		if not Config.raw_data.has_key(role):
 			return {}
 		
-		return dict(Config.parser.items(role))
+		return Config.raw_data[role]

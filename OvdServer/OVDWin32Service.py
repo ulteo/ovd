@@ -33,6 +33,7 @@ from ovd import Config as ConfigModule
 from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.SlaveServer import SlaveServer
+from ovd.Platform.ConfigReader import ConfigReader
 from ovd.Platform.System import System
 
 class OVD(win32serviceutil.ServiceFramework):
@@ -59,7 +60,7 @@ class OVD(win32serviceutil.ServiceFramework):
 		self.ReportServiceStatus(win32service.SERVICE_START_PENDING)
 		
 		config_file = os.path.join(System.get_default_config_dir(), "slaveserver.conf")
-		if not Config.read(config_file):
+		if not Config.read(ConfigReader.process(None)):
 			self.ReportServiceStatus(win32service.SERVICE_STOPPED)
 			return
 		

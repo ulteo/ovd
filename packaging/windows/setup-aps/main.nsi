@@ -26,7 +26,7 @@
 
 !define BASENAME "${PRODUCT_NAME}"
 !define EXE_NAME "ulteo-ovd-slaveserver.exe"
-!define CONFIG_FILE "$APPDATA\ulteo\ovd\slaveserver.conf"
+!define CONFIG_REG_PATH "Software\ulteo\OVD\SlaveServer"
 !define SHORTCUT "${BASENAME}.lnk"
 
 !define UNINSTALL_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_FULL_NAME}"
@@ -126,7 +126,7 @@
 Function InputBoxPageShow
   Var /GLOBAL sm_address
 
-  ReadINIStr $sm_address ${CONFIG_FILE} "main" "session_manager"
+  ReadRegStr $sm_address HKLM ${CONFIG_REG_PATH} "session_manager"
   Push $sm_address
   Call Trim
   Pop $sm_address
@@ -262,9 +262,9 @@ Section "post" PostCmd
   SetOutPath "$APPDATA\ulteo\ovd"
 
   DetailPrint "Generating Config file"
-  WriteINIStr "${CONFIG_FILE}" "main" "session_manager" "$sm_address"
-  WriteINIStr "${CONFIG_FILE}" "main" "roles" "aps"
-  WriteINIStr "${CONFIG_FILE}" "log" "level" "*"
+  WriteRegStr HKLM "${CONFIG_REG_PATH}" "session_manager" "$sm_address"
+  WriteRegStr HKLM "${CONFIG_REG_PATH}" "roles" "aps"
+  WriteRegStr HKLM "${CONFIG_REG_PATH}\log" "level" "*"
 
   SetOutPath "$APPDATA\ulteo\ovd\log"
   SetOverwrite ifnewer

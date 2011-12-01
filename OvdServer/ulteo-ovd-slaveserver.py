@@ -36,6 +36,7 @@ from ovd.Communication.HttpServer import HttpServer as Communication
 from ovd.Config import Config
 from ovd.Exceptions import InterruptedException
 from ovd.Logger import Logger
+from ovd.Platform.ConfigReader import ConfigReader
 from ovd.Platform.System import System
 from ovd.SlaveServer import SlaveServer
 
@@ -56,7 +57,7 @@ def main(queue, config_file, pid_file):
 		else:
 			return (code, msg)
 	
-	if not Config.read(config_file) and not Config.is_valid():
+	if not Config.read(ConfigReader.process(config_file)) and not Config.is_valid():
 		_exit(1, "wrong config file")
 	
 	Logger.initialize("OVD", Config.log_level, Config.log_file, not daemonize, Config.log_threaded)
@@ -133,7 +134,7 @@ if __name__ == "__main__":
 	# freeze_support must be the first line
 	multiprocessing.freeze_support()
 	
-	config_file = os.path.join(System.get_default_config_dir(), "slaveserver.conf")
+	config_file = None
 	daemonize = False
 	pid_file = None
 	
