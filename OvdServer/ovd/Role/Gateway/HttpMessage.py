@@ -46,6 +46,23 @@ def page_error(code, addr=None):
 
 
 
+class Service(object):
+
+	(SESSION_MANAGER, ADMINISTRATION, WEB_CLIENT, ROOT) = range(0, 4)
+
+	@staticmethod
+	def get(path):
+		if path.startswith("/ovd/client/"):
+			return Service.SESSION_MANAGER
+		elif path == "/ovd/admin" or path.startswith("/ovd/admin/"):
+			return Service.ADMINISTRATION
+		elif path == '/ovd' or path.startswith("/ovd/"):
+			return Service.WEB_CLIENT
+		elif path == '/':
+			return Service.ROOT
+
+
+
 class HttpException(Exception):
 
 	def __init__(self, code, path):
@@ -73,6 +90,7 @@ class HttpMessage():
 		self.body = ''
 
 		self.path = ''
+		self.service = None
 		self.TE = HttpMessage.DEFLATE
 		self.len_body = 0
 		self.xml_rewrited = False
@@ -118,6 +136,7 @@ class HttpMessage():
 		res = HttpMessage.http_req_ptn.search(first_line)
 		if res is not None:
 			self.path = res.group(2)
+			self.service = Service.get(self.path)
 		
 		TE = self.get_header('Transfer-Encoding')
 		if TE is not None and TE in 'chunked':
@@ -187,32 +206,27 @@ class HttpMessage():
 
 
 	def auth(self):
-		# Session Manager
-		if self.path.startswith("/ovd/client/"):
+		if   self.service is Service.SESSION_MANAGER:
 			return httplib.OK
 
-		# Administration
-		elif self.path == "/ovd/admin" or self.path.startswith("/ovd/admin/"):
+		elif self.service is Service.ADMINISTRATION:
 			if Config.admin_redirection is True:
 				return httplib.OK
 			else:
 				return httplib.FORBIDDEN
 
-		# Web Client
-		elif self.path == '/ovd' or self.path.startswith("/ovd/"):
+		elif self.service is Service.WEB_CLIENT:
 			if Config.web_client is not None:
 				return httplib.OK
 			else:
 				return httplib.FORBIDDEN
 
-		# root redirection
-		elif self.path == '/':
+		elif self.service is Service.ROOT:
 			if Config.root_redirection is not None:
 				return httplib.FOUND
 			else:
 				return httplib.NOT_FOUND
 
-		# Unknown URL
 		else:
 			return httplib.NOT_FOUND
 
@@ -226,18 +240,14 @@ class HttpMessage():
 	
 	
 	def redirect(self, addr):
-		# Session Manager and administration
-		if self.path.startswith("/ovd/client/") or \
-			self.path == "/ovd/admin" or self.path.startswith("/ovd/admin/"):
+		if self.service in [Service.SESSION_MANAGER, Service.ADMINISTRATION]:
 			if Config.general.session_manager != addr:
 				return Protocol.HTTPS, (Config.general.session_manager, Protocol.HTTPS)
 
-		# Web Client
-		elif self.path == '/ovd' or self.path.startswith("/ovd/"):
+		elif self.service is Service.WEB_CLIENT:
 			if Config.web_client[1] != addr:
 				return Config.web_client[0], Config.web_client[1:3]
 
-		# Unknown URL
 		else:
 			return Protocol.HTTPS, (Config.general.session_manager, Protocol.HTTPS)
 
