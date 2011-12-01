@@ -388,6 +388,10 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.opt.persistent_caching_max_cells = (persistentCachingMaxSize * 1024 * 1024) / PstCache.MAX_CELL_SIZE;
 	}
 
+	/**
+	 * set keyboard layout
+	 * @param keymap specific keyboard layout
+	 */
 	public void setKeymap(String keymap) {
 		if (keymap == null)
 			throw new InvalidParameterException("'setKeymap' does not accept 'null' keymap parameter");
