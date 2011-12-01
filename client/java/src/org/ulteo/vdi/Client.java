@@ -26,6 +26,8 @@ import net.propero.rdp.RdpListener;
 import net.propero.rdp.rdp5.seamless.SeamlessChannel;
 
 import org.apache.log4j.*;
+import org.ulteo.utils.LayoutDetector;
+
 import gnu.getopt.Getopt;
 
 import java.awt.GraphicsEnvironment;
@@ -63,6 +65,7 @@ public class Client implements RdpListener, Runnable {
 		Rectangle dim = GraphicsEnvironment.getLocalGraphicsEnvironment()
 										   .getMaximumWindowBounds();
 
+		rc.setKeymap(LayoutDetector.get());
 		rc.setGraphic((int)(dim.width & ~3), (int)dim.height);
 		rc.setServer(fqdn_);
 		rc.setCredentials(login_, password_);

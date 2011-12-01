@@ -70,7 +70,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	protected Options opt = null;
 	protected Common common = null;
 	private RdesktopCanvas_Localised canvas = null;
-	protected String mapFile = DEFAULT_KEYMAP;
+	private String mapFile = DEFAULT_KEYMAP;
 	protected String inputMethod = null;
 	private CopyOnWriteArrayList<RdpListener> listener = new CopyOnWriteArrayList<RdpListener>();
 	private State state = State.DISCONNECTED;

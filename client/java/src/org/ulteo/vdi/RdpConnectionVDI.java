@@ -20,8 +20,6 @@
 
 package org.ulteo.vdi;
 
-import java.util.Locale;
-
 import net.propero.rdp.Common;
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopException;
@@ -38,11 +36,6 @@ public class RdpConnectionVDI extends RdpConnection {
 	public RdpConnectionVDI() throws VdiException {
 
 		super(new Options(), new Common());
-
-		String language = System.getProperty("user.language");
-		String country = System.getProperty("user.country");
-		this.mapFile =  new Locale(language, country).toString().toLowerCase();
-		this.mapFile = this.mapFile.replace('_', '-');
 		this.opt.bitmap_compression = true;
 
 		try {
