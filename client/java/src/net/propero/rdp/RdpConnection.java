@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.security.InvalidParameterException;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -388,6 +389,9 @@ public class RdpConnection implements SeamListener, Runnable{
 	}
 
 	public void setKeymap(String keymap) {
+		if (keymap == null)
+			throw new InvalidParameterException("'setKeymap' does not accept 'null' keymap parameter");
+		
 		this.mapFile = keymap;
 	}
 	
