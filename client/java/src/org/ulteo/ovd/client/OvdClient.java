@@ -45,7 +45,6 @@ import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpActions;
 import org.ulteo.rdp.RdpConnectionOvd;
-import org.ulteo.utils.LayoutDetector;
 
 public abstract class OvdClient extends Thread implements Runnable, RdpListener, RdpActions {
 	
@@ -76,7 +75,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	protected ArrayList<RdpConnectionOvd> connections = null;
 	protected CopyOnWriteArrayList<RdpConnectionOvd> performedConnections = null;
 	
-	private String keymap = LayoutDetector.get();
+	private String keymap = null;
 	private String inputMethod = null;
 	private boolean offscreenCache = false;
 	private boolean packetCompression = false;
