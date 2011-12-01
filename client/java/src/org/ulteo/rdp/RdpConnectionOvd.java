@@ -25,7 +25,6 @@ package org.ulteo.rdp;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import net.propero.rdp.Common;
 import net.propero.rdp.Options;
@@ -102,7 +101,6 @@ public class RdpConnectionOvd extends RdpConnection {
 		
 		this.appsList = new ArrayList<Application>();
 		this.mapFile = LayoutDetector.get();
-		this.detectKeymap();
 	}
 	
 	@Override
@@ -278,14 +276,6 @@ public class RdpConnectionOvd extends RdpConnection {
 		this.opt.socketTimeout = timetout;
 	}
 	
-	protected void detectKeymap() {
-		String language = System.getProperty("user.language");
-		String country = System.getProperty("user.country");
-
-		this.mapFile =  new Locale(language, country).toString().toLowerCase();
-		this.mapFile = this.mapFile.replace('_', '-');
-	}
-
 	@Override
 	public void stop() {
 		super.stop();
