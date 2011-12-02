@@ -98,6 +98,7 @@ web/Makefile
 web/applet/Makefile
 web/auth/Makefile
 web/auth/cas/Makefile
+web/classes/Makefile
 web/includes/Makefile
 web/media/Makefile
 web/media/image/Makefile
