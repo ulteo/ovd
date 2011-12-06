@@ -171,86 +171,86 @@ class Logger:
 	
 	# Static methods
 	
-	@staticmethod 
-	def initialize(name, loglevel, filename=None, stdout=False, threaded=False):
+	@classmethod 
+	def initialize(cls, name, loglevel, filename=None, stdout=False, threaded=False):
 		instance = Logger(name, loglevel, filename, stdout)
 		if threaded:
 			instance.setThreadedMode(threaded)
 		
-		Logger.setInstance(instance)
+		cls.setInstance(instance)
 	
-	@staticmethod 
-	def setInstance(instance):
-		old_instance = Logger._instance
-		Logger._instance = instance
+	@classmethod 
+	def setInstance(cls, instance):
+		old_instance = cls._instance
+		cls._instance = instance
 		
 		if old_instance is not None:
 			old_instance.setThreadedMode(False)
 	
-	@staticmethod
-	def info(message):
-		if not Logger._instance:
+	@classmethod
+	def info(cls, message):
+		if not cls._instance:
 			return
 		
-		if Logger._instance.loglevel&Logger.INFO != Logger.INFO:
+		if cls._instance.loglevel&cls.INFO != cls.INFO:
 			return
 		
-		Logger._instance.process('log_info', message)
+		cls._instance.process('log_info', message)
 	
 	
-	@staticmethod
-	def warn(message):
-		if not Logger._instance:
+	@classmethod
+	def warn(cls, message):
+		if not cls._instance:
 			return
 		
-		if Logger._instance.loglevel&Logger.WARN != Logger.WARN:
+		if cls._instance.loglevel&cls.WARN != cls.WARN:
 			return
 		
-		Logger._instance.process('log_warn', message)
+		cls._instance.process('log_warn', message)
 	
 	
-	@staticmethod
-	def error(message):
-		if not Logger._instance:
+	@classmethod
+	def error(cls, message):
+		if not cls._instance:
 			return
 		
-		if Logger._instance.loglevel&Logger.ERROR != Logger.ERROR:
+		if cls._instance.loglevel&cls.ERROR != cls.ERROR:
 			return
 		
-		Logger._instance.process('log_error', message)
+		cls._instance.process('log_error', message)
 	
 	
-	@staticmethod
-	def debug(message):
-		if not Logger._instance:
+	@classmethod
+	def debug(cls, message):
+		if not cls._instance:
 			return
 		
-		if Logger._instance.loglevel&Logger.DEBUG != Logger.DEBUG:
+		if cls._instance.loglevel&cls.DEBUG != cls.DEBUG:
 			return
 		
-		Logger._instance.process('log_debug', message)
+		cls._instance.process('log_debug', message)
 	
 	
-	@staticmethod
-	def debug2(message):
-		if not Logger._instance:
+	@classmethod
+	def debug2(cls, message):
+		if not cls._instance:
 			return
 		
-		if Logger._instance.loglevel&Logger.DEBUG_2 != Logger.DEBUG_2:
+		if cls._instance.loglevel&cls.DEBUG_2 != cls.DEBUG_2:
 			return
 		
-		Logger._instance.process('log_debug2', message)
+		cls._instance.process('log_debug2', message)
 	
 	
-	@staticmethod
-	def debug3(message):
-		if not Logger._instance:
+	@classmethod
+	def debug3(cls, message):
+		if not cls._instance:
 			return
 		
-		if Logger._instance.loglevel&Logger.DEBUG_3 != Logger.DEBUG_3:
+		if cls._instance.loglevel&cls.DEBUG_3 != cls.DEBUG_3:
 			return
 		
-		Logger._instance.process('log_debug3', message)
+		cls._instance.process('log_debug3', message)
 	
 	
 	def get_time_from_line(self, line):

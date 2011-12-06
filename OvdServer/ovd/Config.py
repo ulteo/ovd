@@ -60,105 +60,105 @@ class Config:
 	server_allow_reuse_address = System.tcp_server_allow_reuse_address()
 	
 	
-	@staticmethod
-	def read(raw_data):
-		Config.raw_data = raw_data
+	@classmethod
+	def read(cls, raw_data):
+		cls.raw_data = raw_data
 		
-		if not Config.raw_data.has_key("main") or type(Config.raw_data["main"]) is not dict:
+		if not cls.raw_data.has_key("main") or type(cls.raw_data["main"]) is not dict:
 			report_error("Missing 'main' part")
 			return False
 		
-		if Config.raw_data["main"].has_key("roles"):
-			Config.roles = Config.parse_list(Config.raw_data["main"]["roles"])
-			Config.manage_role_aliases(Config.roles)
+		if cls.raw_data["main"].has_key("roles"):
+			cls.roles = cls.parse_list(cls.raw_data["main"]["roles"])
+			cls.manage_role_aliases(cls.roles)
 		
-		if Config.raw_data["main"].has_key("session_manager"):
-			a = Config.raw_data["main"]["session_manager"]
+		if cls.raw_data["main"].has_key("session_manager"):
+			a = cls.raw_data["main"]["session_manager"]
 			if len(a)>0:
-				Config.session_manager = a.strip()
+				cls.session_manager = a.strip()
 		
-		if Config.raw_data["main"].has_key("server_allow_reuse_address"):
-			a = Config.raw_data["main"]["server_allow_reuse_address"].lower().strip()
+		if cls.raw_data["main"].has_key("server_allow_reuse_address"):
+			a = cls.raw_data["main"]["server_allow_reuse_address"].lower().strip()
 			if a not in ["true", "false"]:
 				report_error("Invalid value for configuration key 'server_allow_reuse_address', allowed values are true/false")
 			
-			Config.server_allow_reuse_address = (a == "true")
+			cls.server_allow_reuse_address = (a == "true")
 		
 		
-		if not Config.raw_data.has_key("log") or type(Config.raw_data["log"]) is not dict:
+		if not cls.raw_data.has_key("log") or type(cls.raw_data["log"]) is not dict:
 			return True
 		
-		if Config.raw_data["log"].has_key("file"):
-			Config.log_file = Config.raw_data["log"]["file"]
+		if cls.raw_data["log"].has_key("file"):
+			cls.log_file = cls.raw_data["log"]["file"]
 			
-		if Config.raw_data["log"].has_key("level"):
-			Config.log_level = 0
+		if cls.raw_data["log"].has_key("level"):
+			cls.log_level = 0
 			
 			debug_count = 0
-			for item in Config.raw_data["log"]["level"].split(' '):
+			for item in cls.raw_data["log"]["level"].split(' '):
 				item = item.lower()
 				if item == "debug":
 					debug_count+= 1
-				if Config.LOGS_FLAGS_ALIASES.has_key(item):
-					Config.log_level|= Config.LOGS_FLAGS_ALIASES[item]
+				if cls.LOGS_FLAGS_ALIASES.has_key(item):
+					cls.log_level|= cls.LOGS_FLAGS_ALIASES[item]
 			
 			if debug_count>1:
-				Config.log_level|= Logger.DEBUG_2
+				cls.log_level|= Logger.DEBUG_2
 				if debug_count>=3:
-					Config.log_level|= Logger.DEBUG_3
+					cls.log_level|= Logger.DEBUG_3
 		
-		if Config.raw_data["log"].has_key("thread"):
-			Config.log_threaded = (Config.raw_data["log"]["thread"].lower() == "true")
+		if cls.raw_data["log"].has_key("thread"):
+			cls.log_threaded = (cls.raw_data["log"]["thread"].lower() == "true")
 		
 		return True
 	
 	
-	@staticmethod
-	def is_valid():
-		if len(Config.roles) == 0:
+	@classmethod
+	def is_valid(cls):
+		if len(cls.roles) == 0:
 			report_error("No role given")
 			return False
 		
-		if Config.session_manager is None:
+		if cls.session_manager is None:
 			report_error("No session manager given")
 			return False
-		if " " in Config.session_manager:
+		if " " in cls.session_manager:
 			report_error("Invalid session manager given")
 			return False
-	#	if not is_host(Config.session_manager):
+	#	if not is_host(cls.session_manager):
 	#		return False
 		
-		if Config.log_file is not None:
+		if cls.log_file is not None:
 			try:
-				f = file(Config.log_file, "a")
+				f = file(cls.log_file, "a")
 				f.close()
 			except IOError:
-				report_error("Unable to write into log file '%s'"%(Config.log_file))
+				report_error("Unable to write into log file '%s'"%(cls.log_file))
 				return False
 		
 		return True
 	
 	
-	@staticmethod
-	def manage_role_aliases(l):
+	@classmethod
+	def manage_role_aliases(cls, l):
 		for item in list(l):
-			if not Config.ROLES_ALIASES.has_key(item):
+			if not cls.ROLES_ALIASES.has_key(item):
 				continue
 			
 			l.remove(item)
-			v = Config.ROLES_ALIASES[item]
+			v = cls.ROLES_ALIASES[item]
 			if v not in l:
 				l.append(v)
 	
 	
-	@staticmethod
-	def parse_list(data):
+	@classmethod
+	def parse_list(cls, data):
 		return dict.fromkeys(data.split()).keys()
 	
 	
-	@staticmethod
-	def get_role_dict(role):
-		if not Config.raw_data.has_key(role):
+	@classmethod
+	def get_role_dict(cls, role):
+		if not cls.raw_data.has_key(role):
 			return {}
 		
-		return Config.raw_data[role]
+		return cls.raw_data[role]

@@ -44,32 +44,32 @@ class Config:
 	root_redirection = None
 	http_keep_alive = True
 
-	@staticmethod
-	def init(infos):
+	@classmethod
+	def init(cls, infos):
 		if infos.has_key("address"):
-			Config.address = infos["address"]
+			cls.address = infos["address"]
 		
 		if infos.has_key("port") and infos["port"].isdigit():
 			try:
-				Config.port = int(infos["port"])
+				cls.port = int(infos["port"])
 			except ValueError:
 				Logger.error("Invalid int number for port")
 		
 		if infos.has_key("max_process"):
 			try:
-				Config.max_process = int(infos["max_process"])
+				cls.max_process = int(infos["max_process"])
 			except ValueError:
 				Logger.error("Invalid int number for max_process")
 		
 		if infos.has_key("max_connection"):
 			try:
-				Config.max_connection = int(infos["max_connection"])
+				cls.max_connection = int(infos["max_connection"])
 			except ValueError:
 				Logger.error("Invalid int number for max_process")
 		
 		if infos.has_key("process_timeout"):
 			try:
-				Config.process_timeout = int(infos["process_timeout"])
+				cls.process_timeout = int(infos["process_timeout"])
 			except ValueError:
 				Logger.error("Invalid int number for process_timeout")
 		
@@ -94,24 +94,24 @@ class Config:
 					port = url.port
 				else:
 					port = protocol
-				Config.web_client = (protocol, ip, port)
+				cls.web_client = (protocol, ip, port)
 		
 		if infos.has_key("admin_redirection"):
 			if infos["admin_redirection"].lower() == "true":
-				Config.admin_redirection = True
+				cls.admin_redirection = True
 			elif infos["admin_redirection"].lower() == "false":
-				Config.admin_redirection = False
+				cls.admin_redirection = False
 			else:
 				Logger.error("Invalid value for 'admin_redirection' option")
 		
 		if infos.has_key("root_redirection") and infos["root_redirection"]:
-			Config.root_redirection = infos["root_redirection"].lstrip('/')
+			cls.root_redirection = infos["root_redirection"].lstrip('/')
 		
 		if infos.has_key("http_keep_alive"):
 			if infos["http_keep_alive"].lower() == "false":
-				Config.http_keep_alive = False
+				cls.http_keep_alive = False
 			elif infos["http_keep_alive"].lower() == "true":
-				Config.http_keep_alive = True
+				cls.http_keep_alive = True
 			else:
 				Logger.error("Invalid value for 'http_keep_alive' option")
 		

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -36,57 +36,57 @@ class Config:
 	dav_uid = None
 	dav_passwd_file = "/var/spool/ulteo/ovd/fs.dav.passwd"
 	
-	@staticmethod
-	def init(infos):
+	@classmethod
+	def init(cls, infos):
 		if infos.has_key("user"):
-			Config.user = infos["user"]
+			cls.user = infos["user"]
 		
 		
 		return True
 	
 	
-	@staticmethod
-	def init_role():
+	@classmethod
+	def init_role(cls):
 		try:
-			infos = pwd.getpwnam(Config.user)
+			infos = pwd.getpwnam(cls.user)
 		except KeyError, err:
-			Logger.info("FileServer Config failed: no such user '%s'"%(Config.user))
+			Logger.info("FileServer Config failed: no such user '%s'"%(cls.user))
 			return False
 		
-		Config.uid = infos[2]
-		Config.gid = infos[3]
-		Config.spool = infos[5]
+		cls.uid = infos[2]
+		cls.gid = infos[3]
+		cls.spool = infos[5]
 		
-		if not os.path.isdir(Config.spool):
-			Logger.info("FileServer Config failed: no such directory '%s'"%(Config.spool))
+		if not os.path.isdir(cls.spool):
+			Logger.info("FileServer Config failed: no such directory '%s'"%(cls.spool))
 			return False
 		
 		try:
-			infos = grp.getgrgid(Config.gid)
+			infos = grp.getgrgid(cls.gid)
 		except KeyError, err:
-			Logger.info("FileServer Config failed: no such group '%d'"%(Config.gid))
+			Logger.info("FileServer Config failed: no such group '%d'"%(cls.gid))
 			return False
 		
-		Config.group = infos[0]
+		cls.group = infos[0]
 		
 		try:
-			infos = pwd.getpwnam(Config.dav_user)
+			infos = pwd.getpwnam(cls.dav_user)
 		except KeyError, err:
-			Logger.info("FileServer Config failed: no such user '%s'"%(Config.dav_user))
+			Logger.info("FileServer Config failed: no such user '%s'"%(cls.dav_user))
 			return False
 		
-		Config.dav_uid = infos[2]
+		cls.dav_uid = infos[2]
 		
-		if not os.path.isdir(os.path.dirname(Config.dav_passwd_file)):
-			Logger.info("FileServer Config failed: no such directory '%s'"%(os.path.dirname(Config.dav_passwd_file)))
+		if not os.path.isdir(os.path.dirname(cls.dav_passwd_file)):
+			Logger.info("FileServer Config failed: no such directory '%s'"%(os.path.dirname(cls.dav_passwd_file)))
 			return False
 		
 		try:
-			f = file(Config.dav_passwd_file, "w")
+			f = file(cls.dav_passwd_file, "w")
 			f.close()
-			os.chown(Config.dav_passwd_file, Config.dav_uid, -1)
+			os.chown(cls.dav_passwd_file, cls.dav_uid, -1)
 		except Exception, err:
-			Logger.info("FileServer unable to write in '%s': %s"%(Config.dav_passwd_file, str(err)))
+			Logger.info("FileServer unable to write in '%s': %s"%(cls.dav_passwd_file, str(err)))
 			return False
 		
 		return True

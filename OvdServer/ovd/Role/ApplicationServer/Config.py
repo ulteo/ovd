@@ -28,15 +28,15 @@ class Config:
 	clean_dump_archive = True
 	
 	
-	@staticmethod
-	def init(infos):
+	@classmethod
+	def init(cls, infos):
 		if infos.has_key("multithread"):
-			Config.multithread = (infos["multithread"].lower() == "true")
+			cls.multithread = (infos["multithread"].lower() == "true")
 		
 		if infos.has_key("checkshell"):
-			Config.checkShell = (infos["checkshell"].lower() == "true")
+			cls.checkShell = (infos["checkshell"].lower() == "true")
 		
 		if infos.has_key("clean_dump_archive"):
-			Config.clean_dump_archive = (infos["clean_dump_archive"].lower() == "true")
+			cls.clean_dump_archive = (infos["clean_dump_archive"].lower() == "true")
 		
 		return True
