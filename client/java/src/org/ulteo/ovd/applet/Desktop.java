@@ -42,8 +42,7 @@ public class Desktop extends OvdApplet implements FocusListener {
 	protected void _init() {
 		((OvdClientDesktopApplet)this.ovd).createRDPConnection(this.aps);
 		
-		BorderLayout layout = new BorderLayout();
-		this.setLayout(layout);
+		this.setLayout(new BorderLayout());
 	}
 	
 	
