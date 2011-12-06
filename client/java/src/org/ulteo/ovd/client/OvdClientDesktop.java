@@ -45,6 +45,9 @@ public abstract class OvdClientDesktop extends OvdClient {
 
 	public OvdClientDesktop(SessionManagerCommunication smComm, Callback obj, boolean persistent) {
 		super(smComm, obj, persistent);
+		
+		// extend the size of the list for receiving the future desktop connection
+		this.connections.add(null);
 	}
 
 	protected abstract Properties getProperties();
@@ -107,7 +110,7 @@ public abstract class OvdClientDesktop extends OvdClient {
 		rc.setCredentials(server.getLogin(), server.getPassword());
 		rc.setAllDesktopEffectsEnabled(properties.isDesktopEffectsEnabled());
 		this.configure(rc);
-		this.connections.add(rc);
+		this.connections.set(0, rc);
 		return rc;
 	}
 	
@@ -116,11 +119,7 @@ public abstract class OvdClientDesktop extends OvdClient {
 	 * @return an {@link RdpConnectionOvd}, <code>null</code> if not created yet 
 	 */
 	public RdpConnectionOvd getConnection() {
-		try {
-			return this.connections.get(0);
-		} catch (IndexOutOfBoundsException e) {
-			return null;
-		}
+		return this.connections.get(0);
 	}
 
 	@Override
