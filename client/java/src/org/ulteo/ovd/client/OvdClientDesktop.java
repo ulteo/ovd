@@ -106,6 +106,7 @@ public abstract class OvdClientDesktop extends OvdClient {
 		rc.setCredentials(server.getLogin(), server.getPassword());
 		rc.setAllDesktopEffectsEnabled(properties.isDesktopEffectsEnabled());
 		this.configure(rc);
+		this.connections.add(rc);
 		return rc;
 	}
 

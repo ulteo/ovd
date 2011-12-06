@@ -63,7 +63,6 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 	@Override
 	public RdpConnectionOvd createRDPConnection(ServerAccess server) {
 		RdpConnectionOvd rc = super.createRDPConnection(server);
-		this.connections.add(rc);
 		this.customizeConnection(rc);
 		rc.addRdpListener(this);
 		return rc;

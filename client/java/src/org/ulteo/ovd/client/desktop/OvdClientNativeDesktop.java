@@ -97,7 +97,6 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClien
 		RdpConnectionOvd rc = createRDPConnection(server);
 		if (rc != null) {
 			adjustDesktopSize(rc);
-			this.connections.add(rc);
 		}
 	}
 
