@@ -115,9 +115,14 @@ public class Desktop extends OvdApplet implements FocusListener {
 		}
 	}
 
-       public void switchBackFullscreenWindow() {
+	// Methods called by Javascript
+	
+	/**
+	 * switch back fullscreen window requested by javascript
+	 */
+	public void switchBackFullscreenWindow() {
 		System.out.println("switch back fullscreen window requested by javascript");
-		Frame w = (Frame)((OvdClientDesktopApplet) this.ovd).getFullscreenWindow();
+		Frame w = (Frame) ((OvdClientDesktopApplet) this.ovd).getFullscreenWindow();
 		w.setExtendedState(Frame.NORMAL);
-       }
+	}
 }
