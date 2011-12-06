@@ -32,7 +32,6 @@ import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.ovd.client.OvdClientDesktop;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
-import org.ulteo.rdp.RdpConnectionOvd;
 
 public class Desktop extends OvdApplet implements FocusListener {
 
@@ -43,15 +42,13 @@ public class Desktop extends OvdApplet implements FocusListener {
 	private String token = null;
 	private boolean fullscreenMode = false;
 	
-	private RdpConnectionOvd rc = null;
-	
 	@Override
 	protected void _init() {
 		((OvdClientDesktopApplet)this.ovd).setFullscreen(this.fullscreenMode);
 
 		ServerAccess aps = new ServerAccess(this.server, this.port, this.username, this.password);
 		aps.setGatewayToken(this.token);
-		this.rc = ((OvdClientDesktopApplet)this.ovd).createRDPConnection(aps);
+		((OvdClientDesktopApplet)this.ovd).createRDPConnection(aps);
 		
 		BorderLayout layout = new BorderLayout();
 		this.setLayout(layout);
@@ -60,7 +57,7 @@ public class Desktop extends OvdApplet implements FocusListener {
 	
 	@Override
 	protected void _start() {	
-		((OvdClientDesktop)this.ovd).adjustDesktopSize(this.rc);
+		((OvdClientDesktop)this.ovd).adjustDesktopSize();
 	}
 	
 	@Override

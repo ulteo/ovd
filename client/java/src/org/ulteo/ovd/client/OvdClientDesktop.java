@@ -49,7 +49,8 @@ public abstract class OvdClientDesktop extends OvdClient {
 
 	protected abstract Properties getProperties();
 	
-	public void adjustDesktopSize(RdpConnectionOvd rc) {
+	public void adjustDesktopSize() {
+		RdpConnectionOvd rc = this.getConnection();
 		if (rc == null)
 			return;
 
@@ -108,6 +109,18 @@ public abstract class OvdClientDesktop extends OvdClient {
 		this.configure(rc);
 		this.connections.add(rc);
 		return rc;
+	}
+	
+	/**
+	 * return the unique {@link RdpConnectionOvd} of this desktop client
+	 * @return an {@link RdpConnectionOvd}, <code>null</code> if not created yet 
+	 */
+	public RdpConnectionOvd getConnection() {
+		try {
+			return this.connections.get(0);
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 
 	@Override

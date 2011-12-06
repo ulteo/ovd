@@ -94,10 +94,8 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClien
 	@Override
 	public void createRDPConnections() {
 		ServerAccess server = this.smComm.getServers().get(0);
-		RdpConnectionOvd rc = createRDPConnection(server);
-		if (rc != null) {
-			adjustDesktopSize(rc);
-		}
+		this.createRDPConnection(server);
+		this.adjustDesktopSize();
 	}
 
 	@Override
