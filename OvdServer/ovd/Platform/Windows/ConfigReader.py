@@ -44,7 +44,7 @@ class ConfigReader(AbstractConfigReader):
 		data = {}
 		
 		try:
-			hkey = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, cls.CONFIG_LOCATION, 0, win32con.KEY_ENUMERATE_SUB_KEYS|win32con.KEY_QUERY_VALUE)
+			hkey = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, cls.CONFIG_LOCATION, 0, win32con.KEY_ENUMERATE_SUB_KEYS|win32con.KEY_QUERY_VALUE|win32con.KEY_WOW64_64KEY)
 		except pywintypes.error, err:
 			ConfigModule.report_error("Unable to open '%s' from registry"%(cls.CONFIG_LOCATION))
 			return data
@@ -58,7 +58,7 @@ class ConfigReader(AbstractConfigReader):
 			location = os.path.join(cls.CONFIG_LOCATION, subkey)
 			
 			try:
-				hkey = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, location, 0, win32con.KEY_QUERY_VALUE)
+				hkey = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, location, 0, win32con.KEY_QUERY_VALUE|win32con.KEY_WOW64_64KEY)
 			except pywintypes.error, err:
 				ConfigModule.report_error("Unable to open '%s' from registry"%(location))
 				return data
