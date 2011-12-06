@@ -35,20 +35,13 @@ import org.ulteo.ovd.sm.ServerAccess;
 
 public class Desktop extends OvdApplet implements FocusListener {
 
-	protected int port = 0;
-	protected String server = null;
-	private String username = null;
-	private String password = null;
-	private String token = null;
 	private boolean fullscreenMode = false;
+	private ServerAccess aps = null;
 	
 	@Override
 	protected void _init() {
 		((OvdClientDesktopApplet)this.ovd).setFullscreen(this.fullscreenMode);
-
-		ServerAccess aps = new ServerAccess(this.server, this.port, this.username, this.password);
-		aps.setGatewayToken(this.token);
-		((OvdClientDesktopApplet)this.ovd).createRDPConnection(aps);
+		((OvdClientDesktopApplet)this.ovd).createRDPConnection(this.aps);
 		
 		BorderLayout layout = new BorderLayout();
 		this.setLayout(layout);
@@ -65,10 +58,7 @@ public class Desktop extends OvdApplet implements FocusListener {
 	
 	@Override
 	protected void _destroy() {
-		this.server = null;
-		this.username = null;
-		this.password = null;
-		this.token = null;
+		this.aps = null;
 	}
 	
 	@Override
@@ -78,17 +68,17 @@ public class Desktop extends OvdApplet implements FocusListener {
 	
 	@Override
 	public void readParameters() throws Exception {
-		this.server = this.getParameterNonEmpty("server");
-		this.username = this.getParameterNonEmpty("username");
-		this.password = this.getParameterNonEmpty("password");
-		this.token = this.getParameter("token");
-		String strPort = this.getParameterNonEmpty("port");
+		Integer port;
 		try {
-			this.port = Integer.parseInt(strPort);
+			port = Integer.parseInt(this.getParameterNonEmpty("port"));
 		}
 		catch (NumberFormatException e) {
 			throw new Exception("Unable to get valid port from applet parameters: "+e.getMessage());
 		}
+		
+		this.aps = new ServerAccess(this.getParameterNonEmpty("server"), port, 
+				this.getParameterNonEmpty("username"), this.getParameterNonEmpty("password"));
+		this.aps.setGatewayToken(this.getParameter("token"));
 		
 		if (this.getParameter("fullscreen") != null)
 			this.fullscreenMode = true;
