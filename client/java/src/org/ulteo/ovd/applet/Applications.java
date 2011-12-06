@@ -95,8 +95,6 @@ public class Applications extends OvdApplet {
 			registry_dll = FilesOp.exportJarResource("WindowsLibs/32/ICE_JNIRegistry.dll");
 			LibraryLoader.addToJavaLibraryPath(registry_dll.getParentFile());
 		}
-
-		((OvdClientApplicationsApplet)this.ovd).setPerformDesktopIntegration(this.local_integration);
 		
 		this.spooler = new SpoolOrder((OvdClientApplicationsApplet) this.ovd);
 		this.serverApps = Collections.synchronizedMap(new HashMap<Integer, ArrayList<Application>>());
@@ -153,7 +151,9 @@ public class Applications extends OvdApplet {
 		
 		properties.setDesktopIcons(this.local_integration);
 		SessionManagerCommunication smComm = new SessionManagerCommunication(this.sm_host, this.sm_port, true);
-		return new OvdClientApplicationsApplet(smComm, properties, this);
+		OvdClientApplicationsApplet client = new OvdClientApplicationsApplet(smComm, properties, this);
+		client.setPerformDesktopIntegration(this.local_integration);
+		return client;
 	}
 	
 	// ********

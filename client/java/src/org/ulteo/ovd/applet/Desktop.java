@@ -40,7 +40,6 @@ public class Desktop extends OvdApplet implements FocusListener {
 	
 	@Override
 	protected void _init() {
-		((OvdClientDesktopApplet)this.ovd).setFullscreen(this.fullscreenMode);
 		((OvdClientDesktopApplet)this.ovd).createRDPConnection(this.aps);
 		
 		BorderLayout layout = new BorderLayout();
@@ -86,7 +85,9 @@ public class Desktop extends OvdApplet implements FocusListener {
 	
 	@Override
 	protected OvdClient createOvdClient(Properties properties) {
-		return new OvdClientDesktopApplet(properties, this);
+		OvdClientDesktopApplet client = new OvdClientDesktopApplet(properties, this);
+		client.setFullscreen(this.fullscreenMode);
+		return client;
 	}
 	
 	// FocusListener's method interface
