@@ -184,7 +184,7 @@ public class Applications extends OvdApplet {
 	public boolean serverConnect(int JSId, String host, int port, String gw_token, String login, String password) {
 		ServerAccess server = new ServerAccess(host, port, login, password);
 		server.applications = serverApps.get(JSId);;
-		server.token = gw_token;
+		server.setGatewayToken(gw_token);
 		this.spooler.add(new OrderServer(JSId, server));
 		return true;
 	}

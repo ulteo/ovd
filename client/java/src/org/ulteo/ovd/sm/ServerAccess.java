@@ -37,7 +37,7 @@ public class ServerAccess {
 	 * token use for the gateway mode.
 	 * if this variable is not null, the gateway mode will be used 
 	 */
-	public String token = null;
+	private String token = null;
 	
 	public List<Application> applications = null;
 	
@@ -66,6 +66,22 @@ public class ServerAccess {
 		return this.password;
 	}
 	
+	/**
+	 * get gateway token
+	 * @return gateway token
+	 */
+	public String getGatewayToken() {
+		return token;
+	}
+
+	/**
+	 * set the gateway token
+	 * @param token gateway token
+	 */
+	public void setGatewayToken(String token) {
+		this.token = token;
+	}
+
 	@Override
 	public String toString() {
 		boolean gw = (token != null);

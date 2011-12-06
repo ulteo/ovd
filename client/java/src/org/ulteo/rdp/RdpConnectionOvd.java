@@ -360,10 +360,10 @@ public class RdpConnectionOvd extends RdpConnection {
 		if (server == null)
 			throw new InvalidParameterException("ServerAccess cannot be null");
 		
-		if (server.token == null || server.token.equals("")) {
+		if (server.getGatewayToken() == null || server.getGatewayToken().equals("")) {
 			Logger.debug("gateway cannot be enable");
 		} else {
-			this.opt.rdpCookie.addCookieElement("token", server.token);
+			this.opt.rdpCookie.addCookieElement("token", server.getGatewayToken());
 			this.opt.port = server.getPort();
 			this.opt.socketFactory = new TCPSSLSocketFactory(server.getHost(), server.getPort());
 			Logger.debug("gateway enabled");
