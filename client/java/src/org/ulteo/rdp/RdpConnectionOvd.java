@@ -360,7 +360,7 @@ public class RdpConnectionOvd extends RdpConnection {
 		if (server == null)
 			throw new InvalidParameterException("ServerAccess cannot be null");
 		
-		if (server.getGatewayToken() == null || server.getGatewayToken().equals("")) {
+		if (server.getGatewayToken() == null || server.getGatewayToken().isEmpty()) {
 			Logger.debug("gateway cannot be enable");
 		} else {
 			this.opt.rdpCookie.addCookieElement("token", server.getGatewayToken());
