@@ -95,9 +95,9 @@ function show_default() {
 		echo '<form action="actions.php" method="post">';
 		echo '<input type="hidden" name="name" value="News" />';
 		echo '<input type="hidden" name="action" value="add" />';
-		echo '<tr><td><strong>Title:</strong></td><td><input type="text" name="news_title" value="" /></td></tr>';
-		echo '<tr><td><strong>Content:</strong></td><td><textarea name="news_content" cols="40" rows="4"></textarea></td></tr>';
-		echo '<tr><td><strong>Date:</strong></td><td>'.date('r').'</td></tr>';
+		echo '<tr><td><strong>'._('Title:').'</strong></td><td><input type="text" name="news_title" value="" /></td></tr>';
+		echo '<tr><td><strong>'._('Content:').'</strong></td><td><textarea name="news_content" cols="40" rows="4"></textarea></td></tr>';
+		echo '<tr><td><strong>'._('Date:').'</strong></td><td>'.date('r').'</td></tr>';
 		echo '<tr><td colspan="2"><input type="submit" value="'._('Add this news').'" /></td></tr>';
 		echo '</form>';
 	}
