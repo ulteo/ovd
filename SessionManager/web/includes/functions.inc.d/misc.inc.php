@@ -299,12 +299,11 @@ function domain2suffix($domain_, $separator='dc') {
 		if (! count($buf))
 			return;
 
-		$str='';
+		$build = array();
 		foreach($buf as $d)
-			$str.=$separator.'='.$d.',';
+			$build []= $separator.'='.$d;
 
-		$str = substr($str, 0,-1);
-		return $str;
+		return implode(',', $build);
 }
 
 function suffix2domain($suffix_, $separator='dc') {
