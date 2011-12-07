@@ -45,7 +45,6 @@ public class Desktop extends OvdApplet implements FocusListener {
 		this.setLayout(new BorderLayout());
 	}
 	
-	
 	@Override
 	protected void _start() {
 		((OvdClientDesktop)this.ovd).adjustDesktopSize();
