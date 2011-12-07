@@ -127,7 +127,7 @@ class SMRequestManager():
 			rootNode = document.documentElement
 			rootNode.setAttribute("name", str(self.name))
 			req.add_header("Content-type", "text/xml; charset=UTF-8")
-			req.add_data(document.toxml())
+			req.add_data(document.toxml("UTF-8"))
 		
 		try:
 			stream = urllib2.urlopen(req)
