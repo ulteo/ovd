@@ -323,6 +323,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	public abstract RdpConnectionOvd createRDPConnection(ServerAccess server);
 
 	/* RdpListener */
+	
 	public void connected(RdpConnection co) {
 		Logger.info("Connected to "+co);
 
@@ -357,7 +358,10 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.performedConnections.add((RdpConnectionOvd) co);
 	}
 
+	public void seamlessEnabled(RdpConnection co) {}
+
 	/* RdpActions */
+	
 	public void disconnect(RdpConnection rc) {
 		try {
 			((RdpConnectionOvd) rc).sendLogoff();
@@ -365,8 +369,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 			Logger.warn(rc.getServer()+": "+ex.getMessage());
 		}
 	}
-
-	public void seamlessEnabled(RdpConnection co) {}
 
 	public void disconnectAll() {
 		if (! this.connectionIsActive)
