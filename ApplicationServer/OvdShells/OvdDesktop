@@ -27,36 +27,11 @@ import sys
 import time
 
 from ovd_shells.Platform import _platform as Platform
+from ovd_shells.Platform.ExternalAppsClient import ExternalAppsClient
 from ovd_shells.Platform.Folders import Folders
 from ovd_shells.Platform.InstancesManager import InstancesManager
 from ovd_shells import Util
 
-def generateConfFile(path_file_, sm_, token_):
-	# for now the java client does not support a regular ini file
-	#try:
-			#configP = ConfigParser.ConfigParser()
-	
-			#configP.add_section('user')
-			#configP.add_section('server')
-	
-			#configP.set("user", "token", token_)
-			#configP.set("server", "host", sm_)
-	
-			#f = open(path_file_,'w')
-			#configP.write(f)
-			#f.close() # ..??
-			#return True
-	#except Exception, err:
-			#return False
-	try:
-			f = open(path_file_,'w')
-			f.write("[token]\ntoken=%s\n\n[server]\nhost=%s\n\n"%(token_, sm_))
-			f.close()
-	except Exception, err:
-			print "err ",err
-			return False
-	
-	return True
 
 def main():
 	if os.environ.has_key("OVD_SESSION_DIR"):
@@ -87,37 +62,17 @@ def main():
 	
 	
 	# launch the integrated client
-	sm_file = os.path.join(user_sdir, "sm")
-	token_file = os.path.join(user_sdir, "token")
-	configuration_file = os.path.join(os.path.expanduser('~'), ".integrateclient.conf")
+	external_client = ExternalAppsClient(user_sdir)
 	
-	everything_is_fine = True
-	
-	if os.path.exists(sm_file) == False:
-		# TODO: do a log error sm_file
-		everything_is_fine = False
-	else:
-		f = open(sm_file, "r")
-		sm_value = f.read().strip()
-		f.close()
-	
-	if os.path.exists(token_file) == False:
-		# TODO: do a log : error token_file
-		everything_is_fine = False
-	else:
-		f = open(token_file, "r")
-		token_value = f.read().strip()
-		f.close()
+	everything_is_fine = external_client.load_config()
 	
 	if everything_is_fine:
-		if generateConfFile(configuration_file, sm_value, token_value) == False:
-			# TODO: do a log error configuration_files
-			everything_is_fine = False
-		
+		everything_is_fine = external_client.generate_conf_file()
+	
 	if everything_is_fine:
 		# actually launch the client
 		try:
-			Platform.launchIntegratedClient(configuration_file)
+			external_client.launch()
 		except Exception, err:
 			print "Unable to start external apps", err
 	
