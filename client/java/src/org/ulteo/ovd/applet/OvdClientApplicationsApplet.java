@@ -34,29 +34,33 @@ import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
-	private Properties properties = null;
 
 	// matching variable associate the RDP connection list index with the JS RDP connection id
 	private ConcurrentHashMap<Integer, RdpConnectionOvd> matching = null;
 
 	private OvdApplet applet = null;
+	
+	/**
+	 * enable desktop effect in RDP connection
+	 */
+	private boolean enableDesktopEffect;
 
-	public OvdClientApplicationsApplet(SessionManagerCommunication smComm, Properties properties_, OvdApplet applet_) throws ClassCastException {
+	public OvdClientApplicationsApplet(SessionManagerCommunication smComm, Properties properties, OvdApplet applet_) throws ClassCastException {
 		super(smComm);
 
-		this.properties = properties_;
 		this.applet = applet_;
 		this.matching = new ConcurrentHashMap<Integer, RdpConnectionOvd>();
 		this.showDesktopIcons = true;
 
-		this.setPerformDesktopIntegration(this.properties.isDesktopIcons());
-		this.configureRDP(this.properties);
+		this.enableDesktopEffect = properties.isDesktopEffectsEnabled();
+		this.setPerformDesktopIntegration(properties.isDesktopIcons());
+		this.configureRDP(properties);
 	}
 
 	@Override
 	protected void customizeConnection(RdpConnectionOvd co) {
 		super.customizeConnection(co);
-		co.setAllDesktopEffectsEnabled(this.properties.isDesktopEffectsEnabled());
+		co.setAllDesktopEffectsEnabled(this.enableDesktopEffect);
 	}
 
 	@Override
