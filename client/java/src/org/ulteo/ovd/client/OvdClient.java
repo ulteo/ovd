@@ -384,6 +384,12 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.isCancelled = true;
 		this.obj.sessionDisconnecting();
 	}
+	
+	@Override
+	public void exit(int return_code) {
+		this.exitAfterLogout = true;
+		this.disconnectAll();
+	}
 
 	public void performDisconnectAll() {
 		final Timer forceDisconnectionTimer = new Timer();
@@ -420,12 +426,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		}
 
 		forceDisconnectionTimer.schedule(forceDisconnectionTask, delay);
-	}
-	
-	public void exit(int return_code) {
-		this.exitAfterLogout = true;
-
-		this.disconnectAll();
 	}
 	
 	/**
