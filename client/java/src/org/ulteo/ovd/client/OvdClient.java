@@ -324,6 +324,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 	/* RdpListener */
 	
+	@Override
 	public void connected(RdpConnection co) {
 		Logger.info("Connected to "+co);
 
@@ -333,10 +334,12 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.display(co);
 	}
 
+	@Override
 	public void connecting(RdpConnection co) {
 		Logger.info("Connecting to "+co);
 	}
 
+	@Override
 	public void disconnected(RdpConnection co) {
 		co.removeRdpListener(this);
 
@@ -352,16 +355,19 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		}
 	}
 
+	@Override
 	public void failed(RdpConnection co, String msg) {
 		Logger.error("Connection to "+co+" failed: "+msg);
 
 		this.performedConnections.add((RdpConnectionOvd) co);
 	}
 
+	@Override
 	public void seamlessEnabled(RdpConnection co) {}
 
 	/* RdpActions */
-	
+
+	@Override
 	public void disconnect(RdpConnection rc) {
 		try {
 			((RdpConnectionOvd) rc).sendLogoff();
@@ -370,6 +376,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		}
 	}
 
+	@Override
 	public void disconnectAll() {
 		if (! this.connectionIsActive)
 			return;
