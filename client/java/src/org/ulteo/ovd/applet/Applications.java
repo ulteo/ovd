@@ -90,12 +90,6 @@ public class Applications extends OvdApplet {
 	
 	@Override
 	protected void _init() throws FileNotFoundException {
-		if (OSTools.isWindows()) {
-			jshortcut_dll = FilesOp.exportJarResource("WindowsLibs/32/jshortcut.dll");
-			registry_dll = FilesOp.exportJarResource("WindowsLibs/32/ICE_JNIRegistry.dll");
-			LibraryLoader.addToJavaLibraryPath(registry_dll.getParentFile());
-		}
-		
 		this.spooler = new SpoolOrder((OvdClientApplicationsApplet) this.ovd);
 		this.serverApps = Collections.synchronizedMap(new HashMap<Integer, ArrayList<Application>>());
 		
@@ -147,6 +141,17 @@ public class Applications extends OvdApplet {
 		if (properties.isPrinters()) {
 			SeamlessFrame.focusManager = focusManager;
 			SeamlessPopup.focusManager = focusManager;
+		}
+		
+		// DLL must be exported before the client creation object
+		if (OSTools.isWindows()) {
+			try {
+				jshortcut_dll = FilesOp.exportJarResource("WindowsLibs/32/jshortcut.dll");
+				registry_dll = FilesOp.exportJarResource("WindowsLibs/32/ICE_JNIRegistry.dll");
+			} catch (FileNotFoundException e) {
+				this.local_integration = false;
+			}
+			LibraryLoader.addToJavaLibraryPath(registry_dll.getParentFile());
 		}
 		
 		properties.setDesktopIcons(this.local_integration);
