@@ -151,9 +151,7 @@ public class Applications extends OvdApplet {
 		
 		properties.setDesktopIcons(this.local_integration);
 		SessionManagerCommunication smComm = new SessionManagerCommunication(this.sm_host, this.sm_port, true);
-		OvdClientApplicationsApplet client = new OvdClientApplicationsApplet(smComm, properties, this);
-		client.setPerformDesktopIntegration(this.local_integration);
-		return client;
+		return new OvdClientApplicationsApplet(smComm, properties, this);
 	}
 	
 	// ********

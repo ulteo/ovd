@@ -49,6 +49,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 		this.matching = new ConcurrentHashMap<Integer, RdpConnectionOvd>();
 		this.showDesktopIcons = true;
 
+		this.setPerformDesktopIntegration(this.properties.isDesktopIcons());
 		this.configureRDP(this.properties);
 	}
 
