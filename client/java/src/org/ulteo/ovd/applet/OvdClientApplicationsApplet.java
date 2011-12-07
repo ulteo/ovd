@@ -35,7 +35,9 @@ import org.ulteo.rdp.RdpConnectionOvd;
 
 public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 
-	// matching variable associate the RDP connection list index with the JS RDP connection id
+	/**
+	 * matching variable associate the RDP connection list index with the JS RDP connection id
+	 */
 	private ConcurrentHashMap<Integer, RdpConnectionOvd> matching = null;
 
 	private OvdApplet applet = null;
