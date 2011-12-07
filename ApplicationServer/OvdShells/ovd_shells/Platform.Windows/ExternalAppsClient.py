@@ -66,7 +66,7 @@ class ExternalAppsClient(AbstractExternalAppsClient):
 			return None
 		
 		java_cmd = java_cmd.replace("%1", jar_location)
-		java_cmd = java_cmd.replace("%*", '-c "%s" -o "%s"'%(self.configuration_file, os.path.join(self.directory, "dump-externalapps.txt")))
+		java_cmd = java_cmd.replace("%*", '-c "%s" -o "%s"'%(self.configuration_file, self.log_file))
 		
 		(hProcess, hThread, dwProcessId, dwThreadId) = win32process.CreateProcess(None, java_cmd, None , None, False, win32process.CREATE_NO_WINDOW , None, folder, win32process.STARTUPINFO())
 		win32file.CloseHandle(hProcess)

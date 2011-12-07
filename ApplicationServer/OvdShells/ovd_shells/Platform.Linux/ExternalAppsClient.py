@@ -29,5 +29,5 @@ class ExternalAppsClient(AbstractExternalAppsClient):
 		if os.path.exists(self.configuration_file) == False:
 			return False
 		
-		Platform.launch('OVDExternalAppsClient -c %s -o "%s"'%(self.configuration_file, os.path.join(self.directory, "dump-externalapps.txt")))
+		Platform.launch('OVDExternalAppsClient -c %s -o "%s"'%(self.configuration_file, self.log_file))
 		return True

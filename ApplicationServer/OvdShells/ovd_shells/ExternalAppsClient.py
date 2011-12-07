@@ -26,6 +26,7 @@ class ExternalAppsClient:
 		self.sm = None
 		self.token = None
 		self.configuration_file = os.path.join(os.path.expanduser('~'), ".integrateclient.conf")
+		self.log_file = os.path.join(self.directory, "dump-externalapps.txt")
 	
 	
 	def load_config(self):
