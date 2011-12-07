@@ -47,7 +47,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	 */
 	private boolean enableDesktopEffect;
 
-	public OvdClientApplicationsApplet(SessionManagerCommunication smComm, Properties properties, OvdApplet applet_) throws ClassCastException {
+	public OvdClientApplicationsApplet(SessionManagerCommunication smComm, Properties properties, OvdApplet applet_) {
 		super(smComm);
 
 		this.applet = applet_;
