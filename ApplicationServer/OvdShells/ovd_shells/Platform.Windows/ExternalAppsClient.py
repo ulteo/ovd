@@ -34,15 +34,7 @@ class ExternalAppsClient(AbstractExternalAppsClient):
 		
 		java_cmd = self.detectJavaw()
 		if java_cmd is None:
-			dirs = os.environ["PATH"].split(";")
-			dirs.insert(0, os.path.abspath(os.path.curdir))
-			
-			for d in dirs:
-				path = os.path.join(d, r"jre\bin\java.exe")
-				if os.path.exists(path):
-					print "Found java in '%s'"%(path)
-					java_cmd = '"'+path+'" -jar "%1" %*'
-					break
+			java_cmd = self.detectEmbededJava()
 			
 			if java_cmd is None:
 				print "No JRE available from registry nor in $PATH"
@@ -50,17 +42,7 @@ class ExternalAppsClient(AbstractExternalAppsClient):
 		
 		
 		jar_location = r"OVDExternalAppsClient.jar"
-		folder = None
-		
-		dirs = os.environ["PATH"].split(";")
-		dirs.insert(0, os.path.abspath(os.path.curdir))
-		
-		for d in dirs:
-			path = os.path.join(d, jar_location)
-			if os.path.exists(path):
-				folder = d
-				break
-		
+		folder = self.detectJarFolder(jar_location)
 		if folder is None:
 			print "No OVD integrated client installed on the system"
 			return None
@@ -91,5 +73,32 @@ class ExternalAppsClient(AbstractExternalAppsClient):
 		
 		if data is not None:
 			return data.replace("javaw", "java")
+		
+		return None
+	
+	
+	@classmethod
+	def detectEmbededJava(cls):
+		dirs = os.environ["PATH"].split(";")
+		dirs.insert(0, os.path.abspath(os.path.curdir))
+		
+		for d in dirs:
+			path = os.path.join(d, r"jre\bin\java.exe")
+			if os.path.exists(path):
+				print "Found java in '%s'"%(path)
+				return '"'+path+'" -jar "%1" %*'
+		
+		return None
+	
+	
+	@classmethod
+	def detectJarFolder(cls, jar):
+		dirs = os.environ["PATH"].split(";")
+		dirs.insert(0, os.path.abspath(os.path.curdir))
+		
+		for d in dirs:
+			path = os.path.join(d, jar)
+			if os.path.exists(path):
+				return d
 		
 		return None
