@@ -6,6 +6,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
  * Author David LECHEVALIER <david@ulteo.com> 2010 
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -294,13 +295,17 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
  		return this.parseStartSessionResponse((Document) obj);
 	}
 
-	public boolean askForLogout() throws SessionManagerException {
+	public boolean askForLogout(boolean persistent) throws SessionManagerException {
 		Document doc = getNewDocument();
 		if (doc == null)
 			return false;
 		
 		Element logout = doc.createElement("logout");
-		logout.setAttribute("mode", "logout");
+
+		if (persistent)
+			logout.setAttribute("mode", "suspend");
+		else
+			logout.setAttribute("mode", "logout");
 		doc.appendChild(logout);
 		
 		String data = Document2String(doc);

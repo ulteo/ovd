@@ -6,6 +6,7 @@
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -91,7 +92,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	protected boolean isCancelled = false;
 	private boolean connectionIsActive = true;
 	private boolean exitAfterLogout = false;
-	private boolean persistent = false;
+	protected boolean persistent = false;
 
 	public OvdClient(SessionManagerCommunication smComm, Callback obj_, boolean persistent) {
 		this.smComm = smComm;
@@ -250,7 +251,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		}
 		
 		try {
-			this.smComm.askForLogout();
+			this.smComm.askForLogout(this.persistent);
 		} catch (SessionManagerException e) {
 			Logger.error("Failed to inform the session manager about the RDP session ending.");
 		}
@@ -395,7 +396,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 			Thread disconnectThread = new Thread(new Runnable() {
 				public void run() {
 					try {
-						smComm.askForLogout();
+						smComm.askForLogout(persistent);
 					} catch (SessionManagerException ex) {
 						org.ulteo.Logger.error("Disconnection error: "+ex.getMessage());
 					}
