@@ -18,8 +18,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import _platform as Platform
-
 from ovd_shells.ExternalAppsClient import ExternalAppsClient as AbstractExternalAppsClient
 
 class ExternalAppsClient(AbstractExternalAppsClient):
@@ -28,6 +26,11 @@ class ExternalAppsClient(AbstractExternalAppsClient):
 		return "OVDExternalAppsClient"
 	
 	
-	def launch(self, cmd):
-		Platform.launch(cmd)
-		return True
+	@classmethod
+	def need_specific_working_directory(cls):
+		return False
+	
+	
+	@classmethod
+	def get_working_directory(cls):
+		return None

@@ -19,6 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
+import subprocess
 
 class ExternalAppsClient:
 	def __init__(self, directory_):
@@ -57,13 +58,15 @@ class ExternalAppsClient:
 		
 		cmd = self.get_final_command(cmd)
 		
-		try:
-			ret = self.launch(cmd)
-		except Exception, err:
-			print "Unable to start external apps", err
-			return False
+		folder = os.curdir
+		if self.need_specific_working_directory():
+			folder = self.get_working_directory()
+			if folder is None:
+				print "folder is none"
+				return False
 		
-		return ret is True
+		p = subprocess.Popen(args = cmd, shell = True, cwd = folder)
+		return True
 	
 	
 	def launch(self, cmd):
@@ -77,3 +80,13 @@ class ExternalAppsClient:
 	
 	def get_final_command(self, base_cmd):
 		return '%s -s "%s" -t "%s" -o "%s"'%(base_cmd, self.sm, self.token, self.log_file)
+	
+	
+	@classmethod
+	def need_specific_working_directory(cls):
+		raise NotImplementedError("must be redeclared")
+	
+	
+	@classmethod
+	def get_working_directory(cls):
+		raise NotImplementedError("must be redeclared")

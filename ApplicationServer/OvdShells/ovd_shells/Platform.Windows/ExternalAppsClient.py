@@ -21,8 +21,6 @@
 import os
 import win32api
 import win32con
-import win32process
-import win32file
 
 from ovd_shells.ExternalAppsClient import ExternalAppsClient as AbstractExternalAppsClient
 
@@ -45,17 +43,18 @@ class ExternalAppsClient(AbstractExternalAppsClient):
 		return java_cmd
 	
 	
-	def launch(self, java_cmd):
-		folder = self.detectJarFolder(self.jar_location)
-		if folder is None:
+	@classmethod
+	def need_specific_working_directory(cls):
+		return True
+	
+	
+	@classmethod
+	def get_working_directory(cls):
+		ret = cls.detectJarFolder(cls.jar_location)
+		if ret is None:
 			print "No OVD integrated client installed on the system"
-			return False
 		
-		(hProcess, hThread, dwProcessId, dwThreadId) = win32process.CreateProcess(None, java_cmd, None , None, False, win32process.CREATE_NO_WINDOW , None, folder, win32process.STARTUPINFO())
-		win32file.CloseHandle(hProcess)
-		win32file.CloseHandle(hThread)
-		  
-		return True 
+		return ret
 	
 	
 	@classmethod
