@@ -28,24 +28,28 @@ from ovd_shells.ExternalAppsClient import ExternalAppsClient as AbstractExternal
 
 
 class ExternalAppsClient(AbstractExternalAppsClient):
-	def launch(self):
-		java_cmd = self.detectJavaw()
+	jar_location = r"OVDExternalAppsClient.jar"
+	
+	@classmethod
+	def get_base_command(cls):
+		java_cmd = cls.detectJavaw()
 		if java_cmd is None:
-			java_cmd = self.detectEmbededJava()
+			java_cmd = cls.detectEmbededJava()
 			
 			if java_cmd is None:
 				print "No JRE available from registry nor in $PATH"
-				return False
+				return None
 		
-		
-		jar_location = r"OVDExternalAppsClient.jar"
-		folder = self.detectJarFolder(jar_location)
+		java_cmd = java_cmd.replace("%1", cls.jar_location)
+		java_cmd = java_cmd.replace("%*", "")
+		return java_cmd
+	
+	
+	def launch(self, java_cmd):
+		folder = self.detectJarFolder(self.jar_location)
 		if folder is None:
 			print "No OVD integrated client installed on the system"
-			return None
-		
-		java_cmd = java_cmd.replace("%1", jar_location)
-		java_cmd = java_cmd.replace("%*", '-c "%s" -o "%s"'%(self.configuration_file, self.log_file))
+			return False
 		
 		(hProcess, hThread, dwProcessId, dwThreadId) = win32process.CreateProcess(None, java_cmd, None , None, False, win32process.CREATE_NO_WINDOW , None, folder, win32process.STARTUPINFO())
 		win32file.CloseHandle(hProcess)

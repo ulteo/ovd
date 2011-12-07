@@ -78,5 +78,30 @@ class ExternalAppsClient:
 		return True
 	
 	
-	def launch(self):
+	def start(self):
+		cmd = self.get_base_command()
+		if cmd is None:
+			return False
+		
+		cmd = self.get_final_command(cmd)
+		
+		try:
+			ret = self.launch(cmd)
+		except Exception, err:
+			print "Unable to start external apps", err
+			return False
+		
+		return ret is True
+	
+	
+	def launch(self, cmd):
 		raise NotImplementedError("must be redeclared")
+	
+	
+	@classmethod
+	def get_base_command(cls):
+		raise NotImplementedError("must be redeclared")
+	
+	
+	def get_final_command(self, base_cmd):
+		return '%s -c %s -o "%s"'%(base_cmd, self.configuration_file, self.log_file)

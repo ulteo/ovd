@@ -71,10 +71,7 @@ def main():
 	
 	if everything_is_fine:
 		# actually launch the client
-		try:
-			external_client.launch()
-		except Exception, err:
-			print "Unable to start external apps", err
+		external_client.start()
 	
 	im = InstancesManager()
 	im.setSharedFolderDB(folders)

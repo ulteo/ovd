@@ -25,6 +25,11 @@ import _platform as Platform
 from ovd_shells.ExternalAppsClient import ExternalAppsClient as AbstractExternalAppsClient
 
 class ExternalAppsClient(AbstractExternalAppsClient):
-	def launch(self):
-		Platform.launch('OVDExternalAppsClient -c %s -o "%s"'%(self.configuration_file, self.log_file))
+	@classmethod
+	def get_base_command(cls):
+		return "OVDExternalAppsClient"
+	
+	
+	def launch(self, cmd):
+		Platform.launch(cmd)
 		return True
