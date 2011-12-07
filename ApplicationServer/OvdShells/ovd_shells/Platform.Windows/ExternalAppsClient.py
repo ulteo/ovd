@@ -29,9 +29,6 @@ from ovd_shells.ExternalAppsClient import ExternalAppsClient as AbstractExternal
 
 class ExternalAppsClient(AbstractExternalAppsClient):
 	def launch(self):
-		if os.path.exists(self.configuration_file) == False:                                                                            
-			return False
-		
 		java_cmd = self.detectJavaw()
 		if java_cmd is None:
 			java_cmd = self.detectEmbededJava()

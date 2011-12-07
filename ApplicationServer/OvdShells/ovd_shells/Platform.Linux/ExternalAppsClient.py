@@ -26,8 +26,5 @@ from ovd_shells.ExternalAppsClient import ExternalAppsClient as AbstractExternal
 
 class ExternalAppsClient(AbstractExternalAppsClient):
 	def launch(self):
-		if os.path.exists(self.configuration_file) == False:
-			return False
-		
 		Platform.launch('OVDExternalAppsClient -c %s -o "%s"'%(self.configuration_file, self.log_file))
 		return True
