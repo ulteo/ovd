@@ -20,6 +20,7 @@
 
 import os
 import subprocess
+import sys
 
 class ExternalAppsClient:
 	def __init__(self, directory_):
@@ -65,7 +66,13 @@ class ExternalAppsClient:
 				print "folder is none"
 				return False
 		
-		p = subprocess.Popen(args = cmd, shell = True, cwd = folder)
+		try:
+			log_stream = file(self.log_file, "a")
+		except IOError:
+			print "Unable to open log file %s"%(self.log_file)
+			log_stream = sys.stdout
+		
+		p = subprocess.Popen(args = cmd, shell = True, cwd = folder, stdout = log_stream, stderr = subprocess.STDOUT)
 		return True
 	
 	
@@ -79,7 +86,7 @@ class ExternalAppsClient:
 	
 	
 	def get_final_command(self, base_cmd):
-		return '%s -s "%s" -t "%s" -o "%s"'%(base_cmd, self.sm, self.token, self.log_file)
+		return '%s -s "%s" -t "%s"'%(base_cmd, self.sm, self.token)
 	
 	
 	@classmethod
