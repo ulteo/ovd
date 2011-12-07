@@ -67,9 +67,6 @@ def main():
 	everything_is_fine = external_client.load_config()
 	
 	if everything_is_fine:
-		everything_is_fine = external_client.generate_conf_file()
-	
-	if everything_is_fine:
 		# actually launch the client
 		external_client.start()
 	

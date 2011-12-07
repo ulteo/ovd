@@ -50,34 +50,6 @@ class ExternalAppsClient:
 		return True
 	
 	
-	def generate_conf_file(self):
-		# for now the java client does not support a regular ini file
-		#try:
-			#configP = ConfigParser.ConfigParser()
-			
-			#configP.add_section('user')
-			#configP.add_section('server')
-			
-			#configP.set("user", "token", token_)
-			#configP.set("server", "host", sm_)
-			
-			#f = open(path_file_,'w')
-			#configP.write(f)
-			#f.close() # ..??
-			#return True
-		#except Exception, err:
-			#return False
-		try:
-			f = open(self.configuration_file,'w')
-			f.write("[token]\ntoken=%s\n\n[server]\nhost=%s\n\n"%(self.token, self.sm))
-			f.close()
-		except Exception, err:
-			print "err ",err
-			return False
-		
-		return True
-	
-	
 	def start(self):
 		cmd = self.get_base_command()
 		if cmd is None:
@@ -104,4 +76,4 @@ class ExternalAppsClient:
 	
 	
 	def get_final_command(self, base_cmd):
-		return '%s -c %s -o "%s"'%(base_cmd, self.configuration_file, self.log_file)
+		return '%s -s "%s" -t "%s" -o "%s"'%(base_cmd, self.sm, self.token, self.log_file)
