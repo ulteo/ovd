@@ -37,16 +37,6 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 	}
 
 	@Override
-	protected void runSessionReady() {
-		try {
-			this.spool.join();
-		} catch (InterruptedException e) {
-			Logger.error("Spooler endded unexpectedly");
-		}
-		this.exit(0);
-	}
-
-	@Override
 	protected void hide(RdpConnectionOvd rc) {
 		this.unpublish(rc);
 	}
@@ -68,5 +58,15 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 	public boolean checkRDPConnections() {
 		return _checkRDPConnections();
 	}
-
+	
+	@Override
+	public void runSessionReady() {
+		try {
+			this.spool.join();
+		} catch (InterruptedException e) {
+			Logger.error("Spooler endded unexpectedly");
+		}
+		this.exit(0);
+	}
+	
 }

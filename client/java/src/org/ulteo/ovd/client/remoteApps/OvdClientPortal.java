@@ -73,16 +73,6 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 
 	@Override
-	protected void runSessionReady() {
-		this.portal.initButtonPan(this);
-
-		if (this.portal.getApplicationPanel().isScollerInited())
-			this.portal.getApplicationPanel().addScroller();
-		
-		this.portal.setVisible(! this.hiddenAtStart);
-	}
-
-	@Override
 	public void performDisconnectAll() {
 		if (this.portal.getSystray() == null)
 			return;
@@ -238,6 +228,16 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	@Override
 	public boolean checkRDPConnections() {
 		return _checkRDPConnections();
+	}
+
+	@Override
+	public void runSessionReady() {
+		this.portal.initButtonPan(this);
+
+		if (this.portal.getApplicationPanel().isScollerInited())
+			this.portal.getApplicationPanel().addScroller();
+		
+		this.portal.setVisible(! this.hiddenAtStart);
 	}
 	
 }

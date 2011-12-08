@@ -265,7 +265,8 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 			rc.connect();
 		}
 		
-		this.runSessionReady();
+		if (this instanceof OvdClientPerformer)
+			((OvdClientPerformer)this).runSessionReady();
 	}
 
 	public synchronized void sessionTerminated() {
@@ -305,8 +306,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 			} while (rdpActivity);
 		}
 	}
-
-	protected abstract void runSessionReady();
 
 	protected abstract void runSessionTerminated();
 

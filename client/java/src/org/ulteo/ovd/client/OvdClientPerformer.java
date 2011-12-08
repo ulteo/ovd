@@ -36,5 +36,9 @@ public interface OvdClientPerformer {
 	 * @return
 	 */
 	boolean checkRDPConnections();
-	
+
+	/**
+	 * run this method when session is ready
+	 */
+	void runSessionReady();
 }

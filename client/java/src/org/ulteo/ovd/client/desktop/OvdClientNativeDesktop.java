@@ -48,11 +48,6 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClien
 	}
 
 	@Override
-	protected void runSessionReady() {
-		this.desktop.setVisible(true);
-	}
-
-	@Override
 	protected void customizeConnection(RdpConnectionOvd co) {
 		boolean isFullscreen = (this.resolution.width == getScreenSize().width &&
 				this.resolution.height == getScreenSize().height);
@@ -143,6 +138,11 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClien
 		this.hide(co);
 
 		return false;
+	}
+
+	@Override
+	public void runSessionReady() {
+		this.desktop.setVisible(true);
 	}
 
 }
