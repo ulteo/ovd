@@ -27,6 +27,7 @@ package org.ulteo.ovd.client;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
+import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 
@@ -49,6 +50,18 @@ public abstract class OvdClientDesktop extends OvdClient {
 		// extend the size of the list for receiving the future desktop connection
 		this.connections.add(null);
 	}
+	
+	@Override
+	public void connected(RdpConnection co) {
+		super.connected(co);
+		this.display(co.getCanvas());
+	}
+	
+	/**
+	 * action to perform when a RDP connection is connected 
+	 * @param canvas Rdp desktop Canvas to configure  
+	 */
+	protected abstract void display(RdesktopCanvas canvas);
 
 	protected abstract Properties getProperties();
 	

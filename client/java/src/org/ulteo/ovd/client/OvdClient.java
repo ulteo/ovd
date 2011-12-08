@@ -307,8 +307,6 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 
 	protected abstract void customizeConnection(RdpConnectionOvd co);
 
-	protected abstract void display(RdpConnection co);
-
 	protected abstract void hide(RdpConnectionOvd co);
 	
 	public abstract RdpConnectionOvd createRDPConnection(ServerAccess server);
@@ -321,8 +319,6 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 
 		this.performedConnections.add((RdpConnectionOvd) co);
 		this.availableConnections.add((RdpConnectionOvd) co);
-
-		this.display(co);
 	}
 
 	@Override

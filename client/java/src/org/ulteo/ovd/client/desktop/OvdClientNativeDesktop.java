@@ -63,8 +63,7 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClien
 	}
 
 	@Override
-	public void display(RdpConnection co) {
-		RdesktopCanvas canvas = co.getCanvas();
+	public void display(RdesktopCanvas canvas) {
 		this.desktop.setCanvas(canvas);
 		this.desktop.getContentPane().add(canvas);
 		canvas.validate();

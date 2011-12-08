@@ -74,8 +74,7 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 	}
 
 	@Override
-	protected void display(RdpConnection co) {
-		RdesktopCanvas canvas = co.getCanvas();
+	protected void display(RdesktopCanvas canvas) {
 		canvas.setLocation(0, 0);
 
 		if (this.isFullscreen) {

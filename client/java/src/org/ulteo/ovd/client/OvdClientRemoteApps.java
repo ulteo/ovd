@@ -361,9 +361,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		return true;
 	}
 	
-	@Override
-	protected void display(RdpConnection co) {}
-	
 	public void setPerformDesktopIntegration(boolean value) {
 		this.performDesktopIntegration = value;
 	}
