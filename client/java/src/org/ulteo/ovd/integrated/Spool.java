@@ -31,7 +31,6 @@ import java.util.Scanner;
 import java.util.UUID;
 
 import javax.swing.JOptionPane;
-import net.propero.rdp.RdpConnection;
 import org.apache.log4j.Logger;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
@@ -113,17 +112,6 @@ public class Spool extends Thread {
 
 				if (!todo.delete()) {
 					this.logger.error("No delete file '" + todo.getAbsolutePath() + "'");
-				}
-
-				if (todo.getName().equals("quit")) {
-					for (RdpConnection rc : this.client.getAvailableConnections()) {
-						try {
-							rc.getSeamlessChannel().send_spawn("logoff");
-						} catch (Exception e) {
-							this.logger.error(e);
-						}
-					}
-					return;
 				}
 			}
 		}
