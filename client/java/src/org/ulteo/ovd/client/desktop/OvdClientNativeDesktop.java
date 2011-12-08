@@ -35,7 +35,6 @@ import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
-import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClientPerformer {
@@ -128,24 +127,15 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClien
 			return false;
 		}
 
-		String session_status = null;
-		try {
-			session_status = this.smComm.askForSessionStatus();
-		} catch (SessionManagerException ex) {
-			Logger.error("checkRDPConnections -- Failed to get session status from session manager: "+ex.getMessage()+". Will exit.");
+		String session_status = this.smComm.askForSessionStatus();
+		if (session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_UNKNOWN)) {
+			Logger.error("checkRDPConnections -- Failed to get session status from session manager: ");
 			this.hide(co);
 			return false;
 		}
-		if (session_status == null) {
-			Logger.error("checkRDPConnections -- Failed to get session status from session manager: Internal error. Will exit.");
-			this.hide(co);
-			return false;
-		}
-
-		if (session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED) || session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE)) {
+		else if (session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED) || session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE)) {
 			this.performedConnections.remove(co);
 			co.connect();
-
 			return true;
 		}
 

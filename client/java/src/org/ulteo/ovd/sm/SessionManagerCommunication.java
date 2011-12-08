@@ -316,16 +316,20 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		return obj instanceof Document;
 	}
 
-	public String askForSessionStatus() throws SessionManagerException {
-		Document doc = getNewDocument();
-		if (doc == null)
-			return null;
-		
-		Object obj = this.askWebservice(WEBSERVICE_SESSION_STATUS, CONTENT_TYPE_FORM, REQUEST_METHOD_POST, null, false);
-		if (! (obj instanceof Document))
-			return null;
-		
- 		return this.parseSessionStatusResponse((Document) obj);
+	public String askForSessionStatus() {
+		try {
+			Document doc = getNewDocument();
+			if (doc == null)
+				throw new SessionManagerException();
+			
+			Object obj = this.askWebservice(WEBSERVICE_SESSION_STATUS, CONTENT_TYPE_FORM, REQUEST_METHOD_POST, null, false);
+			if (! (obj instanceof Document))
+				throw new SessionManagerException();
+			
+	 		return this.parseSessionStatusResponse((Document) obj);
+		} catch (SessionManagerException e) {
+			return SESSION_STATUS_UNKNOWN;
+		}
 	}
 
 	public List<News> askForNews() throws SessionManagerException {
