@@ -102,42 +102,42 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 			this.obj = new Callback() {
 				@Override
 				public void reportBadXml(String data) {
-					org.ulteo.Logger.error("Callback::reportBadXml: "+data);
+					Logger.error("Callback::reportBadXml: "+data);
 				}
 
 				@Override
 				public void reportError(int code, String msg) {
-					org.ulteo.Logger.error("Callback::reportError: "+code+" => "+msg);
+					Logger.error("Callback::reportError: "+code+" => "+msg);
 				}
 
 				@Override
 				public void reportErrorStartSession(String code) {
-					org.ulteo.Logger.error("Callback::reportErrorStartSession: "+code);
+					Logger.error("Callback::reportErrorStartSession: "+code);
 				}
 
 				@Override
 				public void reportNotFoundHTTPResponse(String moreInfos) {
-					org.ulteo.Logger.error("Callback::reportNotFoundHTTPResponse: "+moreInfos);
+					Logger.error("Callback::reportNotFoundHTTPResponse: "+moreInfos);
 				}
 
 				@Override
 				public void reportUnauthorizedHTTPResponse(String moreInfos) {
-					org.ulteo.Logger.error("Callback::reportUnauthorizedHTTPResponse: "+moreInfos);
+					Logger.error("Callback::reportUnauthorizedHTTPResponse: "+moreInfos);
 				}
 
 				@Override
 				public void sessionConnected() {
-					org.ulteo.Logger.info("Callback::sessionConnected");
+					Logger.info("Callback::sessionConnected");
 				}
 
 				@Override
 				public void sessionDisconnecting() {
-					org.ulteo.Logger.info("Callback::sessionDisconnected");
+					Logger.info("Callback::sessionDisconnected");
 				}
 
 				@Override
 				public void updateProgress(LoadingStatus status, int substatus) {
-					org.ulteo.Logger.info("Callback::updateProgress "+status+","+substatus);
+					Logger.info("Callback::updateProgress "+status+","+substatus);
 				}
 			};
 		}
@@ -163,7 +163,7 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 			String status = this.smComm.askForSessionStatus();
 
 			if (! status.equals(this.sessionStatus)) {
-				org.ulteo.Logger.info("session status switch from "+this.sessionStatus+" to "+status);
+				Logger.info("session status switch from "+this.sessionStatus+" to "+status);
 				this.sessionStatus = status;
 				if (this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED) || 
 						this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE) ||
@@ -175,7 +175,7 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 						this.obj.sessionConnected();
 						this.connect();
 						
-						org.ulteo.Logger.info("Session is ready");
+						Logger.info("Session is ready");
 						((OvdClientPerformer)this).runSessionReady();
 					}
 				}
@@ -269,7 +269,7 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 		if (! this.connectionIsActive)
 			return;
 
-		org.ulteo.Logger.info("Session is terminated");
+		Logger.info("Session is terminated");
 		
 		this.runSessionTerminated();
 
@@ -400,7 +400,7 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 					try {
 						smComm.askForLogout(persistent);
 					} catch (SessionManagerException ex) {
-						org.ulteo.Logger.error("Disconnection error: "+ex.getMessage());
+						Logger.error("Disconnection error: "+ex.getMessage());
 					}
 
 					forceDisconnectionTimer.cancel();
