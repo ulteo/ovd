@@ -328,6 +328,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 			
 	 		return this.parseSessionStatusResponse((Document) obj);
 		} catch (SessionManagerException e) {
+			Logger.warn("Session status could not be received: " + e.getMessage());
 			return SESSION_STATUS_UNKNOWN;
 		}
 	}
