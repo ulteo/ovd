@@ -47,7 +47,7 @@ import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpActions;
 import org.ulteo.rdp.RdpConnectionOvd;
 
-public abstract class OvdClient extends Thread implements Runnable, RdpListener, RdpActions {
+public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 	
 	public static final String productName = "OVD Client";
 	
