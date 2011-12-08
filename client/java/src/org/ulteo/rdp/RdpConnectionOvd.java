@@ -320,15 +320,6 @@ public class RdpConnectionOvd extends RdpConnection {
 		return RdpConnectionOvd.diskManager;
 	}
 
-	public void sendLogoff() throws OvdException {
-		if (this.ovdAppChannel == null)
-			throw new OvdException("Unable to send logoff: OvdAppChannel does not exist");
-		if (! this.ovdAppChannel.isReady())
-			throw new OvdException("Unable to send logoff: OvdAppChannel is not initialized");
-
-		this.ovdAppChannel.sendLogoff();
-	}
-
 	/**
 	 * Register an OvdAppListener
 	 * @param listener

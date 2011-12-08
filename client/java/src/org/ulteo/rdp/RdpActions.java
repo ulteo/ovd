@@ -20,12 +20,9 @@
 
 package org.ulteo.rdp;
 
-import net.propero.rdp.RdpConnection;
-
 public interface RdpActions {
 	public static final int DELAY_LOGOUT_MILLIS = 5000;
 
-	public void disconnect(RdpConnection rc);
 	public void disconnectAll();
 	public void exit(int return_code);
 }

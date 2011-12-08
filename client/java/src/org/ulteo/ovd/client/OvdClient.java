@@ -35,7 +35,6 @@ import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
-import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.sm.Callback;
@@ -353,15 +352,6 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 	public void seamlessEnabled(RdpConnection co) {}
 
 	/* RdpActions */
-
-	@Override
-	public void disconnect(RdpConnection rc) {
-		try {
-			((RdpConnectionOvd) rc).sendLogoff();
-		} catch (OvdException ex) {
-			Logger.warn(rc.getServer()+": "+ex.getMessage());
-		}
-	}
 
 	@Override
 	public void disconnectAll() {
