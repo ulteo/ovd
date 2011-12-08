@@ -197,7 +197,7 @@ public abstract class OvdApplet extends Applet {
 			return;	
 		
 		Logger.info(this.getClass().toString() +" start");
-		this.ovd.sessionReady();
+		this.ovd.connect();
 		_start();
 		Logger.info(this.getClass().toString() +" started");
 	}

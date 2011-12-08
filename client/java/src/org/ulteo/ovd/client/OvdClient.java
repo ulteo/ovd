@@ -171,7 +171,12 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 					if (! isActive) {
 						isActive = true;
 						this.sessionStatusSleepingTime = REQUEST_TIME_OCCASIONALLY;
-						this.sessionReady();
+
+						this.obj.sessionConnected();
+						this.connect();
+						
+						org.ulteo.Logger.info("Session is ready");
+						((OvdClientPerformer)this).runSessionReady();
 					}
 				}
 				else {
@@ -255,18 +260,9 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 		return this.exitAfterLogout;
 	}
 
-	public void sessionReady() {
-		org.ulteo.Logger.info("Session is ready");
-
-		if (this.obj != null)
-			this.obj.sessionConnected();
-
-		for (RdpConnectionOvd rc : this.connections) {
+	public void connect() {
+		for (RdpConnectionOvd rc : this.connections)
 			rc.connect();
-		}
-		
-		if (this instanceof OvdClientPerformer)
-			((OvdClientPerformer)this).runSessionReady();
 	}
 
 	public synchronized void sessionTerminated() {
