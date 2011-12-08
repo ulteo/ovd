@@ -21,6 +21,5 @@
 package org.ulteo.rdp;
 
 public interface RdpActions {
-	public void disconnectAll();
-	public void exit(int return_code);
+	public void disconnect(boolean exit);
 }

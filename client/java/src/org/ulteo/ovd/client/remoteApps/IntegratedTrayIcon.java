@@ -86,14 +86,14 @@ public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				rdpActions.exit(0);
+				rdpActions.disconnect(true);
 			}
 		});
 		itemDisconnect.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				rdpActions.disconnectAll();
+				rdpActions.disconnect(false);
 			}
 		});
 		popup.add(itemDisconnect);

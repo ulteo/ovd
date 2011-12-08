@@ -46,10 +46,10 @@ public class NativeLogoutPopup extends AbstractLogoutPopup {
 	protected void processOption(int option_) {
 		switch (option_) {
 			case 0 :
-				this.actions.exit(0);
+				this.actions.disconnect(true);
 				break;
 			case 1 :
-				this.actions.disconnectAll();
+				this.actions.disconnect(false);
 				break;
 			default:
 				this.setVisible(true);

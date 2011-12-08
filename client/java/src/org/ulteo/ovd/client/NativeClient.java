@@ -638,7 +638,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			this.isCancelled = true;
 			
 			if (this.client != null)
-				this.client.disconnectAll();
+				this.client.disconnect(false);
 
 			this.loadingFrame.getCancelButton().setEnabled(false);
 		}
@@ -812,7 +812,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			exit = this.client.perform();
 		}
 		else
-			this.client.disconnectAll();
+			this.client.disconnect(false);
 		this.client = null;
 
 		timeout.cancel();

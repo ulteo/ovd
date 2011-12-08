@@ -239,7 +239,7 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 			}
 
 			if (! ((OvdClientPerformer)this).checkRDPConnections()) {
-				this.disconnectAll();
+				this.disconnect(false);
 				break;
 			}
 		} while (this.performedConnections.size() < this.connections.size());
@@ -354,18 +354,14 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 	/* RdpActions */
 
 	@Override
-	public void disconnectAll() {
+	public void disconnect(boolean exit) {
+		this.exitAfterLogout = exit;
+		
 		if (! this.connectionIsActive)
 			return;
 
 		this.isCancelled = true;
 		this.obj.sessionDisconnecting();
-	}
-	
-	@Override
-	public void exit(int return_code) {
-		this.exitAfterLogout = true;
-		this.disconnectAll();
 	}
 
 	public void performDisconnectAll() {

@@ -60,7 +60,7 @@ public class SouthEastPanel extends JPanel {
 		
 		disconnect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				rdpActions.disconnectAll();
+				rdpActions.disconnect(false);
 			}
 		});
 		publishingButton.addActionListener(new ActionListener() {
