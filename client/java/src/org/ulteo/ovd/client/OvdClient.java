@@ -160,39 +160,38 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		boolean isActive = false;
 		
 		while (this.continueSessionStatusMonitoringThread) {
-			try {
-				String status = this.smComm.askForSessionStatus();
+			String status = this.smComm.askForSessionStatus();
 
-				if (! status.equals(this.sessionStatus)) {
-					org.ulteo.Logger.info("session status switch from "+this.sessionStatus+" to "+status);
-					this.sessionStatus = status;
-					if (this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED) || 
-							this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE) ||
-							(this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INACTIVE) && this.persistent)) {
-						if (! isActive) {
-							isActive = true;
-							this.sessionStatusSleepingTime = REQUEST_TIME_OCCASIONALLY;
-							this.sessionReady();
-						}
-					}
-					else {
-						if (isActive) {
-							isActive = false;
-							this.sessionTerminated();
-						}
-						else if (status.equals(SessionManagerCommunication.SESSION_STATUS_UNKNOWN)) {
-							this.sessionTerminated();
-						}
+			if (! status.equals(this.sessionStatus)) {
+				org.ulteo.Logger.info("session status switch from "+this.sessionStatus+" to "+status);
+				this.sessionStatus = status;
+				if (this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED) || 
+						this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE) ||
+						(this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INACTIVE) && this.persistent)) {
+					if (! isActive) {
+						isActive = true;
+						this.sessionStatusSleepingTime = REQUEST_TIME_OCCASIONALLY;
+						this.sessionReady();
 					}
 				}
-				
-				if (this instanceof Newser) {
-					List<News> newsList = this.smComm.askForNews();
-					((Newser)this).updateNews(newsList);
+				else {
+					if (isActive) {
+						isActive = false;
+						this.sessionTerminated();
+					}
+					else if (status.equals(SessionManagerCommunication.SESSION_STATUS_UNKNOWN)) {
+						this.sessionTerminated();
+					}
 				}
 			}
-			catch (SessionManagerException ex) {
-				org.ulteo.Logger.error("Session status monitoring: "+ex.getMessage());
+			
+			if (this instanceof Newser) {
+				try {
+					List<News> newsList = this.smComm.askForNews();
+					((Newser)this).updateNews(newsList);
+				} catch (SessionManagerException e) {
+					Logger.warn("news cannot be received: " + e.getMessage());
+				}
 			}
 			try {
 					Thread.sleep(this.sessionStatusSleepingTime);
