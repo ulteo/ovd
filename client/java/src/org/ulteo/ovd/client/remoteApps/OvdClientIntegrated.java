@@ -66,7 +66,6 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 		} catch (InterruptedException e) {
 			Logger.error("Spooler endded unexpectedly");
 		}
-		this.disconnect(true);
 	}
 	
 }
