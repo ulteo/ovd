@@ -22,18 +22,7 @@
 
 class SessionManager {
 	public static function query($url_) {
-		if (! array_key_exists('sessionmanager', $_SESSION['ovd-client']))
-			$_SESSION['ovd-client']['sessionmanager'] = array();
-		
-		$socket = curl_init($url_);
-		curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($socket, CURLOPT_SSL_VERIFYHOST, 0);
-		curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, 10);
-		curl_setopt($socket, CURLOPT_TIMEOUT, (10+5));
-		
-		if (array_key_exists('session_var', $_SESSION['ovd-client']['sessionmanager']) && array_key_exists('session_id', $_SESSION['ovd-client']['sessionmanager']))
-			curl_setopt($socket, CURLOPT_COOKIE, $_SESSION['ovd-client']['sessionmanager']['session_var'].'='.$_SESSION['ovd-client']['sessionmanager']['session_id']);
+		$socket = self::build_curl_instance($url_);
 		
 		$string = curl_exec($socket);
 		$buf = curl_getinfo($socket, CURLINFO_HTTP_CODE);
@@ -47,20 +36,9 @@ class SessionManager {
 	
 	
 	public static function query_post_xml($url_, $xml_) {
-		if (! array_key_exists('sessionmanager', $_SESSION['ovd-client']))
-			$_SESSION['ovd-client']['sessionmanager'] = array();
-		
-		$socket = curl_init($url_);
-		curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($socket, CURLOPT_SSL_VERIFYHOST, 0);
-		curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, 10);
-		curl_setopt($socket, CURLOPT_TIMEOUT, (10+5));
+		$socket = self::build_curl_instance($url_);
 		
 		curl_setopt($socket, CURLOPT_HEADER, 1);
-		
-		if (array_key_exists('session_var', $_SESSION['ovd-client']['sessionmanager']) && array_key_exists('session_id', $_SESSION['ovd-client']['sessionmanager']))
-			curl_setopt($socket, CURLOPT_COOKIE, $_SESSION['ovd-client']['sessionmanager']['session_var'].'='.$_SESSION['ovd-client']['sessionmanager']['session_id']);
 		
 		curl_setopt($socket, CURLOPT_POSTFIELDS, $xml_);
 		curl_setopt($socket, CURLOPT_HTTPHEADER, array('Connection: close', 'Content-Type: text/xml'));
@@ -91,5 +69,23 @@ class SessionManager {
 		}
 		
 		return $body;
+	}
+	
+	
+	public static function build_curl_instance($url_) {
+		if (! array_key_exists('sessionmanager', $_SESSION['ovd-client']))
+			$_SESSION['ovd-client']['sessionmanager'] = array();
+		
+		$socket = curl_init($url_);
+		curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($socket, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, 10);
+		curl_setopt($socket, CURLOPT_TIMEOUT, (10+5));
+		
+		if (array_key_exists('session_var', $_SESSION['ovd-client']['sessionmanager']) && array_key_exists('session_id', $_SESSION['ovd-client']['sessionmanager']))
+			curl_setopt($socket, CURLOPT_COOKIE, $_SESSION['ovd-client']['sessionmanager']['session_var'].'='.$_SESSION['ovd-client']['sessionmanager']['session_id']);
+		
+		return $socket;
 	}
 }
