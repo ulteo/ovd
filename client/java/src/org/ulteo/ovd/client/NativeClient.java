@@ -130,8 +130,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		List<LongOpt> systemDependantOptions = new ArrayList<LongOpt>();
 
 		if (OSTools.isWindows()) {
-			systemDependantOptions.add(new LongOpt("reg", LongOpt.NO_ARGUMENT, null, nbOptions + 1));
-			systemDependantOptions.add(new LongOpt("ntlm", LongOpt.NO_ARGUMENT, null, nbOptions + 2));
+			opts.setFlag(Options.FLAG_PROFILE_REG);
+			systemDependantOptions.add(new LongOpt("ntlm", LongOpt.NO_ARGUMENT, null, nbOptions + 1));
 		}
 
 		LongOpt[] alo = new LongOpt[nbOptions + systemDependantOptions.size()];
@@ -151,9 +151,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		int c;
 		while ((c = opt.getopt()) != -1) {
 			switch (c) {
-				case (nbOptions + 1): //--reg
-					opts.setFlag(Options.FLAG_PROFILE_REG);
-					break;
 				case 0: //--auto-start
 					opts.autostart = true;
 
@@ -164,7 +161,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 					opts.setFlag(Options.FLAG_AUTO_INTEGRATION);
 					break;
-				case (nbOptions + 2): //--ntlm
+				case (nbOptions + 1): //--ntlm
 					opts.nltm = true;
 
 					opts.setFlag(Options.FLAG_NTLM);
@@ -202,6 +199,9 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				case 'c':
 					opts.profile = new String(opt.getOptarg());
 					opts.setFlag(Options.FLAG_PROFILE_INI);
+					if (OSTools.isWindows())
+						opts.revertFlag(Options.FLAG_PROFILE_REG);
+					
 					break;
 				case 'p':
 					opts.password = new String(opt.getOptarg());
@@ -293,11 +293,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 					usage(RETURN_CODE_BAD_ARGUMENTS);
 					break;
 			}
-		}
-
-		if (opts.getFlag(Options.FLAG_PROFILE_INI) && opts.getFlag(Options.FLAG_PROFILE_REG)) {
-			Logger.error("You cannot use --reg with -c");
-			NativeClient.usage(RETURN_CODE_BAD_ARGUMENTS);
 		}
 
 		if ((opts.sessionMode == Properties.MODE_REMOTEAPPS) && opts.getFlag(Options.FLAG_GEOMETRY)) {
@@ -442,15 +437,12 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		System.err.println("\t-i|--input-method			Custom the input method (unicode or scancode)");
 		if (OSTools.isWindows()) {
 			System.err.println("\t--ntlm				Use NTLM authentication");
-			System.err.println("\t--reg				Load configuration from registry");
 		}
 		System.err.println("Examples:");
 		System.err.println("\tClassic use:");
 		System.err.println("\t\tjava -jar OVDNativeClient.jar -c config.ovd -p password");
 		System.err.println("\tLoad configuration from file and use NTLM authentication:");
 		System.err.println("\t\tjava -jar OVDNativeClient.jar -c config.ovd");
-		System.err.println("\tLoad configuration from registry");
-		System.err.println("\t\tjava -jar OVDNativeClient.jar --reg");
 
 		System.exit(status);
 	}

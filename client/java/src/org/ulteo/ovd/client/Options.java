@@ -6,6 +6,7 @@
  * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -90,6 +91,10 @@ public class Options {
 
 	public void setFlag (int flag) {
 		this.mask |= flag;
+	}
+	
+	public void revertFlag(int flag) {
+		this.mask &= ~flag;
 	}
 	
 	public boolean getFlag (int flag) {
