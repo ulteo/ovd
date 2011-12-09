@@ -22,6 +22,7 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
+require_once(dirname(__FILE__).'/classes/SessionManager.class.php');
 
 $languages = get_available_languages();
 $keymaps = get_available_keymaps();
@@ -85,7 +86,7 @@ function get_users_list() {
 
 	global $sessionmanager_url;
 
-	$ret = query_sm($sessionmanager_url.'/userlist.php');
+	$ret = SessionManager::query($sessionmanager_url.'/userlist.php');
 
 	$dom = new DomDocument('1.0', 'utf-8');
 	$buf = @$dom->loadXML($ret);

@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009, 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,6 +21,7 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
+require_once(dirname(__FILE__).'/classes/SessionManager.class.php');
 
 header('Content-Type: image/png');
-die(query_sm($sessionmanager_url.'/icon.php?id='.$_GET['id']));
+die(SessionManager::query($sessionmanager_url.'/icon.php?id='.$_GET['id']));

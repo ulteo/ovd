@@ -21,6 +21,7 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
+require_once(dirname(__FILE__).'/classes/SessionManager.class.php');
 
 if (! array_key_exists('mode', $_POST))
 	$_POST['mode'] = 'logout';
@@ -35,7 +36,7 @@ $dom->appendChild($logout_node);
 $xml = $dom->saveXML();
 
 $dom = new DomDocument('1.0', 'utf-8');
-$buf = @$dom->loadXML(query_sm_post_xml($sessionmanager_url.'/logout.php', $xml));
+$buf = @$dom->loadXML(SessionManager::query_post_xml($sessionmanager_url.'/logout.php', $xml));
 if (! $buf) {
 	echo return_error(0, 'Invalid XML');
 	die();

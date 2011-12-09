@@ -21,10 +21,11 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
+require_once(dirname(__FILE__).'/classes/SessionManager.class.php');
 
 header('Content-Type: text/xml; charset=utf-8');
 
-$xml = query_sm($sessionmanager_url.'/news.php');
+$xml = SessionManager::query($sessionmanager_url.'/news.php');
 if (! $xml) {
 	echo return_error(0, 'Invalid XML');
 	die();

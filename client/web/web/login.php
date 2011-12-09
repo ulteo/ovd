@@ -27,6 +27,7 @@ if (! is_array($_POST) || count($_POST) == 0) {
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/classes/Ajaxplorer.class.php');
+require_once(dirname(__FILE__).'/classes/SessionManager.class.php');
 
 function return_error_alt($errno_, $errstr_, $errmore_=NULL) {
 	$dom = new DomDocument('1.0', 'utf-8');
@@ -124,7 +125,7 @@ if (array_key_exists('from_SM_start_XML', $_SESSION['ovd-client'])) {
 	$xml = $_SESSION['ovd-client']['from_SM_start_XML'];
 	unset($_SESSION['ovd-client']['from_SM_start_XML']);
 } else {
-	$xml = query_sm_post_xml($sessionmanager_url.'/start.php', $dom->saveXML());
+	$xml = SessionManager::query_post_xml($sessionmanager_url.'/start.php', $dom->saveXML());
 	if (! $xml) {
 		echo return_error_alt(0, 'unable_to_reach_sm', $sessionmanager_url.'/start.php');
 		die();

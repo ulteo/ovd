@@ -1,4 +1,5 @@
-scripts_DATA = Ajaxplorer.class.php
+scripts_DATA = Ajaxplorer.class.php \
+               SessionManager.class.php
 
 scriptsdir = $(datadir)/ulteo/webclient/classes
 

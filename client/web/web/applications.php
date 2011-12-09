@@ -20,8 +20,9 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
+require_once(dirname(__FILE__).'/classes/SessionManager.class.php');
 
-$xml = query_sm($sessionmanager_url.'/applications.php?user='.$_REQUEST['user']);
+$xml = SessionManager::query($sessionmanager_url.'/applications.php?user='.$_REQUEST['user']);
 if (! $xml) {
 	die($xml);
 }
