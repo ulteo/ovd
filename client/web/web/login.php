@@ -209,12 +209,8 @@ foreach ($server_nodes as $server_node) {
 
 
 $_SESSION['ovd-client']['session_id'] = $session_node->getAttribute('id');
-$_SESSION['ovd-client']['session_mode'] = $session_node->getAttribute('mode');
-$_SESSION['ovd-client']['session_language'] = $_POST['language'];
-$_SESSION['ovd-client']['keyboard_layout'] = $_POST['keymap'];
-$_SESSION['ovd-client']['multimedia'] = $session_node->getAttribute('multimedia');
-$_SESSION['ovd-client']['redirect_client_printers'] = $session_node->getAttribute('redirect_client_printers');
-if ($_SESSION['ovd-client']['session_mode'] == 'desktop')
+$session_mode = $session_node->getAttribute('mode');
+if ($session_mode == 'desktop')
 	$_SESSION['ovd-client']['desktop_fullscreen'] = ((array_key_exists('desktop_fullscreen', $_POST))?$_POST['desktop_fullscreen']:0);
 $_SESSION['ovd-client']['timeout'] = $session_node->getAttribute('timeout');
 
@@ -232,7 +228,6 @@ if (! is_object($user_node)) {
 	echo return_error(2, 'internal_error');
 	die();
 }
-$_SESSION['ovd-client']['session_displayname'] = $user_node->getAttribute('displayName');
 
 $server_nodes = $session_node->getElementsByTagName('server');
 if (count($server_nodes) < 1) {
