@@ -237,15 +237,7 @@ var Daemon = Class.create({
 	suspend: function() {
 		this.push_log('debug', '[daemon] suspend()');
 
-		new Ajax.Request(
-			'logout.php',
-			{
-				method: 'post',
-				parameters: {
-					mode: 'suspend'
-				}
-			}
-		);
+		this.req_logout('suspend');
 
 		this.do_ended();
 	},
@@ -253,15 +245,7 @@ var Daemon = Class.create({
 	logout: function() {
 		this.push_log('debug', '[daemon] logout()');
 
-		new Ajax.Request(
-			'logout.php',
-			{
-				method: 'post',
-				parameters: {
-					mode: 'logout'
-				}
-			}
-		);
+		this.req_logout('logout');
 
 		this.do_ended();
 	},
@@ -364,6 +348,18 @@ var Daemon = Class.create({
 
 			this.stopped = true;
 		}
+	},
+
+	req_logout: function(mode_) {
+		new Ajax.Request(
+			'logout.php',
+			{
+				method: 'post',
+				parameters: {
+					mode: mode_
+				}
+			}
+		);
 	},
 
 	start: function() {
