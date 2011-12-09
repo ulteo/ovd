@@ -93,6 +93,17 @@ function query_sm_post_xml($url_, $xml_) {
 	return $body;
 }
 
+
+function return_error($errno_, $errstr_) {
+	$dom = new DomDocument('1.0', 'utf-8');
+	$node = $dom->createElement('error');
+	$node->setAttribute('id', $errno_);
+	$node->setAttribute('message', $errstr_);
+	$dom->appendChild($node);
+	return $dom->saveXML();
+}
+
+
 function get_available_languages() {
 	return array(
 // 		array('id' => 'af', 'english_name' => 'Afrikaans'),

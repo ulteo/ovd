@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,15 +21,6 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
-
-function return_error($errno_, $errstr_) {
-	$dom = new DomDocument('1.0', 'utf-8');
-	$node = $dom->createElement('error');
-	$node->setAttribute('id', $errno_);
-	$node->setAttribute('message', $errstr_);
-	$dom->appendChild($node);
-	return $dom->saveXML();
-}
 
 if (! array_key_exists('mode', $_POST))
 	$_POST['mode'] = 'logout';

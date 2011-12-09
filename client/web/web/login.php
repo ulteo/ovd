@@ -28,7 +28,7 @@ if (! is_array($_POST) || count($_POST) == 0) {
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/classes/Ajaxplorer.class.php');
 
-function return_error($errno_, $errstr_, $errmore_=NULL) {
+function return_error_alt($errno_, $errstr_, $errmore_=NULL) {
 	$dom = new DomDocument('1.0', 'utf-8');
 	$node = $dom->createElement('error');
 	$node->setAttribute('id', $errno_);
@@ -55,7 +55,7 @@ $_SESSION['ovd-client']['interface']['debug'] = $_POST['debug'];
 header('Content-Type: text/xml; charset=utf-8');
 
 if (! defined('SESSIONMANAGER_HOST') && ! array_key_exists('sessionmanager_host', $_POST)) {
-	echo return_error(0, 'no_sessionmanager_host');
+	echo return_error_alt(0, 'no_sessionmanager_host');
 	die();
 }
 
@@ -126,7 +126,7 @@ if (array_key_exists('from_SM_start_XML', $_SESSION['ovd-client'])) {
 } else {
 	$xml = query_sm_post_xml($sessionmanager_url.'/start.php', $dom->saveXML());
 	if (! $xml) {
-		echo return_error(0, 'unable_to_reach_sm', $sessionmanager_url.'/start.php');
+		echo return_error_alt(0, 'unable_to_reach_sm', $sessionmanager_url.'/start.php');
 		die();
 	}
 }
@@ -151,36 +151,36 @@ if (is_array($xml) && count($xml) == 2) {
 		}
 	}
 
-	echo return_error(0, 'internal_error');
+	echo return_error_alt(0, 'internal_error');
 	die();
 }
 
 $dom = new DomDocument('1.0', 'utf-8');
 $buf = @$dom->loadXML($xml);
 if (! $buf) {
-	echo return_error(0, 'internal_error');
+	echo return_error_alt(0, 'internal_error');
 	die();
 }
 
 if (! $dom->hasChildNodes()) {
-	echo return_error(0, 'internal_error');
+	echo return_error_alt(0, 'internal_error');
 	die();
 }
 
 $response_node = $dom->getElementsByTagName('response')->item(0);
 if (! is_null($response_node)) {
-	echo return_error(-1, $response_node->getAttribute('code'));
+	echo return_error_alt(-1, $response_node->getAttribute('code'));
 	die();
 }
 
 $session_node = $dom->getElementsByTagName('session');
 if (count($session_node) != 1) {
-	echo return_error(1, 'internal_error');
+	echo return_error_alt(1, 'internal_error');
 	die();
 }
 $session_node = $session_node->item(0);
 if (! is_object($session_node)) {
-	echo return_error(1, 'internal_error');
+	echo return_error_alt(1, 'internal_error');
 	die();
 }
 $session_node->setAttribute('sessionmanager', $_SESSION['ovd-client']['sessionmanager_host']);
@@ -220,18 +220,18 @@ if ($session_node->hasAttribute('mode_gateway') && $session_node->getAttribute('
 
 $user_node = $session_node->getElementsByTagName('user');
 if (count($user_node) != 1) {
-	echo return_error(2, 'internal_error');
+	echo return_error_alt(2, 'internal_error');
 	die();
 }
 $user_node = $user_node->item(0);
 if (! is_object($user_node)) {
-	echo return_error(2, 'internal_error');
+	echo return_error_alt(2, 'internal_error');
 	die();
 }
 
 $server_nodes = $session_node->getElementsByTagName('server');
 if (count($server_nodes) < 1) {
-	echo return_error(3, 'internal_error');
+	echo return_error_alt(3, 'internal_error');
 	die();
 }
 
