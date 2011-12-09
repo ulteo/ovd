@@ -36,9 +36,29 @@ if (array_key_exists('language', $_REQUEST)) {
 }
 
 $first = false;
-if (! array_key_exists('start_app', $_SESSION['ovd-client'])) {
+if (array_key_exists('ovd-client', $_SESSION) && array_key_exists('session_id', $_SESSION['ovd-client'])) {
+	// Check if session still exist SM side
+	$dom = new DomDocument('1.0', 'utf-8');
+	$buf = @$dom->loadXML(query_sm($sessionmanager_url.'/session_status.php'));
+	if (! $buf)
+		die('Invalid XML from Session Manager');
+	
+	if (! $dom->hasChildNodes())
+		die('Invalid XML from Session Manager');
+	
+	$session_nodes = $dom->getElementsByTagName('session');
+	if ($session_nodes->length == 0)
+		$first = true;
+	elseif ($session_nodes->length > 0) {
+		$session_node = $session_nodes->item(0);
+		if (in_array($session_node->getAttribute('status'), array('unknown', 'error', 'wait_destroy', 'destroyed')))
+			$first = true;
+	}
+}
+else
 	$first = true;
 
+if ($first === true) {
 	$dom = new DomDocument('1.0', 'utf-8');
 
 	$session_node = $dom->createElement('session');
