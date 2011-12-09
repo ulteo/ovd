@@ -140,19 +140,20 @@ void* SeamlessChannel_getLastOrder(int order_type) {
 			length = sizeof(SeamlessOrder_Focus);
 			break;
 		default:
-			return NULL;
+			goto end;
 	}
 
 	if (! global_order)
-		return NULL;
+		goto end;
 
 	order = malloc(length);
 	if (order)
 		memcpy(order, global_order, length);
 
-	ReleaseMutex(g_mutex_orders);
+	end:
+		ReleaseMutex(g_mutex_orders);
 
-	return order;
+		return order;
 }
 
 void SeamlessChannel_setLastOrder(int order_type, void* order) {
@@ -183,16 +184,16 @@ void SeamlessChannel_setLastOrder(int order_type, void* order) {
 			length = sizeof(SeamlessOrder_Focus);
 			break;
 		default:
-			return;
+			goto end;
 	}
 
 	if (! order) {
 		global_order = NULL;
-		return;
+		goto end;
 	}
 
 	if (sizeof(order) != length)
-		return;
+		goto end;
 
 	if (global_order)
 		free(global_order);
@@ -200,10 +201,13 @@ void SeamlessChannel_setLastOrder(int order_type, void* order) {
 	global_order = malloc(length);
 	if (! global_order) {
 		global_order = NULL;
-		return;
+		goto end;
 	}
 
 	memcpy(global_order, order, length);
+
+	end:
+		ReleaseMutex(g_mutex_orders);
 }
 
 static BOOL CALLBACK
