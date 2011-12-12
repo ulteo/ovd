@@ -67,7 +67,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.showBugReporter = showBugReporter_;
 		
 		this.appsList = new ArrayList<Application>();
-		this.portal = new PortalFrame(this.username, this.showBugReporter);
+		this.portal = new PortalFrame(this, this.username, this.showBugReporter);
 		this.portal.addComponentListener(this);
 		this.portal.getRunningApplicationPanel().setSpool(spool);
 	}
@@ -232,7 +232,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	@Override
 	public void runSessionReady() {
-		this.portal.initButtonPan(this);
+		this.portal.initButtonPan();
 
 		if (this.portal.getApplicationPanel().isScollerInited())
 			this.portal.getApplicationPanel().addScroller();

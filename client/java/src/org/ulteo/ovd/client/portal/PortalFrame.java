@@ -4,6 +4,7 @@
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -30,7 +31,6 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,17 +40,16 @@ import javax.swing.JPanel;
 import org.ulteo.Logger;
 
 import org.ulteo.utils.I18n;
-import org.ulteo.ovd.client.authInterface.NativeLogoutPopup;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
+import org.ulteo.ovd.client.OvdClientFrame;
 import org.ulteo.ovd.client.bugreport.gui.BugReportButton;
 import org.ulteo.ovd.client.remoteApps.IntegratedTrayIcon;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.rdp.RdpActions;
 
-public class PortalFrame extends JFrame implements WindowListener {
+public class PortalFrame extends OvdClientFrame {
 
-	private RdpActions rdpActions = null;
 	private String username = null;
 	
 	private MyApplicationPanel appsPanel = null;
@@ -63,7 +62,8 @@ public class PortalFrame extends JFrame implements WindowListener {
 	private boolean showBugReporter = false;
 	private Image frameLogo = null;
 	
-	public PortalFrame(String username, boolean showBugReporter_) {
+	public PortalFrame(RdpActions actions, String username, boolean showBugReporter_) {
+		super(actions);
 		if (username == null)
 			username = "";
 		String displayName = I18n._("Welcome {user}");
@@ -71,7 +71,6 @@ public class PortalFrame extends JFrame implements WindowListener {
 		this.username = displayName;
 		this.showBugReporter = showBugReporter_;
 		
-		this.addWindowListener(this);
 		this.init();
 		this.newsPanel = new NewsPanel();
 	}
@@ -140,9 +139,8 @@ public class PortalFrame extends JFrame implements WindowListener {
 		this.validate();
 	}
 	
-	public void initButtonPan(RdpActions _rdpActions) {
-		this.rdpActions = _rdpActions;
-		this.sep = new SouthEastPanel(_rdpActions);
+	public void initButtonPan() {
+		this.sep = new SouthEastPanel(this.actions);
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridy = 4;
@@ -163,7 +161,7 @@ public class PortalFrame extends JFrame implements WindowListener {
 	
 	public void initSystray() {
 		try {
-			this.systray = new IntegratedTrayIcon(this, this.frameLogo, this.rdpActions);
+			this.systray = new IntegratedTrayIcon(this, this.frameLogo, this.actions);
 		} catch (UnsupportedOperationException ex) {
 			Logger.error("Systray is not supported: "+ex.getMessage());
 			this.systray = null;
@@ -225,27 +223,6 @@ public class PortalFrame extends JFrame implements WindowListener {
 		this.newPanelAdded = false;
 	}
 	
-	
-	public void windowActivated(WindowEvent arg0) {}
-
-
-	public void windowClosed(WindowEvent arg0) {}
-
-
-	public void windowClosing(WindowEvent arg0) {
-		if (this.rdpActions != null)
-			new NativeLogoutPopup(this, this.rdpActions);
-		else
-			System.err.println("can't manage disconnection request: rdpAction is null");
-	}
-
-
-	public void windowDeactivated(WindowEvent arg0) {}
-
-
-	public void windowDeiconified(WindowEvent arg0) {}
-
-
 	public void windowIconified(WindowEvent arg0) {
 		if (OSTools.isWindows() && this.systray != null)
 			this.setVisible(false);
@@ -253,6 +230,4 @@ public class PortalFrame extends JFrame implements WindowListener {
 		 * it will never be deiconified by clicking on systray icon */
 	}
 
-
-	public void windowOpened(WindowEvent arg0) {}
 }

@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Thomas MOUTON <thomas@ulteo.com> 2011
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -28,8 +29,6 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
@@ -38,14 +37,13 @@ import net.propero.rdp.RdesktopCanvas;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
 
-import org.ulteo.ovd.client.authInterface.NativeLogoutPopup;
+import org.ulteo.ovd.client.OvdClientFrame;
 import org.ulteo.rdp.RdpActions;
 import org.ulteo.utils.jni.WorkArea;
 
-public class DesktopFrame extends JFrame implements WindowListener, InputListener {
+public class DesktopFrame extends OvdClientFrame implements InputListener {
 
 	private Image logo = null;
-	private RdpActions actions = null;
 	public static int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 	public static int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 	private static Rectangle workarea_rect = WorkArea.getWorkAreaSize();
@@ -61,9 +59,9 @@ public class DesktopFrame extends JFrame implements WindowListener, InputListene
 	private ScrollableDesktopFrame scrollFrame = null;
 	private KeyStroke fullscreen_keystroke = null;
 	
-	public DesktopFrame(Dimension dim, boolean fullscreen_, RdpActions actions_) {
+	public DesktopFrame(Dimension dim, boolean fullscreen_, RdpActions actions) {
+		super(actions);
 		this.fullscreen = fullscreen_;
-		this.actions = actions_;
 		this.logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
 		setIconImage(logo);
 		setSize(dim);
@@ -73,7 +71,6 @@ public class DesktopFrame extends JFrame implements WindowListener, InputListene
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setLocation(0, 0);
 		setVisible(false);
-		this.addWindowListener(this);
 
 		if (this.fullscreen) {
 			SwingTools.invokeLater(GUIActions.setAlwaysOnTop(this, this.fullscreen));
@@ -141,31 +138,6 @@ public class DesktopFrame extends JFrame implements WindowListener, InputListene
 	}
 
 	@Override
-	public void windowActivated(WindowEvent arg0) {}
-
-	@Override
-	public void windowClosed(WindowEvent arg0) {}
-
-	@Override
-	public void windowClosing(WindowEvent arg0) {
-		if (this.actions != null)
-			new NativeLogoutPopup(this, this.actions);
-		else
-			System.err.println("Can't manage disconnection request: rdpAction is null");
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent arg0) {}
-
-	@Override
-	public void windowDeiconified(WindowEvent arg0) {}
-
-	@Override
-	public void windowIconified(WindowEvent arg0) {}
-
-	@Override
-	public void windowOpened(WindowEvent arg0) {}
-
 	public void keyStrokePressed(KeyStroke keystroke, KeyEvent ke) {
 		if (! keystroke.equals(this.fullscreen_keystroke))
 			return;
