@@ -47,7 +47,8 @@ public class OvdClientFrame extends JFrame implements WindowListener{
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		new NativeLogoutPopup(this, this.actions);
+		NativeLogoutPopup nlp = new NativeLogoutPopup(this, this.actions);
+		nlp.showPopup();
 	}
 
 	@Override

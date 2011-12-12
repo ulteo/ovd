@@ -73,7 +73,8 @@ public class FullscreenWindow extends JFrame implements WindowListener {
 			return;
 		}
 
-		new AppletLogoutPopup(this, this.client);
+		AppletLogoutPopup alp = new AppletLogoutPopup(this, this.client);
+		alp.showPopup();
 	}
 	
 	@Override

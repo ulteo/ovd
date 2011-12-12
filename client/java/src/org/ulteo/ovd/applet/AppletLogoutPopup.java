@@ -37,8 +37,6 @@ public class AppletLogoutPopup extends AbstractLogoutPopup {
 		this.setTitle(I18n._("Warning!"));
 		this.setText(I18n._("Do you really want to close the window?"));
 		this.setChoices(new String[] {I18n._("Yes"), I18n._("No")});
-
-		this.showPopup();
 	}
 
 	@Override
