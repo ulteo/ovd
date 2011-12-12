@@ -88,7 +88,8 @@ function get_users_list() {
 
 	global $sessionmanager_url;
 
-	$ret = SessionManager::query($sessionmanager_url.'/userlist.php');
+	$sm = new SessionManager($sessionmanager_url);
+	$ret = $sm->query('userlist.php');
 
 	$dom = new DomDocument('1.0', 'utf-8');
 	$buf = @$dom->loadXML($ret);

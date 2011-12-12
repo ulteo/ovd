@@ -22,5 +22,17 @@
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
+if (! array_key_exists('ovd-client', $_SESSION) || ! array_key_exists('sessionmanager', $_SESSION['ovd-client'])) {
+	if (is_null($sessionmanager_url)) {
+		header('Content-Type: text/xml');
+		echo return_error(0, 'System not yet initialized');
+		die();
+	}
+	
+	$sm = new SessionManager($sessionmanager_url);
+}
+else
+	$sm = $_SESSION['ovd-client']['sessionmanager'];
+
 header('Content-Type: image/png');
-die(SessionManager::query($sessionmanager_url.'/icon.php?id='.$_GET['id']));
+die($sm->query('icon.php?id='.$_GET['id']));

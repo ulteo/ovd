@@ -21,7 +21,20 @@
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-$xml = SessionManager::query($sessionmanager_url.'/applications.php?user='.$_REQUEST['user']);
+if (! array_key_exists('ovd-client', $_SESSION) || ! array_key_exists('sessionmanager', $_SESSION['ovd-client'])) {
+	if (is_null($sessionmanager_url)) {
+		header('Content-Type: text/xml');
+		echo return_error(0, 'System not yet initialized');
+		die();
+	}
+	
+	$sm = new SessionManager($sessionmanager_url);
+}
+else
+	$sm = $_SESSION['ovd-client']['sessionmanager'];
+
+$sm = $_SESSION['ovd-client']['sessionmanager'];
+$xml = $sm->query('applications.php?user='.$_REQUEST['user']);
 if (! $xml) {
 	die($xml);
 }

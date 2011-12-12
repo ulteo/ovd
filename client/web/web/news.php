@@ -24,7 +24,13 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 header('Content-Type: text/xml; charset=utf-8');
 
-$xml = SessionManager::query($sessionmanager_url.'/news.php');
+if (! array_key_exists('ovd-client', $_SESSION) || ! array_key_exists('sessionmanager', $_SESSION['ovd-client'])) {
+	echo return_error(0, 'System not yet initialized');
+	die();
+}
+
+$sm = $_SESSION['ovd-client']['sessionmanager'];
+$xml = $sm->query('news.php');
 if (! $xml) {
 	echo return_error(0, 'Invalid XML');
 	die();

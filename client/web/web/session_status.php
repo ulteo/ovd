@@ -24,8 +24,14 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 header('Content-Type: text/xml; charset=utf-8');
 
+if (! array_key_exists('ovd-client', $_SESSION) || ! array_key_exists('sessionmanager', $_SESSION['ovd-client'])) {
+	echo return_error(0, 'System not yet initialized');
+	die();
+}
+
+$sm = $_SESSION['ovd-client']['sessionmanager'];
 $dom = new DomDocument('1.0', 'utf-8');
-$buf = @$dom->loadXML(SessionManager::query($sessionmanager_url.'/session_status.php'));
+$buf = @$dom->loadXML($sm->query('session_status.php'));
 if (! $buf) {
 	echo return_error(0, 'Invalid XML');
 	die();

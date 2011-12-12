@@ -36,10 +36,12 @@ if (array_key_exists('language', $_REQUEST)) {
 }
 
 $first = false;
-if (array_key_exists('ovd-client', $_SESSION) && array_key_exists('session_id', $_SESSION['ovd-client'])) {
+if (array_key_exists('ovd-client', $_SESSION) && array_key_exists('sessionmanager', $_SESSION['ovd-client'])) {
+	$sm = $_SESSION['ovd-client']['sessionmanager'];
+	
 	// Check if session still exist SM side
 	$dom = new DomDocument('1.0', 'utf-8');
-	$buf = @$dom->loadXML(SessionManager::query($sessionmanager_url.'/session_status.php'));
+	$buf = @$dom->loadXML($sm->query('session_status.php'));
 	if (! $buf)
 		die('Invalid XML from Session Manager');
 	
@@ -83,8 +85,11 @@ if ($first === true) {
 	$_SESSION['ovd-client']['server'] = @SESSIONMANAGER_HOST; // If the WebClient is not linked to a SessionManager, JavaScript object will return an 'Usage: missing "sessionmanager_host" parameter' error
 	$_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$_SESSION['ovd-client']['server'].'/ovd/client';
 	$sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
+	
+	$sm = new SessionManager($sessionmanager_url);
+	$_SESSION['ovd-client']['sessionmanager'] = $sm;
 
-	SessionManager::query_post_xml($sessionmanager_url.'/auth.php', $dom->saveXML());
+	$sm->query_post_xml('auth.php', $dom->saveXML());
 
 	$_SESSION['ovd-client']['start_app'] = array();
 }

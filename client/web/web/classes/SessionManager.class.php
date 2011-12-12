@@ -21,8 +21,16 @@
 
 
 class SessionManager {
-	public static function query($url_) {
-		$socket = self::build_curl_instance($url_);
+	private $base_url;
+	private $cookies;
+	
+	public function __construct($base_url_) {
+		$this->base_url = $base_url_;
+		$this->cookies = array();
+	}
+	
+	public function query($url_) {
+		$socket = $this->build_curl_instance($url_);
 		
 		$string = curl_exec($socket);
 		$buf = curl_getinfo($socket, CURLINFO_HTTP_CODE);
@@ -35,8 +43,8 @@ class SessionManager {
 	}
 	
 	
-	public static function query_post_xml($url_, $xml_) {
-		$socket = self::build_curl_instance($url_);
+	public function query_post_xml($url_, $xml_) {
+		$socket = $this->build_curl_instance($url_);
 		
 		curl_setopt($socket, CURLOPT_HEADER, 1);
 		
@@ -54,13 +62,9 @@ class SessionManager {
 		if (! in_array($http_code, array(200, 302)))
 			return false;
 		
-		if (! array_key_exists('session_var', $_SESSION['ovd-client']['sessionmanager']) || ! array_key_exists('session_id', $_SESSION['ovd-client']['sessionmanager'])) {
-			preg_match('@Set-Cookie: (.*)=(.*);@', $headers, $matches);
-			if (count($matches) == 3) {
-				$_SESSION['ovd-client']['sessionmanager']['session_var'] = $matches[1];
-				$_SESSION['ovd-client']['sessionmanager']['session_id'] = $matches[2];
-			}
-		}
+		preg_match('@Set-Cookie: (.*)=(.*);@', $headers, $matches);
+		if (count($matches) == 3)
+			$this->cookies[$matches[1]] = $matches[2];
 		
 		if ($http_code == 302) {
 			preg_match('@Location: (.*)\n@', $headers, $matches);
@@ -72,20 +76,25 @@ class SessionManager {
 	}
 	
 	
-	public static function build_curl_instance($url_) {
-		if (! array_key_exists('sessionmanager', $_SESSION['ovd-client']))
-			$_SESSION['ovd-client']['sessionmanager'] = array();
-		
-		$socket = curl_init($url_);
+	private function build_curl_instance($url_) {
+		$socket = curl_init($this->base_url.'/'.$url_);
 		curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($socket, CURLOPT_SSL_VERIFYHOST, 0);
 		curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, 10);
 		curl_setopt($socket, CURLOPT_TIMEOUT, (10+5));
 		
-		if (array_key_exists('session_var', $_SESSION['ovd-client']['sessionmanager']) && array_key_exists('session_id', $_SESSION['ovd-client']['sessionmanager']))
-			curl_setopt($socket, CURLOPT_COOKIE, $_SESSION['ovd-client']['sessionmanager']['session_var'].'='.$_SESSION['ovd-client']['sessionmanager']['session_id']);
+		foreach($this->cookies as $k => $v)
+			curl_setopt($socket, CURLOPT_COOKIE, $k.'='.$v);
 		
 		return $socket;
+	}
+	
+	public function get_base_url() {
+		return $this->base_url;
+	}
+	
+	public function set_base_url($base_url_) {
+		$this->base_url = $base_url_;
 	}
 }

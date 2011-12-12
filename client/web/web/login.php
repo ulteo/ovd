@@ -119,11 +119,21 @@ if (is_array($headers) && array_key_exists('OVD-Gateway', $headers)) {
 $_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$_SESSION['ovd-client']['server'].'/ovd/client';
 $sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
 
+if (array_key_exists('sessionmanager', $_SESSION['ovd-client'])) {
+	$sm = $_SESSION['ovd-client']['sessionmanager'];
+	if ($sm->get_base_url() != $sessionmanager_url)
+		$sm->set_base_url($sessionmanager_url);
+}
+else {
+	$sm = new SessionManager($sessionmanager_url);
+	$_SESSION['ovd-client']['sessionmanager'] = $sm;
+}
+
 if (array_key_exists('from_SM_start_XML', $_SESSION['ovd-client'])) {
 	$xml = $_SESSION['ovd-client']['from_SM_start_XML'];
 	unset($_SESSION['ovd-client']['from_SM_start_XML']);
 } else {
-	$xml = SessionManager::query_post_xml($sessionmanager_url.'/start.php', $dom->saveXML());
+	$xml = $sm->query_post_xml('start.php', $dom->saveXML());
 	if (! $xml) {
 		echo return_error_alt(0, 'unable_to_reach_sm', $sessionmanager_url.'/start.php');
 		die();

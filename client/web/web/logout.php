@@ -27,6 +27,13 @@ if (! array_key_exists('mode', $_POST))
 
 header('Content-Type: text/xml; charset=utf-8');
 
+if (! array_key_exists('ovd-client', $_SESSION) || ! array_key_exists('sessionmanager', $_SESSION['ovd-client'])) {
+	echo return_error(0, 'System not yet initialized');
+	die();
+}
+
+$sm = $_SESSION['ovd-client']['sessionmanager'];
+
 $dom = new DomDocument('1.0', 'utf-8');
 $logout_node = $dom->createElement('logout');
 $logout_node->setAttribute('mode', $_POST['mode']);
@@ -35,7 +42,7 @@ $dom->appendChild($logout_node);
 $xml = $dom->saveXML();
 
 $dom = new DomDocument('1.0', 'utf-8');
-$buf = @$dom->loadXML(SessionManager::query_post_xml($sessionmanager_url.'/logout.php', $xml));
+$buf = @$dom->loadXML($sm->query_post_xml('logout.php', $xml));
 if (! $buf) {
 	echo return_error(0, 'Invalid XML');
 	die();
