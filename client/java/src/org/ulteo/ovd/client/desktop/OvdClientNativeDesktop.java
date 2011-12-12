@@ -66,7 +66,6 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClien
 	@Override
 	public void hide(RdpConnectionOvd co) {
 		this.desktop.destroy();
-		this.desktop = null;
 	}
 
 	@Override
