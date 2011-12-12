@@ -32,6 +32,9 @@ public class OvdClientFrame extends JFrame implements WindowListener{
 	protected RdpActions actions = null;
 	
 	public OvdClientFrame(RdpActions actions) {
+		if (actions == null)
+			throw new IllegalArgumentException("actions parameter cannot be null");
+		
 		this.actions = actions;
 		this.addWindowListener(this);
 	}
@@ -44,10 +47,7 @@ public class OvdClientFrame extends JFrame implements WindowListener{
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		if (this.actions != null)
-			new NativeLogoutPopup(this, this.actions);
-		else
-			System.err.println("Can't manage disconnection request: rdpAction is null");
+		new NativeLogoutPopup(this, this.actions);
 	}
 
 	@Override
