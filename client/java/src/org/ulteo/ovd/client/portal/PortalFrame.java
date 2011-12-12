@@ -223,6 +223,7 @@ public class PortalFrame extends OvdClientFrame {
 		this.newPanelAdded = false;
 	}
 	
+	@Override
 	public void windowIconified(WindowEvent arg0) {
 		if (OSTools.isWindows() && this.systray != null)
 			this.setVisible(false);
