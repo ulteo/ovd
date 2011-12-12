@@ -27,7 +27,7 @@ import javax.swing.JFrame;
 import org.ulteo.ovd.client.authInterface.NativeLogoutPopup;
 import org.ulteo.rdp.RdpActions;
 
-public class OvdClientFrame extends JFrame implements WindowListener{
+public class OvdClientFrame extends JFrame implements WindowListener {
 
 	protected RdpActions actions = null;
 	
