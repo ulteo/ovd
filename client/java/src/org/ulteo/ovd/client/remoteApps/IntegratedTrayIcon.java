@@ -21,7 +21,6 @@
 package org.ulteo.ovd.client.remoteApps;
 
 import java.awt.AWTException;
-import java.awt.Frame;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
@@ -33,14 +32,15 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 
 import org.ulteo.Logger;
+import org.ulteo.ovd.client.OvdClientFrame;
 import org.ulteo.rdp.RdpActions;
 
 public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
-	private Frame portal = null;
+	private OvdClientFrame portal = null;
 	private SystemTray systemTray = null;
 	private RdpActions rdpActions = null;
 
-	public IntegratedTrayIcon(Frame portal, Image logo, RdpActions actions) throws UnsupportedOperationException {
+	public IntegratedTrayIcon(OvdClientFrame portal, Image logo, RdpActions actions) throws UnsupportedOperationException {
 		super(logo, "Open Virtual Desktop");
 		this.setImage(logo);
 		this.portal = portal;
@@ -86,14 +86,15 @@ public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				rdpActions.disconnect(true);
+				portal.haveToQuit(true);
+				rdpActions.disconnect();
 			}
 		});
 		itemDisconnect.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				rdpActions.disconnect(false);
+				rdpActions.disconnect();
 			}
 		});
 		popup.add(itemDisconnect);

@@ -630,7 +630,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			this.isCancelled = true;
 			
 			if (this.client != null)
-				this.client.disconnect(false);
+				this.client.disconnect();
 
 			this.loadingFrame.getCancelButton().setEnabled(false);
 		}
@@ -794,13 +794,13 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			this.client.setBandWidthLimitation(this.opts.socketTimeout, diskBandwidthLimit);
 		}
 
-		boolean exit = false;
 		if (! this.isCancelled) {
 			Runtime.getRuntime().addShutdownHook(new ShutdownTask(this.client));
-			exit = this.client.perform();
+			this.client.perform();
 		}
 		else
-			this.client.disconnect(false);
+			this.client.disconnect();
+		boolean exit = ((NativeClientCommon)client).haveToQuit();
 		this.client = null;
 
 		timeout.cancel();

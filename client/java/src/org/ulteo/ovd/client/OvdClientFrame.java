@@ -31,12 +31,33 @@ public class OvdClientFrame extends JFrame implements WindowListener {
 
 	protected RdpActions actions = null;
 	
+	/**
+	 * have to quit after logout
+	 */
+	private boolean have_to_quit = false;
+	
 	public OvdClientFrame(RdpActions actions) {
 		if (actions == null)
 			throw new IllegalArgumentException("actions parameter cannot be null");
 		
 		this.actions = actions;
 		this.addWindowListener(this);
+	}
+	
+	/**
+	 * respond if native client have to quit after logout
+	 * @return have to quit after logout
+	 */
+	public boolean haveToQuit() {
+		return this.have_to_quit;
+	}
+	
+	/**
+	 * set if native client have to quit after logout
+	 * @param quit have to quit after logout
+	 */
+	public void haveToQuit(boolean quit) {
+		this.have_to_quit = quit;
 	}
 
 	@Override
@@ -49,6 +70,7 @@ public class OvdClientFrame extends JFrame implements WindowListener {
 	public void windowClosing(WindowEvent e) {
 		NativeLogoutPopup nlp = new NativeLogoutPopup(this, this.actions);
 		nlp.showPopup();
+		this.have_to_quit = nlp.haveToQuit();
 	}
 
 	@Override

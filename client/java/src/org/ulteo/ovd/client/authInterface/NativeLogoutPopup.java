@@ -30,6 +30,11 @@ import org.ulteo.rdp.RdpActions;
 public class NativeLogoutPopup extends AbstractLogoutPopup {
 	private RdpActions actions = null;
 	
+	/**
+	 * have to quit after logout
+	 */
+	private boolean have_to_quit = false;
+	
 	public NativeLogoutPopup(JFrame frame_, RdpActions actions_) {
 		super(frame_);
 
@@ -40,14 +45,23 @@ public class NativeLogoutPopup extends AbstractLogoutPopup {
 		this.setChoices(new String[] {I18n._("Yes"), I18n._("Go back to authentication"), I18n._("No")});
 	}
 	
+	/**
+	 * respond if native client have to quit after logout
+	 * @return have to quit after logout
+	 */
+	public boolean haveToQuit() {
+		return this.have_to_quit;
+	}
+	
 	@Override
 	protected void processOption(int option_) {
 		switch (option_) {
 			case 0 :
-				this.actions.disconnect(true);
+				this.have_to_quit = true;
+				this.actions.disconnect();
 				break;
 			case 1 :
-				this.actions.disconnect(false);
+				this.actions.disconnect();
 				break;
 			default:
 				this.setVisible(true);

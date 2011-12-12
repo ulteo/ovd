@@ -36,6 +36,7 @@ import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.OvdException;
+import org.ulteo.ovd.client.NativeClientCommon;
 import org.ulteo.ovd.client.Newser;
 import org.ulteo.ovd.client.OvdClientPerformer;
 import org.ulteo.ovd.client.OvdClientRemoteApps;
@@ -47,7 +48,7 @@ import org.ulteo.ovd.sm.Callback;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
-public class OvdClientPortal extends OvdClientRemoteApps implements ComponentListener, Newser, OvdClientPerformer {
+public class OvdClientPortal extends OvdClientRemoteApps implements ComponentListener, Newser, OvdClientPerformer, NativeClientCommon {
 	
 	private PortalFrame portal = null;
 	private String username = null;
@@ -238,6 +239,14 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			this.portal.getApplicationPanel().addScroller();
 		
 		this.portal.setVisible(! this.hiddenAtStart);
+	}
+	
+	
+	// interface NativeClientCommon's methods 
+	
+	@Override
+	public boolean haveToQuit() {
+		return this.portal.haveToQuit();
 	}
 	
 }

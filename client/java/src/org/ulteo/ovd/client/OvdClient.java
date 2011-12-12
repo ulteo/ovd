@@ -90,7 +90,6 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 
 	protected boolean isCancelled = false;
 	private boolean connectionIsActive = true;
-	private boolean exitAfterLogout = false;
 	protected boolean persistent = false;
 
 	public OvdClient(SessionManagerCommunication smComm, Callback obj_, boolean persistent) {
@@ -209,7 +208,7 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 	 * not called by applet mode
 	 * @return
 	 */
-	boolean perform() {
+	void perform() {
 		if (!(this instanceof OvdClientPerformer))
 			throw new ClassCastException("OvdClient must inherit from an OvdClientPerformer to use 'perform' action");
 		
@@ -239,7 +238,7 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 			}
 
 			if (! ((OvdClientPerformer)this).checkRDPConnections()) {
-				this.disconnect(false);
+				this.disconnect();
 				break;
 			}
 		} while (this.performedConnections.size() < this.connections.size());
@@ -255,8 +254,6 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 		} catch (SessionManagerException e) {
 			Logger.error("Failed to inform the session manager about the RDP session ending.");
 		}
-
-		return this.exitAfterLogout;
 	}
 
 	public void connect() {
@@ -354,9 +351,7 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 	/* RdpActions */
 
 	@Override
-	public void disconnect(boolean exit) {
-		this.exitAfterLogout = exit;
-		
+	public void disconnect() {
 		if (! this.connectionIsActive)
 			return;
 

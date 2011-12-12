@@ -37,7 +37,7 @@ public class ShutdownTask extends Thread {
 			return;
 		}
 
-		this.client.disconnect(false);
+		this.client.disconnect();
 
 		//Cleaning up all useless OVD data
 		SystemAbstract.cleanAll();
