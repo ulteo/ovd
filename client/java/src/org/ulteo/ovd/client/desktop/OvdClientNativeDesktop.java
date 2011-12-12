@@ -40,22 +40,15 @@ import org.ulteo.rdp.RdpConnectionOvd;
 public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClientPerformer {
 	
 	private DesktopFrame desktop = null;
-	private Dimension resolution = null;
 	
-	public OvdClientNativeDesktop(SessionManagerCommunication smComm, Dimension resolution_, Callback obj, boolean persistent) {
+	public OvdClientNativeDesktop(SessionManagerCommunication smComm, Dimension resolution, Callback obj, boolean persistent) {
 		super(smComm, obj, persistent);
-		this.resolution = resolution_;
+		this.desktop = new DesktopFrame(resolution, this);
 	}
 
 	@Override
 	protected void customizeConnection(RdpConnectionOvd co) {
-		boolean isFullscreen = (this.resolution.width == getScreenSize().width &&
-				this.resolution.height == getScreenSize().height);
-
-		if (this.desktop == null)
-			this.desktop = new DesktopFrame(this.resolution, isFullscreen, this);
-
-		if (! isFullscreen) {
+		if (! this.desktop.isFullscreen()) {
 			Dimension dim = this.desktop.getInternalSize();
 			co.setGraphic(dim.width, dim.height, co.getBpp());
 		}

@@ -37,8 +37,8 @@ import net.propero.rdp.RdesktopCanvas;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
 
+import org.ulteo.ovd.client.OvdClientDesktop;
 import org.ulteo.ovd.client.OvdClientFrame;
-import org.ulteo.rdp.RdpActions;
 import org.ulteo.utils.jni.WorkArea;
 
 public class DesktopFrame extends OvdClientFrame implements InputListener {
@@ -59,13 +59,14 @@ public class DesktopFrame extends OvdClientFrame implements InputListener {
 	private ScrollableDesktopFrame scrollFrame = null;
 	private KeyStroke fullscreen_keystroke = null;
 	
-	public DesktopFrame(Dimension dim, boolean fullscreen_, RdpActions actions) {
-		super(actions);
-		this.fullscreen = fullscreen_;
+	public DesktopFrame(Dimension resolution, OvdClientDesktop client) {
+		super(client);
+		this.fullscreen = (resolution.width == client.getScreenSize().width &&
+				resolution.height == client.getScreenSize().height);
 		this.logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
 		setIconImage(logo);
-		setSize(dim);
-		setPreferredSize(dim);
+		setSize(resolution);
+		setPreferredSize(resolution);
 		this.setTitle("Ulteo Remote Desktop");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -84,6 +85,14 @@ public class DesktopFrame extends OvdClientFrame implements InputListener {
 		pack();
 	}
 
+	/**
+	 * say if this desktop is displayed in fullscreen size
+	 * @return is fullscreened display
+	 */
+	public boolean isFullscreen() {
+		return this.fullscreen;
+	}
+	
 	public void destroy() {
 		if (this.fullscreen) {
 			this.scrollFrame.setVisible(false);
@@ -149,4 +158,5 @@ public class DesktopFrame extends OvdClientFrame implements InputListener {
 			this.switchToFullsreen();
 		}
 	}
+	
 }

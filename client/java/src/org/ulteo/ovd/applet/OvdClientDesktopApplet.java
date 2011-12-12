@@ -112,7 +112,7 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 	}
 	
 	@Override
-	protected Dimension getScreenSize() {
+	public Dimension getScreenSize() {
 		return (this.isFullscreen) ? super.getScreenSize() : this.applet.getSize();
 	}
 	

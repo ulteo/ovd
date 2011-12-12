@@ -81,7 +81,7 @@ public abstract class OvdClientDesktop extends OvdClient {
 		rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, bpp);
 	}
 
-	protected Dimension getScreenSize() {
+	public Dimension getScreenSize() {
 		return Toolkit.getDefaultToolkit().getScreenSize();
 	}
 	
