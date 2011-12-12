@@ -26,8 +26,6 @@ if (! is_array($_POST) || count($_POST) == 0) {
 }
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/classes/Ajaxplorer.class.php');
-require_once(dirname(__FILE__).'/classes/SessionManager.class.php');
 
 function return_error_alt($errno_, $errstr_, $errmore_=NULL) {
 	$dom = new DomDocument('1.0', 'utf-8');

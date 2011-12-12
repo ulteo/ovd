@@ -21,7 +21,6 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/classes/SessionManager.class.php');
 
 if (array_key_exists('language', $_REQUEST)) {
 	$available_languages = get_available_languages();

@@ -23,7 +23,6 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/classes/SessionManager.class.php');
 
 $languages = get_available_languages();
 $keymaps = get_available_keymaps();

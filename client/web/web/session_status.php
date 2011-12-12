@@ -21,7 +21,6 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/classes/SessionManager.class.php');
 
 header('Content-Type: text/xml; charset=utf-8');
 

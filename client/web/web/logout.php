@@ -21,7 +21,6 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/classes/SessionManager.class.php');
 
 if (! array_key_exists('mode', $_POST))
 	$_POST['mode'] = 'logout';

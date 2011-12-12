@@ -34,6 +34,20 @@ define('LOCALE_DIR', '/usr/share/locale');
 
 require_once(dirname(__FILE__).'/functions.inc.php');
 
+function __autoload($class_name) {
+	if (class_exists($class_name))
+		return;
+	
+	$class_files = array();
+	
+	$class_dir = dirname(dirname(__FILE__)).'/classes';
+	$class_file = $class_dir.'/'.$class_name.'.class.php';
+	if (! file_exists($class_file))
+		die('Class \''.$class_name.'\' not found');
+	
+	require_once($class_file);
+}
+
 @session_start();
 
 if (! array_key_exists('ovd-client', $_SESSION))
