@@ -369,12 +369,13 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 			}
 		};
 
+		long delay = 0;
+		
 		if (this.persistent) {
-			forceDisconnectionTimer.schedule(forceDisconnectionTask, 0);
+			forceDisconnectionTimer.schedule(forceDisconnectionTask, delay);
 			return;
 		}
 		
-		long delay = 0;
 		if (this.smComm != null && ! OSTools.is_applet) {
 			Thread disconnectThread = new Thread(new Runnable() {
 				public void run() {
