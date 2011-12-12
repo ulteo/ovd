@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1087,4 +1088,15 @@ function onStartExternalSessionFailure() {
 function getWebClientBaseURL() {
 	var url = window.location.href;
 	return url.replace(/\/[^\/]*$/, "")+"/";
+}
+
+function confirmLogout(confirm_) {
+	var nb_apps_ = daemon.nb_running_apps();
+	if (confirm_ == 'always' || (confirm_ == 'apps_only' && nb_apps_ > 0)) {
+		if (!confirm(i18n.get('want_logout').replace('#', nb_apps_)))
+			return false;
+	}
+	
+	daemon.logout();
+	return false;
 }

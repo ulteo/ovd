@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -154,7 +155,8 @@ $js_translations = array(
 										),
 
 	'suspend'						=>	_('suspend'),
-	'resume'						=>	_('resume')
+	'resume'						=>	_('resume'),
+	'want_logout'						=>	_('Are you sure you want to logout (# apps running) ?')
 );
 
 foreach ($js_translations as $id => $string) {

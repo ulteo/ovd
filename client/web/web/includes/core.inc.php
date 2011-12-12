@@ -78,3 +78,6 @@ if (! defined('OPTION_KEYMAP_AUTO_DETECT'))
 
 if (! defined('OPTION_FORCE_KEYMAP'))
 	define('OPTION_FORCE_KEYMAP', false);
+
+if (! defined('OPTION_CONFIRM_LOGOUT'))
+	define('OPTION_CONFIRM_LOGOUT', 'never');

@@ -5,6 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -79,6 +80,8 @@ if (defined('RDP_INPUT_METHOD'))
 	$rdp_input_unicode = RDP_INPUT_METHOD;
 
 $local_integration = (defined('PORTAL_LOCAL_INTEGRATION') && (PORTAL_LOCAL_INTEGRATION === true));
+
+$confirm_logout = OPTION_CONFIRM_LOGOUT;
 
 function get_users_list() {
 	if (! defined('SESSIONMANAGER_HOST'))
@@ -375,7 +378,8 @@ function get_users_list() {
 									<?php
 										}*/
 									?>
-									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.logout(); return false;"><img src="media/image/logout.png" width="32" height="32" alt="" title="" /><br /><span id="logout_gettext">&nbsp;</span></a></td>
+
+									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="confirmLogout('<?php echo $confirm_logout; ?>');"><img src="media/image/logout.png" width="32" height="32" alt="" title="" /><br /><span id="logout_gettext">&nbsp;</span></a></td>
 								</tr>
 							</table>
 						</td>

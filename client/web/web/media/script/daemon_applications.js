@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,6 +28,7 @@ var Applications = Class.create(Daemon, {
 	applications: new Hash(),
 	applicationsPanel: null,
 	running_applications: new Hash(),
+	nb_running_applications: 0,
 	runningApplicationsPanel: null,
 
 	news: new Hash(),
@@ -215,6 +217,10 @@ var Applications = Class.create(Daemon, {
 		}
 	},
 
+	nb_running_apps: function() {
+		return this.nb_running_applications;
+	},
+
 	applicationStatus: function(token_, status_) {
 		this.push_log('debug', '[applications] applicationStatus(token: '+token_+', status: '+status_+')');
 
@@ -246,6 +252,7 @@ var Applications = Class.create(Daemon, {
 						running += parseInt($('running_'+app_id).innerHTML);
 				}
 				running += 1;
+				this.nb_running_applications += 1;
 
 				$('running_'+app_id).innerHTML = running;
 			}
@@ -269,6 +276,7 @@ var Applications = Class.create(Daemon, {
 						running = parseInt($('running_'+app_id).innerHTML);
 				}
 				running -= 1;
+				this.nb_running_applications -= 1;
 
 				if (running > 0)
 					$('running_'+app_id).innerHTML = running;

@@ -74,3 +74,9 @@ define('DEBUG_MODE', 0);
 //    from the port binded by the Gateway (nat redirection)
 //   default is to use the same port as the client connection
 // define('GATEWAY_FORCE_PORT', 443);
+
+// CONFIRM LOGOUT
+// define('OPTION_CONFIRM_LOGOUT', 'always');
+// define('OPTION_CONFIRM_LOGOUT', 'apps_only');
+// define('OPTION_CONFIRM_LOGOUT', 'never');
+// default = never
