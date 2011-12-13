@@ -113,9 +113,6 @@ public class SouthEastPanel extends JPanel {
 	}
 
 	public void initPublishingButton() {
-		if (this.publishingButton == null)
-			return;
-
 		this.publishingButton.setIcon(null);
 		this.publishingButton.setText(((OvdClientPortal) this.rdpActions).isAutoPublish() ?  HIDE : DISPLAY);
 		this.publishingButton.setEnabled(true);
