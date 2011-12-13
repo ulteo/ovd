@@ -136,10 +136,10 @@ function show_default($userDB) {
     echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
 
     $content_color = 1;
-    $minimun_attributes = array('login', 'displayname',  'password');
-    foreach ($minimun_attributes as $minimun_attribute) {
+    $minimun_attributes = array('login' => _('Login'), 'displayname' => _('Display name'),  'password' => _('Password'));
+    foreach ($minimun_attributes as $minimun_attribute => $minimun_attribute_msg) {
       echo '<tr class="content'.$content_color.'">';
-      echo '<th>'._($minimun_attribute).'</th>';
+      echo '<th>'.$minimun_attribute_msg.'</th>';
       echo '<td><input type="'.$minimun_attribute.'" name="'.$minimun_attribute.'" value="" /></td>';
       echo '</tr>';
       $content_color = (($content_color++)%2)+1;
