@@ -85,6 +85,7 @@ public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 		SystemTray.getSystemTray().remove(this);
 	}
 	
+	@Override
 	public void actionPerformed(ActionEvent ae) {
 		if (portal.isVisible()) {
 			portal.setExtendedState(JFrame.ICONIFIED);
