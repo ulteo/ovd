@@ -277,26 +277,24 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 		}
 
 		// stop all RDP connections and wait
-		if (this.connections != null) {
-			for (RdpConnection rc : this.connections)
-				rc.stop();
-	
-			boolean rdpActivity;
-			do {
-				rdpActivity = false;
-				for (RdpConnection rc : this.connections) {
-					if (rc.isConnected()) {
-						rdpActivity = true;
-						try {
-							Thread.sleep(2000);
-						} catch (InterruptedException ex) {
-							rdpActivity = false;
-						}
-						break;
+		for (RdpConnection rc : this.connections)
+			rc.stop();
+
+		boolean rdpActivity;
+		do {
+			rdpActivity = false;
+			for (RdpConnection rc : this.connections) {
+				if (rc.isConnected()) {
+					rdpActivity = true;
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException ex) {
+						rdpActivity = false;
 					}
+					break;
 				}
-			} while (rdpActivity);
-		}
+			}
+		} while (rdpActivity);
 	}
 
 	protected abstract void runSessionTerminated();
