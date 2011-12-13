@@ -38,7 +38,7 @@ public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 	private OvdClientFrame portal = null;
 	private RdpActions rdpActions = null;
 
-	public IntegratedTrayIcon(OvdClientFrame portal, Image logo, RdpActions actions) throws UnsupportedOperationException {
+	public IntegratedTrayIcon(OvdClientFrame portal, Image logo, RdpActions actions) {
 		super(logo, "Open Virtual Desktop");
 		this.setImage(logo);
 		this.portal = portal;

@@ -37,7 +37,6 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import org.ulteo.Logger;
 
 import org.ulteo.utils.I18n;
 import org.ulteo.gui.GUIActions;
@@ -160,12 +159,8 @@ public class PortalFrame extends OvdClientFrame {
 	}
 	
 	public void initSystray() {
-		try {
-			this.systray = new IntegratedTrayIcon(this, this.frameLogo, this.actions);
-			this.systray.addSysTray();
-		} catch (UnsupportedOperationException ex) {
-			Logger.error("Systray is not supported: "+ex.getMessage());
-		}
+		this.systray = new IntegratedTrayIcon(this, this.frameLogo, this.actions);
+		this.systray.addSysTray();
 	}
 		
 	public MyApplicationPanel getApplicationPanel() {
