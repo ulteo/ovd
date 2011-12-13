@@ -36,7 +36,6 @@ import org.ulteo.rdp.RdpActions;
 
 public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 	private OvdClientFrame portal = null;
-	private SystemTray systemTray = null;
 	private RdpActions rdpActions = null;
 
 	public IntegratedTrayIcon(OvdClientFrame portal, Image logo, RdpActions actions) throws UnsupportedOperationException {
@@ -47,19 +46,18 @@ public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 		this.addActionListener(this);
 		this.rdpActions = actions;
 		this.initPopupMenu();
-		this.systemTray = SystemTray.getSystemTray();
 	}
 
 	public void addSysTray() {
 		try {
-			this.systemTray.add(this);
+			SystemTray.getSystemTray().add(this);
 		} catch (AWTException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public void removeSysTray() {
-			this.systemTray.remove(this);
+		SystemTray.getSystemTray().remove(this);
 	}
 	
 	public void actionPerformed(ActionEvent ae) {
