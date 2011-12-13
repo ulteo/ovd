@@ -198,8 +198,13 @@ if (is_array($headers) && array_key_exists('OVD-Gateway', $headers)) {
 	$_SESSION['ovd-client']['gateway'] = true;
 	$_SESSION['ovd-client']['gateway_first'] = true;
 
-	$_SESSION['ovd-client']['server'] = $_SERVER['REMOTE_ADDR'].':'.$_POST['requested_port'];
-	$_SESSION['ovd-client']['sessionmanager_host'] = $_SERVER['REMOTE_ADDR'].':'.$_POST['requested_port'];
+	if (defined('GATEWAY_FORCE_PORT'))
+		$port = GATEWAY_FORCE_PORT;
+	else
+		$port = $_POST['requested_port'];
+	
+	$_SESSION['ovd-client']['server'] = $_SERVER['REMOTE_ADDR'].':'.$port;
+	$_SESSION['ovd-client']['sessionmanager_host'] = $_POST['requested_host'].':'.$_POST['requested_port'];
 }
 
 $_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$_SESSION['ovd-client']['server'].'/ovd/client';
