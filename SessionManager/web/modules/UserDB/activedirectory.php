@@ -111,7 +111,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		$ret []= $c;
 		$c = new ConfigElement_dictionary('match', _('match'), _('match'), _('match'), array());
 		$ret []= $c;
-		$c = new ConfigElement_select('accept_expired_password', _('Accept expired password'), _('Authorize user connection even if password has expired in order to the Windows server perform the password renew process'), _('Authorize user connection even if password has expired in order to the Windows server perform the password renew process'), 0);
+		$c = new ConfigElement_select('accept_expired_password', _('Accept expired password'), _('Authorize a user connection even if the password has expired, to have the Windows server perform the password renew process'), _('Authorize a user connection even if the password has expired, to have the Windows server perform the password renew process'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$ret []= $c;
 		return $ret;

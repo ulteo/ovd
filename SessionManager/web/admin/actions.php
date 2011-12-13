@@ -670,7 +670,7 @@ if ($_REQUEST['name'] == 'User_UserGroup') {
 		}
 
 		if ($group->isDefault()) {
-			popup_error(sprintf(_("Unable to remove an user from usergroup '%s' because it is the default usergroup"), $group->name));
+			popup_error(sprintf(_("Unable to remove a user from usergroup '%s' because it is the default usergroup"), $group->name));
 			redirect();
 		}
 
