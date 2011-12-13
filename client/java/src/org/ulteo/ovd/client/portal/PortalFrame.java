@@ -162,12 +162,10 @@ public class PortalFrame extends OvdClientFrame {
 	public void initSystray() {
 		try {
 			this.systray = new IntegratedTrayIcon(this, this.frameLogo, this.actions);
+			this.systray.addSysTray();
 		} catch (UnsupportedOperationException ex) {
 			Logger.error("Systray is not supported: "+ex.getMessage());
-			this.systray = null;
 		}
-		if (this.systray != null)
-			this.systray.addSysTray();
 	}
 		
 	public MyApplicationPanel getApplicationPanel() {
