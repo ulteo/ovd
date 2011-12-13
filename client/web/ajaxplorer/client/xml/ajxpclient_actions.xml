@@ -16,11 +16,11 @@
 				<serverCallback methodName="switchAction"></serverCallback>
 			</processing>
 		</action>
-		<action name="get_bookmarks">
+<!--		<action name="get_bookmarks">
 			<processing>
 				<serverCallback methodName="switchAction"></serverCallback>
 			</processing>
-		</action>
+		</action>-->
 		<action name="save_user_pref">
 			<processing>
 				<serverCallback methodName="switchAction"></serverCallback>
@@ -99,7 +99,7 @@
 				<serverCallback methodName="switchAction"></serverCallback>
 			</processing>
 		</action>
-		<action name="bookmark">
+<!--		<action name="bookmark">
 			<gui text="152" title="153" src="bookmark.png" hasAccessKey="true"
 				accessKey="bookmarks_access_key">
 				<context selection="false" dir="true" recycle="hidden"
@@ -146,7 +146,7 @@
 				]]></clientForm>
 				<serverCallback methodName="switchAction"></serverCallback>
 			</processing>
-		</action>		
+		</action>-->
 		<!--<action name="splash">
 			<gui text="166" title="167" src="info.png" hasAccessKey="true"
 				accessKey="about_access_key">
