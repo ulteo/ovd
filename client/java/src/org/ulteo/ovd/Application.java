@@ -48,6 +48,10 @@ public class Application implements Comparable<Application> {
 			this.icon = icon_;
 		this.iconName = UUID.randomUUID().toString()+"-"+this.id;
 	}
+	
+	public Application (RdpConnectionOvd connection_, org.ulteo.ovd.sm.Application app, ImageIcon icon_) {
+		this(connection_, app.getId(), app.getName(), app.getMimes(), icon_);
+	}
 
 	public List<String> getSupportedMimeTypes() {
 		return this.supportedMime;

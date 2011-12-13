@@ -242,7 +242,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 					appsIcons.put(appId, appIcon);
 			}
 
-			rc.addApp(new Application(rc, appId, appItem.getName(), appItem.getMimes(), appIcon));
+			rc.addApp(new Application(rc, appItem, appIcon));
 			this.ApplicationIndex++;
 		}
 		int updatedIcons = this.system.updateAppsIconsCache(appsIcons);
