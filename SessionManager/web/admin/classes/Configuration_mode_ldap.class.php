@@ -187,7 +187,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str= '<h1>'._('Lightweight Directory Access Protocol (LDAP)').'</h1>';
 
     $str.= '<div class="section">';
-    $str.= '<h3>Server</h3>';
+    $str.= '<h3>'._('Server').'</h3>';
     $str.= '<table>';
     $str.= '<tr><td>'._('Primary Host:').'</td><td><input type="text" name="host" value="'.$form['host'].'" /></td></tr>';
     $str.= '<tr><td>'._('Secondary Host:').'</td><td><input type="text" name="host2" value="'.$form['host2'].'" /></td>';

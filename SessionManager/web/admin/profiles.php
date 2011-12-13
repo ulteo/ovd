@@ -92,7 +92,7 @@ function show_manage($profile_id_) {
 	
 
 	echo '<div>';
-	echo '<h2>'.('Server').'</h2>';
+	echo '<h2>'._('Server').'</h2>';
 	echo '<a href="servers.php?action=manage&fqdn='.$profile->server.'"> '.$profile->server.'</a>';
 	echo '</div>';
 	echo '<br />';

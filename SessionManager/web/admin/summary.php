@@ -85,7 +85,7 @@ function show_default() {
 			$users_grps = $u->usersGroups();  // in user group
 			echo '<td>';
 			if ( count($users_grps) == 0)
-				echo '<em>Not in any users group</em>';
+				echo '<em>'._('Not in any users group').'</em>';
 			else {
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
 				foreach ($users_grps as $ugrp){
@@ -100,7 +100,7 @@ function show_default() {
 			$apps_grps = $u->appsGroups();
 			if ( count($apps_grps) == 0) {
 				echo '<td colspan="2">';
-				echo '<em>No publication</em>';
+				echo '<em>'._('No publication').'</em>';
 				echo '</td>';
 			}
 			else {
@@ -120,7 +120,7 @@ function show_default() {
 				echo '<td>'; // in app
 				$apps_s = $u->applications();
 				if (count($apps_s) == 0)
-					echo '<em>No applications in these groups</em>';
+					echo '<em>'._('No applications in these groups').'</em>';
 				else {
 					echo '<table border="0" cellspacing="1" cellpadding="3">';
 					foreach ($apps_s as $aaa) {

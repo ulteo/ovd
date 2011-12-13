@@ -158,7 +158,7 @@ class Configuration_mode_ad extends Configuration_mode {
     $str= '<h1>'._('Microsoft integration').'</h1>';
 
     $str.= '<div class="section">';
-    $str.= '<h3>Server</h3>';
+    $str.= '<h3>'._('Server').'</h3>';
     $str.= '<table>';
     $str.= '<tr><td>'._('Domain:').'</td><td><input type="text" name="domain" value="'.$form['domain'].'" /></td></tr>';
     $str.= '<tr><td>'._('Primary Host:').'</td><td><input type="text" name="host" value="'.$form['host'].'" /></td>';
