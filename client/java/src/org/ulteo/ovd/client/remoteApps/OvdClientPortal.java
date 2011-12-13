@@ -81,6 +81,10 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.systray = new IntegratedTrayIcon(portal, logo, this);
 	}
 
+	public boolean isAutoPublish() {
+		return this.autoPublish;
+	}
+
 	@Override
 	public void performDisconnectAll() {
 		for (ActionListener each : this.systray.getActionListeners())
@@ -192,10 +196,6 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	@Override
 	public void componentHidden(ComponentEvent ce) {}
 	
-	public boolean isAutoPublish() {
-		return this.autoPublish;
-	}
-
 	@Override
 	public void shortcutGenerationIsDone(RdpConnectionOvd co) {
 		if (this.autoPublish)
