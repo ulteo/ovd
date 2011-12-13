@@ -59,7 +59,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	protected Spool spool = null;
 	protected SystemAbstract system = null;
 
-	private int numberOfApplication = 0;
 	private int ApplicationIncrement = 0;
 	private int ApplicationIndex = 0;
 
@@ -272,10 +271,10 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		
 		List<ServerAccess> serversList = this.smComm.getServers();
 		
-		this.numberOfApplication = 0;
+		int numberOfApplication = 0;
 
 		for (ServerAccess server : serversList)
-			this.numberOfApplication += server.applications.size();
+			numberOfApplication += server.applications.size();
 
 		this.ApplicationIncrement = 100 / numberOfApplication;
 		this.ApplicationIndex = 0;
