@@ -146,8 +146,6 @@ void SeamlessWindow_updateZOrder(SeamlessWindow *sw) {
 
 	lastOrder = (SeamlessOrder_ZChange *) SeamlessChannel_getLastOrder(SEAMLESSORDER_ZCHANGE);
 
-	//vchannel_block();
-
 	behind = GetNextWindow(sw->windows, GW_HWNDPREV);
 	while (behind) {
 		LONG style;
@@ -171,8 +169,6 @@ void SeamlessWindow_updateZOrder(SeamlessWindow *sw) {
 			flags |= SEAMLESS_CREATE_TOPMOST;
 		SeamlessChannel_sendZChange(sw->windows, behind, flags);
 	}
-
-	//vchannel_unblock();
 }
 
 void SeamlessWindow_updatePosition(SeamlessWindow *sw) {
@@ -184,8 +180,6 @@ void SeamlessWindow_updatePosition(SeamlessWindow *sw) {
 		return;
 
 	lastOrder = (SeamlessOrder_Position *) SeamlessChannel_getLastOrder(SEAMLESSORDER_POSITION);
-
-	//vchannel_block();
 
 	if (IsZoomed(sw->windows) || IsIconic(sw->windows))
 	{
@@ -230,7 +224,7 @@ void SeamlessWindow_updatePosition(SeamlessWindow *sw) {
 	SeamlessChannel_sendPosition(sw->windows, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, 0);
 
       end:
-	;//vchannel_unblock();
+	;
 }
 
 #define ICON_CHUNK 400

@@ -61,26 +61,18 @@ void CALLBACK InternalWindow_processCopyData(PCOPYDATASTRUCT data) {
 				HookMsg_State *msg = (HookMsg_State *)(data->lpData);
 				SeamlessOrder_State *lastOrder = NULL;
 
-				SeamlessChannel_sendDebug("HOOK_MSG_STATE: wnd: 0x%08lx state: %d", msg->wnd, msg->state);
-
 				sw = getWindowFromHistory(msg->wnd);
 				if (sw == NULL)
 					break;
 
-				SeamlessChannel_sendDebug("HOOK_MSG_STATE: wnd: 0x%08lx exists", msg->wnd);
-
 				lastOrder = (SeamlessOrder_State *) SeamlessChannel_getLastOrder(SEAMLESSORDER_STATE);
-				SeamlessChannel_sendDebug("HOOK_MSG_STATE: 1");
 
 				if (lastOrder && (lastOrder->wnd == msg->wnd) && (lastOrder->state == msg->state)) {
-					SeamlessChannel_sendDebug("HOOK_MSG_STATE: 2a");
 					SeamlessChannel_sendAck(lastOrder->serial);
 				}
 				else {
-					SeamlessChannel_sendDebug("HOOK_MSG_STATE: 2b");
 					SeamlessChannel_sendState(msg->wnd, msg->state, 0);
 				}
-				SeamlessChannel_sendDebug("HOOK_MSG_STATE: end");
 			}
 			break;
 		case HOOK_MSG_FOCUS:

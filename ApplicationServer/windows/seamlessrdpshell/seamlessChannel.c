@@ -267,29 +267,22 @@ enum_cb(HWND hwnd, LPARAM lparam)
 }
 
 static void SeamlessChannel_process_sync(void) {
-	//vchannel_block();
-
 	SeamlessChannel_sendSyncBegin();
 
 	EnumWindows(enum_cb, 0);
 
 	SeamlessChannel_sendSyncEnd();
-
-	//vchannel_unblock();
 }
 
 static void SeamlessChannel_process_state(unsigned int serial, HWND hwnd, int state) {
 	int curstate;
 	SeamlessOrder_State *order = NULL;
 
-	//vchannel_block();
-
 	curstate = WindowUtil_getState(hwnd);
 
 	if (state == curstate)
 	{
 		SeamlessChannel_sendAck(serial);
-		//vchannel_unblock();
 		return;
 	}
 
@@ -298,8 +291,6 @@ static void SeamlessChannel_process_state(unsigned int serial, HWND hwnd, int st
 	order->state = state;
 	order->serial = serial;
 	SeamlessChannel_setLastOrder(SEAMLESSORDER_STATE, order);
-
-	//vchannel_unblock();
 
 	if (! WindowUtil_setState(hwnd, state))
 		SeamlessChannel_sendDebug("Invalid state %d sent.", state);
@@ -394,8 +385,7 @@ static void SeamlessChannel_process_destroy(unsigned int serial, HWND hwnd) {
 }
 
 static void SeamlessChannel_process_spawn(char *cmdline) {
-	debug("Client-to-server SPAWN orders are disabled");
-	/*PROCESS_INFORMATION proc_info;
+	PROCESS_INFORMATION proc_info;
 	STARTUPINFO startup_info;
 	BOOL pid;
 	
@@ -415,12 +405,11 @@ static void SeamlessChannel_process_spawn(char *cmdline) {
 	}
 	// Release handles
 	CloseHandle(proc_info.hProcess);
-	CloseHandle(proc_info.hThread);*/
+	CloseHandle(proc_info.hThread);
 }
 
 static void SeamlessChannel_process_start_app(char *cmdline, unsigned int token) {
-	debug("Client-to-server STARTAPP orders are disabled");
-	/*PROCESS_INFORMATION proc_info;
+	PROCESS_INFORMATION proc_info;
 	STARTUPINFO startup_info;
 	BOOL pid;
 	memset(&startup_info, 0, sizeof(STARTUPINFO));
@@ -437,7 +426,7 @@ static void SeamlessChannel_process_start_app(char *cmdline, unsigned int token)
 	vchannel_write("APP_ID", "0x%08x,0x%08x", token, proc_info.dwProcessId);
 	// Release handles
 	CloseHandle(proc_info.hProcess);
-	CloseHandle(proc_info.hThread);*/
+	CloseHandle(proc_info.hThread);
 }
 
 static char* get_token(char **s) {
@@ -487,10 +476,10 @@ void SeamlessChannel_process(char* line) {
 				(HWND) strtoul(tok4, NULL, 0));
 	else if (strcmp(tok1, "FOCUS") == 0)
 		SeamlessChannel_process_focus(strtoul(tok2, NULL, 0), (HWND) strtoul(tok3, NULL, 0), (int) strtol(tok4, NULL, 0));
-	else if (strcmp(tok1, "SPAWN") == 0)
+	/*else if (strcmp(tok1, "SPAWN") == 0)
 		SeamlessChannel_process_spawn(tok3);
 	else if (strcmp(tok1, "START_APP") == 0)
-		SeamlessChannel_process_start_app(tok4, strtoul(tok3, NULL, 0));
+		SeamlessChannel_process_start_app(tok4, strtoul(tok3, NULL, 0));*/
 	else if (strcmp(tok1, "DESTROY") == 0)
 		SeamlessChannel_process_destroy(strtoul(tok2, NULL, 0), (HWND) strtoul(tok3, NULL, 0));
 }
