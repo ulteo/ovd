@@ -24,12 +24,14 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
+import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.swing.ImageIcon;
 
 import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
@@ -51,6 +53,7 @@ import org.ulteo.rdp.RdpConnectionOvd;
 public class OvdClientPortal extends OvdClientRemoteApps implements ComponentListener, Newser, OvdClientPerformer, NativeClientCommon {
 	
 	private PortalFrame portal = null;
+	private IntegratedTrayIcon systray = null;
 	private String username = null;
 	private List<Application> appsList = null;
 	private List<Application> appsListToEnable = null;
@@ -68,19 +71,20 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.showBugReporter = showBugReporter_;
 		
 		this.appsList = new ArrayList<Application>();
-		this.portal = new PortalFrame(this, this.username, this.showBugReporter);
+		
+		Image logo = new ImageIcon(getClass().getClassLoader().getResource("pics/ulteo.png"), "Ulteo OVD").getImage();
+		
+		this.portal = new PortalFrame(this, this.username, logo, this.showBugReporter);
 		this.portal.addComponentListener(this);
 		this.portal.getRunningApplicationPanel().setSpool(spool);
+		
+		this.systray = new IntegratedTrayIcon(portal, logo, this);
 	}
 
 	@Override
 	public void performDisconnectAll() {
-		if (this.portal.getSystray() == null)
-			return;
-		
-		ActionListener[] action = this.portal.getSystray().getActionListeners();
-		for (ActionListener each : action)
-			this.portal.getSystray().removeActionListener(each);
+		for (ActionListener each : this.systray.getActionListeners())
+			this.systray.removeActionListener(each);
 		
 		super.performDisconnectAll();
 	}
@@ -88,10 +92,10 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	@Override
 	protected void runSessionTerminated() {
 		super.runSessionTerminated();
+
+		this.systray.remove();
 		
 		this.portal.setVisible(false);
-		if (this.portal.getSystray() != null)
-			this.portal.getSystray().removeSysTray();
 		this.portal.dispose();
 	}
 
@@ -234,6 +238,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	@Override
 	public void runSessionReady() {
 		this.portal.initButtonPan();
+		this.systray.add();
 
 		if (this.portal.getApplicationPanel().isScollerInited())
 			this.portal.getApplicationPanel().addScroller();

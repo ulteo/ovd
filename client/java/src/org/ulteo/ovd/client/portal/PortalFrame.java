@@ -43,7 +43,6 @@ import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
 import org.ulteo.ovd.client.OvdClientFrame;
 import org.ulteo.ovd.client.bugreport.gui.BugReportButton;
-import org.ulteo.ovd.client.remoteApps.IntegratedTrayIcon;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.rdp.RdpActions;
 
@@ -55,13 +54,11 @@ public class PortalFrame extends OvdClientFrame {
 	private RunningApplicationPanel runningAppsPanel = null;
 	private NewsPanel newsPanel = null;
 	private SouthEastPanel sep = null;	
-	private IntegratedTrayIcon systray = null;
 
 	private boolean newPanelAdded = false;
 	private boolean showBugReporter = false;
-	private Image frameLogo = null;
 	
-	public PortalFrame(RdpActions actions, String username, boolean showBugReporter_) {
+	public PortalFrame(RdpActions actions, String username, Image logo, boolean showBugReporter_) {
 		super(actions);
 		if (username == null)
 			username = "";
@@ -69,6 +66,8 @@ public class PortalFrame extends OvdClientFrame {
 		displayName = displayName.replaceAll("\\{user\\}", username);
 		this.username = displayName;
 		this.showBugReporter = showBugReporter_;
+
+		this.setIconImage(logo);
 		
 		this.init();
 		this.newsPanel = new NewsPanel();
@@ -76,9 +75,6 @@ public class PortalFrame extends OvdClientFrame {
 	
 	
 	public void init() {
-		this.frameLogo = this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
-		
-		this.setIconImage(this.frameLogo);
 		this.setTitle("OVD Remote Applications");
 		this.setSize(700, 400);
 		this.setResizable(false);
@@ -148,7 +144,6 @@ public class PortalFrame extends OvdClientFrame {
 		gbc.anchor = GridBagConstraints.SOUTHEAST;
 		this.add(sep, gbc);
 		this.validate();
-		this.initSystray();
 	}
 
 	public void initPublishingButton() {
@@ -158,21 +153,12 @@ public class PortalFrame extends OvdClientFrame {
 		this.sep.initPublishingButton();
 	}
 	
-	public void initSystray() {
-		this.systray = new IntegratedTrayIcon(this, this.frameLogo, this.actions);
-		this.systray.addSysTray();
-	}
-		
 	public MyApplicationPanel getApplicationPanel() {
 		return this.appsPanel;
 	}
 	
 	public RunningApplicationPanel getRunningApplicationPanel() {
 		return runningAppsPanel;
-	}
-	
-	public IntegratedTrayIcon getSystray() {
-		return this.systray;
 	}
 	
 	public NewsPanel getNewsPanel() {
@@ -218,7 +204,7 @@ public class PortalFrame extends OvdClientFrame {
 	
 	@Override
 	public void windowIconified(WindowEvent arg0) {
-		if (OSTools.isWindows() && this.systray != null)
+		if (OSTools.isWindows())
 			this.setVisible(false);
 		/* Bug on linux, when frame is iconified,
 		 * it will never be deiconified by clicking on systray icon */

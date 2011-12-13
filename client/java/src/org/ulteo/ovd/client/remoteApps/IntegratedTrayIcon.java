@@ -73,7 +73,7 @@ public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 		this.setPopupMenu(popup);
 	}
 
-	public void addSysTray() {
+	public void add() {
 		try {
 			SystemTray.getSystemTray().add(this);
 		} catch (AWTException e) {
@@ -81,7 +81,7 @@ public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 		}
 	}
 	
-	public void removeSysTray() {
+	public void remove() {
 		SystemTray.getSystemTray().remove(this);
 	}
 	
