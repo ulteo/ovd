@@ -31,6 +31,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 
+import org.ulteo.Logger;
 import org.ulteo.ovd.client.OvdClientFrame;
 import org.ulteo.rdp.RdpActions;
 
@@ -80,8 +81,10 @@ public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 	public void add() {
 		try {
 			SystemTray.getSystemTray().add(this);
+		} catch (IllegalArgumentException e) {
+			Logger.warn("Systray is already implemented");
 		} catch (AWTException e) {
-			e.printStackTrace();
+			Logger.warn("Operating system does not have a systray");
 		}
 	}
 	
