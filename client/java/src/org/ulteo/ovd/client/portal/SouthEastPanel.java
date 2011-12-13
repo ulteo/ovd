@@ -59,13 +59,16 @@ public class SouthEastPanel extends JPanel {
 		publishingButton = new JButton(this.rotateIcon);
 		
 		disconnect.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				rdpActions.disconnect();
 			}
 		});
 		publishingButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				new Thread(new Runnable() {
+					@Override
 					public void run() {
 						publishingButton.setEnabled(false);
 						publishingButton.setIcon(rotateIcon);
