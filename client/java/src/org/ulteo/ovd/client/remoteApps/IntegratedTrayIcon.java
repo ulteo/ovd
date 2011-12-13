@@ -31,7 +31,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 
-import org.ulteo.Logger;
 import org.ulteo.ovd.client.OvdClientFrame;
 import org.ulteo.rdp.RdpActions;
 
@@ -60,11 +59,7 @@ public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 	}
 	
 	public void removeSysTray() {
-		try {
 			this.systemTray.remove(this);
-		} catch (Exception ex) {
-			Logger.error("An error occured while removing the systray icon: "+ex.getMessage());
-		}
 	}
 	
 	public void actionPerformed(ActionEvent ae) {
