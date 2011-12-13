@@ -116,12 +116,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			this.desktopIntegrator.start();
 		}
 		
-		for (@SuppressWarnings("unused") Application app : co.getAppsList()) {
-			int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
-			this.obj.updateProgress(LoadingStatus.CLIENT_INSTALL_APPLICATION, subStatus);
-			this.ApplicationIndex++;
-		}
-		
 		co.setShell("OvdRemoteApps");
 	}
 
