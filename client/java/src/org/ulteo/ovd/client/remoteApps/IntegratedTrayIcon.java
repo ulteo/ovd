@@ -48,6 +48,31 @@ public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 		this.initPopupMenu();
 	}
 
+	private void initPopupMenu() {
+		PopupMenu popup = new PopupMenu();
+		
+		MenuItem itemDisconnect = new MenuItem("Disconnect");
+		itemDisconnect.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				rdpActions.disconnect();
+			}
+		});
+		popup.add(itemDisconnect);
+	
+		MenuItem itemClose = new MenuItem("Close");
+		itemClose.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				portal.haveToQuit(true);
+				rdpActions.disconnect();
+			}
+		});
+		popup.add(itemClose);
+		
+		this.setPopupMenu(popup);
+	}
+
 	public void addSysTray() {
 		try {
 			SystemTray.getSystemTray().add(this);
@@ -69,30 +94,6 @@ public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 			portal.setVisible(true);
 			portal.setState(JFrame.NORMAL);
 		}
-	}
-	
-	public void initPopupMenu() {
-		PopupMenu popup = new PopupMenu();
-		MenuItem itemClose = new MenuItem("Close");
-		MenuItem itemDisconnect = new MenuItem("Disconnect");
-		itemClose.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				portal.haveToQuit(true);
-				rdpActions.disconnect();
-			}
-		});
-		itemDisconnect.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				rdpActions.disconnect();
-			}
-		});
-		popup.add(itemDisconnect);
-		popup.add(itemClose);
-		this.setPopupMenu(popup);
 	}
 
 }
