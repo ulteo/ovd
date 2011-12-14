@@ -146,6 +146,8 @@ rm -rf $RPM_BUILD_ROOT
 %files -n ulteo-ovd-session-manager
 %defattr(-,root,root)
 /usr/*
+%dir /var/*
+%dir /var/*/ulteo
 %config /etc/ulteo/sessionmanager/*.conf
 %config /etc/logrotate.d/sessionmanager
 %defattr(0744,root,root)
@@ -153,7 +155,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(0660,apache,apache)
 %config /etc/ulteo/sessionmanager/config.inc.php
 %defattr(2770,apache,apache)
-/var/*
+%dir /var/*/ulteo/sessionmanager
 
 %changelog -n ulteo-ovd-session-manager
 * Wed Sep 20 2011 Samuel Bovée <samuel@ulteo.com> 99.99.svn7521
