@@ -55,7 +55,6 @@ void SeamlessWindow_create(HWND hwnd) {
 		window->is_shown = TRUE;
 
 		style = GetWindowLong(hwnd, GWL_STYLE);
-		SeamlessChannel_sendDebug("NEW WINDOWS");
 
 		exstyle = GetWindowLong(hwnd, GWL_EXSTYLE);
 		GetWindowThreadProcessId(hwnd, &pid);
@@ -79,12 +78,9 @@ void SeamlessWindow_create(HWND hwnd) {
 					|| (strcmp(classname, "Net UI Tool Window") == 0)
 					|| (strcmp(classname, "OfficeTooltip") == 0)
 					|| (strcmp(classname, "DUIListViewHost") == 0)) {
-					SeamlessChannel_sendDebug(classname);
 					flags |= SEAMLESS_CREATE_TOOLTIP;
 					parent = 0xffffffffL;
 				}
-				else
-					SeamlessChannel_sendDebug("Unknown classname: %s style: 0x%08lx exstyle: 0x%08lx", classname, style, exstyle);
 			}
 		}
 		if (! (style & WS_SIZEBOX))
