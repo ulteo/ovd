@@ -334,6 +334,7 @@ class Session(AbstractSession):
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Policies\System"%(hiveName)
 		restrictions = ["DisableRegistryTools",
 				"DisableTaskMgr",
+				"DisableLockWorkstation",
 				"NoDispCPL",
 				]
 		
