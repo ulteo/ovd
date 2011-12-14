@@ -305,6 +305,145 @@ abstract class SessionManagement extends Module {
 					}
 					break;
 				case Server::SERVER_ROLE_FS:
+					if (get_class($this) != 'SessionManagement_internal') {
+						Logger::error('main', 'SessionManagement::buildServersList - Role "'.$role.'" is not compatible with the current integration mode ('.substr(get_class($this), strlen('SessionManagement_')).'), aborting');
+						return false;
+					}
+
+					$default_settings = $this->user->getSessionSettings('session_settings_defaults');
+					$enable_profiles = (($default_settings['enable_profiles'] == 1)?true:false);
+					$auto_create_profile = (($default_settings['auto_create_profile'] == 1)?true:false);
+					$start_without_profile = (($default_settings['start_without_profile'] == 1)?true:false);
+					$enable_sharedfolders = (($default_settings['enable_sharedfolders'] == 1)?true:false);
+					$start_without_all_sharedfolders = (($default_settings['start_without_all_sharedfolders'] == 1)?true:false);
+
+					if ($enable_profiles) {
+						$fileservers = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_FS);
+
+						if (count($fileservers) > 0) {
+							$profiles = $this->user->getProfiles();
+							if (! is_array($profiles)) {
+								Logger::error('main', 'SessionManagement::buildServersList - getProfiles() failed for User "'.$this->user->getAttribute('login').'", aborting');
+								return false;
+							}
+
+							if (count($profiles) == 1) {
+								Logger::debug('main', 'SessionManagement::buildServersList - User "'.$this->user->getAttribute('login').'" already have a Profile, using it');
+
+								$profile = array_pop($profiles);
+
+								foreach ($fileservers as $fileserver) {
+									if ($fileserver->fqdn != $profile->server)
+										continue;
+
+									if (! array_key_exists($fileserver->fqdn, $this->servers[Server::SERVER_ROLE_FS]))
+										$this->servers[Server::SERVER_ROLE_FS][$fileserver->fqdn] = array();
+
+									$this->servers[Server::SERVER_ROLE_FS][$fileserver->fqdn][] = array(
+										'type'		=>	'profile',
+										'server'	=>	$fileserver,
+										'dir'		=>	$profile->id
+									);
+
+									break;
+								}
+							} else {
+								Logger::debug('main', 'SessionManagement::buildServersList - User "'.$this->user->getAttribute('login').'" does not have a Profile for now, checking for auto-creation');
+
+								if ($auto_create_profile) {
+									Logger::debug('main', 'SessionManagement::buildServersList - User "'.$this->user->getAttribute('login').'" Profile will be auto-created and used');
+
+									$profileDB = ProfileDB::getInstance();
+
+									$fileserver = $profileDB->chooseFileServer();
+									if (! is_object($fileserver)) {
+										Logger::error('main', 'SessionManagement::buildServersList - Auto-creation of Profile for User "'.$this->user->getAttribute('login').'" failed (unable to get a valid FileServer)');
+										return false;
+									}
+
+									$profile = new Profile();
+									$profile->server = $fileserver->getAttribute('fqdn');
+
+									if (! $profileDB->addToServer($profile, $fileserver)) {
+										Logger::error('main', 'SessionManagement::buildServersList - Auto-creation of Profile for User "'.$this->user->getAttribute('login').'" failed (unable to add the Profile to the FileServer)');
+										return false;
+									}
+
+									if (! $profile->addUser($this->user)) {
+										Logger::error('main', 'SessionManagement::buildServersList - Auto-creation of Profile for User "'.$this->user->getAttribute('login').'" failed (unable to associate the User to the Profile)');
+										return false;
+									}
+
+									if (! array_key_exists($fileserver->fqdn, $this->servers[Server::SERVER_ROLE_FS]))
+										$this->servers[Server::SERVER_ROLE_FS][$fileserver->fqdn] = array();
+
+									$this->servers[Server::SERVER_ROLE_FS][$fileserver->fqdn][] = array(
+										'type'		=>	'profile',
+										'server'	=>	$fileserver,
+										'dir'		=>	$profile->id
+									);
+								} else {
+									Logger::debug('main', 'SessionManagement::buildServersList - Auto-creation of Profile for User "'.$this->user->getAttribute('login').'" disabled, checking for session without Profile');
+
+									if (! $start_without_profile) {
+										Logger::error('main', 'SessionManagement::buildServersList - User "'.$this->user->getAttribute('login').'" does not have a valid Profile, aborting');
+
+										return false;
+									}
+
+									Logger::debug('main', 'SessionManagement::buildServersList - User "'.$this->user->getAttribute('login').'" can start a session without a valid Profile, proceeding');
+								}
+							}
+						} else {
+							Logger::debug('main', 'SessionManagement::buildServersList - No "'.$role.'" server found for User "'.$this->user->getAttribute('login').'", checking for session without Profile');
+
+							if (! $start_without_profile) {
+								Logger::error('main', 'SessionManagement::buildServersList - User "'.$this->user->getAttribute('login').'" does not have a valid Profile, aborting');
+
+								return false;
+							}
+
+							Logger::debug('main', 'SessionManagement::buildServersList - User "'.$this->user->getAttribute('login').'" can start a session without a valid Profile, proceeding');
+						}
+					}
+
+					if ($enable_sharedfolders) {
+						$sharedfolders = $this->user->getSharedFolders();
+						if (! is_array($sharedfolders)) {
+							Logger::error('main', 'SessionManagement::buildServersList - getSharedFolders() failed for User "'.$this->user->getAttribute('login').'", aborting');
+							return false;
+						}
+
+						if (count($sharedfolders) > 0) {
+							foreach ($sharedfolders as $sharedfolder) {
+								$fileserver = Abstract_Server::load($sharedfolder->server);
+								if (! $fileserver || ! $fileserver->isOnline() || $fileserver->getAttribute('locked')) {
+									Logger::warning('main', 'SessionManagement::buildServersList - Server "'.$sharedfolder->server.'" for SharedFolder "'.$sharedfolder->id.'" is not available');
+
+									if (! $start_without_all_sharedfolders) {
+										Logger::error('main', 'SessionManagement::buildServersList - User "'.$this->user->getAttribute('login').'" does not have all SharedFolders available, aborting');
+
+										return false;
+									} else {
+										Logger::debug('main', 'SessionManagement::buildServersList - User "'.$this->user->getAttribute('login').'" can start a session without all SharedFolders available, proceeding');
+
+										continue;
+									}
+								}
+
+								if (! array_key_exists($fileserver->fqdn, $this->servers[Server::SERVER_ROLE_FS]))
+									$this->servers[Server::SERVER_ROLE_FS][$fileserver->fqdn] = array();
+
+								$this->servers[Server::SERVER_ROLE_FS][$fileserver->fqdn][] = array(
+									'type'		=>	'sharedfolder',
+									'server'	=>	$fileserver,
+									'dir'		=>	$sharedfolder->id,
+									'name'		=>	$sharedfolder->name
+								);
+							}
+						}
+					}
+
 					break;
 			}
 		}
