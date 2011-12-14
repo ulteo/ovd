@@ -137,56 +137,24 @@ void CALLBACK InternalWindow_processCopyData(PCOPYDATASTRUCT data) {
 				HookMsg_Title *msg = (HookMsg_Title *)(data->lpData);
 
 				sw = getWindowFromHistory(msg->wnd);
-				
+
 				if (sw == NULL){
 					SeamlessWindow_create(msg->wnd);
 				}
 				else{
-					unsigned short *title;
-					BOOLEAN titleIsTheSame = TRUE;
-					int i = 0;
-					
-					title = malloc(sizeof(unsigned short) * TITLE_SIZE);
-					if (title == NULL)
-						break;
-
-					GetWindowTextW(sw->windows, title, TITLE_SIZE);
-
-					if (sw->title != NULL) {
-						for (i = 0; i < TITLE_SIZE; i++) {
-							if (title[i] != sw->title[i]) {
-								titleIsTheSame = FALSE;
-								break;
-							}
-						}
-					}
-					else {
-						titleIsTheSame = FALSE;
-					}
-
-					if (titleIsTheSame) {
-						free(title);
-						break;
-					}
-
-					SeamlessChannel_sendTitle(sw->windows, title, 0);
-
-					if (sw->title) {
-						free(sw->title);
-						sw->title;
-					}
-					sw->title = title;
+					SeamlessWindow_updateTitle(sw);
 				}
 			}
 			break;
 		case HOOK_MSG_DESTROY:
 			{
 				HookMsg_Destroy *msg = (HookMsg_Destroy *)(data->lpData);
-				
-				if (! removeHWNDFromHistory(msg->wnd))
+
+				sw = getWindowFromHistory(msg->wnd);
+				if (! sw)
 					break;
 
-				SeamlessChannel_sendDestroy(msg->wnd, 0);
+				SeamlessWindow_destroy(sw);
 			}
 			break;
 		case HOOK_MSG_POSITION:

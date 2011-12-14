@@ -37,5 +37,7 @@ void SeamlessWindow_free(SeamlessWindow * n_);
 void SeamlessWindow_updateZOrder(SeamlessWindow *sw);
 void SeamlessWindow_updatePosition(SeamlessWindow *sw);
 void SeamlessWindow_updateIcon(SeamlessWindow *sw, HICON icon, int large);
+BOOL SeamlessWindow_updateTitle(SeamlessWindow *sw);
+void SeamlessWindow_destroy(SeamlessWindow *sw);
 
 #endif // _SEAMLESSWINDOW_H_

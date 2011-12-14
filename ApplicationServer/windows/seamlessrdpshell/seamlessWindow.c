@@ -254,3 +254,38 @@ void SeamlessWindow_updateIcon(SeamlessWindow *sw, HICON icon, int large) {
 		SeamlessChannel_sendSetIcon(sw->windows, i, large ? 32 : 16, large ? 32 : 16, asciibuf);
 	}
 }
+
+BOOL SeamlessWindow_updateTitle(SeamlessWindow *sw) {
+	unsigned short *title;
+	int i = 0;
+
+	title = malloc(sizeof(unsigned short) * TITLE_SIZE);
+	if (title == NULL)
+		return FALSE;
+
+	GetWindowTextW(sw->windows, title, TITLE_SIZE);
+
+	if (sw->title != NULL && strcmp((const char*) sw->title, (const char*) title) == 0) {
+		free(title);
+		return FALSE;
+	}
+
+	SeamlessChannel_sendTitle(sw->windows, title, 0);
+
+	if (sw->title) {
+		free(sw->title);
+		sw->title;
+	}
+	sw->title = title;
+
+	return TRUE;
+}
+
+void SeamlessWindow_destroy(SeamlessWindow *sw) {
+	if (! sw)
+		return;
+
+	SeamlessChannel_sendDestroy(sw->windows, 0);
+
+	removeHWNDFromHistory(sw->windows);
+}
