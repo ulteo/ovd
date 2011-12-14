@@ -399,7 +399,6 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 		SeamlessChannel_sendDebug("Failed to create seamless internal window");
 
 	SeamlessChannel_sendHello(g_desktop_hidden ? SEAMLESS_HELLO_HIDDEN : 0);
-	SeamlessChannel_sendDebug("PID: %lu", GetCurrentProcessId());
 
 	set_hooks_fn();
 
@@ -462,7 +461,6 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 			int size = 0;
 
 			while (SeamlessChannel_recv(&line) >= 0) {
-				SeamlessChannel_sendDebug("Receive msg '%s'", line);
 				SeamlessChannel_process(line);
 			}
 		}
