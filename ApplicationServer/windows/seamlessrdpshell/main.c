@@ -385,6 +385,8 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 	while (1)
 	{
 		BOOL connected;
+		char* line = NULL;
+		int size = 0;
 
 		connected = is_connected();
 		if (connected && !g_connected)
@@ -424,13 +426,9 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		{
-			char* line = NULL;
-			int size = 0;
 
-			while (SeamlessChannel_recv(&line) >= 0) {
-				SeamlessChannel_process(line);
-			}
+		while (SeamlessChannel_recv(&line) >= 0) {
+			SeamlessChannel_process(line);
 		}
 		Sleep(100);
 	}
