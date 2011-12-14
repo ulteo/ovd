@@ -115,7 +115,7 @@ class SMRequestManager():
 		if document is not None:
 			rootNode = document.documentElement
 			rootNode.setAttribute("name", str(self.name))
-			req.add_data(document.toxml())
+			req.add_data(document.toxml("UTF-8"))
 		
 		try:
 			stream = urllib2.urlopen(req)
