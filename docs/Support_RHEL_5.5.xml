@@ -40,7 +40,7 @@
        <screen>
 <![CDATA[[ovd-3.0]
 name=Ulteo OVD 3.0
-baseurl=http://archive.ulteo.com/ovd/3.0/rhel/5.5/
+baseurl=http://archive.ulteo.com/ovd/3.0/rhel/@distrib_version@/
 enabled=1
 gpgcheck=1
 gpgkey=http://archive.ulteo.com/ovd/keyring]]>
@@ -64,7 +64,7 @@ gpgkey=http://archive.ulteo.com/ovd/keyring]]>
           <screen>
 <![CDATA[[ovd-3.0]
 name=Ulteo OVD 3.0 offline
-baseurl=file:///root/ovd-3.0-rhel-5.5/
+baseurl=file:///root/ovd-3.0-rhel-@distrib_version@/
 enabled=1
 gpgcheck=0]]>
           </screen>

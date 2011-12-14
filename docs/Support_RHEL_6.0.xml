@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
+	  [<!ENTITY parent "Support_RHEL_5.5.xml">]> 
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+  <transform_var name="distrib_pretty_name" value="Red Hat Enterprise Linux (RHEL) 6.0"/>
+  <transform_var name="distrib_name" value="rhel" />
+  <transform_var name="distrib_version" value="6.0"/>
+  <transform_var name="distrib_dvd_url" value="http://www.redhat.com/rhel/"/>
+  <transform_var name="rpm_install_cmd" value="yum"/>
+  <transform_var name="rpm_mysql_packages" value="mysql mysql-server"/>
+  <transform_var name="mysql_service" value="mysqld"/>
+  <transform_var name="apache_service" value="httpd"/>
+
+  <xi:include href="&parent;" xpointer="header" />
+  <xi:include href="&parent;" xpointer="first_para" />
+  <xi:include href="&parent;" xpointer="prerequisites" />
+  <xi:include href="&parent;" xpointer="repository" />
+  <xi:include href="&parent;" xpointer="sm" />
+  <xi:include href="&parent;" xpointer="subsystem" />
+  <xi:include href="&parent;" xpointer="wc" />
+
+  <xi:include href="colophon.xml" />
+</article>
