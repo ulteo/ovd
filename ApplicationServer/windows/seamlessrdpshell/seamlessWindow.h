@@ -27,6 +27,7 @@ typedef struct SeamlessWindow_ {
 	HWND windows;
 	unsigned short *title;
 	RECT *bounds;
+	int state;
 	BOOL focus;
 	BOOL is_shown;
 	struct SeamlessWindow_* next;
@@ -38,6 +39,8 @@ void SeamlessWindow_updateZOrder(SeamlessWindow *sw);
 void SeamlessWindow_updatePosition(SeamlessWindow *sw);
 void SeamlessWindow_updateIcon(SeamlessWindow *sw, HICON icon, int large);
 BOOL SeamlessWindow_updateTitle(SeamlessWindow *sw);
+BOOL SeamlessWindow_updateFocus(SeamlessWindow *sw);
+BOOL SeamlessWindow_updateState(SeamlessWindow *sw);
 void SeamlessWindow_destroy(SeamlessWindow *sw);
 
 #endif // _SEAMLESSWINDOW_H_

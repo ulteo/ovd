@@ -203,6 +203,14 @@
 	</References>
 	<Files>
 		<File
+			RelativePath=".\activeThread.c"
+			>
+		</File>
+		<File
+			RelativePath=".\activeThread.h"
+			>
+		</File>
+		<File
 			RelativePath=".\clipper.rc"
 			>
 		</File>

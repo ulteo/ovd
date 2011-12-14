@@ -77,6 +77,34 @@ HWND WindowUtil_getParent(HWND hwnd) {
 	return result;
 }
 
+BOOL WindowUtil_isFocused(HWND hwnd) {
+	HWND focused_hwnd;
+	HWND child, parent;
+
+	// Attach foreground window thread
+	AttachThreadInput(GetWindowThreadProcessId(hwnd, NULL), GetCurrentThreadId(), TRUE);
+
+	focused_hwnd = GetFocus();
+
+	// Detach the attached thread
+	AttachThreadInput(GetWindowThreadProcessId(hwnd, NULL), GetCurrentThreadId(), FALSE);
+
+	if (focused_hwnd == NULL)
+		return FALSE;
+
+	if (focused_hwnd == hwnd)
+		return TRUE;
+
+	parent = focused_hwnd;
+	do {
+		child = parent;
+
+		parent = GetParent(child);
+	} while(parent);
+
+	return (child == hwnd);
+}
+
 BOOL WindowUtil_setFocus(HWND hwnd) {
 	BOOL ret;
 

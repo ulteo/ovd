@@ -52,6 +52,7 @@ void SeamlessWindow_create(HWND hwnd) {
 		}
 
 		window->bounds = NULL;
+		window->state = -1;
 		window->is_shown = TRUE;
 
 		style = GetWindowLong(hwnd, GWL_STYLE);
@@ -279,6 +280,36 @@ BOOL SeamlessWindow_updateTitle(SeamlessWindow *sw) {
 	sw->title = title;
 
 	return TRUE;
+}
+
+BOOL SeamlessWindow_updateFocus(SeamlessWindow *sw) {
+	BOOL isFocused = FALSE;
+
+	isFocused = WindowUtil_isFocused(sw->windows);
+	if (isFocused != sw->focus) {
+		sw->focus = isFocused;
+
+		if (sw->focus)
+			SeamlessChannel_sendFocus(sw->windows);
+
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+BOOL SeamlessWindow_updateState(SeamlessWindow *sw) {
+	int newState = 0;
+
+	newState = WindowUtil_getState(sw->windows);
+	if (newState != sw->state) {
+		sw->state = newState;
+		SeamlessChannel_sendState(sw->windows, sw->state, 0);
+
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 void SeamlessWindow_destroy(SeamlessWindow *sw) {

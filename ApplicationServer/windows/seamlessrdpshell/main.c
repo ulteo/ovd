@@ -24,9 +24,11 @@
 
 #define WINVER 0x0501
 
+#include <Shlwapi.h>
 #include <windows.h>
 #include <wtsapi32.h>
 
+#include "activeThread.h"
 #include "HookDll/hookdll.h"
 #include "internalWindow.h"
 #include "windowUtil.h"
@@ -314,9 +316,27 @@ is_desktop_hidden(void)
 	return desk == NULL;
 }
 
+static void load_configuration(BOOL *use_active_monitoring) {
+	HKEY rkey;
+	LONG status;
+	DWORD buffer_size = 6;
+	TCHAR buffer[6];
+	DWORD type;
+
+	status = RegOpenKeyEx(HKEY_LOCAL_MACHINE, "Software\\Ulteo\\OVD\\seamlessrdpshell", 0, KEY_READ, &rkey);
+	if (status != ERROR_SUCCESS)
+		return;
+
+	status = RegQueryValueEx(rkey, "use_active_monitoring", NULL, &type, (BYTE*)buffer, &buffer_size);
+	*use_active_monitoring = (status == ERROR_SUCCESS && type == REG_SZ && StrCmpI(buffer, "true") == 0);
+
+	RegCloseKey (rkey);
+}
+
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 {
+	BOOL use_active_monitoring = FALSE;
 	HMODULE hookdll;
 	MSG msg;
 	int check_counter;
@@ -327,30 +347,34 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 
 	g_instance = instance;
 
-	hookdll = LoadLibrary("seamlessrdp.dll");
-	if (!hookdll)
-	{
-		message("Could not load hook DLL. Unable to continue.");
-		return -1;
-	}
+	load_configuration(&use_active_monitoring);
 
-	set_hooks_fn = (set_hooks_proc_t) GetProcAddress(hookdll, "SetHooks");
-	remove_hooks_fn = (remove_hooks_proc_t) GetProcAddress(hookdll, "RemoveHooks");
-	instance_count_fn = (get_instance_count_proc_t) GetProcAddress(hookdll, "GetInstanceCount");
+	if (! use_active_monitoring) {
+		hookdll = LoadLibrary("seamlessrdp.dll");
+		if (!hookdll)
+		{
+			message("Could not load hook DLL. Unable to continue.");
+			return -1;
+		}
 
-	if (!set_hooks_fn || !remove_hooks_fn || !instance_count_fn)
-	{
-		FreeLibrary(hookdll);
-		message("Hook DLL doesn't contain the correct functions. Unable to continue.");
-		return -1;
-	}
+		set_hooks_fn = (set_hooks_proc_t) GetProcAddress(hookdll, "SetHooks");
+		remove_hooks_fn = (remove_hooks_proc_t) GetProcAddress(hookdll, "RemoveHooks");
+		instance_count_fn = (get_instance_count_proc_t) GetProcAddress(hookdll, "GetInstanceCount");
 
-	/* Check if the DLL is already loaded */
-	if (instance_count_fn() != 1)
-	{
-		FreeLibrary(hookdll);
-		message("Another running instance of Seamless RDP detected.");
-		return -1;
+		if (!set_hooks_fn || !remove_hooks_fn || !instance_count_fn)
+		{
+			FreeLibrary(hookdll);
+			message("Hook DLL doesn't contain the correct functions. Unable to continue.");
+			return -1;
+		}
+
+		/* Check if the DLL is already loaded */
+		if (instance_count_fn() != 1)
+		{
+			FreeLibrary(hookdll);
+			message("Another running instance of Seamless RDP detected.");
+			return -1;
+		}
 	}
 
 	ProcessIdToSessionId(GetCurrentProcessId(), &g_session_id);
@@ -363,12 +387,15 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 	g_connected = is_connected();
 	g_desktop_hidden = is_desktop_hidden();
 
-	if (InternalWindow_create(instance, InternalWindow_processCopyData) == FALSE)
+	if (InternalWindow_create(instance, use_active_monitoring ? NULL : InternalWindow_processCopyData) == FALSE)
 		SeamlessChannel_sendDebug("Failed to create seamless internal window");
 
 	SeamlessChannel_sendHello(g_desktop_hidden ? SEAMLESS_HELLO_HIDDEN : 0);
 
-	set_hooks_fn();
+	if (use_active_monitoring)
+		start_windows_monitoring();
+	else
+		set_hooks_fn();
 
 	/* Since we don't see the entire desktop we must resize windows
 	   immediatly. */
@@ -430,12 +457,17 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 		while (SeamlessChannel_recv(&line) >= 0) {
 			SeamlessChannel_process(line);
 		}
+		
 		Sleep(100);
 	}
 
-	remove_hooks_fn();
+	if (use_active_monitoring)
+		stop_windows_monitoring();
+	else {
+		remove_hooks_fn();
 
-	FreeLibrary(hookdll);
+		FreeLibrary(hookdll);
+	}
 
 	SeamlessChannel_uninit();
 

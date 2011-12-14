@@ -23,6 +23,7 @@
 
 #include "seamlessWindow.h"
 
+SeamlessWindow* getHistory();
 SeamlessWindow* getWindowFromHistory(HWND hwnd);
 SeamlessWindow* addHWDNToHistory(HWND hwnd);
 BOOL removeHWNDFromHistory(HWND hwnd);

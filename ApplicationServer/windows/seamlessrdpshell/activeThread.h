@@ -18,21 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef _WINDOWUTIL_H_
-#define _WINDOWUTIL_H_
+#ifndef _ACTIVETHREAD_H_
+#define _ACTIVETHREAD_H_
 
-#include <windows.h>
+int start_windows_monitoring();
+void stop_windows_monitoring();
 
-#define TITLE_SIZE	150
-
-PSIZE WindowUtil_getScreenSize();
-BOOL WindowUtil_isToplevel(HWND hwnd);
-HWND WindowUtil_getParent(HWND hwnd);
-BOOL WindowUtil_isFocused(HWND hwnd);
-BOOL WindowUtil_setFocus(HWND hwnd);
-int WindowUtil_getState(HWND hwnd);
-BOOL WindowUtil_setState(HWND hwnd, int state);
-HICON WindowUtil_getIcon(HWND hwnd, int large);
-int WindowUtil_extractIcon(HICON icon, char *buffer, int maxlen);
-
-#endif // _WINDOWUTIL_H_
+#endif

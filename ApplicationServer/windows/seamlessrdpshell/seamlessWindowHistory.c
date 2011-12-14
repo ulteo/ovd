@@ -25,6 +25,10 @@
 
 static SeamlessWindow* hwdHistory = NULL;
 
+SeamlessWindow* getHistory() {
+	return hwdHistory;
+}
+
 SeamlessWindow* getWindowFromHistory(HWND hwnd) {
 	SeamlessWindow* currentNode = hwdHistory;
 	if (currentNode == NULL) {
