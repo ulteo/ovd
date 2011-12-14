@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,7 +37,7 @@ class Configuration_mode_ad extends Configuration_mode {
     $new = $newprefs->get('UserDB', 'activedirectory');
 
     $change_ad = False;
-    foreach(array('hosts', 'domain') as $key) {
+    foreach(array('domain') as $key) {
       if ($old[$key] != $new[$key]) {
 	$change_ad = True;
 	break;
