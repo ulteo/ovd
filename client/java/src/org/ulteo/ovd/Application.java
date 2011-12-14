@@ -76,6 +76,15 @@ public class Application implements Comparable<Application> {
 	public RdpConnectionOvd getConnection() {
 		return this.connection;
 	}
+	
+	/**
+	 * set the {@link ImageIcon} icon
+	 * @param icon The {@link ImageIcon} to add. Do nothing if icon is null.
+	 */
+	public void setIcon(ImageIcon icon) {
+		if (icon != null)
+			this.icon = icon;
+	}
 
 	@Override
 	public int compareTo(Application t) {

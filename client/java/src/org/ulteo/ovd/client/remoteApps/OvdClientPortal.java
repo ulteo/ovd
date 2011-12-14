@@ -44,6 +44,7 @@ import org.ulteo.ovd.client.OvdClientPerformer;
 import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.portal.PortalFrame;
+import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.News;
 import org.ulteo.ovd.sm.Callback;
@@ -60,6 +61,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	private boolean autoPublish = false;
 	private boolean hiddenAtStart = false;
 	private boolean showBugReporter = false;
+	private float ApplicationIncrement = 0;
 	
 	public OvdClientPortal(SessionManagerCommunication smComm, String login_, boolean autoPublish, boolean showDesktopIcons_, boolean hiddenAtStart_, boolean showBugReporter_, Callback obj) {
 		super(smComm, obj);
@@ -83,6 +85,12 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	public boolean isAutoPublish() {
 		return this.autoPublish;
+	}
+	
+	@Override
+	protected ImageIcon getAppIcon(Application app) {
+		this.obj.updateProgress(LoadingStatus.SM_GET_APPLICATION, (int)(this.ApplicationIndex * this.ApplicationIncrement));
+		return super.getAppIcon(app);
 	}
 
 	@Override
@@ -227,7 +235,15 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	@Override
 	public void createRDPConnections() {
-		_createRDPConnections();
+		List<ServerAccess> servers = this.smComm.getServers();
+		
+		int nbApplications = 0;
+		for (ServerAccess server : servers)
+			nbApplications += server.applications.size();
+		this.ApplicationIncrement = (float) (100.0 / nbApplications);
+
+		this.configureRDP(this.smComm.getResponseProperties());
+		_createRDPConnections(servers);
 	}
 	
 	@Override

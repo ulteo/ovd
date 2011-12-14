@@ -51,7 +51,8 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 
 	@Override
 	public void createRDPConnections() {
-		_createRDPConnections();
+		this.configureRDP(this.smComm.getResponseProperties());
+		_createRDPConnections(this.smComm.getServers());
 	}
 	
 	@Override

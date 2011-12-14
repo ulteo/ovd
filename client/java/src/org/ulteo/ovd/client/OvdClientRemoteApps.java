@@ -31,7 +31,6 @@ import net.propero.rdp.RdpConnection;
 
 import org.ulteo.Logger;
 import org.ulteo.ovd.OvdException;
-import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.Properties;
@@ -59,8 +58,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	protected Spool spool = null;
 	protected SystemAbstract system = null;
 
-	private int ApplicationIncrement = 0;
-	private int ApplicationIndex = 0;
+	protected int ApplicationIndex = 0;
 
 	private int flags = 0;
 	private Rectangle screensize = null;
@@ -188,7 +186,41 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		
 		this.bpp = properties.getRDPBpp();
 	}
+	
+	/**
+	 * get an {@link ImageIcon} icon from a specific {@link Application}. It searches
+	 * firstly in the disk cache, then if not found, ask it to the Session Manager.
+	 * If found, the icon is added to the {@link Application}.
+	 * @param app the {@link Application} to get the {@link ImageIcon}
+	 * @return Return the {@link ImageIcon} icon found, null instead
+	 */
+	protected ImageIcon getAppIcon(Application app) {
+		++this.ApplicationIndex;
+		ImageIcon icon = this.system.getAppIcon(app.getId());
+		if (icon == null)
+			icon = this.smComm.askForIcon(new org.ulteo.ovd.sm.Application(app.getId(), app.getName()));
+		app.setIcon(icon);
+		return icon;
+	}
+	
+	/**
+	 * get all icons available for a {@link RdpConnectionOvd}.
+	 * @param rc the {@link RdpConnectionOvd} to retreive all possible icons
+	 */
+	public void processIconCache(RdpConnectionOvd rc) {
+		HashMap<Integer, ImageIcon> appsIcons = new HashMap<Integer, ImageIcon>();
+		for (Application app : rc.getAppsList()) {
+			if (this.isCancelled)
+				break;
 
+			if (getAppIcon(app) != null)
+				appsIcons.put(app.getId(), app.getIcon());
+		}
+		int updatedIcons = this.system.updateAppsIconsCache(appsIcons);
+		if (updatedIcons > 0)
+			Logger.info("Applications cache updated: "+updatedIcons+" icons");
+	}
+	
 	public RdpConnectionOvd createRDPConnection(ServerAccess server) {
 		if (server == null)
 			return null;
@@ -218,71 +250,31 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		rc.setCredentials(server.getLogin(), server.getPassword());
 		this.configure(rc);
 
-		// application icon processing
-		HashMap<Integer, ImageIcon> appsIcons = new HashMap<Integer, ImageIcon>();
-		for (org.ulteo.ovd.sm.Application appItem : server.applications) {
-			if (this.isCancelled)
-				return null;
-
-			int subStatus = this.ApplicationIndex * this.ApplicationIncrement;
-			this.obj.updateProgress(LoadingStatus.SM_GET_APPLICATION, subStatus);
-
-			int appId = appItem.getId();
-			ImageIcon appIcon = this.system.getAppIcon(appId);
-			if (appIcon == null) {
-				appIcon = this.smComm.askForIcon(appItem);
-				if (appIcon != null)
-					appsIcons.put(appId, appIcon);
-			}
-
-			rc.addApp(new Application(rc, appItem, appIcon));
-			this.ApplicationIndex++;
-		}
-		int updatedIcons = this.system.updateAppsIconsCache(appsIcons);
-		if (updatedIcons > 0)
-			Logger.info("Applications cache updated: "+updatedIcons+" icons");
-
 		// Ensure that width is multiple of 4
 		// Prevent artifact on screen with a with resolution
 		// not divisible by 4
 		rc.setGraphic((int) this.screensize.width & ~3, (int) this.screensize.height, this.bpp);
 		rc.setGraphicOffset(this.screensize.x, this.screensize.y);
-
+		
+		for (org.ulteo.ovd.sm.Application appItem : server.applications)
+			rc.addApp(new Application(rc, appItem, null));
+		
 		this.connections.add(rc);
 
 		return rc;
 	}
 
-	protected void _createRDPConnections() {
-		if (this.smComm == null) {
-			Logger.error("[Programmer error] OvdclientRemoteApps.createRDPConnections() can be used only if 'smComm' variable is not null");
-			return;
-		}
-		
-		Properties properties = this.smComm.getResponseProperties();
-
-		this.configureRDP(properties);
-		
-		List<ServerAccess> serversList = this.smComm.getServers();
-		
-		int numberOfApplication = 0;
-
-		for (ServerAccess server : serversList)
-			numberOfApplication += server.applications.size();
-
-		this.ApplicationIncrement = 100 / numberOfApplication;
+	protected void _createRDPConnections(List<ServerAccess> serversList) {
 		this.ApplicationIndex = 0;
 
 		for (ServerAccess server : serversList) {
 			if (this.isCancelled)
 				return;
-
-			if (this.createRDPConnection(server) == null)
-				continue;
+			
+			RdpConnectionOvd rc = this.createRDPConnection(server);
+			if (rc != null)
+				this.processIconCache(rc);
 		}
-
-		this.obj.updateProgress(LoadingStatus.SM_GET_APPLICATION, 100);
-		this.ApplicationIndex = 0;
 	}
 
 	protected boolean _checkRDPConnections() {

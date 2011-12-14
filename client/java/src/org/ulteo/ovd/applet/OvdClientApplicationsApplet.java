@@ -83,10 +83,11 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 			return false;
 
 		this.customizeConnection(co);
-		co.addRdpListener(this);
-		co.connect();
+		this.processIconCache(co);
 		this.matching.put(JSId, co);
 		
+		co.addRdpListener(this);
+		co.connect();
 		return true;
 	}
 	
