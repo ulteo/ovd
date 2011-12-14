@@ -37,6 +37,7 @@ function show_default() {
 	$userDB = UserDB::getInstance();
 	$userGroupDB = UserGroupDB::getInstance();
 	$applicationsGroupDB = ApplicationsGroupDB::getInstance();
+	$sessionmanagement = SessionManagement::getInstance();
 
 	$usersList = new UsersList($_REQUEST);
 	$us = $usersList->search();
@@ -73,6 +74,9 @@ function show_default() {
 		$count = 0;
 		foreach($us as $u){
 			$session_settings_defaults = $u->getSessionSettings('session_settings_defaults');
+			$start_without_profile = (array_key_exists('start_without_profile', $session_settings_defaults) && $session_settings_defaults['start_without_profile'] == 1);
+			$start_without_all_sharedfolders = (array_key_exists('start_without_all_sharedfolders', $session_settings_defaults) && $session_settings_defaults['start_without_all_sharedfolders'] == 1);
+			
 			echo '<tr class="content';
 			if ($count % 2 == 0)
 				echo '1';
@@ -145,10 +149,23 @@ function show_default() {
 				$profiles = $u->getProfiles();
 			}
 			$networkfolder_s = array_merge($folders, $profiles);
+			$fs_ok_for_session = true;
 			
 			if (count($networkfolder_s) > 0) {
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
 				foreach ($networkfolder_s as $a_networkfolder) {
+					$server = Abstract_Server::load($a_networkfolder->server);
+					if (! ($server && $server->isOnline() && !$server->getAttribute('locked'))) {
+						if (in_array($a_networkfolder, $profiles)) { // User profile
+							if ($start_without_profile == 0)
+								  $fs_ok_for_session = false;
+						}
+						else { // Shared folders
+							if ($start_without_all_sharedfolders == 0)
+								$fs_ok_for_session = false;
+						}
+					}
+					
 					echo '<tr>';
 					echo '<td>'.$a_networkfolder->prettyName().'</td>';
 					if (isset($a_networkfolder->name) && $a_networkfolder->name !== '')
@@ -170,8 +187,26 @@ function show_default() {
 			echo '</td>';
 
 			echo '<td style="text-align: center;">'; // server
-			$serv_s = $u->getAvailableServers();
-			if (is_array($serv_s) && count($serv_s) > 0)
+			$serv_s = array();
+			$sessionmanagement2 = clone($sessionmanagement);
+			$sessionmanagement2->user = $u;
+			$applicationServerTypes = $sessionmanagement2->getApplicationServerTypes();
+			foreach ($applicationServerTypes as $type) {
+				$buf = $sessionmanagement2->user->getAvailableServers($type);
+				if (is_null($buf) || ! is_array($buf))
+					continue;
+				$serv_s = array_merge($serv_s, $buf);
+			}
+			$aps_ok_for_session = (is_array($serv_s) && count($serv_s) > 0);
+			
+			$can_start_session = true;
+			if ($aps_ok_for_session === false)
+				$can_start_session = false;
+			
+			elseif ($fs_ok_for_session === false)
+				$can_start_session = false;
+			
+			if ($can_start_session === true)
 				echo '<img src="media/image/ok.png" alt="" title="" />';
 			else
 				echo '<img src="media/image/cancel.png" alt="" title="" />';
