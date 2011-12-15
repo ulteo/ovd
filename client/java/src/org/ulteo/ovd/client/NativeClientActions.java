@@ -21,8 +21,7 @@
 package org.ulteo.ovd.client;
 
 /**
- * @author samuel
- *
+ * Actions in the OVD client session called by the native client
  */
 public interface NativeClientActions {
 
