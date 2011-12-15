@@ -37,7 +37,7 @@ import javax.swing.JProgressBar;
 
 import org.ulteo.utils.I18n;
 
-public class LoadingFrame extends JDialog {
+public class LoadingFrame extends JDialog implements ActionListener {
 
 	private JButton cancel = null;
 	private JProgressBar aJProgressBar = null;
@@ -46,7 +46,7 @@ public class LoadingFrame extends JDialog {
 	private LoadingStatus loadingStatus = LoadingStatus.LOADING_START;
 	private boolean showProgressBar;
 
-	public LoadingFrame(final ActionListener listener, boolean showProgressBar) {
+	public LoadingFrame(boolean showProgressBar) {
 		this.showProgressBar = showProgressBar;
 
 		Image logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
@@ -61,11 +61,16 @@ public class LoadingFrame extends JDialog {
 		this.cancel = new JButton(I18n._("Cancel"));
 		this.cancel.setPreferredSize(new Dimension(120, 10));
 		this.cancel.setSize(new Dimension(120, 10));
-		this.cancel.addActionListener(listener);
-
+		this.cancel.addActionListener(this);
+		
 		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowActivated(WindowEvent e) {
+				cancel.setEnabled(true);
+			}
+			@Override
 			public void windowClosing(WindowEvent e) {
-				listener.actionPerformed(new ActionEvent(cancel, e.getID(), "cancel"));
+				cancel.setEnabled(false);
 		    }
 		});
 		
@@ -83,9 +88,22 @@ public class LoadingFrame extends JDialog {
 		this.add(BorderLayout.SOUTH, this.jlabel);
 		this.pack();
 	}
-
-	public JButton getCancelButton() {
-		return this.cancel;
+	
+	
+	public void addActionListener(final ActionListener listener) {
+		final LoadingFrame me = this;
+		this.cancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				listener.actionPerformed(new ActionEvent(me, e.getID(), "cancel"));
+			}
+		});
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				listener.actionPerformed(new ActionEvent(me, e.getID(), "cancel"));
+		    }
+		});
 	}
 	
 	public void updateProgression(LoadingStatus status, int subStatus) {
@@ -114,4 +132,10 @@ public class LoadingFrame extends JDialog {
 			this.loadingFrame.setTitle(I18n._("Now loading"));
 		}
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		cancel.setEnabled(false);
+	}
+	
 }

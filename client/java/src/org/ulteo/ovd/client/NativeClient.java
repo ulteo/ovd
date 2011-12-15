@@ -510,7 +510,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	public NativeClient(Options opts_) {
 		this.opts = opts_;
 
-		this.loadingFrame = new LoadingFrame(this, this.opts.showProgressBar);
+		this.loadingFrame = new LoadingFrame(this.opts.showProgressBar);
+		this.loadingFrame.addActionListener(this);
 		this.discFrame = new DisconnectionFrame();
 	}
 	
@@ -626,13 +627,10 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == this.loadingFrame.getCancelButton()) {
+		if (e.getSource() == this.loadingFrame) {
 			this.isCancelled = true;
-			
 			if (this.client != null)
 				this.client.disconnect();
-
-			this.loadingFrame.getCancelButton().setEnabled(false);
 		}
 		else if (e.getSource() == this.authFrame.getStartButton()) {
 			this.start();
@@ -717,7 +715,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	}
 	
 	private boolean launchConnection() throws UnsupportedOperationException, SessionManagerException {
-		this.loadingFrame.getCancelButton().setEnabled(true);
 		this.loadingFrame.updateProgression(LoadingStatus.LOADING_START, 0);
 		if (this.opts.showProgressBar)
 			SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, true));
