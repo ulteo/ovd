@@ -502,7 +502,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	private AuthFrame authFrame = null;
 	private DisconnectionFrame discFrame = null;
 
-	private boolean isCancelled = false;
 	private Thread thread = null;
 	private OvdClient client = null;
 	private Options opts = null;
@@ -588,8 +587,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 	@Override
 	public void run() {
-		this.isCancelled = false;
-
 		try {
 			if (this.authFrame != null) {
 				this.getFormValuesFromGui();
@@ -628,7 +625,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == this.loadingFrame) {
-			this.isCancelled = true;
 			if (this.client != null)
 				this.client.disconnect();
 		}
@@ -790,7 +786,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			this.client.setBandWidthLimitation(this.opts.socketTimeout, diskBandwidthLimit);
 		}
 
-		if (! this.isCancelled) {
+		if (! this.loadingFrame.cancelled()) {
 			Runtime.getRuntime().addShutdownHook(new ShutdownTask(this.client));
 			this.client.perform();
 		}

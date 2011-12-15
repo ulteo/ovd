@@ -106,6 +106,14 @@ public class LoadingFrame extends JDialog implements ActionListener {
 		});
 	}
 	
+	/**
+	 * say if the user has cancelled the loading
+	 * @return
+	 */
+	public boolean cancelled() {
+		return ! this.cancel.isEnabled();
+	}
+	
 	public void updateProgression(LoadingStatus status, int subStatus) {
 		if (! showProgressBar)
 			return;
