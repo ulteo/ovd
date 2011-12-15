@@ -24,7 +24,7 @@ package org.ulteo.ovd.client;
  * @author samuel
  *
  */
-public interface NativeClientCommon {
+public interface NativeClientActions {
 
 	/**
 	 * respond if native client have to quit after logout
