@@ -37,6 +37,7 @@ import net.propero.rdp.RdesktopCanvas;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
 
+import org.ulteo.ovd.client.NativeClientActions;
 import org.ulteo.ovd.client.OvdClientDesktop;
 import org.ulteo.ovd.client.OvdClientFrame;
 import org.ulteo.utils.jni.WorkArea;
@@ -60,7 +61,7 @@ public class DesktopFrame extends OvdClientFrame implements InputListener {
 	private KeyStroke fullscreen_keystroke = null;
 	
 	public DesktopFrame(Dimension resolution, OvdClientDesktop client) {
-		super(client);
+		super((NativeClientActions)client);
 		this.fullscreen = (resolution.width == client.getScreenSize().width &&
 				resolution.height == client.getScreenSize().height);
 		this.logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));

@@ -31,4 +31,9 @@ public interface NativeClientActions extends OvdClientPerformer {
 	 */
 	boolean haveToQuit();
 	
+	/**
+	 * disconnect the current OVD client session
+	 */
+	void disconnect();
+	
 }

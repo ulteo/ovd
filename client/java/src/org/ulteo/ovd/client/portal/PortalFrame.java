@@ -41,10 +41,10 @@ import javax.swing.JPanel;
 import org.ulteo.utils.I18n;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
+import org.ulteo.ovd.client.NativeClientActions;
 import org.ulteo.ovd.client.OvdClientFrame;
 import org.ulteo.ovd.client.bugreport.gui.BugReportButton;
 import org.ulteo.ovd.integrated.OSTools;
-import org.ulteo.rdp.RdpActions;
 
 public class PortalFrame extends OvdClientFrame {
 
@@ -58,7 +58,7 @@ public class PortalFrame extends OvdClientFrame {
 	private boolean newPanelAdded = false;
 	private boolean showBugReporter = false;
 	
-	public PortalFrame(RdpActions actions, String username, Image logo, boolean showBugReporter_) {
+	public PortalFrame(NativeClientActions actions, String username, Image logo, boolean showBugReporter_) {
 		super(actions);
 		if (username == null)
 			username = "";

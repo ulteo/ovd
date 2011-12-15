@@ -25,18 +25,17 @@ import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 
 import org.ulteo.ovd.client.authInterface.NativeLogoutPopup;
-import org.ulteo.rdp.RdpActions;
 
 public class OvdClientFrame extends JFrame implements WindowListener {
 
-	protected RdpActions actions = null;
+	protected NativeClientActions actions = null;
 	
 	/**
 	 * have to quit after logout
 	 */
 	private boolean have_to_quit = false;
 	
-	public OvdClientFrame(RdpActions actions) {
+	public OvdClientFrame(NativeClientActions actions) {
 		if (actions == null)
 			throw new IllegalArgumentException("actions parameter cannot be null");
 		

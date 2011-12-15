@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -35,8 +36,8 @@ import javax.swing.JPanel;
 import org.ulteo.Logger;
 
 import org.ulteo.utils.I18n;
+import org.ulteo.ovd.client.NativeClientActions;
 import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
-import org.ulteo.rdp.RdpActions;
 
 
 public class SouthEastPanel extends JPanel {
@@ -47,9 +48,9 @@ public class SouthEastPanel extends JPanel {
 	private static final String DISPLAY = I18n._("Display icons");
 	private static final String HIDE = I18n._("Hide icons");
 
-	private RdpActions rdpActions = null;
+	private NativeClientActions rdpActions = null;
 	
-	public SouthEastPanel(final RdpActions rdpActions) {
+	public SouthEastPanel(final NativeClientActions rdpActions) {
 		this.setLayout(new GridBagLayout());
 
 		this.rdpActions = rdpActions;

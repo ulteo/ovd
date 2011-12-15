@@ -42,10 +42,9 @@ import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.OvdAppChannel;
-import org.ulteo.rdp.RdpActions;
 import org.ulteo.rdp.RdpConnectionOvd;
 
-public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
+public abstract class OvdClient implements Runnable, RdpListener {
 	
 	public static final String productName = "OVD Client";
 	
@@ -332,9 +331,6 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 	@Override
 	public void seamlessEnabled(RdpConnection co) {}
 
-	/* RdpActions */
-
-	@Override
 	public void disconnect() {
 		if (! this.connectionIsActive)
 			return;

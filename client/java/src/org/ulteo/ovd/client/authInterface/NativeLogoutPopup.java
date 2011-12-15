@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Thomas MOUTON <thomas@ulteo.com> 2011
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -23,19 +24,19 @@ package org.ulteo.ovd.client.authInterface;
 
 import javax.swing.JFrame;
 import org.ulteo.ovd.client.AbstractLogoutPopup;
+import org.ulteo.ovd.client.NativeClientActions;
 
 import org.ulteo.utils.I18n;
-import org.ulteo.rdp.RdpActions;
 
 public class NativeLogoutPopup extends AbstractLogoutPopup {
-	private RdpActions actions = null;
+	private NativeClientActions actions = null;
 	
 	/**
 	 * have to quit after logout
 	 */
 	private boolean have_to_quit = false;
 	
-	public NativeLogoutPopup(JFrame frame_, RdpActions actions_) {
+	public NativeLogoutPopup(JFrame frame_, NativeClientActions actions_) {
 		super(frame_);
 
 		this.actions = actions_;

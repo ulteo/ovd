@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -32,15 +33,15 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 
 import org.ulteo.Logger;
+import org.ulteo.ovd.client.NativeClientActions;
 import org.ulteo.ovd.client.OvdClientFrame;
-import org.ulteo.rdp.RdpActions;
 
 public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 	
 	private OvdClientFrame portal = null;
-	private RdpActions rdpActions = null;
+	private NativeClientActions rdpActions = null;
 
-	public IntegratedTrayIcon(OvdClientFrame portal, Image logo, RdpActions actions) {
+	public IntegratedTrayIcon(OvdClientFrame portal, Image logo, NativeClientActions actions) {
 		super(logo, "Open Virtual Desktop");
 		
 		this.portal = portal;
