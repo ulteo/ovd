@@ -152,5 +152,11 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 	public boolean haveToQuit() {
 		return this.desktop.haveToQuit();
 	}
+	
+	@Override
+	public void disconnect() {
+		super.disconnect();
+		this.obj.sessionDisconnecting();
+	}
 
 }

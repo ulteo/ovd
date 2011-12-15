@@ -277,4 +277,10 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		return this.portal.haveToQuit();
 	}
 	
+	@Override
+	public void disconnect() {
+		super.disconnect();
+		this.obj.sessionDisconnecting();
+	}
+	
 }

@@ -336,7 +336,6 @@ public abstract class OvdClient implements Runnable, RdpListener {
 			return;
 
 		this.isCancelled = true;
-		this.obj.sessionDisconnecting();
 	}
 
 	public void performDisconnectAll() {
