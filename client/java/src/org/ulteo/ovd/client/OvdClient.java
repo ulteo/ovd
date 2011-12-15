@@ -84,7 +84,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	protected long sessionStatusSleepingTime = REQUEST_TIME_FREQUENTLY;
 
 	protected boolean isCancelled = false;
-	private boolean connectionIsActive = true;
+	protected boolean connectionIsActive = true;
 	protected boolean persistent = false;
 
 	public OvdClient(SessionManagerCommunication smComm, boolean persistent) {

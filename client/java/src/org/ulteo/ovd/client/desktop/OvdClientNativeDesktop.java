@@ -158,6 +158,9 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 	
 	@Override
 	public void disconnect() {
+		if (! this.connectionIsActive)
+			return;
+		
 		super.disconnect();
 		this.obj.sessionDisconnecting();
 	}
