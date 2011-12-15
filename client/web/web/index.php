@@ -61,11 +61,8 @@ if (OPTION_FORCE_LANGUAGE !== true && isset($_COOKIE['ovd-client']['session_lang
 if (strlen($user_language) == 2)
 	$user_language = $user_language.'-'.$user_language;
 
-$user_keymap = 'null';
-if (isset($_COOKIE['ovd-client']['session_keymap'])) {
-	$wi_session_keymap = (string)$_COOKIE['ovd-client']['session_language'];
-	$user_keymap = $wi_session_keymap;
-}
+if (OPTION_FORCE_KEYMAP !== true && isset($_COOKIE['ovd-client']['session_keymap']))
+	$user_keymap = (string)$_COOKIE['ovd-client']['session_keymap'];
 
 $wi_desktop_fullscreen = 0;
 if (defined('OPTION_FORCE_FULLSCREEN'))
@@ -147,6 +144,7 @@ function get_users_list() {
 			var i18n = new Hash();
 
 			var user_keymap = '<?php echo $user_keymap; ?>';
+			var OPTION_KEYMAP_AUTO_DETECT = <?php echo ( (OPTION_KEYMAP_AUTO_DETECT === true && !isset($_COOKIE['ovd-client']['session_keymap']))?'true':'false'); ?>;
 		</script>
 
 		<link rel="shortcut icon" type="image/png" href="media/image/favicon.ico" />
@@ -600,10 +598,10 @@ checkSessionMode();
 														<strong><span id="keyboard_layout_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<select id="session_keymap">
+														<select id="session_keymap"<?php if (OPTION_FORCE_KEYMAP === true) echo ' disabled="disabled"';?>>
 															<?php
 																foreach ($keymaps as $keymap)
-																	echo '<option value="'.$keymap['id'].'"'.((isset($keymap['default']))?' selected="selected"':'').'>'.$keymap['name'].'</option>';
+																	echo '<option value="'.$keymap['id'].'"'.(($keymap['id']==$user_keymap)?' selected="selected"':'').'>'.$keymap['name'].'</option>';
 															?>
 														</select>
 													</td>

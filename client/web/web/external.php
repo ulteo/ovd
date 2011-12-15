@@ -30,7 +30,8 @@ if (array_key_exists('language', $_REQUEST)) {
 
 	if (in_array($_REQUEST['language'], $languages)) {
 		$user_language = $_REQUEST['language'];
-		$user_keymap = $user_language;
+		if (OPTION_FORCE_KEYMAP !== true)
+			$user_keymap = $user_language;
 	}
 }
 
@@ -107,6 +108,7 @@ if (defined('RDP_INPUT_METHOD'))
 			var i18n = new Hash();
 
 			var user_keymap = '<?php echo $user_keymap; ?>';
+			var OPTION_KEYMAP_AUTO_DETECT = <?php echo ((OPTION_KEYMAP_AUTO_DETECT === true)?'true':'false'); ?>;
 		</script>
 
 		<link rel="shortcut icon" type="image/png" href="media/image/favicon.ico" />

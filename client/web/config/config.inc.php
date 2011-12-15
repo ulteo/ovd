@@ -29,6 +29,22 @@
 // default: false (do not force any behavior)
 
 
+// Option session language: default value
+// define('OPTION_KEYMAP_DEFAULT', 'fr'); // French for instance
+// define('OPTION_KEYMAP_DEFAULT', 'es'); // Spanish for instance
+// default: 'en-us'
+
+// Option session language: autodetect keyboard layout from client environment or language
+// define('OPTION_KEYMAP_AUTO_DETECT', true);
+// define('OPTION_KEYMAP_AUTO_DETECT', false);
+// default: true
+
+// Option session language: force the option
+// define('OPTION_FORCE_KEYMAP', true);
+// define('OPTION_FORCE_KEYMAP', false);
+// default: false (do not force any behavior)
+
+
 // Option local credentials: show the option
 // define('OPTION_SHOW_USE_LOCAL_CREDENTIALS', true);
 // define('OPTION_SHOW_USE_LOCAL_CREDENTIALS', false);

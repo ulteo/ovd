@@ -68,4 +68,13 @@ if (OPTION_LANGUAGE_AUTO_DETECT === true) {
 		$user_language = strtolower(str_replace('_', '-', $buf[0]));
 	}
 }
-$user_keymap = $user_language;
+
+$user_keymap = 'en-us';
+if (defined('OPTION_KEYMAP_DEFAULT'))
+	$user_keymap = OPTION_KEYMAP_DEFAULT;
+
+if (! defined('OPTION_KEYMAP_AUTO_DETECT'))
+	define('OPTION_KEYMAP_AUTO_DETECT', true);
+
+if (! defined('OPTION_FORCE_KEYMAP'))
+	define('OPTION_FORCE_KEYMAP', false);
