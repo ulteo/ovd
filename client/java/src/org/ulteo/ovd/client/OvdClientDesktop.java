@@ -32,7 +32,6 @@ import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 
 import org.ulteo.Logger;
-import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -41,11 +40,11 @@ import org.ulteo.rdp.RdpConnectionOvd;
 public abstract class OvdClientDesktop extends OvdClient {
 
 	public OvdClientDesktop() {
-		this(null, null, false);
+		this(null, false);
 	}
 
-	public OvdClientDesktop(SessionManagerCommunication smComm, Callback obj, boolean persistent) {
-		super(smComm, obj, persistent);
+	public OvdClientDesktop(SessionManagerCommunication smComm, boolean persistent) {
+		super(smComm, persistent);
 		
 		// extend the size of the list for receiving the future desktop connection
 		this.connections.add(null);

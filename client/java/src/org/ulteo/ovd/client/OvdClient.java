@@ -36,7 +36,6 @@ import net.propero.rdp.RdpListener;
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.integrated.OSTools;
-import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.News;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -65,8 +64,6 @@ public abstract class OvdClient implements Runnable, RdpListener {
 		return map;
 	}
 
-	protected Callback obj = null;
-
 	private ArrayList<RdpConnectionOvd> availableConnections = null;
 	protected SessionManagerCommunication smComm = null;
 	protected Thread getStatus = null;
@@ -90,43 +87,8 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	private boolean connectionIsActive = true;
 	protected boolean persistent = false;
 
-	public OvdClient(SessionManagerCommunication smComm, Callback obj_, boolean persistent) {
+	public OvdClient(SessionManagerCommunication smComm, boolean persistent) {
 		this.smComm = smComm;
-		this.obj = obj_;
-		
-		if (this.obj == null) {
-			this.obj = new Callback() {
-				@Override
-				public void reportBadXml(String data) {
-					Logger.error("Callback::reportBadXml: "+data);
-				}
-
-				@Override
-				public void reportError(int code, String msg) {
-					Logger.error("Callback::reportError: "+code+" => "+msg);
-				}
-
-				@Override
-				public void reportErrorStartSession(String code) {
-					Logger.error("Callback::reportErrorStartSession: "+code);
-				}
-
-				@Override
-				public void reportNotFoundHTTPResponse(String moreInfos) {
-					Logger.error("Callback::reportNotFoundHTTPResponse: "+moreInfos);
-				}
-
-				@Override
-				public void reportUnauthorizedHTTPResponse(String moreInfos) {
-					Logger.error("Callback::reportUnauthorizedHTTPResponse: "+moreInfos);
-				}
-
-				@Override
-				public void sessionDisconnecting() {
-					Logger.info("Callback::sessionDisconnected");
-				}
-			};
-		}
 
 		this.connections = new ArrayList<RdpConnectionOvd>();
 		this.availableConnections = new ArrayList<RdpConnectionOvd>();

@@ -63,10 +63,12 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	private boolean showBugReporter = false;
 	private float ApplicationIncrement = 0;
 	private LoadingFrame loadingFrame;
+	private Callback obj;
 	
 	public OvdClientPortal(SessionManagerCommunication smComm, LoadingFrame loadingFrame, String login_, boolean autoPublish, boolean showDesktopIcons_, boolean hiddenAtStart_, boolean showBugReporter_, Callback obj) {
-		super(smComm, obj);
+		super(smComm);
 		this.loadingFrame = loadingFrame;
+		this.obj = obj;
 		
 		this.username = login_;
 		this.autoPublish = this.publicated = autoPublish;

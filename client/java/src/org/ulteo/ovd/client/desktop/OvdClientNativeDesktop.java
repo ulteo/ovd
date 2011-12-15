@@ -42,10 +42,13 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 	
 	private DesktopFrame desktop = null;
 	private LoadingFrame loadingFrame;
+	private Callback obj;
 	
 	public OvdClientNativeDesktop(SessionManagerCommunication smComm, LoadingFrame loadingFrame, Dimension resolution, Callback obj, boolean persistent) {
-		super(smComm, obj, persistent);
+		super(smComm, persistent);
 		this.loadingFrame = loadingFrame;
+		this.obj = obj;
+		
 		this.desktop = new DesktopFrame(resolution, this);
 	}
 

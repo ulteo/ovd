@@ -32,7 +32,6 @@ import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.Application;
-import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -72,11 +71,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 	
 	public OvdClientRemoteApps(SessionManagerCommunication smComm) {
-		this(smComm, null);
-	}
-
-	public OvdClientRemoteApps(SessionManagerCommunication smComm, Callback obj) {
-		super(smComm, obj, false);
+		super(smComm, false);
 		
 		String sm = this.smComm.getHost();
 		if (OSTools.isWindows()) {
