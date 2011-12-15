@@ -510,7 +510,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	public NativeClient(Options opts_) {
 		this.opts = opts_;
 
-		this.loadingFrame = new LoadingFrame(this);
+		this.loadingFrame = new LoadingFrame(this, this.opts.showProgressBar);
 		this.discFrame = new DisconnectionFrame();
 	}
 	
@@ -717,17 +717,16 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	}
 	
 	private boolean launchConnection() throws UnsupportedOperationException, SessionManagerException {
-		if (this.opts.showProgressBar) {
-			this.loadingFrame.getCancelButton().setEnabled(true);
-			this.updateProgress(LoadingStatus.LOADING_START, 0);
+		this.loadingFrame.getCancelButton().setEnabled(true);
+		this.loadingFrame.updateProgression(LoadingStatus.LOADING_START, 0);
+		if (this.opts.showProgressBar)
 			SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, true));
-		}
 
 		// Start OVD session
 		SessionManagerCommunication dialog = new SessionManagerCommunication(this.opts.host, this.opts.port, true);
 		dialog.addCallbackListener(this);
 
-		this.updateProgress(LoadingStatus.SM_CONNECTION, 0);
+		this.loadingFrame.updateProgression(LoadingStatus.SM_CONNECTION, 0);
 		Properties request = new Properties(this.opts.sessionMode);
 		request.setLang(this.opts.lang);
 		request.setTimeZone(Calendar.getInstance().getTimeZone().getID());
@@ -748,7 +747,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		if (this.opts.savePassword)
 			this.savePassword();
 		
-		this.updateProgress(LoadingStatus.SM_START, 0);
+		this.loadingFrame.updateProgression(LoadingStatus.SM_START, 0);
 		
 		Properties response = dialog.getResponseProperties();
 		
@@ -775,7 +774,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				this.client = new OvdClientNativeDesktop(dialog, this.opts.geometry, this, response.isPersistent());
 				break;
 			case Properties.MODE_REMOTEAPPS:
-				this.client = new OvdClientPortal(dialog, response.getUsername(), this.opts.autopublish, response.isDesktopIcons(), this.opts.autostart, this.opts.isBugReporterVisible, this);
+				this.client = new OvdClientPortal(dialog, this.loadingFrame, response.getUsername(), this.opts.autopublish, response.isDesktopIcons(), this.opts.autostart, this.opts.isBugReporterVisible, this);
 				((OvdClientPortal) this.client).setSeamlessDebugEnabled(this.opts.debugSeamless);
 				break;
 			default:
@@ -864,12 +863,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		String error = ResponseHandler.get(ERROR_DEFAULT);
 		SwingTools.invokeLater(GUIActions.createDialog(error, I18n._("Error"), JOptionPane.ERROR_MESSAGE, JOptionPane.CLOSED_OPTION));
 		Logger.error(error+ "\n" + moreInfos);
-	}
-
-	@Override
-	public void updateProgress(LoadingStatus status, int subStatus) {
-		if (this.opts.showProgressBar)
-			this.loadingFrame.updateProgression(status, subStatus);
 	}
 
 	@Override

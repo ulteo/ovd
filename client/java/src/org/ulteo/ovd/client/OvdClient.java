@@ -35,7 +35,6 @@ import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
-import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.News;
@@ -131,11 +130,6 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 				@Override
 				public void sessionDisconnecting() {
 					Logger.info("Callback::sessionDisconnected");
-				}
-
-				@Override
-				public void updateProgress(LoadingStatus status, int substatus) {
-					Logger.info("Callback::updateProgress "+status+","+substatus);
 				}
 			};
 		}

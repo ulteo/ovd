@@ -42,6 +42,7 @@ import org.ulteo.ovd.client.NativeClientCommon;
 import org.ulteo.ovd.client.Newser;
 import org.ulteo.ovd.client.OvdClientPerformer;
 import org.ulteo.ovd.client.OvdClientRemoteApps;
+import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.portal.PortalFrame;
 import org.ulteo.ovd.sm.ServerAccess;
@@ -62,9 +63,11 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	private boolean hiddenAtStart = false;
 	private boolean showBugReporter = false;
 	private float ApplicationIncrement = 0;
+	private LoadingFrame loadingFrame;
 	
-	public OvdClientPortal(SessionManagerCommunication smComm, String login_, boolean autoPublish, boolean showDesktopIcons_, boolean hiddenAtStart_, boolean showBugReporter_, Callback obj) {
+	public OvdClientPortal(SessionManagerCommunication smComm, LoadingFrame loadingFrame, String login_, boolean autoPublish, boolean showDesktopIcons_, boolean hiddenAtStart_, boolean showBugReporter_, Callback obj) {
 		super(smComm, obj);
+		this.loadingFrame = loadingFrame;
 		
 		this.username = login_;
 		this.autoPublish = this.publicated = autoPublish;
@@ -89,7 +92,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	
 	@Override
 	protected ImageIcon getAppIcon(Application app) {
-		this.obj.updateProgress(LoadingStatus.SM_GET_APPLICATION, (int)(this.ApplicationIndex * this.ApplicationIncrement));
+		this.loadingFrame.updateProgression(LoadingStatus.SM_GET_APPLICATION, (int)(this.ApplicationIndex * this.ApplicationIncrement));
 		return super.getAppIcon(app);
 	}
 
@@ -120,7 +123,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		} catch (OvdException ex) {
 			Logger.error(co.getServer()+": Failed to add ovd applications listener: "+ex);
 		}
-		this.obj.updateProgress(LoadingStatus.CLIENT_WAITING_SERVER, 0);
+		this.loadingFrame.updateProgression(LoadingStatus.CLIENT_WAITING_SERVER, 0);
 
 		for (Application app : co.getAppsList()) {
 			this.appsList.add(app);

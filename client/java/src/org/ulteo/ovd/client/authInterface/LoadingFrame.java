@@ -44,8 +44,10 @@ public class LoadingFrame extends JDialog {
 	private JLabel jlabel = null;
 	
 	private LoadingStatus loadingStatus = LoadingStatus.LOADING_START;
+	private boolean showProgressBar;
 
-	public LoadingFrame(final ActionListener listener) {
+	public LoadingFrame(final ActionListener listener, boolean showProgressBar) {
+		this.showProgressBar = showProgressBar;
 
 		Image logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
 		this.setIconImage(logo);
@@ -87,6 +89,9 @@ public class LoadingFrame extends JDialog {
 	}
 	
 	public void updateProgression(LoadingStatus status, int subStatus) {
+		if (! showProgressBar)
+			return;
+		
 		this.loadingStatus = status;
 		this.aJProgressBar.setValue(LoadingStatus.getIncrement(status, subStatus));
 		this.jlabel.setText(LoadingStatus.getMsg(status));
