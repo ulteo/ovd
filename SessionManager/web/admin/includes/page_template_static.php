@@ -5,6 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2008-2011
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,8 +26,11 @@ function header_static($title_=false) {
 	$title_ = DEFAULT_PAGE_TITLE;
 	$logo_url = DEFAULT_LOGO_URL;
 	
+	global $html_dir;
+	$html_dir = get_component_orientation();
+	
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="'.$html_dir.'">
 	<head>
 		<title>'.$title_.' - '._('Administration').'</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

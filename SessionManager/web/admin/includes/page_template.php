@@ -5,6 +5,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -326,9 +327,12 @@ function page_header($params_=array()) {
   }
   else
     $infos = array();
-
+  
+  global $html_dir;
+  $html_dir = get_component_orientation();
+	
   echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">';
-  echo '<html xmlns="http://www.w3.org/1999/xhtml">';
+  echo '<html xmlns="http://www.w3.org/1999/xhtml" dir="'.$html_dir.'">';
   echo '<head>';
   echo '<title>'.$title.'</title>';
 
@@ -369,7 +373,7 @@ function page_header($params_=array()) {
 
   echo '<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">';
   echo '<tr>';
-  echo '<td style="min-width: 10%; text-align: left;" class="menu">';
+  echo '<td style="min-width: 10%; text-align: inherit;" class="menu">';
   page_menu();
   echo '</td>';
 
@@ -377,7 +381,7 @@ function page_header($params_=array()) {
   //echo '<h1 class="centered">'.$title.'</h1>';
   //echo '</td>';
 
-  echo '<td style="width: 100%; text-align: right; padding-right: 10px; border-bottom: 1px solid #ccc;" class="logo">';
+  echo '<td class="logo">';
   echo '<a href="index.php"><img src="'.ROOT_ADMIN_URL.'/media/image/header.png" alt="'.$title.'" title="'.$title.'" /></a>';
   echo '</td>';
 
@@ -511,6 +515,7 @@ function get_nb_child($id_) {
 
 function page_menu(){
 	global $menu;
+	global $html_dir;
 	$menu2 = $menu; // bug in php 5.1.6 (redhat 5.2)
 
 	$position = get_menu_entry();
@@ -533,9 +538,17 @@ function page_menu(){
 		
 		echo '<td style="min-width: 60px; height: 81px; text-align: center; vertical-align: middle;';
 		if ($id == $parent) {
-			if ($first !== true)
-				echo ' border-left: 1px solid  #ccc;';
-			echo ' background: #eee; border-right: 1px solid #ccc; border-bottom: 0px;';
+			
+			if($html_dir === 'ltr') {
+				if ($first !== true)
+					echo ' border-left: 1px solid  #ccc;';
+				echo ' background: #eee; border-right: 1px solid #ccc; border-bottom: 0px;';
+			}
+			else {
+				if ($first !== true)
+					echo ' border-right: 1px solid  #ccc;';
+				echo ' background: #eee; border-left: 1px solid #ccc; border-bottom: 0px;';
+			}
 		} else
 			echo ' border-bottom: 1px solid #ccc;';
 		
@@ -562,6 +575,7 @@ function page_sub_menu() {
 	echo '<tr>';
 
 	global $menu;
+	global $html_dir;
 	$menu2 = $menu; // bug in php 5.1.6 (redhat 5.2)
 
 	$position = get_menu_entry();
@@ -574,7 +588,10 @@ function page_sub_menu() {
 	}
 
 	if (! is_null($parent)) {
-		echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\''.ROOT_ADMIN_URL.'/media/image/submenu_bg.png\') repeat-y right;">';
+		if ($html_dir === 'ltr')
+			echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\''.ROOT_ADMIN_URL.'/media/image/submenu_bg.png\') repeat-y right;">';
+		else
+			echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\''.ROOT_ADMIN_URL.'/media/image/submenu_bg.png\') repeat-y left;">';
 
 		foreach($menu2 as $id => $entrie) {
 			if (is_array($entrie['parent'])) {
@@ -586,7 +603,10 @@ function page_sub_menu() {
 			}
 
 			if ($id == $position)
-				echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
+				if ($html_dir === 'ltr')
+					echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
+				else
+					echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-right: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
 			else
 				echo '<div class="container">';
 
@@ -597,9 +617,18 @@ function page_sub_menu() {
 		echo '</td>';
 	}
 
-	echo '<td style="text-align: left; vertical-align: top; background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;';
-	if (is_null($parent))
-		echo ' border-left: 1px solid #ccc;';
+	if ($html_dir === 'ltr') {
+		echo '<td style="text-align: inherit; vertical-align: top; background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;';
+		if (is_null($parent))
+			echo ' border-left: 1px solid #ccc;';
+	}
+	else {
+	
+		echo '<td style="text-align: inherit; vertical-align: top; background: #fff; border-top: 1px solid  #ccc; border-left: 1px solid  #ccc; border-bottom: 1px solid  #ccc;';
+		if (is_null($parent))
+			echo ' border-right: 1px solid #ccc;';
+	}
+
 	echo '">';
 	echo '<div class="container">';
 }

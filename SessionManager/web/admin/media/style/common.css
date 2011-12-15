@@ -81,7 +81,7 @@ h1, h2, h3, h4, h5, h6 {
 	padding: 0;
 	padding-top: 5px;
 	padding-bottom: 10px;
-	text-align: left;
+	text-align: inherit;
 	color: #666;
 }
 
@@ -113,7 +113,7 @@ div#pageWrap {
 	margin-left: auto;
 	margin-right: auto;
 	/*margin-bottom: 25px;*/
-	text-align: left;
+	text-align: inherit;
 	background: #eee;
 }
 
@@ -131,6 +131,17 @@ div#footerWrap {
 	text-align: right;
 }
 
+html[dir="rtl"] div#footerWrap {
+	background: #fff;
+	width: 100%;
+	border-top: 1px solid #ccc;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	position: relative;
+	bottom: 0px;
+	text-align: left;
+}
+
 div#copyrightWrap {
 	text-align: center;
 	font-size: 0.9em;
@@ -142,6 +153,13 @@ ul {
 	padding: 0px;
 	padding-left: 10px;
 	margin-left: 5px;
+}
+
+html[dir="rtl"] ul {
+	margin: 0px;
+	padding: 0px;
+	padding-right: 10px;
+	margin-right: 5px;
 }
 
 #menuWrap ul {
@@ -214,7 +232,7 @@ table.main_header {
 table.main_header .logo {
 	width: 159px;
 	height: 100px;
-	text-align: center;
+	text-align: right;
 }
 
 table.main_header .title {
@@ -276,7 +294,7 @@ table.main_sub tr.content2 {
 }
 
 table.main_sub td {
-	text-align: left;
+	text-align: inherit;
 }
 
 table.main_sub td.title {
@@ -319,7 +337,7 @@ table.main_sub2 tr.content2 {
 }
 
 table.main_sub2 td {
-	text-align: left;
+	text-align: inherit;
 }
 
 table.main_sub2 td.title {
@@ -476,6 +494,20 @@ div#adminContent {
 
 div#headerWrap {
 	/*border-bottom: 1px #ccc solid;*/
+}
+
+div#headerWrap .logo {
+	text-align: right;
+	width: 100%width;
+	padding-right: 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+html[dir="rtl"] div#headerWrap .logo {
+	text-align: left;
+	width: 100%width;
+	padding-left: 10px;
+	border-bottom: 1px solid #ccc;
 }
 
 div#pageWrap {

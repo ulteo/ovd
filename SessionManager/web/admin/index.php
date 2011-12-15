@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Omar AKHAM <jeremy@ulteo.com> 2011
  * Contributor Stanislav IEVLEV <stanislav.ievlev@gmail.com> 2010
  *
  * This program is free software; you can redistribute it and/or
@@ -41,7 +42,7 @@ page_header();
 <h1 style="margin-left: 10px;"><?php echo _('Index'); ?></h1>
 <table style="width: 100%;" border="0" cellspacing="3" cellpadding="5">
 	<tr>
-		<td style="width: 30%; text-align: left; vertical-align: top;">
+		<td style="width: 30%; text-align: inherit; vertical-align: top;">
 <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
 	<h2><?php echo _('Users and Users groups'); ?></h2>
@@ -59,7 +60,7 @@ page_header();
 		</td>
 		<td style="width: 20px;">
 		</td>
-		<td style="width: 30%; text-align: left; vertical-align: top;">
+		<td style="width: 30%; text-align: inherit; vertical-align: top;">
 <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
 	<h2><?php echo _('Servers'); ?></h2>
@@ -78,7 +79,7 @@ if ($show_servers) {
 		</td>
 		<td style="width: 20px;">
 		</td>
-		<td style="padding-right: 20px; text-align: left; vertical-align: top;">
+		<td style="padding-right: 20px; text-align: inherit; vertical-align: top;">
 <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
 	<h2><?php echo _('Configuration'); ?></h2>
@@ -100,7 +101,7 @@ if ($show_configuration) {
 		</td>
 	</tr>
 	<tr>
-		<td style="text-align: left; vertical-align: top;">
+		<td style="text-align: inherit; vertical-align: top;">
 <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
 	<h2><?php echo _('Applications and applications groups'); ?></h2>
@@ -122,7 +123,7 @@ if ($show_configuration) {
 		</td>
 		<td style="width: 20px;">
 		</td>
-		<td style="padding-right: 20px; text-align: left; vertical-align: top;">
+		<td style="padding-right: 20px; text-align: inherit; vertical-align: top;">
 <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
 	<h2><?php echo _('System'); ?></h2>
@@ -152,7 +153,7 @@ if ($show_configuration) {
 		</td>
 		<td style="width: 20px;">
 		</td>
-		<td style="padding-right: 20px; text-align: left; vertical-align: top;">
+		<td style="padding-right: 20px; text-align: inherit; vertical-align: top;">
 <div class="container rounded" style="background: #eee; width: 99%; margin-left: auto; margin-right: auto;">
 <div>
 	<h2><?php echo _('Status'); ?></h2>

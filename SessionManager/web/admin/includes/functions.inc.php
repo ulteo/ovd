@@ -393,3 +393,15 @@ function validate_ip($ip_) {
 function validate_fqdn($fqdn_) {
 	return preg_match("/(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)/", $fqdn_);
 }
+
+function get_component_orientation($language_ = null) {
+	$rtl_languages = array('ar', 'he', 'fa', 'ur', 'yi', 'dv');
+	
+	if (is_null($language_))
+		$language_ = substr(getenv('LANGUAGE'),0, 2);
+	
+	if (in_array($language_, $rtl_languages))
+			return 'rtl';
+	
+	return 'ltr';
+}
