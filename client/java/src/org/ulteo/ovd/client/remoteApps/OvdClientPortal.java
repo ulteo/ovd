@@ -95,6 +95,12 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.loadingFrame.updateProgression(LoadingStatus.SM_GET_APPLICATION, (int)(this.ApplicationIndex * this.ApplicationIncrement));
 		return super.getAppIcon(app);
 	}
+	
+	@Override
+	public void connect() {
+		this.loadingFrame.setVisible(false);
+		super.connect();
+	}
 
 	@Override
 	public void performDisconnectAll() {
@@ -161,9 +167,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			if (this.desktopIntegrator != null && this.desktopIntegrator.isDesktopIntegrationDone(rc))
 				this.portal.initPublishingButton();
 		}
-		
-		if (this.obj != null )
-			this.obj.sessionConnected();
+
+		this.loadingFrame.setVisible(false);
 	}
 
 	@Override

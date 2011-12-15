@@ -26,6 +26,5 @@ public interface Callback {
 	public void reportBadXml(String data);
 	public void reportUnauthorizedHTTPResponse(String moreInfos);
 	public void reportNotFoundHTTPResponse(String moreInfos);
-	public void sessionConnected();
 	public void sessionDisconnecting();
 }

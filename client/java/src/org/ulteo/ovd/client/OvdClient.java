@@ -123,11 +123,6 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 				}
 
 				@Override
-				public void sessionConnected() {
-					Logger.info("Callback::sessionConnected");
-				}
-
-				@Override
 				public void sessionDisconnecting() {
 					Logger.info("Callback::sessionDisconnected");
 				}
@@ -163,10 +158,7 @@ public abstract class OvdClient implements Runnable, RdpListener, RdpActions {
 					if (! isActive) {
 						isActive = true;
 						this.sessionStatusSleepingTime = REQUEST_TIME_OCCASIONALLY;
-
-						this.obj.sessionConnected();
 						this.connect();
-						
 						Logger.info("Session is ready");
 						((OvdClientPerformer)this).runSessionReady();
 					}

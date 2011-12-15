@@ -764,7 +764,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 		switch (response.getMode()) {
 			case Properties.MODE_DESKTOP:
-				this.client = new OvdClientNativeDesktop(dialog, this.opts.geometry, this, response.isPersistent());
+				this.client = new OvdClientNativeDesktop(dialog, this.loadingFrame, this.opts.geometry, this, response.isPersistent());
 				break;
 			case Properties.MODE_REMOTEAPPS:
 				this.client = new OvdClientPortal(dialog, this.loadingFrame, response.getUsername(), this.opts.autopublish, response.isDesktopIcons(), this.opts.autostart, this.opts.isBugReporterVisible, this);
@@ -856,13 +856,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		String error = ResponseHandler.get(ERROR_DEFAULT);
 		SwingTools.invokeLater(GUIActions.createDialog(error, I18n._("Error"), JOptionPane.ERROR_MESSAGE, JOptionPane.CLOSED_OPTION));
 		Logger.error(error+ "\n" + moreInfos);
-	}
-
-	@Override
-	public void sessionConnected() {
-		if ((this.loadingFrame != null && this.loadingFrame.isVisible()) || (this.authFrame != null && this.authFrame.getMainFrame().isVisible())) {
-			this.loadingFrame.setVisible(false);
-		}
 	}
 
 	private void saveProfile() {
