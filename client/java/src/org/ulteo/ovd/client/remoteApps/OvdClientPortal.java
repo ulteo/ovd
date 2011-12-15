@@ -271,7 +271,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 	
 	
-	// interface NativeClientCommon's methods 
+	// interface NativeClientActions' methods 
 	
 	@Override
 	public boolean haveToQuit() {

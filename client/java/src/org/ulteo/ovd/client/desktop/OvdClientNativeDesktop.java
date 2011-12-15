@@ -147,7 +147,7 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClien
 	}
 
 	
-	// interface NativeClientCommon's methods 
+	// interface NativeClientActions' methods 
 	
 	@Override
 	public boolean haveToQuit() {
