@@ -23,7 +23,7 @@ package org.ulteo.ovd.client;
 /**
  * Actions in the OVD client session called by the native client
  */
-public interface NativeClientActions {
+public interface NativeClientActions extends OvdClientPerformer {
 
 	/**
 	 * respond if native client have to quit after logout

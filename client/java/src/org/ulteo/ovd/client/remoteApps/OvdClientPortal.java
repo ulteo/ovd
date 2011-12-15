@@ -40,7 +40,6 @@ import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.client.NativeClientActions;
 import org.ulteo.ovd.client.Newser;
-import org.ulteo.ovd.client.OvdClientPerformer;
 import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
@@ -52,7 +51,7 @@ import org.ulteo.ovd.sm.Callback;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
-public class OvdClientPortal extends OvdClientRemoteApps implements ComponentListener, Newser, OvdClientPerformer, NativeClientActions {
+public class OvdClientPortal extends OvdClientRemoteApps implements ComponentListener, Newser, NativeClientActions {
 	
 	private PortalFrame portal = null;
 	private IntegratedTrayIcon systray = null;

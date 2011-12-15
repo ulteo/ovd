@@ -31,7 +31,6 @@ import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
 import org.ulteo.ovd.client.NativeClientActions;
 import org.ulteo.ovd.client.OvdClientDesktop;
-import org.ulteo.ovd.client.OvdClientPerformer;
 import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -39,7 +38,7 @@ import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.rdp.RdpConnectionOvd;
 
-public class OvdClientNativeDesktop extends OvdClientDesktop implements OvdClientPerformer, NativeClientActions {
+public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeClientActions {
 	
 	private DesktopFrame desktop = null;
 	private LoadingFrame loadingFrame;
