@@ -41,6 +41,7 @@ class Config:
 	process_timeout = 60
 	web_client = None
 	admin_redirection = False
+	root_redirection = None
 	http_keep_alive = True
 
 	@staticmethod
@@ -102,7 +103,10 @@ class Config:
 				Config.admin_redirection = False
 			else:
 				Logger.error("Invalid value for 'admin_redirection' option")
-
+		
+		if infos.has_key("root_redirection") and infos["root_redirection"]:
+			Config.root_redirection = infos["root_redirection"].lstrip('/')
+		
 		if infos.has_key("http_keep_alive"):
 			if infos["http_keep_alive"].lower() == "false":
 				Config.http_keep_alive = False

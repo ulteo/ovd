@@ -228,7 +228,7 @@ class HttpClientCommunicator(HttpMetaCommunicator, SSLCommunicator):
 		# test path permission
 		http_code = self.http.auth()
 		if http_code is not httplib.OK:
-			self.send(page_error(http_code))
+			self.send(page_error(http_code, addr=self.socket.getsockname()))
 			self.socket.sock_shutdown(socket.SHUT_WR)
 			self.handle_close()
 			return ''

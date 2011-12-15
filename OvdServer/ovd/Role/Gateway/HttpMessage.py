@@ -32,11 +32,17 @@ HTTP_RESPONSES = {
 
 
 
-def page_error(code):
-	if not HTTP_RESPONSES.has_key(code):
-		code = httplib.INTERNAL_SERVER_ERROR
-	return ("HTTP/1.1 %d %s\r\n\r\n<head></head><body>%s</body>") % \
-		(code, httplib.responses[code], HTTP_RESPONSES[code])
+def page_error(code, addr=None):
+	header = "HTTP/1.1 %d %s\r\n" % (code, httplib.responses[code])
+	body = "\r\n"
+	
+	if code is httplib.FOUND and Config.root_redirection is not None and addr is not None:
+		header += "Location: https://%s:%d/%s\r\n" % (addr + (Config.root_redirection,))
+	
+	if HTTP_RESPONSES.has_key(code):
+		body += "<head></head><body>%s</body>" % HTTP_RESPONSES[code]
+	
+	return header + body
 
 
 
@@ -199,6 +205,14 @@ class HttpMessage():
 			else:
 				return httplib.FORBIDDEN
 
+		# root redirection
+		elif self.path == '/':
+			print Config.root_redirection
+			if Config.root_redirection is not None:
+				return httplib.FOUND
+			else:
+				return httplib.NOT_FOUND
+
 		# Unknown URL
 		else:
 			return httplib.NOT_FOUND
@@ -222,7 +236,7 @@ class HttpMessage():
 		# Web Client
 		elif self.path == '/ovd' or self.path.startswith("/ovd/"):
 			if Config.web_client[1] != addr:
-				return Config.web_client[0], Config.web_client[1:]
+				return Config.web_client[0], Config.web_client[1:3]
 
 		# Unknown URL
 		else:
