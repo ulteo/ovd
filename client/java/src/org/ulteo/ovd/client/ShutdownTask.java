@@ -20,23 +20,20 @@
 
 package org.ulteo.ovd.client;
 
-import org.ulteo.Logger;
 import org.ulteo.ovd.integrated.SystemAbstract;
 
 public class ShutdownTask extends Thread {
 	private OvdClient client = null;
 
 	public ShutdownTask(OvdClient client_) {
+		if (client_ == null)
+			throw new IllegalArgumentException("'OvdClient' parameter cannot be null");
+		
 		this.client = client_;
 	}
 
 	@Override
 	public void run() {
-		if (this.client == null) {
-			Logger.error("Shutdown task: client is null");
-			return;
-		}
-
 		this.client.disconnect();
 
 		//Cleaning up all useless OVD data
