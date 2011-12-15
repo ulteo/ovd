@@ -182,6 +182,14 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.unpublish(rc);
 	}
 	
+	@Override
+	public void shortcutGenerationIsDone(RdpConnectionOvd co) {
+		if (this.autoPublish)
+			super.shortcutGenerationIsDone(co);
+	
+		this.portal.initPublishingButton();
+	}
+	
 	
 	// interface ComponentListener's methods 
 
@@ -207,14 +215,6 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	@Override
 	public void componentHidden(ComponentEvent ce) {}
 	
-	@Override
-	public void shortcutGenerationIsDone(RdpConnectionOvd co) {
-		if (this.autoPublish)
-			super.shortcutGenerationIsDone(co);
-
-		this.portal.initPublishingButton();
-	}
-
 	
 	// interface Newser's methods 
 	
