@@ -747,10 +747,6 @@ public class AuthFrame extends JFrame implements ActionListener, FocusListener, 
 		return this.itemModeDesktop;
 	}
 	
-	public JFrame getthis() {
-		return this;
-	}
-	
 	public boolean isRememberMeChecked() {
 		return this.rememberMe.isSelected();
 	}
