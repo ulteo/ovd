@@ -24,7 +24,6 @@ import java.awt.Dimension;
 import java.awt.Image;
 
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
 import org.ulteo.utils.I18n;
@@ -38,7 +37,7 @@ public class DisconnectionFrame extends JDialog {
 		this.logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
 		this.setIconImage(this.logo);
 		this.setTitle(I18n._("Disconnecting!"));
-		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		this.setSize(300, 50);
 		this.setPreferredSize(new Dimension(300,50));
 		this.setResizable(false);
