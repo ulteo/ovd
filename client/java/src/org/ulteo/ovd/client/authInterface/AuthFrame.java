@@ -69,7 +69,7 @@ import org.ulteo.ovd.client.Language;
 import org.ulteo.ovd.client.bugreport.gui.BugReportButton;
 import org.ulteo.ovd.client.desktop.DesktopFrame;
 
-public class AuthFrame implements ActionListener, FocusListener, Runnable {
+public class AuthFrame extends JFrame implements ActionListener, FocusListener, Runnable {
 
 	private static final int JOB_NOTHING = -1;
 	private static final int JOB_LOCAL_CREDENTIALS = 0;
@@ -82,7 +82,6 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 
 	private List<Integer> jobsList = null;
 	
-	private JFrame mainFrame = new JFrame();
 	private boolean isGUILocked = false;
 	private boolean showBugReporter = false;
 	
@@ -152,7 +151,7 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 		
 		this.init(resolution_);
 
-		this.mainFrame.addWindowListener(new WindowAdapter() {
+		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent evt) {
 				if (loginTextField.getText().isEmpty())
@@ -166,18 +165,18 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 	private void init(Dimension resolution_) {
 		this.optionClicked = false;
 
-		this.mainFrame.setVisible(false);
-		mainFrame.setTitle("OVD Native Client");
-		mainFrame.setSize(500,450);
-		mainFrame.setResizable(false);
-		mainFrame.setBackground(Color.white);
+		this.setVisible(false);
+		this.setTitle("OVD Native Client");
+		this.setSize(500,450);
+		this.setResizable(false);
+		this.setBackground(Color.white);
 		
-		frameLogo = mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
-		mainFrame.setIconImage(frameLogo);
+		frameLogo = this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
+		this.setIconImage(frameLogo);
 
-		ulteoLogo = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/logo_small.png")));
-		userLogo = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/users.png")));
-		passwordLogo = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/password.png")));
+		ulteoLogo = new ImageIcon(this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/logo_small.png")));
+		userLogo = new ImageIcon(this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/users.png")));
+		passwordLogo = new ImageIcon(this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/password.png")));
 		logoLabel.setIcon(ulteoLogo);
 		userLogoLabel.setIcon(userLogo);
 		passwordLogoLabel.setIcon(passwordLogo);
@@ -187,16 +186,16 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 		passwordTextField.addFocusListener(this);
 		serverTextField.addFocusListener(this);
 
-		mainFrame.setLayout(new GridBagLayout());
+		this.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		startButton.setPreferredSize(new Dimension(150, 25));
 
 		this.initResolutionSlider(resolution_);
 
 		if (! this.isGUILocked) {
-			hostLogo = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/server.png")));
-			showOption = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/show.png")));
-			hideOption = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/hide.png")));
+			hostLogo = new ImageIcon(this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/server.png")));
+			showOption = new ImageIcon(this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/show.png")));
+			hideOption = new ImageIcon(this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/hide.png")));
 
 			hostLogoLabel.setIcon(hostLogo);
 
@@ -226,13 +225,13 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
-		mainFrame.add(logoLabel, gbc);
+		this.add(logoLabel, gbc);
 
 		if (this.showBugReporter) {
 			gbc.gridx = 2;
 			gbc.insets = new Insets(7, 0, 25, 7);
 			gbc.anchor = GridBagConstraints.NORTHEAST;
-			mainFrame.add(new BugReportButton(), gbc);
+			this.add(new BugReportButton(), gbc);
 		}
 
 		gbc.gridwidth = 1;
@@ -242,10 +241,10 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 		gbc.insets.left = 0;
 		gbc.insets.top = 0;
 		gbc.insets.bottom = 5;
-		mainFrame.add(userLogoLabel, gbc);
+		this.add(userLogoLabel, gbc);
 
 		gbc.gridy = 4;
-		mainFrame.add(passwordLogoLabel, gbc);
+		this.add(passwordLogoLabel, gbc);
 
 		int pos = 5;
 		if (! this.isGUILocked) {
@@ -253,7 +252,7 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 				pos++;
 
 			gbc.gridy = pos;
-			mainFrame.add(hostLogoLabel, gbc);
+			this.add(hostLogoLabel, gbc);
 		}
 
 		pos = 1;
@@ -261,10 +260,10 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 		gbc.insets.left = 5;
 		gbc.gridx = 1;
 		gbc.gridy = 3;
-		mainFrame.add(login, gbc);
+		this.add(login, gbc);
 
 		gbc.gridy = 4;
-		mainFrame.add(password, gbc);
+		this.add(password, gbc);
 
 		if (! this.isGUILocked) {
 			pos = 5;
@@ -272,14 +271,14 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 				pos++;
 
 			gbc.gridy = pos;
-			mainFrame.add(host, gbc);
+			this.add(host, gbc);
 
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
 			gbc.gridheight = GridBagConstraints.REMAINDER;
 			gbc.insets.top = 25;
 			gbc.gridx = 0;
 			gbc.gridy = 15;
-			mainFrame.add(moreOption, gbc);
+			this.add(moreOption, gbc);
 		}
 
 		gbc.gridwidth = 0;
@@ -292,24 +291,24 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 		gbc.weightx = 0;
 		gbc.weighty = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		mainFrame.add(loginTextField, gbc);
+		this.add(loginTextField, gbc);
 
 		gbc.gridy = 4;
-		mainFrame.add(passwordTextField, gbc);
+		this.add(passwordTextField, gbc);
 
 		pos = 5;
 		if (! this.isGUILocked) {
 			if (this.displayUserLocalCredentials) {
 				gbc.gridy = pos++;
-				mainFrame.add(this.useLocalCredentials, gbc);
+				this.add(this.useLocalCredentials, gbc);
 			}
 
 			gbc.gridy = pos++;
-			mainFrame.add(serverTextField, gbc);
+			this.add(serverTextField, gbc);
 
 			gbc.gridy = pos++;
 			gbc.anchor = GridBagConstraints.CENTER;
-			mainFrame.add(rememberMe, gbc);
+			this.add(rememberMe, gbc);
 		}
 
 		gbc.gridx = 2;
@@ -317,16 +316,16 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 		gbc.anchor = GridBagConstraints.LINE_START;
 		gbc.gridwidth = 1;
 		gbc.fill = GridBagConstraints.NONE;
-		mainFrame.add(startButton, gbc);
+		this.add(startButton, gbc);
 
 		this.initKeyActions();
 
 		// Load the language strings
 		(new ChangeLanguage(this)).run();
 		
-		mainFrame.pack();
-		mainFrame.setLocationRelativeTo(null);
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.pack();
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.showWindow();
 	}
 
@@ -343,7 +342,7 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 			public void keyReleased(KeyEvent ke) {}
 
 		};
-		for (Component c : this.mainFrame.getContentPane().getComponents()) {
+		for (Component c : this.getContentPane().getComponents()) {
 			if (c.getClass() != JLabel.class) {
 				if (c != this.startButton) {
 					for (KeyListener each : c.getKeyListeners())
@@ -459,7 +458,7 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 		componentList.add(this.resolution);
 		componentList.add(this.resBar);
 		try {
-			SwingTools.invokeAndWait(GUIActions.removeComponents(this.mainFrame, componentList));
+			SwingTools.invokeAndWait(GUIActions.removeComponents(this, componentList));
 		} catch (InterruptedException ex) {
 			org.ulteo.Logger.error("Session mode components cleaner was interrupted: "+ex.getMessage());
 		} catch (InvocationTargetException ex) {
@@ -509,7 +508,7 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 			componentList.add(this.resolutionValue);
 			gbcToAdd.add((GridBagConstraints) gbc.clone());
 		}
-		SwingTools.invokeLater(GUIActions.addComponentsAndPack(this.mainFrame, componentList, gbcToAdd));
+		SwingTools.invokeLater(GUIActions.addComponentsAndPack(this, componentList, gbcToAdd));
 	}
 	
 	public static int compareLocales(Locale l1, Locale l2) {
@@ -549,7 +548,7 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 			
 			URL imgUrl = getClass().getClassLoader().getResource("pics/flags/"+flag_name+".png");
 			if (imgUrl != null) {
-				img = new ImageIcon(mainFrame.getToolkit().getImage(imgUrl));
+				img = new ImageIcon(this.getToolkit().getImage(imgUrl));
 			}
 			else {
 				System.err.println("Missing file: "+flag_name+".png");
@@ -660,7 +659,7 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 	public void showWindow() {
 		this.startButtonClicked = false;
 		this.toggleLocalCredentials();
-		this.mainFrame.setVisible(true);
+		this.setVisible(true);
 	}
 	
 	@Override
@@ -670,7 +669,7 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 	}
 	
 	public void hideWindow() {
-		SwingTools.invokeLater(GUIActions.disposeWindow(this.mainFrame));
+		SwingTools.invokeLater(GUIActions.disposeWindow(this));
 	}
 	
 	public JTextField getLogin() {
@@ -748,8 +747,8 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 		return this.itemModeDesktop;
 	}
 	
-	public JFrame getMainFrame() {
-		return mainFrame;
+	public JFrame getthis() {
+		return this;
 	}
 	
 	public boolean isRememberMeChecked() {
@@ -831,7 +830,7 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 		private String buttonLabel = null;
 		
 		public MoreOptionsAction(AuthFrame authFrame_) {
-			this.wnd = authFrame_.mainFrame;
+			this.wnd = authFrame_;
 			this.button = authFrame_.moreOption;
 			this.img = authFrame_.hideOption;
 			this.buttonLabel = I18n._("Fewer options");
@@ -917,7 +916,7 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 		private String buttonLabel = null;
 
 		public FewerOptionsAction(AuthFrame authFrame_) {
-			this.wnd = authFrame_.mainFrame;
+			this.wnd = authFrame_;
 			this.button = authFrame_.moreOption;
 			this.img = authFrame_.showOption;
 			this.buttonLabel = I18n._("More options...");
@@ -1035,7 +1034,7 @@ public class AuthFrame implements ActionListener, FocusListener, Runnable {
 					this.authFrame.resolutionValue.setText(this.authFrame.resolutionStrings[value]);
 			}
 			
-			this.authFrame.mainFrame.pack();
+			this.authFrame.pack();
 		}
 	}
 

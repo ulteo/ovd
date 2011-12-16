@@ -347,7 +347,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		
 		while (true) {
 			try {
-				if (s.authFrame != null && s.authFrame.getMainFrame().isVisible()) {
+				if (s.authFrame != null && s.authFrame.isVisible()) {
 					Thread.sleep(100);
 				} else if (s.thread != null && s.thread.isAlive()) {
 					s.thread.join();
@@ -523,7 +523,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.authFrame.setRememberMeChecked(this.opts.getFlag(Options.FLAG_REMEMBER_ME));
 		this.authFrame.setShowKeyboardLayoutChooser((this.opts.inputMethod == null) || this.opts.inputMethod.equalsIgnoreCase("scancode"));
 		this.authFrame.showWindow();
-		this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
+		this.loadingFrame.setLocationRelativeTo(this.authFrame);
 	}
 
 	private void loadOptions() {
