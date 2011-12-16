@@ -412,7 +412,7 @@ public class AuthFrame extends JFrame implements ActionListener, FocusListener, 
 			case JOB_OPTIONS:
 				if (! this.optionClicked) {
 					try {
-						SwingTools.invokeAndWait(moreOptionsAction(this));
+						SwingTools.invokeAndWait(new MoreOptionsAction(this));
 						this.optionClicked = true;
 						this.toggleSessionMode();
 					} catch (InterruptedException ex) {
@@ -422,7 +422,7 @@ public class AuthFrame extends JFrame implements ActionListener, FocusListener, 
 					}
 				} else {
 					try {
-						SwingTools.invokeAndWait(fewerOptionsAction(this));
+						SwingTools.invokeAndWait(new FewerOptionsAction(this));
 						this.optionClicked = false;
 					} catch (InterruptedException ex) {
 						org.ulteo.Logger.error("More options components removing was interrupted: "+ex.getMessage());
@@ -445,7 +445,7 @@ public class AuthFrame extends JFrame implements ActionListener, FocusListener, 
 		if (isSelected)
 			this.loginStr = this.loginTextField.getText();
 
-		SwingTools.invokeLater(enableLocalCredentials(this, isSelected));
+		SwingTools.invokeLater(new EnableLocalCredentials(this, isSelected));
 	}
 	
 	public void toggleSessionMode() {
@@ -811,12 +811,6 @@ public class AuthFrame extends JFrame implements ActionListener, FocusListener, 
 		return Language.keymapList[selected][1];
 	}
 	
-	/* MoreOptionsAction */
-	public static Runnable moreOptionsAction(AuthFrame authFrame_) {
-		return authFrame_.new MoreOptionsAction(authFrame_);
-
-	}
-
 	private class MoreOptionsAction implements Runnable {
 		private JFrame wnd = null;
 		private List<Component> components = null;
@@ -899,11 +893,6 @@ public class AuthFrame extends JFrame implements ActionListener, FocusListener, 
 		}
 	}
 
-	/* FewerOptionsAction */
-	public static Runnable fewerOptionsAction(AuthFrame authFrame_) {
-		return authFrame_.new FewerOptionsAction(authFrame_);
-	}
-
 	private class FewerOptionsAction implements Runnable {
 		private JFrame wnd = null;
 		private List<Component> components = null;
@@ -941,11 +930,6 @@ public class AuthFrame extends JFrame implements ActionListener, FocusListener, 
 			GUIActions.customizeButton(this.button, this.img, this.buttonLabel).run();
 			GUIActions.packWindow(this.wnd).run();
 		}
-	}
-
-	/* EnableLocalCredentials */
-	public static Runnable enableLocalCredentials(AuthFrame authFrame_, boolean enabled_) {
-		return authFrame_.new EnableLocalCredentials(authFrame_, enabled_);
 	}
 
 	private class EnableLocalCredentials implements Runnable {
