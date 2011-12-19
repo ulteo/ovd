@@ -49,8 +49,6 @@ public class SouthEastPanel extends JPanel {
 	private JButton disconnect = null;
 	private JButton publishingButton = null;;
 	private Icon rotateIcon = null;
-	private static final String DISPLAY = I18n._("Display icons");
-	private static final String HIDE = I18n._("Hide icons");
 
 	private NativeClientActions rdpActions = null;
 	
@@ -82,7 +80,7 @@ public class SouthEastPanel extends JPanel {
 						boolean isPublished = ((OvdClientPortal)rdpActions).togglePublications();
 
 						publishingButton.setIcon(null);
-						publishingButton.setText(isPublished ? HIDE : DISPLAY);
+						publishingButton.setText(isPublished ? I18n._("Hide icons") : I18n._("Display icons"));
 						publishingButton.setEnabled(true);
 					}
 				}).start();
@@ -124,7 +122,7 @@ public class SouthEastPanel extends JPanel {
 
 	public void initPublishingButton() {
 		this.publishingButton.setIcon(null);
-		this.publishingButton.setText(((OvdClientPortal) this.rdpActions).isAutoPublish() ?  HIDE : DISPLAY);
+		this.publishingButton.setText(((OvdClientPortal) this.rdpActions).isAutoPublish() ?  I18n._("Hide icons") : I18n._("Display icons"));
 		this.publishingButton.setEnabled(true);
 	}
 }
