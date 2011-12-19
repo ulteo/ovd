@@ -34,8 +34,6 @@ import java.awt.Insets;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -60,8 +58,9 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.text.JTextComponent;
 import org.ulteo.Logger;
+import org.ulteo.gui.Component.FocusPasswordField;
+import org.ulteo.gui.Component.FocusTextField;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
 
@@ -71,7 +70,7 @@ import org.ulteo.ovd.client.Language.JFrame;
 import org.ulteo.ovd.client.bugreport.gui.BugReportButton;
 import org.ulteo.ovd.client.desktop.DesktopFrame;
 
-public class AuthFrame extends JFrame implements ActionListener, FocusListener, Runnable {
+public class AuthFrame extends JFrame implements ActionListener, Runnable {
 
 	private static final int JOB_NOTHING = -1;
 	private static final int JOB_LOCAL_CREDENTIALS = 0;
@@ -90,11 +89,11 @@ public class AuthFrame extends JFrame implements ActionListener, FocusListener, 
 	private JLabel login = new JLabel();
 	private JLabel password = new JLabel();
 	private JLabel host = new JLabel();
-	private JTextField loginTextField = new JTextField();
-	private JPasswordField passwordTextField = new JPasswordField();
+	private FocusTextField loginTextField = new FocusTextField();
+	private FocusPasswordField passwordTextField = new FocusPasswordField();
 	private String loginStr = null;
 	
-	private JTextField serverTextField = new JTextField();
+	private FocusTextField serverTextField = new FocusTextField();
 	private JButton startButton = new JButton();
 	private boolean startButtonClicked = false;
 	private JButton moreOption = new JButton();
@@ -182,11 +181,6 @@ public class AuthFrame extends JFrame implements ActionListener, FocusListener, 
 		logoLabel.setIcon(ulteoLogo);
 		userLogoLabel.setIcon(userLogo);
 		passwordLogoLabel.setIcon(passwordLogo);
-
-		// Registering JTextComponent objects to enable autoselection
-		loginTextField.addFocusListener(this);
-		passwordTextField.addFocusListener(this);
-		serverTextField.addFocusListener(this);
 
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -1004,18 +998,4 @@ public class AuthFrame extends JFrame implements ActionListener, FocusListener, 
 		}
 	}
 	
-	// JTextComponent autoselection management
-	public void focusGained(FocusEvent fe) {
-		if (! (fe.getComponent() instanceof JTextComponent))
-			return;
-
-		((JTextComponent) fe.getComponent()).selectAll();
-	}
-	public void focusLost(FocusEvent fe) {
-		if (! (fe.getComponent() instanceof JTextComponent))
-			return;
-
-		((JTextComponent) fe.getComponent()).select(0, 0);
-	}
-
 }
