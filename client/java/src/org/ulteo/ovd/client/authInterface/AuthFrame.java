@@ -4,6 +4,7 @@
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Omar AKHAM <oakham@ulteo.com> 2011
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -25,7 +26,6 @@ package org.ulteo.ovd.client.authInterface;
 import java.awt.AWTKeyStroke;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -54,7 +54,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JSlider;
@@ -68,6 +67,7 @@ import org.ulteo.gui.SwingTools;
 
 import org.ulteo.utils.I18n;
 import org.ulteo.ovd.client.Language;
+import org.ulteo.ovd.client.Language.JFrame;
 import org.ulteo.ovd.client.bugreport.gui.BugReportButton;
 import org.ulteo.ovd.client.desktop.DesktopFrame;
 
@@ -321,9 +321,7 @@ public class AuthFrame extends JFrame implements ActionListener, FocusListener, 
 		this.add(startButton, gbc);
 
 		this.initKeyActions();
-
-		// Load the language strings
-		(new ChangeLanguage(this)).run();
+		this.changeLanguage();
 		
 		this.pack();
 		this.setLocationRelativeTo(null);
@@ -967,60 +965,45 @@ public class AuthFrame extends JFrame implements ActionListener, FocusListener, 
 		}
 	}
 	
-	/* ChangeLanguage */
-	public static Runnable changeLanguage(AuthFrame authFrame_) {
-		return authFrame_.new ChangeLanguage(authFrame_);
-	}
+	@Override
+	public void changeLanguage() {
+		this.login.setText(I18n._("Login"));
+		this.password.setText(I18n._("Password"));
+		this.startButton.setText(I18n._("Start!"));
 
-	private class ChangeLanguage implements Runnable {
-		private AuthFrame authFrame = null;
-		
-		public ChangeLanguage(AuthFrame authFrame_) {
-			this.authFrame = authFrame_;
-		}
-		
-		public void run() {
-			this.authFrame.login.setText(I18n._("Login"));
-			this.authFrame.password.setText(I18n._("Password"));
-			this.authFrame.startButton.setText(I18n._("Start!"));
+		if (! isGUILocked) {
+			this.host.setText(I18n._("Server"));
+			this.mode.setText(I18n._("Mode"));
+			this.resolution.setText(I18n._("Resolution"));
+			this.language.setText(I18n._("Language"));
+			this.keyboard.setText(I18n._("Keyboard"));
 
-			if (! isGUILocked) {
-				this.authFrame.host.setText(I18n._("Server"));
-				this.authFrame.mode.setText(I18n._("Mode"));
-				this.authFrame.resolution.setText(I18n._("Resolution"));
-				this.authFrame.language.setText(I18n._("Language"));
-				this.authFrame.keyboard.setText(I18n._("Keyboard"));
+			this.itemModeAuto.setText(I18n._("Auto"));
+			this.itemModeApplication.setText(I18n._("Application"));
+			this.itemModeDesktop.setText(I18n._("Desktop"));
+			this.rememberMe.setText(I18n._("Remember me"));
+			this.autoPublish.setText(I18n._("Auto-publish shortcuts"));
+			this.useLocalCredentials.setText(I18n._("Use local credentials"));
 
-				this.authFrame.itemModeAuto.setText(I18n._("Auto"));
-				this.authFrame.itemModeApplication.setText(I18n._("Application"));
-				this.authFrame.itemModeDesktop.setText(I18n._("Desktop"));
-				this.authFrame.rememberMe.setText(I18n._("Remember me"));
-				this.authFrame.autoPublish.setText(I18n._("Auto-publish shortcuts"));
-				this.authFrame.useLocalCredentials.setText(I18n._("Use local credentials"));
+			String buf = I18n._("More options...");
+			if (this.optionClicked)
+				buf = I18n._("Fewer options");
+			this.moreOption.setText(buf);
 
-				String buf = I18n._("More options...");
-				if (this.authFrame.optionClicked)
-					buf = I18n._("Fewer options");
-				this.authFrame.moreOption.setText(buf);
+			this.RESOLUTION_MAXIMIZED = I18n._("Maximized");
+			this.RESOLUTION_FULLSCREEN = I18n._("Fullscreen");
 
-				this.authFrame.RESOLUTION_MAXIMIZED = I18n._("Maximized");
-				this.authFrame.RESOLUTION_FULLSCREEN = I18n._("Fullscreen");
-
-				if (this.authFrame.resolutionStrings.length >= 2) {
-					this.authFrame.resolutionStrings[this.authFrame.resolutionStrings.length - 2] = RESOLUTION_MAXIMIZED;
-					this.authFrame.resolutionStrings[this.authFrame.resolutionStrings.length - 1] = RESOLUTION_FULLSCREEN;
-				}
-
-				int value = this.authFrame.resBar.getValue();
-				if (value < this.authFrame.resolutionStrings.length)
-					this.authFrame.resolutionValue.setText(this.authFrame.resolutionStrings[value]);
+			if (this.resolutionStrings.length >= 2) {
+				this.resolutionStrings[this.resolutionStrings.length - 2] = RESOLUTION_MAXIMIZED;
+				this.resolutionStrings[this.resolutionStrings.length - 1] = RESOLUTION_FULLSCREEN;
 			}
-			
-			this.authFrame.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
-			this.authFrame.pack();
+
+			int value = this.resBar.getValue();
+			if (value < this.resolutionStrings.length)
+				this.resolutionValue.setText(this.resolutionStrings[value]);
 		}
 	}
-
+	
 	// JTextComponent autoselection management
 	public void focusGained(FocusEvent fe) {
 		if (! (fe.getComponent() instanceof JTextComponent))
@@ -1034,4 +1017,5 @@ public class AuthFrame extends JFrame implements ActionListener, FocusListener, 
 
 		((JTextComponent) fe.getComponent()).select(0, 0);
 	}
+
 }

@@ -23,7 +23,6 @@
 package org.ulteo.ovd.client.authInterface;
 
 import java.awt.BorderLayout;
-import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -31,14 +30,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import java.util.Locale;
-
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
+import org.ulteo.ovd.client.Language.JDialog;
 import org.ulteo.utils.I18n;
 
 public class LoadingFrame extends JDialog implements ActionListener {
@@ -127,25 +124,13 @@ public class LoadingFrame extends JDialog implements ActionListener {
 		this.jlabel.setText(LoadingStatus.getMsg(status));
 	}
 	
-	public static Runnable changeLanguage(LoadingFrame loadingFrame_) {
-		return loadingFrame_.new ChangeLanguage(loadingFrame_);
+	@Override
+	public void changeLanguage() {
+		this.jlabel.setText(LoadingStatus.getMsg(this.loadingStatus));
+		this.cancel.setText(I18n._("Cancel"));
+		this.setTitle(I18n._("Now loading"));
 	}
 	
-	private class ChangeLanguage implements Runnable {
-		private LoadingFrame loadingFrame = null;
-		
-		public ChangeLanguage(LoadingFrame loadingFrame_) {
-			this.loadingFrame = loadingFrame_;
-		}
-		
-		public void run() {
-			this.loadingFrame.jlabel.setText(LoadingStatus.getMsg(this.loadingFrame.loadingStatus));
-			this.loadingFrame.cancel.setText(I18n._("Cancel"));
-			this.loadingFrame.setTitle(I18n._("Now loading"));
-			this.loadingFrame.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
-		}
-	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		cancel.setEnabled(false);

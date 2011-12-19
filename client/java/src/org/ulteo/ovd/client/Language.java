@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -21,8 +22,40 @@
 
 package org.ulteo.ovd.client;
 
+import java.awt.ComponentOrientation;
+import java.awt.Window;
+import java.util.Locale;
+
 public class Language {
+
+	/** {@link Window} that can be translated */
+	private interface Translater {
+		/** change the language of the component */
+		public void changeLanguage();
+	}
+
+	/** Ulteo custom JFrame */
+	public abstract static class JFrame extends javax.swing.JFrame implements Translater {};
 	
+	/** Ulteo custom JDialog */
+	public abstract static class JDialog extends javax.swing.JDialog implements Translater {};
+
+	/**
+	 * give a {@link Runnable} that can translate a specific object
+	 * @param t the object to translate
+	 * @return a {@link Runnable} component translater
+	 */
+	public static Runnable translate(final Translater t) {
+		return new Runnable() {
+			@Override
+			public void run() {
+				t.changeLanguage();
+				((Window)t).applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
+				((Window)t).pack();
+			}
+		};
+	}
+ 
 	public static String[][] languageList = {
 //			{"Afrikaans", "", "af"},
 //			{"Albanian", "", "sq"},

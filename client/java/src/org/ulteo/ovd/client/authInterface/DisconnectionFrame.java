@@ -2,6 +2,7 @@
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -23,9 +24,9 @@ package org.ulteo.ovd.client.authInterface;
 import java.awt.Dimension;
 import java.awt.Image;
 
-import javax.swing.JDialog;
 import javax.swing.JProgressBar;
 
+import org.ulteo.ovd.client.Language.JDialog;
 import org.ulteo.utils.I18n;
 
 public class DisconnectionFrame extends JDialog {
@@ -51,21 +52,9 @@ public class DisconnectionFrame extends JDialog {
 		this.pack();
 	}
 	
-	
-	public static Runnable changeLanguage(DisconnectionFrame frame_) {
-		return frame_.new ChangeLanguage(frame_);
-	}
-	
-	private class ChangeLanguage implements Runnable {
-		private DisconnectionFrame frame = null;
-		
-		public ChangeLanguage(DisconnectionFrame frame_) {
-			this.frame = frame_;
-		}
-		
-		public void run() {	
-			this.frame.setTitle(I18n._("Disconnecting!"));
-		}
+	@Override
+	public void changeLanguage() {
+		this.setTitle(I18n._("Disconnecting!"));
 	}
 
 	@Override

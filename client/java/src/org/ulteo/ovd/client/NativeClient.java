@@ -645,9 +645,9 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			
 			I18n.init();
 			
-			SwingTools.invokeLater(AuthFrame.changeLanguage(this.authFrame));
-			SwingTools.invokeLater(LoadingFrame.changeLanguage(this.loadingFrame));
-			SwingTools.invokeLater(DisconnectionFrame.changeLanguage(this.discFrame));
+			SwingTools.invokeLater(Language.translate(this.authFrame));
+			SwingTools.invokeLater(Language.translate(this.loadingFrame));
+			SwingTools.invokeLater(Language.translate(this.discFrame));
 		}
 	}
 
