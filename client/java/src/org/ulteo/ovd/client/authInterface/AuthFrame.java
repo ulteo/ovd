@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -24,6 +25,7 @@ package org.ulteo.ovd.client.authInterface;
 import java.awt.AWTKeyStroke;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -1014,6 +1016,7 @@ public class AuthFrame extends JFrame implements ActionListener, FocusListener, 
 					this.authFrame.resolutionValue.setText(this.authFrame.resolutionStrings[value]);
 			}
 			
+			this.authFrame.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 			this.authFrame.pack();
 		}
 	}

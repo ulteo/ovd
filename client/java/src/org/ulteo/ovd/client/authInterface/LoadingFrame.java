@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -22,12 +23,15 @@
 package org.ulteo.ovd.client.authInterface;
 
 import java.awt.BorderLayout;
+import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
+import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -84,7 +88,7 @@ public class LoadingFrame extends JDialog implements ActionListener {
 		this.jlabel = new JLabel(LoadingStatus.getMsg(LoadingStatus.SM_START));
 		
 		this.add(BorderLayout.NORTH, this.aJProgressBar);
-		this.add(BorderLayout.EAST, this.cancel);
+		this.add(BorderLayout.LINE_END, this.cancel);
 		this.add(BorderLayout.SOUTH, this.jlabel);
 		this.pack();
 	}
@@ -138,6 +142,7 @@ public class LoadingFrame extends JDialog implements ActionListener {
 			this.loadingFrame.jlabel.setText(LoadingStatus.getMsg(this.loadingFrame.loadingStatus));
 			this.loadingFrame.cancel.setText(I18n._("Cancel"));
 			this.loadingFrame.setTitle(I18n._("Now loading"));
+			this.loadingFrame.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 		}
 	}
 

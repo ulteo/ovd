@@ -2,6 +2,7 @@
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -23,6 +24,8 @@ package org.ulteo.ovd.client.authInterface;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.ComponentOrientation;
+import java.util.Locale;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -32,7 +35,8 @@ import javax.swing.ListCellRenderer;
 public class JComboLanguage extends JLabel implements ListCellRenderer {
 	
 	public JComboLanguage(ImageIcon img, String text) {
-		super(text, img, JLabel.LEFT);
+		super(img);
+		this.setText(text);
 	}
 	
 	@Override
@@ -54,6 +58,12 @@ public class JComboLanguage extends JLabel implements ListCellRenderer {
 		this.setEnabled(list.isEnabled());
 		this.setFont(list.getFont());
 		this.setOpaque(true);
+		this.setComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
+
+		if (this.getComponentOrientation().isLeftToRight())
+			this.setHorizontalAlignment(JLabel.LEFT);
+		else
+			this.setHorizontalAlignment(JLabel.RIGHT);
 		
 		return this;
 	}

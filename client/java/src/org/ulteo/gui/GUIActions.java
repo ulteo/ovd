@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +23,7 @@
 package org.ulteo.gui;
 
 import java.awt.Component;
+import java.awt.ComponentOrientation;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.GraphicsDevice;
@@ -33,6 +35,7 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -249,6 +252,7 @@ public class GUIActions {
 			JOptionPane pane = new JOptionPane(this.message, this.messageType, this.optionType);
 			JDialog dialog = pane.createDialog(this.title);
 			dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			dialog.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 			
 			setIconImage(dialog, this.icon).run();
 			setVisible(dialog, true).run();
@@ -599,6 +603,7 @@ public class GUIActions {
 
 		public void run() {
 			addComponents(this.wnd, this.components, this.gbcs).run();
+			this.wnd.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 			packWindow(this.wnd).run();
 		}
 	}

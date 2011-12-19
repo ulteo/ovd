@@ -2,6 +2,7 @@
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,7 +23,9 @@ package org.ulteo.ovd.client.portal;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
+import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -76,6 +79,7 @@ public class NewsFrame extends JFrame {
 		this.listScroller.setPreferredSize(new Dimension(500,300));
 		this.add(this.listScroller, gbc);
 		
+		this.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 		this.pack();
 	}
 }

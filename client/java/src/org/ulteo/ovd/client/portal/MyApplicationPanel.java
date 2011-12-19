@@ -2,6 +2,7 @@
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -22,11 +23,13 @@ package org.ulteo.ovd.client.portal;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -51,6 +54,8 @@ public class MyApplicationPanel extends JPanel {
 		this.buttonPan.setLayout(new GridBagLayout());
 		this.setPreferredSize(new Dimension(300, 194));
 		this.gbc = new GridBagConstraints();
+
+		this.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 		this.revalidate();	
 	}
 	

@@ -4,6 +4,7 @@
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Thomas MOUTON <thomas@ulteo.com> 2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -22,9 +23,13 @@
 
 package org.ulteo.ovd.client.authInterface;
 
+import java.awt.ComponentOrientation;
+
 import javax.swing.JFrame;
 import org.ulteo.ovd.client.AbstractLogoutPopup;
 import org.ulteo.ovd.client.NativeClientActions;
+
+import java.util.Locale;
 
 import org.ulteo.utils.I18n;
 
@@ -44,6 +49,8 @@ public class NativeLogoutPopup extends AbstractLogoutPopup {
 		this.setTitle(I18n._("Warning!"));
 		this.setText(I18n._("This will close your session, do you really want to continue?"));
 		this.setChoices(new String[] {I18n._("Yes"), I18n._("Go back to authentication"), I18n._("No")});
+		
+		frame_.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 	}
 	
 	/**

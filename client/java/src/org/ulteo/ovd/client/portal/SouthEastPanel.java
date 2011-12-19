@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -21,6 +22,7 @@
 
 package org.ulteo.ovd.client.portal;
 
+import java.awt.ComponentOrientation;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -34,6 +36,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import org.ulteo.Logger;
+
+import java.util.Locale;
 
 import org.ulteo.utils.I18n;
 import org.ulteo.ovd.client.NativeClientActions;
@@ -94,6 +98,8 @@ public class SouthEastPanel extends JPanel {
 		
 		gbc.gridx = 1;
 		this.add(disconnect, gbc);
+		
+		this.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 	}
 
 	private void initRotate() {

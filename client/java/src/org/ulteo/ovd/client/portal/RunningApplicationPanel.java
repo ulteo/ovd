@@ -2,6 +2,7 @@
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -23,6 +24,7 @@ package org.ulteo.ovd.client.portal;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -32,6 +34,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.ApplicationInstance;
@@ -67,6 +71,7 @@ public class RunningApplicationPanel extends JPanel implements OvdAppListener {
 		this.listScroller = new JScrollPane(listPanel);
 		this.add(listScroller, BorderLayout.CENTER);
 		
+		this.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 		this.revalidate();
 	}
 	

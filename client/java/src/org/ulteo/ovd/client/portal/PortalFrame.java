@@ -5,6 +5,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
+ * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -25,6 +26,7 @@ package org.ulteo.ovd.client.portal;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.ComponentOrientation;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -37,6 +39,8 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import java.util.Locale;
 
 import org.ulteo.utils.I18n;
 import org.ulteo.gui.GUIActions;
@@ -71,6 +75,8 @@ public class PortalFrame extends OvdClientFrame {
 		
 		this.init();
 		this.newsPanel = new NewsPanel();
+
+		this.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 	}
 	
 	
@@ -107,7 +113,7 @@ public class PortalFrame extends OvdClientFrame {
 		gbc.insets = new Insets(0, 0, 5, 20);
 		gbc.gridy = 1;
 		gbc.gridwidth = 1;
-		gbc.anchor = GridBagConstraints.SOUTHWEST;
+		gbc.anchor = GridBagConstraints.LINE_START;
 		this.add(application, gbc);
 
 		this.runningAppsPanel = new RunningApplicationPanel();
@@ -122,7 +128,7 @@ public class PortalFrame extends OvdClientFrame {
 		gbc.gridx = 1;
 		gbc.gridy = 1;
 		gbc.insets.bottom = 5;
-		gbc.anchor = GridBagConstraints.SOUTHWEST;
+		gbc.anchor = GridBagConstraints.LINE_START;
 		this.add(runningApps, gbc);
 		
 		gbc.gridy = 2;
@@ -141,7 +147,7 @@ public class PortalFrame extends OvdClientFrame {
 		gbc.gridy = 4;
 		gbc.gridx = 1;
 		gbc.insets.bottom = 10;
-		gbc.anchor = GridBagConstraints.SOUTHEAST;
+		gbc.anchor = GridBagConstraints.LINE_END;
 		this.add(sep, gbc);
 		this.validate();
 	}
@@ -172,7 +178,7 @@ public class PortalFrame extends OvdClientFrame {
 	public void addNewsPanel() {
 		GridBagConstraints gbc = new GridBagConstraints();
 		
-		gbc.anchor = GridBagConstraints.SOUTHWEST;
+		gbc.anchor = GridBagConstraints.LINE_START;
 		gbc.gridheight = 1;
 		gbc.gridy = 4;
 		gbc.gridx = 0;
