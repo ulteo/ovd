@@ -2,6 +2,7 @@
 # http://www.ulteo.com
 # Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author David LECHEVALIER <david@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -28,7 +29,7 @@ EXEC=libWindowsPaths.dll
 all: $(EXEC)
 
 $(EXEC): org_ulteo_ovd_integrated_WindowsPaths.o org_ulteo_ovd_integrated_WindowsPaths.def
-	$(CC) $(LDFLAGS) -shared -o $@ $^
+	$(CC) $^ $(LDFLAGS) -shared -o $@
 
 org_ulteo_ovd_integrated_WindowsPaths.h:
 	javac -classpath ../src:../required_libraries/registry.jar -d . ../src/org/ulteo/ovd/integrated/WindowsPaths.java
