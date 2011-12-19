@@ -115,7 +115,7 @@
   <target name="rdpClient.jar" depends="rdpClient">
     <unjar dest="build">
       <filelist dir="required_libraries"
-                files="gnu-getopt.jar, log4j-1.2.jar, jpedal.jar,
+                files="gnu-getopt.jar, log4j-1.2.jar, jpedal.jar, registry.jar,
                        commons-httpclient-3.0.1.jar, commons-logging-1.1.1.jar" />
     </unjar>
     <copy file="icons/ulteo.png" todir="build/pics" />
