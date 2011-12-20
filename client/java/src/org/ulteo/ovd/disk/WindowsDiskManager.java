@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author David Lechavalier <david@ulteo.com> 2010
+ * Author David Lechevalier <david@ulteo.com> 2010 2011
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -19,9 +19,14 @@
  */
 package org.ulteo.ovd.disk;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.filechooser.FileSystemView;
 
@@ -32,6 +37,10 @@ import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 
 public class WindowsDiskManager extends DiskManager {
 	private static Logger logger = Logger.getLogger(WindowsDiskManager.class);
+
+	private final String netUseCommand = "net use";
+	private final String tsProvider = "\\\\tsclient";
+	private boolean useTSShareDiscoveryFailback = false;
 
 	/**************************************************************************/
 	public WindowsDiskManager(OVDRdpdrChannel diskChannel, boolean mountingMode) {
@@ -47,6 +56,64 @@ public class WindowsDiskManager extends DiskManager {
 		for (String each : paths) {
 			if (each != null)
 				addStaticDirectory(each);
+		}
+	}
+	
+	/**************************************************************************/
+	private ArrayList<String> getTSSharesByProcess() {
+		ArrayList<String> tsShares = new ArrayList<String>();
+
+		Process p;
+		BufferedReader input;
+		try {
+			p = Runtime.getRuntime().exec(this.netUseCommand);
+
+			p.waitFor();
+			
+			if (p.exitValue() == 0) {
+				input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+				String line = null;
+				
+				try {
+					while ((line= input.readLine()) != null) {
+						line = line.toLowerCase();
+						Pattern reg = Pattern.compile(this.tsProvider+"\\S*", Pattern.CASE_INSENSITIVE);
+						Matcher m = reg.matcher(line);
+						while (m.find())
+							tsShares.add(m.group());
+					}
+				}
+				finally {
+					input.close();
+				}
+			}
+		} catch (IOException e) {
+			logger.warn("Unable to get the entire TS drive list due to "+e.getMessage());
+		} catch (InterruptedException e) {
+			logger.warn("TS drive list creation stopped due to "+e.getMessage());
+		}
+
+		return tsShares;
+	}
+	
+	/**************************************************************************/
+	private ArrayList<String> getTSSharesByAPI() {
+		return WNetApi.getTSShare();
+	}
+
+	/**************************************************************************/
+	private ArrayList<String> getTSDrive() {
+		if (this.useTSShareDiscoveryFailback) {
+			return getTSSharesByProcess();
+		}
+
+		try {
+			return this.getTSSharesByAPI();
+		}
+		catch (UnsatisfiedLinkError e) {
+			logger.warn("Unable to get sharelist by the Windows API due to "+e.getMessage());
+			this.useTSShareDiscoveryFailback = true;
+			return getTSSharesByProcess();
 		}
 	}
 	
@@ -82,6 +149,15 @@ public class WindowsDiskManager extends DiskManager {
 			dir = new File(drive);
 			if (! dir.exists() || !dir.isDirectory())
 				continue;
+			if (! this.isMounted(drive) && this.testDir(drive)) {
+				newDrives.add(drive);
+			}
+		}
+
+		for (String drive : getTSDrive()) {
+			logger.debug("TSDrive "+drive);
+			dir = new File(drive);
+
 			if (! this.isMounted(drive) && this.testDir(drive)) {
 				newDrives.add(drive);
 			}

@@ -22,13 +22,13 @@ BINPREFIX?=i586-mingw32msvc-
 CC=$(BINPREFIX)gcc
 JAVAHOME?=/usr/lib/jvm/java-1.6.0-openjdk
 CFLAGS=-Wall -I${JAVAHOME}/include -I${JAVAHOME}/include/linux
-LDFLAGS=
+LDFLAGS= -lmpr
 EXEC=libWindowsPaths.dll
 
 
 all: $(EXEC)
 
-$(EXEC): org_ulteo_ovd_integrated_WindowsPaths.o org_ulteo_ovd_integrated_WindowsPaths.def
+$(EXEC): org_ulteo_ovd_integrated_WindowsPaths.o org_ulteo_ovd_disk_WNetApi.o org_ulteo_ovd_integrated_WindowsPaths.def
 	$(CC) $^ $(LDFLAGS) -shared -o $@
 
 org_ulteo_ovd_integrated_WindowsPaths.h:
@@ -39,7 +39,11 @@ org_ulteo_utils_jni_WindowsTweaks.h:
 	javac -classpath ../src:../required_libraries/registry.jar -d . ../src/org/ulteo/utils/jni/WindowsTweaks.java
 	javah org.ulteo.utils.jni.WindowsTweaks
 
-%.o: %.c %.h org_ulteo_utils_jni_WindowsTweaks.h
+org_ulteo_ovd_disk_WNetApi.h:
+	javac -classpath ../src -d . ../src/org/ulteo/ovd/disk/WNetApi.java
+	javah org.ulteo.ovd.disk.WNetApi
+
+%.o: %.c %.h org_ulteo_utils_jni_WindowsTweaks.h org_ulteo_ovd_disk_WNetApi.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
@@ -47,6 +51,7 @@ clean:
 	$(RM) *~
 	$(RM) org_ulteo_ovd_integrated_WindowsPaths.h
 	$(RM) org_ulteo_utils_jni_WindowsTweaks.h
+	$(RM) org_ulteo_ovd_disk_WNetApi.h
 
 install: all
 	install $(EXEC) $(DIST)

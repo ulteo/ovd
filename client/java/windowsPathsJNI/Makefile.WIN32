@@ -21,21 +21,24 @@ JDK_HOME?="C:\Sun\SDK\jdk"
 
 CC=gcc
 CFLAGS=-Wall -I${JDK_HOME}\include -I${JDK_HOME}\include\win32
-
+LDFLAGS= -lmpr
 RM=del
 
 EXEC=libWindowsPaths.dll
 
 all: $(EXEC)
 
-$(EXEC): org_ulteo_ovd_integrated_WindowsPaths.o org_ulteo_ovd_integrated_WindowsPaths.def 
-	$(CC) $(LDFLAGS) -shared -o $@ $^ 
+$(EXEC): org_ulteo_ovd_integrated_WindowsPaths.o org_ulteo_ovd_disk_WNetApi.o org_ulteo_ovd_integrated_WindowsPaths.def 
+	$(CC) $^ $(LDFLAGS) -shared -o $@ 
 
 org_ulteo_ovd_integrated_WindowsPaths.h:
 	javah -classpath ../classes/ -d . org.ulteo.ovd.integrated.WindowsPaths
 
 org_ulteo_utils_jni_WindowsTweaks.h:
 	javah -classpath ../classes/:../required_libraries/registry.jar -d . org.ulteo.utils.jni.WindowsTweaks
+
+org_ulteo_ovd_disk_WNetApi.h:
+	javah -classpath ../classes/ -d . org.ulteo.ovd.disk.WNetApi
 
 %.o: %.c %.h org_ulteo_utils_jni_WindowsTweaks.h
 	$(CC) $(CFLAGS) -c -o $@ $<
@@ -45,6 +48,7 @@ clean:
 	$(RM) *~
 	$(RM) org_ulteo_ovd_integrated_WindowsPaths.h
 	$(RM) org_ulteo_utils_jni_WindowsTweaks.h
+	$(RM) org_ulteo_ovd_disk_WNetApi.h
 
 install: all
 	install $(EXEC) $(DIST)
