@@ -35,6 +35,7 @@ public class LinuxDiskManager extends DiskManager {
 	private static Logger logger = Logger.getLogger(LinuxDiskManager.class);
 
 	private static String mtabFilename = "/etc/mtab";
+	private static final String rdpdrFolderDirectory = ".rdp_drive";
 	private ArrayList<String> mtabList = null;
 	
 	
@@ -55,6 +56,25 @@ public class LinuxDiskManager extends DiskManager {
 			// Add support to gnome shares 
 			addDirectoryToInspect(Constants.HOMEDIR + "/.gvfs");
 		}
+	}
+	
+	/**************************************************************************/
+	private ArrayList<String> getRdpShare() {
+		String rdpdrDirectory = Constants.HOMEDIR + File.separator + LinuxDiskManager.rdpdrFolderDirectory;
+		ArrayList<String> result = new ArrayList<String>();
+		File dir = new File(rdpdrDirectory);
+		String sharePath;
+		
+		if (! dir.exists() || !dir.isDirectory())
+			return result;
+		
+		for (String shareName : dir.list()) {
+			sharePath = rdpdrDirectory + File.separator + shareName;
+			if (! this.isMounted(sharePath) && this.testDir(sharePath))
+				result.add(sharePath);
+		}
+		
+		return result;
 	}
 	
 	/**************************************************************************/
@@ -114,6 +134,14 @@ public class LinuxDiskManager extends DiskManager {
 					newDrives.add(dirPath);
 				}
 			}
+		}
+		
+		for (String drive : getRdpShare()) {
+			logger.debug("Drive "+drive);
+			dir = new File(drive);
+			
+			if (! this.isMounted(drive) && this.testDir(drive))
+				newDrives.add(drive);
 		}
 		return newDrives;
 	}
