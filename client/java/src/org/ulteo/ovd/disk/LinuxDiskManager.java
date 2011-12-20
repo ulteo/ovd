@@ -37,6 +37,11 @@ public class LinuxDiskManager extends DiskManager {
 	private static String mtabFilename = "/etc/mtab";
 	private static final String rdpdrFolderDirectory = ".rdp_drive";
 	private ArrayList<String> mtabList = null;
+	private final String[] removeableShare = {
+			"/media", 
+			"/mnt", 
+			Constants.HOMEDIR + "/.gvfs", // Add support to gnome shares
+	};
 	
 	
 	/**************************************************************************/
@@ -49,13 +54,6 @@ public class LinuxDiskManager extends DiskManager {
 	public void init() {
 		addStaticDirectory(Constants.PATH_DOCUMENT);
 		addStaticDirectory(Constants.PATH_DESKTOP);
-
-		if (this.mountingMode == ALL_MOUNTING_ALLOWED) {
-			addDirectoryToInspect("/media");
-			addDirectoryToInspect("/mnt");
-			// Add support to gnome shares 
-			addDirectoryToInspect(Constants.HOMEDIR + "/.gvfs");
-		}
 	}
 	
 	/**************************************************************************/
@@ -72,6 +70,27 @@ public class LinuxDiskManager extends DiskManager {
 			sharePath = rdpdrDirectory + File.separator + shareName;
 			if (! this.isMounted(sharePath) && this.testDir(sharePath))
 				result.add(sharePath);
+		}
+		
+		return result;
+	}
+	
+	/**************************************************************************/
+	private ArrayList<String> getRemovableShares() {
+		ArrayList<String> result = new ArrayList<String>();
+		String sharePath;
+		
+		for (int i = 0 ; i < this.removeableShare.length ; i++) {
+			File dir = new File(this.removeableShare[i]);
+			if (! dir.exists() || ! dir.isDirectory())
+				continue;
+	
+			for (String shareName : dir.list()) {
+				sharePath = this.removeableShare[i] + File.separator + shareName;
+				
+				if (! this.isMounted(sharePath) && this.testDir(sharePath))
+					result.add(sharePath);
+			}
 		}
 		
 		return result;
@@ -143,6 +162,14 @@ public class LinuxDiskManager extends DiskManager {
 			if (! this.isMounted(drive) && this.testDir(drive))
 				newDrives.add(drive);
 		}
+		
+		for (String drive : this.getRemovableShares()) {
+			logger.debug("Drive "+drive);
+
+			if (! this.isMounted(drive) && this.testDir(drive))
+				newDrives.add(drive);
+		}
+		
 		return newDrives;
 	}
 }
