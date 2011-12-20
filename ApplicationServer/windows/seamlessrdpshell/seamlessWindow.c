@@ -111,10 +111,24 @@ void SeamlessWindow_create(HWND hwnd) {
 			SeamlessWindow_updateIcon(window, icon, 1);
 			DeleteObject(icon);
 		}
+		
+		if (IsZoomed(hwnd)) {
+			WINDOWPLACEMENT placement;
+
+			placement.length = sizeof(WINDOWPLACEMENT);
+			GetWindowPlacement(hwnd, &placement);
+			vchannel_write("POSITION", "0x%08lx,%d,%d,%d,%d,0x%08lx", hwnd,
+						placement.rcNormalPosition.left,
+						placement.rcNormalPosition.top,
+						placement.rcNormalPosition.right - placement.rcNormalPosition.left,
+						placement.rcNormalPosition.bottom - placement.rcNormalPosition.top,
+						1);
+		}
+		else {
+			SeamlessWindow_updatePosition(window);
+		}
 
 		state = WindowUtil_getState(hwnd);
-
-		SeamlessWindow_updatePosition(window);
 		SeamlessChannel_sendState(hwnd, state, 0);
 
 		if (window->focus)
