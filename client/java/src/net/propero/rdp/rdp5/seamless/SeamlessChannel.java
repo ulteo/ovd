@@ -143,8 +143,6 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		String[] tokens;
 		long id, flags;
 		int numTokens;
-	
-		logger.debug("New SeamlessRDP command: " + line);
 		
 		StringTokenizer st = new StringTokenizer(line, ",");
 		numTokens = st.countTokens();
@@ -165,6 +163,8 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 //			logger.debug("Token " + i + ": " + tokens[i]);
 		}
 
+		if (! tokens[0].equals("DEBUG"))
+			logger.debug("New SeamlessRDP command: " + line);
 
 		if (tokens[0].equals("CREATE"))
 		{
