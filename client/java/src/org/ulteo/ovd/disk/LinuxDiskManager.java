@@ -51,17 +51,14 @@ public class LinuxDiskManager extends DiskManager {
 	}
 	
 	/**************************************************************************/
-	public void init() {
-		addStaticDirectory(Constants.PATH_DOCUMENT);
-		addStaticDirectory(Constants.PATH_DESKTOP);
-	}
-	
-	/**************************************************************************/
 	private ArrayList<String> getRdpShare() {
 		String rdpdrDirectory = Constants.HOMEDIR + File.separator + LinuxDiskManager.rdpdrFolderDirectory;
 		ArrayList<String> result = new ArrayList<String>();
 		File dir = new File(rdpdrDirectory);
 		String sharePath;
+		
+		if (!DiskManager.profile.isTSShareRedirectionActivated())
+			return result;
 		
 		if (! dir.exists() || !dir.isDirectory())
 			return result;
@@ -79,6 +76,9 @@ public class LinuxDiskManager extends DiskManager {
 	private ArrayList<String> getRemovableShares() {
 		ArrayList<String> result = new ArrayList<String>();
 		String sharePath;
+		
+		if (!DiskManager.profile.isRemoveableShareRedirectionActivated())
+			return result;
 		
 		for (int i = 0 ; i < this.removeableShare.length ; i++) {
 			File dir = new File(this.removeableShare[i]);
@@ -142,7 +142,7 @@ public class LinuxDiskManager extends DiskManager {
 		
 		updateMtab();
 		logger.debug("Searching for new drive");
-		for (String toInspect : this.directoryToInspect) {
+		for (String toInspect : DiskManager.profile.getMonitoredDirectories()) {
 			dir = new File(toInspect);
 			if (! dir.exists() || !dir.isDirectory())
 				continue;

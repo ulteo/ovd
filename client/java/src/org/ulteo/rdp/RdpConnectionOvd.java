@@ -251,7 +251,6 @@ public class RdpConnectionOvd extends RdpConnection {
 		else {
 			diskManager = new LinuxDiskManager((OVDRdpdrChannel)rdpdrChannel, mountingMode);
 		}
-		diskManager.init();
 		diskManager.launch();		
 	}
 	

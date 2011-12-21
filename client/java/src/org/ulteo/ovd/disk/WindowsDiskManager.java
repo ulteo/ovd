@@ -24,14 +24,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.filechooser.FileSystemView;
 
 import org.apache.log4j.Logger;
-import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 
 
@@ -47,18 +45,6 @@ public class WindowsDiskManager extends DiskManager {
 		super(diskChannel, mountingMode);
 	}
 
-	/**************************************************************************/
-	public void init() {
-		List<String> paths = new ArrayList<String>();
-		paths.add(Constants.PATH_DESKTOP);
-		paths.add(Constants.PATH_DOCUMENT);
-
-		for (String each : paths) {
-			if (each != null)
-				addStaticDirectory(each);
-		}
-	}
-	
 	/**************************************************************************/
 	private ArrayList<String> getTSSharesByProcess() {
 		ArrayList<String> tsShares = new ArrayList<String>();
@@ -103,6 +89,9 @@ public class WindowsDiskManager extends DiskManager {
 
 	/**************************************************************************/
 	private ArrayList<String> getTSDrive() {
+		if (! DiskManager.profile.isTSShareRedirectionActivated())
+			return new ArrayList<String>();
+		
 		if (this.useTSShareDiscoveryFailback) {
 			return getTSSharesByProcess();
 		}
@@ -123,6 +112,9 @@ public class WindowsDiskManager extends DiskManager {
 		if (this.mountingMode == MOUNTING_RESTRICTED)
 			return newDrives;
 
+		if (! DiskManager.profile.isRemoveableShareRedirectionActivated())
+			return newDrives;
+		
 		File []drives = File.listRoots();
 		String driveString;
 		for (File drive : drives) {
@@ -163,7 +155,7 @@ public class WindowsDiskManager extends DiskManager {
 			}
 		}
 		
-		for (String toInspect : this.directoryToInspect)  {
+		for (String toInspect : DiskManager.profile.getMonitoredDirectories())  {
 			dir = new File(toInspect);
 			if (! dir.exists() || !dir.isDirectory())
 				continue;

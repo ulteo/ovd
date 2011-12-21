@@ -35,8 +35,7 @@ public abstract class DiskManager {
 	private static String invalidCharacter = ":\\/|*?<>";
 
 	protected OVDRdpdrChannel rdpdrChannel;
-	protected ArrayList<String> staticShares;
-	protected ArrayList<String> directoryToInspect;
+	protected static DiskRedirectionProfile profile;
 	private Timer diskAction;
 	private boolean isStaticShareMounted = false;
 	protected boolean mountingMode = MOUNTING_RESTRICTED;
@@ -45,8 +44,8 @@ public abstract class DiskManager {
 	public DiskManager(OVDRdpdrChannel diskChannel, boolean mountingMode_) {
 		this.rdpdrChannel = diskChannel;
 		this.mountingMode = mountingMode_;
-		this.staticShares = new ArrayList<String>();
-		this.directoryToInspect = new ArrayList<String>();
+		if (DiskManager.profile == null)
+			DiskManager.profile = new DiskRedirectionProfile();
 	}
 	
 	/**************************************************************************/
@@ -64,7 +63,10 @@ public abstract class DiskManager {
 	}
 
 	/**************************************************************************/
-	abstract public void init();
+	public static void setDiskProfile(DiskRedirectionProfile profile) {
+		DiskManager.profile = profile;
+	}
+	
 	abstract public ArrayList<String> getNewDrive();
 
 	public boolean getMountingMode() {
@@ -93,22 +95,6 @@ public abstract class DiskManager {
 		String shareName = this.getValidName(file.getName());
 		return shareName;
 	}	
-	
-	/**************************************************************************/
-	protected boolean addStaticDirectory(String directoryName) {
-		if (new File(directoryName).isDirectory()) {
-			this.staticShares.add(directoryName);
-			return true;
-		}
-		return false;
-	}
-	
-	/**************************************************************************/
-	protected boolean addDirectoryToInspect(String directoryName) {
-		this.directoryToInspect.add(directoryName);
-		return false;
-	}
-
 	
 	/**************************************************************************/
 	public boolean isMounted(String path) {
@@ -149,7 +135,7 @@ public abstract class DiskManager {
 	/**************************************************************************/
 	public boolean mountStaticShare() {
 		logger.debug("Mount static share");
-		for (String share : staticShares) {
+		for (String share : DiskManager.profile.getStaticShares()) {
 			logger.debug("Static share mounted: "+share);
 			mount(share);
 		}
