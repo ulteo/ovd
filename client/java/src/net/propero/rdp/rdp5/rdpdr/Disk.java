@@ -79,6 +79,7 @@ public class Disk extends RdpdrDevice{
 	public static final int STATUS_FILE_IS_A_DIRECTORY    = 0xc00000ba;
 	public static final int STATUS_OBJECT_NAME_COLLISION  = 0xc0000035;
 	
+	public static final int FileFullDirectoryInformation  = 0x00000002;
 	public static final int FileBothDirectoryInformation  = 0x00000003;
 	public static final int FileNameInformation           = 0x0000000c;
 	
@@ -557,6 +558,7 @@ public class Disk extends RdpdrDevice{
 		switch (info_class) {
 			case FileNameInformation:
 			case FileBothDirectoryInformation:
+			case FileFullDirectoryInformation:
 				DEBUG("disk_query_directory---FileBothDirectoryInformation");
 				/* If a search pattern is received, remember this pattern, and restart search */
 				if (pattern != null && ! pattern.equals("")) {
@@ -626,8 +628,12 @@ public class Disk extends RdpdrDevice{
 				out.setLittleEndian32(file_attributes);
 				out.setLittleEndian32(2 * d_name.length() + 2); // Filename length (Unicode)
 				out.setLittleEndian32(0);    // EA Size
-				out.set8(0);                 // ShortName length
-				out.incrementPosition(24);   // Short name
+				
+				if (info_class != FileFullDirectoryInformation) {
+					out.set8(0);                 // ShortName length
+					out.incrementPosition(24);   // Short name
+				}
+				
 				out.outUnicodeString(d_name, 2*(d_name.length()));
 				break;
 				
