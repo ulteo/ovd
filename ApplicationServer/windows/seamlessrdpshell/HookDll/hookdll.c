@@ -205,6 +205,11 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 			}
 
 		case WM_SIZE:
+			if (wparam == SIZE_MAXIMIZED) {
+				sendHookMsg_State(hwnd, 2);
+				break;
+			}
+
 		case WM_MOVE:
 			if (!(style & WS_VISIBLE) || (style & WS_MINIMIZE))
 				break;
