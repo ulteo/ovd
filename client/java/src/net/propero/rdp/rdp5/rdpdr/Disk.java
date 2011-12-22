@@ -624,10 +624,10 @@ public class Disk extends RdpdrDevice{
 				out.setLittleEndian32((int)this_file.length());	 /* filesize low */
 				out.setLittleEndian32(0);	/* filesize high */
 				out.setLittleEndian32(file_attributes);
-				out.set8(2*d_name.length()+2);//out_uint8(out, 2 * strlen(pdirent->d_name) + 2);	/* unicode length */
-				out.incrementPosition(7);
-				out.set8(0);
-				out.incrementPosition(2 * 12);
+				out.setLittleEndian32(2 * d_name.length() + 2); // Filename length (Unicode)
+				out.setLittleEndian32(0);    // EA Size
+				out.set8(0);                 // ShortName length
+				out.incrementPosition(24);   // Short name
 				out.outUnicodeString(d_name, 2*(d_name.length()));
 				break;
 				
