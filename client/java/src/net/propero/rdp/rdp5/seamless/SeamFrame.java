@@ -154,8 +154,7 @@ public class SeamFrame extends Frame
 	}
 
 	public void sw_setMyPosition(int x, int y, int width, int height) {
-		this.setSize(width, height);
-		this.setLocation(x, y);
+		this.setBounds(x, y, width, height);
 		this.repaint();
 	}
 	

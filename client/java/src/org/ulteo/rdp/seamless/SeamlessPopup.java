@@ -144,8 +144,7 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	}
 
 	public void sw_setMyPosition(int x, int y, int width, int height) {
-		this.setSize(width, height);
-		this.setLocation(x, y);
+		this.setBounds(x, y, width, height);
 		this.repaint();
 	}
 
