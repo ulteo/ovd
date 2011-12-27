@@ -40,7 +40,7 @@ public class DisconnectionFrame extends JDialog {
 		this.setPreferredSize(new Dimension(300,50));
 		this.setResizable(false);
 
-		final JProgressBar aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL);
+		JProgressBar aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL);
 		aJProgressBar.setIndeterminate(true);
 		aJProgressBar.setPreferredSize(new Dimension(280, 20));
 		
