@@ -52,13 +52,55 @@ typedef int (*get_instance_count_proc_t) ();
 typedef void (*move_window_proc_t) (unsigned int serial, HWND hwnd, int x, int y, int width,
 				    int height);
 typedef void (*zchange_proc_t) (unsigned int serial, HWND hwnd, HWND behind);
-typedef void (*focus_proc_t) (unsigned int serial, HWND hwnd);
+typedef void (*focus_proc_t) (unsigned int serial, HWND hwnd, int action);
 typedef void (*set_state_proc_t) (unsigned int serial, HWND hwnd, int state);
 
 static move_window_proc_t g_move_window_fn = NULL;
 static zchange_proc_t g_zchange_fn = NULL;
 static focus_proc_t g_focus_fn = NULL;
 static set_state_proc_t g_set_state_fn = NULL;
+
+static HWND hwnd_internal;
+const char seamless_class[] = "InternalSeamlessClass";
+
+
+LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	HWND hwnd_to_focus = (HWND)wParam;
+
+	switch(msg) {
+	case WM_CLOSE:
+		DestroyWindow(hwnd);
+		break;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;
+
+
+	case WM_KILLFOCUS:
+		if (hwnd_to_focus != hwnd_internal && hwnd_to_focus != NULL)
+			set_focus_on_window(hwnd_to_focus);
+		break;
+
+	default:
+		return DefWindowProc(hwnd, msg, wParam, lParam);
+	}
+	return 0;
+}
+
+BOOL set_focus_on_window(HWND hwnd) {
+	BOOL ret;
+
+	// Attach foreground window thread
+	AttachThreadInput(GetWindowThreadProcessId(GetForegroundWindow(), NULL), GetCurrentThreadId(), TRUE);
+
+	ret = SetForegroundWindow(hwnd);
+	SetFocus(hwnd);
+
+	// Detach the attached thread
+	AttachThreadInput(GetWindowThreadProcessId(GetForegroundWindow(), NULL), GetCurrentThreadId(), FALSE);
+
+	return ret;
+}
 
 static void
 message(const char *text)
@@ -99,6 +141,9 @@ enum_cb(HWND hwnd, LPARAM lparam)
 	HWND parent;
 	DWORD pid;
 	int flags;
+
+	if (hwnd == hwnd_internal)
+		return TRUE;
 
 	styles = GetWindowLong(hwnd, GWL_STYLE);
 
@@ -178,9 +223,13 @@ do_zchange(unsigned int serial, HWND hwnd, HWND behind)
 }
 
 static void
-do_focus(unsigned int serial, HWND hwnd)
+do_focus(unsigned int serial, HWND hwnd, int action)
 {
-	g_focus_fn(serial, hwnd);
+	if (action == SEAMLESS_FOCUS_RELEASE ) {
+		set_focus_on_window(hwnd_internal);
+		return;
+	}
+	SendMessage(hwnd_internal, WM_KILLFOCUS, (WPARAM)hwnd, (LPARAM)NULL);
 }
 
 /* No need for locking, since this is a request rather than a message
@@ -275,7 +324,7 @@ process_cmds(void)
 			do_zchange(strtoul(tok2, NULL, 0), (HWND) strtoul(tok3, NULL, 0),
 				   (HWND) strtoul(tok4, NULL, 0));
 		else if (strcmp(tok1, "FOCUS") == 0)
-			do_focus(strtoul(tok2, NULL, 0), (HWND) strtoul(tok3, NULL, 0));
+			do_focus(strtoul(tok2, NULL, 0), (HWND) strtoul(tok3, NULL, 0), (int) strtol(tok4, NULL, 0));
 		else if (strcmp(tok1, "SPAWN") == 0)
 			do_spawn(tok3);
 		else if (strcmp(tok1, "START_APP") == 0)
@@ -397,6 +446,39 @@ is_desktop_hidden(void)
 	return desk == NULL;
 }
 
+
+BOOL createInternalWindow(HINSTANCE instance) {
+	WNDCLASSEX wc;
+
+	wc.cbSize = sizeof(WNDCLASSEX);
+	wc.style = 0;
+	wc.lpfnWndProc = WndProc;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hInstance = instance;
+	wc.hIcon = NULL;
+	wc.hCursor = NULL;
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+	wc.lpszMenuName  = NULL;
+	wc.lpszClassName = seamless_class;
+	wc.hIconSm = NULL;
+
+	if(!RegisterClassEx(&wc))
+		return FALSE;
+
+	hwnd_internal = CreateWindowEx(WS_EX_CLIENTEDGE, seamless_class, "", WS_POPUP|WS_CLIPCHILDREN|WS_VISIBLE, 0, 0, 0, 0, NULL, NULL, instance, NULL);
+
+	if(hwnd_internal == NULL) {
+		return FALSE;
+	}
+
+	ShowWindow(hwnd_internal, SW_SHOW);
+	UpdateWindow(hwnd_internal);
+
+	return TRUE;
+}
+
+
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 {
@@ -449,6 +531,9 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 
 	g_connected = is_connected();
 	g_desktop_hidden = is_desktop_hidden();
+
+	if (createInternalWindow(instance) == FALSE)
+		debug("Failed to create seamless internal window");
 
 	vchannel_write("HELLO", "0x%08x", g_desktop_hidden ? SEAMLESS_HELLO_HIDDEN : 0);
 

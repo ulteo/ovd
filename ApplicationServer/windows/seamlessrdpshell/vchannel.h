@@ -35,6 +35,9 @@
 #define SEAMLESS_HELLO_RECONNECT	0x0001
 #define SEAMLESS_HELLO_HIDDEN		0x0002
 
+#define SEAMLESS_FOCUS_REQUEST      0X0000
+#define SEAMLESS_FOCUS_RELEASE      0X0001
+
 DLL_EXPORT void debug(char *format, ...);
 
 DLL_EXPORT const char *unicode_to_utf8(const unsigned short *string);
