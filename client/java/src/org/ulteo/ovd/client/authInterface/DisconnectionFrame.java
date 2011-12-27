@@ -31,12 +31,9 @@ import org.ulteo.utils.I18n;
 
 public class DisconnectionFrame extends JDialog {
 	
-	private Image logo = null;
-	
 	public DisconnectionFrame() {
-
-		this.logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
-		this.setIconImage(this.logo);
+		Image logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
+		this.setIconImage(logo);
 		this.setTitle(I18n._("Disconnecting!"));
 		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		this.setSize(300, 50);
