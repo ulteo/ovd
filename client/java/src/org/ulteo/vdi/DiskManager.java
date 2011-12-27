@@ -9,6 +9,6 @@ public class DiskManager extends LinuxDiskManager {
 	public DiskManager(RdpdrChannel diskChannel) {
 		super((OVDRdpdrChannel)diskChannel, LinuxDiskManager.ALL_MOUNTING_ALLOWED);
 
-		this.profile.addStaticShare(System.getProperty("user.home"));
+		LinuxDiskManager.profile.addStaticShare(System.getProperty("user.home"));
 	}
 }
