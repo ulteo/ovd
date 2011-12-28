@@ -29,10 +29,11 @@ import java.awt.Dimension;
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
+import org.ulteo.gui.GUIActions;
+import org.ulteo.gui.SwingTools;
 import org.ulteo.ovd.client.NativeClientActions;
 import org.ulteo.ovd.client.OvdClientDesktop;
 import org.ulteo.ovd.client.authInterface.LoadingFrame;
-import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
@@ -42,13 +43,11 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 	
 	private DesktopFrame desktop = null;
 	private LoadingFrame loadingFrame;
-	private Callback obj;
 	private boolean is_user_disconnection;
 	
-	public OvdClientNativeDesktop(SessionManagerCommunication smComm, LoadingFrame loadingFrame, Dimension resolution, Callback obj, boolean persistent) {
+	public OvdClientNativeDesktop(SessionManagerCommunication smComm, LoadingFrame loadingFrame, Dimension resolution, boolean persistent) {
 		super(smComm, persistent);
 		this.loadingFrame = loadingFrame;
-		this.obj = obj;
 		
 		this.desktop = new DesktopFrame(resolution, this);
 	}
@@ -155,7 +154,8 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 			return;
 		
 		super.disconnection();
-		this.obj.sessionDisconnecting();
+		this.performDisconnectAll();
+		SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, false));
 		this.desktop.disconnecting();
 	}
 	

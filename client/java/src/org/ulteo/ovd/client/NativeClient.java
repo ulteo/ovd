@@ -760,10 +760,10 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 		switch (response.getMode()) {
 			case Properties.MODE_DESKTOP:
-				this.client = new OvdClientNativeDesktop(dialog, this.loadingFrame, this.opts.geometry, this, response.isPersistent());
+				this.client = new OvdClientNativeDesktop(dialog, this.loadingFrame, this.opts.geometry, response.isPersistent());
 				break;
 			case Properties.MODE_REMOTEAPPS:
-				this.client = new OvdClientPortal(dialog, this.loadingFrame, response.getUsername(), this.opts.autopublish, response.isDesktopIcons(), this.opts.autostart, this.opts.isBugReporterVisible, this);
+				this.client = new OvdClientPortal(dialog, this.loadingFrame, response.getUsername(), this.opts.autopublish, response.isDesktopIcons(), this.opts.autostart, this.opts.isBugReporterVisible);
 				((OvdClientPortal) this.client).setSeamlessDebugEnabled(this.opts.debugSeamless);
 				break;
 			default:
@@ -805,15 +805,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.loadingFrame.setVisible(false);
 		
 		return exit;
-	}
-	
-	@Override
-	public void sessionDisconnecting() {
-		if (this.client != null)
-			this.client.performDisconnectAll();
-
-		if (this.opts.showProgressBar)
-			SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, false));
 	}
 	
 	@Override

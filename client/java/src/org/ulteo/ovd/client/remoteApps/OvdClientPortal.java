@@ -35,6 +35,8 @@ import javax.swing.ImageIcon;
 
 import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
+import org.ulteo.gui.GUIActions;
+import org.ulteo.gui.SwingTools;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.OvdException;
@@ -47,7 +49,6 @@ import org.ulteo.ovd.client.portal.PortalFrame;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.News;
-import org.ulteo.ovd.sm.Callback;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
@@ -63,13 +64,11 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	private boolean showBugReporter = false;
 	private float ApplicationIncrement = 0;
 	private LoadingFrame loadingFrame;
-	private Callback obj;
 	private boolean is_user_disconnection;
 	
-	public OvdClientPortal(SessionManagerCommunication smComm, LoadingFrame loadingFrame, String login_, boolean autoPublish, boolean showDesktopIcons_, boolean hiddenAtStart_, boolean showBugReporter_, Callback obj) {
+	public OvdClientPortal(SessionManagerCommunication smComm, LoadingFrame loadingFrame, String login_, boolean autoPublish, boolean showDesktopIcons_, boolean hiddenAtStart_, boolean showBugReporter_) {
 		super(smComm);
 		this.loadingFrame = loadingFrame;
-		this.obj = obj;
 		
 		this.username = login_;
 		this.autoPublish = this.publicated = autoPublish;
@@ -278,7 +277,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			return;
 		
 		super.disconnection();
-		this.obj.sessionDisconnecting();
+		this.performDisconnectAll();
+		SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, false));
 		this.portal.disconnecting();
 	}
 	
