@@ -501,7 +501,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	private AuthFrame authFrame = null;
 
 	private Thread thread = null;
-	private OvdClient client = null;
+	private NativeClientActions client_actions = null;
 	private Options opts = null;
 
 	public NativeClient(Options opts_) {
@@ -622,8 +622,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == this.loadingFrame) {
-			if (this.client != null)
-				((NativeClientActions)this.client).disconnect();
+			if (this.client_actions != null)
+				this.client_actions.disconnect();
 		}
 		else if (e.getSource() == this.authFrame.getStartButton()) {
 			this.start();
@@ -756,41 +756,42 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 		OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
 		
-		this.client = null;
-
+		OvdClient client;
 		switch (response.getMode()) {
 			case Properties.MODE_DESKTOP:
-				this.client = new OvdClientNativeDesktop(dialog, this.loadingFrame, this.opts.geometry, response.isPersistent());
+				client = new OvdClientNativeDesktop(dialog, this.loadingFrame, this.opts.geometry, response.isPersistent());
 				break;
 			case Properties.MODE_REMOTEAPPS:
-				this.client = new OvdClientPortal(dialog, this.loadingFrame, response.getUsername(), this.opts.autopublish, response.isDesktopIcons(), this.opts.autostart, this.opts.isBugReporterVisible);
-				((OvdClientPortal) this.client).setSeamlessDebugEnabled(this.opts.debugSeamless);
+				client = new OvdClientPortal(dialog, this.loadingFrame, response.getUsername(), this.opts.autopublish, response.isDesktopIcons(), this.opts.autostart, this.opts.isBugReporterVisible);
+				((OvdClientPortal) client).setSeamlessDebugEnabled(this.opts.debugSeamless);
 				break;
 			default:
 				throw new UnsupportedOperationException(I18n._("Internal error: unsupported session mode"));
 		}
-		this.client.setKeymap(this.opts.keymap);
-		this.client.setInputMethod(this.opts.inputMethod);
-		this.client.setPacketCompression(this.opts.usePacketCompression);
-		this.client.setOffscreenCache(this.opts.useOffscreenCache);
+		client.setKeymap(this.opts.keymap);
+		client.setInputMethod(this.opts.inputMethod);
+		client.setPacketCompression(this.opts.usePacketCompression);
+		client.setOffscreenCache(this.opts.useOffscreenCache);
 		if (this.opts.usePersistantCache)
-			this.client.setPersistentCaching(this.opts.persistentCacheMaxCells, this.opts.persistentCachePath);
+			client.setPersistentCaching(this.opts.persistentCacheMaxCells, this.opts.persistentCachePath);
 		if (this.opts.useBandwithLimitation) {
 			int diskBandwidthLimit = 0;
 			if (this.opts.useDiskBandwithLimitation)
 				diskBandwidthLimit = this.opts.diskBandwidthLimit;
-			this.client.setBandWidthLimitation(this.opts.socketTimeout, diskBandwidthLimit);
+			client.setBandWidthLimitation(this.opts.socketTimeout, diskBandwidthLimit);
 		}
 
+		this.client_actions = ((NativeClientActions)client);
 		if (! this.loadingFrame.cancelled()) {
-			Runtime.getRuntime().addShutdownHook(new ShutdownTask(this.client));
-			this.client.perform();
+			Runtime.getRuntime().addShutdownHook(new ShutdownTask(client));
+			client.perform();
 		}
 		else
-			((NativeClientActions)this.client).disconnect();
-		boolean exit = ((NativeClientActions)client).haveToQuit();
-		boolean is_user_deconnection = ((NativeClientActions)client).isUserDisconnection();
-		this.client = null;
+			this.client_actions.disconnect();
+		
+		boolean exit = this.client_actions.haveToQuit();
+		boolean is_user_deconnection = this.client_actions.isUserDisconnection();
+		this.client_actions = null;
 
 		timeout.cancel();
 		
