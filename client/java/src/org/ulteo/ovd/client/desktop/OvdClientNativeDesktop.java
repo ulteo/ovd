@@ -43,6 +43,7 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 	private DesktopFrame desktop = null;
 	private LoadingFrame loadingFrame;
 	private Callback obj;
+	private boolean is_user_disconnection;
 	
 	public OvdClientNativeDesktop(SessionManagerCommunication smComm, LoadingFrame loadingFrame, Dimension resolution, Callback obj, boolean persistent) {
 		super(smComm, persistent);
@@ -148,6 +149,15 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 		this.desktop.setVisible(true);
 	}
 
+	@Override
+	public void disconnection() {
+		if (! this.connectionIsActive)
+			return;
+		
+		super.disconnection();
+		this.obj.sessionDisconnecting();
+		this.desktop.disconnecting();
+	}
 	
 	// interface NativeClientActions' methods 
 	
@@ -155,14 +165,16 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 	public boolean haveToQuit() {
 		return this.desktop.haveToQuit();
 	}
-	
+
 	@Override
 	public void disconnect() {
-		if (! this.connectionIsActive)
-			return;
-		
-		super.disconnect();
-		this.obj.sessionDisconnecting();
+		this.is_user_disconnection = true;
+		this.disconnection();
 	}
-
+	
+	@Override
+	public boolean isUserDisconnection() {
+		return this.is_user_disconnection;
+	}
+	
 }

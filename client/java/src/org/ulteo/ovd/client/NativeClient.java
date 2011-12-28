@@ -56,7 +56,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import org.ulteo.ovd.client.authInterface.AuthFrame;
-import org.ulteo.ovd.client.authInterface.DisconnectionFrame;
 import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.desktop.DesktopFrame;
@@ -500,7 +499,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	
 	private LoadingFrame loadingFrame = null;
 	private AuthFrame authFrame = null;
-	private DisconnectionFrame discFrame = null;
 
 	private Thread thread = null;
 	private OvdClient client = null;
@@ -511,7 +509,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 		this.loadingFrame = new LoadingFrame(this.opts.showProgressBar);
 		this.loadingFrame.addActionListener(this);
-		this.discFrame = new DisconnectionFrame();
 	}
 	
 	private void initAuthFrame() {
@@ -626,7 +623,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == this.loadingFrame) {
 			if (this.client != null)
-				this.client.disconnect();
+				((NativeClientActions)this.client).disconnect();
 		}
 		else if (e.getSource() == this.authFrame.getStartButton()) {
 			this.start();
@@ -647,7 +644,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			
 			SwingTools.invokeLater(Language.translate(this.authFrame));
 			SwingTools.invokeLater(Language.translate(this.loadingFrame));
-			SwingTools.invokeLater(Language.translate(this.discFrame));
 		}
 	}
 
@@ -791,14 +787,15 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			this.client.perform();
 		}
 		else
-			this.client.disconnect();
+			((NativeClientActions)this.client).disconnect();
 		boolean exit = ((NativeClientActions)client).haveToQuit();
+		boolean is_user_deconnection = ((NativeClientActions)client).isUserDisconnection();
 		this.client = null;
 
 		timeout.cancel();
 		
 		if (! this.opts.autostart) {
-			if (! this.discFrame.isVisible())
+			if (! is_user_deconnection)
 				SwingTools.invokeLater(GUIActions.createDialog(I18n._("You have been disconnected"), I18n._("Your session has ended"), JOptionPane.INFORMATION_MESSAGE, JOptionPane.CLOSED_OPTION));
 		} else {
 			Logger.debug("You have been disconnected");
@@ -806,7 +803,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		}
 
 		this.loadingFrame.setVisible(false);
-		this.discFrame.setVisible(false);
 		
 		return exit;
 	}
@@ -818,7 +814,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 		if (this.opts.showProgressBar)
 			SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, false));
-		discFrame.setVisible(true);
 	}
 	
 	@Override

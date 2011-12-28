@@ -64,6 +64,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	private float ApplicationIncrement = 0;
 	private LoadingFrame loadingFrame;
 	private Callback obj;
+	private boolean is_user_disconnection;
 	
 	public OvdClientPortal(SessionManagerCommunication smComm, LoadingFrame loadingFrame, String login_, boolean autoPublish, boolean showDesktopIcons_, boolean hiddenAtStart_, boolean showBugReporter_, Callback obj) {
 		super(smComm);
@@ -271,6 +272,15 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.portal.setVisible(! this.hiddenAtStart);
 	}
 	
+	@Override
+	public void disconnection() {
+		if (! this.connectionIsActive)
+			return;
+		
+		super.disconnection();
+		this.obj.sessionDisconnecting();
+		this.portal.disconnecting();
+	}
 	
 	// interface NativeClientActions' methods 
 	
@@ -278,14 +288,16 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	public boolean haveToQuit() {
 		return this.portal.haveToQuit();
 	}
-	
+
 	@Override
 	public void disconnect() {
-		if (! this.connectionIsActive)
-			return;
-		
-		super.disconnect();
-		this.obj.sessionDisconnecting();
+		this.is_user_disconnection = true;
+		this.disconnection();
+	}
+
+	@Override
+	public boolean isUserDisconnection() {
+		return this.is_user_disconnection;
 	}
 	
 }

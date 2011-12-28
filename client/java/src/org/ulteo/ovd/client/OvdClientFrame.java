@@ -24,11 +24,14 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 
+import org.ulteo.ovd.client.authInterface.DisconnectionFrame;
 import org.ulteo.ovd.client.authInterface.NativeLogoutPopup;
 
 public class OvdClientFrame extends JFrame implements WindowListener {
 
 	protected NativeClientActions actions = null;
+	
+	private DisconnectionFrame discDialog = new DisconnectionFrame();
 	
 	/**
 	 * have to quit after logout
@@ -58,12 +61,21 @@ public class OvdClientFrame extends JFrame implements WindowListener {
 	public void haveToQuit(boolean quit) {
 		this.have_to_quit = quit;
 	}
+	
+	/**
+	 * display the disconnecting window
+	 */
+	public void disconnecting() {
+		 this.discDialog.setVisible(true);
+	 }
 
 	@Override
 	public void windowActivated(WindowEvent e) {}
 
 	@Override
-	public void windowClosed(WindowEvent e) {}
+	public void windowClosed(WindowEvent e) {
+		this.discDialog.setVisible(false);
+	}
 
 	@Override
 	public void windowClosing(WindowEvent e) {

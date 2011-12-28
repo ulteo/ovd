@@ -185,7 +185,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 			}
 
 			if (! ((OvdClientPerformer)this).checkRDPConnections()) {
-				this.disconnect();
+				this.disconnection();
 				break;
 			}
 		} while (this.performedConnections.size() < this.connections.size());
@@ -293,7 +293,10 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	@Override
 	public void seamlessEnabled(RdpConnection co) {}
 
-	public void disconnect() {
+	/**
+	 * disconnect performers
+	 */
+	public void disconnection() {
 		if (! this.connectionIsActive)
 			return;
 
