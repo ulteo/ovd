@@ -31,7 +31,7 @@ public class OvdClientFrame extends JFrame implements WindowListener {
 
 	protected NativeClientActions actions = null;
 	
-	private DisconnectionFrame discDialog = new DisconnectionFrame();
+	private DisconnectionFrame discDialog = new DisconnectionFrame(this);
 	
 	/**
 	 * have to quit after logout

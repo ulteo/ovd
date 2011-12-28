@@ -23,15 +23,18 @@ package org.ulteo.ovd.client.authInterface;
 
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.Window;
 
+import javax.swing.JDialog;
 import javax.swing.JProgressBar;
 
-import org.ulteo.ovd.client.Language.JDialog;
 import org.ulteo.utils.I18n;
 
 public class DisconnectionFrame extends JDialog {
 	
-	public DisconnectionFrame() {
+	public DisconnectionFrame(Window w) {
+		super(w, ModalityType.APPLICATION_MODAL);
+		
 		Image logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
 		this.setIconImage(logo);
 		this.setTitle(I18n._("Disconnecting!"));
@@ -49,21 +52,4 @@ public class DisconnectionFrame extends JDialog {
 		this.pack();
 	}
 	
-	@Override
-	public void changeLanguage() {
-		this.setTitle(I18n._("Disconnecting!"));
-	}
-
-	@Override
-	public void setVisible(boolean b) {
-		if (b) {
-			super.setVisible(true);
-			this.setModal(true);
-		}
-		else {
-			this.setModal(false);
-			super.setVisible(false);
-		}
-	}
-
 }
