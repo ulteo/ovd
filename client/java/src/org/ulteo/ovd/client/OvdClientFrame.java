@@ -24,14 +24,14 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 
-import org.ulteo.ovd.client.authInterface.DisconnectionFrame;
+import org.ulteo.ovd.client.authInterface.DisconnectionDialog;
 import org.ulteo.ovd.client.authInterface.NativeLogoutPopup;
 
 public class OvdClientFrame extends JFrame implements WindowListener {
 
 	protected NativeClientActions actions = null;
 	
-	private DisconnectionFrame discDialog = new DisconnectionFrame(this);
+	private DisconnectionDialog discDialog = new DisconnectionDialog(this);
 	
 	/**
 	 * have to quit after logout

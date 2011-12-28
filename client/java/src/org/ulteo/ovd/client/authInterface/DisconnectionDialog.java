@@ -30,9 +30,9 @@ import javax.swing.JProgressBar;
 
 import org.ulteo.utils.I18n;
 
-public class DisconnectionFrame extends JDialog {
+public class DisconnectionDialog extends JDialog {
 	
-	public DisconnectionFrame(Window w) {
+	public DisconnectionDialog(Window w) {
 		super(w, ModalityType.APPLICATION_MODAL);
 		
 		Image logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
