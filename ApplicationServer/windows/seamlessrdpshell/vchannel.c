@@ -258,10 +258,11 @@ vchannel_write(const char *command, const char *format, ...)
 	size += _vsnprintf(buf + size, sizeof(buf) - size, format, argp);
 	va_end(argp);
 
+	size += _snprintf(buf + size, sizeof(buf) - size, "\n");
+
 	assert(size < sizeof(buf));
 
-	result = WTSVirtualChannelWrite(g_vchannel, buf, (ULONG) strlen(buf), &bytes_written);
-	result = WTSVirtualChannelWrite(g_vchannel, "\n", (ULONG) 1, &bytes_written);
+	result = WTSVirtualChannelWrite(g_vchannel, buf, (ULONG) size, &bytes_written);
 
 	g_vchannel_serial++;
 
