@@ -18,4 +18,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+while true;
+do
+	xprop -root |grep _NET_SUPPORTED | grep -q _NET_WM_STATE
+	[ $? -eq 0 ] && break
+	echo "WM is not initialized yet, sleeping for a while ..."
+
+	sleep 1
+done
+
 java -jar /usr/share/java/OVDExternalAppsClient.jar "$@"
