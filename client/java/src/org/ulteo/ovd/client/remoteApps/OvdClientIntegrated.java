@@ -53,10 +53,7 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 	private void init() {
 		this.showDesktopIcons = this.smComm.getResponseProperties().isDesktopIcons();
 		this.spool = new Spool(this);
-	}
-
-	@Override
-	protected void runInit() {
+		
 		String sm = this.smComm.getHost();
 		this.spool.createIconsDir();
 		if (OSTools.isWindows()) {

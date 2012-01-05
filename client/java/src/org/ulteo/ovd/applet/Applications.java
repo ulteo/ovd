@@ -23,369 +23,108 @@
 
 package org.ulteo.ovd.applet;
 
-import java.io.FileNotFoundException;
-
-import org.ulteo.Logger;
-import org.ulteo.ovd.integrated.OSTools;
-import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
-import org.ulteo.rdp.OvdAppChannel;
-
-import java.applet.Applet;
 import java.util.ArrayList;
-import java.util.List;
 
-import netscape.javascript.JSObject;
-import org.ulteo.ovd.client.ClientInfos;
-import org.ulteo.ovd.client.Options;
-import org.ulteo.ovd.client.WebClientCommunication;
-import org.ulteo.ovd.client.profile.ProfileProperties;
-import org.ulteo.ovd.client.profile.ProfileWeb;
 import org.ulteo.ovd.sm.Properties;
-import org.ulteo.ovd.sm.ServerAccess;
 
-import org.ulteo.utils.AbstractFocusManager;
-import org.ulteo.utils.jni.WorkArea;
-
-import org.ulteo.rdp.rdpdr.OVDPrinter;
 import org.ulteo.rdp.RdpConnectionOvd;
+import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.seamless.SeamlessFrame;
 import org.ulteo.rdp.seamless.SeamlessPopup;
 
 
-abstract class Order {
-}
+class FileApp {
+	int type;
+	String path;
+	String share;
 
-class OrderServer extends Order {
-	public int id;
-	public String host;
-	public int port;
-	public String login;
-	public String password;
-	public String token;
-	
-	public OrderServer(int id, String host, int port, String token, String login, String password) {
-		this.id = id;
-		this.host = host;
-		this.port = port;
-		this.token = token;
-		this.login = login;
-		this.password = password;
-	}
-	
-	public String toString() {
-		return "Server (id: "+this.id+ ", host: "+this.host+", token: "+this.token+")";
-	}
-}
-
-class OrderApplication extends Order {
-	public int id;
-	public int application_id;
-	public int server_id;
-	public String file_type = null;
-	public String file_path = null;
-	public String file_share = null;
-	
-	public OrderApplication(int id, int application_id, int server_id) {
-		this.id = id;
-		this.application_id = application_id;
-		this.server_id = server_id;	
-	}
-	
-	public void setPath(String type, String path, String share) {
-		this.file_type = type;
-		this.file_path = path;
-		this.file_share = share;
-	}
-	
-	public String toString() {
-		return "Application (id: "+this.id+", application: "+this.application_id+", server: "+this.server_id;
-	}
-}
-
-public class Applications extends Applet implements Runnable, JSForwarder/*RdpListener, OvdAppListener*/ {
-	public String keymap = null;
-	private String rdp_input_method = null;
-	private String wc = null;
-	
-	private List<Order> spoolOrder = null;
-	private Thread spoolThread = null;
-	private AbstractFocusManager focusManager;
-
-	public Options opts;
-	private OvdClientApplicationsApplet ovd = null;
-
-	private boolean finished_init = false;
-	private boolean started_stop = false;
-	
-	static {
-		String tempdir = System.getProperty("java.io.tmpdir");
-		if (! tempdir.endsWith(System.getProperty("file.separator")))
-			tempdir+= System.getProperty("file.separator");
-		if (! Logger.initInstance(true, tempdir+"ulteo-ovd-"+Logger.getDate()+".log", true)) {
-			System.err.println(Applications.class.toString() + " Unable to iniatialize logger instance");
-		}
+	FileApp(String f_type, String f_path, String f_share) {
+		if (f_type.equalsIgnoreCase("http"))
+			type = OvdAppChannel.DIR_TYPE_HTTP_URL;
+		else
+			type = OvdAppChannel.DIR_TYPE_SHARED_FOLDER;
 		
-		if (OSTools.isWindows()) {
-			try {
-				LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_WINDOWS, LibraryLoader.LIB_WINDOW_PATH_NAME);
-			} catch (FileNotFoundException ex) {
-				Logger.error(ex.getMessage());
-			}
-		}
-		else if (OSTools.isLinux()) {
-			try {
-				LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_LINUX, LibraryLoader.LIB_X_CLIENT_AREA);
-			} catch (FileNotFoundException ex) {
-				Logger.error(ex.getMessage());
-				WorkArea.disableLibraryLoading();
-			}
-		}
+		path = f_path;
+		share = f_share;
 	}
 	
-	// Begin extends Applet
+	public String toString() {
+		return String.format("file(type: %d, path: %s, share: %s)", this.type, this.path, this.share);
+	}
+}
+
+
+public class Applications extends OvdApplet {
+	
+	private SpoolOrder spooler;
+
+	
 	@Override
-	public void init() {
-		Logger.info("init");
-
-		OSTools.is_applet = true;
-
-		ClientInfos.showClientInfos();
-
-		boolean status = this.checkSecurity();
-		if (! status) {
-			Logger.error("init: Not enought privileges, unable to continue");
-			this.stop();
-			return;
-		}
-
-		Properties properties = this.readParameters();
-		if (properties == null) {
-			Logger.error("usage error");
-			this.stop();
-			return;
-		}
-		
+	protected void _init(Properties properties) {
 		if (properties.isPrinters()) {
-			OVDStandalonePrinterThread appletPrinterThread = new OVDStandalonePrinterThread(); 
-			OVDPrinter.setPrinterThread(appletPrinterThread);
-			focusManager = new AppletFocusManager(appletPrinterThread);
 			SeamlessFrame.focusManager = focusManager;
 			SeamlessPopup.focusManager = focusManager;
 		}
 
-		try {
-			this.ovd = new OvdClientApplicationsApplet(properties, this);
-		} catch (ClassCastException ex) {
-			Logger.error(ex.getMessage());
-			this.stop();
-			return;
-		}
+		this.ovd = new OvdClientApplicationsApplet(properties, this);
 		this.ovd.setKeymap(this.keymap);
 		if (this.rdp_input_method != null)
 			this.ovd.setInputMethod(this.rdp_input_method);
 		
-		this.opts = new Options();
-		WebClientCommunication webComm = new WebClientCommunication(this.wc);
-		if (!this.getWebProfile(webComm))
-			System.out.println("Unable to get webProfile");
-		
-		this.ovd.perform(null);
-		
-		this.spoolOrder = new ArrayList<Order>();
-		this.spoolThread = new Thread(this);
-		this.finished_init = true;
-	}
-	
-	@Override
-	public void start() {
-		if (! this.finished_init || this.started_stop)
-			return;
-		System.out.println(this.getClass().toString() +" start");
-
-		this.ovd.sessionReady();
-		
-		this.spoolThread.start();
-	}
-	
-	@Override
-	public void stop() {
-		if (this.started_stop)
-			return;
-		this.started_stop = true;
-		System.out.println(this.getClass().toString()+" stop");
-		
-		if (this.spoolThread.isAlive())
-			this.spoolThread.interrupt();
-
-		if (this.ovd != null)
-			this.ovd.performDisconnectAll();
-	}
-	
-	@Override
-	public void destroy() {
-		this.spoolOrder = null;
-		this.spoolThread = null;
-	}
-	// End extends Applet
-	
-	public Properties readParameters() {
-		Properties properties = new Properties(Properties.MODE_REMOTEAPPS);
-
-		String buf = this.getParameter("keymap");
-		if (buf == null || buf.equals("")) {
-			System.err.println("Parameter "+buf+": empty value");
-			return null;
+		ArrayList<RdpConnectionOvd> connections = this.ovd.getAvailableConnections();
+		for (RdpConnectionOvd c: connections) {
+			this.applyConfig(c);
 		}
-		this.keymap = buf;
-		this.rdp_input_method = this.getParameter("rdp_input_method");
+		
+		this.spooler = new SpoolOrder((OvdClientApplicationsApplet) this.ovd);
+	}
+	
+	@Override
+	protected void _start() {	
+		this.spooler.start();
+	}
+	
+	@Override
+	protected void _stop() {
+		if (this.spooler.isAlive())
+			this.spooler.interrupt();
+	}
+	
+	@Override
+	protected void _destroy() {
+		this.spooler = null;
+	}
+
+	@Override
+	protected int getMode() {
+		return Properties.MODE_REMOTEAPPS;
+	}
+	
+	@Override
+	protected void readParameters() throws Exception {
 		this.wc = this.getParameter("wc_url");
-		
-		OptionParser.readParameters(this, properties);
-		
-		return properties;
 	}
 	
-	public boolean checkSecurity() {
-		try {
-			System.getProperty("user.home");
-		} catch(java.security.AccessControlException e) {
-			return false;
-		}
-		
-		return true;
-	}
-	
-	public synchronized Order popOrder() {
-		if (this.spoolOrder == null)
-			return null;
-
-		if (this.spoolOrder.size() == 0)
-			return null;
-		
-		return this.spoolOrder.remove(0);
-	}
-	
-	public synchronized void pushOrder(Order o) {
-		if (this.spoolOrder == null) {
-			Logger.warn("Order "+o+" not added: The spool order is not initialized");
-			return;
-		}
-
-		this.spoolOrder.add(o);
-	}
-	
-	// Begin implements Runnable
-	public void run() {
-		System.out.println("Applet thread run");
-		while(true) {
-			Order o = this.popOrder();
-			
-			if (o == null) {
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-					System.err.println("thread interupted: stop");
-					return;
-				}
-				continue;
-			}
-			System.out.println("got job "+o);
-			
-			if (o instanceof OrderServer) {
-				OrderServer order = (OrderServer)o;
-				System.out.println("job "+order.host);
-
-				ServerAccess server = new ServerAccess(order.host, order.port, order.login, order.password);
-				if (order.token != null) {
-					server.setModeGateway(true);
-					server.setToken(order.token);
-				}
-
-				if (! this.ovd.addServer(server, order.id))
-					continue;
-			}
-			
-			else if (o instanceof OrderApplication) {
-				OrderApplication order = (OrderApplication)o;
-				System.out.println("job "+order);
-				System.out.println("Server "+order.server_id);
-
-				if (order.file_path == null)
-					this.ovd.startApplication(order.id, order.application_id, order.server_id);
-					//chan.sendStartApp(order.id, order.application_id);
-				else {
-					int type = OvdAppChannel.DIR_TYPE_SHARED_FOLDER;
-					if (order.file_type.equalsIgnoreCase("http"))
-						type =  OvdAppChannel.DIR_TYPE_HTTP_URL;
-					
-					System.out.println("App: "+order.file_path);
-					this.ovd.startApplication(order.id, order.application_id, order.server_id, type, order.file_path, order.file_share);
-					//chan.sendStartApp(order.id, order.application_id, chan.DIR_TYPE_SHARED_FOLDER, ""+order.repository, order.path);
-				}
-			}
-		}
-	}
-	// End implements Runnable
+	// ********
+	// Methods called by Javascript
+	// ********
 	
 	public boolean serverConnect(int id, String host, int port, String login, String password) {
-		System.out.println("serverConnect: ask for "+host);
-		this.pushOrder(new OrderServer(id, host, port, null, login, password));
+		this.spooler.add(new OrderServer(id, host, port, null, login, password));
 		return true;
 	}
 	
 	public boolean serverConnect(int id, String host, int port, String token, String login, String password) {
-		System.out.println("serverConnect through a gateway: ask for "+host);
-		this.pushOrder(new OrderServer(id, host, port, token, login, password));
+		this.spooler.add(new OrderServer(id, host, port, token, login, password));
 		return true;
 	}
 	
-	/*public boolean serverDisconnect(int id) {
-		this.pushOrder(new OrderServer(id, host, port, login, password));
-		return true;
-	}*/
-	
-	public void startApplication(int token, int id, int server) {
-		this.pushOrder(new OrderApplication(token, id, new Integer(server)));
+	public void startApplication(int token, int app_id, int server_id) {
+		this.spooler.add(new OrderApplication(token, app_id, new Integer(server_id), null));
 	}
 	
-	public void startApplicationWithFile(int token, int id, int server, String type, String path, String share) {
-		OrderApplication o = new OrderApplication(token, id, new Integer(server));
-		o.setPath(type, path, share);
-		
-		this.pushOrder(o);
-	}
-	
-	public boolean getWebProfile(WebClientCommunication wcc) {
-		ProfileWeb webProfile = new ProfileWeb();
-		ProfileProperties properties;
-		properties = webProfile.loadProfile(wcc);
-		
-		if (properties == null)
-			return false;
-		
-		this.opts.parseProperties(properties);
-		
-		return true;
-	}
-	
-	public void forwardJS(String functionName, Integer instance, String status) {
-		Object[] args = new Object[2];
-		args[0] = instance;
-		args[1] = status;
-		
-		try {
-			JSObject win = JSObject.getWindow(this);
-			win.call(functionName, args);
-		}
-		catch (netscape.javascript.JSException e) {
-			String buffer = functionName+"(";
-			for(Object o: args)
-				buffer+= o+", ";
-			if (buffer.endsWith(", "))
-				buffer = buffer.substring(0, buffer.length()-2);
-			buffer+=")";
-			
-			System.err.println(this.getClass()+" error while execute '"+buffer+"' =>"+e.getMessage());
-		}
+	public void startApplicationWithFile(int token, int app_id, int server_id, String f_type, String f_path, String f_share) {
+		FileApp f = new FileApp(f_type, f_path, f_share);
+		this.spooler.add(new OrderApplication(token, app_id, new Integer(server_id), f));
 	}
 }

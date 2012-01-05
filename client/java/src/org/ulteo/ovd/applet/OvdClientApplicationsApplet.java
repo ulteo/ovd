@@ -20,7 +20,6 @@
 
 package org.ulteo.ovd.applet;
 
-import java.applet.Applet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.propero.rdp.RdpConnection;
@@ -38,29 +37,21 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	// matching variable associate the RDP connection list index with the JS RDP connection id
 	private ConcurrentHashMap<Integer, Integer> matching = null;
 
-	private Applet applet = null;
+	private OvdApplet applet = null;
 
-	public OvdClientApplicationsApplet(Properties properties_, Applet applet_) throws ClassCastException {
+	public OvdClientApplicationsApplet(Properties properties_, OvdApplet applet_) throws ClassCastException {
 		super(null);
 
 		this.properties = properties_;
-
-		if (! (applet_ instanceof JSForwarder))
-			throw new ClassCastException("[Programmer error] The Applet class must implement JSForwarder class");
 		this.applet = applet_;
-
 		this.matching = new ConcurrentHashMap<Integer, Integer>();
 
 		this.configureRDP(this.properties);
 	}
 
 	@Override
-	protected void runInit() {}
-
-	@Override
 	protected void customizeRemoteAppsConnection(RdpConnectionOvd co) {
 		co.setAllDesktopEffectsEnabled(this.properties.isDesktopEffectsEnabled());
-		this.applyConfig(co, ((Applications)this.applet).opts);
 	}
 
 	@Override
@@ -140,7 +131,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 				continue;
 
 			if (rc.getOvdAppChannel() == channel) {
-				((JSForwarder) this.applet).forwardJS(JSForwarder.JS_API_F_SERVER, JSId, JSForwarder.JS_API_O_SERVER_READY);
+				this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, JSId, OvdApplet.JS_API_O_SERVER_READY);
 				return;
 			}
 		}
@@ -149,17 +140,17 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 
 	@Override
 	public void ovdInstanceError(int instance) {
-		((JSForwarder) this.applet).forwardJS(JSForwarder.JS_API_F_INSTANCE, new Integer(instance), JSForwarder.JS_API_O_INSTANCE_ERROR);
+		this.applet.forwardJS(OvdApplet.JS_API_F_INSTANCE, new Integer(instance), OvdApplet.JS_API_O_INSTANCE_ERROR);
 	}
 
 	@Override
 	public void ovdInstanceStarted(int instance) {
-		((JSForwarder) this.applet).forwardJS(JSForwarder.JS_API_F_INSTANCE, new Integer(instance), JSForwarder.JS_API_O_INSTANCE_STARTED);
+		this.applet.forwardJS(OvdApplet.JS_API_F_INSTANCE, new Integer(instance), OvdApplet.JS_API_O_INSTANCE_STARTED);
 	}
 
 	@Override
 	public void ovdInstanceStopped(int instance) {
-		((JSForwarder) this.applet).forwardJS(JSForwarder.JS_API_F_INSTANCE, new Integer(instance), JSForwarder.JS_API_O_INSTANCE_STOPPED);
+		this.applet.forwardJS(OvdApplet.JS_API_F_INSTANCE, new Integer(instance), OvdApplet.JS_API_O_INSTANCE_STOPPED);
 	}
 
 	@Override
@@ -173,7 +164,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 
 			RdpConnectionOvd rc = this.connections.get(listId.intValue());
 			if (rc == co) {
-				((JSForwarder) this.applet).forwardJS(JSForwarder.JS_API_F_SERVER, JSId, JSForwarder.JS_API_O_SERVER_CONNECTED);
+				this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, JSId, OvdApplet.JS_API_O_SERVER_CONNECTED);
 				return;
 			}
 		}
@@ -189,7 +180,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 			RdpConnectionOvd rc = this.connections.get(listId.intValue());
 			if (rc == co) {
 				this.matching.remove(JSId);
-				((JSForwarder) this.applet).forwardJS(JSForwarder.JS_API_F_SERVER, JSId, JSForwarder.JS_API_O_SERVER_DISCONNECTED);
+				this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, JSId, OvdApplet.JS_API_O_SERVER_DISCONNECTED);
 				return;
 			}
 		}
@@ -224,7 +215,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 				RdpConnectionOvd rc = this.connections.get(listId.intValue());
 				if (rc == co) {
 					this.matching.remove(JSId);
-					((JSForwarder) this.applet).forwardJS(JSForwarder.JS_API_F_SERVER, JSId, JSForwarder.JS_API_O_SERVER_FAILED);
+					this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, JSId, OvdApplet.JS_API_O_SERVER_FAILED);
 					return;
 				}
 			}
