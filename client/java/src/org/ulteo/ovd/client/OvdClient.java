@@ -173,6 +173,10 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		return this.availableConnections;
 	}
 
+	public ArrayList<RdpConnectionOvd> getConnections() {
+		return this.connections;
+	}
+	
 	public String getInstance() {
 		return null;
 	}

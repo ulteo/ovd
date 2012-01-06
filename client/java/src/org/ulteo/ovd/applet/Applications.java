@@ -71,7 +71,7 @@ public class Applications extends OvdApplet {
 		if (this.rdp_input_method != null)
 			this.ovd.setInputMethod(this.rdp_input_method);
 		
-		ArrayList<RdpConnectionOvd> connections = this.ovd.getAvailableConnections();
+		ArrayList<RdpConnectionOvd> connections = this.ovd.getConnections();
 		for (RdpConnectionOvd c: connections) {
 			this.applyConfig(c);
 		}

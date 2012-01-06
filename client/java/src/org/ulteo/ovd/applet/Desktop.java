@@ -56,7 +56,7 @@ public class Desktop extends OvdApplet implements FocusListener, Callback {
 		
 		((OvdClientDesktopApplet)this.ovd).setFullscreen(this.fullscreenMode);
 		((OvdClientDesktopApplet)this.ovd).createRDPConnections();
-		for (RdpConnectionOvd co : this.ovd.getAvailableConnections())
+		for (RdpConnectionOvd co : this.ovd.getConnections())
 			this.applyConfig(co);
 		
 		BorderLayout layout = new BorderLayout();
