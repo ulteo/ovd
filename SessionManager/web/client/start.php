@@ -412,8 +412,8 @@ if (! isset($old_session_id)) {
 		$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 		$session_node->appendChild($user_node);
 
-		if (array_key_exists(Server::SERVER_ROLE_FS, $servers)) {
-			foreach ($servers[Server::SERVER_ROLE_FS] as $fqdn => $netfolders) {
+		if (array_key_exists(Server::SERVER_ROLE_FS, $session->servers)) {
+			foreach ($session->servers[Server::SERVER_ROLE_FS] as $fqdn => $netfolders) {
 				foreach ($netfolders as $netfolder) {
 					$netfolder_node = $dom->createElement($netfolder['type']);
 					$netfolder_node->setAttribute('server', $netfolder['server']->getAttribute('external_name'));
@@ -498,8 +498,8 @@ $user_node = $dom->createElement('user');
 $user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 $session_node->appendChild($user_node);
 
-if (array_key_exists(Server::SERVER_ROLE_FS, $servers)) {
-	foreach ($servers[Server::SERVER_ROLE_FS] as $fqdn => $netfolders) {
+if (array_key_exists(Server::SERVER_ROLE_FS, $session->servers)) {
+	foreach ($session->servers[Server::SERVER_ROLE_FS] as $fqdn => $netfolders) {
 		foreach ($netfolders as $netfolder) {
 			$netfolder_node = $dom->createElement($netfolder['type']);
 			$netfolder_node->setAttribute('server', $netfolder['server']->getAttribute('external_name'));
