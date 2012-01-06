@@ -827,10 +827,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		
 		Properties response = dialog.getResponseProperties();
 		
-		if ((this.opts.sessionMode != Properties.MODE_ANY) && (response.getMode() != request.getMode())) {
-			throw new UnsupportedOperationException(I18n._("Internal error: Bad session mode return"));
-		}
-		
 		// Session timeout management
 		Timer timeout = new Timer();
 		if (response.getDuration() > 0) {
