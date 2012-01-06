@@ -496,5 +496,14 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 			rc.setPersistentCachingPath(opts.persistentCachePath);
 			rc.setPersistentCachingMaxSize(opts.persistentCacheMaxCells);
 		}
+
+		if (opts.useBandwithLimitation) {
+			rc.setUseBandWidthLimitation(true);
+			rc.setSocketTimeout(opts.socketTimeout);
+			
+			if (opts.useDiskBandwithLimitation) {
+				rc.getRdpdrChannel().setSpoolable(true, opts.diskBandwidthLimit);
+			}
+		}
 	}
 }

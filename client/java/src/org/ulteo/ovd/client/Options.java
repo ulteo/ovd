@@ -75,6 +75,10 @@ public class Options {
 	public boolean isBugReporterVisible = false;
 	public boolean savePassword = false;
 	public boolean usePacketCompression = false;
+	public int diskBandwidthLimit = 10000;   // In byte
+	public boolean useBandwithLimitation = false;
+	public boolean useDiskBandwithLimitation = false;
+	public int socketTimeout = 200;            // In millisecond
 	public boolean useOffscreenCache = false;
 	public boolean usePersistantCache = false;
 	public String persistentCachePath = "";
@@ -186,6 +190,17 @@ public class Options {
 		}
 		if (properties.isUsePacketCompression()) {
 			this.usePacketCompression = true;
+		}
+		if (properties.isUseBandwithLimitation()) {
+			this.useBandwithLimitation = true;
+			if (properties.getSocketTimeout() > 0)
+				this.socketTimeout = properties.getSocketTimeout();
+			
+			if (properties.isUseDiskBandwithLimitation()) {
+				this.useDiskBandwithLimitation = true;
+				if (properties.getDiskBandwidthLimit() > 0)
+					this.diskBandwidthLimit = properties.getDiskBandwidthLimit(); 
+			}
 		}
 		if (properties.isUseOffscreenCache()) {
 			this.useOffscreenCache = true;

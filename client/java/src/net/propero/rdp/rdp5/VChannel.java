@@ -15,6 +15,7 @@
 package net.propero.rdp.rdp5;
 
 import java.io.IOException;
+import java.util.GregorianCalendar;
 
 import org.apache.log4j.Logger;
 
@@ -35,10 +36,20 @@ public abstract class VChannel {
 	protected Common common = null;
 	
 	private int mcs_id = 0;
+	public long packetStat = 0;
+	public long lastTime = 0;
+	public long packetLimit = 0;
+	public boolean limitBandWidth;
 	
 	public VChannel(Options opt_, Common common_) {
 		this.opt = opt_;
 		this.common = common_;
+		this.lastTime = new GregorianCalendar().getTimeInMillis();
+	}
+	
+	public void setSpoolable(boolean limitBandWidth, int packetLimit) {
+		this.limitBandWidth = limitBandWidth;
+		this.packetLimit = packetLimit;
 	}
 	
     /**
@@ -103,11 +114,28 @@ public abstract class VChannel {
      */
 	public void send_packet(RdpPacket_Localised data) throws RdesktopException, IOException, CryptoException
 	{
+		this.send_packet(data, false);
+	}
+	
+	public void send_packet(RdpPacket_Localised data, boolean spoolable) throws RdesktopException, IOException, CryptoException
+	{
 		if(this.common.secure == null) 
 			return;
 		if (! this.common.secure.ready) 
 			return;
 
+		if (this.limitBandWidth && spoolable) {
+			long currentTime = new GregorianCalendar().getTimeInMillis();
+			if (currentTime - this.lastTime >= 1000) {
+				this.lastTime = currentTime;
+				this.packetStat = 0;
+			}
+				
+			this.packetStat += data.size();
+			this.common.secure.spool_packet(data, Constants.encryption ? Secure.SEC_ENCRYPT : 0, this.mcs_id());
+			return;
+		}
+		
 		int length = data.size();
 		
 		int data_offset = 0;

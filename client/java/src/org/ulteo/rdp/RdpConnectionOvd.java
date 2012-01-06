@@ -271,6 +271,14 @@ public class RdpConnectionOvd extends RdpConnection {
 		this.setPersistentCachingPath(cacheDir);
 	}
 
+	public void setUseBandWidthLimitation(boolean value) {
+		this.opt.useBandwithLimitation = value;
+	}
+
+	public void setSocketTimeout(int timetout) {
+		this.opt.socketTimeout = timetout;
+	}
+	
 	protected void detectKeymap() {
 		String language = System.getProperty("user.language");
 		String country = System.getProperty("user.country");

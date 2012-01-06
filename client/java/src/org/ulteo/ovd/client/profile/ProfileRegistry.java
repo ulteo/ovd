@@ -169,6 +169,40 @@ public class ProfileRegistry extends Profile {
 
 					properties.setUsePacketCompression(usePacketCompression);
 				}
+				else if (field.equalsIgnoreCase(FIELD_RDP_USE_BANDWIDTH_LIMITATION)) {
+					boolean useBandwidthLimit = false;
+					if (value.equalsIgnoreCase(VALUE_TRUE))
+						useBandwidthLimit = true;
+
+					properties.setUseBandwithLimitation(useBandwidthLimit);
+				}
+				else if (field.equalsIgnoreCase(FIELD_RDP_SOCKET_TIMEOUT)) {
+					int socketTimeout = properties.getSocketTimeout();
+					try {
+						Integer.parseInt(value);
+					}
+					catch (NumberFormatException e) {
+						Logger.error("Failed to parse socket timeout: '"+value+"'");
+					}
+					properties.setSocketTimeout(socketTimeout);
+				}
+				else if (field.equalsIgnoreCase(FIELD_LIMITATION_USE_DISK_LIMIT)) {
+					boolean useDisklimitation = false;
+					if (value.equalsIgnoreCase(VALUE_TRUE))
+						useDisklimitation = true;
+
+					properties.setUseDiskBandwithLimitation(useDisklimitation);
+				}
+				else if (field.equalsIgnoreCase(FIELD_LIMITATION_DISK_LIMIT)) {
+					int diskLimit = properties.getDiskBandwidthLimit();
+					try {
+						Integer.parseInt(value);
+					}
+					catch (NumberFormatException e) {
+						Logger.error("Failed to parse disk bandwidth limitation: '"+value+"'");
+					}
+					properties.setDiskBandwidthLimit(diskLimit);
+				}
 				else if (field.equalsIgnoreCase(FIELD_RDP_PERSISTENT_CACHE)) {
 					boolean usePersistentCache = false;
 					if (value.equalsIgnoreCase(VALUE_TRUE))

@@ -124,6 +124,10 @@ public class Options {
 	public boolean owncolmap;
 	public boolean readytosend = false;
 	public boolean loggedon = false;
+	public int diskBandwidthLimit = 10000;   // In byte
+	public boolean useBandwithLimitation = false;
+	public boolean useDiskBandwithLimitation = false;
+	public int socketTimeout = 200;            // In millisecond
 	
 	public boolean use_ssl = false;
 	public boolean map_clipboard = true;
