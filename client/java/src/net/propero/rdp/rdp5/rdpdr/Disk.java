@@ -78,6 +78,11 @@ public class Disk extends RdpdrDevice{
 	public static final int STATUS_NOT_SUPPORTED          = 0xc00000bb;
 	public static final int STATUS_FILE_IS_A_DIRECTORY    = 0xc00000ba;
 	public static final int STATUS_OBJECT_NAME_COLLISION  = 0xc0000035;
+	
+	public static final int FileFullDirectoryInformation  = 0x00000002;
+	public static final int FileBothDirectoryInformation  = 0x00000003;
+	public static final int FileNameInformation           = 0x0000000c;
+	
 
 	public Disk(RdpdrChannel rdpdr_, String path, String name_){
 		super(rdpdr_);
@@ -552,7 +557,9 @@ public class Disk extends RdpdrDevice{
 		file_attributes = 0;
 		
 		switch (info_class) {
-			case 3://FileBothDirectoryInformation:
+			case FileNameInformation:
+			case FileBothDirectoryInformation:
+			case FileFullDirectoryInformation:
 				DEBUG("disk_query_directory---FileBothDirectoryInformation");
 				/* If a search pattern is received, remember this pattern, and restart search */
 				if (pattern != null && ! pattern.equals("")) {
@@ -620,10 +627,14 @@ public class Disk extends RdpdrDevice{
 				out.setLittleEndian32((int)this_file.length());	 /* filesize low */
 				out.setLittleEndian32(0);	/* filesize high */
 				out.setLittleEndian32(file_attributes);
-				out.set8(2*d_name.length()+2);//out_uint8(out, 2 * strlen(pdirent->d_name) + 2);	/* unicode length */
-				out.incrementPosition(7);
-				out.set8(0);
-				out.incrementPosition(2 * 12);
+				out.setLittleEndian32(2 * d_name.length() + 2); // Filename length (Unicode)
+				out.setLittleEndian32(0);    // EA Size
+				
+				if (info_class != FileFullDirectoryInformation) {
+					out.set8(0);                 // ShortName length
+					out.incrementPosition(24);   // Short name
+				}
+				
 				out.outUnicodeString(d_name, 2*(d_name.length()));
 				break;
 				
