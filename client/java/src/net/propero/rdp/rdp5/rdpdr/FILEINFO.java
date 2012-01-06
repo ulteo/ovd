@@ -6,12 +6,29 @@
  * Date: 2009/05/16
  *
  * Copyright (c) tomqq
+ * Copyright (C) 2011 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David Lechevalier <david@ulteo.com> 2011
+ * 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  */
 package net.propero.rdp.rdp5.rdpdr;
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+
 
 public class FILEINFO {
 	public static final int PATH_MAX = 256;
@@ -25,7 +42,7 @@ public class FILEINFO {
 	NOTIFY notify;
 	int info_class;
 	public File file;
-	Map<String,String> file_searched = new HashMap<String, String>();
+	LinkedList<String> file_searched = new LinkedList<String>();
 	
 	public int get_device_id(){
 		return device_id;
@@ -92,19 +109,20 @@ public class FILEINFO {
 	}
 	
 	public void add_searched_file(String str){
-		file_searched.put(str, str);
-	}
-	public boolean has_searched_file(String str){
-		if(file_searched.get(str)!=null){
-			if(((String)file_searched.get(str)).equalsIgnoreCase(str))
-				return true;
-			else
-				return false;
-		}
-		return false;
+		file_searched.add(str);
 	}
 	
+	public boolean is_searched_file_empty(){
+		return file_searched.isEmpty();
+	}
+
+	public String get_next_searched_file() {
+		String file = file_searched.getFirst();
+		file_searched.removeFirst();
+		return file;
+	}
+
 	public void reset_file_searched_map(){
-		this.file_searched = new HashMap<String,String>();
+		this.file_searched = new LinkedList<String>();
 	}
 }

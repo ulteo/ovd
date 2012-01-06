@@ -559,52 +559,34 @@ public class Disk extends RdpdrDevice{
 					pattern = pattern.replace("\\", "/");
 					pfinfo.pattern = pattern.substring(pattern.lastIndexOf('/')+1);
 					pfinfo.reset_file_searched_map();
+
+					File tmp_dir = new File(pdir);
+					String[] children = tmp_dir.list();
+					if (children == null)
+						return STATUS_ACCESS_DENIED;
+					
+					if (pfinfo.pattern.equals("*")) {
+						// Java do not manage . and ..
+						pfinfo.add_searched_file(".");
+						pfinfo.add_searched_file("..");
+					}
+					
+					for (int i = 0 ; i < children.length ; i++) {
+						if (children[i].equalsIgnoreCase(pfinfo.pattern) || pfinfo.pattern.equalsIgnoreCase("*")) {
+							File f = new File(dirname + File.separator + children[i]);
+							if (f.exists())
+								pfinfo.add_searched_file(children[i]);
+						}
+					}
 				}
-				File tmp_dir = new File(pdir);
-				String[] children = tmp_dir.list();
-				if (children == null)
-					return STATUS_ACCESS_DENIED;
+
+				if (pfinfo.is_searched_file_empty())
+					return STATUS_NO_MORE_FILES;
 				
-			    boolean match_flag = false;
-			    for (int i=0; i<children.length; i++) {
-		            // Get filename of file or directory
-		            if(children[i].equalsIgnoreCase(pfinfo.pattern) || pfinfo.pattern.equalsIgnoreCase("*")){
-		            	if(!pfinfo.has_searched_file(children[i])) {
-		            		fullpath = dirname + File.separator + children[i];
-		            		d_name = children[i];
-		            		match_flag = true;
-		            		pfinfo.add_searched_file(children[i]);
-		            	}
-		            }
-		            if(match_flag)
-		            	break;
-		        }
-			    if (! match_flag) {
-			    	if (pfinfo.pattern.equals("*")) {
-			    		if (! pfinfo.has_searched_file(".")) {
-			    			fullpath = dirname + File.separator + ".";
-			    			d_name = ".";
-			    			pfinfo.add_searched_file(".");
-			    		}
-			    		else if (! pfinfo.has_searched_file("..")) {
-			    			fullpath = dirname + File.separator + "..";
-			    			d_name = "..";
-			    			pfinfo.add_searched_file("..");			    		
-			    		}
-			    	}
-			    	else
-			    		return STATUS_NO_MORE_FILES;
-			    }
-			    
-			    //check file
-			    if (fullpath.length() == 0)
-				return STATUS_NO_SUCH_FILE;
-			    
-			    File this_file = new File(fullpath);
-			    if(!this_file.exists()){
-			    	out.set8(0);
-			    	return STATUS_NO_SUCH_FILE;
-			    }
+				d_name = pfinfo.get_next_searched_file();
+				fullpath = dirname + File.separator + d_name;
+
+				File this_file = new File(fullpath);
 			    if(this_file.isDirectory())
 			    	file_attributes |= FILE_ATTRIBUTE_DIRECTORY;
 			    if(this_file.isHidden())

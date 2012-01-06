@@ -28,7 +28,9 @@ import java.io.PrintStream;
 
 import org.ini4j.Wini;
 import org.ulteo.ovd.applet.LibraryLoader;
+import org.ulteo.ovd.client.external.ExternalAppsDiskRedirectionProfile;
 import org.ulteo.ovd.client.remoteApps.OvdClientIntegrated;
+import org.ulteo.ovd.disk.DiskManager;
 import org.ulteo.ovd.integrated.OSTools;
 
 import gnu.getopt.Getopt;
@@ -172,6 +174,8 @@ public class ExternalAppsClient {
 
 		OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
 		OVDPrinter.setExternalMode(true);
+		
+		DiskManager.setDiskProfile(new ExternalAppsDiskRedirectionProfile());
 		
 		OvdClient cli = new OvdClientIntegrated(dialog);
 		Runtime.getRuntime().addShutdownHook(new ShutdownTask(cli));
