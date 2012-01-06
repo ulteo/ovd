@@ -165,10 +165,12 @@ function get_users_list() {
 
 			Event.observe(window, 'load', function() {
 				new Effect.Center($('splashContainer'));
+				new Effect.Center($('desktopFullscreenContainer'));
 				new Effect.Center($('endContainer'));
 
 				Event.observe(window, 'resize', function() {
 					new Effect.Center($('splashContainer'));
+					new Effect.Center($('desktopFullscreenContainer'));
 					new Effect.Center($('endContainer'));
 				});
 
@@ -300,6 +302,23 @@ function get_users_list() {
 						<div id="progressBar">
 							<div id="progressBarContent"></div>
 						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div id="desktopFullscreenContainer" class="rounded" style="display: none;">
+			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td style="text-align: center;">
+						<img src="media/image/ulteo.png" alt="" title="" />
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: center; vertical-align: middle; margin-top: 15px;">
+						<span style="font-size: 1.1em; font-weight: bold; color: #686868;" id="desktop_fullscreen_text1_gettext">&nbsp;</span>
+						<br /><br />
+						<span style="font-size: 1.1em; font-weight: bold; color: #686868;" id="desktop_fullscreen_text2_gettext">&nbsp;</span>
 					</td>
 				</tr>
 			</table>

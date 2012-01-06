@@ -103,6 +103,11 @@ $translations = array(
 	'suspend'						=>	_('Suspend'),
 	'logout'						=>	_('Logout'),
 
+	'desktop_fullscreen_text1'		=>	_('The Ulteo OVD session runs in a separated window'),
+	'desktop_fullscreen_text2'		=>	str_replace(array('[A]', '[/A]'), 
+								array('<a href="javascript:;" onclick="$(\'ulteoapplet\').switchBackFullscreenWindow(); return false;">', '</a>'),
+								_('Click [A]here[/A] to switch back to your session')),
+
 	'my_apps'						=>	_('My applications'),
 	'running_apps'					=>	_('Running applications'),
 	'my_files'						=>	_('My files')

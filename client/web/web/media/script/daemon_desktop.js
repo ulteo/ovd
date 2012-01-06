@@ -47,6 +47,10 @@ var Desktop = Class.create(Daemon, {
 
 			var applet_width = (this.my_width-(this.my_width % 4));
 			var applet_height = (this.my_height*applet_width/this.my_width);
+			if (this.fullscreen) {
+				applet_width = 1;
+				applet_height = 1;
+			}
 
 			var applet_params = new Hash();
 			applet_params.set('wc_url', getWebClientBaseURL());
@@ -74,6 +78,11 @@ var Desktop = Class.create(Daemon, {
 			$('desktopAppletContainer').setStyle({width: applet_width+'px', height: applet_height+'px', top: 0+'px', left: 0+'px'});
 			$('desktopAppletContainer').show();
 			$('desktopAppletContainer').appendChild(applet);
+			if (this.fullscreen) {
+				if ($('splashContainer').visible())
+					$('splashContainer').hide();
+				$('desktopFullscreenContainer').show();
+			}
 
 			return true;
 		}
