@@ -52,4 +52,10 @@
       <xsl:call-template name="process.footnotes"/>
     </div>
   </xsl:template>
+
+  <xsl:template match="mediaobject">
+    <xsl:if test="not(parent::colophon)">
+      <xsl:apply-templates/>
+    </xsl:if>
+  </xsl:template>
 </xsl:stylesheet>
