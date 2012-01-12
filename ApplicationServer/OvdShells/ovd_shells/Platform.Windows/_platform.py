@@ -20,6 +20,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import locale
 import os
 import time
 
@@ -67,7 +68,14 @@ def kill(pid):
 	return ret
 
 def getUserSessionDir():
+	try:
+		encoding = locale.getpreferredencoding()
+	except locale.Error:
+		encoding = "UTF-8"
+	
 	d = shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_APPDATA)
+	d = d.encode(encoding)
+	
 	return os.path.join(d, "ulteo", "ovd")
 
 
