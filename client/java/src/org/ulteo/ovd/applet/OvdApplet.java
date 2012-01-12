@@ -256,6 +256,10 @@ public abstract class OvdApplet extends Applet {
 			c.setPacketCompression(this.opts.usePacketCompression);
 		}
 
+		if (this.opts.useOffscreenCache) {
+			c.setUseOffscreenCache(this.opts.useOffscreenCache);
+		}
+
 		if (this.opts.usePersistantCache) {
 			c.setPersistentCaching(this.opts.usePersistantCache);
 			
