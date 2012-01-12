@@ -146,7 +146,7 @@ class RemoteAppsManager(threading.Thread):
 				for token in tokens:
 					self.vchannel.Write(OvdAppChannel.build_packet_ORDER_STOPPED(token))
 			
-			if job is None and tokens is None:
+			if job is None and len(tokens) == 0:
 				time.sleep(0.1)
 			
 			
