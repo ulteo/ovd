@@ -339,14 +339,8 @@ if (! isset($old_session_id)) {
 		}
 	}
 
+	$prepare_servers = array();
 	if ($session->mode == Session::MODE_DESKTOP) {
-		$server = Abstract_Server::load($session->server);
-		if (! $server)
-			continue;
-
-		if (! is_array($server->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $server->roles))
-			continue;
-
 		if ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1 && count($session->servers[Server::SERVER_ROLE_APS]) > 1) {
 			$external_apps_token = new Token(gen_unique_string());
 			$external_apps_token->type = 'external_apps';
@@ -354,6 +348,29 @@ if (! isset($old_session_id)) {
 			$external_apps_token->valid_until = 0;
 			Abstract_Token::save($external_apps_token);
 		}
+
+		$prepare_servers[] = $session->server;
+	}
+
+	if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1)) {
+		foreach ($session->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
+			if ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1 && $fqdn == $session->server)
+				continue;
+
+			$prepare_servers[] = $fqdn;
+		}
+	}
+
+	$count_prepare_servers = 0;
+	foreach ($prepare_servers as $prepare_server) {
+		$count_prepare_servers++;
+
+		$server = Abstract_Server::load($prepare_server);
+		if (! $server)
+			continue;
+
+		if (! is_array($server->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $server->roles))
+			continue;
 
 		$server_applications = $server->getApplications();
 		if (! is_array($server_applications))
@@ -367,7 +384,7 @@ if (! isset($old_session_id)) {
 
 		$session_node = $dom->createElement('session');
 		$session_node->setAttribute('id', $session->id);
-		$session_node->setAttribute('mode', Session::MODE_DESKTOP);
+		$session_node->setAttribute('mode', (($session->mode == Session::MODE_DESKTOP && $count_prepare_servers == 1)?Session::MODE_DESKTOP:Session::MODE_APPLICATIONS));
 		if (isset($external_apps_token))
 			$session_node->setAttribute('external_apps_token', $external_apps_token->id);
 		foreach (array('desktop_icons', 'locale', 'timezone') as $parameter) {
@@ -443,128 +460,6 @@ if (! isset($old_session_id)) {
 			$session->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
 
 			throw_response(INTERNAL_ERROR);
-		}
-	}
-
-	if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1)) {
-		foreach ($session->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
-			$server = Abstract_Server::load($fqdn);
-			if (! $server)
-				continue;
-
-			if (! is_array($server->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $server->roles))
-				continue;
-
-			if ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1 && $server->fqdn == $session->server)
-				continue;
-
-			$server_applications = $server->getApplications();
-			if (! is_array($server_applications))
-				$server_applications = array();
-
-			$available_applications = array();
-			foreach ($server_applications as $server_application)
-				$available_applications[] = $server_application->getAttribute('id');
-
-			$dom = new DomDocument('1.0', 'utf-8');
-
-			$session_node = $dom->createElement('session');
-			$session_node->setAttribute('id', $session->id);
-			$session_node->setAttribute('mode', Session::MODE_APPLICATIONS);
-			foreach (array('desktop_icons', 'locale', 'timezone') as $parameter) {
-				if (! isset($$parameter))
-					continue;
-
-				$parameter_node = $dom->createElement('parameter');
-				$parameter_node->setAttribute('name', $parameter);
-				$parameter_node->setAttribute('value', $$parameter);
-				$session_node->appendChild($parameter_node);
-			}
-			$user_node = $dom->createElement('user');
-			$user_node->setAttribute('login', $user_login_aps);
-			$user_node->setAttribute('password', $user_password_aps);
-			$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
-			$session_node->appendChild($user_node);
-
-			if (isset($profile_available) && $profile_available === true) {
-				$profile_fileserver = Abstract_Server::load($profile_server);
-				$profile_node = $dom->createElement('profile');
-				$profile_node->setAttribute('server', $profile_fileserver->external_name);
-				$profile_node->setAttribute('dir', $profile_name);
-				$profile_node->setAttribute('login', $user_login_fs);
-				$profile_node->setAttribute('password', $user_password_fs);
-				$session_node->appendChild($profile_node);
-			}
-
-			if (isset($netshares) && count($netshares) > 0) {
-				$sharedfolders_node = $dom->createElement('sharedfolders');
-				$session_node->appendChild($sharedfolders_node);
-
-				foreach ($netshares as $netshare) {
-					$netshare_fileserver = Abstract_Server::load($netshare->server);
-					$sharedfolder_node = $dom->createElement('sharedfolder');
-					$sharedfolder_node->setAttribute('server', $netshare_fileserver->external_name);
-					$sharedfolder_node->setAttribute('dir', $netshare->id);
-					$sharedfolder_node->setAttribute('name', $netshare->name);
-					$sharedfolder_node->setAttribute('login', $user_login_fs);
-					$sharedfolder_node->setAttribute('password', $user_password_fs);
-					$sharedfolders_node->appendChild($sharedfolder_node);
-				}
-			}
-
-			foreach ($user->applications() as $application) {
-				if ($application->getAttribute('type') != $server->getAttribute('type'))
-					continue;
-
-				if (! in_array($application->getAttribute('id'), $available_applications))
-					continue;
-
-				$application_node = $dom->createElement('application');
-				$application_node->setAttribute('id', $application->getAttribute('id'));
-				$application_node->setAttribute('name', $application->getAttribute('name'));
-				if (! $application->getAttribute('static'))
-					$application_node->setAttribute('mode', 'local');
-				else
-					$application_node->setAttribute('mode', 'static');
-
-				$session_node->appendChild($application_node);
-			}
-
-			if (isset($start_apps) && is_array($start_apps) && ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1)) {
-				$start_node = $dom->createElement('start');
-				foreach ($start_apps as $start_app) {
-					$application_node = $dom->createElement('application');
-					$application_node->setAttribute('id', $start_app['id']);
-					if (! is_null($start_app['arg']))
-						$application_node->setAttribute('arg', $start_app['arg']);
-					$start_node->appendChild($application_node);
-				}
-				$session_node->appendChild($start_node);
-			}
-
-			$dom->appendChild($session_node);
-
-			$sessionManagement->appendToSessionCreateXML($dom);
-
-			$xml = $dom->saveXML();
-
-			$session_create_xml = query_url_post_xml($server->getBaseURL().'/aps/session/create', $xml);
-			$ret = $sessionManagement->parseSessionCreate($session_create_xml);
-			if (! $ret) {
-				Logger::critical('main', '(client/start) Unable to create Session \''.$session->id.'\' for User \''.$session->user_login.'\' on Server \''.$server->fqdn.'\', aborting');
-				$session->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
-
-				header('Content-Type: text/xml; charset=utf-8');
-				$dom = new DomDocument('1.0', 'utf-8');
-
-				$node = $dom->createElement('error');
-				$node->setAttribute('id', 1);
-				$node->setAttribute('message', 'Server does not send a valid XML');
-				$dom->appendChild($node);
-
-				echo $dom->saveXML();
-				exit(1);
-			}
 		}
 	}
 }
