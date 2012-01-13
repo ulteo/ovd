@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -283,13 +283,13 @@ class Preferences {
 		$c = new ConfigElement_select('type', _('Database type'), _('The type of your database.'), _('The type of your database.'), 'mysql');
 		$c->setContentAvailable(array('mysql'=>_('MySQL')));
 		$this->add($c,'general','sql');
-		$c = new ConfigElement_input('host', _('Database host address'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'),'');
+		$c = new ConfigElement_input('host', _('Database host address'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'),'localhost');
 		$this->add($c,'general','sql');
 		$c = new ConfigElement_input('user', _('Database username'), _('The username that must be used to access the database.'), _('The user name that must be used to access the database.'),'');
 		$this->add($c,'general','sql');
 		$c = new ConfigElement_password('password',_('Database password'), _('The user password that must be used to access the database.'), _('The user password that must be used to access the database.'),'');
 		$this->add($c,'general','sql');
-		$c = new ConfigElement_input('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), '');
+		$c = new ConfigElement_input('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), 'ovd');
 		$this->add($c,'general','sql');
 		$c = new ConfigElement_input('prefix', _('Table prefix'), _('The table prefix for the database.'), _('The table prefix for the database.'), 'ulteo_');
 		$this->add($c,'general','sql');
