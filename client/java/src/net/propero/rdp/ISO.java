@@ -345,8 +345,16 @@ public abstract class ISO {
 			uname = "user"; // Default username
 		
 		if(uname.length() > 9) uname = uname.substring(0,9);
+		byte[] temp = null;
+		try {
+			temp = uname.getBytes("CP1252");
+		}
+		catch (UnsupportedEncodingException e) {
+			logger.warn("Unsupported encoding");
+			temp = "user".getBytes();
+		}
 
-		int length = 21 + "Cookie: mstshash=".length() + uname.length() + cookietail.length();
+		int length = 21 + "Cookie: mstshash=".length() + temp.length + cookietail.length();
 		
 		RdpPacket_Localised buffer = new RdpPacket_Localised(length);
 		byte[] packet=new byte[length];
@@ -360,7 +368,9 @@ public abstract class ISO {
 		buffer.set8(0); //service class
 		logger.debug("Including username");
 		buffer.out_uint8p("Cookie: mstshash=", "Cookie: mstshash=".length());
-		buffer.out_uint8p(uname + cookietail, uname.length() + cookietail.length());
+		buffer.copyFromByteArray(temp, 0, buffer.getPosition(), temp.length);
+		buffer.incrementPosition(temp.length);
+		buffer.out_uint8p(cookietail, cookietail.length());
 		buffer.set8(0x0d); // unknown
 		buffer.set8(0x0a); // unknown
 
