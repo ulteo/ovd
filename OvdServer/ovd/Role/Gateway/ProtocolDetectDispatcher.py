@@ -96,5 +96,5 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 				raise ProtocolException('bad first request line: ' + request)
 		
 		except ProtocolException, err:
-			Logger.error("ProtocolDetectDispatcher::handle_read: %s" % err)
+			Logger.error("ProtocolDetectDispatcher::handle_read: %s" % repr(err))
 			self.handle_close()
