@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009-2012
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
@@ -613,6 +613,9 @@ public class RdpConnection implements SeamListener, Runnable{
 	}
 	
 	protected void fireConnected() {
+		if (this.state == State.CONNECTED)
+			return;
+		
 		this.state = State.CONNECTED;
 		
 		for(RdpListener list : this.listener) {
