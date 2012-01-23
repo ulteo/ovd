@@ -483,9 +483,8 @@ public class Disk extends RdpdrDevice{
 				if (length>0 && (length / 2) < 256) {
 					/*rdp_in_unistr(in, newname, length);
 					convert_to_unix_filename(newname);*/
-					char[] temp_array = new char[length/2];
-					RdpdrChannel.rdp_in_unistr(in, temp_array, length);
-					newname = new String(temp_array).replace("\\", "/");
+					newname = RdpdrChannel.rdp_in_unistr(in, length);
+					newname = newname.replace("\\", "/");
 				}
 				else
 				{
