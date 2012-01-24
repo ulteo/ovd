@@ -23,9 +23,10 @@ package org.ulteo.utils.jni;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.Window;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import org.ulteo.Logger;
 import org.ulteo.ovd.integrated.OSTools;
-import sun.awt.X11.XBaseWindow;
 
 public class WorkArea {
 	private static boolean loadLibrary = true;
@@ -53,9 +54,25 @@ public class WorkArea {
 	private static native int[] getWorkAreaSizeForX();
 
 	public static long getX11WindowId(Window wnd) {
-		XBaseWindow peer = (XBaseWindow) wnd.getPeer();
-		if (peer != null) {
-		    return peer.getWindow();
+		Object peer = wnd.getPeer();
+		if (peer == null)
+			return 0;
+
+		ClassLoader classLoader = WorkArea.class.getClassLoader();
+		try {
+			Class XBaseWindowClass = classLoader.loadClass("sun.awt.X11.XBaseWindow");
+			Method getWindowMethod = XBaseWindowClass.getMethod("getWindow", (Class[]) null);
+
+			Long window_id = (Long) getWindowMethod.invoke(peer, (Object[]) null);
+			return window_id.longValue();
+		} catch (ClassNotFoundException ex) {
+			Logger.error("Failed to find XBaseWindow class: "+ex.getMessage());
+		} catch (NoSuchMethodException ex) {
+			Logger.error("Failed to find XBaseWindow.getWindow() method: "+ex.getMessage());
+		} catch (IllegalAccessException ex) {
+			Logger.error("Failed to access to XBaseWindow.getWindow() method: "+ex.getMessage());
+		} catch (InvocationTargetException ex) {
+			Logger.error("Failed to invoke XBaseWindow.getWindow() method: "+ex.getMessage());
 		}
 
 		return 0;
