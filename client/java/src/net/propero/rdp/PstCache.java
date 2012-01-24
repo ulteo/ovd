@@ -27,9 +27,13 @@ public class PstCache {
     protected Options opt = null;
     protected Common common = null;
     
+    private Bitmap bmpConverter = null;
+    
     public PstCache(Options opt_, Common common_) {
 		this.opt = opt_;
 		this.common = common_;
+		
+		this.bmpConverter = new Bitmap(this.opt);
 	}
 
     protected boolean IS_PERSISTENT(int id){
@@ -100,7 +104,7 @@ public class PstCache {
 
         logger.debug("Loading bitmap from disk (" + cache_id + ":" + cache_idx + ")\n");
 
-        bitmap = new Bitmap(celldata,c.width,c.height,0,0,this.opt.Bpp, this.opt);
+        bitmap = new Bitmap(this.bmpConverter.convertImage(celldata, this.opt.Bpp), c.width, c.height, 0, 0, this.opt);
         this.common.cache.putBitmap(cache_id,cache_idx,bitmap, (int) c.stamp);
 
     return true;
