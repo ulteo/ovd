@@ -697,6 +697,24 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 			break;
 
 		case WM_SIZE:
+			if (wparam == SIZE_MAXIMIZED) {
+				HWND blocked_hwnd;
+				int blocked;
+				unsigned int serial;
+
+				WaitForSingleObject(g_mutex, INFINITE);
+				blocked_hwnd = g_blocked_state_hwnd;
+				serial = g_blocked_state_serial;
+				blocked = g_blocked_state;
+				ReleaseMutex(g_mutex);
+
+				if ((blocked_hwnd == hwnd) && (blocked == 2))
+					vchannel_write("ACK", "%u", serial);
+				else
+					vchannel_write("STATE", "0x%08lx,0x%08x,0x%08x",
+						       hwnd, 2, 0);
+				break;
+			}
 			if (!(style & WS_VISIBLE) || (style & WS_MINIMIZE))
 				break;
 			update_position(hwnd);
