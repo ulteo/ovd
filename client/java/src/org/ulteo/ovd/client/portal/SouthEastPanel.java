@@ -37,11 +37,13 @@ public class SouthEastPanel extends JPanel {
 	
 	private JButton disconnect = null;
 	private JButton publishingButton = null;;
-	private static final String DISPLAY = I18n._("Display icons");
-	private static final String HIDE = I18n._("Hide icons");
+	private String DISPLAY = null;
+	private String HIDE = null;
 	
 	public SouthEastPanel(final RdpActions rdpActions) {
 		this.setLayout(new GridBagLayout());
+		this.DISPLAY = I18n._("Display icons");
+		this.HIDE = I18n._("Hide icons");
 		
 		disconnect = new JButton(I18n._("Disconnect"));
 		publishingButton = (((OvdClientPortal)rdpActions).isAutoPublish() ?  new JButton(HIDE) : new JButton(DISPLAY));
