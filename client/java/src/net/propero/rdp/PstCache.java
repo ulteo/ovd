@@ -217,7 +217,7 @@ public class PstCache {
     logger.debug("persistent bitmap cache file: " + filename);
     
     File cacheDir = new File(this.opt.persistent_caching_path);
-    if(!cacheDir.exists() && !cacheDir.mkdir()){
+    if(!cacheDir.exists() && !cacheDir.mkdirs()){
         logger.warn("failed to get/make cache directory");
         return false;
     }
