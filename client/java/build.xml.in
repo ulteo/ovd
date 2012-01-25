@@ -311,6 +311,7 @@
       <classpath>
         <path refid="minimal.path" />
         <pathelement location="${java.home}/lib/plugin.jar"/>
+        <pathelement location="/usr/share/icedtea-web/plugin.jar"/> <!-- for wheezy distribution -->
         <pathelement location="required_libraries/jpedal.jar"/>
         <pathelement location="required_libraries/jshortcut.jar"/>
         <pathelement location="required_libraries/image4j.jar"/>
