@@ -147,6 +147,7 @@ Ajaxplorer = Class.create({
 			this.actionBar.loadActions();
 			this.infoPanel.load();
 			this.foldersTree.changeRootLabel(repoObject.getLabel(), repoObject.getIcon());
+			$('repo_path').value = repoObject.getLabel();
 		}
 		else
 		{
