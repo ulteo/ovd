@@ -1,10 +1,10 @@
 /*
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -65,8 +65,12 @@ public class Desktop extends OvdApplet implements FocusListener, Callback {
 	
 	
 	@Override
-	protected void _start() {	
+	protected void _start() {
+		// adjustDesktopSize size must be called in the start method and before the connect.
+		// This prevents that the session start with the resolution 800x600 
+		// It guarantee that the detected resolution is right
 		((OvdClientDesktopApplet)this.ovd).adjustDesktopSize();
+		this.ovd.sessionReady();
 	}
 	
 	@Override
