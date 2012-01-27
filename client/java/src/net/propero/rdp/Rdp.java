@@ -6,10 +6,10 @@
  * Date: $Date: 2007/03/08 00:26:19 $
  *
  * Copyright (c) 2005 Propero Limited
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2011
- * Author david LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  *
  * Purpose: Rdp layer of communication
  */
@@ -591,7 +591,7 @@ public class Rdp {
         length = this.stream.getLittleEndian16();
 
         /* 32k packets are really 8, keepalive fix - rdesktop 1.2.0 */
-        if (length == 0x8000) {
+        if ((length & 0xFFFF) == 0x8000) {
             logger.warn("32k packet keepalive fix");
             next_packet += 8;
             type[0] = 0;
