@@ -36,6 +36,7 @@
 * Copyright (C) 2011 Ulteo SAS
 * http://www.ulteo.com
 * Author Julien LANGLOIS <julien@ulteo.com> 2011
+* Author Omar AKHAM <oakham@ulteo.com> 2012
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -146,6 +147,7 @@ Ajaxplorer = Class.create({
 			this.actionBar.loadActions();
 			this.infoPanel.load();
 			this.foldersTree.changeRootLabel(repoObject.getLabel(), repoObject.getIcon());
+			$('repo_path').value = repoObject.getLabel();
 		}
 		else
 		{
@@ -307,7 +309,6 @@ Ajaxplorer = Class.create({
 		if(!this._initObj) { 
 			this.filesList.loadXmlList('/') ;
 			this.repositoryId = repositoryId;
-			this.actionBar.loadBookmarks();
 		} else { this._initObj = null ;}
 		if(this._initLoadRep){
 			this.goTo(this._initLoadRep);
