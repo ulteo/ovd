@@ -1,9 +1,10 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2010-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+# Author David LECHEVALIER <david@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -221,7 +222,7 @@ class Profile(AbstractProfile):
 		grep_cmd = " | ".join(['grep -v "/%s$"'%(word) for word in Profile.rsyncBlacklist()])
 		find_cmd = 'find "%s" -maxdepth 1 -name ".*" | %s'%(src, grep_cmd)
 		
-		args = ["-rltD"]
+		args = ["-rltD", "--safe-links"]
 		if owner:
 			args.append("-o")
 		

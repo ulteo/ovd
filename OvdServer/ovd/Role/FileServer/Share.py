@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2010-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+# Author David LECHEVALIER <david@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -108,6 +109,8 @@ class Share:
 			f.write("Require user %s\n"%(user))
 		f.close()
 		
+		self.do_right_normalization()
+		
 		self.active = True
 		return True
 	
@@ -143,8 +146,22 @@ class Share:
 			Logger.error("FS: unable to del group")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
 
+		self.do_right_normalization()
+		
 		self.active = False
 		return ret
+	
+	
+	def do_right_normalization(self):
+		cmd = 'chown -R %s:%s "%s"'%(Config.uid, Config.gid, self.directory)
+		s, o = commands.getstatusoutput(cmd)
+		if s is not 0:
+			Logger.debug("FS: following command '%s' returned %d => %s"%(cmd, s, o))
+		
+		cmd = 'chmod -R u=rwX,g=rwX,o-rwx "%s"'%(self.directory)
+		s, o = commands.getstatusoutput(cmd)
+		if s is not 0:
+			Logger.debug("FS: following command '%s' returned %d => %s"%(cmd, s, o))
 	
 	
 	def add_user(self, user):
