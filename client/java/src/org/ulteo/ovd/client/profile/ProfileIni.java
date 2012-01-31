@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
@@ -315,7 +315,7 @@ public class ProfileIni extends Profile {
 		if (value != null) {
 			int socketTimeout = properties.getSocketTimeout();
 			try {
-				Integer.parseInt(value);
+				socketTimeout = Integer.parseInt(value);
 			}
 			catch (NumberFormatException e) {
 				Logger.error("Failed to parse the socket timeout: '"+value+"'");
@@ -343,7 +343,7 @@ public class ProfileIni extends Profile {
 		if (value != null) {
 			int diskLimit = properties.getDiskBandwidthLimit();
 			try {
-				Integer.parseInt(value);
+				diskLimit = Integer.parseInt(value);
 			}
 			catch (NumberFormatException e) {
 				Logger.error("Failed to parse the disk bandwidth limite: '"+value+"'");
@@ -376,7 +376,7 @@ public class ProfileIni extends Profile {
 		if (value != null) {
 			int persistentCacheMaxCell = properties.getPersistentCacheMaxCells();
 			try {
-				Integer.parseInt(value);
+				persistentCacheMaxCell = Integer.parseInt(value);
 			}
 			catch (NumberFormatException e) {
 				Logger.error("Failed to parse peristent cache max cells: '"+value+"'");

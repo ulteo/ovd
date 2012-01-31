@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
@@ -201,7 +201,7 @@ public class ProfileRegistry extends Profile {
 				else if (field.equalsIgnoreCase(FIELD_RDP_SOCKET_TIMEOUT)) {
 					int socketTimeout = properties.getSocketTimeout();
 					try {
-						Integer.parseInt(value);
+						socketTimeout = Integer.parseInt(value);
 					}
 					catch (NumberFormatException e) {
 						Logger.error("Failed to parse socket timeout: '"+value+"'");
@@ -218,7 +218,7 @@ public class ProfileRegistry extends Profile {
 				else if (field.equalsIgnoreCase(FIELD_LIMITATION_DISK_LIMIT)) {
 					int diskLimit = properties.getDiskBandwidthLimit();
 					try {
-						Integer.parseInt(value);
+						diskLimit = Integer.parseInt(value);
 					}
 					catch (NumberFormatException e) {
 						Logger.error("Failed to parse disk bandwidth limitation: '"+value+"'");
@@ -238,7 +238,7 @@ public class ProfileRegistry extends Profile {
 				else if (field.equalsIgnoreCase(FIELD_PERSISTENT_CACHE_MAX_CELLS)) {
 					int persistentCacheMaxCell = properties.getPersistentCacheMaxCells();
 					try {
-						Integer.parseInt(value);
+						persistentCacheMaxCell = Integer.parseInt(value);
 					}
 					catch (NumberFormatException e) {
 						Logger.error("Failed to parse peristent cache max cells: '"+value+"'");
