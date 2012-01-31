@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: uovdclient\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-21 16:14+0100\n"
-"PO-Revision-Date: 2011-06-20 20:32+0200\n"
+"POT-Creation-Date: 2011-11-23 12:22+0100\n"
+"PO-Revision-Date: 2011-12-12 15:41+0200\n"
 "Last-Translator: Esa Grönberg\n"
 "Language-Team: Finnish\n"
 "Language: fi\n"
@@ -17,16 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.1.5\n"
+"X-Generator: Pootle 2.1.6\n"
 
-#. { //persistent session
-#. ?>
-#. <td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.suspend(); return false;"><img src="media/image/suspend.png" width="32" height="32" alt="" title="" /><br /><span id="suspend_gettext">&nbsp;</span></a></td>
-#. <?php
-#. }
-#: ../../client/web/web/index.php:405
-msgid "Example: sm.ulteo.com"
-msgstr "Esimerkki: sm.ulteo.com"
+#: ../../client/web/web/login.php:295
+msgid "Profile"
+msgstr "Profiili"
 
 #: ../../client/web/web/translate.php:65
 msgid "Close"
@@ -37,39 +32,39 @@ msgid "Session Manager"
 msgstr "Session Manager"
 
 #: ../../client/web/web/translate.php:68
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:985
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1019
 msgid "Login"
 msgstr "Käyttäjätunnus"
 
 #: ../../client/web/web/translate.php:69
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:986
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1020
 msgid "Password"
 msgstr "Salasana"
 
 #: ../../client/web/web/translate.php:70
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1001
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1035
 msgid "Use local credentials"
 msgstr "Käytä paikallista kirjautumistietoa"
 
 #: ../../client/web/web/translate.php:71 ../../client/web/web/translate.php:77
 #: ../../client/web/web/translate.php:82
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:40
 msgid "Yes"
 msgstr "Kyllä"
 
 #: ../../client/web/web/translate.php:72 ../../client/web/web/translate.php:78
 #: ../../client/web/web/translate.php:83
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:40
 msgid "No"
 msgstr "Ei"
 
 #: ../../client/web/web/translate.php:73
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:991
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1025
 msgid "Mode"
 msgstr "Toimintatila"
 
 #: ../../client/web/web/translate.php:74
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:998
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1032
 msgid "Desktop"
 msgstr "Työpöytä"
 
@@ -78,13 +73,13 @@ msgid "Portal"
 msgstr "Portaali"
 
 #: ../../client/web/web/translate.php:76
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:78
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1009
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:81
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1043
 msgid "Fullscreen"
 msgstr "Kokonäyttö"
 
 #: ../../client/web/web/translate.php:79
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:993
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1027
 msgid "Language"
 msgstr "Kieli"
 
@@ -120,7 +115,8 @@ msgstr ""
 msgid ""
 "You are advised to check the \"<em>Always trust content from this publisher</"
 "em>\" checkbox."
-msgstr "Tarkista \"<em>Luota aina tämän julkaisijan sisältöön</em>\"valintaruutu."
+msgstr ""
+"Tarkista \"<em>Luota aina tämän julkaisijan sisältöön</em>\" valintaruutu."
 
 #: ../../client/web/web/translate.php:93
 msgid "System compatibility error"
@@ -175,90 +171,98 @@ msgid "My files"
 msgstr "Tiedostoni"
 
 #: ../../client/web/web/translate.php:117
+msgid "Example: sm.ulteo.com"
+msgstr "Esimerkki: sm.ulteo.com"
+
+#: ../../client/web/web/translate.php:119
 msgid "Usage: missing \"sessionmanager_host\" parameter"
 msgstr "Käsittely: puuttuva \"sessionmanager_host\" parametri"
 
-#: ../../client/web/web/translate.php:118
+#: ../../client/web/web/translate.php:120
 msgid "Usage: missing \"login\" parameter"
 msgstr "Käsittely: puuttuva \"kirjautumis\" parametri"
 
-#: ../../client/web/web/translate.php:119
+#: ../../client/web/web/translate.php:121
 msgid "Usage: missing \"password\" parameter"
 msgstr "Käsittely: puuttuva \"salasana\" parametri"
 
-#: ../../client/web/web/translate.php:120
+#: ../../client/web/web/translate.php:122
 msgid "Unable to reach the Session Manager"
 msgstr "Istunnonhallinta on tavoittamattomissa"
 
-#: ../../client/web/web/translate.php:122
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:376
+#: ../../client/web/web/translate.php:124
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:467
 msgid "Authentication failed: please double-check your password and try again"
 msgstr "Autentikointi epäonnistui: tarkista salasanasi ja yritä uudelleen"
 
-#: ../../client/web/web/translate.php:123
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:378
+#: ../../client/web/web/translate.php:125
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:469
 msgid ""
 "The system is on maintenance mode, please contact your administrator for "
 "more information"
 msgstr ""
 "Järjestelmä on huoltotilassa, ota yhteyttä pääkäyttäjään lisätietoja varten"
 
-#: ../../client/web/web/translate.php:124
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:380
+#: ../../client/web/web/translate.php:126
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:471
 msgid "An internal error occured, please contact your administrator"
 msgstr "Sisäinen virhe tapahtunut, ota yhteyttä pääkäyttäjään"
 
-#: ../../client/web/web/translate.php:125
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:382
+#: ../../client/web/web/translate.php:127
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:473
 msgid "You specified an invalid login, please double-check and try again"
 msgstr ""
 "Olet määrittänyt virheellisen kirjautumistiedon, tarkista ja yritä uudelleen"
 
-#: ../../client/web/web/translate.php:126
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:384
+#: ../../client/web/web/translate.php:128
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:475
 msgid ""
 "The service is not available, please contact your administrator for more "
 "information"
 msgstr ""
 "Palvelu ei ole käytettävissä, ota yhteyttä pääkäyttäjään lisätietoja varten"
 
-#: ../../client/web/web/translate.php:127
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:386
+#: ../../client/web/web/translate.php:129
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:477
 msgid "You are not authorized to launch a session in this mode"
 msgstr "Et ole valtuutettu käyttämään istuntoa tässä toimintatilassa"
 
-#: ../../client/web/web/translate.php:128
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:388
+#: ../../client/web/web/translate.php:130
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:479
 msgid "You already have an active session"
 msgstr "Sinulla on jo aktiivinen istunto"
 
-#: ../../client/web/web/translate.php:130
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:745
+#: ../../client/web/web/translate.php:132
+msgid "You will be disconnected from your OVD session."
+msgstr "OVD istuntosi katkaistaan."
+
+#: ../../client/web/web/translate.php:134
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:843
 msgid ""
 "Your session is going to end in 3 minutes, please save all your data now!"
 msgstr "Istunto päättyy 3 minuutin kuluttua, tallenna tietosi nyt!"
 
-#: ../../client/web/web/translate.php:132
+#: ../../client/web/web/translate.php:136
 msgid "Server: session closed unexpectedly"
 msgstr "Palvelin: istunto päättyi odottamattomasti"
 
-#: ../../client/web/web/translate.php:133
+#: ../../client/web/web/translate.php:137
 msgid "Your session has ended, you can now close the window"
 msgstr "Istuntosi on päättynyt, voit nyt sulkea ikkunan"
 
-#: ../../client/web/web/translate.php:134
+#: ../../client/web/web/translate.php:138
 msgid "Your session has ended unexpectedly"
 msgstr "Istuntosi päättyi odottamattomasti"
 
-#: ../../client/web/web/translate.php:135
+#: ../../client/web/web/translate.php:139
 msgid "error details"
 msgstr "virheen tarkemmat tiedot"
 
-#: ../../client/web/web/translate.php:136
+#: ../../client/web/web/translate.php:140
 msgid "Close this window"
 msgstr "Sulje tämä ikkuna"
 
-#: ../../client/web/web/translate.php:137
+#: ../../client/web/web/translate.php:141
 msgid ""
 "Click <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
 "false;\">here</a> to start a new session"
@@ -266,89 +270,17 @@ msgstr ""
 "Klikkaa <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
 "false;\">tästä</a> käynnistääksesi uuden istunnon"
 
-#: ../../client/web/web/translate.php:139
+#: ../../client/web/web/translate.php:143
 msgid "suspend"
 msgstr "keskeytä"
 
-#: ../../client/web/web/translate.php:140
+#: ../../client/web/web/translate.php:144
 msgid "resume"
 msgstr "jatka"
 
-#: ../../client/web/web/login.php:280
-msgid "Profile"
-msgstr "Profiili"
-
-#: ../../client/web/web/external.php:212
+#: ../../client/web/web/external.php:237
 msgid "Do not close this Ulteo OVD window!"
 msgstr "Älä sulje tätä Ulteo OVD ikkunaa!"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:390
-msgid "An error occured, please contact your administrator"
-msgstr "Virhe tapahtunut, ota yhteyttä pääkäyttäjään"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:543
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:45
-msgid "Warning!"
-msgstr "Varoitus!"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:553
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:559
-msgid "Error!"
-msgstr "Virhe!"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:557
-msgid "Unable to reach the Session Manager!"
-msgstr "Session Manager on tavoittamattomissa!"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:642
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:646
-msgid "Invalid host field!"
-msgstr "Virheellinen palvelimen kenttä!"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:678
-msgid "You must specify the host field!"
-msgstr "Määritä palvelimen kenttä!"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:683
-msgid "You must specify a username!"
-msgstr "Määritä käyttäjänimi!"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:686
-msgid "You must specify a password!"
-msgstr "Määritä salasana!"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:733
-msgid "Internal error: Bad session mode return"
-msgstr "Sisäinen virhe: Huonon istunnon palautus"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:745
-msgid "Session is going to end"
-msgstr "Istunto päättyy"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:772
-msgid "Internal error: unsupported session mode"
-msgstr "Sisäinen virhe: istunnon muotoa ei tueta"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:807
-msgid "You have been disconnected"
-msgstr "Yhteys on katkaistu"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:807
-msgid "Your session has ended"
-msgstr "Istuntosi on loppunut"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:823
-msgid "Protocol xml error: "
-msgstr "Xml protokolla virhe"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:823
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:830
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:840
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:847
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:854
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
-msgid "Error"
-msgstr "Virhe"
 
 #: ../../client/java/src/org/ulteo/ovd/client/portal/NewsFrame.java:49
 msgid "OVD News"
@@ -369,6 +301,92 @@ msgstr "Piilota kuvakkeet"
 #: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:46
 msgid "Disconnect"
 msgstr "Katkaise yhteys"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:481
+msgid "An error occured, please contact your administrator"
+msgstr "Virhe tapahtunut, ota yhteyttä pääkäyttäjään"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:647
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:663
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:38
+msgid "Warning!"
+msgstr "Varoitus!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:650
+msgid "Unable to reach the Session Manager!"
+msgstr "Session Manager on tavoittamattomissa!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:652
+msgid "Error!"
+msgstr "Virhe!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:740
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:744
+msgid "Invalid host field!"
+msgstr "Virheellinen palvelimen kenttä!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:774
+msgid "You must specify the host field!"
+msgstr "Määritä palvelimen kenttä!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:779
+msgid "You must specify a username!"
+msgstr "Määritä käyttäjänimi!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:782
+msgid "You must specify a password!"
+msgstr "Määritä salasana!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:831
+msgid "Internal error: Bad session mode return"
+msgstr "Sisäinen virhe: Huonon istunnon palautus"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:843
+msgid "Session is going to end"
+msgstr "Istunto päättyy"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:861
+msgid "Internal error: unsupported session mode"
+msgstr "Sisäinen virhe: istunnon muotoa ei tueta"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+msgid "You have been disconnected"
+msgstr "Yhteys on katkaistu"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+msgid "Your session has ended"
+msgstr "Istuntosi on loppunut"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:913
+msgid "Protocol xml error: "
+msgstr "Xml protokolla virhe:"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:913
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:920
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:930
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:937
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:944
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+msgid "Error"
+msgstr "Virhe"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:39
+msgid "Do you really want to close the window?"
+msgstr "Haluatko varmasti sulkea ikkunan?"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:40
+msgid "Go back to authentication"
+msgstr "Palaa takaisin autentikointiin"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:52
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:109
+msgid "Now loading"
+msgstr "Lataa"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:59
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:108
+msgid "Cancel"
+msgstr "Peruuta"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:52
 msgid "Start loading session"
@@ -398,111 +416,57 @@ msgstr "Odottaa palvelinta istuntoa varten"
 msgid "Invalid status"
 msgstr "Virheellinen tila"
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:77
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1008
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:80
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1042
 msgid "Maximized"
-msgstr "Maksimoi"
+msgstr "Maksimoitu"
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:824
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1005
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:854
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1039
 msgid "Fewer options"
 msgstr "Vähemmän vaihtoehtoja"
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:906
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1003
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:940
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1037
 msgid "More options..."
 msgstr "Enemmän vaihtoehtoja..."
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:987
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1021
 msgid "Start!"
 msgstr "Aloita!"
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:990
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1024
 msgid "Server"
 msgstr "Palvelin"
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:992
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1026
 msgid "Resolution"
 msgstr "Resoluutio"
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:994
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1028
 msgid "Keyboard"
 msgstr "Näppäimistö"
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:996
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1030
 msgid "Auto"
 msgstr "Automaattinen"
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:997
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1031
 msgid "Application"
 msgstr "Sovellus"
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:999
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1033
 msgid "Remember me"
 msgstr "Muista minut"
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1000
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1034
 msgid "Auto-publish shortcuts"
 msgstr "Julkaise pikakuvakkeet automaattisesti"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
-msgid "Go back to authentication"
-msgstr "Palaa takaisin autentikointiin"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:44
-msgid "Do you really want to close the window?"
-msgstr "Haluatko varmasti sulkea ikkunan?"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionFrame.java:40
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionFrame.java:68
 msgid "Disconnecting!"
 msgstr "Yhteyttä katkaistaan!"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:52
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:109
-msgid "Now loading"
-msgstr "Lataa"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:59
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:108
-msgid "Cancel"
-msgstr "Peruuta"
-
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportButton.java:44
-msgid "Report a bug"
-msgstr "Ilmoita virheestä"
-
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:73
-msgid "Ulteo OVD Bug Report"
-msgstr "Ulteo OVD Virhe Raportti"
-
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:117
-msgid "Validate"
-msgstr "Vahvista"
-
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:128
-msgid "Date"
-msgstr "Päivä"
-
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:130
-msgid "Version"
-msgstr "Versio"
-
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:132
-msgid "System"
-msgstr "Järjestelmä"
-
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:134
-msgid "JVM"
-msgstr "JVM"
-
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:168
-msgid "Description and steps to reproduce:"
-msgstr "Kuvaus ja toistamisen vaiheet:"
-
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:184
-msgid "MM/dd/yy hh:mm:ss"
-msgstr "KK/pp/vv tt:mm:ss"
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:85
 msgid "Text file (*.txt)"
@@ -510,20 +474,59 @@ msgstr "Teksti tiedosto (*.txt)"
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
 msgid "An error occured. Please try again."
-msgstr "Virhe tapahtunut. Ole hyvä ja yritä uudelleen"
+msgstr "Virhe tapahtunut. Ole hyvä ja yritä uudelleen."
 
+# 90%
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
-msgid "Bug report saved to "
-msgstr "Tallenna virheraportti"
+msgid "Bug report saved to %s"
+msgstr "Tallenna virheraportti %s"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:108
 msgid "Bug report saved"
 msgstr "Virheraportti tallennettu"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:120
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
 msgid "Please fill description field."
 msgstr "Ole hyvä ja täytä kuvaus kenttään."
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:120
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
 msgid "Empty field"
 msgstr "Tyhjä kenttä"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:64
+msgid "Ulteo OVD Bug Report"
+msgstr "Ulteo OVD Virhe Raportti"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:108
+msgid "Validate"
+msgstr "Vahvista"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:119
+msgid "Date"
+msgstr "Päivä"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:121
+msgid "Version"
+msgstr "Versio"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:123
+msgid "System"
+msgstr "Järjestelmä"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:125
+msgid "JVM"
+msgstr "JVM"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:159
+msgid "Description and steps to reproduce:"
+msgstr "Kuvaus ja toistamisen vaiheet:"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportButton.java:44
+msgid "Report a bug"
+msgstr "Ilmoita virheestä"
+
+#~ msgid "MM/dd/yy hh:mm:ss"
+#~ msgstr "KK/pp/vv tt:mm:ss"
+
+#~ msgid "Bug report saved to "
+#~ msgstr "Tallenna virheraportti"
