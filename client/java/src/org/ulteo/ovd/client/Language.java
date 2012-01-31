@@ -1,8 +1,8 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or 
@@ -82,7 +82,7 @@ public class Language {
 //			{"Hebrew", "עברית", "he"},
 //			{"Hindi", "", "hi"},
 			{"Hungarian", "Magyar", "hu"},
-//			{"Icelandic", "", "is"},
+			{"Icelandic", "Íslenska", "is"},
 			{"Indonesian", "Bahasa Indonesia", "id"},
 			{"Italian", "Italiano", "it"},
 			{"Japanese", "日本語", "ja"},

@@ -1,0 +1,534 @@
+# Icelandic translations for uovdclient package.
+# Copyright (C) 2012 Ulteo SAS
+# This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
+# Automatically generated, 2012.
+# Author: Sigurður Guðbrandsson <nikkiclau@gmail.com>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: uovdclient\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-11-23 12:22+0100\n"
+"PO-Revision-Date: 2012-01-05 19:41+0200\n"
+"Last-Translator: Sigurður Guðbrandsson\n"
+"Language-Team: Icelandic\n"
+"Language: is\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.1.6\n"
+
+#: ../../client/web/web/login.php:295
+msgid "Profile"
+msgstr "Forstilling"
+
+#: ../../client/web/web/translate.php:65
+msgid "Close"
+msgstr "Loka"
+
+#: ../../client/web/web/translate.php:67
+msgid "Session Manager"
+msgstr "Setustjóri"
+
+#: ../../client/web/web/translate.php:68
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1019
+msgid "Login"
+msgstr "Notendanafn"
+
+#: ../../client/web/web/translate.php:69
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1020
+msgid "Password"
+msgstr "Lykilorð"
+
+#: ../../client/web/web/translate.php:70
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1035
+msgid "Use local credentials"
+msgstr "Nota staðbundin skilríki"
+
+#: ../../client/web/web/translate.php:71 ../../client/web/web/translate.php:77
+#: ../../client/web/web/translate.php:82
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:40
+msgid "Yes"
+msgstr "Já"
+
+#: ../../client/web/web/translate.php:72 ../../client/web/web/translate.php:78
+#: ../../client/web/web/translate.php:83
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:40
+msgid "No"
+msgstr "Nei"
+
+#: ../../client/web/web/translate.php:73
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1025
+msgid "Mode"
+msgstr "Hamur"
+
+#: ../../client/web/web/translate.php:74
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1032
+msgid "Desktop"
+msgstr "Skjáborð"
+
+#: ../../client/web/web/translate.php:75
+msgid "Portal"
+msgstr "Gátt"
+
+#: ../../client/web/web/translate.php:76
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:81
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1043
+msgid "Fullscreen"
+msgstr "Fylla í skjá"
+
+#: ../../client/web/web/translate.php:79
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1027
+msgid "Language"
+msgstr "Tungumál"
+
+#: ../../client/web/web/translate.php:80
+msgid "Keyboard layout"
+msgstr "Skipulag lyklaborðs"
+
+#: ../../client/web/web/translate.php:81
+msgid "Debug"
+msgstr "Aflúsa"
+
+#: ../../client/web/web/translate.php:86
+msgid "Advanced settings"
+msgstr "Ítarlegar stillingar"
+
+#: ../../client/web/web/translate.php:87
+msgid "Connect"
+msgstr "Tengja"
+
+#: ../../client/web/web/translate.php:89
+msgid "Checking for system compatibility"
+msgstr "Athuga samhæfi kerfis"
+
+#: ../../client/web/web/translate.php:90
+msgid ""
+"If this is your first time here, a Java security window will show up and you "
+"have to accept it to use the service."
+msgstr ""
+"Ef þetta er fyrsta skiptið þitt hér, þá mun Java öryggisgluggi opnast. Þú "
+"þarft að samþykkja hann til að nota þjónustuna."
+
+#: ../../client/web/web/translate.php:91
+msgid ""
+"You are advised to check the \"<em>Always trust content from this publisher</"
+"em>\" checkbox."
+msgstr ""
+"Mælt er með að þú hakir við \"<em>Ávalt treysta efni frá þessum "
+"útgefanda</em>\" gátreitinn."
+
+#: ../../client/web/web/translate.php:93
+msgid "System compatibility error"
+msgstr "Villa við samhæfi kerfis"
+
+#: ../../client/web/web/translate.php:94
+msgid "Java is not available either on your system or in your web browser."
+msgstr "Java er ekki tiltækt annað hvort á tölvunni þinni eða í vafranum þínum."
+
+#: ../../client/web/web/translate.php:95
+msgid ""
+"Please install Java extension for your web browser or contact your "
+"administrator."
+msgstr ""
+"Vinsamlegast settu upp Java viðbót í vafrann þinn eða hafðu samband við "
+"kerfisstjórann þinn."
+
+#: ../../client/web/web/translate.php:96
+msgid "You have not accepted the Java security window."
+msgstr "Þú hefur ekki samþykkt Java öryggisgluggann."
+
+#: ../../client/web/web/translate.php:97
+msgid "You <strong>cannot</strong> have access to this service."
+msgstr "Þú hefur <strong>ekki</string> aðgang að þessari þjónustu."
+
+#: ../../client/web/web/translate.php:99
+msgid "Loading Open Virtual Desktop"
+msgstr "Hleð Open Virtual Desktop"
+
+#: ../../client/web/web/translate.php:100
+msgid "Welcome!"
+msgstr "Velkomin/n!"
+
+#: ../../client/web/web/translate.php:101
+msgid "Suspend"
+msgstr "Fresta"
+
+#: ../../client/web/web/translate.php:102
+msgid "Logout"
+msgstr "Útskráning"
+
+#: ../../client/web/web/translate.php:104
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:116
+msgid "My applications"
+msgstr "Mín forrit"
+
+#: ../../client/web/web/translate.php:105
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:132
+msgid "Running applications"
+msgstr "Forrit í gangi"
+
+#: ../../client/web/web/translate.php:106
+msgid "My files"
+msgstr "Mínar skrár"
+
+#: ../../client/web/web/translate.php:117
+msgid "Example: sm.ulteo.com"
+msgstr "Dæmi: sm.ulteo.com"
+
+#: ../../client/web/web/translate.php:119
+msgid "Usage: missing \"sessionmanager_host\" parameter"
+msgstr "Notkun: vantar \"sessionmanager_host\" færibreytu"
+
+#: ../../client/web/web/translate.php:120
+msgid "Usage: missing \"login\" parameter"
+msgstr "Notkun: vantar \"login\" færibreytu"
+
+#: ../../client/web/web/translate.php:121
+msgid "Usage: missing \"password\" parameter"
+msgstr "Notkun: vantar \"password\" færibreytu"
+
+#: ../../client/web/web/translate.php:122
+msgid "Unable to reach the Session Manager"
+msgstr "Gat ekki haft samband við Setustjóra"
+
+#: ../../client/web/web/translate.php:124
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:467
+msgid "Authentication failed: please double-check your password and try again"
+msgstr ""
+"Auðkenning mistókst: vinsamlegast athugaðu lykilorðið þitt og reyndu aftur."
+
+#: ../../client/web/web/translate.php:125
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:469
+msgid ""
+"The system is on maintenance mode, please contact your administrator for "
+"more information"
+msgstr ""
+"Kerfið er í viðhaldsham, vinsamlegast hafðu samband við kerfisstjórann þinn "
+"fyrir frekari upplýsingar"
+
+#: ../../client/web/web/translate.php:126
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:471
+msgid "An internal error occured, please contact your administrator"
+msgstr "Innri villa kom upp, vinsamlegast hafðu samband við kerfisstjóra þinn"
+
+#: ../../client/web/web/translate.php:127
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:473
+msgid "You specified an invalid login, please double-check and try again"
+msgstr ""
+"Þú skilgreindir ógilt notendanafn, vinsamlegast athugaðu notendanafnið og "
+"reyndu aftur"
+
+#: ../../client/web/web/translate.php:128
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:475
+msgid ""
+"The service is not available, please contact your administrator for more "
+"information"
+msgstr ""
+"Þjónustan er ekki aðgengileg, vinsamlegast hafðu samband við kerfisstjórann "
+"þinn fyrir frekari upplýsingar"
+
+#: ../../client/web/web/translate.php:129
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:477
+msgid "You are not authorized to launch a session in this mode"
+msgstr "Þú ert ekki með leyfi til að hefja setu í þessum ham"
+
+#: ../../client/web/web/translate.php:130
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:479
+msgid "You already have an active session"
+msgstr "Þú ert þegar með virka setu"
+
+#: ../../client/web/web/translate.php:132
+msgid "You will be disconnected from your OVD session."
+msgstr "Þú verður aftengdur frá OVD setunni þinni."
+
+#: ../../client/web/web/translate.php:134
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:843
+msgid ""
+"Your session is going to end in 3 minutes, please save all your data now!"
+msgstr ""
+"Setan þín mun loka innan þriggja mínútna, vinsamlegast vistaðu öll gögnin "
+"þín strax!"
+
+#: ../../client/web/web/translate.php:136
+msgid "Server: session closed unexpectedly"
+msgstr "Þjónn: seta lokaðist óvænt"
+
+#: ../../client/web/web/translate.php:137
+msgid "Your session has ended, you can now close the window"
+msgstr "Setu þinni er lokið, þú mátt loka þessum glugga"
+
+#: ../../client/web/web/translate.php:138
+msgid "Your session has ended unexpectedly"
+msgstr "Setan þín lokaðist óvænt"
+
+#: ../../client/web/web/translate.php:139
+msgid "error details"
+msgstr "villusmáatriði"
+
+#: ../../client/web/web/translate.php:140
+msgid "Close this window"
+msgstr "Loka þessum glugga"
+
+#: ../../client/web/web/translate.php:141
+msgid ""
+"Click <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
+"false;\">here</a> to start a new session"
+msgstr ""
+"Smelltu <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
+"false;\">hér</a> til að hefja nýja setu"
+
+#: ../../client/web/web/translate.php:143
+msgid "suspend"
+msgstr "fresta"
+
+#: ../../client/web/web/translate.php:144
+msgid "resume"
+msgstr "halda áfram"
+
+#: ../../client/web/web/external.php:237
+msgid "Do not close this Ulteo OVD window!"
+msgstr "Ekki loka þessum Ulteo OVD glugga!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/NewsFrame.java:49
+msgid "OVD News"
+msgstr "OVD Fréttir"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:69
+msgid "Welcome {user}"
+msgstr "Velkomin/n {user}"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:40
+msgid "Display icons"
+msgstr "Birta teikn"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:41
+msgid "Hide icons"
+msgstr "Fela teikn"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:46
+msgid "Disconnect"
+msgstr "Aftengjast"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:481
+msgid "An error occured, please contact your administrator"
+msgstr "Villa kom upp, vinsamlegast hafðu samband við kerfisstjórann þinn"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:647
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:663
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:38
+msgid "Warning!"
+msgstr "Viðvörun!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:650
+msgid "Unable to reach the Session Manager!"
+msgstr "Gat ekki tengst Setustjóra!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:652
+msgid "Error!"
+msgstr "Villa!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:740
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:744
+msgid "Invalid host field!"
+msgstr "Ógild hýsiltölvu svæði!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:774
+msgid "You must specify the host field!"
+msgstr "Þú verður að skilgreina hýsiltölvusvæðið!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:779
+msgid "You must specify a username!"
+msgstr "Þú verður að skilgreina notendanafn!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:782
+msgid "You must specify a password!"
+msgstr "Þú verður að skilgreina lykilorð!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:831
+msgid "Internal error: Bad session mode return"
+msgstr "Innri villa: Ógilt setuhams afturhvarf"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:843
+msgid "Session is going to end"
+msgstr "Setan mun hætta"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:861
+msgid "Internal error: unsupported session mode"
+msgstr "Innri villa: óstuddur setuhamur"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+msgid "You have been disconnected"
+msgstr "Þú hefur verið aftengd/ur"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+msgid "Your session has ended"
+msgstr "Setu þinni hefur lokið"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:913
+msgid "Protocol xml error: "
+msgstr "Villa í XML samskiptareglu:"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:913
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:920
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:930
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:937
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:944
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+msgid "Error"
+msgstr "Villa"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:39
+msgid "Do you really want to close the window?"
+msgstr "Ertu viss um að þú viljir loka glugganum?"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:40
+msgid "Go back to authentication"
+msgstr "Til baka í sannvottun"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:52
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:109
+msgid "Now loading"
+msgstr "Hleð"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:59
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:108
+msgid "Cancel"
+msgstr "Hætta við"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:52
+msgid "Start loading session"
+msgstr "Hefja hleðslu á setu"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:54
+msgid "Connecting to the session manager"
+msgstr "Tengist setustjóra"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:56
+msgid "Get session information from session manager"
+msgstr "Sækja setuupplýsingar frá setustjóra"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:58
+msgid "Get application data from session manager"
+msgstr "Sækja forritagögn frá setustjóra"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:60
+msgid "Installing application data on client"
+msgstr "Set upp forritagögn á biðlara"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:62
+msgid "Waiting server for session"
+msgstr "Miðlari bíður eftir lotu"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:64
+msgid "Invalid status"
+msgstr "Ógild staða"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:80
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1042
+msgid "Maximized"
+msgstr "Fullstækkaður"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:854
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1039
+msgid "Fewer options"
+msgstr "Færri valmöguleika"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:940
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1037
+msgid "More options..."
+msgstr "Fleiri valmöguleika..."
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1021
+msgid "Start!"
+msgstr "Ræsa!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1024
+msgid "Server"
+msgstr "Miðlari"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1026
+msgid "Resolution"
+msgstr "Upplausn"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1028
+msgid "Keyboard"
+msgstr "Lyklaborð"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1030
+msgid "Auto"
+msgstr "Sjálfvalið"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1031
+msgid "Application"
+msgstr "Forrit"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1033
+msgid "Remember me"
+msgstr "Muna eftir mér"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1034
+msgid "Auto-publish shortcuts"
+msgstr "Gefa út flýtileiðir sjálfkrafa"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionFrame.java:40
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionFrame.java:68
+msgid "Disconnecting!"
+msgstr "Aftengist!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:85
+msgid "Text file (*.txt)"
+msgstr "Textaskrá (*.txt)"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+msgid "An error occured. Please try again."
+msgstr "Villa kom upp. Vinsamlegast reyndu aftur."
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
+msgid "Bug report saved to %s"
+msgstr "Gallaskýrsla vistuð á %s"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:108
+msgid "Bug report saved"
+msgstr "Gallaskýrsla vistuð"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
+msgid "Please fill description field."
+msgstr "Vinsamlegast fylltu í lýsingarsvæði."
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
+msgid "Empty field"
+msgstr "Tómt svæði"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:64
+msgid "Ulteo OVD Bug Report"
+msgstr "Ulteo OVD Villuskýrsla"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:108
+msgid "Validate"
+msgstr "Staðfesta"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:119
+msgid "Date"
+msgstr "Dagsetning"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:121
+msgid "Version"
+msgstr "Útgáfa"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:123
+msgid "System"
+msgstr "Kerfi"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:125
+msgid "JVM"
+msgstr "JVM"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:159
+msgid "Description and steps to reproduce:"
+msgstr "Lýsing og skref til að endurtaka:"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportButton.java:44
+msgid "Report a bug"
+msgstr "Tilkynna galla"
