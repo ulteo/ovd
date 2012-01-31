@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David Lechevalier <david@ulteo.com> 2010-2011
+ * Author David LECHEVALIER <david@ulteo.com> 2010, 2011, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -364,10 +364,15 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 			return false;
 		}
 		
+		String printerName = printer.get_display_name();
+		int driverlen = 2 * printer.driver.length() + 2;
+		int printerlen = 2 * printerName.length() + 2;
+		int bloblen = printer.bloblen;
+		
 		RdpPacket_Localised s;
 		this.register(printer);
 		
-		s = new RdpPacket_Localised(200);
+		s = new RdpPacket_Localised(52 + driverlen + printerlen);
 		s.out_uint8p(magic, 4);
 		s.setLittleEndian32(1);   /* deviceCount */
 		
@@ -377,11 +382,6 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 
 		s.out_uint8p(printer.name, 8);
 		
-		String printerName = printer.get_display_name();
-		int driverlen = 2 * printer.driver.length() + 2;
-		int printerlen = 2 * printerName.length() + 2;
-		int bloblen = printer.bloblen;
-
 		s.setLittleEndian32(24 + driverlen + printerlen + bloblen);
 		if (printer.default_printer)
 			s.setLittleEndian32(FLAG_DEFAULTPRINTER);
