@@ -76,104 +76,10 @@
   
   <section id="installation_linux">
     <title id="installation_linux_title">Installation on Ubuntu 10.04</title>
-      
-     <section id="repository_online">
-      <title id="repository_online_title">Online method</title>
-      
-      <para id="repository_online_para">
-        The following method describe the repository process when your
-        servers can access to Internet. If not, please read the
-        offline method.
-      </para>
-      
-      <itemizedlist>
-        <listitem id="repository_step1">
-          <para id="repository_online_step1_para">
-            Edit the
-            <emphasis>/etc/apt/sources.list.d/ulteo-ovd.list</emphasis>
-            file and add this line:
-          </para>
-          <important>
-            <para>
-              You have to replace LOGIN and PASSWORD by your own.
-            </para>
-          </important>
-          <screen>
-<![CDATA[deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main
-deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/gold/ubuntu lucid main]]>
-          </screen>
-        </listitem>
-      </itemizedlist>
-    </section>
 
-    <section id="repository_offline">
-      <title id="repository_offline_title">Offline Method</title>
-
-     <itemizedlist>
-       <listitem id="repository_offline_step1">
-         <para id="repository_offline_step1_para">
-           The offline repository are two archives you can download from the Ulteo website 
-           <ulink url="http://archive.ulteo.com/ovd/3.0/offline/ovd-3.0-ubuntu-lucid.tar.gz">here</ulink> and 
-           <ulink url="http://archive.ulteo.com/ovd/3.0/gold/offline/ovd-3.0-gold-ubuntu-lucid.tar.gz">there</ulink>, 
-           or from the Ulteo OVD DVD and copy it in
-           the <emphasis>/root</emphasis> of your machine.
-         </para>
-       </listitem>
-
-       <listitem id="repository_offline_step2">
-          <para id="repository_offline_step2_para">
-            Uncompress the archive:
-          </para>
-          <screen>
-<![CDATA[# for f in ovd-3.0-*ubuntu-lucid.tar.gz; do tar xzf $f; done]]>
-          </screen>
-        </listitem>
-
-        <listitem id="repository_offline_step3">
-          <para id="repository_offline_step3_para">
-            Edit the
-            <emphasis>/etc/apt/sources.list.d/ulteo-ovd.list</emphasis>
-            file and add these lines:
-          </para>
-          <screen>
-<![CDATA[deb file:///root/ovd-3.0-ubuntu-lucid lucid main
-deb file:///root/ovd-3.0-gold-ubuntu-lucid lucid main]]>
-          </screen>
-        </listitem>
-     </itemizedlist>
-    </section>
-
-    <simplesect id="repository_common">
-      <title id="repository_common_title">Finish with any method</title>
-      <itemizedlist>
-        <listitem>
-          <para id="repository_common_step1_para">
-            Update the package database:
-          </para>
-          <screen>
-<![CDATA[# apt-get update]]>
-          </screen>
-          <note>
-            <para>
-              GPG errors given by the previous command will be fixed
-              in the next installation steps. They won't prevent the
-              installation to succeed.
-            </para>
-          </note>
-        </listitem>
-
-        <listitem id="repository_step3">
-          <para>
-            Install the keyring package to validate the repository
-            using gpg:
-          </para>
-          <screen>
-<![CDATA[# apt-get install ulteo-keyring
-# apt-get update]]>
-          </screen>
-        </listitem>
-      </itemizedlist>
-    </simplesect>
+    <xi:include href="Installation_Gateway_Lucid.xml" xpointer="repository_online" />
+    <xi:include href="Installation_Gateway_Lucid.xml" xpointer="repository_offline" />
+    <xi:include href="Installation_Gateway_Lucid.xml" xpointer="repository_common" />
 
     <section id="package_install">
       <title>Package installation</title>
