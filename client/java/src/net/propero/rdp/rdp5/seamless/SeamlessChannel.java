@@ -438,7 +438,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		if (this.opt.isMouseWheelEnabled)
 			f.sw_enableMouseWheel();
 
-		((Window) f).addComponentListener(this);
+		((Window) f).setFocusableWindowState(false);
 
 		f.sw_addWindowStateListener(this);
 		f.sw_addWindowListener(this);
@@ -1170,19 +1170,8 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		new PositionUpdater(this, (SeamlessWindow) c).update();
 	}
 
-	/*
-	 * Setting a Window's focusability state to false is the standard
-	 * mechanism for an application to identify to the AWT a Window
-	 * which will be used as a floating palette or toolbar.
-	 *
-	 * That's why we do this after the window has been shown.
-	 */
-	public void componentShown(ComponentEvent e) {
-		((Window) e.getComponent()).setFocusableWindowState(false);
-	}
-	public void componentHidden(ComponentEvent e) {
-		((Window) e.getComponent()).setFocusableWindowState(true);
-	}
+	public void componentShown(ComponentEvent e) {}
+	public void componentHidden(ComponentEvent e) {}
 
 	protected class StateOrder {
 		public long window_id;
