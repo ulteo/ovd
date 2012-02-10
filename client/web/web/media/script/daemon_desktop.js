@@ -1,8 +1,8 @@
 /**
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,8 +25,8 @@ var Desktop = Class.create(Daemon, {
 
 	fullscreen: false,
 
-	initialize: function(applet_version_, applet_main_class_, debug_) {
-		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, debug_]);
+	initialize: function(debug_) {
+		Daemon.prototype.initialize.apply(this, [debug_]);
 
 		$('desktopAppletContainer').innerHTML = '';
 	},
@@ -72,7 +72,7 @@ var Desktop = Class.create(Daemon, {
 				applet_params.set('setting_'+pair.key, pair.value);
 			});
 			
-			var applet = buildAppletNode('ulteoapplet', this.applet_main_class, 'jpedal.jar,log4j-1.2.jar,'+this.applet_version, applet_params);
+			var applet = this.buildAppletNode('Desktop', applet_params);
 			applet.setAttribute('width', applet_width);
 			applet.setAttribute('height', applet_height);
 			$('desktopAppletContainer').setStyle({width: applet_width+'px', height: applet_height+'px', top: 0+'px', left: 0+'px'});

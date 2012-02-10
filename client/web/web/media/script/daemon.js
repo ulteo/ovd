@@ -1,8 +1,8 @@
 /**
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,9 +22,6 @@
 var Daemon = Class.create({
 	i18n: new Array(),
 	context: null,
-
-	applet_version: '',
-	applet_main_class: '',
 
 	sessionmanager: null,
 
@@ -517,5 +514,9 @@ var Daemon = Class.create({
 			
 			this.settings.set(name, value);
 		}
+	},
+	
+	buildAppletNode: function(mode_, params_) {
+		return buildAppletNode('ulteoapplet', 'org.ulteo.ovd.applet.'+mode_, 'jpedal.jar,log4j-1.2.jar,ulteo-applet.jar', params_);
 	}
 });

@@ -1,8 +1,8 @@
 /**
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
@@ -247,9 +247,9 @@ function onStartSessionSuccess(xml_) {
 
 	setTimeout(function() {
 		if (session_mode == 'Desktop')
-			daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.ovd.applet.Desktop', debug);
+			daemon = new Desktop(debug);
 		else
-			daemon = new Applications('ulteo-applet.jar', 'org.ulteo.ovd.applet.Applications', debug);
+			daemon = new Applications(debug);
 
 		daemon.sessionmanager = sessionmanager_host;
 
@@ -1029,9 +1029,9 @@ function onStartExternalSessionSuccess(xml_) {
 
 	setTimeout(function() {
 		if (session_mode == 'Desktop')
-			daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.ovd.applet.Desktop', false);
+			daemon = new Desktop(false);
 		else
-			daemon = new External('ulteo-applet.jar', 'org.ulteo.ovd.applet.Applications', false);
+			daemon = new External(false);
 
 		daemon.sessionmanager = sessionmanager_host;
 		daemon.keymap = user_keymap;

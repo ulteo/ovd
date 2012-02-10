@@ -1,7 +1,8 @@
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,8 +20,8 @@
  **/
 
 var External = Class.create(Applications, {
-	initialize: function(applet_version_, applet_main_class_, debug_) {
-		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, debug_]);
+	initialize: function(debug_) {
+		Daemon.prototype.initialize.apply(this, [debug_]);
 
 		$('applicationsAppletContainer').innerHTML = '';
 

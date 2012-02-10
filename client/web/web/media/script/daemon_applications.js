@@ -1,8 +1,8 @@
 /**
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
@@ -37,8 +37,8 @@ var Applications = Class.create(Daemon, {
 
 	progress_bar_step: 50,
 
-	initialize: function(applet_version_, applet_main_class_, debug_) {
-		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, debug_]);
+	initialize: function(debug_) {
+		Daemon.prototype.initialize.apply(this, [debug_]);
 
 		$('applicationsAppletContainer').innerHTML = '';
 
@@ -111,7 +111,7 @@ var Applications = Class.create(Daemon, {
 			applet_params.set('setting_'+pair.key, pair.value);
 		});
 
-		var applet = buildAppletNode('ulteoapplet', this.applet_main_class, 'jpedal.jar,log4j-1.2.jar,'+this.applet_version, applet_params);
+		var applet = this.buildAppletNode('Applications', applet_params);
 		$('applicationsAppletContainer').show();
 		$('applicationsAppletContainer').appendChild(applet);
 
