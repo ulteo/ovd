@@ -440,7 +440,7 @@ such file or directory]]>
     </title>
 
     <para>
-      Portal applications stay grey until the ApplicationServer's session is available. The session may never be up and running due to:
+      Portal applications remain grey until the ApplicationServer's session is available. The session may never be up and running due to:
     </para>
     <itemizedlist>
       <listitem>

@@ -423,7 +423,7 @@ and view documents">
 	</itemizedlist>
 
 	<para>
-	  This webservice can be called to becomde un-authenticated.
+	  This webservice can be called to turn into de-authenticaded state.
 	</para>
       </simplesect>
 
@@ -557,7 +557,7 @@ and view documents">
 	  Console.
 	</para>
 	<para>
-	  The service limits to 100 items in the list (can be change
+	  The service limits to 100 items in the list (can be changed
 	  from the Administration Console).
 	</para>
       </simplesect>
@@ -583,9 +583,9 @@ and view documents">
 
 	<para>
 	  This service is the one used by a client to negotiate a
-	  session. In the input XML, the client describe the parameter
+	  session. In the input XML, the client describes the parameter
 	  wanted for the session. According with the Administration
-	  Console policy, the Session Manager return either a session
+	  Console policy, the Session Manager returns either a session
 	  (with parameter and access) or an error message explaining
 	  why the session cannot be created.
 	</para>

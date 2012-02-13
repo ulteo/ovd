@@ -18,7 +18,7 @@
 
     <para>
       This documentation will help you to install a complete Ulteo OVD
-      infrastructure in only one server. This mode is not recommanded
+      infrastructure in only one server. This mode is not advised
       for production, it's only to install a demo quickly.
     </para>
 
@@ -99,7 +99,7 @@
 	    Do not install
 	    both <emphasis>ulteo-ovd-easy-install</emphasis>
 	    and <emphasis>ulteo-ovd-debconf-database</emphasis> in the
-	    same command line or your install will failed.
+	    same command line or your install will fail.
 	  </para>
         </important>
 
@@ -211,7 +211,7 @@
           </listitem>
           <listitem>
             <para>
-              Web browser: Firefox 2+, Internet Explorer 7+, Google Chrome 9+, Saffari 5+
+              Web browser: Firefox 2+, Internet Explorer 7+, Google Chrome 9+, Safari 5+
             </para>
           </listitem>
         </itemizedlist>
