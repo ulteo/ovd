@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2011 Ulteo SAS
+# Copyright (C) 2008-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010, 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -19,55 +20,46 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import ConfigParser
 import hashlib
 import os
-import re
 import tempfile
+
+import xdg.BaseDirectory
+import xdg.DesktopEntry
+import xdg.Exceptions
+import xdg.IconTheme
 
 from ovd import commands
 from ovd.Logger import Logger
+from ovd.Role.ApplicationServer.Config import Config
 
 class ApplicationsDetection():
 	shortcut_ext = ".desktop"
 	
 	def __init__(self):
-		self.path = "/usr/share/applications"
+		self.path = "applications"
 		
-		self.desktop_keys_required = ['Name', 'Exec']
-		self.desktop_keys = {
-				'Name' : ['Name[en]',
-				'name'], # Non standard but used by IBM Lotus Symphony
-				'Icon' : ['Icon'],
-				'Categories' : ['Categories'],
-				'Comment' : ['Comment','GenericName[en]', 'GenericName'],
-				}
-	
 	
 	def find_files(self):
-		ret = []
-		for root, _, files in os.walk(self.path):
-			for name in files:
-				l = os.path.join(root,name)
-				if not os.path.isfile(l):
-					continue
-				
-				if not os.path.splitext(l)[1] == ".desktop":
-					continue
-				
-				ret.append(l)
-				
-		return ret
+		for path in xdg.BaseDirectory.xdg_data_dirs:
+			for root, _, files in os.walk(os.path.join(path, self.path)):
+				for name in files:
+					l = os.path.join(root,name)
+					if not os.path.isfile(l):
+						continue
+					
+					if not os.path.splitext(l)[1] == self.shortcut_ext:
+						continue
+					
+					yield l
 	
 	
 	@staticmethod
-	def isBan(parser):
-		if parser.has_option('Desktop Entry', 'Categories'):
-			categ = parser.get('Desktop Entry','Categories')
-			
-			for elem in ["information", "Peripherals", "settings", "Screensaver", "System"]:
-				if elem in categ:
-					return True
+	def isBan(entry):
+		categ = entry.getCategories()
+		for elem in ["information", "Peripherals", "settings", "Screensaver", "System"]:
+			if elem in categ:
+				return True
 		
 		return False
 	
@@ -77,55 +69,37 @@ class ApplicationsDetection():
 		files = self.find_files()
 		
 		for filename in files:
-			parser = ConfigParser.ConfigParser()
+			entrie = xdg.DesktopEntry.DesktopEntry(filename)
 			
-			try:
-				parser.read(filename)
-			except ConfigParser.MissingSectionHeaderError:
-				continue
-			
-			if not parser.has_section('Desktop Entry'):
-				continue
-			
-			if not parser.has_option('Desktop Entry', 'Type'):
-				continue
-			if not parser.get('Desktop Entry','Type') == "Application":
+			if entrie.getType() != "Application":
 				# the spec define three type: Application, Link and
 				# Directory
 				continue
 			
-			if not parser.has_option('Desktop Entry', "Name"):
+			if entrie.getName() == u'':
 				continue
 			
-			if not parser.has_option('Desktop Entry', "Exec"):
+			if entrie.getExec() == u'':
 				continue
 			
-			if self.isBan(parser):
+			if self.isBan(entrie):
 				continue
 			
 			
 			application = {}
-			application["local_id"] = hashlib.md5(filename).hexdigest()
-			application["name"] = parser.get('Desktop Entry', "Name")
-			application["command"] = parser.get('Desktop Entry', "Exec")
-			application["filename"] = filename
-			application["mimetypes"] = []
-			if parser.has_option('Desktop Entry', "MimeType"):
-				mimes = parser.get('Desktop Entry', "MimeType").strip()
-				if len(mimes)>0:
-					if mimes.endswith(";"):
-						mimes = mimes[:-1]
-					
-					application["mimetypes"] = mimes.split(";")
+			application["local_id"] = hashlib.md5(entrie.filename).hexdigest()
+			application["name"] = entrie.getName()
+			application["command"] = entrie.getExec()
+			application["filename"] = entrie.filename
+			application["mimetypes"] = entrie.getMimeTypes()
 			
+			if entrie.getIcon() != u'':
+				application["icon"] = entrie.getIcon()
 			
-			if parser.has_option('Desktop Entry', "Icon"):
-				application["icon"] = parser.get('Desktop Entry', "Icon")
-				
-			if parser.has_option('Desktop Entry', "Comment"):
-				application["description"] = parser.get('Desktop Entry', "Comment")
-			elif parser.has_option('Desktop Entry', "GenericName"):
-				application["description"] = parser.get('Desktop Entry', "GenericName")
+			if entrie.getComment() != u'':
+				application["description"] = entrie.getComment()
+			elif entrie.getGenericName() != u'':
+				application["description"] = entrie.getGenericName()
 			
 			applications[application["local_id"]] = application
 		
@@ -135,51 +109,40 @@ class ApplicationsDetection():
 	@staticmethod
 	def getExec(filename):
 		Logger.debug("ApplicationsDetection::getExec %s"%(filename))
-		parser = ConfigParser.ConfigParser()
 		
 		try:
-			parser.read(filename)
-		except ConfigParser.MissingSectionHeaderError:
-			Logger.warn("ApplicationsDetection::getExec invalid desktop file syntax")
+			entry = xdg.DesktopEntry.DesktopEntry(filename)
+		except xdg.Exceptions.Error as detail:
+			Logger.warn("ApplicationsDetection::getExec %s" % detail)
+			return None
+
+		if entry.getExec() == u'':
+			Logger.warn("ApplicationsDetection::getExec no command to execute")
 			return None
 		
-		if not parser.has_section('Desktop Entry'):
-			Logger.warn("ApplicationsDetection::getExec invalid desktop file syntax")
-			return None	
-		
-		if not parser.has_option('Desktop Entry', "Exec"):
-			Logger.warn("ApplicationsDetection::getExec invalid desktop file syntax")
-			return None
-		
-		return parser.get('Desktop Entry', "Exec")
+		return entry.getExec()
 	
 	
 	def getIcon(self, filename):
 		Logger.debug("ApplicationsDetection::getIcon %s"%(filename))
-		parser = ConfigParser.ConfigParser()
 		
 		try:
-			parser.read(filename)
-		except ConfigParser.MissingSectionHeaderError:
-			Logger.warn("ApplicationsDetection::getIcon invalid desktop file syntax")
+			entry = xdg.DesktopEntry.DesktopEntry(filename)
+		except xdg.Exceptions.Error as detail:
+			Logger.warn("ApplicationsDetection::getIcon %s" % detail)
 			return None
 		
-		if not parser.has_section('Desktop Entry'):
-			Logger.warn("ApplicationsDetection::getIcon invalid desktop file syntax")
-			return None	
-		
-		if not parser.has_option('Desktop Entry', "Icon"):
+		iconName = entry.getIcon()
+		if entry.getIcon() == u'':
 			# icon field is not required for type=Application
 			return None
 		
-		iconName = parser.get('Desktop Entry', "Icon")
-		if not os.path.isabs(iconName):
-			iconName = self.chooseBestIcon(iconName)
-			if iconName is None:
-				return None
+		iconPath = xdg.IconTheme.getIconPath(iconName, size = 32, theme=Config.linux_icon_theme, extensions = ["png", "xpm"])
+		if iconPath == None:
+			return None
 		
 		bufFile = tempfile.mktemp(".png")		
-		cmd = 'convert -resize 32x32 "%s" "%s"'%(iconName, bufFile)
+		cmd = 'convert -resize 32x32 "%s" "%s"'%(iconPath, bufFile)
 		s,o = commands.getstatusoutput(cmd)
 		if s != 0:
 			Logger.debug("getIcon cmd '%s' returned (%d): %s"%(cmd, s, o))
@@ -196,61 +159,6 @@ class ApplicationsDetection():
 		os.remove(bufFile)
 		
 		return buf
-	
-	
-	def chooseBestIcon(self, pattern):
-		cmd = 'find /usr/share/pixmaps /usr/share/icons -xtype f -iname "*%s*"'%(pattern)
-		s,o = commands.getstatusoutput(cmd)
-		if s != 0:
-			Logger.debug("chooseBestIcon cmd '%s' returned (%d): %s"%(cmd, s, o))
-			Logger.error("chooseBestIcon: unable to get icon")
-			return None
-		
-		files = o.splitlines()
-		if len(files)==0:
-			return None
-		
-		list1 = {};
-		list2 = {};
-		
-		for image in files:
-			cmd = 'identify "%s"'%(image)
-			s,o = commands.getstatusoutput(cmd)
-			if s != 0:
-				Logger.debug("chooseBestIcon cmd '%s' returned (%d): %s"%(cmd, s, o))
-				continue
-			
-			if not o.startswith(image+" "):
-				Logger.debug("chooseBestIcon identify weird out")
-				continue
-			
-			
-			buf = o[len(image+" "):]
-			buf = buf.split(" ")
-			if len(buf)<2:
-				Logger.debug("chooseBestIcon identify weird out")
-				continue
-			
-			res = buf[1]
-			match = re.match("(\d+)x(\d+).*", res)
-			if match is None:
-				Logger.debug("chooseBestIcon identify weird out")
-				continue
-			
-			height =  int(match.group(2))
-			
-			if height >= 32:
-				list1[height] = image
-			else:
-				list2[height] = image
-		
-		if len(list1) > 0:
-			return list1.values()[0]
-		
-		if len(list2) > 0:
-			return list2.values()[-1]
-		
-		return None
 	
 	
 	def getDebianPackage(self, applications):

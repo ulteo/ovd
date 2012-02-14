@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011 Ulteo SAS
+# Copyright (C) 2011-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -26,6 +27,7 @@ class Config:
 	multithread = False
 	checkShell = False
 	clean_dump_archive = True
+	linux_icon_theme = "CrystalGnome"
 	
 	
 	@classmethod
@@ -38,5 +40,8 @@ class Config:
 		
 		if infos.has_key("clean_dump_archive"):
 			cls.clean_dump_archive = (infos["clean_dump_archive"].lower() == "true")
+			
+		if infos.has_key("linux_icon_theme"):
+			cls.linux_icon_theme = infos["linux_icon_theme"]
 		
 		return True
