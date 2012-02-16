@@ -63,13 +63,10 @@ var Daemon = Class.create({
 
 	application_token: 0,
 
-	initialize: function(applet_version_, applet_main_class_, debug_) {
+	initialize: function(debug_) {
 		this.settings = new Hash();
 		this.servers = new Hash();
 		this.liaison_server_applications = new Hash();
-
-		this.applet_version = applet_version_;
-		this.applet_main_class = applet_main_class_;
 
 		this.debug = debug_;
 
