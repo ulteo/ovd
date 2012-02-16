@@ -140,8 +140,7 @@ function showLogin() {
 	new Effect.Move($('loginBox'), { x: 0, y: 1000 });
 
 	if (debug) {
-		$('debugContainer').hide();
-		$('debugLevels').hide();
+		Logger.del_instance();
 		debug = false;
 	}
 }
@@ -469,7 +468,7 @@ Event.observe(window, 'load', function() {
 			if ($('desktopAppletContainer').visible()) {
 				new Effect.Center($('desktopAppletContainer'));
 
-				if (daemon.debug)
+				if (Logger.has_instance())
 					new Effect.Move($('desktopAppletContainer'), { x: 0, y: -75, duration: 0.01 });
 			}
 		});

@@ -7,6 +7,7 @@ scripts_DATA = application.js \
                daemon_desktop.js \
                daemon_external.js \
                external.js \
+               Logger.js \
                server.js \
                timezones.js
 

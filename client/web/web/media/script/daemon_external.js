@@ -30,7 +30,7 @@ var External = Class.create(Applications, {
 	},
 
 	connect_servers: function() {
-		this.push_log('debug', '[external] connect_servers()');
+		Logger.debug('[external] connect_servers()');
 
 		Applications.prototype.connect_servers.apply(this);
 
@@ -40,7 +40,7 @@ var External = Class.create(Applications, {
 	},
 
 	do_started: function() {
-		this.push_log('debug', '[external] do_started()');
+		Logger.debug('[external] do_started()');
 
 		Daemon.prototype.do_started.apply(this);
 
@@ -48,7 +48,7 @@ var External = Class.create(Applications, {
 	},
 
 	list_running_apps: function(applicationsNode_) {
-		this.push_log('debug', '[external] list_running_apps(xml@applicationsNode)');
+		Logger.debug('[external] list_running_apps(xml@applicationsNode)');
 
 		var runningApplicationsNodes = applicationsNode_.getElementsByTagName('running');
 
@@ -77,12 +77,12 @@ var External = Class.create(Applications, {
 	},
 
 	applicationStatus: function(token_, status_) {
-		this.push_log('debug', '[external] applicationStatus(token: '+token_+', status: '+status_+')');
+		Logger.debug('[external] applicationStatus(token: '+token_+', status: '+status_+')');
 
 		var app_status = 2;
 
 		if (typeof this.running_applications.get(token_) == 'undefined') {
-			this.push_log('info', '[external] applicationStatus(token: '+token_+', status: '+status_+') - Creating "running" application "'+token_+'"');
+			Logger.info('[external] applicationStatus(token: '+token_+', status: '+status_+') - Creating "running" application "'+token_+'"');
 
 			var app_id = this.liaison_runningapplicationtoken_application.get(token_);
 			if (typeof app_id == 'undefined')
@@ -90,7 +90,7 @@ var External = Class.create(Applications, {
 
 			var app_object = this.applications.get(app_id);
 			if (typeof app_object == 'undefined') {
-				this.push_log('error', '[external] applicationStatus(token: '+token_+', status: '+status_+') - Application "'+app_id+'" does not exist');
+				Logger.error('[external] applicationStatus(token: '+token_+', status: '+status_+') - Application "'+app_id+'" does not exist');
 				return false;
 			}
 
@@ -98,15 +98,15 @@ var External = Class.create(Applications, {
 			this.running_applications.set(instance.pid, instance);
 
 			if (status_ == 'started')
-				this.push_log('info', '[external] applicationStatus(token: '+token_+', status: '+status_+') - Adding "running" application "'+token_+'" to running applications list');
+				Logger.info('[external] applicationStatus(token: '+token_+', status: '+status_+') - Adding "running" application "'+token_+'" to running applications list');
 		} else {
-			this.push_log('info', '[external] applicationStatus(token: '+token_+', status: '+status_+') - Updating "running" application "'+token_+'" status: "'+app_status+'"');
+			Logger.info('[external] applicationStatus(token: '+token_+', status: '+status_+') - Updating "running" application "'+token_+'" status: "'+app_status+'"');
 
 			var instance = this.running_applications.get(token_);
 			instance.update(app_status);
 
 			if (status_ == 'stopped') {
-				this.push_log('info', '[external] applicationStatus(token: '+token_+', status: '+status_+') - Deleting "running" application "'+token_+'" from running applications list');
+				Logger.info('[external] applicationStatus(token: '+token_+', status: '+status_+') - Deleting "running" application "'+token_+'" from running applications list');
 
 				var app_id = this.liaison_runningapplicationtoken_application.get(token_);
 				if (typeof app_id == 'undefined')

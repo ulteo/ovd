@@ -73,11 +73,7 @@ var Daemon = Class.create({
 		this.refresh_body_size();
 
 		if (this.debug) {
-			$('debugContainer').innerHTML = '';
-			$('debugContainer').show();
-			$('debugContainer').style.display = 'inline';
-			$('debugLevels').show();
-			$('debugLevels').style.display = 'inline';
+			Logger.init_instance();
 		}
 
 		if ($('progressBar') && $('progressBarContent'))
@@ -120,48 +116,8 @@ var Daemon = Class.create({
 		return this.context;
 	},
 
-	push_log: function(level_, data_) {
-		if (! this.debug)
-			return;
 
-		var flag = (($('debugContainer').scrollTop+$('debugContainer').offsetHeight) == $('debugContainer').scrollHeight);
 
-		buf = new Date();
-		hour = buf.getHours();
-		if (hour < 10)
-			hour = '0'+hour;
-		minutes = buf.getMinutes();
-		if (minutes < 10)
-			minutes = '0'+minutes;
-		seconds = buf.getSeconds();
-		if (seconds < 10)
-			seconds = '0'+seconds;
-
-		$('debugContainer').innerHTML += '<div class="'+level_+'">['+hour+':'+minutes+':'+seconds+'] - '+data_+'</div>'+"\n";
-
-		if (flag)
-			$('debugContainer').scrollTop = $('debugContainer').scrollHeight;
-	},
-
-	switch_debug: function(level_) {
-		var flag = (($('debugContainer').scrollTop+$('debugContainer').offsetHeight) == $('debugContainer').scrollHeight);
-
-		var buf = $('debugContainer').className;
-
-		if (buf.match('no_'+level_))
-			buf = buf.replace('no_'+level_, level_);
-		else
-			buf = buf.replace(level_, 'no_'+level_);
-
-		$('debugContainer').className = buf;
-
-		if (flag)
-			$('debugContainer').scrollTop = $('debugContainer').scrollHeight;
-	},
-
-	clear_debug: function() {
-		$('debugContainer').innerHTML = '';
-	},
 
 	is_ready: function() {
 		return this.ready;
@@ -192,14 +148,14 @@ var Daemon = Class.create({
 
 	warn_expire: function() {
 		if (! this.is_stopped()) {
-			this.push_log('warning', '[daemon] warn_expire() - Session will expire in 3 minutes');
+			Logger.warning('[daemon] warn_expire() - Session will expire in 3 minutes');
 
 			alert(i18n.get('session_expire_in_3_minutes'));
 		}
 	},
 
 	prepare: function() {
-		this.push_log('debug', '[daemon] prepare()');
+		Logger.debug('[daemon] prepare()');
 
 		if (this.duration > 0) {
 			if (this.duration > 180)
@@ -210,7 +166,7 @@ var Daemon = Class.create({
 	},
 
 	loop: function() {
-		this.push_log('debug', '[daemon] loop()');
+		Logger.debug('[daemon] loop()');
 
 		this.check_status();
 
@@ -223,13 +179,13 @@ var Daemon = Class.create({
 	},
 
 	break_loop: function() {
-		this.push_log('debug', '[daemon] break_loop()');
+		Logger.debug('[daemon] break_loop()');
 
 		clearTimeout(this.loop_timer);
 	},
 
 	suspend: function() {
-		this.push_log('debug', '[daemon] suspend()');
+		Logger.debug('[daemon] suspend()');
 
 		this.req_logout('suspend');
 
@@ -237,7 +193,7 @@ var Daemon = Class.create({
 	},
 
 	logout: function() {
-		this.push_log('debug', '[daemon] logout()');
+		Logger.debug('[daemon] logout()');
 
 		this.req_logout('logout');
 
@@ -245,19 +201,19 @@ var Daemon = Class.create({
 	},
 
 	client_exit: function() {
-		this.push_log('debug', '[daemon] client_exit()');
+		Logger.debug('[daemon] client_exit()');
 
 		if (this.persistent == true) {
-			this.push_log('info', '[daemon] client_exit() - We are in a "persistent" mode, now suspending session');
+			Logger.info('[daemon] client_exit() - We are in a "persistent" mode, now suspending session');
 			this.suspend();
 		} else {
-			this.push_log('info', '[daemon] client_exit() - We are in a "non-persistent" mode, now ending session');
+			Logger.info('[daemon] client_exit() - We are in a "non-persistent" mode, now ending session');
 			this.logout();
 		}
 	},
 
 	check_status: function() {
-		this.push_log('debug', '[daemon] check_status()');
+		Logger.debug('[daemon] check_status()');
 
 		new Ajax.Request(
 			'session_status.php',
@@ -272,14 +228,14 @@ var Daemon = Class.create({
 	},
 
 	parse_check_status: function(transport) {
-		this.push_log('debug', '[daemon] parse_check_status(transport@check_status())');
+		Logger.debug('[daemon] parse_check_status(transport@check_status())');
 
 		var xml = transport.responseXML;
 
 		var buffer = xml.getElementsByTagName('session');
 
 		if (buffer.length != 1) {
-			this.push_log('error', '[daemon] parse_check_status(transport@check_status()) - Invalid XML (No "session" node)');
+			Logger.error('[daemon] parse_check_status(transport@check_status()) - Invalid XML (No "session" node)');
 			return;
 		}
 
@@ -290,13 +246,13 @@ var Daemon = Class.create({
 			this.session_status = sessionNode.getAttribute('status');
 
 			if (this.session_status_old != this.session_status)
-				this.push_log('info', '[daemon] parse_check_status(transport@check_status()) - Session status is now "'+this.session_status+'"');
+				Logger.info('[daemon] parse_check_status(transport@check_status()) - Session status is now "'+this.session_status+'"');
 			else
-				this.push_log('debug', '[daemon] parse_check_status(transport@check_status()) - Session status is "'+this.session_status+'"');
+				Logger.debug('[daemon] parse_check_status(transport@check_status()) - Session status is "'+this.session_status+'"');
 
 			this.check_status_post();
 		} catch(e) {
-			this.push_log('error', '[daemon] parse_check_status(transport@check_status()) - Invalid XML (Missing argument for "session" node)');
+			Logger.error('[daemon] parse_check_status(transport@check_status()) - Invalid XML (Missing argument for "session" node)');
 			return;
 		}
 	},
@@ -304,37 +260,37 @@ var Daemon = Class.create({
 	check_status_post: function() {
 		if (! this.is_ready()) {
 			if (this.ready_lock) {
-				this.push_log('debug', '[daemon] check_status_post() - Already in "is_ready" state');
+				Logger.debug('[daemon] check_status_post() - Already in "is_ready" state');
 				return;
 			}
 			this.ready_lock = true;
 
-			this.push_log('info', '[daemon] check_status_post() - Now preparing session');
+			Logger.info('[daemon] check_status_post() - Now preparing session');
 
 			this.ready = true;
 		} else if (! this.is_started()) {
 			if (this.started_lock) {
-				this.push_log('debug', '[daemon] check_status_post() - Already in "is_started" state');
+				Logger.debug('[daemon] check_status_post() - Already in "is_started" state');
 				return;
 			}
 			this.started_lock = true;
 
-			this.push_log('info', '[daemon] check_status_post() - Now starting session');
+			Logger.info('[daemon] check_status_post() - Now starting session');
 
 			this.start();
 
 			this.started = true;
 		} else if (this.is_stopped()) {
 			if (this.stopped_lock) {
-				this.push_log('debug', '[daemon] check_status_post() - Already in "is_stopped" state');
+				Logger.debug('[daemon] check_status_post() - Already in "is_stopped" state');
 				return;
 			}
 			this.stopped_lock = true;
 
-			this.push_log('info', '[daemon] check_status_post() - Now ending session');
+			Logger.info('[daemon] check_status_post() - Now ending session');
 
 			if (! this.is_started()) {
-				this.push_log('warning', '[daemon] check_status_post() - Session end is unexpected (session was never started)');
+				Logger.warn('[daemon] check_status_post() - Session end is unexpected (session was never started)');
 				this.error_message = this.i18n['session_close_unexpected'];
 			}
 
@@ -357,7 +313,7 @@ var Daemon = Class.create({
 	},
 
 	start: function() {
-		this.push_log('debug', '[daemon] start()');
+		Logger.debug('[daemon] start()');
 
 		if (! $(this.mode+'ModeContainer').visible())
 			$(this.mode+'ModeContainer').show();
@@ -369,13 +325,13 @@ var Daemon = Class.create({
 	},
 
 	do_started: function() {
-		this.push_log('debug', '[daemon] do_started()');
+		Logger.debug('[daemon] do_started()');
 
 		this.parse_do_started();
 	},
 
 	parse_do_started: function(transport) {
-		this.push_log('debug', '[daemon] parse_do_started(transport@do_started())');
+		Logger.debug('[daemon] parse_do_started(transport@do_started())');
 
 		this.started = true;
 	},
@@ -383,7 +339,7 @@ var Daemon = Class.create({
 	do_ended: function() {
 		window.onbeforeunload = function(e) {}
 
-		this.push_log('debug', '[daemon] do_ended()');
+		Logger.debug('[daemon] do_ended()');
 
 		if ($('splashContainer').visible())
 			$('splashContainer').hide();
@@ -498,7 +454,7 @@ var Daemon = Class.create({
 	},
 	
 	parseSessionSettings: function(setting_nodes) {
-		this.push_log('debug', '[daemon] parseSessionSettings()');
+		Logger.debug('[daemon] parseSessionSettings()');
 		
 		for (var i=0; i < setting_nodes.length; i++) {
 			var name, value;

@@ -59,14 +59,14 @@ var Applications = Class.create(Daemon, {
 	},
 
 	connect_servers: function() {
-		this.push_log('debug', '[applications] connect_servers()');
+		Logger.debug('[applications] connect_servers()');
 
 		try {
 			var ulteoapplet_isactive = $('ulteoapplet').isActive();
 			if (! ulteoapplet_isactive)
 				throw "applet is not ready";
 		} catch(e) {
-			this.push_log('warning', '[applications] connect_servers() - Applet is not ready');
+			Logger.warn('[applications] connect_servers() - Applet is not ready');
 			setTimeout(this.connect_servers.bind(this), 1000);
 			return;
 		}
@@ -74,9 +74,9 @@ var Applications = Class.create(Daemon, {
 		var servers = this.servers.values();
 		for (var i=0; i < servers.length; i++) {
 			if (servers[i].token != null)
-				this.push_log('info', '[applications] connect_servers() - Connecting to server "'+servers[i].id+'"');
+				Logger.info('[applications] connect_servers() - Connecting to server "'+servers[i].id+'"');
 			else
-				this.push_log('info', '[applications] connect_servers() - Connecting to server "'+servers[i].fqdn+'"');
+				Logger.info('[applications] connect_servers() - Connecting to server "'+servers[i].fqdn+'"');
 			servers[i].connect();
 		}
 
@@ -84,7 +84,7 @@ var Applications = Class.create(Daemon, {
 	},
 
 	do_started: function() {
-		this.push_log('debug', '[applications] do_started()');
+		Logger.debug('[applications] do_started()');
 
 		this.load_explorer();
 		this.display_news();
@@ -95,7 +95,7 @@ var Applications = Class.create(Daemon, {
 	},
 
 	parse_do_started: function(transport) {
-		this.push_log('debug', '[applications] parse_do_started(transport@do_started())');
+		Logger.debug('[applications] parse_do_started(transport@do_started())');
 
 		var applet_params = new Hash();
 		applet_params.set('wc_url', getWebClientBaseURL());
@@ -119,12 +119,12 @@ var Applications = Class.create(Daemon, {
 	},
 
 	parse_list_servers: function(xml) {
-		this.push_log('debug', '[applications] parse_list_servers(transport@list_servers())');
+		Logger.debug('[applications] parse_list_servers(transport@list_servers())');
 
 		var sessionNode = xml.getElementsByTagName('session');
 
 		if (sessionNode.length != 1) {
-			this.push_log('error', '[applications] parse_list_servers(transport@list_servers()) - Invalid XML (No "session" node)');
+			Logger.error('[applications] parse_list_servers(transport@list_servers()) - Invalid XML (No "session" node)');
 			return false;
 		}
 
@@ -146,9 +146,9 @@ var Applications = Class.create(Daemon, {
 					server.setToken(serverNodes[i].getAttribute('token'));
 
 				if (mode_gateway)
-					this.push_log('info', '[applications] parse_list_servers(transport@list_servers()) - Adding server "'+server.id+'" to servers list');
+					Logger.info('[applications] parse_list_servers(transport@list_servers()) - Adding server "'+server.id+'" to servers list');
 				else
-					this.push_log('info', '[applications] parse_list_servers(transport@list_servers()) - Adding server "'+server.fqdn+'" to servers list');
+					Logger.info('[applications] parse_list_servers(transport@list_servers()) - Adding server "'+server.fqdn+'" to servers list');
 				this.servers.set(server.id, server);
 				this.liaison_server_applications.set(server.id, new Array());
 
@@ -156,7 +156,7 @@ var Applications = Class.create(Daemon, {
 
 				for (var j=0; j<applicationNodes.length; j++) {
 					try { // IE does not have hasAttribute in DOM API...
-						this.push_log('info', '[applications] parse_list_servers(transport@list_servers()) - Adding application "'+applicationNodes[j].getAttribute('id')+'" to applications list');
+						Logger.info('[applications] parse_list_servers(transport@list_servers()) - Adding application "'+applicationNodes[j].getAttribute('id')+'" to applications list');
 
 						if (typeof this.liaison_server_applications.get(server.id) == 'undefined')
 							continue;
@@ -166,12 +166,12 @@ var Applications = Class.create(Daemon, {
 						this.applicationsPanel.add(application);
 						this.liaison_server_applications.get(server.id).push(application.id);
 					} catch(e) {
-						this.push_log('error', '[applications] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "application" node '+j+')');
+						Logger.error('[applications] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "application" node '+j+')');
 						return false;
 					}
 				}
 			} catch(e) {
-				this.push_log('error', '[applications] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "server" node '+i+')');
+				Logger.error('[applications] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "server" node '+i+')');
 				return false;
 			}
 		}
@@ -180,7 +180,7 @@ var Applications = Class.create(Daemon, {
 	},
 
 	list_running_apps: function(applicationsNode_) {
-		this.push_log('debug', '[applications] list_running_apps(xml@applicationsNode)');
+		Logger.debug('[applications] list_running_apps(xml@applicationsNode)');
 
 		var runningApplicationsNodes = applicationsNode_.getElementsByTagName('running');
 
@@ -222,12 +222,12 @@ var Applications = Class.create(Daemon, {
 	},
 
 	applicationStatus: function(token_, status_) {
-		this.push_log('debug', '[applications] applicationStatus(token: '+token_+', status: '+status_+')');
+		Logger.debug('[applications] applicationStatus(token: '+token_+', status: '+status_+')');
 
 		var app_status = 2;
 
 		if (typeof this.running_applications.get(token_) == 'undefined') {
-			this.push_log('info', '[applications] applicationStatus(token: '+token_+', status: '+status_+') - Creating "running" application "'+token_+'"');
+			Logger.info('[applications] applicationStatus(token: '+token_+', status: '+status_+') - Creating "running" application "'+token_+'"');
 
 			var app_id = this.liaison_runningapplicationtoken_application.get(token_);
 			if (typeof app_id == 'undefined')
@@ -235,7 +235,7 @@ var Applications = Class.create(Daemon, {
 
 			var app_object = this.applications.get(app_id);
 			if (typeof app_object == 'undefined') {
-				this.push_log('error', '[applications] applicationStatus(token: '+token_+', status: '+status_+') - Application "'+app_id+'" does not exist');
+				Logger.error('[applications] applicationStatus(token: '+token_+', status: '+status_+') - Application "'+app_id+'" does not exist');
 				return false;
 			}
 
@@ -243,7 +243,7 @@ var Applications = Class.create(Daemon, {
 			this.running_applications.set(instance.pid, instance);
 
 			if (status_ == 'started') {
-				this.push_log('info', '[applications] applicationStatus(token: '+token_+', status: '+status_+') - Adding "running" application "'+token_+'" to running applications list');
+				Logger.info('[applications] applicationStatus(token: '+token_+', status: '+status_+') - Adding "running" application "'+token_+'" to running applications list');
 				this.runningApplicationsPanel.add(instance);
 
 				var running = 0;
@@ -257,13 +257,13 @@ var Applications = Class.create(Daemon, {
 				$('running_'+app_id).innerHTML = running;
 			}
 		} else {
-			this.push_log('info', '[applications] applicationStatus(token: '+token_+', status: '+status_+') - Updating "running" application "'+token_+'" status: "'+app_status+'"');
+			Logger.info('[applications] applicationStatus(token: '+token_+', status: '+status_+') - Updating "running" application "'+token_+'" status: "'+app_status+'"');
 
 			var instance = this.running_applications.get(token_);
 			instance.update(app_status);
 
 			if (status_ == 'stopped') {
-				this.push_log('info', '[applications] applicationStatus(token: '+token_+', status: '+status_+') - Deleting "running" application "'+token_+'" from running applications list');
+				Logger.info('[applications] applicationStatus(token: '+token_+', status: '+status_+') - Deleting "running" application "'+token_+'" from running applications list');
 				this.runningApplicationsPanel.del(instance);
 
 				var app_id = this.liaison_runningapplicationtoken_application.get(token_);
@@ -298,7 +298,7 @@ var Applications = Class.create(Daemon, {
 	},
 
 	explorer_loop: function() {
-		this.push_log('debug', '[applications] explorer_loop()');
+		Logger.debug('[applications] explorer_loop()');
 
 		this.check_start_app();
 
@@ -307,7 +307,7 @@ var Applications = Class.create(Daemon, {
 	},
 
 	check_start_app: function() {
-		this.push_log('debug', '[applications] check_start_app()');
+		Logger.debug('[applications] check_start_app()');
 
 		new Ajax.Request(
 			'start_app.php',
@@ -323,7 +323,7 @@ var Applications = Class.create(Daemon, {
 	},
 
 	parse_check_start_app: function(transport) {
-		this.push_log('debug', '[applications] parse_check_start_app(transport@check_start_app())');
+		Logger.debug('[applications] parse_check_start_app(transport@check_start_app())');
 
 		var xml = transport.responseXML;
 
@@ -361,14 +361,14 @@ var Applications = Class.create(Daemon, {
 	},
 
 	parse_display_news: function(transport) {
-		this.push_log('debug', '[applications] parse_display_news(transport@display_news())');
+		Logger.debug('[applications] parse_display_news(transport@display_news())');
 
 		var xml = transport.responseXML;
 
 		var buffer = xml.getElementsByTagName('news');
 
 		if (buffer.length != 1) {
-			this.push_log('error', '[applications] parse_display_news(transport@display_news()) - Invalid XML (No "news" node)');
+			Logger.error('[applications] parse_display_news(transport@display_news()) - Invalid XML (No "news" node)');
 			return;
 		}
 
@@ -402,7 +402,7 @@ var Applications = Class.create(Daemon, {
 });
 
 function applicationStatus(token_, status_) {
-	daemon.push_log('debug', '[proxy] applicationStatus(token: '+token_+', status: '+status_+')');
+	Logger.debug('[proxy] applicationStatus(token: '+token_+', status: '+status_+')');
 
 	return daemon.applicationStatus(token_, status_);
 }

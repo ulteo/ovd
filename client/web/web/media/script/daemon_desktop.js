@@ -32,7 +32,7 @@ var Desktop = Class.create(Daemon, {
 	},
 
 	parse_do_started: function(transport) {
-		this.push_log('debug', '[desktop] parse_do_started(transport@do_started())');
+		Logger.debug('[desktop] parse_do_started(transport@do_started())');
 
 		var server = false;
 
@@ -89,12 +89,12 @@ var Desktop = Class.create(Daemon, {
 	},
 
 	parse_list_servers: function(xml) {
-		this.push_log('debug', '[desktop] parse_list_servers(transport@list_servers())');
+		Logger.debug('[desktop] parse_list_servers(transport@list_servers())');
 
 		var sessionNode = xml.getElementsByTagName('session');
 
 		if (sessionNode.length != 1) {
-			this.push_log('error', '[desktop] parse_list_servers(transport@list_servers()) - Invalid XML (No "session" node)');
+			Logger.error('[desktop] parse_list_servers(transport@list_servers()) - Invalid XML (No "session" node)');
 			return false;
 		}
 
@@ -116,13 +116,13 @@ var Desktop = Class.create(Daemon, {
 					server.setToken(serverNodes[i].getAttribute('token'));
 
 				if (mode_gateway)
-					this.push_log('info', '[desktop] parse_list_servers(transport@list_servers()) - Adding server "'+server.id+'" to servers list');
+					Logger.info('[desktop] parse_list_servers(transport@list_servers()) - Adding server "'+server.id+'" to servers list');
 				else
-					this.push_log('info', '[desktop] parse_list_servers(transport@list_servers()) - Adding server "'+server.fqdn+'" to servers list');
+					Logger.info('[desktop] parse_list_servers(transport@list_servers()) - Adding server "'+server.fqdn+'" to servers list');
 				this.servers.set(server.id, server);
 				this.liaison_server_applications.set(server.id, new Array());
 			} catch(e) {
-				this.push_log('error', '[desktop] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "server" node '+i+')');
+				Logger.error('[desktop] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "server" node '+i+')');
 				return false;
 			}
 		}

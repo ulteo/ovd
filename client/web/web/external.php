@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -152,7 +152,7 @@ $local_integration = (defined('PORTAL_LOCAL_INTEGRATION') && (PORTAL_LOCAL_INTEG
 		<script type="text/javascript" src="media/script/daemon_external.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/server.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/application.js?<?php echo time(); ?>" charset="utf-8"></script>
-
+		<script type="text/javascript" src="media/script/Logger.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/timezones.js" charset="utf-8"></script>
 
 		<script type="text/javascript">
@@ -311,11 +311,11 @@ $local_integration = (defined('PORTAL_LOCAL_INTEGRATION') && (PORTAL_LOCAL_INTEG
 		</div>
 
 		<div id="debugLevels" style="display: none;">
-			<span class="debug"><input type="checkbox" id="level_debug" onclick="daemon.switch_debug('debug');" value="10" /> Debug</span>
-			<span class="info"><input type="checkbox" id="level_info" onclick="daemon.switch_debug('info');" value="20" checked="checked" /> Info</span>
-			<span class="warning"><input type="checkbox" id="level_warning" onclick="daemon.switch_debug('warning');" value="30" checked="checked" /> Warning</span>
-			<span class="error"><input type="checkbox" id="level_error" onclick="daemon.switch_debug('error');" value="40" checked="checked" /> Error</span><br />
-			<input type="button" onclick="daemon.clear_debug(); return false;" value="Clear" />
+			<span class="debug"><input type="checkbox" id="level_debug" onclick="Logger.toggle_level('debug');" value="10" /> Debug</span>
+			<span class="info"><input type="checkbox" id="level_info" onclick="Logger.toggle_level('info');" value="20" checked="checked" /> Info</span>
+			<span class="warning"><input type="checkbox" id="level_warning" onclick="Logger.toggle_level('warning');" value="30" checked="checked" /> Warning</span>
+			<span class="error"><input type="checkbox" id="level_error" onclick="Logger.toggle_level('error');" value="40" checked="checked" /> Error</span><br />
+			<input type="button" onclick="Logger.clear(); return false;" value="Clear" />
 		</div>
 	</body>
 </html>
