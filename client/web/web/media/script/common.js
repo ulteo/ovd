@@ -441,7 +441,8 @@ Event.observe(window, 'load', function() {
 		}
 	});
 
-	testJava();
+	var test = new JavaTester();
+	test.perform();
 
 	if ($('loginBox')) {
 		setTimeout(function() {
@@ -474,126 +475,6 @@ Event.observe(window, 'load', function() {
 		});
 	}
 });
-
-function showSystemTest() {
-	showLock();
-
-	new Effect.Center($('systemTestWrap'));
-	var elementDimensions = Element.getDimensions($('systemTestWrap'));
-	$('systemTestWrap').style.width = elementDimensions.width+'px';
-
-	Event.observe(window, 'resize', function() {
-		if ($('systemTestWrap').visible())
-			new Effect.Center($('systemTestWrap'));
-	});
-
-	new Effect.Appear($('systemTestWrap'));
-}
-
-function hideSystemTest() {
-	$('systemTestWrap').hide();
-
-	hideLock();
-}
-
-function showSystemTestError(error_id_) {
-	hideError();
-
-	hideOk();
-	hideInfo();
-
-	hideSystemTest();
-
-	showLock();
-
-	$(error_id_).show();
-
-	new Effect.Center($('systemTestErrorWrap'));
-	var elementDimensions = Element.getDimensions($('systemTestErrorWrap'));
-	$('systemTestErrorWrap').style.width = elementDimensions.width+'px';
-
-	Event.observe(window, 'resize', function() {
-		if ($('systemTestErrorWrap').visible())
-			new Effect.Center($('systemTestErrorWrap'));
-	});
-
-	new Effect.Appear($('systemTestErrorWrap'));
-}
-
-var testJava_t0 = 0;
-function testJava() {
-	if (testJava_t0 == 0) {
-		// first time
-		showSystemTest();
-
-		setTimeout(function() {
-			testJava_t0 = (new Date()).getTime();
-			testJava();
-		}, 2000);
-
-		return;
-	}
-
-	try {
-		var checkjava_isactive = $('CheckJava').isActive();
-		if (! checkjava_isactive)
-				throw "applet is not ready";
-	} catch(e) {
-		testJava_t1 = (new Date()).getTime();
-		if (testJava_t1 - testJava_t0 > 10000)
-			showSystemTestError('systemTestError1');
-		else
-			setTimeout(function() { testJava(); }, 500);
-		return;
-	}
-
-	var applet_params = new Hash();
-	applet_params.set('onSuccess', 'appletSuccess');
-	applet_params.set('onFailure', 'appletFailure');
-
-	var applet = buildAppletNode('CheckSignedJava', 'org.ulteo.ovd.applet.CheckJava', 'ulteo-applet.jar', applet_params);
-	$('testJava').appendChild(applet);
-	testUlteoApplet();
-}
-
-var ulteo_applet_inited;
-function appletSuccess() {
-	ulteo_applet_inited = true;
-}
-function appletFailure() {
-	ulteo_applet_inited = false;
-}
-
-var ti = 0;
-function testUlteoApplet() {
-	try {
-		if (ulteo_applet_inited == true) {
-			afterAppletTests();
-			return;
-		} else if (ulteo_applet_inited == false) {
-			showSystemTestError('systemTestError2');
-			return;
-		}
-
-		go_to_the_catch_please(); //call a function which does not exist to throw an exception and go to the catch()
-	} catch(e) {
-		ti += 1;
-		setTimeout(function() {
-			if (ti < 60) {
-				testUlteoApplet();
-			} else {
-				showSystemTestError('systemTestError2');
-				return;
-			}
-		}, 1000);
-	}
-}
-
-function afterAppletTests() {
-	checkLogin();
-	manageKeymap();
-	hideSystemTest();
-}
 
 function showLock() {
 	refresh_body_size();
