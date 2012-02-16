@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -70,6 +71,13 @@ if (!$res) {
 	die();
 }
 
+// publication
+$ret = Abstract_Liaison::save('UsersGroupApplicationsGroup', $usersGroup->getUniqueID(), $appsGroup->id);
+if ($ret !== true) {
+	Logger::error('main', 'demo.php failed make publication');
+	die();
+}
+
 // server
 $server = Abstract_Server::load('127.0.0.1');
 if (! is_object($server)) {
@@ -80,13 +88,6 @@ $server->register();
 $server->setAttribute('external_name', $server_external_name);
 $server->setAttribute('locked', false);
 Abstract_Server::save($server);
-
-// publication
-$ret = Abstract_Liaison::save('UsersGroupApplicationsGroup', $usersGroup->getUniqueID(), $appsGroup->id);
-if ($ret !== true) {
-	Logger::error('main', 'demo.php failed make publication');
-	die();
-}
 
 $applications = $server->getApplications();
 if (is_array($applications)) {
