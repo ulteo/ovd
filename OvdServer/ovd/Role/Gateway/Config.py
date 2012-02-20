@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011 Ulteo SAS
+# Copyright (C) 2011-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author David LECHEVALIER <david@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -39,6 +40,8 @@ class Config:
 	max_process = 10
 	max_connection = 100
 	process_timeout = 60
+	connection_timeout = 10
+	http_max_header_size = 2048
 	web_client = None
 	admin_redirection = False
 	root_redirection = None
@@ -54,6 +57,18 @@ class Config:
 				cls.port = int(infos["port"])
 			except ValueError:
 				Logger.error("Invalid int number for port")
+		
+		if infos.has_key("connection_timeout") and infos["connection_timeout"].isdigit():
+			try:
+				cls.connection_timeout = int(infos["connection_timeout"])
+			except ValueError:
+				Logger.error("Invalid int number for connection_timeout")
+
+		if infos.has_key("http_max_header_size") and infos["http_max_header_size"].isdigit():
+			try:
+				cls.http_max_header_size = int(infos["http_max_header_size"])
+			except ValueError:
+				Logger.error("Invalid int number for http_max_header_size")
 		
 		if infos.has_key("max_process"):
 			try:

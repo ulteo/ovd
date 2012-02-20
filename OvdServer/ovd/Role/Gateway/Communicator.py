@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2010-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
+# Author David LECHEVALIER <david@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -45,6 +46,7 @@ class Communicator(asyncore.dispatcher):
 		self.communicator = communicator
 		self._buffer = ''
 		self.closed = False
+		self.fragmented = False
 		asyncore.dispatcher.__init__(self, sock=sock)
 	
 	
@@ -65,6 +67,10 @@ class Communicator(asyncore.dispatcher):
 		_writable = len(self.communicator._buffer) > 0
 		if _writable is False and self.communicator.closed is True:
 			self.close()
+		
+		if self.communicator.fragmented:
+			return False
+		
 		return _writable
 	
 	
@@ -185,12 +191,19 @@ class HttpMetaCommunicator(object):
 		if self.http.is_body():
 			if self._buffer == '':
 				self.http = HttpMessage()
+				self.fragmented = False
 			else:
-				return
+				if not self.fragmented:
+					return
 		
 		super(HttpMetaCommunicator, self).handle_read()
 		if self.make_http_message() is not None:
 			self._buffer = self.process()
+			self.fragmented = False
+			return
+		
+		# The packet seams to be fragmented
+		self.fragmented = True
 	
 	
 	def make_http_message(self):
