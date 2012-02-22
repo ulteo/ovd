@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011 
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -108,6 +108,9 @@ public class KerberosConfiguration {
 		System.setProperty("javax.security.auth.useSubjectCredsOnly", "false");
 		System.setProperty("java.security.krb5.realm", this.realm);
 		System.setProperty("java.security.krb5.kdc", this.kdc);
+		
+		// Fix JVM bug during negociate (http://bugs.sun.com/view_bug.do?bug_id=6589477)
+		System.setProperty("http.auth.preference", "Kerberos");
 		
 		Logger.debug("Realm "+this.realm);
 		Logger.debug("KDC "+this.kdc);
