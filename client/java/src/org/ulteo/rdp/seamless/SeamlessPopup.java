@@ -178,7 +178,7 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 
 	/* Icons support for Popups */
 	protected int icon_size, icon_offset;
-	protected byte[] icon_buffer = new byte[32 * 32 * 4];;
+	protected int[] icon_buffer = new int[32 * 32 * 4];;
 
 	public int sw_getIconSize() {
 		return this.icon_size;
@@ -203,11 +203,11 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 			this.icon_offset = icon_offset_;
 	}
 
-	public byte[] sw_getIconBuffer() {
+	public int[] sw_getIconBuffer() {
 		return this.icon_buffer;
 	}
 
-	public void sw_setIconBuffer(byte[] icon_buffer_) {
+	public void sw_setIconBuffer(int[] icon_buffer_) {
 		this.icon_buffer = icon_buffer_;
 	}
 

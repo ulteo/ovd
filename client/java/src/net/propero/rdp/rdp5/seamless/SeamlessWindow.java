@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -50,8 +51,8 @@ public interface SeamlessWindow {
 	boolean sw_setIconSize(int size);
 	int sw_getIconOffset();
 	void sw_setIconOffset(int offset);
-	byte[] sw_getIconBuffer();
-	void sw_setIconBuffer(byte[] buffer);
+	int[] sw_getIconBuffer();
+	void sw_setIconBuffer(int[] buffer);
 	void sw_enableMouseWheel();
 
 	void sw_setCursor(Cursor cursor);

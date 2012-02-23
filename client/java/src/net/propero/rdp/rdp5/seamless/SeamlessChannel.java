@@ -6,6 +6,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
  * Author Thomas MOUTON <thomas@ulteo.com> 2009-2012
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  * 
  * Revision: $Revision: 0.2 $
  * Author: $Author: arnauvp $
@@ -689,7 +690,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		return true;
 	}
 
-	protected boolean process_setIcon(long window_id, int chunk, String format, int width, int height, byte[] bitmap) {
+	protected boolean process_setIcon(long window_id, int chunk, String format, int width, int height, int[] bitmap) {
 		String name = "w_"+window_id;
 		
 		if(! this.windows.containsKey(name)) {
@@ -732,7 +733,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 			return false;
 		}
 		
-		byte[] icon_buffer = f.sw_getIconBuffer();
+		int[] icon_buffer = f.sw_getIconBuffer();
 		for(int i = 0; i < bitmap.length; i++)
 		{
 			icon_buffer[f.sw_getIconOffset() + i] = bitmap[i];
@@ -751,10 +752,10 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 			{
 				for(int x = 0; x < width; x++)
 				{
-					r = (int) icon_buffer[cpt++];
-					g = (int) icon_buffer[cpt++];
-					b = (int) icon_buffer[cpt++];
-					a = (int) icon_buffer[cpt++];
+					r = icon_buffer[cpt++];
+					g = icon_buffer[cpt++];
+					b = icon_buffer[cpt++];
+					a = icon_buffer[cpt++];
 					
 					argb = (a << 24) + (r << 16) + (g << 8) + b;
 					
@@ -785,14 +786,13 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		return "";
 	}
 	
-	public static byte[] DecryptString_(String input) {
+	private static int[] DecryptString_(String input) {
 		int len = input.length() / 2;	
-		byte[] c = new byte[len];
+		int[] c = new int[len];
 
 		for (int i = 0; i < len; i++) {
 			String hex = input.substring(i * 2, i * 2 + 2);
-			Integer x = new Integer(Integer.parseInt(hex, 16));
-			c[i] = x.byteValue();
+			c[i] = Integer.parseInt(hex, 16);
 		}
 
 		return c;
@@ -819,7 +819,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 			
 			String bitmap_hex = SeamlessChannel.getNextToken(data, true); 
 //			int len = data.size() -data.getPosition();
-			byte bitmap[] = SeamlessChannel.DecryptString_(bitmap_hex);
+			int bitmap[] = SeamlessChannel.DecryptString_(bitmap_hex);
 //			data.copyToByteArray(bitmap, 0, data.getPosition(), len);
 
 			try

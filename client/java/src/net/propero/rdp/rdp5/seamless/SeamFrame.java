@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
  * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -65,7 +66,7 @@ public class SeamFrame extends Frame
 	protected int id;
 	protected int group;
 	protected int icon_size, icon_offset;
-	protected byte[] icon_buffer;
+	protected int[] icon_buffer;
 	protected WrappedImage backstore;
 	protected MouseAdapter mouseAdapter = null;
 	protected MouseMotionAdapter mouseMotionAdapter = null;
@@ -82,7 +83,7 @@ public class SeamFrame extends Frame
 		this.group = group_;
 		this.maxBounds = maxBounds_;
 		this.icon_size = 0;
-		this.icon_buffer = new byte[32 * 32 * 4];
+		this.icon_buffer = new int[32 * 32 * 4];
 
 		this.backstore = this.common.canvas.backstore;
 		this.common.canvas.addComponentListener(this);
@@ -122,11 +123,11 @@ public class SeamFrame extends Frame
 		return this.icon_offset;
 	}
 	
-	public byte[] sw_getIconBuffer() {
+	public int[] sw_getIconBuffer() {
 		return this.icon_buffer;
 	}
 	
-	public void sw_setIconBuffer(byte[] icon_buffer_) {
+	public void sw_setIconBuffer(int[] icon_buffer_) {
 		this.icon_buffer = icon_buffer_;
 	}
 	
