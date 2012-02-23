@@ -272,6 +272,11 @@ table.main_login {
 	margin-right: auto;*/
 }
 
+img.icon32 {
+	width: 32px;
+	height: 32px;
+}
+
 .content1 {
 	background: #eee;
 	/*color: #fff;*/

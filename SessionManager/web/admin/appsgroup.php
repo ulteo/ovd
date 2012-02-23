@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2011
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -276,7 +277,7 @@ function show_manage($id) {
     if (count($applications) > 0) {
       foreach($applications as $application) {
 	echo '<tr>';
-	echo '<td><img src="media/image/cache.php?id='.$application->getAttribute('id').'" alt="'.$application->getAttribute('name').'" title="'.$application->getAttribute('name').'" /> <a href="applications.php?action=manage&id='.$application->getAttribute('id').'">'.$application->getAttribute('name').'</a>';
+	echo '<td><img class="icon32" src="media/image/cache.php?id='.$application->getAttribute('id').'" alt="'.$application->getAttribute('name').'" title="'.$application->getAttribute('name').'" /> <a href="applications.php?action=manage&id='.$application->getAttribute('id').'">'.$application->getAttribute('name').'</a>';
 	echo '</td>';
 		if ($can_manage_applicationsgroups) {
 			echo '<td>';

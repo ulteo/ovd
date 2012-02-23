@@ -1,10 +1,11 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2009
  * Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2011
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -358,7 +359,7 @@ function show_step3() {
       if (isset($_SESSION['wizard']['apps']) && in_array($application->getAttribute('id'), $_SESSION['wizard']['apps']))
         echo ' checked="checked"';
       echo '/>';
-      echo '&nbsp; <img src="media/image/cache.php?id='.$application->getAttribute('id').'" alt="" title="" /> &nbsp; <a href="applications.php?action=manage&id='.$application->getAttribute('id').'">'.$application->getAttribute('name').'</a> <img src="media/image/server-'.$application->getAttribute('type').'.png" width="16" height="16" alt="'.$application->getAttribute('type').'" title="'.$application->getAttribute('type').'" /></td>';
+      echo '&nbsp; <img class="icon32" src="media/image/cache.php?id='.$application->getAttribute('id').'" alt="" title="" /> &nbsp; <a href="applications.php?action=manage&id='.$application->getAttribute('id').'">'.$application->getAttribute('name').'</a> <img src="media/image/server-'.$application->getAttribute('type').'.png" width="16" height="16" alt="'.$application->getAttribute('type').'" title="'.$application->getAttribute('type').'" /></td>';
       echo '</tr>';
     }
     $content = 'content'.(($count++%2==0)?1:2);

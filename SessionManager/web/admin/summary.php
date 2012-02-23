@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -127,7 +128,7 @@ function show_default() {
 					echo '<table border="0" cellspacing="1" cellpadding="3">';
 					foreach ($apps_s as $aaa) {
 						echo '<tr>';
-						echo '<td><img src="media/image/cache.php?id='.$aaa->getAttribute('id').'" alt="" title="" /></td>';
+						echo '<td><img class="icon32" src="media/image/cache.php?id='.$aaa->getAttribute('id').'" alt="" title="" /></td>';
 						echo '<td><a href="applications.php?action=manage&id='.$aaa->getAttribute('id').'">'.$aaa->getAttribute('name').'</a></td>';
 						echo '<td style="text-align: center;"><img src="media/image/server-'.$aaa->getAttribute('type').'.png" width="16" height="16" alt="'.$aaa->getAttribute('type').'" title="'.$aaa->getAttribute('type').'" /></td>';
 						echo '</tr>';

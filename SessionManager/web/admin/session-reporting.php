@@ -1,8 +1,9 @@
 <?php
 /**
-* Copyright (C) 2010 Ulteo SAS
+* Copyright (C) 2010-2012 Ulteo SAS
 * http://www.ulteo.com
 * Author Julien LANGLOIS <julien@ulteo.com>
+* Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -372,7 +373,7 @@ function show_manage($id_) {
 		foreach ($applications as $application) {
 			echo '<li>';
 			if (isset($application['obj'])) {
-				echo '<img src="media/image/cache.php?id='.$application['obj']->getAttribute('id').'" alt="" title="" /> ';
+				echo '<img class="icon32" src="media/image/cache.php?id='.$application['obj']->getAttribute('id').'" alt="" title="" /> ';
 				echo '<a href="applications.php?action=manage&id='.$application['obj']->getAttribute('id').'">'.$application['obj']->getAttribute('name').'</a>';
 			}
 			else

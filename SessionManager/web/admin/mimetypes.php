@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -108,7 +109,7 @@ function show_manage($id_) {
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'">';
 			echo '<td><a href="applications.php?action=manage&id='.$app->getAttribute('id').'">';
-			echo '<img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" />&nbsp;';
+			echo '<img class="icon32" src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" />&nbsp;';
 			echo $app->getAttribute('name');
 			echo '</a></td>';
 			echo '<td><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /></td>';

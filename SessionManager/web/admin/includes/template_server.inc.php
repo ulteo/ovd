@@ -1,10 +1,11 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -303,7 +304,7 @@ function server_display_role_aps($server, $var) {
 			
 				echo '<tr class="'.$content.'">';
 				echo '<td>';
-				echo '<img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> ';
+				echo '<img class="icon32" src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> ';
 				echo '<a href="applications.php?action=manage&id='.$app->getAttribute('id').'">';
 				echo $app->getAttribute('name').'</a>';
 				echo '</td>';

@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -91,7 +92,7 @@ function show_default($prefs, $applicationDB) {
 			echo '<tr class="'.$content.'">';
 			if (count($applications) > 1 and $is_rw and $can_manage_applications)
 				echo '<td><input class="input_checkbox" type="checkbox" name="checked_applications[]" value="'.$app->getAttribute('id').'" /></td>';
-			echo '<td><img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> ';
+			echo '<td><img class="icon32" src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> ';
 			if ($is_rw and $can_manage_applications)
 				echo '<a href="?action=manage&id='.$app->getAttribute('id').'">';
 			echo $app->getAttribute('name');
@@ -325,7 +326,7 @@ function show_manage($id, $applicationDB) {
 	page_header();
 
 	echo '<div>';
-	echo '<h1><img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> '.$app->getAttribute('name').'</h1>';
+	echo '<h1><img class="icon32" src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> '.$app->getAttribute('name').'</h1>';
 
 	echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
 	echo '<tr class="title">';
@@ -437,7 +438,7 @@ function show_manage($id, $applicationDB) {
 			echo '<td>'._('Icon').'</td>';
 			echo '<td>';
 			if (($app->getIconPath() != $app->getDefaultIconPath()) && file_exists($app->getIconPath())) {
-				echo '<img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> ';
+				echo '<img class="icon32" src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> ';
 				echo '<input type="button" value="'._('Delete this icon').'" onclick="return confirm(\''._('Are you sure you want to delete this icon?').'\') && $(\'delete_icon\').submit();"/>';
 				echo '<br />';
 			}

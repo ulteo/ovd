@@ -1,10 +1,11 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2008-2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -89,9 +90,9 @@ function show_default($applicationDB) {
       echo '<tr class="'.$content.'">';
       if ($is_rw)
 // 	echo '<td><input class="input_checkbox" type="checkbox" name="manage_applications[]" value="'.$app->getAttribute('id').'" /></td>';
-      echo '<td><img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> <a href="?action=manage&id='.$app->getAttribute('id').'">'.$app->getAttribute('name').'</a></td>';
+      echo '<td><img class="icon32" src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> <a href="?action=manage&id='.$app->getAttribute('id').'">'.$app->getAttribute('name').'</a></td>';
       echo '<td>'.$app->getAttribute('description').'</td>';
-      echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
+      echo '<td style="text-align: center;"><img class="icon32" src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
 //       echo '<td>'.$status.'</td>';
 
       /*if ($is_rw) {
@@ -241,7 +242,7 @@ function show_manage($id, $applicationDB) {
   page_header();
 
   echo '<div>';
-  echo '<h1><img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> '.$app->getAttribute('name').'</h1>';
+  echo '<h1><img class="icon32" src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> '.$app->getAttribute('name').'</h1>';
 
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
   echo '<tr class="title">';
@@ -254,7 +255,7 @@ function show_manage($id, $applicationDB) {
 
   echo '<tr class="content1">';
   echo '<td>'.$app->getAttribute('package').'</td>';
-  echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
+  echo '<td style="text-align: center;"><img class="icon32" src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
 //   echo '<td>'.$status.'</td>';
   echo '<td>'.$app->getAttribute('description').'</td>';
   echo '<td>'.$app->getAttribute('executable_path').'</td>';
@@ -494,7 +495,7 @@ function show_icon($id, $applicationDB) {
 	page_header();
 
 	echo '<div>';
-	echo '<h1><img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> '.$app->getAttribute('name').'</h1>';
+	echo '<h1><img class="icon32" src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> '.$app->getAttribute('name').'</h1>';
 
 	echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
 	echo '<tr class="title">';
@@ -507,7 +508,7 @@ function show_icon($id, $applicationDB) {
 
 	echo '<tr class="content1">';
 	echo '<td>'.$app->getAttribute('package').'</td>';
-	echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
+	echo '<td style="text-align: center;"><img class="icon32" src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
 	//   echo '<td>'.$status.'</td>';
 	echo '<td>'.$app->getAttribute('description').'</td>';
 	echo '<td>'.$app->getAttribute('executable_path').'</td>';
@@ -544,7 +545,7 @@ function show_icon($id, $applicationDB) {
 			continue;
 
 		echo '<tr>';
-		echo '<td style="width: 32px;"><img src="media/image/temp_icon.php?tempnam='.basename($imgfile).'" /></td><td><a href="servers.php?action=manage&amp;fqdn='.$server->getAttribute('fqdn').'">'.$server->getAttribute('fqdn').'</a></td><td><form action="actions.php" method="post"><input type="hidden" name="name" value="Application" /><input type="hidden" name="action" value="icon" /><input type="hidden" name="id" value="'.$app->getAttribute('id').'" /><input type="hidden" name="server" value="'.$server->getAttribute('fqdn').'" /><input type="submit" value="'._('Select this icon').'" /></form></td>';
+		echo '<td style="width: 32px;"><img class="icon32" src="media/image/temp_icon.php?tempnam='.basename($imgfile).'" /></td><td><a href="servers.php?action=manage&amp;fqdn='.$server->getAttribute('fqdn').'">'.$server->getAttribute('fqdn').'</a></td><td><form action="actions.php" method="post"><input type="hidden" name="name" value="Application" /><input type="hidden" name="action" value="icon" /><input type="hidden" name="id" value="'.$app->getAttribute('id').'" /><input type="hidden" name="server" value="'.$server->getAttribute('fqdn').'" /><input type="submit" value="'._('Select this icon').'" /></form></td>';
 		echo '</tr>';
 	}
 	echo '</table>';

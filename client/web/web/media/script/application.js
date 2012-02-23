@@ -1,8 +1,9 @@
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -43,6 +44,7 @@ var Application = Class.create({
 		var td_icon = new Element('td');
 		var icon = new Element('img');
 		icon.setAttribute('src', this.getIconURL());
+		icon.setAttribute('width', 32);
 		td_icon.appendChild(icon);
 		tr.appendChild(td_icon);
 
