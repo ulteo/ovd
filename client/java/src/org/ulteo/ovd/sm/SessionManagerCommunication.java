@@ -1,9 +1,9 @@
 /*
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
- * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
  * Author David LECHEVALIER <david@ulteo.com> 2010 
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  * Author Omar AKHAM <oakham@ulteo.com> 2011
@@ -28,6 +28,7 @@ package org.ulteo.ovd.sm;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import javax.imageio.ImageIO;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -524,15 +526,13 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 					}
 				}
 				else if (contentType.startsWith(CONTENT_TYPE_PNG)) {
-					int length = connexion.getContentLength();
-					byte[] buffer = new byte[length];
-					
-					BufferedInputStream stream = new BufferedInputStream(in);
-					int readed = stream.read(buffer);
-					if (readed != length)
-						Logger.error("askWebservice: Content-Length return "+length+" but read "+readed+" bytes");
-					
-					obj = new ImageIcon(buffer);
+					try {
+						obj = new ImageIcon(ImageIO.read(in));
+					}
+					catch (IOException err) {
+						Logger.error("askWebservice: unable to icon image");
+						Logger.debug("askWebservice: unable to icon image "+err);
+					}
 				}
 				else {
 					BufferedInputStream d = new BufferedInputStream(in);
