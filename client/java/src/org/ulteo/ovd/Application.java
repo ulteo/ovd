@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -21,6 +22,7 @@
 
 package org.ulteo.ovd;
 
+import java.awt.Image;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,6 +61,11 @@ public class Application implements Comparable<Application> {
 	
 	public ImageIcon getIcon() {
 		return this.icon;
+	}
+
+	public ImageIcon getSmallIcon() {
+		ImageIcon smallIcon =  new ImageIcon(this.icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH));
+		return smallIcon;		
 	}
 
 	public int getId() {

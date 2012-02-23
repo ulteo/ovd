@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Omar AKHAM <oakham@ulteo.com> 2011
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -83,7 +84,7 @@ public class RunningApplicationPanel extends JPanel implements OvdAppListener {
 		String appId = new_ai.getApplication().getName()+new_ai.getToken();
 		JLabel appIcon = new JLabel();
 		JLabel appName = new JLabel(new_ai.getApplication().getName());
-		appIcon.setIcon(new_ai.getApplication().getIcon());
+		appIcon.setIcon(new_ai.getApplication().getSmallIcon());
 		appIcon.setName(appId);
 		appName.setName(appId);
 		
