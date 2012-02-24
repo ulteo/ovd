@@ -9,7 +9,7 @@ XS-Python-Version: >= 2.5
 
 Package: ulteo-ovd-slaveserver
 Architecture: all
-Depends: ${python:Depends}, debconf, tmpreaper
+Depends: ${python:Depends}, debconf
 Description: Ulteo Open Virtual Desktop - slave server
  This daemon manages the Open Virtual Desktop servers.
 
@@ -19,6 +19,7 @@ Depends: ${python:Depends},
  ulteo-ovd-slaveserver, ulteo-ovd-shells, ulteo-ovd-externalapps-client,
  xrdp-python, xrdp-seamrdp, xrdp-rdpdr, xrdp-printer, xrdp-sound, xrdp-clipboard,
  tightvncserver, desktop-file-utils, imagemagick, passwd, adduser, rsync, smbfs, python-xdg
+Recommends: tmpreaper
 Description: Ulteo Open Virtual Desktop - application server role for slave server
  Application server role for the Ulteo OVD slave server
 
