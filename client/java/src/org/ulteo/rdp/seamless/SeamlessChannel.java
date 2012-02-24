@@ -1,10 +1,10 @@
 /* SeamlessChannel.java
  * Component: UlteoRDP
  * 
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
- * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009-2012
  * 
  * Revision: $Revision: 0.2 $
  * Author: $Author: arnauvp $
@@ -138,6 +138,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 				sf_parent = (Window)this.windows.get(parentName);
 			
 			sf = new SeamlessPopup((int)id, (int)group, sf_parent, this.getMaximumWindowBounds(), (int)flags, this.common);
+			sf.setFocusableWindowState(false);
 		}
 		else
 			sf = new SeamlessFrame((int)id, (int)group, this.getMaximumWindowBounds(), (int)flags, this.common);

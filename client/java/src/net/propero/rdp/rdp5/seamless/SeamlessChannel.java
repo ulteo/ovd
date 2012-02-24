@@ -424,8 +424,6 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		if (this.opt.isMouseWheelEnabled)
 			f.sw_enableMouseWheel();
 
-		((Window) f).setFocusableWindowState(false);
-
 		f.sw_addWindowStateListener(this);
 		f.sw_addWindowListener(this);
 		f.sw_addFocusListener(this);
