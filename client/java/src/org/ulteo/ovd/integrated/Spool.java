@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@ import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.Application;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -37,6 +38,7 @@ import org.ulteo.gui.SwingTools;
 import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.utils.FilesOp;
 import org.ulteo.utils.I18n;
+import org.ulteo.utils.SystemUtils;
 
 public class Spool extends Thread {
 	private final static String PREFIX_ID = "id = ";
@@ -53,6 +55,22 @@ public class Spool extends Thread {
 		this.id = UUID.randomUUID().toString();
 	}
 
+	private void savePID(File baseDirecotory_) {
+		int jvm_pid = SystemUtils.getPID();
+		File f = new File(baseDirecotory_.getPath()+File.separator+"pid");
+		if (f.exists())
+			f.delete();
+		
+		try {
+			FileWriter fw = new FileWriter(f);
+			fw.write(""+jvm_pid);
+			fw.flush();
+			fw.close();
+		} catch (IOException ex) {
+			org.ulteo.Logger.error("Failed to store JVM PID to '"+f.getAbsolutePath()+"': "+ex.getMessage());
+		}
+	}
+
 	@Override
 	public void run() {
 		File baseDirectory = new File(Constants.PATH_REMOTE_APPS + File.separator + this.id);
@@ -64,6 +82,9 @@ public class Spool extends Thread {
 				new File(Constants.PATH_ICONS), new File(Constants.PATH_SHORTCUTS) };
 		for (File f: toCreateDirs)
 			f.mkdirs();
+		
+		if (OSTools.isWindows())
+			this.savePID(baseDirectory);
 
 		this.logger.info("Spool thread started");
 

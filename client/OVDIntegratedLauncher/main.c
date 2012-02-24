@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
@@ -40,6 +40,48 @@
 
 #define OVDIntegratedClientPath "ulteo\\ovd\\remoteApps"
 
+// WINDOWS FOCUS HACK BEGIN
+#define JVM_PID_FILENAME "pid"
+
+BOOL getJVM_PID_FilePath(LPSTR path, LPSTR arg) {
+	if (getRemoteAppsPath(path, arg) == FALSE)
+		return FALSE;
+
+	if (PathAppend(path, JVM_PID_FILENAME) == FALSE)
+		return FALSE;
+
+	return TRUE;
+}
+
+BOOL allowJVMToSetFocus(LPSTR arg) {
+	TCHAR pidFile[MAX_PATH];
+	FILE *fd;
+	int pid = 0;
+	int ret;
+	
+	if (getJVM_PID_FilePath(pidFile, arg) == FALSE)
+		return FALSE;
+	
+	fd = fopen(pidFile, "r");
+	if (! fd) {
+		fprintf(stderr, "[ERROR] JVM pid file does not exists.\n", fd);
+		return FALSE;
+	}
+
+	ret = fscanf(fd, "%d", &pid);
+	fclose(fd);
+	
+	if (ret != 1 || pid == 0) {
+		fprintf(stderr, "[ERROR] Failed to get the JVM pid.\n", fd);
+		return FALSE;
+	}
+
+	AllowSetForegroundWindow(pid);
+	
+	return TRUE;
+}
+// WINDOWS FOCUS HACK END
+
 #else //POSIX
 
 #include <string.h>
@@ -47,6 +89,10 @@
 #include <unistd.h>
 
 #define OVDIntegratedClientPath ".ulteo/ovd/remoteApps"
+
+BOOL allowJVMToSetFocus(LPSTR arg) {
+	return TRUE;
+}
 
 #endif //WINDOWS/POSIX
 
@@ -88,6 +134,8 @@ int main(int argc, LPSTR argv[]) {
     if (argc > 3) {
         args = argv[3];
     }
+    
+    allowJVMToSetFocus(argv[1]);
 
     instance = spool_instance_create(spool, argv[2], args);
     if (instance == -1) {
