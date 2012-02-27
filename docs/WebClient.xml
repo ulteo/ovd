@@ -27,6 +27,8 @@
     <para>
       This is not a Web Client installation documentation. You need to have already installed a Web Client to be able to launch Ulteo OVD sessions with it.
     </para>
+
+    <xi:include href="common.xml" xpointer="system_requirements_client" />
   </section>
 
   <section>

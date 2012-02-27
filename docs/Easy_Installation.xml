@@ -16,6 +16,8 @@
   <section id="pre">
     <title id="pre_title">Prerequisites</title>
 
+    <xi:include href="common.xml" xpointer="system_requirements_server_linux_all" />
+
     <para>
       This documentation will help you to install a complete Ulteo OVD
       infrastructure in only one server. This mode is not advised

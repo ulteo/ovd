@@ -57,6 +57,18 @@
       </para>
     </important>
 
+    <simplesect id="system_requirements">
+      <title>System requirements</title>
+      <itemizedlist>
+        <listitem><para>
+          Evaluations/POCs: Minimum prerequisites are 1 CPU core and 1GB RAM
+        </para></listitem>
+        <listitem><para>
+          Production envrionments: Ulteo recommends a minimum of 2GB RAM and 2 CPU cores
+        </para></listitem>
+      </itemizedlist>
+    </simplesect>
+
     <xi:include href="&base;" xpointer="warning_name_examples" />
     <xi:include href="&base;" xpointer="sudo" />
   </section>

@@ -13,6 +13,12 @@
     </copyright>
   </articleinfo>
 
+  <section id="prerequisites">
+    <title id="prerequisites_title">Prerequisites</title>
+
+    <xi:include href="common.xml" xpointer="system_requirements_server_linux_all" />
+  </section>
+
   <section id="launch_install_cd">
     <title>Get and launch the installation CD</title>
 

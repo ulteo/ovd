@@ -31,6 +31,19 @@
 
   <section>
     <title>Prerequisites</title>
+
+    <simplesect id="system_requirements">
+      <title>System requirements</title>
+      <itemizedlist>
+        <listitem><para>
+          Evaluations/POCs: Minimum prerequisites are 1 CPU core and 1GB RAM
+        </para></listitem>
+        <listitem><para>
+          Production envrionments: Ulteo recommends a minimum of 4GB RAM and 2 CPU cores
+        </para></listitem>
+      </itemizedlist>
+    </simplesect>
+
     <para>
       The supported operating systems are:
       <itemizedlist>

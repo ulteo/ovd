@@ -23,6 +23,7 @@
       All operation have to be done as super user (root).
     </para>
 
+    <xi:include href="&parent;" xpointer="system_requirements" />
     <xi:include href="&parent;" xpointer="warning_name_examples" />
   </section>
 
