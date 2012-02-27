@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
-	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
+          [<!ENTITY base "Support_Ubuntu_Lucid.xml">]>
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
   <transform_var name="gold_product_name" value="Gateway"/>
 
@@ -56,30 +57,8 @@
       </para>
     </important>
 
-    <important>
-      <para>
-	In this document, we are using
-	<emphasis>sm.ulteo.com</emphasis> for the Session Manager address.
-      </para>
-      
-      <para>
-	You need to set that names according to your own domain
-	names.
-      </para>
-    </important>
-
-    <para>
-      All operations need to be done as <emphasis>super
-      user</emphasis>.
-    </para>
-
-    <itemizedlist>
-      <listitem>
-        <para>To log in as root:
-	<screen><![CDATA[$ sudo -s]]></screen>
-	</para>
-      </listitem>
-    </itemizedlist>
+    <xi:include href="&base;" xpointer="warning_name_examples" />
+    <xi:include href="&base;" xpointer="sudo" />
   </section>
 
 
@@ -87,21 +66,12 @@
     <title>Ubuntu packages configuration</title>
       
      <section id="repository_online">
-      <title id="repository_online_title">Online method</title>
-      
-      <para id="repository_online_para">
-        The following method describe the repository process when your
-        servers can access to Internet. If not, please read the
-        offline method.
-      </para>
+       <xi:include href="&base;" xpointer="repository_online_title" />
+       <xi:include href="&base;" xpointer="repository_online_para" />
       
       <itemizedlist>
         <listitem id="repository_step1">
-          <para id="repository_online_step1_para">
-            Edit the
-            <emphasis>/etc/apt/sources.list.d/ulteo-ovd.list</emphasis>
-            file and add this line:
-          </para>
+          <xi:include href="&base;" xpointer="repository_online_step1_para" />
           <important>
             <para>
               You have to replace LOGIN and PASSWORD by your own.
@@ -116,7 +86,7 @@ deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/3.0/gold/ubuntu lucid main]]>
     </section>
 
     <section id="repository_offline">
-      <title id="repository_offline_title">Offline Method</title>
+       <xi:include href="&base;" xpointer="repository_offline_title" />
 
      <itemizedlist>
        
@@ -159,38 +129,7 @@ deb file:///root/ovd-3.0-gold-ubuntu-lucid lucid main]]>
      </itemizedlist>
     </section>
 
-    <simplesect id="repository_common">
-      <title id="repository_common_title">Finish with any method</title>
-      <itemizedlist>
-        <listitem>
-          <para id="repository_common_step1_para">
-            Update the package database:
-          </para>
-          <screen>
-<![CDATA[# apt-get update]]>
-          </screen>
-          <note>
-            <para>
-              GPG errors given by the previous command will be fixed
-              in the next installation steps. They won't prevent the
-              installation to succeed.
-            </para>
-          </note>
-        </listitem>
-
-        <listitem id="repository_step3">
-          <para>
-            Install the keyring package to validate the repository
-            using gpg:
-          </para>
-          <screen>
-<![CDATA[# apt-get install ulteo-keyring
-# apt-get update]]>
-          </screen>
-        </listitem>
-      </itemizedlist>
-    </simplesect>
-
+    <xi:include href="&base;" xpointer="repository_common" />
 </section>
 
   <section>
