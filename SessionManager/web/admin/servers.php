@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
- * Author Julien LANGLOIS <julien@ulteo.com> 2008-2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -74,11 +74,9 @@ function show_default() {
     if ($av_servers > 1 and $can_do_action)
       echo '<th class="unsortable"></th>';
     echo '<th>'._('FQDN').'</th><th>'._('Type').'</th>';
+    echo '<th>'._('Version').'</th>';
     echo '<th>'._('Roles').'</th>';
-    // echo '<th>'._('Version').'</th>';
     echo '<th>'._('Status').'</th><th>'._('Details').'</th>';
-    if ($nb_a_servs_online > 0)
-      echo '<th>'._('Monitoring').'</th>';
     // echo '<th>'._('Applications(physical)'.</th>';
     echo '</tr>';
     echo '</thead>';
@@ -103,10 +101,13 @@ function show_default() {
       if ($av_servers > 1 and $can_do_action)
         echo '<td><input class="input_checkbox" type="checkbox" name="checked_servers[]" value="'.$s->fqdn.'" /></td>';
       echo '<td>';
-      echo '<a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->fqdn.'</a>';
+	echo '<a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->getAttribute('external_name');
+	if ($s->getAttribute('external_name') != $s->fqdn)
+		echo '<br/><em style="margin-left: 10px; font-size: 0.8em;">'.$s->fqdn.'<em>';
+	echo '</a>';
       echo '</td>';
       echo '<td style="text-align: center;"><img src="media/image/server-'.$s->stringType().'.png" alt="'.$s->stringType().'" title="'.$s->stringType().'" /><br />'.$s->stringType().'</td>';
-      // echo '<td>'.$s->stringVersion().'</td>';
+		echo '<td>'.$s->stringVersion().'</td>';
       echo '<td>';
       echo '<ul>';
       $roles = $s->roles;
@@ -125,32 +126,6 @@ function show_default() {
       echo ')<br />';
       echo _('RAM').': '.round($s->getAttribute('ram_total')/1024).' '._('MB');
       echo '</td>';
-
-      if ($nb_a_servs_online > 0) {
-	echo '<td>';
-	if ($server_online) {
-	  echo _('CPU usage').': '.$s->getCpuUsage().'%<br />';
-	  echo display_loadbar($s->getCpuUsage());
-	  echo _('RAM usage').': '.$s->getRamUsage().'%<br />';
-	  echo display_loadbar($s->getRamUsage());
-	  foreach ($s->roles as $role => $enabled) {
-	    if ($enabled === false)
-	      continue;
-
-	    switch ($role) {
-	      case 'aps':
-	        echo _('Sessions usage').': '.$s->getSessionUsage().'%<br />';
-	        echo display_loadbar((($s->getSessionUsage() > 100)?100:$s->getSessionUsage()));
-	        break;
-	      case 'fs':
-	        echo _('Disk usage').': '.$s->getDiskUsage().'%<br />';
-	        echo display_loadbar((($s->getDiskUsage() > 100)?100:$s->getDiskUsage()));
-	        break;
-	    }
-	  }
-	}
-	echo '</td>';
-      }
 
       if ($can_do_action) {
 	echo '<td>';
@@ -230,9 +205,8 @@ function show_unregistered() {
     if (count($u_servs) > 1)
       echo '<th class="unsortable"></th>';
     echo '<th>'._('FQDN').'</th><th>'._('Type').'</th>';
+    	echo '<th>'._('Version').'</th>';
     echo '<th>'._('Roles').'</th>';
-//     echo '<th>'._('Version').'</th>';
-    echo '<th>'._('Details').'</th>';
     echo '</tr>';
     echo '</thead>';
     echo '<tbody>';
@@ -254,7 +228,7 @@ function show_unregistered() {
 
       echo '<td>'.$s->fqdn.'</td>';
       echo '<td style="text-align: center;"><img src="media/image/server-'.$s->stringType().'.png" alt="'.$s->stringType().'" title="'.$s->stringType().'" /><br />'.$s->stringType().'</td>';
-//       echo '<td>'.$s->stringVersion().'</td>';
+		echo '<td>'.$s->stringVersion().'</td>';
       echo '<td>';
       echo '<ul>';
       foreach ($s->roles as $a_role => $role_enabled) {
@@ -263,12 +237,6 @@ function show_unregistered() {
         }
       }
       echo '</ul>';
-      echo '</td>';
-      echo '<td>';
-      echo _('CPU').': '.$s->getAttribute('cpu_model').' ('.$s->getAttribute('cpu_nb_cores').' ';
-      echo ($s->getAttribute('cpu_nb_cores') > 1)?_('cores'):_('core');
-      echo ')<br />';
-      echo _('RAM').': '.round($s->getAttribute('ram_total')/1024).' MB';
       echo '</td>';
 
 		if ($can_do_action) {
