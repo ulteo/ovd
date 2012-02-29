@@ -85,7 +85,11 @@ download_chroot ()
         CURLOPTS="--retry 3 --connect-timeout 60 --insecure -L"
         curl $CURLOPTS -f -s -I "$URI" > /dev/null && break
         echo "Cannot have access to the chroot tarball"
-        CHROOTURL='http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0'
+        if [ "$DEBIAN" = "false" ]; then
+          CHROOTURL='http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0'
+        else
+          exit 1
+        fi
         unset URI
     done
 
@@ -126,9 +130,11 @@ update_chroot ()
         echo "$HOSTTZ" > $TARGET/etc/timezone
     fi
 
-    # resolv.conf
-    [ -f /etc/resolv.conf ] && cp /etc/resolv.conf $TARGET/etc/resolv.conf
-    [ -f /etc/hosts ] && cp /etc/hosts $TARGET/etc/hosts
+    # get some conffile from host to chroot
+    HOSTCONFFILES="hostname hosts resolv.conf"
+    for file in $HOSTCONFFILES; do
+        [ -f /etc/$file ] && cp /etc/$file $TARGET/etc/
+    done
 
     # issue
     if [ -x "/usr/bin/lsb_release" ]; then
@@ -142,6 +148,7 @@ unset TARGET
 unset SM
 FORCE="false"
 UPDATE="false"
+DEBIAN="false"
 while [ -n "$1" ]; do
     case $1 in
         --chroot-url|--chroot-uri)
@@ -158,6 +165,9 @@ while [ -n "$1" ]; do
             ;;
         --force)
             FORCE="true"
+            ;;
+        --debian)
+            DEBIAN="true"
             ;;
         --help|-h)
             usage
@@ -176,7 +186,7 @@ done
 
 if [ "$UPDATE" = "false" ]; then
     download_chroot
-    configure_startup
+    [ "$DEBIAN" = "false" ] && configure_startup
 fi
 
 update_chroot
