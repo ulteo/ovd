@@ -8,6 +8,7 @@ pre-build::
 install/ulteo-ovd-subsystem::
 	install -D conf/default.conf $(DEB_DESTDIR)/etc/default/ulteo-ovd-subsystem ; \
 	install -D conf/subsystem.conf $(DEB_DESTDIR)/etc/ulteo/subsystem.conf ; \
+	install -D script/ovd-subsystem-config $(DEB_DESTDIR)/usr/sbin/ovd-subsystem-config ; \
 	install -D script/uchroot $(DEB_DESTDIR)/usr/sbin/uchroot
 
 clean::
