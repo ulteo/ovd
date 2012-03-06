@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,6 +21,9 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
+/**
+ * Abstraction layer between the Usergroup_Preferences instances and the SQL backend.
+ */
 class Abstract_UserGroup_Preferences {
 	private static $table = 'usergroup_preferences';
 	

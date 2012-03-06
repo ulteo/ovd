@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2011
+ * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,6 +21,9 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
+/**
+ * Abstraction layer between the VDI instances and the SQL backend.
+ */
 class Abstract_VDI {
 	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_VDI::init');

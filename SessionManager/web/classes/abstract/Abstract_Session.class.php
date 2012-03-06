@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
+ * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,6 +22,9 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
+/**
+ * Abstraction layer between the Session instances and the SQL backend.
+ */
 class Abstract_Session {
 	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_Session::init');

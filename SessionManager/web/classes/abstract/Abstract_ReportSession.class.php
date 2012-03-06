@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Gauvain Pocentek <gauvain@ulteo.com> 2009
  * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
+ * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +23,9 @@
 
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
+/**
+ * Abstraction layer between the ReportSession instances and the SQL backend.
+ */
 class Abstract_ReportSession {
 	static $TYPE_SERVER = 0;
 	static $TYPE_APPLICATION = 1;
