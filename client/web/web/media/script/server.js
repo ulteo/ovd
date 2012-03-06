@@ -2,6 +2,7 @@
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Jocelyn DELALALANDE <j.delalande@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +19,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
+
+/** Represents a RDP server
+ *
+ * Manages authentication against server. There are two auth modes available : 
+ *   - login+password
+ *   - token
+ */
 var Server = Class.create({
 	id: '',
 	java_id: '',
@@ -32,6 +40,13 @@ var Server = Class.create({
 	connected: false,
 	ready: false,
 
+	/** Constructor : initialized with a <server> XML node.
+	 *
+	 * @param id_       Index of the server in servers list
+	 * @param java_id_  Same (?)
+	 * @param xml_      Credentials and params supplied by the webclient server, to 
+   *                  be provided to the RDP applet for RDP auth.
+	 */
 	initialize: function(id_, java_id_, xml_) {
 		this.id = id_;
 		this.java_id = java_id_;
@@ -43,6 +58,7 @@ var Server = Class.create({
 		this.password = xml_.getAttribute('password');
 	},
 
+	/// In case we use the token auth.
 	setToken: function(token_) {
 		this.token = token_;
 	},

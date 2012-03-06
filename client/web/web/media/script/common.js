@@ -4,6 +4,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  * Author Omar AKHAM <oakham@ulteo.com> 2011
+ * Author Jocelyn DELALALANDE <j.delalande@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -155,6 +156,7 @@ function enableLogin() {
 	$('submitLoader').hide();
 }
 
+/// Parses login.php XML answer
 function onStartSessionSuccess(xml_) {
 	var xml = xml_;
 
@@ -167,6 +169,7 @@ function onStartSessionSuccess(xml_) {
 		return false;
 	}
 
+  // Response Error handling
 	var buffer = xml.getElementsByTagName('error');
 	if (buffer.length == 1) {
 		try {
@@ -195,6 +198,7 @@ function onStartSessionSuccess(xml_) {
 		return false;
 	}
 
+  // No <session> tag is not an invalid answer
 	var buffer = xml.getElementsByTagName('session');
 	if (buffer.length != 1) {
 		enableLogin();
@@ -205,6 +209,8 @@ function onStartSessionSuccess(xml_) {
 	var sessionmanager_host = session_node.getAttribute('sessionmanager');
 	if (sessionmanager_host == '127.0.0.1' || sessionmanager_host == '127.0.1.1' || sessionmanager_host == 'localhost' || sessionmanager_host == 'localhost.localdomain')
 		sessionmanager_host = window.location.hostname;
+
+  // HTTPS detection (ugly)
 	if (sessionmanager_host.indexOf(':') == -1)
 		sessionmanager_host += ':443';
 
@@ -289,6 +295,8 @@ function onStartSessionSuccess(xml_) {
 		}
 
 		daemon.prepare();
+
+    // <server> nodes
 		if (! daemon.parse_list_servers(xml)) {
 			try {
 				showError(i18n.get('internal_error'));

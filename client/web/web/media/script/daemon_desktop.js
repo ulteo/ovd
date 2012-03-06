@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author Jocelyn DELALALANDE <j.delalande@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -72,12 +73,19 @@ var Desktop = Class.create(Daemon, {
 				applet_params.set('setting_'+pair.key, pair.value);
 			});
 			
+      // Creates and configures the Java applet
 			var applet = this.buildAppletNode('Desktop', applet_params);
 			applet.setAttribute('width', applet_width);
 			applet.setAttribute('height', applet_height);
+
+      // And it's parent element
 			$('desktopAppletContainer').setStyle({width: applet_width+'px', height: applet_height+'px', top: 0+'px', left: 0+'px'});
 			$('desktopAppletContainer').show();
 			$('desktopAppletContainer').appendChild(applet);
+
+			/* In fullscreen mode, the applet appears in its own window, out of the HTML
+			* desktopFullscreenContainer is then a placeholder in the HTML page.
+			*/
 			if (this.fullscreen) {
 				if ($('splashContainer').visible())
 					$('splashContainer').hide();
@@ -100,6 +108,7 @@ var Desktop = Class.create(Daemon, {
 
 		var serverNodes = xml.getElementsByTagName('server');
 
+    // Normally, in Desktop mode, only 1 server
 		for (var i=0; i<serverNodes.length; i++) {
 			try { // IE does not have hasAttribute in DOM API...
 				var mode_gateway = false;
