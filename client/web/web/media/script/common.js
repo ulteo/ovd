@@ -169,7 +169,7 @@ function onStartSessionSuccess(xml_) {
 		return false;
 	}
 
-  // Response Error handling
+	// Response Error handling
 	var buffer = xml.getElementsByTagName('error');
 	if (buffer.length == 1) {
 		try {
@@ -198,7 +198,7 @@ function onStartSessionSuccess(xml_) {
 		return false;
 	}
 
-  // No <session> tag is not an invalid answer
+	// No <session> tag is not an invalid answer
 	var buffer = xml.getElementsByTagName('session');
 	if (buffer.length != 1) {
 		enableLogin();
@@ -296,7 +296,7 @@ function onStartSessionSuccess(xml_) {
 
 		daemon.prepare();
 
-    // <server> nodes
+		// <server> nodes
 		if (! daemon.parse_list_servers(xml)) {
 			try {
 				showError(i18n.get('internal_error'));

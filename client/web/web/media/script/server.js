@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  * Author Jocelyn DELALALANDE <j.delalande@ulteo.com> 2012
