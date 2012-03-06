@@ -1,7 +1,7 @@
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Jocelyn DELALALANDE <j.delalande@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
