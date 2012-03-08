@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -24,6 +25,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 
+import org.ulteo.gui.GUIActions;
 import org.ulteo.ovd.client.authInterface.DisconnectionDialog;
 import org.ulteo.ovd.client.authInterface.NativeLogoutPopup;
 
@@ -66,7 +68,7 @@ public class OvdClientFrame extends JFrame implements WindowListener {
 	 * display the disconnecting window
 	 */
 	public void disconnecting() {
-		 this.discDialog.setVisible(true);
+		GUIActions.setVisible(this.discDialog, true);
 	 }
 
 	@Override
@@ -74,7 +76,7 @@ public class OvdClientFrame extends JFrame implements WindowListener {
 
 	@Override
 	public void windowClosed(WindowEvent e) {
-		this.discDialog.setVisible(false);
+		GUIActions.setVisible(this.discDialog, false);
 	}
 
 	@Override
