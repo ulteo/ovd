@@ -3,7 +3,7 @@
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2009-2012
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
@@ -546,6 +546,8 @@ public class RdpConnection implements SeamListener, Runnable{
 			SwingUtilities.invokeLater(new Runnable() {
 
 				public void run() {
+					if (backstoreFrame == null)
+						return;
 					backstoreFrame.setVisible(false);
 					backstoreFrame.removeAll();
 					backstoreFrame.dispose();
