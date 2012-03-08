@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
@@ -294,6 +294,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		int nbApps = 0;
 		int nbAppsAvailable = 0;
 
+		List<RdpConnectionOvd> toRemove = new ArrayList<RdpConnectionOvd>();
 		for (RdpConnectionOvd co : this.performedConnections) {
 			int nbAppsByServer = co.getAppsList().size();
 			nbApps += nbAppsByServer;
@@ -302,6 +303,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 			if (state == RdpConnection.State.CONNECTED) {
 				nbAppsAvailable += nbAppsByServer;
+				toRemove.add(co);
 				continue;
 			}
 
@@ -328,6 +330,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			retry = true;
 		}
 
+		for (RdpConnectionOvd co: toRemove)
+			this.performedConnections.remove(co);
+		
 		if (retry)
 			return true;
 
