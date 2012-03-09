@@ -6,6 +6,9 @@
  * Date: $Date: 2007/03/08 00:26:41 $
  *
  * Copyright (c) 2005 Propero Limited
+ * Copyright (C) 2012 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * Purpose: 
  */
@@ -286,7 +289,7 @@ public class ClipChannel extends VChannel implements ClipInterface, ClipboardOwn
 	
 	void request_clipboard_data(int formatcode)throws RdesktopException,IOException,CryptoException{
 	
-		RdpPacket_Localised s = this.common.secure.init(Constants.encryption ? Secure.SEC_ENCRYPT : 0, 24);
+		RdpPacket_Localised s = this.common.secure.init(this.opt.encryption ? Secure.SEC_ENCRYPT : 0, 24);
 		s.setLittleEndian32(16); // length
 		
 		int flags = VChannels.CHANNEL_FLAG_FIRST | VChannels.CHANNEL_FLAG_LAST;
@@ -300,7 +303,7 @@ public class ClipChannel extends VChannel implements ClipInterface, ClipboardOwn
 		s.setLittleEndian32(0); // Unknown. Garbage pad?
 		s.markEnd();
 		
-		this.common.secure.send_to_channel(s, Constants.encryption ? Secure.SEC_ENCRYPT : 0, this.mcs_id());
+		this.common.secure.send_to_channel(s, this.opt.encryption ? Secure.SEC_ENCRYPT : 0, this.mcs_id());
 	}
 	
 	public void

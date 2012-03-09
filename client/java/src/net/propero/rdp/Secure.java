@@ -6,9 +6,9 @@
  * Date: $Date: 2007/03/08 00:26:35 $
  *
  * Copyright (c) 2005 Propero Limited
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  *
  * Purpose: Secure layer of communication
  */
@@ -160,7 +160,7 @@ public class Secure {
 	
 	this.processMcsData(mcs_data);
 
-	if (Constants.encryption) {
+	if (this.opt.encryption) {
 	    this.establishKey();  
 	}
     }
@@ -1048,7 +1048,7 @@ public class Secure {
     		}
 
 		buffer.setHeader(RdpPacket_Localised.SECURE_HEADER);
-		if (Constants.encryption || (! this.licenceIssued)) {
+		if (this.opt.encryption || (! this.licenceIssued)) {
 
 			sec_flags=buffer.getLittleEndian32();
 

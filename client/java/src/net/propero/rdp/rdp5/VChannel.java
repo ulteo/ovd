@@ -6,9 +6,9 @@
  * Date: $Date: 2007/03/08 00:26:39 $
  *
  * Copyright (c) 2005 Propero Limited
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author david LECHEVALIER <david@ulteo.com> 2011
+ * Author david LECHEVALIER <david@ulteo.com> 2011, 2012
  *
  * Purpose: Abstract class for RDP5 channels
  */
@@ -132,7 +132,7 @@ public abstract class VChannel {
 			}
 				
 			this.packetStat += data.size();
-			this.common.secure.spool_packet(data, Constants.encryption ? Secure.SEC_ENCRYPT : 0, this.mcs_id());
+			this.common.secure.spool_packet(data, this.opt.encryption ? Secure.SEC_ENCRYPT : 0, this.mcs_id());
 			return;
 		}
 		
@@ -148,7 +148,7 @@ public abstract class VChannel {
 		
 			int thisLength = Math.min(this.opt.VCChunkMaxSize, length - data_offset);
 			
-			RdpPacket_Localised s = this.common.secure.init(Constants.encryption ? Secure.SEC_ENCRYPT : 0, 8 + thisLength);
+			RdpPacket_Localised s = this.common.secure.init(this.opt.encryption ? Secure.SEC_ENCRYPT : 0, 8 + thisLength);
 			s.setLittleEndian32(length);
 		
 			int flags = ((data_offset == 0) ? VChannels.CHANNEL_FLAG_FIRST : 0);
@@ -163,7 +163,7 @@ public abstract class VChannel {
 			
 			data_offset += thisLength;		
 			
-			if(this.common.secure != null) this.common.secure.send_to_channel(s, Constants.encryption ? Secure.SEC_ENCRYPT : 0, this.mcs_id());
+			if(this.common.secure != null) this.common.secure.send_to_channel(s, this.opt.encryption ? Secure.SEC_ENCRYPT : 0, this.mcs_id());
 			packets_sent++;
 		}
 	}

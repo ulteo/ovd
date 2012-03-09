@@ -7,6 +7,9 @@
  *
  * Copyright (c) 2005 Propero Limited
  *
+ * Copyright (C) 2012 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  * Purpose: Handles request, receipt and processing of
  *          licences
  */
@@ -324,7 +327,7 @@ public class Licence {
 		out_sig = secure.sign(this.licence_sign_key, 16, 16, sealed_buffer, sealed_buffer.length);
 	
 		/* deliberately break signature if licencing disabled */
-		if (! Constants.licence) {
+		if (! this.opt.licence) {
 			out_sig = new byte[LICENCE_SIGNATURE_SIZE]; // set to 0
 		}
 

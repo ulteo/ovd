@@ -9,9 +9,9 @@
  * Date: $Date: 2007/03/08 00:26:14 $
  *
  * Copyright (c) 2005 Propero Limited
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 201, 2012
  * Author Thomas MOUTON <thomas@ulteo.com> 2011
  *
  * Purpose: Global static storage of user-definable options
@@ -145,4 +145,5 @@ public class Options {
 	public boolean server_support_suppress_output = false;
 	public SocketFactory socketFactory = null;
 	public CookieManager rdpCookie = new CookieManager();
+	public boolean licence = true;
 }

@@ -527,7 +527,7 @@ public class Rdp {
         RdpPacket_Localised buffer = null;
 
         buffer = SecureLayer.init(
-                Constants.encryption ? Secure.SEC_ENCRYPT : 0, size + 18);
+                this.opt.encryption ? Secure.SEC_ENCRYPT : 0, size + 18);
         buffer.pushLayer(RdpPacket_Localised.RDP_HEADER, 18);
         // buffer.setHeader(RdpPacket_Localised.RDP_HEADER);
         // buffer.incrementPosition(18);
@@ -567,7 +567,7 @@ public class Rdp {
         data.set8(0); // compression type
         data.setLittleEndian16(0); // compression length
 
-        SecureLayer.send(data, Constants.encryption ? Secure.SEC_ENCRYPT : 0);
+        SecureLayer.send(data, this.opt.encryption ? Secure.SEC_ENCRYPT : 0);
 
         CommunicationMonitor.unlock(this);
     }
@@ -806,7 +806,7 @@ public class Rdp {
         int len_dll = 2 * "C:\\WINNT\\System32\\mstscax.dll".length();
         int packetlen = 0;
 
-        int sec_flags = Constants.encryption ? (Secure.SEC_LOGON_INFO | Secure.SEC_ENCRYPT)
+        int sec_flags = this.opt.encryption ? (Secure.SEC_LOGON_INFO | Secure.SEC_ENCRYPT)
                 : Secure.SEC_LOGON_INFO;
         int domainlen = 2 * domain.length();
         int userlen = 2 * username.length();
@@ -1303,7 +1303,7 @@ public class Rdp {
         order_caps[8] = 1; /* line */
         order_caps[9] = 1; /* line */
         order_caps[10] = 1; /* rect */
-        order_caps[11] = (byte) (Constants.desktop_save ? 1 : 0); /* desksave */
+        order_caps[11] = (byte) (this.opt.desktop_save ? 1 : 0); /* desksave */
         order_caps[13] = 1; /* memblt */
         order_caps[14] = 1; /* triblt */
         order_caps[20] = (byte) (this.opt.polygon_ellipse_orders ? 1 : 0); /* polygon */
@@ -1329,7 +1329,7 @@ public class Rdp {
         data.incrementPosition(32);
         data.setLittleEndian16(0x6a1); /* Text capability flags */
         data.incrementPosition(6); /* Pad */
-        data.setLittleEndian32(Constants.desktop_save ? 0x38400 : 0); /*
+        data.setLittleEndian32(this.opt.desktop_save ? 0x38400 : 0); /*
                                                                          * Desktop
                                                                          * cache
                                                                          * size
