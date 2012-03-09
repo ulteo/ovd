@@ -6,11 +6,11 @@
  * Date: $Date: 2007/03/08 00:26:14 $
  *
  * Copyright (c) 2005 Propero Limited
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
  *
@@ -93,7 +93,6 @@ public class MCS {
      */
     public void connect(String host, int port, RdpPacket_Localised data)  throws IOException, RdesktopException, OrderException, CryptoException {
 	logger.debug("MCS.connect");
-    IsoLayer.connect(host, port);
 
     this.sendConnectInitial(data);
 	this.receiveConnectResponse(data);
@@ -117,6 +116,18 @@ public class MCS {
 
     }
     
+	/**
+	 * Connect to server using iso layer
+	 * @param host Address of server to connect to
+	 * @param port Port to connect to
+	 * @throws CryptoException 
+	 * @throws OrderException 
+	 * @throws RdesktopException 
+	 * @throws IOException 
+	 */
+	public void isoConnect(String host, int port) throws IOException, RdesktopException, OrderException, CryptoException {
+		this.IsoLayer.connect(host, port);
+	}
  
     /**
      * Disconnect from server

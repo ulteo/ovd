@@ -154,12 +154,11 @@ public class Secure {
 		this.opt.hostname = tok.nextToken();
 		this.opt.hostname.trim();
 	}
+	McsLayer.isoConnect(host, port);
 
 	RdpPacket_Localised mcs_data = this.sendMcsData();
 	McsLayer.connect(host, port, mcs_data);
 	
-	this.processMcsData(mcs_data);
-
 	if (this.opt.encryption) {
 	    this.establishKey();  
 	}
