@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
@@ -364,11 +364,4 @@ public class RdpConnectionOvd extends RdpConnection {
 		this.opt.supportOffscreen = value;
 	}
 	
-	public void setUseKeepAlive() {
-		this.opt.useKeepAlive = true;
-	}
-	
-	public void setKeepAliveInterval(int keepAliveInterval) {
-		this.opt.keepAliveInterval = keepAliveInterval;
-	}
 }

@@ -270,7 +270,7 @@ MirrorCloseFile(
 
 	if (cacheEntry->deleteOnClose && cacheEntry->ref == 0) {
 		GetFilePath(FileName, filePath);
-		wprintf(L"DeleteFile : %ls\n", (WCHAR*)filePath);
+		DbgPrint(L"DeleteFile : %ls\n", (WCHAR*)filePath);
 
 		DELETERequest req(filePath);
 		if (FAILED(server->sendRequest(req))) {
@@ -294,11 +294,10 @@ MirrorCleanup(
 {
 	WCHAR filePath[MAX_PATH];
 	ULONG64 cacheHandle = DokanFileInfo->Context;
-	DAVCACHEENTRY* cacheEntry = NULL;
-	cacheEntry = davCache->getFromHandle(cacheHandle);
 
 	if (DokanFileInfo->DeleteOnClose) {
 		GetFilePath(FileName, filePath);
+
 		DbgPrint(L"DeleteFile : %ls\n", (WCHAR*)filePath);
 
 		DELETERequest req(filePath);
@@ -702,9 +701,8 @@ MirrorDeleteFile(
 	PDOKAN_FILE_INFO	DokanFileInfo)
 
 {
-//	UNREFERENCED_PARAMETER(FileName);
+	UNREFERENCED_PARAMETER(FileName);
 	UNREFERENCED_PARAMETER(DokanFileInfo);
-	wprintf(L"delete File %ls\n", FileName);
 	return ERROR_SUCCESS;
 }
 
@@ -737,7 +735,7 @@ MirrorMoveFile(
 	GetFilePath(FileName, filePath);
 	GetFilePath(NewFileName, newFilePath);
 	
-	wprintf(L"MoveFile %s -> %s\n\n", filePath, newFilePath);
+	DbgPrint(L"MoveFile %s -> %s\n\n", filePath, newFilePath);
 	cacheEntry = davCache->getFromHandle(cacheHandle);
 	if (cacheEntry != NULL) {
 		wcscpy_s(cacheEntry->remotePath, MAX_PATH, newFilePath);
@@ -843,7 +841,6 @@ MirrorSetFileAttributes(
 	UNREFERENCED_PARAMETER(FileName);
 	UNREFERENCED_PARAMETER(FileAttributes);
 	UNREFERENCED_PARAMETER(DokanFileInfo);
-
 	return ERROR_SUCCESS;
 }
 
@@ -935,57 +932,6 @@ WCHAR getNextFreeLetter() {
 }
 
 
-BOOL setVolumeName(WCHAR* shareName) {
-	HRESULT err;
-	WCHAR key[MAX_PATH] = {0};
-	HKEY hkey;
-	DWORD len = 0;
-
-	swprintf_s(key, MAX_PATH, L"Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\MountPoints2\\%s", shareName);
-
-	err = RegCreateKeyEx(HKEY_CURRENT_USER, key, 0, NULL, 0, KEY_SET_VALUE, NULL, &hkey, NULL);
-	if (err != ERROR_SUCCESS) {
-		return FALSE;
-	}
-
-	// Check if a value is set
-	err = RegQueryValueEx(hkey, L"_LabelFromReg", NULL, NULL, NULL, NULL);
-	if (err == ERROR_SUCCESS)
-		return TRUE;
-
-	len = lstrlen(shareName) * sizeof(WCHAR);
-	err = RegSetValueEx(hkey, L"_LabelFromReg", NULL, REG_SZ, (BYTE*)shareName, len);
-	if (err != ERROR_SUCCESS || len >= MAX_PATH) {
-		RegCloseKey(hkey);
-		return FALSE;
-	}
-	RegCloseKey(hkey);
-	return TRUE;
-}
-
-BOOL registerShare(WCHAR* letter, WCHAR* shareName) {
-	HRESULT err;
-	WCHAR key[MAX_PATH] = {0};
-	HKEY hkey;
-	DWORD len = 0;
-
-	swprintf_s(key, MAX_PATH, L"Software\\Ulteo\\WebdavFS");
-
-	err = RegCreateKeyEx(HKEY_CURRENT_USER, key, 0, NULL, 0, KEY_SET_VALUE, NULL, &hkey, NULL);
-	if (err != ERROR_SUCCESS) {
-		return FALSE;
-	}
-
-	len = lstrlen(shareName) * sizeof(WCHAR);
-	err = RegSetValueEx(hkey, letter, NULL, REG_SZ, (BYTE*)shareName, len);
-	if (err != ERROR_SUCCESS || len >= MAX_PATH) {
-		RegCloseKey(hkey);
-		return FALSE;
-	}
-	RegCloseKey(hkey);
-	return TRUE;
-}
-
 
 int _cdecl
 main(ULONG argc, PCHAR argv[]) {
@@ -1068,7 +1014,6 @@ main(ULONG argc, PCHAR argv[]) {
 	}
 
 
-
 	ZeroMemory(&urlComp, sizeof(urlComp));
 	if (lstrlen(url) > 0) {
 		//crack the url
@@ -1124,10 +1069,6 @@ main(ULONG argc, PCHAR argv[]) {
 //		dokanOptions->Options |= DOKAN_OPTION_DEBUG;
 //	if (g_UseStdErr)
 //		dokanOptions->Options |= DOKAN_OPTION_STDERR;
-	registerShare(MountPoint, url);
-	setVolumeName(url);
-
-
 
 	dokanOptions->Options |= DOKAN_OPTION_KEEP_ALIVE;
 	dokanOptions->ThreadCount = 1;

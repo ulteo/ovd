@@ -1,9 +1,9 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
- * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
@@ -85,8 +85,6 @@ public class Options {
 	public boolean usePersistantCache = false;
 	public String persistentCachePath = "";
 	public int persistentCacheMaxCells = 0;
-	public boolean useKeepAlive = false;
-	public int keepAliveInterval = 60;         // In second
 	
 	public Options() {
 	}
@@ -219,11 +217,6 @@ public class Options {
 			
 			this.persistentCachePath = properties.getPersistentCachePath();
 			this.persistentCacheMaxCells = properties.getPersistentCacheMaxCells();
-		}
-		
-		if (properties.isUseKeepAlive()) {
-			this.useKeepAlive = true;
-			this.keepAliveInterval = properties.getKeepAliveInterval();
 		}
 		
 		new ProxyManager().updateProxy(properties);

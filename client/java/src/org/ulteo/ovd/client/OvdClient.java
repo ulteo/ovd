@@ -78,8 +78,6 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	private String persistentCachePath = null;
 	private int socketTimeout = 0;
 	private int diskBandwidthLimit = 0;
-	private boolean useKeepAlive = false;
-	private int keepAliveInterval = 0;
 	
 	protected Thread sessionStatusMonitoringThread = null;
 	protected boolean continueSessionStatusMonitoringThread = false;
@@ -402,24 +400,6 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	}
 
 	/**
-	 * enable/disable keepalive capability
-	 * @param useKeepalive 
-	 */
-	public void setUseKeepAlive(boolean useKeepalive) {
-		Logger.info("Keepalive activated");
-		this.useKeepAlive = useKeepalive;
-	}
-	
-	/**
-	 * set keep alive interval
-	 * @param keepAliveInterval keep alive interval in seconde
-	 */
-	public void setKeepAliveInterval(int keepAliveInterval) {
-		Logger.info("Keepalive interval: "+keepAliveInterval);
-		this.keepAliveInterval = keepAliveInterval;
-	}
-	
-	/**
 	 * configure a specific RdpConnection
 	 * @param rc
 	 */
@@ -443,12 +423,6 @@ public abstract class OvdClient implements Runnable, RdpListener {
 			rc.setSocketTimeout(this.socketTimeout);
 			if (diskBandwidthLimit != 0)
 				rc.getRdpdrChannel().setSpoolable(true, this.diskBandwidthLimit);
-		}
-		if (this.useKeepAlive) {
-			rc.setUseKeepAlive();
-			if (this.keepAliveInterval != 0) {
-				rc.setKeepAliveInterval(this.keepAliveInterval);
-			}
 		}
 	}
     

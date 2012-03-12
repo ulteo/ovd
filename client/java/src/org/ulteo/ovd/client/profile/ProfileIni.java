@@ -367,26 +367,6 @@ public class ProfileIni extends Profile {
 			properties.setUsePersistantCache(usePersistentCache);
 		}
 		
-		value = ini.get(INI_SECTION_RDP, FIELD_RDP_USE_KEEPALIVE);
-		if (value != null) {
-			boolean useKeepAlive = false;
-			if (value.equalsIgnoreCase(VALUE_TRUE))
-				useKeepAlive = true;
-			properties.setUseKeepAlive(useKeepAlive);
-		}
-		
-		value = ini.get(INI_SECTION_RDP, FIELD_RDP_KEEPALIVE_INTERVAL);
-		if (value != null) {
-			int keepAliveInterval = properties.getKeepAliveInterval();
-			try {
-				keepAliveInterval = Integer.parseInt(value);
-			}
-			catch (NumberFormatException e) {
-				Logger.error("Failed to parse the keepalive interval: '"+value+"'");
-			}
-			properties.setKeepAliveInterval(keepAliveInterval);
-		}
-		
 		value = ini.get(INI_SECTION_PERSISTENT_CACHE, FIELD_PERSISTENT_CACHE_PATH);
 		if (value != null) {
 			properties.setPersistentCachePath(value);

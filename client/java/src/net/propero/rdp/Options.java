@@ -11,7 +11,7 @@
  * Copyright (c) 2005 Propero Limited
  * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Author David LECHEVALIER <david@ulteo.com> 201, 2012
  * Author Thomas MOUTON <thomas@ulteo.com> 2011
  *
  * Purpose: Global static storage of user-definable options
@@ -128,8 +128,6 @@ public class Options {
 	public boolean useBandwithLimitation = false;
 	public boolean useDiskBandwithLimitation = false;
 	public int socketTimeout = 200;            // In millisecond
-	public boolean useKeepAlive = false;
-	public long keepAliveInterval = 60;        // In second
 	
 	public boolean use_ssl = false;
 	public boolean map_clipboard = true;

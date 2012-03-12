@@ -6,7 +6,6 @@
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Gauvain POCENTEK <gauvain@ulteo.com> 2009
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
-# Author David LECHEVALIER <david@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -23,7 +22,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import ConfigParser
-import locale
 import os
 import sys
 import time
@@ -36,17 +34,10 @@ from ovd_shells import Util
 
 
 def main():
-	try:
-		encoding = locale.getpreferredencoding()
-	except locale.Error, err:
-		encoding = "UTF-8"
-	
 	if os.environ.has_key("OVD_SESSION_DIR"):
 		user_sdir = os.environ["OVD_SESSION_DIR"]
 	else:
 		user_sdir = Platform.getUserSessionDir()
-		user_sdir = user_sdir.encode(encoding)
-		
 		if user_sdir is None:
 			print "Exit because no OVD environment"
 			sys.exit(1)
