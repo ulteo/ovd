@@ -90,10 +90,6 @@ BOOL allowJVMToSetFocus(LPSTR arg) {
 
 #define OVDIntegratedClientPath ".ulteo/ovd/remoteApps"
 
-BOOL allowJVMToSetFocus(LPSTR arg) {
-	return TRUE;
-}
-
 #endif //WINDOWS/POSIX
 
 BOOL getRemoteAppsPath(LPSTR path, LPSTR arg);
@@ -135,7 +131,9 @@ int main(int argc, LPSTR argv[]) {
         args = argv[3];
     }
     
+#ifdef WIN32 //WINDOWS
     allowJVMToSetFocus(argv[1]);
+#endif
 
     instance = spool_instance_create(spool, argv[2], args);
     if (instance == -1) {
