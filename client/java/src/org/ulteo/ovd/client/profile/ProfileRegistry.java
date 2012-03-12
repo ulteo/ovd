@@ -245,6 +245,23 @@ public class ProfileRegistry extends Profile {
 					}
 					properties.setPersistentCacheMaxCells(persistentCacheMaxCell);
 				}
+				else if (field.equalsIgnoreCase(FIELD_RDP_USE_KEEPALIVE)) {
+					boolean useKeepAlive = false;
+					if (value.equalsIgnoreCase(VALUE_TRUE))
+						useKeepAlive = true;
+					
+					properties.setUseKeepAlive(useKeepAlive);
+				}
+				else if (field.equalsIgnoreCase(FIELD_RDP_KEEPALIVE_INTERVAL)) {
+					int keepAliveInterval = properties.getKeepAliveInterval();
+					try {
+						keepAliveInterval = Integer.parseInt(value);
+					}
+					catch (NumberFormatException e) {
+						Logger.error("Failed to parse keepalive interval: '"+value+"'");
+					}
+					properties.setDiskBandwidthLimit(keepAliveInterval);
+				}
 			}
 		} catch (RegistryException ex) {
 			throw new IOException(ex);

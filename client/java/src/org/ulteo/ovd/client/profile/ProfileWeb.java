@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -122,6 +122,24 @@ public class ProfileWeb extends Profile {
 						Logger.warn("Unable to convert value " + valueName + ": "+e.getMessage());
 					}
 					properties.setSocketTimeout(timeout);
+				}
+				
+				if (keyName.equalsIgnoreCase(FIELD_RDP_USE_KEEPALIVE)) {
+					if (valueName.equalsIgnoreCase(VALUE_TRUE) || valueName.equalsIgnoreCase("1"))
+						properties.setUseKeepAlive(true);
+					else
+						properties.setUseKeepAlive(false);
+				}
+				
+				if (keyName.equalsIgnoreCase(FIELD_RDP_KEEPALIVE_INTERVAL)) {
+					int keepAliveInterval = properties.getKeepAliveInterval();
+					try {
+						keepAliveInterval = Integer.parseInt(valueName);	
+					}
+					catch (NumberFormatException e) {
+						Logger.warn("Unable to convert value " + valueName + ": "+e.getMessage());
+					}
+					properties.setKeepAliveInterval(keepAliveInterval);
 				}
 			}
 			

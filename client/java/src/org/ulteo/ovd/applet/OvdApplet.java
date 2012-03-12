@@ -175,6 +175,13 @@ public abstract class OvdApplet extends Applet {
 						diskBandwidthLimit = pproperties.getDiskBandwidthLimit();
 					this.ovd.setBandWidthLimitation(pproperties.getSocketTimeout(), diskBandwidthLimit);
 				}
+				
+				if (pproperties.isUseKeepAlive()) {
+					int keepAliveInterval = 0;
+					this.ovd.setUseKeepAlive(true);
+					keepAliveInterval = pproperties.getKeepAliveInterval();
+					this.ovd.setKeepAliveInterval(keepAliveInterval);
+				}
 			}
 
 			_init();

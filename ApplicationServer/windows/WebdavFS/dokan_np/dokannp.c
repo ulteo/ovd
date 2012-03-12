@@ -506,20 +506,37 @@ NPGetConnection(
 	__out LPWSTR RemoteName,
 	__inout LPDWORD BufferSize)
 {
+	WCHAR shareName[MAX_PATH] = {0};
+	HKEY hkey = NULL;
+	DWORD type = 0;
+	DWORD len = 0;
+	HRESULT err = 0;
+
 	DbgPrintW(L"NpGetConnection %s, %d\n", LocalName, *BufferSize);
-	if (*BufferSize < sizeof(WCHAR) * 4) {
+
+	err = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Ulteo\\WebdavFS", 0, KEY_READ, &hkey);
+	if (err != ERROR_SUCCESS) {
+		DbgPrintW(L"NpGetConnection: key (Software\\Ulteo\\WebdavFS) do not exist in HKEY_CURRENT_USER\n");
+		return WN_SUCCESS;
+	}
+
+	len = MAX_PATH * sizeof(WCHAR);
+	err = RegQueryValueEx(hkey, LocalName, NULL, &type, shareName, &len);
+
+	if (err != ERROR_SUCCESS || len >= MAX_PATH) {
+		DbgPrintW(L"NpGetConnection: key (%s) do not exist in HKEY_CURRENT_USER\\Software\\Ulteo\\WebdavFS \n", LocalName);
+		RegCloseKey(hkey);
+		return WN_SUCCESS;
+	}
+	DbgPrintW(L"NpGetConnection: key (%s) \n", shareName);
+	RegCloseKey(hkey);
+
+	if (*BufferSize < sizeof(WCHAR) * lstrlen(shareName)) {
 		return WN_MORE_DATA;
 	}
-	//if (NotConnected) {
-	//	return WN_NOT_CONNECTED;
-	//  return WN_NO_NETWORK;
-	//}
-	RemoteName[0] = LocalName[0]; // n
-	RemoteName[1] = LocalName[1]; // :
-	RemoteName[2] = L'\\';
-	RemoteName[3] = L'\0';
-	*BufferSize = 4 * sizeof(WCHAR);
 
+	StringCchCopyW(RemoteName, *BufferSize, shareName);
+	*BufferSize = lstrlen(RemoteName) * sizeof(WCHAR);
 
 	return WN_SUCCESS;
 }

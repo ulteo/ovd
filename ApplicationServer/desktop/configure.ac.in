@@ -19,6 +19,7 @@
 
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) Samuel Bovée])
+m4_pattern_allow([^m4])
 AC_INIT([ovd-desktop-settings], [@VERSION@], [http://bugs.ulteo.com])
 
 AM_INIT_AUTOMAKE([1.8])

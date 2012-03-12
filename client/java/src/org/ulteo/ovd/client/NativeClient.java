@@ -1,9 +1,9 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
@@ -780,7 +780,15 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				diskBandwidthLimit = this.opts.diskBandwidthLimit;
 			client.setBandWidthLimitation(this.opts.socketTimeout, diskBandwidthLimit);
 		}
-
+		
+		if (this.opts.useKeepAlive) {
+			int keepAliveInterval = 0;
+			client.setUseKeepAlive(true);
+			keepAliveInterval = this.opts.keepAliveInterval;
+			if (keepAliveInterval != 0)
+				client.setKeepAliveInterval(keepAliveInterval);
+		}
+		
 		this.client_actions = ((NativeClientActions)client);
 		if (! this.loadingFrame.cancelled()) {
 			Runtime.getRuntime().addShutdownHook(new ShutdownTask(client));

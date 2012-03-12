@@ -87,6 +87,7 @@ public class Secure {
     private byte[] server_random = null;
     private byte[] client_random = new byte[SEC_RANDOM_SIZE];
     
+    private long lastNetworkActionTime;
     private BlockingQueue<SpooledPacket> spooledPacket;
 
     private static final byte[] pad_54 = {
@@ -430,6 +431,7 @@ public class Secure {
      * @throws CryptoException
      */
 	public void send(RdpPacket_Localised sec_data, int flags) throws RdesktopException, IOException, CryptoException {
+		this.lastNetworkActionTime = new GregorianCalendar().getTimeInMillis();
 		send_to_channel(sec_data,flags,MCS.MCS_GLOBAL_CHANNEL);
 	}
     
@@ -1030,9 +1032,16 @@ public class Secure {
 			buffer=McsLayer.receive(channel);
 		}catch (SocketTimeoutException e){
 			this.processSpooledPacket();
+			long time = new GregorianCalendar().getTimeInMillis();
+			
+			if (this.opt.useKeepAlive && ((time - this.lastNetworkActionTime) > this.opt.keepAliveInterval * 1000))
+				this.sendKeepAlive();
+			
 			continue;
 		}
 		if(buffer==null) return null;
+		
+		this.lastNetworkActionTime = new GregorianCalendar().getTimeInMillis();
 
 		if (this.opt.server_rdp_version != 3) {
 			if ((this.opt.server_rdp_version & 0x80) != 0) {
@@ -1078,6 +1087,45 @@ public class Secure {
     	}
     }
 
+	/**
+	 * Send a neutral packet in order to check the connectivity
+	 * @throws RdesktopException
+	 * @throws IOException
+	 * @throws CryptoException
+	 */
+	private void sendKeepAlive() throws RdesktopException, IOException, CryptoException {
+		RdpPacket_Localised buffer = null;
+		buffer = this.init(this.opt.encryption ? Secure.SEC_ENCRYPT : 0, 22);
+		buffer.pushLayer(RdpPacket_Localised.RDP_HEADER, 18);
+		
+		buffer.setLittleEndian16(1); // type
+		buffer.setLittleEndian16(1002);
+		
+		buffer.markEnd();
+		CommunicationMonitor.lock(this);
+		
+		int length;
+		
+		buffer.setPosition(buffer.getHeader(RdpPacket_Localised.RDP_HEADER));
+		length = buffer.getEnd() - buffer.getPosition();
+		
+		buffer.setLittleEndian16(length);
+		buffer.setLittleEndian16(0x7 | 0x10);
+		buffer.setLittleEndian16(this.getUserID() + 1001);
+		
+		buffer.setLittleEndian32(0);
+		buffer.set8(0); // pad
+		buffer.set8(1); // stream id
+		buffer.setLittleEndian16(length - 14);
+		buffer.set8(0x1f);
+		buffer.set8(0); // compression type
+		buffer.setLittleEndian16(0); // compression length
+		
+		this.send(buffer, this.opt.encryption ? Secure.SEC_ENCRYPT : 0);
+		
+		CommunicationMonitor.unlock(this);
+	}
+	
     /**
      * Generate encryption keys of applicable size for connection
      * @param rc4_key_size Size of keys to generate (1 if 40-bit encryption, otherwise 128-bit)
