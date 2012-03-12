@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
@@ -105,7 +105,7 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 		RdpConnectionOvd co = this.performedConnections.get(0);
 		RdpConnection.State state = co.getState();
 
-		if (state == RdpConnection.State.CONNECTED)
+		if (state == RdpConnection.State.CONNECTED || state == RdpConnection.State.CONNECTING)
 			return true;
 
 		if (state != RdpConnection.State.FAILED) {

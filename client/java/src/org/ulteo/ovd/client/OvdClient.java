@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
@@ -194,6 +194,11 @@ public abstract class OvdClient implements Runnable, RdpListener {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException ex) {}
+			
+			if (! ((OvdClientPerformer)this).checkRDPConnections()) {
+				this.disconnection();
+				break;
+			}
 		}
 		
 		try {
