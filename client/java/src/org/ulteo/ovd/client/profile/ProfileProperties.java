@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  *
  * This program is free software; you can redistribute it and/or
@@ -58,7 +58,9 @@ public class ProfileProperties {
 	private boolean usePersistantCache = false;
 	private String persistentCachePath = "";
 	private int persistentCacheMaxCells = 0;	
-
+	private boolean useKeepAlive = false;
+	private int keepAliveInterval = 60;         // In second
+	
 	
 	public ProfileProperties() {}
 
@@ -297,5 +299,21 @@ public class ProfileProperties {
 
 	public boolean isUseOffscreenCache() {
 		return useOffscreenCache;
+	}
+	
+	public boolean isUseKeepAlive() {
+		return this.useKeepAlive;
+	}
+	
+	public void setUseKeepAlive(boolean value) {
+		this.useKeepAlive = value;
+	}	
+	
+	public void setKeepAliveInterval(int keepAliveInterval) {
+		this.keepAliveInterval = keepAliveInterval;
+	}
+	
+	public int getKeepAliveInterval() {
+		return this.keepAliveInterval;
 	}
 }
