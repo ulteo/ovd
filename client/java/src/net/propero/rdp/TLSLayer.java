@@ -97,7 +97,7 @@ public class TLSLayer {
 			return null;
 		}
 
-		if (certificates != null && certificates.length == 1)
+		if (certificates != null && certificates.length != 0)
 			return certificates[0].getPublicKey();
 		else
 			Logger.error("Error while etablishing a TLS connection: No certificate delivered by the server");
