@@ -43,6 +43,7 @@ public abstract class ISO {
 	protected Options opt = null;
 	@SuppressWarnings("unused")
 	private Common common = null;
+	private TLSLayer tlsLayer;
 	
 	/* this for the ISO Layer */
 	private static final int CONNECTION_REQUEST = 0xE0;
@@ -53,6 +54,13 @@ public abstract class ISO {
 	private static final int ERROR = 0x70;
 	private static final int PROTOCOL_VERSION = 0x03;
 	private static final int EOT = 0x80;
+	
+	private static final int TYPE_RDP_NEG_REQ = 0x00000001;
+	private static final int TYPE_RDP_NEG_RSP = 0x00000002;
+	
+	public static final int PROTOCOL_RDP      = 0x00000000;  // RC4 encryption method
+	public static final int PROTOCOL_SSL      = 0x00000001;  // TLSv1 encryption method
+	public static final int PROTOCOL_HYBRID   = 0x00000002;  // TLSv1 encryption method with NLA
 
 	/**
 	 * Construct ISO object, initialises hex dump
@@ -88,7 +96,6 @@ public abstract class ISO {
 	 */
 
 	protected void doSocketConnect(String host, int port) throws IOException, RdesktopException {
-		
 		if (this.opt.socketFactory == null) {
 			this.opt.socketFactory = new TCPSocketFactory(host, port);
 		}
@@ -121,10 +128,41 @@ public abstract class ISO {
 		this.in = new DataInputStream(new BufferedInputStream(rdpsock.getInputStream()));
 		this.out= new DataOutputStream(new BufferedOutputStream(rdpsock.getOutputStream()));
 		send_connection_request();
-		receiveMessage(code, false);
+		RdpPacket_Localised s = receiveMessage(code, false);
 		
 		if (code[0] != CONNECTION_CONFIRM) {
 			throw new RdesktopException("Expected CC got:" + Integer.toHexString(code[0]).toUpperCase());
+		}
+				
+		if (s.getPosition() == s.getEnd()) {
+			logger.debug("TLS Layer not supported");
+			this.opt.useTLS = false;
+			return;
+		}
+		
+		int request_type = s.get8();
+		s.get8();                 // Request flags
+		s.getLittleEndian16();    // Request length
+		int selected_proto = s.getLittleEndian32();
+		if (request_type != TYPE_RDP_NEG_RSP)
+			throw new RdesktopException("Failed to negociate security layer");
+		
+		if ((selected_proto & PROTOCOL_SSL) > 0) {
+			logger.debug("TLS Layer activated");
+			this.tlsLayer = new TLSLayer();
+			Socket sslSocket = this.tlsLayer.initTransportLayer(this.rdpsock, host, port);
+			if (s != null) {
+				this.rdpsock = sslSocket;
+				sslSocket.setTcpNoDelay(this.opt.low_latency);
+				sslSocket.setSoTimeout(this.opt.socketTimeout);
+				sslSocket.setReceiveBufferSize(1024 * 16);
+				
+				this.in = new DataInputStream(new BufferedInputStream(sslSocket.getInputStream()));
+				this.out= new DataOutputStream(new BufferedOutputStream(sslSocket.getOutputStream()));
+				this.opt.encryption = false;
+			}
+			else
+				throw new RdesktopException("Unable to establish TLS connection");
 		}
 		
 		/*if(Options.use_ssl){
@@ -355,6 +393,8 @@ public abstract class ISO {
 		}
 
 		int length = 21 + "Cookie: mstshash=".length() + temp.length + cookietail.length();
+		if (this.opt.useTLS)
+			length += 8;
 		
 		RdpPacket_Localised buffer = new RdpPacket_Localised(length);
 		byte[] packet=new byte[length];
@@ -382,6 +422,13 @@ public abstract class ISO {
 		buffer.set8(Options.use_ssl? 0x01 : 0x00);
 		buffer.incrementPosition(3);
 		*/
+		if (this.opt.useTLS) {
+			buffer.set8(TYPE_RDP_NEG_REQ);  // Type
+			buffer.set8(0);                 // Flags (must be set to 0)
+			buffer.setLittleEndian16(8);    // Length (must be set to 8)
+			buffer.setLittleEndian32(PROTOCOL_SSL);
+		}
+		
 		buffer.copyToByteArray(packet, 0, 0, packet.length);
 		out.write(packet);
 		out.flush();

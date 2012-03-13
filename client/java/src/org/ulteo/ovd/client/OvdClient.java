@@ -73,6 +73,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	private String keymap = null;
 	private String inputMethod = null;
 	private boolean offscreenCache = false;
+	private boolean useTLS = false;
 	private boolean packetCompression = false;
 	private int persistentCacheMaxCells = 0;
 	private String persistentCachePath = null;
@@ -382,6 +383,14 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	}
 
 	/**
+	 * enable/disable TLS Transport layer feature
+	 * @param useTLS 
+	 */
+	public void setUseTLS(boolean useTLS) {
+		this.useTLS = useTLS;
+	}
+	
+	/**
 	 * unable persistant cache
 	 * @param persistentCacheMaxCells maximum cells of the persistent cache
 	 * @param persistentCachePath temporary path of the persistent cache
@@ -431,6 +440,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 		
 		rc.setUseOffscreenCache(this.offscreenCache);
 		rc.setPacketCompression(this.packetCompression);
+		rc.setUseTLS(this.useTLS);
        
 		if (this.persistentCacheMaxCells != 0) {
 			rc.setPersistentCaching(true);

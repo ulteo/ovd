@@ -232,6 +232,13 @@ public class ProfileRegistry extends Profile {
 
 					properties.setUsePersistantCache(usePersistentCache);
 				}
+				else if (field.equalsIgnoreCase(FIELD_RDP_USE_TLS)) {
+					boolean useTLS = false;
+					if (value.equalsIgnoreCase(VALUE_TRUE))
+						useTLS = true;
+
+					properties.setUseTLS(useTLS);
+				}
 				else if (field.equalsIgnoreCase(FIELD_PERSISTENT_CACHE_PATH)) {
 					properties.setPersistentCachePath(value);
 				}

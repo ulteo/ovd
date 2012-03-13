@@ -371,4 +371,8 @@ public class RdpConnectionOvd extends RdpConnection {
 	public void setKeepAliveInterval(int keepAliveInterval) {
 		this.opt.keepAliveInterval = keepAliveInterval;
 	}
+
+	public void setUseTLS(boolean value) {
+		this.opt.useTLS = value;
+	}
 }

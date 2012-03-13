@@ -167,6 +167,7 @@ public abstract class OvdApplet extends Applet {
 			if (pproperties != null) {
 				this.ovd.setPacketCompression(pproperties.isUsePacketCompression());
 				this.ovd.setOffscreenCache(pproperties.isUseOffscreenCache());
+				this.ovd.setUseTLS(pproperties.isUseTLS());
 				if (pproperties.isUsePersistantCache())
 					this.ovd.setPersistentCaching(pproperties.getPersistentCacheMaxCells(), pproperties.getPersistentCachePath());
 				if (pproperties.isUseBandwithLimitation()) {

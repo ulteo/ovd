@@ -322,7 +322,16 @@ public class ProfileIni extends Profile {
 			}
 			properties.setSocketTimeout(socketTimeout);
 		}
-
+		
+		value = ini.get(INI_SECTION_RDP, FIELD_RDP_USE_TLS);
+		if (value != null) {
+			boolean useTLS = false;
+			if (value.equalsIgnoreCase(VALUE_TRUE))
+				useTLS = true;
+			
+			properties.setUseTLS(useTLS);
+		}
+		
 		value = ini.get(INI_SECTION_RDP, FIELD_RDP_USE_BANDWIDTH_LIMITATION);
 		if (value != null) {
 			boolean useBandwidthLimitation = false;

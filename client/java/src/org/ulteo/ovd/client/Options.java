@@ -82,6 +82,7 @@ public class Options {
 	public boolean useDiskBandwithLimitation = false;
 	public int socketTimeout = 200;            // In millisecond
 	public boolean useOffscreenCache = false;
+	public boolean useTLS = false;
 	public boolean usePersistantCache = false;
 	public String persistentCachePath = "";
 	public int persistentCacheMaxCells = 0;
@@ -214,6 +215,11 @@ public class Options {
 		if (properties.isUseOffscreenCache()) {
 			this.useOffscreenCache = true;
 		}
+		
+		if (properties.isUseTLS()) {
+			this.useTLS = true;
+		}
+		
 		if (properties.isUsePersistantCache()) {
 			this.usePersistantCache = true;
 			

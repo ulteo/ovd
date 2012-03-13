@@ -7,11 +7,11 @@
  * Date: $Date: 2007/03/08 00:26:22 $
  *
  * Copyright (c) 2005 Propero Limited
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author: Thomas MOUTON <thomas@ulteo.com> 2011
  * Author: Julien LANGLOIS <julien@ulteo.com> 2009
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  * Author: Samuel BOVEE <samuel@ulteo.com> 2010
  *
  * Purpose: Main class, launches session
@@ -332,7 +332,7 @@ public class Rdesktop {
 					opt.set_bpp(8);
 					break;
 				case 9:
-					opt.use_ssl = true;
+					opt.useTLS = true;
 					break;
                 case 10:
                 	opt.enable_menu = true;

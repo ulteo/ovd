@@ -67,6 +67,13 @@ public class Licence {
 	private static final int LICENCE_TAG_USER = 0x000f;
 	private static final int LICENCE_TAG_HOST = 0x0010;	
 	
+	private static final int ERR_INVALID_SCOPE       = 0x00000004;
+	private static final int ERR_NO_LICENSE_SERVER   = 0x00000006;
+	private static final int STATUS_VALID_CLIENT     = 0x00000007;
+	private static final int ERR_INVALID_CLIENT      = 0x00000008;
+	private static final int ERR_INVALID_PRODUCTID   = 0x0000000B;
+	private static final int ERR_INVALID_MESSAGE_LEN = 0x0000000C;
+	
     
 	public byte[] generate_hwid() throws UnsupportedEncodingException{ 
 	   byte[] hwid = new byte[LICENCE_HWID_SIZE];
@@ -112,7 +119,17 @@ public class Licence {
 		   break;
 	 
 	   case (LICENCE_TAG_RESULT):
-		   break;
+		int error = data.getLittleEndian32();
+		int stateTransition = data.getLittleEndian32();
+		int blobType = data.getLittleEndian16();
+		int blobLen = data.getLittleEndian16();
+		if (error == STATUS_VALID_CLIENT) {
+			secure.licenceIssued = true;
+			break;
+		}
+		
+		logger.warn("Failed to negociate Licence, Error: "+Integer.toHexString(error));
+		break;
 	    
 	   default:
 		  logger.warn("got licence tag: " + tag);

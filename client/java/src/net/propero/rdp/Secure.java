@@ -56,6 +56,12 @@ public class Secure {
     private static final int SEC_TAG_KEYSIG = 0x0008;
 
     private static final int SEC_RSA_MAGIC = 0x31415352; /* RSA1 */
+	
+	private static final int CONNECTION_TYPE_LAN              = 0x06;
+	private static final int RNS_UD_CS_SUPPORT_ERRINFO_PDU    = 0x0001;
+	private static final int RNS_UD_CS_VALID_CONNECTION_TYPE  = 0x0020;
+	private static final int ENCRYPTION_128BIT_FLAG           = 0x00000002;
+	private static final int ENCRYPTION_40BIT_FLAG            = 0x00000001;
  
     private MCS McsLayer=null;
  //   private String hostname=null;
@@ -197,31 +203,12 @@ public class Secure {
         
     if (hostlen > 30) { hostlen=30;}
             
-	int length = 158;
-	if(this.opt.use_rdp5) length += 76 + 12 + 4;
-
-	if (this.opt.use_rdp5 && (channels.num_channels() > 0))
-		length += channels.num_channels() * 12 + 8;
-
-	buffer.setBigEndian16(5);	/* unknown */
-	buffer.setBigEndian16(0x14);
-	buffer.set8(0x7c);
-	buffer.setBigEndian16(1);
-
-	buffer.setBigEndian16(length | 0x8000);	// remaining length
-
-	buffer.setBigEndian16(8);	// length?
-	buffer.setBigEndian16(16);
-	buffer.set8(0);
-	buffer.setLittleEndian16(0xc001);
-	buffer.set8(0);
-
-	buffer.setLittleEndian32(0x61637544);	// "Duca" ?!
-	buffer.setBigEndian16(length-14 | 0x8000);	// remaining length
-
+	// We create the packet end in order to get it size
+	buffer.incrementPosition(23);
+    	
 	// Client information
 	buffer.setLittleEndian16(SEC_TAG_CLI_INFO);
-	buffer.setLittleEndian16(this.opt.use_rdp5 ? 212 : 136);	// length
+	buffer.setLittleEndian16(this.opt.use_rdp5 ? 216 : 136);	/* total length */
 	buffer.setLittleEndian16(this.opt.use_rdp5 ? 4 : 1);
 	buffer.setLittleEndian16(8);
 	buffer.setLittleEndian16(this.opt.width); 
@@ -248,9 +235,20 @@ public class Secure {
 	buffer.set8(this.opt.server_bpp); // out_uint8(s, g_server_bpp);
 	buffer.setLittleEndian16(0x0700); // out_uint16_le(s, 0x0700);
 	buffer.set8(0); // out_uint8(s, 0);
-	buffer.setLittleEndian32(1); // out_uint32_le(s, 1);
+	
+	int connectionType = 0;
+	int earlyCapabilityFlags = RNS_UD_CS_SUPPORT_ERRINFO_PDU;
+	//earlyCapabilityFlags |= RNS_UD_CS_VALID_CONNECTION_TYPE;
+	buffer.setLittleEndian16(earlyCapabilityFlags); // out_uint32_le(s, 1);   /* earlyCapabilityFlags */    
 	
 	buffer.incrementPosition(64);
+    	
+	buffer.set8(connectionType);
+	buffer.set8(0);    /* pad1octet */
+	int selectecProto = ISO.PROTOCOL_RDP;
+	if (this.opt.useTLS)
+		selectecProto |= ISO.PROTOCOL_SSL;
+	buffer.setLittleEndian32(selectecProto); /* serverSelectedProtocol */
 
 	buffer.setLittleEndian16(SEC_TAG_CLI_4); // out_uint16_le(s, SEC_TAG_CLI_4);
 	buffer.setLittleEndian16(12); // out_uint16_le(s, 12);
@@ -261,11 +259,8 @@ public class Secure {
 	// Client encryption settings //
 	buffer.setLittleEndian16(SEC_TAG_CLI_CRYPT);
 	buffer.setLittleEndian16(this.opt.use_rdp5 ? 12 : 8);	// length
-    
-    //if(this.opt.use_rdp5) buffer.setLittleEndian32(this.opt.encryption ? 0x1b : 0);	// 128-bit encryption supported
-    //else
-    buffer.setLittleEndian32(this.opt.encryption ? (this.opt.console_session ? 0xb : 0x3) : 0);
-    
+	buffer.setLittleEndian32(ENCRYPTION_40BIT_FLAG | ENCRYPTION_128BIT_FLAG);
+	
 	if(this.opt.use_rdp5) buffer.setLittleEndian32(0); // unknown
 	
 	if (this.opt.use_rdp5 && (channels.num_channels() > 0))
@@ -283,6 +278,26 @@ public class Secure {
 	}
 	
 	buffer.markEnd();
+	
+	// We create the packet begin using the length computed by the previous part 
+	int length = buffer.getPosition() - 23;
+	buffer.setPosition(0);
+	buffer.setBigEndian16(5);	/* unknown */
+	buffer.setBigEndian16(0x14);
+	buffer.set8(0x7c);
+	buffer.setBigEndian16(1);
+	
+	buffer.setBigEndian16((length + 14) | 0x8000);	// remaining length
+	
+	buffer.setBigEndian16(8);	// length?
+	buffer.setBigEndian16(16);
+	buffer.set8(0);
+	buffer.setLittleEndian16(0xc001);
+	buffer.set8(0);
+	
+	buffer.setLittleEndian32(0x61637544);	// "Duca" ?!
+	buffer.setBigEndian16(length | 0x8000);	// remaining length	
+    	
 	return buffer;
     }
 

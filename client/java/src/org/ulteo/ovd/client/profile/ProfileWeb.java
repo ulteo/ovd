@@ -141,6 +141,12 @@ public class ProfileWeb extends Profile {
 					}
 					properties.setKeepAliveInterval(keepAliveInterval);
 				}
+				if (keyName.equalsIgnoreCase(FIELD_RDP_USE_TLS)) {
+					if (valueName.equalsIgnoreCase(VALUE_TRUE) || valueName.equalsIgnoreCase("1"))
+						properties.setUseTLS(true);
+					else
+						properties.setUseTLS(false);
+				}
 			}
 			
 			if (sectionName.equalsIgnoreCase(INI_SECTION_LIMITATION)) {

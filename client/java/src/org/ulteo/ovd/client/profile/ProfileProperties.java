@@ -60,6 +60,7 @@ public class ProfileProperties {
 	private int persistentCacheMaxCells = 0;	
 	private boolean useKeepAlive = false;
 	private int keepAliveInterval = 60;         // In second
+	private boolean useTLS = false;
 	
 	
 	public ProfileProperties() {}
@@ -315,5 +316,13 @@ public class ProfileProperties {
 	
 	public int getKeepAliveInterval() {
 		return this.keepAliveInterval;
+	}
+	
+	public void setUseTLS(boolean useTLS) {
+		this.useTLS = useTLS;
+	}
+	
+	public boolean isUseTLS() {
+		return this.useTLS;
 	}
 }

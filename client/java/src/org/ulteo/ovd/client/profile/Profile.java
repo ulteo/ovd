@@ -79,6 +79,7 @@ public abstract class Profile {
 	protected static final String FIELD_PERSISTENT_CACHE_PATH = "cachePath";
 	protected static final String FIELD_PERSISTENT_CACHE_MAX_CELLS = "cacheMaxCell";
 	
+	protected static final String FIELD_RDP_USE_TLS = "useTLS";
 	protected static final String FIELD_RDP_SOCKET_TIMEOUT = "socketTimeout";
 	protected static final String FIELD_RDP_USE_BANDWIDTH_LIMITATION = "useBandwidthLimitation";
 	protected static final String FIELD_LIMITATION_USE_DISK_LIMIT = "useDiskBandwidthLimitation";
