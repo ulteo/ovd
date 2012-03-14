@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2010-2012 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
 # Author David LECHEVALIER <david@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
@@ -27,14 +27,19 @@ import sys
 from ovd_shells.Platform import _platform as Platform
 from ovd_shells.Platform.Novell import Novell
 
-def redirect_to_dump():
+def redirect_to_dump(purge = True):
 	path = os.path.join(Platform.getUserSessionDir(), "dump.txt")
 	try:
 		dirname = os.path.dirname(path)
 		if not os.path.exists(dirname):
 			os.makedirs(dirname)
 		
-		buf = file(path, "w", 0)
+		if force is True:
+			mode = "w"
+		else:
+			mode = "a"
+		
+		buf = file(path, mode, 0)
 	except IOError, err:
 		return
 	
