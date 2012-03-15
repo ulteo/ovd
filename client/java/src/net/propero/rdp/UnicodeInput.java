@@ -250,6 +250,7 @@ public class UnicodeInput extends Input {
          * Handle a keyReleased event, sending any relevent key events to the server
          */
 		public void keyReleased(KeyEvent e) {
+			proceedOnKeyPressed = false;
 			if (checkModifiers(e)) {
 				return;
 			}
