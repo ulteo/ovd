@@ -51,12 +51,13 @@ class VirtualChannel(AbstractVirtualChannel):
 		buffer_len = ctypes.c_ulong(size)
 		bytes_read = ctypes.c_ulong()
 		
-		while True:
-			self.mutex.acquire()
-			ret = self.dll.WTSVirtualChannelRead(self._handle, 500, ctypes.byref(buffer), buffer_len, ctypes.byref(bytes_read))
-			self.mutex.release()
-			if ret>0:
-				return buffer.raw
+		self.mutex.acquire()
+		ret = self.dll.WTSVirtualChannelRead(self._handle, 0, ctypes.byref(buffer), buffer_len, ctypes.byref(bytes_read))
+		self.mutex.release()
+		if ret == 0 or bytes_read.value == 0:
+			return None
+		
+		return buffer.raw
 	
 	def Write(self, message):
 		buffer = ctypes.create_string_buffer(len(message))
