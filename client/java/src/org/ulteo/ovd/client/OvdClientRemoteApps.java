@@ -2,7 +2,7 @@
  * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
- * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
@@ -253,6 +253,11 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		
 		for (org.ulteo.ovd.sm.Application appItem : server.applications)
 			rc.addApp(new Application(rc, appItem, null));
+		
+		if (rc.getAppsList().isEmpty()) {
+			Logger.warn("Do not create RdpConnectionOvd object because there is no available applications on server "+server.getHost());
+			return null;
+		}
 		
 		this.connections.add(rc);
 
