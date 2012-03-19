@@ -341,6 +341,11 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		if (retry)
 			return true;
 
+		if (nbApps == 0) {
+			Logger.warn("No available application. Will disconnect.");
+			return false;
+		}
+
 		float percent = ((float) (100 * nbAppsAvailable)) / nbApps;
 		if (percent < 50) {
 			Logger.error("Less than 50 percent of applications are available("+percent+"%). Will exit.");
