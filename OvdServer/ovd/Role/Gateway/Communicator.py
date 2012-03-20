@@ -263,7 +263,11 @@ class HttpClientCommunicator(HttpMetaCommunicator, SSLCommunicator):
 		# test path permission
 		http_code = self.http.auth()
 		if http_code is not httplib.OK:
-			self.send(page_error(http_code, addr=self.socket.getsockname()))
+			host = self.http.get_header("Host")
+			if host is None:
+				host = "%s:%d" % (self.socket.getsockname())
+			
+			self.send(page_error(http_code, addr=host))
 			self.socket.sock_shutdown(socket.SHUT_WR)
 			self.handle_close()
 			return ''
