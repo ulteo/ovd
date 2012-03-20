@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Thomas MOUTON <thomas@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -42,7 +43,8 @@ class VirtualChannel(AbstractVirtualChannel):
 	def Close(self):
 		if self._handle is not None:
 			self.mutex.acquire()
-			self._handle =  self.dll.WTSVirtualChannelClose(self._handle)
+			self.dll.WTSVirtualChannelClose(self._handle)
+			self._handle = None
 			self.mutex.release()
 		
 	
@@ -60,6 +62,9 @@ class VirtualChannel(AbstractVirtualChannel):
 		return buffer.raw
 	
 	def Write(self, message):
+		if self._handle is None:
+			return False
+		
 		buffer = ctypes.create_string_buffer(len(message))
 		buffer.raw = message
 		buffer_len = ctypes.c_ulong(len(message))
