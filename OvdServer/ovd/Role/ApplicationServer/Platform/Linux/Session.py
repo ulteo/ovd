@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2011 Ulteo SAS
+# Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
-# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011, 2012
 # Author Thomas MOUTON <thomas@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -47,6 +47,7 @@ class Session(AbstractSession):
 		xdg_app_d = os.path.join(xdg_dir, "applications")
 		if not os.path.isdir(xdg_app_d):
 			os.makedirs(xdg_app_d)
+			os.chown(xdg_app_d, pwd.getpwnam(self.user.name)[2], -1)
 		
 		for p in ["icons", "pixmaps", "mime", "themes"]:
 			src_dir = os.path.join("/usr/share/", p)
@@ -141,14 +142,6 @@ class Session(AbstractSession):
 	
 	def install_shortcut(self, shortcut):
 		xdg_app_d = os.path.join(self.user_session_dir, "xdg", "applications")
-		if not os.path.isdir(xdg_app_d):
-			os.makedirs(xdg_app_d)
-			ret = self.user.getUIDs()
-			if ret is None:
-				Logger.warn("Unable to get uid/gid for user %s"%(self.user.name))
-			else:
-				(uid, gid) = ret
-				os.chown(xdg_app_d, uid, gid)
 		
 		dstFile = os.path.join(xdg_app_d, os.path.basename(shortcut))
 		if os.path.exists(dstFile):
