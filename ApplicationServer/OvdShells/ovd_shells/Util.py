@@ -4,6 +4,7 @@
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
 # Author David LECHEVALIER <david@ulteo.com> 2011
+# Author Thomas MOUTON <thomas@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -34,7 +35,7 @@ def redirect_to_dump(purge = True):
 		if not os.path.exists(dirname):
 			os.makedirs(dirname)
 		
-		if force is True:
+		if purge is True:
 			mode = "w"
 		else:
 			mode = "a"
