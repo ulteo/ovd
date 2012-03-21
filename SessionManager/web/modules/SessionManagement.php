@@ -284,7 +284,7 @@ abstract class SessionManagement extends Module {
 					$servers = array();
 
 					foreach ($applicationServerTypes as $type) {
-						$buf = $this->user->getAvailableServers($type);
+						$buf = $this->chooseApplicationServers($type);
 						if (is_null($buf) || ! is_array($buf))
 							return false;
 
@@ -592,6 +592,81 @@ abstract class SessionManagement extends Module {
 		return $this->desktop_server;
 	}
 
+	public function chooseApplicationServers($type_=NULL) {
+		if (! $this->user) {
+			Logger::error('main', 'SessionManagement::chooseApplicationServers - User is not authenticated, aborting');
+			throw_response(AUTH_FAILED);
+		}
+		
+		$default_settings = $this->user->getSessionSettings('session_settings_defaults');
+		$launch_without_apps = (int)$default_settings['launch_without_apps'];
+		
+		// get the list of server who the user can launch his applications
+		
+		$available_servers = Abstract_Server::load_available_by_role_sorted_by_load_balancing(Server::SERVER_ROLE_APS);
+		
+		$applications = $this->user->applications($type_, true);
+		$servers_to_use = array();
+		
+		foreach($available_servers as $fqdn => $server) {
+			if (! is_null($type_) && $server->getAttribute('type') != $type_)
+				continue;
+			
+			if (count($applications) == 0)
+				break;
+			
+			$applications_from_server = $server->getApplications();
+			foreach ($applications_from_server as $k => $an_server_application) {
+				if (in_array($an_server_application, $applications)) {
+					$servers_to_use[$server->getAttribute('fqdn')]= $server;
+					unset($applications[array_search($an_server_application, $applications)]);
+				}
+			}
+		}
+		
+		$servers_to_use = array_unique($servers_to_use);
+		
+		if (count($applications) == 0) {
+			// remove useless server to minimise the number of servers to use
+			$servers_with_applications = array();
+			foreach ($servers_to_use as $fqdn => $server) {
+				$apps = $server->getApplications();
+				if (is_array($apps)) {
+					$servers_with_applications[$fqdn] = $apps;
+				}
+			}
+			
+			foreach ($servers_with_applications as $fqdn => $applications) {
+				$servers_with_applications2 = array_copy($servers_with_applications);
+				
+				unset($servers_with_applications2[$fqdn]);
+				foreach ($applications as $app_object) {
+					foreach ($servers_with_applications2 as $fqdn2 => $applications2) {
+						if (in_array($app_object, $applications2) && array_key_exists($fqdn2, $servers_with_applications)) {
+							unset($servers_with_applications[$fqdn2][$app_object->getAttribute('id')]);
+						}
+					}
+				}
+				if (count($servers_with_applications[$fqdn]) == 0) {
+					unset($servers_with_applications[$fqdn]);
+					unset($servers_to_use[$fqdn]);
+				}
+			}
+			
+			return $servers_to_use;
+		}
+		else {
+			if ($launch_without_apps == 1) {
+				return $servers_to_use;
+			}
+			else {
+				$application = array_pop($applications);
+				Logger::error('main' , "SessionManagement::chooseApplicationServers no server found for user '".$this->user->getAttribute('login')."'. User's publication are not right, at least application named '".$application->getAttribute('name')."' does not have an available server");
+				return NULL;
+			}
+		}
+	}
+	
 	public function appendToSessionCreateXML($dom_) {
 		return;
 	}

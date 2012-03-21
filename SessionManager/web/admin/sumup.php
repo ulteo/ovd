@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -34,6 +35,7 @@ function my_own_callback($matches) {
 $userDB = UserDB::getInstance();
 $userGroupDB = UserGroupDB::getInstance();
 $applicationsGroupDB = ApplicationsGroupDB::getInstance();
+$sessionmanagement = SessionManagement::getInstance();
 
 $usersList = new UsersList($_REQUEST);
 $us = $usersList->search();
@@ -183,7 +185,10 @@ else{
 			*/
 
 			echo '<td>'; // server
-			$serv_s = $u->getAvailableServers();
+			$sessionmanagement2 = clone($sessionmanagement);
+			$sessionmanagement2->user = $u;
+			$serv_s = $sessionmanagement2->chooseApplicationServers();
+			
 			if (is_array($serv_s) && count($serv_s) > 0) {
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
 				foreach ($serv_s as $s) {
