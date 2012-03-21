@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -328,11 +328,11 @@ abstract class SessionManagement extends Module {
 					}
 
 					$default_settings = $this->user->getSessionSettings('session_settings_defaults');
-					$enable_profiles = (($default_settings['enable_profiles'] == 1)?true:false);
-					$auto_create_profile = (($default_settings['auto_create_profile'] == 1)?true:false);
-					$start_without_profile = (($default_settings['start_without_profile'] == 1)?true:false);
-					$enable_sharedfolders = (($default_settings['enable_sharedfolders'] == 1)?true:false);
-					$start_without_all_sharedfolders = (($default_settings['start_without_all_sharedfolders'] == 1)?true:false);
+					$enable_profiles = ($default_settings['enable_profiles'] == 1);
+					$auto_create_profile = ($default_settings['auto_create_profile'] == 1);
+					$start_without_profile = ($default_settings['start_without_profile'] == 1);
+					$enable_sharedfolders = ($default_settings['enable_sharedfolders'] == 1);
+					$start_without_all_sharedfolders = ($default_settings['start_without_all_sharedfolders'] == 1);
 
 					if ($enable_profiles) {
 						$fileservers = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_FS);
