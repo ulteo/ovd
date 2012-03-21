@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1292,5 +1293,55 @@ class Server {
 	public function getInstallableApplications() {
 		Logger::debug('main', 'Server::getInstallableApplications');
 		return query_url($this->getWebservicesBaseURL().'/installable_applications.php', false);
+	}
+	
+	public static function fire_load_balancing($servers_, $role_) {
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return array();
+		}
+		
+		$slave_server_settings = $prefs->get('general', 'slave_server_settings');
+		$key = 'load_balancing_'.$role_;
+		if (!array_key_exists($key, $slave_server_settings)) {
+			Logger::error('main' , 'Server::fire_load_balancing $slave_server_settings[\''.$key.'\'] not set');
+			return array();
+		}
+		
+		$criterions = $slave_server_settings[$key];
+		if (is_null($criterions)) {
+			Logger::error('main' , 'Server::fire_load_balancing criterions is null');
+			return array();
+		}
+		
+		$servers_objs = array();
+		$servers_values = array();
+		foreach($servers_ as $server) {
+			$val = 0.0;
+			foreach ($criterions as $criterion_name  => $criterion_value ) {
+				$name_class1 = 'DecisionCriterion_'.$criterion_name;
+				if (! class_exists ($name_class1))
+						continue;
+				
+				$d1 = new $name_class1($server);
+				if (! $d1->applyOnRole($role_))
+					continue;
+				
+				$r1 = $d1->get();
+				$val+= $r1 * $criterion_value;
+			}
+			
+			$servers_values[$server->fqdn] = $val;
+			$servers_objs[$server->fqdn] = $server;
+		}
+		
+		arsort($servers_values);
+		
+		$servers_ordered = array();
+		foreach(array_keys($servers_values) as $key)
+			$servers_ordered[$key] = $servers_objs[$key];
+		
+		return $servers_ordered;
 	}
 }
