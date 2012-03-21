@@ -5,6 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2011
  * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -495,6 +496,9 @@ class Abstract_Server {
 				$val = 0;
 				foreach ($criterions as $criterion_name  => $criterion_value ) {
 					$name_class1 = 'DecisionCriterion_'.$criterion_name;
+					if (! class_exists ($name_class1))
+						continue;
+					
 					$d1 = new $name_class1($server);
 					if ($d1->applyOnRole($role_)) {
 						$r1 = $d1->get();

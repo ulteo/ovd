@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2009
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -55,6 +55,9 @@ class ConfigElement_sliders_loadbalancing extends ConfigElement {
 			$label3 = $html_id.$this->formSeparator.$i.$this->formSeparator;
 
 			$criterion_class_name = 'DecisionCriterion_'.$key1;
+			if (! class_exists ($criterion_class_name))
+				continue;
+			
 			$c = new $criterion_class_name(NULL); // ugly
 			$content_load_balancing[] = $c->default_value();
 			$sliders[$i_init][$i] = $c->default_value();
