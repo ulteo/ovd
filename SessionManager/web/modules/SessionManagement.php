@@ -327,11 +327,17 @@ abstract class SessionManagement extends Module {
 						return false;
 					}
 
+					$prefs = Preferences::getInstance();
+					if (! $prefs)
+						return false;
+					
+					$mods_enable = $prefs->get('general', 'module_enable');
+					
 					$default_settings = $this->user->getSessionSettings('session_settings_defaults');
 					$enable_profiles = ($default_settings['enable_profiles'] == 1);
-					$auto_create_profile = ($default_settings['auto_create_profile'] == 1);
+					$auto_create_profile = ($default_settings['auto_create_profile'] == 1 && in_array('ProfileDB', $mods_enable));
 					$start_without_profile = ($default_settings['start_without_profile'] == 1);
-					$enable_sharedfolders = ($default_settings['enable_sharedfolders'] == 1);
+					$enable_sharedfolders = ($default_settings['enable_sharedfolders'] == 1 && in_array('SharedFolderDB', $mods_enable));
 					$start_without_all_sharedfolders = ($default_settings['start_without_all_sharedfolders'] == 1);
 
 					if ($enable_profiles) {
