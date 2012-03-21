@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -516,10 +516,10 @@ if (array_key_exists(Server::SERVER_ROLE_FS, $session->servers)) {
 if ($session->mode == Session::MODE_DESKTOP) {
 	$server = Abstract_Server::load($session->server);
 	if (! $server)
-		continue;
+		throw_response(INTERNAL_ERROR);
 
 	if (! is_array($server->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $server->roles))
-		continue;
+		throw_response(INTERNAL_ERROR);
 
 	$server_applications = $server->getApplications();
 	if (! is_array($server_applications))
