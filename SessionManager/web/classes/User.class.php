@@ -124,11 +124,7 @@ class User {
 	}
 
 	public function getAvailableServers($type_=NULL) {
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed',__FILE__,__LINE__);
-
-		$default_settings = $prefs->get('general', 'session_settings_defaults');
+		$default_settings = $this->getSessionSettings('session_settings_defaults');
 		$launch_without_apps = (int)$default_settings['launch_without_apps'];
 
 		// get the list of server who the user can launch his applications
