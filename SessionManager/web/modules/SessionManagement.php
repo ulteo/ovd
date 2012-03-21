@@ -279,39 +279,8 @@ abstract class SessionManagement extends Module {
 
 			switch ($role) {
 				case Server::SERVER_ROLE_APS:
-					$applicationServerTypes = $this->getApplicationServerTypes();
-
-					$servers = array();
-
-					foreach ($applicationServerTypes as $type) {
-						$buf = $this->chooseApplicationServers($type);
-						if (is_null($buf) || ! is_array($buf))
-							return false;
-
-						$servers = array_merge($servers, $buf);
-					}
-
-					$slave_server_settings = $this->prefs->get('general', 'slave_server_settings');
-					if (is_array($slave_server_settings) && array_key_exists('use_max_sessions_limit', $slave_server_settings) && $slave_server_settings['use_max_sessions_limit'] == 1) {
-						foreach ($servers as $k => $server) {
-							if (! isset($server->max_sessions) || $server->max_sessions == 0)
-								continue;
-
-							$total = Abstract_Session::countByServer($server->fqdn);
-							if ($total >= $server->max_sessions) {
-								Logger::warning('main', 'SessionManagement::buildServersList - Server \''.$server->fqdn.'\' has reached its "max sessions" limit, sessions cannot be launched on it anymore');
-								unset($servers[$k]);
-							}
-						}
-					}
-
-					if (count($servers) == 0) {
-						$event = new SessionStart(array('user' => $this->user));
-						$event->setAttribute('ok', false);
-						$event->setAttribute('error', _('No available server'));
-						$event->emit();
-
-						Logger::error('main', 'SessionManagement::buildServersList - No "'.$role.'" server found for User "'.$this->user->getAttribute('login').'", aborting');
+					$servers = $this->chooseApplicationServers();
+					if (! is_array($servers)) {
 						return false;
 					}
 
@@ -509,162 +478,154 @@ abstract class SessionManagement extends Module {
 		return false;
 	}
 
-	public function getDesktopServer($type_='any') {
+	public function getDesktopServer() {
 		if (! $this->user) {
-			Logger::error('main', 'SessionManagement::getDesktopServer("'.$type_.'") - User is not authenticated, aborting');
+			Logger::error('main', 'SessionManagement::getDesktopServer() - User is not authenticated, aborting');
 			throw_response(AUTH_FAILED);
 		}
 		
-		$allowed_servers = array();
-		
+		$servers = $this->getAvailableApplicationServers();
 		$remote_desktop_settings = $this->user->getSessionSettings('remote_desktop_settings');
-		if (array_key_exists('allowed_desktop_servers', $remote_desktop_settings))
-			$allowed_servers = $remote_desktop_settings['allowed_desktop_servers'];
-
-		$this->desktop_server = false;
-
-		switch ($type_) {
-			case Server::SERVER_TYPE_LINUX:
-			case Server::SERVER_TYPE_WINDOWS:
-				$user_applications = $this->user->applications($type_, true);
-
-				$usable_servers = array();
-				foreach ($this->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
-					$server = Abstract_Server::load($fqdn);
-					if (! $server)
-						continue;
-					
-					if (count($allowed_servers)>0) {
-						if (! in_array($fqdn, $allowed_servers)) {
-							Logger::info('main', 'SessionManagement::getDesktopServer("'.$type_.'") - can\'t used server "'.$fqdn.'" as desktop server because not in allowed desktop servers list');
-							continue;
-						}
-					}
-
-					if ($server->getAttribute('type') == $type_) {
-						$usable_servers[$server->fqdn] = 0;
-
-						$server_applications = $server->getApplications();
-						foreach ($server_applications as $server_application) {
-							if (in_array($server_application, $user_applications))
-								$usable_servers[$server->fqdn] += 1;
-						}
-					}
-				}
-				break;
-			case 'any':
-			default:
-				$user_applications = $this->user->applications(NULL, true);
-
-				$usable_servers = array();
-				foreach ($this->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
-					$server = Abstract_Server::load($fqdn);
-					if (! $server)
-						continue;
-					
-					if (count($allowed_servers)>0) {
-						if (! in_array($fqdn, $allowed_servers)) {
-							Logger::info('main', 'SessionManagement::getDesktopServer("'.$type_.'") - can\'t used server "'.$fqdn.'" as desktop server because not in allowed desktop servers list');
-							continue;
-						}
-					}
-
-					$usable_servers[$server->fqdn] = 0;
-
-					$server_applications = $server->getApplications();
-					foreach ($server_applications as $server_application) {
-						if (in_array($server_application, $user_applications))
-							$usable_servers[$server->fqdn] += 1;
-					}
-				}
-				break;
+		
+		if (array_key_exists('desktop_type', $remote_desktop_settings) && $remote_desktop_settings['desktop_type'] != 'any') {
+			foreach ($servers as $id => $server) {
+				if ($server->getAttribute('type') != $remote_desktop_settings['desktop_type'])
+					unset($servers[$id]);
+			}
 		}
-		arsort($usable_servers);
-
-		if (count($usable_servers) > 0)
-			$this->desktop_server = array_shift(array_keys($usable_servers));
-
-		if (! $this->desktop_server) {
-			Logger::error('main', 'SessionManagement::getDesktopServer("'.$type_.'") - No desktop server found for User "'.$this->user->getAttribute('login').'", aborting');
+		
+		$allowed_servers = (array_key_exists('allowed_desktop_servers', $remote_desktop_settings))?$remote_desktop_settings['allowed_desktop_servers']:array();
+		if (count($allowed_servers)>0) {
+			foreach ($servers as $id => $server) {
+				if (! in_array($server->fqdn, $allowed_servers))
+					unset($servers[$id]);
+			}
+		}
+		if (count($servers) == 0) {
+			Logger::error('main', 'No desktop server available for user '.$this->user);
 			return false;
 		}
-
-		return $this->desktop_server;
+		
+		if (count($servers) > 1) {
+			// Fire load balancing algorithm
+			$servers = Server::fire_load_balancing($servers, Server::SERVER_ROLE_APS, array('user' => $this->user));
+		}
+		
+		$fqdn = array_keys($servers);
+		$fqdn = $fqdn[0];
+		$this->desktop_server = $servers[$fqdn];
+		
+		return true;
 	}
 
-	public function chooseApplicationServers($type_=NULL) {
+	public function chooseApplicationServers() {
 		if (! $this->user) {
 			Logger::error('main', 'SessionManagement::chooseApplicationServers - User is not authenticated, aborting');
 			throw_response(AUTH_FAILED);
 		}
 		
-		$default_settings = $this->user->getSessionSettings('session_settings_defaults');
-		$launch_without_apps = (int)$default_settings['launch_without_apps'];
+		$applications = $this->user->applications();
+		$nb_application_to_publish = count($applications);
 		
-		// get the list of server who the user can launch his applications
+		if ($nb_application_to_publish == 0) {
+			$event = new SessionStart(array('user' => $this->user));
+			$event->setAttribute('ok', false);
+			$event->setAttribute('error', _('No available application'));
+			$event->emit();
+
+			Logger::error('main', 'SessionManagement::choose_applications_servers - No applications published for User "'.$this->user->getAttribute('login').'", aborting');
+			return false;
+		}
 		
-		$available_servers = Abstract_Server::load_available_by_role_sorted_by_load_balancing(Server::SERVER_ROLE_APS);
+		$servers = array();
+		$servers_available = $this->getAvailableApplicationServers();
+		$servers_ordered = Server::fire_load_balancing($servers_available, Server::SERVER_ROLE_APS, array('user' => $this->user));
 		
-		$applications = $this->user->applications($type_, true);
-		$servers_to_use = array();
-		
-		foreach($available_servers as $fqdn => $server) {
-			if (! is_null($type_) && $server->getAttribute('type') != $type_)
-				continue;
+		if ($this->desktop_server !== false) {
+			// We take the desktop servers applications first
+			$servers[]= $this->desktop_server;
 			
+			$this->removeApplicationsAvailableOnServer($applications, $this->desktop_server);
+		}
+		
+		foreach($servers_ordered as $fqdn => $server) {
 			if (count($applications) == 0)
 				break;
 			
-			$applications_from_server = $server->getApplications();
-			foreach ($applications_from_server as $k => $an_server_application) {
-				if (in_array($an_server_application, $applications)) {
-					$servers_to_use[$server->getAttribute('fqdn')]= $server;
-					unset($applications[array_search($an_server_application, $applications)]);
-				}
-			}
+			$application_choosen = $this->removeApplicationsAvailableOnServer($applications, $server);
+			if (count($application_choosen) > 0)
+				$servers[$fqdn] = $server;
 		}
 		
-		$servers_to_use = array_unique($servers_to_use);
+		$remote_desktop_settings = $this->user->getSessionSettings('session_settings_defaults');
+		$launch_without_apps = ($remote_desktop_settings['launch_without_apps'] == 1); 
 		
-		if (count($applications) == 0) {
-			// remove useless server to minimise the number of servers to use
-			$servers_with_applications = array();
-			foreach ($servers_to_use as $fqdn => $server) {
-				$apps = $server->getApplications();
-				if (is_array($apps)) {
-					$servers_with_applications[$fqdn] = $apps;
-				}
-			}
-			
-			foreach ($servers_with_applications as $fqdn => $applications) {
-				$servers_with_applications2 = array_copy($servers_with_applications);
+		// If there are still some non published applications ...
+		if (count($applications) > 0) {
+			// If we didn't puslish any application ...
+			if (count($applications) == $nb_application_to_publish) {
 				
-				unset($servers_with_applications2[$fqdn]);
-				foreach ($applications as $app_object) {
-					foreach ($servers_with_applications2 as $fqdn2 => $applications2) {
-						if (in_array($app_object, $applications2) && array_key_exists($fqdn2, $servers_with_applications)) {
-							unset($servers_with_applications[$fqdn2][$app_object->getAttribute('id')]);
-						}
-					}
-				}
-				if (count($servers_with_applications[$fqdn]) == 0) {
-					unset($servers_with_applications[$fqdn]);
-					unset($servers_to_use[$fqdn]);
-				}
+				$event = new SessionStart(array('user' => $this->user));
+				$event->setAttribute('ok', false);
+				$event->setAttribute('error', _('No available application'));
+				$event->emit();
+				
+				Logger::error('main', 'SessionManagement::choose_applications_servers - Unable to publish any application for User "'.$this->user->getAttribute('login').'", aborting');
+				return false;
 			}
 			
-			return $servers_to_use;
-		}
-		else {
-			if ($launch_without_apps == 1) {
-				return $servers_to_use;
+			// Or if we must statisfy all application ...
+			if ($launch_without_apps === false) {
+				$event = new SessionStart(array('user' => $this->user));
+				$event->setAttribute('ok', false);
+				$event->setAttribute('error', _('No available server'));
+				$event->emit();
+				
+				Logger::error('main', 'SessionManagement::choose_applications_servers - Unable to build a server list for User "'.$this->user->getAttribute('login').'", aborting');
+				return false;
 			}
-			else {
-				$application = array_pop($applications);
-				Logger::error('main' , "SessionManagement::chooseApplicationServers no server found for user '".$this->user->getAttribute('login')."'. User's publication are not right, at least application named '".$application->getAttribute('name')."' does not have an available server");
-				return NULL;
+		}
+		
+		return $servers;
+	}
+	
+	private function removeApplicationsAvailableOnServer(&$applications_, $server_) {
+		$application_choosen = array();
+		$applications_from_server = $server_->getApplications();
+		foreach ($applications_from_server as $k => $an_server_application) {
+			if (in_array($an_server_application, $applications_))
+				$application_choosen[]= $an_server_application;
+		}
+		
+		foreach($application_choosen as $application) {
+			$key = array_search($application, $applications_, true);
+			if ($key === false)
+				continue;
+			
+			unset($applications_[$key]);
+		}
+		
+		return $application_choosen;
+	}
+	
+	public function getAvailableApplicationServers() {
+		$servers = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_APS);
+		
+		$slave_server_settings = $this->prefs->get('general', 'slave_server_settings');
+		if (is_array($slave_server_settings) && array_key_exists('use_max_sessions_limit', $slave_server_settings) && $slave_server_settings['use_max_sessions_limit'] = 1) {
+			foreach ($servers as $k => $server) {
+				if (! isset($server->max_sessions) || $server->max_sessions == 0)
+					continue;
+
+				$total = Abstract_Session::countByServer($server->fqdn);
+				if ($total >= $server->max_sessions) {
+					Logger::warning('main', 'SessionManagement::buildServersList - Server \''.$server->fqdn.'\' has reached its "max sessions" limit, sessions cannot be launched on it anymore');
+					unset($servers[$k]);
+				}
 			}
 		}
+		
+		return $servers;
 	}
 	
 	public function appendToSessionCreateXML($dom_) {

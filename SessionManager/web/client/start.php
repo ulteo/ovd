@@ -193,22 +193,34 @@ if (isset($old_session_id)) {
 		$user_password_fs = $sessionManagement->credentials[Server::SERVER_ROLE_FS]['password'];
 	}
 
+	// Desktop server choosing if session mode desktop
+	if ($session_mode == Session::MODE_DESKTOP) {
+		$ret = $sessionManagement->getDesktopServer();
+		if ($ret !== true) {
+			Logger::error('main', '(client/start) No desktop server found for User "'.$user->getAttribute('login').'", aborting');
+			throw_response(SERVICE_NOT_AVAILABLE);
+		}
+	}
+	
 	if (! $sessionManagement->buildServersList()) {
 		Logger::error('main', '(client/start) Unable to build servers list for User "'.$user->getAttribute('login').'", aborting');
 		throw_response(SERVICE_NOT_AVAILABLE);
 	}
 	$servers = $sessionManagement->servers;
 
+	// Hack: we must set the session server to the desktop server if 
+	// we want to have the desktop server as ... desktop server
 	$random_server = false;
-	if ($session_mode == Session::MODE_DESKTOP && (isset($remote_desktop_settings) && array_key_exists('desktop_type', $remote_desktop_settings)))
-		$random_server = $sessionManagement->getDesktopServer($remote_desktop_settings['desktop_type']);
+	if ($session_mode == Session::MODE_DESKTOP) {
+		if (! $sessionManagement->desktop_server) {
+			Logger::error('main', '(client/start) No desktop server found for User "'.$user->getAttribute('login').'", aborting');
+			throw_response(SERVICE_NOT_AVAILABLE);
+		}
+		
+		$random_server = $sessionManagement->desktop_server->fqdn;
+	}
 	else
 		$random_server = array_rand($servers[Server::SERVER_ROLE_APS]);
-
-	if (! $random_server) {
-		Logger::error('main', '(client/start) No desktop server found for User "'.$user->getAttribute('login').'", aborting');
-		throw_response(SERVICE_NOT_AVAILABLE);
-	}
 
 	$random_session_id = gen_unique_string();
 
