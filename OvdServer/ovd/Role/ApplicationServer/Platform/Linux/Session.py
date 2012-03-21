@@ -38,7 +38,6 @@ class Session(AbstractSession):
 	def install_client(self):
 		d = os.path.join(self.SPOOL_USER, self.user.name)
 		self.init_user_session_dir(d)
-		self.install_desktop_shortcuts()
 		
 		os.chown(self.instanceDirectory, pwd.getpwnam(self.user.name)[2], -1)
 		os.chown(self.user_session_dir, pwd.getpwnam(self.user.name)[2], -1)
@@ -48,6 +47,8 @@ class Session(AbstractSession):
 		if not os.path.isdir(xdg_app_d):
 			os.makedirs(xdg_app_d)
 			os.chown(xdg_app_d, pwd.getpwnam(self.user.name)[2], -1)
+		
+		self.install_desktop_shortcuts()
 		
 		for p in ["icons", "pixmaps", "mime", "themes"]:
 			src_dir = os.path.join("/usr/share/", p)
