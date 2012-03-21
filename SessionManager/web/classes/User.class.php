@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -131,7 +132,6 @@ class User {
 		$launch_without_apps = (int)$default_settings['launch_without_apps'];
 
 		$user_profile_mode = $prefs->get('UserDB', 'enable');
-		$prefs_ad = $prefs->get('UserDB', 'activedirectory');
 
 		// get the list of server who the user can launch his applications
 		
