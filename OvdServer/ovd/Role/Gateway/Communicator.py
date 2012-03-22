@@ -6,6 +6,7 @@
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author David LECHEVALIER <david@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -109,22 +110,19 @@ class SSLCommunicator(Communicator):
 			Communicator.handle_read(self)
 		except SSL.SysCallError:
 			self.handle_close()
+			return -1
 		except SSL.ZeroReturnError:
 			self.handle_close()
+			return -1
 		except SSL.WantReadError:
-			pass
+			return -1
 		except SSL.Error, e:
 			# hack for prevent incomprehensible 'SSL_UNDEFINED_CONST_FUNCTION' error,
 			# treated as same as an 'SSL.WantReadError' error
 			if e.args[0][0][1] == 'SSL_UNDEFINED_CONST_FUNCTION':
-				pass
+				return -1
 			else:
 				raise
-		else:
-			return
-		
-		# error occured
-		return -1
 
 
 	def handle_write(self):
