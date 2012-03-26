@@ -265,7 +265,17 @@ public abstract class ISO {
 		
 		byte [] packet = new byte[length];
 		
-		in.readFully(packet,0,length);
+		int dataRead = 0;
+		
+		while (dataRead != length) {
+			try{
+				dataRead += in.read(packet, dataRead, length - dataRead);
+			}
+			catch (SocketTimeoutException e) {
+				if (this.opt.readytosend && dataRead == 0)
+					throw e;
+			}
+		}
 		
 		if(this.opt.debug_hexdump) HexDump.encode(packet, "RECEIVE" /*System.out*/);
 			
