@@ -362,6 +362,8 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	 * @param inputMethod 
 	 */
 	public void setInputMethod(String inputMethod) {
+		Logger.info("Input method activated: " + packetCompression);
+
 		this.inputMethod = inputMethod;
 	}
 	
@@ -371,6 +373,8 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	 * @param packetCompression
 	 */
 	public void setPacketCompression(boolean packetCompression) {
+		Logger.info("Packet compression activation " + packetCompression);
+		
 		this.packetCompression = packetCompression;
 	}
 
@@ -379,6 +383,8 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	 * @param offscreenCache 
 	 */
 	public void setOffscreenCache(boolean offscreenCache) {
+		Logger.info("Offscreen cache activation " + offscreenCache);
+		
 		this.offscreenCache = offscreenCache;
 	}
 
@@ -387,6 +393,8 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	 * @param useTLS 
 	 */
 	public void setUseTLS(boolean useTLS) {
+		Logger.info("TLS transport layer activation: " + useTLS);
+		
 		this.useTLS = useTLS;
 	}
 	
@@ -396,6 +404,9 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	 * @param persistentCachePath temporary path of the persistent cache
 	 */
 	public void setPersistentCaching(int persistentCacheMaxCells, String persistentCachePath) {
+		Logger.info("Persistent cache path: " + persistentCachePath);
+		Logger.info("Maximun persistent cache cellule count: " + persistentCacheMaxCells);
+		
 		this.persistentCacheMaxCells = persistentCacheMaxCells;
 		this.persistentCachePath = persistentCachePath;
 	}
@@ -406,6 +417,9 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	 * @param diskBandwidthLimit if superior to 0, define disk bandwith limit
 	 */
 	public void setBandWidthLimitation(int socketTimeout, int diskBandwidthLimit) {
+		Logger.info("Socket timeout " + socketTimeout);
+		Logger.info("Bandwith limit " + diskBandwidthLimit+" bytes/second");
+
 		this.socketTimeout = socketTimeout;
 		this.diskBandwidthLimit = diskBandwidthLimit;
 	}
@@ -415,7 +429,8 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	 * @param useKeepalive 
 	 */
 	public void setUseKeepAlive(boolean useKeepalive) {
-		Logger.info("Keepalive activated");
+		Logger.info("Keepalive activation: " + useKeepalive);
+		
 		this.useKeepAlive = useKeepalive;
 	}
 	
