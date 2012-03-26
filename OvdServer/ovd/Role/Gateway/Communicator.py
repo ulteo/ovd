@@ -73,7 +73,15 @@ class Communicator(asyncore.dispatcher):
 		self.communicator._buffer = self.communicator._buffer[sent:]
 	
 	
+	def shutdown_connection(self):
+		try:
+			self.socket.shutdown(socket.SHUT_WR)
+		except socket.error:
+			pass
+	
+	
 	def handle_close(self):
+		self.shutdown_connection()
 		self.close()
 		self.closed = True
 
@@ -119,6 +127,13 @@ class SSLCommunicator(Communicator):
 		except SSL.WantWriteError:
 			pass
 
+	
+	
+	def shutdown_connection(self):
+		try:
+			self.socket.sock_shutdown(socket.SHUT_WR)
+		except socket.error:
+			pass
 
 
 class ServerCommunicator(Communicator):
