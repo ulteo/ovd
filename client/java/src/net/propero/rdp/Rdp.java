@@ -676,7 +676,7 @@ public class Rdp {
                     "Connection timed out when attempting to connect to "
                             + server);
         } catch (IOException e) {
-            throw new ConnectionException("Connection Failed");
+            throw new ConnectionException("Connection Failed: "+e.getMessage());
         } catch (RdesktopException e) {
             throw new ConnectionException(e.getMessage());
         } catch (OrderException e) {
