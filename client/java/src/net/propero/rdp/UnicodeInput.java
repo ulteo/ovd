@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David Lechavalier <david@ulteo.com> 2011
+ * Author David Lechavalier <david@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -45,6 +45,7 @@ public class UnicodeInput extends Input {
     protected static Logger logger = Logger.getLogger(UnicodeInput.class);
     
     protected ScancodeConverter scancode = null;
+    private boolean shiftServerDown = false;
 
     protected static final int RDP_INPUT_UNICODE = 5;
     
@@ -184,6 +185,10 @@ public class UnicodeInput extends Input {
 					return true;
 				}
 				if (e.getKeyCode() == KeyEvent.VK_SHIFT){
+					if(shiftServerDown)
+						sendScancode(getTime(), RDP_KEYRELEASE, KBD_SHIFT_KEY);
+					
+					shiftServerDown = false;
 					shiftDown = false;
 					return true;
 				}
@@ -208,8 +213,10 @@ public class UnicodeInput extends Input {
 			if (rdp != null) {
 				scan = newKeyMapper.getSpecialKey(e);
 				if (!handleSpecialKeys(time, e, true) && scan != -1) {
-					if (shiftDown)
+					if (shiftDown) {
+						shiftServerDown = true;
 						sendScancode(time, RDP_KEYPRESS, KBD_SHIFT_KEY);
+					}
 					sendScancode(time, RDP_KEYPRESS, scan);
 					proceedOnKeyPressed = true;
 				}
@@ -249,6 +256,7 @@ public class UnicodeInput extends Input {
          * Handle a keyReleased event, sending any relevent key events to the server
          */
 		public void keyReleased(KeyEvent e) {
+			proceedOnKeyPressed = false;
 			if (checkModifiers(e)) {
 				return;
 			}
@@ -262,8 +270,6 @@ public class UnicodeInput extends Input {
 				scan = newKeyMapper.getSpecialKey(e);
 				if (!handleSpecialKeys(time, e, false) && scan != -1) {
 					sendScancode(time, RDP_KEYRELEASE, scan);
-					if (shiftDown)
-						sendScancode(time, RDP_KEYRELEASE, KBD_SHIFT_KEY);
 				}
 				else {
 					if (ctrlDown || altDown) {
