@@ -121,10 +121,6 @@ public abstract class ISO {
 		doSocketConnect(host, port);
 		this.rdpsock.setTcpNoDelay(this.opt.low_latency);
 		
-		if (this.opt.useBandwithLimitation || this.opt.useKeepAlive) {
-			this.rdpsock.setSoTimeout(this.opt.socketTimeout);
-		}
-		
 		this.in = new DataInputStream(new BufferedInputStream(rdpsock.getInputStream()));
 		this.out= new DataOutputStream(new BufferedOutputStream(rdpsock.getOutputStream()));
 		send_connection_request();
@@ -163,6 +159,10 @@ public abstract class ISO {
 			}
 			else
 				throw new RdesktopException("Unable to establish TLS connection");
+		}
+		
+		if (this.opt.useBandwithLimitation || this.opt.useKeepAlive) {
+			this.rdpsock.setSoTimeout(this.opt.socketTimeout);
 		}
 		
 		/*if(Options.use_ssl){
