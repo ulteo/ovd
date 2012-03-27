@@ -408,6 +408,7 @@ class Preferences {
 			'fr_FR'=>'Français',
 			'hu_HU'=>'Magyar',
 			'id_ID'=>'Bahasa Indonesia',
+			'is_IS'=>'Icelandic',
 			'it_IT'=>'Italiano',
 			'ja_JP'=>'日本語',
 			'nb_NO'=>'Norsk (bokmål)',
