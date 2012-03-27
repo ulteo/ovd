@@ -26,6 +26,8 @@
 
     <xi:include href="&parent;" xpointer="prerequisites_root" />
 
+    <xi:include href="&parent;" xpointer="system_requirements" />
+
     <xi:include href="&parent;" xpointer="warning_name_examples" />
 
     <xi:include href="&parent;" xpointer="seLinux" />

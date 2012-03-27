@@ -15,4 +15,29 @@
       url="http://www.ulteo.com/home/contact-us" />.
     </para>
   </important>
+
+    <simplesect id="system_requirements_client">
+      <title>System requirements</title>
+      <itemizedlist>
+        <listitem><para>
+          Evaluations/POCs: Minimum prerequisites are 1 CPU core and 512MB RAM
+        </para></listitem>
+        <listitem><para>
+          Production envrionments: Ulteo recommends 1GB RAM whenever possible or more
+        </para></listitem>
+      </itemizedlist>
+    </simplesect>
+
+    <simplesect id="system_requirements_server_linux_all">
+      <title>System requirements</title>
+      <itemizedlist id="system_requirements_server_linux_all_content">
+        <listitem><para>
+          Evaluations/POCs: Minimum prerequisites are 1 CPU core and 1GB RAM
+        </para></listitem>
+        <listitem><para>
+            Production environments: Ulteo does not recommends to use
+            this installation method for production environments
+          </para></listitem>
+      </itemizedlist>
+    </simplesect>
 </article>

@@ -18,7 +18,7 @@
     This documentation describes how to install an <emphasis>Ulteo
     Open Virtual
     Desktop</emphasis> <emphasis role="strong">Application
-    Server</emphasis> on a <trademark class="registered">Microsoft
+    Server</emphasis> (ApS) on a <trademark class="registered">Microsoft
     Windows</trademark> server system.
   </para>
   <para>
@@ -31,37 +31,56 @@
 
   <section>
     <title>Prerequisites</title>
+
+    <simplesect id="system_requirements">
+      <title>System requirements</title>
+      <itemizedlist>
+        <listitem><para>
+          Evaluations/POCs: Minimum prerequisites are 1 CPU core and 1GB RAM
+        </para></listitem>
+        <listitem><para>
+          Production envrionments: Ulteo recommends a minimum of 4GB RAM and 2 CPU cores
+        </para></listitem>
+      </itemizedlist>
+    </simplesect>
+
     <para>
       The supported operating systems are:
       <itemizedlist>
         <listitem>
           <para>
-            <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> Server 2003 x86/x64
+            <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> Server 2003 SP2 x86/x64
           </para>
         </listitem>
         <listitem>
           <para>
-            <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> Server 2008 x86/x64
+            <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> Server 2008R2 SP1
           </para>
         </listitem>
       </itemizedlist>
     </para>
 
     <para>
-      You also have <trademark>Terminal services</trademark>(2003)
-      or <trademark>Remote Desktop services</trademark>(2008)
-      installed and configured.  Members of the <emphasis>Remote
-      Desktop users</emphasis> group have to be authorize to start a
-      TS session.
+      You also have <trademark>Terminal services</trademark> (2003)
+      or <trademark>Remote Desktop services</trademark> (2008R2)
+      installed and configured.
     </para>
 
+    <important>
+      <para>
+        The Windows server may run in workgroup or be member of
+        an AD domain <emphasis role="strong">but must not</emphasis> run as
+        a domain controller.
+      </para>
+    </important>
+
     <para>
-      An Ulteo OVD Session Manager installed and configured.
+      An Ulteo OVD Session Manager installed and running.
     </para>
 
     <para>
       The <emphasis>Ulteo OVD
-      ApS</emphasis> <emphasis role="strong">setup</emphasis>. It can
+      Application Server</emphasis> <emphasis role="strong">setup</emphasis>. It can
       be download from <ulink url="http://www.ulteo.com/main/downloads/ulteo-ovd-win.php?suite=3.0">this place at
       www.ulteo.com</ulink>.
     </para>

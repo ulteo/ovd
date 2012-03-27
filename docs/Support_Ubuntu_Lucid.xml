@@ -34,6 +34,59 @@
       operating system can be downloaded <ulink url="http://releases.ubuntu.com/10.04">here</ulink>.
     </para>
 
+    <simplesect id="system_requirements">
+      <title>System requirements</title>
+
+      <itemizedlist>
+        <listitem>
+          <para>
+            For a Session Manager:
+          </para>
+          <itemizedlist>
+            <listitem><para>
+              Evaluations/POCs: Minimum prerequisites are 1 CPU core and 512MB RAM
+            </para></listitem>
+            <listitem><para>
+              Production environments: Ulteo recommends a minimum of 2GB RAM and 2 CPU cores
+            </para></listitem>
+          </itemizedlist>
+        </listitem>
+        <listitem>
+          <para>
+            For an Application Server (Subsystem):
+          </para>
+          <itemizedlist>
+            <listitem><para>
+              Evaluations/POCs: Minimum prerequisites are 1 CPU core and 1GB RAM
+            </para></listitem>
+            <listitem><para>
+              Production environments: Ulteo recommends a minimum of 4GB RAM and 2 CPU cores
+            </para></listitem>
+          </itemizedlist>
+        </listitem>
+        <listitem>
+          <para>
+            For an WebClient:
+          </para>
+          <itemizedlist>
+            <listitem><para>
+              Evaluations/POCs: Minimum prerequisites are 1 CPU core and 512MB RAM
+            </para></listitem>
+            <listitem><para>
+              Production envrionments: Ulteo recommends 1GB RAM whenever possible or more
+            </para></listitem>
+          </itemizedlist>
+        </listitem>
+        <listitem>
+          <para>
+            For using the same machine to host the Session Manager,
+            the Web Client and the Linux Application Server:
+          </para>
+          <xi:include href="common.xml" xpointer="system_requirements_server_linux_all_content" />
+        </listitem>
+      </itemizedlist>
+    </simplesect>
+
     <simplesect id="sudo">
       <title>sudo</title>
 

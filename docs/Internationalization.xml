@@ -34,9 +34,9 @@
       applications have to support these different languages.
     </para>
     <para>
-      Finally, the user need to use the local keyboard and, there is
+      Finally, the user needs to use the local keyboard and, there is
       more than one keyboard layout in the world. Ulteo solutions
-      supports different behavior for keyboard mapping between clients
+      support different behavior for keyboard mapping between clients
       and servers.
     </para>
   </section>
@@ -266,7 +266,7 @@
 
       <para>
         Scancode is a database where, from each keyboard layout, each
-        keyboard key has a different code. So the client send the
+        keyboard key has a different code. So the client sends the
         keyboard layout identifier at session start and transform each
         keyboard input key into a scancode that is sent to the RDP
         server.

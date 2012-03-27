@@ -35,6 +35,7 @@
       It can also be installed on Ubuntu 10.04 (Lucid Lynx)
     </para>
 
+    <xi:include href="common.xml" xpointer="system_requirements_client" />
   </section>
   
   <section id="installation_windows">

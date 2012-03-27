@@ -31,7 +31,7 @@
     </para>
     </important>
 
-
+    <xi:include href="&parent;" xpointer="system_requirements" />
     <xi:include href="&parent;" xpointer="sudo" />
     <xi:include href="&parent;" xpointer="warning_name_examples" />
   </section>
