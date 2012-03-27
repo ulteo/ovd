@@ -199,7 +199,7 @@ class Preferences {
 			'pt_BR'=>'Português (Brasil)',
 			'sk_SK'=>'Slovenčina',
 			'ro_RO'=>'Română',
-//			'ru_RU'=>'Русский',
+			'ru_RU'=>'Русский',
 			'zh_CN'=>'中文简体',
 		));
 		$this->add($c,'general');
