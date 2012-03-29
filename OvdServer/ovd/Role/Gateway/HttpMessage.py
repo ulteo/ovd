@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011 Ulteo SAS
+# Copyright (C) 2011-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author David LECHEVALIER <david@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -37,7 +38,7 @@ def page_error(code, addr=None):
 	body = "\r\n"
 	
 	if code is httplib.FOUND and Config.root_redirection is not None and addr is not None:
-		header += "Location: https://%s:%d/%s\r\n" % (addr + (Config.root_redirection,))
+		header += "Location: https://%s/%s\r\n" % (addr, Config.root_redirection)
 	
 	if HTTP_RESPONSES.has_key(code):
 		body += "<head></head><body>%s</body>" % HTTP_RESPONSES[code]
