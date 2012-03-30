@@ -129,6 +129,13 @@ fi
 # link crons
 ln -sfT $CONFDIR/sessionmanager.cron /etc/cron.d/sessionmanager
 
+%preun -n ulteo-ovd-session-manager
+if [ "$1" = "0" ]; then
+    if [ -L /etc/cron.d/sessionmanager ]; then
+        unlink /etc/cron.d/sessionmanager
+    fi
+fi
+
 %postun -n ulteo-ovd-session-manager
 if [ "$1" = "0" ]; then
     A2CONFDIR=/etc/apache2/conf.d
