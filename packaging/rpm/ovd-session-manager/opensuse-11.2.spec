@@ -161,7 +161,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir /var/*/ulteo
 %config /etc/ulteo/sessionmanager/*.conf
 %config /etc/logrotate.d/sessionmanager
-%defattr(0744,root,root)
+%defattr(0644,root,root)
 %config /etc/ulteo/sessionmanager/sessionmanager.cron
 %defattr(0660,wwwrun,www)
 %config /etc/ulteo/sessionmanager/config.inc.php
