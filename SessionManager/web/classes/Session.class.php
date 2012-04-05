@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -59,7 +60,7 @@ class Session {
 	public $start_time = 0;
 	public $timestamp = 0;
 	public $servers = array();
-	public $applications = array();
+	public $running_applications = array();
 
 	public function __construct($id_) {
 // 		Logger::debug('main', 'Starting Session::__construct for \''.$id_.'\'');
@@ -511,7 +512,7 @@ class Session {
 
 	public function getRunningApplications() {
 		$running_apps = array();
-		foreach ($this->applications as $server => $running_app) {
+		foreach ($this->running_applications as $server => $running_app) {
 			if (is_array($running_app)) {
 				foreach ($running_app as $k => $v)
 					$running_apps[$k] = $v;
@@ -522,10 +523,10 @@ class Session {
 	}
 
 	public function setRunningApplications($fqdn_, $running_apps_) {
-		if (! array_key_exists($fqdn_, $this->applications) || ! is_array($this->applications[$fqdn_]))
-			$this->applications[$fqdn_] = array();
+		if (! array_key_exists($fqdn_, $this->running_applications) || ! is_array($this->running_applications[$fqdn_]))
+			$this->running_applications[$fqdn_] = array();
 
-		$current_instances = array_keys($this->applications[$fqdn_]);
+		$current_instances = array_keys($this->running_applications[$fqdn_]);
 		$new_instances = array_keys($running_apps_);
 
 		foreach ($new_instances as $new_instance) {
@@ -545,7 +546,7 @@ class Session {
 			if (! in_array($current_instance, $new_instances)) {
 				$ev = new SessionApplicationInstance(array(
 					'id'		=>	$current_instance,
-					'app_id'	=>	$this->applications[$fqdn_][$current_instance],
+					'app_id'	=>	$this->running_applications[$fqdn_][$current_instance],
 					'session_id'	=>	$this->getAttribute('id'),
 					'action'	=>	'stop'
 				));
@@ -554,7 +555,7 @@ class Session {
 			}
 		}
 
-		$this->applications[$fqdn_] = $running_apps_;
+		$this->running_applications[$fqdn_] = $running_apps_;
 
 		return true;
 	}
