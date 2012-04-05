@@ -148,7 +148,7 @@ var Daemon = Class.create({
 
 	warn_expire: function() {
 		if (! this.is_stopped()) {
-			Logger.warning('[daemon] warn_expire() - Session will expire in 3 minutes');
+			Logger.warn('[daemon] warn_expire() - Session will expire in 3 minutes');
 
 			alert(i18n.get('session_expire_in_3_minutes'));
 		}
