@@ -115,7 +115,6 @@ if (isset($_GET['info'])) {
 
 				echo '<tr><td>';
 				echo '<img class="icon32" src="media/image/cache.php?id='.$myapp->getAttribute('id').'" alt="" title="" /> <a href="applications.php?action=manage&id='.$myapp->getAttribute('id').'">'.$myapp->getAttribute('name').'</a>';
-				echo '</td><td>';
 				echo '</td></tr>';
 			}
 			echo '</table>';
