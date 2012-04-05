@@ -62,6 +62,7 @@ class Session {
 	public $servers = array();
 	private $published_applications = array();
 	private $running_applications = array();
+	private $closed_applications = array();
 
 	public function __construct($id_) {
 // 		Logger::debug('main', 'Starting Session::__construct for \''.$id_.'\'');
@@ -559,6 +560,8 @@ class Session {
 			unset($this->running_applications[$instance['id']]);
 			$instance['stop'] = time();
 			
+			$this->closed_applications[$instance['id']] = $instance;
+			
 			$ev = new SessionApplicationInstance(array(
 				'id'		=>	$instance['id'],
 				'app_id'	=>	$instance['application'],
@@ -579,5 +582,13 @@ class Session {
 	
 	public function getPublishedApplications() {
 		return $this->published_applications;
+	}
+	
+	public function setClosedApplications($applications_) {
+		$this->closed_applications = $applications_;
+	}
+	
+	public function getClosedApplications() {
+		return $this->closed_applications;
 	}
 }
