@@ -556,7 +556,7 @@ class Session {
 		}
 		
 		foreach($closed_instances as $instance) {
-			unset($this->running_applications[$instance_id]);
+			unset($this->running_applications[$instance['id']]);
 			$instance['stop'] = time();
 			
 			$ev = new SessionApplicationInstance(array(
