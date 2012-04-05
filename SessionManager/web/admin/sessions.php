@@ -101,15 +101,10 @@ if (isset($_GET['info'])) {
 		} else {
 			echo '<ul>';
 			echo '<table>';
-			foreach ($running_apps as $access_id => $app_id) {
-				if (is_null($app_id)) {
-					Logger::warning('main', '(admin/sessions) Application ID is NULL for access_id \''.$access_id.'\', session \''.$session->getAttribute('id').'\'');
-					continue;
-				}
-
-				$myapp = $applicationDB->import($app_id);
+			foreach ($running_apps as $instance_id => $instance) {
+				$myapp = $applicationDB->import($instance['application']);
 				if (! is_object($myapp)) {
-					Logger::warning('main', '(admin/sessions) Unable to import application \''.$app_id.'\' for session \''.$session->getAttribute('id').'\'');
+					Logger::warning('main', '(admin/sessions) Unable to import application \''.$instance['application'].'\' for session \''.$session->getAttribute('id').'\'');
 					continue;
 				}
 

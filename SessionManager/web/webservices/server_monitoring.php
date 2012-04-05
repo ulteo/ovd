@@ -217,7 +217,7 @@ if (array_key_exists('sessions', $ret) && is_array($ret['sessions'])) {
 
 		if ($session['status'] == Session::SESSION_STATUS_ACTIVE) {
 			$modified = true;
-			$buf->setRunningApplications($ret['server'], $session['instances']);
+			$buf->reportRunningApplicationsOnServer($ret['server'], $session['instances']);
 		}
 
 		if ($modified === true)

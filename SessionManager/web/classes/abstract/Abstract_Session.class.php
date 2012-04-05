@@ -111,7 +111,7 @@ class Abstract_Session {
 		
 		$data = array();
 		$data['applications'] = $session_->getPublishedApplications();
-		$data['running_applications'] = $session_->running_applications;
+		$data['running_applications'] = $session_->getRunningApplications();
 
 		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23 WHERE @24 = %25 LIMIT 1', $SQL->prefix.'sessions', 'server', $session_->server, 'mode', $session_->mode, 'type', $session_->type, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'servers', serialize($session_->servers), 'applications', serialize($data), 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
 
@@ -179,7 +179,7 @@ class Abstract_Session {
 		if (array_key_exists('applications', $data))
 			$buf->setPublishedApplications($data['applications']);
 		if (array_key_exists('running_applications', $data))
-			$buf->running_applications = $data['running_applications'];
+			$buf->setRunningApplications($data['running_applications']);
 		
 		$buf->start_time = (string)$start_time;
 		$buf->timestamp = (int)$timestamp;

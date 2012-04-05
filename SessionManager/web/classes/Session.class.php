@@ -61,7 +61,7 @@ class Session {
 	public $timestamp = 0;
 	public $servers = array();
 	private $published_applications = array();
-	public $running_applications = array();
+	private $running_applications = array();
 
 	public function __construct($id_) {
 // 		Logger::debug('main', 'Starting Session::__construct for \''.$id_.'\'');
@@ -510,53 +510,65 @@ class Session {
 
 		return true;
 	}
-
-	public function getRunningApplications() {
-		$running_apps = array();
-		foreach ($this->running_applications as $server => $running_app) {
-			if (is_array($running_app)) {
-				foreach ($running_app as $k => $v)
-					$running_apps[$k] = $v;
-			}
-		}
-
-		return $running_apps;
+	
+	public function setRunningApplications($applications_) {
+		$this->running_applications = $applications_;
 	}
 
-	public function setRunningApplications($fqdn_, $running_apps_) {
-		if (! array_key_exists($fqdn_, $this->running_applications) || ! is_array($this->running_applications[$fqdn_]))
-			$this->running_applications[$fqdn_] = array();
+	public function getRunningApplications() {
+		return $this->running_applications;
+	}
 
-		$current_instances = array_keys($this->running_applications[$fqdn_]);
-		$new_instances = array_keys($running_apps_);
-
-		foreach ($new_instances as $new_instance) {
-			if (! in_array($new_instance, $current_instances)) {
-				$ev = new SessionApplicationInstance(array(
-					'id'		=>	$new_instance,
-					'app_id'	=>	$running_apps_[$new_instance],
-					'session_id'	=>	$this->getAttribute('id'),
-					'action'	=>	'start'
-				));
-
-				$ev->emit();
-			}
+	public function reportRunningApplicationsOnServer($fqdn_, $running_apps_) {
+		// Search for new instances
+		foreach ($running_apps_ as $instance_id => $application_id) {
+			if (array_key_exists($instance_id, $this->running_applications))
+				continue
+			
+			$instance = array();
+			$instance['id'] = $instance_id;
+			$instance['application'] = $application_id;
+			$instance['server'] = $fqdn_;
+			$instance['start'] = time();
+			
+			$this->running_applications[$instance_id] = $instance;
+			
+			$ev = new SessionApplicationInstance(array(
+				'id'		=>	$instance['id'],
+				'app_id'	=>	$instance['application'],
+				'session_id'	=>	$this->getAttribute('id'),
+				'action'	=>	'start'
+			));
+			
+			$ev->emit();
 		}
-
-		foreach ($current_instances as $current_instance) {
-			if (! in_array($current_instance, $new_instances)) {
-				$ev = new SessionApplicationInstance(array(
-					'id'		=>	$current_instance,
-					'app_id'	=>	$this->running_applications[$fqdn_][$current_instance],
-					'session_id'	=>	$this->getAttribute('id'),
-					'action'	=>	'stop'
-				));
-
-				$ev->emit();
-			}
+		
+		// Begin closed instances management
+		$closed_instances = array();
+		foreach ($this->running_applications as $instance_id => $instance) {
+			if ($instance['server'] != $fqdn_)
+				continue;
+			
+			if (array_key_exists($instance_id, $running_apps_))
+				continue;
+			
+			$closed_instances[]= $instance;
 		}
-
-		$this->running_applications[$fqdn_] = $running_apps_;
+		
+		foreach($closed_instances as $instance) {
+			unset($this->running_applications[$instance_id]);
+			$instance['stop'] = time();
+			
+			$ev = new SessionApplicationInstance(array(
+				'id'		=>	$instance['id'],
+				'app_id'	=>	$instance['application'],
+				'session_id'	=>	$this->getAttribute('id'),
+				'action'	=>	'stop'
+			));
+			
+			$ev->emit();
+		}
+		// End closed instances management
 
 		return true;
 	}
