@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Jocelyn DELALALANDE <j.delalande@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -112,8 +113,12 @@ var Server = Class.create({
 			daemon.sessionmanager_request_time = 2000;
 			daemon.loop();
 
-			if (daemon.mode == 'desktop' && ! daemon.is_stopped())
-				daemon.logout();
+			if (daemon.mode == 'desktop' && ! daemon.is_stopped()) {
+				if (daemon.persistent == true)
+					daemon.suspend();
+				else
+					daemon.logout();
+			}
 		} else if (status_ == 'failed') {
 			this.ready = false;
 			this.connected = false;
