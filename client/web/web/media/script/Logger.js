@@ -25,21 +25,28 @@ var Logger = Class.create({
 	push: function(level_, data_) {
 		var flag = (($('debugContainer').scrollTop+$('debugContainer').offsetHeight) == $('debugContainer').scrollHeight);
 		
+		$('debugContainer').innerHTML += '<div class="'+level_+'">['+this._get_formated_date()+'] - '+data_+'</div>'+"\n";
+		
+		if (flag)
+			$('debugContainer').scrollTop = $('debugContainer').scrollHeight;
+	},
+	
+	_get_formated_date: function() {
 		buf = new Date();
+		
 		hour = buf.getHours();
 		if (hour < 10)
 			hour = '0'+hour;
+		
 		minutes = buf.getMinutes();
 		if (minutes < 10)
 			minutes = '0'+minutes;
+		
 		seconds = buf.getSeconds();
 		if (seconds < 10)
 			seconds = '0'+seconds;
 		
-		$('debugContainer').innerHTML += '<div class="'+level_+'">['+hour+':'+minutes+':'+seconds+'] - '+data_+'</div>'+"\n";
-		
-		if (flag)
-			$('debugContainer').scrollTop = $('debugContainer').scrollHeight;
+		return hour+':'+minutes+':'+seconds;
 	},
 	
 	_toggle_level: function(level_) {
