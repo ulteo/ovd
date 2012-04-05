@@ -60,7 +60,7 @@ class Session {
 	public $start_time = 0;
 	public $timestamp = 0;
 	public $servers = array();
-	public $published_applications = array();
+	private $published_applications = array();
 	public $running_applications = array();
 
 	public function __construct($id_) {
