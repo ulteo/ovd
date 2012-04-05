@@ -30,6 +30,7 @@ abstract class SessionManagement extends Module {
 	public $desktop_server = false;
 	public $servers = array();
 	public $credentials = array();
+	public $applications = array();
 
 	public static function getInstance() {
 		if (is_null(self::$instance)) {
@@ -545,7 +546,9 @@ abstract class SessionManagement extends Module {
 			// We take the desktop servers applications first
 			$servers[]= $this->desktop_server;
 			
-			$this->removeApplicationsAvailableOnServer($applications, $this->desktop_server);
+			$application_choosen = $this->removeApplicationsAvailableOnServer($applications, $this->desktop_server);
+			foreach($application_choosen as $application)
+				$this->applications[$application->getAttribute('id')] = $application;
 		}
 		
 		foreach($servers_ordered as $fqdn => $server) {
@@ -553,8 +556,12 @@ abstract class SessionManagement extends Module {
 				break;
 			
 			$application_choosen = $this->removeApplicationsAvailableOnServer($applications, $server);
-			if (count($application_choosen) > 0)
-				$servers[$fqdn] = $server;
+			if (count($application_choosen) == 0)
+				continue;
+			
+			$servers[$fqdn] = $server;
+			foreach($application_choosen as $application)
+				$this->applications[$application->getAttribute('id')] = $application;
 		}
 		
 		$remote_desktop_settings = $this->user->getSessionSettings('session_settings_defaults');

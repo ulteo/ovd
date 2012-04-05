@@ -5,6 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -120,6 +121,26 @@ if (isset($_GET['info'])) {
 			echo '</table>';
 			echo '</ul>';
 		}
+		
+		echo '<div>';
+		echo '<h2>'._('Published applications').'</h2>';
+		
+		$available_apps = $session->getPublishedApplications();
+		if (count($available_apps) == 0)
+			echo _('No published application');
+		else {
+			echo '<ul>';
+			echo '<table>';
+			foreach ($available_apps as $app_id => $myapp) {
+				echo '<tr><td>';
+				echo '<img class="icon32" src="media/image/cache.php?id='.$myapp->getAttribute('id').'" alt="" title="" /> <a href="applications.php?action=manage&id='.$myapp->getAttribute('id').'">'.$myapp->getAttribute('name').'</a>';
+				echo '</td></tr>';
+			}
+			
+			echo '</table>';
+			echo '</ul>';
+		}
+		echo '</div>';
 	}
 
 	echo '<h2>'._('Kill this session').'</h2>';

@@ -60,6 +60,7 @@ class Session {
 	public $start_time = 0;
 	public $timestamp = 0;
 	public $servers = array();
+	public $published_applications = array();
 	public $running_applications = array();
 
 	public function __construct($id_) {
@@ -558,5 +559,13 @@ class Session {
 		$this->running_applications[$fqdn_] = $running_apps_;
 
 		return true;
+	}
+	
+	public function setPublishedApplications($applications_) {
+		$this->published_applications = $applications_;
+	}
+	
+	public function getPublishedApplications() {
+		return $this->published_applications;
 	}
 }

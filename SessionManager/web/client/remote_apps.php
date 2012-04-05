@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -104,7 +105,7 @@ foreach ($session->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
 	$server_node->setAttribute('fqdn', $server->getAttribute('external_name'));
 	$server_node->setAttribute('login', $session->settings['aps_access_login']);
 	$server_node->setAttribute('password', $session->settings['aps_access_password']);
-	foreach ($user->applications() as $application) {
+	foreach ($session->getPublishedApplications() as $application) {
 		if ($application->getAttribute('type') != $server->getAttribute('type'))
 			continue;
 

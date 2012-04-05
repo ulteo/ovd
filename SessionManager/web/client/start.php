@@ -241,6 +241,7 @@ if (isset($old_session_id)) {
 		throw_response(INTERNAL_ERROR);
 	}
 	$session->setStatus(Session::SESSION_STATUS_CREATED);
+	$session->setPublishedApplications($sessionManagement->applications);
 
 	Logger::info('main', '(client/start) Creating new session for '.$user->getAttribute('login').' ('.$session->id.')');
 }
@@ -273,7 +274,7 @@ if (isset($_REQUEST['start_apps']) && is_array($_REQUEST['start_apps'])) {
 			throw_response(SERVICE_NOT_AVAILABLE);
 		}
 
-		$apps = $user->applications();
+		$apps = $session->getPublishedApplications();
 
 		$ok = false;
 		foreach ($apps as $user_app) {
@@ -439,7 +440,7 @@ if (! isset($old_session_id)) {
 			}
 		}
 
-		foreach ($user->applications() as $application) {
+		foreach ($session->getPublishedApplications() as $application) {
 			if ($application->getAttribute('type') != $server->getAttribute('type'))
 				continue;
 
@@ -546,7 +547,7 @@ if ($session->mode == Session::MODE_DESKTOP) {
 	$server_node->setAttribute('fqdn', $server->getAttribute('external_name'));
 	$server_node->setAttribute('login', $user_login_aps);
 	$server_node->setAttribute('password', $user_password_aps);
-	foreach ($user->applications() as $application) {
+	foreach ($session->getPublishedApplications() as $application) {
 		if ($application->getAttribute('type') != $server->getAttribute('type'))
 			continue;
 
@@ -588,7 +589,7 @@ if ($session->mode == Session::MODE_DESKTOP) {
 		$server_node->setAttribute('login', $user_login_aps);
 		$server_node->setAttribute('password', $user_password_aps);
 
-		foreach ($user->applications() as $application) {
+		foreach ($session->getPublishedApplications() as $application) {
 			if ($application->getAttribute('type') != $server->getAttribute('type'))
 				continue;
 
