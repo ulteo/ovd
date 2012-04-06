@@ -43,6 +43,9 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 
 	@Override
 	public void ovdInstanceStopped(int instance_) {
+		if (this.spool == null)
+			return;
+		
 		this.spool.destroyInstance(instance_);
 	}
 	
@@ -62,6 +65,9 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 	
 	@Override
 	public void runSessionReady() {
+		if (this.spool == null)
+			return;
+		
 		try {
 			this.spool.join();
 		} catch (InterruptedException e) {

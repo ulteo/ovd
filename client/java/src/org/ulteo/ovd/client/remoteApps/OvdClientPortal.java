@@ -165,8 +165,10 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 					this.portal.getApplicationPanel().toggleAppButton(app, true);
 			}
 
-			if (this.desktopIntegrator != null && this.desktopIntegrator.isDesktopIntegrationDone(rc))
-				this.portal.initPublishingButton();
+			if (this.desktopIntegrator == null)
+				this.portal.initPublishingButton(false);
+			else if (this.desktopIntegrator.isDesktopIntegrationDone(rc))
+				this.portal.initPublishingButton(true);
 		}
 
 		this.loadingFrame.setVisible(false);
@@ -174,6 +176,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	@Override
 	public void ovdInstanceStopped(int instance_) {
+		if (this.spool == null)
+			return;
+		
 		ApplicationInstance ai = this.portal.getRunningApplicationPanel().findApplicationInstanceByToken(instance_);
 		if (ai.isLaunchedFromShortcut())
 			this.spool.destroyInstance(instance_);
@@ -193,7 +198,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		if (this.autoPublish)
 			super.shortcutGenerationIsDone(co);
 	
-		this.portal.initPublishingButton();
+		this.portal.initPublishingButton(true);
 	}
 	
 	

@@ -120,9 +120,9 @@ public class SouthEastPanel extends JPanel {
 		}
 	}
 
-	public void initPublishingButton() {
+	public void initPublishingButton(boolean enabled) {
 		this.publishingButton.setIcon(null);
 		this.publishingButton.setText(((OvdClientPortal) this.rdpActions).isAutoPublish() ?  I18n._("Hide icons") : I18n._("Display icons"));
-		this.publishingButton.setEnabled(true);
+		this.publishingButton.setEnabled(enabled);
 	}
 }

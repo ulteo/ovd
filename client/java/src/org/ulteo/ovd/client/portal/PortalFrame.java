@@ -152,11 +152,11 @@ public class PortalFrame extends OvdClientFrame {
 		this.validate();
 	}
 
-	public void initPublishingButton() {
+	public void initPublishingButton(boolean enabled) {
 		if (this.sep == null)
 			return;
 
-		this.sep.initPublishingButton();
+		this.sep.initPublishingButton(enabled);
 	}
 	
 	public MyApplicationPanel getApplicationPanel() {

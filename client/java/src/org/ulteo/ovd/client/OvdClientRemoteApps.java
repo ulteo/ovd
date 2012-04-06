@@ -79,7 +79,8 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		} else if (OSTools.isLinux()) {
 			this.system = new SystemLinux(sm);
 		} else {
-			Logger.warn("This Operating System is not supported");
+			Logger.warn("This Operating System is not fully supported");
+			return;
 		}
 		
 		this.spool = new Spool(this);
@@ -103,7 +104,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			Logger.error(co.getServer()+": Failed to add ovd applications listener: "+ex);
 		}
 		
-		if (this.performDesktopIntegration) {
+		if (this.performDesktopIntegration && this.system != null) {
 			this.desktopIntegrator = new DesktopIntegrator(this.system, new ArrayList<RdpConnectionOvd>(this.connections), this.smComm);
 			this.desktopIntegrator.addDesktopIntegrationListener(this);
 			this.desktopIntegrator.start();
@@ -124,6 +125,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	
 	@Override
 	protected void runSessionTerminated() {
+		if (this.system == null)
+			return;
+		
 		this.spool.terminate();
 
 		if (this.system instanceof SystemLinux)
@@ -191,7 +195,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	 */
 	protected ImageIcon getAppIcon(Application app) {
 		++this.ApplicationIndex;
-		ImageIcon icon = this.system.getAppIcon(app.getId());
+		ImageIcon icon = null;
+		if (this.system != null)
+			this.system.getAppIcon(app.getId());
 		if (icon == null)
 			icon = this.smComm.askForIcon(new org.ulteo.ovd.sm.Application(app.getId(), app.getName()));
 		app.setIcon(icon);
@@ -203,6 +209,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	 * @param rc the {@link RdpConnectionOvd} to retreive all possible icons
 	 */
 	public void processIconCache(RdpConnectionOvd rc) {
+		if (this.system == null)
+			return;
+		
 		HashMap<Integer, ImageIcon> appsIcons = new HashMap<Integer, ImageIcon>();
 		for (Application app : rc.getAppsList()) {
 			if (this.isCancelled)
@@ -391,6 +400,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	protected void publish(RdpConnectionOvd rc) {
 		if (rc == null)
 			throw new NullPointerException("RdpConnectionOvd parameter cannot be null");
+		
+		if (this.system == null)
+			return;
 
 		if (this.system instanceof SystemLinux)
 			((SystemLinux) this.system).installSystemMenu();
@@ -413,6 +425,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		if (rc == null)
 			throw new NullPointerException("RdpConnectionOvd parameter cannot be null");
 		
+		if (this.system == null)
+			return;
+
 		for (Application app : rc.getAppsList()) {
 			this.system.uninstall(app);
 		}
