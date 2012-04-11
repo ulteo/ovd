@@ -111,11 +111,11 @@ public abstract class OvdClient implements Runnable, RdpListener {
 		boolean isActive = false;
 		
 		while (this.continueSessionStatusMonitoringThread) {
-			String status = this.smComm.askForSessionStatus();
+			String oldSessionStatus = this.sessionStatus;
+			this.sessionStatus = this.smComm.askForSessionStatus();
 
-			if (! status.equals(this.sessionStatus)) {
-				Logger.info("session status switch from "+this.sessionStatus+" to "+status);
-				this.sessionStatus = status;
+			if (! this.sessionStatus.equals(oldSessionStatus)) {
+				Logger.info("session status switch from " + oldSessionStatus + " to " + this.sessionStatus);
 				if (this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED) || 
 						this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE) ||
 						(this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INACTIVE) && this.persistent)) {
@@ -132,7 +132,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 						isActive = false;
 						this.sessionTerminated();
 					}
-					else if (status.equals(SessionManagerCommunication.SESSION_STATUS_UNKNOWN)) {
+					else if (this.sessionStatus.equals(SessionManagerCommunication.SESSION_STATUS_UNKNOWN)) {
 						this.sessionTerminated();
 					}
 				}
