@@ -5,6 +5,7 @@
  * Author Gauvain Pocentek <gauvain@ulteo.com> 2009
  * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
  * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -93,7 +94,7 @@ class Abstract_ReportSession {
 	public static function create($report_) {
 		Logger::debug('main', 'Abstract_ReportSession::create');
 		
-		if (Abstract_ReportSession::exists($report_->getID())) {
+		if (self::exists($report_->getID())) {
 			Logger::error('main', 'Abstract_ReportSession::create(\''.$report_->getID().'\') report already exists');
 			return false;
 		}
@@ -107,7 +108,7 @@ class Abstract_ReportSession {
 		Logger::debug('main', "Abstract_ReportSession::update");
 		
 		$SQL = SQL::getInstance();
-		$report = Abstract_ReportSession::load($report_->getID());
+		$report = self::load($report_->getID());
 		if (! is_object($report)) {
 			Logger::debug('main', "Abstract_ReportSession::updateSession failed to load report ".$report_->getID());
 			return false;
