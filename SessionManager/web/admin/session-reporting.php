@@ -2,7 +2,7 @@
 /**
 * Copyright (C) 2010-2012 Ulteo SAS
 * http://www.ulteo.com
-* Author Julien LANGLOIS <julien@ulteo.com>
+* Author Julien LANGLOIS <julien@ulteo.com> 2010, 2012
 * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 *
 * This program is free software; you can redistribute it and/or
@@ -38,32 +38,6 @@ if (isset($_REQUEST['action'])) {
 
 show_default();
 
-function get_sessions_history($from, $to, $user_login, $limit) {
-	$extra = array();
-	if ($from != null && $to != null)
-		$extra[]= '@2>=%3';
-	if ($to != null)
-		$extra[]= '@4<=%5';
-		
-	if ($user_login != null)
-		$extra[]= '@6=%7';
-	
-	$query = 'SELECT * ';
-	$query.= 'FROM @1 ';
-	if (count($extra) > 0) {
-		$query.= 'WHERE';
-		$query.= implode(" AND ", $extra).' ';
-	}
-	$query.= 'ORDER BY @2 DESC LIMIT '.$limit.';';
-	
-	$sql = SQL::getInstance();
-	$res = $sql->DoQuery($query, SESSIONS_HISTORY_TABLE, 
-				'start_stamp', (is_null($from)?null:date('c', $from)),
-				'stop_stamp',  (is_null($to)?null:date('c', $to)),
-				'user', (is_null($user_login)?null:$user_login));
-	
-	return $sql->FetchAllResults();
-}
 
 function show_default() {
 	$search_by_user = false;
@@ -94,7 +68,7 @@ function show_default() {
 			$search_by_time = false;
 	}
 	
-	$sessions = get_sessions_history(($search_by_time?$t0:null), ($search_by_time?$t1:null), ($search_by_user?$user:null), $search_limit+1);
+	$sessions = Abstract_ReportSession::load_partial(($search_by_time?$t0:null), ($search_by_time?$t1:null), ($search_by_user?$user:null), $search_limit+1);
 	$partial_result = false;
 	if (count($sessions) > $search_limit) {
 		$partial_result = true;
@@ -277,10 +251,10 @@ function show_default() {
 		foreach($sessions as $session) {
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'">';
-			echo '<td>'.$session['id'].'</td>';
-			echo '<td><a href="users.php?action=manage&id='.$session['user'].'">'.$session['user'].'</a></td>';
-			echo '<td>'.$session['start_stamp'].'</td>';
-			echo '<td><form><input type="hidden" name="action" value="manage"/><input type="hidden" name="id" value="'.$session['id'].'"/><input type="submit" value="'._('Get more information').'"/></form></td>';
+			echo '<td>'.$session->getId().'</td>';
+			echo '<td><a href="users.php?action=manage&id='.$session->user.'">'.$session->user.'</a></td>';
+			echo '<td>'.$session->start_time.'</td>';
+			echo '<td><form><input type="hidden" name="action" value="manage"/><input type="hidden" name="id" value="'.$session->getId().'"/><input type="submit" value="'._('Get more information').'"/></form></td>';
 			echo '</tr>';
 		}
 
@@ -292,35 +266,21 @@ function show_default() {
 }
 
 
-function get_session_reporting($id_) {
-	$sql = SQL::getInstance();
-	$res = $sql->DoQuery('SELECT * FROM @1 WHERE @2 = %3;',
-				SESSIONS_HISTORY_TABLE, 'id', $id_);
-	
-	$results = $sql->FetchAllResults();
-	if (count($results) == 0)
-		return null;
-	
-	return $results[0];
-}
-
-
 function show_manage($id_) {
-// 	$session = Abstract_ReportSession::load($id_);
-	$session = get_session_reporting($id_);
+	$session = Abstract_ReportSession::load($id_);
 	if (! $session) {
 		popup_error(sprintf(_('Unknown session %s'), $id_));
 		redirect();
 	}
 
 	$userDB = UserDB::getInstance();
-	$user = $userDB->import($session['user']);
+	$user = $userDB->import($session->user);
 	
 	$applicationDB = ApplicationDB::getInstance();
 	$applications = array();
 	
 	$dom = new DomDocument('1.0', 'utf-8');
-	$ret = @$dom->loadXML($session['data']);
+	$ret = @$dom->loadXML($session->data);
 	if ($ret) {
 		foreach ($dom->getElementsByTagName('application') as $node) {
 			$application = array();
@@ -346,23 +306,23 @@ function show_manage($id_) {
 	
 	page_header();
 
-	echo '<h1>'.str_replace('%ID%', $session['id'], _('Archived session - %ID%')).'</h1>';
+	echo '<h1>'.str_replace('%ID%', $session->getId(), _('Archived session - %ID%')).'</h1>';
 
 	echo '<ul>';
 	echo '<li><strong>'._('User:').'</strong> ';
 	if (is_object($user))
 		echo '<a href="users.php?action=manage&id='.$user->getAttribute('login').'">'.$user->getAttribute('displayname').'</a>';
 	else
-		echo $session['user'].' <span><em>'._('Not existing anymore').'</em></span>';
+		echo $session->user.' <span><em>'._('Not existing anymore').'</em></span>';
 	echo '</li>';
 	
 	echo '<li><strong>'._('Started:').'</strong> ';
-	echo $session['start_stamp'];
+	echo $session->start_time;
 	echo '</li>';
 	echo '<li><strong>'._('Stopped:').'</strong> ';
-	echo $session['stop_stamp'];
-	if (isset($session['stop_why']) && strlen($session['stop_why'])>0)
-		echo '&nbsp<em>('.$session['stop_why'].')</em>';
+	echo $session->stop_time;
+	if (! is_null($session->stop_why) && strlen($session->stop_why)>0)
+		echo '&nbsp<em>('.$session->stop_why.')</em>';
 	echo '</li>';
 	echo '</ul>';
 	

@@ -43,7 +43,6 @@ if (is_object($prefs)) {
 	define('HAS_PREFERENCES', true);
 	$sql_conf = $prefs->get('general', 'sql');
 	if (is_array($sql_conf)) {
-		define('SESSIONS_HISTORY_TABLE', $sql_conf['prefix'].'sessions_history');
 		SQL::newInstance($sql_conf);
 	}
 }

@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Gauvain Pocentek <gauvain@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Gauvain Pocentek <gauvain@ulteo.com> 2009
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,7 +30,10 @@ class SessionReportItem {
 	private $node;
 	private $current_apps = array();
 	private $apps_raw_data = array(); /* pid, id, running (ReportRunningItem) */
-	public $stop_why;
+	public $start_time;
+	public $stop_time = null;
+	public $stop_why = null;
+	public $data = null;
 
 	public function __construct() {
 		$this->current_apps = array();
@@ -102,13 +106,6 @@ class SessionReportItem {
 			if (! $app_running->isDone())
 				$app['running']->stop($now);
 		}
-
-		$sql = SQL::getInstance();
-		$res = $sql->DoQuery(
-			'UPDATE @1 SET @2=NOW(), @3=%4 WHERE @5=%6',
-			SESSIONS_HISTORY_TABLE,'stop_stamp','data',$this->toXml(),
-			'id',$this->id);
-		return ($res !== false);
 	}
 
 	public function test() {
@@ -117,7 +114,7 @@ class SessionReportItem {
 	/*
 	 * private methods
 	 */
-	private function toXml() {
+	public function toXml() {
 		$dom = new DomDocument ('1.0', 'utf-8');
 	    $dom->formatOutput = true;
 

@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Gauvain Pocentek <gauvain@ulteo.com> 2009
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -62,6 +63,7 @@ class SessionStatusChangedReport extends EventCallback {
 				}
 
 				$sessitem->end();
+				Abstract_ReportSession::update_on_session_end($sessitem);
 
 				return true;
 				break;

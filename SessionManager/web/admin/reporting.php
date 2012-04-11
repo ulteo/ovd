@@ -174,46 +174,42 @@ function get_session_history($t0, $t1, $mode_) {
 	$result = build_array($t0, $t1, $mode_);
 	$res_server = array();
 	$end_status = array();
+	
+	$sessions = Abstract_ReportSession::load_by_start_time_range($t0, $t1);
 
-	$sql = SQL::getInstance();
-	$res = $sql->DoQuery('SELECT * FROM @1 WHERE @2 BETWEEN %3 AND %4;',
-						SESSIONS_HISTORY_TABLE, 'start_stamp', date('c', $t0), date('c', $t1));
-
-
-	$g = $sql->FetchAllResults();
-	foreach($g as $p) {
-		if (is_null($p['stop_stamp'])) { // todo: or stop_stamp=NULL
-			if (! Abstract_Session::exists($p['id'])) {
+	foreach($sessions as $session) {
+		if (is_null($session->stop_time)) { // todo: or stop_stamp=NULL
+			if (! Abstract_Session::exists($session->getId())) {
 				// Before the v2.5, most of sessions report was empty ...
 //				Logger::warning('main', 'Invalid reporting item session '.$p['id']);
 				continue;
 			}
 		}
 
-		$y = strtotime($p['start_stamp']);
+		$y = strtotime($session->start_time);
 		$buf = date($mode_->get_prefix(), $y);
 		
-		if ($p['stop_why'] == '' || is_null($p['stop_why']))
-			$p['stop_why'] = 'unknown';
+		if ($session->stop_why == '' || is_null($session->stop_why))
+			$session->stop_why = 'unknown';
 		
-		if (! is_null($p['stop_stamp'])) {
-			if (! isset($end_status[$p['stop_why']]))
-				$end_status[$p['stop_why']] = 0;
+		if (! is_null($session->stop_time)) {
+			if (! isset($end_status[$session->stop_why]))
+				$end_status[$session->stop_why] = 0;
 			
-			$end_status[$p['stop_why']] += 1;
+			$end_status[$session->stop_why] += 1;
 		}
 		
 
 		if (! isset($result[$buf]))
 			continue;
 
-		if (! isset($res_server[$p['server']]))
-			$res_server[$p['server']] = build_array($t0, $t1, $mode_);
-		$res_server[$p['server']][$buf]++;
+		if (! isset($res_server[$session->server]))
+			$res_server[$session->server] = build_array($t0, $t1, $mode_);
+		$res_server[$session->server][$buf]++;
 
 		$result[$buf]++;
 	}
-	$session_number = count($g);
+	$session_number = count($sessions);
 
 	return array($session_number, $result, $res_server, $end_status);
 }
@@ -235,25 +231,6 @@ function get_server_history($t0, $t1, $mode_) {
 	}
 
 	return $infos;
-}
-
-function get_session_end_status_for_server($t0_, $t1_, $fqdn_) {
-	$end_status = array();
-	$sql = SQL::getInstance();
-	$res = $sql->DoQuery('SELECT  @1, count(@1) FROM @2 WHERE @3 = %4 AND @5 IS NOT NULL AND @6 BETWEEN %7 AND %8 GROUP BY @1', 'stop_why', SESSIONS_HISTORY_TABLE, 'server', $fqdn_,  'stop_stamp','start_stamp', date('c', $t0_), date('c', $t1_));
- 
-	$rows = $sql->FetchAllResults();
-	foreach ($rows as $row) {
-		$why = $row['stop_why'];
-		unset($row['stop_why']);
-		$nb = array_shift($row);  // to get the $row[count(`stop_why`)]
-		if ($why == '' || is_null($why))
-			$why = 'unknown';
-		if ($nb != 0)
-			$end_status[$why] = $nb;
-	}
-	
-	return $end_status;
 }
 
 
@@ -396,7 +373,8 @@ function show_page($mode_) {
 		$chart->render($tmpfile);
 		
 		$dataSet = new XYDataSet();
-		$end_status2 = get_session_end_status_for_server($t0, $t2, $fqdn);
+		$end_status2 = Abstract_ReportSession::get_end_status_for_server($t0, $t2, $fqdn);
+		
 		if (count($end_status2) > 0) {
 			foreach($end_status2 as $status_session => $number_status) {
 				$dataSet->addPoint(new Point(str_replace(array('%STATUS%', '%TOTAL%'), array(Session::textEndStatus($status_session), (int)($number_status)), ngettext(_('%STATUS% (%TOTAL% session)'), _('%STATUS% (%TOTAL% sessions)'), $number_status)), $number_status));
@@ -694,9 +672,9 @@ function getNB_SESSION($mode_) {
 		$t1 = time();
 
 	if (isset($_GET['server']))
-		$server_part = 'AND server="'.$_GET['server'].'"';
+		$server = $_GET['server'];
 	else
-		$server_part = '';
+		$server = null;
 
 	$t0 = $mode_->transform_date($t0);
 	$t1 = $mode_->transform_date($t1);
@@ -715,20 +693,12 @@ function getNB_SESSION($mode_) {
 	$t2 = strtotime($mode_->get_next(), $t1);
 
 
-	$prefs = Preferences::getInstance();
-	$mysql_conf = $prefs->get('general', 'sql');
-
-	$sql = SQL::getInstance();
-	$res = $sql->DoQuery('SELECT * FROM @1 WHERE @2 BETWEEN %3 AND %4 '.$server_part.' AND ( @5 <= %4 OR ( @6 IS NULL AND id IN (SELECT id FROM @7)))',
-						 SESSIONS_HISTORY_TABLE, 'start_stamp', date('c', $t0), date('c', $t2), 
-						 'stop_stamp', 'stop_stamp', $mysql_conf['prefix'].'sessions');
-
+	$sessions = Abstract_ReportSession::load_by_start_and_stop_time_range($t0, $t2, $server);
 
 	$result_nb_sessions = build_array($t0, $t2, $mode_);
 
-	$g = $sql->FetchAllResults();
-	foreach($g as $p) {
-		$y = strtotime($p['start_stamp']);
+	foreach($sessions as $session) {
+		$y = strtotime($session->start_time);
 		$buf = date($mode_->get_prefix(), $y);
 
 		foreach($result_nb_sessions as $k => $v) {
@@ -736,11 +706,11 @@ function getNB_SESSION($mode_) {
 				continue;
 			}
 
-			if (is_null($p['stop_stamp'])) {
+			if (is_null($session->stop_time)) {
 				$result_nb_sessions[$k]+= 1;
 			}
 			else {
-				$time_stop = strtotime($p['stop_stamp']);
+				$time_stop = strtotime($session->stop_time);
 				$str_stop = date($mode_->get_prefix(), $time_stop);
 
 				if ($str_stop >= $k) {
