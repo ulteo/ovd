@@ -27,6 +27,9 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
  * Abstraction layer between the Server instances and the SQL backend.
  */
 class Abstract_Server {
+	const table = 'servers';
+	const table_properties = 'servers_properties';
+	
 	public static $server_properties = array(
 		'roles'				=>	'roles',
 		'external_name'		=>	'external_name',
@@ -58,14 +61,14 @@ class Abstract_Server {
 			'timestamp'		=>	'int(10)'
 		);
 
-		$ret = $SQL->buildTable($sql_conf['prefix'].'servers', $servers_table_structure, array('fqdn'));
+		$ret = $SQL->buildTable($sql_conf['prefix'].self::table, $servers_table_structure, array('fqdn'));
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].'servers\'');
+			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].self::table.'\'');
 			return false;
 		}
 
-		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].'servers\' created');
+		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].self::table.'\' created');
 
 		$servers_properties_table_structure = array(
 			'fqdn'			=>	'varchar(255)',
@@ -73,14 +76,14 @@ class Abstract_Server {
 			'value'			=>	'varchar(255)'
 		);
 
-		$ret = $SQL->buildTable($sql_conf['prefix'].'servers_properties', $servers_properties_table_structure, array('fqdn', 'property'));
+		$ret = $SQL->buildTable($sql_conf['prefix'].self::table_properties, $servers_properties_table_structure, array('fqdn', 'property'));
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].'servers_properties\'');
+			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].self::table_properties.'\'');
 			return false;
 		}
 
-		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].'servers_properties\' created');
+		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].self::table_properties.'\' created');
 
 		return true;
 	}
@@ -90,7 +93,7 @@ class Abstract_Server {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn_);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'fqdn', $fqdn_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -107,7 +110,7 @@ class Abstract_Server {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn_);
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'fqdn', $fqdn_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -138,7 +141,7 @@ class Abstract_Server {
 			}
 		}
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23 WHERE @24 = %25 LIMIT 1', $SQL->prefix.'servers', 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'cpu_model', $server_->cpu_model,
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23 WHERE @24 = %25 LIMIT 1', $SQL->prefix.self::table, 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'cpu_model', $server_->cpu_model,
 		'cpu_nb_cores', $server_->cpu_nb_cores, 'cpu_load', (int)($server_->cpu_load*100), 'ram_total', $server_->ram_total, 'ram_used', $server_->ram_used, 'timestamp', time(), 'fqdn', $fqdn);
 
 		$properties = Abstract_Server::loadProperties($server_);
@@ -154,7 +157,7 @@ class Abstract_Server {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT @1,@2 FROM @3 WHERE @4 = %5', 'property', 'value', $SQL->prefix.'servers_properties', 'fqdn', $server_->fqdn);
+		$SQL->DoQuery('SELECT @1,@2 FROM @3 WHERE @4 = %5', 'property', 'value', $SQL->prefix.self::table_properties, 'fqdn', $server_->fqdn);
 		$rows = $SQL->FetchAllResults();
 
 		$properties = array();
@@ -171,11 +174,11 @@ class Abstract_Server {
 		$SQL = SQL::getInstance();
 
 		if (! is_null($old_property_) && is_null($property_))
-			$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 AND @4 = %5 LIMIT 1', $SQL->prefix.'servers_properties', 'property', $db_property_, 'fqdn', $server_->fqdn);
+			$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 AND @4 = %5 LIMIT 1', $SQL->prefix.self::table_properties, 'property', $db_property_, 'fqdn', $server_->fqdn);
 		elseif (is_null($old_property_) && ! is_null($property_))
-			$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4) VALUES(%5,%6,%7)', $SQL->prefix.'servers_properties', 'fqdn', 'property', 'value', $server_->fqdn, $db_property_, $property_);
+			$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4) VALUES(%5,%6,%7)', $SQL->prefix.self::table_properties, 'fqdn', 'property', 'value', $server_->fqdn, $db_property_, $property_);
 		elseif ($old_property_ != $property_)
-			$SQL->DoQuery('UPDATE @1 SET @2=%3 WHERE @4 = %5 AND @6 = %7 LIMIT 1', $SQL->prefix.'servers_properties', 'value', $property_, 'property', $db_property_, 'fqdn', $server_->fqdn);
+			$SQL->DoQuery('UPDATE @1 SET @2=%3 WHERE @4 = %5 AND @6 = %7 LIMIT 1', $SQL->prefix.self::table_properties, 'value', $property_, 'property', $db_property_, 'fqdn', $server_->fqdn);
 
 		return true;
 	}
@@ -189,7 +192,7 @@ class Abstract_Server {
 		}
 
 		$SQL = SQL::getInstance();
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'servers', 'fqdn', $server_->fqdn);
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.self::table, 'fqdn', $server_->fqdn);
 
 		return true;
 	}
@@ -206,7 +209,7 @@ class Abstract_Server {
 			return false;
 		}
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23 WHERE @24 = %25 LIMIT 1', $SQL->prefix.'servers', 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'cpu_model', $server_->cpu_model,
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23 WHERE @24 = %25 LIMIT 1', $SQL->prefix.self::table, 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'cpu_model', $server_->cpu_model,
 		'cpu_nb_cores', $server_->cpu_nb_cores, 'cpu_load', (int)($server_->cpu_load*100), 'ram_total', $server_->ram_total, 'ram_used', $server_->ram_used, 'timestamp', time(), 'fqdn', $fqdn);
 
 		$properties = Abstract_Server::loadProperties($server_);
@@ -227,7 +230,7 @@ class Abstract_Server {
 
 		$fqdn = $fqdn_;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'fqdn', $fqdn);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -253,8 +256,8 @@ class Abstract_Server {
 			}
 		}
 
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3', $SQL->prefix.'servers_properties', 'fqdn', $fqdn);
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3', $SQL->prefix.self::table_properties, 'fqdn', $fqdn);
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'fqdn', $fqdn);
 
 		return true;
 	}
@@ -375,7 +378,7 @@ class Abstract_Server {
 		$sql_conf = $prefs->get('general', 'sql');
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1', $sql_conf['prefix'].'servers');
+		$SQL->DoQuery('SELECT * FROM @1', $sql_conf['prefix'].self::table);
 		$rows = $SQL->FetchAllResults();
 
 		$servers = array();
@@ -479,7 +482,7 @@ class Abstract_Server {
 		
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 LIMIT 1', 'timestamp', $SQL->prefix.'servers', 'fqdn', $server_->fqdn);
+		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 LIMIT 1', 'timestamp', $SQL->prefix.self::table, 'fqdn', $server_->fqdn);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {

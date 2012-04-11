@@ -5,6 +5,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,6 +27,8 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
  * Abstraction layer between the News instances and the SQL backend.
  */
 class Abstract_News {
+	const table = 'news';
+	
 	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_News::init');
 
@@ -39,14 +42,14 @@ class Abstract_News {
 			'timestamp'		=>	'int(10)'
 		);
 
-		$ret = $SQL->buildTable($sql_conf['prefix'].'news', $news_table_structure, array('id'));
+		$ret = $SQL->buildTable($sql_conf['prefix'].self::table, $news_table_structure, array('id'));
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].'news\'');
+			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].self::table.'\'');
 			return false;
 		}
 
-		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].'news\' created');
+		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].self::table.'\' created');
 		return true;
 	}
 
@@ -55,7 +58,7 @@ class Abstract_News {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'news', 'id', $id_);
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -87,7 +90,7 @@ class Abstract_News {
 			}
 		}
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7 WHERE @8 = %9 LIMIT 1', $SQL->prefix.'news', 'title', $news_->title, 'content', $news_->content, 'timestamp', $news_->timestamp, 'id', $id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7 WHERE @8 = %9 LIMIT 1', $SQL->prefix.self::table, 'title', $news_->title, 'content', $news_->content, 'timestamp', $news_->timestamp, 'id', $id);
 
 		return true;
 	}
@@ -99,7 +102,7 @@ class Abstract_News {
 
 		$id = $news_->id;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'news', 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total != 0) {
@@ -107,7 +110,7 @@ class Abstract_News {
 			return false;
 		}
 
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'news', 'id', $id);
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.self::table, 'id', $id);
 
 		return $SQL->InsertId();
 	}
@@ -119,7 +122,7 @@ class Abstract_News {
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'news', 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -127,7 +130,7 @@ class Abstract_News {
 			return false;
 		}
 
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'news', 'id', $id);
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id);
 
 		return true;
 	}
@@ -149,7 +152,7 @@ class Abstract_News {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 ORDER BY @2 DESC', $SQL->prefix.'news', 'timestamp');
+		$SQL->DoQuery('SELECT * FROM @1 ORDER BY @2 DESC', $SQL->prefix.self::table, 'timestamp');
 		$rows = $SQL->FetchAllResults();
 
 		$news = array();

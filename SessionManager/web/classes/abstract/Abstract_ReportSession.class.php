@@ -30,6 +30,8 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 class Abstract_ReportSession {
 	static $TYPE_SERVER = 0;
 	static $TYPE_APPLICATION = 1;
+	
+	const table = 'sessions_history';
 
 	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_ReportSession::init');
@@ -46,10 +48,10 @@ class Abstract_ReportSession {
 			'server' => 'VARCHAR(255) NOT NULL',
 			'data' => 'LONGTEXT NOT NULL');
 		
-		$ret = $SQL->buildTable($sql_conf['prefix'].'sessions_history', $sessions_history_table_structure, array('id'));
+		$ret = $SQL->buildTable($sql_conf['prefix'].self::table, $sessions_history_table_structure, array('id'));
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create SQL table \''.$sql_conf['prefix'].'sessions_history\'');
+			Logger::error('main', 'Unable to create SQL table \''.$sql_conf['prefix'].self::table.'\'');
 			return false;
 		}
 
@@ -61,7 +63,7 @@ class Abstract_ReportSession {
 		
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sessions_history', 'id', $id_);
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -98,7 +100,7 @@ class Abstract_ReportSession {
 		Logger::debug('main', "Abstract_ReportSession::exists($id_)");
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sessions_history', 'id', $id_);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 		return ($total == 1);
 	}
@@ -112,7 +114,7 @@ class Abstract_ReportSession {
 		}
 
 		$sql = SQL::getInstance();
-		$res = $sql->DoQuery('INSERT INTO @1 (@2,@3,@4,@5) VALUES (%6,%7,%8,%9)', $sql->prefix.'sessions_history', 'id', 'user', 'server', 'data',  $report_->getID(), $report_->user, $report_->server, '');
+		$res = $sql->DoQuery('INSERT INTO @1 (@2,@3,@4,@5) VALUES (%6,%7,%8,%9)', $sql->prefix.self::table, 'id', 'user', 'server', 'data',  $report_->getID(), $report_->user, $report_->server, '');
 		return $res;
 	}
 	
@@ -126,7 +128,7 @@ class Abstract_ReportSession {
 			return false;
 		}
 		
-		$ret = $SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7 WHERE @8 = %9 LIMIT 1', $SQL->prefix.'sessions_history',
+		$ret = $SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7 WHERE @8 = %9 LIMIT 1', $SQL->prefix.self::table,
 // 			'start_stamp',
 // 			'stop_stamp',
 			'stop_why',  $report_->stop_why,
@@ -148,7 +150,7 @@ class Abstract_ReportSession {
 			return false;
 		}
 		
-		$ret = $sql->DoQuery('UPDATE @1 SET @2=NOW(), @3=%4 WHERE @5=%6 LIMIT 1', $sql->prefix.'sessions_history',
+		$ret = $sql->DoQuery('UPDATE @1 SET @2=NOW(), @3=%4 WHERE @5=%6 LIMIT 1', $sql->prefix.self::table,
 			'stop_stamp',
 			'data',  $report_->toXml(),
 			'id', $report_->getID());
@@ -176,7 +178,7 @@ class Abstract_ReportSession {
 		$query.= 'ORDER BY @2 DESC LIMIT '.$limit_.';';
 		
 		$sql = SQL::getInstance();
-		$res = $sql->DoQuery($query, $sql->prefix.'sessions_history', 
+		$res = $sql->DoQuery($query, $sql->prefix.self::table, 
 					'start_stamp', (is_null($from_)?null:date('c', $from_)),
 					'stop_stamp',  (is_null($to_)?null:date('c', $to_)),
 					'user', (is_null($user_login_)?null:$user_login_));
@@ -200,7 +202,7 @@ class Abstract_ReportSession {
 	public static function load_by_start_time_range($t0_, $t1_) {
 		$sql = SQL::getInstance();
 		$res = $sql->DoQuery('SELECT * FROM @1 WHERE @2 BETWEEN %3 AND %4;',
-					$sql->prefix.'sessions_history', 'start_stamp', date('c', $t0_), date('c', $t1_));
+					$sql->prefix.self::table, 'start_stamp', date('c', $t0_), date('c', $t1_));
 		
 		$rows = $sql->FetchAllResults();
 		
@@ -225,8 +227,8 @@ class Abstract_ReportSession {
 		
 		$sql = SQL::getInstance();
 		$res = $sql->DoQuery('SELECT * FROM @1 WHERE @2 BETWEEN %3 AND %4 '.$server_part.' AND ( @5 <= %4 OR ( @6 IS NULL AND id IN (SELECT id FROM @7)))',
-							$sql->prefix.'sessions_history', 'start_stamp', date('c', $t0_), date('c', $t1_), 
-							'stop_stamp', 'stop_stamp', $sql->prefix.'sessions');
+							$sql->prefix.self::table, 'start_stamp', date('c', $t0_), date('c', $t1_), 
+							'stop_stamp', 'stop_stamp', $sql->prefix.Abstract_Session::table);
 		
 		$rows = $sql->FetchAllResults();
 		
@@ -245,7 +247,7 @@ class Abstract_ReportSession {
 	
 	public static function get_end_status_for_server($t0_, $t1_, $fqdn_) {
 		$sql = SQL::getInstance();
-		$res = $sql->DoQuery('SELECT  @1, count(@1) AS @2 FROM @3 WHERE @4 = %5 AND @6 IS NOT NULL AND @7 BETWEEN %8 AND %9 GROUP BY @1', 'stop_why', 'nb', $sql->prefix.'sessions_history', 'server', $fqdn_,  'stop_stamp','start_stamp', date('c', $t0_), date('c', $t1_));
+		$res = $sql->DoQuery('SELECT  @1, count(@1) AS @2 FROM @3 WHERE @4 = %5 AND @6 IS NOT NULL AND @7 BETWEEN %8 AND %9 GROUP BY @1', 'stop_why', 'nb', $sql->prefix.self::table, 'server', $fqdn_,  'stop_stamp','start_stamp', date('c', $t0_), date('c', $t1_));
 		
 		$stop_why = array();
 		

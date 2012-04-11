@@ -5,6 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
  * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,6 +27,8 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
  * Abstraction layer between the Token instances and the SQL backend.
  */
 class Abstract_Token {
+	const table = 'tokens';
+	
 	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_Token::init');
 
@@ -39,14 +42,14 @@ class Abstract_Token {
 			'valid_until'	=>	'int(10) NOT NULL'
 		);
 
-		$ret = $SQL->buildTable($sql_conf['prefix'].'tokens', $tokens_table_structure, array('id'));
+		$ret = $SQL->buildTable($sql_conf['prefix'].self::table, $tokens_table_structure, array('id'));
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].'tokens\'');
+			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].self::table.'\'');
 			return false;
 		}
 
-		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].'tokens\' created');
+		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].self::table.'\' created');
 		return true;
 	}
 
@@ -55,7 +58,7 @@ class Abstract_Token {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'tokens', 'id', $id_);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -69,7 +72,7 @@ class Abstract_Token {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'tokens', 'id', $id_);
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -100,7 +103,7 @@ class Abstract_Token {
 			}
 		}
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7 WHERE @8 = %9 LIMIT 1', $SQL->prefix.'tokens', 'type', $token_->type, 'link_to', $token_->link_to, 'valid_until', $token_->valid_until, 'id', $id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7 WHERE @8 = %9 LIMIT 1', $SQL->prefix.self::table, 'type', $token_->type, 'link_to', $token_->link_to, 'valid_until', $token_->valid_until, 'id', $id);
 
 		return true;
 	}
@@ -114,7 +117,7 @@ class Abstract_Token {
 		}
 
 		$SQL = SQL::getInstance();
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'tokens', 'id', $token_->id);
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.self::table, 'id', $token_->id);
 
 		return true;
 	}
@@ -126,7 +129,7 @@ class Abstract_Token {
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'tokens', 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -134,7 +137,7 @@ class Abstract_Token {
 			return false;
 		}
 
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'tokens', 'id', $id);
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id);
 
 		return true;
 	}
@@ -156,7 +159,7 @@ class Abstract_Token {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1', $SQL->prefix.'tokens');
+		$SQL->DoQuery('SELECT * FROM @1', $SQL->prefix.self::table);
 		$rows = $SQL->FetchAllResults();
 
 		$tokens = array();
@@ -176,7 +179,7 @@ class Abstract_Token {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3', $SQL->prefix.'tokens', 'link_to', $ssesion_id_);
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3', $SQL->prefix.self::table, 'link_to', $ssesion_id_);
 		$rows = $SQL->FetchAllResults();
 
 		$tokens = array();

@@ -31,6 +31,8 @@ class Abstract_ReportServer {
 	static $TYPE_SERVER = 0;
 	static $TYPE_APPLICATION = 1;
 	
+	const table = 'servers_history';
+	
 	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_ReportServer::init');
 
@@ -45,10 +47,10 @@ class Abstract_ReportServer {
 			'ram' => 'FLOAT NOT NULL',
 			'data' => 'LONGTEXT NOT NULL');
 		
-		$ret = $SQL->buildTable($sql_conf['prefix'].'servers_history', $servers_history_table_structure, array());
+		$ret = $SQL->buildTable($sql_conf['prefix'].self::table, $servers_history_table_structure, array());
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create SQL table \''.$sql_conf['prefix'].'servers_history\'');
+			Logger::error('main', 'Unable to create SQL table \''.$sql_conf['prefix'].self::table.'\'');
 			return false;
 		}
 
@@ -60,7 +62,7 @@ class Abstract_ReportServer {
 		$sql = SQL::getInstance();
 		$res = $sql->DoQuery(
 			'INSERT INTO @1 (@2,@3,@4,@5,@6) VALUES (%7,%8,%9,%10,%11)',
-			$sql->prefix.'servers_history','fqdn','external_name','cpu','ram','data',
+			$sql->prefix.self::table,'fqdn','external_name','cpu','ram','data',
 			$report_->getFQDN(), $report_->getExternalName(), $report_->getCPU(), $report_->getRAM(), $report_->getData());
 		
 		return ($res !== false);
@@ -69,7 +71,7 @@ class Abstract_ReportServer {
 	
 	public static function load_partial($t0_, $t1_) {
 		$sql = SQL::getInstance();
-		$sql->DoQuery('SELECT * FROM @1 WHERE @2 BETWEEN %3 AND %4 ORDER BY @2 ASC;', $sql->prefix.'servers_history', 'timestamp', date('c', $t0_), date('c', $t1_));
+		$sql->DoQuery('SELECT * FROM @1 WHERE @2 BETWEEN %3 AND %4 ORDER BY @2 ASC;', $sql->prefix.self::table, 'timestamp', date('c', $t0_), date('c', $t1_));
 		
 		$rows = $sql->FetchAllResults();
 		

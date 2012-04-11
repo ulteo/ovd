@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,6 +26,8 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
  * Abstraction layer between the Task instances and the SQL backend.
  */
 class Abstract_Task {
+	const table = 'tasks';
+	
 	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_Task::init');
 
@@ -43,14 +46,14 @@ class Abstract_Task {
 			'applications'		=>	'text'
 		);
 
-		$ret = $SQL->buildTable($sql_conf['prefix'].'tasks', $tasks_table_structure, array('id'));
+		$ret = $SQL->buildTable($sql_conf['prefix'].self::table, $tasks_table_structure, array('id'));
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].'tasks\'');
+			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].self::table.'\'');
 			return false;
 		}
 
-		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].'tasks\' created');
+		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].self::table.'\' created');
 		return true;
 	}
 
@@ -59,7 +62,7 @@ class Abstract_Task {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'tasks', 'id', $id_);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -73,7 +76,7 @@ class Abstract_Task {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'tasks', 'id', $id_);
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -104,7 +107,7 @@ class Abstract_Task {
 			}
 		}
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17 WHERE @18 = %19 LIMIT 1', $SQL->prefix.'tasks', 'type', $task_->type, 'job_id', $task_->job_id, 'server', $task_->server, 'status', $task_->status, 't_begin', $task_->t_begin, 't_end', $task_->t_end, 'applications_line', @$task_->applications_line, 'applications', serialize(@$task_->applications), 'id', $id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17 WHERE @18 = %19 LIMIT 1', $SQL->prefix.self::table, 'type', $task_->type, 'job_id', $task_->job_id, 'server', $task_->server, 'status', $task_->status, 't_begin', $task_->t_begin, 't_end', $task_->t_end, 'applications_line', @$task_->applications_line, 'applications', serialize(@$task_->applications), 'id', $id);
 
 		return true;
 	}
@@ -118,7 +121,7 @@ class Abstract_Task {
 		}
 
 		$SQL = SQL::getInstance();
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'tasks', 'id', $task_->id);
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.self::table, 'id', $task_->id);
 
 		return true;
 	}
@@ -130,7 +133,7 @@ class Abstract_Task {
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'tasks', 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -138,7 +141,7 @@ class Abstract_Task {
 			return false;
 		}
 
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'tasks', 'id', $id);
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id);
 
 		return true;
 	}
@@ -181,7 +184,7 @@ class Abstract_Task {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1', $SQL->prefix.'tasks');
+		$SQL->DoQuery('SELECT * FROM @1', $SQL->prefix.self::table);
 		$rows = $SQL->FetchAllResults();
 
 		$tasks = array();
@@ -201,7 +204,7 @@ class Abstract_Task {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3', $SQL->prefix.'tasks', 'server', $fqdn_);
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3', $SQL->prefix.self::table, 'server', $fqdn_);
 		$rows = $SQL->FetchAllResults();
 
 		$tasks = array();
