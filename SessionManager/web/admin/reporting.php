@@ -1,10 +1,10 @@
 <?php
 /**
-* Copyright (C) 2009-2010 Ulteo SAS
+* Copyright (C) 2009-2012 Ulteo SAS
 * http://www.ulteo.com
-* Author Laurent CLOUET <laurent@ulteo.com>
-* Author Jeremy DESVAGES <jeremy@ulteo.com>
-* Author Julien LANGLOIS <julien@ulteo.com>
+* Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
+* Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
+* Author Julien LANGLOIS <julien@ulteo.com> 2009-2012
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -220,22 +220,18 @@ function get_session_history($t0, $t1, $mode_) {
 
 
 function get_server_history($t0, $t1, $mode_) {
-	$sql = SQL::getInstance();
-	$res = $sql->DoQuery('SELECT * FROM @1 WHERE @2 BETWEEN %3 AND %4 ORDER BY @2 ASC;', SERVERS_HISTORY_TABLE, 'timestamp', date('c', $t0), date('c', $t1));
-
+	$reports = Abstract_ReportServer::load_partial($t0, $t1);
 	$infos = array();
 
-	$g = $sql->FetchAllResults();
-	foreach($g as $p) {
-		$y = strtotime($p['timestamp']);
+	foreach($reports as $report) {
+		$y = strtotime($report->getTime());
 		$buf = date($mode_->get_prefix(), $y);
-		if (! isset($infos[$p['fqdn']]))
-			$infos[$p['fqdn']] = array('ram' => build_array($t0, $t1, $mode_, true),
+		if (! isset($infos[$report->getFQDN()]))
+			$infos[$report->getFQDN()] = array('ram' => build_array($t0, $t1, $mode_, true),
 						   'cpu' => build_array($t0, $t1, $mode_, true));
 
-
-		$infos[$p['fqdn']]['ram'][$buf][]= $p['ram'];
-		$infos[$p['fqdn']]['cpu'][$buf][]= $p['cpu']*100;
+		$infos[$report->getFQDN()]['ram'][$buf][]= $report->getRAM();
+		$infos[$report->getFQDN()]['cpu'][$buf][]= $report->getCPU()*100;
 	}
 
 	return $infos;

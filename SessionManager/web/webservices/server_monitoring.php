@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -119,8 +120,10 @@ function parse_monitoring_XML($xml_) {
 					}
 				}
 
-				$sri = new ServerReportItem($ret['server'], $xml_);
-				$sri->save();
+				$sri = ServerReportItem::create_from_server_report($ret['server'], $xml_);
+				if ($sri !== null)
+					Abstract_ReportServer::save($sri);
+				
 				break;
 			case 'FileServer':
 				$size_node = $dom->getElementsByTagName('size')->item(0);

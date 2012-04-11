@@ -5,6 +5,7 @@
  * Author Gauvain Pocentek <gauvain@ulteo.com> 2009
  * Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
  * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -52,5 +53,45 @@ class Abstract_ReportServer {
 		}
 
 		return true;
+	}
+	
+	
+	public static function save($report_) {
+		$sql = SQL::getInstance();
+		$res = $sql->DoQuery(
+			'INSERT INTO @1 (@2,@3,@4,@5,@6) VALUES (%7,%8,%9,%10,%11)',
+			$sql->prefix.'servers_history','fqdn','external_name','cpu','ram','data',
+			$report_->getFQDN(), $report_->getExternalName(), $report_->getCPU(), $report_->getRAM(), $report_->getData());
+		
+		return ($res !== false);
+	}
+	
+	
+	public static function load_partial($t0_, $t1_) {
+		$sql = SQL::getInstance();
+		$sql->DoQuery('SELECT * FROM @1 WHERE @2 BETWEEN %3 AND %4 ORDER BY @2 ASC;', $sql->prefix.'servers_history', 'timestamp', date('c', $t0_), date('c', $t1_));
+		
+		$rows = $sql->FetchAllResults();
+		
+		$reports = array();
+		foreach ($rows as $row) {
+		
+			$report = self::generateFromRow($row);
+			if (! is_object($report))
+				continue;
+			
+			$reports[] = $report;
+		}
+		
+		return $reports;
+	}
+	
+	
+	private static function generateFromRow($row_) {
+		if (! array_keys_exists_not_empty(array('fqdn', 'timestamp', 'external_name', 'cpu', 'ram', 'data'), $row_))
+			return null;
+		
+		$report = new ServerReportItem($row_['timestamp'], $row_['fqdn'], $row_['external_name'], $row_['cpu'], $row_['ram'], $row_['data']);
+		return $report;
 	}
 }

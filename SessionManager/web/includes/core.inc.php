@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008, 2009
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008, 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,7 +43,6 @@ if (is_object($prefs)) {
 	define('HAS_PREFERENCES', true);
 	$sql_conf = $prefs->get('general', 'sql');
 	if (is_array($sql_conf)) {
-		define('SERVERS_HISTORY_TABLE', $sql_conf['prefix'].'servers_history');
 		define('SESSIONS_HISTORY_TABLE', $sql_conf['prefix'].'sessions_history');
 		SQL::newInstance($sql_conf);
 	}
