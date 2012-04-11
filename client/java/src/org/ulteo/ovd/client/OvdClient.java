@@ -158,7 +158,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	 * not called by applet mode
 	 * @return
 	 */
-	void perform() {
+	public void perform() {
 		if (!(this instanceof OvdClientPerformer))
 			throw new ClassCastException("OvdClient must inherit from an OvdClientPerformer to use 'perform' action");
 		
