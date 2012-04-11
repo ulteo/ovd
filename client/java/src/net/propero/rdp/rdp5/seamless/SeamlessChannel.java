@@ -113,6 +113,13 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 		this.stateOrders = new ArrayList<StateOrder>();
 	}
+	
+	public void clearDatas() {
+		this.windows.clear();
+		this.positionsOrders.clear();
+		this.stateOrders.clear();
+	}
+	
 	public void setMainFrame(Frame f_) {
 		this.main_window = f_;
 	}
