@@ -210,8 +210,8 @@ class Session {
 				Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - Server "'.$server_.'" is now "'.$status_.'", switching Session status to "'.$status_.'"');
 				if (Abstract_ReportSession::exists($this->id)) {
 					$session_report = Abstract_ReportSession::load($this->id);
-					if (is_object($session_report) && ! is_null($session_report->stop_why))
-						$reason_ = $session_report->stop_why;
+					if (is_object($session_report) && ! is_null($session_report->getStopWhy()))
+						$reason_ = $session_report->getStopWhy();
 				}
 				$this->setStatus(Session::SESSION_STATUS_DESTROYING, $reason_);
 				break;
@@ -227,8 +227,8 @@ class Session {
 					Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - All servers are "'.$status_.'", switching Session status to "'.$status_.'"');
 					if (Abstract_ReportSession::exists($this->id)) {
 						$session_report = Abstract_ReportSession::load($this->id);
-						if (is_object($session_report) && ! is_null($session_report->stop_why))
-							$reason_ = $session_report->stop_why;
+						if (is_object($session_report) && ! is_null($session_report->getStopWhy()))
+							$reason_ = $session_report->getStopWhy();
 					}
 					$this->setStatus(Session::SESSION_STATUS_DESTROYED, $reason_);
 				}
@@ -289,7 +289,7 @@ class Session {
 			if ($status_ == Session::SESSION_STATUS_WAIT_DESTROY && ! is_null($reason_)) {
 				$report_session = Abstract_ReportSession::load($this->id);
 				if (is_object($report_session)) {
-					$report_session->stop_why = $reason_;
+					$report_session->setStopWhy($reason_);
 					Abstract_ReportSession::update($report_session);
 				}
 			}
@@ -325,7 +325,7 @@ class Session {
 			if ($status_ == Session::SESSION_STATUS_DESTROYED && ! is_null($reason_)) {
 				$report_session = Abstract_ReportSession::load($this->id);
 				if (is_object($report_session)) {
-					$report_session->stop_why = $reason_;
+					$report_session->setStopWhy($reason_);
 					Abstract_ReportSession::update($report_session);
 				}
 			}
@@ -476,7 +476,7 @@ class Session {
 		if (! is_null($reason_)) {
 			$report_session = Abstract_ReportSession::load($this->id);
 			if (is_object($report_session)) {
-				$report_session->stop_why = $reason_;
+				$report_session->setStopWhy($reason_);
 				Abstract_ReportSession::update($report_session);
 			}
 		}

@@ -37,10 +37,7 @@ class SessionStatusChangedReport extends EventCallback {
 					}
 					$session = Abstract_Session::load($token);
 
-					$sessitem = new SessionReportItem();
-					$sessitem->id = $session->id;
-					$sessitem->user = $session->user_login;
-					$sessitem->server = $session->server;
+					$sessitem = new SessionReportItem($session->id, $session->user_login, $session->server, $session->start_time);
 
 					$ret = Abstract_ReportSession::create($sessitem);
 					if (! $ret) {
@@ -55,6 +52,12 @@ class SessionStatusChangedReport extends EventCallback {
 			case Session::SESSION_STATUS_WAIT_DESTROY:
 			case Session::SESSION_STATUS_DESTROYED:
 				$token = $this->ev->id;
+				
+				if (! Abstract_Session::exists($token)) {
+					Logger::error('main', "SessionStatusChangedReport::run failed session '$token' does not exist");
+					return false;
+				}
+				$session = Abstract_Session::load($token);
 
 				$sessitem = Abstract_ReportSession::load($token);
 				if (! is_object($sessitem)) {
@@ -62,7 +65,7 @@ class SessionStatusChangedReport extends EventCallback {
 					return false;
 				}
 
-				$sessitem->end();
+				$sessitem->end($session);
 				Abstract_ReportSession::update_on_session_end($sessitem);
 
 				return true;

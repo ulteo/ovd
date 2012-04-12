@@ -110,14 +110,6 @@ function parse_monitoring_XML($xml_) {
 
 						$ret['sessions'][$session_node->getAttribute('id')]['instances'][$childnode->getAttribute('id')] = $childnode->getAttribute('application');
 					}
-
-					$token = $session_node->getAttribute('id');
-
-					if (Abstract_ReportSession::exists($session_node->getAttribute('id'))) {
-						$report = Abstract_ReportSession::load($session_node->getAttribute('id'));
-						if (is_object($report))
-							$report->update($session_node);
-					}
 				}
 
 				$sri = ServerReportItem::create_from_server_report($ret['server'], $xml_);

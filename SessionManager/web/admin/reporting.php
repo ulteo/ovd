@@ -178,7 +178,7 @@ function get_session_history($t0, $t1, $mode_) {
 	$sessions = Abstract_ReportSession::load_by_start_time_range($t0, $t1);
 
 	foreach($sessions as $session) {
-		if (is_null($session->stop_time)) { // todo: or stop_stamp=NULL
+		if (is_null($session->getStopTime())) { // todo: or stop_stamp=NULL
 			if (! Abstract_Session::exists($session->getId())) {
 				// Before the v2.5, most of sessions report was empty ...
 //				Logger::warning('main', 'Invalid reporting item session '.$p['id']);
@@ -186,26 +186,26 @@ function get_session_history($t0, $t1, $mode_) {
 			}
 		}
 
-		$y = strtotime($session->start_time);
+		$y = strtotime($session->getStartTime());
 		$buf = date($mode_->get_prefix(), $y);
 		
-		if ($session->stop_why == '' || is_null($session->stop_why))
-			$session->stop_why = 'unknown';
+		if ($session->getStopWhy() == '' || is_null($session->getStopWhy()))
+			$session->setStopWhy('unknown');
 		
-		if (! is_null($session->stop_time)) {
-			if (! isset($end_status[$session->stop_why]))
-				$end_status[$session->stop_why] = 0;
+		if (! is_null($session->getStopTime())) {
+			if (! isset($end_status[$session->getStopWhy()]))
+				$end_status[$session->getStopWhy()] = 0;
 			
-			$end_status[$session->stop_why] += 1;
+			$end_status[$session->getStopWhy()] += 1;
 		}
 		
 
 		if (! isset($result[$buf]))
 			continue;
 
-		if (! isset($res_server[$session->server]))
-			$res_server[$session->server] = build_array($t0, $t1, $mode_);
-		$res_server[$session->server][$buf]++;
+		if (! isset($res_server[$session->getServer()]))
+			$res_server[$session->getServer()] = build_array($t0, $t1, $mode_);
+		$res_server[$session->getServer()][$buf]++;
 
 		$result[$buf]++;
 	}
@@ -698,7 +698,7 @@ function getNB_SESSION($mode_) {
 	$result_nb_sessions = build_array($t0, $t2, $mode_);
 
 	foreach($sessions as $session) {
-		$y = strtotime($session->start_time);
+		$y = strtotime($session->getStartTime());
 		$buf = date($mode_->get_prefix(), $y);
 
 		foreach($result_nb_sessions as $k => $v) {
@@ -706,11 +706,11 @@ function getNB_SESSION($mode_) {
 				continue;
 			}
 
-			if (is_null($session->stop_time)) {
+			if (is_null($session->getStopTime())) {
 				$result_nb_sessions[$k]+= 1;
 			}
 			else {
-				$time_stop = strtotime($session->stop_time);
+				$time_stop = strtotime($session->getStopTime());
 				$str_stop = date($mode_->get_prefix(), $time_stop);
 
 				if ($str_stop >= $k) {

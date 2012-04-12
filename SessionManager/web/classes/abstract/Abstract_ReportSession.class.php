@@ -81,17 +81,20 @@ class Abstract_ReportSession {
 		if (! array_keys_exists_not_empty(array('id', 'user', 'server', 'start_stamp'), $row_))
 			return null;
 		
-		$report = new SessionReportItem();
-		$report->id = $row_['id'];
-		$report->user = $row_['user'];
-		$report->server = $row_['server'];
-		$report->start_time = $row_['start_stamp'];
+		$stop_stamp = null;
+		$stop_why = null;
+		$data = null;
+		
 		if (array_key_exists('stop_stamp', $row_) and $row_['stop_stamp'] !== '')
-			$report->stop_time = $row_['stop_why'];
+			$stop_stamp = $row_['stop_stamp'];
 		
 		if (array_key_exists('stop_why', $row_) and $row_['stop_why'] !== '')
-			$report->stop_why = $row_['stop_why'];
+			$stop_why = $row_['stop_why'];
 		
+		if (array_key_exists('data', $row_) || strlen($row_['data']) > 0)
+			$data = $row_['data'];
+		
+		$report = new SessionReportItem($row_['id'], $row_['user'], $row_['server'], $row_['start_stamp'], $stop_stamp, $stop_why, $data);
 		return $report;
 	}
 	
@@ -114,7 +117,10 @@ class Abstract_ReportSession {
 		}
 
 		$sql = SQL::getInstance();
-		$res = $sql->DoQuery('INSERT INTO #1 (@2,@3,@4,@5) VALUES (%6,%7,%8,%9)', self::table, 'id', 'user', 'server', 'data',  $report_->getID(), $report_->user, $report_->server, '');
+		$res = $sql->DoQuery('INSERT INTO #1 (@2,@4,@6) VALUES (%3,%5,%7)', self::table, 
+			'id', $report_->getID(), 
+			'user', $report_->getUser(), 
+			'server', $report_->getServer());
 		return $res;
 	}
 	
@@ -128,13 +134,8 @@ class Abstract_ReportSession {
 			return false;
 		}
 		
-		$ret = $SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7 WHERE @8 = %9 LIMIT 1', self::table,
-// 			'start_stamp',
-// 			'stop_stamp',
-			'stop_why',  $report_->stop_why,
-			'user', $report_->user,
-			'server', $report_->server,
-// 			'data',
+		$ret = $SQL->DoQuery('UPDATE #1 SET @2=%3 WHERE @4 = %5 LIMIT 1', self::table,
+			'stop_why',  $report_->getStopWhy(),
 			'id', $report_->getID());
 		return $ret;
 	}
@@ -152,7 +153,7 @@ class Abstract_ReportSession {
 		
 		$ret = $sql->DoQuery('UPDATE #1 SET @2=NOW(), @3=%4 WHERE @5=%6 LIMIT 1', self::table,
 			'stop_stamp',
-			'data',  $report_->toXml(),
+			'data',  $report_->getData(),
 			'id', $report_->getID());
 		
 		return $ret;

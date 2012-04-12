@@ -252,8 +252,8 @@ function show_default() {
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'">';
 			echo '<td>'.$session->getId().'</td>';
-			echo '<td><a href="users.php?action=manage&id='.$session->user.'">'.$session->user.'</a></td>';
-			echo '<td>'.$session->start_time.'</td>';
+			echo '<td><a href="users.php?action=manage&id='.$session->getUser().'">'.$session->getUser().'</a></td>';
+			echo '<td>'.$session->getStartTime().'</td>';
 			echo '<td><form><input type="hidden" name="action" value="manage"/><input type="hidden" name="id" value="'.$session->getId().'"/><input type="submit" value="'._('Get more information').'"/></form></td>';
 			echo '</tr>';
 		}
@@ -274,32 +274,82 @@ function show_manage($id_) {
 	}
 
 	$userDB = UserDB::getInstance();
-	$user = $userDB->import($session->user);
+	$user = $userDB->import($session->getUser());
 	
 	$applicationDB = ApplicationDB::getInstance();
-	$applications = array();
+	
+	$mode = '<em>'._('unknown').'</em>';
+	$servers = array();
+	$published_applications = array();
+	$applications_instances = array();
 	
 	$dom = new DomDocument('1.0', 'utf-8');
-	$ret = @$dom->loadXML($session->data);
+	$ret = @$dom->loadXML($session->getData());
 	if ($ret) {
-		foreach ($dom->getElementsByTagName('application') as $node) {
-			$application = array();
-			foreach ($node->childNodes as $child_node) {
-				$name = $child_node->nodeName;
-				if ($name == '#text')
-					continue;
-				
-				$application[$name] = $child_node->nodeValue;
+		$root_node = $dom->documentElement;
+		if ($root_node->hasAttribute('mode'))
+			$mode = $root_node->getAttribute('mode');
+		
+		foreach ($dom->getElementsByTagName('server') as $node) {
+			if (! ($node->hasAttribute('fqdn') &&
+				$node->hasAttribute('role')
+				)) {
+				// Not enough information to continue ...
+				continue;
 			}
 			
-			$applications[]= $application;
+			$server = array();
+			$server['fqdn'] = $node->getAttribute('fqdn');
+			$server['role'] = $node->getAttribute('role');
+			$server['desktop_server'] = ($node->hasAttribute('desktop_server'));
+			if ($node->hasAttribute('type'))
+				$server['type'] = $node->getAttribute('type');
+			
+			$server_obj = Abstract_Server::load($server['fqdn']);
+			if (is_object($server_obj))
+				$server['obj'] = $server_obj;
+			
+			$servers[]= $server; // can be the same server twice with different role ... ToDO: fix that on backend side
 		}
-	}
-	
-	for ($i=0; $i<count($applications); $i++) {
-		$app_buf = $applicationDB->import($applications[$i]['id']);
-		if (is_object($app_buf)) {
-			$applications[$i]["obj"] = $app_buf;
+		
+		foreach ($dom->getElementsByTagName('application') as $node) {
+			if (! $node->hasAttribute('id')) {
+				// Not enough information to continue ...
+				continue;
+			}
+			
+			$application = array('id' => $node->getAttribute('id'));
+			if ($node->hasAttribute('name'))
+				$application['name'] = $node->getAttribute('name');
+			
+			$app_buf = $applicationDB->import($application['id']);
+			if (is_object($app_buf))
+				$application['obj'] = $app_buf;
+			
+			$published_applications[$application['id']]= $application;
+		}
+		
+		foreach ($dom->getElementsByTagName('instance') as $node) {
+			if (! ($node->hasAttribute('id') &&
+				$node->hasAttribute('application') &&
+				$node->hasAttribute('server') &&
+				$node->hasAttribute('start') &&
+				$node->hasAttribute('stop')
+				)) {
+				// Not enough information to continue ...
+				continue;
+			}
+			
+			$instance = array('id' => $node->getAttribute('id'));
+			$instance['application'] = $node->getAttribute('application');
+			$instance['server'] = $node->getAttribute('server');
+			$instance['start'] = $node->getAttribute('start');
+			$instance['stop'] = $node->getAttribute('stop');
+			
+			if (! array_key_exists($instance['application'], $published_applications))
+				continue;
+			
+			$applications_instances[]= $instance;
 		}
 	}
 	
@@ -313,40 +363,117 @@ function show_manage($id_) {
 	if (is_object($user))
 		echo '<a href="users.php?action=manage&id='.$user->getAttribute('login').'">'.$user->getAttribute('displayname').'</a>';
 	else
-		echo $session->user.' <span><em>'._('Not existing anymore').'</em></span>';
+		echo $session->getUser().' <span><em>'._('Not existing anymore').'</em></span>';
 	echo '</li>';
 	
+	echo '<li><strong>'._('Mode:').'</strong> '.$mode.'</li>';
+	
 	echo '<li><strong>'._('Started:').'</strong> ';
-	echo $session->start_time;
+	echo $session->getStartTime();
 	echo '</li>';
 	echo '<li><strong>'._('Stopped:').'</strong> ';
-	echo $session->stop_time;
-	if (! is_null($session->stop_why) && strlen($session->stop_why)>0)
-		echo '&nbsp<em>('.$session->stop_why.')</em>';
+	echo $session->getStopTime();
+	if (! is_null($session->getStopWhy()) && strlen($session->getStopWhy())>0)
+		echo '&nbsp<em>('.$session->getStopWhy().')</em>';
 	echo '</li>';
 	echo '</ul>';
 	
-	if (count($applications)>0) {
-		echo '<div>';
-		echo '<h2>'._('Used applications').'</h2>';
+	echo '<div>';
+	echo '<h2>'._('Servers').'</h2>';
+	if (count($servers) == 0)
+		echo _('No information about it in the report');
+	else {
 		echo '<ul>';
-		foreach ($applications as $application) {
+		foreach ($servers as $server) {
+			echo '<li>';
+			if (array_key_exists('obj', $server))
+				echo '<a href="servers.php?action=manage&fqdn='.$server['obj']->fqdn.'">'.$server['obj']->fqdn.'</a>';
+			else {
+				echo $server['fqdn'];
+				
+				
+				echo '&nbsp;<span><em>'._('not existing anymore').'</em></span>';
+			}
+			
+			$infos = array();
+			$infos[]= 'role: '.$server['role'];
+			
+			if ($mode == Session::MODE_DESKTOP && $server['desktop_server'])
+				$infos[]= 'desktop server';
+			
+			if (array_key_exists('type', $server))
+				$infos[]= '(OS: '.$server['type'].')';
+			
+			echo '&nbsp;'.implode(', ', $infos);
+			echo '</li>';
+		}
+		echo '</ul>';
+	}
+	echo '</div>';
+	
+	echo '<div>';
+	echo '<h2>'._('Published applications').'</h2>';
+	if (count($published_applications) == 0)
+		echo _('No information about it in the report');
+	else {
+		echo '<ul>';
+		foreach ($published_applications as $app_id => $application) {
 			echo '<li>';
 			if (isset($application['obj'])) {
 				echo '<img class="icon32" src="media/image/cache.php?id='.$application['obj']->getAttribute('id').'" alt="" title="" /> ';
 				echo '<a href="applications.php?action=manage&id='.$application['obj']->getAttribute('id').'">'.$application['obj']->getAttribute('name').'</a>';
 			}
-			else
-				echo $application['id'].'&nbsp;<span><em>'._('not existing anymore').'</em></span>';
-			
-			if (($application['start']-$application['start'])>0)
-				echo '  - ('.(($application['start']-$application['start'])/60).'m)';
+			else {
+				if (array_key_exists('name', $application))
+					echo '<span>'.$application['name'].'</span>';
+				else
+					echo '<span>'.sprintf(_('Unknown application (id: %s)'), $application['id']).'</span>';
+				
+				echo '&nbsp;<span><em>'._('not existing anymore').'</em></span>';
+			}
 			echo '</li>';
 		}
 		echo '</ul>';
-		echo '</div>';
+	}
+	echo '</div>';
+	
+	echo '<div>';
+	echo '<h2>'._('Used applications').'</h2>';
+	if (count($applications_instances) == 0)
+		echo _('No information about it in the report');
+	else {
+		echo '<ul>';
+		foreach ($applications_instances as $instance) {
+			$application = $published_applications[$instance['application']];
+			
+			echo '<li>';
+			
+			if (array_key_exists('obj', $application)) {
+				echo '<img class="icon32" src="media/image/cache.php?id='.$application['obj']->getAttribute('id').'" alt="" title="" /> ';
+				echo '<a href="applications.php?action=manage&id='.$application['obj']->getAttribute('id').'">'.$application['obj']->getAttribute('name').'</a>';
+			}
+			else {
+				if (array_key_exists('name', $application))
+					echo '<span>'.$application['name'].'</span>';
+				else
+					echo '<span>'.sprintf(_('Unknown application (id: %s)'), $application['id']).'</span>';
+				
+				echo '&nbsp;<span><em>'._('not existing anymore').'</em></span>';
+			}
+			
+			echo ' - ';
+			$duration = sprintf('%0.2f', (($instance['stop']-$instance['start'])/60));
+			echo str_replace(array('%SERVER%', '%DURATION%', '%STARTED_TIME%', '%STOPPED_TIME%'), 
+				  array($instance['server'], $duration, strftime('%T', $instance['start']), strftime('%T', $instance['stop'])),
+				  _('executed on server %SERVER% during %DURATION%m (started at %STARTED_TIME%, stopped at %STOPPED_TIME%)'));
+			
+			echo '</li>';
+		}
+		
+		echo '</ul>';
 	}
 	
+	echo '</div>';
 	page_footer();
 	die();
 }

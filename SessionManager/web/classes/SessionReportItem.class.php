@@ -24,127 +24,139 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 require_once(CLASSES_DIR.'/ReportItems.class.php');
 
 class SessionReportItem {
-	public $id = -1; // id of the report is also the id of the session
-	public $server;
-	public $user;
-	private $node;
-	private $current_apps = array();
-	private $apps_raw_data = array(); /* pid, id, running (ReportRunningItem) */
-	public $start_time;
-	public $stop_time = null;
-	public $stop_why = null;
-	public $data = null;
+	private $id = -1; // id of the report is also the id of the session
+	private $server;
+	private $user;
+	private $start_time;
+	private $stop_time = null;
+	private $stop_why = null;
+	private $data = null;
 
-	public function __construct() {
-		$this->current_apps = array();
- 	}
+	public function __construct($id_, $user_, $server_, $start_time_, $stop_time_ = null, $stop_why_ = null, $data_ = null) {
+		$this->id = $id_;
+		$this->user = $user_;
+		$this->server = $server_;
+		$this->start_time = $start_time_;
+		if ($stop_time_ !== null)
+			$this->stop_time = $stop_time_;
+		if ($stop_why_ !== null)
+			$this->stop_why = $stop_why_;
+		if ($data_ !== null)
+			$this->data = $data_;
+	}
 
 	public function getId() {
 		return $this->id;
 	}
-
-	public function update($session_node_) {
-		$sessid = $session_node_->getAttribute('id');
-		$buf = Abstract_Session::exists($sessid);
-		if (! $buf)
-			return;
-
-		$session = Abstract_Session::load($sessid);
-		if (! $session)
-			return;
-
-		//$apps_link = application_desktops_to_ids();
-		/* reset the current apps data */
-		$this->current_apps = array();
-
-		/* get the running apps for a start */
-		$tmp = array();
-		foreach ($session_node_->childNodes as $instance_node) {
-			if ($instance_node->tagName != 'instance')
-				continue;
-
-			$app_pid = $instance_node->getAttribute('id');
-			$app_id = $instance_node->getAttribute('application');
-			$this->current_apps[$sessid] = $app_id;
-			$tmp[$app_pid] = $app_id;
-		}
-
-		/* for each app that was already active, we check if it's still there
-		 * and:
-		   - if yes, drop it from $tmp
-		   - if no, regeister the end of the application
-		 */
-		foreach ($this->apps_raw_data as $app) {
-			$app_pid = $app['pid'];
-			$app_id = $app['id'];
-			$app_running = $app['running'];
-			if ($app_running->isDone())
-				/* already ended, we don't care */
-				continue;
-
-			if (array_key_exists ($app_pid, $tmp) && ($app_id == $tmp[$app_pid]))
-				unset ($tmp[$app_pid]);
-			else
-				$app_running->stop();
-		}
-
-		/* now register each remaining item in $tmp */
-		foreach ($tmp as $app_pid => $app_id) {
-			$this->apps_raw_data[] = array(
-				'pid' => $app_pid,
-				'id' => $app_id,
-				'running' => new ReportRunningItem()
-			);
-		}
+	
+	public function getServer() {
+		return $this->server;
+	}
+	
+	public function getUser() {
+		return $this->user;
+	}
+	
+	public function getStartTime() {
+		return $this->start_time;
+	}
+	
+	public function getStopTime() {
+		return $this->stop_time;
+	}
+	
+	public function setStartTime($start_time_) {
+		$this->start_time = $start_time_;
+	}
+	
+	public function getStopWhy() {
+		return $this->stop_why;
+	}
+	
+	public function setStopWhy($stop_why_) {
+		$this->stop_why = $stop_why_;
+	}
+	
+	public function getData() {
+		return $this->data;
 	}
 
-	public function end() {
-		/* end all applications */
-		$now = time();
-		foreach ($this->apps_raw_data as $app) {
-			$app_running = $app['running'];
-			if (! $app_running->isDone())
-				$app['running']->stop($now);
-		}
+	public function end($session_) {
+		$this->data = $this->session2Xml($session_);
 	}
-
-	public function test() {
-		print $this->toXml();
-	}
-	/*
-	 * private methods
-	 */
-	public function toXml() {
+	
+	private static function session2Xml($session_) {
 		$dom = new DomDocument ('1.0', 'utf-8');
-	    $dom->formatOutput = true;
-
-	    /* main node */
-	    $snapshot = $dom->createElement('session_snapshot');
-	    $dom->appendChild($snapshot);
-
-		/* applications */
-		$applications = $dom->createElement('applications');
-		$snapshot->appendChild($applications);
-		foreach ($this->apps_raw_data as $data) {
-			$application = $dom->createElement('application');
-			$applications->appendChild($application);
-
-			$node = $dom->createElement('id');
-			$application->appendChild($node);
-			$txt = $dom->createTextNode($data['id']);
-			$node->appendChild($txt);
-
-			$node = $dom->createElement('start');
-			$application->appendChild($node);
-			$txt = $dom->createTextNode($data['running']->start);
-			$node->appendChild($txt);
-
-			$node = $dom->createElement('stop');
-			$application->appendChild($node);
-			$txt = $dom->createTextNode($data['running']->end);
-			$node->appendChild($txt);
+		$dom->formatOutput = true;
+		
+		$session_node = $dom->createElement('session');
+		$dom->appendChild($session_node);
+		
+		$session_node->setAttribute('id', $session_->id);
+		$session_node->setAttribute('mode', $session_->mode);
+		
+		$user_node = $dom->createElement('user');
+		$session_node->appendChild($user_node);
+		$user_node->setAttribute('login', $session_->user_login);
+		$user_node->setAttribute('display_name', $session_->user_displayname);
+		
+		// Begin session servers part
+		$servers_node = $dom->createElement('servers');
+		$session_node->appendChild($servers_node);
+		
+		foreach ($session_->servers as $role => $servers) {
+			foreach ($servers as $fqdn=> $data) {
+				$server_node = $dom->createElement('server');
+				$servers_node->appendChild($server_node);
+				$server_node->setAttribute('fqdn', $fqdn);
+				$server_node->setAttribute('role', $role);
+				
+				if ($session_->mode == Session::MODE_DESKTOP && $session_->server == $fqdn)
+					$server_node->setAttribute('desktop_server', 'true');
+				
+				$server = Abstract_Server::load($fqdn);
+				if (! $server || $server->getAttribute('registered') === false)
+					continue;
+				
+				$server_node->setAttribute('type', $server->type);
+			}
 		}
-
+		// Finish session servers part
+		
+		$applications = $dom->createElement('published_applications');
+		$session_node->appendChild($applications);
+		
+		foreach ($session_->getPublishedApplications() as $application_id => $application) {
+			$app_node = $dom->createElement('application');
+			$applications->appendChild($app_node);
+			
+			$app_node->setAttribute('id', $application_id);
+			$app_node->setAttribute('name', $application->getAttribute('name'));
+		}
+		
+		$apps_instances_node = $dom->createElement('applications_instances');
+		$session_node->appendChild($apps_instances_node);
+		foreach ($session_->getClosedApplications() as $instance_id => $instance) {
+			$node = $dom->createElement('instance');
+			$apps_instances_node->appendChild($node);
+			
+			$node->setAttribute('id', $instance_id);
+			$node->setAttribute('application', $instance['application']);
+			$node->setAttribute('server', $instance['server']);
+			$node->setAttribute('start', $instance['start']);
+			$node->setAttribute('stop', $instance['stop']);
+		}
+		foreach ($session_->getRunningApplications() as $instance_id => $instance) {
+			$node = $dom->createElement('instance');
+			$apps_instances_node->appendChild($node);
+			
+			$node->setAttribute('id', $instance_id);
+			$node->setAttribute('application', $instance['application']);
+			$node->setAttribute('server', $instance['server']);
+			$node->setAttribute('start', $instance['start']);
+			$node->setAttribute('stop', time());
+		}
+		
 		return $dom->saveXML();
 	}
 }
