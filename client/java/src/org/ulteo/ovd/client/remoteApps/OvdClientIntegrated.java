@@ -64,15 +64,6 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 	}
 	
 	@Override
-	public void runSessionReady() {
-		if (this.spool == null)
-			return;
-		
-		try {
-			this.spool.join();
-		} catch (InterruptedException e) {
-			Logger.error("Spooler endded unexpectedly");
-		}
-	}
+	public void runSessionReady() {}
 	
 }
