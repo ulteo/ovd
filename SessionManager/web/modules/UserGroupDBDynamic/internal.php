@@ -38,7 +38,7 @@ class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
 	public function import($id_) {
 		Logger::debug('main', "UserGroupDBDynamic::internal::import (id = $id_)");
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @7 FROM @5 WHERE @1 = %6', 'id', 'name', 'description', 'published', $sql2->prefix.self::table, $id_, 'validation_type');
+		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @7 FROM #5 WHERE @1 = %6', 'id', 'name', 'description', 'published', self::table, $id_, 'validation_type');
 		
 		if ($sql2->NumRows($res) == 1) {
 			$row = $sql2->FetchResult($res);
@@ -62,7 +62,7 @@ class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
 			return NULL;
 		}
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @5 FROM @6', 'id', 'name', 'description', 'published',  'validation_type', $sql2->prefix.self::table);
+		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @5 FROM #6', 'id', 'name', 'description', 'published',  'validation_type', self::table);
 		if ($res !== false){
 			$result = array();
 			$rows = $sql2->FetchAllResults($res);
@@ -94,7 +94,7 @@ class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
 	public function add($usergroup_){
 		Logger::debug('main', 'UserGroupDBDynamic::internal::add');
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('INSERT INTO @1 (@2,@3,@4,@8) VALUES (%5,%6,%7,%9)', $sql2->prefix.self::table, 'name', 'description', 'published', $usergroup_->name, $usergroup_->description, $usergroup_->published, 'validation_type', $usergroup_->validation_type);
+		$res = $sql2->DoQuery('INSERT INTO #1 (@2,@3,@4,@8) VALUES (%5,%6,%7,%9)',self::table, 'name', 'description', 'published', $usergroup_->name, $usergroup_->description, $usergroup_->published, 'validation_type', $usergroup_->validation_type);
 		if ($res === false) {
 			Logger::error('main','UserGroupDBDynamic::internal::add SQL insert request failed');
 			return false;
@@ -126,7 +126,7 @@ class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
 			Abstract_Liaison::delete('UsersGroup', NULL, $usergroup_->getUniqueID());
 		}
 		// second we delete the group
-		$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', $sql2->prefix.self::table, 'id', $usergroup_->id);
+		$res = $sql2->DoQuery('DELETE FROM #1 WHERE @2 = %3', self::table, 'id', $usergroup_->id);
 		if ( $res === false) {
 			Logger::error('main', 'UserGroupDBDynamic::internal::remove Failed to remove group from SQL DB');
 			return false;
@@ -148,7 +148,7 @@ class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
 		$old_rules = $old_usergroup->rules;
 		
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3 , @4 = %5 , @6 = %7 , @10 = %11  WHERE @8 = %9', $sql2->prefix.self::table, 'published', $usergroup_->published, 'name', $usergroup_->name, 'description', $usergroup_->description, 'id', $usergroup_->id, 'validation_type', $usergroup_->validation_type);
+		$res = $sql2->DoQuery('UPDATE #1  SET @2 = %3 , @4 = %5 , @6 = %7 , @10 = %11  WHERE @8 = %9', self::table, 'published', $usergroup_->published, 'name', $usergroup_->name, 'description', $usergroup_->description, 'id', $usergroup_->id, 'validation_type', $usergroup_->validation_type);
 		if ( $res === false) {
 			Logger::error('main', 'UserGroupDBDynamic::internal::update failed to update the group from DB');
 			return false;
@@ -192,7 +192,7 @@ class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
 			'validation_type' => 'varchar(15) NOT NULL',
 			);
 		
-		$ret = $sql2->buildTable($sql2->prefix.self::table, $usersgroup_table_structure, array('id'));
+		$ret = $sql2->buildTable(self::table, $usersgroup_table_structure, array('id'));
 		
 		if ( $ret === false) {
 			Logger::error('main', 'UserGroupDBDynamic::internal::init table '.self::table.' fail to created');

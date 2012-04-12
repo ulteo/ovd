@@ -48,14 +48,14 @@ class Abstract_VDI {
 			'ip'			=>	'varchar(15)'
 		);
 
-		$ret = $SQL->buildTable($sql_conf['prefix'].self::table, $vdi_table_structure, array('id'));
+		$ret = $SQL->buildTable(self::table, $vdi_table_structure, array('id'));
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].self::table.'\'');
+			Logger::error('main', 'Unable to create MySQL table \''.self::table.'\'');
 			return false;
 		}
 
-		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].self::table.'\' created');
+		Logger::debug('main', 'MySQL table \''.self::table.'\' created');
 
 		return true;
 	}
@@ -65,7 +65,7 @@ class Abstract_VDI {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id_);
+		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -79,7 +79,7 @@ class Abstract_VDI {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -110,7 +110,7 @@ class Abstract_VDI {
 			}
 		}
 
-		$SQL->DoQuery('UPDATE @1 SET @4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id, 'type', $machine_->type, 'name', $machine_->name, 'server', $machine_->server, 'master_id', $machine_->master_id, 'used_by', $machine_->used_by, 'cpu_model', $machine_->cpu_model, 'cpu_nb_cores', $machine_->cpu_nb_cores, 'ram_total', $machine_->ram_total, 'status', $machine_->status, 'ip', $machine_->ip);
+		$SQL->DoQuery('UPDATE #1 SET @4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id, 'type', $machine_->type, 'name', $machine_->name, 'server', $machine_->server, 'master_id', $machine_->master_id, 'used_by', $machine_->used_by, 'cpu_model', $machine_->cpu_model, 'cpu_nb_cores', $machine_->cpu_nb_cores, 'ram_total', $machine_->ram_total, 'status', $machine_->status, 'ip', $machine_->ip);
 
 		return true;
 	}
@@ -125,7 +125,7 @@ class Abstract_VDI {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.self::table, 'id', $machine_->id);
+		$SQL->DoQuery('INSERT INTO #1 (@2) VALUES (%3)', self::table, 'id', $machine_->id);
 
 		return true;
 	}
@@ -140,7 +140,7 @@ class Abstract_VDI {
 			return false;
 		}
 
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id_);
+		$SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id_);
 
 		return true;
 	}
@@ -183,7 +183,7 @@ class Abstract_VDI {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3', $SQL->prefix.self::table, 'server', $fqdn_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3', self::table, 'server', $fqdn_);
 		$rows = $SQL->FetchAllResults();
 
 		$machines = array();
@@ -203,7 +203,7 @@ class Abstract_VDI {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3', $SQL->prefix.self::table, 'used_by', $login_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3', self::table, 'used_by', $login_);
 		$rows = $SQL->FetchAllResults();
 
 		$machines = array();

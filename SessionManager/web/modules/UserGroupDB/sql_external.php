@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
@@ -47,7 +47,7 @@ class UserGroupDB_sql_external {
 			return array();
 		}
 		
-		$res = $sql2->DoQuery('SELECT @2,@3,@4 FROM @1 WHERE @2=%5', $this->config['table'], $this->config['match']['id'], $this->config['match']['name'], $this->config['match']['description'], $id_);
+		$res = $sql2->DoQuery('SELECT @2,@3,@4 FROM #1 WHERE @2=%5', $this->config['table'], $this->config['match']['id'], $this->config['match']['name'], $this->config['match']['description'], $id_);
 		$row = $sql2->FetchResult($res);
 		$ug = new UsersGroup($row[$this->config['match']['id']], $row[$this->config['match']['name']], $row[$this->config['match']['description']], true);
 		if ($this->isOK($ug))
@@ -83,7 +83,7 @@ class UserGroupDB_sql_external {
 			return array();
 		}
 		
-		$res = $sql2->DoQuery('SELECT @2,@3,@4 FROM @1', $this->config['table'], $this->config['match']['id'], $this->config['match']['name'], $this->config['match']['description']);
+		$res = $sql2->DoQuery('SELECT @2,@3,@4 FROM #1', $this->config['table'], $this->config['match']['id'], $this->config['match']['name'], $this->config['match']['description']);
 		$rows = $sql2->FetchAllResults($res);
 		foreach ($rows as $row) {
 			$ug = new UsersGroup($row[$this->config['match']['id']], $row[$this->config['match']['name']], $row[$this->config['match']['description']], true);

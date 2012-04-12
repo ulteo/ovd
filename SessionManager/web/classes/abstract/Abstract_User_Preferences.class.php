@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,20 +43,20 @@ class Abstract_User_Preferences {
 			'value'		=>	'text'
 		);
 		
-		$ret = $SQL->buildTable($sql_conf['prefix'].self::$table, $user_preferences_table_structure, array());
+		$ret = $SQL->buildTable(self::$table, $user_preferences_table_structure, array());
 		if (! $ret) {
-			Logger::error('main', "Unable to create MySQL table '".$sql_conf['prefix'].self::$table."'");
+			Logger::error('main', "Unable to create MySQL table '".self::$table."'");
 			return false;
 		}
 		
-		Logger::debug('main', "MySQL table '".$sql_conf['prefix'].self::$table."' created");
+		Logger::debug('main', "MySQL table '".self::$table."' created");
 		return true;
 	}
 	
 	public static function loadByUserLogin($login_, $key_, $container_) {
 		$ret = array();
 		$sql = SQL::getInstance();
-		$res = $sql->DoQuery('SELECT @1,@2,@3,@4,@5 FROM @6 WHERE @1 = %7 AND @2 = %8 AND @3 = %9', 'login', 'key', 'container', 'element_id', 'value', $sql->prefix.self::$table, $login_, $key_, $container_);
+		$res = $sql->DoQuery('SELECT @1,@2,@3,@4,@5 FROM #6 WHERE @1 = %7 AND @2 = %8 AND @3 = %9', 'login', 'key', 'container', 'element_id', 'value', self::$table, $login_, $key_, $container_);
 		
 		if ($res !== true) {
 			Logger::error('main', "Abstract_User_Preferences::loadByUserLogin($login_,$key_,$container_) sql request failed");
@@ -72,11 +73,11 @@ class Abstract_User_Preferences {
 	
 	public static function save($user_prefs_) {
 		$sql = SQL::getInstance();
-		return $res = $sql->DoQuery('INSERT INTO @1 (@2,@3,@4,@5,@6) VALUES (%7,%8,%9,%10,%11)', $sql->prefix.self::$table, 'login', 'key', 'container', 'element_id', 'value', $user_prefs_->login, $user_prefs_->key, $user_prefs_->container, $user_prefs_->element_id, serialize($user_prefs_->value));
+		return $res = $sql->DoQuery('INSERT INTO #1 (@2,@3,@4,@5,@6) VALUES (%7,%8,%9,%10,%11)', self::$table, 'login', 'key', 'container', 'element_id', 'value', $user_prefs_->login, $user_prefs_->key, $user_prefs_->container, $user_prefs_->element_id, serialize($user_prefs_->value));
 	}
 	
 	public static function delete($userlogin_, $key_, $container_, $element_id_) {
 		$sql = SQL::getInstance();
-		return $sql->DoQuery('DELETE FROM @1 WHERE @2 = %3 AND @4 = %5 AND @6 = %7 AND @8 = %9', $sql->prefix.self::$table, 'login', $userlogin_, 'key', $key_, 'container', $container_, 'element_id', $element_id_);
+		return $sql->DoQuery('DELETE FROM #1 WHERE @2 = %3 AND @4 = %5 AND @6 = %7 AND @8 = %9', self::$table, 'login', $userlogin_, 'key', $key_, 'container', $container_, 'element_id', $element_id_);
 	}
 }

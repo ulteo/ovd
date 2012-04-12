@@ -46,14 +46,14 @@ class Abstract_Task {
 			'applications'		=>	'text'
 		);
 
-		$ret = $SQL->buildTable($sql_conf['prefix'].self::table, $tasks_table_structure, array('id'));
+		$ret = $SQL->buildTable(self::table, $tasks_table_structure, array('id'));
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].self::table.'\'');
+			Logger::error('main', 'Unable to create MySQL table \''.self::table.'\'');
 			return false;
 		}
 
-		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].self::table.'\' created');
+		Logger::debug('main', 'MySQL table \''.self::table.'\' created');
 		return true;
 	}
 
@@ -62,7 +62,7 @@ class Abstract_Task {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id_);
+		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -76,7 +76,7 @@ class Abstract_Task {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -107,7 +107,7 @@ class Abstract_Task {
 			}
 		}
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17 WHERE @18 = %19 LIMIT 1', $SQL->prefix.self::table, 'type', $task_->type, 'job_id', $task_->job_id, 'server', $task_->server, 'status', $task_->status, 't_begin', $task_->t_begin, 't_end', $task_->t_end, 'applications_line', @$task_->applications_line, 'applications', serialize(@$task_->applications), 'id', $id);
+		$SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17 WHERE @18 = %19 LIMIT 1', self::table, 'type', $task_->type, 'job_id', $task_->job_id, 'server', $task_->server, 'status', $task_->status, 't_begin', $task_->t_begin, 't_end', $task_->t_end, 'applications_line', @$task_->applications_line, 'applications', serialize(@$task_->applications), 'id', $id);
 
 		return true;
 	}
@@ -121,7 +121,7 @@ class Abstract_Task {
 		}
 
 		$SQL = SQL::getInstance();
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.self::table, 'id', $task_->id);
+		$SQL->DoQuery('INSERT INTO #1 (@2) VALUES (%3)', self::table, 'id', $task_->id);
 
 		return true;
 	}
@@ -133,7 +133,7 @@ class Abstract_Task {
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -141,7 +141,7 @@ class Abstract_Task {
 			return false;
 		}
 
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id);
+		$SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id);
 
 		return true;
 	}
@@ -184,7 +184,7 @@ class Abstract_Task {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1', $SQL->prefix.self::table);
+		$SQL->DoQuery('SELECT * FROM #1', self::table);
 		$rows = $SQL->FetchAllResults();
 
 		$tasks = array();
@@ -204,7 +204,7 @@ class Abstract_Task {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3', $SQL->prefix.self::table, 'server', $fqdn_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3', self::table, 'server', $fqdn_);
 		$rows = $SQL->FetchAllResults();
 
 		$tasks = array();

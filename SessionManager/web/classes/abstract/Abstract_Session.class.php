@@ -50,14 +50,14 @@ class Abstract_Session {
 			'timestamp'			=>	'int(10)'
 		);
 
-		$ret = $SQL->buildTable($sql_conf['prefix'].self::table, $sessions_table_structure, array('id'));
+		$ret = $SQL->buildTable(self::table, $sessions_table_structure, array('id'));
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].self::table.'\'');
+			Logger::error('main', 'Unable to create MySQL table \''.self::table.'\'');
 			return false;
 		}
 
-		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].self::table.'\' created');
+		Logger::debug('main', 'MySQL table \''.self::table.'\' created');
 		return true;
 	}
 
@@ -66,7 +66,7 @@ class Abstract_Session {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id_);
+		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -80,7 +80,7 @@ class Abstract_Session {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -116,7 +116,7 @@ class Abstract_Session {
 		$data['running_applications'] = $session_->getRunningApplications();
 		$data['closed_applications'] = $session_->getClosedApplications();
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23 WHERE @24 = %25 LIMIT 1', $SQL->prefix.self::table, 'server', $session_->server, 'mode', $session_->mode, 'type', $session_->type, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'servers', serialize($session_->servers), 'applications', serialize($data), 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
+		$SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23 WHERE @24 = %25 LIMIT 1', self::table, 'server', $session_->server, 'mode', $session_->mode, 'type', $session_->type, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'servers', serialize($session_->servers), 'applications', serialize($data), 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
 
 		return true;
 	}
@@ -130,7 +130,7 @@ class Abstract_Session {
 		}
 
 		$SQL = SQL::getInstance();
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.self::table, 'id', $session_->id);
+		$SQL->DoQuery('INSERT INTO #1 (@2) VALUES (%3)', self::table, 'id', $session_->id);
 
 		foreach ($session_->servers[Server::SERVER_ROLE_APS] as $fqdn => $data)
 			Abstract_Liaison::save('ServerSession', $fqdn, $session_->id);
@@ -145,7 +145,7 @@ class Abstract_Session {
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -153,7 +153,7 @@ class Abstract_Session {
 			return false;
 		}
 
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id);
+		$SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id);
 
 		Abstract_Liaison::delete('ServerSession', NULL, $id_);
 
@@ -197,7 +197,7 @@ class Abstract_Session {
 		
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1', $SQL->prefix.self::table);
+		$SQL->DoQuery('SELECT * FROM #1', self::table);
 		$rows = $SQL->FetchAllResults();
 
 		$sessions = array();
@@ -218,9 +218,9 @@ class Abstract_Session {
 		$SQL = SQL::getInstance();
 
 		if (! is_null($offset_))
-			$SQL->DoQuery('SELECT * FROM @1 ORDER BY @2 DESC LIMIT '.((! is_null($start_))?$start_.',':'').$offset_, $SQL->prefix.self::table, 'timestamp');
+			$SQL->DoQuery('SELECT * FROM #1 ORDER BY @2 DESC LIMIT '.((! is_null($start_))?$start_.',':'').$offset_, self::table, 'timestamp');
 		else
-			$SQL->DoQuery('SELECT * FROM @1 ORDER BY @2 DESC', $SQL->prefix.self::table, 'timestamp');
+			$SQL->DoQuery('SELECT * FROM #1 ORDER BY @2 DESC', self::table, 'timestamp');
 		$rows = $SQL->FetchAllResults();
 
 		$sessions = array();
@@ -239,7 +239,7 @@ class Abstract_Session {
 		Logger::debug('main', 'Starting Abstract_Session::uptodate for \''.$session_->id.'\'');
 		
 		$SQL = SQL::getInstance();
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 LIMIT 1', 'timestamp', $SQL->prefix.self::table, 'id', $session_->id);
+		$SQL->DoQuery('SELECT @1 FROM #2 WHERE @3 = %4 LIMIT 1', 'timestamp', self::table, 'id', $session_->id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -261,9 +261,9 @@ class Abstract_Session {
 		$SQL = SQL::getInstance();
 
 		if (! is_null($status_))
-			$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3', $SQL->prefix.self::table, 'status', $status_);
+			$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3', self::table, 'status', $status_);
 		else
-			$SQL->DoQuery('SELECT 1 FROM @1', $SQL->prefix.self::table);
+			$SQL->DoQuery('SELECT 1 FROM #1', self::table);
 
 		return $SQL->NumRows();
 	}
@@ -271,7 +271,7 @@ class Abstract_Session {
 	public static function countByServer($fqdn_) {
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3', $SQL->prefix.self::table, 'server', $fqdn_);
+		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3', self::table, 'server', $fqdn_);
 
 		return $SQL->NumRows();
 	}
@@ -280,9 +280,9 @@ class Abstract_Session {
 		$SQL = SQL::getInstance();
 
 		if (! is_null($offset_))
-			$SQL->DoQuery('SELECT * FROM @1 WHERE @2 LIKE %3 ORDER BY @4 DESC LIMIT '.((! is_null($start_))?$start_.',':'').$offset_, $SQL->prefix.self::table, 'servers', '%'.$fqdn_.'%', 'timestamp');
+			$SQL->DoQuery('SELECT * FROM #1 WHERE @2 LIKE %3 ORDER BY @4 DESC LIMIT '.((! is_null($start_))?$start_.',':'').$offset_, self::table, 'servers', '%'.$fqdn_.'%', 'timestamp');
 		else
-			$SQL->DoQuery('SELECT * FROM @1 WHERE @2 LIKE %3 ORDER BY @4 DESC', $SQL->prefix.self::table, 'servers', '%'.$fqdn_.'%', 'timestamp');
+			$SQL->DoQuery('SELECT * FROM #1 WHERE @2 LIKE %3 ORDER BY @4 DESC', self::table, 'servers', '%'.$fqdn_.'%', 'timestamp');
 		$rows = $SQL->FetchAllResults();
 
 		$sessions = array();
@@ -300,7 +300,7 @@ class Abstract_Session {
 	public static function getByUser($user_login_) {
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3', $SQL->prefix.self::table, 'user_login', $user_login_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3', self::table, 'user_login', $user_login_);
 		$rows = $SQL->FetchAllResults();
 
 		$sessions = array();
@@ -318,7 +318,7 @@ class Abstract_Session {
 	public static function getByFSUser($fs_user_login_) {
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 LIKE %3', $SQL->prefix.self::table, 'settings', '%fs_access_login%'.$fs_user_login_.'%');
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 LIKE %3', self::table, 'settings', '%fs_access_login%'.$fs_user_login_.'%');
 		$rows = $SQL->FetchAllResults();
 
 		$sessions = array();

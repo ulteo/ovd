@@ -55,7 +55,7 @@ class ProfileDB_internal extends ProfileDB  {
 			'status'		=>	'varchar(255)',
 		);
 		
-		$ret = $SQL->buildTable($SQL->prefix.self::$table, $SharedFolder_table_structure, array('id'));
+		$ret = $SQL->buildTable(self::$table, $SharedFolder_table_structure, array('id'));
 		
 		Logger::debug('main', "ProfileDB::internal::init SQL table '".self::$table."' created");
 		return true;
@@ -79,7 +79,7 @@ class ProfileDB_internal extends ProfileDB  {
 		Logger::debug('main', "ProfileDB::internal::import($id_)");
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::$table, 'id', $id_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3 LIMIT 1', self::$table, 'id', $id_);
 		$total = $SQL->NumRows();
 		
 		if ($total == 0) {
@@ -113,7 +113,7 @@ class ProfileDB_internal extends ProfileDB  {
 		Logger::debug('main', "ProfileDB::internal::importFromServer($server_fdqn_)");
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3', $SQL->prefix.self::$table, 'server', $server_fdqn_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3', self::$table, 'server', $server_fdqn_);
 		$rows = $SQL->FetchAllResults();
 		
 		$profiles = array();
@@ -132,7 +132,7 @@ class ProfileDB_internal extends ProfileDB  {
 		Logger::debug('main', 'ProfileDB::internal::getList()');
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT * FROM @1', $SQL->prefix.self::$table);
+		$SQL->DoQuery('SELECT * FROM #1', self::$table);
 		$rows = $SQL->FetchAllResults();
 		
 		$profiles = array();
@@ -152,7 +152,7 @@ class ProfileDB_internal extends ProfileDB  {
 		
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT 1 FROM @1', $SQL->prefix.self::$table);
+		$SQL->DoQuery('SELECT 1 FROM #1', self::$table);
 		$nb_rows = $SQL->NumRows();
 		
 		return $nb_rows;
@@ -163,7 +163,7 @@ class ProfileDB_internal extends ProfileDB  {
 		
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2=%3', $SQL->prefix.self::$table, 'server', $fqdn_);
+		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2=%3', self::$table, 'server', $fqdn_);
 		$nb_rows = $SQL->NumRows();
 		
 		return $nb_rows;
@@ -219,10 +219,10 @@ class ProfileDB_internal extends ProfileDB  {
 		
 		if (is_null($profile_->id)) {
 			$profile_->id = 'p_'.gen_unique_string(); // $SQL->InsertId();
-			$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4) VALUES (%5,%6,%7)', $SQL->prefix.self::$table, 'id', 'server', 'status', $profile_->id, $profile_->server,  $profile_->status);
+			$SQL->DoQuery('INSERT INTO #1 (@2,@3,@4) VALUES (%5,%6,%7)', self::$table, 'id', 'server', 'status', $profile_->id, $profile_->server,  $profile_->status);
 		}
 		else {
-			$SQL->DoQuery('INSERT INTO @1 (@2,@3) VALUES (%4,%5)', $SQL->prefix.self::$table, 'id', 'server', 'status', $profile_->id, $profile_->server,  $profile_->status);
+			$SQL->DoQuery('INSERT INTO #1 (@2,@3) VALUES (%4,%5)', self::$table, 'id', 'server', 'status', $profile_->id, $profile_->server,  $profile_->status);
 		}
 		
 		return $profile_->id;
@@ -237,7 +237,7 @@ class ProfileDB_internal extends ProfileDB  {
 		}
 		Abstract_Liaison::delete('UserProfile', NULL, $profile->id);
 		$SQL = SQL::getInstance();
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::$table, 'id', $profile->id);
+		$SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3 LIMIT 1', self::$table, 'id', $profile->id);
 
 		$server = Abstract_Server::load($profile->server);
 		if (is_object($server)) {
@@ -263,7 +263,7 @@ class ProfileDB_internal extends ProfileDB  {
 		Logger::debug('main', 'ProfileDB::internal::update for \''.$profile_->id.'\'');
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('UPDATE @1 SET @2=%3, @4=%5 WHERE @6=%7 LIMIT 1', $SQL->prefix.self::$table, 'server', $profile_->server, 'status', $profile_->status, 'id', $profile_->id);
+		$SQL->DoQuery('UPDATE #1 SET @2=%3, @4=%5 WHERE @6=%7 LIMIT 1', self::$table, 'server', $profile_->server, 'status', $profile_->status, 'id', $profile_->id);
 		
 		return true;
 	}

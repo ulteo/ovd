@@ -70,7 +70,7 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 	public function import_nocache($id_) {
 		Logger::debug('main', "ApplicationsGroupDB::sql::import_nocache (id = $id_)");
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5 WHERE @1 = %6', 'id', 'name', 'description', 'published', $sql2->prefix.self::table, $id_);
+		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM #5 WHERE @1 = %6', 'id', 'name', 'description', 'published', self::table, $id_);
 			
 		if ($sql2->NumRows($res) == 1) {
 			$row = $sql2->FetchResult($res);
@@ -90,7 +90,7 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 			return NULL;
 		}
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5', 'id', 'name', 'description', 'published', $sql2->prefix.self::table);
+		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM #5', 'id', 'name', 'description', 'published', self::table);
 		if ($res !== false){
 			$result = array();
 			$rows = $sql2->FetchAllResults($res);
@@ -182,7 +182,7 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 		}
 		$sql2 = SQL::getInstance();
 		// group already exists ?
-		$res = $sql2->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 AND @4 = %5', $sql2->prefix.self::table, 'name', $group_->name, 'description', $group_->description);
+		$res = $sql2->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3 AND @4 = %5', self::table, 'name', $group_->name, 'description', $group_->description);
 			
 		if ($sql2->NumRows($res) > 0) {
 			Logger::error('main', 'ApplicationsGroupDB::sql_sql::add usersgroup (name='.$group_->name.',description='.$group_->description.') already exists');
@@ -190,7 +190,7 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 			return false;
 		}
 		
-		$res = $sql2->DoQuery('INSERT INTO @1 (@2,@3,@4) VALUES (%5,%6,%7)', $sql2->prefix.self::table, 'name', 'description', 'published', $group_->name, $group_->description, $group_->published);
+		$res = $sql2->DoQuery('INSERT INTO #1 (@2,@3,@4) VALUES (%5,%6,%7)',self::table, 'name', 'description', 'published', $group_->name, $group_->description, $group_->published);
 		if ($res !== false) {
 			$group_->id = $sql2->InsertId();
 			return is_object($this->import($sql2->InsertId()));
@@ -214,7 +214,7 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 		
 		// second we delete the group
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', $sql2->prefix.self::table, 'id', $group_->id);
+		$res = $sql2->DoQuery('DELETE FROM #1 WHERE @2 = %3', self::table, 'id', $group_->id);
 		return ($res !== false);
 	}
 	
@@ -228,7 +228,7 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 			unset($this->cache[$group_->id]);
 		}
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3 , @4 = %5 , @6 = %7  WHERE @8 = %9', $sql2->prefix.self::table, 'published', $group_->published, 'name', $group_->name, 'description', $group_->description, 'id', $group_->id);
+		$res = $sql2->DoQuery('UPDATE #1  SET @2 = %3 , @4 = %5 , @6 = %7  WHERE @8 = %9', self::table, 'published', $group_->published, 'name', $group_->name, 'description', $group_->description, 'id', $group_->id);
 		return ($res !== false);
 	}
 	
@@ -247,7 +247,7 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 			'description' => 'varchar(150) NOT NULL',
 			'published' => 'tinyint(1) NOT NULL');
 		
-		$ret = $sql2->buildTable($sql2->prefix.self::table, $appsgroup_structure, array('id'));
+		$ret = $sql2->buildTable(self::table, $appsgroup_structure, array('id'));
 		
 		if ( $ret === false) {
 			Logger::error('main', 'ApplicationsGroupDB::sql::init table '.self::table.' fail to created');

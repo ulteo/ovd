@@ -38,13 +38,13 @@ class Abstract_Liaison_sql {
 		Logger::debug('main', "Abstract_Liaison_sql::save ($type_,$element_,$group_)");
 		$sql2 = SQL::getInstance();
 		
-		$res = $sql2->DoQuery('SELECT @3,@4 FROM @1 WHERE @2=%5 AND @3=%6 AND @4=%7', $sql2->prefix.self::table, 'type', 'element', 'group',  $type_, $element_, $group_);
+		$res = $sql2->DoQuery('SELECT @3,@4 FROM #1 WHERE @2=%5 AND @3=%6 AND @4=%7', self::table, 'type', 'element', 'group',  $type_, $element_, $group_);
 		if ($sql2->NumRows() > 0) {
 			Logger::error('main', 'Abstract_Liaison_sql::save Liaison(type='.$type_.',element='.$element_.',group='.$group_.') already exists');
 			popup_error('liaison(type='.$type_.',element='.$element_.',group='.$group_.') already exists');
 			return false;
 		}
-		$res = $sql2->DoQuery('INSERT INTO #1 ( @2,@3,@4 ) VALUES ( %5,%6,%7)', $table, 'type', 'element', 'group', $type_, $element_, $group_);
+		$res = $sql2->DoQuery('INSERT INTO #1 ( @2,@3,@4 ) VALUES ( %5,%6,%7)', self::table, 'type', 'element', 'group', $type_, $element_, $group_);
 		return ($res !== false);
 	}
 	public static function delete($type_, $element_, $group_) {
@@ -58,16 +58,16 @@ class Abstract_Liaison_sql {
 		
 		$res = false;
 		if (is_null($element_) && is_null($group_)) {
-			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3', $sql2->prefix.self::table, 'type', $type_);
+			$res = $sql2->DoQuery('DELETE FROM #1 WHERE @2=%3', self::table, 'type', $type_);
 		}
 		else if (is_null($element_)) {
-			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3 AND @4=%5', $sql2->prefix.self::table, 'type', $type_, 'group', $group_);
+			$res = $sql2->DoQuery('DELETE FROM #1 WHERE @2=%3 AND @4=%5', self::table, 'type', $type_, 'group', $group_);
 		}
 		else if (is_null($group_)) {
-			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3 AND @4=%5', $sql2->prefix.self::table, 'type', $type_, 'element', $element_);
+			$res = $sql2->DoQuery('DELETE FROM #1 WHERE @2=%3 AND @4=%5', self::table, 'type', $type_, 'element', $element_);
 		}
 		else {
-			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3 AND @4=%5 AND @6=%7', $sql2->prefix.self::table, 'type', $type_, 'element', $element_, 'group', $group_);
+			$res = $sql2->DoQuery('DELETE FROM #1 WHERE @2=%3 AND @4=%5 AND @6=%7', self::table, 'type', $type_, 'element', $element_, 'group', $group_);
 		}
 		return ($res !== false);
 	}
@@ -81,7 +81,7 @@ class Abstract_Liaison_sql {
 			return NULL;
 		}
 		
-		$res = $sql2->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6','element', $sql2->prefix.self::table, 'type', $type_, 'group', $group_);
+		$res = $sql2->DoQuery('SELECT @1 FROM #2 WHERE @3 = %4 AND @5 = %6','element', self::table, 'type', $type_, 'group', $group_);
 		if ($res !== false){
 			$result = array();
 			$rows = $sql2->FetchAllResults($res);
@@ -105,7 +105,7 @@ class Abstract_Liaison_sql {
 			return NULL;
 		}
 		
-		$res = $sql2->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6', 'group', $sql2->prefix.self::table, 'type', $type_, 'element', $element_);
+		$res = $sql2->DoQuery('SELECT @1 FROM #2 WHERE @3 = %4 AND @5 = %6', 'group', self::table, 'type', $type_, 'element', $element_);
 		if ($res !== false){
 			$result = array();
 			$rows = $sql2->FetchAllResults($res);
@@ -129,7 +129,7 @@ class Abstract_Liaison_sql {
 			return NULL;
 		}
 		
-		$res = $sql2->DoQuery('SELECT @1,@2 FROM @3 WHERE @4 = %5', 'element', 'group', $sql2->prefix.self::table, 'type', $type_);
+		$res = $sql2->DoQuery('SELECT @1,@2 FROM #3 WHERE @4 = %5', 'element', 'group', self::table, 'type', $type_);
 		if ($res !== false){
 			$result = array();
 			$rows = $sql2->FetchAllResults($res);
@@ -152,7 +152,7 @@ class Abstract_Liaison_sql {
 			return NULL;
 		}
 		
-		$res = $sql2->DoQuery('SELECT @3,@4 FROM @1 WHERE @2=%5 AND @3=%6 AND @4=%7', $sql2->prefix.self::table, 'type', 'element', 'group',  $type_, $element_, $group_);
+		$res = $sql2->DoQuery('SELECT @3,@4 FROM #1 WHERE @2=%5 AND @3=%6 AND @4=%7', self::table, 'type', 'element', 'group',  $type_, $element_, $group_);
 // 		echo 'FetchAllResults ';var_dump2($sql2->FetchAllResults());
 		if ($res !== false){
 			if ($sql2->NumRows() == 0) {
@@ -176,7 +176,6 @@ class Abstract_Liaison_sql {
 			Logger::error('main', 'Abstract_Liaison::init sql conf not valid');
 			return false;
 		}
-		
 		// we create the sql table
 		$sql2 = SQL::newInstance($sql_conf);
 		
@@ -185,7 +184,7 @@ class Abstract_Liaison_sql {
 			'element' => 'varchar(200) NOT NULL',
 			'group' => 'varchar(200) NOT NULL');
 		
-		$ret = $sql2->buildTable($sql2->prefix.self::table, $LIAISON_table_structure, array());
+		$ret = $sql2->buildTable(self::table, $LIAISON_table_structure, array());
 		
 		if ( $ret === false) {
 			Logger::error('main', 'Abstract_Liaison::init table '.self::table.' fail to created');
@@ -206,7 +205,7 @@ class Abstract_Liaison_sql {
 			return false;
 		}
 		
-		$res = $sql2->DoQuery('SELECT @1,@2,@3 FROM @4', 'type', 'element', 'group', $sql2->prefix.self::table);
+		$res = $sql2->DoQuery('SELECT @1,@2,@3 FROM #4', 'type', 'element', 'group', self::table);
 		if ($res === false) {
 			Logger::error('main', 'Abstract_Liaison_sql::cleanup DoQuery failed');
 			return false;

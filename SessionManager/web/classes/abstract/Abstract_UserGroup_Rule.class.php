@@ -43,14 +43,14 @@ class Abstract_UserGroup_Rule {
 			'usergroup_id'	=>	'varchar(255)'
 		);
 
-		$ret = $SQL->buildTable($sql_conf['prefix'].self::table, $usergroup_rules_table_structure, array('id'));
+		$ret = $SQL->buildTable(self::table, $usergroup_rules_table_structure, array('id'));
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].self::table.'\'');
+			Logger::error('main', 'Unable to create MySQL table \''.self::table.'\'');
 			return false;
 		}
 
-		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].self::table.'\' created');
+		Logger::debug('main', 'MySQL table \''.self::table.'\' created');
 		return true;
 	}
 
@@ -59,7 +59,7 @@ class Abstract_UserGroup_Rule {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6 AND @7 = %8 AND @9 = %10 LIMIT 1', 'id', $SQL->prefix.self::table, 'attribute', $attribute_, 'type', $type_, 'value', $value_, 'usergroup_id', $usergroup_id_);
+		$SQL->DoQuery('SELECT @1 FROM #2 WHERE @3 = %4 AND @5 = %6 AND @7 = %8 AND @9 = %10 LIMIT 1', 'id', self::table, 'attribute', $attribute_, 'type', $type_, 'value', $value_, 'usergroup_id', $usergroup_id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -74,7 +74,7 @@ class Abstract_UserGroup_Rule {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -117,7 +117,7 @@ class Abstract_UserGroup_Rule {
 			return false;
 		}
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9 WHERE @10 = %11 LIMIT 1', $SQL->prefix.self::table, 'attribute', $usergroup_rule_->attribute, 'type', $usergroup_rule_->type, 'value', $usergroup_rule_->value, 'usergroup_id', $usergroup_rule_->usergroup_id, 'id', $usergroup_rule_->id);
+		$SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7,@8=%9 WHERE @10 = %11 LIMIT 1', self::table, 'attribute', $usergroup_rule_->attribute, 'type', $usergroup_rule_->type, 'value', $usergroup_rule_->value, 'usergroup_id', $usergroup_rule_->usergroup_id, 'id', $usergroup_rule_->id);
 
 		return true;
 	}
@@ -129,7 +129,7 @@ class Abstract_UserGroup_Rule {
 
 		$id = $usergroup_rule_->id;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total != 0) {
@@ -137,7 +137,7 @@ class Abstract_UserGroup_Rule {
 			return false;
 		}
 
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.self::table, 'id', '');
+		$SQL->DoQuery('INSERT INTO #1 (@2) VALUES (%3)', self::table, 'id', '');
 
 		return $SQL->InsertId();
 	}
@@ -149,7 +149,7 @@ class Abstract_UserGroup_Rule {
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -157,7 +157,7 @@ class Abstract_UserGroup_Rule {
 			return false;
 		}
 
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id);
+		$SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id);
 
 		return true;
 	}
@@ -180,7 +180,7 @@ class Abstract_UserGroup_Rule {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1', $SQL->prefix.self::table);
+		$SQL->DoQuery('SELECT * FROM #1', self::table);
 
 		$rows = $SQL->FetchAllResults();
 
@@ -201,7 +201,7 @@ class Abstract_UserGroup_Rule {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5 FROM @6 WHERE @5 = %7', 'id', 'attribute', 'type', 'value', 'usergroup_id', $SQL->prefix.self::table, $usergroup_id_);
+		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5 FROM #6 WHERE @5 = %7', 'id', 'attribute', 'type', 'value', 'usergroup_id', self::table, $usergroup_id_);
 
 		$rows = $SQL->FetchAllResults();
 

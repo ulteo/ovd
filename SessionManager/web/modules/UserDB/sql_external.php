@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008,2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -46,7 +47,7 @@ class UserDB_sql_external extends UserDB {
 			$match2[$value] = $key;
 		}
 		
-		$res = $sql2->DoQuery('SELECT '.$fields.' FROM @1 WHERE @2=%3', $config['table'], $config['match']['login'], $login_);
+		$res = $sql2->DoQuery('SELECT '.$fields.' FROM #1 WHERE @2=%3', $config['table'], $config['match']['login'], $login_);
 		if ( $sql2->NumRows() == 0)
 			return NULL;
 		$row = $sql2->FetchResult($res);
@@ -101,7 +102,7 @@ class UserDB_sql_external extends UserDB {
 			$match2[$value] = $key;
 		}
 		
-		$res = $sql2->DoQuery('SELECT '.$fields.' FROM @1', $config['table']);
+		$res = $sql2->DoQuery('SELECT '.$fields.' FROM #1', $config['table']);
 		$rows = $sql2->FetchAllResults($res);
 		foreach ($rows as $row) {
 			$u = new User();

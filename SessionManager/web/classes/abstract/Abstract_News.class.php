@@ -42,14 +42,14 @@ class Abstract_News {
 			'timestamp'		=>	'int(10)'
 		);
 
-		$ret = $SQL->buildTable($sql_conf['prefix'].self::table, $news_table_structure, array('id'));
+		$ret = $SQL->buildTable(self::table, $news_table_structure, array('id'));
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].self::table.'\'');
+			Logger::error('main', 'Unable to create MySQL table \''.self::table.'\'');
 			return false;
 		}
 
-		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].self::table.'\' created');
+		Logger::debug('main', 'MySQL table \''.self::table.'\' created');
 		return true;
 	}
 
@@ -58,7 +58,7 @@ class Abstract_News {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -90,7 +90,7 @@ class Abstract_News {
 			}
 		}
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7 WHERE @8 = %9 LIMIT 1', $SQL->prefix.self::table, 'title', $news_->title, 'content', $news_->content, 'timestamp', $news_->timestamp, 'id', $id);
+		$SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7 WHERE @8 = %9 LIMIT 1', self::table, 'title', $news_->title, 'content', $news_->content, 'timestamp', $news_->timestamp, 'id', $id);
 
 		return true;
 	}
@@ -102,7 +102,7 @@ class Abstract_News {
 
 		$id = $news_->id;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total != 0) {
@@ -110,7 +110,7 @@ class Abstract_News {
 			return false;
 		}
 
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.self::table, 'id', $id);
+		$SQL->DoQuery('INSERT INTO #1 (@2) VALUES (%3)', self::table, 'id', $id);
 
 		return $SQL->InsertId();
 	}
@@ -122,7 +122,7 @@ class Abstract_News {
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -130,7 +130,7 @@ class Abstract_News {
 			return false;
 		}
 
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::table, 'id', $id);
+		$SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id);
 
 		return true;
 	}
@@ -152,7 +152,7 @@ class Abstract_News {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 ORDER BY @2 DESC', $SQL->prefix.self::table, 'timestamp');
+		$SQL->DoQuery('SELECT * FROM #1 ORDER BY @2 DESC', self::table, 'timestamp');
 		$rows = $SQL->FetchAllResults();
 
 		$news = array();

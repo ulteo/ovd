@@ -64,7 +64,7 @@ class UserGroupDB_sql {
 	public function import_nocache($id_) {
 		Logger::debug('main', "USERGROUPDB::sql::import_noche (id = $id_)");
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5 WHERE @1 = %6', 'id', 'name', 'description', 'published', $sql2->prefix.self::table, $id_);
+		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM #5 WHERE @1 = %6', 'id', 'name', 'description', 'published', self::table, $id_);
 			
 		if ($sql2->NumRows($res) == 1) {
 			$row = $sql2->FetchResult($res);
@@ -82,7 +82,7 @@ class UserGroupDB_sql {
 		Logger::debug('main','UserGroupDB_sql::getList');
 		
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5', 'id', 'name', 'description', 'published', $sql2->prefix.self::table);
+		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM #5', 'id', 'name', 'description', 'published', self::table);
 		if ($res !== false){
 			$result = array();
 			$rows = $sql2->FetchAllResults($res);
@@ -165,15 +165,14 @@ class UserGroupDB_sql {
 		Logger::debug('main', "USERGROUPDB::add($usergroup_)");
 		$sql2 = SQL::getInstance();
 		// usergroup already exists ?
-		$res = $sql2->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 AND @4 = %5', $sql2->prefix.self::table, 'name', $usergroup_->name, 'description', $usergroup_->description);
-			
+		$res = $sql2->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3 AND @4 = %5', self::table, 'name', $usergroup_->name, 'description', $usergroup_->description);
 		if ($sql2->NumRows($res) > 0) {
 			Logger::error('main', 'UserGroupDB_sql::add usersgroup (name='.$usergroup_->name.',description='.$usergroup_->description.') already exists');
 			popup_error(_('Users group already exists'));
 			return false;
 		}
 		
-		$res = $sql2->DoQuery('INSERT INTO @1 (@2,@3,@4) VALUES (%5,%6,%7)', $sql2->prefix.self::table, 'name', 'description', 'published', $usergroup_->name, $usergroup_->description, $usergroup_->published);
+		$res = $sql2->DoQuery('INSERT INTO #1 (@2,@3,@4) VALUES (%5,%6,%7)',self::table, 'name', 'description', 'published', $usergroup_->name, $usergroup_->description, $usergroup_->published);
 		if ($res !== false) {
 			$usergroup_->id = $sql2->InsertId();
 			return is_object($this->import($sql2->InsertId()));
@@ -212,7 +211,7 @@ class UserGroupDB_sql {
 		}
 
 		// fourth we delete the group
-		$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', $sql2->prefix.self::table, 'id', $usergroup_->id);
+		$res = $sql2->DoQuery('DELETE FROM #1 WHERE @2 = %3', self::table, 'id', $usergroup_->id);
 
 		return ($res !== false);
 	}
@@ -223,7 +222,7 @@ class UserGroupDB_sql {
 			unset($this->cache[$usergroup_->id]);
 		}
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3 , @4 = %5 , @6 = %7  WHERE @8 = %9', $sql2->prefix.self::table, 'published', $usergroup_->published, 'name', $usergroup_->name, 'description', $usergroup_->description, 'id', $usergroup_->id);
+		$res = $sql2->DoQuery('UPDATE #1  SET @2 = %3 , @4 = %5 , @6 = %7  WHERE @8 = %9', self::table, 'published', $usergroup_->published, 'name', $usergroup_->name, 'description', $usergroup_->description, 'id', $usergroup_->id);
 		return ($res !== false);
 	}
 	
@@ -243,7 +242,7 @@ class UserGroupDB_sql {
 			'description' => 'varchar(150) NOT NULL',
 			'published' => 'tinyint(1) NOT NULL');
 		
-		$ret = $sql2->buildTable($sql2->prefix.self::table, $usersgroup_table_structure, array('id'));
+		$ret = $sql2->buildTable(self::table, $usersgroup_table_structure, array('id'));
 		
 		if ( $ret === false) {
 			Logger::error('main', 'USERGROUPDB::sql::init table '.self::table.' fail to created');

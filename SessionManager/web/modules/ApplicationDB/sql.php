@@ -45,7 +45,7 @@ class ApplicationDB_sql extends ApplicationDB {
 
 	protected function import_nocache($id_){
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3', $sql2->prefix.self::table,'id',$id_);
+		$res = $sql2->DoQuery('SELECT * FROM #1 WHERE @2=%3',self::table,'id',$id_);
 		if ($res !== false){
 			if ($sql2->NumRows($res) == 1){
 				$row = $sql2->FetchResult($res);
@@ -62,8 +62,8 @@ class ApplicationDB_sql extends ApplicationDB {
 	Logger::debug('main',"ApplicationDB_sql::search ('".$app_name."','".$app_description."','".$app_type."','".$app_path_exe."')");
 // 		echo "ApplicationDB_sql::search ('".$app_name."','".$app_description."','".$app_type."','".$app_path_exe."')\n";
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1 FROM @2 WHERE
-		@3 = %4 AND @5 = %6 AND @7 = %8 AND @9 = %10', 'id', $sql2->prefix.self::table, 'name', $app_name, 'description', $app_description, 'type', $app_type, 'executable_path', $app_path_exe);
+		$res = $sql2->DoQuery('SELECT @1 FROM #2 WHERE
+		@3 = %4 AND @5 = %6 AND @7 = %8 AND @9 = %10', 'id', self::table, 'name', $app_name, 'description', $app_description, 'type', $app_type, 'executable_path', $app_path_exe);
 		if ($res !== false){
 			if ($sql2->NumRows($res) > 0){
 				$row = $sql2->FetchResult($res);
@@ -77,9 +77,9 @@ class ApplicationDB_sql extends ApplicationDB {
 		Logger::debug('main', "ApplicationDB_sql::getList(sort=$sort_, type=$type_)");
 		$sql2 = SQL::getInstance();
 		if (is_null($type_))
-			$res = $sql2->DoQuery('SELECT * FROM @1', $sql2->prefix.self::table);
+			$res = $sql2->DoQuery('SELECT * FROM #1', self::table);
 		else
-			$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3', $sql2->prefix.self::table, 'type', $type_);
+			$res = $sql2->DoQuery('SELECT * FROM #1 WHERE @2=%3', self::table, 'type', $type_);
 		
 		if ($res !== false){
 			$result = array();
@@ -213,7 +213,7 @@ class ApplicationDB_sql extends ApplicationDB {
 			$query_keys = implode(', ', $query_keys);
 			$query_values = implode(', ', $query_values);
 			$sql2 = SQL::getInstance();
-			$res = $sql2->DoQuery('INSERT INTO @1 ( '.$query_keys.' ) VALUES ('.$query_values.' )', $sql2->prefix.self::table);
+			$res = $sql2->DoQuery('INSERT INTO #1 ( '.$query_keys.' ) VALUES ('.$query_values.' )', self::table);
 			$id = $sql2->InsertId();
 			$a->setAttribute('id', $id);
 			if ($res === false)
@@ -248,7 +248,7 @@ class ApplicationDB_sql extends ApplicationDB {
 			Abstract_Liaison::delete('AppsGroup', $a->getAttribute('id'), NULL); // remove publication for a group
 			
 			$sql2 = SQL::getInstance();
-			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', $sql2->prefix.self::table, 'id', $a->getAttribute('id'));
+			$res = $sql2->DoQuery('DELETE FROM #1 WHERE @2 = %3', self::table, 'id', $a->getAttribute('id'));
 			return ($res !== false);
 		}
 		else
@@ -261,7 +261,7 @@ class ApplicationDB_sql extends ApplicationDB {
 			unset($this->cache[$a->getAttribute('id')]);
 		}
 		if ($this->isOK($a)){
-			$query = 'UPDATE @1 SET ';
+			$query = 'UPDATE#1 SET ';
 			$attributes = $a->getAttributesList();
 			foreach ($attributes as $key){
 				$query .=  '`'.$key.'` = \''.mysql_escape_string($a->getAttribute($key)).'\' , ';
@@ -270,7 +270,7 @@ class ApplicationDB_sql extends ApplicationDB {
 			$query .= ' WHERE `id` =\''.$a->getAttribute('id').'\'';
 
 			$sql2 = SQL::getInstance();
-			$res = $sql2->DoQuery($query, $sql2->prefix.self::table);
+			$res = $sql2->DoQuery($query, self::table);
 			if ($res === false)
 				return false;
 			
@@ -310,7 +310,7 @@ class ApplicationDB_sql extends ApplicationDB {
 			'revision' => 'int(8) default \'0\''
 		);
 
-		$ret = $sql2->buildTable($sql2->prefix.self::table, $APPLICATION_table_structure, array('id'));
+		$ret = $sql2->buildTable(self::table, $APPLICATION_table_structure, array('id'));
 
 		if ( $ret === false) {
 			Logger::error('main', 'APPLICATIONDB::sql::init table '.self::table.' fail to created');

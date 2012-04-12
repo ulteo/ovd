@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
  * Author Laurent CLOUET <laurent@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -137,6 +138,8 @@ class SQL {
 
 		$query = $args[0];
 
+		$query = preg_replace('/#([0-9]+)/se', '((! array_key_exists(\\1, $args))?\'@\\1\':(is_null($args[\\1])?\'NULL\':\'`\'.$this->prefix.mysqli_real_escape_string($this->link, $args[\\1]).\'`\'))', $query);
+		
 		$query = preg_replace('/@([0-9]+)/se', '((! array_key_exists(\\1, $args))?\'@\\1\':(is_null($args[\\1])?\'NULL\':\'`\'.mysqli_real_escape_string($this->link, $args[\\1]).\'`\'))', $query);
 		$query = preg_replace('/%([0-9]+)/se', '((! array_key_exists(\\1, $args))?\'%\\1\':(is_null($args[\\1])?\'NULL\':\'"\'.$this->CleanValue($args[\\1]).\'"\'))', $query);
 
@@ -199,7 +202,7 @@ class SQL {
 		
 		// the table exists ?
 		$table_exists = false;
-		$ret = $this->DoQuery('SHOW TABLES LIKE %1', $name_);
+		$ret = $this->DoQuery('SHOW TABLES LIKE %1', $this->prefix.$name_);
 		if ($ret !== false) {
 			$ret2 = $this->NumRows($ret);
 			if ($ret2 == 1)
@@ -208,7 +211,7 @@ class SQL {
 				$table_exists = false;
 		}
 		if (! $table_exists) {
-			$query  = 'CREATE TABLE IF NOT EXISTS @1 (';
+			$query  = 'CREATE TABLE IF NOT EXISTS #1 (';
 			foreach ($table_structure_ as $column_name => $column_type) {
 				$query .= '`'.mysql_escape_string($column_name).'` '.$column_type.' , ';
 			}
@@ -232,7 +235,7 @@ class SQL {
 			// TODO : see if it works when we change the primary key
 		
 			// the table exists, it is the right structure ?
-			$res = $this->DoQuery('SHOW COLUMNS FROM @1', $name_);
+			$res = $this->DoQuery('SHOW COLUMNS FROM #1', $name_);
 			if ($res !== false){
 				$rows = $this->FetchAllResults($res);
 				$columns_from_database = array();
@@ -240,7 +243,7 @@ class SQL {
 					if (in_array( $row['Field'], array_keys($table_structure_))) {
 						// the column exists
 						// it's the same type ?
-						$ret2 = $this->DoQuery('SHOW COLUMNS FROM @1 WHERE @2=%3', $name_, 'Field', $row['Field']);
+						$ret2 = $this->DoQuery('SHOW COLUMNS FROM #1 WHERE @2=%3', $name_, 'Field', $row['Field']);
 						if ($ret2 === false) {
 							Logger::error('main', 'SQL::createTable failed to get type of \''.$row['Field'].'\'');
 							return false;
@@ -251,14 +254,14 @@ class SQL {
 						if (isset($type6[0])) {
 							if ($type6[0] !== $field_type) {
 								// it's not the same -> we will alter the table
-								$this->DoQuery('ALTER TABLE @1 CHANGE @2 @2 '.$table_structure_[$row['Field']], $name_, $row['Field']);
+								$this->DoQuery('ALTER TABLE #1 CHANGE @2 @2 '.$table_structure_[$row['Field']], $name_, $row['Field']);
 							}
 						}
 						$columns_from_database[] = $row['Field'];
 					}
 					else {
 						// we must remove this column
-						$res = $this->DoQuery('ALTER TABLE @1 DROP @2', $name_, $row['Field']);
+						$res = $this->DoQuery('ALTER TABLE #1 DROP @2', $name_, $row['Field']);
 						if ($res == false)
 							Logger::error('main', 'SQL::createTable failed to remove \''.$row['Field'].'\' from the table \''.$name_.'\'');
 					}
@@ -266,7 +269,7 @@ class SQL {
 				
 				foreach($table_structure_ as $column_name => $column_structure) {
 					if (!in_array($column_name, $columns_from_database)) {
-						$res = $this->DoQuery('ALTER TABLE @1 ADD @2 '.$column_structure, $name_, $column_name);
+						$res = $this->DoQuery('ALTER TABLE #1 ADD @2 '.$column_structure, $name_, $column_name);
 						if ($res == false)
 							Logger::error('main', "SQL::createTable failed to add '$columns_from_database' in the table '$name_'");
 					}

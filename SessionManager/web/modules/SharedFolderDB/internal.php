@@ -57,7 +57,7 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 			'status'		=>	'varchar(255)',
 		);
 		
-		$ret = $SQL->buildTable($SQL->prefix.self::$table, $SharedFolder_table_structure, array('id'));
+		$ret = $SQL->buildTable(self::$table, $SharedFolder_table_structure, array('id'));
 		
 		Logger::debug('main', "SharedFolderDB::internal::init SQL table '".self::$table."' created");
 		return true;
@@ -70,7 +70,7 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 		
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @1 = %3 LIMIT 1', 'id', $SQL->prefix.self::$table, $id_);
+		$SQL->DoQuery('SELECT @1 FROM #2 WHERE @1 = %3 LIMIT 1', 'id', self::$table, $id_);
 		$total = $SQL->NumRows();
 		
 		return ($total == 1);
@@ -80,7 +80,7 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 		Logger::debug('main', "SharedFolderDB_internal::import($id_)");
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::$table, 'id', $id_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3 LIMIT 1', self::$table, 'id', $id_);
 		$total = $SQL->NumRows();
 		
 		if ($total == 0) {
@@ -97,7 +97,7 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 		Logger::debug('main', "SharedFolderDB::internal::importFromServer($server_fdqn_)");
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3', $SQL->prefix.self::$table, 'server', $server_fdqn_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3', self::$table, 'server', $server_fdqn_);
 		$rows = $SQL->FetchAllResults();
 		
 		$sharedfolders = array();
@@ -116,7 +116,7 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 		Logger::debug('main', "SharedFolderDB::internal::importFromName($a_name_)");
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2=%3', $SQL->prefix.self::$table, 'name', $a_name_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2=%3', self::$table, 'name', $a_name_);
 		$rows = $SQL->FetchAllResults();
 		
 		$sharedfolders = array();
@@ -153,7 +153,7 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 		Logger::debug('main', 'SharedFolderDB::internal::getList()');
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT * FROM @1', $SQL->prefix.self::$table);
+		$SQL->DoQuery('SELECT * FROM #1', self::$table);
 		$rows = $SQL->FetchAllResults();
 		
 		$sharedfolders = array();
@@ -173,7 +173,7 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 		
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT 1 FROM @1', $SQL->prefix.self::$table);
+		$SQL->DoQuery('SELECT 1 FROM #1', self::$table);
 		$nb_rows = $SQL->NumRows();
 		
 		return $nb_rows;
@@ -184,7 +184,7 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 		
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2=%3', $SQL->prefix.self::$table, 'server', $fqdn_);
+		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2=%3', self::$table, 'server', $fqdn_);
 		$nb_rows = $SQL->NumRows();
 		
 		return $nb_rows;
@@ -213,14 +213,14 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 		
 		if (is_null($sharedfolder_->id)) {
 			$sharedfolder_->id = 'sf_'.gen_unique_string(); // $SQL->InsertId();
-			$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4,@5) VALUES (%6,%7,%8,%9)', $SQL->prefix.self::$table, 'id', 'name', 'server', 'status', $sharedfolder_->id, $sharedfolder_->name, $sharedfolder_->server,  $sharedfolder_->status);
+			$SQL->DoQuery('INSERT INTO #1 (@2,@3,@4,@5) VALUES (%6,%7,%8,%9)', self::$table, 'id', 'name', 'server', 'status', $sharedfolder_->id, $sharedfolder_->name, $sharedfolder_->server,  $sharedfolder_->status);
 			
 			if (is_null($sharedfolder_->name) || $sharedfolder_->name === '') {
 				$sharedfolder_->name = $sharedfolder_->id;
 			}
 		}
 		else {
-			$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4) VALUES (%5,%6,%7)', $SQL->prefix.self::$table, 'id', 'name', 'server', 'status', $sharedfolder_->id, $sharedfolder_->name, $sharedfolder_->server,  $sharedfolder_->status);
+			$SQL->DoQuery('INSERT INTO #1 (@2,@3,@4) VALUES (%5,%6,%7)', self::$table, 'id', 'name', 'server', 'status', $sharedfolder_->id, $sharedfolder_->name, $sharedfolder_->server,  $sharedfolder_->status);
 		}
 		
 		if (is_null($sharedfolder_->name) || $sharedfolder_->name === '') {
@@ -239,7 +239,7 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 		}
 		Abstract_Liaison::delete('UserGroupSharedFolder', NULL, $sharedfolder->id);
 		$SQL = SQL::getInstance();
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.self::$table, 'id', $sharedfolder->id);
+		$SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3 LIMIT 1', self::$table, 'id', $sharedfolder->id);
 
 		$server = Abstract_Server::load($sharedfolder->server);
 		$server->deleteNetworkFolder($sharedfolder->id, true);
@@ -282,7 +282,7 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 		Logger::debug('main', 'SharedFolderDB::internal::update for \''.$sharedfolder_->id.'\'');
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('UPDATE @1 SET @2=%3, @4=%5, @6=%7 WHERE @8=%9 LIMIT 1', $SQL->prefix.self::$table, 'name', $sharedfolder_->name, 'server', $sharedfolder_->server, 'status', $sharedfolder_->status, 'id', $sharedfolder_->id);
+		$SQL->DoQuery('UPDATE #1 SET @2=%3, @4=%5, @6=%7 WHERE @8=%9 LIMIT 1', self::$table, 'name', $sharedfolder_->name, 'server', $sharedfolder_->server, 'status', $sharedfolder_->status, 'id', $sharedfolder_->id);
 		
 		return true;
 	}
