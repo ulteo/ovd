@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,18 +21,9 @@
  **/
 
 class UserGroupDBDynamicCached_internal extends UserGroupDBDynamicCached {
-	public static $tablename="usergroup_dynamic_cached";
-	protected $table;
+	const table = 'usergroup_dynamic_cached';
+	
 	public function __construct() {
-		$prefs = Preferences::getInstance();
-		if ($prefs) {
-			$sql_conf = $prefs->get('general', 'sql');
-			if (is_array($sql_conf)) {
-				$this->table =  $sql_conf['prefix'].UserGroupDBDynamicCached_internal::$tablename;
-			}
-			else
-				$this->table = NULL;
-		}
 	}
 
 	protected function isOK($usergroup_) {
@@ -47,7 +39,7 @@ class UserGroupDBDynamicCached_internal extends UserGroupDBDynamicCached {
 	public function import($id_) {
 		Logger::debug('main', "UserGroupDBDynamic_cached::import (id = $id_)");
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @5, @6, @7 FROM @8 WHERE @1 = %9', 'id', 'name', 'description', 'published', 'validation_type', 'schedule', 'last_update', $this->table, $id_);
+		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @5, @6, @7 FROM @8 WHERE @1 = %9', 'id', 'name', 'description', 'published', 'validation_type', 'schedule', 'last_update', $sql2->prefix.self::table, $id_);
 		if ($sql2->NumRows($res) == 1) {
 			$row = $sql2->FetchResult();
 			$rules = UserGroup_Rules::getByUserGroupId('dynamiccached_'.$row['id']);
@@ -64,12 +56,12 @@ class UserGroupDBDynamicCached_internal extends UserGroupDBDynamicCached {
 	
 	public function getList() {
 		Logger::debug('main', 'UserGroupDBDynamic_cached::getList');
-		if (is_null($this->table)) {
+		if (is_null(self::table)) {
 			Logger::error('main', 'UserGroupDBDynamic_cached::getList table is null');
 			return NULL;
 		}
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @5, @6, @7 FROM @8', 'id', 'name', 'description', 'published',  'validation_type', 'schedule', 'last_update', $this->table);
+		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @5, @6, @7 FROM @8', 'id', 'name', 'description', 'published',  'validation_type', 'schedule', 'last_update', $sql2->prefix.self::table);
 		if ($res !== false){
 			$result = array();
 			$rows = $sql2->FetchAllResults($res);
@@ -100,7 +92,7 @@ class UserGroupDBDynamicCached_internal extends UserGroupDBDynamicCached {
 	public function add($usergroup_){
 		Logger::debug('main', 'UserGroupDBDynamic_cached::add');
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('INSERT INTO @1 (@2,@4,@6,@8,@10) VALUES (%3,%5,%7,%9,%11)',$this->table, 'name', $usergroup_->name, 'description', $usergroup_->description, 'published', $usergroup_->published, 'validation_type', $usergroup_->validation_type, 'schedule', $usergroup_->schedule);
+		$res = $sql2->DoQuery('INSERT INTO @1 (@2,@4,@6,@8,@10) VALUES (%3,%5,%7,%9,%11)', $sql2->prefix.self::table, 'name', $usergroup_->name, 'description', $usergroup_->description, 'published', $usergroup_->published, 'validation_type', $usergroup_->validation_type, 'schedule', $usergroup_->schedule);
 		if ($res === false) {
 			Logger::error('main', 'UserGroupDBDynamic_cached::add SQL insert request failed');
 			return false;
@@ -134,7 +126,7 @@ class UserGroupDBDynamicCached_internal extends UserGroupDBDynamicCached {
 			Abstract_Liaison::delete('UsersGroup', NULL, $usergroup_->getUniqueID());
 		}
 		// second we delete the group
-		$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', $this->table, 'id', $usergroup_->id);
+		$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', $sql2->prefix.self::table, 'id', $usergroup_->id);
 		if ( $res === false) {
 			Logger::error('main', 'UserGroupDBDynamic_cached::remove Failed to remove group from SQL DB');
 			return false;
@@ -156,7 +148,7 @@ class UserGroupDBDynamicCached_internal extends UserGroupDBDynamicCached {
 		$old_rules = $old_usergroup->rules;
 		
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3 , @4 = %5 , @6 = %7 , @10 = %11, @12 = %13  WHERE @8 = %9', $this->table, 'published', $usergroup_->published, 'name', $usergroup_->name, 'description', $usergroup_->description, 'id', $usergroup_->id, 'validation_type', $usergroup_->validation_type, 'schedule', $usergroup_->schedule);
+		$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3 , @4 = %5 , @6 = %7 , @10 = %11, @12 = %13  WHERE @8 = %9', $sql2->prefix.self::table, 'published', $usergroup_->published, 'name', $usergroup_->name, 'description', $usergroup_->description, 'id', $usergroup_->id, 'validation_type', $usergroup_->validation_type, 'schedule', $usergroup_->schedule);
 		if ( $res === false) {
 			Logger::error('main', 'UserGroupDBDynamic_cached::update failed to update the group from DB');
 			return false;
@@ -179,7 +171,7 @@ class UserGroupDBDynamicCached_internal extends UserGroupDBDynamicCached {
 			Logger::debug('main', 'UserGroupDBDynamic_cached::updateCache usergroup (id='.$usergroup_->getUniqueID().') must update his cache');
 			$usergroup_->updateCache(); // update the liaison
 			$sql2 = SQL::getInstance();
-			$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3  WHERE @4 = %5', $this->table, 'last_update', time(), 'id', $usergroup_->id);
+			$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3  WHERE @4 = %5', $sql2->prefix.self::table, 'last_update', time(), 'id', $usergroup_->id);
 			if ( $res === false) {
 				Logger::error('main', 'UserGroupDBDynamic_cached::updateCache failed to update the group from DB');
 				return false;
@@ -199,7 +191,7 @@ class UserGroupDBDynamicCached_internal extends UserGroupDBDynamicCached {
 			Logger::error('main', 'UserGroupDBDynamic_cached::init sql conf not valid');
 			return false;
 		}
-		$usersgroup_table = $sql_conf['prefix'].'usergroup_dynamic_cached';
+		
 		$sql2 = SQL::newInstance($sql_conf);
 		
 		$usersgroup_table_structure = array(
@@ -212,10 +204,10 @@ class UserGroupDBDynamicCached_internal extends UserGroupDBDynamicCached {
 			'last_update' => 'int(12)',
 			);
 		
-		$ret = $sql2->buildTable($usersgroup_table, $usersgroup_table_structure, array('id'));
+		$ret = $sql2->buildTable($sql2->prefix.self::table, $usersgroup_table_structure, array('id'));
 		
 		if ( $ret === false) {
-			Logger::error('main', 'UserGroupDBDynamic_cached::init table '.$usersgroup_table.' fail to created');
+			Logger::error('main', 'UserGroupDBDynamic_cached::init table '.self::table.' fail to created');
 			return false;
 		}
 		
@@ -232,21 +224,21 @@ class UserGroupDBDynamicCached_internal extends UserGroupDBDynamicCached {
 		if (!is_array($sql_conf)) {
 			return false;
 		}
-		$table =  $sql_conf['prefix'].'usergroup_dynamic_cached';
+		
 		$sql2 = SQL::newInstance($sql_conf);
-		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $sql_conf['database'], $table);
+		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $sql_conf['database'], $sql2->prefix.self::table);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows();
 			if ($ret2 == 1) {
 				return true;
 			}
 			else {
-				Logger::error('main', 'UserGroupDBDynamic_cached::prefsIsValid table \''.$table.'\' does not exist');
+				Logger::error('main', 'UserGroupDBDynamic_cached::prefsIsValid table \''.self::table.'\' does not exist');
 				return false;
 			}
 		}
 		else {
-			Logger::error('main', 'UserGroupDBDynamic_cached::prefsIsValid table \''.$table.'\' does not exist(2)');
+			Logger::error('main', 'UserGroupDBDynamic_cached::prefsIsValid table \''.self::table.'\' does not exist(2)');
 			return false;
 		}
 	}

@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +22,7 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class SharedFolderDB_internal  extends SharedFolderDB {
-	public static $table="shared_folder";
+	public static $table = 'shared_folder';
 	
 	public static function prettyName() {
 		return _('Internal');
@@ -56,9 +57,9 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 			'status'		=>	'varchar(255)',
 		);
 		
-		$ret = $SQL->buildTable($sql_conf['prefix'].SharedFolderDB_internal::$table, $SharedFolder_table_structure, array('id'));
+		$ret = $SQL->buildTable($SQL->prefix.self::$table, $SharedFolder_table_structure, array('id'));
 		
-		Logger::debug('main', "SharedFolderDB::internal::init SQL table '".$sql_conf['prefix'].SharedFolderDB_internal::$table."' created");
+		Logger::debug('main', "SharedFolderDB::internal::init SQL table '".self::$table."' created");
 		return true;
 	}
 	

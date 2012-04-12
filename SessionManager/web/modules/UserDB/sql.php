@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -19,25 +20,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 class UserDB_sql extends UserDB  {
-	protected $table;
+	const table = 'user';
 	protected $cache_userlist=NULL;
 	public function __construct(){
-		$prefs = Preferences::getInstance();
-		$sql_conf = $prefs->get('general', 'sql');
-		if (is_array($sql_conf)) {
-			$this->table = $sql_conf['prefix'].'user';
-		}
 	}
 	
 	public function exists($login_) {
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT 1 FROM @1 WHERE @2=%3', $this->table, 'login', $login_);
+		$res = $sql2->DoQuery('SELECT 1 FROM @1 WHERE @2=%3', $sql2->prefix.self::table, 'login', $login_);
 		return ($sql2->NumRows() == 1);
 	}
 	
 	public function import($login_){
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3', $this->table, 'login', $login_);
+		$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3', $sql2->prefix.self::table, 'login', $login_);
 		if ($res !== false){
 			if ($sql2->NumRows($res) == 1){
 				$row = $sql2->FetchResult($res);
@@ -87,7 +83,7 @@ class UserDB_sql extends UserDB  {
 		Logger::debug('main','USERDB::MYSQL::getList_nocache');
 		$result = array();
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT * FROM @1', $this->table);
+		$res = $sql2->DoQuery('SELECT * FROM @1', $sql2->prefix.self::table);
 		if ($res !== false){
 			$rows = $sql2->FetchAllResults($res);
 			foreach ($rows as $row){
@@ -132,7 +128,7 @@ class UserDB_sql extends UserDB  {
 		if ($limit_ != 0)
 			$limit = 'LIMIT '.(int)($limit_+1); // SQL do not have a status sizelimit_exceeded
 		
-		$res = $sql2->DoQuery('SELECT * FROM '.$this->table.' WHERE '.$search.' '.$limit);
+		$res = $sql2->DoQuery('SELECT * FROM @1 WHERE '.$search.' '.$limit, $sql2->prefix.self::table);
 		if ($res === false) {
 			Logger::error('main', 'USERDB::MYSQL::getUsersContains failed (sql query failed)');
 			return NULL;
@@ -205,21 +201,21 @@ class UserDB_sql extends UserDB  {
 			Logger::error('main', 'UserDB::sql::prefsIsValid2 sql_conf is not valid');
 			return false;
 		}
-		$table = $sql_conf['prefix'].'user';
+		
 		$sql2 = SQL::newInstance($sql_conf);
-		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $sql_conf['database'], $table);
+		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $sql_conf['database'], $sql2->prefix.self::table);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows($ret);
 			if ($ret2 == 1) {
 				return true;
 			}
 			else {
-				Logger::error('main', 'USERDB::MYSQL::prefsIsValid table \''.$table.'\' does not exist');
+				Logger::error('main', 'USERDB::MYSQL::prefsIsValid table \''.self::table.'\' does not exist');
 				return false;
 			}
 		}
 		else {
-			Logger::error('main', 'USERDB::MYSQL::prefsIsValid table \''.$table.'\' does not exist(2)');
+			Logger::error('main', 'USERDB::MYSQL::prefsIsValid table \''.self::table.'\' does not exist(2)');
 			return false;
 		}
 	}
@@ -262,8 +258,8 @@ class UserDB_sql extends UserDB  {
 			$query_keys = substr($query_keys, 0, -1); // del the last ,
 			$query_values = substr($query_values, 0, -1); // del the last ,
 			$SQL = SQL::getInstance();
-			$query = 'INSERT INTO `'.$this->table.'` ( '.$query_keys.' ) VALUES ('.$query_values.' )';
-			$ret = $SQL->DoQuery($query);
+			$query = 'INSERT INTO @1 ( '.$query_keys.' ) VALUES ('.$query_values.' )';
+			$ret = $SQL->DoQuery($query, $SQL->prefix.self::table);
 			$id = $SQL->InsertId();
 			$user_->setAttribute('id', $id);
 			return $ret;
@@ -289,7 +285,7 @@ class UserDB_sql extends UserDB  {
 			}
 			
 			// second we delete the user
-			return $SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3', $this->table, 'login', $user_->getAttribute('login'));
+			return $SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3', $sql2->prefix.self::table, 'login', $user_->getAttribute('login'));
 		}
 		else {
 			Logger::debug('main', 'UserDB::sql::remove failed (user not ok)');
@@ -300,7 +296,7 @@ class UserDB_sql extends UserDB  {
 	public function update($user_){
 		if ($this->isOK($user_)){
 			$attributes = $user_->getAttributesList();
-			$query = 'UPDATE `'.$this->table.'` SET ';
+			$query = 'UPDATE @1 SET ';
 			foreach ($attributes as $key){
 				if ($key == 'password') {
 					$user_ori = $this->import($user_->getAttribute('login'));
@@ -323,7 +319,7 @@ class UserDB_sql extends UserDB  {
 			$query = substr($query, 0, -2); // del the last ,
 			$query .= ' WHERE `login` = \''.$user_->getAttribute('login').'\'';
 			$SQL = SQL::getInstance();
-			return $SQL->DoQuery($query);
+			return $SQL->DoQuery($query, $SQL->prefix.self::table);
 		}
 		return false;
 	}
@@ -377,7 +373,7 @@ class UserDB_sql extends UserDB  {
 			Logger::error('main', 'USERDB::sql::init sql conf not valid');
 			return false;
 		}
-		$table = $sql_conf['prefix'].'user';
+		
 		$sql2 = SQL::newInstance($sql_conf);
 		
 		$user_table_structure = array(
@@ -385,14 +381,14 @@ class UserDB_sql extends UserDB  {
 			'displayname' => 'varchar(100) NOT NULL',
 			'password' => 'varchar(50) NOT NULL');
 		
-		$ret = $sql2->buildTable($table, $user_table_structure, array('login'));
+		$ret = $sql2->buildTable($sql2->prefix.self::table, $user_table_structure, array('login'));
 		
 		if ( $ret === false) {
-			Logger::error('main', 'USERDB::sql::init table '.$table.' fail to created');
+			Logger::error('main', 'USERDB::sql::init table '.self::table.' fail to created');
 			return false;
 		}
 		else {
-			Logger::debug('main', 'USERDB::sql::init table '.$table.' created');
+			Logger::debug('main', 'USERDB::sql::init table '.self::table.' created');
 			return true;
 		}
 	}

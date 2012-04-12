@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,13 +22,10 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class ApplicationDB_sql extends ApplicationDB {
+	const table = 'application';
+	
 	protected $cache;
 	public function __construct(){
-		$prefs = Preferences::getInstance();
-		$sql_conf = $prefs->get('general', 'sql');
-		if (is_array($sql_conf)) {
-			@define('APPLICATION_TABLE', $sql_conf['prefix'].'application');
-		}
 		$this->cache = array();
 	}
 	
@@ -47,7 +45,7 @@ class ApplicationDB_sql extends ApplicationDB {
 
 	protected function import_nocache($id_){
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3',APPLICATION_TABLE,'id',$id_);
+		$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3', $sql2->prefix.self::table,'id',$id_);
 		if ($res !== false){
 			if ($sql2->NumRows($res) == 1){
 				$row = $sql2->FetchResult($res);
@@ -65,7 +63,7 @@ class ApplicationDB_sql extends ApplicationDB {
 // 		echo "ApplicationDB_sql::search ('".$app_name."','".$app_description."','".$app_type."','".$app_path_exe."')\n";
 		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('SELECT @1 FROM @2 WHERE
-		@3 = %4 AND @5 = %6 AND @7 = %8 AND @9 = %10', 'id', APPLICATION_TABLE, 'name', $app_name, 'description', $app_description, 'type', $app_type, 'executable_path', $app_path_exe);
+		@3 = %4 AND @5 = %6 AND @7 = %8 AND @9 = %10', 'id', $sql2->prefix.self::table, 'name', $app_name, 'description', $app_description, 'type', $app_type, 'executable_path', $app_path_exe);
 		if ($res !== false){
 			if ($sql2->NumRows($res) > 0){
 				$row = $sql2->FetchResult($res);
@@ -79,9 +77,9 @@ class ApplicationDB_sql extends ApplicationDB {
 		Logger::debug('main', "ApplicationDB_sql::getList(sort=$sort_, type=$type_)");
 		$sql2 = SQL::getInstance();
 		if (is_null($type_))
-			$res = $sql2->DoQuery('SELECT * FROM @1',APPLICATION_TABLE);
+			$res = $sql2->DoQuery('SELECT * FROM @1', $sql2->prefix.self::table);
 		else
-			$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3',APPLICATION_TABLE, 'type', $type_);
+			$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3', $sql2->prefix.self::table, 'type', $type_);
 		
 		if ($res !== false){
 			$result = array();
@@ -168,27 +166,25 @@ class ApplicationDB_sql extends ApplicationDB {
 	}
 
 	public static function prefsIsValid($prefs_, &$log=array()) {
-		if (!defined('APPLICATION_TABLE'))
-			return false;
 		$sql_conf = $prefs_->get('general', 'sql');
 		if (!is_array($sql_conf)) {
 
 			return false;
 		}
 		$sql2 = SQL::newInstance($sql_conf);
-		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2',$sql_conf['database'],APPLICATION_TABLE);
+		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $sql_conf['database'], $sql2->prefix.self::table);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows($ret);
 			if ($ret2 == 1) {
 				return true;
 			}
 			else {
-				Logger::error('main', 'APPLICATIONSDB_SQL table \''.APPLICATION_TABLE.'\' does not exist');
+				Logger::error('main', 'APPLICATIONSDB_SQL table \''.self::table.'\' does not exist');
 				return false;
 			}
 		}
 		else {
-			Logger::error('main', 'APPLICATIONSDB_SQL table \''.APPLICATION_TABLE.'\' does not exist(2)');
+			Logger::error('main', 'APPLICATIONSDB_SQL table \''.self::table.'\' does not exist(2)');
 			return false;
 		}
 	}
@@ -217,7 +213,7 @@ class ApplicationDB_sql extends ApplicationDB {
 			$query_keys = implode(', ', $query_keys);
 			$query_values = implode(', ', $query_values);
 			$sql2 = SQL::getInstance();
-			$res = $sql2->DoQuery('INSERT INTO @1 ( '.$query_keys.' ) VALUES ('.$query_values.' )',APPLICATION_TABLE);
+			$res = $sql2->DoQuery('INSERT INTO @1 ( '.$query_keys.' ) VALUES ('.$query_values.' )', $sql2->prefix.self::table);
 			$id = $sql2->InsertId();
 			$a->setAttribute('id', $id);
 			if ($res === false)
@@ -252,7 +248,7 @@ class ApplicationDB_sql extends ApplicationDB {
 			Abstract_Liaison::delete('AppsGroup', $a->getAttribute('id'), NULL); // remove publication for a group
 			
 			$sql2 = SQL::getInstance();
-			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', APPLICATION_TABLE, 'id', $a->getAttribute('id'));
+			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', $sql2->prefix.self::table, 'id', $a->getAttribute('id'));
 			return ($res !== false);
 		}
 		else
@@ -265,7 +261,7 @@ class ApplicationDB_sql extends ApplicationDB {
 			unset($this->cache[$a->getAttribute('id')]);
 		}
 		if ($this->isOK($a)){
-			$query = 'UPDATE `'.APPLICATION_TABLE.'` SET ';
+			$query = 'UPDATE @1 SET ';
 			$attributes = $a->getAttributesList();
 			foreach ($attributes as $key){
 				$query .=  '`'.$key.'` = \''.mysql_escape_string($a->getAttribute($key)).'\' , ';
@@ -274,7 +270,7 @@ class ApplicationDB_sql extends ApplicationDB {
 			$query .= ' WHERE `id` =\''.$a->getAttribute('id').'\'';
 
 			$sql2 = SQL::getInstance();
-			$res = $sql2->DoQuery($query);
+			$res = $sql2->DoQuery($query, $sql2->prefix.self::table);
 			if ($res === false)
 				return false;
 			
@@ -299,7 +295,7 @@ class ApplicationDB_sql extends ApplicationDB {
 			Logger::error('main', 'APPLICATIONDB::sql::init sql conf not valid');
 			return false;
 		}
-		@define('APPLICATION_TABLE', $sql_conf['prefix'].'application');
+		
 		$sql2 = SQL::newInstance($sql_conf);
 		$APPLICATION_table_structure = array(
 			'id' => 'int(8) NOT NULL auto_increment',
@@ -314,14 +310,14 @@ class ApplicationDB_sql extends ApplicationDB {
 			'revision' => 'int(8) default \'0\''
 		);
 
-		$ret = $sql2->buildTable($sql_conf['prefix'].'application', $APPLICATION_table_structure, array('id'));
+		$ret = $sql2->buildTable($sql2->prefix.self::table, $APPLICATION_table_structure, array('id'));
 
 		if ( $ret === false) {
-			Logger::error('main', 'APPLICATIONDB::sql::init table '.APPLICATION_TABLE.' fail to created');
+			Logger::error('main', 'APPLICATIONDB::sql::init table '.self::table.' fail to created');
 			return false;
 		}
 		else {
-			Logger::debug('main', 'APPLICATIONDB::sql::init table '.APPLICATION_TABLE.' created');
+			Logger::debug('main', 'APPLICATIONDB::sql::init table '.self::table.' created');
 			return true;
 		}
 	}

@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,18 +21,9 @@
  **/
 
 class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
-	public static $tablename="usergroup_dynamic";
-	protected $table;
+	const table = 'usergroup_dynamic';
+	
 	public function __construct() {
-		$prefs = Preferences::getInstance();
-		if ($prefs) {
-			$sql_conf = $prefs->get('general', 'sql');
-			if (is_array($sql_conf)) {
-				$this->table =  $sql_conf['prefix'].UserGroupDBDynamic_internal::$tablename;
-			}
-			else
-				$this->table = NULL;
-		}
 	}
 	protected function isOK($usergroup_) {
 		if (is_object($usergroup_)) {
@@ -46,7 +38,7 @@ class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
 	public function import($id_) {
 		Logger::debug('main', "UserGroupDBDynamic::internal::import (id = $id_)");
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @7 FROM @5 WHERE @1 = %6', 'id', 'name', 'description', 'published', $this->table, $id_, 'validation_type');
+		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @7 FROM @5 WHERE @1 = %6', 'id', 'name', 'description', 'published', $sql2->prefix.self::table, $id_, 'validation_type');
 		
 		if ($sql2->NumRows($res) == 1) {
 			$row = $sql2->FetchResult($res);
@@ -65,12 +57,12 @@ class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
 	
 	public function getList() {
 		Logger::debug('main','UserGroupDBDynamic::internal::getList');
-		if (is_null($this->table)) {
+		if (is_null(self::table)) {
 			Logger::error('main', 'UserGroupDBDynamic::internal::getList table is null');
 			return NULL;
 		}
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @5 FROM @6', 'id', 'name', 'description', 'published',  'validation_type', $this->table);
+		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @5 FROM @6', 'id', 'name', 'description', 'published',  'validation_type', $sql2->prefix.self::table);
 		if ($res !== false){
 			$result = array();
 			$rows = $sql2->FetchAllResults($res);
@@ -102,7 +94,7 @@ class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
 	public function add($usergroup_){
 		Logger::debug('main', 'UserGroupDBDynamic::internal::add');
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('INSERT INTO @1 (@2,@3,@4,@8) VALUES (%5,%6,%7,%9)',$this->table, 'name', 'description', 'published', $usergroup_->name, $usergroup_->description, $usergroup_->published, 'validation_type', $usergroup_->validation_type);
+		$res = $sql2->DoQuery('INSERT INTO @1 (@2,@3,@4,@8) VALUES (%5,%6,%7,%9)', $sql2->prefix.self::table, 'name', 'description', 'published', $usergroup_->name, $usergroup_->description, $usergroup_->published, 'validation_type', $usergroup_->validation_type);
 		if ($res === false) {
 			Logger::error('main','UserGroupDBDynamic::internal::add SQL insert request failed');
 			return false;
@@ -134,7 +126,7 @@ class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
 			Abstract_Liaison::delete('UsersGroup', NULL, $usergroup_->getUniqueID());
 		}
 		// second we delete the group
-		$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', $this->table, 'id', $usergroup_->id);
+		$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', $sql2->prefix.self::table, 'id', $usergroup_->id);
 		if ( $res === false) {
 			Logger::error('main', 'UserGroupDBDynamic::internal::remove Failed to remove group from SQL DB');
 			return false;
@@ -156,7 +148,7 @@ class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
 		$old_rules = $old_usergroup->rules;
 		
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3 , @4 = %5 , @6 = %7 , @10 = %11  WHERE @8 = %9', $this->table, 'published', $usergroup_->published, 'name', $usergroup_->name, 'description', $usergroup_->description, 'id', $usergroup_->id, 'validation_type', $usergroup_->validation_type);
+		$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3 , @4 = %5 , @6 = %7 , @10 = %11  WHERE @8 = %9', $sql2->prefix.self::table, 'published', $usergroup_->published, 'name', $usergroup_->name, 'description', $usergroup_->description, 'id', $usergroup_->id, 'validation_type', $usergroup_->validation_type);
 		if ( $res === false) {
 			Logger::error('main', 'UserGroupDBDynamic::internal::update failed to update the group from DB');
 			return false;
@@ -189,7 +181,7 @@ class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
 			Logger::error('main', 'UserGroupDBDynamic::internal::init sql conf not valid');
 			return false;
 		}
-		$usersgroup_table = $sql_conf['prefix'].UserGroupDBDynamic_internal::$tablename;
+		
 		$sql2 = SQL::newInstance($sql_conf);
 		
 		$usersgroup_table_structure = array(
@@ -200,10 +192,10 @@ class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
 			'validation_type' => 'varchar(15) NOT NULL',
 			);
 		
-		$ret = $sql2->buildTable($usersgroup_table, $usersgroup_table_structure, array('id'));
+		$ret = $sql2->buildTable($sql2->prefix.self::table, $usersgroup_table_structure, array('id'));
 		
 		if ( $ret === false) {
-			Logger::error('main', 'UserGroupDBDynamic::internal::init table '.$usersgroup_table.' fail to created');
+			Logger::error('main', 'UserGroupDBDynamic::internal::init table '.self::table.' fail to created');
 			return false;
 		}
 		
@@ -225,21 +217,21 @@ class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
 			Logger::error('main', 'UserGroupDBDynamic::internal::prefsIsValid2 failed to get sql configuration');
 			return false;
 		}
-		$table =  $sql_conf['prefix'].UserGroupDBDynamic_internal::$tablename;
+		
 		$sql2 = SQL::newInstance($sql_conf);
-		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $sql_conf['database'], $table);
+		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $sql_conf['database'], $sql2->prefix.self::table);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows($ret);
 			if ($ret2 == 1) {
 				return true;
 			}
 			else {
-				Logger::error('main', 'UserGroupDBDynamic::internal::prefsIsValid table \''.$table.'\' does not exist');
+				Logger::error('main', 'UserGroupDBDynamic::internal::prefsIsValid table \''.self::table.'\' does not exist');
 				return false;
 			}
 		}
 		else {
-			Logger::error('main', 'UserGroupDBDynamic::internal::prefsIsValid table \''.$table.'\' does not exist(2)');
+			Logger::error('main', 'UserGroupDBDynamic::internal::prefsIsValid table \''.self::table.'\' does not exist(2)');
 			return false;
 		}
 	}

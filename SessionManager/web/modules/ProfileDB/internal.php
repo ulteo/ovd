@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2009 - 2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011-2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -55,9 +55,9 @@ class ProfileDB_internal extends ProfileDB  {
 			'status'		=>	'varchar(255)',
 		);
 		
-		$ret = $SQL->buildTable($sql_conf['prefix'].ProfileDB_internal::$table, $SharedFolder_table_structure, array('id'));
+		$ret = $SQL->buildTable($SQL->prefix.self::$table, $SharedFolder_table_structure, array('id'));
 		
-		Logger::debug('main', "ProfileDB::internal::init SQL table '".$sql_conf['prefix'].ProfileDB_internal::$table."' created");
+		Logger::debug('main', "ProfileDB::internal::init SQL table '".self::$table."' created");
 		return true;
 	}
 	
@@ -69,7 +69,7 @@ class ProfileDB_internal extends ProfileDB  {
 		
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @1 = %3 LIMIT 1', 'id', $SQL->prefix.self::$table, $id_);
+		$SQL->DoQuery('SELECT @1 FROM #2 WHERE @1 = %3 LIMIT 1', 'id', self::$table, $id_);
 		$total = $SQL->NumRows();
 		
 		return ($total == 1);

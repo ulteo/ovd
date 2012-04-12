@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -21,6 +22,8 @@
 require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
 class Abstract_Liaison_sql {
+	const table = 'liaison';
+	
 	public static function load($type_, $element_=NULL, $group_=NULL) {
 		if (is_null($element_) && is_null($group_))
 			return Abstract_Liaison_sql::loadAll($type_);
@@ -34,14 +37,14 @@ class Abstract_Liaison_sql {
 	public static function save($type_, $element_, $group_) {
 		Logger::debug('main', "Abstract_Liaison_sql::save ($type_,$element_,$group_)");
 		$sql2 = SQL::getInstance();
-		$table = $sql2->prefix.'liaison';
-		$res = $sql2->DoQuery('SELECT @3,@4 FROM @1 WHERE @2=%5 AND @3=%6 AND @4=%7', $table, 'type', 'element', 'group',  $type_, $element_, $group_);
+		
+		$res = $sql2->DoQuery('SELECT @3,@4 FROM @1 WHERE @2=%5 AND @3=%6 AND @4=%7', $sql2->prefix.self::table, 'type', 'element', 'group',  $type_, $element_, $group_);
 		if ($sql2->NumRows() > 0) {
 			Logger::error('main', 'Abstract_Liaison_sql::save Liaison(type='.$type_.',element='.$element_.',group='.$group_.') already exists');
 			popup_error('liaison(type='.$type_.',element='.$element_.',group='.$group_.') already exists');
 			return false;
 		}
-		$res = $sql2->DoQuery('INSERT INTO @1 ( @2,@3,@4 ) VALUES ( %5,%6,%7)', $table, 'type', 'element', 'group', $type_, $element_, $group_);
+		$res = $sql2->DoQuery('INSERT INTO #1 ( @2,@3,@4 ) VALUES ( %5,%6,%7)', $table, 'type', 'element', 'group', $type_, $element_, $group_);
 		return ($res !== false);
 	}
 	public static function delete($type_, $element_, $group_) {
@@ -52,25 +55,19 @@ class Abstract_Liaison_sql {
 			Logger::error('main', 'Abstract_Liaison_sql::delete get Preferences failed');
 			return false;
 		}
-		$sql_conf = $prefs->get('general', 'sql');
-		if (!is_array($sql_conf)) {
-			Logger::error('main', 'Abstract_Liaison_sql::delete sql conf not valid');
-			return false;
-		}
-		$table = $sql_conf['prefix'].'liaison';
 		
 		$res = false;
 		if (is_null($element_) && is_null($group_)) {
-			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3', $table, 'type', $type_);
+			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3', $sql2->prefix.self::table, 'type', $type_);
 		}
 		else if (is_null($element_)) {
-			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3 AND @4=%5', $table, 'type', $type_, 'group', $group_);
+			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3 AND @4=%5', $sql2->prefix.self::table, 'type', $type_, 'group', $group_);
 		}
 		else if (is_null($group_)) {
-			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3 AND @4=%5', $table, 'type', $type_, 'element', $element_);
+			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3 AND @4=%5', $sql2->prefix.self::table, 'type', $type_, 'element', $element_);
 		}
 		else {
-			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3 AND @4=%5 AND @6=%7', $table, 'type', $type_, 'element', $element_, 'group', $group_);
+			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3 AND @4=%5 AND @6=%7', $sql2->prefix.self::table, 'type', $type_, 'element', $element_, 'group', $group_);
 		}
 		return ($res !== false);
 	}
@@ -83,13 +80,8 @@ class Abstract_Liaison_sql {
 			Logger::error('main', 'Abstract_Liaison_sql::loadElements get Preferences failed');
 			return NULL;
 		}
-		$sql_conf = $prefs->get('general', 'sql');
-		if (!is_array($sql_conf)) {
-			Logger::error('main', 'Abstract_Liaison_sql::loadElements sql conf not valid');
-			return $result;
-		}
-		$table = $sql_conf['prefix'].'liaison';
-		$res = $sql2->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6','element', $table, 'type', $type_, 'group', $group_);
+		
+		$res = $sql2->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6','element', $sql2->prefix.self::table, 'type', $type_, 'group', $group_);
 		if ($res !== false){
 			$result = array();
 			$rows = $sql2->FetchAllResults($res);
@@ -112,13 +104,8 @@ class Abstract_Liaison_sql {
 			Logger::error('main', 'Abstract_Liaison_sql::loadGroups get Preferences failed');
 			return NULL;
 		}
-		$sql_conf = $prefs->get('general', 'sql');
-		if (!is_array($sql_conf)) {
-			Logger::error('main', 'Abstract_Liaison_sql::loadGroups sql conf not valid');
-			return $result;
-		}
-		$table = $sql_conf['prefix'].'liaison';
-		$res = $sql2->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6', 'group', $table, 'type', $type_, 'element', $element_);
+		
+		$res = $sql2->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6', 'group', $sql2->prefix.self::table, 'type', $type_, 'element', $element_);
 		if ($res !== false){
 			$result = array();
 			$rows = $sql2->FetchAllResults($res);
@@ -141,13 +128,8 @@ class Abstract_Liaison_sql {
 			Logger::error('main', 'Abstract_Liaison_sql::loadAll get Preferences failed');
 			return NULL;
 		}
-		$sql_conf = $prefs->get('general', 'sql');
-		if (!is_array($sql_conf)) {
-			Logger::error('main', 'Abstract_Liaison_sql::loadAll sql conf not valid');
-			return $result;
-		}
-		$table = $sql_conf['prefix'].'liaison';
-		$res = $sql2->DoQuery('SELECT @1,@2 FROM @3 WHERE @4 = %5', 'element', 'group', $table, 'type', $type_);
+		
+		$res = $sql2->DoQuery('SELECT @1,@2 FROM @3 WHERE @4 = %5', 'element', 'group', $sql2->prefix.self::table, 'type', $type_);
 		if ($res !== false){
 			$result = array();
 			$rows = $sql2->FetchAllResults($res);
@@ -169,13 +151,8 @@ class Abstract_Liaison_sql {
 			Logger::error('main', 'Abstract_Liaison_sql::loadAll get Preferences failed');
 			return NULL;
 		}
-		$sql_conf = $prefs->get('general', 'sql');
-		if (!is_array($sql_conf)) {
-			Logger::error('main', 'Abstract_Liaison_sql::loadAll sql conf not valid');
-			return $result;
-		}
-		$table = $sql_conf['prefix'].'liaison';
-		$res = $sql2->DoQuery('SELECT @3,@4 FROM @1 WHERE @2=%5 AND @3=%6 AND @4=%7', $table, 'type', 'element', 'group',  $type_, $element_, $group_);
+		
+		$res = $sql2->DoQuery('SELECT @3,@4 FROM @1 WHERE @2=%5 AND @3=%6 AND @4=%7', $sql2->prefix.self::table, 'type', 'element', 'group',  $type_, $element_, $group_);
 // 		echo 'FetchAllResults ';var_dump2($sql2->FetchAllResults());
 		if ($res !== false){
 			if ($sql2->NumRows() == 0) {
@@ -199,7 +176,7 @@ class Abstract_Liaison_sql {
 			Logger::error('main', 'Abstract_Liaison::init sql conf not valid');
 			return false;
 		}
-		$LIAISON_TABLE = $sql_conf['prefix'].'liaison';
+		
 		// we create the sql table
 		$sql2 = SQL::newInstance($sql_conf);
 		
@@ -208,14 +185,14 @@ class Abstract_Liaison_sql {
 			'element' => 'varchar(200) NOT NULL',
 			'group' => 'varchar(200) NOT NULL');
 		
-		$ret = $sql2->buildTable($LIAISON_TABLE, $LIAISON_table_structure, array());
+		$ret = $sql2->buildTable($sql2->prefix.self::table, $LIAISON_table_structure, array());
 		
 		if ( $ret === false) {
-			Logger::error('main', 'Abstract_Liaison::init table '.$LIAISON_TABLE.' fail to created');
+			Logger::error('main', 'Abstract_Liaison::init table '.self::table.' fail to created');
 			return false;
 		}
 		else {
-			Logger::debug('main', 'Abstract_Liaison::init table '.$LIAISON_TABLE.' created');
+			Logger::debug('main', 'Abstract_Liaison::init table '.self::table.' created');
 			return true;
 		}
 	}
@@ -228,13 +205,8 @@ class Abstract_Liaison_sql {
 			Logger::error('main', 'Abstract_Liaison_sql::cleanup get Preferences failed');
 			return false;
 		}
-		$sql_conf = $prefs->get('general', 'sql');
-		if (!is_array($sql_conf)) {
-			Logger::error('main', 'Abstract_Liaison_sql::cleanup sql conf not valid');
-			return $result;
-		}
-		$table = $sql_conf['prefix'].'liaison';
-		$res = $sql2->DoQuery('SELECT @1,@2,@3 FROM @4', 'type', 'element', 'group', $table);
+		
+		$res = $sql2->DoQuery('SELECT @1,@2,@3 FROM @4', 'type', 'element', 'group', $sql2->prefix.self::table);
 		if ($res === false) {
 			Logger::error('main', 'Abstract_Liaison_sql::cleanup DoQuery failed');
 			return false;
