@@ -21,7 +21,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import fcntl
-import locale
 import pwd
 import time
 import xrdp
@@ -72,7 +71,7 @@ class User(AbstractUser):
 			if retry < 0:
 				  Logger.error("ERROR: unable to add a new user")
 			lock.acquire()
-			s,o = commands.getstatusoutput(cmd.encode(locale.getpreferredencoding()))
+			s,o = commands.getstatusoutput(System.local_encode(cmd))
 			lock.release()
 			if s == 0:
 				break
