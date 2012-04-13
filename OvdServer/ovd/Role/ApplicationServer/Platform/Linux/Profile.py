@@ -44,7 +44,7 @@ class Profile(AbstractProfile):
 	
 	def mount(self):
 		os.makedirs(self.cifs_dst)
-		self.homeDir = pwd.getpwnam(self.session.user.name)[5]
+		self.homeDir = pwd.getpwnam(self.transformToLocaleEncoding(self.session.user.name))[5]
 		
 		if self.profile is not None:
 			os.makedirs(self.profile_mount_point)

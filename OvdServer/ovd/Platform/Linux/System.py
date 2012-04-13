@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2011 Ulteo SAS
+# Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
+# Author David LECHEVALIER <david@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -22,6 +23,7 @@
 
 import commands
 import grp
+import locale
 import os
 import platform
 import pwd
@@ -293,7 +295,7 @@ class System(AbstractSystem):
 	@staticmethod
 	def userExist(name_):
 		try:
-			pwd.getpwnam(name_)
+			pwd.getpwnam(System.local_encode(name_))
 		except KeyError:
 			return False
 		

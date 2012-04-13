@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2010-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+# Author David LECHEVALIER <david@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -18,6 +19,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+
+import locale
 
 class System:
 	@staticmethod
@@ -91,3 +94,20 @@ class System:
 	@staticmethod
 	def tcp_server_allow_reuse_address():
 		raise NotImplementedError()
+
+	@staticmethod
+	def local_encode(data):
+		if type(data) is not unicode:
+			return data
+
+		try:
+			encoding = locale.getpreferredencoding()
+		except:
+			encoding = "UTF-8"
+		
+		try:
+			ret = data.encode(encoding)
+		except:
+			ret = data
+
+		return ret
