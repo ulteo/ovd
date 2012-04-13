@@ -251,7 +251,7 @@ function show_default() {
 		foreach($sessions as $session) {
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'">';
-			echo '<td>'.$session->getId().'</td>';
+			echo '<td><a title="'._('Get more information').'" href="?action=manage&id='.$session->getId().'">'.$session->getId().'</a></td>';
 			echo '<td><a href="users.php?action=manage&id='.$session->getUser().'">'.$session->getUser().'</a></td>';
 			echo '<td>'.$session->getStartTime().'</td>';
 			echo '<td><form><input type="hidden" name="action" value="manage"/><input type="hidden" name="id" value="'.$session->getId().'"/><input type="submit" value="'._('Get more information').'"/></form></td>';
@@ -356,7 +356,7 @@ function show_manage($id_) {
 	
 	page_header();
 
-	echo '<h1>'.str_replace('%ID%', $session->getId(), _('Archived session - %ID%')).'</h1>';
+	echo '<h1><a title="'._('Back to archived sessions list').'" href="?">'._('Archived session').'</a> - '.$session->getId().'</h1>';
 
 	echo '<ul>';
 	echo '<li><strong>'._('User:').'</strong> ';
