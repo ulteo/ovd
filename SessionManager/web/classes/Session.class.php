@@ -245,6 +245,14 @@ class Session {
 
 		return true;
 	}
+	
+	public function setServerDump($server_, $dumps_) {
+		if (! array_key_exists($server_, $this->servers[Server::SERVER_ROLE_APS]))
+			return false;
+		
+		$this->servers[Server::SERVER_ROLE_APS][$server_]['dump'] = $dumps_;
+		return true;
+	}
 
 	public function setStatus($status_, $reason_=NULL) {
 		if ($status_ == $this->getAttribute('status'))

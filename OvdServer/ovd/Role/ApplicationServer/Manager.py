@@ -1,8 +1,8 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2011 Ulteo SAS
+# Copyright (C) 2011-2012 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
 # Author David LECHEVALIER <david@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
@@ -19,11 +19,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.Platform.System import System
 from Platform.TS import TS
 from Session import Session
 
+import base64
+import glob
+import os
 from xml.dom.minidom import Document
 
 
@@ -57,6 +61,50 @@ class Manager:
 			response = None
 	
 	
+	def send_session_dump(self, session):
+		dumps = {}
+		
+		for path in glob.glob(os.path.join(Config.spool_dir, "sessions dump archive", "%s %s-*"%(session.id, session.user.name))):
+			try:
+				f= file(path, "r")
+			except IOError, err:
+				continue
+			
+			data = f.read()
+			f.close()
+			
+			name = os.path.basename(path)
+			name = name[len("%s %s-"%(session.id, session.user.name)):]
+			
+			dumps[name] = data
+		
+		try:
+			doc = Document()
+			rootNode = doc.createElement('session')
+			rootNode.setAttribute("id", session.id)
+			
+			for (name, data) in dumps.items():
+				textNode = doc.createTextNode(base64.encodestring(data))
+				
+				node = doc.createElement('dump')
+				node.setAttribute("name", name)
+				node.appendChild(textNode)
+				
+				rootNode.appendChild(node)
+			
+			doc.appendChild(rootNode)
+		except Exception, e:
+			print str(e)
+		
+		response = self.smManager.send_packet("/session/dump", doc)
+		Logger.debug2("ApplicationServer: send_session_dump: %s"%(response))
+		if response is False:
+			Logger.warn("ApplicationServer: unable to send session dump")
+		else:
+			response.close()
+			response = None
+	
+	
 	def purgeGroup(self):
 		while True:
 			users = System.groupMember(self.ovd_group_name)
@@ -76,6 +124,9 @@ class Manager:
 	
 	
 	def session_switch_status(self, session, status):
+		if status == Session.SESSION_STATUS_DESTROYED:
+			self.send_session_dump(session)
+		
 		session.switch_status(status)
 		Logger.info("Session %s switch status %s"%(session.id, session.status))
 		self.send_session_status(session)

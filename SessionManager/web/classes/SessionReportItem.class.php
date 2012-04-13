@@ -114,6 +114,17 @@ class SessionReportItem {
 				if ($session_->mode == Session::MODE_DESKTOP && $session_->server == $fqdn)
 					$server_node->setAttribute('desktop_server', 'true');
 				
+				if (array_key_exists('dump', $data)) {
+					foreach($data['dump'] as $name => $dump) {
+						$node = $dom->createElement('dump');
+						$node->setAttribute('name', $name);
+						$server_node->appendChild($node);
+						
+						$textNode = $dom->createTextNode($dump);
+						$node->appendChild($textNode);
+					}
+				}
+				
 				$server = Abstract_Server::load($fqdn);
 				if (! $server || $server->getAttribute('registered') === false)
 					continue;

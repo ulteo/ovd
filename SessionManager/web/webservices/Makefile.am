@@ -4,6 +4,7 @@ scripts_DATA =  application_icon.php \
                 domain.php \
                 server_monitoring.php \
                 server_name.php \
+                session_dump.php \
                 session_status.php \
                 server_status.php \
                 application.php

@@ -305,6 +305,18 @@ function show_manage($id_) {
 			if ($node->hasAttribute('type'))
 				$server['type'] = $node->getAttribute('type');
 			
+			$server['dump'] = array();
+			foreach($node->childNodes as $child_node) {
+				if ($child_node->nodeName != 'dump')
+					continue;
+				
+				if (! $child_node->hasAttribute('name'))
+					continue;
+				
+				$name = $child_node->getAttribute('name');
+				$server['dump'][$name] = base64_decode ($child_node->textContent);
+			}
+			
 			$server_obj = Abstract_Server::load($server['fqdn']);
 			if (is_object($server_obj))
 				$server['obj'] = $server_obj;
@@ -405,6 +417,27 @@ function show_manage($id_) {
 				$infos[]= '(OS: '.$server['type'].')';
 			
 			echo '&nbsp;'.implode(', ', $infos);
+			if (count($server['dump']) > 0) {
+				echo '<div style="margin-left: 20px;">';
+				echo '<ul>';
+				foreach ($server['dump'] as $name => $dump) {
+					$elem_id = $server['fqdn'].$name;
+					$nb_lines = substr_count($dump, "\n");
+					if ($nb_lines > 10)
+						$nb_lines = 10;
+					
+					echo '<li>'.$name.'&nbsp;';
+					echo '<em>(';
+					echo '<a href="" id="'.$elem_id.'_show" title="'._('Show the dump data').'" onclick="$(\''.$elem_id.'_text\').show(); $(\''.$elem_id.'_hide\').show(); this.hide(); return false;">'._('show').'</a>';
+					echo '<a href="" id="'.$elem_id.'_hide" title="'._('Hide the dump data').'" onclick="$(\''.$elem_id.'_text\').hide(); $(\''.$elem_id.'_show\').show(); this.hide(); return false;" style="display: none;" >'._('hide').'</a>';
+					echo ')</em><br/>';
+					echo '<textarea id="'.$elem_id.'_text" style="display: none; margin-left: 20px;" cols="100" rows="'.$nb_lines.'">'.$dump.'</textarea>';
+					echo '</li>';
+				}
+				echo '</ul>';
+				echo '</div>';
+			}
+			
 			echo '</li>';
 		}
 		echo '</ul>';
