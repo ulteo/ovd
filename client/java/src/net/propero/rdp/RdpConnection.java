@@ -422,6 +422,9 @@ public class RdpConnection implements SeamListener, Runnable{
 			}
 		}
 
+		if (istr == null)
+			throw new KeyMapException("Unable to find a keymap file");
+		
 		KeyCode_FileBased keyMap = new KeyCode_FileBased_Localised(istr, opt);
 		System.out.println("Autoselected keyboard map " + this.mapFile);
 
