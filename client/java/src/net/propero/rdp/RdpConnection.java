@@ -511,6 +511,12 @@ public class RdpConnection implements SeamListener, Runnable{
 					exit = 1;
 				}
 				this.keep_running = false;
+			} catch (IndexOutOfBoundsException i) {
+				if (this.RdpLayer.isConnected()) {
+					this.failedMsg = i.getMessage();
+					exit = 1;
+				}
+				this.keep_running = false;
 			} catch (RdesktopException e) {
 				this.failedMsg = e.getMessage();
 				
