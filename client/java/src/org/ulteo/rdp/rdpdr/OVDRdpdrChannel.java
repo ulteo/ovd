@@ -187,7 +187,8 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		try {
 			this.send_packet(s);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.debug("Unable to send RDPDR client capability message: "+e.getMessage());
+			Logger.warn("Unable to initialize disk/printer channel");
 		}
 	}
 	
@@ -350,7 +351,8 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		try {
 			this.send_packet(s);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.debug("Unable to mount drive ["+name+"]: "+e.getMessage());
+			Logger.warn("Unable to mount drive ["+name+"]");
 			return false;
 		}
 		return true;
@@ -399,7 +401,8 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		try {
 			this.send_packet(s);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.debug("Unable to mount printer ["+printer.name+"]: "+e.getMessage());
+			Logger.warn("Unable to mount printer ["+printer.name+"]");
 			return false;
 		}
 		return true;
@@ -433,7 +436,8 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 			this.send_packet(s);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			Logger.debug("Unable to unmount the drive ["+name+"]: "+e.getMessage());
+			Logger.warn("Unable to unmount the drive ["+name+"]");
 			return false;
 		}
 
