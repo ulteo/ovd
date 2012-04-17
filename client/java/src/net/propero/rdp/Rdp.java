@@ -566,10 +566,13 @@ public class Rdp {
         data.set8(data_pdu_type);
         data.set8(0); // compression type
         data.setLittleEndian16(0); // compression length
-
-        SecureLayer.send(data, this.opt.encryption ? Secure.SEC_ENCRYPT : 0);
-
-        CommunicationMonitor.unlock(this);
+        
+        try {
+        	SecureLayer.send(data, this.opt.encryption ? Secure.SEC_ENCRYPT : 0);
+        }
+        finally {
+        	CommunicationMonitor.unlock(this);
+        }
     }
 
     /**
