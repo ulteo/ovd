@@ -1602,16 +1602,19 @@ public class Rdp {
             this.sendData(data, RDP_DATA_PDU_INPUT);
         } catch (RdesktopException r) {
             if (this.common.rdp.isConnected())
-                Rdesktop.error(r, this.common.rdp, this.common.frame, true);
-    		Rdesktop.exit(0,frame.rdp,this.frame,true);
+                Rdesktop.error(r, this.common.rdp, this.common.frame, false);
+            else
+                Rdesktop.exit(0, frame.rdp, this.frame, false);
         } catch (CryptoException c) {
             if (this.common.rdp.isConnected())
-                Rdesktop.error(c, this.common.rdp, this.common.frame, true);
-    		Rdesktop.exit(0,frame.rdp,this.frame,true);
+                Rdesktop.error(c, this.common.rdp, this.common.frame, false);
+            else
+                Rdesktop.exit(0, frame.rdp, this.frame, false);
         } catch (IOException i) {
             if (this.common.rdp.isConnected())
-                Rdesktop.error(i, this.common.rdp, this.common.frame, true);
-    		Rdesktop.exit(0,frame.rdp,this.frame,true);
+                Rdesktop.error(i, this.common.rdp, this.common.frame, false);
+            else
+                Rdesktop.exit(0, frame.rdp, this.frame, false);
         }
     }
 
