@@ -438,11 +438,14 @@ public class RdpConnection implements SeamListener, Runnable{
 	}
 	
 	public void run() {
+		this.tryNumber++;
 		
 		try {
 			this.initCanvas();
 		} catch (RdesktopException ex) {
 			this.logger.fatal(ex.getMessage());
+			this.failedMsg = ex.getMessage();
+			this.fireFailed();
 			return;
 		}
 
@@ -450,6 +453,8 @@ public class RdpConnection implements SeamListener, Runnable{
 			this.loadKeymap();
 		} catch (KeyMapException ex) {
 			this.logger.fatal(ex.getMessage());
+			this.failedMsg = ex.getMessage();
+			this.fireFailed();
 			return;
 		}
 		
@@ -459,8 +464,6 @@ public class RdpConnection implements SeamListener, Runnable{
 			this.backstoreFrame.add(this.canvas);
 			this.backstoreFrame.pack();
 		}
-
-		this.tryNumber++;
 
 		this.RdpLayer = new Rdp5(channels, this.opt, this.common);
 		this.common.rdp = this.RdpLayer;
