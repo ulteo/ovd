@@ -85,6 +85,11 @@ void CALLBACK InternalWindow_processCopyData(PCOPYDATASTRUCT data) {
 				sw = getWindowFromHistory(msg->wnd);
 				if (sw == NULL)
 					break;
+				
+				if (sw->state == msg->state)
+					break;
+				
+				sw->state = msg->state;
 
 				lastOrder = (SeamlessOrder_State *) SeamlessChannel_getLastOrder(SEAMLESSORDER_STATE);
 
