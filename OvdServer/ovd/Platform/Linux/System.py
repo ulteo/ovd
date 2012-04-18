@@ -218,7 +218,7 @@ class System(AbstractSystem):
 	
 	@staticmethod
 	def DeleteDirectory(path):
-		os.system("rm -rf '%s'"%(path))
+		commands.execute("rm -rf '%s'"%(path))
 	
 	
 	@staticmethod

@@ -25,6 +25,7 @@ import os
 import pwd
 import shutil
 
+from ovd import commands
 from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
@@ -61,7 +62,7 @@ class Session(AbstractSession):
 			os.symlink(src_dir, dst_dir)
 		
 		
-		os.system('update-desktop-database "%s"'%(System.local_encode(xdg_app_d)))
+		commands.execute('update-desktop-database "%s"'%(System.local_encode(xdg_app_d)))
 		
 		if self.parameters.has_key("desktop_icons") and self.parameters["desktop_icons"] == "1":
 			path = os.path.join(xdg_app_d, ".show_on_desktop")
