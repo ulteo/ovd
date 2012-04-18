@@ -23,17 +23,23 @@ import os
 import subprocess
 import sys
 
-__all__ = ["getstatusoutput"]
+__all__ = ["getstatusoutput", "execute_no_wait"]
 
-
-def getstatusoutput(args):
+def execute_no_wait(args):
 	if type(args) is type([]):
 		shell = False
 	elif type(args) in [type(""), type(u"")]:
 		shell = True
 	
 	p = subprocess.Popen(args, preexec_fn=detachFatherProcess,
+		stdin=subprocess.PIPE, 
 		stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=shell)
+	
+	return p
+
+
+def getstatusoutput(args):
+	p = execute_no_wait(args)
 	p.wait()
 	output = p.communicate()[0]
 	return  (p.returncode, output)

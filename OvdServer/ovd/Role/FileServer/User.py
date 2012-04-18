@@ -42,16 +42,14 @@ class User:
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
 			return False
 		
-		cmd = 'echo "%s\\n%s" | smbpasswd -s -a %s'%(password, password, self.login)
-		s,o = commands.getstatusoutput(cmd)
-		if s == 256:
-			# "echo" is different between bash and dash
-			cmd = 'echo -e "%s\\n%s" | smbpasswd -s -a %s'%(password, password, self.login)
-			s,o = commands.getstatusoutput(cmd)
+		cmd = 'smbpasswd -s -a %s'%(self.login)
+		p = commands.execute_no_wait(cmd)
+		p.stdin.write("%s\n%s\n"%(password, password))
+		p.wait()
 		
-		if s != 0:
+		if p.returncode != 0:
 			Logger.error("FS: unable to set samba password")
-			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
+			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 			return False
 		
 		cmd = 'htpasswd -b %s "%s" "%s"'%(Config.dav_passwd_file, self.login, password)
