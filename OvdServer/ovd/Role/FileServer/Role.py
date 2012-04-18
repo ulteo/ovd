@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2011 Ulteo SAS
+# Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author David LECHEVALIER <david@ulteo.com> 2011 
-# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011, 2012
 # Author Samuel BOVEE <samuel@ulteo> 2011
 #
 # This program is free software; you can redistribute it and/or 
@@ -20,13 +20,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import commands
 import glob
 import os
 import statvfs
 import time
 from xml.dom.minidom import Document
 
+from ovd import commands
 from ovd.Logger import Logger
 from ovd.Platform.System import System
 from ovd.Role.Role import Role as AbstractRole

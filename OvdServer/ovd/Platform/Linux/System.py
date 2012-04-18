@@ -2,7 +2,7 @@
 
 # Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011, 2012
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 # Author David LECHEVALIER <david@ulteo.com> 2012
 #
@@ -21,7 +21,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-import commands
 import grp
 import locale
 import os
@@ -29,6 +28,7 @@ import platform
 import pwd
 import time
 
+from ovd import commands
 from ovd.Logger import Logger
 
 from Base.System import System as AbstractSystem

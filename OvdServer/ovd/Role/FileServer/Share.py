@@ -4,7 +4,7 @@
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
 # Author David LECHEVALIER <david@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
@@ -21,10 +21,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import commands
 import os
 import stat
 
+from ovd import commands
 from ovd.Logger import Logger
 
 from Config import Config

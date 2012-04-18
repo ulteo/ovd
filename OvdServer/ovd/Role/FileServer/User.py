@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2012 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -18,9 +18,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import commands
 import pwd
 
+from ovd import commands
 from ovd.Logger import Logger
 
 from Config import Config
