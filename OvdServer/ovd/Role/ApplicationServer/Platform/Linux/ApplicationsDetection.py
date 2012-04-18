@@ -3,7 +3,7 @@
 # Copyright (C) 2008-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010, 2011, 2012
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
@@ -143,9 +143,9 @@ class ApplicationsDetection():
 		
 		bufFile = tempfile.mktemp(".png")		
 		cmd = 'convert -resize 32x32 "%s" "%s"'%(iconPath, bufFile)
-		s,o = commands.getstatusoutput(cmd)
-		if s != 0:
-			Logger.debug("getIcon cmd '%s' returned (%d): %s"%(cmd, s, o))
+		p = commands.execute(cmd)
+		if p.returncode != 0:
+			Logger.debug("getIcon cmd '%s' returned (%d): %s"%(cmd, p.returncode, p.stdout.read()))
 			Logger.error("getIcon: imagemagick error")
 			if os.path.exists(bufFile):
 				os.remove(bufFile)
@@ -167,10 +167,11 @@ class ApplicationsDetection():
 			
 			cmd = 'dpkg -S "%s"'%(application["filename"])
 			
-			status,out = commands.getstatusoutput(cmd)
-			if status != 0:
+			p = commands.execute(cmd)
+			if p.returncode != 0:
 				continue
 			
+			out = p.stdout.read()
 			if not ":" in out:
 				continue
 			

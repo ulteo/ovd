@@ -225,9 +225,9 @@ class System(AbstractSystem):
 	def groupCreate(name_):
 		cmd = "groupadd %s"%(name_)
 		
-		s,o = commands.getstatusoutput(cmd)
-		if s != 0:
-			Logger.error("groupCreate return %d (%s)"%(s, o))
+		p = commands.execute(cmd)
+		if p.returncode != 0:
+			Logger.error("groupCreate return %d (%s)"%(p.returncode, p.stdout.read()))
 			return False
 		
 		return True
@@ -258,11 +258,11 @@ class System(AbstractSystem):
 	def userRemove(name_):
 		cmd = "userdel --force  --remove %s"%(name_)
 		
-		s,o = commands.getstatusoutput(cmd)
-		if s == 3072:
-			Logger.debug("mail dir error: '%s' return %d => %s"%(cmd, s, o))
-		elif s != 0:
-			Logger.error("userRemove return %d (%s)"%(s, o))
+		p = commands.execute(cmd)
+		if p.returncode == 3072:
+			Logger.debug("mail dir error: '%s' return %d => %s"%(cmd, p.returncode, p.stdout.read()))
+		elif p.returncode != 0:
+			Logger.error("userRemove return %d (%s)"%(p.returncode, p.stdout.read()))
 			return False
 		
 		return True
@@ -271,22 +271,22 @@ class System(AbstractSystem):
 	@staticmethod
 	def userAdd(login_, displayName_, password_, groups_):
 		cmd = "useradd -m -k /dev/null %s"%(login_)
-		s,o = commands.getstatusoutput(cmd)
-		if s != 0:
-			Logger.error("userAdd return %d (%s)"%(s, o))
+		p = commands.execute(cmd)
+		if p.returncode != 0:
+			Logger.error("userAdd return %d (%s)"%(p.returncode, p.stdout.read()))
 			return False
 		
 		cmd = 'echo "%s:%s" | chpasswd'%(login_, password_)
-		s,o = commands.getstatusoutput(cmd)
-		if s != 0:
-			Logger.error("userAdd return %d (%s)"%(s, o))
+		p = commands.execute(cmd)
+		if p.returncode != 0:
+			Logger.error("userAdd return %d (%s)"%(p.returncode, p.stdout.read()))
 			return False
 		
 		for group in groups_:
 			cmd = "adduser %s %s"%(login_, group)
-			s,o = commands.getstatusoutput(cmd)
-			if s != 0:
-				Logger.error("userAdd return %d (%s)"%(s, o))
+			p = commands.execute(cmd)
+			if p.returncode != 0:
+				Logger.error("userAdd return %d (%s)"%(p.returncode, p.stdout.read()))
 				return False
 		
 		return True

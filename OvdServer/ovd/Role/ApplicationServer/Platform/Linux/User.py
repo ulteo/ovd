@@ -71,22 +71,22 @@ class User(AbstractUser):
 			if retry < 0:
 				  Logger.error("ERROR: unable to add a new user")
 			lock.acquire()
-			s,o = commands.getstatusoutput(System.local_encode(cmd))
+			p = commands.execute(System.local_encode(cmd))
 			lock.release()
-			if s == 0:
+			if p.returncode == 0:
 				break
 			
 			Logger.debug("Add user :retry %i"%(6-retry))
-			if s == 2304: # user already exist
+			if p.returncode == 2304: # user already exist
 				Logger.error("User %s already exist"%(self.name))
 				break;
-			if s == 256: # an other process is creating a user
+			if p.returncode == 256: # an other process is creating a user
 				Logger.error("An other process is creating a user")
 				retry -=1
 				time.sleep(0.2)
 				continue
-			if s != 0:
-				Logger.error("UserAdd return %d (%s)"%(s, o))
+			if p.returncode != 0:
+				Logger.error("UserAdd return %d (%s)"%(p.returncode, p.stdout.read()))
 				return False
 		
 		
@@ -98,19 +98,19 @@ class User(AbstractUser):
 					Logger.error("ERROR: unable to add a new user")
 					return False
 				lock.acquire()
-				s,o = commands.getstatusoutput(cmd)
+				p = commands.execute(cmd)
 				lock.release()
-				if s == 0:
+				if p.returncode == 0:
 					break
 				
 				Logger.debug("Chpasswd of %s:retry %i"%(self.name, 6-retry))
-				if s == 256 or s == 2560: # an other process is creating a user
+				if p.returncode == 256 or p.returncode == 2560: # an other process is creating a user
 					Logger.debug("An other process is creating a user")
 					retry -=1
 					time.sleep(0.2)
 					continue
-				if s != 0:
-					Logger.error("chpasswd return %d (%s)"%(s, o))
+				if p.returncode != 0:
+					Logger.error("chpasswd return %d (%s)"%(p.returncode, p.stdout.read()))
 					return False
 		
 		return self.post_create()
@@ -147,22 +147,22 @@ class User(AbstractUser):
 		retry = 5
 		while retry !=0:
 			lock.acquire()
-			s,o = commands.getstatusoutput(cmd)
+			p = commands.execute(cmd)
 			lock.release()
-			if s == 0:
+			if p.returncode == 0:
 				return True
-			if s == 12:
-				Logger.debug("mail dir error: '%s' return %d => %s"%(str(cmd), s, o))
+			if p.returncode == 12:
+				Logger.debug("mail dir error: '%s' return %d => %s"%(str(cmd), p.returncode, p.stdout.read()))
 				return True
 			
 			Logger.debug("User delete of %s: retry %i"%(self.name, 6-retry))
-			if s == 256 or s == 2560: # an other process is creating a user
+			if p.returncode == 256 or s == 2560: # an other process is creating a user
 				Logger.debug("An other process is creating a user")
 				retry -=1
 				time.sleep(0.2)
 				continue
-			if s != 0:
-				Logger.error("userdel return %d (%s)"%(s, o))
+			if p.returncode != 0:
+				Logger.error("userdel return %d (%s)"%(p.returncode, p.stdout.read()))
 				return False
 		
 		return True

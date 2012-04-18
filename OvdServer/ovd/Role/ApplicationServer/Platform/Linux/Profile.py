@@ -3,7 +3,7 @@
 # Copyright (C) 2010-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
 # Author David LECHEVALIER <david@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
@@ -52,10 +52,10 @@ class Profile(AbstractProfile):
 			cmd = "mount -t cifs -o username=%s,password=%s,uid=%s,gid=0,umask=077 //%s/%s %s"%(self.profile["login"], self.profile["password"], self.session.user.name, self.profile["server"], self.profile["dir"], self.profile_mount_point)
 			cmd = self.transformToLocaleEncoding(cmd)
 			Logger.debug("Profile mount command: '%s'"%(cmd))
-			s,o = commands.getstatusoutput(cmd)
-			if s != 0:
+			p = commands.execute(cmd)
+			if p.returncode != 0:
 				Logger.error("Profile mount failed")
-				Logger.debug("Profile mount failed (status: %d) => %s"%(s, o))
+				Logger.debug("Profile mount failed (status: %d) => %s"%(p.returncode, p.stdout.read()))
 				os.rmdir(self.profile_mount_point)
 			else:
 				self.profileMounted = True
@@ -69,10 +69,10 @@ class Profile(AbstractProfile):
 			cmd = "mount -t cifs -o username=%s,password=%s,uid=%s,gid=0,umask=077 //%s/%s %s"%(sharedFolder["login"], sharedFolder["password"], self.session.user.name, sharedFolder["server"], sharedFolder["dir"], dest)
 			cmd = self.transformToLocaleEncoding(cmd)
 			Logger.debug("Profile, sharedFolder mount command: '%s'"%(cmd))
-			s,o = commands.getstatusoutput(cmd)
-			if s != 0:
+			p = commands.execute(cmd)
+			if p.returncode != 0:
 				Logger.error("Profile sharedFolder mount failed")
-				Logger.debug("Profile sharedFolder mount failed (status: %d) => %s"%(s, o))
+				Logger.debug("Profile sharedFolder mount failed (status: %d) => %s"%(p.returncode, p.stdout.read()))
 				os.rmdir(dest)
 			else:
 				sharedFolder["mountdest"] = dest
@@ -90,10 +90,10 @@ class Profile(AbstractProfile):
 				cmd = "mount -o bind \"%s\" \"%s\""%(dest, dst)
 				cmd = self.transformToLocaleEncoding(cmd)
 				Logger.debug("Profile bind dir command '%s'"%(cmd))
-				s,o = commands.getstatusoutput(cmd)
-				if s != 0:
+				p = commands.execute(cmd)
+				if p.returncode != 0:
 					Logger.error("Profile bind dir failed")
-					Logger.error("Profile bind dir failed (status: %d) %s"%(s, o))
+					Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
 				else:
 					sharedFolder["local_path"] = dst
 					self.folderRedirection.append(dst)
@@ -117,10 +117,10 @@ class Profile(AbstractProfile):
 				cmd = "mount -o bind \"%s\" \"%s\""%(src, dst)
 				cmd = self.transformToLocaleEncoding(cmd)
 				Logger.debug("Profile bind dir command '%s'"%(cmd))
-				s,o = commands.getstatusoutput(cmd)
-				if s != 0:
+				p = commands.execute(cmd)
+				if p.returncode != 0:
 					Logger.error("Profile bind dir failed")
-					Logger.error("Profile bind dir failed (status: %d) %s"%(s, o))
+					Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
 				else:
 					self.folderRedirection.append(dst)
 			
@@ -141,20 +141,20 @@ class Profile(AbstractProfile):
 			cmd = "umount \"%s\""%(d)
 			cmd = self.transformToLocaleEncoding(cmd)
 			Logger.debug("Profile bind dir command: '%s'"%(cmd))
-			s,o = commands.getstatusoutput(cmd)
-			if s != 0:
+			p = commands.execute(cmd)
+			if p.returncode != 0:
 				Logger.error("Profile bind dir failed")
-				Logger.error("Profile bind dir failed (status: %d) %s"%(s, o))
+				Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
 		
 		for sharedFolder in self.sharedFolders:
 			if sharedFolder.has_key("mountdest"):
 				cmd = """umount "%s" """%(sharedFolder["mountdest"])
 				cmd = self.transformToLocaleEncoding(cmd)
 				Logger.debug("Profile sharedFolder umount dir command: '%s'"%(cmd))
-				s,o = commands.getstatusoutput(cmd)
-				if s != 0:
+				p = commands.execute(cmd)
+				if p.returncode != 0:
 					Logger.error("Profile sharedFolder umount dir failed")
-					Logger.error("Profile sharedFolder umount dir failed (status: %d) %s"%(s, o))
+					Logger.error("Profile sharedFolder umount dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
 				
 				os.rmdir(sharedFolder["mountdest"])
 		
@@ -162,10 +162,10 @@ class Profile(AbstractProfile):
 			cmd = "umount %s"%(self.profile_mount_point)
 			cmd = self.transformToLocaleEncoding(cmd)
 			Logger.debug("Profile umount command: '%s'"%(cmd))
-			s,o = commands.getstatusoutput(cmd)
-			if s != 0:
+			p = commands.execute(cmd)
+			if p.returncode != 0:
 				Logger.error("Profile umount failed")
-				Logger.debug("Profile umount failed (status: %d) => %s"%(s, o))
+				Logger.debug("Profile umount failed (status: %d) => %s"%(p.returncode, p.stdout.read()))
 			
 			try:
 				os.rmdir(self.profile_mount_point)
@@ -190,10 +190,10 @@ class Profile(AbstractProfile):
 		cmd = self.getRsyncMethod(d, self.homeDir, True)
 		Logger.debug("rsync cmd '%s'"%(cmd))
 		
-		s,o = commands.getstatusoutput(cmd)
-		if s is not 0:
+		p = commands.execute(cmd)
+		if p.returncode is not 0:
 			Logger.error("Unable to copy conf from profile")
-			Logger.debug("Unable to copy conf from profile, cmd '%s' return %d: %s"%(cmd, s, o))
+			Logger.debug("Unable to copy conf from profile, cmd '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read()))
 	
 	
 	def copySessionStop(self):
@@ -212,10 +212,10 @@ class Profile(AbstractProfile):
 		cmd = self.getRsyncMethod(self.homeDir, d)
 		Logger.debug("rsync cmd '%s'"%(cmd))
 		
-		s,o = commands.getstatusoutput(cmd)
-		if s is not 0:
+		p = commands.execute(cmd)
+		if p.returncode is not 0:
 			Logger.error("Unable to copy conf to profile")
-			Logger.debug("Unable to copy conf to profile, cmd '%s' return %d: %s"%(cmd, s, o))
+			Logger.debug("Unable to copy conf to profile, cmd '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read()))
 	
 	
 	@staticmethod

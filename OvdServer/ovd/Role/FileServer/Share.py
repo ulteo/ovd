@@ -76,27 +76,27 @@ class Share:
 	
 	def delete(self):
 		cmd = "rm -rf %s"%(self.directory)
-		s, o = commands.getstatusoutput(cmd)
-		if s is not 0:
+		p = commands.execute(cmd)
+		if p.returncode is not 0:
 			Logger.error("FS: unable to del share")
-			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
+			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 		
 		return s == 0
 	
 	
 	def enable(self):
 		cmd = "groupadd  %s"%(self.group)
-		s, o = commands.getstatusoutput(cmd)
-		if s is not 0:
+		p = commands.execute(cmd)
+		if p.returncode is not 0:
 			Logger.error("FS: unable to create group")
-			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
+			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 			return False
 		
 		cmd = 'net usershare add %s "%s" %s %s:f,Everyone:d'%(self.name, self.directory, self.name, self.group)
-		s, o = commands.getstatusoutput(cmd)
-		if s is not 0:
+		p = commands.execute(cmd)
+		if p.returncode is not 0:
 			Logger.error("FS: unable to add share")
-			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
+			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 			return False
 		
 		path = os.path.join(self.directory, ".htaccess")
@@ -132,20 +132,20 @@ class Share:
 		
 		
 		cmd = "net usershare delete %s"%(self.name)
-		s, o = commands.getstatusoutput(cmd)
+		p = commands.execute(cmd)
 		ret = True
-		if s is not 0:
+		if p.returncode is not 0:
 			ret = False
 			Logger.error("FS: unable to del share")
-			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
+			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 		
 		
 		cmd = "groupdel  %s"%(self.group)
-		s, o = commands.getstatusoutput(cmd)
-		if s is not 0:
+		p = commands.execute(cmd)
+		if p.returncode is not 0:
 			ret = False
 			Logger.error("FS: unable to del group")
-			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
+			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 		
 		self.do_right_normalization()
 		
@@ -155,14 +155,14 @@ class Share:
 	
 	def do_right_normalization(self):
 		cmd = 'chown -R %s:%s "%s"'%(Config.uid, Config.gid, self.directory)
-		s, o = commands.getstatusoutput(cmd)
-		if s is not 0:
-			Logger.debug("FS: following command '%s' returned %d => %s"%(cmd, s, o))
+		p = commands.execute(cmd)
+		if p.returncode is not 0:
+			Logger.debug("FS: following command '%s' returned %d => %s"%(cmd, p.returncode, p.stdout.read()))
 		
 		cmd = 'chmod -R u=rwX,g=rwX,o-rwx "%s"'%(self.directory)
-		s, o = commands.getstatusoutput(cmd)
-		if s is not 0:
-			Logger.debug("FS: following command '%s' returned %d => %s"%(cmd, s, o))
+		p = commands.execute(cmd)
+		if p.returncode is not 0:
+			Logger.debug("FS: following command '%s' returned %d => %s"%(cmd, p.returncode, p.stdout.read()))
 	
 	
 	def add_user(self, user):
@@ -170,10 +170,10 @@ class Share:
 			self.enable()
 		
 		cmd = "adduser %s %s"%(user, self.group)
-		s, o = commands.getstatusoutput(cmd)
-		if s is not 0:
+		p = commands.execute(cmd)
+		if p.returncode is not 0:
 			Logger.error("FS: unable to add user in group")
-			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
+			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 			return False
 		
 		self.users.append(user)
@@ -186,11 +186,11 @@ class Share:
 		
 		ret = True
 		cmd = "deluser %s %s"%(user, self.group)
-		s, o = commands.getstatusoutput(cmd)
-		if s is not 0:
+		p = commands.execute(cmd)
+		if p.returncode is not 0:
 			ret = False
 			Logger.error("FS: unable to del user in group")
-			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
+			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 		
 		self.users.remove(user)
 		if len(self.users) == 0:

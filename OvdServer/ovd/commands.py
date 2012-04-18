@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011 Ulteo SAS
+# Copyright (C) 2011-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
-# Author Julien LANGLOIS <julien@ulteo.com> 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2011-2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -23,9 +23,9 @@ import os
 import subprocess
 import sys
 
-__all__ = ["getstatusoutput", "execute_no_wait"]
+__all__ = ["execute"]
 
-def execute_no_wait(args):
+def execute(args, wait = True):
 	if type(args) is type([]):
 		shell = False
 	elif type(args) in [type(""), type(u"")]:
@@ -35,14 +35,10 @@ def execute_no_wait(args):
 		stdin=subprocess.PIPE, 
 		stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=shell)
 	
+	if wait:
+		p.wait()
+	
 	return p
-
-
-def getstatusoutput(args):
-	p = execute_no_wait(args)
-	p.wait()
-	output = p.communicate()[0]
-	return  (p.returncode, output)
 
 
 def detachFatherProcess():
