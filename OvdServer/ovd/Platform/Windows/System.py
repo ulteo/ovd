@@ -291,10 +291,5 @@ class System(AbstractSystem):
 	
 	
 	@staticmethod
-	def detachFatherProcess():
-		pass
-	
-	
-	@staticmethod
 	def tcp_server_allow_reuse_address():
 		return False

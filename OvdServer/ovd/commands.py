@@ -21,8 +21,7 @@
 
 import os
 import subprocess
-
-from ovd.Platform.System import System
+import sys
 
 __all__ = ["getstatusoutput"]
 
@@ -33,8 +32,13 @@ def getstatusoutput(args):
 	elif type(args) in [type(""), type(u"")]:
 		shell = True
 	
-	p = subprocess.Popen(args, preexec_fn=System.detachFatherProcess,
+	p = subprocess.Popen(args, preexec_fn=detachFatherProcess,
 		stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=shell)
 	p.wait()
 	output = p.communicate()[0]
 	return  (p.returncode, output)
+
+
+def detachFatherProcess():
+	if sys.platform.startswith('linux'):
+		os.setpgrp()

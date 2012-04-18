@@ -303,10 +303,5 @@ class System(AbstractSystem):
 	
 	
 	@staticmethod
-	def detachFatherProcess():
-		os.setpgrp()
-	
-	
-	@staticmethod
 	def tcp_server_allow_reuse_address():
 		return True
