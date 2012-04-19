@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2010-2012 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -24,9 +24,8 @@ import re
 from win32com.shell import shell
 
 from ovd.Logger import Logger
+from ovd.Platform.System import System
 from ovd.Role.ApplicationServer.ApplicationsStatic import ApplicationsStatic as AbstractApplicationsStatic
-
-from ApplicationsDetection import ApplicationsDetection
 
 
 class ApplicationsStatic(AbstractApplicationsStatic):
@@ -45,9 +44,9 @@ class ApplicationsStatic(AbstractApplicationsStatic):
 		
 		cmd = """"%s" "%s" "%s" """%("png2ico.exe", ico_file, png_file)
 		
-		status = ApplicationsDetection.execute(cmd, True)
-		if status != 0:
-			Logger.warn("createShortcut following command returned %d: %s"%(status, cmd))
+		p = System.execute(cmd, True)
+		if p.returncode != 0:
+			Logger.warn("createShortcut following command returned %d: %s"%(p.returncode, cmd))
 			if os.path.exists(ico_file):
 			  os.remove(ico_file)
 			

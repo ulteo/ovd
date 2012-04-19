@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
-# Copyright (C) 2009-2011 Ulteo SAS
+# Copyright (C) 2009-2012 Ulteo SAS
 # Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
-# Author Julien LANGLOIS <julien@ulteo.com> 2009-2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2009-2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -25,11 +25,9 @@ import tempfile
 import pywintypes
 import win32api
 from win32com.shell import shell, shellcon
-import win32event
-import win32file
-import win32process
 
 from ovd.Logger import Logger
+from ovd.Platform.System import System
 import LnkFile
 from MimeTypeInfos import MimeTypeInfos
 from Msi import Msi
@@ -188,19 +186,19 @@ class ApplicationsDetection:
 		
 		
 		cmd = """"%s" "%s" "%s" """%("exeIcon2png.exe", iconLocation, path_png)
-		status = self.execute(cmd, True)
-		if status != 0:
+		p = System.execute(cmd, True)
+		if p.returncode != 0:
 			Logger.warn("Unable to extract icon, use alternative method")
-			Logger.debug("ApplicationsDetection::getIcon following command returned %d: %s"%(status, cmd))
+			Logger.debug("ApplicationsDetection::getIcon following command returned %d: %s"%(p.returncode, cmd))
 			if os.path.exists(path_png):
 				os.remove(path_png)
 			
 			cmd = """"%s" "%s" "%s" """%("extract_icon.exe", iconLocation, path_bmp)
 			
-			status = self.execute(cmd, True)
-			if status != 0:
+			p = System.execute(cmd, True)
+			if p.returncode != 0:
 				Logger.warn("Unable to extract icon with the alternative method")
-				Logger.debug("ApplicationsDetection::getIcon following command returned %d: %s"%(status, cmd))
+				Logger.debug("ApplicationsDetection::getIcon following command returned %d: %s"%(p.returncode, cmd))
 				if os.path.exists(path_bmp):
 					os.remove(path_bmp)
 				
@@ -212,10 +210,10 @@ class ApplicationsDetection:
 			
 			
 			cmd = """"%s" -Q -O "%s" "%s" """%("bmp2png.exe", path_png, path_bmp)
-			status = self.execute(cmd, True)
-			if status != 0:
+			p = System.execute(cmd, True)
+			if p.returncode != 0:
 				Logger.warn("Unable to extract icon with the alternative method")
-				Logger.debug("ApplicationsDetection::getIcon following command returned %d: %s"%(status, cmd))
+				Logger.debug("ApplicationsDetection::getIcon following command returned %d: %s"%(p.returncode, cmd))
 				os.remove(path_bmp)
 				if os.path.exists(path_png):
 					os.remove(path_png)
@@ -234,26 +232,6 @@ class ApplicationsDetection:
 		
 		os.remove(path_png)
 		return buf
-	
-	
-	@staticmethod
-	def execute(cmd, wait=False):
-		try:
-			(hProcess, hThread, dwProcessId, dwThreadId) = win32process.CreateProcess(None, cmd, None , None, False, 0 , None, None, win32process.STARTUPINFO())
-		except Exception, err:
-			Logger.error("Unable to exec '%s': %s"%(cmd, str(err)))
-			return 255
-		
-		if wait:
-			win32event.WaitForSingleObject(hProcess, win32event.INFINITE)
-			retValue = win32process.GetExitCodeProcess(hProcess)
-		else:
-			retValue = dwProcessId
-		
-		win32file.CloseHandle(hProcess)
-		win32file.CloseHandle(hThread)
-		
-		return retValue
 	
 	
 	@staticmethod
