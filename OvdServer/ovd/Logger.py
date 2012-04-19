@@ -54,6 +54,8 @@ class Logger:
 		self.thread = None
 		self.lock = threading.Lock()
 		
+		self.hooks = []
+		
 		if filename is not None or stdout is not False:	
 			formatter = logging.Formatter('%(asctime)s [%(levelname)s]: %(message)s')
 			self.logging = logging.getLogger(name)
@@ -132,6 +134,11 @@ class Logger:
 			#	self.fileHandler.stream = self.fileHandler._open()
 			f = getattr(self, func)
 			f(obj)
+		
+		for hook in self.hooks:
+			f = getattr(hook, func[len("log_"):])
+			f(obj)
+		
 		self.lock.release()
 	
 
@@ -186,6 +193,26 @@ class Logger:
 		
 		if old_instance is not None:
 			old_instance.setThreadedMode(False)
+	
+	
+	@classmethod 
+	def registerHook(cls, hook):
+		if not cls._instance:
+			return
+		
+		cls._instance.hooks.append(hook)
+	
+	
+	@classmethod 
+	def unregisterHook(cls, hook):
+		if not cls._instance:
+			return
+		
+		if hook not in cls._instance.hooks:
+			return
+		
+		cls._instance.hooks.remove(hook)
+	
 	
 	@classmethod
 	def info(cls, message):

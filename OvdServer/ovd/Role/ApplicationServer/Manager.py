@@ -78,6 +78,10 @@ class Manager:
 			
 			dumps[name] = data
 		
+		data = session.log.get_full_log()
+		if len(data) > 0:
+			dumps["server.log"] = data
+		
 		try:
 			doc = Document()
 			rootNode = doc.createElement('session')

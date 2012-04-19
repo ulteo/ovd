@@ -34,6 +34,8 @@ from ovd.Platform.System import System
 
 from Platform.ApplicationsDetection import ApplicationsDetection
 
+from SessionLogger import SessionLogger
+
 class Session:
 	Ulteo_apps = ["startovdapp", "UlteoOVDIntegratedLauncher"]
 	
@@ -69,7 +71,7 @@ class Session:
 		
 		self.domain = None
 		
-		self.log = []
+		self.log = SessionLogger()
 		self.switch_status(Session.SESSION_STATUS_INIT)
 	
 	def init(self):
@@ -187,7 +189,6 @@ class Session:
 	
 	
 	def switch_status(self, status_):
-		self.log.append((time.time(), status_))
 		self.status = status_
 	
 	

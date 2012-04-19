@@ -73,18 +73,25 @@ class SessionManagement(Process):
 			
 			if request == "create":
 				session = obj
+				
+				Logger.registerHook(session.log)
 				self.create_session(session)
+				Logger.unregisterHook(session.log)
 				self.queue_sync.put(session)
 			elif request == "destroy":
 				session = obj
+				Logger.registerHook(session.log)
 				self.destroy_session(session)
+				Logger.unregisterHook(session.log)
 				self.queue_sync.put(session)
 			elif request == "logoff":
 				user = obj
 				self.destroy_user(user)
 			elif request == "manage_new":
 				session = obj
+				Logger.registerHook(session.log)
 				self.manage_new_session(session)
+				Logger.unregisterHook(session.log)
 				self.queue_sync.put(session)
 			elif request == "exit":
 				break
