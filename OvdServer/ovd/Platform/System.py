@@ -21,6 +21,7 @@
 
 
 import locale
+import subprocess
 
 class System:
 	@staticmethod
@@ -111,3 +112,26 @@ class System:
 			ret = data
 
 		return ret
+	
+	
+	@classmethod
+	def execute(cls, args, wait = True):
+		if type(args) is type([]):
+			shell = False
+		elif type(args) in [type(""), type(u"")]:
+			shell = True
+		
+		p = subprocess.Popen(args, preexec_fn=cls.detachFatherProcess,
+			stdin = subprocess.PIPE, 
+			stdout = subprocess.PIPE, stderr = subprocess.STDOUT,
+			shell=shell)
+		
+		if wait:
+			p.wait()
+		
+		return p
+	
+	
+	@classmethod
+	def detachFatherProcess(cls):
+		pass

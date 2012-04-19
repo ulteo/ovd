@@ -29,9 +29,9 @@ import xdg.DesktopEntry
 import xdg.Exceptions
 import xdg.IconTheme
 
-from ovd import commands
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Config import Config
+from ovd.Platform.System import System
 
 class ApplicationsDetection():
 	shortcut_ext = ".desktop"
@@ -143,7 +143,7 @@ class ApplicationsDetection():
 		
 		bufFile = tempfile.mktemp(".png")		
 		cmd = 'convert -resize 32x32 "%s" "%s"'%(iconPath, bufFile)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode != 0:
 			Logger.debug("getIcon cmd '%s' returned (%d): %s"%(cmd, p.returncode, p.stdout.read()))
 			Logger.error("getIcon: imagemagick error")
@@ -167,7 +167,7 @@ class ApplicationsDetection():
 			
 			cmd = 'dpkg -S "%s"'%(application["filename"])
 			
-			p = commands.execute(cmd)
+			p = System.execute(cmd)
 			if p.returncode != 0:
 				continue
 			

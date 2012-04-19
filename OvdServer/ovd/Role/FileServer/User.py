@@ -20,8 +20,8 @@
 
 import pwd
 
-from ovd import commands
 from ovd.Logger import Logger
+from ovd.Platform.System import System
 
 from Config import Config
 
@@ -33,7 +33,7 @@ class User:
 	
 	def create(self, password):
 		cmd = "useradd -d /dev/null -s /bin/false -G %s %s"%(Config.group, self.login)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode == 2304:
 			Logger.warn("FS: unable to create user: already exists")
 			return False
@@ -43,7 +43,7 @@ class User:
 			return False
 		
 		cmd = 'smbpasswd -s -a %s'%(self.login)
-		p = commands.execute(cmd, wait = False)
+		p = System.execute(cmd, wait = False)
 		p.stdin.write("%s\n%s\n"%(password, password))
 		p.wait()
 		
@@ -53,7 +53,7 @@ class User:
 			return False
 		
 		cmd = 'htpasswd -b %s "%s" "%s"'%(Config.dav_passwd_file, self.login, password)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode != 0:
 			Logger.error("FS: unable to update apache auth file")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
@@ -66,21 +66,21 @@ class User:
 		ret = True
 		
 		cmd = 'htpasswd -D %s "%s"'%(Config.dav_passwd_file, self.login)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode != 0:
 			Logger.error("FS: unable to update apache auth file")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 			return False
 		
 		cmd = 'smbpasswd -x %s'%(self.login)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode != 0:
 			Logger.error("FS: unable to del smb password")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 			ret = False
 		
 		cmd = "userdel -f %s"%(self.login)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode != 0:
 			Logger.error("FS: unable to del user")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
@@ -91,19 +91,19 @@ class User:
 	
 	def clean(self):
 		cmd = 'htpasswd -D %s "%s"'%(Config.dav_passwd_file, self.login)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode != 0:
 			Logger.warn("FS: unable to remove user %s in 'clean' process"%(self.login))
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 		
 		cmd = 'smbpasswd -x %s'%(self.login)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode != 0:
 			Logger.warn("FS: unable to remove user %s in 'clean' process"%(self.login))
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 		
 		cmd = "userdel -f %s"%(self.login)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode != 0:
 			Logger.warn("FS: unable to remove user %s in 'clean' process"%(self.login))
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
@@ -117,7 +117,7 @@ class User:
 			pass
 		
 		cmd = "smbpasswd -e %s"%(self.login)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode == 0:
 			return True
 		

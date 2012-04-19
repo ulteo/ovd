@@ -27,8 +27,8 @@ import Queue
 from threading import Thread
 from xml.dom.minidom import Document
 
-from ovd import commands
 from ovd.Logger import Logger
+from ovd.Platform.System import System
 
 class Apt(Thread):
 	def __init__(self):
@@ -46,7 +46,7 @@ class Apt(Thread):
 		if not os.path.exists(self.directory):
 			os.makedirs(self.directory)
 		else:
-			commands.execute("rm -rf %s/*"%(self.directory))
+			System.execute("rm -rf %s/*"%(self.directory))
 	
 	
 	def add(self, request):
@@ -138,12 +138,12 @@ class Request_Packages(Request):
 			command = "autoremove --purge "+" ".join(self.packages)
 		
 		cmd = "apt-get update >>%s/stdout 2>>%s/stderr"%(self.directory, self.directory)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode != 0:
 			return False
 		
 		cmd = "DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical DEBCONF_NONINTERACTIVE_SEEN=true apt-get --yes --force-yes --option DPkg::Options::=--force-confold %s >>%s/stdout 2>>%s/stderr"%(command, self.directory, self.directory)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode != 0:
 			return False
 		

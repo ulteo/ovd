@@ -26,7 +26,6 @@ import statvfs
 import time
 from xml.dom.minidom import Document
 
-from ovd import commands
 from ovd.Logger import Logger
 from ovd.Platform.System import System
 from ovd.Role.Role import Role as AbstractRole
@@ -99,7 +98,7 @@ class Role(AbstractRole):
 		
 		for usershare in self.get_enabled_usershares():
 			Logger.debug("FileServer:: Removing samba usershare '%s'"%(usershare))
-			p = commands.execute("net usershare delete %s"%(usershare))
+			p = System.execute("net usershare delete %s"%(usershare))
 			if p.returncode is not 0:
 				Logger.error("FS: unable to 'net usershare delete': %d => %s"%(p.returncode, p.stdout.read()))
 				ret = False
@@ -109,13 +108,13 @@ class Role(AbstractRole):
 	
 	def cleanup_repository(self):
 		cmd = 'chown -R %s:%s "%s"'%(Config.uid, Config.gid, Config.spool)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode is not 0:
 			Logger.debug("FS: following command '%s' returned %d => %s"%(cmd, p.returncode, p.stdout.read()))
 			return False
 		
 		cmd = 'chmod -R u=rwX,g=rwX,o-rwx "%s"'%(Config.spool)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode is not 0:
 			Logger.debug("FS: following command '%s' returned %d => %s"%(cmd, p.returncode, p.stdout.read()))
 			return False
@@ -158,7 +157,7 @@ class Role(AbstractRole):
 	
 	
 	def get_enabled_usershares(self):
-		p = commands.execute("net usershare list")
+		p = System.execute("net usershare list")
 		if p.returncode is not 0:
 			Logger.error("FS: unable to 'net usershare list': %d => %s"%(p.returncode, p.stdout.read()))
 			return []

@@ -28,7 +28,6 @@ import platform
 import pwd
 import time
 
-from ovd import commands
 from ovd.Logger import Logger
 
 from Base.System import System as AbstractSystem
@@ -218,14 +217,14 @@ class System(AbstractSystem):
 	
 	@staticmethod
 	def DeleteDirectory(path):
-		commands.execute("rm -rf '%s'"%(path))
+		System.execute("rm -rf '%s'"%(path))
 	
 	
 	@staticmethod
 	def groupCreate(name_):
 		cmd = "groupadd %s"%(name_)
 		
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode != 0:
 			Logger.error("groupCreate return %d (%s)"%(p.returncode, p.stdout.read()))
 			return False
@@ -258,7 +257,7 @@ class System(AbstractSystem):
 	def userRemove(name_):
 		cmd = "userdel --force  --remove %s"%(name_)
 		
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode == 3072:
 			Logger.debug("mail dir error: '%s' return %d => %s"%(cmd, p.returncode, p.stdout.read()))
 		elif p.returncode != 0:
@@ -271,20 +270,20 @@ class System(AbstractSystem):
 	@staticmethod
 	def userAdd(login_, displayName_, password_, groups_):
 		cmd = "useradd -m -k /dev/null %s"%(login_)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode != 0:
 			Logger.error("userAdd return %d (%s)"%(p.returncode, p.stdout.read()))
 			return False
 		
 		cmd = 'echo "%s:%s" | chpasswd'%(login_, password_)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode != 0:
 			Logger.error("userAdd return %d (%s)"%(p.returncode, p.stdout.read()))
 			return False
 		
 		for group in groups_:
 			cmd = "adduser %s %s"%(login_, group)
-			p = commands.execute(cmd)
+			p = System.execute(cmd)
 			if p.returncode != 0:
 				Logger.error("userAdd return %d (%s)"%(p.returncode, p.stdout.read()))
 				return False
@@ -300,6 +299,11 @@ class System(AbstractSystem):
 			return False
 		
 		return True
+	
+	
+	@classmethod
+	def detachFatherProcess(cls):
+		os.setpgrp()
 	
 	
 	@staticmethod

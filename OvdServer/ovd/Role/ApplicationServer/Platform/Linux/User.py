@@ -25,7 +25,6 @@ import pwd
 import time
 import xrdp
 
-from ovd import commands
 from ovd.Logger import Logger
 from ovd.Platform.System import System
 from ovd.Role.ApplicationServer.User import User as AbstractUser
@@ -71,7 +70,7 @@ class User(AbstractUser):
 			if retry < 0:
 				  Logger.error("ERROR: unable to add a new user")
 			lock.acquire()
-			p = commands.execute(System.local_encode(cmd))
+			p = System.execute(System.local_encode(cmd))
 			lock.release()
 			if p.returncode == 0:
 				break
@@ -98,7 +97,7 @@ class User(AbstractUser):
 					Logger.error("ERROR: unable to add a new user")
 					return False
 				lock.acquire()
-				p = commands.execute(cmd)
+				p = System.execute(cmd)
 				lock.release()
 				if p.returncode == 0:
 					break
@@ -147,7 +146,7 @@ class User(AbstractUser):
 		retry = 5
 		while retry !=0:
 			lock.acquire()
-			p = commands.execute(cmd)
+			p = System.execute(cmd)
 			lock.release()
 			if p.returncode == 0:
 				return True

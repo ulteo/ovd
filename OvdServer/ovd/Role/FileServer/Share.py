@@ -24,8 +24,8 @@
 import os
 import stat
 
-from ovd import commands
 from ovd.Logger import Logger
+from ovd.Platform.System import System
 
 from Config import Config
 
@@ -76,7 +76,7 @@ class Share:
 	
 	def delete(self):
 		cmd = "rm -rf %s"%(self.directory)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode is not 0:
 			Logger.error("FS: unable to del share")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
@@ -86,14 +86,14 @@ class Share:
 	
 	def enable(self):
 		cmd = "groupadd  %s"%(self.group)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode is not 0:
 			Logger.error("FS: unable to create group")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 			return False
 		
 		cmd = 'net usershare add %s "%s" %s %s:f,Everyone:d'%(self.name, self.directory, self.name, self.group)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode is not 0:
 			Logger.error("FS: unable to add share")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
@@ -132,7 +132,7 @@ class Share:
 		
 		
 		cmd = "net usershare delete %s"%(self.name)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		ret = True
 		if p.returncode is not 0:
 			ret = False
@@ -141,7 +141,7 @@ class Share:
 		
 		
 		cmd = "groupdel  %s"%(self.group)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode is not 0:
 			ret = False
 			Logger.error("FS: unable to del group")
@@ -155,12 +155,12 @@ class Share:
 	
 	def do_right_normalization(self):
 		cmd = 'chown -R %s:%s "%s"'%(Config.uid, Config.gid, self.directory)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode is not 0:
 			Logger.debug("FS: following command '%s' returned %d => %s"%(cmd, p.returncode, p.stdout.read()))
 		
 		cmd = 'chmod -R u=rwX,g=rwX,o-rwx "%s"'%(self.directory)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode is not 0:
 			Logger.debug("FS: following command '%s' returned %d => %s"%(cmd, p.returncode, p.stdout.read()))
 	
@@ -170,7 +170,7 @@ class Share:
 			self.enable()
 		
 		cmd = "adduser %s %s"%(user, self.group)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode is not 0:
 			Logger.error("FS: unable to add user in group")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
@@ -186,7 +186,7 @@ class Share:
 		
 		ret = True
 		cmd = "deluser %s %s"%(user, self.group)
-		p = commands.execute(cmd)
+		p = System.execute(cmd)
 		if p.returncode is not 0:
 			ret = False
 			Logger.error("FS: unable to del user in group")
