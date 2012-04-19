@@ -302,8 +302,8 @@ class System(AbstractSystem):
 	
 	
 	@classmethod
-	def detachFatherProcess(cls):
-		os.setpgrp()
+	def customize_subprocess_args(cls, args):
+		args["preexec_fn"] =  os.setpgrp
 	
 	
 	@staticmethod

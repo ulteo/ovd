@@ -121,10 +121,15 @@ class System:
 		elif type(args) in [type(""), type(u"")]:
 			shell = True
 		
-		p = subprocess.Popen(args, preexec_fn=cls.detachFatherProcess,
-			stdin = subprocess.PIPE, 
-			stdout = subprocess.PIPE, stderr = subprocess.STDOUT,
-			shell=shell)
+		
+		subprocess_args = {}
+		subprocess_args["stdin"] = subprocess.PIPE
+		subprocess_args["stdout"] = subprocess.PIPE
+		subprocess_args["stderr"] = subprocess.STDOUT
+		subprocess_args["shell"] = shell
+		cls.customize_subprocess_args(subprocess_args)
+		
+		p = subprocess.Popen(args, **subprocess_args)
 		
 		if wait:
 			p.wait()
@@ -133,5 +138,5 @@ class System:
 	
 	
 	@classmethod
-	def detachFatherProcess(cls):
+	def customize_subprocess_args(cls, args):
 		pass
