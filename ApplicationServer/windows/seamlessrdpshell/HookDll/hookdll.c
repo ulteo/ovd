@@ -94,6 +94,7 @@ typedef struct node_{
 	unsigned short *title;
 	boolean focus;
 	boolean is_shown;
+	int state;
 	struct node_* next;
 }node;
 
@@ -501,7 +502,6 @@ update_icon(HWND hwnd, HICON icon, int large)
 
 static void create_window(HWND hwnd){
 		unsigned short *title;
-		int state;
 		DWORD pid;
 		int flags;
 		HICON icon;
@@ -594,15 +594,15 @@ static void create_window(HWND hwnd){
 		}
 
 		if (style & WS_MAXIMIZE)
-			state = 2;
+			window->state = 2;
 		else if (style & WS_MINIMIZE)
-			state = 1;
+			window->state = 1;
 		else
-			state = 0;
+			window->state = 0;
 
 		update_position(hwnd);
 		vchannel_write("STATE", "0x%08lx,0x%08x,0x%08x", hwnd,
-				   state, 0);
+				   window->state, 0);
 
 		if (window->focus)
 			vchannel_write("FOCUS", "0x%08lx", hwnd);
@@ -625,6 +625,8 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 	LPARAM lparam;
 
 	LONG style;
+	
+	node* sw;
 
 	if (code < 0)
 		goto end;
@@ -633,6 +635,10 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 	msg = ((CWPSTRUCT *) details)->message;
 	wparam = ((CWPSTRUCT *) details)->wParam;
 	lparam = ((CWPSTRUCT *) details)->lParam;
+	
+	sw = getWindowFromHistory(hwnd);
+	if (! sw)
+		goto end;
 
 	if (!is_toplevel(hwnd) || is_seamless_internal_windows(hwnd))
 	{
@@ -710,9 +716,11 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 
 				if ((blocked_hwnd == hwnd) && (blocked == 2))
 					vchannel_write("ACK", "%u", serial);
-				else
+				else if (sw->state != 2) {
+					sw->state = 2;
 					vchannel_write("STATE", "0x%08lx,0x%08x,0x%08x",
 						       hwnd, 2, 0);
+				}
 				break;
 			}
 			if (!(style & WS_VISIBLE) || (style & WS_MINIMIZE))
@@ -896,17 +904,31 @@ wndprocret_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 static LRESULT CALLBACK
 cbt_hook_proc(int code, WPARAM wparam, LPARAM lparam)
 {
+	HWND hwnd;
+	node* sw;
+	int show;
+	LONG style;
+	
 	if (code < 0)
 		goto end;
+
+	hwnd = (HWND) wparam;
+				
+	sw = getWindowFromHistory(hwnd);
+	if (! sw)
+		goto end;
+	
+	show = LOWORD(lparam);
+	
+	style = GetWindowLong(hwnd, GWL_STYLE);
 
 	switch (code)
 	{
 		case HCBT_MINMAX:
 			{
-				int show, state, blocked;
-				HWND hwnd, blocked_hwnd;
+				int state, blocked;
+				HWND blocked_hwnd;
 				unsigned int serial;
-				LONG style;
 
 				WaitForSingleObject(g_mutex, INFINITE);
 				blocked_hwnd = g_blocked_state_hwnd;
@@ -914,14 +936,8 @@ cbt_hook_proc(int code, WPARAM wparam, LPARAM lparam)
 				blocked = g_blocked_state;
 				ReleaseMutex(g_mutex);
 
-				hwnd = (HWND) wparam;
-
-				style = GetWindowLong(hwnd, GWL_STYLE);
-
 				if (!(style & WS_VISIBLE))
 					break;
-
-				show = LOWORD(lparam);
 
 				if ((show == SW_NORMAL) || (show == SW_SHOWNORMAL)
 				    || (show == SW_RESTORE))
@@ -938,9 +954,11 @@ cbt_hook_proc(int code, WPARAM wparam, LPARAM lparam)
 
 				if ((blocked_hwnd == hwnd) && (blocked == state))
 					vchannel_write("ACK", "%u", serial);
-				else
+				else if (sw->state != state) {
+					sw->state = state;
 					vchannel_write("STATE", "0x%08lx,0x%08x,0x%08x",
 						       hwnd, state, 0);
+				}
 
 				break;
 			}
