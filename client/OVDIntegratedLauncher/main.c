@@ -2,7 +2,7 @@
  * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
- * Author Julien LANGLOIS <julien@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,6 +20,10 @@
  */
 
 #ifdef WIN32 //WINDOWS
+
+#ifndef WINVER
+#define WINVER 0x0500
+#endif //WINVER
 
 #ifndef _WIN32_IE
 #define _WIN32_IE 0x0500
