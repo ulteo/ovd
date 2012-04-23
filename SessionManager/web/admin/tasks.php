@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008-2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -158,6 +158,8 @@ function show_default($tm) {
 	      $status = '<span class="msg_error">'._('Error').'</span>';
       elseif ($task->status == 'in progress')
 	      $status = '<span class="msg_warn">'._('In progress').'</span>';
+	else
+		$status = $task->status;
 
       echo '<tr class="'.$content.'">';
       echo '<td><a href="?action=manage&id='.$task->id.'">'.$task->id.'</a></td>';
