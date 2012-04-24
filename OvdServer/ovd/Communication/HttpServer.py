@@ -1,10 +1,10 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2008-2011 Ulteo SAS
+# Copyright (C) 2008-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
-# Author David LECHEVALIER <david@ulteo.com> 2011
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2012
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or 
@@ -201,6 +201,9 @@ class HttpRequestHandler(SimpleHTTPRequestHandler):
 		response = self.server.comm_instance.process(req)
 		if response is None:
 			self.send_error(httplib.NOT_FOUND)
+			return
+		if response is False:
+			self.send_error(httplib.UNAUTHORIZED)
 			return
 		
 		
