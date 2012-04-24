@@ -625,8 +625,6 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 	LPARAM lparam;
 
 	LONG style;
-	
-	node* sw;
 
 	if (code < 0)
 		goto end;
@@ -636,10 +634,6 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 	wparam = ((CWPSTRUCT *) details)->wParam;
 	lparam = ((CWPSTRUCT *) details)->lParam;
 	
-	sw = getWindowFromHistory(hwnd);
-	if (! sw)
-		goto end;
-
 	if (!is_toplevel(hwnd) || is_seamless_internal_windows(hwnd))
 	{
 		goto end;
@@ -707,6 +701,11 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 				HWND blocked_hwnd;
 				int blocked;
 				unsigned int serial;
+				node* sw;
+				
+				sw = getWindowFromHistory(hwnd);
+				if (! sw)
+					break;
 
 				WaitForSingleObject(g_mutex, INFINITE);
 				blocked_hwnd = g_blocked_state_hwnd;
