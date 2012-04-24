@@ -45,12 +45,19 @@ function show_default() {
   if (! is_array($a_servs))
     $a_servs = array();
 
+  $nb_a_servs_online_maintenance = 0;
+  $nb_a_servs_not_maintenance = 0;
   foreach($a_servs as $s) {
 	$external_name_checklist = array('localhost', '127.0.0.1');
 	if (in_array($s->fqdn, $external_name_checklist) && in_array($s->getAttribute('external_name'), $external_name_checklist))
 		popup_error(sprintf(_('Server "%s": redirection name may be invalid!'), $s->fqdn));
 	if ($s->getAttribute('external_name') == '')
 		popup_error(sprintf(_('Server "%s": redirection name cannot be empty!'), $s->fqdn));
+	
+	if ($s->isOnline() and $s->getAttribute('locked'))
+		$nb_a_servs_online_maintenance++;
+	if (! $s->getAttribute('locked'))
+		$nb_a_servs_not_maintenance++;
   }
 
 	$can_do_action = isAuthorized('manageServers');
@@ -67,7 +74,7 @@ function show_default() {
     echo '<table id="available_servers_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
     echo '<thead>';
     echo '<tr class="title">';
-    if ($av_servers > 1 and $can_do_action)
+    if ($av_servers > 1 and $can_do_action and ($nb_a_servs_online_maintenance > 0 or $nb_a_servs_not_maintenance > 0))
       echo '<th class="unsortable"></th>';
     echo '<th>'._('FQDN').'</th><th>'._('Type').'</th>';
     echo '<th>'._('Version').'</th>';
@@ -94,8 +101,12 @@ function show_default() {
 
 
       echo '<tr class="'.$content.'">';
-      if ($av_servers > 1 and $can_do_action)
-        echo '<td><input class="input_checkbox" type="checkbox" name="checked_servers[]" value="'.$s->fqdn.'" /></td>';
+	if ($av_servers > 1 and $can_do_action and ($nb_a_servs_online_maintenance > 0 or $nb_a_servs_not_maintenance > 0)) {
+		echo '<td>';
+		if ($server_online || $switch_value == 1)
+			echo '<input class="input_checkbox" type="checkbox" name="checked_servers[]" value="'.$s->fqdn.'" />';
+		echo '</td>';
+	}
       echo '<td>';
 	echo '<a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->getAttribute('external_name');
 	if ($s->getAttribute('external_name') != $s->fqdn)
@@ -123,7 +134,7 @@ function show_default() {
       echo _('RAM').': '.round($s->getAttribute('ram_total')/1024).' '._('MB');
       echo '</td>';
 
-      if ($can_do_action) {
+      if ($can_do_action and ($nb_a_servs_online_maintenance > 0 or $nb_a_servs_not_maintenance > 0)) {
 	echo '<td>';
 	  if ($server_online || $switch_value == 1) {
 	  echo '<form action="actions.php" method="post">';
@@ -147,7 +158,7 @@ function show_default() {
     }
     echo '</tbody>';
 
-    if ($av_servers > 1 and $can_do_action) {
+    if ($av_servers > 1 and $can_do_action and ($nb_a_servs_online_maintenance > 0 or $nb_a_servs_not_maintenance > 0)) {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tfoot>';
       echo '<tr class="'.$content.'">';
@@ -159,8 +170,12 @@ function show_default() {
       echo '<form action="actions.php" method="post" onsubmit="return updateMassActionsForm(this, \'available_servers_table\');">';
       echo '<input type="hidden" name="name" value="Server" />';
       echo '<input type="hidden" name="action" value="maintenance" />';
-      echo '<input type="submit" name="to_production" value="'._('Switch to production').'"/><br />';
-      echo '<input type="submit" name="to_maintenance" value="'._('Switch to maintenance').'"/>';
+	if ($nb_a_servs_online_maintenance > 0)
+		echo '<input type="submit" name="to_production" value="'._('Switch to production').'"/>';
+	if ($nb_a_servs_online_maintenance > 0 and $nb_a_servs_not_maintenance > 0)
+		echo '<br />';
+	if ($nb_a_servs_not_maintenance > 0)
+		echo '<input type="submit" name="to_maintenance" value="'._('Switch to maintenance').'"/>';
       echo '</form>';
       echo '</td>';
       echo '</tr>';
