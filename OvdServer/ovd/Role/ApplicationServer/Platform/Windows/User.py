@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009
-# Author David LECHEVALIER <david@ulteo.com> 2010
+# Author David LECHEVALIER <david@ulteo.com> 2010, 2012
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -64,7 +64,7 @@ class User(AbstractUser):
 			win32net.NetUserAdd(None, 3, userData)
 		except Exception, e:
 			Logger.error("unable to create user: "+str(e))
-			raise e
+			return False
 		
 		self.post_create()
 		return True
