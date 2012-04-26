@@ -640,6 +640,9 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 			
 			count++;
 		}
+		
+		if (SeamlessChannel.getSeamlessState(f.sw_getExtendedState()) == state)
+			return false;
 
 		StateOrder order = new StateOrder();
 		order.window_id = id;
