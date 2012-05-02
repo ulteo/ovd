@@ -184,11 +184,10 @@ class Role(AbstractRole):
 				except (EOFError, socket.error):
 					Logger.debug("APS:: Role stopping")
 					return
-
+				
 				if session.status != self.sessions[session.id].status:
 					self.manager.session_switch_status(session, session.status)
-
-
+				
 				if session.status == Session.SESSION_STATUS_DESTROYED:
 					if self.sessions.has_key(session.id):
 						del(self.sessions[session.id])
