@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2011 Ulteo SAS
+# Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
-# Author David LECHEVALIER <david@ulteo.com> 2011
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2012
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
 #
@@ -184,6 +184,11 @@ class Role(AbstractRole):
 				except (EOFError, socket.error):
 					Logger.debug("APS:: Role stopping")
 					return
+
+				if session.status != self.sessions[session.id].status:
+					self.manager.session_switch_status(session, session.status)
+
+
 				if session.status == Session.SESSION_STATUS_DESTROYED:
 					if self.sessions.has_key(session.id):
 						del(self.sessions[session.id])

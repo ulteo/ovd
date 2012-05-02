@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2011 Ulteo SAS
+# Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
-# Author David LECHEVALIER <david@ulteo.com> 2011
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2012
 # Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
 #
@@ -110,7 +110,7 @@ class SessionManagement(Process):
 			if System.userExist(session.user.name):
 				Logger.error("unable to create session: user %s already exists"%(session.user.name))
 				session.end_status = Session.SESSION_END_STATUS_ERROR
-				self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_ERROR)
+				session.switch_status(Session.SESSION_STATUS_ERROR)
 				return self.destroy_session(session)
 			
 			session.user.infos["groups"] = [self.aps_instance.ts_group_name, self.aps_instance.ovd_group_name]
@@ -124,7 +124,7 @@ class SessionManagement(Process):
 			if rr is False:
 				Logger.error("unable to create session for user %s"%(session.user.name))
 				session.end_status = Session.SESSION_END_STATUS_ERROR
-				self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_ERROR)
+				session.switch_status(Session.SESSION_STATUS_ERROR)
 				return self.destroy_session(session)
 			
 			session.user.created = True
@@ -138,7 +138,7 @@ class SessionManagement(Process):
 			if rr is False:
 				Logger.error("unable to initialize session %s"%(session.id))
 				session.end_status = Session.SESSION_END_STATUS_ERROR
-				self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_ERROR)
+				session.switch_status(Session.SESSION_STATUS_ERROR)
 				return self.destroy_session(session)
 		
 		else:
@@ -147,7 +147,7 @@ class SessionManagement(Process):
 		
 		session.post_install()
 		
-		self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_INITED)
+		session.switch_status(Session.SESSION_STATUS_INITED)
 	
 	
 	def destroy_session(self, session):
@@ -173,7 +173,7 @@ class SessionManagement(Process):
 		if session.domain.manage_user():
 			self.destroy_user(session.user)
 		
-		self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_DESTROYED)
+		session.switch_status(Session.SESSION_STATUS_DESTROYED)
 	
 	
 	def logoff_user(self, user):
