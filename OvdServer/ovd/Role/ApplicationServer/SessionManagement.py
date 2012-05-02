@@ -77,11 +77,13 @@ class SessionManagement(Process):
 				Logger.registerHook(session.log)
 				self.create_session(session)
 				Logger.unregisterHook(session.log)
+				session.locked = False
 				self.queue_sync.put(session)
 			elif request == "destroy":
 				session = obj
 				Logger.registerHook(session.log)
 				self.destroy_session(session)
+				session.locked = False
 				Logger.unregisterHook(session.log)
 				self.queue_sync.put(session)
 			elif request == "logoff":
@@ -91,6 +93,7 @@ class SessionManagement(Process):
 				session = obj
 				Logger.registerHook(session.log)
 				self.manage_new_session(session)
+				session.locked = False
 				Logger.unregisterHook(session.log)
 				self.queue_sync.put(session)
 			elif request == "exit":

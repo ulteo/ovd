@@ -54,6 +54,7 @@ class Role(AbstractRole):
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
 		self.sessions = {}
+		self.locked_sessions = []
 		self.sessions_spooler = multiprocessing.Queue()
 		self.sessions_spooler2 = multiprocessing.Queue()
 		self.sessions_sync = multiprocessing.Queue()
@@ -145,6 +146,8 @@ class Role(AbstractRole):
 	def finalize(self):
 		Logger._instance.setThreadedMode(False)
 		
+		self.update_locked_sessions()
+		
 		for session in self.sessions.values():
 			self.manager.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
 		
@@ -197,6 +200,8 @@ class Role(AbstractRole):
 				else:
 					self.sessions[session.id] = session
 			
+			self.update_locked_sessions()
+			
 			for session in self.sessions.values():
 				try:
 					ts_id = TS.getSessionID(session.user.name)
@@ -215,7 +220,7 @@ class Role(AbstractRole):
 						
 						if session.status not in [Session.SESSION_STATUS_WAIT_DESTROY, Session.SESSION_STATUS_DESTROYED, Session.SESSION_STATUS_ERROR]:
 							self.manager.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
-							self.sessions_spooler.put(("destroy", session))
+							self.spool_action("destroy", session.id)
 					continue
 				
 				try:
@@ -229,7 +234,7 @@ class Role(AbstractRole):
 					if ts_status is TS.STATUS_LOGGED:
 						self.manager.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
 						if not session.domain.manage_user():
-							self.sessions_spooler2.put(("manage_new", session))
+							self.spool_action("manage_new", session.id)
 						
 						continue
 						
@@ -244,7 +249,7 @@ class Role(AbstractRole):
 				if session.status == Session.SESSION_STATUS_INACTIVE and ts_status is TS.STATUS_LOGGED:
 					self.manager.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
 					if not session.domain.manage_user():
-						self.sessions_spooler2.put(("manage_new", session))
+						self.spool_action("manage_new", session.id)
 					continue
 			
 			
@@ -359,3 +364,38 @@ class Role(AbstractRole):
 				sessionNode.appendChild(appNode)
 			
 			node.appendChild(sessionNode)
+	
+	
+	def update_locked_sessions(self):
+		actions_to_delete = []
+		for action in self.locked_sessions:
+			(action_name, session_id) = action
+			if not self.sessions.has_key(session_id):
+				Logger.error("Session %s is not existing anymore !"%(session_id))
+				actions_to_delete.append(action)
+				continue
+			
+			session = self.sessions[session_id]
+			if session.locked:
+				continue
+			
+			session.locked = True
+			if action in ["manage_new"]:
+				self.sessions_spooler2.put((action_name, session))
+			else:
+				self.sessions_spooler.put((action_name, session))
+			
+			actions_to_delete.append(action)
+		
+		for action in actions_to_delete:
+			self.locked_sessions.remove(action)		
+	
+	
+	def spool_action(self, action, session_id):
+		session = self.sessions[session_id]
+		if session.locked:
+			self.locked_sessions.append((action, session.id))
+		else:
+			session.locked = True
+			self.sessions_spooler.put((action, session))
+

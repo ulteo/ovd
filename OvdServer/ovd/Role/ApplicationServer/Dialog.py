@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2011 Ulteo SAS
+# Copyright (C) 2008-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2010, 2011
 # Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
+# Author David LECHEVALIER <david@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -370,7 +371,7 @@ class Dialog(AbstractDialog):
 			profile.addSharedFolder(folder)
 		
 		self.role_instance.sessions[session.id] = session
-		self.role_instance.sessions_spooler.put(("create", session))
+		self.role_instance.spool_action("create", session.id)
 		
 		return self.req_answer(self.session2xmlstatus(session))
 	
@@ -391,7 +392,7 @@ class Dialog(AbstractDialog):
 			if session.status not in [Session.SESSION_STATUS_WAIT_DESTROY, Session.SESSION_STATUS_DESTROYED, Session.SESSION_STATUS_ERROR]:
 				# Switch the session status without warn the session manager
 				session.switch_status(Session.SESSION_STATUS_WAIT_DESTROY)
-				self.role_instance.sessions_spooler.put(("destroy", session))
+				self.role_instance.spool_action("destroy", session.id)
 		else:
 			session = Session(session_id, None, None, None, None)
 			session.status = Session.SESSION_STATUS_UNKNOWN
@@ -478,7 +479,7 @@ class Dialog(AbstractDialog):
 			return self.req_answer(doc)
 		
 		user = User(login, {"tsid": ret})
-		self.role_instance.sessions_spooler.put(("logoff", user))
+		self.role_instance.spool_action("logoff", session.id)
 		
 		return self.req_answer(document)
 	
