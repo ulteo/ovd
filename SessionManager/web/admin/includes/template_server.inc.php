@@ -2,9 +2,9 @@
 /**
  * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008-2012
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -552,28 +552,28 @@ function server_display_role_fs($server_, $var_) {
 	
 	foreach ($datas as $k => $data) {
 		if (is_array($data['folder']) && count($data['folder']) > 0 && is_array($data['usedby'])) {
-			$mass_action = false;
-			if (count($data['folder']) > 1) {
-				foreach ($data['folder'] as $a_networkfolder) {
-					if ($a_networkfolder->isUsed())
-						continue;
-
-					$mass_action = true;
-					break;
-				}
+			$nb_not_used = 0;
+			
+			foreach ($data['folder'] as $a_networkfolder) {
+				if (! $a_networkfolder->isUsed())
+					$nb_not_used++;
 			}
+			
+			$show_action_column = ($nb_not_used != 0);
+			$show_mass_action = ($nb_not_used > 1);
+			
 			echo '<h3>'.$data['name'].'</h3>';
 			$count = 0;
 			echo '<table id="available_networkfolder_table_'.$k.'" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
 			echo '<thead>';
 			echo '<tr class="title">';
-			if (isset($mass_action) && $mass_action === true)
+			if ($show_mass_action === true)
 				echo '<th class="unsortable"></th>';
 			if ($k != 0)
 				echo '<th>'._('Name').'</th>';
 			echo '<th class="unsortable">'.(($k == 0)?_('Owner'):_('Used by')).'</th>';
 			echo '<th>'._('Status').'</th>';
-			if (isset($mass_action) && $mass_action === true)
+			if ($show_action_column === true)
 				echo '<th class="unsortable"></th>';
 			echo '</tr>';
 			echo '</thead>';
@@ -582,7 +582,7 @@ function server_display_role_fs($server_, $var_) {
 				
 				$content = 'content'.(($count++%2==0)?1:2);
 				echo '<tr class="'.$content.'">';
-				if (count($data['folder']) > 1 && isset($mass_action) && $mass_action === true) {
+				if ($show_mass_action === true) {
 					echo '<td>';
 					if (! $a_networkfolder->isUsed())
 						echo '<input class="input_checkbox" type="checkbox" name="ids[]" value="'.$a_networkfolder->id.'" />';
@@ -618,21 +618,26 @@ function server_display_role_fs($server_, $var_) {
 				echo '<td>';
 				echo '<span class="msg_'.NetworkFolder::colorStatus($a_networkfolder->status).'">'.NetworkFolder::textStatus($a_networkfolder->status).'</span>';
 				echo '</td>';
-				echo '<td>';
-				if (! $a_networkfolder->isUsed()) {
-					echo '<form action="actions.php" method="post" onsubmit="return confirm(\''.(($k == 0)?_('Are you sure you want to delete this user profile?'):_('Are you sure you want to delete this network folder?')).'\');">';
-					echo '<input type="hidden" name="name" value="'.(($k == 0)?'Profile':'SharedFolder').'" />';
-					echo '<input type="hidden" name="action" value="del" />';
-					echo '<input type="hidden" name="ids[]" value="'.$a_networkfolder->id.'" />';
-					echo '<input type="submit" value="'._('Delete').'" />';
-					echo '</form>';
+				
+				if ($show_action_column === true) {
+					echo '<td>';
+					if (! $a_networkfolder->isUsed()) {
+						
+						echo '<form action="actions.php" method="post" onsubmit="return confirm(\''.(($k == 0)?_('Are you sure you want to delete this user profile?'):_('Are you sure you want to delete this network folder?')).'\');">';
+						echo '<input type="hidden" name="name" value="'.(($k == 0)?'Profile':'SharedFolder').'" />';
+						echo '<input type="hidden" name="action" value="del" />';
+						echo '<input type="hidden" name="ids[]" value="'.$a_networkfolder->id.'" />';
+						echo '<input type="submit" value="'._('Delete').'" />';
+						echo '</form>';
+					}
+					echo '</td>';
 				}
-				echo '</td>';
+				
 				echo '</tr>';
 			}
 			echo '</tbody>';
 
-			if (count($data['folder']) > 1 && isset($mass_action) && $mass_action === true) {
+			if ($show_mass_action === true) {
 				$content = 'content'.(($count++%2==0)?1:2);
 				echo '<tfoot>';
 				echo '<tr class="'.$content.'">';
