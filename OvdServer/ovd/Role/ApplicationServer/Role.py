@@ -185,12 +185,15 @@ class Role(AbstractRole):
 					Logger.debug("APS:: Role stopping")
 					return
 				
+				if not self.sessions.has_key(session.id):
+					Logger.warn("Session %s do not exist, session information are ignored"%(session.id))
+					continue
+				
 				if session.status != self.sessions[session.id].status:
 					self.manager.session_switch_status(session, session.status)
 				
 				if session.status == Session.SESSION_STATUS_DESTROYED:
-					if self.sessions.has_key(session.id):
-						del(self.sessions[session.id])
+					del(self.sessions[session.id])
 				else:
 					self.sessions[session.id] = session
 			
