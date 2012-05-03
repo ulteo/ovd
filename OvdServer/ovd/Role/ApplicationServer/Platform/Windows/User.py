@@ -159,7 +159,7 @@ class User(AbstractUser):
 					Reg.DeleteTree(win32con.HKEY_LOCAL_MACHINE, path)
 				except Exception, err:
 					Logger.warn("RegDeleteTree of %s return: %s"%(path, str(err)))
-					raise e
+					return False
 				
 				# Todo: remove the directory
 				#Platform.DeleteDirectory(userdir)
@@ -168,6 +168,6 @@ class User(AbstractUser):
 			win32net.NetUserDel(None, self.name)
 		except Exception, err:
 			Logger.error("Unable to delete user: %s"%(str(err)))
-			raise err
+			return False
 		
 		return True
