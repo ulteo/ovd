@@ -5,6 +5,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -161,7 +162,10 @@ if ($sessions > 0) {
 		} elseif ($session->isAlive()) {
 			Logger::error('main', '(client/start) User \''.$user->getAttribute('login').'\' already have an active session');
 			throw_response(USER_WITH_ACTIVE_SESSION);
-		} elseif (in_array($session->status, array(Session::SESSION_STATUS_DESTROYING, Session::SESSION_STATUS_DESTROYED))) {
+		} elseif ($session->status == Session::SESSION_STATUS_DESTROYED) {
+			$session->orderDeletion(false, Session::SESSION_END_STATUS_ERROR);
+			Abstract_Session::delete($session);
+		} elseif (in_array($session->status, array(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_STATUS_DESTROYING)) && array_key_exists('stop_time', $session->settings) && ($session->settings['stop_time'] + DESTROYING_DURATION) < time()) {
 			$session->orderDeletion(false, Session::SESSION_END_STATUS_ERROR);
 			Abstract_Session::delete($session);
 		} else {

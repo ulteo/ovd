@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -293,7 +294,10 @@ class Session {
 				return $this->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_END_STATUS_LOGOUT);
 		} elseif ($status_ == Session::SESSION_STATUS_WAIT_DESTROY) {
 			Logger::info('main', 'Session end : \''.$this->id.'\' (reason: \''.$reason_.'\')');
-
+			
+			if (! array_key_exists('stop_time', $this->settings))
+				$this->settings["stop_time"] = time();
+			
 			if ($status_ == Session::SESSION_STATUS_WAIT_DESTROY && ! is_null($reason_)) {
 				$report_session = Abstract_ReportSession::load($this->id);
 				if (is_object($report_session)) {
