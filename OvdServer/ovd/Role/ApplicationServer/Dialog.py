@@ -370,6 +370,14 @@ class Dialog(AbstractDialog):
 				folder[attribute] = sharedFolderNode.getAttribute(attribute)
 			profile.addSharedFolder(folder)
 		
+		if self.role_instance.sessions.has_key(session.id):
+			Logger.warn("Session %s already exist, aborting creation"%(session.id))
+			doc = Document()
+			rootNode = doc.createElement('error')
+			rootNode.setAttribute("id", "user already exist")
+			doc.appendChild(rootNode)
+			return self.req_answer(doc)
+		
 		self.role_instance.sessions[session.id] = session
 		self.role_instance.spool_action("create", session.id)
 		
