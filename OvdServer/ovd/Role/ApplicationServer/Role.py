@@ -99,7 +99,7 @@ class Role(AbstractRole):
 		if Config.clean_dump_archive:
 			self.purgeArchives()
 		
-		if Config.multithread:
+		if Config.thread_count is None:
 			cpuInfos = System.getCPUInfos()
 			vcpu = cpuInfos[0]
 			ram_total = System.getRAMTotal()
@@ -107,7 +107,7 @@ class Role(AbstractRole):
 			
 			nb_thread = int(round(1 + (ram + vcpu * 2)/3))
 		else:
-			nb_thread = 1
+			nb_thread = Config.thread_count
 		
 		Logger._instance.setQueue(self.logging_queue, True)
 		for _ in xrange(nb_thread):

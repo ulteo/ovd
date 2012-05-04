@@ -3,7 +3,7 @@
 # Copyright (C) 2011-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2011
-# Author David LECHEVALIER <david@ulteo.com> 2011
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2012
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
@@ -24,7 +24,7 @@ from ovd.Logger import Logger
 
 class Config:
 	general = None
-	multithread = False
+	thread_count = 1
 	checkShell = False
 	clean_dump_archive = True
 	linux_icon_theme = "CrystalGnome"
@@ -32,8 +32,21 @@ class Config:
 	
 	@classmethod
 	def init(cls, infos):
-		if infos.has_key("multithread"):
-			cls.multithread = (infos["multithread"].lower() == "true")
+		if infos.has_key("thread_count"):
+				value = infos["thread_count"]
+				if value.lower() == "auto":
+					cls.thread_count = None
+				else:
+					try:
+						nbThread = int(value)
+					except ValueError:
+						Logger.error("Invalid int number for thread_count")
+						nbThread = 1
+
+					if nbThread <= 0:
+						Logger.error("thread_count must be greater than 0")
+					else:
+						cls.thread_count = nbThread
 		
 		if infos.has_key("checkshell"):
 			cls.checkShell = (infos["checkshell"].lower() == "true")
