@@ -380,10 +380,7 @@ class Role(AbstractRole):
 				continue
 			
 			session.locked = True
-			if action in ["manage_new"]:
-				self.sessions_spooler2.put((action_name, session))
-			else:
-				self.sessions_spooler.put((action_name, session))
+			self.sessions_spooler2.put((action_name, session))
 			
 			actions_to_delete.append(action)
 		
