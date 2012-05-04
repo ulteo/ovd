@@ -95,8 +95,12 @@ class User(AbstractUser):
 			else:
 				shell = shell_path
 			
-			win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigInitialProgram, shell)
-			win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigfInheritInitialProgram, False)
+			try:
+				win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigInitialProgram, shell)
+				win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigfInheritInitialProgram, False)
+			except Exception, e:
+				Logger.error("Unable to configure user initial program [%s]"%str(e)))
+				return False
 	
 	
 	def exists(self):
