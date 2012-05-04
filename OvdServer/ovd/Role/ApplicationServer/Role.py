@@ -392,6 +392,10 @@ class Role(AbstractRole):
 	
 	
 	def spool_action(self, action, session_id):
+		if not self.sessions.has_key(session_id):
+			Logger.warn("Unable to spool %s on session %s, the session do not exist"%(action, session_id))
+			return
+		
 		session = self.sessions[session_id]
 		if session.locked:
 			self.locked_sessions.append((action, session.id))
