@@ -1,10 +1,10 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010-2011
  * Author David LECHEVALIER <david@ulteo.com> 2011
- * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
@@ -152,7 +152,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		alo[2] = new LongOpt("progress-bar", LongOpt.REQUIRED_ARGUMENT, null, 2);
 		alo[3] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 3);
 		alo[4] = new LongOpt("version", LongOpt.NO_ARGUMENT, null, 4);
-		alo[5] = new LongOpt("input-method", LongOpt.REQUIRED_ARGUMENT, null, 4);
+		alo[5] = new LongOpt("input-method", LongOpt.REQUIRED_ARGUMENT, null, 5);
 		alo[6] = new LongOpt("save-password", LongOpt.NO_ARGUMENT, null, 6);
 
 		for (int i = nbOptions; i < alo.length; i++)
