@@ -2,6 +2,7 @@
  * Copyright (C) 2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,6 +21,11 @@
 
 package org.ulteo.utils;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+
 public class SystemUtils {
 	public static int getPID() {
 		String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
@@ -31,5 +37,31 @@ public class SystemUtils {
 			return 0;
 		
 		return Integer.parseInt(chunks[0]);
+	}
+	
+	public static String getLocalIp() {
+		String localIp = "127.0.0.1";
+		try {
+			Enumeration<NetworkInterface> nifs = NetworkInterface.getNetworkInterfaces();
+			if (nifs == null) 
+				return localIp;
+			
+			while (nifs.hasMoreElements()) {
+				NetworkInterface nif = nifs.nextElement();
+				
+				Enumeration<InetAddress> adrs = nif.getInetAddresses();
+				while (adrs.hasMoreElements()) {
+					InetAddress adr = adrs.nextElement();
+					
+					if (adr != null && !adr.isLoopbackAddress() && !adr.isLinkLocalAddress())
+						return adr.getHostAddress();
+				}
+			}
+		}
+		catch (SocketException ex) {
+			return localIp; 
+		}
+		
+		return localIp;
 	}
 }

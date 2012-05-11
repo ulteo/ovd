@@ -805,7 +805,7 @@ public class Rdp {
             String password, String command, String directory)
             throws RdesktopException, IOException, CryptoException {
 
-        int len_ip = 2 * "127.0.0.1".length();
+        int len_ip = 2 * this.opt.clientIP.length();
         int len_dll = 2 * "C:\\WINNT\\System32\\mstscax.dll".length();
         int packetlen = 0;
 
@@ -933,7 +933,7 @@ public class Rdp {
             data.setLittleEndian16(2); // out_uint16_le(s, 2);
             data.setLittleEndian16(len_ip + 2); // out_uint16_le(s, len_ip + 2);
             // // Length of client ip
-            data.outUnicodeString("127.0.0.1", len_ip); // rdp_out_unistr(s,
+            data.outUnicodeString(this.opt.clientIP, len_ip); // rdp_out_unistr(s,
             // "127.0.0.1",
             // len_ip);
             data.setLittleEndian16(len_dll + 2); // out_uint16_le(s, len_dll

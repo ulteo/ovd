@@ -35,6 +35,7 @@ public class Options {
 	public String password = ""; // -p password
 	public String hostname = ""; // -n hostname
 	public String clientName = "";
+	public String clientIP = "127.0.0.1";
 	public String command = "";  // -s command
 	public String directory = ""; // -d directory
 	public String windowTitle = "UlteoRDP"; // -T windowTitle

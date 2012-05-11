@@ -42,6 +42,7 @@ import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 import org.ulteo.rdp.seamless.SeamlessChannel;
 import org.ulteo.Logger;
 import org.ulteo.rdp.TCPSSLSocketFactory;
+import org.ulteo.utils.SystemUtils;
 
 public class RdpConnectionOvd extends RdpConnection {
 
@@ -87,6 +88,8 @@ public class RdpConnectionOvd extends RdpConnection {
 		this.opt.bitmap_compression = true;
 		this.setVolatileCaching(true);
 		this.setPersistentCaching(false);
+		
+		this.opt.clientIP = SystemUtils.getLocalIp();
 
 		if ((this.flags & MODE_DESKTOP) != 0) {
 			this.setDesktopMode();
