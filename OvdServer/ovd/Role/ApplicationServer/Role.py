@@ -151,6 +151,8 @@ class Role(AbstractRole):
 		for session in self.sessions.values():
 			self.manager.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
 		
+		System.prepareForSessionActions()
+		
 		cleaner = SessionManagement(self.manager, None, None, None, None)
 		for session in self.sessions.values():
 			session.end_status = Session.SESSION_END_STATUS_SHUTDOWN

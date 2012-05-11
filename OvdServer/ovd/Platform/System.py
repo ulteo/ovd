@@ -140,3 +140,8 @@ class System:
 	@classmethod
 	def customize_subprocess_args(cls, args):
 		pass
+	
+	
+	@staticmethod
+	def prepareForSessionActions():
+		raise NotImplementedError()

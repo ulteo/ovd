@@ -309,3 +309,8 @@ class System(AbstractSystem):
 	@staticmethod
 	def tcp_server_allow_reuse_address():
 		return True
+	
+	
+	@staticmethod
+	def prepareForSessionActions():
+		pass

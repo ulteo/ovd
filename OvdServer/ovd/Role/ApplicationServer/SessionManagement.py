@@ -52,6 +52,8 @@ class SessionManagement(Process):
 		self.synchronizer.restore()
 		Logger._instance.setQueue(self.logging_queue, False)
 		
+		System.prepareForSessionActions()
+		
 		# Prevent the process to be stop by a keyboard interruption
 		signal.signal(signal.SIGINT, signal.SIG_IGN)
 		signal.signal(signal.SIGTERM, signal.SIG_IGN)

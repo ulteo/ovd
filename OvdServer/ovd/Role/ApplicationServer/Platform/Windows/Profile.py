@@ -1,10 +1,10 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2010-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
-# Author David LECHEVALIER <david@ulteo.com> 2010
+# Author David LECHEVALIER <david@ulteo.com> 2010, 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -115,7 +115,6 @@ class Profile(AbstractProfile):
 						Logger.warn("Unable to delete %s (%s)"%(path, str(err)))
 			
 			# Copy user registry
-			self.session.obainPrivileges()
 			
 			src = os.path.join(d, "NTUSER.DAT")
 			if os.path.exists(src):
@@ -175,8 +174,6 @@ class Profile(AbstractProfile):
 			except OSError, err:
 				Logger.debug2("conf.Windows mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
 				continue
-		
-		self.session.obainPrivileges()
 		
 		# Copy user registry
 		src = os.path.join(self.session.windowsProfileDir, "NTUSER.DAT")

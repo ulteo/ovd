@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2011 Ulteo SAS
+# Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author David LECHEVALIER <david@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -31,6 +32,7 @@ from win32com.shell import shell, shellcon
 import win32con
 import win32netcon
 import win32net
+import win32security
 
 from ovd.Logger import Logger
 from Base.System import System as AbstractSystem
@@ -293,3 +295,21 @@ class System(AbstractSystem):
 	@staticmethod
 	def tcp_server_allow_reuse_address():
 		return False
+	
+	
+	@staticmethod
+	def prepareForSessionActions():
+		try:
+			# Get some privileges to load the hive
+			priv_flags = win32security.TOKEN_ADJUST_PRIVILEGES | win32security.TOKEN_QUERY 
+			hToken = win32security.OpenProcessToken (win32api.GetCurrentProcess (), priv_flags)
+			backup_privilege_id = win32security.LookupPrivilegeValue (None, "SeBackupPrivilege")
+			restore_privilege_id = win32security.LookupPrivilegeValue (None, "SeRestorePrivilege")
+			win32security.AdjustTokenPrivileges (
+				hToken, 0, [
+				(backup_privilege_id, win32security.SE_PRIVILEGE_ENABLED),
+				(restore_privilege_id, win32security.SE_PRIVILEGE_ENABLED)
+				]
+			)
+		except Exception, e:
+			Logger.error("Failed to obtain more provilege"%(str(e)))
