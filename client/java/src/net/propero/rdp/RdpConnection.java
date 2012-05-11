@@ -96,9 +96,8 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.opt.use_rdp5 = true;
 		this.opt.rdp5_performanceflags = Rdp5.PERF_DISABLE_ALL;
 		
-		InetAddress localhost;
 		try {
-			localhost = InetAddress.getLocalHost();
+			InetAddress localhost = InetAddress.getLocalHost();
 			String name = localhost.getHostName();
 			StringTokenizer tok = new StringTokenizer(name, ".");
 			this.opt.clientName = tok.nextToken();
@@ -107,7 +106,6 @@ public class RdpConnection implements SeamListener, Runnable{
 			this.opt.clientName = "127.0.0.1";
 		}
 		
-
 		this.channels = new VChannels(this.opt);
 	}
 
