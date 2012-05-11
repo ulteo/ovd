@@ -29,9 +29,11 @@ import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.security.InvalidParameterException;
+import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -93,6 +95,18 @@ public class RdpConnection implements SeamListener, Runnable{
 
 		this.opt.use_rdp5 = true;
 		this.opt.rdp5_performanceflags = Rdp5.PERF_DISABLE_ALL;
+		
+		InetAddress localhost;
+		try {
+			localhost = InetAddress.getLocalHost();
+			String name = localhost.getHostName();
+			StringTokenizer tok = new StringTokenizer(name, ".");
+			this.opt.clientName = tok.nextToken();
+			this.opt.clientName.trim();
+		} catch (UnknownHostException e) {
+			this.opt.clientName = "127.0.0.1";
+		}
+		
 
 		this.channels = new VChannels(this.opt);
 	}

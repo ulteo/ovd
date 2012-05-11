@@ -154,13 +154,6 @@ public class Secure {
      * @throws OrderException
      */
     public void connect(String host, int port) throws UnknownHostException, IOException, RdesktopException, SocketException, CryptoException, OrderException {
-	if(this.opt.hostname==""){
-		InetAddress localhost = InetAddress.getLocalHost();
-		String name = localhost.getHostName();
-		StringTokenizer tok = new StringTokenizer(name, ".");
-		this.opt.hostname = tok.nextToken();
-		this.opt.hostname.trim();
-	}
 	McsLayer.isoConnect(host, port);
 
 	RdpPacket_Localised mcs_data = this.sendMcsData();
@@ -199,7 +192,7 @@ public class Secure {
     
     RdpPacket_Localised buffer= new RdpPacket_Localised(512);
         
-    int hostlen = 2 * (this.opt.hostname==null ? 0 : this.opt.hostname.length());
+    int hostlen = 2 * (this.opt.clientName==null ? 0 : this.opt.clientName.length());
         
     if (hostlen > 30) { hostlen=30;}
             
@@ -219,7 +212,7 @@ public class Secure {
 	buffer.setLittleEndian32(this.opt.use_rdp5 ? 2600 : 419); // or 0ece	// client build? we are 2600 compatible :-)
 
 	/* Unicode name of client, padded to 32 bytes */
-    buffer.outUnicodeString(this.opt.hostname.toUpperCase(), hostlen);
+    buffer.outUnicodeString(this.opt.clientName.toUpperCase(), hostlen);
 	buffer.incrementPosition(30 - hostlen);
 
 	buffer.setLittleEndian32(4);
