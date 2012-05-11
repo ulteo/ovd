@@ -1,6 +1,6 @@
-# Copyright (C) 2009, 2010 Ulteo SAS
+# Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -25,7 +25,7 @@ endif
 
 CC=$(PREFIX)gcc
 CFLAGS= -Wall
-LDFLAGS=-lgdi32
+LDFLAGS=-lgdi32 -lshlwapi
 
 
 

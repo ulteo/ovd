@@ -1,5 +1,7 @@
 /**
- * Copyright (C) 2009 Julien LANGLOIS <julien@ulteo.com>
+ * Copyright (C) 2009-2012 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2012
  * based on code http://www.developpez.net/forums/d469482/general-developpement/programmation-windows/taille-resolution-screenshot/
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +20,7 @@
 
 
 #include <windows.h>
+#include <Shlwapi.h>
 #include <stdio.h>
 
 BOOL hicon2bmpfile(LPCTSTR pszFileName, HICON ico) {
@@ -132,14 +135,19 @@ BOOL hicon2bmpfile(LPCTSTR pszFileName, HICON ico) {
 
 int main(int argc, char* argv[]){
   HICON ico;
+  TCHAR iconPath[MAX_PATH];
+  UINT iconIndex = 0;
   int r;
 
   if (argc != 3) {
-    printf("usage: %s exe_file out_bmp_file\n", argv[0]);
+    printf("usage: %s exe_file[,icon_index] out_bmp_file\n", argv[0]);
     return 1;
   }
 
-  ico = ExtractIcon(NULL, argv[1], 0);
+  strncpy(iconPath, argv[1], MAX_PATH);
+  iconIndex = PathParseIconLocation(iconPath);
+
+  ico = ExtractIcon(NULL, iconPath, iconIndex);
   if (ico == NULL){
     printf("extract icon failed %d\n", (int)GetLastError());
     return 2;
