@@ -34,7 +34,7 @@ if (!isset($_REQUEST['name']))
 if (!isset($_REQUEST['action']))
 	redirect();
 
-if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'clone', 'icon', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'populate', 'publish', 'del_icon', 'unset_default', 'set_default', 'modify_rules', 'remove_orphan')))
+if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'clone', 'icon', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'rdp_port', 'populate', 'publish', 'del_icon', 'unset_default', 'set_default', 'modify_rules', 'remove_orphan')))
 	redirect();
 
 if ($_REQUEST['name'] == 'System') {
@@ -1608,6 +1608,32 @@ if ($_REQUEST['name'] == 'Server') {
 					popup_info(_('Task successfully added'));
 				}
 			}
+			redirect();
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'rdp_port') {
+		if (isset($_REQUEST['rdp_port']) && isset($_REQUEST['fqdn'])) {
+			if (! ctype_digit($_REQUEST['rdp_port']) || $_REQUEST['rdp_port'] < 1 || $_REQUEST['rdp_port'] > 65535 ) {
+				popup_error(sprintf(_("RDP port \"%s\" is invalid"), $_REQUEST['rdp_port']));
+				redirect();
+			}
+			
+			$server = Abstract_Server::load($_REQUEST['fqdn']);
+			
+			if ($_REQUEST['rdp_port'] == $server->getApSRDPPort()) {
+				popup_error(_("Nothing to save. RDP port is identicall to old one"));
+				redirect();
+			}
+			
+			if ($_REQUEST['rdp_port'] == Server::DEFAULT_RDP_PORT)
+				$server->setAttribute('rdp_port', null);
+			else
+				$server->setAttribute('rdp_port', $_REQUEST['rdp_port']);
+			
+			Abstract_Server::save($server);
+			popup_info(sprintf(_("Server '%s' successfully modified"), $server->getAttribute('fqdn')));
+			
 			redirect();
 		}
 	}

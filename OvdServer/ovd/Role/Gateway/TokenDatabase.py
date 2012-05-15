@@ -3,6 +3,7 @@
 # Copyright (C) 2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2011
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -24,10 +25,10 @@ import threading
 database = {}
 lock = threading.Lock()
 
-def insertToken(fqdn):
+def insertToken(address):
 	token = str(uuid.uuid4())
 	lock.acquire()
-	database[token] = fqdn
+	database[token] = address
 	lock.release()
 	return token
 

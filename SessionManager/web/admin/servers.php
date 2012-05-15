@@ -437,6 +437,27 @@ function show_manage($fqdn) {
   }
   echo "</td></tr>\n";
   
+	echo '<tr><td>';
+	echo _('Redirection port (rdp) for this server').': ';
+	echo '</td><td>';
+	if ($can_do_action) {
+		echo '<form action="actions.php" method="post">';
+		echo '<input type="hidden" name="name" value="Server" />';
+		echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+		echo '<input type="hidden" name="action" value="rdp_port" />';
+	}
+	echo '<input type="text" name="rdp_port" value="'.$server->getApSRDPPort().'" />';
+	if ($can_do_action) {
+		echo ' <input type="submit" value="'._('change').'" />';
+		echo '</form>';
+	}
+	echo '</td><td>';
+	if ($server->getApSRDPPort() == Server::DEFAULT_RDP_PORT)
+		echo _('(default value)');
+	else
+		echo sprintf(_('(overloaded, default value is %d)'), Server::DEFAULT_RDP_PORT);
+	echo "</td></tr>\n";
+  
 
 	if ($can_do_action) {
 		if ($server_online || $switch_value == 1) {

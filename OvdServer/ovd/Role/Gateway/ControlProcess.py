@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011 Ulteo SAS
+# Copyright (C) 2011-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -84,8 +85,8 @@ class ControlChildProcess(ControlClassProcess):
 	def _digest_token(self, token):
 		return digestToken(token)
 	
-	def _insert_token(self, fqdn):
-		return insertToken(fqdn)
+	def _insert_token(self, address):
+		return insertToken(address)
 	
 	def _stop_pid(self, pid):
 		self._class.kill_process(pid)

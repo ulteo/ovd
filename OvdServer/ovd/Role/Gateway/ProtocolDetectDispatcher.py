@@ -25,7 +25,6 @@ import re
 
 from Communicator import RdpClientCommunicator, RdpServerCommunicator, \
 	HttpClientCommunicator, SSLCommunicator
-from Config import Protocol
 from Config import Config
 from ovd.Logger import Logger
 
@@ -87,14 +86,14 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 			# RDP case
 			if rdp:
 				token = rdp.group(1)
-				fqdn = self.f_ctrl.send(("digest_token", token))
-				Logger.debug("ProtocolDetectDispatcher:: request: RDP (%s -> %s)" % (token, fqdn))
-				if not fqdn:
+				address = self.f_ctrl.send(("digest_token", token))
+				Logger.debug("ProtocolDetectDispatcher:: request: RDP (%s -> %s)" % (token, str(address)))
+				if not address or type(address) != tuple or len(address)<2:
 					raise ProtocolException('token authorization failed for: ' + token)
 				
 				client = RdpClientCommunicator(self.socket)
 				client._buffer = self._buffer
-				client.communicator = RdpServerCommunicator((fqdn, Protocol.RDP), communicator=client)
+				client.communicator = RdpServerCommunicator(address, communicator=client)
 			
 			# HTTP case
 			elif http:

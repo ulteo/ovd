@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2011 Ulteo SAS
+# Copyright (C) 2008-2012 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010, 2011, 2012
 # Author Laurent CLOUET <laurent@ulteo.com> 2009, 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -36,6 +36,8 @@ import urllib2
 from xml.dom import minidom
 from xml.dom.minidom import Document
 from xml.parsers.expat import ExpatError
+
+DEFAULT_RDP_PORT = 3389
 
 class Logger:
     _instance = None
@@ -214,13 +216,19 @@ class Dialog:
             return False
 
         node = node[0]
-        self.access = {}
+        self.access = {"port": DEFAULT_RDP_PORT}
         for attr in ['fqdn', 'login', 'password']:
             if not node.hasAttribute(attr):
                 Logger.warn("Missing attribute %s"%(str(attr)))
                 Logger.debug("data received %s"%(data))
                 return False
             self.access[attr] = node.getAttribute(attr)
+        
+        if node.hasAttribute("port"):
+            try:
+                self.access["port"] = int(node.getAttribute("port"))
+            except ValueError:
+                Logger.warn("Port attribute is valid (%s)"%(node.getAttribute("port")))
 
         return True
 
@@ -388,7 +396,10 @@ class Dialog:
             cmd.append("-a")
             cmd.append(str(bpp))
 
-        cmd.append(self.access["fqdn"])
+        server_fqdn = self.access["fqdn"]
+        if self.access["port"] != DEFAULT_RDP_PORT:
+              server_fqdn+= ":%d"%(self.access["port"])
+        cmd.append(server_fqdn)
 
         t = threading.Thread(target=self.check_whatsup)
         t.start()

@@ -7,6 +7,7 @@
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author David LECHEVALIER <david@ulteo.com> 2012
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+# Author Julien LANGLOIS <julien@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -343,9 +344,19 @@ class HttpMetaServerCommunicator(HttpMetaCommunicator):
 		
 		session.set('mode_gateway', 'on')
 		for server in session.findall('server'):
-			token = self.f_ctrl.send(('insert_token', server.attrib['fqdn']))
+			port = Protocol.RDP
+			
+			if server.attrib.has_key("port"):
+				try:
+					port = int(server.attrib["port"])
+				except ValueError,err:
+					Logger.warn("Gateway:: Invalid protocol: server port attribute is not a digit (%s)"%(server.attrib["port"]))
+			
+			token = self.f_ctrl.send(('insert_token', (server.attrib['fqdn'], port)))
 			server.set('token', token)
 			del server.attrib['fqdn']
+			if server.attrib.has_key("port"):
+				del server.attrib["port"]
 		
 		return parser.tostring(session)
 

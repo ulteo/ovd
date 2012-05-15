@@ -61,6 +61,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -116,6 +117,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	private static final int TIMEOUT = 2000;
 	private static final int MAX_REDIRECTION_TRY = 5;
 	public static final int DEFAULT_PORT = 443;
+	public static final int DEFAULT_RDP_PORT = RdpConnection.RDP_PORT;
 
 	private String host = null;
 	private int port;
@@ -650,7 +652,6 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 	private boolean parseStartSessionResponse(Document document) {
 		Element rootNode = document.getDocumentElement();
-		int serverPort = 3389;
 
 		if (! rootNode.getNodeName().equals("session")) {
 			if (rootNode.getNodeName().equals("response")) {
@@ -689,7 +690,6 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 			if (rootNode.hasAttribute("mode_gateway")) {
 				if (rootNode.getAttribute("mode_gateway").equals("on"))
 					mode_gateway = true;
-					serverPort = this.port;
 			}
 
 			if (rootNode.hasAttribute("duration"))
@@ -733,7 +733,18 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 				else
 					server_host = serverNode.getAttribute("fqdn");
 				
-				ServerAccess server = new ServerAccess(server_host, serverPort,
+				int server_port = this.DEFAULT_RDP_PORT;
+				if (mode_gateway)
+					server_port = this.port;
+				else if (serverNode.hasAttribute("port"))
+					try {
+						server_port = Integer.parseInt(serverNode.getAttribute("port"));
+					}
+					catch (NumberFormatException ex) {
+						Logger.warn("Invalid protocol: server port attribute is not a digit ("+serverNode.getAttribute("port")+")");
+					}
+				
+				ServerAccess server = new ServerAccess(server_host, server_port,
 							serverNode.getAttribute("login"), serverNode.getAttribute("password"));
 				
 				if (mode_gateway)

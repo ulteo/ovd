@@ -118,7 +118,7 @@ public abstract class OvdClientDesktop extends OvdClient {
 		}
 		
 		rc.enableGatewayMode(server);
-		rc.setServer(server.getHost());
+		rc.setServer(server.getHost(), server.getPort());
 		rc.setCredentials(server.getLogin(), server.getPassword());
 		rc.setAllDesktopEffectsEnabled(properties.isDesktopEffectsEnabled());
 		this.configure(rc);

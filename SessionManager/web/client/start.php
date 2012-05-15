@@ -549,6 +549,8 @@ if ($session->mode == Session::MODE_DESKTOP) {
 	$server_node = $dom->createElement('server');
 	$server_node->setAttribute('type', $server->getAttribute('type'));
 	$server_node->setAttribute('fqdn', $server->getAttribute('external_name'));
+	if ($server->getApSRDPPort() != Server::DEFAULT_RDP_PORT)
+		$server_node->setAttribute('port', $server->getApSRDPPort());
 	$server_node->setAttribute('login', $user_login_aps);
 	$server_node->setAttribute('password', $user_password_aps);
 	foreach ($session->getPublishedApplications() as $application) {
@@ -590,6 +592,8 @@ if ($session->mode == Session::MODE_DESKTOP) {
 		$server_node = $dom->createElement('server');
 		$server_node->setAttribute('type', $server->getAttribute('type'));
 		$server_node->setAttribute('fqdn', $server->getAttribute('external_name'));
+		if ($server->getApSRDPPort() != Server::DEFAULT_RDP_PORT)
+			$server_node->setAttribute('port', $server->getApSRDPPort());
 		$server_node->setAttribute('login', $user_login_aps);
 		$server_node->setAttribute('password', $user_password_aps);
 

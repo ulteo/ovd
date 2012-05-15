@@ -5,6 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,6 +33,8 @@ class Server {
 	const SERVER_STATUS_ONLINE = "ready";
 	const SERVER_STATUS_OFFLINE = "down";
 	const SERVER_STATUS_BROKEN = "broken";
+	
+	const DEFAULT_RDP_PORT = 3389;
 
 	public $fqdn = NULL;
 
@@ -1293,6 +1296,13 @@ class Server {
 	public function getInstallableApplications() {
 		Logger::debug('main', 'Server::getInstallableApplications');
 		return query_url($this->getWebservicesBaseURL().'/installable_applications.php', false);
+	}
+	
+	public function getApSRDPPort() {
+		if ($this->hasAttribute('rdp_port') && ! is_null($this->getAttribute('rdp_port')))
+			return $this->getAttribute('rdp_port');
+		
+		return self::DEFAULT_RDP_PORT;
 	}
 	
 	public static function fire_load_balancing($servers_, $role_) {

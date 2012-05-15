@@ -211,9 +211,10 @@ foreach ($server_nodes as $server_node) {
 				$port = 443;
 		}
 		$server_node->setAttribute('fqdn', $host);
+		$server_node->setAttribute('port', $port);
 	}
-	
-	$server_node->setAttribute('port', $port);
+	elseif (! $server_node->hasAttribute('port'))
+		$server_node->setAttribute('port', $port);
 }
 
 
