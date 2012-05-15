@@ -439,6 +439,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 				this.publish(rc);
 			this.publicated = true;
 		}
+		
+		this.system.refresh();
+		
 		return this.publicated;
 	}
 
