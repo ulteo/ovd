@@ -128,6 +128,6 @@ public class SouthEastPanel extends JPanel {
 	}
 	
 	private void switchLocalDesktopIntegrationButtonText(boolean on) {
-		this.localDesktopIntegrationButton.setText(on ?  I18n._("Display icons") : I18n._("Hide icons"));
+		this.localDesktopIntegrationButton.setText(on ? I18n._("Enable desktop integration") : I18n._("Disable desktop integration"));
 	}
 }
