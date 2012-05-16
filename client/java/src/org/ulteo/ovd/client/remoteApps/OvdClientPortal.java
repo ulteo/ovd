@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
  * Author David LECHEVALIER <david@ulteo.com> 2011
@@ -166,9 +166,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			}
 
 			if (this.desktopIntegrator == null)
-				this.portal.initPublishingButton(false);
+				this.portal.initLocalDesktopIntegrationButton(false);
 			else if (this.desktopIntegrator.isDesktopIntegrationDone(rc))
-				this.portal.initPublishingButton(true);
+				this.portal.initLocalDesktopIntegrationButton(true);
 		}
 
 		this.loadingFrame.setVisible(false);
@@ -198,7 +198,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		if (this.autoPublish)
 			super.shortcutGenerationIsDone(co);
 	
-		this.portal.initPublishingButton(true);
+		this.portal.initLocalDesktopIntegrationButton(true);
 	}
 	
 	

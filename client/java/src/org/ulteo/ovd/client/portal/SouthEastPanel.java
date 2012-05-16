@@ -1,9 +1,10 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Omar AKHAM <oakham@ulteo.com> 2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -47,7 +48,7 @@ import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
 public class SouthEastPanel extends JPanel {
 	
 	private JButton disconnect = null;
-	private JButton publishingButton = null;;
+	private JButton localDesktopIntegrationButton = null;;
 	private Icon rotateIcon = null;
 
 	private NativeClientActions rdpActions = null;
@@ -59,7 +60,7 @@ public class SouthEastPanel extends JPanel {
 		disconnect = new JButton(I18n._("Disconnect"));
 		
 		this.initRotate();
-		publishingButton = new JButton(this.rotateIcon);
+		this.localDesktopIntegrationButton = new JButton(this.rotateIcon);
 		
 		disconnect.addActionListener(new ActionListener() {
 			@Override
@@ -67,32 +68,32 @@ public class SouthEastPanel extends JPanel {
 				rdpActions.disconnect();
 			}
 		});
-		publishingButton.addActionListener(new ActionListener() {
+		this.localDesktopIntegrationButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						publishingButton.setEnabled(false);
-						publishingButton.setIcon(rotateIcon);
-						publishingButton.setText(null);
+						SouthEastPanel.this.localDesktopIntegrationButton.setEnabled(false);
+						SouthEastPanel.this.localDesktopIntegrationButton.setIcon(rotateIcon);
+						SouthEastPanel.this.localDesktopIntegrationButton.setText(null);
 
 						boolean isPublished = ((OvdClientPortal)rdpActions).togglePublications();
 
-						publishingButton.setIcon(null);
-						publishingButton.setText(isPublished ? I18n._("Hide icons") : I18n._("Display icons"));
-						publishingButton.setEnabled(true);
+						SouthEastPanel.this.localDesktopIntegrationButton.setIcon(null);
+						SouthEastPanel.this.localDesktopIntegrationButton.setText(isPublished ? I18n._("Hide icons") : I18n._("Display icons"));
+						SouthEastPanel.this.localDesktopIntegrationButton.setEnabled(true);
 					}
 				}).start();
 			}
 		});
-		this.publishingButton.setEnabled(false);
+		this.localDesktopIntegrationButton.setEnabled(false);
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		
 		gbc.anchor = GridBagConstraints.LINE_END;
 		gbc.gridx = gbc.gridy = 0;
-		this.add(publishingButton, gbc);
+		this.add(this.localDesktopIntegrationButton, gbc);
 		
 		gbc.gridx = 1;
 		this.add(disconnect, gbc);
@@ -120,9 +121,9 @@ public class SouthEastPanel extends JPanel {
 		}
 	}
 
-	public void initPublishingButton(boolean enabled) {
-		this.publishingButton.setIcon(null);
-		this.publishingButton.setText(((OvdClientPortal) this.rdpActions).isAutoPublish() ?  I18n._("Hide icons") : I18n._("Display icons"));
-		this.publishingButton.setEnabled(enabled);
+	public void initLocalDesktopIntegrationButton(boolean enabled) {
+		this.localDesktopIntegrationButton.setIcon(null);
+		this.localDesktopIntegrationButton.setText(((OvdClientPortal) this.rdpActions).isAutoPublish() ?  I18n._("Hide icons") : I18n._("Display icons"));
+		this.localDesktopIntegrationButton.setEnabled(enabled);
 	}
 }
