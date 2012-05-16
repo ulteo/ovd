@@ -81,7 +81,7 @@ public class SouthEastPanel extends JPanel {
 						boolean isPublished = ((OvdClientPortal)rdpActions).togglePublications();
 
 						SouthEastPanel.this.localDesktopIntegrationButton.setIcon(null);
-						SouthEastPanel.this.localDesktopIntegrationButton.setText(isPublished ? I18n._("Hide icons") : I18n._("Display icons"));
+						SouthEastPanel.this.switchLocalDesktopIntegrationButtonText(! isPublished);
 						SouthEastPanel.this.localDesktopIntegrationButton.setEnabled(true);
 					}
 				}).start();
@@ -123,7 +123,11 @@ public class SouthEastPanel extends JPanel {
 
 	public void initLocalDesktopIntegrationButton(boolean enabled) {
 		this.localDesktopIntegrationButton.setIcon(null);
-		this.localDesktopIntegrationButton.setText(((OvdClientPortal) this.rdpActions).isAutoPublish() ?  I18n._("Hide icons") : I18n._("Display icons"));
+		this.switchLocalDesktopIntegrationButtonText(! ((OvdClientPortal) this.rdpActions).isAutoPublish());
 		this.localDesktopIntegrationButton.setEnabled(enabled);
+	}
+	
+	private void switchLocalDesktopIntegrationButtonText(boolean on) {
+		this.localDesktopIntegrationButton.setText(on ?  I18n._("Display icons") : I18n._("Hide icons"));
 	}
 }
