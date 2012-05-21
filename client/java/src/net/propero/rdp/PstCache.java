@@ -6,6 +6,10 @@
  * Date: $Date: 2007/03/08 00:26:16 $
  *
  * Copyright (c) 2005 Propero Limited
+ * Copyright (C) 2012 Ulteo SAS
+ * http://www.ulteo.com
+ * Author: Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author: Thomas MOUTON <thomas@ulteo.com> 2012
  *
  * Purpose: Handle persistent caching
  */
@@ -16,6 +20,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.lang.Thread;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 public class PstCache {
@@ -27,6 +35,9 @@ public class PstCache {
     protected Options opt = null;
     protected Common common = null;
     
+    protected Thread thread = null;
+    protected BlockingQueue<PstCacheJob> spool = null;
+    
     private Bitmap bmpConverter = null;
     
     public PstCache(Options opt_, Common common_) {
@@ -34,6 +45,8 @@ public class PstCache {
 		this.common = common_;
 		
 		this.bmpConverter = new Bitmap(this.opt);
+		
+		this.spool = new LinkedBlockingQueue<PstCacheJob>() ;
 	}
 
     protected boolean IS_PERSISTENT(int id){
@@ -111,9 +124,29 @@ public class PstCache {
  }
 
  /* Store a bitmap in the persistent cache */
- public boolean pstcache_put_bitmap(int cache_id, int cache_idx, byte[] bitmap_id, int width, int height, int length, byte[] data) throws IOException
+ public boolean pstcache_put_bitmap(int cache_id, int cache_idx, byte[] bitmap_id, int width, int height, int length, byte[] data) {
+	logger.debug("PstCache.pstcache_put_bitmap");
+	 
+	PstCacheJob job = new PstCacheJob(cache_id, cache_idx, bitmap_id, width, height, length, data);
+
+	try {
+		this.spool.put(job);
+	}
+	catch (InterruptedException e) {
+		return false;
+	}
+
+	if (this.thread == null || ! this.thread.isAlive()) {
+		this.thread = new PstCacheThread(this, this.spool);
+		this.thread.start();
+	}
+
+	return true;
+ }
+
+ public boolean pstcache_put_bitmap_process(int cache_id, int cache_idx, byte[] bitmap_id, int width, int height, int length, byte[] data) throws IOException
  {
-    logger.debug("PstCache.pstcache_put_bitmap");
+    logger.debug("PstCache.pstcache_put_bitmap_process");
     RandomAccessFile fd;
     CELLHEADER cellhdr = new CELLHEADER();
 
@@ -243,6 +276,57 @@ public class PstCache {
  
  
 }
+
+class PstCacheJob {
+	public int cache_id;
+	public int cache_idx;
+	public byte[] bitmap_id;
+	public int width;
+	public int height;
+	public int length;
+	public byte[] data;
+	
+	public PstCacheJob(int cache_id, int cache_idx, byte[] bitmap_id, int width, int height, int length, byte[] data) {
+		this.cache_id = cache_id;
+		this.cache_idx = cache_idx;
+		this.bitmap_id = bitmap_id;
+		this.width = width;
+		this.height = height;
+		this.length = length;
+		this.data = data;
+	}
+}
+
+class PstCacheThread extends Thread {
+	private PstCache parent;
+	private BlockingQueue<PstCacheJob> spool;
+	
+	public PstCacheThread(PstCache parent, BlockingQueue<PstCacheJob> spool) {
+		this.parent = parent;
+		this.spool = spool;
+	}
+	
+	public void run() {
+		while (true) {
+			PstCacheJob job = null;
+			try {
+				job = this.spool.poll(1, TimeUnit.SECONDS);
+			}
+			catch (InterruptedException e) {
+				break;
+			}
+			
+			if (job == null)
+				return;
+			
+			try {
+				this.parent.pstcache_put_bitmap_process(job.cache_id, job.cache_idx, job.bitmap_id, job.width, job.height, job.length, job.data);
+			}
+			catch (IOException e) {}
+		}
+	}
+}
+
 
 /* Header for an entry in the persistent bitmap cache file */
 class CELLHEADER
