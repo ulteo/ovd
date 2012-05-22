@@ -141,7 +141,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		alo[3] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 3);
 		alo[4] = new LongOpt("version", LongOpt.NO_ARGUMENT, null, 4);
 		alo[5] = new LongOpt("input-method", LongOpt.REQUIRED_ARGUMENT, null, 5);
-		alo[6] = new LongOpt("save-password", LongOpt.NO_ARGUMENT, null, 6);
+		alo[6] = new LongOpt("manage-password", LongOpt.NO_ARGUMENT, null, 6);
 
 		for (int i = nbOptions; i < alo.length; i++)
 			alo[i] = systemDependantOptions.remove(0);
@@ -192,9 +192,9 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 					opts.setFlag(Options.FLAG_INPUT_METHOD);
 
 					break;
-				case 6: //--save-password
-					opts.savePassword = true;
-					opts.setFlag(Options.FLAG_SAVE_PASSWORD);
+				case 6: //--manage-password
+					opts.managePassword = true;
+					opts.setFlag(Options.FLAG_MANAGE_PASSWORD);
 					break;
 				case 'c':
 					opts.profile = new String(opt.getOptarg());
@@ -424,7 +424,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		System.err.println("\t-s host[:port]			Server address");
 		System.err.println("\t-u username			Username");
 		System.err.println("\t-p password			Password");
-		System.err.println("\t--save-password			Save the password");
+		System.err.println("\t--manage-password		Manage the password (save/load from file/registry)");
 		System.err.println("\t-m [auto|desktop|applications]	Session mode");
 		System.err.println("\t-g widthxheight			Geometry");
 		System.err.println("\t-k keymap			Keymap");
@@ -864,7 +864,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 	private void saveProfile() {
 		ProfileProperties properties = new ProfileProperties(this.opts.username, this.opts.host, this.opts.port, this.opts.sessionMode, this.opts.autopublish, this.opts.nltm, this.opts.geometry, this.opts.lang, this.opts.keymap, this.opts.inputMethod);
-		if (this.opts.getFlag(Options.FLAG_SAVE_PASSWORD))
+		if (this.opts.getFlag(Options.FLAG_MANAGE_PASSWORD))
 			properties.setPassword(this.opts.password);
 
 		if (this.opts.getFlag(Options.FLAG_PROFILE_REG)) {

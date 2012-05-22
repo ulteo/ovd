@@ -54,7 +54,7 @@ public class Options {
 	public static final int FLAG_GUI_LOCKED        = 0x00008000;
 	public static final int FLAG_SHOW_BURGREPORTER = 0x00010000;
 	public static final int FLAG_INPUT_METHOD      = 0x00020000;
-	public static final int FLAG_SAVE_PASSWORD     = 0x00040000;
+	public static final int FLAG_MANAGE_PASSWORD   = 0x00040000;
 	
 	private int mask = 0x00000000;
 	
@@ -75,7 +75,7 @@ public class Options {
 	public boolean debugSeamless = false;
 	public boolean guiLocked = false;
 	public boolean isBugReporterVisible = false;
-	public boolean savePassword = false;
+	public boolean managePassword = false;
 	public boolean usePacketCompression = false;
 	public int diskBandwidthLimit = 10000;   // In byte
 	public boolean useBandwithLimitation = false;
@@ -128,7 +128,7 @@ public class Options {
 					this.setFlag(Options.FLAG_USERNAME);
 				}
 			}
-			if (! this.getFlag(Options.FLAG_PASSWORD) && this.getFlag(Options.FLAG_SAVE_PASSWORD)) {
+			if (! this.getFlag(Options.FLAG_PASSWORD) && this.getFlag(Options.FLAG_MANAGE_PASSWORD)) {
 				String password = properties.getPassword();
 				if (password != null) {
 					this.password = password;
