@@ -34,16 +34,7 @@ public class ProfileWeb extends Profile {
 	private static final String INI_SECTION_RDP = "rdp";
 	private static final String INI_SECTION_LIMITATION = "limitation";
 	private static final String INI_SECTION_PERSISTENT_CACHE = "persistentCache";
-	
-	
-	
-	@Override
-	protected String loadPassword() throws IOException { return null; }
 
-	@Override
-	protected void storePassword(String password) throws IOException { }
-	
-	
 
 	public ProfileProperties loadProfile(WebClientCommunication wcc) {
 		ProfileProperties properties = new ProfileProperties();

@@ -33,24 +33,6 @@ import org.ulteo.ovd.client.desktop.DesktopFrame;
 
 public class ProfileRegistry extends Profile {
 
-	@Override
-	protected String loadPassword() throws IOException {
-		RegistryKey key = null;
-
-		key = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software\\Ulteo\\OVD\\NativeClient", RegistryKey.ACCESS_READ);
-		if (key == null)
-			return null;
-
-		String hash;
-		try {
-			hash = key.getStringValue(FIELD_PASSWORD);
-		} catch (Exception ex) {
-			throw new IOException(ex);
-		}
-
-		return hash;
-	}
-
 	private ProfileProperties extractPropertiesFromKey(RegistryKey key, ProfileProperties properties) throws IOException {
 		if (key == null || properties == null)
 			return null;
@@ -65,7 +47,7 @@ public class ProfileRegistry extends Profile {
 					properties.setLogin(value);
 				}
 				else if (field.equalsIgnoreCase(FIELD_PASSWORD)) {
-					properties.setPassword(this.getPassword());
+					properties.setPassword(value);
 				}
 				else if (field.equalsIgnoreCase(FIELD_LOCALCREDENTIALS)) {
 					boolean useLocalCredentials = false;
@@ -319,19 +301,6 @@ public class ProfileRegistry extends Profile {
 		return key;
 	}
 
-	@Override
-	protected void storePassword(String password) throws IOException {
-		RegistryKey key = this.initProfileKey();
-		if (key == null)
-			return;
-
-		try {
-			key.setValue(new RegStringValue(key, FIELD_PASSWORD, password));
-		} catch (RegistryException ex) {
-			Logger.error("Setting password in the registry failed: "+ex.getMessage());
-		}
-	}
-
 	public void saveProfile(ProfileProperties properties) {
 		RegistryKey key = this.initProfileKey();
 		if (key == null)
@@ -343,6 +312,10 @@ public class ProfileRegistry extends Profile {
 			tmpStr = properties.getLogin();
 			if (tmpStr != null)
 				key.setValue(new RegStringValue(key, FIELD_LOGIN, tmpStr));
+
+			tmpStr = properties.getPassword();
+			if (tmpStr != null)
+				key.setValue(new RegStringValue(key, FIELD_PASSWORD, tmpStr));
 
 			tmpStr = properties.getHost();
 			if (tmpStr != null)

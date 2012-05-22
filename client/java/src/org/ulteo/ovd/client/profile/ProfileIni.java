@@ -96,6 +96,9 @@ public class ProfileIni extends Profile {
 
 		ini.put(INI_SECTION_USER, FIELD_LOGIN, properties.getLogin());
 		ini.put(INI_SECTION_USER, FIELD_LOCALCREDENTIALS, properties.getUseLocalCredentials()?VALUE_TRUE:VALUE_FALSE);
+		
+		if (properties.getPassword() != null)
+			ini.put(INI_SECTION_USER, FIELD_PASSWORD, properties.getPassword());
 
 		ini.put(INI_SECTION_SERVER, FIELD_HOST, properties.getHost());
 		ini.put(INI_SECTION_SERVER, FIELD_PORT, properties.getPort());
@@ -141,24 +144,6 @@ public class ProfileIni extends Profile {
 		ini.store();
 	}
 
-	@Override
-	protected void storePassword(String password) throws IOException {
-		Ini ini = new Ini(this.file);
-		ini.put(INI_SECTION_USER, FIELD_PASSWORD, password);
-		ini.store();
-	}
-
-	@Override
-	protected String loadPassword() throws IOException {
-		String password = null;
-		Ini ini = null;
-
-		ini = new Ini(this.file);
-
-		password = ini.get(INI_SECTION_USER, FIELD_PASSWORD);
-		return password;
-	}
-
 	public ProfileProperties loadProfile(String profile, String path) throws IOException {
 		if (path == null) {
 			if (! this.listProfiles().contains(profile))
@@ -180,12 +165,15 @@ public class ProfileIni extends Profile {
 		if (value != null)
 			properties.setLogin(value);
 
+		value = ini.get(INI_SECTION_USER, FIELD_PASSWORD);
+		if (value != null) {
+			properties.setPassword(value);
+		}
+
 		value = ini.get(INI_SECTION_USER, FIELD_LOCALCREDENTIALS);
 		if (value != null) {
 			properties.setUseLocalCredentials(value.equals(VALUE_TRUE));
 		}
-
-		properties.setPassword(this.getPassword());
 
 		value = ini.get(INI_SECTION_SERVER, FIELD_HOST);
 		if (value != null)

@@ -128,7 +128,7 @@ public class Options {
 					this.setFlag(Options.FLAG_USERNAME);
 				}
 			}
-			if (! this.getFlag(Options.FLAG_PASSWORD)) {
+			if (! this.getFlag(Options.FLAG_PASSWORD) && this.getFlag(Options.FLAG_SAVE_PASSWORD)) {
 				String password = properties.getPassword();
 				if (password != null) {
 					this.password = password;

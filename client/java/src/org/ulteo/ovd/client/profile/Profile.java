@@ -88,40 +88,29 @@ public abstract class Profile {
 	protected static final String FIELD_RDP_USE_KEEPALIVE = "useKeepAlive";
 	protected static final String FIELD_RDP_KEEPALIVE_INTERVAL = "keepAliveInterval";
 	
-	private SymmetricCryptography crypto = null;
+	private static final SymmetricCryptography crypto = new AES(AES.default_key);
 
-	public Profile() {
-		this.crypto = new AES(AES.default_key);
-	}
+	public Profile() {}
 	
-	protected abstract void storePassword(String password) throws IOException;
-	
-	public final void savePassword(String password) throws IOException {
-		if (password == null)
-			return;
-
+	public static String cryptPassword(String password) {
+		String encryptedPassword = null;
 		try {
-			byte[] data = this.crypto.encrypt(password.getBytes());
-			String encryptedPassword = new BASE64Encoder().encode(data);
-			this.storePassword(encryptedPassword);
+			byte[] data = Profile.crypto.encrypt(password.getBytes());
+			encryptedPassword = new BASE64Encoder().encode(data);
 		} catch (GeneralSecurityException e) {
-			Logger.error("saving password failed: " + e.getMessage());
+			Logger.error("An error occured while crypting password: " + e.getMessage());
 		}
+		
+		return encryptedPassword;
 	}
-
-	protected abstract String loadPassword() throws IOException;
 	
-	protected final String getPassword() throws IOException {
-		String hash = this.loadPassword();
-		if (hash == null)
-			return null;
-
+	public static String decryptPassword(String hash) {
 		String password = null;
 		try {
-			byte[] data = this.crypto.decrypt(new BASE64Decoder().decodeBuffer(hash));
+			byte[] data = Profile.crypto.decrypt(new BASE64Decoder().decodeBuffer(hash));
 			password = new String(data);
-		} catch (GeneralSecurityException e) {
-			Logger.error("getting password failed:" + e.getMessage());
+		} catch (Exception e) {
+			Logger.error("An error occured while decrypting password:" + e.getMessage());
 		}
 		return password;
 	}

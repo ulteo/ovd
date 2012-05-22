@@ -63,6 +63,7 @@ import org.ulteo.ovd.client.desktop.OvdClientNativeDesktop;
 import org.ulteo.utils.jni.WorkArea;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
+import org.ulteo.ovd.client.profile.Profile;
 import org.ulteo.ovd.client.profile.ProfileProperties;
 import org.ulteo.ovd.client.profile.ProfileRegistry;
 import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
@@ -203,7 +204,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 					
 					break;
 				case 'p':
-					opts.password = new String(opt.getOptarg());
+					opts.password = Profile.cryptPassword(new String(opt.getOptarg()));
 
 					opts.setFlag(Options.FLAG_PASSWORD);
 					break;
@@ -540,7 +541,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			this.authFrame.setLogin(this.opts.username);
 
 		if (this.opts.password != null)
-			this.authFrame.getPassword().setText(this.opts.password);
+			this.authFrame.getPassword().setText(Profile.decryptPassword(this.opts.password));
 
 		if (this.opts.host != null) {
 			String address = this.opts.host;
@@ -587,10 +588,17 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		try {
 			if (this.authFrame != null) {
 				this.getFormValuesFromGui();
+				
 				if (this.authFrame.isRememberMeChecked())
-					this.saveProfile();
+					this.opts.setFlag(Options.FLAG_REMEMBER_ME);
+				else
+					this.opts.revertFlag(Options.FLAG_REMEMBER_ME);
+				
 				this.authFrame.hideWindow();
 			}
+			
+			if (this.opts.getFlag(Options.FLAG_REMEMBER_ME))
+				this.saveProfile();
 		
 			try {
 				if (! this.launchConnection())
@@ -650,8 +658,11 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	private void getFormValuesFromGui() throws IllegalArgumentException {
 		this.opts.username = this.authFrame.getLogin().getText();
 
-		this.opts.password = new String(this.authFrame.getPassword().getPassword());
-		this.authFrame.getPassword().setText("");
+		String password = new String(this.authFrame.getPassword().getPassword());
+		if (password.length() > 0) {
+			this.opts.password = Profile.cryptPassword(password);
+			this.authFrame.getPassword().setText("");
+		}
 
 		if (! this.opts.guiLocked) {
 			URI u = null;
@@ -700,7 +711,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			if (this.opts.username.equals("")) {
 				throw new IllegalArgumentException(I18n._("You must specify a username!"));
 			}
-			if (this.opts.password.equals("")) {
+			if (this.opts.password == null) {
 				throw new IllegalArgumentException(I18n._("You must specify a password!"));
 			}
 		}
@@ -727,14 +738,11 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			ret = dialog.askForSession(request);
 		}
 		else
-			ret = dialog.askForSession(this.opts.username, this.opts.password, request);
+			ret = dialog.askForSession(this.opts.username, Profile.decryptPassword(this.opts.password), request);
 		if (ret == false) {
 			this.loadingFrame.setVisible(false);
 			return false;
 		}
-
-		if (this.opts.savePassword)
-			this.savePassword();
 		
 		this.loadingFrame.updateProgression(LoadingStatus.SM_START, 0);
 		
@@ -856,6 +864,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 	private void saveProfile() {
 		ProfileProperties properties = new ProfileProperties(this.opts.username, this.opts.host, this.opts.port, this.opts.sessionMode, this.opts.autopublish, this.opts.nltm, this.opts.geometry, this.opts.lang, this.opts.keymap, this.opts.inputMethod);
+		if (this.opts.getFlag(Options.FLAG_SAVE_PASSWORD))
+			properties.setPassword(this.opts.password);
 
 		if (this.opts.getFlag(Options.FLAG_PROFILE_REG)) {
 			ProfileRegistry registry = new ProfileRegistry();
@@ -885,39 +895,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			ini.saveProfile(properties);
 		} catch (IOException e) {
 			Logger.warn("Unable to save profile: " + e.getMessage());
-		}
-	}
-
-	private void savePassword() {
-		try {
-			if (this.opts.getFlag(Options.FLAG_PROFILE_REG)) {
-				ProfileRegistry registry = new ProfileRegistry();
-				registry.savePassword(this.opts.password);
-				return;
-			}
-
-			ProfileIni ini = new ProfileIni();
-
-			if (this.opts.getFlag(Options.FLAG_PROFILE_INI)) {
-
-				String path = null;
-				String profile = this.opts.profile;
-				int idx = this.opts.profile.lastIndexOf(System.getProperty("file.separator"));
-
-				if (idx != -1) {
-					profile = this.opts.profile.substring(idx + 1, this.opts.profile.length());
-					path = this.opts.profile.substring(0, idx + 1);
-				}
-
-				ini.setProfile(profile, path);
-			}
-			else {
-				ini.setProfile(null, null);// Default profile
-			}
-			
-			ini.savePassword(this.opts.password);
-		} catch (IOException ex) {
-			Logger.error("Failed to save password: "+ex.getMessage());
 		}
 	}
 }
