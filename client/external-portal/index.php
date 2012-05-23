@@ -30,8 +30,10 @@ if (isset($_REQUEST['login'])) {
 
 if (isset($_SESSION['login']))
 	$user = $_SESSION['login'];
-else
+else if (defined('ULTEO_OVD_DEFAULT_LOGIN'))
 	$user = ULTEO_OVD_DEFAULT_LOGIN;
+else
+	$user = null;
 
 
 $apps = getApplications($user);
