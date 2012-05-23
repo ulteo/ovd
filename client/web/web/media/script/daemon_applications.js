@@ -36,6 +36,8 @@ var Applications = Class.create(Daemon, {
 	liaison_runningapplicationtoken_application: new Hash(),
 
 	progress_bar_step: 50,
+	
+	waiting_applications_instances: new Array(),
 
 	initialize: function(debug_) {
 		Daemon.prototype.initialize.apply(this, [debug_]);
@@ -333,9 +335,36 @@ var Applications = Class.create(Daemon, {
 			return;
 
 		for (var i=0; i<buffer.length; i++) {
-			var application = this.applications.get(parseInt(buffer[i].getAttribute('id')));
+			this.waiting_applications_instances.push(buffer[i]);
+		}
+		
+		this.start_waiting_instances();
+	},
+
+	start_waiting_instances: function() {
+		Logger.debug('[applications] start_waiting_instances()');
+		var instances2start = new Array();
+		
+		for (var i=0; i<this.waiting_applications_instances.length; i++) {
+			var node = this.waiting_applications_instances[i];
+		  
+			var application = this.applications.get(parseInt(node.getAttribute('id')));
 			
-			var file = buffer[i].getElementsByTagName('file');
+			var server = daemon.servers.get(application.server_id);
+			if (server.ready == false)
+				continue;
+			
+			instances2start.push(node);
+		}
+		
+		for (var i=0; i<instances2start.length; i++) {
+			this.waiting_applications_instances = this.waiting_applications_instances.without(instances2start[i]);
+			
+			Logger.info('start application '+instances2start[i].getAttribute('id'));
+			
+			var application = this.applications.get(parseInt(instances2start[i].getAttribute('id')));
+			
+			var file = instances2start[i].getElementsByTagName('file');
 			if (file.length == 0)
 				application.launch();
 			else {

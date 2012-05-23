@@ -103,8 +103,10 @@ var Server = Class.create({
 	setStatus: function(status_) {
 		if (status_ == 'connected')
 			this.connected = true;
-		else if (this.connected && status_ == 'ready')
+		else if (this.connected && status_ == 'ready') {
 			this.ready = true;
+			daemon.start_waiting_instances();
+		}
 		else if (status_ == 'disconnected') {
 			this.ready = false;
 			this.connected = false;

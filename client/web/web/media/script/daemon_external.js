@@ -29,22 +29,13 @@ var External = Class.create(Applications, {
 		this.runningApplicationsPanel = new ApplicationsPanel($('runningAppsContainer'));
 	},
 
-	connect_servers: function() {
-		Logger.debug('[external] connect_servers()');
-
-		Applications.prototype.connect_servers.apply(this);
-
-		setTimeout(this.explorer_loop.bind(this), 5000);
-
-		return true;
-	},
-
 	do_started: function() {
 		Logger.debug('[external] do_started()');
 
 		Daemon.prototype.do_started.apply(this);
 
 		setTimeout(this.connect_servers.bind(this), 1000);
+		setTimeout(this.explorer_loop.bind(this), 2000);
 	},
 
 	list_running_apps: function(applicationsNode_) {
