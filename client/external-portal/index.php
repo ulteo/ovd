@@ -25,7 +25,10 @@ require_once('functions.inc.php');
 session_start();
 
 if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
-	if (isset($_REQUEST['login']))
+	if (isset($_REQUEST['disconnect']) && isset($_SESSION['login']))
+		unset($_SESSION['login']);
+	
+	else if (isset($_REQUEST['login']))
 		$_SESSION['login'] = $_REQUEST['login'];
 
 	header('Location: '.$_SERVER['HTTP_REFERER']);
@@ -177,11 +180,18 @@ function startApplicationWithPath(mode_, app_id_, path_, url_) {
 <h2>Ulteo OVD Authentication</h2>
 <form action="" method="POST">
 <table>
+<?php if (! isset($_SESSION['login']) or defined('ULTEO_OVD_DEFAULT_LOGIN')) { ?>
 	<tr>
 		<td>Login: </td>
 		<td><input name="login" value="<?php echo $user; ?>" /></td>
 		<td><input type="submit" value="Go" /></td>
 	</tr>
+<?php } else { ?>
+	<tr>
+		<td>Logged as <?php echo $_SESSION['login']; ?></td>
+		<td><input type="submit" name="disconnect" value="Disconnect" /></td>
+	</tr>
+<? } ?>
 </table>
 </form>
 
