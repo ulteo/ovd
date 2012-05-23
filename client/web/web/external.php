@@ -170,6 +170,7 @@ $local_integration = (defined('PORTAL_LOCAL_INTEGRATION') && (PORTAL_LOCAL_INTEG
 					var client_language = '<?php echo $user_language; ?>';
 					var rdp_input_method = <?php echo (($rdp_input_unicode == null)?'null':'\''.$rdp_input_unicode.'\''); ?>;
 					var local_integration = <?php echo (($local_integration === true)?'true':'false'); ?>;
+					var debug_mode = <?php echo (($debug_mode === true)?'true':'false'); ?>;
 
 					Event.observe(window, 'load', function() {
 						if ('<?php echo $_REQUEST['mode']; ?>' == 'desktop')

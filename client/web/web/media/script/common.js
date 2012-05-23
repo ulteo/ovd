@@ -917,9 +917,9 @@ function onStartExternalSessionSuccess(xml_) {
 
 	setTimeout(function() {
 		if (session_mode == 'Desktop')
-			daemon = new Desktop(false);
+			daemon = new Desktop(debug_mode);
 		else
-			daemon = new External(false);
+			daemon = new External(debug_mode);
 
 		daemon.sessionmanager = sessionmanager_host;
 		daemon.keymap = user_keymap;
