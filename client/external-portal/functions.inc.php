@@ -28,11 +28,11 @@ function getApplications($user) {
 	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
 	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, 15);
 	curl_setopt($socket, CURLOPT_TIMEOUT, (15+5));
+	curl_setopt($socket, CURLOPT_SSL_VERIFYHOST, 1);
 	$data = curl_exec($socket);
 	$code = curl_getinfo($socket, CURLINFO_HTTP_CODE);
 	$content_type = curl_getinfo($socket, CURLINFO_CONTENT_TYPE);
 	curl_close($socket);
-	
 	if ($code != 200) {
 		$_SESSION['error'] = 'Unable to talk to sm';
 		return false;
@@ -80,6 +80,7 @@ function getIcon($app_id) {
 	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
 	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, 15);
 	curl_setopt($socket, CURLOPT_TIMEOUT, (15+5));
+	curl_setopt($socket, CURLOPT_SSL_VERIFYHOST, 1);
 	$ret['content_type'] = curl_getinfo($socket, CURLINFO_CONTENT_TYPE);
 	$ret['data'] = curl_exec($socket);
 	curl_close($socket);
