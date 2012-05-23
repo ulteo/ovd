@@ -24,8 +24,12 @@ require_once('functions.inc.php');
 
 session_start();
 
-if (isset($_REQUEST['login'])) {
-	$_SESSION['login'] = $_REQUEST['login'];
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
+	if (isset($_REQUEST['login']))
+		$_SESSION['login'] = $_REQUEST['login'];
+
+	header('Location: '.$_SERVER['HTTP_REFERER']);
+	die();
 }
 
 if (isset($_SESSION['login']))
