@@ -1,8 +1,9 @@
 /**
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,15 +29,27 @@ function UlteoOVD_session(web_client_url_, mode_) {
 	
 	this.extra_args = new Object();
 	
+	screen_width = screen.width;
+	screen_height = screen.height;
+	
+	if (navigator.platform == "iPad") {
+		if (Math.abs(window.orientation) == 90) {
+			var w = screen_width;
+			screen_width = screen_height;
+			screen_height = w;
+		}
+	}
+	
+	
 	if (this.mode == ULTEO_OVD_SESSION_MODE_APPLICATIONS) {
 		this.my_width = 436;
 		this.my_height = 270;
-		this.pos_top = screen.height-270;
-		this.pos_left = screen.width-436;
+		this.pos_top = screen_height-270;
+		this.pos_left = screen_width-436;
 	}
 	else {
-		this.my_width = screen.width;
-		this.my_height =  screen.height;
+		this.my_width = screen_width;
+		this.my_height =  screen_height;
 		this.pos_top = 0;
 		this.pos_left = 0;
 	}
