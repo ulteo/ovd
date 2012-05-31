@@ -117,7 +117,7 @@ void SeamlessWindow_create(HWND hwnd) {
 
 			placement.length = sizeof(WINDOWPLACEMENT);
 			GetWindowPlacement(hwnd, &placement);
-			vchannel_write("POSITION", "0x%08lx,%d,%d,%d,%d,0x%08lx", hwnd,
+			SeamlessChannel_sendPosition(hwnd,
 						placement.rcNormalPosition.left,
 						placement.rcNormalPosition.top,
 						placement.rcNormalPosition.right - placement.rcNormalPosition.left,
