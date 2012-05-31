@@ -420,9 +420,8 @@ public class Rdp {
         if (this.opt.width != width || this.opt.height != height) {
             logger.warn("screen size changed from " + this.opt.width + "x"
                     + this.opt.height + " to " + width + "x" + height);
-            this.opt.width = width;
-            this.opt.height = height;
-            // ui_resize_window(); TODO: implement resize thingy
+            
+            this.surface.resize(width, height);
         }
     }
 
@@ -1005,7 +1004,9 @@ public class Rdp {
 
 	this.processServerCaps(data, len_combined_caps);
 	
-	this.cache.init();
+	// Cache size do not change when a second mcs data is received
+	if (this.opt.readytosend == false)
+		this.cache.init();
 
         this.sendConfirmActive();
 

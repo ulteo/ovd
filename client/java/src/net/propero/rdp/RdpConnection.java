@@ -146,6 +146,10 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.setServer(address, RDP_PORT);
 	}
 
+	public void setFrame(JFrame frame) {
+		this.common.desktopFrame = frame;   
+	}
+	
 	/**
 	 * Set the host and the port to connect
 	 * @param host

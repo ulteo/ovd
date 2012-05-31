@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
 
 import net.propero.rdp.keymapping.KeyCode;
 import net.propero.rdp.keymapping.KeyCode_FileBased;
@@ -132,6 +133,21 @@ public abstract class RdesktopCanvas extends Canvas {
 
         // now do input listeners in registerCommLayer() / registerKeyboard()
         this.ComponentListener = new ArrayList<Component>();
+    }
+    
+    public void resize(int width, int height) {
+        this.width = width; 
+        this.height = height;
+        this.opt.width = width; 
+        this.opt.height = height;
+        
+        this.backstore = new WrappedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        
+        if (this.common.desktopFrame != null) {
+            JFrame f = this.common.desktopFrame;
+            Insets ins = f.getInsets();
+            f.setSize(width + (ins.left + ins.right), height + (ins.bottom + ins.top));
+        }
     }
 
     public Dimension getMinimumSize()

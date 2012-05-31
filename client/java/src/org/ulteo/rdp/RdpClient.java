@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -367,6 +368,8 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		this.setVisible(false);
 		this.setResizable(false);
 		this.addWindowListener(this);
+		RdpConnection conn = this.co.get(0);
+		conn.setFrame(this);
 	}
 
 	public void connect() throws OvdException {
