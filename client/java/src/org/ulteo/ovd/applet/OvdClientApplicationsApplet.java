@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -82,8 +83,8 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 		if (co == null)
 			return false;
 
-		this.customizeConnection(co);
 		this.processIconCache(co);
+		this.customizeConnection(co);
 		this.matching.put(JSId, co);
 		
 		co.addRdpListener(this);
