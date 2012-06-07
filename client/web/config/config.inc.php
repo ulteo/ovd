@@ -56,7 +56,9 @@
 // default: do not force any behavior
 
 // Enable/disable debug mode
-define('DEBUG_MODE', 0);
+//  define('DEBUG_MODE', true);
+//  define('DEBUG_MODE', false);
+// default: false
 
 // Select RDP input method
 // define('RDP_INPUT_METHOD', 'scancode'); // default
