@@ -166,7 +166,7 @@ HICON WindowUtil_getIcon(HWND hwnd, int large) {
 	if (icon)
 		return icon;
 
-	icon = (HICON) GetClassLong(hwnd, large ? GCL_HICON : GCL_HICONSM);
+	icon = (HICON) GetClassLong(hwnd, large ? GCLP_HICON : GCLP_HICONSM);
 
 	if (icon)
 		return icon;
