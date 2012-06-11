@@ -80,8 +80,9 @@ class Share:
 		if p.returncode is not 0:
 			Logger.error("FS: unable to del share")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
+			return False
 		
-		return s == 0
+		return True
 	
 	
 	def enable(self):
