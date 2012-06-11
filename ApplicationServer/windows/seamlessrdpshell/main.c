@@ -80,9 +80,10 @@ void CALLBACK InternalWindow_processCopyData(PCOPYDATASTRUCT data) {
 		case HOOK_MSG_STATE:
 			{
 				HookMsg_State *msg = (HookMsg_State *)(data->lpData);
+				HWND hwnd = (HWND) msg->wnd;
 				SeamlessOrder_State *lastOrder = NULL;
 
-				sw = getWindowFromHistory(msg->wnd);
+				sw = getWindowFromHistory(hwnd);
 				if (sw == NULL)
 					break;
 				
@@ -93,21 +94,22 @@ void CALLBACK InternalWindow_processCopyData(PCOPYDATASTRUCT data) {
 
 				lastOrder = (SeamlessOrder_State *) SeamlessChannel_getLastOrder(SEAMLESSORDER_STATE);
 
-				if (lastOrder && (lastOrder->wnd == msg->wnd) && (lastOrder->state == msg->state)) {
+				if (lastOrder && (lastOrder->wnd == hwnd) && (lastOrder->state == msg->state)) {
 					SeamlessChannel_sendAck(lastOrder->serial);
 				}
 				else {
-					SeamlessChannel_sendState(msg->wnd, msg->state, 0);
+					SeamlessChannel_sendState(hwnd, msg->state, 0);
 				}
 			}
 			break;
 		case HOOK_MSG_FOCUS:
 			{
 				HookMsg_Focus *msg = (HookMsg_Focus *)(data->lpData);
+				HWND hwnd = (HWND) msg->wnd;
 
-				sw = getWindowFromHistory(msg->wnd);
+				sw = getWindowFromHistory(hwnd);
 				if (sw == NULL) {
-					sw = addHWDNToHistory(msg->wnd);
+					sw = addHWDNToHistory(hwnd);
 					if (sw == NULL)
 						break;
 
@@ -115,20 +117,21 @@ void CALLBACK InternalWindow_processCopyData(PCOPYDATASTRUCT data) {
 					break;
 				}
 
-				if (msg->wnd == SeamlessChannel_getLastFocusedWindow())
+				if (hwnd == SeamlessChannel_getLastFocusedWindow())
 					break;
 
-				SeamlessChannel_setFocusedWindow(msg->wnd);
+				SeamlessChannel_setFocusedWindow(hwnd);
 
-				SeamlessChannel_sendFocus(msg->wnd);
+				SeamlessChannel_sendFocus(hwnd);
 			}
 			break;
 		case HOOK_MSG_ICON:
 			{
 				HookMsg_Icon *msg = (HookMsg_Icon *)(data->lpData);
+				HWND hwnd = (HWND) msg->wnd;
 				int size;
 
-				sw = getWindowFromHistory(msg->wnd);
+				sw = getWindowFromHistory(hwnd);
 				if (sw == NULL)
 					break;
 
@@ -140,7 +143,7 @@ void CALLBACK InternalWindow_processCopyData(PCOPYDATASTRUCT data) {
 					 * So trigger a read of it every time the large one is
 					 * changed.
 					 */
-					msg->icon = WindowUtil_getIcon(msg->wnd, 0);
+					msg->icon = WindowUtil_getIcon(hwnd, 0);
 					if (msg->icon)
 					{
 						SeamlessWindow_updateIcon(sw, msg->icon, 0);
@@ -151,7 +154,7 @@ void CALLBACK InternalWindow_processCopyData(PCOPYDATASTRUCT data) {
 				}
 
 				if (msg->icon == NULL) {
-					SeamlessChannel_sendDelIcon(msg->wnd, size, size);
+					SeamlessChannel_sendDelIcon(hwnd, size, size);
 					break;
 				}
 				
@@ -161,11 +164,12 @@ void CALLBACK InternalWindow_processCopyData(PCOPYDATASTRUCT data) {
 		case HOOK_MSG_TITLE:
 			{
 				HookMsg_Title *msg = (HookMsg_Title *)(data->lpData);
+				HWND hwnd = (HWND) msg->wnd;
 
-				sw = getWindowFromHistory(msg->wnd);
+				sw = getWindowFromHistory(hwnd);
 
 				if (sw == NULL){
-					SeamlessWindow_create(msg->wnd);
+					SeamlessWindow_create(hwnd);
 				}
 				else{
 					SeamlessWindow_updateTitle(sw);
@@ -175,8 +179,9 @@ void CALLBACK InternalWindow_processCopyData(PCOPYDATASTRUCT data) {
 		case HOOK_MSG_DESTROY:
 			{
 				HookMsg_Destroy *msg = (HookMsg_Destroy *)(data->lpData);
+				HWND hwnd = (HWND) msg->wnd;
 
-				sw = getWindowFromHistory(msg->wnd);
+				sw = getWindowFromHistory(hwnd);
 				if (! sw)
 					break;
 
@@ -186,8 +191,9 @@ void CALLBACK InternalWindow_processCopyData(PCOPYDATASTRUCT data) {
 		case HOOK_MSG_POSITION:
 			{
 				HookMsg_Position *msg = (HookMsg_Position *)(data->lpData);
+				HWND hwnd = (HWND) msg->wnd;
 
-				sw = getWindowFromHistory(msg->wnd);
+				sw = getWindowFromHistory(hwnd);
 				if (! sw)
 					break;
 
@@ -197,8 +203,9 @@ void CALLBACK InternalWindow_processCopyData(PCOPYDATASTRUCT data) {
 		case HOOK_MSG_SHOW:
 			{
 				HookMsg_Show *msg = (HookMsg_Show *)(data->lpData);
+				HWND hwnd = (HWND) msg->wnd;
 
-				SeamlessWindow_create(msg->wnd);
+				SeamlessWindow_create(hwnd);
 			}
 			break;
 		case HOOK_MSG_DESTROYGRP:
@@ -211,8 +218,9 @@ void CALLBACK InternalWindow_processCopyData(PCOPYDATASTRUCT data) {
 		case HOOK_MSG_ZCHANGE:
 			{
 				HookMsg_ZChange *msg = (HookMsg_ZChange *)(data->lpData);
+				HWND hwnd = (HWND) msg->wnd;
 
-				sw = getWindowFromHistory(msg->wnd);
+				sw = getWindowFromHistory(hwnd);
 				if (! sw)
 					break;
 

@@ -34,36 +34,36 @@
 #define HOOK_MSG_ZCHANGE		8
 
 typedef struct HookMsg_State_ {
-	HWND wnd;
+	ULONG32 wnd;
 	int state;
 } HookMsg_State;
 typedef struct HookMsg_Focus_ {
-	HWND wnd;
+	ULONG32 wnd;
 } HookMsg_Focus;
 typedef struct HookMsg_Icon_ {
-	HWND wnd;
+	ULONG32 wnd;
 	HICON icon;
 	BOOL large;
 	BOOL haveToGetIcon;
 } HookMsg_Icon;
 typedef struct HookMsg_Title_ {
-	HWND wnd;
+	ULONG32 wnd;
 	unsigned short title[TITLE_SIZE];
 } HookMsg_Title;
 typedef struct HookMsg_Destroy_ {
-	HWND wnd;
+	ULONG32 wnd;
 } HookMsg_Destroy;
 typedef struct HookMsg_Position_ {
-	HWND wnd;
+	ULONG32 wnd;
 } HookMsg_Position;
 typedef struct HookMsg_Show_ {
-	HWND wnd;
+	ULONG32 wnd;
 } HookMsg_Show;
 typedef struct HookMsg_DestroyGrp_ {
 	DWORD pid;
 } HookMsg_DestroyGrp;
 typedef struct HookMsg_ZChange_ {
-	HWND wnd;
+	ULONG32 wnd;
 } HookMsg_ZChange;
 
 #endif // _HOOKDLL_H_
