@@ -92,7 +92,7 @@ public class Language {
 //			{"Maltese", "", "mt"},
 			{"Norwegian (Bokmal)", "Norsk (Bokmål)", "nb", "no"},
 //			{"Norwegian (Nynorsk)", "", "no"},
-//			{"Polish", "Polski", "pl"},
+			{"Polish", "Polski", "pl"},
 //			{"Portuguese", "Português", "pt"},
 			{"Portuguese (Brazil)", "Português (Brasil)", "pt", "br"},
 			{"Romanian", "Română", "ro"},
