@@ -1,4 +1,7 @@
-rd /s/q build Release HookDll\Release
+rd /s/q build
+vcbuild vchannel.vcproj /clean
+vcbuild HookDll\hookdll.vcproj /clean
+vcbuild clipper.vcproj /clean
 
 mkdir build
 vcbuild vchannel.vcproj Release
