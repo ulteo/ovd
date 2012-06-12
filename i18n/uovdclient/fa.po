@@ -1,0 +1,528 @@
+# Persian translations for uovdclient package.
+# Copyright (C) 2012 Ulteo SAS
+# This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
+# Automatically generated, 2011.
+# Author: Hosein Rastegar <molavy2003@gmail.com>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: uovdclient\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-11-23 12:22+0100\n"
+"PO-Revision-Date: 2012-04-03 09:02+0200\n"
+"Last-Translator: Hosein Rastegar\n"
+"Language-Team: Persian\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.1.6\n"
+
+#: ../../client/web/web/login.php:295
+msgid "Profile"
+msgstr "مشخصات کاربر"
+
+#: ../../client/web/web/translate.php:65
+msgid "Close"
+msgstr "بستن"
+
+#: ../../client/web/web/translate.php:67
+msgid "Session Manager"
+msgstr "مدیر جلسات"
+
+#: ../../client/web/web/translate.php:68
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1019
+msgid "Login"
+msgstr "ورود"
+
+#: ../../client/web/web/translate.php:69
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1020
+msgid "Password"
+msgstr "رمز عبور"
+
+#: ../../client/web/web/translate.php:70
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1035
+msgid "Use local credentials"
+msgstr "اعتبارنامه محلی شما"
+
+#: ../../client/web/web/translate.php:71 ../../client/web/web/translate.php:77
+#: ../../client/web/web/translate.php:82
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:40
+msgid "Yes"
+msgstr "بله"
+
+#: ../../client/web/web/translate.php:72 ../../client/web/web/translate.php:78
+#: ../../client/web/web/translate.php:83
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:40
+msgid "No"
+msgstr "خیر"
+
+#: ../../client/web/web/translate.php:73
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1025
+msgid "Mode"
+msgstr "حالت"
+
+#: ../../client/web/web/translate.php:74
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1032
+msgid "Desktop"
+msgstr "رومیزی"
+
+#: ../../client/web/web/translate.php:75
+msgid "Portal"
+msgstr "پرتال"
+
+#: ../../client/web/web/translate.php:76
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:81
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1043
+msgid "Fullscreen"
+msgstr "تمام صفحه"
+
+#: ../../client/web/web/translate.php:79
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1027
+msgid "Language"
+msgstr "زبان"
+
+#: ../../client/web/web/translate.php:80
+msgid "Keyboard layout"
+msgstr "طرح بندی صفحه کلید"
+
+#: ../../client/web/web/translate.php:81
+msgid "Debug"
+msgstr "خطا یابی"
+
+#: ../../client/web/web/translate.php:86
+msgid "Advanced settings"
+msgstr "تنظیمات پیشرفته"
+
+#: ../../client/web/web/translate.php:87
+msgid "Connect"
+msgstr "اتصال"
+
+#: ../../client/web/web/translate.php:89
+msgid "Checking for system compatibility"
+msgstr "بررسی سازگاری سیستم "
+
+#: ../../client/web/web/translate.php:90
+msgid ""
+"If this is your first time here, a Java security window will show up and you "
+"have to accept it to use the service."
+msgstr ""
+"اگر اولین بار است که اینجا وارد می شوید،یک پیغام امنیتی از جاوا نمایش داده "
+"می شود و شما باید برای استفاده از سیستم پیغام را قبول(accept) کنید."
+
+#: ../../client/web/web/translate.php:91
+msgid ""
+"You are advised to check the \"<em>Always trust content from this publisher</"
+"em>\" checkbox."
+msgstr ""
+"توصیه می شود که تیک چک باکس<em>Always trust content from this "
+"publisher</em>را بزنید"
+
+#: ../../client/web/web/translate.php:93
+msgid "System compatibility error"
+msgstr "خطای سازگاری سیستم"
+
+#: ../../client/web/web/translate.php:94
+msgid "Java is not available either on your system or in your web browser."
+msgstr "جاوا بر روی سیستم یا مرورگر شما نصب نیست."
+
+#: ../../client/web/web/translate.php:95
+msgid ""
+"Please install Java extension for your web browser or contact your "
+"administrator."
+msgstr ""
+"لطفا افزونه جاوا را بر روی مرورگر خود نصب کنید و یا با مدیریت خود تماس "
+"بگیرید."
+
+#: ../../client/web/web/translate.php:96
+msgid "You have not accepted the Java security window."
+msgstr "شما پنجره امنیتی جاوا را قبول(accept) نکرده اید."
+
+#: ../../client/web/web/translate.php:97
+msgid "You <strong>cannot</strong> have access to this service."
+msgstr "شما<strong>نمی توانید</strong> این سرویس استفاده کنید"
+
+#: ../../client/web/web/translate.php:99
+msgid "Loading Open Virtual Desktop"
+msgstr "بارگزاری رومیزی مجازی(Open Virtual Desktop)"
+
+#: ../../client/web/web/translate.php:100
+msgid "Welcome!"
+msgstr "خوش آمدید!"
+
+#: ../../client/web/web/translate.php:101
+msgid "Suspend"
+msgstr "تعلیق"
+
+#: ../../client/web/web/translate.php:102
+msgid "Logout"
+msgstr "خروج"
+
+#: ../../client/web/web/translate.php:104
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:116
+msgid "My applications"
+msgstr "برنامه های من"
+
+#: ../../client/web/web/translate.php:105
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:132
+msgid "Running applications"
+msgstr "برنامه های در حال اجرا"
+
+#: ../../client/web/web/translate.php:106
+msgid "My files"
+msgstr "فایل های من"
+
+#: ../../client/web/web/translate.php:117
+msgid "Example: sm.ulteo.com"
+msgstr "به عنوان نمونه sm.ulteo.com"
+
+#: ../../client/web/web/translate.php:119
+msgid "Usage: missing \"sessionmanager_host\" parameter"
+msgstr "کاربرد:مقدار \"sessionmanager_host\" وارد نشده است"
+
+#: ../../client/web/web/translate.php:120
+msgid "Usage: missing \"login\" parameter"
+msgstr "کاربرد:مقدار \"نام کاربری\" وارد نشده است"
+
+#: ../../client/web/web/translate.php:121
+msgid "Usage: missing \"password\" parameter"
+msgstr "کاربرد:مقدار \"رمز عبور\" وارد نشده است"
+
+#: ../../client/web/web/translate.php:122
+msgid "Unable to reach the Session Manager"
+msgstr "قادر به دسترسی به مدیر جلسات نیست"
+
+#: ../../client/web/web/translate.php:124
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:467
+msgid "Authentication failed: please double-check your password and try again"
+msgstr "خطای تایید هویت: لطفا رمز عبور خود را بررسی و دوباره امتحان نمایید"
+
+#: ../../client/web/web/translate.php:125
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:469
+msgid ""
+"The system is on maintenance mode, please contact your administrator for "
+"more information"
+msgstr ""
+"سیستم در حالت نگهداری است،لطفا با مدیر خود برای اطلاعات بیشتر تماس بگیرید"
+
+#: ../../client/web/web/translate.php:126
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:471
+msgid "An internal error occured, please contact your administrator"
+msgstr "خطای داخلی روی داد،لطفا با مدیر خود تماس بگیرید"
+
+#: ../../client/web/web/translate.php:127
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:473
+msgid "You specified an invalid login, please double-check and try again"
+msgstr "شما ورود نامعتبری را اختصاص داده اید.لطفا بررسی و دوباره امتحان نمایید"
+
+#: ../../client/web/web/translate.php:128
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:475
+msgid ""
+"The service is not available, please contact your administrator for more "
+"information"
+msgstr ""
+"این سرویس در دسترس نمی باشد،لطفا با مدیریت خود برای اطلاعات بیشتر تماس "
+"بگیرید"
+
+#: ../../client/web/web/translate.php:129
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:477
+msgid "You are not authorized to launch a session in this mode"
+msgstr "شما اجازه اجرای جلسه در این حالت را ندارید"
+
+#: ../../client/web/web/translate.php:130
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:479
+msgid "You already have an active session"
+msgstr "شما از قبل جلسه فعالی دارید."
+
+#: ../../client/web/web/translate.php:132
+msgid "You will be disconnected from your OVD session."
+msgstr "شما از  دسکتاپ مجازی خارج خواهید شد."
+
+#: ../../client/web/web/translate.php:134
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:843
+msgid ""
+"Your session is going to end in 3 minutes, please save all your data now!"
+msgstr "جلسه در دقیقه آینده قطع خواهد شد.لطفا اطلاعات خود را ذخیره کنید."
+
+#: ../../client/web/web/translate.php:136
+msgid "Server: session closed unexpectedly"
+msgstr "سرور:جلسه به صورت غیر منتظره ای به پایان رسید"
+
+#: ../../client/web/web/translate.php:137
+msgid "Your session has ended, you can now close the window"
+msgstr "جلسه به پایان رسید،می توانید پنجره را ببندید."
+
+#: ../../client/web/web/translate.php:138
+msgid "Your session has ended unexpectedly"
+msgstr "جلسه شما به صورت غیر منتظره ای به پایان رسید"
+
+#: ../../client/web/web/translate.php:139
+msgid "error details"
+msgstr "جزییات خطا"
+
+#: ../../client/web/web/translate.php:140
+msgid "Close this window"
+msgstr "بستن این پنجره"
+
+#: ../../client/web/web/translate.php:141
+msgid ""
+"Click <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
+"false;\">here</a> to start a new session"
+msgstr ""
+"برای شروع جلسه جدید <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); "
+"return false;\">ایجا</a> کلیک کنید"
+
+#: ../../client/web/web/translate.php:143
+msgid "suspend"
+msgstr "تعلیق"
+
+#: ../../client/web/web/translate.php:144
+msgid "resume"
+msgstr "ادامه"
+
+#: ../../client/web/web/external.php:237
+msgid "Do not close this Ulteo OVD window!"
+msgstr "این پنجره Ulteo OVD را نبندید!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/NewsFrame.java:49
+msgid "OVD News"
+msgstr "اخبار OVD"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:69
+msgid "Welcome {user}"
+msgstr "خوش آمدید {user}"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:40
+msgid "Display icons"
+msgstr "نمایش آیکن ها"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:41
+msgid "Hide icons"
+msgstr "پنهان کردن آیکن ها"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:46
+msgid "Disconnect"
+msgstr "قطع"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:481
+msgid "An error occured, please contact your administrator"
+msgstr "خطایی روی داد،لطفا با مدیریت خود تماس بگیرید"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:647
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:663
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:38
+msgid "Warning!"
+msgstr "هشدار!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:650
+msgid "Unable to reach the Session Manager!"
+msgstr "قادر به ارتباط با مدیر جلسات نیست!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:652
+msgid "Error!"
+msgstr "خطا!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:740
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:744
+msgid "Invalid host field!"
+msgstr "فیلد هاست نامعتبر!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:774
+msgid "You must specify the host field!"
+msgstr "شما باید فیلد هاست را اختصاص دهید!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:779
+msgid "You must specify a username!"
+msgstr "شما باید نام کاربری انتخاب کنید!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:782
+msgid "You must specify a password!"
+msgstr "شما باید رمز عبوری انتخاب کنید!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:831
+msgid "Internal error: Bad session mode return"
+msgstr "خطای داخلی: حالت جلسه به صورت نامناسب برگشت خورد"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:843
+msgid "Session is going to end"
+msgstr "جلسه پایان خواهد یافت"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:861
+msgid "Internal error: unsupported session mode"
+msgstr "خطای داخلی عدم پشتیابی حالت جلسه"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+msgid "You have been disconnected"
+msgstr "شما قطع شده اید."
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+msgid "Your session has ended"
+msgstr "جلسه شما به پایان رسید"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:913
+msgid "Protocol xml error: "
+msgstr "خطای پروتکل xml :"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:913
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:920
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:930
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:937
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:944
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+msgid "Error"
+msgstr "خطا"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:39
+msgid "Do you really want to close the window?"
+msgstr "آیا واقعا می خواهید این پنجره را ببندید؟"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:40
+msgid "Go back to authentication"
+msgstr "بازگشت به تایید هویت"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:52
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:109
+msgid "Now loading"
+msgstr "در حال بارگزاری"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:59
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:108
+msgid "Cancel"
+msgstr "لغو"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:52
+msgid "Start loading session"
+msgstr "آغاز بارگزاری جلسه"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:54
+msgid "Connecting to the session manager"
+msgstr "اتصال به مدیر جلسات"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:56
+msgid "Get session information from session manager"
+msgstr "دریافت اطلاعات جلسه از مدیر جلسات"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:58
+msgid "Get application data from session manager"
+msgstr "دریافت داده های برنامه از مدیر جلسات"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:60
+msgid "Installing application data on client"
+msgstr "نصب داده های برنامه در کاربر"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:62
+msgid "Waiting server for session"
+msgstr "انتظار برای جلسه از سرور"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:64
+msgid "Invalid status"
+msgstr "وضعیت نامعتبر"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:80
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1042
+msgid "Maximized"
+msgstr "حداکثر شده"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:854
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1039
+msgid "Fewer options"
+msgstr "تنظیمات کمتر"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:940
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1037
+msgid "More options..."
+msgstr "تنظیمات بیشتر"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1021
+msgid "Start!"
+msgstr "آغاز!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1024
+msgid "Server"
+msgstr "سرور"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1026
+msgid "Resolution"
+msgstr "تفکیک پذیری"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1028
+msgid "Keyboard"
+msgstr "صفحه کلید"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1030
+msgid "Auto"
+msgstr "خودکار"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1031
+msgid "Application"
+msgstr "برنامه"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1033
+msgid "Remember me"
+msgstr "به خاطر سپردن من"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1034
+msgid "Auto-publish shortcuts"
+msgstr "انتشار خودکار میانبر ها"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionFrame.java:40
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionFrame.java:68
+msgid "Disconnecting!"
+msgstr "در حال قطع شدن!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:85
+msgid "Text file (*.txt)"
+msgstr "فایل تکست(*.txt)"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+msgid "An error occured. Please try again."
+msgstr "خطایی روی داد.لطفا دوباره امتحان کنید."
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
+msgid "Bug report saved to %s"
+msgstr "گزارش خطا در %s ذخیره شد"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:108
+msgid "Bug report saved"
+msgstr "گزارش خطا ذخیره شد"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
+msgid "Please fill description field."
+msgstr "لطفا فیلد توضیح را پر کنید."
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
+msgid "Empty field"
+msgstr "فیلد خالی"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:64
+msgid "Ulteo OVD Bug Report"
+msgstr "گزارش خطای Ulteo OVD "
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:108
+msgid "Validate"
+msgstr "ارزیابی"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:119
+msgid "Date"
+msgstr "تاریخ"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:121
+msgid "Version"
+msgstr "نسخه"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:123
+msgid "System"
+msgstr "سیستم"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:125
+msgid "JVM"
+msgstr "JVM"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:159
+msgid "Description and steps to reproduce:"
+msgstr "توضیحات و مراحل برای تکرار وضعیت:"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportButton.java:44
+msgid "Report a bug"
+msgstr "گزارش یک خطا"

@@ -414,6 +414,7 @@ class Preferences {
 			'en_GB'=>'English',
 			'el_GR'=>'Ελληνικά',
 			'es_ES'=>'Español',
+			'fa_IR'=>'فارسی',
 			'fi_FI'=>'Suomi',
 			'fr_FR'=>'Français',
 			'hu_HU'=>'Magyar',
