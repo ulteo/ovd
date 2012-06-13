@@ -365,6 +365,28 @@ static void load_configuration(BOOL *use_active_monitoring) {
 	RegCloseKey (rkey);
 }
 
+// Refer to http://msdn.microsoft.com/en-us/library/windows/desktop/ms684139%28v=vs.85%29.aspx
+typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
+BOOL IsWow64() {
+	LPFN_ISWOW64PROCESS fnIsWow64Process;
+	BOOL bIsWow64 = FALSE;
+
+	// IsWow64Process is not available on all supported versions of Windows.
+	// Use GetModuleHandle to get a handle to the DLL that contains the function
+	// and GetProcAddress to get a pointer to the function if available.
+
+	fnIsWow64Process = (LPFN_ISWOW64PROCESS) GetProcAddress(
+	GetModuleHandle(TEXT("kernel32")),"IsWow64Process");
+
+	if(fnIsWow64Process == NULL)
+		return FALSE;
+
+	if (! fnIsWow64Process(GetCurrentProcess(), &bIsWow64))
+		return FALSE;
+
+	return bIsWow64;
+}
+
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 {
@@ -387,6 +409,24 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 		{
 			message("Could not load hook DLL. Unable to continue.");
 			return -1;
+		}
+
+		if (IsWow64())
+		{
+			STARTUPINFO si;
+			PROCESS_INFORMATION pi;
+
+			ZeroMemory( &si, sizeof(si) );
+			si.cb = sizeof(si);
+			ZeroMemory( &pi, sizeof(pi) );
+
+			// Start the child process.
+			if (! CreateProcess(NULL, "hook_launcher_x64.exe", NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+				message("CreateProcess failed.\n");
+				return -1;
+			}
+			CloseHandle(pi.hProcess);
+			CloseHandle(pi.hThread);
 		}
 
 		set_hooks_fn = (set_hooks_proc_t) GetProcAddress(hookdll, "SetHooks");
