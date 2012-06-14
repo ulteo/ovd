@@ -217,6 +217,11 @@ public class UnicodeInput extends Input {
 				else {
 					if (ctrlDown || altDown) {
 						char c = Character.toLowerCase((char)e.getKeyCode());
+						// With non latin keyboard layout, there is no keyCode for a key.
+						// We need the keyChar
+						if (c == 0)
+							c = e.getKeyChar();
+						
 						scan = newKeyMapper.getFromMap(KeyCode_FileBased.NOSHIFT_SECTION, Integer.toString(c));
 						sendScancode(time, RDP_KEYPRESS, scan);
 						proceedOnKeyPressed = true;
