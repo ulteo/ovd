@@ -274,7 +274,7 @@ class Session {
 		);
 
 		if (array_key_exists($status_, $states) && array_key_exists($this->getAttribute('status'), $states)) {
-			if ($states[$status_] < $states[$this->getAttribute('status')])
+			if ($states[$status_] < $states[$this->getAttribute('status')] && ! $this->canSwitchToPreviousStatus($status_))
 				return false; // avoid switching Session to a previous status...
 		}
 
@@ -357,6 +357,13 @@ class Session {
 		Abstract_Session::save($this);
 
 		return true;
+	}
+
+	private function canSwitchToPreviousStatus($status_) {
+		return (array_key_exists('persistent', $this->settings) && 
+			$this->settings['persistent'] == 1 && 
+			$this->getAttribute('status') == Session::SESSION_STATUS_INACTIVE &&
+			$status_ == Session::SESSION_STATUS_READY);
 	}
 
 	public function textStatus($status_=Session::SESSION_STATUS_UNKNOWN) {
