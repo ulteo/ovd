@@ -28,7 +28,6 @@ import sys
 import xrdp.Session as XrdpSession
 
 def rdpSessionIsConnected():
-	#current_user = os.getlogin()
 	try:
 		current_user = os.environ["USER"]
 	except KeyError:
