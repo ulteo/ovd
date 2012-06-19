@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
@@ -223,7 +223,7 @@ public abstract class OvdApplet extends Applet {
 		if (this.ovd != null)
 			this.ovd.performDisconnectAll();
 		else
-			this.forwardJS(OvdApplet.JS_API_F_SERVER, 0, OvdApplet.JS_API_O_SERVER_FAILED);
+			this.forwardServerStatusToJS(0, OvdApplet.JS_API_O_SERVER_FAILED);
 		Logger.info(this.getClass().toString() +" stopped");
 	}
 	
@@ -236,13 +236,13 @@ public abstract class OvdApplet extends Applet {
 		System.gc();
 	}
 	
-
-	@SuppressWarnings("deprecation")
-	public void forwardJS(String functionName, Integer instance, String status) {
+	public void forwardToJS(String functionName, Object[] args) {
+		if (args == null)
+			args = new Object[0];
+		
 		try {
 			try {
 				JSObject win = JSObject.getWindow(this);
-				Object[] args = {instance, status};
 				win.call(functionName, args);
 			} catch (ClassCastException e) {
 				// a cast exception is raised when the applet is executed by the 
@@ -251,9 +251,28 @@ public abstract class OvdApplet extends Applet {
 				throw new netscape.javascript.JSException(e.getMessage());
 			}
 		} catch (netscape.javascript.JSException e) {
-			Logger.error(String.format("%s: error while execute %s(%d, %s) => %s",
-					this.getClass(), functionName, instance, status, e.getMessage()));
+			String argsStr = "";
+			if (args.length > 0) {
+				for (int i = 0; i < args.length; i++) {
+					argsStr += args[i];
+					
+					if (i < args.length - 1)
+						argsStr += ", ";
+				}
+			}
+			
+			Logger.error(String.format("%s: error while execute %s(%s) => %s",
+					this.getClass(), functionName, argsStr, e.getMessage()));
 		}
 	}
 	
+	public void forwardServerStatusToJS(Integer serverId_, String status_) {
+		Object[] args = {serverId_, status_};
+		this.forwardToJS(JS_API_F_SERVER, args);
+	}
+	
+	public void forwardApplicationStatusToJS(Integer token_, String status_) {
+		Object[] args = {token_, status_};
+		this.forwardToJS(JS_API_F_INSTANCE, args);
+	}
 }

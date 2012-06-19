@@ -1,8 +1,8 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011
- * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
@@ -119,13 +119,13 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 	@Override
 	public void connected(RdpConnection co) {
 		super.connected(co);
-		this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, 0, OvdApplet.JS_API_O_SERVER_CONNECTED);
+		this.applet.forwardServerStatusToJS(0, OvdApplet.JS_API_O_SERVER_CONNECTED);
 	}
 
 	@Override
 	public void disconnected(RdpConnection co) {
 		super.disconnected(co);
-		this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, 0, OvdApplet.JS_API_O_SERVER_DISCONNECTED);
+		this.applet.forwardServerStatusToJS(0, OvdApplet.JS_API_O_SERVER_DISCONNECTED);
 		this.applet.stop();
 	}
 
@@ -141,7 +141,7 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 
 		if (tryNumber > 1) {
 			Logger.error("checkRDPConnections -- Several try to connect to "+co.getServer()+" failed. Will exit.");
-			this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, 0, OvdApplet.JS_API_O_SERVER_FAILED);
+			this.applet.forwardServerStatusToJS(0, OvdApplet.JS_API_O_SERVER_FAILED);
 			return;
 		}
 

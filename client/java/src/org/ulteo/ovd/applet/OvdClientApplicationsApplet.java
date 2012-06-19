@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author David LECHEVALIER <david@ulteo.com> 2012
  *
@@ -133,7 +133,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 				continue;
 
 			if (rc.getOvdAppChannel() == channel) {
-				this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, JSId, OvdApplet.JS_API_O_SERVER_READY);
+				this.applet.forwardServerStatusToJS(JSId, OvdApplet.JS_API_O_SERVER_READY);
 				return;
 			}
 		}
@@ -142,17 +142,17 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 
 	@Override
 	public void ovdInstanceError(int instance) {
-		this.applet.forwardJS(OvdApplet.JS_API_F_INSTANCE, new Integer(instance), OvdApplet.JS_API_O_INSTANCE_ERROR);
+		this.applet.forwardApplicationStatusToJS(new Integer(instance), OvdApplet.JS_API_O_INSTANCE_ERROR);
 	}
 
 	@Override
 	public void ovdInstanceStarted(int instance) {
-		this.applet.forwardJS(OvdApplet.JS_API_F_INSTANCE, new Integer(instance), OvdApplet.JS_API_O_INSTANCE_STARTED);
+		this.applet.forwardApplicationStatusToJS(new Integer(instance), OvdApplet.JS_API_O_INSTANCE_STARTED);
 	}
 
 	@Override
 	public void ovdInstanceStopped(int instance) {
-		this.applet.forwardJS(OvdApplet.JS_API_F_INSTANCE, new Integer(instance), OvdApplet.JS_API_O_INSTANCE_STOPPED);
+		this.applet.forwardApplicationStatusToJS(new Integer(instance), OvdApplet.JS_API_O_INSTANCE_STOPPED);
 	}
 
 	@Override
@@ -162,7 +162,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 		for (Integer JSId: this.matching.keySet()) {
 			RdpConnectionOvd rc = this.matching.get(JSId);
 			if (rc == co) {
-				this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, JSId, OvdApplet.JS_API_O_SERVER_CONNECTED);
+				this.applet.forwardServerStatusToJS(JSId, OvdApplet.JS_API_O_SERVER_CONNECTED);
 				return;
 			}
 		}
@@ -174,7 +174,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 			RdpConnectionOvd rc = this.matching.get(JSId);
 			if (rc == co) {
 				this.matching.remove(JSId);
-				this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, JSId, OvdApplet.JS_API_O_SERVER_DISCONNECTED);
+				this.applet.forwardServerStatusToJS(JSId, OvdApplet.JS_API_O_SERVER_DISCONNECTED);
 				return;
 			}
 		}
@@ -204,7 +204,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 				RdpConnectionOvd rc = this.matching.get(JSId);
 				if (rc == co) {
 					this.matching.remove(JSId);
-					this.applet.forwardJS(OvdApplet.JS_API_F_SERVER, JSId, OvdApplet.JS_API_O_SERVER_FAILED);
+					this.applet.forwardServerStatusToJS(JSId, OvdApplet.JS_API_O_SERVER_FAILED);
 					return;
 				}
 			}
