@@ -4,7 +4,7 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
- * Author David LECHEVALIER <david@ulteo.com> 2010 
+ * Author David LECHEVALIER <david@ulteo.com> 2010 , 2012
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.cert.CertificateException;
@@ -210,6 +211,18 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		if (login == null || password == null || request == null || this.requestProperties != null)
  			return false;
 		
+		String encodedLogin = null;
+		String encodedPassword = null;
+		
+		try {
+			encodedLogin = new String(login.getBytes("UTF-8"));
+			encodedPassword = new String(password.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			Logger.warn("Failed to encode login and password in unicode");
+			encodedLogin = login;
+			encodedPassword = password;
+		}
+		
 		this.requestProperties = request;
 		
 		Document doc = getNewDocument();
@@ -225,8 +238,8 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 			session.setAttribute("mode", SESSION_MODE_REMOTEAPPS);
 
 		Element user = doc.createElementNS(null, "user");
-		user.setAttribute("login", login);
-		user.setAttribute("password", password);
+		user.setAttribute("login", encodedLogin);
+		user.setAttribute("password", encodedPassword);
 
 		session.appendChild(user);
 		
