@@ -271,8 +271,8 @@ public abstract class OvdApplet extends Applet {
 		this.forwardToJS(JS_API_F_SERVER, args);
 	}
 	
-	public void forwardApplicationStatusToJS(Integer token_, String status_) {
-		Object[] args = {token_, status_};
+	public void forwardApplicationStatusToJS(Integer app_id_, Integer token_, String status_) {
+		Object[] args = {app_id_, token_, status_};
 		this.forwardToJS(JS_API_F_INSTANCE, args);
 	}
 }

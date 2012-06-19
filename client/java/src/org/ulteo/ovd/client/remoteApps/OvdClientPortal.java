@@ -46,6 +46,7 @@ import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.portal.PortalFrame;
+import org.ulteo.ovd.client.portal.RunningApplicationPanel;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.News;
@@ -174,6 +175,33 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.loadingFrame.setVisible(false);
 	}
 
+	@Override
+	public void ovdInstanceStarted(OvdAppChannel channel_, int app_id_, int instance_) {
+		// If there is no application instance created, is that the application is restoring.
+		RunningApplicationPanel runningAppsPanel = this.portal.getRunningApplicationPanel();
+		if (runningAppsPanel.findApplicationInstanceByToken(instance_) == null) {
+			RdpConnectionOvd rc = this.find(channel_);
+			if (rc == null) {
+				Logger.error("Failed to find connection corresponding to this ovdApp channel");
+				return;
+			}
+
+			Application app = null;
+			for (Application an_app : rc.getAppsList()) {
+				if (an_app.getId() != app_id_)
+					continue;
+
+				app = an_app;
+				break;
+			}
+
+			ApplicationInstance ai = new ApplicationInstance(app, null, instance_);
+			runningAppsPanel.addInstance(ai);
+			
+			Logger.info("Restoring application "+app.getName()+" ("+instance_+")");
+		}
+	}
+	
 	@Override
 	public void ovdInstanceStopped(int instance_) {
 		if (this.spool == null)

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2010-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+# Author Thomas MOUTON <thomas@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -68,8 +69,9 @@ class OvdAppChannel:
 	
 	
 	@classmethod
-	def build_packet_ORDER_STARTED(cls, token):
+	def build_packet_ORDER_STARTED(cls, app_id, token):
 		buf = struct.pack("<B", cls.ORDER_STARTED)
+		buf+= struct.pack("<I", app_id)
 		buf+= struct.pack("<I", token)
 		
 		return buf

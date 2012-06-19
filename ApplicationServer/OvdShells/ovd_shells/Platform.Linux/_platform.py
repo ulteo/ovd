@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2010-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+# Author Thomas MOUTON <thomas@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -24,7 +25,20 @@ import os
 import re
 import signal
 import sys
+import xrdp.Session as XrdpSession
 
+def rdpSessionIsConnected():
+	#current_user = os.getlogin()
+	try:
+		current_user = os.environ["USER"]
+	except KeyError:
+		print "No USER environ var"
+		return false
+	
+	sessionId = XrdpSession.SessionGetId(current_user)
+	sessionStatus = XrdpSession.SessionGetStatus(sessionId)
+	
+	return sessionStatus == XrdpSession.SESSION_STATUS_ACTIVE
 
 def findProcessWithEnviron(pattern):
 	uid = os.getuid()

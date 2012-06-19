@@ -154,7 +154,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	}
 
 	@Override
-	public void ovdInstanceStarted(int instance_) {}
+	public void ovdInstanceStarted(OvdAppChannel channel_, int app_id_, int instance_) {}
 	
 	@Override
 	public void ovdInstanceStopped(int instance_) {}

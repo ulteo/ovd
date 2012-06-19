@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2010-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011
+# Author Thomas MOUTON <thomas@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -34,9 +35,15 @@ import win32event
 import win32file
 import win32process
 import win32security
+import win32ts
 
 import ProcessMonitoring
 
+
+def rdpSessionIsConnected():
+	sessionState = win32ts.WTSQuerySessionInformation(None, win32ts.WTS_CURRENT_SESSION, win32ts.WTSConnectState);
+		
+	return sessionState == win32ts.WTSActive
 
 def findProcessWithEnviron(pattern):
 	sid, _,_  = win32security.LookupAccountName(None, win32api.GetUserName())

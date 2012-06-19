@@ -238,7 +238,7 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 	}
 
 	public void ovdInited(OvdAppChannel o) {}
-	public void ovdInstanceStarted(int instance_) {
+	public void ovdInstanceStarted(OvdAppChannel channel_, int app_id_, int instance_) {
 		if (instance_ != this.token)
 			return;
 		

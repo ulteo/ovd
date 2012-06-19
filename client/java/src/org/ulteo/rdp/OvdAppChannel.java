@@ -79,6 +79,7 @@ public class OvdAppChannel extends VChannel {
 	
 	public void process(RdpPacket data) throws RdesktopException, IOException, CryptoException {
 		int order = (int)data.get8();
+		int app_id = 0;
 		int instance = 0;
 		switch( order ) {
 			case ORDER_INIT:
@@ -114,11 +115,12 @@ public class OvdAppChannel extends VChannel {
 				break;
 
 			case ORDER_STARTED:
+				app_id = data.getLittleEndian32();
 				instance = data.getLittleEndian32();
 				
-				System.out.println("ovdapp channel started instance "+instance);
+				System.out.println("ovdapp channel started instance "+instance+" of application "+app_id);
 				for(OvdAppListener listener : this.listener) {
-					listener.ovdInstanceStarted(instance);
+					listener.ovdInstanceStarted(this, app_id, instance);
 				}
 				
 				break;

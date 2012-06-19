@@ -144,7 +144,7 @@ public class RunningApplicationPanel extends JPanel implements OvdAppListener {
 
 	public void ovdInstanceError(int instance) {}
 
-	public void ovdInstanceStarted(int instance) {
+	public void ovdInstanceStarted(OvdAppChannel channel_, int app_id_, int instance) {
 		ApplicationInstance ai = this.findApplicationInstanceByToken(instance);
 		if (ai == null) {
 			this.logger.error("Can't find ApplicationInstance "+instance);

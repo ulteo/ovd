@@ -22,7 +22,7 @@ package org.ulteo.rdp;
 
 public interface OvdAppListener {
 	public void ovdInited(OvdAppChannel o);
-	public void ovdInstanceStarted(int instance_);
+	public void ovdInstanceStarted(OvdAppChannel channel_, int app_id_, int instance_);
 	public void ovdInstanceStopped(int instance_);
 	public void ovdInstanceError(int instance_);
 }

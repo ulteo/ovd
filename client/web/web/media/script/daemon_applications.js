@@ -223,17 +223,17 @@ var Applications = Class.create(Daemon, {
 		return this.nb_running_applications;
 	},
 
-	applicationStatus: function(token_, status_) {
+	applicationStatus: function(app_id_, token_, status_) {
 		Logger.debug('[applications] applicationStatus(token: '+token_+', status: '+status_+')');
 
 		var app_status = 2;
 
 		if (typeof this.running_applications.get(token_) == 'undefined') {
 			Logger.info('[applications] applicationStatus(token: '+token_+', status: '+status_+') - Creating "running" application "'+token_+'"');
-
+			
 			var app_id = this.liaison_runningapplicationtoken_application.get(token_);
 			if (typeof app_id == 'undefined')
-				return false;
+				app_id = app_id_;
 
 			var app_object = this.applications.get(app_id);
 			if (typeof app_object == 'undefined') {
@@ -430,8 +430,8 @@ var Applications = Class.create(Daemon, {
 	}
 });
 
-function applicationStatus(token_, status_) {
+function applicationStatus(app_id_, token_, status_) {
 	Logger.debug('[proxy] applicationStatus(token: '+token_+', status: '+status_+')');
 
-	return daemon.applicationStatus(token_, status_);
+	return daemon.applicationStatus(app_id_, token_, status_);
 }

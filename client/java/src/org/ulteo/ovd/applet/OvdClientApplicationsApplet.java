@@ -142,17 +142,17 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 
 	@Override
 	public void ovdInstanceError(int instance) {
-		this.applet.forwardApplicationStatusToJS(new Integer(instance), OvdApplet.JS_API_O_INSTANCE_ERROR);
+		this.applet.forwardApplicationStatusToJS(0, new Integer(instance), OvdApplet.JS_API_O_INSTANCE_ERROR);
 	}
 
 	@Override
-	public void ovdInstanceStarted(int instance) {
-		this.applet.forwardApplicationStatusToJS(new Integer(instance), OvdApplet.JS_API_O_INSTANCE_STARTED);
+	public void ovdInstanceStarted(OvdAppChannel channel_, int app_id_, int instance) {
+		this.applet.forwardApplicationStatusToJS(app_id_, new Integer(instance), OvdApplet.JS_API_O_INSTANCE_STARTED);
 	}
 
 	@Override
 	public void ovdInstanceStopped(int instance) {
-		this.applet.forwardApplicationStatusToJS(new Integer(instance), OvdApplet.JS_API_O_INSTANCE_STOPPED);
+		this.applet.forwardApplicationStatusToJS(0, new Integer(instance), OvdApplet.JS_API_O_INSTANCE_STOPPED);
 	}
 
 	@Override

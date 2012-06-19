@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2011 Ulteo SAS
+# Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
+# Author Thomas MOUTON <thomas@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -63,7 +64,7 @@ class InstancesManager:
 		if token is None:
 			token = instance
 		
-		self.instances.append((instance, token, extra))
+		self.instances.append((instance, token, extra, app_id))
 		
 		return True
 	
@@ -126,7 +127,7 @@ class InstancesManager:
 		# ToDo: sleep 0.5s and check if the process exist
 		# with startovdapp return status, get the error
 		
-		self.instances.append((instance, token, extra))
+		self.instances.append((instance, token, extra, app_id))
 		return True
 	
 	

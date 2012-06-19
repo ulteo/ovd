@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011 Ulteo SAS
+# Copyright (C) 2011-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2011
+# Author Thomas MOUTON <thomas@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -23,6 +24,7 @@ import Queue
 import time
 import threading
 
+from Platform import _platform as Platform
 from ovd_shells.OvdAppChannel import OvdAppChannel
 
 class RemoteAppsManager(threading.Thread):
@@ -41,7 +43,25 @@ class RemoteAppsManager(threading.Thread):
 	
 	
 	def loop(self):
+		connected = Platform.rdpSessionIsConnected();
 		while True:
+			channelConnected = Platform.rdpSessionIsConnected();
+			
+			if connected and not channelConnected:
+				# Client has disconnected
+				self.vchannel.Close()
+			elif channelConnected and not connected:
+				# Client has reconnected
+				self.vchannel.Open()
+				self.vchannel.Write(OvdAppChannel.getInitPacket())
+				for instance in self.im.instances:
+					self.vchannel.Write(OvdAppChannel.build_packet_ORDER_STARTED(instance[3], instance[1]))
+			
+			connected = channelConnected
+			if not connected:
+				time.sleep(0.5)
+				continue
+			
 			# Read a complete packet
 			# so we assume a maximum packet size is 2048
 			packet = self.vchannel.Read(2048)
@@ -119,7 +139,7 @@ class RemoteAppsManager(threading.Thread):
 						self.vchannel.Write(OvdAppChannel.build_packet_ORDER_CANT_START(token))
 						continue
 					
-					self.vchannel.Write(OvdAppChannel.build_packet_ORDER_STARTED(token))
+					self.vchannel.Write(OvdAppChannel.build_packet_ORDER_STARTED(app, token))
 				  
 				  
 				elif order == OvdAppChannel.ORDER_START_WITH_ARGS:
@@ -129,7 +149,7 @@ class RemoteAppsManager(threading.Thread):
 						self.vchannel.Write(OvdAppChannel.build_packet_ORDER_CANT_START(token))
 						continue
 					
-					self.vchannel.Write(OvdAppChannel.build_packet_ORDER_STARTED(token))
+					self.vchannel.Write(OvdAppChannel.build_packet_ORDER_STARTED(app, token))
 				
 				
 				elif order == OvdAppChannel.ORDER_STOP:
