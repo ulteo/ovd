@@ -49,7 +49,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	private boolean enableDesktopEffect;
 
 	public OvdClientApplicationsApplet(SessionManagerCommunication smComm, Properties properties, OvdApplet applet_) {
-		super(smComm);
+		super(smComm, properties.isPersistent());
 
 		this.applet = applet_;
 		this.matching = new ConcurrentHashMap<Integer, RdpConnectionOvd>();

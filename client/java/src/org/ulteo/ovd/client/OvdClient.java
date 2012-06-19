@@ -52,7 +52,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 
 	private static final long DISCONNECTION_MAX_DELAY = 3500;
 	
-	protected String sessionStatus = SessionManagerCommunication.SESSION_STATUS_INIT;
+	protected String sessionStatus = SessionManagerCommunication.SESSION_STATUS_UNKNOWN;
 	
 
 	public static HashMap<String,String> toMap(String login_, String password_) {

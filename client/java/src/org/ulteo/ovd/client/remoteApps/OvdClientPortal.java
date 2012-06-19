@@ -67,8 +67,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	private LoadingFrame loadingFrame;
 	private boolean is_user_disconnection;
 	
-	public OvdClientPortal(SessionManagerCommunication smComm, LoadingFrame loadingFrame, String login_, boolean autoPublish, boolean showDesktopIcons_, boolean hiddenAtStart_, boolean showBugReporter_) {
-		super(smComm);
+	public OvdClientPortal(SessionManagerCommunication smComm, LoadingFrame loadingFrame, String login_, boolean autoPublish, boolean showDesktopIcons_, boolean hiddenAtStart_, boolean showBugReporter_, boolean persistent) {
+		super(smComm, persistent);
 		this.loadingFrame = loadingFrame;
 		
 		this.username = login_;

@@ -70,8 +70,8 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	protected DesktopIntegrator desktopIntegrator = null;
 
 	
-	public OvdClientRemoteApps(SessionManagerCommunication smComm) {
-		super(smComm, false);
+	public OvdClientRemoteApps(SessionManagerCommunication smComm, boolean persistent) {
+		super(smComm, persistent);
 		
 		String sm = this.smComm.getHost();
 		if (OSTools.isWindows()) {
@@ -295,7 +295,11 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			}
 			return false;
 		}
-		else if (!(session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED) || session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE))) {
+		else if (! (
+				session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INACTIVE)
+				|| session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED)
+				|| session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE)
+		)) {
 			Logger.info("checkRDPConnections -- Your session has ended. Will exit.");
 			for (RdpConnectionOvd co : this.performedConnections) {
 				this.hide(co);

@@ -178,7 +178,7 @@ public class ExternalAppsClient {
 		
 		DiskManager.setDiskProfile(new ExternalAppsDiskRedirectionProfile());
 		
-		OvdClient cli = new OvdClientIntegrated(dialog);
+		OvdClient cli = new OvdClientIntegrated(dialog, response.isPersistent());
 		Runtime.getRuntime().addShutdownHook(new ShutdownTask(cli));
 		
 		//  By default, activate unicode in external mode.

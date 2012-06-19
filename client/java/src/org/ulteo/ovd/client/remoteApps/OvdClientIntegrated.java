@@ -30,8 +30,8 @@ import org.ulteo.rdp.RdpConnectionOvd;
 
 public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClientPerformer {
 
-	public OvdClientIntegrated(SessionManagerCommunication smComm) {
-		super(smComm);
+	public OvdClientIntegrated(SessionManagerCommunication smComm, boolean persistent) {
+		super(smComm, persistent);
 		
 		this.showDesktopIcons = this.smComm.getResponseProperties().isDesktopIcons();
 	}
