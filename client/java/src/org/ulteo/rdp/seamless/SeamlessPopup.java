@@ -158,7 +158,11 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	public void repaint(int x, int y, int width, int height) {
 		Rectangle bounds = new Rectangle(x, y, width, height);
 
-		if (this.getBounds().intersects(bounds))
+		Rectangle wndBounds = this.getBounds();
+		wndBounds.x -= this.maxBounds.x;
+		wndBounds.y -= this.maxBounds.y;
+		
+		if (wndBounds.intersects(bounds))
 			super.repaint();
 	}
 
