@@ -67,7 +67,16 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	protected void uncustomizeRemoteAppsConnection(RdpConnectionOvd co) {}
 
 	public boolean addServer(ServerAccess server, int JSId) {
-		Integer listId = super.createRDPConnectionAndConnect(server);
+		RdpConnectionOvd co = this.initRDPConnection(server);
+		
+		if (co == null)
+			return false;
+		
+		this.configureRDPConnection(co);
+		this.applet.applyConfig(co);
+		co.connect();
+		
+		Integer listId = new Integer(this.connections.indexOf(co));
 		if (listId == null)
 			return false;
 

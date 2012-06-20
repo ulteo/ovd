@@ -1363,12 +1363,17 @@ public class Rdp {
         // (BMPCACHE2_NUM_PSTCELLS | BMPCACHE2_FLAG_PERSIST) :
         // BMPCACHE2_C2_CELLS);
 
+	int cacheLvl2Size = this.cache.getCacheSize(2);
         if (this.opt.persistent_bitmap_caching) {
+		this.opt.persistent_caching_max_cells = cacheLvl2Size;
+		
+		cacheLvl2Size |= BMPCACHE2_FLAG_PERSIST;
+
 		this.common.persistent_cache.pstcache_init(2);
 		logger.info("Persistent cache initialized");
 	}
 
-        data.setLittleEndian32(this.cache.getCacheSize(2));
+        data.setLittleEndian32(cacheLvl2Size);
         data.incrementPosition(20); // out_uint8s(s, 20); /* other bitmap caches
                                     // not used */
     }
