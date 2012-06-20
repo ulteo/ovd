@@ -183,7 +183,7 @@ class ApplicationsDetection:
 		path_png = path_tmp + ".png"
 		
 		
-		cmd = """"%s" "%s" "%s" """%("exeIcon2png.exe", iconLocation, path_png)
+		cmd = """"%s" "%s,%d" "%s" """%("exeIcon2png.exe", iconLocation, iconId, path_png)
 		status = self.execute(cmd, True)
 		if status != 0:
 			Logger.warn("Unable to extract icon, use alternative method")

@@ -1,7 +1,7 @@
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2012
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #include <png.h>
 #include <stdio.h>
 #include <windows.h>
+#include <Shlwapi.h>
 
 void png_my_error(png_structp, png_const_charp);
 void png_my_warning(png_structp, png_const_charp);
@@ -29,14 +30,19 @@ BOOL isARGBPixels(LPBYTE, long int);
 
 int main(int argc, char* argv[]){
     HICON ico;
+    TCHAR iconPath[MAX_PATH];
+    UINT iconIndex = 0;
     BOOL ret;
 
     if (argc != 3) {
-        fprintf(stderr, "usage: %s exe_file out_png_file\n", argv[0]);
+        fprintf(stderr, "usage: %s exe_file[,icon_index] out_png_file\n", argv[0]);
         return 1;
     }
 
-    ico = ExtractIcon(NULL, argv[1], 0);
+    strncpy(iconPath, argv[1], MAX_PATH);
+    iconIndex = PathParseIconLocation(iconPath);
+
+    ico = ExtractIcon(NULL, iconPath, iconIndex);
     if (ico == NULL){
         fprintf(stderr, "extract icon failed %d\n", (int)GetLastError());
         return 2;
