@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008-2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -77,14 +77,14 @@ if ($_REQUEST['name'] == 'Application_Server') {
 		if ($app->getAttribute('static') == false) {
 			if ($_REQUEST['action'] == 'add') {
 				$tm = new Tasks_Manager();
-				$t = new Task_install(0, $_REQUEST['server'], $app);
+				$t = new Task_install(0, $_REQUEST['server'], array($app));
 				$tm->add($t);
 
 				$msg = _('Task to add application \'%APPLICATION%\' on server \'%SERVER%\' was successfully added');
 				popup_info(str_replace(array('%APPLICATION%', '%SERVER%'), array($id, $_REQUEST['server']), $msg));
 			} elseif ($_REQUEST['action'] == 'del') {
 				$tm = new Tasks_Manager();
-				$t = new Task_remove(0, $_REQUEST['server'], $app);
+				$t = new Task_remove(0, $_REQUEST['server'], array($app));
 				$tm->add($t);
 
 				$msg = _('Task to remove application \'%APPLICATION%\' from server \'%SERVER%\' was successfully added');
