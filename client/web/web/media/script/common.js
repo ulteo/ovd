@@ -310,14 +310,6 @@ function onStartSessionSuccess(xml_) {
 	}, 2500);
 
 	setTimeout(function() {
-		if (session_mode == 'Desktop')
-				new Effect.Move($('desktopModeContainer'), { x: 0, y: my_height });
-		else
-				new Effect.Move($('applicationsModeContainer'), { x: 0, y: my_height });
-	}, 3000);
-
-	setTimeout(function() {
-		hideSplash();
 		enableLogin();
 	}, 5000);
 

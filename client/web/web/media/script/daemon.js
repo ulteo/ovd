@@ -277,6 +277,11 @@ var Daemon = Class.create({
 
 			Logger.info('[daemon] check_status_post() - Now starting session');
 
+			new Effect.Move($(this.mode+'ModeContainer'), { x: 0, y: my_height });
+			setTimeout(function() {
+				hideSplash();
+			}, 2000);
+			
 			this.start();
 
 			this.started = true;
