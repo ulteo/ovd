@@ -135,8 +135,11 @@ class Profile(AbstractProfile):
 		while len(self.folderRedirection)>0:
 			d = self.folderRedirection.pop()
 			
-			if not os.path.ismount(d):
-				continue
+			try:
+				if not self.ismount(d):
+					continue
+			except IOError, err:
+				Logger.error("Unable to check mount point %s :%s"%(d, str(err)))
 			
 			cmd = "umount \"%s\""%(d)
 			cmd = self.transformToLocaleEncoding(cmd)
@@ -243,6 +246,16 @@ class Profile(AbstractProfile):
 			encoding = "UTF-8"
 		
 		return data.encode(encoding)
+	
+	
+	@staticmethod
+	def ismount(path):
+		for line in file('/proc/mounts'):
+			components = line.split()
+			if len(components) > 1 and components[1] == path:
+				return True
+		
+		return False
 	
 	
 	def addGTKBookmark(self, url):
