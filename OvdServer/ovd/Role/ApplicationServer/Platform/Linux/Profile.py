@@ -20,6 +20,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import errno
 import hashlib
 import locale
 import os
@@ -108,6 +109,10 @@ class Profile(AbstractProfile):
 					try:
 						os.makedirs(src)
 					except OSError, err:
+						if self.isNetworkError(err[0]):
+							Logger.warn("Unable to access profile: %s"%(str(err)))
+							return
+						
 						Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
 						continue
 				
@@ -208,6 +213,10 @@ class Profile(AbstractProfile):
 			try:
 				os.makedirs(d)
 			except OSError, err:
+				if self.isNetworkError(err[0]):
+					Logger.warn("Unable to access profile: %s"%(str(err)))
+					return
+				
 				Logger.debug2("conf.Linux mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
 				continue
 		
@@ -256,6 +265,23 @@ class Profile(AbstractProfile):
 				return True
 		
 		return False
+	
+	
+	@staticmethod
+	def isNetworkError(err):
+		networkError = [errno.EIO, errno.ECOMM,
+				errno.ENETDOWN,
+				errno.ENETUNREACH,
+				errno.ENETRESET,
+				errno.ECONNABORTED,
+				errno.ECONNRESET,
+				errno.ENOTCONN,
+				errno.ESHUTDOWN,
+				errno.ECONNREFUSED,
+				errno.EHOSTDOWN,
+				errno.EHOSTUNREACH
+				]
+		return err in networkError
 	
 	
 	def addGTKBookmark(self, url):
