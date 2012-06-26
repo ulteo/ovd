@@ -268,7 +268,7 @@ var Daemon = Class.create({
 			Logger.info('[daemon] check_status_post() - Now preparing session');
 
 			this.ready = true;
-		} else if (! this.is_started()) {
+		} else if (! this.is_started() && this.session_status == 'ready') {
 			if (this.started_lock) {
 				Logger.debug('[daemon] check_status_post() - Already in "is_started" state');
 				return;
