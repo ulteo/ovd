@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
@@ -32,6 +32,7 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 
 	public OvdClientIntegrated(SessionManagerCommunication smComm, boolean persistent) {
 		super(smComm, persistent);
+		this.enableWaitRecoveryMode(true);
 		
 		this.showDesktopIcons = this.smComm.getResponseProperties().isDesktopIcons();
 	}

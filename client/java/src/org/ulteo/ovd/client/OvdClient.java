@@ -2,7 +2,7 @@
  * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
@@ -89,6 +89,9 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	protected boolean isCancelled = false;
 	protected boolean connectionIsActive = true;
 	protected boolean persistent = false;
+	
+	private boolean waitSession = false;
+	private final Object waitSessionLock = new Object();
 
 	public OvdClient(SessionManagerCommunication smComm, boolean persistent) {
 		this.smComm = smComm;
@@ -99,9 +102,44 @@ public abstract class OvdClient implements Runnable, RdpListener {
 
 		this.persistent = persistent;
 	}
+	
+	private boolean isWaitRecoveryModeEnabled = false;
+	public void enableWaitRecoveryMode(boolean waitRecoveryMode_) {
+		this.isWaitRecoveryModeEnabled = waitRecoveryMode_;
+	}
+	
+	private void setWaitSession(boolean waitSession_) {
+		synchronized(this.waitSessionLock) {
+			this.waitSession = waitSession_;
+		}
+	}
+	
+	private boolean getWaitSession() {
+		synchronized(this.waitSessionLock) {
+			return this.waitSession;
+		}
+	}
 
 	public ArrayList<RdpConnectionOvd> getAvailableConnections() {
 		return this.availableConnections;
+	}
+	
+	private void suspendSession() {
+		Logger.info("Session is suspended");
+		this.setWaitSession(true);
+		
+		for (RdpConnectionOvd each : this.connections)
+			each.stop();
+	}
+	
+	private void resumeSession() {
+		Logger.info("Session is resumed");
+		this.setWaitSession(false);
+		
+		for (RdpConnectionOvd each : this.connections) {
+			each.addRdpListener(this);
+			each.connect();
+		}
 	}
 
 	@Override
@@ -116,6 +154,25 @@ public abstract class OvdClient implements Runnable, RdpListener {
 
 			if (! this.sessionStatus.equals(oldSessionStatus)) {
 				Logger.info("session status switch from " + oldSessionStatus + " to " + this.sessionStatus);
+				
+				if (this.isWaitRecoveryModeEnabled) {
+					if (this.sessionStatus.equals(SessionManagerCommunication.SESSION_STATUS_INITED) || 
+						this.sessionStatus.equals(SessionManagerCommunication.SESSION_STATUS_ACTIVE)) {
+						// Session is resumed
+						this.resumeSession();
+
+						this.sessionStatusSleepingTime = REQUEST_TIME_OCCASIONALLY;
+						continue;
+					}
+					else if (this.sessionStatus.equals(SessionManagerCommunication.SESSION_STATUS_INACTIVE)) {
+						// Session is suspended
+						this.suspendSession();
+
+						this.sessionStatusSleepingTime = REQUEST_TIME_FREQUENTLY;
+						continue;
+					}
+				}
+				
 				if (this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED) || 
 						this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE) ||
 						(this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INACTIVE) && this.persistent)) {
@@ -175,15 +232,22 @@ public abstract class OvdClient implements Runnable, RdpListener {
 		this.sessionStatusMonitoringThread = new Thread(this);
 		this.continueSessionStatusMonitoringThread = true;
 		this.sessionStatusMonitoringThread.start();
-
+		
 		do {
+			// Waiting for the session is resumed
+			while (this.getWaitSession()) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException ex) {}
+			}
+			
 			// Waiting for all the RDP connections are performed
 			while (this.performedConnections.size() < this.connections.size()) {
 				if (! this.connectionIsActive)
 					break;
 				
 				try {
-					Thread.sleep(50);
+					Thread.sleep(1000);
 				} catch (InterruptedException ex) {}
 			}
 
@@ -191,18 +255,23 @@ public abstract class OvdClient implements Runnable, RdpListener {
 				this.disconnection();
 				break;
 			}
-		} while (this.performedConnections.size() < this.connections.size());
-		
-		while (! this.performedConnections.isEmpty() && this.connectionIsActive) {
+
+			while (! this.availableConnections.isEmpty()) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException ex) {}
+
+				if (! ((OvdClientPerformer)this).checkRDPConnections()) {
+					this.disconnection();
+					break;
+				}
+			}
+			
 			try {
-				Thread.sleep(100);
+				Thread.sleep(1000);
 			} catch (InterruptedException ex) {}
 			
-			if (! ((OvdClientPerformer)this).checkRDPConnections()) {
-				this.disconnection();
-				break;
-			}
-		}
+		} while (this.connectionIsActive);
 		
 		try {
 			this.smComm.askForLogout(this.persistent);
@@ -226,7 +295,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 
 		this.connectionIsActive = false;
 
-		if (this.sessionStatusMonitoringThread != null) {
+		if (! this.getWaitSession() && this.sessionStatusMonitoringThread != null) {
 			this.continueSessionStatusMonitoringThread = false;
 			this.sessionStatusMonitoringThread = null;
 		}
@@ -284,7 +353,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 		this.availableConnections.remove(co);
 		Logger.info("Disconnected from "+co);
 
-		if (this.sessionStatusMonitoringThread != null && this.sessionStatusMonitoringThread.isAlive()) {
+		if (! this.getWaitSession() && this.sessionStatusMonitoringThread != null && this.sessionStatusMonitoringThread.isAlive()) {
 			// Break session status monitoring sleep to check with SessionManager ASAP
 			this.sessionStatusSleepingTime = REQUEST_TIME_FREQUENTLY;
 			this.sessionStatusMonitoringThread.interrupt();
