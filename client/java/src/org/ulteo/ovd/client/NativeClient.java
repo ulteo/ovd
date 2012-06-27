@@ -600,9 +600,9 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			if (this.opts.getFlag(Options.FLAG_REMEMBER_ME))
 				this.saveProfile();
 		
+			boolean exit = false;
 			try {
-				if (! this.launchConnection())
-					this.initAuthFrame();
+				exit = this.launchConnection();
 			} catch (UnsupportedOperationException ex) {
 				Logger.error(ex.getMessage());
 				SwingTools.invokeLater(GUIActions.createDialog(I18n._(ex.getMessage()), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
@@ -613,6 +613,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				SwingTools.invokeLater(GUIActions.createDialog(I18n._(errormsg), I18n._("Error!"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
 				this.loadingFrame.setVisible(false);
 			}
+			if (! exit)
+				this.initAuthFrame();
 		} catch (IllegalArgumentException ex) {
 			Logger.warn(ex.getMessage());
 			SwingTools.invokeLater(GUIActions.createDialog(I18n._(ex.getMessage()), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
