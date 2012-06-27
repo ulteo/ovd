@@ -287,43 +287,14 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	}
 
 	protected boolean _checkRDPConnections() {
-		String session_status = this.smComm.askForSessionStatus();
-		if (session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_UNKNOWN)) {
-			Logger.error("checkRDPConnections -- Failed to get session status from session manager");
-			for (RdpConnectionOvd co : this.performedConnections) {
-				this.hide(co);
-			}
-			return false;
-		}
-		else if (! (
-				session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INACTIVE)
-				|| session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED)
-				|| session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE)
-		)) {
-			Logger.info("checkRDPConnections -- Your session has ended. Will exit.");
-			for (RdpConnectionOvd co : this.performedConnections) {
-				this.hide(co);
-			}
-			return false;
-		}
-
-		boolean retry = false;
-
-		int nbApps = 0;
-		int nbAppsAvailable = 0;
-
-		List<RdpConnectionOvd> toRemove = new ArrayList<RdpConnectionOvd>();
+		int nSeveralConnectionsFailed = 0;
+		int nConnections = this.performedConnections.size();
+		
 		for (RdpConnectionOvd co : this.performedConnections) {
-			int nbAppsByServer = co.getAppsList().size();
-			nbApps += nbAppsByServer;
-
 			RdpConnection.State state = co.getState();
 
-			if (state == RdpConnection.State.CONNECTED) {
-				nbAppsAvailable += nbAppsByServer;
-				toRemove.add(co);
+			if (state == RdpConnection.State.CONNECTED)
 				continue;
-			}
 
 			if (state != RdpConnection.State.FAILED) {
 				Logger.debug("checkRDPConnections "+co.getServer()+" -- Bad connection state("+state+"). Will continue normal process.");
@@ -338,35 +309,16 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 			if (tryNumber > 1) {
 				Logger.error("checkRDPConnections "+co.getServer()+" -- Several try to connect failed.");
+				nSeveralConnectionsFailed++;
 				this.hide(co);
 				continue;
 			}
 
 			Logger.warn("checkRDPConnections "+co.getServer()+" -- Connection failed. Will try to reconnect.");
-			this.performedConnections.remove(co);
 			co.connect();
-			retry = true;
 		}
-
-		for (RdpConnectionOvd co: toRemove)
-			this.performedConnections.remove(co);
 		
-		if (retry)
-			return true;
-
-		if (nbApps == 0) {
-			Logger.warn("No available application. Will disconnect.");
-			return false;
-		}
-
-		float percent = ((float) (100 * nbAppsAvailable)) / nbApps;
-		if (percent < 50) {
-			Logger.error("Less than 50 percent of applications are available("+percent+"%). Will exit.");
-			return false;
-		}
-		Logger.warn("More than 50 percent of applications are available("+percent+"%). Will continue.");
-
-		return true;
+		return (nSeveralConnectionsFailed == nConnections) ? false : true;
 	}
 	
 	public void setPerformDesktopIntegration(boolean value) {

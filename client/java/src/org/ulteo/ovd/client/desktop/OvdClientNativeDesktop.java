@@ -125,21 +125,6 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 			return false;
 		}
 
-		String session_status = this.smComm.askForSessionStatus();
-		if (session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_UNKNOWN)) {
-			Logger.error("checkRDPConnections -- Failed to get session status from session manager: ");
-			this.hide(co);
-			return false;
-		}
-		else if (session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED) || session_status.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE)) {
-			this.performedConnections.remove(co);
-			co.connect();
-			return true;
-		}
-
-		Logger.info("checkRDPConnections -- Your session has ended. Will exit.");
-		this.hide(co);
-
 		return false;
 	}
 
