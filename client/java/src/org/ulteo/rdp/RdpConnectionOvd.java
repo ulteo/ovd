@@ -2,7 +2,7 @@
  * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
@@ -288,6 +288,9 @@ public class RdpConnectionOvd extends RdpConnection {
 			RdpConnectionOvd.printerManager.stop();
 			RdpConnectionOvd.printerManager = null;
 		}
+		
+		if (this.ovdAppChannel != null)
+			this.ovdAppChannel = null;
 	}
 
 	public void addApp(Application app_) {
