@@ -372,14 +372,7 @@ function get_users_list() {
 						<td style="text-align: right; padding-left: 5px; padding-right: 10px; border-bottom: 1px solid #ccc;">
 							<table style="margin-left: auto; margin-right: 0px;" border="0" cellspacing="0" cellpadding="10">
 								<tr>
-									<?php
-										/*{ //persistent session
-									?>
-									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.suspend(); return false;"><img src="media/image/suspend.png" width="32" height="32" alt="" title="" /><br /><span id="suspend_gettext">&nbsp;</span></a></td>
-									<?php
-										}*/
-									?>
-
+									<td id="suspend_button" style="display: none; text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.suspend(); return false;"><img src="media/image/suspend.png" width="32" height="32" alt="" title="" /><br /><span id="suspend_gettext">&nbsp;</span></a></td>
 									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="confirmLogout('<?php echo $confirm_logout; ?>');"><img src="media/image/logout.png" width="32" height="32" alt="" title="" /><br /><span id="logout_gettext">&nbsp;</span></a></td>
 								</tr>
 							</table>
