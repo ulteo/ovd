@@ -277,8 +277,8 @@ public class RdpConnectionOvd extends RdpConnection {
 	}
 	
 	@Override
-	public void stop() {
-		super.stop();
+	protected void closeVChannels() {
+		super.closeVChannels();
 
 		if (RdpConnectionOvd.diskManager != null) {
 			RdpConnectionOvd.diskManager.stop();

@@ -622,7 +622,9 @@ public class RdpConnection implements SeamListener, Runnable{
 	public synchronized void stop() {
 		this.keep_running = false;
 		this.disconnect();
+	}
 
+	protected void closeVChannels() {
 		if (this.opt.seamlessEnabled && this.seamChannel != null) {
 			this.seamChannel.closeAllWindows();
 			this.seamChannel.clearDatas();
@@ -669,6 +671,8 @@ public class RdpConnection implements SeamListener, Runnable{
 		for(RdpListener list : this.listener) {
 			list.failed(this, this.failedMsg);
 		}
+		
+		this.closeVChannels();
 	}
 	
 	protected synchronized void fireDisconnected() {
@@ -678,6 +682,8 @@ public class RdpConnection implements SeamListener, Runnable{
 		for(RdpListener list : this.listener) {
 			list.disconnected(this);
 		}
+		
+		this.closeVChannels();
 	}
 	
 	protected void fireSeamlessEnabled() {
