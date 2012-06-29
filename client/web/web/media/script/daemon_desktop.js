@@ -93,48 +93,5 @@ var Desktop = Class.create(Daemon, {
 
 			return true;
 		}
-	},
-
-	parse_list_servers: function(xml) {
-		Logger.debug('[desktop] parse_list_servers(transport@list_servers())');
-
-		var sessionNode = xml.getElementsByTagName('session');
-
-		if (sessionNode.length != 1) {
-			Logger.error('[desktop] parse_list_servers(transport@list_servers()) - Invalid XML (No "session" node)');
-			return false;
-		}
-
-		var serverNodes = xml.getElementsByTagName('server');
-
-		// Normally, in Desktop mode, only 1 server
-		for (var i=0; i<serverNodes.length; i++) {
-			try { // IE does not have hasAttribute in DOM API...
-				var mode_gateway = false;
-				try {
-					var token = serverNodes[i].getAttribute('token');
-					if (token == null)
-						go_to_the_catch_please(); //call a function which does not exist to throw an exception and go to the catch()
-
-					mode_gateway = true;
-				} catch(e) {}
-
-				var server = new Server(i, i, serverNodes[i]);
-				if (mode_gateway)
-					server.setToken(serverNodes[i].getAttribute('token'));
-
-				if (mode_gateway)
-					Logger.info('[desktop] parse_list_servers(transport@list_servers()) - Adding server "'+server.id+'" to servers list');
-				else
-					Logger.info('[desktop] parse_list_servers(transport@list_servers()) - Adding server "'+server.fqdn+'" to servers list');
-				this.servers.set(server.id, server);
-				this.liaison_server_applications.set(server.id, new Array());
-			} catch(e) {
-				Logger.error('[desktop] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "server" node '+i+')');
-				return false;
-			}
-		}
-
-		return true;
 	}
 });

@@ -477,6 +477,52 @@ var Daemon = Class.create({
 		}
 	},
 	
+	parse_list_servers: function(xml) {
+		Logger.debug('[daemon] parse_list_servers(transport@list_servers())');
+		
+		var sessionNode = xml.getElementsByTagName('session');
+		
+		if (sessionNode.length != 1) {
+			Logger.error('[daemon] parse_list_servers(transport@list_servers()) - Invalid XML (No "session" node)');
+			return false;
+		}
+		
+		var serverNodes = xml.getElementsByTagName('server');
+		
+		for (var i=0; i<serverNodes.length; i++) {
+			try { // IE does not have hasAttribute in DOM API...
+				var mode_gateway = false;
+				try {
+					var token = serverNodes[i].getAttribute('token');
+					if (token == null)
+						go_to_the_catch_please(); //call a function which does not exist to throw an exception and go to the catch()
+					
+					mode_gateway = true;
+				} catch(e) {}
+				
+				var server = new Server(i, i, serverNodes[i]);
+				if (mode_gateway)
+					server.setToken(serverNodes[i].getAttribute('token'));
+				
+				if (mode_gateway)
+					Logger.info('[daemon] parse_list_servers(transport@list_servers()) - Adding server "'+server.id+'" to servers list');
+				else
+					Logger.info('[daemon] parse_list_servers(transport@list_servers()) - Adding server "'+server.fqdn+'" to servers list');
+				this.servers.set(server.id, server);
+				this.liaison_server_applications.set(server.id, new Array());
+				
+				this.parse_server_node(server, serverNodes[i]);
+			} catch(e) {
+				Logger.error('[daemon] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "server" node '+i+')');
+				return false;
+			}
+		}
+		
+		return true;
+	},
+	
+	parse_server_node: function(server_, serverNode_) {},
+	
 	buildAppletNode: function(mode_, params_) {
 		return buildAppletNode('ulteoapplet', 'org.ulteo.ovd.applet.'+mode_, 'jpedal.jar,log4j-1.2.jar,ulteo-applet.jar', params_);
 	}
