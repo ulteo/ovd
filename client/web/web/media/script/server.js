@@ -116,10 +116,7 @@ var Server = Class.create({
 			daemon.loop();
 
 			if (daemon.mode == 'desktop' && ! daemon.is_stopped()) {
-				if (daemon.persistent == true)
-					daemon.suspend();
-				else
-					daemon.logout();
+				daemon.client_exit();
 			}
 		} else if (status_ == 'failed') {
 			this.ready = false;
