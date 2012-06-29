@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -78,6 +78,12 @@ public class OvdAppChannel extends VChannel {
 	}
 	
 	public void process(RdpPacket data) throws RdesktopException, IOException, CryptoException {
+		int length = data.size() - data.getPosition();
+		if (length < 1) {
+			Logger.error("ovdapp channel invalid protocol (packet length error)");
+			return;
+		}
+		
 		int order = (int)data.get8();
 		int app_id = 0;
 		int instance = 0;
@@ -95,11 +101,26 @@ public class OvdAppChannel extends VChannel {
 				break;
 			
 			case ORDER_KNOWN_DRIVES:
+				if (length < 1 + 4) {
+					Logger.error("ovdapp channel invalid order KNOWN_DRIVES (packet length error)");
+					break;
+				}
+				
 				int folder_count = data.getLittleEndian32();
 				known_folers.clear();
 
 				for(int i = 0 ; i < folder_count ; i++) {
+					if (data.size() - data.getPosition() < 4) {
+						Logger.error("ovdapp channel invalid order KNOWN_DRIVES (packet length error: expected a uint32)");
+						break;
+					}
+					
 					int drive_uid_length = data.getLittleEndian32();
+					if (data.size() - data.getPosition() < drive_uid_length) {
+						Logger.error("ovdapp channel invalid order KNOWN_DRIVES (packet length error: expected a "+drive_uid_length+" string length)");
+						break;
+					}
+					
 					byte[] stringData = new byte[drive_uid_length];
 					
 					data.copyToByteArray(stringData, 0, data.getPosition(), drive_uid_length);
@@ -115,6 +136,11 @@ public class OvdAppChannel extends VChannel {
 				break;
 
 			case ORDER_STARTED:
+				if (length != 1 + 4 + 4) {
+					Logger.error("ovdapp channel invalid order STARTED (packet length error)");
+					break;
+				}
+				
 				app_id = data.getLittleEndian32();
 				instance = data.getLittleEndian32();
 				
@@ -126,6 +152,11 @@ public class OvdAppChannel extends VChannel {
 				break;
 
 			case ORDER_STOPPED:
+				if (length != 1 + 4) {
+					Logger.error("ovdapp channel invalid order STOPPED (packet length error)");
+					break;
+				}
+				
 				instance = data.getLittleEndian32();
 				
 				System.out.println("ovdapp channel stopped instance "+instance);
@@ -135,6 +166,11 @@ public class OvdAppChannel extends VChannel {
 				break;
 				
 			case ORDER_CANT_START:
+				if (length != 1 + 4) {
+					Logger.error("ovdapp channel invalid order CANT_START (packet length error)");
+					break;
+				}
+				
 				instance = data.getLittleEndian32();
 				
 				System.out.println("ovdapp channel cant start instance "+instance);
