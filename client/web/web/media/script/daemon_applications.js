@@ -22,7 +22,6 @@
 
 var Applications = Class.create(Daemon, {
 	mode: 'applications',
-	persistent: false,
 	local_integration: false,
 
 	applications: new Hash(),

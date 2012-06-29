@@ -22,7 +22,6 @@
 
 var Desktop = Class.create(Daemon, {
 	mode: 'desktop',
-	persistent: true,
 
 	fullscreen: false,
 

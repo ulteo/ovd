@@ -471,6 +471,9 @@ var Daemon = Class.create({
 			}
 			
 			this.settings.set(name, value);
+			
+			if (name == 'persistent' && value == '1')
+				this.persistent = true;
 		}
 	},
 	
