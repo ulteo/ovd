@@ -81,6 +81,7 @@ $redirect_client_drives = $default_settings['redirect_client_drives'];
 $redirect_client_printers = $default_settings['redirect_client_printers'];
 $rdp_bpp = $default_settings['rdp_bpp'];
 $enhance_user_experience = $default_settings['enhance_user_experience'];
+$persistent = $default_settings['persistent'];
 
 $advanced_settings = array();
 foreach ($default_settings['advanced_settings_startsession'] as $v)
@@ -88,7 +89,6 @@ foreach ($default_settings['advanced_settings_startsession'] as $v)
 
 $remote_desktop_settings = $user->getSessionSettings('remote_desktop_settings');
 $remote_desktop_enabled = (($remote_desktop_settings['enabled'] == 1)?true:false);
-$persistent = $remote_desktop_settings['persistent'];
 $desktop_icons = $remote_desktop_settings['desktop_icons'];
 $authorize_no_desktop = ($remote_desktop_settings['authorize_no_desktop'] == 1);
 
@@ -150,7 +150,7 @@ $ev = new SessionStart(array('user' => $user));
 $sessions = Abstract_Session::getByUser($user->getAttribute('login'));
 if ($sessions > 0) {
 	foreach ($sessions as $session) {
-		if ($session->mode == Session::MODE_DESKTOP && $session->isSuspended()) {
+		if ($session->isSuspended()) {
 			$old_session_id = $session->id;
 
 			$user_login_aps = $session->settings['aps_access_login'];

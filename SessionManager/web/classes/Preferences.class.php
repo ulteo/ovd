@@ -368,10 +368,6 @@ class Preferences {
 		$c_desktop_mode = new ConfigElement_select('enabled', _('Enable Remote Desktop'), _('Enable Remote Desktop'), _('Enable Remote Desktop'), 1);
 		$c_desktop_mode->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c_desktop_mode,'general','remote_desktop_settings');
-		$c = new ConfigElement_select('persistent', _('Sessions are persistent'), _('Sessions are persistent'), _('Sessions are persistent'), 0);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
-		$c_desktop_mode->addReference('1', $c);
-		$this->add($c,'general','remote_desktop_settings');
 		$c = new ConfigElement_select('desktop_icons', _('Show icons on user desktop'), _('Show icons on user desktop'), _('Show icons on user desktop'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$c_desktop_mode->addReference('1', $c);
@@ -459,6 +455,10 @@ class Preferences {
 		$c = new ConfigElement_select('enhance_user_experience', _('Enhance user experience'), _('Enhance user experience: graphic effects and optimizations (It decreases performances if used in a Wide Area Network)'), _('Enhance user experience: graphic effects and optimizations (It decreases performances if used in a Wide Area Network)'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
+		
+		$c = new ConfigElement_select('persistent', _('Sessions are persistent'), _('Sessions are persistent'), _('Sessions are persistent'), 0);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c,'general','session_settings_defaults');
 
 		$c_user_profile = new ConfigElement_select('enable_profiles', _('Enable user profiles'), _('Enable user profiles'), _('Enable user profiles'), 1);
 		$c_user_profile->setContentAvailable(array(0=>_('no'),1=>_('yes')));
@@ -481,7 +481,7 @@ class Preferences {
 		$this->add($c,'general','session_settings_defaults');
 
 		$c = new ConfigElement_multiselect('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('session_mode', 'language'));
-		$c->setContentAvailable(array('session_mode' => _('session mode'), 'language' => _('language'), 'server' => _('server'), 'timeout' => _('timeout'), /*'persistent' => _('persistent'), 'shareable' => _('shareable')*/));
+		$c->setContentAvailable(array('session_mode' => _('session mode'), 'language' => _('language'), 'server' => _('server'), 'timeout' => _('timeout'), 'persistent' => _('persistent'), /*'shareable' => _('shareable')*/));
 		$this->add($c,'general','session_settings_defaults');
 
 		$this->addPrettyName('web_interface_settings',_('Web interface settings'));
