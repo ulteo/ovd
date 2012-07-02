@@ -155,7 +155,7 @@ class User(AbstractUser):
 				return True
 			
 			Logger.debug("User delete of %s: retry %i"%(self.name, 6-retry))
-			if p.returncode == 256 or s == 2560: # an other process is creating a user
+			if p.returncode == 256 or p.returncode == 2560: # an other process is creating a user
 				Logger.debug("An other process is creating a user")
 				retry -=1
 				time.sleep(0.2)
