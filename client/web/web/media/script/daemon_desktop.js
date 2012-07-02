@@ -31,6 +31,17 @@ var Desktop = Class.create(Daemon, {
 		$('desktopAppletContainer').innerHTML = '';
 	},
 
+	start: function() {
+		if (this.fullscreen) {
+			$('desktopFullscreenContainer').show();
+			new Effect.Center($('desktopFullscreenContainer'));
+		}
+		else
+			$('desktopFullscreenContainer').hide();
+		
+		Daemon.prototype.start.apply(this, []);
+	},
+	   
 	parse_do_started: function(transport) {
 		Logger.debug('[desktop] parse_do_started(transport@do_started())');
 
@@ -81,15 +92,6 @@ var Desktop = Class.create(Daemon, {
 			$('desktopAppletContainer').setStyle({width: applet_width+'px', height: applet_height+'px', top: 0+'px', left: 0+'px'});
 			$('desktopAppletContainer').show();
 			$('desktopAppletContainer').appendChild(applet);
-
-			/* In fullscreen mode, the applet appears in its own window, out of the HTML
-			* desktopFullscreenContainer is then a placeholder in the HTML page.
-			*/
-			if (this.fullscreen) {
-				if ($('splashContainer').visible())
-					$('splashContainer').hide();
-				$('desktopFullscreenContainer').show();
-			}
 
 			return true;
 		}

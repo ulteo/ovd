@@ -348,8 +348,6 @@ var Daemon = Class.create({
 
 		if ($('splashContainer').visible())
 			$('splashContainer').hide();
-		if ($('desktopFullscreenContainer') && $('desktopFullscreenContainer').visible())
-			$('desktopFullscreenContainer').hide();
 
 		if ($(this.mode+'AppletContainer').visible())
 			$(this.mode+'AppletContainer').hide();
