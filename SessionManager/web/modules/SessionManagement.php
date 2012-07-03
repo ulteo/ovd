@@ -53,7 +53,7 @@ abstract class SessionManagement extends Module {
 		$this->prefs = Preferences::getInstance();
 		if (! $this->prefs) {
 			Logger::critical('main', 'SessionManagement::__construct - get Preferences failed');
-			throw_response(INTERNAL_ERROR);
+			throw new Exception('Internal error: unable to get preference instance');
 		}
 	}
 
@@ -69,7 +69,7 @@ abstract class SessionManagement extends Module {
 			$session_number = Abstract_Session::countByStatus();
 			if ($session_number >= $max_sessions_number) {
 				Logger::error('main', 'SessionManagement::buildServersList - Maximum number of sessions already started '.$session_number);
-				throw_response(SERVICE_NOT_AVAILABLE);
+				return false;
 			}
 		}
 
@@ -261,7 +261,7 @@ abstract class SessionManagement extends Module {
 	public function buildServersList() {
 		if (! $this->user) {
 			Logger::error('main', 'SessionManagement::buildServersList - User is not authenticated, aborting');
-			throw_response(AUTH_FAILED);
+			return false;
 		}
 
 		$serverRoles = $this->getServerRoles();
@@ -441,7 +441,7 @@ abstract class SessionManagement extends Module {
 	public function generateCredentials() {
 		if (! $this->user) {
 			Logger::error('main', 'SessionManagement::generateCredentials - User is not authenticated, aborting');
-			throw_response(AUTH_FAILED);
+			return false;
 		}
 
 		$serverRoles = $this->getServerRoles();
@@ -476,7 +476,7 @@ abstract class SessionManagement extends Module {
 	public function getDesktopServer() {
 		if (! $this->user) {
 			Logger::error('main', 'SessionManagement::getDesktopServer() - User is not authenticated, aborting');
-			throw_response(AUTH_FAILED);
+			return false;
 		}
 		
 		$servers = $this->getAvailableApplicationServers();
@@ -516,7 +516,7 @@ abstract class SessionManagement extends Module {
 	public function chooseApplicationServers() {
 		if (! $this->user) {
 			Logger::error('main', 'SessionManagement::chooseApplicationServers - User is not authenticated, aborting');
-			throw_response(AUTH_FAILED);
+			return false;
 		}
 		
 		$applications = $this->user->applications();

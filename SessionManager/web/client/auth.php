@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -44,7 +45,13 @@ function throw_response($response_code_) {
 	die();
 }
 
-$sessionManagement = SessionManagement::getInstance();
+try {
+	$sessionManagement = SessionManagement::getInstance();
+}
+catch (Exception $err) {
+	throw_response(INTERNAL_ERROR);
+}
+
 if (! $sessionManagement->initialize()) {
 	Logger::error('main', '(client/auth) SessionManagement initialization failed');
 	throw_response(INTERNAL_ERROR);

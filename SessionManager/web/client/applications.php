@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  *
@@ -58,7 +58,13 @@ if (! is_object($user)) {
 /*
 ToDo: implement this kind of generic authentication
 
-$sessionManagement = SessionManagement::getInstance();
+try {
+	$sessionManagement = SessionManagement::getInstance();
+}
+catch (Exception $err) {
+	throw_response(INTERNAL_ERROR);
+}
+
 if (! $sessionManagement->initialize()) {
 	Logger::error('main', '(client/applications) SessionManagement initialization failed');
 	throw_response(INTERNAL_ERROR);

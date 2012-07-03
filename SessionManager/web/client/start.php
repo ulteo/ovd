@@ -57,7 +57,13 @@ if ($system_in_maintenance == '1') {
 	throw_response(IN_MAINTENANCE);
 }
 
-$sessionManagement = SessionManagement::getInstance();
+try {
+	$sessionManagement = SessionManagement::getInstance();
+}
+catch (Exception $err) {
+	throw_response(INTERNAL_ERROR);
+}
+
 if (! $sessionManagement->initialize()) {
 	Logger::error('main', '(client/start) SessionManagement initialization failed');
 	throw_response(INTERNAL_ERROR);

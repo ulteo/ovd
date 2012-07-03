@@ -682,7 +682,12 @@ class Preferences {
 		$modules_enable = $this->get('general', 'module_enable');
 		foreach ($modules_enable as $module_name) {
 			if (method_exists($module_name, 'getInstance')) {
-				$module_instance = call_user_func(array($module_name, 'getInstance'));
+				try {
+					$module_instance = call_user_func(array($module_name, 'getInstance'));
+				}
+				catch (Exception $err) {
+					continue;
+				}
 				if (is_object($module_instance)) {
 					if (method_exists($module_instance, 'liaisonType')) {
 						$liaisons = $module_instance->liaisonType();

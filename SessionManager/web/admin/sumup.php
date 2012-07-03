@@ -35,7 +35,12 @@ function my_own_callback($matches) {
 $userDB = UserDB::getInstance();
 $userGroupDB = UserGroupDB::getInstance();
 $applicationsGroupDB = ApplicationsGroupDB::getInstance();
-$sessionmanagement = SessionManagement::getInstance();
+try {
+	$sessionmanagement = SessionManagement::getInstance();
+}
+catch (Exception $err) {
+	die_error('Unable to instanciate SessionManagement: '.$err->getMessage(), __FILE__, __LINE__);
+}
 
 $usersList = new UsersList($_REQUEST);
 $us = $usersList->search();

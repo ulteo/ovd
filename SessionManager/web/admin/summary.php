@@ -2,8 +2,8 @@
 /**
  * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,7 +38,12 @@ function show_default() {
 	$userDB = UserDB::getInstance();
 	$userGroupDB = UserGroupDB::getInstance();
 	$applicationsGroupDB = ApplicationsGroupDB::getInstance();
-	$sessionmanagement = SessionManagement::getInstance();
+	try {
+		$sessionmanagement = SessionManagement::getInstance();
+	}
+	catch (Exception $err) {
+		die_error('Unable to instanciate SessionManagement: '.$err->getMessage(), __FILE__, __LINE__);
+	}
 
 	$usersList = new UsersList($_REQUEST);
 	$us = $usersList->search();
