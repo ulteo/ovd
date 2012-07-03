@@ -47,6 +47,16 @@ function throw_response($response_code_) {
 	die();
 }
 
+$prefs = Preferences::getInstance();
+if (! $prefs)
+	throw_response(INTERNAL_ERROR);
+
+$system_in_maintenance = $prefs->get('general', 'system_in_maintenance');
+if ($system_in_maintenance == '1') {
+	Logger::error('main', 'SessionManagement::__construct - The system is on maintenance mode');
+	throw_response(IN_MAINTENANCE);
+}
+
 $sessionManagement = SessionManagement::getInstance();
 if (! $sessionManagement->initialize()) {
 	Logger::error('main', '(client/start) SessionManagement initialization failed');
