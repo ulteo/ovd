@@ -238,8 +238,7 @@ class UserDB_sql extends UserDB  {
 			// user already exists ?
 			$user_from_db = $this->exists($user_->getAttribute('login'));
 			if ($user_from_db === true) {
-				Logger::error('main', 'UserDB_sql::add user (login='.$user_->getAttribute('login').') already exists');
-				popup_error(_('User already exists'));
+				ErrorManager::report('user (login='.$user_->getAttribute('login').') already exists');
 				return false;
 			}
 			

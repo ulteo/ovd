@@ -57,4 +57,13 @@ class ErrorManager {
 		
 		die();
 	}
+	
+	final public static function report($msg_) {
+		$errorManager = self::getInstance();
+		$errorManager->report_error_message($msg_);
+	}
+	
+	protected function report_error_message($msg_) {
+		Logger::error('main', $msg_);
+	}
 }

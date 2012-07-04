@@ -40,8 +40,7 @@ class Abstract_Liaison_sql {
 		
 		$res = $sql2->DoQuery('SELECT @3,@4 FROM #1 WHERE @2=%5 AND @3=%6 AND @4=%7', self::table, 'type', 'element', 'group',  $type_, $element_, $group_);
 		if ($sql2->NumRows() > 0) {
-			Logger::error('main', 'Abstract_Liaison_sql::save Liaison(type='.$type_.',element='.$element_.',group='.$group_.') already exists');
-			popup_error('liaison(type='.$type_.',element='.$element_.',group='.$group_.') already exists');
+			ErrorManager::report('liaison(type='.$type_.',element='.$element_.',group='.$group_.') already exists');
 			return false;
 		}
 		$res = $sql2->DoQuery('INSERT INTO #1 ( @2,@3,@4 ) VALUES ( %5,%6,%7)', self::table, 'type', 'element', 'group', $type_, $element_, $group_);

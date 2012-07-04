@@ -40,4 +40,9 @@ class AdminErrorManager extends ErrorManager{
 		footer_static();
 		die();
 	}
+	
+	protected function report_error_message($msg_) {
+		parent::report_error_message($msg_);
+		popup_error($msg_);
+	}
 }

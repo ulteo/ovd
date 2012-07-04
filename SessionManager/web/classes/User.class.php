@@ -288,7 +288,7 @@ class User {
 			foreach ($prefs_of_a_group_unsort as $key => $pref) {
 				$element = $pref->toConfigElement();
 				if (isset($overriden[$key]) && ($overriden[$key] == true) && ($element->content != $default_settings[$key])) {
-					popup_error(sprintf(_("User '%s' has at least two groups with the same overriden rule but with different values, the result will be unpredictable."), $this->getAttribute('login')));
+					ErrorManager::report('User "'.$this->getAttribute('login').'" has at least two groups with the same overriden rule but with different values, the result will be unpredictable.');
 				}
 				$default_settings[$key] = $element->content;
 				$overriden[$key] = true;

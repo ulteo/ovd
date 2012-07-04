@@ -4,8 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -295,8 +294,7 @@ class Server {
 			return true;
 
 		if ($warn === true && $this->getAttribute('locked') == 0) {
-			popup_error('"'.$this->fqdn.'": '._('is NOT online!'));
-			Logger::error('main', '"'.$this->fqdn.'": is NOT online!');
+			ErrorManager::report('"'.$this->fqdn.'": is NOT online!');
 		}
 
 		$this->isNotReady();

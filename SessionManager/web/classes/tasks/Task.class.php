@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
  * Author Laurent CLOUET <laurent@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -65,7 +66,7 @@ class Task {
 
 		$xml = query_url_post_xml($server->getBaseURL().'/aps/debian', $xml);
 		if (! $xml) {
-			popup_error(sprintf(_("Unable to submit Task to server '%s'"), $server->fqdn));
+			ErrorManager::report('Unable to submit Task to server "'.$server->fqdn.'"');
 			return false;
 		}
 

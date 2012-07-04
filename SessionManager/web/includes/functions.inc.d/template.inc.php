@@ -26,33 +26,3 @@ function die_error($error_=false, $file_=NULL, $line_=NULL, $display_=false) {
 	$errorManager->perform($error_, $file_, $line_, $display_);
 }
 
-function popup_error($msg_) {
-	$msg_ = secure_html($msg_);
-
-	if (! isset($_SESSION['errormsg']))
-		$_SESSION['errormsg'] = array();
-
-	if (is_array($msg_))
-		foreach ($msg_ as $errormsg)
-			$_SESSION['errormsg'][] = $errormsg;
-	else
-		$_SESSION['errormsg'][] = $msg_;
-
-	return true;
-}
-
-function popup_info($msg_) {
-	$msg_ = secure_html($msg_);
-
-	if (! isset($_SESSION['infomsg']))
-		$_SESSION['infomsg'] = array();
-
-	if (is_array($msg_))
-		foreach ($msg_ as $infomsg)
-			$_SESSION['infomsg'][] = $infomsg;
-	else
-		$_SESSION['infomsg'][] = $msg_;
-
-	return true;
-}
-

@@ -185,8 +185,7 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 		$res = $sql2->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3 AND @4 = %5', self::table, 'name', $group_->name, 'description', $group_->description);
 			
 		if ($sql2->NumRows($res) > 0) {
-			Logger::error('main', 'ApplicationsGroupDB::sql_sql::add usersgroup (name='.$group_->name.',description='.$group_->description.') already exists');
-			popup_error(_('Applications group already exists'));
+			ErrorManager::report('usersgroup (name='.$group_->name.',description='.$group_->description.') already exists');
 			return false;
 		}
 		

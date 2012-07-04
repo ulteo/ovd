@@ -207,7 +207,8 @@ class ProfileDB_internal extends ProfileDB  {
 		// do the request to the server
 		$ret = $an_fs_server_->createNetworkFolder($profile_->id);
 		if (! $ret) {
-			popup_error(sprintf(_("ProfileDB::internal Unable to create shared folder on file server '%s'"), $profile_->server));
+			ErrorManager::report('ProfileDB::internal Unable to create shared folder on file server "'.$profile_->server.'"');
+			
 			$this->remove($profile_);
 			return false;
 		}

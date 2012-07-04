@@ -167,8 +167,7 @@ class UserGroupDB_sql {
 		// usergroup already exists ?
 		$res = $sql2->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3 AND @4 = %5', self::table, 'name', $usergroup_->name, 'description', $usergroup_->description);
 		if ($sql2->NumRows($res) > 0) {
-			Logger::error('main', 'UserGroupDB_sql::add usersgroup (name='.$usergroup_->name.',description='.$usergroup_->description.') already exists');
-			popup_error(_('Users group already exists'));
+			ErrorManager::report('usersgroup (name='.$usergroup_->name.',description='.$usergroup_->description.') already exists');
 			return false;
 		}
 		

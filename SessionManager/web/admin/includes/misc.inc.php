@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,6 +33,35 @@ function redirect($url_=NULL) {
 	die();
 }
 
+function popup_error($msg_) {
+	$msg_ = secure_html($msg_);
+
+	if (! isset($_SESSION['errormsg']))
+		$_SESSION['errormsg'] = array();
+
+	if (is_array($msg_))
+		foreach ($msg_ as $errormsg)
+			$_SESSION['errormsg'][] = $errormsg;
+	else
+		$_SESSION['errormsg'][] = $msg_;
+
+	return true;
+}
+
+function popup_info($msg_) {
+	$msg_ = secure_html($msg_);
+
+	if (! isset($_SESSION['infomsg']))
+		$_SESSION['infomsg'] = array();
+
+	if (is_array($msg_))
+		foreach ($msg_ as $infomsg)
+			$_SESSION['infomsg'][] = $infomsg;
+	else
+		$_SESSION['infomsg'][] = $msg_;
+
+	return true;
+}
 
 function get_pagechanger($link, $number, $total) {
 	if (! isset($_GET['start']) || (! is_numeric($_GET['start']) || $_GET['start'] >= $total))

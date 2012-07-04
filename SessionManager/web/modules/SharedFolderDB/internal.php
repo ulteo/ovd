@@ -271,7 +271,7 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 		// do the request to the server
 		$ret = $an_fs_server_->createNetworkFolder($sharedfolder_->id);
 		if (! $ret) {
-			popup_error(sprintf(_("SharedFolderDB::internal Unable to create shared folder on file server '%s'"), $sharedfolder_->server));
+			ErrorManager::report('SharedFolderDB::internal Unable to create shared folder on file server "'.$sharedfolder_->server.'"');
 			$this->remove($sharedfolder_);
 			return false;
 		}
