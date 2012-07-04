@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com> 2008
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008, 2012
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2009
  *
@@ -40,20 +40,6 @@ require_once(dirname(__FILE__).'/functions.inc.php');
 require_once(dirname(__FILE__).'/load_balancing.inc.php');
 
 require_once(dirname(__FILE__).'/defaults.inc.php');
-
-if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-	$buf = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-	$buf = explode(';', $buf[0]);
-	$buf = $buf[0];
-} else
-	$buf = 'en_GB';
-$language = locale2unix($buf);
-if (! in_admin()) {
-	setlocale(LC_ALL, $language.'.UTF-8');
-	$domain = 'uovdsmadmin';
-	bindtextdomain($domain, LOCALE_DIR);
-	textdomain($domain);
-}
 
 if (! file_exists(SESSIONMANAGER_CONF_FILE))
 	die_error('Configuration file missing',__FILE__,__LINE__);
