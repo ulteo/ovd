@@ -45,6 +45,9 @@ import org.ulteo.rdp.RdpConnectionOvd;
 
 public abstract class OvdClient implements Runnable, RdpListener {
 	
+	public enum DisconnectionMode {SUSPEND, LOGOFF};
+	public static final DisconnectionMode DEFAULT_DISCONNECTION_MODE = DisconnectionMode.SUSPEND;
+	
 	public static final String productName = "OVD Client";
 	
 	private static final long REQUEST_TIME_FREQUENTLY = 2000;
@@ -274,10 +277,16 @@ public abstract class OvdClient implements Runnable, RdpListener {
 		} while (this.connectionIsActive);
 		
 		try {
-			this.smComm.askForLogout(this.persistent);
+			boolean suspendSession = (this.persistent && this.getDisconnectionMode() == DisconnectionMode.SUSPEND);
+			
+			this.smComm.askForLogout(suspendSession);
 		} catch (SessionManagerException e) {
 			Logger.error("Failed to inform the session manager about the RDP session ending.");
 		}
+	}
+	
+	protected DisconnectionMode getDisconnectionMode() {
+		return DEFAULT_DISCONNECTION_MODE;
 	}
 
 	public void connect() {

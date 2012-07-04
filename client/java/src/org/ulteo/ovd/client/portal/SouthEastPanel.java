@@ -42,32 +42,51 @@ import java.util.Locale;
 
 import org.ulteo.utils.I18n;
 import org.ulteo.ovd.client.NativeClientActions;
+import org.ulteo.ovd.client.OvdClient;
+import org.ulteo.ovd.client.OvdClientFrame;
 import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
 
 
 public class SouthEastPanel extends JPanel {
 	
 	private JButton disconnect = null;
+	private JButton logoffButton = null;
 	private JButton localDesktopIntegrationButton = null;;
 	private Icon rotateIcon = null;
 
+	private OvdClientFrame parentFrame = null;
 	private NativeClientActions rdpActions = null;
 	
-	public SouthEastPanel(final NativeClientActions rdpActions) {
+	public SouthEastPanel(OvdClientFrame parentFrame_, final NativeClientActions rdpActions) {
 		this.setLayout(new GridBagLayout());
 
+		this.parentFrame = parentFrame_;
 		this.rdpActions = rdpActions;
-		disconnect = new JButton(I18n._("Disconnect"));
 		
 		this.initRotate();
 		this.localDesktopIntegrationButton = new JButton(this.rotateIcon);
 		
-		disconnect.addActionListener(new ActionListener() {
+		if (this.rdpActions.isPersistentSessionEnabled()) {
+			this.disconnect = new JButton(I18n._("Disconnect"));
+			
+			this.disconnect.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					parentFrame.setDisconnectionMode(OvdClient.DisconnectionMode.SUSPEND);
+					rdpActions.disconnect();
+				}
+			});
+		}
+		
+		this.logoffButton = new JButton(I18n._("Logoff"));
+		this.logoffButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				parentFrame.setDisconnectionMode(OvdClient.DisconnectionMode.LOGOFF);
 				rdpActions.disconnect();
 			}
 		});
+		
 		this.localDesktopIntegrationButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -96,7 +115,14 @@ public class SouthEastPanel extends JPanel {
 		this.add(this.localDesktopIntegrationButton, gbc);
 		
 		gbc.gridx = 1;
-		this.add(disconnect, gbc);
+		
+		if (this.rdpActions.isPersistentSessionEnabled()) {
+			this.add(disconnect, gbc);
+			
+			gbc.gridx = 2;
+		}
+		
+		this.add(this.logoffButton, gbc);
 		
 		this.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 	}

@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author Thomas MOUTON <thomas@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -40,6 +41,8 @@ public class OvdClientFrame extends JFrame implements WindowListener {
 	 */
 	private boolean have_to_quit = false;
 	
+	private OvdClient.DisconnectionMode disconnectionMode = OvdClient.DEFAULT_DISCONNECTION_MODE;
+	
 	public OvdClientFrame(NativeClientActions actions) {
 		if (actions == null)
 			throw new IllegalArgumentException("actions parameter cannot be null");
@@ -65,6 +68,30 @@ public class OvdClientFrame extends JFrame implements WindowListener {
 	}
 	
 	/**
+	 * return the disconnection mode
+	 * @return disconnection mode OvdClient.DisconnectionMode.SUSPEND or OvdClient.DisconnectionMode.LOGOFF
+	 */
+	public OvdClient.DisconnectionMode getDisconnectionMode() {
+		return this.disconnectionMode;
+	}
+	
+	/**
+	 * set the disconnection mode
+	 * @param mode disconnection mode OvdClient.DisconnectionMode.SUSPEND or OvdClient.DisconnectionMode.LOGOFF
+	 */
+	public void setDisconnectionMode(OvdClient.DisconnectionMode mode) {
+		this.disconnectionMode = mode;
+	}
+	
+	/**
+	 * open a modal logout popup
+	 */
+	public void openLogoutPopup() {
+		NativeLogoutPopup nlp = new NativeLogoutPopup(this, this.actions);
+		nlp.setVisible(true);
+	}
+	
+	/**
 	 * display the disconnecting window
 	 */
 	public void disconnecting() {
@@ -85,9 +112,7 @@ public class OvdClientFrame extends JFrame implements WindowListener {
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		NativeLogoutPopup nlp = new NativeLogoutPopup(this, this.actions);
-		nlp.showPopup();
-		this.have_to_quit = nlp.haveToQuit();
+		this.openLogoutPopup();
 	}
 
 	@Override

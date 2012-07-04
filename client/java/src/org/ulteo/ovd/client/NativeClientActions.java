@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
+ * Author Thomas MOUTON <samuel@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -41,5 +42,11 @@ public interface NativeClientActions extends OvdClientPerformer {
 	 * @return if it is a user session deconnection
 	 */
 	boolean isUserDisconnection();
+
+	/**
+	 * is persistent session enabled
+	 * @return if the persistent session is enabled
+	 */
+	boolean isPersistentSessionEnabled();
 	
 }

@@ -2,7 +2,7 @@
  * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
- * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
@@ -143,6 +143,11 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 		SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, false));
 		this.desktop.disconnecting();
 	}
+
+	@Override
+	public DisconnectionMode getDisconnectionMode() {
+		return this.desktop.getDisconnectionMode();
+	}
 	
 	// interface NativeClientActions' methods 
 	
@@ -162,4 +167,8 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 		return this.is_user_disconnection;
 	}
 	
+	@Override
+	public boolean isPersistentSessionEnabled() {
+		return this.persistent;
+	}
 }

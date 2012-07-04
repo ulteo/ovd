@@ -141,7 +141,7 @@ public class PortalFrame extends OvdClientFrame {
 	}
 	
 	public void initButtonPan() {
-		this.sep = new SouthEastPanel(this.actions);
+		this.sep = new SouthEastPanel(this, this.actions);
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridy = 4;

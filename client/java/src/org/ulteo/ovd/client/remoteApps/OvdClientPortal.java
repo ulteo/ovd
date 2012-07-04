@@ -315,6 +315,11 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.portal.disconnecting();
 	}
 	
+	@Override
+	public DisconnectionMode getDisconnectionMode() {
+		return this.portal.getDisconnectionMode();
+	}
+	
 	// interface NativeClientActions' methods 
 	
 	@Override
@@ -333,4 +338,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		return this.is_user_disconnection;
 	}
 	
+	@Override
+	public boolean isPersistentSessionEnabled() {
+		return this.persistent;
+	}
 }

@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -34,6 +35,7 @@ import javax.swing.JFrame;
 
 import org.ulteo.Logger;
 import org.ulteo.ovd.client.NativeClientActions;
+import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.ovd.client.OvdClientFrame;
 
 public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
@@ -61,6 +63,7 @@ public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 		itemDisconnect.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				portal.setDisconnectionMode(OvdClient.DisconnectionMode.SUSPEND);
 				rdpActions.disconnect();
 			}
 		});
@@ -70,8 +73,7 @@ public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 		itemClose.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				portal.haveToQuit(true);
-				rdpActions.disconnect();
+				portal.openLogoutPopup();
 			}
 		});
 		popup.add(itemClose);
