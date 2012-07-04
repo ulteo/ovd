@@ -22,6 +22,7 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core-minimal.inc.php');
 require_once(dirname(__FILE__).'/functions.inc.php');
+require_once(dirname(__FILE__).'/misc.inc.php');
 
 $buf = 'en_GB';
 $prefs = Preferences::getInstance();
@@ -48,5 +49,4 @@ textdomain($domain);
 ErrorManager::setInstance(new AdminErrorManager());
 
 require_once(dirname(__FILE__).'/functions.inc.php');
-require_once(dirname(__FILE__).'/misc.inc.php');
 require_once(dirname(__FILE__).'/template_server.inc.php');
