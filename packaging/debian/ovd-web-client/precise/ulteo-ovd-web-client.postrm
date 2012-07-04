@@ -1,0 +1,24 @@
+#!/bin/sh -e
+
+A2CONFDIR=/etc/apache2/conf.d
+
+if [ "$1" = "remove" ]; then
+    if [ -L $A2CONFDIR/webclient ]; then
+        # remove apache2 link
+        rm -f $A2CONFDIR/webclient
+
+        # reload apache
+        if apache2ctl configtest 2>/dev/null; then
+            invoke-rc.d apache2 reload || true
+        else
+            echo << EOF
+"Your apache configuration is broken!
+Correct it and restart apache."
+EOF
+        fi
+    fi
+fi
+
+#DEBHELPER#
+
+exit 0

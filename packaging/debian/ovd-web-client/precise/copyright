@@ -1,0 +1,36 @@
+This package was debianized by:
+
+    Jeremy Desvages <jeremy@ulteo.com> on Tue, 26 Jan 2010 17:20:49 +0100
+    Samuel BOVEE    <samuel@ulteo.com> on Mon, 29 Mar 2010 12:43:02 +0200
+
+Upstream authors:
+
+    Jeremy DESVAGES <jeremy@ulteo.com> 2010
+    Julien LANGLOIS <julien@ulteo.com> 2010
+    Samuel BOVEE <julien@ulteo.com> 2010
+    Laurent CLOUET <laurent@ulteo.com> 2010
+
+Copyright:
+
+    Copyright (C), 2010 Ulteo SAS
+
+License:
+
+    This package is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    This package is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this package; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+On Debian systems, the complete text of the GNU General
+Public License can be found in `/usr/share/common-licenses/GPL'.
+
+The Debian packaging is (C) 2010, Ulteo SAS and
+is licensed under the GPL, see above.

@@ -1,0 +1,10 @@
+Template: ulteo-ovd-web-client/link_session_manager
+Type: boolean
+Default: true
+Description:
+ Do you want to link your web portal to an existing Session Manager ?
+
+Template: ulteo-ovd-web-client/session_manager_ip
+Type: string
+Default: 127.0.0.1
+Description: IP address/FQDN of the Session Manager
