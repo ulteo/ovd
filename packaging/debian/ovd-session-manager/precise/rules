@@ -1,0 +1,18 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/class/autotools.mk
+include /usr/share/cdbs/1/rules/debhelper.mk
+
+DEB_CONFIGURE_EXTRA_FLAGS = --without-libchart
+
+install/ulteo-ovd-session-manager::
+	# put the correct Apache user in cron file
+	A2USER=www-data ; \
+	sed -i "s/@APACHE_USER@/$${A2USER}/" debian/ulteo-ovd-session-manager/etc/ulteo/sessionmanager/sessionmanager.cron
+	
+	# remove sm-config (useless on Debian OS) and var folders create later
+	rm -rf debian/ulteo-ovd-session-manager/var
+	rm -rf debian/ulteo-ovd-session-manager/usr/bin
+
+clean::
+	debconf-updatepo
