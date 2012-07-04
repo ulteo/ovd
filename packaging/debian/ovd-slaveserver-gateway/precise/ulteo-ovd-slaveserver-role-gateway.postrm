@@ -1,0 +1,10 @@
+#!/bin/sh
+
+CONFDIR=/etc/ulteo/ovd
+
+[ "$1" = "purge" ]    && rm -f $CONFDIR/gateway.pem
+[ "$1" != "upgrade" ] && ovd-slaveserver-role del Gateway
+
+#DEBHELPER#
+
+exit 0

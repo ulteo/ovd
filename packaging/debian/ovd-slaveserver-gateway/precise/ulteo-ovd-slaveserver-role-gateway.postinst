@@ -1,0 +1,16 @@
+#!/bin/sh
+
+CONFDIR=/etc/ulteo/ovd
+
+[ -z "$2" ] && ovd-slaveserver-role add Gateway
+
+if [ ! -e $CONFDIR/gateway.pem ]; then
+    openssl genrsa 1024 > $CONFDIR/gateway.pem 2> /dev/null
+    openssl req -new -x509 -days 3650 -key $CONFDIR/gateway.pem -batch \
+        >> $CONFDIR/gateway.pem
+    chmod 400 $CONFDIR/gateway.pem
+fi
+
+#DEBHELPER#
+
+exit 0
