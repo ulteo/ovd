@@ -111,6 +111,7 @@ public class SouthEastPanel extends JPanel {
 		GridBagConstraints gbc = new GridBagConstraints();
 		
 		gbc.anchor = GridBagConstraints.LINE_END;
+		gbc.insets.left = 5;
 		gbc.gridx = gbc.gridy = 0;
 		this.add(this.localDesktopIntegrationButton, gbc);
 		
