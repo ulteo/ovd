@@ -1,0 +1,50 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+[ -f /etc/default/ulteo-ovd-subsystem ] && . /etc/default/ulteo-ovd-subsystem
+[ -f /etc/ulteo/subsystem.conf ] && . /etc/ulteo/subsystem.conf
+CHROOTCONF=$CHROOTDIR/etc/ulteo/ovd/slaveserver.conf
+
+is_valid_chroot () {
+    test -e "$CHROOTCONF"
+    return $?
+}
+
+# download the chroot if needed
+while ! is_valid_chroot; do
+
+    # get the tarball uri and quit if empty
+    db_get ulteo-ovd-subsystem/tarball_uri && URI="$RET"
+    [ -z "$URI" ] && break
+
+    # session manager url
+    db_get ulteo-ovd-subsystem/sm_address && SM="$RET"
+
+    # get the chroot
+    /usr/sbin/ovd-subsystem-config --chroot-uri "$URI" --chroot-dir "$CHROOTDIR" --sm-address "$SM" --force --debian && break
+
+    # chroot download failed
+    db_subst ulteo-ovd-subsystem/download_error URI "$URI"
+    db_subst ulteo-ovd-subsystem/download_error CHROOTDIR "$CHROOTDIR"
+    db_input critical ulteo-ovd-subsystem/download_error || true
+    db_go
+    rm -rf $CHROOTDIR
+
+    db_fset ulteo-ovd-subsystem/tarball_uri seen false || true
+    db_input high ulteo-ovd-subsystem/tarball_uri || true
+    db_go
+done
+
+
+if ! is_valid_chroot; then
+    db_subst ulteo-ovd-subsystem/no_chroot_conf CHROOTCONF "$CHROOTCONF"
+    db_input high ulteo-ovd-subsystem/no_chroot_conf || true
+    db_go
+fi
+
+db_stop
+
+#DEBHELPER#
+
+exit 0
