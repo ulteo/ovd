@@ -145,7 +145,8 @@ public class PortalFrame extends OvdClientFrame {
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridy = 4;
-		gbc.gridx = 1;
+		gbc.gridx = 0;
+		gbc.gridwidth = 2;
 		gbc.insets.bottom = 10;
 		gbc.anchor = GridBagConstraints.LINE_END;
 		this.add(sep, gbc);
