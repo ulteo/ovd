@@ -1,0 +1,18 @@
+mysql-server-5.1	mysql-server/root_password_again	password	
+mysql-server-5.1	mysql-server/root_password	password	
+ulteo-ovd-session-manager	ulteo-ovd-session-manager/admin_login	string	admin
+ulteo-ovd-session-manager	ulteo-ovd-session-manager/admin_password_again	password	admin
+ulteo-ovd-session-manager	ulteo-ovd-session-manager/admin_password	password	admin
+ulteo-ovd-session-manager	ulteo-ovd-session-manager/ssl_disable_warning	note	
+ulteo-ovd-session-manager	ulteo-ovd-session-manager/mysql_setup	boolean	false
+ulteo-ovd-session-manager	ulteo-ovd-session-manager/tarball_url	string	http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=trunk
+ulteo-ovd-web-client	ulteo-ovd-web-client/link_session_manager	boolean	true
+ulteo-ovd-web-client	ulteo-ovd-web-client/session_manager_ip	string	127.0.0.1
+ulteo-ovd-subsystem	ulteo-ovd-subsystem/tarball_uri	string	file:///var/cache/ulteo/sessionmanager/base.tar.gz
+ulteo-ovd-subsystem	ulteo-ovd-subsystem/sm_address	string	127.0.0.1
+ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbuser	string	ovd
+ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbpass	password	
+ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbserver	string	localhost
+ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbname	string	ovd
+ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbprefix	string	ulteo_
+ulteo-ovd-debconf-database	ulteo-ovd-debconf-database/mysql_root_password	password	

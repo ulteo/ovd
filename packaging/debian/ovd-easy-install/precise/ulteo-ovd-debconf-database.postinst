@@ -1,0 +1,21 @@
+#!/bin/sh -e
+
+DEBCONFDB=/usr/share/ulteo/ovd/debconfdb
+
+case "$1" in
+
+    configure)
+        passwd=$(< /dev/urandom tr -dc _A-Za-z0-9 | head -c12)
+        sed "/root_password/ s/$/$passwd/" $DEBCONFDB | debconf-set-selections
+    ;;
+
+    abort-*)
+        exit 1
+    ;;
+
+    *) ;;
+esac
+
+#DEBHELPER#
+
+exit 0

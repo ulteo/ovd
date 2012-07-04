@@ -1,0 +1,6 @@
+Template: ulteo-ovd-debconf-database/mysql_root_password
+Type: password
+Description: Password for the MySQL "root" user:
+ While not mandatory, it is highly recommended that you set a password for
+ the MySQL administrative "root" user.\n\nIf that field is left blank, the
+ password will not be changed.

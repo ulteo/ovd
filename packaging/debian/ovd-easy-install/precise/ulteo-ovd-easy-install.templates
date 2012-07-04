@@ -1,0 +1,50 @@
+Template: ulteo-ovd-easy-install/mysql_dbserver
+Type: string
+Default: localhost
+Description: MySQL host:
+ Please enter the name or IP address of the MySQL database server
+ that will store the Ulteo Session Manager database.
+
+Template: ulteo-ovd-easy-install/mysql_dbname
+Type: string
+Default: ovd
+Description: Ulteo Session Manager database name:
+ Please enter the name of the database that will host data for
+ Ulteo Session Manager.
+
+Template: ulteo-ovd-easy-install/mysql_dbprefix
+Type: string
+Default: ulteo_
+Description: Ulteo Session Manager database name:
+ Please enter the database table prefix of the Ulteo Session Manager.
+
+Template: ulteo-ovd-easy-install/mysql_dbuser
+Type: string
+Default: ovd
+Description: Database user for Ulteo Session Manager:
+ Please choose the MySQL account that will be used to access the
+ database hosting Ulteo Session Manager data.
+
+Template: ulteo-ovd-easy-install/mysql_dbpass
+Type: password
+Description: Database user password:
+ Please choose the password for the account that will be used to
+ access the database hosting Ulteo Session Manager data.
+
+Template: ulteo-ovd-easy-install/mysql_dbrootpass
+Type: password
+Description: Database root password:
+ Indicate the mysql root password
+
+Template: ulteo-ovd-easy-install/wrong_msql_password
+Type: error
+Description: Wrong MySQL password, try again !
+
+Template: ulteo-ovd-easy-install/display_sm_password
+Type: note
+Description: Session Manager administrator password
+ The administrator Session Manager login is "admin", the password is "admin"
+ too.
+ .
+ It is strongly recommended to change this password as soon as possible in
+ the Session Manager web interface after login in.
