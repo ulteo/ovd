@@ -48,5 +48,4 @@ textdomain($domain);
 
 ErrorManager::setInstance(new AdminErrorManager());
 
-require_once(dirname(__FILE__).'/functions.inc.php');
 require_once(dirname(__FILE__).'/template_server.inc.php');
