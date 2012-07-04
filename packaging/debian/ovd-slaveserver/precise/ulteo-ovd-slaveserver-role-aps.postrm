@@ -1,0 +1,7 @@
+#!/bin/sh -e
+
+[ "$1" != "upgrade" ] && ovd-slaveserver-role del ApplicationServer
+
+#DEBHELPER#
+
+exit 0

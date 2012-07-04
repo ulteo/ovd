@@ -1,0 +1,3 @@
+Template: ulteo-ovd-slaveserver/session_manager
+Type: string
+Description: IP address/FQDN of your Session Manager:

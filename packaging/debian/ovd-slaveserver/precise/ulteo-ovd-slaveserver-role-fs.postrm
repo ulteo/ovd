@@ -1,0 +1,22 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+FSCACHEDIR=/var/lib/ulteo/ovd/slaveserver/fs
+
+[ "$1" != "upgrade" ] && ovd-slaveserver-role del FileServer
+
+if [ "$1" = "purge" ] ; then
+    # delete fs user
+    getent passwd ovd-fs >/dev/null && deluser ovd-fs >/dev/null
+
+    # delete fs cache
+    db_input high ulteo-ovd-slaveserver-role-fs/purge_cache || true
+    db_go
+    db_get ulteo-ovd-slaveserver-role-fs/purge_cache || true
+    [ "$RET" = "true" ] && rm -rf $FSCACHEDIR
+fi
+
+#DEBHELPER#
+
+exit 0

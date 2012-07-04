@@ -1,0 +1,11 @@
+#!/bin/sh -e
+
+LOGDIR=/var/log/ulteo/ovd
+
+if [ "$1" = "purge" ]; then
+    rm -f $LOGDIR/slaveserver.log
+fi
+
+#DEBHELPER#
+
+exit 0

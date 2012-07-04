@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+
+DEB_PYTHON_SYSTEM := pycentral
+DEB_PYTHON_COMPILE_VERSION = 2.6
+
+DEB_DH_INSTALL_SOURCEDIR = debian/tmp
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/python-distutils.mk
+
+# fix an issue: dh_installinit creates scripts after dh_pycentral
+binary-post-install/ulteo-ovd-slaveserver::
+	cp examples/ulteo-ovd-slaveserver.init debian
+	dh_installinit -pulteo-ovd-slaveserver --update-rcd-params="defaults 95 05"
