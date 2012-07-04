@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+
+DEB_DH_INSTALL_SOURCEDIR = debian/tmp
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/ant.mk
+
+JAVA_HOME = /usr/lib/jvm/java-6-openjdk
+
+OVD_CERT_DIR = /usr/share/ulteo/ovd-cert
+JKS_PATH ?= $(OVD_CERT_DIR)/keystore
+JKS_PASSWD ?= $(OVD_CERT_DIR)/password
+JKS_ALIAS ?= ulteo
+
+DEB_ANT_INSTALL_TARGET = applet.install ovdExternalAppsClient.install
+DEB_ANT_ARGS += -Dprefix=/usr -Dbuild.type=stripped -Ddestdir=$(DEB_DESTDIR) \
+	-Dkeystore.path=$(JKS_PATH) -Dkeystore.password="$(shell cat $(JKS_PASSWD))" -Dkeystore.alias=$(JKS_ALIAS)
+
+DEB_JARS += $(ANT_HOME)/lib/ant-nodeps.jar # debian bug #420287
+
+build/libovd-xclient-area::
+	cd libXClientArea ; make clean ; make JAVAHOME=$(JAVA_HOME)
+
+install/libovd-xclient-area::
+	cd libXClientArea ; make install DESTDIR=$(CURDIR)/$(DEB_DH_INSTALL_SOURCEDIR)
