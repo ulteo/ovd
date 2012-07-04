@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,27 +22,8 @@
  **/
 
 function die_error($error_=false, $file_=NULL, $line_=NULL, $display_=false) {
-	$display_ = true; //always display the real error message instead of a generic one
-
-	$file_ = substr(str_replace(SESSIONMANAGER_ROOT, '', $file_), 1);
-
-	Logger::debug('main', 'die_error() called with message \''.$error_.'\' in '.$file_.':'.$line_);
-	Logger::critical('main', $error_);
-
-	header('Content-Type: text/xml; charset=utf-8');
-
-	$dom = new DomDocument('1.0', 'utf-8');
-	$node = $dom->createElement('error');
-	$node->setAttribute('id', 0);
-	if (in_admin() || $display_ === true)
-		$node->setAttribute('message', $error_);
-	else
-		$node->setAttribute('message', 'The service is not available, please try again later');
-	$dom->appendChild($node);
-
-	echo $dom->saveXML();
-
-	die();
+	$errorManager = ErrorManager::getInstance();
+	$errorManager->perform($error_, $file_, $line_, $display_);
 }
 
 function popup_error($msg_) {

@@ -1,4 +1,5 @@
-scripts_DATA = Configuration_mode_ad.class.php \
+scripts_DATA = AdminErrorManager.class.php \
+               Configuration_mode_ad.class.php \
                Configuration_mode.class.php \
                Configuration_mode_internal.class.php \
                Configuration_mode_ldap.class.php \
