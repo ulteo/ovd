@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com>
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2012
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
  * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-if (in_admin() && ! isset($_SESSION['admin_login']) && basename($_SERVER['PHP_SELF']) != 'login.php') {
+if (! isset($_SESSION['admin_login']) && basename($_SERVER['PHP_SELF']) != 'login.php') {
 	$_SESSION['redirect'] = base64_encode($_SERVER['REQUEST_URI']);
 
 	if (basename(dirname($_SERVER['PHP_SELF'])) != 'admin')

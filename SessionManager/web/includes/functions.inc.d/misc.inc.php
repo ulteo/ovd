@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2008-2012
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
@@ -28,16 +28,6 @@ function secure_html($data_) {
 		$data_ = htmlspecialchars($data_, ENT_NOQUOTES);
 
 	return $data_;
-}
-
-function in_admin() {
-	if (! defined('ROOT_ADMIN_URL'))
-		return false;
-	
-	if (! str_startswith($_SERVER['REQUEST_URI'], ROOT_ADMIN_URL))
-		return false;
-	
-	return true;
 }
 
 function check_folder($folder_) {
