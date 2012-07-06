@@ -90,20 +90,24 @@ class User(AbstractUser):
 		
 		
 		if self.infos.has_key("password"):
-			cmd = 'echo "%s:%s" | chpasswd'%(self.name, self.infos["password"])
+			cmd = 'passwd "%s"'%(self.name)
+			password = "%s\n"%(self.infos["password"])
 			retry = 5
 			while retry !=0:
 				if retry < 0:
 					Logger.error("ERROR: unable to add a new user")
 					return False
 				lock.acquire()
-				p = System.execute(cmd)
+				p = System.execute(cmd, False)
+				p.stdin.write(password)
+				p.stdin.write(password)
+				p.wait()
 				lock.release()
 				if p.returncode == 0:
 					break
 				
-				Logger.debug("Chpasswd of %s:retry %i"%(self.name, 6-retry))
-				if p.returncode == 256 or p.returncode == 2560: # an other process is creating a user
+				Logger.debug("Passwd of %s:retry %i"%(self.name, 6-retry))
+				if p.returncode == 5: # an other process is creating a user
 					Logger.debug("An other process is creating a user")
 					retry -=1
 					time.sleep(0.2)
