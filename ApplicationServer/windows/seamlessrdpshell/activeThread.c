@@ -23,6 +23,7 @@
 #include "internalWindow.h"
 #include "seamlessWindow.h"
 #include "seamlessWindowHistory.h"
+#include "windowUtil.h"
 
 static BOOL g_continue_monitoring = FALSE;
 static HANDLE g_monitoring_thread = NULL;
@@ -48,10 +49,6 @@ static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lparam) {
 	return TRUE;
 }
 
-static BOOL checkWindowExistence(SeamlessWindow *sw) {
-	return IsWindowVisible(sw->windows);
-}
-
 static void checkRegisteredWindows() {
 	SeamlessWindow* sw = getHistory();
 	if (sw == NULL)
@@ -61,8 +58,8 @@ static void checkRegisteredWindows() {
 		unsigned short *title = NULL;
 		RECT *bounds = NULL;
 
-		// Check window existence
-		if (! checkWindowExistence(sw)) {
+		// Check window visibility
+		if (! WindowUtil_isVisible(sw->windows)) {
 			SeamlessWindow_destroy(sw);
 
 			sw = sw->next;

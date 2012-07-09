@@ -50,6 +50,10 @@ BOOL WindowUtil_isToplevel(HWND hwnd) {
 	return toplevel;
 }
 
+BOOL WindowUtil_isVisible(HWND hwnd) {
+	return IsWindowVisible(hwnd);
+}
+
 HWND WindowUtil_getParent(HWND hwnd) {
 	HWND result;
 	HWND owner;
