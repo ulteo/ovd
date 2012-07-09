@@ -18,9 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include "seamlessChannel.h"
 #include "windowUtil.h"
 
 #include "assert.h"
+#include <CommCtrl.h>
 
 // Screen size
 static PSIZE g_screen_size = NULL;
@@ -52,6 +54,41 @@ BOOL WindowUtil_isToplevel(HWND hwnd) {
 
 BOOL WindowUtil_isVisible(HWND hwnd) {
 	return IsWindowVisible(hwnd);
+}
+
+int WindowUtil_getFlags(HWND hwnd) {
+	int flags = 0;
+	LONG style;
+	LONG exstyle;
+	TCHAR classname[256];
+
+	style = GetWindowLong(hwnd, GWL_STYLE);
+	exstyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+
+	if (style & DS_MODALFRAME || exstyle & WS_EX_DLGMODALFRAME)
+		flags |= SEAMLESS_CREATE_MODAL;
+
+	if (((style & WS_POPUP) || (exstyle & WS_EX_TOOLWINDOW))
+		&& (style & WS_MINIMIZEBOX) == 0 && (style & WS_MAXIMIZEBOX) == 0) {
+		flags |= SEAMLESS_CREATE_POPUP;
+
+		if (GetClassName(hwnd, classname, 256)) {
+			if ((strcmp(classname, TOOLTIPS_CLASS) == 0)
+				|| (strcmp(classname, "Net UI Tool Window") == 0)
+				|| (strcmp(classname, "OfficeTooltip") == 0)
+				|| (strcmp(classname, "DUIListViewHost") == 0)) {
+				flags |= SEAMLESS_CREATE_TOOLTIP;
+			}
+		}
+	}
+	if (! (style & WS_SIZEBOX))
+		flags |= SEAMLESS_CREATE_FIXEDSIZE;
+
+	// handle always on top
+	if (exstyle & WS_EX_TOPMOST)
+		flags |= SEAMLESS_CREATE_TOPMOST;
+
+	return flags;
 }
 
 HWND WindowUtil_getParent(HWND hwnd) {

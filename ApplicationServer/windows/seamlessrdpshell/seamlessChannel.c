@@ -210,68 +210,31 @@ void SeamlessChannel_setLastOrder(int order_type, void* order) {
 		ReleaseMutex(g_mutex_orders);
 }
 
-static BOOL CALLBACK
-enum_cb(HWND hwnd, LPARAM lparam)
-{
-	RECT rect;
-	unsigned short title[150];
-	LONG styles;
-	int state;
-	HWND parent;
-	DWORD pid;
-	int flags;
-
-	if (hwnd == InternalWindow_getHandle())
-		return TRUE;
-
-	styles = GetWindowLong(hwnd, GWL_STYLE);
-
-	if (!(styles & WS_VISIBLE))
-		return TRUE;
-
-	if (styles & WS_POPUP)
-		parent = (HWND) GetWindowLong(hwnd, GWL_HWNDPARENT);
-	else
-		parent = NULL;
-
-	GetWindowThreadProcessId(hwnd, &pid);
-
-	flags = 0;
-	if (styles & DS_MODALFRAME)
-		flags |= SEAMLESS_CREATE_MODAL;
-
-	SeamlessChannel_sendCreate(hwnd, pid, parent, flags);
-
-	if (!GetWindowRect(hwnd, &rect))
-	{
-		SeamlessChannel_sendDebug("GetWindowRect failed!");
-		return TRUE;
-	}
-
-	SeamlessChannel_sendPosition(hwnd, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, 0);
-
-	GetWindowTextW(hwnd, title, sizeof(title) / sizeof(*title));
-
-	SeamlessChannel_sendTitle(hwnd, title, 0);
-
-	if (styles & WS_MAXIMIZE)
-		state = 2;
-	else if (styles & WS_MINIMIZE)
-		state = 1;
-	else
-		state = 0;
-
-	SeamlessChannel_sendState(hwnd, state, 0);
-
-	return TRUE;
-}
-
 static void SeamlessChannel_process_sync(void) {
+	SeamlessWindow* sw = NULL;
+
 	SeamlessChannel_sendSyncBegin();
 
-	EnumWindows(enum_cb, 0);
+	sw = getHistory();
+	if (sw == NULL)
+		goto end;
 
-	SeamlessChannel_sendSyncEnd();
+	while(sw){
+		// Check window visibility
+		if (! WindowUtil_isVisible(sw->windows)) {
+			removeHWNDFromHistory(sw->windows);
+
+			sw = sw->next;
+			continue;
+		}
+
+		SeamlessWindow_synchronize(sw);
+
+		sw = sw->next;
+	}
+
+	end: 
+		SeamlessChannel_sendSyncEnd();
 }
 
 static void SeamlessChannel_process_state(unsigned int serial, HWND hwnd, int state) {

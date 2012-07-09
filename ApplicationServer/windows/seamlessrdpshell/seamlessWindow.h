@@ -41,6 +41,7 @@ void SeamlessWindow_updateIcon(SeamlessWindow *sw, HICON icon, int large);
 BOOL SeamlessWindow_updateTitle(SeamlessWindow *sw);
 BOOL SeamlessWindow_updateFocus(SeamlessWindow *sw);
 BOOL SeamlessWindow_updateState(SeamlessWindow *sw);
+void SeamlessWindow_synchronize(SeamlessWindow *sw);
 void SeamlessWindow_destroy(SeamlessWindow *sw);
 
 #endif // _SEAMLESSWINDOW_H_

@@ -28,6 +28,7 @@
 PSIZE WindowUtil_getScreenSize();
 BOOL WindowUtil_isToplevel(HWND hwnd);
 BOOL WindowUtil_isVisible(HWND hwnd);
+int WindowUtil_getFlags(HWND hwnd);
 HWND WindowUtil_getParent(HWND hwnd);
 BOOL WindowUtil_isFocused(HWND hwnd);
 BOOL WindowUtil_setFocus(HWND hwnd);

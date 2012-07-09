@@ -26,7 +26,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
-#include <CommCtrl.h>
 
 void SeamlessWindow_create(HWND hwnd) {
 		unsigned short *title;
@@ -34,8 +33,6 @@ void SeamlessWindow_create(HWND hwnd) {
 		DWORD pid;
 		int flags;
 		HICON icon;
-		LONG exstyle;
-		LONG style;
 		HWND parent;
 		SeamlessWindow* window;
 		TCHAR classname[256];
@@ -55,41 +52,16 @@ void SeamlessWindow_create(HWND hwnd) {
 		window->state = -1;
 		window->is_shown = TRUE;
 
-		style = GetWindowLong(hwnd, GWL_STYLE);
-
-		exstyle = GetWindowLong(hwnd, GWL_EXSTYLE);
 		GetWindowThreadProcessId(hwnd, &pid);
 
 		parent = WindowUtil_getParent(hwnd);
 		if (getWindowFromHistory(parent) == NULL)
 			parent = 0;
 
-		flags = 0;
-		if (style & DS_MODALFRAME || exstyle & WS_EX_DLGMODALFRAME)
-			flags |= SEAMLESS_CREATE_MODAL;
-
-		if (((style & WS_POPUP) || (exstyle & WS_EX_TOOLWINDOW))
-			&& (style & WS_MINIMIZEBOX) == 0 && (style & WS_MAXIMIZEBOX) == 0) {
-			flags |= SEAMLESS_CREATE_POPUP;
-			if (! parent)
-				parent = 0xffffffffL;
-
-			if (GetClassName(hwnd, classname, 256)) {
-				if ((strcmp(classname, TOOLTIPS_CLASS) == 0)
-					|| (strcmp(classname, "Net UI Tool Window") == 0)
-					|| (strcmp(classname, "OfficeTooltip") == 0)
-					|| (strcmp(classname, "DUIListViewHost") == 0)) {
-					flags |= SEAMLESS_CREATE_TOOLTIP;
-					parent = 0xffffffffL;
-				}
-			}
-		}
-		if (! (style & WS_SIZEBOX))
-			flags |= SEAMLESS_CREATE_FIXEDSIZE;
-
-		// handle always on top
-		if (exstyle & WS_EX_TOPMOST)
-			flags |= SEAMLESS_CREATE_TOPMOST;
+		flags = WindowUtil_getFlags(hwnd);
+		if ((! parent && (flags & SEAMLESS_CREATE_POPUP) != 0)
+			|| (flags & SEAMLESS_CREATE_TOOLTIP) != 0)
+			parent = 0xffffffffL;
 
 		SeamlessChannel_sendCreate(hwnd, pid, parent, flags);
 
@@ -339,6 +311,35 @@ BOOL SeamlessWindow_updateState(SeamlessWindow *sw) {
 	}
 
 	return FALSE;
+}
+
+void SeamlessWindow_synchronize(SeamlessWindow *sw)
+{
+	HWND parent;
+	DWORD pid;
+	int flags;
+
+	if (sw == NULL)
+		return;
+
+	GetWindowThreadProcessId(sw->windows, &pid);
+	
+	parent = WindowUtil_getParent(sw->windows);
+	if (getWindowFromHistory(parent) == NULL)
+		parent = 0;
+
+	flags = WindowUtil_getFlags(sw->windows);
+	if ((! parent && (flags & SEAMLESS_CREATE_POPUP) != 0)
+		|| (flags & SEAMLESS_CREATE_TOOLTIP) != 0)
+		parent = 0xffffffffL;
+
+	SeamlessChannel_sendCreate(sw->windows, pid, parent, flags);
+
+	SeamlessWindow_sendTitle(sw);
+
+	SeamlessWindow_sendPosition(sw);
+
+	SeamlessWindow_sendState(sw);
 }
 
 void SeamlessWindow_destroy(SeamlessWindow *sw) {
