@@ -182,6 +182,13 @@ void SeamlessWindow_updateZOrder(SeamlessWindow *sw) {
 	}
 }
 
+static void SeamlessWindow_sendPosition(SeamlessWindow *sw) {
+	if (! sw || ! sw->bounds)
+		return;
+
+	SeamlessChannel_sendPosition(sw->windows, sw->bounds->left, sw->bounds->top, sw->bounds->right - sw->bounds->left, sw->bounds->bottom - sw->bounds->top, 0);
+}
+
 void SeamlessWindow_updatePosition(SeamlessWindow *sw) {
 	RECT rect;
 	SeamlessOrder_Position *lastOrder = NULL;
@@ -232,7 +239,7 @@ void SeamlessWindow_updatePosition(SeamlessWindow *sw) {
 		sw->bounds = malloc(sizeof(RECT));
 	memcpy(sw->bounds, &rect, sizeof(RECT));
 
-	SeamlessChannel_sendPosition(sw->windows, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, 0);
+	SeamlessWindow_sendPosition(sw);
 
       end:
 	;
@@ -270,6 +277,10 @@ void SeamlessWindow_updateIcon(SeamlessWindow *sw, HICON icon, int large) {
 	}
 }
 
+static void SeamlessWindow_sendTitle(SeamlessWindow *sw) {
+	SeamlessChannel_sendTitle(sw->windows, sw->title, 0);
+}
+
 BOOL SeamlessWindow_updateTitle(SeamlessWindow *sw) {
 	unsigned short *title;
 	int i = 0;
@@ -285,13 +296,13 @@ BOOL SeamlessWindow_updateTitle(SeamlessWindow *sw) {
 		return FALSE;
 	}
 
-	SeamlessChannel_sendTitle(sw->windows, title, 0);
-
 	if (sw->title) {
 		free(sw->title);
 		sw->title;
 	}
 	sw->title = title;
+
+	SeamlessWindow_sendTitle(sw);
 
 	return TRUE;
 }
@@ -312,13 +323,17 @@ BOOL SeamlessWindow_updateFocus(SeamlessWindow *sw) {
 	return FALSE;
 }
 
+static void SeamlessWindow_sendState(SeamlessWindow *sw) {
+	SeamlessChannel_sendState(sw->windows, sw->state, 0);
+}
+
 BOOL SeamlessWindow_updateState(SeamlessWindow *sw) {
 	int newState = 0;
 
 	newState = WindowUtil_getState(sw->windows);
 	if (newState != sw->state) {
 		sw->state = newState;
-		SeamlessChannel_sendState(sw->windows, sw->state, 0);
+		SeamlessWindow_sendState(sw);
 
 		return TRUE;
 	}
