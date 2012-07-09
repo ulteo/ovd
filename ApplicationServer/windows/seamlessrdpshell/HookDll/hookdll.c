@@ -65,25 +65,25 @@ static void sendCopyDataMessage(HWND hwnd_src_, int msg_id_, LPVOID data_, SIZE_
 	COPYDATASTRUCT copydata;
 
 	copydata.dwData = msg_id_;		// function identifier
-	copydata.cbData = data_len_;	// size of data
+	copydata.cbData = (DWORD) data_len_;	// size of data
 	copydata.lpData = data_;		// data structure
 	
 	SendMessage(g_internal_window, WM_COPYDATA, (WPARAM)(HWND) hwnd_src_, (LPARAM) (LPVOID) &copydata);
 }
 static void sendHookMsg_State(HWND hwnd_, int state_) {
 	HookMsg_State msg;
-	msg.wnd = (ULONG32) hwnd_;
+	msg.wnd = PtrToUlong(hwnd_);
 	msg.state = state_;
 	sendCopyDataMessage(hwnd_, HOOK_MSG_STATE, &msg, sizeof(HookMsg_State));
 }
 static void sendHookMsg_Focus(HWND hwnd_) {
 	HookMsg_Focus msg;
-	msg.wnd = (ULONG32) hwnd_;
+	msg.wnd = PtrToUlong(hwnd_);
 	sendCopyDataMessage(hwnd_, HOOK_MSG_FOCUS, &msg, sizeof(HookMsg_Focus));
 }
 static void sendHookMsg_Icon(HWND hwnd_, HICON icon_, BOOL large_, BOOL haveToGetIcon_) {
 	HookMsg_Icon msg;
-	msg.wnd = (ULONG32) hwnd_;
+	msg.wnd = PtrToUlong(hwnd_);
 	msg.icon = icon_;
 	msg.large = large_;
 	msg.haveToGetIcon = haveToGetIcon_;
@@ -91,23 +91,23 @@ static void sendHookMsg_Icon(HWND hwnd_, HICON icon_, BOOL large_, BOOL haveToGe
 }
 static void sendHookMsg_Title(HWND hwnd_, unsigned short * title_) {
 	HookMsg_Title msg;
-	msg.wnd = (ULONG32) hwnd_;
+	msg.wnd = PtrToUlong(hwnd_);
 	wcscpy(msg.title, title_);
 	sendCopyDataMessage(hwnd_, HOOK_MSG_TITLE, &msg, sizeof(HookMsg_Title));
 }
 static void sendHookMsg_Destroy(HWND hwnd_) {
 	HookMsg_Destroy msg;
-	msg.wnd = (ULONG32) hwnd_;
+	msg.wnd = PtrToUlong(hwnd_);
 	sendCopyDataMessage(hwnd_, HOOK_MSG_DESTROY, &msg, sizeof(HookMsg_Destroy));
 }
 static void sendHookMsg_Position(HWND hwnd_) {
 	HookMsg_Position msg;
-	msg.wnd = (ULONG32) hwnd_;
+	msg.wnd = PtrToUlong(hwnd_);
 	sendCopyDataMessage(hwnd_, HOOK_MSG_POSITION, &msg, sizeof(HookMsg_Position));
 }
 static void sendHookMsg_Show(HWND hwnd_) {
 	HookMsg_Show msg;
-	msg.wnd = (ULONG32) hwnd_;
+	msg.wnd = PtrToUlong(hwnd_);
 	sendCopyDataMessage(hwnd_, HOOK_MSG_SHOW, &msg, sizeof(HookMsg_Show));
 }
 static void sendHookMsg_DestroyGrp(DWORD pid_) {
@@ -117,7 +117,7 @@ static void sendHookMsg_DestroyGrp(DWORD pid_) {
 }
 static void sendHookMsg_ZChange(HWND hwnd_) {
 	HookMsg_ZChange msg;
-	msg.wnd = (ULONG32) hwnd_;
+	msg.wnd = PtrToUlong(hwnd_);
 	sendCopyDataMessage(hwnd_, HOOK_MSG_ZCHANGE, &msg, sizeof(HookMsg_ZChange));
 }
 

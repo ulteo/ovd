@@ -35,7 +35,6 @@ void SeamlessWindow_create(HWND hwnd) {
 		HICON icon;
 		HWND parent;
 		SeamlessWindow* window;
-		TCHAR classname[256];
 
 		window = getWindowFromHistory(hwnd);
 		if (window != NULL) {
