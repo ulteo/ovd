@@ -270,7 +270,6 @@ BOOL SeamlessWindow_updateTitle(SeamlessWindow *sw) {
 
 	if (sw->title) {
 		free(sw->title);
-		sw->title;
 	}
 	sw->title = title;
 
