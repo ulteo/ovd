@@ -208,6 +208,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			return;
 		
 		ApplicationInstance ai = this.portal.getRunningApplicationPanel().findApplicationInstanceByToken(instance_);
+		if (ai == null)
+			return;
+		
 		if (ai.isLaunchedFromShortcut())
 			this.spool.destroyInstance(instance_);
 	}
