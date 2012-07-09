@@ -318,6 +318,7 @@ void SeamlessWindow_synchronize(SeamlessWindow *sw)
 	HWND parent;
 	DWORD pid;
 	int flags;
+	HICON icon;
 
 	if (sw == NULL)
 		return;
@@ -336,6 +337,12 @@ void SeamlessWindow_synchronize(SeamlessWindow *sw)
 	SeamlessChannel_sendCreate(sw->windows, pid, parent, flags);
 
 	SeamlessWindow_sendTitle(sw);
+
+	icon = WindowUtil_getIcon(sw->windows, 1);
+	if (icon) {
+		SeamlessWindow_updateIcon(sw, icon, 1);
+		DeleteObject(icon);
+	}
 
 	SeamlessWindow_sendPosition(sw);
 
