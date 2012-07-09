@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009
-# Author David LECHEVALIER <david@ulteo.com> 2010
+# Author David LECHEVALIER <david@ulteo.com> 2010, 2012
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -64,7 +64,7 @@ class User(AbstractUser):
 			win32net.NetUserAdd(None, 3, userData)
 		except Exception, e:
 			Logger.error("unable to create user: "+str(e))
-			raise e
+			return False
 		
 		
 		self.post_create()
@@ -97,8 +97,12 @@ class User(AbstractUser):
 			else:
 				shell = shell_path
 
-			win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigInitialProgram, shell)
-			win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigfInheritInitialProgram, False)
+			try:
+				win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigInitialProgram, shell)
+				win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigfInheritInitialProgram, False)
+			except Exception, e:
+				Logger.error("Unable to configure user initial program [%s]"%(str(e)))
+				return False
 	
 	
 	def exists(self):
@@ -162,7 +166,7 @@ class User(AbstractUser):
 					Reg.DeleteTree(win32con.HKEY_LOCAL_MACHINE, path)
 				except Exception, err:
 					Logger.warn("RegDeleteTree of %s return: %s"%(path, str(err)))
-					raise e
+					return False
 				
 				# Todo: remove the directory
 				#Platform.DeleteDirectory(userdir)
@@ -171,6 +175,6 @@ class User(AbstractUser):
 			win32net.NetUserDel(None, self.name)
 		except Exception, err:
 			Logger.error("Unable to delete user: %s"%(str(err)))
-			raise err
+			return False
 		
 		return True

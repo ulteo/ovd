@@ -21,6 +21,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import commands
+import errno
 import hashlib
 import locale
 import os
@@ -44,7 +45,7 @@ class Profile(AbstractProfile):
 	
 	def mount(self):
 		os.makedirs(self.cifs_dst)
-		self.homeDir = pwd.getpwnam(self.session.user.name)[5]
+		self.homeDir = pwd.getpwnam(self.transformToLocaleEncoding(self.session.user.name))[5]
 		
 		if self.profile is not None:
 			os.makedirs(self.profile_mount_point)
@@ -108,6 +109,10 @@ class Profile(AbstractProfile):
 					try:
 						os.makedirs(src)
 					except OSError, err:
+						if self.isNetworkError(err[0]):
+							Logger.warn("Unable to access profile: %s"%(str(err)))
+							return
+						
 						Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
 						continue
 				
@@ -135,8 +140,11 @@ class Profile(AbstractProfile):
 		while len(self.folderRedirection)>0:
 			d = self.folderRedirection.pop()
 			
-			if not os.path.ismount(d):
-				continue
+			try:
+				if not self.ismount(d):
+					continue
+			except IOError, err:
+				Logger.error("Unable to check mount point %s :%s"%(d, str(err)))
 			
 			cmd = "umount \"%s\""%(d)
 			cmd = self.transformToLocaleEncoding(cmd)
@@ -205,6 +213,10 @@ class Profile(AbstractProfile):
 			try:
 				os.makedirs(d)
 			except OSError, err:
+				if self.isNetworkError(err[0]):
+					Logger.warn("Unable to access profile: %s"%(str(err)))
+					return
+				
 				Logger.debug2("conf.Linux mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
 				continue
 		
@@ -241,6 +253,33 @@ class Profile(AbstractProfile):
 			encoding = "UTF-8"
 		
 		return data.encode(encoding)
+	
+	
+	@staticmethod
+	def ismount(path):
+		for line in file('/proc/mounts'):
+			components = line.split()
+			if len(components) > 1 and components[1] == path:
+				return True
+		
+		return False
+	
+	
+	@staticmethod
+	def isNetworkError(err):
+		networkError = [errno.EIO, errno.ECOMM,
+				errno.ENETDOWN,
+				errno.ENETUNREACH,
+				errno.ENETRESET,
+				errno.ECONNABORTED,
+				errno.ECONNRESET,
+				errno.ENOTCONN,
+				errno.ESHUTDOWN,
+				errno.ECONNREFUSED,
+				errno.EHOSTDOWN,
+				errno.EHOSTUNREACH
+				]
+		return err in networkError
 	
 	
 	def addGTKBookmark(self, url):

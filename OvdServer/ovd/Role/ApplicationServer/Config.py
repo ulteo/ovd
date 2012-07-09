@@ -3,7 +3,7 @@
 # Copyright (C) 2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2011
-# Author David LECHEVALIER <david@ulteo.com> 2011
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -23,16 +23,29 @@ from ovd.Logger import Logger
 
 class Config:
 	general = None
-	multithread = False
+	thread_count = 1
 	checkShell = False
 	clean_dump_archive = True
 	
 	
 	@staticmethod
 	def init(infos):
-		if infos.has_key("multithread"):
-			Config.listen_address = (infos["multithread"].lower() == True)
-		    
+		if infos.has_key("thread_count"):
+				value = infos["thread_count"]
+				if value.lower() == "auto":
+					Config.thread_count = None
+				else:
+					try:
+						nbThread = int(value)
+					except ValueError:
+						Logger.error("Invalid int number for thread_count")
+						nbThread = 1
+
+					if nbThread <= 0:
+						Logger.error("thread_count must be greater than 0")
+					else:
+						Config.thread_count = nbThread
+		
 		if infos.has_key("checkshell"):
 			Config.checkShell = (infos["checkshell"].lower() == "true")
 		

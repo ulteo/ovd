@@ -334,7 +334,7 @@ var Daemon = Class.create({
 			this.push_log('info', '[daemon] check_status_post() - Now preparing session');
 
 			this.list_servers();
-		} else if (! this.is_started()) {
+		} else if (! this.is_started() && this.session_status == 'ready') {
 			if (this.started_lock) {
 				this.push_log('debug', '[daemon] check_status_post() - Already in "is_started" state');
 				return;
@@ -343,6 +343,11 @@ var Daemon = Class.create({
 
 			this.push_log('info', '[daemon] check_status_post() - Now starting session');
 
+			new Effect.Move($(this.mode+'ModeContainer'), { x: 0, y: my_height });
+			setTimeout(function() {
+				hideSplash();
+			}, 2000);
+			
 			this.start();
 
 			this.started = true;

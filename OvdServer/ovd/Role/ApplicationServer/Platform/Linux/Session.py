@@ -5,6 +5,7 @@
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
 # Author Thomas MOUTON <thomas@ulteo.com> 2010
+# Author David LECHEVALIER <david@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -27,6 +28,7 @@ import shutil
 from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
+from ovd.Platform.System import System
 
 from ovd.Platform import Platform
 
@@ -39,12 +41,14 @@ class Session(AbstractSession):
 	
 	
 	def install_client(self):
+		name = System.local_encode(self.user.name)
+		
 		d = os.path.join(self.SPOOL_USER, self.user.name)
 		self.init_user_session_dir(d)
 		self.install_desktop_shortcuts()
 		
-		os.chown(self.instanceDirectory, pwd.getpwnam(self.user.name)[2], -1)
-		os.chown(self.user_session_dir, pwd.getpwnam(self.user.name)[2], -1)
+		os.chown(self.instanceDirectory, pwd.getpwnam(name)[2], -1)
+		os.chown(self.user_session_dir, pwd.getpwnam(name)[2], -1)
 		
 		xdg_dir = os.path.join(d, "xdg")
 		xdg_app_d = os.path.join(xdg_dir, "applications")
@@ -58,7 +62,7 @@ class Session(AbstractSession):
 			os.symlink(src_dir, dst_dir)
 		
 		
-		os.system('update-desktop-database "%s"'%(xdg_app_d))
+		os.system('update-desktop-database "%s"'%(System.local_encode(xdg_app_d)))
 	
 		if self.parameters.has_key("desktop_icons") and self.parameters["desktop_icons"] == "1":
 			path = os.path.join(xdg_app_d, ".show_on_desktop")

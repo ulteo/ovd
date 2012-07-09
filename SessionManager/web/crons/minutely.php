@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -50,9 +51,17 @@ foreach ($sessions as $session) {
 		}
 	}
 
-	if (in_array($session->status, array(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_STATUS_DESTROYING, Session::SESSION_STATUS_DESTROYED))) {
+	if ($session->status == Session::SESSION_STATUS_DESTROYED) {
 		if (! Abstract_Session::uptodate($session)) {
 			Logger::info('main', '(minutely cron) Session \''.$session->id.'\' does not exist anymore, purging...');
+			$session->orderDeletion(false, Session::SESSION_END_STATUS_ERROR);
+			Abstract_Session::delete($session->id);
+		}
+	}
+	
+	if (in_array($session->status, array(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_STATUS_DESTROYING))) {
+		if (array_key_exists('stop_time', $session->settings) && ($session->settings['stop_time'] + DESTROYING_DURATION) < time()) {
+			Logger::info('main', '(minutely cron) Session \''.$session->id.'\' do not respond, purging...');
 			$session->orderDeletion(false, Session::SESSION_END_STATUS_ERROR);
 			Abstract_Session::delete($session->id);
 		}

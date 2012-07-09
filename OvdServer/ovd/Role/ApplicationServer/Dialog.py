@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2010 Ulteo SAS
+# Copyright (C) 2008-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2008-2010
 # Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
+# Author David LECHEVALIER <david@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -361,8 +362,16 @@ class Dialog(AbstractDialog):
 				folder[attribute] = sharedFolderNode.getAttribute(attribute)
 			profile.addSharedFolder(folder)
 		
+		if self.role_instance.sessions.has_key(session.id):
+			Logger.warn("Session %s already exist, aborting creation"%(session.id))
+			doc = Document()
+			rootNode = doc.createElement('error')
+			rootNode.setAttribute("id", "user already exist")
+			doc.appendChild(rootNode)
+			return self.req_answer(doc)
+		
 		self.role_instance.sessions[session.id] = session
-		self.role_instance.sessions_spooler.put(("create", session))
+		self.role_instance.spool_action("create", session.id)
 		
 		return self.req_answer(self.session2xmlstatus(session))
 	
@@ -383,7 +392,7 @@ class Dialog(AbstractDialog):
 			if session.status not in [Platform.Session.SESSION_STATUS_WAIT_DESTROY, Platform.Session.SESSION_STATUS_DESTROYED, Platform.Session.SESSION_STATUS_ERROR]:
 				# Switch the session status without warn the session manager
 				session.switch_status(Platform.Session.SESSION_STATUS_WAIT_DESTROY)
-				self.role_instance.sessions_spooler.put(("destroy", session))
+				self.role_instance.spool_action("destroy", session.id)
 		else:
 			session = Platform.Session(session_id, None, None, None, None)
 			session.status = Platform.Session.SESSION_STATUS_UNKNOWN
@@ -471,7 +480,7 @@ class Dialog(AbstractDialog):
 			return self.req_answer(doc)
 		
 		user = Platform.User(login, {"tsid": ret})
-		self.role_instance.sessions_spooler.put(("logoff", user))
+		self.role_instance.spool_action("logoff", session.id)
 		
 		return self.req_answer(document)
 	

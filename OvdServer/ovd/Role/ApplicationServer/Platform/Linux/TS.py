@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author David LECHEVALIER <david@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -22,6 +23,7 @@ import xrdp
 
 
 from ovd.Role.ApplicationServer.TS import TS as AbstractTS
+from ovd.Platform.System import System
 
 
 
@@ -39,7 +41,7 @@ class TS (AbstractTS):
 	
 	@staticmethod
 	def getSessionID(username_):
-		return xrdp.SessionGetId(username_)
+		return xrdp.SessionGetId(System.local_encode(username_))
 	
 	
 	@staticmethod

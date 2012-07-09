@@ -1,10 +1,10 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2011 Ulteo SAS
+# Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
-# Author David LECHEVALIER <david@ulteo.com> 2011
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -176,24 +176,8 @@ class Session(AbstractSession):
 		return True
 	
 	
-	def obainPrivileges(self):
-		# Get some privileges to load the hive
-		priv_flags = win32security.TOKEN_ADJUST_PRIVILEGES | win32security.TOKEN_QUERY 
-		hToken = win32security.OpenProcessToken (win32api.GetCurrentProcess (), priv_flags)
-		backup_privilege_id = win32security.LookupPrivilegeValue (None, "SeBackupPrivilege")
-		restore_privilege_id = win32security.LookupPrivilegeValue (None, "SeRestorePrivilege")
-		win32security.AdjustTokenPrivileges (
-			hToken, 0, [
-			(backup_privilege_id, win32security.SE_PRIVILEGE_ENABLED),
-			(restore_privilege_id, win32security.SE_PRIVILEGE_ENABLED)
-			]
-		)
-	
-	
 	def overwriteDefaultRegistry(self, directory):
 		registryFile = os.path.join(directory, "NTUSER.DAT")
-		
-		self.obainPrivileges()
 		
 		hiveName = "OVD_%s_%d"%(str(self.id), random.randrange(10000, 50000))
 		

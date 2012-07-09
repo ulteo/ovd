@@ -4,7 +4,7 @@
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
-# Author David LECHEVALIER <david@ulteo.com> 2011
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -28,6 +28,7 @@ import time
 import xrdp
 
 from ovd.Logger import Logger
+from ovd.Platform.System import System
 from ovd.Role.ApplicationServer.User import User as AbstractUser
 
 
@@ -119,13 +120,15 @@ class User(AbstractUser):
 	
 
 	def post_create(self):
+		name = System.local_encode(self.name)
+		
 		if self.infos.has_key("shell"):
-			xrdp.UserSetShell(self.name, self.infos["shell"])
-			xrdp.UserAllowUserShellOverride(self.name, True)
+			xrdp.UserSetShell(name, self.infos["shell"])
+			xrdp.UserAllowUserShellOverride(name, True)
 		
 		
 		try:		
-			self.home = pwd.getpwnam(self.name)[5]
+			self.home = pwd.getpwnam(name)[5]
 		except KeyError:
 			return False
 		return True
@@ -133,7 +136,7 @@ class User(AbstractUser):
 	
 	def exists(self):
 		try:
-			pwd.getpwnam(self.name)
+			pwd.getpwnam(System.local_encode(self.name))
 		except KeyError:
 			return False
 		
@@ -152,7 +155,7 @@ class User(AbstractUser):
 	def destroy(self):
                 lock = FileLock("/tmp/user.lock")
 
-		cmd = "userdel --force  --remove %s"%(self.name)
+		cmd = "userdel --force  --remove %s"%(System.local_encode(self.name))
 		retry = 5
 		while retry !=0:
 			lock.acquire()

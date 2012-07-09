@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2011 Ulteo SAS
+# Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
-# Author David LECHEVALIER <david@ulteo.com> 2011
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2012
 # Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -49,6 +49,8 @@ class SessionManagement(Process):
 		Logger._instance.setQueue(self.logging_queue, False)
 		loop = True
 
+		Platform.System.prepareForSessionActions()
+		
 		# Prevent the process to be stop by a keyboard interruption
 		def quit(machin, truc):
 			global loop
@@ -74,10 +76,12 @@ class SessionManagement(Process):
 			if request == "create":
 				session = obj
 				self.create_session(session)
+				session.locked = False
 				self.queue_sync.put(session)
 			elif request == "destroy":
 				session = obj
 				self.destroy_session(session)
+				session.locked = False
 				self.queue_sync.put(session)
 			elif request == "logoff":
 				user = obj
@@ -85,6 +89,7 @@ class SessionManagement(Process):
 			elif request == "manage_new":
 				session = obj
 				self.manage_new_session(session)
+				session.locked = False
 				self.queue_sync.put(session)
 	
 	
@@ -95,7 +100,7 @@ class SessionManagement(Process):
 			if Platform.System.userExist(session.user.name):
 				Logger.error("unable to create session: user %s already exists"%(session.user.name))
 				session.end_status = Session.SESSION_END_STATUS_ERROR
-				self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
+				session.switch_status(RolePlatform.Session.SESSION_STATUS_ERROR)
 				return self.destroy_session(session)
 			
 			session.user.infos["groups"] = [self.aps_instance.ts_group_name, self.aps_instance.ovd_group_name]
@@ -109,7 +114,7 @@ class SessionManagement(Process):
 			if rr is False:
 				Logger.error("unable to create session for user %s"%(session.user.name))
 				session.end_status = Session.SESSION_END_STATUS_ERROR
-				self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
+				session.switch_status(RolePlatform.Session.SESSION_STATUS_ERROR)
 				return self.destroy_session(session)
 			
 			session.user.created = True
@@ -123,7 +128,7 @@ class SessionManagement(Process):
 			if rr is False:
 				Logger.error("unable to initialize session %s"%(session.id))
 				session.end_status = Session.SESSION_END_STATUS_ERROR
-				self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
+				session.switch_status(RolePlatform.Session.SESSION_STATUS_ERROR)
 				return self.destroy_session(session)
 		
 		else:
@@ -132,7 +137,7 @@ class SessionManagement(Process):
 		
 		session.post_install()
 		
-		self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_INITED)
+		session.switch_status(RolePlatform.Session.SESSION_STATUS_INITED)
 	
 	
 	def destroy_session(self, session):
@@ -158,8 +163,9 @@ class SessionManagement(Process):
 		if session.domain.manage_user():
 			self.destroy_user(session.user)
 		
-		self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_DESTROYED)
-
+		session.switch_status(RolePlatform.Session.SESSION_STATUS_DESTROYED)
+	
+	
 	def logoff_user(self, user):
 		Logger.info("SessionManagement::logoff_user %s"%(user.name))
 

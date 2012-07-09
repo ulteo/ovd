@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2011 Ulteo SAS
+# Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
-# Author David LECHEVALIER <david@ulteo.com> 2011
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2012
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -52,6 +52,7 @@ class Role(AbstractRole):
 		self.dialog = Dialog(self)
 		Logger._instance.close()
 		self.sessions = {}
+		self.locked_sessions = []
 		self.sessions_spooler = multiprocessing.Queue()
 		self.sessions_spooler2 = multiprocessing.Queue()
 		self.sessions_sync = multiprocessing.Queue()
@@ -97,7 +98,7 @@ class Role(AbstractRole):
 		if Config.clean_dump_archive:
 			self.purgeArchives()
 		
-		if Config.multithread:
+		if Config.thread_count is None:
 			cpuInfos = Platform.System.getCPUInfos()
 			vcpu = cpuInfos[0]
 			ram_total = Platform.System.getRAMTotal()
@@ -105,7 +106,7 @@ class Role(AbstractRole):
 			
 			nb_thread = int(round(1 + (ram + vcpu * 2)/3))
 		else:
-			nb_thread = 1
+			nb_thread = Config.thread_count
 
 		Logger._instance.setQueue(self.logging_queue, True)
 		Logger._instance.close()
@@ -135,8 +136,12 @@ class Role(AbstractRole):
 		for thread in self.threads:
 			thread.join()
 		
+		self.update_locked_sessions()
+		
 		for session in self.sessions.values():
 			self.manager.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
+		
+		Platform.System.prepareForSessionActions()
 		
 		cleaner = SessionManagement(self.manager, None, None, None, None)
 		for session in self.sessions.values():
@@ -178,12 +183,21 @@ class Role(AbstractRole):
 				except (EOFError, socket.error):
 					Logger.debug("Role stopping")
 					return
+				
+				if not self.sessions.has_key(session.id):
+					Logger.warn("Session %s do not exist, session information are ignored"%(session.id))
+					continue
+				
+				if session.status != self.sessions[session.id].status:
+					self.manager.session_switch_status(session, session.status)
+				
 				if session.status == RolePlatform.Session.SESSION_STATUS_DESTROYED:
-					if self.sessions.has_key(session.id):
-						del(self.sessions[session.id])
+					del(self.sessions[session.id])
 				else:
 					self.sessions[session.id] = session
 
+			self.update_locked_sessions()
+			
 			for session in self.sessions.values():
 				try:
 					ts_id = RolePlatform.TS.getSessionID(session.user.name)
@@ -202,7 +216,7 @@ class Role(AbstractRole):
 						
 						if session.status not in [Session.SESSION_STATUS_WAIT_DESTROY, Session.SESSION_STATUS_DESTROYED, Session.SESSION_STATUS_ERROR]:
 							self.manager.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
-							self.sessions_spooler.put(("destroy", session))
+							self.spool_action("destroy", session.id)
 					continue
 				
 				try:
@@ -216,7 +230,7 @@ class Role(AbstractRole):
 					if ts_status is RolePlatform.TS.STATUS_LOGGED:
 						self.manager.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
 						if not session.domain.manage_user():
-							self.sessions_spooler2.put(("manage_new", session))
+							self.spool_action("manage_new", session.id)
 						
 						continue
 						
@@ -231,7 +245,7 @@ class Role(AbstractRole):
 				if session.status == Session.SESSION_STATUS_INACTIVE and ts_status is RolePlatform.TS.STATUS_LOGGED:
 					self.manager.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
 					if not session.domain.manage_user():
-						self.sessions_spooler2.put(("manage_new", session))
+						self.spool_action("manage_new", session.id)
 					continue
 			
 			
@@ -347,3 +361,39 @@ class Role(AbstractRole):
 				sessionNode.appendChild(appNode)
 			
 			node.appendChild(sessionNode)
+	
+	
+	def update_locked_sessions(self):
+		actions_to_delete = []
+		for action in self.locked_sessions:
+			(action_name, session_id) = action
+			if not self.sessions.has_key(session_id):
+				Logger.error("Session %s is not existing anymore !"%(session_id))
+				actions_to_delete.append(action)
+				continue
+			
+			session = self.sessions[session_id]
+			if session.locked:
+				continue
+			
+			session.locked = True
+			self.sessions_spooler2.put((action_name, session))
+			
+			actions_to_delete.append(action)
+		
+		for action in actions_to_delete:
+			self.locked_sessions.remove(action)		
+	
+	
+	def spool_action(self, action, session_id):
+		if not self.sessions.has_key(session_id):
+			Logger.warn("Unable to spool %s on session %s, the session do not exist"%(action, session_id))
+			return
+		
+		session = self.sessions[session_id]
+		if session.locked:
+			self.locked_sessions.append((action, session.id))
+		else:
+			session.locked = True
+			self.sessions_spooler.put((action, session))
+

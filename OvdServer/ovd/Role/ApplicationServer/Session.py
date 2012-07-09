@@ -1,10 +1,10 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2010 Ulteo SAS
+# Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
-# Author David LECHEVALIER <david@ulteo.com> 2010, 2011
+# Author David LECHEVALIER <david@ulteo.com> 2010, 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -66,6 +66,7 @@ class Session:
 		self.external_apps_token = None
 		self.end_status = None
 		self.user_session_dir = None
+		self.locked = False
 		
 		self.domain = None
 		

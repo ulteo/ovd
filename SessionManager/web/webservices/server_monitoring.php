@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -196,6 +197,7 @@ if ($slaveserver_settings['auto_recover'] == 1) {
 Abstract_Server::save($server); //update Server cache timestamp
 
 if (array_key_exists('sessions', $ret) && is_array($ret['sessions'])) {
+	$monitored_session = array();
 	foreach ($ret['sessions'] as $session) {
 		$buf = Abstract_Session::exists($session['id']);
 		if (! $buf)
@@ -207,6 +209,8 @@ if (array_key_exists('sessions', $ret) && is_array($ret['sessions'])) {
 
 		$modified = false;
 
+		array_push($monitored_session, $session['id']);
+		
 		if (! array_key_exists($session['server'], $buf->servers[Server::SERVER_ROLE_APS]))
 			continue;
 
@@ -222,6 +226,20 @@ if (array_key_exists('sessions', $ret) && is_array($ret['sessions'])) {
 
 		if ($modified === true)
 			Abstract_Session::save($buf); //update Session cache timestamp
+	}
+
+	// Check state of sessions not present in xml
+	Logger::debug('main', "Checking session from ".$server->fqdn);
+	$sessions = Abstract_Session::getByServer($server->fqdn);
+	foreach ($sessions as $session) {
+		Logger::debug('main', "Inspecting session ".$session->id);
+
+		if (! in_array($session->id, $monitored_session)) {
+			if ($session->servers[Server::SERVER_ROLE_APS][$server->fqdn]['status'] !== Session::SESSION_STATUS_DESTROYED) {
+				Logger::info('main', "Session ".$session->id." switch status ".Session::SESSION_STATUS_DESTROYED." on ".$server->fqdn);
+				$session->setServerStatus($server->fqdn, Session::SESSION_STATUS_DESTROYED);
+			}
+		}
 	}
 }
 
