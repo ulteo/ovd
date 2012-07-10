@@ -413,6 +413,7 @@ class Preferences {
 			'fa_IR'=>'فارسی - Persian',
 			'fi_FI'=>'Suomi - Finnish',
 			'fr_FR'=>'Français - French',
+			'he_IL'=>'Hebrew - עברית',
 			'hu_HU'=>'Magyar - Hungarian',
 			'id_ID'=>'Bahasa Indonesia - Indonesian',
 			'is_IS'=>'Íslenska - Icelandic',

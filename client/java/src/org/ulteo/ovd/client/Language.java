@@ -79,7 +79,7 @@ public class Language {
 //			{"French (Luxembourg)", "Français", "fr-lu"},
 			{"German", "Deutsch", "de"},
 			{"Greek", "Ελληνικά", "el"},
-//			{"Hebrew", "עברית", "he"},
+			{"Hebrew", "עברית", "he"},
 //			{"Hindi", "", "hi"},
 			{"Hungarian", "Magyar", "hu"},
 			{"Icelandic", "Íslenska", "is"},
