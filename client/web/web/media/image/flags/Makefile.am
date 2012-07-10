@@ -105,7 +105,7 @@ scripts_DATA = ad.png \
                gu.png \
                gw.png \
                gy.png \
-               he.png \
+               he-il.png \
                hi.png \
                hk.png \
                hn.png \
