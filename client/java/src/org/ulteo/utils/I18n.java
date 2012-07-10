@@ -43,11 +43,11 @@ public class I18n {
 					catalog = null;
 				}
 			}
-			else if (Locale.getDefault().getLanguage().equals("he")) {
+			else if (Locale.getDefault().getLanguage().equals("iw")) {
 				// Hebrew Locale does not comply with ISO 639
 				// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4778440
 				try {
-					catalog = ResourceBundle.getBundle("Messages_iw");
+					catalog = ResourceBundle.getBundle("Messages_he");
 				}
 				catch(java.util.MissingResourceException e2) {
 					System.err.println("Unable to load Hebrew translations");
