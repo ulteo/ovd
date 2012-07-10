@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -40,6 +40,17 @@ public class I18n {
 				}
 				catch(java.util.MissingResourceException e2) {
 					System.err.println("Unable to load Indonesian translations");
+					catalog = null;
+				}
+			}
+			else if (Locale.getDefault().getLanguage().equals("iw")) {
+				// Hebrew Locale does not comply with ISO 639
+				// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4778440
+				try {
+					catalog = ResourceBundle.getBundle("Messages_he");
+				}
+				catch(java.util.MissingResourceException e2) {
+					System.err.println("Unable to load Hebrew translations");
 					catalog = null;
 				}
 			}

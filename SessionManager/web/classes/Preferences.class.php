@@ -407,6 +407,7 @@ class Preferences {
 			'fa_IR'=>'فارسی',
 			'fi_FI'=>'Suomi',
 			'fr_FR'=>'Français',
+			'he_IL'=>'עברית',
 			'hu_HU'=>'Magyar',
 			'id_ID'=>'Bahasa Indonesia',
 			'is_IS'=>'Icelandic',
