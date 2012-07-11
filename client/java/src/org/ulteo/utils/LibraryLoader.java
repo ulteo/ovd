@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David  LECHEVALIER <david@ulteo.com> 2010, 2011
+ * Author David  LECHEVALIER <david@ulteo.com> 2010, 2011, 2012
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
  *
@@ -93,6 +93,11 @@ public class LibraryLoader {
 		} catch (Exception e) {
 			Logger.error(String.format("Unable to load the '%s' library: %s", DLLName, e.getMessage()));
 		}
+		catch (UnsatisfiedLinkError e) {
+			Logger.error(String.format("Unable to load the '%s' library: %s", DLLName, e.getMessage()));
+			
+			throw new FileNotFoundException("Unable to find a valid library for "+DLLName);
+		}
 	}
 	
 	//This method is called from an non applet client
@@ -119,7 +124,15 @@ public class LibraryLoader {
 			each += LibName;
 
 			if (new File(each).exists()) {
-				System.load(each);
+				try {
+					System.load(each);
+				}
+				catch (UnsatisfiedLinkError e) {
+					Logger.error(String.format("Unable to load the '%s' library: %s", LibName, e.getMessage()));
+					
+					throw new FileNotFoundException("Unable to find a valid library for "+LibName);
+				}
+				
 				return;
 			}
 		}
