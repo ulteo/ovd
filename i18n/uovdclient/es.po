@@ -1,18 +1,19 @@
 # Spanish translations for uovdclient package.
-# Copyright (C) 2011 Ulteo SAS
+# Copyright (C) 2012 Ulteo SAS
 # This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
 # Automatically generated, 2011.
 # Author: Cooperativa de trabajo gcoop ltda <info@gcoop.coop>, 2010.
 # Author: Socket Sistemas Informáticos Alternativos <clientes@socket.es>, 2011.
 # Author: Mario Roman <mrbs21@hotmail.com>, 2011.
+# Author: Simón Alonso Sánchez <simonalsa@sctech.es>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: uovdclient\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-02-21 16:14+0100\n"
-"PO-Revision-Date: 2011-03-04 11:26+0200\n"
-"Last-Translator: Juan Carlos Giménez Moncada\n"
+"PO-Revision-Date: 2012-07-11 11:26+0200\n"
+"Last-Translator: Simón Alonso Sánchez\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -123,7 +124,7 @@ msgid ""
 "You are advised to check the \"<em>Always trust content from this publisher</"
 "em>\" checkbox."
 msgstr ""
-"Se recomienda marcar la opción \"<em>Confiar siempre en el contenido de éste "
+"Te recomendamos marcar la opción \"<em>Confiar siempre en el contenido de este "
 "editor</em>\"."
 
 #: ../../client/web/web/translate.php:93
@@ -234,7 +235,7 @@ msgstr ""
 #: ../../client/web/web/translate.php:127
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:386
 msgid "You are not authorized to launch a session in this mode"
-msgstr "No está autorizado para iniciar sesión de éste modo"
+msgstr "No estás autorizado para iniciar sesión en este modo"
 
 #: ../../client/web/web/translate.php:128
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:388
@@ -387,7 +388,7 @@ msgstr "Cargando la sesión"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:54
 msgid "Connecting to the session manager"
-msgstr "Conectándo al administrador de sesiones"
+msgstr "Conectando al administrador de sesiones"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:56
 msgid "Get session information from session manager"
