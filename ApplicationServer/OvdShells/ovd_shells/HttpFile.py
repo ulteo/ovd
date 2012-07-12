@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011 Ulteo SAS
+# Copyright (C) 2011-2012 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2011-2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -23,10 +23,26 @@ import mimetools
 import mimetypes
 import os
 import urllib2
+import urlparse
 
 
 class HttpFile:
+	PROTOCOL_HTTP_RAW = 0x01
+	PROTOCOL_WEBDAV   = 0x02
+	
 	def __init__(self, url, path):
+		u = urlparse.urlparse(url)
+		if u.scheme in ["webdav", "webdavs"]:
+			self.proto = self.PROTOCOL_WEBDAV
+			
+			if u.scheme == "webdav":
+				url = urlparse.urlunparse(("http", u.netloc, u.path, u.params, u.query, u.fragment))
+			else:
+				url = urlparse.urlunparse(("https", u.netloc, u.path, u.params, u.query, u.fragment))
+		
+		else:
+			self.proto = self.PROTOCOL_HTTP_RAW
+		
 		self.url = url
 		self.root = os.path.join(os.path.expanduser("~"), "remote")
 		self.path = os.path.join(self.root, path)
@@ -66,12 +82,10 @@ class HttpFile:
 		content = f.read()
 		f.close()
 		
-		content_type, body = self.encode_multipart_formdata([], [("file", self.path, content)])
-		headers = {'Content-Type': content_type,
-			  'Content-Length': str(len(body))
-			  }
-		
-		req = urllib2.Request(self.url, body, headers)
+		if self.proto is self.PROTOCOL_HTTP_RAW:
+			req = self.create_request_send_http_raw(content)
+		else:
+			req = self.create_request_send_webdav(content)
 		
 		try:
 			stream = urllib2.urlopen(req)
@@ -83,6 +97,25 @@ class HttpFile:
 			return False
 		
 		return True
+	
+	
+	def create_request_send_http_raw(self, content):
+		content_type, body = self.encode_multipart_formdata([], [("file", self.path, content)])
+		headers = {'Content-Type': content_type,
+			  'Content-Length': str(len(body))
+			  }
+		
+		req = urllib2.Request(self.url, body, headers)
+		return req
+	
+	
+	def create_request_send_webdav(self, content):
+		headers = { 'Content-Length': str(len(content)) }
+		
+		req = urllib2.Request(self.url, content, headers)
+		req.get_method = lambda: 'PUT'
+		
+		return req
 	
 	
 	## Code from http://code.activestate.com/recipes/146306-http-client-to-post-using-multipartform-data/
