@@ -4,6 +4,7 @@
  * Author David  LECHEVALIER <david@ulteo.com> 2010, 2011, 2012
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -102,8 +103,8 @@ public class LibraryLoader {
 	
 	//This method is called from an non applet client
 	public static void LoadLibrary(String LibName) throws FileNotFoundException {
-		String jarPath = System.getProperty("user.dir")+File.separator+System.getProperty("java.class.path");
-		String jarDirectory = new File(jarPath).getParent();
+		String jarPath = System.getProperty("java.class.path");
+		String jarDirectory = new File(jarPath).getAbsoluteFile().getParent();
 		String jvmArch = System.getProperty("sun.arch.data.model");
 
 		String standaloneLibPath = jarDirectory+File.separator+"lib"+File.separator+jvmArch;
