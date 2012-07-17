@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2011-2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -188,17 +188,37 @@ void SeamlessWindow_updatePosition(SeamlessWindow *sw) {
 		goto end;
 
 	screenSize = WindowUtil_getScreenSize();
-	if (screenSize && (! IsZoomed(sw->windows)) && (rect.left < 0 || rect.top < 0 || rect.bottom > screenSize->cy || rect.right > screenSize->cx)) {
-		int w = rect.right - rect.left;
-		int h = rect.bottom - rect.top;
-		int x = ((screenSize->cx - rect.left) < w) ? (screenSize->cx - w) : rect.left;
-		int y = ((screenSize->cy - rect.top) < h) ? (screenSize->cy - h) : rect.top;
-		x = (rect.left < 0) ? 0 : x;
-		y = (rect.top < 0) ? 0 : y;
-
-		SetWindowPos(sw->windows, NULL, x, y, w, h, SWP_NOACTIVATE | SWP_NOZORDER);
-
-		goto end;
+	if (screenSize && (! IsZoomed(sw->windows))) {
+		int width = rect.right - rect.left;
+		int height = rect.bottom - rect.top;
+		int x = rect.left;
+		int y = rect.top;
+		
+		if (width > screenSize->cx) {
+			width = screenSize->cx - 1;
+		}
+		if (height > screenSize->cy) {
+			height = screenSize->cy - 1;
+		}
+		
+		if (rect.right > screenSize->cx) {
+			x -= rect.right - screenSize->cx;
+		}
+		if (rect.bottom > screenSize->cy) {
+			y -= rect.bottom - screenSize->cy;
+		}
+		
+		if (x < 0) {
+			x = 0;
+		}
+		if (y < 0) {
+			y = 0;
+		}
+		
+		if (x != rect.left || y != rect.top || width != (rect.right - rect.left) || height != (rect.bottom - rect.top)) {
+			SetWindowPos(sw->windows, NULL, x, y, width, height, SWP_NOACTIVATE | SWP_NOZORDER);
+			goto end;
+		}
 	}
 
 	// Check if the window has been moved or resized
