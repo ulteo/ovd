@@ -145,6 +145,19 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	public Rectangle getMaximumWindowBounds() {
 		return new Rectangle(this.opt.x_offset, this.opt.y_offset, this.opt.width, this.opt.height);
 	}
+	
+	protected StateOrder getLastStateOrder(long window_id) {
+		StateOrder lastOrder = null;
+		
+		for (StateOrder each : this.stateOrders) {
+			if (each.window_id != window_id)
+				continue;
+			
+			lastOrder = each;
+		}
+		
+		return lastOrder;
+	}
 
 	public boolean processLine(String line)
 	{
@@ -643,6 +656,12 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		
 		if (SeamlessChannel.getSeamlessState(f.sw_getExtendedState()) == state)
 			return false;
+		
+		StateOrder lastOrder = this.getLastStateOrder(id);
+		if (lastOrder != null && lastOrder.state == (int) state) {
+			logger.debug("Ignoring this State message because this state("+state+") has already been asked for the window "+String.format("0x%08x", id));
+			return false;
+		}
 
 		StateOrder order = new StateOrder();
 		order.window_id = id;
