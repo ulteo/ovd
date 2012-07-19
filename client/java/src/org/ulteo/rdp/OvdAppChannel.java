@@ -188,6 +188,16 @@ public class OvdAppChannel extends VChannel {
 		return this.channel_open;
 	}
 	
+	public boolean hasKnownDrive(String id) {
+		for (String each: this.known_folers) {
+			if (each.equals(id)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public void sendStartApp(int token, int app_id) {
 		RdpPacket_Localised out = new RdpPacket_Localised(9);
 		out.set8(ORDER_START);

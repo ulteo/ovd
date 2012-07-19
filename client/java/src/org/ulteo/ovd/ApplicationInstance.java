@@ -128,7 +128,7 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 		
 		if (OSTools.isWindows()) {
 			String ulteoID = SystemWindows.getKnownDrivesUUIDFromPath(this.arg);
-			if (ulteoID != null) {
+			if (ulteoID != null && ovdApp.hasKnownDrive(ulteoID)) {
 				String relativePath = this.arg.substring(3);
 				relativePath = relativePath.replace(File.separator, "/");
 				ovdApp.addOvdAppListener(this);
@@ -143,7 +143,7 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 			String ulteoIDPath = SystemLinux.getKnownDrivesUUIDPathFromPath(args.getAbsolutePath());
 			String ulteoID = SystemLinux.getKnownDrivesUUIDFromPath(ulteoIDPath);
 			
-			if (ulteoID != null) {
+			if (ulteoID != null && ovdApp.hasKnownDrive(ulteoID)) {
 				String relativePath = args.getAbsolutePath().replace(new File(ulteoIDPath).getAbsolutePath(), "");
 				if (relativePath.startsWith("/"))
 					relativePath = relativePath.replaceFirst("/", "");
