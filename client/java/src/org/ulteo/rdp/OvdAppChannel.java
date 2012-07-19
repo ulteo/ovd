@@ -198,6 +198,10 @@ public class OvdAppChannel extends VChannel {
 		return false;
 	}
 	
+	public boolean hasKnownDrives() {
+		return (! this.known_folers.isEmpty());
+	}
+	
 	public void sendStartApp(int token, int app_id) {
 		RdpPacket_Localised out = new RdpPacket_Localised(9);
 		out.set8(ORDER_START);

@@ -126,32 +126,34 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 			return; 
 		}
 		
-		if (OSTools.isWindows()) {
-			String ulteoID = SystemWindows.getKnownDrivesUUIDFromPath(this.arg);
-			if (ulteoID != null && ovdApp.hasKnownDrive(ulteoID)) {
-				String relativePath = this.arg.substring(3);
-				relativePath = relativePath.replace(File.separator, "/");
-				ovdApp.addOvdAppListener(this);
-				ovdApp.sendStartApp(this.token, this.app.getId(), OvdAppChannel.DIR_TYPE_KNOWN_DRIVE, ulteoID, relativePath);
-				this.state = STARTING;
-				return;
+		if (ovdApp.hasKnownDrives()) {
+			if (OSTools.isWindows()) {
+				String ulteoID = SystemWindows.getKnownDrivesUUIDFromPath(this.arg);
+				if (ulteoID != null && ovdApp.hasKnownDrive(ulteoID)) {
+					String relativePath = this.arg.substring(3);
+					relativePath = relativePath.replace(File.separator, "/");
+					ovdApp.addOvdAppListener(this);
+					ovdApp.sendStartApp(this.token, this.app.getId(), OvdAppChannel.DIR_TYPE_KNOWN_DRIVE, ulteoID, relativePath);
+					this.state = STARTING;
+					return;
+				}
 			}
-		}
-		
-		if (OSTools.isLinux()) {
-			File args = new File(this.arg);
-			String ulteoIDPath = SystemLinux.getKnownDrivesUUIDPathFromPath(args.getAbsolutePath());
-			String ulteoID = SystemLinux.getKnownDrivesUUIDFromPath(ulteoIDPath);
 			
-			if (ulteoID != null && ovdApp.hasKnownDrive(ulteoID)) {
-				String relativePath = args.getAbsolutePath().replace(new File(ulteoIDPath).getAbsolutePath(), "");
-				if (relativePath.startsWith("/"))
-					relativePath = relativePath.replaceFirst("/", "");
+			if (OSTools.isLinux()) {
+				File args = new File(this.arg);
+				String ulteoIDPath = SystemLinux.getKnownDrivesUUIDPathFromPath(args.getAbsolutePath());
+				String ulteoID = SystemLinux.getKnownDrivesUUIDFromPath(ulteoIDPath);
+				
+				if (ulteoID != null && ovdApp.hasKnownDrive(ulteoID)) {
+					String relativePath = args.getAbsolutePath().replace(new File(ulteoIDPath).getAbsolutePath(), "");
+					if (relativePath.startsWith("/"))
+						relativePath = relativePath.replaceFirst("/", "");
 
-				ovdApp.addOvdAppListener(this);
-				ovdApp.sendStartApp(this.token, this.app.getId(), OvdAppChannel.DIR_TYPE_KNOWN_DRIVE, ulteoID, relativePath);
-				this.state = STARTING;
-				return;
+					ovdApp.addOvdAppListener(this);
+					ovdApp.sendStartApp(this.token, this.app.getId(), OvdAppChannel.DIR_TYPE_KNOWN_DRIVE, ulteoID, relativePath);
+					this.state = STARTING;
+					return;
+				}
 			}
 		}
 
