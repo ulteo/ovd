@@ -305,6 +305,9 @@ public class OvdAppChannel extends VChannel {
 	public void removeShareUsedByApp(RdpdrDevice device, int instance) {
 		Integer i = null;
 		List<Integer> l = this.sharesUsedByApps.get(device);
+		if (l == null)
+			return;
+		
 		for (Integer each : l) {
 			if (each.intValue() == instance) {
 				i = each;
