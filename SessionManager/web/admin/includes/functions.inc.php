@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008-2012
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -126,7 +126,7 @@ function print_prefs5($prefs,$key_name, $container) {
 		// we print element
 		echo '<tr class="content'.($color % 2 +1).'">';
 		echo '<td style="width: 200px;">';
-		echo '<span onmouseover="showInfoBulle(\''.str_replace("'", "&rsquo;", $element->description_detailed).'\'); return false;" onmouseout="hideInfoBulle(); return false;">'.$element->label.'</span>';
+		echo '<span onmouseover="showInfoBulle(\''.str_replace("'", "&rsquo;", htmlspecialchars($element->description_detailed)).'\'); return false;" onmouseout="hideInfoBulle(); return false;">'.$element->label.'</span>';
 		echo '</td>';
 		echo '<td style="padding: 3px;">';
 		echo "\n";
@@ -153,7 +153,7 @@ function print_prefs4($prefs,$key_name,$recursive=true) {
 	if (is_object($elements)) {
 		echo '<tr class="content'.($color % 2 +1).'">';
 		echo '<td style="width: 200px;">';
-		echo '<span onmouseover="showInfoBulle(\''.str_replace("'", "&rsquo;", $elements->description_detailed).'\'); return false;" onmouseout="hideInfoBulle(); return false;">'.$elements->label.'</span>';
+		echo '<span onmouseover="showInfoBulle(\''.str_replace("'", "&rsquo;", htmlspecialchars($elements->description_detailed)).'\'); return false;" onmouseout="hideInfoBulle(); return false;">'.$elements->label.'</span>';
 		echo '</td>';
 		echo '<td>';
 		echo "\n";
@@ -168,7 +168,7 @@ function print_prefs4($prefs,$key_name,$recursive=true) {
 			if (is_object($elements2)) {
 				echo '<tr class="content'.($color % 2 +1).'">';
 				echo '<td style="width: 200px;">';
-				echo '<span onmouseover="showInfoBulle(\''.str_replace("'", "&rsquo;", $elements2->description_detailed).'\'); return false;" onmouseout="hideInfoBulle(); return false;">'.$elements2->label.'</span>';
+				echo '<span onmouseover="showInfoBulle(\''.str_replace("'", "&rsquo;", htmlspecialchars($elements2->description_detailed)).'\'); return false;" onmouseout="hideInfoBulle(); return false;">'.$elements2->label.'</span>';
 				echo '</td>';
 				echo '<td>';
 				echo "\n";
