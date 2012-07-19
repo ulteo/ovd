@@ -3,7 +3,7 @@
 # Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011, 2012
 # Author David LECHEVALIER <david@ulteo.com> 2010, 2012
 #
 # This program is free software; you can redistribute it and/or 
@@ -134,6 +134,11 @@ class Session:
 		if self.parameters.has_key("no_desktop_process"):
 			f = open(os.path.join(self.user_session_dir, "no_desktop_process"), "w")
 			f.write("no_desktop_process\n")
+			f.close()
+		
+		if self.parameters.has_key("use_known_drives") and self.parameters["use_known_drives"] == "true":
+			f = open(os.path.join(self.user_session_dir, "use_known_drives"), "w")
+			f.write("use_known_drives\n")
 			f.close()
 	
 	

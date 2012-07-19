@@ -2,7 +2,7 @@
 
 # Copyright (C) 2011-2012 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
 # Author Thomas MOUTON <thomas@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
@@ -33,6 +33,7 @@ class RemoteAppsManager(threading.Thread):
 		self.im = instance_manager
 		self.vchannel = vchannel
 		self.drives = drives
+		self.use_known_drives = False
 		
 		self.jobs = Queue.Queue()
 		
@@ -112,8 +113,9 @@ class RemoteAppsManager(threading.Thread):
 	
 	
 	def run(self):
-		self.drives.rebuild()
-		self.vchannel.Write(OvdAppChannel.getDrivesMessage(self.drives.getListUID()))
+		if self.use_known_drives:
+			self.drives.rebuild()
+			self.vchannel.Write(OvdAppChannel.getDrivesMessage(self.drives.getListUID()))
 		
 		t_init = 0
 		while True:
@@ -176,7 +178,7 @@ class RemoteAppsManager(threading.Thread):
 				# We send channel init time to time to manage the reconnection
 				self.vchannel.Write(OvdAppChannel.getInitPacket())
 				
-				if self.drives.rebuild():
+				if self.use_known_drives and self.drives.rebuild():
 					self.vchannel.Write(OvdAppChannel.getDrivesMessage(self.drives.getListUID()))
 				
 				t_init = 0

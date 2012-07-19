@@ -98,6 +98,8 @@ $redirect_client_printers = $default_settings['redirect_client_printers'];
 $rdp_bpp = $default_settings['rdp_bpp'];
 $enhance_user_experience = $default_settings['enhance_user_experience'];
 $persistent = $default_settings['persistent'];
+if ($default_settings['use_known_drives'] == 1)
+	$use_known_drives = 'true';
 
 $advanced_settings = array();
 foreach ($default_settings['advanced_settings_startsession'] as $v)
@@ -430,7 +432,7 @@ if (! isset($old_session_id)) {
 		$session_node->setAttribute('mode', (($session->mode == Session::MODE_DESKTOP && $count_prepare_servers == 1)?Session::MODE_DESKTOP:Session::MODE_APPLICATIONS));
 		if (isset($external_apps_token))
 			$session_node->setAttribute('external_apps_token', $external_apps_token->id);
-		foreach (array('desktop_icons', 'locale', 'timezone', 'no_desktop_process') as $parameter) {
+		foreach (array('desktop_icons', 'locale', 'timezone', 'no_desktop_process', 'use_known_drives') as $parameter) {
 			if (! isset($$parameter))
 				continue;
 
