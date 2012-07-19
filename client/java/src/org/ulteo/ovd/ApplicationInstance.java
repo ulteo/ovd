@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -269,8 +270,10 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 
 		ovdApp.removeOvdAppListener(this);
 
-		ovdApp.removeShareUsedByApp(this.waitedDevice, this.token);
-		if (! ovdApp.isShareUsed(this.waitedDevice))
-			this.app.getConnection().getRdpdrChannel().unmountDrive(this.waitedDevice.get_name(), this.waitedDevice.get_local_path());
+		if (this.waitedDevice != null) {
+			ovdApp.removeShareUsedByApp(this.waitedDevice, this.token);
+			if (! ovdApp.isShareUsed(this.waitedDevice))
+				this.app.getConnection().getRdpdrChannel().unmountDrive(this.waitedDevice.get_name(), this.waitedDevice.get_local_path());
+		}
 	}
 }
