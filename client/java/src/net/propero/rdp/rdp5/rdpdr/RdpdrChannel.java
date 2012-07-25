@@ -80,6 +80,7 @@ public class RdpdrChannel extends VChannel {
 	public static final int STATUS_INVALID_PARAMETER	  = 0xc000000d;
 	public static final int STATUS_SUCCESS			      = 0x00000000;
 	public static final int STATUS_NOT_SUPPORTED          = 0xc00000bb;
+	public static final int STATUS_UNSUCCESSFUL           = 0xc0000001;
 	public static final int FLAG_DEFAULTPRINTER           = 0xc0000002;
 	
 	public int g_num_devices = 0;
@@ -407,6 +408,8 @@ public class RdpdrChannel extends VChannel {
 				break;
 
 			case DEVICE_TYPE_SCARD:
+				rw_blocking = false;
+				break;
 			default:
 				System.out.print("IRP for bad device " + device + "\n");
 				return;
@@ -583,7 +586,13 @@ public class RdpdrChannel extends VChannel {
 				s.incrementPosition(0x14);
 				buffer = new RdpPacket_Localised(bytes_out + 0x14);
 				int OldPosition5 = buffer.getPosition();
-				status = Disk.disk_device_control(file, request, s, buffer);
+				
+				if (fns.get_device_type() == DEVICE_TYPE_SCARD) {
+					status = fns.device_control(file, request, s, buffer);
+				}
+				else {
+					status = Disk.disk_device_control(file, request, s, buffer);
+				}
 				result[0] = buffer_len = buffer.getPosition() - OldPosition5;
 
 /*
@@ -649,7 +658,7 @@ public class RdpdrChannel extends VChannel {
 		return new String(str);
 	}
 	
-	void rdpdr_send_completion(int device, int id, int status, 
+	public void rdpdr_send_completion(int device, int id, int status, 
 			int result, RdpPacket_Localised buffer, int buffer_len) {
 		
 		String magic = "rDCI";

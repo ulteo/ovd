@@ -7,6 +7,7 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -74,6 +75,7 @@ import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
+import org.ulteo.pcsc.PCSC;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.Callback {
@@ -120,6 +122,26 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		String log_dir = Constants.PATH_NATIVE_CLIENT_CONF + Constants.FILE_SEPARATOR + "logs";
 		if (! Logger.initInstance(true, log_dir+Constants.FILE_SEPARATOR +Logger.getDate()+".log", true))
 			System.err.println("Unable to iniatialize logger instance");
+		
+		if (OSTools.isWindows()) {
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.LIB_PCSC_WINDOWS);
+				PCSC.libraryLoaded();
+			} catch (FileNotFoundException ex) {
+				org.ulteo.Logger.warn(ex.getMessage());
+				PCSC.disableLibraryLoading();
+			}
+		}
+		else if(OSTools.isLinux()) {
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.LIB_PCSC_UNIX);
+				PCSC.LoadPCSCLite();
+				PCSC.libraryLoaded();
+			} catch (FileNotFoundException ex) {
+				org.ulteo.Logger.warn(ex.getMessage());
+				PCSC.disableLibraryLoading();
+			}
+		}
 
 		//Cleaning up all useless OVD data
 		SystemAbstract.cleanAll();

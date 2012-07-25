@@ -1,8 +1,8 @@
 /*
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Thomas MOUTON <thomas@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011-2012
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
@@ -31,6 +31,7 @@ public class Protocol {
 	public static final String NAME_ATTR_MULTIMEDIA = "multimedia";
 	public static final String NAME_ATTR_PRINTERS = "redirect_client_printers";
 	public static final String NAME_ATTR_DRIVES = "redirect_client_drives";
+	public static final String NAME_ATTR_CARDSREADERS = "redirect_smartcards_readers";
 	
 	public static final String DRIVES_MODE_FULL = "full";
 	public static final String DRIVES_MODE_PARTIAL = "partial";
@@ -46,6 +47,7 @@ public class Protocol {
 						NAME_ATTR_MULTIMEDIA,
 						NAME_ATTR_PRINTERS,
 						NAME_ATTR_DRIVES,
+						NAME_ATTR_CARDSREADERS,
 						NAME_ATTR_RDP_BPP,
 	};
 
@@ -97,6 +99,15 @@ public class Protocol {
 				properties.setPrinters(val > 0);
 			} catch (NumberFormatException ex) {
 				Logger.error("Failed to parse value '"+value+"' (name: "+NAME_ATTR_PRINTERS+")");
+			}
+		}
+		
+		if (name.equalsIgnoreCase(NAME_ATTR_CARDSREADERS)) {
+			try {
+				int val = Integer.parseInt(value);
+				properties.setCardsReaders(val > 0);
+			} catch (NumberFormatException ex) {
+				Logger.error("Failed to parse value '"+value+"' (name: "+NAME_ATTR_CARDSREADERS+")");
 			}
 		}
 		

@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010-2012
  * Author Thomas MOUTON <thomas@ulteo.com> 2011
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012 
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,6 +41,7 @@ public class Properties {
 	
 	private boolean multimedia = false;
 	private boolean printers = false;
+	private boolean cards_readers = false;
 	private boolean persistent = false;
 	private int drives = REDIRECT_DRIVES_NO;
 
@@ -106,6 +108,14 @@ public class Properties {
 
 	public void setDrives(int drives) {
 		this.drives = drives;
+	}
+	
+	public boolean isCardsReaders() {
+		return this.cards_readers;
+	}
+
+	public void setCardsReaders(boolean cards_readers) {
+		this.cards_readers = cards_readers;
 	}
 	
 	public int getDuration() {

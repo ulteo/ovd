@@ -5,6 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -74,6 +75,7 @@ $session_node->setAttribute('mode', Session::MODE_APPLICATIONS);
 $session_node->setAttribute('multimedia', $session->settings['multimedia']);
 $session_node->setAttribute('redirect_client_drives', $session->settings['redirect_client_drives']);
 $session_node->setAttribute('redirect_client_printers', $session->settings['redirect_client_printers']);
+$session_node->setAttribute('redirect_smartcards_readers', $session->settings['redirect_smartcards_readers']);
 $settings_node = $dom->createElement('settings');
 foreach ($session->settings as $setting_k => $setting_v) {
 	$setting_node = $dom->createElement('setting');

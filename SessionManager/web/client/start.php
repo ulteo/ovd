@@ -6,6 +6,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -95,6 +96,7 @@ $allow_shell = $default_settings['allow_shell'];
 $multimedia = $default_settings['multimedia'];
 $redirect_client_drives = $default_settings['redirect_client_drives'];
 $redirect_client_printers = $default_settings['redirect_client_printers'];
+$redirect_smartcards_readers = $default_settings['redirect_smartcards_readers'];
 $rdp_bpp = $default_settings['rdp_bpp'];
 $enhance_user_experience = $default_settings['enhance_user_experience'];
 $persistent = $default_settings['persistent'];
@@ -276,6 +278,7 @@ $default_args = array(
 	'multimedia'				=>	$multimedia,
 	'redirect_client_drives'	=>	$redirect_client_drives,
 	'redirect_client_printers'	=>	$redirect_client_printers,
+	'redirect_smartcards_readers'	=>	$redirect_smartcards_readers,
 	'rdp_bpp'			=>	$rdp_bpp,
 	'enhance_user_experience'	=>	$enhance_user_experience
 );

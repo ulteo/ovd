@@ -150,4 +150,5 @@ public class Options {
 	public SocketFactory socketFactory = null;
 	public CookieManager rdpCookie = new CookieManager();
 	public boolean licence = true;
+	public boolean useSmartCard = true;
 }

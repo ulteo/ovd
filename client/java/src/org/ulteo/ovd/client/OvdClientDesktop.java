@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011-2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -88,7 +88,7 @@ public abstract class OvdClientDesktop extends OvdClient {
 	public RdpConnectionOvd createRDPConnection(ServerAccess server) {
 		Properties properties = getProperties();
 		
-		byte flags = 0x00;
+		int flags = 0x00;
 		flags |= RdpConnectionOvd.MODE_DESKTOP;
 		
 		if (properties.isMultimedia())
@@ -96,6 +96,9 @@ public abstract class OvdClientDesktop extends OvdClient {
 		
 		if (properties.isPrinters())
 			flags |= RdpConnectionOvd.MOUNT_PRINTERS;
+		
+		if (properties.isCardsReaders())
+			flags |= RdpConnectionOvd.MOUNT_SMARTCARD;
 
 		if (properties.isDrives() == Properties.REDIRECT_DRIVES_FULL)
 			flags |= RdpConnectionOvd.MOUNTING_MODE_FULL;

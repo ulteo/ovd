@@ -454,6 +454,9 @@ class Preferences {
 		$c = new ConfigElement_select('redirect_client_printers', _('Redirect client printers'), _('Redirect client printers'), _('Redirect client printers'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
+		$c = new ConfigElement_select('redirect_smartcards_readers', _('Redirect Smart card readers'), _('Redirect Smart card readers'), _('Redirect Smart card readers'), 0);
+		$c->setContentAvailable(array(0=>_('no'), 1=>_('yes')));
+		$this->add($c, 'general', 'session_settings_defaults');
 		$c = new ConfigElement_select('rdp_bpp', _('RDP bpp'), _('RDP color depth'), _('RDP color depth'), 16);
 		$c->setContentAvailable(array(16=>'16', 24=>'24', 32=>'32'));
 		$this->add($c,'general','session_settings_defaults');

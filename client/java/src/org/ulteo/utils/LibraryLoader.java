@@ -36,6 +36,8 @@ public class LibraryLoader {
 	public static final String RESOURCE_LIBRARY_DIRECTORY_LINUX = "LinuxLibs";
 	public static final String LIB_WINDOW_PATH_NAME = "libWindowsPaths.dll";
 	public static final String LIB_X_CLIENT_AREA = "libXClientArea.so";
+	public static final String LIB_PCSC_UNIX = "libPCSC.so";
+	public static final String LIB_PCSC_WINDOWS = "libPCSC.dll";
 
 	/**
 	 * Ajoute un nouveau répertoire dans le java.library.path.

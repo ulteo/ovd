@@ -5,6 +5,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  * Author Omar AKHAM <oakham@ulteo.com> 2011
  * Author Jocelyn DELALALANDE <j.delalande@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -921,6 +922,7 @@ function onStartExternalSessionSuccess(xml_) {
 		daemon.duration = parseInt(session_node.getAttribute('duration'));
 		daemon.multimedia = ((session_node.getAttribute('multimedia') == 1)?true:false);
 		daemon.redirect_client_printers = ((session_node.getAttribute('redirect_client_printers') == 1)?true:false);
+		daemon.redirect_smartcards_readers = ((session_node.getAttribute('redirect_smartcards_readers') == 1)?true:false);
 		try {
 			daemon.redirect_client_drives = session_node.getAttribute('redirect_client_drives');
 		} catch(e) {}

@@ -4,6 +4,7 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
  * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -47,6 +48,7 @@ import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
+import org.ulteo.pcsc.PCSC;
 import org.ulteo.utils.LayoutDetector;
 import org.ulteo.utils.LibraryLoader;
 
@@ -64,6 +66,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		public int bpp = RdpConnection.DEFAULT_BPP;
 		public boolean seamless = false;
 		public boolean multimedia = false;
+		public boolean smartcard = false;
 		public boolean packetCompression = false;
 		public boolean volatileCache = true;
 		public boolean persistentCache = false;
@@ -117,11 +120,12 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		if (! org.ulteo.Logger.initInstance(true, log_dir+System.getProperty("file.separator")+org.ulteo.Logger.getDate()+".log", true))
 			System.err.println("Unable to iniatialize logger instance");
 
-		LongOpt[] alo = new LongOpt[4];
+		LongOpt[] alo = new LongOpt[5];
 		alo[0] = new LongOpt("persistent-cache-location", LongOpt.REQUIRED_ARGUMENT, null, 0);
 		alo[1] = new LongOpt("persistent-cache-maxsize", LongOpt.REQUIRED_ARGUMENT, null, 1);
 		alo[2] = new LongOpt("disable-all-cache", LongOpt.NO_ARGUMENT, null, 2);
 		alo[3] = new LongOpt("ovd_mode", LongOpt.OPTIONAL_ARGUMENT, null, 3);
+		alo[4] = new LongOpt("smartcard", LongOpt.OPTIONAL_ARGUMENT, null, 4);
 		Getopt opt = new Getopt(RdpClient.productName, args, "u:p:g:Ams:o:zP", alo);
 
 		int c;
@@ -141,6 +145,28 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 					String mode = opt.getOptarg();
 					if ((mode != null) && (opt.getOptarg().equalsIgnoreCase(SessionManagerCommunication.SESSION_MODE_REMOTEAPPS)))
 						params.ovd_mode = Properties.MODE_REMOTEAPPS;
+					break;
+				case 4: //--smartcard
+					params.smartcard = true;
+					if (OSTools.isWindows()) {
+						try {
+							LibraryLoader.LoadLibrary(LibraryLoader.LIB_PCSC_WINDOWS);
+							PCSC.libraryLoaded();
+						} catch (FileNotFoundException ex) {
+							org.ulteo.Logger.error(ex.getMessage());
+							System.exit(2);
+						}
+					}
+					else if(OSTools.isLinux()) {
+						try {
+							LibraryLoader.LoadLibrary(LibraryLoader.LIB_PCSC_UNIX);
+							PCSC.LoadPCSCLite();
+							PCSC.libraryLoaded();
+						} catch (FileNotFoundException ex) {
+							org.ulteo.Logger.error(ex.getMessage());
+							System.exit(2);
+						}
+					}
 					break;
 				case 'u':
 					params.username = new String(opt.getOptarg());
@@ -263,7 +289,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 			return;
 		}
 
-		byte flags = 0x00;
+		int flags = 0x00;
 		Dimension screenSize = null;
 
 		if (mode == Properties.MODE_DESKTOP) {
@@ -281,6 +307,8 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		if (response.isPrinters())
 			flags |= RdpConnectionOvd.MOUNT_PRINTERS;
 
+		if (response.isCardsReaders())
+			flags |= RdpConnectionOvd.MOUNT_SMARTCARD;
 
 		for (ServerAccess server : sm.getServers()) {
 			RdpConnectionOvd rc = null;
@@ -319,7 +347,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 	}
 
 	private void parseOptions(Params params) throws RdesktopException {
-		byte flags = 0x00;
+		int flags = 0x00;
 
 		if (params.seamless)
 			flags |= RdpConnectionOvd.MODE_APPLICATION;
@@ -328,6 +356,9 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 
 		if (params.multimedia)
 			flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
+
+		if (params.smartcard)
+			flags |= RdpConnectionOvd.MOUNT_SMARTCARD;
 
 		RdpConnectionOvd connection = new RdpConnectionOvd(flags);
 

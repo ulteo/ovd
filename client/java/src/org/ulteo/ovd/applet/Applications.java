@@ -5,6 +5,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -85,6 +86,7 @@ public class Applications extends OvdApplet {
 	
 	private File jshortcut_dll;
 	private File registry_dll;
+	private File libpcsc_dll;
 	
 	private boolean local_integration = false;
 	
@@ -112,6 +114,8 @@ public class Applications extends OvdApplet {
 			jshortcut_dll.delete();
 		if (registry_dll != null && registry_dll.exists())
 			registry_dll.delete();
+		if (libpcsc_dll != null && libpcsc_dll.exists())
+			libpcsc_dll.delete();
 	}
 	
 	@Override
@@ -144,6 +148,8 @@ public class Applications extends OvdApplet {
 			SeamlessPopup.focusManager = focusManager;
 		}
 		
+		String arch = System.getProperty("sun.arch.data.model");
+		
 		// DLL must be exported before the client creation object
 		if (OSTools.isWindows()) {
 			try {
@@ -153,6 +159,19 @@ public class Applications extends OvdApplet {
 				this.local_integration = false;
 			}
 			LibraryLoader.addToJavaLibraryPath(registry_dll.getParentFile());
+			try {
+				libpcsc_dll = FilesOp.exportJarResource("WindowsLibs/"+arch+"/"+LibraryLoader.LIB_PCSC_WINDOWS);
+			} catch (FileNotFoundException e) {
+				libpcsc_dll = null;
+			}
+			
+		}
+		else {
+			try {
+				libpcsc_dll = FilesOp.exportJarResource("LinuxLibs/"+arch+"/"+LibraryLoader.LIB_PCSC_UNIX);
+			} catch (FileNotFoundException e) {
+				libpcsc_dll = null;
+			}
 		}
 		
 		properties.setDesktopIcons(this.local_integration);

@@ -1,0 +1,204 @@
+/*
+ * Copyright (C) 2012 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Yann Hodique <y.hodique@ulteo.com> 2012
+ *
+ * Copyright (c) 2005, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
+
+#ifndef _WIN32
+typedef LONG (*FPTR_SCardEstablishContext)(ULONG dwScope,
+				const void *pvReserved1,
+				const void *pvReserved2,
+				LONG *phContext);
+
+typedef LONG (*FPTR_SCardReleaseContext)(LONG hContext);
+
+typedef LONG (*FPTR_SCardIsValidContext)(LONG hContext);
+
+typedef LONG (*FPTR_SCardConnect)(LONG hContext,
+				const char *szReader,
+				ULONG dwShareMode,
+				ULONG dwPreferredProtocols,
+				LONG *phCard, ULONG *pdwActiveProtocol);
+
+typedef LONG (*FPTR_SCardReconnect)(LONG hCard,
+								   ULONG dwShareMode,
+								   ULONG dwPreferredProtocols,
+								   ULONG dwInitialization,
+								   ULONG *pdwActiveProtocol);
+
+typedef LONG (*FPTR_SCardDisconnect)(LONG hCard, ULONG dwDisposition);
+
+typedef LONG (*FPTR_SCardStatus)(LONG hCard,
+				char *mszReaderNames,
+				ULONG *pcchReaderLen,
+				ULONG *pdwState,
+				ULONG *pdwProtocol,
+				unsigned char *pbAtr, ULONG *pcbAtrLen);
+
+typedef LONG (*FPTR_SCardGetStatusChange)(LONG hContext,
+				ULONG dwTimeout,
+				LPSCARD_READERSTATE_A rgReaderStates, ULONG cReaders);
+
+typedef LONG (*FPTR_SCardCancel)(LONG hContext);
+
+typedef LONG (*FPTR_SCardTransmit)(LONG hCard,
+				LPCSCARD_IO_REQUEST pioSendPci,
+				const unsigned char *pbSendBuffer,
+				ULONG cbSendLength,
+				LPSCARD_IO_REQUEST pioRecvPci,
+				unsigned char *pbRecvBuffer, ULONG *pcbRecvLength);
+
+typedef LONG (*FPTR_SCardListReaders)(LONG hContext,
+				const char *mszGroups,
+				char *mszReaders, ULONG *pcchReaders);
+
+typedef LONG (*FPTR_SCardBeginTransaction)(LONG hCard);
+
+typedef LONG (*FPTR_SCardEndTransaction)(LONG hCard, ULONG dwDisposition);
+
+typedef LONG (*FPTR_SCardControl)(LONG hCard, ULONG dwControlCode,
+	const void* pbSendBuffer, ULONG cbSendLength, const void* pbRecvBuffer,
+	ULONG pcbRecvLength, ULONG *lpBytesReturned);
+
+typedef LONG (*FPTR_SCardGetAttrib)(LONG hCard, LONG dwAttrId,
+									const void* pbAttr, ULONG *pcbAttrLen);
+
+#define CALL_SCardEstablishContext(dwScope, pvReserved1, pvReserved2, phContext) \
+	((scardEstablishContext)(dwScope, pvReserved1, pvReserved2, phContext))
+
+#define CALL_SCardReleaseContext(hContext) \
+	((scardReleaseContext)(hContext))
+
+#define CALL_SCardIsValidContext(hContext) \
+	((scardIsValidContext)(hContext))
+
+#define CALL_SCardConnect(hContext, szReader, dwSharedMode, dwPreferredProtocols, phCard, pdwActiveProtocols) \
+	((scardConnect)(hContext, szReader, dwSharedMode, dwPreferredProtocols, phCard, pdwActiveProtocols))
+
+#define CALL_SCardReconnect(hCard, dwSharedMode, dwPreferredProtocols, dwInitialization, pdwActiveProtocols) \
+	((scardReconnect)(hCard, dwSharedMode, dwPreferredProtocols, dwInitialization, pdwActiveProtocols))
+
+#define CALL_SCardDisconnect(hCard, dwDisposition) \
+	((scardDisconnect)(hCard, dwDisposition))
+
+#define CALL_SCardStatus(hCard, mszReaderNames, pcchReaderLen, pdwState, pdwProtocol, pbAtr, pcbAtrLen) \
+	((scardStatus)(hCard, mszReaderNames, pcchReaderLen, pdwState, pdwProtocol, pbAtr, pcbAtrLen))
+
+#define CALL_SCardGetStatusChange(hContext, dwTimeout, rgReaderStates, cReaders) \
+	((scardGetStatusChange)(hContext, dwTimeout, rgReaderStates, cReaders))
+
+#define CALL_SCardCancel(hContext) \
+	((scardCancel)(hContext))
+
+#define CALL_SCardTransmit(hCard, pioSendPci, pbSendBuffer, cbSendLength, \
+							pioRecvPci, pbRecvBuffer, pcbRecvLength) \
+	((scardTransmit)(hCard, pioSendPci, pbSendBuffer, cbSendLength, \
+							pioRecvPci, pbRecvBuffer, pcbRecvLength))
+
+#define CALL_SCardListReaders(hContext, mszGroups, mszReaders, pcchReaders) \
+	((scardListReaders)(hContext, mszGroups, mszReaders, pcchReaders))
+
+#define CALL_SCardBeginTransaction(hCard) \
+	((scardBeginTransaction)(hCard))
+
+#define CALL_SCardEndTransaction(hCard, dwDisposition) \
+	((scardEndTransaction)(hCard, dwDisposition))
+
+#define CALL_SCardControl(hCard, dwControlCode, pbSendBuffer, cbSendLength, \
+			pbRecvBuffer, pcbRecvLength, lpBytesReturned) \
+	((scardControl)(hCard, dwControlCode, pbSendBuffer, cbSendLength, \
+			pbRecvBuffer, pcbRecvLength, lpBytesReturned))
+
+#define CALL_SCardGetAttrib(hCard, dwAttrId, pbAttr, pcbAttrLen) \
+	((scardGetAttrib)(hCard, dwAttrId, pbAttr, pcbAttrLen))
+
+extern FPTR_SCardEstablishContext scardEstablishContext;
+extern FPTR_SCardReleaseContext scardReleaseContext;
+extern FPTR_SCardIsValidContext scardIsValidContext;
+extern FPTR_SCardConnect scardConnect;
+extern FPTR_SCardReconnect scardReconnect;
+extern FPTR_SCardDisconnect scardDisconnect;
+extern FPTR_SCardStatus scardStatus;
+extern FPTR_SCardGetStatusChange scardGetStatusChange;
+extern FPTR_SCardCancel scardCancel;
+extern FPTR_SCardTransmit scardTransmit;
+extern FPTR_SCardListReaders scardListReaders;
+extern FPTR_SCardBeginTransaction scardBeginTransaction;
+extern FPTR_SCardEndTransaction scardEndTransaction;
+extern FPTR_SCardControl scardControl;
+extern FPTR_SCardGetAttrib scardGetAttrib;
+
+#else /* win32 */
+#define CALL_SCardEstablishContext(dwScope, pvReserved1, pvReserved2, phContext) \
+	(SCardEstablishContext(dwScope, pvReserved1, pvReserved2, phContext))
+
+#define CALL_SCardReleaseContext(hContext) \
+	(SCardReleaseContext(hContext))
+
+#define CALL_SCardIsValidContext(hContext) \
+	(SCardIsValidContext(hContext))
+
+#define CALL_SCardConnect(hContext, szReader, dwSharedMode, dwPreferredProtocols, phCard, pdwActiveProtocols) \
+	(SCardConnect(hContext, szReader, dwSharedMode, dwPreferredProtocols, phCard, pdwActiveProtocols))
+
+#define CALL_SCardReconnect(hCard, dwSharedMode, dwPreferredProtocols, dwInitialization, pdwActiveProtocols) \
+	(SCardReconnect(hCard, dwSharedMode, dwPreferredProtocols, dwInitialization, pdwActiveProtocols))
+
+#define CALL_SCardDisconnect(hCard, dwDisposition) \
+	(SCardDisconnect(hCard, dwDisposition))
+
+#define CALL_SCardStatus(hCard, mszReaderNames, pcchReaderLen, pdwState, pdwProtocol, pbAtr, pcbAtrLen) \
+	(SCardStatus(hCard, mszReaderNames, pcchReaderLen, pdwState, pdwProtocol, pbAtr, pcbAtrLen))
+
+#define CALL_SCardGetStatusChange(hContext, dwTimeout, rgReaderStates, cReaders) \
+	(SCardGetStatusChange(hContext, dwTimeout, rgReaderStates, cReaders))
+
+#define CALL_SCardCancel(hContext) \
+	(SCardCancel(hContext))
+
+#define CALL_SCardTransmit(hCard, pioSendPci, pbSendBuffer, cbSendLength, \
+							pioRecvPci, pbRecvBuffer, pcbRecvLength) \
+	(SCardTransmit(hCard, pioSendPci, pbSendBuffer, cbSendLength, \
+							pioRecvPci, pbRecvBuffer, pcbRecvLength))
+
+#define CALL_SCardListReaders(hContext, mszGroups, mszReaders, pcchReaders) \
+	(SCardListReaders(hContext, mszGroups, mszReaders, pcchReaders))
+
+#define CALL_SCardBeginTransaction(hCard) \
+	(SCardBeginTransaction(hCard))
+
+#define CALL_SCardEndTransaction(hCard, dwDisposition) \
+	(SCardEndTransaction(hCard, dwDisposition))
+
+#define CALL_SCardControl(hCard, dwControlCode, pbSendBuffer, cbSendLength, \
+			pbRecvBuffer, pcbRecvLength, lpBytesReturned) \
+	(SCardControl(hCard, dwControlCode, pbSendBuffer, cbSendLength, \
+			pbRecvBuffer, pcbRecvLength, lpBytesReturned))
+
+#define CALL_SCardGetAttrib(hCard, dwAttrId, pbAttr, pcbAttrLen) \
+	(SCardGetAttrib(hCard, dwAttrId, pbAttr, pcbAttrLen))
+
+#endif

@@ -2,6 +2,7 @@
  * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2010, 2011, 2012
+ * Author Yann Hodique <y.hodique@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,6 +37,7 @@ import net.propero.rdp.RdpPacket_Localised;
 import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
 import org.ulteo.ovd.integrated.Constants;
+import org.ulteo.ovd.smartCard.SmartCard;
 
 public class OVDRdpdrChannel extends RdpdrChannel {
 	
@@ -58,6 +60,8 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 	private int drive_version = DRIVE_CAPABILITY_VERSION_01;
 
 	private List<DeviceListener> listeners = null;
+	private boolean useSmartCard = false;
+	private int smartCardIndex = -1;
 
 	public OVDRdpdrChannel(Options opt, Common common) {
 		super(opt, common);
@@ -85,6 +89,9 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 					}
 					if ((magic[2] == 'C') && (magic[3] == 'C')) {
 						/* connect from server */
+						if (this.useSmartCard && this.smartCardIndex != -1) {
+							this.mountNewSmartCard((SmartCard)this.g_rdpdr_device[this.smartCardIndex]);
+						}
 
 						return;
 					}
@@ -223,6 +230,11 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		for (RdpdrDevice device : this.g_rdpdr_device) {
 			if (device == null)
 				continue;
+			
+			if (device.get_device_type() == RdpdrChannel.DEVICE_TYPE_SCARD) {
+				if (device.name.equals(name))
+					return device;
+			}
 
 			if (device.get_device_type() != RdpdrChannel.DEVICE_TYPE_DISK)
 				continue;
@@ -408,6 +420,39 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		return true;
 	}
 	
+	public boolean mountNewSmartCard(SmartCard sc) {
+		Logger.info("SmartCard mount a new smart card "+sc.name);
+		String magic = "rDAD";
+		int index = getNextFreeSlot();
+		if (index < 0) {
+			return false;
+		}
+		
+		Logger.info("SmartCard ID "+index);
+		
+		RdpPacket_Localised s;
+		this.register(sc);
+		
+		s = new RdpPacket_Localised(32);
+		s.out_uint8p(magic, 4);
+		s.setLittleEndian32(1);   /* deviceCount */
+		
+		
+		s.setLittleEndian32(sc.device_type);
+		s.setLittleEndian32(index); /* RDP Device ID */
+
+		s.out_uint8p(sc.name, 8);
+		
+		s.markEnd();
+		try {
+			this.send_packet(s);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
 	public boolean unmountDrive(String name, String path) {
 		logger.info("unmount the drive "+name+ " => "+path);
 		String magic = "rDMD";
@@ -470,6 +515,12 @@ public class OVDRdpdrChannel extends RdpdrChannel {
  		}
 		this.g_rdpdr_device[index] = v;
 		g_num_devices++;
+		
+		if (v.device_type == SmartCard.DEVICE_TYPE) {
+			this.useSmartCard = true;
+			this.smartCardIndex = index;
+		}
+		
 		return true;
  	}
 

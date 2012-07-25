@@ -5,7 +5,7 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011-2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -174,6 +174,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 		if (properties.isPrinters())
 			this.flags |= RdpConnectionOvd.MOUNT_PRINTERS;
+
+		if (properties.isCardsReaders())
+			this.flags |= RdpConnectionOvd.MOUNT_SMARTCARD;
 
 		if (properties.isDrives() == Properties.REDIRECT_DRIVES_FULL)
 			this.flags |= RdpConnectionOvd.MOUNTING_MODE_FULL;

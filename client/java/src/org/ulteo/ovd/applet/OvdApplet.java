@@ -5,6 +5,7 @@
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,6 +37,7 @@ import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.Protocol;
+import org.ulteo.pcsc.PCSC;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 import org.ulteo.utils.AbstractFocusManager;
 import org.ulteo.utils.LibraryLoader;
@@ -81,6 +83,13 @@ public abstract class OvdApplet extends Applet {
 			} catch (FileNotFoundException ex) {
 				Logger.error(ex.getMessage());
 			}
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_WINDOWS, LibraryLoader.LIB_PCSC_WINDOWS);
+				PCSC.libraryLoaded();
+			} catch (FileNotFoundException ex) {
+				org.ulteo.Logger.warn(ex.getMessage());
+				PCSC.disableLibraryLoading();
+			}
 		}
 		else if (OSTools.isLinux()) {
 			try {
@@ -88,6 +97,14 @@ public abstract class OvdApplet extends Applet {
 			} catch (FileNotFoundException ex) {
 				Logger.error(ex.getMessage());
 				WorkArea.disableLibraryLoading();
+			}
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_LINUX, LibraryLoader.LIB_PCSC_UNIX);
+				PCSC.LoadPCSCLite();
+				PCSC.libraryLoaded();
+			} catch (FileNotFoundException ex) {
+				org.ulteo.Logger.warn(ex.getMessage());
+				PCSC.disableLibraryLoading();
 			}
 		}
 	}

@@ -5,6 +5,7 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,6 +39,8 @@ import org.ulteo.ovd.disk.DiskManager;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDPrinterManager;
 import org.ulteo.ovd.sm.ServerAccess;
+import org.ulteo.ovd.smartCard.SmartCard;
+import org.ulteo.pcsc.PCSC;
 import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 import org.ulteo.rdp.seamless.SeamlessChannel;
 import org.ulteo.Logger;
@@ -55,6 +58,8 @@ public class RdpConnectionOvd extends RdpConnection {
 	public static final int MOUNTING_MODE_FULL =	0x00000010;
 	public static final int MOUNTING_MODE_PARTIAL =	0x00000020;
 	public static final int MOUNTING_MODE_MASK =	0x000000F0;
+	
+	public static final int MOUNT_SMARTCARD =	0x00000100;
 
 	/* Flags value between 0x10000000 and 0xf0000000 are reserved for debug*/
 	public static final int DEBUG_SEAMLESS =	0x10000000;
@@ -139,6 +144,16 @@ public class RdpConnectionOvd extends RdpConnection {
 		}
 		if ((this.flags & MOUNT_PRINTERS) != 0) {
 			this.mountLocalPrinters();
+		}
+		if ((this.flags & MOUNT_SMARTCARD) != 0) {
+			this.enableSmartCard();
+		}
+	}
+
+	private void enableSmartCard() throws RdesktopException {
+		if (PCSC.checkAvailable()) {
+			this.initRdpdrChannel();
+			this.rdpdrChannel.register(new SmartCard(this.rdpdrChannel));
 		}
 	}
 
