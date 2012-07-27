@@ -81,10 +81,21 @@ function show_default() {
 		
 		$user_info['networkfolders'] = array_merge($user_info['folders'], $user_info['profiles']);
 	
+		$remote_desktop_settings = $user->getSessionSettings('remote_desktop_settings');
+		$remote_desktop_enabled = ($remote_desktop_settings['enabled'] == 1);
+		$remote_applications_settings = $user->getSessionSettings('remote_applications_settings');
+		$remote_applications_enabled = ($remote_applications_settings['enabled'] == 1);
+	
 		$sessionmanagement2 = clone($sessionmanagement);
 		$sessionmanagement2->user = $user;
+		$user_info['can_start_session_desktop'] = $remote_desktop_enabled && 
+			$sessionmanagement2->getDesktopServer() && 
+			$sessionmanagement2->buildServersList();
 		
-		$user_info['can_start_session'] = $sessionmanagement2->buildServersList();
+		$sessionmanagement2 = clone($sessionmanagement);
+		$sessionmanagement2->user = $user;
+		$user_info['can_start_session_applications'] = $remote_applications_enabled &&
+			$sessionmanagement2->buildServersList();
 		
 		$users_info[]= $user_info;
 	}
@@ -203,12 +214,23 @@ function show_default() {
 			}
 			echo '</td>';
 
-			echo '<td style="text-align: center;">'; // server
-			
-			if ($user_info['can_start_session'] === true)
+			echo '<td>';
+			echo '<div>';
+			if ($user_info['can_start_session_desktop'] === true)
 				echo '<img src="media/image/ok.png" alt="" title="" />';
 			else
 				echo '<img src="media/image/cancel.png" alt="" title="" />';
+			echo ' '._('Desktop');
+			echo '</div>';
+			
+			echo '<div>';
+			if ($user_info['can_start_session_applications'] === true)
+				echo '<img src="media/image/ok.png" alt="" title="" />';
+			else
+				echo '<img src="media/image/cancel.png" alt="" title="" />';
+			echo ' '._('Applications');
+			echo '</div>';
+			
 			echo '</td>';
 			echo '</tr>';
 			$count++;
