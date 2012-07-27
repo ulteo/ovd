@@ -48,6 +48,46 @@ function show_default() {
 	$usersList = new UsersList($_REQUEST);
 	$us = $usersList->search();
 	$searchDiv = $usersList->getForm();
+	
+	$users_info = array();
+	foreach($us as $user){
+		$user_info = array();
+		$user_info['user'] = $user;
+		$user_info['settings'] = $user->getSessionSettings('session_settings_defaults');
+		
+		$user_info['user_grps'] = $user->usersGroups();
+		$user_info['apps_grps'] = array();
+		
+		$apps_grps = $user->appsGroups();
+		foreach ($apps_grps as $agrp_id) {
+				$agrp = $applicationsGroupDB->import($agrp_id);
+				if (! is_object($agrp))
+					continue;
+				
+				$user_info['apps_grps'][]= $agrp;
+		}
+		
+		$user_info['apps'] = $user->applications();
+		
+		$user_info['folders'] = array();
+		if (array_key_exists('enable_sharedfolders', $user_info['settings']) && $user_info['settings']['enable_sharedfolders'] == 1) {
+			$user_info['folders']= $user->getSharedFolders();
+		}
+		
+		$user_info['profiles'] = array();
+		if (array_key_exists('enable_profiles', $user_info['settings']) && $user_info['settings']['enable_profiles'] == 1) {
+			$user_info['profiles'] = $user->getProfiles();
+		}
+		
+		$user_info['networkfolders'] = array_merge($user_info['folders'], $user_info['profiles']);
+	
+		$sessionmanagement2 = clone($sessionmanagement);
+		$sessionmanagement2->user = $user;
+		
+		$user_info['can_start_session'] = $sessionmanagement2->buildServersList();
+		
+		$users_info[]= $user_info;
+	}
 
 
 	page_header();
@@ -55,7 +95,7 @@ function show_default() {
 
 	echo $searchDiv;
 
-	if (count($us) == 0)
+	if (count($users_info) == 0)
 		echo _('No available user').'<br />';
 	else {
 		echo '<table id="users_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
@@ -78,8 +118,8 @@ function show_default() {
 		echo '<tbody>';
 		
 		$count = 0;
-		foreach($us as $u){
-			$session_settings_defaults = $u->getSessionSettings('session_settings_defaults');
+		foreach($users_info as $user_info) {
+			$u = $user_info['user'];
 			
 			echo '<tr class="content';
 			if ($count % 2 == 0)
@@ -90,13 +130,12 @@ function show_default() {
 			echo '<td><a href="users.php?action=manage&id='.$u->getAttribute('login').'">'.$u->getAttribute('login').'</a></td>'; // login
 			echo '<td><a href="users.php?action=manage&id='.$u->getAttribute('login').'">'.$u->getAttribute('displayname').'</a></td>'; //nam
 
-			$users_grps = $u->usersGroups();  // in user group
 			echo '<td>';
-			if ( count($users_grps) == 0)
+			if ( count($user_info['user_grps']) == 0)
 				echo '<em>'._('Not in any users group').'</em>';
 			else {
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
-				foreach ($users_grps as $ugrp){
+				foreach ($user_info['user_grps'] as $ugrp) {
 					echo '<tr>';
 					echo '<td><a href="usersgroup.php?action=manage&id='.$ugrp->getUniqueID().'">'.$ugrp->name.'</a></td>';
 					echo '</tr>';
@@ -105,8 +144,7 @@ function show_default() {
 			}
 			echo '</td>';
 			
-			$apps_grps = $u->appsGroups();
-			if ( count($apps_grps) == 0) {
+			if ( count($user_info['apps_grps']) == 0) {
 				echo '<td colspan="2">';
 				echo '<em>'._('No publication').'</em>';
 				echo '</td>';
@@ -114,24 +152,21 @@ function show_default() {
 			else {
 				echo '<td>';
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
-				foreach ($apps_grps as $agrp_id){
-					$agrp = $applicationsGroupDB->import($agrp_id);
-					if (is_object($agrp)) {
-						echo '<tr>';
-						echo '<td><a href="appsgroup.php?action=manage&id='.$agrp->id.'">'.$agrp->name.'</a></td>';
-						echo '</tr>';
-					}
+				foreach ($user_info['apps_grps'] as $agrp) {
+					echo '<tr>';
+					echo '<td><a href="appsgroup.php?action=manage&id='.$agrp->id.'">'.$agrp->name.'</a></td>';
+					echo '</tr>';
+					
 				}
 				echo '</table>';
 				echo '</td>';
 
 				echo '<td>'; // in app
-				$apps_s = $u->applications();
-				if (count($apps_s) == 0)
+				if (count($user_info['apps']) == 0)
 					echo '<em>'._('No applications in these groups').'</em>';
 				else {
 					echo '<table border="0" cellspacing="1" cellpadding="3">';
-					foreach ($apps_s as $aaa) {
+					foreach ($user_info['apps'] as $aaa) {
 						echo '<tr>';
 						echo '<td><img class="icon32" src="media/image/cache.php?id='.$aaa->getAttribute('id').'" alt="" title="" /></td>';
 						echo '<td><a href="applications.php?action=manage&id='.$aaa->getAttribute('id').'">'.$aaa->getAttribute('name').'</a></td>';
@@ -144,19 +179,10 @@ function show_default() {
 			}
 			
 			echo '<td>';
-			$folders = array();
-			if (array_key_exists('enable_sharedfolders', $session_settings_defaults) && $session_settings_defaults['enable_sharedfolders'] == 1) {
-				$folders = $u->getSharedFolders();
-			}
-			$profiles = array();
-			if (array_key_exists('enable_profiles', $session_settings_defaults) && $session_settings_defaults['enable_profiles'] == 1) {
-				$profiles = $u->getProfiles();
-			}
-			$networkfolder_s = array_merge($folders, $profiles);
 			
-			if (count($networkfolder_s) > 0) {
+			if (count($user_info['networkfolders']) > 0) {
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
-				foreach ($networkfolder_s as $a_networkfolder) {
+				foreach ($user_info['networkfolders'] as $a_networkfolder) {
 					echo '<tr>';
 					echo '<td>'.$a_networkfolder->prettyName().'</td>';
 					if (isset($a_networkfolder->name) && $a_networkfolder->name !== '')
@@ -178,12 +204,8 @@ function show_default() {
 			echo '</td>';
 
 			echo '<td style="text-align: center;">'; // server
-			$sessionmanagement2 = clone($sessionmanagement);
-			$sessionmanagement2->user = $u;
 			
-			$can_start_session = $sessionmanagement2->buildServersList();
-			
-			if ($can_start_session === true)
+			if ($user_info['can_start_session'] === true)
 				echo '<img src="media/image/ok.png" alt="" title="" />';
 			else
 				echo '<img src="media/image/cancel.png" alt="" title="" />';
