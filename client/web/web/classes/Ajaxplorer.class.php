@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
- * Author Julien LANGLOIS <julien@ulteo.com> 2011 
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -51,14 +51,17 @@ class Ajaxplorer {
 		$ret['applications'] = $this->generateActionsXML($this->session_node->getElementsByTagName('application'));
 		
 		$profile_node = $this->pr_nodes->item(0);
-		if (is_object($profile_node)) {
+		if (is_object($profile_node) && self::isValidSharedFolder($profile_node)) {
 			$ret['repositories'][] = $this->generateRepo(_('Profile'), $profile_node);
-			$ret['folders'][] = $profile_node->getAttribute('dir');
+			$ret['folders'][] = $profile_node->getAttribute('rid');
 		}
 		
 		foreach ($this->sf_nodes as $sharedfolder_node) {
+			if (! self::isValidSharedFolder($sharedfolder_node))
+				continue;
+			
 			$ret['repositories'][] = $this->generateRepo($sharedfolder_node->getAttribute('name'), $sharedfolder_node);
-			$ret['folders'][] = $sharedfolder_node->getAttribute('dir');
+			$ret['folders'][] = $sharedfolder_node->getAttribute('rid');
 		}
 		
 		return $ret;
@@ -66,11 +69,15 @@ class Ajaxplorer {
 	
 	
 	private static function generateRepo($name_, $node_) {
+		$uri = $node_->getAttribute('uri');
+		if ($node_->hasAttribute('login') && $node_->hasAttribute('password'))
+			$uri = unparse_url(array_merge(parse_url($uri), array('user' => $node_->getAttribute('login'), 'pass' => $node_->getAttribute('password'))));
+		
 		return array(
 			'DISPLAY'		=>	$name_,
 			'DRIVER'		=>	'fs',
 			'DRIVER_OPTIONS'	=>	array(
-				'PATH'			=>	'webdav://'.$node_->getAttribute('login').':'.$node_->getAttribute('password').'@'.$node_->getAttribute('server').':1113/ovd/fs/'.$node_->getAttribute('dir').'/',
+				'PATH'			=>	$uri,
 				'CREATE'		=>	false,
 				'RECYCLE_BIN'		=>	'',
 				'CHMOD_VALUE'		=>	'0660',
@@ -81,6 +88,19 @@ class Ajaxplorer {
 		);
 	}
 	
+	protected static function isValidSharedFolder($node_) {
+		if (! $node_->hasAttribute('uri'))
+			return false;
+		
+		$ret = parse_url ($node_->getAttribute('uri'));
+		if ($ret === FALSE)
+			return false;
+		
+		if (! in_array($ret['scheme'], array('webdav', 'webdavs')))
+			return false;
+		
+		return true;
+	}
 	
 	private static function generateActionsXML($application_nodes_) {
 		$dom = new DomDocument('1.0', 'utf-8');

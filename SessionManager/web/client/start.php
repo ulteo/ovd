@@ -453,16 +453,32 @@ if (! isset($old_session_id)) {
 		if (array_key_exists(Server::SERVER_ROLE_FS, $session->servers)) {
 			foreach ($session->servers[Server::SERVER_ROLE_FS] as $fqdn => $netfolders) {
 				foreach ($netfolders as $netfolder) {
+					$uri = 'cifs://'.$netfolder['server']->getAttribute('external_name').'/'.$netfolder['dir'];
+					
 					$netfolder_node = $dom->createElement($netfolder['type']);
-					$netfolder_node->setAttribute('server', $netfolder['server']->getAttribute('external_name'));
-					$netfolder_node->setAttribute('dir', $netfolder['dir']);
+					$netfolder_node->setAttribute('rid', $netfolder['rid']);
+					$netfolder_node->setAttribute('uri', $uri);
 					if ($netfolder['type'] == 'sharedfolder')
 						$netfolder_node->setAttribute('name', $netfolder['name']);
+					
 					$netfolder_node->setAttribute('login', $user_login_fs);
 					$netfolder_node->setAttribute('password', $user_password_fs);
 					$session_node->appendChild($netfolder_node);
 				}
 			}
+		}
+		
+		foreach ($sessionManagement->forced_sharedfolders as $share) {
+			$sharedfolder_node = $dom->createElement('sharedfolder');
+			$sharedfolder_node->setAttribute('rid', $share['rid']);
+			$sharedfolder_node->setAttribute('uri', $share['uri']);
+			$sharedfolder_node->setAttribute('name', $share['name']);
+			if (array_key_exists('login', $share) && array_key_exists('password', $share)) {
+				$sharedfolder_node->setAttribute('login', $share['login']);
+				$sharedfolder_node->setAttribute('password', $share['password']);
+			}
+			
+			$session_node->appendChild($sharedfolder_node);
 		}
 
 		foreach ($session->getPublishedApplications() as $application) {
@@ -539,9 +555,11 @@ $session_node->appendChild($user_node);
 if (array_key_exists(Server::SERVER_ROLE_FS, $session->servers)) {
 	foreach ($session->servers[Server::SERVER_ROLE_FS] as $fqdn => $netfolders) {
 		foreach ($netfolders as $netfolder) {
+			$uri = 'webdav://'.$netfolder['server']->getAttribute('external_name').':1113/ovd/fs/'.$netfolder['dir'].'/';
+			
 			$netfolder_node = $dom->createElement($netfolder['type']);
-			$netfolder_node->setAttribute('server', $netfolder['server']->getAttribute('external_name'));
-			$netfolder_node->setAttribute('dir', $netfolder['dir']);
+			$netfolder_node->setAttribute('rid', $netfolder['rid']);
+			$netfolder_node->setAttribute('uri', $uri);
 			if ($netfolder['type'] == 'sharedfolder')
 				$netfolder_node->setAttribute('name', $netfolder['name']);
 			$netfolder_node->setAttribute('login', $user_login_fs);

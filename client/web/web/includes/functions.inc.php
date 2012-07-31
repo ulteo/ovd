@@ -116,3 +116,22 @@ function get_available_keymaps() {
 		array('id' => 'tr', 'name' => 'Turkish')
 	);
 }
+
+function unparse_url($parsed_url) { 
+	$scheme   = array_key_exists('scheme', $parsed_url)?$parsed_url['scheme'].'://':'';
+	$host     = array_key_exists('host', $parsed_url)?$parsed_url['host']:'';
+	$port     = array_key_exists('port', $parsed_url)?':'.$parsed_url['port']:'';
+	$creds    = array_key_exists('user', $parsed_url)?$parsed_url['user']:'';
+	if (strlen($creds) > 0) {
+		if (array_key_exists('pass', $parsed_url))
+			$creds.= ':'.$parsed_url['pass'];
+		
+		$creds.= '@';
+	}
+	
+	$path     = array_key_exists('path', $parsed_url)?$parsed_url['path']:'';
+	$query    = array_key_exists('query', $parsed_url)?'?'.$parsed_url['query']:'';
+	$fragment = array_key_exists('fragment', $parsed_url)?'#'.$parsed_url['fragment']:'';
+	
+	return $scheme.$creds.$host.$port.$path.$query.$fragment;
+}

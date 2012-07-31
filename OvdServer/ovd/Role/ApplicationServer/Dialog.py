@@ -2,7 +2,7 @@
 
 # Copyright (C) 2008-2012 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2010, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2010, 2011, 2012
 # Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
 # Author David LECHEVALIER <david@ulteo.com> 2012
 #
@@ -323,7 +323,7 @@ class Dialog(AbstractDialog):
 			nodes = sessionNode.getElementsByTagName("profile")
 			if len(nodes)>0:
 				profileNode = nodes[0]
-				for attribute in ["server", "dir", "login", "password"]:
+				for attribute in ("rid", "uri"):
 					if len(profileNode.getAttribute(attribute)) == 0:
 						raise Exception("Empty attribute "+attribute)
 			else:
@@ -331,7 +331,7 @@ class Dialog(AbstractDialog):
 			
 			sharedfolderNodes = sessionNode.getElementsByTagName("sharedfolder")
 			for node in sharedfolderNodes:
-				for attribute in ["server", "dir", "login", "password", "name"]:
+				for attribute in ("rid", "uri", "name"):
 					if len(node.getAttribute(attribute)) == 0:
 						raise Exception("Empty attribute "+attribute)
 		
@@ -360,14 +360,16 @@ class Dialog(AbstractDialog):
 		
 		if profileNode is not None:
 			folder = {}
-			for attribute in ["server", "dir", "login", "password"]:
-				folder[attribute] = profileNode.getAttribute(attribute)
+			for (key, value) in profileNode.attributes.items():
+				folder[key] = value
+			
 			profile.setProfile(folder)
 		
 		for sharedFolderNode in sharedfolderNodes:
 			folder = {}
-			for attribute in ["server", "dir", "login", "password", "name"]:
-				folder[attribute] = sharedFolderNode.getAttribute(attribute)
+			for (key, value) in sharedFolderNode.attributes.items():
+				folder[key] = value
+			
 			profile.addSharedFolder(folder)
 		
 		if self.role_instance.sessions.has_key(session.id):

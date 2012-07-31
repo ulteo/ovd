@@ -3,7 +3,7 @@
 # Copyright (C) 2010-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
 # Author David LECHEVALIER <david@ulteo.com> 2010, 2012
 #
 # This program is free software; you can redistribute it and/or 
@@ -22,6 +22,7 @@
 
 import os
 import random
+import urlparse
 import win32api
 import win32con
 import win32file
@@ -53,14 +54,34 @@ class Profile(AbstractProfile):
 			return
 		
 		self.mountPoint = "%s:"%(buf)
+		mount_uri = self.getMountURI(self.profile["uri"])
+		if mount_uri is None:
+			return False
+		
+		if self.profile.has_key("login"):
+			login = self.profile["login"]
+		else:
+			login = None
+		
+		if self.profile.has_key("password"):
+			password = self.profile["password"]
+		else:
+			password = None
 		
 		try:
-			win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, self.mountPoint, r"\\%s\%s"%(self.profile["server"], self.profile["dir"]), None, self.profile["login"], self.profile["password"])
+			win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, self.mountPoint, mount_uri, None, login, password)
 		
 		except Exception, err:
+			cmd = "net use %s %s"%(self.mountPoint, mount_uri)
+			if password is not None:
+				cmd+= " "+password
+			
+			if login is not None:
+				cmd+= " /user:"+login
+			
 			Logger.error("Unable to mount drive")
 			Logger.debug("WNetAddConnection2 return %s"%(err))
-			Logger.debug("Unable to mount drive, '%s', try the net use command equivalent: '%s'"%(str(err), "net use %s \\\\%s\\%s %s /user:%s"%(self.mountPoint, self.profile["server"], self.profile["dir"], self.profile["password"], self.profile["login"])))
+			Logger.debug("Unable to mount drive, '%s', try the net use command equivalent: '%s'"%(str(err), cmd))
 			
 			self.mountPoint = None
 			return False
@@ -81,6 +102,22 @@ class Profile(AbstractProfile):
 			Logger.debug("Unable to umount drive, net use command equivalent: '%s'"%("net use %s: /delete"%(self.mountPoint)))
 			return False
 		return True
+	
+	
+	@staticmethod
+	def getMountURI(uri_):
+		u = urlparse.urlparse(uri_)
+		if u.scheme == "cifs":
+			return r"\\%s\%s"%(u.netloc, u.path[1:])
+		
+		if u.scheme == "webdav":
+			return urlparse.urlunparse(("http", u.netloc, u.path, u.params, u.query, u.fragment))
+		
+		if u.scheme == "webdavs":
+			return urlparse.urlunparse(("https", u.netloc, u.path, u.params, u.query, u.fragment))
+		
+		Logger.warn("Shouldn't appear: unknown protocol in share uri '%s'"%(uri_))
+		return None
 	
 	
 	def copySessionStart(self):
@@ -223,14 +260,19 @@ class Profile(AbstractProfile):
 			Reg.CreateKeyR(win32con.HKEY_USERS, path)
 			
 			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
-			win32api.RegSetValueEx(key, "host", 0, win32con.REG_SZ, self.profile["server"])
-			win32api.RegSetValueEx(key, "directory", 0, win32con.REG_SZ, self.profile["dir"])
-			win32api.RegSetValueEx(key, "login", 0, win32con.REG_SZ, self.profile["login"])
-			win32api.RegSetValueEx(key, "password", 0, win32con.REG_SZ, self.profile["password"])
+			win32api.RegSetValueEx(key, "rid", 0, win32con.REG_SZ, self.profile["rid"])
+			win32api.RegSetValueEx(key, "uri", 0, win32con.REG_SZ, self.profile["uri"])
+			if self.profile.has_key("login"):
+				win32api.RegSetValueEx(key, "login", 0, win32con.REG_SZ, self.profile["login"])
+			
+			if self.profile.has_key("password"):
+				win32api.RegSetValueEx(key, "password", 0, win32con.REG_SZ, self.profile["password"])
+			
 			win32api.RegCloseKey(key)
 			
 			# Set the name
-			path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\MountPoints2\##%s#%s"%(self.profile["server"], self.profile["dir"])
+			u = urlparse.urlparse(self.profile["uri"])
+			path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\MountPoints2\##%s#%s"%(u.netloc, u.path[1:].replace("/", "#"))
 			Reg.CreateKeyR(win32con.HKEY_USERS, path)
 			
 			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
@@ -244,18 +286,23 @@ class Profile(AbstractProfile):
 		
 		shareNum = 0
 		for share in self.sharedFolders:
-			path = hiveName+r"\Software\Ulteo\ovd\share_%d"%(shareNum)
+			path = hiveName+r"\Software\Ulteo\ovd\%s"%(share["rid"])
 			Reg.CreateKeyR(win32con.HKEY_USERS, path)
 			
 			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
-			win32api.RegSetValueEx(key, "host", 0, win32con.REG_SZ, share["server"])
-			win32api.RegSetValueEx(key, "directory", 0, win32con.REG_SZ, share["dir"])
-			win32api.RegSetValueEx(key, "login", 0, win32con.REG_SZ, share["login"])
-			win32api.RegSetValueEx(key, "password", 0, win32con.REG_SZ, share["password"])
+			win32api.RegSetValueEx(key, "rid", 0, win32con.REG_SZ, share["rid"])
+			win32api.RegSetValueEx(key, "uri", 0, win32con.REG_SZ, share["uri"])
+			if share.has_key("login"):
+				win32api.RegSetValueEx(key, "login", 0, win32con.REG_SZ, share["login"])
+			
+			if share.has_key("password"):
+				win32api.RegSetValueEx(key, "password", 0, win32con.REG_SZ, share["password"])
+			
 			win32api.RegCloseKey(key)
 			
 			# Set the name
-			path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\MountPoints2\##%s#%s"%(share["server"], share["dir"])
+			u = urlparse.urlparse(share["uri"])
+			path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\MountPoints2\##%s#%s"%(u.netloc, u.path[1:].replace("/", "#"))
 			Reg.CreateKeyR(win32con.HKEY_USERS, path)
 			
 			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)

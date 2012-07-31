@@ -31,6 +31,8 @@ abstract class SessionManagement extends Module {
 	public $servers = array();
 	public $credentials = array();
 	public $applications = array();
+	public $sharedfolders_known_rid= array();
+	public $forced_sharedfolders = array();
 
 	public static function getInstance() {
 		if (is_null(self::$instance)) {
@@ -151,6 +153,63 @@ abstract class SessionManagement extends Module {
 			}
 		}
 
+		$session_settings = $this->prefs->get('general', 'session_settings_defaults');
+		$can_force_sharedfolders = ($session_settings['can_force_sharedfolders'] == 1);
+		if ($can_force_sharedfolders) {
+			$share_required_keys = array('rid', 'uri');
+			
+			$sharedfolder_nodes = $dom->getElementsByTagname('sharedfolder');
+			foreach ($sharedfolder_nodes as $sharedfolder_node) {
+				$share = array();
+				
+				if (! $sharedfolder_node->hasAttribute('uri')) {
+					Logger::error('main', 'Force shared folder - Usage: missing "uri" attribute');
+					continue;
+				}
+				
+				$share['uri'] = $sharedfolder_node->getAttribute('uri');
+				
+				foreach (array('rid', 'name', 'login', 'password') as $key) {
+					if (! $sharedfolder_node->hasAttribute($key))
+						continue;
+					
+					$share[$key] = $sharedfolder_node->getAttribute($key);
+				}
+				
+				$ret = parse_url($share['uri']);
+				if ($ret === FALSE) {
+					Logger::error('main', 'Force shared folder - Unrecognized URI "'.$share['uri'].'"');
+					continue;
+				}
+				
+				if (! in_array($ret['scheme'], array('cifs', 'webdav', 'webdavs'))) {
+					Logger::error('main', 'Force shared folder - Usage: unsupported protocol "'.$ret['scheme'].'"');
+					continue;
+				}
+				
+				if (array_key_exists('login', $share) !== array_key_exists('password', $share)) {
+					Logger::error('main', 'Force shared folder - missing credentials for "'.$ret['scheme'].'": require both login and password');
+					continue;
+				}
+				
+				// Check if match RID syntax
+				if (array_key_exists('rid', $share) && ! preg_match('/^[a-zA-Z0-9\-_]{4,32}$/', $share['rid'])) {
+					Logger::warning('main', 'Force shared folder - rid "'.$share['rid'].'" does not match valid syntax ([a-zA-Z0-9\-_]{4,32}), generating a random one');
+					unset($share['rid']);
+				}
+				
+				if (! array_key_exists('rid', $share))
+					$share['rid'] = $this->find_uniq_rid('share');
+				
+				$this->sharedfolders_known_rid[]= $share['rid'];
+				
+				if (! array_key_exists('name', $share))
+					$share['name'] = $share['rid'];
+				
+				$this->forced_sharedfolders[]= $share;
+			}
+		}
+		
 		return true;
 	}
 
@@ -328,6 +387,7 @@ abstract class SessionManagement extends Module {
 
 									$this->servers[Server::SERVER_ROLE_FS][$fileserver->fqdn][] = array(
 										'type'		=>	'profile',
+										'rid'		=>	$this->find_uniq_rid('profile', true),
 										'server'	=>	$fileserver,
 										'dir'		=>	$profile->id
 									);
@@ -366,6 +426,7 @@ abstract class SessionManagement extends Module {
 
 									$this->servers[Server::SERVER_ROLE_FS][$fileserver->fqdn][] = array(
 										'type'		=>	'profile',
+										'rid'		=>	$this->find_uniq_rid('profile', true),
 										'server'	=>	$fileserver,
 										'dir'		=>	$profile->id
 									);
@@ -423,6 +484,7 @@ abstract class SessionManagement extends Module {
 
 								$this->servers[Server::SERVER_ROLE_FS][$fileserver->fqdn][] = array(
 									'type'		=>	'sharedfolder',
+									'rid'		=>	$this->find_uniq_rid('sharedfolder', true),
 									'server'	=>	$fileserver,
 									'dir'		=>	$sharedfolder->id,
 									'name'		=>	$sharedfolder->name
@@ -638,5 +700,15 @@ abstract class SessionManagement extends Module {
 			unset($_SESSION['user_login']);
 
 		return;
+	}
+	
+	public function find_uniq_rid($pattern, $register = false) {
+		$i = 0;
+		$item = $pattern;
+		while (in_array($item, $this->sharedfolders_known_rid))
+			$item = $pattern.'_'.(++$i);
+		
+		$this->sharedfolders_known_rid[]= $item;
+		return $item;
 	}
 }

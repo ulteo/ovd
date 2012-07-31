@@ -25,7 +25,9 @@ import hashlib
 import locale
 import os
 import pwd
+import stat
 import urllib
+import urlparse
 
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Profile import Profile as AbstractProfile
@@ -43,6 +45,58 @@ class Profile(AbstractProfile):
 		self.homeDir = None
 	
 	
+	def mount_cifs(self, share, uri, dest):
+		if share.has_key("login") and share.has_key("password"):
+			cmd = "mount -t cifs -o username=%s,password=%s,uid=%s,gid=0,umask=077 //%s%s %s"%(share["login"], share["password"], self.session.user.name, uri.netloc, uri.path, dest)
+		else:
+			cmd = "mount -t cifs -o guest,uid=%s,gid=0,umask=077 //%s%s %s"%(self.session.user.name, uri.netloc, uri.path, dest)
+		
+		cmd = self.transformToLocaleEncoding(cmd)
+		Logger.debug("Profile, share mount command: '%s'"%(cmd))
+		p = System.execute(cmd)
+		if p.returncode != 0:
+			Logger.debug("CIFS mount failed (status: %d) => %s"%(p.returncode, p.stdout.read()))
+			return False
+		
+		return True
+	
+	
+	def mount_webdav(self, share, uri, dest):
+		davfs_conf   = os.path.join(self.cifs_dst, "davfs.conf")
+		davfs_secret = os.path.join(self.cifs_dst, "davfs.secret")
+		if uri.scheme == "webdav":
+			mount_uri = urlparse.urlunparse(("http", uri.netloc, uri.path, uri.params, uri.query, uri.fragment))
+		else:
+			mount_uri = urlparse.urlunparse(("https", uri.netloc, uri.path, uri.params, uri.query, uri.fragment))
+		
+		if not os.path.exists(davfs_conf):
+			f = open(davfs_conf, "w")
+			f.write("ask_auth 0\n")
+			f.write("use_locks 0\n")
+			f.write("secrets %s\n"%(davfs_secret))
+			f.close()
+		
+		if not os.path.exists(davfs_secret):
+			f = open(davfs_secret, "w")
+			f.close()
+			os.chmod(davfs_secret, stat.S_IRUSR | stat.S_IWUSR)
+		
+		if share.has_key("login") and share.has_key("password"):
+			f = open(davfs_secret, "a")
+			f.write("%s %s %s\n"%(mount_uri, share["login"], share["password"]))
+			f.close()
+		
+		cmd = 'mount -t davfs -o conf=%s,uid=%s,gid=0,dir_mode=700,file_mode=600 "%s" %s'%(davfs_conf, self.session.user.name, mount_uri, dest)
+		cmd = self.transformToLocaleEncoding(cmd)
+		Logger.debug("Profile, sharedFolder mount command: '%s'"%(cmd))
+		p = System.execute(cmd)
+		if p.returncode != 0:
+			Logger.debug("WebDAV mount failed (status: %d) => %s"%(p.returncode, p.stdout.read()))
+			return False
+		
+		return True
+	
+	
 	def mount(self):
 		os.makedirs(self.cifs_dst)
 		self.homeDir = pwd.getpwnam(self.transformToLocaleEncoding(self.session.user.name))[5]
@@ -50,30 +104,39 @@ class Profile(AbstractProfile):
 		if self.profile is not None:
 			os.makedirs(self.profile_mount_point)
 			
-			cmd = "mount -t cifs -o username=%s,password=%s,uid=%s,gid=0,umask=077 //%s/%s %s"%(self.profile["login"], self.profile["password"], self.session.user.name, self.profile["server"], self.profile["dir"], self.profile_mount_point)
-			cmd = self.transformToLocaleEncoding(cmd)
-			Logger.debug("Profile mount command: '%s'"%(cmd))
-			p = System.execute(cmd)
-			if p.returncode != 0:
+			u = urlparse.urlparse(self.profile["uri"])
+			if u.scheme == "cifs":
+				ret = self.mount_cifs(self.profile, u, self.profile_mount_point)
+			
+			elif u.scheme in ("webdav", "webdavs"):
+				ret = self.mount_webdav(self.profile, u, self.profile_mount_point)
+			else:
+				Logger.warn("Profile: unknown protocol in share uri '%s'"%(self.profile["uri"]))
+				ret = False
+			
+			if ret is False:
 				Logger.error("Profile mount failed")
-				Logger.debug("Profile mount failed (status: %d) => %s"%(p.returncode, p.stdout.read()))
 				os.rmdir(self.profile_mount_point)
 			else:
 				self.profileMounted = True
 		
 		for sharedFolder in self.sharedFolders:
-			dest = os.path.join(self.MOUNT_POINT, self.session.id, "sharedFolder_"+ hashlib.md5(sharedFolder["server"]+ sharedFolder["dir"]).hexdigest())
+			dest = os.path.join(self.MOUNT_POINT, self.session.id, "sharedFolder_"+ hashlib.md5(sharedFolder["uri"]).hexdigest())
 			if not os.path.exists(dest):
 				os.makedirs(dest)
 			
-			print "mount dest ",dest
-			cmd = "mount -t cifs -o username=%s,password=%s,uid=%s,gid=0,umask=077 //%s/%s %s"%(sharedFolder["login"], sharedFolder["password"], self.session.user.name, sharedFolder["server"], sharedFolder["dir"], dest)
-			cmd = self.transformToLocaleEncoding(cmd)
-			Logger.debug("Profile, sharedFolder mount command: '%s'"%(cmd))
-			p = System.execute(cmd)
-			if p.returncode != 0:
-				Logger.error("Profile sharedFolder mount failed")
-				Logger.debug("Profile sharedFolder mount failed (status: %d) => %s"%(p.returncode, p.stdout.read()))
+			u = urlparse.urlparse(sharedFolder["uri"])
+			if u.scheme == "cifs":
+				ret = self.mount_cifs(sharedFolder, u, dest)
+			
+			elif u.scheme in ("webdav", "webdavs"):
+				ret = self.mount_webdav(sharedFolder, u, dest)
+			else:
+				Logger.warn("Profile: unknown protocol in share uri '%s'"%(self.profile["uri"]))
+				ret = False
+			
+			if ret is False:
+				Logger.error("SharedFolder mount failed")
 				os.rmdir(dest)
 			else:
 				sharedFolder["mountdest"] = dest
@@ -165,6 +228,15 @@ class Profile(AbstractProfile):
 					Logger.error("Profile sharedFolder umount dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
 				
 				os.rmdir(sharedFolder["mountdest"])
+		
+		for fname in ("davfs.conf", "davfs.secret"):
+			path = os.path.join(self.cifs_dst, fname)
+			if not os.path.exists(path):
+				continue
+			try:
+				os.remove(path)
+			except OSError, e:
+				Logger.error("Unable to delete file (%s): %s"%(path, str(e)))
 		
 		if self.profile is not None and self.profileMounted:
 			cmd = "umount %s"%(self.profile_mount_point)
@@ -296,7 +368,7 @@ class Profile(AbstractProfile):
 	
 	def register_shares(self, dest_dir):
 		if self.profileMounted is True:
-			path = os.path.join(dest_dir, self.profile["dir"])
+			path = os.path.join(dest_dir, self.profile["rid"])
 			f = file(path, "w")
 			f.write(self.homeDir)
 			f.close()
@@ -305,7 +377,7 @@ class Profile(AbstractProfile):
 			if not sharedFolder.has_key("local_path"):
 				continue
 			
-			path = os.path.join(dest_dir, sharedFolder["dir"])
+			path = os.path.join(dest_dir, sharedFolder["rid"])
 			f = file(path, "w")
 			f.write(self.transformToLocaleEncoding(sharedFolder["local_path"]))
 			f.close()
