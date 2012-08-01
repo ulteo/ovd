@@ -214,7 +214,7 @@ function show_default() {
 			}
 			echo '</td>';
 
-			echo '<td>';
+			echo '<td style="white-space: nowrap;">';
 			echo '<div>';
 			if ($user_info['can_start_session_desktop'] === true)
 				echo '<img src="media/image/ok.png" alt="" title="" />';
