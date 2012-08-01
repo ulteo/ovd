@@ -294,6 +294,17 @@ function onStartSessionSuccess(xml_) {
 			else
 				$('applicationsModeContainer').style.height = daemon.my_height+'px';
 		}
+		
+		daemon.add_session_ready_callback(function onSessionReady(d_) {
+			if (session_mode == 'Desktop')
+				new Effect.Move($('desktopModeContainer'), { x: 0, y: my_height });
+			else
+				new Effect.Move($('applicationsModeContainer'), { x: 0, y: my_height });
+			
+			setTimeout(function() {
+				hideSplash();
+			}, 2000);
+		});
 
 		daemon.prepare();
 

@@ -62,6 +62,8 @@ var Daemon = Class.create({
 	progress_bar_step: 20,
 
 	application_token: 0,
+	  
+	session_ready_callback: new Array(),
 
 	initialize: function(debug_) {
 		this.settings = new Hash();
@@ -277,10 +279,8 @@ var Daemon = Class.create({
 
 			Logger.info('[daemon] check_status_post() - Now starting session');
 
-			new Effect.Move($(this.mode+'ModeContainer'), { x: 0, y: my_height });
-			setTimeout(function() {
-				hideSplash();
-			}, 2000);
+			for (var i=0; i<this.session_ready_callback.length; i++)
+				this.session_ready_callback[i](this);
 			
 			this.start();
 
@@ -303,6 +303,10 @@ var Daemon = Class.create({
 
 			this.stopped = true;
 		}
+	},
+	
+	add_session_ready_callback: function(callback_) {
+		this.session_ready_callback.push(callback_);
 	},
 
 	req_logout: function(mode_) {
