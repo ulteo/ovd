@@ -235,10 +235,6 @@ class Dialog(AbstractDialog):
 			session["id"] = sessionNode.getAttribute("id")
 			session["mode"] = sessionNode.getAttribute("mode")
 			
-			external_apps_token = None
-			if sessionNode.hasAttribute("external_apps_token"):
-				external_apps_token = sessionNode.getAttribute("external_apps_token")
-			
 			if len(session["id"])==0:
 				raise Exception("Missing attribute id")
 			
@@ -296,24 +292,7 @@ class Dialog(AbstractDialog):
 			
 			self.role_instance.applications_mutex.release()
 			
-			application_to_start = []
-			startNodes = sessionNode.getElementsByTagName("start")
-			if len(startNodes)>0:
-				startNodes = startNodes[0]
-				
-				applicationNodes = startNodes.getElementsByTagName("application")
-				for node in applicationNodes:
-					application = {}
-					
-					application["id"] = node.getAttribute("id")
-					if application["id"] not in applications.keys():
-						Logger.warn("Cannot start unknown application %s"%(application["id"]))
-						continue
-					
-					if node.hasAttribute("arg"):
-						application["arg"] = node.getAttribute("arg")
-					
-					application_to_start.append(application)
+			shellNode = sessionNode.getElementsByTagName("shell")[0]
 			
 			session["parameters"] = {}
 			for node in sessionNode.getElementsByTagName("parameter"):
@@ -349,10 +328,7 @@ class Dialog(AbstractDialog):
 		
 		session = Session(session["id"], session["mode"], user, session["parameters"], applications.values())
 		session.setDomain(environment)
-		if external_apps_token is not None:
-			session.setExternalAppsToken(external_apps_token)
-		
-		session.setApplicationToStart(application_to_start)
+		session.setShellConf(shellNode)
 		session.init()
 		
 		if profileNode is not None or len(sharedfolderNodes)>0:

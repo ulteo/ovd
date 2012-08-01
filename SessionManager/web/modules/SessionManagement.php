@@ -140,11 +140,10 @@ abstract class SessionManagement extends Module {
 				if ($application_node->hasAttribute('file_type') && 
 				    $application_node->hasAttribute('file_location') && 
 				    $application_node->hasAttribute('file_path')) {
-					$b = $application_node->getAttribute('file_type')."\n";
-					$b.= $application_node->getAttribute('file_location')."\n";
-					$b.= $application_node->getAttribute('file_path');
-					
-					$r['arg'] = base64_encode($b);
+					$r['file'] = array();
+					$r['file']['type'] = $application_node->getAttribute('file_type');
+					$r['file']['location'] = $application_node->getAttribute('file_location');
+					$r['file']['path'] = $application_node->getAttribute('file_path');
 				}
 				else if ($application_node->hasAttribute('arg'))
 					$r['arg'] = $application_node->getAttribute('arg');

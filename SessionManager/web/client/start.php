@@ -433,9 +433,29 @@ if (! isset($old_session_id)) {
 		$session_node = $dom->createElement('session');
 		$session_node->setAttribute('id', $session->id);
 		$session_node->setAttribute('mode', (($session->mode == Session::MODE_DESKTOP && $count_prepare_servers == 1)?Session::MODE_DESKTOP:Session::MODE_APPLICATIONS));
-		if (isset($external_apps_token))
-			$session_node->setAttribute('external_apps_token', $external_apps_token->id);
-		foreach (array('desktop_icons', 'locale', 'timezone', 'no_desktop_process', 'use_known_drives') as $parameter) {
+		
+		// OvdShell Configuration
+		$shell_node = $dom->createElement('shell');
+		$session_node->appendChild($shell_node);
+		
+		if (isset($external_apps_token)) {
+			$setting_node = $dom->createElement('setting');
+			$setting_node->setAttribute('name', 'external_apps_token');
+			$setting_node->setAttribute('value', $external_apps_token->id);
+			$shell_node->appendChild($setting_node);
+		}
+		
+		foreach (array('no_desktop_process', 'use_known_drives') as $parameter) {
+			if (! isset($$parameter))
+				continue;
+
+			$setting_node = $dom->createElement('setting');
+			$setting_node->setAttribute('name', $parameter);
+			$setting_node->setAttribute('value', $$parameter);
+			$shell_node->appendChild($setting_node);
+		}
+		
+		foreach (array('desktop_icons', 'locale', 'timezone') as $parameter) {
 			if (! isset($$parameter))
 				continue;
 
@@ -503,13 +523,25 @@ if (! isset($old_session_id)) {
 			$start_node = $dom->createElement('start');
 			foreach ($start_apps as $start_app) {
 				$application_node = $dom->createElement('application');
-				$application_node->setAttribute('id', $start_app['id']);
+				$application_node->setAttribute('app_id', $start_app['id']);
 				if (array_key_exists('arg', $start_app) && ! is_null($start_app['arg']))
 					$application_node->setAttribute('arg', $start_app['arg']);
+				
+				if (array_key_exists('file', $start_app)) {
+					$file_node = $dom->createElement('file');
+					$file_node->setAttribute('type', $start_app['file']['type']);
+					$file_node->setAttribute('location', $start_app['file']['location']);
+					$file_node->setAttribute('path', $start_app['file']['path']);
+					
+					$application_node->appendChild($file_node);
+				}
+				
 				$start_node->appendChild($application_node);
 			}
-			$session_node->appendChild($start_node);
+			$shell_node->appendChild($start_node);
 		}
+		
+		$session_node->appendChild($shell_node);
 
 		$dom->appendChild($session_node);
 

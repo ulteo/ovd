@@ -68,26 +68,13 @@ def loadUserEnv(d):
 		
 		os.environ[key] = value
 
-def manageAutoStartApplication(d, im):
-	for path in glob.glob(os.path.join(d, "to_start", "*")):
-		f = file(path, "r")
-		lines = f.readlines()
-		f.close()
-		
-		try:
-			app_id = int(lines[0].strip())
-		except ValueError, err:
-			print "Invalid application id '%s'"%(lines[0].strip())
-			continue
-		
-		if len(lines)>1:
-			d = base64.decodestring(lines[1].strip())
-			
-			o = d.splitlines()
-			if len(o) == 3:
-				f_type = o[0]
-				path = o[1]
-				share = o[2]
+def manageAutoStartApplication(config, im):
+	for application in config.application_to_start:
+		if application.has_key("file") or application.has_key("arg"):
+			if application.has_key("file"):
+				f_type = application["file"]["type"]
+				path = application["file"]["path"]
+				share = application["file"]["location"]
 				
 				if f_type == "native":
 					dir_type = im.DIR_TYPE_NATIVE
@@ -106,12 +93,12 @@ def manageAutoStartApplication(d, im):
 			else:
 				dir_type = im.DIR_TYPE_NATIVE
 				share = None
-				path  = lines[1].strip()
+				path  = application["arg"].strip()
 			
 			im.start_app_with_arg(None, app_id, dir_type, share, path)
-			continue
 		
-		im.start_app_empty(None, app_id)
+		else:
+			im.start_app_empty(None, application["id"])
 
 def startModules():
 	novell = Novell()

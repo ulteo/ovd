@@ -25,6 +25,7 @@ import os
 import sys
 import time
 
+from ovd_shells.Config import Config
 from ovd_shells.OvdAppChannel import OvdAppChannel
 from ovd_shells.Platform import _platform as Platform
 from ovd_shells.Platform.Drives import Drives
@@ -56,6 +57,8 @@ def main():
 		os.environ["OVD_SESSION_DIR"] = user_sdir
 	
 	Util.loadUserEnv(user_sdir)
+	config = Config()
+	config.load(user_sdir)
 	
 	# Load profile share
 	folders = Folders()
@@ -75,10 +78,10 @@ def main():
 	im.setSharedFolderDB(folders)
 	
 	# Applications to auto starts
-	Util.manageAutoStartApplication(user_sdir, im)
+	Util.manageAutoStartApplication(config, im)
 	
 	manager = RemoteAppsManager(im, vchannel, drives)
-	if os.path.exists(os.path.join(user_sdir, "use_known_drives")):
+	if config.use_known_drives:
 		manager.use_known_drives = True
 	
 	manager.start()

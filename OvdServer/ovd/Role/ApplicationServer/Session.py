@@ -62,10 +62,10 @@ class Session:
 		self.parameters = parameters_
 		self.profile = None
 		self.applications = applications_
-		self.application_to_start = []
 		self.instanceDirectory = None
 		self.used_applications = {}
-		self.external_apps_token = None
+		self.shellNode = None
+		
 		self.end_status = None
 		self.user_session_dir = None
 		self.locked = False
@@ -107,40 +107,12 @@ class Session:
 			f.write(cmd)
 			f.close()
 		
-		
-		if self.external_apps_token is not None:
-			f = open(os.path.join(self.user_session_dir, "sm"), "w")
-			f.write(Config.session_manager+"\n")
+		if self.shellNode is not None:
+			# Push the OvdShell configuration
+			self.shellNode.setAttribute("sm", Config.session_manager)
+			f = open(os.path.join(self.user_session_dir, "shell.conf"), "w")
+			f.write(self.shellNode.toprettyxml())
 			f.close()
-			
-			f = open(os.path.join(self.user_session_dir, "token"), "w")
-			f.write(self.external_apps_token+"\n")
-			f.close()
-		
-		
-		if len(self.application_to_start) > 0:
-			apps2start_dir = os.path.join(self.user_session_dir, "to_start")
-			os.mkdir(apps2start_dir)
-			
-			for application in self.application_to_start:
-				id_ = hashlib.md5("%f%f"%(random.random(), time.time())).hexdigest()
-				
-				f = open(os.path.join(apps2start_dir, id_), "w")
-				f.write(application["id"])
-				if (application.has_key("arg")):
-					f.write("\n"+application["arg"])
-				f.close()
-		
-		if self.parameters.has_key("no_desktop_process"):
-			f = open(os.path.join(self.user_session_dir, "no_desktop_process"), "w")
-			f.write("no_desktop_process\n")
-			f.close()
-		
-		if self.parameters.has_key("use_known_drives") and self.parameters["use_known_drives"] == "true":
-			f = open(os.path.join(self.user_session_dir, "use_known_drives"), "w")
-			f.write("use_known_drives\n")
-			f.close()
-	
 	
 	def post_install(self):
 		if self.user_session_dir is not None:
@@ -161,13 +133,8 @@ class Session:
 			self.install_shortcut(final_file)
 	
 	
-	def setApplicationToStart(self, application_to_start):
-		self.application_to_start = application_to_start
-	
-	
-	def setExternalAppsToken(self, external_apps_token):
-		self.external_apps_token = external_apps_token
-	
+	def setShellConf(self, shellNode):
+		self.shellNode = shellNode
 	
 	def setDomain(self, domain):
 		self.domain = domain

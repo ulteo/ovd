@@ -27,6 +27,7 @@ import os
 import sys
 import time
 
+from ovd_shells.Config import Config
 from ovd_shells.Platform import _platform as Platform
 from ovd_shells.Platform.ExternalAppsClient import ExternalAppsClient
 from ovd_shells.Platform.Folders import Folders
@@ -60,12 +61,14 @@ def main():
 	folders.registerShares()
 	
 	Util.loadUserEnv(user_sdir)
+	config = Config()
+	config.load(user_sdir)
 	
 	
 	# launch the integrated client
 	external_client = ExternalAppsClient(user_sdir)
 	
-	everything_is_fine = external_client.load_config()
+	everything_is_fine = external_client.load_config(config)
 	
 	if everything_is_fine:
 		# actually launch the client
@@ -75,12 +78,11 @@ def main():
 	im.setSharedFolderDB(folders)
 	
 	# Applications to auto starts
-	Util.manageAutoStartApplication(user_sdir, im)
+	Util.manageAutoStartApplication(config, im)
 	
 	Util.startModules()
 	
-	nodesktop = os.path.exists(os.path.join(user_sdir, "no_desktop_process"))
-	if nodesktop:
+	if config.no_desktop_process:
 		Platform.startWM()
 		time.sleep(5)
 		

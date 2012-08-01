@@ -27,27 +27,18 @@ class ExternalAppsClient:
 		self.directory = directory_
 		self.sm = None
 		self.token = None
-		self.configuration_file = os.path.join(os.path.expanduser('~'), ".integrateclient.conf")
 		self.log_file = os.path.join(self.directory, "dump-externalapps.txt")
 	
 	
-	def load_config(self):
-		sm_file = os.path.join(self.directory, "sm")
-		token_file = os.path.join(self.directory, "token")
-		
-		if not os.path.exists(sm_file):
+	def load_config(self, config):
+		if config.sm is None:
 			return False
 		
-		f = open(sm_file, "r")
-		self.sm = f.readline().strip()
-		f.close()
-		
-		if not os.path.exists(token_file):
+		if config.external_apps_token is None:
 			return False
 		
-		f = open(token_file, "r")
-		self.token = f.readline().strip()
-		f.close()
+		self.sm = config.sm
+		self.token = config.external_apps_token
 		
 		return True
 	
