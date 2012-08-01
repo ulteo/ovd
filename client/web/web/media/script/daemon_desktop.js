@@ -32,12 +32,14 @@ var Desktop = Class.create(Daemon, {
 	},
 
 	start: function() {
-		if (this.fullscreen) {
-			$('desktopFullscreenContainer').show();
-			new Effect.Center($('desktopFullscreenContainer'));
+		if ($('desktopFullscreenContainer')) {
+			if (this.fullscreen) {
+				$('desktopFullscreenContainer').show();
+				new Effect.Center($('desktopFullscreenContainer'));
+			}
+			else
+				$('desktopFullscreenContainer').hide();
 		}
-		else
-			$('desktopFullscreenContainer').hide();
 		
 		Daemon.prototype.start.apply(this, []);
 	},
