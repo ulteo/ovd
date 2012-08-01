@@ -63,11 +63,13 @@ var Applications = Class.create(Daemon, {
 		Daemon.prototype.parseSessionSettings.apply(this, [setting_nodes]);
 
 		Logger.error('Applications - persistent: '+this.persistent);
-		if (this.persistent) {
-			$('suspend_button').show();
-		}
-		else {
-			$('suspend_button').hide();
+		if ($('suspend_button')) {
+			if (this.persistent) {
+				$('suspend_button').show();
+			}
+			else {
+				$('suspend_button').hide();
+			}
 		}
 	},
 
