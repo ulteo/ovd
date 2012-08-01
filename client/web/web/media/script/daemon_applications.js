@@ -36,7 +36,7 @@ var Applications = Class.create(Daemon, {
 
 	progress_bar_step: 50,
 	
-	waiting_applications_instances: new Array(),
+	waiting_applications_instances: null,
 
 	initialize: function(debug_) {
 		Daemon.prototype.initialize.apply(this, [debug_]);
@@ -57,6 +57,8 @@ var Applications = Class.create(Daemon, {
 		try {
 			this.local_integration = local_integration;
 		} catch(e) {}
+		
+		this.waiting_applications_instances = new Array();
 	},
 
 	parseSessionSettings: function(setting_nodes) {
