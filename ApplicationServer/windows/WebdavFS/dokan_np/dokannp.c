@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -514,12 +514,8 @@ NPGetConnection(
 	//	return WN_NOT_CONNECTED;
 	//  return WN_NO_NETWORK;
 	//}
-	RemoteName[0] = LocalName[0]; // n
-	RemoteName[1] = LocalName[1]; // :
-	RemoteName[2] = L'\\';
-	RemoteName[3] = L'\0';
-	*BufferSize = 4 * sizeof(WCHAR);
-
+	StringCchCopyW(RemoteName, MAX_PATH, REMOTE_NAME);
+	*BufferSize = lstrlen(REMOTE_NAME);
 
 	return WN_SUCCESS;
 }

@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,6 +25,7 @@
 #define DEBUG 1
 #define WAIT_TIME               10000
 #define DOKAN_CONTROL_PIPE			L"\\\\.\\pipe\\DokanMounter"
+#define REMOTE_NAME                             L"Webdav Drive"
 
 #define DOKAN_CONTROL_MOUNT		1
 #define DOKAN_CONTROL_UNMOUNT	2
