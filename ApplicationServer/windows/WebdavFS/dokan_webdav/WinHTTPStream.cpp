@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2010, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -49,13 +49,7 @@ ULONG STDMETHODCALLTYPE WinHTTPStream::Release(void) {
 }
 
 HRESULT STDMETHODCALLTYPE WinHTTPStream::Read(void* pv, ULONG cb, ULONG* pcbRead) {
-	BOOL result;
-
-	result=::WinHttpReceiveResponse(m_Request,0);
-	if (result)
-	{
-		result = WinHttpReadData( m_Request, pv, cb, pcbRead);
-	}
+	BOOL result = ::WinHttpReadData( m_Request, pv, cb, pcbRead);
 	return (result) ? S_OK : HRESULT_FROM_WIN32(GetLastError());
 }
 
