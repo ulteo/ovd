@@ -240,12 +240,12 @@ function onStartSessionSuccess(xml_) {
 	showSplash();
 
 	if (session_mode == 'Desktop') {
-		new Effect.Move($('desktopModeContainer'), { x: 0, y: -my_height });
+		new Effect.Move($('desktopModeContainer'), { x: 0, y: -my_height, mode: 'absolute' });
 		setTimeout(function() {
 			$('desktopModeContainer').show();
 		}, 2000);
 	} else {
-		new Effect.Move($('applicationsModeContainer'), { x: 0, y: -my_height });
+		new Effect.Move($('applicationsModeContainer'), { x: 0, y: -my_height, mode: 'absolute' });
 		setTimeout(function() {
 			$('applicationsModeContainer').show();
 		}, 2000);
