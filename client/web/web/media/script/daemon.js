@@ -63,12 +63,13 @@ var Daemon = Class.create({
 
 	application_token: 0,
 	  
-	session_ready_callback: new Array(),
+	session_ready_callback: null,
 
 	initialize: function(debug_) {
 		this.settings = new Hash();
 		this.servers = new Hash();
 		this.liaison_server_applications = new Hash();
+		this.session_ready_callback = new Array();
 
 		this.debug = debug_;
 
