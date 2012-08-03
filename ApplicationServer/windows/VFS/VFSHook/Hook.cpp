@@ -13,8 +13,18 @@
 #endif //#if _WIN64
 #endif //#if _WIN32 || _WIN64
 
+static bool gs_Logging = false;
 ////////////////////////////////////////////////////////////////////////
-//	Function Redefine
+//	File system related API
+//
+//	Winodws Local File Systems referece:
+//		http://msdn.microsoft.com/en-us/library/windows/desktop/aa364407(v=vs.85).aspx
+//	Directory Management Functions:
+//		http://msdn.microsoft.com/en-us/library/windows/desktop/aa363950(v=vs.85).aspx
+//	File Management Functions:
+//		http://msdn.microsoft.com/en-us/library/windows/desktop/aa364232(v=vs.85).aspx
+//	Disk Management Functions:
+//		http://msdn.microsoft.com/en-us/library/windows/desktop/aa363983(v=vs.85).aspx
 ////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////
@@ -35,8 +45,13 @@ HANDLE WINAPI myCreateFileA(LPCSTR lpFileName,
 							DWORD dwFlagsAndAttributes, 
 							HANDLE hTemplateFile)
 {          
-	//log("CreateFileA: filename=%s", lpFileName);
+	if(gs_Logging)
+	{
+		return OriginCreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes,
+			dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+	}
 
+	log("CreateFileA: filename=%s", lpFileName);
 	if(strcmp(lpFileName, "D:\\HookTest\\AppOutput.txt") == 0)
 	{
 		lpFileName = "D:\\HookTest\\AppOutput_REDIRECT.txt";
@@ -63,14 +78,20 @@ HANDLE WINAPI myCreateFileW(LPCWSTR lpFileName,
 							DWORD dwFlagsAndAttributes, 
 							HANDLE hTemplateFile)
 {	
+	if(gs_Logging)
+	{
+		return OriginCreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes,
+			dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+	}
+
 	char fname[MAX_PATH];
 	WideCharToMultiByte( CP_ACP, 0, lpFileName, -1, fname, sizeof(fname), NULL, NULL);  
+	log("CreateFileW: filename=%s", fname);
 
 	if(wcscmp(lpFileName, L"D:\\HookTest\\AppOutput.txt") == 0)
 	{
 		lpFileName = L"D:\\HookTest\\AppOutput_REDIRECT.txt";
 	}
-	//log("CreateFileW: filename=%s", fname);
 
 	return OriginCreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes,
 		dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
@@ -149,6 +170,11 @@ BOOL WINAPI myWriteFile(HANDLE hFile,
 						LPDWORD lpNumberOfBytesWritten, 
 						LPOVERLAPPED lpOverlapped)
 {
+	if(gs_Logging)
+	{
+		return OriginWriteFile(hFile, lpBuffer, nNumberOfBytesToWrite, lpNumberOfBytesWritten, lpOverlapped);
+	}
+
 	log("WriteFile: handle=%x", hFile);
 
 	return OriginWriteFile(hFile, lpBuffer, nNumberOfBytesToWrite, lpNumberOfBytesWritten, lpOverlapped);
@@ -167,9 +193,14 @@ BOOL WINAPI myWriteFileEx(HANDLE hFile,
 						  LPOVERLAPPED lpOverlapped, 
 						  LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine)
 {
+	if(gs_Logging)
+	{
+		return OriginWriteFileEx(hFile, lpBuffer, nNumberOfBytesToWrite, lpOverlapped, lpCompletionRoutine);
+	}
+
 	log("WriteFileEx: handle=%x", hFile);
 
-	return WriteFileEx(hFile, lpBuffer, nNumberOfBytesToWrite, lpOverlapped, lpCompletionRoutine);
+	return OriginWriteFileEx(hFile, lpBuffer, nNumberOfBytesToWrite, lpOverlapped, lpCompletionRoutine);
 }
 ////////////////////////////////////////////////////////////////////////
 //CreateProcessW
@@ -262,8 +293,184 @@ DWORD WINAPI myCreateProcessA(LPCSTR lpApplicationName,
 	return static_cast<DWORD>(ifsuccess);
 }
 
+////////////////////////////////////////////////////////////////////////
+//	Registry related API
+//	Registry Functions:
+//		http://msdn.microsoft.com/en-us/library/windows/desktop/ms724875(v=vs.85).aspx
+////////////////////////////////////////////////////////////////////////
+char *GetRootKey(HKEY hKey)
+{
+	if(hKey == HKEY_CLASSES_ROOT)
+		return "HKEY_CLASSES_ROOT";
+	else if(hKey == HKEY_CURRENT_CONFIG)
+		return "KEY_CURRENT_CONFIG";
+	else if(hKey ==HKEY_CURRENT_USER)
+		return "HKEY_CURRENT_USER";
+	else if(hKey == HKEY_LOCAL_MACHINE)
+		return "HKEY_LOCAL_MACHINE";
+	else if(hKey == HKEY_USERS)
+		return "HKEY_USERS";
+	else if(hKey == HKEY_PERFORMANCE_DATA)
+		return "HKEY_PERFORMANCE_DATA";
+	else
+		return "UNKNOWN_KEY";
+}
+////////////////////////////////////////////////////////////////////////
+//RegOpenKeyA
+typedef DWORD (WINAPI* _pRegOpenKeyA)(
+									HKEY hKey, 
+									LPCSTR lpSubKey, 
+									PHKEY phkResult);
+_pRegOpenKeyA OriginRegOpenKeyA = (_pRegOpenKeyA)GetProcAddress(GetModuleHandle(L"Advapi32"), "RegOpenKeyA");
+DWORD WINAPI myRegOpenKeyA(HKEY hKey, LPCSTR lpSubKey, PHKEY phkResult)
+{
+	log("RegOpenKeyA: hKey=%s, SubKey=%s", GetRootKey(hKey), lpSubKey);
+
+	return OriginRegOpenKeyA(hKey, lpSubKey, phkResult);
+}
+////////////////////////////////////////////////////////////////////////
+//RegOpenKeyW
+typedef DWORD (WINAPI* _pRegOpenKeyW)(
+									HKEY hKey, 
+									LPCWSTR lpSubKey, 
+									PHKEY phkResult);
+_pRegOpenKeyW OriginRegOpenKeyW = (_pRegOpenKeyW)GetProcAddress(GetModuleHandle(L"Advapi32"), "RegOpenKeyW");
+DWORD WINAPI myRegOpenKeyW(HKEY hKey, LPCWSTR lpSubKey, PHKEY phkResult)
+{
+	char subkey[200];
+	int len =WideCharToMultiByte( CP_ACP, 0, lpSubKey, -1, subkey, sizeof(subkey),NULL,NULL); 
+	subkey[len] =0;
+	log("RegOpenKeyW: hKey=%s, SubKey=%s", GetRootKey(hKey), subkey);
+
+	return OriginRegOpenKeyW(hKey, lpSubKey, phkResult);
+}
+////////////////////////////////////////////////////////////////////////
+//RegOpenKeyExA
+typedef DWORD (WINAPI* _pRegOpenKeyExA)(
+									HKEY hKey,
+									LPCSTR lpSubKey,
+									DWORD ulOptions,
+									REGSAM samDesired,
+									PHKEY phkResult);
+_pRegOpenKeyExA OriginRegOpenKeyExA = (_pRegOpenKeyExA)GetProcAddress(GetModuleHandle(L"Advapi32"), "RegOpenKeyExA");
+DWORD WINAPI myRegOpenKeyExA(
+						HKEY hKey,			
+						LPCSTR lpSubKey,
+						DWORD ulOptions,
+						REGSAM samDesired,
+						PHKEY phkResult)
+{
+	log("RegOpenKeyExA: hKey=%s, SubKey=%s", GetRootKey(hKey), lpSubKey);
+
+	return OriginRegOpenKeyExA(hKey, lpSubKey, ulOptions, samDesired, phkResult);
+}
+////////////////////////////////////////////////////////////////////////
+//RegOpenKeyExA
+typedef DWORD (WINAPI* _pRegOpenKeyExW)(
+									HKEY hKey,
+									LPCWSTR lpSubKey,
+									DWORD ulOptions,
+									REGSAM samDesired,
+									PHKEY phkResult);
+_pRegOpenKeyExW OriginRegOpenKeyExW = (_pRegOpenKeyExW)GetProcAddress(GetModuleHandle(L"Advapi32"), "RegOpenKeyExW");
+DWORD WINAPI myRegOpenKeyExW(
+						HKEY hKey,
+						LPCWSTR lpSubKey,
+						DWORD ulOptions,
+						REGSAM samDesired,
+						PHKEY phkResult)
+{
+	char subkey[200];
+	int len =WideCharToMultiByte( CP_ACP, 0, lpSubKey, -1, subkey, sizeof(subkey),NULL,NULL); 
+	subkey[len] =0;
+	log("RegOpenKeyExW: hKey=%s, SubKey=%s", GetRootKey(hKey), lpSubKey);
+
+	return OriginRegOpenKeyExW(hKey, lpSubKey, ulOptions, samDesired, phkResult);
+}
+////////////////////////////////////////////////////////////////////////
+//RegQueryValueA
+typedef DWORD (WINAPI* _pRegQueryValueA)(
+									HKEY hKey, 
+									LPCSTR lpSubKey, 
+									LPSTR lpValue, 
+									PLONG lpcbValue);
+_pRegQueryValueA OriginRegQueryValueA = (_pRegQueryValueA)GetProcAddress(GetModuleHandle(L"Advapi32"), "RegQueryValueA");
+DWORD WINAPI myRegQueryValueA(HKEY hKey, LPCSTR lpSubKey, LPSTR lpValue, PLONG lpcbValue)
+{
+	log("RegQueryValueA: hKey=%s, SubKey=%s", GetRootKey(hKey), lpSubKey);
+
+	return OriginRegQueryValueA(hKey, lpSubKey, lpValue, lpcbValue);
+}
+////////////////////////////////////////////////////////////////////////
+//RegQueryValueW
+typedef DWORD (WINAPI* _pRegQueryValueW)(
+									HKEY hKey,
+									LPCWSTR lpSubKey, 
+									LPWSTR lpValue, 
+									PLONG lpcbValue);
+_pRegQueryValueW OriginRegQueryValueW = (_pRegQueryValueW)GetProcAddress(GetModuleHandle(L"Advapi32"), "RegQueryValueW");
+DWORD WINAPI myRegQueryValueW(HKEY hKey,LPCWSTR lpSubKey, LPWSTR lpValue, PLONG lpcbValue)
+{
+	char subkey[200];
+	int len =WideCharToMultiByte( CP_ACP, 0, lpSubKey, -1, subkey, sizeof(subkey),NULL,NULL); 
+	subkey[len] =0;
+	log("RegQueryValueW: hKey=%s, SubKey=%s", GetRootKey(hKey), subkey);
+
+	return OriginRegQueryValueW(hKey, lpSubKey, lpValue, lpcbValue);
+}
+////////////////////////////////////////////////////////////////////////
+//RegQueryValueExA
+typedef DWORD (WINAPI* _pRegQueryValueExA)(
+										HKEY hKey, 
+										LPSTR lpValueName, 
+										LPDWORD lpReserved, 
+										LPDWORD lpType, 
+										LPBYTE lpData, 
+										LPDWORD lpcbData);
+_pRegQueryValueExA OriginRegQueryValueExA = (_pRegQueryValueExA)GetProcAddress(GetModuleHandle(L"Advapi32"), "RegQueryValueExA");
+DWORD WINAPI myRegQueryValueExA(HKEY hKey, 
+								LPSTR lpValueName, 
+								LPDWORD lpReserved, 
+								LPDWORD lpType, 
+								LPBYTE lpData, 
+								LPDWORD lpcbData)
+{
+	log("RegQueryValueExA:hKey=%s,ValueName=%s", GetRootKey(hKey), lpValueName);
+		
+	return OriginRegQueryValueExA(hKey, lpValueName, lpReserved, lpType, lpData, lpcbData);
+}
+////////////////////////////////////////////////////////////////////////
+//RegQueryValueExW
+typedef DWORD (WINAPI* _pRegQueryValueExW)(
+										HKEY hKey, 
+										LPWSTR lpValueName, 
+										LPDWORD lpReserved, 
+										LPDWORD lpType, 
+										LPBYTE lpData, 
+										LPDWORD lpcbData);
+_pRegQueryValueExW OriginRegQueryValueExW = (_pRegQueryValueExW)GetProcAddress(GetModuleHandle(L"Advapi32"), "RegQueryValueExW");
+DWORD WINAPI myRegQueryValueExW(
+								HKEY hKey, 
+								LPWSTR lpValueName,
+								LPDWORD lpReserved, 
+								LPDWORD lpType, 
+								LPBYTE lpData, 
+								LPDWORD lpcbData)
+{
+	char value[200];
+	int len =WideCharToMultiByte( CP_ACP, 0, lpValueName, -1, value, sizeof(value),NULL,NULL); 
+	value[len] =0;
+	log("RegQueryValueExW: hKey=%s, ValueName=%s", GetRootKey(hKey), value);
+	
+	return OriginRegQueryValueExW(hKey, lpValueName, lpReserved, lpType, lpData, lpcbData);
+}
+
+////////////////////////////////////////////////////////////////////////
+//	Util Functions:
+////////////////////////////////////////////////////////////////////////
 void setupHooks()
 {
+	//File system APIs
 	if (!Mhook_SetHook((PVOID*)&OriginCreateFileA, myCreateFileA)) 
 	{
 		log("Failed to hook CreateFileA");
@@ -305,7 +512,41 @@ void setupHooks()
 		log("Failed to hook CreateProcessW");
 	}
 
-	log("Hooked");
+	//Reg APIs
+	if (!Mhook_SetHook((PVOID*)&OriginRegOpenKeyA, myRegOpenKeyA)) 
+	{
+		log("Failed to hook RegOpenKeyA");
+	}
+	if (!Mhook_SetHook((PVOID*)&OriginRegOpenKeyW, myRegOpenKeyW)) 
+	{
+		log("Failed to hook RegOpenKeyW");
+	}
+	if (!Mhook_SetHook((PVOID*)&OriginRegOpenKeyExA, myRegOpenKeyExA)) 
+	{
+		log("Failed to hook RegOpenKeyExA");
+	}
+	if (!Mhook_SetHook((PVOID*)&OriginRegOpenKeyExW, myRegOpenKeyExW)) 
+	{
+		log("Failed to hook RegOpenKeyExW");
+	}	
+	if (!Mhook_SetHook((PVOID*)&OriginRegQueryValueA, myRegQueryValueA)) 
+	{
+		log("Failed to hook RegQueryValueA");
+	}
+	if (!Mhook_SetHook((PVOID*)&OriginRegQueryValueW, myRegQueryValueW)) 
+	{
+		log("Failed to hook RegQueryValueW");
+	}
+	if (!Mhook_SetHook((PVOID*)&OriginRegQueryValueExA, myRegQueryValueExA)) 
+	{
+		log("Failed to hook RegQueryValueExA");
+	}
+	if (!Mhook_SetHook((PVOID*)&OriginRegQueryValueExW, myRegQueryValueExW)) 
+	{
+		log("Failed to hook RegQueryValueExW");
+	}
+	
+	log(" ======= Hooked =======");
 }
 
 void releaseHooks()
@@ -320,12 +561,23 @@ void releaseHooks()
 	Mhook_Unhook((PVOID*)&OriginWriteFileEx);
 	Mhook_Unhook((PVOID*)&OriginCreateProcessA);
 	Mhook_Unhook((PVOID*)&OriginCreateProcessW);
+	
+	Mhook_Unhook((PVOID*)&OriginRegOpenKeyA);
+	Mhook_Unhook((PVOID*)&OriginRegOpenKeyW);
+	Mhook_Unhook((PVOID*)&OriginRegOpenKeyExA);
+	Mhook_Unhook((PVOID*)&OriginRegOpenKeyExW);	
+	Mhook_Unhook((PVOID*)&OriginRegQueryValueA);
+	Mhook_Unhook((PVOID*)&OriginRegQueryValueW);
+	Mhook_Unhook((PVOID*)&OriginRegQueryValueExA);
+	Mhook_Unhook((PVOID*)&OriginRegQueryValueExW);
 
-	log("UnHooked");
+	log(" ======= UnHooked =======");
 }
 
 void log(char *fmt,...)
 {
+	gs_Logging = true;
+
 	va_list args;
 	char modname[200];
 
@@ -334,7 +586,7 @@ void log(char *fmt,...)
 
 	GetModuleFileNameA(NULL, modname, sizeof(modname));
 
-	if((hFile = OriginCreateFileA(LOG_FILE, GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) <0)
+	if((hFile = CreateFileA(LOG_FILE, GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) <0)
 	{
 		return;
 	}
@@ -355,19 +607,20 @@ void log(char *fmt,...)
 		timeinfo->tm_hour, 
 		timeinfo->tm_min, 
 		timeinfo->tm_sec);
-	OriginWriteFile(hFile, temp, strlen(temp), &dw, NULL);
+	WriteFile(hFile, temp, strlen(temp), &dw, NULL);
 
 	wsprintfA(temp, "%s : ", modname);
-	OriginWriteFile(hFile, temp, strlen(temp), &dw, NULL);
+	WriteFile(hFile, temp, strlen(temp), &dw, NULL);
 	
 	va_start(args,fmt);
 	vsprintf_s(temp, fmt, args);
 	va_end(args);
-	OriginWriteFile(hFile, temp, strlen(temp), &dw, NULL);
+	WriteFile(hFile, temp, strlen(temp), &dw, NULL);
 
 	wsprintfA(temp, "\r\n");
-	OriginWriteFile(hFile, temp, strlen(temp), &dw, NULL);
-
+	WriteFile(hFile, temp, strlen(temp), &dw, NULL);
 
 	_lclose((HFILE)hFile);
+
+	gs_Logging = false;
 }

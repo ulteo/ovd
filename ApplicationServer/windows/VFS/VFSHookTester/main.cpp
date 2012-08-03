@@ -3,10 +3,15 @@
 #include <ctime>
 #include <windows.h>
 
-#define DLL_PATH "VFSHook.dll"
-#define TEST_FILE_PATH "D:\\HookTest\\AppOutput.txt"
+#define DLL_PATH			"VFSHook.dll"
 
-void writeFileTest(char *fmt,...)
+#define VFS_DLL_LOG_PATH	"D:\\HookTest\\"
+#define TEST_FILE_PATH		"D:\\HookTest\\AppOutput.txt"
+
+#define	TEST_REG_MAIN_KEY	HKEY_LOCAL_MACHINE
+#define	TEST_REG_SUB_KEY	TEXT("Software")
+
+void WriteFileTest(char *fmt,...)
 {
 	va_list args;
 	char temp[5000];
@@ -32,7 +37,42 @@ void writeFileTest(char *fmt,...)
 	_lclose((HFILE)hFile);
 }
 
+void RegOpenKeyTest()
+{
+	HKEY	hKey;
+	HKEY	hMainKey = TEST_REG_MAIN_KEY;
+	LPCSTR	lpSubKey = TEST_REG_SUB_KEY;
 
+	LONG lErrorCode = RegOpenKey(hMainKey, lpSubKey, &hKey);;
+	if (lErrorCode != ERROR_SUCCESS)
+	{
+		printf("RegOpenKeyEx failed.");
+	}
+
+	lErrorCode = RegCloseKey(hKey);
+	if (lErrorCode != ERROR_SUCCESS)
+	{
+		printf("RegCloseKey failed.");
+	}		
+}
+void RegOpenKeyExTest()
+{
+	HKEY	hKey;
+	HKEY	hMainKey = TEST_REG_MAIN_KEY;
+	LPCSTR	lpSubKey = TEST_REG_SUB_KEY;
+	
+	LONG lErrorCode = RegOpenKeyEx(hMainKey, lpSubKey, 0, KEY_NOTIFY | KEY_READ, &hKey);
+	if (lErrorCode != ERROR_SUCCESS)
+	{
+		printf("RegOpenKeyEx failed.");
+	}
+
+	lErrorCode = RegCloseKey(hKey);
+	if (lErrorCode != ERROR_SUCCESS)
+	{
+		printf("RegCloseKey failed.");
+	}
+}
 int main()
 {	
 	HINSTANCE hDLL;
@@ -49,13 +89,25 @@ int main()
 		system("pause");
 		return 0;
 	}
-
-	printf("write file test: output file to : %s \n", TEST_FILE_PATH);
-	writeFileTest("Origin name of file wrote to : %s", TEST_FILE_PATH);
-
-	//TODO:
-	printf("read file test: read file from: ... \n");
 	
+	printf("========= Test Start =========\n");
+	printf("\n");
+
+	printf("WriteFileTest, file : %s \n", TEST_FILE_PATH);
+	WriteFileTest("Origin name of file wrote to : %s", TEST_FILE_PATH);
+	//TODO:
+	//printf("read file test: read file from: ... \n");
+	
+	printf("RegOpenKeyTest, key : %s \n", TEST_REG_SUB_KEY);
+	RegOpenKeyTest();	
+	printf("RegOpenKeyExTest, key : %s \n", TEST_REG_SUB_KEY);
+	RegOpenKeyExTest();
+	
+	printf("\n");
+	printf("========= Test End =========\n");
+
+	printf("========= Check the log : %s =========\n", VFS_DLL_LOG_PATH);
+
 	FreeLibrary(hDLL);
 	system("pause");
     return 0;
