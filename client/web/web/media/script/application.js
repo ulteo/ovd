@@ -212,7 +212,7 @@ var Running_Application = Class.create(Application, {
 });
 
 var Context = Class.create({
-	i18n: new Array(),
+	i18n: null, // Array
 	persistent: false,
 
 	initialize: function(i18n_, persistent_) {

@@ -20,7 +20,7 @@
  **/
 
 var Daemon = Class.create({
-	i18n: new Array(),
+	i18n: null, // Array
 	context: null,
 
 	sessionmanager: null,
@@ -36,10 +36,10 @@ var Daemon = Class.create({
 	duration: -1,
 	rdp_imput_method: null,
 
-	settings: new Hash(),
+	settings: null, // Hash
 
-	servers: new Hash(),
-	liaison_server_applications: new Hash(),
+	servers: null, // Hash
+	liaison_server_applications: null, // Hash
 
 	persistent: false,
 
@@ -66,6 +66,7 @@ var Daemon = Class.create({
 	session_ready_callback: null,
 
 	initialize: function(debug_) {
+		this.i18n = new Array();
 		this.settings = new Hash();
 		this.servers = new Hash();
 		this.liaison_server_applications = new Hash();

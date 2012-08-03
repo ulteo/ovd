@@ -24,15 +24,15 @@ var Applications = Class.create(Daemon, {
 	mode: 'applications',
 	local_integration: false,
 
-	applications: new Hash(),
+	applications: null, // Hash
 	applicationsPanel: null,
-	running_applications: new Hash(),
+	running_applications: null, // Hash
 	nb_running_applications: 0,
 	runningApplicationsPanel: null,
 
-	news: new Hash(),
+	news: null, // Hash
 
-	liaison_runningapplicationtoken_application: new Hash(),
+	liaison_runningapplicationtoken_application: null, // Hash
 
 	progress_bar_step: 50,
 	
@@ -40,6 +40,11 @@ var Applications = Class.create(Daemon, {
 
 	initialize: function(debug_) {
 		Daemon.prototype.initialize.apply(this, [debug_]);
+		
+		this.applications = new Hash();
+		this.running_applications = new Hash();
+		this.news = new Hash();
+		this.liaison_runningapplicationtoken_application = new Hash();
 
 		$('applicationsAppletContainer').innerHTML = '';
 
