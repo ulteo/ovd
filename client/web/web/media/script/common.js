@@ -36,7 +36,6 @@ function refresh_body_size() {
 }
 
 var debug = false;
-var explorer = false;
 
 var session_mode = false;
 
@@ -49,8 +48,6 @@ function startSession() {
 	}
 
 	disableLogin();
-
-	explorer = false;
 
 	debug = false;
 	if ($('debug_true') && $('debug_true').checked)
@@ -219,6 +216,7 @@ function onStartSessionSuccess(xml_) {
 
 	$('user_password').value = '';
 
+	var explorer = false;
 	var buffer = xml.getElementsByTagName('explorer');
 	if (buffer.length == 1)
 		explorer = true;
