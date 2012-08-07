@@ -191,7 +191,7 @@ function startApplicationWithPath(mode_, app_id_, path_, url_) {
 		<td>Logged as <?php echo $_SESSION['login']; ?></td>
 		<td><input type="submit" name="disconnect" value="Disconnect" /></td>
 	</tr>
-<? } ?>
+<?php } ?>
 </table>
 </form>
 
