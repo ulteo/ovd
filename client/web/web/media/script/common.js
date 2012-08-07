@@ -35,10 +35,6 @@ function refresh_body_size() {
 	}
 }
 
-var date = new Date();
-var rand = Math.round(Math.random()*100)+date.getTime();
-var window_;
-
 var debug = false;
 var explorer = false;
 
