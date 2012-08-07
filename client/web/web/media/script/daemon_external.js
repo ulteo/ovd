@@ -23,6 +23,11 @@ var External = Class.create(Applications, {
 	initialize: function(debug_) {
 		Daemon.prototype.initialize.apply(this, [debug_]);
 
+		this.applications = new Hash();
+		this.running_applications = new Hash();
+		this.liaison_runningapplicationtoken_application = new Hash();
+		this.waiting_applications_instances = new Array();
+
 		$('applicationsAppletContainer').innerHTML = '';
 
 		this.applicationsPanel = new ApplicationsPanel($('appsContainer'));
