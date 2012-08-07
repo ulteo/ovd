@@ -688,7 +688,7 @@ function updateKeymap(id_) {
 	return false;
 }
 
-switchsettings_lock = false;
+var switchsettings_lock = false;
 function switchSettings() {
 	if (switchsettings_lock)
 		return;
