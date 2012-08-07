@@ -38,8 +38,6 @@ function refresh_body_size() {
 var debug = false;
 var explorer = false;
 
-var startsession = false;
-
 var session_mode = false;
 
 var desktop_fullscreen = false;
@@ -53,8 +51,6 @@ function startSession() {
 	disableLogin();
 
 	explorer = false;
-
-	startsession = false;
 
 	debug = false;
 	if ($('debug_true') && $('debug_true').checked)
@@ -97,9 +93,6 @@ function startSession() {
 		$('CheckSignedJava').ajaxRequest($('sessionmanager_host').value, $('session_mode').value, $('session_language').value, getTimezoneName(), 'onStartSessionJavaRequest');
 		return false;
 	}
-
-	if (! startsession)
-		return false;
 
 	return false;
 }
@@ -230,8 +223,6 @@ function onStartSessionSuccess(xml_) {
 	if (buffer.length == 1)
 		explorer = true;
 
-	startsession = true;
-
 	hideLogin();
 	showSplash();
 
@@ -328,8 +319,6 @@ function onStartSessionFailure() {
 	showError(i18n.get('internal_error'));
 
 	enableLogin();
-
-	startsession = false;
 
 	return false;
 }
@@ -913,8 +902,6 @@ function onStartExternalSessionSuccess(xml_) {
 		session_mode = session_mode.substr(0, 1).toUpperCase()+session_mode.substr(1, session_mode.length-1);
 	} catch(e) {}
 
-	startsession = true;
-
 	setTimeout(function() {
 		if (session_mode == 'Desktop')
 			daemon = new Desktop(debug_mode);
@@ -968,8 +955,6 @@ function onStartExternalSessionSuccess(xml_) {
 
 function onStartExternalSessionFailure() {
 	showError(i18n.get('internal_error'));
-
-	startsession = false;
 
 	return false;
 }
