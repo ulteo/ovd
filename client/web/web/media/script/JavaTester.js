@@ -21,12 +21,19 @@
 
 var JavaTester = Class.create({
 	applet_inited: null,
+	finished_callback: null,
 	
 	initialize: function() {
 		this.t0 = 0;
 		this.ti = 0;
+		
+		this.finished_callback = new Array();
 	},
 	
+	add_finished_callback: function(callback_) {
+		this.finished_callback.push(callback_);
+	},
+	      
 	perform: function() {
 		this.showSystemTest();
 		setTimeout(this.perform_.bind(this), 2000);
@@ -80,8 +87,9 @@ var JavaTester = Class.create({
 	},
 	
 	finish: function() {
-		checkLogin();
-		manageKeymap();
+		for (var i=0; i<this.finished_callback.length; i++)
+			this.finished_callback[i](this);
+		
 		this.hideSystemTest();
 	},
 	

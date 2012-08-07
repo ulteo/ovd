@@ -10,7 +10,10 @@ scripts_DATA = application.js \
                JavaTester.js \
                Logger.js \
                server.js \
-               timezones.js
+               timezones.js \
+               uovd_int_client.js \
+               uovd_ext_client.js
+               
 
 scriptsdir = $(datadir)/ulteo/webclient/media/script
 
