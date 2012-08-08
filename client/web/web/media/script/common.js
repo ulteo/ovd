@@ -326,6 +326,14 @@ function buildAppletNode(name, code, archive, extra_params) {
 }
 
 function getWebClientBaseURL() {
+	/*
+		Using any window.location.href as:
+		  * http://host/ovd/
+		  * http://host/ovd/index.php
+		  * http://host/ovd/external.php?args1=val/ue1
+		Return: http://host/ovd/
+	*/
 	var url = window.location.href;
+	url = url.replace(/\?[^\?]*$/, "");
 	return url.replace(/\/[^\/]*$/, "")+"/";
 }
