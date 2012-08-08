@@ -29,6 +29,8 @@ function startExternalSession(mode_) {
 		{
 			method: 'post',
 			parameters: {
+				requested_host: window.location.hostname,
+				requested_port: ((window.location.port !=  '')?window.location.port:'443'),
 				mode: mode_,
 				language: client_language,
 				keymap: user_keymap,
