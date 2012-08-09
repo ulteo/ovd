@@ -134,7 +134,7 @@ var Running_Application = Class.create(Application, {
 		if (status_ != this.status) {
 			this.status = status_;
 		}
-	},
+	}
 });
 
 var Context = Class.create({
