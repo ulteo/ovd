@@ -42,7 +42,7 @@ var External = Class.create(Applications, {
 		setTimeout(this.explorer_loop.bind(this), 2000);
 	},
 
-	applicationStatus: function(token_, status_) {
+	applicationStatus: function(app_id_, token_, status_) {
 		Logger.debug('[external] applicationStatus(token: '+token_+', status: '+status_+')');
 
 		var app_status = 2;
@@ -52,7 +52,7 @@ var External = Class.create(Applications, {
 
 			var app_id = this.liaison_runningapplicationtoken_application.get(token_);
 			if (typeof app_id == 'undefined')
-				return false;
+				app_id = app_id_;
 
 			var app_object = this.applications.get(app_id);
 			if (typeof app_object == 'undefined') {
