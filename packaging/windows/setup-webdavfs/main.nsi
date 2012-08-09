@@ -1,6 +1,7 @@
-;; Copyright (C) 2011 Ulteo SAS
+;; Copyright (C) 2011-2012 Ulteo SAS
 ;; http://www.ulteo.com
 ;; Author Julien LANGLOIS <julien@ulteo.com> 2011
+;; Author David LECHEVALIER <david@ulteo.com> 2012
 ;;
 ;; This program is free software; you can redistribute it and/or 
 ;; modify it under the terms of the GNU General Public License
@@ -156,6 +157,7 @@ SectionEnd
 
 Section "post" PostCmd
   Var /GLOBAL arch
+  Var /GLOBAL sysdir32
   ClearErrors
   ReadEnvStr $0 "PROGRAMW6432"
   IfErrors x86 amd64
@@ -163,15 +165,18 @@ Section "post" PostCmd
   x86:
     DetailPrint "Running on x86"
     StrCpy $arch "x86"
+    StrCpy $sysdir32 "$SYSDIR"
     GOTO Done
   amd64:
     StrCpy $arch "amd64"
+    System::Call "kernel32::GetSystemWow64Directory(t .r0, i ${NSIS_MAX_STRLEN})"
+    StrCpy $sysdir32 "$0"
     GOTO Done
   Done:
     DetailPrint "Running on $arch"
 
   CopyFiles "$INSTDIR\davfs.exe" "$SYSDIR\"
-  CopyFiles "$INSTDIR\dokan.dll" "$SYSDIR\"
+  CopyFiles "$INSTDIR\dokan.dll" "$sysdir32\"
   CopyFiles "$INSTDIR\$arch\dokan.sys" "$SYSDIR\drivers\"
   CopyFiles "$INSTDIR\$arch\dokannp.dll" "$SYSDIR\"
   SetRebootFlag true
