@@ -160,44 +160,6 @@ var Applications = Class.create(Daemon, {
 		}
 	},
 
-	list_running_apps: function(applicationsNode_) {
-		Logger.debug('[applications] list_running_apps(xml@applicationsNode)');
-
-		var runningApplicationsNodes = applicationsNode_.getElementsByTagName('running');
-
-		var apps_in_xml = new Array();
-
-		for (var i=0; i < runningApplicationsNodes.length; i++) {
-			var pid = runningApplicationsNodes[i].getAttribute('job');
-			var app_status = parseInt(runningApplicationsNodes[i].getAttribute('status'));
-
-			if (typeof this.running_applications.get(pid) == 'undefined') {
-				var app_id = runningApplicationsNodes[i].getAttribute('app_id');
-
-				var app_object = this.applications.get(app_id);
-				if (typeof app_object == 'undefined')
-					continue;
-
-				var instance = new Running_Application(app_object.id, app_object.name, app_object.server, pid, app_status, this.getContext());
-				this.running_applications.set(instance.pid, instance);
-				this.runningApplicationsPanel.add(instance);
-			} else {
-				var instance = this.running_applications.get(pid);
-				instance.update(app_status);
-			}
-
-			apps_in_xml.push(pid);
-		}
-
-		var runnings = this.running_applications.keys();
-		if (runnings.length > apps_in_xml.length) {
-			for (var i=0; i<runnings.length; i++) {
-				if (apps_in_xml.indexOf(runnings[i]) == -1)
-					this.runningApplicationsPanel.del(this.running_applications.get(runnings[i]));
-			}
-		}
-	},
-
 	nb_running_apps: function() {
 		return this.nb_running_applications;
 	},
