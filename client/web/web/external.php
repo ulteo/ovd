@@ -302,9 +302,6 @@ $local_integration = (defined('PORTAL_LOCAL_INTEGRATION') && (PORTAL_LOCAL_INTEG
 			<div id="appsContainer" style="overflow: auto; display: none;">
 			</div>
 
-			<div id="runningAppsContainer" style="overflow: auto; display: none;">
-			</div>
-
 			<div id="applicationsAppletContainer" style="display: none;">
 			</div>
 		</div>

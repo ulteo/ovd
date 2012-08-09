@@ -122,8 +122,6 @@ var Running_Application = Class.create(Application, {
 	status: -1,
 	context: null,
 
-	app_span: null,
-
 	initialize: function(id_, name_, server_id_, pid_, status_, context_) {
 		Application.prototype.initialize.apply(this, [id_, name_, server_id_]);
 
@@ -135,80 +133,8 @@ var Running_Application = Class.create(Application, {
 	update: function(status_) {
 		if (status_ != this.status) {
 			this.status = status_;
-			this.repaintNode();
 		}
 	},
-
-	initNode: function() {
-		var tr = new Element('tr');
-
-		var td_icon = new Element('td');
-		var icon = new Element('img');
-		icon.setAttribute('src', this.getIconURL());
-		td_icon.appendChild(icon);
-		tr.appendChild(td_icon);
-
-		var td_app = new Element('td');
-		var td_app_div = new Element('div');
-		td_app_div.setAttribute('style', 'font-weight: bold;');
-		td_app_div.innerHTML = this.name;
-		td_app.appendChild(td_app_div);
-
-		this.app_span = new Element('span');
-		td_app.appendChild(this.app_span);
-
-		tr.appendChild(td_app);
-
-		this.repaintNode();
-
-		return tr;
-	},
-
-	repaintNode: function() {
-		this.app_span.innerHTML = '';
-
-		if (this.status == 2) {
-			if (this.context.persistent == true) {
-				var node = new Element('a');
-				node.observe('click', this.onClickSuspend.bind(this));
-				node.setAttribute('href', 'javascript:;');
-				node.innerHTML = this.context.translate('suspend');
-				this.app_span.appendChild(node);
-			}
-		}
-
-		if (this.status == 10) {
-			var node = new Element('a');
-			node.observe('click', this.onClickResume.bind(this));
-			node.setAttribute('href', 'javascript:;');
-			node.innerHTML = this.context.translate('resume');
-			this.app_span.appendChild(node);
-		}
-
-		var separator_node = new Element('span');
-		separator_node.innerHTML = '&nbsp;-&nbsp;';
-
-		for (var j=1; j<this.app_span.childNodes.length; j+=2)
-			this.app_span.insertBefore(separator_node.cloneNode(true), this.app_span.childNodes[j]);
-
-		return true;
-	},
-
-	onClickSuspend: function(event) {
-		this.suspend();
-		event.stop();
-	},
-
-	onClickResume: function(event) {
-		this.resume();
-		event.stop();
-	},
-
-	suspend: function() {
-	},
-
-	resume: function() {
-	}
 });
 
 var Context = Class.create({

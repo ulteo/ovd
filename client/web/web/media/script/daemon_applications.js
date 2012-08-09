@@ -28,7 +28,6 @@ var Applications = Class.create(Daemon, {
 	applicationsPanel: null,
 	running_applications: null, // Hash
 	nb_running_applications: 0,
-	runningApplicationsPanel: null,
 
 	news: null, // Hash
 
@@ -53,11 +52,9 @@ var Applications = Class.create(Daemon, {
 			remove_height = 115;
 		$('applicationsContainer').style.height = parseInt(this.my_height)-remove_height+'px';
 		$('appsContainer').style.height = parseInt(this.my_height)-remove_height+'px';
-		$('runningAppsContainer').style.height = parseInt(this.my_height)-remove_height+'px';
 		$('fileManagerContainer').style.height = parseInt(this.my_height)-remove_height+'px';
 
 		this.applicationsPanel = new ApplicationsPanel($('appsContainer'));
-		this.runningApplicationsPanel = new ApplicationsPanel($('runningAppsContainer'));
 		
 		try {
 			this.local_integration = local_integration;
@@ -187,7 +184,6 @@ var Applications = Class.create(Daemon, {
 
 			if (status_ == 'started') {
 				Logger.info('[applications] applicationStatus(token: '+token_+', status: '+status_+') - Adding "running" application "'+token_+'" to running applications list');
-				this.runningApplicationsPanel.add(instance);
 
 				var running = 0;
 				if ($('running_'+app_id)) {
@@ -207,7 +203,6 @@ var Applications = Class.create(Daemon, {
 
 			if (status_ == 'stopped') {
 				Logger.info('[applications] applicationStatus(token: '+token_+', status: '+status_+') - Deleting "running" application "'+token_+'" from running applications list');
-				this.runningApplicationsPanel.del(instance);
 
 				var app_id = this.liaison_runningapplicationtoken_application.get(token_);
 				if (typeof app_id == 'undefined')

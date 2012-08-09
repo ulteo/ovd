@@ -31,7 +31,6 @@ var External = Class.create(Applications, {
 		$('applicationsAppletContainer').innerHTML = '';
 
 		this.applicationsPanel = new ApplicationsPanel($('appsContainer'));
-		this.runningApplicationsPanel = new ApplicationsPanel($('runningAppsContainer'));
 	},
 
 	do_started: function() {
