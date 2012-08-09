@@ -40,6 +40,8 @@ var Server = Class.create({
 
 	connected: false,
 	ready: false,
+	
+	status_changed_callbacks: null, // Array
 
 	/** Constructor : initialized with a <server> XML node.
 	 *
@@ -57,6 +59,8 @@ var Server = Class.create({
 		this.port = xml_.getAttribute('port');
 		this.username = xml_.getAttribute('login');
 		this.password = xml_.getAttribute('password');
+		
+		this.status_changed_callbacks = new Array();
 	},
 
 	/// In case we use the token auth.
@@ -125,13 +129,14 @@ var Server = Class.create({
 			daemon.logout();
 		}
 
-		var applications = daemon.liaison_server_applications.get(this.id);
-		for (var i=0; i < applications.length; i++) {
-			var application = daemon.applications.get(applications[i]);
-			application.update();
-		}
+		for (var i=0; i < this.status_changed_callbacks.length; i++)
+			this.status_changed_callbacks[i](this, status_);
 
 		return true;
+	},
+	
+	add_status_changed_callback: function(callback_) {
+		this.status_changed_callbacks.push(callback_);
 	}
 });
 

@@ -24,80 +24,11 @@ var Application = Class.create({
 	id: 0,
 	name: '',
 	server_id: 0,
-	node: null,
-
-	app_span: null,
 
 	initialize: function(id_, name_, server_id_) {
 		this.id = id_;
 		this.name = name_;
 		this.server_id = server_id_;
-	},
-
-	update: function() {
-		this.repaintNode();
-	},
-
-	initNode: function() {
-		var tr = new Element('tr');
-
-		var td_icon = new Element('td');
-		var icon = new Element('img');
-		icon.setAttribute('src', this.getIconURL());
-		icon.setAttribute('width', 32);
-		td_icon.appendChild(icon);
-		tr.appendChild(td_icon);
-
-		var td_app = new Element('td');
-		this.app_span = new Element('span');
-		td_app.appendChild(this.app_span);
-		tr.appendChild(td_app);
-
-		var td_running = new Element('td');
-		td_running.setAttribute('id', 'running_'+this.id);
-		td_running.setAttribute('style', 'width: 15px; text-align: right; font-size: 0.9em; font-style: italic;');
-		tr.appendChild(td_running);
-
-		this.repaintNode();
-
-		return tr;
-	},
-
-	repaintNode: function() {
-		this.app_span.innerHTML = '';
-
-		var server = daemon.servers.get(this.server_id);
-
-		if (server.ready) {
-			var node = new Element('a');
-			node.observe('click', this.onClick.bind(this));
-			node.setAttribute('href', 'javascript:;');
-			node.innerHTML = this.name;
-			this.app_span.appendChild(node);
-
-			this.app_span.parentNode.parentNode.setAttribute('style', 'opacity: 1.00; filter: alpha(opacity=100); -moz-opacity: 1.00;');
-		} else {
-			var node = new Element('span');
-			node.setAttribute('style', 'font-weight: bold;');
-			node.innerHTML = this.name;
-			this.app_span.appendChild(node);
-
-			this.app_span.parentNode.parentNode.setAttribute('style', 'opacity: 0.40; filter: alpha(opacity=40); -moz-opacity: 0.40;');
-		}
-
-		return true;
-	},
-
-	getNode: function() {
-		if (this.node == null)
-			this.node = this.initNode();
-
-		return this.node;
-	},
-
- 	onClick: function(event) {
-		this.launch();
-		event.stop();
 	},
 
 	launch: function() {
@@ -110,10 +41,6 @@ var Application = Class.create({
 		var server = daemon.servers.get(this.server_id);
 		$('ulteoapplet').startApplicationWithFile(++daemon.application_token, this.id, server.java_id, type_, path_, share_);
 		daemon.liaison_runningapplicationtoken_application.set(daemon.application_token, this.id);
-	},
-
-	getIconURL: function() {
-		return 'icon.php?id='+this.id;
 	}
 });
 
@@ -203,5 +130,86 @@ var ApplicationsPanel = Class.create({
 		try {
 			this.node.removeChild(app_.getNode());
 		} catch(e) {}
+	}
+});
+
+var ApplicationItem = Class.create({
+	application_: null,
+	node: null,
+
+	app_span: null,
+
+	initialize: function(application_) {
+		this.application = application_;
+	},
+
+	on_server_status_change: function(server_, status_) {
+		this.repaintNode();
+	},
+
+	initNode: function() {
+		var tr = new Element('tr');
+
+		var td_icon = new Element('td');
+		var icon = new Element('img');
+		icon.setAttribute('src', this.getIconURL());
+		icon.setAttribute('width', 32);
+		td_icon.appendChild(icon);
+		tr.appendChild(td_icon);
+
+		var td_app = new Element('td');
+		this.app_span = new Element('span');
+		td_app.appendChild(this.app_span);
+		tr.appendChild(td_app);
+
+		var td_running = new Element('td');
+		td_running.setAttribute('id', 'running_'+this.application.id);
+		td_running.setAttribute('style', 'width: 15px; text-align: right; font-size: 0.9em; font-style: italic;');
+		tr.appendChild(td_running);
+
+		this.repaintNode();
+
+		return tr;
+	},
+
+	repaintNode: function() {
+		this.app_span.innerHTML = '';
+
+		var server = daemon.servers.get(this.application.server_id);
+
+		if (server.ready) {
+			var node = new Element('a');
+			node.observe('click', this.onClick.bind(this));
+			node.setAttribute('href', 'javascript:;');
+			node.innerHTML = this.application.name;
+			this.app_span.appendChild(node);
+
+			this.app_span.parentNode.parentNode.setAttribute('style', 'opacity: 1.00; filter: alpha(opacity=100); -moz-opacity: 1.00;');
+		} else {
+			var node = new Element('span');
+			node.setAttribute('style', 'font-weight: bold;');
+			node.innerHTML = this.application.name;
+			this.app_span.appendChild(node);
+
+			this.app_span.parentNode.parentNode.setAttribute('style', 'opacity: 0.40; filter: alpha(opacity=40); -moz-opacity: 0.40;');
+		}
+
+		return true;
+	},
+
+	getNode: function() {
+		if (this.node == null)
+			this.node = this.initNode();
+
+		return this.node;
+	},
+
+ 	onClick: function(event) {
+		this.application.launch();
+		event.stop();
+	},
+
+	getIconURL: function() {
+		return 'icon.php?id='+this.application.id;
 	}
 });

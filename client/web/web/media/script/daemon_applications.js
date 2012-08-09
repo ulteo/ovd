@@ -148,8 +148,17 @@ var Applications = Class.create(Daemon, {
 				
 				var application = new Application(applicationNodes[j].getAttribute('id'), applicationNodes[j].getAttribute('name'), server_.id);
 				this.applications.set(application.id, application);
-				this.applicationsPanel.add(application);
+				
 				this.liaison_server_applications.get(server_.id).push(application.id);
+				
+				var application_item = new ApplicationItem(application);
+				this.servers.each(function(pair) {
+					var server = pair.value;
+					server.add_status_changed_callback(application_item.on_server_status_change.bind(application_item));
+				});
+				
+				this.applicationsPanel.add(application_item);
+			
 			} catch(e) {
 				Logger.error('[applications] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "application" node '+j+')');
 				return false;
