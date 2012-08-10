@@ -82,6 +82,9 @@ $local_integration = (defined('PORTAL_LOCAL_INTEGRATION') && (PORTAL_LOCAL_INTEG
 
 $confirm_logout = OPTION_CONFIRM_LOGOUT;
 
+if ($debug_mode === false && array_key_exists('debug', $_REQUEST))
+	$debug_mode = true;
+
 function get_users_list() {
 	if (! defined('SESSIONMANAGER_HOST'))
 		return false;
