@@ -140,24 +140,53 @@ var Portal = Class.create(Applications, {
 			return;
 		}
 
-		var html = '';
-		html += '<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="3">';
+		var table_node = new Element('table');
+		table_node.setAttribute('style', 'width: 100%; margin-left: auto; margin-right: auto;');
+		table_node.setAttribute('border', '0');
+		table_node.setAttribute('cellspacing', '0');
+		table_node.setAttribute('cellpadding', '0');
+		
+		var tbody_node = new Element('tbody');
+		table_node.appendChild(tbody_node);
+		
 		var new_nodes = xml.getElementsByTagName('new');
 		for (var i=0; i<new_nodes.length; i++) {
 			this.news.set(''+new_nodes[i].getAttribute('id'), new_nodes[i]);
 
 			var date = new Date();
 			date.setTime(new_nodes[i].getAttribute('timestamp')*1000);
+			
+			var myself = this;
+			var news_id = new_nodes[i].getAttribute('id');
+			
+			var a_node = new Element('a');
+			a_node.observe('click', function(event) {
+				myself.show_new(news_id);
+				event.stop();
+			});
+			a_node.setAttribute('href', 'javascript:;');
+			a_node.innerHTML = new_nodes[i].getAttribute('title');
 
-			html += '<tr><td style="text-align: left;">';
-			html += '<span style="font-size: 1.1em; color: black;">';
-			html += '<em>'+date.toLocaleString()+'</em> - <strong><a href="javascript:;" onclick="daemon.show_new('+new_nodes[i].getAttribute('id')+'); return false;">'+new_nodes[i].getAttribute('title')+'</a></strong>';
-			html += '</span>';
-			html += '</td></tr>';
+			var strong_node = new Element('strong');
+			strong_node.appendChild(a_node);
+			
+			var span_node = new Element('span');
+			span_node.setAttribute('style', 'font-size: 1.1em; color: black;');
+			span_node.innerHTML = '<em>'+date.toLocaleString()+'</em> - ';
+			span_node.appendChild(strong_node);
+			
+			var td_node = new Element('td');
+			td_node.setAttribute('style', 'text-align: left;');
+			td_node.appendChild(span_node);
+			
+			var tr_node = new Element('tr');
+			tr_node.appendChild(td_node);
+			
+			tbody_node.appendChild(tr_node);
 		}
-		html += '</table>';
-
-		$('newsContainer').innerHTML = html;
+		
+		$('newsContainer').innerHTML = '';
+		$('newsContainer').appendChild(table_node);
 	},
 
 	show_new: function(i_) {
