@@ -72,20 +72,18 @@ var Server = Class.create({
 		if (this.connected)
 			return true;
 
-		if (daemon.mode == 'applications') {
-			var serialized;
+		var serialized;
 
-			try {
-				// XMLSerializer exists in current Mozilla browsers
-				serializer = new XMLSerializer();
-				serialized = serializer.serializeToString(this.xml);
-			} catch (e) {
-				// Internet Explorer has a different approach to serializing XML
-				serialized = this.xml.xml;
-			}
-
-			$('ulteoapplet').serverPrepare(this.java_id, serialized);
+		try {
+			// XMLSerializer exists in current Mozilla browsers
+			serializer = new XMLSerializer();
+			serialized = serializer.serializeToString(this.xml);
+		} catch (e) {
+			// Internet Explorer has a different approach to serializing XML
+			serialized = this.xml.xml;
 		}
+
+		$('ulteoapplet').serverPrepare(this.java_id, serialized);
 
 		if (this.token != null)
 			$('ulteoapplet').serverConnect(this.java_id, this.fqdn, this.port, this.token, this.username, this.password);
