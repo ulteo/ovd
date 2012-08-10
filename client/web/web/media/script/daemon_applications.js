@@ -232,7 +232,7 @@ var Applications = Class.create(Daemon, {
 		  
 			var application = this.applications.get(parseInt(node.getAttribute('id')));
 			
-			var server = daemon.servers.get(application.server_id);
+			var server = this.servers.get(application.server_id);
 			if (server.ready == false)
 				continue;
 			
