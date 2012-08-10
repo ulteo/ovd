@@ -228,6 +228,10 @@ if (array_key_exists('sessions', $ret) && is_array($ret['sessions'])) {
 	$sessions = Abstract_Session::getByServer($server->fqdn);
 	foreach ($sessions as $session) {
 		Logger::debug('main', "Inspecting session ".$session->id);
+		if (! array_key_exists($server->fqdn, $session->servers[Server::SERVER_ROLE_APS])) {
+			Logger::debug('main', "Session ".$session->id." on ".$server->fqdn." is not an APS session");
+			continue;
+		}
 
 		if (! in_array($session->id, $monitored_session)) {
 			if ($session->servers[Server::SERVER_ROLE_APS][$server->fqdn]['status'] !== Session::SESSION_STATUS_DESTROYED) {
