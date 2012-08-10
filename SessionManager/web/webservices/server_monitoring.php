@@ -232,9 +232,21 @@ if (array_key_exists('sessions', $ret) && is_array($ret['sessions'])) {
 			Logger::debug('main', "Session ".$session->id." on ".$server->fqdn." is not an APS session");
 			continue;
 		}
-
+		
+		// Check if the session id unknown by the APS
 		if (! in_array($session->id, $monitored_session)) {
-			if ($session->servers[Server::SERVER_ROLE_APS][$server->fqdn]['status'] !== Session::SESSION_STATUS_DESTROYED) {
+			$serverStatus = $session->servers[Server::SERVER_ROLE_APS][$server->fqdn]['status'];
+			
+			// If the monitoring is received during the APS session creation,
+			// monitoring do not state about creating session and the session is destroy
+			if (in_array($serverStatus, array(Session::SESSION_STATUS_CREATED, Session::SESSION_STATUS_READY))) {
+				if ((time() - $session->start_time) > DEFAULT_UNUSED_SESSION_DURATION) {
+					Logger::info('main', "Session ".$session->id." is expired");
+					$session->setServerStatus($server->fqdn, Session::SESSION_STATUS_DESTROYED);
+				}
+			}
+			// The session is unknown by APS, status is changed to destroyed
+			else if ($serverStatus !== Session::SESSION_STATUS_DESTROYED) {
 				Logger::info('main', "Session ".$session->id." switch status ".Session::SESSION_STATUS_DESTROYED." on ".$server->fqdn);
 				$session->setServerStatus($server->fqdn, Session::SESSION_STATUS_DESTROYED);
 			}
