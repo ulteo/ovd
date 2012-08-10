@@ -107,24 +107,13 @@ var Server = Class.create({
 			this.connected = true;
 		else if (this.connected && status_ == 'ready') {
 			this.ready = true;
-			daemon.start_waiting_instances();
 		}
 		else if (status_ == 'disconnected') {
 			this.ready = false;
 			this.connected = false;
-
-			daemon.break_loop();
-			daemon.sessionmanager_request_time = 2000;
-			daemon.loop();
-
-			if (daemon.mode == 'desktop' && ! daemon.is_stopped()) {
-				daemon.client_exit();
-			}
 		} else if (status_ == 'failed') {
 			this.ready = false;
 			this.connected = false;
-
-			daemon.logout();
 		}
 
 		for (var i=0; i < this.status_changed_callbacks.length; i++)

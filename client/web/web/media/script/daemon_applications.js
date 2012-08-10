@@ -181,6 +181,14 @@ var Applications = Class.create(Daemon, {
 	on_running_app_started: function(instance_) {},
 	on_running_app_stopped: function(instance_) {},
 	
+	on_server_status_change: function(server_, status_) {
+		Daemon.prototype.on_server_status_change.apply(this, [server_, status_]);
+		
+		if (server_.connected && status_ == 'ready') {
+			this.start_waiting_instances();
+		}
+	},
+	
 	launch_application: function(application_) {
 		var server = this.servers.get(application_.server_id);
 		$('ulteoapplet').startApplication(++this.application_token, application_.id, server.java_id);

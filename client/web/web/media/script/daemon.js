@@ -496,6 +496,9 @@ var Daemon = Class.create({
 				this.liaison_server_applications.set(server.id, new Array());
 				
 				this.parse_server_node(server, serverNodes[i]);
+				
+				server.add_status_changed_callback(this.on_server_status_change.bind(this));
+				
 			} catch(e) {
 				Logger.error('[daemon] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "server" node '+i+')');
 				return false;
@@ -506,6 +509,21 @@ var Daemon = Class.create({
 	},
 	
 	parse_server_node: function(server_, serverNode_) {},
+	
+	on_server_status_change: function(server_, status_) {
+		if (status_ == 'disconnected') {
+			this.break_loop();
+			this.sessionmanager_request_time = 2000;
+			this.loop();
+			
+			if (this.mode == 'desktop' && ! this.is_stopped()) {
+				this.client_exit();
+			}
+		}
+		else if (status_ == 'failed') {
+			this.logout();
+		}
+	},
 	
 	buildAppletNode: function(mode_, params_) {
 		return buildAppletNode('ulteoapplet', 'org.ulteo.ovd.applet.'+mode_, 'jpedal.jar,log4j-1.2.jar,ulteo-applet.jar', params_);
