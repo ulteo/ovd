@@ -21,7 +21,6 @@
 
 var Daemon = Class.create({
 	i18n: null, // Array
-	context: null,
 
 	sessionmanager: null,
 
@@ -106,22 +105,6 @@ var Daemon = Class.create({
 		if (this.debug)
 			this.my_height = parseInt(this.my_height)-149;
 	},
-
-	initContext: function() {
-		var context = new Context(this.i18n, this.persistent);
-
-		return context;
-	},
-
-	getContext: function() {
-		if (this.context == null)
-			this.context = this.initContext();
-
-		return this.context;
-	},
-
-
-
 
 	is_ready: function() {
 		return this.ready;

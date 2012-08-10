@@ -47,38 +47,18 @@ var Application = Class.create({
 var Running_Application = Class.create(Application, {
 	pid: '',
 	status: -1,
-	context: null,
 
-	initialize: function(id_, name_, server_id_, pid_, status_, context_) {
+	initialize: function(id_, name_, server_id_, pid_, status_) {
 		Application.prototype.initialize.apply(this, [id_, name_, server_id_]);
 
 		this.pid = pid_;
 		this.status = status_;
-		this.context = context_;
 	},
 
 	update: function(status_) {
 		if (status_ != this.status) {
 			this.status = status_;
 		}
-	}
-});
-
-var Context = Class.create({
-	i18n: null, // Array
-	persistent: false,
-
-	initialize: function(i18n_, persistent_) {
-		this.i18n = i18n_,
-		this.persistent = persistent_;
-	},
-
- 	translate: function(str_) {
-		var ret = this.i18n[str_];
-		if (typeof ret == 'undefined')
-			return str_;
-
-		return ret;
 	}
 });
 

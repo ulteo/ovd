@@ -149,7 +149,7 @@ var Applications = Class.create(Daemon, {
 				return false;
 			}
 
-			var instance = new Running_Application(app_object.id, app_object.name, app_object.server, token_, app_status, this.getContext());
+			var instance = new Running_Application(app_object.id, app_object.name, app_object.server, token_, app_status);
 			this.running_applications.set(instance.pid, instance);
 
 			if (status_ == 'started') {
