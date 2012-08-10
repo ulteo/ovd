@@ -114,7 +114,7 @@ var ApplicationsPanel = Class.create({
 });
 
 var ApplicationItem = Class.create({
-	application_: null,
+	application: null,
 	node: null,
 
 	app_span: null,
