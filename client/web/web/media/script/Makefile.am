@@ -4,9 +4,9 @@ scripts_DATA = application.js \
                common.js \
                daemon.js \
                daemon_applications.js \
-               daemon_applications_int.js \
                daemon_desktop.js \
                daemon_external.js \
+               daemon_portal.js \
                external.js \
                JavaTester.js \
                Logger.js \
