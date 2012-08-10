@@ -252,16 +252,6 @@ function onStartSessionSuccess(xml_) {
 			daemon.parseSessionSettings(setting_nodes);
 		}
 
-		daemon.i18n['session_close_unexpected'] = i18n.get('session_close_unexpected');
-		daemon.i18n['session_end_ok'] = i18n.get('session_end_ok');
-		daemon.i18n['session_end_unexpected'] = i18n.get('session_end_unexpected');
-		daemon.i18n['error_details'] = i18n.get('error_details');
-		daemon.i18n['close_this_window'] = i18n.get('close_this_window');
-		daemon.i18n['start_another_session'] = i18n.get('start_another_session');
-
-		daemon.i18n['suspend'] = i18n.get('suspend');
-		daemon.i18n['resume'] = i18n.get('resume');
-
 		if (debug) {
 			if (session_mode == 'Desktop')
 				$('desktopModeContainer').style.height = daemon.my_height+'px';

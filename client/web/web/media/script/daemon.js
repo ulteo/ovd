@@ -20,8 +20,6 @@
  **/
 
 var Daemon = Class.create({
-	i18n: null, // Array
-
 	sessionmanager: null,
 
 	debug: false,
@@ -65,7 +63,6 @@ var Daemon = Class.create({
 	session_ready_callback: null,
 
 	initialize: function(debug_) {
-		this.i18n = new Array();
 		this.settings = new Hash();
 		this.servers = new Hash();
 		this.liaison_server_applications = new Hash();
@@ -281,7 +278,7 @@ var Daemon = Class.create({
 
 			if (! this.is_started()) {
 				Logger.warn('[daemon] check_status_post() - Session end is unexpected (session was never started)');
-				this.error_message = this.i18n['session_close_unexpected'];
+				this.error_message = i18n.get('session_close_unexpected');
 			}
 
 			this.do_ended();
@@ -393,7 +390,7 @@ var Daemon = Class.create({
 				error_toggle_text_link.setAttribute('onclick', 'toggleContent(\'errorContainer\'); return false;');
 				var error_toggle_text = document.createElement('span');
 				error_toggle_text.setAttribute('style', 'height: 16px;');
-				error_toggle_text.innerHTML = this.i18n['error_details'];
+				error_toggle_text.innerHTML = i18n.get('error_details');
 				error_toggle_text_link.appendChild(error_toggle_text);
 				error_toggle_text_td.appendChild(error_toggle_text_link);
 				error_toggle_tr.appendChild(error_toggle_text_td);
@@ -414,7 +411,7 @@ var Daemon = Class.create({
 				var close_container = document.createElement('div');
 				close_container.setAttribute('style', 'margin-top: 10px;');
 				var close_text = document.createElement('span');
-				close_text.innerHTML = this.i18n['start_another_session'];
+				close_text.innerHTML = i18n.get('start_another_session');
 				close_container.appendChild(close_text);
 				buf.appendChild(close_container);
 			}
@@ -431,9 +428,9 @@ var Daemon = Class.create({
 
 		if ($('endMessage')) {
 			if (this.error_message != '')
-				$('endMessage').innerHTML = '<span class="msg_error">'+this.i18n['session_end_unexpected']+'</span>';
+				$('endMessage').innerHTML = '<span class="msg_error">'+i18n.get('session_end_unexpected')+'</span>';
 			else
-				$('endMessage').innerHTML = this.i18n['session_end_ok'];
+				$('endMessage').innerHTML = i18n.get('session_end_ok');
 		}
 
 		if ($('progressBar') && $('progressBarContent')) {
