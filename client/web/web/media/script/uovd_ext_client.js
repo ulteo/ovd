@@ -119,7 +119,6 @@ function onStartExternalSessionSuccess(xml_) {
 				showError(i18n.get('internal_error'));
 			} catch(e) {}
 			
-			enableLogin();
 			return false;
 		}
 		
