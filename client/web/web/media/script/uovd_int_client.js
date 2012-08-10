@@ -229,7 +229,7 @@ function onStartSessionSuccess(xml_) {
 		if (session_mode == 'Desktop')
 			daemon = new Desktop(debug);
 		else
-			daemon = new Applications(debug);
+			daemon = new Portal(debug);
 
 		daemon.sessionmanager = sessionmanager_host;
 

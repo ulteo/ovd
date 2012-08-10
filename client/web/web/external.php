@@ -303,9 +303,6 @@ if ($debug_mode === false && array_key_exists('debug', $_REQUEST))
 		</div>
 
 		<div id="applicationsModeContainer" style="display: none;">
-			<div id="appsContainer" style="overflow: auto; display: none;">
-			</div>
-
 			<div id="applicationsAppletContainer" style="display: none;">
 			</div>
 		</div>

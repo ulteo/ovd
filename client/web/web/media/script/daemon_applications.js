@@ -25,11 +25,8 @@ var Applications = Class.create(Daemon, {
 	local_integration: false,
 
 	applications: null, // Hash
-	applicationsPanel: null,
 	running_applications: null, // Hash
 	nb_running_applications: 0,
-
-	news: null, // Hash
 
 	liaison_runningapplicationtoken_application: null, // Hash
 
@@ -42,38 +39,9 @@ var Applications = Class.create(Daemon, {
 		
 		this.applications = new Hash();
 		this.running_applications = new Hash();
-		this.news = new Hash();
 		this.liaison_runningapplicationtoken_application = new Hash();
 
-		$('applicationsAppletContainer').innerHTML = '';
-
-		var remove_height = 114;
-		if (this.debug)
-			remove_height = 115;
-		$('applicationsContainer').style.height = parseInt(this.my_height)-remove_height+'px';
-		$('appsContainer').style.height = parseInt(this.my_height)-remove_height+'px';
-		$('fileManagerContainer').style.height = parseInt(this.my_height)-remove_height+'px';
-
-		this.applicationsPanel = new ApplicationsPanel($('appsContainer'));
-		
-		try {
-			this.local_integration = local_integration;
-		} catch(e) {}
-		
 		this.waiting_applications_instances = new Array();
-	},
-
-	parseSessionSettings: function(setting_nodes) {
-		Daemon.prototype.parseSessionSettings.apply(this, [setting_nodes]);
-
-		if ($('suspend_button')) {
-			if (this.persistent) {
-				$('suspend_button').show();
-			}
-			else {
-				$('suspend_button').hide();
-			}
-		}
 	},
 
 	connect_servers: function() {
@@ -104,8 +72,7 @@ var Applications = Class.create(Daemon, {
 	do_started: function() {
 		Logger.debug('[applications] do_started()');
 
-		this.load_explorer();
-		this.display_news();
+		this.process_loop();
 
 		Daemon.prototype.do_started.apply(this);
 
@@ -151,13 +118,7 @@ var Applications = Class.create(Daemon, {
 				
 				this.liaison_server_applications.get(server_.id).push(application.id);
 				
-				var application_item = new ApplicationItem(application);
-				this.servers.each(function(pair) {
-					var server = pair.value;
-					server.add_status_changed_callback(application_item.on_server_status_change.bind(application_item));
-				});
-				
-				this.applicationsPanel.add(application_item);
+				this.on_application_add(application);
 			
 			} catch(e) {
 				Logger.error('[applications] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "application" node '+j+')');
@@ -194,15 +155,7 @@ var Applications = Class.create(Daemon, {
 			if (status_ == 'started') {
 				Logger.info('[applications] applicationStatus(token: '+token_+', status: '+status_+') - Adding "running" application "'+token_+'" to running applications list');
 
-				var running = 0;
-				if ($('running_'+app_id)) {
-					if ($('running_'+app_id).innerHTML != '' && typeof parseInt($('running_'+app_id).innerHTML) == 'number')
-						running += parseInt($('running_'+app_id).innerHTML);
-				}
-				running += 1;
-				this.nb_running_applications += 1;
-
-				$('running_'+app_id).innerHTML = running;
+				this.on_running_app_started(instance);
 			}
 		} else {
 			Logger.info('[applications] applicationStatus(token: '+token_+', status: '+status_+') - Updating "running" application "'+token_+'" status: "'+app_status+'"');
@@ -217,40 +170,24 @@ var Applications = Class.create(Daemon, {
 				if (typeof app_id == 'undefined')
 					return false;
 
-				var running = 0;
-				if ($('running_'+app_id)) {
-					if ($('running_'+app_id).innerHTML != '' && typeof parseInt($('running_'+app_id).innerHTML) == 'number')
-						running = parseInt($('running_'+app_id).innerHTML);
-				}
-				running -= 1;
-				this.nb_running_applications -= 1;
-
-				if (running > 0)
-					$('running_'+app_id).innerHTML = running;
-				else
-					$('running_'+app_id).innerHTML = '';
+				this.on_running_app_stopped(instance);
 			}
 		}
 
 		return true;
 	},
 
-	load_explorer: function() {
-		if (! this.explorer)
-			return;
+	on_application_add: function(application_) {},
+	on_running_app_started: function(instance_) {},
+	on_running_app_stopped: function(instance_) {},
 
-		this.explorer_loop();
-
-		$('fileManagerContainer').innerHTML = '<iframe style="width: 100%; height: 100%; border: none;" src="ajaxplorer/"></iframe>';
-	},
-
-	explorer_loop: function() {
-		Logger.debug('[applications] explorer_loop()');
+	process_loop: function() {
+		Logger.debug('[applications] process_loop()');
 
 		this.check_start_app();
 
 		if (! this.is_stopped())
-			setTimeout(this.explorer_loop.bind(this), 2000);
+			setTimeout(this.process_loop.bind(this), 2000);
 	},
 
 	check_start_app: function() {
@@ -320,58 +257,6 @@ var Applications = Class.create(Daemon, {
 				application.launch_with_file(type, path, share);
 			}
 		}
-	},
-
-	display_news: function() {
-		new Ajax.Request(
-			'news.php',
-			{
-				method: 'get',
-				onSuccess: this.parse_display_news.bind(this)
-			}
-		);
-
-		setTimeout(this.display_news.bind(this), 300000);
-	},
-
-	parse_display_news: function(transport) {
-		Logger.debug('[applications] parse_display_news(transport@display_news())');
-
-		var xml = transport.responseXML;
-
-		var buffer = xml.getElementsByTagName('news');
-
-		if (buffer.length != 1) {
-			Logger.error('[applications] parse_display_news(transport@display_news()) - Invalid XML (No "news" node)');
-			return;
-		}
-
-		var html = '';
-		html += '<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="3">';
-		var new_nodes = xml.getElementsByTagName('new');
-		for (var i=0; i<new_nodes.length; i++) {
-			this.news.set(''+new_nodes[i].getAttribute('id'), new_nodes[i]);
-
-			var date = new Date();
-			date.setTime(new_nodes[i].getAttribute('timestamp')*1000);
-
-			html += '<tr><td style="text-align: left;">';
-			html += '<span style="font-size: 1.1em; color: black;">';
-			html += '<em>'+date.toLocaleString()+'</em> - <strong><a href="javascript:;" onclick="daemon.show_new('+new_nodes[i].getAttribute('id')+'); return false;">'+new_nodes[i].getAttribute('title')+'</a></strong>';
-			html += '</span>';
-			html += '</td></tr>';
-		}
-		html += '</table>';
-
-		$('newsContainer').innerHTML = html;
-	},
-
-	show_new: function(i_) {
-		var new_ = this.news.get(''+i_);
-		var title = new_.getAttribute('title');
-		var content = new_.firstChild.nodeValue;
-
-		showNews(title, content);
 	}
 });
 
