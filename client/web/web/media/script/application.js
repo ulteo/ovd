@@ -29,18 +29,6 @@ var Application = Class.create({
 		this.id = id_;
 		this.name = name_;
 		this.server_id = server_id_;
-	},
-
-	launch: function() {
-		var server = daemon.servers.get(this.server_id);
-		$('ulteoapplet').startApplication(++daemon.application_token, this.id, server.java_id);
-		daemon.liaison_runningapplicationtoken_application.set(daemon.application_token, this.id);
-	},
-
-	launch_with_file: function(type_, path_, share_) {
-		var server = daemon.servers.get(this.server_id);
-		$('ulteoapplet').startApplicationWithFile(++daemon.application_token, this.id, server.java_id, type_, path_, share_);
-		daemon.liaison_runningapplicationtoken_application.set(daemon.application_token, this.id);
 	}
 });
 
@@ -118,9 +106,12 @@ var ApplicationItem = Class.create({
 	node: null,
 
 	app_span: null,
+	on_click_callbacks: null, // Array
 
 	initialize: function(application_) {
 		this.application = application_;
+		
+		this.on_click_callbacks = new Array();
 	},
 
 	on_server_status_change: function(server_, status_) {
@@ -185,8 +176,14 @@ var ApplicationItem = Class.create({
 	},
 
  	onClick: function(event) {
-		this.application.launch();
+		for (var i=0; i < this.on_click_callbacks.length; i++)
+			this.on_click_callbacks[i](this);
+		
 		event.stop();
+	},
+	
+	add_on_click_callback: function(callback_) {
+		this.on_click_callbacks.push(callback_);
 	},
 
 	getIconURL: function() {

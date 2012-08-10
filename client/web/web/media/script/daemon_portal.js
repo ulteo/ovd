@@ -74,6 +74,8 @@ var Portal = Class.create(Applications, {
 			server.add_status_changed_callback(app_item.on_server_status_change.bind(app_item));
 		});
 		
+		app_item.add_on_click_callback(this.on_application_item_clicked.bind(this));
+		
 		this.applicationsPanel.add(app_item);
 	},
 	
@@ -107,6 +109,10 @@ var Portal = Class.create(Applications, {
 			$('running_'+app_id).innerHTML = running;
 		else
 			$('running_'+app_id).innerHTML = '';
+	},
+	
+	on_application_item_clicked: function(application_item_) {
+		this.launch_application(application_item_.application);
 	},
 
 	load_explorer: function() {

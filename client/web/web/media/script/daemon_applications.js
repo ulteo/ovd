@@ -180,6 +180,18 @@ var Applications = Class.create(Daemon, {
 	on_application_add: function(application_) {},
 	on_running_app_started: function(instance_) {},
 	on_running_app_stopped: function(instance_) {},
+	
+	launch_application: function(application_) {
+		var server = this.servers.get(application_.server_id);
+		$('ulteoapplet').startApplication(++this.application_token, application_.id, server.java_id);
+		this.liaison_runningapplicationtoken_application.set(this.application_token, application_.id);
+	},
+
+	launch_application_with_file: function(application_, type_, path_, share_) {
+		var server = this.servers.get(application_.server_id);
+		$('ulteoapplet').startApplicationWithFile(++this.application_token, application_.id, server.java_id, type_, path_, share_);
+		this.liaison_runningapplicationtoken_application.set(this.application_token, application_.id);
+	},
 
 	process_loop: function() {
 		Logger.debug('[applications] process_loop()');
@@ -248,13 +260,13 @@ var Applications = Class.create(Daemon, {
 			
 			var file = instances2start[i].getElementsByTagName('file');
 			if (file.length == 0)
-				application.launch();
+				this.launch_application(application);
 			else {
 				var type = file[0].getAttribute('type');
 				var path = file[0].getAttribute('path');
 				var share = file[0].getAttribute('share');
 				
-				application.launch_with_file(type, path, share);
+				this.launch_application_with_file(application, type, path, share);
 			}
 		}
 	}
