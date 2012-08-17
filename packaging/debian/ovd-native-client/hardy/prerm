@@ -1,6 +1,6 @@
 #!/bin/sh
 
-xdg-icon-resource uninstall --size 128 --mode system ulteo-ovd-native-client
+xdg-icon-resource uninstall --size 32 --mode system ulteo-ovd-native-client
 
 #DEBHELPER#
 

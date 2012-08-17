@@ -2,7 +2,7 @@
 
 ICONFILE=/usr/share/icons/ulteo.png
 
-xdg-icon-resource install --size 128 --mode system $ICONFILE ulteo-ovd-native-client
+xdg-icon-resource install --size 32 --mode system $ICONFILE ulteo-ovd-native-client
 
 #DEBHELPER#
 
