@@ -1,8 +1,9 @@
 #!/bin/sh
 
-ICONFILE=/usr/share/icons/ulteo.png
+ICONPATH=/usr/share/icons
 
-xdg-icon-resource install --size 32 --mode system $ICONFILE ulteo-ovd-native-client
+xdg-icon-resource install --size 32 --mode system $ICONPATH/ulteo.png ulteo-ovd-native-client
+xdg-icon-resource install --size 128 --mode system $ICONPATH/ulteo-128.png ulteo-ovd-native-client
 
 #DEBHELPER#
 

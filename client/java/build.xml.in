@@ -267,6 +267,7 @@
     <copy file="misc/ulteo-ovd-native-client.desktop"
           todir="${datadir}/applications" />
     <copy file="icons/ulteo.png" todir="${datadir}/icons" />
+    <copy file="icons/ulteo-128.png" todir="${datadir}/icons" />
   </target>
 
   <target name="ovdNativeClient.jar" depends="ovdNativeClient">
