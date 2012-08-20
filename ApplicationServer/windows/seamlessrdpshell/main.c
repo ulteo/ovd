@@ -69,6 +69,8 @@ static int g_startup_num_procs;
 static BOOL g_connected;
 static BOOL g_desktop_hidden;
 
+BOOL g_is_move_offscreen_forbidden = FALSE;
+
 typedef void (*set_hooks_proc_t) ();
 typedef void (*remove_hooks_proc_t) ();
 typedef int (*get_instance_count_proc_t) ();
@@ -348,7 +350,7 @@ is_desktop_hidden(void)
 	return desk == NULL;
 }
 
-static void load_configuration(BOOL *use_active_monitoring) {
+static void load_configuration(BOOL *use_active_monitoring, BOOL *is_move_offscreen_forbidden) {
 	HKEY rkey;
 	LONG status;
 	DWORD buffer_size = 6;
@@ -361,6 +363,9 @@ static void load_configuration(BOOL *use_active_monitoring) {
 
 	status = RegQueryValueEx(rkey, "use_active_monitoring", NULL, &type, (BYTE*)buffer, &buffer_size);
 	*use_active_monitoring = (status == ERROR_SUCCESS && type == REG_SZ && StrCmpI(buffer, "true") == 0);
+
+	status = RegQueryValueEx(rkey, "move_offscreen_forbidden", NULL, &type, (BYTE*)buffer, &buffer_size);
+	*is_move_offscreen_forbidden = (status == ERROR_SUCCESS && type == REG_SZ && StrCmpI(buffer, "true") == 0);
 
 	RegCloseKey (rkey);
 }
@@ -401,7 +406,7 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 
 	g_instance = instance;
 
-	load_configuration(&use_active_monitoring);
+	load_configuration(&use_active_monitoring, &g_is_move_offscreen_forbidden);
 
 	if (! use_active_monitoring) {
 		hookdll = LoadLibrary("seamlessrdp.dll");

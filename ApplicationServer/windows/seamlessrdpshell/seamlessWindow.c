@@ -27,6 +27,8 @@
 #include <stdlib.h>
 #include <malloc.h>
 
+extern BOOL g_is_move_offscreen_forbidden;
+
 void SeamlessWindow_create(HWND hwnd) {
 		unsigned short *title;
 		int state;
@@ -163,7 +165,6 @@ static void SeamlessWindow_sendPosition(SeamlessWindow *sw) {
 void SeamlessWindow_updatePosition(SeamlessWindow *sw) {
 	RECT rect;
 	SeamlessOrder_Position *lastOrder = NULL;
-	PSIZE screenSize = NULL;
 
 	if (! sw)
 		return;
@@ -187,37 +188,41 @@ void SeamlessWindow_updatePosition(SeamlessWindow *sw) {
 	    && (rect.right == lastOrder->bounds.right) && (rect.bottom == lastOrder->bounds.bottom))
 		goto end;
 
-	screenSize = WindowUtil_getScreenSize();
-	if (screenSize && (! IsZoomed(sw->windows))) {
-		int width = rect.right - rect.left;
-		int height = rect.bottom - rect.top;
-		int x = rect.left;
-		int y = rect.top;
-		
-		if (width > screenSize->cx) {
-			width = screenSize->cx - 1;
-		}
-		if (height > screenSize->cy) {
-			height = screenSize->cy - 1;
-		}
-		
-		if (rect.right > screenSize->cx) {
-			x -= rect.right - screenSize->cx;
-		}
-		if (rect.bottom > screenSize->cy) {
-			y -= rect.bottom - screenSize->cy;
-		}
-		
-		if (x < 0) {
-			x = 0;
-		}
-		if (y < 0) {
-			y = 0;
-		}
-		
-		if (x != rect.left || y != rect.top || width != (rect.right - rect.left) || height != (rect.bottom - rect.top)) {
-			SetWindowPos(sw->windows, NULL, x, y, width, height, SWP_NOACTIVATE | SWP_NOZORDER);
-			goto end;
+	if (g_is_move_offscreen_forbidden) {
+		PSIZE screenSize = NULL;
+
+		screenSize = WindowUtil_getScreenSize();
+		if (screenSize && (! IsZoomed(sw->windows))) {
+			int width = rect.right - rect.left;
+			int height = rect.bottom - rect.top;
+			int x = rect.left;
+			int y = rect.top;
+			
+			if (width > screenSize->cx) {
+				width = screenSize->cx - 1;
+			}
+			if (height > screenSize->cy) {
+				height = screenSize->cy - 1;
+			}
+			
+			if (rect.right > screenSize->cx) {
+				x -= rect.right - screenSize->cx;
+			}
+			if (rect.bottom > screenSize->cy) {
+				y -= rect.bottom - screenSize->cy;
+			}
+			
+			if (x < 0) {
+				x = 0;
+			}
+			if (y < 0) {
+				y = 0;
+			}
+			
+			if (x != rect.left || y != rect.top || width != (rect.right - rect.left) || height != (rect.bottom - rect.top)) {
+				SetWindowPos(sw->windows, NULL, x, y, width, height, SWP_NOACTIVATE | SWP_NOZORDER);
+				goto end;
+			}
 		}
 	}
 
