@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VFSHook", "VFSHook\VFSHook.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VFSHookTester", "VFSHookTester\VFSHookTester.vcxproj", "{4D049F85-4268-45E6-83F4-917690C3D41C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VFSHookLoader", "VFSHookLoader\VFSHookLoader.vcxproj", "{30DA1326-F177-4E25-8733-0A81BF7A9B32}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +29,12 @@ Global
 		{4D049F85-4268-45E6-83F4-917690C3D41C}.Release|Win32.ActiveCfg = Release|Win32
 		{4D049F85-4268-45E6-83F4-917690C3D41C}.Release|Win32.Build.0 = Release|Win32
 		{4D049F85-4268-45E6-83F4-917690C3D41C}.Release|x64.ActiveCfg = Release|Win32
+		{30DA1326-F177-4E25-8733-0A81BF7A9B32}.Debug|Win32.ActiveCfg = Debug|Win32
+		{30DA1326-F177-4E25-8733-0A81BF7A9B32}.Debug|Win32.Build.0 = Debug|Win32
+		{30DA1326-F177-4E25-8733-0A81BF7A9B32}.Debug|x64.ActiveCfg = Debug|Win32
+		{30DA1326-F177-4E25-8733-0A81BF7A9B32}.Release|Win32.ActiveCfg = Release|Win32
+		{30DA1326-F177-4E25-8733-0A81BF7A9B32}.Release|Win32.Build.0 = Release|Win32
+		{30DA1326-F177-4E25-8733-0A81BF7A9B32}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

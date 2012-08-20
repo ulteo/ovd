@@ -3,21 +3,29 @@
 #include <ctime>
 #include <windows.h>
 
-#define DLL_PATH			"VFSHook.dll"
 
-#define VFS_DLL_LOG_PATH	"D:\\HookTest\\"
-#define TEST_FILE_PATH		"D:\\HookTest\\AppOutput.txt"
+#include <shlobj.h>
+#include <boost/filesystem.hpp>
+#include <boost/thread/thread.hpp>
+#include <boost/bind.hpp>
 
-#define	TEST_REG_MAIN_KEY	HKEY_LOCAL_MACHINE
-#define	TEST_REG_SUB_KEY	TEXT("Software")
 
-void WriteFileTest(char *fmt,...)
+#define DLL_PATH				"VFSHook.dll"
+
+#define VFS_DLL_LOG_PATH		"D:\\HookTest\\"
+#define TEST_DESKTOP_FILE_PATH	"C:\\Users\\Wei\\Desktop\\DesktopPathOutput.txt"
+#define TEST_DOC_FILE_PATH		"C:\\Users\\Wei\\Documents\\DocPathOutput.txt"
+
+#define	TEST_REG_MAIN_KEY		HKEY_LOCAL_MACHINE
+#define	TEST_REG_SUB_KEY		TEXT("Software")
+
+void WriteFileTest(LPCSTR path, char *fmt,...)
 {
 	va_list args;
 	char temp[5000];
 	HANDLE hFile;
 
-	if((hFile = CreateFileA(TEST_FILE_PATH, GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) <0)
+	if((hFile = CreateFileA(path, GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) <0)
 	{
 		return;
 	}
@@ -93,10 +101,13 @@ int main()
 	printf("========= Test Start =========\n");
 	printf("\n");
 
-	printf("WriteFileTest, file : %s \n", TEST_FILE_PATH);
-	WriteFileTest("Origin name of file wrote to : %s", TEST_FILE_PATH);
+	printf("WriteFileTest, file : %s \n", TEST_DESKTOP_FILE_PATH);
+	WriteFileTest(TEST_DESKTOP_FILE_PATH, "Origin name of file wrote to : %s", TEST_DESKTOP_FILE_PATH);
+	printf("WriteFileTest, file : %s \n", TEST_DOC_FILE_PATH);
+	WriteFileTest(TEST_DOC_FILE_PATH, "Origin name of file wrote to : %s", TEST_DOC_FILE_PATH);
 	//TODO:
 	//printf("read file test: read file from: ... \n");
+	
 	
 	printf("RegOpenKeyTest, key : %s \n", TEST_REG_SUB_KEY);
 	RegOpenKeyTest();	

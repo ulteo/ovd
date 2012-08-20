@@ -1,17 +1,30 @@
 #include "stdafx.h"
+
 #include "Hook.h"
 #include "mhook-lib/mhook.h"
+
 #include <stdio.h>
-#include <ctime>
 #include <windows.h>
+#include <ctime>
+#include <shlobj.h> 
+#include <string>
+
+//#include <boost/filesystem.hpp>
 
 #if _WIN32 || _WIN64
 #if _WIN64
 #define LOG_FILE "D:\\HookTest\\HookLog64.txt"
 #else
-#define LOG_FILE "D:\\HookTest\\HookLog32.txt"
+//#define LOG_FILE "D:\\HookTest\\HookLog32.txt"
+#define LOG_FILE "U:\\HookLog32.txt"
 #endif //#if _WIN64
 #endif //#if _WIN32 || _WIN64
+
+//#define REDIRECT_PATH	L"D:\\HookTest"
+#define REDIRECT_PATH	L"U:\\"
+#define	SEPERATOR		L"\\"
+#define DESKTOP_FOLDER	L"Desktop"
+#define DOCUMENT_FOLDER	L"Documents"
 
 static bool gs_Logging = false;
 ////////////////////////////////////////////////////////////////////////
@@ -27,6 +40,36 @@ static bool gs_Logging = false;
 //		http://msdn.microsoft.com/en-us/library/windows/desktop/aa363983(v=vs.85).aspx
 ////////////////////////////////////////////////////////////////////////
 
+bool filter(LPCWSTR lpFilePath, 
+			std::wstring szTargetPath, 
+			std::wstring szRedirectPath, 
+			std::wstring* pszOutputPath)
+{
+	bool bRedirected = false;
+	std::wstring szResult(lpFilePath);//reusult == input path by default
+
+	std::wstring szFileTargetRoot = std::wstring(lpFilePath).substr(0, szTargetPath.length());
+
+	//is in target folder
+	if( wcscmp(szFileTargetRoot.c_str(), szTargetPath.c_str()) == 0 )
+	{
+		bRedirected = true;
+		//is children folder/file of the target folder
+		if(std::wstring(lpFilePath).length() > szFileTargetRoot.length())
+		{
+			std::wstring szRemainPath = std::wstring(lpFilePath).substr(szTargetPath.length() + 1);
+			szResult = szRedirectPath + SEPERATOR + szRemainPath;
+		}
+		//is target folder
+		else 
+		{
+			szResult = szTargetPath;
+		}
+	}
+
+	*pszOutputPath = szResult;
+	return bRedirected;
+}
 ////////////////////////////////////////////////////////////////////////
 //CreateFileA
 typedef HANDLE (WINAPI* _pCreateFileA)(LPCSTR lpFileName, 
@@ -52,15 +95,11 @@ HANDLE WINAPI myCreateFileA(LPCSTR lpFileName,
 	}
 
 	log("CreateFileA: filename=%s", lpFileName);
-	if(strcmp(lpFileName, "D:\\HookTest\\AppOutput.txt") == 0)
-	{
-		lpFileName = "D:\\HookTest\\AppOutput_REDIRECT.txt";
-	}
+
 	return OriginCreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes,
 		dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
 }
 
-////////////////////////////////////////////////////////////////////////
 //CreateFileW
 typedef HANDLE (WINAPI* _pCreateFileW)(LPCWSTR lpFileName, 
 									   DWORD dwDesiredAccess, 
@@ -87,11 +126,24 @@ HANDLE WINAPI myCreateFileW(LPCWSTR lpFileName,
 	char fname[MAX_PATH];
 	WideCharToMultiByte( CP_ACP, 0, lpFileName, -1, fname, sizeof(fname), NULL, NULL);  
 	log("CreateFileW: filename=%s", fname);
-
-	if(wcscmp(lpFileName, L"D:\\HookTest\\AppOutput.txt") == 0)
+	
+	// target path : Desktop & Document
+	WCHAR szDesktop[MAX_PATH];
+	WCHAR szDocumnet[MAX_PATH];
+	SHGetSpecialFolderPath(NULL, szDesktop, CSIDL_DESKTOP, 0);
+	SHGetSpecialFolderPath(NULL, szDocumnet, CSIDL_PERSONAL, 0);
+	
+	std::wstring out;
+	if ( filter(
+		lpFileName, szDesktop, std::wstring(REDIRECT_PATH) + SEPERATOR + DESKTOP_FOLDER, &out) )
 	{
-		lpFileName = L"D:\\HookTest\\AppOutput_REDIRECT.txt";
-	}
+		lpFileName = out.c_str();
+	}	
+	else if( filter(
+		lpFileName, szDocumnet, std::wstring(REDIRECT_PATH) + SEPERATOR + DOCUMENT_FOLDER, &out) )
+	{
+		lpFileName = out.c_str();
+	}	
 
 	return OriginCreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes,
 		dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
@@ -602,7 +654,7 @@ void log(char *fmt,...)
 	timeinfo = localtime(rawtime);
 	wsprintfA(temp, "[%d/%02d/%02d %02d:%02d:%02d] ", 
 		timeinfo->tm_year + 1900, 
-		timeinfo->tm_mon, 
+		timeinfo->tm_mon + 1, 
 		timeinfo->tm_mday,
 		timeinfo->tm_hour, 
 		timeinfo->tm_min, 
