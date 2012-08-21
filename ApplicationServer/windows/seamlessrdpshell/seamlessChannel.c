@@ -157,30 +157,30 @@ void* SeamlessChannel_getLastOrder(int order_type) {
 }
 
 void SeamlessChannel_setLastOrder(int order_type, void* order) {
-	void *global_order = NULL;
+	void **global_order = NULL;
 	SIZE_T length = 0;
 
 	WaitForSingleObject(g_mutex_orders, INFINITE);
 
 	switch(order_type) {
 		case SEAMLESSORDER_STATE:
-			global_order = g_last_state_order;
+			global_order = &g_last_state_order;
 			length = sizeof(SeamlessOrder_State);
 			break;
 		case SEAMLESSORDER_POSITION:
-			global_order = g_last_position_order;
+			global_order = &g_last_position_order;
 			length = sizeof(SeamlessOrder_Position);
 			break;
 		case SEAMLESSORDER_DESTROY:
-			global_order = g_last_destroy_order;
+			global_order = &g_last_destroy_order;
 			length = sizeof(SeamlessOrder_Destroy);
 			break;
 		case SEAMLESSORDER_ZCHANGE:
-			global_order = g_last_zchange_order;
+			global_order = &g_last_zchange_order;
 			length = sizeof(SeamlessOrder_ZChange);
 			break;
 		case SEAMLESSORDER_FOCUS:
-			global_order = g_last_focus_order;
+			global_order = &g_last_focus_order;
 			length = sizeof(SeamlessOrder_Focus);
 			break;
 		default:
@@ -188,20 +188,20 @@ void SeamlessChannel_setLastOrder(int order_type, void* order) {
 	}
 
 	if (! order) {
-		global_order = NULL;
+		*global_order = NULL;
 		goto end;
 	}
 
-	if (global_order)
-		free(global_order);
+	if (*global_order)
+		free(*global_order);
 
-	global_order = malloc(length);
-	if (! global_order) {
-		global_order = NULL;
+	*global_order = malloc(length);
+	if (! *global_order) {
+		*global_order = NULL;
 		goto end;
 	}
 
-	memcpy(global_order, order, length);
+	memcpy(*global_order, order, length);
 
 	end:
 		ReleaseMutex(g_mutex_orders);
