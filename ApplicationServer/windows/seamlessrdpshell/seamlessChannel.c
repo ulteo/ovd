@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2011-2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -191,9 +191,6 @@ void SeamlessChannel_setLastOrder(int order_type, void* order) {
 		global_order = NULL;
 		goto end;
 	}
-
-	if (sizeof(order) != length)
-		goto end;
 
 	if (global_order)
 		free(global_order);
