@@ -164,12 +164,9 @@ static void SeamlessWindow_sendPosition(SeamlessWindow *sw) {
 
 void SeamlessWindow_updatePosition(SeamlessWindow *sw) {
 	RECT rect;
-	SeamlessOrder_Position *lastOrder = NULL;
 
 	if (! sw)
 		return;
-
-	lastOrder = (SeamlessOrder_Position *) SeamlessChannel_getLastOrder(SEAMLESSORDER_POSITION);
 
 	if (IsZoomed(sw->windows) || IsIconic(sw->windows))
 	{
@@ -183,10 +180,6 @@ void SeamlessWindow_updatePosition(SeamlessWindow *sw) {
 			goto end;
 		}
 	}
-
-	if (lastOrder && (sw->windows == lastOrder->wnd) && (rect.left == lastOrder->bounds.left) && (rect.top == lastOrder->bounds.top)
-	    && (rect.right == lastOrder->bounds.right) && (rect.bottom == lastOrder->bounds.bottom))
-		goto end;
 
 	if (g_is_move_offscreen_forbidden) {
 		PSIZE screenSize = NULL;
