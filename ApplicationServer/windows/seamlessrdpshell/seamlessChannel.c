@@ -288,8 +288,6 @@ static void SeamlessChannel_process_position(unsigned int serial, HWND hwnd, int
 	else if ((rect.left != x) || (rect.top != y) || (rect.right != x + width)
 		 || (rect.bottom != y + height))
 		SeamlessWindow_updatePosition(sw);
-	else if (! IsIconic(sw->windows))
-		SeamlessChannel_sendPosition(sw->windows, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, 0);
 
 	SeamlessChannel_setLastOrder(SEAMLESSORDER_POSITION, NULL);
 }
