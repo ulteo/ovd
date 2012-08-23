@@ -127,7 +127,8 @@ if ($debug_mode === false && array_key_exists('debug', $_REQUEST))
 
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-		<link rel="shortcut icon" type="image/png" href="media/image/favicon.ico" />
+		<link rel="shortcut icon" href="media/image/favicon.ico" />
+		<link rel="shortcut icon" type="image/png" href="media/image/favicon.png" />
 
 		<link rel="stylesheet" type="text/css" href="media/script/lib/nifty/niftyCorners.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />

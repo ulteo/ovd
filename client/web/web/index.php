@@ -129,7 +129,8 @@ function get_users_list() {
 
 		<meta http-equiv="X-UA-Compatible" content="IE=8" />
 
-		<link rel="shortcut icon" type="image/png" href="media/image/favicon.ico" />
+		<link rel="shortcut icon" href="media/image/favicon.ico" />
+		<link rel="shortcut icon" type="image/png" href="media/image/favicon.png" />
 
 		<link rel="stylesheet" type="text/css" href="media/script/lib/nifty/niftyCorners.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />

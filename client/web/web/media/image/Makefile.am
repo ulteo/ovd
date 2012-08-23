@@ -5,6 +5,7 @@ scripts_DATA = close-wrap.png \
                cross.png \
                error.png \
                favicon.ico \
+               favicon.png \
                hide.png \
                loader.gif \
                logout.png \
