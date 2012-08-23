@@ -4,7 +4,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
- * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
@@ -573,8 +573,17 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		}
 		
 		if (this.opts.lang != null) {
+			String[] buf = this.opts.lang.split("_", 2);
+
+			String lang = buf[0];
+			String suffix = (buf.length == 2) ? buf[1] : null;
+
 			for (int i = 0; i < Language.languageList.length; i++) {
-				if (this.opts.lang.equalsIgnoreCase(Language.languageList[i][2])) {
+				if (lang.equalsIgnoreCase(Language.languageList[i][2])) {
+					if (suffix != null && Language.languageList[i].length > 3 && ! suffix.equalsIgnoreCase(Language.languageList[i][3])) {
+						continue;
+					}
+
 					this.authFrame.getLanguageBox().setSelectedIndex(i);
 					break;
 				}
