@@ -13,7 +13,8 @@ scripts_DATA = application.js \
                server.js \
                timezones.js \
                uovd_int_client.js \
-               uovd_ext_client.js
+               uovd_ext_client.js \
+               uovd.js
                
 
 scriptsdir = $(datadir)/ulteo/webclient/media/script

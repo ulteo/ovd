@@ -130,9 +130,16 @@ if ($debug_mode === false && array_key_exists('debug', $_REQUEST))
 		<link rel="shortcut icon" href="media/image/favicon.ico" />
 		<link rel="shortcut icon" type="image/png" href="media/image/favicon.png" />
 
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/style/uovd.css")) { ?>
+		<link rel="stylesheet" type="text/css" href="media/style/uovd.css" />
+<?php } else { ?>
 		<link rel="stylesheet" type="text/css" href="media/script/lib/nifty/niftyCorners.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
+<?php } ?>
 
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/uovd.js")) { ?>
+		<script type="text/javascript" src="media/script/uovd.js" charset="utf-8"></script>
+<?php } else { ?>
 		<script type="text/javascript" src="media/script/lib/prototype/prototype.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/scriptaculous/effects.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/scriptaculous/extensions.js" charset="utf-8"></script>
@@ -147,6 +154,7 @@ if ($debug_mode === false && array_key_exists('debug', $_REQUEST))
 		<script type="text/javascript" src="media/script/JavaTester.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/Logger.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/timezones.js" charset="utf-8"></script>
+<?php } ?>
 
 		<script type="text/javascript" src="media/script/uovd_ext_client.js?<?php echo time(); ?>" charset="utf-8"></script>
 
