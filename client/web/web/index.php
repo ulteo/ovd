@@ -136,7 +136,7 @@ function get_users_list() {
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 
 		<script type="text/javascript" src="media/script/lib/prototype/prototype.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/lib/scriptaculous/effects.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/scriptaculous/extensions.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/common.js?<?php echo time(); ?>" charset="utf-8"></script>
