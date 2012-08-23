@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -126,30 +127,16 @@ if ($debug_mode === false && array_key_exists('debug', $_REQUEST))
 
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-		<script type="text/javascript" src="media/script/lib/prototype/prototype.js" charset="utf-8"></script>
-
-		<script type="text/javascript" src="media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/lib/scriptaculous/extensions.js" charset="utf-8"></script>
+		<link rel="shortcut icon" type="image/png" href="media/image/favicon.ico" />
 
 		<link rel="stylesheet" type="text/css" href="media/script/lib/nifty/niftyCorners.css" />
-		<script type="text/javascript" src="media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>
-		<script type="text/javascript" charset="utf-8">
-			NiftyLoad = function() {
-				Nifty('div.rounded');
-			}
-		</script>
-
-		<script type="text/javascript">
-			var i18n = new Hash();
-
-			var user_keymap = '<?php echo $user_keymap; ?>';
-			var OPTION_KEYMAP_AUTO_DETECT = <?php echo ((OPTION_KEYMAP_AUTO_DETECT === true)?'true':'false'); ?>;
-		</script>
-
-		<link rel="shortcut icon" type="image/png" href="media/image/favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
+
+		<script type="text/javascript" src="media/script/lib/prototype/prototype.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/lib/scriptaculous/extensions.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/common.js?<?php echo time(); ?>" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd_ext_client.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/daemon.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/daemon_desktop.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/daemon_applications.js?<?php echo time(); ?>" charset="utf-8"></script>
@@ -160,7 +147,18 @@ if ($debug_mode === false && array_key_exists('debug', $_REQUEST))
 		<script type="text/javascript" src="media/script/Logger.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/timezones.js" charset="utf-8"></script>
 
+		<script type="text/javascript" src="media/script/uovd_ext_client.js?<?php echo time(); ?>" charset="utf-8"></script>
+
 		<script type="text/javascript">
+			NiftyLoad = function() {
+				Nifty('div.rounded');
+			}
+
+			var i18n = new Hash();
+
+			var user_keymap = '<?php echo $user_keymap; ?>';
+			var OPTION_KEYMAP_AUTO_DETECT = <?php echo ((OPTION_KEYMAP_AUTO_DETECT === true)?'true':'false'); ?>;
+
 			<?php
 				if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications' && ! $first) {
 			?>
