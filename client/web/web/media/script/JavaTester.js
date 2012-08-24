@@ -2,6 +2,7 @@
  * Copyright (C) 2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,7 +37,13 @@ var JavaTester = Class.create({
 	      
 	perform: function() {
 		this.showSystemTest();
-		setTimeout(this.perform_.bind(this), 2000);
+		if (!this.lookupNavigatorPlugins("application/x-java-applet;version=1.6")) {
+			this.insertApplet()
+			setTimeout(this.perform_.bind(this), 2000);
+		} else {
+			this.insertSecondApplet();
+			this.do_second_test();
+		}
 	},
 	
 	perform_: function() {
@@ -59,13 +66,17 @@ var JavaTester = Class.create({
 			return;
 		}
 		
+		this.insertSecondApplet();
+		this.do_second_test();
+	},
+	
+	insertSecondApplet: function() {
 		var applet_params = new Hash();
 		applet_params.set('onSuccess', 'JavaTester_appletSuccess');
 		applet_params.set('onFailure', 'JavaTester_appletFailure');
 		
 		var applet = buildAppletNode('CheckSignedJava', 'org.ulteo.ovd.applet.CheckJava', 'ulteo-applet.jar', applet_params);
 		$('testJava').appendChild(applet);
-		this.do_second_test();
 	},
 	
 	do_second_test: function () {
@@ -136,6 +147,27 @@ var JavaTester = Class.create({
 		});
 		
 		new Effect.Appear($('systemTestErrorWrap'));
+	},
+	
+	insertApplet: function() {
+		var applet = new Element('applet', {id:"CheckJava", code:"org.ulteo.ovd.applet.CheckJava", codebase:"applet/", archive:"CheckJava.jar", mayscript:"true", width:"1", height:"1"});
+		applet.appendChild(new Element('param', {name:"code", value:"org.ulteo.ovd.applet.CheckJava"}));
+		applet.appendChild(new Element('param', {name:"codebase", value:"applet"}));
+		applet.appendChild(new Element('param', {name:"archive", value:"CheckJava.jar"}));
+		applet.appendChild(new Element('param', {name:"mayscript", value:"true"}));
+		$("testJava").appendChild(applet);
+	},
+	
+	lookupNavigatorPlugins: function(search) {
+		for (i = 0; i < navigator.plugins.length; i++) {
+			var plugin = navigator.plugins[i];
+			for (j = 0; j < plugin.length; j++) {
+				var mimetype = plugin[j];
+				if (mimetype && mimetype.enabledPlugin && (mimetype.enabledPlugin.name == plugin.name) && mimetype.type == search)
+					return true
+			}
+		}
+		return false;
 	}
 });
 
