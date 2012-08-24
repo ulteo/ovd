@@ -40,7 +40,7 @@ var JavaTester = Class.create({
 	},
 	
 	perform_: function() {
-		this.testJava_t0 = (new Date()).getTime();
+		this.t0 = (new Date()).getTime();
 		this.do_first_test();
 	},
 	
