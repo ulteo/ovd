@@ -502,7 +502,7 @@ var Daemon = Class.create({
 				
 			} catch(e) {
 				Logger.error('[daemon] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "server" node '+i+')');
-				Logger.error('[daemon] parse_list_servers(transport@list_servers()) - Exception: '+e);
+				Logger.debug('[daemon] parse_list_servers(transport@list_servers()) - Exception: '+e);
 				return false;
 			}
 		}
