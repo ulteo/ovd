@@ -122,6 +122,7 @@ var Applications = Class.create(Daemon, {
 			
 			} catch(e) {
 				Logger.error('[applications] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "application" node '+j+')');
+				Logger.debug('[applications] parse_list_servers(transport@list_servers()) - Exception: '+e);
 				return false;
 			}
 		}

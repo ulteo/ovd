@@ -237,6 +237,7 @@ var Daemon = Class.create({
 			this.check_status_post();
 		} catch(e) {
 			Logger.error('[daemon] parse_check_status(transport@check_status()) - Invalid XML (Missing argument for "session" node)');
+			Logger.debug('[daemon] parse_check_status(transport@check_status()) - Exception: '+e);
 			return;
 		}
 	},
@@ -501,6 +502,7 @@ var Daemon = Class.create({
 				
 			} catch(e) {
 				Logger.error('[daemon] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "server" node '+i+')');
+				Logger.error('[daemon] parse_list_servers(transport@list_servers()) - Exception: '+e);
 				return false;
 			}
 		}
