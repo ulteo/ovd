@@ -116,7 +116,7 @@ Logger.toggle_level = function(level_) {
 };
 
 Logger.info = function(data_) {
-	if (console && console.info)
+	if (typeof console != "undefined" && console.info)
 		console.info(data_);
 	
 	if (! Logger.has_instance())
@@ -126,7 +126,7 @@ Logger.info = function(data_) {
 };
 
 Logger.warn = function(data_) {
-	if (console && console.warn)
+	if (typeof console != "undefined"  && console.warn)
 		console.warn(data_);
 	
 	if (! Logger.has_instance())
@@ -136,7 +136,7 @@ Logger.warn = function(data_) {
 };
 
 Logger.error = function(data_) {
-	if (console && console.error)
+	if (typeof console != "undefined"  && console.error)
 		console.error(data_);
 	
 	if (! Logger.has_instance())
@@ -146,7 +146,7 @@ Logger.error = function(data_) {
 };
 
 Logger.debug = function(data_) {
-	if (console && console.debug)
+	if (typeof console != "undefined"  && console.debug)
 		console.debug(data_);
 	
 	if (! Logger.has_instance())
