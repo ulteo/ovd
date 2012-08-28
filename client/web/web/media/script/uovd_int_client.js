@@ -239,9 +239,10 @@ function onStartSessionSuccess(xml_) {
 
 	daemon.keymap = $('session_keymap').value;
 	try {
-		daemon.duration = parseInt(session_node.getAttribute('duration'));
+		var duration = parseInt(session_node.getAttribute('duration'));
+		if (! isNaN(duration))
+			daemon.duration = duration;
 	} catch(e) {}
-	daemon.duration = parseInt(session_node.getAttribute('duration'));
 
 	if (session_mode == 'Desktop' && desktop_fullscreen)
 		daemon.fullscreen = true;

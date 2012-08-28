@@ -97,9 +97,11 @@ function onStartExternalSessionSuccess(xml_) {
 	daemon.sessionmanager = sessionmanager_host;
 	daemon.keymap = user_keymap;
 	try {
-		daemon.duration = parseInt(session_node.getAttribute('duration'));
+		var duration = parseInt(session_node.getAttribute('duration'));
+		if (! isNaN(duration))
+			daemon.duration = duration;
 	} catch(e) {}
-	daemon.duration = parseInt(session_node.getAttribute('duration'));
+	
 	daemon.multimedia = ((session_node.getAttribute('multimedia') == 1)?true:false);
 	daemon.redirect_client_printers = ((session_node.getAttribute('redirect_client_printers') == 1)?true:false);
 	daemon.redirect_smartcards_readers = ((session_node.getAttribute('redirect_smartcards_readers') == 1)?true:false);
