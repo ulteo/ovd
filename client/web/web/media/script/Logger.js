@@ -2,6 +2,7 @@
  * Copyright (C) 2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -115,6 +116,9 @@ Logger.toggle_level = function(level_) {
 };
 
 Logger.info = function(data_) {
+	if (console && console.info)
+		console.info(data_);
+	
 	if (! Logger.has_instance())
 		return;
 	
@@ -122,6 +126,9 @@ Logger.info = function(data_) {
 };
 
 Logger.warn = function(data_) {
+	if (console && console.warn)
+		console.warn(data_);
+	
 	if (! Logger.has_instance())
 		return;
 	
@@ -129,6 +136,9 @@ Logger.warn = function(data_) {
 };
 
 Logger.error = function(data_) {
+	if (console && console.error)
+		console.error(data_);
+	
 	if (! Logger.has_instance())
 		return;
 	
@@ -136,6 +146,9 @@ Logger.error = function(data_) {
 };
 
 Logger.debug = function(data_) {
+	if (console && console.debug)
+		console.debug(data_);
+	
 	if (! Logger.has_instance())
 		return;
 	
