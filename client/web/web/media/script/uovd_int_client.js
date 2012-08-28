@@ -2,6 +2,7 @@
  * Copyright (C) 2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -225,61 +226,62 @@ function onStartSessionSuccess(xml_) {
 		}, 2000);
 	}
 
-	setTimeout(function() {
-		if (session_mode == 'Desktop')
-			daemon = new Desktop(debug);
-		else
-			daemon = new Portal(debug);
+	if (session_mode == 'Desktop')
+		daemon = new Desktop(debug);
+	else
+		daemon = new Portal(debug);
 
-		daemon.sessionmanager = sessionmanager_host;
+	daemon.sessionmanager = sessionmanager_host;
 
-		daemon.explorer = explorer;
-		if (daemon.explorer)
-			$('fileManagerWrap').show();
+	daemon.explorer = explorer;
+	if (daemon.explorer)
+		$('fileManagerWrap').show();
 
-		daemon.keymap = $('session_keymap').value;
-		try {
-			daemon.duration = parseInt(session_node.getAttribute('duration'));
-		} catch(e) {}
+	daemon.keymap = $('session_keymap').value;
+	try {
 		daemon.duration = parseInt(session_node.getAttribute('duration'));
+	} catch(e) {}
+	daemon.duration = parseInt(session_node.getAttribute('duration'));
 
-		if (session_mode == 'Desktop' && desktop_fullscreen)
-			daemon.fullscreen = true;
+	if (session_mode == 'Desktop' && desktop_fullscreen)
+		daemon.fullscreen = true;
 
-		var settings_node = session_node.getElementsByTagName('settings');
-		if (settings_node.length > 0) {
-			var setting_nodes = settings_node[0].getElementsByTagName('setting');
-			daemon.parseSessionSettings(setting_nodes);
-		}
+	var settings_node = session_node.getElementsByTagName('settings');
+	if (settings_node.length > 0) {
+		var setting_nodes = settings_node[0].getElementsByTagName('setting');
+		daemon.parseSessionSettings(setting_nodes);
+	}
+
+	daemon.add_session_ready_callback(function onSessionReady(d_) {
+		if (session_mode == 'Desktop')
+			new Effect.Move($('desktopModeContainer'), { x: 0, y: my_height });
+		else
+			new Effect.Move($('applicationsModeContainer'), { x: 0, y: my_height });
+		
+		setTimeout(function() {
+			hideSplash();
+		}, 2000);
+	});
+
+	daemon.prepare();
+
+	// <server> nodes
+	if (! daemon.parse_list_servers(xml)) {
+		try {
+			showError(i18n.get('internal_error'));
+		} catch(e) {}
+		
+		enableLogin();
+		return false;
+	}
+
+	setTimeout(function() {
 
 		if (debug) {
 			if (session_mode == 'Desktop')
 				$('desktopModeContainer').style.height = daemon.my_height+'px';
 			else
 				$('applicationsModeContainer').style.height = daemon.my_height+'px';
-		}
-		
-		daemon.add_session_ready_callback(function onSessionReady(d_) {
-			if (session_mode == 'Desktop')
-				new Effect.Move($('desktopModeContainer'), { x: 0, y: my_height });
-			else
-				new Effect.Move($('applicationsModeContainer'), { x: 0, y: my_height });
-			
-			setTimeout(function() {
-				hideSplash();
-			}, 2000);
-		});
-
-		daemon.prepare();
-
-		// <server> nodes
-		if (! daemon.parse_list_servers(xml)) {
-			try {
-				showError(i18n.get('internal_error'));
-			} catch(e) {}
-			
-			enableLogin();
-			return false;
 		}
 		
 		daemon.loop();

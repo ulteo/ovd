@@ -2,6 +2,7 @@
  * Copyright (C) 2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -88,40 +89,40 @@ function onStartExternalSessionSuccess(xml_) {
 		session_mode = session_mode.substr(0, 1).toUpperCase()+session_mode.substr(1, session_mode.length-1);
 	} catch(e) {}
 
-	setTimeout(function() {
-		if (session_mode == 'Desktop')
-			daemon = new Desktop(debug_mode);
-		else
-			daemon = new External(debug_mode);
+	if (session_mode == 'Desktop')
+		daemon = new Desktop(debug_mode);
+	else
+		daemon = new External(debug_mode);
 
-		daemon.sessionmanager = sessionmanager_host;
-		daemon.keymap = user_keymap;
-		try {
-			daemon.duration = parseInt(session_node.getAttribute('duration'));
-		} catch(e) {}
+	daemon.sessionmanager = sessionmanager_host;
+	daemon.keymap = user_keymap;
+	try {
 		daemon.duration = parseInt(session_node.getAttribute('duration'));
-		daemon.multimedia = ((session_node.getAttribute('multimedia') == 1)?true:false);
-		daemon.redirect_client_printers = ((session_node.getAttribute('redirect_client_printers') == 1)?true:false);
-		daemon.redirect_smartcards_readers = ((session_node.getAttribute('redirect_smartcards_readers') == 1)?true:false);
+	} catch(e) {}
+	daemon.duration = parseInt(session_node.getAttribute('duration'));
+	daemon.multimedia = ((session_node.getAttribute('multimedia') == 1)?true:false);
+	daemon.redirect_client_printers = ((session_node.getAttribute('redirect_client_printers') == 1)?true:false);
+	daemon.redirect_smartcards_readers = ((session_node.getAttribute('redirect_smartcards_readers') == 1)?true:false);
+	try {
+		daemon.redirect_client_drives = session_node.getAttribute('redirect_client_drives');
+	} catch(e) {}
+
+	var settings_node = session_node.getElementsByTagName('settings');
+	if (settings_node.length > 0) {
+		var setting_nodes = settings_node[0].getElementsByTagName('setting');
+		daemon.parseSessionSettings(setting_nodes);
+	}
+
+	daemon.prepare();
+	if (! daemon.parse_list_servers(xml)) {
 		try {
-			daemon.redirect_client_drives = session_node.getAttribute('redirect_client_drives');
+			showError(i18n.get('internal_error'));
 		} catch(e) {}
-
-		var settings_node = session_node.getElementsByTagName('settings');
-		if (settings_node.length > 0) {
-			var setting_nodes = settings_node[0].getElementsByTagName('setting');
-			daemon.parseSessionSettings(setting_nodes);
-		}
-
-		daemon.prepare();
-		if (! daemon.parse_list_servers(xml)) {
-			try {
-				showError(i18n.get('internal_error'));
-			} catch(e) {}
-			
-			return false;
-		}
 		
+		return false;
+	}
+	
+	setTimeout(function() {
 		daemon.loop();
 	}, 2500);
 
