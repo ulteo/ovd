@@ -248,7 +248,7 @@ function translateInterface(lang_) {
 	new Ajax.Request(
 		'translate.php',
 		{
-			method: 'post',
+			method: 'get',
 			parameters: {
 				lang: lang_
 			},

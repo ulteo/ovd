@@ -1,10 +1,11 @@
 <?php
 /**
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
  * Author Omar AKHAM <oakham@ulteo.com> 2011
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +23,12 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
+
+$seconds_to_cache = 86400*15;
+$ts = gmdate("D, d M Y H:i:s", time() + $seconds_to_cache) . " GMT";
+header("Expires: $ts");
+header("Pragma: cache");
+header("Cache-Control: max-age=$seconds_to_cache");
 
 function locale2unix($locale_) {
 	if (preg_match('/[a-z]+_[A-Z]+\.[a-zA-Z-0-9]+/', $locale_))
