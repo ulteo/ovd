@@ -150,11 +150,7 @@ var JavaTester = Class.create({
 	},
 	
 	insertApplet: function() {
-		var applet = new Element('applet', {id:"CheckJava", code:"org.ulteo.ovd.applet.CheckJava", codebase:"applet/", archive:"CheckJava.jar", mayscript:"true", width:"1", height:"1"});
-		applet.appendChild(new Element('param', {name:"code", value:"org.ulteo.ovd.applet.CheckJava"}));
-		applet.appendChild(new Element('param', {name:"codebase", value:"applet"}));
-		applet.appendChild(new Element('param', {name:"archive", value:"CheckJava.jar"}));
-		applet.appendChild(new Element('param', {name:"mayscript", value:"true"}));
+		var applet = buildAppletNode('CheckJava', 'org.ulteo.ovd.applet.CheckJava', 'CheckJava.jar', new Hash());
 		$("testJava").appendChild(applet);
 	},
 	
