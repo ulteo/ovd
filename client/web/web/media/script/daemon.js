@@ -31,7 +31,7 @@ var Daemon = Class.create({
 	mode: '',
 	keymap: 'en-us',
 	duration: -1,
-	rdp_imput_method: null,
+	rdp_input_method: null,
 
 	settings: null, // Hash
 
