@@ -9,3 +9,10 @@ Alias /ovd @DATADIR@/ulteo/webclient
     DirectoryIndex index.php
     php_admin_flag magic_quotes_gpc Off
 </Directory>
+
+<Directory @DATADIR@/ulteo/webclient/media>
+    <IfModule mod_expires.c>
+        ExpiresActive On
+        ExpiresDefault "modification plus 1 years"
+    </IfModule>
+</Directory>
