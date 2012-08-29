@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2011 
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,6 +24,7 @@
 class SessionManager {
 	private $base_url;
 	private $cookies;
+	private $lastfilemtime;
 	
 	public function __construct($base_url_) {
 		$this->base_url = $base_url_;
@@ -34,12 +36,18 @@ class SessionManager {
 		
 		$string = curl_exec($socket);
 		$buf = curl_getinfo($socket, CURLINFO_HTTP_CODE);
+		$this->lastfilemtime = curl_getinfo($socket, CURLINFO_FILETIME);
 		curl_close($socket);
 		
 		if ($buf != 200)
 			return false;
 		
 		return $string;
+	}
+	
+	
+	public function get_last_file_mtime() {
+		return $this->lastfilemtime;
 	}
 	
 	
@@ -83,6 +91,7 @@ class SessionManager {
 		curl_setopt($socket, CURLOPT_SSL_VERIFYHOST, 0);
 		curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, 10);
 		curl_setopt($socket, CURLOPT_TIMEOUT, (10+5));
+		curl_setopt($socket, CURLOPT_FILETIME, true);
 		
 		foreach($this->cookies as $k => $v)
 			curl_setopt($socket, CURLOPT_COOKIE, $k.'='.$v);

@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009, 2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -74,6 +75,14 @@ $path = $app->getIconPath();
 if (! file_exists($path)) {
 	echo return_error(6, 'No icon available for application "'.$_GET['id'].'"');
 	die();
+}
+
+$time = filemtime($path);
+if ($time !== false) {
+	header("Last-Modified: " . gmdate("D, d M Y H:i:s", $time) . " GMT");
+	header('Cache-Control: cache');
+	header('Pragma: cache');
+	header('Expires: ' . gmdate('D, d M Y H:i:s', $time+(86400*360)) . ' GMT'); // one year
 }
 
 header('Content-Type: image/png');
