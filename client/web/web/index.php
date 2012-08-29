@@ -25,6 +25,12 @@
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
+$logo_size = getimagesize(dirname(__FILE__).'/media/image/ulteo.png');
+if ($logo_size === false)
+	$logo_size = "";
+else
+	$logo_size = $logo_size[3];
+
 $languages = get_available_languages();
 $keymaps = get_available_keymaps();
 
@@ -301,7 +307,7 @@ function get_users_list() {
 			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td style="text-align: center;" colspan="3">
-						<img src="media/image/ulteo.png" alt="" title="" />
+						<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
 					</td>
 				</tr>
 				<tr>
@@ -328,7 +334,7 @@ function get_users_list() {
 			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td style="text-align: center;">
-						<img src="media/image/ulteo.png" alt="" title="" />
+						<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
 					</td>
 				</tr>
 				<tr>
@@ -343,7 +349,7 @@ function get_users_list() {
 				<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td style="text-align: center;">
-							<img src="media/image/ulteo.png" alt="" title="" />
+							<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
 						</td>
 					</tr>
 					<tr>
@@ -438,7 +444,7 @@ function get_users_list() {
 					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td style="width: 300px; text-align: left; vertical-align: top;">
-								<img src="media/image/ulteo.png" alt="" title="" />
+								<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
 							</td>
 							<td style="width: 10px;">
 							</td>
@@ -463,7 +469,7 @@ checkSessionMode();
 										<table style="width: 100%; margin-left: auto; margin-right: auto; padding-top: 10px;" border="0" cellspacing="0" cellpadding="5">
 											<tr style="<?php echo ((defined('SESSIONMANAGER_HOST'))?'display: none;':'') ?>">
 												<td style="width: 22px; text-align: right; vertical-align: middle;">
-													<img src="media/image/icons/sessionmanager.png" alt="" title="" />
+													<img src="media/image/icons/sessionmanager.png" width="22" height="22" alt="" title="" />
 												</td>
 												<td style="text-align: left; vertical-align: middle;">
 													<strong><span id="session_manager_gettext">&nbsp;</span></strong>
@@ -496,7 +502,7 @@ checkSessionMode();
 											</tr>
 											<tr>
 												<td style="width: 22px; text-align: right; vertical-align: middle;">
-													<img src="media/image/icons/user_login.png" alt="" title="" />
+													<img src="media/image/icons/user_login.png" width="22" height="22" alt="" title="" />
 												</td>
 												<td style="text-align: left; vertical-align: middle;">
 													<strong><span id="login_gettext">&nbsp;</span></strong>
@@ -523,7 +529,7 @@ checkSessionMode();
 											</tr>
 											<tr id="password_row">
 												<td style="text-align: right; vertical-align: middle;">
-													<img src="media/image/icons/user_password.png" alt="" title="" />
+													<img src="media/image/icons/user_password.png" width="22" height="22" alt="" title="" />
 												</td>
 												<td style="text-align: left; vertical-align: middle;">
 													<strong><span id="password_gettext">&nbsp;</span></strong>
@@ -548,7 +554,7 @@ checkSessionMode();
 											<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="5">
 												<tr<?php if (OPTION_SHOW_USE_LOCAL_CREDENTIALS === false) echo ' style="display: none;"';?>>
 													<td style="text-align: right; vertical-align: middle;">
-														<img src="media/image/icons/use_local_credentials.png" alt="" title="" />
+														<img src="media/image/icons/use_local_credentials.png" width="22" height="22" alt="" title="" />
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
 														<strong><span id="use_local_credentials_gettext">&nbsp;</span></strong>
@@ -560,7 +566,7 @@ checkSessionMode();
 												</tr>
 												<tr>
 													<td style="width: 22px; text-align: right; vertical-align: middle;">
-														<img src="media/image/icons/session_mode.png" alt="" title="" />
+														<img src="media/image/icons/session_mode.png" width="22" height="22" alt="" title="" />
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
 														<strong><span id="mode_gettext">&nbsp;</span></strong>
@@ -574,7 +580,7 @@ checkSessionMode();
 												</tr>
 												<tr id="advanced_settings_desktop">
 													<td style="text-align: right; vertical-align: middle;">
-														<img src="media/image/icons/settings_desktop_fullscreen.png" alt="" title="" />
+														<img src="media/image/icons/settings_desktop_fullscreen.png" width="22" height="22" alt="" title="" />
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
 														<strong><span id="fullscreen_gettext">&nbsp;</span></strong>
@@ -586,13 +592,13 @@ checkSessionMode();
 												</tr>
 												<tr>
 													<td style="text-align: right; vertical-align: middle;">
-														<img src="media/image/icons/session_language.png" alt="" title="" />
+														<img src="media/image/icons/session_language.png" width="22" height="22" alt="" title="" />
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
 														<strong><span id="language_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<span style="margin-right: 5px;"><img id="session_language_flag" /></span>
+														<span style="margin-right: 5px;"><img id="session_language_flag" width="16" height="11" /></span>
 														<script type="text/javascript">
 															Event.observe(window, 'load', function() {
 																translateInterface($('session_language').value);
@@ -609,7 +615,7 @@ checkSessionMode();
 												</tr>
 												<tr<?php if ($rdp_input_unicode == 'unicode') echo ' style="display: none;"';?>>
 													<td style="text-align: right; vertical-align: middle;">
-														<img src="media/image/icons/keyboard_layout.png" alt="" title="" />
+														<img src="media/image/icons/keyboard_layout.png" width="22" height="22" alt="" title="" />
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
 														<strong><span id="keyboard_layout_gettext">&nbsp;</span></strong>
@@ -628,7 +634,7 @@ checkSessionMode();
 ?>
 												<tr>
 													<td style="text-align: right; vertical-align: middle;">
-														<img src="media/image/icons/debug.png" alt="" title="" />
+														<img src="media/image/icons/debug.png" width="22" height="22" alt="" title="" />
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
 														<strong><span id="debug_gettext">&nbsp;</span></strong>

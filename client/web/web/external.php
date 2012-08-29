@@ -23,6 +23,12 @@
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
+$logo_size = getimagesize(dirname(__FILE__).'/media/image/ulteo.png');
+if ($logo_size === false)
+	$logo_size = "";
+else
+	$logo_size = $logo_size[3];
+
 if (array_key_exists('language', $_REQUEST)) {
 	$available_languages = get_available_languages();
 	$languages = array();
@@ -271,7 +277,7 @@ if ($debug_mode === false && array_key_exists('debug', $_REQUEST))
 			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td style="text-align: center;" colspan="3">
-						<img src="media/image/ulteo.png" alt="" title="" />
+						<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
 					</td>
 				</tr>
 				<tr>
@@ -290,7 +296,7 @@ if ($debug_mode === false && array_key_exists('debug', $_REQUEST))
 			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td style="text-align: center;">
-						<img src="media/image/ulteo.png" alt="" title="" />
+						<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
 					</td>
 				</tr>
 				<tr>
