@@ -115,7 +115,6 @@ function onStartExternalSessionSuccess(xml_) {
 		daemon.parseSessionSettings(setting_nodes);
 	}
 
-	daemon.prepare();
 	if (! daemon.parse_list_servers(xml)) {
 		try {
 			showError(i18n.get('internal_error'));
@@ -123,6 +122,8 @@ function onStartExternalSessionSuccess(xml_) {
 		
 		return false;
 	}
+	
+	daemon.prepare();
 	
 	setTimeout(function() {
 		daemon.loop();

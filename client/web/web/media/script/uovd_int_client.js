@@ -264,8 +264,6 @@ function onStartSessionSuccess(xml_) {
 		}, 2000);
 	});
 
-	daemon.prepare();
-
 	// <server> nodes
 	if (! daemon.parse_list_servers(xml)) {
 		try {
@@ -275,6 +273,8 @@ function onStartSessionSuccess(xml_) {
 		enableLogin();
 		return false;
 	}
+
+	daemon.prepare();
 
 	setTimeout(function() {
 

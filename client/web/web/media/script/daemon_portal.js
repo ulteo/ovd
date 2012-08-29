@@ -4,6 +4,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  * Author Omar AKHAM <oakham@ulteo.com> 2011
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -201,5 +202,17 @@ var Portal = Class.create(Applications, {
 		var content = new_.firstChild.nodeValue;
 
 		showNews(title, content);
+	},
+	
+	prepare: function($super) {
+		$super();
+		
+		Logger.debug('[applications] prepare()');
+		
+		this.applications.each(function (app) {
+			var appItem = new ApplicationItem(app.value);
+			var img = new Image()
+			img.src = appItem.getIconURL();
+		});
 	}
 });
