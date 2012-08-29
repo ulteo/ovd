@@ -127,7 +127,7 @@ function get_users_list() {
 
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-		<meta http-equiv="X-UA-Compatible" content="IE=8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 
 		<link rel="shortcut icon" href="media/image/favicon.ico" />
 		<link rel="shortcut icon" type="image/png" href="media/image/favicon.png" />
