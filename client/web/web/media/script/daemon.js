@@ -89,6 +89,8 @@ var Daemon = Class.create({
 		
 		Event.observe(window, 'unload', this.client_exit.bind(this));
 	},
+	
+	finalize: function() {},
 
 	refresh_body_size: function() {
 		if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
@@ -441,6 +443,7 @@ var Daemon = Class.create({
 
 		this.break_loop();
 		this.stopped = true;
+		this.finalize();
 	},
 	
 	parseSessionSettings: function(setting_nodes) {

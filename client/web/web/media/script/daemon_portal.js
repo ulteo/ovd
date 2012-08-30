@@ -25,6 +25,7 @@ var Portal = Class.create(Applications, {
 	local_integration: false,
 	applicationsPanel: null,
 	news: null, // Hash
+	news_timeout: null,
 
 	initialize: function(debug_) {
 		Applications.prototype.initialize.apply(this, [debug_]);
@@ -43,6 +44,15 @@ var Portal = Class.create(Applications, {
 		try {
 			this.local_integration = local_integration;
 		} catch(e) {}
+	},
+	
+	finalize: function($super) {
+		$super();
+		
+		if (this.news_timeout != null) {
+			clearTimeout(this.news_timeout);
+			this.news_timeout = null;
+		}
 	},
 
 	parseSessionSettings: function(setting_nodes) {
@@ -132,7 +142,7 @@ var Portal = Class.create(Applications, {
 			}
 		);
 
-		setTimeout(this.display_news.bind(this), 300000);
+		this.news_timeout = setTimeout(this.display_news.bind(this), 300000);
 	},
 
 	parse_display_news: function(transport) {
