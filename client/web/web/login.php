@@ -100,20 +100,14 @@ if (defined('SESSIONMANAGER_HOST')) {
 	$_SESSION['ovd-client']['sessionmanager_host'] = $_POST['sessionmanager_host'];
 }
 
-$_SESSION['ovd-client']['gateway'] = false;
-$_SESSION['ovd-client']['gateway_first'] = false;
 $headers = apache_request_headers();
 if (is_array($headers) && array_key_exists('OVD-Gateway', $headers)) {
-	$_SESSION['ovd-client']['gateway'] = true;
-	$_SESSION['ovd-client']['gateway_first'] = true;
-
 	if (defined('GATEWAY_FORCE_PORT'))
 		$port = GATEWAY_FORCE_PORT;
 	else
 		$port = $_POST['requested_port'];
 	
 	$_SESSION['ovd-client']['server'] = $_SERVER['REMOTE_ADDR'].':'.$port;
-	$_SESSION['ovd-client']['sessionmanager_host'] = $_POST['requested_host'].':'.$_POST['requested_port'];
 }
 
 $_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$_SESSION['ovd-client']['server'].'/ovd/client';
@@ -192,41 +186,12 @@ if (! is_object($session_node)) {
 	echo return_error_alt(1, 'internal_error');
 	die();
 }
-$session_node->setAttribute('sessionmanager', $_SESSION['ovd-client']['sessionmanager_host']);
-
-$server_nodes = $session_node->getElementsByTagName('server');
-foreach ($server_nodes as $server_node) {
-	$port = 3389;
-	
-	if ($_SESSION['ovd-client']['gateway'] === true) {
-		if ($_SESSION['ovd-client']['gateway_first'] === true) {
-			$host = $_POST['requested_host'];
-			$port = $_POST['requested_port'];
-		}
-		else {
-			$url = 'http://'.$_SESSION['ovd-client']['sessionmanager_host'];
-			$host = parse_url($url, PHP_URL_HOST);
-			$port = parse_url($url, PHP_URL_PORT);
-			if (is_null($port))
-				$port = 443;
-		}
-		$server_node->setAttribute('fqdn', $host);
-		$server_node->setAttribute('port', $port);
-	}
-	elseif (! $server_node->hasAttribute('port'))
-		$server_node->setAttribute('port', $port);
-}
-
 
 $_SESSION['ovd-client']['session_id'] = $session_node->getAttribute('id');
 $session_mode = $session_node->getAttribute('mode');
 if ($session_mode == 'desktop')
 	$_SESSION['ovd-client']['desktop_fullscreen'] = ((array_key_exists('desktop_fullscreen', $_POST))?$_POST['desktop_fullscreen']:0);
 $_SESSION['ovd-client']['timeout'] = $session_node->getAttribute('timeout');
-
-if ($session_node->hasAttribute('mode_gateway') && $session_node->getAttribute('mode_gateway') == 'on') {
-	$_SESSION['ovd-client']['gateway'] = true;
-}
 
 $user_node = $session_node->getElementsByTagName('user');
 if (count($user_node) != 1) {

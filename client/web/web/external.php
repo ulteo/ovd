@@ -125,6 +125,9 @@ $local_integration = (defined('PORTAL_LOCAL_INTEGRATION') && (PORTAL_LOCAL_INTEG
 if ($debug_mode === false && array_key_exists('debug', $_REQUEST))
 	$debug_mode = true;
 
+$headers = apache_request_headers();
+$gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers));
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -173,6 +176,8 @@ if ($debug_mode === false && array_key_exists('debug', $_REQUEST))
 
 			var i18n = new Hash();
 
+			var SESSIONMANAGER = '<?php echo SESSIONMANAGER_HOST; ?>';
+			var GATEWAY_FIRST_MODE = <?php echo (($gateway_first === true)?'true':'false'); ?>;
 			var user_keymap = '<?php echo $user_keymap; ?>';
 			var OPTION_KEYMAP_AUTO_DETECT = <?php echo ((OPTION_KEYMAP_AUTO_DETECT === true)?'true':'false'); ?>;
 

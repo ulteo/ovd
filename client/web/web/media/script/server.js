@@ -50,15 +50,15 @@ var Server = Class.create({
 	 * @param xml_      Credentials and params supplied by the webclient server, to 
    *                  be provided to the RDP applet for RDP auth.
 	 */
-	initialize: function(id_, java_id_, xml_) {
+	initialize: function(id_, java_id_, fqdn_, port_, username_, password_, xml_) {
 		this.id = id_;
 		this.java_id = java_id_;
 		this.xml = xml_;
 
-		this.fqdn = xml_.getAttribute('fqdn');
-		this.port = xml_.getAttribute('port');
-		this.username = xml_.getAttribute('login');
-		this.password = xml_.getAttribute('password');
+		this.fqdn = fqdn_;
+		this.port = port_;
+		this.username = username_;
+		this.password = password_;
 		
 		this.status_changed_callbacks = new Array();
 	},
@@ -126,6 +126,8 @@ var Server = Class.create({
 		this.status_changed_callbacks.push(callback_);
 	}
 });
+
+Server.DEFAULT_RDP_PORT = 3389;
 
 function serverStatus(java_id_, status_) {
 	var servers = daemon.servers.values();

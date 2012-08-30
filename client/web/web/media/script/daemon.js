@@ -475,20 +475,40 @@ var Daemon = Class.create({
 			return false;
 		}
 		
+		sessionNode = sessionNode[0];
+		
+		var mode_gateway = false;
+		if (! Object.isUndefined(sessionNode.getAttribute("mode_gateway"))) {
+			if (sessionNode.getAttribute("mode_gateway") == "on")
+				mode_gateway = true;
+		}
+		
 		var serverNodes = xml.getElementsByTagName('server');
 		
 		for (var i=0; i<serverNodes.length; i++) {
 			try { // IE does not have hasAttribute in DOM API...
-				var mode_gateway = false;
-				try {
-					var token = serverNodes[i].getAttribute('token');
-					if (token == null)
-						go_to_the_catch_please(); //call a function which does not exist to throw an exception and go to the catch()
-					
-					mode_gateway = true;
-				} catch(e) {}
+				var serverNode = serverNodes[i];
 				
-				var server = new Server(i, i, serverNodes[i]);
+				var server_host = serverNodes[i].getAttribute("fqdn");
+				var server_port = Server.DEFAULT_RDP_PORT;
+				var server_username = serverNodes[i].getAttribute("login");
+				var server_password = serverNodes[i].getAttribute("password");
+				
+				if (mode_gateway) {
+					server_host = this.sessionmanager.host;
+					server_port = this.sessionmanager.port;
+				}
+				else if (! Object.isUndefined(serverNodes[i].getAttribute("port"))) {
+					var port = parseInt(serverNodes[i].getAttribute("port"));
+					if (isNaN(port)) {
+						Logger.error("Invalid protocol: server port attribute is not a digit ("+port+")");
+						throw 'port isNaN';
+					}
+					
+					server_port = port;
+				}
+				
+				var server = new Server(i, i, server_host, server_port, server_username, server_password, serverNodes[i]);
 				if (mode_gateway)
 					server.setToken(serverNodes[i].getAttribute('token'));
 				

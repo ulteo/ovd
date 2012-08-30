@@ -79,7 +79,7 @@ var Desktop = Class.create(Daemon, {
 			if (this.fullscreen)
 				applet_params.set('fullscreen', 1);
 			if (this.sessionmanager != null)
-				applet_params.set('sessionmanager', this.sessionmanager);
+				applet_params.set('sessionmanager', this.sessionmanager.host+":"+this.sessionmanager.port);
 
 			this.settings.each(function(pair) {
 				applet_params.set('setting_'+pair.key, pair.value);

@@ -30,7 +30,6 @@ function startExternalSession(mode_) {
 		{
 			method: 'post',
 			parameters: {
-				requested_host: window.location.hostname,
 				requested_port: ((window.location.port !=  '')?window.location.port:'443'),
 				mode: mode_,
 				language: client_language,
@@ -77,11 +76,22 @@ function onStartExternalSessionSuccess(xml_) {
 		return false;
 	session_node = buffer[0];
 
-	var sessionmanager_host = session_node.getAttribute('sessionmanager');
-	if (sessionmanager_host == '127.0.0.1' || sessionmanager_host == '127.0.1.1' || sessionmanager_host == 'localhost' || sessionmanager_host == 'localhost.localdomain')
-		sessionmanager_host = window.location.hostname;
-	if (sessionmanager_host.indexOf(':') == -1)
-		sessionmanager_host += ':443';
+	var sessionmanager = {'port': 443}; // Default SM & Gateway port
+	if (GATEWAY_FIRST_MODE) {
+		sessionmanager.host = window.location.hostname;
+		if (window.location.port !=  '')
+			sessionmanager.port = window.location.port;
+	}
+	else {
+		var buf = SESSIONMANAGER;
+		var sep = buf.lastIndexOf(":");
+		if (sep == -1)
+			sessionmanager.host = buf;
+		else {
+			sessionmanager.host = buf.substring(0, sep);
+			sessionmanager.port = buf.substring(sep+1, buf.length);
+		}
+	}
 	
 	var session_mode = false;
 	try {
@@ -94,7 +104,7 @@ function onStartExternalSessionSuccess(xml_) {
 	else
 		daemon = new External(debug_mode);
 
-	daemon.sessionmanager = sessionmanager_host;
+	daemon.sessionmanager = sessionmanager;
 	daemon.keymap = user_keymap;
 	try {
 		var duration = parseInt(session_node.getAttribute('duration'));

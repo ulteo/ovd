@@ -78,7 +78,6 @@ function startSession() {
 			{
 				method: 'post',
 				parameters: {
-					requested_host: window.location.hostname,
 					requested_port: ((window.location.port !=  '')?window.location.port:'443'),
 					sessionmanager_host: $('sessionmanager_host').value,
 					login: $('user_login').value,
@@ -182,15 +181,24 @@ function onStartSessionSuccess(xml_) {
 		return false;
 	}
 	session_node = buffer[0];
-
-	var sessionmanager_host = session_node.getAttribute('sessionmanager');
-	if (sessionmanager_host == '127.0.0.1' || sessionmanager_host == '127.0.1.1' || sessionmanager_host == 'localhost' || sessionmanager_host == 'localhost.localdomain')
-		sessionmanager_host = window.location.hostname;
-
-  // HTTPS detection (ugly)
-	if (sessionmanager_host.indexOf(':') == -1)
-		sessionmanager_host += ':443';
-
+	
+	var sessionmanager = {'port': 443};  // Default SM & Gateway port
+	if (GATEWAY_FIRST_MODE) {
+		sessionmanager.host = window.location.hostname;
+		if (window.location.port !=  '')
+			sessionmanager.port = window.location.port; 
+	}
+	else {
+		var buf = $('sessionmanager_host').value;
+		var sep = buf.lastIndexOf(":");
+		if (sep == -1)
+			sessionmanager.host = buf;
+		else {
+			sessionmanager.host = buf.substring(0, sep);
+			sessionmanager.port = buf.substring(sep+1, buf.length);
+		}
+	}
+	
 	try {
 		session_mode = session_node.getAttribute('mode');
 		session_mode = session_mode.substr(0, 1).toUpperCase()+session_mode.substr(1, session_mode.length-1);
@@ -231,7 +239,7 @@ function onStartSessionSuccess(xml_) {
 	else
 		daemon = new Portal(debug);
 
-	daemon.sessionmanager = sessionmanager_host;
+	daemon.sessionmanager = sessionmanager;
 
 	daemon.explorer = explorer;
 	if (daemon.explorer)

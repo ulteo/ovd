@@ -92,6 +92,9 @@ $confirm_logout = OPTION_CONFIRM_LOGOUT;
 if ($debug_mode === false && array_key_exists('debug', $_REQUEST))
 	$debug_mode = true;
 
+$headers = apache_request_headers();
+$gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers));
+
 function get_users_list() {
 	if (! defined('SESSIONMANAGER_HOST'))
 		return false;
@@ -180,6 +183,7 @@ function get_users_list() {
 			
 			var i18n = new Hash();
 
+			var GATEWAY_FIRST_MODE = <?php echo (($gateway_first === true)?'true':'false'); ?>;
 			var user_keymap = '<?php echo $user_keymap; ?>';
 			var OPTION_KEYMAP_AUTO_DETECT = <?php echo ( (OPTION_KEYMAP_AUTO_DETECT === true && !isset($_COOKIE['ovd-client']['session_keymap']))?'true':'false'); ?>;
 			

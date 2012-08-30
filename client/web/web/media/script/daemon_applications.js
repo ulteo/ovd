@@ -90,7 +90,7 @@ var Applications = Class.create(Daemon, {
 		if (this.local_integration == true)
 			applet_params.set('local_integration', 'true');
 		if (this.sessionmanager != null)
-			applet_params.set('sessionmanager', this.sessionmanager);
+			applet_params.set('sessionmanager', this.sessionmanager.host+":"+this.sessionmanager.port);
 
 		this.settings.each(function(pair) {
 			applet_params.set('setting_'+pair.key, pair.value);
