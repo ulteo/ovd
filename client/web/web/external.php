@@ -23,6 +23,23 @@
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
+
+if (array_key_exists('REQUEST_METHOD', $_SERVER) && $_SERVER['REQUEST_METHOD'] == 'POST') {
+	$_SESSION['last_request'] = array();
+	foreach($_POST as $k => $v)
+		$_SESSION['last_request'][$k] = $v;
+	
+	header('Location: external.php');
+	die();
+}
+
+if (array_key_exists('last_request', $_SESSION)) {
+	foreach($_SESSION['last_request'] as $k => $v)
+		$_REQUEST[$k] = $v;
+	
+	unset($_SESSION['last_request']);
+}
+
 $logo_size = getimagesize(dirname(__FILE__).'/media/image/ulteo.png');
 if ($logo_size === false)
 	$logo_size = "";

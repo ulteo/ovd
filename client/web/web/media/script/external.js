@@ -27,6 +27,8 @@ function UlteoOVD_session(web_client_url_, mode_) {
 	this.web_client_url = web_client_url_;
 	this.mode = mode_;
 	
+	this.post_request = false;
+	
 	this.extra_args = new Object();
 	
 	screen_width = screen.width;
@@ -94,11 +96,20 @@ function UlteoOVD_session(web_client_url_, mode_) {
 		this.extra_args['file_type'] = 'http';
 	};
 	
-	
 	this.start = function() {
-		this.openPopup(this.getURL());
+		if (this.post_request) {
+			var form = this.getPostForm();
+			var popup = this.openPopup('about:blank');
+			form.target = popup;
+			
+			document.body.appendChild(form);
+			form.submit();
+			document.body.removeChild(form);
+		}
+		else {
+			this.openPopup(this.getURL());
+		}
 	};
-	
 	
 	this.getURL = function() {
 		var url = this.web_client_url+'/external.php?mode='+this.mode;
@@ -109,13 +120,35 @@ function UlteoOVD_session(web_client_url_, mode_) {
 		return url;
 	};
 	
+	this.getPostForm = function() {
+		var form = document.createElement('form');
+		form.setAttribute('method', 'post');
+		form.setAttribute('action', this.web_client_url+'/external.php');
+		
+		var input = document.createElement('input');
+		input.setAttribute('type', 'hidden');
+		input.setAttribute('name', 'mode');
+		input.setAttribute('value', this.mode);
+		form.appendChild(input);
+		
+		for (var k in this.extra_args) {
+			var input = document.createElement('input');
+			input.setAttribute('type', 'hidden');
+			input.setAttribute('name', k);
+			input.setAttribute('value', this.extra_args[k]);
+			form.appendChild(input);
+		}
+		
+		return form;
+	};
 	
 	this.openPopup = function(url_) {
 		var date = new Date();
 		var rand = Math.round(Math.random()*100)+date.getTime();
+		var window_id = 'Ulteo'+rand;
 		
-		var w = window.open(url_, 'Ulteo'+rand, 'width='+this.my_width+',height='+this.my_height+',top='+this.pos_top+',left='+this.pos_left+',toolbar=no,status=no,scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
+		var w = window.open(url_, window_id, 'width='+this.my_width+',height='+this.my_height+',top='+this.pos_top+',left='+this.pos_left+',toolbar=no,status=no,scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
 		
-		return true;
+		return window_id;
 	};
 }
