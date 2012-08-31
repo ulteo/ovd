@@ -48,9 +48,6 @@ function return_popup($location_='about:blank') {
 
 
 
-$_SESSION['ovd-client']['interface'] = array();
-$_SESSION['ovd-client']['interface']['debug'] = $_POST['debug'];
-
 header('Content-Type: text/xml; charset=utf-8');
 
 if (! defined('SESSIONMANAGER_HOST') && ! array_key_exists('sessionmanager_host', $_POST)) {
@@ -93,11 +90,9 @@ if ($_POST['mode'] == 'desktop' && array_key_exists('start_app', $_SESSION['ovd-
 $dom->appendChild($session_node);
 
 if (defined('SESSIONMANAGER_HOST')) {
-	$_SESSION['ovd-client']['server'] = SESSIONMANAGER_HOST;
-	$_SESSION['ovd-client']['sessionmanager_host'] = SESSIONMANAGER_HOST;
+	$sm_host = SESSIONMANAGER_HOST;
 } else {
-	$_SESSION['ovd-client']['server'] = $_POST['sessionmanager_host'];
-	$_SESSION['ovd-client']['sessionmanager_host'] = $_POST['sessionmanager_host'];
+	$sm_host = $_POST['sessionmanager_host'];
 }
 
 $headers = apache_request_headers();
@@ -107,10 +102,10 @@ if (is_array($headers) && array_key_exists('OVD-Gateway', $headers)) {
 	else
 		$port = $_POST['requested_port'];
 	
-	$_SESSION['ovd-client']['server'] = $_SERVER['REMOTE_ADDR'].':'.$port;
+	$sm_host = $_SERVER['REMOTE_ADDR'].':'.$port;
 }
 
-$_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$_SESSION['ovd-client']['server'].'/ovd/client';
+$_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$sm_host.'/ovd/client';
 $sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
 
 if (array_key_exists('sessionmanager', $_SESSION['ovd-client'])) {
@@ -189,9 +184,6 @@ if (! is_object($session_node)) {
 
 $_SESSION['ovd-client']['session_id'] = $session_node->getAttribute('id');
 $session_mode = $session_node->getAttribute('mode');
-if ($session_mode == 'desktop')
-	$_SESSION['ovd-client']['desktop_fullscreen'] = ((array_key_exists('desktop_fullscreen', $_POST))?$_POST['desktop_fullscreen']:0);
-$_SESSION['ovd-client']['timeout'] = $session_node->getAttribute('timeout');
 
 $user_node = $session_node->getElementsByTagName('user');
 if (count($user_node) != 1) {
@@ -211,12 +203,12 @@ if (count($server_nodes) < 1) {
 }
 
 $aj = new Ajaxplorer($session_node);
-$_SESSION['ovd-client']['explorer'] = ($aj->can_run() && $aj->is_required());
-if ($_SESSION['ovd-client']['explorer'] === true) {
+$use_explorer = ($aj->can_run() && $aj->is_required());
+if ($use_explorer === true) {
 	$_SESSION['ovd-client']['ajxp'] = $aj->build_data();
 	
 	$explorer_node = $dom->createElement('explorer');
-	$explorer_node->setAttribute('enabled', (($_SESSION['ovd-client']['explorer'] === true)?1:0));
+	$explorer_node->setAttribute('enabled', (($use_explorer === true)?1:0));
 	$session_node->appendChild($explorer_node);
 }
 

@@ -106,8 +106,8 @@ if ($first === true) {
 	
 	$dom->appendChild($session_node);
 
-	$_SESSION['ovd-client']['server'] = @SESSIONMANAGER_HOST; // If the WebClient is not linked to a SessionManager, JavaScript object will return an 'Usage: missing "sessionmanager_host" parameter' error
-	$_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$_SESSION['ovd-client']['server'].'/ovd/client';
+	$sm_host = @SESSIONMANAGER_HOST; // If the WebClient is not linked to a SessionManager, JavaScript object will return an 'Usage: missing "sessionmanager_host" parameter' error
+	$_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$sm_host.'/ovd/client';
 	$sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
 	
 	$sm = new SessionManager($sessionmanager_url);
