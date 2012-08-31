@@ -498,7 +498,7 @@ var Daemon = Class.create({
 					server_host = this.sessionmanager.host;
 					server_port = this.sessionmanager.port;
 				}
-				else if (! Object.isUndefined(serverNodes[i].getAttribute("port"))) {
+				else if (! Object.isUndefined(serverNodes[i].getAttribute("port")) && serverNodes[i].getAttribute("port") != null) {
 					var port = parseInt(serverNodes[i].getAttribute("port"));
 					if (isNaN(port)) {
 						Logger.error("Invalid protocol: server port attribute is not a digit ("+serverNodes[i].getAttribute("port")+")");
