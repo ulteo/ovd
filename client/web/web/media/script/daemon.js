@@ -501,7 +501,7 @@ var Daemon = Class.create({
 				else if (! Object.isUndefined(serverNodes[i].getAttribute("port"))) {
 					var port = parseInt(serverNodes[i].getAttribute("port"));
 					if (isNaN(port)) {
-						Logger.error("Invalid protocol: server port attribute is not a digit ("+port+")");
+						Logger.error("Invalid protocol: server port attribute is not a digit ("+serverNodes[i].getAttribute("port")+")");
 						throw 'port isNaN';
 					}
 					
