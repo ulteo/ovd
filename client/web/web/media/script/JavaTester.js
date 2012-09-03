@@ -38,11 +38,17 @@ var JavaTester = Class.create({
 	perform: function() {
 		this.showSystemTest();
 		if (!this.lookupNavigatorPlugins("application/x-java-applet;version=1.6")) {
-			this.insertApplet()
-			setTimeout(this.perform_.bind(this), 2000);
+			// Chack java one second after showing the progress dialog.
+			setTimeout(function () {
+				this.insertApplet()
+				this.perform_();
+			}.bind(this), 1000);
 		} else {
-			this.insertSecondApplet();
-			this.do_second_test();
+			// Do second java test one second after showing the progress dialog.
+			setTimeout(function () {
+				this.insertSecondApplet();
+				this.do_second_test();
+			}.bind(this), 1000);
 		}
 	},
 	
