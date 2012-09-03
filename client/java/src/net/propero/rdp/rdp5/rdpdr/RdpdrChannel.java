@@ -3,11 +3,11 @@
  * 
  * Revision: $Revision: 1.0
  * Author: tomqq (hekong@gmail.com)
- * Author David Lechavalier <david@ulteo.com> 2011
+ * Author David Lechevalier <david@ulteo.com> 2011 2012
  * Date: 2009/05/16
  *
  * Copyright (c) tomqq
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  *
  *
  * Purpose: 
@@ -104,25 +104,16 @@ public class RdpdrChannel extends VChannel {
 	int sequence_count = 0;
 
 	public byte[] getUnicodeDriveName(String str) {
-		byte[] sByte = null;
 		byte[] unicodeStr = null;
-		int unicodeStrLength = 0;
 		
 		try {
-			sByte = str.getBytes("UTF-16LE");
+			unicodeStr = str.getBytes("CP1252");
 		} catch (UnsupportedEncodingException e) {
 			logger.debug(e.getMessage());
-			logger.info("UTF-16LE is not supported by your JVM");
+			logger.info("CP1252 is not supported by your JVM");
 			return null;
 		}
-		unicodeStrLength = 0;
-		unicodeStr = new byte[sByte.length];
-		for (int i = 0 ; i < sByte.length ; i++) {
-			if (sByte[i] != 0) {
-				unicodeStr[unicodeStrLength] = sByte[i] ;
-				unicodeStrLength++;
-			}
-		}
+		
 		return unicodeStr;
 	}
 	
