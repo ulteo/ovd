@@ -25,11 +25,18 @@
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-$logo_size = getimagesize(dirname(__FILE__).'/media/image/ulteo.png');
-if ($logo_size === false)
-	$logo_size = "";
-else
-	$logo_size = $logo_size[3];
+$big_image_map = false;
+if (get_ie_version() > 7 && file_exists(WEB_CLIENT_ROOT . "/media/image/uovd.png")) {
+	$big_image_map = true;
+}
+
+if (!$big_image_map) {
+	$logo_size = getimagesize(dirname(__FILE__).'/media/image/ulteo.png');
+	if ($logo_size === false)
+		$logo_size = "";
+	else
+		$logo_size = $logo_size[3];
+}
 
 $languages = get_available_languages();
 $keymaps = get_available_keymaps();
@@ -145,6 +152,7 @@ function get_users_list() {
 		<link rel="stylesheet" type="text/css" href="media/style/uovd.css" />
 <?php } else { ?>
 		<link rel="stylesheet" type="text/css" href="media/script/lib/nifty/niftyCorners.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/images.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 <?php } ?>
 
@@ -170,6 +178,8 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/uovd_int_client.js?<?php echo time(); ?>" charset="utf-8"></script>
 
 		<script type="text/javascript">
+			var big_image_map = <?php echo ($big_image_map?'true':'false'); ?>;
+
 			NiftyLoad = function() {
 				Nifty('div.rounded');
 			}
@@ -244,7 +254,11 @@ function get_users_list() {
 								</div>
 							</td>
 							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
+								<?php if (!$big_image_map) { ?>
 								<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
+								<?php } else { ?>
+								<div class="image_rotate_gif"></div>
+								<?php } ?>
 							</td>
 						</tr>
 					</table>
@@ -269,7 +283,11 @@ function get_users_list() {
 								<p id="system_compatibility_error_5_gettext">&nbsp;</p>
 							</td>
 							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
+								<?php if (!$big_image_map) { ?>
 								<img src="media/image/error.png" width="32" height="32" alt="" title="" />
+								<?php } else { ?>
+								<div class="image_error_png"></div>
+								<?php } ?>
 							</td>
 						</tr>
 					</table>
@@ -278,7 +296,7 @@ function get_users_list() {
 
 			<div id="iframeWrap" class="rounded" style="display: none;">
 				<iframe id="iframeContainer" width="975" height="550"></iframe>
-				<a href="javascript:;" onclick="hideIFrame(); return false;"><div id="iframeCloseButton" class="rounded"></div></a>
+				<a href="javascript:;" onclick="hideIFrame(); return false;"><div id="iframeCloseButton" class="rounded <?php echo ($big_image_map ? "image_close-wrap_png" : "msie6"); ?>"></div></a>
 			</div>
 
 			<div id="newsWrap" class="rounded" style="display: none;">
@@ -289,7 +307,11 @@ function get_users_list() {
 								<div id="newsWrap_title"></div>
 							</td>
 							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top; margin-bottom: 15px;">
+								<?php if (!$big_image_map) { ?>
 								<img src="media/image/news.png" width="32" height="32" alt="" title="" />
+								<?php } else { ?>
+								<div class="image_news_png"></div>
+								<?php } ?>
 							</td>
 						</tr>
 						<tr>
@@ -311,7 +333,11 @@ function get_users_list() {
 			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td style="text-align: center;" colspan="3">
+						<?php if (!$big_image_map) { ?>
 						<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
+						<?php } else { ?>
+						<div class="image_ulteo_png"></div>
+						<?php } ?>
 					</td>
 				</tr>
 				<tr>
@@ -320,7 +346,11 @@ function get_users_list() {
 					</td>
 					<td style="width: 20px"></td>
 					<td style="text-align: left; vertical-align: middle;">
+						<?php if (!$big_image_map) { ?>
 						<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
+						<?php } else { ?>
+						<div class="image_rotate_gif"></div>
+						<?php } ?>
 					</td>
 				</tr>
 				<tr>
@@ -338,7 +368,11 @@ function get_users_list() {
 			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td style="text-align: center;">
+						<?php if (!$big_image_map) { ?>
 						<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
+						<?php } else { ?>
+						<div class="image_ulteo_png"></div>
+						<?php } ?>
 					</td>
 				</tr>
 				<tr>
@@ -353,7 +387,11 @@ function get_users_list() {
 				<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td style="text-align: center;">
+							<?php if (!$big_image_map) { ?>
 							<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
+							<?php } else { ?>
+							<div class="image_ulteo_png"></div>
+							<?php } ?>
 						</td>
 					</tr>
 					<tr>
@@ -374,7 +412,11 @@ function get_users_list() {
 				<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td style="width: 175px; text-align: left; border-bottom: 1px solid #ccc;" class="logo">
+							<?php if (!$big_image_map) { ?>
 							<img src="media/image/ulteo-small.png" width="141" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" />
+							<?php } else { ?>
+							<div class="image_ulteo-small_png"></div>
+							<?php } ?>
 						</td>
 						<td style="text-align: left; border-bottom: 1px solid #ccc;" class="title centered">
 							<h1><span id="user_displayname">&nbsp;</span><span id="welcome_gettext" style="display: none;">&nbsp;</span></h1>
@@ -386,8 +428,22 @@ function get_users_list() {
 						<td style="text-align: right; padding-left: 5px; padding-right: 10px; border-bottom: 1px solid #ccc;">
 							<table style="margin-left: auto; margin-right: 0px;" border="0" cellspacing="0" cellpadding="10">
 								<tr>
-									<td id="suspend_button" style="display: none; text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.suspend(); return false;"><img src="media/image/suspend.png" width="32" height="32" alt="" title="" /><br /><span id="suspend_gettext">&nbsp;</span></a></td>
-									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="confirmLogout('<?php echo $confirm_logout; ?>');"><img src="media/image/logout.png" width="32" height="32" alt="" title="" /><br /><span id="logout_gettext">&nbsp;</span></a></td>
+									<td id="suspend_button" style="display: none; text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.suspend(); return false;">
+										<?php if (!$big_image_map) { ?>
+										<img src="media/image/suspend.png" width="32" height="32" alt="" title="" />
+										<?php } else { ?>
+										<div class="image_suspend_png" style="display:inline-block"></div>
+										<?php } ?>
+										<span id="suspend_gettext">&nbsp;</span></a>
+									</td>
+									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="confirmLogout('<?php echo $confirm_logout; ?>');">
+										<?php if (!$big_image_map) { ?>
+										<img src="media/image/logout.png" width="32" height="32" alt="" title="" />
+										<?php } else { ?>
+										<div class="image_logout_png" style="display:inline-block"></div>
+										<?php } ?>
+										<br /><span id="logout_gettext">&nbsp;</span></a>
+									</td>
 								</tr>
 							</table>
 						</td>
@@ -448,7 +504,11 @@ function get_users_list() {
 					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td style="width: 300px; text-align: left; vertical-align: top;">
+								<?php if (!$big_image_map) { ?>
 								<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
+								<?php } else { ?>
+								<div class="image_ulteo_png"></div>
+								<?php } ?>
 							</td>
 							<td style="width: 10px;">
 							</td>
@@ -473,7 +533,11 @@ checkSessionMode();
 										<table style="width: 100%; margin-left: auto; margin-right: auto; padding-top: 10px;" border="0" cellspacing="0" cellpadding="5">
 											<tr style="<?php echo ((defined('SESSIONMANAGER_HOST'))?'display: none;':'') ?>">
 												<td style="width: 22px; text-align: right; vertical-align: middle;">
+													<?php if (!$big_image_map) { ?>
 													<img src="media/image/icons/sessionmanager.png" width="22" height="22" alt="" title="" />
+													<?php } else { ?>
+													<div class="image_sessionmanager_png"></div>
+													<?php } ?>
 												</td>
 												<td style="text-align: left; vertical-align: middle;">
 													<strong><span id="session_manager_gettext">&nbsp;</span></strong>
@@ -506,7 +570,11 @@ checkSessionMode();
 											</tr>
 											<tr>
 												<td style="width: 22px; text-align: right; vertical-align: middle;">
+													<?php if (!$big_image_map) { ?>
 													<img src="media/image/icons/user_login.png" width="22" height="22" alt="" title="" />
+													<?php } else { ?>
+													<div class="image_user_login_png"></div>
+													<?php } ?>
 												</td>
 												<td style="text-align: left; vertical-align: middle;">
 													<strong><span id="login_gettext">&nbsp;</span></strong>
@@ -533,7 +601,11 @@ checkSessionMode();
 											</tr>
 											<tr id="password_row">
 												<td style="text-align: right; vertical-align: middle;">
+													<?php if (!$big_image_map) { ?>
 													<img src="media/image/icons/user_password.png" width="22" height="22" alt="" title="" />
+													<?php } else { ?>
+													<div class="image_user_password_png"></div>
+													<?php } ?>
 												</td>
 												<td style="text-align: left; vertical-align: middle;">
 													<strong><span id="password_gettext">&nbsp;</span></strong>
@@ -558,7 +630,11 @@ checkSessionMode();
 											<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="5">
 												<tr<?php if (OPTION_SHOW_USE_LOCAL_CREDENTIALS === false) echo ' style="display: none;"';?>>
 													<td style="text-align: right; vertical-align: middle;">
+														<?php if (!$big_image_map) { ?>
 														<img src="media/image/icons/use_local_credentials.png" width="22" height="22" alt="" title="" />
+														<?php } else { ?>
+														<div class="image_use_local_credentials_png"></div>
+														<?php } ?>
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
 														<strong><span id="use_local_credentials_gettext">&nbsp;</span></strong>
@@ -570,7 +646,11 @@ checkSessionMode();
 												</tr>
 												<tr>
 													<td style="width: 22px; text-align: right; vertical-align: middle;">
+														<?php if (!$big_image_map) { ?>
 														<img src="media/image/icons/session_mode.png" width="22" height="22" alt="" title="" />
+														<?php } else { ?>
+														<div class="image_session_mode_png"></div>
+														<?php } ?>
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
 														<strong><span id="mode_gettext">&nbsp;</span></strong>
@@ -584,7 +664,11 @@ checkSessionMode();
 												</tr>
 												<tr id="advanced_settings_desktop">
 													<td style="text-align: right; vertical-align: middle;">
+														<?php if (!$big_image_map) { ?>
 														<img src="media/image/icons/settings_desktop_fullscreen.png" width="22" height="22" alt="" title="" />
+														<?php } else { ?>
+														<div class="image_settings_desktop_fullscreen_png"></div>
+														<?php } ?>
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
 														<strong><span id="fullscreen_gettext">&nbsp;</span></strong>
@@ -596,13 +680,23 @@ checkSessionMode();
 												</tr>
 												<tr>
 													<td style="text-align: right; vertical-align: middle;">
+														<?php if (!$big_image_map) { ?>
 														<img src="media/image/icons/session_language.png" width="22" height="22" alt="" title="" />
+														<?php } else { ?>
+														<div class="image_session_language_png"></div>
+														<?php } ?>
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
 														<strong><span id="language_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<span style="margin-right: 5px;"><img id="session_language_flag" width="16" height="11" /></span>
+														<span style="margin-right: 5px;">
+															<?php if (!$big_image_map) { ?>
+															<img id="session_language_flag" width="16" height="11" />
+															<?php } else { ?>
+															<div id="session_language_flag" style="display:inline-block;" ></div>
+															<?php } ?>
+														</span>
 														<script type="text/javascript">
 															Event.observe(window, 'load', function() {
 																translateInterface($('session_language').value);
@@ -619,7 +713,11 @@ checkSessionMode();
 												</tr>
 												<tr<?php if ($rdp_input_unicode == 'unicode') echo ' style="display: none;"';?>>
 													<td style="text-align: right; vertical-align: middle;">
+														<?php if (!$big_image_map) { ?>
 														<img src="media/image/icons/keyboard_layout.png" width="22" height="22" alt="" title="" />
+														<?php } else { ?>
+														<div class="image_keyboard_layout_png"></div>
+														<?php } ?>
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
 														<strong><span id="keyboard_layout_gettext">&nbsp;</span></strong>
@@ -638,7 +736,11 @@ checkSessionMode();
 ?>
 												<tr>
 													<td style="text-align: right; vertical-align: middle;">
+														<?php if (!$big_image_map) { ?>
 														<img src="media/image/icons/debug.png" width="22" height="22" alt="" title="" />
+														<?php } else { ?>
+														<div class="image_debug_png"></div>
+														<?php } ?>
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
 														<strong><span id="debug_gettext">&nbsp;</span></strong>
@@ -656,11 +758,21 @@ checkSessionMode();
 										<table style="width: 100%; margin-left: auto; margin-right: auto; margin-top: 35px; padding-bottom: 10px;" border="0" cellspacing="0" cellpadding="5">
 											<tr style="height: 40px;">
 												<td style="text-align: left; vertical-align: bottom;">
+													<?php if (!$big_image_map) { ?>
 													<span id="advanced_settings_status" style="position: relative; left: 20px;"><img src="media/image/show.png" width="12" height="12" alt="" title="" /></span><input style="padding-left: 18px;" type="button" id="advanced_settings_gettext" value="" onclick="switchSettings(); return false;" />
+													<?php } else { ?>
+													<span id="advanced_settings_status" class="image_show_png" style="display: inline-block;position: relative; left: 18px;"></span><input style="padding-left: 18px;" type="button" id="advanced_settings_gettext" value="" onclick="switchSettings(); return false;" />
+													<?php } ?>
 												</td>
 												<td style="text-align: right; vertical-align: bottom;">
 													<span id="submitButton"><input type="submit" id="connect_gettext" value="" /></span>
-													<span id="submitLoader" style="display: none;"><img src="media/image/loader.gif" width="24" height="24" alt="" title="" /></span>
+													<span id="submitLoader" style="display: none;">
+														<?php if (!$big_image_map) { ?>
+														<img src="media/image/loader.gif" width="24" height="24" alt="" title="" />
+														<?php } else { ?>
+														<div class="image_loader_gif"></div>
+														<?php } ?>
+													</span>
 												</td>
 											</tr>
 										</table>

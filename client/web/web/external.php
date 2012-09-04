@@ -40,11 +40,18 @@ if (array_key_exists('last_request', $_SESSION)) {
 	unset($_SESSION['last_request']);
 }
 
-$logo_size = getimagesize(dirname(__FILE__).'/media/image/ulteo.png');
-if ($logo_size === false)
-	$logo_size = "";
-else
-	$logo_size = $logo_size[3];
+$big_image_map = false;
+if (get_ie_version() > 7 && file_exists(WEB_CLIENT_ROOT . "/media/image/uovd.png")) {
+	$big_image_map = true;
+}
+
+if (!$big_image_map) {
+	$logo_size = getimagesize(dirname(__FILE__).'/media/image/ulteo.png');
+	if ($logo_size === false)
+		$logo_size = "";
+	else
+		$logo_size = $logo_size[3];
+}
 
 if (array_key_exists('language', $_REQUEST)) {
 	$available_languages = get_available_languages();
@@ -162,6 +169,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<link rel="stylesheet" type="text/css" href="media/style/uovd.css" />
 <?php } else { ?>
 		<link rel="stylesheet" type="text/css" href="media/script/lib/nifty/niftyCorners.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/images.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 <?php } ?>
 
@@ -187,6 +195,8 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<script type="text/javascript" src="media/script/uovd_ext_client.js?<?php echo time(); ?>" charset="utf-8"></script>
 
 		<script type="text/javascript">
+			var big_image_map = <?php echo ($big_image_map?'true':'false'); ?>;
+
 			NiftyLoad = function() {
 				Nifty('div.rounded');
 			}
@@ -262,7 +272,11 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 								</div>
 							</td>
 							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
+								<?php if (!$big_image_map) { ?>
 								<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
+								<?php } else { ?>
+								<div class="image_rotate_gif"></div>
+								<?php } ?>
 							</td>
 						</tr>
 					</table>
@@ -287,7 +301,11 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 								<p id="system_compatibility_error_5_gettext">&nbsp;</p>
 							</td>
 							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
+								<?php if (!$big_image_map) { ?>
 								<img src="media/image/error.png" width="32" height="32" alt="" title="" />
+								<?php } else { ?>
+								<div class="image_error_png"></div>
+								<?php } ?>
 							</td>
 						</tr>
 					</table>
@@ -299,7 +317,11 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td style="text-align: center;" colspan="3">
+						<?php if (!$big_image_map) { ?>
 						<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
+						<?php } else { ?>
+						<div class="image_ulteo_png"></div>
+						<?php } ?>
 					</td>
 				</tr>
 				<tr>
@@ -308,7 +330,11 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 					</td>
 					<td style="width: 20px"></td>
 					<td style="text-align: left; vertical-align: middle;">
+						<?php if (!$big_image_map) { ?>
 						<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
+						<?php } else { ?>
+						<div class="image_rotate_gif"></div>
+						<?php } ?>
 					</td>
 				</tr>
 			</table>
@@ -318,7 +344,11 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td style="text-align: center;">
+						<?php if (!$big_image_map) { ?>
 						<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
+						<?php } else { ?>
+						<div class="image_ulteo_png"></div>
+						<?php } ?>
 					</td>
 				</tr>
 				<tr>

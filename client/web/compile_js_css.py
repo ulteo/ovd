@@ -20,7 +20,9 @@
 
 import os
 import re
+import tempfile
 from subprocess import Popen, PIPE
+import Image
 
 def jscompress(outfile, filename):
 	print " * compress %s" % filename
@@ -36,6 +38,84 @@ def csscompress(outfile, filename):
 	outfile.write(output)
 
 
+def listImages(apath):
+	for root, dirs, files in os.walk(apath):
+		for curfile in files:
+			if (curfile.endswith('.png') or curfile.endswith('.jpeg') or curfile.endswith('.gif')) and not curfile in ('favicon.png', 'uovd.png'):
+				yield os.path.join(root, curfile)
+
+
+def make_image_map(images, width=None):
+	cimages = [image for image in images if not os.path.basename(image['fname']) in ('rotate.gif', 'loader.gif')]
+	
+	cimages.sort(lambda x,y:-1*cmp(x['width'], y['width']))
+	if width == None:
+		width = max(cimages[0]['width'], 300)
+	
+	margin=1
+	cw = 0
+	ch = 0
+	height = 0
+	while len(cimages) > 0:
+		found = False
+		for image in cimages:
+			if cw + image['width'] <= width:
+				image['uovd'] = True
+				image['posx'] = -1*cw
+				image['posy'] = -1*ch
+				image['fname'] = '../image/uovd.png'
+				height = max(height, image['height'])
+				cw += image['width'] + margin
+				cimages.remove(image)
+				found = True
+				break
+		
+		if not found or len(cimages) == 0:
+			cw = 0
+			ch += height + margin
+			height = 0
+	
+	output = Image.new("RGBA", (width, ch))
+	
+	for image in images:
+		if image.get('uovd', False):
+			output.paste(image['image'], (-image['posx'], -image['posy']))
+	
+	return output
+
+
+def compile_images():
+	startpath=os.path.join("web", "media", "")
+	images = []
+	for fname in listImages(os.path.join("web", "media", "image")):
+		css = {}
+		css["fname"] = os.path.join(os.path.pardir, fname.replace(startpath, ''))
+		css["class"] = os.path.basename(fname).replace('.', '_')
+		css["posx"] = 0
+		css["posy"] = 0
+		css["image"] = Image.open(fname)
+		css["width"] = css["image"].size[0]
+		css["height"] = css["image"].size[1]
+		images.append(css)
+	
+	imagemap = make_image_map(images)
+	uovd_png = tempfile.NamedTemporaryFile()
+	imagemap.save(uovd_png, 'PNG')
+	print Popen(("pngcrush", uovd_png.name, os.path.join("web", "media", "image", "uovd.png")), stdout=PIPE).stdout.read()
+	
+	cssimages = os.path.join("web", "media", "style", "images.css")
+	cssimagesfile = open(cssimages, "w")
+	for css in images:
+		cssimagesfile.write(""".image_%(class)s {
+  background: url(\"%(fname)s\") no-repeat scroll %(posx)dpx %(posy)dpx transparent;
+  width: %(width)dpx;
+  height: %(height)dpx;
+}
+
+""" % css)
+	cssimagesfile.close()
+
+
 copyright = """/**
 * Copyright (C) 2012 Ulteo SAS
 * http://www.ulteo.com
@@ -44,6 +124,8 @@ copyright = """/**
 **/"""
 
 if __name__ == "__main__":
+	compile_images()
+
 	f = open(os.path.join("web", "index.php"))
 	content = f.read()
 	f.close()

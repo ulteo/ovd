@@ -414,7 +414,11 @@ function hideIFrame() {
 }
 
 function updateFlag(id_) {
-	$('session_language_flag').src = 'media/image/flags/'+id_+'.png';
+	if (!big_image_map) {
+		$('session_language_flag').src = 'media/image/flags/'+id_+'.png';
+	} else {
+		$('session_language_flag').className = 'image_'+id_+'_png';
+	}
 }
 
 function updateKeymap(id_) {
@@ -445,10 +449,18 @@ function switchSettings() {
 	}, 400);
 
 	if ($('advanced_settings').visible()) {
-		$('advanced_settings_status').innerHTML = '<img src="media/image/show.png" width="12" height="12" alt="" title="" />';
+		if (!big_image_map) {
+			$('advanced_settings_status').innerHTML = '<img src="media/image/show.png" width="12" height="12" alt="" title="" />';
+		} else {
+			$('advanced_settings_status').removeClassName('image_hide_png').addClassName('image_show_png');
+		}
 		new Effect.SlideUp($('advanced_settings'), { duration: 0.4 });
 	} else {
-		$('advanced_settings_status').innerHTML = '<img src="media/image/hide.png" width="12" height="12" alt="" title="" />';
+		if (!big_image_map) {
+			$('advanced_settings_status').innerHTML = '<img src="media/image/hide.png" width="12" height="12" alt="" title="" />';
+		} else {
+			$('advanced_settings_status').removeClassName('image_show_png').addClassName('image_hide_png');
+		}
 		new Effect.SlideDown($('advanced_settings'), { duration: 0.4 });
 	}
 }

@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -134,4 +135,14 @@ function unparse_url($parsed_url) {
 	$fragment = array_key_exists('fragment', $parsed_url)?'#'.$parsed_url['fragment']:'';
 	
 	return $scheme.$creds.$host.$port.$path.$query.$fragment;
+}
+
+
+function get_ie_version() {
+	if (($msiepos = stripos($_SERVER['HTTP_USER_AGENT'], 'msie')) !== false) {
+		$ie_version = floatval(substr($_SERVER['HTTP_USER_AGENT'], $msiepos+5, strpos($_SERVER['HTTP_USER_AGENT'], ';', $msiepos+5)));
+	} else {
+		$ie_version = PHP_INT_MAX;
+	}
+	return $ie_version;
 }

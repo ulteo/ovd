@@ -346,10 +346,13 @@ div#iframeWrap {
 	text-align: center;
 }
 
-div#iframeCloseButton {
+div#iframeCloseButton.msie6 {
 	background: url('../image/close-wrap.png') no-repeat;
 	width: 26px;
 	height: 26px;
+}
+
+div#iframeCloseButton {
 	float: right;
 	text-align: left;
 	margin: 0;
