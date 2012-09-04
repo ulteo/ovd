@@ -13,6 +13,7 @@ scripts_DATA = close-wrap.png \
                rotate.gif \
                show.png \
                suspend.png \
+               ulteo-small.png \
                ulteo.png
 
 scriptsdir = $(datadir)/ulteo/webclient/media/image
