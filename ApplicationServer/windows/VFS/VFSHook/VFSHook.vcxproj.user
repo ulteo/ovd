@@ -7,7 +7,7 @@
     <LocalDebuggerWorkingDirectory>$(ProjectDir)</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommand>D:\PC2_SRC\ulteo-sources\DtrInjectDll\Debug\DtrInjectDll.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>../x64/debug/VFSHookLoader.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <ShowAllFiles>false</ShowAllFiles>
   </PropertyGroup>

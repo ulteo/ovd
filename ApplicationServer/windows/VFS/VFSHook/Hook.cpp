@@ -3,30 +3,33 @@
 #include "Hook.h"
 #include "mhook-lib/mhook.h"
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <windows.h>
 #include <ctime>
 #include <shlobj.h> 
+#include <shlwapi.h> 
 #include <string>
-
-//#include <boost/filesystem.hpp>
 
 #if _WIN32 || _WIN64
 #if _WIN64
 #define LOG_FILE "D:\\HookTest\\HookLog64.txt"
 #else
-//#define LOG_FILE "D:\\HookTest\\HookLog32.txt"
-#define LOG_FILE "U:\\HookLog32.txt"
+#define LOG_FILE "D:\\HookTest\\HookLog32.txt"
 #endif //#if _WIN64
 #endif //#if _WIN32 || _WIN64
 
-//#define REDIRECT_PATH	L"D:\\HookTest"
-#define REDIRECT_PATH	L"U:\\"
+#define REDIRECT_PATH	L"D:\\HookTest"
+//#define REDIRECT_PATH	L"U:"
 #define	SEPERATOR		L"\\"
 #define DESKTOP_FOLDER	L"Desktop"
 #define DOCUMENT_FOLDER	L"Documents"
+#define HOOK_AND_LOG_FAILURE(pOri, pInt, szFunc)	if(!Mhook_SetHook(pOri, pInt)){log("Failed to hook %s", szFunc);}
+
 
 static bool gs_Logging = false;
+
+
 ////////////////////////////////////////////////////////////////////////
 //	File system related API
 //
@@ -39,6 +42,15 @@ static bool gs_Logging = false;
 //	Disk Management Functions:
 //		http://msdn.microsoft.com/en-us/library/windows/desktop/aa363983(v=vs.85).aspx
 ////////////////////////////////////////////////////////////////////////
+
+WCHAR g_szOriginDesktop[MAX_PATH] = {0};
+WCHAR g_szOriginDocuments[MAX_PATH] = {0};
+void obtainUserSHFolders()
+{
+	// target path : Desktop & Document
+	SHGetSpecialFolderPath(NULL, g_szOriginDesktop, CSIDL_DESKTOP, 0);
+	SHGetSpecialFolderPath(NULL, g_szOriginDocuments, CSIDL_PERSONAL, 0);
+}
 
 bool filter(LPCWSTR lpFilePath, 
 			std::wstring szTargetPath, 
@@ -63,458 +75,398 @@ bool filter(LPCWSTR lpFilePath,
 		//is target folder
 		else 
 		{
-			szResult = szTargetPath;
+			szResult = szRedirectPath;
 		}
 	}
 
 	*pszOutputPath = szResult;
 	return bRedirected;
 }
-////////////////////////////////////////////////////////////////////////
-//CreateFileA
-typedef HANDLE (WINAPI* _pCreateFileA)(LPCSTR lpFileName, 
-									   DWORD dwDesiredAccess, 
-									   DWORD dwShareMode, 
-									   LPSECURITY_ATTRIBUTES lpSecurityAttributes, 
-									   DWORD dwCreationDisposition, 
-									   DWORD dwFlagsAndAttributes, 
-									   HANDLE hTemplateFile);
-_pCreateFileA OriginCreateFileA = (_pCreateFileA)GetProcAddress(GetModuleHandle(L"Kernel32"), "CreateFileA");
-HANDLE WINAPI myCreateFileA(LPCSTR lpFileName, 
-							DWORD dwDesiredAccess, 
-							DWORD dwShareMode, 
-							LPSECURITY_ATTRIBUTES lpSecurityAttributes, 
-							DWORD dwCreationDisposition, 
-							DWORD dwFlagsAndAttributes, 
-							HANDLE hTemplateFile)
-{          
-	if(gs_Logging)
+
+BOOL GetPath(POBJECT_ATTRIBUTES ObjectAttributes, WCHAR* strPath)
+{
+	if (!ObjectAttributes->RootDirectory && !ObjectAttributes->ObjectName)
 	{
-		return OriginCreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes,
-			dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+		return FALSE;
 	}
 
-	log("CreateFileA: filename=%s", lpFileName);
-
-	return OriginCreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes,
-		dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+	if (ObjectAttributes->RootDirectory)
+	{
+		//TODO: ObjectAttributes->RootDirectory
+		//if (STATUS_SUCCESS != GetFullPathByHandle(ObjectAttributes->RootDirectory, strPath))
+		//{
+		//	return FALSE;
+		//}
+	}
+	if (NULL != ObjectAttributes && NULL != ObjectAttributes->ObjectName && ObjectAttributes->ObjectName->Length > 0)
+	{
+		lstrcatW(strPath,ObjectAttributes->ObjectName->Buffer);
+	}
+	return TRUE;
 }
 
-//CreateFileW
-typedef HANDLE (WINAPI* _pCreateFileW)(LPCWSTR lpFileName, 
-									   DWORD dwDesiredAccess, 
-									   DWORD dwShareMode, 
-									   LPSECURITY_ATTRIBUTES lpSecurityAttributes, 
-									   DWORD dwCreationDisposition, 
-									   DWORD dwFlagsAndAttributes, 
-									   HANDLE hTemplateFile);
-_pCreateFileW OriginCreateFileW = (_pCreateFileW)GetProcAddress(GetModuleHandle(L"Kernel32"), "CreateFileW");
-HANDLE WINAPI myCreateFileW(LPCWSTR lpFileName, 
-							DWORD dwDesiredAccess, 
-							DWORD dwShareMode, 
-							LPSECURITY_ATTRIBUTES lpSecurityAttributes, 
-							DWORD dwCreationDisposition, 
-							DWORD dwFlagsAndAttributes, 
-							HANDLE hTemplateFile)
+void redirectUserPath(WCHAR* strTargetPath, PUNICODE_STRING* punistrPathOutput)
 {	
-	if(gs_Logging)
-	{
-		return OriginCreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes,
-			dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-	}
-
-	char fname[MAX_PATH];
-	WideCharToMultiByte( CP_ACP, 0, lpFileName, -1, fname, sizeof(fname), NULL, NULL);  
-	log("CreateFileW: filename=%s", fname);
-	
-	// target path : Desktop & Document
-	WCHAR szDesktop[MAX_PATH];
-	WCHAR szDocumnet[MAX_PATH];
-	SHGetSpecialFolderPath(NULL, szDesktop, CSIDL_DESKTOP, 0);
-	SHGetSpecialFolderPath(NULL, szDocumnet, CSIDL_PERSONAL, 0);
-	
 	std::wstring out;
-	if ( filter(
-		lpFileName, szDesktop, std::wstring(REDIRECT_PATH) + SEPERATOR + DESKTOP_FOLDER, &out) )
-	{
-		lpFileName = out.c_str();
+	WCHAR szNewP[MAX_PATH] = {0};
+	lstrcatW(szNewP, L"\\??\\");
+	lstrcatW(szNewP, g_szOriginDesktop);
+	if ( filter(strTargetPath, szNewP, std::wstring(REDIRECT_PATH) + SEPERATOR + DESKTOP_FOLDER, &out) )
+	{			
+		WCHAR temp[MAX_PATH]  = {0};
+		lstrcatW(temp, L"\\??\\");
+		lstrcatW(temp, out.c_str());
+
+		log("NEW filename=%S", temp);
+
+		(*punistrPathOutput)->Buffer = temp;   
+		(*punistrPathOutput)->Length = (4 + out.length()) * 2;  // 4 for \\??\\, * 2 for wchar 
+		(*punistrPathOutput)->MaximumLength = (4 + out.length()) * 2 + 2; // + 2 for "/0"
 	}	
-	else if( filter(
-		lpFileName, szDocumnet, std::wstring(REDIRECT_PATH) + SEPERATOR + DOCUMENT_FOLDER, &out) )
+	else if( filter(strTargetPath, g_szOriginDocuments, std::wstring(REDIRECT_PATH) + SEPERATOR + DOCUMENT_FOLDER, &out) )
 	{
-		lpFileName = out.c_str();
-	}	
-
-	return OriginCreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes,
-		dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-}
-
-////////////////////////////////////////////////////////////////////////
-//DeleteFileA
-typedef BOOL (WINAPI* _pDeleteFileA)(LPCSTR lpFileName);
-_pDeleteFileA OriginDeleteFileA = (_pDeleteFileA)GetProcAddress(GetModuleHandle(L"Kernel32"), "DeleteFileA");
-BOOL WINAPI myDeleteFileA(LPCSTR lpFileName)
-{
-	log("DeleteFileA: filename=%s", lpFileName);
-
-	return OriginDeleteFileA(lpFileName);
-}
-////////////////////////////////////////////////////////////////////////
-//DeleteFileW
-typedef BOOL (WINAPI* _pDeleteFileW)(LPCWSTR lpFileName);
-_pDeleteFileW OriginDeleteFileW = (_pDeleteFileW)GetProcAddress(GetModuleHandle(L"Kernel32"), "DeleteFileW");
-BOOL WINAPI myDeleteFileW(LPCWSTR lpFileName)
-{
-	char fname[MAX_PATH];
-	WideCharToMultiByte( CP_ACP, 0, lpFileName, -1, fname, sizeof(fname), NULL, NULL);  
-
-	log("DeleteFileW: filename=%s", fname);
-
-	return OriginDeleteFileW(lpFileName);
-}
-////////////////////////////////////////////////////////////////////////
-//ReadFile
-typedef BOOL (WINAPI* _pReadFile)(HANDLE hFile, 
-								  LPVOID lpBuffer, 
-								  DWORD nNumberOfBytesToRead, 
-								  LPDWORD lpNumberOfBytesRead, 
-								  LPOVERLAPPED lpOverlapped);
-_pReadFile OriginReadFile = (_pReadFile)GetProcAddress(GetModuleHandle(L"Kernel32"), "ReadFile");
-BOOL WINAPI myReadFile(HANDLE hFile, 
-					   LPVOID lpBuffer, 
-					   DWORD nNumberOfBytesToRead, 
-					   LPDWORD lpNumberOfBytesRead, 
-					   LPOVERLAPPED lpOverlapped)
-{
-	log("ReadFile: handle=%x", hFile);
-
-	return OriginReadFile(hFile, lpBuffer, nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped);
-}
-////////////////////////////////////////////////////////////////////////
-//ReadFileEx
-typedef BOOL (WINAPI* _pReadFileEx)(HANDLE hFile, 
-									LPVOID lpBuffer, 
-									DWORD nNumberOfBytesToRead,
-									LPOVERLAPPED lpOverlapped, 
-									LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine);
-_pReadFileEx OriginReadFileEx = (_pReadFileEx)GetProcAddress(GetModuleHandle(L"Kernel32"), "ReadFileEx");
-BOOL WINAPI myReadFileEx(HANDLE hFile, 
-						 LPVOID lpBuffer, 
-						 DWORD nNumberOfBytesToRead,
-						 LPOVERLAPPED lpOverlapped, 
-						 LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine)
-{
-	log("ReadFileEx: handle=%x", hFile);
-
-	return OriginReadFileEx(hFile, lpBuffer, nNumberOfBytesToRead, lpOverlapped, lpCompletionRoutine);
-}	
-////////////////////////////////////////////////////////////////////////
-//WriteFile
-typedef BOOL (WINAPI* _pWriteFile)(HANDLE hFile, 
-								   LPCVOID lpBuffer, 
-								   DWORD nNumberOfBytesToWrite,
-								   LPDWORD lpNumberOfBytesWritten, 
-								   LPOVERLAPPED lpOverlapped);
-_pWriteFile OriginWriteFile = (_pWriteFile)GetProcAddress(GetModuleHandle(L"Kernel32"), "WriteFile");
-BOOL WINAPI myWriteFile(HANDLE hFile, 
-						LPCVOID lpBuffer, 
-						DWORD nNumberOfBytesToWrite,
-						LPDWORD lpNumberOfBytesWritten, 
-						LPOVERLAPPED lpOverlapped)
-{
-	if(gs_Logging)
-	{
-		return OriginWriteFile(hFile, lpBuffer, nNumberOfBytesToWrite, lpNumberOfBytesWritten, lpOverlapped);
+		WCHAR szModifiedPath[MAX_PATH] = {0};
+		wcscpy(szModifiedPath, out.c_str());
+		log("NEW filename=%S", szModifiedPath);
 	}
-
-	log("WriteFile: handle=%x", hFile);
-
-	return OriginWriteFile(hFile, lpBuffer, nNumberOfBytesToWrite, lpNumberOfBytesWritten, lpOverlapped);
 }
-////////////////////////////////////////////////////////////////////////
-//WriteFileEx
-typedef BOOL (WINAPI* _pWriteFileEx)(HANDLE hFile, 
-									 LPCVOID lpBuffer, 
-									 DWORD nNumberOfBytesToWrite,
-									 LPOVERLAPPED lpOverlapped, 
-									 LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine);
-_pWriteFileEx OriginWriteFileEx = (_pWriteFileEx)GetProcAddress(GetModuleHandle(L"Kernel32"), "WriteFileEx");
-BOOL WINAPI myWriteFileEx(HANDLE hFile, 
-						  LPCVOID lpBuffer, 
-						  DWORD nNumberOfBytesToWrite,
-						  LPOVERLAPPED lpOverlapped, 
-						  LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine)
-{
-	if(gs_Logging)
-	{
-		return OriginWriteFileEx(hFile, lpBuffer, nNumberOfBytesToWrite, lpOverlapped, lpCompletionRoutine);
-	}
-
-	log("WriteFileEx: handle=%x", hFile);
-
-	return OriginWriteFileEx(hFile, lpBuffer, nNumberOfBytesToWrite, lpOverlapped, lpCompletionRoutine);
-}
-////////////////////////////////////////////////////////////////////////
-//CreateProcessW
-typedef DWORD (WINAPI* _pCreateProcessW)(LPCWSTR lpApplicationName,
-									  LPWSTR lpCommandLine, 
-									  LPSECURITY_ATTRIBUTES lpProcessAttributes,
-									  LPSECURITY_ATTRIBUTES lpThreadAttributes,
-									  BOOL bInheritHandles,
-									  DWORD dwCreationFlags,
-									  LPVOID lpEnvironment,
-									  LPCWSTR lpCurrentDirectory,
-									  LPSTARTUPINFOW lpStartupInfo,
-									  LPPROCESS_INFORMATION lpProcessInformation);
-_pCreateProcessW OriginCreateProcessW = (_pCreateProcessW)GetProcAddress(GetModuleHandle(L"Kernel32"), "CreateProcessW");
-DWORD WINAPI myCreateProcessW(LPCWSTR lpApplicationName,
-							  LPWSTR lpCommandLine, 
-							  LPSECURITY_ATTRIBUTES lpProcessAttributes,
-							  LPSECURITY_ATTRIBUTES lpThreadAttributes,
-							  BOOL bInheritHandles,
-							  DWORD dwCreationFlags,
-							  LPVOID lpEnvironment,
-							  LPCWSTR lpCurrentDirectory,
-							  LPSTARTUPINFOW lpStartupInfo,
-							  LPPROCESS_INFORMATION lpProcessInformation)
+//-------------------------------------------------------------------//
+//NtCreateFile
+typedef NTSTATUS (WINAPI* _pNtCreateFile)(	PHANDLE FileHandle,
+											ACCESS_MASK DesiredAccess,
+											POBJECT_ATTRIBUTES ObjectAttributes,
+											PIO_STATUS_BLOCK IoStatusBlock,
+											PLARGE_INTEGER AllocationSize,
+											ULONG FileAttributes,
+											ULONG ShareAccess,
+											ULONG CreateDisposition,
+											ULONG CreateOptions,
+											PVOID EaBuffer,
+											ULONG EaLength);
+_pNtCreateFile OriginNtCreateFile = (_pNtCreateFile)GetProcAddress(GetModuleHandle(L"ntdll"), "NtCreateFile");
+NTSTATUS WINAPI myNtCreateFile(	PHANDLE FileHandle,
+								ACCESS_MASK DesiredAccess,
+								POBJECT_ATTRIBUTES ObjectAttributes,
+								PIO_STATUS_BLOCK IoStatusBlock,
+								PLARGE_INTEGER AllocationSize,
+								ULONG FileAttributes,
+								ULONG ShareAccess,
+								ULONG CreateDisposition,
+								ULONG CreateOptions,
+								PVOID EaBuffer,
+								ULONG EaLength)
 {	
-	char fcmd[MAX_PATH];
-	WideCharToMultiByte( CP_ACP, 0, lpCommandLine, -1, fcmd, sizeof(fcmd), NULL, NULL);  
+	if(gs_Logging)
+	{
+		return OriginNtCreateFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, AllocationSize, 
+			FileAttributes, ShareAccess, CreateDisposition, CreateOptions, EaBuffer, EaLength);
+	}
 
-	log("CreateProcessW :cmd=%s", fcmd);
+	log("NtCreateFile: handle=%x, filename=%wZ", FileHandle, ObjectAttributes->ObjectName);
 
-	BOOL ifsuccess = OriginCreateProcessW
-		(lpApplicationName, 
-		lpCommandLine, 
-		lpProcessAttributes,	
-		lpThreadAttributes, 
-		bInheritHandles, 
-		dwCreationFlags, 
-		lpEnvironment,
-		lpCurrentDirectory, 
-		lpStartupInfo, 
-		lpProcessInformation);
-
-	DWORD err =GetLastError();
-	SetLastError(err);
+	//return OriginNtCreateFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, AllocationSize, 
+	//	FileAttributes, ShareAccess, CreateDisposition, CreateOptions, EaBuffer, EaLength);
+			
+	PUNICODE_STRING pOriginObjectName = ObjectAttributes->ObjectName;
+	WCHAR szFilePath[MAX_PATH] = {0};
+	if(GetPath(ObjectAttributes, szFilePath))
+	{
+		redirectUserPath(szFilePath, &ObjectAttributes->ObjectName);
+	}
 	
-	return static_cast<DWORD>(ifsuccess);
-}
-////////////////////////////////////////////////////////////////////////
-//CreateProcessA
-typedef DWORD (WINAPI* _pCreateProcessA)(
-									  LPCSTR lpApplicationName,
-									  LPSTR lpCommandLine, 
-									  LPSECURITY_ATTRIBUTES lpProcessAttributes,
-									  LPSECURITY_ATTRIBUTES lpThreadAttributes,
-									  BOOL bInheritHandles,
-									  DWORD dwCreationFlags,
-									  LPVOID lpEnvironment,
-									  LPCSTR lpCurrentDirectory,
-									  LPSTARTUPINFO lpStartupInfo,
-									  LPPROCESS_INFORMATION lpProcessInformation);
-_pCreateProcessA OriginCreateProcessA = (_pCreateProcessA)GetProcAddress(GetModuleHandle(L"Kernel32"), "CreateProcessA");
-DWORD WINAPI myCreateProcessA(LPCSTR lpApplicationName,
-							  LPSTR lpCommandLine, 
-							  LPSECURITY_ATTRIBUTES lpProcessAttributes,
-							  LPSECURITY_ATTRIBUTES lpThreadAttributes,
-							  BOOL bInheritHandles,
-							  DWORD dwCreationFlags,
-							  LPVOID lpEnvironment,
-							  LPCSTR lpCurrentDirectory,
-							  LPSTARTUPINFO lpStartupInfo,
-							  LPPROCESS_INFORMATION lpProcessInformation)
-{
-	log("CreateProcessA :cmd=%s", lpCommandLine);
+	NTSTATUS stus = OriginNtCreateFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, AllocationSize, 
+		FileAttributes, ShareAccess, CreateDisposition, CreateOptions, EaBuffer, EaLength);
 
-	BOOL ifsuccess = OriginCreateProcessA(
-		lpApplicationName,
-		lpCommandLine, 
-		lpProcessAttributes,
-		lpThreadAttributes, 
-		bInheritHandles, 
-		dwCreationFlags, 
-		lpEnvironment,
-		lpCurrentDirectory, 
-		lpStartupInfo, 
-		lpProcessInformation);
-
-	DWORD err =GetLastError();
-	SetLastError(err);
-
-	return static_cast<DWORD>(ifsuccess);
-}
-
-////////////////////////////////////////////////////////////////////////
-//	Registry related API
-//	Registry Functions:
-//		http://msdn.microsoft.com/en-us/library/windows/desktop/ms724875(v=vs.85).aspx
-////////////////////////////////////////////////////////////////////////
-char *GetRootKey(HKEY hKey)
-{
-	if(hKey == HKEY_CLASSES_ROOT)
-		return "HKEY_CLASSES_ROOT";
-	else if(hKey == HKEY_CURRENT_CONFIG)
-		return "KEY_CURRENT_CONFIG";
-	else if(hKey ==HKEY_CURRENT_USER)
-		return "HKEY_CURRENT_USER";
-	else if(hKey == HKEY_LOCAL_MACHINE)
-		return "HKEY_LOCAL_MACHINE";
-	else if(hKey == HKEY_USERS)
-		return "HKEY_USERS";
-	else if(hKey == HKEY_PERFORMANCE_DATA)
-		return "HKEY_PERFORMANCE_DATA";
-	else
-		return "UNKNOWN_KEY";
-}
-////////////////////////////////////////////////////////////////////////
-//RegOpenKeyA
-typedef DWORD (WINAPI* _pRegOpenKeyA)(
-									HKEY hKey, 
-									LPCSTR lpSubKey, 
-									PHKEY phkResult);
-_pRegOpenKeyA OriginRegOpenKeyA = (_pRegOpenKeyA)GetProcAddress(GetModuleHandle(L"Advapi32"), "RegOpenKeyA");
-DWORD WINAPI myRegOpenKeyA(HKEY hKey, LPCSTR lpSubKey, PHKEY phkResult)
-{
-	log("RegOpenKeyA: hKey=%s, SubKey=%s", GetRootKey(hKey), lpSubKey);
-
-	return OriginRegOpenKeyA(hKey, lpSubKey, phkResult);
-}
-////////////////////////////////////////////////////////////////////////
-//RegOpenKeyW
-typedef DWORD (WINAPI* _pRegOpenKeyW)(
-									HKEY hKey, 
-									LPCWSTR lpSubKey, 
-									PHKEY phkResult);
-_pRegOpenKeyW OriginRegOpenKeyW = (_pRegOpenKeyW)GetProcAddress(GetModuleHandle(L"Advapi32"), "RegOpenKeyW");
-DWORD WINAPI myRegOpenKeyW(HKEY hKey, LPCWSTR lpSubKey, PHKEY phkResult)
-{
-	char subkey[200];
-	int len =WideCharToMultiByte( CP_ACP, 0, lpSubKey, -1, subkey, sizeof(subkey),NULL,NULL); 
-	subkey[len] =0;
-	log("RegOpenKeyW: hKey=%s, SubKey=%s", GetRootKey(hKey), subkey);
-
-	return OriginRegOpenKeyW(hKey, lpSubKey, phkResult);
-}
-////////////////////////////////////////////////////////////////////////
-//RegOpenKeyExA
-typedef DWORD (WINAPI* _pRegOpenKeyExA)(
-									HKEY hKey,
-									LPCSTR lpSubKey,
-									DWORD ulOptions,
-									REGSAM samDesired,
-									PHKEY phkResult);
-_pRegOpenKeyExA OriginRegOpenKeyExA = (_pRegOpenKeyExA)GetProcAddress(GetModuleHandle(L"Advapi32"), "RegOpenKeyExA");
-DWORD WINAPI myRegOpenKeyExA(
-						HKEY hKey,			
-						LPCSTR lpSubKey,
-						DWORD ulOptions,
-						REGSAM samDesired,
-						PHKEY phkResult)
-{
-	log("RegOpenKeyExA: hKey=%s, SubKey=%s", GetRootKey(hKey), lpSubKey);
-
-	return OriginRegOpenKeyExA(hKey, lpSubKey, ulOptions, samDesired, phkResult);
-}
-////////////////////////////////////////////////////////////////////////
-//RegOpenKeyExA
-typedef DWORD (WINAPI* _pRegOpenKeyExW)(
-									HKEY hKey,
-									LPCWSTR lpSubKey,
-									DWORD ulOptions,
-									REGSAM samDesired,
-									PHKEY phkResult);
-_pRegOpenKeyExW OriginRegOpenKeyExW = (_pRegOpenKeyExW)GetProcAddress(GetModuleHandle(L"Advapi32"), "RegOpenKeyExW");
-DWORD WINAPI myRegOpenKeyExW(
-						HKEY hKey,
-						LPCWSTR lpSubKey,
-						DWORD ulOptions,
-						REGSAM samDesired,
-						PHKEY phkResult)
-{
-	char subkey[200];
-	int len =WideCharToMultiByte( CP_ACP, 0, lpSubKey, -1, subkey, sizeof(subkey),NULL,NULL); 
-	subkey[len] =0;
-	log("RegOpenKeyExW: hKey=%s, SubKey=%s", GetRootKey(hKey), lpSubKey);
-
-	return OriginRegOpenKeyExW(hKey, lpSubKey, ulOptions, samDesired, phkResult);
-}
-////////////////////////////////////////////////////////////////////////
-//RegQueryValueA
-typedef DWORD (WINAPI* _pRegQueryValueA)(
-									HKEY hKey, 
-									LPCSTR lpSubKey, 
-									LPSTR lpValue, 
-									PLONG lpcbValue);
-_pRegQueryValueA OriginRegQueryValueA = (_pRegQueryValueA)GetProcAddress(GetModuleHandle(L"Advapi32"), "RegQueryValueA");
-DWORD WINAPI myRegQueryValueA(HKEY hKey, LPCSTR lpSubKey, LPSTR lpValue, PLONG lpcbValue)
-{
-	log("RegQueryValueA: hKey=%s, SubKey=%s", GetRootKey(hKey), lpSubKey);
-
-	return OriginRegQueryValueA(hKey, lpSubKey, lpValue, lpcbValue);
-}
-////////////////////////////////////////////////////////////////////////
-//RegQueryValueW
-typedef DWORD (WINAPI* _pRegQueryValueW)(
-									HKEY hKey,
-									LPCWSTR lpSubKey, 
-									LPWSTR lpValue, 
-									PLONG lpcbValue);
-_pRegQueryValueW OriginRegQueryValueW = (_pRegQueryValueW)GetProcAddress(GetModuleHandle(L"Advapi32"), "RegQueryValueW");
-DWORD WINAPI myRegQueryValueW(HKEY hKey,LPCWSTR lpSubKey, LPWSTR lpValue, PLONG lpcbValue)
-{
-	char subkey[200];
-	int len =WideCharToMultiByte( CP_ACP, 0, lpSubKey, -1, subkey, sizeof(subkey),NULL,NULL); 
-	subkey[len] =0;
-	log("RegQueryValueW: hKey=%s, SubKey=%s", GetRootKey(hKey), subkey);
-
-	return OriginRegQueryValueW(hKey, lpSubKey, lpValue, lpcbValue);
-}
-////////////////////////////////////////////////////////////////////////
-//RegQueryValueExA
-typedef DWORD (WINAPI* _pRegQueryValueExA)(
-										HKEY hKey, 
-										LPSTR lpValueName, 
-										LPDWORD lpReserved, 
-										LPDWORD lpType, 
-										LPBYTE lpData, 
-										LPDWORD lpcbData);
-_pRegQueryValueExA OriginRegQueryValueExA = (_pRegQueryValueExA)GetProcAddress(GetModuleHandle(L"Advapi32"), "RegQueryValueExA");
-DWORD WINAPI myRegQueryValueExA(HKEY hKey, 
-								LPSTR lpValueName, 
-								LPDWORD lpReserved, 
-								LPDWORD lpType, 
-								LPBYTE lpData, 
-								LPDWORD lpcbData)
-{
-	log("RegQueryValueExA:hKey=%s,ValueName=%s", GetRootKey(hKey), lpValueName);
-		
-	return OriginRegQueryValueExA(hKey, lpValueName, lpReserved, lpType, lpData, lpcbData);
-}
-////////////////////////////////////////////////////////////////////////
-//RegQueryValueExW
-typedef DWORD (WINAPI* _pRegQueryValueExW)(
-										HKEY hKey, 
-										LPWSTR lpValueName, 
-										LPDWORD lpReserved, 
-										LPDWORD lpType, 
-										LPBYTE lpData, 
-										LPDWORD lpcbData);
-_pRegQueryValueExW OriginRegQueryValueExW = (_pRegQueryValueExW)GetProcAddress(GetModuleHandle(L"Advapi32"), "RegQueryValueExW");
-DWORD WINAPI myRegQueryValueExW(
-								HKEY hKey, 
-								LPWSTR lpValueName,
-								LPDWORD lpReserved, 
-								LPDWORD lpType, 
-								LPBYTE lpData, 
-								LPDWORD lpcbData)
-{
-	char value[200];
-	int len =WideCharToMultiByte( CP_ACP, 0, lpValueName, -1, value, sizeof(value),NULL,NULL); 
-	value[len] =0;
-	log("RegQueryValueExW: hKey=%s, ValueName=%s", GetRootKey(hKey), value);
+	ObjectAttributes->ObjectName = pOriginObjectName;
 	
-	return OriginRegQueryValueExW(hKey, lpValueName, lpReserved, lpType, lpData, lpcbData);
+	return stus;
+}
+
+//-------------------------------------------------------------------//
+//NtQueryDirectoryFile
+typedef NTSTATUS (NTAPI* _pNtQueryDirectoryFile)(	HANDLE FileHandle, 
+													HANDLE Event,  
+													PIO_APC_ROUTINE ApcRoutine,  
+													PVOID ApcContext,
+													PIO_STATUS_BLOCK IoStatusBlock, 
+													PVOID FileInformation,  
+													ULONG Length,  
+													FILE_INFORMATION_CLASS FileInformationClass,
+													BOOLEAN ReturnSingleEntry,
+													PUNICODE_STRING FileName,
+													BOOLEAN RestartScan );
+_pNtQueryDirectoryFile OriginNtQueryDirectoryFile = (_pNtQueryDirectoryFile)GetProcAddress(GetModuleHandle(L"ntdll"), "NtQueryDirectoryFile");
+NTSTATUS NTAPI myNtQueryDirectoryFile(	HANDLE FileHandle, 
+										HANDLE Event,  
+										PIO_APC_ROUTINE ApcRoutine,  
+										PVOID ApcContext,
+										PIO_STATUS_BLOCK IoStatusBlock, 
+										PVOID FileInformation,  
+										ULONG Length,  
+										FILE_INFORMATION_CLASS FileInformationClass,
+										BOOLEAN ReturnSingleEntry,
+										PUNICODE_STRING FileName,
+										BOOLEAN RestartScan )
+{
+	log("NtQueryDirectoryFile handle=%x, filename=%wZ", FileHandle, FileName);
+
+	//NOTE: FileName here is relative path, for ex: Desktop, not C:\Users\User\Desktop
+	return OriginNtQueryDirectoryFile(FileHandle, Event, ApcRoutine, ApcContext, IoStatusBlock,
+		FileInformation, Length, FileInformationClass, ReturnSingleEntry, FileName,	RestartScan);
+}
+	
+//-------------------------------------------------------------------//
+//NtQueryObject
+typedef NTSTATUS (NTAPI* _pNtQueryObject)(	HANDLE Handle,
+											OBJECT_INFORMATION_CLASS ObjectInformationClass,
+											PVOID ObjectInformation,
+											ULONG ObjectInformationLength,
+											PULONG ReturnLength);
+_pNtQueryObject OriginNtQueryObject = (_pNtQueryObject)GetProcAddress(GetModuleHandle(L"ntdll"), "NtQueryObject");
+NTSTATUS NTAPI myNtQueryObject(	HANDLE Handle, 
+								OBJECT_INFORMATION_CLASS ObjectInformationClass,
+								PVOID ObjectInformation,
+								ULONG ObjectInformationLength,
+								PULONG ReturnLength)
+{
+	log("NtQueryObject: handle=%x", Handle);
+
+	return OriginNtQueryObject(Handle, ObjectInformationClass, ObjectInformation, ObjectInformationLength, ReturnLength);
+}
+
+//-------------------------------------------------------------------//
+//ZwOpenFile
+typedef NTSTATUS (NTAPI* _pZwOpenFile)(	PHANDLE FileHandle,
+										ACCESS_MASK DesiredAccess,
+										POBJECT_ATTRIBUTES ObjectAttributes,
+										PIO_STATUS_BLOCK IoStatusBlock,
+										ULONG ShareAccess,
+										ULONG OpenOptions);
+_pZwOpenFile OriginZwOpenFile = (_pZwOpenFile)GetProcAddress(GetModuleHandle(L"ntdll"), "ZwOpenFile");
+NTSTATUS NTAPI myZwOpenFile(PHANDLE FileHandle,
+							ACCESS_MASK DesiredAccess,
+							POBJECT_ATTRIBUTES ObjectAttributes,
+							PIO_STATUS_BLOCK IoStatusBlock,
+							ULONG ShareAccess,
+							ULONG OpenOptions)
+{
+	if(gs_Logging)
+	{
+		return OriginZwOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
+	}
+
+	log("ZwOpenFile: handle=%x, filename=%wZ", FileHandle, ObjectAttributes->ObjectName);
+
+	PUNICODE_STRING pOriginObjectName = ObjectAttributes->ObjectName;
+	WCHAR szFilePath[MAX_PATH] = {0};
+	if(GetPath(ObjectAttributes, szFilePath))
+	{
+		redirectUserPath(szFilePath, &ObjectAttributes->ObjectName);
+	}
+	
+	NTSTATUS stus = OriginZwOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
+
+	ObjectAttributes->ObjectName = pOriginObjectName;
+	
+	log("ZwOpenFile: return stus = %ld", stus);
+	
+	return stus;
+	
+	//return OriginZwOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
+}
+
+//-------------------------------------------------------------------//
+//ZwQuerySecurityObject
+typedef NTSTATUS (NTAPI* _pZwQuerySecurityObject)(	HANDLE Handle,
+													SECURITY_INFORMATION SecurityInformation,
+													PSECURITY_DESCRIPTOR SecurityDescriptor,
+													ULONG Length,
+													PULONG LengthNeeded);
+_pZwQuerySecurityObject OriginZwQuerySecurityObject = 
+	(_pZwQuerySecurityObject)GetProcAddress(GetModuleHandle(L"ntdll"), "ZwQuerySecurityObject");
+NTSTATUS NTAPI myZwQuerySecurityObject(	HANDLE Handle,
+										SECURITY_INFORMATION SecurityInformation,
+										PSECURITY_DESCRIPTOR SecurityDescriptor,
+										ULONG Length,
+										PULONG LengthNeeded)
+{
+	log("ZwQuerySecurityObject: handle=%x", Handle);
+
+	return OriginZwQuerySecurityObject(Handle, SecurityInformation, SecurityDescriptor, Length, LengthNeeded);
+}
+
+//-------------------------------------------------------------------//
+//ZwQueryAttributesFile
+typedef struct _FILE_BASIC_INFORMATION {
+  LARGE_INTEGER CreationTime;
+  LARGE_INTEGER LastAccessTime;
+  LARGE_INTEGER LastWriteTime;
+  LARGE_INTEGER ChangeTime;
+  ULONG         FileAttributes;
+} FILE_BASIC_INFORMATION, *PFILE_BASIC_INFORMATION;
+
+typedef NTSTATUS (NTAPI* _pZwQueryAttributesFile)(
+						POBJECT_ATTRIBUTES ObjectAttributes,
+						PFILE_BASIC_INFORMATION FileInformation);
+_pZwQueryAttributesFile OriginZwQueryAttributesFile = (_pZwQueryAttributesFile)GetProcAddress(GetModuleHandle(L"ntdll"), "ZwQueryAttributesFile");
+NTSTATUS NTAPI myZwQueryAttributesFile(	POBJECT_ATTRIBUTES ObjectAttributes,
+										PFILE_BASIC_INFORMATION FileInformation)
+{	
+	if(gs_Logging)
+	{
+		return OriginZwQueryAttributesFile(ObjectAttributes, FileInformation);
+	}
+
+	log("ZwQueryAttributesFile: filename=%wZ", ObjectAttributes->ObjectName);
+			
+
+	PUNICODE_STRING pOriginObjectName = ObjectAttributes->ObjectName;
+	WCHAR szFilePath[MAX_PATH] = {0};
+	if(GetPath(ObjectAttributes, szFilePath))
+	{
+		redirectUserPath(szFilePath, &ObjectAttributes->ObjectName);
+	}
+	
+	NTSTATUS stus = OriginZwQueryAttributesFile(ObjectAttributes, FileInformation);
+
+	ObjectAttributes->ObjectName = pOriginObjectName;
+
+	return stus;
+
+	//return OriginZwQueryAttributesFile(ObjectAttributes, FileInformation);
+}
+
+//-------------------------------------------------------------------//
+//ZwQueryInformationFile
+typedef NTSTATUS (NTAPI* _pZwQueryInformationFile)(	HANDLE FileHandle,
+													PIO_STATUS_BLOCK IoStatusBlock, 
+													PVOID FileInformation,
+													ULONG FileInformationLength,
+													FILE_INFORMATION_CLASS FileInformationClass);
+_pZwQueryInformationFile OriginZwQueryInformationFile = (_pZwQueryInformationFile)GetProcAddress(GetModuleHandle(L"ntdll"), "ZwQueryInformationFile");
+NTSTATUS NTAPI myZwQueryInformationFile(HANDLE FileHandle,
+										PIO_STATUS_BLOCK IoStatusBlock, 
+										PVOID FileInformation,
+										ULONG FileInformationLength,
+										FILE_INFORMATION_CLASS FileInformationClass)
+{
+	if(gs_Logging)
+	{
+		return OriginZwQueryInformationFile(FileHandle, IoStatusBlock,  FileInformation,
+			FileInformationLength, FileInformationClass);
+	}
+
+	log("ZwQueryInformationFile: handle=%x", FileHandle);
+
+	return OriginZwQueryInformationFile(FileHandle, IoStatusBlock,  FileInformation,
+			FileInformationLength, FileInformationClass);
+}
+
+//-------------------------------------------------------------------//
+//ZwQueryVolumeInformationFile
+typedef enum  { 
+  FileFsVolumeInformation        = 1,
+  FileFsLabelInformation         = 2,
+  FileFsSizeInformation          = 3,
+  FileFsDeviceInformation        = 4,
+  FileFsAttributeInformation     = 5,
+  FileFsControlInformation       = 6,
+  FileFsFullSizeInformation      = 7,
+  FileFsObjectIdInformation      = 8,
+  FileFsDriverPathInformation    = 9,
+  FileFsVolumeFlagsInformation   = 10,
+  FileFsSectorSizeInformation    = 11 
+} FS_INFORMATION_CLASS;
+
+typedef NTSTATUS (NTAPI* _pZwQueryVolumeInformationFile)(
+													HANDLE FileHandle,
+													PIO_STATUS_BLOCK IoStatusBlock, 
+													PVOID VolumeInformation,
+													ULONG VolumeInformationLength,
+													FS_INFORMATION_CLASS VolumeInformationClass);
+_pZwQueryVolumeInformationFile OriginZwQueryVolumeInformationFile = 
+	(_pZwQueryVolumeInformationFile)GetProcAddress(GetModuleHandle(L"ntdll"), "ZwQueryVolumeInformationFile");
+NTSTATUS NTAPI myZwQueryVolumeInformationFile(	HANDLE FileHandle,
+												PIO_STATUS_BLOCK IoStatusBlock, 
+												PVOID VolumeInformation,
+												ULONG VolumeInformationLength,
+												FS_INFORMATION_CLASS VolumeInformationClass)
+{	
+	log("ZwQueryVolumeInformationFile: handle=%x", FileHandle);
+
+	return OriginZwQueryVolumeInformationFile(FileHandle, IoStatusBlock,  VolumeInformation,
+		VolumeInformationLength, VolumeInformationClass);
+}
+
+//-------------------------------------------------------------------//
+//SHCreateDirectoryExA
+typedef int (*_pSHCreateDirectoryExA)(HWND hWnd, LPCSTR path, LPSECURITY_ATTRIBUTES sec);
+_pSHCreateDirectoryExA OriginSHCreateDirectoryExA = 
+	(_pSHCreateDirectoryExA)GetProcAddress(GetModuleHandle(L"SHELL32"), "SHCreateDirectoryExA");
+int mySHCreateDirectoryExA(HWND hWnd, LPCSTR path, LPSECURITY_ATTRIBUTES sec)
+{
+	log("SHCreateDirectoryExA: handle=%x, filename=%s", hWnd, path);
+
+	return OriginSHCreateDirectoryExA(hWnd, path, sec);
+}
+
+//-------------------------------------------------------------------//
+//PathFileExistsW
+typedef BOOL (WINAPI* _pPathFileExistsW)(LPCWSTR lpszPath);
+_pPathFileExistsW OriginPathFileExistsW = 
+	(_pPathFileExistsW)GetProcAddress(GetModuleHandle(L"Shlwapi"), "PathFileExistsW");
+BOOL WINAPI myPathFileExistsW(LPCWSTR lpszPath)
+{
+	log("PathFileExistsW: filename=%s", lpszPath);
+
+	return OriginPathFileExistsW(lpszPath);
+}
+
+//-------------------------------------------------------------------//
+//GetFileInformationByHandleEx
+typedef enum _FILE_INFO_BY_HANDLE_CLASS { 
+  FileBasicInfo                    = 0,
+  FileStandardInfo                 = 1,
+  FileNameInfo                     = 2,
+  FileRenameInfo                   = 3,
+  FileDispositionInfo              = 4,
+  FileAllocationInfo               = 5,
+  FileEndOfFileInfo                = 6,
+  FileStreamInfo                   = 7,
+  FileCompressionInfo              = 8,
+  FileAttributeTagInfo             = 9,
+  FileIdBothDirectoryInfo          = 10,
+  // 0xA  FileIdBothDirectoryRestartInfo   = 11,
+  // 0xB  FileIoPriorityHintInfo           = 12,
+  // 0xC  FileRemoteProtocolInfo           = 13,
+  // 0xD  FileFullDirectoryInfo            = 14,
+  // 0xE  FileFullDirectoryRestartInfo     = 15,
+  // 0xF  FileStorageInfo                  = 16,
+  // 0x10  FileAlignmentInfo                = 17,
+  // 0x11  FileIdInfo                       = 18,
+  // 0x12  FileIdExtdDirectoryInfo          = 19,
+  // 0x13  FileIdExtdDirectoryRestartInfo   = 20,
+  // 0x14  MaximumFileInfoByHandlesClass 
+} FILE_INFO_BY_HANDLE_CLASS, *PFILE_INFO_BY_HANDLE_CLASS;
+
+typedef BOOL (WINAPI* _pGetFileInformationByHandleEx)(	HANDLE hFile,
+														FILE_INFO_BY_HANDLE_CLASS FileInformationClass,
+														LPVOID lpFileInformation,
+														DWORD dwBufferSize);
+_pGetFileInformationByHandleEx OriginGetFileInformationByHandleEx = 
+	(_pGetFileInformationByHandleEx)GetProcAddress(GetModuleHandle(L"Kernel32"), "GetFileInformationByHandleEx");
+BOOL WINAPI myGetFileInformationByHandleEx( HANDLE hFile,
+											FILE_INFO_BY_HANDLE_CLASS FileInformationClass,
+											LPVOID lpFileInformation,
+											DWORD dwBufferSize)
+{
+	if(gs_Logging)
+	{
+		return OriginGetFileInformationByHandleEx(hFile, FileInformationClass, lpFileInformation, dwBufferSize);
+	}
+
+	log("GetFileInformationByHandleEx: handle = %x", hFile);
+	return OriginGetFileInformationByHandleEx(hFile, FileInformationClass, lpFileInformation, dwBufferSize);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -522,106 +474,52 @@ DWORD WINAPI myRegQueryValueExW(
 ////////////////////////////////////////////////////////////////////////
 void setupHooks()
 {
-	//File system APIs
-	if (!Mhook_SetHook((PVOID*)&OriginCreateFileA, myCreateFileA)) 
-	{
-		log("Failed to hook CreateFileA");
-	}
-	if (!Mhook_SetHook((PVOID*)&OriginCreateFileW, myCreateFileW)) 
-	{
-		log("Failed to hook CreateFileW");
-	}
-	if (!Mhook_SetHook((PVOID*)&OriginDeleteFileA, myDeleteFileA)) 
-	{
-		log("Failed to hook DeleteFileA");
-	}
-	if (!Mhook_SetHook((PVOID*)&OriginDeleteFileW, myDeleteFileW)) 
-	{
-		log("Failed to hook DeleteFileW");
-	}
-	if (!Mhook_SetHook((PVOID*)&OriginReadFile, myReadFile)) 
-	{
-		log("Failed to hook ReadFile");
-	}
-	if (!Mhook_SetHook((PVOID*)&OriginReadFileEx, myReadFileEx)) 
-	{
-		log("Failed to hook ReadFileEx");
-	}
-	if (!Mhook_SetHook((PVOID*)&OriginWriteFile, myWriteFile)) 
-	{
-		log("Failed to hook WriteFile");
-	}
-	if (!Mhook_SetHook((PVOID*)&OriginWriteFileEx, myWriteFileEx)) 
-	{
-		log("Failed to hook WriteFileEx");
-	}
-	if (!Mhook_SetHook((PVOID*)&OriginCreateProcessA, myCreateProcessA)) 
-	{
-		log("Failed to hook CreateProcessA");
-	}
-	if (!Mhook_SetHook((PVOID*)&OriginCreateProcessW, myCreateProcessW)) 
-	{
-		log("Failed to hook CreateProcessW");
-	}
+	obtainUserSHFolders();
 
-	//Reg APIs
-	if (!Mhook_SetHook((PVOID*)&OriginRegOpenKeyA, myRegOpenKeyA)) 
-	{
-		log("Failed to hook RegOpenKeyA");
-	}
-	if (!Mhook_SetHook((PVOID*)&OriginRegOpenKeyW, myRegOpenKeyW)) 
-	{
-		log("Failed to hook RegOpenKeyW");
-	}
-	if (!Mhook_SetHook((PVOID*)&OriginRegOpenKeyExA, myRegOpenKeyExA)) 
-	{
-		log("Failed to hook RegOpenKeyExA");
-	}
-	if (!Mhook_SetHook((PVOID*)&OriginRegOpenKeyExW, myRegOpenKeyExW)) 
-	{
-		log("Failed to hook RegOpenKeyExW");
-	}	
-	if (!Mhook_SetHook((PVOID*)&OriginRegQueryValueA, myRegQueryValueA)) 
-	{
-		log("Failed to hook RegQueryValueA");
-	}
-	if (!Mhook_SetHook((PVOID*)&OriginRegQueryValueW, myRegQueryValueW)) 
-	{
-		log("Failed to hook RegQueryValueW");
-	}
-	if (!Mhook_SetHook((PVOID*)&OriginRegQueryValueExA, myRegQueryValueExA)) 
-	{
-		log("Failed to hook RegQueryValueExA");
-	}
-	if (!Mhook_SetHook((PVOID*)&OriginRegQueryValueExW, myRegQueryValueExW)) 
-	{
-		log("Failed to hook RegQueryValueExW");
-	}
+	//NOTE: For some dlls you have to load it so you can hook it. 
+	//		(Maybe previlieges are needed to hook it without loading.)
+	//		The dlls:	Shlwapi, SHELL32
+	//HOOK_AND_LOG_FAILURE((PVOID*)&OriginPathFileExistsW, myPathFileExistsW, "PathFileExistsW");
+	//HOOK_AND_LOG_FAILURE((PVOID*)&OriginSHCreateDirectoryExA, mySHCreateDirectoryExA, "SHCreateDirectoryExA");
+
+	//Win
+	//HOOK_AND_LOG_FAILURE((PVOID*)&OriginGetFileInformationByHandleEx, myGetFileInformationByHandleEx, "GetFileInformationByHandleEx");
+
+	//Nt
+	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtCreateFile, myNtCreateFile, "NtCreateFile");
+	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtQueryDirectoryFile, myNtQueryDirectoryFile, "NtQueryDirectoryFile");	
+	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtQueryObject, myNtQueryObject, "NtQueryObject");	
+	
+	//Zw	
+	HOOK_AND_LOG_FAILURE((PVOID*)&OriginZwOpenFile, myZwOpenFile, "ZwOpenFile");
+	HOOK_AND_LOG_FAILURE((PVOID*)&OriginZwQuerySecurityObject, myZwQuerySecurityObject, "ZwQuerySecurityObject");
+	HOOK_AND_LOG_FAILURE((PVOID*)&OriginZwQueryAttributesFile, myZwQueryAttributesFile, "ZwQueryAttributesFile");
+	HOOK_AND_LOG_FAILURE((PVOID*)&OriginZwQueryInformationFile, myZwQueryInformationFile, "ZwQueryInformationFile");
+	HOOK_AND_LOG_FAILURE((PVOID*)&OriginZwQueryVolumeInformationFile, myZwQueryVolumeInformationFile, "ZwQueryVolumeInformationFile");
+	
 	
 	log(" ======= Hooked =======");
 }
 
 void releaseHooks()
 {
-	Mhook_Unhook((PVOID*)&OriginCreateFileA);
-	Mhook_Unhook((PVOID*)&OriginCreateFileW);	
-	Mhook_Unhook((PVOID*)&OriginDeleteFileA);
-	Mhook_Unhook((PVOID*)&OriginDeleteFileW);
-	Mhook_Unhook((PVOID*)&OriginReadFile);
-	Mhook_Unhook((PVOID*)&OriginReadFileEx);
-	Mhook_Unhook((PVOID*)&OriginWriteFile);
-	Mhook_Unhook((PVOID*)&OriginWriteFileEx);
-	Mhook_Unhook((PVOID*)&OriginCreateProcessA);
-	Mhook_Unhook((PVOID*)&OriginCreateProcessW);
+	//Mhook_Unhook((PVOID*)&OriginPathFileExistsW);	
+	//Mhook_Unhook((PVOID*)&OriginSHCreateDirectoryExA);
+
+	//Win
+	//Mhook_Unhook((PVOID*)&OriginGetFileInformationByHandleEx);	
+
+	//Nt
+	Mhook_Unhook((PVOID*)&OriginNtCreateFile);	
+	Mhook_Unhook((PVOID*)&OriginNtQueryDirectoryFile);	
+	Mhook_Unhook((PVOID*)&OriginNtQueryObject);	
 	
-	Mhook_Unhook((PVOID*)&OriginRegOpenKeyA);
-	Mhook_Unhook((PVOID*)&OriginRegOpenKeyW);
-	Mhook_Unhook((PVOID*)&OriginRegOpenKeyExA);
-	Mhook_Unhook((PVOID*)&OriginRegOpenKeyExW);	
-	Mhook_Unhook((PVOID*)&OriginRegQueryValueA);
-	Mhook_Unhook((PVOID*)&OriginRegQueryValueW);
-	Mhook_Unhook((PVOID*)&OriginRegQueryValueExA);
-	Mhook_Unhook((PVOID*)&OriginRegQueryValueExW);
+	//Zw	
+	Mhook_Unhook((PVOID*)&OriginZwOpenFile);	
+	Mhook_Unhook((PVOID*)&OriginZwQuerySecurityObject);		
+	Mhook_Unhook((PVOID*)&OriginZwQueryAttributesFile);	
+	Mhook_Unhook((PVOID*)&OriginZwQueryInformationFile);	
+	Mhook_Unhook((PVOID*)&OriginZwQueryVolumeInformationFile);	
 
 	log(" ======= UnHooked =======");
 }

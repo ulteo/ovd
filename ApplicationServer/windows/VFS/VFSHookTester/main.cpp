@@ -5,9 +5,6 @@
 
 
 #include <shlobj.h>
-#include <boost/filesystem.hpp>
-#include <boost/thread/thread.hpp>
-#include <boost/bind.hpp>
 
 
 #define DLL_PATH				"VFSHook.dll"
@@ -83,6 +80,13 @@ void RegOpenKeyExTest()
 }
 int main()
 {	
+	//NOTE: strange, for some dlls you have to load it so you can hook it. 
+	//		(Maybe previlieges are needed to hook it without loading.)
+	//		The dlls:	Shlwapi, SHELL32
+	LoadLibrary("Shlwapi.dll");	
+	LoadLibrary("SHELL32.dll");	
+	
+	
 	HINSTANCE hDLL;
 	hDLL = LoadLibrary(DLL_PATH);
  
@@ -100,6 +104,8 @@ int main()
 	
 	printf("========= Test Start =========\n");
 	printf("\n");
+
+	CreateFileA("C:\\Users\\Wei\\Desktop", GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	printf("WriteFileTest, file : %s \n", TEST_DESKTOP_FILE_PATH);
 	WriteFileTest(TEST_DESKTOP_FILE_PATH, "Origin name of file wrote to : %s", TEST_DESKTOP_FILE_PATH);
