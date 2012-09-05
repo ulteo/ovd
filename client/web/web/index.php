@@ -163,19 +163,19 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/lib/scriptaculous/effects.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/scriptaculous/extensions.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/common.js?<?php echo time(); ?>" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon.js?<?php echo time(); ?>" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon_desktop.js?<?php echo time(); ?>" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon_applications.js?<?php echo time(); ?>" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon_portal.js?<?php echo time(); ?>" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/server.js?<?php echo time(); ?>" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/application.js?<?php echo time(); ?>" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/JavaTester.js?<?php echo time(); ?>" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/Logger.js?<?php echo time(); ?>" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/common.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/daemon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/daemon_desktop.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/daemon_applications.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/daemon_portal.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/server.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/application.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/JavaTester.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/Logger.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/timezones.js" charset="utf-8"></script>
 <?php } ?>
 
-		<script type="text/javascript" src="media/script/uovd_int_client.js?<?php echo time(); ?>" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd_int_client.js" charset="utf-8"></script>
 
 		<script type="text/javascript">
 			var big_image_map = <?php echo ($big_image_map?'true':'false'); ?>;
