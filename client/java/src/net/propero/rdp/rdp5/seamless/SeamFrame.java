@@ -2,7 +2,7 @@
  * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
- * Author Thomas MOUTON <thomas@ulteo.com> 2009-2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009-2012
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
@@ -181,9 +181,9 @@ public class SeamFrame extends Frame
 		int y = Math.max(bounds.y - this.maxBounds.y, 0);
 		int weight = Math.min(bounds.width, this.backstore.getWidth() - x);
 		int height = Math.min(bounds.height, this.backstore.getHeight() - y);
-		int dx = ((bounds.x) < 0) ? -(bounds.x) : 0;
-		int dy = ((bounds.y) < 0) ? -(bounds.y) : 0;
-
+		int dx = (bounds.x < this.maxBounds.x) ? this.maxBounds.x - bounds.x : 0;
+		int dy = (bounds.y < this.maxBounds.y) ? this.maxBounds.y - bounds.y : 0;
+		
 		if (weight > 0 && height > 0)
 			g.drawImage(this.backstore.getSubimage(x, y, weight, height), dx , dy, null);
 	}
