@@ -176,13 +176,14 @@ public class SeamFrame extends Frame
 	
 	public void paint(Graphics g) {
 		Rectangle bounds = this.getBounds();
+		
+		int dx = (bounds.x < this.maxBounds.x) ? this.maxBounds.x - bounds.x : 0;
+		int dy = (bounds.y < this.maxBounds.y) ? this.maxBounds.y - bounds.y : 0;
 
 		int x = Math.max(bounds.x - this.maxBounds.x, 0);
 		int y = Math.max(bounds.y - this.maxBounds.y, 0);
-		int weight = Math.min(bounds.width, this.backstore.getWidth() - x);
-		int height = Math.min(bounds.height, this.backstore.getHeight() - y);
-		int dx = (bounds.x < this.maxBounds.x) ? this.maxBounds.x - bounds.x : 0;
-		int dy = (bounds.y < this.maxBounds.y) ? this.maxBounds.y - bounds.y : 0;
+		int weight = Math.min(bounds.width - dx, this.backstore.getWidth() - x);
+		int height = Math.min(bounds.height - dy, this.backstore.getHeight() - y);
 		
 		if (weight > 0 && height > 0)
 			g.drawImage(this.backstore.getSubimage(x, y, weight, height), dx , dy, null);
