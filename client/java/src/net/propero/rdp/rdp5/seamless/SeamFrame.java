@@ -182,11 +182,11 @@ public class SeamFrame extends Frame
 
 		int x = Math.max(bounds.x - this.maxBounds.x, 0);
 		int y = Math.max(bounds.y - this.maxBounds.y, 0);
-		int weight = Math.min(bounds.width - dx, this.backstore.getWidth() - x);
+		int width = Math.min(bounds.width - dx, this.backstore.getWidth() - x);
 		int height = Math.min(bounds.height - dy, this.backstore.getHeight() - y);
 		
-		if (weight > 0 && height > 0)
-			g.drawImage(this.backstore.getSubimage(x, y, weight, height), dx , dy, null);
+		if (width > 0 && height > 0)
+			g.drawImage(this.backstore.getSubimage(x, y, width, height), dx , dy, null);
 	}
 
 
