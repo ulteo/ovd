@@ -70,7 +70,9 @@ elseif (isset($_COOKIE['ovd-client']['session_mode']))
 	$wi_session_mode = (string)$_COOKIE['ovd-client']['session_mode'];
 
 if (OPTION_FORCE_LANGUAGE !== true && isset($_COOKIE['ovd-client']['session_language'])) {
-	$user_language = (string)$_COOKIE['ovd-client']['session_language'];
+	$lang = (string)$_COOKIE['ovd-client']['session_language'];
+	if (language_is_supported($languages, $lang))
+		$user_language = $lang;
 }
 
 if (OPTION_FORCE_KEYMAP !== true && isset($_COOKIE['ovd-client']['session_keymap']))

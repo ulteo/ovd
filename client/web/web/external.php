@@ -55,11 +55,8 @@ if (!$big_image_map) {
 
 if (array_key_exists('language', $_REQUEST)) {
 	$available_languages = get_available_languages();
-	$languages = array();
-	foreach ($available_languages as $available_language)
-		$languages []= $available_language['id'];
 
-	if (in_array($_REQUEST['language'], $languages)) {
+	if (language_is_supported($available_languages, $_REQUEST['language'])) {
 		$user_language = $_REQUEST['language'];
 		if (OPTION_FORCE_KEYMAP !== true)
 			$user_keymap = $user_language;

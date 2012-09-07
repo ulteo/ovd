@@ -80,7 +80,11 @@ if (OPTION_LANGUAGE_AUTO_DETECT === true) {
 	if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 		$buf = explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
 		$buf = explode(';', $buf[0]);
-		$user_language = strtolower(str_replace('_', '-', $buf[0]));
+		$lang = strtolower(str_replace('_', '-', $buf[0]));
+		
+		$languages = get_available_languages();
+		if (language_is_supported($languages, $lang))
+			$user_language = $lang;
 	}
 }
 

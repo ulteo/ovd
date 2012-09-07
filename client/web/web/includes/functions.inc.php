@@ -118,6 +118,15 @@ function get_available_keymaps() {
 	);
 }
 
+function language_is_supported($languages_list, $lang) {
+	foreach ($languages_list as $available_language) {
+		if ($available_language['id'] == $lang)
+			return true;
+	}
+	
+	return false;
+}
+
 function unparse_url($parsed_url) { 
 	$scheme   = array_key_exists('scheme', $parsed_url)?$parsed_url['scheme'].'://':'';
 	$host     = array_key_exists('host', $parsed_url)?$parsed_url['host']:'';
