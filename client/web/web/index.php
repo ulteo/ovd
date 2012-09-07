@@ -75,6 +75,8 @@ if (OPTION_FORCE_LANGUAGE !== true && isset($_COOKIE['ovd-client']['session_lang
 		$user_language = $lang;
 }
 
+list($translations, $js_translations) = get_available_translations($user_language);
+
 if (OPTION_FORCE_KEYMAP !== true && isset($_COOKIE['ovd-client']['session_keymap']))
 	$user_keymap = (string)$_COOKIE['ovd-client']['session_keymap'];
 
@@ -192,6 +194,13 @@ function get_users_list() {
 			}
 			
 			var i18n = new Hash();
+<?php		foreach ($js_translations as $id => $string)
+			echo 'i18n.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
+?>
+			var i18n_tmp = new Hash();
+<?php		foreach ($translations as $id => $string) 
+			echo 'i18n_tmp.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
+?>
 
 			var GATEWAY_FIRST_MODE = <?php echo (($gateway_first === true)?'true':'false'); ?>;
 			var user_keymap = '<?php echo $user_keymap; ?>';
@@ -221,6 +230,9 @@ function get_users_list() {
 
 				$('debugContainer').hide();
 				$('debugLevels').hide();
+				
+				applyTranslations(i18n_tmp);
+				updateFlag($('session_language').value);
 			});
 		</script>
 	</head>
@@ -697,12 +709,6 @@ checkSessionMode();
 															<div id="session_language_flag" style="display:inline-block;" ></div>
 															<?php } ?>
 														</span>
-														<script type="text/javascript">
-															Event.observe(window, 'load', function() {
-																translateInterface($('session_language').value);
-																updateFlag($('session_language').value);
-															});
-														</script>
 														<select id="session_language" onchange="translateInterface($('session_language').value); updateFlag($('session_language').value);" onkeyup="translateInterface($('session_language').value); updateFlag($('session_language').value);"<?php if (OPTION_FORCE_LANGUAGE === true) echo ' disabled="disabled"';?>>
 															<?php
 																foreach ($languages as $language)

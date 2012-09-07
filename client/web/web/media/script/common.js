@@ -257,27 +257,36 @@ function translateInterface(lang_) {
 				if (xml == null)
 					return;
 
+				var items = new Hash();
 				var translations = xml.getElementsByTagName('translation');
 				for (var i = 0; i < translations.length; i++) {
-					var obj = $(translations[i].getAttribute('id')+'_gettext');
-					if (! obj)
-						continue;
-
-					if (obj.nodeName.toLowerCase() == 'input')
-						obj.value = translations[i].getAttribute('string');
-					else
-						obj.innerHTML = translations[i].getAttribute('string');
+					items.set(translations[i].getAttribute('id'), translations[i].getAttribute('string'));
 				}
 
+				applyTranslations(items);
+				
 				var js_translations = xml.getElementsByTagName('js_translation');
 				for (var i = 0; i < js_translations.length; i++)
 					i18n.set(js_translations[i].getAttribute('id'), js_translations[i].getAttribute('string'));
-				
-				if (typeof window.updateSMHostField == 'function')
-					updateSMHostField();
 			}
 		}
 	);
+}
+
+function applyTranslations(translations) {
+	translations.each(function(pair) {
+		var obj = $(pair.key+'_gettext');
+		if (! obj)
+			return;
+		
+		if (obj.nodeName.toLowerCase() == 'input')
+			obj.value = pair.value;
+		else
+			obj.innerHTML = pair.value;
+	});
+	
+	if (typeof window.updateSMHostField == 'function')
+		updateSMHostField();
 }
 
 function buildAppletNode(name, code, archive, extra_params) {

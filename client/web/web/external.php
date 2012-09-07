@@ -53,7 +53,7 @@ if (!$big_image_map) {
 		$logo_size = $logo_size[3];
 }
 
-if (array_key_exists('language', $_REQUEST)) {
+if (OPTION_FORCE_LANGUAGE !== true && array_key_exists('language', $_REQUEST)) {
 	$available_languages = get_available_languages();
 
 	if (language_is_supported($available_languages, $_REQUEST['language'])) {
@@ -62,6 +62,8 @@ if (array_key_exists('language', $_REQUEST)) {
 			$user_keymap = $user_language;
 	}
 }
+
+list($translations, $js_translations) = get_available_translations($user_language);
 
 $first = false;
 if (array_key_exists('ovd-client', $_SESSION) && array_key_exists('sessionmanager', $_SESSION['ovd-client'])) {
@@ -199,6 +201,13 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 			}
 
 			var i18n = new Hash();
+<?php		foreach ($js_translations as $id => $string)
+			echo 'i18n.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
+?>
+			var i18n_tmp = new Hash();
+<?php		foreach ($translations as $id => $string) 
+			echo 'i18n_tmp.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
+?>
 
 			var SESSIONMANAGER = '<?php echo SESSIONMANAGER_HOST; ?>';
 			var GATEWAY_FIRST_MODE = <?php echo (($gateway_first === true)?'true':'false'); ?>;
@@ -231,7 +240,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 						$('applicationsModeContainer').hide();
 						$('applicationsAppletContainer').hide();
 
-						translateInterface(client_language);
+						applyTranslations(i18n_tmp);
 						startExternalSession('<?php echo $_REQUEST['mode']; ?>');
 					});
 			<?php
