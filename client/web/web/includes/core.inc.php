@@ -64,9 +64,8 @@ $debug_mode = false;
 if (defined('DEBUG_MODE') && DEBUG_MODE === true)
 	$debug_mode = true;
 
-$user_language = 'en-us';
-if (defined('OPTION_LANGUAGE_DEFAULT'))
-	$user_language = OPTION_LANGUAGE_DEFAULT;
+if (! defined('OPTION_LANGUAGE_DEFAULT'))
+	define('OPTION_LANGUAGE_DEFAULT', 'en-us');
 
 if (! defined('OPTION_LANGUAGE_AUTO_DETECT'))
 	define('OPTION_LANGUAGE_AUTO_DETECT', true);
@@ -75,6 +74,7 @@ if (! defined('OPTION_FORCE_LANGUAGE'))
 	define('OPTION_FORCE_LANGUAGE', false);
 
 
+$user_language = OPTION_LANGUAGE_DEFAULT;
 if (OPTION_LANGUAGE_AUTO_DETECT === true) {
 	// Autodetect language from browser settings
 	if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
@@ -84,15 +84,16 @@ if (OPTION_LANGUAGE_AUTO_DETECT === true) {
 	}
 }
 
-$user_keymap = 'en-us';
-if (defined('OPTION_KEYMAP_DEFAULT'))
-	$user_keymap = OPTION_KEYMAP_DEFAULT;
+if (! defined('OPTION_KEYMAP_DEFAULT'))
+	define('OPTION_KEYMAP_DEFAULT', 'en-us');
 
 if (! defined('OPTION_KEYMAP_AUTO_DETECT'))
 	define('OPTION_KEYMAP_AUTO_DETECT', true);
 
 if (! defined('OPTION_FORCE_KEYMAP'))
 	define('OPTION_FORCE_KEYMAP', false);
+
+$user_keymap = OPTION_KEYMAP_DEFAULT;
 
 if (! defined('OPTION_CONFIRM_LOGOUT'))
 	define('OPTION_CONFIRM_LOGOUT', 'never');
