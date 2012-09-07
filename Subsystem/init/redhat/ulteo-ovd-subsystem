@@ -100,7 +100,7 @@ case $1 in
         _print "Stopping Ulteo OVD subsystem: "
         ;;
     restart|reload|force-reload)
-        do_stop && sleep 1 && do_start
+        do_stop ; sleep 1 ; do_start
         _print "Re-starting Ulteo OVD subsystem: "
         ;;
     *)
