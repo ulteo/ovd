@@ -45,6 +45,7 @@ from Apt import Apt
 from Config import Config
 from SessionManagement import SessionManagement
 from Manager import Manager
+import MPQueue
 
 
 class Role(AbstractRole):
@@ -55,10 +56,10 @@ class Role(AbstractRole):
 		AbstractRole.__init__(self, main_instance)
 		self.sessions = {}
 		self.locked_sessions = []
-		self.sessions_spooler = multiprocessing.Queue()
-		self.sessions_spooler2 = multiprocessing.Queue()
-		self.sessions_sync = multiprocessing.Queue()
-		self.logging_queue = multiprocessing.Queue()
+		self.sessions_spooler = MPQueue.Queue()
+		self.sessions_spooler2 = MPQueue.Queue()
+		self.sessions_sync = MPQueue.Queue()
+		self.logging_queue = MPQueue.Queue()
 		
 		self.manager = Manager(self.main_instance.smRequestManager)
 		self.threads = []
