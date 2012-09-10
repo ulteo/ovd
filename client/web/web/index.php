@@ -219,7 +219,7 @@ function get_users_list() {
 					new Effect.Center($('desktopFullscreenContainer'));
 					new Effect.Center($('endContainer'));
 				});
-
+				
 				$('desktopModeContainer').hide();
 				$('desktopAppletContainer').hide();
 
@@ -233,6 +233,102 @@ function get_users_list() {
 				
 				applyTranslations(i18n_tmp);
 				updateFlag($('session_language').value);
+				
+				Event.observe($('sessionmanager_host'), 'keyup', function() {
+					checkLogin();
+				});
+				Event.observe($('sessionmanager_host'), 'change', function() {
+					checkLogin();
+				});
+				
+				Event.observe($('user_login'), 'change', function() {
+					checkLogin();
+				});
+				Event.observe($('user_login'), 'keyup', function() {
+					checkLogin();
+				});
+				Event.observe($('user_login'), 'keydown', function(event) {
+					if (typeof event == 'undefined' || event.keyCode != 13)
+						return;
+					
+					$('startsession').submit();
+				});
+				
+				Event.observe($('user_password'), 'keydown', function(event) {
+					if (typeof event == 'undefined' || event.keyCode != 13)
+						return;
+					
+					$('startsession').submit();
+				});
+				
+				Event.observe($('startsession'), 'submit', function() {
+					startSession();
+				});
+				
+				Event.observe($('use_local_credentials_true'), 'change', function() {
+					checkLogin();
+				});
+				Event.observe($('use_local_credentials_true'), 'click', function() {
+					checkLogin();
+				});
+				Event.observe($('use_local_credentials_false'), 'change', function() {
+					checkLogin();
+				});
+				Event.observe($('use_local_credentials_false'), 'click', function() {
+					checkLogin();
+				});
+				
+				Event.observe($('session_mode'), 'change', function() {
+					checkSessionMode();
+				});
+				Event.observe($('session_mode'), 'click', function() {
+					checkSessionMode();
+				});
+				
+				Event.observe($('session_language'), 'change', function() {
+					translateInterface($('session_language').value);
+					updateFlag($('session_language').value);
+				});
+				Event.observe($('session_language'), 'keyup', function() {
+					translateInterface($('session_language').value);
+					updateFlag($('session_language').value);
+				});
+				
+				Event.observe($('advanced_settings_gettext'), 'click', function() {
+					switchSettings();
+				});
+				
+				Event.observe($('suspend_link'), 'click', function() {
+					daemon.suspend();
+				});
+				Event.observe($('logout_link'), 'click', function() {
+					confirmLogout('<?php echo $confirm_logout; ?>');
+				});
+				
+				Event.observe($('iframeLink'), 'click', function() {
+					hideIFrame();
+				});
+				
+				Event.observe($('newsHideLink'), 'click', function() {
+					hideNews();
+				});
+<?php	if ($debug_mode) { ?>
+				Event.observe($('level_debug'), 'click', function() {
+					Logger.toggle_level('debug');
+				});
+				Event.observe($('level_info'), 'click', function() {
+					Logger.toggle_level('info');
+				});
+				Event.observe($('level_warning'), 'click', function() {
+					Logger.toggle_level('warning');
+				});
+				Event.observe($('level_error'), 'click', function() {
+					Logger.toggle_level('error');
+				});
+				Event.observe($('clear_button'), 'click', function() {
+					Logger.clear();
+				});
+<?php	}	?>
 				
 				setTimeout(function() {
 <?php
@@ -342,7 +438,7 @@ else
 
 			<div id="iframeWrap" class="rounded" style="display: none;">
 				<iframe id="iframeContainer" width="975" height="550"></iframe>
-				<a href="javascript:;" onclick="hideIFrame(); return false;"><div id="iframeCloseButton" class="rounded <?php echo ($big_image_map ? "image_close-wrap_png" : "msie6"); ?>"></div></a>
+				<a id="iframeLink" href="javascript:;"><div id="iframeCloseButton" class="rounded <?php echo ($big_image_map ? "image_close-wrap_png" : "msie6"); ?>"></div></a>
 			</div>
 
 			<div id="newsWrap" class="rounded" style="display: none;">
@@ -367,7 +463,7 @@ else
 						</tr>
 						<tr>
 							<td style="text-align: right; vertical-align: bottom; margin: 10px;" colspan="2">
-								<a href="javascript:;" onclick="hideNews(); return false;"><span id="close_gettext">&nbsp;</span></a>
+								<a id="newsHideLink" href="javascript:;"><span id="close_gettext">&nbsp;</span></a>
 							</td>
 						</tr>
 					</table>
@@ -474,7 +570,7 @@ else
 						<td style="text-align: right; padding-left: 5px; padding-right: 10px; border-bottom: 1px solid #ccc;">
 							<table style="margin-left: auto; margin-right: 0px;" border="0" cellspacing="0" cellpadding="10">
 								<tr>
-									<td id="suspend_button" style="display: none; text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.suspend(); return false;">
+									<td id="suspend_button" style="display: none; text-align: center; vertical-align: middle;"><a id="suspend_link" href="javascript:;">
 										<?php if (!$big_image_map) { ?>
 										<img src="media/image/suspend.png" width="32" height="32" alt="" title="" />
 										<?php } else { ?>
@@ -482,7 +578,7 @@ else
 										<?php } ?>
 										<span id="suspend_gettext">&nbsp;</span></a>
 									</td>
-									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="confirmLogout('<?php echo $confirm_logout; ?>');">
+									<td style="text-align: center; vertical-align: middle;"><a id="logout_link" href="javascript:;">
 										<?php if (!$big_image_map) { ?>
 										<img src="media/image/logout.png" width="32" height="32" alt="" title="" />
 										<?php } else { ?>
@@ -532,11 +628,11 @@ else
 		</div>
 
 		<div id="debugLevels" style="display: none;">
-			<span class="debug"><input type="checkbox" id="level_debug" onclick="Logger.toggle_level('debug');" value="10" /> Debug</span>
-			<span class="info"><input type="checkbox" id="level_info" onclick="Logger.toggle_level('info');" value="20" checked="checked" /> Info</span>
-			<span class="warning"><input type="checkbox" id="level_warning" onclick="Logger.toggle_level('warning');" value="30" checked="checked" /> Warning</span>
-			<span class="error"><input type="checkbox" id="level_error" onclick="Logger.toggle_level('error');" value="40" checked="checked" /> Error</span><br />
-			<input type="button" onclick="Logger.clear(); return false;" value="Clear" />
+			<span class="debug"><input type="checkbox" id="level_debug" value="10" /> Debug</span>
+			<span class="info"><input type="checkbox" id="level_info" value="20" checked="checked" /> Info</span>
+			<span class="warning"><input type="checkbox" id="level_warning" value="30" checked="checked" /> Warning</span>
+			<span class="error"><input type="checkbox" id="level_error" value="40" checked="checked" /> Error</span><br />
+			<input type="button" id="clear_button" value="Clear" />
 		</div>
 
 		<div id="mainWrap">
@@ -561,7 +657,7 @@ else
 							<td style="text-align: center; vertical-align: top;">
 								<div id="loginForm" class="rounded">
 
-									<form id="startsession" method="post" onsubmit="return startSession();">
+									<form id="startsession" action="javascript:;" method="post">
 										<table style="width: 100%; margin-left: auto; margin-right: auto; padding-top: 10px;" border="0" cellspacing="0" cellpadding="5">
 											<tr style="<?php echo ((defined('SESSIONMANAGER_HOST'))?'display: none;':'') ?>">
 												<td style="width: 22px; text-align: right; vertical-align: middle;">
@@ -575,7 +671,7 @@ else
 													<strong><span id="session_manager_gettext">&nbsp;</span></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
-													<input type="text" id="sessionmanager_host" value="<?php echo $wi_sessionmanager_host; ?>" onchange="checkLogin();" onkeyup="checkLogin();" />
+													<input type="text" id="sessionmanager_host" value="<?php echo $wi_sessionmanager_host; ?>"/>
 												
 												</td>
 											</tr>
@@ -594,11 +690,11 @@ else
 													<?php
 														if (! defined('SESSIONMANAGER_HOST') || $users === false) {
 													?>
-													<input type="text" id="user_login" value="<?php echo $wi_user_login; ?>" onchange="checkLogin();" onkeyup="checkLogin();" onkeydown="if (typeof window.event != 'undefined' && window.event.keyCode == 13) return startSession();" />
+													<input type="text" id="user_login" value="<?php echo $wi_user_login; ?>"/>
 													<?php
 														} else {
 													?>
-													<select id="user_login" onchange="checkLogin();" onkeyup="checkLogin();">
+													<select id="user_login">
 													<?php
 														foreach ($users as $login => $displayname)
 															echo '<option value="'.$login.'"'.(($login == $wi_user_login)?'selected="selected"':'').'>'.$login.' ('.$displayname.')</option>'."\n";
@@ -622,7 +718,7 @@ else
 													<strong><span id="password_gettext">&nbsp;</span></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
-													<input type="password" id="user_password" value="" onkeydown="if (typeof window.event != 'undefined' && window.event.keyCode == 13) return startSession();" />
+													<input type="password" id="user_password" value=""/>
 												</td>
 											</tr>
 										</table>
@@ -640,8 +736,8 @@ else
 														<strong><span id="use_local_credentials_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="use_local_credentials_true" name="use_local_credentials" value="1"<?php if ($wi_use_local_credentials == 1) echo ' checked="checked"'; ?><?php if (defined('OPTION_FORCE_USE_LOCAL_CREDENTIALS')) echo ' disabled="disabled"'; ?> onchange="checkLogin();" onclick="checkLogin();" /> <span id="use_local_credentials_yes_gettext">&nbsp;</span>
-														<input class="input_radio" type="radio" id="use_local_credentials_false" name="use_local_credentials" value="0"<?php if ($wi_use_local_credentials == 0) echo ' checked="checked"'; ?><?php if (defined('OPTION_FORCE_USE_LOCAL_CREDENTIALS')) echo ' disabled="disabled"'; ?> onchange="checkLogin();" onclick="checkLogin();" /> <span id="use_local_credentials_no_gettext">&nbsp;</span>
+														<input class="input_radio" type="radio" id="use_local_credentials_true" name="use_local_credentials" value="1"<?php if ($wi_use_local_credentials == 1) echo ' checked="checked"'; ?><?php if (defined('OPTION_FORCE_USE_LOCAL_CREDENTIALS')) echo ' disabled="disabled"'; ?>/> <span id="use_local_credentials_yes_gettext">&nbsp;</span>
+														<input class="input_radio" type="radio" id="use_local_credentials_false" name="use_local_credentials" value="0"<?php if ($wi_use_local_credentials == 0) echo ' checked="checked"'; ?><?php if (defined('OPTION_FORCE_USE_LOCAL_CREDENTIALS')) echo ' disabled="disabled"'; ?>/> <span id="use_local_credentials_no_gettext">&nbsp;</span>
 													</td>
 												</tr>
 												<tr>
@@ -656,7 +752,7 @@ else
 														<strong><span id="mode_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<select id="session_mode" onchange="checkSessionMode();" onclick="checkSessionMode();" <?php if (defined('OPTION_FORCE_SESSION_MODE')) echo ' disabled="disabled"';?>>
+														<select id="session_mode" <?php if (defined('OPTION_FORCE_SESSION_MODE')) echo ' disabled="disabled"';?>>
 															<option id="mode_desktop_gettext" value="desktop"<?php if ($wi_session_mode == 'desktop') echo ' selected="selected"'; ?>></option>
 															<option id="mode_portal_gettext" value="applications"<?php if ($wi_session_mode == 'applications') echo ' selected="selected"'; ?>></option>
 														</select>
@@ -697,7 +793,7 @@ else
 															<div id="session_language_flag" style="display:inline-block;" ></div>
 															<?php } ?>
 														</span>
-														<select id="session_language" onchange="translateInterface($('session_language').value); updateFlag($('session_language').value);" onkeyup="translateInterface($('session_language').value); updateFlag($('session_language').value);"<?php if (OPTION_FORCE_LANGUAGE === true) echo ' disabled="disabled"';?>>
+														<select id="session_language" <?php if (OPTION_FORCE_LANGUAGE === true) echo ' disabled="disabled"';?>>
 															<?php
 																foreach ($languages as $language)
 																	echo '<option value="'.$language['id'].'" style="background: url(\'media/image/flags/'.$language['id'].'.png\') no-repeat right;"'.(($language['id'] == $user_language || $language['id'] == substr($user_language, 0, 2))?' selected="selected"':'').'>'.$language['english_name'].((array_key_exists('local_name', $language))?' - '.$language['local_name']:'').'</option>';
@@ -753,9 +849,9 @@ else
 											<tr style="height: 40px;">
 												<td style="text-align: left; vertical-align: bottom;">
 													<?php if (!$big_image_map) { ?>
-													<span id="advanced_settings_status" style="position: relative; left: 20px;"><img src="media/image/show.png" width="12" height="12" alt="" title="" /></span><input style="padding-left: 18px;" type="button" id="advanced_settings_gettext" value="" onclick="switchSettings(); return false;" />
+													<span id="advanced_settings_status" style="position: relative; left: 20px;"><img src="media/image/show.png" width="12" height="12" alt="" title="" /></span><input style="padding-left: 18px;" type="button" id="advanced_settings_gettext" value=""/>
 													<?php } else { ?>
-													<span id="advanced_settings_status" class="image_show_png" style="display: inline-block;position: relative; left: 18px;"></span><input style="padding-left: 18px;" type="button" id="advanced_settings_gettext" value="" onclick="switchSettings(); return false;" />
+													<span id="advanced_settings_status" class="image_show_png" style="display: inline-block;position: relative; left: 18px;"></span><input style="padding-left: 18px;" type="button" id="advanced_settings_gettext" value=""/>
 													<?php } ?>
 												</td>
 												<td style="text-align: right; vertical-align: bottom;">
