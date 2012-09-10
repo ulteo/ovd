@@ -233,6 +233,40 @@ function get_users_list() {
 				
 				applyTranslations(i18n_tmp);
 				updateFlag($('session_language').value);
+				
+				setTimeout(function() {
+<?php
+if (! defined('SESSIONMANAGER_HOST') && (! isset($wi_sessionmanager_host) || $wi_sessionmanager_host == ''))
+	echo 'if ($(\'sessionmanager_host\') && $(\'sessionmanager_host\').visible()) $(\'sessionmanager_host\').focus();';
+elseif ((isset($users) && $users !== false) || (isset($wi_user_login) && $wi_user_login != ''))
+	echo 'if ($(\'user_password\') && $(\'user_password\').visible()) $(\'user_password\').focus();';
+else
+	echo 'if ($(\'user_login\') && $(\'user_login\').visible()) $(\'user_login\').focus();';
+?>
+					checkSessionMode();
+					
+					if ($('sessionmanager_host').value == '') {
+						$('sessionmanager_host').style.color = 'grey';
+						$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
+						if ($('sessionmanager_host') && $('sessionmanager_host').visible())
+							setCaretPosition($('sessionmanager_host'), 0);
+					}
+					Event.observe($('sessionmanager_host'), 'focus', function() {
+						if ($('sessionmanager_host').value == i18n.get('sessionmanager_host_example')) {
+							$('sessionmanager_host').style.color = 'black';
+							$('sessionmanager_host').value = '';
+						}
+					});
+					Event.observe($('sessionmanager_host'), 'blur', function() {
+						if ($('sessionmanager_host').value == '') {
+							$('sessionmanager_host').style.color = 'grey';
+							$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
+						}
+					});
+				}, 1500);
+<?php	if ($debug_mode) {	?>
+				switchSettings();
+<?php	}	?>
 			});
 		</script>
 	</head>
@@ -526,21 +560,7 @@ function get_users_list() {
 							</td>
 							<td style="text-align: center; vertical-align: top;">
 								<div id="loginForm" class="rounded">
-									<script type="text/javascript">
-									Event.observe(window, 'load', function() {
-										setTimeout(function() {
-<?php
-if (! defined('SESSIONMANAGER_HOST') && (! isset($wi_sessionmanager_host) || $wi_sessionmanager_host == ''))
-	echo 'if ($(\'sessionmanager_host\') && $(\'sessionmanager_host\').visible()) $(\'sessionmanager_host\').focus();';
-elseif ((isset($users) && $users !== false) || (isset($wi_user_login) && $wi_user_login != ''))
-	echo 'if ($(\'user_password\') && $(\'user_password\').visible()) $(\'user_password\').focus();';
-else
-	echo 'if ($(\'user_login\') && $(\'user_login\').visible()) $(\'user_login\').focus();';
-?>
 
-checkSessionMode();
-										}, 1500);
-									});</script>
 									<form id="startsession" method="post" onsubmit="return startSession();">
 										<table style="width: 100%; margin-left: auto; margin-right: auto; padding-top: 10px;" border="0" cellspacing="0" cellpadding="5">
 											<tr style="<?php echo ((defined('SESSIONMANAGER_HOST'))?'display: none;':'') ?>">
@@ -556,28 +576,7 @@ checkSessionMode();
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
 													<input type="text" id="sessionmanager_host" value="<?php echo $wi_sessionmanager_host; ?>" onchange="checkLogin();" onkeyup="checkLogin();" />
-													<script type="text/javascript">Event.observe(window, 'load', function() {
-														setTimeout(function() {
-															if ($('sessionmanager_host').value == '') {
-																$('sessionmanager_host').style.color = 'grey';
-																$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
-																if ($('sessionmanager_host') && $('sessionmanager_host').visible())
-																	setCaretPosition($('sessionmanager_host'), 0);
-															}
-															Event.observe($('sessionmanager_host'), 'focus', function() {
-																if ($('sessionmanager_host').value == i18n.get('sessionmanager_host_example')) {
-																	$('sessionmanager_host').style.color = 'black';
-																	$('sessionmanager_host').value = '';
-																}
-															});
-															Event.observe($('sessionmanager_host'), 'blur', function() {
-																if ($('sessionmanager_host').value == '') {
-																	$('sessionmanager_host').style.color = 'grey';
-																	$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
-																}
-															});
-														}, 1500);
-													});</script>
+												
 												</td>
 											</tr>
 											<tr>
@@ -627,17 +626,6 @@ checkSessionMode();
 												</td>
 											</tr>
 										</table>
-<?php
-	if ($debug_mode) {
-?>
-										<script type="text/javascript">
-											Event.observe(window, 'load', function() {
-												switchSettings();
-											});
-										</script>
-<?php
-	}
-?>
 										<div id="advanced_settings" style="display: none;">
 											<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="5">
 												<tr<?php if (OPTION_SHOW_USE_LOCAL_CREDENTIALS === false) echo ' style="display: none;"';?>>
