@@ -7,9 +7,9 @@
  *
  * Copyright (c) 2005 Propero Limited
  *
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  * 
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -210,7 +210,7 @@ public class RasterOp {
 		for (int row = 0; row < cy; row++) {
 			for (int col = 0; col < cx; col++) {
 				int c = biDst.getRGB(x+col,y+row);
-				biDst.setRGB(x+col,y+row,(~(c | src.getRGB(col, row))) & mask);
+				biDst.setRGB(x+col,y+row,(~(c | src.getRGB(srcx+col, srcy+row))) & mask);
 			}
 		}
 	}
@@ -222,7 +222,7 @@ public class RasterOp {
 		for (int row = 0; row < cy; row++) {
 			for (int col = 0; col < cx; col++) {
 				int c = biDst.getRGB(x+col,y+row);
-				biDst.setRGB(x+col,y+row,c & ((~src.getRGB(col, row)) & mask));
+				biDst.setRGB(x+col,y+row,c & ((~src.getRGB(srcx+col, srcy+row)) & mask));
 			}
 		}
 	}
@@ -237,7 +237,7 @@ public class RasterOp {
 		for (int row = 0; row < cy; row++) {
 			for (int col = 0; col < cx; col++) {
 				int c = biDst.getRGB(x+col,y+row);
-				biDst.setRGB(x+col,y+row, c ^ ((src.getRGB(col, row)) & mask));
+				biDst.setRGB(x+col,y+row, c ^ ((src.getRGB(srcx+col, srcy+row)) & mask));
 			}
 		}
 	}
@@ -249,7 +249,7 @@ public class RasterOp {
 		for (int row = 0; row < cy; row++) {
 			for (int col = 0; col < cx; col++) {
 				int c = biDst.getRGB(x+col,y+row);
-				biDst.setRGB(x+col,y+row, (~(c & src.getRGB(col, row))) & mask);
+				biDst.setRGB(x+col,y+row, (~(c & src.getRGB(srcx+col, srcy+row))) & mask);
 			}
 		}
 	}
@@ -261,7 +261,7 @@ public class RasterOp {
 		for (int row = 0; row < cy; row++) {
 			for (int col = 0; col < cx; col++) {
 				int c = biDst.getRGB(x+col,y+row);
-				biDst.setRGB(x+col,y+row, c & ((src.getRGB(col, row)) & mask));
+				biDst.setRGB(x+col,y+row, c & ((src.getRGB(srcx+col, srcy+row)) & mask));
 			}
 		}
 	}
@@ -273,7 +273,7 @@ public class RasterOp {
 		for (int row = 0; row < cy; row++) {
 			for (int col = 0; col < cx; col++) {
 				int c = biDst.getRGB(x+col,y+row);
-				biDst.setRGB(x+col,y+row, c ^ ((~src.getRGB(col, row)) & mask));
+				biDst.setRGB(x+col,y+row, c ^ ((~src.getRGB(srcx+col, srcy+row)) & mask));
 			}
 		}
 	}
@@ -285,7 +285,7 @@ public class RasterOp {
 		for (int row = 0; row < cy; row++) {
 			for (int col = 0; col < cx; col++) {
 				int c = biDst.getRGB(x+col,y+row);
-				biDst.setRGB(x+col,y+row, c | ((~src.getRGB(col, row)) & mask));
+				biDst.setRGB(x+col,y+row, c | ((~src.getRGB(srcx+col, srcy+row)) & mask));
 			}
 		}
 	}
@@ -297,7 +297,7 @@ public class RasterOp {
 		for (int row = 0; row < cy; row++) {
 			for (int col = 0; col < cx; col++) {
 				int c = biDst.getRGB(x+col,y+row);
-				biDst.setRGB(x+col,y+row, c | (src.getRGB(col, row) & mask));
+				biDst.setRGB(x+col,y+row, c | (src.getRGB(srcx+col, srcy+row) & mask));
 			}
 		}
 	}
