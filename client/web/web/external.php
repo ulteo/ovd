@@ -239,6 +239,8 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 
 						$('applicationsModeContainer').hide();
 						$('applicationsAppletContainer').hide();
+						
+						$('splashContainer').show();
 
 						applyTranslations(i18n_tmp);
 						startExternalSession('<?php echo $_REQUEST['mode']; ?>');
@@ -267,6 +269,39 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 	</head>
 
 	<body style="margin: 10px; background: #ddd; color: #333;">
+		<noscript>
+			<div class="finalErrorBox" style="width: 500px;">
+				<table style="width: 100%;" border="0" cellspacing="1" cellpadding="3">
+					<tr>
+						<td style="text-align: left; vertical-align: middle;">
+							<strong>JavaScript must be enabled</strong>
+							<div style="margin-top: 15px;">
+<?php echo str_replace(
+	array('[A]', '[/A]'),
+	array('<a href="">', '</a>'),
+	_('JavaScript must be enabled in order for you to use Ulteo OVD. However, it seems JavaScript is either disabled or not supported by your browser. To use OVD Web Client, enable JavaScript by changing your browser options, then [A]try again[/A].'));
+?>
+							</div>
+						</td>
+						<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
+<?php if (!$big_image_map) { ?>
+							<img src="media/image/error.png" width="32" height="32" alt="" title="" />
+<?php } else { ?>
+							<div class="image_error_png"></div>
+<?php } ?>
+						</td>
+					</tr>
+				</table>
+				<div style="text-align:center;">
+<?php if (!$big_image_map) { ?>
+					<img src="media/image/ulteo-small.png" width="141" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop"/>
+<?php } else { ?>
+					<div class="image_ulteo-small_png" style="margin-left: auto; margin-right: auto;"></div>
+<?php } ?>
+				</div>
+			</div>
+		</noscript>
+
 		<div id="lockWrap" style="display: none;">
 		</div>
 
@@ -336,7 +371,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 			</div>
 		</div>
 
-		<div id="splashContainer" class="rounded">
+		<div id="splashContainer" class="rounded" style="display: none;">
 			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td style="text-align: center;" colspan="3">

@@ -320,6 +320,19 @@ div#systemTest {
 	margin-right: auto;
 }
 
+div.finalErrorBox {
+	background: #fff;
+	color: #c33;
+	border: 10px solid #c33;
+	
+	font-size: 1.2em;
+	padding: 20px;
+	z-index: 200;
+	
+	margin-left: auto;
+	margin-right: auto;
+}
+
 div#systemTestErrorWrap {
 	position: absolute;
 	background: #c33;
