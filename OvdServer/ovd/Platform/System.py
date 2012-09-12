@@ -21,7 +21,11 @@
 
 
 import locale
+import os
 import subprocess
+
+from ovd.Logger import Logger
+
 
 class System:
 	@staticmethod
@@ -145,3 +149,17 @@ class System:
 	@staticmethod
 	def prepareForSessionActions():
 		raise NotImplementedError()
+	
+	
+	@staticmethod
+	def mount_point_exist(path):
+		# This function replace os.path.exists because it do not inform about error
+		try:
+			st = os.stat(path)
+		except os.error, e:
+			if e[0] != 2:
+				Logger.error("Unable to check mount point %s"%(path))
+				Logger.debug("Unable to check mount point %s: %s"%(path, str(e)))
+			return False
+		return True
+

@@ -69,14 +69,14 @@ class Profile(AbstractProfile):
 		else:
 			mount_uri = urlparse.urlunparse(("https", uri.netloc, uri.path, uri.params, uri.query, uri.fragment))
 		
-		if not os.path.exists(davfs_conf):
+		if not System.mount_point_exist(davfs_conf):
 			f = open(davfs_conf, "w")
 			f.write("ask_auth 0\n")
 			f.write("use_locks 0\n")
 			f.write("secrets %s\n"%(davfs_secret))
 			f.close()
 		
-		if not os.path.exists(davfs_secret):
+		if not System.mount_point_exist(davfs_secret):
 			f = open(davfs_secret, "w")
 			f.close()
 			os.chmod(davfs_secret, stat.S_IRUSR | stat.S_IWUSR)
@@ -122,7 +122,7 @@ class Profile(AbstractProfile):
 		
 		for sharedFolder in self.sharedFolders:
 			dest = os.path.join(self.MOUNT_POINT, self.session.id, "sharedFolder_"+ hashlib.md5(sharedFolder["uri"]).hexdigest())
-			if not os.path.exists(dest):
+			if not System.mount_point_exist(dest):
 				os.makedirs(dest)
 			
 			u = urlparse.urlparse(sharedFolder["uri"])
@@ -144,11 +144,11 @@ class Profile(AbstractProfile):
 				
 				dst = os.path.join(home, sharedFolder["name"])
 				i = 0
-				while os.path.exists(dst):
+				while System.mount_point_exist(dst):
 					dst = os.path.join(home, sharedFolder["name"]+"_%d"%(i))
 					i += 1
 				
-				if not os.path.exists(dst):
+				if not System.mount_point_exist(dst):
 					os.makedirs(dst)
 				
 				cmd = "mount -o bind \"%s\" \"%s\""%(dest, dst)
@@ -168,7 +168,7 @@ class Profile(AbstractProfile):
 				src = os.path.join(self.profile_mount_point, d)
 				dst = os.path.join(self.homeDir, d)
 				
-				while not os.path.exists(src):
+				while not System.mount_point_exist(src):
 					try:
 						os.makedirs(src)
 					except OSError, err:
@@ -179,7 +179,7 @@ class Profile(AbstractProfile):
 						Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
 						continue
 				
-				if not os.path.exists(dst):
+				if not System.mount_point_exist(dst):
 					os.makedirs(dst)
 				
 				cmd = "mount -o bind \"%s\" \"%s\""%(src, dst)
@@ -231,7 +231,7 @@ class Profile(AbstractProfile):
 		
 		for fname in ("davfs.conf", "davfs.secret"):
 			path = os.path.join(self.cifs_dst, fname)
-			if not os.path.exists(path):
+			if not System.mount_point_exist(path):
 				continue
 			try:
 				os.remove(path)
@@ -263,7 +263,7 @@ class Profile(AbstractProfile):
 			return
 		
 		d = os.path.join(self.profile_mount_point, "conf.Linux")
-		if not os.path.exists(d):
+		if not System.mount_point_exist(d):
 			return
 		
 		# Copy conf files
@@ -281,7 +281,7 @@ class Profile(AbstractProfile):
 			return
 		
 		d = os.path.join(self.profile_mount_point, "conf.Linux")
-		while not os.path.exists(d):
+		while not System.mount_point_exist(d):
 			try:
 				os.makedirs(d)
 			except OSError, err:
