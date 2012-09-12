@@ -3,6 +3,7 @@
 # Copyright (C) 2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2012
+# Author David LECHEVALIER <david@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -22,6 +23,7 @@
 import time
 
 from ovd.LoggerHook import LoggerHook
+from ovd.Platform.System import System
 
 class SessionLogger(LoggerHook):
 	def __init__(self):
@@ -29,7 +31,8 @@ class SessionLogger(LoggerHook):
 	
 	
 	def add(self, level, message):
-		self.log.append("%s [%s] %s"%(time.strftime("%Y-%m-%d %H:%M:%S"), level, message))
+		log = "%s [%s] %s"%(time.strftime("%Y-%m-%d %H:%M:%S"), level, message)
+		self.log.append(System.local_encode(log))
 	
 	def get_full_log(self):
 		return "\n".join(self.log)
