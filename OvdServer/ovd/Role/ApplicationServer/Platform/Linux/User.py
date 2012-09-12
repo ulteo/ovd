@@ -21,6 +21,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import fcntl
+import os
 import pwd
 import time
 import xrdp
@@ -54,7 +55,22 @@ class User(AbstractUser):
 	def create(self):
 		lock = FileLock("/tmp/user.lock")
 		
-		cmd = u"useradd -m -k /dev/null"
+		# TODO get the default home in /etc/default/useradd
+		default_home_dir = os.path.join(u"/home", self.name)
+		home_dir = default_home_dir
+		i = 0
+		while os.path.exists(home_dir) and i < 100:
+			home_dir = default_home_dir+"_%d"%(i)
+			i+= 1
+
+		if i > 0:
+			Logger.warn("Unable to create home directory %s, the home is now %s"%(default_home_dir, home_dir))
+
+		if os.path.exists(home_dir):
+			Logger.error("Unable to find a valid home directory")
+			return False
+		
+		cmd = u"useradd -m -d '%s' -k /dev/null"%(home_dir)
 		if self.infos.has_key("displayName"):
 			cmd+= u" --comment '%s,,,'"%(self.infos["displayName"])
 		
