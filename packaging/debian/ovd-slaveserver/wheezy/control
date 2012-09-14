@@ -1,7 +1,7 @@
 Source: ovd-slaveserver
 Section: net
 Priority: extra
-Maintainer: Samuel Bovée <samuel@ulteo.com>
+Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
 Build-Depends: cdbs, debhelper (>= 6),
  python (>= 2.6), python-central, python-svn
 Standards-Version: 3.7.3
@@ -18,7 +18,7 @@ Architecture: all
 Depends: ${python:Depends},
  ulteo-ovd-slaveserver, ulteo-ovd-shells, ulteo-ovd-externalapps-client,
  xrdp-python, xrdp-seamrdp, xrdp-rdpdr, xrdp-printer, xrdp-sound, xrdp-clipboard,
- tightvncserver, desktop-file-utils, imagemagick, passwd, adduser, rsync, smbfs, python-xdg
+ desktop-file-utils, imagemagick, passwd, adduser, rsync, smbfs, python-xdg
 Recommends: tmpreaper
 Description: Ulteo Open Virtual Desktop - application server role for slave server
  Application server role for the Ulteo OVD slave server
