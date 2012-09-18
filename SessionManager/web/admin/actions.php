@@ -34,9 +34,6 @@ if (!isset($_REQUEST['name']))
 if (!isset($_REQUEST['action']))
 	redirect();
 
-if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'clone', 'icon', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'display_name', 'external_name', 'rename', 'rdp_port', 'populate', 'publish', 'del_icon', 'unset_default', 'set_default', 'modify_rules', 'remove_orphan')))
-	redirect();
-
 if ($_REQUEST['name'] == 'System') {
 	if (! checkAuthorization('manageServers'))
 		redirect();
