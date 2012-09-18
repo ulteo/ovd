@@ -501,7 +501,7 @@ function show_manage($login, $userDB, $userGroupDB) {
       else
         echo @date('d/m/Y H:i:s', $session->getAttribute('start_time'));
       echo '</td>';
-      echo '<td><a href="servers.php?action=manage&fqdn='.$session->server.'">'.$session->server.'</td>';
+      echo '<td><a href="sessions.php?info='.$session->id.'">'.$session->id.'</td>';
       echo '<td>';
       echo '<input type="hidden" name="info" value="'.$session->id.'" />';
       echo '</td><td><input type="submit" value="'._('Information about this session').'" /></td>';
