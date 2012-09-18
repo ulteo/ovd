@@ -493,7 +493,7 @@ function show_manage($login, $userDB, $userGroupDB) {
     echo '<h2>'._('Active sessions').'</h2>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
     foreach($sessions as $session) {
-      echo '<form action="sessions.php"><tr>';
+      echo '<tr>';
       echo '<td>';
       $buf = $session->getAttribute('start_time');
       if (! $buf)
@@ -502,11 +502,14 @@ function show_manage($login, $userDB, $userGroupDB) {
         echo @date('d/m/Y H:i:s', $session->getAttribute('start_time'));
       echo '</td>';
       echo '<td><a href="sessions.php?info='.$session->id.'">'.$session->id.'</td>';
+      echo '<td></td>';
       echo '<td>';
+      echo '<form action="sessions.php">';
       echo '<input type="hidden" name="info" value="'.$session->id.'" />';
-      echo '</td><td><input type="submit" value="'._('Information about this session').'" /></td>';
+      echo '<input type="submit" value="'._('Information about this session').'" />';
+      echo '</form>';
       echo '</td>';
-      echo '</tr></form>';
+      echo '</tr>';
     }
     echo '</table>';
     echo '</div>';
