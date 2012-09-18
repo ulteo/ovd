@@ -48,7 +48,7 @@ function show_default() {
   $nb_a_servs_online_maintenance = 0;
   $nb_a_servs_not_maintenance = 0;
   foreach($a_servs as $s) {
-	$external_name_checklist = array('localhost', '127.0.0.1');
+	$external_name_checklist = array('localhost', '127.0.0.1'); // change by a "fqdn is loopback address" function
 	if (in_array($s->fqdn, $external_name_checklist) && in_array($s->getAttribute('external_name'), $external_name_checklist))
 		popup_error(sprintf(_('Server "%s": redirection name may be invalid!'), $s->fqdn));
 	if ($s->getAttribute('external_name') == '')
