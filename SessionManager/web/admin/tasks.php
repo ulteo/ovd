@@ -53,6 +53,7 @@ function show_manage($id, $tm) {
 		die_error('Unable to find task '.$id, __FILE__,__LINE__);
 	
 	$infos = $task->get_AllInfos();
+	$server = Abstract_Server::load($task->server);
 	$can_remove = ($task->succeed() || $task->failed());
 
 	$can_do_action = isAuthorized('manageServers');
@@ -84,7 +85,7 @@ function show_manage($id, $tm) {
 	echo '<tr class="content1">';
 	echo '<td>'.date('Y-m-d H:i:s', $task->t_begin).'</td>';
 	echo '<td>'.get_class($task).'</td>';
-	echo '<td><a href="servers.php?action=manage&fqdn='.$task->server.'">'.$task->server.'</a></td>';
+	echo '<td><a href="servers.php?action=manage&fqdn='.$task->server.'">'.$server->getDisplayName().'</a></td>';
 	echo '<td>'.$status.'</td>';
 	echo '<td>'.implode(', ', $task->getPackages()).'</td>';
 	echo '<td>'.$task->job_id.'</td>';
@@ -150,6 +151,7 @@ function show_default($tm) {
     $count = 0;
     foreach($tm->tasks as $task) {
       $content = 'content'.(($count++%2==0)?1:2);
+      $server = Abstract_Server::load($task->server);
       $can_remove = ($task->succeed() || $task->failed());
 
       if ($task->succeed())
@@ -165,7 +167,7 @@ function show_default($tm) {
       echo '<td><a href="?action=manage&id='.$task->id.'">'.$task->id.'</a></td>';
       echo '<td>'.date('Y-m-d H:i:s', $task->t_begin).'</td>';
       echo '<td>'.get_class($task).'</td>';
-      echo '<td><a href="servers.php?action=manage&fqdn='.$task->server.'">'.$task->server.'</a></td>';
+      echo '<td><a href="servers.php?action=manage&fqdn='.$task->server.'">'.$server->getDisplayName().'</a></td>';
       echo '<td>'.$status.'</td>';
       echo '<td>'.$task->getRequest().'</td>';
       if ($can_do_action) {
@@ -195,7 +197,7 @@ function show_default($tm) {
 	echo '<input type="hidden" name="action" value="add" />';
     	echo '<select name="server">';
     	foreach ($servers as $server)
-		echo '<option value="'.$server->fqdn.'">'.$server->fqdn.'</option>';
+		echo '<option value="'.$server->fqdn.'">'.$server->getDisplayName().'</option>';
     	echo '</select> &nbsp; ';
     	echo '<input type="text" name="request" value="" /> &nbsp; ';
     	echo '<input type="hidden" name="type" value="install_from_line" />';
@@ -211,7 +213,7 @@ function show_default($tm) {
         echo '<input type="hidden" name="request" value="" />'; // hack for the task creation
         echo '<select name="server">';
         foreach ($servers as $server)
-            echo '<option value="'.$server->fqdn.'">'.$server->fqdn.'</option>';
+            echo '<option value="'.$server->fqdn.'">'.$server->getDisplayName().'</option>';
         echo '</select> &nbsp; ';
         echo '<input type="submit" name="submit" value="'._('Upgrade').'" />';
         echo '</form>';

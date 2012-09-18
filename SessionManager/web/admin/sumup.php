@@ -197,7 +197,7 @@ else{
 			if (is_array($serv_s) && count($serv_s) > 0) {
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
 				foreach ($serv_s as $s) {
-					echo '<tr><td><strong>('.$s->getAttribute('type').')</strong></td><td><a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->fqdn.'</a></td></tr>';
+					echo '<tr><td><strong>('.$s->getAttribute('type').')</strong></td><td><a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->getDisplayName().'</a></td></tr>';
 				}
 				echo '</table>';
 			}
@@ -255,7 +255,7 @@ else{
 				echo '2';
 			echo '">';
 			
-			echo '<td><a href="servers.php?action=manage&fqdn='.$server->fqdn.'">'.$server->fqdn.'</a></td>';
+			echo '<td><a href="servers.php?action=manage&fqdn='.$server->fqdn.'">'.$server->getDisplayName().'</a></td>';
 			echo '<td>'.$server->stringType().'</td>';
 			echo '<td>';
 			if (is_array($roles)) {

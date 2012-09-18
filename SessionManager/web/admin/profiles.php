@@ -139,6 +139,7 @@ function show_manage($profile_id_) {
 		redirect('profiles.php');
 
 	$used_users = $profile->getUsers();
+	$server = Abstract_Server::load($profile->server);
 
 	page_header();
 
@@ -148,7 +149,7 @@ function show_manage($profile_id_) {
 
 	echo '<div>';
 	echo '<h2>'._('Server').'</h2>';
-	echo '<a href="servers.php?action=manage&fqdn='.$profile->server.'"> '.$profile->server.'</a>';
+	echo '<a href="servers.php?action=manage&fqdn='.$profile->server.'"> '.$server->getDisplayName().'</a>';
 	echo '</div>';
 	echo '<br />';
 

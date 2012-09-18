@@ -133,7 +133,7 @@ function show_all($flags_) {
 	foreach ($display2 as $fqdn => $logs) {
 		$server = Abstract_Server::load($fqdn);
 
-		echo '<h2><img src="media/image/server-'.$server->stringType().'.png" alt="'.$server->stringType().'" title="'.$server->stringType().'" /> <a href="servers.php?action=manage&amp;fqdn='.$fqdn.'">'.$fqdn.'</a></h2>';
+		echo '<h2><img src="media/image/server-'.$server->stringType().'.png" alt="'.$server->stringType().'" title="'.$server->stringType().'" /> <a href="servers.php?action=manage&amp;fqdn='.$fqdn.'">'.$server->getDisplayName().'</a></h2>';
 		echo '<div class="section">';
 		echo '<h4>'._('Log');
 		echo ' <a href="?show=1&amp;where=aps&amp;server='.$fqdn.'"><img src="media/image/view.png" width="22" height="22" alt="view" onmouseover="showInfoBulle(\''._('View full log file online').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';

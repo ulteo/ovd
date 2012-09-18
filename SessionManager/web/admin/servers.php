@@ -89,6 +89,7 @@ function show_default() {
     foreach($a_servs as $s) {
       $content = 'content'.(($count++%2==0)?1:2);
       $server_online = $s->isOnline();
+      $dn = $s->getDisplayName();
 
 	if ($s->getAttribute('locked')) {
 	  $switch_msg = _('Switch to production');
@@ -108,8 +109,10 @@ function show_default() {
 		echo '</td>';
 	}
       echo '<td>';
-	echo '<a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->getAttribute('external_name');
-	if ($s->getAttribute('external_name') != $s->fqdn)
+	echo '<a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$dn;
+	if ($s->getAttribute('external_name') != $dn)
+		echo '<br/><em style="margin-left: 10px; font-size: 0.8em;">'.$s->getAttribute('external_name').'</em>';
+	if ($s->fqdn != $dn && $s->fqdn != $s->getAttribute('external_name'))
 		echo '<br/><em style="margin-left: 10px; font-size: 0.8em;">'.$s->fqdn.'</em>';
 	echo '</a>';
       echo '</td>';
@@ -364,7 +367,7 @@ function show_manage($fqdn) {
   echo '<script type="text/javascript" src="media/script/ajax/servers.js" charset="utf-8"></script>';
 
   echo '<div id="servers_div">';
-  echo '<h1>'.$server->fqdn.'</h1>';
+  echo '<h1>'.$server->getDisplayName().'</h1>';
 
 //   if ($server_online === false)
 //     echo '<h2><p class="msg_error centered">'.$status_error_msg.'</p></h2>';
@@ -420,6 +423,38 @@ function show_manage($fqdn) {
   echo '<div class="section">';
   echo '<h2>'._('Configuration').'</h2>';
   echo '<table>';
+  
+	$dn = null;
+	if ($server->hasAttribute('display_name') && ! is_null($server->getAttribute('display_name')))
+		$dn = $server->getAttribute('display_name');
+	
+	echo '<tr><td>';
+	echo _('Display name').': ';
+	echo '</td><td>';
+	if ($can_do_action) {
+		echo '<form action="actions.php" method="post">';
+		echo '<input type="hidden" name="name" value="Server" />';
+		echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+		echo '<input type="hidden" name="action" value="display_name" />';
+	}
+	echo '<input type="text" name="display_name" value="'.((is_null($dn))?'':$dn).'" />';
+	if ($can_do_action) {
+		echo ' <input type="submit" value="'.((is_null($dn))?_('define'):_('change')).'" />';
+		echo '</form>';
+		
+	}
+	echo '</td><td>';
+	if (is_null($dn))
+		echo sprintf(_('(no display name defined yet, use "%s" instead'), $server->getDisplayName());
+	else {
+		echo '<form action="actions.php" method="post">';
+		echo '<input type="hidden" name="name" value="Server" />';
+		echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+		echo '<input type="hidden" name="action" value="display_name" />';
+		echo '<input type="submit" value="'._('delete').'" />';
+		echo '</form>';
+	}
+	echo "</td></tr>\n";
   
   echo '<tr><td>';
   echo _('Redirection name for this server').': ';

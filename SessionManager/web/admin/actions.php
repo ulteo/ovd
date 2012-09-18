@@ -34,7 +34,7 @@ if (!isset($_REQUEST['name']))
 if (!isset($_REQUEST['action']))
 	redirect();
 
-if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'clone', 'icon', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'rdp_port', 'populate', 'publish', 'del_icon', 'unset_default', 'set_default', 'modify_rules', 'remove_orphan')))
+if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'clone', 'icon', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'display_name', 'external_name', 'rename', 'rdp_port', 'populate', 'publish', 'del_icon', 'unset_default', 'set_default', 'modify_rules', 'remove_orphan')))
 	redirect();
 
 if ($_REQUEST['name'] == 'System') {
@@ -1527,6 +1527,33 @@ if ($_REQUEST['name'] == 'Server') {
 			
 			redirect('servers.php?action=manage&fqdn='.$server->getAttribute('fqdn'));
 		}
+	}
+	
+	if ($_REQUEST['action'] == 'display_name') {
+		if (! isset($_REQUEST['fqdn']))
+			redirect();
+		
+		if (! isset($_REQUEST['display_name']) || strlen($_REQUEST['display_name']) == 0)
+			$new_dn = null;
+		else
+			$new_dn = $_REQUEST['display_name'];
+		
+		$server = Abstract_Server::load($_REQUEST['fqdn']);
+		
+		$dn = null;
+		if ($server->hasAttribute('display_name') && ! is_null($server->getAttribute('display_name')))
+			$dn = $server->getAttribute('display_name');
+		
+		if ($new_dn == $dn) {
+			popup_error(_("Nothing to save. New display name is identicall to old one"));
+			redirect();
+		}
+		
+		$server->setAttribute('display_name', $new_dn);
+		Abstract_Server::save($server);
+		popup_info(sprintf(_("Server '%s' successfully modified"), $server->getDisplayName()));
+		
+		redirect();
 	}
 	
 	if ($_REQUEST['action'] == 'external_name') {

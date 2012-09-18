@@ -89,6 +89,8 @@ function show_manage($sharedfolder_id_) {
 		popup_error(sprintf(_("Failed to import shared folder '%s'"), $sharedfolder_id_));
 		redirect('sharedfolders.php');
 	}
+	
+	$server = Abstract_Server::load($sharedfolder->server);
 
 	$usersgroupsList = new UsersGroupsList($_REQUEST);
 	$all_groups = $usersgroupsList->search();
@@ -116,7 +118,7 @@ function show_manage($sharedfolder_id_) {
 
 	echo '<div>';
 	echo '<h2>'._('Server').'</h2>';
-	echo '<a href="servers.php?action=manage&fqdn='.$sharedfolder->server.'"> '.$sharedfolder->server.'</a>';
+	echo '<a href="servers.php?action=manage&fqdn='.$sharedfolder->server.'"> '.$server->getDisplayName().'</a>';
 	echo '</div>';
 	echo '<br />';
 

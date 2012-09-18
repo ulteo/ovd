@@ -313,7 +313,7 @@ function show_manage($id, $applicationDB) {
       $remove_in_progress = in_array($server->fqdn, $servers_in_remove);
 
       echo '<tr><td>';
-      echo '<a href="servers.php?action=manage&fqdn='.$server->fqdn.'">'.$server->fqdn.'</a>';
+      echo '<a href="servers.php?action=manage&fqdn='.$server->fqdn.'">'.$server->getDisplayName().'</a>';
       echo '</td>';
       echo '<td>';
       if ($remove_in_progress) {
@@ -334,7 +334,7 @@ function show_manage($id, $applicationDB) {
 
     foreach($servers_in_install as $server) {
       echo '<tr><td>';
-      echo '<a href="servers.php?action=manage&fqdn='.$server.'">'.$server.'</a>';
+      echo '<a href="servers.php?action=manage&fqdn='.$server.'">'.$server->getDisplayName().'</a>';
       echo '</td>';
       echo '<td>install in progress</td>';
       echo '</tr>';
@@ -357,7 +357,7 @@ function show_manage($id, $applicationDB) {
         echo '<select name="server">';
         foreach ($servers_available as $server) {
           if ($server->hasAttribute('ulteo_system') && $server->getAttribute('ulteo_system') == 1) {
-            echo '<option value="'.$server->fqdn.'">'.$server->fqdn.'</option>';
+            echo '<option value="'.$server->fqdn.'">'.$server->getDisplayName().'</option>';
           }
         }
         echo '</select>';
@@ -546,7 +546,7 @@ function show_icon($id, $applicationDB) {
 
 		echo '<tr>';
 		echo '<td style="width: 32px;"><img class="icon32" src="media/image/temp_icon.php?tempnam='.basename($imgfile).'" /></td>';
-		echo '<td><a href="servers.php?action=manage&amp;fqdn='.$server->getAttribute('fqdn').'">'.$server->getAttribute('fqdn').'</a></td>';
+		echo '<td><a href="servers.php?action=manage&amp;fqdn='.$server->getAttribute('fqdn').'">'.$server->getDisplayName().'</a></td>';
 		echo '<td><form action="actions.php" method="post">';
 		echo '<input type="hidden" name="name" value="Application" />';
 		echo '<input type="hidden" name="action" value="icon" />';

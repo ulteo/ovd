@@ -1303,6 +1303,16 @@ class Server {
 		return self::DEFAULT_RDP_PORT;
 	}
 	
+	public function getDisplayName() {
+		if ($this->hasAttribute('display_name') && ! is_null($this->getAttribute('display_name')))
+			return $this->getAttribute('display_name');
+		
+		if ($this->getAttribute('external_name') != $this->fqdn)
+			return $this->getAttribute('external_name');
+		
+		return $this->fqdn;
+	}
+	
 	public static function fire_load_balancing($servers_, $role_) {
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {

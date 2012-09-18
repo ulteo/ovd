@@ -32,6 +32,7 @@ class Abstract_Server {
 	
 	public static $server_properties = array(
 		'roles'				=>	'roles',
+		'display_name'			=>	'display_name',
 		'external_name'		=>	'external_name',
 		'rdp_port'		=>	'rdp_port',
 		'max_sessions'		=>	'max_sessions',

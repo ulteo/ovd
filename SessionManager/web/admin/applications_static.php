@@ -469,7 +469,7 @@ function show_manage($id, $applicationDB) {
 		echo '<table border="0" cellspacing="1" cellpadding="3">';
 		foreach($servers as $server) {
 			echo '<tr><td>';
-			echo '<a href="servers.php?action=manage&fqdn='.$server->fqdn.'">'.$server->fqdn.'</a>';
+			echo '<a href="servers.php?action=manage&fqdn='.$server->fqdn.'">'.$server->getDisplayName().'</a>';
 			echo '</td>';
 			echo '<td>';
 			if ($server->isOnline() and $can_manage_server) {
@@ -493,7 +493,7 @@ function show_manage($id, $applicationDB) {
 			echo '<input type="hidden" name="application" value="'.$id.'" />';
 			echo '<select name="server">';
 			foreach ($servers_available as $server)
-			echo '<option value="'.$server->fqdn.'">'.$server->fqdn.'</option>';
+			echo '<option value="'.$server->fqdn.'">'.$server->getDisplayName().'</option>';
 			echo '</select>';
 			echo '</td><td><input type="submit" value="'._('Add to this server').'" /></td>';
 			echo '</form>';
