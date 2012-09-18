@@ -545,7 +545,15 @@ function show_icon($id, $applicationDB) {
 			continue;
 
 		echo '<tr>';
-		echo '<td style="width: 32px;"><img class="icon32" src="media/image/temp_icon.php?tempnam='.basename($imgfile).'" /></td><td><a href="servers.php?action=manage&amp;fqdn='.$server->getAttribute('fqdn').'">'.$server->getAttribute('fqdn').'</a></td><td><form action="actions.php" method="post"><input type="hidden" name="name" value="Application" /><input type="hidden" name="action" value="icon" /><input type="hidden" name="id" value="'.$app->getAttribute('id').'" /><input type="hidden" name="server" value="'.$server->getAttribute('fqdn').'" /><input type="submit" value="'._('Select this icon').'" /></form></td>';
+		echo '<td style="width: 32px;"><img class="icon32" src="media/image/temp_icon.php?tempnam='.basename($imgfile).'" /></td>';
+		echo '<td><a href="servers.php?action=manage&amp;fqdn='.$server->getAttribute('fqdn').'">'.$server->getAttribute('fqdn').'</a></td>';
+		echo '<td><form action="actions.php" method="post">';
+		echo '<input type="hidden" name="name" value="Application" />';
+		echo '<input type="hidden" name="action" value="icon" />';
+		echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+		echo '<input type="hidden" name="server" value="'.$server->getAttribute('fqdn').'" />';
+		echo '<input type="submit" value="'._('Select this icon').'" />';
+		echo '</form></td>';
 		echo '</tr>';
 	}
 	echo '</table>';
