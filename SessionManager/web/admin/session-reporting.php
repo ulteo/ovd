@@ -399,7 +399,7 @@ function show_manage($id_) {
 		foreach ($servers as $server) {
 			echo '<li>';
 			if (array_key_exists('obj', $server))
-				echo '<a href="servers.php?action=manage&fqdn='.$server['obj']->fqdn.'">'.$server['obj']->fqdn.'</a>'; // To change !
+				echo '<a href="servers.php?action=manage&fqdn='.$server['obj']->fqdn.'">'.$server['obj']->fqdn.'</a>';
 			else {
 				echo $server['fqdn'];
 				
