@@ -21,6 +21,25 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
+/*
+ * Copyright (C) 2012 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Thomas MOUTON <thomas@ulteo.com> 2012
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 
 #include <windows.h>
 
@@ -205,10 +224,18 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 			}
 
 		case WM_SIZE:
-			if (wparam == SIZE_MAXIMIZED) {
-				sendHookMsg_State(hwnd, 2);
-				break;
+			switch (wparam) {
+				case SIZE_MAXIMIZED:
+					sendHookMsg_State(hwnd, 2);
+					break;
+				case SIZE_MINIMIZED:
+					sendHookMsg_State(hwnd, 1);
+					break;
+				case SIZE_RESTORED:
+					sendHookMsg_State(hwnd, 0);
+					break;
 			}
+			break;
 
 		case WM_MOVE:
 			if (!(style & WS_VISIBLE) || (style & WS_MINIMIZE))
