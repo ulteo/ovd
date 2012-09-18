@@ -110,7 +110,7 @@ function show_default() {
       echo '<td>';
 	echo '<a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->getAttribute('external_name');
 	if ($s->getAttribute('external_name') != $s->fqdn)
-		echo '<br/><em style="margin-left: 10px; font-size: 0.8em;">'.$s->fqdn.'<em>';
+		echo '<br/><em style="margin-left: 10px; font-size: 0.8em;">'.$s->fqdn.'</em>';
 	echo '</a>';
       echo '</td>';
       echo '<td style="text-align: center;"><img src="media/image/server-'.$s->stringType().'.png" alt="'.$s->stringType().'" title="'.$s->stringType().'" /><br />'.$s->stringType().'</td>';
