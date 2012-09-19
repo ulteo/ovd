@@ -120,7 +120,7 @@ function show_default() {
 		echo '<td>'.$s->stringVersion().'</td>';
       echo '<td>';
       echo '<ul>';
-      $roles = $s->roles;
+      $roles = $s->getRoles();
       asort($roles);
       foreach ($roles as $a_role => $role_enabled) {
         if ($role_enabled) {
@@ -350,6 +350,7 @@ function show_manage($fqdn) {
       $switch_value = 1;
     }
 
+  $server_enabled_roles = $server->getRoles();
   ksort($server->roles);
   $var = array();
   foreach ($server->roles as $role => $bool) {
@@ -493,6 +494,46 @@ function show_manage($fqdn) {
 		echo sprintf(_('(overloaded, default value is %d)'), Server::DEFAULT_RDP_PORT);
 	echo "</td></tr>\n";
   
+	// Roles enabled / disabled
+	echo '<tr><td>';
+	echo _('Roles available on this server').': ';
+	echo '</td>';
+	$role_i = 0;
+	foreach ($server->roles as $role => $bool) {
+		echo '<td>'.$role;
+		
+		if (array_key_exists($role, $server_enabled_roles))
+			echo ' (<em class="msg_ok">enabled</em>)';
+		else
+			echo ' (<em class="msg_error">disabled</em>)';
+		
+		if ($can_do_action) {
+			echo '<span style="float: right;">';
+			echo '<form action="actions.php" method="post">';
+			echo '<input type="hidden" name="name" value="Server" />';
+			echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+			echo '<input type="hidden" name="action" value="role" />';
+			echo '<input type="hidden" name="role" value="'.$role.'" />';
+			
+			if (array_key_exists($role, $server_enabled_roles)) {
+				echo '<input type="hidden" name="do" value="disable" />';
+				echo '<input type="submit" value="'._('disable this role').'" />';
+			}
+			else {
+				echo '<input type="hidden" name="do" value="enable" />';
+				echo '<input type="submit" value="'._('enable this role').'" />';
+			}
+			
+			echo '</form>';
+			echo '</span>';
+		}
+		echo '</td>';
+		
+		$role_i++;
+		if ($role_i < count($server->roles))
+			echo '</tr><tr><td></td>';
+	}
+	echo '</tr>';
 
 	if ($can_do_action) {
 		if ($server_online || $switch_value == 1) {

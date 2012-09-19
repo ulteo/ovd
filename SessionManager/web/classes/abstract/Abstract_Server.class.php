@@ -32,6 +32,7 @@ class Abstract_Server {
 	
 	public static $server_properties = array(
 		'roles'				=>	'roles',
+		'roles_disabled'		=>	'roles_disabled',
 		'display_name'			=>	'display_name',
 		'external_name'		=>	'external_name',
 		'rdp_port'		=>	'rdp_port',
@@ -465,7 +466,7 @@ class Abstract_Server {
 		$servers = Abstract_Server::load_available($with_locked_);
 
 		foreach ($servers as $k => $server) {
-			if (! array_key_exists($role_, $server->roles))
+			if (! array_key_exists($role_, $server->getRoles()))
 				unset($servers[$k]);
 		}
 

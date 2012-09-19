@@ -3,7 +3,7 @@
  * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2008-2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2010, 2012
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
@@ -217,7 +217,7 @@ function show_manage($id, $applicationDB) {
       continue;
     elseif ( $server->type != $app->getAttribute('type'))
       continue;
-    elseif (is_array($server->roles) && array_key_exists(Server::SERVER_ROLE_APS, $server->roles))
+    elseif (array_key_exists(Server::SERVER_ROLE_APS, $server->getRoles()))
       $servers_available[]= $server;
   }
 

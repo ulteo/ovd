@@ -417,7 +417,7 @@ if (! isset($old_session_id)) {
 		if (! $server)
 			continue;
 
-		if (! is_array($server->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $server->roles))
+		if (! array_key_exists(Server::SERVER_ROLE_APS, $server->getRoles()))
 			continue;
 
 		$server_applications = $server->getApplications();
@@ -606,7 +606,7 @@ if ($session->mode == Session::MODE_DESKTOP) {
 	if (! $server)
 		throw_response(INTERNAL_ERROR);
 
-	if (! is_array($server->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $server->roles))
+	if (! array_key_exists(Server::SERVER_ROLE_APS, $server->getRoles()))
 		throw_response(INTERNAL_ERROR);
 
 	$server_applications = $server->getApplications();
@@ -649,7 +649,7 @@ if ($session->mode == Session::MODE_DESKTOP) {
 		if (! $server)
 			continue;
 
-		if (! is_array($server->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $server->roles))
+		if (! array_key_exists(Server::SERVER_ROLE_APS, $server->getRoles()))
 			continue;
 
 		$server_applications = $server->getApplications();

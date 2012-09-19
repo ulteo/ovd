@@ -50,6 +50,7 @@ class Server {
 	public $ram_used = NULL;
 
 	public $roles = array();
+	public $roles_disabled = array();
 
 	public function __construct($fqdn_) {
 // 		Logger::debug('main', 'Starting Server::__construct for \''.$fqdn_.'\'');
@@ -510,6 +511,18 @@ class Server {
 			return $this->getAttribute('version');
 
 		return _('Unknown');
+	}
+
+	public function getRoles() {
+		$roles = array();
+		foreach($this->roles as $role => $enable) {
+			if (array_key_exists($role, $this->roles_disabled))
+				continue;
+			
+			$roles[$role] = true;
+		}
+		
+		return $roles;
 	}
 
 	public function getNbMaxSessions() {

@@ -1661,6 +1661,41 @@ if ($_REQUEST['name'] == 'Server') {
 			redirect();
 		}
 	}
+	
+	if ($_REQUEST['action'] == 'role') {
+		if (! isset($_REQUEST['fqdn']) || ! isset($_REQUEST['role']) || ! isset($_REQUEST['do'])) {
+			redirect();
+		}
+		
+		if (! in_array($_REQUEST['do'], array('enable', 'disable'))) {
+			redirect();
+		}
+		
+		$server = Abstract_Server::load($_REQUEST['fqdn']);
+		
+		if (! array_key_exists($_REQUEST['role'], $server->roles)) {
+			popup_error(sprintf(_("%s is not an available role"), $_REQUEST['role']));
+			redirect();
+		}
+		else if ($_REQUEST['do'] == 'disable' && array_key_exists($_REQUEST['role'], $server->roles_disabled)) {
+			popup_error(sprintf(_("Nothing to save. Role %s is already disabled"), $_REQUEST['role']));
+			redirect();
+		}
+		else if ($_REQUEST['do'] == 'enable' && ! array_key_exists($_REQUEST['role'], $server->roles_disabled)) {
+			popup_error(sprintf(_("Nothing to save. Role %s is already enabled"), $_REQUEST['role']));
+			redirect();
+		}
+		
+		if ($_REQUEST['do'] == 'disable')
+			$server->roles_disabled[$_REQUEST['role']] = true;
+		else
+			unset($server->roles_disabled[$_REQUEST['role']]);
+		
+		Abstract_Server::save($server);
+		popup_info(sprintf(_("Server '%s' successfully modified"), $server->getDisplayName()));
+		
+		redirect();
+	}
 }
 
 if ($_REQUEST['name'] == 'Task') {
