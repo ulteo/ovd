@@ -399,11 +399,11 @@ function show_manage($fqdn) {
         echo display_loadbar($server->getRamUsage());
         foreach ($server->roles as $role => $enabled) {
           switch ($role) {
-            case 'aps':
+            case Server::SERVER_ROLE_APS:
               echo _('Sessions usage').': '.$server->getSessionUsage().'%<br />';
               echo display_loadbar((($server->getSessionUsage() > 100)?100:$server->getSessionUsage()));
               break;
-            case 'fs':
+            case Server::SERVER_ROLE_FS:
               echo _('Disk usage').': '.$server->getDiskUsage().'%<br />';
               echo display_loadbar((($server->getDiskUsage() > 100)?100:$server->getDiskUsage()));
               break;

@@ -237,7 +237,7 @@ else{
 		$count = 0;
 		foreach($servs_all as $server){
 			$roles = $server->getRoles();
-			if (array_key_exists('aps', $roles)) {
+			if (array_key_exists(Server::SERVER_ROLE_APS, $roles)) {
 				$applications = $server->getApplications();
 				if (! is_array($applications)) {
 					$applications = array();

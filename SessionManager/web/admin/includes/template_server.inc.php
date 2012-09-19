@@ -79,7 +79,7 @@ function server_display_role_preparation_aps($server) {
 		if ($v->type != $server->getAttribute('type'))
 			unset($servers_replication[$k]);
 
-		if (! array_key_exists('aps', $v->roles))
+		if (! array_key_exists(Server::SERVER_ROLE_APS, $v->roles))
 			unset($servers_replication[$k]);
 
 		if ($server->hasAttribute('ulteo_system') == false || $server->getAttribute('ulteo_system') == 0)
