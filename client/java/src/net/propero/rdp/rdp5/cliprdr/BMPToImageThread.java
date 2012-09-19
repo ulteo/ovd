@@ -6,6 +6,9 @@
  * Date: $Date: 2007/03/08 00:26:41 $
  *
  * Copyright (c) 2005 Propero Limited
+ * Copyright (C) 2012 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * Purpose: 
  */
@@ -27,13 +30,6 @@ import net.propero.rdp.RdpPacket;
 	 	}
 	 	
 	 	public void run(){
-			int origin = data.getPosition();
-			
-			@SuppressWarnings("unused")
-			int head_len = data.getLittleEndian32();
-
-			data.setPosition(origin);
-			
 			byte[] content = new byte[length];
 			
 				for(int i = 0; i < length; i++){
