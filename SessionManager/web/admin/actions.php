@@ -1602,7 +1602,7 @@ if ($_REQUEST['name'] == 'Server') {
 			$servers_fqdn = $_REQUEST['servers'];
 			foreach($servers_fqdn as $server_fqdn) {
 				$server_to = Abstract_Server::load($server_fqdn);
-				if (! array_key_exists('aps', $server_to->roles) || $server_to->roles['aps'] !== true)
+				if (! array_key_exists('aps', $server_to->roles))
 					continue;
 
 				$applications_to = $server_to->getApplications();

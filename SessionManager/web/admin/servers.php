@@ -123,9 +123,7 @@ function show_default() {
       $roles = $s->getRoles();
       asort($roles);
       foreach ($roles as $a_role => $role_enabled) {
-        if ($role_enabled) {
           echo "<li>$a_role</li>";
-        }
       }
       echo '</ul>';
       echo '</td>';
@@ -400,9 +398,6 @@ function show_manage($fqdn) {
         echo _('RAM usage').': '.$server->getRamUsage().'%<br />';
         echo display_loadbar($server->getRamUsage());
         foreach ($server->roles as $role => $enabled) {
-          if ($enabled === false)
-            continue;
-
           switch ($role) {
             case 'aps':
               echo _('Sessions usage').': '.$server->getSessionUsage().'%<br />';
