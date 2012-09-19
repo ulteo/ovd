@@ -85,7 +85,7 @@ public class Language {
 			{"Icelandic", "Íslenska", "is"},
 			{"Indonesian", "Bahasa Indonesia", "id"},
 			{"Italian", "Italiano", "it"},
-			{"Japanese", "日本語", "ja"},
+			{"Japanese", "日本語", "ja", "jp"},
 //			{"Korean", "한국어", "ko"},
 //			{"Latvian", "", "lv"},
 //			{"Lithuanian", "Lietuvių", "lt"},
