@@ -8,7 +8,7 @@
  * Copyright (c) 2005 Propero Limited
  * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2011-2012
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or 
@@ -217,6 +217,14 @@ public class Rdp {
     public static final int OFFSCREEN_CACHE_SIZE = 100;
     
     public static final int OFFSCREEN_CACHE_LENGTH = 7680;
+    
+    public static final int ORDERFLAGS_NEGOTIATE_ORDER_SUPPORT =	0x0002;
+    public static final int ORDERFLAGS_ZERO_BOUNDS_DELTAS_SUPPORT =	0x0008;
+    public static final int ORDERFLAGS_COLOR_INDEX_SUPPORT =		0x0020;
+    public static final int ORDERFLAGS_SOLID_PATTERN_BRUSH_ONLY =	0x0040;
+    public static final int ORDERFLAGS_EXTRA_FLAGS =			0x0080;
+    
+    public final static int ORDERFLAGS_EX_ALTSEC_FRAME_MARKER_SUPPORT = 0x0004;
 
     private static final int RDP5_FLAG = 0x0030;
 
@@ -1297,6 +1305,10 @@ public class Rdp {
     }
 
     private void sendOrderCaps(RdpPacket_Localised data) {
+        int orderFlags = ORDERFLAGS_NEGOTIATE_ORDER_SUPPORT
+                        | ORDERFLAGS_ZERO_BOUNDS_DELTAS_SUPPORT
+                        | ORDERFLAGS_COLOR_INDEX_SUPPORT;
+        int orderSupportExFlags = 0;
 
         byte[] order_caps = new byte[32];
         order_caps[0] = 1; /* dest blt */
@@ -1325,14 +1337,15 @@ public class Rdp {
         data.setLittleEndian16(0); /* Pad */
         data.setLittleEndian16(1); /* Max order level */
         data.setLittleEndian16(0x147); /* Number of fonts */
-        data.setLittleEndian16(0x2a); /* Capability flags */
+        data.setLittleEndian16(orderFlags); /* Capability flags */
         data.copyFromByteArray(order_caps, 0, data.getPosition(), 32); /*
                                                                          * Orders
                                                                          * supported
                                                                          */
         data.incrementPosition(32);
         data.setLittleEndian16(0x6a1); /* Text capability flags */
-        data.incrementPosition(6); /* Pad */
+        data.setLittleEndian16(orderSupportExFlags); /* Extended order support flags */
+        data.incrementPosition(4); /* Pad */
         data.setLittleEndian32(this.opt.desktop_save ? 0x38400 : 0); /*
                                                                          * Desktop
                                                                          * cache
