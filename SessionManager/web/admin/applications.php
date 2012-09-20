@@ -333,7 +333,7 @@ function show_manage($id, $applicationDB) {
       if (! in_array($server->fqdn, $servers_in_install))
         continue;
       echo '<tr><td>';
-      echo '<a href="servers.php?action=manage&id='.$server->fqdn.'">'.$server->getDisplayName().'</a>';
+      echo '<a href="servers.php?action=manage&fqdn='.$server->fqdn.'">'.$server->getDisplayName().'</a>';
       echo '</td>';
       echo '<td>install in progress</td>';
       echo '</tr>';
