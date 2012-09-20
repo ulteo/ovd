@@ -385,6 +385,10 @@ public class RdpConnectionOvd extends RdpConnection {
 		this.opt.supportOffscreen = value;
 	}
 	
+	public void setUseFrameMarker(boolean value) {
+		this.opt.supportFrameMarker = value;
+	}
+	
 	public void setUseKeepAlive() {
 		this.opt.useKeepAlive = true;
 	}

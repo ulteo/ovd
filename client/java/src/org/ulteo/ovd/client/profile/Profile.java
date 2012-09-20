@@ -75,6 +75,7 @@ public abstract class Profile {
 	
 	protected static final String FIELD_RDP_PACKET_COMPRESSION = "usePacketCompression";
 	protected static final String FIELD_RDP_USE_OFFSCREEN_CACHE = "useOffscreenCache";
+	protected static final String FIELD_RDP_USE_FRAME_MARKER = "useFrameMarker";
 	protected static final String FIELD_RDP_PERSISTENT_CACHE = "usePersistentCache";
 	protected static final String FIELD_PERSISTENT_CACHE_PATH = "cachePath";
 	protected static final String FIELD_PERSISTENT_CACHE_MAX_CELLS = "cacheMaxCell";

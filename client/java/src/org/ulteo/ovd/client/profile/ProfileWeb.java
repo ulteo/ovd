@@ -2,6 +2,7 @@
  * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Author Thomas MOUTON <thomas@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -97,6 +98,12 @@ public class ProfileWeb extends Profile {
 						properties.setUseOffscreenCache(true);
 					else
 						properties.setUseOffscreenCache(false);
+				}
+				if (keyName.equalsIgnoreCase(FIELD_RDP_USE_FRAME_MARKER)) {
+					if (valueName.equalsIgnoreCase(VALUE_TRUE) || valueName.equalsIgnoreCase("1"))
+						properties.setUseFrameMarker(true);
+					else
+						properties.setUseFrameMarker(false);
 				}
 				if (keyName.equalsIgnoreCase(FIELD_RDP_USE_BANDWIDTH_LIMITATION)) {
 					if (valueName.equalsIgnoreCase(VALUE_TRUE) || valueName.equalsIgnoreCase("1"))

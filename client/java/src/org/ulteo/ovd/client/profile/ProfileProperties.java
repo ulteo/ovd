@@ -2,7 +2,7 @@
  * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
- * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -55,6 +55,7 @@ public class ProfileProperties {
 	private boolean useDiskBandwithLimitation = false;
 	private int socketTimeout = 200;            // In millisecond
 	private boolean useOffscreenCache = false;
+	private boolean useFrameMarker = false;
 	private boolean usePersistantCache = false;
 	private String persistentCachePath = "";
 	private int persistentCacheMaxCells = 0;	
@@ -300,6 +301,14 @@ public class ProfileProperties {
 
 	public boolean isUseOffscreenCache() {
 		return useOffscreenCache;
+	}
+
+	public void setUseFrameMarker(boolean useFrameMarker) {
+		this.useFrameMarker = useFrameMarker;
+	}
+
+	public boolean isUseFrameMarker() {
+		return useFrameMarker;
 	}
 	
 	public boolean isUseKeepAlive() {

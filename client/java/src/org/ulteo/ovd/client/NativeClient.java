@@ -813,6 +813,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		client.setInputMethod(this.opts.inputMethod);
 		client.setPacketCompression(this.opts.usePacketCompression);
 		client.setOffscreenCache(this.opts.useOffscreenCache);
+		client.setUseFrameMarker(this.opts.useFrameMarker);
 		client.setUseTLS(this.opts.useTLS);
 		if (this.opts.usePersistantCache)
 			client.setPersistentCaching(this.opts.persistentCacheMaxCells, this.opts.persistentCachePath);

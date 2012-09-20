@@ -76,6 +76,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	private String keymap = null;
 	private String inputMethod = null;
 	private boolean offscreenCache = false;
+	private boolean useFrameMarker = false;
 	private boolean useTLS = false;
 	private boolean packetCompression = false;
 	private int persistentCacheMaxCells = 0;
@@ -467,6 +468,16 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	}
 
 	/**
+	 * enable/disable frame marker feature
+	 * @param useFrameMarker 
+	 */
+	public void setUseFrameMarker(boolean useFrameMarker) {
+		Logger.info("Frame marker feature activation " + useFrameMarker);
+		
+		this.useFrameMarker = useFrameMarker;
+	}
+
+	/**
 	 * enable/disable TLS Transport layer feature
 	 * @param useTLS 
 	 */
@@ -532,6 +543,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 			rc.setInputMethod(this.inputMethod);
 		
 		rc.setUseOffscreenCache(this.offscreenCache);
+		rc.setUseFrameMarker(this.useFrameMarker);
 		rc.setPacketCompression(this.packetCompression);
 		rc.setUseTLS(this.useTLS);
        

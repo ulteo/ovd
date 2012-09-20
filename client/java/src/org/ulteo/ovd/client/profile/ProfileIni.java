@@ -2,7 +2,7 @@
  * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
- * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -354,6 +354,14 @@ public class ProfileIni extends Profile {
 			if (value.equalsIgnoreCase(VALUE_TRUE))
 				useOffscreenCache = true;
 			properties.setUseOffscreenCache(useOffscreenCache);
+		}
+		
+		value = ini.get(INI_SECTION_RDP, FIELD_RDP_USE_FRAME_MARKER);
+		if (value != null) {
+			boolean useFrameMarker = false;
+			if (value.equalsIgnoreCase(VALUE_TRUE))
+				useFrameMarker = true;
+			properties.setUseFrameMarker(useFrameMarker);
 		}
 		
 		value = ini.get(INI_SECTION_RDP, FIELD_RDP_PERSISTENT_CACHE);

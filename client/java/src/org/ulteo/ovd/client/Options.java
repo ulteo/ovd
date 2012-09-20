@@ -4,7 +4,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
- * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
  *
@@ -82,6 +82,7 @@ public class Options {
 	public boolean useDiskBandwithLimitation = false;
 	public int socketTimeout = 200;            // In millisecond
 	public boolean useOffscreenCache = false;
+	public boolean useFrameMarker = false;
 	public boolean useTLS = false;
 	public boolean usePersistantCache = false;
 	public String persistentCachePath = "";
@@ -214,6 +215,10 @@ public class Options {
 		}
 		if (properties.isUseOffscreenCache()) {
 			this.useOffscreenCache = true;
+		}
+		
+		if (properties.isUseFrameMarker()) {
+			this.useFrameMarker = true;
 		}
 		
 		if (properties.isUseTLS()) {
