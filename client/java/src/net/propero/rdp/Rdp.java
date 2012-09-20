@@ -1307,9 +1307,13 @@ public class Rdp {
     private void sendOrderCaps(RdpPacket_Localised data) {	    
         int orderFlags = ORDERFLAGS_NEGOTIATE_ORDER_SUPPORT
                         | ORDERFLAGS_ZERO_BOUNDS_DELTAS_SUPPORT
-                        | ORDERFLAGS_COLOR_INDEX_SUPPORT
-                        | ORDERFLAGS_EXTRA_FLAGS;
-        int orderSupportExFlags = ORDERFLAGS_EX_ALTSEC_FRAME_MARKER_SUPPORT;
+                        | ORDERFLAGS_COLOR_INDEX_SUPPORT;
+        int orderSupportExFlags = 0;
+	
+	if (this.opt.supportFrameMarker) {
+		orderFlags |= ORDERFLAGS_EXTRA_FLAGS;
+		orderSupportExFlags |= ORDERFLAGS_EX_ALTSEC_FRAME_MARKER_SUPPORT;
+	}
 
         byte[] order_caps = new byte[32];
         order_caps[0] = 1; /* dest blt */
