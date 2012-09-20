@@ -7,7 +7,9 @@
  * Date: $Date: 2007/03/08 00:26:31 $
  *
  * Copyright (c) 2005 Propero Limited
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Thomas MOUTON <thomas@ulteo.com> 2012
  *
  * Purpose: Encapsulates an RDP order
  */
@@ -33,6 +35,8 @@ public class Orders {
     
     private Options opt = null;
     private Common common = null;
+    
+    private boolean frameMarkerIsSet = false;
 
     /* RDP_BMPCACHE2_ORDER */
     private static final int ID_MASK = 0x0007;
@@ -101,8 +105,10 @@ public class Orders {
 	private static final int RDP_ORDER_TS_ALTSEC_WINDOW= 0x0B;
 	@SuppressWarnings("unused")
 	private static final int RDP_ORDER_TS_ALTSEC_COMPDESK_FIRST = 0x0C;
-	@SuppressWarnings("unused")
 	private static final int RDP_ORDER_TS_ALTSEC_FRAME_MARKER = 0x0D;
+	
+	private static final int TS_FRAME_START = 0x00000000;
+	private static final int TS_FRAME_END = 0x00000001;
 
     @SuppressWarnings("unused")
     private static final int MIX_TRANSPARENT = 0;
@@ -280,7 +286,10 @@ public class Orders {
             processed++;
         }
 
-	this.surface.repaint_order();
+	if (! this.frameMarkerIsSet) {
+		this.surface.repaint_order();
+	}
+	
         if (! this.opt.bitmap_compression && (data.getPosition() != next_packet)) {
             throw new OrderException("End not reached!");
         }
@@ -346,6 +355,30 @@ public class Orders {
     	this.common.cache.putBitmap(255, cache_idx, b, 0);
     }
     
+	private void processFrameMarker(RdpPacket_Localised data) throws RdesktopException {
+		int action;
+
+		action = data.getLittleEndian32();
+
+		switch (action) {
+			case TS_FRAME_START:
+				this.frameMarkerIsSet = true;
+				break;
+			case TS_FRAME_END:
+				if (! this.frameMarkerIsSet) {
+					// Should ignore this message because the frame marker is not set
+				}
+
+				this.frameMarkerIsSet = false;
+				this.surface.repaint_order();
+
+				break;
+			default:
+				logger.error("[processFrameMarker] Unknown action: "+action);
+				return;
+		}
+	}
+    
     private void processAlternateOrders(RdpPacket_Localised data, int order_flags)
             throws OrderException, RdesktopException {
     	
@@ -362,6 +395,9 @@ public class Orders {
     		case RDP_ORDER_TS_ALTSEC_SWITCH_SURFACE:
     			processSwitchSurface(data);
     			break;
+		case RDP_ORDER_TS_ALTSEC_FRAME_MARKER:
+			processFrameMarker(data);
+			break;
     		default:
     			logger.debug("Unknow Alternate order "+order_flags);
     	}

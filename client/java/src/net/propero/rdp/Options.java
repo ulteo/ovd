@@ -12,7 +12,7 @@
  * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
- * Author Thomas MOUTON <thomas@ulteo.com> 2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2011-2012
  *
  * Purpose: Global static storage of user-definable options
  */
@@ -74,6 +74,7 @@ public class Options {
 	public boolean soundEnabled = false;
 	
 	public boolean supportOffscreen = false;
+	public boolean supportFrameMarker = false;
 	
 	public boolean rdpdrEnabled = false;
 	public boolean diskEnabled = false;
