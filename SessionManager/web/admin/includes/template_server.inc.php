@@ -86,7 +86,7 @@ function server_display_role_preparation_aps($server) {
 			unset($servers_replication[$k]);
 	}
 	$sessions = array();
-	$total = Abstract_Session::countByServer($_GET['fqdn']);
+	$total = Abstract_Session::countByServer($server->fqdn);
 	
 	if ($total > 0) {
 		$has_sessions = true;
@@ -100,11 +100,11 @@ function server_display_role_preparation_aps($server) {
 			else
 				$start = $_GET['start'];
 
-			$pagechanger = get_pagechanger('servers.php?action=manage&fqdn='.$_GET['fqdn'].'&', $prefs->get('general', 'max_items_per_page'), $total);
+			$pagechanger = get_pagechanger('servers.php?action=manage&fqdn='.$server->fqdn.'&', $prefs->get('general', 'max_items_per_page'), $total);
 
-			$sessions = Abstract_Session::getByServer($_GET['fqdn'], $prefs->get('general', 'max_items_per_page'), $start);
+			$sessions = Abstract_Session::getByServer($server->fqdn, $prefs->get('general', 'max_items_per_page'), $start);
 		} else
-			$sessions = Abstract_Session::getByServer($_GET['fqdn']);
+			$sessions = Abstract_Session::getByServer($server->fqdn);
 	} else
 		$has_sessions = false;
 
