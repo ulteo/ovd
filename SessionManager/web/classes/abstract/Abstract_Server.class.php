@@ -108,9 +108,6 @@ class Abstract_Server {
 	public static function load($fqdn_) {
 		Logger::debug('main', 'Starting Abstract_Server::load for \''.$fqdn_.'\'');
 
-		if (substr($fqdn_, -1) == '.')
-			$fqdn_ = substr($fqdn_, 0, (strlen($fqdn_)-1));
-
 		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'fqdn', $fqdn_);
@@ -226,9 +223,6 @@ class Abstract_Server {
 	public static function delete($fqdn_) {
 		Logger::debug('main', 'Starting Abstract_Server::delete for \''.$fqdn_.'\'');
 
-		if (substr($fqdn_, -1) == '.')
-			$fqdn_ = substr($fqdn_, 0, (strlen($fqdn_)-1));
-
 		$SQL = SQL::getInstance();
 
 		$fqdn = $fqdn_;
@@ -267,9 +261,6 @@ class Abstract_Server {
 
 	public static function removeRole($fqdn_, $role_) {
 		Logger::debug('main', "Starting Abstract_Server::removeRole for '$fqdn_' removing '$role_'");
-		
-		if (substr($fqdn_, -1) == '.')
-			$fqdn_ = substr($fqdn_, 0, (strlen($fqdn_)-1));
 		
 		$a_server = Abstract_Server::load($fqdn_);
 		if (is_object($a_server) == false) {
