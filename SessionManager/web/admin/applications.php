@@ -198,10 +198,7 @@ function show_manage($id, $applicationDB) {
   }
 
   // Servers
-  if ( $app->getAttribute('static'))
-    $servers_all = array();
-  else
-    $servers_all = Abstract_Server::load_all();
+  $servers_all = Abstract_Server::load_all();
   $liaisons = Abstract_Liaison::load('ApplicationServer', $app->getAttribute('id'), NULL);
   $servers_id = array();
   foreach ($liaisons as $liaison)
@@ -282,7 +279,7 @@ function show_manage($id, $applicationDB) {
   echo '<br />';
   
   // orphan part
-  if ($app->isOrphan() && !($app->getAttribute('static'))) {
+  if ($app->isOrphan()) {
     echo '<br />';
     echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to remove this application?').'\');">';
     echo '<input type="hidden" name="action" value="del" />';
