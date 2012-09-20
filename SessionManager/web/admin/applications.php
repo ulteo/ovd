@@ -391,7 +391,7 @@ function show_manage($id, $applicationDB) {
       echo '<td><a href="tasks.php?action=manage&id='.$task->id.'">'.$task->id.'</a></td>';
       echo '<td>'.get_class($task).'</td>';
       echo '<td>'.$status.'</td>';
-      echo '<td>'.$task->server.', '.$task->getRequest().', '.$task->status_code.'</td>';
+      echo '<td>'.$task->server.', '.$task->getRequest().'</td>';
       echo '</tr>';
     }
     echo '</table>';
