@@ -313,7 +313,7 @@ if ($_REQUEST['name'] == 'Application') {
 			if ($server->isOnline())
 				$server->getApplicationIcon($app->getAttribute('id'));
 
-			popup_info(sprintf(_("Icon of application '%s' has been updated from server '%s'"), $app->getAttribute('id'), $server->getAttribute('fqdn')));
+			popup_info(sprintf(_("Icon of application '%s' has been updated from server '%s'"), $app->getAttribute('id'), $server->getDisplayName()));
 			redirect('applications.php?action=manage&id='.$app->getAttribute('id'));
 		}
 
@@ -1456,18 +1456,20 @@ if ($_REQUEST['name'] == 'Server') {
 	if ($_REQUEST['action'] == 'del') {
 		if (isset($_REQUEST['checked_servers']) && is_array($_REQUEST['checked_servers'])) {
 			foreach ($_REQUEST['checked_servers'] as $fqdn) {
-				$sessions = Abstract_Session::getByServer($fqdn);
-				if (count($sessions) > 0) {
-					popup_error(sprintf(_("Unable to delete the server '%s' because there are active sessions on it."), $fqdn));
+				$server = Abstract_Server::load($fqdn);
+				if (! is_object($server)) {
 					continue; 
 				}
-			
-				$buf = Abstract_Server::load($fqdn);
-				if (is_object($buf)) {
-					$buf->orderDeletion();
-					Abstract_Server::delete($buf->fqdn);
-					popup_info(sprintf(_("Server '%s' successfully deleted"), $buf->getAttribute('fqdn')));
+				
+				$sessions = Abstract_Session::getByServer($server->fqdn);
+				if (count($sessions) > 0) {
+					popup_error(sprintf(_("Unable to delete the server '%s' because there are active sessions on it."), $server->getDisplayName()));
+					continue; 
 				}
+				
+				$server->orderDeletion();
+				Abstract_Server::delete($server->fqdn);
+				popup_info(sprintf(_("Server '%s' successfully deleted"), $server->getDisplayName()));
 			}
 			$buf = count(Abstract_Server::load_registered(false));
 			if ($buf == 0)
@@ -1484,10 +1486,10 @@ if ($_REQUEST['name'] == 'Server') {
 				$res = $buf->register();
 				if ($res) {
 					Abstract_Server::save($buf);
-					popup_info(sprintf(_("Server '%s' successfully registered"), $buf->getAttribute('fqdn')));
+					popup_info(sprintf(_("Server '%s' successfully registered"), $buf->getDisplayName()));
 				}
 				else {
-					popup_error(sprintf(_("Failed to register Server '%s'"), $buf->getAttribute('fqdn')));
+					popup_error(sprintf(_("Failed to register Server '%s'"), $buf->getDisplayName()));
 				}
 			}
 		}
@@ -1509,7 +1511,7 @@ if ($_REQUEST['name'] == 'Server') {
 					$a_server->setAttribute('locked', false);
 	
 				Abstract_Server::save($a_server);
-				popup_info(sprintf(_("Server '%s' successfully modified"), $a_server->getAttribute('fqdn')));
+				popup_info(sprintf(_("Server '%s' successfully modified"), $a_server->getDisplayName()));
 			}
 		}
 		redirect();
@@ -1520,7 +1522,7 @@ if ($_REQUEST['name'] == 'Server') {
 			$server = Abstract_Server::load($_REQUEST['fqdn']);
 			$server->setAttribute('max_sessions', $_REQUEST['max_sessions']);
 			Abstract_Server::save($server);
-			popup_info(sprintf(_("Server '%s' successfully modified"), $server->getAttribute('fqdn')));
+			popup_info(sprintf(_("Server '%s' successfully modified"), $server->getDisplayName()));
 			
 			redirect('servers.php?action=manage&fqdn='.$server->getAttribute('fqdn'));
 		}
@@ -1563,7 +1565,7 @@ if ($_REQUEST['name'] == 'Server') {
 			$server = Abstract_Server::load($_REQUEST['fqdn']);
 			$server->setAttribute('external_name', $_REQUEST['external_name']);
 			Abstract_Server::save($server);
-			popup_info(sprintf(_("Server '%s' successfully modified"), $server->getAttribute('fqdn')));
+			popup_info(sprintf(_("Server '%s' successfully modified"), $server->getDisplayName()));
 		
 			redirect('servers.php?action=manage&fqdn='.$server->getAttribute('fqdn'));
 		}
@@ -1656,7 +1658,7 @@ if ($_REQUEST['name'] == 'Server') {
 				$server->setAttribute('rdp_port', $_REQUEST['rdp_port']);
 			
 			Abstract_Server::save($server);
-			popup_info(sprintf(_("Server '%s' successfully modified"), $server->getAttribute('fqdn')));
+			popup_info(sprintf(_("Server '%s' successfully modified"), $server->getDisplayName()));
 			
 			redirect();
 		}
