@@ -245,6 +245,12 @@ if (isAuthorized('viewStatus')) {
 			  'name' => _('Reporting'),
 			  'page' => 'reporting.php',
 			  'parent' => array('status'));
+	
+	$menu['session_reporting'] = 
+		array('id' => 'session_reporting',
+			  'name' => _('Session reporting'),
+			  'page' => 'session-reporting.php',
+			  'parent' => array('status'));
 }
 
 if (isAuthorized('viewNews'))
