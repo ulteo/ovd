@@ -270,7 +270,7 @@ function show_manage($id_) {
 	$session = Abstract_ReportSession::load($id_);
 	if (! $session) {
 		popup_error(sprintf(_('Unknown session %s'), $id_));
-		redirect();
+		return false;
 	}
 
 	$userDB = UserDB::getInstance();
