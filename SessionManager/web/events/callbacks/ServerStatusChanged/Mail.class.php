@@ -28,13 +28,13 @@ class ServerStatusChangedMail extends EventCallback {
 		$data = get_from_cache('events', 'ServerStatusChanged');
 
 		if ($data == NULL) {
-			$data[$this->ev->server_id] = $this->ev->status;
+			$data[$this->ev->id] = $this->ev->status;
 			if ($this->ev->status == ServerStatusChanged::$OFFLINE)
 				$needs_alert = true;
 		} else {
-			if (isset($data[$this->ev->server_id]) &&
-			  ($data[$this->ev->server_id] != $this->ev->status)) {
-				$data[$this->ev->server_id] = $this->ev->status;
+			if (isset($data[$this->ev->id]) &&
+			  ($data[$this->ev->id] != $this->ev->status)) {
+				$data[$this->ev->id] = $this->ev->status;
 				$needs_alert = true;
 			}
 		}
