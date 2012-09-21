@@ -1227,6 +1227,11 @@ class Server {
 						//echo 'app '.$app_name." not insert<br>\n";
 						return false;
 					}
+					
+					if ($a->haveIcon()) {
+						// We remove the application icon if already exists because it shouldn't be
+						$a->delIcon();
+					}
 				}
 			}
 			if ($applicationDB->isWriteable() == true){
