@@ -271,6 +271,7 @@ class Preferences {
 			'viewConfiguration' => _('view Configuration'),
 			'manageConfiguration' => _('manage Configuration'),
 			'viewStatus' => _('view Status'),
+			'manageSession' => _('manage session'),
 			'viewSummary' => _('view Summary'),
 			'viewNews' => _('view News'),
 			'manageNews' => _('manage News')

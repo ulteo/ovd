@@ -147,13 +147,15 @@ if (isset($_GET['info'])) {
 		echo '</div>';
 	}
 
-	echo '<h2>'._('Kill this session').'</h2>';
-	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
-	echo '  <input type="hidden" name="name" value="Session" />';
-	echo '	<input type="hidden" name="action" value="del" />';
-	echo '	<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
-	echo '	<input type="submit" value="'._('Kill this session').'" />';
-	echo '</form>';
+	if (isAuthorized('manageSession')) {
+		echo '<h2>'._('Kill this session').'</h2>';
+		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
+		echo '  <input type="hidden" name="name" value="Session" />';
+		echo '	<input type="hidden" name="action" value="del" />';
+		echo '	<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
+		echo '	<input type="submit" value="'._('Kill this session').'" />';
+		echo '</form>';
+	}
 
 	echo '</div>';
 	page_footer();
@@ -207,7 +209,7 @@ else {
 			$css_class = 'content'.(($i++%2==0)?1:2);
 
 			echo '	<tr class="'.$css_class.'">';
-			if (count($sessions) > 1)
+			if (isAuthorized('manageSession') && count($sessions) > 1)
 				echo '		<td><input class="input_checkbox" type="checkbox" name="selected_session[]" value="'.$session->id.'" /></td>';
 			echo '		<td><a href="sessions.php?info='.$session->id.'">'.$session->id.'</td>';
 			echo '		<td><ul>';
@@ -229,19 +231,21 @@ else {
 			echo '		</ul></td>';
 			echo '		<td><a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</td>';
 			echo '		<td>'.$session->stringStatus().'</td>';
-			echo '		<td style="vertical-align: middle;">';
-			echo '		<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
-			echo '  		<input type="hidden" name="name" value="Session" />';
-			echo '			<input type="hidden" name="action" value="del" />';
-			echo '			<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
-			echo '			<input type="submit" value="'._('Kill').'" />';
-			echo '		</form>';
-			echo '		</td>';
+			if (isAuthorized('manageSession')) {
+				echo '<td style="vertical-align: middle;">';
+				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
+				echo '<input type="hidden" name="name" value="Session" />';
+				echo '<input type="hidden" name="action" value="del" />';
+				echo '<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
+				echo '<input type="submit" value="'._('Kill').'" />';
+				echo '</form>';
+				echo '</td>';
+			}
 			echo '	</tr>';
 		}
 		echo '</tbody>';
 		$css_class = 'content'.(($i++%2==0)?1:2);
-		if (count($sessions) > 1) {
+		if (isAuthorized('manageSession') && count($sessions) > 1) {
 			echo '<tfoot>';
 			echo '	<tr class="'.$css_class.'">';
 			echo '		<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'sessions_list_table\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'sessions_list_table\'); return false">'._('Unmark all').'</a></td>';

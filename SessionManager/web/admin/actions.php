@@ -1428,6 +1428,9 @@ if ($_REQUEST['name'] == 'password') {
 
 if ($_REQUEST['name'] == 'Session') {
 	if ($_REQUEST['action'] == 'del') {
+		if (! checkAuthorization('manageSession'))
+			redirect();
+	
 		if (isset($_REQUEST['selected_session']) && is_array($_REQUEST['selected_session'])) {
 			foreach ($_POST['selected_session'] as $session) {
 				$session = Abstract_Session::load($session);
