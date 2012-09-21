@@ -51,11 +51,11 @@ if (isset($_GET['info'])) {
 	
 	$servers_cache = array();
 	foreach ($session->getAttribute('servers') as $role => $servers) {
-		foreach ($servers as $fqdn => $data) {
-			if (array_key_exists($fqdn, $servers_cache))
+		foreach ($servers as $server_id => $data) {
+			if (array_key_exists($server_id, $servers_cache))
 				continue;
 			
-			$servers_cache[$fqdn] = Abstract_Server::load($fqdn);
+			$servers_cache[$server_id] = Abstract_Server::load($server_id);
 		}
 	}
 
@@ -73,9 +73,9 @@ if (isset($_GET['info'])) {
 
 		echo '<li>'.$role.'</li>';
 		echo '<ul>';
-		foreach ($servers as $fqdn => $data) {
+		foreach ($servers as $server_id => $data) {
 			echo '<li>';
-			echo '<a href="servers.php?action=manage&fqdn='.$fqdn.'">'.$servers_cache[$fqdn]->getDisplayName().'</a>';
+			echo '<a href="servers.php?action=manage&id='.$server_id.'">'.$servers_cache[$server_id]->getDisplayName().'</a>';
 			if ($role == Server::SERVER_ROLE_APS)
 				echo ' (<span class="msg_'.Session::colorStatus($data['status']).'">'.Session::textStatus($data['status']).'</span>)';
 			echo '</li>';
@@ -220,10 +220,10 @@ else {
 
 					echo '<li>'.$role.'</li>';
 					echo '<ul>';
-					foreach ($servers as $fqdn => $data) {
-						$server = Abstract_Server::load($fqdn);
+					foreach ($servers as $server_id => $data) {
+						$server = Abstract_Server::load($server_id);
 						
-						echo '<li><a href="servers.php?action=manage&fqdn='.$fqdn.'">'.$server->getDisplayName().'</a></li>';
+						echo '<li><a href="servers.php?action=manage&id='.$server_id.'">'.$server->getDisplayName().'</a></li>';
 					}
 					echo '</ul>';
 				}

@@ -256,9 +256,9 @@ class Abstract_ReportSession {
 	}
 	
 	
-	public static function get_end_status_for_server($t0_, $t1_, $fqdn_) {
+	public static function get_end_status_for_server($t0_, $t1_, $server_id_) {
 		$sql = SQL::getInstance();
-		$res = $sql->DoQuery('SELECT  @1, count(@1) AS @2 FROM #3 WHERE @4 = %5 AND @6 IS NOT NULL AND @7 BETWEEN %8 AND %9 GROUP BY @1', 'stop_why', 'nb', self::table, 'server', $fqdn_,  'stop_stamp','start_stamp', date('c', $t0_), date('c', $t1_));
+		$res = $sql->DoQuery('SELECT  @1, count(@1) AS @2 FROM #3 WHERE @4 = %5 AND @6 IS NOT NULL AND @7 BETWEEN %8 AND %9 GROUP BY @1', 'stop_why', 'nb', self::table, 'server', $server_id_,  'stop_stamp','start_stamp', date('c', $t0_), date('c', $t1_));
 		
 		$stop_why = array();
 		

@@ -92,7 +92,7 @@ $new_roles = $server->getAttribute('roles');
 foreach ($old_roles as $a_role => $enable) {
 	if (array_key_exists($a_role, $new_roles) == false) {
 		// the server has not anymore the role
-		Abstract_Server::removeRole($server->getAttribute('fqdn'), $a_role);
+		Abstract_Server::removeRole($server->id, $a_role);
 	}
 }
 
@@ -103,7 +103,7 @@ header('Content-Type: text/xml; charset=utf-8');
 $dom = new DomDocument('1.0', 'utf-8');
 
 $node = $dom->createElement('server');
-$node->setAttribute('name', $server->fqdn);
+$node->setAttribute('name', $server->id);
 $node->setAttribute('status', $server->status);
 $dom->appendChild($node);
 

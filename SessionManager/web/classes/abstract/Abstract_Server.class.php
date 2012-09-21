@@ -50,6 +50,7 @@ class Abstract_Server {
 		$SQL = SQL::newInstance($sql_conf);
 
 		$servers_table_structure = array(
+			'id'			=>	'varchar(255)',
 			'fqdn'			=>	'varchar(255)',
 			'status'		=>	'varchar(255)',
 			'registered'	=>	'int(8)',
@@ -64,7 +65,7 @@ class Abstract_Server {
 			'timestamp'		=>	'int(10)'
 		);
 
-		$ret = $SQL->buildTable(self::table, $servers_table_structure, array('fqdn'));
+		$ret = $SQL->buildTable(self::table, $servers_table_structure, array('id'));
 
 		if (! $ret) {
 			Logger::error('main', 'Unable to create MySQL table \''.self::table.'\'');
@@ -74,12 +75,12 @@ class Abstract_Server {
 		Logger::debug('main', 'MySQL table \''.self::table.'\' created');
 
 		$servers_properties_table_structure = array(
-			'fqdn'			=>	'varchar(255)',
+			'server'		=>	'varchar(255)',
 			'property'		=>	'varchar(64)',
 			'value'			=>	'varchar(255)'
 		);
 
-		$ret = $SQL->buildTable(self::table_properties, $servers_properties_table_structure, array('fqdn', 'property'));
+		$ret = $SQL->buildTable(self::table_properties, $servers_properties_table_structure, array('server', 'property'));
 
 		if (! $ret) {
 			Logger::error('main', 'Unable to create MySQL table \''.self::table_properties.'\'');
@@ -91,12 +92,12 @@ class Abstract_Server {
 		return true;
 	}
 
-	public static function exists($fqdn_) {
-		Logger::debug('main', 'Starting Abstract_Server::exists for \''.$fqdn_.'\'');
+	public static function exists($id_) {
+		Logger::debug('main', 'Starting Abstract_Server::exists for \''.$id_.'\'');
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'fqdn', $fqdn_);
+		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -105,16 +106,16 @@ class Abstract_Server {
 		return true;
 	}
 
-	public static function load($fqdn_) {
-		Logger::debug('main', 'Starting Abstract_Server::load for \''.$fqdn_.'\'');
+	public static function load($id_) {
+		Logger::debug('main', 'Starting Abstract_Server::load for \''.$id_.'\'');
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'fqdn', $fqdn_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
-			Logger::error('main', "Abstract_Server::load($fqdn_) failed: NumRows == 0");
+			Logger::error('main', "Abstract_Server::load($id_) failed: NumRows == 0");
 			return false;
 		}
 
@@ -130,7 +131,7 @@ class Abstract_Server {
 
 		$SQL = SQL::getInstance();
 
-		if (! Abstract_Server::exists($server_->fqdn)) {
+		if (! Abstract_Server::exists($server_->id)) {
 			Logger::debug('main', "Abstract_Server::save($server_) server does NOT exist, we must create it");
 
 			if (! Abstract_Server::create($server_)) {
@@ -139,8 +140,8 @@ class Abstract_Server {
 			}
 		}
 
-		$SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23 WHERE @24 = %25 LIMIT 1', self::table, 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'cpu_model', $server_->cpu_model,
-		'cpu_nb_cores', $server_->cpu_nb_cores, 'cpu_load', (int)($server_->cpu_load*100), 'ram_total', $server_->ram_total, 'ram_used', $server_->ram_used, 'timestamp', time(), 'fqdn', $server_->fqdn);
+		$SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23,@24=%25 WHERE @26 = %27 LIMIT 1', self::table, 'fqdn', $server_->fqdn, 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'cpu_model', $server_->cpu_model,
+		'cpu_nb_cores', $server_->cpu_nb_cores, 'cpu_load', (int)($server_->cpu_load*100), 'ram_total', $server_->ram_total, 'ram_used', $server_->ram_used, 'timestamp', time(), 'id', $server_->id);
 
 		$properties = Abstract_Server::loadProperties($server_);
 
@@ -155,7 +156,7 @@ class Abstract_Server {
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT @1,@2 FROM #3 WHERE @4 = %5', 'property', 'value', self::table_properties, 'fqdn', $server_->fqdn);
+		$SQL->DoQuery('SELECT @1,@2 FROM #3 WHERE @4 = %5', 'property', 'value', self::table_properties, 'server', $server_->id);
 		$rows = $SQL->FetchAllResults();
 
 		$properties = array();
@@ -172,11 +173,11 @@ class Abstract_Server {
 		$SQL = SQL::getInstance();
 
 		if (! is_null($old_property_) && is_null($property_))
-			$SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3 AND @4 = %5 LIMIT 1', self::table_properties, 'property', $db_property_, 'fqdn', $server_->fqdn);
+			$SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3 AND @4 = %5 LIMIT 1', self::table_properties, 'property', $db_property_, 'server', $server_->id);
 		elseif (is_null($old_property_) && ! is_null($property_))
-			$SQL->DoQuery('INSERT INTO #1 (@2,@3,@4) VALUES(%5,%6,%7)', self::table_properties, 'fqdn', 'property', 'value', $server_->fqdn, $db_property_, $property_);
+			$SQL->DoQuery('INSERT INTO #1 (@2,@3,@4) VALUES(%5,%6,%7)', self::table_properties, 'server', 'property', 'value', $server_->id, $db_property_, $property_);
 		elseif ($old_property_ != $property_)
-			$SQL->DoQuery('UPDATE #1 SET @2=%3 WHERE @4 = %5 AND @6 = %7 LIMIT 1', self::table_properties, 'value', $property_, 'property', $db_property_, 'fqdn', $server_->fqdn);
+			$SQL->DoQuery('UPDATE #1 SET @2=%3 WHERE @4 = %5 AND @6 = %7 LIMIT 1', self::table_properties, 'value', $property_, 'property', $db_property_, 'server', $server_->id);
 
 		return true;
 	}
@@ -184,13 +185,13 @@ class Abstract_Server {
 	private static function create($server_) {
 		Logger::debug('main', 'Starting Abstract_Server::create for \''.$server_->fqdn.'\'');
 
-		if (Abstract_Server::exists($server_->fqdn)) {
-			Logger::error('main', 'Abstract_Server::create(\''.$server_->fqdn.'\') server already exists');
+		if (Abstract_Server::exists($server_->id)) {
+			Logger::error('main', 'Abstract_Server::create(\''.$server_->id.'\') server already exists');
 			return false;
 		}
 
 		$SQL = SQL::getInstance();
-		$SQL->DoQuery('INSERT INTO #1 (@2) VALUES (%3)', self::table, 'fqdn', $server_->fqdn);
+		$SQL->DoQuery('INSERT INTO #1 (@2) VALUES (%3)', self::table, 'id', $server_->id);
 
 		return true;
 	}
@@ -200,13 +201,13 @@ class Abstract_Server {
 
 		$SQL = SQL::getInstance();
 
-		if (! Abstract_Server::load($server_->fqdn)) {
+		if (! Abstract_Server::load($server_->id)) {
 			Logger::error('main', 'Abstract_Server::modify('.$server_->fqdn.') failed to load server');
 			return false;
 		}
 
-		$SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23 WHERE @24 = %25 LIMIT 1', self::table, 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'cpu_model', $server_->cpu_model,
-		'cpu_nb_cores', $server_->cpu_nb_cores, 'cpu_load', (int)($server_->cpu_load*100), 'ram_total', $server_->ram_total, 'ram_used', $server_->ram_used, 'timestamp', time(), 'fqdn', $server_->fqdn);
+		$SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23,@24=%25 WHERE @26 = %27 LIMIT 1', self::table, 'fqdn', $server_->fqdn, 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'cpu_model', $server_->cpu_model,
+		'cpu_nb_cores', $server_->cpu_nb_cores, 'cpu_load', (int)($server_->cpu_load*100), 'ram_total', $server_->ram_total, 'ram_used', $server_->ram_used, 'timestamp', time(), 'id', $server_->id);
 
 		$properties = Abstract_Server::loadProperties($server_);
 
@@ -216,12 +217,12 @@ class Abstract_Server {
 		return true;
 	}
 
-	public static function delete($fqdn_) {
-		Logger::debug('main', 'Starting Abstract_Server::delete for \''.$fqdn_.'\'');
+	public static function delete($id_) {
+		Logger::debug('main', 'Starting Abstract_Server::delete for \''.$id_.'\'');
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'fqdn', $fqdn_);
+		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -229,7 +230,7 @@ class Abstract_Server {
 			return false;
 		}
 
-		$sessions_liaisons = Abstract_Liaison::load('ServerSession', $fqdn_, NULL);
+		$sessions_liaisons = Abstract_Liaison::load('ServerSession', $id_, NULL);
 		foreach ($sessions_liaisons as $sessions_liaison) {
 			$session = Abstract_Session::load($sessions_liaison->group);
 			if (! $session)
@@ -237,28 +238,28 @@ class Abstract_Server {
 
 			$session->orderDeletion(true, Session::SESSION_END_STATUS_SERVER_DELETED);
 		}
-		Abstract_Liaison::delete('ServerSession', $fqdn_, NULL);
+		Abstract_Liaison::delete('ServerSession', $id_, NULL);
 		
-		$a_server = Abstract_Server::load($fqdn_);
+		$a_server = Abstract_Server::load($id_);
 		$roles = $a_server->getAttribute('roles');
 		if (is_array($roles)) {
 			foreach ($roles as $a_role) {
-				Abstract_Server::removeRole($fqdn_, $a_role);
+				Abstract_Server::removeRole($id_, $a_role);
 			}
 		}
 
-		$SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3', self::table_properties, 'fqdn', $fqdn_);
-		$SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'fqdn', $fqdn_);
+		$SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3', self::table_properties, 'server', $id_);
+		$SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id_);
 
 		return true;
 	}
 
-	public static function removeRole($fqdn_, $role_) {
-		Logger::debug('main', "Starting Abstract_Server::removeRole for '$fqdn_' removing '$role_'");
+	public static function removeRole($id_, $role_) {
+		Logger::debug('main', "Starting Abstract_Server::removeRole for '$id_' removing '$role_'");
 		
-		$a_server = Abstract_Server::load($fqdn_);
+		$a_server = Abstract_Server::load($id_);
 		if (is_object($a_server) == false) {
-			Logger::error('main', "Starting Abstract_Server::removeRole error failed to load server '$fqdn_'");
+			Logger::error('main', "Starting Abstract_Server::removeRole error failed to load server '$id_'");
 			return false;
 		}
 		
@@ -280,7 +281,7 @@ class Abstract_Server {
 				$slave_server_settings = $prefs->get('general', 'slave_server_settings');
 				$remove_orphan = (bool)$slave_server_settings['remove_orphan'];
 				
-				Abstract_Liaison::delete('ApplicationServer', NULL, $fqdn_);
+				Abstract_Liaison::delete('ApplicationServer', NULL, $a_server->id);
 				if ($remove_orphan) {
 					$apps = $a_server->getApplications();
 					$applicationDB = ApplicationDB::getInstance();
@@ -297,7 +298,7 @@ class Abstract_Server {
 				}
 				
 				$tm = new Tasks_Manager();
-				$tm->load_from_server($fqdn_);
+				$tm->load_from_server($id_);
 				foreach ($tm->tasks as $a_task) {
 					$tm->remove($a_task->id);
 				}
@@ -306,7 +307,7 @@ class Abstract_Server {
 			case Server::SERVER_ROLE_FS:
 				if (Preferences::moduleIsEnabled('ProfileDB')) {
 					$profiledb = ProfileDB::getInstance();
-					$folders = $profiledb->importFromServer($fqdn_);
+					$folders = $profiledb->importFromServer($id_);
 					foreach ($folders as $a_folder) {
 						$profiledb->remove($a_folder->id);
 					}
@@ -314,7 +315,7 @@ class Abstract_Server {
 				
 				if (Preferences::moduleIsEnabled('SharedFolderDB')) {
 					$sharedfolderdb = SharedFolderDB::getInstance();
-					$folders = $sharedfolderdb->importFromServer($fqdn_);
+					$folders = $sharedfolderdb->importFromServer($id_);
 					foreach ($folders as $a_folder) {
 						$profiledb->remove($a_folder->id);
 					}
@@ -332,7 +333,8 @@ class Abstract_Server {
 		foreach ($row_ as $k => $v)
 			$$k = $v;
 
-		$buf = new Server((string)$fqdn);
+		$buf = new Server((string)$id);
+		$buf->fqdn = (string)$fqdn;
 		$buf->status = (string)$status;
 		$buf->registered = (bool)$registered;
 		$buf->locked = (bool)$locked;
@@ -469,7 +471,7 @@ class Abstract_Server {
 		
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT @1 FROM #2 WHERE @3 = %4 LIMIT 1', 'timestamp', self::table, 'fqdn', $server_->fqdn);
+		$SQL->DoQuery('SELECT @1 FROM #2 WHERE @3 = %4 LIMIT 1', 'timestamp', self::table, 'id', $server_->id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {

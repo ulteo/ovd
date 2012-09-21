@@ -65,7 +65,7 @@ abstract class SharedFolderDB extends Module  {
 		return false;
 	}
 	
-	public function countOnServer($fqdn_) {
+	public function countOnServer($id_) {
 		return false;
 	}
 	

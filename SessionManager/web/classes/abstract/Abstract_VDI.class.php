@@ -178,12 +178,12 @@ class Abstract_VDI {
 		return $buf;
 	}
 
-	public static function loadByServer($fqdn_) {
+	public static function loadByServer($server_id_) {
 		Logger::debug('main', 'Starting Abstract_VDI::load_all');
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3', self::table, 'server', $fqdn_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3', self::table, 'server', $server_id_);
 		$rows = $SQL->FetchAllResults();
 
 		$machines = array();

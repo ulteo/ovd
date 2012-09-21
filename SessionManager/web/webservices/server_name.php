@@ -53,6 +53,7 @@ if (! Abstract_Server::exists($server_name)) {
 	if ($buf['auto_switch_new_servers_to_production'] == 1)
 		$server->locked = false;
 
+	$server->fqdn = $server_name;
 	$server->external_name = $server->fqdn;
 
 	$server->max_sessions = 20;
@@ -80,7 +81,7 @@ header('Content-Type: text/xml; charset=utf-8');
 $dom = new DomDocument('1.0', 'utf-8');
 
 $node = $dom->createElement('server');
-$node->setAttribute('name', $server->fqdn);
+$node->setAttribute('name', $server->id);
 $dom->appendChild($node);
 
 echo $dom->saveXML();

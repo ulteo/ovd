@@ -26,14 +26,16 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class ServerReportItem {
 	private $timestamp;
+	private $id;
 	private $fqdn;
 	private $external_name;
 	private $cpu;
 	private $ram;
 	private $data;
 	
-	public function __construct($timestamp_, $fqdn_, $external_name_, $cpu_, $ram_, $data_) {
+	public function __construct($timestamp_, $id_, $fqdn_, $external_name_, $cpu_, $ram_, $data_) {
 		$this->timestamp = $timestamp_;
+		$this->id = $id_;
 		$this->fqdn = $fqdn_;
 		$this->external_name = $external_name_;
 		$this->cpu = $cpu_;
@@ -43,6 +45,10 @@ class ServerReportItem {
 	
 	public function getTime() {
 		return $this->timestamp;
+	}
+	
+	public function getID() {
+		return $this->id;
 	}
 	
 	public function getFQDN() {
@@ -66,8 +72,8 @@ class ServerReportItem {
 	}
 	
 	
-	public static function create_from_server_report($fqdn_, $xml_input_) {
-		$server = Abstract_Server::load($fqdn_);
+	public static function create_from_server_report($server_id_, $xml_input_) {
+		$server = Abstract_Server::load($server_id_);
 		if ($server === false)
 			return;
 		
@@ -128,7 +134,7 @@ class ServerReportItem {
 		}
 		
 		$data = self::infos2Xml($sessions_infos, $applications_infos);
-		$report = new self(time(), $fqdn_, $external_name, $cpu, $ram, $data);
+		$report = new self(time(), $server_id_, $server->fqdn, $external_name, $cpu, $ram, $data);
 		return $report;
 	}
 

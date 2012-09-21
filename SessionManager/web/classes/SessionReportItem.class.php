@@ -105,13 +105,13 @@ class SessionReportItem {
 		$session_node->appendChild($servers_node);
 		
 		foreach ($session_->servers as $role => $servers) {
-			foreach ($servers as $fqdn=> $data) {
+			foreach ($servers as $server_id => $data) {
 				$server_node = $dom->createElement('server');
 				$servers_node->appendChild($server_node);
-				$server_node->setAttribute('fqdn', $fqdn);
+				$server_node->setAttribute('id', $server_id);
 				$server_node->setAttribute('role', $role);
 				
-				if ($session_->mode == Session::MODE_DESKTOP && $session_->server == $fqdn)
+				if ($session_->mode == Session::MODE_DESKTOP && $session_->server == $server_id)
 					$server_node->setAttribute('desktop_server', 'true');
 				
 				if (array_key_exists('dump', $data)) {
@@ -125,10 +125,11 @@ class SessionReportItem {
 					}
 				}
 				
-				$server = Abstract_Server::load($fqdn);
+				$server = Abstract_Server::load($server_id);
 				if (! $server || $server->getAttribute('registered') === false)
 					continue;
 				
+				$server_node->setAttribute('fqdn', $server->fqdn);
 				$server_node->setAttribute('type', $server->type);
 			}
 		}

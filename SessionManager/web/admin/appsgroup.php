@@ -321,14 +321,14 @@ function show_manage($id) {
   else {
     foreach($servers as $server) {
       echo '<tr>';
-      echo '<td><a href="servers.php?action=manage&id='.$server->fqdn.'">'.$server->fqdn.'</a>';
+      echo '<td><a href="servers.php?action=manage&id='.$server->id.'">'.$server->getDisplayName().'</a>';
       echo '</td>';
       echo '<td>';
       echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group from this server?').'\');">';
       echo '<input type="hidden" name="action" value="del" />';
       echo '<input type="hidden" name="name" value="ApplicationGroup_Server" />';
       echo '<input type="hidden" name="group" value="'.$id.'" />';
-      echo '<input type="hidden" name="server" value="'.$server->fqdn.'" />';
+      echo '<input type="hidden" name="server" value="'.$server->id.'" />';
       echo '<input type="submit" value="'._('Delete from this group').'" /> FIXME';
       echo '</form>';
       echo '</td>';
@@ -345,7 +345,7 @@ function show_manage($id) {
     echo '<input type="hidden" name="group" value="'.$id.'" />';
     echo '<select name="element">';
     foreach($servers_available as $servers)
-      echo '<option value="'.$server->fqdn.'" >'.$server->fqdn.'</option>';
+      echo '<option value="'.$server->id.'" >'.$server->getDisplayName().'</option>';
     echo '</select>';
     echo '</td><td><input type="submit" value="'._('Add to this server').'" /></td>';
     echo '</form></tr>';

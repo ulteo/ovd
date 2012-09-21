@@ -52,14 +52,14 @@ class Server {
 	public $roles = array();
 	public $roles_disabled = array();
 
-	public function __construct($fqdn_) {
-// 		Logger::debug('main', 'Starting Server::__construct for \''.$fqdn_.'\'');
+	public function __construct($id_) {
+// 		Logger::debug('main', 'Starting Server::__construct for \''.$id_.'\'');
 
-		$this->fqdn = $fqdn_;
+		$this->id = $id_;
 	}
 
 	public function __toString() {
-		return 'Server(\''.$this->fqdn.'\', \''.$this->status.'\', \''.$this->registered.'\', \''.$this->locked.'\', \''.$this->type.'\', \''.$this->version.'\', \''.$this->web_port.'\', \''.$this->cpu_model.'\', \''.$this->cpu_nb_cores.'\', \''.$this->cpu_load.'\', \''.$this->ram_total.'\', \''.$this->ram_used.'\')';
+		return 'Server(\''.$this->id.'\', \''.$this->status.'\', \''.$this->registered.'\', \''.$this->locked.'\', \''.$this->type.'\', \''.$this->version.'\', \''.$this->web_port.'\', \''.$this->cpu_model.'\', \''.$this->cpu_nb_cores.'\', \''.$this->cpu_load.'\', \''.$this->ram_total.'\', \''.$this->ram_used.'\')';
 	}
 
 	public function hasAttribute($attrib_) {
@@ -310,6 +310,7 @@ class Server {
 		}
 
 		$ev = new ServerStatusChanged(array(
+			'id'		=>	$this->id,
 			'fqdn'		=>	$this->fqdn,
 			'status'	=>	ServerStatusChanged::$UNREACHABLE
 		));
@@ -332,11 +333,11 @@ class Server {
 			return false;
 		}
 
-		$sessions = Abstract_Session::getByServer($this->fqdn);
+		$sessions = Abstract_Session::getByServer($this->id);
 		foreach ($sessions as $session)
 			Abstract_Session::delete($session->id);
 
-		$tasks = Abstract_Task::load_by_server($this->fqdn);
+		$tasks = Abstract_Task::load_by_server($this->id);
 		foreach ($tasks as $task)
 			Abstract_Task::delete($task->id);
 
@@ -412,6 +413,7 @@ class Server {
 		Logger::debug('main', 'Starting Server::setStatus for \''.$this->fqdn.'\'');
 
 		$ev = new ServerStatusChanged(array(
+			'id'		=>	$this->id,
 			'fqdn'		=>	$this->fqdn,
 			'status'	=>	($status_ == 'ready')?ServerStatusChanged::$ONLINE:ServerStatusChanged::$OFFLINE
 		));
@@ -457,7 +459,7 @@ class Server {
 			case 'pending':
 				break;
 			case 'down':
-				$sessions = Abstract_Session::getByServer($this->fqdn);
+				$sessions = Abstract_Session::getByServer($this->id);
 				foreach ($sessions as $session) {
 					Logger::warning('main', 'Server \''.$this->fqdn.'\' status is now "down", killing Session \''.$session->id.'\'');
 					$session->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_END_STATUS_SERVER_DOWN);
@@ -466,7 +468,7 @@ class Server {
 				break;
 			case 'broken':
 			default:
-				$sessions = Abstract_Session::getByServer($this->fqdn);
+				$sessions = Abstract_Session::getByServer($this->id);
 				foreach ($sessions as $session) {
 					Logger::warning('main', 'Server \''.$this->fqdn.'\' status is now "broken", killing Session \''.$session->id.'\'');
 					$session->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_END_STATUS_SERVER_BROKEN);
@@ -530,7 +532,7 @@ class Server {
 	}
 
 	public function getNbUsedSessions() {
-  		$buf = Abstract_Session::countByServer($this->fqdn);
+  		$buf = Abstract_Session::countByServer($this->id);
 
 		return $buf;
 	}
@@ -917,13 +919,13 @@ class Server {
 		$folders_on_sm1 = array();
 		if (Preferences::moduleIsEnabled('ProfileDB')) {
 			$profiledb = ProfileDB::getInstance();
-			$folders_on_sm1 = $profiledb->importFromServer($this->fqdn);
+			$folders_on_sm1 = $profiledb->importFromServer($this->id);
 		}
 		
 		$folders_on_sm2 = array();
 		if (Preferences::moduleIsEnabled('SharedFolderDB')) {
 			$sharedfolderdb = SharedFolderDB::getInstance();
-			$folders_on_sm2 = $sharedfolderdb->importFromServer($this->fqdn);
+			$folders_on_sm2 = $sharedfolderdb->importFromServer($this->id);
 		}
 		
 		$folders_on_sm = array();
@@ -953,7 +955,7 @@ class Server {
 				$folder = new NetworkFolder();
 				$folder->id = $folder_id;
 				$folder->name = $folder_id;
-				$folder->server = $this->fqdn;
+				$folder->server = $this->id;
 				$profiledb->remove($folder);
 				$sharedfolderdb->remove($folder);
 			}
@@ -1111,7 +1113,7 @@ class Server {
 
 		$applicationDB = ApplicationDB::getInstance();
 
-		$ls = Abstract_Liaison::load('ApplicationServer', NULL, $this->fqdn);
+		$ls = Abstract_Liaison::load('ApplicationServer', NULL, $this->id);
 		if (! is_array($ls)) {
 			Logger::error('main', 'SERVER::getApplications elements is not array');
 			return NULL;
@@ -1169,7 +1171,7 @@ class Server {
 		$root = $dom->documentElement;
 
 		// before adding application, we remove all previous applications
-		$previous_liaison = Abstract_Liaison::load('ApplicationServer', NULL, $this->fqdn); // see end of function
+		$previous_liaison = Abstract_Liaison::load('ApplicationServer', NULL, $this->id); // see end of function
 		$current_liaison_key = array();
 
 		$application_node = $dom->getElementsByTagName("application");
@@ -1230,8 +1232,8 @@ class Server {
 			if ($applicationDB->isWriteable() == true){
 				if ($applicationDB->isOK($a) == true){
 					// we add the app to the server
-					if (!is_object(Abstract_Liaison::load('ApplicationServer', $a->getAttribute('id'),$this->fqdn))) {
-						$ret = Abstract_Liaison::save('ApplicationServer', $a->getAttribute('id'),$this->fqdn);
+					if (!is_object(Abstract_Liaison::load('ApplicationServer', $a->getAttribute('id'), $this->id))) {
+						$ret = Abstract_Liaison::save('ApplicationServer', $a->getAttribute('id'), $this->id);
 						if ($ret === false) {
 							Logger::error('main', 'Server::updateApplications failed to save application');
 							return $ret;
@@ -1252,7 +1254,7 @@ class Server {
 			if (in_array($key, $current_liaison_key) == false) {
 				$a = $applicationDB->import($key);
 				if ( is_null($a) || $a->getAttribute('static') == false)
-					Abstract_Liaison::delete('ApplicationServer', $key, $this->fqdn);
+					Abstract_Liaison::delete('ApplicationServer', $key, $this->id);
 			}
 		}
 
@@ -1363,8 +1365,8 @@ class Server {
 				$val+= $r1 * $criterion_value;
 			}
 			
-			$servers_values[$server->fqdn] = $val;
-			$servers_objs[$server->fqdn] = $server;
+			$servers_values[$server->id] = $val;
+			$servers_objs[$server->id] = $server;
 		}
 		
 		arsort($servers_values);

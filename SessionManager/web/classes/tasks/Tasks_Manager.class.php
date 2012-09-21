@@ -27,8 +27,8 @@ class Tasks_Manager {
 		$this->tasks = Abstract_Task::load_all();
 	}
 
-	public function load_from_server($fqdn_) {
-		$this->tasks = Abstract_Task::load_by_server($fqdn_);
+	public function load_from_server($server_id_) {
+		$this->tasks = Abstract_Task::load_by_server($server_id_);
 	}
 
 	public function load_from_application($app_id_) {

@@ -222,12 +222,12 @@ function get_server_history($t0, $t1, $mode_) {
 	foreach($reports as $report) {
 		$y = strtotime($report->getTime());
 		$buf = date($mode_->get_prefix(), $y);
-		if (! isset($infos[$report->getFQDN()]))
-			$infos[$report->getFQDN()] = array('ram' => build_array($t0, $t1, $mode_, true),
+		if (! isset($infos[$report->getID()]))
+			$infos[$report->getID()] = array('ram' => build_array($t0, $t1, $mode_, true),
 						   'cpu' => build_array($t0, $t1, $mode_, true));
 
-		$infos[$report->getFQDN()]['ram'][$buf][]= $report->getRAM();
-		$infos[$report->getFQDN()]['cpu'][$buf][]= $report->getCPU()*100;
+		$infos[$report->getID()]['ram'][$buf][]= $report->getRAM();
+		$infos[$report->getID()]['cpu'][$buf][]= $report->getCPU()*100;
 	}
 
 	return $infos;
@@ -308,18 +308,30 @@ function show_page($mode_) {
 	$file_id = substr($tmpfile, strlen(TMP_DIR.'/'.REPORT_PREFIX));
 	$chart->render($tmpfile);
 
+	// Foreach server
+	$servers = array();
+	foreach($res_server as $server_id => $value) {
+		$servers[$server_id] = array();
+		
+		$server = Abstract_Server::load($server_id);
+		if ($server)
+			$servers[$server_id]['name'] = $server->getDisplayName();
+		else
+			$servers[$server_id]['name'] = $server_id;
+	}
+
 	if ($session_number>0) {
 		$dataSet = new XYDataSet();
-		foreach($res_server as $fqdn => $c) {
-			if ($fqdn === "") {
-				$fqdn = _("unknown");
+		foreach($res_server as $server_id => $c) {
+			if ($server_id === "") {
+				$server_id = _("unknown");
 			}
 			$tot = 0;
 			foreach($c as $k => $v)
 				$tot+= $v;
 			$value = ($tot*100)/$session_number;
 
-			$dataSet->addPoint(new Point(str_replace(array('%FQDN%', '%TOTAL%'), array($fqdn, (int)($tot)), ngettext(_('%FQDN% (%TOTAL% session)'), _('%FQDN% (%TOTAL% sessions)'), $value)), $value));
+			$dataSet->addPoint(new Point(str_replace(array('%SERVER%', '%TOTAL%'), array($servers[$server_id]['name'], (int)($tot)), ngettext(_('%SERVER% (%TOTAL% session)'), _('%SERVER% (%TOTAL% sessions)'), $value)), $value));
 		}
 
 		$chart = new PieChart();
@@ -348,10 +360,7 @@ function show_page($mode_) {
 
 
 	// Foreach server
-	$servers = array();
-	foreach($res_server as $fqdn => $value) {
-		$servers[$fqdn] = array();
-
+	foreach($res_server as $server_id => $value) {
 		$chart = new LineChart();
 		$chart->getPlot()->setLogoFileName('');
 		$dataSet = new XYDataSet();
@@ -369,11 +378,11 @@ function show_page($mode_) {
 		$chart->setDataSet($dataSet);
 		$chart->setTitle(_('Number of launched sessions'));
 		$tmpfile = tempnam(TMP_DIR, REPORT_PREFIX);
-		$servers[$fqdn]['session_file'] = substr($tmpfile, strlen(TMP_DIR.'/'.REPORT_PREFIX));
+		$servers[$server_id]['session_file'] = substr($tmpfile, strlen(TMP_DIR.'/'.REPORT_PREFIX));
 		$chart->render($tmpfile);
 		
 		$dataSet = new XYDataSet();
-		$end_status2 = Abstract_ReportSession::get_end_status_for_server($t0, $t2, $fqdn);
+		$end_status2 = Abstract_ReportSession::get_end_status_for_server($t0, $t2, $server_id);
 		
 		if (count($end_status2) > 0) {
 			foreach($end_status2 as $status_session => $number_status) {
@@ -385,17 +394,17 @@ function show_page($mode_) {
 			$chart->setTitle(_('Session end status'));
 			$chart->setDataSet($dataSet);
 			$tmpfile = tempnam(TMP_DIR, REPORT_PREFIX);
-			$servers[$fqdn]['session_end_status'] = substr($tmpfile, strlen(TMP_DIR.'/'.REPORT_PREFIX));
+			$servers[$server_id]['session_end_status'] = substr($tmpfile, strlen(TMP_DIR.'/'.REPORT_PREFIX));
 			$chart->render($tmpfile);
 		}
 
-		if (! isset($info2[$fqdn]))
+		if (! isset($info2[$server_id]))
 			continue;
 
 		$dataSet_cpu = new XYDataSet();
-		$step = max(round(count($info2[$fqdn]['cpu'])/MAX_STEPS), 1);
+		$step = max(round(count($info2[$server_id]['cpu'])/MAX_STEPS), 1);
 		$step_i = 0;
-		foreach ($info2[$fqdn]['cpu'] as $day => $num) {
+		foreach ($info2[$server_id]['cpu'] as $day => $num) {
 			$text = ($step_i%$step == 0?substr($day, -2):'');
 			$step_i++;
 			
@@ -408,14 +417,14 @@ function show_page($mode_) {
 		$chart->setDataSet($dataSet_cpu);
 		$chart->setTitle(_('CPU usage'));
 		$tmpfile = tempnam(TMP_DIR, REPORT_PREFIX);
-		$servers[$fqdn]['cpu_file'] = substr($tmpfile, strlen(TMP_DIR.'/'.REPORT_PREFIX));
+		$servers[$server_id]['cpu_file'] = substr($tmpfile, strlen(TMP_DIR.'/'.REPORT_PREFIX));
 		$chart->render($tmpfile);
 
 
 		$dataSet_ram = new XYDataSet();
-		$step = max(round(count($info2[$fqdn]['ram'])/MAX_STEPS), 1);
+		$step = max(round(count($info2[$server_id]['ram'])/MAX_STEPS), 1);
 		$step_i = 0;
-		foreach ($info2[$fqdn]['ram'] as $day => $num) {
+		foreach ($info2[$server_id]['ram'] as $day => $num) {
 			$text = ($step_i%$step == 0?substr($day, -2):'');
 			$step_i++;
 			
@@ -429,7 +438,7 @@ function show_page($mode_) {
 		$chart->setDataSet($dataSet_ram);
 		$chart->setTitle(_('RAM usage'));
 		$tmpfile = tempnam(TMP_DIR, REPORT_PREFIX);
-		$servers[$fqdn]['ram_file'] = substr($tmpfile, strlen(TMP_DIR.'/'.REPORT_PREFIX));
+		$servers[$server_id]['ram_file'] = substr($tmpfile, strlen(TMP_DIR.'/'.REPORT_PREFIX));
 		$chart->render($tmpfile);
 	}
 
@@ -570,9 +579,9 @@ function show_page($mode_) {
 	echo '</form>';
 
 
-	foreach($servers as $fqdn => $value) {
+	foreach($servers as $server_id => $value) {
 		echo '<hr/>';
-		echo '<h2>'._('Server').' '.$fqdn.'</h2>';
+		echo '<h2>'._('Server').' '.$value['name'].'</h2>';
 		echo '<table>';
 		if (isset($value['session_file'])) {
 			echo '<tr><td>';

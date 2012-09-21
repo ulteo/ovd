@@ -27,7 +27,7 @@ class ServerStatusChangedTask extends EventCallback {
 		$data = get_from_cache('events', 'ServerStatusChanged');
 		
 		if ($data == NULL) {
-			$data[$this->ev->fqdn] = $this->ev->status;
+			$data[$this->ev->server_id] = $this->ev->status;
 			if ($this->ev->status != ServerStatusChanged::$ONLINE)
 				$needs_cleanup = true;
 		} else {
@@ -40,7 +40,7 @@ class ServerStatusChangedTask extends EventCallback {
 			Logger::debug('main', 'ServerStatusChangedTask::run cleanup task for '.$this->ev->fqdn);
 			set_cache($data, 'events', 'ServerStatusChanged');
 			$tm = new Tasks_Manager();
-			$tm->load_from_server($this->ev->fqdn);
+			$tm->load_from_server($this->ev->server_id);
 			foreach ($tm->tasks as $a_task) {
 				$tm->remove($a_task->id);
 			}

@@ -199,12 +199,12 @@ class Abstract_Task {
 		return $tasks;
 	}
 
-	public function load_by_server($fqdn_) {
-		Logger::debug('main', 'Starting Abstract_Task::load_from_server('.$fqdn_.')');
+	public function load_by_server($server_id_) {
+		Logger::debug('main', 'Starting Abstract_Task::load_from_server('.$server_id_.')');
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3', self::table, 'server', $fqdn_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3', self::table, 'server', $server_id_);
 		$rows = $SQL->FetchAllResults();
 
 		$tasks = array();

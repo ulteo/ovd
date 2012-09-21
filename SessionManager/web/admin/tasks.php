@@ -85,7 +85,7 @@ function show_manage($id, $tm) {
 	echo '<tr class="content1">';
 	echo '<td>'.date('Y-m-d H:i:s', $task->t_begin).'</td>';
 	echo '<td>'.get_class($task).'</td>';
-	echo '<td><a href="servers.php?action=manage&fqdn='.$task->server.'">'.$server->getDisplayName().'</a></td>';
+	echo '<td><a href="servers.php?action=manage&id='.$task->server.'">'.$server->getDisplayName().'</a></td>';
 	echo '<td>'.$status.'</td>';
 	echo '<td>'.implode(', ', $task->getPackages()).'</td>';
 	echo '<td>'.$task->job_id.'</td>';
@@ -167,7 +167,7 @@ function show_default($tm) {
       echo '<td><a href="?action=manage&id='.$task->id.'">'.$task->id.'</a></td>';
       echo '<td>'.date('Y-m-d H:i:s', $task->t_begin).'</td>';
       echo '<td>'.get_class($task).'</td>';
-      echo '<td><a href="servers.php?action=manage&fqdn='.$task->server.'">'.$server->getDisplayName().'</a></td>';
+      echo '<td><a href="servers.php?action=manage&id='.$task->server.'">'.$server->getDisplayName().'</a></td>';
       echo '<td>'.$status.'</td>';
       echo '<td>'.$task->getRequest().'</td>';
       if ($can_do_action) {
@@ -197,7 +197,7 @@ function show_default($tm) {
 	echo '<input type="hidden" name="action" value="add" />';
     	echo '<select name="server">';
     	foreach ($servers as $server)
-		echo '<option value="'.$server->fqdn.'">'.$server->getDisplayName().'</option>';
+		echo '<option value="'.$server->id.'">'.$server->getDisplayName().'</option>';
     	echo '</select> &nbsp; ';
     	echo '<input type="text" name="request" value="" /> &nbsp; ';
     	echo '<input type="hidden" name="type" value="install_from_line" />';
@@ -213,7 +213,7 @@ function show_default($tm) {
         echo '<input type="hidden" name="request" value="" />'; // hack for the task creation
         echo '<select name="server">';
         foreach ($servers as $server)
-            echo '<option value="'.$server->fqdn.'">'.$server->getDisplayName().'</option>';
+            echo '<option value="'.$server->id.'">'.$server->getDisplayName().'</option>';
         echo '</select> &nbsp; ';
         echo '<input type="submit" name="submit" value="'._('Upgrade').'" />';
         echo '</form>';

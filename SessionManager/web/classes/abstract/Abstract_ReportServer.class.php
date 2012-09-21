@@ -40,6 +40,7 @@ class Abstract_ReportServer {
 		$SQL = SQL::newInstance($sql_conf);
 
 		$servers_history_table_structure = array(
+			'id' => 'VARCHAR(255) NOT NULL',
 			'fqdn' => 'VARCHAR(255) NOT NULL',
 			'external_name' => 'VARCHAR(255) NOT NULL',
 			'timestamp' => 'TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP',
@@ -61,9 +62,9 @@ class Abstract_ReportServer {
 	public static function save($report_) {
 		$sql = SQL::getInstance();
 		$res = $sql->DoQuery(
-			'INSERT INTO #1 (@2,@3,@4,@5,@6) VALUES (%7,%8,%9,%10,%11)',
-			self::table,'fqdn','external_name','cpu','ram','data',
-			$report_->getFQDN(), $report_->getExternalName(), $report_->getCPU(), $report_->getRAM(), $report_->getData());
+			'INSERT INTO #1 (@2,@3,@4,@5,@6,@7) VALUES (%8,%9,%10,%11,%12,%13)',
+			self::table,'id','fqdn','external_name','cpu','ram','data',
+			$report_->getID(), $report_->getFQDN(), $report_->getExternalName(), $report_->getCPU(), $report_->getRAM(), $report_->getData());
 		return ($res !== false);
 	}
 	
@@ -89,10 +90,10 @@ class Abstract_ReportServer {
 	
 	
 	private static function generateFromRow($row_) {
-		if (! array_keys_exists_not_empty(array('fqdn', 'timestamp', 'external_name', 'cpu', 'ram', 'data'), $row_))
+		if (! array_keys_exists_not_empty(array('id', 'fqdn', 'timestamp', 'external_name', 'cpu', 'ram', 'data'), $row_))
 			return null;
 		
-		$report = new ServerReportItem($row_['timestamp'], $row_['fqdn'], $row_['external_name'], $row_['cpu'], $row_['ram'], $row_['data']);
+		$report = new ServerReportItem($row_['timestamp'], $row_['id'], $row_['fqdn'], $row_['external_name'], $row_['cpu'], $row_['ram'], $row_['data']);
 		return $report;
 	}
 }

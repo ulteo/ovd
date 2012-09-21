@@ -206,9 +206,9 @@ function show_manage($id, $applicationDB) {
   $servers = array();
   $servers_available = array();
   foreach($servers_all as $server) {
-    if (in_array($server->fqdn, $servers_id))
+    if (in_array($server->id, $servers_id))
       $servers[]= $server;
-    elseif(in_array($server->fqdn, $servers_in_install))
+    elseif(in_array($server->id, $servers_in_install))
       continue;
     elseif (! $server->isOnline())
       continue;
@@ -307,10 +307,10 @@ function show_manage($id, $applicationDB) {
     echo '<h2>'._('Servers with this application').'</h2>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
     foreach($servers as $server) {
-      $remove_in_progress = in_array($server->fqdn, $servers_in_remove);
+      $remove_in_progress = in_array($server->id, $servers_in_remove);
 
       echo '<tr><td>';
-      echo '<a href="servers.php?action=manage&fqdn='.$server->fqdn.'">'.$server->getDisplayName().'</a>';
+      echo '<a href="servers.php?action=manage&id='.$server->id.'">'.$server->getDisplayName().'</a>';
       echo '</td>';
       echo '<td>';
       if ($remove_in_progress) {
@@ -321,7 +321,7 @@ function show_manage($id, $applicationDB) {
 	echo '<input type="hidden" name="action" value="del" />';
 	echo '<input type="hidden" name="name" value="Application_Server" />';
 	echo '<input type="hidden" name="application" value="'.$id.'" />';
-	echo '<input type="hidden" name="server" value="'.$server->fqdn.'" />';
+	echo '<input type="hidden" name="server" value="'.$server->id.'" />';
 	echo '<input type="submit" value="'._('Remove from this server').'"/>';
 	echo '</form>';
       }
@@ -330,10 +330,10 @@ function show_manage($id, $applicationDB) {
     }
 
     foreach($servers as $server) {
-      if (! in_array($server->fqdn, $servers_in_install))
+      if (! in_array($server->id, $servers_in_install))
         continue;
       echo '<tr><td>';
-      echo '<a href="servers.php?action=manage&fqdn='.$server->fqdn.'">'.$server->getDisplayName().'</a>';
+      echo '<a href="servers.php?action=manage&id='.$server->id.'">'.$server->getDisplayName().'</a>';
       echo '</td>';
       echo '<td>install in progress</td>';
       echo '</tr>';
@@ -356,7 +356,7 @@ function show_manage($id, $applicationDB) {
         echo '<select name="server">';
         foreach ($servers_available as $server) {
           if ($server->hasAttribute('ulteo_system') && $server->getAttribute('ulteo_system') == 1) {
-            echo '<option value="'.$server->fqdn.'">'.$server->getDisplayName().'</option>';
+            echo '<option value="'.$server->id.'">'.$server->getDisplayName().'</option>';
           }
         }
         echo '</select>';
@@ -545,12 +545,12 @@ function show_icon($id, $applicationDB) {
 
 		echo '<tr>';
 		echo '<td style="width: 32px;"><img class="icon32" src="media/image/temp_icon.php?tempnam='.basename($imgfile).'" /></td>';
-		echo '<td><a href="servers.php?action=manage&amp;fqdn='.$server->getAttribute('fqdn').'">'.$server->getDisplayName().'</a></td>';
+		echo '<td><a href="servers.php?action=manage&amp;id='.$server->id.'">'.$server->getDisplayName().'</a></td>';
 		echo '<td><form action="actions.php" method="post">';
 		echo '<input type="hidden" name="name" value="Application" />';
 		echo '<input type="hidden" name="action" value="icon" />';
 		echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
-		echo '<input type="hidden" name="server" value="'.$server->getAttribute('fqdn').'" />';
+		echo '<input type="hidden" name="server" value="'.$server->id.'" />';
 		echo '<input type="submit" value="'._('Select this icon').'" />';
 		echo '</form></td>';
 		echo '</tr>';

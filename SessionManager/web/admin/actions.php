@@ -1458,20 +1458,20 @@ if ($_REQUEST['name'] == 'Server') {
 	
 	if ($_REQUEST['action'] == 'del') {
 		if (isset($_REQUEST['checked_servers']) && is_array($_REQUEST['checked_servers'])) {
-			foreach ($_REQUEST['checked_servers'] as $fqdn) {
-				$server = Abstract_Server::load($fqdn);
+			foreach ($_REQUEST['checked_servers'] as $server_id) {
+				$server = Abstract_Server::load($server_id);
 				if (! is_object($server)) {
 					continue; 
 				}
 				
-				$sessions = Abstract_Session::getByServer($server->fqdn);
+				$sessions = Abstract_Session::getByServer($server->id);
 				if (count($sessions) > 0) {
 					popup_error(sprintf(_("Unable to delete the server '%s' because there are active sessions on it."), $server->getDisplayName()));
 					continue; 
 				}
 				
 				$server->orderDeletion();
-				Abstract_Server::delete($server->fqdn);
+				Abstract_Server::delete($server->id);
 				popup_info(sprintf(_("Server '%s' successfully deleted"), $server->getDisplayName()));
 			}
 			$buf = count(Abstract_Server::load_registered(false));
@@ -1521,18 +1521,18 @@ if ($_REQUEST['name'] == 'Server') {
 	}
 	
 	if ($_REQUEST['action'] == 'available_sessions') {
-		if (isset($_REQUEST['fqdn']) && isset($_REQUEST['max_sessions'])) {
-			$server = Abstract_Server::load($_REQUEST['fqdn']);
+		if (isset($_REQUEST['server']) && isset($_REQUEST['max_sessions'])) {
+			$server = Abstract_Server::load($_REQUEST['server']);
 			$server->setAttribute('max_sessions', $_REQUEST['max_sessions']);
 			Abstract_Server::save($server);
 			popup_info(sprintf(_("Server '%s' successfully modified"), $server->getDisplayName()));
 			
-			redirect('servers.php?action=manage&fqdn='.$server->getAttribute('fqdn'));
+			redirect('servers.php?action=manage&id='.$server->id);
 		}
 	}
 	
 	if ($_REQUEST['action'] == 'display_name') {
-		if (! isset($_REQUEST['fqdn']))
+		if (! isset($_REQUEST['server']))
 			redirect();
 		
 		if (! isset($_REQUEST['display_name']) || strlen($_REQUEST['display_name']) == 0)
@@ -1540,7 +1540,7 @@ if ($_REQUEST['name'] == 'Server') {
 		else
 			$new_dn = $_REQUEST['display_name'];
 		
-		$server = Abstract_Server::load($_REQUEST['fqdn']);
+		$server = Abstract_Server::load($_REQUEST['server']);
 		
 		$dn = null;
 		if ($server->hasAttribute('display_name') && ! is_null($server->getAttribute('display_name')))
@@ -1559,54 +1559,54 @@ if ($_REQUEST['name'] == 'Server') {
 	}
 	
 	if ($_REQUEST['action'] == 'external_name') {
-		if (isset($_REQUEST['external_name']) && isset($_REQUEST['fqdn'])) {
+		if (isset($_REQUEST['external_name']) && isset($_REQUEST['server'])) {
 			if (! validate_ip($_REQUEST['external_name']) && ! validate_fqdn($_REQUEST['external_name'])) {
 				popup_error(sprintf(_("Redirection name \"%s\" is invalid"), $_REQUEST['external_name']));
 				redirect();
 			}
 
-			$server = Abstract_Server::load($_REQUEST['fqdn']);
+			$server = Abstract_Server::load($_REQUEST['server']);
 			$server->setAttribute('external_name', $_REQUEST['external_name']);
 			Abstract_Server::save($server);
 			popup_info(sprintf(_("Server '%s' successfully modified"), $server->getDisplayName()));
 		
-			redirect('servers.php?action=manage&fqdn='.$server->getAttribute('fqdn'));
+			redirect('servers.php?action=manage&id='.$server->id);
 		}
 	}
 	
 	if ($_REQUEST['action'] == 'install_line') {
-		if (isset($_REQUEST['fqdn']) && isset($_REQUEST['line'])) {
+		if (isset($_REQUEST['server']) && isset($_REQUEST['line'])) {
 			//FIX ME ?
-			$t = new Task_install_from_line(0, $_REQUEST['fqdn'], $_REQUEST['line']);
+			$t = new Task_install_from_line(0, $_REQUEST['server'], $_REQUEST['line']);
 		
 			$tm = new Tasks_Manager();
 			$tm->add($t);
 			popup_info(_('Task successfully added'));
 		
-			redirect('servers.php?action=manage&fqdn='.$_REQUEST['fqdn']);
+			redirect('servers.php?action=manage&id='.$_REQUEST['server']);
 		}
 	}
 	
 	if ($_REQUEST['action'] == 'upgrade') {
-		if (isset($_REQUEST['fqdn'])) {
-			$t = new Task_upgrade(0, $_REQUEST['fqdn']);
+		if (isset($_REQUEST['server'])) {
+			$t = new Task_upgrade(0, $_REQUEST['server']);
 		
 			$tm = new Tasks_Manager();
 			$tm->add($t);
 			
-			popup_info(sprintf(_("Server '%s' is upgrading"), $_REQUEST['fqdn']));
-			redirect('servers.php?action=manage&fqdn='.$_REQUEST['fqdn']);
+			popup_info(sprintf(_("Server '%s' is upgrading"), $_REQUEST['server']));
+			redirect('servers.php?action=manage&id='.$_REQUEST['server']);
 		}
 	}
 	
 	if ($_REQUEST['action'] == 'replication') {
-		if (isset($_REQUEST['fqdn']) && isset($_REQUEST['servers'])) {
-			$server_from = Abstract_Server::load($_REQUEST['fqdn']);
+		if (isset($_REQUEST['server']) && isset($_REQUEST['servers'])) {
+			$server_from = Abstract_Server::load($_REQUEST['server']);
 			$applications_from = $server_from->getApplications();
 		
-			$servers_fqdn = $_REQUEST['servers'];
-			foreach($servers_fqdn as $server_fqdn) {
-				$server_to = Abstract_Server::load($server_fqdn);
+			$servers_id = $_REQUEST['servers'];
+			foreach($servers_id as $server_id) {
+				$server_to = Abstract_Server::load($server_id);
 				if (! array_key_exists(Server::SERVER_ROLE_APS, $server_to->roles))
 					continue;
 
@@ -1627,12 +1627,12 @@ if ($_REQUEST['name'] == 'Server') {
 				//FIX ME ?
 				$tm = new Tasks_Manager();
 				if (count($to_delete) > 0) {
-					$t = new Task_remove(0, $server_fqdn, $to_delete);
+					$t = new Task_remove(0, $server_id, $to_delete);
 					popup_info(_('Task successfully deleted'));
 					$tm->add($t);
 				}
 				if (count($to_install) > 0) {
-					$t = new Task_install(0, $server_fqdn, $to_install);
+					$t = new Task_install(0, $server_id, $to_install);
 					$tm->add($t);
 					popup_info(_('Task successfully added'));
 				}
@@ -1642,13 +1642,13 @@ if ($_REQUEST['name'] == 'Server') {
 	}
 	
 	if ($_REQUEST['action'] == 'rdp_port') {
-		if (isset($_REQUEST['rdp_port']) && isset($_REQUEST['fqdn'])) {
+		if (isset($_REQUEST['rdp_port']) && isset($_REQUEST['server'])) {
 			if (! ctype_digit($_REQUEST['rdp_port']) || $_REQUEST['rdp_port'] < 1 || $_REQUEST['rdp_port'] > 65535 ) {
 				popup_error(sprintf(_("RDP port \"%s\" is invalid"), $_REQUEST['rdp_port']));
 				redirect();
 			}
 			
-			$server = Abstract_Server::load($_REQUEST['fqdn']);
+			$server = Abstract_Server::load($_REQUEST['server']);
 			
 			if ($_REQUEST['rdp_port'] == $server->getApSRDPPort()) {
 				popup_error(_("Nothing to save. RDP port is identicall to old one"));
@@ -1668,7 +1668,7 @@ if ($_REQUEST['name'] == 'Server') {
 	}
 	
 	if ($_REQUEST['action'] == 'role') {
-		if (! isset($_REQUEST['fqdn']) || ! isset($_REQUEST['role']) || ! isset($_REQUEST['do'])) {
+		if (! isset($_REQUEST['server']) || ! isset($_REQUEST['role']) || ! isset($_REQUEST['do'])) {
 			redirect();
 		}
 		
@@ -1676,7 +1676,7 @@ if ($_REQUEST['name'] == 'Server') {
 			redirect();
 		}
 		
-		$server = Abstract_Server::load($_REQUEST['fqdn']);
+		$server = Abstract_Server::load($_REQUEST['server']);
 		
 		if (! array_key_exists($_REQUEST['role'], $server->roles)) {
 			popup_error(sprintf(_("%s is not an available role"), $_REQUEST['role']));
@@ -1821,7 +1821,7 @@ function action_add_sharedfolder() {
 		return false;
 	}
 	
-	$buf->server = $a_server->fqdn;
+	$buf->server = $a_server->id;
 	
 	$ret = $sharedfolderdb->addToServer($buf, $a_server);
 	if (! $ret) {

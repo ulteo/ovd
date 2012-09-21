@@ -330,7 +330,7 @@ function show_manage($id_) {
 			$mode = $root_node->getAttribute('mode');
 		
 		foreach ($dom->getElementsByTagName('server') as $node) {
-			if (! ($node->hasAttribute('fqdn') &&
+			if (! ($node->hasAttribute('id') &&
 				$node->hasAttribute('role')
 				)) {
 				// Not enough information to continue ...
@@ -338,7 +338,13 @@ function show_manage($id_) {
 			}
 			
 			$server = array();
-			$server['fqdn'] = $node->getAttribute('fqdn');
+			$server['id'] = $node->getAttribute('id');
+			if ($node->hasAttribute('fqdn')) {
+				$server['fqdn'] = $node->getAttribute('fqdn');
+				$server['name'] = $server['fqdn'];
+			}
+			else
+				$server['name'] = $server['id'];
 			$server['role'] = $node->getAttribute('role');
 			$server['desktop_server'] = ($node->hasAttribute('desktop_server'));
 			if ($node->hasAttribute('type'))
@@ -356,7 +362,7 @@ function show_manage($id_) {
 				$server['dump'][$name] = base64_decode ($child_node->textContent);
 			}
 			
-			$server_obj = Abstract_Server::load($server['fqdn']);
+			$server_obj = Abstract_Server::load($server['id']);
 			if (is_object($server_obj))
 				$server['obj'] = $server_obj;
 			
@@ -447,9 +453,9 @@ function show_manage($id_) {
 		foreach ($servers as $server) {
 			echo '<li>';
 			if (array_key_exists('obj', $server))
-				echo '<a href="servers.php?action=manage&fqdn='.$server['obj']->fqdn.'">'.$server['obj']->fqdn.'</a>';
+				echo '<a href="servers.php?action=manage&id='.$server['obj']->id.'">'.$server['obj']->getDisplayName().'</a>';
 			else {
-				echo $server['fqdn'];
+				echo $server['name'];
 				
 				
 				echo '&nbsp;<span><em>'._('not existing anymore').'</em></span>';
@@ -469,7 +475,7 @@ function show_manage($id_) {
 				echo '<div style="margin-left: 20px;">';
 				echo '<ul>';
 				foreach ($server['dump'] as $name => $dump) {
-					$elem_id = $server['fqdn'].$name;
+					$elem_id = $server['id'].$name;
 					$nb_lines = substr_count($dump, "\n");
 					if ($nb_lines > 10)
 						$nb_lines = 10;

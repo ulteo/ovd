@@ -118,7 +118,7 @@ function show_manage($sharedfolder_id_) {
 
 	echo '<div>';
 	echo '<h2>'._('Server').'</h2>';
-	echo '<a href="servers.php?action=manage&fqdn='.$sharedfolder->server.'"> '.$server->getDisplayName().'</a>';
+	echo '<a href="servers.php?action=manage&id='.$sharedfolder->server.'"> '.$server->getDisplayName().'</a>';
 	echo '</div>';
 	echo '<br />';
 

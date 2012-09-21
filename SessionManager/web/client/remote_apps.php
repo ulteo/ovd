@@ -84,15 +84,15 @@ foreach ($session->settings as $setting_k => $setting_v) {
 	$settings_node->appendChild($setting_node);
 }
 $session_node->appendChild($settings_node);
-foreach ($session->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
-	$server = Abstract_Server::load($fqdn);
+foreach ($session->servers[Server::SERVER_ROLE_APS] as $server_id => $data) {
+	$server = Abstract_Server::load($server_id);
 	if (! $server)
 		continue;
 
 	if (! array_key_exists(Server::SERVER_ROLE_APS, $server->getRoles()))
 		continue;
 
-	if ($server->fqdn == $session->server)
+	if ($server->id == $session->server)
 		continue;
 
 	$server_applications = $server->getApplications();

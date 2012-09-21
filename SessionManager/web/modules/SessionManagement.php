@@ -338,7 +338,7 @@ abstract class SessionManagement extends Module {
 					}
 
 					foreach ($servers as $server) {
-						$this->servers[Server::SERVER_ROLE_APS][$server->fqdn] = array(
+						$this->servers[Server::SERVER_ROLE_APS][$server->id] = array(
 							'status' => Session::SESSION_STATUS_CREATED
 						);
 					}
@@ -378,13 +378,13 @@ abstract class SessionManagement extends Module {
 								$profile = array_pop($profiles);
 
 								foreach ($fileservers as $fileserver) {
-									if ($fileserver->fqdn != $profile->server)
+									if ($fileserver->id != $profile->server)
 										continue;
 
-									if (! array_key_exists($fileserver->fqdn, $this->servers[Server::SERVER_ROLE_FS]))
-										$this->servers[Server::SERVER_ROLE_FS][$fileserver->fqdn] = array();
+									if (! array_key_exists($fileserver->id, $this->servers[Server::SERVER_ROLE_FS]))
+										$this->servers[Server::SERVER_ROLE_FS][$fileserver->id] = array();
 
-									$this->servers[Server::SERVER_ROLE_FS][$fileserver->fqdn][] = array(
+									$this->servers[Server::SERVER_ROLE_FS][$fileserver->id][] = array(
 										'type'		=>	'profile',
 										'rid'		=>	$this->find_uniq_rid('profile', true),
 										'server'	=>	$fileserver,
@@ -408,7 +408,7 @@ abstract class SessionManagement extends Module {
 									}
 
 									$profile = new Profile();
-									$profile->server = $fileserver->getAttribute('fqdn');
+									$profile->server = $fileserver->id;
 
 									if (! $profileDB->addToServer($profile, $fileserver)) {
 										Logger::error('main', 'SessionManagement::buildServersList - Auto-creation of Profile for User "'.$this->user->getAttribute('login').'" failed (unable to add the Profile to the FileServer)');
@@ -420,10 +420,10 @@ abstract class SessionManagement extends Module {
 										return false;
 									}
 
-									if (! array_key_exists($fileserver->fqdn, $this->servers[Server::SERVER_ROLE_FS]))
-										$this->servers[Server::SERVER_ROLE_FS][$fileserver->fqdn] = array();
+									if (! array_key_exists($fileserver->id, $this->servers[Server::SERVER_ROLE_FS]))
+										$this->servers[Server::SERVER_ROLE_FS][$fileserver->id] = array();
 
-									$this->servers[Server::SERVER_ROLE_FS][$fileserver->fqdn][] = array(
+									$this->servers[Server::SERVER_ROLE_FS][$fileserver->id][] = array(
 										'type'		=>	'profile',
 										'rid'		=>	$this->find_uniq_rid('profile', true),
 										'server'	=>	$fileserver,
@@ -478,10 +478,10 @@ abstract class SessionManagement extends Module {
 									}
 								}
 
-								if (! array_key_exists($fileserver->fqdn, $this->servers[Server::SERVER_ROLE_FS]))
-									$this->servers[Server::SERVER_ROLE_FS][$fileserver->fqdn] = array();
+								if (! array_key_exists($fileserver->id, $this->servers[Server::SERVER_ROLE_FS]))
+									$this->servers[Server::SERVER_ROLE_FS][$fileserver->id] = array();
 
-								$this->servers[Server::SERVER_ROLE_FS][$fileserver->fqdn][] = array(
+								$this->servers[Server::SERVER_ROLE_FS][$fileserver->id][] = array(
 									'type'		=>	'sharedfolder',
 									'rid'		=>	$this->find_uniq_rid('sharedfolder', true),
 									'server'	=>	$fileserver,
@@ -567,9 +567,9 @@ abstract class SessionManagement extends Module {
 			$servers = Server::fire_load_balancing($servers, Server::SERVER_ROLE_APS, array('user' => $this->user));
 		}
 		
-		$fqdn = array_keys($servers);
-		$fqdn = $fqdn[0];
-		$this->desktop_server = $servers[$fqdn];
+		$servers_id = array_keys($servers);
+		$server_id = $servers_id[0];
+		$this->desktop_server = $servers[$server_id];
 		
 		return true;
 	}
@@ -606,7 +606,7 @@ abstract class SessionManagement extends Module {
 				$this->applications[$application->getAttribute('id')] = $application;
 		}
 		
-		foreach($servers_ordered as $fqdn => $server) {
+		foreach($servers_ordered as $server_id => $server) {
 			if (count($applications) == 0)
 				break;
 			
@@ -614,7 +614,7 @@ abstract class SessionManagement extends Module {
 			if (count($application_choosen) == 0)
 				continue;
 			
-			$servers[$fqdn] = $server;
+			$servers[$server_id] = $server;
 			foreach($application_choosen as $application)
 				$this->applications[$application->getAttribute('id')] = $application;
 		}
@@ -679,7 +679,7 @@ abstract class SessionManagement extends Module {
 				if (! isset($server->max_sessions) || $server->max_sessions == 0)
 					continue;
 
-				$total = Abstract_Session::countByServer($server->fqdn);
+				$total = Abstract_Session::countByServer($server->id);
 				if ($total >= $server->max_sessions) {
 					Logger::warning('main', 'SessionManagement::buildServersList - Server \''.$server->fqdn.'\' has reached its "max sessions" limit, sessions cannot be launched on it anymore');
 					unset($servers[$k]);

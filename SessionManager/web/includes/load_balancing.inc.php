@@ -133,13 +133,13 @@ class DecisionCriterion_networkfolder extends DecisionCriterion {
 		if (Preferences::moduleIsEnabled('ProfileDB')) {
 			$profiledb = ProfileDB::getInstance();
 			$total += $profiledb->count();
-			$used += $profiledb->countOnServer($this->server->fqdn);
+			$used += $profiledb->countOnServer($this->server->id);
 		}
 		
 		if (Preferences::moduleIsEnabled('SharedFolderDB')) {
 			$sharedfolderdb = SharedFolderDB::getInstance();
 			$total += $sharedfolderdb->count();
-			$used += $sharedfolderdb->countOnServer($this->server->fqdn);
+			$used += $sharedfolderdb->countOnServer($this->server->id);
 		}
 		
 		if ($total == 0) {

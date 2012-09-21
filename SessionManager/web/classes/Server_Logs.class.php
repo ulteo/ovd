@@ -37,7 +37,7 @@ class Server_Logs {
 
 		$this->server = $server_;
 
-		$this->logsdir = SESSIONMANAGER_SPOOL.'/cache/logs/'.$this->server->fqdn;
+		$this->logsdir = SESSIONMANAGER_SPOOL.'/cache/logs/'.$this->server->id;
 		if (! check_folder($this->logsdir)) {
 			Logger::error('main', 'Server_Logs::__construct Unable to create logs cache folder for server \''.$this->server->fqdn.'\'');
 			die_error($this->logsdir.' does not exist and cannot be created!', __FILE__, __LINE__);

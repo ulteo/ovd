@@ -241,7 +241,7 @@ if (isset($old_session_id)) {
 			throw_response(SERVICE_NOT_AVAILABLE);
 		}
 		
-		$random_server = $sessionManagement->desktop_server->fqdn;
+		$random_server = $sessionManagement->desktop_server->id;
 	}
 	else
 		$random_server = array_rand($servers[Server::SERVER_ROLE_APS]);
@@ -364,12 +364,12 @@ if (! isset($old_session_id)) {
 	if (array_key_exists(Server::SERVER_ROLE_FS, $servers)) {
 		$mounts = array();
 
-		foreach ($servers[Server::SERVER_ROLE_FS] as $fqdn => $netfolders) {
+		foreach ($servers[Server::SERVER_ROLE_FS] as $server_id => $netfolders) {
 			foreach ($netfolders as $netfolder) {
-				if (! array_key_exists($netfolder['server']->fqdn, $mounts))
-					$mounts[$netfolder['server']->fqdn] = array();
+				if (! array_key_exists($netfolder['server']->id, $mounts))
+					$mounts[$netfolder['server']->id] = array();
 
-				$mounts[$netfolder['server']->fqdn][] = $netfolder['dir'];
+				$mounts[$netfolder['server']->id][] = $netfolder['dir'];
 			}
 		}
 
@@ -401,11 +401,11 @@ if (! isset($old_session_id)) {
 	}
 
 	if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1)) {
-		foreach ($session->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
-			if ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1 && $fqdn == $session->server)
+		foreach ($session->servers[Server::SERVER_ROLE_APS] as $server_id => $data) {
+			if ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1 && $server_id == $session->server)
 				continue;
 
-			$prepare_servers[] = $fqdn;
+			$prepare_servers[] = $server_id;
 		}
 	}
 
@@ -471,7 +471,7 @@ if (! isset($old_session_id)) {
 		$session_node->appendChild($user_node);
 
 		if (array_key_exists(Server::SERVER_ROLE_FS, $session->servers)) {
-			foreach ($session->servers[Server::SERVER_ROLE_FS] as $fqdn => $netfolders) {
+			foreach ($session->servers[Server::SERVER_ROLE_FS] as $server_id => $netfolders) {
 				foreach ($netfolders as $netfolder) {
 					$uri = 'cifs://'.$netfolder['server']->getAttribute('external_name').'/'.$netfolder['dir'];
 					
@@ -585,7 +585,7 @@ $user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 $session_node->appendChild($user_node);
 
 if (array_key_exists(Server::SERVER_ROLE_FS, $session->servers)) {
-	foreach ($session->servers[Server::SERVER_ROLE_FS] as $fqdn => $netfolders) {
+	foreach ($session->servers[Server::SERVER_ROLE_FS] as $server_id => $netfolders) {
 		foreach ($netfolders as $netfolder) {
 			$uri = 'webdav://'.$netfolder['server']->getAttribute('external_name').':1113/ovd/fs/'.$netfolder['dir'].'/';
 			
@@ -644,8 +644,8 @@ if ($session->mode == Session::MODE_DESKTOP) {
 	$session_node->appendChild($server_node);
 } elseif ($session->mode == Session::MODE_APPLICATIONS) {
 	$defined_apps = array();
-	foreach ($session->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
-		$server = Abstract_Server::load($fqdn);
+	foreach ($session->servers[Server::SERVER_ROLE_APS] as $server_id => $data) {
+		$server = Abstract_Server::load($server_id);
 		if (! $server)
 			continue;
 

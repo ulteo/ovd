@@ -109,11 +109,11 @@ class ProfileDB_internal extends ProfileDB  {
 		return $profiles;
 	}
 	
-	public function importFromServer($server_fdqn_) {
-		Logger::debug('main', "ProfileDB::internal::importFromServer($server_fdqn_)");
+	public function importFromServer($server_id_) {
+		Logger::debug('main', "ProfileDB::internal::importFromServer($server_id_)");
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3', self::$table, 'server', $server_fdqn_);
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3', self::$table, 'server', $server_id_);
 		$rows = $SQL->FetchAllResults();
 		
 		$profiles = array();
@@ -158,12 +158,12 @@ class ProfileDB_internal extends ProfileDB  {
 		return $nb_rows;
 	}
 	
-	public function countOnServer($fqdn_) {
-		Logger::debug('main', "ProfileDB::internal::countOnServer($fqdn_)");
+	public function countOnServer($id_) {
+		Logger::debug('main', "ProfileDB::internal::countOnServer($id_)");
 		
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2=%3', self::$table, 'server', $fqdn_);
+		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2=%3', self::$table, 'server', $id_);
 		$nb_rows = $SQL->NumRows();
 		
 		return $nb_rows;
@@ -194,7 +194,7 @@ class ProfileDB_internal extends ProfileDB  {
 			return false;
 		}
 		
-		$profile_->server = $an_fs_server_->fqdn;
+		$profile_->server = $an_fs_server_->id;
 		if ($this->exists($profile_->id) === false) {
 			// we save the object first
 			$ret = $this->add($profile_);

@@ -22,7 +22,7 @@
 
 var available_applications;
 
-function fetchInstallableApplicationsList(fqdn_) {
+function fetchInstallableApplicationsList(server) {
 	$('installableApplicationsList_content').innerHTML = '<div style="width: 5%; text-align: center; margin-top: 10px;"><img src="media/image/loader.gif" width="16" height="16" alt="" title="" /></div>';
 	
 	new Ajax.Request(
@@ -30,7 +30,7 @@ function fetchInstallableApplicationsList(fqdn_) {
 		{
 			method: 'get',
 			parameters: {
-				fqdn: fqdn_
+				server: server
 			},
 			onSuccess: function(transport) {
 				var xml = transport.responseXML;
@@ -172,11 +172,11 @@ function InstallableApplicationsChangeList() {
 }
 
 var installable_applications_list_already_shown = false;
-function toggleInstallableApplicationsList(fqdn_) {
+function toggleInstallableApplicationsList(server_) {
 	toggleContent('installableApplicationsList');
 
 	if ($('installableApplicationsList_content').visible() && installable_applications_list_already_shown == false) {
 		installable_applications_list_already_shown = true;
- 		fetchInstallableApplicationsList(fqdn_);
+		fetchInstallableApplicationsList(server_);
 	}
 }

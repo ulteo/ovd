@@ -25,17 +25,17 @@ Logger::debug('main', 'Starting ajax/installable_applications.php');
 
 if (isset($_REQUEST['task']))
 	do_refresh_task($_REQUEST['task']);
-elseif (isset($_GET['fqdn']))
-	do_create_task($_GET['fqdn']);
+elseif (isset($_GET['server']))
+	do_create_task($_GET['server']);
 else {
-	Logger::error('main', '(ajax/installable_applications) Missing parameter : fqdn or task');
-	die('ERROR - NO $_GET[\'fqdn\'] or $_GET[\'task\']');
+	Logger::error('main', '(ajax/installable_applications) Missing parameter : server or task');
+	die('ERROR - NO $_GET[\'server\'] or $_GET[\'task\']');
 }
 
-function do_create_task($fqdn_) {
-	$server = Abstract_Server::load($fqdn_);
+function do_create_task($server_id_) {
+	$server = Abstract_Server::load($server_id_);
 	if (! is_object($server)) {
-		Logger::error('main', '(ajax/installable_applications) Server '.$fqdn_.' not found');
+		Logger::error('main', '(ajax/installable_applications) Server '.$server_id_.' not found');
 
 		header('Content-Type: text/xml; charset=utf-8');
 		$dom = new DomDocument('1.0', 'utf-8');
@@ -47,7 +47,7 @@ function do_create_task($fqdn_) {
 		die($dom->saveXML());
 	}
 	
-	$task = new Task_available_applications('', $fqdn_);
+	$task = new Task_available_applications('', $server_id_);
 	$manager = new Tasks_Manager();
 	$manager->add($task);
 	

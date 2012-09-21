@@ -26,8 +26,8 @@ require_once(dirname(__FILE__).'/includes/page_template.php');
 if (! checkAuthorization('viewServers'))
 	redirect('index.php');
 
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'manage' && isset($_REQUEST['fqdn'])) {
-  show_manage($_REQUEST['fqdn']);
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'manage' && isset($_REQUEST['id'])) {
+  show_manage($_REQUEST['id']);
 }
 
 if (! isset($_GET['view']))
@@ -50,9 +50,9 @@ function show_default() {
   foreach($a_servs as $s) {
 	$external_name_checklist = array('localhost', '127.0.0.1');
 	if (in_array($s->fqdn, $external_name_checklist) && in_array($s->getAttribute('external_name'), $external_name_checklist))
-		popup_error(sprintf(_('Server "%s": redirection name may be invalid!'), $s->fqdn));
+		popup_error(sprintf(_('Server "%s": redirection name may be invalid!'), $s->getDisplayName()));
 	if ($s->getAttribute('external_name') == '')
-		popup_error(sprintf(_('Server "%s": redirection name cannot be empty!'), $s->fqdn));
+		popup_error(sprintf(_('Server "%s": redirection name cannot be empty!'), $s->getDisplayName()));
 	
 	if ($s->isOnline() and $s->getAttribute('locked'))
 		$nb_a_servs_online_maintenance++;
@@ -105,11 +105,11 @@ function show_default() {
 	if ($av_servers > 1 and $can_do_action and ($nb_a_servs_online_maintenance > 0 or $nb_a_servs_not_maintenance > 0)) {
 		echo '<td>';
 		if ($server_online || $switch_value == 1)
-			echo '<input class="input_checkbox" type="checkbox" name="checked_servers[]" value="'.$s->fqdn.'" />';
+			echo '<input class="input_checkbox" type="checkbox" name="checked_servers[]" value="'.$s->id.'" />';
 		echo '</td>';
 	}
       echo '<td>';
-	echo '<a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$dn;
+	echo '<a href="servers.php?action=manage&id='.$s->id.'">'.$dn;
 	if ($s->getAttribute('external_name') != $dn)
 		echo '<br/><em style="margin-left: 10px; font-size: 0.8em;">'.$s->getAttribute('external_name').'</em>';
 	if ($s->fqdn != $dn && $s->fqdn != $s->getAttribute('external_name'))
@@ -150,7 +150,7 @@ function show_default() {
 	  else
 		echo '<input type="hidden" name="to_maintenance" value="to_maintenance"/>';
 	  echo '<input type="hidden" name="locked" value="'.$switch_value.'" />';
-	  echo '<input type="hidden" name="checked_servers[]" value="'.$s->fqdn.'" />';
+	  echo '<input type="hidden" name="checked_servers[]" value="'.$s->id.'" />';
 	  echo '</form>';
 	  }
 	echo '</td>';
@@ -228,7 +228,7 @@ function show_unregistered() {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tr class="'.$content.'">';
             if (count($u_servs) > 1)
-	echo '<td><input class="input_checkbox" type="checkbox" name="checked_servers[]" value="'.$s->fqdn.'" />';
+	echo '<td><input class="input_checkbox" type="checkbox" name="checked_servers[]" value="'.$s->id.'" />';
 
 	if ($s->getAttribute('type') == '')
 		$s->isOK();
@@ -257,7 +257,7 @@ function show_unregistered() {
 				echo '<form action="actions.php" method="post">';
 				echo '<input type="hidden" name="name" value="Server" />';
 				echo '<input type="hidden" name="action" value="register" />';
-				echo '<input type="hidden" name="checked_servers[]" value="'.$s->fqdn.'" />';
+				echo '<input type="hidden" name="checked_servers[]" value="'.$s->id.'" />';
 				echo '<input style="background: #05a305; color: #fff; font-weight: bold;" type="submit" value="'._('Register').'" />';
 				echo '</form>';
 			}
@@ -267,7 +267,7 @@ function show_unregistered() {
 			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this server?').'\');">';
 			echo '<input type="hidden" name="name" value="Server" />';
 			echo '<input type="hidden" name="action" value="del" />';
-			echo '<input type="hidden" name="checked_servers[]" value="'.$s->fqdn.'" />';
+			echo '<input type="hidden" name="checked_servers[]" value="'.$s->id.'" />';
 			echo '<input type="submit" value="'._('Delete').'" />';
 			echo '</form>';
 			echo '</td>';
@@ -317,8 +317,8 @@ function show_unregistered() {
   die();
 }
 
-function show_manage($fqdn) {
-  $server = Abstract_Server::load($fqdn);
+function show_manage($id_) {
+  $server = Abstract_Server::load($id_);
 
   if (! $server || $server->getAttribute('registered') === false)
     redirect('servers.php');
@@ -328,7 +328,7 @@ function show_manage($fqdn) {
   if ($server_online) {
     $buf = $server->getMonitoring();
     if ($buf === false)
-      popup_error(sprintf(_('Cannot get server monitoring for \'%s\''), $server->getAttribute('fqdn')));
+      popup_error(sprintf(_('Cannot get server monitoring for \'%s\''), $server->getDisplayName()));
     Abstract_Server::save($server);
   }
 
@@ -430,7 +430,7 @@ function show_manage($fqdn) {
 	if ($can_do_action) {
 		echo '<form action="actions.php" method="post">';
 		echo '<input type="hidden" name="name" value="Server" />';
-		echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+		echo '<input type="hidden" name="server" value="'.$server->id.'" />';
 		echo '<input type="hidden" name="action" value="display_name" />';
 	}
 	echo '<input type="text" name="display_name" value="'.((is_null($dn))?'':$dn).'" />';
@@ -445,7 +445,7 @@ function show_manage($fqdn) {
 	else {
 		echo '<form action="actions.php" method="post">';
 		echo '<input type="hidden" name="name" value="Server" />';
-		echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+		echo '<input type="hidden" name="server" value="'.$server->id.'" />';
 		echo '<input type="hidden" name="action" value="display_name" />';
 		echo '<input type="submit" value="'._('delete').'" />';
 		echo '</form>';
@@ -458,7 +458,7 @@ function show_manage($fqdn) {
   if ($can_do_action) {
     echo '<form action="actions.php" method="post">';
     echo '<input type="hidden" name="name" value="Server" />';
-    echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+    echo '<input type="hidden" name="server" value="'.$server->id.'" />';
     echo '<input type="hidden" name="action" value="external_name" />';
   }
   echo '<input type="text" name="external_name" value="'.$server->getAttribute('external_name').'" />';
@@ -474,7 +474,7 @@ function show_manage($fqdn) {
 	if ($can_do_action) {
 		echo '<form action="actions.php" method="post">';
 		echo '<input type="hidden" name="name" value="Server" />';
-		echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+		echo '<input type="hidden" name="server" value="'.$server->id.'" />';
 		echo '<input type="hidden" name="action" value="rdp_port" />';
 	}
 	echo '<input type="text" name="rdp_port" value="'.$server->getApSRDPPort().'" />';
@@ -506,7 +506,7 @@ function show_manage($fqdn) {
 			echo '<span style="float: right;">';
 			echo '<form action="actions.php" method="post">';
 			echo '<input type="hidden" name="name" value="Server" />';
-			echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+			echo '<input type="hidden" name="server" value="'.$server->id.'" />';
 			echo '<input type="hidden" name="action" value="role" />';
 			echo '<input type="hidden" name="role" value="'.$role.'" />';
 			
@@ -535,7 +535,7 @@ function show_manage($fqdn) {
 			echo '<tr><td></td><td>';
 			echo '<form action="actions.php" method="post">';
 			echo '<input type="hidden" name="name" value="Server" />';
-			echo '<input type="hidden" name="checked_servers[]" value="'.$server->fqdn.'" />';
+			echo '<input type="hidden" name="checked_servers[]" value="'.$server->id.'" />';
 			echo '<input type="hidden" name="action" value="maintenance" />';
 			if ($switch_value == 0) 
 				echo '<input type="hidden" name="to_production" value="to_production"/>';
@@ -555,7 +555,7 @@ function show_manage($fqdn) {
 			echo '<form action="actions.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this server?').'\');">';
 			echo '<input type="hidden" name="name" value="Server" />';
 			echo '<input type="hidden" name="action" value="del" />';
-			echo '<input type="hidden" name="checked_servers[]" value="'.$server->fqdn.'" />';
+			echo '<input type="hidden" name="checked_servers[]" value="'.$server->id.'" />';
 			echo '<input type="submit" value="'._('Delete').'" />';
 			echo '</form>';
 			echo '</td></tr>';

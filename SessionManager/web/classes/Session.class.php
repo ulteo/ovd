@@ -120,22 +120,22 @@ class Session {
 
 		Logger::debug('main', 'Starting Session::getStatus for \''.$this->id.'\'');
 
-		foreach ($this->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
-			$server = Abstract_Server::load($fqdn);
+		foreach ($this->servers[Server::SERVER_ROLE_APS] as $server_id => $data) {
+			$server = Abstract_Server::load($server_id);
 			if (! $server) {
-				Logger::error('main', 'Session::getStatus failed to load server (server='.$fqdn.')');
-				$this->setServerStatus($fqdn, Session::SESSION_STATUS_ERROR);
+				Logger::error('main', 'Session::getStatus failed to load server (server='.$server_id.')');
+				$this->setServerStatus($server_id, Session::SESSION_STATUS_ERROR);
 				continue;
 			}
 
 			$ret = $server->getSessionStatus($this->id);
 			if (! $ret) {
 				Logger::error('main', 'Session::getStatus('.$this->id.') - ApS answer is incorrect');
-				$this->setServerStatus($fqdn, Session::SESSION_STATUS_ERROR);
+				$this->setServerStatus($server_id, Session::SESSION_STATUS_ERROR);
 				continue;
 			}
 
-			$this->setServerStatus($fqdn, $ret);
+			$this->setServerStatus($server_id, $ret);
 		}
 
 		return $this->getAttribute('status');
@@ -184,8 +184,8 @@ class Session {
 				break;
 			case Session::SESSION_STATUS_READY:
 				$all_ready = true;
-				foreach ($this->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
-					if ($fqdn != $server_ && $data['status'] != Session::SESSION_STATUS_READY) {
+				foreach ($this->servers[Server::SERVER_ROLE_APS] as $server_id => $data) {
+					if ($server_id != $server_ && $data['status'] != Session::SESSION_STATUS_READY) {
 						$all_ready = false;
 						break;
 					}
@@ -218,8 +218,8 @@ class Session {
 				break;
 			case Session::SESSION_STATUS_DESTROYED:
 				$all_destroyed = true;
-				foreach ($this->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
-					if ($fqdn != $server_ && $data['status'] != Session::SESSION_STATUS_DESTROYED) {
+				foreach ($this->servers[Server::SERVER_ROLE_APS] as $server_id => $data) {
+					if ($server_id != $server_ && $data['status'] != Session::SESSION_STATUS_DESTROYED) {
 						$all_destroyed = false;
 						break;
 					}
@@ -317,10 +317,10 @@ class Session {
 			Logger::info('main', 'Session purge : \''.$this->id.'\' (reason: \''.$reason_.'\')');
 
 			if (array_key_exists(Server::SERVER_ROLE_FS, $this->servers)) {
-				foreach ($this->servers[Server::SERVER_ROLE_FS] as $fqdn => $data) {
-					$session_server = Abstract_Server::load($fqdn);
+				foreach ($this->servers[Server::SERVER_ROLE_FS] as $server_id => $data) {
+					$session_server = Abstract_Server::load($server_id);
 					if (! $session_server) {
-						Logger::error('main', 'Session::orderDeletion Unable to load server \''.$fqdn.'\'');
+						Logger::error('main', 'Session::orderDeletion Unable to load server \''.$server_id.'\'');
 						return false;
 					}
 
@@ -328,7 +328,7 @@ class Session {
 						if (array_key_exists(Server::SERVER_ROLE_FS, $session_server->roles)) {
 							$buf = $session_server->orderFSAccessDisable($this->settings['fs_access_login']);
 							if (! $buf)
-								Logger::warning('main', 'Session::orderDeletion User \''.$this->settings['fs_access_login'].'\' already logged out of server \''.$fqdn.'\'');
+								Logger::warning('main', 'Session::orderDeletion User \''.$this->settings['fs_access_login'].'\' already logged out of server \''.$session_server->fqdn.'\'');
 						}
 					}
 				}
@@ -501,10 +501,10 @@ class Session {
 		}
 
 		if ($request_servers_) {
-			foreach ($this->servers[Server::SERVER_ROLE_APS] as $fqdn => $data) {
-				$session_server = Abstract_Server::load($fqdn);
+			foreach ($this->servers[Server::SERVER_ROLE_APS] as $server_id => $data) {
+				$session_server = Abstract_Server::load($server_id);
 				if (! $session_server) {
-					Logger::error('main', 'Session::orderDeletion Unable to load server \''.$fqdn.'\'');
+					Logger::error('main', 'Session::orderDeletion Unable to load server \''.$server_id.'\'');
 					return false;
 				}
 
@@ -512,11 +512,11 @@ class Session {
 					if (array_key_exists(Server::SERVER_ROLE_APS, $session_server->roles)) {
 						$buf = $session_server->orderSessionDeletion($this->id);
 						if (! $buf) {
-							Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on server \''.$fqdn.'\'');
-							$this->setServerStatus($fqdn, Session::SESSION_STATUS_DESTROYED);
+							Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on server \''.$session_server->fqdn.'\'');
+							$this->setServerStatus($session_server->fqdn, Session::SESSION_STATUS_DESTROYED);
 							$destroyed++;
 						} else
-							$this->setServerStatus($fqdn, Session::SESSION_STATUS_DESTROYING);
+							$this->setServerStatus($session_server->fqdn, Session::SESSION_STATUS_DESTROYING);
 					}
 				}
 			}
@@ -539,7 +539,7 @@ class Session {
 		return $this->running_applications;
 	}
 
-	public function reportRunningApplicationsOnServer($fqdn_, $running_apps_) {
+	public function reportRunningApplicationsOnServer($server_id_, $running_apps_) {
 		// Search for new instances
 		foreach ($running_apps_ as $instance_id => $application_id) {
 			if (array_key_exists($instance_id, $this->running_applications))
@@ -548,7 +548,7 @@ class Session {
 			$instance = array();
 			$instance['id'] = $instance_id;
 			$instance['application'] = $application_id;
-			$instance['server'] = $fqdn_;
+			$instance['server'] = $server_id_;
 			$instance['start'] = time();
 			
 			$this->running_applications[$instance_id] = $instance;
@@ -566,7 +566,7 @@ class Session {
 		// Begin closed instances management
 		$closed_instances = array();
 		foreach ($this->running_applications as $instance_id => $instance) {
-			if ($instance['server'] != $fqdn_)
+			if ($instance['server'] != $server_id_)
 				continue;
 			
 			if (array_key_exists($instance_id, $running_apps_))

@@ -67,13 +67,13 @@ function server_display_role_preparation_aps($server) {
 	
 	$servers_all = Abstract_Server::load_by_status(Server::SERVER_STATUS_ONLINE);
 	foreach($servers_all as $k => $v) {
-		if ($v->fqdn == $server->fqdn)
+		if ($v->id == $server->id)
 			unset($servers_all[$k]);
 	}
 	
 	$servers_replication = Abstract_Server::load_by_status(Server::SERVER_STATUS_ONLINE);
 	foreach($servers_replication as $k => $v) {
-		if ($v->fqdn == $server->fqdn)
+		if ($v->id == $server->id)
 			unset($servers_replication[$k]);
 
 		if ($v->type != $server->getAttribute('type'))
@@ -86,7 +86,7 @@ function server_display_role_preparation_aps($server) {
 			unset($servers_replication[$k]);
 	}
 	$sessions = array();
-	$total = Abstract_Session::countByServer($server->fqdn);
+	$total = Abstract_Session::countByServer($server->id);
 	
 	if ($total > 0) {
 		$has_sessions = true;
@@ -100,24 +100,24 @@ function server_display_role_preparation_aps($server) {
 			else
 				$start = $_GET['start'];
 
-			$pagechanger = get_pagechanger('servers.php?action=manage&fqdn='.$server->fqdn.'&', $prefs->get('general', 'max_items_per_page'), $total);
+			$pagechanger = get_pagechanger('servers.php?action=manage&id='.$server->id.'&', $prefs->get('general', 'max_items_per_page'), $total);
 
-			$sessions = Abstract_Session::getByServer($server->fqdn, $prefs->get('general', 'max_items_per_page'), $start);
+			$sessions = Abstract_Session::getByServer($server->id, $prefs->get('general', 'max_items_per_page'), $start);
 		} else
-			$sessions = Abstract_Session::getByServer($server->fqdn);
+			$sessions = Abstract_Session::getByServer($server->id);
 	} else
 		$has_sessions = false;
 
 	$external_name_checklist = array('localhost', '127.0.0.1');
 	if (in_array($server->fqdn, $external_name_checklist) && in_array($server->getAttribute('external_name'), $external_name_checklist))
-		popup_error(sprintf(_('Server "%s": redirection name may be invalid!'), $server->fqdn));
+		popup_error(sprintf(_('Server "%s": redirection name may be invalid!'), $server->getDisplayName()));
 	if ($server->getAttribute('external_name') == '')
-		popup_error(sprintf(_('Server "%s": redirection name cannot be empty!'), $server->fqdn));
+		popup_error(sprintf(_('Server "%s": redirection name cannot be empty!'), $server->getDisplayName()));
 	
 	if ($server_online) {
 		//FIX ME ?
 		$tm = new Tasks_Manager();
-		$tm->load_from_server($server->fqdn);
+		$tm->load_from_server($server->id);
 		$tm->refresh_all();
 
 		$apps_in_remove = array();
@@ -224,7 +224,7 @@ function server_display_role_aps($server, $var) {
 	if ($can_do_action) {
 		echo '<form action="actions.php" method="post">';
 		echo '<input type="hidden" name="name" value="Server" />';
-		echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+		echo '<input type="hidden" name="server" value="'.$server->id.'" />';
 		echo '<input type="hidden" name="action" value="available_sessions" />';
 		echo '<input type="button" value="-" onclick="field_increase(\'number\', -1);" /> ';
 	}
@@ -245,14 +245,14 @@ function server_display_role_aps($server, $var) {
 		echo '<form action="actions.php" method="post">';
 		echo '<input type="hidden" name="name" value="Server" />';
 		echo '<input type="hidden" name="action" value="install_line">';
-		echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'">';
+		echo '<input type="hidden" name="server" value="'.$server->id.'">';
 		echo '<input type="text" name="line"> ';
 		echo '<input type="submit" value="'._('Install from a package name').'">';
 		echo '</form>';
 		echo '<br />';
 
 		echo '<div id="installableApplicationsList">';
-		echo '<a href="javascript:;" onclick="toggleInstallableApplicationsList(\''.$server->fqdn.'\'); return false;"><div style="width: 16px; height: 16px; float: left;" id="installableApplicationsList_ajax"></div></a><div style="float: left;"><a href="javascript:;" onclick="toggleInstallableApplicationsList(\''.$server->fqdn.'\'); return false;">&nbsp;'._('more options').'</a></div>';
+		echo '<a href="javascript:;" onclick="toggleInstallableApplicationsList(\''.$server->id.'\'); return false;"><div style="width: 16px; height: 16px; float: left;" id="installableApplicationsList_ajax"></div></a><div style="float: left;"><a href="javascript:;" onclick="toggleInstallableApplicationsList(\''.$server->id.'\'); return false;">&nbsp;'._('more options').'</a></div>';
 		echo '<div style="clear: both;"></div>';
 		echo '<div id="installableApplicationsList_content" style="display: none;"><script type="text/javascript">Event.observe(window, \'load\', function() { offContent(\'installableApplicationsList\'); });</script></div>';
 		echo '</div>';
@@ -261,7 +261,7 @@ function server_display_role_aps($server, $var) {
 		echo '<form action="actions.php" method="post">';
 		echo '<input type="hidden" name="name" value="Server" />';
 		echo '<input type="hidden" name="action" value="install_line">';
-		echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'">';
+		echo '<input type="hidden" name="server" value="'.$server->id.'">';
 		echo '<table>';
 		echo '<tr>';
 		echo '<td>'._('Category').'</td>';
@@ -284,7 +284,7 @@ function server_display_role_aps($server, $var) {
 		echo '<form action="actions.php" method="post">';
 		echo '<input type="hidden" name="name" value="Server" />';
 		echo '<input type="hidden" name="action" value="upgrade">';
-		echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'">';
+		echo '<input type="hidden" name="server" value="'.$server->id.'">';
 		echo '<input type="submit" value="'._('Upgrade the internal system and applications').'">';
 		echo '</form>';
 		echo '</div>';
@@ -316,7 +316,7 @@ function server_display_role_aps($server, $var) {
 						echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to remove this application from this server?').'\');">';
 						echo '<input type="hidden" name="action" value="del" />';
 						echo '<input type="hidden" name="name" value="Application_Server" />';
-						echo '<input type="hidden" name="server" value="'.$server->fqdn.'" />';
+						echo '<input type="hidden" name="server" value="'.$server->id.'" />';
 						echo '<input type="hidden" name="application" value="'.$app->getAttribute('id').'" />';
 						echo '<input type="submit" value="'._('Remove from this server').'" />';
 						echo '</form>';
@@ -345,7 +345,7 @@ function server_display_role_aps($server, $var) {
 			echo '<tr class="'.$content.'"><form action="actions.php" method="post">';
 			echo '<input type="hidden" name="action" value="add" />';
 			echo '<input type="hidden" name="name" value="Application_Server" />';
-			echo '<input type="hidden" name="server" value="'.$server->fqdn.'" />';
+			echo '<input type="hidden" name="server" value="'.$server->id.'" />';
 			echo '<td>';
 			
 			echo '<select name="application">';
@@ -363,7 +363,7 @@ function server_display_role_aps($server, $var) {
 			echo '<tr class="'.$content.'"><form action="actions.php" method="post">';
 			echo '<input type="hidden" name="action" value="add" />';
 			echo '<input type="hidden" name="name" value="Application_Server" />';
-			echo '<input type="hidden" name="server" value="'.$server->fqdn.'" />';
+			echo '<input type="hidden" name="server" value="'.$server->id.'" />';
 			echo '<td>';
 			
 			echo '<select name="application">';
@@ -387,13 +387,13 @@ function server_display_role_aps($server, $var) {
 		echo '<form action="actions.php" method="post">';
 		echo '<input type="hidden" name="name" value="Server" />';
 		echo '<input type="hidden" name="action" value="replication" />';
-		echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+		echo '<input type="hidden" name="server" value="'.$server->id.'" />';
 
 		echo '<table border="0" cellspacing="1" cellpadding="3">';
 		foreach($servers_replication as $server_) {
 		echo '<tr>';
-		echo '<td><input class="input_checkbox" type="checkbox" name="servers[]" value="'.$server_->fqdn.'" /></td>';
-		echo '<td><a href="servers.php?action=manage&fqdn='.$server_->fqdn.'">'.$server_->fqdn.'</a></td></tr>';
+		echo '<td><input class="input_checkbox" type="checkbox" name="servers[]" value="'.$server_->id.'" /></td>';
+		echo '<td><a href="servers.php?action=manage&id='.$server_->id.'">'.$server_->getDisplayName().'</a></td></tr>';
 		}
 		echo '<tr><td></td><td><input type="submit" value="'._('Replicate on those servers').'" /></td></tr>';
 		echo '</table>';
@@ -435,7 +435,7 @@ function server_display_role_aps($server, $var) {
 	// Sessions part
 	if ($has_sessions) {
 		echo '<div>'; // div 1 has_sessions
-		$total = Abstract_Session::countByServer($server->fqdn);
+		$total = Abstract_Session::countByServer($server->id);
 		echo '<h2>'.sprintf(_('Active sessions (total: %s)'), $total).'</h2>';
 		echo '<div>';
 		if (isset($pagechanger))
@@ -475,13 +475,13 @@ function server_display_role_preparation_fs($server_) {
 	$networkfolders = false;
 	if (Preferences::moduleIsEnabled('SharedFolderDB')) {
 		$sharedfolderdb = SharedFolderDB::getInstance();
-		$networkfolders = $sharedfolderdb->importFromServer($server_->getAttribute('fqdn'));
+		$networkfolders = $sharedfolderdb->importFromServer($server_->id);
 	}
 	
 	$profiles = false;
 	if (Preferences::moduleIsEnabled('ProfileDB')) {
 		$profiledb = ProfileDB::getInstance();
-		$profiles = $profiledb->importFromServer($server_->getAttribute('fqdn'));
+		$profiles = $profiledb->importFromServer($server_->id);
 	}
 	
 	$ret['NetworkFolders'] =  array();
@@ -668,7 +668,7 @@ function server_display_role_fs($server_, $var_) {
 		echo '<input type="hidden" name="name" value="SharedFolder" />';
 		echo '<input type="hidden" name="action" value="add" />';
 		echo '<input type="text" name="sharedfolder_name" value="" />';
-		echo '<input type="hidden" name="sharedfolder_server" value="'.$server_->fqdn.'" />';
+		echo '<input type="hidden" name="sharedfolder_server" value="'.$server_->id.'" />';
 		echo '</td><td><input type="submit" value="'._('Create this shared folder').'" /></td>';
 		echo '</form></tr>';
 		echo '</table>';

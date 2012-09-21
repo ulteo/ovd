@@ -132,8 +132,8 @@ class Abstract_Session {
 		$SQL = SQL::getInstance();
 		$SQL->DoQuery('INSERT INTO #1 (@2) VALUES (%3)', self::table, 'id', $session_->id);
 
-		foreach ($session_->servers[Server::SERVER_ROLE_APS] as $fqdn => $data)
-			Abstract_Liaison::save('ServerSession', $fqdn, $session_->id);
+		foreach ($session_->servers[Server::SERVER_ROLE_APS] as $server_id => $data)
+			Abstract_Liaison::save('ServerSession', $server_id, $session_->id);
 
 		return true;
 	}
@@ -268,21 +268,21 @@ class Abstract_Session {
 		return $SQL->NumRows();
 	}
 
-	public static function countByServer($fqdn_) {
+	public static function countByServer($server_id_) {
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3', self::table, 'server', $fqdn_);
+		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2 = %3', self::table, 'server', $server_id_);
 
 		return $SQL->NumRows();
 	}
 
-	public static function getByServer($fqdn_, $offset_=NULL, $start_=NULL) {
+	public static function getByServer($server_id_, $offset_=NULL, $start_=NULL) {
 		$SQL = SQL::getInstance();
 
 		if (! is_null($offset_))
-			$SQL->DoQuery('SELECT * FROM #1 WHERE @2 LIKE %3 ORDER BY @4 DESC LIMIT '.((! is_null($start_))?$start_.',':'').$offset_, self::table, 'servers', '%'.$fqdn_.'%', 'timestamp');
+			$SQL->DoQuery('SELECT * FROM #1 WHERE @2 LIKE %3 ORDER BY @4 DESC LIMIT '.((! is_null($start_))?$start_.',':'').$offset_, self::table, 'servers', '%'.$server_id_.'%', 'timestamp');
 		else
-			$SQL->DoQuery('SELECT * FROM #1 WHERE @2 LIKE %3 ORDER BY @4 DESC', self::table, 'servers', '%'.$fqdn_.'%', 'timestamp');
+			$SQL->DoQuery('SELECT * FROM #1 WHERE @2 LIKE %3 ORDER BY @4 DESC', self::table, 'servers', '%'.$server_id_.'%', 'timestamp');
 		$rows = $SQL->FetchAllResults();
 
 		$sessions = array();

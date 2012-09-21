@@ -103,10 +103,10 @@ function show_all($flags_) {
 
 		$lines = $buf->getLog(20);
 		if ($lines !== false)
-			$display2[$server->getAttribute('fqdn')] = array();
+			$display2[$server->id] = array();
 
 		if ($lines !== false)
-			$display2[$server->getAttribute('fqdn')]['web'] = get_lines_from_string($lines, 20, $flags_);
+			$display2[$server->id]['web'] = get_lines_from_string($lines, 20, $flags_);
 	}
 
 	page_header();
@@ -130,14 +130,14 @@ function show_all($flags_) {
 	echo '<div class="section">';
 	echo '<h1>'._('Slave Servers').'</h1>';
 
-	foreach ($display2 as $fqdn => $logs) {
-		$server = Abstract_Server::load($fqdn);
+	foreach ($display2 as $server_id => $logs) {
+		$server = Abstract_Server::load($server_id);
 
-		echo '<h2><img src="media/image/server-'.$server->stringType().'.png" alt="'.$server->stringType().'" title="'.$server->stringType().'" /> <a href="servers.php?action=manage&amp;fqdn='.$fqdn.'">'.$server->getDisplayName().'</a></h2>';
+		echo '<h2><img src="media/image/server-'.$server->stringType().'.png" alt="'.$server->stringType().'" title="'.$server->stringType().'" /> <a href="servers.php?action=manage&amp;id='.$server_id.'">'.$server->getDisplayName().'</a></h2>';
 		echo '<div class="section">';
 		echo '<h4>'._('Log');
-		echo ' <a href="?show=1&amp;where=aps&amp;server='.$fqdn.'"><img src="media/image/view.png" width="22" height="22" alt="view" onmouseover="showInfoBulle(\''._('View full log file online').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
-		echo ' <a href="?download=1&amp;where=aps&amp;server='.$fqdn.'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Download full log file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
+		echo ' <a href="?show=1&amp;where=aps&amp;server='.$server_id.'"><img src="media/image/view.png" width="22" height="22" alt="view" onmouseover="showInfoBulle(\''._('View full log file online').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
+		echo ' <a href="?download=1&amp;where=aps&amp;server='.$server_id.'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Download full log file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
 		echo '</h4>';
 		echo '<div style="border: 1px solid #ccc; background: #fff; padding: 5px; text-align: left;" class="section">';
 		echo implode("<br />\n", $logs['web']);
