@@ -250,7 +250,7 @@ class Server {
 			foreach ($this->roles as $role => $enabled) {
 				switch ($role) {
 					case Server::SERVER_ROLE_APS:
-						$this->updateApplications();
+						$this->updateApplications(true);
 						$this->setAttribute('max_sessions', $this->getDefaultMaxSessions()); 
 						break;
 					case Server::SERVER_ROLE_FS:
@@ -422,7 +422,7 @@ class Server {
 			case 'ready':
 				$this->setAttribute('status', 'ready');
 				if ($this->getAttribute('registered') && is_array($this->roles) && array_key_exists(Server::SERVER_ROLE_APS, $this->roles)) {
-					if (! $this->updateApplications()) {
+					if (! $this->updateApplications(true)) {
 						Logger::critical('main', 'Server::setStatus('.$status_.') - updateApplications failed, status switched to "broken"');
 						$this->setStatus(Server::SERVER_STATUS_BROKEN);
 						return false;
@@ -1128,7 +1128,7 @@ class Server {
 		return $res;
 	}
 
-	public function updateApplications(){
+	public function updateApplications($force_server_refresh = false) {
 		Logger::debug('main', 'Server::updateApplications');
 
 		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $this->roles)) {
@@ -1176,6 +1176,7 @@ class Server {
 
 		$application_node = $dom->getElementsByTagName("application");
 		$sync_apps = array();
+		$done_modifications = 0;
 		foreach($application_node as $app_node){
 			$app_name = '';
 			$app_description = '';
@@ -1228,6 +1229,8 @@ class Server {
 						return false;
 					}
 					
+					$done_modifications++;
+					
 					if ($a->haveIcon()) {
 						// We remove the application icon if already exists because it shouldn't be
 						$a->delIcon();
@@ -1243,6 +1246,8 @@ class Server {
 							Logger::error('main', 'Server::updateApplications failed to save application');
 							return $ret;
 						}
+						
+						$done_modifications++;
 					}
 					$current_liaison_key[] = $a->getAttribute('id');
 				}
@@ -1258,12 +1263,14 @@ class Server {
 		foreach ($previous_liaison_key as $key){
 			if (in_array($key, $current_liaison_key) == false) {
 				$a = $applicationDB->import($key);
-				if ( is_null($a) || $a->getAttribute('static') == false)
+				if ( is_null($a) || $a->getAttribute('static') == false) {
 					Abstract_Liaison::delete('ApplicationServer', $key, $this->id);
+					$done_modifications++;
+				}
 			}
 		}
 
-		if (count($sync_apps) > 0) {
+		if (($force_server_refresh || $done_modifications>0) && count($sync_apps) > 0) {
 			$dom = new DomDocument('1.0', 'utf-8');
 
 			$applications_node = $dom->createElement('applications');
