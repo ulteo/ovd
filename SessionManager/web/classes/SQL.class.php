@@ -186,6 +186,12 @@ class SQL {
 
 		return @mysqli_num_rows($this->result);
 	}
+	
+	public function AffectedRows() {
+		$this->CheckLink();
+		
+		return mysqli_affected_rows($this->link);
+	}
 
 	public function InsertId() {
 		$this->CheckLink();

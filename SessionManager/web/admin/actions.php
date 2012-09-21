@@ -1703,6 +1703,39 @@ if ($_REQUEST['name'] == 'Server') {
 	}
 }
 
+if ($_REQUEST['name'] == 'SessionReporting') {
+	if (! checkAuthorization('manageReporting'))
+		redirect();
+	
+	if ($_REQUEST['action'] == 'delete') {
+		if (! isset($_REQUEST['session']) && ! isset($_REQUEST['sessions']))
+			redirect();
+			
+		if (isset($_REQUEST['sessions']) && ! is_array($_REQUEST['sessions']))
+			redirect();
+		
+		if (isset($_REQUEST['sessions']))
+			$sessions_id = $_REQUEST['sessions'];
+		else
+			$sessions_id = array($_REQUEST['session']);
+		
+		foreach ($sessions_id as $sessions_id) {
+			if (! Abstract_ReportSession::exists($sessions_id)) {
+				popup_error(sprintf(_("Unknown archived session '%s'"), $sessions_id));
+				continue;
+			}
+			
+			$ret = Abstract_ReportSession::delete($sessions_id);
+			if ($ret !== true) {
+				popup_error(sprintf(_("Unable to delete archived session '%s'"), $sessions_id));
+				continue; 
+			}
+			
+			popup_info(sprintf(_("Archived session '%s' successfully deleted"), $sessions_id));
+		}
+	}
+}
+
 if ($_REQUEST['name'] == 'Task') {
 	// it is the rigth place ? (see similar block on name=server action=install_line
 		if (! checkAuthorization('manageServers'))

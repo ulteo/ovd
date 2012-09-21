@@ -240,6 +240,8 @@ function show_default() {
 		echo '<table class="main_sub sortable" id="main_table" border="0" cellspacing="1" cellpadding="5">';
 		echo '<thead>';
 		echo '<tr class="title">';
+		if (isAuthorized('manageReporting') && count($sessions)>1)
+			echo '<th class="unsortable"></th>';
 		echo '<th>'._('Session id').'</th>';
 		echo '<th>'._('User').'</th>';
 		echo '<th>'._('Date').'</th>';
@@ -251,14 +253,51 @@ function show_default() {
 		foreach($sessions as $session) {
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'">';
+			
+			if (isAuthorized('manageReporting') && count($sessions)>1) {
+				echo '<td>';
+				echo '<input class="input_checkbox" type="checkbox" name="sessions[]" value="'.$session->getId().'" />';
+				echo '</td>';
+			}
+			
 			echo '<td><a title="'._('Get more information').'" href="?action=manage&id='.$session->getId().'">'.$session->getId().'</a></td>';
 			echo '<td><a href="users.php?action=manage&id='.$session->getUser().'">'.$session->getUser().'</a></td>';
 			echo '<td>'.$session->getStartTime().'</td>';
 			echo '<td><form><input type="hidden" name="action" value="manage"/><input type="hidden" name="id" value="'.$session->getId().'"/><input type="submit" value="'._('Get more information').'"/></form></td>';
+			
+			if (isAuthorized('manageReporting')) {
+				echo '<td>';
+				echo '<form method="post" action="actions.php" onsubmit="return confirm(\''._('Are you sure you want to delete this archived session?').'\');">';
+				echo '<input type="hidden" name="name" value="SessionReporting"/>';
+				echo '<input type="hidden" name="action" value="delete"/>';
+				echo '<input type="hidden" name="session" value="'.$session->getId().'"/>';
+				echo '<input type="submit" value="'._('Delete').'"/>';
+				echo '</form>';
+				echo '</td>';
+			}
 			echo '</tr>';
 		}
 
 		echo '</tbody>';
+		
+		if (isAuthorized('manageReporting') && count($sessions)>1) {
+			$content = 'content'.(($count++%2==0)?1:2);
+			echo '<tfoot>';
+			echo '<tr class="'.$content.'">';
+			echo '<td colspan="5">';
+			echo '<a href="javascript:;" onclick="markAllRows(\'main_table\'); return false">'._('Mark all').'</a>';
+			echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'main_table\'); return false">'._('Unmark all').'</a>';
+			echo '</td>';
+			echo '<td>';
+			echo '<form action="actions.php" method="post" onsubmit="updateMassActionsForm(this, \'main_table\'); return confirm(\''._('Are you sure you want to delete these archived sessions?').'\');"  ">';
+			echo '<input type="hidden" name="name" value="SessionReporting"/>';
+			echo '<input type="hidden" name="action" value="delete"/>';
+			echo '<input type="submit" value="'._('Delete').'"/>';
+			echo '</form>';
+			echo '</td>';
+			echo '</tr>';
+			echo '</tfoot>';
+		}
 		echo '</table>';
 	}
 	page_footer();
@@ -389,6 +428,15 @@ function show_manage($id_) {
 		echo '&nbsp<em>('.$session->getStopWhy().')</em>';
 	echo '</li>';
 	echo '</ul>';
+	
+	if (isAuthorized('manageReporting')) {
+		echo '<form method="post" action="actions.php" onsubmit="return confirm(\''._('Are you sure you want to delete this archived session?').'\');">';
+		echo '<input type="hidden" name="name" value="SessionReporting"/>';
+		echo '<input type="hidden" name="action" value="delete"/>';
+		echo '<input type="hidden" name="session" value="'.$session->getId().'"/>';
+		echo '<input type="submit" value="'._('Delete').'"/>';
+		echo '</form>';
+	}
 	
 	echo '<div>';
 	echo '<h2>'._('Servers').'</h2>';

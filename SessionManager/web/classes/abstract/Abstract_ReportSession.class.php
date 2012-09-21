@@ -124,6 +124,16 @@ class Abstract_ReportSession {
 		return $res;
 	}
 	
+	public static function delete($id_) {
+		Logger::debug('main', 'Abstract_ReportSession::delete for \''.$id_.'\'');
+
+		$SQL = SQL::getInstance();
+
+		$gg = $SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'id', $id_);
+
+		return ($SQL->AffectedRows() > 0);
+	}
+	
 	public static function update($report_) {
 		Logger::debug('main', "Abstract_ReportSession::update");
 		
