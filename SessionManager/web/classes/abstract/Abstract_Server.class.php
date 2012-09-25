@@ -226,7 +226,7 @@ class Abstract_Server {
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
-			Logger::error('main', "Abstract_Server::delete($server_) server does not exist (NumRows == 0)");
+			Logger::error('main', "Abstract_Server::delete($id_) server does not exist (NumRows == 0)");
 			return false;
 		}
 
