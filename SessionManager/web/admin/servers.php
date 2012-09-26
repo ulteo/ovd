@@ -361,6 +361,10 @@ function show_manage($id_) {
     }
   }
   $can_do_action = isAuthorized('manageServers');
+
+	$dn = null;
+	if ($server->hasAttribute('display_name') && ! is_null($server->getAttribute('display_name')))
+		$dn = $server->getAttribute('display_name');
   
   page_header();
   echo '<script type="text/javascript" src="media/script/ajax/servers.js" charset="utf-8"></script>';
@@ -420,10 +424,6 @@ function show_manage($id_) {
   echo '<h2>'._('Configuration').'</h2>';
   echo '<table>';
   
-	$dn = null;
-	if ($server->hasAttribute('display_name') && ! is_null($server->getAttribute('display_name')))
-		$dn = $server->getAttribute('display_name');
-	
 	echo '<tr><td>';
 	echo _('Display name').': ';
 	echo '</td><td>';
