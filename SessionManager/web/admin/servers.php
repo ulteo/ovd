@@ -452,6 +452,23 @@ function show_manage($id_) {
 	}
 	echo "</td></tr>\n";
   
+	echo '<tr><td>';
+	echo _('Internal name (fqdn)').': ';
+	echo '</td><td>';
+	if ($can_do_action) {
+		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to change the internal name of this server? The server will switch to broken state if the name is not valid!').'\');">';
+		echo '<input type="hidden" name="name" value="Server" />';
+		echo '<input type="hidden" name="server" value="'.$server->id.'" />';
+		echo '<input type="hidden" name="action" value="fqdn" />';
+	}
+	echo '<input type="text" name="fqdn" value="'.$server->fqdn.'" />';
+	if ($can_do_action) {
+		echo ' <input type="submit" value="'._('change').'" />';
+		echo '</form>';
+		
+	}
+	echo "</td></tr>\n";
+
   echo '<tr><td>';
   echo _('Redirection name for this server').': ';
   echo '</td><td>';

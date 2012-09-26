@@ -1558,6 +1558,22 @@ if ($_REQUEST['name'] == 'Server') {
 		redirect();
 	}
 	
+	if ($_REQUEST['action'] == 'fqdn') {
+		if (isset($_REQUEST['fqdn']) && isset($_REQUEST['server'])) {
+			if (! validate_ip($_REQUEST['fqdn']) && ! validate_fqdn($_REQUEST['fqdn'])) {
+				popup_error(sprintf(_("Internal name \"%s\" is invalid"), $_REQUEST['fqdn']));
+				redirect();
+			}
+			
+			$server = Abstract_Server::load($_REQUEST['server']);
+			$server->fqdn = $_REQUEST['fqdn'];
+			Abstract_Server::save($server);
+			popup_info(sprintf(_("Server '%s' successfully modified"), $server->fqdn));
+			
+			redirect('servers.php?action=manage&id='.$server->id);
+		}
+	}
+	
 	if ($_REQUEST['action'] == 'external_name') {
 		if (isset($_REQUEST['external_name']) && isset($_REQUEST['server'])) {
 			if (! validate_ip($_REQUEST['external_name']) && ! validate_fqdn($_REQUEST['external_name'])) {

@@ -553,7 +553,8 @@ abstract class SessionManagement extends Module {
 		$allowed_servers = (array_key_exists('allowed_desktop_servers', $remote_desktop_settings))?$remote_desktop_settings['allowed_desktop_servers']:array();
 		if (count($allowed_servers)>0) {
 			foreach ($servers as $id => $server) {
-				if (! in_array($server->fqdn, $allowed_servers))
+				// can be server id or fqdn
+				if (! in_array($server->id, $allowed_servers) && ! in_array($server->fqdn, $allowed_servers))
 					unset($servers[$id]);
 			}
 		}

@@ -83,7 +83,7 @@ if ($ret !== true) {
 
 // try to get server several times, APS start could take some time.
 for ($i=0; $i < 10; $i++){
-	$server = Abstract_Server::load('127.0.0.1');
+	$server = Abstract_Server::load_by_fqdn('127.0.0.1');
 	if (is_object($server))
 		break;
 	sleep(3);	

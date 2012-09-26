@@ -20,6 +20,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
+require_once(dirname(__FILE__).'/../includes/webservices.inc.php');
 
 function return_error($errno_, $errstr_) {
 	header('Content-Type: text/xml; charset=utf-8');
@@ -32,10 +33,13 @@ function return_error($errno_, $errstr_) {
 	return $dom->saveXML();
 }
 
-$server_name = $_SERVER['REMOTE_ADDR'];
-if (! Abstract_Server::exists($server_name)) {
-	$server = new Server($server_name);
+function generate_server_id() {
+	return gen_string(5, 'abcdefghijklmnopqrstuvwxyz0123456789');
+}
 
+$server = webservices_load_server($_SERVER['REMOTE_ADDR']);
+if (is_null($server)) {
+	$server = new Server(generate_server_id());
 	$server->registered = false;
 	$server->locked = true;
 
@@ -53,7 +57,7 @@ if (! Abstract_Server::exists($server_name)) {
 	if ($buf['auto_switch_new_servers_to_production'] == 1)
 		$server->locked = false;
 
-	$server->fqdn = $server_name;
+	$server->fqdn = $_SERVER['REMOTE_ADDR'];
 	$server->external_name = $server->fqdn;
 
 	$server->max_sessions = 20;
@@ -73,9 +77,23 @@ if (! Abstract_Server::exists($server_name)) {
 		die();
 	}
 */
+	$ret = Abstract_Server::create($server);
+	$try_count = 0;
+	while($ret !== true && $try_count < 10) {
+		$server->id = generate_server_id();
+		$ret = Abstract_Server::create($server);
+		$try_count++;
+	}
+	
+	if ($ret !== true) {
+		Logger.error('');
+		Logger::error('main', 'Unable to save new server after '.$try_count.' try');
+		echo return_error(0, 'Internal error');
+		die();
+	}
+	
 	Abstract_Server::save($server);
-} else
-	$server = Abstract_Server::load($server_name);
+}
 
 header('Content-Type: text/xml; charset=utf-8');
 $dom = new DomDocument('1.0', 'utf-8');

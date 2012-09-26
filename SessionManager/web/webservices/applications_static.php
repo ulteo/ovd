@@ -19,6 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
+require_once(dirname(__FILE__).'/../includes/webservices.inc.php');
 
 function return_error($errno_, $errstr_) {
 	header('Content-Type: text/xml; charset=utf-8');
@@ -31,7 +32,7 @@ function return_error($errno_, $errstr_) {
 	return $dom->saveXML();
 }
 
-$server = Abstract_Server::load($_SERVER['REMOTE_ADDR']);
+$server = webservices_load_server($_SERVER['REMOTE_ADDR']);;
 if (! $server) {
 	echo return_error(1, 'Server does not exist');
 	die();

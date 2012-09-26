@@ -20,6 +20,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
+require_once(dirname(__FILE__).'/../includes/webservices.inc.php');
 
 function return_error($errno_, $errstr_) {
 	header('Content-Type: text/xml; charset=utf-8');
@@ -74,13 +75,19 @@ if (! $ret) {
 	die();
 }
 
+$server = webservices_load_server($_SERVER['REMOTE_ADDR']);
+if (is_null($server)) {
+	echo return_error(2, 'Server does not exist');
+	die();
+}
+
 $session = Abstract_Session::load($ret['id']);
 if (! $session) {
 	echo return_error(2, 'Session does not exist');
 	die();
 }
 
-$session->setServerStatus($ret['server'], $ret['status'], $ret['reason']);
+$session->setServerStatus($server->id, $ret['status'], $ret['reason']);
 
 header('Content-Type: text/xml; charset=utf-8');
 $dom = new DomDocument('1.0', 'utf-8');

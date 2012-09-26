@@ -182,7 +182,7 @@ class Abstract_Server {
 		return true;
 	}
 
-	private static function create($server_) {
+	public static function create($server_) {
 		Logger::debug('main', 'Starting Abstract_Server::create for \''.$server_->fqdn.'\'');
 
 		if (Abstract_Server::exists($server_->id)) {
@@ -193,7 +193,7 @@ class Abstract_Server {
 		$SQL = SQL::getInstance();
 		$SQL->DoQuery('INSERT INTO #1 (@2) VALUES (%3)', self::table, 'id', $server_->id);
 
-		return true;
+		return ($SQL->AffectedRows() == 1);
 	}
 
 	public static function modify($server_) {
@@ -438,6 +438,26 @@ class Abstract_Server {
 		return $servers;
 	}
 
+	public static function load_by_fqdn($fqdn_) {
+		Logger::debug('main', 'Starting Abstract_Server::load_by_fqdn for \''.$fqdn_.'\'');
+		
+		$SQL = SQL::getInstance();
+		
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3 LIMIT 1', self::table, 'fqdn', $fqdn_);
+		$total = $SQL->NumRows();
+		
+		if ($total == 0) {
+			Logger::error('main', "Abstract_Server::load($fqdn_) failed: NumRows == 0");
+			return null;
+		}
+		
+		$row = $SQL->FetchResult();
+		
+		$buf = self::generateFromRow($row);
+		
+		return $buf;
+	}
+	
 	public static function load_available_by_type($type_, $with_locked_=false) {
 		$servers = Abstract_Server::load_available($with_locked_);
 
