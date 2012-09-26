@@ -286,7 +286,7 @@ public class Orders {
             processed++;
         }
 
-	if (! this.opt.supportFrameMarker || ! this.frameMarkerIsSet) {
+	if (! this.common.rdp.useFrameMarker || ! this.frameMarkerIsSet) {
 		this.surface.repaint_order();
 	}
 	

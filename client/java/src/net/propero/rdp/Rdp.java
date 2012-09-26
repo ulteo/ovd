@@ -136,6 +136,8 @@ public class Rdp {
     private static final int RDP_CAPSET_GENERAL = 1;
 
     private static final int RDP_CAPLEN_GENERAL = 0x18;
+    
+    private static final int TS_ORDER_CAPABILITYSET = 3;
 
     private static final int RDP_CAPSET_INPUT = 13;
 
@@ -298,6 +300,7 @@ public class Rdp {
     protected Common common = null;
     
 	protected RdpDecompressor decompressor;
+	protected boolean useFrameMarker = false;
 
     /*
      * private final byte[] canned_caps = { (byte)0x01, (byte)0x00, (byte)0x00,
@@ -355,6 +358,38 @@ public class Rdp {
             (byte) 0x80, 0x00, (byte) 0xFE, 0x00, 0x00, 0x01, 0x40, 0x00, 0x00,
             0x08, 0x00, 0x01, 0x00, 0x01, 0x02, 0x00, 0x00, 0x00 };
 
+    
+    protected void processCapabilitySet(RdpPacket_Localised data) {
+    	int orderFlags = 0;
+    	int orderFlagsEx = 0;
+    	
+    	data.incrementPosition(16);                // terminalDescriptor (ignored)
+    	data.incrementPosition(4);                 // pad4octetsA (ignored)
+    	data.incrementPosition(2);                 // desktopSaveXGranularity (ignored)
+    	data.incrementPosition(2);                 // desktopSaveYGranularity (ignored)
+    	data.incrementPosition(2);                 // pad2octetsA (ignored)
+    	data.incrementPosition(2);                 // maximumOrderLevel
+    	data.incrementPosition(2);                 // numberFonts
+    	orderFlags = data.getLittleEndian16();     // orderFlags
+    	data.incrementPosition(32);                // orderSupport
+    	
+    	data.incrementPosition(2);                 // textFlags (ignored)
+    	orderFlagsEx = data.getLittleEndian16();   // orderSupportExFlags
+    	data.incrementPosition(4);                 // pad4octetsB
+    	data.incrementPosition(4);                 // desktopSaveSize
+    	data.incrementPosition(2);                 // pad2octetsC
+    	data.incrementPosition(2);                 // pad2octetsD (ignored)
+    	data.incrementPosition(2);                 // textANSICodePage (ignored)
+    	data.incrementPosition(2);                 // pad2octetsE (ignored)
+    	
+    	if ((orderFlags & ORDERFLAGS_EXTRA_FLAGS) != 0 ) {
+    		if ((this.opt.supportFrameMarker && (orderFlagsEx & ORDERFLAGS_EX_ALTSEC_FRAME_MARKER_SUPPORT) != 0)) {
+    			logger.info("Activating frame marker support");
+    			this.useFrameMarker = true;
+    		}
+    	}
+    }
+    
     /**
      * Process a general capability set
      * @param data Packet containing capability set data at current read position
@@ -479,6 +514,9 @@ public class Rdp {
             next = data.getPosition() + capset_length - 4;
 
             switch (capset_type) {
+            case TS_ORDER_CAPABILITYSET:
+            	processCapabilitySet(data);
+            	
             case RDP_CAPSET_GENERAL:
                 processGeneralCaps(data);
                 break;
@@ -1310,7 +1348,7 @@ public class Rdp {
                         | ORDERFLAGS_COLOR_INDEX_SUPPORT;
         int orderSupportExFlags = 0;
 	
-	if (this.opt.supportFrameMarker) {
+	if (this.useFrameMarker) {
 		orderFlags |= ORDERFLAGS_EXTRA_FLAGS;
 		orderSupportExFlags |= ORDERFLAGS_EX_ALTSEC_FRAME_MARKER_SUPPORT;
 	}
