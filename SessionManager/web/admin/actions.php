@@ -1600,24 +1600,31 @@ if ($_REQUEST['name'] == 'Server') {
 	}
 	
 	if ($_REQUEST['action'] == 'external_name') {
-		if (isset($_REQUEST['external_name']) && isset($_REQUEST['server'])) {
+		if (! isset($_REQUEST['server']))
+			redirect();
+		
+		if (! isset($_REQUEST['external_name']) || strlen($_REQUEST['external_name']) == 0)
+			$external_name = null;
+		else {
 			if (! validate_ip($_REQUEST['external_name']) && ! validate_fqdn($_REQUEST['external_name'])) {
 				popup_error(sprintf(_("Redirection name \"%s\" is invalid"), $_REQUEST['external_name']));
 				redirect();
 			}
-
-			$server = Abstract_Server::load($_REQUEST['server']);
-			if (! is_object($server)) {
-				popup_error(sprintf(_("Unknown server '%s'"), $_REQUEST['server']));
-				redirect(); 
-			}
 			
-			$server->setAttribute('external_name', $_REQUEST['external_name']);
-			Abstract_Server::save($server);
-			popup_info(sprintf(_("Server '%s' successfully modified"), $server->getDisplayName()));
-		
-			redirect('servers.php?action=manage&id='.$server->id);
+			$external_name = $_REQUEST['external_name'];
 		}
+
+		$server = Abstract_Server::load($_REQUEST['server']);
+		if (! is_object($server)) {
+			popup_error(sprintf(_("Unknown server '%s'"), $_REQUEST['server']));
+			redirect(); 
+		}
+		
+		$server->setAttribute('external_name', $external_name);
+		Abstract_Server::save($server);
+		popup_info(sprintf(_("Server '%s' successfully modified"), $server->getDisplayName()));
+	
+		redirect('servers.php?action=manage&id='.$server->id);
 	}
 	
 	if ($_REQUEST['action'] == 'install_line') {

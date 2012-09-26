@@ -1334,7 +1334,11 @@ class Server {
 		if ($this->hasAttribute('display_name') && ! is_null($this->getAttribute('display_name')))
 			return $this->getAttribute('display_name');
 		
-		if ($this->getAttribute('external_name') != $this->fqdn)
+		return $this->getExternalName();
+	}
+	
+	public function getExternalName() {
+		if ($this->hasAttribute('external_name'))
 			return $this->getAttribute('external_name');
 		
 		return $this->fqdn;

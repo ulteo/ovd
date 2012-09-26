@@ -109,10 +109,8 @@ function server_display_role_preparation_aps($server) {
 		$has_sessions = false;
 
 	$external_name_checklist = array('localhost', '127.0.0.1');
-	if (in_array($server->fqdn, $external_name_checklist) && in_array($server->getAttribute('external_name'), $external_name_checklist))
+	if (in_array($server->getExternalName(), $external_name_checklist))
 		popup_error(sprintf(_('Server "%s": redirection name may be invalid!'), $server->getDisplayName()));
-	if ($server->getAttribute('external_name') == '')
-		popup_error(sprintf(_('Server "%s": redirection name cannot be empty!'), $server->getDisplayName()));
 	
 	if ($server_online) {
 		//FIX ME ?

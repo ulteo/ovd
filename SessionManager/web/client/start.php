@@ -473,7 +473,7 @@ if (! isset($old_session_id)) {
 		if (array_key_exists(Server::SERVER_ROLE_FS, $session->servers)) {
 			foreach ($session->servers[Server::SERVER_ROLE_FS] as $server_id => $netfolders) {
 				foreach ($netfolders as $netfolder) {
-					$uri = 'cifs://'.$netfolder['server']->getAttribute('external_name').'/'.$netfolder['dir'];
+					$uri = 'cifs://'.$netfolder['server']->getExternalName().'/'.$netfolder['dir'];
 					
 					$netfolder_node = $dom->createElement($netfolder['type']);
 					$netfolder_node->setAttribute('rid', $netfolder['rid']);
@@ -587,7 +587,7 @@ $session_node->appendChild($user_node);
 if (array_key_exists(Server::SERVER_ROLE_FS, $session->servers)) {
 	foreach ($session->servers[Server::SERVER_ROLE_FS] as $server_id => $netfolders) {
 		foreach ($netfolders as $netfolder) {
-			$uri = 'webdav://'.$netfolder['server']->getAttribute('external_name').':1113/ovd/fs/'.$netfolder['dir'].'/';
+			$uri = 'webdav://'.$netfolder['server']->getExternalName().':1113/ovd/fs/'.$netfolder['dir'].'/';
 			
 			$netfolder_node = $dom->createElement($netfolder['type']);
 			$netfolder_node->setAttribute('rid', $netfolder['rid']);
@@ -619,7 +619,7 @@ if ($session->mode == Session::MODE_DESKTOP) {
 
 	$server_node = $dom->createElement('server');
 	$server_node->setAttribute('type', $server->getAttribute('type'));
-	$server_node->setAttribute('fqdn', $server->getAttribute('external_name'));
+	$server_node->setAttribute('fqdn', $server->getExternalName());
 	if ($server->getApSRDPPort() != Server::DEFAULT_RDP_PORT)
 		$server_node->setAttribute('port', $server->getApSRDPPort());
 	$server_node->setAttribute('login', $user_login_aps);
@@ -662,7 +662,7 @@ if ($session->mode == Session::MODE_DESKTOP) {
 
 		$server_node = $dom->createElement('server');
 		$server_node->setAttribute('type', $server->getAttribute('type'));
-		$server_node->setAttribute('fqdn', $server->getAttribute('external_name'));
+		$server_node->setAttribute('fqdn', $server->getExternalName());
 		if ($server->getApSRDPPort() != Server::DEFAULT_RDP_PORT)
 			$server_node->setAttribute('port', $server->getApSRDPPort());
 		$server_node->setAttribute('login', $user_login_aps);

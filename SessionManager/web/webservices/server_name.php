@@ -58,7 +58,6 @@ if (is_null($server)) {
 		$server->locked = false;
 
 	$server->fqdn = $_SERVER['REMOTE_ADDR'];
-	$server->external_name = $server->fqdn;
 
 	$server->max_sessions = 20;
 /*

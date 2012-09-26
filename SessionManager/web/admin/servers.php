@@ -49,10 +49,8 @@ function show_default() {
   $nb_a_servs_not_maintenance = 0;
   foreach($a_servs as $s) {
 	$external_name_checklist = array('localhost', '127.0.0.1');
-	if (in_array($s->fqdn, $external_name_checklist) && in_array($s->getAttribute('external_name'), $external_name_checklist))
+	if (in_array($s->getExternalName(), $external_name_checklist))
 		popup_error(sprintf(_('Server "%s": redirection name may be invalid!'), $s->getDisplayName()));
-	if ($s->getAttribute('external_name') == '')
-		popup_error(sprintf(_('Server "%s": redirection name cannot be empty!'), $s->getDisplayName()));
 	
 	if ($s->isOnline() and $s->getAttribute('locked'))
 		$nb_a_servs_online_maintenance++;
@@ -110,7 +108,7 @@ function show_default() {
 	}
       echo '<td>';
 	echo '<a href="servers.php?action=manage&id='.$s->id.'">'.$dn;
-	if ($s->getAttribute('external_name') != $dn)
+	if ($s->hasAttribute('external_name') && $s->getAttribute('external_name') != $dn)
 		echo '<br/><em style="margin-left: 10px; font-size: 0.8em;">'.$s->getAttribute('external_name').'</em>';
 	if ($s->fqdn != $dn && $s->fqdn != $s->getAttribute('external_name'))
 		echo '<br/><em style="margin-left: 10px; font-size: 0.8em;">'.$s->fqdn.'</em>';
@@ -365,6 +363,10 @@ function show_manage($id_) {
 	$dn = null;
 	if ($server->hasAttribute('display_name') && ! is_null($server->getAttribute('display_name')))
 		$dn = $server->getAttribute('display_name');
+	
+	$external_name = null;
+	if ($server->hasAttribute('external_name'))
+		$external_name = $server->getAttribute('external_name');
   
   page_header();
   echo '<script type="text/javascript" src="media/script/ajax/servers.js" charset="utf-8"></script>';
@@ -478,11 +480,22 @@ function show_manage($id_) {
     echo '<input type="hidden" name="server" value="'.$server->id.'" />';
     echo '<input type="hidden" name="action" value="external_name" />';
   }
-  echo '<input type="text" name="external_name" value="'.$server->getAttribute('external_name').'" />';
+  echo '<input type="text" name="external_name" value="'.((is_null($external_name))?'':$external_name).'" />';
   if ($can_do_action) {
-    echo ' <input type="submit" value="'._('change').'" />';
+    echo ' <input type="submit" value="'.((is_null($external_name))?_('define'):_('change')).'" />';
     echo '</form>';
   }
+	echo '</td><td>';
+	if (is_null($external_name))
+		echo sprintf(_('(no external name defined yet, use "%s" instead'), $server->getExternalName());
+	else {
+		echo '<form action="actions.php" method="post">';
+		echo '<input type="hidden" name="name" value="Server" />';
+		echo '<input type="hidden" name="server" value="'.$server->id.'" />';
+		echo '<input type="hidden" name="action" value="external_name" />';
+		echo '<input type="submit" value="'._('delete').'" />';
+		echo '</form>';
+	}
   echo "</td></tr>\n";
   
 	echo '<tr><td>';

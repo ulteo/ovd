@@ -77,7 +77,7 @@ class ServerReportItem {
 		if ($server === false)
 			return;
 		
-		$external_name = $server->getAttribute('external_name');
+		$external_name = $server->getExternalName();
 		
 		$dom = new DomDocument('1.0', 'utf-8');
 		$dom->loadXML($xml_input_);
