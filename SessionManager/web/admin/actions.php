@@ -306,7 +306,7 @@ if ($_REQUEST['name'] == 'Application') {
 		if (array_key_exists('server', $_REQUEST)) {
 			$server = Abstract_Server::load($_REQUEST['server']);
 			if (! $server) {
-				popup_error(sprintf(_("Failed to load server '%s'"), $_REQUEST['server']));
+				popup_error(sprintf(_("Unknown server '%s'"), $_REQUEST['server']));
 				redirect();
 			}
 
@@ -1461,6 +1461,7 @@ if ($_REQUEST['name'] == 'Server') {
 			foreach ($_REQUEST['checked_servers'] as $server_id) {
 				$server = Abstract_Server::load($server_id);
 				if (! is_object($server)) {
+					popup_error(sprintf(_("Unknown server '%s'"), $server_id));
 					continue; 
 				}
 				
@@ -1486,6 +1487,11 @@ if ($_REQUEST['name'] == 'Server') {
 		if (isset($_REQUEST['checked_servers']) && is_array($_REQUEST['checked_servers'])) {
 			foreach ($_REQUEST['checked_servers'] as $server) {
 				$buf = Abstract_Server::load($server);
+				if (! is_object($buf)) {
+					popup_error(sprintf(_("Unknown server '%s'"), $server));
+					continue; 
+				}
+				
 				$res = $buf->register();
 				if ($res) {
 					Abstract_Server::save($buf);
@@ -1508,6 +1514,11 @@ if ($_REQUEST['name'] == 'Server') {
 		if (isset($_REQUEST['checked_servers']) && is_array($_REQUEST['checked_servers']) && (isset($_REQUEST['to_maintenance']) || isset($_REQUEST['to_production']))) {
 			foreach ($_REQUEST['checked_servers'] as $server) {
 				$a_server = Abstract_Server::load($server);
+				if (! is_object($a_server)) {
+					popup_error(sprintf(_("Unknown server '%s'"), $server));
+					continue; 
+				}
+				
 				if (isset($_REQUEST['to_maintenance']))
 					$a_server->setAttribute('locked', true);
 				elseif (isset($_REQUEST['to_production']) && $a_server->isOnline())
@@ -1523,6 +1534,11 @@ if ($_REQUEST['name'] == 'Server') {
 	if ($_REQUEST['action'] == 'available_sessions') {
 		if (isset($_REQUEST['server']) && isset($_REQUEST['max_sessions'])) {
 			$server = Abstract_Server::load($_REQUEST['server']);
+			if (! is_object($server)) {
+				popup_error(sprintf(_("Unknown server '%s'"), $_REQUEST['server']));
+				redirect(); 
+			}
+			
 			$server->setAttribute('max_sessions', $_REQUEST['max_sessions']);
 			Abstract_Server::save($server);
 			popup_info(sprintf(_("Server '%s' successfully modified"), $server->getDisplayName()));
@@ -1541,6 +1557,10 @@ if ($_REQUEST['name'] == 'Server') {
 			$new_dn = $_REQUEST['display_name'];
 		
 		$server = Abstract_Server::load($_REQUEST['server']);
+		if (! is_object($server)) {
+			popup_error(sprintf(_("Unknown server '%s'"), $_REQUEST['server']));
+			redirect(); 
+		}
 		
 		$dn = null;
 		if ($server->hasAttribute('display_name') && ! is_null($server->getAttribute('display_name')))
@@ -1566,6 +1586,11 @@ if ($_REQUEST['name'] == 'Server') {
 			}
 			
 			$server = Abstract_Server::load($_REQUEST['server']);
+			if (! is_object($server)) {
+				popup_error(sprintf(_("Unknown server '%s'"), $_REQUEST['server']));
+				redirect(); 
+			}
+			
 			$server->fqdn = $_REQUEST['fqdn'];
 			Abstract_Server::save($server);
 			popup_info(sprintf(_("Server '%s' successfully modified"), $server->fqdn));
@@ -1582,6 +1607,11 @@ if ($_REQUEST['name'] == 'Server') {
 			}
 
 			$server = Abstract_Server::load($_REQUEST['server']);
+			if (! is_object($server)) {
+				popup_error(sprintf(_("Unknown server '%s'"), $_REQUEST['server']));
+				redirect(); 
+			}
+			
 			$server->setAttribute('external_name', $_REQUEST['external_name']);
 			Abstract_Server::save($server);
 			popup_info(sprintf(_("Server '%s' successfully modified"), $server->getDisplayName()));
@@ -1618,11 +1648,21 @@ if ($_REQUEST['name'] == 'Server') {
 	if ($_REQUEST['action'] == 'replication') {
 		if (isset($_REQUEST['server']) && isset($_REQUEST['servers'])) {
 			$server_from = Abstract_Server::load($_REQUEST['server']);
+			if (! is_object($server_from)) {
+				popup_error(sprintf(_("Unknown server '%s'"), $_REQUEST['server']));
+				redirect(); 
+			}
+			
 			$applications_from = $server_from->getApplications();
 		
 			$servers_id = $_REQUEST['servers'];
 			foreach($servers_id as $server_id) {
 				$server_to = Abstract_Server::load($server_id);
+				if (! is_object($server_to)) {
+					popup_error(sprintf(_("Unknown server '%s'"), $server_id));
+					continue;
+				}
+				
 				if (! array_key_exists(Server::SERVER_ROLE_APS, $server_to->roles))
 					continue;
 
@@ -1665,6 +1705,10 @@ if ($_REQUEST['name'] == 'Server') {
 			}
 			
 			$server = Abstract_Server::load($_REQUEST['server']);
+			if (! is_object($server)) {
+				popup_error(sprintf(_("Unknown server '%s'"), $_REQUEST['server']));
+				redirect();
+			}
 			
 			if ($_REQUEST['rdp_port'] == $server->getApSRDPPort()) {
 				popup_error(_("Nothing to save. RDP port is identicall to old one"));
@@ -1693,6 +1737,10 @@ if ($_REQUEST['name'] == 'Server') {
 		}
 		
 		$server = Abstract_Server::load($_REQUEST['server']);
+		if (! is_object($server)) {
+			popup_error(sprintf(_("Unknown server '%s'"), $_REQUEST['server']));
+			redirect();
+		}
 		
 		if (! array_key_exists($_REQUEST['role'], $server->roles)) {
 			popup_error(sprintf(_("%s is not an available role"), $_REQUEST['role']));
@@ -1828,6 +1876,10 @@ function action_add_sharedfolder() {
 	
 	if (array_key_exists('sharedfolder_server', $_REQUEST)) {
 		$a_server = Abstract_Server::load($_REQUEST['sharedfolder_server']);
+		if (! is_object($a_server)) {
+			popup_error(sprintf(_("Unknown server '%s'"), $_REQUEST['sharedfolder_server']));
+			return false;
+		}
 	}
 	else {
 		$a_server = $sharedfolderdb->chooseFileServer();
