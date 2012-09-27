@@ -332,6 +332,12 @@ class Preferences {
 		$c = new ConfigElement_select('disable_fqdn_check', _('Disable reverse FQDN checking'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general', 'slave_server_settings');
+		$c = new ConfigElement_select('use_reverse_dns', _('Use reverse DNS for server\'s FQDN'),
+			_('Try to identify the server using the reverse DNS record associated to the remote address.'),
+			_('Try to identify the server using the reverse DNS record associated to the remote address.'),
+			true);
+		$c->setContentAvailable(array(false => _('no'), true => _('yes')));
+		$this->add($c,'general', 'slave_server_settings');
 		$c = new ConfigElement_select('action_when_as_not_ready', _('Action when a server status is not ready anymore'), _('Action when a server status is not ready anymore'), _('Action when an server status is not ready anymore'), 0);
 		$c->setContentAvailable(array(0=>_('Do nothing'),1=>_('Switch to maintenance')));
 		$this->add($c,'general', 'slave_server_settings');

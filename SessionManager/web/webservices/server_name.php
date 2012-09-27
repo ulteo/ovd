@@ -47,6 +47,18 @@ if (is_null($server)) {
 		$server->locked = false;
 
 	$server->fqdn = $_SERVER['REMOTE_ADDR'];
+	
+	$buf = $prefs->get('general', 'slave_server_settings');
+	if ($buf['use_reverse_dns']) {
+		$reverse = @gethostbyaddr($server->fqdn);
+		
+		if ($reverse !== false && $reverse != $server->fqdn) {
+			$ips = @gethostbynamel($reverse);
+			if ($ips !== false && in_array($server->fqdn, $ips)) {
+				$server->fqdn = $reverse;
+			}
+		}
+	}
 
 	$server->max_sessions = 20;
 /*
