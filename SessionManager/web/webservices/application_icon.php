@@ -21,17 +21,6 @@
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 require_once(dirname(__FILE__).'/../includes/webservices.inc.php');
 
-function return_error($errno_, $errstr_) {
-	header('Content-Type: text/xml; charset=utf-8');
-	$dom = new DomDocument('1.0', 'utf-8');
-	$node = $dom->createElement('error');
-	$node->setAttribute('id', $errno_);
-	$node->setAttribute('message', $errstr_);
-	$dom->appendChild($node);
-	Logger::error('main', "(webservices/application_icon) return_error($errno_, $errstr_)");
-	return $dom->saveXML();
-}
-
 function parse_icon_XML($xml_) {
 	if (! $xml_ || strlen($xml_) == 0)
 		return false;
@@ -64,33 +53,33 @@ function parse_icon_XML($xml_) {
 
 $ret = parse_icon_XML(@file_get_contents('php://input'));
 if (! $ret) {
-	echo return_error(1, 'Server does not send a valid XML');
-	die();
+	Logger::error('main', '(webservices/application/icon) Server does not send a valid XML (error_code: 1)');
+	webservices_return_error(1, 'Server does not send a valid XML');
 }
 
 $server = webservices_load_server($_SERVER['REMOTE_ADDR']);
 if (! $server) {
-	echo return_error(2, 'Server does not exist');
-	die();
+	Logger::error('main', '(webservices/application/icon) Server does not exist (error_code: 2)');
+	webservices_return_error(2, 'Server does not exist');
 }
 
 if (! $server->isAuthorized()) {
-	echo return_error(3, 'Server is not authorized');
-	die();
+	Logger::error('main', '(webservices/application/icon) Server is not authorized (error_code: 3)');
+	webservices_return_error(3, 'Server is not authorized');
 }
 
 $applicationDB = ApplicationDB::getInstance();
 
 $app = $applicationDB->import($ret['application']['id']);
 if (! is_object($app)) {
-	echo return_error(4, 'No such application "'.$ret['application']['id'].'"');
-	die();
+	Logger::error('main', '(webservices/application/icon) No such application "'.$ret['application']['id'].'" (error_code: 4)');
+	webservices_return_error(4, 'No such application "'.$ret['application']['id'].'"');
 }
 
 $path = $app->getIconPath();
 if (! file_exists($path)) {
-	echo return_error(5, 'No icon available for application "'.$ret['application']['id'].'"');
-	die();
+	Logger::error('main', '(webservices/application/icon) No icon available for application "'.$ret['application']['id'].'" (error_code: 5)');
+	webservices_return_error(5, 'No icon available for application "'.$ret['application']['id'].'"');
 }
 
 header('Content-Type: image/png');

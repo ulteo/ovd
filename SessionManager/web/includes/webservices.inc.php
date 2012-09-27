@@ -35,3 +35,15 @@ function webservices_load_server($addr_) {
 	
 	return $server;
 }
+
+function webservices_return_error($errno_, $errstr_) {
+	$dom = new DomDocument('1.0', 'utf-8');
+	$node = $dom->createElement('error');
+	$node->setAttribute('id', $errno_);
+	$node->setAttribute('message', $errstr_);
+	$dom->appendChild($node);
+	
+	header('Content-Type: text/xml; charset=utf-8');
+	echo $dom->saveXML();
+	die();
+}

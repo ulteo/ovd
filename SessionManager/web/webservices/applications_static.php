@@ -21,26 +21,15 @@
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 require_once(dirname(__FILE__).'/../includes/webservices.inc.php');
 
-function return_error($errno_, $errstr_) {
-	header('Content-Type: text/xml; charset=utf-8');
-	$dom = new DomDocument('1.0', 'utf-8');
-	$node = $dom->createElement('error');
-	$node->setAttribute('id', $errno_);
-	$node->setAttribute('message', $errstr_);
-	$dom->appendChild($node);
-	Logger::error('main', "(webservices/application_icon) return_error($errno_, $errstr_)");
-	return $dom->saveXML();
-}
-
 $server = webservices_load_server($_SERVER['REMOTE_ADDR']);;
 if (! $server) {
-	echo return_error(1, 'Server does not exist');
-	die();
+	Logger::error('main', '(webservices/applications/static) Server does not exist (error_code: 0)');
+	webservices_return_error(1, 'Server does not exist');
 }
 
 if (! $server->isAuthorized()) {
-	echo return_error(2, 'Server is not authorized');
-	die();
+	Logger::error('main', '(webservices/applications/static) Server is not authorized (error_code: 2)');
+	webservices_return_error(2, 'Server is not authorized');
 }
 
 header('Content-Type: text/xml; charset=utf-8');

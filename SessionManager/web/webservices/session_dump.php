@@ -21,17 +21,6 @@
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 require_once(dirname(__FILE__).'/../includes/webservices.inc.php');
 
-function return_error($errno_, $errstr_) {
-	header('Content-Type: text/xml; charset=utf-8');
-	$dom = new DomDocument('1.0', 'utf-8');
-	$node = $dom->createElement('error');
-	$node->setAttribute('id', $errno_);
-	$node->setAttribute('message', $errstr_);
-	$dom->appendChild($node);
-	Logger::error('main', "(webservices/session_dump) return_error($errno_, $errstr_)");
-	return $dom->saveXML();
-}
-
 function parse_session_dump_XML($xml_) {
 	if (! $xml_ || strlen($xml_) == 0)
 		return false;
@@ -84,32 +73,32 @@ function parse_session_dump_XML($xml_) {
 
 $infos = parse_session_dump_XML(@file_get_contents('php://input'));
 if (! $infos) {
-	echo return_error(1, 'Server does not send a valid XML');
-	die();
+	Logger::error('main', '(webservices/session/dump) Server does not send a valid XML (error_code: 1)');
+	webservices_return_error(1, 'Server does not send a valid XML');
 }
 
 $server = webservices_load_server($_SERVER['REMOTE_ADDR']);
 if (! $server) {
-	echo return_error(2, 'Server does not exist');
-	die();
+	Logger::error('main', '(webservices/session/dump) Server does not exist (error_code: 2)');
+	webservices_return_error(2, 'Server does not exist');
 }
 
 $session = Abstract_Session::load($infos['id']);
 if (! $session) {
-	echo return_error(2, 'Session does not exist');
-	die();
+	Logger::error('main', '(webservices/session/dump) Session does not exist (error_code: 2)');
+	webservices_return_error(2, 'Session does not exist');
 }
 
 $ret = $session->setServerDump($server->id, $infos['dump']);
 if ($ret === false) {
-	echo return_error(1, 'Server is not used for this session');
-	die();
+	Logger::error('main', '(webservices/session/dump) Server is not used for this session (error_code: 1)');
+	webservices_return_error(1, 'Server is not used for this session');
 }
 
 $ret = Abstract_Session::save($session);
 if ($ret === false) {
-	echo return_error(1, 'Unable to save session with these information');
-	die();
+	Logger::error('main', '(webservices/session/dump) Unable to save session with these information (error_code: 1)');
+	webservices_return_error(1, 'Unable to save session with these information');
 }
 
 header('Content-Type: text/xml; charset=utf-8');

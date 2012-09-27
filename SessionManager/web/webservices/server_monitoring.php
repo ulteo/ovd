@@ -24,17 +24,6 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 require_once(dirname(__FILE__).'/../includes/webservices.inc.php');
 
-function return_error($errno_, $errstr_) {
-	header('Content-Type: text/xml; charset=utf-8');
-	$dom = new DomDocument('1.0', 'utf-8');
-	$node = $dom->createElement('error');
-	$node->setAttribute('id', $errno_);
-	$node->setAttribute('message', $errstr_);
-	$dom->appendChild($node);
-	Logger::error('main', "(webservices/server_monitoring) return_error($errno_, $errstr_)");
-	return $dom->saveXML();
-}
-
 function parse_monitoring_XML($xml_) {
 	if (! $xml_ || strlen($xml_) == 0)
 		return false;
@@ -57,8 +46,8 @@ function parse_monitoring_XML($xml_) {
 
 	$server = webservices_load_server($_SERVER['REMOTE_ADDR']);
 	if (! $server) {
-		echo return_error(2, 'Server does not exist');
-		die();
+		Logger::error('main', '(webservices/server/monitoring) Server does not exist (error_code: 2)');
+		webservices_return_error(2, 'Server does not exist');
 	}
 
 	if (! $server->isAuthorized())
@@ -155,19 +144,19 @@ function parse_monitoring_XML($xml_) {
 
 $ret = parse_monitoring_XML(@file_get_contents('php://input'));
 if (! $ret) {
-	echo return_error(1, 'Server does not send a valid XML');
-	die();
+	Logger::error('main', '(webservices/server/monitoring) Server does not send a valid XML (error_code: 1)');
+	webservices_return_error(1, 'Server does not send a valid XML');
 }
 
 $server = webservices_load_server($_SERVER['REMOTE_ADDR']);
 if (! $server) {
-	echo return_error(2, 'Server does not exist');
-	die();
+	Logger::error('main', '(webservices/server/monitoring) Server does not exist (error_code: 1)');
+	webservices_return_error(2, 'Server does not exist');
 }
 
 if (! $server->isAuthorized()) {
-	echo return_error(3, 'Server is not authorized');
-	die();
+	Logger::error('main', '(webservices/server/monitoring) Server is not authorized (error_code: 3)');
+	webservices_return_error(3, 'Server is not authorized');
 }
 
 $server->setAttribute('cpu_load', $ret['cpu_load']);

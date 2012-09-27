@@ -22,17 +22,6 @@
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 require_once(dirname(__FILE__).'/../includes/webservices.inc.php');
 
-function return_error($errno_, $errstr_) {
-	header('Content-Type: text/xml; charset=utf-8');
-	$dom = new DomDocument('1.0', 'utf-8');
-	$node = $dom->createElement('error');
-	$node->setAttribute('id', $errno_);
-	$node->setAttribute('message', $errstr_);
-	$dom->appendChild($node);
-	Logger::error('main', "(webservices/server_name) return_error($errno_, $errstr_)");
-	return $dom->saveXML();
-}
-
 function generate_server_id() {
 	return gen_string(5, 'abcdefghijklmnopqrstuvwxyz0123456789');
 }
@@ -45,8 +34,8 @@ if (is_null($server)) {
 
 	$prefs = Preferences::getInstance();
 	if (! $prefs) {
-		echo return_error(0, 'Internal error');
-		die();
+		Logger::error('main', '(webservices/server/name) Unable to load preferences (error_code: 0)');
+		webservices_return_error(0, 'Internal error');
 	}
 
 	$buf = $prefs->get('general', 'slave_server_settings');
@@ -62,18 +51,18 @@ if (is_null($server)) {
 	$server->max_sessions = 20;
 /*
 	if (! $server->isAuthorized()) {
-		echo return_error(1, 'Server is not authorized');
-		die();
+		Logger::error('main', '(webservices/server/name) Server is not authorized (error_code: 1)');
+		webservices_return_error(1, 'Server is not authorized');
 	}
 
 	if (! $server->isOnline()) {
-		echo return_error(2, 'Server is not OK');
-		die();
+		Logger::error('main', '(webservices/server/name) Server is not OK (error_code: 2)');
+		webservices_return_error(2, 'Server is not OK');
 	}
 
 	if (! $server->isOK()) {
-		echo return_error(3, 'Server is not online');
-		die();
+		Logger::error('main', '(webservices/server/name) Server is not online (error_code: 3)');
+		webservices_return_error(3, 'Server is not online');
 	}
 */
 	$ret = Abstract_Server::create($server);
@@ -87,8 +76,7 @@ if (is_null($server)) {
 	if ($ret !== true) {
 		Logger.error('');
 		Logger::error('main', 'Unable to save new server after '.$try_count.' try');
-		echo return_error(0, 'Internal error');
-		die();
+		webservices_return_error(0, 'Internal error');
 	}
 	
 	Abstract_Server::save($server);
