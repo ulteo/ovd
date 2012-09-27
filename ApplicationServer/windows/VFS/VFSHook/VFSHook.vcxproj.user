@@ -7,7 +7,7 @@
     <LocalDebuggerWorkingDirectory>$(ProjectDir)</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommand>../x64/debug/VFSHookLoader.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>../x64/debug/VFSHookTester.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <ShowAllFiles>false</ShowAllFiles>
   </PropertyGroup>

@@ -9,130 +9,347 @@
 #include <ctime>
 #include <shlobj.h> 
 #include <shlwapi.h> 
-#include <string>
-
+/*
 #if _WIN32 || _WIN64
 #if _WIN64
-#define LOG_FILE "D:\\HookTest\\HookLog64.txt"
+//#define LOG_FILE "U:\\VFSLog64.log"
 #else
-#define LOG_FILE "D:\\HookTest\\HookLog32.txt"
+//#define LOG_FILE "U:\\VFSLog32.log"
 #endif //#if _WIN64
 #endif //#if _WIN32 || _WIN64
+*/
 
-#define REDIRECT_PATH	L"D:\\HookTest"
-//#define REDIRECT_PATH	L"U:"
-#define	SEPERATOR		L"\\"
-#define DESKTOP_FOLDER	L"Desktop"
-#define DOCUMENT_FOLDER	L"Documents"
-#define HOOK_AND_LOG_FAILURE(pOri, pInt, szFunc)	if(!Mhook_SetHook(pOri, pInt)){log("Failed to hook %s", szFunc);}
+//ENABLE_LOGGING	
+// 0 disable log, 1 enable log
+#define ENABLE_LOGGING			0
 
+#define LOG_FILE				L"U:\\.VFSLog.log"
 
-static bool gs_Logging = false;
+#define REDIRECT_PATH			L"U:"
+#define	SEPERATOR				L"\\"
+#define DEVICE_PREFIX			L"\\??\\"
+#define BLACKLIST_CONF_FILE		L"blacklist.conf"
+
+#define HOOK_AND_LOG_FAILURE(pOri, pInt, szFunc)	if(!Mhook_SetHook(pOri, pInt))\
+													{\
+														log("Failed to hook %s", szFunc);\
+													}
+
+// is path d0 equals to d1
+#define SAME_DIR(d0, d1)							wcscmp(d0, d1) == 0
+
+//0 represents for CSIDL blacklist
+//1 represents for allowed CSIDL 
+#define IS_CSIDL_BLACK_LIST(flag)					flag == 0 ? true:false
 
 
 ////////////////////////////////////////////////////////////////////////
-//	File system related API
-//
-//	Winodws Local File Systems referece:
-//		http://msdn.microsoft.com/en-us/library/windows/desktop/aa364407(v=vs.85).aspx
-//	Directory Management Functions:
-//		http://msdn.microsoft.com/en-us/library/windows/desktop/aa363950(v=vs.85).aspx
-//	File Management Functions:
-//		http://msdn.microsoft.com/en-us/library/windows/desktop/aa364232(v=vs.85).aspx
-//	Disk Management Functions:
-//		http://msdn.microsoft.com/en-us/library/windows/desktop/aa363983(v=vs.85).aspx
+//	Global attributes
 ////////////////////////////////////////////////////////////////////////
 
-WCHAR g_szOriginDesktop[MAX_PATH] = {0};
-WCHAR g_szOriginDocuments[MAX_PATH] = {0};
-void obtainUserSHFolders()
-{
-	// target path : Desktop & Document
-	SHGetSpecialFolderPath(NULL, g_szOriginDesktop, CSIDL_DESKTOP, 0);
-	SHGetSpecialFolderPath(NULL, g_szOriginDocuments, CSIDL_PERSONAL, 0);
+bool g_bLogging = false;
+
+//blacklist of folders should not be redirected 
+//"PATH", "PATH/Temp" for example; or "PATH*" for any file or folder starts with "PATH"
+std::vector<std::wstring>		g_vBlacklistFolder;
+
+//Origin User Profile path
+int g_iUserProfileStringLength = 0;
+
+//Origin User Profile path with DevicePrefix //??//
+std::wstring g_szDeviceUserProfilePath;
+
+////////////////////////////////////////////////////////////////////////
+//	Utility functions
+////////////////////////////////////////////////////////////////////////
+
+void setupBlackList(std::vector<std::wstring>* pvBlackList)
+{	
+	//Default blacklist
+	pvBlackList->push_back(std::wstring(L"ntuser*"));
+	pvBlackList->push_back(std::wstring(L"NTUSER*"));
+
+	//Read conf file from CSIDL_COMMON_APPDATA\\ulteo\ovd
+	WCHAR filename[MAX_PATH];
+	SHGetSpecialFolderPathW(NULL, filename, CSIDL_COMMON_APPDATA, 0);
+	lstrcatW(filename, L"\\ulteo\\ovd\\");
+	lstrcatW(filename, BLACKLIST_CONF_FILE);
+		
+	//Check if conf file not exist
+	WIN32_FIND_DATAW FindFileData;
+	HANDLE hFind = FindFirstFileW(filename, &FindFileData);
+	if (hFind == INVALID_HANDLE_VALUE) 
+	{
+		log("Blacklist configuration file not found. Setting CSIDL folders into blacklist by default.");
+
+		//If conf file not exist, put every folder to black list except CSIDL_DESKTOP and CSIDL_PERSONAL
+		//pvBlackList->push_back( getCSIDLFolderName(CSIDL_DESKTOP) );
+		//pvBlackList->push_back( getCSIDLFolderName(CSIDL_PERSONAL) );
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_FAVORITES) );
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_MYMUSIC) );
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_MYVIDEO) );
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_MYPICTURES) );
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_SENDTO) );
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_STARTMENU) );
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_NETHOOD) );
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_APPDATA) );
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_PRINTHOOD) );
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_LOCAL_APPDATA) );
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_TEMPLATES) );
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_COOKIES) );
+		pvBlackList->push_back( L"Downloads");
+		pvBlackList->push_back( L"Links");
+		pvBlackList->push_back( L"Searches");
+		pvBlackList->push_back( L"Contacts");
+		pvBlackList->push_back( L"Saved Games");
+
+		//Don't need to continue if the conf file is not exist
+		return;
+	}
+	else
+	{
+		FindClose(hFind);
+	}
+
+	//Parse CSIDL black list
+	int iDefault = 0;
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"CSIDL_DESKTOP", iDefault, filename)) )
+	{
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_DESKTOP) );
+	}
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"CSIDL_PERSONAL", iDefault, filename)) )
+	{
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_PERSONAL) );
+	}
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"CSIDL_FAVORITES", iDefault, filename)) )
+	{
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_FAVORITES) );
+	}
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"CSIDL_MYMUSIC", iDefault, filename)) )
+	{
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_MYMUSIC) );
+	}
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"CSIDL_MYVIDEO", iDefault, filename)) )
+	{
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_MYVIDEO) );
+	}
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"CSIDL_MYPICTURES", iDefault, filename)) )
+	{
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_MYPICTURES) );
+	}
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"CSIDL_SENDTO", iDefault, filename)) )
+	{
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_SENDTO) );
+	}
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"CSIDL_STARTMENU", iDefault, filename)) )
+	{
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_STARTMENU) );
+	}
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"CSIDL_NETHOOD", iDefault, filename)) )
+	{
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_NETHOOD) );
+	}
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"CSIDL_APPDATA", iDefault, filename)) )
+	{
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_APPDATA) );
+	}
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"CSIDL_PRINTHOOD", iDefault, filename)) )
+	{
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_PRINTHOOD) );
+	}
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"CSIDL_LOCAL_APPDATA", iDefault, filename)) )
+	{
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_LOCAL_APPDATA) );
+	}
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"CSIDL_TEMPLATES", iDefault, filename)) )
+	{
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_TEMPLATES) );
+	}
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"CSIDL_COOKIES", iDefault, filename)) )
+	{
+		pvBlackList->push_back( getCSIDLFolderName(CSIDL_COOKIES) );
+	}
+	//The following are not defined CSIDL, but usually comes with UserProfile
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"DOWNLOADS", iDefault, filename)) )
+	{
+		pvBlackList->push_back( L"Downloads");
+	}
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"LINKS", iDefault, filename)) )
+	{
+		pvBlackList->push_back( L"Links");
+	}
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"SEARCHES", iDefault, filename)) )
+	{
+		pvBlackList->push_back( L"Searches");
+	}
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"CONTACTS", iDefault, filename)) )
+	{
+		pvBlackList->push_back( L"Contacts");
+	}
+	if( IS_CSIDL_BLACK_LIST(GetPrivateProfileIntW(L"CSIDL", L"SAVED_GAMES", iDefault, filename)) )
+	{
+		pvBlackList->push_back( L"Saved Games");
+	}
+		
+	//Parse SELF_DEFINE black list
+	int charsCount;
+	WCHAR szBlackList[4096] = {};
+	charsCount = GetPrivateProfileSectionW(L"SELF_DEFINE", szBlackList, 4096, filename);
+	int start = 0;
+	for (int i = 0; i < charsCount; i++)
+	{
+		WCHAR curChar = szBlackList[i];
+		if (curChar == L'\0')
+		{
+			std::wstring item( szBlackList + start, i);
+			pvBlackList->push_back(item);
+			start = i+1;			
+		}
+	}
 }
 
-bool filter(LPCWSTR lpFilePath, 
-			std::wstring szTargetPath, 
-			std::wstring szRedirectPath, 
-			std::wstring* pszOutputPath)
+void obtainCSIDLFolders()
 {
-	bool bRedirected = false;
-	std::wstring szResult(lpFilePath);//reusult == input path by default
+	//Obtain USERPROFILE path
+	WCHAR szUserProfilePath[MAX_PATH];
+	SHGetSpecialFolderPathW(NULL, szUserProfilePath, CSIDL_PROFILE, 0);
+		
+	//Profile path string length
+	g_iUserProfileStringLength = std::wstring(szUserProfilePath).length();
 
-	std::wstring szFileTargetRoot = std::wstring(lpFilePath).substr(0, szTargetPath.length());
+	// Profile path with device prefiex
+	g_szDeviceUserProfilePath.append(DEVICE_PREFIX);
+	g_szDeviceUserProfilePath.append(szUserProfilePath);
+}
 
-	//is in target folder
-	if( wcscmp(szFileTargetRoot.c_str(), szTargetPath.c_str()) == 0 )
+std::wstring getCSIDLFolderName(int csidl)
+{
+	WCHAR temp[MAX_PATH];
+	SHGetSpecialFolderPathW(NULL, temp, csidl, 0);
+	return std::wstring(temp).substr(g_iUserProfileStringLength + 1);
+}
+
+bool substitutePath(std::wstring szPath, 
+					std::wstring szTargetPath, 
+					std::wstring szRedirectPath, 
+					bool bSubstituteSelf,
+					std::wstring* pszSubstitutedPath)
+{	
+	bool bRet = false;
+	std::wstring szPathParent = szPath.substr(0, szTargetPath.length());
+	
+	//Path contains target folder
+	if( SAME_DIR(szPathParent.c_str(), szTargetPath.c_str()))
 	{
-		bRedirected = true;
-		//is children folder/file of the target folder
-		if(std::wstring(lpFilePath).length() > szFileTargetRoot.length())
+		//Path is children of the target folder
+		if(szPath.length() > szPathParent.length())
 		{
-			std::wstring szRemainPath = std::wstring(lpFilePath).substr(szTargetPath.length() + 1);
-			szResult = szRedirectPath + SEPERATOR + szRemainPath;
+			//szPathRemain: the remain path without SEPERATOR at begin
+			std::wstring szRemainPath = szPath.substr(szTargetPath.length() + 1);
+			
+			//Check if szRemainPath is in black list
+			if(hasFolder(szRemainPath, g_vBlacklistFolder))
+			{
+				;
+			}
+			else
+			{
+				*pszSubstitutedPath = szRedirectPath + SEPERATOR + szRemainPath;
+				bRet = true;
+			}
 		}
-		//is target folder
+		//Path is target path
 		else 
 		{
-			szResult = szRedirectPath;
+			if(bSubstituteSelf)
+			{
+				*pszSubstitutedPath = szRedirectPath + SEPERATOR;
+				bRet = true;
+			}
 		}
 	}
 
-	*pszOutputPath = szResult;
-	return bRedirected;
+	return bRet;
 }
 
-BOOL GetPath(POBJECT_ATTRIBUTES ObjectAttributes, WCHAR* strPath)
+bool getPath(POBJECT_ATTRIBUTES ObjectAttributes, WCHAR* strPath)
 {
 	if (!ObjectAttributes->RootDirectory && !ObjectAttributes->ObjectName)
 	{
-		return FALSE;
+		return false;
 	}
-
 	if (ObjectAttributes->RootDirectory)
 	{
-		//TODO: ObjectAttributes->RootDirectory
-		//if (STATUS_SUCCESS != GetFullPathByHandle(ObjectAttributes->RootDirectory, strPath))
-		//{
-		//	return FALSE;
-		//}
+		return false;
 	}
 	if (NULL != ObjectAttributes && NULL != ObjectAttributes->ObjectName && ObjectAttributes->ObjectName->Length > 0)
 	{
-		lstrcatW(strPath,ObjectAttributes->ObjectName->Buffer);
+		lstrcatW(strPath, ObjectAttributes->ObjectName->Buffer);
 	}
-	return TRUE;
+	return true;
 }
 
-void redirectUserPath(WCHAR* strTargetPath, PUNICODE_STRING* punistrPathOutput)
-{	
-	std::wstring out;
-	WCHAR szNewP[MAX_PATH] = {0};
-	lstrcatW(szNewP, L"\\??\\");
-	lstrcatW(szNewP, g_szOriginDesktop);
-	if ( filter(strTargetPath, szNewP, std::wstring(REDIRECT_PATH) + SEPERATOR + DESKTOP_FOLDER, &out) )
-	{			
-		WCHAR temp[MAX_PATH]  = {0};
-		lstrcatW(temp, L"\\??\\");
-		lstrcatW(temp, out.c_str());
-
-		log("NEW filename=%S", temp);
-
-		(*punistrPathOutput)->Buffer = temp;   
-		(*punistrPathOutput)->Length = (4 + out.length()) * 2;  // 4 for \\??\\, * 2 for wchar 
-		(*punistrPathOutput)->MaximumLength = (4 + out.length()) * 2 + 2; // + 2 for "/0"
-	}	
-	else if( filter(strTargetPath, g_szOriginDocuments, std::wstring(REDIRECT_PATH) + SEPERATOR + DOCUMENT_FOLDER, &out) )
+bool hasFolder(std::wstring szFolder, std::vector<std::wstring> vList)
+{
+	for(int i=0; i<vList.size(); ++i)
 	{
-		WCHAR szModifiedPath[MAX_PATH] = {0};
-		wcscpy(szModifiedPath, out.c_str());
-		log("NEW filename=%S", szModifiedPath);
+		std::wstring blackItm = vList[i];
+		int len;
+		if(blackItm[blackItm.length()-1] == L'*')// any word
+		{
+			len = blackItm.length() - 1;
+		}
+		else
+		{
+			len = blackItm.length();
+		}
+		std::wstring path = szFolder.substr(0, len);
+		blackItm = blackItm.substr(0, len);
+
+		if(SAME_DIR(path.c_str(), blackItm.c_str()))
+		{
+			return true;
+		}
 	}
+	return false;
 }
+
+bool redirectFilePath(WCHAR* pszFilePath, PUNICODE_STRING* puniszRedirectPath, WCHAR* pszReserve)
+{	
+	std::wstring szResult;
+	if ( substitutePath(pszFilePath, 
+			g_szDeviceUserProfilePath, 
+			std::wstring(REDIRECT_PATH), 
+			true, 
+			&szResult) )
+	{
+		lstrcatW(pszReserve, DEVICE_PREFIX);
+		lstrcatW(pszReserve, szResult.c_str());
+		
+		log("Redirected filename=%S", pszReserve);
+
+		(*puniszRedirectPath)->Buffer = pszReserve;   
+		(*puniszRedirectPath)->Length = (4 + szResult.length()) * 2;  // 4 for \\??\\, * 2 for wchar 
+		(*puniszRedirectPath)->MaximumLength = (4 + szResult.length()) * 2 + 2; // + 2 for "/0"
+		
+		return true;
+	}
+
+	return false;
+}
+
+void logErrorStatus(NTSTATUS stus)
+{
+	log("Return STATUS Error, id = %ld", stus);
+}
+
+////////////////////////////////////////////////////////////////////////
+//	API Hooking
+////////////////////////////////////////////////////////////////////////
+
 //-------------------------------------------------------------------//
 //NtCreateFile
-typedef NTSTATUS (WINAPI* _pNtCreateFile)(	PHANDLE FileHandle,
+typedef NTSTATUS (WINAPI* PtrNtCreateFile)(	PHANDLE FileHandle,
 											ACCESS_MASK DesiredAccess,
 											POBJECT_ATTRIBUTES ObjectAttributes,
 											PIO_STATUS_BLOCK IoStatusBlock,
@@ -143,7 +360,7 @@ typedef NTSTATUS (WINAPI* _pNtCreateFile)(	PHANDLE FileHandle,
 											ULONG CreateOptions,
 											PVOID EaBuffer,
 											ULONG EaLength);
-_pNtCreateFile OriginNtCreateFile = (_pNtCreateFile)GetProcAddress(GetModuleHandle(L"ntdll"), "NtCreateFile");
+PtrNtCreateFile OriginNtCreateFile = (PtrNtCreateFile)GetProcAddress(GetModuleHandle(L"ntdll"), "NtCreateFile");
 NTSTATUS WINAPI myNtCreateFile(	PHANDLE FileHandle,
 								ACCESS_MASK DesiredAccess,
 								POBJECT_ATTRIBUTES ObjectAttributes,
@@ -156,147 +373,108 @@ NTSTATUS WINAPI myNtCreateFile(	PHANDLE FileHandle,
 								PVOID EaBuffer,
 								ULONG EaLength)
 {	
-	if(gs_Logging)
+	if(g_bLogging)
 	{
 		return OriginNtCreateFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, AllocationSize, 
 			FileAttributes, ShareAccess, CreateDisposition, CreateOptions, EaBuffer, EaLength);
 	}
-
-	log("NtCreateFile: handle=%x, filename=%wZ", FileHandle, ObjectAttributes->ObjectName);
-
-	//return OriginNtCreateFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, AllocationSize, 
-	//	FileAttributes, ShareAccess, CreateDisposition, CreateOptions, EaBuffer, EaLength);
-			
-	PUNICODE_STRING pOriginObjectName = ObjectAttributes->ObjectName;
-	WCHAR szFilePath[MAX_PATH] = {0};
-	if(GetPath(ObjectAttributes, szFilePath))
+	
+	if(ObjectAttributes != NULL && ObjectAttributes->ObjectName != NULL)
 	{
-		redirectUserPath(szFilePath, &ObjectAttributes->ObjectName);
+		log("NtCreateFile: handle=%x, filename=%wZ", FileHandle, ObjectAttributes->ObjectName);
+	}
+
+	//Reserve origin data before modified
+	UNICODE_STRING uniszRestore;
+	bool bStore = false;
+	if(ObjectAttributes != NULL && ObjectAttributes->ObjectName != NULL)
+	{
+		bStore = true;
+		uniszRestore= *(ObjectAttributes->ObjectName);
+	}
+
+	WCHAR szFilePath[MAX_PATH] = {0};
+	WCHAR szTemp[MAX_PATH]  = {0};
+	if(getPath(ObjectAttributes, szFilePath))
+	{
+		redirectFilePath(szFilePath, &ObjectAttributes->ObjectName, szTemp);
 	}
 	
 	NTSTATUS stus = OriginNtCreateFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, AllocationSize, 
 		FileAttributes, ShareAccess, CreateDisposition, CreateOptions, EaBuffer, EaLength);
 
-	ObjectAttributes->ObjectName = pOriginObjectName;
+	logErrorStatus(stus);
 	
+	//Restore original data after modified
+	if(bStore)
+	{
+		ObjectAttributes->ObjectName->Buffer = uniszRestore.Buffer; 
+		ObjectAttributes->ObjectName->Length = uniszRestore.Length; 
+		ObjectAttributes->ObjectName->MaximumLength = uniszRestore.MaximumLength; 
+	}
+
 	return stus;
 }
 
 //-------------------------------------------------------------------//
-//NtQueryDirectoryFile
-typedef NTSTATUS (NTAPI* _pNtQueryDirectoryFile)(	HANDLE FileHandle, 
-													HANDLE Event,  
-													PIO_APC_ROUTINE ApcRoutine,  
-													PVOID ApcContext,
-													PIO_STATUS_BLOCK IoStatusBlock, 
-													PVOID FileInformation,  
-													ULONG Length,  
-													FILE_INFORMATION_CLASS FileInformationClass,
-													BOOLEAN ReturnSingleEntry,
-													PUNICODE_STRING FileName,
-													BOOLEAN RestartScan );
-_pNtQueryDirectoryFile OriginNtQueryDirectoryFile = (_pNtQueryDirectoryFile)GetProcAddress(GetModuleHandle(L"ntdll"), "NtQueryDirectoryFile");
-NTSTATUS NTAPI myNtQueryDirectoryFile(	HANDLE FileHandle, 
-										HANDLE Event,  
-										PIO_APC_ROUTINE ApcRoutine,  
-										PVOID ApcContext,
-										PIO_STATUS_BLOCK IoStatusBlock, 
-										PVOID FileInformation,  
-										ULONG Length,  
-										FILE_INFORMATION_CLASS FileInformationClass,
-										BOOLEAN ReturnSingleEntry,
-										PUNICODE_STRING FileName,
-										BOOLEAN RestartScan )
-{
-	log("NtQueryDirectoryFile handle=%x, filename=%wZ", FileHandle, FileName);
-
-	//NOTE: FileName here is relative path, for ex: Desktop, not C:\Users\User\Desktop
-	return OriginNtQueryDirectoryFile(FileHandle, Event, ApcRoutine, ApcContext, IoStatusBlock,
-		FileInformation, Length, FileInformationClass, ReturnSingleEntry, FileName,	RestartScan);
-}
-	
-//-------------------------------------------------------------------//
-//NtQueryObject
-typedef NTSTATUS (NTAPI* _pNtQueryObject)(	HANDLE Handle,
-											OBJECT_INFORMATION_CLASS ObjectInformationClass,
-											PVOID ObjectInformation,
-											ULONG ObjectInformationLength,
-											PULONG ReturnLength);
-_pNtQueryObject OriginNtQueryObject = (_pNtQueryObject)GetProcAddress(GetModuleHandle(L"ntdll"), "NtQueryObject");
-NTSTATUS NTAPI myNtQueryObject(	HANDLE Handle, 
-								OBJECT_INFORMATION_CLASS ObjectInformationClass,
-								PVOID ObjectInformation,
-								ULONG ObjectInformationLength,
-								PULONG ReturnLength)
-{
-	log("NtQueryObject: handle=%x", Handle);
-
-	return OriginNtQueryObject(Handle, ObjectInformationClass, ObjectInformation, ObjectInformationLength, ReturnLength);
-}
-
-//-------------------------------------------------------------------//
-//ZwOpenFile
-typedef NTSTATUS (NTAPI* _pZwOpenFile)(	PHANDLE FileHandle,
+//NtOpenFile
+typedef NTSTATUS (NTAPI* PtrNtOpenFile)(PHANDLE FileHandle,
 										ACCESS_MASK DesiredAccess,
 										POBJECT_ATTRIBUTES ObjectAttributes,
 										PIO_STATUS_BLOCK IoStatusBlock,
 										ULONG ShareAccess,
 										ULONG OpenOptions);
-_pZwOpenFile OriginZwOpenFile = (_pZwOpenFile)GetProcAddress(GetModuleHandle(L"ntdll"), "ZwOpenFile");
-NTSTATUS NTAPI myZwOpenFile(PHANDLE FileHandle,
+PtrNtOpenFile OriginNtOpenFile = (PtrNtOpenFile)GetProcAddress(GetModuleHandle(L"ntdll"), "NtOpenFile");
+NTSTATUS NTAPI myNtOpenFile(PHANDLE FileHandle,
 							ACCESS_MASK DesiredAccess,
 							POBJECT_ATTRIBUTES ObjectAttributes,
 							PIO_STATUS_BLOCK IoStatusBlock,
 							ULONG ShareAccess,
 							ULONG OpenOptions)
 {
-	if(gs_Logging)
+	if(g_bLogging)
 	{
-		return OriginZwOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
+		return OriginNtOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
+	}
+		
+	if(ObjectAttributes != NULL && ObjectAttributes->ObjectName != NULL)
+	{
+		log("NtOpenFile: handle=%x, filename=%wZ", FileHandle, ObjectAttributes->ObjectName);
 	}
 
-	log("ZwOpenFile: handle=%x, filename=%wZ", FileHandle, ObjectAttributes->ObjectName);
+	//Reserve origin data before modified
+	UNICODE_STRING uniszRestore;
+	bool bStore = false;
+	if(ObjectAttributes != NULL && ObjectAttributes->ObjectName != NULL)
+	{
+		bStore = true;
+		uniszRestore= *(ObjectAttributes->ObjectName);
+	}
 
-	PUNICODE_STRING pOriginObjectName = ObjectAttributes->ObjectName;
 	WCHAR szFilePath[MAX_PATH] = {0};
-	if(GetPath(ObjectAttributes, szFilePath))
+	WCHAR szTemp[MAX_PATH]  = {0};
+	if(getPath(ObjectAttributes, szFilePath))
 	{
-		redirectUserPath(szFilePath, &ObjectAttributes->ObjectName);
+		redirectFilePath(szFilePath, &ObjectAttributes->ObjectName, szTemp);
 	}
+		
+	NTSTATUS stus = OriginNtOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
+		
+	logErrorStatus(stus);
 	
-	NTSTATUS stus = OriginZwOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
-
-	ObjectAttributes->ObjectName = pOriginObjectName;
-	
-	log("ZwOpenFile: return stus = %ld", stus);
-	
+	//Restore original data after modified
+	if(bStore)
+	{
+		ObjectAttributes->ObjectName->Buffer = uniszRestore.Buffer; 
+		ObjectAttributes->ObjectName->Length = uniszRestore.Length; 
+		ObjectAttributes->ObjectName->MaximumLength = uniszRestore.MaximumLength; 
+	}
+		
 	return stus;
-	
-	//return OriginZwOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
 }
 
 //-------------------------------------------------------------------//
-//ZwQuerySecurityObject
-typedef NTSTATUS (NTAPI* _pZwQuerySecurityObject)(	HANDLE Handle,
-													SECURITY_INFORMATION SecurityInformation,
-													PSECURITY_DESCRIPTOR SecurityDescriptor,
-													ULONG Length,
-													PULONG LengthNeeded);
-_pZwQuerySecurityObject OriginZwQuerySecurityObject = 
-	(_pZwQuerySecurityObject)GetProcAddress(GetModuleHandle(L"ntdll"), "ZwQuerySecurityObject");
-NTSTATUS NTAPI myZwQuerySecurityObject(	HANDLE Handle,
-										SECURITY_INFORMATION SecurityInformation,
-										PSECURITY_DESCRIPTOR SecurityDescriptor,
-										ULONG Length,
-										PULONG LengthNeeded)
-{
-	log("ZwQuerySecurityObject: handle=%x", Handle);
-
-	return OriginZwQuerySecurityObject(Handle, SecurityInformation, SecurityDescriptor, Length, LengthNeeded);
-}
-
-//-------------------------------------------------------------------//
-//ZwQueryAttributesFile
+//NtQueryAttributesFile
 typedef struct _FILE_BASIC_INFORMATION {
   LARGE_INTEGER CreationTime;
   LARGE_INTEGER LastAccessTime;
@@ -305,228 +483,193 @@ typedef struct _FILE_BASIC_INFORMATION {
   ULONG         FileAttributes;
 } FILE_BASIC_INFORMATION, *PFILE_BASIC_INFORMATION;
 
-typedef NTSTATUS (NTAPI* _pZwQueryAttributesFile)(
+typedef NTSTATUS (NTAPI* PtrNtQueryAttributesFile)(
 						POBJECT_ATTRIBUTES ObjectAttributes,
 						PFILE_BASIC_INFORMATION FileInformation);
-_pZwQueryAttributesFile OriginZwQueryAttributesFile = (_pZwQueryAttributesFile)GetProcAddress(GetModuleHandle(L"ntdll"), "ZwQueryAttributesFile");
-NTSTATUS NTAPI myZwQueryAttributesFile(	POBJECT_ATTRIBUTES ObjectAttributes,
+PtrNtQueryAttributesFile OriginNtQueryAttributesFile = (PtrNtQueryAttributesFile)GetProcAddress(GetModuleHandle(L"ntdll"), "NtQueryAttributesFile");
+NTSTATUS NTAPI myNtQueryAttributesFile(	POBJECT_ATTRIBUTES ObjectAttributes,
 										PFILE_BASIC_INFORMATION FileInformation)
 {	
-	if(gs_Logging)
+	if(g_bLogging)
 	{
-		return OriginZwQueryAttributesFile(ObjectAttributes, FileInformation);
-	}
-
-	log("ZwQueryAttributesFile: filename=%wZ", ObjectAttributes->ObjectName);
-			
-
-	PUNICODE_STRING pOriginObjectName = ObjectAttributes->ObjectName;
-	WCHAR szFilePath[MAX_PATH] = {0};
-	if(GetPath(ObjectAttributes, szFilePath))
-	{
-		redirectUserPath(szFilePath, &ObjectAttributes->ObjectName);
+		return OriginNtQueryAttributesFile(ObjectAttributes, FileInformation);
 	}
 	
-	NTSTATUS stus = OriginZwQueryAttributesFile(ObjectAttributes, FileInformation);
+	if(ObjectAttributes != NULL && ObjectAttributes->ObjectName != NULL)
+	{
+		log("NtQueryAttributesFile: filename=%wZ", ObjectAttributes->ObjectName);
+	}
 
-	ObjectAttributes->ObjectName = pOriginObjectName;
+	//Reserve origin data before modified
+	UNICODE_STRING uniszRestore;
+	bool bStore = false;
+	if(ObjectAttributes != NULL && ObjectAttributes->ObjectName != NULL)
+	{
+		bStore = true;
+		uniszRestore= *(ObjectAttributes->ObjectName);
+	}
 
+	WCHAR szFilePath[MAX_PATH] = {0};
+	WCHAR szTemp[MAX_PATH]  = {0};
+	if(getPath(ObjectAttributes, szFilePath))
+	{
+		redirectFilePath(szFilePath, &ObjectAttributes->ObjectName, szTemp);
+	}
+		
+	NTSTATUS stus = OriginNtQueryAttributesFile(ObjectAttributes, FileInformation);
+
+	logErrorStatus(stus);
+	
+	//Restore original data after modified
+	if(bStore)
+	{
+		ObjectAttributes->ObjectName->Buffer = uniszRestore.Buffer; 
+		ObjectAttributes->ObjectName->Length = uniszRestore.Length; 
+		ObjectAttributes->ObjectName->MaximumLength = uniszRestore.MaximumLength; 
+	}
+	
 	return stus;
-
-	//return OriginZwQueryAttributesFile(ObjectAttributes, FileInformation);
 }
 
 //-------------------------------------------------------------------//
-//ZwQueryInformationFile
-typedef NTSTATUS (NTAPI* _pZwQueryInformationFile)(	HANDLE FileHandle,
-													PIO_STATUS_BLOCK IoStatusBlock, 
+//NtSetInformationFile
+
+//NOTE: 
+//	http://www.koders.com/c/fid85C174ABA2F3B414046CE7B78DAF9E789A36267B.aspx
+//	http://topic.csdn.net/u/20110622/12/1977f8ab-7c89-42d3-9d9a-3bc4239c5b63.html
+typedef enum _MY_FILE_INFORMATION_CLASS {
+//FileDirectoryInformation = 1, // 1 Y N D
+FileFullDirectoryInformation = 2, // 2 Y N D
+FileBothDirectoryInformation, // 3 Y N D
+FileBasicInformation, // 4 Y Y F
+FileStandardInformation, // 5 Y N F
+FileInternalInformation, // 6 Y N F
+FileEaInformation, // 7 Y N F
+FileAccessInformation, // 8 Y N F
+FileNameInformation, // 9 Y N F
+FileRenameInformation, // 10 N Y F
+FileLinkInformation, // 11 N Y F
+FileNamesInformation, // 12 Y N D
+FileDispositionInformation, // 13 N Y F
+FilePositionInformation, // 14 Y Y F
+FileModeInformation = 16, // 16 Y Y F
+FileAlignmentInformation, // 17 Y N F
+FileAllInformation, // 18 Y N F
+FileAllocationInformation, // 19 N Y F
+FileEndOfFileInformation, // 20 N Y F
+FileAlternateNameInformation, // 21 Y N F
+FileStreamInformation, // 22 Y N F
+FilePipeInformation, // 23 Y Y F
+FilePipeLocalInformation, // 24 Y N F
+FilePipeRemoteInformation, // 25 Y Y F
+FileMailslotQueryInformation, // 26 Y N F
+FileMailslotSetInformation, // 27 N Y F
+FileCompressionInformation, // 28 Y N F
+FileObjectIdInformation, // 29 Y Y F
+FileCompletionInformation, // 30 N Y F
+FileMoveClusterInformation, // 31 N Y F
+FileQuotaInformation, // 32 Y Y F
+FileReparsePointInformation, // 33 Y N F
+FileNetworkOpenInformation, // 34 Y N F
+FileAttributeTagInformation, // 35 Y N F
+FileTrackingInformation // 36 N Y F
+} MY_FILE_INFORMATION_CLASS, *MY_PFILE_INFORMATION_CLASS;
+
+typedef struct _FILE_LINK_RENAME_INFORMATION { // Info Classes 10 and 11
+BOOLEAN ReplaceIfExists;
+HANDLE RootDirectory;
+ULONG FileNameLength;
+WCHAR FileName[1];
+} FILE_LINK_INFORMATION, *PFILE_LINK_INFORMATION, FILE_RENAME_INFORMATION, *PFILE_RENAME_INFORMATION;
+
+#define FILE_RENAME_SIZE  MAX_PATH +sizeof(FILE_RENAME_INFORMATION)
+
+typedef NTSTATUS (NTAPI* PtrNtSetInformationFile)(	HANDLE FileHandle,
+													PIO_STATUS_BLOCK IoStatusBlock,
 													PVOID FileInformation,
 													ULONG FileInformationLength,
 													FILE_INFORMATION_CLASS FileInformationClass);
-_pZwQueryInformationFile OriginZwQueryInformationFile = (_pZwQueryInformationFile)GetProcAddress(GetModuleHandle(L"ntdll"), "ZwQueryInformationFile");
-NTSTATUS NTAPI myZwQueryInformationFile(HANDLE FileHandle,
-										PIO_STATUS_BLOCK IoStatusBlock, 
+PtrNtSetInformationFile OriginNtSetInformationFile = (PtrNtSetInformationFile)GetProcAddress(GetModuleHandle(L"ntdll"), "NtSetInformationFile");
+NTSTATUS NTAPI myNtSetInformationFile(	HANDLE FileHandle,
+										PIO_STATUS_BLOCK IoStatusBlock,
 										PVOID FileInformation,
 										ULONG FileInformationLength,
 										FILE_INFORMATION_CLASS FileInformationClass)
 {
-	if(gs_Logging)
+	log("NtSetInformationFile: handle=%x, fInfoId=%d", FileHandle, FileInformationClass);
+
+	//Rename
+	if(FileInformationClass == FileRenameInformation)
 	{
-		return OriginZwQueryInformationFile(FileHandle, IoStatusBlock,  FileInformation,
-			FileInformationLength, FileInformationClass);
+		FILE_RENAME_INFORMATION* pFileRename = (PFILE_RENAME_INFORMATION)FileInformation;
+		unsigned long length =  pFileRename->FileNameLength/2; // wide char / 2
+		std::wstring szOriginPath(pFileRename->FileName, length);
+		
+		std::wstring szResult;
+		//Reset File_RENAME_INFO, redirect if substitutePath success
+		if( substitutePath(	szOriginPath.c_str(), 
+							g_szDeviceUserProfilePath, 
+							std::wstring(REDIRECT_PATH), 
+							true, 
+							&szResult) )
+		{
+			szResult = DEVICE_PREFIX + szResult;
+
+			FILE_RENAME_INFORMATION* pNewFileRename;
+			USHORT Buffer[FILE_RENAME_SIZE];
+			pNewFileRename = (FILE_RENAME_INFORMATION*)Buffer;
+
+			pNewFileRename->ReplaceIfExists = pFileRename->ReplaceIfExists;
+			pNewFileRename->RootDirectory = pFileRename->RootDirectory;
+			pNewFileRename->FileNameLength = szResult.length() * 2;// wide char * 2
+			memcpy(pNewFileRename->FileName, szResult.c_str(), pFileRename->FileNameLength);
+
+			log("FileRenameInformation: NEW Filename : %S", szResult.c_str());
+
+			return OriginNtSetInformationFile(FileHandle, IoStatusBlock, 
+				pNewFileRename, FILE_RENAME_SIZE, FileInformationClass);
+		}
+		
+
 	}
 
-	log("ZwQueryInformationFile: handle=%x", FileHandle);
-
-	return OriginZwQueryInformationFile(FileHandle, IoStatusBlock,  FileInformation,
-			FileInformationLength, FileInformationClass);
+	return OriginNtSetInformationFile(FileHandle, IoStatusBlock, FileInformation, 
+		FileInformationLength, FileInformationClass);
 }
-
-//-------------------------------------------------------------------//
-//ZwQueryVolumeInformationFile
-typedef enum  { 
-  FileFsVolumeInformation        = 1,
-  FileFsLabelInformation         = 2,
-  FileFsSizeInformation          = 3,
-  FileFsDeviceInformation        = 4,
-  FileFsAttributeInformation     = 5,
-  FileFsControlInformation       = 6,
-  FileFsFullSizeInformation      = 7,
-  FileFsObjectIdInformation      = 8,
-  FileFsDriverPathInformation    = 9,
-  FileFsVolumeFlagsInformation   = 10,
-  FileFsSectorSizeInformation    = 11 
-} FS_INFORMATION_CLASS;
-
-typedef NTSTATUS (NTAPI* _pZwQueryVolumeInformationFile)(
-													HANDLE FileHandle,
-													PIO_STATUS_BLOCK IoStatusBlock, 
-													PVOID VolumeInformation,
-													ULONG VolumeInformationLength,
-													FS_INFORMATION_CLASS VolumeInformationClass);
-_pZwQueryVolumeInformationFile OriginZwQueryVolumeInformationFile = 
-	(_pZwQueryVolumeInformationFile)GetProcAddress(GetModuleHandle(L"ntdll"), "ZwQueryVolumeInformationFile");
-NTSTATUS NTAPI myZwQueryVolumeInformationFile(	HANDLE FileHandle,
-												PIO_STATUS_BLOCK IoStatusBlock, 
-												PVOID VolumeInformation,
-												ULONG VolumeInformationLength,
-												FS_INFORMATION_CLASS VolumeInformationClass)
-{	
-	log("ZwQueryVolumeInformationFile: handle=%x", FileHandle);
-
-	return OriginZwQueryVolumeInformationFile(FileHandle, IoStatusBlock,  VolumeInformation,
-		VolumeInformationLength, VolumeInformationClass);
-}
-
-//-------------------------------------------------------------------//
-//SHCreateDirectoryExA
-typedef int (*_pSHCreateDirectoryExA)(HWND hWnd, LPCSTR path, LPSECURITY_ATTRIBUTES sec);
-_pSHCreateDirectoryExA OriginSHCreateDirectoryExA = 
-	(_pSHCreateDirectoryExA)GetProcAddress(GetModuleHandle(L"SHELL32"), "SHCreateDirectoryExA");
-int mySHCreateDirectoryExA(HWND hWnd, LPCSTR path, LPSECURITY_ATTRIBUTES sec)
-{
-	log("SHCreateDirectoryExA: handle=%x, filename=%s", hWnd, path);
-
-	return OriginSHCreateDirectoryExA(hWnd, path, sec);
-}
-
-//-------------------------------------------------------------------//
-//PathFileExistsW
-typedef BOOL (WINAPI* _pPathFileExistsW)(LPCWSTR lpszPath);
-_pPathFileExistsW OriginPathFileExistsW = 
-	(_pPathFileExistsW)GetProcAddress(GetModuleHandle(L"Shlwapi"), "PathFileExistsW");
-BOOL WINAPI myPathFileExistsW(LPCWSTR lpszPath)
-{
-	log("PathFileExistsW: filename=%s", lpszPath);
-
-	return OriginPathFileExistsW(lpszPath);
-}
-
-//-------------------------------------------------------------------//
-//GetFileInformationByHandleEx
-typedef enum _FILE_INFO_BY_HANDLE_CLASS { 
-  FileBasicInfo                    = 0,
-  FileStandardInfo                 = 1,
-  FileNameInfo                     = 2,
-  FileRenameInfo                   = 3,
-  FileDispositionInfo              = 4,
-  FileAllocationInfo               = 5,
-  FileEndOfFileInfo                = 6,
-  FileStreamInfo                   = 7,
-  FileCompressionInfo              = 8,
-  FileAttributeTagInfo             = 9,
-  FileIdBothDirectoryInfo          = 10,
-  // 0xA  FileIdBothDirectoryRestartInfo   = 11,
-  // 0xB  FileIoPriorityHintInfo           = 12,
-  // 0xC  FileRemoteProtocolInfo           = 13,
-  // 0xD  FileFullDirectoryInfo            = 14,
-  // 0xE  FileFullDirectoryRestartInfo     = 15,
-  // 0xF  FileStorageInfo                  = 16,
-  // 0x10  FileAlignmentInfo                = 17,
-  // 0x11  FileIdInfo                       = 18,
-  // 0x12  FileIdExtdDirectoryInfo          = 19,
-  // 0x13  FileIdExtdDirectoryRestartInfo   = 20,
-  // 0x14  MaximumFileInfoByHandlesClass 
-} FILE_INFO_BY_HANDLE_CLASS, *PFILE_INFO_BY_HANDLE_CLASS;
-
-typedef BOOL (WINAPI* _pGetFileInformationByHandleEx)(	HANDLE hFile,
-														FILE_INFO_BY_HANDLE_CLASS FileInformationClass,
-														LPVOID lpFileInformation,
-														DWORD dwBufferSize);
-_pGetFileInformationByHandleEx OriginGetFileInformationByHandleEx = 
-	(_pGetFileInformationByHandleEx)GetProcAddress(GetModuleHandle(L"Kernel32"), "GetFileInformationByHandleEx");
-BOOL WINAPI myGetFileInformationByHandleEx( HANDLE hFile,
-											FILE_INFO_BY_HANDLE_CLASS FileInformationClass,
-											LPVOID lpFileInformation,
-											DWORD dwBufferSize)
-{
-	if(gs_Logging)
-	{
-		return OriginGetFileInformationByHandleEx(hFile, FileInformationClass, lpFileInformation, dwBufferSize);
-	}
-
-	log("GetFileInformationByHandleEx: handle = %x", hFile);
-	return OriginGetFileInformationByHandleEx(hFile, FileInformationClass, lpFileInformation, dwBufferSize);
-}
-
 ////////////////////////////////////////////////////////////////////////
 //	Util Functions:
 ////////////////////////////////////////////////////////////////////////
 void setupHooks()
 {
-	obtainUserSHFolders();
-
-	//NOTE: For some dlls you have to load it so you can hook it. 
-	//		(Maybe previlieges are needed to hook it without loading.)
-	//		The dlls:	Shlwapi, SHELL32
-	//HOOK_AND_LOG_FAILURE((PVOID*)&OriginPathFileExistsW, myPathFileExistsW, "PathFileExistsW");
-	//HOOK_AND_LOG_FAILURE((PVOID*)&OriginSHCreateDirectoryExA, mySHCreateDirectoryExA, "SHCreateDirectoryExA");
-
-	//Win
-	//HOOK_AND_LOG_FAILURE((PVOID*)&OriginGetFileInformationByHandleEx, myGetFileInformationByHandleEx, "GetFileInformationByHandleEx");
+	obtainCSIDLFolders();
+	setupBlackList(&g_vBlacklistFolder);
 
 	//Nt
 	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtCreateFile, myNtCreateFile, "NtCreateFile");
-	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtQueryDirectoryFile, myNtQueryDirectoryFile, "NtQueryDirectoryFile");	
-	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtQueryObject, myNtQueryObject, "NtQueryObject");	
-	
-	//Zw	
-	HOOK_AND_LOG_FAILURE((PVOID*)&OriginZwOpenFile, myZwOpenFile, "ZwOpenFile");
-	HOOK_AND_LOG_FAILURE((PVOID*)&OriginZwQuerySecurityObject, myZwQuerySecurityObject, "ZwQuerySecurityObject");
-	HOOK_AND_LOG_FAILURE((PVOID*)&OriginZwQueryAttributesFile, myZwQueryAttributesFile, "ZwQueryAttributesFile");
-	HOOK_AND_LOG_FAILURE((PVOID*)&OriginZwQueryInformationFile, myZwQueryInformationFile, "ZwQueryInformationFile");
-	HOOK_AND_LOG_FAILURE((PVOID*)&OriginZwQueryVolumeInformationFile, myZwQueryVolumeInformationFile, "ZwQueryVolumeInformationFile");
-	
+	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtOpenFile, myNtOpenFile, "NtOpenFile");
+	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtQueryAttributesFile, myNtQueryAttributesFile, "NtQueryAttributesFile");
+	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtSetInformationFile, myNtSetInformationFile, "NtSetInformationFile");
 	
 	log(" ======= Hooked =======");
 }
 
 void releaseHooks()
 {
-	//Mhook_Unhook((PVOID*)&OriginPathFileExistsW);	
-	//Mhook_Unhook((PVOID*)&OriginSHCreateDirectoryExA);
-
-	//Win
-	//Mhook_Unhook((PVOID*)&OriginGetFileInformationByHandleEx);	
-
 	//Nt
 	Mhook_Unhook((PVOID*)&OriginNtCreateFile);	
-	Mhook_Unhook((PVOID*)&OriginNtQueryDirectoryFile);	
-	Mhook_Unhook((PVOID*)&OriginNtQueryObject);	
-	
-	//Zw	
-	Mhook_Unhook((PVOID*)&OriginZwOpenFile);	
-	Mhook_Unhook((PVOID*)&OriginZwQuerySecurityObject);		
-	Mhook_Unhook((PVOID*)&OriginZwQueryAttributesFile);	
-	Mhook_Unhook((PVOID*)&OriginZwQueryInformationFile);	
-	Mhook_Unhook((PVOID*)&OriginZwQueryVolumeInformationFile);	
+	Mhook_Unhook((PVOID*)&OriginNtOpenFile);	
+	Mhook_Unhook((PVOID*)&OriginNtQueryAttributesFile);	
+	Mhook_Unhook((PVOID*)&OriginNtSetInformationFile);	
 
 	log(" ======= UnHooked =======");
 }
 
 void log(char *fmt,...)
 {
-	gs_Logging = true;
+	if(!ENABLE_LOGGING)
+		return;
+
+	g_bLogging = true;
 
 	va_list args;
 	char modname[200];
@@ -536,7 +679,7 @@ void log(char *fmt,...)
 
 	GetModuleFileNameA(NULL, modname, sizeof(modname));
 
-	if((hFile = CreateFileA(LOG_FILE, GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) <0)
+	if((hFile = CreateFileW(LOG_FILE, GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) <0)
 	{
 		return;
 	}
@@ -572,5 +715,5 @@ void log(char *fmt,...)
 
 	_lclose((HFILE)hFile);
 
-	gs_Logging = false;
+	g_bLogging = false;
 }

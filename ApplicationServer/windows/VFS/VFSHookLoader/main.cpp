@@ -1,24 +1,48 @@
 #include <windows.h>
 #include <stdio.h>
+#include <shlobj.h> 
+#include <Psapi.h>
+#include <stdlib.h>
+#include <shlwapi.h> 
+
+#define HOOK_DLL	L"VFSHook.dll"
+#define EXPLORER	L"Explorer.EXE"
+#define EXPLORER_L	L"explorer.exe"
 
 typedef void (*set_hooks_proc_t) ();
 
+//Refresh desktop on Explorer hooked
+void waitDesktopRefresh()
+{
+	Sleep(2500);
+	//Refresh Desktop 
+	//NOTE: For some reason(?) SHChangeNotify crash the explorer on loader terminated.
+	//SHChangeNotify(SHCNE_INTERRUPT, SHCNF_FLUSH, NULL, NULL);
+	//SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, NULL, NULL);
+
+	HWND hProgman = FindWindowW(L"Progman", 0);
+	if(hProgman)
+	{
+		HWND hDesktop = FindWindowExW(hProgman, 0, L"SHELLDLL_DefView", 0);
+		if(hDesktop)
+		{
+			PostMessageW(hDesktop, WM_KEYDOWN, VK_F5, 1);
+			PostMessageW(hDesktop, WM_KEYUP, VK_F5, 1);
+			printf("Desktop refreshed.\n");
+		}
+	}
+}
 int main()
 {
+	ShowWindow( GetConsoleWindow(), SW_HIDE );
+
 	set_hooks_proc_t set_hooks_fn;
 	
-	//NOTE: strange, for some dlls you have to load it so you can hook it. 
-	//		(Maybe previlieges are needed to hook it without loading.)
-	//		The dlls:	Shlwapi, SHELL32
-	LoadLibrary("Shlwapi.dll");
-	LoadLibrary("SHELL32.dll");	
-
-	HMODULE hookdll = LoadLibrary("VFSHook.dll");
+	HMODULE hookdll = LoadLibraryW(HOOK_DLL);
 	
 	if (!hookdll)
 	{
-		printf("Could not load hook DLL. Unable to continue.");
-		system("pause");
+		printf("Could not load hook DLL. Unable to continue.\n");
 		return -1;
 	}
 
@@ -26,6 +50,17 @@ int main()
 
 	set_hooks_fn();
 
-	system("pause");
+	//refresh desktop on dll loaded by Explorer
+	waitDesktopRefresh();
+	
+	printf("Running...\n");	
+	//system("pause");
+	bool run = true;
+	while(run)
+	{
+		//TODO: End condition; Currently Windows force terminate this program on user exit.
+		Sleep(1000);
+	}
+
 	return 0;
 }
