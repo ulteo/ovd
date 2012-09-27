@@ -74,7 +74,7 @@ function show_default() {
     echo '<tr class="title">';
     if ($av_servers > 1 and $can_do_action and ($nb_a_servs_online_maintenance > 0 or $nb_a_servs_not_maintenance > 0))
       echo '<th class="unsortable"></th>';
-    echo '<th>'._('FQDN').'</th><th>'._('Type').'</th>';
+    echo '<th>'._('Name').'</th><th>'._('Type').'</th>';
     echo '<th>'._('Version').'</th>';
     echo '<th>'._('Roles').'</th>';
     echo '<th>'._('Status').'</th><th>'._('Details').'</th>';
