@@ -120,7 +120,6 @@ configure_startup ()
 
 update_chroot ()
 {
-    CHROOTCONF=$TARGET/etc/ulteo/ovd/slaveserver.conf
     [ -e "$CHROOTCONF" ] || die "Chroot download is corrupt ; download it again"
 
     # set timezone
@@ -183,6 +182,7 @@ while [ -n "$1" ]; do
 done
 
 [ -z "$TARGET" ] && TARGET=$CHROOTDIR
+CHROOTCONF=$TARGET/etc/ulteo/ovd/slaveserver.conf
 
 if [ "$UPDATE" = "false" ]; then
     download_chroot
