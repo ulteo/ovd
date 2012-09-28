@@ -6,6 +6,9 @@
  * Date: $Date: 2007/03/08 00:26:40 $
  *
  * Copyright (c) 2005 Propero Limited
+ * Copyright (C) 2012 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * Purpose: 
  */
@@ -346,13 +349,17 @@ public class ClipBMP extends Component {
 					| (((int) bi[37] & 0xff) << 8) | (int) bi[36] & 0xff;
 			//System.out.println("Colors important are :" + nclrimp);
 
-			if (nbitcount == 24) {
+			if (nbitcount == 24 || nbitcount == 32) {
 				//	 No Palatte data for 24-bit format but scan lines are
 				//	 padded out to even 4-byte boundaries.
-				int npad = (nsizeimage / nheight) - nwidth * 3;
+				int channelNumber = 3;
+				if (nbitcount == 32) {
+					channelNumber = 4;
+				}
+				int npad = (nsizeimage / nheight) - nwidth * channelNumber;
 				int ndata[] = new int[nheight * nwidth];
-				byte brgb[] = new byte[(nwidth + npad) * 3 * nheight];
-				fs.read(brgb, 0, (nwidth + npad) * 3 * nheight);
+				byte brgb[] = new byte[(nwidth + npad) * channelNumber * nheight];
+				fs.read(brgb, 0, (nwidth + npad) * channelNumber * nheight);
 				int nindex = 0;
 				for (int j = 0; j < nheight; j++) {
 					for (int i = 0; i < nwidth; i++) {
@@ -364,7 +371,7 @@ public class ClipBMP extends Component {
 						// +i+","+j+")is:"+nrgb+" (R,G,B)= (" +((int)(brgb[2]) &
 						// 0xff)+"," +((int)brgb[1]&0xff)+","
 						// +((int)brgb[0]&0xff)+")";
-						nindex += 3;
+						nindex += channelNumber;
 					}
 					nindex += npad;
 				}
