@@ -58,7 +58,7 @@ def main(queue, config_file, pid_file):
 			return (code, msg)
 	
 	if not Config.read(ConfigReader.process(config_file)) and not Config.is_valid():
-		_exit(1, "wrong config file")
+		return _exit(1, "wrong config file")
 	
 	Logger.initialize("OVD", Config.log_level, Config.log_file, not daemonize, Config.log_threaded)
 	
@@ -90,9 +90,9 @@ def main(queue, config_file, pid_file):
 		try:
 			registred = server.push_production()
 			if registred:
-				_exit(0)
+				return _exit(0)
 			else:
-				_exit(5, "Session manager was not reachable")
+				return _exit(5, "Session manager was not reachable")
 			while not registred:
 				Logger.warn("Session Manager not connected. Sleeping for a while ...")
 				time.sleep(60)
