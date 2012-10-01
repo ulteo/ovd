@@ -57,7 +57,7 @@ def main(queue, config_file, pid_file):
 		else:
 			return (code, msg)
 	
-	if not Config.read(ConfigReader.process(config_file)) and not Config.is_valid():
+	if not Config.read(ConfigReader.process(config_file)) or not Config.is_valid():
 		return _exit(1, "wrong config file")
 	
 	Logger.initialize("OVD", Config.log_level, Config.log_file, not daemonize, Config.log_threaded)
