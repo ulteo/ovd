@@ -156,13 +156,13 @@ public class ClipBMP extends Component {
 		int pad;
 		int padCount;
 		byte rgb[] = new byte[3];
-		size = (biWidth * biHeight) - 1;
+		size = (biWidth * biHeight);
 		pad = 4 - ((biWidth * 3) % 4);
 		if (pad == 4) // <==== Bug correction
 			pad = 0; // <==== Bug correction
 		rowCount = 1;
 		padCount = 0;
-		rowIndex = size - biWidth;
+		rowIndex = size - biWidth -1;
 		lastRowIndex = rowIndex;
 		try {
 			for (j = 0; j < size; j++) {
