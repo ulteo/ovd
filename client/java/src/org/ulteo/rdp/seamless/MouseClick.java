@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2011-2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,6 +20,7 @@
 
 package org.ulteo.rdp.seamless;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -43,10 +44,11 @@ public class MouseClick {
 	private static int retrieveType(MouseEvent evt, SeamlessWindowProperties props) {
 		int x = evt.getX();
 		int y = evt.getY();
+		
+		Component c = evt.getComponent();
+		Rectangle bounds = c.getBounds();
 
-		Rectangle bounds = evt.getComponent().getBounds();
-
-		if ((x < props.borderSize || x > (bounds.width - props.borderSize) ||
+		if (((SeamlessMovingResizing) c)._isResizable() && (x < props.borderSize || x > (bounds.width - props.borderSize) ||
 			y < props.borderSize || y > (bounds.height - props.borderSize))
 		) {
 			return RESIZING_CLICK;
