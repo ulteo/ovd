@@ -89,10 +89,12 @@ def main(queue, config_file, pid_file):
 	else:
 		try:
 			registred = server.push_production()
-			if registred:
-				return _exit(0)
-			else:
-				return _exit(5, "Session manager was not reachable")
+			if daemonize:
+				if registred:
+					queue.put((0, ""))
+				else:
+					queue.put((5, "Session manager was not reachable"))
+			
 			while not registred:
 				Logger.warn("Session Manager not connected. Sleeping for a while ...")
 				time.sleep(60)
