@@ -28,6 +28,7 @@ class Config:
 	checkShell = False
 	clean_dump_archive = True
 	linux_icon_theme = "CrystalGnome"
+	linux_skel_directory = "/dev/null"
 	
 	
 	@classmethod
@@ -56,5 +57,8 @@ class Config:
 			
 		if infos.has_key("linux_icon_theme"):
 			cls.linux_icon_theme = infos["linux_icon_theme"]
+		
+		if infos.has_key("linux_skel_directory"):
+			cls.linux_skel_directory = infos["linux_skel_directory"]
 		
 		return True

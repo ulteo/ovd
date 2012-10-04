@@ -29,6 +29,7 @@ import xrdp
 from ovd.Logger import Logger
 from ovd.Platform.System import System
 from ovd.Role.ApplicationServer.User import User as AbstractUser
+from ovd.Role.ApplicationServer.Config import Config
 
 
 class FileLock():
@@ -70,7 +71,7 @@ class User(AbstractUser):
 			Logger.error("Unable to find a valid home directory")
 			return False
 		
-		cmd = u"useradd -m -d '%s' -k /dev/null"%(home_dir)
+		cmd = u"useradd -m -d '%s' -k '%s'"%(home_dir, Config.linux_skel_directory)
 		if self.infos.has_key("displayName"):
 			cmd+= u" --comment '%s,,,'"%(self.infos["displayName"])
 		
