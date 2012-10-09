@@ -257,9 +257,12 @@ class Profile(AbstractProfile):
 	
 	@staticmethod
 	def ismount(path):
+		# The content returned by /proc/mounts escape space using \040
+		escaped_path = path.replace(" ", "\\040")
+		
 		for line in file('/proc/mounts'):
 			components = line.split()
-			if len(components) > 1 and components[1] == path:
+			if len(components) > 1 and components[1] == escaped_path:
 				return True
 		
 		return False
