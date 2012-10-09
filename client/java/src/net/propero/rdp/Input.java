@@ -6,6 +6,9 @@
  * Date: $Date: 2007/03/14 23:26:08 $
  *
  * Copyright (c) 2005 Propero Limited
+ * Copyright (C) 2011-2012 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  *
  * Purpose: Handles input events and sends relevant input data
  *          to server
@@ -128,6 +131,7 @@ public abstract class Input {
 		pressedKeys = new Vector();
 		this.keystrokesList = new HashMap<KeyStroke, Long>();
 		this.inputListeners = new CopyOnWriteArrayList<InputListener>();
+		Input.resetState();
 	}
 
     /**
@@ -152,8 +156,20 @@ public abstract class Input {
 		pressedKeys = new Vector();
 		this.keystrokesList = new HashMap<KeyStroke, Long>();
 		this.inputListeners = new CopyOnWriteArrayList<InputListener>();
+		Input.resetState();
 	}
 
+	private static void resetState() {
+		capsLockOn = false;
+		numLockOn = false;
+		scrollLockOn = false;
+		serverAltDown = false;
+		altDown = false;
+		ctrlDown = false;
+		altgrDown = false;
+		shiftDown = false;
+	}
+	
 	public void addInputListener(InputListener listener) {
 		this.inputListeners.add(listener);
 	}
