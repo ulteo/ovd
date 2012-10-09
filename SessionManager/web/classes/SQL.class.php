@@ -5,6 +5,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
  * Author Laurent CLOUET <laurent@ulteo.com> 2009
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -258,7 +259,7 @@ class SQL {
 						$field_type = $rows6['Type'];
 						$type6 = explode(' ', $table_structure_[$row['Field']]);
 						if (isset($type6[0])) {
-							if ($type6[0] !== $field_type) {
+							if (strtoupper($type6[0]) !== strtoupper($field_type)) {
 								// it's not the same -> we will alter the table
 								$this->DoQuery('ALTER TABLE #1 CHANGE @2 @2 '.$table_structure_[$row['Field']], $name_, $row['Field']);
 							}
