@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2009
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -183,7 +184,7 @@ class Abstract_Liaison_sql {
 			'element' => 'varchar(200) NOT NULL',
 			'group' => 'varchar(200) NOT NULL');
 		
-		$ret = $sql2->buildTable(self::table, $LIAISON_table_structure, array());
+		$ret = $sql2->buildTable(self::table, $LIAISON_table_structure, array(), array('I_TYPE'=>array('type'), 'I_ELEMENT'=>array('element'), 'I_GROUP'=>array('group')));
 		
 		if ( $ret === false) {
 			Logger::error('main', 'Abstract_Liaison::init table '.self::table.' fail to created');
