@@ -239,7 +239,6 @@ class SQL {
 			
 		}
 		else {
-			// TODO : see if it works when we change the primary key
 			$query_queue = array();
 			
 			// the table exists, it is the right structure ?
@@ -280,13 +279,46 @@ class SQL {
 				}
 			}
 			
+			// look for indexes structure
+			$keys = array();
+			$res = $this->DoQuery('SHOW INDEXES FROM #1', $name_);
+			if ($res !== false) {
+				$rows = $this->FetchAllResults($res);
+				foreach($rows as $row) {
+					if (!array_key_exists($row['Key_name'], $keys))
+						$keys[$row['Key_name']] = array();
+					
+					$keys[$row['Key_name']][] = $row['Column_name'];
+				}
+			}
+			
+			$process_indexes = false;
+			if ((count($primary_keys_) > 0) != array_key_exists('PRIMARY', $keys))
+				$process_indexes = true;
+			
+			if (!$process_indexes && array_diff($keys['PRIMARY'], $primary_keys_) != array_diff($primary_keys_, $keys['PRIMARY']))
+				$process_indexes = true;
+			
 			// is the database to be updated ?
-			if (count($query_queue) > 0) {
+			if (count($query_queue) > 0 || $process_indexes) {
+				// drop all indexes
+				foreach(array_keys($keys) as $key) {
+					if ($key == "PRIMARY")
+						$key .= " KEY";
+					else
+						$key = "KEY ".$key;
+					
+					array_unshift($query_queue, 'DROP '.$key);
+				}
+				
+				// add primary key
+				if (count($primary_keys_) > 0)
+					$query_queue[] = 'ADD PRIMARY KEY  (`'.implode('`, `', $primary_keys_).'`)';
+				
 				$res = $this->DoQuery('ALTER TABLE #1 '.implode(', ', $query_queue), $name_);
 				if ($res == false)
 					Logger::error('main', 'SQL::createTable failed to modify table '.$name_);
 			}
-			// TODO : what about primary key
 			
 			return true;
 		}
