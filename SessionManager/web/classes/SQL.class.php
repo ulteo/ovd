@@ -204,7 +204,7 @@ class SQL {
 		return $this->total_queries;
 	}
 	
-	public function buildTable($name_, $table_structure_, $primary_keys_) {
+	public function buildTable($name_, $table_structure_, $primary_keys_, $indexes_ = array()) {
 		$this->CheckLink();
 		
 		// the table exists ?
@@ -232,6 +232,15 @@ class SQL {
 				}
 				$query = substr($query, 0, -3);
 				$query .= ')';
+			}
+			
+			foreach($indexes_ as $name=>$index) {
+				if (substr($name, 0, 2) === 'U_')
+					$name = 'UNIQUE '.$name;
+				else
+					$name = 'INDEX '.$name;
+				
+				$query .= ' , '.$name.' (`'.implode('`, `', $index).'`)';
 			}
 			$query .= ') DEFAULT CHARSET=utf8;';
 			$ret = $this->DoQuery($query, $name_);
@@ -293,8 +302,21 @@ class SQL {
 			}
 			
 			$process_indexes = false;
+			
 			if ((count($primary_keys_) > 0) != array_key_exists('PRIMARY', $keys))
 				$process_indexes = true;
+			
+			foreach($indexes_ as $name=>$index) {
+				if ((count($index) > 0) != array_key_exists($name, $keys)) {
+					$process_indexes = true;
+					break;
+				}
+				
+				if (array_diff($keys[$name], $index) != array_diff($index, $keys[$name])) {
+					$process_indexes = true;
+					break;
+				}
+			}
 			
 			if (!$process_indexes && array_diff($keys['PRIMARY'], $primary_keys_) != array_diff($primary_keys_, $keys['PRIMARY']))
 				$process_indexes = true;
@@ -315,11 +337,18 @@ class SQL {
 				if (count($primary_keys_) > 0)
 					$query_queue[] = 'ADD PRIMARY KEY  (`'.implode('`, `', $primary_keys_).'`)';
 				
+				// add indexes
+				foreach($indexes_ as $name=>$index) {
+					if (substr($name, 0, 2) === 'U_')
+						$query_queue[] = 'ADD  UNIQUE '.$name.' (`'.implode('`, `', $index).'`)';
+					else
+						$query_queue[] = 'ADD  INDEX '.$name.' (`'.implode('`, `', $index).'`)';
+				}
+				
 				$res = $this->DoQuery('ALTER TABLE #1 '.implode(', ', $query_queue), $name_);
 				if ($res == false)
 					Logger::error('main', 'SQL::createTable failed to modify table '.$name_);
 			}
-			
 			return true;
 		}
 	}
