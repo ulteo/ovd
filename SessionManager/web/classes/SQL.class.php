@@ -240,7 +240,8 @@ class SQL {
 		}
 		else {
 			// TODO : see if it works when we change the primary key
-		
+			$query_queue = array();
+			
 			// the table exists, it is the right structure ?
 			$res = $this->DoQuery('SHOW COLUMNS FROM #1', $name_);
 			if ($res !== false){
@@ -261,26 +262,29 @@ class SQL {
 						if (isset($type6[0])) {
 							if (strtoupper($type6[0]) !== strtoupper($field_type)) {
 								// it's not the same -> we will alter the table
-								$this->DoQuery('ALTER TABLE #1 CHANGE @2 @2 '.$table_structure_[$row['Field']], $name_, $row['Field']);
+								$query_queue[] = 'MODIFY `'.$row['Field'].'` '.$table_structure_[$row['Field']];
 							}
 						}
 						$columns_from_database[] = $row['Field'];
 					}
 					else {
 						// we must remove this column
-						$res = $this->DoQuery('ALTER TABLE #1 DROP @2', $name_, $row['Field']);
-						if ($res == false)
-							Logger::error('main', 'SQL::createTable failed to remove \''.$row['Field'].'\' from the table \''.$name_.'\'');
+						$query_queue[] = 'DROP `'.$row['Field'].'`';
 					}
 				}
 				
 				foreach($table_structure_ as $column_name => $column_structure) {
 					if (!in_array($column_name, $columns_from_database)) {
-						$res = $this->DoQuery('ALTER TABLE #1 ADD @2 '.$column_structure, $name_, $column_name);
-						if ($res == false)
-							Logger::error('main', "SQL::createTable failed to add '$columns_from_database' in the table '$name_'");
+						$query_queue[] = 'ADD `'.$column_name.'` '.$column_structure;
 					}
 				}
+			}
+			
+			// is the database to be updated ?
+			if (count($query_queue) > 0) {
+				$res = $this->DoQuery('ALTER TABLE #1 '.implode(', ', $query_queue), $name_);
+				if ($res == false)
+					Logger::error('main', 'SQL::createTable failed to modify table '.$name_);
 			}
 			// TODO : what about primary key
 			
