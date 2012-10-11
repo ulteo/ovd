@@ -5,6 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2008-2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1582,6 +1583,12 @@ if ($_REQUEST['name'] == 'Server') {
 		if (isset($_REQUEST['fqdn']) && isset($_REQUEST['server'])) {
 			if (! validate_ip($_REQUEST['fqdn']) && ! validate_fqdn($_REQUEST['fqdn'])) {
 				popup_error(sprintf(_("Internal name \"%s\" is invalid"), $_REQUEST['fqdn']));
+				redirect();
+			}
+			
+			$server = Abstract_Server::load_by_fqdn($_REQUEST['fqdn']);
+			if ($server != null && $server->id != $_REQUEST['server']) {
+				popup_error(sprintf(_("Internal name \"%s\" is already used for another server"), $_REQUEST['fqdn']));
 				redirect();
 			}
 			

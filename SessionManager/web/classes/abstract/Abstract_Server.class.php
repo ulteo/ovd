@@ -6,6 +6,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2011
  * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -65,7 +66,7 @@ class Abstract_Server {
 			'timestamp'		=>	'int(10)'
 		);
 
-		$ret = $SQL->buildTable(self::table, $servers_table_structure, array('id'));
+		$ret = $SQL->buildTable(self::table, $servers_table_structure, array('id'), array('U_FQDN'=>array('fqdn')));
 
 		if (! $ret) {
 			Logger::error('main', 'Unable to create MySQL table \''.self::table.'\'');
