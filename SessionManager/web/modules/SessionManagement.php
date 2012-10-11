@@ -316,7 +316,7 @@ abstract class SessionManagement extends Module {
 		return false;
 	}
 
-	public function buildServersList() {
+	public function buildServersList($simulation_mode = false) {
 		if (! $this->user) {
 			Logger::error('main', 'SessionManagement::buildServersList - User is not authenticated, aborting');
 			return false;
@@ -407,28 +407,30 @@ abstract class SessionManagement extends Module {
 										return false;
 									}
 
-									$profile = new Profile();
-									$profile->server = $fileserver->id;
+									if (! $simulation_mode) {
+										$profile = new Profile();
+										$profile->server = $fileserver->id;
 
-									if (! $profileDB->addToServer($profile, $fileserver)) {
-										Logger::error('main', 'SessionManagement::buildServersList - Auto-creation of Profile for User "'.$this->user->getAttribute('login').'" failed (unable to add the Profile to the FileServer)');
-										return false;
+										if (! $profileDB->addToServer($profile, $fileserver)) {
+											Logger::error('main', 'SessionManagement::buildServersList - Auto-creation of Profile for User "'.$this->user->getAttribute('login').'" failed (unable to add the Profile to the FileServer)');
+											return false;
+										}
+
+										if (! $profile->addUser($this->user)) {
+											Logger::error('main', 'SessionManagement::buildServersList - Auto-creation of Profile for User "'.$this->user->getAttribute('login').'" failed (unable to associate the User to the Profile)');
+											return false;
+										}
+
+										if (! array_key_exists($fileserver->id, $this->servers[Server::SERVER_ROLE_FS]))
+											$this->servers[Server::SERVER_ROLE_FS][$fileserver->id] = array();
+
+										$this->servers[Server::SERVER_ROLE_FS][$fileserver->id][] = array(
+											'type'		=>	'profile',
+											'rid'		=>	$this->find_uniq_rid('profile', true),
+											'server'	=>	$fileserver,
+											'dir'		=>	$profile->id
+										);
 									}
-
-									if (! $profile->addUser($this->user)) {
-										Logger::error('main', 'SessionManagement::buildServersList - Auto-creation of Profile for User "'.$this->user->getAttribute('login').'" failed (unable to associate the User to the Profile)');
-										return false;
-									}
-
-									if (! array_key_exists($fileserver->id, $this->servers[Server::SERVER_ROLE_FS]))
-										$this->servers[Server::SERVER_ROLE_FS][$fileserver->id] = array();
-
-									$this->servers[Server::SERVER_ROLE_FS][$fileserver->id][] = array(
-										'type'		=>	'profile',
-										'rid'		=>	$this->find_uniq_rid('profile', true),
-										'server'	=>	$fileserver,
-										'dir'		=>	$profile->id
-									);
 								} else {
 									Logger::debug('main', 'SessionManagement::buildServersList - Auto-creation of Profile for User "'.$this->user->getAttribute('login').'" disabled, checking for session without Profile');
 

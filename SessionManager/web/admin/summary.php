@@ -90,12 +90,12 @@ function show_default() {
 		$sessionmanagement2->user = $user;
 		$user_info['can_start_session_desktop'] = $remote_desktop_enabled && 
 			$sessionmanagement2->getDesktopServer() && 
-			$sessionmanagement2->buildServersList();
+			$sessionmanagement2->buildServersList(true);
 		
 		$sessionmanagement2 = clone($sessionmanagement);
 		$sessionmanagement2->user = $user;
 		$user_info['can_start_session_applications'] = $remote_applications_enabled &&
-			$sessionmanagement2->buildServersList();
+			$sessionmanagement2->buildServersList(true);
 		
 		$users_info[]= $user_info;
 	}
