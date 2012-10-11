@@ -533,130 +533,191 @@ function server_display_role_fs($server_, $var_) {
 	if (Preferences::moduleIsEnabled('ProfileDB') == false && Preferences::moduleIsEnabled('SharedFolderDB') == false) {
 		return;
 	}
-	$datas = array(
-		0 => array(
-			'name' => _('User profiles on the server'),
-			'folder' => $var_['profiles'],
-			'usedby' => $var_['used by profiles'],
-			'page' => 'users',
-		),
-		1 => array(
-			'name' => _('Shared folders on the server'),
-			'folder' => $var_['sharedfolders'],
-			'usedby' => $var_['used by sharedfolders'],
-			'page' => 'usersgroup',
-		)
-	);
 	
-	foreach ($datas as $k => $data) {
-		if (is_array($data['folder']) && count($data['folder']) > 0 && is_array($data['usedby'])) {
-			$nb_not_used = 0;
-			
-			foreach ($data['folder'] as $a_networkfolder) {
-				if (! $a_networkfolder->isUsed())
-					$nb_not_used++;
-			}
-			
-			$show_action_column = ($nb_not_used != 0);
-			$show_mass_action = ($nb_not_used > 1);
-			
-			echo '<h3>'.$data['name'].'</h3>';
-			$count = 0;
-			echo '<table id="available_networkfolder_table_'.$k.'" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
-			echo '<thead>';
-			echo '<tr class="title">';
-			if ($show_mass_action === true)
-				echo '<th class="unsortable"></th>';
-			if ($k != 0)
-				echo '<th>'._('Name').'</th>';
-			echo '<th class="unsortable">'.(($k == 0)?_('Owner'):_('Used by')).'</th>';
-			echo '<th>'._('Status').'</th>';
-			if ($show_action_column === true)
-				echo '<th class="unsortable"></th>';
-			echo '</tr>';
-			echo '</thead>';
-			echo '<tbody>';
-			foreach ($data['folder'] as $a_networkfolder) {
-				
-				$content = 'content'.(($count++%2==0)?1:2);
-				echo '<tr class="'.$content.'">';
-				if ($show_mass_action === true) {
-					echo '<td>';
-					if (! $a_networkfolder->isUsed())
-						echo '<input class="input_checkbox" type="checkbox" name="ids[]" value="'.$a_networkfolder->id.'" />';
-					echo '</td>';
-				}
-				if ($k != 0) {
-					echo '<td>';
-					if ($data['page'] !== 'users') {
-						echo '<a href="sharedfolders.php?action=manage&id='.$a_networkfolder->id.'">'.$a_networkfolder->name.'</a>';
-					}
-					else {
-						echo $a_networkfolder->name;
-					}
-					echo '</td>';
-				}
-				echo '<td>';
-				if (array_key_exists($a_networkfolder->id, $data['usedby']) &&  (is_null($data['page']) === false)) {
-					$objs = $data['usedby'][$a_networkfolder->id];
-					if ($k != 0) {
-						echo '<ul>';
-						foreach ($objs as $a_obj) {
-							echo '<li>';
-							echo '<a href="'.$data['page'].'.php?action=manage&id='.$a_obj['id'].'">'.$a_obj['name'].'</a>';
-							echo '</li>';
-						}
-						echo '</ul>';
-					} else {
-						$a_obj = array_pop($objs);
-						echo '<a href="'.$data['page'].'.php?action=manage&id='.$a_obj['id'].'">'.$a_obj['name'].'</a>';
-					}
-				}
-				echo '</td>';
-				echo '<td>';
-				echo '<span class="msg_'.NetworkFolder::colorStatus($a_networkfolder->status).'">'.NetworkFolder::textStatus($a_networkfolder->status).'</span>';
-				echo '</td>';
-				
-				if ($show_action_column === true) {
-					echo '<td>';
-					if (! $a_networkfolder->isUsed()) {
-						
-						echo '<form action="actions.php" method="post" onsubmit="return confirm(\''.(($k == 0)?_('Are you sure you want to delete this user profile?'):_('Are you sure you want to delete this network folder?')).'\');">';
-						echo '<input type="hidden" name="name" value="'.(($k == 0)?'Profile':'SharedFolder').'" />';
-						echo '<input type="hidden" name="action" value="del" />';
-						echo '<input type="hidden" name="ids[]" value="'.$a_networkfolder->id.'" />';
-						echo '<input type="submit" value="'._('Delete').'" />';
-						echo '</form>';
-					}
-					echo '</td>';
-				}
-				
-				echo '</tr>';
-			}
-			echo '</tbody>';
-
-			if ($show_mass_action === true) {
-				$content = 'content'.(($count++%2==0)?1:2);
-				echo '<tfoot>';
-				echo '<tr class="'.$content.'">';
-				echo '<td colspan="'.(($k != 0)?4:3).'">';
-				echo '<a href="javascript:;" onclick="markAllRows(\'available_networkfolder_table_'.$k.'\'); return false">'._('Mark all').'</a>';
-				echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'available_networkfolder_table_'.$k.'\'); return false">'._('Unmark all').'</a>';
-				echo '</td>';
-				echo '<td>';
-				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''.(($k == 0)?_('Are you sure you want to delete these user profiles?'):_('Are you sure you want to delete these network folders?')).'\') && updateMassActionsForm(this, \'available_networkfolder_table_'.$k.'\');">';
-				echo '<input type="hidden" name="name" value="'.(($k == 0)?'Profile':'SharedFolder').'" />';
-				echo '<input type="hidden" name="action" value="del" />';
-				echo '<input type="submit" name="to_production" value="'._('Delete').'"/>';
-				echo '</form>';
-				echo '</td>';
-				echo '</tr>';
-				echo '</tfoot>';
-			}
-
-			echo '</table>';
-			echo '<br />';
+	
+	if (is_array($var_['profiles']) && count($var_['profiles']) > 0 && is_array($var_['used by profiles'])) {
+		$nb_not_used = 0;
+		
+		foreach ($var_['profiles'] as $a_networkfolder) {
+			if (! $a_networkfolder->isUsed())
+				$nb_not_used++;
 		}
+		
+		$show_action_column = ($nb_not_used != 0);
+		$show_mass_action = ($nb_not_used > 1);
+		
+		echo '<h3>'._('User profiles on the server').'</h3>';
+		$count = 0;
+		echo '<table id="available_networkfolder_table_profile" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
+		echo '<thead>';
+		echo '<tr class="title">';
+		if ($show_mass_action === true)
+			echo '<th class="unsortable"></th>';
+		echo '<th class="unsortable">'._('Owner').'</th>';
+		echo '<th>'._('Status').'</th>';
+		if ($show_action_column === true)
+			echo '<th class="unsortable"></th>';
+		echo '</tr>';
+		echo '</thead>';
+		echo '<tbody>';
+		foreach ($var_['profiles'] as $a_networkfolder) {
+			
+			$content = 'content'.(($count++%2==0)?1:2);
+			echo '<tr class="'.$content.'">';
+			if ($show_mass_action === true) {
+				echo '<td>';
+				if (! $a_networkfolder->isUsed())
+					echo '<input class="input_checkbox" type="checkbox" name="ids[]" value="'.$a_networkfolder->id.'" />';
+				echo '</td>';
+			}
+			
+			echo '<td>';
+			if (array_key_exists($a_networkfolder->id, $var_['used by profiles'])) {
+				$objs = $var_['used by profiles'][$a_networkfolder->id];
+					$a_obj = array_pop($objs);
+					echo '<a href="users.php?action=manage&id='.$a_obj['id'].'">'.$a_obj['name'].'</a>';
+			}
+			echo '</td>';
+			echo '<td>';
+			echo '<span class="msg_'.NetworkFolder::colorStatus($a_networkfolder->status).'">'.NetworkFolder::textStatus($a_networkfolder->status).'</span>';
+			echo '</td>';
+			
+			if ($show_action_column === true) {
+				echo '<td>';
+				if (! $a_networkfolder->isUsed()) {
+					
+					echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user profile?').'\');">';
+					echo '<input type="hidden" name="name" value="Profile" />';
+					echo '<input type="hidden" name="action" value="del" />';
+					echo '<input type="hidden" name="ids[]" value="'.$a_networkfolder->id.'" />';
+					echo '<input type="submit" value="'._('Delete').'" />';
+					echo '</form>';
+				}
+				echo '</td>';
+			}
+			
+			echo '</tr>';
+		}
+		echo '</tbody>';
+
+		if ($show_mass_action === true) {
+			$content = 'content'.(($count++%2==0)?1:2);
+			echo '<tfoot>';
+			echo '<tr class="'.$content.'">';
+			echo '<td colspan="3">';
+			echo '<a href="javascript:;" onclick="markAllRows(\'available_networkfolder_table_profile\'); return false">'._('Mark all').'</a>';
+			echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'available_networkfolder_table_profile\'); return false">'._('Unmark all').'</a>';
+			echo '</td>';
+			echo '<td>';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these user profiles?').'\') && updateMassActionsForm(this, \'available_networkfolder_table_profile\');">';
+			echo '<input type="hidden" name="name" value="Profile" />';
+			echo '<input type="hidden" name="action" value="del" />';
+			echo '<input type="submit" name="to_production" value="'._('Delete').'"/>';
+			echo '</form>';
+			echo '</td>';
+			echo '</tr>';
+			echo '</tfoot>';
+		}
+
+		echo '</table>';
+		echo '<br />';
+	}
+	
+	if (is_array($var_['sharedfolders']) && count($var_['sharedfolders']) > 0 && is_array($var_['used by sharedfolders'])) {
+		$nb_not_used = 0;
+		
+		foreach ($var_['sharedfolders'] as $a_networkfolder) {
+			if (! $a_networkfolder->isUsed())
+				$nb_not_used++;
+		}
+		
+		$show_action_column = ($nb_not_used != 0);
+		$show_mass_action = ($nb_not_used > 1);
+		
+		echo '<h3>'._('Shared folders on the server').'</h3>';
+		$count = 0;
+		echo '<table id="available_networkfolder_table_sf" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
+		echo '<thead>';
+		echo '<tr class="title">';
+		if ($show_mass_action === true)
+			echo '<th class="unsortable"></th>';
+		echo '<th>'._('Name').'</th>';
+		echo '<th class="unsortable">'._('Used by').'</th>';
+		echo '<th>'._('Status').'</th>';
+		if ($show_action_column === true)
+			echo '<th class="unsortable"></th>';
+		echo '</tr>';
+		echo '</thead>';
+		echo '<tbody>';
+		foreach ($var_['sharedfolders'] as $a_networkfolder) {
+			
+			$content = 'content'.(($count++%2==0)?1:2);
+			echo '<tr class="'.$content.'">';
+			if ($show_mass_action === true) {
+				echo '<td>';
+				if (! $a_networkfolder->isUsed())
+					echo '<input class="input_checkbox" type="checkbox" name="ids[]" value="'.$a_networkfolder->id.'" />';
+				echo '</td>';
+			}
+			
+			echo '<td>';
+			echo '<a href="sharedfolders.php?action=manage&id='.$a_networkfolder->id.'">'.$a_networkfolder->name.'</a>';
+			echo '</td>';
+			echo '<td>';
+			if (array_key_exists($a_networkfolder->id, $var_['used by sharedfolders'])) {
+				$objs = $var_['used by sharedfolders'][$a_networkfolder->id];
+				echo '<ul>';
+				foreach ($objs as $a_obj) {
+					echo '<li>';
+					echo '<a href="usersgroup.php?action=manage&id='.$a_obj['id'].'">'.$a_obj['name'].'</a>';
+					echo '</li>';
+				}
+				echo '</ul>';
+			}
+			echo '</td>';
+			echo '<td>';
+			echo '<span class="msg_'.NetworkFolder::colorStatus($a_networkfolder->status).'">'.NetworkFolder::textStatus($a_networkfolder->status).'</span>';
+			echo '</td>';
+			
+			if ($show_action_column === true) {
+				echo '<td>';
+				if (! $a_networkfolder->isUsed()) {
+					
+					echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this network folder?').'\');">';
+					echo '<input type="hidden" name="name" value="SharedFolder" />';
+					echo '<input type="hidden" name="action" value="del" />';
+					echo '<input type="hidden" name="ids[]" value="'.$a_networkfolder->id.'" />';
+					echo '<input type="submit" value="'._('Delete').'" />';
+					echo '</form>';
+				}
+				echo '</td>';
+			}
+			
+			echo '</tr>';
+		}
+		echo '</tbody>';
+
+		if ($show_mass_action === true) {
+			$content = 'content'.(($count++%2==0)?1:2);
+			echo '<tfoot>';
+			echo '<tr class="'.$content.'">';
+			echo '<td colspan="4">';
+			echo '<a href="javascript:;" onclick="markAllRows(\'available_networkfolder_table_sf\'); return false">'._('Mark all').'</a>';
+			echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'available_networkfolder_table_sf\'); return false">'._('Unmark all').'</a>';
+			echo '</td>';
+			echo '<td>';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these network folders?').'\') && updateMassActionsForm(this, \'available_networkfolder_table_sf\');">';
+			echo '<input type="hidden" name="name" value="SharedFolder" />';
+			echo '<input type="hidden" name="action" value="del" />';
+			echo '<input type="submit" name="to_production" value="'._('Delete').'"/>';
+			echo '</form>';
+			echo '</td>';
+			echo '</tr>';
+			echo '</tfoot>';
+		}
+
+		echo '</table>';
+		echo '<br />';
 	}
 	
 	if ($server_->isOnline()) {
