@@ -141,6 +141,8 @@ function show_manage($profile_id_) {
 	$used_users = $profile->getUsers();
 	$server = Abstract_Server::load($profile->server);
 
+	$can_manage_profiles = isAuthorized('manageSharedFolders');
+
 	page_header();
 
 	echo '<div id="profiles_div">';
@@ -167,6 +169,17 @@ function show_manage($profile_id_) {
 	echo '</table>';
 
 	echo '</div>';
+	
+	if ($can_manage_profiles) {
+		echo '<div>';
+		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this profile?').'\');">';
+		echo '<input type="hidden" name="name" value="Profile" />';
+		echo '<input type="hidden" name="action" value="del" />';
+		echo '<input type="hidden" name="ids[]" value="'.$profile->id.'" />';
+		echo '<input type="submit" value="'._('Delete this profile').'" />';
+		echo '</form>';
+		echo '</div>';
+	}
 
 	echo '</div>';
 
