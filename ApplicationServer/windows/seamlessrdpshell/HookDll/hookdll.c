@@ -21,6 +21,25 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
+/*
+ * Copyright (C) 2012 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Thomas MOUTON <thomas@ulteo.com> 2012
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 
 #include <assert.h>
 #include <stdio.h>
@@ -697,11 +716,12 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 			break;
 
 		case WM_SIZE:
-			if (wparam == SIZE_MAXIMIZED) {
+			{
 				HWND blocked_hwnd;
 				int blocked;
 				unsigned int serial;
 				node* sw;
+				int state;
 				
 				sw = getWindowFromHistory(hwnd);
 				if (! sw)
@@ -713,16 +733,33 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 				blocked = g_blocked_state;
 				ReleaseMutex(g_mutex);
 
-				if ((blocked_hwnd == hwnd) && (blocked == 2))
-					vchannel_write("ACK", "%u", serial);
-				else if (sw->state != 2) {
-					sw->state = 2;
-					vchannel_write("STATE", "0x%08lx,0x%08x,0x%08x",
-						       hwnd, 2, 0);
+				switch (wparam) {
+					case SIZE_MAXIMIZED:
+						state = 2;
+						break;
+					case SIZE_MINIMIZED:
+						state = 1;
+						break;
+					case SIZE_RESTORED:
+						state = 0;
+						break;
 				}
-				break;
+
+				if (sw->state == state) {
+					break;
+				}
+
+				sw->state = state;
+				if ((blocked_hwnd == hwnd) && (blocked == state)) {
+					vchannel_write("ACK", "%u", serial);
+				}
+				else {
+					vchannel_write("STATE", "0x%08lx,0x%08x,0x%08x",
+						  hwnd, sw->state, 0);
+				}
 			}
-			if (!(style & WS_VISIBLE) || (style & WS_MINIMIZE))
+
+			if (wparam == SIZE_MAXIMIZED || !(style & WS_VISIBLE) || (style & WS_MINIMIZE))
 				break;
 			update_position(hwnd);
 			break;
