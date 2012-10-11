@@ -227,6 +227,20 @@ function show_manage($login, $userDB, $userGroupDB) {
 
 	$can_manage_users = isAuthorized('manageUsers');
 	$can_manage_usersgroups = isAuthorized('manageUsersGroups');
+	$can_manage_profiles = isAuthorized('manageSharedFolders');
+	
+	$session_settings = $u->getSessionSettings('session_settings_defaults');
+	
+	$show_profile_part = (array_key_exists('enable_profiles', $session_settings) && $session_settings['enable_profiles'] == 1);
+	if ($show_profile_part) {
+		$profiles = $u->getProfiles();
+		$has_profiles = count($profiles);
+		$profiles_servers = array();
+		
+		foreach($profiles as $profile) {
+			$profiles_servers[$profile->server] = Abstract_Server::load($profile->server);
+		}
+	}
 
   $prefs = Preferences::getInstance();
   if (! $prefs)
@@ -514,6 +528,51 @@ function show_manage($login, $userDB, $userGroupDB) {
     echo '</table>';
     echo '</div>';
   }
+
+	if ($show_profile_part) {
+		echo '<div>';
+		echo '<h2>'._('Profile').'</h2>';
+		
+		if (! $has_profiles) {
+			echo '<p>';
+			echo _('This user doesn\'t have user profiles yet');
+			echo '</p>';
+			if ($can_manage_profiles) {
+				echo '<div>';
+				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to create a profile for this user?').'\');">';
+				echo '<input type="hidden" name="name" value="Profile" />';
+				echo '<input type="hidden" name="action" value="add" />';
+				echo '<input type="hidden" name="users[]" value="'.$u->getAttribute('login').'" />';
+				echo '<input type="submit" value="'._('Create a profile').'" />';
+				echo '</form>';
+				echo '</div>';
+			}
+			
+		}
+		else {
+			foreach($profiles as $profile) {
+				$server = $profiles_servers[$profile->server];
+			
+				echo '<p>';
+				echo str_replace(
+					'%SERVER%',
+					'<a href="servers.php?action=manage&id='.$server->id.'"> '.$server->getDisplayName().'</a>',
+					_('User has profile stored on server %SERVER%.'));
+				echo '</p>';
+				if ($can_manage_profiles) {
+					echo '<div>';
+					echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this profile?').'\');">';
+					echo '<input type="hidden" name="name" value="Profile" />';
+					echo '<input type="hidden" name="action" value="del" />';
+					echo '<input type="hidden" name="ids[]" value="'.$profile->id.'" />';
+					echo '<input type="submit" value="'._('Delete this profile').'" />';
+					echo '</form>';
+					echo '</div>';
+				}
+			}
+		}
+		echo '</div>';
+	}
 
   echo '</div>';
   page_footer();

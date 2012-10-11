@@ -1350,6 +1350,51 @@ if ($_REQUEST['name'] == 'Profile') {
 	if (! checkAuthorization('manageServers'))
 		redirect();
 
+	if ($_REQUEST['action'] == 'add') {
+		if (! isset($_REQUEST['users']) || ! is_array($_REQUEST['users'])) {
+			if (! isset($_REQUEST['user']) || is_array($_REQUEST['user'])) {
+				redirect();
+			}
+			
+			$_REQUEST['users'] = array($_REQUEST['user']);
+		}
+		
+		$userDB = UserDB::getInstance();
+		$profiledb = ProfileDB::getInstance();
+		foreach ($_REQUEST['users'] as $user_login) {
+			$user = $userDB->import($user_login);
+			if (! is_object($user)) {
+				popup_error(sprintf(_("Failed to import user '%s'"), $user_login));
+				continue;
+			}
+			
+			$fileserver = $profiledb->chooseFileServer();
+			if (! is_object($fileserver)) {
+				Logger::error('main', 'Auto-creation of Profile for User "'.$user->getAttribute('login').'" failed (unable to get a valid FileServer)');
+				popup_error(_('Unable to get a valid FileServer'));
+				redirect();
+			}
+			
+			$profile = new Profile();
+			$profile->server = $fileserver->id;
+			if (! $profiledb->addToServer($profile, $fileserver)) {
+				Logger::error('main', 'Auto-creation of Profile for User "'.$user->getAttribute('login').'" failed (unable to add the Profile to the FileServer)');
+				popup_error(_('Unable to add the profile to the FileServer'));
+				redirect();
+			}
+
+			if (! $profile->addUser($user)) {
+				Logger::error('main', 'Auto-creation of Profile for User "'.$user->getAttribute('login').'" failed (unable to associate the User to the Profile)');
+				popup_error(_('Unable to associate the user to the profile'));
+				redirect();
+			}
+			
+			popup_info(sprintf(_("Profile successfully created for user '%s'"), $user->getAttribute('login')));
+		}
+		
+		redirect();
+	}
+
 	if ($_REQUEST['action'] == 'del') {
 		$profiledb = ProfileDB::getInstance();
 		foreach ($_REQUEST['ids'] as $id) {
