@@ -526,7 +526,7 @@ function show_icon($id, $applicationDB) {
 	foreach ($servers as $server) {
 		$ret = query_url($server->getBaseURL().'/aps/application/icon/'.$app->getAttribute('id'));
 		if (! $ret)
-			return false;
+			continue;
 
 		$imgfile = tempnam(NULL, 'ico');
 		@file_put_contents($imgfile, $ret);
