@@ -9,6 +9,7 @@
  * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Author Vincent ROULLIER <v.roullier@ulteo.com> 2012
  *
  * Purpose: Secure layer of communication
  */
@@ -252,7 +253,12 @@ public class Secure {
 	// Client encryption settings //
 	buffer.setLittleEndian16(SEC_TAG_CLI_CRYPT);
 	buffer.setLittleEndian16(this.opt.use_rdp5 ? 12 : 8);	// length
-	buffer.setLittleEndian32(ENCRYPTION_40BIT_FLAG | ENCRYPTION_128BIT_FLAG);
+
+	if (this.opt.useTLS) {
+		buffer.setLittleEndian32(0);
+	} else {
+		buffer.setLittleEndian32(ENCRYPTION_40BIT_FLAG | ENCRYPTION_128BIT_FLAG);
+	}
 	
 	if(this.opt.use_rdp5) buffer.setLittleEndian32(0); // unknown
 	
