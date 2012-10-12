@@ -188,8 +188,12 @@ class ApplicationsDetection():
 			
 			return None
 		
+		try:
+			f = file(bufFile, "r")
+		except IOError, err:
+			Logger.error("ApplicationsDetection::getIcon finale icon file '%s' does not exists"%(bufFile))
+			return None
 		
-		f = file(bufFile, "r")
 		buffer = f.read()
 		f.close()
 		os.remove(bufFile)
