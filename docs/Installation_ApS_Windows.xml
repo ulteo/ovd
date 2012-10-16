@@ -81,7 +81,7 @@
     <para>
       The <emphasis>Ulteo OVD
       Application Server</emphasis> <emphasis role="strong">setup</emphasis>. It can
-      be download from <ulink url="http://www.ulteo.com/main/downloads/ulteo-ovd-win.php?suite=3.0">this place at
+      be download from <ulink url="http://www.ulteo.com/main/downloads/ulteo-ovd-win.php?suite=@VERSION@">this place at
       www.ulteo.com</ulink>.
     </para>
 

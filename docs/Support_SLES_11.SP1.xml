@@ -86,7 +86,7 @@ SELinux status:              disabled]]>
             Add the ovd repository:
           </para>
           <screen>
-<![CDATA[# zypper ar http://archive.ulteo.com/ovd/3.0/@distrib_name@/@distrib_version@ ovd]]>
+<![CDATA[# zypper ar http://archive.ulteo.com/ovd/@VERSION@/@distrib_name@/@distrib_version@ ovd]]>
           </screen>
         </listitem>
 
@@ -115,7 +115,7 @@ SELinux status:              disabled]]>
             Add the ovd repository:
           </para>
           <screen>
-<![CDATA[# zypper ar file:///root/ovd-3.0-@distrib_name@-@distrib_version@ ovd-offline]]>
+<![CDATA[# zypper ar file:///root/ovd-@VERSION@-@distrib_name@-@distrib_version@ ovd-offline]]>
           </screen>
         </listitem>
 
@@ -124,7 +124,7 @@ SELinux status:              disabled]]>
             Install the keyring package to validate the repository using gpg:
           </para>
           <screen>
-<![CDATA[# rpm --import ovd-3.0-@distrib_name@-@distrib_version@/keyring]]>
+<![CDATA[# rpm --import ovd-@VERSION@-@distrib_name@-@distrib_version@/keyring]]>
           </screen>
         </listitem>
 
@@ -213,12 +213,12 @@ SELinux status:              disabled]]>
 Admin login: admin
 Password: 
 Retype password: 
-Chroot download url [http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0]: 
+Chroot download url [http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=@VERSION@]: 
 Chroot destination [/var/cache/ulteo/sessionmanager/base.tar.gz]: 
 
 Options:
 * chroot download:  yes
-* chroot URI:       http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0
+* chroot URI:       http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=@VERSION@
 * chroot directory: /var/cache/ulteo/sessionmanager/base.tar.gz
 
 Is this correct? [Y/n]]]>

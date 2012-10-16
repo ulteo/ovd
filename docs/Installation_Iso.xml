@@ -24,7 +24,7 @@
 
     <para>
       If you haven't an Ulteo OVD DVD-ROM yet, please donwload the corresponding ISO file from
-      <ulink url="http://www.ulteo.com/main/downloads/ulteo-ovd-iso.php?suite=3.0">this place at www.ulteo.com</ulink> and burn it to a fresh DVD.
+      <ulink url="http://www.ulteo.com/main/downloads/ulteo-ovd-iso.php?suite=@VERSION@">this place at www.ulteo.com</ulink> and burn it to a fresh DVD.
     </para>
 
     <para>
@@ -246,7 +246,7 @@
 
     <para>
       To administrate the OVD, follow the corresponding online
-      <ulink url="http://doc.ulteo.com/trunk/AdminConsole.html" >documentation</ulink>.
+      <ulink url="http://doc.ulteo.com/@VERSION@/AdminConsole.html" >documentation</ulink>.
     </para>
 
   </section>

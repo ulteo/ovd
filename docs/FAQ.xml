@@ -256,7 +256,7 @@ $ getent hosts 192.168.0.19
 
   <section id="ports">
     <title>
-      What ports Ulteo Open Virtual Desktop 3.0 is using?
+      What ports Ulteo Open Virtual Desktop @VERSION@ is using?
     </title>
     <para>
        All ports are TCP
@@ -445,7 +445,7 @@ such file or directory]]>
     <itemizedlist>
       <listitem>
         <para>
-          Firewall issue: read <ulink url="#ports">ports used by OVD 3.0</ulink>
+          Firewall issue: read <ulink url="#ports">ports used by OVD @VERSION@</ulink>
         </para>
       </listitem>
       <listitem>
