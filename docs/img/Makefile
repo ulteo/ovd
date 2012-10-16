@@ -11,9 +11,6 @@ DATA=\
 	aps_win_install_config.png \
 	aps_win_services.png \
 	aps_win_services_set_boot.png \
-	cm_session_kde.png \
-	cm_session_launching.png \
-	cm_session.png \
 	important.png \
 	note.png \
 	ovd.png \
@@ -24,7 +21,6 @@ DATA=\
 	profile-ldap-ug.png \
 	session.png \
 	sm_admin_external_name.png \
-	sm_admin_install_fqdn.png \
 	sm_admin_main.png \
 	sm_admin_populate.png \
 	sm_admin_publication.png \
