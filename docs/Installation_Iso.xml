@@ -210,7 +210,7 @@
     <para>
       Once you can access the Ulteo system from your browser, go
       to the administration console:
-      <ulink url="http://10.42.1.242/ovd/admin" /> and authenticate yourself.
+      <ulink url="http://sm.test.demo/ovd/admin" /> and authenticate yourself.
     </para>
 
       <para>

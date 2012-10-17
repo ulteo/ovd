@@ -109,9 +109,9 @@
     <important id="warning_name_examples">
       <para>
         In this document, we are using
-        <emphasis>sm.ulteo.com</emphasis> for the Session Manager
-        address, <emphasis>aps.ulteo.com</emphasis> for the
-        Application Server and <emphasis>web.ulteo.com</emphasis> for
+        <emphasis>sm.test.demo</emphasis> for the Session Manager
+        address, <emphasis>aps.test.demo</emphasis> for the
+        Application Server and <emphasis>web.test.demo</emphasis> for
         the Web Client.
       </para>
       
@@ -369,7 +369,7 @@
 
       <para id="sm_install_browse">
         The server is now installed but not configured yet. You have
-        to open <ulink url="http://sm.ulteo.com/ovd/admin" /> with a
+        to open <ulink url="http://sm.test.demo/ovd/admin" /> with a
         web browser. It should display this page:
       </para>
 
@@ -391,7 +391,7 @@
 
       <para>
         The first step is to go to
-        <ulink url="http://sm.ulteo.com/ovd/admin"/> and authenticate
+        <ulink url="http://sm.test.demo/ovd/admin"/> and authenticate
         yourself with the login and password you provided during
         installation.
       </para>
@@ -485,7 +485,7 @@
         <para>
 	  The only question is about the host/IP address where the
 	  session manager can be accessed (we use
-	  <ulink url="sm.ulteo.com" /> here for the example, but of
+	  <ulink url="sm.test.demo" /> here for the example, but of
 	  course, you have to set your own domain name).
 	</para>
 
@@ -572,7 +572,7 @@
 
   <section id="wc">
     <title id="wc_title">
-      Web Client installation (web.ulteo.com)
+      Web Client installation (web.test.demo)
     </title>
       
     <para id="wc_para_1">
@@ -582,7 +582,7 @@
       possible to install it on the same machine as the Session Manager.
     </para>
     <para id="wc_para_2">
-      In this example, we are using <emphasis>web.ulteo.com</emphasis>
+      In this example, we are using <emphasis>web.test.demo</emphasis>
     </para>
 
     <itemizedlist>
@@ -618,7 +618,7 @@
 	<para>
 	  If you answered yes at the previous question, you now have
 	  to provide the Session Manager an host/IP address. In our
-	  example: <ulink url="sm.ulteo.com" />.
+	  example: <ulink url="sm.test.demo" />.
 	</para>
     	<para>
 	  <inlinemediaobject>
@@ -635,7 +635,7 @@
     
     <para id="wc_last_1">
       Using you web browser, go to
-      <ulink url="http://web.ulteo.com/ovd/" />, you should
+      <ulink url="http://web.test.demo/ovd/" />, you should
       see a login page:
     </para>
     <para id="wc_last_2">

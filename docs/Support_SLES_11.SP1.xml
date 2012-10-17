@@ -263,7 +263,7 @@ Is this correct? [Y/n]]]>
         <para>Launch the configuration tool</para>
         <screen>
 <![CDATA[# ovd-subsystem-config 
-Session Manager address : sm.ulteo.com
+Session Manager address : sm.test.demo
 Chroot destination [/opt/ulteo]:]]>
         </screen>
         <xi:include href="&parent;" xpointer="subsystem-sm-warning" />
@@ -301,7 +301,7 @@ Chroot destination [/opt/ulteo]:]]>
         <screen>
 <![CDATA[# ovd-webclient-config
 Do you want to link the web client to a specific Session Manager ? ([yes]/no): 
-Session Manager address [127.0.0.1]: sm.ulteo.com]]>
+Session Manager address [127.0.0.1]: sm.test.demo]]>
         </screen>
        </listitem>
 

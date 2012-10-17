@@ -204,7 +204,7 @@
 
       <para>
 	The base URL to access to these services is
-	<ulink url="https://sm.ulteo.com/ovd" />.
+	<ulink url="https://sm.test.demo/ovd" />.
       </para>
 
       <para>
@@ -638,10 +638,10 @@ and view documents">
   <head>
     <!-- Load the Ulteo javascript files -->
     <script type="text/javascript" 
-	    src="http://web.ulteo.com/media/script/lib/prototype/prototype.js" 
+	    src="http://web.test.demo/media/script/lib/prototype/prototype.js" 
 	    charset="utf-8"></script>
     <script type="text/javascript" 
-	    src="http://web.ulteo.com/media/script/external.js" 
+	    src="http://web.test.demo/media/script/external.js" 
 	    charset="utf-8"></script>
 
     <script type="text/javascript">
@@ -659,7 +659,7 @@ function start(form_) {
 
 <form action="#" onsubmit="start(this); return false;">
  Server: 
- <input type="text" name="server" value="web.ulteo.com" />
+ <input type="text" name="server" value="web.test.demo" />
  <br/>
 
  Login: 

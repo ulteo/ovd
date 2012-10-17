@@ -220,7 +220,7 @@
 	<listitem><para>
 	  On an application server:
 	  <screen>
-<![CDATA[$ getent hosts sm.ulteo.com]]>
+<![CDATA[$ getent hosts sm.test.demo]]>
 	  </screen>
 
 	  <screen>
@@ -246,10 +246,10 @@
       The reverse DNS must be the same between the two sets of commands
       as you can see in that example:
       <programlisting>
-<![CDATA[$ getent hosts sm3.office.ulteo.com
-192.168.0.19    sm3.office.ulteo.com
+<![CDATA[$ getent hosts sm.test.demo
+192.168.0.19    sm.test.demo
 $ getent hosts 192.168.0.19
-192.168.0.19    sm3.office.ulteo.com]]>
+192.168.0.19    sm.test.demo]]>
       </programlisting>
     </para>
   </section>

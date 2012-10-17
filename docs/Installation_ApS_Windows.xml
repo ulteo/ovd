@@ -110,7 +110,7 @@
 
     <para>
       The only question is about the host/IP address where the session
-      manager can be accessed. (we use <ulink url="sm.ulteo.com" />
+      manager can be accessed. (we use <ulink url="sm.test.demo" />
       here for the example, but of course, you have to set your own
       domain name).
     </para>

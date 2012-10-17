@@ -161,7 +161,7 @@ deb file:///root/ovd-@VERSION@-gold-ubuntu-lucid lucid main]]>
         <para>
           The only question is about the host/IP address where the
           session manager can be accessed. (we use
-          <ulink url="sm.ulteo.com" /> here for the example, but of
+          <ulink url="sm.test.demo" /> here for the example, but of
           course, you have to set your own domain name).
         </para>
 
