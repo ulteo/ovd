@@ -1253,10 +1253,10 @@ public class Orders {
         }
 
         if ((present & 0x020000) != 0)
-            data.incrementPosition(4);
+            data.incrementPosition(1);
 
         if ((present & 0x040000) != 0)
-            data.incrementPosition(4);
+            data.incrementPosition(7);
 
         if ((present & 0x080000) != 0) {
             text2.setX(data.getLittleEndian16());
