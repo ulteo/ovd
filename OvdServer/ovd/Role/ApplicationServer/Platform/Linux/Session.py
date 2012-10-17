@@ -6,6 +6,7 @@
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011, 2012
 # Author Thomas MOUTON <thomas@ulteo.com> 2010
 # Author David LECHEVALIER <david@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -54,13 +55,6 @@ class Session(AbstractSession):
 		
 		self.install_desktop_shortcuts()
 		
-		for p in ["icons", "pixmaps", "mime", "themes"]:
-			src_dir = os.path.join("/usr/share/", p)
-			dst_dir =  os.path.join(xdg_dir, p)
-			
-			os.symlink(src_dir, dst_dir)
-		
-		
 		System.execute('update-desktop-database "%s"'%(System.local_encode(xdg_app_d)))
 		
 		if self.parameters.has_key("desktop_icons") and self.parameters["desktop_icons"] == "1":
@@ -106,13 +100,6 @@ class Session(AbstractSession):
 			self.profile.umount()
 		
 		d = os.path.join(self.SPOOL_USER, self.user.name)
-		xdg_dir = os.path.join(d, "xdg")
-		
-		for p in ["icons", "pixmaps", "mime", "themes"]:
-			dst_dir =  os.path.join(xdg_dir, p)
-			if os.path.islink(dst_dir):
-				os.remove(dst_dir)
-		
 		if os.path.exists(d):
 			shutil.rmtree(d)
 	

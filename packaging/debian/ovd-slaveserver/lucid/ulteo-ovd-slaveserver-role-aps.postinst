@@ -1,6 +1,13 @@
 #!/bin/sh -e
 
-[ -z "$2" ] && ovd-slaveserver-role add ApplicationServer
+if [ -z "$2" ]; then
+	ovd-slaveserver-role add ApplicationServer
+
+	[ -d /usr/share/ovd ] || mkdir /usr/share/ovd
+	for i in icons pixmaps mime themes; do
+		[ -d /usr/share/$i ] && ln -s /usr/share/$i /usr/share/ovd/
+	done
+fi
 
 #DEBHELPER#
 

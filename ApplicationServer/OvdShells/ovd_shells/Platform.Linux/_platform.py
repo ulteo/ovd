@@ -5,6 +5,7 @@
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 # Author Thomas MOUTON <thomas@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -101,7 +102,7 @@ def getUserSessionDir():
 	
 
 def startDesktop():
-	os.environ["XDG_DATA_DIRS"] = os.path.join(os.environ["OVD_SESSION_DIR"], "xdg")
+	os.environ["XDG_DATA_DIRS"] = "/usr/share/ovd:"+os.path.join(os.environ["OVD_SESSION_DIR"], "xdg")
 	os.environ["OVD_APPS_DIR"] = os.path.join(os.environ["OVD_SESSION_DIR"], "xdg", "applications")
 	
 	os.system("x-session-manager")

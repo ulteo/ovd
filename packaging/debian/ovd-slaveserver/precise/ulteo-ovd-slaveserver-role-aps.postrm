@@ -1,6 +1,13 @@
 #!/bin/sh -e
 
-[ "$1" != "upgrade" ] && ovd-slaveserver-role del ApplicationServer
+if [ "$1" != "upgrade" ]; then
+	ovd-slaveserver-role del ApplicationServer
+	
+	for i in icons pixmaps mime themes; do
+		[ -L /usr/share/ovd/$i ] && rm /usr/share/ovd/$i
+	done
+	rmdir /usr/share/ovd || echo "Do not delete /usr/share/ovd"
+fi
 
 #DEBHELPER#
 
