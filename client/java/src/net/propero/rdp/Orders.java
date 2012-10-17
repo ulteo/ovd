@@ -10,6 +10,7 @@
  * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * Purpose: Encapsulates an RDP order
  */
@@ -1182,58 +1183,58 @@ public class Orders {
             int present, boolean delta) throws RdesktopException {
 
         if ((present & 0x000001) != 0) {
-            text2.setFont(data.get8());
+            text2.setFont(data.get8());                     // cacheId (optional)
         }
         if ((present & 0x000002) != 0) {
-            text2.setFlags(data.get8());
+            text2.setFlags(data.get8());                    // flAccel (optional)
         }
 
         if ((present & 0x000004) != 0) {
-            text2.setOpcode(data.get8()); // setUnknown(data.get8());
+            text2.setOpcode(data.get8());                   // ulCharInc (optional)
         }
 
         if ((present & 0x000008) != 0) {
-            text2.setMixmode(data.get8());
+            text2.setMixmode(data.get8());                  // fOpRedundant (optional)
         }
 
         if ((present & 0x000010) != 0) {
-            text2.setForegroundColor(setColor(data));
+            text2.setForegroundColor(setColor(data));       // BackColor (optional)
         }
 
         if ((present & 0x000020) != 0) {
-            text2.setBackgroundColor(setColor(data));
+            text2.setBackgroundColor(setColor(data));       // ForeColor (optional)
         }
 
         if ((present & 0x000040) != 0) {
-            text2.setClipLeft(data.getLittleEndian16());
+            text2.setClipLeft(data.getLittleEndian16());    // BkLeft (optional)
         }
 
         if ((present & 0x000080) != 0) {
-            text2.setClipTop(data.getLittleEndian16());
+            text2.setClipTop(data.getLittleEndian16());     // BkTop (optional)
         }
 
         if ((present & 0x000100) != 0) {
-            text2.setClipRight(data.getLittleEndian16());
+            text2.setClipRight(data.getLittleEndian16());   // BkRight (optional)
         }
 
         if ((present & 0x000200) != 0) {
-            text2.setClipBottom(data.getLittleEndian16());
+            text2.setClipBottom(data.getLittleEndian16());  // BkBottom (optional)
         }
 
         if ((present & 0x000400) != 0) {
-            text2.setBoxLeft(data.getLittleEndian16());
+            text2.setBoxLeft(data.getLittleEndian16());     // OpLeft (optional)
         }
 
         if ((present & 0x000800) != 0) {
-            text2.setBoxTop(data.getLittleEndian16());
+            text2.setBoxTop(data.getLittleEndian16());      // OpTop (optional)
         }
 
         if ((present & 0x001000) != 0) {
-            text2.setBoxRight(data.getLittleEndian16());
+            text2.setBoxRight(data.getLittleEndian16());    // OpRight (optional)
         }
 
         if ((present & 0x002000) != 0) {
-            text2.setBoxBottom(data.getLittleEndian16());
+            text2.setBoxBottom(data.getLittleEndian16());   // OpBottom (optional)
         }
 
         /*
@@ -1241,33 +1242,33 @@ public class Orders {
          * disconnected with mstsc and with wintach's spreadsheet test.
          */
         if ((present & 0x004000) != 0)
-            data.incrementPosition(1);
+            data.incrementPosition(1);                      // BrushOrgX (optional)
 
         if ((present & 0x008000) != 0)
-            data.incrementPosition(1);
+            data.incrementPosition(1);                      // BrushOrgY (optional)
 
         if ((present & 0x010000) != 0) {
-            data.incrementPosition(1); /* guessing the length here */
+            data.incrementPosition(1);                      // BrushStyle (optional)
             logger
                     .warn("Unknown order state member (0x010000) in text2 order.\n");
         }
 
         if ((present & 0x020000) != 0)
-            data.incrementPosition(1);
+            data.incrementPosition(1);                      // BrushHatch (optional)
 
         if ((present & 0x040000) != 0)
-            data.incrementPosition(7);
+            data.incrementPosition(7);                      // BrushExtra (optional)
 
         if ((present & 0x080000) != 0) {
-            text2.setX(data.getLittleEndian16());
+            text2.setX(data.getLittleEndian16());           // X (optional)
         }
 
         if ((present & 0x100000) != 0) {
-            text2.setY(data.getLittleEndian16());
+            text2.setY(data.getLittleEndian16());           // Y (optional)
         }
 
         if ((present & 0x200000) != 0) {
-            text2.setLength(data.get8());
+            text2.setLength(data.get8());                   // VariableBytes (variable)
 
             byte[] text = new byte[text2.getLength()];
             data.copyToByteArray(text, 0, data.getPosition(), text.length);
