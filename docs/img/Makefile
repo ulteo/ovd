@@ -5,7 +5,6 @@ SUBDIRS=\
 	windows
 
 DATA=\
-	aps-session-win-appps.png \
 	aps_win_event.png \
 	aps_win_install_1.png \
 	aps_win_install_config.png \
