@@ -1024,6 +1024,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 	public void windowStateChanged(WindowEvent ev) {
 		SeamlessWindow f = (SeamlessWindow)ev.getWindow();
+		((Window) f).repaint();
 
 		int oldState = SeamlessChannel.getSeamlessState(ev.getOldState());
 		int newState = SeamlessChannel.getSeamlessState(ev.getNewState());
