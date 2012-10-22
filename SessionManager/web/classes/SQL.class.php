@@ -318,7 +318,7 @@ class SQL {
 				}
 			}
 			
-			if (!$process_indexes && array_diff($keys['PRIMARY'], $primary_keys_) != array_diff($primary_keys_, $keys['PRIMARY']))
+			if (!$process_indexes && array_key_exists('PRIMARY', $keys) && array_diff($keys['PRIMARY'], $primary_keys_) != array_diff($primary_keys_, $keys['PRIMARY']))
 				$process_indexes = true;
 			
 			// is the database to be updated ?
