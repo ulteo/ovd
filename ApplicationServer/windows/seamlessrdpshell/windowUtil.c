@@ -121,14 +121,14 @@ HWND WindowUtil_getParent(HWND hwnd) {
 BOOL WindowUtil_isFocused(HWND hwnd) {
 	HWND focused_hwnd;
 	HWND child, parent;
+	GUITHREADINFO thread_infos;
 
-	// Attach foreground window thread
-	AttachThreadInput(GetWindowThreadProcessId(hwnd, NULL), GetCurrentThreadId(), TRUE);
+	thread_infos.cbSize = sizeof(GUITHREADINFO);
+	if (! GetGUIThreadInfo(GetWindowThreadProcessId(hwnd, NULL), &thread_infos)) {
+		return FALSE;
+	}
 
-	focused_hwnd = GetFocus();
-
-	// Detach the attached thread
-	AttachThreadInput(GetWindowThreadProcessId(hwnd, NULL), GetCurrentThreadId(), FALSE);
+	focused_hwnd = thread_infos.hwndFocus;
 
 	if (focused_hwnd == NULL)
 		return FALSE;
