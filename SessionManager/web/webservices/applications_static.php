@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -51,6 +52,9 @@ if (is_array($applications)) {
 		$app_node->setAttribute('name', $app->getAttribute('name'));
 		$app_node->setAttribute('description', $app->getAttribute('description'));
 		$app_node->setAttribute('command', $app->getAttribute('executable_path'));
+		if ($app->hasAttribute('directory') && strlen($app->getAttribute('directory')) > 0)
+			$app_node->setAttribute('directory', $app->getAttribute('directory'));
+		
 		$app_node->setAttribute('revision', $app->getAttribute('revision'));
 		$mimes = explode(';', $app->getAttribute('mimetypes'));
 		foreach ($mimes as $mime) {

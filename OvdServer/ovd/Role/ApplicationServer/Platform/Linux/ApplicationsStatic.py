@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2012 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -45,6 +45,9 @@ class ApplicationsStatic(AbstractApplicationsStatic):
 		lines.append("Name=%s"%(application_["name"]))
 		lines.append("Comment=%s"%(application_["description"]))
 		lines.append("Exec=%s"%(application_["command"]))
+		if application_.has_key("directory"):
+			lines.append("Path=%s"%(application_["directory"]))
+		
 		lines.append("MimeType=%s"%(";".join(application_["mimetypes"])))
 		#parser = ConfigParser.ConfigParser()
 		#parser.add_section("Desktop Entry")

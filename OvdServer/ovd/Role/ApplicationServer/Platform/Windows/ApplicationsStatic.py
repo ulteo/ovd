@@ -74,6 +74,13 @@ class ApplicationsStatic(AbstractApplicationsStatic):
 				Logger.warn("Unable to shortcut SetArguments ('%s')"%(arguments))
 				return False
 		
+		if application_.has_key("directory"):
+			try:
+				shortcut.SetWorkingDirectory(application_["directory"])
+			except:
+				Logger.warn("Unable to shortcut SetWorkingDirectory ('%s')"%(application_["directory"]))
+				return False
+		
 		shortcut.SetIconLocation(ico_file, 0)
 		#shortcut.SetWorkingDirectory(workingDirectory)
 		shortcut.SetDescription(application_["description"])

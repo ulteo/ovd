@@ -28,6 +28,7 @@ from ovd_shells.Application import Application
 from ovd_shells.CheckFork import CheckFork
 from ovd_shells.CheckOpenOffice import CheckOpenOffice
 from ovd_shells.Monitoring import Monitoring
+from ovd_shells.CheckWorkingDir import CheckWorkingDir
 from ovd_shells.CheckWow64 import CheckWow64
 from ovd_shells.Platform import _platform as Platform
 from ovd_shells import Util
@@ -70,6 +71,7 @@ def main():
 	modules.append(CheckOpenOffice(application))
 	modules.append(Monitoring(application))
 	modules.append(CheckWow64(application))
+	modules.append(CheckWorkingDir(application))
 	
 	
 	for module in modules:

@@ -303,6 +303,7 @@ class ApplicationDB_sql extends ApplicationDB {
 			'description' => 'text NOT NULL',
 			'type' => 'text  NOT NULL',
 			'executable_path' => 'text NOT NULL',
+			'directory' => 'varchar(512)',
 			'package' => 'text NOT NULL',
 			'desktopfile' => 'text default NULL',
 			'published' => 'tinyint(1) default \'0\'',
