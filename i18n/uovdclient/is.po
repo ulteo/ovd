@@ -174,8 +174,8 @@ msgid "My files"
 msgstr "Mínar skrár"
 
 #: ../../client/web/web/translate.php:117
-msgid "Example: sm.ulteo.com"
-msgstr "Dæmi: sm.ulteo.com"
+msgid "Example: %EXAMPLE%"
+msgstr "Dæmi: %EXAMPLE%"
 
 #: ../../client/web/web/translate.php:119
 msgid "Usage: missing \"sessionmanager_host\" parameter"

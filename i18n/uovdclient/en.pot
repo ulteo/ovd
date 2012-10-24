@@ -22,7 +22,7 @@ msgstr ""
 #. <?php
 #. }
 #: ../../client/web/web/index.php:406
-msgid "Example: sm.ulteo.com"
+msgid "Example: %EXAMPLE%"
 msgstr ""
 
 #: ../../client/web/web/translate.php:65

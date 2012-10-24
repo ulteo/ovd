@@ -19,9 +19,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
  
-define('ULTEO_OVD_SM_HOST', 'sm.ulteo.com');
+define('ULTEO_OVD_SM_HOST', 'sm.test.demo');
 
-define('ULTEO_OVD_WEBCLIENT_URL', 'http://web.ulteo.com/ovd');
+define('ULTEO_OVD_WEBCLIENT_URL', 'http://web.test.demo/ovd');
 
 // define('ULTEO_OVD_AUTH_TYPE', 'password');
 define('ULTEO_OVD_AUTH_TYPE', 'token');

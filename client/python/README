@@ -29,7 +29,7 @@ Auto launch a defined number of sessions
 
 launch_x_sessions.py [-h|--help] sm_url Number
 
- * sm_url: http://sm.ulteo.com/sessionmanager ...
+ * sm_url: http://sm.test.demo/sessionmanager ...
  * Number: number of session you want to launch
 
 

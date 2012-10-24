@@ -178,8 +178,8 @@ msgid "My files"
 msgstr "Мои файлы"
 
 #: ../../client/web/web/translate.php:117
-msgid "Example: sm.ulteo.com"
-msgstr "Например: sm.ulteo.com"
+msgid "Example: %EXAMPLE%"
+msgstr "Например: %EXAMPLE%"
 
 # I need to know context for right translate
 #: ../../client/web/web/translate.php:119

@@ -175,8 +175,8 @@ msgid "My files"
 msgstr "Moje pliki"
 
 #: ../../client/web/web/translate.php:117
-msgid "Example: sm.ulteo.com"
-msgstr "Przykład: sm.ulteo.com"
+msgid "Example: %EXAMPLE%"
+msgstr "Przykład: %EXAMPLE%"
 
 #: ../../client/web/web/translate.php:119
 msgid "Usage: missing \"sessionmanager_host\" parameter"

@@ -1,6 +1,6 @@
 Template: ulteo-ovd-subsystem/sm_address
 Type: string
-Default: sm.ulteo.com
+Default: sm.test.demo
 _Description: Session manager address/hostname
 
 Template: ulteo-ovd-subsystem/tarball_uri

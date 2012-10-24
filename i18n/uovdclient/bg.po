@@ -25,8 +25,8 @@ msgstr ""
 #. <?php
 #. }
 #: ../../client/web/web/index.php:405
-msgid "Example: sm.ulteo.com"
-msgstr "Например: sm.ulteo.com"
+msgid "Example: %EXAMPLE%"
+msgstr "Например: %EXAMPLE%"
 
 #: ../../client/web/web/translate.php:65
 msgid "Close"

@@ -137,7 +137,7 @@ Function InputBoxPageShow
     PassDialog::InitDialog /NOUNLOAD InputBox \
                            /HEADINGTEXT "Caution: give full name or ip address" \
                            /GROUPTEXT "Session Manager host/address" \
-                           /BOX "Example: sm.ulteo.com" $sm_address 0
+                           /BOX "Example: sm.test.demo" $sm_address 0
     PassDialog::Show
     Pop $0
   

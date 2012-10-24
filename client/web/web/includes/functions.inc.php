@@ -215,7 +215,7 @@ function get_available_translations($lang) {
 	);
 
 	$js_translations = array(
-		'sessionmanager_host_example'		=>	_('Example: sm.ulteo.com'),
+		'sessionmanager_host_example'		=>	str_replace('%EXAMPLE%', 'sm.test.demo', _('Example: %EXAMPLE%')),
 		
 		'no_sessionmanager_host'		=>	_('Usage: missing "sessionmanager_host" parameter'),
 		'no_login_parameter'			=>	_('Usage: missing "login" parameter'),
