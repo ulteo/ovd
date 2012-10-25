@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008, 2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,6 +36,16 @@ class Application {
 		$this->attributes['package'] = $package_;
 		$this->attributes['published'] = (bool)($published_);
 		$this->attributes['desktopfile'] = $desktopfile_;
+	}
+	
+	public static function toArray($application) {
+		return $application->attributes;
+	}
+	
+	public static function fromArray($attributes) {
+		$application = new Application();
+		$application->attributes = $attributes;
+		return $application;
 	}
 
 	public function __toString() {

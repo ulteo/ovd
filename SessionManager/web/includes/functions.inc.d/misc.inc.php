@@ -5,6 +5,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com> 2008-2012
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -399,4 +400,23 @@ function shadow($input_, $password_) {
        $hash = $matches[2];
 
        return (crypt($password_, '$'.$type.'$'.$hash.'$') == $input_);
+}
+
+function json_serialize($array) {
+	if (function_exists("json_encode"))
+		return json_encode($array);
+	
+	return serialize($array);
+}
+
+function json_unserialize($string) {
+	if (function_exists("json_decode"))
+		$ret = json_decode($string, true);
+	else
+		$ret = NULL;
+	
+	if ($ret == NULL) // try with old method
+		$ret = @unserialize($string);
+	
+	return $ret;
 }

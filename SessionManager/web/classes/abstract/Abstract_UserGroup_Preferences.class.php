@@ -5,6 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -64,7 +65,7 @@ class Abstract_UserGroup_Preferences {
 		else {
 			$rows = $sql->FetchAllResults();
 			foreach ($rows as $row) {
-				$ret[$row['element_id']] = new UserGroup_Preferences($row['group_id'], $row['key'], $row['container'], $row['element_id'], unserialize($row['value']));
+				$ret[$row['element_id']] = new UserGroup_Preferences($row['group_id'], $row['key'], $row['container'], $row['element_id'], json_unserialize($row['value']));
 			}
 		}
 		
@@ -73,7 +74,7 @@ class Abstract_UserGroup_Preferences {
 	
 	public static function save($usergroup_prefs_) {
 		$sql = SQL::getInstance();
-		return $res = $sql->DoQuery('INSERT INTO #1 (@2,@3,@4,@5,@6) VALUES (%7,%8,%9,%10,%11)', self::$table, 'group_id', 'key', 'container', 'element_id', 'value', $usergroup_prefs_->usergroup_id, $usergroup_prefs_->key, $usergroup_prefs_->container, $usergroup_prefs_->element_id, serialize($usergroup_prefs_->value));
+		return $res = $sql->DoQuery('INSERT INTO #1 (@2,@3,@4,@5,@6) VALUES (%7,%8,%9,%10,%11)', self::$table, 'group_id', 'key', 'container', 'element_id', 'value', $usergroup_prefs_->usergroup_id, $usergroup_prefs_->key, $usergroup_prefs_->container, $usergroup_prefs_->element_id, json_serialize($usergroup_prefs_->value));
 	}
 	
 	public static function delete($usergroup_id_, $key_, $container_, $element_id_) {

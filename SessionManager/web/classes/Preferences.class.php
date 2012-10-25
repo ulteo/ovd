@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -124,7 +125,7 @@ class Preferences {
 			return array();
 		}
 		
-		$ret = @unserialize(@file_get_contents($this->conf_file, LOCK_EX));
+		$ret = json_unserialize(@file_get_contents($this->conf_file, LOCK_EX));
 		if ($ret === false) {
 			return array();
 		}

@@ -5,6 +5,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -107,7 +108,7 @@ class Abstract_Task {
 			}
 		}
 
-		$SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17 WHERE @18 = %19 LIMIT 1', self::table, 'type', $task_->type, 'job_id', $task_->job_id, 'server', $task_->server, 'status', $task_->status, 't_begin', $task_->t_begin, 't_end', $task_->t_end, 'applications_line', @$task_->applications_line, 'applications', serialize(@$task_->applications), 'id', $id);
+		$SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17 WHERE @18 = %19 LIMIT 1', self::table, 'type', $task_->type, 'job_id', $task_->job_id, 'server', $task_->server, 'status', $task_->status, 't_begin', $task_->t_begin, 't_end', $task_->t_end, 'applications_line', @$task_->applications_line, 'applications', json_serialize(@array_map("Application::toArray", $task_->applications)), 'id', $id);
 
 		return true;
 	}
@@ -152,7 +153,7 @@ class Abstract_Task {
 
 		switch ($type) {
 			case 'install':
-				$buf = new Task_install((string)$id, (string)$server, unserialize($applications));
+				$buf = new Task_install((string)$id, (string)$server, array_map("Application::fromArray", json_unserialize($applications)));
 				break;
 			case 'install_from_line':
 				$buf = new Task_install_from_line((string)$id, (string)$server, (string)$applications_line);
@@ -161,7 +162,7 @@ class Abstract_Task {
 				$buf = new Task_upgrade((string)$id, (string)$server);
 				break;
 			case 'remove':
-				$buf = new Task_remove((string)$id, (string)$server, unserialize($applications));
+				$buf = new Task_remove((string)$id, (string)$server, json_unserialize($applications));
 				break;
 			case 'available':
 				$buf = new Task_available_applications((string)$id, (string)$server);
@@ -174,7 +175,7 @@ class Abstract_Task {
 		$buf->t_begin = (int)$t_begin;
 		$buf->t_end = (int)$t_end;
 		$buf->applications_line = (string)$applications_line;
-		$buf->applications = unserialize($applications);
+		$buf->applications = array_map("Application::fromArray", json_unserialize($applications));
 
 		return $buf;
 	}

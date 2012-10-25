@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -78,7 +79,7 @@ class Preferences_admin extends Preferences {
 				$filecontents[$key1] = $buf->content;
 			}
 		}
-		return file_put_contents($this->conf_file,serialize($filecontents), LOCK_EX);
+		return file_put_contents($this->conf_file, json_serialize($filecontents), LOCK_EX);
 	}
 
 	public function isValid() {

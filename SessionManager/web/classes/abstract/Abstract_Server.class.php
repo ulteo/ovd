@@ -162,14 +162,14 @@ class Abstract_Server {
 
 		$properties = array();
 		foreach ($rows as $row)
-			$properties[$row['property']] = unserialize($row['value']);
+			$properties[$row['property']] = json_unserialize($row['value']);
 
 		return $properties;
 	}
 
 	private static function saveProperty($server_, $object_property_, $db_property_, $old_property_) {
-		$property_ = ((isset($server_->$object_property_))?serialize($server_->$object_property_):NULL);
-		$old_property_ = ((! is_null($old_property_))?serialize($old_property_):NULL);
+		$property_ = ((isset($server_->$object_property_))?json_serialize($server_->$object_property_):NULL);
+		$old_property_ = ((! is_null($old_property_))?json_serialize($old_property_):NULL);
 
 		$SQL = SQL::getInstance();
 

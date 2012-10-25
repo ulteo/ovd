@@ -6,6 +6,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
  * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -112,11 +113,11 @@ class Abstract_Session {
 		}
 		
 		$data = array();
-		$data['applications'] = $session_->getPublishedApplications();
-		$data['running_applications'] = $session_->getRunningApplications();
-		$data['closed_applications'] = $session_->getClosedApplications();
+		$data['applications'] = array_map("Application::toArray", $session_->getPublishedApplications());
+		$data['running_applications'] = array_map("Application::toArray", $session_->getRunningApplications());
+		$data['closed_applications'] = array_map("Application::toArray", $session_->getClosedApplications());
 
-		$SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23 WHERE @24 = %25 LIMIT 1', self::table, 'server', $session_->server, 'mode', $session_->mode, 'type', $session_->type, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'servers', serialize($session_->servers), 'applications', serialize($data), 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
+		$SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23 WHERE @24 = %25 LIMIT 1', self::table, 'server', $session_->server, 'mode', $session_->mode, 'type', $session_->type, 'status', $session_->status, 'settings', json_serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'servers', json_serialize($session_->servers), 'applications', json_serialize($data), 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
 
 		return true;
 	}
@@ -173,18 +174,18 @@ class Abstract_Session {
 		$buf->mode = (string)$mode;
 		$buf->type = (string)$type;
 		$buf->status = (string)$status;
-		$buf->settings = unserialize($settings);
+		$buf->settings = json_unserialize($settings);
 		$buf->user_login = (string)$user_login;
 		$buf->user_displayname = (string)$user_displayname;
-		$buf->servers = unserialize($servers);
+		$buf->servers = json_unserialize($servers);
 		
-		$data = unserialize($applications);
+		$data = json_unserialize($applications);
 		if (array_key_exists('applications', $data))
-			$buf->setPublishedApplications($data['applications']);
+			$buf->setPublishedApplications(array_map("Application::fromArray", $data['applications']));
 		if (array_key_exists('running_applications', $data))
-			$buf->setRunningApplications($data['running_applications']);
+			$buf->setRunningApplications(array_map("Application::fromArray", $data['running_applications']));
 		if (array_key_exists('closed_applications', $data))
-			$buf->setClosedApplications($data['closed_applications']);
+			$buf->setClosedApplications(array_map("Application::fromArray", $data['closed_applications']));
 		
 		$buf->start_time = (string)$start_time;
 		$buf->timestamp = (int)$timestamp;
