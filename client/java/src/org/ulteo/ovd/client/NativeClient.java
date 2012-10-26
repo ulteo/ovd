@@ -543,7 +543,6 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.authFrame.setRememberMeChecked(this.opts.getFlag(Options.FLAG_REMEMBER_ME));
 		this.authFrame.setShowKeyboardLayoutChooser((this.opts.inputMethod == null) || this.opts.inputMethod.equalsIgnoreCase("scancode"));
 		this.authFrame.showWindow();
-		this.loadingFrame.setLocationRelativeTo(this.authFrame);
 	}
 
 	private void loadOptions() {
@@ -752,8 +751,10 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	
 	private boolean launchConnection() throws UnsupportedOperationException, SessionManagerException {
 		this.loadingFrame.updateProgression(LoadingStatus.LOADING_START, 0);
-		if (this.opts.showProgressBar)
+		if (this.opts.showProgressBar) {
+			this.loadingFrame.setLocationRelativeTo(this.authFrame);
 			SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, true));
+		}
 
 		// Start OVD session
 		SessionManagerCommunication dialog = new SessionManagerCommunication(this.opts.host, this.opts.port, true);
