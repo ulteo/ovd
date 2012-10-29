@@ -1,5 +1,7 @@
 /*
  * Copyright (C) 2008 Gauvain Pocentek <gpocentek@linutop.com>
+ * Copyright (C) 2012 Ulteo SAS http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -185,15 +187,25 @@ populate (SMenu *sm)
     if (sm->priv->common_path)
     {
         dir = g_dir_open (sm->priv->common_path, 0, NULL);
+        GList *list = NULL;
         if (dir)
         {
+            while ((tmp = g_strdup (g_dir_read_name (dir))) != NULL)
+            {
+                list = g_list_insert_sorted(list, tmp, (GCompareFunc) g_ascii_strcasecmp);
+            }
+            g_dir_close (dir);
+        }
+        if (list)
+        {
+            GList *node;
             GtkWidget *sep = gtk_separator_menu_item_new ();
             gtk_widget_show (sep);
             append_to_menu (sep, sm);
 
-            while ((tmp = g_strdup (g_dir_read_name (dir))) != NULL)
+            for (node = g_list_first (list); node != NULL; node = g_list_next (node))
             {
-                gchar *path = g_strconcat (sm->priv->common_path, "/", tmp, NULL);
+                gchar *path = g_strconcat (sm->priv->common_path, "/", node->data, NULL);
                 XfceDesktopEntry *de = xfce_desktop_entry_new (
                     path, categories, 4);
                 if (de)
@@ -207,9 +219,9 @@ populate (SMenu *sm)
                     g_object_unref (de);
                 }
                 g_free (path);
-                g_free (tmp);
+                g_free (node->data);
             }
-            g_dir_close (dir);
+            g_list_free (list);
         }
     }
 
