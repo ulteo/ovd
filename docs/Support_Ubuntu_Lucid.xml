@@ -162,7 +162,7 @@
           The Ulteo OVD offline installation requires that the <ulink
           url="@distrib_dvd_url@">@distrib_pretty_name@ DVD</ulink> is
           registered on the system as a packages repository in order
-          to match package dependecies.
+          to match package dependencies.
         </para>
 
         <para>
