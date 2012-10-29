@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Disconnect
+Name[fr]=Déconnecter
+GenericName=Disconnect
+GenericName[fr]=Déconnecter
+Comment=Disconnect from the session
+Comment[fr]=Déconnecter la session
+Exec=xrdp-disconnect
+Icon=gnome-lockscreen.png
+
