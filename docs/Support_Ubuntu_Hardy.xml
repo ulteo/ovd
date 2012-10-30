@@ -15,7 +15,7 @@
     <xi:include href="&parent;" xpointer="prerequisites_title" />
 
     <para>
-      @distrib_pretty_name@ was the LTS version of Ubuntu untill 2010. There are
+      @distrib_pretty_name@ was the LTS version of Ubuntu until 2010. There are
       several edition: desktop/server, 32/64 bits. This documentation
       has been done for the server edition (32/64 bits) but it should
       also work for desktop edition. Ubuntu system can be downloaded
