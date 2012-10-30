@@ -29,6 +29,7 @@ SRC=\
 	Support_openSUSE_11.3.xml \
 	Support_SLES_11.SP1.xml \
 	Support_Ubuntu_Hardy.xml \
+	Support_Ubuntu_Precise.xml \
 	Support_Ubuntu_Lucid.xml \
 	WebClient.xml
 
@@ -55,6 +56,7 @@ Support_Debian_Squeeze.html Support_Debian_Squeeze.pdf: Support_Ubuntu_Lucid.xml
 Support_RHEL_5.5.html Support_RHEL_5.5.pdf: Support_SLES_11.SP1.xml
 Support_SLES_11.SP1.html Support_SLES_11.SP1.pdf: Support_Debian_Squeeze.xml Support_Ubuntu_Hardy.xml
 Support_Ubuntu_Hardy.html Support_Ubuntu_Hardy.pdf: Support_Ubuntu_Lucid.xml
+Support_Ubuntu_Precise.html Support_Ubuntu_Precise.pdf: Support_Ubuntu_Lucid.xml
 Support_openSUSE_11.2.html Support_openSUSE_11.2.pdf: Support_SLES_11.SP1.xml
 Support_openSUSE_11.3.html Support_openSUSE_11.3.pdf: Support_SLES_11.SP1.xml
 

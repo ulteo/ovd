@@ -27,7 +27,7 @@
     <title id="prerequisites_title">Prerequisites: @distrib_pretty_name@</title>
 
     <para>
-      @distrib_pretty_name@ is the latest LTS version of
+      @distrib_pretty_name@ is a LTS version of
       Ubuntu. There are several editions: desktop/server, 32/64
       bits. This documentation has been done for the server edition
       (32/64 bits) but it should also work with the desktop edition. The Ubuntu
