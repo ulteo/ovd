@@ -223,6 +223,11 @@ if ($_REQUEST['name'] == 'Application') {
 		popup_info(sprintf(_("Application '%s' successfully added"), $app->getAttribute('name')));
 		
 		// Clone Icon
+		if ($app->haveIcon()) {
+			// We remove the application icon if already exists because it shouldn't
+			$app->delIcon();
+		}
+
 		$path_rw = $app->getIconPathRW();
 		if (is_writable2($path_rw)) {
 			@file_put_contents($path_rw, @file_get_contents($icon_path));
@@ -357,6 +362,11 @@ if ($_REQUEST['name'] == 'Application_static') {
 				$ret = $applicationDB->add($a);
 				if (! $ret) {
 					popup_error(sprintf(_("Failed to add application '%s'"), $a->getAttribute('name')));
+				}
+				
+				if ($a->haveIcon()) {
+					// We remove the application icon if already exists because it shouldn't
+					$a->delIcon();
 				}
 				
 				popup_info(sprintf(_("Application '%s' successfully added"), $a->getAttribute('name')));
