@@ -6,6 +6,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -415,7 +416,7 @@ function json_unserialize($string) {
 	else
 		$ret = NULL;
 	
-	if ($ret == NULL) // try with old method
+	if ($ret === NULL) // try with old method
 		$ret = @unserialize($string);
 	
 	return $ret;
