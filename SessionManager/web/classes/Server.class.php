@@ -1232,7 +1232,7 @@ class Server {
 					$done_modifications++;
 					
 					if ($a->haveIcon()) {
-						// We remove the application icon if already exists because it shouldn't be
+						// We remove the application icon if already exists because it shouldn't
 						$a->delIcon();
 					}
 				}
