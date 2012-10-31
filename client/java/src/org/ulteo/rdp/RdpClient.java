@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
  * Author David LECHEVALIER <david@ulteo.com> 2012
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
@@ -434,11 +434,11 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 	/*RDP connection events*/
 	public void connected(RdpConnection co) {
 		RdpClient.logger.info("Connected to "+co.getServer());
+		this.initPane(co);
 	}
 
 	public void connecting(RdpConnection co) {
 		RdpClient.logger.info("Connecting to "+co.getServer());
-		this.initPane(co);
 	}
 
 	public void failed(RdpConnection co, String msg) {
