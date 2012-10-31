@@ -601,8 +601,12 @@ if (array_key_exists(Server::SERVER_ROLE_FS, $session->servers)) {
 	}
 }
 
-if ($session->mode == Session::MODE_DESKTOP) {
-	$server = Abstract_Server::load($session->server);
+$defined_apps = array();
+foreach ($session->servers[Server::SERVER_ROLE_APS] as $server_id => $data) {
+	if ($session->mode == Session::MODE_DESKTOP && $server_id != $session->server)
+		continue;
+	
+	$server = Abstract_Server::load($server_id);
 	if (! $server)
 		throw_response(INTERNAL_ERROR);
 
@@ -624,12 +628,18 @@ if ($session->mode == Session::MODE_DESKTOP) {
 		$server_node->setAttribute('port', $server->getApSRDPPort());
 	$server_node->setAttribute('login', $user_login_aps);
 	$server_node->setAttribute('password', $user_password_aps);
+
 	foreach ($session->getPublishedApplications() as $application) {
 		if ($application->getAttribute('type') != $server->getAttribute('type'))
 			continue;
 
 		if (! in_array($application->getAttribute('id'), $available_applications))
 			continue;
+
+		if (in_array($application->getAttribute('id'), $defined_apps))
+			continue;
+		
+		$defined_apps[] = $application->getAttribute('id');
 
 		$application_node = $dom->createElement('application');
 		$application_node->setAttribute('id', $application->getAttribute('id'));
@@ -642,55 +652,6 @@ if ($session->mode == Session::MODE_DESKTOP) {
 		$server_node->appendChild($application_node);
 	}
 	$session_node->appendChild($server_node);
-} elseif ($session->mode == Session::MODE_APPLICATIONS) {
-	$defined_apps = array();
-	foreach ($session->servers[Server::SERVER_ROLE_APS] as $server_id => $data) {
-		$server = Abstract_Server::load($server_id);
-		if (! $server)
-			continue;
-
-		if (! array_key_exists(Server::SERVER_ROLE_APS, $server->getRoles()))
-			continue;
-
-		$server_applications = $server->getApplications();
-		if (! is_array($server_applications))
-			$server_applications = array();
-
-		$available_applications = array();
-		foreach ($server_applications as $server_application)
-			$available_applications[] = $server_application->getAttribute('id');
-
-		$server_node = $dom->createElement('server');
-		$server_node->setAttribute('type', $server->getAttribute('type'));
-		$server_node->setAttribute('fqdn', $server->getExternalName());
-		if ($server->getApSRDPPort() != Server::DEFAULT_RDP_PORT)
-			$server_node->setAttribute('port', $server->getApSRDPPort());
-		$server_node->setAttribute('login', $user_login_aps);
-		$server_node->setAttribute('password', $user_password_aps);
-
-		foreach ($session->getPublishedApplications() as $application) {
-			if ($application->getAttribute('type') != $server->getAttribute('type'))
-				continue;
-
-			if (! in_array($application->getAttribute('id'), $available_applications))
-				continue;
-
-			if (in_array($application->getAttribute('id'), $defined_apps))
-				continue;
-			$defined_apps[] = $application->getAttribute('id');
-
-			$application_node = $dom->createElement('application');
-			$application_node->setAttribute('id', $application->getAttribute('id'));
-			$application_node->setAttribute('name', $application->getAttribute('name'));
-			foreach ($application->getMimeTypes() as $mimetype) {
-				$mimetype_node = $dom->createElement('mime');
-				$mimetype_node->setAttribute('type', $mimetype);
-				$application_node->appendChild($mimetype_node);
-			}
-			$server_node->appendChild($application_node);
-		}
-		$session_node->appendChild($server_node);
-	}
 }
 $dom->appendChild($session_node);
 
