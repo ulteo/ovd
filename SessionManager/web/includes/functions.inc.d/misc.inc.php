@@ -405,9 +405,14 @@ function shadow($input_, $password_) {
 
 function json_serialize($array) {
 	if (function_exists("json_encode"))
-		return json_encode($array);
+		$ret = json_encode($array);
+	else
+		$ret = FALSE;
 	
-	return serialize($array);
+	if ($ret === FALSE)
+		return serialize($array);
+	
+	return $ret;
 }
 
 function json_unserialize($string) {
