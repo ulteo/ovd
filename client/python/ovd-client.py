@@ -5,6 +5,7 @@
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010, 2011, 2012
 # Author Laurent CLOUET <laurent@ulteo.com> 2009, 2010
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -284,7 +285,7 @@ class Dialog:
 
 
     def do_call_exit(self):
-        if d.sessionProperties["persistent"]:
+        if self.sessionProperties["persistent"]:
             mode = "suspend"
         else:
             mode = "logout"
