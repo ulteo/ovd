@@ -3,6 +3,7 @@
 # Copyright (C) 2010-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -118,7 +119,7 @@ class Folders(AbstractFolders):
 		if u.scheme == "webdavs":
 			return uri_
 		
-		Logger.warn("Shouldn't appear: unknown protocol in share uri '%s'"%(uri_))
+		print >>sys.stderr, "Shouldn't appear: unknown protocol in share uri '%s'"%(uri_)
 		return None
 	
 	def getPathFromID(self, id_):
