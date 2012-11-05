@@ -1,10 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2011 Ulteo SAS
+# Copyright (C) 2008-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2008-2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -77,7 +78,7 @@ def getUserList(host):
 
         headers = url.info()
         if not headers['Content-Type'].startswith('text/xml'):
-            Logger.warn("Invalid response format")
+            print >>sys.stderr, "Invalid response format"
             return False
 
         data = url.read()
@@ -85,13 +86,13 @@ def getUserList(host):
         try:
             dom = minidom.parseString(data)
         except ExpatError:
-            Logger.warn("Invalid XML result")
+            print >>sys.stderr, "Invalid XML result"
             return False
 
         nodes = dom.getElementsByTagName('user')
         for node in nodes:
             if not node.hasAttribute('login'):
-                Logger.warn("Bad xml result")
+                print >>sys.stderr, "Bad xml result"
                 return False
 
             users.append(node.getAttribute('login'))
