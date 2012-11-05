@@ -33,7 +33,7 @@ def rdpSessionIsConnected():
 		current_user = os.environ["USER"]
 	except KeyError:
 		print "No USER environ var"
-		return false
+		return False
 	
 	sessionId = XrdpSession.SessionGetId(current_user)
 	sessionStatus = XrdpSession.SessionGetStatus(sessionId)
