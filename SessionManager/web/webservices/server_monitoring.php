@@ -268,6 +268,7 @@ if (array_key_exists('shares', $ret) && is_array($ret['shares'])) {
 			if (! $server)
 				continue;
 
+			Logger::warning('main', "Share ".$share['id'].' do not exist on SM: deleting it');
 			$server->deleteNetworkFolder($share['id'], true);
 			continue;
 		}
