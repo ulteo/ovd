@@ -5,6 +5,7 @@
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
 # Author David LECHEVALIER <david@ulteo.com> 2011
 # Author Thomas MOUTON <thomas@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -95,7 +96,7 @@ def manageAutoStartApplication(config, im):
 				share = None
 				path  = application["arg"].strip()
 			
-			im.start_app_with_arg(None, app_id, dir_type, share, path)
+			im.start_app_with_arg(None, application["id"], dir_type, share, path)
 		
 		else:
 			im.start_app_empty(None, application["id"])
