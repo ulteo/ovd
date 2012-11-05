@@ -309,6 +309,48 @@ if (array_key_exists('shares', $ret) && is_array($ret['shares'])) {
 		if ($modified === true)
 			$db->update($buf);
 	}
+	
+	if (array_key_exists('shares', $ret) && is_array($ret['shares'])) {
+		$SMFolders = array();
+		
+		if (is_object($profiledb)) {
+			$profiles = $profiledb->importFromServer($ret['server']);
+			if (is_array($profiles))
+				$SMFolders = array_merge($SMFolders, $profiles);
+		}
+		if (is_object($sharedfolderdb)) {
+			$shares = $sharedfolderdb->importFromServer($ret['server']);
+			if (is_array($shares))
+				$SMFolders = array_merge($SMFolders, $shares);
+		}
+		
+		foreach ($SMFolders as $SMFolder) {
+			$delete = true;
+			if (! is_object($SMFolder)) {
+				continue;
+			}
+			foreach ($ret['shares'] as $FSFolder) {
+				if (strcasecmp($FSFolder['id'], $SMFolder->id) == 0) {
+					$delete = false;
+				}
+			}
+			
+			if ($delete == true) {
+				Logger::error('main','Share '.$SMFolder->id.' do not exist on the FS, deleting it from the SM');
+				if (is_object($sharedfolderdb) && $sharedfolderdb->exists($SMFolder->id)) {
+					Logger::debug('main','Share '.$SMFolder->id.' removed from the sharedb');
+					$sharedfolderdb->remove($SMFolder->id);
+				}
+				else if (is_object($profiledb) && $profiledb->exists($SMFolder->id)) {
+					Logger::debug('main','Profile '.$SMFolder->id.' removed from the profiledb');
+					$profiledb->remove($SMFolder->id);
+				}
+				else {
+					Logger::warning('main','Share '.$SMFolder->id.' do not exist on the SM');
+				}
+			}
+		}
+	}
 }
 
 header('Content-Type: text/xml; charset=utf-8');
