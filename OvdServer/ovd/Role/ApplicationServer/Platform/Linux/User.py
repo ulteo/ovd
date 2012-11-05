@@ -5,6 +5,7 @@
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2012
 # Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -47,7 +48,7 @@ class FileLock():
 		try:
 			self.lock = fcntl.flock(self.fp.fileno(),fcntl.LOCK_UN)
 			self.fp.close()
-		except Exception, e:
+		except Exception, err:
 			Logger.error("Error while releasing user lock(%s)"%(str(err)))
 
 
