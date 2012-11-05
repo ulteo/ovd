@@ -5,6 +5,7 @@
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
 # Author David LECHEVALIER <david@ulteo.com> 2010, 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -140,7 +141,7 @@ class Profile(AbstractProfile):
 			try:
 				dirs = os.listdir(d)
 			except Exception, err:
-				Logger.warn("Unable to list content of the directory %s (%s)"%(directory, str(err)))
+				Logger.warn("Unable to list content of the directory %s (%s)"%(d, str(err)))
 				return
 			
 			for content in dirs:
