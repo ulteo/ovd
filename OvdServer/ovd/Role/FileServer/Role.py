@@ -2,7 +2,7 @@
 
 # Copyright (C) 2009-2012 Ulteo SAS
 # http://www.ulteo.com
-# Author David LECHEVALIER <david@ulteo.com> 2011 
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2012
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011, 2012
 # Author Samuel BOVEE <samuel@ulteo> 2011
 #
@@ -156,6 +156,24 @@ class Role(AbstractRole):
 		return shares
 	
 	
+	def update_shares(self):
+		shares = self.get_existing_shares()
+		
+		for (share_id, share) in shares.items():
+			if self.shares.has_key(share_id):
+				continue
+			
+			Logger.error("FS: New share '%s' found, adding it"%(share_id))
+			self.shares[share_id] = share
+		
+		for (share_id, share) in self.shares.items():
+			if shares.has_key(share_id):
+				continue
+			
+			Logger.error("FS: Share '%s' became invalid, deleting it"%(share_id))
+			del(self.shares[share_id])
+	
+	
 	def get_enabled_usershares(self):
 		p = System.execute("net usershare list")
 		if p.returncode is not 0:
@@ -177,6 +195,7 @@ class Role(AbstractRole):
 	
 	
 	def getReporting(self, node):
+		self.update_shares()
 		doc = Document()
 		
 		infos  = self.get_disk_size_infos()
