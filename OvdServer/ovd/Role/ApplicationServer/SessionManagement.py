@@ -89,8 +89,8 @@ class SessionManagement(Process):
 				Logger.unregisterHook(session.log)
 				self.queue_sync.put(session)
 			elif request == "logoff":
-				user = obj
-				self.destroy_user(user)
+				session = obj
+				self.destroy_user(session.user)
 			elif request == "manage_new":
 				session = obj
 				Logger.registerHook(session.log)

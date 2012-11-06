@@ -445,18 +445,9 @@ class Dialog(AbstractDialog):
 			return self.req_answer(doc)
 		
 		
-		try:
-			ret = TS.getSessionID(login)
-		except Exception,err:
-			Logger.error("RDP server dialog failed ... ")
-			Logger.debug("Dialog::req_user_logout: %s"%(str(err)))
-			doc = Document()
-			rootNode = doc.createElement('error')
-			rootNode.setAttribute("id", "internalerror")
-			doc.appendChild(rootNode)
-			return self.req_answer(doc)
+		session = self.role_instance.get_session_from_login(login)
 		
-		if ret is None:
+		if session is None:
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "unknown user")
@@ -464,7 +455,6 @@ class Dialog(AbstractDialog):
 			
 			return self.req_answer(doc)
 		
-		user = User(login, {"tsid": ret})
 		self.role_instance.spool_action("logoff", session.id)
 		
 		return self.req_answer(document)
