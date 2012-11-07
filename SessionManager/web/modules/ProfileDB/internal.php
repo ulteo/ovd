@@ -221,11 +221,9 @@ class ProfileDB_internal extends ProfileDB  {
 		
 		if (is_null($profile_->id)) {
 			$profile_->id = 'p_'.gen_unique_string(); // $SQL->InsertId();
-			$SQL->DoQuery('INSERT INTO #1 (@2,@3,@4) VALUES (%5,%6,%7)', self::$table, 'id', 'server', 'status', $profile_->id, $profile_->server,  $profile_->status);
 		}
-		else {
-			$SQL->DoQuery('INSERT INTO #1 (@2,@3) VALUES (%4,%5)', self::$table, 'id', 'server', 'status', $profile_->id, $profile_->server,  $profile_->status);
-		}
+		
+		$SQL->DoQuery('INSERT INTO #1 (@2,@3,@4) VALUES (%5,%6,%7)', self::$table, 'id', 'server', 'status', $profile_->id, $profile_->server,  $profile_->status);
 		
 		return $profile_->id;
 	}
