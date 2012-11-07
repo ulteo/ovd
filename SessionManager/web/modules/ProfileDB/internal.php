@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2009 - 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011-2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -49,13 +50,13 @@ class ProfileDB_internal extends ProfileDB  {
 		$sql_conf = $prefs_->get('general', 'sql');
 		$SQL = SQL::newInstance($sql_conf);
 		
-		$SharedFolder_table_structure = array(
+		$Profile_table_structure = array(
 			'id'				=>	'varchar(255)',//'id'			=>	'int(8) NOT NULL auto_increment',
 			'server'		=>	'varchar(255)',
 			'status'		=>	'varchar(255)',
 		);
 		
-		$ret = $SQL->buildTable(self::$table, $SharedFolder_table_structure, array('id'));
+		$ret = $SQL->buildTable(self::$table, $Profile_table_structure, array('id'));
 		
 		Logger::debug('main', "ProfileDB::internal::init SQL table '".self::$table."' created");
 		return true;
