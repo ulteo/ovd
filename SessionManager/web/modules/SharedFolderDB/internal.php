@@ -209,17 +209,21 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 	private function add($sharedfolder_) {
 		$SQL = SQL::getInstance();
 		
-		if (is_null($sharedfolder_->name) || $sharedfolder_->name === '') {
-			$sharedfolder_->name = $sharedfolder_->id;
-		}
-		
 		if (is_null($sharedfolder_->id)) {
 			$sharedfolder_->id = 'sf_'.gen_unique_string(); // $SQL->InsertId();
+			
+			if (is_null($sharedfolder_->name) || $sharedfolder_->name === '') {
+				$sharedfolder_->name = $sharedfolder_->id;
+			}
 			
 			$SQL->DoQuery('INSERT INTO #1 (@2,@3,@4,@5) VALUES (%6,%7,%8,%9)', self::$table, 'id', 'name', 'server', 'status', $sharedfolder_->id, $sharedfolder_->name, $sharedfolder_->server,  $sharedfolder_->status);
 			
 		}
 		else {
+			if (is_null($sharedfolder_->name) || $sharedfolder_->name === '') {
+				$sharedfolder_->name = $sharedfolder_->id;
+			}
+			
 			$SQL->DoQuery('INSERT INTO #1 (@2,@3,@4) VALUES (%5,%6,%7)', self::$table, 'id', 'name', 'server', 'status', $sharedfolder_->id, $sharedfolder_->name, $sharedfolder_->server,  $sharedfolder_->status);
 		}
 		
