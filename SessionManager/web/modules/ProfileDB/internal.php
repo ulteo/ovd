@@ -50,11 +50,7 @@ class ProfileDB_internal extends ProfileDB  {
 		$sql_conf = $prefs_->get('general', 'sql');
 		$SQL = SQL::newInstance($sql_conf);
 		
-		$Profile_table_structure = array(
-			'id'				=>	'varchar(255)',//'id'			=>	'int(8) NOT NULL auto_increment',
-			'server'		=>	'varchar(255)',
-			'status'		=>	'varchar(255)',
-		);
+		$Profile_table_structure = array('id' => 'varchar(255)');
 		
 		$ret = $SQL->buildTable(self::$table, $Profile_table_structure, array('id'));
 		
@@ -80,7 +76,7 @@ class ProfileDB_internal extends ProfileDB  {
 		Logger::debug('main', "ProfileDB::internal::import($id_)");
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3 LIMIT 1', self::$table, 'id', $id_);
+		$SQL->DoQuery('SELECT * FROM #1 as p, #2 as n WHERE p.@3 = n.@3 AND p.@3 = %4 LIMIT 1', self::$table, Abstract_Network_Folder::$table, 'id', $id_);
 		$total = $SQL->NumRows();
 		
 		if ($total == 0) {
@@ -114,7 +110,7 @@ class ProfileDB_internal extends ProfileDB  {
 		Logger::debug('main', "ProfileDB::internal::importFromServer($server_id_)");
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 = %3', self::$table, 'server', $server_id_);
+		$SQL->DoQuery('SELECT * FROM #1 as p, #2 as n WHERE p.@3 = n.@3 AND @4 = %5 LIMIT 1', self::$table, Abstract_Network_Folder::$table, 'id', 'server', $server_id_);
 		$rows = $SQL->FetchAllResults();
 		
 		$profiles = array();
@@ -133,7 +129,7 @@ class ProfileDB_internal extends ProfileDB  {
 		Logger::debug('main', 'ProfileDB::internal::getList()');
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT * FROM #1', self::$table);
+		$SQL->DoQuery('SELECT * FROM #1 as p, #2 as n WHERE p.@3 = n.@3', self::$table, Abstract_Network_Folder::$table, 'id');
 		$rows = $SQL->FetchAllResults();
 		
 		$profiles = array();
@@ -164,7 +160,7 @@ class ProfileDB_internal extends ProfileDB  {
 		
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT 1 FROM #1 WHERE @2=%3', self::$table, 'server', $id_);
+		$SQL->DoQuery('SELECT * FROM #1 as p, #2 as n WHERE p.@3 = n.@3 AND @4=%5', self::$table, Abstract_Network_Folder::$table, 'id', 'server', $id_);
 		$nb_rows = $SQL->NumRows();
 		
 		return $nb_rows;
@@ -179,7 +175,7 @@ class ProfileDB_internal extends ProfileDB  {
 		$obj = new Profile();
 		$obj->id = $row_['id'];
 		$obj->server = $row_['server'];
-		$obj->status = $row_['status'];
+		$obj->status = (int)$row_['status'];
 		
 		return $obj;
 	}
@@ -223,7 +219,8 @@ class ProfileDB_internal extends ProfileDB  {
 			$profile_->id = 'p_'.gen_unique_string(); // $SQL->InsertId();
 		}
 		
-		$SQL->DoQuery('INSERT INTO #1 (@2,@3,@4) VALUES (%5,%6,%7)', self::$table, 'id', 'server', 'status', $profile_->id, $profile_->server,  $profile_->status);
+		$SQL->DoQuery('INSERT INTO #1 (@2) VALUES (%3)', self::$table, 'id', $profile_->id);
+		Abstract_Network_Folder::save($profile_);
 		
 		return $profile_->id;
 	}
@@ -235,14 +232,27 @@ class ProfileDB_internal extends ProfileDB  {
 			Logger::error('main', "ProfileDB::internal::remove($profile_id_) failed, unable to import profile");
 			return false;
 		}
-		Abstract_Liaison::delete('UserProfile', NULL, $profile->id);
-		$SQL = SQL::getInstance();
-		$SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3 LIMIT 1', self::$table, 'id', $profile->id);
 
 		$server = Abstract_Server::load($profile->server);
 		if (is_object($server)) {
 			$server->deleteNetworkFolder($profile->id, true);
 		}
+		
+		if (self::invalidate($profile_id_) == false)
+			return false;
+		
+		if (Abstract_Network_Folder::delete($profile_id_) == false)
+			return false;
+		
+		return true;
+	}
+	
+	public function invalidate($profile_id_) {
+		Logger::debug('main', "ProfileDB::internal::invalidate($profile_id_)");
+		
+		Abstract_Liaison::delete('UserProfile', NULL, $profile_id_);
+		$SQL = SQL::getInstance();
+		$SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3 LIMIT 1', self::$table, 'id', $profile_id_);
 		
 		return true;
 	}
@@ -261,11 +271,8 @@ class ProfileDB_internal extends ProfileDB  {
 	
 	public static function update($profile_) {
 		Logger::debug('main', 'ProfileDB::internal::update for \''.$profile_->id.'\'');
-		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('UPDATE #1 SET @2=%3, @4=%5 WHERE @6=%7 LIMIT 1', self::$table, 'server', $profile_->server, 'status', $profile_->status, 'id', $profile_->id);
-		
-		return true;
+		return Abstract_Network_Folder::save($profile_);
 	}
 	
 	public function chooseFileServer() {

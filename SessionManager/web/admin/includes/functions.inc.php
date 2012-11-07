@@ -5,6 +5,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com> 2008-2012
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -82,6 +83,7 @@ function init_db($prefs_) {
 	Abstract_UserGroup_Preferences::init($prefs_);
 	Abstract_UserGroup_Rule::init($prefs_);
 	Abstract_VDI::init($prefs_);
+	Abstract_Network_Folder::init($prefs_);
 	
 	return true;
 }
