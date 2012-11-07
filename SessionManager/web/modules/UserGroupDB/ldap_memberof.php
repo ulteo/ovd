@@ -96,6 +96,25 @@ class UserGroupDB_ldap_memberof {
 				$buf[$attribut] = $info[$match_ldap][0];
 			}
 		}
+		
+		if (is_array($buf['id'])) {
+			$buf['id'] = array_pop($buf['id']);
+		}
+		
+		if (!isset($buf['name'])) {
+			$buf['name'] = $dn_;
+		}
+		else if (is_array($buf['name'])) {
+			$buf['name'] = array_pop($buf['name']);
+		}
+		
+		if (!isset($buf['description'])) {
+			$buf['description'] = '';
+		}
+		else if (is_array($buf['description'])) {
+			$buf['description'] = array_pop($buf['description']);
+		}
+		
 		$ug = new UsersGroup($buf['id'], $buf['name'], $buf['description'], true);
 		return $ug;
 	}
@@ -189,8 +208,19 @@ class UserGroupDB_ldap_memberof {
 					$extras[$attribut] = array();
 				}
 			}
+			
+			if (!isset($buf['name'])) {
+				$buf['name'] = $dn_;
+			}
+			else if (is_array($buf['name'])) {
+				$buf['name'] = array_pop($buf['name']);
+			}
+			
 			if (!isset($buf['description']))
 				$buf['description'] = '';
+			else if (is_array($buf['description'])) {
+				$buf['description'] = array_pop($buf['description']);
+			}
 			
 			$ug = new UsersGroup($dn, $buf['name'], $buf['description'], true);
 			$ug->extras = $extras;

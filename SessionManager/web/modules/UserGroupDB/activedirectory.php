@@ -106,6 +106,19 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 			Logger::error('main', "UserGroupDB::activedirectory::import($id_) error group name is empty");
 			return NULL;
 		}
+		
+		if (is_array($buf['id'])) {
+			$buf['id'] = array_pop($buf['id']);
+		}
+		
+		if (is_array($buf['name'])) {
+			$buf['name'] = array_pop($buf['name']);
+		}
+		
+		if (is_array($buf['description'])) {
+			$buf['description'] = array_pop($buf['description']);
+		}
+		
 		$ug = new UsersGroup($buf['id'], $buf['name'], $buf['description'], true);
 		$ug->extras = $extras;
 		$this->cache[$buf['id']] = $ug;
@@ -150,9 +163,15 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 			}
 			if (!isset($buf['description']))
 				$buf['description'] = '';
+			else if (is_array($buf['description'])) {
+				$buf['description'] = array_pop($buf['description']);
+			}
 			
 			if (!isset($buf['name']))
 				$buf['name'] = $dn;
+			else if (is_array($buf['name'])) {
+				$buf['name'] = array_pop($buf['name']);
+			}
 			
 			$ug = new UsersGroup($dn, $buf['name'], $buf['description'], true);
 			$ug->extras = $extras;

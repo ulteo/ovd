@@ -237,9 +237,15 @@ class UserGroupDB_ldap_posix {
 		}
 		if (!isset($buf['description']))
 			$buf['description'] = '';
+		else if (is_array($buf['description'])) {
+			$buf['description'] = array_pop($buf['description']);
+		}
 		
 		if (!isset($buf['name']))
 			$buf['name'] = $dn_;
+		else if (is_array($buf['name'])) {
+			$buf['name'] = array_pop($buf['name']);
+		}
 		
 		$ug = new UsersGroup($dn_, $buf['name'], $buf['description'], true);
 		$ug->extras = $extras;
