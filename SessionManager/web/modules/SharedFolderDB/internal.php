@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -201,9 +202,6 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 		$obj->name = $row_['name'];
 		$obj->server = $row_['server'];
 		$obj->status = $row_['status'];
-		if ($obj->name === '') {
-			$obj->name = $obj->id;
-		}
 		
 		return $obj;
 	}
@@ -211,20 +209,18 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 	private function add($sharedfolder_) {
 		$SQL = SQL::getInstance();
 		
+		if (is_null($sharedfolder_->name) || $sharedfolder_->name === '') {
+			$sharedfolder_->name = $sharedfolder_->id;
+		}
+		
 		if (is_null($sharedfolder_->id)) {
 			$sharedfolder_->id = 'sf_'.gen_unique_string(); // $SQL->InsertId();
+			
 			$SQL->DoQuery('INSERT INTO #1 (@2,@3,@4,@5) VALUES (%6,%7,%8,%9)', self::$table, 'id', 'name', 'server', 'status', $sharedfolder_->id, $sharedfolder_->name, $sharedfolder_->server,  $sharedfolder_->status);
 			
-			if (is_null($sharedfolder_->name) || $sharedfolder_->name === '') {
-				$sharedfolder_->name = $sharedfolder_->id;
-			}
 		}
 		else {
 			$SQL->DoQuery('INSERT INTO #1 (@2,@3,@4) VALUES (%5,%6,%7)', self::$table, 'id', 'name', 'server', 'status', $sharedfolder_->id, $sharedfolder_->name, $sharedfolder_->server,  $sharedfolder_->status);
-		}
-		
-		if (is_null($sharedfolder_->name) || $sharedfolder_->name === '') {
-			$sharedfolder_->name = $sharedfolder_->id;
 		}
 		
 		return $sharedfolder_->id;
