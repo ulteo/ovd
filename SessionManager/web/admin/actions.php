@@ -6,6 +6,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2008-2012
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1996,7 +1997,7 @@ function action_del_sharedfolder($sharedfolder_id) {
 		return false;
 	}
 
-	$buf = $sharedfolderdb->remove($sharedfolder);
+	$buf = $sharedfolderdb->remove($sharedfolder->id);
 	if (! $buf) {
 		popup_error(_('Unable to delete this shared folder'));
 		return false;
