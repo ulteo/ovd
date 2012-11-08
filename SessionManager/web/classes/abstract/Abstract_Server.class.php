@@ -7,6 +7,7 @@
  * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -318,7 +319,7 @@ class Abstract_Server {
 					$sharedfolderdb = SharedFolderDB::getInstance();
 					$folders = $sharedfolderdb->importFromServer($id_);
 					foreach ($folders as $a_folder) {
-						$profiledb->remove($a_folder->id);
+						$sharedfolderdb->remove($a_folder->id);
 					}
 				}
 				
