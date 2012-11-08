@@ -10,6 +10,7 @@ scripts_DATA = Abstract_News.class.php \
                Abstract_UserGroup_Preferences.class.php \
                Abstract_UserGroup_Rule.class.php \
                Abstract_User_Preferences.class.php \
+               Abstract_Network_Folder.class.php \
                Abstract_VDI.class.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/classes/abstract
