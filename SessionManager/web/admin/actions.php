@@ -1112,8 +1112,13 @@ if ($_REQUEST['name'] == 'User') {
 						$profiledb = ProfileDB::getInstance();
 						$netfolders = $u->getProfiles();
 						if (is_array($netfolders)) {
-							foreach ($netfolders as $netfolder)
+							foreach ($netfolders as $netfolder) {
 								$profiledb->remove($netfolder->id);
+								$server = Abstract_Server::load($netfolder->server);
+								if ($profiledb->isInternal())
+									$server->deleteNetworkFolder($netfolder->id, true);
+							}
+							
 						}
 					}
 					$res = $userDB->remove($u);
@@ -1290,17 +1295,22 @@ if ($_REQUEST['name'] == 'SharedFolder') {
 	
 	if ($_REQUEST['action'] == 'del' && array_key_exists('ids', $_REQUEST)) {
 		$sharedfolderdb = SharedFolderDB::getInstance();
-		$status = true;
+		$status = false;
 		foreach ($_REQUEST['ids'] as $id) {
-			$buf = $sharedfolderdb->remove($id);
-			if ($buf !== true) {
-				$status = false;
-				$sharedfolder = $sharedfolderdb->import($id);
-				if (is_object($sharedfolder)) {
+			$sharedfolder = $sharedfolderdb->import($id);
+			if (! is_object($sharedfolder)) {
+				popup_error(sprintf(_("Unable to delete network folder with id '%s'"), $id));
+			}
+			else {
+				if ($buf = $sharedfolderdb->remove($id) !== true) {
 					popup_error(sprintf(_("Unable to delete network folder '%s'"), $sharedfolder->name));
 				}
 				else {
-					popup_error(sprintf(_("Unable to delete network folder with id '%s'"), $id));
+					$server = Abstract_Server::load($sharedfolder->server);
+					if ($sharedfolderdb->isInternal()) {
+						$server->deleteNetworkFolder($sharedfolder->id, true);
+						$status = true;
+					}
 				}
 			}
 		}
@@ -1411,8 +1421,12 @@ if ($_REQUEST['name'] == 'Profile') {
 		foreach ($_REQUEST['ids'] as $id) {
 			$network_folder = $profiledb->import($id);
 			if (is_object($network_folder)) {
-				if (! $network_folder->isUsed())
+				if (! $network_folder->isUsed()) {
 					$buf = $profiledb->remove($network_folder->id);
+					$server = Abstract_Server::load($network_folder->server);
+					if ($profiledb->isInternal())
+						$server->deleteNetworkFolder($network_folder->id, true);
+				}
 				else
 					$buf = false;
 				
@@ -1991,7 +2005,9 @@ function action_del_sharedfolder($sharedfolder_id) {
 		return false;
 	}
 
-	$ret = $a_server->deleteNetworkFolder($sharedfolder->id);
+	if ($sharefolderdb->isInternal())
+		$ret = $a_server->deleteNetworkFolder($sharedfolder->id);
+	
 	if (! $ret) {
 		popup_error(sprintf(_("Unable to delete shared folder on file server '%s'"), $sharedfolder->server));
 		return false;

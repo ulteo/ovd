@@ -312,6 +312,8 @@ class Abstract_Server {
 					$folders = $profiledb->importFromServer($id_);
 					foreach ($folders as $a_folder) {
 						$profiledb->remove($a_folder->id);
+						if ($profiledb->isInternal())
+							$a_server->deleteNetworkFolder($a_folder->id, true);
 					}
 				}
 				
@@ -320,6 +322,8 @@ class Abstract_Server {
 					$folders = $sharedfolderdb->importFromServer($id_);
 					foreach ($folders as $a_folder) {
 						$sharedfolderdb->remove($a_folder->id);
+						if ($sharedfolderdb->isInternal())
+							$a_server->deleteNetworkFolder($a_folder->id, true);
 					}
 				}
 				

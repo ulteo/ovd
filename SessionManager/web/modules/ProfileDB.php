@@ -42,6 +42,10 @@ abstract class ProfileDB extends Module  {
 		return NULL;
 	}
 	
+	public function isInternal() {
+		return false;
+	}
+	
 	public function import($id_) {
 		return false;
 	}

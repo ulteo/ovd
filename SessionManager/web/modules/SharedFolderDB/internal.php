@@ -75,6 +75,10 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 		return ($total == 1);
 	}
 	
+	public function isInternal() {
+		return true;
+	}
+	
 	public function import($id_) {
 		Logger::debug('main', "SharedFolderDB_internal::import($id_)");
 		$SQL = SQL::getInstance();
@@ -228,9 +232,6 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 			Logger::error('main', "SharedFolderDB::internal::remove($sharedfolder_id_) failed, unable to import sharedfolder");
 			return false;
 		}
-
-		$server = Abstract_Server::load($sharedfolder->server);
-		$server->deleteNetworkFolder($sharedfolder->id, true);
 		
 		if (self::invalidate($sharedfolder_id_) == false)
 			return false;

@@ -72,6 +72,10 @@ class ProfileDB_internal extends ProfileDB  {
 		return ($total == 1);
 	}
 	
+	public function isInternal() {
+		return true;
+	}
+	
 	public function import($id_) {
 		Logger::debug('main', "ProfileDB::internal::import($id_)");
 		$SQL = SQL::getInstance();
@@ -231,11 +235,6 @@ class ProfileDB_internal extends ProfileDB  {
 		if (is_object($profile) == false ) {
 			Logger::error('main', "ProfileDB::internal::remove($profile_id_) failed, unable to import profile");
 			return false;
-		}
-
-		$server = Abstract_Server::load($profile->server);
-		if (is_object($server)) {
-			$server->deleteNetworkFolder($profile->id, true);
 		}
 		
 		if (self::invalidate($profile_id_) == false)

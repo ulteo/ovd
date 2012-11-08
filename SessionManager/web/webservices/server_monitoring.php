@@ -340,10 +340,16 @@ if (array_key_exists('shares', $ret) && is_array($ret['shares'])) {
 				if (is_object($sharedfolderdb) && $sharedfolderdb->exists($SMFolder->id)) {
 					Logger::debug('main','Share '.$SMFolder->id.' removed from the sharedb');
 					$sharedfolderdb->remove($SMFolder->id);
+					
+					if ($sharedfolderdb->isInternal())
+						$server->deleteNetworkFolder($SMFolder->id, true);
 				}
 				else if (is_object($profiledb) && $profiledb->exists($SMFolder->id)) {
 					Logger::debug('main','Profile '.$SMFolder->id.' removed from the profiledb');
 					$profiledb->remove($SMFolder->id);
+					
+					if ($profiledb->isInternal())
+						$server->deleteNetworkFolder($SMFolder->id, true);
 				}
 				else {
 					Logger::warning('main','Share '.$SMFolder->id.' do not exist on the SM');
