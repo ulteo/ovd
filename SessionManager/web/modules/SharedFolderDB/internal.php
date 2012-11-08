@@ -96,7 +96,7 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 		Logger::debug('main', "SharedFolderDB::internal::importFromServer($server_id_)");
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT * FROM #1 as p, #2 as n WHERE p.@3 = n.@3 AND @4 = %5 LIMIT 1', self::$table, Abstract_Network_Folder::$table, 'id', 'server', $server_id_);
+		$SQL->DoQuery('SELECT * FROM #1 as p, #2 as n WHERE p.@3 = n.@3 AND @4 = %5', self::$table, Abstract_Network_Folder::$table, 'id', 'server', $server_id_);
 		$rows = $SQL->FetchAllResults();
 		
 		$sharedfolders = array();
