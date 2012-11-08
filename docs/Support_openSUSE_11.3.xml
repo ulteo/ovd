@@ -11,6 +11,7 @@
   <transform_var name="rpm_mysql_packages" value="mysql"/>
   <transform_var name="mysql_service" value="mysql"/>
   <transform_var name="apache_service" value="apache2"/>
+  <transform_var name="samba_service" value="samba"/>
 
   <xi:include href="&parent;" xpointer="header" />
   <xi:include href="&parent;" xpointer="first_para" />

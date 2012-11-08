@@ -11,6 +11,7 @@
   <transform_var name="rpm_mysql_packages" value="mysql"/>
   <transform_var name="mysql_service" value="mysql"/>
   <transform_var name="apache_service" value="apache2"/>
+  <transform_var name="samba_service" value="samba"/>
 
   <xi:include href="&parent;" xpointer="header" />
   <xi:include href="&parent;" xpointer="first_para" />
@@ -257,6 +258,19 @@ Is this correct? [Y/n]]]>
         <screen>
 <![CDATA[# @rpm_install_cmd@ install ulteo-ovd-subsystem]]>
         </screen>
+         <important>
+      <para>
+		Due to a conflict, you may have to uninstall <emphasis>@samba_service@</emphasis> packages before installing the ulteo-ovd-session-manager package.
+		
+				<para>
+				Remove the <emphasis>@samba_service@</emphasis> client and server packages:
+				<screen>
+					<![CDATA[# @rpm_install_cmd@ remove @samba_service@*]]>
+				</screen>
+				</para>
+				
+      </para>
+    </important>
       </listitem>
 
       <listitem>
