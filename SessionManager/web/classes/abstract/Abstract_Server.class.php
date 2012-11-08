@@ -245,7 +245,7 @@ class Abstract_Server {
 		$a_server = Abstract_Server::load($id_);
 		$roles = $a_server->getAttribute('roles');
 		if (is_array($roles)) {
-			foreach ($roles as $a_role) {
+			foreach ($roles as $a_role => $role_enabled) {
 				Abstract_Server::removeRole($id_, $a_role);
 			}
 		}
