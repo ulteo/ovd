@@ -598,9 +598,20 @@ function show_manage($id_) {
 		if (array_key_exists($role, $var)) {
 			echo '<div>'; // div role
 			echo '<fieldset class="role">';
-			echo '<legend>'.sprintf(_('Role: %s'), strtoupper($role)).'</legend>';
+			echo '<legend>';
+			echo '<a href="javascript:;" onclick="toggleContent(\'role_'.$role.'\'); return false;">';
+			echo '<span id="role_'.$role.'_ajax"></span>';
+			echo sprintf(_('Role: %s'), strtoupper($role));
+			echo '</a>';
+			echo '</legend>';
+			echo '<div id="role_'.$role.'_content" style="display:none;">';
 			echo server_display_role($role, $server, $var[$role]);
+			echo '</div>';
+			echo '<div id="role_'.$role.'_content_off" style="text-align: center;">';
+			echo '<a href="javascript:;" onclick="toggleContent(\'role_'.$role.'\'); return false;" class="button">...</a>';
+			echo '</div>';
 			echo '</fieldset>';
+			echo '<script type="text/javascript">Event.observe(window, \'load\', function() { offContent(\'role_'.$role.'\'); });</script></div>';
 			echo '</div>';
 		}
 	}

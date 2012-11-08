@@ -27,6 +27,15 @@ a:hover {
 	color: #963;
 }
 
+a.button {
+	background-color: #ddd;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+a.button:hover {
+	background-color: #bbb;
+}
+
 input, select, textarea {
 	/*border: 1px solid #999;*/
 	border: 1px solid #004985;

@@ -157,6 +157,8 @@ function hideInfoBulle() {
 function offContent(container) {
 	$(container+'_ajax').innerHTML = '<img src="media/image/show.png" width="16" height="16" alt="+" title="+" />';
 	$(container+'_content').hide();
+	if ($(container+'_content_off'))
+		$(container+'_content_off').show();
 
 	return true;
 }
@@ -164,6 +166,8 @@ function offContent(container) {
 function onContent(container) {
 	$(container+'_ajax').innerHTML = '<img src="media/image/hide.png" width="16" height="16" alt="-" title="-" />';
 	$(container+'_content').show();
+	if ($(container+'_content_off'))
+		$(container+'_content_off').hide();
 
 	return true;
 }
