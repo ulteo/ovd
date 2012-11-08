@@ -185,5 +185,28 @@ deb file:///root/ovd-@VERSION@-gold-ubuntu-lucid lucid main]]>
     Manager.
   </para>
   </section>
+  <section>
+	<title>WebClient configuration</title>
+	<para>Due to security reasons, the Gateway doesn't deliver communications with the web client by default. If you want access to the web client through the Gateway, you have to change the default configuration.</para>	 
+        <para>
+          Edit the slaveserver.conf file in <emphasis>/etc/ulteo/ovd/slaveserver.conf</emphasis> and change this line:
+        </para>
+        <screen>
+		<![CDATA[# web_client = http[s]://ip[:port]/]]>
+        </screen>
+        <para>
+          You have to set it with the Url of your Web Client. 
+          For instance:
+          <screen>
+			<![CDATA[web_client = http://webclient.test.demo/]]>
+		  </screen>
+        </para> 
+        <para>
+			Now, you have to restart the slaverserver service.
+			  <screen>
+			<![CDATA[# /etc/init.d/ulteo-ovd-slaveserver restart]]>
+		  </screen>
+        </para>     
+  </section>
   <xi:include href="colophon.xml" />  
 </article>
