@@ -1396,8 +1396,7 @@ if ($_REQUEST['name'] == 'Profile') {
 				redirect();
 			}
 			
-			$profile = new Profile();
-			$profile->server = $fileserver->id;
+			$profile = new Profile(NULL, $fileserver->id, NetworkFolder::NF_STATUS_OK);
 			if (! $profiledb->addToServer($profile, $fileserver)) {
 				Logger::error('main', 'Auto-creation of Profile for User "'.$user->getAttribute('login').'" failed (unable to add the Profile to the FileServer)');
 				popup_error(_('Unable to add the profile to the FileServer'));
@@ -1954,10 +1953,6 @@ function action_add_sharedfolder() {
 		popup_error(_('A shared folder with this name already exists'));
 		return false;
 	}
-
-	$buf = new SharedFolder();
-	$buf->name = $sharedfolder_name;
-	$buf->status = NetworkFolder::NF_STATUS_OK;
 	
 	if (array_key_exists('sharedfolder_server', $_REQUEST)) {
 		$a_server = Abstract_Server::load($_REQUEST['sharedfolder_server']);
@@ -1974,7 +1969,7 @@ function action_add_sharedfolder() {
 		return false;
 	}
 	
-	$buf->server = $a_server->id;
+	$buf = new SharedFolder(NULL, $sharedfolder_name, $a_server->id, NetworkFolder::NF_STATUS_OK);
 	
 	$ret = $sharedfolderdb->addToServer($buf, $a_server);
 	if (! $ret) {

@@ -199,13 +199,7 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 			return NULL;
 		}
 		
-		$obj = new SharedFolder();
-		$obj->id = $row_['id'];
-		$obj->name = $row_['name'];
-		$obj->server = $row_['server'];
-		$obj->status = (int)$row_['status'];
-		
-		return $obj;
+		return new SharedFolder($row_['id'], $row_['name'], $row_['server'], (int)$row_['status']);
 	}
 	
 	private function add($sharedfolder_) {

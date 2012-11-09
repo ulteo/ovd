@@ -23,6 +23,11 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 class SharedFolder extends NetworkFolder {
 	public $name = '';
 	
+	public function __construct($id, $name, $server, $status) {
+		parent::__construct($id, $server, $status);
+		$this->name = $name;
+	}
+	
 	public function __toString() {
 		return get_class($this).'(id \''.$this->id.'\' name \''.$this->name.'\' server \''.$this->server.'\' status \''.$this->status.'\' )';
 	}

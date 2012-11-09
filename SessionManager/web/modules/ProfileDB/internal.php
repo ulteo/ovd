@@ -176,12 +176,7 @@ class ProfileDB_internal extends ProfileDB  {
 			return NULL;
 		}
 		
-		$obj = new Profile();
-		$obj->id = $row_['id'];
-		$obj->server = $row_['server'];
-		$obj->status = (int)$row_['status'];
-		
-		return $obj;
+		return new Profile($row_['id'], $row_['server'], (int)$row_['status']);
 	}
 	
 	public function addToServer($profile_, $an_fs_server_) {

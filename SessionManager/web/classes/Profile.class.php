@@ -21,6 +21,10 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Profile extends NetworkFolder {
+	public function __construct($id, $server, $status) {
+		parent::__construct($id, $server, $status);
+	}
+	
 	public function getUsers() {
 		$liaisons = Abstract_Liaison::load('UserProfile', NULL, $this->id);
 		if (is_array($liaisons) == false) {

@@ -409,8 +409,7 @@ abstract class SessionManagement extends Module {
 									}
 
 									if (! $simulation_mode) {
-										$profile = new Profile();
-										$profile->server = $fileserver->id;
+										$profile = new Profile(NULL, $fileserver->id, NetworkFolder::NF_STATUS_OK);
 
 										if (! $profileDB->addToServer($profile, $fileserver)) {
 											Logger::error('main', 'SessionManagement::buildServersList - Auto-creation of Profile for User "'.$this->user->getAttribute('login').'" failed (unable to add the Profile to the FileServer)');

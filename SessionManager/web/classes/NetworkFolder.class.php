@@ -30,8 +30,11 @@ class NetworkFolder {
 	public $id = NULL;
 	public $server = NULL; // FQDN/ID of the server
 	public $status = '';
-
-	public function __construct() {
+	
+	public function __construct($id, $server, $status) {
+		$this->id = $id;
+		$this->server = $server;
+		$this->status = $status;
 	}
 	
 	public function __toString() {
