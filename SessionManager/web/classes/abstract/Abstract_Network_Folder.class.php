@@ -133,12 +133,7 @@ class Abstract_Network_Folder {
 			return NULL;
 		}
 		
-		$obj = new NetworkFolder();
-		$obj->id = $row_['id'];
-		$obj->server = $row_['server'];
-		$obj->status = (int)$row_['status'];
-		
-		return $obj;
+		return new NetworkFolder($row_['id'], $row_['server'], (int)$row_['status']);
 	}
 	
 	public static function load_all() {
