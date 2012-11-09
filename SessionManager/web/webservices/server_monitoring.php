@@ -264,12 +264,10 @@ if (array_key_exists('shares', $ret) && is_array($ret['shares'])) {
 		}
 		
 		if (! $buf) {
-			$server = Abstract_Server::load($ret['server']);
-			if (! $server)
-				continue;
-
-			Logger::warning('main', "Share ".$share['id'].' do not exist on SM: deleting it');
-			$server->deleteNetworkFolder($share['id'], true);
+			if (! Abstract_Network_Folder::exists($share['id'])) {
+				Logger::warning('main', "Share ".$share['id'].' do not exist on SM. It will be add in the orphan network folder list');
+				Abstract_Network_Folder::save(new NetworkFolder($share['id'], $server->id, NetworkFolder::NF_STATUS_NOT_EXISTS));
+			}
 			continue;
 		}
 	}
@@ -300,17 +298,17 @@ if (array_key_exists('shares', $ret) && is_array($ret['shares'])) {
 			}
 			
 			if ($delete == true) {
-				Logger::error('main','Share '.$SMFolder->id.' do not exist on the FS, deleting it from the SM');
+				Logger::error('main','Share '.$SMFolder->id.' do not exist on the FS. It will be add in the orphan network folder list');
 				if (is_object($sharedfolderdb) && $sharedfolderdb->exists($SMFolder->id)) {
-					Logger::debug('main','Share '.$SMFolder->id.' removed from the sharedb');
-					$sharedfolderdb->remove($SMFolder->id);
+					Logger::debug('main','Share '.$SMFolder->id.' invalidated from the sharedb');
+					$sharedfolderdb->invalidate($SMFolder->id);
 					
 					if ($sharedfolderdb->isInternal())
 						$server->deleteNetworkFolder($SMFolder->id, true);
 				}
 				else if (is_object($profiledb) && $profiledb->exists($SMFolder->id)) {
-					Logger::debug('main','Profile '.$SMFolder->id.' removed from the profiledb');
-					$profiledb->remove($SMFolder->id);
+					Logger::debug('main','Profile '.$SMFolder->id.' invalidated from the profiledb');
+					$profiledb->invalidate($SMFolder->id);
 					
 					if ($profiledb->isInternal())
 						$server->deleteNetworkFolder($SMFolder->id, true);

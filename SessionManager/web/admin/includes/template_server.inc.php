@@ -490,6 +490,7 @@ function server_display_role_preparation_fs($server_) {
 	$ret['used by sharedfolders'] = array();
 	$ret['profiles_currently_used'] = array();
 	$ret['sharedfolders_currently_used'] = array();
+	$ret['orphanfolders'] = Abstract_Network_Folder::load_orphans();
 	
 	if (is_array($networkfolders)) {
 		foreach ($networkfolders as $a_networkfolder) {
@@ -705,6 +706,72 @@ function server_display_role_fs($server_, $var_) {
 			echo '<td>';
 			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these network folders?').'\') && updateMassActionsForm(this, \'available_networkfolder_table_sf\');">';
 			echo '<input type="hidden" name="name" value="SharedFolder" />';
+			echo '<input type="hidden" name="action" value="del" />';
+			echo '<input type="submit" name="to_production" value="'._('Delete').'"/>';
+			echo '</form>';
+			echo '</td>';
+			echo '</tr>';
+			echo '</tfoot>';
+		}
+
+		echo '</table>';
+		echo '<br />';
+	}
+	
+	if (is_array($var_['orphanfolders']) && count($var_['orphanfolders']) > 0) {
+		$show_action_column = (isAuthorized('manageServers') && $server_->isOnline());
+		$show_mass_action = ($show_action_column && count($var_['orphanfolders']) > 1);
+		
+		echo '<h3>'._('Orphan network folders on the server').'</h3>';
+		$count = 0;
+		echo '<table id="orphanfolder_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
+		echo '<thead>';
+		echo '<tr class="title">';
+		if ($show_mass_action === true)
+			echo '<th class="unsortable"></th>';
+		echo '<th>'._('Name').'</th>';
+		if ($show_action_column === true)
+			echo '<th class="unsortable"></th>';
+		echo '</tr>';
+		echo '</thead>';
+		echo '<tbody>';
+		foreach ($var_['orphanfolders'] as $a_orphanfolder) {
+			$content = 'content'.(($count++%2==0)?1:2);
+			echo '<tr class="'.$content.'">';
+			if ($show_mass_action === true) {
+				echo '<td>';
+				echo '<input class="input_checkbox" type="checkbox" name="ids[]" value="'.$a_orphanfolder->id.'" />';
+				echo '</td>';
+			}
+			
+			echo '<td>'.$a_orphanfolder->id.'</td>';
+			
+			if ($show_action_column === true) {
+				echo '<td>';
+				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this orphan folder?').'\');">';
+				echo '<input type="hidden" name="name" value="NetworkFolder" />';
+				echo '<input type="hidden" name="action" value="del" />';
+				echo '<input type="hidden" name="ids[]" value="'.$a_orphanfolder->id.'" />';
+				echo '<input type="submit" value="'._('Delete').'" />';
+				echo '</form>';
+				echo '</td>';
+			}
+			
+			echo '</tr>';
+		}
+		echo '</tbody>';
+
+		if ($show_mass_action === true) {
+			$content = 'content'.(($count++%2==0)?1:2);
+			echo '<tfoot>';
+			echo '<tr class="'.$content.'">';
+			echo '<td colspan="2">';
+			echo '<a href="javascript:;" onclick="markAllRows(\'orphanfolder_table\'); return false">'._('Mark all').'</a>';
+			echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'orphanfolder_table\'); return false">'._('Unmark all').'</a>';
+			echo '</td>';
+			echo '<td>';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these orphan folders?').'\') && updateMassActionsForm(this, \'orphanfolder_table\');">';
+			echo '<input type="hidden" name="name" value="NetworkFolder" />';
 			echo '<input type="hidden" name="action" value="del" />';
 			echo '<input type="submit" name="to_production" value="'._('Delete').'"/>';
 			echo '</form>';

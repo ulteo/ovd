@@ -180,6 +180,48 @@ class Abstract_Network_Folder {
 		return $network_folders;
 	}
 	
+	public static function load_orphans() {
+		Logger::debug('main', 'Starting Abstract_Network_Folder::load_orphans()');
+		
+		$sharedfolderdb = null;
+		if (Preferences::moduleIsEnabled('SharedFolderDB')) {
+			$sharedfolderdb = SharedFolderDB::getInstance();
+		}
+		
+		$profiles = null;
+		if (Preferences::moduleIsEnabled('ProfileDB')) {
+			$profiledb = ProfileDB::getInstance();
+		}
+		
+		$SQL = SQL::getInstance();
+		
+		if (is_null($sharedfolderdb) && is_null($profiledb)) {
+			$SQL->DoQuery('SELECT * FROM #1;', self::$table);
+		}
+		else if (is_null($sharedfolderdb)) {
+			$SQL->DoQuery('SELECT * FROM #1 WHERE @2 NOT IN ( SELECT @2 FROM #3 );', self::$table, 'id', ProfileDB_internal::$table);
+		}
+		else if (is_null($profiledb)) {
+			$SQL->DoQuery('SELECT * FROM #1 WHERE @2 NOT IN ( SELECT @2 FROM #3 );', self::$table, 'id', SharedFolderDB_internal::$table);
+		}
+		else {
+			$SQL->DoQuery('SELECT * FROM #1 WHERE @2 NOT IN ( SELECT @2 FROM #3 ) AND @2 NOT IN ( SELECT @2 FROM #4 )', self::$table, 'id', ProfileDB_internal::$table, SharedFolderDB_internal::$table);
+		}
+		
+		$rows = $SQL->FetchAllResults();
+		
+		$network_folders = array();
+		foreach ($rows as $row) {
+			$Network_Folder = self::generateFromRow($row);
+			if (! is_object($Network_Folder))
+				continue;
+			
+			$network_folders[] = $Network_Folder;
+		}
+		
+		return $network_folders;
+	}
+	
 	public static function countByStatus($status_=NULL) {
 		Logger::debug('main', "Starting Abstract_Network_Folder::countByStatus($status_)");
 		

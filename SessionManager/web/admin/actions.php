@@ -1444,6 +1444,39 @@ if ($_REQUEST['name'] == 'Profile') {
 	}
 }
 
+
+if ($_REQUEST['name'] == 'NetworkFolder') {
+	if (! checkAuthorization('manageServers'))
+		redirect();
+
+	if ($_REQUEST['action'] == 'del') {
+		foreach ($_REQUEST['ids'] as $id) {
+			$network_folder = Abstract_Network_Folder::load($id);
+			if (! is_object($network_folder)) {
+				popup_error(sprintf(_("Network folder '%s' do not exists"), $id));
+				continue;
+			}
+			
+			$server = Abstract_Server::load($network_folder->server);
+			if (! $server) {
+				Logger::warning('main', 'Unable to load server \''.$network_folder->server.'\' associated to network folder \''.$network_folder->id.'\'');
+			}
+			else {
+				if (! $server->isOnline()) {
+					continue;
+				}
+				
+				$server->deleteNetworkFolder($network_folder->id, true);
+			}
+			
+			Abstract_Network_Folder::delete($network_folder->id);
+		}
+		
+		redirect();
+	}
+}
+
+
 if ($_REQUEST['name'] == 'News') {
 	if ($_REQUEST['action'] == 'add' && isset($_REQUEST['news_title']) && isset($_REQUEST['news_content'])) {
 		$news = new News('');
