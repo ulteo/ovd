@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-#include "Hook.h"
+#include "InterceptAPI.h"
 
 #define DLL_EXPORT extern "C" __declspec(dllexport)
 
@@ -19,6 +19,14 @@ DLL_EXPORT void SetHooks()
 	}
 }
 
+DLL_EXPORT void RemoveHooks()
+{
+	if (g_cbt_hook)
+	{
+		UnhookWindowsHookEx(g_cbt_hook);
+	}
+}
+
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
                        LPVOID lpReserved
@@ -27,7 +35,6 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
-		// NOTE: remember our instance handle
 		g_instance = hModule;
 		setupHooks();
 		break;
