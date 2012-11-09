@@ -1421,7 +1421,8 @@ if ($_REQUEST['name'] == 'Profile') {
 		foreach ($_REQUEST['ids'] as $id) {
 			$network_folder = $profiledb->import($id);
 			if (is_object($network_folder)) {
-				if (! $network_folder->isUsed()) {
+				$sessions = Abstract_Session::getByNetworkFolder($network_folder->id);
+				if (count($sessions) == 0) {
 					$buf = $profiledb->remove($network_folder->id);
 					$server = Abstract_Server::load($network_folder->server);
 					if ($profiledb->isInternal())
@@ -1956,7 +1957,7 @@ function action_add_sharedfolder() {
 
 	$buf = new SharedFolder();
 	$buf->name = $sharedfolder_name;
-	$buf->status = NetworkFolder::NF_STATUS_INACTIVE;
+	$buf->status = NetworkFolder::NF_STATUS_OK;
 	
 	if (array_key_exists('sharedfolder_server', $_REQUEST)) {
 		$a_server = Abstract_Server::load($_REQUEST['sharedfolder_server']);
@@ -2000,7 +2001,8 @@ function action_del_sharedfolder($sharedfolder_id) {
 		return false;
 	}
 	
-	if ($sharedfolder->isUsed()) {
+	$sessions = Abstract_Session::getByNetworkFolder($sharedfolder->id);
+	if (count($sessions) > 0) {
 		popup_error(sprintf(_("Unable to delete shared folder '%s' because it is currently being used"), $sharedfolder->name));
 		return false;
 	}

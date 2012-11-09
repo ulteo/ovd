@@ -272,42 +272,6 @@ if (array_key_exists('shares', $ret) && is_array($ret['shares'])) {
 			$server->deleteNetworkFolder($share['id'], true);
 			continue;
 		}
-
-		$modified = false;
-
-		switch ($share['status']) {
-			case NetworkFolder::NF_STATUS_ACTIVE:
-				$disabled = 0;
-				foreach ($share['users'] as $user) {
-					if (in_array($user, $disabled_users))
-						continue;
-
-					$sessions = Abstract_Session::getByFSUser($user);
-
-					if (count($sessions) == 0) {
-						$server = Abstract_Server::load($ret['server']);
-						if (! $server)
-							continue;
-
-						if ($server->orderFSAccessDisable($user)) {
-							$disabled += 1;
-							$disabled_users[] = $user;
-						}
-					}
-				}
-
-				if ($disabled == count($share['users']))
-					$share['status'] = NetworkFolder::NF_STATUS_INACTIVE;
-				break;
-		}
-
-		if ($share['status'] != $buf->status) {
-			$modified = true;
-			$buf->status = $share['status'];
-		}
-
-		if ($modified === true)
-			$db->update($buf);
 	}
 	
 	if (array_key_exists('shares', $ret) && is_array($ret['shares'])) {

@@ -6,6 +6,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -487,6 +488,8 @@ function server_display_role_preparation_fs($server_) {
 	$ret['sharedfolders'] =  array();
 	$ret['used by profiles'] = array();
 	$ret['used by sharedfolders'] = array();
+	$ret['profiles_currently_used'] = array();
+	$ret['sharedfolders_currently_used'] = array();
 	
 	if (is_array($networkfolders)) {
 		foreach ($networkfolders as $a_networkfolder) {
@@ -504,6 +507,10 @@ function server_display_role_preparation_fs($server_) {
 					$ret['used by sharedfolders'][$a_networkfolder->id] []= $buf;
 				}
 			}
+			
+			$sessions = Abstract_Session::getByNetworkFolder($a_networkfolder->id);
+			if (count($sessions) > 0)
+				$ret['sharedfolders_currently_used'][]= $a_networkfolder->id;
 		}
 	}
 	
@@ -523,6 +530,10 @@ function server_display_role_preparation_fs($server_) {
 					$ret['used by profiles'][$a_networkfolder->id] []= $buf;
 				}
 			}
+			
+			$sessions = Abstract_Session::getByNetworkFolder($a_networkfolder->id);
+			if (count($sessions) > 0)
+				$ret['profiles_currently_used'][]= $a_networkfolder->id;
 		}
 	}
 	
@@ -536,15 +547,8 @@ function server_display_role_fs($server_, $var_) {
 	
 	
 	if (is_array($var_['profiles']) && count($var_['profiles']) > 0 && is_array($var_['used by profiles'])) {
-		$nb_not_used = 0;
-		
-		foreach ($var_['profiles'] as $a_networkfolder) {
-			if (! $a_networkfolder->isUsed())
-				$nb_not_used++;
-		}
-		
-		$show_action_column = ($nb_not_used != 0);
-		$show_mass_action = ($nb_not_used > 1);
+		$show_action_column = (isAuthorized('manageServers') && $server_->isOnline() &&  count($var_['profiles_currently_used']) < count($var_['profiles']));
+		$show_mass_action = ($show_action_column && count($var_['profiles_currently_used']) + 1 < count($var_['profiles']));
 		
 		echo '<h3>'._('User profiles on the server').'</h3>';
 		$count = 0;
@@ -566,7 +570,7 @@ function server_display_role_fs($server_, $var_) {
 			echo '<tr class="'.$content.'">';
 			if ($show_mass_action === true) {
 				echo '<td>';
-				if (! $a_networkfolder->isUsed())
+				if (! in_array( $a_networkfolder->id, $var_['profiles_currently_used']))
 					echo '<input class="input_checkbox" type="checkbox" name="ids[]" value="'.$a_networkfolder->id.'" />';
 				echo '</td>';
 			}
@@ -584,7 +588,7 @@ function server_display_role_fs($server_, $var_) {
 			
 			if ($show_action_column === true) {
 				echo '<td>';
-				if (! $a_networkfolder->isUsed()) {
+				if (! in_array( $a_networkfolder->id, $var_['profiles_currently_used'])) {
 					
 					echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user profile?').'\');">';
 					echo '<input type="hidden" name="name" value="Profile" />';
@@ -624,15 +628,8 @@ function server_display_role_fs($server_, $var_) {
 	}
 	
 	if (is_array($var_['sharedfolders']) && count($var_['sharedfolders']) > 0 && is_array($var_['used by sharedfolders'])) {
-		$nb_not_used = 0;
-		
-		foreach ($var_['sharedfolders'] as $a_networkfolder) {
-			if (! $a_networkfolder->isUsed())
-				$nb_not_used++;
-		}
-		
-		$show_action_column = ($nb_not_used != 0);
-		$show_mass_action = ($nb_not_used > 1);
+		$show_action_column = (isAuthorized('manageServers') && $server_->isOnline() && count($var_['sharedfolders_currently_used']) < count($var_['sharedfolders']));
+		$show_mass_action = ($show_action_column && count($var_['sharedfolders_currently_used']) + 1 < count($var_['sharedfolders']));
 		
 		echo '<h3>'._('Shared folders on the server').'</h3>';
 		$count = 0;
@@ -655,7 +652,7 @@ function server_display_role_fs($server_, $var_) {
 			echo '<tr class="'.$content.'">';
 			if ($show_mass_action === true) {
 				echo '<td>';
-				if (! $a_networkfolder->isUsed())
+				if (! in_array( $a_networkfolder->id, $var_['sharedfolders_currently_used']))
 					echo '<input class="input_checkbox" type="checkbox" name="ids[]" value="'.$a_networkfolder->id.'" />';
 				echo '</td>';
 			}
@@ -681,7 +678,7 @@ function server_display_role_fs($server_, $var_) {
 			
 			if ($show_action_column === true) {
 				echo '<td>';
-				if (! $a_networkfolder->isUsed()) {
+				if (! in_array( $a_networkfolder->id, $var_['sharedfolders_currently_used'])) {
 					
 					echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this network folder?').'\');">';
 					echo '<input type="hidden" name="name" value="SharedFolder" />';

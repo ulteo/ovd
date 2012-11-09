@@ -24,9 +24,8 @@ class NetworkFolder {
 	const NF_TYPE_PROFILE = "profile";
 	const NF_TYPE_NETWORKFOLDER = "network_folder";
 
+	const NF_STATUS_OK = 0;
 	const NF_STATUS_NOT_EXISTS = 1;
-	const NF_STATUS_ACTIVE = 2;
-	const NF_STATUS_INACTIVE = 3;
 
 	public $id = NULL;
 	public $server = NULL; // FQDN/ID of the server
@@ -43,23 +42,13 @@ class NetworkFolder {
 		return get_class($this);
 	}
 
-	public function isUsed() {
-		if ($this->status == 2)
-			return true;
-
-		return false;
-	}
-
 	public function textStatus($status_=NetworkFolder::NF_STATUS_NOT_EXISTS) {
 		switch ($status_) {
+			case NetworkFolder::NF_STATUS_OK:
+				return _('OK');
+				break;
 			case NetworkFolder::NF_STATUS_NOT_EXISTS:
 				return _('Unknown');
-				break;
-			case NetworkFolder::NF_STATUS_ACTIVE:
-				return _('Active');
-				break;
-			case NetworkFolder::NF_STATUS_INACTIVE:
-				return _('Inactive');
 				break;
 		}
 
@@ -71,11 +60,8 @@ class NetworkFolder {
 			case NetworkFolder::NF_STATUS_NOT_EXISTS:
 				return 'error';
 				break;
-			case NetworkFolder::NF_STATUS_ACTIVE:
+			case NetworkFolder::NF_STATUS_OK:
 				return 'ok';
-				break;
-			case NetworkFolder::NF_STATUS_INACTIVE:
-				return 'warn';
 				break;
 		}
 

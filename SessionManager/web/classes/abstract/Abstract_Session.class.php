@@ -7,6 +7,7 @@
  * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -331,6 +332,24 @@ class Abstract_Session {
 			$sessions[] = $session;
 		}
 
+		return $sessions;
+	}
+	
+	public static function getByNetworkFolder($network_folder_id_) {
+		$SQL = SQL::getInstance();
+		
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2 LIKE %3', self::table, 'servers', '%dir%'.$network_folder_id_.'%');
+		$rows = $SQL->FetchAllResults();
+		
+		$sessions = array();
+		foreach ($rows as $row) {
+			$session = self::generateFromRow($row);
+			if (! is_object($session))
+				continue;
+			
+			$sessions[] = $session;
+		}
+		
 		return $sessions;
 	}
 }
