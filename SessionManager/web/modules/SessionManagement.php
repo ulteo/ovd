@@ -5,6 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -561,7 +562,7 @@ abstract class SessionManagement extends Module {
 			}
 		}
 		if (count($servers) == 0) {
-			Logger::error('main', 'No desktop server available for user '.$this->user);
+			Logger::error('main', 'No desktop server available for user '.$this->user->getAttribute('login'));
 			return false;
 		}
 		
