@@ -261,7 +261,6 @@ class Server {
 								$this->setAttribute('disk_free',  $stats['size']['free']);
 							}
 						}
-						$this->updateNetworkFolders();
 						break;
 				}
 			}
@@ -897,71 +896,6 @@ class Server {
 		}
 
 		return $shares;
-	}
-
-	public function updateNetworkFolders() {
-		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_FS, $this->roles)) {
-			Logger::critical('main', 'Server::updateNetworkFolders - Not an FS');
-			return false;
-		}
-		
-		if (! $this->isOnline()) {
-			Logger::debug('main', 'Server::updateNetworkFolders server "'.$this->fqdn.':'.$this->web_port.'" is not online');
-			return false;
-		}
-		
-		$forders_on_server = $this->getNetworkFoldersList();
-		if (is_array($forders_on_server) === false) {
-			Logger::error('main', 'Server::updateNetworkFolders getNetworkFoldersList failed for fqdn='.$this->fqdn);
-			return false;
-		}
-		
-		$folders_on_sm1 = array();
-		if (Preferences::moduleIsEnabled('ProfileDB')) {
-			$profiledb = ProfileDB::getInstance();
-			$folders_on_sm1 = $profiledb->importFromServer($this->id);
-		}
-		
-		$folders_on_sm2 = array();
-		if (Preferences::moduleIsEnabled('SharedFolderDB')) {
-			$sharedfolderdb = SharedFolderDB::getInstance();
-			$folders_on_sm2 = $sharedfolderdb->importFromServer($this->id);
-		}
-		
-		$folders_on_sm = array();
-		if (is_array($folders_on_sm1)) {
-			$folders_on_sm = array_merge($folders_on_sm, $folders_on_sm1);
-		}
-		if (is_array($folders_on_sm2)) {
-			$folders_on_sm = array_merge($folders_on_sm, $folders_on_sm2);
-		}
-		
-		foreach ($forders_on_server as $folder_id) {
-			if (Preferences::moduleIsEnabled('SharedFolderDB')) {
-				$folder = $sharedfolderdb->import($folder_id);
-				if ($folder) {
-					$db = $sharedfolderdb;
-				}
-			}
-			if (Preferences::moduleIsEnabled('ProfileDB')) {
-				if (! $folder) {
-					$folder = $profiledb->import($folder_id);
-					$db = $profiledb;
-				}
-			}
-			
-			if (is_object($folder) === false) {
-				// networkfolder does not exist
-				$folder = new NetworkFolder();
-				$folder->id = $folder_id;
-				$folder->name = $folder_id;
-				$folder->server = $this->id;
-				$profiledb->remove($folder);
-				$sharedfolderdb->remove($folder);
-			}
-		}
-		
-		return true;
 	}
 	
 	public function createNetworkFolder($name_) {
