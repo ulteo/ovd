@@ -100,6 +100,8 @@ $redirect_smartcards_readers = $default_settings['redirect_smartcards_readers'];
 $rdp_bpp = $default_settings['rdp_bpp'];
 $enhance_user_experience = $default_settings['enhance_user_experience'];
 $persistent = $default_settings['persistent'];
+$need_valid_profile = ($default_settings['start_without_profile'] == 0);
+
 if ($default_settings['use_known_drives'] == 1)
 	$use_known_drives = 'true';
 
@@ -455,7 +457,7 @@ if (! isset($old_session_id)) {
 			$shell_node->appendChild($setting_node);
 		}
 		
-		foreach (array('desktop_icons', 'locale', 'timezone') as $parameter) {
+		foreach (array('desktop_icons', 'locale', 'timezone', 'need_valid_profile') as $parameter) {
 			if (! isset($$parameter))
 				continue;
 

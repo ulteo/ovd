@@ -83,7 +83,8 @@ class Session(AbstractSession):
 		
 		if self.profile is not None:
 			if self.profile.mount() == False:
-				return False
+				if self.parameters.has_key("need_valid_profile") and self.parameters["need_valid_profile"] == "1":
+					return False
 			
 			shares_dir = os.path.join(d, "shares")
 			if not os.path.isdir(shares_dir):

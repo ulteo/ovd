@@ -74,9 +74,10 @@ class Session(AbstractSession):
 		
 		if self.profile is not None and self.profile.hasProfile():
 			if not self.profile.mount():
-				return False
-			
-			self.profile.copySessionStart()
+				if self.parameters.has_key("need_valid_profile") and self.parameters["need_valid_profile"] == "1":
+					return False
+			else:
+				self.profile.copySessionStart()
 		
 		if self.profile is not None and self.profile.mountPoint is not None:
 			d = os.path.join(self.profile.mountPoint, self.profile.DesktopDir)
@@ -414,7 +415,7 @@ class Session(AbstractSession):
 			Logger.warn("Unable to reset ActiveSetup")
 			Logger.debug("Unable to reset ActiveSetup: "+str(err))
 		
-		if self.profile is not None:
+		if self.profile is not None and self.profile.mountPoint is not None:
 			self.profile.overrideRegistry(hiveName, self.user.name)
 		
 		self.domain.doCustomizeRegistry(hiveName)
