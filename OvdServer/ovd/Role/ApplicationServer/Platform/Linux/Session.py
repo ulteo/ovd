@@ -82,7 +82,8 @@ class Session(AbstractSession):
 		f.close()
 		
 		if self.profile is not None:
-			self.profile.mount()
+			if self.profile.mount() == False:
+				return False
 			
 			shares_dir = os.path.join(d, "shares")
 			if not os.path.isdir(shares_dir):

@@ -117,6 +117,7 @@ class Profile(AbstractProfile):
 			if ret is False:
 				Logger.error("Profile mount failed")
 				os.rmdir(self.profile_mount_point)
+				return False
 			else:
 				self.profileMounted = True
 		
@@ -138,6 +139,7 @@ class Profile(AbstractProfile):
 			if ret is False:
 				Logger.error("SharedFolder mount failed")
 				os.rmdir(dest)
+				return False
 			else:
 				sharedFolder["mountdest"] = dest
 				home = self.homeDir
@@ -158,6 +160,7 @@ class Profile(AbstractProfile):
 				if p.returncode != 0:
 					Logger.error("Profile bind dir failed")
 					Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
+					return False
 				else:
 					sharedFolder["local_path"] = dst
 					self.folderRedirection.append(dst)
@@ -174,7 +177,7 @@ class Profile(AbstractProfile):
 					except OSError, err:
 						if self.isNetworkError(err[0]):
 							Logger.warn("Unable to access profile: %s"%(str(err)))
-							return
+							return False
 						
 						Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
 						continue
@@ -189,11 +192,14 @@ class Profile(AbstractProfile):
 				if p.returncode != 0:
 					Logger.error("Profile bind dir failed")
 					Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
+					return False
 				else:
 					self.folderRedirection.append(dst)
 			
 			
 			self.copySessionStart()
+		
+		return True
 	
 	
 	def umount(self):
