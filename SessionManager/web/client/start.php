@@ -101,6 +101,7 @@ $rdp_bpp = $default_settings['rdp_bpp'];
 $enhance_user_experience = $default_settings['enhance_user_experience'];
 $persistent = $default_settings['persistent'];
 $need_valid_profile = ($default_settings['start_without_profile'] == 0);
+$need_all_sharedFolders = ($default_settings['start_without_all_sharedfolders'] == 0);
 
 if ($default_settings['use_known_drives'] == 1)
 	$use_known_drives = 'true';
@@ -381,10 +382,27 @@ if (! isset($old_session_id)) {
 				continue;
 
 			if (! $server->orderFSAccessEnable($user_login_fs, $user_password_fs, $v)) {
-				Logger::error('main', '(client/start) Cannot enable FS access for User \''.$user->getAttribute('login').'\' on Server \''.$server->fqdn.'\', aborting');
-				$session->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
-
-				throw_response(INTERNAL_ERROR);
+				$error = false;
+				if ($need_valid_profile && $need_all_shareFolder) {
+					$error = true;
+				}
+				else if ($need_valid_profile != $need_all_shareFolder) {
+					foreach ($servers[Server::SERVER_ROLE_FS][$k] as $netfolder) {
+						if (! in_array($netfolder['dir'], $v))
+							continue;
+						
+						if (($netfolder['type'] == 'sharedfolder' && $need_all_sharedFolders) || ($netfolder['type'] == 'profile' && $need_valid_profile)) {
+							$error = true;
+							break;
+						}
+					}
+				}
+				
+				if ($error == true) {
+					Logger::error('main', '(client/start) Cannot enable FS access for User \''.$user->getAttribute('login').'\' on Server \''.$server->fqdn.'\', aborting');
+					$session->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
+					throw_response(INTERNAL_ERROR);
+				}
 			}
 		}
 	}
