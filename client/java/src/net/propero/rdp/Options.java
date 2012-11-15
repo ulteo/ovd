@@ -135,6 +135,7 @@ public class Options {
 	public long keepAliveInterval = 60;        // In second
 	
 	public boolean useTLS = false;
+	public int networkConnectionType = Rdp.CONNECTION_TYPE_UNKNOWN;
 	public boolean map_clipboard = true;
 	public int rdp5_performanceflags =   Rdp5.PERF_DISABLE_CURSOR_SHADOW | Rdp5.PERF_DISABLE_CURSORSETTINGS |
 						Rdp5.PERF_DISABLE_FULLWINDOWDRAG | Rdp5.PERF_DISABLE_MENUANIMATIONS |

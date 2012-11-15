@@ -26,6 +26,7 @@
 package org.ulteo.ovd.client;
 
 import java.awt.Dimension;
+import net.propero.rdp.Rdp;
 
 import org.ulteo.ovd.client.profile.ProfileProperties;
 import org.ulteo.ovd.sm.Properties;
@@ -89,6 +90,7 @@ public class Options {
 	public int persistentCacheMaxCells = 0;
 	public boolean useKeepAlive = false;
 	public int keepAliveInterval = 60;         // In second
+	public int networkConnectionType = Rdp.CONNECTION_TYPE_UNKNOWN;
 	
 	public Options() {
 	}
@@ -236,6 +238,8 @@ public class Options {
 			this.useKeepAlive = true;
 			this.keepAliveInterval = properties.getKeepAliveInterval();
 		}
+		
+		this.networkConnectionType = properties.getNetworkConnectionType();
 		
 		new ProxyManager().updateProxy(properties);
 	}

@@ -214,6 +214,14 @@ public class ProfileRegistry extends Profile {
 					}
 					properties.setDiskBandwidthLimit(diskLimit);
 				}
+				if (field.equalsIgnoreCase(FIELD_RDP_NETWORK_CONNECTION_TYPE)) {
+					try {
+						properties.setNetworkConnectionType(Integer.parseInt(value));
+					}
+					catch (NumberFormatException e) {
+						Logger.error("Failed to parse the network connection type: '"+value+"'");
+					}
+				}
 				else if (field.equalsIgnoreCase(FIELD_RDP_PERSISTENT_CACHE)) {
 					boolean usePersistentCache = false;
 					if (value.equalsIgnoreCase(VALUE_TRUE))

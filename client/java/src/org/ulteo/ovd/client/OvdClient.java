@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
+import net.propero.rdp.Rdp;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
 import org.ulteo.Logger;
@@ -85,6 +86,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	private int diskBandwidthLimit = 0;
 	private boolean useKeepAlive = false;
 	private int keepAliveInterval = 0;
+	private int networkConnectionType = Rdp.CONNECTION_TYPE_UNKNOWN;
 	
 	protected Thread sessionStatusMonitoringThread = null;
 	protected boolean continueSessionStatusMonitoringThread = false;
@@ -533,6 +535,16 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	}
 	
 	/**
+	 * set network connection type
+	 * @param networkConnectionType the network connection type
+	 */
+	public void setNetworkConnectionType(int networkConnectionType) {
+		Logger.info("Network connection type: " + networkConnectionType);
+		
+		this.networkConnectionType = networkConnectionType;
+	}
+	
+	/**
 	 * configure a specific RdpConnection
 	 * @param rc
 	 */
@@ -546,6 +558,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 		rc.setUseFrameMarker(this.useFrameMarker);
 		rc.setPacketCompression(this.packetCompression);
 		rc.setUseTLS(this.useTLS);
+		rc.setNetworkConnectionType(this.networkConnectionType);
        
 		if (this.persistentCacheMaxCells != 0) {
 			rc.setPersistentCaching(true);

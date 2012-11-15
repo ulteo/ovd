@@ -145,6 +145,14 @@ public class ProfileWeb extends Profile {
 					else
 						properties.setUseTLS(false);
 				}
+				if (keyName.equalsIgnoreCase(FIELD_RDP_NETWORK_CONNECTION_TYPE)) {
+					try {
+						properties.setNetworkConnectionType(Integer.parseInt(valueName));
+					}
+					catch (NumberFormatException e) {
+						Logger.error("Failed to parse the network connection type: '"+valueName+"'");
+					}
+				}
 			}
 			
 			if (sectionName.equalsIgnoreCase(INI_SECTION_LIMITATION)) {

@@ -392,6 +392,16 @@ public class ProfileIni extends Profile {
 			properties.setKeepAliveInterval(keepAliveInterval);
 		}
 		
+		value = ini.get(INI_SECTION_RDP, FIELD_RDP_NETWORK_CONNECTION_TYPE);
+		if (value != null) {
+			try {
+				properties.setNetworkConnectionType(Integer.parseInt(value));
+			}
+			catch (NumberFormatException e) {
+				Logger.error("Failed to parse the network connection type: '"+value+"'");
+			}
+		}
+		
 		value = ini.get(INI_SECTION_PERSISTENT_CACHE, FIELD_PERSISTENT_CACHE_PATH);
 		if (value != null) {
 			properties.setPersistentCachePath(value);

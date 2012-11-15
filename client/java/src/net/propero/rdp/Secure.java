@@ -9,6 +9,7 @@
  * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Author Thomas MOUTON <thomas@ulteo.com> 2012
  * Author Vincent ROULLIER <v.roullier@ulteo.com> 2012
  *
  * Purpose: Secure layer of communication
@@ -230,14 +231,15 @@ public class Secure {
 	buffer.setLittleEndian16(0x0700); // out_uint16_le(s, 0x0700);
 	buffer.set8(0); // out_uint8(s, 0);
 	
-	int connectionType = 0;
 	int earlyCapabilityFlags = RNS_UD_CS_SUPPORT_ERRINFO_PDU;
-	//earlyCapabilityFlags |= RNS_UD_CS_VALID_CONNECTION_TYPE;
+	if (this.opt.networkConnectionType != Rdp.CONNECTION_TYPE_UNKNOWN) {
+		earlyCapabilityFlags |= RNS_UD_CS_VALID_CONNECTION_TYPE;
+	}
 	buffer.setLittleEndian16(earlyCapabilityFlags); // out_uint32_le(s, 1);   /* earlyCapabilityFlags */    
 	
 	buffer.incrementPosition(64);
     	
-	buffer.set8(connectionType);
+	buffer.set8(this.opt.networkConnectionType);
 	buffer.set8(0);    /* pad1octet */
 	int selectecProto = ISO.PROTOCOL_RDP;
 	if (this.opt.useTLS)

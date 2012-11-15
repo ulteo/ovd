@@ -2,7 +2,7 @@
  * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
- * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -85,6 +85,7 @@ public abstract class Profile {
 	protected static final String FIELD_RDP_USE_BANDWIDTH_LIMITATION = "useBandwidthLimitation";
 	protected static final String FIELD_LIMITATION_USE_DISK_LIMIT = "useDiskBandwidthLimitation";
 	protected static final String FIELD_LIMITATION_DISK_LIMIT = "diskBandwidthLimit";
+	protected static final String FIELD_RDP_NETWORK_CONNECTION_TYPE = "networkConnectionType";
 	
 	protected static final String FIELD_RDP_USE_KEEPALIVE = "useKeepAlive";
 	protected static final String FIELD_RDP_KEEPALIVE_INTERVAL = "keepAliveInterval";

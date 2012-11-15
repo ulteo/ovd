@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import net.propero.rdp.Common;
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopException;
+import net.propero.rdp.Rdp;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.OvdException;
@@ -399,5 +400,13 @@ public class RdpConnectionOvd extends RdpConnection {
 
 	public void setUseTLS(boolean value) {
 		this.opt.useTLS = value;
+	}
+
+	public void setNetworkConnectionType(int networkConnectionType) {
+		if (networkConnectionType < 0 || networkConnectionType > Rdp.CONNECTION_TYPE_AUTODETECT) {
+			return;
+		}
+		
+		this.opt.networkConnectionType = networkConnectionType;
 	}
 }

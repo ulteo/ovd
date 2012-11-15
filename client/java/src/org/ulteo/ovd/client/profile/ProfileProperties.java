@@ -22,6 +22,7 @@
 package org.ulteo.ovd.client.profile;
 
 import java.awt.Dimension;
+import net.propero.rdp.Rdp;
 
 import org.ulteo.ovd.client.profile.Profile.ProxyMode;
 
@@ -62,6 +63,7 @@ public class ProfileProperties {
 	private boolean useKeepAlive = false;
 	private int keepAliveInterval = 60;         // In second
 	private boolean useTLS = false;
+	private int networkConnectionType = Rdp.CONNECTION_TYPE_UNKNOWN;
 	
 	
 	public ProfileProperties() {}
@@ -333,5 +335,13 @@ public class ProfileProperties {
 	
 	public boolean isUseTLS() {
 		return this.useTLS;
+	}
+	
+	public void setNetworkConnectionType(int networkConnectionType) {
+		this.networkConnectionType = networkConnectionType;
+	}
+	
+	public int getNetworkConnectionType() {
+		return this.networkConnectionType;
 	}
 }
