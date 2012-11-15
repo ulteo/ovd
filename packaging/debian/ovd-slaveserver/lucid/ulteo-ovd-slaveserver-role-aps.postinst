@@ -2,12 +2,12 @@
 
 if [ -z "$2" ]; then
 	ovd-slaveserver-role add ApplicationServer
-
-	[ -d /usr/share/ovd ] || mkdir /usr/share/ovd
-	for i in icons pixmaps mime themes; do
-		[ -d /usr/share/$i ] && ln -s /usr/share/$i /usr/share/ovd/
-	done
 fi
+
+[ -d /usr/share/ovd ] || mkdir /usr/share/ovd
+for i in icons pixmaps mime themes; do
+	[ -d /usr/share/$i -a ! -e /usr/share/ovd/$i ] && ln -s /usr/share/$i /usr/share/ovd/
+done
 
 #DEBHELPER#
 
