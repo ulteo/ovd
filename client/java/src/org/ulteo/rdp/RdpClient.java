@@ -72,6 +72,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		public boolean persistentCache = false;
 		public int persistentCacheMaxSize = RdpConnection.DEFAULT_PERSISTENT_CACHE_SIZE;
 		public String persistentCachePath = null;
+		public boolean use_tls = false;
 	}
 
 	public static final String productName = "Ulteo RDP Client";
@@ -93,6 +94,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		System.err.println("	  --persistent-cache-maxsize		Set the persistent cache maximum size");
 		System.err.println("	  --disable-all-cache			Disable volatile and persistent cache");
 		System.err.println("	--ovd_mode=MODE				Enable the OVD environnement with mode \"desktop\"/\"portal\" (default is \"desktop\")");
+		System.err.println("	--tls					Use TLS encryption");
 		System.err.println("Example: java -jar OVDIntegratedClient.jar -u username -p password server");
 
 		System.exit(0);
@@ -120,12 +122,13 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		if (! org.ulteo.Logger.initInstance(true, log_dir+System.getProperty("file.separator")+org.ulteo.Logger.getDate()+".log", true))
 			System.err.println("Unable to iniatialize logger instance");
 
-		LongOpt[] alo = new LongOpt[5];
+		LongOpt[] alo = new LongOpt[6];
 		alo[0] = new LongOpt("persistent-cache-location", LongOpt.REQUIRED_ARGUMENT, null, 0);
 		alo[1] = new LongOpt("persistent-cache-maxsize", LongOpt.REQUIRED_ARGUMENT, null, 1);
 		alo[2] = new LongOpt("disable-all-cache", LongOpt.NO_ARGUMENT, null, 2);
 		alo[3] = new LongOpt("ovd_mode", LongOpt.OPTIONAL_ARGUMENT, null, 3);
 		alo[4] = new LongOpt("smartcard", LongOpt.OPTIONAL_ARGUMENT, null, 4);
+		alo[5] = new LongOpt("tls", LongOpt.NO_ARGUMENT, null, 5);
 		Getopt opt = new Getopt(RdpClient.productName, args, "u:p:g:Ams:o:zP", alo);
 
 		int c;
@@ -167,6 +170,9 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 							System.exit(2);
 						}
 					}
+					break;
+				case 5: // --tls
+					params.use_tls = true;
 					break;
 				case 'u':
 					params.username = new String(opt.getOptarg());
@@ -386,6 +392,8 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 			connection.setPersistentCachingPath(params.persistentCachePath);
 			connection.setPersistentCachingMaxSize(params.persistentCacheMaxSize);
 		}
+		
+		connection.setUseTLS(params.use_tls);
 
 		connection.initSecondaryChannels();
 
