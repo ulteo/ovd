@@ -180,7 +180,7 @@ public abstract class OvdApplet extends Applet {
 			
 			// load web profile
 			WebClientCommunication webComm = new WebClientCommunication(wc);
-			ProfileProperties pproperties = new ProfileWeb().loadProfile(webComm);
+			ProfileProperties pproperties = new ProfileWeb(webComm).loadProfile();
 			if (pproperties != null) {
 				this.ovd.setPacketCompression(pproperties.isUsePacketCompression());
 				this.ovd.setOffscreenCache(pproperties.isUseOffscreenCache());

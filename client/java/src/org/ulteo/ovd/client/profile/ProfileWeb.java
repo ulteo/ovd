@@ -22,6 +22,9 @@
 package org.ulteo.ovd.client.profile;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 
 import org.ulteo.Logger;
 import org.ulteo.ovd.client.WebClientCommunication;
@@ -32,21 +35,21 @@ import org.w3c.dom.NodeList;
 
 
 public class ProfileWeb extends Profile {
-	private static final String INI_SECTION_RDP = "rdp";
-	private static final String INI_SECTION_LIMITATION = "limitation";
-	private static final String INI_SECTION_PERSISTENT_CACHE = "persistentCache";
+	private WebClientCommunication wcc = null;
 
-
-	public ProfileProperties loadProfile(WebClientCommunication wcc) {
-		ProfileProperties properties = new ProfileProperties();
-		
-		Document doc = wcc.askForConfig();
+	public ProfileWeb(WebClientCommunication wcc) {
+		this.wcc = wcc;
+	}
+	
+	@Override
+	protected boolean loadProfileEntries() {
+		Document doc = this.wcc.askForConfig();
 		if (doc == null)
-			return null;
+			return false;
 		
 		NodeList sections = doc.getElementsByTagName("entry");
 		if (sections == null)
-			return null;
+			return false;
 		
 		for (int i=0 ; i<sections.getLength() ; i++) {
 			Node key = sections.item(i);
@@ -80,116 +83,12 @@ public class ProfileWeb extends Profile {
 				
 			}
 			
-			if (sectionName.equalsIgnoreCase(INI_SECTION_RDP)) {
-				if (keyName.equalsIgnoreCase(FIELD_RDP_PACKET_COMPRESSION)) {
-					if (valueName.equalsIgnoreCase(VALUE_TRUE) || valueName.equalsIgnoreCase("1"))
-						properties.setUsePacketCompression(true);
-					else
-						properties.setUsePacketCompression(false);
-				}
-				if (keyName.equalsIgnoreCase(FIELD_RDP_PERSISTENT_CACHE)) {
-					if (valueName.equalsIgnoreCase(VALUE_TRUE) || valueName.equalsIgnoreCase("1"))
-						properties.setUsePersistantCache(true);
-					else
-						properties.setUsePersistantCache(false);
-				}
-				if (keyName.equalsIgnoreCase(FIELD_RDP_USE_OFFSCREEN_CACHE)) {
-					if (valueName.equalsIgnoreCase(VALUE_TRUE) || valueName.equalsIgnoreCase("1"))
-						properties.setUseOffscreenCache(true);
-					else
-						properties.setUseOffscreenCache(false);
-				}
-				if (keyName.equalsIgnoreCase(FIELD_RDP_USE_FRAME_MARKER)) {
-					if (valueName.equalsIgnoreCase(VALUE_TRUE) || valueName.equalsIgnoreCase("1"))
-						properties.setUseFrameMarker(true);
-					else
-						properties.setUseFrameMarker(false);
-				}
-				if (keyName.equalsIgnoreCase(FIELD_RDP_USE_BANDWIDTH_LIMITATION)) {
-					if (valueName.equalsIgnoreCase(VALUE_TRUE) || valueName.equalsIgnoreCase("1"))
-						properties.setUseBandwithLimitation(true);
-					else
-						properties.setUseBandwithLimitation(false);
-				}
-				if (keyName.equalsIgnoreCase(FIELD_RDP_SOCKET_TIMEOUT)) {
-					int timeout = properties.getSocketTimeout();
-					try {
-						timeout = Integer.parseInt(valueName);	
-					}
-					catch (NumberFormatException e) {
-						Logger.warn("Unable to convert value " + valueName + ": "+e.getMessage());
-					}
-					properties.setSocketTimeout(timeout);
-				}
-				
-				if (keyName.equalsIgnoreCase(FIELD_RDP_USE_KEEPALIVE)) {
-					if (valueName.equalsIgnoreCase(VALUE_TRUE) || valueName.equalsIgnoreCase("1"))
-						properties.setUseKeepAlive(true);
-					else
-						properties.setUseKeepAlive(false);
-				}
-				
-				if (keyName.equalsIgnoreCase(FIELD_RDP_KEEPALIVE_INTERVAL)) {
-					int keepAliveInterval = properties.getKeepAliveInterval();
-					try {
-						keepAliveInterval = Integer.parseInt(valueName);	
-					}
-					catch (NumberFormatException e) {
-						Logger.warn("Unable to convert value " + valueName + ": "+e.getMessage());
-					}
-					properties.setKeepAliveInterval(keepAliveInterval);
-				}
-				if (keyName.equalsIgnoreCase(FIELD_RDP_USE_TLS)) {
-					if (valueName.equalsIgnoreCase(VALUE_TRUE) || valueName.equalsIgnoreCase("1"))
-						properties.setUseTLS(true);
-					else
-						properties.setUseTLS(false);
-				}
-				if (keyName.equalsIgnoreCase(FIELD_RDP_NETWORK_CONNECTION_TYPE)) {
-					try {
-						properties.setNetworkConnectionType(Integer.parseInt(valueName));
-					}
-					catch (NumberFormatException e) {
-						Logger.error("Failed to parse the network connection type: '"+valueName+"'");
-					}
-				}
-			}
-			
-			if (sectionName.equalsIgnoreCase(INI_SECTION_LIMITATION)) {
-				if (keyName.equalsIgnoreCase(FIELD_LIMITATION_USE_DISK_LIMIT)) {
-					if (valueName.equalsIgnoreCase(VALUE_TRUE) || valueName.equalsIgnoreCase("1"))
-						properties.setUseDiskBandwithLimitation(true);
-					else
-						properties.setUseDiskBandwithLimitation(false);
-				}
-				if (keyName.equalsIgnoreCase(FIELD_LIMITATION_DISK_LIMIT)) {
-					int limit = properties.getDiskBandwidthLimit();
-					try {
-						limit = Integer.parseInt(valueName);	
-					}
-					catch (NumberFormatException e) {
-						Logger.warn("Unable to convert value " + valueName + ": "+e.getMessage());
-					}
-					properties.setDiskBandwidthLimit(limit);
-				}
-			}
-
-			if (sectionName.equalsIgnoreCase(INI_SECTION_PERSISTENT_CACHE)) {
-				if (keyName.equalsIgnoreCase(FIELD_PERSISTENT_CACHE_MAX_CELLS)) {
-					int max = properties.getPersistentCacheMaxCells();
-					try {
-						max = Integer.parseInt(valueName);	
-					}
-					catch (NumberFormatException e) {
-						Logger.warn("Unable to convert value " + valueName + ": "+e.getMessage());
-					}
-					properties.setPersistentCacheMaxCells(max);
-				}
-				if (keyName.equalsIgnoreCase(FIELD_PERSISTENT_CACHE_PATH)) {
-					properties.setPersistentCachePath(valueName);
-				}
-			}
-		}		
-		return properties;
+			this.fillProfileMap(sectionName, keyName, valueName);
+		}
+		
+		return true;
 	}
+
+	@Override
+	protected void saveProfileEntries(HashMap<String, List<Entry<String, String>>> profileEntriesMap) {}
 }

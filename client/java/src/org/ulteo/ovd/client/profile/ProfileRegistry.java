@@ -25,276 +25,60 @@ import com.ice.jni.registry.RegStringValue;
 import com.ice.jni.registry.Registry;
 import com.ice.jni.registry.RegistryException;
 import com.ice.jni.registry.RegistryKey;
-import java.awt.Dimension;
-import java.io.IOException;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.ulteo.Logger;
-import org.ulteo.ovd.client.desktop.DesktopFrame;
 
 public class ProfileRegistry extends Profile {
 
-	private ProfileProperties extractPropertiesFromKey(RegistryKey key, ProfileProperties properties) throws IOException {
-		if (key == null || properties == null)
-			return null;
+	private boolean extractPropertiesFromKey(RegistryKey key) {
+		if (key == null)
+			return false;
 
+		int numberSubkeys;
 		try {
-			Enumeration<?> fieldsEnum = key.valueElements();
+			numberSubkeys = key.getNumberSubkeys();
+		} catch (RegistryException ex) {
+			Logger.error("Failed to list registry subkeys of '"+key.getFullName()+"': "+ex.getMessage());
+			return false;
+		}
+		
+		int cpt = 0;
+		while (cpt < numberSubkeys) {
+			String sectionName;
+			try {
+				sectionName = key.regEnumKey(cpt++);
+			} catch (RegistryException ex) {
+				Logger.error("Failed to load section "+cpt+": "+ex.getMessage());
+				continue;
+			}
+			RegistryKey subkey = Registry.openSubkey(key, sectionName, RegistryKey.ACCESS_READ);
+			
+			Enumeration<?> fieldsEnum;
+			try {
+				fieldsEnum = subkey.valueElements();
+			} catch (RegistryException ex) {
+				Logger.error("Failed to list fields of section '"+sectionName+"': "+ex.getMessage());
+				continue;
+			}
 			while (fieldsEnum.hasMoreElements()) {
 				String field = (String) fieldsEnum.nextElement();
-				String value = key.getStringValue(field);
+				String value;
+				try {
+					value = subkey.getStringValue(field);
+				} catch (RegistryException ex) {
+					Logger.error("Failed to get value of field '"+field+"': "+ex.getMessage());
+					continue;
+				}
 
-				if (field.equalsIgnoreCase(FIELD_LOGIN)) {
-					properties.setLogin(value);
-				}
-				else if (field.equalsIgnoreCase(FIELD_PASSWORD)) {
-					properties.setPassword(value);
-				}
-				else if (field.equalsIgnoreCase(FIELD_LOCALCREDENTIALS)) {
-					boolean useLocalCredentials = false;
-
-					if (value.equalsIgnoreCase(VALUE_TRUE))
-						useLocalCredentials = true;
-
-					properties.setUseLocalCredentials(useLocalCredentials);
-				}
-				else if (field.equalsIgnoreCase(FIELD_HOST)) {
-					properties.setHost(value);
-				}
-				else if (field.equalsIgnoreCase(FIELD_PORT)) {
-					try {
-						properties.setPort(Integer.parseInt(value));
-					}
-					catch (NumberFormatException err) {}
-				}
-				else if (field.equalsIgnoreCase(FIELD_MODE)) {
-					int mode = ProfileProperties.MODE_AUTO;
-
-					if (value.equalsIgnoreCase(VALUE_MODE_AUTO))
-						mode = ProfileProperties.MODE_AUTO;
-					else if (value.equalsIgnoreCase(VALUE_MODE_APPLICATIONS))
-						mode = ProfileProperties.MODE_APPLICATIONS;
-					else if (value.equalsIgnoreCase(VALUE_MODE_DESKTOP))
-						mode = ProfileProperties.MODE_DESKTOP;
-
-					properties.setSessionMode(mode);
-				}
-				else if (field.equalsIgnoreCase(FIELD_AUTOPUBLISH)) {
-					boolean autoPublish = false;
-
-					if (value.equalsIgnoreCase(VALUE_TRUE))
-						autoPublish = true;
-
-					properties.setAutoPublish(autoPublish);
-				}
-				else if (field.equalsIgnoreCase(FIELD_SHOW_PROGRESSBAR)) {
-					boolean showProgressBar = false;
-
-					if (value.equalsIgnoreCase(VALUE_TRUE))
-						showProgressBar = true;
-
-					properties.setShowProgressbar(showProgressBar);
-				}
-				else if (field.equalsIgnoreCase(FIELD_SCREENSIZE)) {
-					int pos = value.indexOf("x");
-
-					if (pos != -1 && value.lastIndexOf("x") == pos) {
-						try {
-							Dimension dim = new Dimension();
-							dim.width = Integer.parseInt(value.substring(0, pos));
-							dim.height = Integer.parseInt(value.substring(pos + 1, value.length()));
-
-							properties.setScreenSize(dim);
-						} catch (NumberFormatException ex) {
-							Logger.error("Failed to parse screen size value: '"+value+"'");
-						}
-					}
-					else if (value.equalsIgnoreCase(VALUE_MAXIMIZED)) {
-						properties.setScreenSize(DesktopFrame.MAXIMISED);
-					}
-					else if (value.equalsIgnoreCase(VALUE_FULLSCREEN)) {
-						properties.setScreenSize(DesktopFrame.FULLSCREEN);
-					}
-					else {
-						Logger.error("Failed to parse screen size value: '"+value+"'");
-					}
-				}
-				else if (field.equalsIgnoreCase(FIELD_LANG)) {
-					properties.setLang(value);
-				}
-				else if (field.equalsIgnoreCase(FIELD_KEYMAP)) {
-					properties.setKeymap(value);
-				}
-				else if (field.equalsIgnoreCase(FIELD_INPUT_METHOD)) {
-					properties.setInputMethod(value);
-				}
-				else if (field.equalsIgnoreCase(FIELD_GUI_LOCKED)) {
-					boolean isGUILocked = false;
-
-					if (value.equalsIgnoreCase(VALUE_TRUE))
-						isGUILocked = true;
-
-					properties.setGUILocked(isGUILocked);
-				}
-				else if (field.equalsIgnoreCase(FIELD_SHOW_BUGREPORTER)) {
-					properties.setBugReporterVisible(value.equalsIgnoreCase(VALUE_TRUE));
-				}
-				else if (field.equalsIgnoreCase(PROXY_TYPE)) {
-					try {
-						ProxyMode v = ProxyMode.valueOf(value.toLowerCase());
-						properties.setProxyType(v);
-					}
-					catch (Exception e) {
-						properties.setProxyType(Profile.ProxyMode.none);
-					}
-				}
-				else if (field.equalsIgnoreCase(PROXY_HOST)) {
-					properties.setProxyHost(value);
-				}
-				else if (field.equalsIgnoreCase(PROXY_PORT)) {
-					properties.setProxyPort(value);
-				}
-				else if (field.equalsIgnoreCase(PROXY_USERNAME)) {
-					properties.setProxyUsername(value);
-				}
-				else if (field.equalsIgnoreCase(PROXY_PASSWORD)) {
-					properties.setProxyPassword(value);
-				}				
-				else if (field.equalsIgnoreCase(FIELD_RDP_USE_OFFSCREEN_CACHE)) {
-					boolean useOffscreenCache = false;
-					if (value.equalsIgnoreCase(VALUE_TRUE))
-						useOffscreenCache = true;
-
-					properties.setUseOffscreenCache(useOffscreenCache);
-				}
-				else if (field.equalsIgnoreCase(FIELD_RDP_USE_FRAME_MARKER)) {
-					boolean useFrameMarker = false;
-					if (value.equalsIgnoreCase(VALUE_TRUE))
-						useFrameMarker = true;
-					
-					properties.setUseFrameMarker(useFrameMarker);
-				}
-				else if (field.equalsIgnoreCase(FIELD_RDP_PACKET_COMPRESSION)) {
-					boolean usePacketCompression = false;
-					if (value.equalsIgnoreCase(VALUE_TRUE))
-						usePacketCompression = true;
-
-					properties.setUsePacketCompression(usePacketCompression);
-				}
-				else if (field.equalsIgnoreCase(FIELD_RDP_USE_BANDWIDTH_LIMITATION)) {
-					boolean useBandwidthLimit = false;
-					if (value.equalsIgnoreCase(VALUE_TRUE))
-						useBandwidthLimit = true;
-
-					properties.setUseBandwithLimitation(useBandwidthLimit);
-				}
-				else if (field.equalsIgnoreCase(FIELD_RDP_SOCKET_TIMEOUT)) {
-					int socketTimeout = properties.getSocketTimeout();
-					try {
-						socketTimeout = Integer.parseInt(value);
-					}
-					catch (NumberFormatException e) {
-						Logger.error("Failed to parse socket timeout: '"+value+"'");
-					}
-					properties.setSocketTimeout(socketTimeout);
-				}
-				else if (field.equalsIgnoreCase(FIELD_LIMITATION_USE_DISK_LIMIT)) {
-					boolean useDisklimitation = false;
-					if (value.equalsIgnoreCase(VALUE_TRUE))
-						useDisklimitation = true;
-
-					properties.setUseDiskBandwithLimitation(useDisklimitation);
-				}
-				else if (field.equalsIgnoreCase(FIELD_LIMITATION_DISK_LIMIT)) {
-					int diskLimit = properties.getDiskBandwidthLimit();
-					try {
-						diskLimit = Integer.parseInt(value);
-					}
-					catch (NumberFormatException e) {
-						Logger.error("Failed to parse disk bandwidth limitation: '"+value+"'");
-					}
-					properties.setDiskBandwidthLimit(diskLimit);
-				}
-				if (field.equalsIgnoreCase(FIELD_RDP_NETWORK_CONNECTION_TYPE)) {
-					try {
-						properties.setNetworkConnectionType(Integer.parseInt(value));
-					}
-					catch (NumberFormatException e) {
-						Logger.error("Failed to parse the network connection type: '"+value+"'");
-					}
-				}
-				else if (field.equalsIgnoreCase(FIELD_RDP_PERSISTENT_CACHE)) {
-					boolean usePersistentCache = false;
-					if (value.equalsIgnoreCase(VALUE_TRUE))
-						usePersistentCache = true;
-
-					properties.setUsePersistantCache(usePersistentCache);
-				}
-				else if (field.equalsIgnoreCase(FIELD_RDP_USE_TLS)) {
-					boolean useTLS = false;
-					if (value.equalsIgnoreCase(VALUE_TRUE))
-						useTLS = true;
-
-					properties.setUseTLS(useTLS);
-				}
-				else if (field.equalsIgnoreCase(FIELD_PERSISTENT_CACHE_PATH)) {
-					properties.setPersistentCachePath(value);
-				}
-				else if (field.equalsIgnoreCase(FIELD_PERSISTENT_CACHE_MAX_CELLS)) {
-					int persistentCacheMaxCell = properties.getPersistentCacheMaxCells();
-					try {
-						persistentCacheMaxCell = Integer.parseInt(value);
-					}
-					catch (NumberFormatException e) {
-						Logger.error("Failed to parse peristent cache max cells: '"+value+"'");
-					}
-					properties.setPersistentCacheMaxCells(persistentCacheMaxCell);
-				}
-				else if (field.equalsIgnoreCase(FIELD_RDP_USE_KEEPALIVE)) {
-					boolean useKeepAlive = false;
-					if (value.equalsIgnoreCase(VALUE_TRUE))
-						useKeepAlive = true;
-					
-					properties.setUseKeepAlive(useKeepAlive);
-				}
-				else if (field.equalsIgnoreCase(FIELD_RDP_KEEPALIVE_INTERVAL)) {
-					int keepAliveInterval = properties.getKeepAliveInterval();
-					try {
-						keepAliveInterval = Integer.parseInt(value);
-					}
-					catch (NumberFormatException e) {
-						Logger.error("Failed to parse keepalive interval: '"+value+"'");
-					}
-					properties.setDiskBandwidthLimit(keepAliveInterval);
-				}
+				this.fillProfileMap(sectionName, field, value);
 			}
-		} catch (RegistryException ex) {
-			throw new IOException(ex);
 		}
-		return properties;
-	}
-
-	public ProfileProperties loadProfile() throws IOException {
-		ProfileProperties properties = new ProfileProperties();
-
-		RegistryKey key = null;
-		boolean keyFound = false;
-
-		key = Registry.openSubkey(Registry.HKEY_LOCAL_MACHINE, "Software\\Ulteo\\OVD\\NativeClient", RegistryKey.ACCESS_READ);
-		if (key != null) {
-			properties = this.extractPropertiesFromKey(key, properties);
-			keyFound = true;
-		}
-
-		key = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software\\Ulteo\\OVD\\NativeClient", RegistryKey.ACCESS_READ);
-		if (key != null) {
-			properties = this.extractPropertiesFromKey(key, properties);
-			keyFound = true;
-		}
-
-		if (! keyFound)
-			return null;
-
-		return properties;
+		
+		return true;
 	}
 
 	private RegistryKey initProfileKey() {
@@ -316,74 +100,56 @@ public class ProfileRegistry extends Profile {
 		return key;
 	}
 
-	public void saveProfile(ProfileProperties properties) {
+	@Override
+	protected boolean loadProfileEntries() {
+		RegistryKey key = null;
+		boolean res = false;
+
+		key = Registry.openSubkey(Registry.HKEY_LOCAL_MACHINE, "Software\\Ulteo\\OVD\\NativeClient", RegistryKey.ACCESS_READ);
+		if (key != null) {
+			res = this.extractPropertiesFromKey(key);
+		}
+
+		key = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software\\Ulteo\\OVD\\NativeClient", RegistryKey.ACCESS_READ);
+		if (key != null) {
+			res = this.extractPropertiesFromKey(key);
+		}
+		
+		return res;
+	}
+
+	@Override
+	protected void saveProfileEntries(HashMap<String, List<Entry<String, String>>> profileEntriesMap) {
 		RegistryKey key = this.initProfileKey();
-		if (key == null)
-			return;
-
-		try {
-			String tmpStr = null;
-
-			tmpStr = properties.getLogin();
-			if (tmpStr != null)
-				key.setValue(new RegStringValue(key, FIELD_LOGIN, tmpStr));
-
-			tmpStr = properties.getPassword();
-			if (tmpStr != null)
-				key.setValue(new RegStringValue(key, FIELD_PASSWORD, tmpStr));
-
-			tmpStr = properties.getHost();
-			if (tmpStr != null)
-				key.setValue(new RegStringValue(key, FIELD_HOST, tmpStr));
-
-			tmpStr = properties.getLang();
-			if (tmpStr != null)
-				key.setValue(new RegStringValue(key, FIELD_LANG, tmpStr));
-
-			tmpStr = properties.getKeymap();
-			if (tmpStr != null)
-				key.setValue(new RegStringValue(key, FIELD_KEYMAP, tmpStr));
-
-			tmpStr = properties.getInputMethod();
-			if (tmpStr != null)
-				key.setValue(new RegStringValue(key, FIELD_INPUT_METHOD, tmpStr));
-
-			int sessionMode = properties.getSessionMode();
-			if (sessionMode > -1) {
-				if (properties.getSessionMode() == ProfileProperties.MODE_DESKTOP)
-					tmpStr = VALUE_MODE_DESKTOP;
-				else if (properties.getSessionMode() == ProfileProperties.MODE_APPLICATIONS)
-					tmpStr = VALUE_MODE_APPLICATIONS;
-				else
-					tmpStr = VALUE_MODE_AUTO;
-				key.setValue(new RegStringValue(key, FIELD_MODE, tmpStr));
-			}
-
-			Dimension screensize = properties.getScreenSize();
-			if (screensize != null) {
-				if (screensize.equals(DesktopFrame.FULLSCREEN)) {
-					key.setValue(new RegStringValue(key, FIELD_SCREENSIZE, VALUE_FULLSCREEN));
-				}
-				else if (screensize.equals(DesktopFrame.MAXIMISED)) {
-					key.setValue(new RegStringValue(key, FIELD_SCREENSIZE, VALUE_MAXIMIZED));
-				}
-				else {
-					key.setValue(new RegStringValue(key, FIELD_SCREENSIZE, screensize.width+"x"+screensize.height));
-				}
-				screensize = null;
-			}
-
-			boolean tmpBool = properties.getAutoPublish();
-			key.setValue(new RegStringValue(key, FIELD_AUTOPUBLISH, ""+tmpBool));
-
-			tmpBool = properties.getUseLocalCredentials();
-			key.setValue(new RegStringValue(key, FIELD_LOCALCREDENTIALS, ""+tmpBool));
-
-			tmpBool = properties.getShowProgressbar();
-			key.setValue(new RegStringValue(key, FIELD_SHOW_PROGRESSBAR, ""+tmpBool));
+		
+		for (Map.Entry<String, List<Map.Entry<String, String>>> section : profileEntriesMap.entrySet()) {
+			String sectionName = section.getKey();
+			List<Map.Entry<String, String>> entries = section.getValue();
 			
-		} catch (RegistryException ex) {
-			Logger.error("Setting profile preferencies in the registry failed: "+ex.getMessage());
+			RegistryKey subkey = Registry.openSubkey(key, sectionName, RegistryKey.ACCESS_WRITE);
+			if (subkey == null) {
+				try {
+					subkey = key.createSubKey(sectionName, "");
+				} catch (RegistryException ex) {
+					Logger.error("Failed to create '"+sectionName+"' subkey: "+ex.getMessage());
+					continue;
+				}
+			}
+			
+			for (Map.Entry<String, String> entry : entries) {
+				String name = entry.getKey();
+				String value = entry.getValue();
+				
+				if (value == null)
+					continue;
+				
+				try {
+					subkey.setValue(new RegStringValue(subkey, name, value));
+				} catch (RegistryException ex) {
+					Logger.error("Failed to set property '"+name+"': "+ex.getMessage());
+					continue;
+				}
+			}
 		}
 	}
 }

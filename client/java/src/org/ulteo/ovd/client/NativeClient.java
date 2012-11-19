@@ -386,10 +386,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 
 	
 	public static boolean getIniProfile(Options option, String path) {
-		ProfileIni ini = new ProfileIni();
-
 		if (path == null) {
-			List<String> profiles = ini.listProfiles();
+			List<String> profiles = ProfileIni.listProfiles();
 
 			if (profiles == null)
 				return false;
@@ -405,11 +403,10 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			path = file.getParent();
 		}
 
-		ProfileProperties properties = null;
-		try {
-			properties = ini.loadProfile(option.profile, path);
-		} catch (IOException ex) {
-			Logger.error("Unable to load \""+option.profile+"\" profile: "+ex.getMessage());
+		ProfileIni ini = new ProfileIni(option.profile, path);
+		
+		ProfileProperties properties = ini.loadProfile();
+		if (properties == null) {
 			return false;
 		}
 		
@@ -422,13 +419,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	
 	public static boolean getRegistryProfile(Options option) {
 		ProfileRegistry registry = new ProfileRegistry();
-		ProfileProperties properties;
-		try {
-			properties = registry.loadProfile();
-		} catch (IOException ex) {
-			Logger.error("Getting profile preferencies from registry failed: "+ex.getMessage());
-			return false;
-		}
+		ProfileProperties properties = registry.loadProfile();
+		
 		if (properties == null)
 			return false;
 
@@ -909,7 +901,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			return;
 		}
 
-		ProfileIni ini = new ProfileIni();
+		ProfileIni ini = null;
 
 		if (this.opts.getFlag(Options.FLAG_PROFILE_INI)) {
 
@@ -922,15 +914,12 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				path = this.opts.profile.substring(0, idx + 1);
 			}
 
-			ini.setProfile(profile, path);
+			ini = new ProfileIni(profile, path);
 		}
 		else {
-			ini.setProfile(null, null);// Default profile
+			ini = new ProfileIni(null, null);// Default profile
 		}
-		try {
-			ini.saveProfile(properties);
-		} catch (IOException e) {
-			Logger.warn("Unable to save profile: " + e.getMessage());
-		}
+		
+		ini.saveProfile(properties);
 	}
 }
