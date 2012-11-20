@@ -668,7 +668,7 @@ public class Rdp {
 	    }
 	    else if (this.opt.server_rdp_version != 3) {
 		/* rdp5_process should move g_next_packet ok */
-		this.common.rdp.rdp5_process(this.stream, (this.opt.server_rdp_version & 0x80) != 0);
+		this.common.rdp.process_fastpath_update(this.stream, (this.opt.server_rdp_version & 0x80) != 0);
 		type[0] = 0;
 		return this.stream;
 	    }

@@ -74,7 +74,7 @@ public class Rdp5 extends Rdp {
      * @throws OrderException
      * @throws CryptoException
      */
-    public void rdp5_process(RdpPacket_Localised s, boolean encryption)
+    public void process_fastpath_update(RdpPacket_Localised s, boolean encryption)
             throws RdesktopException, OrderException, CryptoException {
         logger.debug("Processing RDP 5 order");
 
