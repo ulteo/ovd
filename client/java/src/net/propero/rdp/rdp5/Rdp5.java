@@ -6,9 +6,9 @@
  * Date: $Date: 2007/03/08 00:26:39 $
  *
  * Copyright (c) 2005 Propero Limited
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2011-2012
  *
  * Purpose: Handle RDP5 orders
  */
@@ -68,33 +68,14 @@ public class Rdp5 extends Rdp {
      * 
      * @param s
      *            Packet to be processed
-     * @param e
-     *            True if packet is encrypted
-     * @throws RdesktopException
-     * @throws OrderException
-     * @throws CryptoException
-     */
-    public void rdp5_process(RdpPacket_Localised s, boolean e)
-            throws RdesktopException, OrderException, CryptoException {
-        rdp5_process(s, e, false);
-    }
-
-    /**
-     * Process an RDP5 packet
-     * 
-     * @param s
-     *            Packet to be processed
      * @param encryption
      *            True if packet is encrypted
-     * @param shortform
-     *            True if packet is of the "short" form
      * @throws RdesktopException
      * @throws OrderException
      * @throws CryptoException
      */
-    public void rdp5_process(RdpPacket_Localised s, boolean encryption,
-            boolean shortform) throws RdesktopException, OrderException,
-            CryptoException {
+    public void rdp5_process(RdpPacket_Localised s, boolean encryption)
+            throws RdesktopException, OrderException, CryptoException {
         logger.debug("Processing RDP 5 order");
 
         int length, count;
