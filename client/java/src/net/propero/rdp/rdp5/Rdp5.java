@@ -22,8 +22,6 @@ import net.propero.rdp.crypto.*;
 public class Rdp5 extends Rdp {
 	private static final int FASTPATH_OUTPUT_COMPRESSION_USED = 0x2;
 
-	private static final int RDP_MPPC_COMPRESSED = 0x20;
-
 	/* Disable desktop wallpaper */
 	public static final int PERF_DISABLE_WALLPAPER =		0x00000001;
 	/* Disable full-window drag (only the window outline is displayed when the window is moved) */
@@ -100,7 +98,7 @@ public class Rdp5 extends Rdp {
             }
             this.next_packet = next = s.getPosition() + length;
 
-            if ((ctype & RDP_MPPC_COMPRESSED) != 0) {
+            if ((ctype & PACKET_COMPRESSED) != 0) {
                 try {
                     ts = decompressor.decompress(s, length, ctype);
                 } catch (RdpCompressionException ex) {
