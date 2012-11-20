@@ -20,7 +20,7 @@ import net.propero.rdp.compress.RdpCompressionException;
 import net.propero.rdp.crypto.*;
 
 public class Rdp5 extends Rdp {
-	private static final int RDP5_COMPRESSED = 0x80;
+	private static final int FASTPATH_OUTPUT_COMPRESSION_USED = 0x2;
 
 	private static final int RDP_MPPC_COMPRESSED = 0x20;
 
@@ -79,17 +79,20 @@ public class Rdp5 extends Rdp {
         logger.debug("Processing RDP 5 order");
 
         int length, count;
-        int type, ctype;
+        byte updateHeader, updateCode, fragmentation, compression;
+        int ctype;
         int next;
         RdpPacket_Localised ts = null;
 
         while (s.getPosition() < s.getEnd()) {
-            type = s.get8();
-
-            if ((type & RDP5_COMPRESSED) != 0) {
+            updateHeader = (byte) s.get8();
+            updateCode = (byte) (updateHeader & 0x0F);
+            fragmentation = (byte) ((updateHeader >> 4) & 0x03);
+            compression = (byte) ((updateHeader >> 6) & 0x03);
+            
+            if ((compression & FASTPATH_OUTPUT_COMPRESSION_USED) != 0) {
                 ctype = s.get8();
                 length = s.getLittleEndian16();
-                type ^= RDP5_COMPRESSED;
             }
             else {
                 ctype = 0;
@@ -108,8 +111,8 @@ public class Rdp5 extends Rdp {
             else
                 ts = s;
 
-            logger.debug("RDP5: type = " + type);
-            switch (type) {
+            logger.debug("RDP5: type = " + updateCode);
+            switch (updateCode) {
             case 0: /* orders */
                 count = ts.getLittleEndian16();
                 orders.processOrders(ts, next, count);
@@ -139,7 +142,7 @@ public class Rdp5 extends Rdp {
                 process_new_pointer_pdu(ts);
                 break;                
             default:
-                logger.warn("Unimplemented RDP5 opcode " + type);
+                logger.warn("Unimplemented RDP5 opcode " + updateCode);
             }
 
             s.setPosition(next);
