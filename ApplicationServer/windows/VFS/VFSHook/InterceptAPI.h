@@ -1,3 +1,6 @@
+// Copyright (C) 2012 
+// Author Wei-Jen Chen 2012
+
 #ifndef _Hook_H
 #define _Hook_H
 
@@ -7,9 +10,5 @@
 
 void setupHooks();
 void releaseHooks();
-
-#define restoreObjectAttributes_ObjectName(ObjectAttributes, value)			ObjectAttributes->ObjectName->Buffer = value.Buffer; \
-																			ObjectAttributes->ObjectName->Length = value.Length; \
-																			ObjectAttributes->ObjectName->MaximumLength = value.MaximumLength; 
 
 #endif //#ifndef _Hook_H

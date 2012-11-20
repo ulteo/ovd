@@ -1,3 +1,6 @@
+// Copyright (C) 2012 
+// Author Wei-Jen Chen 2012
+
 #include "stdafx.h"
 #include "mhook-lib/mhook.h"
 #include "InterceptAPI.h"
@@ -61,13 +64,7 @@ NTSTATUS WINAPI myNtCreateFile(	PHANDLE FileHandle,
 		
 	NTSTATUS stus = OriginNtCreateFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, AllocationSize, 
 		FileAttributes, ShareAccess, CreateDisposition, CreateOptions, EaBuffer, EaLength);
-
-	//Restore original data after modified
-	//if(bStore)
-	//{
-	//	restoreObjectAttributes_ObjectName(ObjectAttributes, uniszRestore);
-	//}
-
+	
 	return stus;
 }
 
@@ -104,13 +101,7 @@ NTSTATUS NTAPI myNtOpenFile(PHANDLE FileHandle,
 	VirtualFileSystem::getSingleton().redirectFilePath(ObjectAttributes);
 		
 	NTSTATUS stus = OriginNtOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
-	
-	//Restore original data after modified
-	//if(bStore)
-	//{
-	//	restoreObjectAttributes_ObjectName(ObjectAttributes, uniszRestore);
-	//}
-		
+			
 	return stus;
 }
 
@@ -147,14 +138,7 @@ NTSTATUS NTAPI myNtQueryAttributesFile(	POBJECT_ATTRIBUTES ObjectAttributes,
 	VirtualFileSystem::getSingleton().redirectFilePath(ObjectAttributes);
 			
 	NTSTATUS stus = OriginNtQueryAttributesFile(ObjectAttributes, FileInformation);
-
-	//TODO: something wrong here restoring reg origin path
-	//Restore original data after modified
-	//if(bStore)
-	//{
-	//	restoreObjectAttributes_ObjectName(ObjectAttributes, uniszRestore);
-	//}
-	
+		
 	return stus;
 }
 
@@ -244,18 +228,6 @@ NTSTATUS NTAPI myNtSetInformationFile(	HANDLE FileHandle,
 	NTSTATUS stus = OriginNtSetInformationFile(FileHandle, IoStatusBlock, FileInformation, 
 		FileInformationLength, FileInformationClass);
 	
-	//TODO: something wrong here restoring reg origin path
-	//Restore original data after modified
-	//if(bStore)
-	//{
-	//	FILE_RENAME_INFORMATION* pFileRename = (PFILE_RENAME_INFORMATION)FileInformation;
-	//
-	//	pFileRename->FileName[0] = restoreFileRenameInfo.FileName[0];
-	//	pFileRename->FileNameLength = restoreFileRenameInfo.FileNameLength;
-	//	pFileRename->ReplaceIfExists = restoreFileRenameInfo.ReplaceIfExists;
-	//	pFileRename->RootDirectory = restoreFileRenameInfo.RootDirectory;
-	//}
-
 	return stus;
 }
 
@@ -300,14 +272,7 @@ NTSTATUS NTAPI myNtCreateKey(	PHANDLE KeyHandle,
 	
 	NTSTATUS stus = OriginNtCreateKey(KeyHandle, DesiredAccess, ObjectAttributes, 
 		TitleIndex, Class, CreateOptions, Disposition);
-
-	//TODO: something wrong here restoring reg origin path
-	//Restore original data after modified
-	//if(bStore)
-	//{		
-	//	restoreObjectAttributes_ObjectName(ObjectAttributes, uniszRestore);
-	//}
-	
+		
 	return stus;
 }
 
@@ -338,14 +303,7 @@ NTSTATUS NTAPI myNtOpenKey(	PHANDLE KeyHandle,
 	VirtualFileSystem::getSingleton().redirectRegPath(ObjectAttributes);
 	
 	NTSTATUS stus = OriginNtOpenKey(KeyHandle, DesiredAccess, ObjectAttributes);
-
-	//TODO: something wrong here restoring reg origin path
-	//Restore original data after modified
-	//if(bStore)
-	//{		
-	//	restoreObjectAttributes_ObjectName(ObjectAttributes, uniszRestore);
-	//}
-	
+		
 	return stus;
 }
 
@@ -378,14 +336,7 @@ NTSTATUS NTAPI myNtOpenKeyEx(	PHANDLE KeyHandle,
 	VirtualFileSystem::getSingleton().redirectRegPath(ObjectAttributes);
 	
 	NTSTATUS stus = OriginNtOpenKeyEx(KeyHandle, DesiredAccess, ObjectAttributes, OpenOptions);
-
-	//TODO: something wrong here restoring reg origin path
-	//Restore original data after modified
-	//if(bStore)
-	//{		
-	//	restoreObjectAttributes_ObjectName(ObjectAttributes, uniszRestore);
-	//}
-	
+		
 	return stus;
 }
 
@@ -393,12 +344,18 @@ NTSTATUS NTAPI myNtOpenKeyEx(	PHANDLE KeyHandle,
 //	Util Functions:
 ////////////////////////////////////////////////////////////////////////
 void setupHooks()
-{
-	//Read conf file from CSIDL_COMMON_APPDATA\\ulteo\ovd
-	WCHAR filename[MAX_PATH] = {};
-	SHGetSpecialFolderPathW(NULL, filename, CSIDL_COMMON_APPDATA, 0);
-	lstrcatW(filename, L"\\ulteo\\ovd\\");
-	lstrcatW(filename, VIRTUAL_SYSTEM_CONF_FILE);
+{	
+	// Set log file to user profile path by default
+	WCHAR szLogFile[MAX_PATH] = {};
+	SHGetSpecialFolderPathW(NULL, szLogFile, CSIDL_PROFILE, 0);
+	lstrcatW(szLogFile, L"\\ulteo\\VirtSys.log");
+	Logger::getSingleton().setLogFile(szLogFile);
+	
+	// Read conf file from CSIDL_COMMON_APPDATA\\ulteo\ovd
+	WCHAR szConfigFile[MAX_PATH] = {};
+	SHGetSpecialFolderPathW(NULL, szConfigFile, CSIDL_COMMON_APPDATA, 0);
+	lstrcatW(szConfigFile, L"\\ulteo\\ovd\\");
+	lstrcatW(szConfigFile, VIRTUAL_SYSTEM_CONF_FILE);
 	
 	if( ! VirtualFileSystem::getSingleton().init() )
 	{
@@ -406,13 +363,13 @@ void setupHooks()
 		return;
 	}
 
-	if( ! VirtualFileSystem::getSingleton().parseFileSystem(filename) )
+	if( ! VirtualFileSystem::getSingleton().parseFileSystem(szConfigFile) )
 	{
 		Logger::getSingleton().log("File blacklist configuration file not found!");
 		return;
 	}
 
-	if( ! VirtualFileSystem::getSingleton().parseRegSystem(filename) )
+	if( ! VirtualFileSystem::getSingleton().parseRegSystem(szConfigFile) )
 	{
 		Logger::getSingleton().log("Registry redirect-list configuration file not found!");
 		return;
@@ -427,23 +384,19 @@ void setupHooks()
 	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtQueryAttributesFile, myNtQueryAttributesFile, "NtQueryAttributesFile");
 	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtSetInformationFile, myNtSetInformationFile, "NtSetInformationFile");
 	/*
-		ZwSetVolumeInformationFile 
-		ZwQueryFullAttributesFile
-		ZwQueryDirectoryFile
-		ZwQueryVolumeInformationFile
-		ZwQueryInformationFile
-		ZwDeleteFile
+		NtSetVolumeInformationFile 
+		NtQueryFullAttributesFile
+		NtQueryDirectoryFile
+		NtQueryVolumeInformationFile
+		NtQueryInformationFile
+		NtDeleteFile
+		NtSetValueKey
 	*/
 
-	// TODO: NtSetValueKey?
 	//Intercept Reg API	
 	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtCreateKey, myNtCreateKey, "NtCreateKey");
 	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtOpenKey, myNtOpenKey, "NtOpenKey");
 	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtOpenKeyEx, myNtOpenKeyEx, "NtOpenKeyEx");
-	//HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtQueryKey, myNtQueryKey, "NtQueryKey");
-	//HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtQueryValueKey, myNtQueryValueKey, "NtQueryValueKey");
-	//HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtEnumerateKey, myNtEnumerateKey, "NtEnumerateKey");
-	//HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtEnumerateValueKey, myNtEnumerateValueKey, "NtEnumerateValueKey");
 
 	Logger::getSingleton().log("Hooked success");
 }
@@ -459,11 +412,7 @@ void releaseHooks()
 	//Reg API
 	Mhook_Unhook((PVOID*)&OriginNtCreateKey);	
 	Mhook_Unhook((PVOID*)&OriginNtOpenKey);	
-	Mhook_Unhook((PVOID*)&OriginNtOpenKeyEx);	
-	//Mhook_Unhook((PVOID*)&OriginNtQueryKey);	
-	//Mhook_Unhook((PVOID*)&OriginNtQueryValueKey);	
-	//Mhook_Unhook((PVOID*)&OriginNtEnumerateKey);	
-	//Mhook_Unhook((PVOID*)&OriginNtEnumerateValueKey);
+	Mhook_Unhook((PVOID*)&OriginNtOpenKeyEx);
 
 	Logger::getSingleton().log("Un-Hooked program");
 }

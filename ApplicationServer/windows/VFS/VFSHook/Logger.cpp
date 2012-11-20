@@ -1,3 +1,6 @@
+// Copyright (C) 2012 
+// Author Wei-Jen Chen 2012
+
 #include "stdafx.h"
 #include "Logger.h"
 
@@ -7,12 +10,11 @@
 #include <ctime>
 #include "WinBase.h"
 
-#define LOG_FILE	L"U:\\VFSLog.txt"
-
 Logger* Logger::m_sInstance = NULL;
 
 Logger::Logger()
 {
+	m_szLogFile = L"C:\\VirtSys.log";
 	m_bIsLogging = false;
 }
 Logger::~Logger()
@@ -35,6 +37,11 @@ Logger* Logger::getSingletonPtr()
 		m_sInstance = new Logger();
 	}
 	return m_sInstance;
+}
+
+void Logger::setLogFile(std::wstring szLogFile)
+{
+	m_szLogFile = szLogFile;
 }
 
 void Logger::enable(bool bEnable)
@@ -75,7 +82,7 @@ void Logger::log(char *fmt,...)
 	char temp[5000];
 	HANDLE hFile;
 	
-	if((hFile = CreateFileW(LOG_FILE, GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) <0)
+	if((hFile = CreateFileW(m_szLogFile.c_str(), GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) <0)
 	{
 		return;
 	}

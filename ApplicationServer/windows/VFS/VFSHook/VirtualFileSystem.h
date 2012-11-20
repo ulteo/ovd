@@ -1,3 +1,7 @@
+// Copyright (C) 2012 
+// Author Wei-Jen Chen 2012
+// Author Shen-Hao chen 2012
+
 #ifndef _VirtualFileSystem_H_
 #define _VirtualFileSystem_H_
 
@@ -82,6 +86,9 @@ public:
 	// _IN_ szDst: Destination path
 	void addRegRedirectionPath(std::wstring szSrc, std::wstring szDst);
 	
+	// Get virtual file space files to be redirect to.
+	std::wstring getVirtualFileSpace(){return m_szVirtualFileSpace;}
+
 public:
 	static VirtualFileSystem& getSingleton();
 	static VirtualFileSystem* getSingletonPtr();

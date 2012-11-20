@@ -1,3 +1,7 @@
+// Copyright (C) 2012 
+// Author Wei-Jen Chen 2012
+// Author Shen-Hao chen 2012
+
 #include "stdafx.h"
 #include "VirtualFileSystem.h"
 
@@ -437,7 +441,7 @@ bool VirtualFileSystem::redirectRegPath(POBJECT_ATTRIBUTES ObjectAttributesPtr)
 		(*puniszRedirectPathPtr)->MaximumLength = szResult.length() * 2 + 2; // + 2 for "/0"
 		memcpy( (*puniszRedirectPathPtr)->Buffer, szResult.c_str(), (*puniszRedirectPathPtr)->Length);
 		memset( (*puniszRedirectPathPtr)->Buffer + szResult.length() , '\0', originLength -  szResult.length() );
-
+		
 		return true;
 	}
 	
@@ -474,11 +478,6 @@ bool VirtualFileSystem::_getFilePathByObjectAttributesPtr(	POBJECT_ATTRIBUTES Ob
 
 	if( ObjectAttributesPtr->RootDirectory )
 	{
-		//TODO: if ObjectAttributes RootDirectory Not NULL, we should handle it properly
-		//if (STATUS_SUCCESS != GetFullPathByHandle(ObjectAttributes->RootDirectory, strPath))
-		//{
-		//	return FALSE;
-		//}
 		return false;
 	}
 
@@ -487,9 +486,10 @@ bool VirtualFileSystem::_getFilePathByObjectAttributesPtr(	POBJECT_ATTRIBUTES Ob
 		ObjectAttributesPtr->ObjectName->Length > 0)
 	{
 		lstrcatW(szPath, ObjectAttributesPtr->ObjectName->Buffer);
+		return true;
 	}
 
-	return true;
+	return false;
 }
 
 bool VirtualFileSystem::_getRegPathByObjectAttributesPtr(POBJECT_ATTRIBUTES ObjectAttributesPtr, WCHAR* szPath)
@@ -498,20 +498,21 @@ bool VirtualFileSystem::_getRegPathByObjectAttributesPtr(POBJECT_ATTRIBUTES Obje
 	{
 		return false;
 	}
-
-	if( _isRootKeyCurrentUser( ObjectAttributesPtr->ObjectName->Buffer ) )
-	{
-		return false;
-	}
-
+	
 	if( ObjectAttributesPtr != NULL && 
 		ObjectAttributesPtr->ObjectName != NULL && 
 		ObjectAttributesPtr->ObjectName->Length > 0)
 	{
+		if( _isRootKeyCurrentUser( ObjectAttributesPtr->ObjectName->Buffer ) )
+		{
+			return false;
+		}
+
 		lstrcatW(szPath, ObjectAttributesPtr->ObjectName->Buffer);
+		return true;
 	}
 
-	return true;
+	return false;
 }
 
 bool VirtualFileSystem::_isFileInList(const std::wstring& szFileRef, std::vector<std::wstring>& vListRef)
@@ -554,132 +555,3 @@ bool VirtualFileSystem::_isRootKeyCurrentUser( PWSTR pwszKey )
 
 	return false;
 }
-/*
-NTSTATUS GetFullPathByHandle(IN HANDLE ObjectHandle,OUT WCHAR* strFullPath)
-{
-
-  NTSTATUS status;
-  BOOL bRet = FALSE;
-  POBJECT_NAME_INFORMATION pNameInfo = NULL;
-
-  while (true)
-  {
-    ULONG uResultLength = 0;
-    pNameInfo = (POBJECT_NAME_INFORMATION)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 0x200);
-
-    status = NtQueryObject(ObjectHandle, ObjectNameInformation, pNameInfo, 0x200, &uResultLength);
-    if (STATUS_INFO_LENGTH_MISMATCH == status || 
-      STATUS_BUFFER_OVERFLOW == status || 
-      STATUS_BUFFER_TOO_SMALL == status)
-    {
-      pNameInfo = (POBJECT_NAME_INFORMATION)HeapReAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, pNameInfo, 0x100);
-      continue;
-    }
-    else if (STATUS_SUCCESS == status)
-    {
-      lstrcpyW(strFullPath,pNameInfo->Name.Buffer);
-      break;
-    }
-    else
-    {
-      break;
-    }
-
-  }
-
-  if (NULL != pNameInfo )
-  {
-    HeapFree(GetProcessHeap(),0,pNameInfo);
-    pNameInfo = NULL;
-  }
-  return status;
-}*/
-
-/*
-void GetKeyFullName( HANDLE hKey, PUNICODE_STRING lpszSubKeyVal, PCHAR fullName)
-{
-	char *tempName;
-	PVOID pKey;
-	//HashUnit *pUnit;
-	UNICODE_STRING *pUniName;
-	ULONG actualLen;
-	ANSI_STRING keyname;
-
-	if( !fullName)
-		return;
-	
-	tempName = ExAllocatePool( PagedPool, MAXPATHLEN);
-	
-	//no memory?
-	if( !tempName)
-	{
-		strcpy( fullName, szNoMemory);
-		return;
-	}
-
-	fullName[0] = 0;
-	tempName[0] = 0;
-	if( pKey = GetPointer( hKey))
-	{
-		if( pKey)
-			ObDereferenceObject( pKey);
-		
-		//pUnit = Sk_HashEntry_SearchItem( pKey);
-		
-		//if( pUnit)
-		//	strcpy( tempName, pUnit->szStr);
-		//else
-		{
-			if( pKey)
-			{
-				pUniName = ExAllocatePool( PagedPool, MAXPATHLEN*2+2*sizeof(ULONG));
-				if( !pUniName)
-			¡@	{
-					strcpy( fullName, szNoMemory);
-					ExFreePool( tempName);
-					return;
-			¡@¡@}
-				
-				pUniName->MaximumLength = MAXPATHLEN * 2;
-				//if( NT_SUCCESS( ObQueryNameString( pKey, pUniName, MAXPATHLEN, &actualLen)))
-				//{
-				RtlUnicodeStringToAnsiString( &keyname, pUniName, TRUE);
-				if( keyname.Buffer[0] )
-				{
-					strcpy( tempName,"\\");
-					strncat( tempName, keyname.Buffer, MAXPATHLEN - 2);
-				}
-				RtlFreeAnsiString( &keyname);
-				//}
-			ExFreePool( pUniName);
-			}
-		}
-	}
-	
-	//add value.
-	try
-	{
-		if( lpszSubKeyVal)
-		{
-			ANSI_STRING keyname;
-			keyname.Buffer = NULL;
-			RtlUnicodeStringToAnsiString( &keyname, lpszSubKeyVal, TRUE);
-			if( keyname.Buffer[0])
-			{
-				strcat( tempName,"\\");
-				strncat( tempName, keyname.Buffer, MAXPATHLEN-1-strlen(tempName));
-			}
-			RtlFreeAnsiString( &keyname);
-		}
-	}
-	except( EXCEPTION_EXECUTE_HANDLER)
-	{
-		strcat( tempName,"*** invalid name ***");
-	}
-	
-	//discard current user's string....
-	//discard root key's string comparing....
-	strcpy( fullName, tempName);
-	ExFreePool( tempName);
-	return;
-}*/
