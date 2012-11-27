@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,7 +30,7 @@ public class MPPCDecompressor extends RdpDecompressor {
 	private static final int MPPC_8K_DICT_SIZE = 8192;
 	private static final int MPPC_64K_DICT_SIZE = 65536;
 
-	private long roff;
+	private int roff;
 	private byte[] hist;
 	private String errorMsg = new String("Error while decompressing packet");
 
@@ -138,7 +138,7 @@ public class MPPCDecompressor extends RdpDecompressor {
 		data_roff = 0;
 		data_rlen = 0;
 
-		this.walker = (int) this.roff;
+		this.walker = this.roff;
 
 		next_offset = this.walker;
 		old_offset = next_offset;
