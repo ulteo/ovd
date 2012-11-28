@@ -236,6 +236,7 @@ public class MPPCDecompressor extends RdpDecompressor {
 		if (this.type != ctype) {
 			if (this.type == null) {
 				this.type = ctype;
+				Logger.info("Using packet compression type: "+this.type);
 			}
 			else {
 				throw new RdpCompressionException("Compression type has changed from "+this.type+" to "+ctype);
