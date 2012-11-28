@@ -22,7 +22,7 @@ package net.propero.rdp.compress;
 
 import java.util.Arrays;
 import net.propero.rdp.RdpPacket_Localised;
-import org.ulteo.Logger;
+import org.apache.log4j.Logger;
 
 public class MPPCDecompressor extends RdpDecompressor {
 	private static final int MPPC_BIG = 0x01;
@@ -190,6 +190,8 @@ public class MPPCDecompressor extends RdpDecompressor {
 		34, 42, 50, 58, 66, 82, 98, 114,
 		130, 194, 258, 514, 2, 2
 	};	
+	
+	protected static Logger logger = Logger.getLogger(MPPCDecompressor.class);
 
 	private MPPCType type = null;
 	private int roff;
@@ -205,7 +207,7 @@ public class MPPCDecompressor extends RdpDecompressor {
 
 	public MPPCDecompressor(MPPCType type) throws RdpCompressionException {
 		int dictSize;
-
+		
 		switch (type) {
 			case mppc4:
 				dictSize = MPPC_8K_DICT_SIZE;
@@ -236,7 +238,7 @@ public class MPPCDecompressor extends RdpDecompressor {
 		if (this.type != ctype) {
 			if (this.type == null) {
 				this.type = ctype;
-				Logger.info("Using packet compression type: "+this.type);
+				logger.info("Using packet compression type: "+this.type);
 			}
 			else {
 				throw new RdpCompressionException("Compression type has changed from "+this.type+" to "+ctype);
@@ -633,7 +635,7 @@ public class MPPCDecompressor extends RdpDecompressor {
 		int historyOffset = this.roff;
 		
 		if ((ctype & MPPC_COMPRESSED) != MPPC_COMPRESSED) {
-			Logger.error("[decompress_rdp60] data is not compressed");
+			logger.error("[decompress_rdp60] data is not compressed");
 			return null;
 		}
 
