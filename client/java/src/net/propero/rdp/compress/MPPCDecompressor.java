@@ -191,7 +191,7 @@ public class MPPCDecompressor extends RdpDecompressor {
 		130, 194, 258, 514, 2, 2
 	};	
 
-	private int type = -1;
+	private MPPCType type = null;
 	private int roff;
 	private byte[] hist;
 	private String errorMsg = new String("Error while decompressing packet");
@@ -203,17 +203,17 @@ public class MPPCDecompressor extends RdpDecompressor {
 	
 	private int[] copyOffsetCache = null;
 
-	public MPPCDecompressor(int type) throws RdpCompressionException {
+	public MPPCDecompressor(MPPCType type) throws RdpCompressionException {
 		int dictSize;
 
 		switch (type) {
-			case RdpCompressionConstants.TYPE_8K:
+			case mppc4:
 				dictSize = MPPC_8K_DICT_SIZE;
 				break;
-			case RdpCompressionConstants.TYPE_64K:
+			case mppc5:
 				dictSize = MPPC_64K_DICT_SIZE;
 				break;
-			case RdpCompressionConstants.TYPE_RDP6:
+			case mppc6:
 				dictSize = MPPC_64K_DICT_SIZE;
 				this.copyOffsetCache = new int[4];
 				break;
@@ -226,9 +226,15 @@ public class MPPCDecompressor extends RdpDecompressor {
 	}
 
 	public RdpPacket_Localised decompress(RdpPacket_Localised compressedPacket, int length, int compressionType) throws RdpCompressionException {
-		byte ctype = (byte) (compressionType & 0xf);
+		MPPCType ctype = null;
+		try {
+			ctype = MPPCType.values()[(compressionType & 0xf)];
+		} catch (IndexOutOfBoundsException ex) {
+			throw new RdpCompressionException("Unknown compression type: "+ex.getMessage());
+		}
+		
 		if (this.type != ctype) {
-			if (this.type == -1) {
+			if (this.type == null) {
 				this.type = ctype;
 			}
 			else {
@@ -242,15 +248,15 @@ public class MPPCDecompressor extends RdpDecompressor {
 		byte[] decompressedDatas;
 
 		switch (ctype) {
-			case RdpCompressionConstants.TYPE_8K:
-			case RdpCompressionConstants.TYPE_64K:
+			case mppc4:
+			case mppc5:
 				decompressedDatas = this.expand(compressedDatas, length, compressionType);
 				break;
-			case RdpCompressionConstants.TYPE_RDP6:
+			case mppc6:
 				decompressedDatas = this.RDP60_decompress(compressedDatas, length, compressionType);
 				break;
 			default:
-				throw new RdpCompressionException("Failed to decompress packet: Compression type "+String.format("0x%x", ctype)+" is not supported.");
+				throw new RdpCompressionException("Failed to decompress packet: Compression type "+String.format("0x%x", ctype.value())+" is not supported.");
 		}
 		
 		RdpPacket_Localised decompressedPacket = new RdpPacket_Localised(decompressedDatas.length);
