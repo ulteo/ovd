@@ -697,7 +697,7 @@ public class Rdp {
     private int configureCompression(int flags) {
 	if (this.opt.packet_compression) {
 		try {
-			MPPCType type = MPPCType.mppc5;
+			MPPCType type = this.opt.packet_compression_type;
 			
 			this.decompressor = new MPPCDecompressor(type);
 			flags |= Rdp.RDP_LOGON_COMPRESSION;

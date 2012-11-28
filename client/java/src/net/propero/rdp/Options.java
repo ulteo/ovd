@@ -19,6 +19,7 @@
 package net.propero.rdp;
 
 import java.awt.image.DirectColorModel;
+import net.propero.rdp.compress.MPPCType;
 import net.propero.rdp.rdp5.Rdp5;
 
 public class Options {
@@ -109,6 +110,7 @@ public class Options {
 	
 	public int win_button_size = 0;	/* If zero, disable single app mode */
 	public boolean packet_compression = false;
+	public MPPCType packet_compression_type = MPPCType.mppc5;
 	public boolean bitmap_compression = true; /* Must to be true if we use RDP v5 or later */
 	public boolean persistent_bitmap_caching = false;
 	public int persistent_caching_max_cells = Rdp.BMPCACHE2_NUM_PSTCELLS;

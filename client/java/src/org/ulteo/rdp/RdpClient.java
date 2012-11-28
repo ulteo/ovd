@@ -38,6 +38,7 @@ import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
+import net.propero.rdp.compress.MPPCType;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -68,6 +69,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		public boolean multimedia = false;
 		public boolean smartcard = false;
 		public boolean packetCompression = false;
+		public MPPCType packetCompressionType = null;
 		public boolean volatileCache = true;
 		public boolean persistentCache = false;
 		public int persistentCacheMaxSize = RdpConnection.DEFAULT_PERSISTENT_CACHE_SIZE;
@@ -95,6 +97,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		System.err.println("	  --disable-all-cache			Disable volatile and persistent cache");
 		System.err.println("	--ovd_mode=MODE				Enable the OVD environnement with mode \"desktop\"/\"portal\" (default is \"desktop\")");
 		System.err.println("	--tls					Use TLS encryption");
+		System.err.println("	--ctype=[mppc4|mppc5|mppc6]		Set the packet compression(MPPC) type");
 		System.err.println("Example: java -jar OVDIntegratedClient.jar -u username -p password server");
 
 		System.exit(0);
@@ -122,13 +125,14 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		if (! org.ulteo.Logger.initInstance(true, log_dir+System.getProperty("file.separator")+org.ulteo.Logger.getDate()+".log", true))
 			System.err.println("Unable to iniatialize logger instance");
 
-		LongOpt[] alo = new LongOpt[6];
+		LongOpt[] alo = new LongOpt[7];
 		alo[0] = new LongOpt("persistent-cache-location", LongOpt.REQUIRED_ARGUMENT, null, 0);
 		alo[1] = new LongOpt("persistent-cache-maxsize", LongOpt.REQUIRED_ARGUMENT, null, 1);
 		alo[2] = new LongOpt("disable-all-cache", LongOpt.NO_ARGUMENT, null, 2);
 		alo[3] = new LongOpt("ovd_mode", LongOpt.OPTIONAL_ARGUMENT, null, 3);
 		alo[4] = new LongOpt("smartcard", LongOpt.OPTIONAL_ARGUMENT, null, 4);
 		alo[5] = new LongOpt("tls", LongOpt.NO_ARGUMENT, null, 5);
+		alo[6] = new LongOpt("ctype", LongOpt.REQUIRED_ARGUMENT, null, 6);
 		Getopt opt = new Getopt(RdpClient.productName, args, "u:p:g:Ams:o:zP", alo);
 
 		int c;
@@ -173,6 +177,13 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 					break;
 				case 5: // --tls
 					params.use_tls = true;
+					break;
+				case 6: // --ctype
+					try {
+						params.packetCompressionType = MPPCType.valueOf(opt.getOptarg());
+					} catch (IllegalArgumentException ex) {
+						usage();
+					}
 					break;
 				case 'u':
 					params.username = new String(opt.getOptarg());
@@ -385,6 +396,9 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		connection.setGraphic(params.width, params.height, params.bpp);
 
 		connection.setPacketCompression(params.packetCompression);
+		if (params.packetCompressionType != null) {
+			connection.setPacketCompressionType(params.packetCompressionType);
+		}
 
 		connection.setVolatileCaching(params.volatileCache);
 		if (params.volatileCache && params.persistentCache) {

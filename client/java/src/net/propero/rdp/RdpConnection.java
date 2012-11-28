@@ -38,6 +38,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import net.propero.rdp.compress.MPPCType;
 import net.propero.rdp.keymapping.KeyCode_FileBased;
 import net.propero.rdp.keymapping.KeyMapException;
 import net.propero.rdp.rdp5.seamless.SeamListener;
@@ -335,11 +336,19 @@ public class RdpConnection implements SeamListener, Runnable{
 	}
 
 	/**
-	 * Enable/disable MPPC-BULK compression with a history buffer of 64k
+	 * Enable/disable MPPC-BULK compression
 	 * @param packetCompression
 	 */
 	public void setPacketCompression(boolean packetCompression) {
 		this.opt.packet_compression = packetCompression;
+	}
+
+	/**
+	 * Set MPPC-BULK compression type
+	 * @param packetCompression
+	 */
+	public void setPacketCompressionType(MPPCType packetCompressionType) {
+		this.opt.packet_compression_type = packetCompressionType;
 	}
 
 	/**
