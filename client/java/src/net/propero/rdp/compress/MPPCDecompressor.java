@@ -218,7 +218,7 @@ public class MPPCDecompressor extends RdpDecompressor {
 				this.copyOffsetCache = new int[4];
 				break;
 			default:
-				throw new RdpCompressionException("Bad MPPC compression type");
+				throw new RdpCompressionException("Bad MPPC compression type: "+type);
 		}
 
 		this.hist = new byte[dictSize];
