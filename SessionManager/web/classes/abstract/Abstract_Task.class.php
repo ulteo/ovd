@@ -108,7 +108,12 @@ class Abstract_Task {
 			}
 		}
 
-		$SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17 WHERE @18 = %19 LIMIT 1', self::table, 'type', $task_->type, 'job_id', $task_->job_id, 'server', $task_->server, 'status', $task_->status, 't_begin', $task_->t_begin, 't_end', $task_->t_end, 'applications_line', @$task_->applications_line, 'applications', json_serialize(@array_map("Application::toArray", $task_->applications)), 'id', $id);
+		if (is_array(@$task_->applications))
+			$apps = $task_->applications;
+		else
+			$apps = array();
+		
+		$SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17 WHERE @18 = %19 LIMIT 1', self::table, 'type', $task_->type, 'job_id', $task_->job_id, 'server', $task_->server, 'status', $task_->status, 't_begin', $task_->t_begin, 't_end', $task_->t_end, 'applications_line', @$task_->applications_line, 'applications', json_serialize(array_map("Application::toArray", $apps)), 'id', $id);
 
 		return true;
 	}
@@ -175,7 +180,12 @@ class Abstract_Task {
 		$buf->t_begin = (int)$t_begin;
 		$buf->t_end = (int)$t_end;
 		$buf->applications_line = (string)$applications_line;
-		$buf->applications = array_map("Application::fromArray", json_unserialize($applications));
+		
+		$apps = json_unserialize($applications);
+		if (!is_array($apps))
+			$apps = array();
+		
+		$buf->applications = array_map("Application::fromArray", $apps);
 
 		return $buf;
 	}
