@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2009
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,12 +23,12 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
 if (! checkAuthorization('manageConfiguration')) {
-	pop_error(_('User not authorized to manage configuration'));
+	popup_error(_('User not authorized to manage configuration'));
 	redirect('index.php');
 }
 
 if (!isset($_REQUEST['action'])) {
-	pop_error(_('No action found'));
+	popup_error(_('No action found'));
 	redirect('index.php');
 }
 
