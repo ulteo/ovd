@@ -253,7 +253,7 @@ function server_display_role_aps($server, $var) {
 		echo '<div id="installableApplicationsList">';
 		echo '<a href="javascript:;" onclick="toggleInstallableApplicationsList(\''.$server->id.'\'); return false;"><div style="width: 16px; height: 16px; float: left;" id="installableApplicationsList_ajax"></div></a><div style="float: left;"><a href="javascript:;" onclick="toggleInstallableApplicationsList(\''.$server->id.'\'); return false;">&nbsp;'._('more options').'</a></div>';
 		echo '<div style="clear: both;"></div>';
-		echo '<div id="installableApplicationsList_content" style="display: none;"><script type="text/javascript">Event.observe(window, \'load\', function() { offContent(\'installableApplicationsList\'); });</script></div>';
+		echo '<div id="installableApplicationsList_content" style="display: none;"><script type="text/javascript">Event.observe(window, \'load\', function() { initContent(\'installableApplicationsList\'); });</script></div>';
 		echo '</div>';
 
 		echo '<div id="installableApplicationsListDefault" style="display: none; visibility: hidden;">';

@@ -1,7 +1,8 @@
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -152,6 +153,13 @@ function hideInfoBulle() {
 		$('infoBulle').hide();
 		$('infoBulle').innerHTML = '';
 	}
+}
+
+function initContent(container) {
+	if ($(container+'_content').visible())
+		onContent(container);
+	else
+		offContent(container);
 }
 
 function offContent(container) {

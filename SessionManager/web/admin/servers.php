@@ -611,7 +611,7 @@ function show_manage($id_) {
 			echo '<a href="javascript:;" onclick="toggleContent(\'role_'.$role.'\'); return false;" class="button">...</a>';
 			echo '</div>';
 			echo '</fieldset>';
-			echo '<script type="text/javascript">Event.observe(window, \'load\', function() { offContent(\'role_'.$role.'\'); });</script></div>';
+			echo '<script type="text/javascript">Event.observe(window, \'load\', function() { initContent(\'role_'.$role.'\'); });</script></div>';
 			echo '</div>';
 		}
 	}
