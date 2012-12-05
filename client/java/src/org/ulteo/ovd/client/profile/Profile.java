@@ -468,10 +468,13 @@ public abstract class Profile {
 		this.profileMap.put(SECTION_PUBLICATION, entriesList);
 
 		// [screen]
-		entriesList = new ArrayList<Map.Entry<String, String>>();
-		entriesList.add(createEntry(FIELD_SCREENSIZE, getStringFromScreenSize(properties.getScreenSize())));
-		
-		this.profileMap.put(SECTION_SCREEN, entriesList);
+		Dimension screensize = properties.getScreenSize();
+		if (screensize != null) {
+			entriesList = new ArrayList<Map.Entry<String, String>>();
+			entriesList.add(createEntry(FIELD_SCREENSIZE, getStringFromScreenSize(screensize)));
+
+			this.profileMap.put(SECTION_SCREEN, entriesList);
+		}
 
 		// [gui]
 		entriesList = new ArrayList<Map.Entry<String, String>>();
