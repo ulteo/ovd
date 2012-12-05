@@ -623,20 +623,22 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				this.saveProfile();
 		
 			boolean exit = false;
+			String errorMsg = null;
 			try {
 				exit = this.launchConnection();
 			} catch (UnsupportedOperationException ex) {
-				Logger.error(ex.getMessage());
-				SwingTools.invokeLater(GUIActions.createDialog(I18n._(ex.getMessage()), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
-				this.loadingFrame.setVisible(false);
+				errorMsg = ex.getMessage();
 			} catch (SessionManagerException ex) {
-				String errormsg = I18n._("Unable to reach the Session Manager!");
-				Logger.error(errormsg+": "+ex.getMessage());
-				SwingTools.invokeLater(GUIActions.createDialog(I18n._(errormsg), I18n._("Error!"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
-				this.loadingFrame.setVisible(false);
+				errorMsg = I18n._("Unable to reach the Session Manager!")+": "+ex.getMessage();
 			}
-			if (! exit)
+			if (! exit) {
 				this.initAuthFrame();
+				if (errorMsg != null) {
+					this.loadingFrame.setVisible(false);
+					Logger.error(errorMsg);
+					SwingTools.invokeLater(GUIActions.createDialog(I18n._(errorMsg), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
+				}
+			}
 		} catch (IllegalArgumentException ex) {
 			Logger.warn(ex.getMessage());
 			SwingTools.invokeLater(GUIActions.createDialog(I18n._(ex.getMessage()), I18n._("Warning!"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
