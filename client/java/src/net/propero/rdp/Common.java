@@ -26,6 +26,7 @@ public class Common {
 	public Rdp5 rdp;
 	public Secure secure;
 	public MCS mcs;
+	public ISO iso;
 	public RdesktopFrame frame;
 	public RdesktopCanvas canvas;
 	public JFrame desktopFrame;

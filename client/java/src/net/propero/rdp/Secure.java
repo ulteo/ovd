@@ -27,6 +27,7 @@ import net.propero.rdp.crypto.*;
 import net.propero.rdp.rdp5.SpooledPacket;
 import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
+import net.propero.rdp.rdp5.rdpemt.EMTChannel;
 
 public class Secure {
 	boolean readCert = false;
@@ -48,11 +49,13 @@ public class Secure {
     private static final int SEC_TAG_SRV_INFO = 0x0c01;
     private static final int SEC_TAG_SRV_CRYPT = 0x0c02;
     private static final int SEC_TAG_SRV_CHANNELS = 0x0c03;
+    private static final int SC_MCS_MSGCHANNEL = 0x0c04;
 
     private static final int SEC_TAG_CLI_INFO = 0xc001;
     private static final int SEC_TAG_CLI_CRYPT = 0xc002;
     private static final int SEC_TAG_CLI_CHANNELS = 0xc003;
     private static final int SEC_TAG_CLI_4 = 0xc004;
+    private static final int CS_MCS_MSGCHANNEL = 0xC006;
 
     private static final int SEC_TAG_PUBKEY = 0x0006;
     private static final int SEC_TAG_KEYSIG = 0x0008;
@@ -60,8 +63,18 @@ public class Secure {
     private static final int SEC_RSA_MAGIC = 0x31415352; /* RSA1 */
 	
 	private static final int CONNECTION_TYPE_LAN              = 0x06;
-	private static final int RNS_UD_CS_SUPPORT_ERRINFO_PDU    = 0x0001;
-	private static final int RNS_UD_CS_VALID_CONNECTION_TYPE  = 0x0020;
+	
+	// earlyCapabilityFlags
+	private static final int RNS_UD_CS_SUPPORT_ERRINFO_PDU         = 0x0001;
+	private static final int RNS_UD_CS_WANT_32BPP_SESSION          = 0x0002;
+	private static final int RNS_UD_CS_SUPPORT_STATUSINFO_PDU      = 0x0004;
+	private static final int RNS_UD_CS_STRONG_ASYMMETRIC_KEYS      = 0x0008;
+	private static final int RNS_UD_CS_VALID_CONNECTION_TYPE       = 0x0020;
+	private static final int RNS_UD_CS_SUPPORT_MONITOR_LAYOUT_PDU  = 0x0040;
+	private static final int RNS_UD_CS_SUPPORT_NETCHAR_AUTODETECT  = 0x0080;
+	private static final int RNS_UD_CS_SUPPORT_DYNVC_GFX_PROTOCOL  = 0x0100;
+	private static final int RNS_UD_CS_SUPPORT_DYNAMIC_TIME_ZONE   = 0x0200;
+	
 	private static final int ENCRYPTION_128BIT_FLAG           = 0x00000002;
 	private static final int ENCRYPTION_40BIT_FLAG            = 0x00000001;
  
@@ -116,6 +129,7 @@ public class Secure {
     private Options opt = null;
     private Common common = null;
     public boolean ready = false;
+    private EMTChannel emt = null;
     
     /**
      * Initialise Secure layer of communications
@@ -235,6 +249,11 @@ public class Secure {
 	if (this.opt.networkConnectionType != Rdp.CONNECTION_TYPE_UNKNOWN) {
 		earlyCapabilityFlags |= RNS_UD_CS_VALID_CONNECTION_TYPE;
 	}
+	
+	if (this.opt.networkConnectionType == Rdp.CONNECTION_TYPE_AUTODETECT && this.opt.extendedClientDataBlocksSupported) {
+		earlyCapabilityFlags |= RNS_UD_CS_SUPPORT_NETCHAR_AUTODETECT;
+	}
+	
 	buffer.setLittleEndian16(earlyCapabilityFlags); // out_uint32_le(s, 1);   /* earlyCapabilityFlags */    
 	
 	buffer.incrementPosition(64);
@@ -276,6 +295,12 @@ public class Secure {
 			buffer.out_uint8p(channels.channel(i).name(), 8); // out_uint8a(s, g_channels[i].name, 8);
 			buffer.setBigEndian32(channels.channel(i).flags()); // out_uint32_be(s, g_channels[i].flags);
 		}
+	}
+	
+	if (this.opt.extendedClientDataBlocksSupported) {
+		buffer.setLittleEndian16(CS_MCS_MSGCHANNEL);  // type
+		buffer.setLittleEndian16(8);                  // length
+		buffer.setLittleEndian32(0);                  // flags (must be set to 0)
 	}
 	
 	buffer.markEnd();
@@ -336,6 +361,13 @@ public class Secure {
 			/* FIXME: We should parse this information and
 			   use it to map RDP5 channels to MCS 
 			   channels */
+			break;
+		
+		case Secure.SC_MCS_MSGCHANNEL:
+			int transportID = mcs_data.getLittleEndian16();
+			this.emt = new EMTChannel(this.opt, this.common);
+			emt.set_mcs_id(transportID);
+			this.channels.register(emt);
 			break;
 
 	    default: throw new RdesktopException("Not implemented! Tag:"+tag+"not recognized!");
@@ -1091,6 +1123,12 @@ public class Secure {
 				
 				buffer.copyFromByteArray(packet, 0, buffer.getPosition(), packet.length);
 			}
+		}
+		
+		if ((this.emt != null) && (this.emt.mcs_id() == channel[0])) {
+			this.emt.process(buffer);
+			this.opt.server_rdp_version = 0xff;
+			return buffer;
 		}
 	    
     		if (channel[0] != MCS.MCS_GLOBAL_CHANNEL)

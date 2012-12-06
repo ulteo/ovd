@@ -155,4 +155,5 @@ public class Options {
 	public CookieManager rdpCookie = new CookieManager();
 	public boolean licence = true;
 	public boolean useSmartCard = true;
+	public boolean extendedClientDataBlocksSupported = false;
 }

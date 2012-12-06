@@ -79,6 +79,7 @@ public class MCS {
 	this.opt = opt_;
         this.common = common_;
     	IsoLayer = new ISO_Localised(opt_, this.common);
+    	this.common.iso = IsoLayer;
     }
     
     /**

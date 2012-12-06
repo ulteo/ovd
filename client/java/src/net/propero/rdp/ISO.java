@@ -44,6 +44,10 @@ public abstract class ISO {
 	@SuppressWarnings("unused")
 	private Common common = null;
 	private TLSLayer tlsLayer;
+	private int totalSend = 0;
+	private int baseRTT = 0;
+	private int bandwidth = 0;
+	private int averageRTT = 0;
 	
 	/* this for the ISO Layer */
 	private static final int CONNECTION_REQUEST = 0xE0;
@@ -61,6 +65,10 @@ public abstract class ISO {
 	public static final int PROTOCOL_RDP      = 0x00000000;  // RC4 encryption method
 	public static final int PROTOCOL_SSL      = 0x00000001;  // TLSv1 encryption method
 	public static final int PROTOCOL_HYBRID   = 0x00000002;  // TLSv1 encryption method with NLA
+	
+	private static final int EXTENDED_CLIENT_DATA_SUPPORTED  = 0x01;
+	private static final int DYNVC_GFX_PROTOCOL_SUPPORTED    = 0x02;
+	private static final int RDP_NEGRSP_RESERVED             = 0x04;
 
 	/**
 	 * Construct ISO object, initialises hex dump
@@ -69,6 +77,7 @@ public abstract class ISO {
 		dump = new HexDump();
 		this.opt = opt_;
 		this.common = common_;
+		this.totalSend = 0;
 	}
 
 	/**
@@ -137,7 +146,11 @@ public abstract class ISO {
 		}
 		
 		int request_type = s.get8();
-		s.get8();                 // Request flags
+		int flags = s.get8();                 // Request flags
+		if ((flags & EXTENDED_CLIENT_DATA_SUPPORTED) != 0) {
+			this.opt.extendedClientDataBlocksSupported = true;
+		}
+		
 		s.getLittleEndian16();    // Request length
 		int selected_proto = s.getLittleEndian32();
 		if (request_type != TYPE_RDP_NEG_RSP)
@@ -196,6 +209,7 @@ public abstract class ISO {
 		buffer.setBigEndian16(0); // source reference should be a reasonable address we use 0
 		buffer.set8(0); //service class
 		buffer.copyToByteArray(packet, 0, 0, packet.length);
+		this.totalSend += packet.length;
 		out.write(packet);
 		out.flush();
 	}
@@ -224,6 +238,7 @@ public abstract class ISO {
 			buffer.set8(EOT);
 			buffer.copyToByteArray(packet, 0, 0, buffer.getEnd());
 			if(this.opt.debug_hexdump) HexDump.encode(packet, "SEND"/*System.out*/);
+			this.totalSend += packet.length;
 			out.write(packet);
 			out.flush();
 		}
@@ -388,6 +403,7 @@ public abstract class ISO {
 	void send_connection_request() throws IOException {
 		String uname = this.opt.username;
 		String cookietail = this.opt.rdpCookie.getFormatedCookie();
+		int proto = PROTOCOL_RDP;
 		
 		if (uname.length() == 0)
 			uname = "user"; // Default username
@@ -433,14 +449,52 @@ public abstract class ISO {
 		buffer.incrementPosition(3);
 		*/
 		if (this.opt.useTLS) {
+			proto = PROTOCOL_SSL;
+		}
+		
+		// This packet is needed in order to receive a packet TYPE_RDP_NEG_RSP which inform about:
+		//  * TLS transport layer initialization
+		//  * support of network autodetection
+		if (this.opt.useTLS || this.opt.networkConnectionType == Rdp.CONNECTION_TYPE_AUTODETECT) {
 			buffer.set8(TYPE_RDP_NEG_REQ);  // Type
 			buffer.set8(0);                 // Flags (must be set to 0)
 			buffer.setLittleEndian16(8);    // Length (must be set to 8)
-			buffer.setLittleEndian32(PROTOCOL_SSL);
+			buffer.setLittleEndian32(proto); // Protocol
 		}
 		
 		buffer.copyToByteArray(packet, 0, 0, packet.length);
 		out.write(packet);
 		out.flush();
+	}
+		
+	public void resetCounter() {
+		this.totalSend = 0;
+	}
+	
+	public int getTotalSend() {
+		return this.totalSend;
+	}
+	
+	public void updateRTT(int baseRTT, int bandwidth, int averageRTT) {
+		this.baseRTT = baseRTT;
+		this.bandwidth = bandwidth;
+		this.averageRTT = averageRTT;
+		
+		logger.info("Bandwidth autodetection result:");
+		logger.info("  base RTT = "+this.baseRTT+" ms");
+		logger.info("  bandwidth = "+this.bandwidth+" kbs");
+		logger.info("  average RTT = "+this.averageRTT+" ms");
+	}
+	
+	public int getBaseRTT() {
+		return this.baseRTT;
+	}
+	
+	public int getBandwidth() {
+		return this.bandwidth;
+	}
+	
+	public int getAverageRTT() {
+		return this.averageRTT;
 	}
 }
