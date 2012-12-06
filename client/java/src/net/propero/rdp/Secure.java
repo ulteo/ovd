@@ -330,7 +330,7 @@ public class Secure {
 	    processSrvInfo(mcs_data);
 	    break;
 	    case (Secure.SEC_TAG_SRV_CRYPT):
-		this.processCryptInfo(mcs_data);
+		this.processCryptInfo(mcs_data, length - 4);
 		break;
 		case (Secure.SEC_TAG_SRV_CHANNELS):
 			/* FIXME: We should parse this information and
@@ -371,10 +371,10 @@ public class Secure {
 	
     }
 
-    public void processCryptInfo(RdpPacket_Localised data) throws RdesktopException, CryptoException {
+    public void processCryptInfo(RdpPacket_Localised data, int length) throws RdesktopException, CryptoException {
 	int rc4_key_size=0;
 	    
-	rc4_key_size = this.parseCryptInfo(data);
+	rc4_key_size = this.parseCryptInfo(data, length);
 	if (rc4_key_size == 0) {
 	    return;
 	}
@@ -684,8 +684,10 @@ public class Secure {
      * @return Size of RC4 key
      * @throws RdesktopException
      */
-    public int parseCryptInfo(RdpPacket_Localised data) throws RdesktopException {
+    public int parseCryptInfo(RdpPacket_Localised data, int dataLen) throws RdesktopException {
 	logger.debug("Secure.parseCryptInfo");
+	int endPacket = data.getPosition() + dataLen; 
+	
 	int encryption_level=0, random_length=0, RSA_info_length=0;
 	int tag=0, length=0;
 	int next_tag=0, end=0; 
@@ -708,7 +710,7 @@ public class Secure {
 
 	end = data.getPosition() + RSA_info_length;
 
-	if (end > data.getEnd()) {
+	if (end > endPacket) {
 	   logger.debug("Reached end of crypt info prematurely ");
 	    return 0;
 	}
@@ -721,7 +723,7 @@ public class Secure {
 		logger.debug(("We're going for the RDP4-style encryption"));
 		data.incrementPosition(8); //in_uint8s(s, 8);	// unknown
 
-	while (data.getPosition() < data.getEnd()) {
+	while (data.getPosition() < endPacket) {
 	    tag=data.getLittleEndian16();
 	    length=data.getLittleEndian16();
 
@@ -746,7 +748,7 @@ public class Secure {
 	    data.setPosition(next_tag);
 	}
 
-	if (data.getPosition() == data.getEnd()) {
+	if (data.getPosition() == endPacket) {
 	    return rc4_key_size;
 	} else {
 	    logger.warn("End not reached!");
