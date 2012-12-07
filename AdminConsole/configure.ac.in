@@ -1,0 +1,101 @@
+# Copyright (C) 2008-2012 Ulteo SAS
+# http://www.ulteo.com
+# Author Gauvain POCENTEK <gauvain@linutop.com> 2008-2009
+# Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
+# Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
+# Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+AC_INIT([@MODULE@], [@VERSION@], [http://bugs.ulteo.com])
+
+# Init automake
+AM_INIT_AUTOMAKE([1.9 tar-pax])
+AC_PROG_INSTALL
+
+#################################################
+###                  prototype                ###
+# Allow use of already installed javascript libraries
+AC_ARG_WITH([prototypedir],
+    [AC_HELP_STRING([--with-prototypedir],
+        [use a local installation of the Prototype javascript library])], ,
+    [with_prototypedir=no])
+if test x"$with_prototypedir" != xno; then
+    if test -f "$with_prototypedir/prototype.js"; then
+        PROTOTYPEDIR="$with_prototypedir"
+        AC_SUBST(PROTOTYPEDIR)
+        echo "Using $PROTOTYPEDIR for Prototype library."
+    else
+        AC_MSG_WARN([$with_prototypedir/prototype.js doesn't exist; using builtin Prototype library.])
+        PROTOTYPEDIR=
+    fi
+fi
+AM_CONDITIONAL(PROTOTYPE, [test -n "$PROTOTYPEDIR"])
+
+#################################################
+###              scriptaculous                ###
+AC_ARG_WITH([scriptaculousdir],
+    [AC_HELP_STRING([--with-scriptaculousdir],
+        [use a local installation of the Scriptaculous javascript library])], ,
+    [with_scriptaculousdir=no])
+if test x"$with_scriptaculousdir" != xno; then
+    if test -f "$with_scriptaculousdir/scriptaculous.js"; then
+        SCRIPTACULOUSDIR="$with_scriptaculousdir"
+        AC_SUBST(SCRIPTACULOUSDIR)
+        echo "Using $SCRIPTACULOUSDIR for Scriptaculous library."
+    else
+        AC_MSG_WARN([$with_scriptaculousdir/scriptaculous.js doesn't exist; using builtin Prototype library.])
+        SCRIPTACULOUSDIR=
+    fi
+fi
+AM_CONDITIONAL(SCRIPTACULOUS, [test -n "$SCRIPTACULOUSDIR"])
+
+#################################################
+###                 libchart                  ###
+AC_ARG_WITH([libchart],
+    [AC_HELP_STRING([--without-libchart],
+        [use a local installation of the libchart PHP library])],
+    [libchart=no],
+    [libchart=yes])
+if test "$libchart" = "yes"; then
+    LIBCHARTDIR=/usr/share/php/libchart/classes/libchart.php
+    test -e $LIBCHARDIR || AC_MSG_ERROR([$LIBCHARTDIR not found ; deploy PHP libchart library.])
+else
+    DISTCHECK_CONFIGURE_FLAGS+=" --without-libchart"
+    AC_SUBST(DISTCHECK_CONFIGURE_FLAGS)
+fi
+
+AC_CONFIG_FILES([
+Makefile
+config/Makefile
+web/Makefile
+web/ajax/Makefile
+web/classes/Makefile
+web/includes/Makefile
+web/media/script/Makefile
+web/media/script/ajax/Makefile
+web/media/script/lib/calendarpopup/Makefile
+web/media/script/lib/nifty/Makefile
+web/media/script/lib/prototype/Makefile
+web/media/script/lib/scriptaculous/Makefile
+web/media/script/lib/Makefile
+web/media/style/Makefile
+web/media/image/loadbalancing/Makefile
+web/media/image/menu/Makefile
+web/media/image/Makefile
+web/media/Makefile
+])
+AC_OUTPUT

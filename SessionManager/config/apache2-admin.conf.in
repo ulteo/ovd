@@ -1,5 +1,8 @@
 # Ulteo session manager admin alias
 
+Alias /ovd/service/admin/wsdl @DATADIR@/ulteo/sessionmanager/admin/api.wsdl
+Alias /ovd/service/admin      @DATADIR@/ulteo/sessionmanager/admin/api.php
+
 Alias /ovd/admin/base.tar.gz /var/cache/ulteo/sessionmanager/base.tar.gz
 <Location /ovd/admin/base.tar.gz>
     Order allow,deny

@@ -1,0 +1,8 @@
+<?php
+define('SESSIONMANAGER_HOST', '@SM_HOST@');
+
+define('SPOOL_DIR', '@LOCALSTATEDIR@/spool/ulteo/administration_console');
+
+//define('EXPERT_MODE', true);
+
+//define('DEBUG_MODE', true);

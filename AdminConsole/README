@@ -1,0 +1,26 @@
+Ulteo Open Virtual Desktop - Administration Console
+============================================
+
+Installation
+------------
+
+If you install from svn you'll need to have these packages installed:
+ - autogen
+ - autconf
+ - intltool
+ - make
+
+To prepare the sources run:
+$ ./autogen.sh
+
+The first step is to run:
+
+$ ./configure
+$ make
+$ make install # you might need to be root
+
+Configuration
+-------------
+
+To configure the session manager host, run as root:
+$  ovd-administration-console-config

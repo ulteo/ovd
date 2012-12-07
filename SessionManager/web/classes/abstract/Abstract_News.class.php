@@ -88,6 +88,8 @@ class Abstract_News {
 				Logger::error('main', "Abstract_News::save($news_) Abstract_News::create failed");
 				return false;
 			}
+			
+			$news_->id = $id;
 		}
 
 		$SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7 WHERE @8 = %9 LIMIT 1', self::table, 'title', $news_->title, 'content', $news_->content, 'timestamp', $news_->timestamp, 'id', $id);

@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,6 +28,7 @@ abstract class ConfigElement{
 	public $description;
 	public $description_detailed;
 	public $content;
+	public $content_default;
 	public $content_available;
 	public $formSeparator='';
 	public $path=array();
@@ -39,6 +41,7 @@ abstract class ConfigElement{
 		$this->description = $description_;
 		$this->description_detailed = $description_detailed_;
 		$this->content = $content_;
+		$this->content_default = $content_;
 // 		$this->content_available = $content_available_;
 // 		$this->type = $type_;
 	}

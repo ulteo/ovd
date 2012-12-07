@@ -1,0 +1,78 @@
+/**
+ * Copyright (C) 2008-2010 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Arnaud LEGRAND <arnaud@ulteo.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ **/
+ 
+#ha_main{}
+#ha_main_row{vertical-align:top;}
+#ha_main_left_column{}
+#ha_main_right_column{}
+#ha_main-separator{width:10px;}
+.bg_eee{background-color:#EEE;}
+.bg_0000FF{background-color:#0000FF;}
+div.host_status{margin-bottom:5px;}
+table.host_status{width:100%; border:0px solid; background:#E8E8E8;}
+table.host_status tr.host_title{vertical-align:middle; border:#1px solid 555; }
+table.host_status tr.host_title td{background:#555;}
+table.host_status tr.content{vertical-align:middle; border:#1px solid #555; }
+table.host_status tr.content td{background:#F2F2F2;}
+span.mod_ha_sm{color:#DDD;}
+table.host_status.online  tr.host_title td{background:#229630;}
+table.host_status.online  tr td{border:1px solid #229630;}
+table.host_status.online  tr td span.mod_ha_sm{color:#95d083;}
+table.host_status.standby  tr.host_title td{background:#e57a24;}
+table.host_status.standby  tr td{border:1px solid #e57a24;}
+table.host_status.standby  tr td span.mod_ha_sm{color:#ffcca3;}
+table.host_status.onfailed  tr.host_title td{background:#dc2424;}
+table.host_status.onfailed  tr td{border:1px solid #dc2424;}
+table.host_status.onfailed  tr td span.mod_ha_sm{color:#ffd3d3;}
+table.host_status.ready  tr.host_title td{background:#4172e5;}
+table.host_status.ready  tr td{border:1px solid #4172e5;}
+table.host_status.ready  tr td span.mod_ha_sm{color:#95d083;}
+table.host_status.down  tr.host_title td{background:#999;}
+table.host_status.down  tr td{border:1px solid #999;}
+table.host_status.down  tr td span.mod_ha_sm{color:#DDD;}
+table.ha_status_content tr{vertical-align:top;}
+table.host_status  tr td table.ha_status_content tr td{border:0px solid;}
+div.host_status_element{display:block; padding:2px 5px 2px 5px; margin:0 1px 3px 5px; background:#DDD; border:0px solid #CBCBCB; font-weight:bold; color:#888; }
+img.host_status_img{margin:0; border:0px solid; padding:0;}
+a.status{text-decoration:none;}
+span.host_name{color:#FFF; font-weight:bold; font-size:1.2em;}
+span.status{color:#e2ff00; font-weight:bold; margin:4px 5px 0 0; float:right; font-size:0.9em; text-transform:uppercase;}
+div.host_status_buttons{text-align:right;  display:block;  border:0px solid; border-top: 1px dotted #CCC;margin:2px 0 0 0; padding-top:5px;}
+div.host_status_buttons input{margin:0 5px 0 0; font-size:10px; color:#FFF; font-weight:bold; border:1px solid #999; cursor:pointer; background:#AAA; padding:2px 5px 2px 5px;}
+span.ha_resource_started{color:#00AA00; float:right;}
+span.ha_resource_stopped{ float:right;}
+span.ha_resource_failed{color:#FF0000; font-weight:bold; float:right;}
+span.ha_resource_master{color:#00AA00; float:right;}
+span.ha_resource_slave{color:#0000FF; float:right;}
+span.ha_resource_clone{ float:right;}
+.ha_error_cib{border:1px solid #BBB;-moz-border-radius:10px;-webkit-border-radius:10px;border-radius:10px;display:block;width:300px;margin:20px auto;padding:0;overflow:hidden;	background:#EEE;}
+.ha_error_txt_block{display:block;margin:10px;text-align:center;border:0px solid #BBB;}
+.ha_error_txt_block h2{color:#FF5555;margin:10px 0 10px 0;text-align:center;text-transform:uppercase;}
+div.ha_error_loader{text-align:center;}
+div.ha_error_loader p{margin:2px; text-align:center; font-size:11px; color:#999;}
+div.mod_ha_logbar{margin:0px 10px 0 10px; padding:3px 3px 2px 0; border-bottom:1px solid #DDD;border-left:1px solid #DDD;border-right:1px solid #DDD;border-top:1px solid #EEE;	background:#F7F7F7;font-size:0.9em;}
+span.mod_ha_log_date{background:#BBB; padding:1px 3px 0 3px; margin-left:5px; color:#FFF;-moz-border-radius:2px;-webkit-border-radius:2px;border-radius:2px;}
+span.mod_ha_log_host{background:#999; padding:1px 3px 0 3px; margin-left:5px; color:#FFF;-moz-border-radius:2px;-webkit-border-radius:2px;border-radius:2px;}
+span.mod_ha_log_orig{background:#CCC; padding:1px 3px 0 3px; margin-left:5px; color:#FFF;-moz-border-radius:2px;-webkit-border-radius:2px;border-radius:2px;}
+span.mod_ha_log_gravity{ /* font-weight:bold;*/ background:#333; padding:1px 3px 0 3px; margin-left:5px; color:#FFF;-moz-border-radius:2px;-webkit-border-radius:2px;border-radius:2px;}
+span.mod_ha_log_info{ padding:1px 3px 0 3px; margin-left:5px; color:#333;-moz-border-radius:2px;-webkit-border-radius:2px;border-radius:2px;}
+span.mod_ha_log_gravity.mod_ha_info{background:#4646e0;}
+span.mod_ha_log_gravity.mod_ha_warn{background:#e57a24;}
+span.mod_ha_log_gravity.mod_ha_error{background:#dc2424;}

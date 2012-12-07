@@ -110,7 +110,7 @@ class Session {
 		return $buf;
 	}
 
-	public function getAllStates() {
+	public static function getAllStates() {
 		return array(Session::SESSION_STATUS_UNKNOWN, Session::SESSION_STATUS_CREATING, Session::SESSION_STATUS_CREATED, Session::SESSION_STATUS_INIT, Session::SESSION_STATUS_READY, Session::SESSION_STATUS_ACTIVE, Session::SESSION_STATUS_INACTIVE, Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_STATUS_DESTROYING, Session::SESSION_STATUS_DESTROYED, Session::SESSION_STATUS_ERROR);
 	}
 

@@ -1,0 +1,2194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<definitions name="OvdAdmin" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:urn="uri:ovd" targetNamespace="uri:ovd">
+	
+	<types>
+		<xsd:simpleType name="any" />
+		
+		<xsd:complexType name="string_array" final="#all">
+			<xsd:sequence>
+				<xsd:element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true" />
+			</xsd:sequence>
+		</xsd:complexType>
+		
+		<xsd:complexType name="application">
+			<xsd:sequence>
+				<xsd:element name="id" type="xsd:string" minOccurs="0" />
+				<xsd:element name="name" type="xsd:string" minOccurs="0" />
+				<xsd:element name="description" type="xsd:string" minOccurs="1" maxOccurs="1" />
+				<xsd:element name="type" type="xsd:string" minOccurs="1" maxOccurs="1" />
+				<xsd:element name="executable_path" type="xsd:string" minOccurs="1" maxOccurs="1" />
+				<xsd:element name="package" type="xsd:string" minOccurs="1" maxOccurs="1" />
+				<xsd:element name="published" type="xsd:boolean" minOccurs="1" maxOccurs="1" />
+				<xsd:element name="desktopfile" type="xsd:string" minOccurs="1" maxOccurs="1" />
+				
+				<xsd:element name="servers" type="urn:any" minOccurs="0" maxOccurs="1" />
+				<xsd:element name="groups" type="urn:any" minOccurs="0" maxOccurs="1" />
+				<xsd:element name="mimetypes" type="urn:string_array" minOccurs="0" maxOccurs="1" />
+			</xsd:sequence>
+		</xsd:complexType>
+		
+		<xsd:complexType name="application_array" final="#all">
+			<xsd:sequence>
+				<xsd:element name="item" type="urn:application" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</types>
+	
+	<message name="voidRequest" />
+	
+	<message name="Any">
+		<part name="parameters" type="urn:any"/>
+	</message>
+	
+	<message name="Boolean">
+		<part name="parameters" type="xsd:boolean"/>
+	</message>
+	
+	<message name="Integer">
+		<part name="parameters" type="xsd:integer"/>
+	</message>
+	
+	<message name="String">
+		<part name="parameters" type="xsd:string"/>
+	</message>
+	
+	<message name="2Integers">
+		<part name="first" type="xsd:integer"/>
+		<part name="second" type="xsd:integer"/>
+	</message>
+	
+	<message name="2Strings">
+		<part name="first" type="xsd:string"/>
+		<part name="second" type="xsd:string"/>
+	</message>
+	
+	<message name="server_switch_maintenanceMessage">
+		<part name="server_id" type="xsd:string"/>
+		<part name="maintenance" type="xsd:boolean"/>
+	</message>
+	
+	<message name="server_set_available_sessionsMessage">
+		<part name="server_id" type="xsd:string"/>
+		<part name="nb_session" type="xsd:integer"/>
+	</message>
+	
+	<message name="server_set_display_nameMessage">
+		<part name="server_id" type="xsd:string"/>
+		<part name="display_name" type="xsd:string"/>
+	</message>
+	
+	<message name="server_set_fqdnMessage">
+		<part name="server_id" type="xsd:string"/>
+		<part name="fqdn" type="xsd:string"/>
+	</message>
+		
+	<message name="server_set_external_nameMessage">
+		<part name="server_id" type="xsd:string"/>
+		<part name="external_name" type="xsd:string"/>
+	</message>
+	
+	<message name="server_set_rdp_portMessage">
+		<part name="server_id" type="xsd:string"/>
+		<part name="rdp_port" type="xsd:integrer"/>
+	</message>
+	
+	<message name="server_roleMessage">
+		<part name="server_id" type="xsd:string"/>
+		<part name="role" type="xsd:string"/>
+	</message>
+	
+	<message name="Application">
+		<part name="parameters" type="urn:application"/>
+	</message>
+	
+	<message name="ApplicationToGroupMessage">
+		<part name="application" type="urn:string"/>
+		<part name="group" type="urn:string"/>
+	</message>
+	
+	<message name="ApplicationToServerMessage">
+		<part name="application" type="urn:string"/>
+		<part name="server" type="urn:string"/>
+	</message>
+	
+	<message name="application_publishMessage">
+		<part name="application" type="urn:string"/>
+		<part name="publish" type="urn:boolean"/>
+	</message>
+	
+	<message name="application_icon_setMessage">
+		<part name="application" type="urn:string"/>
+		<part name="icon" type="urn:string"/> <!--base64-->
+	</message>
+	
+	<message name="application_static_addMessage">
+		<part name="name" type="urn:string"/>
+		<part name="description" type="urn:string"/>
+		<part name="type" type="urn:string"/>
+		<part name="command" type="urn:string"/>
+	</message>
+	
+	<message name="application_static_modifyMessage">
+		<part name="id" type="urn:string"/>
+		<part name="name" type="urn:string"/>
+		<part name="description" type="urn:string"/>
+		<part name="command" type="urn:string"/>
+	</message>
+	
+	<message name="application_web_addMessage">
+		<part name="name" type="urn:string"/>
+		<part name="description" type="urn:string"/>
+		<part name="url" type="urn:string"/>
+	</message>
+	
+	<message name="applications_group_addMessage">
+		<part name="name" type="urn:string"/>
+		<part name="description" type="urn:string"/>
+	</message>
+	
+	<message name="applications_group_modifyMessage">
+		<part name="id" type="urn:string"/>
+		<part name="name" type="urn:string"/>
+		<part name="description" type="urn:string"/>
+		<part name="published" type="urn:boolean"/>
+	</message>
+	
+	<message name="MimeTypeToApplicationMessage">
+		<part name="application" type="urn:string"/>
+		<part name="mime_type" type="urn:string"/>
+	</message>
+	
+	<message name="UsersPartialListRequest">
+		<part name="search" type="xsd:string"/>
+<!-- 		<part name="search_fields" type="urn:any"/>-->
+		<part name="search_fields" type="urn:string_array"/>
+	</message>
+	
+	<message name="UsersPartialListResponse">
+		<part name="data" type="urn:any"/>
+		<part name="partial" type="xsd:boolean"/>
+	</message>
+	
+	<message name="user_addMessage">
+		<part name="login" type="xsd:string"/>
+		<part name="displayname" type="xsd:string"/>
+		<part name="password" type="xsd:string"/>
+	</message>
+	
+	<message name="user_settings_setMessage">
+		<part name="user_id" type="xsd:string"/>
+		<part name="container" type="xsd:string"/>
+		<part name="setting" type="xsd:string"/>
+		<part name="value" type="xsd:any"/>
+	</message>
+	
+	<message name="user_settings_removeMessage">
+		<part name="user_id" type="xsd:string"/>
+		<part name="container" type="xsd:string"/>
+		<part name="setting" type="xsd:string"/>
+	</message>
+	
+	<message name="user_addsGroupMessage">
+		<part name="name" type="xsd:string"/>
+		<part name="description" type="xsd:string"/>
+	</message>
+	
+	<message name="user_modifysGroupMessage">
+		<part name="id" type="xsd:string"/>
+		<part name="name" type="xsd:string"/>
+		<part name="description" type="xsd:string"/>
+		<part name="published" type="xsd:boolean"/>
+	</message>
+	
+	<message name="users_group_dynamic_addMessage">
+		<part name="name" type="xsd:string"/>
+		<part name="description" type="xsd:string"/>
+		<part name="validation_type" type="xsd:string"/>
+	</message>
+	
+	<message name="users_group_dynamic_modifyMessage">
+		<part name="id" type="xsd:string"/>
+		<part name="rules" type="xsd:any"/>
+		<part name="validation_type" type="xsd:string"/>
+	</message>
+	
+	<message name="users_group_dynamic_cached_addMessage">
+		<part name="name" type="xsd:string"/>
+		<part name="description" type="xsd:string"/>
+		<part name="validation_type" type="xsd:string"/>
+		<part name="schedule" type="xsd:integer"/>
+	</message>
+	
+	<message name="users_group_dynamic_cached_set_schedule">
+		<part name="id" type="xsd:string"/>
+		<part name="schedule" type="xsd:integer"/>
+	</message>
+	
+	<message name="users_group_settings_setMessage">
+		<part name="group_id" type="xsd:string"/>
+		<part name="container" type="xsd:string"/>
+		<part name="setting" type="xsd:string"/>
+		<part name="value" type="xsd:any"/>
+	</message>
+	
+	<message name="users_group_settings_removeMessage">
+		<part name="group_id" type="xsd:string"/>
+		<part name="container" type="xsd:string"/>
+		<part name="setting" type="xsd:string"/>
+	</message>
+	
+	<message name="UsersGroup_policyMessage">
+		<part name="group_id" type="xsd:string"/>
+		<part name="rule" type="xsd:string"/>
+	</message>
+	
+	<message name="UserToGroupMessage">
+		<part name="user_id" type="xsd:string"/>
+		<part name="group_id" type="xsd:string"/>
+	</message>
+	
+	<message name="GroupOnSharedFolderMessage">
+		<part name="group_id" type="xsd:string"/>
+		<part name="share_id" type="xsd:string"/>
+	</message>
+	
+	<message name="PublicationMessage">
+		<part name="users_group" type="xsd:string"/>
+		<part name="applications_group" type="xsd:string"/>
+	</message>
+	
+	<message name="sessions_list_by_serverMessage">
+		<part name="server" type="xsd:string"/>
+		<part name="offset" type="xsd:integer"/>
+	</message>
+	
+	<message name="sessions_reports_list2Message">
+		<part name="start" type="xsd:integer"/>
+		<part name="stop" type="xsd:integer"/>
+		<part name="server" type="xsd:string"/>
+	</message>
+	
+	<message name="sessions_reports_list3Message">
+		<part name="from" type="xsd:integer"/>
+		<part name="to" type="xsd:integer"/>
+		<part name="user" type="xsd:string"/>
+		<part name="limit" type="xsd:integer"/>
+	</message>
+	
+	<message name="news_modifyMessage">
+		<part name="id" type="xsd:string"/>
+		<part name="title" type="xsd:string"/>
+		<part name="content" type="xsd:string"/>
+	</message>
+	
+	<message name="news_addMessage">
+		<part name="title" type="xsd:string"/>
+		<part name="content" type="xsd:string"/>
+	</message>
+	
+	<portType name="OvdAdminPortType">
+		<operation name="test_link_connected">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="getInitialConfiguration">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="system_switch_maintenance">
+			<input message="urn:Boolean"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="administrator_password_set">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="settings_get">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="settings_set">
+			<input message="urn:Any"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="settings_domain_integration_preview">
+			<input message="urn:Any"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="settings_domain_integration_set">
+			<input message="urn:Any"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="servers_list">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="server_info">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="server_remove">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="server_register">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="server_switch_maintenance">
+			<input message="urn:server_switch_maintenanceMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="server_set_available_sessions">
+			<input message="urn:server_set_available_sessionsMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="server_set_display_name">
+			<input message="urn:server_set_display_nameMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="server_unset_display_name">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="server_set_fqdn">
+			<input message="urn:server_set_fqdnMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="server_set_external_name">
+			<input message="urn:server_set_external_nameMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="server_unset_external_name">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="server_set_rdp_port">
+			<input message="urn:server_set_rdp_portMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="server_unset_rdp_port">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="server_role_enable">
+			<input message="urn:server_roleMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="server_role_disable">
+			<input message="urn:server_roleMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="server_add_static_application">
+			<input message="urn:ApplicationToServerMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="server_remove_static_application">
+			<input message="urn:ApplicationToServerMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="tasks_list">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="task_info">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="task_remove">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="task_debian_install_packages">
+			<input message="urn:2Strings"/>
+			<output message="urn:String"/>
+		</operation>
+		
+		<operation name="task_debian_installable_application">
+			<input message="urn:2Strings"/>
+			<output message="urn:String"/>
+		</operation>
+		
+		<operation name="task_debian_upgrade">
+			<input message="urn:String"/>
+			<output message="urn:String"/>
+		</operation>
+		
+		<operation name="task_debian_server_replicate">
+			<input message="urn:2Strings"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="task_debian_application_install">
+			<input message="urn:ApplicationToServerMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="task_debian_application_remove">
+			<input message="urn:ApplicationToServerMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="applications_list">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="application_info">
+			<input message="urn:String"/>
+			<output message="urn:Application"/>
+		</operation>
+		
+		<operation name="application_remove">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="application_publish">
+			<input message="urn:application_publishMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="applications_remove_orphans">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="application_clone">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="application_icon_get">
+			<input message="urn:String"/>
+			<output message="urn:String"/>
+		</operation>
+		
+		<operation name="application_icon_set">
+			<input message="urn:application_icon_setMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="application_icon_getFromServer">
+			<input message="urn:ApplicationToServerMessage"/>
+			<output message="urn:String"/>
+		</operation>
+		
+		<operation name="application_icon_setFromServer">
+			<input message="urn:ApplicationToServerMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="application_static_add">
+			<input message="urn:application_static_addMessage"/>
+			<output message="urn:String"/>
+		</operation>
+		
+		<operation name="application_static_remove">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="application_static_removeIcon">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="application_static_modify">
+			<input message="urn:application_static_modifyMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="application_web_add">
+			<input message="urn:application_web_addMessage"/>
+			<output message="urn:String"/>
+		</operation>
+		
+		<operation name="default_browser_get">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="default_browser_set">
+			<input message="urn:2Strings"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="undefault_browser_set">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="applications_groups_list">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="applications_group_info">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="applications_group_add">
+			<input message="urn:applications_group_addMessage"/>
+			<output message="urn:String"/>
+		</operation>
+		
+		<operation name="applications_group_remove">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="applications_group_modify">
+			<input message="urn:applications_group_modifyMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="applications_group_add_application">
+			<input message="urn:ApplicationToGroupMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="applications_group_remove_application">
+			<input message="urn:ApplicationToGroupMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="mime_types_list">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="mime_type_info">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="application_add_mime_type">
+			<input message="urn:MimeTypeToApplicationMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="applications_remove_mime_type">
+			<input message="urn:MimeTypeToApplicationMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="users_list">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="users_list_partial">
+			<input message="urn:UsersPartialListRequest"/>
+			<output message="urn:UsersPartialListResponse"/>
+		</operation>
+		
+		<operation name="user_info">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="user_add">
+			<input message="urn:user_addMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="user_remove">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="user_modify">
+			<input message="urn:user_addMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="users_populate">
+			<input message="urn:2Strings"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="user_settings_set">
+			<input message="urn:user_settings_setMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="user_settings_remove">
+			<input message="urn:user_settings_removeMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="user_addsGroup_policy">
+			<input message="urn:UsersGroup_policyMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="user_removesGroup_policy">
+			<input message="urn:UsersGroup_policyMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="users_groups_list">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="users_groups_list_partial">
+			<input message="urn:UsersPartialListRequest"/>
+			<output message="urn:UsersPartialListResponse"/>
+		</operation>
+		
+		<operation name="users_group_info">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="user_addsGroup">
+			<input message="urn:user_addsGroupMessage"/>
+			<output message="urn:String"/>
+		</operation>
+		
+		<operation name="user_removesGroup">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="user_modifysGroup">
+			<input message="urn:user_modifysGroupMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="system_set_default_users_group">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="unsystem_set_default_users_group">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="users_group_dynamic_add">
+			<input message="urn:users_group_dynamic_addMessage"/>
+			<output message="urn:String"/>
+		</operation>
+		
+		<operation name="users_group_dynamic_modify">
+			<input message="urn:users_group_dynamic_modifyMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="users_group_dynamic_cached_add">
+			<input message="urn:users_group_dynamic_cached_addMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="users_group_dynamic_cached_set_schedule">
+			<input message="urn:users_group_dynamic_cached_set_schedule"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="users_group_settings_set">
+			<input message="urn:users_group_settings_setMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="users_group_settings_remove">
+			<input message="urn:users_group_settings_removeMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="user_addToGroup">
+			<input message="urn:UserToGroupMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="user_removeToGroup">
+			<input message="urn:UserToGroupMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="publication_add">
+			<input message="urn:PublicationMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="publication_remove">
+			<input message="urn:PublicationMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="shared_folders_list">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="shared_folder_info">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="shared_folder_add">
+			<input message="urn:2Strings"/>
+			<output message="urn:String"/>
+		</operation>
+		
+		<operation name="shared_folder_remove">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="shared_folder_rename">
+			<input message="urn:2Strings"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="shared_folder_add_group">
+			<input message="urn:GroupOnSharedFolderMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="shared_folder_remove_group">
+			<input message="urn:GroupOnSharedFolderMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="users_profiles_list">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="user_profile_info">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="user_addProfile">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="user_removeProfile">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="network_folder_remove">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="sessions_count">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="sessions_list">
+			<input message="urn:Integer"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="sessions_list_by_server">
+			<input message="urn:sessions_list_by_serverMessage"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="session_info">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="session_kill">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="session_simulate">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="log_preview">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="log_download">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="sessions_reports_list">
+			<input message="urn:2Integers"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="sessions_reports_list2">
+			<input message="urn:sessions_reports_list2Message"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="sessions_reports_list3">
+			<input message="urn:sessions_reports_list3Message"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="session_report_info">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="session_report_remove">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="servers_reports_list">
+			<input message="urn:2Integers"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="checkup">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="cleanup_liaisons">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="cleanup_preferences">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="news_list">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="news_info">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="news_modify">
+			<input message="urn:news_modifyMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="news_add">
+			<input message="urn:news_addMessage"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="news_remove">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+	</portType>
+	
+	<binding name="OvdAdminBinding" type="urn:OvdAdminPortType">
+		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="test_link_connected">
+			<soap:operation soapAction="urn:OvdAdmin#test_link_connected"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="getInitialConfiguration">
+			<soap:operation soapAction="urn:OvdAdmin#getInitialConfiguration"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="system_switch_maintenance">
+			<soap:operation soapAction="urn:OvdAdmin#system_switch_maintenance"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="administrator_password_set">
+			<soap:operation soapAction="urn:OvdAdmin#administrator_password_set"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="settings_get">
+			<soap:operation soapAction="urn:OvdAdmin#settings_get"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="settings_set">
+			<soap:operation soapAction="urn:OvdAdmin#settings_set"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="settings_domain_integration_preview">
+			<soap:operation soapAction="urn:OvdAdmin#settings_domain_integration_preview"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="settings_domain_integration_set">
+			<soap:operation soapAction="urn:OvdAdmin#settings_domain_integration_set"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_list">
+			<soap:operation soapAction="urn:OvdAdmin#servers_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="server_info">
+			<soap:operation soapAction="urn:OvdAdmin#server_info"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="server_remove">
+			<soap:operation soapAction="urn:OvdAdmin#server_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="server_register">
+			<soap:operation soapAction="urn:OvdAdmin#server_register"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="server_switch_maintenance">
+			<soap:operation soapAction="urn:OvdAdmin#server_switch_maintenance"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="server_set_available_sessions">
+			<soap:operation soapAction="urn:OvdAdmin#server_set_available_sessions"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="server_set_display_name">
+			<soap:operation soapAction="urn:OvdAdmin#server_set_display_name"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="server_unset_display_name">
+			<soap:operation soapAction="urn:OvdAdmin#server_unset_display_name"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="server_set_fqdn">
+			<soap:operation soapAction="urn:OvdAdmin#server_set_fqdn"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="server_set_external_name">
+			<soap:operation soapAction="urn:OvdAdmin#server_set_external_name"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="server_unset_external_name">
+			<soap:operation soapAction="urn:OvdAdmin#server_unset_external_name"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="server_set_rdp_port">
+			<soap:operation soapAction="urn:OvdAdmin#server_set_rdp_port"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="server_unset_rdp_port">
+			<soap:operation soapAction="urn:OvdAdmin#server_unset_rdp_port"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="server_role_enable">
+			<soap:operation soapAction="urn:OvdAdmin#server_role_enable"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="server_role_disable">
+			<soap:operation soapAction="urn:OvdAdmin#server_role_disable"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="server_add_static_application">
+			<soap:operation soapAction="urn:OvdAdmin#adddStaticApplicationOnServer"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="server_remove_static_application">
+			<soap:operation soapAction="urn:OvdAdmin#server_remove_static_application"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="tasks_list">
+			<soap:operation soapAction="urn:OvdAdmin#tasks_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="task_info">
+			<soap:operation soapAction="urn:OvdAdmin#task_info"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="task_remove">
+			<soap:operation soapAction="urn:OvdAdmin#task_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="task_debian_install_packages">
+			<soap:operation soapAction="urn:OvdAdmin#task_debian_install_packages"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="task_debian_installable_application">
+			<soap:operation soapAction="urn:OvdAdmin#task_debian_installable_application"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="task_debian_upgrade">
+			<soap:operation soapAction="urn:OvdAdmin#task_debian_upgrade"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="task_debian_server_replicate">
+			<soap:operation soapAction="urn:OvdAdmin#task_debian_server_replicate"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="task_debian_application_install">
+			<soap:operation soapAction="urn:OvdAdmin#task_debian_install_application"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="task_debian_application_remove">
+			<soap:operation soapAction="urn:OvdAdmin#task_debian_remove_application"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="applications_list">
+			<soap:operation soapAction="urn:OvdAdmin#applications_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="application_info">
+			<soap:operation soapAction="urn:OvdAdmin#application_info"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="application_remove">
+			<soap:operation soapAction="urn:OvdAdmin#application_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="application_publish">
+			<soap:operation soapAction="urn:OvdAdmin#application_publish"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="applications_remove_orphans">
+			<soap:operation soapAction="urn:OvdAdmin#applications_remove_orphans"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="application_clone">
+			<soap:operation soapAction="urn:OvdAdmin#application_clone"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="application_icon_get">
+			<soap:operation soapAction="urn:OvdAdmin#application_icon_get"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="application_icon_set">
+			<soap:operation soapAction="urn:OvdAdmin#application_icon_set"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="application_icon_getFromServer">
+			<soap:operation soapAction="urn:OvdAdmin#application_icon_getFromServer"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="application_icon_setFromServer">
+			<soap:operation soapAction="urn:OvdAdmin#application_icon_setFromServer"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="application_static_add">
+			<soap:operation soapAction="urn:OvdAdmin#application_static_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="application_static_remove">
+			<soap:operation soapAction="urn:OvdAdmin#application_static_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="application_static_removeIcon">
+			<soap:operation soapAction="urn:OvdAdmin#application_static_removeIcon"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="application_static_modify">
+			<soap:operation soapAction="urn:OvdAdmin#application_static_modify"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="application_web_add">
+			<soap:operation soapAction="urn:OvdAdmin#application_web_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="default_browser_get">
+			<soap:operation soapAction="urn:OvdAdmin#default_browser_get"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="default_browser_set">
+			<soap:operation soapAction="urn:OvdAdmin#default_browser_set"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="undefault_browser_set">
+			<soap:operation soapAction="urn:OvdAdmin#undefault_browser_set"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="applications_groups_list">
+			<soap:operation soapAction="urn:OvdAdmin#applications_groups_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="applications_group_info">
+			<soap:operation soapAction="urn:OvdAdmin#applications_group_info"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="applications_group_add">
+			<soap:operation soapAction="urn:OvdAdmin#applications_group_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="applications_group_remove">
+			<soap:operation soapAction="urn:OvdAdmin#applications_group_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="applications_group_modify">
+			<soap:operation soapAction="urn:OvdAdmin#applications_group_modify"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="applications_group_add_application">
+			<soap:operation soapAction="urn:OvdAdmin#applications_group_add_application"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="applications_group_remove_application">
+			<soap:operation soapAction="urn:OvdAdmin#applications_group_remove_application"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="mime_types_list">
+			<soap:operation soapAction="urn:OvdAdmin#mime_types_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="mime_type_info">
+			<soap:operation soapAction="urn:OvdAdmin#mime_type_info"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="application_add_mime_type">
+			<soap:operation soapAction="urn:OvdAdmin#application_add_mime_type"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="applications_remove_mime_type">
+			<soap:operation soapAction="urn:OvdAdmin#applications_remove_mime_type"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="users_list">
+			<soap:operation soapAction="urn:OvdAdmin#users_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="users_list_partial">
+			<soap:operation soapAction="urn:OvdAdmin#users_list_partial"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="user_info">
+			<soap:operation soapAction="urn:OvdAdmin#user_info"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="user_add">
+			<soap:operation soapAction="urn:OvdAdmin#user_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="user_remove">
+			<soap:operation soapAction="urn:OvdAdmin#user_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="user_modify">
+			<soap:operation soapAction="urn:OvdAdmin#user_modify"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="users_populate">
+			<soap:operation soapAction="urn:OvdAdmin#users_populate"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="user_settings_set">
+			<soap:operation soapAction="urn:OvdAdmin#user_settings_set"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="user_settings_remove">
+			<soap:operation soapAction="urn:OvdAdmin#user_settings_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="users_groups_list">
+			<soap:operation soapAction="urn:OvdAdmin#users_groups_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="users_groups_list_partial">
+			<soap:operation soapAction="urn:OvdAdmin#users_groups_list_partial"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="users_group_info">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_info"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="user_addsGroup">
+			<soap:operation soapAction="urn:OvdAdmin#user_addsGroup"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="user_removesGroup">
+			<soap:operation soapAction="urn:OvdAdmin#user_removesGroup"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="user_modifysGroup">
+			<soap:operation soapAction="urn:OvdAdmin#user_modifysGroup"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="system_set_default_users_group">
+			<soap:operation soapAction="urn:OvdAdmin#system_set_default_users_group"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="unsystem_set_default_users_group">
+			<soap:operation soapAction="urn:OvdAdmin#unsystem_set_default_users_group"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="users_group_dynamic_add">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_dynamic_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="users_group_dynamic_modify">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_dynamic_modify"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="users_group_dynamic_cached_add">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_dynamic_cached_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="users_group_dynamic_cached_set_schedule">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_dynamic_cached_set_schedule"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="users_group_settings_set">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_settings_set"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="users_group_settings_remove">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_settings_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="user_addsGroup_policy">
+			<soap:operation soapAction="urn:OvdAdmin#user_addsGroup_policy"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="user_removesGroup_policy">
+			<soap:operation soapAction="urn:OvdAdmin#user_removesGroup_policy"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="user_addToGroup">
+			<soap:operation soapAction="urn:OvdAdmin#user_addToGroup"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="user_removeToGroup">
+			<soap:operation soapAction="urn:OvdAdmin#user_removeToGroup"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="publication_add">
+			<soap:operation soapAction="urn:OvdAdmin#publication_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="publication_remove">
+			<soap:operation soapAction="urn:OvdAdmin#publication_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="shared_folders_list">
+			<soap:operation soapAction="urn:OvdAdmin#shared_folders_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="shared_folder_info">
+			<soap:operation soapAction="urn:OvdAdmin#shared_folder_info"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="shared_folder_add">
+			<soap:operation soapAction="urn:OvdAdmin#shared_folder_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="shared_folder_remove">
+			<soap:operation soapAction="urn:OvdAdmin#shared_folder_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="shared_folder_rename">
+			<soap:operation soapAction="urn:OvdAdmin#shared_folder_rename"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="shared_folder_add_group">
+			<soap:operation soapAction="urn:OvdAdmin#shared_folder_add_group"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="shared_folder_remove_group">
+			<soap:operation soapAction="urn:OvdAdmin#shared_folder_remove_group"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="users_profiles_list">
+			<soap:operation soapAction="urn:OvdAdmin#users_profiles_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="user_profile_info">
+			<soap:operation soapAction="urn:OvdAdmin#user_profile_info"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="user_addProfile">
+			<soap:operation soapAction="urn:OvdAdmin#user_addProfile"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="user_removeProfile">
+			<soap:operation soapAction="urn:OvdAdmin#user_removeProfile"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="network_folder_remove">
+			<soap:operation soapAction="urn:OvdAdmin#network_folder_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="sessions_count">
+			<soap:operation soapAction="urn:OvdAdmin#sessions_count"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="sessions_list">
+			<soap:operation soapAction="urn:OvdAdmin#sessions_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="sessions_list_by_server">
+			<soap:operation soapAction="urn:OvdAdmin#sessions_list_by_server"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="session_info">
+			<soap:operation soapAction="urn:OvdAdmin#session_info"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="session_kill">
+			<soap:operation soapAction="urn:OvdAdmin#session_kill"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="session_simulate">
+			<soap:operation soapAction="urn:OvdAdmin#session_simulate"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="log_preview">
+			<soap:operation soapAction="urn:OvdAdmin#log_preview"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="log_download">
+			<soap:operation soapAction="urn:OvdAdmin#log_download"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="sessions_reports_list">
+			<soap:operation soapAction="urn:OvdAdmin#sessions_reports_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="sessions_reports_list2">
+			<soap:operation soapAction="urn:OvdAdmin#sessions_reports_list2"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="sessions_reports_list3">
+			<soap:operation soapAction="urn:OvdAdmin#sessions_reports_list3"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="session_report_info">
+			<soap:operation soapAction="urn:OvdAdmin#getSessionsReport"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="session_report_remove">
+			<soap:operation soapAction="urn:OvdAdmin#session_report_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_reports_list">
+			<soap:operation soapAction="urn:OvdAdmin#servers_reports_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="checkup">
+			<soap:operation soapAction="urn:OvdAdmin#checkup"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="cleanup_liaisons">
+			<soap:operation soapAction="urn:OvdAdmin#cleanup_liaisons"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="cleanup_preferences">
+			<soap:operation soapAction="urn:OvdAdmin#cleanup_preferences"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="news_list">
+			<soap:operation soapAction="urn:OvdAdmin#news_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="news_info">
+			<soap:operation soapAction="urn:OvdAdmin#news_info"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="news_modify">
+			<soap:operation soapAction="urn:OvdAdmin#news_modify"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="news_add">
+			<soap:operation soapAction="urn:OvdAdmin#news_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="news_remove">
+			<soap:operation soapAction="urn:OvdAdmin#news_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+	</binding>
+	
+	<service name="OvdAdminService">
+		<port name="OvdAdminPort" binding="OvdAdminBinding">
+			<soap:address location="localhost"/>
+		</port>
+	</service>
+</definitions>

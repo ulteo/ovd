@@ -1,0 +1,56 @@
+#!/bin/sh
+
+# Copyright (C) 2010-2012 Ulteo SAS
+# http://www.ulteo.com
+# Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2012
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+unset LANG
+args="--without-libchart"
+
+# get module
+module=ovd-administration-console
+set -- $(getopt -u -l ha m: "$@")
+[ $# -lt 1 ] && exit 1
+while [ $# -gt 0 ]
+do
+    case "$1" in
+        -m) module="$2" ; shift ;;
+        --ha) args+=" --with-ha" ;;
+        --) shift; break ;;
+        *)  break ;;
+    esac
+    shift
+done
+
+# get version
+if [ -n "$OVD_VERSION" ]; then
+    version="$OVD_VERSION"
+else
+    if [ -d .svn ]; then
+      revision=$(svnversion -c $SVN_DIR | cut -d':' -f2)
+    else
+      revision=0
+    fi
+    version="99.99.svn$revision"
+fi
+
+sed -e "s/@MODULE@/${module}/g" \
+    -e "s/@VERSION@/${version}/g" \
+    configure.ac.in > configure.ac
+
+autoreconf -vfi && ./configure $args

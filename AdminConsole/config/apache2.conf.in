@@ -1,0 +1,11 @@
+# Ulteo session manager admin alias
+
+Alias /ovd/admin @DATADIR@/ulteo/administration_console
+<Directory @DATADIR@/ulteo/administration_console>
+    Options FollowSymLinks
+    AllowOverride None
+    Order allow,deny
+    allow from all
+    DirectoryIndex index.php
+    php_admin_flag magic_quotes_gpc Off
+</Directory>

@@ -1,0 +1,4 @@
+Template: ulteo-ovd-administration-console/session_manager_host
+Type: string
+Default: 127.0.0.1
+Description: IP address/FQDN of the Session Manager
