@@ -28,7 +28,7 @@ if (! checkAuthorization('viewConfiguration'))
 $sep = '___';
 
 if (isset($_POST['submit'])) {
-	if (! checkAuthorization('viewConfiguration'))
+	if (! checkAuthorization('manageConfiguration'))
 		redirect();
 
 	// saving preferences
