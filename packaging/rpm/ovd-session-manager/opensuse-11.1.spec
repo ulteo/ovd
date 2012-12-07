@@ -30,7 +30,6 @@ Distribution: OpenSUSE 11.1
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Buildrequires: intltool
 Buildroot: %{buildroot}
 
 %description

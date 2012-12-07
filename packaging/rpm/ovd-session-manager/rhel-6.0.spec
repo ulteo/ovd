@@ -30,7 +30,6 @@ Distribution: RHEL 6.0
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Buildrequires: intltool
 
 %description
 This source package provides the Session Manager web services for the Ulteo

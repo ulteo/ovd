@@ -30,7 +30,6 @@ Distribution: SLES 11 SP1
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Buildrequires: intltool
 Buildroot: %{buildroot}
 
 %description

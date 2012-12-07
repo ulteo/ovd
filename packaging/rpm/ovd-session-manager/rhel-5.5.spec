@@ -30,7 +30,6 @@ Distribution: RHEL 5.5
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Buildrequires: intltool
 Buildroot: %{buildroot}
 
 %description

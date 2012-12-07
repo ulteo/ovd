@@ -30,7 +30,6 @@ Distribution: OpenSUSE 11.2
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Buildrequires: intltool
 
 %description
 This source package provides the Session Manager web services for the Ulteo
