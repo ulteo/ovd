@@ -42,7 +42,7 @@ Open Virtual Desktop.
 
 Summary: Ulteo Open Virtual Desktop - Session Manager
 Group: Applications/System
-Requires: ulteo-ovd-l10n, php, php-ldap, php-mysql, php-mbstring, php-pear, php-xml, php-libchart, php-imagick, curl, openssl, mod_ssl
+Requires: ulteo-ovd-l10n, php, php-ldap, php-mysql, php-mbstring, php-pear, php-xml, php-libchart, php-imagick, php-soap, curl, openssl, mod_ssl
 
 %description -n ulteo-ovd-session-manager
 This package provides the Session Manager web services for the Ulteo

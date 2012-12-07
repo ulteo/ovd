@@ -19,6 +19,7 @@ Depends:
  php-pear,
  php5-imagick,
  php-libchart,
+ php-soap,
  curl,
  openssl
 Suggests: mysql-server, mail-transport-agent

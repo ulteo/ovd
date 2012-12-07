@@ -27,6 +27,8 @@ SUBDIRS += ha
 endif
 
 scripts_DATA = actions.php \
+               api.php \
+               api.wsdl \
                applications.php \
                applications_static.php \
                appsgroup.php \
