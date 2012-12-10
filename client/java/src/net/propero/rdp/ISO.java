@@ -44,7 +44,7 @@ public abstract class ISO {
 	@SuppressWarnings("unused")
 	private Common common = null;
 	private TLSLayer tlsLayer;
-	private int totalSend = 0;
+	private int totalReceived = 0;
 	private int baseRTT = 0;
 	private int bandwidth = 0;
 	private int averageRTT = 0;
@@ -77,7 +77,7 @@ public abstract class ISO {
 		dump = new HexDump();
 		this.opt = opt_;
 		this.common = common_;
-		this.totalSend = 0;
+		this.totalReceived = 0;
 	}
 
 	/**
@@ -209,7 +209,6 @@ public abstract class ISO {
 		buffer.setBigEndian16(0); // source reference should be a reasonable address we use 0
 		buffer.set8(0); //service class
 		buffer.copyToByteArray(packet, 0, 0, packet.length);
-		this.totalSend += packet.length;
 		out.write(packet);
 		out.flush();
 	}
@@ -238,7 +237,6 @@ public abstract class ISO {
 			buffer.set8(EOT);
 			buffer.copyToByteArray(packet, 0, 0, buffer.getEnd());
 			if(this.opt.debug_hexdump) HexDump.encode(packet, "SEND"/*System.out*/);
-			this.totalSend += packet.length;
 			out.write(packet);
 			out.flush();
 		}
@@ -257,6 +255,9 @@ public abstract class ISO {
 		RdpPacket_Localised buffer = receiveMessage(type, true);
 		
 		if(buffer == null) return null;
+
+		totalReceived += buffer.size();
+		
 		if (save_version && this.opt.server_rdp_version != 3)
 			return buffer;
 		
@@ -468,11 +469,11 @@ public abstract class ISO {
 	}
 		
 	public void resetCounter() {
-		this.totalSend = 0;
+		this.totalReceived = 0;
 	}
 	
-	public int getTotalSend() {
-		return this.totalSend;
+	public int getTotalReceived() {
+		return this.totalReceived;
 	}
 	
 	public void updateRTT(int baseRTT, int bandwidth, int averageRTT) {

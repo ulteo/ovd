@@ -131,7 +131,7 @@ public class EMTChannel extends VChannel {
 			break;
 		
 		case RDP_BW_SESSION_STOP:
-			this.dataCount = this.common.iso.getTotalSend();
+			this.dataCount = this.common.iso.getTotalReceived();
 			this.stopTime = Calendar.getInstance().getTimeInMillis();
 			this.sendMesureResult(sequenceNumber);
 			break;
