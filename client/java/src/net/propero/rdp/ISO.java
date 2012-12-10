@@ -48,6 +48,7 @@ public abstract class ISO {
 	private int baseRTT = 0;
 	private int bandwidth = 0;
 	private int averageRTT = 0;
+	private boolean RTTEnable = false;
 	
 	/* this for the ISO Layer */
 	private static final int CONNECTION_REQUEST = 0xE0;
@@ -256,7 +257,8 @@ public abstract class ISO {
 		
 		if(buffer == null) return null;
 
-		totalReceived += buffer.size();
+		if (this.RTTEnable);
+			this.totalReceived += buffer.size();
 		
 		if (save_version && this.opt.server_rdp_version != 3)
 			return buffer;
@@ -469,6 +471,7 @@ public abstract class ISO {
 	}
 		
 	public void resetCounter() {
+		this.RTTEnable = true;
 		this.totalReceived = 0;
 	}
 	
