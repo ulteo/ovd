@@ -28,13 +28,18 @@ import time
 import logging
 import gettext
 from optparse import OptionParser
+import sys
 
 from ovd import OvdException
 from ovd import OvdExceptionNotAvailable
 from ovd import OvdExceptionInternalError
 from ovd import Dialog
 
-_ = gettext.translation("uovdclient").lgettext
+try:
+	_ = gettext.translation("uovdclient").lgettext
+except:
+	print >>sys.stderr, "Unable to load translation"
+	_ = lambda(string): string
 
 
 tr_codes = {
