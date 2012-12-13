@@ -130,7 +130,7 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, 
 	
 	@Override
 	public void focusGained(FocusEvent e) {
-		if (OSTools.isWindows())
+		if (! this.input.supportIME())
 			((sun.awt.im.InputContext)this.getInputContext()).disableNativeIM();
 
 		if (SeamlessFrame.focusManager != null)

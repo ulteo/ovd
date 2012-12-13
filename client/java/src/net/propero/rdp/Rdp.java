@@ -85,6 +85,8 @@ public class Rdp {
 
     private static final int RDP_DATA_PDU_FONT2 = 39;
 
+    private static final int RDP_DATA_PDU_SET_IME_STATUS = 45;
+
     private static final int PDUTYPE2_SET_ERROR_INFO_PDU = 47;
 
     // Control PDU types
@@ -300,6 +302,21 @@ public class Rdp {
 	then this value SHOULD be ignored.
      */
     public static final int CONNECTION_TYPE_AUTODETECT =	0x07;
+
+    /* RDP IME Status PDU constants */
+    public static final int IME_STATE_CLOSED =       0x000;
+    public static final int IME_STATE_OPEN =         0x001;
+    public static final int IME_CMODE_NATIVE =       0x001; // ! NATIVE = Alphanum
+    public static final int IME_CMODE_KATAKANA =     0x002; // ! KATAKANA = Hiragana
+    public static final int IME_CMODE_FULLSHAPE =    0x008; // ! FULLSHAPE = half-width
+    public static final int IME_CMODE_ROMAN =        0x010; // Roman input
+    public static final int IME_CMODE_CHARCODE =     0x020; // Character-code input
+    public static final int IME_CMODE_HANJACONVERT = 0x040; // Hanja conversion enabled
+    public static final int IME_CMODE_SOFTKBD =      0x080; // On-screen keyboard enabled
+    public static final int IME_CMODE_NOCONVERSION = 0x100; // IME conversion is inactive
+    public static final int IME_CMODE_EUDC =         0x200; // End-User Defined Character mode
+    public static final int IME_CMODE_SYMBOL =       0x400; // Symbol conversion mode
+    public static final int IME_CMODE_FIXED =        0x800; // Fixed conversion mode
 
     protected Secure SecureLayer = null;
 
@@ -1164,6 +1181,9 @@ public class Rdp {
             logger.debug("User logged on");
             this.opt.loggedon = true;
             break;
+        case (Rdp.RDP_DATA_PDU_SET_IME_STATUS):
+            this.processImeStatus(data);
+            break;
         case (Rdp.PDUTYPE2_SET_ERROR_INFO_PDU):
             /*
              * Normally received when user logs out or disconnects from a
@@ -1752,6 +1772,30 @@ public class Rdp {
 
         default:
             break;
+        }
+    }
+
+    private void processImeStatus(RdpPacket_Localised data) {
+        int unitId = data.getLittleEndian16();
+        int imeOpen = data.getLittleEndian32();
+        int imeConvMode = data.getLittleEndian32();
+        
+        if(imeConvMode == IME_CMODE_NATIVE) {
+            this.opt.enabledIME = true;
+            try {
+                ((sun.awt.im.InputContext)surface.getInputContext()).setCompositionEnabled(this.opt.enabledIME);
+            } catch(Exception e) {
+                System.err.println("IME : "+e.getMessage());
+                return;
+            }
+        } else {
+            this.opt.enabledIME = false;
+            try {
+                ((sun.awt.im.InputContext)surface.getInputContext()).setCompositionEnabled(this.opt.enabledIME);
+            } catch(Exception e) {
+                System.err.println("IME : "+e.getMessage());
+                return;
+            }
         }
     }
 

@@ -250,6 +250,14 @@ public abstract class Input {
 		this.keystrokesList.remove(keystroke);
 		return true;
 	}
+	
+	public boolean supportIME() {
+		return this.opt.supportIME;
+	}
+
+	public boolean enabledIME() {
+		return this.opt.enabledIME;
+	}
 
 	/**
      * Send a sequence of key actions to the server
@@ -324,7 +332,7 @@ public abstract class Input {
      * Check locking key states.
      */
     public void gainedFocus() {
-		if (OSTools.isWindows())
+		if (! this.supportIME())
 			((sun.awt.im.InputContext)canvas.getInputContext()).disableNativeIM();
     	
 		doLockKeys(); // ensure lock key states are correct
