@@ -255,6 +255,9 @@ class OvdClientGui:
 		conf["language"] = self.options.language
 		conf["keyboard"] = self.options.keyboard
 		
+		if self.options.drives:
+			conf["drives"] = self.options.drives
+		
 		if conf["host"] == "":
 			error("You must specify the host field!")
 			return
@@ -295,6 +298,7 @@ if __name__ == "__main__":
 	parser.add_option("-g", "--geometry", action="store", dest="geometry", default=None, help="Set session geometry ex: 800x600")
 	parser.add_option("-x", "--freerdp", action="store_const", dest="client", const="freerdp", help="Use freerdp client")
 	parser.add_option("-u", "--username", action="store", dest="username", default="", help="Default username")
+	parser.add_option("-d", "--drive", action="append", nargs=2, dest="drives", help="Add a redirected drive to the session [name] [path]")
 	
 	lang = locale.getdefaultlocale()
 	if lang:

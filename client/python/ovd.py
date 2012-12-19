@@ -430,9 +430,11 @@ class Dialog:
 					buf = buf[1]
 					if buf not in params["printers"]:
 						params["printers"].append(buf)
-				
-		params["drives"] = []
-		if self.sessionProperties["redirect_client_drives"] in ("full", ):
+		
+		if not params.has_key("drives"):
+			params["drives"] = []
+		
+		if self.sessionProperties["redirect_client_drives"] in ("full", "partial"):
 			rep = self.__get_user_dir("XDG_DESKTOP_DIR")
 			if rep:
 				params["drives"].append((os.path.basename(rep), rep))
@@ -441,6 +443,7 @@ class Dialog:
 			if rep:
 				params["drives"].append((os.path.basename(rep), rep))
 			
+		if self.sessionProperties["redirect_client_drives"] in ("full", ):
 			f = open("/proc/mounts", "r")
 			for line in f.readlines():
 				parts = line.split(" ");
