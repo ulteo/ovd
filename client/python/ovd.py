@@ -75,6 +75,9 @@ class Dialog:
 		doc = Document()
 		sessionNode = doc.createElement("session")
 		sessionNode.setAttribute("mode", "desktop")
+		if self.conf.has_key("language") and self.conf["language"]:
+			sessionNode.setAttribute("language", self.conf["language"])
+		
 		userNode = doc.createElement("user")
 		userNode.setAttribute("login", self.conf["login"])
 		userNode.setAttribute("password", self.conf["password"])
@@ -266,6 +269,10 @@ class Dialog:
 		cmd.append("-T")
 		cmd.append("\"Ulteo OVD - %s\""%(params["user_dn"]))
 		
+		if self.conf.has_key("keyboard") and self.conf["keyboard"]:
+			cmd.append("-k")
+			cmd.append(self.conf["keyboard"])
+		
 		if params["multimedia"]:
 			cmd.append("-r")
 			cmd.append("sound:local")
@@ -301,6 +308,10 @@ class Dialog:
 		#cmd.append("-z")
 		cmd.append("-T")
 		cmd.append("\"Ulteo OVD - %s\""%(params["user_dn"]))
+		
+		if self.conf.has_key("keyboard") and self.conf["keyboard"]:
+			cmd.append("-k")
+			cmd.append(self.conf["keyboard"])
 		
 		if params["multimedia"]:
 			 cmd.append("--plugin")

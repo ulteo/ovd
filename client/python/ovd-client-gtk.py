@@ -29,6 +29,7 @@ import logging
 import gettext
 from optparse import OptionParser
 import sys
+import locale
 
 from ovd import OvdException
 from ovd import OvdExceptionNotAvailable
@@ -183,7 +184,7 @@ class OvdClientGui:
 	def __init__(self, options):
 		self.options = options
 		self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-		self.window.set_title("OVD Native Client")
+		self.window.set_title("OVD Light Client")
 		
 		table = gtk.Table(4, 2, True)
 		self.window.add(table)
@@ -251,6 +252,8 @@ class OvdClientGui:
 		conf["login"] = self.user.get_text()
 		conf["password"] = self.passwd.get_text()
 		conf["client"] = self.options.client
+		conf["language"] = self.options.language
+		conf["keyboard"] = self.options.keyboard
 		
 		if conf["host"] == "":
 			error("You must specify the host field!")
@@ -292,6 +295,13 @@ if __name__ == "__main__":
 	parser.add_option("-g", "--geometry", action="store", dest="geometry", default=None, help="Set session geometry ex: 800x600")
 	parser.add_option("-x", "--freerdp", action="store_const", dest="client", const="freerdp", help="Use freerdp client")
 	parser.add_option("-u", "--username", action="store", dest="username", default="", help="Default username")
+	
+	lang = locale.getdefaultlocale()
+	if lang:
+		lang = lang[0]
+	
+	parser.add_option("-l", "--language", action="store", dest="language", default=lang, help="Session language")
+	parser.add_option("-k", "--keyboard", action="store", dest="keyboard", default=None, help="Session keyboard")
 	
 	(options, args) = parser.parse_args()
 	
