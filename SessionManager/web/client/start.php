@@ -1,12 +1,12 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  * Author David LECHEVALIER <david@ulteo.com> 2012
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012-2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -519,6 +519,34 @@ if (! isset($old_session_id)) {
 			}
 			
 			$session_node->appendChild($sharedfolder_node);
+		}
+
+		// Pass custom shared folders to the server
+		foreach (Plugin::dispatch('getSharedFolders', $server) as $plugin=>$results) {
+			foreach ($results as $sharedfolder) {
+				$sharedfolder_ok = true;
+				$sharedfolder_node = $dom->createElement('sharedfolder');
+				foreach (array('uri', 'name', 'rid') as $key) {
+					if (array_key_exists($key, $sharedfolder)) {
+						$sharedfolder_node->setAttribute($key, $sharedfolder[$key]);
+					} else {
+						Logger::error('main', 'SharedFolder is missing '.$key.' parameter in '.$plugin);
+						$sharedfolder_ok = false;
+					}
+				}
+				foreach (array('login', 'password') as $key) {
+					if (array_key_exists($key, $sharedfolder)) {
+						$sharedfolder_node->setAttribute($key, $sharedfolder[$key]);
+					}
+				}
+				if (($have_login = array_key_exists('login', $sharedfolder)) != array_key_exists('password', $sharedfolder) && $have_login) {
+					Logger::error('main', 'SharedFolder login and password are both required if one is present in '.$plugin);
+					$sharedfolder_ok = false;
+				}
+				if ($sharedfolder_ok) {
+					$session_node->appendChild($sharedfolder_node);
+				}
+			}
 		}
 
 		foreach ($session->getPublishedApplications() as $application) {
