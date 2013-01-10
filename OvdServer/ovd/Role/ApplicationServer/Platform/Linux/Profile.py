@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010-2012 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012, 2013
 # Author David LECHEVALIER <david@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
@@ -123,8 +123,12 @@ class Profile(AbstractProfile):
 		
 		for sharedFolder in self.sharedFolders:
 			dest = os.path.join(self.MOUNT_POINT, self.session.id, "sharedFolder_"+ hashlib.md5(sharedFolder["uri"]).hexdigest())
-			if not System.mount_point_exist(dest):
-				os.makedirs(dest)
+			i = 0
+			while System.mount_point_exist(dest):
+				dest = os.path.join(self.MOUNT_POINT, self.session.id, "sharedFolder_"+ hashlib.md5(sharedFolder["server"]+ sharedFolder["dir"]).hexdigest()  + str(random.random()))
+				i += 1
+ 			
+			os.makedirs(dest)
 			
 			u = urlparse.urlparse(sharedFolder["uri"])
 			if u.scheme == "cifs":
