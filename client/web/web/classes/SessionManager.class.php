@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2011-2012 Ulteo SAS
+ * Copyright (C) 2011-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com> 2011 
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -105,5 +105,9 @@ class SessionManager {
 	
 	public function set_base_url($base_url_) {
 		$this->base_url = $base_url_;
+	}
+	
+	public function get_cookies() {
+		return $this->cookies;
 	}
 }

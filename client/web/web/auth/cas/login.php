@@ -1,4 +1,24 @@
 <?php
+/**
+ * Copyright (C) 2013 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ **/
+
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 function finish() {
@@ -32,19 +52,24 @@ $CAS_callback_url .= $path.'/callback.php';
 
 require_once('CAS.php');
 
-if (array_key_exists('session_var', $_SESSION['ovd-client']['sessionmanager']) && array_key_exists('session_id', $_SESSION['ovd-client']['sessionmanager'])) {
+if (array_key_exists('sessionmanager', $_SESSION['ovd-client'])) {
 	if (! array_key_exists('phpCAS', $_SESSION))
 		$_SESSION['phpCAS'] = array();
 
 	if (! array_key_exists('service_cookies', $_SESSION['phpCAS']))
 		$_SESSION['phpCAS']['service_cookies'] = array();
 
-	if (! array_key_exists(0, $_SESSION['phpCAS']['service_cookies'])) {
-		$_SESSION['phpCAS']['service_cookies'][0]['domain'] = $_SERVER['SERVER_ADDR'];
-		$_SESSION['phpCAS']['service_cookies'][0]['path'] = '/';
-		$_SESSION['phpCAS']['service_cookies'][0]['secure'] = false;
-		$_SESSION['phpCAS']['service_cookies'][0]['name'] = $_SESSION['ovd-client']['sessionmanager']['session_var'];
-		$_SESSION['phpCAS']['service_cookies'][0]['value'] = $_SESSION['ovd-client']['sessionmanager']['session_id'];
+	$sm = $_SESSION['ovd-client']['sessionmanager'];
+	foreach($sm->get_cookies() as $k => $v) {
+		$cookie = array(
+			'domain' => parse_url($sm->get_base_url(), PHP_URL_HOST),
+			'path' => '/',
+			'secure' => false,
+			'name' => $k,
+			'value' => $v,
+		);
+		
+		$_SESSION['phpCAS']['service_cookies'][]= $cookie;
 	}
 }
 
