@@ -73,7 +73,19 @@ if (array_key_exists('sessionmanager', $_SESSION['ovd-client'])) {
 	}
 }
 
-phpCAS::proxy(CAS_VERSION_2_0, parse_url($CAS_server_url, PHP_URL_HOST), parse_url($CAS_server_url, PHP_URL_PORT), parse_url($CAS_server_url, PHP_URL_PATH), false);
+$port = parse_url($CAS_server_url, PHP_URL_PORT);
+if (is_null($port)) {
+	if (parse_url($CAS_server_url, PHP_URL_SCHEME) == 'https') {
+		$port = 443;
+	}
+	else {
+		$port = 80;
+	}
+}
+
+$path = (!parse_url($CAS_server_url, PHP_URL_PATH)) ? '' : parse_url($CAS_server_url, PHP_URL_PATH);
+
+phpCAS::proxy(CAS_VERSION_2_0, parse_url($CAS_server_url, PHP_URL_HOST), $port, $path, false);
 
 phpCAS::setNoCasServerValidation();
 

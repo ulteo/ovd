@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,9 +39,21 @@ class AuthMethod_CAS extends AuthMethod {
 			Logger::error('main', 'AuthMethod_CAS::get_login() - Unable to find CAS server url in Preferences');
 			return NULL;
 		}
+		
+		$port = parse_url($CAS_server_url, PHP_URL_PORT);
+		if (is_null($port)) {
+			if (parse_url($CAS_server_url, PHP_URL_SCHEME) == 'https') {
+				$port = 443;
+			}
+			else {
+				$port = 80;
+			}
+		}
+		
+		$path = (!parse_url($CAS_server_url, PHP_URL_PATH)) ? '' : parse_url($CAS_server_url, PHP_URL_PATH);
+		phpCAS::client(CAS_VERSION_2_0, parse_url($CAS_server_url, PHP_URL_HOST), $port, $path, false);
+		Logger::debug('main', 'AuthMethod_CAS::get_login() - Parsing URL - Host:"'.parse_url($CAS_server_url, PHP_URL_HOST).'" Port:"'.$port.'" Path:"'.$path.'"');
 
-		phpCAS::client(CAS_VERSION_2_0, parse_url($CAS_server_url, PHP_URL_HOST), parse_url($CAS_server_url, PHP_URL_PORT), parse_url($CAS_server_url, PHP_URL_PATH), false);
-		Logger::debug('main', 'AuthMethod_CAS::get_login() - Parsing URL - Host:"'.parse_url($CAS_server_url, PHP_URL_HOST).'" Port:"'.parse_url($CAS_server_url, PHP_URL_PORT).'" Path:"'.parse_url($CAS_server_url, PHP_URL_PATH).'"');
 		phpCAS::setNoCasServerValidation();
 
 		if (! phpCAS::forceAuthentication()) {
