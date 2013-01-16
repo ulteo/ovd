@@ -236,8 +236,12 @@ class Profile(AbstractProfile):
 				if p.returncode != 0:
 					Logger.error("Profile sharedFolder umount dir failed")
 					Logger.error("Profile sharedFolder umount dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
+					continue
 				
-				os.rmdir(sharedFolder["mountdest"])
+				try:
+					os.rmdir(sharedFolder["mountdest"])
+				except OSError, e:
+					Logger.error("Unable to delete mount point (%s): %s"%(sharedFolder["mountdest"], str(e)))
 		
 		for fname in ("davfs.conf", "davfs.secret"):
 			path = os.path.join(self.cifs_dst, fname)
