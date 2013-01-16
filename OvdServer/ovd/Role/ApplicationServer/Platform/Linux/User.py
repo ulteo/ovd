@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2012 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2012
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2012, 2013
 # Author David LECHEVALIER <david@ulteo.com> 2011, 2012
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
@@ -29,6 +29,7 @@ import xrdp
 
 from ovd.Logger import Logger
 from ovd.Platform.System import System
+from ovd.Platform.MountPoint import MountPoint
 from ovd.Role.ApplicationServer.User import User as AbstractUser
 from ovd.Role.ApplicationServer.Config import Config
 
@@ -164,7 +165,12 @@ class User(AbstractUser):
 	def destroy(self):
 		lock = FileLock("/tmp/user.lock")
 		
-		cmd = "userdel --force  --remove %s"%(System.local_encode(self.name))
+		arg_remove = ""
+		if self.check_remaining_mount_points():
+			arg_remove = "--remove"
+		
+		cmd = "userdel --force %s %s"%(arg_remove, System.local_encode(self.name))
+		
 		retry = 5
 		while retry !=0:
 			lock.acquire()
@@ -187,3 +193,27 @@ class User(AbstractUser):
 				return False
 		
 		return True
+	
+	
+	def check_remaining_mount_points(self):
+		try:
+			user = pwd.getpwnam(self.name)
+		except KeyError:
+			return False
+		
+		mount_points = MountPoint.get_list(user.pw_dir)
+		if mount_points is None:
+			return False
+		
+		success = True
+		for d in mount_points:
+			Logger.warn("Remaining mount point '%s'"%(d))
+			cmd = 'umount "%s"'%(System.local_encode(d))
+			
+			p = System.execute(cmd)
+			if p.returncode != 0:
+				Logger.error("Unable to unmount remaining mount point, home dir %s won't be purged"%(user.pw_dir))
+				Logger.debug('umount command "%s" return: %s'%(cmd,  p.stdout.read()))
+				success = False
+		
+		return success
