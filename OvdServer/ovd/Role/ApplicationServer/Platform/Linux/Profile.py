@@ -318,14 +318,17 @@ class Profile(AbstractProfile):
 	
 	@staticmethod
 	def getRsyncMethod(src, dst, owner=False):
-		grep_cmd = " | ".join(['grep -v "/%s$"'%(word) for word in Profile.rsyncBlacklist()])
-		find_cmd = 'find "%s" -maxdepth 1 -name ".*" | %s'%(src, grep_cmd)
-		
 		args = ["-rltD", "--safe-links"]
 		if owner:
 			args.append("-o")
 		
-		return 'rsync %s $(%s) "%s/"'%(" ".join(args), find_cmd, dst)
+		for p in Profile.rsyncBlacklist():
+			args.append('--exclude="%s"'%p)
+		
+		args.append('--include="/.**"')
+		args.append('--exclude="/**"')
+		
+		return 'rsync %s "%s/" "%s/"'%(" ".join(args), src, dst)
 	
 	
 	@staticmethod
