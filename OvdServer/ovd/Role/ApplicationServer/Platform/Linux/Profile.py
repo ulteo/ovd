@@ -30,6 +30,7 @@ import urllib
 import urlparse
 
 from ovd.Logger import Logger
+from ovd.Role.ApplicationServer.Config import Config
 from ovd.Role.ApplicationServer.Profile import Profile as AbstractProfile
 from ovd.Platform.System import System
 
@@ -322,11 +323,15 @@ class Profile(AbstractProfile):
 		if owner:
 			args.append("-o")
 		
-		for p in Profile.rsyncBlacklist():
-			args.append('--exclude="%s"'%p)
-		
-		args.append('--include="/.**"')
-		args.append('--exclude="/**"')
+		if os.path.exists(Config.linux_profile_filters_filename):
+			args.append("--include-from=%s"%Config.linux_profile_filters_filename)
+		else:
+			Logger.warn("Rsync filters file '%s' is missing, Using hardcoded rules"%Config.linux_profile_filters_filename)
+			for p in Profile.rsyncBlacklist():
+				args.append('--exclude="%s"'%p)
+			
+			args.append('--include="/.**"')
+			args.append('--exclude="/**"')
 		
 		return 'rsync %s "%s/" "%s/"'%(" ".join(args), src, dst)
 	

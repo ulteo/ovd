@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011-2012 Ulteo SAS
+# Copyright (C) 2011-2013 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2011, 2013
 # Author David LECHEVALIER <david@ulteo.com> 2011, 2012
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
@@ -29,6 +29,7 @@ class Config:
 	clean_dump_archive = True
 	linux_icon_theme = "CrystalGnome"
 	linux_skel_directory = "/dev/null"
+	linux_profile_filters_filename = "/etc/ulteo/ovd/profiles_filter.conf"
 	
 	
 	@classmethod
@@ -60,5 +61,8 @@ class Config:
 		
 		if infos.has_key("linux_skel_directory"):
 			cls.linux_skel_directory = infos["linux_skel_directory"]
+		
+		if infos.has_key("linux_profile_filters_filename"):
+			cls.linux_profile_filters_filename = infos["linux_profile_filters_filename"]
 		
 		return True

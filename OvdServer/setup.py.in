@@ -95,7 +95,7 @@ elif sys.platform.startswith('linux'):
 @EXTRA_MODULES@
 	
 	setup_args["data_files"] = [
-		('/etc/ulteo/ovd', ['examples/slaveserver.conf']),
+		('/etc/ulteo/ovd', ['examples/slaveserver.conf', "examples/profiles_filter.conf"]),
 		('/usr/sbin', ['examples/ovd-slaveserver-config']),
 		('/usr/share/ulteo/ovd/slaveserver', [
 			'ulteo-ovd-slaveserver.py', 'ovd-slaveserver-role.py',
