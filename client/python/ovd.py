@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2012 Ulteo SAS
+# Copyright (C) 2008-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010, 2011, 2012
 # Author Laurent CLOUET <laurent@ulteo.com> 2009, 2010
-# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -265,9 +265,13 @@ class Dialog:
 		else:
 			cmd.append("-g")
 			cmd.append("x".join(params.get("geometry", ("800", "600"))))
-		cmd.append("-z")
-		cmd.append("-T")
-		cmd.append("\"Ulteo OVD - %s\""%(params["user_dn"]))
+		
+		if params["compress"]:
+			cmd.append("-z")
+		
+		if params["title"]:
+			cmd.append("-T")
+			cmd.append("\"%s\""%params["title"])
 		
 		if self.conf.has_key("keyboard") and self.conf["keyboard"]:
 			cmd.append("-k")
@@ -305,9 +309,13 @@ class Dialog:
 		else:
 			cmd.append("-g")
 			cmd.append("x".join(params.get("geometry", ("800", "600"))))
-		#cmd.append("-z")
-		cmd.append("-T")
-		cmd.append("\"Ulteo OVD - %s\""%(params["user_dn"]))
+		
+		if params["compress"]:
+			cmd.append("-z")
+		
+		if params["title"]:
+			cmd.append("-T")
+			cmd.append("\"%s\""%params["title"])
 		
 		if self.conf.has_key("keyboard") and self.conf["keyboard"]:
 			cmd.append("-k")
@@ -357,6 +365,7 @@ class Dialog:
 			cmd.append("--rfx")
 			
 		cmd.append("--ignore-certificate")
+		cmd.append("--no-nla")
 		
 		cmd.append(params["server_fqdn"])
 		
