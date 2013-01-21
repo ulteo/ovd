@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010-2012 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012, 2013
 # Author David LECHEVALIER <david@ulteo.com> 2010, 2012
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
@@ -32,6 +32,7 @@ import win32security
 import win32wnet
 
 from ovd.Logger import Logger
+from ovd.Platform.System import System
 from ovd.Role.ApplicationServer.Profile import Profile as AbstractProfile
 
 import Reg
@@ -133,7 +134,7 @@ class Profile(AbstractProfile):
 					continue
 		
 		
-		d = os.path.join(self.mountPoint, "conf.Windows")
+		d = os.path.join(self.mountPoint, "conf.Windows.%s"%System.getWindowsVersionName())
 		if os.path.exists(d):
 			
 			# clean temporary file used by windows to load registry
@@ -205,7 +206,7 @@ class Profile(AbstractProfile):
 		# etre sur que le type est logoff !
 		
 		
-		d = os.path.join(self.mountPoint, "conf.Windows")
+		d = os.path.join(self.mountPoint, "conf.Windows.%s"%System.getWindowsVersionName())
 		while not os.path.exists(d):
 			try:
 				os.makedirs(d)

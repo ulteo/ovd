@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2012 Ulteo SAS
+# Copyright (C) 2009-2013 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011, 2013
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
 # Author David LECHEVALIER <david@ulteo.com> 2012
@@ -313,3 +313,16 @@ class System(AbstractSystem):
 			)
 		except Exception, e:
 			Logger.error("Failed to obtain more provilege"%(str(e)))
+	
+	
+	@classmethod
+	def getWindowsVersionName(cls):
+		names = {
+				"5.2": "2003",
+				"6.0": "2008",
+				"6.1": "2008R2",
+				"6.2": "2012",
+			}
+		
+		v = platform.version()[:3]
+		return names.get(v, v)
