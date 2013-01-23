@@ -21,26 +21,19 @@ package org.ulteo.ovd.printer;
 
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.print.PageFormat;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.io.File;
 
 import javax.print.DocFlavor;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
-import javax.print.attribute.Attribute;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.standard.PageRanges;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.jpedal.PdfDecoder;
-import org.jpedal.objects.PrinterOptions;
-import org.jpedal.io.ObjectStore;
 
+import org.ulteo.Logger;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.utils.FilesOp;
 
@@ -113,71 +106,24 @@ public class OVDJob{
 	
 	public boolean print(){
 		if (this.printerName == null) {
+			System.out.println("returning true, no printer");
 			return true;
 		}
 		
-		if (OSTools.isLinux()) {
+		if (OSTools.isLinux() || OSTools.isMac()) {
 			LinuxPrinter lp = new LinuxPrinter(this.printerName, this.pdfFilename);
 			new Thread(lp).start();
 			return true;
 		}
 		
-		PrintService printService = OVDJob.getPrintService(this.printerName);
-		if (printService == null) {
-			System.out.println("Unable to find the printer");
-			return false;
-		}
-		PdfDecoder decode_pdf = new PdfDecoder(true);
-		try {
-			decode_pdf.openPdfFile(this.pdfFilename);
-		} catch (Exception e) {
-			System.out.println("Exception " + e + " in pdf code");
-		}
-		int pageCount = decode_pdf.getPageCount();
-		if ((decode_pdf.isEncrypted()) && (!decode_pdf.isExtractionAllowed())) {
-			System.out.println("Encrypted settings");
-			return false;
-		}
-		try {
-			// Set the Document length so the user can know it in advance
-			PrintRequestAttributeSet attributeSet = new HashPrintRequestAttributeSet();
-			PageRanges pr = new PageRanges(1,pageCount);
-			attributeSet.add(pr);
-	
-			Attribute[] attribs=attributeSet.toArray();
-			for (int i=0; i<attribs.length; i++) {
-				System.out.println(i+" "+attribs[i].getName()+ ' ' +attribs[i].toString());
-			}
-			//Select all pages here, the printer will choose which ones to print
-			decode_pdf.setPagePrintRange(1,pageCount);
-			decode_pdf.setPrintAutoRotateAndCenter(false); 
-			decode_pdf.setPrintCurrentView(false);
-			decode_pdf.setPrintPageScalingMode(PrinterOptions.PAGE_SCALING_NONE);
-			decode_pdf.setCenterOnScaling(false);
-			decode_pdf.setUsePDFPaperSize(true);
-			//decode_pdf.setPrintAutoRotateAndCenter(true);
-			PrinterJob printJob = PrinterJob.getPrinterJob();
-			printJob.setPrintService(printService);
-			printJob.setPageable(decode_pdf);
-			PageFormat pf = printJob.defaultPage();
-			decode_pdf.setPageFormat(pf);
-	
-			//Print PDF document
-			printJob.print(attributeSet);
-			decode_pdf.closePdfFile();
-
-			//Temporary file cleaning
-			new File(this.pdfFilename).delete();
-			String jpedalDir = ObjectStore.temp_dir;
-			FilesOp.deleteDirectory(new File(jpedalDir));
+		if (OSTools.isWindows()) {
+			System.out.println("It is a windows ");
+			WindowsPrinter lp = new WindowsPrinter(this.printerName, this.pdfFilename);
+			new Thread(lp).start();
 			return true;
-		} 
-		catch (PrinterException ee) {
-			System.err.println(ee.getMessage());
 		}
-		catch (Exception ee) {
-			System.err.println(ee.getMessage());
-		}
+		
+		Logger.error("Your system is not suppored for printing task");
 		return false;
 	}
 	

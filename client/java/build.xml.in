@@ -93,6 +93,10 @@
     <copy todir="build/resources/integration/linux/">
       <fileset dir="misc/desktopIntegration/linux"/>
     </copy>
+    <mkdir dir="build/resources/print"/>
+    <copy todir="build/resources/print">
+      <fileset dir="externals"/>
+    </copy>
     <copy file="misc/krb5.ini" todir="build/resources" />
     <copy file="misc/login.conf" todir="build/resources" />
     <echo file="build/VERSION" message="${version}" />
@@ -295,7 +299,7 @@
     <unjar dest="build">
       <filelist dir="required_libraries"
                 files="gnu-getopt.jar, log4j-1.2.jar, registry.jar,
-                       jshortcut.jar, image4j.jar, ini4j.jar, jpedal.jar,
+                       jshortcut.jar, image4j.jar, ini4j.jar,
                        commons-httpclient-3.0.1.jar, commons-logging-1.1.1.jar" />
     </unjar>
     <antcall target="ovdNativeClient_jar" />
