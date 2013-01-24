@@ -43,8 +43,9 @@ public class WindowsPrinter implements Runnable {
 		// extracting resource in %TEMP%
 		InputStream is = WindowsPrinter.class.getResourceAsStream("/resources/print/lpr.exe");
 		File dest = new File(tempDir+File.separator+"lpr.exe");
-		if (dest.exists())
+		if (dest.exists()) {
 			dest.delete();
+		}
 		
 		try {
 			FileOutputStream fos = new FileOutputStream(dest);
