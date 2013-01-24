@@ -258,6 +258,10 @@ class Dialog:
 		cmd.append(out)
 		cmd.append("-u")
 		cmd.append(params["login"])
+		if params.has_key("domain"):
+			cmd.append("-d")
+			cmd.append(params["domain"])
+		
 		cmd.append("-p")
 		cmd.append(params["password"])
 		if params["fullscreen"]:
@@ -302,6 +306,10 @@ class Dialog:
 		cmd.append("xfreerdp")
 		cmd.append("-u")
 		cmd.append(params["login"])
+		if params.has_key("domain"):
+			cmd.append("-d")
+			cmd.append(params["domain"])
+		
 		cmd.append("-p")
 		cmd.append(params["password"])
 		if params["fullscreen"]:
@@ -373,6 +381,9 @@ class Dialog:
 	
 	
 	def getLaunchCommand(self, params):
+		if self.conf.has_key("use_upn") and self.conf["use_upn"] is False and "@" in params["login"]:
+			params["login"], params["domain"] = params["login"].split("@", 2)
+		
 		if self.conf.get("client", None) == "freerdp":
 			return self.getLaunchCommandFreeRDP(params)
 		

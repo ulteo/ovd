@@ -257,6 +257,7 @@ class OvdClientGui:
 		conf["keyboard"] = self.options.keyboard
 		conf["compress"] = self.options.compress
 		conf["title"] = self.options.title
+		conf["use_upn"] = self.options.use_upn
 		
 		if self.options.drives:
 			conf["drives"] = self.options.drives
@@ -313,6 +314,7 @@ if __name__ == "__main__":
 	parser.add_option("-d", "--drive", action="append", nargs=2, dest="drives", help="Add a redirected drive to the session [name] [path]")
 	parser.add_option("-c", "--compress", action="store_true", dest="compress", default=False, help="Enable RDP compression")
 	parser.add_option("-t", "--title", action="store", dest="title", default="OVD Light Client", help="Title to show on the windows")
+	parser.add_option("--no-upn", action="store_false", dest="use_upn", default=True, help="Use the RDP domain field instead of push the login in UPN syntax (login@domain)")
 	
 	lang = locale.getdefaultlocale()
 	if lang:
