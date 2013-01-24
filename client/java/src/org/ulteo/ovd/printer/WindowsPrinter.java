@@ -26,11 +26,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.ulteo.Logger;
-import org.ulteo.utils.FilesOp;
 
 public class WindowsPrinter implements Runnable {
 	private final String printingCommand = "lpr.exe -print-to "; 
-	
+	private final String printingExecutable = "/resources/print/lpr.exe";
 	private String printerName;
 	private String job;
 	private String tempDir;
@@ -40,8 +39,7 @@ public class WindowsPrinter implements Runnable {
 		this.job = job;
 		this.tempDir = System.getProperty("java.io.tmpdir");
 		
-		// extracting resource in %TEMP%
-		InputStream is = WindowsPrinter.class.getResourceAsStream("/resources/print/lpr.exe");
+		InputStream is = WindowsPrinter.class.getResourceAsStream(this.printingExecutable);
 		File dest = new File(tempDir+File.separator+"lpr.exe");
 		if (dest.exists()) {
 			dest.delete();
@@ -49,15 +47,19 @@ public class WindowsPrinter implements Runnable {
 		
 		try {
 			FileOutputStream fos = new FileOutputStream(dest);
-			int c = 0;
-			while ((c = is.read()) != -1)
-				fos.write(c);
+			byte[] buffer = new byte[1024];
+			int count;
+			while ((count = is.read(buffer)) != -1) {
+				fos.write(buffer, 0, count);
+			}
 			
 			fos.close();
+			is.close();
+			
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			Logger.error("Unable to find the resource "+this.printingExecutable);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.error("Unable to find the resource: "+e.getMessage());
 		}
 	}
 

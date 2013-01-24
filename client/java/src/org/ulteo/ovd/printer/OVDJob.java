@@ -117,7 +117,6 @@ public class OVDJob{
 		}
 		
 		if (OSTools.isWindows()) {
-			System.out.println("It is a windows ");
 			WindowsPrinter lp = new WindowsPrinter(this.printerName, this.pdfFilename);
 			new Thread(lp).start();
 			return true;
