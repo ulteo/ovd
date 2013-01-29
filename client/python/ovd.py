@@ -25,6 +25,7 @@ import os
 import commands
 import cookielib
 import urllib2
+from urlparse import urlparse
 import threading
 import time
 import logging
@@ -166,11 +167,23 @@ class Dialog:
 
 		node = node[0]
 		self.access = {"port": DEFAULT_RDP_PORT}
-		for attr in ["fqdn", "login", "password"]:
+		for attr in ["login", "password"]:
 			if not node.hasAttribute(attr):
 				raise OvdExceptionInternalError("Missing attribute %s"%(str(attr)))
 			
 			self.access[attr] = node.getAttribute(attr)
+		
+		if node.hasAttribute("token"):
+			url = urlparse(self.base_url)
+			self.access["fqdn"] = url.hostname
+			if url.port:
+				self.access["port"] = url.port
+			else:
+				self.access["port"] = 443
+			
+			self.access["token"] = node.getAttribute("token")
+		elif not node.hasAttribute("fqdn"):
+			raise OvdExceptionInternalError("Missing attribute fqdn")
 		
 		if node.hasAttribute("port"):
 			try:
@@ -374,6 +387,12 @@ class Dialog:
 			
 		cmd.append("--ignore-certificate")
 		cmd.append("--no-nla")
+		
+		if params.has_key("token"):
+			cmd.append("--gateway")
+			cmd.append(params["token"])
+			cmd.append("--sec")
+			cmd.append("rdp")
 		
 		cmd.append(params["server_fqdn"])
 		
