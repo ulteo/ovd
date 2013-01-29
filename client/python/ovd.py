@@ -3,7 +3,7 @@
 
 # Copyright (C) 2008-2013 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010, 2011, 2012
+# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010-2013
 # Author Laurent CLOUET <laurent@ulteo.com> 2009, 2010
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
 #
