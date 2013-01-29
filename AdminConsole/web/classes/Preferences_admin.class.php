@@ -150,8 +150,8 @@ class Preferences_admin {
 		if (array_key_exists('possible_values', $element_)) {
 			$values = array();
 			foreach($element_['possible_values'] as $value) {
+				$value = strval($value);
 				$name = $value;
-				
 				$k = $gid.'_value_'.$value;
 				if (array_key_exists($k, $this->values)) {
 					$name = $this->values[$k];
