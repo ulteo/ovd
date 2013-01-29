@@ -91,7 +91,8 @@ class SessionManager {
 	}
 	
 	public function servers_list($filter_ = null) {
-		$res = $this->__call('servers_list', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('servers_list', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -120,7 +121,8 @@ class SessionManager {
 	}
 	
 	public function server_info($id_) {
-		$res = $this->__call('server_info', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('server_info', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -134,7 +136,8 @@ class SessionManager {
 	}
 	
 	public function tasks_list() {
-		$res = $this->__call('tasks_list', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('tasks_list', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -152,7 +155,8 @@ class SessionManager {
 	}
 	
 	public function task_info($id_) {
-		$res = $this->__call('task_info', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('task_info', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -166,7 +170,8 @@ class SessionManager {
 	
 	
 	public function applications_list($type_ = null) {
-		$res = $this->__call('applications_list', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('applications_list', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -185,7 +190,8 @@ class SessionManager {
 	}
 	
 	public function application_info($id_) {
-		$res = $this->__call('application_info', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('application_info', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -213,7 +219,8 @@ class SessionManager {
 	}
 	
 	public function application_icon_get($id_) {
-		$res = $this->__call('application_icon_get', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('application_icon_get', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -222,7 +229,8 @@ class SessionManager {
 	}
 	
 	public function applications_groups_list() {
-		$res = $this->__call('applications_groups_list', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('applications_groups_list', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -241,7 +249,8 @@ class SessionManager {
 	}
 	
 	public function applications_group_info($id_) {
-		$res = $this->__call('applications_group_info', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('applications_group_info', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -255,7 +264,8 @@ class SessionManager {
 	}
 	
 	public function users_list($filter_) {
-		$res = $this->__call('users_list', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('users_list', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -274,7 +284,8 @@ class SessionManager {
 	}
 	
 	public function user_info($id_) {
-		$res = $this->__call('user_info', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('user_info', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -291,7 +302,8 @@ class SessionManager {
 	}
 	
 	public function users_groups_list() {
-		$res = $this->__call('users_groups_list', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('users_groups_list', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -310,7 +322,8 @@ class SessionManager {
 	}
 	
 	public function users_groups_list_partial($search_item_, $search_fields_) {
-		$res = $this->__call('users_groups_list_partial', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('users_groups_list_partial', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -319,7 +332,8 @@ class SessionManager {
 	}
 	
 	public function users_group_info($id_) {
-		$res = $this->__call('users_group_info', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('users_group_info', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -333,7 +347,8 @@ class SessionManager {
 	}
 	
 	public function shared_folders_list() {
-		$res = $this->__call('shared_folders_list', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('shared_folders_list', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -351,7 +366,8 @@ class SessionManager {
 	}
 	
 	public function shared_folder_info($id_) {
-		$res = $this->__call('shared_folder_info', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('shared_folder_info', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -365,7 +381,8 @@ class SessionManager {
 	}
 	
 	public function users_profiles_list() {
-		$res = $this->__call('users_profiles_list', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('users_profiles_list', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -383,7 +400,8 @@ class SessionManager {
 	}
 	
 	public function user_profile_info($id_) {
-		$res = $this->__call('user_profile_info', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('user_profile_info', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -397,7 +415,8 @@ class SessionManager {
 	}
 	
 	public function sessions_list($start_ = 0) {
-		$res = $this->__call('sessions_list', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('sessions_list', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -415,7 +434,8 @@ class SessionManager {
 	}
 	
 	public function sessions_list_by_server($server_, $start_ = 0) {
-		$res = $this->__call('sessions_list_by_server', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('sessions_list_by_server', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -433,7 +453,8 @@ class SessionManager {
 	}
 	
 	public function session_info($id_) {
-		$res = $this->__call('session_info', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('session_info', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -446,7 +467,8 @@ class SessionManager {
 	}
 	
 	public function sessions_reports_list($start_, $stop_) {
-		$res = $this->__call('sessions_reports_list', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('sessions_reports_list', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -464,7 +486,8 @@ class SessionManager {
 	}
 	
 	public function sessions_reports_list2($start_, $stop_, $server_ = null) {
-		$res = $this->__call('sessions_reports_list2', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('sessions_reports_list2', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -482,7 +505,8 @@ class SessionManager {
 	}
 	
 	public function sessions_reports_list3($from_, $to_, $user_login_, $limit_) {
-		$res = $this->__call('sessions_reports_list3', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('sessions_reports_list3', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -500,7 +524,8 @@ class SessionManager {
 	}
 	
 	public function session_report_info($id_) {
-		$res = $this->__call('session_report_info', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('session_report_info', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -514,7 +539,8 @@ class SessionManager {
 	}
 	
 	public function servers_reports_list($start_, $stop_) {
-		$res = $this->__call('servers_reports_list', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('servers_reports_list', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -533,7 +559,8 @@ class SessionManager {
 	}
 	
 	public function news_list() {
-		$res = $this->__call('news_list', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('news_list', $args);
 		if ($res === null) {
 			return null;
 		}
@@ -552,7 +579,8 @@ class SessionManager {
 	}
 	
 	public function news_info($id_) {
-		$res = $this->__call('news_info', func_get_args());
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('news_info', $args);
 		if ($res === null) {
 			return null;
 		}
