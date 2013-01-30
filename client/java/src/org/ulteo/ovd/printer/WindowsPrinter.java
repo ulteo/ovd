@@ -66,7 +66,9 @@ public class WindowsPrinter implements Runnable {
 	@Override
 	public void run() {
 		try {
-			Process p = Runtime.getRuntime().exec(this.tempDir+File.separator+printingCommand+" "+this.printerName+" "+this.job);
+			String command = this.tempDir+File.separator+printingCommand+" \""+this.printerName+"\" "+this.job;
+			System.out.println("executing command "+command);
+			Process p = Runtime.getRuntime().exec(command);
 			p.waitFor();
 			if (p.exitValue() == 0) {
 				Logger.info("Job printed successfully");
