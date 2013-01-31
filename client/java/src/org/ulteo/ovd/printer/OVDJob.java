@@ -105,7 +105,7 @@ public class OVDJob{
 
 	
 	public boolean print(){
-		if (this.printerName == null) {
+		if (this.printerName == null || this.printerName.equals(OVDPrinterThread.filePrinterName)) {
 			System.out.println("returning true, no printer");
 			return true;
 		}
