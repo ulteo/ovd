@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2011-2012 Ulteo SAS
+ * Copyright (C) 2011-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -434,7 +434,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 			<span class="info"><input type="checkbox" id="level_info" value="20" checked="checked" /> Info</span>
 			<span class="warning"><input type="checkbox" id="level_warning" value="30" checked="checked" /> Warning</span>
 			<span class="error"><input type="checkbox" id="level_error" value="40" checked="checked" /> Error</span><br />
-			<input type="button" value="Clear" />
+			<input type="button" id="clear_button" value="Clear" />
 		</div>
 	</body>
 </html>
