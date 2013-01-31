@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-# Copyright (C) 2012 Ulteo SAS
+# Copyright (C) 2012-2013 Ulteo SAS
 # http://www.ulteo.com
-# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -126,8 +126,14 @@ copyright = """/**
 if __name__ == "__main__":
 	compile_images()
 
+	processed_files = []
+
 	f = open(os.path.join("web", "index.php"))
 	content = f.read()
+	f.close()
+
+	f = open(os.path.join("web", "external.php"))
+	content += f.read()
 	f.close()
 
 	outfilename = os.path.join("web", "media", "script", "uovd.js")
@@ -136,7 +142,8 @@ if __name__ == "__main__":
 
 	for match in re.findall("<script type=\"text/javascript\" src=\"media/(.*).js[^\"]*\" charset=\"utf-8\"></script>", content, re.IGNORECASE):
 		filename = os.path.join("web", "media", match + ".js")
-		if not os.path.basename(filename) in ("uovd.js", "uovd_int_client.js", "uovd_ext_client.js"):
+		if not os.path.basename(filename) in ("uovd.js", "uovd_int_client.js", "uovd_ext_client.js") and not os.path.basename(filename) in processed_files:
+			processed_files.append(os.path.basename(filename))
 			jscompress(outfile, filename)
 
 	outfile.close()
@@ -147,7 +154,8 @@ if __name__ == "__main__":
 
 	for match in re.findall("<link rel=\"stylesheet\" type=\"text/css\" href=\"media/(.*).css\" />", content, re.IGNORECASE):
 		filename = os.path.join("web", "media", match + ".css")
-		if not os.path.basename(filename) in ("uovd.css", ):
+		if not os.path.basename(filename) in ("uovd.css", ) and not os.path.basename(filename) in processed_files:
+			processed_files.append(os.path.basename(filename))
 			csscompress(outfile, filename)
 
 	outfile.close()
