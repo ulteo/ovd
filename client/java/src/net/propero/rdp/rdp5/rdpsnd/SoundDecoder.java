@@ -1,3 +1,23 @@
+/*
+ * Copyright (C) 2013 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 /* Subversion properties, do not modify!
  * 
  * Sound Channel Process Functions - class that handles various sound decodings. 
@@ -44,7 +64,7 @@ public class SoundDecoder {
 		if( inputBufferLength > Integer.MAX_VALUE ) throw new NumberFormatException( "Number too large: " + inputBufferLength );
 		switch( fmt.wFormatTag ) {
 			case VChannels.WAVE_FORMAT_ALAW:
-				return ( fmt.nChannels * 16 / fmt.wBitsPerSample ) * (int)inputBufferLength;
+				return 2 * (int)inputBufferLength; // ALAW converts 8 bits samples to 16 bits.
 			case VChannels.WAVE_FORMAT_ADPCM:
 				int blockHeaderOverhead = ( 7 * fmt.nChannels );
 				int numOfBlocks = ( (int)inputBufferLength / fmt.nBlockAlign );
