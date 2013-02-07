@@ -2,6 +2,7 @@
  * Copyright (C) 2013 Ulteo SAS
  * http://www.ulteo.com
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,6 +31,9 @@
  * 
  */
 package net.propero.rdp.rdp5.rdpsnd;
+
+import java.util.Arrays;
+
 import net.propero.rdp.rdp5.VChannels;
 
 public class SoundDecoder {
@@ -42,6 +46,29 @@ public class SoundDecoder {
 
 	private static final int[]	AdaptCoeff2		= { 0, -256, 0, 64, 0, -208, -232 };
 
+	private static class ADPCM
+	{
+		int[] last_sample = new int[2];
+		int[] last_step = new int[2];
+	};
+	
+	private static int[] ima_step_index_table = {
+		-1, -1, -1, -1, 2, 4, 6, 8,
+		-1, -1, -1, -1, 2, 4, 6, 8
+	};
+	
+	private static int[] ima_step_size_table = {
+		7, 8, 9, 10, 11, 12, 13, 14, 16, 17,
+		19, 21, 23, 25, 28, 31, 34, 37, 41, 45,
+		50, 55, 60, 66, 73, 80, 88, 97, 107, 118,
+		130, 143, 157, 173, 190, 209, 230, 253, 279, 307,
+		337, 371, 408, 449, 494, 544, 598, 658, 724, 796,
+		876, 963, 1060, 1166, 1282, 1411, 1552, 1707, 1878, 2066,
+		2272, 2499, 2749, 3024, 3327, 3660, 4026, 4428, 4871, 5358,
+		5894, 6484, 7132, 7845, 8630, 9493, 10442, 11487, 12635, 13899,
+		15289, 16818, 18500, 20350, 22385, 24623, 27086, 29794, 32767
+	};
+	
 	public static final WaveFormatEx translateFormatForDevice( WaveFormatEx fmt ) {
 
 		if( fmt.wFormatTag != VChannels.WAVE_FORMAT_PCM ) {
@@ -55,6 +82,10 @@ public class SoundDecoder {
 			ret.cbSize = 0;
 			ret.cb = null;
 
+			if (fmt.wFormatTag != VChannels.WAVE_FORMAT_IMA_ADPCM) {
+				ret.nBlockAlign = fmt.nBlockAlign;
+			}
+			
 			return ret;
 		}
 		return fmt;
@@ -65,6 +96,7 @@ public class SoundDecoder {
 		switch( fmt.wFormatTag ) {
 			case VChannels.WAVE_FORMAT_ALAW:
 				return 2 * (int)inputBufferLength; // ALAW converts 8 bits samples to 16 bits.
+			case VChannels.WAVE_FORMAT_IMA_ADPCM:
 			case VChannels.WAVE_FORMAT_ADPCM:
 				int blockHeaderOverhead = ( 7 * fmt.nChannels );
 				int numOfBlocks = ( (int)inputBufferLength / fmt.nBlockAlign );
@@ -80,6 +112,8 @@ public class SoundDecoder {
 			case VChannels.WAVE_FORMAT_ALAW:
 				decodeALaw( inputBuffer, outputBuffer, len );
 				return outputBuffer;
+			case VChannels.WAVE_FORMAT_IMA_ADPCM:
+				return dsp_decode_ima_adpcm(inputBuffer, len, fmt.nChannels, fmt.nBlockAlign);
 			case VChannels.WAVE_FORMAT_ADPCM:
 				decodeADPCM( inputBuffer, outputBuffer, len, fmt );
 				return outputBuffer;
@@ -234,4 +268,117 @@ public class SoundDecoder {
 			return a;
 	}
 
+	static short dsp_decode_ima_adpcm_sample(ADPCM adpcm, int channel, int sample)
+	{
+		int ss;
+		int d;
+		ss = ima_step_size_table[adpcm.last_step[channel]] & 0x0000FFFF;
+		d = (ss >> 3) & 0x1fff;
+		
+		if ((sample & 1) != 0) {
+			d += (ss >> 2) & 0x3fff;
+		}
+		
+		if ((sample & 2) != 0) {
+			d += (ss >> 1) & 0x7fff;
+		}
+		
+		if ((sample & 4) != 0) {
+			d += ss;
+		}
+		
+		if ((sample & 8) != 0) {
+			d = -(short)d;
+		}
+		
+		d += (short)adpcm.last_sample[channel];
+		
+		if ((short)d < -32768) {
+			d = -32768;
+		}
+		else if ((short)d > 32767) {
+			d = 32767;
+		}
+		
+		adpcm.last_sample[channel] = (short)(d);
+		adpcm.last_step[channel] += ima_step_index_table[(int)(sample&0x0FF)];
+		if (adpcm.last_step[channel] < 0) {
+			adpcm.last_step[channel] = 0;
+		}
+		else if (adpcm.last_step[channel] > 88) {
+			adpcm.last_step[channel] = 88;
+		}
+		return (short)(d & 0xFFFF);
+	}
+
+	public static byte[] dsp_decode_ima_adpcm(byte[] src, int size, int channels, int block_size)
+	{
+		byte[] dst;
+		byte sample;
+		int decoded;
+		int channel;
+		int i;
+		int sindex = 0;
+		int dindex = 0;
+		int out_size;
+		ADPCM adpcm = new ADPCM();
+		
+		out_size = size * 4;
+		dst = new byte[out_size];
+		while (size > 0) {
+			if (size % block_size == 0) {
+				adpcm.last_sample[0] = (int)(((src[sindex]& 0xFF)) | ((src[sindex+1]) << 8) & 0xFF00);
+					
+				adpcm.last_step[0] = (int) (src[sindex+2]);
+				sindex += 4;
+				size -= 4;
+				out_size -= 16;
+				if (channels > 1) {
+					adpcm.last_sample[1] = (int)(((src[sindex]& 0xFF)) | ((src[sindex+1]) << 8) & 0xFF00);
+					adpcm.last_step[1] = (int) (src[sindex + 2]);
+					sindex += 4;
+					size -= 4;
+					out_size -= 16;
+				}
+			}
+			
+			if (channels > 1) {
+				for (i = 0; i < 8; i++) {
+					channel = (i < 4 ? 0 : 1);
+					sample = (byte)(src[sindex] & 0x0f);
+					decoded = dsp_decode_ima_adpcm_sample(adpcm, channel, sample);
+					dst[dindex + ((i & 3) << 3) + (channel << 1)] = (byte)(decoded & 0xff);
+					dst[dindex + ((i & 3) << 3) + (channel << 1) + 1] = (byte)(decoded >> 8);
+					sample = (byte)((src[sindex] >> 4) & 0x0f);
+					decoded = dsp_decode_ima_adpcm_sample(adpcm, channel, sample);
+					dst[dindex + ((i & 3) << 3) + (channel << 1) + 4] = (byte)(decoded & 0xff);
+					dst[dindex + ((i & 3) << 3) + (channel << 1) + 5] = (byte)(decoded >> 8);
+					sindex++;
+				}
+				dindex += 32;
+				size -= 8;
+			}
+			else {
+				sample = (byte)(src[sindex] & 0x0f);
+
+				decoded = dsp_decode_ima_adpcm_sample(adpcm, 0, sample);
+				dst[dindex++] = (byte)(decoded & 0xff);
+				dst[dindex++] = (byte)((decoded >> 8) & 0xff);
+				sample = (byte)((src[sindex] >> 4) & 0x0f);
+				decoded = dsp_decode_ima_adpcm_sample(adpcm, 0, sample);
+				dst[dindex++] = (byte)(decoded & 0xff);
+				dst[dindex++] = (byte)((decoded >> 8) & 0xff);
+				sindex++;
+				size--;
+			}
+		}
+		
+		if (out_size != dst.length) {
+			byte[] res = Arrays.copyOf(dst, out_size); 
+			
+			return res;
+		}
+		
+		return dst;
+	}
 }

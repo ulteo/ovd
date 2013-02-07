@@ -179,6 +179,10 @@ public class SoundDriver {
 		if( outLen > outBuffer.length ) outBuffer = new byte[ outLen ];
 		this.outBuffer = SoundDecoder.decode( this.buffer, this.outBuffer, len, this.format );
 
+		if (this.outBuffer.length != BUFFER_SIZE) {
+			outLen = this.outBuffer.length;
+		}
+		
 		this.oDevice.write( this.outBuffer, 0, outLen );
 
 		GregorianCalendar tv = new GregorianCalendar();
@@ -202,7 +206,9 @@ public class SoundDriver {
 				// ADPCM crashes the "RDP Clip monitor" on the server
 				//case VChannels.WAVE_FORMAT_ADPCM:
 				//	logger.info( "ADPCM" );
-				//	return ( ( fmt.nChannels == 1 ) || ( fmt.nChannels == 2 ) ) && ( fmt.wBitsPerSample == 4 );
+				case VChannels.WAVE_FORMAT_IMA_ADPCM:
+					//logger.info( "IMA_ADPCM" );
+					return ( ( fmt.nChannels == 1 ) || ( fmt.nChannels == 2 ) ) && ( fmt.wBitsPerSample == 4 );
 			default:
 				return false;
 		}
