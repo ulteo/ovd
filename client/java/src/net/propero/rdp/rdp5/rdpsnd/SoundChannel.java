@@ -11,9 +11,9 @@
  *  Sound Channel Process Functions
  *  Copyright (C) Matthew Chapman 2003
  *  Copyright (C) GuoJunBo guojunbo@ict.ac.cn 2003
- *  Copyright (C) 2010-2011 Ulteo SAS
+ *  Copyright (C) 2010-2013 Ulteo SAS
  *  http://www.ulteo.com
- *  Author David LECHEVALIER <david@ulteo.com> 2010-2011
+ *  Author David LECHEVALIER <david@ulteo.com> 2010,2011,2013
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -65,6 +65,8 @@ public class SoundChannel extends VChannel {
 	private SoundDriver		soundDriver;
 
 	private WaveFormatEx[]	formats;
+	private byte[] pendingData;
+	
 
 	public SoundChannel(Options opt_, Common common_) {
 		super(opt_, common_);
@@ -79,6 +81,7 @@ public class SoundChannel extends VChannel {
 		for( int i = 0; i < SoundChannel.MAX_FORMATS; i++ )
 			this.formats[ i ] = new WaveFormatEx();
 		this.soundDriver = new SoundDriver( this );
+		this.pendingData = new byte[4];
 		
 		//init & run playThread
 		this.soundDriver.start();
@@ -117,6 +120,7 @@ public class SoundChannel extends VChannel {
 				this.deviceOpen = true;
 				this.currentFormat = format;
 			}
+			data.copyFromByteArray(pendingData, 0, 0, 4);
 			this.soundDriver.waveOutWrite( data, this.tick, this.packetIndex );
 			this.awaitingDataPacket = false;
 			return;
@@ -131,7 +135,9 @@ public class SoundChannel extends VChannel {
 			case RDPSND_WRITE:
 				this.tick = data.getLittleEndian16() & 0xFFFF;
 				this.format = data.getLittleEndian16() & 0xFFFF;
-				this.packetIndex = data.getLittleEndian16() & 0xFFFF;
+				this.packetIndex = data.get8() & 0xFF;
+				data.incrementPosition(3); // pad
+				data.copyToByteArray(pendingData, 0, data.getPosition(), 4);
 				this.awaitingDataPacket = true;
 				break;
 			case RDPSND_CLOSE:
