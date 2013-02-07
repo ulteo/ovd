@@ -185,6 +185,7 @@ public class SoundChannel extends VChannel {
 
 	private void negotiate( RdpPacket data ) {
 		boolean deviceAvailable = false;
+		int formatLength = 0;
 
 		data.incrementPosition( 14 ); // advance 14 bytes - flags, volume, pitch, UDP port
 
@@ -224,12 +225,15 @@ public class SoundChannel extends VChannel {
 
 				if( deviceAvailable && soundDriver.waveOutFormatSupported( format ) ) {
 					this.formatCount++;
+					formatLength += 18;
+					formatLength += format.cbSize;
+					
 					if( this.formatCount == MAX_FORMATS ) break;
 				}
 			}
 		}
-
-		RdpPacket_Localised out = initPacket( RDPSND_NEGOTIATE | 0x200, 20 + 18 * formatCount );
+		
+		RdpPacket_Localised out = initPacket( RDPSND_NEGOTIATE | 0x200, 20 + formatLength );
 		out.setLittleEndian32( 3 ); // flags
 		out.setLittleEndian32( 0xffffffff ); // volume
 		out.setLittleEndian32( 0 ); // pitch
@@ -248,7 +252,11 @@ public class SoundChannel extends VChannel {
 			out.setLittleEndian32( format.nAvgBytesPerSec );
 			out.setLittleEndian16( format.nBlockAlign );
 			out.setLittleEndian16( format.wBitsPerSample );
-			out.setLittleEndian16( 0 ); // cbSize
+			out.setLittleEndian16( format.cbSize ); // cbSize
+			if (format.cbSize > 0) {
+				out.copyFromByteArray(format.cb, 0, out.getPosition(), format.cbSize);
+				out.incrementPosition(format.cbSize);
+			}
 		}
 
 		out.markEnd();
