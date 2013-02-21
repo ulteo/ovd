@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2013
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
@@ -185,8 +185,8 @@ public class Spool extends Thread {
 	}
 
 	public void destroyInstance(int token) {
-		File instanceFile = new File(Constants.PATH_REMOTE_APPS + File.pathSeparator + this.id +
-				File.pathSeparator + Constants.DIRNAME_INSTANCES + File.pathSeparator + token);
+		File instanceFile = new File(Constants.PATH_REMOTE_APPS + File.separator + this.id +
+				File.separator + Constants.DIRNAME_INSTANCES + File.separator + token);
 		if (! instanceFile.delete())
 			this.logger.error(String.format("Unable to remove instance file (%s)", instanceFile.getPath()));
 	}
