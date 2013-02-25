@@ -27,6 +27,7 @@
 #include "str.h"
 #include "error.h"
 #include "sys.h"
+#include "xdg_user_dir.h"
 
 
 int file_open(const char* filename) {
