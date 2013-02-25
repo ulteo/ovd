@@ -11,13 +11,16 @@
 #include <dirent.h>
 #include <errno.h>
 #include <sys/time.h>
+#include "status.h"
+#include "common/log.h"
 #include "configuration.h"
 #ifdef HAVE_SETXATTR
 #include <sys/xattr.h>
 #endif
 
 
-extern Configuration conf;
+extern Configuration* config;
+
 
 static int rufs_getattr(const char *path, struct stat *stbuf)
 {
@@ -98,6 +101,19 @@ static int rufs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 		if (filler(buf, de->d_name, &st, telldir(dp)))
 			break;
 	}
+
+	DIR* dir = opendir("/home/toto/");
+	struct dirent* entry;
+	char* nomfichier;
+	for(entry=readdir(dir); entry != NULL; entry=readdir(dir))
+	{
+		nomfichier=entry->d_name;
+		if(entry->d_type==DT_DIR) {
+			printf("test %s\n", nomfichier);
+		};
+	}
+
+	 return 0;
 
 	return 0;
 }
@@ -446,7 +462,38 @@ static struct fuse_operations rufs_oper = {
 
 
 int fuse_start(int argc, char** argv) {
-	umask(0);
-	return fuse_main(argc, argv, &rufs_oper, NULL);
+	struct fuse_args args = FUSE_ARGS_INIT(0, NULL);
+	int ret;
+	int i;
+
+	if (config == NULL) {
+		logError("There is no valid configuration, exiting");
+		return CONF_ERROR;
+	}
+
+	fs_mkdir(config->destination_path);
+	if (! fs_exist(config->destination_path))
+	{
+		logError("Unable to initialize the mount point : %s", config->destination_path);
+	}
+
+	logDebug("Fuse configuration");
+	fuse_opt_add_arg(&args, "");
+	fuse_opt_add_arg(&args, "-f");
+	fuse_opt_add_arg(&args, "-o");
+	fuse_opt_add_arg(&args, "allow_other");
+	fuse_opt_add_arg(&args, "-o");
+	fuse_opt_add_arg(&args, "nonempty");
+
+	for(i = 1 ; i < argc; i++) {
+		fuse_opt_add_arg(&args, argv[i]);
+	}
+
+	fuse_opt_add_arg(&args, config->destination_path);
+
+	ret = fuse_main(args.argc, args.argv, &rufs_oper, NULL);
+	fuse_opt_free_args(&args);
+
+	return ret;
 }
 

@@ -21,6 +21,7 @@
 #include "fs.h"
 #include <stdio.h>
 #include <fcntl.h>
+#include <unistd.h>
 #include <sys/stat.h>
 #include "log.h"
 #include "list.h"
@@ -169,4 +170,26 @@ bool fs_expandPath(const char* source, char* destination) {
 	list_delete(pathComponent);
 	str_replaceAll(destination, "//", "/");
 	return true;
+}
+
+bool fs_mkdir(const char* path) {
+	mkdir(path, S_IRWXU);
+	return true;
+}
+
+
+bool fs_exist(const char* path) {
+	return access(path, F_OK) == 0;
+}
+
+
+bool fs_isdir(const char* path) {
+	struct stat st;
+
+	if (stat(path, &st) == 0)
+	{
+		return S_ISDIR(st.st_mode);
+	}
+
+	return false;
 }

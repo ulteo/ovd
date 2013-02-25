@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 	}
 
 	configuration_dump(config);
-	//fuse_start(argc, argv);
+	fuse_start(argc, argv);
 
 	return SUCCESS;
 }

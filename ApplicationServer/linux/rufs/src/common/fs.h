@@ -36,5 +36,9 @@ size_t file_size(char* filename);
 bool file_readLine(int fd, char* line);
 char* file_getShortName(const char* filename);
 bool fs_expandPath(const char* source, char* destination);
+bool fs_mkdir(const char* path);
+bool fs_exist(const char* path);
+bool fs_isdir(const char* path);
+
 
 #endif
