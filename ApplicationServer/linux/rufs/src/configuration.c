@@ -31,6 +31,9 @@ Configuration* configuration_new() {
 		return NULL;
 
 	conf->unions = list_new(false);
+	conf->bind = false;
+	conf->destination_path[0] = '\0';
+	conf->bind_path[0] = '\0';
 	
 	return conf;
 }
@@ -106,6 +109,7 @@ static bool configuration_parseUnion(Ini* ini, Configuration* conf, const char* 
 	char* value;
 	int i;
 
+	str_cat(unionObject->name, unionName);
 	unionObject->accept = list_new(true);
 	unionObject->reject = list_new(true);
 	unionObject->path[0] = '\0';
@@ -169,9 +173,26 @@ static bool configuration_parseUnion(Ini* ini, Configuration* conf, const char* 
 	return true;
 }
 
+
+Union* configuration_getUnion(Configuration* conf, const char* unionName) {
+	int i;
+	Union* res = NULL;
+
+	for (i = 0 ; i < conf->unions->size ; i++) {
+		res = (Union*)list_get(conf->unions, i);
+		if (str_cmp(res->name, unionName) == 0) {
+			return res;
+		}
+	}
+
+	return NULL;
+}
+
+
 static bool configuration_parseMain(Ini* ini, Configuration* conf) {
 	char expandedPath[PATH_MAX];
 	char* value;
+	Union* u;
 	int i;
 
 	if (ini == NULL || conf == NULL) {
@@ -210,6 +231,37 @@ static bool configuration_parseMain(Ini* ini, Configuration* conf) {
 			logWarn("Failed to parse union %s", unionName);
 			return false;
 		}
+	}
+
+	value = ini_getKey(ini, MAIN_CONFIGURATION_SECTION, MAIN_BIND_CONFIGURATION_KEY);
+	if (value != NULL) {
+		conf->bind = str_toBool(value);
+	}
+
+	value = ini_getKey(ini, MAIN_CONFIGURATION_SECTION, MAIN_BIND_DESTINATION_CONFIGURATION_KEY);
+	if (value != NULL) {
+		if (value[0] == '@') {
+			u = configuration_getUnion(conf, value+1);
+			if (u) {
+				str_cat(conf->bind_path, u->path);
+			}
+			else {
+				logWarn("Failed to find union which match %s", value);
+			}
+
+		}
+		else {
+			if (! fs_expandPath(value, expandedPath)) {
+				logWarn("Unable to expand %s", value);
+				return false;
+			}
+
+			str_cat(conf->bind_path, expandedPath);
+		}
+	}
+
+	if (conf->bind & conf->bind_path[0] == '\0') {
+		logWarn("You authorize bind but there is no bind path");
 	}
 
 	return true;

@@ -29,6 +29,7 @@
 #include "error.h"
 #include "sys.h"
 #include "xdg_user_dir.h"
+#include <sys/mount.h>
 
 
 int file_open(const char* filename) {
@@ -193,3 +194,21 @@ bool fs_isdir(const char* path) {
 
 	return false;
 }
+
+
+bool fs_mountbind(const char* src, const char* dst) {
+	fs_mkdir(dst);
+
+	if (! fs_exist(dst))
+	{
+		return false;
+	}
+
+	return (mount(src, dst, NULL, MS_BIND, NULL) == 0);
+}
+
+
+bool fs_umount(const char* dst) {
+	return (umount(dst) == 0);
+}
+

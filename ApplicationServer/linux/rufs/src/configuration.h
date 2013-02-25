@@ -28,6 +28,8 @@
 #define MAIN_CONFIGURATION_SECTION "main"
 #define MAIN_DESTINATION_CONFIGURATION_KEY "destination"
 #define MAIN_UNION_CONFIGURATION_KEY "union"
+#define MAIN_BIND_CONFIGURATION_KEY "bind"
+#define MAIN_BIND_DESTINATION_CONFIGURATION_KEY "bindDestination"
 
 #define LOG_CONFIGURATION_SECTION "log"
 #define LOG_LEVEL_CONFIGURATION_KEY "level"
@@ -42,13 +44,16 @@
 
 
 typedef struct _Union {
+	char name[256];
 	char path[PATH_MAX];
 	List* accept;
 	List* reject;
 } Union;
 
 typedef struct _Configuration {
+	bool bind;
 	char destination_path[PATH_MAX];
+	char bind_path[PATH_MAX];
 	List* unions;
 } Configuration;
 

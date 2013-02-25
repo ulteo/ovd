@@ -23,7 +23,8 @@
 
 typedef enum {
 	SUCCESS,
-	CONF_ERROR
+	CONF_ERROR,
+	MOUNT_ERROR
 } status;
 
 

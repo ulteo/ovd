@@ -102,19 +102,6 @@ static int rufs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 			break;
 	}
 
-	DIR* dir = opendir("/home/toto/");
-	struct dirent* entry;
-	char* nomfichier;
-	for(entry=readdir(dir); entry != NULL; entry=readdir(dir))
-	{
-		nomfichier=entry->d_name;
-		if(entry->d_type==DT_DIR) {
-			printf("test %s\n", nomfichier);
-		};
-	}
-
-	 return 0;
-
 	return 0;
 }
 
@@ -483,7 +470,9 @@ int fuse_start(int argc, char** argv) {
 	fuse_opt_add_arg(&args, "-o");
 	fuse_opt_add_arg(&args, "allow_other");
 	fuse_opt_add_arg(&args, "-o");
-	fuse_opt_add_arg(&args, "nonempty");
+	if (config->bind) {
+		fuse_opt_add_arg(&args, "nonempty");
+	}
 
 	for(i = 1 ; i < argc; i++) {
 		fuse_opt_add_arg(&args, argv[i]);
@@ -491,8 +480,21 @@ int fuse_start(int argc, char** argv) {
 
 	fuse_opt_add_arg(&args, config->destination_path);
 
+	// make the mountbind
+	if (config->bind && config->bind_path[0] != 0) {
+		if (! fs_mountbind(config->destination_path, config->bind_path)) {
+			logError("Failed to bind %s to %s: %s", config->destination_path, config->bind_path, str_geterror());
+			return MOUNT_ERROR;
+		}
+	}
+
 	ret = fuse_main(args.argc, args.argv, &rufs_oper, NULL);
 	fuse_opt_free_args(&args);
+
+	if (config->bind && config->bind_path[0] != 0) {
+		fs_umount(config->bind_path);
+	}
+
 
 	return ret;
 }

@@ -50,6 +50,6 @@ int str_sprintf(char* dest, const char* format, ...);
 void str_snprintf(char* dest, int len, const char* format, ...);
 bool format_time();
 const char* str_lastOf(const char* src, const char* sub);
-
+const char* str_geterror();
 
 #endif

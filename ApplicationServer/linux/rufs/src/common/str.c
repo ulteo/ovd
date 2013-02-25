@@ -22,6 +22,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <errno.h>
 #include "memory.h"
 #include "types.h"
 #include "list.h"
@@ -242,4 +243,8 @@ const char* str_lastOf(const char* src, const char* sub) {
 		last = p++;
 
 	return last;
+}
+
+const char* str_geterror() {
+	return strerror(errno);
 }
