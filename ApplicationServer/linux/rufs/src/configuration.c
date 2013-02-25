@@ -47,7 +47,7 @@ bool configuration_free(Configuration* conf) {
 
 	if (conf->unions == NULL) {
 		logWarn("Invalid configuration, we need at least one path to union");
-		return;
+		return false;
 	}
 
 	logInfo("mounted path: %s", conf->destination_path);
