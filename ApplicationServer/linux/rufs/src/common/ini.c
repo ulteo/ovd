@@ -71,7 +71,7 @@ char* ini_getKey(Ini* ini, const char* sectionName, const char* key) {
 
 	for (i = 0 ; i < section->keys->size ; i++) {
 		char* currentKey = (char*)list_get(section->keys, i);
-		if (str_ncmp(key, currentKey, str_len(currentKey)) == 0)
+		if (str_ncmp(key, currentKey, 255) == 0)
 			return (char*)list_get(section->values, i);
 	}
 
