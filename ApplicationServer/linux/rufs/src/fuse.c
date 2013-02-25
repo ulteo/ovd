@@ -470,9 +470,7 @@ int fuse_start(int argc, char** argv) {
 	fuse_opt_add_arg(&args, "-o");
 	fuse_opt_add_arg(&args, "allow_other");
 	fuse_opt_add_arg(&args, "-o");
-	if (config->bind) {
-		fuse_opt_add_arg(&args, "nonempty");
-	}
+	fuse_opt_add_arg(&args, "nonempty");
 
 	for(i = 1 ; i < argc; i++) {
 		fuse_opt_add_arg(&args, argv[i]);
