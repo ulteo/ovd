@@ -147,17 +147,20 @@ bool fs_expandPath(const char* source, char* destination) {
 			str_cat(destination, r);
 			break;
 		case '%': // XDG variable
-			r = sys_getEnv(p+1);
+			r = xdg_user_dir_lookup(p+1);
 			if (r == NULL) {
 				printf("%s is not a valid xdg variable\n", p);
 				return false;
 			}
 
 			str_cat(destination, r);
+			memory_free(r);
 			break;
 
 		default:
+			str_cat(destination, "/");
 			str_cat(destination, p);
+			break;
 		}
 	}
 
