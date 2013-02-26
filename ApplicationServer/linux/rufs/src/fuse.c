@@ -14,6 +14,8 @@
 #include "status.h"
 #include "common/log.h"
 #include "configuration.h"
+#include "common/regexp.h"
+#include <linux/limits.h>
 #ifdef HAVE_SETXATTR
 #include <sys/xattr.h>
 #endif
@@ -22,11 +24,79 @@
 extern Configuration* config;
 
 
+static bool transformPath(const char* path, char* to) {
+	logDebug("======> test %s", path);
+	int lastIndex = config->unions->size - 1;
+	Regexp* reg;
+	Union* u;
+	int i = 0;
+	int a = 0;
+	int r = 0;
+
+	for(i = 0 ; i < config->unions->size ; i++) {
+		u = (Union*)list_get(config->unions, i);
+		List* accept;
+		List* reject;
+		bool match = false;
+
+		if (!u) {
+			continue;
+		}
+
+		// if the file exist in a union, we return it
+		str_sprintf(to, "%s%s", u->path, path);
+		if (fs_exist(to)) {
+			return true;
+		}
+
+		accept = u->accept;
+		reject = u->reject;
+
+		for(a = 0 ; a < accept->size ; a++) {
+			reg = (Regexp*)list_get(accept, a);
+			if (regexp_match(reg, path)) {
+				match = true;
+			}
+		}
+
+		// if no accept rules matched, we test the following union
+		if (!match && accept->size > 0) {
+			continue;
+		}
+
+
+		for(r = 0 ; r < reject->size ; r++) {
+			reg = (Regexp*)list_get(reject, r);
+			if (regexp_match(reg, path)) {
+				continue;
+			}
+		}
+
+		// We found a valid union
+		logDebug("Union %s is valid for the path %s", u->name, path);
+
+		str_sprintf(to, "%s%s", u->path, path);
+		return true;
+	}
+
+	// If we found noting, we return the last union
+	u = (Union*)list_get(config->unions, lastIndex);
+	logDebug("Failed back %s\n", u->name);
+
+	str_sprintf(to, "%s%s", u->path, path);
+	return true;
+}
+
 static int rufs_getattr(const char *path, struct stat *stbuf)
 {
 	int res;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
 
-	res = lstat(path, stbuf);
+	res = lstat(trpath, stbuf);
 	if (res == -1)
 		return -errno;
 
@@ -50,8 +120,13 @@ static int rufs_fgetattr(const char *path, struct stat *stbuf,
 static int rufs_access(const char *path, int mask)
 {
 	int res;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
 
-	res = access(path, mask);
+	res = access(trpath, mask);
 	if (res == -1)
 		return -errno;
 
@@ -61,8 +136,13 @@ static int rufs_access(const char *path, int mask)
 static int rufs_readlink(const char *path, char *buf, size_t size)
 {
 	int res;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
 
-	res = readlink(path, buf, size - 1);
+	res = readlink(trpath, buf, size - 1);
 	if (res == -1)
 		return -errno;
 
@@ -72,7 +152,14 @@ static int rufs_readlink(const char *path, char *buf, size_t size)
 
 static int rufs_opendir(const char *path, struct fuse_file_info *fi)
 {
-	DIR *dp = opendir(path);
+	int res;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
+
+	DIR *dp = opendir(trpath);
 	if (dp == NULL)
 		return -errno;
 
@@ -90,8 +177,31 @@ static int rufs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 {
 	DIR *dp = get_dirp(fi);
 	struct dirent *de;
-
 	(void) path;
+
+	// We need to list all the file present in all union
+	if (str_cmp(path, "/") == 0) {
+		int i = 0;
+		for (i = 0 ; i < config->unions->size ; i++) {
+			Union* u = (Union*)list_get(config->unions, i);
+			if (!u) {
+				continue;
+			}
+
+			dp = opendir(u->path);
+			while ((de = readdir(dp)) != NULL) {
+				struct stat st;
+				memset(&st, 0, sizeof(st));
+				st.st_ino = de->d_ino;
+				st.st_mode = de->d_type << 12;
+				if (filler(buf, de->d_name, &st, 0))
+					break;
+			}
+			closedir(dp);
+		}
+		return 0;
+	}
+
 	seekdir(dp, offset);
 	while ((de = readdir(dp)) != NULL) {
 		struct stat st;
@@ -116,11 +226,16 @@ static int rufs_releasedir(const char *path, struct fuse_file_info *fi)
 static int rufs_mknod(const char *path, mode_t mode, dev_t rdev)
 {
 	int res;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
 
 	if (S_ISFIFO(mode))
-		res = mkfifo(path, mode);
+		res = mkfifo(trpath, mode);
 	else
-		res = mknod(path, mode, rdev);
+		res = mknod(trpath, mode, rdev);
 	if (res == -1)
 		return -errno;
 
@@ -130,8 +245,13 @@ static int rufs_mknod(const char *path, mode_t mode, dev_t rdev)
 static int rufs_mkdir(const char *path, mode_t mode)
 {
 	int res;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
 
-	res = mkdir(path, mode);
+	res = mkdir(trpath, mode);
 	if (res == -1)
 		return -errno;
 
@@ -141,8 +261,13 @@ static int rufs_mkdir(const char *path, mode_t mode)
 static int rufs_unlink(const char *path)
 {
 	int res;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
 
-	res = unlink(path);
+	res = unlink(trpath);
 	if (res == -1)
 		return -errno;
 
@@ -152,8 +277,13 @@ static int rufs_unlink(const char *path)
 static int rufs_rmdir(const char *path)
 {
 	int res;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
 
-	res = rmdir(path);
+	res = rmdir(trpath);
 	if (res == -1)
 		return -errno;
 
@@ -163,8 +293,13 @@ static int rufs_rmdir(const char *path)
 static int rufs_symlink(const char *from, const char *to)
 {
 	int res;
+	char trto[PATH_MAX];
+	if (!transformPath(to, trto))
+	{
+		return -ENOENT;
+	}
 
-	res = symlink(from, to);
+	res = symlink(from, trto);
 	if (res == -1)
 		return -errno;
 
@@ -174,8 +309,13 @@ static int rufs_symlink(const char *from, const char *to)
 static int rufs_rename(const char *from, const char *to)
 {
 	int res;
+	char trto[PATH_MAX];
+	if (!transformPath(to, trto))
+	{
+		return -ENOENT;
+	}
 
-	res = rename(from, to);
+	res = rename(from, trto);
 	if (res == -1)
 		return -errno;
 
@@ -185,8 +325,13 @@ static int rufs_rename(const char *from, const char *to)
 static int rufs_link(const char *from, const char *to)
 {
 	int res;
+	char trto[PATH_MAX];
+	if (!transformPath(to, trto))
+	{
+		return -ENOENT;
+	}
 
-	res = link(from, to);
+	res = link(from, trto);
 	if (res == -1)
 		return -errno;
 
@@ -196,8 +341,13 @@ static int rufs_link(const char *from, const char *to)
 static int rufs_chmod(const char *path, mode_t mode)
 {
 	int res;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
 
-	res = chmod(path, mode);
+	res = chmod(trpath, mode);
 	if (res == -1)
 		return -errno;
 
@@ -207,8 +357,13 @@ static int rufs_chmod(const char *path, mode_t mode)
 static int rufs_chown(const char *path, uid_t uid, gid_t gid)
 {
 	int res;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
 
-	res = lchown(path, uid, gid);
+	res = lchown(trpath, uid, gid);
 	if (res == -1)
 		return -errno;
 
@@ -218,8 +373,13 @@ static int rufs_chown(const char *path, uid_t uid, gid_t gid)
 static int rufs_truncate(const char *path, off_t size)
 {
 	int res;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
 
-	res = truncate(path, size);
+	res = truncate(trpath, size);
 	if (res == -1)
 		return -errno;
 
@@ -243,6 +403,11 @@ static int rufs_ftruncate(const char *path, off_t size,
 static int rufs_utimens(const char *path, const struct timespec ts[2])
 {
 	int res;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
 	struct timeval tv[2];
 
 	tv[0].tv_sec = ts[0].tv_sec;
@@ -250,7 +415,7 @@ static int rufs_utimens(const char *path, const struct timespec ts[2])
 	tv[1].tv_sec = ts[1].tv_sec;
 	tv[1].tv_usec = ts[1].tv_nsec / 1000;
 
-	res = utimes(path, tv);
+	res = utimes(trpath, tv);
 	if (res == -1)
 		return -errno;
 
@@ -260,8 +425,14 @@ static int rufs_utimens(const char *path, const struct timespec ts[2])
 static int rufs_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
 	int fd;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
 
-	fd = open(path, fi->flags, mode);
+
+	fd = open(trpath, fi->flags, mode);
 	if (fd == -1)
 		return -errno;
 
@@ -272,8 +443,13 @@ static int rufs_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 static int rufs_open(const char *path, struct fuse_file_info *fi)
 {
 	int fd;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
 
-	fd = open(path, fi->flags);
+	fd = open(trpath, fi->flags);
 	if (fd == -1)
 		return -errno;
 
@@ -310,8 +486,13 @@ static int rufs_write(const char *path, const char *buf, size_t size,
 static int rufs_statfs(const char *path, struct statvfs *stbuf)
 {
 	int res;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
 
-	res = statvfs(path, stbuf);
+	res = statvfs(trpath, stbuf);
 	if (res == -1)
 		return -errno;
 
@@ -368,7 +549,13 @@ static int rufs_fsync(const char *path, int isdatasync,
 static int rufs_setxattr(const char *path, const char *name, const char *value,
 			size_t size, int flags)
 {
-	int res = lsetxattr(path, name, value, size, flags);
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
+
+	int res = lsetxattr(trpath, name, value, size, flags);
 	if (res == -1)
 		return -errno;
 	return 0;
@@ -377,7 +564,14 @@ static int rufs_setxattr(const char *path, const char *name, const char *value,
 static int rufs_getxattr(const char *path, const char *name, char *value,
 			size_t size)
 {
-	int res = lgetxattr(path, name, value, size);
+	int res;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
+
+	res = lgetxattr(trpath, name, value, size);
 	if (res == -1)
 		return -errno;
 	return res;
@@ -385,7 +579,14 @@ static int rufs_getxattr(const char *path, const char *name, char *value,
 
 static int rufs_listxattr(const char *path, char *list, size_t size)
 {
-	int res = llistxattr(path, list, size);
+	int res;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
+
+	res = llistxattr(trpath, list, size);
 	if (res == -1)
 		return -errno;
 	return res;
@@ -393,7 +594,14 @@ static int rufs_listxattr(const char *path, char *list, size_t size)
 
 static int rufs_removexattr(const char *path, const char *name)
 {
-	int res = lremovexattr(path, name);
+	int res;
+	char trpath[PATH_MAX];
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
+
+	res = lremovexattr(trpath, name);
 	if (res == -1)
 		return -errno;
 	return 0;
