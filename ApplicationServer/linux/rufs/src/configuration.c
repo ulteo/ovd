@@ -150,14 +150,16 @@ static bool configuration_parseUnion(Ini* ini, Configuration* conf, const char* 
 				return false;
 			}
 
-			Regexp* reg = regexp_create(expandedPath);
-			if (!reg) {
-				logWarn("Invalid accept close in union.");
-				regexp_delete(reg);
-				return false;
-			}
+			if (str_len(value) > 0) {
+				Regexp* reg = regexp_create(expandedPath);
+				if (!reg) {
+					logWarn("Invalid accept close in union.");
+					regexp_delete(reg);
+					return false;
+				}
 
-			list_add(unionObject->accept, (Any)reg);
+				list_add(unionObject->accept, (Any)reg);
+			}
 			continue;
 		}
 
@@ -167,15 +169,16 @@ static bool configuration_parseUnion(Ini* ini, Configuration* conf, const char* 
 				return false;
 			}
 
-			Regexp* reg = regexp_create(expandedPath);
-			if (!reg) {
-				logWarn("Invalid reject close in union.");
-				regexp_delete(reg);
-				return false;
+			if(str_len(value) > 0) {
+				Regexp* reg = regexp_create(expandedPath);
+				if (!reg) {
+					logWarn("Invalid reject close in union.");
+					regexp_delete(reg);
+					return false;
+				}
+
+				list_add(unionObject->reject, (Any)reg);
 			}
-
-
-			list_add(unionObject->reject, (Any)reg);
 			continue;
 		}
 	}
