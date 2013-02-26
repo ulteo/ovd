@@ -22,7 +22,7 @@
 #define _COMMON_STR_
 
 #include <stdarg.h>
-#include "str.h"
+#include "list.h"
 
 
 size_t str_len(const char* txt);
