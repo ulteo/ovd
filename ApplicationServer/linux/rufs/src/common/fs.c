@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2012 Ulteo SAS
+ * Copyright (C) 2013 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -161,7 +161,9 @@ bool fs_expandPath(const char* source, char* destination) {
 			break;
 
 		default:
-			str_cat(destination, "/");
+			if (str_len(destination) > 0) {
+				str_cat(destination, "/");
+			}
 			str_cat(destination, p);
 			break;
 		}
