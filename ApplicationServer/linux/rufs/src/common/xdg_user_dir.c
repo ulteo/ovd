@@ -136,7 +136,6 @@ xdg_user_dir_lookup_with_fallback (const char *type, const char *fallback)
 			goto error2;
 
 		*user_dir = 0;
-		strcat (user_dir, "/");
 
 		d = user_dir + strlen (user_dir);
 		while (*p && *p != '"')
@@ -193,11 +192,11 @@ xdg_user_dir_lookup (const char *type)
 	/* Special case desktop for historical compatibility */
 	if (strcmp (type, "DESKTOP") == 0)
 	{
-		user_dir = (char*) malloc (strlen (home_dir) + strlen ("/Desktop") + 1);
+		user_dir = (char*) malloc (strlen (home_dir) + strlen ("Desktop") + 1);
 		if (user_dir == NULL)
 			return NULL;
 
-		strcat (user_dir, "/Desktop");
+		strcat (user_dir, "Desktop");
 		return user_dir;
 	}
   
