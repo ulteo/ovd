@@ -135,6 +135,9 @@ List* str_split(const char* str, const char delim) {
 		return NULL;
 
 	List* res = list_new(true);
+	if (*p == '/') {
+		p++;
+	}
 
 	while (p) {
 		last = p;
