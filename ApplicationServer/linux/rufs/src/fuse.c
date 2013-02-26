@@ -24,14 +24,76 @@
 extern Configuration* config;
 
 
+// Transform path returned by ls
+static void transformPathOut(const char* path, char* to) {
+
+	List* transList = config->translations;
+	Translation* trans;
+	int i;
+
+	for(i = 0 ; i < transList->size ; i++) {
+		trans = (Translation*) list_get(transList, i);
+		if (str_cmp(path, trans->in) == 0) {
+			str_cpy(to, trans->out);
+			return;
+		}
+	}
+
+	str_cpy(to, path);
+}
+
+
+// transform path used to access the filesystem
+static void transformPathIn(const char* path, char* to) {
+	int i;
+	char* p;
+	List *pathComponent = (List*)str_split(path, '/');
+	List* transList = config->translations;
+	Translation* trans;
+	to[0] = 0;
+
+	if (pathComponent == NULL || pathComponent->size == 0) {
+		str_cpy(to, path);
+		return;
+	}
+
+	p = (char*)list_get(pathComponent, 0);
+
+	for(i = 0 ; i < transList->size ; i++) {
+		trans = (Translation*) list_get(transList, i);
+		if (str_cmp(p, trans->out) == 0) {
+			sprintf(to, "/%s", trans->in);
+			break;
+		}
+	}
+
+	if (str_len(to) == 0) {
+		p = (char*)list_get(pathComponent, 0);
+		str_cat(to, "/");
+		str_cat(to, p);
+	}
+
+	for(i = 1 ; i < pathComponent->size ; i++) {
+		p = (char*)list_get(pathComponent, i);
+		str_cat(to, "/");
+		str_cat(to, p);
+	}
+
+	// Cleaning
+	list_delete(pathComponent);
+}
+
 static bool transformPath(const char* path, char* to) {
 	logDebug("======> test %s", path);
 	int lastIndex = config->unions->size - 1;
+	char trpath[PATH_MAX];
 	Regexp* reg;
 	Union* u;
 	int i = 0;
 	int a = 0;
 	int r = 0;
+
+	transformPathIn(path, trpath);
 
 	for(i = 0 ; i < config->unions->size ; i++) {
 		u = (Union*)list_get(config->unions, i);
@@ -44,7 +106,7 @@ static bool transformPath(const char* path, char* to) {
 		}
 
 		// if the file exist in a union, we return it
-		str_sprintf(to, "%s%s", u->path, path);
+		str_sprintf(to, "%s%s", u->path, trpath);
 		if (fs_exist(to)) {
 			return true;
 		}
@@ -54,7 +116,7 @@ static bool transformPath(const char* path, char* to) {
 
 		for(a = 0 ; a < accept->size ; a++) {
 			reg = (Regexp*)list_get(accept, a);
-			if (regexp_match(reg, path)) {
+			if (regexp_match(reg, trpath)) {
 				match = true;
 			}
 		}
@@ -67,15 +129,15 @@ static bool transformPath(const char* path, char* to) {
 
 		for(r = 0 ; r < reject->size ; r++) {
 			reg = (Regexp*)list_get(reject, r);
-			if (regexp_match(reg, path)) {
+			if (regexp_match(reg, trpath)) {
 				continue;
 			}
 		}
 
 		// We found a valid union
-		logDebug("Union %s is valid for the path %s", u->name, path);
+		logDebug("Union %s is valid for the path %s", u->name, trpath);
 
-		str_sprintf(to, "%s%s", u->path, path);
+		str_sprintf(to, "%s%s", u->path, trpath);
 		return true;
 	}
 
@@ -83,7 +145,7 @@ static bool transformPath(const char* path, char* to) {
 	u = (Union*)list_get(config->unions, lastIndex);
 	logDebug("Failed back %s\n", u->name);
 
-	str_sprintf(to, "%s%s", u->path, path);
+	str_sprintf(to, "%s%s", u->path, trpath);
 	return true;
 }
 
@@ -190,11 +252,13 @@ static int rufs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 
 			dp = opendir(u->path);
 			while ((de = readdir(dp)) != NULL) {
+				char trpath[PATH_MAX];
 				struct stat st;
 				memset(&st, 0, sizeof(st));
 				st.st_ino = de->d_ino;
 				st.st_mode = de->d_type << 12;
-				if (filler(buf, de->d_name, &st, 0))
+				transformPathOut(de->d_name, trpath);
+				if (filler(buf, trpath, &st, 0))
 					break;
 			}
 			closedir(dp);

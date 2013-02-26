@@ -26,6 +26,7 @@
 
 #define DEFAULT_CONFIGURATION_PATH "/etc/ulteo/default.conf"
 #define MAIN_CONFIGURATION_SECTION "main"
+#define TRANS_CONFIGURATION_SECTION "translation"
 #define MAIN_DESTINATION_CONFIGURATION_KEY "destination"
 #define MAIN_UNION_CONFIGURATION_KEY "union"
 #define MAIN_BIND_CONFIGURATION_KEY "bind"
@@ -50,11 +51,19 @@ typedef struct _Union {
 	List* reject;
 } Union;
 
+
+typedef struct _Translation {
+	char in[PATH_MAX];
+	char out[PATH_MAX];
+} Translation;
+
+
 typedef struct _Configuration {
 	bool bind;
 	char destination_path[PATH_MAX];
 	char bind_path[PATH_MAX];
 	List* unions;
+	List* translations;
 } Configuration;
 
 

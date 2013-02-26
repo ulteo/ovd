@@ -32,6 +32,7 @@ Configuration* configuration_new() {
 		return NULL;
 
 	conf->unions = list_new(false);
+	conf->translations = list_new(true);
 	conf->bind = false;
 	conf->destination_path[0] = '\0';
 	conf->bind_path[0] = '\0';
@@ -61,6 +62,8 @@ bool configuration_free(Configuration* conf) {
 
 		memory_free(u);
 	}
+
+	list_delete(conf->translations);
 
 	memory_free(conf);
 	return true;
@@ -292,6 +295,36 @@ static bool configuration_parseMain(Ini* ini, Configuration* conf) {
 	return true;
 }
 
+
+static bool configuration_parseTranslation(Ini* ini, Configuration* conf) {
+	Translation* trans;
+	char* key;
+	char* value;
+	Section* sec;
+	int i;
+
+	if (ini == NULL || conf == NULL) {
+		logWarn("Invalid config object");
+		return false;
+	}
+
+	sec = ini_get(ini, TRANS_CONFIGURATION_SECTION);
+
+	for(i = 0 ; i < sec->keys->size ; i++) {
+		trans = memory_new(Translation, true);
+		char* key = (char*)list_get(sec->keys, i);
+		char* value = (char*)list_get(sec->values, i);
+		str_unquote(value);
+
+		str_cpy(trans->in, key);
+		fs_expandPath(value, trans->out);
+		list_add(conf->translations, (Any)trans);
+	}
+
+	return true;
+}
+
+
 bool configuration_parse (const char* path, Configuration* conf) {
 	logDebug("Parsing configuration...");
 	Ini* ini = ini_new();
@@ -310,6 +343,12 @@ bool configuration_parse (const char* path, Configuration* conf) {
 		goto end;
 	}
 
+	result = configuration_parseTranslation(ini, conf);
+	if (! result) {
+		logWarn("Failed to parse translation configuration");
+		goto end;
+	}
+
 end:
 	ini_delete(ini);
 	return result;
@@ -317,6 +356,7 @@ end:
 
 void configuration_dump (Configuration* conf) {
 	logInfo("Configuration dump:");
+	Translation* trans;
 	int i, j;
 
 	if (conf == NULL) {
@@ -330,6 +370,13 @@ void configuration_dump (Configuration* conf) {
 	}
 
 	logInfo("mounted path: %s", conf->destination_path);
+
+	logInfo("Translation information");
+	for(i = 0 ; i < conf->translations->size; i++) {
+		trans = (Translation*)list_get(conf->translations, i);
+		logInfo("\t %s => %s", trans->in, trans->out);
+	}
+
 
 	for(i = 0 ; i < conf->unions->size; i++) {
 		Union* u = (Union*)list_get(conf->unions, i);
