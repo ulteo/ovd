@@ -48,126 +48,115 @@
 static char *
 xdg_user_dir_lookup_with_fallback (const char *type, const char *fallback)
 {
-  FILE *file;
-  char *home_dir, *config_home, *config_file;
-  char buffer[512];
-  char *user_dir;
-  char *p, *d;
-  int len;
-  int relative;
-  
-  home_dir = getenv ("HOME");
+	FILE *file;
+	char *home_dir, *config_home, *config_file;
+	char buffer[512];
+	char *user_dir;
+	char *p, *d;
+	int len;
+	int relative;
 
-  if (home_dir == NULL)
-    goto error;
+	home_dir = getenv ("HOME");
 
-  config_home = getenv ("XDG_CONFIG_HOME");
-  if (config_home == NULL || config_home[0] == 0)
-    {
-      config_file = (char*) malloc (strlen (home_dir) + strlen ("/.config/user-dirs.dirs") + 1);
-      if (config_file == NULL)
-        goto error;
+	if (home_dir == NULL)
+		goto error;
 
-      strcpy (config_file, home_dir);
-      strcat (config_file, "/.config/user-dirs.dirs");
-    }
-  else
-    {
-      config_file = (char*) malloc (strlen (config_home) + strlen ("/user-dirs.dirs") + 1);
-      if (config_file == NULL)
-        goto error;
-
-      strcpy (config_file, config_home);
-      strcat (config_file, "/user-dirs.dirs");
-    }
-
-  file = fopen (config_file, "r");
-  free (config_file);
-  if (file == NULL)
-    goto error;
-
-  user_dir = NULL;
-  while (fgets (buffer, sizeof (buffer), file))
-    {
-      /* Remove newline at end */
-      len = strlen (buffer);
-      if (len > 0 && buffer[len-1] == '\n')
-	buffer[len-1] = 0;
-      
-      p = buffer;
-      while (*p == ' ' || *p == '\t')
-	p++;
-      
-      if (strncmp (p, "XDG_", 4) != 0)
-	continue;
-      p += 4;
-      if (strncmp (p, type, strlen (type)) != 0)
-	continue;
-      p += strlen (type);
-      if (strncmp (p, "_DIR", 4) != 0)
-	continue;
-      p += 4;
-
-      while (*p == ' ' || *p == '\t')
-	p++;
-
-      if (*p != '=')
-	continue;
-      p++;
-      
-      while (*p == ' ' || *p == '\t')
-	p++;
-
-      if (*p != '"')
-	continue;
-      p++;
-      
-      relative = 0;
-      if (strncmp (p, "$HOME/", 6) == 0)
+	config_home = getenv ("XDG_CONFIG_HOME");
+	if (config_home == NULL || config_home[0] == 0)
 	{
-	  p += 6;
-	  relative = 1;
-	}
-      else if (*p != '/')
-	continue;
-      
-      if (relative)
-	{
-	  user_dir = (char*) malloc (strlen (home_dir) + 1 + strlen (p) + 1);
-          if (user_dir == NULL)
-            goto error2;
+		config_file = (char*) malloc (strlen (home_dir) + strlen ("/.config/user-dirs.dirs") + 1);
+		if (config_file == NULL)
+			goto error;
 
-	  strcpy (user_dir, home_dir);
-	  strcat (user_dir, "/");
+		strcpy (config_file, home_dir);
+		strcat (config_file, "/.config/user-dirs.dirs");
 	}
-      else
+	else
 	{
-	  user_dir = (char*) malloc (strlen (p) + 1);
-          if (user_dir == NULL)
-            goto error2;
+		config_file = (char*) malloc (strlen (config_home) + strlen ("/user-dirs.dirs") + 1);
+		if (config_file == NULL)
+			goto error;
 
-	  *user_dir = 0;
+		strcpy (config_file, config_home);
+		strcat (config_file, "/user-dirs.dirs");
 	}
-      
-      d = user_dir + strlen (user_dir);
-      while (*p && *p != '"')
+
+	file = fopen (config_file, "r");
+	free (config_file);
+	if (file == NULL)
+		goto error;
+
+	user_dir = NULL;
+	while (fgets (buffer, sizeof (buffer), file))
 	{
-	  if ((*p == '\\') && (*(p+1) != 0))
-	    p++;
-	  *d++ = *p++;
+		/* Remove newline at end */
+		len = strlen (buffer);
+		if (len > 0 && buffer[len-1] == '\n')
+			buffer[len-1] = 0;
+      
+		p = buffer;
+		while (*p == ' ' || *p == '\t')
+			p++;
+      
+		if (strncmp (p, "XDG_", 4) != 0)
+			continue;
+		p += 4;
+		if (strncmp (p, type, strlen (type)) != 0)
+			continue;
+		p += strlen (type);
+		if (strncmp (p, "_DIR", 4) != 0)
+			continue;
+		p += 4;
+
+		while (*p == ' ' || *p == '\t')
+			p++;
+
+		if (*p != '=')
+			continue;
+		p++;
+
+		while (*p == ' ' || *p == '\t')
+			p++;
+
+		if (*p != '"')
+			continue;
+		p++;
+      
+		relative = 0;
+		if (strncmp (p, "$HOME/", 6) == 0)
+		{
+			p += 6;
+			relative = 1;
+		}
+		else if (*p != '/')
+			continue;
+      
+		user_dir = (char*) malloc (strlen (p) + 2);
+		if (user_dir == NULL)
+			goto error2;
+
+		*user_dir = 0;
+		strcat (user_dir, "/");
+
+		d = user_dir + strlen (user_dir);
+		while (*p && *p != '"')
+		{
+			if ((*p == '\\') && (*(p+1) != 0))
+				p++;
+			*d++ = *p++;
+		}
+		*d = 0;
 	}
-      *d = 0;
-    }
 error2:
-  fclose (file);
+fclose (file);
 
-  if (user_dir)
-    return user_dir;
+if (user_dir)
+	return user_dir;
 
- error:
-  if (fallback)
-    return strdup (fallback);
-  return NULL;
+error:
+if (fallback)
+	return strdup (fallback);
+return NULL;
 }
 
 /**
@@ -190,28 +179,27 @@ error2:
 char *
 xdg_user_dir_lookup (const char *type)
 {
-  char *dir, *home_dir, *user_dir;
+	char *dir, *home_dir, *user_dir;
 	  
-  dir = xdg_user_dir_lookup_with_fallback (type, NULL);
-  if (dir != NULL)
-    return dir;
+	dir = xdg_user_dir_lookup_with_fallback (type, NULL);
+	if (dir != NULL)
+		return dir;
   
-  home_dir = getenv ("HOME");
+	home_dir = getenv ("HOME");
   
-  if (home_dir == NULL)
-    return NULL;
+	if (home_dir == NULL)
+		return NULL;
   
-  /* Special case desktop for historical compatibility */
-  if (strcmp (type, "DESKTOP") == 0)
-    {
-      user_dir = (char*) malloc (strlen (home_dir) + strlen ("/Desktop") + 1);
-      if (user_dir == NULL)
-        return NULL;
+	/* Special case desktop for historical compatibility */
+	if (strcmp (type, "DESKTOP") == 0)
+	{
+		user_dir = (char*) malloc (strlen (home_dir) + strlen ("/Desktop") + 1);
+		if (user_dir == NULL)
+			return NULL;
 
-      strcpy (user_dir, home_dir);
-      strcat (user_dir, "/Desktop");
-      return user_dir;
-    }
+		strcat (user_dir, "/Desktop");
+		return user_dir;
+	}
   
-  return strdup (home_dir);
+	return strdup (home_dir);
 }
