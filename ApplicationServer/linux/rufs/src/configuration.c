@@ -23,6 +23,7 @@
 #include "common/memory.h"
 #include "common/list.h"
 #include "common/str.h"
+#include "common/regexp.h"
 
 
 Configuration* configuration_new() {
@@ -149,7 +150,14 @@ static bool configuration_parseUnion(Ini* ini, Configuration* conf, const char* 
 				return false;
 			}
 
-			list_add(unionObject->accept, (Any)str_dup(expandedPath));
+			Regexp* reg = regexp_create(expandedPath);
+			if (!reg) {
+				logWarn("Invalid accept close in union.");
+				regexp_delete(reg);
+				return false;
+			}
+
+			list_add(unionObject->accept, (Any)reg);
 			continue;
 		}
 
@@ -159,7 +167,15 @@ static bool configuration_parseUnion(Ini* ini, Configuration* conf, const char* 
 				return false;
 			}
 
-			list_add(unionObject->reject, (Any)str_dup(expandedPath));
+			Regexp* reg = regexp_create(expandedPath);
+			if (!reg) {
+				logWarn("Invalid reject close in union.");
+				regexp_delete(reg);
+				return false;
+			}
+
+
+			list_add(unionObject->reject, (Any)reg);
 			continue;
 		}
 	}
@@ -311,13 +327,17 @@ void configuration_dump (Configuration* conf) {
 
 		logInfo(" unionized path: %s", u->path);
 		if (u->accept != NULL) {
-			for(j = 0 ; j < u->accept->size; j++)
-				logInfo("  accept: %s", list_get(u->accept, j));
+			for(j = 0 ; j < u->accept->size; j++) {
+				Regexp* reg = (Regexp*)list_get(u->accept, j);
+				logInfo("  accept: %s", reg->expression);
+			}
 		}
 
 		if (u->reject != NULL) {
-			for(j = 0 ; j < u->reject->size; j++)
-				logInfo("  reject: %s", list_get(u->reject, j));
+			for(j = 0 ; j < u->reject->size; j++) {
+				Regexp* reg = (Regexp*)list_get(u->reject, j);
+				logInfo("  reject: %s", reg->expression);
+			}
 		}
 	}
 }
