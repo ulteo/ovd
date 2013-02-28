@@ -85,7 +85,7 @@ AC_ARG_WITH([ha], [AC_HELP_STRING([--with-ha], [add the module HA to the SM])],
             [ha=yes], )
 AM_CONDITIONAL(HA, [test -n "$ha"])
 if test -n "$ha"; then
-    AC_CONFIG_FILES([ha/Makefile web/admin/ha/Makefile])
+    AC_CONFIG_FILES([ha/Makefile])
     DISTCHECK_CONFIGURE_FLAGS+=" --with-ha"
 fi
 
@@ -109,20 +109,9 @@ web/modules/ApplicationsGroupDB/Makefile
 web/modules/ProfileDB/Makefile
 web/modules/SharedFolderDB/Makefile
 web/admin/Makefile
-web/admin/ajax/Makefile
 web/admin/classes/Makefile
 web/admin/includes/Makefile
 web/admin/init/Makefile
-web/admin/media/script/Makefile
-web/admin/media/script/ajax/Makefile
-web/admin/media/script/lib/calendarpopup/Makefile
-web/admin/media/script/lib/nifty/Makefile
-web/admin/media/script/lib/prototype/Makefile
-web/admin/media/script/lib/scriptaculous/Makefile
-web/admin/media/script/lib/Makefile
-web/admin/media/style/Makefile
-web/admin/media/image/loadbalancing/Makefile
-web/admin/media/image/menu/Makefile
 web/admin/media/image/Makefile
 web/admin/media/Makefile
 web/includes/Makefile

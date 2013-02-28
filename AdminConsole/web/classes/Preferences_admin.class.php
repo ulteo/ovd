@@ -156,11 +156,11 @@ class Preferences_admin {
 				if (array_key_exists($k, $this->values)) {
 					$name = $this->values[$k];
 				}
-				else if (array_key_exists($value, $this->values)) {
-					$name = $this->values[$value];
+				else if (array_key_exists(strval($value), $this->values)) {
+					$name = $this->values[strval($value)];
 				}
-				else if (array_key_exists($value, $this->titles)) {
-					$name = $this->titles[$value];
+				else if (array_key_exists(strval($value), $this->titles)) {
+					$name = $this->titles[strval($value)];
 				}
 				
 				$values[$value] = $name;

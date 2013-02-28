@@ -26,16 +26,8 @@ define('OVD_SM_VERSION', '@OVD_VERSION@');
 define('SESSIONMANAGER_CONF_FILE', '@SYSCONFDIR@/ulteo/sessionmanager/config.inc.php');
 define('SESSIONMANAGER_PLUGINS_DIR', '@SYSCONFDIR@/ulteo/sessionmanager/plugins');
 
-define('DEFAULT_PAGE_TITLE', 'Open Virtual Desktop');
-
-$base_url = str_replace('/admin', '', dirname($_SERVER['PHP_SELF'])).'/';
-
-define('DEFAULT_LOGO_URL', '/ovd/admin/media/image/header.png');
-
 define('DEFAULT_REQUEST_TIMEOUT', 10);
 
 define('DEFAULT_CACHE_DURATION', 60);
 define('DESTROYING_DURATION', 60);
 define('DEFAULT_UNUSED_SESSION_DURATION', 600);
-
-define('LOCALE_DIR', '@LOCALE_DIR@');

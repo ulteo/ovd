@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -479,41 +479,6 @@ class Server {
 		return true;
 	}
 
-	public function stringStatus() {
-		$string = '';
-
-		if ($this->getAttribute('locked'))
-			$string .= '<span class="msg_unknown">'._('Under maintenance').'</span> ';
-
-		$buf = $this->getAttribute('status');
-		if ($buf == 'pending')
-			$string .= '<span class="msg_warn">'._('Pending').'</span>';
-		elseif ($buf == 'ready')
-			$string .= '<span class="msg_ok">'._('Online').'</span>';
-		elseif ($buf == 'down')
-			$string .= '<span class="msg_warn">'._('Offline').'</span>';
-		elseif ($buf == 'broken')
-			$string .= '<span class="msg_error">'._('Broken').'</span>';
-		else
-			$string .= '<span class="msg_other">'._('Unknown').'</span>';
-
-		return $string;
-	}
-
-	public function stringType() {
-		if ($this->hasAttribute('type'))
-			return $this->getAttribute('type');
-
-		return _('Unknown');
-	}
-
-	public function stringVersion() {
-		if ($this->hasAttribute('version'))
-			return $this->getAttribute('version');
-
-		return _('Unknown');
-	}
-
 	public function getRoles() {
 		$roles = array();
 		foreach($this->roles as $role => $enable) {
@@ -583,46 +548,6 @@ class Server {
 			$this->setAttribute($k, trim($v));
 
 		return true;
-	}
-
-	public function getCpuUsage() {
-		$cpu_load = $this->getAttribute('cpu_load');
-		$cpu_nb_cores = $this->getAttribute('cpu_nb_cores');
-
-		if ($cpu_nb_cores == 0)
-			return false;
-
-		return round(($cpu_load/$cpu_nb_cores)*100);
-	}
-
-	public function getRamUsage() {
-		$ram_used = $this->getAttribute('ram_used');
-		$ram_total = $this->getAttribute('ram_total');
-
-		if ($ram_total == 0)
-			return false;
-
-		return round(($ram_used/$ram_total)*100);
-	}
-
-	public function getSessionUsage() {
-		$max_sessions = $this->getNbMaxSessions();
-		$used_sessions = $this->getNbUsedSessions();
-
-		if ($max_sessions == 0)
-			return false;
-
-		return round(($used_sessions/$max_sessions)*100);
-	}
-
-	public function getDiskUsage() {
-		$total_disk = (float)($this->getAttribute('disk_total'));
-		$free_disk = (float)($this->getAttribute('disk_free'));
-
-		if ($total_disk == 0)
-			return false;
-
-		return round((($total_disk-$free_disk)/$total_disk)*100);
 	}
 
 	public function orderDeletion() {

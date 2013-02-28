@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Arnaud LEGRAND <arnaud@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -47,7 +48,7 @@ class HA_high_availability  extends HA {
 	public static function configuration() {
 		$ret = array();
 		$vars=HA_high_availability::extractVarsFromConfFile();
-		$c = new ConfigElement_input('VIP', _('Virtual IP'), _('Virtual IP'), _('Virtual IP'),$vars["VIP"]);
+		$c = new ConfigElement_input('VIP', $vars["VIP"]);
 		$ret[]= $c;
 		return $ret;
 	}
@@ -56,10 +57,6 @@ class HA_high_availability  extends HA {
 		return true;
 	}
 
-	public static function prettyName() {
-		return _('HA configuration');
-	}
-	
 	public static function isDefault() {
 		return true;
 	}

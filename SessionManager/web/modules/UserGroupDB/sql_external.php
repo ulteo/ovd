@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -103,17 +103,17 @@ class UserGroupDB_sql_external {
 	
 	public static function configuration() {
 		$ret = array();
-		$c = new ConfigElement_input('host', _('Server host address'), _('The address of your MySQL server.'), _('The address of your MySQL server.'), '');
+		$c = new ConfigElement_input('host', '');
 		$ret []= $c;
-		$c = new ConfigElement_input('user', _('User login'), _('The user login that must be used to access the database (to list users groups).'), _('The user login that must be used to access the database (to list users groups).'), '');
+		$c = new ConfigElement_input('user', '');
 		$ret []= $c;
-		$c = new ConfigElement_password('password', _('User password'), _('The user password that must be used to access the database (to list users groups).'), _('The user password that must be used to access the database (to list users groups).'), '');
+		$c = new ConfigElement_password('password', '');
 		$ret []= $c;
-		$c = new ConfigElement_input('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), '');
+		$c = new ConfigElement_input('database', '');
 		$ret []= $c;
-		$c = new ConfigElement_input('table', _('Database users groups table name'), _('The name of the database table which contains the users groups'), _('The name of the database table which contains the users groups'), '');
+		$c = new ConfigElement_input('table', '');
 		$ret []= $c;
-		$c = new ConfigElement_inputlist('match', _('Matching'), _('Matching'), _('Matching'), array('id' => 'id', 'name' => 'name', 'description' => 'description'));
+		$c = new ConfigElement_inputlist('match', array('id', 'name', 'description'));
 		$ret []= $c;
 		return $ret;
 	}
@@ -132,10 +132,6 @@ class UserGroupDB_sql_external {
 		$sql2 = new SQL($config);
 		$status = $sql2->CheckLink(false);
 		return $status;
-	}
-	
-	public static function prettyName() {
-		return _('MySQL external');
 	}
 	
 	public static function isDefault() {

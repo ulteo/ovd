@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -178,188 +178,166 @@ class Preferences {
 
 	public function initialize(){
 
-		$this->addPrettyName('general',_('General configuration'));
-
-		$c = new ConfigElement_select('system_in_maintenance', _('System on maintenance mode'), _('System on maintenance mode'), _('System on maintenance mode'), 0);
-		$c->setContentAvailable(array(0=>_('no'), 1=>_('yes')));
+		$c = new ConfigElement_select('system_in_maintenance', 0);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general');
 
-		$c = new ConfigElement_select('admin_language', _('Administration console language'), _('Administration console language'), _('Administration console language'), 'auto');
+		$c = new ConfigElement_select('admin_language', 'auto');
 		$c->setContentAvailable(array(
-			'auto'=>_('Autodetect'),
-			'ar_AE'=>'العربي - Arabic',
-			'de_DE'=>'Deutsch - German',
-			'en_GB'=>'English',
-			'es_ES'=>'Español - Spanish',
-			'fr_FR'=>'Français - French',
-			'hu_HU'=>'Magyar - Hungarian',
-//			'id_ID'=>'Bahasa Indonesia - Indonesian',
-			'it_IT'=>'Italiano - Italian',
-			'ja_JP'=>'日本語 - Japanese',
-			'nl_NL'=>'Nederlands - Dutch',
-			'pt_BR'=>'Português (Brasil) - Portuguese (Brazil)',
-			'sk_SK'=>'Slovenčina - Slovak',
-			'ro_RO'=>'Română - Romanian',
-			'ru_RU'=>'Русский - Russian',
-			'zh_CN'=>'中文简体 - Chinese',
+			'auto',
+			'ar_AE',
+			'de_DE',
+			'en_GB',
+			'es_ES',
+			'fr_FR',
+			'hu_HU',
+//			'id_ID',
+			'it_IT',
+			'ja_JP',
+			'nl_NL',
+			'pt_BR',
+			'sk_SK',
+			'ro_RO',
+			'ru_RU',
+			'zh_CN',
 		));
 		$this->add($c,'general');
 
-		$c = new ConfigElement_multiselect('log_flags', _('Debug options list'), _('Select debug options you want to enable.'), _('Select debug options you want to enable.'), array('info','warning','error','critical'));
-		$c->setContentAvailable(array('debug' => _('debug'),'info' => _('info'), 'warning' => _('warning'),'error' => _('error'),'critical' => _('critical')));
+		$c = new ConfigElement_multiselect('log_flags', array('info','warning','error','critical'));
+		$c->setContentAvailable(array('debug','info', 'warning','error','critical'));
 		$this->add($c,'general');
-		$c = new ConfigElement_select('cache_update_interval', _('Cache logs update interval'), _('Cache logs update interval'), _('Cache logs update interval'), 30);
-		$c->setContentAvailable(array(30=>_('30 seconds'), 60=>_('1 minute'), 300=>_('5 minutes'), 900=>_('15 minutes'), 1800=>_('30 minutes'), 3600=>_('1 hour'), 7200=>_('2 hours')));
+		$c = new ConfigElement_select('cache_update_interval', 30);
+		$c->setContentAvailable(array(30, 60, 300, 900, 1800, 3600, 7200));
 		$this->add($c,'general');
-		$c = new ConfigElement_select('cache_expire_time', _('Cache logs expiry time'), _('Cache logs expiry time'), _('Cache logs expiry time'), (86400*366));
-		$c->setContentAvailable(array(86400=>_('A day'), (86400*7)=>_('A week'), (86400*31)=>_('A month'), (86400*366)=>_('A year')));
+		$c = new ConfigElement_select('cache_expire_time', (86400*366));
+		$c->setContentAvailable(array(86400, (86400*7), (86400*31), (86400*366)));
 		$this->add($c,'general');
 
-// 		$c = new ConfigElement_input('start_app','start_app','start_app_des','');
+// 		$c = new ConfigElement_input('start_app','');
 // 		$this->add('general',$c);
 
-		$c = new ConfigElement_text('user_default_group', _('Default user group'), _('Default user group'), _('Default user group'), '');
+		$c = new ConfigElement_text('user_default_group', '');
 		$this->add($c,'general');
 
-		$c = new ConfigElement_select('domain_integration', _('Domain integration'), _('Domain integration'), _('Domain integration'), 'internal');
-		$domain_integration_select = array();
-		if (function_exists('get_classes_startwith_admin')) { // are we on /admin ?
-			$domain_integration_classes = get_classes_startwith_admin('Configuration_mode_');
-			foreach($domain_integration_classes as $a_class) {
-				if (class_exists($a_class)) { // can not call class->getPrettyName(); because we might be on the admin
-					$b = new $a_class();
-					$name = substr($a_class, strlen('Configuration_mode_'));
-					$domain_integration_select[$name] = $b->getPrettyName();
-				}
-				else {
-					$name = substr($a_class, strlen('Configuration_mode_'));
-					$domain_integration_select[$name] = $name; 
-				}
-			}
-		}
-		else {
-			$domain_integration_select['internal'] = _('Internal');
-		}
-		$c->setContentAvailable($domain_integration_select);
+		$c = new ConfigElement_select('domain_integration', 'internal');
+		$c->setContentAvailable(array(
+			'internal',
+			'microsoft',
+			'ldap',
+			'novell',
+		));
+		
 		$this->add($c, 'general');
 
-		$c = new ConfigElement_input('max_items_per_page', _('Maximum items per page'), _('The maximum number of items that can be displayed.'), _('The maximum number of items that can be displayed.'), 100);
+		$c = new ConfigElement_input('max_items_per_page', 100);
 		$this->add($c,'general');
 		
-		$c = new ConfigElement_inputlist('default_browser', _('Default browser'), _('Default browser'), _('Default browser'), array('linux' => NULL, 'windows' => NULL));
+		$c = new ConfigElement_inputlist('default_browser', array('linux' => NULL, 'windows' => NULL));
 		$this->add($c,'general');
 		
-		$c = new ConfigElement_dictionary('liaison', _('Liaisons'), _('Liaisons'), _('Liaisons'), array());
+		$c = new ConfigElement_dictionary('liaison', array());
 		$this->add($c,'general');
 		
-		$c = new ConfigElement_multiselect('default_policy', _('Default policy'), _('Default policy'), _('Default policy'), array());
+		$c = new ConfigElement_multiselect('default_policy', array());
 		$c->setContentAvailable(array(
-			'canUseAdminPanel' => _('use Admin panel'),
-			'viewServers' => _('view Servers'),
-			'manageServers' => _('manage Servers'),
-			'viewSharedFolders' => _('view Shared folders'),
-			'manageSharedFolders' => _('manage Shared folders'),
-			'viewUsers' => _('view Users'),
-			'manageUsers' => _('manage Users'),
-			'viewUsersGroups' => _('view Usergroups'),
-			'manageUsersGroups' => _('manage Usergroups'),
-			'viewApplications' => _('view Applications'),
-			'manageApplications' => _('manage Applications'),
-			'viewApplicationsGroups' => _('view Application groups'),
-			'manageApplicationsGroups' => _('manage Application groups'),
-			'viewPublications' => _('view Publications'),
-			'managePublications' => _('manage Publications'),
-			'viewConfiguration' => _('view Configuration'),
-			'manageConfiguration' => _('manage Configuration'),
-			'viewStatus' => _('view Status'),
-			'manageSession' => _('manage session'),
-			'manageReporting' => _('manage Reporting'),
-			'viewSummary' => _('view Summary'),
-			'viewNews' => _('view News'),
-			'manageNews' => _('manage News')
+			'canUseAdminPanel',
+			'viewServers',
+			'manageServers',
+			'viewSharedFolders',
+			'manageSharedFolders',
+			'viewUsers',
+			'manageUsers',
+			'viewUsersGroups',
+			'manageUsersGroups',
+			'viewApplications',
+			'manageApplications',
+			'viewApplicationsGroups',
+			'manageApplicationsGroups',
+			'viewPublications',
+			'managePublications',
+			'viewConfiguration',
+			'manageConfiguration',
+			'viewStatus',
+			'manageSession',
+			'manageReporting',
+			'viewSummary',
+			'viewNews',
+			'manageNews'
 		));
 
 		$this->add($c,'general', 'policy');
-		$this->addPrettyName('policy', _('Policy for administration delegation'));
-
-		$this->addPrettyName('sql',_('SQL configuration'));
-		$c = new ConfigElement_select('type', _('Database type'), _('The type of your database.'), _('The type of your database.'), 'mysql');
-		$c->setContentAvailable(array('mysql'=>_('MySQL')));
+		$c = new ConfigElement_select('type', 'mysql');
+		$c->setContentAvailable(array('mysql'));
 		$this->add($c,'general','sql');
-		$c = new ConfigElement_input('host', _('Database host address'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'),'localhost');
+		$c = new ConfigElement_input('host', 'localhost');
 		$this->add($c,'general','sql');
-		$c = new ConfigElement_input('user', _('Database username'), _('The username that must be used to access the database.'), _('The user name that must be used to access the database.'),'');
+		$c = new ConfigElement_input('user', '');
 		$this->add($c,'general','sql');
-		$c = new ConfigElement_password('password',_('Database password'), _('The user password that must be used to access the database.'), _('The user password that must be used to access the database.'),'');
+		$c = new ConfigElement_password('password', '');
 		$this->add($c,'general','sql');
-		$c = new ConfigElement_input('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), 'ovd');
+		$c = new ConfigElement_input('database', 'ovd');
 		$this->add($c,'general','sql');
-		$c = new ConfigElement_input('prefix', _('Table prefix'), _('The table prefix for the database.'), _('The table prefix for the database.'), 'ulteo_');
+		$c = new ConfigElement_input('prefix', 'ulteo_');
 		$this->add($c,'general','sql');
 
-		$this->addPrettyName('mails_settings',_('Email settings'));
-		$c_mail_type = new ConfigElement_select('send_type', _('Mail server type'), _('Mail server type'), _('Mail server type'),'mail');
-		$c_mail_type->setContentAvailable(array('mail'=>_('Local'),'smtp'=>_('SMTP server')));
+		$c_mail_type = new ConfigElement_select('send_type', 'mail');
+		$c_mail_type->setContentAvailable(array('mail', 'smtp'));
 		$this->add($c_mail_type,'general','mails_settings');
 		
-		$c = new ConfigElement_input('send_from', _('From'), _('From'), _('From'), 'no-reply@'.@$_SERVER['SERVER_NAME']);
+		$c = new ConfigElement_input('send_from', 'no-reply@'.@$_SERVER['SERVER_NAME']);
 		$this->add($c,'general','mails_settings');
 		
 		// SMTP conf
-		$c = new ConfigElement_input('send_host', _('Host'), _('Host'), _('Host'), '');
+		$c = new ConfigElement_input('send_host', '');
 		$this->add($c,'general','mails_settings');
 		$c_mail_type->addReference('smtp', $c);
-		$c = new ConfigElement_input('send_port', _('Port'), _('Port'), _('Port'), 25);
+		$c = new ConfigElement_input('send_port', 25);
 		$this->add($c,'general','mails_settings');
 		$c_mail_type->addReference('smtp', $c);
-		$c = new ConfigElement_select('send_ssl', _('Use SSL with SMTP'), _('Use SSL with SMTP'), _('Use SSL with SMTP'), 0);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('send_ssl', 0);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','mails_settings');
 		$c_mail_type->addReference('smtp', $c);
-		$c = new ConfigElement_select('send_auth', _('Authentication'), _('Authentication'), _('Authentication'),0);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('send_auth',0);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','mails_settings');
 		$c_mail_type->addReference('smtp', $c);
-		$c = new ConfigElement_input('send_username', _('SMTP username'), _('SMTP username'), _('SMTP username'), '');
+		$c = new ConfigElement_input('send_username', '');
 		$this->add($c,'general','mails_settings');
 		$c_mail_type->addReference('smtp', $c);
-		$c = new ConfigElement_password('send_password', _('SMTP password'), _('SMTP password'), _('SMTP password'), '');
+		$c = new ConfigElement_password('send_password', '');
 		$this->add($c,'general','mails_settings');
 		$c_mail_type->addReference('smtp', $c);
 
-		$this->addPrettyName('slave_server_settings',_('Slave Server settings'));
-		$c = new ConfigElement_list('authorized_fqdn', _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), array('*'));
+		$c = new ConfigElement_list('authorized_fqdn', array('*'));
 		$this->add($c,'general', 'slave_server_settings');
-		$c = new ConfigElement_select('disable_fqdn_check', _('Disable reverse FQDN checking'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), 0);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('disable_fqdn_check', 0);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general', 'slave_server_settings');
-		$c = new ConfigElement_select('use_reverse_dns', _('Use reverse DNS for server\'s FQDN'),
-			_('Try to identify the server using the reverse DNS record associated to the remote address.'),
-			_('Try to identify the server using the reverse DNS record associated to the remote address.'),
-			true);
-		$c->setContentAvailable(array(false => _('no'), true => _('yes')));
+		$c = new ConfigElement_select('use_reverse_dns', true);
+		$c->setContentAvailable(array(false, true));
 		$this->add($c,'general', 'slave_server_settings');
-		$c = new ConfigElement_select('action_when_as_not_ready', _('Action when a server status is not ready anymore'), _('Action when a server status is not ready anymore'), _('Action when an server status is not ready anymore'), 0);
-		$c->setContentAvailable(array(0=>_('Do nothing'),1=>_('Switch to maintenance')));
+		$c = new ConfigElement_select('action_when_as_not_ready', 0);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general', 'slave_server_settings');
-		$c = new ConfigElement_select('auto_recover', _('Auto-recover server'), _('When a server status is down or broken, and it is sending monitoring, try to switch it back to ready ?'), _('When a server status is down or broken, and it is sending monitoring, try to switch it back to ready ?'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('auto_recover', 1);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general', 'slave_server_settings');
-		$c = new ConfigElement_select('remove_orphan', _('Remove orphan applications when the application server is deleted'), _('Remove orphan applications when the application server is deleted'), _('Remove orphan applications when the application server is deleted'), 0);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('remove_orphan', 0);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','slave_server_settings');
-		$c = new ConfigElement_select('auto_register_new_servers', _('Auto register new servers'), _('Auto register new servers'), _('Auto register new servers'), 0);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('auto_register_new_servers', 0);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','slave_server_settings');
-		$c = new ConfigElement_select('auto_switch_new_servers_to_production', _('Auto switch new servers to production mode'), _('Auto switch new servers to production mode'), _('Auto switch new servers to production mode'), 0);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('auto_switch_new_servers_to_production', 0);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','slave_server_settings');
-		$c = new ConfigElement_select('use_max_sessions_limit', _('When an Application Server have reached its "max sessions" limit, disable session launch on it ?'), _('When an Application Server have reached its "max sessions" limit, disable session launch on it ?'), _('When an Application Server have reached its "max sessions" limit, disable session launch on it ?'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('use_max_sessions_limit', 1);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','slave_server_settings');
 
-		$roles = array(Server::SERVER_ROLE_APS => _('Load Balancing policy for Application Servers'), Server::SERVER_ROLE_FS => _('Load Balancing policy for File Servers'));
-		foreach ($roles as $role => $text) {
+		$roles = array(Server::SERVER_ROLE_APS, Server::SERVER_ROLE_FS);
+		foreach ($roles as $role) {
 			$decisionCriterion = get_classes_startwith('DecisionCriterion_');
 			$content_load_balancing = array();
 			foreach ($decisionCriterion as $criterion_class_name) {
@@ -368,150 +346,157 @@ class Preferences {
 					$content_load_balancing[substr($criterion_class_name, strlen('DecisionCriterion_'))] = $c->default_value();
 				}
 			}
-			$c = new ConfigElement_sliders_loadbalancing('load_balancing_'.$role, $text, $text, $text, $content_load_balancing);
+			$c = new ConfigElement_sliders_loadbalancing('load_balancing_'.$role, $content_load_balancing);
 			$this->add($c,'general', 'slave_server_settings');
 		}
 
-		$this->addPrettyName('remote_desktop_settings', _('Remote Desktop settings'));
-
-		$c_desktop_mode = new ConfigElement_select('enabled', _('Enable Remote Desktop'), _('Enable Remote Desktop'), _('Enable Remote Desktop'), 1);
-		$c_desktop_mode->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c_desktop_mode = new ConfigElement_select('enabled', 1);
+		$c_desktop_mode->setContentAvailable(array(0, 1));
 		$this->add($c_desktop_mode,'general','remote_desktop_settings');
-		$c = new ConfigElement_select('desktop_icons', _('Show icons on user desktop'), _('Show icons on user desktop'), _('Show icons on user desktop'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('desktop_icons', 1);
+		$c->setContentAvailable(array(0, 1));
 		$c_desktop_mode->addReference('1', $c);
 		$this->add($c,'general','remote_desktop_settings');
-		$c = new ConfigElement_select('allow_external_applications', _('Allow external applications in Desktop'), _('Allow external applications in Desktop'), _('Allow external applications in Desktop'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('allow_external_applications', 1);
+		$c->setContentAvailable(array(0, 1));
 		$c_desktop_mode->addReference('1', $c);
 		$this->add($c,'general','remote_desktop_settings');
-		$c = new ConfigElement_select('desktop_type', _('Desktop type'), _('Desktop type'), _('Desktop type'), 'any');
-		$c->setContentAvailable(array('any'=>_('Any'),'linux'=>_('Linux'),'windows'=>_('Windows')));
-		$c_desktop_mode->addReference('1', $c);
-		$this->add($c,'general','remote_desktop_settings');
-		
-		$c = new ConfigElement_list('allowed_desktop_servers', _('Servers which are allowed to start desktop'), _('An empty list means all servers can host a desktop (no restriction on desktop server choice)'), _('An empty list means all servers can host a desktop (no restriction on desktop server choice)'), array());
+		$c = new ConfigElement_select('desktop_type', 'any');
+		$c->setContentAvailable(array('any', 'linux' ,'windows'));
 		$c_desktop_mode->addReference('1', $c);
 		$this->add($c,'general','remote_desktop_settings');
 		
-		$c = new ConfigElement_select('authorize_no_desktop', _('Authorize to launch a desktop session without desktop process'), _('Usefull for web integration starting a maximised application as only windows into the remote screen'), _('Usefull for web integration starting a maximised application as only windows into the remote screen'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_list('allowed_desktop_servers', array());
+		$c_desktop_mode->addReference('1', $c);
+		$this->add($c,'general','remote_desktop_settings');
+		
+		$c = new ConfigElement_select('authorize_no_desktop', 1);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','remote_desktop_settings');
 
-		$this->addPrettyName('remote_applications_settings', _('Remote Applications settings'));
-
-		$c = new ConfigElement_select('enabled', _('Enable Remote Applications'), _('Enable Remote Applications'), _('Enable Remote Applications'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('enabled', 1);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','remote_applications_settings');
 
-		$this->addPrettyName('session_settings_defaults',_('Sessions settings'));
-
-		$c = new ConfigElement_select('session_mode', _('Default mode for session'), _('Default mode for session'), _('Default mode for session'), Session::MODE_APPLICATIONS);
-		$c->setContentAvailable(array(Session::MODE_DESKTOP=>_('Desktop'), Session::MODE_APPLICATIONS=>_('Applications')));
+		$c = new ConfigElement_select('session_mode', Session::MODE_APPLICATIONS);
+		$c->setContentAvailable(array(Session::MODE_DESKTOP, Session::MODE_APPLICATIONS));
 		$this->add($c,'general','session_settings_defaults');
 
-		$c = new ConfigElement_select('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB');
+		$c = new ConfigElement_select('language', 'en_GB');
 		$c->setContentAvailable(array(
-			'ar_AE'=>'العربي - Arabic',
-			'bg_BG'=>'Български - Bulgarian',
-			'da-dk'=>'Dansk - Danish',
-			'de_DE'=>'Deutsch - German',
-			'en_GB'=>'English',
-			'el_GR'=>'Ελληνικά - Greek',
-			'es_ES'=>'Español - Spanish',
-			'fa_IR'=>'فارسی - Persian',
-			'fi_FI'=>'Suomi - Finnish',
-			'fr_FR'=>'Français - French',
-			'he_IL'=>'Hebrew - עברית',
-			'hu_HU'=>'Magyar - Hungarian',
-			'id_ID'=>'Bahasa Indonesia - Indonesian',
-			'is_IS'=>'Íslenska - Icelandic',
-			'it_IT'=>'Italiano - Italian',
-			'ja_JP'=>'日本語 - Japanese',
-			'nb_NO'=>'Norsk (bokmål) - Norwegian (Bokmal)',
-			'nl_NL'=>'Nederlands - Dutch',
-			'pl_PL'=>'Polski - Polish',
-			'pt_BR'=>'Português (Brasil) - Portuguese (Brazil)',
-			'ro_RO'=>'Română - Romanian',
-			'ru_RU'=>'Русский - Russian',
-			'sk_SK'=>'Slovenčina - Slovak',
-			'zh_CN'=>'中文简体 - Chinese',
+			'ar_AE',
+			'bg_BG',
+			'da-dk',
+			'de_DE',
+			'en_GB',
+			'el_GR',
+			'es_ES',
+			'fa_IR',
+			'fi_FI',
+			'fr_FR',
+			'he_IL',
+			'hu_HU',
+			'id_ID',
+			'is_IS',
+			'it_IT',
+			'ja_JP',
+			'nb_NO',
+			'nl_NL',
+			'pl_PL',
+			'pt_BR',
+			'ro_RO',
+			'ru_RU',
+			'sk_SK',
+			'zh_CN',
 		));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('timeout', _('Default timeout for session'), _('Default timeout for session'), _('Default timeout for session'), -1);
-		$c->setContentAvailable(array(60 => _('1 minute'),120 => _('2 minutes'),300 => _('5 minutes'),600 => _('10 minutes'),900 => _('15 minutes'),1800 => _('30 minutes'),3600 => _('1 hour'),7200 => _('2 hours'),18000 => _('5 hours'),43200 => _('12 hours'),86400 => _('1 day'),172800 => _('2 days'),604800 => _('1 week'),2764800 => _('1 month'),-1 => _('None')));
+		$c = new ConfigElement_select('timeout', -1);
+		$c->setContentAvailable(array(
+			60,
+			120,
+			300,
+			600,
+			900,
+			1800,
+			3600,
+			7200,
+			18000,
+			43200,
+			86400,
+			172800,
+			604800,
+			2764800,
+			-1));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_input('max_sessions_number', _('Maximum number of running sessions'), _('The maximum number of session that can be started on the farm (0 is unlimited).'), _('The maximum number of session that can be started on the farm (0 is unlimited).'), 0);
+		$c = new ConfigElement_input('max_sessions_number', 0);
 		$this->add($c, 'general');
-		$c = new ConfigElement_select('launch_without_apps', _('User can launch a session even if some of his published applications are not available'), _('User can launch a session even if some of his published applications are not available'), _('User can launch a session even if some of his published applications are not available'), 0);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('launch_without_apps', 0);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('allow_shell', _('User can use a console in the session'), _('User can use a console in the session'), _('User can use a console in the session'), 0);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('allow_shell', 0);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
 		
-		$c = new ConfigElement_select('use_known_drives', _('Use known drives'), _('Provide file access optimization when using common network drives between client & Application Servers (open the file on server side instead of sending it from client using RDP disk redirection)'), _('Provide file access optimization when using common network drives between client & Application Servers (open the file on server side instead of sending it from client using RDP disk redirection)'), 0);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('use_known_drives', 0);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
 
-		$c = new ConfigElement_select('multimedia', _('Multimedia'), _('Multimedia'), _('Multimedia'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('multimedia', 1);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('redirect_client_drives', _('Redirect client drives'), _('Redirect client drives'), _("- None: none of the client drives will be used in the OVD session<br />- Partial: Desktop and My Documents user directories will be available in the OVD session<br />- Full: all client drives (including Desktop and My Documents) will be available in the OVD session"), 'full');
-		$c->setContentAvailable(array('no'=>_('no'),'partial'=>_('partial'),'full'=>_('full')));
+		$c = new ConfigElement_select('redirect_client_drives', 'full');
+		$c->setContentAvailable(array('no', 'partial', 'full'));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('redirect_client_printers', _('Redirect client printers'), _('Redirect client printers'), _('Redirect client printers'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('redirect_client_printers', 1);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('redirect_smartcards_readers', _('Redirect Smart card readers'), _('Redirect Smart card readers'), _('Redirect Smart card readers'), 0);
-		$c->setContentAvailable(array(0=>_('no'), 1=>_('yes')));
+		$c = new ConfigElement_select('redirect_smartcards_readers', 0);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c, 'general', 'session_settings_defaults');
-		$c = new ConfigElement_select('rdp_bpp', _('RDP bpp'), _('RDP color depth'), _('RDP color depth'), 16);
-		$c->setContentAvailable(array(16=>'16', 24=>'24', 32=>'32'));
+		$c = new ConfigElement_select('rdp_bpp', 16);
+		$c->setContentAvailable(array(16, 24, 32));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('enhance_user_experience', _('Enhance user experience'), _('Enhance user experience: graphic effects and optimizations (It decreases performances if used in a Wide Area Network)'), _('Enhance user experience: graphic effects and optimizations (It decreases performances if used in a Wide Area Network)'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('enhance_user_experience', 1);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
 		
-		$c = new ConfigElement_select('persistent', _('Sessions are persistent'), _('Sessions are persistent'), _('Sessions are persistent'), 0);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('persistent', 0);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
 
-		$c_user_profile = new ConfigElement_select('enable_profiles', _('Enable user profiles'), _('Enable user profiles'), _('Enable user profiles'), 1);
-		$c_user_profile->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c_user_profile = new ConfigElement_select('enable_profiles', 1);
+		$c_user_profile->setContentAvailable(array(0, 1));
 		$this->add($c_user_profile,'general','session_settings_defaults');
-		$c = new ConfigElement_select('auto_create_profile', _('Auto-create user profiles when non-existant'), _('Auto-create user profile when non-existant'), _('Auto-create user profile when nonexistant'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('auto_create_profile', 1);
+		$c->setContentAvailable(array(0, 1));
 		$c_user_profile->addReference('1', $c);
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('start_without_profile', _('Launch a session without a valid profile'), _('Launch a session without a valid profile'), _('Launch a session without a valid profile'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('start_without_profile', 1);
+		$c->setContentAvailable(array(0, 1));
 		$c_user_profile->addReference('1', $c);
 		$this->add($c,'general','session_settings_defaults');
 		
-		$c_shared_folder = new ConfigElement_select('enable_sharedfolders', _('Enable shared folders'), _('Enable shared folders'), _('Enable shared folders'), 1);
-		$c_shared_folder->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c_shared_folder = new ConfigElement_select('enable_sharedfolders', 1);
+		$c_shared_folder->setContentAvailable(array(0, 1));
 		$this->add($c_shared_folder,'general','session_settings_defaults');
-		$c = new ConfigElement_select('start_without_all_sharedfolders', _('Launch a session even when a shared folder\'s fileserver is missing'), _('Launch a session even when a shared folder\'s fileserver is missing'), _('Launch a session even when a shared folder\'s fileserver is missing'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('start_without_all_sharedfolders', 1);
+		$c->setContentAvailable(array(0, 1));
 		$c_shared_folder->addReference('1', $c);
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('can_force_sharedfolders', _('Allow user to force shared folders'), _('Allow user to force shared folders'), _('Allow user to force shared folders'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('can_force_sharedfolders', 1);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
 
-		$c = new ConfigElement_multiselect('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('session_mode', 'language'));
-		$c->setContentAvailable(array('session_mode' => _('session mode'), 'language' => _('language'), 'server' => _('server'), 'timeout' => _('timeout'), 'persistent' => _('persistent'), /*'shareable' => _('shareable')*/));
+		$c = new ConfigElement_multiselect('advanced_settings_startsession', array('session_mode', 'language'));
+		$c->setContentAvailable(array('session_mode', 'language', 'server', 'timeout', 'persistent', /*'shareable'*/));
 		$this->add($c,'general','session_settings_defaults');
 
-		$this->addPrettyName('web_interface_settings',_('Web interface settings'));
-
-		$c = new ConfigElement_select('show_list_users', _('Display users list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must provide his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must provide his login name.'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('show_list_users', 1);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','web_interface_settings');
 		
-		$c = new ConfigElement_select('public_webservices_access', _('Public Webservices access'), _('Authorize non authenticated requests to get information about users authorized applications or get applications icons.'), _('Authorize non authenticated requests to get information about users authorized applications or get applications icons.'), 0);
-		$c->setContentAvailable(array(0=>_('no'), 1=>_('yes')));
+		$c = new ConfigElement_select('public_webservices_access', 0);
+		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','web_interface_settings');
 
 		$this->getPrefsModules();
@@ -522,7 +507,7 @@ class Preferences {
 		$available_module = $this->getAvailableModule();
 		// we remove all diseable modules
 		foreach ($available_module as $mod2 => $sub_mod2){
-			foreach ($sub_mod2 as $sub_mod_name2 => $sub_mod_pretty2){
+			foreach ($sub_mod2 as $sub_mod_name2){
 				$enable =  call_user_func(array($mod2.'_'.$sub_mod_name2, 'enable'));
 				if ($enable !== true)
 					unset ($available_module[$mod2][$sub_mod_name2]);
@@ -532,26 +517,26 @@ class Preferences {
 		$modules_prettyname = array();
 		$enabledByDefault = array();
 		foreach ($available_module as $module_name => $sub_module) {
-			$modules_prettyname[$module_name] = $module_name;
+			$modules_prettyname[] = $module_name;
 			if (call_user_func(array($module_name, 'enabledByDefault')))
 				$enabledByDefault[] =  $module_name;
 		}
-		$c2 = new ConfigElement_multiselect('module_enable',_('Modules activation'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), $enabledByDefault);
+		$c2 = new ConfigElement_multiselect('module_enable', $enabledByDefault);
 		$c2->setContentAvailable($modules_prettyname);
 		$this->add($c2, 'general');
 
 		foreach ($available_module as $mod => $sub_mod){
 			$module_is_multiselect = call_user_func(array($mod, 'multiSelectModule'));
 			if ( $module_is_multiselect) {
-				$c = new ConfigElement_multiselect('enable', $mod, $mod, $mod, array());
+				$c = new ConfigElement_multiselect('enable', array());
 				$c->setContentAvailable($sub_mod);
 			}
 			else {
-				$c = new ConfigElement_select('enable', $mod, $mod, $mod, NULL);
+				$c = new ConfigElement_select('enable', NULL);
 				$c->setContentAvailable($sub_mod);
 			}
 
-			foreach ($sub_mod as $k4 => $v4) {
+			foreach ($sub_mod as $k4) {
 				$default1 = call_user_func(array($mod.'_'.$k4, 'isDefault'));
 				if ($default1 === true) {
 					if ( $module_is_multiselect) {
@@ -568,9 +553,7 @@ class Preferences {
 				$this->elements[$mod] = array();
 
 			$this->add($c,$mod);
-			$this->addPrettyName($mod,'Module '.$mod);
-
-			foreach ($sub_mod as $sub_mod_name => $sub_mod_pretty){
+			foreach ($sub_mod as $sub_mod_name){
 				$module_name= $mod.'_'.$sub_mod_name;
 				$list_conf = call_user_func(array($module_name, 'configuration'));
 				if (is_array($list_conf)) {
@@ -584,9 +567,7 @@ class Preferences {
 
 	public function getPrefsEvents() {
 		/* Events settings */
-		$this->addPrettyName('events', _("Events settings"));
-
-		$c = new ConfigElement_list('mail_to', _('Email addresses to send alerts to'), _('On system alerts, emails will be sent to these addresses'), NULL, array());
+		$c = new ConfigElement_list('mail_to', array());
 		$this->add($c,'events');
 
 		$events = Events::loadAll();
@@ -596,7 +577,7 @@ class Preferences {
 			foreach ($event->getCallbacks() as $cb) {
 				if (! $cb['is_internal']) {
 					$list[] = $cb['name'];
-					$pretty_list[$cb['name']] = $cb['description'];
+					$pretty_list[] = $cb['name'];
 				}
 			}
 			if (count($list) == 0)
@@ -611,7 +592,6 @@ class Preferences {
 			$c->setContentAvailable($pretty_list);
 			$this->add($c, 'events', 'active_callbacks');
 		}
-		$this->addPrettyName('active_callbacks', _('Activated callbacks'));
 		unset($events);
 	}
 
@@ -628,10 +608,7 @@ class Preferences {
 							$ret[basename($pathinfo["dirname"])] = array();
 						}
 						if (array_key_exists('extension', $pathinfo) && ($pathinfo['extension'] == 'php')) {
-							$pretty_name = call_user_func(array(basename($pathinfo["dirname"]).'_'.$pathinfo["filename"],'prettyName'));
-							if ( is_null($pretty_name))
-								$pretty_name = $pathinfo["filename"];
-							$ret[basename($pathinfo["dirname"])][$pathinfo["filename"]] = $pretty_name;
+							$ret[basename($pathinfo["dirname"])][] = $pathinfo["filename"];
 						}
 					}
 				}
@@ -681,10 +658,6 @@ class Preferences {
 				$this->elements[$key_] = $value_;
 			}
 		}
-	}
-
-	public function addPrettyName($key_,$prettyName_) {
-		$this->prettyName[$key_] = $prettyName_;
 	}
 
 	public static function moduleIsEnabled($name_) {

@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Gauvain Pocentek <gauvain@ulteo.com>
+ * Author Gauvain Pocentek <gauvain@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,7 +27,6 @@ abstract class EventCallback {
 
 	/* action the callbacks does when the signal is emitted */
 	abstract function run();
-	abstract function getDescription();
 
 	/* if isInternal returns true, there will not be an option to
 	 * active/deactivate it */

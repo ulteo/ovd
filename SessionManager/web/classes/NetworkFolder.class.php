@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,35 +40,5 @@ class NetworkFolder {
 	
 	public function __toString() {
 		return get_class($this).'(id \''.$this->id.'\' server \''.$this->server.'\' status \''.$this->status.'\' )';
-	}
-	
-	public function prettyName() {
-		return get_class($this);
-	}
-
-	public function textStatus($status_=NetworkFolder::NF_STATUS_NOT_EXISTS) {
-		switch ($status_) {
-			case NetworkFolder::NF_STATUS_OK:
-				return _('OK');
-				break;
-			case NetworkFolder::NF_STATUS_NOT_EXISTS:
-				return _('Unknown');
-				break;
-		}
-
-		return _('Unknown');
-	}
-
-	public function colorStatus($status_=NetworkFolder::NF_STATUS_NOT_EXISTS) {
-		switch ($status_) {
-			case NetworkFolder::NF_STATUS_NOT_EXISTS:
-				return 'error';
-				break;
-			case NetworkFolder::NF_STATUS_OK:
-				return 'ok';
-				break;
-		}
-
-		return 'error';
 	}
 }

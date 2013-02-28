@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -231,10 +232,10 @@ class UserGroupDB_ldap_memberof {
 	
 	public static function configuration() {
 		$ret = array();
-		$c = new ConfigElement_dictionary('match',_('Matching'), _('Matching'), _('Matching'), array('description' => 'description','name' => 'name', 'member' => 'member'));
+		$c = new ConfigElement_dictionary('match', array('description' => 'description','name' => 'name', 'member' => 'member'));
 		$ret []= $c;
-		$c = new ConfigElement_select('use_child_group', _('Use child groups'), _('Use child groups'), _('Use child groups'), 0);
-		$c->setContentAvailable(array(0 => _('No'), 1 => _('Yes')));
+		$c = new ConfigElement_select('use_child_group', 0);
+		$c->setContentAvailable(array(0, 1));
 		$ret []= $c;
 		return $ret;
 	}
@@ -242,10 +243,6 @@ class UserGroupDB_ldap_memberof {
 	public static function prefsIsValid($prefs_, &$log=array()) {
 		// FIXME : liaison to ad
 		return true;
-	}
-	
-	public static function prettyName() {
-		return _('LDAP using memberOf');
 	}
 	
 	public static function isDefault() {

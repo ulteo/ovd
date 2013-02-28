@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
- * Author Julien LANGLOIS <julien@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2013
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
@@ -42,10 +42,6 @@ class AuthMethod_Password extends AuthMethod {
 		$_SESSION['password'] = $_POST['password'];
 
 		return true;
-	}
-
-	public static function prettyName() {
-		return _('Login/Password authentication');
 	}
 
 	public static function prefsIsValid($prefs_, &$log=array()) {

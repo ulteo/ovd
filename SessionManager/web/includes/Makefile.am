@@ -18,7 +18,6 @@ EXTRA_DIST = defaults.inc.php.in \
 
 defaults.inc.php:
 	sed -e "s,@SYSCONFDIR@,$(sysconfdir)," \
-	    -e "s,@LOCALE_DIR@,$(datadir)/locale," \
 	    -e "s,@OVD_VERSION@,$(PACKAGE_VERSION)," \
 		< $(srcdir)/defaults.inc.php.in > $@
 

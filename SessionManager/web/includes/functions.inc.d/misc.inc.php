@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com> 2008-2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008-2013
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
@@ -221,13 +221,6 @@ function appsgroup_cmp($o1, $o2) {
 		return 0;
 	
 	return strcmp($o1->name, $o2->name);
-}
-
-function server_cmp($o1, $o2) {
-	if (!is_object($o1) || !is_object($o2))
-		return 0;
-	
-	return ip2long($o1->getAttribute('fqdn')) > ip2long($o2->getAttribute('fqdn'));
 }
 
 /* caching helpers */

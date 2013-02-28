@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -101,18 +101,18 @@ class UserDB_activedirectory  extends UserDB_ldap{
 
 	public static function configuration() {
 		$ret = array();
-		$c = new ConfigElement_list('hosts', _('Server host address'), _('The address of your Active Directory server.'), _('The address of your Active Directory server.'),  array());
+		$c = new ConfigElement_list('hosts',  array());
 		$ret []= $c;
-		$c = new ConfigElement_input('domain', _('Domain name'), _('Domain name used by Active Directory'), _('Domain name used by Active Directory'), NULL);
+		$c = new ConfigElement_input('domain', NULL);
 		$ret []= $c;
-		$c = new ConfigElement_input('login', _('Administrator DN'), _('The user login that must be used to access the database (to list users accounts).'), _('The user login that must be used to access the database (to list users accounts).'), NULL);
+		$c = new ConfigElement_input('login', NULL);
 		$ret []= $c;
-		$c = new ConfigElement_password('password', _('Administrator password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'), NULL);
+		$c = new ConfigElement_password('password', NULL);
 		$ret []= $c;
-		$c = new ConfigElement_dictionary('match', _('match'), _('match'), _('match'), array());
+		$c = new ConfigElement_dictionary('match', array());
 		$ret []= $c;
-		$c = new ConfigElement_select('accept_expired_password', _('Accept expired password'), _('Authorize a user connection even if the password has expired, to have the Windows server perform the password renew process'), _('Authorize a user connection even if the password has expired, to have the Windows server perform the password renew process'), 0);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$c = new ConfigElement_select('accept_expired_password', 0);
+		$c->setContentAvailable(array(0, 1));
 		$ret []= $c;
 		return $ret;
 	}
@@ -156,10 +156,6 @@ class UserDB_activedirectory  extends UserDB_ldap{
 
 		$LDAP2->disconnect();
 		return true;
-	}
-
-	public static function prettyName() {
-		return _('Active Directory');
 	}
 
 	public static function isDefault() {

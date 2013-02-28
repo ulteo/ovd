@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -254,17 +255,13 @@ class UserGroupDB_ldap_posix {
 	
 	public static function configuration() {
 		$ret = array();
-		$c = new ConfigElement_input('group_dn', _('Group Branch DN'), _('Use LDAP users groups using Posix groups, Group Branch DN:'), _('Use LDAP users groups using Posix groups, Group Branch DN:'),'');
+		$c = new ConfigElement_input('group_dn','');
 		$ret []= $c;
-		$c = new ConfigElement_dictionary('match', _('Matching'), _('Matching'), _('Matching'), array('description' => 'description', 'name' => 'cn', 'member' => 'memberUid'));
+		$c = new ConfigElement_dictionary('match', array('description' => 'description', 'name' => 'cn', 'member' => 'memberUid'));
 		$ret []= $c;
-		$c = new ConfigElement_input('filter', _('Filter (optional)'), sprintf(_('Filter (example: %s)'), '<em>(objectClass=posixGroup)</em>'), sprintf(_('Filter (example: %s)'), '<em>(objectClass=posixGroup)</em>'), '(objectClass=posixGroup)');
+		$c = new ConfigElement_input('filter', '(objectClass=posixGroup)');
 		$ret []= $c;
 		return $ret;
-	}
-	
-	public static function prettyName() {
-		return _('LDAP using Posix groups');
 	}
 	
 	public static function isDefault() {

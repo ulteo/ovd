@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008,2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -131,10 +132,11 @@ class UsersGroup {
 			Logger::error('main', 'UsersGroup::getPolicy, default_policy not found on general policy');
 			return array();
 		}
-		$result = $elements['default_policy']->content_available;
+		$result_keys = $elements['default_policy']->content_available;
 		
-		foreach ($result as $k => $v) {
-			$result[$k] = false;
+		$result = array();
+		foreach ($result_keys as $key) {
+			$result[$key] = false;
 		}
 		$default_policy = $prefs_policy['default_policy'];
 		
@@ -143,7 +145,7 @@ class UsersGroup {
 				$result[$v] = true;
 			}
 			else {
-				unset($result[$k]);
+				unset($result[$v]);
 			}
 		}
 		

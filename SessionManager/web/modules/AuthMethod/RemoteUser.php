@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2009
- * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011, 2013
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
@@ -48,11 +48,6 @@ class AuthMethod_RemoteUser extends AuthMethod {
 	}
 
 
-	public static function prettyName() {
-		return _('RemoteUser authentication');
-	}
-
-
 	public static function prefsIsValid($prefs_, &$log=array()) {
 		$buf = $prefs_->get('AuthMethod','RemoteUser');
 		$key = $buf['user_authenticate_trust'];
@@ -66,11 +61,11 @@ class AuthMethod_RemoteUser extends AuthMethod {
 	public static function configuration() {
 		$ret = array();
 
-		$c = new ConfigElement_input('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER');
+		$c = new ConfigElement_input('user_authenticate_trust', 'REMOTE_USER');
 		$ret[] = $c;
 
-		$c = new ConfigElement_select('remove_domain_if_exists', _('Remove domain if exists'), _('Remove domain if exists'), _('Remove domain if exists'), 0);
-		$c->setContentAvailable(array(0=>_('No'), 1=>_('Yes')));
+		$c = new ConfigElement_select('remove_domain_if_exists', 0);
+		$c->setContentAvailable(array(0, 1));
 		$ret[] = $c;
 
 		return $ret;

@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -290,27 +291,27 @@ class UserDB_ldap  extends UserDB {
 
 	public static function configuration() {
 		$ret = array();
-		$c = new ConfigElement_list('hosts', _('Server host address'), _('The address of your LDAP server.'), _('The address of your LDAP server.'), array('servldap.example.com'));
+		$c = new ConfigElement_list('hosts', array('servldap.example.com'));
 		$ret []= $c;
-		$c = new ConfigElement_input('port', _('Server port'), _('The port number used by your LDAP server.'), _('The port use by your LDAP server.'),'389');
+		$c = new ConfigElement_input('port', '389');
 		$ret []= $c;
-		$c = new ConfigElement_input('login', _('User login'), _('The user login that must be used to access the database (to list users accounts).'), _('The user login that must be used to access the database (to list users accounts).'),'');
+		$c = new ConfigElement_input('login', '');
 		$ret []= $c;
-		$c = new ConfigElement_password('password', _('User password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'),'');
+		$c = new ConfigElement_password('password', '');
 		$ret []= $c;
-		$c = new ConfigElement_input('suffix','suffix','suffix','suffix','dc=servldap,dc=example,dc=com');
+		$c = new ConfigElement_input('suffix', 'dc=servldap,dc=example,dc=com');
 		$ret []= $c;
-		$c = new ConfigElement_input('userbranch','userbranch','userbranch','userbranch','ou=People');
+		$c = new ConfigElement_input('userbranch', 'ou=People');
 		$ret []= $c;
-		$c = new ConfigElement_dictionary('options', _('Options given to ldap object'),  _('Options given to ldap object.'), _('Options given to ldap object.'), array('LDAP_OPT_PROTOCOL_VERSION' => '3', 'LDAP_OPT_REFERRALS' => 0));
+		$c = new ConfigElement_dictionary('options', array('LDAP_OPT_PROTOCOL_VERSION' => '3', 'LDAP_OPT_REFERRALS' => 0));
 		$ret []= $c;
-		$c = new ConfigElement_dictionary('match',_('Matching'), _('Matching'), _('Matching'), array('login' => 'uid', 'uid' => 'uidnumber',  'displayname' => 'displayname', 'distinguishedname' => 'distinguishedname'));
+		$c = new ConfigElement_dictionary('match', array('login' => 'uid', 'uid' => 'uidnumber',  'displayname' => 'displayname', 'distinguishedname' => 'distinguishedname'));
 		$ret []= $c;
 		
-		$c = new ConfigElement_input('filter', _('Filter (optional)'), _('Filter, example (&(distinguishedname=mike*)(uid=42*))'), _('Filter, example (&(distinguishedname=mike*)(uid=42*))'), '');
+		$c = new ConfigElement_input('filter', '');
 		$ret []= $c;
 
-		$c = new ConfigElement_dictionary('extra',_('extra'), _('extra'), _('extra'), array());
+		$c = new ConfigElement_dictionary('extra', array());
 		$ret []= $c;
 
 		return $ret;
@@ -347,10 +348,6 @@ class UserDB_ldap  extends UserDB {
 		$base_pattern = '[a-zA-Z]+=[^,=]+';
 
 		return (preg_match('/^'.$base_pattern.'(,'.$base_pattern.')*$/', $dn_) == 1);
-	}
-
-	public static function prettyName() {
-		return _('Lightweight Directory Access Protocol (LDAP)');
 	}
 
 	public static function isDefault() {

@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Gauvain Pocentek <gauvain@ulteo.com>
+ * Author Gauvain Pocentek <gauvain@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -79,8 +80,7 @@ class Event {
 			$cb = new $callback_name($this);
 			$ret[$callback_name] = array(
 				'name' => $callback_name,
-				'is_internal' => $cb->isInternal(),
-				'description' => $cb->getDescription()
+				'is_internal' => $cb->isInternal()
 				);
 			unset($cb);
 		}

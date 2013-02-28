@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,24 +22,4 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class ConfigElement_multiselect extends ConfigElement { // list of text (r) (fixed length) (more than one can be selected)
-	public function toHTML($readonly=false) {
-		$html_id = $this->htmlID();
-		$html = '';
-		$disabled = '';
-		if ($readonly) {
-			$disabled = 'disabled="disabled"';
-		}
-
-		foreach ($this->content_available as $mykey => $myval){
-			if ( in_array($mykey,$this->content))
-				$html .= '<input class="input_checkbox" type="checkbox" '.$disabled.' name="'.$html_id.'[]" checked="checked" value="'.$mykey.'" onchange="configuration_switch(this,\''.$this->path['key_name'].'\',\''.$this->path['container'].'\',\''.$this->id.'\');"/>';
-			else
-				$html .= '<input class="input_checkbox" type="checkbox" '.$disabled.' name="'.$html_id.'[]" value="'.$mykey.'" onchange="configuration_switch(this,\''.$this->path['key_name'].'\',\''.$this->path['container'].'\',\''.$this->id.'\');"/>';
-			// TODO targetid
-			$html .= $myval;
-			$html .= '<br />';
-		}
-		$html .= '<input class="input_checkbox" type="hidden" '.$disabled.' name="'.$html_id.'[]" value="thisIsADirtyHack" />'; // dirty hack for []
-		return $html;
-	}
 }

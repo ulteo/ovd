@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Gauvain Pocentek <gauvain@ulteo.com>
+ * Author Gauvain Pocentek <gauvain@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,7 +23,4 @@
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
 class SessionStatusChanged extends Event {
-    public function getPrettyName() {
-        return _("Session status changed");
-    }
 }

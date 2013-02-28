@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -63,10 +64,6 @@ class AuthMethod_Auto extends AuthMethod {
 		return true;
 	}
 
-	public static function prettyName() {
-		return _('Auto authentication');
-	}
-
 	public static function prefsIsValid($prefs_, &$log=array()) {
 		$mods_enabled = $prefs_->get('general', 'module_enable');
 		
@@ -99,8 +96,8 @@ class AuthMethod_Auto extends AuthMethod {
 	
 	public static function configuration() {
 		$ret = array();
-		$c = new ConfigElement_select('uselogin', _('Use the given login to generate user'), _('Use the given login to generate user.'), _('Use the given login to generate user.'), 0);
-		$c->setContentAvailable(array(0=>_('No'), 1=>_('Yes')));
+		$c = new ConfigElement_select('uselogin', 0);
+		$c->setContentAvailable(array(0, 1));
 		$ret []= $c;
 		return $ret;
 	}

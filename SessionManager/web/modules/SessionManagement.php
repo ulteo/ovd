@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
  * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -589,7 +589,7 @@ abstract class SessionManagement extends Module {
 		if ($nb_application_to_publish == 0) {
 			$event = new SessionStart(array('user' => $this->user));
 			$event->setAttribute('ok', false);
-			$event->setAttribute('error', _('No available application'));
+			$event->setAttribute('error', 'No available application');
 			$event->emit();
 
 			Logger::error('main', 'SessionManagement::choose_applications_servers - No applications published for User "'.$this->user->getAttribute('login').'", aborting');
@@ -632,7 +632,7 @@ abstract class SessionManagement extends Module {
 				
 				$event = new SessionStart(array('user' => $this->user));
 				$event->setAttribute('ok', false);
-				$event->setAttribute('error', _('No available application'));
+				$event->setAttribute('error', 'No available application');
 				$event->emit();
 				
 				Logger::error('main', 'SessionManagement::choose_applications_servers - Unable to publish any application for User "'.$this->user->getAttribute('login').'", aborting');
@@ -643,7 +643,7 @@ abstract class SessionManagement extends Module {
 			if ($launch_without_apps === false) {
 				$event = new SessionStart(array('user' => $this->user));
 				$event->setAttribute('ok', false);
-				$event->setAttribute('error', _('No available server'));
+				$event->setAttribute('error', 'No available server');
 				$event->emit();
 				
 				Logger::error('main', 'SessionManagement::choose_applications_servers - Unable to build a server list for User "'.$this->user->getAttribute('login').'", aborting');

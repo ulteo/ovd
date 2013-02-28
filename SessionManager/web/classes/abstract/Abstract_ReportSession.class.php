@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Gauvain Pocentek <gauvain@ulteo.com> 2009
  * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
  * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -253,26 +253,5 @@ class Abstract_ReportSession {
 		}
 		
 		return $reports;
-	}
-	
-	
-	public static function get_end_status_for_server($t0_, $t1_, $server_id_) {
-		$sql = SQL::getInstance();
-		$res = $sql->DoQuery('SELECT  @1, count(@1) AS @2 FROM #3 WHERE @4 = %5 AND @6 IS NOT NULL AND @7 BETWEEN %8 AND %9 GROUP BY @1', 'stop_why', 'nb', self::table, 'server', $server_id_,  'stop_stamp','start_stamp', date('c', $t0_), date('c', $t1_));
-		
-		$stop_why = array();
-		
-		$rows = $sql->FetchAllResults();
-		foreach ($rows as $row) {
-			$why = $row['stop_why'];
-			$nb = $row['nb'];
-			
-			if ($why == '' || is_null($why))
-				$why = 'unknown';
-			if ($nb != 0)
-				$stop_why[$why] = $nb;
-		}
-		
-		return $stop_why;
 	}
  }

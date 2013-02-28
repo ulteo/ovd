@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -234,10 +234,6 @@ class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
 			Logger::error('main', 'UserGroupDBDynamic::internal::prefsIsValid table \''.self::table.'\' does not exist(2)');
 			return false;
 		}
-	}
-	
-	public static function prettyName() {
-		return _('Internal');
 	}
 	
 	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0) {

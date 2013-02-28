@@ -1,2 +1,2 @@
-SUBDIRS =  script style image
+SUBDIRS =  image
 

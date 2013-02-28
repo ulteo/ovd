@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008,2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -195,20 +195,20 @@ class UserDB_sql_external extends UserDB {
 	
 	public static function configuration() {
 		$ret = array();
-		$c = new ConfigElement_input('host', _('Server host address'), _('The address of your MySQL server.'), _('The address of your MySQL server.'), '');
+		$c = new ConfigElement_input('host', '');
 		$ret []= $c;
-		$c = new ConfigElement_input('user', _('User login'), _('The user login that must be used to access the database (to list users accounts).'), _('The user login that must be used to access the database (to list users accounts).'), '');
+		$c = new ConfigElement_input('user', '');
 		$ret []= $c;
-		$c = new ConfigElement_password('password', _('User password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'), '');
+		$c = new ConfigElement_password('password', '');
 		$ret []= $c;
-		$c = new ConfigElement_input('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), '');
+		$c = new ConfigElement_input('database', '');
 		$ret []= $c;
-		$c = new ConfigElement_input('table', _('Table of users'), _('Table of users'), _('Table of users'), '');
+		$c = new ConfigElement_input('table', '');
 		$ret []= $c;
-		$c = new ConfigElement_dictionary('match',_('Matching'), _('Matching'), _('Matching'), array('login' => 'login', 'displayname' => 'displayname'));
+		$c = new ConfigElement_dictionary('match', array('login' => 'login', 'displayname' => 'displayname'));
 		$ret []= $c;
-		$c = new ConfigElement_select('hash_method',_('Hash method'), _('Hash method'), _('Hash method'), 'plain');
-		$c->setContentAvailable(array('md5' => _('MD5'), 'crypt' => _('Crypt'), 'shadow' => _('Shadow'), 'plain' => _('Plain')));
+		$c = new ConfigElement_select('hash_method', 'plain');
+		$c->setContentAvailable(array('md5', 'crypt', 'shadow', 'plain'));
 		$ret []= $c;
 		return $ret;
 	}
@@ -218,10 +218,6 @@ class UserDB_sql_external extends UserDB {
 		$sql2 = new SQL($config);
 		$status = $sql2->CheckLink(false);
 		return $status;
-	}
-	
-	public static function prettyName() {
-		return _('MySQL external');
 	}
 	
 	public static function isDefault() {

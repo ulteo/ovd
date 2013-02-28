@@ -1,8 +1,8 @@
-# Copyright (C) 2008-2010 Ulteo SAS
+# Copyright (C) 2008-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Gauvain POCENTEK <gauvain@linutop.com> 2008-2009
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2012
 # Author Laurent CLOUET <laurent@ulteo.com> 2009
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
 #
@@ -20,43 +20,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-SUBDIRS = ajax media includes init classes
+SUBDIRS = includes init classes media
 
-if HA
-SUBDIRS += ha
-endif
-
-scripts_DATA = actions.php \
-               api.php \
-               api.wsdl \
-               applications.php \
-               applications_static.php \
-               appsgroup.php \
-               checkup.php \
-               configuration.php \
-               configuration-partial.php \
-               configuration-profile.php \
-               configuration-sumup.php \
-               index.php \
-               login.php \
-               logout.php \
-               logs.php \
-               mimetypes.php \
-               news.php \
-               password.php \
-               profiles.php \
-               publications.php \
-               reporting.php \
-               servers.php \
-               sharedfolders.php \
-               session-reporting.php \
-               sessions.php \
-               summary.php \
-               sumup.php \
-               tasks.php \
-               users.php \
-               usersgroup.php \
-               wizard.php
+scripts_DATA = api.php \
+               api.wsdl
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/admin
 

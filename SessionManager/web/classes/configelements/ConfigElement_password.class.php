@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,13 +22,4 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class ConfigElement_password extends ConfigElement {  // input password (rw)
-	public function toHTML($readonly=false) {
-		$html_id = $this->htmlID();
-		$disabled = '';
-		if ($readonly) {
-			$disabled = 'disabled="disabled"';
-		}
-
-		return '<input type="password" '.$disabled.' id="'.$html_id.'" name="'.$html_id.'" value="'.$this->content.'" size="25" />';
-	}
 }

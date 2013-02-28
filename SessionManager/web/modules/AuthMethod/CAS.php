@@ -81,10 +81,6 @@ class AuthMethod_CAS extends AuthMethod {
 		return true;
 	}
 
-	public static function prettyName() {
-		return _('CAS authentication');
-	}
-
 	public static function prefsIsValid($prefs_, &$log=array()) {
 		$buf = $prefs_->get('AuthMethod','CAS');
 		$CAS_server_url = $buf['user_authenticate_cas_server_url'];
@@ -96,7 +92,7 @@ class AuthMethod_CAS extends AuthMethod {
 
 	public static function configuration() {
 		return array(
-			new ConfigElement_input('user_authenticate_cas_server_url', _('CAS server URL'), _('CAS server URL'), _('CAS server URL'), 'http://cas.server.com:1234')
+			new ConfigElement_input('user_authenticate_cas_server_url', 'http://cas.server.com:1234')
 		);
 	}
 	

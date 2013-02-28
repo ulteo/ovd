@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -52,7 +53,7 @@ class UserGroupDB extends Module {
 	public function __toString() {
 		$ret = get_class($this).'(';
 		foreach ($this->instance_type as $key => $value) {
-			$ret .= '\''.$key.'\':\''.$value->prettyName().'\' ';
+			$ret .= '\''.$key.'\':\''.$key.'\' ';
 		}
 		$ret .= ')';
 		return $ret;
@@ -143,9 +144,6 @@ class UserGroupDB extends Module {
 	}
 	public static function prefsIsValid($prefs_, &$log=array()) {
 		return self::call_static_method('prefsIsValid', $prefs_ , $log);
-	}
-	public static function prettyName() {
-		return self::call_static_method('prettyName');
 	}
 	public static function isDefault() {
 		return self::call_static_method('isDefault');

@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -48,10 +49,6 @@ class ServerStatusChangedTask extends EventCallback {
 		
 		return true;
     }
-	
-	public function getDescription() {
-		return _("Clean up tasks");
-	}
 	
 	public function isInternal() {
 		return true;

@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author David LECHEVALIER <david@ulteo.com> 2012
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -404,56 +404,6 @@ class Session {
 		}
 
 		return _('Unknown');
-	}
-
-	public function colorStatus($status_=Session::SESSION_STATUS_UNKNOWN) {
-		switch ($status_) {
-			case Session::SESSION_STATUS_UNKNOWN:
-				return 'error';
-				break;
-			case Session::SESSION_STATUS_ERROR:
-				return 'error';
-				break;
-			case Session::SESSION_STATUS_CREATING:
-				return 'warn';
-				break;
-			case Session::SESSION_STATUS_CREATED:
-				return 'warn';
-				break;
-			case Session::SESSION_STATUS_INIT:
-				return 'warn';
-				break;
-			case Session::SESSION_STATUS_READY:
-				return 'ok';
-				break;
-			case Session::SESSION_STATUS_ACTIVE:
-				return 'ok';
-				break;
-			case Session::SESSION_STATUS_INACTIVE:
-				return 'warn';
-				break;
-			case Session::SESSION_STATUS_WAIT_DESTROY:
-				return 'warn';
-				break;
-			case Session::SESSION_STATUS_DESTROYING:
-				return 'warn';
-				break;
-			case Session::SESSION_STATUS_DESTROYED:
-				return 'error';
-				break;
-		}
-
-		return 'error';
-	}
-
-	public function stringStatus() {
-		$buf = $this->getAttribute('status');
-
-		return '<span class="msg_'.$this->colorStatus($buf).'">'.$this->textStatus($buf).'</span>';
-	}
-
-	public static function textEndStatus($end_status_) {
-		return $end_status_; // for now the text is not translated
 	}
 
 	public function isAlive() {

@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -104,10 +105,6 @@ class UserGroupDB_unix  extends UserGroupDB {
 	
 	public static function prefsIsValid($prefs_, &$log=array()) {
 		return true;
-	}
-	
-	public static function prettyName() {
-		return _('Unix');
 	}
 	
 	public static function isDefault() {

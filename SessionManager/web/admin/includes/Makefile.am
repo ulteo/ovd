@@ -1,10 +1,4 @@
-scripts_DATA = core.inc.php \
-               core-minimal.inc.php \
-               functions.inc.php \
-               misc.inc.php \
-               page_template.php \
-               page_template_static.php \
-               template_server.inc.php
+scripts_DATA = core.inc.php functions.inc.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/admin/includes
 

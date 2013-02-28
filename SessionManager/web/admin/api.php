@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2012 Ulteo SAS
+ * Copyright (C) 2012-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -63,7 +63,7 @@ class OvdAdminSoap {
 			
 			$policy = $elements['default_policy']->content_available;
 			foreach ($policy as $k => $v) {
-				$policy[$k] = true;
+				$policy[$v] = true;
 			}
 		}
 		
@@ -251,7 +251,7 @@ class OvdAdminSoap {
 		}
 		
 		if ($element_->content_available && is_array($element_->content_available)) {
-			$e['possible_values'] = array_keys($element_->content_available);
+			$e['possible_values'] = $element_->content_available;
 		}
 		
 		return $e;

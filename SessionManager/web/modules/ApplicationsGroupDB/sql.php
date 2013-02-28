@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -156,10 +156,6 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 			Logger::error('main', 'ApplicationsGroupDB::sql::prefsIsValid table \''.self::table.'\' does not exist(2)');
 			return false;
 		}
-	}
-	
-	public static function prettyName() {
-		return _('MySQL');
 	}
 	
 	public static function isDefault() {

@@ -9,7 +9,6 @@ Package: ulteo-ovd-session-manager
 Architecture: all
 Pre-depends: debconf
 Depends:
- ulteo-ovd-l10n,
  apache2,
  libapache2-mod-php5,
  php5-cli,
@@ -18,10 +17,10 @@ Depends:
  php5-ldap,
  php-pear,
  php5-imagick,
- php-libchart,
  php-soap,
  curl,
  openssl
+Recommends: ulteo-ovd-administration-console
 Suggests: mysql-server, mail-transport-agent
 Description: Ulteo Open Virtual Desktop - Session Manager
  This package provides the Session Manager web services for the Ulteo Open
