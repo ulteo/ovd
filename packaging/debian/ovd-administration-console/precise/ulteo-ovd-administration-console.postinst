@@ -4,7 +4,7 @@
 
 CONFDIR=/etc/ulteo/administration_console
 CONFFILE=$CONFDIR/config.inc.php
-SPOOLDIR=/var/spool/ulteo/sessionmanager
+SPOOLDIR=/var/spool/ulteo/administration_console
 
 ############################# APACHE CONFIGURATION #############################
 
