@@ -19,10 +19,6 @@
 
 SUBDIRS = web config scripts examples
 
-if HA
-SUBDIRS += ha
-endif
-
 DIST_SUBDIRS = $(SUBDIRS)
 
 clean-local:
