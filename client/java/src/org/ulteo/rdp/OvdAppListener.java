@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,9 +21,11 @@
 
 package org.ulteo.rdp;
 
+import org.ulteo.ovd.ApplicationInstance;
+
 public interface OvdAppListener {
 	public void ovdInited(OvdAppChannel o);
-	public void ovdInstanceStarted(OvdAppChannel channel_, int app_id_, int instance_);
-	public void ovdInstanceStopped(int instance_);
-	public void ovdInstanceError(int instance_);
+	public void ovdInstanceStarted(OvdAppChannel channel_, ApplicationInstance appInst_);
+	public void ovdInstanceStopped(ApplicationInstance appInst_);
+	public void ovdInstanceError(ApplicationInstance appInst_);
 }

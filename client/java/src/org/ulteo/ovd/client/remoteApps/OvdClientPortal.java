@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2013
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
  * Author David LECHEVALIER <david@ulteo.com> 2011
@@ -46,7 +46,6 @@ import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.portal.PortalFrame;
-import org.ulteo.ovd.client.portal.RunningApplicationPanel;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.News;
@@ -83,7 +82,6 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		
 		this.portal = new PortalFrame(this, this.username, logo, this.showBugReporter);
 		this.portal.addComponentListener(this);
-		this.portal.getRunningApplicationPanel().setSpool(spool);
 		
 		this.systray = new IntegratedTrayIcon(portal, logo, this);
 	}
@@ -133,7 +131,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		}
 		this.loadingFrame.updateProgression(LoadingStatus.CLIENT_WAITING_SERVER, 0);
 
-		for (Application app : co.getAppsList()) {
+		for (Application app : co.getOvdAppChannel().getApplicationsList()) {
 			this.appsList.add(app);
 		}
 	}
@@ -156,7 +154,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		
 		RdpConnectionOvd rc = find(channel);
 		if (rc != null) {
-			for (Application app : rc.getAppsList()) {
+			for (Application app : rc.getOvdAppChannel().getApplicationsList()) {
 				if (! this.portal.isVisible()) {
 					if (this.appsListToEnable == null)
 						this.appsListToEnable = new ArrayList<Application>();
@@ -176,48 +174,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 
 	@Override
-	public void ovdInstanceStarted(OvdAppChannel channel_, int app_id_, int instance_) {
-		// If there is no application instance created, is that the application is restoring.
-		RunningApplicationPanel runningAppsPanel = this.portal.getRunningApplicationPanel();
-		if (runningAppsPanel.findApplicationInstanceByToken(instance_) == null) {
-			RdpConnectionOvd rc = this.find(channel_);
-			if (rc == null) {
-				Logger.error("Failed to find connection corresponding to this ovdApp channel");
-				return;
-			}
-
-			Application app = null;
-			for (Application an_app : rc.getAppsList()) {
-				if (an_app.getId() != app_id_)
-					continue;
-
-				app = an_app;
-				break;
-			}
-
-			ApplicationInstance ai = new ApplicationInstance(app, null, instance_);
-			runningAppsPanel.addInstance(ai);
-			
-			Logger.info("Restoring application "+app.getName()+" ("+instance_+")");
-		}
-	}
-	
-	@Override
-	public void ovdInstanceStopped(int instance_) {
-		if (this.spool == null)
-			return;
-		
-		ApplicationInstance ai = this.portal.getRunningApplicationPanel().findApplicationInstanceByToken(instance_);
-		if (ai == null)
-			return;
-		
-		if (ai.isLaunchedFromShortcut())
-			this.spool.destroyInstance(instance_);
-	}
-
-	@Override
 	protected void hide(RdpConnectionOvd rc) {
-		for (Application app : rc.getAppsList()) {
+		for (Application app : rc.getOvdAppChannel().getApplicationsList()) {
 			this.portal.getApplicationPanel().toggleAppButton(app, false);
 		}
 		

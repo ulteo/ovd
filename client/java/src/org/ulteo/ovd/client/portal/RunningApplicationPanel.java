@@ -1,9 +1,10 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Omar AKHAM <oakham@ulteo.com> 2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author Thomas MOUTON <thomas@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -40,7 +41,6 @@ import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.ApplicationInstance;
-import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 
@@ -49,17 +49,14 @@ public class RunningApplicationPanel extends JPanel implements OvdAppListener {
 	private Logger logger = Logger.getLogger(RunningApplicationPanel.class);
 	
 	//private static final ImageIcon KILL_ICON = new ImageIcon(Toolkit.getDefaultToolkit().getImage(RunningApplicationPanel.class.getClassLoader().getResource("pics/button_cancel.png")));
-	private ArrayList<ApplicationInstance> runningApps = null;
 	private ArrayList<Component> components = null;
 	private JScrollPane listScroller = null;
-	private Spool spool = null;
 	private JPanel listPanel = new JPanel();
 	private int y = 0;
 	private GridBagConstraints gbc = null;
 	
 	public RunningApplicationPanel() {
 		this.listPanel.setBackground(Color.white);
-		this.runningApps = new ArrayList<ApplicationInstance>();
 		this.components = new ArrayList<Component>();
 		
 		this.setLayout(new BorderLayout());
@@ -74,10 +71,6 @@ public class RunningApplicationPanel extends JPanel implements OvdAppListener {
 		
 		this.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 		this.revalidate();
-	}
-	
-	public void addInstance(ApplicationInstance ai) {
-		this.runningApps.add(ai);
 	}
 	
 	private void add(ApplicationInstance new_ai) {
@@ -127,46 +120,16 @@ public class RunningApplicationPanel extends JPanel implements OvdAppListener {
 		this.revalidate();
 		this.repaint();
 	}
-
-	public ApplicationInstance findApplicationInstanceByToken(int token) {
-		for (ApplicationInstance ai : this.runningApps) {
-			if (ai.getToken() == token)
-				return ai;
-		}
-		
-		if (this.spool == null)
-			return null;
-		
-		return this.spool.findAppInstanceByToken(token);
-	}
 	
 	public void ovdInited(OvdAppChannel o) {}
 
-	public void ovdInstanceError(int instance) {}
+	public void ovdInstanceError(ApplicationInstance appInst_) {}
 
-	public void ovdInstanceStarted(OvdAppChannel channel_, int app_id_, int instance) {
-		ApplicationInstance ai = this.findApplicationInstanceByToken(instance);
-		if (ai == null) {
-			this.logger.error("Can't find ApplicationInstance "+instance);
-			return;
-		}
-		ai.setState(ApplicationInstance.STARTED);
-
-		this.add(ai);
+	public void ovdInstanceStarted(OvdAppChannel channel_, ApplicationInstance appInst_) {
+		this.add(appInst_);
 	}
 
-	public void ovdInstanceStopped(int instance) {
-		ApplicationInstance ai = this.findApplicationInstanceByToken(instance);
-		if (ai == null) {
-			this.logger.error("Can't find ApplicationInstance "+instance);
-			return;
-		}
-		ai.setState(ApplicationInstance.STOPPED);
-
-		this.remove(ai);
-	}
-	
-	public void setSpool(Spool spool) {
-		this.spool = spool;
+	public void ovdInstanceStopped(ApplicationInstance appInst_) {
+		this.remove(appInst_);
 	}
 }

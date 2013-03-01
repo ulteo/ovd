@@ -35,7 +35,9 @@ import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
-import org.ulteo.ovd.client.OvdClient;
+import org.ulteo.ovd.client.OvdClientRemoteApps;
+import org.ulteo.rdp.OvdAppChannel;
+import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.utils.FilesOp;
 import org.ulteo.utils.I18n;
 import org.ulteo.utils.SystemUtils;
@@ -45,13 +47,11 @@ public class Spool extends Thread {
 	private final static String PREFIX_ARG = "arg = ";
 
 	private Logger logger = Logger.getLogger(Spool.class);
-	private OvdClient client = null;
-	private ArrayList<ApplicationInstance> appInstances = null;
+	private OvdClientRemoteApps client = null;
 	private String id = null;
 
-	public Spool(OvdClient client_) {
+	public Spool(OvdClientRemoteApps client_) {
 		this.client = client_;
-		this.appInstances = new ArrayList<ApplicationInstance>();
 		this.id = UUID.randomUUID().toString();
 	}
 
@@ -151,14 +151,6 @@ public class Spool extends Thread {
 			this.join();
 		} catch (InterruptedException e) {}
 	}
-	
-	public ApplicationInstance findAppInstanceByToken(long token_) {
-		for (ApplicationInstance ai : this.appInstances) {
-			if (ai.getToken() == token_)
-				return ai;
-		}
-		return null;
-	}
 
 	private void startApp(int appId_, String arg_, String token_) {
 		this.logger.info("Start application "+appId_+" with arg '"+arg_+"'(token: "+token_+")");
@@ -169,7 +161,6 @@ public class Spool extends Thread {
 		}
 		ApplicationInstance ai = new ApplicationInstance(app, arg_, Integer.parseInt(token_));
 		ai.setLaunchedFromShortcut(true);
-		this.appInstances.add(ai);
 		try {
 			ai.startApp();
 		} catch (RestrictedAccessException ex) {

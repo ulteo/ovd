@@ -1,8 +1,8 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
- * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012-2013
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
@@ -578,35 +578,6 @@ public abstract class OvdClient implements Runnable, RdpListener {
 				rc.setKeepAliveInterval(this.keepAliveInterval);
 			}
 		}
-	}
-    
-	/**
-	 * find the {@link RdpConnectionOvd} corresponding to a given {@link OvdAppChannel}
-	 * @param specific {@link OvdAppChannel}
-	 * @return {@link RdpConnectionOvd} if found, null instead
-	 */
-	protected RdpConnectionOvd find(OvdAppChannel channel) {
-		for (RdpConnectionOvd rc : this.getAvailableConnections()) {
-			if (rc.getOvdAppChannel() == channel)
-				return rc;
-		}
-		return null;
-	}
-	
-	/**
-	 * find the {@link Application} available in the several {@link RdpConnectionOvd}
-	 * @param id id of the {@link Application} to search
-	 * @return {@link Application} if found, null instead
-	 */
-	public Application findAppById(int id) {
-		for (RdpConnectionOvd rc : this.getAvailableConnections()) {
-			for (Application app : rc.getAppsList()) {
-				if (app.getId() == id) {
-					return app;
-				}
-			}
-		}
-		return null;
 	}
 
 }

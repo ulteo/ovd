@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2012
+ * Author Thomas MOUTON <thomas@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -20,8 +21,10 @@
 
 package org.ulteo.rdp;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +40,16 @@ import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
 import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
 import org.ulteo.Logger;
+import org.ulteo.ovd.Application;
+import org.ulteo.ovd.ApplicationInstance;
+import org.ulteo.ovd.OvdException;
+import org.ulteo.ovd.disk.DiskManager;
+import org.ulteo.ovd.integrated.OSTools;
+import org.ulteo.ovd.integrated.RestrictedAccessException;
+import org.ulteo.ovd.integrated.SystemLinux;
+import org.ulteo.ovd.integrated.SystemWindows;
+import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
+import org.ulteo.utils.I18n;
 
 public class OvdAppChannel extends VChannel {
 	public static final int	ORDER_INIT	= 0x00;
@@ -60,6 +73,9 @@ public class OvdAppChannel extends VChannel {
 	private List<String> known_folers = null;
 
 	private HashMap<RdpdrDevice, List<Integer>> sharesUsedByApps = null;
+
+	private List<Application> appsList = null;
+	private List<ApplicationInstance> appInstancesList = null;
 	
 	public OvdAppChannel(Options opt_, Common common_) {
 		super(opt_, common_);
@@ -67,6 +83,8 @@ public class OvdAppChannel extends VChannel {
 		this.sharesUsedByApps = new HashMap<RdpdrDevice, List<Integer>>();
 		this.listener = new CopyOnWriteArrayList<OvdAppListener>();
 		this.known_folers = new CopyOnWriteArrayList<String>();
+		this.appsList = new ArrayList<Application>();
+		this.appInstancesList = new ArrayList<ApplicationInstance>();
 	}
 	
 	public int flags() {
@@ -76,7 +94,44 @@ public class OvdAppChannel extends VChannel {
 	public String name() {
 		return "ovdapp";
 	}
+
+	public void addApplication(Application app_) {
+		this.appsList.add(app_);
+	}
+
+	public List<Application> getApplicationsList() {
+		return this.appsList;
+	}
 	
+	private Application findApplicationById(int appId) {
+		for (Application each : this.appsList) {
+			if (each.getId() == appId)
+				return each;
+		}
+		
+		return null;
+	}
+
+	private ApplicationInstance findApplicationInstanceByToken(int token) {
+		for (ApplicationInstance each : this.appInstancesList) {
+			if (each.getToken() == token)
+				return each;
+		}
+		
+		return null;
+	}
+	
+	private ApplicationInstance getNewApplicationInstance(int token, int app_id) throws OvdException {
+		Application app = this.findApplicationById(app_id);
+		if (app == null) {
+			throw new OvdException("Unknown application ID "+app_id);
+		}
+		if (this.findApplicationInstanceByToken(token) != null) {
+			throw new OvdException("Application token "+token+" is already registered");
+		}
+		return new ApplicationInstance(app, null, token);
+	}
+
 	public void process(RdpPacket data) throws RdesktopException, IOException, CryptoException {
 		int length = data.size() - data.getPosition();
 		if (length < 1) {
@@ -87,6 +142,7 @@ public class OvdAppChannel extends VChannel {
 		int order = (int)data.get8();
 		int app_id = 0;
 		int instance = 0;
+		ApplicationInstance ai = null;
 		switch( order ) {
 			case ORDER_INIT:
 				if (! this.channel_open) {
@@ -145,8 +201,20 @@ public class OvdAppChannel extends VChannel {
 				instance = data.getLittleEndian32();
 				
 				System.out.println("ovdapp channel started instance "+instance+" of application "+app_id);
+				
+				ai = this.findApplicationInstanceByToken(instance);
+				if (ai == null) {
+					try {
+						ai = this.getNewApplicationInstance(instance, app_id);
+						this.appInstancesList.add(ai);
+					} catch (OvdException ex) {
+						Logger.error("Failed to create ApplicationInstance: "+ex.getMessage());
+						break;
+					}
+				}
+				
 				for(OvdAppListener listener : this.listener) {
-					listener.ovdInstanceStarted(this, app_id, instance);
+					listener.ovdInstanceStarted(this, ai);
 				}
 				
 				break;
@@ -160,8 +228,15 @@ public class OvdAppChannel extends VChannel {
 				instance = data.getLittleEndian32();
 				
 				System.out.println("ovdapp channel stopped instance "+instance);
+				
+				ai = this.findApplicationInstanceByToken(instance);
+				if (ai == null) {
+					Logger.error("OvdAppChannel does not know the application instance");
+					break;
+				}
+				
 				for(OvdAppListener listener : this.listener) {
-					listener.ovdInstanceStopped(instance);
+					listener.ovdInstanceStopped(ai);
 				}
 				break;
 				
@@ -174,8 +249,15 @@ public class OvdAppChannel extends VChannel {
 				instance = data.getLittleEndian32();
 				
 				System.out.println("ovdapp channel cant start instance "+instance);
+				
+				ai = this.findApplicationInstanceByToken(instance);
+				if (ai == null) {
+					Logger.error("OvdAppChannel does not know the application instance");
+					break;
+				}
+				
 				for(OvdAppListener listener : this.listener) {
-					listener.ovdInstanceError(instance);
+					listener.ovdInstanceError(ai);
 				}
 				break;
 			
@@ -203,6 +285,15 @@ public class OvdAppChannel extends VChannel {
 	}
 	
 	public void sendStartApp(int token, int app_id) {
+		try {
+			ApplicationInstance instance = this.getNewApplicationInstance(token, app_id);
+			instance.setState(ApplicationInstance.STARTING);
+			this.appInstancesList.add(instance);
+		} catch(OvdException ex) {
+			Logger.error("[sendStartApp] "+ex.getMessage());
+			return;
+		}
+		
 		RdpPacket_Localised out = new RdpPacket_Localised(9);
 		out.set8(ORDER_START);
 		out.setLittleEndian32(token);

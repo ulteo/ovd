@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.propero.rdp.RdpConnection;
 
 import org.ulteo.Logger;
+import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
@@ -141,18 +142,18 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	}
 
 	@Override
-	public void ovdInstanceError(int instance) {
-		this.applet.forwardApplicationStatusToJS(0, new Integer(instance), OvdApplet.JS_API_O_INSTANCE_ERROR);
+	public void ovdInstanceError(ApplicationInstance appInstance) {
+		this.applet.forwardApplicationStatusToJS(0, new Integer(appInstance.getToken()), OvdApplet.JS_API_O_INSTANCE_ERROR);
 	}
 
 	@Override
-	public void ovdInstanceStarted(OvdAppChannel channel_, int app_id_, int instance) {
-		this.applet.forwardApplicationStatusToJS(app_id_, new Integer(instance), OvdApplet.JS_API_O_INSTANCE_STARTED);
+	public void ovdInstanceStarted(OvdAppChannel channel_, ApplicationInstance appInstance) {
+		this.applet.forwardApplicationStatusToJS(appInstance.getApplication().getId(), new Integer(appInstance.getToken()), OvdApplet.JS_API_O_INSTANCE_STARTED);
 	}
 
 	@Override
-	public void ovdInstanceStopped(int instance) {
-		this.applet.forwardApplicationStatusToJS(0, new Integer(instance), OvdApplet.JS_API_O_INSTANCE_STOPPED);
+	public void ovdInstanceStopped(ApplicationInstance appInstance) {
+		this.applet.forwardApplicationStatusToJS(0, new Integer(appInstance.getToken()), OvdApplet.JS_API_O_INSTANCE_STOPPED);
 	}
 
 	@Override

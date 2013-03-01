@@ -1,8 +1,8 @@
 /*
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2013
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@ package org.ulteo.ovd;
 import java.io.File;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.crypto.CryptoException;
 import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
@@ -241,16 +242,16 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 	}
 
 	public void ovdInited(OvdAppChannel o) {}
-	public void ovdInstanceStarted(OvdAppChannel channel_, int app_id_, int instance_) {
-		if (instance_ != this.token)
+	public void ovdInstanceStarted(OvdAppChannel channel_, ApplicationInstance appInst_) {
+		if (appInst_.getToken() != this.token)
 			return;
 		
 		if (this.waitedDevice != null)
 			this.app.getConnection().getOvdAppChannel().addShareUsedByApp(this.waitedDevice, this.token);
 	}
 
-	public void ovdInstanceStopped(int instance_) {
-		if (instance_ != this.token)
+	public void ovdInstanceStopped(ApplicationInstance appInst_) {
+		if (appInst_.getToken() != this.token)
 			return;
 		
 		OvdAppChannel ovdApp = this.app.getConnection().getOvdAppChannel();
@@ -264,8 +265,8 @@ public class ApplicationInstance implements DeviceListener, OvdAppListener {
 		}
 	}
 
-	public void ovdInstanceError(int instance_) {
-		if (instance_ != this.token)
+	public void ovdInstanceError(ApplicationInstance appInst_) {
+		if (appInst_.getToken() != this.token)
 			return;
 
 		OvdAppChannel ovdApp = this.app.getConnection().getOvdAppChannel();

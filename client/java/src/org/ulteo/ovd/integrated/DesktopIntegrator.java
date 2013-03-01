@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2011, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -58,7 +58,7 @@ public class DesktopIntegrator extends Thread {
 	public void run() {
 		// generate shortcuts
 		for (RdpConnectionOvd rc : this.connections) {
-			for (Application app : rc.getAppsList()) {
+			for (Application app : rc.getOvdAppChannel().getApplicationsList()) {
 				if (this.system.create(app) == null)
 					Logger.error("The "+app.getName()+" shortcut could not be created");
 
@@ -95,7 +95,7 @@ public class DesktopIntegrator extends Thread {
 			
 		HashMap<String, ImageIcon> mimeTypesIcons = new HashMap<String, ImageIcon>();
 
-		for (Application app : rc.getAppsList()) {
+		for (Application app : rc.getOvdAppChannel().getApplicationsList()) {
 			if (app == null)
 				continue;
 

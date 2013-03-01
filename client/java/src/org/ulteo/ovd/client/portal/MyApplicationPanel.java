@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Omar AKHAM <oakham@ulteo.com> 2011
+ * Author Thomas MOUTON <thomas@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -41,14 +42,12 @@ public class MyApplicationPanel extends JPanel {
 
 	private JPanel buttonPan = null;
 	private JScrollPane scroller = null;
-	private RunningApplicationPanel runningApps = null;
 	private GridBagConstraints gbc = null;
 	private int y = 0;
 	
-	public MyApplicationPanel(RunningApplicationPanel runningApps) {
+	public MyApplicationPanel() {
 		this.buttonPan = new JPanel();
 		this.buttonPan.setBackground(Color.WHITE);
-		this.runningApps = runningApps;
 		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		this.buttonPan.setLayout(new GridBagLayout());
@@ -98,7 +97,7 @@ public class MyApplicationPanel extends JPanel {
 		appLink.setEnabled(enable);
 
 		if (enable)
-			appLink.addActionListener(new ApplicationListener(app, this.runningApps));
+			appLink.addActionListener(new ApplicationListener(app));
 	}
 
 	private ApplicationLink findLinkByApp(Application app) {

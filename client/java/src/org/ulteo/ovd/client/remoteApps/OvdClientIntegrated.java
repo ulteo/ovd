@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012-2013
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
@@ -40,14 +40,6 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 	@Override
 	protected void hide(RdpConnectionOvd rc) {
 		this.unpublish(rc);
-	}
-
-	@Override
-	public void ovdInstanceStopped(int instance_) {
-		if (this.spool == null)
-			return;
-		
-		this.spool.destroyInstance(instance_);
 	}
 	
 	

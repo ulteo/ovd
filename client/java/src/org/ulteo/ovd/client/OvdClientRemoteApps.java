@@ -1,8 +1,8 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
- * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2013
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011-2012
@@ -30,6 +30,7 @@ import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 
 import org.ulteo.Logger;
+import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.sm.Properties;
@@ -134,7 +135,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			((SystemLinux) this.system).clearSystemMenu();
 
 		for (RdpConnectionOvd co : this.connections) {
-			for (Application app : co.getAppsList())
+			for (Application app : co.getOvdAppChannel().getApplicationsList())
 				this.system.clean(app);
 		}
 		this.system.refresh();
@@ -154,13 +155,19 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	}
 
 	@Override
-	public void ovdInstanceStarted(OvdAppChannel channel_, int app_id_, int instance_) {}
+	public void ovdInstanceStarted(OvdAppChannel channel_, ApplicationInstance appInst_) {}
 	
 	@Override
-	public void ovdInstanceStopped(int instance_) {}
+	public void ovdInstanceStopped(ApplicationInstance appInst_) {
+		if (this.spool == null)
+			return;
+		
+		if (appInst_.isLaunchedFromShortcut())
+			this.spool.destroyInstance(appInst_.getToken());
+	}
 	
 	@Override
-	public void ovdInstanceError(int instance_) {}
+	public void ovdInstanceError(ApplicationInstance appInst_) {}
 	
 	
 	protected void configureRDP(Properties properties) {
@@ -216,7 +223,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			return;
 		
 		HashMap<Integer, ImageIcon> appsIcons = new HashMap<Integer, ImageIcon>();
-		for (Application app : rc.getAppsList()) {
+		for (Application app : rc.getOvdAppChannel().getApplicationsList()) {
 			if (this.isCancelled)
 				break;
 
@@ -264,9 +271,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		rc.setGraphicOffset(this.screensize.x, this.screensize.y);
 		
 		for (org.ulteo.ovd.sm.Application appItem : server.applications)
-			rc.addApp(new Application(rc, appItem, null));
+			rc.getOvdAppChannel().addApplication(new Application(rc, appItem, null));
 		
-		if (rc.getAppsList().isEmpty()) {
+		if (rc.getOvdAppChannel().getApplicationsList().isEmpty()) {
 			Logger.warn("Do not create RdpConnectionOvd object because there is no available applications on server "+server.getHost());
 			return null;
 		}
@@ -368,7 +375,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		
 		if (rc.getOvdAppChannel().isReady()) {
 			boolean associate = (rc.getFlags() & RdpConnectionOvd.MOUNTING_MODE_MASK) != 0;
-			for (Application app : rc.getAppsList()) {
+			for (Application app : rc.getOvdAppChannel().getApplicationsList()) {
 				this.system.install(app, this.showDesktopIcons, associate);
 			}
 
@@ -387,10 +394,39 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		if (this.system == null)
 			return;
 
-		for (Application app : rc.getAppsList()) {
+		for (Application app : rc.getOvdAppChannel().getApplicationsList()) {
 			this.system.uninstall(app);
 		}
 
 		this.system.refresh();
+	}
+    
+	/**
+	 * find the {@link RdpConnectionOvd} corresponding to a given {@link OvdAppChannel}
+	 * @param specific {@link OvdAppChannel}
+	 * @return {@link RdpConnectionOvd} if found, null instead
+	 */
+	protected RdpConnectionOvd find(OvdAppChannel channel) {
+		for (RdpConnectionOvd rc : this.getAvailableConnections()) {
+			if (rc.getOvdAppChannel() == channel)
+				return rc;
+		}
+		return null;
+	}
+	
+	/**
+	 * find the {@link Application} available in the several {@link RdpConnectionOvd}
+	 * @param id id of the {@link Application} to search
+	 * @return {@link Application} if found, null instead
+	 */
+	public Application findAppById(int id) {
+		for (RdpConnectionOvd rc : this.getAvailableConnections()) {
+			for (Application app : rc.getOvdAppChannel().getApplicationsList()) {
+				if (app.getId() == id) {
+					return app;
+				}
+			}
+		}
+		return null;
 	}
 }

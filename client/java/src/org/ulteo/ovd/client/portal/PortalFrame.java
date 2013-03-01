@@ -1,9 +1,9 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
- * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010-2013
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
@@ -117,7 +117,7 @@ public class PortalFrame extends OvdClientFrame {
 		this.add(application, gbc);
 
 		this.runningAppsPanel = new RunningApplicationPanel();
-		this.appsPanel = new MyApplicationPanel(this.runningAppsPanel);
+		this.appsPanel = new MyApplicationPanel();
 		gbc.gridy = 2;
 		gbc.anchor = GridBagConstraints.CENTER;
 		gbc.insets.bottom = 20;

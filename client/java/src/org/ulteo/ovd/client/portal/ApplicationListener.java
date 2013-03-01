@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -29,18 +30,15 @@ import org.ulteo.ovd.integrated.RestrictedAccessException;
 
 public class ApplicationListener implements ActionListener{
 	Application app = null;
-	RunningApplicationPanel runningApps = null;
 	
-	public ApplicationListener(Application app, RunningApplicationPanel runningApps) {
+	public ApplicationListener(Application app) {
 		this.app = app;
-		this.runningApps = runningApps;
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
 		int token = (int) (Math.random() * 1000000000);
 		ApplicationInstance ai = new ApplicationInstance(this.app, null, token);
 		ai.setLaunchedFromShortcut(false);
-		this.runningApps.addInstance(ai);
 
 		try {
 			ai.startApp();

@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012-2013
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
  * Author David LECHEVALIER <david@ulteo.com> 2012
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
@@ -351,7 +351,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 			rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, RdpConnectionOvd.DEFAULT_BPP);
 
 			for (org.ulteo.ovd.sm.Application appItem : server.applications)
-				rc.addApp(new Application(rc, appItem, sm.askForIcon(appItem)));
+				rc.getOvdAppChannel().addApplication(new Application(rc, appItem, sm.askForIcon(appItem)));
 
 			this.co.add(rc);
 		}

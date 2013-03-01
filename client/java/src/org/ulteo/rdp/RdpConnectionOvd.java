@@ -1,8 +1,8 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
- * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012-2013
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
@@ -25,7 +25,7 @@
 package org.ulteo.rdp;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
+import java.util.List;
 
 import net.propero.rdp.Common;
 import net.propero.rdp.Options;
@@ -67,7 +67,6 @@ public class RdpConnectionOvd extends RdpConnection {
 	public static final int DEBUG_MASK =		0xf0000000;
 
 	private int flags = 0x00;
-	private ArrayList<Application> appsList = null;
 	private OvdAppChannel ovdAppChannel = null;
 	private static DiskManager diskManager = null;
 	private static OVDPrinterManager printerManager = null;
@@ -106,8 +105,6 @@ public class RdpConnectionOvd extends RdpConnection {
 		else {
 			throw new OvdException("Unable to create connection: Neither desktop nor application mode specified");
 		}
-		
-		this.appsList = new ArrayList<Application>();
 	}
 	
 	@Override
@@ -307,14 +304,6 @@ public class RdpConnectionOvd extends RdpConnection {
 		
 		if (this.ovdAppChannel != null)
 			this.ovdAppChannel = null;
-	}
-
-	public void addApp(Application app_) {
-		this.appsList.add(app_);
-	}
-
-	public ArrayList<Application> getAppsList() {
-		return this.appsList;
 	}
 
 	/**
