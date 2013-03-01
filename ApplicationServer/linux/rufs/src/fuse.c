@@ -107,7 +107,9 @@ static bool transformPath(const char* path, char* to) {
 
 		// if the file exist in a union, we return it
 		str_sprintf(to, "%s%s", u->path, trpath);
-		if (fs_exist(to)) {
+
+		// do not resolv symlink => this generate deadlock
+		if (faccessat(0, to, F_OK, AT_EACCESS | AT_SYMLINK_NOFOLLOW) == 0) {
 			return true;
 		}
 
