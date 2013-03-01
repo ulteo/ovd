@@ -24,10 +24,11 @@
 #include "common/ini.h"
 
 
+
+#define PACKAGE_VERSION            "0.1"
 #define DEFAULT_CONFIGURATION_PATH "/etc/ulteo/default.conf"
 #define MAIN_CONFIGURATION_SECTION "main"
 #define TRANS_CONFIGURATION_SECTION "translation"
-#define MAIN_DESTINATION_CONFIGURATION_KEY "destination"
 #define MAIN_UNION_CONFIGURATION_KEY "union"
 #define MAIN_BIND_CONFIGURATION_KEY "bind"
 #define MAIN_BIND_DESTINATION_CONFIGURATION_KEY "bindDestination"
@@ -59,8 +60,10 @@ typedef struct _Translation {
 
 
 typedef struct _Configuration {
+	char* user;
 	bool bind;
-	char destination_path[PATH_MAX];
+	char* source_path;
+	char* destination_path;
 	char bind_path[PATH_MAX];
 	List* unions;
 	List* translations;

@@ -20,12 +20,7 @@
 
 #include "fuse.h"
 #include "status.h"
-#include "common/sys.h"
-#include "configuration.h"
 #include "common/log.h"
-
-
-Configuration* config;
 
 
 int main(int argc, char **argv)
@@ -33,14 +28,6 @@ int main(int argc, char **argv)
 	log_init();
 	log_setProgram(file_getShortName(argv[0]));
 
-	config = configuration_new();
-
-	if (! configuration_parse(DEFAULT_CONFIGURATION_PATH, config)) {
-		logError("Failed to parse configuration file");
-		sys_exit(CONF_ERROR);
-	}
-
-	configuration_dump(config);
 	fuse_start(argc, argv);
 
 	return SUCCESS;

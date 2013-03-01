@@ -15,13 +15,36 @@
 #include "common/log.h"
 #include "configuration.h"
 #include "common/regexp.h"
+#include "common/sys.h"
+#include "common/str.h"
 #include <linux/limits.h>
 #ifdef HAVE_SETXATTR
 #include <sys/xattr.h>
 #endif
 
 
-extern Configuration* config;
+Configuration* config;
+
+enum {
+     KEY_HELP,
+     KEY_VERSION,
+     KEY_DEBUG,
+};
+
+#define RUFS_OPT(t, p, v) { t, offsetof(Configuration, p), v }
+
+static struct fuse_opt rufs_opts[] = {
+     RUFS_OPT("user=%s", user, 0),
+
+     FUSE_OPT_KEY("-V",          KEY_VERSION),
+     FUSE_OPT_KEY("--version",   KEY_VERSION),
+     FUSE_OPT_KEY("-h",          KEY_HELP),
+     FUSE_OPT_KEY("--help",      KEY_HELP),
+     FUSE_OPT_KEY("-d",          KEY_DEBUG),
+     FUSE_OPT_KEY("--debug",     KEY_DEBUG),
+     FUSE_OPT_END
+};
+
 
 
 // Transform path returned by ls
@@ -727,35 +750,97 @@ static struct fuse_operations rufs_oper = {
 };
 
 
+static int rufs_opt_proc(void *data, const char *arg, int key, struct fuse_args *outargs)
+{
+	Configuration* conf = data;
+
+	switch (key) {
+	case FUSE_OPT_KEY_NONOPT:
+		if (conf->source_path == 0) {
+			conf->source_path = str_dup(arg);
+			return 0;
+		}
+		return 1;
+
+	case KEY_HELP:
+		fprintf(stderr,
+				"usage: %s source mountpoint [options]\n"
+				"\n"
+				"general options:\n"
+				"    -o opt,[opt...]  mount options\n"
+				"    -h   --help      print help\n"
+				"    -V   --version   print version\n"
+				"\n"
+				"rufs options:\n"
+				"    -o user=STRING\n"
+				, outargs->argv[0]);
+		fuse_opt_add_arg(outargs, "-ho");
+		fuse_main(outargs->argc, outargs->argv, &rufs_oper, NULL);
+		sys_exit(1);
+
+	case KEY_VERSION:
+		fprintf(stderr, "rufs version %s\n", PACKAGE_VERSION);
+		fuse_opt_add_arg(outargs, "--version");
+		fuse_main(outargs->argc, outargs->argv, &rufs_oper, NULL);
+		sys_exit(0);
+
+	case KEY_DEBUG:
+		log_setLevel(DEBUG);
+		fuse_opt_add_arg(outargs, "--debug");
+		return 0;
+	}
+	return 1;
+}
+
+
 int fuse_start(int argc, char** argv) {
-	struct fuse_args args = FUSE_ARGS_INIT(0, NULL);
+    struct fuse_args args = FUSE_ARGS_INIT(argc, argv);
 	int ret;
-	int i;
+
+	config = configuration_new();
+
+	if (! configuration_parse(DEFAULT_CONFIGURATION_PATH, config)) {
+		logError("Failed to parse configuration file");
+		sys_exit(CONF_ERROR);
+	}
 
 	if (config == NULL) {
 		logError("There is no valid configuration, exiting");
 		return CONF_ERROR;
 	}
 
+	logDebug("Fuse configuration");
+
+	if (fuse_opt_parse(&args, config, rufs_opts, rufs_opt_proc) == -1) {
+		logError("Failed to parse option");
+		sys_exit(1);
+	}
+
+	fuse_parse_cmdline(&args, &config->destination_path, NULL, NULL);
+	if (config->destination_path == NULL) {
+		logError("no mount point, exiting");
+		sys_exit(CONF_ERROR);
+	}
+
+	if (config->source_path == NULL) {
+		logError("no source path, exiting");
+		sys_exit(CONF_ERROR);
+	}
+
+	logDebug("mount point is %s", config->destination_path);
+	logDebug("source path is %s", config->source_path);
+
+	fuse_opt_add_arg(&args, "-o");
+	fuse_opt_add_arg(&args, "allow_other");
+	fuse_opt_add_arg(&args, "-o");
+	fuse_opt_add_arg(&args, "nonempty");
+	fuse_opt_add_arg(&args, config->destination_path);
+
 	fs_mkdir(config->destination_path);
 	if (! fs_exist(config->destination_path))
 	{
 		logError("Unable to initialize the mount point : %s", config->destination_path);
 	}
-
-	logDebug("Fuse configuration");
-	fuse_opt_add_arg(&args, "");
-	fuse_opt_add_arg(&args, "-f");
-	fuse_opt_add_arg(&args, "-o");
-	fuse_opt_add_arg(&args, "allow_other");
-	fuse_opt_add_arg(&args, "-o");
-	fuse_opt_add_arg(&args, "nonempty");
-
-	for(i = 1 ; i < argc; i++) {
-		fuse_opt_add_arg(&args, argv[i]);
-	}
-
-	fuse_opt_add_arg(&args, config->destination_path);
 
 	// make the mountbind
 	if (config->bind && config->bind_path[0] != 0) {
@@ -772,6 +857,7 @@ int fuse_start(int argc, char** argv) {
 		fs_umount(config->bind_path);
 	}
 
+	configuration_free(config);
 
 	return ret;
 }

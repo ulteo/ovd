@@ -34,7 +34,6 @@ Configuration* configuration_new() {
 	conf->unions = list_new(false);
 	conf->translations = list_new(true);
 	conf->bind = false;
-	conf->destination_path[0] = '\0';
 	conf->bind_path[0] = '\0';
 	
 	return conf;
@@ -226,16 +225,6 @@ static bool configuration_parseMain(Ini* ini, Configuration* conf) {
 	if (ini == NULL || conf == NULL) {
 		logWarn("Invalid config object");
 		return false;
-	}
-
-	value = ini_getKey(ini, MAIN_CONFIGURATION_SECTION, MAIN_DESTINATION_CONFIGURATION_KEY);
-	if (value != NULL) {
-		if (! fs_expandPath(value, expandedPath)) {
-			logWarn("Unable to expand %s", value);
-			return false;
-		}
-
-		str_ncpy(conf->destination_path, expandedPath, sizeof(conf->destination_path));
 	}
 
 	value = ini_getKey(ini, MAIN_CONFIGURATION_SECTION, MAIN_UNION_CONFIGURATION_KEY);
