@@ -81,14 +81,6 @@ else
     AC_SUBST(DISTCHECK_CONFIGURE_FLAGS)
 fi
 
-AC_ARG_WITH([ha], [AC_HELP_STRING([--with-ha], [add the module HA to the SM])],
-            [ha=yes], )
-AM_CONDITIONAL(HA, [test -n "$ha"])
-if test -n "$ha"; then
-    AC_CONFIG_FILES([ha/Makefile])
-    DISTCHECK_CONFIGURE_FLAGS+=" --with-ha"
-fi
-
 AC_CONFIG_FILES([
 Makefile
 config/Makefile

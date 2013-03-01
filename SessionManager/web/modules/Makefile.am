@@ -44,11 +44,5 @@ scripts_DATA = ApplicationDB.php \
                UserGroupDBDynamic.php \
                UserGroupDBDynamicCached.php
 
-if HA
-scripts_DATA += HA.php
 
-hadir=$(datadir)/ulteo/sessionmanager/modules/HA
-ha_DATA = HA/high_availability.php
-endif
-
-EXTRA_DIST = $(scripts_DATA) $(ha_DATA)
+EXTRA_DIST = $(scripts_DATA)

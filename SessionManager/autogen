@@ -29,7 +29,6 @@ while [ $# -gt 0 ]
 do
     case "$1" in
         -m) module="$2" ; shift ;;
-        --ha) args+=" --with-ha" ;;
         --) shift; break ;;
         *)  break ;;
     esac
