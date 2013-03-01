@@ -37,13 +37,7 @@ public class ApplicationListener implements ActionListener{
 	
 	public void actionPerformed(ActionEvent arg0) {
 		int token = (int) (Math.random() * 1000000000);
-		ApplicationInstance ai = new ApplicationInstance(this.app, null, token);
-		ai.setLaunchedFromShortcut(false);
-
-		try {
-			ai.startApp();
-		} catch (RestrictedAccessException ex) {
-			org.ulteo.Logger.error("Weird: Should not appear: "+ex);
-		}
+		
+		this.app.getConnection().getOvdAppChannel().sendStartApp(token, this.app.getId());
 	}
 }
