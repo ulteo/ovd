@@ -84,7 +84,6 @@ static void transformPathIn(const char* path, char* to) {
 }
 
 static bool transformPath(const char* path, char* to) {
-	logDebug("======> test %s", path);
 	int lastIndex = config->unions->size - 1;
 	char trpath[PATH_MAX];
 	Regexp* reg;
