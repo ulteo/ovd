@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "types.h"
 
 /**
  * xdg_user_dir_lookup_with_fallback:
@@ -192,7 +193,7 @@ xdg_user_dir_lookup (const char *type)
 	/* Special case desktop for historical compatibility */
 	if (strcmp (type, "DESKTOP") == 0)
 	{
-		user_dir = (char*) malloc (strlen (home_dir) + strlen ("Desktop") + 1);
+		user_dir = (char*) memory_alloc((strlen (home_dir) + strlen ("Desktop") + 1), true);
 		if (user_dir == NULL)
 			return NULL;
 
