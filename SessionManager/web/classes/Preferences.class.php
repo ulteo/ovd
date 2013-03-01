@@ -585,9 +585,7 @@ class Preferences {
 
 			$event_name = $event->getPrettyName();
 			/* FIXME: descriptions */
-			$c = new ConfigElement_multiselect(get_class($event), $event_name,
-			                       "When $event_name is emitted",
-			                       "When $event_name is emitted",
+			$c = new ConfigElement_multiselect(get_class($event),
 			                       array());
 			$c->setContentAvailable($pretty_list);
 			$this->add($c, 'events', 'active_callbacks');
