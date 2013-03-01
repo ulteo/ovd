@@ -3,7 +3,6 @@
 Alias /ovd/service/admin/wsdl @DATADIR@/ulteo/sessionmanager/admin/api.wsdl
 Alias /ovd/service/admin      @DATADIR@/ulteo/sessionmanager/admin/api.php
 <Location /ovd/service/admin>
-    AllowOverride None
     Order allow,deny
     allow from all
     php_admin_flag magic_quotes_gpc Off
