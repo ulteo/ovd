@@ -285,12 +285,27 @@
       
       <itemizedlist>
         <listitem>
-	  <para id="sm_install_package">Install the <emphasis>ulteo-ovd-session-manager</emphasis> package:</para>
+	  <para id="sm_install_package">Install the <emphasis>ulteo-ovd-session-manager</emphasis> packages:</para>
           <screen>
-<![CDATA[# apt-get install ulteo-ovd-session-manager]]>
+<![CDATA[# apt-get install ulteo-ovd-session-manager ulteo-ovd-administration-console]]>
 	  </screen>
         </listitem>
         
+        <listitem>
+	  <para>
+	    The installer asks for an Session Manager location
+	  </para>
+    	  <para>
+	    <inlinemediaobject>
+	      <imageobject>
+                <imagedata fileref="img/ac_debconf.png"/>
+	      </imageobject>
+	      <textobject>
+	        <phrase>Administration Console debconf - Session Manager host</phrase>
+	      </textobject>
+	    </inlinemediaobject>
+	  </para>
+        </listitem>
         <listitem>
 	  <para>
 	    The installer asks for an admin login

@@ -203,7 +203,7 @@ SELinux status:              disabled]]>
        <listitem>
          <xi:include href="&parent;" xpointer="sm_install_package" />
 	 <screen>
-<![CDATA[# @rpm_install_cmd@ install ulteo-ovd-session-manager]]>
+<![CDATA[# @rpm_install_cmd@ install ulteo-ovd-session-manager ulteo-ovd-administration-console]]>
          </screen>
        </listitem>
 
@@ -235,6 +235,14 @@ Is this correct? [Y/n]]]>
 	 </note>
        </listitem>
 
+       <listitem>
+         <para>Launch the Administration Console configuration tool</para>
+         <screen>
+<![CDATA[# ovd-administration-console-config
+Session Manager address [127.0.0.1]: 
+]]>
+         </screen>
+       </listitem>
        <listitem id="sm_configure_apache_service">
          <para>Configure and start apache service</para>
          <screen>
