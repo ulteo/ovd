@@ -787,7 +787,7 @@ static int rufs_opt_proc(void *data, const char *arg, int key, struct fuse_args 
 
 	case KEY_DEBUG:
 		log_setLevel(DEBUG);
-		fuse_opt_add_arg(outargs, "--debug");
+		fuse_opt_add_arg(outargs, "-d");
 		return 0;
 	}
 	return 1;
