@@ -1,7 +1,7 @@
-/*
- * Copyright (C) 2012 Ulteo SAS
+ /*
+ * Copyright (C) 2013 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,15 +18,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef STATUS_H_
-#define STATUS_H_
+#ifndef _PAM
+#define _PAM
 
-typedef enum {
-	SUCCESS,
-	CONF_ERROR,
-	MOUNT_ERROR,
-	PERMISSION_ERROR,
-} status;
+#include <stdio.h>
+#include <security/pam_appl.h>
 
 
-#endif /* STATUS_H_ */
+typedef struct _Credential
+{
+  char user[256];
+  char pass[256];
+} Credential;
+
+typedef struct _AuthInfo
+{
+  Credential user_pass;
+  int session_opened;
+  int did_setcred;
+  struct pam_conv pamc;
+  pam_handle_t* ph;
+} AuthInfo;
+
+
+long pam_auth(const char* module, const char* user, const char* pass);
+bool pam_startSession(long handle);
+bool pam_endSession(long handle);
+bool pam_setEnv(long handle);
+
+#endif  // _PAM
+

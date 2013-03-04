@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2012 Ulteo SAS
+ * Copyright (C) 2013 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,16 +17,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-
-#ifndef STATUS_H_
-#define STATUS_H_
-
-typedef enum {
-	SUCCESS,
-	CONF_ERROR,
-	MOUNT_ERROR,
-	PERMISSION_ERROR,
-} status;
+#ifndef USER_H_
+#define USER_H_
 
 
-#endif /* STATUS_H_ */
+#include "types.h"
+
+
+bool user_getINFO(const char* user, int* gid, int* uid, char* shell, char* dir);
+bool user_switch(const char* user, const char* pass);
+bool user_setGroup(const char* user, gid_t gid);
+bool user_setGID(gid_t gid);
+bool user_setUID(uid_t uid);
+
+
+#endif /* USER_H_ */

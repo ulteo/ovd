@@ -17,6 +17,7 @@
 #include "common/regexp.h"
 #include "common/sys.h"
 #include "common/str.h"
+#include "common/user.h"
 #include <linux/limits.h>
 #ifdef HAVE_SETXATTR
 #include <sys/xattr.h>
@@ -847,6 +848,17 @@ int fuse_start(int argc, char** argv) {
 		if (! fs_mountbind(config->destination_path, config->bind_path)) {
 			logError("Failed to bind %s to %s: %s", config->destination_path, config->bind_path, str_geterror());
 			return MOUNT_ERROR;
+		}
+	}
+
+	if (config->user != NULL) {
+		logDebug("Switching to user %s", config->user);
+		if (! user_switch(config->user, NULL)) {
+			logWarn("Failed to switch to user %s", config->user);
+
+			fuse_opt_free_args(&args);
+			configuration_free(config);
+			sys_exit(PERMISSION_ERROR);
 		}
 	}
 

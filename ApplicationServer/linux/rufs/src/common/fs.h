@@ -41,6 +41,7 @@ bool fs_exist(const char* path);
 bool fs_isdir(const char* path);
 bool fs_mountbind(const char* src, const char* dst);
 bool fs_umount(const char* dst);
+bool fs_setCurrentDir(const char* dir);
 
 
 #endif

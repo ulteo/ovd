@@ -214,3 +214,12 @@ bool fs_umount(const char* dst) {
 	return (umount(dst) == 0);
 }
 
+
+bool fs_setCurrentDir(const char* dir) {
+	if (chdir(dir) < 0) {
+		logError("Failed to set the current directory to %s: %s", dir, str_geterror());
+		return false;
+	}
+
+	return true;
+}
