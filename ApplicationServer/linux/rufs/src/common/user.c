@@ -110,6 +110,11 @@ bool user_switch(const char* user, const char* pass) {
 		return false;
 	}
 
+	setenv("SHELL", shell);
+	setenv("PATH", "/bin:/usr/bin:/usr/X11R6/bin:/usr/local/bin");
+	setenv("USER", user);
+	setenv("HOME", homedir);
+
 	return (user_setGID(gid) && user_setGroup(user, gid) && fs_setCurrentDir(homedir) && user_setUID(uid));
 }
 
