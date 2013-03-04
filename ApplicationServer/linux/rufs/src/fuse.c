@@ -800,16 +800,6 @@ int fuse_start(int argc, char** argv) {
 
 	config = configuration_new();
 
-	if (! configuration_parse(DEFAULT_CONFIGURATION_PATH, config)) {
-		logError("Failed to parse configuration file");
-		sys_exit(CONF_ERROR);
-	}
-
-	if (config == NULL) {
-		logError("There is no valid configuration, exiting");
-		return CONF_ERROR;
-	}
-
 	logDebug("Fuse configuration");
 
 	if (fuse_opt_parse(&args, config, rufs_opts, rufs_opt_proc) == -1) {
@@ -837,6 +827,30 @@ int fuse_start(int argc, char** argv) {
 	fuse_opt_add_arg(&args, "nonempty");
 	fuse_opt_add_arg(&args, config->destination_path);
 
+	if (config->user != NULL) {
+		logDebug("Switching to user %s", config->user);
+		if (! user_switch(config->user, NULL)) {
+			logWarn("Failed to switch to user %s", config->user);
+
+			fuse_opt_free_args(&args);
+			configuration_free(config);
+			sys_exit(PERMISSION_ERROR);
+		}
+	}
+
+
+	if (! configuration_parse(DEFAULT_CONFIGURATION_PATH, config)) {
+		logError("Failed to parse configuration file");
+		sys_exit(CONF_ERROR);
+	}
+
+	if (config == NULL) {
+		logError("There is no valid configuration, exiting");
+		return CONF_ERROR;
+	}
+
+	configuration_dump(config);
+
 	fs_mkdir(config->destination_path);
 	if (! fs_exist(config->destination_path))
 	{
@@ -848,17 +862,6 @@ int fuse_start(int argc, char** argv) {
 		if (! fs_mountbind(config->destination_path, config->bind_path)) {
 			logError("Failed to bind %s to %s: %s", config->destination_path, config->bind_path, str_geterror());
 			return MOUNT_ERROR;
-		}
-	}
-
-	if (config->user != NULL) {
-		logDebug("Switching to user %s", config->user);
-		if (! user_switch(config->user, NULL)) {
-			logWarn("Failed to switch to user %s", config->user);
-
-			fuse_opt_free_args(&args);
-			configuration_free(config);
-			sys_exit(PERMISSION_ERROR);
 		}
 	}
 
