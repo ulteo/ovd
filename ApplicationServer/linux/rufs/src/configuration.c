@@ -142,7 +142,16 @@ static bool configuration_parseUnion(Ini* ini, Configuration* conf, const char* 
 				return false;
 			}
 
-			str_ncpy(unionObject->path, expandedPath, sizeof(unionObject->path));
+			// Check if the path is relative
+			if (expandedPath[0] != '/') {
+				if (str_endWith(conf->source_path, "/"))
+					str_sprintf(unionObject->path, "%s/%s", conf->source_path, expandedPath);
+				else
+					str_sprintf(unionObject->path, "%s%s", conf->source_path, expandedPath);
+			}
+			else
+				str_ncpy(unionObject->path, expandedPath, sizeof(unionObject->path));
+
 			fs_mkdir(unionObject->path);
 			if (!fs_exist(unionObject->path)) {
 				logWarn("%s do not exist and can not be created", unionObject->path);
