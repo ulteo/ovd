@@ -37,7 +37,7 @@ void log_init() {
 	logger.stdOutput = true;
 	logger.logFileFd = 0;
 	logger.level = INFO;
-	str_cat(logger.program, "Unknnow");
+	str_cat(logger.program, "");
 }
 
 void log_release() {
