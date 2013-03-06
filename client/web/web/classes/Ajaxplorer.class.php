@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -52,7 +53,12 @@ class Ajaxplorer {
 		
 		$profile_node = $this->pr_nodes->item(0);
 		if (is_object($profile_node) && self::isValidSharedFolder($profile_node)) {
-			$ret['repositories'][] = $this->generateRepo(_('Profile'), $profile_node);
+			$new_profile_node = clone($profile_node);
+			$uri = $new_profile_node->getAttribute('uri');
+			$uri .= 'Data/';
+			$new_profile_node->setAttribute('uri', $uri);
+			
+			$ret['repositories'][] = $this->generateRepo(_('Profile'), $new_profile_node);
 			$ret['folders'][] = $profile_node->getAttribute('rid');
 		}
 		
