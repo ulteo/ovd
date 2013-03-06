@@ -61,6 +61,7 @@ typedef struct _Translation {
 
 typedef struct _Configuration {
 	char* user;
+	char* configFile;
 	bool bind;
 	char* source_path;
 	char* destination_path;
@@ -72,6 +73,6 @@ typedef struct _Configuration {
 
 Configuration* configuration_new();
 bool configuration_free(Configuration* conf);
-bool configuration_parse (const char* path, Configuration* conf);
+bool configuration_parse(Configuration* conf);
 void configuration_dump (Configuration* conf);
 

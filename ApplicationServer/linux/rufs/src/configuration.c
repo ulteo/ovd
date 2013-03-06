@@ -323,11 +323,15 @@ static bool configuration_parseTranslation(Ini* ini, Configuration* conf) {
 }
 
 
-bool configuration_parse (const char* path, Configuration* conf) {
+bool configuration_parse (Configuration* conf) {
 	logDebug("Parsing configuration...");
 	Ini* ini = ini_new();
 	bool result;
-	ini_parse(ini, path);
+
+	if (conf->configFile == NULL)
+		conf->configFile = str_dup(DEFAULT_CONFIGURATION_PATH);
+
+	ini_parse(ini, conf->configFile);
 
 	result = configuration_parseLog(ini);
 	if (! result) {

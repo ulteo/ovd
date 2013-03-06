@@ -36,6 +36,7 @@ enum {
 
 static struct fuse_opt rufs_opts[] = {
      RUFS_OPT("user=%s", user, 0),
+     RUFS_OPT("fsconfig=%s", configFile, 0),
 
      FUSE_OPT_KEY("-V",          KEY_VERSION),
      FUSE_OPT_KEY("--version",   KEY_VERSION),
@@ -774,6 +775,7 @@ static int rufs_opt_proc(void *data, const char *arg, int key, struct fuse_args 
 				"\n"
 				"rufs options:\n"
 				"    -o user=STRING\n"
+				"    -o config=STRING\n"
 				, outargs->argv[0]);
 		fuse_opt_add_arg(outargs, "-ho");
 		fuse_main(outargs->argc, outargs->argv, &rufs_oper, NULL);
@@ -839,7 +841,7 @@ int fuse_start(int argc, char** argv) {
 	}
 
 
-	if (! configuration_parse(DEFAULT_CONFIGURATION_PATH, config)) {
+	if (! configuration_parse(config)) {
 		logError("Failed to parse configuration file");
 		sys_exit(CONF_ERROR);
 	}
