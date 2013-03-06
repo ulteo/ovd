@@ -70,6 +70,15 @@ class Share:
 			os.mkdir(self.directory, 0700)
 			os.chown(self.directory, -1, Config.gid)
 			os.chmod(self.directory, stat.S_IRWXU | stat.S_IRWXG | stat.S_ISGID)
+			
+			# TODO Find a better way
+			if self.name.startswith("p"):
+				## Creating minimal skeleton
+				path = os.path.join(self.directory, "Data")
+				os.mkdir(path, 0700)
+				os.chown(path, Config.uid, Config.gid)
+				os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.S_ISGID)
+			
 		except:
 			Logger.warn("FS: unable to create profile '%s'"%(self.name))
 			return False

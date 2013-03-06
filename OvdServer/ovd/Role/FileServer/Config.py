@@ -37,12 +37,15 @@ class Config:
 	dav_uid = None
 	dav_passwd_file = "/var/spool/ulteo/ovd/fs.dav.passwd"
 	dav_group_file = "/var/spool/ulteo/ovd/fs.dav.group"
+	FSBackendConf = "/etc/ulteo/ovd/FSBackend.conf"
 	
 	@classmethod
 	def init(cls, infos):
 		if infos.has_key("user"):
 			cls.user = infos["user"]
 		
+		if infos.has_key("FSBackendConf"):
+			cls.FSBackendConf = info["FSBackendConf"]
 		
 		return True
 	

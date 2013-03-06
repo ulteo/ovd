@@ -31,8 +31,8 @@ from ovd.Platform.System import System
 from ovd.Role.Role import Role as AbstractRole
 
 from Config import Config
-from DirectoryWatcher import DirectoryWatcher
 from HTGroup import HTGroup
+from FSBackend import FSBackend
 from Share import Share
 from User import User
 
@@ -40,13 +40,19 @@ from User import User
 class Role(AbstractRole):
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
+		self.loop = False
 		self.shares = {}
-		self.wm = None
+		self.FSBackend = FSBackend()
 	
 	def init(self):
 		Logger.info("FileServer init")
 		
 		if not Config.init_role():
+			return False
+
+		if not self.FSBackend.start():
+			Logger.error("FileServer: failed to initialize FSBackend")
+			self.FSBackend.stop()
 			return False
 		
 		if not self.cleanup_samba():
@@ -61,8 +67,6 @@ class Role(AbstractRole):
 			Logger.error("FileServer: unable to cleanup users")
 			return False
 		
-		self.wm = DirectoryWatcher()
-		
 		self.shares = self.get_existing_shares()
 		
 		return True
@@ -74,7 +78,8 @@ class Role(AbstractRole):
 	
 	
 	def stop(self):
-		self.wm.stop()
+		self.FSBackend.stop()
+		self.loop = False
 	
 	
 	def finalize(self):
@@ -84,7 +89,11 @@ class Role(AbstractRole):
 	
 	def run(self):
 		self.status = Role.STATUS_RUNNING
-		self.wm.start()
+		self.loop = True
+		
+		while self.loop:
+			time.sleep(5)
+		
 		self.status = Role.STATUS_STOP
 	
 	

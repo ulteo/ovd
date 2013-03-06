@@ -234,9 +234,6 @@ class Dialog(AbstractDialog):
 				doc.appendChild(rootNode)
 				response = self.req_answer(doc)
 				break
-			
-			Logger.debug("FS: Add inotify watch to the directory %s"%(share.directory))
-			self.role_instance.wm.add_monitor_path(share.directory)
 		
 		if somethingWrong:
 			for share_id in shares:
@@ -287,9 +284,6 @@ class Dialog(AbstractDialog):
 			if share.has_user(user):
 				if not share.del_user(user):
 					somethingWrong = True
-				
-				Logger.debug("FS: Remove inotify from the directory %s"%(share.directory))
-				self.role_instance.wm.rm_monitor_path(share.directory)
 		
 		if not u.destroy():
 			somethingWrong = True
