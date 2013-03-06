@@ -294,9 +294,6 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 
 	@Override
 	public void focusGained(FocusEvent e) {	
-		if (! this.input.supportIME())
-			((sun.awt.im.InputContext)this.getInputContext()).disableNativeIM();
-
 		if (SeamlessPopup.focusManager != null)	{
 			SeamlessPopup.focusManager.performedFocusLost(this);
 		}

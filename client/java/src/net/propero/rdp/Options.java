@@ -58,7 +58,6 @@ public class Options {
 	public boolean debug_seamless = false;
 	public boolean supportUnicodeInput = false;
 	public boolean supportIME = false;
-	public boolean enabledIME = false;
 
 	public boolean enable_menu = false;
 	//public boolean paste_hack = true;

@@ -1779,23 +1779,20 @@ public class Rdp {
         int unitId = data.getLittleEndian16();
         int imeOpen = data.getLittleEndian32();
         int imeConvMode = data.getLittleEndian32();
-        
+        KeyboardFocusManager keyboard_focus_manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+
+        if(! this.surface.getInput().supportIME()) {
+            return;
+        }
+
         if(imeConvMode == IME_CMODE_NATIVE) {
-            this.opt.enabledIME = true;
-            try {
-                ((sun.awt.im.InputContext)surface.getInputContext()).setCompositionEnabled(this.opt.enabledIME);
-            } catch(Exception e) {
-                System.err.println("IME : "+e.getMessage());
-                return;
-            }
+            this.surface.enableInputMethods(true);
+            keyboard_focus_manager.clearGlobalFocusOwner();
+            this.surface.requestFocus();
         } else {
-            this.opt.enabledIME = false;
-            try {
-                ((sun.awt.im.InputContext)surface.getInputContext()).setCompositionEnabled(this.opt.enabledIME);
-            } catch(Exception e) {
-                System.err.println("IME : "+e.getMessage());
-                return;
-            }
+            this.surface.enableInputMethods(false);
+            keyboard_focus_manager.clearGlobalFocusOwner();
+            this.surface.requestFocus();
         }
     }
 

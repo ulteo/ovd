@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 import java.awt.MouseInfo;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.*;
 import java.util.HashMap;
 import java.util.List;
@@ -132,6 +133,10 @@ public abstract class Input {
 		this.keystrokesList = new HashMap<KeyStroke, Long>();
 		this.inputListeners = new CopyOnWriteArrayList<InputListener>();
 		Input.resetState();
+
+		this.canvas.enableInputMethods(this.supportIME());
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
+		this.canvas.requestFocus();
 	}
 
     /**
@@ -157,6 +162,10 @@ public abstract class Input {
 		this.keystrokesList = new HashMap<KeyStroke, Long>();
 		this.inputListeners = new CopyOnWriteArrayList<InputListener>();
 		Input.resetState();
+
+		this.canvas.enableInputMethods(this.supportIME());
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
+		this.canvas.requestFocus();
 	}
 
 	private static void resetState() {
@@ -255,10 +264,6 @@ public abstract class Input {
 		return this.opt.supportIME;
 	}
 
-	public boolean enabledIME() {
-		return this.opt.enabledIME;
-	}
-
 	/**
      * Send a sequence of key actions to the server
      * @param pressSequence String representing a sequence of key actions.
@@ -332,9 +337,6 @@ public abstract class Input {
      * Check locking key states.
      */
     public void gainedFocus() {
-		if (! this.supportIME())
-			((sun.awt.im.InputContext)canvas.getInputContext()).disableNativeIM();
-    	
 		doLockKeys(); // ensure lock key states are correct
 	}
 
