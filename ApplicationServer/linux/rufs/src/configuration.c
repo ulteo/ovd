@@ -143,7 +143,7 @@ static bool configuration_parseUnion(Ini* ini, Configuration* conf, const char* 
 			}
 
 			// Check if the path is relative
-			if (expandedPath[0] != '/') {
+			if ((str_len(expandedPath) == 0) || (expandedPath[0] != '/')) {
 				if (str_endWith(conf->source_path, "/"))
 					str_sprintf(unionObject->path, "%s/%s", conf->source_path, expandedPath);
 				else
