@@ -109,8 +109,10 @@ void log_message(LogLevel level, const char* function, int line, const char* msg
 	if (logger.stdOutput)
 		puts(buffer);
 
-	if (logger.logFileFd)
+	if (logger.logFileFd) {
 		file_write(logger.logFileFd, buffer, str_len(buffer));
+		file_write(logger.logFileFd, "\n", 1);
+	}
 }
 
 void log_hexdump(LogLevel level, const char* function, int line, byte* data, size_t size) {
