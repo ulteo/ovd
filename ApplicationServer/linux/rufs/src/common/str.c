@@ -162,9 +162,14 @@ List* str_split(const char* str, const char delim) {
 
 bool str_rtrim(char* str) {
 	int index;
-	size_t strLen = strlen(str);
+	size_t strLen;
 
-	if (str == NULL || strLen == 0)
+	if (str == NULL)
+		return false;
+
+	strLen = strlen(str);
+
+	if (strLen == 0)
 		return false;
 
 	for (index = strLen; index >= 0; index--) {
@@ -178,9 +183,10 @@ bool str_rtrim(char* str) {
 }
 
 bool str_ltrim(char* str) {
-	size_t strLen = strlen(str);
+	if (str == NULL)
+		return false;
 
-	if (str == NULL || strLen == 0)
+	if (strlen(str) == 0)
 		return false;
 
 	while (str[0] < 33)
