@@ -98,6 +98,7 @@ bool configuration_parseLog(Ini* ini) {
 		log_enableStdOutput(str_toBool(value));
 
 	value = ini_getKey(ini, LOG_CONFIGURATION_SECTION, LOG_OUTFILE_CONFIGURATION_KEY);
+	str_unquote(value);
 	if (value != NULL)
 		log_setOutputFile(value);
 
