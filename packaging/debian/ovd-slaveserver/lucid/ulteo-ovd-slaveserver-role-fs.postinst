@@ -12,6 +12,7 @@ HOMEDIR=/var/lib/ulteo/ovd/slaveserver/fs
 # add user ovd-fs
 getent passwd ovd-fs >/dev/null || adduser --system --group --home $HOMEDIR ovd-fs >/dev/null 2>&1
 usermod -G ovd-fs www-data >/dev/null
+usermod -G fuse ovd-fs >/dev/null
 chown ovd-fs:ovd-fs $HOMEDIR
 
 # create spool directory
