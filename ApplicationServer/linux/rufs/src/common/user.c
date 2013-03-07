@@ -80,6 +80,7 @@ bool user_setUID(uid_t uid) {
 bool user_switch(const char* user, const char* pass) {
 	char shell[256];
 	char homedir[256];
+	char uidString[256] = {0};
 	long handle;
 	gid_t gid;
 	uid_t uid;
@@ -110,8 +111,11 @@ bool user_switch(const char* user, const char* pass) {
 		return false;
 	}
 
+	str_sprintf(uidString, "%d", uid);
+
 	setenv("SHELL", shell);
 	setenv("PATH", "/bin:/usr/bin:/usr/X11R6/bin:/usr/local/bin");
+	setenv("UID", uidString, 1);
 	setenv("USER", user);
 	setenv("HOME", homedir);
 
