@@ -400,12 +400,19 @@ static int rufs_rename(const char *from, const char *to)
 {
 	int res;
 	char trto[PATH_MAX];
+	char trfrom[PATH_MAX];
+
 	if (!transformPath(to, trto))
 	{
 		return -ENOENT;
 	}
 
-	res = rename(from, trto);
+	if (!transformPath(from, trfrom))
+	{
+		return -ENOENT;
+	}
+
+	res = rename(trfrom, trto);
 	if (res == -1)
 		return -errno;
 
