@@ -148,6 +148,7 @@ class SessionManagement(Process):
 		
 		else:
 			# will be customize by a lock system when the users will connect in RDP
+			session.domain.onSessionCreate()
 			pass
 		
 		session.post_install()
@@ -178,6 +179,7 @@ class SessionManagement(Process):
 		if session.domain.manage_user():
 			self.destroy_user(session.user)
 		
+		session.domain.onSessionEnd()
 		session.switch_status(Session.SESSION_STATUS_DESTROYED)
 	
 	

@@ -24,6 +24,7 @@ class User:
 		self.infos = infos_
 		self.home = None
 		self.created = False
+		self.groups = None
 	
 	def create(self):
 		pass
