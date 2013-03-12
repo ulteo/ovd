@@ -47,6 +47,7 @@ class DomainMicrosoft(AbstractDomainMicrosoft):
 			gids.append(grp.getgrgid(gid).gr_gid)
 			return ["'%s'"%(grp.getgrgid(gid).gr_name) for gid in gids]
 		except Exception, e:
+			Logger.error("Failed to get groups of the user %s: %s"%(username, str(e)))
 			return None
 	
 	
@@ -77,6 +78,8 @@ class DomainMicrosoft(AbstractDomainMicrosoft):
 		username = self.getUsername()
 		self.session.user.name = username
 		self.session.user.groups = self.getGroupList(username)
+		if self.session.user.groups is None:
+			return False
 
 		groups = set(self.ovdGroups + self.session.user.groups)
 		
@@ -92,6 +95,8 @@ class DomainMicrosoft(AbstractDomainMicrosoft):
 	
 	def onSessionEnd(self):
 		username = self.getUsername()
+		if self.session.user.groups is None:
+			return True
 		
 		if not self.tuneGroups(username, self.session.user.groups):
 			Logger.error("Failed to restaure groups of the user %s"%(username))
