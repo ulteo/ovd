@@ -1,8 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author David LECHEVALIER <david@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -30,24 +31,9 @@ from ovd.Role.ApplicationServer.DomainNovell import DomainNovell as AbstractDoma
 
 class DomainNovell(AbstractDomainNovell):
 	def onSessionStarts(self):
-		if not self.zenworks:
-			return True
-		
-		mylock = Waiter(self.session)
-		
-		t0 = time.time()
-		while mylock.init() is False:
-			d = time.time() - t0
-			if d>20:
-				return False
-			
-			time.sleep(0.5)
-		
-		self.session.set_user_profile_directories(mylock.userprofile, mylock.appdata)
-		
 		self.session.init_user_session_dir(os.path.join(mylock.appdata, "ulteo", "ovd"))
 		
-		return mylock.unlock()
+		return True
 	
 	
 	def doCustomizeRegistry(self, hive):

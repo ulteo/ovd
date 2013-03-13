@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2012 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
-# Author David LECHEVALIER <david@ulteo.com> 2011
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2013
 # Author Thomas MOUTON <thomas@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
@@ -127,10 +127,12 @@ def getUserSessionDir():
 	except locale.Error:
 		encoding = "UTF-8"
 	
-	d = shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_APPDATA)
+	d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
 	d = d.encode(encoding)
+	user = os.environ["USERNAME"]
+	user = user.encode(encoding)
 	
-	return os.path.join(d, "ulteo", "ovd")
+	return os.path.join(d, "ulteo", "ovd", user)
 
 
 
@@ -225,3 +227,11 @@ def CreateKeyR(hkey, path):
 	
 	win32api.RegCreateKey(hkey2, name)
 	win32api.RegCloseKey(hkey2)
+
+
+def deleteOnclose(path):
+	try:
+		win32file.CreateFile(path, win32file.GENERIC_READ, win32file.FILE_SHARE_READ, None, win32file.OPEN_EXISTING, win32file.FILE_FLAG_DELETE_ON_CLOSE, None)
+	except Exception, e:
+		print "Failed to mark file '%s'as to delete: %s"%(path, str(e))
+
