@@ -31,7 +31,9 @@ from ovd.Role.ApplicationServer.DomainNovell import DomainNovell as AbstractDoma
 
 class DomainNovell(AbstractDomainNovell):
 	def onSessionStarts(self):
-		self.session.init_user_session_dir(os.path.join(mylock.appdata, "ulteo", "ovd"))
+		self.session.init_user_session_dir(os.path.join(self.session.SPOOL_USER, self.session.user.name))
+		self.session.succefully_initialized = True
+		self.session.install_desktop_shortcuts()
 		
 		return True
 	
