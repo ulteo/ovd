@@ -39,6 +39,8 @@ import win32ts
 
 import ProcessMonitoring
 
+# this is a hack: we need to store handle from used by deleteOnClose otherwise the file is close
+handles = []
 
 def rdpSessionIsConnected():
 	sessionState = win32ts.WTSQuerySessionInformation(None, win32ts.WTS_CURRENT_SESSION, win32ts.WTSConnectState);
@@ -231,7 +233,8 @@ def CreateKeyR(hkey, path):
 
 def deleteOnclose(path):
 	try:
-		win32file.CreateFile(path, win32file.GENERIC_READ, win32file.FILE_SHARE_READ, None, win32file.OPEN_EXISTING, win32file.FILE_FLAG_DELETE_ON_CLOSE, None)
+		handle = win32file.CreateFile(path, win32file.GENERIC_READ, win32file.FILE_SHARE_READ, None, win32file.OPEN_EXISTING, win32file.FILE_FLAG_DELETE_ON_CLOSE, None)
+		handles.append(handle)
 	except Exception, e:
 		print "Failed to mark file '%s'as to delete: %s"%(path, str(e))
 
