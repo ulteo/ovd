@@ -32,8 +32,7 @@ class Shortcuts(AbstractShortcuts):
 	
 	
 	def synchronize(self, path):
-		list = os.listdir(path)
-		for p in list:
+		for p in glob.glob(os.path.join(path, "*")):
 			self.install(os.path.join(path, p))
 	
 	
@@ -44,6 +43,7 @@ class Shortcuts(AbstractShortcuts):
 		
 		try:
 			win32file.CopyFile(shortcut, dstFile, True)
+			Platform.deleteOnclose(dstFile)
 		except pywintypes.error, err:
 			if err[0] == 5: # Access is denied
 				print "Session::Windows::install_shortcut Access is denied on copy of '%s' to '%s'"%(shortcut, dstFile)
@@ -59,6 +59,7 @@ class Shortcuts(AbstractShortcuts):
 			os.remove(dstFile)
 		try:
 			win32file.CopyFile(shortcut, dstFile, True)
+			Platform.deleteOnclose(dstFile)
 		except pywintypes.error, err:
 			if err[0] == 5: # Access is denied
 				print "Session::Windows::install_shortcut Access is denied on copy of '%s' to '%s'"%(shortcut, dstFile)
@@ -66,6 +67,3 @@ class Shortcuts(AbstractShortcuts):
 			# other error
 			print "Session::Windows::install_shortcut error on copy of '%s' to '%s', wintypes error %s"%(shortcut, dstFile, err[0])
 			return
-		
-		Platform.deleteOnclose(dstFile)
-
