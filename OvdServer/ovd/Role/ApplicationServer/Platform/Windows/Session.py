@@ -23,6 +23,7 @@
 import os
 import pywintypes
 import random
+import shutil
 import win32api
 from win32com.shell import shell, shellcon
 import win32con
@@ -52,7 +53,7 @@ class Session(AbstractSession):
 		data["UserName"] = self.user.name
 		hkey = win32profile.LoadUserProfile(logon, data)
 		self.windowsProfileDir = win32profile.GetUserProfileDirectory(logon)
-		self.sessionDir = os.path.join(self.SPOOL_USER, self.user.name)
+		sessionDir = os.path.join(self.SPOOL_USER, self.user.name)
 		
 		self.windowsProgramsDir = shell.SHGetFolderPath(0, shellcon.CSIDL_PROGRAMS, logon, 0)
 		Logger.debug("startmenu: %s"%(self.windowsProgramsDir))
@@ -65,7 +66,7 @@ class Session(AbstractSession):
 		win32profile.UnloadUserProfile(logon, hkey)
 		win32api.CloseHandle(logon)
 		
-		self.init_user_session_dir(self.sessionDir)
+		self.init_user_session_dir(sessionDir)
 		
 		if self.profile is not None and self.profile.hasProfile():
 			if not self.profile.mount():
@@ -143,7 +144,7 @@ class Session(AbstractSession):
 		if hkey is None:
 			Logger.error("Unable to open key '%s'"%(path))
 		else:
-			win32api.RegSetValueEx(hkey, "OVD_SESSION_DIR", 0, win32con.REG_SZ, self.sessionDir)
+			win32api.RegSetValueEx(hkey, "OVD_SESSION_DIR", 0, win32con.REG_SZ, self.user_session_dir)
 			win32api.RegCloseKey(hkey)
 		
 		# Set the language
