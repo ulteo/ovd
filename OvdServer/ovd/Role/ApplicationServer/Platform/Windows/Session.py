@@ -75,10 +75,10 @@ class Session(AbstractSession):
 			else:
 				self.profile.copySessionStart()
 		
-#		if self.profile is not None and self.profile.mountPoint is not None:
-#			d = os.path.join(self.profile.mountPoint, self.profile.DesktopDir)
-#			self.cleanupShortcut(d)
-#		
+		if self.profile is not None and self.profile.mountPoint is not None:
+			d = os.path.join(self.profile.mountPoint, self.profile.DesktopDir)
+			self.cleanupShortcut(d)
+		
 		self.install_desktop_shortcuts()
 		
 		self.overwriteDefaultRegistry(self.windowsProfileDir)
