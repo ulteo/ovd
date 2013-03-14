@@ -32,10 +32,20 @@ from ApplicationsDetection import ApplicationsDetection
 
 
 class DomainMicrosoft(AbstractDomainMicrosoft):
-	def onSessionStarts(self):
+	def getUsername(self):
+		username = self.session.user.name
 		
+		if '@' in self.session.user.name:
+			username = self.session.user.name.split('@')[0]
+		
+		return username
+	
+	
+	def onSessionCreate(self):
+		self.session.user.name = self.getUsername()
 		self.session.init_user_session_dir(os.path.join(self.session.SPOOL_USER, self.session.user.name))
 		self.session.succefully_initialized = True
+		self.session.install_desktop_shortcuts()
 		return True
 	
 	
