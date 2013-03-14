@@ -24,8 +24,6 @@ import os
 import time
 import win32api
 
-from Waiter import Waiter
-
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.DomainMicrosoft import DomainMicrosoft as AbstractDomainMicrosoft
 from ApplicationsDetection import ApplicationsDetection

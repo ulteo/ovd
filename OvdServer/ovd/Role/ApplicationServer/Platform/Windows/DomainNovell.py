@@ -25,7 +25,6 @@ import win32api
 import win32con
 
 import Reg
-from Waiter import Waiter
 
 from ovd.Role.ApplicationServer.DomainNovell import DomainNovell as AbstractDomainNovell
 
