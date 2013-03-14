@@ -121,6 +121,10 @@ class Session(AbstractSession):
 				if not self.profile.umount():
 					Logger.error("Unable to umount profile at uninstall_client of session "+self.id)
 		
+		try:
+			shutil.rmtree(self.user_session_dir)
+		except Exception, e:
+			Logger.warn("Failed to remove spool directory '%s' : %s"%(self.user_session_dir, str(e)))
 		
 		self.domain.onSessionEnd()
 		return True
