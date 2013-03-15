@@ -7,9 +7,8 @@ set( ${PROJECT_NAME}_PATCH_LEVEL 0 )
 
 include(FindPkgConfig)
 
-set(${PROJECT_NAME}_SOURCE_DIR  ${${PROJECT_NAME}_SOURCE_DIR}/src)
-set(BIN_PATH  ${${PROJECT_NAME}_SOURCE_DIR}/../install/bin)
-set(CONF_PATH  ${${PROJECT_NAME}_SOURCE_DIR}/../install/conf)
+set(BIN_PATH  /usr/sbin)
+set(CONF_PATH /etc/ulteo)
 
 pkg_check_modules(FUSE fuse>=2.6)
 if (FUSE_FOUND EQUAL 1)
@@ -18,3 +17,4 @@ endif()
 
 add_subdirectory (src)
 add_subdirectory (conf)
+add_subdirectory (packaging)
