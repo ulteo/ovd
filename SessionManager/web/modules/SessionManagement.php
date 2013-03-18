@@ -5,7 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
- * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -388,7 +388,6 @@ abstract class SessionManagement extends Module {
 									$this->servers[Server::SERVER_ROLE_FS][$fileserver->id][] = array(
 										'type'		=>	'profile',
 										'rid'		=>	$this->find_uniq_rid('profile', true),
-										'server'	=>	$fileserver,
 										'dir'		=>	$profile->id
 									);
 
@@ -427,7 +426,6 @@ abstract class SessionManagement extends Module {
 										$this->servers[Server::SERVER_ROLE_FS][$fileserver->id][] = array(
 											'type'		=>	'profile',
 											'rid'		=>	$this->find_uniq_rid('profile', true),
-											'server'	=>	$fileserver,
 											'dir'		=>	$profile->id
 										);
 									}
@@ -486,7 +484,6 @@ abstract class SessionManagement extends Module {
 								$this->servers[Server::SERVER_ROLE_FS][$fileserver->id][] = array(
 									'type'		=>	'sharedfolder',
 									'rid'		=>	$this->find_uniq_rid('sharedfolder', true),
-									'server'	=>	$fileserver,
 									'dir'		=>	$sharedfolder->id,
 									'name'		=>	$sharedfolder->name
 								);

@@ -5,7 +5,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
- * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012, 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012-2013
  *
  * This program is free software; you can redistribute it and/or
@@ -369,10 +369,10 @@ if (! isset($old_session_id)) {
 
 		foreach ($servers[Server::SERVER_ROLE_FS] as $server_id => $netfolders) {
 			foreach ($netfolders as $netfolder) {
-				if (! array_key_exists($netfolder['server']->id, $mounts))
-					$mounts[$netfolder['server']->id] = array();
+				if (! array_key_exists($server_id, $mounts))
+					$mounts[$server_id] = array();
 
-				$mounts[$netfolder['server']->id][] = $netfolder['dir'];
+				$mounts[$server_id][] = $netfolder['dir'];
 			}
 		}
 
@@ -492,8 +492,9 @@ if (! isset($old_session_id)) {
 
 		if (array_key_exists(Server::SERVER_ROLE_FS, $session->servers)) {
 			foreach ($session->servers[Server::SERVER_ROLE_FS] as $server_id => $netfolders) {
+				$server = Abstract_Server::load($server_id);
 				foreach ($netfolders as $netfolder) {
-					$uri = 'cifs://'.$netfolder['server']->getExternalName().'/'.$netfolder['dir'];
+					$uri = 'cifs://'.$server->getExternalName().'/'.$netfolder['dir'];
 					
 					$netfolder_node = $dom->createElement($netfolder['type']);
 					$netfolder_node->setAttribute('rid', $netfolder['rid']);
@@ -634,8 +635,9 @@ $session_node->appendChild($user_node);
 
 if (array_key_exists(Server::SERVER_ROLE_FS, $session->servers)) {
 	foreach ($session->servers[Server::SERVER_ROLE_FS] as $server_id => $netfolders) {
+		$server = Abstract_Server::load($server_id);
 		foreach ($netfolders as $netfolder) {
-			$uri = 'webdav://'.$netfolder['server']->getExternalName().':1113/ovd/fs/'.$netfolder['dir'].'/';
+			$uri = 'webdav://'.$server->getExternalName().':1113/ovd/fs/'.$netfolder['dir'].'/';
 			
 			$netfolder_node = $dom->createElement($netfolder['type']);
 			$netfolder_node->setAttribute('rid', $netfolder['rid']);
