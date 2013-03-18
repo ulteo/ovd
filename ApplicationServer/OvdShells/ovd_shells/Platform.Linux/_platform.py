@@ -105,7 +105,7 @@ def startDesktop():
 	os.environ["XDG_DATA_DIRS"] = "/usr/share/ovd:"+os.path.join(os.environ["OVD_SESSION_DIR"], "xdg")
 	os.environ["OVD_APPS_DIR"] = os.path.join(os.environ["OVD_SESSION_DIR"], "xdg", "applications")
 	
-	os.system("x-session-manager")
+	os.system("/etc/xrdp/startwm.sh")
 
 def startWM():
 	os.environ["XDG_DATA_DIRS"] = os.path.join(os.environ["OVD_SESSION_DIR"], "xdg")
