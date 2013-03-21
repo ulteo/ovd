@@ -47,7 +47,7 @@ This daemon manages the Open Virtual Desktop servers.
 %{__mkdir_p} $RPM_BUILD_ROOT%{_var}/log/ulteo/ovd
 %{__ln_s} /usr/share/ulteo/ovd/slaveserver/ovd-slaveserver-role.py $RPM_BUILD_ROOT%{_sbindir}/ovd-slaveserver-role
 %{__ln_s} /usr/share/ulteo/ovd/slaveserver/ulteo-ovd-slaveserver.py $RPM_BUILD_ROOT%{_sbindir}/ulteo-ovd-slaveserver
-%{__install} -T -D examples/ulteo-ovd-slaveserver.suse.init $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/ulteo-ovd-slaveserver
+%{__install} -T -D examples/ulteo-ovd-slaveserver.rhel.init $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/ulteo-ovd-slaveserver
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
