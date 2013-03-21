@@ -64,14 +64,12 @@ Requires: python
 This daemon manages the Open Virtual Desktop servers.
 
 %post -n ulteo-ovd-slaveserver
-pymodule=/usr/lib64/python/site-packages/ovd
-if [ "$(getconf LONG_BIT)" = "64" -a ! -e $pymodule ]; then
-    %{__ln_s} -T /usr/lib/python2.6/site-packages/ovd $pymodule
-fi
-
 if [ "$1" = "1" ]; then
     %{_sbindir}/ovd-slaveserver-config --sm-address "127.0.0.1"
+    chkconfig ulteo-ovd-slaveserver on
 fi
+
+service ulteo-ovd-slaveserver restart
 
 %preun -n ulteo-ovd-slaveserver
 if [ "$1" = "0" ]; then
@@ -119,6 +117,7 @@ Application server role for the Ulteo OVD slave server
 %post -n ulteo-ovd-slaveserver-role-aps
 if [ "$1" = "1" ]; then
     %{_sbindir}/ovd-slaveserver-role add ApplicationServer
+    service ulteo-ovd-slaveserver restart
 fi
 
 %postun -n ulteo-ovd-slaveserver-role-aps

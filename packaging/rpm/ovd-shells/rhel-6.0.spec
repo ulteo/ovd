@@ -56,12 +56,6 @@ These scripts handle the Open Virtual Desktop user sessions.
 %install -n ulteo-ovd-shells
 %{__python} setup.py install --root $RPM_BUILD_ROOT --prefix %{_prefix}
 
-%post -n ulteo-ovd-shells
-pymodule=/usr/lib64/python/site-packages/ovd
-if [ "$(getconf LONG_BIT)" = "64" -a ! -e $pymodule ]; then
-    %{__ln_s} -T /usr/lib/python2.6/site-packages/ovd $pymodule
-fi
-
 %clean -n ulteo-ovd-shells
 %{__rm} -rf $RPM_BUILD_ROOT
 
