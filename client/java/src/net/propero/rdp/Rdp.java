@@ -1779,21 +1779,18 @@ public class Rdp {
         int unitId = data.getLittleEndian16();
         int imeOpen = data.getLittleEndian32();
         int imeConvMode = data.getLittleEndian32();
-        KeyboardFocusManager keyboard_focus_manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        boolean state = (imeConvMode == IME_CMODE_NATIVE);
+        Input input = this.surface.getInput();
 
-        if(! this.surface.getInput().supportIME()) {
-            return;
+        if (input.supportIME() == false) {
+            return; /* Not supported */
         }
 
-        if(imeConvMode == IME_CMODE_NATIVE) {
-            this.surface.enableInputMethods(true);
-            keyboard_focus_manager.clearGlobalFocusOwner();
-            this.surface.requestFocus();
-        } else {
-            this.surface.enableInputMethods(false);
-            keyboard_focus_manager.clearGlobalFocusOwner();
-            this.surface.requestFocus();
+        if (input.getImeActive() == state) {
+            return; /* State unchanged */
         }
+
+        input.setImeActive(state);
     }
 
     private void process_system_pointer_pdu(RdpPacket_Localised data) {

@@ -23,6 +23,7 @@ import net.propero.rdp.keymapping.KeyMapException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
+import java.awt.Component;
 import java.awt.MouseInfo;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.*;
@@ -52,6 +53,7 @@ public abstract class Input {
 	protected static boolean shiftDown = false;
 
 	protected Boolean proceedOnKeyPressed = false;
+	protected Boolean imeActive = false;
 
     protected static long last_mousemove = 0;
     
@@ -133,10 +135,6 @@ public abstract class Input {
 		this.keystrokesList = new HashMap<KeyStroke, Long>();
 		this.inputListeners = new CopyOnWriteArrayList<InputListener>();
 		Input.resetState();
-
-		this.canvas.enableInputMethods(this.supportIME());
-		KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
-		this.canvas.requestFocus();
 	}
 
     /**
@@ -162,10 +160,6 @@ public abstract class Input {
 		this.keystrokesList = new HashMap<KeyStroke, Long>();
 		this.inputListeners = new CopyOnWriteArrayList<InputListener>();
 		Input.resetState();
-
-		this.canvas.enableInputMethods(this.supportIME());
-		KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
-		this.canvas.requestFocus();
 	}
 
 	private static void resetState() {
@@ -262,6 +256,21 @@ public abstract class Input {
 	
 	public boolean supportIME() {
 		return this.opt.supportIME;
+	}
+
+	public boolean getImeActive() {
+		return this.imeActive;
+	}
+
+	public void setImeActive(boolean state) {
+		KeyboardFocusManager keyboard_focus_manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+		Component last_focus = keyboard_focus_manager.getFocusOwner();
+
+		this.imeActive = state;
+
+		if (last_focus != null && last_focus instanceof net.propero.rdp.ImeStateListener) {
+			((net.propero.rdp.ImeStateListener)last_focus).setImeState(state);
+		}
 	}
 
 	/**

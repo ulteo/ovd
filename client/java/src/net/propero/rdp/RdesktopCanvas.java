@@ -24,6 +24,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
+import net.propero.rdp.ImeStateListener;
 import net.propero.rdp.keymapping.KeyCode;
 import net.propero.rdp.keymapping.KeyCode_FileBased;
 import net.propero.rdp.orders.*;
@@ -32,7 +33,7 @@ import org.apache.log4j.Logger;
 
 // import org.apache.log4j.NDC;
 
-public abstract class RdesktopCanvas extends Canvas {
+public abstract class RdesktopCanvas extends Canvas implements ImeStateListener {
     static Logger logger = Logger.getLogger(RdesktopCanvas.class);
 
     private RasterOp rop = null;
@@ -1511,5 +1512,9 @@ public abstract class RdesktopCanvas extends Canvas {
 	
 	public void prepare_repaint(int x, int y, int cx, int cy) {
 		this.refresh_rect = refresh_rect.union(new Rectangle(x, y, cx, cy)); 
+	}
+
+	public void setImeState(boolean state) {
+		ImeStateSetter imeStS = new ImeStateSetter(this, this.getParent(), state); 
 	}
 }
