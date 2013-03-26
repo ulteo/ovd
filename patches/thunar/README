@@ -19,3 +19,6 @@
 * ulteo_run_windows_app.patch
   if the executable is an rdesktop (windows) application, use the CIFS path to
   be able to open the file on the windows server
+
+* ulteo_tree_view.patch
+  fix a segfault when we activate the tree view in thunar
