@@ -492,9 +492,9 @@ if (! isset($old_session_id)) {
 
 		if (array_key_exists(Server::SERVER_ROLE_FS, $session->servers)) {
 			foreach ($session->servers[Server::SERVER_ROLE_FS] as $server_id => $netfolders) {
-				$server = Abstract_Server::load($server_id);
+				$fs_server = Abstract_Server::load($server_id);
 				foreach ($netfolders as $netfolder) {
-					$uri = 'cifs://'.$server->getExternalName().'/'.$netfolder['dir'];
+					$uri = 'cifs://'.$fs_server->getExternalName().'/'.$netfolder['dir'];
 					
 					$netfolder_node = $dom->createElement($netfolder['type']);
 					$netfolder_node->setAttribute('rid', $netfolder['rid']);
