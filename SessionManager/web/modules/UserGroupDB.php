@@ -179,7 +179,7 @@ class UserGroupDB extends Module {
 			}
 			$groups = array_merge($groups, $groups1);
 			
-			$sizelimit_exceeded = $sizelimit_exceeded or $sizelimit_exceeded1;
+			$sizelimit_exceeded = ($sizelimit_exceeded or $sizelimit_exceeded1);
 			if ( $sizelimit_exceeded == true)
 				break;
 			
