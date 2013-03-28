@@ -30,6 +30,9 @@ package net.propero.rdp.rdp5.rdpdr;
 
 import java.io.*;
 import java.util.*;
+
+import org.ulteo.utils.FilesOp;
+
 import net.propero.rdp.*;
 
 public class Disk extends RdpdrDevice{
@@ -403,7 +406,10 @@ public class Disk extends RdpdrDevice{
 			try {
 				fileToDelete = new File(finfo.get_path());
 				if (fileToDelete.exists()) {
-					fileToDelete.delete();
+					if (fileToDelete.isDirectory())
+						FilesOp.deleteDirectory(fileToDelete);
+					else
+						fileToDelete.delete();
 				}
 			}
 			catch (Exception e) {
