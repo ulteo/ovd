@@ -102,6 +102,10 @@
 
   <target name="rdpClient">
     <antcall target="precompile_client" />
+    <unjar dest="build">
+      <filelist dir="required_libraries"
+                files="image4j.jar, jshortcut.jar" />
+    </unjar>
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
            target="1.5" source="1.5" includes="org/ulteo/rdp/RdpClient.java"
            debug="${javac.debug}" debuglevel="lines,vars,source">
