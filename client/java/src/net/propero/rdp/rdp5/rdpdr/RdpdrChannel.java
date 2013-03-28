@@ -3,11 +3,11 @@
  * 
  * Revision: $Revision: 1.0
  * Author: tomqq (hekong@gmail.com)
- * Author David Lechevalier <david@ulteo.com> 2011 2012
+ * Author David Lechevalier <david@ulteo.com> 2011, 2012, 2013
  * Date: 2009/05/16
  *
  * Copyright (c) tomqq
- * Copyright (C) 2011-2012 Ulteo SAS
+ * Copyright (C) 2011-2013 Ulteo SAS
  *
  *
  * Purpose: 
@@ -409,7 +409,7 @@ public class RdpdrChannel extends VChannel {
 		switch (major){
 			case IRP_MJ_CREATE:
 //				System.out.println("IRP:IRP_MJ_CREATE" + " ["+(sequence_count++) + "]");
-				desired_access = s.getBigEndian32();
+				desired_access = s.getLittleEndian32();
 				s.incrementPosition(0x08); /* unknown */
 				error_mode = s.getLittleEndian32();
 				share_mode = s.getLittleEndian32();

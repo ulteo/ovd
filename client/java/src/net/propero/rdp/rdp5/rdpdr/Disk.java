@@ -8,7 +8,7 @@
  * Copyright (c) tomqq
  * Copyright (C) 2011 Ulteo SAS
  * http://www.ulteo.com
- * Author David Lechevalier <david@ulteo.com> 2011
+ * Author David Lechevalier <david@ulteo.com> 2011, 2013
  * 
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -52,6 +52,7 @@ public class Disk extends RdpdrDevice{
 	public static final int GENERIC_ALL		  = 0x10000000;
 	public static final int GENERIC_READ	  = 0x80000000;
 	public static final int GENERIC_WRITE	  = 0x40000000;
+	public static final int DELETE            = 0x00010000;
 	
 	//file flags
 	public static final int FILE_NON_DIRECTORY_FILE       = 0x00000040;
@@ -223,7 +224,7 @@ public class Disk extends RdpdrDevice{
 		tempFILEINFO.accessmask = accessmask;
 		tempFILEINFO.path = path;
 		tempFILEINFO.notify = new NOTIFY();
-		if ((flags_and_attributes & FILE_DELETE_ON_CLOSE) > 0) {
+		if ((flags_and_attributes & FILE_DELETE_ON_CLOSE) != 0 && (accessmask & DELETE) != 0) {
 			tempFILEINFO.delete_on_close = true;
 		}
 		g_notify_stamp = true;
@@ -504,9 +505,7 @@ public class Disk extends RdpdrDevice{
 				
 			case 13://FileDispositionInformation:
 				delete_on_close = in.getLittleEndian32();
-				if (delete_on_close > 0 ||(tempfinfo.accessmask & (FILE_DELETE_ON_CLOSE | FILE_COMPLETE_IF_OPLOCKED))>0){
-					tempfinfo.delete_on_close = true;
-				}
+				tempfinfo.delete_on_close = true;
 				break; 
 				
 			case 19://FileAllocationInformation:
