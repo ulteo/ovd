@@ -132,14 +132,15 @@ class UserDB_sql extends UserDB  {
 		}
 		$rows = $sql2->FetchAllResults($res);
 		foreach ($rows as $row){
+			if ($limit_ > 0 && $count >= $limit_) {
+					$sizelimit_exceeded = true;
+					break;
+			}
+			
 			$a_user = $this->generateUserFromRow($row);
 			if ($this->isOK($a_user)) {
 				$users []= $a_user;
 				$count++;
-				if ($limit_ > 0 && $count >= $limit_) {
-					$sizelimit_exceeded = next($rows) !== false; // is it the last element ?
-					return array($users, $sizelimit_exceeded);
-				}
 			}
 			else {
 				if (isset($row['login']))
