@@ -21,8 +21,13 @@
 #ifndef _COMMON_SYS_
 #define _COMMON_SYS_
 
+#include "list.h"
+#include "types.h"
+
+
 void sys_exit(int);
 char* sys_getEnv(const char* name);
+bool sys_exec(List* args, int* status, char** message, bool wait);
 
 
 #endif

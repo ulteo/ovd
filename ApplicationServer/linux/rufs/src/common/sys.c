@@ -19,6 +19,11 @@
  **/
 #include "sys.h"
 #include <stdlib.h>
+#include "memory.h"
+#include "log.h"
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <errno.h>
 
 
 void sys_exit(int status) {
@@ -32,3 +37,70 @@ char* sys_getEnv(const char* name) {
 	return getenv(name);
 }
 
+
+bool sys_exec(List* args, int* status, char** message, bool wait) {
+	pid_t pid = 0;
+	int out[2];
+	int dataLen;
+	int bufferSize = 1024;
+	int totalLength = 0;
+
+
+	logDebug("creating pipe");
+	if (pipe(out) == -1) {
+		logError("Failed to create pipe %s", str_geterror());
+		return false;
+	}
+
+	pid = fork();
+	if (pid == -1) {
+		logWarn("Failed to create rsync processus: %s", error_str());
+		list_clear(args);
+
+		return false;
+	}
+	else if (pid == 0) {
+		close(1);
+		close(2);
+		close(out[0]);
+		dup2(out[1], 1);
+		dup2(out[1], 2);
+
+		execvp((char*)args->values[0], ((char**)args->values));
+
+		logError("failed to exec command '%s': %s", (char*)args->values[0], str_geterror());
+		sys_exit(0);
+	}
+
+	close(out[1]);
+
+	if (! wait) {
+		close(out[0]);
+		list_clear(args);
+
+		return true;
+	}
+
+
+	*message = memory_alloc(bufferSize, false);
+	*status = 0;
+
+	while (waitpid(pid, status, WNOHANG) <= 0 || (errno == EINTR)) {
+		int r = read(out[0], *message, (bufferSize - totalLength));
+
+		if (r <= 0)
+			break;
+
+		totalLength += r;
+		if (totalLength == bufferSize) {
+			memory_realloc(&message, bufferSize + 1024);
+			bufferSize += 1024;
+		}
+		usleep(1000);
+	}
+
+	close(out[0]);
+	list_clear(args);
+
+	return true;
+}
