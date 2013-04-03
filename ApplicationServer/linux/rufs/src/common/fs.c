@@ -130,6 +130,8 @@ bool fs_expandPath(const char* source, char* destination) {
 		return false;
 	}
 
+	destination[0] = '\0';
+
 	for(i = 0 ; i < pathComponent->size ; i++) {
 		char* p = (char*)list_get(pathComponent, i);
 		char* r = NULL;
