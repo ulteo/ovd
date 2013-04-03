@@ -42,6 +42,7 @@ bool sys_exec(List* args, int* status, char** message, bool wait) {
 	pid_t pid = 0;
 	int out[2];
 	int dataLen;
+	char* commandLine;
 	int bufferSize = 1024;
 	int totalLength = 0;
 
@@ -51,6 +52,10 @@ bool sys_exec(List* args, int* status, char** message, bool wait) {
 		logError("Failed to create pipe %s", str_geterror());
 		return false;
 	}
+
+	commandLine = list_dumpStr(args, " ");
+	logDebug("start the following command line %s", commandLine);
+	memory_free(commandLine);
 
 	pid = fork();
 	if (pid == -1) {
@@ -85,18 +90,16 @@ bool sys_exec(List* args, int* status, char** message, bool wait) {
 	*message = memory_alloc(bufferSize, false);
 	*status = 0;
 
-	while (waitpid(pid, status, WNOHANG) <= 0 || (errno == EINTR)) {
-		int r = read(out[0], *message, (bufferSize - totalLength));
+	while (waitpid(pid, status, WNOHANG) <= 0 || (errno == EINTR))
+		usleep(1000);
 
-		if (r <= 0)
-			break;
+	while((dataLen = read(out[0], *message, (bufferSize - totalLength))) > 0) {
+		totalLength += dataLen;
 
-		totalLength += r;
 		if (totalLength == bufferSize) {
 			memory_realloc(&message, bufferSize + 1024);
 			bufferSize += 1024;
 		}
-		usleep(1000);
 	}
 
 	close(out[0]);
