@@ -403,12 +403,14 @@ void configuration_dump (Configuration* conf) {
 
 	logInfo("mounted path: %s", conf->destination_path);
 
-	logInfo("Translation information");
-	for(i = 0 ; i < conf->translations->size; i++) {
-		trans = (Translation*)list_get(conf->translations, i);
-		logInfo("\t %s => %s", trans->in, trans->out);
-	}
 
+	if ( conf->translations->size > 0) {
+		logInfo("Translation information");
+		for(i = 0 ; i < conf->translations->size; i++) {
+			trans = (Translation*)list_get(conf->translations, i);
+			logInfo("\t %s => %s", trans->in, trans->out);
+		}
+	}
 
 	for(i = 0 ; i < conf->unions->size; i++) {
 		Union* u = (Union*)list_get(conf->unions, i);
