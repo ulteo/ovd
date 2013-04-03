@@ -376,11 +376,8 @@ bool configuration_parse (Configuration* conf) {
 		goto end;
 	}
 
-	result = configuration_parseTranslation(ini, conf);
-	if (! result) {
-		logWarn("Failed to parse translation configuration");
-		goto end;
-	}
+	if (! configuration_parseTranslation(ini, conf))
+		logDebug("No translation found");
 
 end:
 	ini_delete(ini);
