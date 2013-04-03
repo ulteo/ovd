@@ -212,10 +212,10 @@ function show_manage($login) {
   $groups_available = array();
 	$default_group_id = null;
 	if ($usergroupdb_rw) {
-		$groups_all = $_SESSION['service']->users_groups_list();
-		if (is_null($groups_all)) {
-			$groups_all = array();
-		}
+		$usersgroupsList = new UsersGroupsList($_REQUEST);
+		$groups_all = $usersgroupsList->search();
+		usort($groups_all, "usergroup_cmp");
+		$searchDiv = $usersgroupsList->getForm();
 		
 		foreach($groups_all as $group) {
 			if (! array_key_exists($group->id, $groups_mine))

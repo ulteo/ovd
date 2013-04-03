@@ -2520,21 +2520,6 @@ class OvdAdminSoap {
 		);
 	}
 	
-	public function users_groups_list() {
-		$this->check_authorized('viewUsersGroups');
-		
-		$userGroupDB = UserGroupDB::getInstance();
-		$groups = $userGroupDB->getList();
-		
-		$ret = array();
-		foreach($groups as $group) {
-			$g = self::generate_usersgroup_array($group);
-			$ret[$g['id']] = $g;
-		}
-		
-		return $ret;
-	}
-	
 	public function users_groups_list_partial($search_item_, $search_fields_) {
 		$this->check_authorized('viewUsersGroups');
 		

@@ -301,26 +301,6 @@ class SessionManager {
 		return $user;
 	}
 	
-	public function users_groups_list() {
-		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
-		$res = $this->__call('users_groups_list', $args);
-		if ($res === null) {
-			return null;
-		}
-		
-		$groups = array();
-		foreach($res as $item) {
-			$group = new UsersGroup($item);
-			if (! $group->is_valid()) {
-				continue;
-			}
-			
-			$groups[]= $group;
-		}
-		
-		return $groups;
-	}
-	
 	public function users_groups_list_partial($search_item_, $search_fields_) {
 		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
 		$res = $this->__call('users_groups_list_partial', $args);
