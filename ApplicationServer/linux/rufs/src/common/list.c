@@ -114,3 +114,31 @@ size_t list_getIndex(List* list, Any value) {
 	return NOT_FOUND;
 }
 
+
+char* list_dumpStr(List* list, char* separator) {
+	char* buffer;
+	char* str;
+	int size = 1;
+	int i;
+
+	for (i = 0; i < list->size; i++) {
+		str = (char*)list->values[i];
+		if (str != NULL)
+			size += str_len(str) + str_len(separator);
+	}
+
+	if (size == 0)
+		return NULL;
+
+	buffer = memory_alloc(size, true);
+
+	for (i = 0; i < list->size; i++) {
+		str = (char*)list->values[i];
+		if (str != NULL) {
+			str_cat(buffer, str);
+			str_cat(buffer, separator);
+		}
+	}
+
+	return buffer;
+}

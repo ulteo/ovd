@@ -46,5 +46,6 @@ void list_clear(List* list);
 
 Any list_get(List* list, size_t index);
 size_t list_getIndex(List* self, Any value);
+char* list_dumpStr(List* list, char* separator);
 
 #endif
