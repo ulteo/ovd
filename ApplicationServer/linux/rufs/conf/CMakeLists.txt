@@ -1,3 +1,2 @@
-install(FILES default.conf DESTINATION "${CONF_PATH}")
-
+install(FILES default.conf profiles_filter.conf DESTINATION "${CONF_PATH}")
 

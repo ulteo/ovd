@@ -117,6 +117,8 @@ static bool configuration_parseUnion(Ini* ini, Configuration* conf, const char* 
 	unionObject->accept = list_new(true);
 	unionObject->reject = list_new(true);
 	unionObject->path[0] = '\0';
+	unionObject->rsync_src[0] = '\0';
+	unionObject->rsync_filter_filename[0] = '\0';
 
 	if (ini == NULL || conf == NULL || unionName == NULL) {
 		logWarn("Invalid arguments");
@@ -197,6 +199,34 @@ static bool configuration_parseUnion(Ini* ini, Configuration* conf, const char* 
 
 				list_add(unionObject->reject, (Any)reg);
 			}
+			continue;
+		}
+
+		if (str_ncmp(key, UNION_RSYNC_CONFIGURATION_KEY, sizeof(UNION_RSYNC_CONFIGURATION_KEY)) == 0) {
+			if (! fs_expandPath(value, expandedPath)) {
+				logWarn("Unable to expand rsync value path %s", value);
+				return false;
+			}
+
+			// Check if the path is relative
+			if ((str_len(expandedPath) == 0) || (expandedPath[0] != '/')) {
+				if (str_endWith(conf->source_path, "/"))
+					str_sprintf(unionObject->rsync_src, "%s/%s", conf->source_path, expandedPath);
+				else
+					str_sprintf(unionObject->rsync_src, "%s%s", conf->source_path, expandedPath);
+			}
+			else
+				str_ncpy(unionObject->rsync_src, expandedPath, sizeof(unionObject->rsync_src));
+
+			continue;
+		}
+
+		if (str_ncmp(key, UNION_RFILTER_CONFIGURATION_KEY, sizeof(UNION_RFILTER_CONFIGURATION_KEY)) == 0) {
+			if (! fs_expandPath(value, unionObject->rsync_filter_filename)) {
+				logWarn("Unable to expand rsync value path %s", value);
+				return false;
+			}
+
 			continue;
 		}
 	}
@@ -385,6 +415,11 @@ void configuration_dump (Configuration* conf) {
 		Union* u = (Union*)list_get(conf->unions, i);
 
 		logInfo(" unionized path: %s", u->path);
+		if (u->rsync_src[0]) {
+			logInfo("  rsync src: %s", u->rsync_src);
+			logInfo("  rsync filter filename: %s", u->rsync_filter_filename);
+		}
+
 		if (u->accept != NULL) {
 			for(j = 0 ; j < u->accept->size; j++) {
 				Regexp* reg = (Regexp*)list_get(u->accept, j);

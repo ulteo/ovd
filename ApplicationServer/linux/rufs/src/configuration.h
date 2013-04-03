@@ -43,11 +43,15 @@
 #define UNION_PATH_CONFIGURATION_KEY "path"
 #define UNION_ACCEPT_CONFIGURATION_KEY "accept"
 #define UNION_REJECT_CONFIGURATION_KEY "reject"
+#define UNION_RSYNC_CONFIGURATION_KEY "rsync"
+#define UNION_RFILTER_CONFIGURATION_KEY "rsync_filter"
 
 
 typedef struct _Union {
 	char name[256];
 	char path[PATH_MAX];
+	char rsync_src[PATH_MAX];
+	char rsync_filter_filename[PATH_MAX];
 	List* accept;
 	List* reject;
 } Union;
