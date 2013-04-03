@@ -338,6 +338,8 @@ static bool configuration_parseTranslation(Ini* ini, Configuration* conf) {
 	}
 
 	sec = ini_get(ini, TRANS_CONFIGURATION_SECTION);
+	if (sec == NULL)
+		return false;
 
 	for(i = 0 ; i < sec->keys->size ; i++) {
 		trans = memory_new(Translation, true);
