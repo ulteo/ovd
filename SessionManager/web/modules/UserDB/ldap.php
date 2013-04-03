@@ -54,7 +54,7 @@ class UserDB_ldap  extends UserDB {
 		}
 		
 		$ldap = new LDAP($this->config);
-		$sr = $ldap->search($this->config['match']['login'].'='.$login_, NULL);
+		$sr = $ldap->search($this->config['match']['login'].'='.$login_, NULL, 1);
 		if ($sr === false) {
 			Logger::error('main', "UserDB_ldap::import($login_) ldap failed (usually timeout on server)");
 			return NULL;
@@ -93,7 +93,7 @@ class UserDB_ldap  extends UserDB {
 
 		$config = $this->config;
 		$ldap = new LDAP($config);
-		$sr = $ldap->searchDN($dn_, NULL);
+		$sr = $ldap->searchDN($dn_, NULL, 1);
 		if ($sr === false) {
 			Logger::error('main','UserDB_ldap::fromDN ldap failed (mostly timeout on server)');
 			return NULL;
