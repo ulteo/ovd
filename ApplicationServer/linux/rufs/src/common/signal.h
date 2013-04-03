@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2012 Ulteo SAS
+ * Copyright (C) 2013 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,21 +18,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "fuse.h"
-#include "status.h"
-#include "common/log.h"
-#include "shares.h"
-#include "common/signal.h"
+#ifndef SIGNAL_H_
+#define SIGNAL_H_
+
+#include "types.h"
 
 
-int main(int argc, char **argv)
-{
-	log_init();
-	log_setProgram(file_getShortName(argv[0]));
+typedef void (*sighandler)(int);
 
-	signal_installSIGHUPHandler(shares_reload);
 
-	fuse_start(argc, argv);
+bool signal_install(sighandler func);
 
-	return SUCCESS;
-}
+void signal_block();
+
+
+#endif /* SIGNAL_H_ */

@@ -35,6 +35,7 @@ Configuration* configuration_new() {
 	conf->translations = list_new(true);
 	conf->bind = false;
 	conf->bind_path[0] = '\0';
+	conf->shareFile = NULL;
 	
 	return conf;
 }
@@ -63,6 +64,7 @@ bool configuration_free(Configuration* conf) {
 	}
 
 	list_delete(conf->translations);
+	memory_free(conf->shareFile);
 
 	memory_free(conf);
 	return true;
@@ -267,6 +269,14 @@ static bool configuration_parseMain(Ini* ini, Configuration* conf) {
 		return false;
 	}
 
+
+	value = ini_getKey(ini, MAIN_CONFIGURATION_SECTION, MAIN_SHARE_LIST_CONFIGURATION_KEY);
+	if (value != NULL) {
+		str_unquote(value);
+		conf->shareFile = str_dup(value);
+	}
+
+
 	value = ini_getKey(ini, MAIN_CONFIGURATION_SECTION, MAIN_UNION_CONFIGURATION_KEY);
 	if (value == NULL) {
 		logWarn("No union found in the configuration file");
@@ -402,6 +412,9 @@ void configuration_dump (Configuration* conf) {
 	}
 
 	logInfo("mounted path: %s", conf->destination_path);
+
+	if (conf->shareFile)
+		logInfo("\t shares files %s", conf->shareFile);
 
 
 	if ( conf->translations->size > 0) {

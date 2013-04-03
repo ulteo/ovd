@@ -32,6 +32,7 @@
 #define MAIN_UNION_CONFIGURATION_KEY "union"
 #define MAIN_BIND_CONFIGURATION_KEY "bind"
 #define MAIN_BIND_DESTINATION_CONFIGURATION_KEY "bindDestination"
+#define MAIN_SHARE_LIST_CONFIGURATION_KEY "sharesList"
 
 #define LOG_CONFIGURATION_SECTION "log"
 #define LOG_LEVEL_CONFIGURATION_KEY "level"
@@ -66,6 +67,7 @@ typedef struct _Translation {
 typedef struct _Configuration {
 	char* user;
 	char* configFile;
+	char* shareFile;
 	bool bind;
 	char* source_path;
 	char* destination_path;
