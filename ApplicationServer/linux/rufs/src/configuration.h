@@ -26,7 +26,7 @@
 
 
 #define PACKAGE_VERSION            "0.1"
-#define DEFAULT_CONFIGURATION_PATH "/etc/ulteo/default.conf"
+#define DEFAULT_CONFIGURATION_PATH "/etc/ulteo/rufs/default.conf"
 #define MAIN_CONFIGURATION_SECTION "main"
 #define TRANS_CONFIGURATION_SECTION "translation"
 #define MAIN_UNION_CONFIGURATION_KEY "union"

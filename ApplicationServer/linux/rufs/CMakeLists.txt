@@ -8,7 +8,7 @@ set( ${PROJECT_NAME}_PATCH_LEVEL 0 )
 include(FindPkgConfig)
 
 set(BIN_PATH  /usr/sbin)
-set(CONF_PATH /etc/ulteo)
+set(CONF_PATH /etc/ulteo/rufs)
 
 pkg_check_modules(FUSE fuse>=2.6)
 if (FUSE_FOUND EQUAL 1)
