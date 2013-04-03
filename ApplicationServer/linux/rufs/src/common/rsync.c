@@ -21,6 +21,7 @@
 #include "rsync.h"
 #include "list.h"
 #include "fs.h"
+#include "str.h"
 #include "sys.h"
 
 
@@ -30,58 +31,55 @@ RSync* RSync_create() {
 }
 
 
-void Rsync_delete(RSync* rsync) {
+RSync* RSync_new(char* src, char* dst, char* filter) {
+	RSync* rsync = memory_new(RSync, true);
+	rsync->src = str_dup(src);
+	rsync->dst = str_dup(dst);
+	rsync->filter = str_dup(filter);
+
+	return rsync;
+}
+
+
+void Rsync_free(RSync* rsync) {
 	if (! rsync)
 		return;
 
 	memory_free(rsync->src);
 	memory_free(rsync->dst);
-	memory_free(rsync->includeFilter);
-	memory_free(rsync->excludeFilter);
+	memory_free(rsync->filter);
 	memory_free(rsync->statusMessage);
 	memory_free(rsync);
 }
 
 
-bool Rsync_INSync(RSync* rsync) {
+bool Rsync_sync(RSync* rsync) {
 	char src[PATH_MAX];
 	char dst[PATH_MAX];
 	List* args = list_new(true);
+	bool res;
 
-	list_add(args, str_dup(RSYNC_PATH));
-	list_add(args, str_dup("-rltD"));
-	list_add(args, str_dup("--safe-links"));
+	list_add(args, (Any)str_dup(RSYNC_PATH));
+	list_add(args, (Any)str_dup("-rltD"));
+	list_add(args, (Any)str_dup("--safe-links"));
 
-	if (rsync->includeFilter && fs_exist(rsync->includeFilter)) {
-		const char arg[PATH_MAX];
-		str_sprintf("--include-from=%s", rsync->includeFilter);
-		list_add(args, str_dup(arg));
+	if (rsync->filter && fs_exist(rsync->filter)) {
+		char arg[PATH_MAX];
+		str_sprintf(arg, "--include-from=%s", rsync->filter);
+		list_add(args, (Any)str_dup(arg));
 	}
 
-	if (rsync->excludeFilter && fs_exist(rsync->excludeFilter)) {
-		const char arg[PATH_MAX];
-		str_sprintf("--exclude-from=%s", rsync->excludeFilter);
-		list_add(args, str_dup(arg));
-	}
+	str_sprintf(src, "%s/", rsync->src);
+	str_sprintf(dst, "%s/", rsync->dst);
 
-	str_sprintf(src, "\"%s\"", rsync->src);
-	str_sprintf(dst, "\"%s\"", rsync->dst);
+	list_add(args, (Any)str_dup(src));
+	list_add(args, (Any)str_dup(dst));
 
-	list_add(args, str_dup(src));
-	list_add(args, str_dup(dst));
+	res = sys_exec(args, &rsync->status, &rsync->statusMessage, true);
 
-	if (sys_exec(args, &rsync->status, &rsync->statusMessage, true))
-		return false;
+	list_delete(args);
 
-	Rsync_dumpStatus(rsync);
-	memory_free(rsync->statusMessage);
-
-	return true;
-}
-
-
-bool Rsync_OUTSync(RSync* rsync) {
-	return true;
+	return res;
 }
 
 

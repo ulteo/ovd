@@ -31,17 +31,16 @@
 typedef struct _RSync {
 	char* src;
 	char* dst;
-	char* includeFilter;
-	char* excludeFilter;
+	char* filter;
 	int status;
 	char* statusMessage;
 } RSync;
 
 
 RSync* RSync_create();
-void Rsync_delete(RSync* rsync);
-bool Rsync_INSync(RSync* rsync);
-bool Rsync_OUTSync(RSync* rsync);
+RSync* RSync_new(char* src, char* dst, char* filter);
+void Rsync_free(RSync* rsync);
+bool Rsync_sync(RSync* rsync);
 void Rsync_dumpStatus(RSync* rsync);
 
 
