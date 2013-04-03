@@ -38,6 +38,7 @@
 #include "common/sys.h"
 #include "common/str.h"
 #include "common/user.h"
+#include "common/rsync.h"
 #include <linux/limits.h>
 #ifdef HAVE_SETXATTR
 #include <sys/xattr.h>
@@ -807,12 +808,14 @@ static int rufs_opt_proc(void *data, const char *arg, int key, struct fuse_args 
 		fuse_opt_add_arg(outargs, "-ho");
 		fuse_main(outargs->argc, outargs->argv, &rufs_oper, NULL);
 		sys_exit(1);
+		break;
 
 	case KEY_VERSION:
 		fprintf(stderr, "rufs version %s\n", PACKAGE_VERSION);
 		fuse_opt_add_arg(outargs, "--version");
 		fuse_main(outargs->argc, outargs->argv, &rufs_oper, NULL);
 		sys_exit(0);
+		break;
 
 	case KEY_DEBUG:
 		log_setLevel(DEBUG);
@@ -820,6 +823,44 @@ static int rufs_opt_proc(void *data, const char *arg, int key, struct fuse_args 
 		return 0;
 	}
 	return 1;
+}
+
+
+bool processRsync(Configuration* conf) {
+	int i = 0;
+	RSync* rsync;
+
+	if (conf == NULL) {
+		logWarn("Configuration is NULL");
+		return false;
+	}
+
+	for (i = 0 ; i < conf->unions->size ; i++) {
+		Union* u = (Union*) list_get(conf->unions, i);
+
+		if (u->rsync_src[0]) {
+			logInfo("process rsync of '%s'", u->name);
+
+			rsync = RSync_new(u->rsync_src, u->path, u->rsync_filter_filename);
+			if (rsync == NULL) {
+				logWarn("Failed to create rsync command for union '%s'", u->name);
+				continue;
+			}
+
+			if (! Rsync_sync(rsync)) {
+				logWarn("Failed to rsync '%s'", u->name);
+				Rsync_free(rsync);
+				continue;
+			}
+
+			if (rsync->status != 0)
+				Rsync_dumpStatus(rsync);
+
+			Rsync_free(rsync);
+		}
+	}
+
+	return true;
 }
 
 
@@ -893,6 +934,11 @@ int fuse_start(int argc, char** argv) {
 			return MOUNT_ERROR;
 		}
 	}
+
+	// do rsync operations
+	logDebug("rsync operation...");
+	processRsync(config);
+
 
 	ret = fuse_main(args.argc, args.argv, &rufs_oper, NULL);
 	fuse_opt_free_args(&args);
