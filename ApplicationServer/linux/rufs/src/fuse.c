@@ -107,6 +107,17 @@ static bool quotaExceed(const char* path) {
 }
 
 
+static void updateShareSpace(const char* path, long size) {
+	if (path == NULL)
+		return;
+
+	char* root = fs_getRoot(path);
+	if (root != NULL && str_len(root) > 0)
+		shares_updateSpace(root, size);
+
+	memory_free(root);
+}
+
 // Transform path returned by ls
 static void transformPathOut(const char* path, char* to) {
 
@@ -424,12 +435,16 @@ static int rufs_mkdir(const char *path, mode_t mode)
 	if (res == -1)
 		return -errno;
 
+	// TODO find better way
+	updateShareSpace(path, 4096);
+
 	return 0;
 }
 
 static int rufs_unlink(const char *path)
 {
 	int res;
+	long fsize;
 	char trpath[PATH_MAX];
 
 	if (! authorized(path))
@@ -440,9 +455,13 @@ static int rufs_unlink(const char *path)
 		return -ENOENT;
 	}
 
+	fsize = file_size(trpath);
+
 	res = unlink(trpath);
 	if (res == -1)
 		return -errno;
+
+	updateShareSpace(path, (-1 * fsize));
 
 	return 0;
 }
@@ -463,6 +482,9 @@ static int rufs_rmdir(const char *path)
 	res = rmdir(trpath);
 	if (res == -1)
 		return -errno;
+
+	// TODO find better way
+	updateShareSpace(path, -4096);
 
 	return 0;
 }
@@ -582,6 +604,7 @@ static int rufs_chown(const char *path, uid_t uid, gid_t gid)
 static int rufs_truncate(const char *path, off_t size)
 {
 	int res;
+	int fsize;
 	char trpath[PATH_MAX];
 
 	if (quotaExceed(path))
@@ -595,9 +618,13 @@ static int rufs_truncate(const char *path, off_t size)
 		return -ENOENT;
 	}
 
+	fsize = file_size(trpath);
+
 	res = truncate(trpath, size);
 	if (res == -1)
 		return -errno;
+
+	updateShareSpace(path, (size - fsize));
 
 	return 0;
 }
@@ -606,6 +633,8 @@ static int rufs_ftruncate(const char *path, off_t size,
 			 struct fuse_file_info *fi)
 {
 	int res;
+	int fsize;
+	char trpath[PATH_MAX];
 
 	if (quotaExceed(path))
 		return -EDQUOT;
@@ -613,9 +642,18 @@ static int rufs_ftruncate(const char *path, off_t size,
 	if (! authorized(path))
 		return -EPERM;
 
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
+
+	fsize = file_size(trpath);
+
 	res = ftruncate(fi->fh, size);
 	if (res == -1)
 		return -errno;
+
+	updateShareSpace(path, (size - fsize));
 
 	return 0;
 }
@@ -709,6 +747,7 @@ static int rufs_write(const char *path, const char *buf, size_t size,
 		     off_t offset, struct fuse_file_info *fi)
 {
 	int res;
+	long fsize;
 	char trpath[PATH_MAX];
 
 	if (! authorized(path))
@@ -722,9 +761,14 @@ static int rufs_write(const char *path, const char *buf, size_t size,
 		return -ENOENT;
 	}
 
+	fsize = file_size(trpath);
+
 	res = pwrite(fi->fh, buf, size, offset);
 	if (res == -1)
 		res = -errno;
+
+	if (offset + size > fsize)
+		updateShareSpace(path, (offset + size - fsize));
 
 	return res;
 }

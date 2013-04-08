@@ -49,6 +49,7 @@ bool shares_activated(const char* name);
 long long shares_getQuota(const char* name);
 long long shares_getSpaceUsed(const char* name);
 bool shares_quotaExceed(const char* name);
+void shares_updateSpace(const char* name, long size);
 
 
 #endif /* SHARES_H_ */

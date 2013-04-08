@@ -301,3 +301,23 @@ bool shares_quotaExceed(const char* name) {
 
 	return res;
 }
+
+
+void shares_updateSpace(const char* name, long size) {
+	int i;
+	Share* s;
+	List* l;
+
+	if (shareList == NULL)
+		return;
+
+	pthread_mutex_lock(&shareMutex);
+
+	s = shares_get(name);
+	if (s != NULL) {
+		logDebug("space of %s increased by %li", name, size);
+		s->spaceUsed += size;
+	}
+
+	pthread_mutex_unlock(&shareMutex);
+}
