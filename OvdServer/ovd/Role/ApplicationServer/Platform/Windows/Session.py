@@ -62,6 +62,10 @@ class Session(AbstractSession):
 			System.DeleteDirectory(self.windowsProgramsDir)
 		os.makedirs(self.windowsProgramsDir)
 		
+		self.appDataDir = shell.SHGetFolderPath(0, shellcon.CSIDL_APPDATA, logon, 0)
+		self.localAppDataDir = shell.SHGetFolderPath(0, shellcon.CSIDL_LOCAL_APPDATA, logon, 0)
+		Logger.debug("localAppdata: '%s'"%(self.localAppDataDir))
+		Logger.debug("appdata: '%s'"%(self.appDataDir))
 		
 		win32profile.UnloadUserProfile(logon, hkey)
 		win32api.CloseHandle(logon)
