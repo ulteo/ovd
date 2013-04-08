@@ -20,8 +20,35 @@
 #ifndef SHARES_H_
 #define SHARES_H_
 
+#include "common/types.h"
+#include "configuration.h"
 
-void shares_reload(int sig);
+
+typedef struct _Share {
+	char* name;
+	char* path;
+	bool activated;
+	long long quota;
+	long long spaceUsed;
+} Share;
+
+
+typedef struct _ShareList {
+	char* shareFile;
+	char* shareDirectory;
+	List* list;
+	bool needReload;
+	long long shareGrace;
+} ShareList;
+
+
+void shares_init(Configuration* conf);
+void shares_signalReload(int sig);
+ShareList* shares_getInstance();
+bool shares_activated(const char* name);
+long long shares_getQuota(const char* name);
+long long shares_getSpaceUsed(const char* name);
+bool shares_quotaExceed(const char* name);
 
 
 #endif /* SHARES_H_ */

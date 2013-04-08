@@ -39,6 +39,8 @@
 #include "common/str.h"
 #include "common/user.h"
 #include "common/rsync.h"
+#include "common/signal.h"
+#include "shares.h"
 #include <linux/limits.h>
 #ifdef HAVE_SETXATTR
 #include <sys/xattr.h>
@@ -68,6 +70,41 @@ static struct fuse_opt rufs_opts[] = {
      FUSE_OPT_END
 };
 
+
+static bool authorized(const char* path) {
+	bool res;
+
+	if (path == NULL)
+		return true;
+
+	char* root = fs_getRoot(path);
+	if (root == NULL || str_len(root) == 0)
+		res = true;
+	else
+		res = shares_activated(root);
+
+	memory_free(root);
+
+	return res;
+}
+
+
+static bool quotaExceed(const char* path) {
+	bool res;
+
+	if (path == NULL)
+		return false;
+
+	char* root = fs_getRoot(path);
+	if (root == NULL || str_len(root) == 0)
+		res = false;
+	else
+		res = shares_quotaExceed(root);
+
+	memory_free(root);
+
+	return res;
+}
 
 
 // Transform path returned by ls
@@ -246,6 +283,10 @@ static int rufs_readlink(const char *path, char *buf, size_t size)
 {
 	int res;
 	char trpath[PATH_MAX];
+
+	if (! authorized(path))
+		return -EPERM;
+
 	if (!transformPath(path, trpath))
 	{
 		return -ENOENT;
@@ -263,6 +304,10 @@ static int rufs_opendir(const char *path, struct fuse_file_info *fi)
 {
 	int res;
 	char trpath[PATH_MAX];
+
+	if (! authorized(path))
+		return -EPERM;
+
 	if (!transformPath(path, trpath))
 	{
 		return -ENOENT;
@@ -286,7 +331,9 @@ static int rufs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 {
 	DIR *dp = get_dirp(fi);
 	struct dirent *de;
-	(void) path;
+
+	if (! authorized(path))
+		return -EPERM;
 
 	// We need to list all the file present in all union
 	if (str_cmp(path, "/") == 0) {
@@ -338,6 +385,10 @@ static int rufs_mknod(const char *path, mode_t mode, dev_t rdev)
 {
 	int res;
 	char trpath[PATH_MAX];
+
+	if (! authorized(path))
+		return -EPERM;
+
 	if (!transformPath(path, trpath))
 	{
 		return -ENOENT;
@@ -357,6 +408,13 @@ static int rufs_mkdir(const char *path, mode_t mode)
 {
 	int res;
 	char trpath[PATH_MAX];
+
+	if (! authorized(path))
+		return -EPERM;
+
+	if (quotaExceed(path))
+		return -EDQUOT;
+
 	if (!transformPath(path, trpath))
 	{
 		return -ENOENT;
@@ -373,6 +431,10 @@ static int rufs_unlink(const char *path)
 {
 	int res;
 	char trpath[PATH_MAX];
+
+	if (! authorized(path))
+		return -EPERM;
+
 	if (!transformPath(path, trpath))
 	{
 		return -ENOENT;
@@ -389,6 +451,10 @@ static int rufs_rmdir(const char *path)
 {
 	int res;
 	char trpath[PATH_MAX];
+
+	if (! authorized(path))
+		return -EPERM;
+
 	if (!transformPath(path, trpath))
 	{
 		return -ENOENT;
@@ -405,6 +471,10 @@ static int rufs_symlink(const char *from, const char *to)
 {
 	int res;
 	char trto[PATH_MAX];
+
+	if (! authorized(from))
+		return -EPERM;
+
 	if (!transformPath(to, trto))
 	{
 		return -ENOENT;
@@ -422,6 +492,9 @@ static int rufs_rename(const char *from, const char *to)
 	int res;
 	char trto[PATH_MAX];
 	char trfrom[PATH_MAX];
+
+	if (! authorized(from))
+		return -EPERM;
 
 	if (!transformPath(to, trto))
 	{
@@ -445,6 +518,10 @@ static int rufs_link(const char *from, const char *to)
 	int res;
 	char trto[PATH_MAX];
 	char trfrom[PATH_MAX];
+
+	if (! authorized(from))
+		return -EPERM;
+
 	if (!transformPath(to, trto))
 	{
 		return -ENOENT;
@@ -466,6 +543,10 @@ static int rufs_chmod(const char *path, mode_t mode)
 {
 	int res;
 	char trpath[PATH_MAX];
+
+	if (! authorized(path))
+		return -EPERM;
+
 	if (!transformPath(path, trpath))
 	{
 		return -ENOENT;
@@ -482,6 +563,10 @@ static int rufs_chown(const char *path, uid_t uid, gid_t gid)
 {
 	int res;
 	char trpath[PATH_MAX];
+
+	if (! authorized(path))
+		return -EPERM;
+
 	if (!transformPath(path, trpath))
 	{
 		return -ENOENT;
@@ -498,6 +583,13 @@ static int rufs_truncate(const char *path, off_t size)
 {
 	int res;
 	char trpath[PATH_MAX];
+
+	if (quotaExceed(path))
+		return -EDQUOT;
+
+	if (! authorized(path))
+		return -EPERM;
+
 	if (!transformPath(path, trpath))
 	{
 		return -ENOENT;
@@ -515,7 +607,11 @@ static int rufs_ftruncate(const char *path, off_t size,
 {
 	int res;
 
-	(void) path;
+	if (quotaExceed(path))
+		return -EDQUOT;
+
+	if (! authorized(path))
+		return -EPERM;
 
 	res = ftruncate(fi->fh, size);
 	if (res == -1)
@@ -528,6 +624,10 @@ static int rufs_utimens(const char *path, const struct timespec ts[2])
 {
 	int res;
 	char trpath[PATH_MAX];
+
+	if (! authorized(path))
+		return -EPERM;
+
 	if (!transformPath(path, trpath))
 	{
 		return -ENOENT;
@@ -550,6 +650,10 @@ static int rufs_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
 	int fd;
 	char trpath[PATH_MAX];
+
+	if (! authorized(path))
+		return -EPERM;
+
 	if (!transformPath(path, trpath))
 	{
 		return -ENOENT;
@@ -568,6 +672,10 @@ static int rufs_open(const char *path, struct fuse_file_info *fi)
 {
 	int fd;
 	char trpath[PATH_MAX];
+
+	if (! authorized(path))
+		return -EPERM;
+
 	if (!transformPath(path, trpath))
 	{
 		return -ENOENT;
@@ -585,8 +693,11 @@ static int rufs_read(const char *path, char *buf, size_t size, off_t offset,
 		    struct fuse_file_info *fi)
 {
 	int res;
+	char trpath[PATH_MAX];
 
-	(void) path;
+	if (! authorized(path))
+		return -EPERM;
+
 	res = pread(fi->fh, buf, size, offset);
 	if (res == -1)
 		res = -errno;
@@ -598,8 +709,19 @@ static int rufs_write(const char *path, const char *buf, size_t size,
 		     off_t offset, struct fuse_file_info *fi)
 {
 	int res;
+	char trpath[PATH_MAX];
 
-	(void) path;
+	if (! authorized(path))
+		return -EPERM;
+
+	if (quotaExceed(path))
+		return -EDQUOT;
+
+	if (!transformPath(path, trpath))
+	{
+		return -ENOENT;
+	}
+
 	res = pwrite(fi->fh, buf, size, offset);
 	if (res == -1)
 		res = -errno;
@@ -611,12 +733,35 @@ static int rufs_statfs(const char *path, struct statvfs *stbuf)
 {
 	int res;
 	char trpath[PATH_MAX];
+
+	if (! authorized(path))
+		return -EPERM;
+
 	if (!transformPath(path, trpath))
 	{
 		return -ENOENT;
 	}
 
+	char* root = fs_getRoot(path);
+	long long quota = shares_getQuota(root);
+	long long spaceUsed = shares_getSpaceUsed(root);
+	memory_free(root);
+
 	res = statvfs(trpath, stbuf);
+
+	if (quota != -1) {
+		long block = quota/stbuf->f_frsize;
+		long blockUsed = spaceUsed/stbuf->f_frsize;
+		long blockAvailable = block - blockUsed;
+
+		if (blockAvailable < 0)
+			blockAvailable = 0;
+
+		stbuf->f_blocks = block;
+		stbuf->f_bfree = blockAvailable;
+		stbuf->f_bavail = blockAvailable;
+	}
+
 	if (res == -1)
 		return -errno;
 
@@ -627,7 +772,9 @@ static int rufs_flush(const char *path, struct fuse_file_info *fi)
 {
 	int res;
 
-	(void) path;
+	if (! authorized(path))
+		return -EPERM;
+
 	/* This is called from every close on an open file, so call the
 	   close on the underlying filesystem.	But since flush may be
 	   called multiple times for an open file, this must not really
@@ -642,7 +789,9 @@ static int rufs_flush(const char *path, struct fuse_file_info *fi)
 
 static int rufs_release(const char *path, struct fuse_file_info *fi)
 {
-	(void) path;
+	if (! authorized(path))
+		return -EPERM;
+
 	close(fi->fh);
 
 	return 0;
@@ -652,7 +801,9 @@ static int rufs_fsync(const char *path, int isdatasync,
 		     struct fuse_file_info *fi)
 {
 	int res;
-	(void) path;
+
+	if (! authorized(path))
+		return -EPERM;
 
 #ifndef HAVE_FDATASYNC
 	(void) isdatasync;
@@ -674,6 +825,10 @@ static int rufs_setxattr(const char *path, const char *name, const char *value,
 			size_t size, int flags)
 {
 	char trpath[PATH_MAX];
+
+	if (! authorized(path))
+		return -EPERM;
+
 	if (!transformPath(path, trpath))
 	{
 		return -ENOENT;
@@ -690,6 +845,10 @@ static int rufs_getxattr(const char *path, const char *name, char *value,
 {
 	int res;
 	char trpath[PATH_MAX];
+
+	if (! authorized(path))
+		return -EPERM;
+
 	if (!transformPath(path, trpath))
 	{
 		return -ENOENT;
@@ -705,6 +864,10 @@ static int rufs_listxattr(const char *path, char *list, size_t size)
 {
 	int res;
 	char trpath[PATH_MAX];
+
+	if (! authorized(path))
+		return -EPERM;
+
 	if (!transformPath(path, trpath))
 	{
 		return -ENOENT;
@@ -720,6 +883,10 @@ static int rufs_removexattr(const char *path, const char *name)
 {
 	int res;
 	char trpath[PATH_MAX];
+
+	if (! authorized(path))
+		return -EPERM;
+
 	if (!transformPath(path, trpath))
 	{
 		return -ENOENT;
@@ -735,7 +902,8 @@ static int rufs_removexattr(const char *path, const char *name)
 static int rufs_lock(const char *path, struct fuse_file_info *fi, int cmd,
 		    struct flock *lock)
 {
-	(void) path;
+	if (! authorized(path))
+		return -EPERM;
 
 	return ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
 			   sizeof(fi->lock_owner));
@@ -921,6 +1089,14 @@ int fuse_start(int argc, char** argv) {
 
 	configuration_dump(config);
 
+	// load share right
+	if (config->shareFile[0]) {
+		shares_init(config);
+		shares_reload();
+		signal_installSIGHUPHandler(shares_signalReload);
+		shares_dump();
+	}
+
 	fs_mkdir(config->destination_path);
 	if (! fs_exist(config->destination_path))
 	{
@@ -948,6 +1124,7 @@ int fuse_start(int argc, char** argv) {
 	}
 
 	configuration_free(config);
+	shares_delete();
 
 	return ret;
 }

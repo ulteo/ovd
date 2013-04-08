@@ -19,10 +19,12 @@
  */
 
 #include "fs.h"
+#include <dirent.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <string.h>
 #include "log.h"
 #include "list.h"
 #include "str.h"
@@ -224,4 +226,92 @@ bool fs_setCurrentDir(const char* dir) {
 	}
 
 	return true;
+}
+
+
+char* fs_getRoot(const char* path) {
+	char* res;
+	char* p;
+
+	if (path == NULL)
+		return NULL;
+
+	if (path[0] == '/')
+		path++;
+
+	res = str_dup(path);
+	p = strchr(res, '/');
+
+	if (p != NULL)
+		*p = '\0';
+
+	return res;
+}
+
+
+char* fs_join(const char* p1, const char* p2) {
+	char path[PATH_MAX];
+
+	if (p1 == NULL || p2 == NULL)
+		return NULL;
+
+	if (p1[str_len(p1) - 1] == '/')
+		str_sprintf(path, "%s%s", p1, p2);
+	else
+		str_sprintf(path, "%s/%s", p1, p2);
+
+	return str_dup(path);
+}
+
+
+long long fs_getDirectorySize(const char* path) {
+	struct dirent* dirnt = NULL;
+	struct stat buf;
+	long long size = 0;
+	char* p;
+
+	if (path == NULL)
+		return 0;
+
+	DIR *dir = opendir (path);
+
+	if (dir == NULL) {
+		logWarn("Failed to open directory '%s': %s", path, str_geterror());
+		return 0;
+	}
+
+	while ((dirnt = readdir (dir)) != NULL) {
+		if ((strcmp (dirnt->d_name, ".") == 0) || (strcmp (dirnt->d_name, "..") == 0))
+			continue;
+
+		p = fs_join(path, dirnt->d_name);
+
+		if (lstat (p, &buf) != 0) {
+			logWarn("failed to stat %s : %s", p, str_geterror());
+			return -1;
+		}
+
+		size += buf.st_size;
+		if (S_ISDIR (buf.st_mode))
+			size += fs_getDirectorySize(p);
+
+		memory_free(p);
+	}
+
+	if (closedir (dir) != 0)
+		logWarn("Failed to close directory '%s': %s", path, str_geterror());
+
+	return size;
+}
+
+
+long long fs_getSpace(const char* path) {
+	struct stat buf;
+	if (lstat (path, &buf) != 0)
+		return -1;
+
+	if (S_ISDIR (buf.st_mode))
+		return buf.st_size + fs_getDirectorySize(path);
+	else
+		return buf.st_size;
 }

@@ -22,15 +22,12 @@
 #include "status.h"
 #include "common/log.h"
 #include "shares.h"
-#include "common/signal.h"
 
 
 int main(int argc, char **argv)
 {
 	log_init();
 	log_setProgram(file_getShortName(argv[0]));
-
-	signal_installSIGHUPHandler(shares_reload);
 
 	fuse_start(argc, argv);
 

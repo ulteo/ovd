@@ -27,9 +27,9 @@
 typedef void (*sighandler)(int);
 
 
-bool signal_install(sighandler func);
-
-void signal_block();
+bool signal_installSIGHUPHandler(sighandler func);
+long signal_blockSIGHUP(long handle);
+long signal_unblockSIGHUP(long handle);
 
 
 #endif /* SIGNAL_H_ */

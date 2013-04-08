@@ -19,6 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
+#define _GNU_SOURCE
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -28,6 +29,8 @@
 #include "list.h"
 #include "log.h"
 #include "str.h"
+#include <math.h>
+#include <ctype.h>
 
 
 size_t str_len(const char* txt) {
@@ -205,6 +208,75 @@ bool str_toBool(const char* str) {
 
 bool str_toInt(const char* str) {
 	return atoi(str);
+}
+
+
+long long str_toSize(const char* str) {
+	char* temp = str_dup(str);
+	int coef = 0;
+
+	str_trim(temp);
+
+	char lastChar = temp[strlen(temp) - 1];
+	switch (lastChar) {
+	case 'K':
+	case 'k':
+		coef = 3;
+		break;
+
+	case 'M':
+	case 'm':
+		coef = 6;
+		break;
+
+	case 'G':
+	case 'g':
+		coef = 9;
+		break;
+
+	case 'T':
+	case 't':
+		coef = 12;
+		break;
+
+	case 'P':
+	case 'p':
+		coef = 15;
+		break;
+
+	default:
+		if (!isdigit(lastChar)) {
+			logWarn("Invalid value '%s'", temp);
+			return -1;
+		}
+		break;
+	}
+
+	if (!isdigit(lastChar)) {
+		temp[strlen(temp) - 1] = '\0';
+	}
+
+	return (long long)(atol(temp) * exp10(coef));
+}
+
+
+char* str_fromSize(long long size) {
+	char unit[] = " KMGTP";
+	char res[20];
+	int coef;
+
+	coef = log10(size);
+	if (coef > 0)
+		coef /= 3;
+
+	if (coef > 5)
+		coef = 5;
+
+	size /= exp10(coef * 3);
+
+	str_sprintf(res, "%d%c", (unsigned int)size, unit[coef]);
+
+	return str_dup(res);
 }
 
 

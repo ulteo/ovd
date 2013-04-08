@@ -276,6 +276,11 @@ static bool configuration_parseMain(Ini* ini, Configuration* conf) {
 		conf->shareFile = str_dup(value);
 	}
 
+	value = ini_getKey(ini, MAIN_CONFIGURATION_SECTION, MAIN_SHARE_LIST_QUOTA_GRACE);
+	if (value != NULL) {
+		str_unquote(value);
+		conf->shareGrace = str_toSize(value);
+	}
 
 	value = ini_getKey(ini, MAIN_CONFIGURATION_SECTION, MAIN_UNION_CONFIGURATION_KEY);
 	if (value == NULL) {

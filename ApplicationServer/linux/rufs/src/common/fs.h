@@ -42,6 +42,9 @@ bool fs_isdir(const char* path);
 bool fs_mountbind(const char* src, const char* dst);
 bool fs_umount(const char* dst);
 bool fs_setCurrentDir(const char* dir);
+char* fs_getRoot(const char* path);
+char* fs_join(const char* p1, const char* p2);
+long long fs_getSpace(const char* path);
 
 
 #endif

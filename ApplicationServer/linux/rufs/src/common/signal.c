@@ -20,6 +20,7 @@
 
 #include <signal.h>
 #include "signal.h"
+#include "memory.h"
 
 
 
@@ -27,3 +28,26 @@ bool signal_installSIGHUPHandler(sighandler func) {
 	return signal(SIGHUP, func) == SIG_ERR;
 }
 
+
+long signal_blockSIGHUP(long handle) {
+	sigset_t* x = (sigset_t*)handle;
+
+	if (handle == 0)
+		x = memory_new(sigset_t, true);
+
+	sigemptyset (x);
+	sigaddset(x, SIGHUP);
+
+	sigprocmask(SIG_BLOCK, x, NULL);
+
+	return (long)x;
+}
+
+
+long signal_unblockSIGHUP(long handle) {
+	sigset_t* x = (sigset_t*)handle;
+
+	sigprocmask(SIG_UNBLOCK, x, NULL);
+
+	return (long)x;
+}
