@@ -18,6 +18,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#ifndef _CONFIGURATION_H_
+#define _CONFIGURATION_H_
+
 #include "common/list.h"
 #include "common/types.h"
 #include "common/fs.h"
@@ -82,3 +85,5 @@ bool configuration_free(Configuration* conf);
 bool configuration_parse(Configuration* conf);
 void configuration_dump (Configuration* conf);
 
+
+#endif
