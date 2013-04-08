@@ -114,14 +114,6 @@ class Session(AbstractSession):
 			else:
 				self.profile.copySessionStop()
 				
-				desktop_path = os.path.join(self.profile.mountPoint, self.profile.DesktopDir)
-				self.cleanupShortcut(desktop_path)
-				
-				for shortcut in self.installedShortcut:
-					dstFile = os.path.join(self.profile.mountPoint, self.profile.DesktopDir, shortcut)
-					if os.path.exists(dstFile):
-						os.remove(dstFile)
-				
 				if not self.profile.umount():
 					Logger.error("Unable to umount profile at uninstall_client of session "+self.id)
 		
