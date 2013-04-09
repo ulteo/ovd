@@ -89,7 +89,7 @@ a browser
 Summary: Ulteo Open Virtual Desktop - desktop applet
 Group: Applications/System
 BuildArch: noarch
-Requires: java-1.6.0-openjdk, cups, libovd-xclient-area, desktop-file-utils
+Requires: java-1.6.0-openjdk, cups, libovd-xclient-area, desktop-file-utils, ulteo-ovd-integrated-launcher
 # Java can also be provided by packages: java-1.7.0-openjdk  jre-7-linux jre-6-linux
 
 %description -n ulteo-ovd-externalapps-client
