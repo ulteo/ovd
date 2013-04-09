@@ -24,6 +24,8 @@
 #include <windows.h>
 
 #define TITLE_SIZE	150
+#define CONSOLE_WINDOW_CLASS_NAME "ConsoleWindowClass"
+#define CONSOLE_WINDOW_CLASS_SIZE (sizeof(CONSOLE_WINDOW_CLASS_NAME))
 
 PSIZE WindowUtil_getScreenSize();
 BOOL WindowUtil_isToplevel(HWND hwnd);

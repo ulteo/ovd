@@ -122,6 +122,7 @@ BOOL WindowUtil_isFocused(HWND hwnd) {
 	HWND focused_hwnd;
 	HWND child, parent;
 	GUITHREADINFO thread_infos;
+	char className[CONSOLE_WINDOW_CLASS_SIZE];
 
 	thread_infos.cbSize = sizeof(GUITHREADINFO);
 	if (! GetGUIThreadInfo(GetWindowThreadProcessId(hwnd, NULL), &thread_infos)) {
@@ -129,6 +130,10 @@ BOOL WindowUtil_isFocused(HWND hwnd) {
 	}
 
 	focused_hwnd = thread_infos.hwndFocus;
+
+	if (GetClassName(hwnd, className, CONSOLE_WINDOW_CLASS_SIZE) == CONSOLE_WINDOW_CLASS_SIZE - 1)
+		if (strncmp(CONSOLE_WINDOW_CLASS_NAME, className, CONSOLE_WINDOW_CLASS_SIZE) == 0)
+			return (thread_infos.hwndCaret == hwnd);
 
 	if (focused_hwnd == NULL)
 		return FALSE;
