@@ -27,6 +27,7 @@
 
 void sys_exit(int);
 char* sys_getEnv(const char* name);
+pid_t sys_getPID();
 bool sys_exec(List* args, int* status, char** message, bool wait);
 
 

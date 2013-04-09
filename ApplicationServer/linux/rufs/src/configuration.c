@@ -65,6 +65,7 @@ bool configuration_free(Configuration* conf) {
 
 	list_delete(conf->translations);
 	memory_free(conf->shareFile);
+	memory_free(conf->pidFile);
 
 	memory_free(conf);
 	return true;
@@ -274,6 +275,12 @@ static bool configuration_parseMain(Ini* ini, Configuration* conf) {
 	if (value != NULL) {
 		str_unquote(value);
 		conf->shareFile = str_dup(value);
+	}
+
+	value = ini_getKey(ini, MAIN_CONFIGURATION_SECTION, MAIN_PID_FILE);
+	if (value != NULL) {
+		str_unquote(value);
+		conf->pidFile = str_dup(value);
 	}
 
 	value = ini_getKey(ini, MAIN_CONFIGURATION_SECTION, MAIN_SHARE_LIST_QUOTA_GRACE);

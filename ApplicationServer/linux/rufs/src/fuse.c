@@ -841,6 +841,24 @@ static int rufs_release(const char *path, struct fuse_file_info *fi)
 	return 0;
 }
 
+
+static void* rufs_init()
+{
+	char pidData[255];
+
+	logInfo("rufs inited");
+
+	if (config->pidFile != NULL) {
+		int fd = file_open(config->pidFile);
+		str_sprintf(pidData, "%i", sys_getPID());
+
+		file_write(fd, pidData, strlen(pidData));
+	}
+
+	return NULL;
+}
+
+
 static int rufs_fsync(const char *path, int isdatasync,
 		     struct fuse_file_info *fi)
 {
@@ -981,6 +999,7 @@ static struct fuse_operations rufs_oper = {
 	.statfs		= rufs_statfs,
 	.flush		= rufs_flush,
 	.release	= rufs_release,
+	.init		= rufs_init,
 	.fsync		= rufs_fsync,
 #ifdef HAVE_SETXATTR
 	.setxattr	= rufs_setxattr,
@@ -1132,6 +1151,14 @@ int fuse_start(int argc, char** argv) {
 	}
 
 	configuration_dump(config);
+
+	// cleanup pid file
+	if (config->pidFile != NULL && fs_exist(config->pidFile)) {
+		if (! file_delete(config->pidFile)) {
+			logWarn("Failed to delete pid file %s: %s", config->pidFile, str_geterror());
+			return CONF_ERROR;
+		}
+	}
 
 	// load share right
 	if (config->shareFile != NULL) {

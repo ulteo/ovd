@@ -37,6 +37,7 @@
 #define MAIN_BIND_DESTINATION_CONFIGURATION_KEY "bindDestination"
 #define MAIN_SHARE_LIST_CONFIGURATION_KEY "sharesList"
 #define MAIN_SHARE_LIST_QUOTA_GRACE "sharesQuotaGrace"
+#define MAIN_PID_FILE "pidFile"
 
 #define LOG_CONFIGURATION_SECTION "log"
 #define LOG_LEVEL_CONFIGURATION_KEY "level"
@@ -72,6 +73,7 @@ typedef struct _Configuration {
 	char* user;
 	char* configFile;
 	char* shareFile;
+	char* pidFile;
 	long long shareGrace;
 	bool bind;
 	char* source_path;

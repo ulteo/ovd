@@ -56,6 +56,10 @@ void file_close(int fd) {
 	close(fd);
 }
 
+bool file_delete(const char* filename) {
+	return unlink(filename) == 0;
+}
+
 size_t file_read(int fd, char* buffer, size_t size) {
 	size_t nbRead = read(fd, buffer, size);
 	if (nbRead == -1)

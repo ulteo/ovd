@@ -28,6 +28,7 @@
 
 int file_open(const char* filename);
 void file_close(int fd);
+bool file_delete(const char* filename);
 int file_write(int fd, char* buffer, size_t size);
 off_t file_seek(int fd, off_t offset);
 off_t file_getOffset(int fd);

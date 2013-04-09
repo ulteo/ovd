@@ -37,6 +37,9 @@ char* sys_getEnv(const char* name) {
 	return getenv(name);
 }
 
+pid_t sys_getPID() {
+	return getpid();
+}
 
 bool sys_exec(List* args, int* status, char** message, bool wait) {
 	pid_t pid = 0;
