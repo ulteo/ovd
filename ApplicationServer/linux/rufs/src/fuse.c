@@ -1134,7 +1134,7 @@ int fuse_start(int argc, char** argv) {
 	configuration_dump(config);
 
 	// load share right
-	if (config->shareFile[0]) {
+	if (config->shareFile != NULL) {
 		shares_init(config);
 		shares_reload();
 		signal_installSIGHUPHandler(shares_signalReload);
