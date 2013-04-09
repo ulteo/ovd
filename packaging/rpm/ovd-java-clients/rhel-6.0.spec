@@ -96,8 +96,9 @@ Requires: java-1.6.0-openjdk, cups, libovd-xclient-area, desktop-file-utils
 This application is used in the Open Virtual Desktop to display the user session and launch applications via an all integrated client.
 
 %files -n ulteo-ovd-externalapps-client
-%defattr(-,root,root)
-/usr/bin/OVDExternalAppsClient
+%defattr(0755,root,root)
+%{_bindir}/OVDExternalAppsClient
+%defattr(0644,root,root)
 /usr/share/java/OVDExternalAppsClient.jar
 
 ###########################################
