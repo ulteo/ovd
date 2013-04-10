@@ -265,6 +265,11 @@ char* str_fromSize(long long size) {
 	char res[20];
 	int coef;
 
+	if (size < 1000) {
+		str_sprintf(res, "%d", (unsigned int)size);
+		return str_dup(res);
+	}
+
 	coef = log10(size);
 	if (coef > 0)
 		coef /= 3;
