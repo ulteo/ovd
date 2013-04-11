@@ -697,7 +697,7 @@
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="unsystem_set_default_users_group">
+		<operation name="system_unset_default_users_group">
 			<input message="urn:voidRequest"/>
 			<output message="urn:Boolean"/>
 		</operation>
@@ -1715,8 +1715,8 @@
 			</output>
 		</operation>
 		
-		<operation name="unsystem_set_default_users_group">
-			<soap:operation soapAction="urn:OvdAdmin#unsystem_set_default_users_group"/>
+		<operation name="system_unset_default_users_group">
+			<soap:operation soapAction="urn:OvdAdmin#system_unset_default_users_group"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
