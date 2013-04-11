@@ -2112,6 +2112,9 @@ class OvdAdminSoap {
 		$u['settings_default'] = array();
 		$session_prefs_categs = array('session_settings_defaults', 'remote_desktop_settings',  'remote_applications_settings');
 		foreach ($session_prefs_categs as $session_prefs_categ) {
+			$u['settings'][$session_prefs_categ] = array();
+			$u['settings_default'][$session_prefs_categ] = array();
+			
 			$session_prefs = $this->prefs->getElements('general', $session_prefs_categ);
 			foreach($session_prefs as $session_pref) {
 				$e = self::pref_element2dict($session_pref);
