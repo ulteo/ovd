@@ -203,7 +203,14 @@ bool str_trim(char* str) {
 }
 
 bool str_toBool(const char* str) {
-	return ((strcasecmp(str, "1") == 0) || (strcasecmp(str, "true") == 0) || (strcasecmp(str, "yes") == 0));
+	char* t = strdup(str);
+	bool res;
+
+	str_trim(t);
+	res = ((strcasecmp(t, "1") == 0) || (strcasecmp(t, "true") == 0) || (strcasecmp(t, "yes") == 0));
+	memory_free(t);
+
+	return res;
 }
 
 bool str_toInt(const char* str) {
