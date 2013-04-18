@@ -33,6 +33,7 @@ from ovd.Role.Role import Role as AbstractRole
 from Config import Config
 from HTGroup import HTGroup
 from FSBackend import FSBackend
+from HTGroup import HTGroup
 from Share import Share
 from User import User
 
