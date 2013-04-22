@@ -285,17 +285,18 @@ bool shares_quotaExceed(const char* name) {
 	bool res;
 
 	if (shareList == NULL)
-		return true;
+		return false;
 
 	pthread_mutex_lock(&shareMutex);
 
 	s = shares_get(name);
-	if (s == NULL)
-		res = true;
-	else
+	if (s == NULL || s->quota == 0)
+		res = false;
+	else {
 		res = s->spaceUsed > (s->quota + shareList->shareGrace);
 
-	logDebug("check exceed space used(%lli) quota(%lli)", s->spaceUsed, (s->quota + shareList->shareGrace));
+		logDebug("check exceed space used(%lli) quota(%lli)", s->spaceUsed, (s->quota + shareList->shareGrace));
+	}
 
 	pthread_mutex_unlock(&shareMutex);
 
