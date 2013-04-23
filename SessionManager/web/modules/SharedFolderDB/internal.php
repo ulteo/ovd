@@ -24,6 +24,7 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class SharedFolderDB_internal  extends SharedFolderDB {
 	public static $table = 'shared_folder';
+	public static $table_publication = 'shared_folder_publication';
 	
 	public static function isDefault() {
 		return true;
@@ -53,6 +54,14 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 		);
 		
 		$ret = $SQL->buildTable(self::$table, $SharedFolder_table_structure, array('id'));
+		
+		$SharedFolder_publication_table_structure = array(
+			'id'			=>	'varchar(255)',
+			'group'			=>	'varchar(255)',
+			'mode'			=>	'varchar(4)',
+		);
+		
+		$ret = $SQL->buildTable(self::$table_publication, $SharedFolder_publication_table_structure, array());
 		
 		Logger::debug('main', "SharedFolderDB::internal::init SQL table '".self::$table."' created");
 		return true;
@@ -132,14 +141,15 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 	
 	public function importFromUsergroup($group_id_) {
 		Logger::debug('main', "SharedFolderDB::internal::importFromUsergroup($group_id_)");
-		$liaisons = Abstract_Liaison::load('UserGroupSharedFolder', $group_id_, NULL);
-		if (is_array($liaisons) == false) {
-			Logger::error('main', "SharedFolderDB::internal::importFromUsergroup($group_id_) problem with liaison");
-			return false;
-		}
+		$SQL = SQL::getInstance();
+		
+		$SQL->DoQuery('SELECT * FROM #1 as s, #2 as n, #3 as p WHERE s.@4 = n.@4 AND s.@4 = p.@4 AND @5 = %6', 
+			self::$table, Abstract_Network_Folder::$table, self::$table_publication, 'id', 'group', $group_id_);
+		$rows = $SQL->FetchAllResults();
+
 		$sharedfolders = array();
-		foreach ($liaisons as $liaison) {
-			$sharedfolder = $this->import($liaison->group);
+		foreach ($rows as $row) {
+			$sharedfolder = self::generateFromRow($row);
 			if (! is_object($sharedfolder))
 				continue;
 			
@@ -235,8 +245,8 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 	public function invalidate($sharedfolder_id_) {
 		Logger::debug('main', "SharedFolderDB::internal::invalidate($sharedfolder_id_)");
 		
-		Abstract_Liaison::delete('UserGroupSharedFolder', NULL, $sharedfolder_id_);
 		$SQL = SQL::getInstance();
+		$SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3', self::$table_publication, 'id', $sharedfolder_id_);
 		$SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3 LIMIT 1', self::$table, 'id', $sharedfolder_id_);
 		
 		return true;
@@ -282,7 +292,9 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 		return true;
 	}
 	
-	public function addUserGroupToSharedFolder($usergroup_, $sharedfolder_) {
+	public function addUserGroupToSharedFolder($usergroup_, $sharedfolder_, $mode_) {
+		$SQL = SQL::getInstance();
+		
 		if (! is_object($usergroup_)) {
 			Logger::error('main', "SharedFolderDB::internal::addUserGroupToSharedFolder, parameter 'usergroup' is not correct, usergroup: ".serialize($usergroup_));
 			return false;
@@ -291,10 +303,12 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 			Logger::error('main', "SharedFolderDB::internal::addUserGroupToSharedFolder, parameter 'sharedfolder' is not correct, NetworkFolder: ".serialize($sharedfolder_));
 			return false;
 		}
-		return Abstract_Liaison::save('UserGroupSharedFolder', $usergroup_->getUniqueID(), $sharedfolder_->id);
+		return $SQL->DoQuery('INSERT INTO #1 (@2,@3,@4) VALUES (%5,%6,%7)', self::$table_publication, 'id', 'group', 'mode', $sharedfolder_->id, $usergroup_->getUniqueID(), $mode_);
 	}
 	
 	public function delUserGroupToSharedFolder($usergroup_, $sharedfolder_) {
+		$SQL = SQL::getInstance();
+		
 		if (! is_object($usergroup_)) {
 			Logger::error('main', "SharedFolderDB::internal::delUserGroupToSharedFolder, parameter 'usergroup' is not correct, usergroup: ".serialize($usergroup_));
 			return false;
@@ -303,7 +317,32 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 			Logger::error('main', "SharedFolderDB::internal::delUserGroupToSharedFolder, parameter 'sharedfolder' is not correct, networkfolder_: ".serialize($sharedfolder_));
 			return false;
 		}
-		return Abstract_Liaison::delete('UserGroupSharedFolder', $usergroup_->getUniqueID(), $sharedfolder_->id);
+		
+		return $SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3 AND @4 = %5LIMIT 1', self::$table_publication, 'id', $sharedfolder_->id, 'group', $usergroup_->getUniqueID());
+	}
+	
+	public function get_usersgroups($sharedfolder_) {
+		Logger::debug('main', 'SharedFolderDB::internal::get_usersgroups('.$sharedfolder_->id.')');
+		$SQL = SQL::getInstance();
+		
+		$SQL->DoQuery('SELECT * FROM #1 WHERE @2= %3', self::$table_publication, 'id', $sharedfolder_->id);
+		$rows = $SQL->FetchAllResults();
+		
+		$groups = array();
+		foreach ($rows as $row) {
+			$groups[$row['group']] = $row['mode'];
+		}
+		
+		return $groups;
+	}
+	
+	public function clear_publications() {
+		Logger::debug('main', "SharedFolderDB::internal::clear_publications");
+               
+		$SQL = SQL::getInstance();
+		$SQL->DoQuery('DELETE FROM #1', self::$table_publication);
+		
+		return true;
 	}
 	
 	public function chooseFileServer() {

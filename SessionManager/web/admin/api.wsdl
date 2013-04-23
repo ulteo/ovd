@@ -272,6 +272,12 @@
 		<part name="share_id" type="xsd:string"/>
 	</message>
 	
+	<message name="GroupOnSharedFolderMessageAdd">
+		<part name="group_id" type="xsd:string"/>
+		<part name="share_id" type="xsd:string"/>
+		<part name="mode" type="xsd:string"/>
+	</message>
+	
 	<message name="PublicationMessage">
 		<part name="users_group" type="xsd:string"/>
 		<part name="applications_group" type="xsd:string"/>
@@ -818,7 +824,7 @@
 		</operation>
 		
 		<operation name="shared_folder_add_group">
-			<input message="urn:GroupOnSharedFolderMessage"/>
+			<input message="urn:GroupOnSharedFolderMessageAdd"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		

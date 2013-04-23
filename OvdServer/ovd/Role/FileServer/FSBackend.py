@@ -19,6 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
+import signal
 import errno
 
 from ovd.Logger import Logger
@@ -30,6 +31,60 @@ from Config import Config
 class FSBackend:
 	def __init__(self):
 		self.path = {}
+		self.pid = None
+		self.sharesFile = "/etc/ulteo/rufs/shares.conf"
+		self.pidFile = "/tmp/FSBackend.pid"
+	
+	
+	def add(self, share, quota, activated):
+		if self.pid is None:
+			try:
+				f = open(self.pidFile, "r")
+				self.pid = f.readline()
+			except Exception, e:
+				Logger.error("Failed to get FSBackend pid"%(str(e)))
+				return False
+		
+		try:
+			# TODO use a file lock
+			f = open(self.sharesFile, "rw")
+			self.lines = f.readlines
+			out = ""
+			found = False
+			close(f)
+			
+			for line in lines:
+				compo = line.split(',')
+				if len(compo) != 3:
+					Logger.error("The following line '%s' is not properly formated, removing it")
+					continue
+				
+				if shate == compo[0].strip():
+					# updating entry
+					l = "%s, %s, %s\n"%(share, quota, str(bool(activated)))
+					data += l
+					found = True
+					continue
+				
+				# we restore the entry
+				data += line
+				data += "\n"
+			
+			if not found:
+				# we append a new entry
+				l = "%s, %s, %s\n"%(share, quota, str(bool(activated)))
+				data += l
+			
+			f = open(self.sharesFile, "w+")
+			f.write(data)
+			
+			# force share data relaod
+			os.kill(self.pid, signal.SIGHUP)
+			
+			
+		except Exception, e:
+			Logger.error("Failed to add entry for the share '%s': %s", share, str(e))
+		
 	
 	
 	def start(self):

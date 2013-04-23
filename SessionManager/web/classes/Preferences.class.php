@@ -467,6 +467,11 @@ class Preferences {
 		$c_user_profile = new ConfigElement_select('enable_profiles', 1);
 		$c_user_profile->setContentAvailable(array(0, 1));
 		$this->add($c_user_profile,'general','session_settings_defaults');
+		
+		$c = new ConfigElement_input('quota', 0);
+		$c_user_profile->addReference('1', $c);
+		$this->add($c,'general','session_settings_defaults');
+		
 		$c = new ConfigElement_select('auto_create_profile', 1);
 		$c->setContentAvailable(array(0, 1));
 		$c_user_profile->addReference('1', $c);

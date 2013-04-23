@@ -443,7 +443,8 @@ class OvdAdminSoap {
 			$mods_enable = $prefs->get('general', 'module_enable');
 			$new_mods_enable = $new_prefs->get('general', 'module_enable');
 			if (in_array('SharedFolderDB', $mods_enable) || in_array('SharedFolderDB', $new_mods_enable)) {
-				Abstract_Liaison::delete('UserGroupSharedFolder', NULL, NULL);
+				$sharedfolderdb = SharedFolderDB::getInstance();
+				$sharedfolderdb->clear_publications();
 			}
 		}
 		
@@ -600,11 +601,14 @@ class OvdAdminSoap {
 					);
 					
 					
-					$groups = $networkfolder->getUserGroups();
+					$groups = $networkfolder->getPublishedUserGroups();
 					if (is_array($groups) && count($groups) > 0) {
 						$nf['groups'] = array();
-						foreach ($groups as $a_group) {
-							$nf['groups'][$a_group->getUniqueID()] = $a_group->name;
+						foreach ($groups as $mode => $groups2) {
+							$nf['groups'][$mode] = array();
+							foreach ($groups2 as $group) {
+								$nf['groups'][$mode][$group->getUniqueID()] = $group->name;
+							}
 						}
 					}
 					
@@ -3091,11 +3095,14 @@ class OvdAdminSoap {
 			'status' => $sharedfolder->status,
 		);
 		
-		$groups = $sharedfolder->getUserGroups();
+		$groups = $sharedfolder->getPublishedUserGroups();
 		if (count($groups) > 0) {
 			$s['groups'] = array();
-			foreach ($groups as $group) {
-				$s['groups'][$group->getUniqueID()] = $group->name;
+			foreach ($groups as $mode => $groups2) {
+				$s['groups'][$mode] = array();
+				foreach ($groups2 as $group) {
+					$s['groups'][$mode][$group->getUniqueID()] = $group->name;
+				}
 			}
 		}
 		
@@ -3204,11 +3211,16 @@ class OvdAdminSoap {
 		return ($ret === true);
 	}
 	
-	public function shared_folder_add_group($group_id_, $share_id_) {
+	public function shared_folder_add_group($group_id_, $share_id_, $mode_) {
 		$this->check_authorized('manageSharedFolders');
 		
 		if (! Preferences::moduleIsEnabled('SharedFolderDB')) {
 			Logger::error('api', 'Shared folder management is not enabled');
+			return false;
+		}
+		
+		if (! in_array($mode_, array('ro', 'rw'))) {
+			Logger::error('api', 'Invalid "mode" argument');
 			return false;
 		}
 		
@@ -3226,7 +3238,7 @@ class OvdAdminSoap {
 			return false;
 		}
 		
-		$ret = $sharedfolder->addUserGroup($group);
+		$ret = $sharedfolder->addUserGroup($group, $mode_);
 		return ($ret === true);
 	}
 	
@@ -3742,18 +3754,6 @@ class OvdAdminSoap {
 					return 'Session "'.$group_.'" does not exist';
 				break;
 			
-			case 'UserGroupSharedFolder':
-				$sharedfolderdb = SharedFolderDB::getInstance();
-				$userGroupDB = UserGroupDB::getInstance();
-				$buf = $userGroupDB->import($element_);
-				if (! is_object($buf))
-					return 'UserGroup "'.$element_.'" does not exist';
-				
-				$buf = $sharedfolderdb->import($group_);
-				if (! $buf)
-					return 'SharedFolder "'.$group_.'" does not exist';
-				break;
-			
 			case 'UserProfile':
 				$profiledb = ProfileDB::getInstance();
 				$userDB = UserDB::getInstance();
@@ -3810,9 +3810,6 @@ class OvdAdminSoap {
 		$liaisons_types = array('ApplicationServer', 'AppsGroup', 'ApplicationMimeType', 'ServerSession', 'UsersGroup', 'UsersGroupApplicationsGroup');
 		if (Preferences::moduleIsEnabled('ProfileDB')) {
 			$liaisons_types []= 'UserProfile';
-		}
-		if (Preferences::moduleIsEnabled('SharedFolderDB')) {
-			$liaisons_types []= 'UserGroupSharedFolder';
 		}
 		if (Preferences::moduleIsEnabled('UsersGroupDBDynamic') || Preferences::moduleIsEnabled('UsersGroupDBDynamicCached')) {
 			$liaisons_types []= 'UsersGroupCached';
