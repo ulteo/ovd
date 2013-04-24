@@ -53,10 +53,10 @@ class FSBackend:
 		try:
 			# TODO use a file lock
 			f = open(self.sharesFile, "rw")
-			self.lines = f.readlines
+			lines = f.readlines()
 			out = ""
 			found = False
-			close(f)
+			f.close()
 			
 			for line in lines:
 				compo = line.split(',')
@@ -64,31 +64,31 @@ class FSBackend:
 					Logger.error("The following line '%s' is not properly formated, removing it")
 					continue
 				
-				if shate == compo[0].strip():
+				if share == compo[0].strip():
 					# updating entry
-					l = "%s, %s, %s\n"%(share, quota, str(bool(activated)))
-					data += l
+					out += "%s, %s, %s\n"%(share, quota, str(bool(activated)))
 					found = True
 					continue
 				
 				# we restore the entry
-				data += line
-				data += "\n"
+				out += line
 			
 			if not found:
 				# we append a new entry
-				l = "%s, %s, %s\n"%(share, quota, str(bool(activated)))
-				data += l
+				out += "%s, %s, %s\n"%(share, quota, str(bool(activated)))
 			
 			f = open(self.sharesFile, "w+")
-			f.write(data)
+			f.write(out)
+			f.close()
 			
 			# force share data relaod
 			os.kill(self.pid, signal.SIGHUP)
+			return True
 			
 			
 		except Exception, e:
-			Logger.error("Failed to add entry for the share '%s': %s", share, str(e))
+			Logger.error("Failed to add entry for the share '%s': %s"%(share, str(e)))
+			return False
 		
 	
 	
