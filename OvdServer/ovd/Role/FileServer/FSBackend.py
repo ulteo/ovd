@@ -61,7 +61,13 @@ class FSBackend:
 			for line in lines:
 				compo = line.split(',')
 				if len(compo) != 3:
-					Logger.error("The following line '%s' is not properly formated, removing it")
+					# Check comment
+					strippedLine = line.strip()
+					if strippedLine.startswith("#") or strippedLine.startswith(";") or len(strippedLine) == 0:
+						out += line
+						continue
+
+					Logger.error("The following line '%s' is not properly formated, removing it"%(line))
 					continue
 				
 				if share == compo[0].strip():
