@@ -96,7 +96,7 @@ class Dialog(AbstractDialog):
 			return self.req_answer(doc)
 		
 		
-		share = Share(share_id, Config.spool)
+		share = Share(share_id, Config.backendSpool)
 		if self.role_instance.shares.has_key(share_id) or share.status() is not Share.STATUS_NOT_EXISTS:
 			doc = Document()
 			rootNode = doc.createElement('error')
@@ -138,7 +138,7 @@ class Dialog(AbstractDialog):
 		
 		if not self.role_instance.shares.has_key(share_id):
 			Logger.debug("Unknown share '%s'"%(share_id))
-			return self.share2xml(Share(share_id, Config.spool))
+			return self.share2xml(Share(share_id, Config.backendSpool))
 		
 		share = self.role_instance.shares[share_id]
 		share.delete()
@@ -221,7 +221,7 @@ class Dialog(AbstractDialog):
 		for share_id in shares:
 			if not self.role_instance.shares.has_key(share_id):
 				somethingWrong = True
-				response = self.share2xml(Share(share_id, Config.spool))
+				response = self.share2xml(Share(share_id, Config.backendSpool))
 				break
 			
 			share = self.role_instance.shares[share_id]

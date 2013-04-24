@@ -118,13 +118,13 @@ class Role(AbstractRole):
 	
 	
 	def cleanup_repository(self):
-		cmd = 'chown -R %s:%s "%s"'%(Config.uid, Config.gid, Config.spool)
+		cmd = 'chown -R %s:%s "%s"'%(Config.uid, Config.gid, Config.backendSpool)
 		p = System.execute(cmd)
 		if p.returncode is not 0:
 			Logger.debug("FS: following command '%s' returned %d => %s"%(cmd, p.returncode, p.stdout.read()))
 			return False
 		
-		cmd = 'chmod -R u=rwX,g=rwX,o-rwx "%s"'%(Config.spool)
+		cmd = 'chmod -R u=rwX,g=rwX,o-rwx "%s"'%(Config.backendSpool)
 		p = System.execute(cmd)
 		if p.returncode is not 0:
 			Logger.debug("FS: following command '%s' returned %d => %s"%(cmd, p.returncode, p.stdout.read()))
@@ -161,10 +161,10 @@ class Role(AbstractRole):
 	def get_existing_shares():
 		shares = {}
 		
-		for f in glob.glob(Config.spool+"/*"):
+		for f in glob.glob(Config.backendSpool+"/*"):
 			name = os.path.basename(f)
 			
-			share = Share(name, Config.spool)
+			share = Share(name, Config.backendSpool)
 			shares[name] = share
 			
 		return shares
@@ -200,7 +200,7 @@ class Role(AbstractRole):
 	
 	
 	def get_disk_size_infos(self):
-		stats = os.statvfs(Config.spool)
+		stats = os.statvfs(Config.backendSpool)
 		free_bytes = stats[statvfs.F_BSIZE] * stats[statvfs.F_BFREE] 
 		#avail_bytes = stats[statvfs.F_BSIZE] * stats[statvfs.F_BAVAIL]
 		total_bytes = stats[statvfs.F_BSIZE] * stats[statvfs.F_BLOCKS]

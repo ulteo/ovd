@@ -32,6 +32,7 @@ class Config:
 	uid = None
 	gid = None
 	spool = None
+	backendSpool = None
 	
 	dav_user = "www-data"
 	dav_uid = None
@@ -61,6 +62,7 @@ class Config:
 		cls.uid = infos[2]
 		cls.gid = infos[3]
 		cls.spool = infos[5]
+		cls.backendSpool = cls.spool+".real"
 		
 		if not os.path.isdir(cls.spool):
 			Logger.info("FileServer Config failed: no such directory '%s'"%(cls.spool))
