@@ -365,12 +365,6 @@
     <jar destfile="jars/ulteo-applet.jar" basedir="build">
       <include name="**" />
     </jar>
-    <jar destfile="jars/CheckJava.jar" basedir="build/">
-      <include name="org/ulteo/ovd/applet/CheckJava.class"/>
-      <manifest>
-        <attribute name="Main-Class" value="org.ulteo.ovd.applet.CheckJava"/>
-      </manifest>
-    </jar>
     <signjar keystore="${keystore.path}" storepass="${keystore.password}" alias="${keystore.alias}"
              destdir="jars" >
         <fileset dir="required_libraries" includes="jpedal.jar log4j-1.2.jar" />
@@ -381,7 +375,7 @@
   <target name="applet.install" description="install applets"
           depends="applet.jar">
     <copy todir="${applets.dir}">
-      <filelist dir="jars" files="jpedal.jar log4j-1.2.jar ulteo-applet.jar CheckJava.jar" />
+      <filelist dir="jars" files="jpedal.jar log4j-1.2.jar ulteo-applet.jar" />
     </copy>
   </target>
 
