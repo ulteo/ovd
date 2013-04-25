@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <!--
- Copyright (C) 2008-2012 Ulteo SAS
+ Copyright (C) 2008-2013 Ulteo SAS
  http://www.ulteo.com
  Author Gauvain POCENTEK <gpocentek@linutop.com> 2008-2009
  Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
  Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
  Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
  Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
- Author David LECHEVALIER <david@ulteo.com> 2010-2011
+ Author David LECHEVALIER <david@ulteo.com> 2010, 2013
  Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  Author Yann HODIQUE <y.hodique@ulteo.com> 2012
  Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
@@ -368,6 +368,9 @@
           todir="build/resources" failonerror="false" />
     <jar destfile="jars/ulteo-applet.jar" basedir="build">
       <include name="**" />
+        <manifest>
+          <attribute name="Trusted-Library" value="true" />
+        </manifest>
     </jar>
     <signjar keystore="${keystore.path}" storepass="${keystore.password}" alias="${keystore.alias}"
              destdir="jars" >
