@@ -326,6 +326,10 @@
         <pathelement location="required_libraries/commons-logging-1.1.1.jar" />
       </classpath>
     </javac>
+    <unjar dest="build">
+      <filelist dir="required_libraries"
+                files="log4j-1.2.jar, jpedal.jar" />
+    </unjar>
     <exec executable="make" failonerror="true" dir="windowsPathsJNI">
        <env key="JAVAHOME"  path="${java.home}/.." />
        <env key="BINPREFIX" value="${mingw32.prefix}" />
