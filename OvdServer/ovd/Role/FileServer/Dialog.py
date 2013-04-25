@@ -182,9 +182,15 @@ class Dialog(AbstractDialog):
 			if len(user) == 0 or len(password) == 0:
 				raise Exception("empty parameters")
 			
-			shares = []
+			shares = {}
 			for node in rootNode.getElementsByTagName("share"):
-				shares.append(node.getAttribute("id"))
+				shareID = node.getAttribute("id")
+				shareQuota = node.getAttribute("quota")
+				shareMode = node.getAttribute("mode")
+				
+				shares[shareID] = {}
+				shares[shareID]["quota"] = shareQuota
+				shares[shareID]["mode"] = shareMode
 		
 		except Exception, err:
 			Logger.warn("Invalid xml input: "+str(err))
@@ -225,12 +231,22 @@ class Dialog(AbstractDialog):
 				break
 			
 			share = self.role_instance.shares[share_id]
-			if not share.add_user(user):
+			if not share.add_user(user, shares[share_id]["mode"]):
 				somethingWrong = True
 				doc = Document()
 				rootNode = doc.createElement('error')
 				rootNode.setAttribute("id", "system_error")
 				rootNode.setAttribute("msg", "share cannot enable user")
+				doc.appendChild(rootNode)
+				response = self.req_answer(doc)
+				break
+			
+			if not self.role_instance.FSBackend.add(share_id, shares[share_id]["quota"], True):
+				somethingWrong = True
+				doc = Document()
+				rootNode = doc.createElement('error')
+				rootNode.setAttribute("id", "system_error")
+				rootNode.setAttribute("msg", "FSBackend failed to enable share")
 				doc.appendChild(rootNode)
 				response = self.req_answer(doc)
 				break

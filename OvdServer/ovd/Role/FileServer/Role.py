@@ -223,7 +223,11 @@ class Role(AbstractRole):
 			shareNode.setAttribute("id", share_id)
 			shareNode.setAttribute("status", str(share.status()))
 			
-			for user in share.users:
+			for user in share.ro_users:
+				userNode = doc.createElement("user")
+				userNode.setAttribute("login", user)
+				shareNode.appendChild(userNode)
+			for user in share.rw_users:
 				userNode = doc.createElement("user")
 				userNode.setAttribute("login", user)
 				shareNode.appendChild(userNode)

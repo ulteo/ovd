@@ -653,10 +653,11 @@ class Server {
 		$node = $dom->createElement('session');
 		$node->setAttribute('login', $login_);
 		$node->setAttribute('password', $password_);
-		foreach ($netfolders_ as $netfolder => $quota) {
+		foreach ($netfolders_ as $netfolder => $data) {
 			$share_node = $dom->createElement('share');
 			$share_node->setAttribute('id', $netfolder);
-			$share_node->setAttribute('quota', $quota);
+			$share_node->setAttribute('quota', $data['quota']);
+			$share_node->setAttribute('mode', $data['mode']);
 			$node->appendChild($share_node);
 		}
 		$dom->appendChild($node);

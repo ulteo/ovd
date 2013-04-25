@@ -42,11 +42,24 @@ class HTAccess:
 			if len(self.groups) == 0:
 				f.write("deny from all")
 			else:
-				f.write("require group ")
+				f.write("<LimitExcept PUT POST DELETE MKCOL MOVE>\n")
+				f.write("\trequire group")
+				
+				for group in self.groups:
+                                	f.write(" %s_rw"%(group))
+					f.write(" %s_ro"%(group))
+				
+				f.write("\n")
+				f.write("</LimitExcept>\n")
+				
+				f.write("<Limit PUT POST DELETE MKCOL MOVE>\n")
+				f.write("\trequire group")
+				for group in self.groups:
+					f.write(" %s_rw"%(group))
+				f.write("\n")
+				
+				f.write("</Limit>\n")
 			
-			for group in self.groups:
-				f.write(" %s"%(group))
-			f.write("\n")
 			f.close()
 		
 		except IOError, err:

@@ -108,7 +108,15 @@ function show_manage($sharedfolder_id_) {
 	$available_groups = array();
 	$used_groups = array();
 	if ($sharedfolder->hasAttribute('groups')) {
-		$used_groups = $sharedfolder->getAttribute('groups');
+		$used_groups = array();
+		$mods_by_group = array();
+		$groups2 = $sharedfolder->getAttribute('groups');
+		foreach($groups2 as $mode => $groups3) {
+			foreach($groups3 as $group_id => $group_name) {
+				$used_groups[$group_id] = $group_name;
+				$mods_by_group[$group_id] = $mode;
+			}
+		}
 	}
 	foreach ($all_groups as $group) {
 		if (array_key_exists($group->id, $used_groups) === false) {
@@ -163,6 +171,7 @@ function show_manage($sharedfolder_id_) {
 	foreach ($used_groups as $group_id => $group_name) {
 		echo '<tr>';
 		echo '<td><a href="usersgroup.php?action=manage&amp;id='.$group_id.'">'.$group_name.'</a></td>';
+		echo '<td>'.$mods_by_group[$group_id].'</td>';
 		if ($can_manage_sharedfolders) {
 			echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this shared folder access?').'\');">';
 			echo '<input type="hidden" name="name" value="SharedFolder_ACL" />';
@@ -183,6 +192,11 @@ function show_manage($sharedfolder_id_) {
 		echo '<select name="usergroup_id">';
 		foreach($available_groups as $group)
 			echo '<option value="'.$group->id.'" >'.$group->name.'</option>';
+		echo '</select>';
+		echo '</td><td>';
+		echo '<select name="mode">';
+		echo '<option value="rw" >'._('Read-write').'</option>';
+		echo '<option value="ro" >'._('Read only').'</option>';
 		echo '</select>';
 		echo '</td><td><input type="submit" value="'._('Add access to this shared folder').'" /></td>';
 		echo '</form></tr>';

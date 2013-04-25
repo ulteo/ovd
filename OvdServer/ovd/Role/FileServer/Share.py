@@ -41,7 +41,8 @@ class Share:
 		self.name = name
 		self.directory = directory + "/" + name
 		self.group = "ovd_share_"+self.name
-		self.users = []
+		self.ro_users = []
+		self.rw_users = []
 		self.htaccess = HTAccess(self.directory)
 		
 		self.active = False
@@ -97,15 +98,16 @@ class Share:
 		return True
 	
 	
-	def enable(self):
-		cmd = "groupadd  %s"%(self.group)
-		p = System.execute(cmd)
-		if p.returncode is not 0:
-			Logger.error("FS: unable to create group")
-			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
-			return False
+	def enable(self, mode):
+		for i in ['ro', 'rw']:
+			cmd = "groupadd  %s_%s"%(self.group, i)
+			p = System.execute(cmd)
+			if p.returncode is not 0:
+				Logger.error("FS: unable to create group")
+				Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
+				return False
 		
-		cmd = 'net usershare add %s "%s" %s %s:f,Everyone:d'%(self.name, self.directory, self.name, self.group)
+		cmd = 'net usershare add %s "%s" %s %s_ro:r,%s_rw:f,Everyone:d'%(self.name, self.directory, self.name, self.group, self.group)
 		p = System.execute(cmd)
 		if p.returncode is not 0:
 			Logger.error("FS: unable to add share")
@@ -144,13 +146,13 @@ class Share:
 			Logger.error("FS: unable to del share")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 		
-		
-		cmd = "groupdel  %s"%(self.group)
-		p = System.execute(cmd)
-		if p.returncode is not 0:
-			ret = False
-			Logger.error("FS: unable to del group")
-			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
+		for i in ['rw', 'ro']:
+			cmd = "groupdel  %s_%s"%(self.group, i)
+			p = System.execute(cmd)
+			if p.returncode is not 0:
+				ret = False
+				Logger.error("FS: unable to del group")
+				Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 		
 		self.do_right_normalization()
 		
@@ -173,29 +175,39 @@ class Share:
 			Logger.debug("FS: following command '%s' returned %d => %s"%(cmd, p.returncode, p.stdout.read()))
 	
 	
-	def add_user(self, user):
+	def add_user(self, user, mode):
 		if not self.active:
-			self.enable()
+			self.enable(mode)
 		
-		cmd = "adduser %s %s"%(user, self.group)
+		cmd = "adduser %s %s_%s"%(user, self.group, mode)
 		p = System.execute(cmd)
 		if p.returncode is not 0:
 			Logger.error("FS: unable to add user in group")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 			return False
 		
-		self.users.append(user)
 		htgroup = HTGroup(Config.dav_group_file)
-		htgroup.add(user, self.group)
+		
+		if mode == 'rw':
+			self.rw_users.append(user)
+			htgroup.add(user, self.group+"_rw")
+		else:
+			self.ro_users.append(user)
+			htgroup.add(user, self.group+"_ro")
+
 		return True
 	
 	
 	def del_user(self, user):
-		if user not in self.users:
+		if user not in self.ro_users and user not in self.rw_users:
 			return True
 		
 		ret = True
-		cmd = "deluser %s %s"%(user, self.group)
+		if user in self.ro_users:
+			cmd = "deluser %s %s_ro"%(user, self.group)
+		else:
+			cmd = "deluser %s %s_rw"%(user, self.group)
+		
 		p = System.execute(cmd)
 		if p.returncode is not 0:
 			ret = False
@@ -203,14 +215,19 @@ class Share:
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 		
 		htgroup = HTGroup(Config.dav_group_file)
-		htgroup.delete(user, self.group)
 		
-		self.users.remove(user)
-		if len(self.users) == 0:
+		if user in self.ro_users:
+			self.ro_users.remove(user)
+			htgroup.delete(user, self.group+"_ro")
+		if user in self.rw_users:
+			self.rw_users.remove(user)
+			htgroup.delete(user, self.group+"_rw")
+		
+		if (len(self.ro_users) + len(self.rw_users)) == 0:
 			return self.disable()
 		
 		return True
 	
 	
 	def has_user(self, user):
-		return (user in self.users)
+		return (user in self.ro_users) or (user in self.rw_users)
