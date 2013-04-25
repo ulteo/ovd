@@ -449,6 +449,7 @@ class Preferences_admin {
 			'AuthMethod_Token_login_attribute_name' => _('Token XML login attribute name'),
 			
 			'SessionManagement_internal_generate_aps_login' => _("Which login should be used for the ApplicationServer's generated user?"), 
+			'SessionManagement_internal_generate_aps_password' => _("Which password should be used for the ApplicationServer's generated user?"),
 			
 			'SessionManagement_novell_dlu' => _('Manage users by ZENworks DLU instead of native method'),
 			
@@ -629,6 +630,10 @@ class Preferences_admin {
 			
 			'SessionManagement_internal_generate_aps_login_value_0' => _('Use given login'),
 			'SessionManagement_internal_generate_aps_login_value_1' => _('Auto-generate'),
+			
+			'SessionManagement_internal_generate_aps_password_value_0' => _('Use given password'),
+			'SessionManagement_internal_generate_aps_password_value_1' => _('Auto-generate'),
+			
 		);
 	}
 }

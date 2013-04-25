@@ -50,8 +50,12 @@ class SessionManagement_internal extends SessionManagement {
 			$this->credentials[Server::SERVER_ROLE_APS]['login'] = 'u'.time().gen_string(5).'_APS'; //hardcoded
 		else
 			$this->credentials[Server::SERVER_ROLE_APS]['login'] = $this->user->getAttribute('login');
-		$this->credentials[Server::SERVER_ROLE_APS]['password'] = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-
+		
+		if (! array_key_exists('generate_aps_password', $buf) || $buf['generate_aps_password'] != 0)
+			$this->credentials[Server::SERVER_ROLE_APS]['password'] = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+		else
+			$this->credentials[Server::SERVER_ROLE_APS]['password'] = $_SESSION['password'];
+		
 		return true;
 	}
 
@@ -74,6 +78,10 @@ class SessionManagement_internal extends SessionManagement {
 		$ret = array();
 
 		$c = new ConfigElement_select('generate_aps_login', 0);
+		$c->setContentAvailable(array(0, 1));
+		$ret []= $c;
+		
+		$c = new ConfigElement_select('generate_aps_password', 1);
 		$c->setContentAvailable(array(0, 1));
 		$ret []= $c;
 
