@@ -124,6 +124,38 @@ class Profile(AbstractProfile):
 			else:
 				self.profileMounted = True
 		
+		if self.profile is not None and self.profileMounted:
+			for d in [self.DesktopDir, self.DocumentsDir]:
+				src = os.path.join(self.profile_mount_point, "Data", d)
+				
+				while not System.mount_point_exist(src):
+					try:
+						os.makedirs(src)
+					except OSError, err:
+						if self.isNetworkError(err[0]):
+							Logger.warn("Unable to access profile: %s"%(str(err)))
+							return False
+						
+						Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
+						continue
+				
+			if not System.mount_point_exist(self.homeDir):
+				os.makedirs(self.homeDir)
+			
+			cmd = "RegularUnionFS \"%s\" \"%s\" -o user=%s"%(self.profile_mount_point, self.homeDir, self.session.user.name)
+			cmd = self.transformToLocaleEncoding(cmd)
+			Logger.debug("Profile bind dir command '%s'"%(cmd))
+			p = System.execute(cmd)
+			if p.returncode != 0:
+				Logger.error("Profile bind dir failed")
+				Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
+				return False
+			else:
+				self.folderRedirection.append(self.homeDir)
+			
+			
+			self.copySessionStart()
+		
 		for sharedFolder in self.sharedFolders:
 			dest = os.path.join(self.MOUNT_POINT, self.session.id, "sharedFolder_"+ hashlib.md5(sharedFolder["uri"]).hexdigest())
 			i = 0
@@ -173,37 +205,6 @@ class Profile(AbstractProfile):
 					self.folderRedirection.append(dst)
 					self.addGTKBookmark(dst)
 		
-		if self.profile is not None and self.profileMounted:
-			for d in [self.DesktopDir, self.DocumentsDir]:
-				src = os.path.join(self.profile_mount_point, "Data", d)
-				
-				while not System.mount_point_exist(src):
-					try:
-						os.makedirs(src)
-					except OSError, err:
-						if self.isNetworkError(err[0]):
-							Logger.warn("Unable to access profile: %s"%(str(err)))
-							return False
-						
-						Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
-						continue
-				
-			if not System.mount_point_exist(self.homeDir):
-				os.makedirs(self.homeDir)
-			
-			cmd = "RegularUnionFS \"%s\" \"%s\" -o user=%s"%(self.profile_mount_point, self.homeDir, self.session.user.name)
-			cmd = self.transformToLocaleEncoding(cmd)
-			Logger.debug("Profile bind dir command '%s'"%(cmd))
-			p = System.execute(cmd)
-			if p.returncode != 0:
-				Logger.error("Profile bind dir failed")
-				Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
-				return False
-			else:
-				self.folderRedirection.append(self.homeDir)
-			
-			
-			self.copySessionStart()
 		
 		return True
 	
