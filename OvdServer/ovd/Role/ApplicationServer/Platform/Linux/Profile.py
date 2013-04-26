@@ -26,6 +26,7 @@ import locale
 import os
 import pwd
 import stat
+import time
 import urllib
 import urlparse
 
@@ -259,7 +260,14 @@ class Profile(AbstractProfile):
 			cmd = "umount %s"%(self.profile_mount_point)
 			cmd = self.transformToLocaleEncoding(cmd)
 			Logger.debug("Profile umount command: '%s'"%(cmd))
-			p = System.execute(cmd)
+			
+			for _ in xrange(5):
+				p = System.execute(cmd)
+				if p.returncode != 0:
+					time.sleep(1)
+				else:
+					break
+			
 			if p.returncode != 0:
 				Logger.error("Profile umount failed")
 				Logger.debug("Profile umount failed (status: %d) => %s"%(p.returncode, p.stdout.read()))
