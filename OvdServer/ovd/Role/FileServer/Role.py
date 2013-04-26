@@ -79,13 +79,13 @@ class Role(AbstractRole):
 	
 	
 	def stop(self):
-		self.FSBackend.stop()
 		self.loop = False
 	
 	
 	def finalize(self):
 		self.cleanup_samba()
 		self.purgeGroup()
+		self.FSBackend.stop()
 	
 	
 	def run(self):
