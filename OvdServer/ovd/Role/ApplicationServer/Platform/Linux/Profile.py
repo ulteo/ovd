@@ -185,7 +185,7 @@ class Profile(AbstractProfile):
 				
 				dst = os.path.join(home, sharedFolder["name"])
 				i = 0
-				while System.mount_point_exist(dst):
+				while System.mount_point_exist(dst) and self.ismount(dst):
 					dst = os.path.join(home, sharedFolder["name"]+"_%d"%(i))
 					i += 1
 				
