@@ -164,7 +164,7 @@ class Role(AbstractRole):
 		for f in glob.glob(Config.backendSpool+"/*"):
 			name = os.path.basename(f)
 			
-			share = Share(name, Config.backendSpool)
+			share = Share(name, Config.backendSpool, Config.spool)
 			shares[name] = share
 			
 		return shares
