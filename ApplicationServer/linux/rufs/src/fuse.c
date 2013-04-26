@@ -1057,7 +1057,7 @@ static int rufs_opt_proc(void *data, const char *arg, int key, struct fuse_args 
 }
 
 
-bool processRsync(Configuration* conf) {
+bool processRsync(Configuration* conf, bool start) {
 	int i = 0;
 	RSync* rsync;
 
@@ -1072,7 +1072,11 @@ bool processRsync(Configuration* conf) {
 		if (u->rsync_src[0]) {
 			logInfo("process rsync of '%s'", u->name);
 
-			rsync = RSync_new(u->rsync_src, u->path, u->rsync_filter_filename);
+			if (start)
+				rsync = RSync_new(u->rsync_src, u->path, u->rsync_filter_filename);
+			else
+				rsync = RSync_new(u->path, u->rsync_src, u->rsync_filter_filename);
+
 			if (rsync == NULL) {
 				logWarn("Failed to create rsync command for union '%s'", u->name);
 				continue;
@@ -1184,7 +1188,7 @@ int fuse_start(int argc, char** argv) {
 
 	// do rsync operations
 	logDebug("rsync operation...");
-	processRsync(config);
+	processRsync(config, true);
 
 
 	ret = fuse_main(args.argc, args.argv, &rufs_oper, NULL);
@@ -1193,6 +1197,8 @@ int fuse_start(int argc, char** argv) {
 	if (config->bind && config->bind_path[0] != 0) {
 		fs_umount(config->bind_path);
 	}
+
+	processRsync(config, false);
 
 	configuration_free(config);
 	shares_delete();
