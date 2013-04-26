@@ -20,6 +20,7 @@
 
 import os
 import signal
+import time
 import errno
 
 from ovd.Logger import Logger
@@ -142,7 +143,14 @@ class FSBackend:
 		
 		cmd = "umount \"%s\""%(self.path["spool"])
 		Logger.debug("FSBackend release command '%s'"%(cmd))
-		p = System.execute(cmd)
+		for _ in xrange(30):
+			p = System.execute(cmd)
+			if p.returncode != 0:
+				Logger.debug("FSBackend is busy, waiting")
+				time.sleep(2)
+			else:
+				break
+		
 		if p.returncode == 0:
 			print "Success"
 			return True
