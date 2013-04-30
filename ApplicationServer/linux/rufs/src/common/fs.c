@@ -83,7 +83,7 @@ off_t file_getOffset(int fd) {
 
 size_t file_size(char* filename) {
 	struct stat fileStat;
-	stat(filename, &fileStat);
+	lstat(filename, &fileStat);
 	return fileStat.st_size;
 }
 
@@ -197,7 +197,7 @@ bool fs_exist(const char* path) {
 bool fs_isdir(const char* path) {
 	struct stat st;
 
-	if (stat(path, &st) == 0)
+	if (lstat(path, &st) == 0)
 	{
 		return S_ISDIR(st.st_mode);
 	}
