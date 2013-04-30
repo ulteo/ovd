@@ -494,7 +494,7 @@ static int rufs_symlink(const char *from, const char *to)
 	int res;
 	char trto[PATH_MAX];
 
-	if (! authorized(from))
+	if (! authorized(to))
 		return -EPERM;
 
 	if (!transformPath(to, trto))
@@ -515,7 +515,7 @@ static int rufs_rename(const char *from, const char *to)
 	char trto[PATH_MAX];
 	char trfrom[PATH_MAX];
 
-	if (! authorized(from))
+	if (! authorized(to))
 		return -EPERM;
 
 	if (!transformPath(to, trto))
@@ -541,7 +541,7 @@ static int rufs_link(const char *from, const char *to)
 	char trto[PATH_MAX];
 	char trfrom[PATH_MAX];
 
-	if (! authorized(from))
+	if (! authorized(to))
 		return -EPERM;
 
 	if (!transformPath(to, trto))
