@@ -137,7 +137,7 @@ class FSBackend:
 	
 	def stop(self):
 		print "Stopping FSBackend"
-		if not os.path.ismount(self.path["spool"]):
+		if (len(self.path) == 0) or not os.path.ismount(self.path["spool"]):
 			Logger.warn("FSBackend is already stopped")
 			return True
 		
