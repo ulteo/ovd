@@ -61,7 +61,7 @@ class FSBackend:
 			
 			for line in lines:
 				compo = line.split(',')
-				if len(compo) != 3:
+				if len(compo) != 2:
 					# Check comment
 					strippedLine = line.strip()
 					if strippedLine.startswith("#") or strippedLine.startswith(";") or len(strippedLine) == 0:
