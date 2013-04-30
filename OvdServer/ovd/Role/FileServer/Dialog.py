@@ -241,7 +241,7 @@ class Dialog(AbstractDialog):
 				response = self.req_answer(doc)
 				break
 			
-			if not self.role_instance.FSBackend.add(share_id, shares[share_id]["quota"]):
+			if not self.role_instance.FSBackend.update_shares(share_id, shares[share_id]["quota"], True):
 				somethingWrong = True
 				doc = Document()
 				rootNode = doc.createElement('error')
@@ -299,6 +299,9 @@ class Dialog(AbstractDialog):
 		for share in self.role_instance.shares.values():
 			if share.has_user(user):
 				if not share.del_user(user):
+					somethingWrong = True
+				
+				if not share.isActive() and not self.role_instance.FSBackend.update_shares(share.name, 0, False):
 					somethingWrong = True
 		
 		if not u.destroy():

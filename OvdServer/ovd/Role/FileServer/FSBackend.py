@@ -37,7 +37,7 @@ class FSBackend:
 		self.pidFile = "/tmp/FSBackend.pid"
 	
 	
-	def add(self, share, quota):
+	def update_shares(self, share, quota, toAdd):
 		if self.pid is None:
 			try:
 				f = open(self.pidFile, "r")
@@ -72,15 +72,16 @@ class FSBackend:
 					continue
 				
 				if share == compo[0].strip():
-					# updating entry
-					out += "%s, %s\n"%(share, quota)
-					found = True
+					if toAdd:
+						# updating entry
+						out += "%s, %s\n"%(share, quota)
+						found = True
 					continue
 				
 				# we restore the entry
 				out += line
 			
-			if not found:
+			if not found and toAdd:
 				# we append a new entry
 				out += "%s, %s\n"%(share, quota)
 			
