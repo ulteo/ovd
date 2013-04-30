@@ -105,7 +105,7 @@ void shares_parse(char* line) {
 
 	l = str_split(line, ',');
 
-	if (l->size != 3) {
+	if (l->size != 2) {
 		logWarn("Share entry '%s' is not well formated", line);
 		return;
 	}
@@ -114,14 +114,13 @@ void shares_parse(char* line) {
 
 	s->name = str_dup((char*)list_get(l, 0));
 	s->quota = str_toSize((char*)list_get(l, 1));
-	s->activated = str_toBool((char*)list_get(l, 2));
 	s->path = fs_join(shareList->shareDirectory, s->name);
 	s->spaceUsed = fs_getSpace(s->path);
 
 	strSpaceUsed = str_fromSize(s->spaceUsed);
 	strQuota = str_fromSize(s->quota);
 
-	logDebug("new share %s: %s/%s, %i", s->name, strSpaceUsed, strQuota, s->activated);
+	logDebug("new share %s: %s/%s", s->name, strSpaceUsed, strQuota);
 	memory_free(strSpaceUsed);
 	memory_free(strQuota);
 
@@ -187,7 +186,7 @@ void shares_dump() {
 	logInfo("Shares dump");
 	for (i = 0 ; i < l->size; i++) {
 		s = (Share*)list_get(l, i);
-		logInfo("\t %s: quota:%lli, activated:%i", s->name, s->quota, s->activated);
+		logInfo("\t %s: quota:%lli", s->name, s->quota);
 	}
 
 	pthread_mutex_unlock(&shareMutex);
@@ -226,8 +225,6 @@ bool shares_activated(const char* name) {
 
 	if (s == NULL)
 		res = false;
-	else
-		res = s->activated;
 
 	pthread_mutex_unlock(&shareMutex);
 	return res;

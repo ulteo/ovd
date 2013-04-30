@@ -27,7 +27,6 @@
 typedef struct _Share {
 	char* name;
 	char* path;
-	bool activated;
 	long long quota;
 	long long spaceUsed;
 } Share;

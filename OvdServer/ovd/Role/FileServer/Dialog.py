@@ -241,7 +241,7 @@ class Dialog(AbstractDialog):
 				response = self.req_answer(doc)
 				break
 			
-			if not self.role_instance.FSBackend.add(share_id, shares[share_id]["quota"], True):
+			if not self.role_instance.FSBackend.add(share_id, shares[share_id]["quota"]):
 				somethingWrong = True
 				doc = Document()
 				rootNode = doc.createElement('error')
