@@ -184,6 +184,8 @@ class Dialog:
 			self.access["token"] = node.getAttribute("token")
 		elif not node.hasAttribute("fqdn"):
 			raise OvdExceptionInternalError("Missing attribute fqdn")
+		else:
+			self.access["fqdn"] = node.getAttribute("fqdn")
 		
 		if node.hasAttribute("port"):
 			try:
