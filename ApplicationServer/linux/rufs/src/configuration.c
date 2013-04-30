@@ -232,6 +232,16 @@ static bool configuration_parseUnion(Ini* ini, Configuration* conf, const char* 
 
 			continue;
 		}
+
+		if (str_ncmp(key, UNION_ACCEPT_SYMLINK_KEY, sizeof(UNION_ACCEPT_SYMLINK_KEY)) == 0) {
+			unionObject->acceptSymlink = str_toBool(value);
+			continue;
+		}
+
+		if (str_ncmp(key, UNION_DELETE_ON_END_KEY, sizeof(UNION_DELETE_ON_END_KEY)) == 0) {
+			unionObject->deleteOnEnd = str_toBool(value);
+			continue;
+		}
 	}
 
 	if (str_len(unionObject->path) == 0) {
@@ -445,6 +455,9 @@ void configuration_dump (Configuration* conf) {
 			logInfo("  rsync src: %s", u->rsync_src);
 			logInfo("  rsync filter filename: %s", u->rsync_filter_filename);
 		}
+
+		logInfo("  accept symlink: %s", u->acceptSymlink ? "true" : "false");
+		logInfo("  delete on end: %s", u->deleteOnEnd ? "true" : "false");
 
 		if (u->accept != NULL) {
 			for(j = 0 ; j < u->accept->size; j++) {

@@ -51,6 +51,8 @@
 #define UNION_REJECT_CONFIGURATION_KEY "reject"
 #define UNION_RSYNC_CONFIGURATION_KEY "rsync"
 #define UNION_RFILTER_CONFIGURATION_KEY "rsync_filter"
+#define UNION_ACCEPT_SYMLINK_KEY "acceptSymlink"
+#define UNION_DELETE_ON_END_KEY "deleteOnEnd"
 
 
 typedef struct _Union {
@@ -58,6 +60,8 @@ typedef struct _Union {
 	char path[PATH_MAX];
 	char rsync_src[PATH_MAX];
 	char rsync_filter_filename[PATH_MAX];
+	bool acceptSymlink;
+	bool deleteOnEnd;
 	List* accept;
 	List* reject;
 } Union;

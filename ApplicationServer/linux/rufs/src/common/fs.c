@@ -319,3 +319,55 @@ long long fs_getSpace(const char* path) {
 	else
 		return buf.st_size;
 }
+
+
+bool fs_mkdirs(const char* file) {
+	char *pos;
+	char* cpy = str_dup(file);
+	struct stat st;
+
+	pos = strchr(cpy,'/');
+	if (pos == NULL)
+		return false;
+
+	pos = strchr(pos+1,'/');
+	while (pos != NULL) {
+		*pos = 0;
+		mkdir(cpy, S_IRWXU);
+		if ( lstat(cpy, &st) == -1)
+			return false;
+
+		*pos = '/';
+		pos = strchr(pos+1,'/');
+	}
+
+	return true;
+}
+
+
+
+bool fs_rmdirs(const char* path) {
+	char subpath[PATH_MAX];
+	struct dirent *dir_entry;
+	DIR *dir;
+	dir = opendir(path);
+
+	if( dir == NULL)
+		return false;
+
+	while((dir_entry = readdir(dir)) != NULL) {
+		if( str_cmp(dir_entry->d_name, ".") == 0 || str_cmp(dir_entry->d_name, "..") == 0)
+			continue;
+
+		str_sprintf(subpath, "%s/%s", path, dir_entry->d_name);
+
+		if(dir_entry->d_type & DT_DIR)
+			fs_rmdirs(subpath);
+		else
+			unlink(subpath);
+	}
+
+	closedir(dir);
+	return (rmdir(path) == 0);
+}
+

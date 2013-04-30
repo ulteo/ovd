@@ -177,7 +177,7 @@ static void transformPathIn(const char* path, char* to) {
 	list_delete(pathComponent);
 }
 
-static bool transformPath(const char* path, char* to) {
+static bool transformPath(const char* path, char* to, bool isSymlink) {
 	int lastIndex = config->unions->size - 1;
 	char trpath[PATH_MAX];
 	Regexp* reg;
@@ -197,6 +197,9 @@ static bool transformPath(const char* path, char* to) {
 		if (!u) {
 			continue;
 		}
+
+		if (isSymlink && !u->acceptSymlink)
+			continue;
 
 		// if the file exist in a union, we return it
 		str_sprintf(to, "%s%s", u->path, trpath);
@@ -248,7 +251,7 @@ static int rufs_getattr(const char *path, struct stat *stbuf)
 {
 	int res;
 	char trpath[PATH_MAX];
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -278,7 +281,7 @@ static int rufs_access(const char *path, int mask)
 {
 	int res;
 	char trpath[PATH_MAX];
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -298,7 +301,7 @@ static int rufs_readlink(const char *path, char *buf, size_t size)
 	if (! authorized(path))
 		return -EPERM;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, true))
 	{
 		return -ENOENT;
 	}
@@ -319,7 +322,7 @@ static int rufs_opendir(const char *path, struct fuse_file_info *fi)
 	if (! authorized(path))
 		return -EPERM;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -400,7 +403,7 @@ static int rufs_mknod(const char *path, mode_t mode, dev_t rdev)
 	if (! authorized(path))
 		return -EPERM;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -426,7 +429,7 @@ static int rufs_mkdir(const char *path, mode_t mode)
 	if (quotaExceed(path))
 		return -EDQUOT;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -450,7 +453,7 @@ static int rufs_unlink(const char *path)
 	if (! authorized(path))
 		return -EPERM;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -474,7 +477,7 @@ static int rufs_rmdir(const char *path)
 	if (! authorized(path))
 		return -EPERM;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -497,11 +500,12 @@ static int rufs_symlink(const char *from, const char *to)
 	if (! authorized(to))
 		return -EPERM;
 
-	if (!transformPath(to, trto))
+	if (!transformPath(to, trto, true))
 	{
 		return -ENOENT;
 	}
 
+	fs_mkdirs(trto);
 	res = symlink(from, trto);
 	if (res == -1)
 		return -errno;
@@ -518,12 +522,12 @@ static int rufs_rename(const char *from, const char *to)
 	if (! authorized(to))
 		return -EPERM;
 
-	if (!transformPath(to, trto))
+	if (!transformPath(to, trto, false))
 	{
 		return -ENOENT;
 	}
 
-	if (!transformPath(from, trfrom))
+	if (!transformPath(from, trfrom, false))
 	{
 		return -ENOENT;
 	}
@@ -544,12 +548,12 @@ static int rufs_link(const char *from, const char *to)
 	if (! authorized(to))
 		return -EPERM;
 
-	if (!transformPath(to, trto))
+	if (!transformPath(to, trto, true))
 	{
 		return -ENOENT;
 	}
 
-	if (!transformPath(from, trfrom))
+	if (!transformPath(from, trfrom, true))
 	{
 		return -ENOENT;
 	}
@@ -569,7 +573,7 @@ static int rufs_chmod(const char *path, mode_t mode)
 	if (! authorized(path))
 		return -EPERM;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -589,7 +593,7 @@ static int rufs_chown(const char *path, uid_t uid, gid_t gid)
 	if (! authorized(path))
 		return -EPERM;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -613,7 +617,7 @@ static int rufs_truncate(const char *path, off_t size)
 	if (! authorized(path))
 		return -EPERM;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -642,7 +646,7 @@ static int rufs_ftruncate(const char *path, off_t size,
 	if (! authorized(path))
 		return -EPERM;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -666,7 +670,7 @@ static int rufs_utimens(const char *path, const struct timespec ts[2])
 	if (! authorized(path))
 		return -EPERM;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -692,7 +696,7 @@ static int rufs_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 	if (! authorized(path))
 		return -EPERM;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -714,7 +718,7 @@ static int rufs_open(const char *path, struct fuse_file_info *fi)
 	if (! authorized(path))
 		return -EPERM;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -756,7 +760,7 @@ static int rufs_write(const char *path, const char *buf, size_t size,
 	if (quotaExceed(path))
 		return -EDQUOT;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -781,7 +785,7 @@ static int rufs_statfs(const char *path, struct statvfs *stbuf)
 	if (! authorized(path))
 		return -EPERM;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -891,7 +895,7 @@ static int rufs_setxattr(const char *path, const char *name, const char *value,
 	if (! authorized(path))
 		return -EPERM;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -911,7 +915,7 @@ static int rufs_getxattr(const char *path, const char *name, char *value,
 	if (! authorized(path))
 		return -EPERM;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -930,7 +934,7 @@ static int rufs_listxattr(const char *path, char *list, size_t size)
 	if (! authorized(path))
 		return -EPERM;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -949,7 +953,7 @@ static int rufs_removexattr(const char *path, const char *name)
 	if (! authorized(path))
 		return -EPERM;
 
-	if (!transformPath(path, trpath))
+	if (!transformPath(path, trpath, false))
 	{
 		return -ENOENT;
 	}
@@ -1098,6 +1102,31 @@ bool processRsync(Configuration* conf, bool start) {
 	return true;
 }
 
+bool processDeleteOnEnd(Configuration* conf) {
+	int i = 0;
+	RSync* rsync;
+
+	if (conf == NULL) {
+		logWarn("Configuration is NULL");
+		return false;
+	}
+
+	for (i = 0 ; i < conf->unions->size ; i++) {
+		Union* u = (Union*) list_get(conf->unions, i);
+
+		if (u->deleteOnEnd) {
+			logInfo("removing union '%s'", u->name);
+
+			if (! fs_rmdirs(u->path)) {
+				logWarn("Failed to remove directory %s: %s", u->path, str_geterror());
+			}
+		}
+	}
+
+	return true;
+}
+
+
 
 int fuse_start(int argc, char** argv) {
     struct fuse_args args = FUSE_ARGS_INIT(argc, argv);
@@ -1199,6 +1228,7 @@ int fuse_start(int argc, char** argv) {
 	}
 
 	processRsync(config, false);
+	processDeleteOnEnd(config);
 
 	configuration_free(config);
 	shares_delete();
