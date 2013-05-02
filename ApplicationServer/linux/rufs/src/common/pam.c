@@ -52,7 +52,6 @@ static int verify_pam_conv(int num_msg, const struct pam_message** msg, struct p
 	}
 
 	*resp = reply;
-	logDebug("return success1");
 	return PAM_SUCCESS;
 }
 
@@ -76,16 +75,12 @@ long pam_auth(const char* module, const char* user, const char* pass) {
 		return 0;
 	}
 
-	logDebug("return success2");
-
 	res = pam_authenticate(authInfo->ph, 0);
 	if (res != PAM_SUCCESS) {
 		logWarn("Authentication failed: %s", pam_strerror(authInfo->ph, res));
 		memory_free(authInfo);
 		return 0;
 	}
-
-	logDebug("return success3");
 
 	res = pam_acct_mgmt(authInfo->ph, 0);
 	if (res != PAM_SUCCESS) {
@@ -94,7 +89,6 @@ long pam_auth(const char* module, const char* user, const char* pass) {
 		return 0;
 	}
 
-	logDebug("return success4 %lu", (long)authInfo);
 	return (long)authInfo;
 }
 
@@ -103,15 +97,11 @@ bool pam_startSession(long handle) {
 	AuthInfo* authInfo = (AuthInfo*)handle;
 	int res;
 
-	logDebug("return success5");
-
 	res = pam_setcred(authInfo->ph, PAM_ESTABLISH_CRED);
 	if (res != PAM_SUCCESS) {
 		logWarn("Failed to set credential: %s", pam_strerror(authInfo->ph, res));
 		return false;
 	}
-
-	logDebug("return success6");
 
 	authInfo->did_setcred = 1;
 	res = pam_open_session(authInfo->ph, 0);
@@ -119,8 +109,6 @@ bool pam_startSession(long handle) {
 		logWarn("Failed to start pam session: %s", pam_strerror(authInfo->ph, res));
 		return false;
 	}
-
-	logDebug("return success7");
 
 	authInfo->session_opened = 1;
 	return true;
