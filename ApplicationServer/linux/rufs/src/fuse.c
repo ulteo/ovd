@@ -188,6 +188,28 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 
 	transformPathIn(path, trpath);
 
+	// Firstly, check if it already exist somewhere
+	for(i = 0 ; i < config->unions->size ; i++) {
+		u = (Union*)list_get(config->unions, i);
+		List* accept;
+		List* reject;
+		bool match = false;
+
+		if (!u) {
+			continue;
+		}
+
+		// if the file exist in a union, we return it
+		str_sprintf(to, "%s%s", u->path, trpath);
+
+		// do not resolv symlink => this generate deadlock
+		if (faccessat(0, to, F_OK, AT_EACCESS | AT_SYMLINK_NOFOLLOW) == 0) {
+			logDebug("path '%s' already exist in repository %s", path, u->name);
+			return true;
+		}
+	}
+
+	// The file do not exist
 	for(i = 0 ; i < config->unions->size ; i++) {
 		u = (Union*)list_get(config->unions, i);
 		List* accept;
@@ -203,11 +225,6 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 
 		// if the file exist in a union, we return it
 		str_sprintf(to, "%s%s", u->path, trpath);
-
-		// do not resolv symlink => this generate deadlock
-		if (faccessat(0, to, F_OK, AT_EACCESS | AT_SYMLINK_NOFOLLOW) == 0) {
-			return true;
-		}
 
 		accept = u->accept;
 		reject = u->reject;
