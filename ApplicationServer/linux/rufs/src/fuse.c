@@ -233,6 +233,7 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 			reg = (Regexp*)list_get(accept, a);
 			if (regexp_match(reg, trpath)) {
 				match = true;
+				break;
 			}
 		}
 
