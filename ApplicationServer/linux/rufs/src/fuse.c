@@ -242,12 +242,18 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 			continue;
 		}
 
-
+		match = false;
 		for(r = 0 ; r < reject->size ; r++) {
 			reg = (Regexp*)list_get(reject, r);
 			if (regexp_match(reg, trpath)) {
-				continue;
+				match = true;
+				break;
 			}
+		}
+
+		// if one reject rules match, we test the following union
+		if (match) {
+			continue;
 		}
 
 		// We found a valid union
