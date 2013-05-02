@@ -95,6 +95,11 @@ $rdp_input_unicode = null;
 if (defined('RDP_INPUT_METHOD'))
 	$rdp_input_unicode = RDP_INPUT_METHOD;
 
+$use_proxy = false;
+if (defined('OPTION_USE_PROXY') && is_bool(OPTION_USE_PROXY)) {
+ $use_proxy = OPTION_USE_PROXY;
+}
+
 $local_integration = (defined('PORTAL_LOCAL_INTEGRATION') && (PORTAL_LOCAL_INTEGRATION === true));
 
 $confirm_logout = OPTION_CONFIRM_LOGOUT;
@@ -208,6 +213,7 @@ function get_users_list() {
 			var GATEWAY_FIRST_MODE = <?php echo (($gateway_first === true)?'true':'false'); ?>;
 			var user_keymap = '<?php echo $user_keymap; ?>';
 			var OPTION_KEYMAP_AUTO_DETECT = <?php echo ( (OPTION_KEYMAP_AUTO_DETECT === true && !isset($_COOKIE['ovd-client']['session_keymap']))?'true':'false'); ?>;
+			var OPTION_USE_PROXY = <?php echo (($use_proxy === true)?'true':'false'); ?>;
 			
 			var daemon;
 			var rdp_input_method = <?php echo (($rdp_input_unicode == null)?'null':'\''.$rdp_input_unicode.'\''); ?>;

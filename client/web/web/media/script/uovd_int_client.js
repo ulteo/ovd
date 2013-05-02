@@ -73,30 +73,65 @@ function startSession() {
 		desktop_fullscreen = true;
 
 	if (! $('use_local_credentials_true') || ! $('use_local_credentials_true').checked) {
-		new Ajax.Request(
-			'login.php',
-			{
-				method: 'post',
-				parameters: {
-					requested_port: ((window.location.port !=  '')?window.location.port:'443'),
-					sessionmanager_host: $('sessionmanager_host').value,
-					login: $('user_login').value,
-					password: $('user_password').value,
-					mode: $('session_mode').value,
-					language: $('session_language').value,
-					keymap: $('session_keymap').value,
-					timezone: getTimezoneName(),
-					desktop_fullscreen: ((desktop_fullscreen)?1:0),
-					debug: ((debug)?1:0)
-				},
-				onSuccess: function(transport) {
-					onStartSessionSuccess(transport.responseXML);
-				},
-				onFailure: function() {
-					onStartSessionFailure();
+		if( ! OPTION_USE_PROXY ) {
+			new Ajax.Request(
+				'login.php',
+				{
+					method: 'post',
+					parameters: {
+						requested_port: ((window.location.port !=  '')?window.location.port:'443'),
+						sessionmanager_host: $('sessionmanager_host').value,
+						login: $('user_login').value,
+						password: $('user_password').value,
+						mode: $('session_mode').value,
+						language: $('session_language').value,
+						keymap: $('session_keymap').value,
+						timezone: getTimezoneName(),
+						desktop_fullscreen: ((desktop_fullscreen)?1:0),
+						debug: ((debug)?1:0)
+					},
+					onSuccess: function(transport) {
+						onStartSessionSuccess(transport.responseXML);
+					},
+					onFailure: function() {
+						onStartSessionFailure();
+					}
 				}
+			);
+		} else {
+			try {
+				var doc = document.implementation.createDocument("", "", null);
+			} catch(e) {
+				var doc = new ActiveXObject("Microsoft.XMLDOM");
 			}
-		);
+
+			var session_node = doc.createElement("session");
+			session_node.setAttribute("mode", $('session_mode').value);
+			session_node.setAttribute("language", $('session_language').value);
+			session_node.setAttribute("timezone", getTimezoneName());
+
+			var user_node = doc.createElement("user");
+			user_node.setAttribute("login", $('user_login').value);
+			user_node.setAttribute("password", $('user_password').value);
+			session_node.appendChild(user_node);
+			doc.appendChild(session_node);
+
+			new Ajax.Request(
+				"proxy.php",
+				{
+					method: 'post',
+					requestHeaders: ['X-Ovd-Service', 'start'],
+					contentType: 'text/xml',
+					postBody: doc,
+					onSuccess: function(transport) {
+						onStartSessionSuccess(transport.responseXML);
+					},
+					onFailure: function() {
+						onStartSessionFailure();
+					}
+				}
+			);
+		}
 	} else {
 		$('CheckSignedJava').ajaxRequest($('sessionmanager_host').value, $('session_mode').value, $('session_language').value, getTimezoneName(), 'onStartSessionJavaRequest');
 		return false;

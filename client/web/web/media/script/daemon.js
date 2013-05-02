@@ -204,16 +204,30 @@ var Daemon = Class.create({
 	check_status: function() {
 		Logger.debug('[daemon] check_status()');
 
-		new Ajax.Request(
-			'session_status.php',
-			{
-				method: 'get',
-				parameters: {
-					differentiator: Math.floor(Math.random()*50000)
-				},
-				onSuccess: this.parse_check_status.bind(this)
-			}
-		);
+		if( ! OPTION_USE_PROXY ) {
+			new Ajax.Request(
+				'session_status.php',
+				{
+					method: 'get',
+					parameters: {
+						differentiator: Math.floor(Math.random()*50000)
+					},
+					onSuccess: this.parse_check_status.bind(this)
+				}
+			);
+		} else {
+			new Ajax.Request(
+				"proxy.php",
+				{
+					method: 'get',
+					requestHeaders: ['X-Ovd-Service', 'session_status'],
+					parameters: {
+						differentiator: Math.floor(Math.random()*50000)
+					},
+					onSuccess: this.parse_check_status.bind(this)
+				}
+			);
+		}
 	},
 
 	parse_check_status: function(transport) {
@@ -298,15 +312,6 @@ var Daemon = Class.create({
 	},
 
 	req_logout: function(mode_) {
-		new Ajax.Request(
-			'logout.php',
-			{
-				method: 'post',
-				parameters: {
-					mode: mode_
-				}
-			}
-		);
 		if (mode_ == 'suspend') {
 			this.webapp_servers.each(function (param) {
 				var ix = param[0], server = param[1];
@@ -315,6 +320,38 @@ var Daemon = Class.create({
 				tag.src = server.server_url+'/disconnect?id='+server.id+'&user='+server.username+'&pass='+server.password;
 				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(tag, s);
 			});
+		}
+
+		if( ! OPTION_USE_PROXY ) {
+			new Ajax.Request(
+				'logout.php',
+				{
+					method: 'post',
+					parameters: {
+						mode: mode_
+					}
+				}
+			);
+		} else {
+			try {
+				var doc = document.implementation.createDocument("", "", null);
+			} catch(e) {
+				var doc = new ActiveXObject("Microsoft.XMLDOM");
+			}
+
+			var node = doc.createElement("logout");
+			node.setAttribute("mode", mode_);
+			doc.appendChild(node);
+
+			new Ajax.Request(
+				"proxy.php",
+				{
+					method: 'post',
+					requestHeaders: ['X-Ovd-Service', 'logout'],
+					contentType: 'text/xml',
+					postBody: doc
+				}
+			);
 		}
 	},
 

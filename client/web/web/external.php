@@ -143,6 +143,11 @@ $rdp_input_unicode = null;
 if (defined('RDP_INPUT_METHOD'))
 	$rdp_input_unicode = RDP_INPUT_METHOD;
 
+$use_proxy = false;
+if (defined('OPTION_USE_PROXY') && is_bool(OPTION_USE_PROXY)) {
+ $use_proxy = OPTION_USE_PROXY;
+}
+
 $local_integration = (defined('PORTAL_LOCAL_INTEGRATION') && (PORTAL_LOCAL_INTEGRATION === true));
 
 if ($debug_mode === false && array_key_exists('debug', $_REQUEST))
@@ -213,6 +218,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 			var GATEWAY_FIRST_MODE = <?php echo (($gateway_first === true)?'true':'false'); ?>;
 			var user_keymap = '<?php echo $user_keymap; ?>';
 			var OPTION_KEYMAP_AUTO_DETECT = <?php echo ((OPTION_KEYMAP_AUTO_DETECT === true)?'true':'false'); ?>;
+			var OPTION_USE_PROXY = <?php echo (($use_proxy === true)?'true':'false'); ?>;
 
 			<?php
 				if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications' && ! $first) {
@@ -243,7 +249,19 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 						$('splashContainer').show();
 
 						applyTranslations(i18n_tmp);
-						startExternalSession('<?php echo $_REQUEST['mode']; ?>');
+
+						<?php
+							$params = '\''.$_REQUEST['mode'].'\'';
+
+							if($_REQUEST['mode'] == 'desktop' && array_key_exists('app', $_REQUEST)) {
+									$params = $params.', \''.$_REQUEST['app'].'\'';
+
+									if (array_key_exists('file', $_REQUEST)) {
+										$params = $params.', \''.$_REQUEST['file'].'\', \''.$_REQUEST['file_type'].'\', \''.base64_decode($_REQUEST['file_share']).'\'';
+									}
+							}
+						?>
+						startExternalSession(<?php echo $params; ?>);
 						
 						Event.observe($('level_debug'), 'click', function() {
 							Logger.toggle_level('debug');

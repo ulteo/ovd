@@ -24,27 +24,74 @@ Event.observe(window, 'load', function() {
 	test.perform();
 });
 
-function startExternalSession(mode_) {
-	new Ajax.Request(
-		'login.php',
-		{
-			method: 'post',
-			parameters: {
-				requested_port: ((window.location.port !=  '')?window.location.port:'443'),
-				mode: mode_,
-				language: client_language,
-				keymap: user_keymap,
-				timezone: getTimezoneName(),
-				debug: 0
-			},
-			onSuccess: function(transport) {
-				onStartExternalSessionSuccess(transport.responseXML);
-			},
-			onFailure: function() {
-				onStartExternalSessionFailure();
+function startExternalSession(mode_, app_, file_, file_type_, file_share_) {
+	if( ! OPTION_USE_PROXY ) {
+		new Ajax.Request(
+			'login.php',
+			{
+				method: 'post',
+				parameters: {
+					requested_port: ((window.location.port !=  '')?window.location.port:'443'),
+					mode: mode_,
+					language: client_language,
+					keymap: user_keymap,
+					timezone: getTimezoneName(),
+					debug: 0
+				},
+				onSuccess: function(transport) {
+					onStartExternalSessionSuccess(transport.responseXML);
+				},
+				onFailure: function() {
+					onStartExternalSessionFailure();
+				}
 			}
+		);
+	} else {
+		try {
+			var doc = document.implementation.createDocument("", "", null);
+		} catch(e) {
+			var doc = new ActiveXObject("Microsoft.XMLDOM");
 		}
-	);
+
+		var session_node = doc.createElement("session");
+		session_node.setAttribute("mode", mode_);
+		session_node.setAttribute("language", client_language);
+		session_node.setAttribute("timezone", getTimezoneName());
+
+		if (app_ != undefined) {
+			var start = doc.createElement("start");
+			var application = doc.createElement("application");
+			application.setAttribute("id", app_);
+
+			if (file_ != undefined && file_type_ != undefined && file_share_ != undefined ) {
+				application.setAttribute("file_location", file_);   /* The name to be given to the copy of the resource */
+				application.setAttribute("file_type", file_type_);  /* The resource type : native/sharedfolder/http */
+				application.setAttribute("file_path", file_share_); /* The path to the resource */
+			}
+
+			start.appendChild(application);
+			session_node.appendChild(start);
+		}
+
+		doc.appendChild(session_node);
+
+		new Ajax.Request(
+			"proxy.php",
+			{
+				method: 'post',
+				requestHeaders: ['X-Ovd-Service', 'start'],
+				contentType: 'text/xml',
+				postBody: doc,
+
+				onSuccess: function(transport) {
+					onStartExternalSessionSuccess(transport.responseXML);
+				},
+				onFailure: function() {
+					onStartExternalSessionFailure();
+				}
+			}
+		);
+	}
 
 	return false;
 }
