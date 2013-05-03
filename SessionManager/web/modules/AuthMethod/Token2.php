@@ -29,12 +29,12 @@ class AuthMethod_Token2 extends AuthMethod {
 			return NULL;
 		}
 		
-		if (! in_array($_REQUEST['token'], array_values($tokens))) {
+		if (! array_key_exists($_REQUEST['token'], $tokens)) {
 			Logger::warning('main', 'Unauthorized token');
 			return NULL;
 		}
 		
-		$this->login = $buf['login'];
+		$this->login = $tokens[$_REQUEST['token']];
 		return $this->login;
 	}
 
@@ -43,26 +43,20 @@ class AuthMethod_Token2 extends AuthMethod {
 	}
 
 	public static function prettyName() {
-		return _('Token authentication 2');
+		return _('Standalone token authentication');
 	}
 
 	public static function prefsIsValid($prefs_, &$log=array()) {
-		$buf = $prefs_->get('AuthMethod','Token2');
-		$login = $buf['login'];
-		if (strlen(trim($login)) == 0)
-			return false;
-		
 		return true;
 	}
 	
 	public static function configuration() {
 		return array(
-			new ConfigElement_input('login', 
-				_('User login to use to start sessions'),
-				_('User login to use to start sessions'),
-				_('User login to use to start sessions'), ''),
-			
-			new ConfigElement_dictionary('tokens', _('Token liste'), _('Token liste'), _('Token liste'), array()),
+			new ConfigElement_dictionary('tokens',
+				_('Token list'),
+				_('Token list: the first column is supposed to be the token. the second is the user login associated with this token'),
+				_('Token list: the first column is supposed to be the token. the second is the user login associated with this token'),
+				array()),
 		);
 	}
 	
