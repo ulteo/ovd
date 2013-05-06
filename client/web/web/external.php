@@ -118,26 +118,26 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 <?php } ?>
 
-<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/uovd.js")) { ?>
-		<script type="text/javascript" src="media/script/uovd.js" charset="utf-8"></script>
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/ovd/uovd.js")) { ?>
+		<script type="text/javascript" src="media/script/ovd/uovd.js" charset="utf-8"></script>
 <?php } else { ?>
 		<script type="text/javascript" src="media/script/lib/prototype/prototype.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/scriptaculous/effects.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/scriptaculous/extensions.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/common.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon_desktop.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon_applications.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon_external.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/server.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/application.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/JavaTester.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/Logger.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/timezones.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/ovd/common.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/ovd/daemon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/ovd/daemon_desktop.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/ovd/daemon_applications.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/ovd/daemon_external.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/ovd/server.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/ovd/application.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/ovd/JavaTester.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/ovd/Logger.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/ovd/timezones.js" charset="utf-8"></script>
 <?php } ?>
 
-		<script type="text/javascript" src="media/script/uovd_ext_client.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/ovd/uovd_ext_client.js" charset="utf-8"></script>
 
 		<script type="text/javascript">
 			var big_image_map = <?php echo ($big_image_map?'true':'false'); ?>;
