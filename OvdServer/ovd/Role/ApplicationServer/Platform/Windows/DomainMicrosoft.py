@@ -40,8 +40,8 @@ class DomainMicrosoft(AbstractDomainMicrosoft):
 	
 	
 	def onSessionCreate(self):
-		self.session.user.name = self.getUsername()
-		self.session.init_user_session_dir(os.path.join(self.session.SPOOL_USER, self.session.user.name))
+		user = self.getUsername()
+		self.session.init_user_session_dir(os.path.join(self.session.SPOOL_USER, user))
 		self.session.succefully_initialized = True
 		self.session.install_desktop_shortcuts()
 		return True
