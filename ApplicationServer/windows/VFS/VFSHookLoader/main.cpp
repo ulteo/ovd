@@ -37,8 +37,6 @@ void waitDesktopRefresh()
 #include <iostream>
 int main()
 {
-	ShowWindow( GetConsoleWindow(), SW_HIDE );
-	
 	set_hooks_proc_t set_hooks_fn;
 	remove_hooks_proc_t remove_hooks_fn;
 	
