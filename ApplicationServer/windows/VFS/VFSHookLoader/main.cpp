@@ -8,7 +8,11 @@
 #include <stdlib.h>
 #include <shlwapi.h> 
 
-#define HOOK_DLL	L"VFSHook.dll"
+#ifdef _WIN64
+	#define HOOK_DLL	L"VFSHook64.dll"
+#else
+	#define HOOK_DLL	L"VFSHook32.dll"
+#endif
 
 typedef void (*set_hooks_proc_t) ();
 typedef void (*remove_hooks_proc_t) ();
