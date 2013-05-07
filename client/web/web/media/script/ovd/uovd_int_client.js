@@ -27,30 +27,170 @@ var desktop_fullscreen = false;
 
 var switchsettings_lock = false;
 
+/* Global ovd daemon instance */
+var daemon = null;
+
+/* Load NiftyCorners */
+NiftyLoad = function() {
+	Nifty('div.rounded');
+}
+
+/* Bind events after DOM load */
 Event.observe(window, 'load', function() {
-	$('loginBox').hide();
 
-	$('newsWrap').hide();
-
-	Event.observe($('lockWrap'), 'click', function() {
-		if ($('iframeWrap').visible())
-			hideIFrame();
-
-		if ($('newsWrap')) {
-			if ($('newsWrap').visible())
-				hideNews();
-		}
-	});
-
+	/* Perform the Java Test */
 	var test = new JavaTester();
 	test.add_finished_callback(on_java_test_finished);
 	test.perform();
 
+	/* Center containers at startup */
+	new Effect.Center($('splashContainer'));
+	new Effect.Center($('endContainer'));
+	new Effect.Center($('iframeWrap'));
+
+	/* Keep containers centered after a window resize */
+	Event.observe(window, 'resize', function() {
+		new Effect.Center($('splashContainer'));
+		new Effect.Center($('desktopFullscreenContainer'));
+		new Effect.Center($('endContainer'));
+		new Effect.Center($('iframeWrap'));
+	});
+
+	/* Hide panels */
+	$('desktopModeContainer').hide();
+	$('desktopAppletContainer').hide();
+	$('applicationsModeContainer').hide();
+	$('applicationsAppletContainer').hide();
+	$('fileManagerWrap').hide();
+	$('debugContainer').hide();
+	$('debugLevels').hide();
+	$('loginBox').hide();
+	$('newsWrap').hide();
+
+	/* Fade-in the login panel */
 	setTimeout(function() {
 		new Effect.Appear($('loginBox'));
 	}, 1000);
-	
-	new Effect.Center($('iframeWrap'));
+
+	/* Translate string and select flag icon */
+	applyTranslations(i18n_tmp);
+	updateFlag($('session_language').value);
+
+	/* Update translation on language change */
+	Event.observe($('session_language'), 'change', function() {
+		translateInterface($('session_language').value);
+		updateFlag($('session_language').value);
+	});
+	Event.observe($('session_language'), 'keyup', function() {
+		translateInterface($('session_language').value);
+		updateFlag($('session_language').value);
+	});
+
+	/* Auth form validation (mostly for special auth methods) */
+	Event.observe($('sessionmanager_host'),         'keyup',  function() { checkLogin(); });
+	Event.observe($('sessionmanager_host'),         'change', function() { checkLogin(); });
+	Event.observe($('user_login'),                  'change', function() { checkLogin(); });
+	Event.observe($('user_login'),                  'keyup',  function() { checkLogin(); });
+	Event.observe($('use_local_credentials_true'),  'change', function() { checkLogin(); });
+	Event.observe($('use_local_credentials_true'),  'click',  function() { checkLogin(); });
+	Event.observe($('use_local_credentials_false'), 'change', function() { checkLogin(); });
+	Event.observe($('use_local_credentials_false'), 'click',  function() { checkLogin(); });
+
+	/* Session form validation */
+	Event.observe($('session_mode'), 'change', function() { checkSessionMode(); });
+	Event.observe($('session_mode'), 'click',  function() { checkSessionMode(); });
+
+	/* Form submit using "Enter" key */
+	Event.observe($('user_login'), 'keydown', function(event) {
+		if (typeof event == 'undefined' || event.keyCode != 13)
+			return;
+		$('startsession').submit();
+	});
+	Event.observe($('user_password'), 'keydown', function(event) {
+		if (typeof event == 'undefined' || event.keyCode != 13)
+			return;
+		$('startsession').submit();
+	});
+
+	/* Submit event */
+	Event.observe($('startsession'), 'submit', function() {
+		startSession();
+	});
+
+	/* Open "advanced settings" tab */
+	Event.observe($('advanced_settings_gettext'), 'click', function() {
+		switchSettings();
+	});
+
+	/* Suspend */
+	Event.observe($('suspend_link'), 'click', function() {
+		daemon.suspend();
+	});
+
+	/* Logout confirmation for "Applications" mode */
+	Event.observe($('logout_link'), 'click', function() {
+		confirmLogout(confirm_logout);
+	});
+
+	/* Hide IFrame */
+	Event.observe($('iframeLink'), 'click', function() {
+		hideIFrame();
+	});
+
+	/* Hide News */
+	Event.observe($('newsHideLink'), 'click', function() {
+		hideNews();
+	});
+
+	/* Lock Wrap */
+	Event.observe($('lockWrap'), 'click', function() {
+		if ($('iframeWrap').visible()) hideIFrame();
+		if ($('newsWrap') && $('newsWrap').visible()) hideNews();
+	});
+
+	/* Set focus to the first text field */
+	if(focus_sm_textfield) {
+		if ($('sessionmanager_host') && $('sessionmanager_host').visible()) $('sessionmanager_host').focus();
+	} else if(focus_pw_textfield) {
+		if ($('user_password') && $('user_password').visible()) $('user_password').focus();
+	} else {
+		if ($('user_login') && $('user_login').visible()) $('user_login').focus();
+	}
+
+	/* Configure the SM Host field behaviour */
+	if ($('sessionmanager_host').value == '') {
+		$('sessionmanager_host').style.color = 'grey';
+		$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
+		if ($('sessionmanager_host') && $('sessionmanager_host').visible())
+			setCaretPosition($('sessionmanager_host'), 0);
+	}
+	Event.observe($('sessionmanager_host'), 'focus', function() {
+		if ($('sessionmanager_host').value == i18n.get('sessionmanager_host_example')) {
+			$('sessionmanager_host').style.color = 'black';
+			$('sessionmanager_host').value = '';
+		}
+	});
+	Event.observe($('sessionmanager_host'), 'blur', function() {
+		if ($('sessionmanager_host').value == '') {
+			$('sessionmanager_host').style.color = 'grey';
+			$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
+		}
+	});
+	window.updateSMHostField = function() {
+		if ($('sessionmanager_host').style.color != 'grey')
+			return;
+		$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
+	}
+
+	/* Configure the debug panel */
+	if(debug_mode) {
+		Event.observe($('level_debug'),   'click', function() { Logger.toggle_level('debug'); });
+		Event.observe($('level_info'),    'click', function() { Logger.toggle_level('info'); });
+		Event.observe($('level_warning'), 'click', function() { Logger.toggle_level('warning'); });
+		Event.observe($('level_error'),   'click', function() { Logger.toggle_level('error'); });
+		Event.observe($('clear_button'),  'click', function() { Logger.clear(); });
+		switchSettings();
+	}
 });
 
 function startSession() {

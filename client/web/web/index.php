@@ -188,191 +188,29 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/ovd/uovd_int_client.js" charset="utf-8"></script>
 
 		<script type="text/javascript">
-			var big_image_map = <?php echo ($big_image_map?'true':'false'); ?>;
-
-			NiftyLoad = function() {
-				Nifty('div.rounded');
-			}
-			
-			function updateSMHostField() {
-				 if ($('sessionmanager_host').style.color != 'grey')
-					return;
-				
-				$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
-			}
-			
-			var i18n = new Hash();
-<?php		foreach ($js_translations as $id => $string)
-			echo 'i18n.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
-?>
-			var i18n_tmp = new Hash();
-<?php		foreach ($translations as $id => $string) 
-			echo 'i18n_tmp.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
-?>
-
+			/* Options from PHP to JS */
 			var GATEWAY_FIRST_MODE = <?php echo (($gateway_first === true)?'true':'false'); ?>;
-			var user_keymap = '<?php echo $user_keymap; ?>';
 			var OPTION_KEYMAP_AUTO_DETECT = <?php echo ( (OPTION_KEYMAP_AUTO_DETECT === true && !isset($_COOKIE['ovd-client']['session_keymap']))?'true':'false'); ?>;
 			var OPTION_USE_PROXY = <?php echo (($use_proxy === true)?'true':'false'); ?>;
-			
-			var daemon;
+			var big_image_map = <?php echo ($big_image_map?'true':'false'); ?>;
+			var user_keymap = '<?php echo $user_keymap; ?>';
 			var rdp_input_method = <?php echo (($rdp_input_unicode == null)?'null':'\''.$rdp_input_unicode.'\''); ?>;
 			var local_integration = <?php echo (($local_integration === true)?'true':'false'); ?>;
+			var debug_mode = <?php echo ($debug_mode ? 'true' : 'false'); ?>;
+			var focus_sm_textfield = <?php echo ((! defined('SESSIONMANAGER_HOST') && (! isset($wi_sessionmanager_host) || $wi_sessionmanager_host == '')) ? 'true' : 'false'); ?>;
+			var focus_pw_textfield = <?php echo (((isset($users) && $users !== false) || (isset($wi_user_login) && $wi_user_login != '')) ? 'true' : 'false'); ?>;
+			var confirm_logout = '<?php echo $confirm_logout; ?>';
 
-			Event.observe(window, 'load', function() {
-				new Effect.Center($('splashContainer'));
-				new Effect.Center($('endContainer'));
-
-				Event.observe(window, 'resize', function() {
-					new Effect.Center($('splashContainer'));
-					new Effect.Center($('desktopFullscreenContainer'));
-					new Effect.Center($('endContainer'));
-				});
-				
-				$('desktopModeContainer').hide();
-				$('desktopAppletContainer').hide();
-
-				$('applicationsModeContainer').hide();
-				$('applicationsAppletContainer').hide();
-
-				$('fileManagerWrap').hide();
-
-				$('debugContainer').hide();
-				$('debugLevels').hide();
-				
-				applyTranslations(i18n_tmp);
-				updateFlag($('session_language').value);
-				
-				Event.observe($('sessionmanager_host'), 'keyup', function() {
-					checkLogin();
-				});
-				Event.observe($('sessionmanager_host'), 'change', function() {
-					checkLogin();
-				});
-				
-				Event.observe($('user_login'), 'change', function() {
-					checkLogin();
-				});
-				Event.observe($('user_login'), 'keyup', function() {
-					checkLogin();
-				});
-				Event.observe($('user_login'), 'keydown', function(event) {
-					if (typeof event == 'undefined' || event.keyCode != 13)
-						return;
-					
-					$('startsession').submit();
-				});
-				
-				Event.observe($('user_password'), 'keydown', function(event) {
-					if (typeof event == 'undefined' || event.keyCode != 13)
-						return;
-					
-					$('startsession').submit();
-				});
-				
-				Event.observe($('startsession'), 'submit', function() {
-					startSession();
-				});
-				
-				Event.observe($('use_local_credentials_true'), 'change', function() {
-					checkLogin();
-				});
-				Event.observe($('use_local_credentials_true'), 'click', function() {
-					checkLogin();
-				});
-				Event.observe($('use_local_credentials_false'), 'change', function() {
-					checkLogin();
-				});
-				Event.observe($('use_local_credentials_false'), 'click', function() {
-					checkLogin();
-				});
-				
-				Event.observe($('session_mode'), 'change', function() {
-					checkSessionMode();
-				});
-				Event.observe($('session_mode'), 'click', function() {
-					checkSessionMode();
-				});
-				
-				Event.observe($('session_language'), 'change', function() {
-					translateInterface($('session_language').value);
-					updateFlag($('session_language').value);
-				});
-				Event.observe($('session_language'), 'keyup', function() {
-					translateInterface($('session_language').value);
-					updateFlag($('session_language').value);
-				});
-				
-				Event.observe($('advanced_settings_gettext'), 'click', function() {
-					switchSettings();
-				});
-				
-				Event.observe($('suspend_link'), 'click', function() {
-					daemon.suspend();
-				});
-				Event.observe($('logout_link'), 'click', function() {
-					confirmLogout('<?php echo $confirm_logout; ?>');
-				});
-				
-				Event.observe($('iframeLink'), 'click', function() {
-					hideIFrame();
-				});
-				
-				Event.observe($('newsHideLink'), 'click', function() {
-					hideNews();
-				});
-<?php	if ($debug_mode) { ?>
-				Event.observe($('level_debug'), 'click', function() {
-					Logger.toggle_level('debug');
-				});
-				Event.observe($('level_info'), 'click', function() {
-					Logger.toggle_level('info');
-				});
-				Event.observe($('level_warning'), 'click', function() {
-					Logger.toggle_level('warning');
-				});
-				Event.observe($('level_error'), 'click', function() {
-					Logger.toggle_level('error');
-				});
-				Event.observe($('clear_button'), 'click', function() {
-					Logger.clear();
-				});
-<?php	}	?>
-				
-				setTimeout(function() {
-<?php
-if (! defined('SESSIONMANAGER_HOST') && (! isset($wi_sessionmanager_host) || $wi_sessionmanager_host == ''))
-	echo 'if ($(\'sessionmanager_host\') && $(\'sessionmanager_host\').visible()) $(\'sessionmanager_host\').focus();';
-elseif ((isset($users) && $users !== false) || (isset($wi_user_login) && $wi_user_login != ''))
-	echo 'if ($(\'user_password\') && $(\'user_password\').visible()) $(\'user_password\').focus();';
-else
-	echo 'if ($(\'user_login\') && $(\'user_login\').visible()) $(\'user_login\').focus();';
-?>
-					checkSessionMode();
-					
-					if ($('sessionmanager_host').value == '') {
-						$('sessionmanager_host').style.color = 'grey';
-						$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
-						if ($('sessionmanager_host') && $('sessionmanager_host').visible())
-							setCaretPosition($('sessionmanager_host'), 0);
-					}
-					Event.observe($('sessionmanager_host'), 'focus', function() {
-						if ($('sessionmanager_host').value == i18n.get('sessionmanager_host_example')) {
-							$('sessionmanager_host').style.color = 'black';
-							$('sessionmanager_host').value = '';
-						}
-					});
-					Event.observe($('sessionmanager_host'), 'blur', function() {
-						if ($('sessionmanager_host').value == '') {
-							$('sessionmanager_host').style.color = 'grey';
-							$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
-						}
-					});
-				}, 1500);
-<?php	if ($debug_mode) {	?>
-				switchSettings();
-<?php	}	?>
-			});
+			var i18n = new Hash();
+			<?php
+				foreach ($js_translations as $id => $string)
+					echo 'i18n.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
+			?>
+			var i18n_tmp = new Hash();
+			<?php
+				foreach ($translations as $id => $string)
+					echo 'i18n_tmp.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
+			?>
 		</script>
 	</head>
 
