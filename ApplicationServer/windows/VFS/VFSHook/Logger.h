@@ -16,7 +16,7 @@ public:
 	void setLogFile(std::wstring szLogFile);
 
 	// NOTE: not working
-	void debug(const char * format,...);
+	void debug(const wchar_t * format,...);
 	
 	// output log to log file
 	void log(char *fmt,...);
