@@ -50,25 +50,26 @@ void Logger::enable(bool bEnable)
 	m_bEnable = bEnable;
 }
 
-void Logger::debug(const char * format,...)
+void Logger::debug(const wchar_t * format,...)
 {
 	#define MAX_DBG_MSG_LEN (4096)
-    char buf[MAX_DBG_MSG_LEN];
+    wchar_t buf[MAX_DBG_MSG_LEN];
+	wchar_t msg[MAX_DBG_MSG_LEN];
 	
-	char modname[200];
-	GetModuleFileNameA(NULL, modname, sizeof(modname));
-	wsprintfA(buf, "%s : ", modname);
+	wchar_t modname[200];
+	GetModuleFileName(NULL, modname, sizeof(modname));
 	
 	va_list args;
     va_start(args, format);
-	vsprintf_s(buf, format, args);
+	vswprintf_s(buf, format, args);
     va_end(args);
 
-	char msg[MAX_DBG_MSG_LEN];
-	lstrcatA(msg, modname);
-	lstrcatA(msg, buf);
+	msg[0] = '\0';
+	lstrcat(msg, modname);
+	lstrcat(msg, L": ");
+	lstrcat(msg, buf);
 
-    //OutputdebugStringA(msg);
+    OutputDebugString(msg);
 }
 
 void Logger::log(char *fmt,...)
