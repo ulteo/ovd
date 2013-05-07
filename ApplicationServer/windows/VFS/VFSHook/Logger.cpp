@@ -14,6 +14,7 @@ Logger* Logger::m_sInstance = NULL;
 
 Logger::Logger()
 {
+	// TODO user do not have the right to write here !!!
 	m_szLogFile = L"C:\\VirtSys.log";
 	m_bIsLogging = false;
 }
