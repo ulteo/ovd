@@ -19,9 +19,54 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
+/* Global ovd daemon instance */
+var daemon = null;
+
+/* Load NiftyCorners */
+NiftyLoad = function() {
+	Nifty('div.rounded');
+}
+
 Event.observe(window, 'load', function() {
+
+	/* Perform the Java Test */
 	var test = new JavaTester();
 	test.perform();
+
+	/* Center containers at startup */
+	new Effect.Center($('endContainer'));
+	if (session_mode == 'desktop') {
+		new Effect.Center($('splashContainer'));
+	}
+
+	/* Hide panels */
+	$('desktopModeContainer').hide();
+	$('desktopAppletContainer').hide();
+	$('applicationsModeContainer').hide();
+	$('applicationsAppletContainer').hide();
+
+	/* Show splash */
+	$('splashContainer').show();
+
+	/* Translate strings */
+	applyTranslations(i18n_tmp);
+
+	/* Create or Join a session */
+	checkExternalSession( function() {
+		window.close();
+	}, function() {
+		startExternalSession(session_mode, session_user, session_pass, session_token,
+		                     session_app, session_file, session_file_type, session_file_share);
+	});
+
+  /* Configure the debug panel */
+	if(debug_mode) {
+		Event.observe($('level_debug'),   'click', function() { Logger.toggle_level('debug'); });
+		Event.observe($('level_info'),    'click', function() { Logger.toggle_level('info'); });
+		Event.observe($('level_warning'), 'click', function() { Logger.toggle_level('warning'); });
+		Event.observe($('level_error'),   'click', function() { Logger.toggle_level('error'); });
+		Event.observe($('clear_button'),  'click', function() { Logger.clear(); });
+	}
 });
 
 function startExternalSession(mode_, app_, file_, file_type_, file_share_) {

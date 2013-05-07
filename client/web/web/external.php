@@ -140,89 +140,64 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<script type="text/javascript" src="media/script/ovd/uovd_ext_client.js" charset="utf-8"></script>
 
 		<script type="text/javascript">
-			var big_image_map = <?php echo ($big_image_map?'true':'false'); ?>;
-
-			NiftyLoad = function() {
-				Nifty('div.rounded');
-			}
-
-			var i18n = new Hash();
-<?php		foreach ($js_translations as $id => $string)
-			echo 'i18n.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
-?>
-			var i18n_tmp = new Hash();
-<?php		foreach ($translations as $id => $string) 
-			echo 'i18n_tmp.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
-?>
-
+			/* Options from PHP to JS */
 			var SESSIONMANAGER = '<?php echo SESSIONMANAGER_HOST; ?>';
 			var GATEWAY_FIRST_MODE = <?php echo (($gateway_first === true)?'true':'false'); ?>;
-			var user_keymap = '<?php echo $user_keymap; ?>';
 			var OPTION_KEYMAP_AUTO_DETECT = <?php echo ((OPTION_KEYMAP_AUTO_DETECT === true)?'true':'false'); ?>;
 			var OPTION_USE_PROXY = <?php echo (($use_proxy === true)?'true':'false'); ?>;
+			var big_image_map = <?php echo ($big_image_map?'true':'false'); ?>;
+			var user_keymap = '<?php echo $user_keymap; ?>';
+			var rdp_input_method = <?php echo (($rdp_input_unicode == null)?'null':'\''.$rdp_input_unicode.'\''); ?>;
+			var local_integration = <?php echo (($local_integration === true)?'true':'false'); ?>;
+			var debug_mode = <?php echo (($debug_mode === true)?'true':'false'); ?>;
+			var client_language = '<?php echo $user_language; ?>';
 
+			/* Session params */
 			<?php
-				if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications' && ! $first) {
-			?>
-					Event.observe(window, 'load', function() {
-						window.close();
-					});
-			<?php
-				} else {
-			?>
-					var daemon;
-					var client_language = '<?php echo $user_language; ?>';
-					var rdp_input_method = <?php echo (($rdp_input_unicode == null)?'null':'\''.$rdp_input_unicode.'\''); ?>;
-					var local_integration = <?php echo (($local_integration === true)?'true':'false'); ?>;
-					var debug_mode = <?php echo (($debug_mode === true)?'true':'false'); ?>;
+				$params = array();
+				$params['mode'] = '\''.$_REQUEST['mode'].'\'';
+				$params['login'] = '\''.$_REQUEST['login'].'\'';
+				$params['password'] = '\''.$_REQUEST['password'].'\'';
+				$params['token'] = '\'\'';
 
-					Event.observe(window, 'load', function() {
-						if ('<?php echo $_REQUEST['mode']; ?>' == 'desktop')
-							new Effect.Center($('splashContainer'));
-						new Effect.Center($('endContainer'));
-
-						$('desktopModeContainer').hide();
-						$('desktopAppletContainer').hide();
-
-						$('applicationsModeContainer').hide();
-						$('applicationsAppletContainer').hide();
-						
-						$('splashContainer').show();
-
-						applyTranslations(i18n_tmp);
-
-						<?php
-							$params = '\''.$_REQUEST['mode'].'\'';
-
-							if($_REQUEST['mode'] == 'desktop' && array_key_exists('app', $_REQUEST)) {
-									$params = $params.', \''.$_REQUEST['app'].'\'';
-
-									if (array_key_exists('file', $_REQUEST)) {
-										$params = $params.', \''.$_REQUEST['file'].'\', \''.$_REQUEST['file_type'].'\', \''.base64_decode($_REQUEST['file_share']).'\'';
-									}
-							}
-						?>
-						startExternalSession(<?php echo $params; ?>);
-						
-						Event.observe($('level_debug'), 'click', function() {
-							Logger.toggle_level('debug');
-						});
-						Event.observe($('level_info'), 'click', function() {
-							Logger.toggle_level('info');
-						});
-						Event.observe($('level_warning'), 'click', function() {
-							Logger.toggle_level('warning');
-						});
-						Event.observe($('level_error'), 'click', function() {
-							Logger.toggle_level('error');
-						});
-						Event.observe($('clear_button'), 'click', function() {
-							Logger.clear();
-						});
-						
-					});
-			<?php
+				if (array_key_exists('token', $_REQUEST)) {
+					$params['token'] = '\''.$_REQUEST['token'].'\'';
 				}
+
+				$params['app'] = '\'\'';
+				$params['file'] = '\'\'';
+				$params['file_type'] = '\'\'';
+				$params['file_share'] = '\'\'';
+
+				if($_REQUEST['mode'] == 'desktop' && array_key_exists('app', $_REQUEST)) {
+					$params['app'] = '\''.$_REQUEST['app'].'\'';
+
+					if (array_key_exists('file', $_REQUEST)) {
+						$params['file'] = '\''.$_REQUEST['file'].'\'';
+						$params['file_type'] = '\''.$_REQUEST['file_type'].'\'';
+						$params['file_share'] = '\''.base64_decode($_REQUEST['file_share']).'\'';
+					}
+				}
+			?>
+
+			var session_mode = <?php echo $params['mode']; ?>;
+			var session_user = <?php echo $params['login']; ?>;
+			var session_pass = <?php echo $params['password']; ?>;
+			var session_token = <?php echo $params['token']; ?>;
+			var session_app = <?php echo $params['app']; ?>;
+			var session_file = <?php echo $params['file']; ?>;
+			var session_file_type = <?php echo $params['file_type']; ?>;
+			var session_file_share = <?php echo $params['file_share']; ?>;
+
+			var i18n = new Hash();
+			<?php
+				foreach ($js_translations as $id => $string)
+					echo 'i18n.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
+			?>
+			var i18n_tmp = new Hash();
+			<?php
+				foreach ($translations as $id => $string)
+					echo 'i18n_tmp.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
 			?>
 		</script>
 	</head>
