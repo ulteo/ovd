@@ -95,17 +95,20 @@ void Logger::log(char *fmt,...)
 	
 	DWORD dw;
 
-	time_t* rawtime = new time_t;
-	struct tm * timeinfo;
-	time(rawtime);
-	timeinfo = localtime(rawtime);
-	wsprintfA(temp, "[%d/%02d/%02d %02d:%02d:%02d] ", 
-		timeinfo->tm_year + 1900, 
-		timeinfo->tm_mon + 1, 
-		timeinfo->tm_mday,
-		timeinfo->tm_hour, 
-		timeinfo->tm_min, 
-		timeinfo->tm_sec);
+	time_t rawtime;
+	struct tm timeinfo;
+	time(&rawtime);
+	if (localtime_s(&timeinfo, &rawtime) == 0) {
+		this->debug(L"Failed to get localtime: errno %i", errno);
+		return;
+	}
+	wsprintfA(temp, "[%d/%02d/%02d %02d:%02d:%02d] ",
+		timeinfo.tm_year + 1900,
+		timeinfo.tm_mon + 1,
+		timeinfo.tm_mday,
+		timeinfo.tm_hour,
+		timeinfo.tm_min,
+		timeinfo.tm_sec);
 	WriteFile(hFile, temp, strlen(temp), &dw, NULL);
 	
 	char modname[200];
