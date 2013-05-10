@@ -519,7 +519,7 @@ bool VirtualFileSystem::_getRegPathByObjectAttributesPtr(POBJECT_ATTRIBUTES Obje
 
 bool VirtualFileSystem::_isFileInList(const std::wstring& szFileRef, std::vector<std::wstring>& vListRef)
 {
-	for(int i=0; i<vListRef.size(); ++i)
+	for(unsigned int i=0; i<vListRef.size(); ++i)
 	{
 		std::wstring szBlackItm = vListRef[i];
 		int len = 0;
