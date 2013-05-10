@@ -22,7 +22,7 @@ ProxyAjaxProvider.prototype.sessionStart_implementation = function(callback) {
 		type: "POST",
 		dataType: "xml",
 		headers: {
-			"X-Ovd-Service" : "https://"+this.session_management.parameters["session_manager"]+"/ovd/client/start.php"
+			"X-Ovd-Service" : "start"
 		},
 		contentType: "text/xml",
 		data: ""+
@@ -44,7 +44,7 @@ ProxyAjaxProvider.prototype.sessionStatus_implementation = function(callback) {
 		type: "GET",
 		dataType: "xml",
 		headers: {
-			"X-Ovd-Service" : "https://"+this.session_management.parameters["session_manager"]+"/ovd/client/session_status.php"
+			"X-Ovd-Service" : "session_status"
 		},
 		success: function(xml) {
 			callback(xml);
@@ -62,7 +62,7 @@ ProxyAjaxProvider.prototype.sessionEnd_implementation = function(callback) {
 		type: "POST",
 		dataType: "xml",
 		headers: {
-			"X-Ovd-Service" : "https://"+this.session_management.parameters["session_manager"]+"/ovd/client/logout.php"
+			"X-Ovd-Service" : "logout"
 		},
 		contentType: "text/xml",
 		data: ""+
