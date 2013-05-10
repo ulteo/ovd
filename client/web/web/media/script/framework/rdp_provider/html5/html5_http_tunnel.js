@@ -414,4 +414,6 @@ HTTPTunnel = function(tunnelURL) {
 
 };
 
-HTTPTunnel.prototype = new Guacamole.Tunnel();
+try {
+	HTTPTunnel.prototype = new Guacamole.Tunnel();
+} catch(e) {}
