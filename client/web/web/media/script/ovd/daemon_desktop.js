@@ -28,17 +28,17 @@ var Desktop = Class.create(Daemon, {
 	initialize: function(debug_) {
 		Daemon.prototype.initialize.apply(this, [debug_]);
 
-		$('desktopAppletContainer').innerHTML = '';
+		jQuery('#desktopAppletContainer').html('');
 	},
 
 	start: function() {
-		if ($('desktopFullscreenContainer')) {
+		if (jQuery('#desktopFullscreenContainer')[0]) {
 			if (this.fullscreen) {
-				$('desktopFullscreenContainer').show();
-				new Effect.Center($('desktopFullscreenContainer'));
+				jQuery('#desktopFullscreenContainer').show();
+				new Effect.Center(jQuery('#desktopFullscreenContainer')[0]);
 			}
 			else
-				$('desktopFullscreenContainer').hide();
+				jQuery('#desktopFullscreenContainer').hide();
 		}
 		
 		Daemon.prototype.start.apply(this, []);
@@ -91,9 +91,9 @@ var Desktop = Class.create(Daemon, {
 			applet.setAttribute('height', applet_height);
 
 			// And it's parent element
-			$('desktopAppletContainer').setStyle({width: applet_width+'px', height: applet_height+'px', top: 0+'px', left: 0+'px'});
-			$('desktopAppletContainer').show();
-			$('desktopAppletContainer').appendChild(applet);
+			jQuery('#desktopAppletContainer').css({'width' : applet_width+'px', 'height' : applet_height+'px', 'top': '0px', 'left': '0px'});
+			jQuery('#desktopAppletContainer').show();
+			jQuery('#desktopAppletContainer').append(applet);
 
 			return true;
 		}

@@ -36,43 +36,43 @@ function refresh_body_size() {
 }
 
 function hideSplash() {
-	new Effect.Fade($('splashContainer'));
+	new Effect.Fade(jQuery('#splashContainer')[0]);
 }
 
 function showSplash() {
-	new Effect.Appear($('splashContainer'));
+	new Effect.Appear(jQuery('#splashContainer')[0]);
 }
 
 function hideEnd() {
-	new Effect.Fade($('endContainer'));
+	new Effect.Fade(jQuery('#endContainer')[0]);
 }
 
 function showEnd() {
-	if ($('endContainer').visible())
+	if (jQuery('#endContainer')[0].visible())
 		return;
 
-	if ($('loginBox') && $('loginBox').visible())
+	if (jQuery('#loginBox')[0] && jQuery('#loginBox')[0].visible())
 		return;
 
-	new Effect.Appear($('endContainer'));
+	new Effect.Appear(jQuery('#endContainer')[0]);
 }
 
 function offContent(container) {
-	$(container+'_ajax').innerHTML = '<img src="media/image/show.png" width="9" height="9" alt="+" title="" />';
-	$(container+'_content').hide();
+	jQuery('#'+container+'_ajax').html('<img src="media/image/show.png" width="9" height="9" alt="+" title="" />');
+	jQuery('#'+container+'_content').hide();
 
 	return true;
 }
 
 function onContent(container) {
-	$(container+'_ajax').innerHTML = '<img src="media/image/hide.png" width="9" height="9" alt="-" title="" />';
-	$(container+'_content').show();
+	jQuery('#'+container+'_ajax').html('<img src="media/image/hide.png" width="9" height="9" alt="-" title="" />');
+	jQuery('#'+container+'_content').show();
 
 	return true;
 }
 
 function toggleContent(container) {
-	if ($(container+'_content').visible())
+	if (jQuery('#'+container+'_content')[0].visible())
 		offContent(container);
 	else
 		onContent(container);
@@ -83,48 +83,48 @@ function toggleContent(container) {
 Event.observe(window, 'load', function() {
 	refresh_body_size();
 
-	$('lockWrap').hide();
-	$('lockWrap').style.width = my_width+'px';
-	$('lockWrap').style.height = my_height+'px';
+	jQuery('#lockWrap').hide();
+	jQuery('#lockWrap').width(my_width);
+	jQuery('#lockWrap').height(my_height);
 
-	$('errorWrap').hide();
-	$('okWrap').hide();
-	$('infoWrap').hide();
+	jQuery('#errorWrap').hide();
+	jQuery('#okWrap').hide();
+	jQuery('#infoWrap').hide();
 
 	Event.observe(window, 'keypress', function() {
-		if ($('errorWrap').visible())
+		if (jQuery('#errorWrap')[0].visible())
 			hideError();
 	});
 
-	Event.observe($('lockWrap'), 'click', function() {
-		if ($('errorWrap').visible())
+	Event.observe(jQuery('#lockWrap')[0], 'click', function() {
+		if (jQuery('#errorWrap')[0].visible())
 			hideError();
 
-		if ($('okWrap').visible())
+		if (jQuery('#okWrap')[0].visible())
 			hideOk();
 
-		if ($('infoWrap').visible())
+		if (jQuery('#infoWrap')[0].visible())
 			hideInfo();
 	});
 
-	if ($('lockWrap')) {
+	if (jQuery('#lockWrap')[0]) {
 		Event.observe(window, 'resize', function() {
-			if ($('lockWrap').visible()) {
+			if (jQuery('#lockWrap')[0].visible()) {
 				refresh_body_size();
 
-				$('lockWrap').style.width = my_width+'px';
-				$('lockWrap').style.height = my_height+'px';
+				jQuery('#lockWrap').width(my_width);
+				jQuery('#lockWrap').height(my_height);
 			}
 		});
 	}
 
-	if ($('desktopAppletContainer')) {
+	if (jQuery('#desktopAppletContainer')[0]) {
 		Event.observe(window, 'resize', function() {
-			if ($('desktopAppletContainer').visible()) {
-				new Effect.Center($('desktopAppletContainer'));
+			if (jQuery('#desktopAppletContainer')[0].visible()) {
+				new Effect.Center(jQuery('#desktopAppletContainer')[0]);
 
 				if (Logger.has_instance())
-					new Effect.Move($('desktopAppletContainer'), { x: 0, y: -75, duration: 0.01 });
+					new Effect.Move(jQuery('#desktopAppletContainer')[0], { x: 0, y: -75, duration: 0.01 });
 			}
 		});
 	}
@@ -133,20 +133,20 @@ Event.observe(window, 'load', function() {
 function showLock() {
 	refresh_body_size();
 
-	if (! $('lockWrap').visible()) {
-		$('lockWrap').style.width = my_width+'px';
-		$('lockWrap').style.height = my_height+'px';
+	if (! jQuery('#lockWrap')[0].visible()) {
+		jQuery('#lockWrap').width(my_width);
+		jQuery('#lockWrap').height(my_height);
 
-		$('lockWrap').show();
+		jQuery('#lockWrap').show();
 	}
 }
 
 function hideLock() {
-	if ($('lockWrap').visible() && (! $('errorWrap').visible() && ! $('okWrap').visible() && ! $('infoWrap').visible())) {
-		if ($('user_password') && $('user_password').visible() && $('user_password').disabled == false) {
-			$('user_password').value = '';
+	if (jQuery('#lockWrap')[0].visible() && (! jQuery('#errorWrap')[0].visible() && ! jQuery('#okWrap')[0].visible() && ! jQuery('#infoWrap')[0].visible())) {
+		if (jQuery('#user_password')[0] && jQuery('#user_password')[0].visible() && jQuery('#user_password')[0].disabled == false) {
+			jQuery('#user_password').prop('value','');
 		}
-		$('lockWrap').hide();
+		jQuery('#lockWrap').hide();
 	}
 }
 
@@ -158,26 +158,26 @@ function showError(errormsg) {
 
 	showLock();
 
-	$('errorWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right;"><a href="javascript:;" onclick="hideError(); return false;"><img src="media/image/cross.png" width="16" height="16" alt="" title="" /></a></div>'+errormsg;
-	$('errorWrap').style.padding = '10px';
+	jQuery('#errorWrap').html('<div style="width: 16px; height: 16px; float: right;"><a href="javascript:;" onclick="hideError(); return false;"><img src="media/image/cross.png" width="16" height="16" alt="" title="" /></a></div>'+errormsg);
+	jQuery('#errorWrap').css('padding', '10px');
 
-	new Effect.Center($('errorWrap'));
-	var elementDimensions = Element.getDimensions($('errorWrap'));
-	$('errorWrap').style.width = elementDimensions.width+'px';
+	new Effect.Center(jQuery('#errorWrap')[0]);
+	var elementDimensions = Element.getDimensions(jQuery('#errorWrap')[0]);
+	jQuery('#errorWrap').width(elementDimensions.width);
 
-	new Effect.Appear($('errorWrap'));
+	new Effect.Appear(jQuery('#errorWrap')[0]);
 
 	Nifty('div#errorWrap');
 }
 
 function hideError() {
-	$('errorWrap').hide();
+	jQuery('#errorWrap').hide();
 
 	hideLock();
 
-	$('errorWrap').innerHTML = '';
-	$('errorWrap').style.width = '';
-	$('errorWrap').style.height = '';
+	jQuery('#errorWrap').html('');
+	jQuery('#errorWrap').width('');
+	jQuery('#errorWrap').height('');
 }
 
 function showOk(okmsg) {
@@ -188,14 +188,14 @@ function showOk(okmsg) {
 
 	showLock();
 
-	$('okWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right;"><a href="javascript:;" onclick="hideOk(); return false;"><img src="media/image/cross.png" width="16" height="16" alt="" title="" /></a></div>'+okmsg;
-	$('okWrap').style.padding = '10px';
+	jQuery('#okWrap').html('<div style="width: 16px; height: 16px; float: right;"><a href="javascript:;" onclick="hideOk(); return false;"><img src="media/image/cross.png" width="16" height="16" alt="" title="" /></a></div>'+okmsg);
+	jQuery('#okWrap').css('padding', '10px');
 
-	new Effect.Center($('okWrap'));
-	var elementDimensions = Element.getDimensions($('okWrap'));
-	$('okWrap').style.width = elementDimensions.width+'px';
+	new Effect.Center(jQuery('#okWrap')[0]);
+	var elementDimensions = Element.getDimensions(jQuery('#okWrap')[0]);
+	jQuery('#okWrap').width(elementDimensions.width);
 
-	new Effect.Appear($('okWrap'));
+	new Effect.Appear(jQuery('#okWrap')[0]);
 
 	Nifty('div#okWrap');
 
@@ -205,13 +205,13 @@ function showOk(okmsg) {
 }
 
 function hideOk() {
-	$('okWrap').hide();
+	jQuery('#okWrap').hide();
 
 	hideLock();
 
-	$('okWrap').innerHTML = '';
-	$('okWrap').style.width = '';
-	$('okWrap').style.height = '';
+	jQuery('#okWrap').html('');
+	jQuery('#okWrap').width('');
+	jQuery('#okWrap').height('');
 }
 
 function showInfo(infomsg) {
@@ -222,38 +222,34 @@ function showInfo(infomsg) {
 
 	showLock();
 
-	$('infoWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right;"><a href="javascript:;" onclick="hideInfo(); return false;"><img src="media/image/cross.png" width="16" height="16" alt="" title="" /></a></div>'+infomsg;
-	$('infoWrap').style.padding = '10px';
+	jQuery('#infoWrap').html('<div style="width: 16px; height: 16px; float: right;"><a href="javascript:;" onclick="hideInfo(); return false;"><img src="media/image/cross.png" width="16" height="16" alt="" title="" /></a></div>'+infomsg);
+	jQuery('#infoWrap').css('padding', '10px');
 
-	new Effect.Center($('infoWrap'));
-	var elementDimensions = Element.getDimensions($('infoWrap'));
-	$('infoWrap').style.width = elementDimensions.width+'px';
+	new Effect.Center(jQuery('#infoWrap')[0]);
+	var elementDimensions = Element.getDimensions(jQuery('#infoWrap')[0]);
+	jQuery('#infoWrap').width(elementDimensions.width);
 
-	new Effect.Appear($('infoWrap'));
+	new Effect.Appear(jQuery('#infoWrap')[0]);
 
 	Nifty('div#infoWrap');
 }
 
 function hideInfo() {
-	$('infoWrap').hide();
+	jQuery('#infoWrap').hide();
 
 	hideLock();
 
-	$('infoWrap').innerHTML = '';
-	$('infoWrap').style.width = '';
-	$('infoWrap').style.height = '';
+	jQuery('#infoWrap').html('');
+	jQuery('#infoWrap').width('');
+	jQuery('#infoWrap').height('');
 }
 
 function translateInterface(lang_) {
-	new Ajax.Request(
-		'translate.php',
-		{
-			method: 'get',
-			parameters: {
-				lang: lang_
-			},
-			onSuccess: function(transport) {
-				var xml = transport.responseXML;
+	jQuery.ajax({
+			url: 'translate.php?differentiator='+Math.floor(Math.random()*50000)+'&lang='+lang_,
+			type: 'GET',
+			dataType: 'xml',
+			success: function(xml) {
 				if (xml == null)
 					return;
 
@@ -275,7 +271,7 @@ function translateInterface(lang_) {
 
 function applyTranslations(translations) {
 	translations.each(function(pair) {
-		var obj = $(pair.key+'_gettext');
+		var obj = jQuery('#'+pair.key+'_gettext')[0];
 		if (! obj)
 			return;
 		

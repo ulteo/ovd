@@ -49,7 +49,7 @@ var Applications = Class.create(Daemon, {
 		Logger.debug('[applications] connect_servers()');
 
 		try {
-			var ulteoapplet_isactive = $('ulteoapplet').isActive();
+			var ulteoapplet_isactive = jQuery('#ulteoapplet')[0].isActive();
 			if (! ulteoapplet_isactive)
 				throw "applet is not ready";
 		} catch(e) {
@@ -103,8 +103,8 @@ var Applications = Class.create(Daemon, {
 		});
 
 		var applet = this.buildAppletNode('Applications', applet_params);
-		$('applicationsAppletContainer').show();
-		$('applicationsAppletContainer').appendChild(applet);
+		jQuery('#applicationsAppletContainer').show();
+		jQuery('#applicationsAppletContainer').append(applet);
 
 		return true;
 	},
@@ -206,14 +206,14 @@ var Applications = Class.create(Daemon, {
 			var app_window = window.open(url, '_blank');
 		} else {
 			server = this.servers.get(application_.server_id);
-			$('ulteoapplet').startApplication(++this.application_token, application_.id, server.java_id);
+			jQuery('#ulteoapplet')[0].startApplication(++this.application_token, application_.id, server.java_id);
 			this.liaison_runningapplicationtoken_application.set(this.application_token, application_.id);
 		}
 	},
 
 	launch_application_with_file: function(application_, type_, path_, share_) {
 		var server = this.servers.get(application_.server_id);
-		$('ulteoapplet').startApplicationWithFile(++this.application_token, application_.id, server.java_id, type_, path_, share_);
+		jQuery('#ulteoapplet')[0].startApplicationWithFile(++this.application_token, application_.id, server.java_id, type_, path_, share_);
 		this.liaison_runningapplicationtoken_application.set(this.application_token, application_.id);
 	},
 
@@ -229,23 +229,17 @@ var Applications = Class.create(Daemon, {
 	check_start_app: function() {
 		Logger.debug('[applications] check_start_app()');
 
-		new Ajax.Request(
-			'start_app.php',
-			{
-				method: 'get',
-				parameters: {
-					check: true,
-					differentiator: Math.floor(Math.random()*50000)
-				},
-				onSuccess: this.parse_check_start_app.bind(this)
+		jQuery.ajax({
+				url: 'start_app.php?differentiator='+Math.floor(Math.random()*50000)+'&check=true',
+				type: 'GET',
+				dataType: 'xml',
+				success: this.parse_check_start_app.bind(this)
 			}
 		);
 	},
 
-	parse_check_start_app: function(transport) {
+	parse_check_start_app: function(xml) {
 		Logger.debug('[applications] parse_check_start_app(transport@check_start_app())');
-
-		var xml = transport.responseXML;
 
 		var buffer = xml.getElementsByTagName('start_app');
 

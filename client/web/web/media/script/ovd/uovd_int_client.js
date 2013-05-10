@@ -44,157 +44,157 @@ Event.observe(window, 'load', function() {
 	test.perform();
 
 	/* Center containers at startup */
-	new Effect.Center($('splashContainer'));
-	new Effect.Center($('endContainer'));
-	new Effect.Center($('iframeWrap'));
+	new Effect.Center(jQuery('#splashContainer')[0]);
+	new Effect.Center(jQuery('#endContainer')[0]);
+	new Effect.Center(jQuery('#iframeWrap')[0]);
 
 	/* Keep containers centered after a window resize */
 	Event.observe(window, 'resize', function() {
-		new Effect.Center($('splashContainer'));
-		new Effect.Center($('desktopFullscreenContainer'));
-		new Effect.Center($('endContainer'));
-		new Effect.Center($('iframeWrap'));
+		new Effect.Center(jQuery('#splashContainer')[0]);
+		new Effect.Center(jQuery('#desktopFullscreenContainer')[0]);
+		new Effect.Center(jQuery('#endContainer')[0]);
+		new Effect.Center(jQuery('#iframeWrap')[0]);
 	});
 
 	/* Hide panels */
-	$('desktopModeContainer').hide();
-	$('desktopAppletContainer').hide();
-	$('applicationsModeContainer').hide();
-	$('applicationsAppletContainer').hide();
-	$('fileManagerWrap').hide();
-	$('debugContainer').hide();
-	$('debugLevels').hide();
-	$('loginBox').hide();
-	$('newsWrap').hide();
+	jQuery('#desktopModeContainer').hide();
+	jQuery('#desktopAppletContainer').hide();
+	jQuery('#applicationsModeContainer').hide();
+	jQuery('#applicationsAppletContainer').hide();
+	jQuery('#fileManagerWrap').hide();
+	jQuery('#debugContainer').hide();
+	jQuery('#debugLevels').hide();
+	jQuery('#loginBox').hide();
+	jQuery('#newsWrap').hide();
 
 	/* Fade-in the login panel */
 	setTimeout(function() {
-		new Effect.Appear($('loginBox'));
+		new Effect.Appear(jQuery('#loginBox')[0]);
 	}, 1000);
 
 	/* Translate string and select flag icon */
 	applyTranslations(i18n_tmp);
-	updateFlag($('session_language').value);
+	updateFlag(jQuery('#session_language').prop('value'));
 
 	/* Update translation on language change */
-	Event.observe($('session_language'), 'change', function() {
-		translateInterface($('session_language').value);
-		updateFlag($('session_language').value);
+	Event.observe(jQuery('#session_language')[0], 'change', function() {
+		translateInterface(jQuery('#session_language').prop('value'));
+		updateFlag(jQuery('#session_language').prop('value'));
 	});
-	Event.observe($('session_language'), 'keyup', function() {
-		translateInterface($('session_language').value);
-		updateFlag($('session_language').value);
+	Event.observe(jQuery('#session_language')[0], 'keyup', function() {
+		translateInterface(jQuery('#session_language').prop('value'));
+		updateFlag(jQuery('#session_language').prop('value'));
 	});
 
 	/* Auth form validation (mostly for special auth methods) */
-	Event.observe($('sessionmanager_host'),         'keyup',  function() { checkLogin(); });
-	Event.observe($('sessionmanager_host'),         'change', function() { checkLogin(); });
-	Event.observe($('user_login'),                  'change', function() { checkLogin(); });
-	Event.observe($('user_login'),                  'keyup',  function() { checkLogin(); });
-	Event.observe($('use_local_credentials_true'),  'change', function() { checkLogin(); });
-	Event.observe($('use_local_credentials_true'),  'click',  function() { checkLogin(); });
-	Event.observe($('use_local_credentials_false'), 'change', function() { checkLogin(); });
-	Event.observe($('use_local_credentials_false'), 'click',  function() { checkLogin(); });
+	Event.observe(jQuery('#sessionmanager_host')[0],         'keyup',  function() { checkLogin(); });
+	Event.observe(jQuery('#sessionmanager_host')[0],         'change', function() { checkLogin(); });
+	Event.observe(jQuery('#user_login')[0],                  'change', function() { checkLogin(); });
+	Event.observe(jQuery('#user_login')[0],                  'keyup',  function() { checkLogin(); });
+	Event.observe(jQuery('#use_local_credentials_true')[0],  'change', function() { checkLogin(); });
+	Event.observe(jQuery('#use_local_credentials_true')[0],  'click',  function() { checkLogin(); });
+	Event.observe(jQuery('#use_local_credentials_false')[0], 'change', function() { checkLogin(); });
+	Event.observe(jQuery('#use_local_credentials_false')[0], 'click',  function() { checkLogin(); });
 
 	/* Session form validation */
-	Event.observe($('session_mode'), 'change', function() { checkSessionMode(); });
-	Event.observe($('session_mode'), 'click',  function() { checkSessionMode(); });
+	Event.observe(jQuery('#session_mode')[0], 'change', function() { checkSessionMode(); });
+	Event.observe(jQuery('#session_mode')[0], 'click',  function() { checkSessionMode(); });
 
 	/* Form submit using "Enter" key */
-	Event.observe($('user_login'), 'keydown', function(event) {
+	Event.observe(jQuery('#user_login')[0], 'keydown', function(event) {
 		if (typeof event == 'undefined' || event.keyCode != 13)
 			return;
-		$('startsession').submit();
+		jQuery('#startsession')[0].submit();
 	});
-	Event.observe($('user_password'), 'keydown', function(event) {
+	Event.observe(jQuery('#user_password')[0], 'keydown', function(event) {
 		if (typeof event == 'undefined' || event.keyCode != 13)
 			return;
-		$('startsession').submit();
+		jQuery('#startsession')[0].submit();
 	});
 
 	/* Submit event */
-	Event.observe($('startsession'), 'submit', function() {
+	Event.observe(jQuery('#startsession')[0], 'submit', function() {
 		startSession();
 	});
 
 	/* Open "advanced settings" tab */
-	Event.observe($('advanced_settings_gettext'), 'click', function() {
+	Event.observe(jQuery('#advanced_settings_gettext')[0], 'click', function() {
 		switchSettings();
 	});
 
 	/* Suspend */
-	Event.observe($('suspend_link'), 'click', function() {
+	Event.observe(jQuery('#suspend_link')[0], 'click', function() {
 		daemon.suspend();
 	});
 
 	/* Logout confirmation for "Applications" mode */
-	Event.observe($('logout_link'), 'click', function() {
+	Event.observe(jQuery('#logout_link')[0], 'click', function() {
 		confirmLogout(confirm_logout);
 	});
 
 	/* Hide IFrame */
-	Event.observe($('iframeLink'), 'click', function() {
+	Event.observe(jQuery('#iframeLink')[0], 'click', function() {
 		hideIFrame();
 	});
 
 	/* Hide News */
-	Event.observe($('newsHideLink'), 'click', function() {
+	Event.observe(jQuery('#newsHideLink')[0], 'click', function() {
 		hideNews();
 	});
 
 	/* Lock Wrap */
-	Event.observe($('lockWrap'), 'click', function() {
-		if ($('iframeWrap').visible()) hideIFrame();
-		if ($('newsWrap') && $('newsWrap').visible()) hideNews();
+	Event.observe(jQuery('#lockWrap')[0], 'click', function() {
+		if (jQuery('#iframeWrap')[0].visible()) hideIFrame();
+		if (jQuery('#newsWrap')[0] && jQuery('#newsWrap')[0].visible()) hideNews();
 	});
 
 	/* Set focus to the first text field */
 	if(focus_sm_textfield) {
-		if ($('sessionmanager_host') && $('sessionmanager_host').visible()) $('sessionmanager_host').focus();
+		if (jQuery('#sessionmanager_host')[0] && jQuery('#sessionmanager_host')[0].visible()) jQuery('#sessionmanager_host')[0].focus();
 	} else if(focus_pw_textfield) {
-		if ($('user_password') && $('user_password').visible()) $('user_password').focus();
+		if (jQuery('#user_password')[0] && jQuery('#user_password')[0].visible()) jQuery('#user_password')[0].focus();
 	} else {
-		if ($('user_login') && $('user_login').visible()) $('user_login').focus();
+		if (jQuery('#user_login')[0] && jQuery('#user_login')[0].visible()) jQuery('#user_login')[0].focus();
 	}
 
 	/* Configure the SM Host field behaviour */
-	if ($('sessionmanager_host').value == '') {
-		$('sessionmanager_host').style.color = 'grey';
-		$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
-		if ($('sessionmanager_host') && $('sessionmanager_host').visible())
-			setCaretPosition($('sessionmanager_host'), 0);
+	if (jQuery('#sessionmanager_host').prop('value') == '') {
+		jQuery('#sessionmanager_host').css('color', 'grey');
+		jQuery('#sessionmanager_host').prop('value', i18n.get('sessionmanager_host_example'));
+		if (jQuery('#sessionmanager_host')[0] && jQuery('#sessionmanager_host')[0].visible())
+			setCaretPosition(jQuery('#sessionmanager_host')[0], 0);
 	}
-	Event.observe($('sessionmanager_host'), 'focus', function() {
-		if ($('sessionmanager_host').value == i18n.get('sessionmanager_host_example')) {
-			$('sessionmanager_host').style.color = 'black';
-			$('sessionmanager_host').value = '';
+	Event.observe(jQuery('#sessionmanager_host')[0], 'focus', function() {
+		if (jQuery('#sessionmanager_host').prop('value') == i18n.get('sessionmanager_host_example')) {
+			jQuery('#sessionmanager_host').css('color', 'black');
+			jQuery('#sessionmanager_host').prop('value', '');
 		}
 	});
-	Event.observe($('sessionmanager_host'), 'blur', function() {
-		if ($('sessionmanager_host').value == '') {
-			$('sessionmanager_host').style.color = 'grey';
-			$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
+	Event.observe(jQuery('#sessionmanager_host')[0], 'blur', function() {
+		if (jQuery('#sessionmanager_host').prop('value') == '') {
+			jQuery('#sessionmanager_host').css('color', 'grey');
+			jQuery('#sessionmanager_host').prop('value', i18n.get('sessionmanager_host_example'));
 		}
 	});
 	window.updateSMHostField = function() {
-		if ($('sessionmanager_host').style.color != 'grey')
+		if (jQuery('#sessionmanager_host').css('color') != 'grey')
 			return;
-		$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
+		jQuery('#sessionmanager_host').prop('value', i18n.get('sessionmanager_host_example'));
 	}
 
 	/* Configure the debug panel */
 	if(debug_mode) {
-		Event.observe($('level_debug'),   'click', function() { Logger.toggle_level('debug'); });
-		Event.observe($('level_info'),    'click', function() { Logger.toggle_level('info'); });
-		Event.observe($('level_warning'), 'click', function() { Logger.toggle_level('warning'); });
-		Event.observe($('level_error'),   'click', function() { Logger.toggle_level('error'); });
-		Event.observe($('clear_button'),  'click', function() { Logger.clear(); });
+		Event.observe(jQuery('#level_debug')[0],   'click', function() { Logger.toggle_level('debug'); });
+		Event.observe(jQuery('#level_info')[0],    'click', function() { Logger.toggle_level('info'); });
+		Event.observe(jQuery('#level_warning')[0], 'click', function() { Logger.toggle_level('warning'); });
+		Event.observe(jQuery('#level_error')[0],   'click', function() { Logger.toggle_level('error'); });
+		Event.observe(jQuery('#clear_button')[0],  'click', function() { Logger.clear(); });
 		switchSettings();
 	}
 });
 
 function startSession() {
-	if ($('errorWrap').visible()) {
+	if (jQuery('#errorWrap')[0].visible()) {
 		hideError();
 		return false;
 	}
@@ -202,78 +202,70 @@ function startSession() {
 	disableLogin();
 
 	debug = false;
-	if ($('debug_true') && $('debug_true').checked)
+	if (jQuery('#debug_true')[0] && jQuery('#debug_true').prop('checked'))
 		debug = true;
 
-	session_mode = $('session_mode').value;
+	session_mode = jQuery('#session_mode').prop('value');
 	session_mode = session_mode.substr(0, 1).toUpperCase()+session_mode.substr(1, session_mode.length-1);
 
 	desktop_fullscreen = false;
-	if ($('desktop_fullscreen_true') && $('desktop_fullscreen_true').checked)
+	if (jQuery('#desktop_fullscreen_true')[0] && jQuery('#desktop_fullscreen_true').prop('checked'))
 		desktop_fullscreen = true;
 
-	if (! $('use_local_credentials_true') || ! $('use_local_credentials_true').checked) {
+	if (! jQuery('#use_local_credentials_true')[0] || ! jQuery('#use_local_credentials_true').prop('checked')) {
+		try {
+			var doc = document.implementation.createDocument("", "", null);
+		} catch(e) {
+			var doc = new ActiveXObject("Microsoft.XMLDOM");
+		}
+
+		var session_node = doc.createElement("session");
+		session_node.setAttribute("mode", jQuery('#session_mode').prop('value'));
+		session_node.setAttribute("language", jQuery('#session_language').prop('value'));
+		session_node.setAttribute("timezone", getTimezoneName());
+
+		var user_node = doc.createElement("user");
+		user_node.setAttribute("login", jQuery('#user_login').prop('value'));
+		user_node.setAttribute("password", jQuery('#user_password').prop('value'));
+		session_node.appendChild(user_node);
+		doc.appendChild(session_node);
+
 		if( ! OPTION_USE_PROXY ) {
-			new Ajax.Request(
-				'login.php',
-				{
-					method: 'post',
-					parameters: {
-						requested_port: ((window.location.port !=  '')?window.location.port:'443'),
-						sessionmanager_host: $('sessionmanager_host').value,
-						login: $('user_login').value,
-						password: $('user_password').value,
-						mode: $('session_mode').value,
-						language: $('session_language').value,
-						keymap: $('session_keymap').value,
-						timezone: getTimezoneName(),
-						desktop_fullscreen: ((desktop_fullscreen)?1:0),
-						debug: ((debug)?1:0)
+			jQuery.ajax({
+					url: '/ovd/client/start.php',
+					type: 'POST',
+					dataType: "xml",
+					contentType: 'text/xml',
+					data: (new XMLSerializer()).serializeToString(doc),
+					success: function(xml) {
+						onStartSessionSuccess(xml);
 					},
-					onSuccess: function(transport) {
-						onStartSessionSuccess(transport.responseXML);
-					},
-					onFailure: function() {
+					error: function() {
 						onStartSessionFailure();
 					}
 				}
 			);
 		} else {
-			try {
-				var doc = document.implementation.createDocument("", "", null);
-			} catch(e) {
-				var doc = new ActiveXObject("Microsoft.XMLDOM");
-			}
-
-			var session_node = doc.createElement("session");
-			session_node.setAttribute("mode", $('session_mode').value);
-			session_node.setAttribute("language", $('session_language').value);
-			session_node.setAttribute("timezone", getTimezoneName());
-
-			var user_node = doc.createElement("user");
-			user_node.setAttribute("login", $('user_login').value);
-			user_node.setAttribute("password", $('user_password').value);
-			session_node.appendChild(user_node);
-			doc.appendChild(session_node);
-
-			new Ajax.Request(
-				"proxy.php",
-				{
-					method: 'post',
-					requestHeaders: ['X-Ovd-Service', 'start'],
-					contentType: 'text/xml',
-					postBody: doc,
-					onSuccess: function(transport) {
-						onStartSessionSuccess(transport.responseXML);
+			jQuery.ajax({
+					url: 'proxy.php',
+					type: 'POST',
+					dataType: "xml",
+					headers: {
+						"X-Ovd-Service" : 'start'
 					},
-					onFailure: function() {
+					contentType: 'text/xml',
+					data: (new XMLSerializer()).serializeToString(doc),
+					success: function(xml) {
+						onStartSessionSuccess(xml);
+					},
+					error: function() {
 						onStartSessionFailure();
 					}
 				}
 			);
 		}
 	} else {
-		$('CheckSignedJava').ajaxRequest($('sessionmanager_host').value, $('session_mode').value, $('session_language').value, getTimezoneName(), 'onStartSessionJavaRequest');
+		jQuery('#CheckSignedJava')[0].ajaxRequest(jQuery('#sessionmanager_host').prop('value'), jQuery('#session_mode').prop('value'), jQuery('#session_language').prop('value'), getTimezoneName(), 'onStartSessionJavaRequest');
 		return false;
 	}
 
@@ -281,15 +273,15 @@ function startSession() {
 }
 
 function hideLogin() {
-	new Effect.Move($('loginBox'), { x: 0, y: -1000 });
+	new Effect.Move(jQuery('#loginBox')[0], { x: 0, y: -1000 });
 	setTimeout(function() {
-		$('loginBox').hide();
+		jQuery('#loginBox').hide();
 	}, 1000);
 }
 
 function showLogin() {
-	$('loginBox').show();
-	new Effect.Move($('loginBox'), { x: 0, y: 1000 });
+	jQuery('#loginBox').show();
+	new Effect.Move(jQuery('#loginBox')[0], { x: 0, y: 1000 });
 
 	if (debug) {
 		Logger.del_instance();
@@ -298,13 +290,13 @@ function showLogin() {
 }
 
 function disableLogin() {
-	$('submitButton').hide();
-	$('submitLoader').show();
+	jQuery('#submitButton').hide();
+	jQuery('#submitLoader').show();
 }
 
 function enableLogin() {
-	$('submitButton').show();
-	$('submitLoader').hide();
+	jQuery('#submitButton').show();
+	jQuery('#submitLoader').hide();
 }
 
 /// Parses login.php XML answer
@@ -364,7 +356,7 @@ function onStartSessionSuccess(xml_) {
 			sessionmanager.port = window.location.port; 
 	}
 	else {
-		var buf = $('sessionmanager_host').value;
+		var buf = jQuery('#sessionmanager_host').prop('value');
 		var sep = buf.lastIndexOf(":");
 		if (sep == -1)
 			sessionmanager.host = buf;
@@ -383,11 +375,11 @@ function onStartSessionSuccess(xml_) {
 	for (var i = 0; i < buffer.length; i++) {
 		try {
 			if (buffer[i].getAttribute('name') == 'user_displayname')
-				$('user_displayname').innerHTML = buffer[i].getAttribute('value');
+				jQuery('#user_displayname').html(buffer[i].getAttribute('value'));
 		} catch(e) {}
 	}
 
-	$('user_password').value = '';
+	jQuery('#user_password').prop('value', '');
 
 	var explorer = false;
 	var buffer = xml.getElementsByTagName('explorer');
@@ -398,14 +390,14 @@ function onStartSessionSuccess(xml_) {
 	showSplash();
 
 	if (session_mode == 'Desktop') {
-		new Effect.Move($('desktopModeContainer'), { x: 0, y: -my_height, mode: 'absolute' });
+		new Effect.Move(jQuery('#desktopModeContainer')[0], { x: 0, y: -my_height, mode: 'absolute' });
 		setTimeout(function() {
-			$('desktopModeContainer').show();
+			jQuery('#desktopModeContainer').show();
 		}, 2000);
 	} else {
-		new Effect.Move($('applicationsModeContainer'), { x: 0, y: -my_height, mode: 'absolute' });
+		new Effect.Move(jQuery('#applicationsModeContainer')[0], { x: 0, y: -my_height, mode: 'absolute' });
 		setTimeout(function() {
-			$('applicationsModeContainer').show();
+			jQuery('#applicationsModeContainer').show();
 		}, 2000);
 	}
 
@@ -418,9 +410,9 @@ function onStartSessionSuccess(xml_) {
 
 	daemon.explorer = explorer;
 	if (daemon.explorer)
-		$('fileManagerWrap').show();
+		jQuery('#fileManagerWrap').show();
 
-	daemon.keymap = $('session_keymap').value;
+	daemon.keymap = jQuery('#session_keymap').prop('value');
 	try {
 		var duration = parseInt(session_node.getAttribute('duration'));
 		if (! isNaN(duration))
@@ -438,9 +430,9 @@ function onStartSessionSuccess(xml_) {
 
 	daemon.add_session_ready_callback(function onSessionReady(d_) {
 		if (session_mode == 'Desktop')
-			new Effect.Move($('desktopModeContainer'), { x: 0, y: my_height });
+			new Effect.Move(jQuery('#desktopModeContainer')[0], { x: 0, y: my_height });
 		else
-			new Effect.Move($('applicationsModeContainer'), { x: 0, y: my_height });
+			new Effect.Move(jQuery('#applicationsModeContainer')[0], { x: 0, y: my_height });
 		
 		setTimeout(function() {
 			hideSplash();
@@ -463,9 +455,9 @@ function onStartSessionSuccess(xml_) {
 
 		if (debug) {
 			if (session_mode == 'Desktop')
-				$('desktopModeContainer').style.height = daemon.my_height+'px';
+				jQuery('#desktopModeContainer').height(daemon.my_height);
 			else
-				$('applicationsModeContainer').style.height = daemon.my_height+'px';
+				jQuery('#applicationsModeContainer').height(daemon.my_height);
 		}
 		
 		daemon.loop();
@@ -519,20 +511,21 @@ function onStartSessionJavaRequest(http_code_, content_type_, data_, cookies_) {
 }
 
 function synchronize(cookie_) {
-	new Ajax.Request(
-		'synchronize.php',
-		{
-			method: 'post',
-			asynchronous: false,
-			parameters: {
-				sessionmanager_host: $('sessionmanager_host').value,
-				mode: $('session_mode').value,
-				language: $('session_language').value,
-				keymap: $('session_keymap').value,
+	jQuery.ajax({
+			url: 'synchronize.php',
+			type: 'POST',
+			async: false,
+			headers: {
+				"Forward-Cookie" : cookie_
+			},
+			data: {
+				sessionmanager_host: jQuery('#sessionmanager_host').prop('value'),
+				mode: jQuery('#session_mode').prop('value'),
+				language: jQuery('#session_language').prop('value'),
+				keymap: jQuery('#session_keymap').prop('value'),
 				timezone: getTimezoneName(),
 				debug: ((debug)?1:0)
-			},
-			requestHeaders: new Array('Forward-Cookie', cookie_)
+			}
 		}
 	);
 }
@@ -551,48 +544,48 @@ function showNews(title_, content_) {
 
 	showLock();
 
-	$('newsWrap_title').innerHTML = title_;
+	jQuery('#newsWrap_title').html(title_);
 	refresh_body_size();
 	var reg = new RegExp("\n", "g");
-	$('newsWrap_content').innerHTML = '<div style="width: 100%; height: '+parseInt(my_height*(75/100))+'px; overflow: auto;">'+content_.replace(reg, '<br />')+'</div>';
+	jQuery('#newsWrap_content').html('<div style="width: 100%; height: '+parseInt(my_height*(75/100))+'px; overflow: auto;">'+content_.replace(reg, '<br />')+'</div>');
 
-	new Effect.Center($('newsWrap'));
+	new Effect.Center(jQuery('#newsWrap')[0]);
 
-	new Effect.Appear($('newsWrap'));
+	new Effect.Appear(jQuery('#newsWrap')[0]);
 }
 
 function hideNews() {
-	$('newsWrap').hide();
+	jQuery('#newsWrap').hide();
 
 	hideLock();
 
-	$('newsWrap_title').innerHTML = '';
-	$('newsWrap_content').innerHTML = '';
-	$('newsWrap').style.width = '750px';
-	$('newsWrap').style.height = '';
+	jQuery('#newsWrap_title').html('');
+	jQuery('#newsWrap_content').html('');
+	jQuery('#newsWrap').width('750px');
+	jQuery('#newsWrap').height('');
 }
 
 function showIFrame(url_) {
 	showLock();
 
-	$('iframeContainer').src = url_;
+	jQuery('#iframeContainer').prop('src', url_);
 
-	new Effect.Appear($('iframeWrap'));
+	new Effect.Appear(jQuery('#iframeWrap')[0]);
 }
 
 function hideIFrame() {
-	$('iframeWrap').hide();
+	jQuery('#iframeWrap').hide();
 
-	$('iframeContainer').src = 'about:blank';
+	jQuery('#iframeContainer').prop('src', 'about:blank');
 
 	hideLock();
 }
 
 function updateFlag(id_) {
 	if (!big_image_map) {
-		$('session_language_flag').src = 'media/image/flags/'+id_+'.png';
+		jQuery('#session_language_flag').attr('src', 'media/image/flags/'+id_+'.png');
 	} else {
-		$('session_language_flag').className = 'image_'+id_+'_png';
+		jQuery('#session_language_flag').addClass('image_'+id_+'_png');
 	}
 }
 
@@ -600,12 +593,12 @@ function updateKeymap(id_) {
 	if (id_ == null)
 		return false;
 	
-	if (! $('session_keymap'))
+	if (! jQuery('#session_keymap')[0])
 		return false;
 	
-	for (var i = 0; i < $('session_keymap').length; i++) {
-		if ($('session_keymap')[i].value == id_) {
-			$('session_keymap')[i].selected = 'selected';
+	for (var i = 0; i < jQuery('#session_keymap')[0].length; i++) {
+		if (jQuery('#session_keymap')[0][i].value == id_) {
+			jQuery('#session_keymap')[0][i].selected = 'selected';
 			return true;
 		}
 	}
@@ -623,20 +616,20 @@ function switchSettings() {
 		switchsettings_lock = false;
 	}, 400);
 
-	if ($('advanced_settings').visible()) {
+	if (jQuery('#advanced_settings')[0].visible()) {
 		if (!big_image_map) {
-			$('advanced_settings_status').innerHTML = '<img src="media/image/show.png" width="12" height="12" alt="" title="" />';
+			jQuery('#advanced_settings_status').html('<img src="media/image/show.png" width="12" height="12" alt="" title="" />');
 		} else {
-			$('advanced_settings_status').removeClassName('image_hide_png').addClassName('image_show_png');
+			jQuery('#advanced_settings_status').removeClass('image_hide_png').addClass('image_show_png');
 		}
-		new Effect.SlideUp($('advanced_settings'), { duration: 0.4 });
+		new Effect.SlideUp(jQuery('#advanced_settings')[0], { duration: 0.4 });
 	} else {
 		if (!big_image_map) {
-			$('advanced_settings_status').innerHTML = '<img src="media/image/hide.png" width="12" height="12" alt="" title="" />';
+			jQuery('#advanced_settings_status').html('<img src="media/image/hide.png" width="12" height="12" alt="" title="" />');
 		} else {
-			$('advanced_settings_status').removeClassName('image_show_png').addClassName('image_hide_png');
+			jQuery('#advanced_settings_status').removeClass('image_show_png').addClass('image_hide_png');
 		}
-		new Effect.SlideDown($('advanced_settings'), { duration: 0.4 });
+		new Effect.SlideDown(jQuery('#advanced_settings')[0], { duration: 0.4 });
 	}
 }
 
@@ -654,30 +647,30 @@ function setCaretPosition(ctrl, pos) {
 }
 
 function checkLogin() {
-	if (! $('user_login') || ! $('user_login_local') || ! $('password_row'))
+	if (! jQuery('#user_login')[0] || ! jQuery('#user_login_local')[0] || ! jQuery('#password_row')[0])
 		return;
 
-	if ($('use_local_credentials_true') && $('use_local_credentials_true').checked) {
-		$('user_login_local').innerHTML = $('CheckSignedJava').getUserLogin();
-		if ($('user_password'))
-			$('user_password').disabled = true;
+	if (jQuery('#use_local_credentials_true')[0] && jQuery('#use_local_credentials_true').prop('checked')) {
+		jQuery('#user_login_local').html(jQuery('#CheckSignedJava')[0].getUserLogin());
+		if (jQuery('#user_password')[0])
+			jQuery('#user_password').prop('disabled', 'true');
 		
-		$('user_login').hide();
-		$('user_login_local').show();
-		$('password_row').hide();
+		jQuery('#user_login').hide();
+		jQuery('#user_login_local').show();
+		jQuery('#password_row').hide();
 	} else {
-		if ($('user_password'))
-			$('user_password').disabled = false;
+		if (jQuery('#user_password')[0])
+			jQuery('#user_password').removeProp('disabled');
 		
-		$('user_login').show();
-		$('user_login_local').hide();
-		$('password_row').show();
+		jQuery('#user_login').show();
+		jQuery('#user_login_local').hide();
+		jQuery('#password_row').show();
 	}
 
-	if ($('sessionmanager_host').value != '' && $('sessionmanager_host').value != i18n.get('sessionmanager_host_example') && ($('user_login').value != '' || ($('use_local_credentials_true') && $('use_local_credentials_true').checked)))
-		$('connect_gettext').disabled = false;
+	if (jQuery('#sessionmanager_host').prop('value') != '' && jQuery('#sessionmanager_host').prop('value') != i18n.get('sessionmanager_host_example') && (jQuery('#user_login').prop('value') != '' || (jQuery('#use_local_credentials_true')[0] && jQuery('#use_local_credentials_true').prop('checked'))))
+		jQuery('#connect_gettext').removeProp('disabled');
 	else
-		$('connect_gettext').disabled = true;
+		jQuery('#connect_gettext').prop('disabled', 'true');
 }
 
 function manageKeymap() {
@@ -688,15 +681,15 @@ function manageKeymap() {
 	if (! keymapSet) {
 		var detected = null;
 		try {
-			detected = $('CheckSignedJava').getDetectedKeyboardLayout();
+			detected = jQuery('#CheckSignedJava')[0].getDetectedKeyboardLayout();
 		} catch(e) {}
 		
 		keymapSet = updateKeymap(detected);
 		if (! keymapSet) {
-			if (! $('session_language'))
+			if (! jQuery('#session_language')[0])
 				return false;
 			
-			detected = $('session_language').value;
+			detected = jQuery('#session_language').prop('value');
 			
 			keymapSet = updateKeymap(detected);
 			if (! keymapSet) {
@@ -713,16 +706,16 @@ function manageKeymap() {
 }
 
 function checkSessionMode() {
-	if ($('session_mode').value == 'desktop') {
-		if ($('advanced_settings_applications'))
-			$('advanced_settings_applications').hide();
-		if ($('advanced_settings_desktop'))
-			$('advanced_settings_desktop').show();
-	} else if ($('session_mode').value == 'applications') {
-		if ($('advanced_settings_desktop'))
-			$('advanced_settings_desktop').hide();
-		if ($('advanced_settings_applications'))
-			$('advanced_settings_applications').show();
+	if (jQuery('#session_mode').prop('value') == 'desktop') {
+		if (jQuery('#advanced_settings_applications')[0])
+			jQuery('#advanced_settings_applications').hide();
+		if (jQuery('#advanced_settings_desktop')[0])
+			jQuery('#advanced_settings_desktop').show();
+	} else if (jQuery('#session_mode').prop('value') == 'applications') {
+		if (jQuery('#advanced_settings_desktop')[0])
+			jQuery('#advanced_settings_desktop').hide();
+		if (jQuery('#advanced_settings_applications')[0])
+			jQuery('#advanced_settings_applications').show();
 	}
 }
 

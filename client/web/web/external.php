@@ -118,6 +118,8 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 <?php } ?>
 
+		<script type="text/javascript" src="media/script/lib/jquery/jquery.js" charset="utf-8"></script>
+
 <?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/ovd/uovd.js")) { ?>
 		<script type="text/javascript" src="media/script/ovd/uovd.js" charset="utf-8"></script>
 <?php } else { ?>

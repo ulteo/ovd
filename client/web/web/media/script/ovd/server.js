@@ -84,12 +84,12 @@ var Server = Class.create({
 			serialized = this.xml.xml;
 		}
 
-		$('ulteoapplet').serverPrepare(this.java_id, serialized);
+		jQuery('#ulteoapplet')[0].serverPrepare(this.java_id, serialized);
 
 		if (this.token != null)
-			$('ulteoapplet').serverConnect(this.java_id, this.fqdn, this.port, this.token, this.username, this.password);
+			jQuery('#ulteoapplet')[0].serverConnect(this.java_id, this.fqdn, this.port, this.token, this.username, this.password);
 		else
-			$('ulteoapplet').serverConnect(this.java_id, this.fqdn, this.port, this.username, this.password);
+			jQuery('#ulteoapplet')[0].serverConnect(this.java_id, this.fqdn, this.port, this.username, this.password);
 
 		return true;
 	},
@@ -98,7 +98,7 @@ var Server = Class.create({
 		if (! this.connected)
 			return true;
 
-		$('ulteoapplet').serverDisconnect(this.java_id, this.fqdn, this.port, this.username, this.password);
+		jQuery('#ulteoapplet')[0].serverDisconnect(this.java_id, this.fqdn, this.port, this.username, this.password);
 
 		return true;
 	},

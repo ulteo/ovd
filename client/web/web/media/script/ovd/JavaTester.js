@@ -47,7 +47,7 @@ var JavaTester = Class.create({
 		applet_params.set('onFailure', 'JavaTester_appletFailure');
 		
 		var applet = buildAppletNode('CheckSignedJava', 'org.ulteo.ovd.applet.CheckJava', 'ulteo-applet.jar', applet_params);
-		$('testJava').appendChild(applet);
+		jQuery('#testJava').append(applet);
 	},
 	
 	do_second_test: function () {
@@ -78,20 +78,20 @@ var JavaTester = Class.create({
 	showSystemTest: function() {
 		showLock();
 		
-		new Effect.Center($('systemTestWrap'));
-		var elementDimensions = Element.getDimensions($('systemTestWrap'));
-		$('systemTestWrap').style.width = elementDimensions.width+'px';
+		new Effect.Center(jQuery('#systemTestWrap')[0]);
+		var elementDimensions = Element.getDimensions(jQuery('#systemTestWrap')[0]);
+		jQuery('#systemTestWrap').width(elementDimensions.width);
 		
 		Event.observe(window, 'resize', function() {
-			if ($('systemTestWrap').visible())
-				new Effect.Center($('systemTestWrap'));
+			if (jQuery('#systemTestWrap')[0].visible())
+				new Effect.Center(jQuery('#systemTestWrap')[0]);
 		});
 		
-		new Effect.Appear($('systemTestWrap'));
+		new Effect.Appear(jQuery('#systemTestWrap')[0]);
 	},
 	
 	hideSystemTest: function () {
-		$('systemTestWrap').hide();
+		jQuery('#systemTestWrap').hide();
 		
 		hideLock();
 	},
@@ -106,23 +106,23 @@ var JavaTester = Class.create({
 		
 		showLock();
 		
-		$(error_id_).show();
+		jQuery("#"+error_id_).show();
 		
-		new Effect.Center($('systemTestErrorWrap'));
-		var elementDimensions = Element.getDimensions($('systemTestErrorWrap'));
-		$('systemTestErrorWrap').style.width = elementDimensions.width+'px';
+		new Effect.Center(jQuery('#systemTestErrorWrap')[0]);
+		var elementDimensions = Element.getDimensions(jQuery('#systemTestErrorWrap')[0]);
+		jQuery('#systemTestErrorWrap').width(elementDimensions.width);
 		
 		Event.observe(window, 'resize', function() {
-			if ($('systemTestErrorWrap').visible())
-				new Effect.Center($('systemTestErrorWrap'));
+			if (jQuery('#systemTestErrorWrap')[0].visible())
+				new Effect.Center(jQuery('#systemTestErrorWrap')[0]);
 		});
 		
-		new Effect.Appear($('systemTestErrorWrap'));
+		new Effect.Appear(jQuery('#systemTestErrorWrap')[0]);
 	},
 	
 	insertApplet: function() {
 		var applet = buildAppletNode('CheckJava', 'org.ulteo.ovd.applet.CheckJava', 'CheckJava.jar', new Hash());
-		$("testJava").appendChild(applet);
+		jQuery('#testJava').append(applet);
 	},
 	
 	lookupNavigatorPlugins: function(search) {

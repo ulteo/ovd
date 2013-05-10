@@ -31,16 +31,16 @@ var Portal = Class.create(Applications, {
 	initialize: function(debug_) {
 		Applications.prototype.initialize.apply(this, [debug_]);
 		this.news = new Hash();
-		$('applicationsAppletContainer').innerHTML = '';
+		jQuery('#applicationsAppletContainer').html('');
 
 		var remove_height = 114;
 		if (this.debug)
 			remove_height = 115;
-		$('applicationsContainer').style.height = parseInt(this.my_height)-remove_height+'px';
-		$('appsContainer').style.height = parseInt(this.my_height)-remove_height+'px';
-		$('fileManagerContainer').style.height = parseInt(this.my_height)-remove_height+'px';
+		jQuery('#applicationsContainer').height((parseInt(this.my_height)-remove_height)+'px');
+		jQuery('#appsContainer').height((parseInt(this.my_height)-remove_height)+'px');
+		jQuery('#fileManagerContainer').height((parseInt(this.my_height)-remove_height)+'px');
 
-		this.applicationsPanel = new ApplicationsPanel($('appsContainer'));
+		this.applicationsPanel = new ApplicationsPanel(jQuery('#appsContainer')[0]);
 		
 		try {
 			this.local_integration = local_integration;
@@ -59,12 +59,12 @@ var Portal = Class.create(Applications, {
 	parseSessionSettings: function(setting_nodes) {
 		Applications.prototype.parseSessionSettings.apply(this, [setting_nodes]);
 
-		if ($('suspend_button')) {
+		if (jQuery('#suspend_button')[0]) {
 			if (this.persistent) {
-				$('suspend_button').show();
+				jQuery('#suspend_button').show();
 			}
 			else {
-				$('suspend_button').hide();
+				jQuery('#suspend_button').hide();
 			}
 		}
 	},
@@ -100,14 +100,14 @@ var Portal = Class.create(Applications, {
 		var app_id = instance_.id;
 		var running = 0;
 		
-		if ($('running_'+app_id)) {
-			if ($('running_'+app_id).innerHTML != '' && typeof parseInt($('running_'+app_id).innerHTML) == 'number')
-				running += parseInt($('running_'+app_id).innerHTML);
+		if (jQuery('#running_'+app_id)[0]) {
+			if (jQuery('#running_'+app_id).html() != '' && typeof parseInt(jQuery('#running_'+app_id).html()) == 'number')
+				running += parseInt(jQuery('#running_'+app_id).html());
 		}
 		running += 1;
 		this.nb_running_applications += 1;
 
-		$('running_'+app_id).innerHTML = running;
+		jQuery('#running_'+app_id).html(""+running);
 	
 	},
 	
@@ -115,17 +115,17 @@ var Portal = Class.create(Applications, {
 		var app_id = instance_.id;
 		var running = 0;
 		
-		if ($('running_'+app_id)) {
-			if ($('running_'+app_id).innerHTML != '' && typeof parseInt($('running_'+app_id).innerHTML) == 'number')
-				running = parseInt($('running_'+app_id).innerHTML);
+		if (jQuery('#running_'+app_id)[0]) {
+			if (jQuery('#running_'+app_id).html() != '' && typeof parseInt(jQuery('#running_'+app_id).html()) == 'number')
+				running = parseInt(jQuery('#running_'+app_id).html());
 		}
 		running -= 1;
 		this.nb_running_applications -= 1;
 
 		if (running > 0)
-			$('running_'+app_id).innerHTML = running;
+			jQuery('#running_'+app_id).html(""+running);
 		else
-			$('running_'+app_id).innerHTML = '';
+			jQuery('#running_'+app_id).html('');
 	},
 	
 	on_application_item_clicked: function(application_item_) {
@@ -136,25 +136,23 @@ var Portal = Class.create(Applications, {
 		if (! this.explorer)
 			return;
 
-		$('fileManagerContainer').innerHTML = '<iframe style="width: 100%; height: 100%; border: none;" src="ajaxplorer/"></iframe>';
+		jQuery('#fileManagerContainer').html('<iframe style="width: 100%; height: 100%; border: none;" src="ajaxplorer/"></iframe>');
 	},
 
 	display_news: function() {
-		new Ajax.Request(
-			'news.php',
-			{
-				method: 'get',
-				onSuccess: this.parse_display_news.bind(this)
+		jQuery.ajax({
+				url: 'news.php',
+				type: 'GET',
+				dataType: 'xml',
+				success: this.parse_display_news.bind(this)
 			}
 		);
 
 		this.news_timeout = setTimeout(this.display_news.bind(this), 300000);
 	},
 
-	parse_display_news: function(transport) {
+	parse_display_news: function(xml) {
 		Logger.debug('[applications] parse_display_news(transport@display_news())');
-
-		var xml = transport.responseXML;
 
 		var buffer = xml.getElementsByTagName('news');
 
@@ -208,8 +206,8 @@ var Portal = Class.create(Applications, {
 			tbody_node.appendChild(tr_node);
 		}
 		
-		$('newsContainer').innerHTML = '';
-		$('newsContainer').appendChild(table_node);
+		jQuery('#newsContainer').html('');
+		jQuery('#newsContainer').append(table_node);
 	},
 
 	show_new: function(i_) {

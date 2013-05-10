@@ -79,7 +79,7 @@ var Daemon = Class.create({
 			Logger.init_instance();
 		}
 
-		if ($('progressBar') && $('progressBarContent'))
+		if (jQuery('#progressBar')[0] && jQuery('#progressBarContent')[0])
 			this.progressBar();
 
 		window.onbeforeunload = function(e) {
@@ -121,7 +121,7 @@ var Daemon = Class.create({
 	},
 
 	progressBar: function() {
-		if (! $('progressBar') || ! $('progressBarContent'))
+		if (! jQuery('#progressBar')[0] || ! jQuery('#progressBarContent')[0])
 			return false;
 
 		if (this.progressbar_value > 100)
@@ -129,7 +129,7 @@ var Daemon = Class.create({
 
 		this.progressbar_value += this.progress_bar_step;
 
-		$('progressBarContent').style.width = this.progressbar_value+'%';
+		jQuery('#progressBarContent').width(this.progressbar_value+'%');
 
 		if (this.progressbar_value < 100)
 			setTimeout(this.progressBar.bind(this), 500);
@@ -205,35 +205,29 @@ var Daemon = Class.create({
 		Logger.debug('[daemon] check_status()');
 
 		if( ! OPTION_USE_PROXY ) {
-			new Ajax.Request(
-				'session_status.php',
-				{
-					method: 'get',
-					parameters: {
-						differentiator: Math.floor(Math.random()*50000)
-					},
-					onSuccess: this.parse_check_status.bind(this)
+			jQuery.ajax({
+					url: '/ovd/client/session_status.php?differentiator='+Math.floor(Math.random()*50000),
+					type: 'GET',
+					dataType: 'xml',
+					success: this.parse_check_status.bind(this)
 				}
 			);
 		} else {
-			new Ajax.Request(
-				"proxy.php",
-				{
-					method: 'get',
-					requestHeaders: ['X-Ovd-Service', 'session_status'],
-					parameters: {
-						differentiator: Math.floor(Math.random()*50000)
+			jQuery.ajax({
+					url: 'proxy.php?differentiator='+Math.floor(Math.random()*50000),
+					type: 'GET',
+					dataType: 'xml',
+					headers: {
+						"X-Ovd-Service" : 'session_status'
 					},
-					onSuccess: this.parse_check_status.bind(this)
+					success: this.parse_check_status.bind(this)
 				}
 			);
 		}
 	},
 
-	parse_check_status: function(transport) {
+	parse_check_status: function(xml) {
 		Logger.debug('[daemon] parse_check_status(transport@check_status())');
-
-		var xml = transport.responseXML;
 
 		var buffer = xml.getElementsByTagName('session');
 
@@ -322,34 +316,33 @@ var Daemon = Class.create({
 			});
 		}
 
+		try {
+			var doc = document.implementation.createDocument("", "", null);
+		} catch(e) {
+			var doc = new ActiveXObject("Microsoft.XMLDOM");
+		}
+
+		var node = doc.createElement("logout");
+		node.setAttribute("mode", mode_);
+		doc.appendChild(node);
+
 		if( ! OPTION_USE_PROXY ) {
-			new Ajax.Request(
-				'logout.php',
-				{
-					method: 'post',
-					parameters: {
-						mode: mode_
-					}
+			jQuery.ajax({
+					url: '/ovd/client/logout.php',
+					type: 'POST',
+					dataType: "xml",
+					data: (new XMLSerializer()).serializeToString(doc),
 				}
 			);
 		} else {
-			try {
-				var doc = document.implementation.createDocument("", "", null);
-			} catch(e) {
-				var doc = new ActiveXObject("Microsoft.XMLDOM");
-			}
-
-			var node = doc.createElement("logout");
-			node.setAttribute("mode", mode_);
-			doc.appendChild(node);
-
-			new Ajax.Request(
-				"proxy.php",
-				{
-					method: 'post',
-					requestHeaders: ['X-Ovd-Service', 'logout'],
-					contentType: 'text/xml',
-					postBody: doc
+			jQuery.ajax({
+					url: 'proxy.php',
+					type: 'POST',
+					dataType: "xml",
+					headers: {
+						"X-Ovd-Service" : 'logout'
+					},
+					data: (new XMLSerializer()).serializeToString(doc),
 				}
 			);
 		}
@@ -358,11 +351,11 @@ var Daemon = Class.create({
 	start: function() {
 		Logger.debug('[daemon] start()');
 
-		if (! $(this.mode+'ModeContainer').visible())
-			$(this.mode+'ModeContainer').show();
+		if (! jQuery('#'+this.mode+'ModeContainer')[0].visible())
+			jQuery('#'+this.mode+'ModeContainer').show();
 
-		if (! $(this.mode+'AppletContainer').visible())
-			$(this.mode+'AppletContainer').show();
+		if (! jQuery('#'+this.mode+'AppletContainer')[0].visible())
+			jQuery('#'+this.mode+'AppletContainer').show();
 
 		this.do_started();
 	},
@@ -384,25 +377,25 @@ var Daemon = Class.create({
 
 		Logger.debug('[daemon] do_ended()');
 
-		if ($('splashContainer').visible())
-			$('splashContainer').hide();
+		if (jQuery('#splashContainer')[0].visible())
+			jQuery('#splashContainer').hide();
 
-		if ($(this.mode+'AppletContainer').visible())
-			$(this.mode+'AppletContainer').hide();
-		$(this.mode+'AppletContainer').innerHTML = '';
+		if (jQuery('#'+this.mode+'AppletContainer')[0].visible())
+			jQuery('#'+this.mode+'AppletContainer').hide();
+		jQuery('#'+this.mode+'AppletContainer').html('');
 
-		if ($(this.mode+'ModeContainer').visible())
-			$(this.mode+'ModeContainer').hide();
+		if (jQuery('#'+this.mode+'ModeContainer')[0].visible())
+			jQuery('#'+this.mode+'ModeContainer').hide();
 
 		if (this.explorer) {
-			if ($('fileManagerWrap'))
-				$('fileManagerWrap').hide();
-			if ($('fileManagerContainer'))
-				$('fileManagerContainer').innerHTML = '';
+			if (jQuery('#fileManagerWrap')[0])
+				jQuery('#fileManagerWrap').hide();
+			if (jQuery('#fileManagerContainer')[0])
+				jQuery('#fileManagerContainer').html('');
 		}
 
-		if ($('endContainer')) {
-			$('endContent').innerHTML = '';
+		if (jQuery('#endContainer')[0]) {
+			jQuery('#endContent').html('');
 
 			var buf = document.createElement('span');
 			buf.setAttribute('style', 'font-size: 1.1em; font-weight: bold; color: #686868;');
@@ -459,7 +452,7 @@ var Daemon = Class.create({
 				buf.appendChild(error_toggle_div);
 			}
 
-			if ($('loginBox')) {
+			if (jQuery('#loginBox')[0]) {
 				var close_container = document.createElement('div');
 				close_container.setAttribute('style', 'margin-top: 10px;');
 				var close_text = document.createElement('span');
@@ -468,9 +461,9 @@ var Daemon = Class.create({
 				buf.appendChild(close_container);
 			}
 
-			$('endContent').appendChild(buf);
+			jQuery('#endContent').append(buf);
 
-			$('endContent').innerHTML = $('endContent').innerHTML;
+			jQuery('#endContent').html(jQuery('#endContent').html());
 
 			if (this.error_message != '' && this.error_message != 'undefined')
 				offContent('errorContainer');
@@ -478,15 +471,15 @@ var Daemon = Class.create({
 			showEnd();
 		}
 
-		if ($('endMessage')) {
+		if (jQuery('#endMessage')[0]) {
 			if (this.error_message != '')
-				$('endMessage').innerHTML = '<span class="msg_error">'+i18n.get('session_end_unexpected')+'</span>';
+				jQuery('#endMessage').html('<span class="msg_error">'+i18n.get('session_end_unexpected')+'</span>');
 			else
-				$('endMessage').innerHTML = i18n.get('session_end_ok');
+				jQuery('#endMessage').html(i18n.get('session_end_ok'));
 		}
 
-		if ($('progressBar') && $('progressBarContent')) {
-			$('progressBarContent').style.width = '0px';
+		if (jQuery('#progressBar')[0] && jQuery('#progressBarContent')[0]) {
+			jQuery('#progressBarContent').width('0');
 			this.progressbar_value = 0;
 		}
 

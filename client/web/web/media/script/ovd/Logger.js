@@ -24,12 +24,12 @@ var Logger = Class.create({
 	instance: null,
 	
 	push: function(level_, data_) {
-		var flag = (($('debugContainer').scrollTop+$('debugContainer').offsetHeight) == $('debugContainer').scrollHeight);
+		var flag = ((jQuery('#debugContainer')[0].scrollTop+jQuery('#debugContainer')[0].offsetHeight) == jQuery('#debugContainer')[0].scrollHeight);
 		
-		$('debugContainer').innerHTML += '<div class="'+level_+'">['+this._get_formated_date()+'] - '+data_+'</div>'+"\n";
+		jQuery('#debugContainer').html(jQuery('#debugContainer').html() + '<div class="'+level_+'">['+this._get_formated_date()+'] - '+data_+'</div>'+"\n");
 		
 		if (flag)
-			$('debugContainer').scrollTop = $('debugContainer').scrollHeight;
+			jQuery('#debugContainer')[0].scrollTop = jQuery('#debugContainer')[0].scrollHeight;
 	},
 	
 	_get_formated_date: function() {
@@ -51,36 +51,36 @@ var Logger = Class.create({
 	},
 	
 	_toggle_level: function(level_) {
-		var flag = (($('debugContainer').scrollTop+$('debugContainer').offsetHeight) == $('debugContainer').scrollHeight);
+		var flag = ((jQuery('#debugContainer')[0].scrollTop+jQuery('#debugContainer')[0].offsetHeight) == jQuery('#debugContainer')[0].scrollHeight);
 		
-		var buf = $('debugContainer').className;
+		var buf = jQuery('#debugContainer')[0].className;
 		
 		if (buf.match('no_'+level_))
 			buf = buf.replace('no_'+level_, level_);
 		else
 			buf = buf.replace(level_, 'no_'+level_);
 		
-		$('debugContainer').className = buf;
+		jQuery('#debugContainer')[0].className = buf;
 	
 		if (flag)
-			$('debugContainer').scrollTop = $('debugContainer').scrollHeight;
+			jQuery('#debugContainer')[0].scrollTop = jQuery('#debugContainer')[0].scrollHeight;
 	},
 	
 	show: function() {
-		$('debugContainer').innerHTML = '';
-		$('debugContainer').show();
-		$('debugContainer').style.display = 'inline';
-		$('debugLevels').show();
-		$('debugLevels').style.display = 'inline';
+		jQuery('#debugContainer').html('');
+		jQuery('#debugContainer').show();
+		jQuery('#debugContainer').css('display', 'inline');
+		jQuery('#debugLevels').show();
+		jQuery('#debugLevels').css('display', 'inline');
 	},
 	
 	hide: function() {
-		$('debugContainer').hide();
-		$('debugLevels').hide();
+		jQuery('#debugContainer').hide();
+		jQuery('#debugLevels').hide();
 	},
 	
 	_clear: function() {
-		$('debugContainer').innerHTML = ''; 
+		jQuery('#debugContainer').html('');
 	}
 });
 

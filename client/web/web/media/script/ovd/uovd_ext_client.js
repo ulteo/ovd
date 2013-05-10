@@ -34,19 +34,19 @@ Event.observe(window, 'load', function() {
 	test.perform();
 
 	/* Center containers at startup */
-	new Effect.Center($('endContainer'));
+	new Effect.Center(jQuery('#endContainer')[0]);
 	if (session_mode == 'desktop') {
-		new Effect.Center($('splashContainer'));
+		new Effect.Center(jQuery('#splashContainer')[0]);
 	}
 
 	/* Hide panels */
-	$('desktopModeContainer').hide();
-	$('desktopAppletContainer').hide();
-	$('applicationsModeContainer').hide();
-	$('applicationsAppletContainer').hide();
+	jQuery('#desktopModeContainer').hide();
+	jQuery('#desktopAppletContainer').hide();
+	jQuery('#applicationsModeContainer').hide();
+	jQuery('#applicationsAppletContainer').hide();
 
 	/* Show splash */
-	$('splashContainer').show();
+	jQuery('#splashContainer').show();
 
 	/* Translate strings */
 	applyTranslations(i18n_tmp);
@@ -61,11 +61,11 @@ Event.observe(window, 'load', function() {
 
   /* Configure the debug panel */
 	if(debug_mode) {
-		Event.observe($('level_debug'),   'click', function() { Logger.toggle_level('debug'); });
-		Event.observe($('level_info'),    'click', function() { Logger.toggle_level('info'); });
-		Event.observe($('level_warning'), 'click', function() { Logger.toggle_level('warning'); });
-		Event.observe($('level_error'),   'click', function() { Logger.toggle_level('error'); });
-		Event.observe($('clear_button'),  'click', function() { Logger.clear(); });
+		Event.observe(jQuery('#level_debug')[0],   'click', function() { Logger.toggle_level('debug'); });
+		Event.observe(jQuery('#level_info')[0],    'click', function() { Logger.toggle_level('info'); });
+		Event.observe(jQuery('#level_warning')[0], 'click', function() { Logger.toggle_level('warning'); });
+		Event.observe(jQuery('#level_error')[0],   'click', function() { Logger.toggle_level('error'); });
+		Event.observe(jQuery('#clear_button')[0],  'click', function() { Logger.clear(); });
 	}
 });
 
@@ -118,20 +118,35 @@ function startExternalSession(mode_, app_, file_, file_type_, file_share_) {
 			session_node.appendChild(start);
 		}
 
-		doc.appendChild(session_node);
-
-		new Ajax.Request(
-			"proxy.php",
-			{
-				method: 'post',
-				requestHeaders: ['X-Ovd-Service', 'start'],
+	if( ! OPTION_USE_PROXY ) {
+		jQuery.ajax({
+				url: '/ovd/client/start.php',
+				type: 'POST',
+				dataType: "xml",
 				contentType: 'text/xml',
-				postBody: doc,
-
-				onSuccess: function(transport) {
-					onStartExternalSessionSuccess(transport.responseXML);
+				data: (new XMLSerializer()).serializeToString(doc),
+				success: function(xml) {
+					onStartExternalSessionSuccess(xml);
 				},
-				onFailure: function() {
+				error: function() {
+					onStartExternalSessionFailure();
+				}
+			}
+		);
+	} else {
+		jQuery.ajax({
+				url: 'proxy.php',
+				type: 'POST',
+				dataType: "xml",
+				headers: {
+					"X-Ovd-Service" : 'start'
+				},
+				contentType: 'text/xml',
+				data: (new XMLSerializer()).serializeToString(doc),
+				success: function(xml) {
+					onStartExternalSessionSuccess(xml);
+				},
+				error: function() {
 					onStartExternalSessionFailure();
 				}
 			}
