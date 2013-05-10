@@ -86,6 +86,7 @@ void Logger::log(char *fmt,...)
 	
 	if((hFile = CreateFileW(m_szLogFile.c_str(), GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) <0)
 	{
+		this->debug(L"Failed to open log file %s", m_szLogFile.c_str());
 		return;
 	}
 	
