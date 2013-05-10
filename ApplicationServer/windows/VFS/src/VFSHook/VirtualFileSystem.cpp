@@ -466,6 +466,8 @@ bool VirtualFileSystem::redirectRegPath(WCHAR Name[1], ULONG* pNameLength)
 
 		return true;
 	}
+	
+	return false;
 }
 
 bool VirtualFileSystem::_getFilePathByObjectAttributesPtr(	POBJECT_ATTRIBUTES ObjectAttributesPtr, 
