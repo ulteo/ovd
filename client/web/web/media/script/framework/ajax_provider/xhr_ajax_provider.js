@@ -3,7 +3,7 @@
 /* Standard AjaxProvider */
 
 function XhrAjaxProvider() {
-	AjaxProvider();
+	this.initialize();
 }
 XhrAjaxProvider.prototype = new AjaxProvider();
 

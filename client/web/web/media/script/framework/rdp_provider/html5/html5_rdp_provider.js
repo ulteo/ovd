@@ -1,7 +1,7 @@
 /* HTML5 RDP Provider */
 
 function Html5RdpProvider() {
-	RdpProvider();
+	this.initialize();
 	this.guac_client   = null;
 	this.guac_display  = null;
 	this.guac_canvas   = null;

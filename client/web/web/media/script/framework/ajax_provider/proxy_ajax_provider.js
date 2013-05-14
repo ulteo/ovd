@@ -5,7 +5,7 @@
 */
 
 function ProxyAjaxProvider(proxy_url) {
-	AjaxProvider();
+	this.initialize();
 	this.proxy_url = proxy_url;
 }
 ProxyAjaxProvider.prototype = new AjaxProvider();

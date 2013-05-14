@@ -1,7 +1,7 @@
 /* Html5 Application provider */
 
 function Html5ApplicationProvider(rdp_provider) {
-	this.init(rdp_provider);
+	this.initialize(rdp_provider);
 	this.tunnel = this.rdp_provider.guac_tunnel;
 }
 Html5ApplicationProvider.prototype = new ApplicationProvider();

@@ -1,6 +1,8 @@
 /* Base class */
 
-function AjaxProvider() {
+function AjaxProvider() { }
+
+AjaxProvider.prototype.initialize = function() {
 	this.session_management = null;
 }
 

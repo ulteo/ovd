@@ -6,7 +6,7 @@
 */
 
 function DirectAjaxProvider() {
-	AjaxProvider();
+	this.initialize();
 }
 DirectAjaxProvider.prototype = new AjaxProvider();
 

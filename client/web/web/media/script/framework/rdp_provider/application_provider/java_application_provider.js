@@ -1,7 +1,7 @@
 /* Java application provider */
 
 function JavaApplicationProvider(rdp_provider) {
-	this.init(rdp_provider);
+	this.initialize(rdp_provider);
 }
 
 JavaApplicationProvider.prototype = new ApplicationProvider();

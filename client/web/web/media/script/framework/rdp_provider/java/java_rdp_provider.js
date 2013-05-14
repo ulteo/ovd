@@ -1,7 +1,7 @@
 /* Java RDP Provider */
 
 function JavaRdpProvider() {
-	RdpProvider();
+	this.initialize();
 	this.applet = null;
 }
 JavaRdpProvider.prototype = new RdpProvider();

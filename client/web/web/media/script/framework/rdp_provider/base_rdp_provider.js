@@ -1,6 +1,8 @@
 /* Base class */
 
-function RdpProvider() {
+function RdpProvider() { }
+
+RdpProvider.prototype.initialize = function() {
 	this.session_management = null;
 }
 

@@ -1,12 +1,10 @@
 /* Base class */
 
-function ApplicationProvider(rdp_provider) {
-	this.rdp_provider = null;
-	this.token = 0;
-}
+function ApplicationProvider(rdp_provider) { }
 
-ApplicationProvider.prototype.init = function(rdp_provider) {
+ApplicationProvider.prototype.initialize = function(rdp_provider) {
 	this.rdp_provider = rdp_provider;
+	this.token = 0;
 
 	/* register events listeners */
 	var self = this; /* closure */
