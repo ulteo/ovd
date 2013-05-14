@@ -272,33 +272,6 @@ function startSession() {
 	return false;
 }
 
-function hideLogin() {
-	new Effect.Move(jQuery('#loginBox')[0], { x: 0, y: -1000 });
-	setTimeout(function() {
-		jQuery('#loginBox').hide();
-	}, 1000);
-}
-
-function showLogin() {
-	jQuery('#loginBox').show();
-	new Effect.Move(jQuery('#loginBox')[0], { x: 0, y: 1000 });
-
-	if (debug) {
-		Logger.del_instance();
-		debug = false;
-	}
-}
-
-function disableLogin() {
-	jQuery('#submitButton').hide();
-	jQuery('#submitLoader').show();
-}
-
-function enableLogin() {
-	jQuery('#submitButton').show();
-	jQuery('#submitLoader').hide();
-}
-
 /// Parses login.php XML answer
 function onStartSessionSuccess(xml_) {
 	var xml = xml_;
@@ -429,23 +402,12 @@ function onStartSessionSuccess(xml_) {
 	}
 
 	daemon.add_session_ready_callback(function onSessionReady(d_) {
-		if (session_mode == 'Desktop')
-			new Effect.Move(jQuery('#desktopModeContainer')[0], { x: 0, y: my_height });
-		else
-			new Effect.Move(jQuery('#applicationsModeContainer')[0], { x: 0, y: my_height });
-		
-		setTimeout(function() {
-			hideSplash();
-		}, 2000);
+		showMainContainer();
 	});
 
 	// <server> nodes
 	if (! daemon.parse_list_servers(xml)) {
-		try {
-			showError(i18n.get('internal_error'));
-		} catch(e) {}
-		
-		enableLogin();
+		showInternalError();
 		return false;
 	}
 
@@ -471,10 +433,7 @@ function onStartSessionSuccess(xml_) {
 }
 
 function onStartSessionFailure() {
-	showError(i18n.get('internal_error'));
-
-	enableLogin();
-
+	showInternalError();
 	return false;
 }
 
@@ -494,8 +453,7 @@ function onStartSessionJavaRequest(http_code_, content_type_, data_, cookies_) {
 			xml.loadXML(data_);
 		}
 	} catch(e) {
-		showError(i18n.get('internal_error'));
-		enableLogin();
+		showInternalError();
 		return false;
 	}
 
@@ -533,52 +491,6 @@ function synchronize(cookie_) {
 function on_java_test_finished(test) {
 	checkLogin();
 	manageKeymap();
-}
-
-function showNews(title_, content_) {
-	hideNews();
-
-	hideInfo();
-	hideError();
-	hideOk();
-
-	showLock();
-
-	jQuery('#newsWrap_title').html(title_);
-	refresh_body_size();
-	var reg = new RegExp("\n", "g");
-	jQuery('#newsWrap_content').html('<div style="width: 100%; height: '+parseInt(my_height*(75/100))+'px; overflow: auto;">'+content_.replace(reg, '<br />')+'</div>');
-
-	new Effect.Center(jQuery('#newsWrap')[0]);
-
-	new Effect.Appear(jQuery('#newsWrap')[0]);
-}
-
-function hideNews() {
-	jQuery('#newsWrap').hide();
-
-	hideLock();
-
-	jQuery('#newsWrap_title').html('');
-	jQuery('#newsWrap_content').html('');
-	jQuery('#newsWrap').width('750px');
-	jQuery('#newsWrap').height('');
-}
-
-function showIFrame(url_) {
-	showLock();
-
-	jQuery('#iframeContainer').prop('src', url_);
-
-	new Effect.Appear(jQuery('#iframeWrap')[0]);
-}
-
-function hideIFrame() {
-	jQuery('#iframeWrap').hide();
-
-	jQuery('#iframeContainer').prop('src', 'about:blank');
-
-	hideLock();
 }
 
 function updateFlag(id_) {

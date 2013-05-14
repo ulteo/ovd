@@ -187,6 +187,7 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/ovd/timezones.js" charset="utf-8"></script>
 <?php } ?>
 
+		<script type="text/javascript" src="media/script/ovd/ui.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/ovd/uovd_int_client.js" charset="utf-8"></script>
 
 		<script type="text/javascript">
