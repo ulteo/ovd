@@ -14,22 +14,28 @@ JavaRdpProvider.prototype.connectCommon = function(callback) {
 	var settings = this.session_management.session.settings;
 	var parameters = this.session_management.parameters;
 
+	var name = "ulteoapplet";
+	var codebase = "applet/";
+	var archive = "jpedal.jar,log4j-1.2.jar,ulteo-applet.jar";
+	var cache_archive = "jpedal.jar,log4j-1.2.jar,ulteo-applet.jar";
+	var cache_archive_ex = "jpedal.jar,log4j-1.2.jar,ulteo-applet.jar;preload"
+
 	this.applet = jQuery(document.createElement("applet"));
 	this.applet.attr("id", "ulteoapplet");
 	this.applet.attr("width", parameters["width"]);
 	this.applet.attr("height", parameters["height"]);
-	this.applet.attr("name", "ulteoapplet");
-	this.applet.attr("codebase", "media/script/rdp_provider/java/");
-	this.applet.attr("archive", "jpedal.jar,log4j-1.2.jar,ulteo-applet.jar");
-	this.applet.attr("cache_archive", "jpedal.jar,log4j-1.2.jar,ulteo-applet.jar");
-	this.applet.attr("cache_archive_ex", "jpedal.jar,log4j-1.2.jar,ulteo-applet.jar;preload");
+	this.applet.attr("name", name);
+	this.applet.attr("codebase", codebase);
+	this.applet.attr("archive", archive);
+	this.applet.attr("cache_archive", cache_archive);
+	this.applet.attr("cache_archive_ex", cache_archive_ex);
 	this.applet.attr("mayscript", "true");
 
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "name").attr("value", "ulteoapplet"));
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "codebase").attr("value", "media/script/rdp_provider/java/"));
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "archive").attr("value", "jpedal.jar,log4j-1.2.jar,ulteo-applet.jar"));
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive").attr("value", "jpedal.jar,log4j-1.2.jar,ulteo-applet.jar"));
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive_ex").attr("value", "jpedal.jar,log4j-1.2.jar,ulteo-applet.jar;preload"));
+	this.applet.append(jQuery(document.createElement("param")).attr("name", "name").attr("value", name));
+	this.applet.append(jQuery(document.createElement("param")).attr("name", "codebase").attr("value", codebase));
+	this.applet.append(jQuery(document.createElement("param")).attr("name", "archive").attr("value", archive));
+	this.applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive").attr("value", cache_archive));
+	this.applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive_ex").attr("value", cache_archive_ex));
 
 	this.applet.append(jQuery(document.createElement("param")).attr("name", "sessionmanager").attr("value", "127.0.0.1:443"));
 	this.applet.append(jQuery(document.createElement("param")).attr("name", "server").attr("value", server.fqdn));
