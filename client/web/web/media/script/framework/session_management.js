@@ -8,8 +8,33 @@ function SessionManagement(params, rdp_provider, ajax_provider) {
 	this.ajax_provider = ajax_provider;
 
 	/* set parent refs */
-	this.rdp_provider.session_management = this;
-	this.ajax_provider.session_management = this;
+	if(this.rdp_provider) {
+		this.rdp_provider.session_management = this;
+	}
+
+	if(this.ajax_provider) {
+		this.ajax_provider.session_management = this;
+	}
+}
+
+SessionManagement.prototype.setParameters = function(params) {
+	this.parameters = params;
+}
+
+SessionManagement.prototype.setRdpProvider = function(rdp_provider) {
+	this.rdp_provider = rdp_provider;
+
+	if(this.rdp_provider) {
+		this.rdp_provider.session_management = this;
+	}
+}
+
+SessionManagement.prototype.setAjaxProvider = function(ajax_provider) {
+	this.ajax_provider = ajax_provider;
+
+	if(this.ajax_provider) {
+		this.ajax_provider.session_management = this;
+	}
 }
 
 SessionManagement.prototype.start = function() {
