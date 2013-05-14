@@ -1,6 +1,6 @@
 function SessionManagement(params, rdp_provider, ajax_provider) {
 	this.parameters = params;
-	this.callbacks = new Array();
+	this.callbacks = {};
 	this.status_check = null;
 
 	this.session = new Session(this);

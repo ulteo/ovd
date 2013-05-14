@@ -2,7 +2,7 @@ function SeamlessWindowManager(session_management, node, windowFactory) {
 	this.node = jQuery(node);
 	this.session_management = session_management;
 	this.windowFactory = windowFactory;
-	this.windows = new Array();
+	this.windows = {};
 
 	if(this.session_management.parameters["session_type"] == "applications") {
 		/* register events listeners */
@@ -52,7 +52,7 @@ SeamlessWindowManager.prototype.handleEvents = function(type, source, params) {
 		if(to == "disconnected") {
 			/* Server disconnected : unmap all windows */
 			for(id in this.windows) {
-				if(this.windows[id] != null) {
+				if(id && this.windows[id]) {
 					jQuery(this.windows[id].getNode()).remove();
 					this.windows[id].destroy();
 					this.windows[id] = null;

@@ -1,8 +1,8 @@
 function SeamlessLauncher(session_management, node) {
 	this.node = jQuery(node);
 	this.session_management = session_management;
-	this.applications = new Array(); /* application id as index */
-	this.content = new Array(); /* application id as index */
+	this.applications = {}; /* application id as index */
+	this.content = {}; /* application id as index */
 
 	if(this.session_management.parameters["session_type"] == "applications") {
 		/* register events listeners */

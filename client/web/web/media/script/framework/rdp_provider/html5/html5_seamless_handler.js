@@ -61,7 +61,7 @@ Html5SeamlessHandler.prototype.handleOrders = function(opcode, parameters) {
 
 			/* Create the window content node */
 			var content = document.createElement("CANVAS");
-			var params = new Array();
+			var params = {};
 			params["id"] = parameters[2];
 			params["content"] = content;
 			params["update"] = function(win, params) {
@@ -92,7 +92,7 @@ Html5SeamlessHandler.prototype.handleOrders = function(opcode, parameters) {
 			/* parameters[2] = Window id
 				 parameters[3] = flags
 			*/
-			var params = new Array();
+			var params = {};
 			params["id"] = parameters[2];
 			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.windowDestroy", this, params);
 			var new_windowIdList = new Array();
@@ -110,7 +110,7 @@ Html5SeamlessHandler.prototype.handleOrders = function(opcode, parameters) {
 			/* parameters[2] = Window id
 			   parameters[3] = Title
 			*/
-			var params = new Array();
+			var params = {};
 			params["id"] = parameters[2];
 			params["title"] = parameters[3];
 			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.windowProperties", this, params);
@@ -130,7 +130,7 @@ Html5SeamlessHandler.prototype.handleOrders = function(opcode, parameters) {
 				 parameters[6] = Height
 				 parameters[7] = Flags
 			*/
-			var params = new Array();
+			var params = {};
 			params["id"] = parameters[2];
 			params["position"] = new Array(parameters[3], parameters[4]);
 			params["size"] = new Array(parameters[5], parameters[6]);
@@ -145,13 +145,13 @@ Html5SeamlessHandler.prototype.handleOrders = function(opcode, parameters) {
 					  3 = Full screen
 				 parameters[4] = Flags
 			*/
-			var params = new Array();
+			var params = {};
 			params["id"] = parameters[2];
 			params["visible"] = (parseInt(parameters[3]) == 0 || parseInt(parameters[3]) == 2 || parseInt(parameters[3]) == 3);
 			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.windowProperties", this, params);
 
 			if(parseInt(parameters[3]) == 2 || parseInt(parameters[3]) == 3) {
-				var params = new Array();
+				var params = {};
 				params["id"] = parameters[2];
 				params["position"] = new Array(0, 0);
 				params["size"] = new Array(main_canvas.width, main_canvas.height);
@@ -161,7 +161,7 @@ Html5SeamlessHandler.prototype.handleOrders = function(opcode, parameters) {
 			/* parameters[2] = Window id
 			   parameters[3] = Action (Unused by server)
 			*/
-			var params = new Array();
+			var params = {};
 			params["id"] = parameters[2];
 			params["focus"] = true;
 			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.windowProperties", this, params);
