@@ -19,6 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
+var session_management = new SessionManagement();
+
 var debug = false;
 
 var session_mode = false;
@@ -26,9 +28,6 @@ var session_mode = false;
 var desktop_fullscreen = false;
 
 var switchsettings_lock = false;
-
-/* Global ovd daemon instance */
-var daemon = null;
 
 /* Load NiftyCorners */
 NiftyLoad = function() {
@@ -124,7 +123,7 @@ Event.observe(window, 'load', function() {
 
 	/* Suspend */
 	Event.observe(jQuery('#suspend_link')[0], 'click', function() {
-		daemon.suspend();
+		session_management.stop();
 	});
 
 	/* Logout confirmation for "Applications" mode */
@@ -191,6 +190,40 @@ Event.observe(window, 'load', function() {
 		Event.observe(jQuery('#clear_button')[0],  'click', function() { Logger.clear(); });
 		switchSettings();
 	}
+
+	/* handle status modifications */
+	session_management.addCallback("ovd.session.statusChanged", function(type, source, params) {
+		var from = params["from"];
+		var to = params["to"];
+
+		if(to == "ready") {
+			hideLogin();
+			showSplash();
+			pushMainContainer();
+
+			/* Wait for the animation end */
+			setTimeout(function() {
+				showMainContainer();
+				enableLogin();
+			}, 2000);
+		}
+
+		if(to == "logged") {
+			pullMainContainer();
+
+			/* Wait for the animation end */
+			setTimeout(function() {
+				hideSplash();
+			}, 2000);
+		}
+
+		if(from == "logged") {
+			generateEnd();
+			showEnd();
+			pushMainContainer();
+		}
+  });
+
 });
 
 function startSession() {
@@ -205,69 +238,50 @@ function startSession() {
 	if (jQuery('#debug_true')[0] && jQuery('#debug_true').prop('checked'))
 		debug = true;
 
-	session_mode = jQuery('#session_mode').prop('value');
-	session_mode = session_mode.substr(0, 1).toUpperCase()+session_mode.substr(1, session_mode.length-1);
-
 	desktop_fullscreen = false;
 	if (jQuery('#desktop_fullscreen_true')[0] && jQuery('#desktop_fullscreen_true').prop('checked'))
 		desktop_fullscreen = true;
 
-	if (! jQuery('#use_local_credentials_true')[0] || ! jQuery('#use_local_credentials_true').prop('checked')) {
-		try {
-			var doc = document.implementation.createDocument("", "", null);
-		} catch(e) {
-			var doc = new ActiveXObject("Microsoft.XMLDOM");
-		}
+	var use_local_credentials = false;
+	if (jQuery('#use_local_credentials_true')[0] && jQuery('#use_local_credentials_true').prop('checked'))
+		use_local_credentials = true;
 
-		var session_node = doc.createElement("session");
-		session_node.setAttribute("mode", jQuery('#session_mode').prop('value'));
-		session_node.setAttribute("language", jQuery('#session_language').prop('value'));
-		session_node.setAttribute("timezone", getTimezoneName());
+	var parameters = {};
+	parameters["session_manager"] = 'localhost';
+	parameters["username"] = jQuery('#user_login').prop('value');
+	parameters["password"] = jQuery('#user_password').prop('value');
+	parameters["session_type"] = jQuery('#session_mode').prop('value');
+	parameters["language"] = jQuery('#session_language').prop('value');
+	parameters["timezone"] = getTimezoneName();
+	parameters["width"] = window.innerWidth;
+	parameters["height"] = window.innerHeight;
+	parameters["fullscreen"] = desktop_fullscreen;
+	parameters["debug"] = debug;
+	parameters["use_local_credentials"] = use_local_credentials;
 
-		var user_node = doc.createElement("user");
-		user_node.setAttribute("login", jQuery('#user_login').prop('value'));
-		user_node.setAttribute("password", jQuery('#user_password').prop('value'));
-		session_node.appendChild(user_node);
-		doc.appendChild(session_node);
-
-		if( ! OPTION_USE_PROXY ) {
-			jQuery.ajax({
-					url: '/ovd/client/start.php',
-					type: 'POST',
-					dataType: "xml",
-					contentType: 'text/xml',
-					data: (new XMLSerializer()).serializeToString(doc),
-					success: function(xml) {
-						onStartSessionSuccess(xml);
-					},
-					error: function() {
-						onStartSessionFailure();
-					}
-				}
-			);
-		} else {
-			jQuery.ajax({
-					url: 'proxy.php',
-					type: 'POST',
-					dataType: "xml",
-					headers: {
-						"X-Ovd-Service" : 'start'
-					},
-					contentType: 'text/xml',
-					data: (new XMLSerializer()).serializeToString(doc),
-					success: function(xml) {
-						onStartSessionSuccess(xml);
-					},
-					error: function() {
-						onStartSessionFailure();
-					}
-				}
-			);
-		}
-	} else {
-		jQuery('#CheckSignedJava')[0].ajaxRequest(jQuery('#sessionmanager_host').prop('value'), jQuery('#session_mode').prop('value'), jQuery('#session_language').prop('value'), getTimezoneName(), 'onStartSessionJavaRequest');
-		return false;
+	switch(jQuery('#rdp_mode').prop('value')) {
+		case "html5" :
+			session_management.setRdpProvider(new Html5RdpProvider());
+			break;
+		default :
+			session_management.setRdpProvider(new JavaRdpProvider());
+			break;
 	}
+
+	session_management.setParameters(parameters);
+	session_management.setAjaxProvider(new ProxyAjaxProvider("proxy.php"));
+	session_management.start();
+
+	/* handle client insertion */
+	var desktop_container_node = jQuery("#"+session_management.parameters["session_type"]+"ModeContainer")[0];
+	new DesktopContainer(session_management, desktop_container_node);
+
+	/* applications launcher */
+	var launcher_container_node = jQuery("#appsContainer")[0];
+	new SeamlessLauncher(session_management, launcher_container_node);
+
+	/* window manager */
+	new SeamlessWindowManager(session_management, jQuery("#applicationsModeContainer")[0], new SeamlessWindowFactory());
 
 	return false;
 }
@@ -632,12 +646,12 @@ function checkSessionMode() {
 }
 
 function confirmLogout(confirm_) {
-	var nb_apps_ = daemon.nb_running_apps();
+	var nb_apps_ = 0; /*daemon.nb_running_apps();*/ /* !!! */
 	if (confirm_ == 'always' || (confirm_ == 'apps_only' && nb_apps_ > 0)) {
 		if (!confirm(i18n.get('want_logout').replace('#', nb_apps_)))
 			return false;
 	}
 	
-	daemon.logout();
+	session_management.stop();
 	return false;
 }

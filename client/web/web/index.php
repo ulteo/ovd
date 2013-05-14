@@ -187,6 +187,41 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/ovd/timezones.js" charset="utf-8"></script>
 <?php } ?>
 
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/framework/uframework.js")) { ?>
+		<script type="text/javascript" src="media/script/framework/uframework.js" charset="utf-8"></script>
+<?php } else { ?>
+		<script type="text/javascript" src="media/script/framework/session.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/session_management.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ajax_provider/base_ajax_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ajax_provider/direct_ajax_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ajax_provider/proxy_ajax_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ajax_provider/xhr_ajax_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/application_provider/base_application_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/application_provider/html5_application_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/application_provider/java_application_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/base_rdp_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_http_tunnel.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_rdp_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_seamless_handler.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_seamless_icon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/java/java_rdp_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ui/debug_panel.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ui/desktop_container.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ui/seamless_dragging_bar.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ui/seamless_launcher.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ui/seamless_window_factory.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ui/seamless_window_manager.js" charset="utf-8"></script>
+<?php } ?>
+
+		<!-- Guacamole scripts -->
+		<script type="text/javascript" src="media/script/guacamole-js/keyboard.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/guacamole-js/mouse.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/guacamole-js/layer.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/guacamole-js/tunnel.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/guacamole-js/guacamole.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/guacamole-js/encodings.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/guacamole-js/oskeyboard.js" charset="utf-8"></script>
+
 		<script type="text/javascript" src="media/script/ovd/ui.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/ovd/uovd_int_client.js" charset="utf-8"></script>
 
@@ -638,6 +673,24 @@ function get_users_list() {
 														<select id="session_mode" <?php if (defined('OPTION_FORCE_SESSION_MODE')) echo ' disabled="disabled"';?>>
 															<option id="mode_desktop_gettext" value="desktop"<?php if ($wi_session_mode == 'desktop') echo ' selected="selected"'; ?>></option>
 															<option id="mode_portal_gettext" value="applications"<?php if ($wi_session_mode == 'applications') echo ' selected="selected"'; ?>></option>
+														</select>
+													</td>
+												</tr>
+												<tr>
+													<td style="width: 22px; text-align: right; vertical-align: middle;">
+														<?php if (!$big_image_map) { ?>
+														<img src="media/image/icons/session_mode.png" width="22" height="22" alt="" title="" />
+														<?php } else { ?>
+														<div class="image_session_mode_png"></div>
+														<?php } ?>
+													</td>
+													<td style="text-align: left; vertical-align: middle;">
+														<strong><span id="rdp_mode_gettext">Type&nbsp;</span></strong>
+													</td>
+													<td style="text-align: right; vertical-align: middle;">
+														<select id="rdp_mode">
+															<option id="rdp_mode_java" value="java" selected="selected">Java</option>
+															<option id="rdp_mode_html5" value="html5">HTML5</option>
 														</select>
 													</td>
 												</tr>
