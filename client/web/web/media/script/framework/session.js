@@ -1,6 +1,5 @@
 function Session(session_management) {
 	this.session_management = session_management
-	this.xml = null;
 	this.mode = null
 	this.mode_gateway = null
 	this.settings = new Array();
@@ -9,20 +8,20 @@ function Session(session_management) {
 }
 
 Session.prototype.update = function(xml) {
-	this.xml = jQuery(xml).find(":root");
+	var xml_root = jQuery(xml).find(":root");
 
-	switch(this.xml.prop("nodeName")) {
+	switch(xml_root.prop("nodeName")) {
 		case "session" :
 		/* Got a session */
-		 return this.parseSession(this.xml);
+		 return this.parseSession(xml_root);
 
 		case "logout" :
 		/* Got a logout ack */
-		 return this.parseEnd(this.xml);
+		 return this.parseEnd(xml_root);
 
 		case "response" :
 		/* Got an error */
-		return this.parseError(this.xml);
+		return this.parseError(xml_root);
 	}
 
 	return "bad_xml";
@@ -80,7 +79,6 @@ Session.prototype.parseEnd = function(xml) {
 /* Data storage */
 
 function Setting(session, xml) {
-	this.xml = xml;
 	this.session = session;
 	this.name = xml.attr("name");
 	this.value = xml.attr("value");
@@ -88,7 +86,6 @@ function Setting(session, xml) {
 
 function Server(session, xml) {
 	var self = this; /* closure */
-	this.xml = xml;
 	this.session = session;
 	this.type = xml.attr("type");
 	this.fqdn = xml.attr("fqdn");
@@ -126,7 +123,6 @@ Server.prototype.setStatus = function(status) {
 
 function Application(server, xml) {
 	var self = this; /* closure */
-	this.xml = xml;
 	this.server = server;
 	this.id = xml.attr("id");
 	this.name = xml.attr("name");
