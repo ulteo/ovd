@@ -46,7 +46,7 @@ SessionManagement.prototype.start = function() {
 	this.addCallback("ovd.ajaxProvider.sessionStart", function(type, source, params) {
 		var state = params["state"];
 
-		if(state = "success") {
+		if(state == "success") {
 			self.status_check = setInterval( function() {
 				self.ajax_provider.sessionStatus();
 			}, 3000);

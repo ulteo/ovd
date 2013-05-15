@@ -20,7 +20,11 @@ Session.prototype.update = function(xml) {
 		 return this.parseEnd(xml_root);
 
 		case "response" :
-		/* Got an error */
+		/* Got a start error */
+		return this.parseResponse(xml_root);
+
+		case "error" :
+		/* Got a session_status error */
 		return this.parseError(xml_root);
 	}
 
@@ -55,21 +59,35 @@ Session.prototype.parseSession = function(xml) {
 			});
 		}
 	} catch(error) {
-		console.log("Error : "+error);
+		this.session_management.fireEvent("ovd.session.error", this, {"code":"bad_xml", "from":"start"});
 		return "bad_xml";
 	}
 	return null;
 }
 
-Session.prototype.parseError = function(xml) {
+Session.prototype.parseResponse = function(xml) {
+	var code = "";
 	try {
-		var code = xml.attr("code");
-		this.session.session_management.fireEvent("ovd.log", this, {"message":"Session error "+code,"level":"error"});
+		code = xml.attr("code");
+		this.session_management.fireEvent("ovd.session.error", this, {"code":code, "from":"start"});
 	} catch(error) {
-		console.log("Error : "+error);
+		this.session_management.fireEvent("ovd.session.error", this, {"code":"bad_xml", "from":"start"});
 		return "bad_xml";
 	}
-	return null;
+	return code;
+}
+
+Session.prototype.parseError = function(xml) {
+	var code = "";
+	try {
+		code = xml.attr("id");
+		var message = xml.attr("message");
+		this.session_management.fireEvent("ovd.session.error", this, {"code":code, "from":"session_status", "message":message});
+	} catch(error) {
+		this.session_management.fireEvent("ovd.session.error", this, {"code":"bad_xml", "from":"session_status"});
+		return "bad_xml";
+	}
+	return code;
 }
 
 Session.prototype.parseEnd = function(xml) {

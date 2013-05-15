@@ -224,6 +224,26 @@ Event.observe(window, 'load', function() {
 		}
   });
 
+	/* handle errors */
+	session_management.addCallback("ovd.session.error", function(type, source, params) {
+		var code = params["code"];
+		var from = params["from"];
+		var message = params["message"];
+
+		if(code == "bad_xml") {
+			showError(i18n.get('internal_error'));
+			enableLogin();
+			return;
+		}
+
+		if(from == "start" || from == "session_status") { /* = xml 'response' || 'error' */
+			var message = i18n.get(code) || i18n.get('internal_error');
+			showError(message);
+			enableLogin();
+			return;
+		}
+  });
+
 });
 
 function startSession() {
@@ -290,33 +310,6 @@ function startSession() {
 function onStartSessionSuccess(xml_) {
 	var xml = xml_;
 
-	var buffer = xml.getElementsByTagName('response');
-	if (buffer.length == 1) {
-		try {
-			showError(i18n.get(buffer[0].getAttribute('code')));
-		} catch(e) {}
-		enableLogin();
-		return false;
-	}
-
-	// Response Error handling
-	var buffer = xml.getElementsByTagName('error');
-	if (buffer.length == 1) {
-		try {
-			if (typeof i18n.get(buffer[0].getAttribute('error_id')) != 'undefined') {
-				var errormsg = i18n.get(buffer[0].getAttribute('error_id'));
-				try {
-					var errormore = buffer[0].getAttribute('more');
-					if (errormore != null)
-						errormsg += ' ('+errormore+')';
-				} catch(e) {}
-				showError(errormsg);
-			} else
-				showError(i18n.get('internal_error'));
-		} catch(e) {}
-		enableLogin();
-		return false;
-	}
 
 	var buffer = xml.getElementsByTagName('popup');
 	if (buffer.length == 1) {
