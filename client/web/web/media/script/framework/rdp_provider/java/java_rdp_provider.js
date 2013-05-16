@@ -44,6 +44,7 @@ JavaRdpProvider.prototype.connectCommon = function(callback) {
 	this.applet.append(jQuery(document.createElement("param")).attr("name", "username").attr("value", server.login));
 	this.applet.append(jQuery(document.createElement("param")).attr("name", "password").attr("value", server.password));
 	this.applet.append(jQuery(document.createElement("param")).attr("name", "keymap").attr("value", "fr"));
+	this.applet.append(jQuery(document.createElement("param")).attr("name", "fullscreen").attr("value", parameters["fullscreen"]));
 
 	/* Add the servers status callback to global namespace */
 	window.serverStatus = function(id, status) {

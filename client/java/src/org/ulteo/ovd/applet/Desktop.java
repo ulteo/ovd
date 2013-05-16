@@ -81,8 +81,10 @@ public class Desktop extends OvdApplet implements FocusListener {
 				this.getParameterNonEmpty("username"), this.getParameterNonEmpty("password"));
 		this.aps.setGatewayToken(this.getParameter("token"));
 		
-		if (this.getParameter("fullscreen") != null)
-			this.fullscreenMode = true;
+		if (this.getParameter("fullscreen") != null) {
+			String str = ""+this.getParameter("fullscreen");
+			this.fullscreenMode = (str.equalsIgnoreCase("true") || str.equalsIgnoreCase("yes") || str.equals("1"));
+		}
 	}
 	
 	@Override
