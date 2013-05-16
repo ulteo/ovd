@@ -134,7 +134,11 @@ SessionManagement.prototype.fireEvent = function(type, source, params) {
 	for(var i=0 ; i<patterns.length ; ++i) {
 		if(this.callbacks[patterns[i]]) {
 			for(var j = 0 ; j<this.callbacks[patterns[i]].length ; ++j) {
-				this.callbacks[patterns[i]][j](type, source, params);
+				try {
+					this.callbacks[patterns[i]][j](type, source, params);
+				} catch(e) {
+					console.log("Error in SessionManagement callback system : "+e);
+				}
 			}
 		}
 	}
