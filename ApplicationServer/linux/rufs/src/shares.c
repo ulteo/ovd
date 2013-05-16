@@ -215,7 +215,7 @@ bool shares_activated(const char* name) {
 	int i;
 	Share* s;
 	List* l;
-	bool res;
+	bool res = true;
 
 	if (shareList == NULL)
 		return true;
