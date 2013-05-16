@@ -12,7 +12,7 @@ ProxyAjaxProvider.prototype = new AjaxProvider();
 
 ProxyAjaxProvider.prototype.sessionStart_implementation = function(callback) {
 	var mode = this.session_management.parameters["session_type"];
-	var language = "en-us";
+	var language = this.session_management.parameters["language"];
 	var timezone = "Europe/Amsterdam";
 	var login = this.session_management.parameters["username"];
 	var password = this.session_management.parameters["password"];

@@ -18,7 +18,7 @@ XhrAjaxProvider.prototype.sessionStart_implementation = function(callback) {
 			login: this.session_management.parameters["username"],
 			password: this.session_management.parameters["password"],
 			mode: this.session_management.parameters["session_type"],
-			language: "en-us",
+			language: this.session_management.parameters["language"],
 			keymap: "fr",
 			timezone: "Europe/Amsterdam",
 			desktop_fullscreen: 0,
