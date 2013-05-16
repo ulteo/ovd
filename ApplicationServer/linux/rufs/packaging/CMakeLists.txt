@@ -28,16 +28,16 @@ if (DPKG_CMD)
 		DEPENDS    ${CMAKE_CURRENT_SOURCE_DIR}/CHANGELOG
 	)
 
-	install (
-		FILES         ${CMAKE_CURRENT_SOURCE_DIR}/COPYRIGHT
-		DESTINATION   /usr/share/doc/${CMAKE_PROJECT_NAME}
-		RENAME        copyright
-	)
+	#install (
+	#	FILES         ${CMAKE_CURRENT_SOURCE_DIR}/COPYRIGHT
+	#	DESTINATION   /usr/share/doc/${CMAKE_PROJECT_NAME}
+	#	RENAME        copyright
+	#)
 
-	install (
-		FILES         ${CMAKE_CURRENT_BINARY_DIR}/changelog.Debian.gz
-		DESTINATION   /usr/share/doc/${CMAKE_PROJECT_NAME}
-	)
+	#install (
+	#	FILES         ${CMAKE_CURRENT_BINARY_DIR}/changelog.Debian.gz
+	#	DESTINATION   /usr/share/doc/${CMAKE_PROJECT_NAME}
+	#)
 endif()
 ADD_DEPENDENCIES(${CMAKE_PROJECT_NAME} debian_package)
 

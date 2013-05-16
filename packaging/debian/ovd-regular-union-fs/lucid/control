@@ -1,0 +1,13 @@
+Source: ovd-regular-union-fs
+Section: utils
+Priority: optional
+Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
+Build-Depends: debhelper (>= 6), cmake, libfuse-dev (>= 2.6), libpam-dev
+Standards-Version: 3.8.2
+
+Package: ulteo-ovd-regular-union-fs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Provide a regular expression based union filesystem
+ The OVD Regular Union File System provides an expression based
+ union filesystem
