@@ -244,6 +244,37 @@ Event.observe(window, 'load', function() {
 		}
   });
 
+	/* handle progress bar */
+	session_management.addCallback("ovd.*", function(type, source, params) {
+		function step(n, message) {
+			jQuery('#progressBarContent').animate({width: n+'%'});
+
+			jQuery('#progressBar').css({'text-align':'center'});
+			jQuery('#progressBar > span').remove();
+			jQuery('#progressBar').append(jQuery('<span>'+message+'</span>').css({'position':'relative', 'top':'-100%'}));
+		}
+
+		if(type == 'ovd.ajaxProvider.sessionStart' && params['state'] == 'success') {
+			step(25, "Loading session");
+			return;
+		}
+
+		if(type == 'ovd.session.statusChanged' && params['to'] == 'ready') {
+			step(50, "Connecting...");
+			return;
+		}
+
+		if(type == 'ovd.session.server.statusChanged' && params['to'] == 'connected') {
+			step(75, "Connection Ok");
+			return;
+		}
+
+		if(type == 'ovd.session.statusChanged' && params['to'] == 'logged') {
+			step(100, "Ready");
+			return;
+		}
+  });
+
 });
 
 function startSession() {
