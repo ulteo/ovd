@@ -8,13 +8,11 @@ function DebugPanel(session_management, node) {
 		"debug"   : "grey" };
 
 	/* register events listeners */
-	var self = this; /* closure */
-	this.session_management.addCallback("ovd.log", function(type, source, params) {
-		self.handleEvents(type, source, params);
-	});                                         
+	this.session_management.addCallback("ovd.log", this.handleEvents.bind(this));
 
 	/* Listen events to log */
-	session_management.addCallback("ovd.ajaxProvider.sessionStart", function(type, source, params) {
+	var self = this; /* closure */
+	this.session_management.addCallback("ovd.ajaxProvider.sessionStart", function(type, source, params) {
 		if(params["code"]) {
 			self.handleEvents("ovd.log", source, {"message":"Session start "+type+" : "+params["state"]+" "+params["code"], "level":"error"});
 		} else {
@@ -22,7 +20,7 @@ function DebugPanel(session_management, node) {
 		}
 	});
 
-	session_management.addCallback("ovd.ajaxProvider.sessionEnd", function(type, source, params) {
+	this.session_management.addCallback("ovd.ajaxProvider.sessionEnd", function(type, source, params) {
 		if(params["code"]) {
 			self.handleEvents("ovd.log", source, {"message":"Session stop "+type+" : "+params["state"]+" "+params["code"], "level":"error"});
 		} else {
@@ -30,11 +28,11 @@ function DebugPanel(session_management, node) {
 		}
 	});
 
-	session_management.addCallback("ovd.session.statusChanged", function(type, source, params) {
+	this.session_management.addCallback("ovd.session.statusChanged", function(type, source, params) {
 		self.handleEvents("ovd.log", source, {"message":"Session status "+type+" : "+params["from"]+" --> "+params["to"]});
   });
 
-	session_management.addCallback("ovd.session.server.statusChanged", function(type, source, params) {
+	this.session_management.addCallback("ovd.session.server.statusChanged", function(type, source, params) {
 		self.handleEvents("ovd.log", source, {"message":"Server status "+type+" : "+params["from"]+" --> "+params["to"]});
   });
 }

@@ -4,10 +4,8 @@ function DesktopContainer(session_management, node) {
 	this.session_management = session_management;
 
 	/* register events listeners */
-	var self = this; /* closure */
-	this.session_management.addCallback("ovd.*", function(type, source, params) {
-		self.handleEvents(type, source, params);
-	});                                         
+	this.session_management.addCallback("ovd.rdpProvider.desktopPanel", this.handleEvents.bind(this));
+	this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",  this.handleEvents.bind(this));
 }
 
 DesktopContainer.prototype.handleEvents = function(type, source, params) {

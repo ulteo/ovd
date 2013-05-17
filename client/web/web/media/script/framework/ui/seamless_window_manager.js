@@ -6,13 +6,11 @@ function SeamlessWindowManager(session_management, node, windowFactory) {
 
 	if(this.session_management.parameters["session_type"] == "applications") {
 		/* register events listeners */
-		var self = this; /* closure */
-		this.session_management.addCallback("ovd.rdpProvider.*", function(type, source, params) {
-			self.handleEvents(type, source, params);
-		});
-		this.session_management.addCallback("ovd.session.*", function(type, source, params) {
-			self.handleEvents(type, source, params);
-		});
+		this.session_management.addCallback("ovd.rdpProvider.windowCreate",     this.handleEvents.bind(this));
+		this.session_management.addCallback("ovd.rdpProvider.windowDestroy",    this.handleEvents.bind(this));
+		this.session_management.addCallback("ovd.rdpProvider.windowProperties", this.handleEvents.bind(this));
+		this.session_management.addCallback("ovd.rdpProvider.windowUpdate",     this.handleEvents.bind(this));
+		this.session_management.addCallback("ovd.session.server.statusChanged", this.handleEvents.bind(this));
 	}
 }
 

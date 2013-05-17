@@ -7,10 +7,9 @@ ApplicationProvider.prototype.initialize = function(rdp_provider) {
 	this.token = 0;
 
 	/* register events listeners */
-	var self = this; /* closure */
-	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.applicationProvider.*", function(type, source, params) {
-			self.handleEvents(type, source, params);
-	});
+	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.applicationProvider.applicationStart",         this.handleEvents.bind(this));
+	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.applicationProvider.applicationStartWithArgs", this.handleEvents.bind(this));
+	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.applicationProvider.applicationStop",          this.handleEvents.bind(this));
 }
 
 ApplicationProvider.prototype.handleEvents = function(type, source, params) {

@@ -6,10 +6,8 @@ function SeamlessLauncher(session_management, node) {
 
 	if(this.session_management.parameters["session_type"] == "applications") {
 		/* register events listeners */
-		var self = this; /* closure */
-		this.session_management.addCallback("ovd.session.*", function(type, source, params) {
-			self.handleEvents(type, source, params);
-		});                                         
+		this.session_management.addCallback("ovd.session.statusChanged",        this.handleEvents.bind(this));
+		this.session_management.addCallback("ovd.session.server.statusChanged", this.handleEvents.bind(this));
 	}
 }
 
