@@ -18,7 +18,7 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
 //IN THE SOFTWARE.
 
-#include "stdafx.h"
+#include <common/stdafx.h>
 #include <windows.h>
 #include <tlhelp32.h>
 #include <stdio.h>

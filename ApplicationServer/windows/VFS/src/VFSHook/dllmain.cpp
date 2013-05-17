@@ -1,7 +1,7 @@
 ﻿// Copyright (C) 2012 
 // Author Wei-Jen Chen 2012
 
-#include "stdafx.h"
+#include <common/stdafx.h>
 #include "InterceptAPI.h"
 
 #define DLL_EXPORT extern "C" __declspec(dllexport)

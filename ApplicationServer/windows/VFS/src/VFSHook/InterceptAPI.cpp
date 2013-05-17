@@ -1,11 +1,11 @@
 // Copyright (C) 2012 
 // Author Wei-Jen Chen 2012
 
-#include "stdafx.h"
+#include <common/stdafx.h>
 #include "mhook-lib/mhook.h"
 #include "InterceptAPI.h"
 #include "VirtualFileSystem.h"
-#include "Logger.h"
+#include <common/Logger.h>
 #include <shlobj.h> 
 
 #define VIRTUAL_SYSTEM_CONF_FILE	L"VirtualSystem.conf"

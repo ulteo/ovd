@@ -2,7 +2,7 @@
 // Author Wei-Jen Chen 2012
 // Author Shen-Hao chen 2012
 
-#include "stdafx.h"
+#include <common/stdafx.h>
 #include "VirtualFileSystem.h"
 
 #include <stdlib.h>
