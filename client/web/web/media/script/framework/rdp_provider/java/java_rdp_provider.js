@@ -98,7 +98,7 @@ JavaRdpProvider.prototype.connectApplications = function() {
 				try {
 					// XMLSerializer exists in current Mozilla browsers
 					serializer = new XMLSerializer();
-					serialized = serializer.serializeToString(server.xml[0]);
+					serialized = serializer.serializeToString(server.xml);
 				} catch (e) {
 					// Internet Explorer has a different approach to serializing XML
 					serialized = server.xml.xml;

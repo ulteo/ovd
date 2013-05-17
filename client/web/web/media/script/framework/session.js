@@ -1,5 +1,6 @@
 function Session(session_management) {
 	this.session_management = session_management
+	this.xml = null;
 	this.mode = null
 	this.mode_gateway = null
 	this.settings = new Array();
@@ -33,6 +34,7 @@ Session.prototype.update = function(xml) {
 
 Session.prototype.parseSession = function(xml) {
 	var self = this; /* closure */
+	this.xml = xml[0];
 	try {
 		if(xml.attr("status") != undefined) {
 			/* Session status message */
@@ -98,6 +100,7 @@ Session.prototype.parseEnd = function(xml) {
 
 function Setting(session, xml) {
 	this.session = session;
+	this.xml = xml[0];
 	this.name = xml.attr("name");
 	this.value = xml.attr("value");
 }
@@ -105,6 +108,7 @@ function Setting(session, xml) {
 function Server(session, xml) {
 	var self = this; /* closure */
 	this.session = session;
+	this.xml = xml[0];
 	this.type = xml.attr("type");
 	this.fqdn = xml.attr("fqdn");
 	this.token = xml.attr("token");
@@ -142,6 +146,7 @@ Server.prototype.setStatus = function(status) {
 function Application(server, xml) {
 	var self = this; /* closure */
 	this.server = server;
+	this.xml = xml[0];
 	this.id = xml.attr("id");
 	this.name = xml.attr("name");
 	this.mime = new Array();
