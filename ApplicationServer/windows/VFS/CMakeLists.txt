@@ -16,4 +16,6 @@ if (${CMAKE_GENERATOR} MATCHES ".*Win64")
 	set(ARCH "64")
 endif()
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+
 add_subdirectory (src)
