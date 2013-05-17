@@ -56,6 +56,10 @@ void* memory_realloc2(void* data, size_t size, size_t oldSize, bool reset) {
 		return NULL;
 
 	void* data2 = realloc(data, size);
+	if (! data2) {
+		logError("Error reallocating %lu", size);
+		return data;
+	}
 
 	if (reset && (size > oldSize))
 		memset(data2+oldSize, 0, (size - oldSize));
