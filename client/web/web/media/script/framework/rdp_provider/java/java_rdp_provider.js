@@ -75,7 +75,7 @@ JavaRdpProvider.prototype.connectApplications = function() {
 
 		/* minimize applet size */
 		/* css "display: none" doesn't works with applets */
-		self.applet.attr("width", "1").attr("height", "1");
+		self.applet.width("1").height("1");
 
 		/* set application_provider */
 		var application_provider = new JavaApplicationProvider(self);

@@ -89,7 +89,7 @@ Html5RdpProvider.prototype.connectApplications = function() {
 	var self = this; /* closure */
 	this.connectCommon( function() {
 		/* Hide main canvas */
-		self.guac_canvas.style.cssText = "display:none;";
+		jQuery(self.guac_canvas).width("1").height("1");
 		
 		/* set handler for seamrdp channel */
 		var seamless_instructionHandler = new Html5SeamlessHandler(self);

@@ -195,21 +195,22 @@ Event.observe(window, 'load', function() {
 	session_management.addCallback("ovd.session.statusChanged", function(type, source, params) {
 		var from = params["from"];
 		var to = params["to"];
+		var mode = session_management.parameters["session_type"];
 
 		if(to == "ready") {
 			hideLogin();
 			showSplash();
-			pushMainContainer();
+			pushMainContainer(mode);
 
 			/* Wait for the animation end */
 			setTimeout(function() {
-				showMainContainer();
+				showMainContainer(mode);
 				enableLogin();
 			}, 2000);
 		}
 
 		if(to == "logged") {
-			pullMainContainer();
+			pullMainContainer(mode);
 
 			/* Wait for the animation end */
 			setTimeout(function() {
@@ -220,7 +221,7 @@ Event.observe(window, 'load', function() {
 		if(from == "logged") {
 			generateEnd();
 			showEnd();
-			pushMainContainer();
+			pushMainContainer(mode);
 		}
   });
 
@@ -325,7 +326,7 @@ function startSession() {
 	session_management.start();
 
 	/* handle client insertion */
-	var desktop_container_node = jQuery("#"+session_management.parameters["session_type"]+"ModeContainer")[0];
+	var desktop_container_node = jQuery("#"+session_management.parameters["session_type"]+"AppletContainer")[0];
 	new DesktopContainer(session_management, desktop_container_node);
 
 	/* applications launcher */
@@ -333,7 +334,7 @@ function startSession() {
 	new SeamlessLauncher(session_management, launcher_container_node);
 
 	/* window manager */
-	new SeamlessWindowManager(session_management, jQuery("#applicationsModeContainer")[0], new SeamlessWindowFactory());
+	new SeamlessWindowManager(session_management, jQuery("#windowsContainer")[0], new SeamlessWindowFactory());
 
 	return false;
 }
@@ -441,7 +442,8 @@ function onStartSessionSuccess(xml_) {
 	}
 
 	daemon.add_session_ready_callback(function onSessionReady(d_) {
-		showMainContainer();
+		var mode = session_management.parameters["session_type"];
+		showMainContainer(mode);
 	});
 
 	// <server> nodes

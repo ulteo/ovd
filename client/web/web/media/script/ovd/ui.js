@@ -68,35 +68,29 @@ function hideIFrame() {
 	hideLock();
 }
 
-function showMainContainer(container) {
-	if(!container) { container = session_management.parameters["session_type"]+'ModeContainer'; }
-
-	if(jQuery('#'+container)[0]) {
-		jQuery('#'+container).show();
+function showMainContainer(mode) {
+	if(jQuery('#'+mode+"ModeContainer")[0]) {
+		jQuery('#'+mode+"ModeContainer").show();
+		jQuery('#'+mode+"AppletContainer").show();
 	}
 }
 
-function hideMainContainer(container) {
-	if(!container) { container = session_management.parameters["session_type"]+'ModeContainer'; }
-
-	if(jQuery('#'+container)[0]) {
-		jQuery('#'+container).hide();
+function hideMainContainer(mode) {
+	if(jQuery('#'+mode+"ModeContainer")[0]) {
+		jQuery('#'+mode+"ModeContainer").hide();
+		jQuery('#'+mode+"AppletContainer").hide();
 	}
 }
 
-function pullMainContainer(container) {
-	if(!container) { container = session_management.parameters["session_type"]+'ModeContainer'; }
-
-	if(jQuery('#'+container)[0]) {
-		new Effect.Move(jQuery('#'+container)[0], { x: 0, y: my_height });
+function pullMainContainer(mode) {
+	if(jQuery('#'+mode+"ModeContainer")[0]) {
+		new Effect.Move(jQuery('#'+mode+"ModeContainer")[0], { x: 0, y: my_height });
 	}
 }
 
-function pushMainContainer(container) {
-	if(!container) { container = session_management.parameters["session_type"]+'ModeContainer'; }
-
-	if(jQuery('#'+container)[0]) {
-		new Effect.Move(jQuery('#'+container)[0], { x: 0, y: -my_height, mode: 'absolute' });
+function pushMainContainer(mode) {
+	if(jQuery('#'+mode+"ModeContainer")[0]) {
+		new Effect.Move(jQuery('#'+mode+"ModeContainer")[0], { x: 0, y: -my_height, mode: 'absolute' });
 	}
 }
 
