@@ -6,11 +6,13 @@ function SeamlessWindowManager(session_management, node, windowFactory) {
 
 	if(this.session_management.parameters["session_type"] == "applications") {
 		/* register events listeners */
-		this.session_management.addCallback("ovd.rdpProvider.windowCreate",     this.handleEvents.bind(this));
-		this.session_management.addCallback("ovd.rdpProvider.windowDestroy",    this.handleEvents.bind(this));
-		this.session_management.addCallback("ovd.rdpProvider.windowProperties", this.handleEvents.bind(this));
-		this.session_management.addCallback("ovd.rdpProvider.windowUpdate",     this.handleEvents.bind(this));
-		this.session_management.addCallback("ovd.session.server.statusChanged", this.handleEvents.bind(this));
+		this.handler = this.handleEvents.bind(this);
+		this.session_management.addCallback("ovd.rdpProvider.windowCreate",     this.handler);
+		this.session_management.addCallback("ovd.rdpProvider.windowDestroy",    this.handler);
+		this.session_management.addCallback("ovd.rdpProvider.windowProperties", this.handler);
+		this.session_management.addCallback("ovd.rdpProvider.windowUpdate",     this.handler);
+		this.session_management.addCallback("ovd.session.server.statusChanged", this.handler);
+		this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",      this.handler);
 	}
 }
 
@@ -57,5 +59,19 @@ SeamlessWindowManager.prototype.handleEvents = function(type, source, params) {
 				}
 			}
 		}
+	} else if(type == "ovd.ajaxProvider.sessionEnd") {
+		this.end();
+	}
+}
+
+SeamlessWindowManager.prototype.end = function() {
+	if(this.session_management.parameters["session_type"] == "applications") {
+		this.node.empty();
+		this.session_management.removeCallback("ovd.rdpProvider.windowCreate",     this.handler);
+		this.session_management.removeCallback("ovd.rdpProvider.windowDestroy",    this.handler);
+		this.session_management.removeCallback("ovd.rdpProvider.windowProperties", this.handler);
+		this.session_management.removeCallback("ovd.rdpProvider.windowUpdate",     this.handler);
+		this.session_management.removeCallback("ovd.session.server.statusChanged", this.handler);
+		this.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",      this.handler);
 	}
 }

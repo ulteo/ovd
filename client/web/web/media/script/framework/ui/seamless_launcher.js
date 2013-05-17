@@ -6,8 +6,10 @@ function SeamlessLauncher(session_management, node) {
 
 	if(this.session_management.parameters["session_type"] == "applications") {
 		/* register events listeners */
-		this.session_management.addCallback("ovd.session.statusChanged",        this.handleEvents.bind(this));
-		this.session_management.addCallback("ovd.session.server.statusChanged", this.handleEvents.bind(this));
+		this.handler = this.handleEvents.bind(this);
+		this.session_management.addCallback("ovd.session.statusChanged",        this.handler);
+		this.session_management.addCallback("ovd.session.server.statusChanged", this.handler);
+		this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",      this.handler);
 	}
 }
 
@@ -72,5 +74,18 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 				item["node"].prop("className", "applicationLauncherDisabled");
 			}
 		}
+	}
+
+	if(type == "ovd.ajaxProvider.sessionEnd") { /* Clean context */
+		this.end();
+	}
+}
+
+SeamlessLauncher.prototype.end = function() {
+	if(this.session_management.parameters["session_type"] == "applications") {
+		this.node.empty();
+		this.session_management.removeCallback("ovd.session.statusChanged",        this.handler);
+		this.session_management.removeCallback("ovd.session.server.statusChanged", this.handler);
+		this.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",      this.handler);
 	}
 }

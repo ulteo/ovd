@@ -1,9 +1,8 @@
 function SessionManagement(params, rdp_provider, ajax_provider) {
 	this.parameters = params;
-	this.callbacks = {};
 	this.status_check = null;
 
-	this.session = new Session(this);
+	this.session = null;
 	this.rdp_provider = rdp_provider;
 	this.ajax_provider = ajax_provider;
 
@@ -15,6 +14,55 @@ function SessionManagement(params, rdp_provider, ajax_provider) {
 	if(this.ajax_provider) {
 		this.ajax_provider.session_management = this;
 	}
+
+	/* ---------------- Initial callbacks ------------------ */
+
+	var self = this; /* closure */
+	this.callbacks = {
+		"ovd.ajaxProvider.sessionStart" : new Array(function(type, source, params) {
+			var state = params["state"];
+
+			if(state == "success") {
+				self.status_check = setInterval( function() {
+					self.ajax_provider.sessionStatus();
+				}, 3000);
+			}
+		}),
+		"ovd.session.statusChanged" : new Array(function(type, source, params) {
+			var from = params["from"];
+			var to = params["to"];
+
+			if(to == "ready") {
+				/* Connect to rdp servers */
+				self.rdp_provider.connect();
+			}
+			if(to == "logged") {
+				/* Lower the polling interval to 30 sec */
+				clearInterval(self.status_check);
+				self.status_check = setInterval( function() {
+					self.ajax_provider.sessionStatus();
+				}, 30000);
+			}
+			if(to == "unknown") {
+				/* Call SessionManagement.stop for a clean stop */
+				self.stop();
+				/* Clear status_check interval */
+				clearInterval(self.status_check);
+			}
+		}),
+		"ovd.session.server.statusChanged" : new Array(function(type, source, params) {
+			var from = params["from"];
+			var to = params["to"];
+
+			if(to == "disconnected") {
+				/* Set the polling interval to 3 sec */
+				clearInterval(self.status_check);
+				self.status_check = setInterval( function() {
+					self.ajax_provider.sessionStatus();
+				}, 3000);
+			}
+		})
+	};
 }
 
 SessionManagement.prototype.setParameters = function(params) {
@@ -38,61 +86,7 @@ SessionManagement.prototype.setAjaxProvider = function(ajax_provider) {
 }
 
 SessionManagement.prototype.start = function() {
-	var self = this; /* closure */
-
-	/* ---------------- Internal callbacks ------------------ */
-
-	/* Check the SessionStart status */	
-	this.addCallback("ovd.ajaxProvider.sessionStart", function(type, source, params) {
-		var state = params["state"];
-
-		if(state == "success") {
-			self.status_check = setInterval( function() {
-				self.ajax_provider.sessionStatus();
-			}, 3000);
-		}
-	});
-
-	/* Handle the session status evolutions */
-	this.addCallback("ovd.session.statusChanged", function(type, source, params) {
-		var from = params["from"];
-		var to = params["to"];
-
-		if(to == "ready") {
-			/* Connect to rdp servers */
-			self.rdp_provider.connect();
-		}
-		if(to == "logged") {
-			/* Lower the polling interval to 30 sec */
-			clearInterval(self.status_check);
-			self.status_check = setInterval( function() {
-				self.ajax_provider.sessionStatus();
-			}, 30000);
-		}
-		if(to == "unknown") {
-			/* Call SessionManagement.stop for a clean stop */
-			self.stop();
-			/* Clear status_check interval */
-			clearInterval(self.status_check);
-		}
-	});
-
-	/* Handle server status evolutions */
-	this.addCallback("ovd.session.server.statusChanged", function(type, source, params) {
-		var from = params["from"];
-		var to = params["to"];
-
-		if(to == "disconnected") {
-			/* Set the polling interval to 3 sec */
-			clearInterval(self.status_check);
-			self.status_check = setInterval( function() {
-				self.ajax_provider.sessionStatus();
-			}, 3000);
-		}
-	});
-
-	/* ----------------   Start session   ------------------ */
-
+	this.session = new Session(this);
 	this.ajax_provider.sessionStart();
 }
 
