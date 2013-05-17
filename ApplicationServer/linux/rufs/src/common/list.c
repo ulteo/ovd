@@ -91,6 +91,7 @@ void list_add(List* list, Any item) {
 	if (list->size >= list->allocSize) {
 		p = (Any*)memory_realloc2(list->values, (list->allocSize + DEFAULT_LIST_SIZE) * sizeof(Any), list->allocSize * sizeof(Any), true);
 		list->allocSize += DEFAULT_LIST_SIZE;
+		list->values = p;
 	}
 
 	list->values[list->size++] = item;
