@@ -6,9 +6,12 @@
 
 #include <string>
 
+
 class Logger
 {
 public:
+	enum Level {LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR};
+
 	static Logger& getSingleton();
 	static Logger* getSingletonPtr();
 
