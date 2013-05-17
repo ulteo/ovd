@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,7 +24,7 @@
 define('WEB_CLIENT_ROOT', realpath(dirname(__FILE__).'/..'));
 
 $buf = @ini_get('include_path');
-@ini_set('include_path', $buf.':'.WEB_CLIENT_ROOT.'/PEAR');
+@ini_set('include_path', WEB_CLIENT_ROOT.'/PEAR:'.$buf);
 
 define('WEB_CLIENT_CONF_DIR', '/etc/ulteo/webclient');
 define('WEB_CLIENT_CONF_FILE', '/etc/ulteo/webclient/config.inc.php');
