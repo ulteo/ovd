@@ -137,6 +137,9 @@ SessionManagement.prototype.removeCallback = function(type, func) {
 			var idx = this.callbacks[type].indexOf(func);
 			if(idx != -1) {
 				this.callbacks[type].splice(idx, 1);
+				if(this.callbacks[type].length == 0) {
+					delete this.callbacks[type];
+				}
 			}
 	}
 }
