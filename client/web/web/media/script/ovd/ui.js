@@ -145,6 +145,14 @@ function generateEnd() {
 function configureUI(mode) {
 	var session_settings = session_management.session.settings;
 	if(mode == "applications") {
+		/* Set page size */
+		(function() {
+			var header_height = jQuery('#applicationsHeaderWrap').height();
+			var height = parseInt(my_height)-parseInt(header_height);
+			jQuery('#appsContainer').height(height-30);
+			jQuery('#fileManagerContainer').height(height-30);
+		})();
+
 		/* Suport suspend ? */
 		(function() {
 			if(session_settings["persistent"]) {
