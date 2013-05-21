@@ -50,14 +50,30 @@ DirectAjaxProvider.prototype.sessionStatus_implementation = function(callback) {
 }
 
 DirectAjaxProvider.prototype.sessionEnd_implementation = function(callback) {
-	var mode = this.session_management.parameters["session_type"];
   jQuery.ajax({
 		url: "/ovd/client/logout.php",
 		type: "POST",
 		dataType: "xml",
 		contentType: "text/xml",
 		data: ""+
-		"<logout mode='"+mode+"'/>",
+		"<logout mode='logout'/>",
+		success: function(xml) {
+			callback(xml);
+		},
+		error: function( xhr, status ) {
+			console.log("Error : "+status);
+		}
+	});
+}
+
+DirectAjaxProvider.prototype.sessionSuspend_implementation = function(callback) {
+  jQuery.ajax({
+		url: "/ovd/client/logout.php",
+		type: "POST",
+		dataType: "xml",
+		contentType: "text/xml",
+		data: ""+
+		"<logout mode='suspend'/>",
 		success: function(xml) {
 			callback(xml);
 		},

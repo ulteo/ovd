@@ -28,6 +28,28 @@ function SessionManagement(params, rdp_provider, ajax_provider) {
 				}, 3000);
 			}
 		}),
+		"ovd.ajaxProvider.sessionEnd" : new Array(function(type, source, params) {
+			var state = params["state"];
+
+			if(state == "success") {
+				/* Set the polling interval to 3 sec */
+				clearInterval(self.status_check);
+				self.status_check = setInterval( function() {
+					self.ajax_provider.sessionStatus();
+				}, 3000);
+			}
+		}),
+		"ovd.ajaxProvider.sessionSuspend" : new Array(function(type, source, params) {
+			var state = params["state"];
+
+			if(state == "success") {
+				/* Set the polling interval to 3 sec */
+				clearInterval(self.status_check);
+				self.status_check = setInterval( function() {
+					self.ajax_provider.sessionStatus();
+				}, 3000);
+			}
+		}),
 		"ovd.session.statusChanged" : new Array(function(type, source, params) {
 			var from = params["from"];
 			var to = params["to"];
@@ -42,6 +64,10 @@ function SessionManagement(params, rdp_provider, ajax_provider) {
 				self.status_check = setInterval( function() {
 					self.ajax_provider.sessionStatus();
 				}, 30000);
+			}
+			if(to == "disconnected") {
+				/* Clear status_check interval */
+				clearInterval(self.status_check);
 			}
 			if(to == "unknown") {
 				/* Call SessionManagement.stop for a clean stop */
@@ -94,6 +120,10 @@ SessionManagement.prototype.stop = function() {
 	this.ajax_provider.sessionEnd();
 }
 
+SessionManagement.prototype.suspend = function() {
+	this.ajax_provider.sessionSuspend();
+}
+
 SessionManagement.prototype.addCallback = function(type, func) {
 	if(! this.callbacks[type]) {
 		this.callbacks[type] = new Array();
@@ -114,6 +144,7 @@ SessionManagement.prototype.removeCallback = function(type, func) {
 SessionManagement.prototype.fireEvent = function(type, source, params) {
 	var path_elements = type.split(".");
 	var patterns = [];
+	var callbacks = [];
 	for(var i=0 ; i<path_elements.length ; ++i) {
 		var pattern = "";
 		for(var j=0 ; j<i ; ++j) {
@@ -125,15 +156,21 @@ SessionManagement.prototype.fireEvent = function(type, source, params) {
 
 	patterns.push(type);
 
+	/* Copy callbacks before calling */
 	for(var i=0 ; i<patterns.length ; ++i) {
 		if(this.callbacks[patterns[i]]) {
 			for(var j = 0 ; j<this.callbacks[patterns[i]].length ; ++j) {
-				try {
-					this.callbacks[patterns[i]][j](type, source, params);
-				} catch(e) {
-					console.log("Error in SessionManagement callback system : "+e);
-				}
+				callbacks.push(this.callbacks[patterns[i]][j]);
 			}
+		}
+	}
+
+	/* Call */
+	for(var i=0 ; i<callbacks.length ; ++i) {
+		try {
+			callbacks[i](type, source, params);
+		} catch(e) {
+			console.log("Error in SessionManagement callback system : "+e);
 		}
 	}
 }

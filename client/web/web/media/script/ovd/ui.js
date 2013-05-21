@@ -141,3 +141,15 @@ function generateEnd() {
 			jQuery('#endMessage').html(i18n.get('session_end_ok'));
 	}
 }
+
+function configureUI(mode) {
+	var session_settings = session_management.session.settings;
+	if(mode == "applications") {
+		/* Suport suspend ? */
+		(function() {
+			if(session_settings["persistent"]) {
+				jQuery('#suspend_button').show();
+			}
+		})();
+	}
+}

@@ -32,6 +32,7 @@ function DebugPanel(session_management, node) {
 	this.handler = this.handleEvents.bind(this);
 	this.session_management.addCallback("ovd.log", this.handler);
 	this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",  this.handler);
+	this.session_management.addCallback("ovd.ajaxProvider.sessionSuspend", this.handler);
 
 	/* Listen events to log */
 	for(var type in this.callbacks) {
@@ -46,7 +47,7 @@ DebugPanel.prototype.handleEvents = function(type, source, params) {
 		this.node.append(jQuery(document.createElement("div")).css("color", this.colors[level]).text(message));
 	}
 
-	if(type == "ovd.ajaxProvider.sessionEnd") { /* Clean context */
+	if(type == "ovd.ajaxProvider.sessionEnd" || type == "ovd.ajaxProvider.sessionSuspend" ) { /* Clean context */
 		this.end();
 	}
 }
@@ -55,6 +56,7 @@ DebugPanel.prototype.end = function() {
 	this.node.empty();
 	this.session_management.removeCallback("ovd.log", this.handler);
 	this.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",  this.handler);
+	this.session_management.removeCallback("ovd.ajaxProvider.sessionSuspend", this.handler);
 
 	for(var type in this.callbacks) {
 		this.session_management.removeCallback(type, callbacks[type]);

@@ -123,7 +123,7 @@ Event.observe(window, 'load', function() {
 
 	/* Suspend */
 	Event.observe(jQuery('#suspend_link')[0], 'click', function() {
-		session_management.stop();
+		session_management.suspend();
 	});
 
 	/* Logout confirmation for "Applications" mode */
@@ -210,6 +210,7 @@ Event.observe(window, 'load', function() {
 		}
 
 		if(to == "logged") {
+			configureUI(mode);
 			pullMainContainer(mode);
 
 			/* Wait for the animation end */

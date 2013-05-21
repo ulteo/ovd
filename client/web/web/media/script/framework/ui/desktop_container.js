@@ -4,8 +4,9 @@ function DesktopContainer(session_management, node) {
 
 	/* register events listeners */
 	this.handler = this.handleEvents.bind(this);
-	this.session_management.addCallback("ovd.rdpProvider.desktopPanel", this.handler);
-	this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",  this.handler);
+	this.session_management.addCallback("ovd.rdpProvider.desktopPanel",    this.handler);
+	this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",     this.handler);
+	this.session_management.addCallback("ovd.ajaxProvider.sessionSuspend", this.handler);
 }
 
 DesktopContainer.prototype.handleEvents = function(type, source, params) {
@@ -16,13 +17,14 @@ DesktopContainer.prototype.handleEvents = function(type, source, params) {
 		this.node.append(node);
 	}
 
-	if(type == "ovd.ajaxProvider.sessionEnd") { /* Clean context */
+	if(type == "ovd.ajaxProvider.sessionEnd" || type == "ovd.ajaxProvider.sessionSuspend" ) { /* Clean context */
 		this.end();
 	}
 }
 
 DesktopContainer.prototype.end = function() {
 	this.node.empty();
-	this.session_management.removeCallback("ovd.rdpProvider.desktopPanel", this.handler);
-	this.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",  this.handler);
+	this.session_management.removeCallback("ovd.rdpProvider.desktopPanel",     this.handler);
+	this.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",      this.handler);
+	this.session_management.removeCallback("ovd.ajaxProvider.sessionSuspend",  this.handler);
 }

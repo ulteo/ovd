@@ -13,6 +13,7 @@ function SeamlessWindowManager(session_management, node, windowFactory) {
 		this.session_management.addCallback("ovd.rdpProvider.windowUpdate",     this.handler);
 		this.session_management.addCallback("ovd.session.server.statusChanged", this.handler);
 		this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",      this.handler);
+		this.session_management.addCallback("ovd.ajaxProvider.sessionSuspend",  this.handler);
 	}
 }
 
@@ -59,7 +60,7 @@ SeamlessWindowManager.prototype.handleEvents = function(type, source, params) {
 				}
 			}
 		}
-	} else if(type == "ovd.ajaxProvider.sessionEnd") {
+	} else if(type == "ovd.ajaxProvider.sessionEnd" || type == "ovd.ajaxProvider.sessionSuspend" ) { /* Clean context */
 		this.end();
 	}
 }
@@ -73,5 +74,6 @@ SeamlessWindowManager.prototype.end = function() {
 		this.session_management.removeCallback("ovd.rdpProvider.windowUpdate",     this.handler);
 		this.session_management.removeCallback("ovd.session.server.statusChanged", this.handler);
 		this.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",      this.handler);
+		this.session_management.removeCallback("ovd.ajaxProvider.sessionSuspend",  this.handler);
 	}
 }

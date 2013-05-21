@@ -10,6 +10,7 @@ function SeamlessLauncher(session_management, node) {
 		this.session_management.addCallback("ovd.session.statusChanged",        this.handler);
 		this.session_management.addCallback("ovd.session.server.statusChanged", this.handler);
 		this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",      this.handler);
+		this.session_management.addCallback("ovd.ajaxProvider.sessionSuspend",  this.handler);
 	}
 }
 
@@ -76,7 +77,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 		}
 	}
 
-	if(type == "ovd.ajaxProvider.sessionEnd") { /* Clean context */
+	if(type == "ovd.ajaxProvider.sessionEnd" || type == "ovd.ajaxProvider.sessionSuspend" ) { /* Clean context */
 		this.end();
 	}
 }
@@ -87,5 +88,6 @@ SeamlessLauncher.prototype.end = function() {
 		this.session_management.removeCallback("ovd.session.statusChanged",        this.handler);
 		this.session_management.removeCallback("ovd.session.server.statusChanged", this.handler);
 		this.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",      this.handler);
+		this.session_management.removeCallback("ovd.ajaxProvider.sessionSuspend",  this.handler);
 	}
 }

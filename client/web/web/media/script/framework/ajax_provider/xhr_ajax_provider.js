@@ -63,3 +63,20 @@ XhrAjaxProvider.prototype.sessionEnd_implementation = function(callback) {
 		}
 	});
 }
+
+XhrAjaxProvider.prototype.sessionSuspend_implementation = function(callback) {
+	jQuery.ajax({
+		url: "logout.php",
+		type: "GET",
+		dataType : "xml",
+		data : {
+			mode: "suspend"
+		},
+		success: function(xml) {
+			callback(xml);
+		},
+		error: function( xhr, status ) {
+			console.log("Error : "+status);
+		}
+	});
+}

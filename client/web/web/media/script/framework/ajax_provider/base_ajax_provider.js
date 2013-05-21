@@ -41,3 +41,15 @@ AjaxProvider.prototype.sessionEnd = function() {
 		}
 	});
 }
+
+AjaxProvider.prototype.sessionSuspend = function() {
+	var self = this; /* closure */
+	this.sessionSuspend_implementation( function(xml) {
+		var error = self.session_management.session.update(xml);
+		if(error) {
+			self.session_management.fireEvent("ovd.ajaxProvider.sessionSuspend", self, {"state":"error", "code":error});
+		} else {
+			self.session_management.fireEvent("ovd.ajaxProvider.sessionSuspend", self, {"state":"success"});
+		}
+	});
+}

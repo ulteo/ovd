@@ -56,7 +56,6 @@ ProxyAjaxProvider.prototype.sessionStatus_implementation = function(callback) {
 }
 
 ProxyAjaxProvider.prototype.sessionEnd_implementation = function(callback) {
-	var mode = this.session_management.parameters["session_type"];
   jQuery.ajax({
 		url: this.proxy_url,
 		type: "POST",
@@ -66,7 +65,7 @@ ProxyAjaxProvider.prototype.sessionEnd_implementation = function(callback) {
 		},
 		contentType: "text/xml",
 		data: ""+
-		"<logout mode='"+mode+"'/>",
+		"<logout mode='logout'/>",
 		success: function(xml) {
 			callback(xml);
 		},
@@ -76,3 +75,22 @@ ProxyAjaxProvider.prototype.sessionEnd_implementation = function(callback) {
 	});
 }
 
+ProxyAjaxProvider.prototype.sessionSuspend_implementation = function(callback) {
+  jQuery.ajax({
+		url: this.proxy_url,
+		type: "POST",
+		dataType: "xml",
+		headers: {
+			"X-Ovd-Service" : "logout"
+		},
+		contentType: "text/xml",
+		data: ""+
+		"<logout mode='suspend'/>",
+		success: function(xml) {
+			callback(xml);
+		},
+		error: function( xhr, status ) {
+			console.log("Error : "+status);
+		}
+	});
+}
