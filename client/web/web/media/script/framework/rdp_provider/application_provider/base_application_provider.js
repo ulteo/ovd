@@ -7,9 +7,12 @@ ApplicationProvider.prototype.initialize = function(rdp_provider) {
 	this.token = 0;
 
 	/* register events listeners */
-	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.applicationProvider.applicationStart",         this.handleEvents.bind(this));
-	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.applicationProvider.applicationStartWithArgs", this.handleEvents.bind(this));
-	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.applicationProvider.applicationStop",          this.handleEvents.bind(this));
+	this.handler = this.handleEvents.bind(this);
+	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.applicationProvider.applicationStart",         this.handler);
+	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.applicationProvider.applicationStartWithArgs", this.handler);
+	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.applicationProvider.applicationStop",          this.handler);
+	this.rdp_provider.session_management.addCallback("ovd.ajaxProvider.sessionEnd",                                  this.handler);
+	this.rdp_provider.session_management.addCallback("ovd.ajaxProvider.sessionSuspend",                              this.handler);
 }
 
 ApplicationProvider.prototype.handleEvents = function(type, source, params) {
@@ -27,6 +30,10 @@ ApplicationProvider.prototype.handleEvents = function(type, source, params) {
 		var args = params["token"];
 		this.applicationStop(id, token);
 	}
+
+	if(type == "ovd.ajaxProvider.sessionEnd" || type == "ovd.ajaxProvider.sessionSuspend" ) { /* Clean context */
+		this.end();
+	}
 }
 
 ApplicationProvider.prototype.applicationStart = function(application_id) { 
@@ -41,4 +48,12 @@ ApplicationProvider.prototype.applicationStartWithArgs = function(application_id
 
 ApplicationProvider.prototype.applicationStop = function(application_id, token) { 
 	this.applicationStop_implementation(application_id, token);
+}
+
+ApplicationProvider.prototype.end = function() {
+	this.rdp_provider.session_management.removeCallback("ovd.rdpProvider.applicationProvider.applicationStart",         this.handler);
+	this.rdp_provider.session_management.removeCallback("ovd.rdpProvider.applicationProvider.applicationStartWithArgs", this.handler);
+	this.rdp_provider.session_management.removeCallback("ovd.rdpProvider.applicationProvider.applicationStop",          this.handler);
+	this.rdp_provider.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",                                  this.handler);
+	this.rdp_provider.session_management.removeCallback("ovd.ajaxProvider.sessionSuspend",                              this.handler);
 }
