@@ -3,7 +3,7 @@ function Session(session_management) {
 	this.xml = null;
 	this.mode = null
 	this.mode_gateway = null
-	this.settings = new Array();
+	this.settings = {};
 	this.servers = new Array();
 	this.status = "unknown";
 }
@@ -53,7 +53,7 @@ Session.prototype.parseSession = function(xml) {
 
 			/* get settings */
 			xml.find("setting").each( function() {
-				self.settings.push(new Setting(self, jQuery(this)));
+				self.settings[jQuery(this).attr("name")] = jQuery(this).attr("value");
 			});
 
 			xml.find("server").each( function() {
@@ -97,13 +97,6 @@ Session.prototype.parseEnd = function(xml) {
 }
 
 /* Data storage */
-
-function Setting(session, xml) {
-	this.session = session;
-	this.xml = xml[0];
-	this.name = xml.attr("name");
-	this.value = xml.attr("value");
-}
 
 function Server(session, xml) {
 	var self = this; /* closure */
