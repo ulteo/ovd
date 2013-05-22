@@ -31,7 +31,7 @@ function SessionManagement(params, rdp_provider, ajax_provider) {
 		"ovd.ajaxProvider.sessionEnd" : new Array(function(type, source, params) {
 			var state = params["state"];
 
-			if(state == "success") {
+			if(state == "success" && self.status_check) {
 				/* Set the polling interval to 3 sec */
 				clearInterval(self.status_check);
 				self.status_check = setInterval( function() {
@@ -42,7 +42,7 @@ function SessionManagement(params, rdp_provider, ajax_provider) {
 		"ovd.ajaxProvider.sessionSuspend" : new Array(function(type, source, params) {
 			var state = params["state"];
 
-			if(state == "success") {
+			if(state == "success" && self.status_check) {
 				/* Set the polling interval to 3 sec */
 				clearInterval(self.status_check);
 				self.status_check = setInterval( function() {
@@ -68,12 +68,14 @@ function SessionManagement(params, rdp_provider, ajax_provider) {
 			if(to == "disconnected") {
 				/* Clear status_check interval */
 				clearInterval(self.status_check);
+				self.status_check = 0;
 			}
 			if(to == "unknown") {
 				/* Call SessionManagement.stop for a clean stop */
 				self.stop();
 				/* Clear status_check interval */
 				clearInterval(self.status_check);
+				self.status_check = 0;
 			}
 		}),
 		"ovd.session.server.statusChanged" : new Array(function(type, source, params) {
