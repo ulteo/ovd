@@ -5,6 +5,7 @@ function ApplicationProvider(rdp_provider) { }
 ApplicationProvider.prototype.initialize = function(rdp_provider) {
 	this.rdp_provider = rdp_provider;
 	this.token = 0;
+	this.applications = {} /* token -> ApplicationInstance */
 
 	/* register events listeners */
 	this.handler = this.handleEvents.bind(this);
@@ -56,4 +57,16 @@ ApplicationProvider.prototype.end = function() {
 	this.rdp_provider.session_management.removeCallback("ovd.rdpProvider.applicationProvider.applicationStop",          this.handler);
 	this.rdp_provider.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",                                  this.handler);
 	this.rdp_provider.session_management.removeCallback("ovd.ajaxProvider.sessionSuspend",                              this.handler);
+}
+
+/* ApplicationInstance class */
+function ApplicationInstance(applicationProvider, id, instance) {
+	this.applicationProvider = applicationProvider;
+	this.id = id;
+	this.instance = instance;
+	this.status = "unknown";
+
+	this.create = (new Date()).getTime();
+	this.start = 0;
+	this.end = 0;
 }

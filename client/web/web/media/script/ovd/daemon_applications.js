@@ -289,9 +289,3 @@ var Applications = Class.create(Daemon, {
 		}
 	}
 });
-
-function applicationStatus(app_id_, token_, status_) {
-	Logger.debug('[proxy] applicationStatus(token: '+token_+', status: '+status_+')');
-
-	return daemon.applicationStatus(app_id_, token_, status_);
-}

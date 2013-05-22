@@ -7,10 +7,11 @@ function SeamlessLauncher(session_management, node) {
 	if(this.session_management.parameters["session_type"] == "applications") {
 		/* register events listeners */
 		this.handler = this.handleEvents.bind(this);
-		this.session_management.addCallback("ovd.session.statusChanged",        this.handler);
-		this.session_management.addCallback("ovd.session.server.statusChanged", this.handler);
-		this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",      this.handler);
-		this.session_management.addCallback("ovd.ajaxProvider.sessionSuspend",  this.handler);
+		this.session_management.addCallback("ovd.session.statusChanged",                         this.handler);
+		this.session_management.addCallback("ovd.session.server.statusChanged",                  this.handler);
+		this.session_management.addCallback("ovd.rdpProvider.applicationProvider.statusChanged", this.handler);
+		this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",                       this.handler);
+		this.session_management.addCallback("ovd.ajaxProvider.sessionSuspend",                   this.handler);
 	}
 }
 
@@ -39,7 +40,8 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 				div.prop("id", "application_"+id);
 				div.prop("className", "applicationLauncherDisabled");
 				div.append(img);
-        div.append(document.createTextNode(this.applications[id].name));
+				div.append(document.createTextNode(this.applications[id].name+" "));
+				div.append(jQuery(document.createElement("span")).addClass("application_instance_counter"));
 
 				this.content[id] = {"node":div, "event":null};
 				this.node.append(div);
@@ -77,6 +79,46 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 		}
 	}
 
+	if(type == "ovd.rdpProvider.applicationProvider.statusChanged") {
+		var from = params['from'];
+		var to = params['to'];
+		var application = params['application'];
+
+		if(to == "started") {
+			var id = application.id;
+			var node = this.content[id]['node'].find(".application_instance_counter");
+			var count = node.html() || 0;
+			var next = 0;
+
+			try{
+				next = parseInt(count) + 1;
+			} catch(e) {}
+
+			if(next == 0) {
+				node.html("");
+			} else {
+				node.html(next);
+			}
+		}
+
+		if(to == "stopped") {
+			var id = application.id;
+			var node = this.content[id]['node'].find(".application_instance_counter");
+			var count = node.html() || 0;
+			var next = 0;
+
+			try{
+				next = parseInt(count) - 1;
+			} catch(e) {}
+
+			if(next == 0) {
+				node.html("");
+			} else {
+				node.html(next);
+			}
+		}
+	}
+
 	if(type == "ovd.ajaxProvider.sessionEnd" || type == "ovd.ajaxProvider.sessionSuspend" ) { /* Clean context */
 		this.end();
 	}
@@ -85,9 +127,10 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 SeamlessLauncher.prototype.end = function() {
 	if(this.session_management.parameters["session_type"] == "applications") {
 		this.node.empty();
-		this.session_management.removeCallback("ovd.session.statusChanged",        this.handler);
-		this.session_management.removeCallback("ovd.session.server.statusChanged", this.handler);
-		this.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",      this.handler);
-		this.session_management.removeCallback("ovd.ajaxProvider.sessionSuspend",  this.handler);
+		this.session_management.removeCallback("ovd.session.statusChanged",                         this.handler);
+		this.session_management.removeCallback("ovd.session.server.statusChanged",                  this.handler);
+		this.session_management.removeCallback("ovd.rdpProvider.applicationProvider.statusChanged", this.handler);
+		this.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",                       this.handler);
+		this.session_management.removeCallback("ovd.ajaxProvider.sessionSuspend",                   this.handler);
 	}
 }
