@@ -321,6 +321,7 @@ function startSession() {
 	parameters["session_type"] = jQuery('#session_mode').prop('value');
 	parameters["language"] = jQuery('#session_language').prop('value');
 	parameters["keymap"] = jQuery('#session_keymap').prop('value');
+	parameters["rdp_input_method"] = window.rdp_input_method;
 	parameters["timezone"] = getTimezoneName();
 	parameters["width"] = window.innerWidth;
 	parameters["height"] = window.innerHeight;
