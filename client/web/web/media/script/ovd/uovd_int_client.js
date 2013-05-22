@@ -29,6 +29,8 @@ var desktop_fullscreen = false;
 
 var switchsettings_lock = false;
 
+var running_apps = 0;
+
 /* Load NiftyCorners */
 NiftyLoad = function() {
 	Nifty('div.rounded');
@@ -277,6 +279,19 @@ Event.observe(window, 'load', function() {
 		}
   });
 
+	/* Count running applications */
+	session_management.addCallback("ovd.rdpProvider.applicationProvider.statusChanged", function(type, source, params) {
+		var from = params['from'];
+		var to = params['to'];
+		var application = params['application'];
+
+		if(to == "started") {
+			running_apps++;
+		}
+		if(to == "stopped") {
+			running_apps--;
+		}
+  });
 });
 
 function startSession() {
@@ -674,12 +689,9 @@ function checkSessionMode() {
 }
 
 function confirmLogout(confirm_) {
-	var nb_apps_ = 0; /*daemon.nb_running_apps();*/ /* !!! */
-	if (confirm_ == 'always' || (confirm_ == 'apps_only' && nb_apps_ > 0)) {
-		if (!confirm(i18n.get('want_logout').replace('#', nb_apps_)))
-			return false;
-	}
+	if (confirm_ == 'always' || (confirm_ == 'apps_only' && running_apps > 0))
+		if (!confirm(i18n.get('want_logout').replace('#', running_apps)))
+			return;
 	
 	session_management.stop();
-	return false;
 }
