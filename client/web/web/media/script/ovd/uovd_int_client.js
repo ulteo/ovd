@@ -353,6 +353,9 @@ function startSession() {
 	/* window manager */
 	new SeamlessWindowManager(session_management, jQuery("#windowsContainer")[0], new SeamlessWindowFactory());
 
+	/* ajaxplorer file manager */
+	new Ajaxplorer(session_management, jQuery("#fileManagerContainer")[0]);
+
 	return false;
 }
 

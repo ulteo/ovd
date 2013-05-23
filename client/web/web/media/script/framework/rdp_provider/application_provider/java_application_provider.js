@@ -18,6 +18,7 @@ JavaApplicationProvider.prototype.applicationStart_implementation = function (ap
 }
 
 JavaApplicationProvider.prototype.applicationStartWithArgs_implementation = function(application_id, args, token) { 
+	this.applicationStart_implementation(application_id, token); /* stub */
 }
 
 JavaApplicationProvider.prototype.applicationStop_implementation = function(application_id, token) { 

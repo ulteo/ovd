@@ -25,6 +25,7 @@ Html5ApplicationProvider.prototype.applicationStart_implementation = function (a
 }
 
 Html5ApplicationProvider.prototype.applicationStartWithArgs_implementation = function(application_id, args, token) { 
+	this.applicationStart_implementation(application_id, token); /* stub */
 }
 
 Html5ApplicationProvider.prototype.applicationStop_implementation = function(application_id, token) { 
