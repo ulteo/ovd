@@ -151,6 +151,7 @@ function configureUI(mode) {
 			var height = parseInt(my_height)-parseInt(header_height);
 			jQuery('#appsContainer').height(height-30);
 			jQuery('#fileManagerContainer').height(height-30);
+			jQuery('#applicationsAppletContainer').width(1).height(1);
 			jQuery("#fileManagerWrap").show();
 		})();
 
