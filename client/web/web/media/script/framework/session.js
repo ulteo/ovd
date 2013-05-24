@@ -34,7 +34,6 @@ Session.prototype.update = function(xml) {
 
 Session.prototype.parseSession = function(xml) {
 	var self = this; /* closure */
-	this.xml = xml[0];
 	try {
 		if(xml.attr("status") != undefined) {
 			/* Session status message */
@@ -46,6 +45,7 @@ Session.prototype.parseSession = function(xml) {
 			}
 		} else {
 			/* New session */
+			this.xml = xml[0];
 
 			/* get mode and gateway settings */
 			this.mode = xml.attr("mode");
