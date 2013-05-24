@@ -501,8 +501,6 @@ function get_users_list() {
 
 							<div id="appsContainer" style="overflow: auto;">
 							</div>
-							<div id="windowsContainer">
-							</div>
 						</div>
 						</div>
 					</td>
@@ -521,6 +519,8 @@ function get_users_list() {
 				</tr>
 			</table>
 			<div id="applicationsAppletContainer" style="display: none; width:1; height:1; overflow:hidden;">
+			</div>
+			<div id="windowsContainer">
 			</div>
 		</div>
 
