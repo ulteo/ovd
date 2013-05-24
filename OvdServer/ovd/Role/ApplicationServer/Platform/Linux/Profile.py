@@ -45,16 +45,18 @@ class Profile(AbstractProfile):
 		self.profile_mount_point = os.path.join(self.cifs_dst, "profile")
 		self.homeDir = None
 	
-	
 	def mount_cifs(self, share, uri, dest):
+		mount_env = {}
 		if share.has_key("login") and share.has_key("password"):
-			cmd = "mount -t cifs -o username=%s,password=%s,uid=%s,gid=0,umask=077 //%s%s %s"%(share["login"], share["password"], self.session.user.name, uri.netloc, uri.path, dest)
+			cmd = "mount -t cifs -o uid=%s,gid=0,umask=077 //%s%s %s"%(self.session.user.name, uri.netloc, uri.path, dest)
+			mount_env["USER"] = share["login"]
+			mount_env["PASSWD"] = share["password"]
 		else:
 			cmd = "mount -t cifs -o guest,uid=%s,gid=0,umask=077 //%s%s %s"%(self.session.user.name, uri.netloc, uri.path, dest)
 		
 		cmd = self.transformToLocaleEncoding(cmd)
 		Logger.debug("Profile, share mount command: '%s'"%(cmd))
-		p = System.execute(cmd)
+		p = System.execute(cmd, env=mount_env)
 		if p.returncode != 0:
 			Logger.debug("CIFS mount failed (status: %d) => %s"%(p.returncode, p.stdout.read()))
 			return False
