@@ -279,19 +279,8 @@ Event.observe(window, 'load', function() {
 		}
   });
 
-	/* Count running applications */
-	session_management.addCallback("ovd.rdpProvider.applicationProvider.statusChanged", function(type, source, params) {
-		var from = params['from'];
-		var to = params['to'];
-		var application = params['application'];
-
-		if(to == "started") {
-			running_apps++;
-		}
-		if(to == "stopped") {
-			running_apps--;
-		}
-  });
+	/* application counter */
+	window.applicationCounter = new ApplicationCounter(session_management);
 });
 
 function startSession() {
@@ -693,6 +682,7 @@ function checkSessionMode() {
 }
 
 function confirmLogout(confirm_) {
+	var running_apps = window.applicationCounter.get();
 	if (confirm_ == 'always' || (confirm_ == 'apps_only' && running_apps > 0))
 		if (!confirm(i18n.get('want_logout').replace('#', running_apps)))
 			return;
