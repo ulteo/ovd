@@ -14,3 +14,7 @@ RdpProvider.prototype.connect = function() {
 		this.connectApplications();
 	}
 }
+
+RdpProvider.prototype.disconnect = function() {
+	this.disconnect_implementation();
+}

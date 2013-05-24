@@ -118,3 +118,6 @@ JavaRdpProvider.prototype.connectApplications = function() {
 		waitApplet();
 	});
 }
+
+JavaRdpProvider.prototype.disconnect_implementation = function() {
+}

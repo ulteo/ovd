@@ -66,6 +66,9 @@ function SessionManagement(params, rdp_provider, ajax_provider) {
 				}, 30000);
 			}
 			if(to == "disconnected") {
+				/* Disconnect the client */
+				self.rdp_provider.disconnect();
+
 				/* Clear status_check interval */
 				clearInterval(self.status_check);
 				self.status_check = 0;

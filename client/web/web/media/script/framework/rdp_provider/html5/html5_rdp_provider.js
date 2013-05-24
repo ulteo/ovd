@@ -98,3 +98,7 @@ Html5RdpProvider.prototype.connectApplications = function() {
 		var application_provider = new Html5ApplicationProvider(self);
 	});
 }
+
+Html5RdpProvider.prototype.disconnect_implementation = function() {
+	this.guac_client.disconnect();
+}
