@@ -54,9 +54,6 @@ DebugPanel.prototype.handleEvents = function(type, source, params) {
 
 DebugPanel.prototype.end = function() {
 	this.node.empty();
-	this.session_management.removeCallback("ovd.log", this.handler);
-	this.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",  this.handler);
-	this.session_management.removeCallback("ovd.ajaxProvider.sessionSuspend", this.handler);
 
 	for(var type in this.callbacks) {
 		this.session_management.removeCallback(type, callbacks[type]);

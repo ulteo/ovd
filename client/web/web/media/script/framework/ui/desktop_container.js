@@ -1,6 +1,10 @@
 function DesktopContainer(session_management, node) {
-	this.node = jQuery(node);
+	this.node = null;
 	this.session_management = session_management;
+
+	if(node) {
+		this.node = jQuery(node);
+	}
 
 	/* register events listeners */
 	this.handler = this.handleEvents.bind(this);
@@ -14,6 +18,10 @@ DesktopContainer.prototype.handleEvents = function(type, source, params) {
 		var name = params["name"];
 		var node = params["node"];
 
+		if(!this.node) {
+			this.node = jQuery("#"+session_management.parameters["session_type"]+"AppletContainer"); /* !!! */
+		}
+
 		this.node.append(node);
 	}
 
@@ -24,7 +32,4 @@ DesktopContainer.prototype.handleEvents = function(type, source, params) {
 
 DesktopContainer.prototype.end = function() {
 	this.node.empty();
-	this.session_management.removeCallback("ovd.rdpProvider.desktopPanel",     this.handler);
-	this.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",      this.handler);
-	this.session_management.removeCallback("ovd.ajaxProvider.sessionSuspend",  this.handler);
 }

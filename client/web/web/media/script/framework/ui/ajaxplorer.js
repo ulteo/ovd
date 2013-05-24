@@ -2,21 +2,24 @@ function Ajaxplorer(session_management, node) {
 	this.node = jQuery(node);
 	this.session_management = session_management;
 	this.start_app_interval = null;
+	this.handler = this.handleEvents.bind(this);
 
-	/* register events listeners */
-	if(this.session_management.parameters["session_type"] == "applications") {
-		this.handler = this.handleEvents.bind(this);
-		this.session_management.addCallback("ovd.ajaxProvider.sessionStart",   this.handler);
-		this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",     this.handler);
-		this.session_management.addCallback("ovd.ajaxProvider.sessionSuspend", this.handler);
-	}
+	/* Do NOT remove ovd.session.statusChanged in destructor as it is used as a delayed initializer */
+	this.session_management.addCallback("ovd.session.statusChanged", this.handler);
 }
 
 Ajaxplorer.prototype.handleEvents = function(type, source, params) {
-	if(type == "ovd.ajaxProvider.sessionStart") {
-		var state = params["state"];
+	if(type == "ovd.session.statusChanged") {
+		var from = params["from"];
+		var to = params["to"];
+		var session_type = this.session_management.parameters["session_type"];
 		var self = this; /* closure */
-		if(state == "success") {
+
+		if(to == "ready" && session_type == "applications") {
+			/* register events listeners */
+			this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",     this.handler);
+			this.session_management.addCallback("ovd.ajaxProvider.sessionSuspend", this.handler);
+
 			var serialized;
 			try {
 				// XMLSerializer exists in current Mozilla browsers
@@ -93,9 +96,10 @@ Ajaxplorer.prototype._parse_start_app = function(xml) {
 Ajaxplorer.prototype.end = function() {
 	if(this.session_management.parameters["session_type"] == "applications") {
 		this.node.empty();
-		this.session_management.removeCallback("ovd.ajaxProvider.sessionStart",    this.handler);
+		/* Do NOT remove ovd.session.statusChanged as it is used as a delayed initializer */
 		this.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",      this.handler);
 		this.session_management.removeCallback("ovd.ajaxProvider.sessionSuspend",  this.handler);
+
 		if(this.start_app_interval != null) {
 			clearInterval(this.start_app_interval);
 			this.start_app_interval = null;

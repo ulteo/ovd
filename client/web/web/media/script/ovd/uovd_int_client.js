@@ -279,6 +279,18 @@ Event.observe(window, 'load', function() {
 		}
   });
 
+	/* handle client insertion */
+	new DesktopContainer(session_management); /* !!! */
+
+	/* applications launcher */
+	new SeamlessLauncher(session_management, "#appsContainer");
+
+	/* window manager */
+	new SeamlessWindowManager(session_management, "#windowsContainer", new SeamlessWindowFactory());
+
+	/* ajaxplorer file manager */
+	new Ajaxplorer(session_management, "#fileManagerContainer");
+
 	/* application counter */
 	window.applicationCounter = new ApplicationCounter(session_management);
 });
@@ -330,20 +342,6 @@ function startSession() {
 	session_management.setParameters(parameters);
 	session_management.setAjaxProvider(new ProxyAjaxProvider("proxy.php"));
 	session_management.start();
-
-	/* handle client insertion */
-	var desktop_container_node = jQuery("#"+session_management.parameters["session_type"]+"AppletContainer")[0];
-	new DesktopContainer(session_management, desktop_container_node);
-
-	/* applications launcher */
-	var launcher_container_node = jQuery("#appsContainer")[0];
-	new SeamlessLauncher(session_management, launcher_container_node);
-
-	/* window manager */
-	new SeamlessWindowManager(session_management, jQuery("#windowsContainer")[0], new SeamlessWindowFactory());
-
-	/* ajaxplorer file manager */
-	new Ajaxplorer(session_management, jQuery("#fileManagerContainer")[0]);
 
 	return false;
 }

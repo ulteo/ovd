@@ -3,25 +3,26 @@ function SeamlessLauncher(session_management, node) {
 	this.session_management = session_management;
 	this.applications = {}; /* application id as index */
 	this.content = {}; /* application id as index */
+	this.handler = this.handleEvents.bind(this);
 
-	if(this.session_management.parameters["session_type"] == "applications") {
-		/* register events listeners */
-		this.handler = this.handleEvents.bind(this);
-		this.session_management.addCallback("ovd.session.statusChanged",                         this.handler);
-		this.session_management.addCallback("ovd.session.server.statusChanged",                  this.handler);
-		this.session_management.addCallback("ovd.rdpProvider.applicationProvider.statusChanged", this.handler);
-		this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",                       this.handler);
-		this.session_management.addCallback("ovd.ajaxProvider.sessionSuspend",                   this.handler);
-	}
+	/* Do NOT remove ovd.session.statusChanged in destructor as it is used as a delayed initializer */
+	this.session_management.addCallback("ovd.session.statusChanged", this.handler);
 }
 
 SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.session.statusChanged") {
 		var from = params["from"];
 		var to = params["to"];
+		var session_type = this.session_management.parameters["session_type"];
 		var session = source;
 
-		if(to == "ready") {
+		if(to == "ready" && session_type == "applications") {
+			/* register events listeners */
+			this.session_management.addCallback("ovd.session.server.statusChanged",                  this.handler);
+			this.session_management.addCallback("ovd.rdpProvider.applicationProvider.statusChanged", this.handler);
+			this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",                       this.handler);
+			this.session_management.addCallback("ovd.ajaxProvider.sessionSuspend",                   this.handler);
+
 			var servers = session.servers;
 
 			/* Get application list */
@@ -127,10 +128,13 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 SeamlessLauncher.prototype.end = function() {
 	if(this.session_management.parameters["session_type"] == "applications") {
 		this.node.empty();
-		this.session_management.removeCallback("ovd.session.statusChanged",                         this.handler);
+		/* Do NOT remove ovd.session.statusChanged as it is used as a delayed initializer */
 		this.session_management.removeCallback("ovd.session.server.statusChanged",                  this.handler);
 		this.session_management.removeCallback("ovd.rdpProvider.applicationProvider.statusChanged", this.handler);
 		this.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",                       this.handler);
 		this.session_management.removeCallback("ovd.ajaxProvider.sessionSuspend",                   this.handler);
+
+		this.applications = {};
+		this.content = {};
 	}
 }
