@@ -329,6 +329,7 @@ function startSession() {
 	parameters["fullscreen"] = desktop_fullscreen;
 	parameters["debug"] = debug;
 	parameters["use_local_credentials"] = use_local_credentials;
+	parameters["local_integration"] = window.local_integration;
 
 	switch(jQuery('#rdp_mode').prop('value')) {
 		case "html5" :
