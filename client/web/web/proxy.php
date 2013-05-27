@@ -19,12 +19,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
+function new_session_manager($sm_host) {
+	$sessionmanager_url = 'https://'.$sm_host.'/ovd/client';
+	$sessionmanager = new SessionManager($sessionmanager_url);
+	$_SESSION['ovd-client']['sessionmanager_url'] = $sessionmanager_url;
+	$_SESSION['ovd-client']['sessionmanager'] = $sessionmanager;
+  return $sessionmanager;
+}
+
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 $ALLOWED_SERVICES = array('start', 'session_status', 'logout');
 $SERVICE_HEADER = 'X-Ovd-Service';
 $service = '';
-$session_manager = NULL;
+
+$SM_HEADER = 'X-Ovd-SessionManager';
+$sm_host = '';
+$sessionmanager = NULL;
+$sessionmanager_url = '';
 
 /* Get service type */
 $headers = apache_request_headers();
@@ -40,16 +52,25 @@ if (is_array($headers) && array_key_exists('X-Ovd-Service', $headers)) {
 	die();
 }
 
-/* Get the SessionManager object from session or create it */
-if (array_key_exists('ovd-client', $_SESSION) && array_key_exists('sessionmanager', $_SESSION['ovd-client'])) {
-	$session_manager = $_SESSION['ovd-client']['sessionmanager'];
+/* Get sm_host */
+if (is_array($headers) && array_key_exists($SM_HEADER, $headers)) {
+	$sm_host = $headers[$SM_HEADER];
 } else {
 	$sm_host = @SESSIONMANAGER_HOST;
-  $_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$sm_host.'/ovd/client';
-  $sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
+}
 
-  $session_manager = new SessionManager($sessionmanager_url);
-  $_SESSION['ovd-client']['sessionmanager'] = $session_manager;
+$sessionmanager_url = 'https://'.$sm_host.'/ovd/client';
+
+/* Get the SessionManager object from session or create it */
+if (array_key_exists('ovd-client', $_SESSION) && array_key_exists('sessionmanager', $_SESSION['ovd-client'])) {
+	if($sessionmanager_url != $_SESSION['ovd-client']['sessionmanager_url']) {
+		/* The sm_host is different, create a new SessionManager instance */
+		$sessionmanager = new_session_manager($sm_host);
+	} else {
+		$sessionmanager = $_SESSION['ovd-client']['sessionmanager'];
+	}
+} else {
+	$sessionmanager = new_session_manager($sm_host);
 }
 
 /* Input data */

@@ -11,6 +11,7 @@ function ProxyAjaxProvider(proxy_url) {
 ProxyAjaxProvider.prototype = new AjaxProvider();
 
 ProxyAjaxProvider.prototype.sessionStart_implementation = function(callback) {
+	var session_manager = this.session_management.parameters["session_manager"];
 	var mode = this.session_management.parameters["session_type"];
 	var language = this.session_management.parameters["language"];
 	var timezone = "Europe/Amsterdam";
@@ -22,6 +23,7 @@ ProxyAjaxProvider.prototype.sessionStart_implementation = function(callback) {
 		type: "POST",
 		dataType: "xml",
 		headers: {
+			"X-Ovd-SessionManager" : session_manager,
 			"X-Ovd-Service" : "start"
 		},
 		contentType: "text/xml",
@@ -39,11 +41,13 @@ ProxyAjaxProvider.prototype.sessionStart_implementation = function(callback) {
 }
 
 ProxyAjaxProvider.prototype.sessionStatus_implementation = function(callback) {
+	var session_manager = this.session_management.parameters["session_manager"];
   jQuery.ajax({
 		url: this.proxy_url,
 		type: "GET",
 		dataType: "xml",
 		headers: {
+			"X-Ovd-SessionManager" : session_manager,
 			"X-Ovd-Service" : "session_status"
 		},
 		success: function(xml) {
@@ -56,11 +60,13 @@ ProxyAjaxProvider.prototype.sessionStatus_implementation = function(callback) {
 }
 
 ProxyAjaxProvider.prototype.sessionEnd_implementation = function(callback) {
+	var session_manager = this.session_management.parameters["session_manager"];
   jQuery.ajax({
 		url: this.proxy_url,
 		type: "POST",
 		dataType: "xml",
 		headers: {
+			"X-Ovd-SessionManager" : session_manager,
 			"X-Ovd-Service" : "logout"
 		},
 		contentType: "text/xml",
@@ -76,11 +82,13 @@ ProxyAjaxProvider.prototype.sessionEnd_implementation = function(callback) {
 }
 
 ProxyAjaxProvider.prototype.sessionSuspend_implementation = function(callback) {
+	var session_manager = this.session_management.parameters["session_manager"];
   jQuery.ajax({
 		url: this.proxy_url,
 		type: "POST",
 		dataType: "xml",
 		headers: {
+			"X-Ovd-SessionManager" : session_manager,
 			"X-Ovd-Service" : "logout"
 		},
 		contentType: "text/xml",

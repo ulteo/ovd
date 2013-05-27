@@ -37,7 +37,7 @@ JavaRdpProvider.prototype.connectCommon = function(callback) {
 	this.applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive").attr("value", cache_archive));
 	this.applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive_ex").attr("value", cache_archive_ex));
 
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "sessionmanager").attr("value", "127.0.0.1:443"));
+	this.applet.append(jQuery(document.createElement("param")).attr("name", "sessionmanager").attr("value", parameters["session_manager"]+":443"));
 	this.applet.append(jQuery(document.createElement("param")).attr("name", "server").attr("value", server.fqdn));
 	this.applet.append(jQuery(document.createElement("param")).attr("name", "token").attr("value", server.token));
 	this.applet.append(jQuery(document.createElement("param")).attr("name", "port").attr("value", server.port));

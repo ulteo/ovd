@@ -316,7 +316,7 @@ function startSession() {
 		use_local_credentials = true;
 
 	var parameters = {};
-	parameters["session_manager"] = 'localhost';
+	parameters["session_manager"] = jQuery('#sessionmanager_host').prop('value');
 	parameters["username"] = jQuery('#user_login').prop('value');
 	parameters["password"] = jQuery('#user_password').prop('value');
 	parameters["session_type"] = jQuery('#session_mode').prop('value');
