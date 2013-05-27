@@ -20,7 +20,7 @@ XhrAjaxProvider.prototype.sessionStart_implementation = function(callback) {
 			mode: this.session_management.parameters["session_type"],
 			language: this.session_management.parameters["language"],
 			keymap: "fr",
-			timezone: "Europe/Amsterdam",
+			timezone: this.session_management.parameters["timezone"],
 			desktop_fullscreen: 0,
 			debug: 0,
 		},
