@@ -424,3 +424,16 @@ h1, h2, h3, h4, h5, h6 {
 	text-align: left;
 	color: #666;
 }
+
+.applicationLauncherDisabled {
+	opacity: 0.3;
+}
+
+.applicationLauncherEnabled {
+	opacity: 1;
+}
+
+.applicationLauncherEnabled:hover {
+	text-decoration: underline;
+}
+

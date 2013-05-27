@@ -34,19 +34,39 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 			}
 
 			/* Create launchers */
-			for(var id in this.applications) {
-				var img = jQuery(document.createElement("img"));
-				img.prop("src", "icon.php?id="+id);
-				var div = jQuery(document.createElement("div"));
-				div.prop("id", "application_"+id);
-				div.prop("className", "applicationLauncherDisabled");
-				div.append(img);
-				div.append(document.createTextNode(this.applications[id].name+" "));
-				div.append(jQuery(document.createElement("span")).addClass("application_instance_counter"));
+			var table = jQuery(document.createElement("table"));
+			var tbody = jQuery(document.createElement("tbody"));
 
-				this.content[id] = {"node":div, "event":null};
-				this.node.append(div);
+			for(var id in this.applications) {
+				var tr = jQuery(document.createElement("tr"));
+				tr.prop("id", "application_"+id);
+				tr.prop("className", "applicationLauncherDisabled");
+
+				var td_img = jQuery(document.createElement("td"))
+				var img = jQuery(document.createElement("img"));
+				img.addClass("application_icon");
+				img.prop("src", "icon.php?id="+id);
+				td_img.append(img);
+
+				var td_name = jQuery(document.createElement("td"));
+				var name = jQuery(document.createElement("span"));
+				name.addClass("application_name");
+				name.html(this.applications[id].name+" ");
+				td_name.append(name);
+
+				var td_count = jQuery(document.createElement("td"));
+				var count = jQuery(document.createElement("span"));
+				count.addClass("application_instance_counter");
+				td_count.append(count);
+
+				tr.append(td_img, td_name, td_count);
+
+				this.content[id] = {"node":tr, "event":null};
+				tbody.append(tr);
 			}
+
+			table.append(tbody);
+			this.node.append(table);
 		}
 	}
 
