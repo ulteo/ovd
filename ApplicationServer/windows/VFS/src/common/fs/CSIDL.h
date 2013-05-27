@@ -18,19 +18,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <iostream>
-#include <common/Logger.h>
-#include <common/conf/Configuration.h>
+#ifndef CSIDL_H_
+#define CSIDL_H_
+
+#include <string>
 
 
-int main(int argc, char** argv) {
-	log_info("this is the main program");
+class CSIDL {
+private:
+	std::string csidl;
 
-	Configuration& conf = Configuration::getInstance();
-	if (!conf.load()) {
-		log_error("Failed to load configuration file");
-		return -1;
-	}
+	int toID(const std::string& csidl);
 
-	return 0;
-}
+public:
+	CSIDL();
+	virtual ~CSIDL();
+
+	bool getPath(const std::string& csidl, std::string& out);
+};
+
+#endif /* CSIDL_H_ */

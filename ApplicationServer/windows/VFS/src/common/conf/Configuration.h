@@ -18,19 +18,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <iostream>
+#ifndef CONFIGURATION_H_
+#define CONFIGURATION_H_
+
+#include <string>
+#include <map>
+#include "INI.h"
 #include <common/Logger.h>
-#include <common/conf/Configuration.h>
+
+#define DEFAULT_CONF_FILENAME    "%{CSIDL_COMMON_APPDATA}\\ulteo\\profile\\default.conf"
 
 
-int main(int argc, char** argv) {
-	log_info("this is the main program");
+class Configuration {
+private:
+	Configuration();
+	virtual ~Configuration();
 
-	Configuration& conf = Configuration::getInstance();
-	if (!conf.load()) {
-		log_error("Failed to load configuration file");
-		return -1;
-	}
+	Logger::Level logLevel;
+	bool develOutput;
+	bool stdoutOutput;
+	std::string logFilename;
 
-	return 0;
-}
+
+
+public:
+	static Configuration& getInstance();
+
+	bool load();
+	bool load(const std::string& filename);
+
+	Logger::Level getLogLevel();
+	bool useDevelOutput();
+	bool useStdOut();
+	const std::string& getLogFilename();
+};
+
+#endif /* CONFIGURATION_H_ */

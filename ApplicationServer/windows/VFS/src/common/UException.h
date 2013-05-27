@@ -18,19 +18,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <iostream>
-#include <common/Logger.h>
-#include <common/conf/Configuration.h>
+#ifndef UEXCEPTION_H_
+#define UEXCEPTION_H_
+
+#include <exception>
+#include <string>
+#include "stdafx.h"
 
 
-int main(int argc, char** argv) {
-	log_info("this is the main program");
+class UException: public std::exception {
+protected:
+	std::string msg;
 
-	Configuration& conf = Configuration::getInstance();
-	if (!conf.load()) {
-		log_error("Failed to load configuration file");
-		return -1;
-	}
+public:
+	UException(char *fmt,...);
+	virtual ~UException();
 
-	return 0;
-}
+	virtual const char * what() const throw();
+};
+
+#endif /* UEXCEPTION_H_ */

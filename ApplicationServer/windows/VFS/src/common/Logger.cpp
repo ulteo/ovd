@@ -9,14 +9,17 @@
 #include <stdio.h>
 #include <ctime>
 #include "WinBase.h"
+#include <iostream>
 
 Logger* Logger::m_sInstance = NULL;
 
 Logger::Logger()
 {
 	// TODO user do not have the right to write here !!!
-	m_szLogFile = L"C:\\VirtSys.log";
+	m_szLogFile = "";
 	m_bIsLogging = false;
+	this->logLevel = LOG_INFO;
+	this->useStdOut = true;
 }
 Logger::~Logger()
 {
@@ -40,17 +43,43 @@ Logger* Logger::getSingletonPtr()
 	return m_sInstance;
 }
 
-void Logger::setLogFile(std::wstring szLogFile)
+
+Logger::Level Logger::getFromString(std::string level) {
+	if( level.compare("DEBUG") == 0)
+		return LOG_DEBUG;
+
+	if( level.compare("INFO") == 0)
+		return LOG_INFO;
+
+	if( level.compare("WARN") == 0)
+		return LOG_WARN;
+
+	if( level.compare("ERROR") == 0)
+		return LOG_ERROR;
+
+	throw std::exception("Unsupported log level");
+}
+
+
+
+void Logger::setLogFile(std::string szLogFile)
 {
 	m_szLogFile = szLogFile;
 }
 
-void Logger::enable(bool bEnable)
-{
-	m_bEnable = bEnable;
+
+void Logger::setLevel(Level lvl) {
+	this->logLevel = lvl;
 }
 
-void Logger::debug(const wchar_t * format,...)
+
+void Logger::setStdoutput(bool value) {
+	this->useStdOut = value;
+}
+
+
+
+void Logger::debug(const wchar_t* format,...)
 {
 	#define MAX_DBG_MSG_LEN (4096)
     wchar_t buf[MAX_DBG_MSG_LEN];
@@ -72,9 +101,8 @@ void Logger::debug(const wchar_t * format,...)
     OutputDebugString(msg);
 }
 
-void Logger::log(char *fmt,...)
-{
-	if(!m_bEnable)
+void Logger::log(Level lvl, char *fmt,...) {
+	if (lvl < this->logLevel)
 		return;
 
 	m_bIsLogging = true;
@@ -82,23 +110,21 @@ void Logger::log(char *fmt,...)
 	va_list args;
 
 	char temp[5000];
-	HANDLE hFile;
+	HANDLE hFile = 0;
 	
-	if((hFile = CreateFileW(m_szLogFile.c_str(), GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) <0)
-	{
-		this->debug(L"Failed to open log file %s", m_szLogFile.c_str());
-		return;
+	if (! m_szLogFile.empty()) {
+		if((hFile = CreateFileA(m_szLogFile.c_str(), GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) <0)
+			this->debug(L"Failed to open log file %s", m_szLogFile.c_str());
+		else
+			_llseek((HFILE)hFile, 0, SEEK_END);
 	}
-	
-	_llseek((HFILE)hFile, 0, SEEK_END);
 
-	
 	DWORD dw;
 
 	time_t rawtime;
 	struct tm timeinfo;
 	time(&rawtime);
-	if (localtime_s(&timeinfo, &rawtime) == 0) {
+	if (localtime_s(&timeinfo, &rawtime)) {
 		this->debug(L"Failed to get localtime: errno %i", errno);
 		return;
 	}
@@ -109,22 +135,43 @@ void Logger::log(char *fmt,...)
 		timeinfo.tm_hour,
 		timeinfo.tm_min,
 		timeinfo.tm_sec);
-	WriteFile(hFile, temp, strlen(temp), &dw, NULL);
 	
+	if (hFile)
+		WriteFile(hFile, temp, strlen(temp), &dw, NULL);
+
+	if (this->useStdOut)
+		std::cout<<temp;
+
 	char modname[200];
 	GetModuleFileNameA(NULL, modname, sizeof(modname));
 	wsprintfA(temp, "%s : ", modname);
-	WriteFile(hFile, temp, strlen(temp), &dw, NULL);
 	
+	if (hFile)
+		WriteFile(hFile, temp, strlen(temp), &dw, NULL);
+
+	if (this->useStdOut)
+		std::cout<<temp;
+
 	va_start(args,fmt);
 	vsprintf_s(temp, fmt, args);
 	va_end(args);
 	WriteFile(hFile, temp, strlen(temp), &dw, NULL);
 
-	wsprintfA(temp, "\r\n");
-	WriteFile(hFile, temp, strlen(temp), &dw, NULL);
+	if (hFile)
+		WriteFile(hFile, temp, strlen(temp), &dw, NULL);
 
-	_lclose((HFILE)hFile);
+	if (this->useStdOut)
+		std::cout<<temp;
+
+	wsprintfA(temp, "\r\n");
+
+	if (hFile) {
+		WriteFile(hFile, temp, strlen(temp), &dw, NULL);
+		_lclose((HFILE)hFile);
+	}
 	
+	if (this->useStdOut)
+		std::cout<<temp;
+
 	m_bIsLogging = false;
 }

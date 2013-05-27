@@ -18,19 +18,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <iostream>
-#include <common/Logger.h>
-#include <common/conf/Configuration.h>
+#ifndef INI_H_
+#define INI_H_
+
+#include <map>
+#include <string>
+
+#include "Section.h"
 
 
-int main(int argc, char** argv) {
-	log_info("this is the main program");
+typedef std::map<std::string, Section*> Sections;
 
-	Configuration& conf = Configuration::getInstance();
-	if (!conf.load()) {
-		log_error("Failed to load configuration file");
-		return -1;
-	}
+class INI {
+protected:
+	std::string filename;
+	Sections sections;
 
-	return 0;
-}
+public:
+	INI(const std::string& filename);
+	virtual ~INI();
+
+	void parse();
+
+	std::string& getString(std::string section, std::string key);
+	int getInt(std::string section, std::string key);
+	bool getBool(std::string section, std::string key);
+
+	Sections& getSections();
+	Section* getSection(std::string section);
+	void addSection(std::string section);
+	void addValue(std::string section, std::string key, std::string value);
+	std::string dump();
+};
+
+#endif /* INI_H_ */

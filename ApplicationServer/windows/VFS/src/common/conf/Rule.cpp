@@ -18,19 +18,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <iostream>
-#include <common/Logger.h>
-#include <common/conf/Configuration.h>
+#include "Rule.h"
 
+Rule::Rule() { }
 
-int main(int argc, char** argv) {
-	log_info("this is the main program");
+Rule::~Rule() { }
 
-	Configuration& conf = Configuration::getInstance();
-	if (!conf.load()) {
-		log_error("Failed to load configuration file");
-		return -1;
-	}
-
-	return 0;
-}

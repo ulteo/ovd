@@ -18,50 +18,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "Configuration.h"
+#include "UException.h"
 
 
+UException::UException(char* fmt,...) {
+	char buf[4096];
+	va_list args;
 
-Configuration::Configuration() {
-	this->logLevel = Logger::INFO;
-	this->develOutput = false;
-	this->stdoutOutput = false;
+	va_start(args, fmt);
+	vsprintf_s(buf, fmt, args);
+	va_end(args);
+
+	this->msg = buf;
 }
 
+UException::~UException() { }
 
-Configuration::~Configuration() { }
-
-
-Configuration& Configuration::getInstance() {
-	static Configuration instance;
-	return instance;
+const char * UException::what() const throw() {
+	return this->msg.c_str();
 }
-
-Logger::level Configuration::getLogLevel() {
-	return this->logLevel;
-}
-
-
-bool Configuration::useDevelOutput() {
-	return this->develOutput;
-}
-
-
-bool Configuration::useStdOut() {
-	return this->stdoutOutput;
-}
-
-
-const std::string& Configuration::getLogFilename() {
-	return this->logFilename;
-}
-
-
-
-bool Configuration::load(const std::string& filename) {
-
-
-	return true;
-}
-
-

@@ -18,19 +18,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <iostream>
-#include <common/Logger.h>
-#include <common/conf/Configuration.h>
+#ifndef FILE_H_
+#define FILE_H_
+
+#include <string>
+#include <list>
 
 
-int main(int argc, char** argv) {
-	log_info("this is the main program");
+class File {
+protected:
+	std::string separator;
+	std::string pathValue;
 
-	Configuration& conf = Configuration::getInstance();
-	if (!conf.load()) {
-		log_error("Failed to load configuration file");
-		return -1;
-	}
+public:
+	File(std::string path);
+	virtual ~File();
 
-	return 0;
-}
+
+	std::string path();
+	std::string parent();
+	std::string fullname();
+	std::string shortname();
+	std::string extention();
+	void join(std::string path);
+	bool expand();
+};
+
+#endif /* FILE_H_ */

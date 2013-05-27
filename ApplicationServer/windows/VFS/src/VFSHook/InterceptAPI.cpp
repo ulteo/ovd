@@ -12,7 +12,7 @@
 
 #define HOOK_AND_LOG_FAILURE(pOri, pInt, szFunc)	if(!Mhook_SetHook(pOri, pInt))\
 													{\
-														Logger::getSingleton().log("Failed to hook %s", szFunc);\
+														Logger::getSingleton().log(Logger::LOG_ERROR, "Failed to hook %s", szFunc);\
 													}
 
 ////////////////////////////////////////////////////////////////////////
@@ -346,9 +346,9 @@ NTSTATUS NTAPI myNtOpenKeyEx(	PHANDLE KeyHandle,
 void setupHooks()
 {	
 	// Set log file to user profile path by default
-	WCHAR szLogFile[MAX_PATH] = {};
-	SHGetSpecialFolderPathW(NULL, szLogFile, CSIDL_PROFILE, 0);
-	lstrcatW(szLogFile, L"\\ulteo\\VirtSys.log");
+	char szLogFile[MAX_PATH] = {};
+	SHGetSpecialFolderPathA(NULL, szLogFile, CSIDL_PROFILE, 0);
+	lstrcatA(szLogFile, "\\ulteo\\VirtSys.log");
 	Logger::getSingleton().setLogFile(szLogFile);
 	
 	// Read conf file from CSIDL_COMMON_APPDATA\\ulteo\ovd
@@ -359,19 +359,19 @@ void setupHooks()
 	
 	if( ! VirtualFileSystem::getSingleton().init() )
 	{
-		Logger::getSingleton().log("Failed to initialize Virtual File System!");
+		log_error("Failed to initialize Virtual File System!");
 		return;
 	}
 
 	if( ! VirtualFileSystem::getSingleton().parseFileSystem(szConfigFile) )
 	{
-		Logger::getSingleton().log("File blacklist configuration file not found!");
+		log_error("File blacklist configuration file not found!");
 		return;
 	}
 
 	if( ! VirtualFileSystem::getSingleton().parseRegSystem(szConfigFile) )
 	{
-		Logger::getSingleton().log("Registry redirect-list configuration file not found!");
+		log_error("Registry redirect-list configuration file not found!");
 		return;
 	}
 	
@@ -398,7 +398,7 @@ void setupHooks()
 	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtOpenKey, myNtOpenKey, "NtOpenKey");
 	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtOpenKeyEx, myNtOpenKeyEx, "NtOpenKeyEx");
 
-	Logger::getSingleton().log("Hooked success");
+	log_error("Hooked success");
 }
 
 void releaseHooks()
@@ -414,5 +414,5 @@ void releaseHooks()
 	Mhook_Unhook((PVOID*)&OriginNtOpenKey);	
 	Mhook_Unhook((PVOID*)&OriginNtOpenKeyEx);
 
-	Logger::getSingleton().log("Un-Hooked program");
+	log_error("Un-Hooked program");
 }

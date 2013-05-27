@@ -18,19 +18,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#ifndef SECTION_H_
+#define SECTION_H_
+
 #include <iostream>
-#include <common/Logger.h>
-#include <common/conf/Configuration.h>
+#include <map>
 
 
-int main(int argc, char** argv) {
-	log_info("this is the main program");
+typedef std::map<std::string, std::string> KeyMap;
 
-	Configuration& conf = Configuration::getInstance();
-	if (!conf.load()) {
-		log_error("Failed to load configuration file");
-		return -1;
-	}
 
-	return 0;
-}
+class Section {
+private:
+	std::string name;
+	KeyMap keys;
+
+public:
+	Section();
+	Section(std::string name);
+	virtual ~Section();
+
+	std::string getName();
+	KeyMap* getMap();
+	int getInt(std::string key);
+	bool getBool(std::string key);
+	std::string& getString(std::string key);
+	void addValue(std::string key, std::string value);
+	bool hasKey(std::string key);
+
+
+	friend std::ostream& operator <<(std::ostream& out, Section& section);
+};
+
+#endif /* SECTION_H_ */

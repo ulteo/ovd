@@ -17,35 +17,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-#ifndef CONFIGURATION_H_
-#define CONFIGURATION_H_
 
-#include <string>
-#include "Logger.h"
+#include "Union.h"
 
-#define DEFAULT_FILENAME    L"%CSIDL_COMMON_APPDATA\\ulteo\\profile\\default.conf"
+Union::Union() { }
 
+Union::~Union() {
+	// TODO Auto-generated destructor stub
+}
 
-class Configuration {
-private:
-	Configuration();
-	virtual ~Configuration();
-
-	Logger::level logLevel;
-	bool develOutput;
-	bool stdoutOutput;
-	std::string logFilename;
-
-
-public:
-	static Configuration& getInstance();
-
-	bool load(const std::string& filename);
-
-	Logger::level getLogLevel();
-	bool useDevelOutput();
-	bool useStdOut();
-	const std::string& getLogFilename();
-};
-
-#endif /* CONFIGURATION_H_ */
