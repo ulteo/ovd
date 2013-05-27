@@ -40,8 +40,8 @@ $sessionmanager_url = '';
 
 /* Get service type */
 $headers = apache_request_headers();
-if (is_array($headers) && array_key_exists('X-Ovd-Service', $headers)) {
-	$service = $headers['X-Ovd-Service'];
+if (is_array($headers) && array_key_exists($SERVICE_HEADER, $headers)) {
+	$service = $headers[$SERVICE_HEADER];
 	if ( ! in_array($service, $ALLOWED_SERVICES)) {
 		echo 'Bad service requested';
 		die();
