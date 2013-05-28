@@ -1,12 +1,13 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2012 Ulteo SAS
+# Copyright (C) 2009-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Gauvain POCENTEK <gauvain@ulteo.com> 2009
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+# Author David LECHEVALIER <david@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -31,6 +32,7 @@ from ovd_shells.Config import Config
 from ovd_shells.Platform import _platform as Platform
 from ovd_shells.Platform.ExternalAppsClient import ExternalAppsClient
 from ovd_shells.Platform.Folders import Folders
+from ovd_shells.Platform.Shortcuts import Shortcuts
 from ovd_shells.Platform.InstancesManager import InstancesManager
 from ovd_shells import Util
 
@@ -44,21 +46,15 @@ def main():
 			print "Exit because no OVD environment"
 			sys.exit(1)
 		
-		
-		path = os.path.join(user_sdir, "nolock")
-		if not os.path.isfile(path):
-			print "Switch to LOCK system until OvdServer unlock it"
-			success = Platform.lock(60)
-			if not success or not os.path.isdir(user_sdir):
-				print "Exit because no OVD environment"
-				sys.exit(1)
-			print "Unlocked, continue"
-		
 		os.environ["OVD_SESSION_DIR"] = user_sdir
 	
 	# Load profile share
 	folders = Folders()
 	folders.registerShares()
+	
+	# Synchronize Shortcuts
+	shortcuts = Shortcuts()
+	shortcuts.synchronize(os.path.join(user_sdir, "Shortcuts"))
 	
 	Util.loadUserEnv(user_sdir)
 	config = Config()

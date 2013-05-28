@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
-# Author David LECHEVALIER <david@ulteo.com> 2011
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2013
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -24,76 +24,27 @@ import os
 import time
 import win32api
 
-from Waiter import Waiter
-
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.DomainMicrosoft import DomainMicrosoft as AbstractDomainMicrosoft
 from ApplicationsDetection import ApplicationsDetection
 
 
 class DomainMicrosoft(AbstractDomainMicrosoft):
-	# This function, in the future, will replace the function located in the Session class
-	def cleanupShortcut(self, path):
-		shortcut_ext = ApplicationsDetection.shortcut_ext
+	def getUsername(self):
+		username = self.session.user.name
 		
-		if not os.path.exists(path):
-			return
+		if '@' in self.session.user.name:
+			username = self.session.user.name.split('@')[0]
 		
-		try:
-			contents = os.listdir(path)
-		except Exception, err:
-			Logger.warn("Unable to list content of the directory %s (%s)"%(path, str(err)))
-			return
-		
-		for content in contents:
-			target = None
-			l = os.path.join(path, content)
-			if not os.path.isfile(l):
-				continue
-			
-			if not os.path.splitext(l)[1] == shortcut_ext:
-				continue
-			
-			try:
-				target = ApplicationsDetection.getExec(l)
-			except Exception, e:
-				Logger.debug("Unable to get the desktop target of %s %s"%(l, str(e)))
-				target = None
-			
-			if target is None:
-				continue
-			if "startovdapp" in target:
-				Logger.debug("removing shortcut %s"%(l))
-				try:
-					os.remove(l)
-				except Exception, e:
-					Logger.debug("Unable to delete the desktop target %s %s"%(l, str(e)))
-
-
-	def onSessionStarts(self):
-		mylock = Waiter(self.session)
-		
-		t0 = time.time()
-		while mylock.init() is False:
-			d = time.time() - t0
-			if d>20:
-				return False
-			
-			time.sleep(0.5)
-		
-		self.session.set_user_profile_directories(mylock.userprofile, mylock.userDir["AppData"])
-		
-		self.session.init_user_session_dir(os.path.join(mylock.userDir["AppData"], "ulteo", "ovd"))
-		
-		self.session.windowsProgramsDir = mylock.userDir["Programs"]
-		self.session.windowsDesktopDir = mylock.userDir["Desktop"]
-		self.cleanupShortcut(self.session.windowsProgramsDir)
-		self.cleanupShortcut(self.session.windowsDesktopDir)
-		
-		self.session.install_desktop_shortcuts()
-		
+		return username
+	
+	
+	def onSessionCreate(self):
+		user = self.getUsername()
+		self.session.init_user_session_dir(os.path.join(self.session.SPOOL_USER, user))
 		self.session.succefully_initialized = True
-		return mylock.unlock()
+		self.session.install_desktop_shortcuts()
+		return True
 	
 	
 	def doCustomizeRegistry(self, hive):

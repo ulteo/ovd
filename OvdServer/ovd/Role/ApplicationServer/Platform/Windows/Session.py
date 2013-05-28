@@ -1,10 +1,10 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2012 Ulteo SAS
+# Copyright (C) 2009-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
-# Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -23,6 +23,7 @@
 import os
 import pywintypes
 import random
+import shutil
 import win32api
 from win32com.shell import shell, shellcon
 import win32con
@@ -39,8 +40,9 @@ import LnkFile
 import Reg
 
 class Session(AbstractSession):
+	SPOOL_USER = System.get_default_config_dir()
+	
 	def init(self):
-		self.installedShortcut = []
 		self.succefully_initialized = False
 	
 	
@@ -51,6 +53,7 @@ class Session(AbstractSession):
 		data["UserName"] = self.user.name
 		hkey = win32profile.LoadUserProfile(logon, data)
 		self.windowsProfileDir = win32profile.GetUserProfileDirectory(logon)
+		sessionDir = os.path.join(self.SPOOL_USER, self.user.name)
 		
 		self.windowsProgramsDir = shell.SHGetFolderPath(0, shellcon.CSIDL_PROGRAMS, logon, 0)
 		Logger.debug("startmenu: %s"%(self.windowsProgramsDir))
@@ -58,8 +61,6 @@ class Session(AbstractSession):
 		if os.path.exists(self.windowsProgramsDir):
 			System.DeleteDirectory(self.windowsProgramsDir)
 		os.makedirs(self.windowsProgramsDir)
-		
-		self.windowsDesktopDir = shell.SHGetFolderPath(0, shellcon.CSIDL_DESKTOPDIRECTORY, logon, 0)
 		
 		self.appDataDir = shell.SHGetFolderPath(0, shellcon.CSIDL_APPDATA, logon, 0)
 		self.localAppDataDir = shell.SHGetFolderPath(0, shellcon.CSIDL_LOCAL_APPDATA, logon, 0)
@@ -69,8 +70,7 @@ class Session(AbstractSession):
 		win32profile.UnloadUserProfile(logon, hkey)
 		win32api.CloseHandle(logon)
 		
-		self.set_user_profile_directories(self.windowsProfileDir, self.appDataDir)
-		self.init_user_session_dir(os.path.join(self.appDataDir, "ulteo", "ovd"))
+		self.init_user_session_dir(sessionDir)
 		
 		if self.profile is not None and self.profile.hasProfile():
 			if not self.profile.mount():
@@ -94,53 +94,6 @@ class Session(AbstractSession):
 		return True
 	
 	
-	def set_user_profile_directories(self, userprofile, appDataDir):
-		self.user.home          = userprofile
-		self.appDataDir         = appDataDir
-		
-	
-	
-	def install_shortcut(self, shortcut):
-		if self.mode != Session.MODE_DESKTOP:
-			return
-		
-		self.installedShortcut.append(os.path.basename(shortcut))
-		
-		dstFile = os.path.join(self.windowsProgramsDir, os.path.basename(shortcut))
-		if os.path.exists(dstFile):
-			os.remove(dstFile)
-		
-		try:
-			win32file.CopyFile(shortcut, dstFile, True)
-		except pywintypes.error, err:
-			if err[0] == 5: # Access is denied
-				Logger.error("Session::Windows::install_shortcut Access is denied on copy of '%s' to '%s'"%(shortcut, dstFile))
-			else:
-				# other error
-				Logger.error("Session::Windows::install_shortcut error on copy of '%s' to '%s', wintypes error %s"%(shortcut, dstFile, err[0]))
-		
-		if self.parameters.has_key("desktop_icons") and self.parameters["desktop_icons"] == "1":
-			if self.profile is not None and self.profile.mountPoint is not None:
-				d = os.path.join(self.profile.mountPoint, self.profile.DesktopDir)
-			else:
-				d = self.windowsDesktopDir
-				if not os.path.exists(self.windowsDesktopDir):
-					os.makedirs(self.windowsDesktopDir)
-			
-			dstFile = os.path.join(d, os.path.basename(shortcut))
-			if os.path.exists(dstFile):
-				os.remove(dstFile)
-			try:
-				win32file.CopyFile(shortcut, dstFile, True)
-			except pywintypes.error, err:
-				if err[0] == 5: # Access is denied
-					Logger.error("Session::Windows::install_shortcut Access is denied on copy of '%s' to '%s'"%(shortcut, dstFile))
-					return
-				# other error
-				Logger.error("Session::Windows::install_shortcut error on copy of '%s' to '%s', wintypes error %s"%(shortcut, dstFile, err[0]))
-				return
-	
-	
 	def get_target_file(self, application):
 		return application["name"]+".lnk"
 	
@@ -161,17 +114,13 @@ class Session(AbstractSession):
 			else:
 				self.profile.copySessionStop()
 				
-				desktop_path = os.path.join(self.profile.mountPoint, self.profile.DesktopDir)
-				self.cleanupShortcut(desktop_path)
-				
-				for shortcut in self.installedShortcut:
-					dstFile = os.path.join(self.profile.mountPoint, self.profile.DesktopDir, shortcut)
-					if os.path.exists(dstFile):
-						os.remove(dstFile)
-				
 				if not self.profile.umount():
 					Logger.error("Unable to umount profile at uninstall_client of session "+self.id)
 		
+		try:
+			shutil.rmtree(self.user_session_dir)
+		except Exception, e:
+			Logger.warn("Failed to remove spool directory '%s' : %s"%(self.user_session_dir, str(e)))
 		
 		self.domain.onSessionEnd()
 		return True
@@ -195,7 +144,7 @@ class Session(AbstractSession):
 		if hkey is None:
 			Logger.error("Unable to open key '%s'"%(path))
 		else:
-			win32api.RegSetValueEx(hkey, "OVD_SESSION_DIR", 0, win32con.REG_SZ, os.path.join(self.appDataDir, "ulteo", "ovd"))
+			win32api.RegSetValueEx(hkey, "OVD_SESSION_DIR", 0, win32con.REG_SZ, self.user_session_dir)
 			win32api.RegCloseKey(hkey)
 		
 		# Set the language
