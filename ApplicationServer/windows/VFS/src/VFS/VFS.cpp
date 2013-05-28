@@ -18,57 +18,54 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <iostream>
 #include "VFS.h"
-#include <common/StringUtil.h>
+#include <Shlwapi.h>
 #include <common/Logger.h>
+#include <common/conf/Configuration.h>
+#include <common/conf/Union.h>
 
 
-void usage() {
-	std::cout<<"usage: VFS.exe [-h] [-p 'profile path']"<<std::endl;
+VFS::VFS() { }
+
+VFS::~VFS() { }
+
+
+VFS::status VFS::init(std::string path) {
+	if (path.empty()) {
+		log_error("%s is invalid for a source path", path);
+		return WRONG_SRC;
+	}
+
+	if (! PathFileExistsA(path.c_str())) {
+		log_error("source %s must exist", path.c_str());
+		return SRC_DO_NOT_EXIST;
+	}
+
+	Configuration& conf = Configuration::getInstance();
+	conf.setSrcPath(path);
+
+	if (!conf.load()) {
+		log_error("Failed to load configuration file");
+		return INVALID_CONF;
+	}
+
+	return SUCCESS;
 }
 
 
-int main(int argc, char** argv) {
-	VFS vfs;
-	std::string arg;
-	std::string path;
-	int status;
+VFS::status VFS::start() {
+	Configuration& conf = Configuration::getInstance();
 
-	if (argc < 2) {
-		usage();
-		return VFS::INVALID_ARGUMENT;
-	}
+	// Manage rsync if needed
+	std::list<Union> unionList = conf.getUnions();
+	std::list<Union>::iterator it;
 
-	arg = std::string(argv[1]);
+	// start hook launcher
 
-	if (arg.compare("-h") == 0 || arg.compare("/h") == 0) {
-		usage();
-		return VFS::SUCCESS;
-	}
-
-	if (arg.compare("-p") == 0 || arg.compare("/p") == 0) {
-		if (argc != 3) {
-			usage();
-			return VFS::INVALID_ARGUMENT;
-		}
-
-		path = std::string(argv[2]);
-		StringUtil::unquote(path);
-	}
+	return SUCCESS;
+}
 
 
-	status = vfs.init(path);
-	if (status != VFS::SUCCESS)
-		return status;
-
-	status = vfs.start();
-	if (status != VFS::SUCCESS)
-		return status;
-
-	status = vfs.stop();
-	if (status != VFS::SUCCESS)
-		return status;
-
-	return VFS::SUCCESS;
+VFS::status VFS::stop() {
+	return SUCCESS;
 }
