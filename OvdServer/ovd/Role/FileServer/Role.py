@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2012 Ulteo SAS
+# Copyright (C) 2009-2013 Ulteo SAS
 # http://www.ulteo.com
-# Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011, 2012
 # Author Samuel BOVEE <samuel@ulteo> 2011
 #
@@ -32,6 +32,7 @@ from ovd.Role.Role import Role as AbstractRole
 
 from Config import Config
 from DirectoryWatcher import DirectoryWatcher
+from HTGroup import HTGroup
 from Share import Share
 from User import User
 
@@ -139,6 +140,9 @@ class Role(AbstractRole):
 			if u.existSomeWhere():
 				Logger.error("FS: unable to del user %s"%(user))
 				ret =  False
+		
+		htgroup = HTGroup(Config.dav_group_file)
+		htgroup.purge()
 		
 		return ret
 	

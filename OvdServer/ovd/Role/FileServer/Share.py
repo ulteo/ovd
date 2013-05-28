@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2012 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
-# Author David LECHEVALIER <david@ulteo.com> 2012
+# Author David LECHEVALIER <david@ulteo.com> 2012, 2013
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -28,6 +28,8 @@ from ovd.Logger import Logger
 from ovd.Platform.System import System
 
 from Config import Config
+from HTGroup import HTGroup
+from HTAccess import HTAccess
 
 
 class Share:
@@ -40,6 +42,7 @@ class Share:
 		self.directory = directory + "/" + name
 		self.group = "ovd_share_"+self.name
 		self.users = []
+		self.htaccess = HTAccess(self.directory)
 		
 		self.active = False
 	
@@ -100,18 +103,10 @@ class Share:
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 			return False
 		
-		path = os.path.join(self.directory, ".htaccess")
-		try:
-			f = file(path, "w")
-		except IOError, err:
-			Logger.error("FS: unable to write .htaccess")
-			Logger.debug("FS: unable to write .htaccess '%s' return: %s"%(path, str(err)))
-			return False
-		for user in self.users:
-			f.write("Require user %s\n"%(user))
-		f.close()
-		
 		self.do_right_normalization()
+		
+		self.htaccess.addGroup(self.group)
+		self.htaccess.save()
 		
 		self.active = True
 		return True
@@ -150,6 +145,9 @@ class Share:
 		
 		self.do_right_normalization()
 		
+		self.htaccess.delGroup(self.group)
+		self.htaccess.save()
+		
 		self.active = False
 		return ret
 	
@@ -178,6 +176,8 @@ class Share:
 			return False
 		
 		self.users.append(user)
+		htgroup = HTGroup(Config.dav_group_file)
+		htgroup.add(user, self.group)
 		return True
 	
 	
@@ -192,6 +192,9 @@ class Share:
 			ret = False
 			Logger.error("FS: unable to del user in group")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
+		
+		htgroup = HTGroup(Config.dav_group_file)
+		htgroup.delete(user, self.group)
 		
 		self.users.remove(user)
 		if len(self.users) == 0:
