@@ -36,7 +36,7 @@ class HTAccess:
 			self.groups.remove(group)
 	
 	
-        def save(self):
+	def save(self):
 		try:
 			f = file(self.path, "w")
 			if len(self.groups) == 0:
@@ -49,10 +49,9 @@ class HTAccess:
 			f.write("\n")
 			f.close()
 		
-                except IOError, err:
+		except IOError, err:
 			Logger.error("FS: unable to write .htaccess")
 			Logger.debug("FS: unable to write .htaccess '%s' return: %s"%(path, str(err)))
 			return False
 		
 		return True
-

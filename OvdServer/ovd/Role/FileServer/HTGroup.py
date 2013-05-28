@@ -71,8 +71,7 @@ class HTGroup:
 			return False
 		
 		return True
-		
-		
+	
 	
 	def add(self, user, group):
 		if not self.load():
@@ -106,4 +105,3 @@ class HTGroup:
 	def purge(self):
 		f = open(self.groupFile, 'w')
 		f.close()
-
