@@ -73,12 +73,15 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.session.server.statusChanged") {
 		var from = params["from"];
 		var to = params["to"];
+		var server = source;
 
 		if(to == "connected") {
 			/* Activate launchers */
-			for(var id in this.applications) {
-				var self = this; /* closure */
+			for(var i = 0 ; i<server.applications.length ; ++i) {
+				var id = server.applications[i].id;
 				var item =  this.content[id];
+
+				var self = this; /* closure */
 				item["event"] = function () {
 					var appId = jQuery(this).prop("id").split("_")[1];
 					self.session_management.fireEvent("ovd.log", self, {"message":"Start application "+appId, "level":"debug"});
@@ -91,9 +94,10 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 
 		if(to == "disconnected") {
 			/* Deactivate launchers */
-			for(var id in this.applications) {
-				var self = this; /* closure */
+			for(var i = 0 ; i<server.applications.length ; ++i) {
+				var id = server.applications[i].id;
 				var item =  this.content[id];
+
 				item["node"].off('click');
 				item["node"].prop("className", "applicationLauncherDisabled");
 			}
