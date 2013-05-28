@@ -20,9 +20,55 @@
 
 #include "Union.h"
 
-Union::Union() { }
 
-Union::~Union() {
-	// TODO Auto-generated destructor stub
+
+Union::Union(std::string& name): name(name), deleteOnClose(false) { }
+
+
+Union::~Union() { }
+
+
+void Union::setPath(std::string& path) {
+	this->path = path;
+}
+
+
+void Union::setDeleteOnClose(bool value) {
+	this->deleteOnClose = value;
+}
+
+
+void Union::setRsyncSrc(std::string src) {
+	this->rsyncSrc = src;
+}
+
+
+void Union::setRsyncFilter(std::string filter) {
+	this->rsyncFilter = filter;
+}
+
+
+std::string& Union::getName() {
+	return this->name;
+}
+
+
+std::string& Union::getPath() {
+	return this->path;
+}
+
+
+bool Union::isDeleteOnClose() {
+	return this->deleteOnClose;
+}
+
+
+std::string& Union::getRsyncSrc() {
+	return this->rsyncSrc;
+}
+
+
+std::string& Union::getRsyncFilter() {
+	return this->rsyncFilter;
 }
 

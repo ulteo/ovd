@@ -18,19 +18,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "Rule.h"
+#ifndef TRANSLATION_H_
+#define TRANSLATION_H_
 
-Rule::Rule(std::string unionName, std::string pattern): pattern(pattern), unionName(unionName)  { }
-
-Rule::~Rule() { }
-
-
-std::string& Rule::getUnion() {
-	return this->unionName;
-}
+#include <vector>
 
 
-std::string& Rule::getPattern() {
-	return this->pattern;
-}
+class Translation {
+private:
+	std::vector<std::string> keys;
+	std::vector<std::string> values;
 
+public:
+	Translation();
+	virtual ~Translation();
+
+	void add(std::string key, std::string value);
+	std::vector<std::string>& getKeys();
+	std::vector<std::string>& getValues();
+
+	std::string& translate(std::string path, bool inRequest);
+};
+
+#endif /* TRANSLATION_H_ */

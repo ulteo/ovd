@@ -22,9 +22,14 @@
 #define CONFIGURATION_H_
 
 #include <string>
-#include <map>
+#include <list>
 #include "INI.h"
 #include <common/Logger.h>
+#include <common/StringUtil.h>
+#include "Rule.h"
+#include "Union.h"
+#include "Translation.h"
+
 
 #define DEFAULT_CONF_FILENAME    "%{CSIDL_COMMON_APPDATA}\\ulteo\\profile\\default.conf"
 
@@ -34,11 +39,17 @@ private:
 	Configuration();
 	virtual ~Configuration();
 
+	// Log configuration
 	Logger::Level logLevel;
 	bool develOutput;
 	bool stdoutOutput;
 	std::string logFilename;
 
+	// union configuration
+	std::string srcPath;
+	std::list<Rule> rules;
+	std::list<Union> unions;
+	Translation trans;
 
 
 public:
@@ -46,11 +57,21 @@ public:
 
 	bool load();
 	bool load(const std::string& filename);
+	void parseUnions(INI& ini);
+	void parseRules(INI& ini);
+	void parseLog(INI& ini);
+	void parseTranslations(INI& ini);
 
 	Logger::Level getLogLevel();
 	bool useDevelOutput();
 	bool useStdOut();
 	const std::string& getLogFilename();
+
+	std::list<Rule>& getRules();
+	std::list<Union>& getUnions();
+	void setSrcPath(const std::string& path);
+
+	void dump();
 };
 
 #endif /* CONFIGURATION_H_ */

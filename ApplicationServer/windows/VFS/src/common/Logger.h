@@ -14,7 +14,8 @@ public:
 
 	static Logger& getSingleton();
 	static Logger* getSingletonPtr();
-	Level Logger::getFromString(std::string level);
+	Level getFromString(std::string& level);
+	void getLevelString(std::string& level);
 
 
 	// set log file, defalut is "C:\\VirtSys.log"

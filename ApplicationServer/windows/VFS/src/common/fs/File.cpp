@@ -21,6 +21,7 @@
 #include "File.h"
 #include "string.h"
 #include <common/Logger.h>
+#include <Windows.h>
 #include "CSIDL.h"
 
 
@@ -29,7 +30,7 @@ File::File(std::string path): pathValue(path), separator("\\") { }
 
 File::~File() { }
 
-std::string File::path() { return this->pathValue; }
+std::string& File::path() { return this->pathValue; }
 
 std::string File::fullname() {
 	std::string::size_type pos = this->pathValue.find_last_of(this->separator);
@@ -67,15 +68,25 @@ void File::join(std::string path) {
 }
 
 
+bool File::isAbsolute() {
+	char letter = tolower((int)this->pathValue[0]);
+
+	return (this->pathValue[1] == ':') && (this->pathValue[2] = '\\') && letter >= 'a' && letter <= 'z';
+}
+
+
+
 bool File::expand() {
+	char temp[1024];
 	std::string res = this->pathValue;
 	std::string csidl;
 	std::string csidlPath;
+	int pos = 0;
 	CSIDL c;
 
 	// We are searching for CSIDL constant
 	if (res.find("%{") == 0) {
-		int pos = res.find("}");
+		pos = res.find("}");
 		if (pos == std::string::npos) {
 			log_warn("%s do not contain valid information", this->pathValue.c_str());
 			return false;
@@ -87,22 +98,25 @@ bool File::expand() {
 
 	}
 
-//	while(res.find("${") != std::string::npos) {
-//		int pos1 = res.find("${");
-//		int pos2;
-//		std::string sub = res.substr(pos);
-//		if (sub.find("}") == std::string::npos)
-//			break;
-//
-//		pos2 = sub.find("}");
-//		std::string env = sub.substr(0, pos2);
-//		if (GetEnvironmentVariableA(env.c_str(), ))
-//	}
-//
-//	if () {
-//		res.replace
-//
-//	}
+	pos = 0;
+	while(res.find("${", pos) != std::string::npos) {
+		pos = res.find("${");
+		int posEnd;
+		std::string sub = res.substr(pos);
+		if (sub.find("}") == std::string::npos)
+			break;
+
+		posEnd = sub.find("}");
+		std::string env = sub.substr(2, posEnd - 2);
+		int status = GetEnvironmentVariableA(env.c_str(), temp, sizeof(temp));
+
+		if (status > 0)
+			res.replace(pos, env.length()+3, temp);
+		else
+			log_warn("%s is not a right environment variable", env.c_str());
+
+		pos +=2;
+	}
 	this->pathValue = res;
 
 	return true;

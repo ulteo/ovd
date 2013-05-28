@@ -44,7 +44,7 @@ Logger* Logger::getSingletonPtr()
 }
 
 
-Logger::Level Logger::getFromString(std::string level) {
+Logger::Level Logger::getFromString(std::string& level) {
 	if( level.compare("DEBUG") == 0)
 		return LOG_DEBUG;
 
@@ -58,6 +58,24 @@ Logger::Level Logger::getFromString(std::string level) {
 		return LOG_ERROR;
 
 	throw std::exception("Unsupported log level");
+}
+
+
+void Logger::getLevelString(std::string& level) {
+	if (this->logLevel == LOG_DEBUG)
+		level = "DEBUG";
+
+	if (this->logLevel == LOG_INFO)
+		level = "INFO";
+
+	if (this->logLevel == LOG_WARN)
+		level = "WARN";
+
+	if (this->logLevel == LOG_ERROR)
+		level = "ERROR";
+
+	if (level.empty())
+		level = "UNKNOW";
 }
 
 

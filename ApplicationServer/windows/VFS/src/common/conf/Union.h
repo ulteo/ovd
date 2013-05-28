@@ -21,10 +21,32 @@
 #ifndef UNION_H_
 #define UNION_H_
 
+#include <string>
+
+
 class Union {
+private:
+	std::string name;
+	std::string path;
+	std::string rsyncSrc;
+	std::string rsyncFilter;
+	bool deleteOnClose;
+
 public:
-	Union();
+	Union(std::string& name);
 	virtual ~Union();
+
+
+	void setPath(std::string& path);
+	void setDeleteOnClose(bool value);
+	void setRsyncSrc(std::string src);
+	void setRsyncFilter(std::string filter);
+
+	std::string& getName();
+	std::string& getPath();
+	bool isDeleteOnClose();
+	std::string& getRsyncSrc();
+	std::string& getRsyncFilter();
 };
 
 #endif /* UNION_H_ */

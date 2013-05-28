@@ -35,11 +35,12 @@ public:
 	virtual ~File();
 
 
-	std::string path();
+	std::string& path();
 	std::string parent();
 	std::string fullname();
 	std::string shortname();
 	std::string extention();
+	bool isAbsolute();
 	void join(std::string path);
 	bool expand();
 };

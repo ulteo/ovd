@@ -21,10 +21,19 @@
 #ifndef RULE_H_
 #define RULE_H_
 
+#include <string>
+
+
 class Rule {
+	std::string unionName;
+	std::string pattern;
+
 public:
-	Rule();
+	Rule(std::string unionName, std::string pattern);
 	virtual ~Rule();
+
+	std::string& getUnion();
+	std::string& getPattern();
 };
 
 #endif /* RULE_H_ */

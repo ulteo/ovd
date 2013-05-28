@@ -19,18 +19,68 @@
  */
 
 #include <iostream>
+#include <Shlwapi.h>
+#include <common/StringUtil.h>
 #include <common/Logger.h>
 #include <common/conf/Configuration.h>
 
 
-int main(int argc, char** argv) {
-	log_info("this is the main program");
+#define STATUS_SUCCESS          0
+#define STATUS_INVALID_ARGUMENT 1
+#define STATUS_WRONG_SRC        2
+#define STATUS_SRC_DO_NOT_EXIST 3
+#define STATUS_INVALID_CONF     4
 
-	Configuration& conf = Configuration::getInstance();
-	if (!conf.load()) {
-		log_error("Failed to load configuration file");
-		return -1;
+
+
+void usage() {
+	std::cout<<"usage: VFS.exe [-h] [-p 'profile path']"<<std::endl;
+}
+
+
+int main(int argc, char** argv) {
+	std::string arg;
+	std::string path;
+
+	if (argc < 2) {
+		usage();
+		return STATUS_INVALID_ARGUMENT;
 	}
 
-	return 0;
+	arg = std::string(argv[1]);
+
+	if (arg.compare("-h") == 0 || arg.compare("/h") == 0) {
+		usage();
+		return STATUS_SUCCESS;
+	}
+
+	if (arg.compare("-p") == 0 || arg.compare("/p") == 0) {
+		if (argc != 3) {
+			usage();
+			return STATUS_INVALID_ARGUMENT;
+		}
+
+		path = std::string(argv[2]);
+		StringUtil::unquote(path);
+	}
+
+	if (path.empty()) {
+		log_error("%s is invalid for a source path", path);
+		return STATUS_WRONG_SRC;
+	}
+
+	if (! PathFileExistsA(path.c_str())) {
+		log_error("source %s must exist", path.c_str());
+		return STATUS_SRC_DO_NOT_EXIST;
+	}
+
+	Configuration& conf = Configuration::getInstance();
+	conf.setSrcPath(path);
+
+	if (!conf.load()) {
+		log_error("Failed to load configuration file");
+		return STATUS_INVALID_CONF;
+	}
+
+	return STATUS_SUCCESS;
 }
