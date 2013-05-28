@@ -1,8 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author David LECHEVALIER <david@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -33,7 +34,7 @@ class DomainMicrosoft(AbstractDomainMicrosoft):
 		self.ovdGroups = ["'video'", "'audio'", "'pulse'", "'pulse-access'", "'fuse'", "'tsusers'"]
 	
 	
-        def manage_user(self):
+	def manage_user(self):
 		return False
 	
 	
@@ -41,7 +42,7 @@ class DomainMicrosoft(AbstractDomainMicrosoft):
 		if username is None:
 			return None
 		
-		try:		
+		try:
 			gids = [g.gr_gid for g in grp.getgrall() if username in g.gr_mem]
 			gid = pwd.getpwnam(username).pw_gid
 			gids.append(grp.getgrgid(gid).gr_gid)

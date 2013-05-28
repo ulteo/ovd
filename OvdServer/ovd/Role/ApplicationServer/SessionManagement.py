@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2012 Ulteo SAS
+# Copyright (C) 2009-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
-# Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+# Author David LECHEVALIER <david@ulteo.com> 2011-2013
 # Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
 #
