@@ -6,10 +6,11 @@
  * Date: $Date: 2007/03/08 00:26:19 $
  *
  * Copyright (c) 2005 Propero Limited
- * Copyright (C) 2011-2012 Ulteo SAS
+ * Copyright (C) 2011-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2011-2012
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License

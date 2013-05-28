@@ -6,9 +6,10 @@
  * Date: $Date: 2007/03/14 23:26:08 $
  *
  * Copyright (c) 2005 Propero Limited
- * Copyright (C) 2011-2012 Ulteo SAS
+ * Copyright (C) 2011-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * Purpose: Handles input events and sends relevant input data
  *          to server

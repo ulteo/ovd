@@ -4,10 +4,11 @@
  * Revision: $Revision: 1.3 $
  * Author: $Author: suvarov $
  * Author: David LECHEVALIER <david@ulteo.com> 2011
+ * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  * Date: $Date: 2007/03/15 23:16:33 $
  *
  * Copyright (c) 2005 Propero Limited
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2013 Ulteo SAS
  *
  * Purpose: Canvas component, handles drawing requests from server,
  *          and passes user input to Input class.
