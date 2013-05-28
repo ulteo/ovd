@@ -22,16 +22,14 @@
 #define SECTION_H_
 
 #include <iostream>
-#include <map>
-
-
-typedef std::map<std::string, std::string> KeyMap;
+#include <vector>
 
 
 class Section {
 private:
 	std::string name;
-	KeyMap keys;
+	std::vector<std::string> keys;
+	std::vector<std::string> values;
 
 public:
 	Section();
@@ -39,7 +37,8 @@ public:
 	virtual ~Section();
 
 	std::string getName();
-	KeyMap* getMap();
+	std::vector<std::string>& getKeys();
+	std::vector<std::string>& getValues();
 	int getInt(std::string key);
 	bool getBool(std::string key);
 	std::string& getString(std::string key);

@@ -33,53 +33,69 @@ std::string Section::getName() {
 	return this->name;
 }
 
-KeyMap* Section::getMap() {
-	return &this->keys;
+std::vector<std::string>& Section::getKeys() {
+	return this->keys;
 }
 
-std::string& Section::getString(std::string key) {
-	if ((this->keys.find(key) == this->keys.end()))
-		throw UException("key %s do not exist in the section: %s", key.c_str(), this->name.c_str());
+std::vector<std::string>& Section::getValues() {
+	return this->values;
+}
 
-	return this->keys[key];
+
+std::string& Section::getString(std::string key) {
+	int length = this->keys.size();
+
+	for (int i = 0 ; i < length ; i++)
+		if (this->keys[i].compare(key) == 0)
+			return this->values[i];
+
+	throw UException("key %s do not exist in the section: %s", key.c_str(), this->name.c_str());
 }
 
 int Section::getInt(std::string key) {
-	if ((this->keys.find(key) == this->keys.end()))
-		throw UException("key %s do not exist in the section: %s", key.c_str(), this->name.c_str());
+	std::string value = this->getString(key);
 
-	return atoi(this->keys[key].c_str());
+	return atoi(value.c_str());
 }
 
 bool Section::getBool(std::string key) {
-	if ((this->keys.find(key) == this->keys.end()))
-		throw UException("key %s do not exist in the section: %s", key.c_str(), this->name.c_str());
+	std::string value = this->getString(key);
 
 	bool ret = false;
-	ret = (StringUtil::caseCompare(this->keys[key], "Yes") == 0) || (StringUtil::caseCompare(this->keys[key], "True") == 0)	|| (this->keys[key].compare("1") == 0);
+	ret = (StringUtil::caseCompare(value, "Yes") == 0) || (StringUtil::caseCompare(value, "True") == 0)	|| (value.compare("1") == 0);
 
 	return ret;
 }
 
 void Section::addValue(std::string key, std::string value) {
-	this->keys[key] = value;
+	this->keys.insert(this->keys.end(), key);
+	this->values.insert(this->values.end(), value);
 }
 
 bool Section::hasKey(std::string key) {
-	return (this->keys.find(key) != this->keys.end());
+	int length = this->keys.size();
+
+	for (int i = 0 ; i < length ; i++)
+		if (this->keys[i].compare(key) == 0)
+			return true;
+
+	return false;
 }
 
 
 std::ostream& operator <<(std::ostream& out, Section& section) {
-	KeyMap* map = section.getMap();
+	std::vector<std::string>& keys = section.getKeys();
+	std::vector<std::string>& values = section.getValues();
 
 	out<<"["<<section.getName()<<"]"<<std::endl;
-	KeyMap::iterator valueIterator = map->begin();
+	std::vector<std::string>::iterator keyIterator = keys.begin();
+	std::vector<std::string>::iterator valueIterator = values.begin();
 
-	while(valueIterator != map->end())
+	while(keyIterator != keys.end() && valueIterator != values.end())
 	{
-		out<<(*valueIterator).first<<" = "<<(*valueIterator).second<<std::endl;
+		out<<(*keyIterator)<<" = "<<(*valueIterator)<<std::endl;
 		valueIterator++;
+		keyIterator++;
 	}
 	out<<std::endl;
 
