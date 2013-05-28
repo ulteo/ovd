@@ -31,6 +31,9 @@ class Config:
 	linux_skel_directory = "/dev/null"
 	linux_profile_filters_filename = "/etc/ulteo/ovd/profiles_filter.conf"
 	
+	OVERRIDE_PASSWORD_METHOD_UNIX = 0x01
+	OVERRIDE_PASSWORD_METHOD_CUSTOM = 0x02
+	override_password_method = 0x01
 	
 	@classmethod
 	def init(cls, infos):
@@ -64,5 +67,14 @@ class Config:
 		
 		if infos.has_key("linux_profile_filters_filename"):
 			cls.linux_profile_filters_filename = infos["linux_profile_filters_filename"]
+		
+		if infos.has_key("override_password_method"):
+			v = infos["override_password_method"].lower()
+			if v == "unix":
+				Config.override_password_method = Config.OVERRIDE_PASSWORD_METHOD_UNIX
+			elif v == "custom":
+				Config.override_password_method = Config.OVERRIDE_PASSWORD_METHOD_CUSTOM
+			else:
+				Logger.error("Unknown override_password_method value '%s'"%v)
 		
 		return True
