@@ -148,8 +148,10 @@ class SessionManagement(Process):
 		
 		else:
 			# will be customize by a lock system when the users will connect in RDP
-			session.domain.onSessionCreate()
-			pass
+			if not session.domain.onSessionCreate():
+				session.end_status = Session.SESSION_END_STATUS_ERROR
+				session.switch_status(Session.SESSION_STATUS_ERROR)
+				return False
 		
 		session.post_install()
 		

@@ -22,8 +22,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import fcntl
+import grp
 import os
 import pwd
+import subprocess
 import time
 import xrdp
 
@@ -55,6 +57,8 @@ class FileLock():
 
 
 class User(AbstractUser):
+	CUSTOM_PASSWD_FILE = "/etc/ulteo/ovd/users.passwd"
+	
 	def create(self):
 		lock = FileLock("/tmp/user.lock")
 		
@@ -109,33 +113,105 @@ class User(AbstractUser):
 		
 		
 		if self.infos.has_key("password"):
-			cmd = 'passwd "%s"'%(self.name)
-			password = "%s\n"%(self.infos["password"])
-			retry = 5
-			while retry !=0:
-				if retry < 0:
-					Logger.error("ERROR: unable to add a new user")
-					return False
-				lock.acquire()
-				p = System.execute(cmd, False)
-				p.stdin.write(password)
-				p.stdin.write(password)
-				p.wait()
-				lock.release()
-				if p.returncode == 0:
-					break
-				
-				Logger.debug("Passwd of %s:retry %i"%(self.name, 6-retry))
-				if p.returncode == 5: # an other process is creating a user
-					Logger.debug("An other process is creating a user")
-					retry -=1
-					time.sleep(0.2)
-					continue
-				if p.returncode != 0:
-					Logger.error("chpasswd return %d (%s)"%(p.returncode, p.stdout.read()))
-					return False
+			if not self.set_password():
+				return False
 		
 		return self.post_create()
+	
+	def set_password(self):
+		lock = FileLock("/tmp/user.lock")
+		
+		cmd = 'passwd -r files "%s"'%(self.name)
+		password = "%s\n"%(self.infos["password"])
+		retry = 5
+		while retry !=0:
+			if retry < 0:
+				Logger.error("ERROR: unable to add a new user")
+				return False
+			
+			lock.acquire()
+			p = self.exec_command(cmd, False)
+			p.stdin.write(password)
+			p.stdin.write(password)
+			p.wait()
+			lock.release()
+			if p.returncode == 0:
+				break
+			
+			Logger.debug("Passwd of %s:retry %i"%(self.name, 6-retry))
+			if p.returncode == 5: # an other process is creating a user
+				Logger.debug("An other process is creating a user")
+				retry -=1
+				time.sleep(0.2)
+				continue
+			if p.returncode != 0:
+				Logger.error("chpasswd return %d (%s)"%(p.returncode, p.stdout.read()))
+				return False
+		return True
+	
+	
+	def disable_password(self):
+		lock = FileLock("/tmp/user.lock")
+		
+		cmd = 'passwd -r files -d "%s"'%(self.name)
+		retry = 5
+		while retry !=0:
+			if retry < 0:
+				Logger.error("ERROR: unable to disable user")
+				return False
+			lock.acquire()
+			p = self.exec_command(cmd)
+			lock.release()
+			if p.returncode == 0:
+				break
+			
+			Logger.debug("Passwd of %s:retry %i"%(self.name, 6-retry))
+			if p.returncode == 5: # an other process is creating a user
+				Logger.debug("An other process is creating a user")
+				retry -=1
+				time.sleep(0.2)
+				continue
+			if p.returncode != 0:
+				Logger.error("passwd return %d (%s)"%(p.returncode, p.stdout.read()))
+				return False
+		return True
+	
+	
+	def set_custom_password(self):
+		if not os.path.exists(self.CUSTOM_PASSWD_FILE):
+			Logger.error("Custom password file '%s' doesn't not exists. Please create it and update your pam auth rules to use it before retry use custom password system"%self.CUSTOM_PASSWD_FILE)
+			return False
+		
+		cmd = 'htpasswd -b "%s" "%s" "%s"'%(self.CUSTOM_PASSWD_FILE, self.name, self.infos["password"])
+		
+		lock = FileLock("/tmp/user.lock")
+		lock.acquire()
+		p = self.exec_command(cmd)
+		lock.release()
+		
+		if p.returncode != 0:
+			Logger.error("htpasswd return %d (%s)"%(p.returncode, p.stdout.read()))
+			return False
+		
+		return True
+	
+	
+	def disable_custom_password(self):
+		if not os.path.exists(self.CUSTOM_PASSWD_FILE):
+			return True
+		
+		cmd = 'htpasswd -D "%s" "%s"'%(self.CUSTOM_PASSWD_FILE, self.name)
+		
+		lock = FileLock("/tmp/user.lock")
+		lock.acquire()
+		p = self.exec_command(cmd)
+		lock.release()
+		
+		if p.returncode != 0:
+			Logger.error("passwd return %d (%s)"%(p.returncode, p.stdout.read()))
+			return False
+		
+		return True
 	
 	
 	def post_create(self):

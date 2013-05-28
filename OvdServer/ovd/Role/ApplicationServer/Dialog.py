@@ -32,6 +32,7 @@ from Platform.ApplicationsDetection import ApplicationsDetection
 from Platform.DomainMicrosoft import DomainMicrosoft
 from Platform.DomainNovell import DomainNovell
 from Platform.DomainUlteo import DomainUlteo
+from Platform.DomainLocal import DomainLocal
 from Platform.Profile import Profile
 from Platform.TS import TS
 from Platform.Session import Session
@@ -254,6 +255,8 @@ class Dialog(AbstractDialog):
 					environment = DomainMicrosoft()
 				elif name == "Novell":
 					environment = DomainNovell()
+				elif name == "Local":
+					environment = DomainLocal()
 				else:
 					raise Exception("unknown environment '%s'"%(name))
 				
