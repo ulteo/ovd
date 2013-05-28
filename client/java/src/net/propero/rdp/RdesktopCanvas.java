@@ -4,10 +4,11 @@
  * Revision: $Revision: 1.3 $
  * Author: $Author: suvarov $
  * Author: David LECHEVALIER <david@ulteo.com> 2011
+ * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  * Date: $Date: 2007/03/15 23:16:33 $
  *
  * Copyright (c) 2005 Propero Limited
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2013 Ulteo SAS
  *
  * Purpose: Canvas component, handles drawing requests from server,
  *          and passes user input to Input class.
@@ -24,6 +25,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
+import net.propero.rdp.ImeStateListener;
 import net.propero.rdp.keymapping.KeyCode;
 import net.propero.rdp.keymapping.KeyCode_FileBased;
 import net.propero.rdp.orders.*;
@@ -32,7 +34,7 @@ import org.apache.log4j.Logger;
 
 // import org.apache.log4j.NDC;
 
-public abstract class RdesktopCanvas extends Canvas {
+public abstract class RdesktopCanvas extends Canvas implements ImeStateListener {
     static Logger logger = Logger.getLogger(RdesktopCanvas.class);
 
     private RasterOp rop = null;
@@ -1511,5 +1513,9 @@ public abstract class RdesktopCanvas extends Canvas {
 	
 	public void prepare_repaint(int x, int y, int cx, int cy) {
 		this.refresh_rect = refresh_rect.union(new Rectangle(x, y, cx, cy)); 
+	}
+
+	public void setImeState(boolean state) {
+		ImeStateSetter imeStS = new ImeStateSetter(this, this.getParent(), state); 
 	}
 }

@@ -6,10 +6,11 @@
  * Date: $Date: 2007/03/08 00:26:19 $
  *
  * Copyright (c) 2005 Propero Limited
- * Copyright (C) 2011-2012 Ulteo SAS
+ * Copyright (C) 2011-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2011-2012
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -1779,24 +1780,18 @@ public class Rdp {
         int unitId = data.getLittleEndian16();
         int imeOpen = data.getLittleEndian32();
         int imeConvMode = data.getLittleEndian32();
-        
-        if(imeConvMode == IME_CMODE_NATIVE) {
-            this.opt.enabledIME = true;
-            try {
-                ((sun.awt.im.InputContext)surface.getInputContext()).setCompositionEnabled(this.opt.enabledIME);
-            } catch(Exception e) {
-                System.err.println("IME : "+e.getMessage());
-                return;
-            }
-        } else {
-            this.opt.enabledIME = false;
-            try {
-                ((sun.awt.im.InputContext)surface.getInputContext()).setCompositionEnabled(this.opt.enabledIME);
-            } catch(Exception e) {
-                System.err.println("IME : "+e.getMessage());
-                return;
-            }
+        boolean state = (imeConvMode == IME_CMODE_NATIVE);
+        Input input = this.surface.getInput();
+
+        if (input.supportIME() == false) {
+            return; /* Not supported */
         }
+
+        if (input.getImeActive() == state) {
+            return; /* State unchanged */
+        }
+
+        input.setImeActive(state);
     }
 
     private void process_system_pointer_pdu(RdpPacket_Localised data) {

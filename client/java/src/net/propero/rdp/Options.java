@@ -6,10 +6,11 @@
  * Author: tomqq <hekong@gmail.com> 2009
  * Author: Julien LANGLOIS <julien@ulteo.com> 2009
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
+ * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  * Date: $Date: 2007/03/08 00:26:14 $
  *
  * Copyright (c) 2005 Propero Limited
- * Copyright (C) 2011-2012 Ulteo SAS
+ * Copyright (C) 2011-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  * Author Thomas MOUTON <thomas@ulteo.com> 2011-2012
@@ -58,7 +59,6 @@ public class Options {
 	public boolean debug_seamless = false;
 	public boolean supportUnicodeInput = false;
 	public boolean supportIME = false;
-	public boolean enabledIME = false;
 
 	public boolean enable_menu = false;
 	//public boolean paste_hack = true;

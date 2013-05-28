@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
+ * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -294,9 +295,6 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 
 	@Override
 	public void focusGained(FocusEvent e) {	
-		if (! this.input.supportIME())
-			((sun.awt.im.InputContext)this.getInputContext()).disableNativeIM();
-
 		if (SeamlessPopup.focusManager != null)	{
 			SeamlessPopup.focusManager.performedFocusLost(this);
 		}

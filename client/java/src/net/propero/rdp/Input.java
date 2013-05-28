@@ -6,9 +6,10 @@
  * Date: $Date: 2007/03/14 23:26:08 $
  *
  * Copyright (c) 2005 Propero Limited
- * Copyright (C) 2011-2012 Ulteo SAS
+ * Copyright (C) 2011-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * Purpose: Handles input events and sends relevant input data
  *          to server
@@ -23,7 +24,9 @@ import net.propero.rdp.keymapping.KeyMapException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
+import java.awt.Component;
 import java.awt.MouseInfo;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.*;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +54,7 @@ public abstract class Input {
 	protected static boolean shiftDown = false;
 
 	protected Boolean proceedOnKeyPressed = false;
+	protected Boolean imeActive = false;
 
     protected static long last_mousemove = 0;
     
@@ -255,8 +259,19 @@ public abstract class Input {
 		return this.opt.supportIME;
 	}
 
-	public boolean enabledIME() {
-		return this.opt.enabledIME;
+	public boolean getImeActive() {
+		return this.imeActive;
+	}
+
+	public void setImeActive(boolean state) {
+		KeyboardFocusManager keyboard_focus_manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+		Component last_focus = keyboard_focus_manager.getFocusOwner();
+
+		this.imeActive = state;
+
+		if (last_focus != null && last_focus instanceof net.propero.rdp.ImeStateListener) {
+			((net.propero.rdp.ImeStateListener)last_focus).setImeState(state);
+		}
 	}
 
 	/**
@@ -332,9 +347,6 @@ public abstract class Input {
      * Check locking key states.
      */
     public void gainedFocus() {
-		if (! this.supportIME())
-			((sun.awt.im.InputContext)canvas.getInputContext()).disableNativeIM();
-    	
 		doLockKeys(); // ensure lock key states are correct
 	}
 

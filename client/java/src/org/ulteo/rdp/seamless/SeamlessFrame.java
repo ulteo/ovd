@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2009-2010 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
  * Author Thomas MOUTON <thomas@ulteo.com> 2009-2010
+ * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -31,13 +32,15 @@ import java.awt.event.MouseEvent;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.utils.AbstractFocusManager;
 
+import net.propero.rdp.ImeStateListener;
+import net.propero.rdp.ImeStateSetter;
 import net.propero.rdp.Common;
 import net.propero.rdp.Input;
 import net.propero.rdp.rdp5.seamless.SeamFrame;
 import org.ulteo.gui.GUIActions;
 
 
-public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, FocusListener {
+public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, FocusListener, ImeStateListener {
 	public static AbstractFocusManager focusManager = null;
 	
 	protected boolean lockMouseEvents = false;
@@ -109,6 +112,10 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, 
 			this.rw.setVisible(false);
 	}
 
+	public void setImeState(boolean state) {
+		ImeStateSetter imeStS = new ImeStateSetter(this, this, state);
+	}
+
 	public void processMouseEvent(MouseEvent e, int type) {
 		switch (type) {
 			case MOUSE_PRESSED:
@@ -130,9 +137,6 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, 
 	
 	@Override
 	public void focusGained(FocusEvent e) {
-		if (! this.input.supportIME())
-			((sun.awt.im.InputContext)this.getInputContext()).disableNativeIM();
-
 		if (SeamlessFrame.focusManager != null)
 		{
 			SeamlessFrame.focusManager.performedFocusLost(this);
