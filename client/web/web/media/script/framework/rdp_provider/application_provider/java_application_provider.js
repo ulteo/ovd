@@ -12,9 +12,15 @@ function JavaApplicationProvider(rdp_provider) {
 JavaApplicationProvider.prototype = new ApplicationProvider();
 
 JavaApplicationProvider.prototype.applicationStart_implementation = function (application_id, token) { 
-	this.rdp_provider.applet[0].startApplication(token, application_id, 0 /* server id */);
+	var server_id = this.getServerByAppId(application_id);
 	this.applications[token] = new ApplicationInstance(this, application_id, token);
-	this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"unknown"});
+
+	if(server_id != -1) {
+		this.rdp_provider.applet[0].startApplication(token, application_id, server_id);
+		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"unknown"});
+	} else {
+		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"aborted"});
+	}
 }
 
 JavaApplicationProvider.prototype.applicationStartWithArgs_implementation = function(application_id, args, token) { 
@@ -55,4 +61,21 @@ JavaApplicationProvider.prototype.handleOrders = function(app_id, instance, stat
 	} else {
 		console.log("Unknown application status : "+id+" "+token+" "+status);
 	}
+}
+
+JavaApplicationProvider.prototype.getServerByAppId = function(application_id) {
+	var session = this.rdp_provider.session_management.session;
+	var servers = session.servers;
+
+	for(var i = 0 ; i<servers.length ; ++i) {
+		var applications = servers[i].applications;
+
+		for(var j = 0 ; j<applications.length ; ++j) {
+			if(applications[j].id == application_id) {
+				return i;
+			}
+		}
+	}
+
+	return -1;
 }
