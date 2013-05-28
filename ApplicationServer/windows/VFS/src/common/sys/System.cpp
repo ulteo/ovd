@@ -18,34 +18,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef FILE_H_
-#define FILE_H_
-
-#include <string>
-#include <list>
+#include "System.h"
+#include <common/Logger.h>
 
 
-class File {
-protected:
-	std::string separator;
-	std::string pathValue;
+System::System() { }
 
-public:
-	File(std::string path);
-	virtual ~File();
+System::~System() { }
 
+bool System::is64Bits() {
+	BOOL res = FALSE;
 
-	std::string& path();
-	std::string parent();
-	std::string fullname();
-	std::string shortname();
-	std::string extention();
-	bool isAbsolute();
-	void join(std::string path);
-	bool expand();
+	//IsWow64Process is not available on all supported versions of Windows.
+	//Use GetModuleHandle to get a handle to the DLL that contains the function
+	//and GetProcAddress to get a pointer to the function if available.
 
-	bool exist();
-	bool remove();
-};
+	fnIsWow64Process = (LPFN_ISWOW64PROCESS) GetProcAddress(GetModuleHandle(L"kernel32"), "IsWow64Process");
+	if(fnIsWow64Process) {
+		if (!fnIsWow64Process(GetCurrentProcess(), &res)) {
+			log_error("Failed to determine machine architecture: %u", GetLastError());
+			return false;
+		}
+	}
 
-#endif /* FILE_H_ */
+	return res;
+}

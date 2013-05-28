@@ -22,6 +22,8 @@
 #include "string.h"
 #include <common/Logger.h>
 #include <Windows.h>
+#include <Shlwapi.h>
+#include <iostream>
 #include "CSIDL.h"
 
 
@@ -120,4 +122,14 @@ bool File::expand() {
 	this->pathValue = res;
 
 	return true;
+}
+
+
+bool File::exist() {
+	return (PathFileExistsA(this->pathValue.c_str()) == TRUE);
+}
+
+
+bool File::remove() {
+	return (DeleteFileA(this->pathValue.c_str()) == TRUE);
 }

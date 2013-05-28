@@ -18,34 +18,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef FILE_H_
-#define FILE_H_
+#ifndef RSYNC_H_
+#define RSYNC_H_
 
 #include <string>
-#include <list>
 
 
-class File {
-protected:
-	std::string separator;
-	std::string pathValue;
+class RSync {
+private:
+	std::string src;
+	std::string dst;
+	std::string filter;
+	std::string realFilter;
+
 
 public:
-	File(std::string path);
-	virtual ~File();
+	RSync(std::string& src, std::string& dst, std::string& filter);
+	virtual ~RSync();
 
-
-	std::string& path();
-	std::string parent();
-	std::string fullname();
-	std::string shortname();
-	std::string extention();
-	bool isAbsolute();
-	void join(std::string path);
-	bool expand();
-
-	bool exist();
-	bool remove();
+	bool init(bool sessionStart);
+	bool start();
 };
 
-#endif /* FILE_H_ */
+#endif /* RSYNC_H_ */

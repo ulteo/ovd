@@ -18,34 +18,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef FILE_H_
-#define FILE_H_
+#ifndef SYSTEM_H_
+#define SYSTEM_H_
 
-#include <string>
-#include <list>
+#include <windows.h>
 
 
-class File {
-protected:
-	std::string separator;
-	std::string pathValue;
+typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
 
+LPFN_ISWOW64PROCESS fnIsWow64Process;
+
+class System {
 public:
-	File(std::string path);
-	virtual ~File();
+	System();
+	virtual ~System();
 
-
-	std::string& path();
-	std::string parent();
-	std::string fullname();
-	std::string shortname();
-	std::string extention();
-	bool isAbsolute();
-	void join(std::string path);
-	bool expand();
-
-	bool exist();
-	bool remove();
+	static bool is64Bits();
 };
 
-#endif /* FILE_H_ */
+#endif /* SYSTEM_H_ */

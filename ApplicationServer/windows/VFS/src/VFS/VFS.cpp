@@ -23,6 +23,8 @@
 #include <common/Logger.h>
 #include <common/conf/Configuration.h>
 #include <common/conf/Union.h>
+#include <common/fs/RSync.h>
+#include <common/fs/File.h>
 
 
 VFS::VFS() { }
@@ -31,12 +33,14 @@ VFS::~VFS() { }
 
 
 VFS::status VFS::init(std::string path) {
+	File f(path);
+
 	if (path.empty()) {
 		log_error("%s is invalid for a source path", path);
 		return WRONG_SRC;
 	}
 
-	if (! PathFileExistsA(path.c_str())) {
+	if (!f.exist()) {
 		log_error("source %s must exist", path.c_str());
 		return SRC_DO_NOT_EXIST;
 	}
@@ -59,6 +63,16 @@ VFS::status VFS::start() {
 	// Manage rsync if needed
 	std::list<Union> unionList = conf.getUnions();
 	std::list<Union>::iterator it;
+
+	for (it = unionList.begin() ; it != unionList.end() ; it++) {
+		Union& u = (*it);
+
+		if (!u.getRsyncSrc().empty()) {
+			RSync rsync(u.getRsyncSrc(), u.getPath(), u.getRsyncFilter());
+
+			rsync.start();
+		}
+	}
 
 	// start hook launcher
 
