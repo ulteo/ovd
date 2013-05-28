@@ -99,9 +99,7 @@ void Configuration::parseUnions(INI& ini) {
 		try {
 			path = sec->getString("path");
 			File f(path);
-			std::cout<<"before expand "<<f.path()<<std::endl;
 			f.expand();
-			std::cout<<"after expand "<<f.path()<<std::endl;
 
 			// manage local path
 			if (! f.isAbsolute()) {
