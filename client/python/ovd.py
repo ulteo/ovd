@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2012 Ulteo SAS
+# Copyright (C) 2008-2013 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010, 2011, 2012
+# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010-2013
 # Author Laurent CLOUET <laurent@ulteo.com> 2009, 2010
-# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -25,6 +25,7 @@ import os
 import commands
 import cookielib
 import urllib2
+from urlparse import urlparse
 import threading
 import time
 import logging
@@ -166,11 +167,25 @@ class Dialog:
 
 		node = node[0]
 		self.access = {"port": DEFAULT_RDP_PORT}
-		for attr in ["fqdn", "login", "password"]:
+		for attr in ["login", "password"]:
 			if not node.hasAttribute(attr):
 				raise OvdExceptionInternalError("Missing attribute %s"%(str(attr)))
 			
 			self.access[attr] = node.getAttribute(attr)
+		
+		if node.hasAttribute("token"):
+			url = urlparse(self.base_url)
+			self.access["fqdn"] = url.hostname
+			if url.port:
+				self.access["port"] = url.port
+			else:
+				self.access["port"] = 443
+			
+			self.access["token"] = node.getAttribute("token")
+		elif not node.hasAttribute("fqdn"):
+			raise OvdExceptionInternalError("Missing attribute fqdn")
+		else:
+			self.access["fqdn"] = node.getAttribute("fqdn")
 		
 		if node.hasAttribute("port"):
 			try:
@@ -258,6 +273,10 @@ class Dialog:
 		cmd.append(out)
 		cmd.append("-u")
 		cmd.append(params["login"])
+		if params.has_key("domain"):
+			cmd.append("-d")
+			cmd.append(params["domain"])
+		
 		cmd.append("-p")
 		cmd.append(params["password"])
 		if params["fullscreen"]:
@@ -265,9 +284,13 @@ class Dialog:
 		else:
 			cmd.append("-g")
 			cmd.append("x".join(params.get("geometry", ("800", "600"))))
-		cmd.append("-z")
-		cmd.append("-T")
-		cmd.append("\"Ulteo OVD - %s\""%(params["user_dn"]))
+		
+		if params["compress"]:
+			cmd.append("-z")
+		
+		if params["title"]:
+			cmd.append("-T")
+			cmd.append("\"%s\""%params["title"])
 		
 		if self.conf.has_key("keyboard") and self.conf["keyboard"]:
 			cmd.append("-k")
@@ -298,6 +321,10 @@ class Dialog:
 		cmd.append("xfreerdp")
 		cmd.append("-u")
 		cmd.append(params["login"])
+		if params.has_key("domain"):
+			cmd.append("-d")
+			cmd.append(params["domain"])
+		
 		cmd.append("-p")
 		cmd.append(params["password"])
 		if params["fullscreen"]:
@@ -305,9 +332,13 @@ class Dialog:
 		else:
 			cmd.append("-g")
 			cmd.append("x".join(params.get("geometry", ("800", "600"))))
-		#cmd.append("-z")
-		cmd.append("-T")
-		cmd.append("\"Ulteo OVD - %s\""%(params["user_dn"]))
+		
+		if params["compress"]:
+			cmd.append("-z")
+		
+		if params["title"]:
+			cmd.append("-T")
+			cmd.append("\"%s\""%params["title"])
 		
 		if self.conf.has_key("keyboard") and self.conf["keyboard"]:
 			cmd.append("-k")
@@ -357,6 +388,13 @@ class Dialog:
 			cmd.append("--rfx")
 			
 		cmd.append("--ignore-certificate")
+		cmd.append("--no-nla")
+		
+		if params.has_key("token"):
+			cmd.append("--gateway")
+			cmd.append(params["token"])
+			cmd.append("--sec")
+			cmd.append("rdp")
 		
 		cmd.append(params["server_fqdn"])
 		
@@ -364,6 +402,9 @@ class Dialog:
 	
 	
 	def getLaunchCommand(self, params):
+		if self.conf.has_key("use_upn") and self.conf["use_upn"] is False and "@" in params["login"]:
+			params["login"], params["domain"] = params["login"].split("@", 2)
+		
 		if self.conf.get("client", None) == "freerdp":
 			return self.getLaunchCommandFreeRDP(params)
 		

@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2012 Ulteo SAS
+# Copyright (C) 2012, 2013 Ulteo SAS
 # http://www.ulteo.com
-# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
+# Author Julien LANGLOIS <julien@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -37,7 +38,7 @@ from ovd import OvdExceptionInternalError
 from ovd import Dialog
 
 try:
-	_ = gettext.translation("uovdclient").lgettext
+	_ = gettext.translation("uovdclient", localedir=os.environ.get("LOCALEDIR")).lgettext
 except:
 	print >>sys.stderr, "Unable to load translation"
 	_ = lambda(string): string
@@ -184,7 +185,7 @@ class OvdClientGui:
 	def __init__(self, options):
 		self.options = options
 		self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-		self.window.set_title("OVD Light Client")
+		self.window.set_title(options.title)
 		
 		table = gtk.Table(4, 2, True)
 		self.window.add(table)
@@ -209,7 +210,7 @@ class OvdClientGui:
 		label.show()
 		self.passwd = gtk.Entry()
 		self.passwd.set_activates_default(True)
-		self.passwd.set_visibility(gtk.FALSE)
+		self.passwd.set_visibility(False)
 		table.attach(self.passwd, 1, 2, 1, 2)
 		self.passwd.show()
 		
@@ -234,9 +235,10 @@ class OvdClientGui:
 		self.window.set_position(gtk.WIN_POS_CENTER)
 		self.window.show()
 		
-		if self.options.username!=None:
+		if self.options.username != None:
 			self.user.set_text(self.options.username)
-			self.passwd.grab_focus() 
+			if self.options.username != "":
+				self.passwd.grab_focus()
 		
 		if options.server:
 			self.sm.set_text(options.server)
@@ -254,21 +256,33 @@ class OvdClientGui:
 		conf["client"] = self.options.client
 		conf["language"] = self.options.language
 		conf["keyboard"] = self.options.keyboard
+		conf["compress"] = self.options.compress
+		conf["title"] = self.options.title
+		conf["use_upn"] = self.options.use_upn
 		
 		if self.options.drives:
 			conf["drives"] = self.options.drives
-		
-		if conf["host"] == "":
-			error("You must specify the host field!")
-			return
 		
 		if conf["login"] == "":
 			error("You must specify a username!")
 			return
 			
 		if conf["password"] == "":
+			if self.window.get_focus() == self.user:
+				self.passwd.grab_focus()
+				return
+			
 			error("You must specify a password!")
 			return
+		
+		if conf["host"] == "":
+			if self.window.get_focus() == self.passwd:
+				self.sm.grab_focus()
+				return
+			
+			error("You must specify the host field!")
+			return
+		
 		
 		self.passwd.set_text("")
 		self.passwd.grab_focus()
@@ -299,6 +313,9 @@ if __name__ == "__main__":
 	parser.add_option("-x", "--freerdp", action="store_const", dest="client", const="freerdp", help="Use freerdp client")
 	parser.add_option("-u", "--username", action="store", dest="username", default="", help="Default username")
 	parser.add_option("-d", "--drive", action="append", nargs=2, dest="drives", help="Add a redirected drive to the session [name] [path]")
+	parser.add_option("-c", "--compress", action="store_true", dest="compress", default=False, help="Enable RDP compression")
+	parser.add_option("-t", "--title", action="store", dest="title", default="OVD Light Client", help="Title to show on the windows")
+	parser.add_option("--no-upn", action="store_false", dest="use_upn", default=True, help="Use the RDP domain field instead of push the login in UPN syntax (login@domain)")
 	
 	lang = locale.getdefaultlocale()
 	if lang:
