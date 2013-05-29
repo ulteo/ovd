@@ -28,6 +28,7 @@ System::~System() { }
 
 bool System::is64Bits() {
 	BOOL res = FALSE;
+	LPFN_ISWOW64PROCESS fnIsWow64Process;
 
 	//IsWow64Process is not available on all supported versions of Windows.
 	//Use GetModuleHandle to get a handle to the DLL that contains the function

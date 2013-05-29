@@ -27,7 +27,6 @@
 
 typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
 
-LPFN_ISWOW64PROCESS fnIsWow64Process;
 
 class System {
 public:
