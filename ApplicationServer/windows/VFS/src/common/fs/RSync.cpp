@@ -32,6 +32,7 @@ RSync::RSync(std::string& src, std::string& dst, std::string& filter) {
 	this->convertPath(dst, this->dst);
 	this->convertPath(filter, this->filter);
 	this->process = NULL;
+	this->src.append("/");
 }
 
 
