@@ -148,3 +148,13 @@ std::string StringUtil::getCommonPart(std::list<std::string> list) {
 
 	return commonPart;
 }
+
+
+void StringUtil::replaceAll(std::string& src, const std::string& from, const std::string to) {
+	size_t pos = 0;
+
+	while((pos = src.find(from, pos)) != std::string::npos) {
+	         src.replace(pos, from.length(), to);
+	         pos += to.length();
+	}
+}

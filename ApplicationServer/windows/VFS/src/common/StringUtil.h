@@ -44,6 +44,7 @@ public:
 	static int split(std::vector<std::string>& vec, std::string str, char delim);
 	static int split(std::list<std::string>& vec, std::string str, char delim);
 	static std::string getCommonPart(std::list<std::string> list);
+	static void replaceAll(std::string& src, const std::string& from, const std::string to);
 };
 
 #endif /* STRINGUTIL_H_ */
