@@ -43,3 +43,7 @@ bool System::is64Bits() {
 
 	return res;
 }
+
+bool System::setEnv(const std::string& key, const std::string& value) {
+	return (SetEnvironmentVariableA(key.c_str(), value.c_str()) == TRUE);
+}

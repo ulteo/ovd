@@ -22,6 +22,7 @@
 #define SYSTEM_H_
 
 #include <windows.h>
+#include <string>
 
 
 typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
@@ -34,6 +35,8 @@ public:
 	virtual ~System();
 
 	static bool is64Bits();
+
+	static bool setEnv(const std::string& key, const std::string& value);
 };
 
 #endif /* SYSTEM_H_ */
