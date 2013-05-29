@@ -38,7 +38,7 @@ public:
 	RSync(std::string& src, std::string& dst, std::string& filter);
 	virtual ~RSync();
 
-	bool init(bool sessionStart);
+	bool init();
 	bool start();
 };
 

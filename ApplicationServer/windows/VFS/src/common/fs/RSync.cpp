@@ -58,7 +58,7 @@ void RSync::convertPath(std::string& in, std::string& out) {
 }
 
 
-bool RSync::init(bool sessionStart) {
+bool RSync::init() {
 	char buffer[1024] = {0};
 	std::string line;
 
