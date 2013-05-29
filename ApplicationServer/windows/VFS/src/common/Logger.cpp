@@ -17,7 +17,6 @@ Logger::Logger()
 {
 	// TODO user do not have the right to write here !!!
 	m_szLogFile = "";
-	m_bIsLogging = false;
 	this->logLevel = LOG_INFO;
 	this->useStdOut = true;
 }
@@ -123,8 +122,6 @@ void Logger::log(Level lvl, char *fmt,...) {
 	if (lvl < this->logLevel)
 		return;
 
-	m_bIsLogging = true;
-
 	va_list args;
 
 	char temp[5000];
@@ -190,6 +187,4 @@ void Logger::log(Level lvl, char *fmt,...) {
 	
 	if (this->useStdOut)
 		std::cout<<temp;
-
-	m_bIsLogging = false;
 }

@@ -28,9 +28,6 @@ public:
 	
 	// output log to log file
 	void log(Level lvl, char *fmt,...);
-	
-	bool isLogging(){return m_bIsLogging;}
-	
 
 
 private:
@@ -42,8 +39,6 @@ private:
 	std::string	m_szLogFile;
 	Level logLevel;
 	bool useStdOut;
-
-	bool m_bIsLogging;
 };
 
 
