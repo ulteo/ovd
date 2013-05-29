@@ -97,23 +97,14 @@ void Configuration::parseUnions(INI& ini) {
 		Section* sec = ini.getSection(unionName);
 
 		try {
-			path = sec->getString("path");
-			File f(path);
-			f.expand();
-
-			// manage local path
-			if (! f.isAbsolute()) {
-				File src(this->srcPath);
-				src.join(f.path());
-				unionNode.setPath(src.path());
-			}
-			else {
-				unionNode.setPath(f.path());
-			}
+			File path(sec->getString("path"));
+			path.expand(this->srcPath);
+			unionNode.setPath(path.path());
 
 			try {
-				rsyncSrc = sec->getString("rsync");
-				unionNode.setRsyncSrc(rsyncSrc);
+				File rsyncSrc(sec->getString("rsync"));
+				rsyncSrc.expand(this->srcPath);
+				unionNode.setRsyncSrc(rsyncSrc.path());
 
 				rsyncFilter = sec->getString("rsync_filter");
 				File f(rsyncFilter);
