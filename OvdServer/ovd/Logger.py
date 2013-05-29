@@ -107,7 +107,9 @@ class Logger:
 	
 	
 	def run(self):
-		while True:
+		while not self.queue._closed:
+			# Python 2.6: raise Empty even when queue is closed.
+			
 			try:
 				# Request queue with a timeout or the close() method freeze on Windows
 				(func, obj) = self.queue.get(True, 4)
