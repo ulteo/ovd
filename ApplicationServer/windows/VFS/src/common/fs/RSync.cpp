@@ -75,7 +75,7 @@ bool RSync::init() {
 	this->process->addArgs("\""+this->src+"\"");
 	this->process->addArgs("\""+this->dst+"\"");
 
-	return false;
+	return true;
 }
 
 
