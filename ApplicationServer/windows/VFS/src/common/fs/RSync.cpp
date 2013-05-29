@@ -88,6 +88,8 @@ bool RSync::start() {
 		return false;
 	}
 
+	log_info("rsync from %s to %s", this->src.c_str(), this->dst.c_str());
+
 	this->process->start(true);
 
 	status = this->process->getStatus();
