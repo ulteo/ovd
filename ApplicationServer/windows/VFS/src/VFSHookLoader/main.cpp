@@ -58,9 +58,6 @@ int main() {
 
 	set_hooks_fn();
 	
-	//refresh desktop on dll loaded by Explorer
-	System::refreshDesktop();
-
 	printf("Running... \n");
 
 	bool run = true;
