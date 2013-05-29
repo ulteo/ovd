@@ -42,7 +42,7 @@ bool System::is64Bits() {
 		}
 	}
 
-	return res;
+	return (res == TRUE);
 }
 
 bool System::setEnv(const std::string& key, const std::string& value) {
