@@ -90,12 +90,8 @@ public:
 	std::wstring getVirtualFileSpace(){return m_szVirtualFileSpace;}
 
 public:
-	static VirtualFileSystem& getSingleton();
-	static VirtualFileSystem* getSingletonPtr();
-
-private:
 	VirtualFileSystem();
-	~VirtualFileSystem();	
+	~VirtualFileSystem();
 	
 	//---------------------------------------------------------------------------//
 	// File redirection helper function:
@@ -155,8 +151,6 @@ private:
 	std::wstring _getCSIDLFolderName(const int csidl);
 
 private:
-	static VirtualFileSystem* m_sInstance;
-
 	//---------------------------------------------------------------------------//
 	// File system attributes
 	//---------------------------------------------------------------------------//

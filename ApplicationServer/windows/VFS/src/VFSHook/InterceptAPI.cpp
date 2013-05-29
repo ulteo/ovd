@@ -20,7 +20,7 @@ PtrNtCreateKey OriginNtCreateKey = (PtrNtCreateKey)GetProcAddress(GetModuleHandl
 PtrNtOpenKey OriginNtOpenKey = (PtrNtOpenKey)GetProcAddress(GetModuleHandle(L"ntdll"), "NtOpenKey");
 PtrNtOpenKeyEx OriginNtOpenKeyEx = (PtrNtOpenKeyEx)GetProcAddress(GetModuleHandle(L"ntdll"), "NtOpenKeyEx");
 
-
+VirtualFileSystem vf;
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -53,7 +53,7 @@ NTSTATUS WINAPI myNtCreateFile(	PHANDLE FileHandle,
 		uniszRestore= *(ObjectAttributes->ObjectName);
 	}
 
-	VirtualFileSystem::getSingleton().redirectFilePath(ObjectAttributes);
+	vf.redirectFilePath(ObjectAttributes);
 		
 	NTSTATUS stus = OriginNtCreateFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, AllocationSize, 
 		FileAttributes, ShareAccess, CreateDisposition, CreateOptions, EaBuffer, EaLength);
@@ -80,7 +80,7 @@ NTSTATUS NTAPI myNtOpenFile(PHANDLE FileHandle,
 		uniszRestore= *(ObjectAttributes->ObjectName);
 	}
 
-	VirtualFileSystem::getSingleton().redirectFilePath(ObjectAttributes);
+	vf.redirectFilePath(ObjectAttributes);
 		
 	NTSTATUS stus = OriginNtOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
 			
@@ -103,7 +103,7 @@ NTSTATUS NTAPI myNtQueryAttributesFile(	POBJECT_ATTRIBUTES ObjectAttributes,
 		uniszRestore= *(ObjectAttributes->ObjectName);
 	}
 
-	VirtualFileSystem::getSingleton().redirectFilePath(ObjectAttributes);
+	vf.redirectFilePath(ObjectAttributes);
 			
 	NTSTATUS stus = OriginNtQueryAttributesFile(ObjectAttributes, FileInformation);
 		
@@ -131,7 +131,7 @@ NTSTATUS NTAPI myNtSetInformationFile(	HANDLE FileHandle,
 		PFILE_RENAME_INFORMATION pFileRename = (PFILE_RENAME_INFORMATION)FileInformation;				
 		restoreFileRenameInfo = *pFileRename;
 		
-		if( VirtualFileSystem::getSingleton().redirectFilePath(pFileRename->FileName, &(pFileRename->FileNameLength)) )
+		if( vf.redirectFilePath(pFileRename->FileName, &(pFileRename->FileNameLength)) )
 			bStore = true;
 	}
 
@@ -163,7 +163,7 @@ NTSTATUS NTAPI myNtCreateKey(	PHANDLE KeyHandle,
 		uniszRestore= *(ObjectAttributes->ObjectName);
 	}
 
-	VirtualFileSystem::getSingleton().redirectRegPath(ObjectAttributes);
+	vf.redirectRegPath(ObjectAttributes);
 	
 	NTSTATUS stus = OriginNtCreateKey(KeyHandle, DesiredAccess, ObjectAttributes, TitleIndex, Class, CreateOptions, Disposition);
 		
@@ -186,7 +186,7 @@ NTSTATUS NTAPI myNtOpenKey(	PHANDLE KeyHandle,
 		uniszRestore= *(ObjectAttributes->ObjectName);
 	}
 
-	VirtualFileSystem::getSingleton().redirectRegPath(ObjectAttributes);
+	vf.redirectRegPath(ObjectAttributes);
 	
 	NTSTATUS stus = OriginNtOpenKey(KeyHandle, DesiredAccess, ObjectAttributes);
 		
@@ -210,7 +210,7 @@ NTSTATUS NTAPI myNtOpenKeyEx(	PHANDLE KeyHandle,
 		uniszRestore= *(ObjectAttributes->ObjectName);
 	}
 
-	VirtualFileSystem::getSingleton().redirectRegPath(ObjectAttributes);
+	vf.redirectRegPath(ObjectAttributes);
 	
 	NTSTATUS stus = OriginNtOpenKeyEx(KeyHandle, DesiredAccess, ObjectAttributes, OpenOptions);
 		
@@ -233,17 +233,17 @@ void setupHooks() {
 	lstrcatW(szConfigFile, L"\\ulteo\\ovd\\");
 	lstrcatW(szConfigFile, VIRTUAL_SYSTEM_CONF_FILE);
 	
-	if( ! VirtualFileSystem::getSingleton().init() ) {
+	if( ! vf.init() ) {
 		log_error("Failed to initialize Virtual File System!");
 		return;
 	}
 
-	if( ! VirtualFileSystem::getSingleton().parseFileSystem(szConfigFile)) {
+	if( ! vf.parseFileSystem(szConfigFile)) {
 		log_error("File blacklist configuration file not found!");
 		return;
 	}
 
-	if( ! VirtualFileSystem::getSingleton().parseRegSystem(szConfigFile)) {
+	if( ! vf.parseRegSystem(szConfigFile)) {
 		log_error("Registry redirect-list configuration file not found!");
 		return;
 	}

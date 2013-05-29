@@ -12,8 +12,6 @@
 #define	SEPERATOR		L"\\"
 #define DEVICE_PREFIX	L"\\??\\"
 
-VirtualFileSystem* VirtualFileSystem::m_sInstance = NULL;
-
 VirtualFileSystem::VirtualFileSystem():
 m_szVirtualFileSpace(L""),
 m_iUserProfileStringLength(0),
@@ -21,30 +19,11 @@ m_szDeviceUserProfilePath(L"")
 {
 }
 
-VirtualFileSystem::~VirtualFileSystem()
-{
-}
+VirtualFileSystem::~VirtualFileSystem() { }
 
-VirtualFileSystem& VirtualFileSystem::getSingleton()
-{
-	if(m_sInstance == NULL) 
-	{
-		m_sInstance = new VirtualFileSystem();
-	}
-	return (*m_sInstance);
-}
-
-VirtualFileSystem* VirtualFileSystem::getSingletonPtr()
-{
-	if(m_sInstance == NULL) 
-	{
-		m_sInstance = new VirtualFileSystem();
-	}
-	return m_sInstance;
-}
 
 bool VirtualFileSystem::init()
-{	
+{
 	//Obtain USERPROFILE path
 	WCHAR szUserProfilePath[MAX_PATH];
 	SHGetSpecialFolderPathW(NULL, szUserProfilePath, CSIDL_PROFILE, 0);
