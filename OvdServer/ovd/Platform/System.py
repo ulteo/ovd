@@ -119,7 +119,7 @@ class System:
 	
 	
 	@classmethod
-	def execute(cls, args, wait = True):
+	def execute(cls, args, wait = True, env = {}):
 		if type(args) is type([]):
 			shell = False
 		elif type(args) in [type(""), type(u"")]:
@@ -131,6 +131,9 @@ class System:
 		subprocess_args["stdout"] = subprocess.PIPE
 		subprocess_args["stderr"] = subprocess.STDOUT
 		subprocess_args["shell"] = shell
+		subprocess_args["env"] = os.environ.copy()
+		subprocess_args["env"].update(env)
+		
 		cls.customize_subprocess_args(subprocess_args)
 		
 		p = subprocess.Popen(args, **subprocess_args)
