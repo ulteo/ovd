@@ -239,6 +239,11 @@ void Configuration::setSrcPath(const std::string& path) {
 }
 
 
+std::string& Configuration::getSrcPath() {
+	return this->srcPath;
+}
+
+
 void Configuration::dump() {
 	std::string logLevel;
 	Logger& logger =  Logger::getSingleton();

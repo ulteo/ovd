@@ -70,6 +70,7 @@ public:
 	std::list<Rule>& getRules();
 	std::list<Union>& getUnions();
 	void setSrcPath(const std::string& path);
+	std::string& getSrcPath();
 
 	void dump();
 };
