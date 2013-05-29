@@ -26,7 +26,7 @@ System::System() { }
 
 System::~System() { }
 
-bool System::is64Bits() {
+bool System::is64() {
 	BOOL res = FALSE;
 	LPFN_ISWOW64PROCESS fnIsWow64Process;
 

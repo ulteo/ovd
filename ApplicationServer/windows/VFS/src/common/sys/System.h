@@ -33,7 +33,7 @@ public:
 	System();
 	virtual ~System();
 
-	static bool is64Bits();
+	static bool is64();
 
 	static bool setEnv(const std::string& key, const std::string& value);
 };
