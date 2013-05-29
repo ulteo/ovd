@@ -6,7 +6,13 @@
 #include <shlobj.h> 
 #include <Psapi.h>
 #include <stdlib.h>
-#include <shlwapi.h> 
+#include <shlwapi.h>
+#include <stdlib.h>
+#include <string>
+#include <iostream>
+#include <common/sys/System.h>
+
+
 
 #ifdef _WIN64
 	#define HOOK_DLL	L"VFSHook64.dll"
@@ -17,28 +23,7 @@
 typedef void (*set_hooks_proc_t) ();
 typedef void (*remove_hooks_proc_t) ();
 
-//Refresh desktop on Explorer hooked
-void waitDesktopRefresh()
-{	
-	Sleep(2500);
 
-	//Refresh Desktop 
-	HWND hProgman = FindWindowW(L"Progman", 0);
-	if(hProgman)
-	{
-		HWND hDesktop = FindWindowExW(hProgman, 0, L"SHELLDLL_DefView", 0);
-		if(hDesktop)
-		{
-			PostMessageW(hDesktop, WM_KEYDOWN, VK_F5, 1);
-			PostMessageW(hDesktop, WM_KEYUP, VK_F5, 1);
-			printf("Desktop refreshed.\n");
-		}
-	}
-	
-}
-#include <stdlib.h>
-#include <string>
-#include <iostream>
 int main()
 {
 	set_hooks_proc_t set_hooks_fn;
@@ -58,8 +43,8 @@ int main()
 	set_hooks_fn();
 	
 	//refresh desktop on dll loaded by Explorer
-	waitDesktopRefresh();
-	
+	System::refreshDesktop();
+
 	printf("Running... \n");
 
 	bool run = true;

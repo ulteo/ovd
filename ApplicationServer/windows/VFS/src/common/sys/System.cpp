@@ -19,6 +19,8 @@
  */
 
 #include "System.h"
+#include <windows.h>
+#include <shlwapi.h>
 #include <common/Logger.h>
 
 
@@ -47,4 +49,20 @@ bool System::is64() {
 
 bool System::setEnv(const std::string& key, const std::string& value) {
 	return (SetEnvironmentVariableA(key.c_str(), value.c_str()) == TRUE);
+}
+
+
+void System::refreshDesktop() {
+	//Refresh Desktop
+	Sleep(2500);
+	HWND hProgman = FindWindow(L"Progman", 0);
+	if(hProgman)
+	{
+		HWND hDesktop = FindWindowEx(hProgman, 0, L"SHELLDLL_DefView", 0);
+		if(hDesktop) {
+			log_debug("desktop refreshed");
+			PostMessage(hDesktop, WM_KEYDOWN, VK_F5, 1);
+			PostMessage(hDesktop, WM_KEYUP, VK_F5, 1);
+		}
+	}
 }

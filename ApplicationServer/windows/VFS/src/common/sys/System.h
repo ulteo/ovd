@@ -36,6 +36,7 @@ public:
 	static bool is64();
 
 	static bool setEnv(const std::string& key, const std::string& value);
+	static void refreshDesktop();
 };
 
 #endif /* SYSTEM_H_ */
