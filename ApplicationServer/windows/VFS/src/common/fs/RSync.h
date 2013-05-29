@@ -22,6 +22,7 @@
 #define RSYNC_H_
 
 #include <string>
+#include <common/sys/Process.h>
 
 
 class RSync {
@@ -29,8 +30,9 @@ private:
 	std::string src;
 	std::string dst;
 	std::string filter;
-	std::string realFilter;
+	Process* process;
 
+	void convertPath(std::string& in, std::string& out);
 
 public:
 	RSync(std::string& src, std::string& dst, std::string& filter);

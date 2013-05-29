@@ -28,16 +28,33 @@
 
 
 RSync::RSync(std::string& src, std::string& dst, std::string& filter) {
-	this->src = src;
-	this->dst = dst;
-	this->filter = filter;
+	this->convertPath(src, this->src);
+	this->convertPath(dst, this->dst);
+	this->convertPath(filter, this->filter);
+	this->process = NULL;
 }
 
-RSync::~RSync() {
-	File f(this->realFilter);
 
-	if (f.exist())
-		f.remove();
+RSync::~RSync() {
+	if (this->process)
+		delete process;
+}
+
+
+void RSync::convertPath(std::string& in, std::string& out) {
+	File f(in);
+	char letter;
+
+	if (f.isAbsolute()) {
+		std::stringstream ss;
+		letter = f.path()[0];
+		in.erase(0, 2);
+		ss<<"/cygdrive/"<<(char)tolower(letter)<<"/"<<in;
+		out = ss.str();
+	}
+
+	StringUtil::replaceAll(out, "\\", "/");
+	StringUtil::replaceAll(out, "//", "/");
 }
 
 
@@ -48,30 +65,35 @@ bool RSync::init(bool sessionStart) {
 	if (this->filter.empty())
 		return true;
 
-	// convert filter file
-	std::ifstream fileStream(this->filter);
-	if (!fileStream.good())
-		return false;
+	// Creating process
+	this->process = new Process("rsync.exe");
+	this->process->addArgs("-rvltD");
 
-	while (!fileStream.eof()) {
-		fileStream.getline(buffer, sizeof(buffer));
-		line = buffer;
-		StringUtil::atrim(line);
+	if (! this->filter.empty())
+		this->process->addArgs("--include-from=\""+this->filter+"\"");
 
-		if (line.find("#") == 0)
-			continue;
-
-		if (line.empty())
-			continue;
-
-		// TODO
-	}
+	this->process->addArgs("\""+this->src+"\"");
+	this->process->addArgs("\""+this->dst+"\"");
 
 	return false;
 }
 
 
 bool RSync::start() {
+	int status;
 
-	return false;
+	if (this->process == NULL) {
+		log_warn("rsync is not inited");
+		return false;
+	}
+
+	this->process->start(true);
+
+	status = this->process->getStatus();
+	if (status != 0) {
+		log_warn("Processus stop with status %i\n", status);
+		return false;
+	}
+
+	return true;
 }
