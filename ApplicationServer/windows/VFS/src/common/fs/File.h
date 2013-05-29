@@ -43,9 +43,12 @@ public:
 	bool isAbsolute();
 	void join(std::string path);
 	bool expand();
+	bool expand(const std::string& base);
 
 	bool exist();
 	bool remove();
+
+	bool mkdirs();
 };
 
 #endif /* FILE_H_ */

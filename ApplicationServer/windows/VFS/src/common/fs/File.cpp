@@ -23,6 +23,7 @@
 #include <common/Logger.h>
 #include <Windows.h>
 #include <Shlwapi.h>
+#include <Shlobj.h>
 #include <iostream>
 #include "CSIDL.h"
 
@@ -125,6 +126,18 @@ bool File::expand() {
 }
 
 
+bool File::expand(const std::string& base) {
+	bool res = this->expand();
+
+	if (!this->isAbsolute()) {
+		File f(base);
+		f.join(this->pathValue);
+		this->pathValue = f.path();
+	}
+
+	return res;
+}
+
 bool File::exist() {
 	return (PathFileExistsA(this->pathValue.c_str()) == TRUE);
 }
@@ -132,4 +145,9 @@ bool File::exist() {
 
 bool File::remove() {
 	return (DeleteFileA(this->pathValue.c_str()) == TRUE);
+}
+
+
+bool File::mkdirs() {
+	return (SHCreateDirectoryExA(NULL, this->pathValue.c_str(), NULL) == ERROR_SUCCESS);
 }
