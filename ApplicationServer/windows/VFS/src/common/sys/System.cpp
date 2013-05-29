@@ -21,6 +21,7 @@
 #include "System.h"
 #include <windows.h>
 #include <shlwapi.h>
+#include <shlobj.h>
 #include <common/Logger.h>
 
 
