@@ -42,15 +42,13 @@ typedef void (*set_hooks_proc_t) ();
 typedef void (*remove_hooks_proc_t) ();
 
 
-int main()
-{
+int main() {
 	set_hooks_proc_t set_hooks_fn;
 	remove_hooks_proc_t remove_hooks_fn;
 	
 	HMODULE hookdll = LoadLibraryW(HOOK_DLL);
 	
-	if (!hookdll)
-	{
+	if (!hookdll) {
 		printf("Could not load hook DLL. Unable to continue.\n");
 		return -1;
 	}
@@ -67,8 +65,7 @@ int main()
 
 	bool run = true;
 
-	while(run)
-	{
+	while(run) {
 		//TODO: End condition, or just let Windows terminate this program on user exit.
 		Sleep(1000);
 	}
