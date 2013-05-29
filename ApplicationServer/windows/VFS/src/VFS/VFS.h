@@ -23,6 +23,9 @@
 
 #include <string>
 
+#define VFS_HOOK_LOADER_32  "VFSHookLoader32.exe"
+#define VFS_HOOK_LOADER_64  "VFSHookLoader64.exe"
+
 
 class VFS {
 public:

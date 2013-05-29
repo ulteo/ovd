@@ -23,6 +23,7 @@
 #include <common/Logger.h>
 #include <common/conf/Configuration.h>
 #include <common/conf/Union.h>
+#include <common/sys/System.h>
 #include <common/fs/RSync.h>
 #include <common/fs/File.h>
 
@@ -59,6 +60,9 @@ VFS::status VFS::init(std::string path) {
 
 VFS::status VFS::start() {
 	Configuration& conf = Configuration::getInstance();
+	Process hook32(VFS_HOOK_LOADER_32);
+	Process hook64(VFS_HOOK_LOADER_64);
+	std::list<Process*> processList;
 
 	// Manage rsync if needed
 	std::list<Union> unionList = conf.getUnions();
@@ -82,11 +86,21 @@ VFS::status VFS::start() {
 	}
 
 	// start hook launcher
+	System::setEnv("VFS_SRC", Configuration::getInstance().getSrcPath());
+	hook32.start(false);
+	processList.push_back(&hook32);
 
+	if (System::is64()) {
+		hook64.start(false);
+		processList.push_back(&hook64);
+	}
+
+	Process::wait(processList, INFINITE);
 	return SUCCESS;
 }
 
 
 VFS::status VFS::stop() {
+	// TODO manage signal
 	return SUCCESS;
 }
