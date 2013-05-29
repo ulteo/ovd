@@ -40,6 +40,11 @@ NTSTATUS WINAPI myNtCreateFile(	PHANDLE FileHandle,
 								PVOID EaBuffer,
 								ULONG EaLength)
 {	
+	if(Logger::getSingleton().isLogging()) {
+		return OriginNtCreateFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, AllocationSize, 
+				FileAttributes, ShareAccess, CreateDisposition, CreateOptions, EaBuffer, EaLength);
+	}
+
 	//Reserve origin data before modified
 	UNICODE_STRING uniszRestore;
 	bool bStore = false;
@@ -64,6 +69,9 @@ NTSTATUS NTAPI myNtOpenFile(PHANDLE FileHandle,
 							ULONG ShareAccess,
 							ULONG OpenOptions)
 {
+	if(Logger::getSingleton().isLogging())
+		return OriginNtOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
+
 	//Reserve origin data before modified
 	UNICODE_STRING uniszRestore;
 	bool bStore = false;
@@ -83,6 +91,9 @@ NTSTATUS NTAPI myNtOpenFile(PHANDLE FileHandle,
 NTSTATUS NTAPI myNtQueryAttributesFile(	POBJECT_ATTRIBUTES ObjectAttributes,
 										PFILE_BASIC_INFORMATION FileInformation)
 {	
+	if(Logger::getSingleton().isLogging())
+		return OriginNtQueryAttributesFile(ObjectAttributes, FileInformation);
+
 	//Reserve origin data before modified
 	UNICODE_STRING uniszRestore;
 	bool bStore = false;
@@ -106,6 +117,11 @@ NTSTATUS NTAPI myNtSetInformationFile(	HANDLE FileHandle,
 										ULONG FileInformationLength,
 										FILE_INFORMATION_CLASS FileInformationClass)
 {
+	if(Logger::getSingleton().isLogging()) {
+		return OriginNtSetInformationFile(FileHandle, IoStatusBlock, FileInformation, 
+			FileInformationLength, FileInformationClass);
+	}
+
 	//Reserve origin data before modified
 	FILE_RENAME_INFORMATION restoreFileRenameInfo;
 	bool bStore = false;
@@ -136,6 +152,9 @@ NTSTATUS NTAPI myNtCreateKey(	PHANDLE KeyHandle,
 								ULONG CreateOptions,
 								PULONG Disposition)
 {
+	if(Logger::getSingleton().isLogging())
+		return OriginNtCreateKey(KeyHandle, DesiredAccess, ObjectAttributes, TitleIndex, Class, CreateOptions, Disposition);
+
 	//Reserve origin data before modified
 	UNICODE_STRING uniszRestore;
 	bool bStore = false;
@@ -156,6 +175,9 @@ NTSTATUS NTAPI myNtOpenKey(	PHANDLE KeyHandle,
 							ACCESS_MASK DesiredAccess,
 							POBJECT_ATTRIBUTES ObjectAttributes)
 {
+	if(Logger::getSingleton().isLogging())
+		return OriginNtOpenKey(KeyHandle, DesiredAccess, ObjectAttributes);
+
 	//Reserve origin data before modified
 	UNICODE_STRING uniszRestore;
 	bool bStore = false;
@@ -177,6 +199,9 @@ NTSTATUS NTAPI myNtOpenKeyEx(	PHANDLE KeyHandle,
 								POBJECT_ATTRIBUTES ObjectAttributes,
 								ULONG OpenOptions)
 {	
+	if(Logger::getSingleton().isLogging())
+		return OriginNtOpenKeyEx(KeyHandle, DesiredAccess, ObjectAttributes, OpenOptions);
+
 	//Reserve origin data before modified
 	UNICODE_STRING uniszRestore;
 	bool bStore = false;
