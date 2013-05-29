@@ -66,6 +66,13 @@ VFS::status VFS::start() {
 
 	for (it = unionList.begin() ; it != unionList.end() ; it++) {
 		Union& u = (*it);
+		File f(u.getPath());
+
+		f.mkdirs();
+		if (!f.exist()) {
+			log_error("Union src %s do not exist and can not be created", u.getPath());
+			return INVALID_UNION;
+		}
 
 		if (!u.getRsyncSrc().empty()) {
 			RSync rsync(u.getRsyncSrc(), u.getPath(), u.getRsyncFilter());
