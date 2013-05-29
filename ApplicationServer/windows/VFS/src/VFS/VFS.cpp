@@ -76,7 +76,7 @@ VFS::status VFS::start() {
 
 		if (!u.getRsyncSrc().empty()) {
 			RSync rsync(u.getRsyncSrc(), u.getPath(), u.getRsyncFilter());
-
+			rsync.init(true);
 			rsync.start();
 		}
 	}
