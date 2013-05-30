@@ -6,6 +6,7 @@
 #include "InterceptAPI.h"
 #include "VirtualFileSystem.h"
 #include <common/Logger.h>
+#include <iostream>
 #include <shlobj.h> 
 
 
@@ -222,29 +223,29 @@ NTSTATUS NTAPI myNtOpenKeyEx(	PHANDLE KeyHandle,
 ////////////////////////////////////////////////////////////////////////
 void setupHooks() {
 	// Set log file to user profile path by default
-	char szLogFile[MAX_PATH] = {};
-	SHGetSpecialFolderPathA(NULL, szLogFile, CSIDL_PROFILE, 0);
-	lstrcatA(szLogFile, "\\ulteo\\VirtSys.log");
+	wchar_t szLogFile[MAX_PATH] = {};
+	SHGetSpecialFolderPath(NULL, szLogFile, CSIDL_PROFILE, 0);
+	lstrcat(szLogFile, L"\\ulteo\\VirtSys.log");
 	Logger::getSingleton().setLogFile(szLogFile);
 	
 	// Read conf file from CSIDL_COMMON_APPDATA\\ulteo\ovd
 	WCHAR szConfigFile[MAX_PATH] = {};
 	SHGetSpecialFolderPathW(NULL, szConfigFile, CSIDL_COMMON_APPDATA, 0);
-	lstrcatW(szConfigFile, L"\\ulteo\\ovd\\");
-	lstrcatW(szConfigFile, VIRTUAL_SYSTEM_CONF_FILE);
+	lstrcat(szConfigFile, L"\\ulteo\\ovd\\");
+	lstrcat(szConfigFile, VIRTUAL_SYSTEM_CONF_FILE);
 	
 	if( ! vf.init() ) {
-		log_error("Failed to initialize Virtual File System!");
+		log_error(L"Failed to initialize Virtual File System!");
 		return;
 	}
 
 	if( ! vf.parseFileSystem(szConfigFile)) {
-		log_error("File blacklist configuration file not found!");
+		log_error(L"File blacklist configuration file not found!");
 		return;
 	}
 
 	if( ! vf.parseRegSystem(szConfigFile)) {
-		log_error("Registry redirect-list configuration file not found!");
+		log_error(L"Registry redirect-list configuration file not found!");
 		return;
 	}
 	
@@ -271,7 +272,7 @@ void setupHooks() {
 	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtOpenKey, myNtOpenKey, "NtOpenKey");
 	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtOpenKeyEx, myNtOpenKeyEx, "NtOpenKeyEx");
 
-	log_error("Hooked success");
+	log_error(L"Hooked success");
 }
 
 void releaseHooks() {
@@ -285,6 +286,5 @@ void releaseHooks() {
 	Mhook_Unhook((PVOID*)&OriginNtCreateKey);	
 	Mhook_Unhook((PVOID*)&OriginNtOpenKey);	
 	Mhook_Unhook((PVOID*)&OriginNtOpenKeyEx);
-
-	log_error("Un-Hooked program");
+	log_error(L"Un-Hooked program");
 }

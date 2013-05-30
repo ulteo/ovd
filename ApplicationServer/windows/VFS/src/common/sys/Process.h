@@ -29,17 +29,17 @@
 
 class Process {
 private:
-	STARTUPINFOA si;
+	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
 
-	std::string programName;
-	std::list<std::string> arguments;
+	std::wstring programName;
+	std::list<std::wstring> arguments;
 
 public:
-	Process(const std::string& programName);
+	Process(const std::wstring& programName);
 	virtual ~Process();
 
-	void addArgs(std::string argument);
+	void addArgs(std::wstring argument);
 	unsigned int getStatus();
 	long getPID();
 	bool start(bool wait);

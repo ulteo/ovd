@@ -20,17 +20,17 @@
 
 #include "Rule.h"
 
-Rule::Rule(std::string unionName, std::string pattern): pattern(pattern), unionName(unionName)  { }
+Rule::Rule(std::wstring unionName, std::wstring pattern): pattern(pattern), unionName(unionName)  { }
 
 Rule::~Rule() { }
 
 
-std::string& Rule::getUnion() {
+std::wstring& Rule::getUnion() {
 	return this->unionName;
 }
 
 
-std::string& Rule::getPattern() {
+std::wstring& Rule::getPattern() {
 	return this->pattern;
 }
 

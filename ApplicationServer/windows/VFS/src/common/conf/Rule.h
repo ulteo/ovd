@@ -25,15 +25,15 @@
 
 
 class Rule {
-	std::string unionName;
-	std::string pattern;
+	std::wstring unionName;
+	std::wstring pattern;
 
 public:
-	Rule(std::string unionName, std::string pattern);
+	Rule(std::wstring unionName, std::wstring pattern);
 	virtual ~Rule();
 
-	std::string& getUnion();
-	std::string& getPattern();
+	std::wstring& getUnion();
+	std::wstring& getPattern();
 };
 
 #endif /* RULE_H_ */

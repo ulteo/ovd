@@ -29,41 +29,41 @@
 
 
 
-File::File(std::string path): pathValue(path), separator("\\") { }
+File::File(std::wstring path): pathValue(path), separator(L"\\") { }
 
 File::~File() { }
 
-std::string& File::path() { return this->pathValue; }
+std::wstring& File::path() { return this->pathValue; }
 
-std::string File::fullname() {
-	std::string::size_type pos = this->pathValue.find_last_of(this->separator);
+std::wstring File::fullname() {
+	std::wstring::size_type pos = this->pathValue.find_last_of(this->separator);
 
-	if (pos != std::string::npos)
-		return this->pathValue.substr(pos + 1, std::string::npos);
+	if (pos != std::wstring::npos)
+		return this->pathValue.substr(pos + 1, std::wstring::npos);
 	else
 		return this->pathValue;
 }
 
-std::string File::shortname() {
-	return fullname().substr(0, fullname().find_last_of("."));
+std::wstring File::shortname() {
+	return fullname().substr(0, fullname().find_last_of(L"."));
 }
 
 
-std::string File::parent() {
-	return this->pathValue.substr(0, this->pathValue.find_last_of("/"));
+std::wstring File::parent() {
+	return this->pathValue.substr(0, this->pathValue.find_last_of(L"/"));
 }
 
 
-std::string File::extention() {
-    std::string::size_type pos = this->pathValue.find_last_of(".");
-    if (pos != std::string::npos)
-        return this->pathValue.substr(pos + 1, std::string::npos);
+std::wstring File::extention() {
+    std::wstring::size_type pos = this->pathValue.find_last_of(L".");
+    if (pos != std::wstring::npos)
+        return this->pathValue.substr(pos + 1, std::wstring::npos);
     else
-        return "";
+        return L"";
 }
 
 
-void File::join(std::string path) {
+void File::join(std::wstring path) {
 	if ((this->pathValue[this->pathValue.length() - 1] == this->separator[0]) || (path[0] == this->separator[0]))
 		this->pathValue += path;
 	else
@@ -72,26 +72,26 @@ void File::join(std::string path) {
 
 
 bool File::isAbsolute() {
-	char letter = tolower((int)this->pathValue[0]);
+	wchar_t letter = tolower((int)this->pathValue[0]);
 
-	return (this->pathValue[1] == ':') && (this->pathValue[2] = '\\') && letter >= 'a' && letter <= 'z';
+	return (this->pathValue[1] == L':') && (this->pathValue[2] = L'\\') && letter >= L'a' && letter <= L'z';
 }
 
 
 
 bool File::expand() {
-	char temp[1024];
-	std::string res = this->pathValue;
-	std::string csidl;
-	std::string csidlPath;
+	wchar_t temp[1024];
+	std::wstring res = this->pathValue;
+	std::wstring csidl;
+	std::wstring csidlPath;
 	int pos = 0;
 	CSIDL c;
 
 	// We are searching for CSIDL constant
-	if (res.find("%{") == 0) {
-		pos = res.find("}");
-		if (pos == std::string::npos) {
-			log_warn("%s do not contain valid information", this->pathValue.c_str());
+	if (res.find(L"%{") == 0) {
+		pos = res.find(L"}");
+		if (pos == std::wstring::npos) {
+			log_warn(L"%s do not contain valid information", this->pathValue.c_str());
 			return false;
 		}
 
@@ -102,21 +102,21 @@ bool File::expand() {
 	}
 
 	pos = 0;
-	while(res.find("${", pos) != std::string::npos) {
-		pos = res.find("${");
+	while(res.find(L"${", pos) != std::wstring::npos) {
+		pos = res.find(L"${");
 		int posEnd;
-		std::string sub = res.substr(pos);
-		if (sub.find("}") == std::string::npos)
+		std::wstring sub = res.substr(pos);
+		if (sub.find(L"}") == std::wstring::npos)
 			break;
 
-		posEnd = sub.find("}");
-		std::string env = sub.substr(2, posEnd - 2);
-		int status = GetEnvironmentVariableA(env.c_str(), temp, sizeof(temp));
+		posEnd = sub.find(L"}");
+		std::wstring env = sub.substr(2, posEnd - 2);
+		int status = GetEnvironmentVariable(env.c_str(), temp, sizeof(temp));
 
 		if (status > 0)
 			res.replace(pos, env.length()+3, temp);
 		else
-			log_warn("%s is not a right environment variable", env.c_str());
+			log_warn(L"%s is not a right environment variable", env.c_str());
 
 		pos +=2;
 	}
@@ -126,7 +126,7 @@ bool File::expand() {
 }
 
 
-bool File::expand(const std::string& base) {
+bool File::expand(const std::wstring& base) {
 	bool res = this->expand();
 
 	if (!this->isAbsolute()) {
@@ -139,15 +139,15 @@ bool File::expand(const std::string& base) {
 }
 
 bool File::exist() {
-	return (PathFileExistsA(this->pathValue.c_str()) == TRUE);
+	return (PathFileExists(this->pathValue.c_str()) == TRUE);
 }
 
 
 bool File::remove() {
-	return (DeleteFileA(this->pathValue.c_str()) == TRUE);
+	return (DeleteFile(this->pathValue.c_str()) == TRUE);
 }
 
 
 bool File::mkdirs() {
-	return (SHCreateDirectoryExA(NULL, this->pathValue.c_str(), NULL) == ERROR_SUCCESS);
+	return (SHCreateDirectoryEx(NULL, this->pathValue.c_str(), NULL) == ERROR_SUCCESS);
 }

@@ -23,8 +23,8 @@
 
 #include <string>
 
-#define VFS_HOOK_LOADER_32  "VFSHookLoader32.exe"
-#define VFS_HOOK_LOADER_64  "VFSHookLoader64.exe"
+#define VFS_HOOK_LOADER_32  L"VFSHookLoader32.exe"
+#define VFS_HOOK_LOADER_64  L"VFSHookLoader64.exe"
 
 
 class VFS {
@@ -34,7 +34,7 @@ public:
 	VFS();
 	virtual ~VFS();
 
-	VFS::status init(std::string path);
+	VFS::status init(std::wstring path);
 	VFS::status start();
 	VFS::status stop();
 };

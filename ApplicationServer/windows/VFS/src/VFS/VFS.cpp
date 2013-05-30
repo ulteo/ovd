@@ -33,16 +33,16 @@ VFS::VFS() { }
 VFS::~VFS() { }
 
 
-VFS::status VFS::init(std::string path) {
+VFS::status VFS::init(std::wstring path) {
 	File f(path);
 
 	if (path.empty()) {
-		log_error("%s is invalid for a source path", path);
+		log_error(L"%s is invalid for a source path", path);
 		return WRONG_SRC;
 	}
 
 	if (!f.exist()) {
-		log_error("source %s must exist", path.c_str());
+		log_error(L"source %s must exist", path.c_str());
 		return SRC_DO_NOT_EXIST;
 	}
 
@@ -50,7 +50,7 @@ VFS::status VFS::init(std::string path) {
 	conf.setSrcPath(path);
 
 	if (!conf.load()) {
-		log_error("Failed to load configuration file");
+		log_error(L"Failed to load configuration file");
 		return INVALID_CONF;
 	}
 
@@ -74,7 +74,7 @@ VFS::status VFS::start() {
 
 		f.mkdirs();
 		if (!f.exist()) {
-			log_error("Union src %s do not exist and can not be created", u.getPath());
+			log_error(L"Union src %s do not exist and can not be created", u.getPath());
 			return INVALID_UNION;
 		}
 
@@ -86,7 +86,7 @@ VFS::status VFS::start() {
 	}
 
 	// start hook launcher
-	System::setEnv("VFS_SRC", Configuration::getInstance().getSrcPath());
+	System::setEnv(L"VFS_SRC", Configuration::getInstance().getSrcPath());
 	hook32.start(false);
 	processList.push_back(&hook32);
 
@@ -114,7 +114,7 @@ VFS::status VFS::stop() {
 
 		f.mkdirs();
 		if (!f.exist()) {
-			log_error("Union src %s do not exist and can not be created", u.getPath());
+			log_error(L"Union src %s do not exist and can not be created", u.getPath());
 			return INVALID_UNION;
 		}
 

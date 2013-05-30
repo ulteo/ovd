@@ -27,28 +27,28 @@
 #include "Section.h"
 
 
-typedef std::map<std::string, Section*> Sections;
+typedef std::map<std::wstring, Section*> Sections;
 
 class INI {
 protected:
-	std::string filename;
+	std::wstring filename;
 	Sections sections;
 
 public:
-	INI(const std::string& filename);
+	INI(const std::wstring& filename);
 	virtual ~INI();
 
 	void parse();
 
-	std::string& getString(std::string section, std::string key);
-	int getInt(std::string section, std::string key);
-	bool getBool(std::string section, std::string key);
+	std::wstring& getString(std::wstring section, std::wstring key);
+	int getInt(std::wstring section, std::wstring key);
+	bool getBool(std::wstring section, std::wstring key);
 
 	Sections& getSections();
-	Section* getSection(std::string section);
-	void addSection(std::string section);
-	void addValue(std::string section, std::string key, std::string value);
-	std::string dump();
+	Section* getSection(std::wstring section);
+	void addSection(std::wstring section);
+	void addValue(std::wstring section, std::wstring key, std::wstring value);
+	std::wstring dump();
 };
 
 #endif /* INI_H_ */

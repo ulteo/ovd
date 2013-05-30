@@ -31,20 +31,20 @@ public:
 	StringUtil();
 	virtual ~StringUtil();
 
-	static void rtrim(std::string &str);
-	static void ltrim(std::string &str);
-	static void atrim(std::string &str);
+	static void towstring(const std::string& in, std::wstring& out);
+	static void rtrim(std::wstring &str);
+	static void ltrim(std::wstring &str);
+	static void atrim(std::wstring &str);
 
-	static void unquote(std::string &str);
+	static void unquote(std::wstring &str);
 
-	static bool startWith(std::string &str, std::string &begin);
-	static std::string toLower(std::string str);
-	static int caseCompare(std::string &str, std::string &str2);
-	static int caseCompare(std::string &str, const char* str2);
-	static int split(std::vector<std::string>& vec, std::string str, char delim);
-	static int split(std::list<std::string>& vec, std::string str, char delim);
-	static std::string getCommonPart(std::list<std::string> list);
-	static void replaceAll(std::string& src, const std::string& from, const std::string to);
+	static bool startWith(std::wstring &str, std::wstring &begin);
+	static std::wstring toLower(std::wstring str);
+	static int caseCompare(const std::wstring &str, const std::wstring &str2);
+	static int split(std::vector<std::wstring>& vec, std::wstring str, wchar_t delim);
+	static int split(std::list<std::wstring>& vec, std::wstring str, wchar_t delim);
+	static std::wstring getCommonPart(std::list<std::wstring> list);
+	static void replaceAll(std::wstring& src, const std::wstring& from, const std::wstring to);
 };
 
 #endif /* STRINGUTIL_H_ */

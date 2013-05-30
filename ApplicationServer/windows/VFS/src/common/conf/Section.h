@@ -27,26 +27,26 @@
 
 class Section {
 private:
-	std::string name;
-	std::vector<std::string> keys;
-	std::vector<std::string> values;
+	std::wstring name;
+	std::vector<std::wstring> keys;
+	std::vector<std::wstring> values;
 
 public:
 	Section();
-	Section(std::string name);
+	Section(std::wstring name);
 	virtual ~Section();
 
-	std::string getName();
-	std::vector<std::string>& getKeys();
-	std::vector<std::string>& getValues();
-	int getInt(std::string key);
-	bool getBool(std::string key);
-	std::string& getString(std::string key);
-	void addValue(std::string key, std::string value);
-	bool hasKey(std::string key);
+	std::wstring getName();
+	std::vector<std::wstring>& getKeys();
+	std::vector<std::wstring>& getValues();
+	int getInt(std::wstring key);
+	bool getBool(std::wstring key);
+	std::wstring& getString(std::wstring key);
+	void addValue(std::wstring key, std::wstring value);
+	bool hasKey(std::wstring key);
 
 
-	friend std::ostream& operator <<(std::ostream& out, Section& section);
+	friend std::wostream& operator <<(std::wostream& out, Section& section);
 };
 
 #endif /* SECTION_H_ */

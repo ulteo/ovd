@@ -27,23 +27,23 @@
 
 class File {
 protected:
-	std::string separator;
-	std::string pathValue;
+	std::wstring separator;
+	std::wstring pathValue;
 
 public:
-	File(std::string path);
+	File(std::wstring path);
 	virtual ~File();
 
 
-	std::string& path();
-	std::string parent();
-	std::string fullname();
-	std::string shortname();
-	std::string extention();
+	std::wstring& path();
+	std::wstring parent();
+	std::wstring fullname();
+	std::wstring shortname();
+	std::wstring extention();
 	bool isAbsolute();
-	void join(std::string path);
+	void join(std::wstring path);
 	bool expand();
-	bool expand(const std::string& base);
+	bool expand(const std::wstring& base);
 
 	bool exist();
 	bool remove();

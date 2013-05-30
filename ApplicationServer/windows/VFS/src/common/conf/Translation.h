@@ -26,18 +26,18 @@
 
 class Translation {
 private:
-	std::vector<std::string> keys;
-	std::vector<std::string> values;
+	std::vector<std::wstring> keys;
+	std::vector<std::wstring> values;
 
 public:
 	Translation();
 	virtual ~Translation();
 
-	void add(std::string key, std::string value);
-	std::vector<std::string>& getKeys();
-	std::vector<std::string>& getValues();
+	void add(std::wstring key, std::wstring value);
+	std::vector<std::wstring>& getKeys();
+	std::vector<std::wstring>& getValues();
 
-	std::string& translate(std::string path, bool inRequest);
+	std::wstring& translate(std::wstring& path, bool inRequest);
 };
 
 #endif /* TRANSLATION_H_ */

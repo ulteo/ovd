@@ -14,12 +14,12 @@ public:
 
 	static Logger& getSingleton();
 	static Logger* getSingletonPtr();
-	Level getFromString(std::string& level);
-	void getLevelString(std::string& level);
+	Level getFromString(std::wstring& level);
+	void getLevelString(std::wstring& level);
 
 
 	// set log file, defalut is "C:\\VirtSys.log"
-	void setLogFile(std::string szLogFile);
+	void setLogFile(std::wstring szLogFile);
 	void setLevel(Level lvl);
 	void setStdoutput(bool value);
 
@@ -27,7 +27,7 @@ public:
 	void debug(const wchar_t * format,...);
 	
 	// output log to log file
-	void log(Level lvl, char *fmt,...);
+	void log(Level lvl, wchar_t *fmt,...);
 	
 	bool isLogging(){return m_bIsLogging;}
 	
@@ -39,7 +39,7 @@ private:
 
 private:
 	static Logger*	m_sInstance;
-	std::string	m_szLogFile;
+	std::wstring	m_szLogFile;
 	Level logLevel;
 	bool useStdOut;
 

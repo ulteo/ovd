@@ -27,12 +27,12 @@
 
 
 
-RSync::RSync(std::string& src, std::string& dst, std::string& filter) {
+RSync::RSync(std::wstring& src, std::wstring& dst, std::wstring& filter) {
 	this->convertPath(src, this->src);
 	this->convertPath(dst, this->dst);
 	this->convertPath(filter, this->filter);
 	this->process = NULL;
-	this->src.append("/");
+	this->src.append(L"/");
 }
 
 
@@ -42,39 +42,39 @@ RSync::~RSync() {
 }
 
 
-void RSync::convertPath(std::string& in, std::string& out) {
+void RSync::convertPath(std::wstring& in, std::wstring& out) {
 	File f(in);
-	char letter;
+	wchar_t letter;
 
 	if (f.isAbsolute()) {
-		std::stringstream ss;
+		std::wstringstream ss;
 		letter = f.path()[0];
 		in.erase(0, 2);
-		ss<<"/cygdrive/"<<(char)tolower(letter)<<"/"<<in;
+		ss<<L"/cygdrive/"<<(char)tolower(letter)<<"/"<<in;
 		out = ss.str();
 	}
 
-	StringUtil::replaceAll(out, "\\", "/");
-	StringUtil::replaceAll(out, "//", "/");
+	StringUtil::replaceAll(out, L"\\", L"/");
+	StringUtil::replaceAll(out, L"//", L"/");
 }
 
 
 bool RSync::init() {
 	char buffer[1024] = {0};
-	std::string line;
+	std::wstring line;
 
 	if (this->filter.empty())
 		return true;
 
 	// Creating process
-	this->process = new Process("rsync.exe");
-	this->process->addArgs("-rvltD");
+	this->process = new Process(L"rsync.exe");
+	this->process->addArgs(L"-rvltD");
 
 	if (! this->filter.empty())
-		this->process->addArgs("--include-from=\""+this->filter+"\"");
+		this->process->addArgs(L"--include-from=\""+this->filter+L"\"");
 
-	this->process->addArgs("\""+this->src+"\"");
-	this->process->addArgs("\""+this->dst+"\"");
+	this->process->addArgs(L"\""+this->src+L"\"");
+	this->process->addArgs(L"\""+this->dst+L"\"");
 
 	return true;
 }
@@ -84,17 +84,17 @@ bool RSync::start() {
 	int status;
 
 	if (this->process == NULL) {
-		log_warn("rsync is not inited");
+		log_warn(L"rsync is not inited");
 		return false;
 	}
 
-	log_info("rsync from %s to %s", this->src.c_str(), this->dst.c_str());
+	log_info(L"rsync from %s to %s", this->src.c_str(), this->dst.c_str());
 
 	this->process->start(true);
 
 	status = this->process->getStatus();
 	if (status != 0) {
-		log_warn("Processus stop with status %i\n", status);
+		log_warn(L"Processus stop with status %i\n", status);
 		return false;
 	}
 

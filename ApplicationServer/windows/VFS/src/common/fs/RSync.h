@@ -27,15 +27,15 @@
 
 class RSync {
 private:
-	std::string src;
-	std::string dst;
-	std::string filter;
+	std::wstring src;
+	std::wstring dst;
+	std::wstring filter;
 	Process* process;
 
-	void convertPath(std::string& in, std::string& out);
+	void convertPath(std::wstring& in, std::wstring& out);
 
 public:
-	RSync(std::string& src, std::string& dst, std::string& filter);
+	RSync(std::wstring& src, std::wstring& dst, std::wstring& filter);
 	virtual ~RSync();
 
 	bool init();

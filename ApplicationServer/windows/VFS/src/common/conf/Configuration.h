@@ -31,7 +31,7 @@
 #include "Translation.h"
 
 
-#define DEFAULT_CONF_FILENAME    "%{CSIDL_COMMON_APPDATA}\\ulteo\\profile\\default.conf"
+#define DEFAULT_CONF_FILENAME    L"%{CSIDL_COMMON_APPDATA}\\ulteo\\profile\\default.conf"
 
 
 class Configuration {
@@ -43,10 +43,10 @@ private:
 	Logger::Level logLevel;
 	bool develOutput;
 	bool stdoutOutput;
-	std::string logFilename;
+	std::wstring logFilename;
 
 	// union configuration
-	std::string srcPath;
+	std::wstring srcPath;
 	std::list<Rule> rules;
 	std::list<Union> unions;
 	Translation trans;
@@ -56,7 +56,7 @@ public:
 	static Configuration& getInstance();
 
 	bool load();
-	bool load(const std::string& filename);
+	bool load(const std::wstring& filename);
 	void parseUnions(INI& ini);
 	void parseRules(INI& ini);
 	void parseLog(INI& ini);
@@ -65,12 +65,12 @@ public:
 	Logger::Level getLogLevel();
 	bool useDevelOutput();
 	bool useStdOut();
-	const std::string& getLogFilename();
+	const std::wstring& getLogFilename();
 
 	std::list<Rule>& getRules();
 	std::list<Union>& getUnions();
-	void setSrcPath(const std::string& path);
-	std::string& getSrcPath();
+	void setSrcPath(const std::wstring& path);
+	std::wstring& getSrcPath();
 
 	void dump();
 };

@@ -25,24 +25,24 @@
 #include <common/UException.h>
 
 
-Section::Section(std::string name): name(name) { }
+Section::Section(std::wstring name): name(name) { }
 
 Section::~Section() { }
 
-std::string Section::getName() {
+std::wstring Section::getName() {
 	return this->name;
 }
 
-std::vector<std::string>& Section::getKeys() {
+std::vector<std::wstring>& Section::getKeys() {
 	return this->keys;
 }
 
-std::vector<std::string>& Section::getValues() {
+std::vector<std::wstring>& Section::getValues() {
 	return this->values;
 }
 
 
-std::string& Section::getString(std::string key) {
+std::wstring& Section::getString(std::wstring key) {
 	int length = this->keys.size();
 
 	for (int i = 0 ; i < length ; i++)
@@ -52,27 +52,27 @@ std::string& Section::getString(std::string key) {
 	throw UException("key %s do not exist in the section: %s", key.c_str(), this->name.c_str());
 }
 
-int Section::getInt(std::string key) {
-	std::string value = this->getString(key);
+int Section::getInt(std::wstring key) {
+	std::wstring value = this->getString(key);
 
-	return atoi(value.c_str());
+	return _wtoi(value.c_str());
 }
 
-bool Section::getBool(std::string key) {
-	std::string value = this->getString(key);
+bool Section::getBool(std::wstring key) {
+	std::wstring value = this->getString(key);
 
 	bool ret = false;
-	ret = (StringUtil::caseCompare(value, "Yes") == 0) || (StringUtil::caseCompare(value, "True") == 0)	|| (value.compare("1") == 0);
+	ret = (StringUtil::caseCompare(value, L"Yes") == 0) || (StringUtil::caseCompare(value, L"True") == 0)	|| (value.compare(L"1") == 0);
 
 	return ret;
 }
 
-void Section::addValue(std::string key, std::string value) {
+void Section::addValue(std::wstring key, std::wstring value) {
 	this->keys.insert(this->keys.end(), key);
 	this->values.insert(this->values.end(), value);
 }
 
-bool Section::hasKey(std::string key) {
+bool Section::hasKey(std::wstring key) {
 	int length = this->keys.size();
 
 	for (int i = 0 ; i < length ; i++)
@@ -83,16 +83,15 @@ bool Section::hasKey(std::string key) {
 }
 
 
-std::ostream& operator <<(std::ostream& out, Section& section) {
-	std::vector<std::string>& keys = section.getKeys();
-	std::vector<std::string>& values = section.getValues();
+std::wostream& operator <<(std::wostream& out, Section& section) {
+	std::vector<std::wstring>& keys = section.getKeys();
+	std::vector<std::wstring>& values = section.getValues();
 
 	out<<"["<<section.getName()<<"]"<<std::endl;
-	std::vector<std::string>::iterator keyIterator = keys.begin();
-	std::vector<std::string>::iterator valueIterator = values.begin();
+	std::vector<std::wstring>::iterator keyIterator = keys.begin();
+	std::vector<std::wstring>::iterator valueIterator = values.begin();
 
-	while(keyIterator != keys.end() && valueIterator != values.end())
-	{
+	while(keyIterator != keys.end() && valueIterator != values.end()) {
 		out<<(*keyIterator)<<" = "<<(*valueIterator)<<std::endl;
 		valueIterator++;
 		keyIterator++;

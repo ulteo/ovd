@@ -54,7 +54,7 @@ bool Configuration::useStdOut() {
 }
 
 
-const std::string& Configuration::getLogFilename() {
+const std::wstring& Configuration::getLogFilename() {
 	return this->logFilename;
 }
 
@@ -70,14 +70,14 @@ std::list<Union>& Configuration::getUnions() {
 
 
 bool Configuration::load() {
-	return this->load(std::string(DEFAULT_CONF_FILENAME));
+	return this->load(std::wstring(DEFAULT_CONF_FILENAME));
 }
 
 
 void Configuration::parseUnions(INI& ini) {
-	std::string unions =  ini.getString("main", "union");
-	std::list<std::string>::iterator it;
-	std::list<std::string> unionsList;
+	std::wstring unions =  ini.getString(L"main", L"union");
+	std::list<std::wstring>::iterator it;
+	std::list<std::wstring> unionsList;
 	StringUtil::split(unionsList, unions, ',');
 
 	if (unionsList.empty())
@@ -85,28 +85,28 @@ void Configuration::parseUnions(INI& ini) {
 
 
 	for (it = unionsList.begin() ; it != unionsList.end() ; it++) {
-		std::string unionName = (*it);
+		std::wstring unionName = (*it);
 		StringUtil::atrim(unionName);
 		Union unionNode(unionName);
 
-		std::string path = "";
-		std::string rsyncSrc = "";
-		std::string rsyncFilter = "";
+		std::wstring path = L"";
+		std::wstring rsyncSrc = L"";
+		std::wstring rsyncFilter = L"";
 		bool deleteOnClose = false;
 
 		Section* sec = ini.getSection(unionName);
 
 		try {
-			File path(sec->getString("path"));
+			File path(sec->getString(L"path"));
 			path.expand(this->srcPath);
 			unionNode.setPath(path.path());
 
 			try {
-				File rsyncSrc(sec->getString("rsync"));
+				File rsyncSrc(sec->getString(L"rsync"));
 				rsyncSrc.expand(this->srcPath);
 				unionNode.setRsyncSrc(rsyncSrc.path());
 
-				rsyncFilter = sec->getString("rsync_filter");
+				rsyncFilter = sec->getString(L"rsync_filter");
 				File f(rsyncFilter);
 				f.expand();
 				unionNode.setRsyncFilter(f.path());
@@ -114,13 +114,13 @@ void Configuration::parseUnions(INI& ini) {
 			catch (const std::exception&) { }
 
 			try {
-				deleteOnClose = sec->getBool("deleteOnEnd");
+				deleteOnClose = sec->getBool(L"deleteOnEnd");
 				unionNode.setDeleteOnClose(deleteOnClose);
 			}
 			catch (const std::exception&) { }
 		}
 		catch (std::exception& e) {
-			log_error("failed to parse union '%s': %s", (*it), e.what());
+			log_error(L"failed to parse union '%s': %s", (*it), e.what());
 			throw;
 		}
 
@@ -130,9 +130,9 @@ void Configuration::parseUnions(INI& ini) {
 
 
 void Configuration::parseRules(INI& ini) {
-	Section* rules =  ini.getSection("rules");
-	std::vector<std::string>& keys = rules->getKeys();
-	std::vector<std::string>& values = rules->getValues();
+	Section* rules =  ini.getSection(L"rules");
+	std::vector<std::wstring>& keys = rules->getKeys();
+	std::vector<std::wstring>& values = rules->getValues();
 
 	for (unsigned int i = 0 ; i < keys.size() ; i++) {
 		File f(values[i]);
@@ -145,19 +145,19 @@ void Configuration::parseLog(INI& ini) {
 	Logger& logger = Logger::getSingleton();
 
 	try {
-		this->logLevel = logger.getFromString(ini.getString("log", "level"));
+		this->logLevel = logger.getFromString(ini.getString(L"log", L"level"));
 		logger.setLevel(this->logLevel);
 	}
 	catch (const std::exception&) { }
 
 	try {
-		this->stdoutOutput = ini.getBool("log", "enableStdOutput");
+		this->stdoutOutput = ini.getBool(L"log", L"enableStdOutput");
 		logger.setStdoutput(this->stdoutOutput);
 	}
 	catch (const std::exception&) { }
 
 	try {
-		this->logFilename = ini.getString("log", "outputFilename");
+		this->logFilename = ini.getString(L"log", L"outputFilename");
 		logger.setLogFile(this->logFilename);
 	}
 	catch (const std::exception&) {}
@@ -165,9 +165,9 @@ void Configuration::parseLog(INI& ini) {
 
 
 void Configuration::parseTranslations(INI& ini) {
-	Section* rules =  ini.getSection("translation");
-	std::vector<std::string>& keys = rules->getKeys();
-	std::vector<std::string>& values = rules->getValues();
+	Section* rules =  ini.getSection(L"translation");
+	std::vector<std::wstring>& keys = rules->getKeys();
+	std::vector<std::wstring>& values = rules->getValues();
 
 	for (unsigned int i = 0 ; i < keys.size() ; i++) {
 		File f(values[i]);
@@ -178,16 +178,16 @@ void Configuration::parseTranslations(INI& ini) {
 }
 
 
-bool Configuration::load(const std::string& filename) {
+bool Configuration::load(const std::wstring& filename) {
 	File f(filename);
 
 	if (! f.expand()) {
-		log_error("File %s is invalid", filename.c_str());
+		log_error(L"File %s is invalid", filename.c_str());
 		return false;
 	}
 
 	if (this->srcPath.empty()) {
-		log_error("missing source path");
+		log_error(L"missing source path");
 		return false;
 	}
 
@@ -197,7 +197,7 @@ bool Configuration::load(const std::string& filename) {
 		ini.parse();
 	}
 	catch (const std::exception& e) {
-		log_error("Failed to parse configuration file: %s", e.what());
+		log_error(L"Failed to parse configuration file: %s", e.what());
 		return false;
 	}
 
@@ -209,7 +209,7 @@ bool Configuration::load(const std::string& filename) {
 		this->parseUnions(ini);
 	}
 	catch (const std::exception& e) {
-		log_error("failed to parse unions list: %s", e.what());
+		log_error(L"failed to parse unions list: %s", e.what());
 		return false;
 	}
 
@@ -217,7 +217,7 @@ bool Configuration::load(const std::string& filename) {
 		this->parseRules(ini);
 	}
 	catch (const std::exception& e) {
-		log_error("failed to parse rules list: %s", e.what());
+		log_error(L"failed to parse rules list: %s", e.what());
 		return false;
 	}
 
@@ -225,52 +225,52 @@ bool Configuration::load(const std::string& filename) {
 }
 
 
-void Configuration::setSrcPath(const std::string& path) {
+void Configuration::setSrcPath(const std::wstring& path) {
 	this->srcPath = path;
 }
 
 
-std::string& Configuration::getSrcPath() {
+std::wstring& Configuration::getSrcPath() {
 	return this->srcPath;
 }
 
 
 void Configuration::dump() {
-	std::string logLevel;
+	std::wstring logLevel;
 	Logger& logger =  Logger::getSingleton();
 	std::list<Rule>::iterator itRules;
 	std::list<Union>::iterator itUnions;
 	logger.getLevelString(logLevel);
-	std::vector<std::string>& transKeys = this->trans.getKeys();
-	std::vector<std::string>& transValues = this->trans.getValues();
+	std::vector<std::wstring>& transKeys = this->trans.getKeys();
+	std::vector<std::wstring>& transValues = this->trans.getValues();
 
-	log_info("Configuration dump");
-	log_info("  Log configuration:");
-	log_info("    - log level: %s", logLevel.c_str());
-	log_info("    - use stdout: %s", this->stdoutOutput? "yes": "no");
-	log_info("    - output file: %s", this->logFilename.c_str());
+	log_info(L"Configuration dump");
+	log_info(L"  Log configuration:");
+	log_info(L"    - log level: %s", logLevel.c_str());
+	log_info(L"    - use stdout: %s", this->stdoutOutput? "yes": "no");
+	log_info(L"    - output file: %s", this->logFilename.c_str());
 
-	log_info("  Translations:");
+	log_info(L"  Translations:");
 	for(unsigned int i = 0 ; i < transKeys.size() ; i++) {
-		log_info("    - translation: %s => %s", transKeys[i].c_str(), transValues[i].c_str());
+		log_info(L"    - translation: %s => %s", transKeys[i].c_str(), transValues[i].c_str());
 	}
 
-	log_info("  Rules:");
+	log_info(L"  Rules:");
 	for(itRules = this->rules.begin() ; itRules != this->rules.end() ; itRules++)
-		log_info("    - rules: %s => %s", (*itRules).getUnion().c_str(), (*itRules).getPattern().c_str());
+		log_info(L"    - rules: %s => %s", (*itRules).getUnion().c_str(), (*itRules).getPattern().c_str());
 
-	log_info("  Unions:");
+	log_info(L"  Unions:");
 	for(itUnions = this->unions.begin() ; itUnions != this->unions.end() ; itUnions++) {
 		Union& u = (*itUnions);
-		log_info("    - union: %s", u.getName().c_str());
+		log_info(L"    - union: %s", u.getName().c_str());
 
-		log_info("      - path: %s", u.getPath().c_str());
-		log_info("      - delete content on session end: %s", u.isDeleteOnClose()? "yes":"no");
+		log_info(L"      - path: %s", u.getPath().c_str());
+		log_info(L"      - delete content on session end: %s", u.isDeleteOnClose()? "yes":"no");
 
 		if (! u.getRsyncSrc().empty())
-			log_info("      - rsync src: %s", u.getRsyncSrc().c_str());
+			log_info(L"      - rsync src: %s", u.getRsyncSrc().c_str());
 
 		if (! u.getRsyncFilter().empty())
-			log_info("      - rsync filter: %s", u.getRsyncFilter().c_str());
+			log_info(L"      - rsync filter: %s", u.getRsyncFilter().c_str());
 	}
 }

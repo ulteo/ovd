@@ -27,40 +27,45 @@ StringUtil::StringUtil() { }
 StringUtil::~StringUtil() { }
 
 
-void StringUtil::rtrim(std::string& str) {
+void StringUtil::towstring(const std::string& in, std::wstring& out) {
+	out.assign(in.begin(), in.end());
+}
+
+
+void StringUtil::rtrim(std::wstring& str) {
 	if (str.empty())
 		return;
 
-	std::string::size_type pos = str.find_first_not_of(" ");
-	if (pos != std::string::npos)
+	std::wstring::size_type pos = str.find_first_not_of(L" ");
+	if (pos != std::wstring::npos)
 		str.erase(0,pos);
 
-	pos = str.find_first_not_of("\t");
-	if (pos != std::string::npos)
+	pos = str.find_first_not_of(L"\t");
+	if (pos != std::wstring::npos)
 		str.erase(0,pos);
 }
 
-void StringUtil::ltrim(std::string& str) {
+void StringUtil::ltrim(std::wstring& str) {
 	if (str.empty())
 		return;
 
-	std::string::size_type pos = str.find_last_not_of(" ");
-	if (pos != std::string::npos)
+	std::wstring::size_type pos = str.find_last_not_of(L" ");
+	if (pos != std::wstring::npos)
 		str.erase(pos+1);
 
-	pos = str.find_last_not_of("\t");
-	if (pos != std::string::npos)
+	pos = str.find_last_not_of(L"\t");
+	if (pos != std::wstring::npos)
 		str.erase(pos+1);
 }
 
-void StringUtil::atrim(std::string& str) {
+void StringUtil::atrim(std::wstring& str) {
 	ltrim(str);
 	rtrim(str);
 }
 
 
-void StringUtil::unquote(std::string& str) {
-	std::string::iterator it;
+void StringUtil::unquote(std::wstring& str) {
+	std::wstring::iterator it;
 	atrim(str);
 
 	if (str.empty())
@@ -76,31 +81,25 @@ void StringUtil::unquote(std::string& str) {
 }
 
 
-bool StringUtil::startWith(std::string &str, std::string &begin) {
+bool StringUtil::startWith(std::wstring &str, std::wstring &begin) {
 	return str.compare(0, begin.size(), begin) == 0;
 }
 
-std::string StringUtil::toLower(std::string str) {
+std::wstring StringUtil::toLower(std::wstring str) {
 	std::transform(str.begin(), str.end(), str.begin(), toupper);
 	return str;
 }
 
-int StringUtil::caseCompare(std::string &str, std::string &str2) {
+int StringUtil::caseCompare(const std::wstring &str, const std::wstring &str2) {
 	return toLower(str).compare(toLower(str2));
 }
 
-int StringUtil::caseCompare(std::string &str, const char* str2) {
-	std::string s = str2;
-	return toLower(str).compare(toLower(s));
-}
-
-
-int StringUtil::split(std::vector<std::string>& vec, std::string str, char delim) {
+int StringUtil::split(std::vector<std::wstring>& vec, std::wstring str, wchar_t delim) {
 	vec.clear();
 
-	std::string::size_type pos = str.find(delim);
+	std::wstring::size_type pos = str.find(delim);
 
-	while(pos != std::string::npos) {
+	while(pos != std::wstring::npos) {
 		vec.push_back(str.substr(0, pos));
 		str = str.substr(pos + 1);
 		pos = str.find(delim);
@@ -111,12 +110,12 @@ int StringUtil::split(std::vector<std::string>& vec, std::string str, char delim
 	return vec.size();
 }
 
-int StringUtil::split(std::list<std::string>& list, std::string str, char delim) {
+int StringUtil::split(std::list<std::wstring>& list, std::wstring str, wchar_t delim) {
 	list.clear();
 
-	std::string::size_type pos = str.find(delim);
+	std::wstring::size_type pos = str.find(delim);
 
-	while(pos != std::string::npos) {
+	while(pos != std::wstring::npos) {
 		list.push_back(str.substr(0, pos));
 		str = str.substr(pos + 1);
 		pos = str.find(delim);
@@ -127,15 +126,15 @@ int StringUtil::split(std::list<std::string>& list, std::string str, char delim)
 	return list.size();
 }
 
-std::string StringUtil::getCommonPart(std::list<std::string> list) {
+std::wstring StringUtil::getCommonPart(std::list<std::wstring> list) {
 	if (list.size() == 0)
-		return "";
+		return L"";
 
 	if (list.size() == 1)
 		return *list.begin();
 
-	std::list<std::string>::iterator j = list.begin();
-	std::string commonPart = (*j++);
+	std::list<std::wstring>::iterator j = list.begin();
+	std::wstring commonPart = (*j++);
 
 	while (j != list.end()) {
 		for (int i = commonPart.length() ; i > 0 ; i--) {
@@ -150,10 +149,10 @@ std::string StringUtil::getCommonPart(std::list<std::string> list) {
 }
 
 
-void StringUtil::replaceAll(std::string& src, const std::string& from, const std::string to) {
+void StringUtil::replaceAll(std::wstring& src, const std::wstring& from, const std::wstring to) {
 	size_t pos = 0;
 
-	while((pos = src.find(from, pos)) != std::string::npos) {
+	while((pos = src.find(from, pos)) != std::wstring::npos) {
 	         src.replace(pos, from.length(), to);
 	         pos += to.length();
 	}

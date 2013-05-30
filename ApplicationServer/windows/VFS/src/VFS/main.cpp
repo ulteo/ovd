@@ -31,8 +31,8 @@ void usage() {
 
 int main(int argc, char** argv) {
 	VFS vfs;
-	std::string arg;
-	std::string path;
+	std::wstring arg;
+	std::wstring path;
 	int status;
 
 	if (argc < 2) {
@@ -40,20 +40,20 @@ int main(int argc, char** argv) {
 		return VFS::INVALID_ARGUMENT;
 	}
 
-	arg = std::string(argv[1]);
+	StringUtil::towstring(argv[1], arg);
 
-	if (arg.compare("-h") == 0 || arg.compare("/h") == 0) {
+	if (arg.compare(L"-h") == 0 || arg.compare(L"/h") == 0) {
 		usage();
 		return VFS::SUCCESS;
 	}
 
-	if (arg.compare("-p") == 0 || arg.compare("/p") == 0) {
+	if (arg.compare(L"-p") == 0 || arg.compare(L"/p") == 0) {
 		if (argc != 3) {
 			usage();
 			return VFS::INVALID_ARGUMENT;
 		}
 
-		path = std::string(argv[2]);
+		StringUtil::towstring(argv[2], path);
 		StringUtil::unquote(path);
 	}
 

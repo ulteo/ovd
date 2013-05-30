@@ -22,7 +22,7 @@
 #include <common/Logger.h>
 
 
-Process::Process(const std::string& programName): programName(programName) {}
+Process::Process(const std::wstring& programName): programName(programName) {}
 
 Process::~Process() {
 	CloseHandle(this->pi.hProcess);
@@ -31,27 +31,27 @@ Process::~Process() {
 
 
 bool Process::start(bool wait) {
-	std::string commandLine;
-	std::list<std::string>::iterator it;
+	std::wstring commandLine;
+	std::list<std::wstring>::iterator it;
 
 	if (this->programName.empty()) {
-		log_info("there is no processus to start");
+		log_info(L"there is no processus to start");
 		return false;
 	}
 
 	commandLine = this->programName;
 
 	for(it = this->arguments.begin() ; it != this->arguments.end() ; it++) {
-		commandLine.append(" "+*(it));
+		commandLine.append(L" "+*(it));
 	}
 
-	ZeroMemory( &this->si, sizeof(STARTUPINFOA) );
-	ZeroMemory( &this->pi, sizeof(PROCESS_INFORMATION) );
-	this->si.cb = sizeof(STARTUPINFOA);
+	ZeroMemory( &this->si, sizeof(STARTUPINFO));
+	ZeroMemory( &this->pi, sizeof(PROCESS_INFORMATION));
+	this->si.cb = sizeof(STARTUPINFO);
 	this->si.wShowWindow = FALSE;
 
-	if (! CreateProcessA(NULL, (LPSTR)commandLine.c_str(), NULL, NULL, FALSE, 0, NULL, NULL, &this->si, &this->pi)) {
-		log_error("Failed to start command %s: %u", commandLine.c_str(), GetLastError());
+	if (! CreateProcess(NULL, (LPWSTR)commandLine.c_str(), NULL, NULL, FALSE, 0, NULL, NULL, &this->si, &this->pi)) {
+		log_error(L"Failed to start command %s: %u", commandLine.c_str(), GetLastError());
 		return false;
 	}
 
@@ -62,7 +62,7 @@ bool Process::start(bool wait) {
 }
 
 
-void Process::addArgs(std::string argument) {
+void Process::addArgs(std::wstring argument) {
 	this->arguments.push_back(argument);
 }
 
@@ -71,7 +71,7 @@ unsigned int Process::getStatus() {
 	DWORD status;
 
 	if (!GetExitCodeProcess(this->pi.hProcess, &status)) {
-		log_error("Failed to get return code %u", GetLastError());
+		log_error(L"Failed to get return code %u", GetLastError());
 		return (DWORD)-1;
 	}
 
@@ -86,7 +86,7 @@ long Process::getPID() {
 
 void Process::wait(unsigned int time) {
 	if (WaitForSingleObject(this->pi.hProcess, time) == WAIT_FAILED)
-		log_error("Failed to wait for processus %s", this->programName.c_str());
+		log_error(L"Failed to wait for processus %s", this->programName.c_str());
 }
 
 
@@ -99,7 +99,7 @@ void Process::wait(std::list<Process*> processList, unsigned int time) {
 		handles[index++] = (HANDLE)(*it)->getPID();
 
 	if (WaitForMultipleObjects(processList.size(), handles, TRUE, time) == WAIT_FAILED)
-		log_error("Failed to wait for processus list");
+		log_error(L"Failed to wait for processus list");
 
 	delete[] handles;
 }

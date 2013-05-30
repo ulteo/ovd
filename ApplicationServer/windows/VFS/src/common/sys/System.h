@@ -35,7 +35,7 @@ public:
 
 	static bool is64();
 
-	static bool setEnv(const std::string& key, const std::string& value);
+	static bool setEnv(const std::wstring& key, const std::wstring& value);
 	static void refreshDesktop();
 };
 

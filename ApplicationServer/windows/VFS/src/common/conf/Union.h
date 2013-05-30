@@ -26,27 +26,27 @@
 
 class Union {
 private:
-	std::string name;
-	std::string path;
-	std::string rsyncSrc;
-	std::string rsyncFilter;
+	std::wstring name;
+	std::wstring path;
+	std::wstring rsyncSrc;
+	std::wstring rsyncFilter;
 	bool deleteOnClose;
 
 public:
-	Union(std::string& name);
+	Union(std::wstring& name);
 	virtual ~Union();
 
 
-	void setPath(std::string& path);
+	void setPath(std::wstring& path);
 	void setDeleteOnClose(bool value);
-	void setRsyncSrc(std::string src);
-	void setRsyncFilter(std::string filter);
+	void setRsyncSrc(std::wstring src);
+	void setRsyncFilter(std::wstring filter);
 
-	std::string& getName();
-	std::string& getPath();
+	std::wstring& getName();
+	std::wstring& getPath();
 	bool isDeleteOnClose();
-	std::string& getRsyncSrc();
-	std::string& getRsyncFilter();
+	std::wstring& getRsyncSrc();
+	std::wstring& getRsyncFilter();
 };
 
 #endif /* UNION_H_ */

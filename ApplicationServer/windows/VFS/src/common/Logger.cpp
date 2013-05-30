@@ -16,7 +16,7 @@ Logger* Logger::m_sInstance = NULL;
 Logger::Logger()
 {
 	// TODO user do not have the right to write here !!!
-	m_szLogFile = "";
+	m_szLogFile = L"";
 	m_bIsLogging = false;
 	this->logLevel = LOG_INFO;
 	this->useStdOut = true;
@@ -44,43 +44,43 @@ Logger* Logger::getSingletonPtr()
 }
 
 
-Logger::Level Logger::getFromString(std::string& level) {
-	if( level.compare("DEBUG") == 0)
+Logger::Level Logger::getFromString(std::wstring& level) {
+	if( level.compare(L"DEBUG") == 0)
 		return LOG_DEBUG;
 
-	if( level.compare("INFO") == 0)
+	if( level.compare(L"INFO") == 0)
 		return LOG_INFO;
 
-	if( level.compare("WARN") == 0)
+	if( level.compare(L"WARN") == 0)
 		return LOG_WARN;
 
-	if( level.compare("ERROR") == 0)
+	if( level.compare(L"ERROR") == 0)
 		return LOG_ERROR;
 
 	throw std::exception("Unsupported log level");
 }
 
 
-void Logger::getLevelString(std::string& level) {
+void Logger::getLevelString(std::wstring& level) {
 	if (this->logLevel == LOG_DEBUG)
-		level = "DEBUG";
+		level = L"DEBUG";
 
 	if (this->logLevel == LOG_INFO)
-		level = "INFO";
+		level = L"INFO";
 
 	if (this->logLevel == LOG_WARN)
-		level = "WARN";
+		level = L"WARN";
 
 	if (this->logLevel == LOG_ERROR)
-		level = "ERROR";
+		level = L"ERROR";
 
 	if (level.empty())
-		level = "UNKNOW";
+		level = L"UNKNOW";
 }
 
 
 
-void Logger::setLogFile(std::string szLogFile)
+void Logger::setLogFile(std::wstring szLogFile)
 {
 	m_szLogFile = szLogFile;
 }
@@ -119,7 +119,7 @@ void Logger::debug(const wchar_t* format,...)
     OutputDebugString(msg);
 }
 
-void Logger::log(Level lvl, char *fmt,...) {
+void Logger::log(Level lvl, wchar_t *fmt,...) {
 	if (lvl < this->logLevel)
 		return;
 
@@ -127,11 +127,11 @@ void Logger::log(Level lvl, char *fmt,...) {
 
 	va_list args;
 
-	char temp[5000];
+	wchar_t temp[5000];
 	HANDLE hFile = 0;
 	
 	if (! m_szLogFile.empty()) {
-		if((hFile = CreateFileA(m_szLogFile.c_str(), GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) <0)
+		if((hFile = CreateFile(m_szLogFile.c_str(), GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) <0)
 			this->debug(L"Failed to open log file %s", m_szLogFile.c_str());
 		else
 			_llseek((HFILE)hFile, 0, SEEK_END);
@@ -146,7 +146,7 @@ void Logger::log(Level lvl, char *fmt,...) {
 		this->debug(L"Failed to get localtime: errno %i", errno);
 		return;
 	}
-	wsprintfA(temp, "[%d/%02d/%02d %02d:%02d:%02d] ",
+	wsprintf(temp, L"[%d/%02d/%02d %02d:%02d:%02d] ",
 		timeinfo.tm_year + 1900,
 		timeinfo.tm_mon + 1,
 		timeinfo.tm_mday,
@@ -155,41 +155,41 @@ void Logger::log(Level lvl, char *fmt,...) {
 		timeinfo.tm_sec);
 	
 	if (hFile)
-		WriteFile(hFile, temp, strlen(temp), &dw, NULL);
+		WriteFile(hFile, temp, wcslen(temp), &dw, NULL);
 
 	if (this->useStdOut)
-		std::cout<<temp;
+		std::wcout<<temp;
 
-	char modname[200];
-	GetModuleFileNameA(NULL, modname, sizeof(modname));
-	wsprintfA(temp, "%s : ", modname);
+	wchar_t modname[200];
+	GetModuleFileName(NULL, modname, sizeof(modname));
+	wsprintf(temp, L"%s : ", modname);
 	
 	if (hFile)
-		WriteFile(hFile, temp, strlen(temp), &dw, NULL);
+		WriteFile(hFile, temp, wcslen(temp), &dw, NULL);
 
 	if (this->useStdOut)
-		std::cout<<temp;
+		std::wcout<<temp;
 
 	va_start(args,fmt);
-	vsprintf_s(temp, fmt, args);
+	vswprintf_s(temp, fmt, args);
 	va_end(args);
-	WriteFile(hFile, temp, strlen(temp), &dw, NULL);
+	WriteFile(hFile, temp, wcslen(temp), &dw, NULL);
 
 	if (hFile)
-		WriteFile(hFile, temp, strlen(temp), &dw, NULL);
+		WriteFile(hFile, temp, wcslen(temp), &dw, NULL);
 
 	if (this->useStdOut)
-		std::cout<<temp;
+		std::wcout<<temp;
 
-	wsprintfA(temp, "\r\n");
+	wsprintf(temp, L"\r\n");
 
 	if (hFile) {
-		WriteFile(hFile, temp, strlen(temp), &dw, NULL);
+		WriteFile(hFile, temp, wcslen(temp), &dw, NULL);
 		_lclose((HFILE)hFile);
 	}
 	
 	if (this->useStdOut)
-		std::cout<<temp;
+		std::wcout<<temp;
 
 	m_bIsLogging = false;
 }

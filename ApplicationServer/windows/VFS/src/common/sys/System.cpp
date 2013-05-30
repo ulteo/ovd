@@ -40,7 +40,7 @@ bool System::is64() {
 	fnIsWow64Process = (LPFN_ISWOW64PROCESS) GetProcAddress(GetModuleHandle(L"kernel32"), "IsWow64Process");
 	if(fnIsWow64Process) {
 		if (!fnIsWow64Process(GetCurrentProcess(), &res)) {
-			log_error("Failed to determine machine architecture: %u", GetLastError());
+			log_error(L"Failed to determine machine architecture: %u", GetLastError());
 			return false;
 		}
 	}
@@ -48,8 +48,8 @@ bool System::is64() {
 	return (res == TRUE);
 }
 
-bool System::setEnv(const std::string& key, const std::string& value) {
-	return (SetEnvironmentVariableA(key.c_str(), value.c_str()) == TRUE);
+bool System::setEnv(const std::wstring& key, const std::wstring& value) {
+	return (SetEnvironmentVariable(key.c_str(), value.c_str()) == TRUE);
 }
 
 

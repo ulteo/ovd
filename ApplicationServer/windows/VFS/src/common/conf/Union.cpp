@@ -22,13 +22,13 @@
 
 
 
-Union::Union(std::string& name): name(name), deleteOnClose(false) { }
+Union::Union(std::wstring& name): name(name), deleteOnClose(false) { }
 
 
 Union::~Union() { }
 
 
-void Union::setPath(std::string& path) {
+void Union::setPath(std::wstring& path) {
 	this->path = path;
 }
 
@@ -38,22 +38,22 @@ void Union::setDeleteOnClose(bool value) {
 }
 
 
-void Union::setRsyncSrc(std::string src) {
+void Union::setRsyncSrc(std::wstring src) {
 	this->rsyncSrc = src;
 }
 
 
-void Union::setRsyncFilter(std::string filter) {
+void Union::setRsyncFilter(std::wstring filter) {
 	this->rsyncFilter = filter;
 }
 
 
-std::string& Union::getName() {
+std::wstring& Union::getName() {
 	return this->name;
 }
 
 
-std::string& Union::getPath() {
+std::wstring& Union::getPath() {
 	return this->path;
 }
 
@@ -63,12 +63,12 @@ bool Union::isDeleteOnClose() {
 }
 
 
-std::string& Union::getRsyncSrc() {
+std::wstring& Union::getRsyncSrc() {
 	return this->rsyncSrc;
 }
 
 
-std::string& Union::getRsyncFilter() {
+std::wstring& Union::getRsyncFilter() {
 	return this->rsyncFilter;
 }
 

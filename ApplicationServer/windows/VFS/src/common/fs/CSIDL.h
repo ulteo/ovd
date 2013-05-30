@@ -26,15 +26,15 @@
 
 class CSIDL {
 private:
-	std::string csidl;
+	std::wstring csidl;
 
-	int toID(const std::string& csidl);
+	int toID(const std::wstring& csidl);
 
 public:
 	CSIDL();
 	virtual ~CSIDL();
 
-	bool getPath(const std::string& csidl, std::string& out);
+	bool getPath(const std::wstring& csidl, std::wstring& out);
 };
 
 #endif /* CSIDL_H_ */

@@ -28,23 +28,23 @@ Translation::Translation() { }
 Translation::~Translation() { }
 
 
-void Translation::add(std::string key, std::string value) {
+void Translation::add(std::wstring key, std::wstring value) {
 	this->keys.push_back(key);
 	this->values.push_back(value);
 }
 
 
-std::vector<std::string>& Translation::getKeys() {
+std::vector<std::wstring>& Translation::getKeys() {
 	return this->keys;
 }
 
 
-std::vector<std::string>& Translation::getValues() {
+std::vector<std::wstring>& Translation::getValues() {
 	return this->values;
 }
 
 
-std::string& Translation::translate(std::string path, bool inRequest) {
+std::wstring& Translation::translate(std::wstring& path, bool inRequest) {
 	if (inRequest) {
 		for(unsigned int i = 0 ; i < this->values.size() ; i++) {
 			if (path.find(this->values[i]) == 0) {
