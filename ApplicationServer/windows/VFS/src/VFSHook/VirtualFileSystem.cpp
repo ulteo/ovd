@@ -1,13 +1,35 @@
-// Copyright (C) 2012 
-// Author Wei-Jen Chen 2012
-// Author Shen-Hao chen 2012
+/*
+ * Copyright (C) 2013 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2013
+ * Author Wei-Jen Chen 2012
+ * Author Shen-Hao chen 2012
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 
 #include <common/stdafx.h>
 #include "VirtualFileSystem.h"
 
 #include <stdlib.h>
 #include <shlobj.h> 
-#include <shlwapi.h> 
+#include <shlwapi.h>
+#include <common/sys/System.h>
+#include <common/conf/Configuration.h>
+#include <common/conf/Rule.h>
+
 
 #define	SEPERATOR		L"\\"
 #define DEVICE_PREFIX	L"\\??\\"
@@ -24,208 +46,105 @@ VirtualFileSystem::~VirtualFileSystem() { }
 
 bool VirtualFileSystem::init()
 {
+	Configuration& conf = Configuration::getInstance();
+
 	//Obtain USERPROFILE path
 	WCHAR szUserProfilePath[MAX_PATH];
-	SHGetSpecialFolderPathW(NULL, szUserProfilePath, CSIDL_PROFILE, 0);
+	SHGetSpecialFolderPath(NULL, szUserProfilePath, CSIDL_PROFILE, 0);
 		
 	//Profile path string length
 	m_iUserProfileStringLength = std::wstring(szUserProfilePath).length();
 
-	// Profile path with device prefiex
+	// Profile path with device prefixe
 	m_szDeviceUserProfilePath.append(DEVICE_PREFIX);
 	m_szDeviceUserProfilePath.append(szUserProfilePath);
 	
 	return true;
 }
 
+
 void VirtualFileSystem::setVirtualFileSpace(std::wstring szFileSpacePath)
 {
 	m_szVirtualFileSpace = szFileSpacePath;
 }
 
-bool VirtualFileSystem::parseFileSystem(std::wstring szConfFilename)
+
+bool VirtualFileSystem::initFileSystem()
 {	
-	// Check if conf file not exist
-	WIN32_FIND_DATAW FindFileData;
-	HANDLE hFind = FindFirstFileW(szConfFilename.c_str(), &FindFileData);
-	if (hFind == INVALID_HANDLE_VALUE) 
-	{
-		return false;
-	}
-	else
-	{
-		FindClose(hFind);
-	}
+	Configuration& conf = Configuration::getInstance();
+	this->m_szVirtualFileSpace = conf.getSrcPath();
 
-	// Parse virtual file space
-	WCHAR szPath[MAX_PATH];
-	GetPrivateProfileStringW(L"VirtualFileSpace", L"Profile", L"", szPath, MAX_PATH, szConfFilename.c_str());
-	std::wstring szVirtualFileSpace(szPath);
-	if( szVirtualFileSpace.length() == 0)
-	{
-		return false;
-	}
-	else
-	{
-		setVirtualFileSpace(szVirtualFileSpace);
-	}
+	// Converting Rules to regexp
+	std::list<Rule> rules = conf.getRules();
+	std::list<Rule>::iterator it;
 
-	// Parse CSIDL black list
-	int iDefault = 0;
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"CSIDL_DESKTOP", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( _getCSIDLFolderName(CSIDL_DESKTOP) );
-	}
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"CSIDL_PERSONAL", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( _getCSIDLFolderName(CSIDL_PERSONAL) );
-	}
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"CSIDL_FAVORITES", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( _getCSIDLFolderName(CSIDL_FAVORITES) );
-	}
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"CSIDL_MYMUSIC", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( _getCSIDLFolderName(CSIDL_MYMUSIC) );
-	}
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"CSIDL_MYVIDEO", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( _getCSIDLFolderName(CSIDL_MYVIDEO) );
-	}
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"CSIDL_MYPICTURES", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( _getCSIDLFolderName(CSIDL_MYPICTURES) );
-	}
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"CSIDL_SENDTO", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( _getCSIDLFolderName(CSIDL_SENDTO) );
-	}
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"CSIDL_STARTMENU", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( _getCSIDLFolderName(CSIDL_STARTMENU) );
-	}
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"CSIDL_NETHOOD", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( _getCSIDLFolderName(CSIDL_NETHOOD) );
-	}
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"CSIDL_APPDATA", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( _getCSIDLFolderName(CSIDL_APPDATA) );
-	}
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"CSIDL_PRINTHOOD", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( _getCSIDLFolderName(CSIDL_PRINTHOOD) );
-	}
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"CSIDL_LOCAL_APPDATA", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( _getCSIDLFolderName(CSIDL_LOCAL_APPDATA) );
-	}
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"CSIDL_TEMPLATES", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( _getCSIDLFolderName(CSIDL_TEMPLATES) );
-	}
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"CSIDL_COOKIES", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( _getCSIDLFolderName(CSIDL_COOKIES) );
-	}
-	// The following are not defined CSIDL, but usually comes with UserProfile
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"DOWNLOADS", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( L"Downloads");
-	}
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"LINKS", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( L"Links");
-	}
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"SEARCHES", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( L"Searches");
-	}
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"CONTACTS", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( L"Contacts");
-	}
-	if( _isCsidlBlacklist( GetPrivateProfileIntW(L"CSIDL", L"SAVED_GAMES", iDefault, szConfFilename.c_str())) )
-	{
-		addFileBlacklistPath( L"Saved Games");
+	for(it = rules.begin() ; it != rules.end() ; it++) {
+		VFSRule* vfsrule = new VFSRule((*it).getPattern(), (*it).getUnion());
+
+		vfsrule->compile();
+		this->fsRules.push_back(vfsrule);
 	}
 	
-	// Parse SELF_DEFINE black list
-	int charsCount;
-	WCHAR szBlackList[4096] = {};
-	charsCount = GetPrivateProfileSectionW(L"SELF_DEFINE", szBlackList, 4096, szConfFilename.c_str());
-	int start = 0;
-	for (int i = 0; i < charsCount; i++)
-	{
-		WCHAR curChar = szBlackList[i];
-		if (curChar == L'\0')
-		{
-			std::wstring item( szBlackList + start, i);
-			addFileBlacklistPath(item);
-			start = i+1;			
-		}
-	}
-
 	return true;
 }
 
-bool VirtualFileSystem::parseRegSystem(std::wstring szConfFilename)
+bool VirtualFileSystem::initRegSystem()
 {
-	// Check if conf file not exist
-	WIN32_FIND_DATAW FindFileData;
-	HANDLE hFind = FindFirstFileW(szConfFilename.c_str(), &FindFileData);
-	if (hFind == INVALID_HANDLE_VALUE) 
-	{
-		return false;
-	}
-	else
-	{
-		FindClose(hFind);
-	}
-
-	// Parse Registry Redirect list
-	int charsCount;
-	WCHAR szRedirectList[4096] = {};
-	std::wstring szSrc, szDst;
-	charsCount = GetPrivateProfileSectionW(L"Registry", szRedirectList, 4096, szConfFilename.c_str());
-	int start = 0;
-
-	for (int i = 0; i < charsCount; i++)
-	{
-		WCHAR curChar = szRedirectList[i];
-				
-		if (curChar == L'=')
-		{
-			// strip out spaces before '='
-			int lastChar = i-1;
-			while( szRedirectList[lastChar] == L' ' || szRedirectList[lastChar] == L'\t')
-			{
-				lastChar--;
-			}
-
-			szSrc = std::wstring( szRedirectList + start, lastChar - start + 1 );
-			start = i + 1;
-		}
-		if (curChar == L'\0')
-		{
-			// To make pair, need a src path before dst path
-			if ( !szSrc.empty() )	
-			{				
-				// strip out spaces after '='
-				while( szRedirectList[start] == L' ' || szRedirectList[start] == L'\t')
-				{
-					start++;
-				}
-
-				szDst = std::wstring( szRedirectList + start, i - start );
-				start = i + 1;
-				
-				addRegRedirectionPath(szSrc, szDst);
-				szSrc.clear();
-				szDst.clear();
-			}
-		}
-	}
+//	// Check if conf file not exist
+//	WIN32_FIND_DATAW FindFileData;
+//	HANDLE hFind = FindFirstFileW(szConfFilename.c_str(), &FindFileData);
+//	if (hFind == INVALID_HANDLE_VALUE)
+//	{
+//		return false;
+//	}
+//	else
+//	{
+//		FindClose(hFind);
+//	}
+//
+//	// Parse Registry Redirect list
+//	int charsCount;
+//	WCHAR szRedirectList[4096] = {};
+//	std::wstring szSrc, szDst;
+//	charsCount = GetPrivateProfileSectionW(L"Registry", szRedirectList, 4096, szConfFilename.c_str());
+//	int start = 0;
+//
+//	for (int i = 0; i < charsCount; i++)
+//	{
+//		WCHAR curChar = szRedirectList[i];
+//
+//		if (curChar == L'=')
+//		{
+//			// strip out spaces before '='
+//			int lastChar = i-1;
+//			while( szRedirectList[lastChar] == L' ' || szRedirectList[lastChar] == L'\t')
+//			{
+//				lastChar--;
+//			}
+//
+//			szSrc = std::wstring( szRedirectList + start, lastChar - start + 1 );
+//			start = i + 1;
+//		}
+//		if (curChar == L'\0')
+//		{
+//			// To make pair, need a src path before dst path
+//			if ( !szSrc.empty() )
+//			{
+//				// strip out spaces after '='
+//				while( szRedirectList[start] == L' ' || szRedirectList[start] == L'\t')
+//				{
+//					start++;
+//				}
+//
+//				szDst = std::wstring( szRedirectList + start, i - start );
+//				start = i + 1;
+//
+//				addRegRedirectionPath(szSrc, szDst);
+//				szSrc.clear();
+//				szDst.clear();
+//			}
+//		}
+//	}
 
 	return true;
 }
@@ -240,11 +159,6 @@ std::wstring VirtualFileSystem::_getCSIDLFolderName(const int csidl)
 	WCHAR temp[MAX_PATH];
 	SHGetSpecialFolderPathW(NULL, temp, csidl, 0);
 	return std::wstring(temp).substr(m_iUserProfileStringLength + 1);
-}
-
-void VirtualFileSystem::addFileBlacklistPath(std::wstring szPath)
-{
-	m_vFileBlacklist.push_back(szPath);
 }
 
 void VirtualFileSystem::addRegRedirectionPath(std::wstring szSrc, std::wstring szDst)
@@ -307,15 +221,17 @@ bool VirtualFileSystem::substitutePath(	const std::wstring& szPathRef,
 			std::wstring szRemainPath = szPathRef.substr(szSrcRef.length() + 1);
 			
 			// Check if szRemainPath is in black list
-			if(_isFileInList(szRemainPath, m_vFileBlacklist))
-			{
-				;
-			}
-			else
-			{
-				*pszSubstitutedPath = szDstRef + SEPERATOR + szRemainPath;
-				bSubstituted = true;
-			}
+			// match
+			log_debug(L"check %s", szRemainPath);
+//			if(_isFileInList(szRemainPath, m_vFileBlacklist))
+//			{
+//				;
+//			}
+//			else
+//			{
+//				*pszSubstitutedPath = szDstRef + SEPERATOR + szRemainPath;
+//				bSubstituted = true;
+//			}
 		}
 	}
 

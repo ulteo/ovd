@@ -28,6 +28,7 @@ Configuration::Configuration() {
 	this->logLevel = Logger::LOG_INFO;
 	this->develOutput = false;
 	this->stdoutOutput = false;
+	this->hookRegistry = false;
 }
 
 
@@ -51,6 +52,11 @@ bool Configuration::useDevelOutput() {
 
 bool Configuration::useStdOut() {
 	return this->stdoutOutput;
+}
+
+
+bool Configuration::supportHookRegistry() {
+	return this->hookRegistry;
 }
 
 
@@ -200,6 +206,11 @@ bool Configuration::load(const std::wstring& filename) {
 		log_error(L"Failed to parse configuration file: %s", e.what());
 		return false;
 	}
+
+	try {
+		this->hookRegistry = ini.getBool(L"main", L"hookRegistry");
+	}
+	catch (const std::exception&) { }
 
 	this->parseLog(ini);
 

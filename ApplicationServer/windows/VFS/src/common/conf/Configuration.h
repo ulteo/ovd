@@ -32,13 +32,15 @@
 
 
 #define DEFAULT_CONF_FILENAME    L"%{CSIDL_COMMON_APPDATA}\\ulteo\\profile\\default.conf"
-#define SRC_PATH_ENV_VAR         L"VFS_SRC"
+#define REGISTRY_PATH_KEY        L"HKEY_CURRENT_USER\\Software\\ulteo"
 
 
 class Configuration {
 private:
 	Configuration();
 	virtual ~Configuration();
+
+	bool hookRegistry;
 
 	// Log configuration
 	Logger::Level logLevel;
@@ -62,6 +64,8 @@ public:
 	void parseRules(INI& ini);
 	void parseLog(INI& ini);
 	void parseTranslations(INI& ini);
+
+	bool supportHookRegistry();
 
 	Logger::Level getLogLevel();
 	bool useDevelOutput();

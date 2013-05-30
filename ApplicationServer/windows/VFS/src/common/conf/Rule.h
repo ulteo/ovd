@@ -29,7 +29,7 @@ class Rule {
 	std::wstring pattern;
 
 public:
-	Rule(std::wstring unionName, std::wstring pattern);
+	Rule(const std::wstring& unionName, const std::wstring& pattern);
 	virtual ~Rule();
 
 	std::wstring& getUnion();

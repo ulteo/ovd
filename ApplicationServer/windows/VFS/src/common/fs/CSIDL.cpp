@@ -179,6 +179,13 @@ int CSIDL::toID(const std::wstring& csidl) {
 	if (csidl.compare(L"CSIDL_STARTUP") == 0)
 		return CSIDL_STARTUP;
 
+// TODO manage non csidl constant
+//	"DOWNLOADS" => "Downloads"
+//	"LINKS" => "Links"
+//	"SEARCHES" => "Searches"
+//	"CONTACTS" => "Contacts"
+//	"SAVED_GAMES" => "Saved Games"
+
 	log_error(L"Failed to transform %s", csidl);
 	return -1;
 }

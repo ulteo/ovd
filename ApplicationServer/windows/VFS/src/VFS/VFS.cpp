@@ -23,6 +23,7 @@
 #include <common/Logger.h>
 #include <common/conf/Configuration.h>
 #include <common/conf/Union.h>
+#include <common/sys/Registry.h>
 #include <common/sys/System.h>
 #include <common/fs/RSync.h>
 #include <common/fs/File.h>
@@ -62,6 +63,7 @@ VFS::status VFS::start() {
 	Configuration& conf = Configuration::getInstance();
 	Process hook32(VFS_HOOK_LOADER_32);
 	Process hook64(VFS_HOOK_LOADER_64);
+	Registry reg(REGISTRY_PATH_KEY);
 	std::list<Process*> processList;
 
 	// Manage rsync if needed
@@ -86,7 +88,18 @@ VFS::status VFS::start() {
 	}
 
 	// start hook launcher
-	System::setEnv(SRC_PATH_ENV_VAR, Configuration::getInstance().getSrcPath());
+	if (!reg.create()) {
+		log_error(L"Failed to create registry key %s", REGISTRY_PATH_KEY);
+		return INTERNAL_ERROR;
+	}
+
+	reg.set(L"ProfileSrc", Configuration::getInstance().getSrcPath());
+
+	if (!reg.exist()) {
+		log_error(L"Registry key %s do not exist", REGISTRY_PATH_KEY);
+		return INTERNAL_ERROR;
+	}
+
 	hook32.start(false);
 	processList.push_back(&hook32);
 

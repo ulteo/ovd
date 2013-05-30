@@ -18,19 +18,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "Rule.h"
+#ifndef REGISTRY_H_
+#define REGISTRY_H_
 
-Rule::Rule(const std::wstring& unionName, const std::wstring& pattern): pattern(pattern), unionName(unionName)  { }
-
-Rule::~Rule() { }
-
-
-std::wstring& Rule::getUnion() {
-	return this->unionName;
-}
+#include <windows.h>
+#include <string>
 
 
-std::wstring& Rule::getPattern() {
-	return this->pattern;
-}
+class Registry {
+private:
+	HKEY hkey;
+	std::wstring subkey;
 
+
+public:
+	Registry(std::wstring key);
+	virtual ~Registry();
+
+	bool create();
+	bool exist();
+
+	bool set(const std::wstring& key, const std::wstring& value);
+	bool get(const std::wstring& key, std::wstring& value);
+};
+
+#endif /* REGISTRY_H_ */

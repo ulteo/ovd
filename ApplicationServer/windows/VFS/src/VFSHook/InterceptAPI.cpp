@@ -6,6 +6,8 @@
 #include "InterceptAPI.h"
 #include "VirtualFileSystem.h"
 #include <common/Logger.h>
+#include <common/conf/Configuration.h>
+#include <common/sys/Registry.h>
 #include <iostream>
 #include <shlobj.h> 
 
@@ -222,29 +224,43 @@ NTSTATUS NTAPI myNtOpenKeyEx(	PHANDLE KeyHandle,
 //	Util Functions:
 ////////////////////////////////////////////////////////////////////////
 void setupHooks() {
-	// Set log file to user profile path by default
-	wchar_t szLogFile[MAX_PATH] = {};
-	SHGetSpecialFolderPath(NULL, szLogFile, CSIDL_PROFILE, 0);
-	lstrcat(szLogFile, L"\\ulteo\\VirtSys.log");
-	Logger::getSingleton().setLogFile(szLogFile);
-	
-	// Read conf file from CSIDL_COMMON_APPDATA\\ulteo\ovd
-	WCHAR szConfigFile[MAX_PATH] = {};
-	SHGetSpecialFolderPathW(NULL, szConfigFile, CSIDL_COMMON_APPDATA, 0);
-	lstrcat(szConfigFile, L"\\ulteo\\ovd\\");
-	lstrcat(szConfigFile, VIRTUAL_SYSTEM_CONF_FILE);
-	
+	// loading configuration
+	Logger::getSingleton().debug(L"test");
+	Registry reg(REGISTRY_PATH_KEY);
+	Configuration& conf = Configuration::getInstance();
+	std::wstring src;
+
+	// Get the environment variable which contain profile source
+	if (! reg.exist()) {
+		Logger::getSingleton().debug(L"Registry key %s do not exist", REGISTRY_PATH_KEY);
+		log_error(L"Registry key %s do not exist", REGISTRY_PATH_KEY);
+		return;
+	}
+
+	if (! reg.get(L"ProfileSrc", src)) {
+		Logger::getSingleton().debug(L"Failed to get registry key variable %s", REGISTRY_PATH_KEY);
+		log_error(L"Failed to get registry key variable %s", REGISTRY_PATH_KEY);
+		return;
+	}
+
+	conf.setSrcPath(src);
+
+	if (!conf.load()) {
+		log_error(L"Failed to load configuration file");
+		return;
+	}
+
 	if( ! vf.init() ) {
 		log_error(L"Failed to initialize Virtual File System!");
 		return;
 	}
 
-	if( ! vf.parseFileSystem(szConfigFile)) {
+	if( ! vf.initFileSystem()) {
 		log_error(L"File blacklist configuration file not found!");
 		return;
 	}
 
-	if( ! vf.parseRegSystem(szConfigFile)) {
+	if( ! vf.initRegSystem()) {
 		log_error(L"Registry redirect-list configuration file not found!");
 		return;
 	}
@@ -267,10 +283,12 @@ void setupHooks() {
 		NtSetValueKey
 	*/
 
-	//Intercept Reg API	
-	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtCreateKey, myNtCreateKey, "NtCreateKey");
-	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtOpenKey, myNtOpenKey, "NtOpenKey");
-	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtOpenKeyEx, myNtOpenKeyEx, "NtOpenKeyEx");
+	//Intercept Reg API
+	if (conf.supportHookRegistry()) {
+		HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtCreateKey, myNtCreateKey, "NtCreateKey");
+		HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtOpenKey, myNtOpenKey, "NtOpenKey");
+		HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtOpenKeyEx, myNtOpenKeyEx, "NtOpenKeyEx");
+	}
 
 	log_error(L"Hooked success");
 }

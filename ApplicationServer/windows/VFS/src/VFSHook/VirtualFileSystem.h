@@ -1,6 +1,24 @@
-// Copyright (C) 2012 
-// Author Wei-Jen Chen 2012
-// Author Shen-Hao chen 2012
+/*
+ * Copyright (C) 2013 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2013
+ * Author Wei-Jen Chen 2012
+ * Author Shen-Hao chen 2012
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 
 #ifndef _VirtualFileSystem_H_
 #define _VirtualFileSystem_H_
@@ -8,7 +26,9 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <Winternl.h>	//Nt 
+#include <Winternl.h>	//Nt
+#include "VFSRule.h"
+
 
 class VirtualFileSystem
 {
@@ -17,15 +37,13 @@ public:
 	// Note: Most run init before hooked up.
 	bool init();
 
-	// Read and parse file system configuration file
-	// _IN_ szConfFilename: path of configuration file
+	// Read and parse file system configuration
 	// Return True for success, False otherwise.
-	bool parseFileSystem(std::wstring szConfFilename);
+	bool initFileSystem();
 	
-	// Read and parse registry system from configuration file
-	// _IN_ szConfFilename: path of configuration file
+	// Read and parse registry system from configuration
 	// Return True for success, False otherwise.
-	bool parseRegSystem(std::wstring szConfFilename);
+	bool initRegSystem();
 	
 	// Substitue original path to virtual system path.
 	// _IN_ szPathRef: Origin path to check for substitution
@@ -77,9 +95,6 @@ public:
 	// _IN_OUT_ ObjectAttributesPtr: Input data of file attributes, output modified result 
 	// Return True if path has redirected, False otherwise.
 	bool redirectRegPath(WCHAR Name[1], ULONG* pNameLength);
-
-	// Add file path to blacklist.
-	void addFileBlacklistPath(std::wstring szPath);
 
 	// Add registry path src to be redirect into dst.
 	// _IN_ szSrc: Source path
@@ -163,9 +178,8 @@ private:
 	// Origin User Profile path with DevicePrefix //??//
 	std::wstring					m_szDeviceUserProfilePath;
 
-	// Blacklist of files/folders should not be redirected.
-	// Value of "PATH", "PATH/Temp" or "PATH_ALL*" (for any file or folder starts with "PATH_ALL")
-	std::vector<std::wstring>		m_vFileBlacklist;
+	// File redirection rules
+	std::vector<VFSRule*> fsRules;
 
 	// Redirection list of pairs of registries 
 	// <Origin path, Redirection path>

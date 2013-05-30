@@ -18,19 +18,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "Rule.h"
-
-Rule::Rule(const std::wstring& unionName, const std::wstring& pattern): pattern(pattern), unionName(unionName)  { }
-
-Rule::~Rule() { }
+#include "VFSRule.h"
+#include <common/Logger.h>
+#include <exception>
 
 
-std::wstring& Rule::getUnion() {
-	return this->unionName;
+VFSRule::VFSRule(const std::wstring& rule, const std::wstring& unionName): rule(rule), unionName(unionName), reg(NULL) { }
+
+VFSRule::~VFSRule() { }
+
+
+bool VFSRule::compile() {
+	try {
+		this->reg = new std::wregex(rule);
+	}
+	catch (const std::exception& e) {
+		log_error(L"Failed to compile rule: %s: %s", this->rule.c_str(), e.what());
+		return false;
+	}
+
+
+	return true;
 }
 
 
-std::wstring& Rule::getPattern() {
-	return this->pattern;
-}
+bool VFSRule::match(std::wstring path) {
 
+	return true;
+}
