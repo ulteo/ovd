@@ -551,6 +551,6 @@ var Daemon = Class.create({
 	},
 	
 	buildAppletNode: function(mode_, params_) {
-		return buildAppletNode('ulteoapplet', 'org.ulteo.ovd.applet.'+mode_, 'jpedal.jar,log4j-1.2.jar,ulteo-applet.jar', params_);
+		return buildAppletNode('ulteoapplet', 'org.ulteo.ovd.applet.'+mode_, 'ulteo-applet.jar', params_);
 	}
 });

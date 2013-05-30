@@ -37,41 +37,6 @@ var JavaTester = Class.create({
 	      
 	perform: function() {
 		this.showSystemTest();
-		if (!this.lookupNavigatorPlugins("application/x-java-applet;version=1.6")) {
-			// Chack java one second after showing the progress dialog.
-			setTimeout(function () {
-				this.insertApplet()
-				this.perform_();
-			}.bind(this), 1000);
-		} else {
-			// Do second java test one second after showing the progress dialog.
-			setTimeout(function () {
-				this.insertSecondApplet();
-				this.do_second_test();
-			}.bind(this), 1000);
-		}
-	},
-	
-	perform_: function() {
-		this.t0 = (new Date()).getTime();
-		this.do_first_test();
-	},
-	
-	do_first_test: function() {
-		try {
-			var checkjava_isactive = $('CheckJava').isActive();
-			if (! checkjava_isactive)
-				throw "applet is not ready";
-		}
-		catch(e) {
-			var t1 = (new Date()).getTime();
-			if (t1 - this.t0 > 10000)
-				this.showSystemTestError('systemTestError1');
-			else
-				setTimeout(this.do_first_test.bind(this), 500);
-			return;
-		}
-		
 		this.insertSecondApplet();
 		this.do_second_test();
 	},
