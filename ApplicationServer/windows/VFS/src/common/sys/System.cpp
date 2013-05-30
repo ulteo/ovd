@@ -53,6 +53,32 @@ bool System::setEnv(const std::wstring& key, const std::wstring& value) {
 }
 
 
+bool System::getEnv(const std::wstring& key, std::wstring& value) {
+	DWORD res = GetEnvironmentVariable(key.c_str(), NULL, 0);
+	wchar_t* buffer;
+
+	if(res = 0) {
+		DWORD err = GetLastError();
+		if( err == ERROR_ENVVAR_NOT_FOUND) {
+			log_warn(L"Environment variable %s do not exist", key.c_str());
+			return false;
+		}
+
+		log_warn(L"Failed to get environment variable %s: %u", key.c_str(), err);
+		return false;
+	}
+
+	buffer = new wchar_t[res];
+	if (GetEnvironmentVariable(key.c_str(), buffer, res) == 0) {
+		log_error(L"Failed to get environment variable %s: %u", key.c_str(), GetLastError());
+		return false;
+	}
+
+	value = buffer;
+	return true;
+}
+
+
 void System::refreshDesktop() {
 	SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
 }
