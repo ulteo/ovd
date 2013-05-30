@@ -374,7 +374,6 @@
     </jar>
     <signjar keystore="${keystore.path}" storepass="${keystore.password}" alias="${keystore.alias}"
              destdir="jars" >
-        <fileset dir="required_libraries" includes="jpedal.jar log4j-1.2.jar" />
         <fileset dir="jars" includes="ulteo-applet.jar" />
     </signjar>
   </target>
@@ -382,7 +381,7 @@
   <target name="applet.install" description="install applets"
           depends="applet.jar">
     <copy todir="${applets.dir}">
-      <filelist dir="jars" files="jpedal.jar log4j-1.2.jar ulteo-applet.jar" />
+      <filelist dir="jars" files="ulteo-applet.jar" />
     </copy>
   </target>
 
