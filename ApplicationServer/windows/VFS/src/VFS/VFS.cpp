@@ -86,7 +86,7 @@ VFS::status VFS::start() {
 	}
 
 	// start hook launcher
-	System::setEnv(L"VFS_SRC", Configuration::getInstance().getSrcPath());
+	System::setEnv(SRC_PATH_ENV_VAR, Configuration::getInstance().getSrcPath());
 	hook32.start(false);
 	processList.push_back(&hook32);
 

@@ -32,6 +32,7 @@
 
 
 #define DEFAULT_CONF_FILENAME    L"%{CSIDL_COMMON_APPDATA}\\ulteo\\profile\\default.conf"
+#define SRC_PATH_ENV_VAR         L"VFS_SRC"
 
 
 class Configuration {
