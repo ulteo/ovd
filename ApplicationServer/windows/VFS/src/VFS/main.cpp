@@ -29,7 +29,7 @@ void usage() {
 }
 
 
-int main(int argc, char** argv) {
+int wmain(int argc, wchar_t** argv) {
 	VFS vfs;
 	std::wstring arg;
 	std::wstring path;
@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
 		return VFS::INVALID_ARGUMENT;
 	}
 
-	StringUtil::towstring(argv[1], arg);
+	arg = argv[1];
 
 	if (arg.compare(L"-h") == 0 || arg.compare(L"/h") == 0) {
 		usage();
@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
 			return VFS::INVALID_ARGUMENT;
 		}
 
-		StringUtil::towstring(argv[2], path);
+		path = argv[2];
 		StringUtil::unquote(path);
 	}
 
