@@ -75,6 +75,23 @@ std::list<Union>& Configuration::getUnions() {
 }
 
 
+Union& Configuration::getUnions(const std::wstring& name) {
+	std::list<Union>::iterator it;
+	for(it = this->unions.begin() ; it != this->unions.end() ; it++) {
+		if ((*it).getName().compare(name) == 0)
+			return (*it);
+	}
+
+	throw std::exception("invalid union");
+}
+
+
+
+Translation& Configuration::getTranslation() {
+	return this->trans;
+}
+
+
 bool Configuration::load() {
 	return this->load(std::wstring(DEFAULT_CONF_FILENAME));
 }
@@ -171,15 +188,22 @@ void Configuration::parseLog(INI& ini) {
 
 
 void Configuration::parseTranslations(INI& ini) {
+	File profile(L"%{CSIDL_PROFILE}");
 	Section* rules =  ini.getSection(L"translation");
 	std::vector<std::wstring>& keys = rules->getKeys();
 	std::vector<std::wstring>& values = rules->getValues();
+	profile.expand();
 
 	for (unsigned int i = 0 ; i < keys.size() ; i++) {
 		File f(values[i]);
+		std::wstring path;
 		f.expand();
 
-		this->trans.add(keys[i], f.path());
+		path = f.path();
+		if (path.find(profile.path()) == 0)
+			path.erase(0, profile.path().length() + 1);
+
+		this->trans.add(keys[i], path);
 	}
 }
 

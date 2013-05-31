@@ -74,6 +74,10 @@ public:
 
 	std::list<Rule>& getRules();
 	std::list<Union>& getUnions();
+	Union& getUnions(const std::wstring& name);
+	Translation& getTranslation();
+
+
 	void setSrcPath(const std::wstring& path);
 	std::wstring& getSrcPath();
 

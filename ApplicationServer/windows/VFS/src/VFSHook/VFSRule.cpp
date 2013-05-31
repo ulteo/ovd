@@ -23,9 +23,12 @@
 #include <exception>
 
 
-VFSRule::VFSRule(const std::wstring& rule, const std::wstring& unionName): rule(rule), unionName(unionName), reg(NULL) { }
+VFSRule::VFSRule(const std::wstring& rule, const std::wstring& destination): rule(rule), destination(destination), reg(NULL) { }
 
-VFSRule::~VFSRule() { }
+VFSRule::~VFSRule() {
+	if (this->reg)
+		delete reg;
+}
 
 
 bool VFSRule::compile() {
@@ -37,12 +40,24 @@ bool VFSRule::compile() {
 		return false;
 	}
 
-
 	return true;
 }
 
 
-bool VFSRule::match(std::wstring path) {
+bool VFSRule::match(const std::wstring& path) {
+	if (this->reg)
+		return std::regex_match(path, *this->reg);
 
-	return true;
+	log_error(L"The regular expression %s is not compiled", this->rule.c_str());
+	return false;
+}
+
+
+const std::wstring& VFSRule::getRule() {
+	return this->rule;
+}
+
+
+const std::wstring& VFSRule::getDestination() {
+	return this->destination;
 }

@@ -12,7 +12,7 @@
 
 #define HOOK_AND_LOG_FAILURE(pOri, pInt, szFunc)	if(!Mhook_SetHook(pOri, pInt))\
 													{\
-														Logger::getSingleton().log(Logger::LOG_ERROR, L"Failed to hook %s", szFunc);\
+														Logger::getSingleton().debug(L"Failed to hook %s", szFunc);\
 													}
 
 

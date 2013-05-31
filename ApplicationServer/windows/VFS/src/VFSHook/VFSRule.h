@@ -28,7 +28,7 @@
 class VFSRule {
 private:
 	std::wstring rule;
-	std::wstring unionName;
+	std::wstring destination;
 	std::wregex* reg;
 
 public:
@@ -37,7 +37,9 @@ public:
 
 	bool compile();
 
-	bool match(std::wstring path);
+	bool match(const std::wstring& path);
+	const std::wstring& getRule();
+	const std::wstring& getDestination();
 };
 
 #endif /* VFSRULE_H_ */

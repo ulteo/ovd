@@ -48,6 +48,8 @@ NTSTATUS WINAPI myNtCreateFile(	PHANDLE FileHandle,
 				FileAttributes, ShareAccess, CreateDisposition, CreateOptions, EaBuffer, EaLength);
 	}
 
+	Logger::getSingleton().debug(L"myNtCreateFile");
+
 	//Reserve origin data before modified
 	UNICODE_STRING uniszRestore;
 	bool bStore = false;
@@ -75,18 +77,39 @@ NTSTATUS NTAPI myNtOpenFile(PHANDLE FileHandle,
 	if(Logger::getSingleton().isLogging())
 		return OriginNtOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
 
+	Logger::getSingleton().debug(L"myNtOpenFile");
+	std::wstring result;
+
 	//Reserve origin data before modified
 	UNICODE_STRING uniszRestore;
 	bool bStore = false;
 	if(ObjectAttributes != NULL && ObjectAttributes->ObjectName != NULL) {
 		bStore = true;
 		uniszRestore= *(ObjectAttributes->ObjectName);
+		Logger::getSingleton().debug(L"    => uniszRestore %s", uniszRestore.Buffer);
 	}
 
-	vf.redirectFilePath(ObjectAttributes);
+
+	if (vf.redirectFilePath(ObjectAttributes, result)) {
+		OBJECT_ATTRIBUTES oa;
+		UNICODE_STRING us;
+
+		us.Length = result.length() * sizeof(wchar_t);
+		us.MaximumLength = result.length() * sizeof(wchar_t);
+		us.Buffer = (PWSTR)result.c_str();
+
+
+		InitializeObjectAttributes(&oa, &us, ObjectAttributes->Attributes, ObjectAttributes->RootDirectory, ObjectAttributes->SecurityDescriptor);
+
+		NTSTATUS stus = OriginNtOpenFile(FileHandle, DesiredAccess, &oa, IoStatusBlock, ShareAccess, OpenOptions);
+		return stus;
+	}
+
 		
 	NTSTATUS stus = OriginNtOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
-			
+
+	Logger::getSingleton().debug(L"return with status %x %x", stus);
+
 	return stus;
 }
 
@@ -96,6 +119,9 @@ NTSTATUS NTAPI myNtQueryAttributesFile(	POBJECT_ATTRIBUTES ObjectAttributes,
 {	
 	if(Logger::getSingleton().isLogging())
 		return OriginNtQueryAttributesFile(ObjectAttributes, FileInformation);
+
+	Logger::getSingleton().debug(L"myNtQueryAttributesFile");
+
 
 	//Reserve origin data before modified
 	UNICODE_STRING uniszRestore;
@@ -128,6 +154,8 @@ NTSTATUS NTAPI myNtSetInformationFile(	HANDLE FileHandle,
 	//Reserve origin data before modified
 	FILE_RENAME_INFORMATION restoreFileRenameInfo;
 	bool bStore = false;
+
+	Logger::getSingleton().debug(L"myNtSetInformationFile");
 
 	//FileRename
 	if(FileInformationClass == FileRenameInformation) {
@@ -225,7 +253,6 @@ NTSTATUS NTAPI myNtOpenKeyEx(	PHANDLE KeyHandle,
 ////////////////////////////////////////////////////////////////////////
 void setupHooks() {
 	// loading configuration
-	Logger::getSingleton().debug(L"test");
 	Registry reg(REGISTRY_PATH_KEY);
 	Configuration& conf = Configuration::getInstance();
 	std::wstring src;
@@ -249,6 +276,8 @@ void setupHooks() {
 		log_error(L"Failed to load configuration file");
 		return;
 	}
+
+	conf.dump();
 
 	if( ! vf.init() ) {
 		log_error(L"Failed to initialize Virtual File System!");
@@ -291,6 +320,7 @@ void setupHooks() {
 	}
 
 	log_error(L"Hooked success");
+	Logger::getSingleton().debug(L"Hooked success");
 }
 
 void releaseHooks() {

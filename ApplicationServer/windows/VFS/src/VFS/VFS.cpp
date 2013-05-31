@@ -55,6 +55,9 @@ VFS::status VFS::init(std::wstring path) {
 		return INVALID_CONF;
 	}
 
+
+
+
 	return SUCCESS;
 }
 
