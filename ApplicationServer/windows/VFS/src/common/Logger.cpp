@@ -116,6 +116,10 @@ void Logger::debug(const wchar_t* format,...)
 	lstrcat(msg, L": ");
 	lstrcat(msg, buf);
 
+	std::wstring m = msg;
+	if (m.find(L"Dbgview") != std::string::npos)
+		return;
+
     OutputDebugString(msg);
 }
 
