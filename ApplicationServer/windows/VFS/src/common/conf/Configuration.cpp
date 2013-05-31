@@ -258,7 +258,7 @@ void Configuration::dump() {
 	log_info(L"Configuration dump");
 	log_info(L"  Log configuration:");
 	log_info(L"    - log level: %s", logLevel.c_str());
-	log_info(L"    - use stdout: %s", this->stdoutOutput? "yes": "no");
+	log_info(L"    - use stdout: %s", this->stdoutOutput? L"yes": L"no");
 	log_info(L"    - output file: %s", this->logFilename.c_str());
 
 	log_info(L"  Translations:");
