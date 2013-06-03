@@ -59,7 +59,7 @@ public:
 						const std::wstring& szSrcRef, 
 						const std::wstring& szDstRef, 
 						bool bSubstituteSelf,
-						std::wstring* pszSubstitutedPath);
+						std::wstring& pszSubstitutedPath);
 
 	// Substitue original path to virtual system path.
 	// _IN_ szPathRef: Origin path to check for substitution
@@ -69,20 +69,20 @@ public:
 	bool substitutePath(const std::wstring& szPathRef, 
 						const std::map<std::wstring, std::wstring>& vPathPair,
 						bool bSubstituteSelf,
-						std::wstring* pszSubstitutedPath);
+						std::wstring& pszSubstitutedPath);
 
 	// Redirect file path.
-	// _IN_OUT_ ObjectAttributesPtr: Input data of file attributes, output modified result 
+	// _IN_OUT_ ObjectAttributesPtr: Input data of file attributes, output modified result
+	// _IN_OUT_ result: transformed path
 	// Return True if path has redirected, False otherwise.
-	bool redirectFilePath(POBJECT_ATTRIBUTES ObjectAttributesPtr);
+	bool redirectFilePath(POBJECT_ATTRIBUTES ObjectAttributesPtr, std::wstring& result);
 
 
 	// Redirect file path.
-	// _IN_OUT_ ObjectAttributesPtr: Input data of file rename info, output modified result 
-	// _IN_OUT_ FileName: Input data of file rename info, output modified result 
-	// _IN_OUT_ FileNameLength: Input data of file rename info, output modified result 
+	// _IN_OUT_ path: Input path
+	// _IN_OUT_ result: transformed path
 	// Return True if path has redirected, False otherwise.
-	bool redirectFilePath(WCHAR FileName[1], ULONG* pFileNameLength);
+	bool redirectFilePath(const std::wstring& path, std::wstring& result);
 
 	// Virtual file space files to be redirect to.
 	void setVirtualFileSpace(std::wstring szFileSpacePath);

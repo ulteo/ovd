@@ -209,7 +209,7 @@ bool VirtualFileSystem::substitutePath(	const std::wstring& szPathRef,
 										const std::wstring& szSrcRef, 
 										const std::wstring& szDstRef, 
 										bool bSubstituteSelf,
-										std::wstring* pszSubstitutedPath)
+										std::wstring& pszSubstitutedPath)
 {	
 	bool bSubstituted = false;
 	std::wstring szPathParent = _getParent( szPathRef, szSrcRef );
@@ -222,7 +222,7 @@ bool VirtualFileSystem::substitutePath(	const std::wstring& szPathRef,
 		{
 			if(bSubstituteSelf)
 			{
-				*pszSubstitutedPath = szDstRef + SEPERATOR;
+				pszSubstitutedPath = szDstRef + SEPERATOR;
 				bSubstituted = true;
 			}
 		}
@@ -240,8 +240,8 @@ bool VirtualFileSystem::substitutePath(	const std::wstring& szPathRef,
 				if ((*it)->match(szRemainPath)) {
 					Logger::getSingleton().debug(L"   => match %s -> %s", (*it)->getRule().c_str(), (*it)->getDestination());
 
-					*pszSubstitutedPath = (*it)->getDestination() + SEPERATOR + trans.translate(szRemainPath, true);
-					Logger::getSingleton().debug(L"   => replace by is %s %s", pszSubstitutedPath->c_str(), (szDstRef + SEPERATOR + szRemainPath));
+					pszSubstitutedPath = (*it)->getDestination() + SEPERATOR + trans.translate(szRemainPath, true);
+					Logger::getSingleton().debug(L"   => replace by is %s %s", pszSubstitutedPath.c_str(), (szDstRef + SEPERATOR + szRemainPath));
 					bSubstituted = true;
 
 					break;
@@ -257,7 +257,7 @@ bool VirtualFileSystem::substitutePath(	const std::wstring& szPathRef,
 bool VirtualFileSystem::substitutePath(	const std::wstring& szPathRef, 
 										const std::map<std::wstring, std::wstring>& vPathPair,
 										bool bSubstituteSelf,
-										std::wstring* pszSubstitutedPath)
+										std::wstring& pszSubstitutedPath)
 {
 	std::map<std::wstring, std::wstring>::const_iterator itr = vPathPair.begin();
 	for(; itr!= vPathPair.end(); ++itr)
@@ -276,48 +276,31 @@ bool VirtualFileSystem::substitutePath(	const std::wstring& szPathRef,
 	return false;
 }
 
-bool VirtualFileSystem::redirectFilePath(POBJECT_ATTRIBUTES ObjectAttributesPtr)
+bool VirtualFileSystem::redirectFilePath(POBJECT_ATTRIBUTES ObjectAttributesPtr, std::wstring& result)
 {
 	WCHAR szFilePath[MAX_PATH] = {0};
+	std::wstring path;
 	if ( !_getFilePathByObjectAttributesPtr(ObjectAttributesPtr, szFilePath))
 	{
 		return false;
 	}
 
-	std::wstring szResult;
-	if (substitutePath(szFilePath, m_szDeviceUserProfilePath, m_szVirtualFileSpace, true, &szResult)) {
-		PUNICODE_STRING* puniszRedirectPathPtr = &ObjectAttributesPtr->ObjectName;
-		int originLength = (*puniszRedirectPathPtr)->Length >> 1;
+	path = std::wstring(ObjectAttributesPtr->ObjectName->Buffer, 0, ObjectAttributesPtr->ObjectName->Length>>1);
+	Logger::getSingleton().debug(L"substiture %s ", path.c_str());
 
-		memset((*puniszRedirectPathPtr)->Buffer, '\0', (*puniszRedirectPathPtr)->MaximumLength);
-
-		szResult = DEVICE_PREFIX + szResult;
-		(*puniszRedirectPathPtr)->Length = (szResult.length() - (wcslen(szFilePath) - originLength)) * 2;  // * 2 for wchar
-		memcpy((*puniszRedirectPathPtr)->Buffer, szResult.c_str(), szResult.length() * sizeof(wchar_t));
-
+	if (substitutePath(path, m_szDeviceUserProfilePath, m_szVirtualFileSpace, true, result)) {
+		result = DEVICE_PREFIX + result;
 		return true;
 	}
 
 	return false;
 }
 
-bool VirtualFileSystem::redirectFilePath(WCHAR FileName[1], ULONG* pFileNameLength)
+bool VirtualFileSystem::redirectFilePath(const std::wstring& path, std::wstring& result)
 {
-	unsigned long length = *pFileNameLength / 2; // wide char / 2
-	std::wstring szFilePath(FileName, length);
-		
-	std::wstring szResult;
 	// Reset File_RENAME_INFO, redirect if substitutePath success
-	if( substitutePath(	szFilePath.c_str(), 
-						m_szDeviceUserProfilePath, 
-						m_szVirtualFileSpace, 
-						true, 
-						&szResult) )
-	{		
-		szResult = DEVICE_PREFIX + szResult;
-		*pFileNameLength = szResult.length() * 2;// wide char * 2
-		memcpy(FileName, szResult.c_str(), *pFileNameLength);
-
+	if( substitutePath(	path, m_szDeviceUserProfilePath, m_szVirtualFileSpace, true, result)) {
+		result = DEVICE_PREFIX + result;
 		//Logger::getSingleton().debug(L"substiture %s by %s ", szFilePath, (*puniszRedirectPathPtr)->Buffer);
 		return true;
 	}
@@ -339,7 +322,7 @@ bool VirtualFileSystem::redirectRegPath(POBJECT_ATTRIBUTES ObjectAttributesPtr)
 	if (substitutePath(	szFilePath, 
 						m_mRegRedirectPaths,
 						true, 
-						&szResult)
+						szResult)
 		)
 	{
 		int originLength = (*puniszRedirectPathPtr)->Length / 2;
@@ -364,7 +347,7 @@ bool VirtualFileSystem::redirectRegPath(WCHAR Name[1], ULONG* pNameLength)
 	if( substitutePath(	szRegPath, 
 						m_mRegRedirectPaths,
 						true, 
-						&szResult) )
+						szResult) )
 	{		
 		szResult = DEVICE_PREFIX + szResult;
 		*pNameLength = szResult.length() * 2;// wide char * 2

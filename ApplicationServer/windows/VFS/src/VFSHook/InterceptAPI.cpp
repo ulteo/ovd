@@ -1,5 +1,23 @@
-// Copyright (C) 2012 
-// Author Wei-Jen Chen 2012
+/*
+ * Copyright (C) 2013 Ulteo SAS
+ * http://www.ulteo.com
+ * Author David LECHEVALIER <david@ulteo.com> 2013
+ * Author Wei-Jen Chen 2012
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 
 #include <common/stdafx.h>
 #include "mhook-lib/mhook.h"
@@ -49,21 +67,24 @@ NTSTATUS WINAPI myNtCreateFile(	PHANDLE FileHandle,
 	}
 
 	Logger::getSingleton().debug(L"myNtCreateFile");
+	std::wstring result;
 
-	//Reserve origin data before modified
-	UNICODE_STRING uniszRestore;
-	bool bStore = false;
-	if(ObjectAttributes != NULL && ObjectAttributes->ObjectName != NULL) {
-		bStore = true;
-		uniszRestore= *(ObjectAttributes->ObjectName);
+	if (vf.redirectFilePath(ObjectAttributes, result)) {
+		OBJECT_ATTRIBUTES out;
+		UNICODE_STRING uni;
+
+		uni.Buffer = (PWSTR)result.c_str();
+		uni.Length = result.length() * 2;
+		uni.MaximumLength = uni.Length;
+
+		InitializeObjectAttributes(&out, &uni, ObjectAttributes->Attributes, 0, ObjectAttributes->SecurityDescriptor);
+
+		return OriginNtCreateFile(FileHandle, DesiredAccess, &out, IoStatusBlock, AllocationSize,
+						FileAttributes, ShareAccess, CreateDisposition, CreateOptions, EaBuffer, EaLength);
 	}
-
-	vf.redirectFilePath(ObjectAttributes);
 		
-	NTSTATUS stus = OriginNtCreateFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, AllocationSize, 
-		FileAttributes, ShareAccess, CreateDisposition, CreateOptions, EaBuffer, EaLength);
-	
-	return stus;
+	return OriginNtCreateFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, AllocationSize,
+			FileAttributes, ShareAccess, CreateDisposition, CreateOptions, EaBuffer, EaLength);
 }
 
 
@@ -78,25 +99,24 @@ NTSTATUS NTAPI myNtOpenFile(PHANDLE FileHandle,
 		return OriginNtOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
 
 	Logger::getSingleton().debug(L"myNtOpenFile");
-	std::wstring result;
 
 	//Reserve origin data before modified
-	UNICODE_STRING uniszRestore;
-	bool bStore = false;
-	if(ObjectAttributes != NULL && ObjectAttributes->ObjectName != NULL) {
-		bStore = true;
-		uniszRestore= *(ObjectAttributes->ObjectName);
-		Logger::getSingleton().debug(L"    => uniszRestore %s", uniszRestore.Buffer);
+	std::wstring result;
+
+	if (vf.redirectFilePath(ObjectAttributes, result)) {
+		OBJECT_ATTRIBUTES out;
+		UNICODE_STRING uni;
+
+		uni.Buffer = (PWSTR)result.c_str();
+		uni.Length = result.length() * 2;
+		uni.MaximumLength = uni.Length;
+
+		InitializeObjectAttributes(&out, &uni, ObjectAttributes->Attributes, 0, ObjectAttributes->SecurityDescriptor);
+
+		return OriginNtOpenFile(FileHandle, DesiredAccess, &out, IoStatusBlock, ShareAccess, OpenOptions);
 	}
 
-
-	vf.redirectFilePath(ObjectAttributes);
-		
-	NTSTATUS stus = OriginNtOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
-
-	Logger::getSingleton().debug(L"return with status %x %x", stus);
-
-	return stus;
+	return OriginNtOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
 }
 
 
@@ -107,22 +127,22 @@ NTSTATUS NTAPI myNtQueryAttributesFile(	POBJECT_ATTRIBUTES ObjectAttributes,
 		return OriginNtQueryAttributesFile(ObjectAttributes, FileInformation);
 
 	Logger::getSingleton().debug(L"myNtQueryAttributesFile");
+	std::wstring result;
 
+	if (vf.redirectFilePath(ObjectAttributes, result)) {
+		OBJECT_ATTRIBUTES out;
+		UNICODE_STRING uni;
 
-	//Reserve origin data before modified
-	UNICODE_STRING uniszRestore;
-	bool bStore = false;
-	if(ObjectAttributes != NULL && ObjectAttributes->ObjectName != NULL)
-	{
-		bStore = true;
-		uniszRestore= *(ObjectAttributes->ObjectName);
+		uni.Buffer = (PWSTR)result.c_str();
+		uni.Length = result.length() * 2;
+		uni.MaximumLength = uni.Length;
+
+		InitializeObjectAttributes(&out, &uni, ObjectAttributes->Attributes, 0, ObjectAttributes->SecurityDescriptor);
+
+		return OriginNtQueryAttributesFile(&out, FileInformation);
 	}
 
-	vf.redirectFilePath(ObjectAttributes);
-			
-	NTSTATUS stus = OriginNtQueryAttributesFile(ObjectAttributes, FileInformation);
-		
-	return stus;
+	return OriginNtQueryAttributesFile(ObjectAttributes, FileInformation);
 }
 
 
@@ -137,24 +157,27 @@ NTSTATUS NTAPI myNtSetInformationFile(	HANDLE FileHandle,
 			FileInformationLength, FileInformationClass);
 	}
 
-	//Reserve origin data before modified
-	FILE_RENAME_INFORMATION restoreFileRenameInfo;
-	bool bStore = false;
-
 	Logger::getSingleton().debug(L"myNtSetInformationFile");
 
 	//FileRename
 	if(FileInformationClass == FileRenameInformation) {
-		PFILE_RENAME_INFORMATION pFileRename = (PFILE_RENAME_INFORMATION)FileInformation;				
-		restoreFileRenameInfo = *pFileRename;
-		
-		if( vf.redirectFilePath(pFileRename->FileName, &(pFileRename->FileNameLength)) )
-			bStore = true;
+		PFILE_RENAME_INFORMATION pFileRename = (PFILE_RENAME_INFORMATION)FileInformation;
+		std::wstring path = std::wstring(pFileRename->FileName, 0, pFileRename->FileNameLength);
+		std::wstring result;
+
+		if( vf.redirectFilePath(path, result)) {
+			FILE_RENAME_INFORMATION fr;
+			fr.ReplaceIfExists = pFileRename->ReplaceIfExists;
+			fr.RootDirectory = pFileRename->RootDirectory;
+			fr.FileNameLength = result.length() * 2;
+			fr.FileName[1] = result.c_str()[0];
+
+			return OriginNtSetInformationFile(FileHandle, IoStatusBlock, (PVOID)&fr, FileInformationLength, FileInformationClass);
+		}
 	}
 
-	NTSTATUS stus = OriginNtSetInformationFile(FileHandle, IoStatusBlock, FileInformation, FileInformationLength, FileInformationClass);
-	
-	return stus;
+	return OriginNtSetInformationFile(FileHandle, IoStatusBlock, FileInformation, FileInformationLength, FileInformationClass);
+
 }
 
 ////////////////////////////////////////////////////////////////////////
