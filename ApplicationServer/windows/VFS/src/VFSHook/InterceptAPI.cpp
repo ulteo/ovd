@@ -90,21 +90,7 @@ NTSTATUS NTAPI myNtOpenFile(PHANDLE FileHandle,
 	}
 
 
-	if (vf.redirectFilePath(ObjectAttributes, result)) {
-		OBJECT_ATTRIBUTES oa;
-		UNICODE_STRING us;
-
-		us.Length = result.length() * sizeof(wchar_t);
-		us.MaximumLength = result.length() * sizeof(wchar_t);
-		us.Buffer = (PWSTR)result.c_str();
-
-
-		InitializeObjectAttributes(&oa, &us, ObjectAttributes->Attributes, ObjectAttributes->RootDirectory, ObjectAttributes->SecurityDescriptor);
-
-		NTSTATUS stus = OriginNtOpenFile(FileHandle, DesiredAccess, &oa, IoStatusBlock, ShareAccess, OpenOptions);
-		return stus;
-	}
-
+	vf.redirectFilePath(ObjectAttributes);
 		
 	NTSTATUS stus = OriginNtOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
 

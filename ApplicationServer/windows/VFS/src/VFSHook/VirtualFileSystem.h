@@ -74,7 +74,6 @@ public:
 	// Redirect file path.
 	// _IN_OUT_ ObjectAttributesPtr: Input data of file attributes, output modified result 
 	// Return True if path has redirected, False otherwise.
-	bool redirectFilePath(POBJECT_ATTRIBUTES ObjectAttributesPtr, std::wstring& szResult);
 	bool redirectFilePath(POBJECT_ATTRIBUTES ObjectAttributesPtr);
 
 

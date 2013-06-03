@@ -276,50 +276,6 @@ bool VirtualFileSystem::substitutePath(	const std::wstring& szPathRef,
 	return false;
 }
 
-bool VirtualFileSystem::redirectFilePath(POBJECT_ATTRIBUTES ObjectAttributesPtr, std::wstring& szResult)
-{	
-	WCHAR szFilePath[MAX_PATH] = {0};
-	if ( !_getFilePathByObjectAttributesPtr(ObjectAttributesPtr, szFilePath))
-	{
-		return false;
-	}
-
-	Logger::getSingleton().debug(L"Attributes %x ", ObjectAttributesPtr->Attributes);
-	Logger::getSingleton().debug(L"SecurityDescriptor %x ", ObjectAttributesPtr->SecurityDescriptor);
-	Logger::getSingleton().debug(L"SecurityQualityOfService %x ", ObjectAttributesPtr->SecurityQualityOfService);
-
-	Logger::getSingleton().debug(L"after _getFilePathByObjectAttributesPtr %s ", szFilePath);
-
-	PUNICODE_STRING* puniszRedirectPathPtr = &ObjectAttributesPtr->ObjectName;
-
-	Logger::getSingleton().debug(L"after  %s %i %i", ObjectAttributesPtr->ObjectName->Buffer, ObjectAttributesPtr->ObjectName->Length, ObjectAttributesPtr->ObjectName->MaximumLength);
-
-	if (substitutePath(	szFilePath, 
-						m_szDeviceUserProfilePath, 
-						m_szVirtualFileSpace, 
-						true, 
-						&szResult)
-		)
-	{
-		szResult = DEVICE_PREFIX+szResult;
-		Logger::getSingleton().debug(L"substiture %s by %s", szFilePath, szResult.c_str());
-//
-//		int originLength = (*puniszRedirectPathPtr)->Length / 2;
-//		szResult = DEVICE_PREFIX + szResult;
-//		(*puniszRedirectPathPtr)->Length = szResult.length() * 2;  // * 2 for wchar
-//		(*puniszRedirectPathPtr)->MaximumLength = szResult.length() * 2 + 2; // + 2 for "/0"
-//		memcpy((*puniszRedirectPathPtr)->Buffer, szResult.c_str(), (*puniszRedirectPathPtr)->Length);
-//		memset( (*puniszRedirectPathPtr)->Buffer + szResult.length() , '\0', originLength -  szResult.length() );
-//
-//		Logger::getSingleton().debug(L"substiture %s %u %u", (*puniszRedirectPathPtr)->Buffer, (*puniszRedirectPathPtr)->Length, (*puniszRedirectPathPtr)->MaximumLength);
-
-		return true;
-	}
-
-	return false;
-}
-
-
 bool VirtualFileSystem::redirectFilePath(POBJECT_ATTRIBUTES ObjectAttributesPtr)
 {
 	WCHAR szFilePath[MAX_PATH] = {0};
@@ -328,35 +284,16 @@ bool VirtualFileSystem::redirectFilePath(POBJECT_ATTRIBUTES ObjectAttributesPtr)
 		return false;
 	}
 
-	Logger::getSingleton().debug(L"Attributes %x ", ObjectAttributesPtr->Attributes);
-	Logger::getSingleton().debug(L"SecurityDescriptor %x ", ObjectAttributesPtr->SecurityDescriptor);
-	Logger::getSingleton().debug(L"SecurityQualityOfService %x ", ObjectAttributesPtr->SecurityQualityOfService);
-
-	Logger::getSingleton().debug(L"after _getFilePathByObjectAttributesPtr %s ", szFilePath);
-
-	PUNICODE_STRING* puniszRedirectPathPtr = &ObjectAttributesPtr->ObjectName;
-
-	Logger::getSingleton().debug(L"after  %s %i %i", ObjectAttributesPtr->ObjectName->Buffer, ObjectAttributesPtr->ObjectName->Length, ObjectAttributesPtr->ObjectName->MaximumLength);
-
-
 	std::wstring szResult;
-	if (substitutePath(	szFilePath,
-						m_szDeviceUserProfilePath,
-						m_szVirtualFileSpace,
-						true,
-						&szResult)
-		)
-	{
-		Logger::getSingleton().debug(L"substiture %s by %s", szFilePath, szResult.c_str());
+	if (substitutePath(szFilePath, m_szDeviceUserProfilePath, m_szVirtualFileSpace, true, &szResult)) {
+		PUNICODE_STRING* puniszRedirectPathPtr = &ObjectAttributesPtr->ObjectName;
+		int originLength = (*puniszRedirectPathPtr)->Length >> 1;
 
-		int originLength = (*puniszRedirectPathPtr)->Length / 2;
+		memset((*puniszRedirectPathPtr)->Buffer, '\0', (*puniszRedirectPathPtr)->MaximumLength);
+
 		szResult = DEVICE_PREFIX + szResult;
-		(*puniszRedirectPathPtr)->Length = szResult.length() * 2;  // * 2 for wchar
-		(*puniszRedirectPathPtr)->MaximumLength = szResult.length() * 2 + 2; // + 2 for "/0"
-		memcpy((*puniszRedirectPathPtr)->Buffer, szResult.c_str(), (*puniszRedirectPathPtr)->Length);
-		memset( (*puniszRedirectPathPtr)->Buffer + szResult.length() , '\0', originLength -  szResult.length() );
-
-		Logger::getSingleton().debug(L"substiture %s %u %u", (*puniszRedirectPathPtr)->Buffer, (*puniszRedirectPathPtr)->Length, (*puniszRedirectPathPtr)->MaximumLength);
+		(*puniszRedirectPathPtr)->Length = (szResult.length() - (wcslen(szFilePath) - originLength)) * 2;  // * 2 for wchar
+		memcpy((*puniszRedirectPathPtr)->Buffer, szResult.c_str(), szResult.length() * sizeof(wchar_t));
 
 		return true;
 	}
