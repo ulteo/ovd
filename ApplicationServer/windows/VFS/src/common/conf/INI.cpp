@@ -61,7 +61,7 @@ void INI::parse() {
 		else {
 			std::vector<std::wstring> v;
 			if (StringUtil::split(v, line, L'=') != 2)
-				throw UException(L"Wrong INIuration line %s", line.c_str());
+				throw UException(L"Wrong configuration line %s", line.c_str());
 
 			std::wstring keyStr = v[0];
 			StringUtil::atrim(keyStr);
