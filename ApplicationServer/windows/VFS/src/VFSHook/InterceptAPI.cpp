@@ -162,17 +162,19 @@ NTSTATUS NTAPI myNtSetInformationFile(	HANDLE FileHandle,
 	//FileRename
 	if(FileInformationClass == FileRenameInformation) {
 		PFILE_RENAME_INFORMATION pFileRename = (PFILE_RENAME_INFORMATION)FileInformation;
-		std::wstring path = std::wstring(pFileRename->FileName, 0, pFileRename->FileNameLength);
+		std::wstring path = std::wstring(pFileRename->FileName, 0, pFileRename->FileNameLength>>1);
 		std::wstring result;
 
 		if( vf.redirectFilePath(path, result)) {
-			FILE_RENAME_INFORMATION fr;
-			fr.ReplaceIfExists = pFileRename->ReplaceIfExists;
-			fr.RootDirectory = pFileRename->RootDirectory;
-			fr.FileNameLength = result.length() * 2;
-			fr.FileName[1] = result.c_str()[0];
+			char buffer[sizeof(FILE_RENAME_INFORMATION) + MAX_PATH * sizeof(wchar_t)];
+			PFILE_RENAME_INFORMATION fr = (PFILE_RENAME_INFORMATION)buffer;
 
-			return OriginNtSetInformationFile(FileHandle, IoStatusBlock, (PVOID)&fr, FileInformationLength, FileInformationClass);
+			fr->ReplaceIfExists = pFileRename->ReplaceIfExists;
+			fr->RootDirectory = pFileRename->RootDirectory;
+			fr->FileNameLength = result.length() * 2;
+			wcscpy_s(&fr->FileName[0], MAX_PATH * sizeof(wchar_t), result.c_str());
+
+			return OriginNtSetInformationFile(FileHandle, IoStatusBlock, (PVOID)fr, sizeof(buffer), FileInformationClass);
 		}
 	}
 
