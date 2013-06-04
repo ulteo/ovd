@@ -1,7 +1,10 @@
+#! /usr/bin/python
 # -*- coding: UTF-8 -*-
-# Copyright (C) 2011 Ulteo SAS
+
+# Copyright (C) 2011-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -26,11 +29,8 @@ path = os.path.dirname( os.path.realpath( __file__ ) )
 if os.environ.has_key("OVD_VERSION"):
 	version = os.environ["OVD_VERSION"]
 else:
-	import pysvn
-	c = pysvn.Client()
-	revision = c.info(path)["revision"].number
-	version = "99.99.0.%05d"%(revision)
-
+	version = file("VERSION", "r").readline().strip()
+	version += "~dev"
 
 for name in ["ressources.rc"]:
 	f = file(os.path.join(path, name+".in"), "r")
