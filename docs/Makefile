@@ -69,7 +69,7 @@ Support_openSUSE_11.3.html Support_openSUSE_11.3.pdf: Support_SLES_11.SP1.xml
 	# dblatex -B -d -D -v -t pdf -T db2latex -p $(STYLE_XSL_LATEX) -s $(STYLE_LATEX) $< -o $@
 
 %.xml.out: %.xml
-	xmllint --xinclude $< | ./transform >$@
+	xmllint --nonet --xinclude $< | ./transform >$@
 
 clean:
 	$(RM) $(DST)
