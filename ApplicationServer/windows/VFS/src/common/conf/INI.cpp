@@ -35,8 +35,6 @@ INI::~INI() {}
 void INI::parse() {
 	std::wstring currentSection;
 	char buffer[1024] = {0};
-	wchar_t section[256] = {0};
-	wchar_t external[256] = {0};
 	std::wstring line;
 
 	std::ifstream fileStream(this->filename.c_str());
@@ -54,8 +52,8 @@ void INI::parse() {
 		if (line.empty())
 			continue;
 
-		if (swscanf_s(line.c_str(), L"[%[^]]", section) == 1) {
-			currentSection = section;
+		if (*line.begin() == L'[' && *line.rbegin() == L']') {
+			currentSection = line.substr(1, line.length() - 2);
 			this->addSection(currentSection);
 		}
 		else {
