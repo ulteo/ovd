@@ -288,8 +288,6 @@ void setupHooks() {
 		return;
 	}
 
-	conf.dump();
-
 	if( ! vf.init() ) {
 		log_error(L"Failed to initialize Virtual File System!");
 		return;
