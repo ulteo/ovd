@@ -319,7 +319,7 @@ void Configuration::dump() {
 		log_info(L"    - union: %s", u.getName().c_str());
 
 		log_info(L"      - path: %s", u.getPath().c_str());
-		log_info(L"      - delete content on session end: %s", u.isDeleteOnClose()? "yes":"no");
+		log_info(L"      - delete content on session end: %s", u.isDeleteOnClose()? L"yes":L"no");
 
 		if (! u.getRsyncSrc().empty())
 			log_info(L"      - rsync src: %s", u.getRsyncSrc().c_str());
