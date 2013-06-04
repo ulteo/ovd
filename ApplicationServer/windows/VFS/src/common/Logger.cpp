@@ -57,7 +57,7 @@ Logger::Level Logger::getFromString(std::wstring& level) {
 	if( level.compare(L"ERROR") == 0)
 		return LOG_ERROR;
 
-	throw std::exception("Unsupported log level");
+	throw UException(L"Unsupported log level");
 }
 
 

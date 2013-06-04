@@ -20,7 +20,6 @@
 
 #include "Section.h"
 #include <stdlib.h>
-#include <exception>
 #include <common/StringUtil.h>
 #include <common/UException.h>
 
@@ -49,7 +48,7 @@ std::wstring& Section::getString(std::wstring key) {
 		if (this->keys[i].compare(key) == 0)
 			return this->values[i];
 
-	throw UException("key %s do not exist in the section: %s", key.c_str(), this->name.c_str());
+	throw UException(L"key %s do not exist in the section: %s", key.c_str(), this->name.c_str());
 }
 
 int Section::getInt(std::wstring key) {

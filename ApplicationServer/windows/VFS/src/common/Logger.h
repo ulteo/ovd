@@ -5,6 +5,8 @@
 #define _Logger_H
 
 #include <string>
+#include <common/UException.h>
+
 
 
 class Logger

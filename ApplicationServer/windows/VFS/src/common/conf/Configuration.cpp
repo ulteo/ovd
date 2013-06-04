@@ -20,7 +20,7 @@
 
 #include "Configuration.h"
 #include <common/fs/File.h>
-#include <exception>
+#include <common/UException.h>
 
 
 
@@ -82,7 +82,7 @@ Union& Configuration::getUnions(const std::wstring& name) {
 			return (*it);
 	}
 
-	throw std::exception("invalid union");
+	throw UException(L"invalid union");
 }
 
 
@@ -104,7 +104,7 @@ void Configuration::parseUnions(INI& ini) {
 	StringUtil::split(unionsList, unions, ',');
 
 	if (unionsList.empty())
-		throw std::exception("there is no unions");
+		throw UException(L"there is no unions");
 
 
 	for (it = unionsList.begin() ; it != unionsList.end() ; it++) {
@@ -134,16 +134,16 @@ void Configuration::parseUnions(INI& ini) {
 				f.expand();
 				unionNode.setRsyncFilter(f.path());
 			}
-			catch (const std::exception&) { }
+			catch (const UException&) { }
 
 			try {
 				deleteOnClose = sec->getBool(L"deleteOnEnd");
 				unionNode.setDeleteOnClose(deleteOnClose);
 			}
-			catch (const std::exception&) { }
+			catch (const UException&) { }
 		}
-		catch (std::exception& e) {
-			log_error(L"failed to parse union '%s': %s", (*it), e.what());
+		catch (UException& e) {
+			log_error(L"failed to parse union '%s': %s", (*it), e.wwhat());
 			throw;
 		}
 
@@ -171,19 +171,19 @@ void Configuration::parseLog(INI& ini) {
 		this->logLevel = logger.getFromString(ini.getString(L"log", L"level"));
 		logger.setLevel(this->logLevel);
 	}
-	catch (const std::exception&) { }
+	catch (const UException&) { }
 
 	try {
 		this->stdoutOutput = ini.getBool(L"log", L"enableStdOutput");
 		logger.setStdoutput(this->stdoutOutput);
 	}
-	catch (const std::exception&) { }
+	catch (const UException&) { }
 
 	try {
 		this->logFilename = ini.getString(L"log", L"outputFilename");
 		logger.setLogFile(this->logFilename);
 	}
-	catch (const std::exception&) {}
+	catch (const UException&) {}
 }
 
 
@@ -226,15 +226,15 @@ bool Configuration::load(const std::wstring& filename) {
 	try {
 		ini.parse();
 	}
-	catch (const std::exception& e) {
-		log_error(L"Failed to parse configuration file: %s", e.what());
+	catch (const UException& e) {
+		log_error(L"Failed to parse configuration file: %s", e.wwhat());
 		return false;
 	}
 
 	try {
 		this->hookRegistry = ini.getBool(L"main", L"hookRegistry");
 	}
-	catch (const std::exception&) { }
+	catch (const UException&) { }
 
 	this->parseLog(ini);
 
@@ -243,16 +243,16 @@ bool Configuration::load(const std::wstring& filename) {
 	try {
 		this->parseUnions(ini);
 	}
-	catch (const std::exception& e) {
-		log_error(L"failed to parse unions list: %s", e.what());
+	catch (const UException& e) {
+		log_error(L"failed to parse unions list: %s", e.wwhat());
 		return false;
 	}
 
 	try {
 		this->parseRules(ini);
 	}
-	catch (const std::exception& e) {
-		log_error(L"failed to parse rules list: %s", e.what());
+	catch (const UException& e) {
+		log_error(L"failed to parse rules list: %s", e.wwhat());
 		return false;
 	}
 

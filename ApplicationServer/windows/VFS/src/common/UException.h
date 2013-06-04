@@ -28,13 +28,14 @@
 
 class UException: public std::exception {
 protected:
-	std::string msg;
+	std::wstring msg;
+
 
 public:
-	UException(char *fmt,...);
+	UException(wchar_t *fmt,...);
 	virtual ~UException();
 
-	virtual const char * what() const throw();
+	virtual const wchar_t * wwhat() const throw();
 };
 
 #endif /* UEXCEPTION_H_ */

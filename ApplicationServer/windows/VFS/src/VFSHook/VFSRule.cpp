@@ -20,7 +20,7 @@
 
 #include "VFSRule.h"
 #include <common/Logger.h>
-#include <exception>
+#include <common/UException.h>
 
 
 VFSRule::VFSRule(const std::wstring& rule, const std::wstring& destination): rule(rule), destination(destination), reg(NULL) { }
@@ -35,8 +35,8 @@ bool VFSRule::compile() {
 	try {
 		this->reg = new std::wregex(rule);
 	}
-	catch (const std::exception& e) {
-		log_error(L"Failed to compile rule: %s: %s", this->rule.c_str(), e.what());
+	catch (const UException& e) {
+		log_error(L"Failed to compile rule: %s: %s", this->rule.c_str(), e.wwhat());
 		return false;
 	}
 

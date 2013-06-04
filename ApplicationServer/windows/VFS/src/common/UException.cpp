@@ -21,19 +21,21 @@
 #include "UException.h"
 
 
-UException::UException(char* fmt,...) {
-	char buf[4096];
+UException::UException(wchar_t* fmt,...) {
+	wchar_t buf[4096];
 	va_list args;
 
 	va_start(args, fmt);
-	vsprintf_s(buf, fmt, args);
+	vswprintf_s(buf, fmt, args);
 	va_end(args);
 
 	this->msg = buf;
 }
 
+
 UException::~UException() { }
 
-const char * UException::what() const throw() {
+
+const wchar_t* UException::wwhat() const throw() {
 	return this->msg.c_str();
 }

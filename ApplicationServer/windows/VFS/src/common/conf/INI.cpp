@@ -41,7 +41,7 @@ void INI::parse() {
 
 	std::ifstream fileStream(this->filename.c_str());
 	if (!fileStream.good())
-		throw UException("Failed to open %s", this->filename);
+		throw UException(L"Failed to open %s", this->filename.c_str());
 
 	while (!fileStream.eof()) {
 		fileStream.getline(buffer, sizeof(buffer));
@@ -61,7 +61,7 @@ void INI::parse() {
 		else {
 			std::vector<std::wstring> v;
 			if (StringUtil::split(v, line, L'=') != 2)
-				throw UException("Wrong INIuration line %s", line);
+				throw UException(L"Wrong INIuration line %s", line.c_str());
 
 			std::wstring keyStr = v[0];
 			StringUtil::atrim(keyStr);
@@ -98,7 +98,7 @@ Sections& INI::getSections() {
 
 Section* INI::getSection(std::wstring section) {
 	if (this->sections.find(section) == this->sections.end())
-		throw UException("section %s do not exist", section.c_str());
+		throw UException(L"section %s do not exist", section.c_str());
 
 	return this->sections[section];
 }
