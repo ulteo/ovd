@@ -41,8 +41,8 @@ public:
 	static bool startWith(std::wstring &str, std::wstring &begin);
 	static std::wstring toLower(std::wstring str);
 	static int caseCompare(const std::wstring &str, const std::wstring &str2);
-	static int split(std::vector<std::wstring>& vec, std::wstring str, wchar_t delim);
-	static int split(std::list<std::wstring>& vec, std::wstring str, wchar_t delim);
+	static size_t split(std::vector<std::wstring>& vec, std::wstring str, wchar_t delim);
+	static size_t split(std::list<std::wstring>& vec, std::wstring str, wchar_t delim);
 	static std::wstring getCommonPart(std::list<std::wstring> list);
 	static void replaceAll(std::wstring& src, const std::wstring& from, const std::wstring to);
 };

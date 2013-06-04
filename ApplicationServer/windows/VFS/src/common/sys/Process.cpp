@@ -98,7 +98,7 @@ void Process::wait(std::list<Process*> processList, unsigned int time) {
 	for (it = processList.begin() ; it != processList.end() ; it++)
 		handles[index++] = (HANDLE)(*it)->getPID();
 
-	if (WaitForMultipleObjects(processList.size(), handles, TRUE, time) == WAIT_FAILED)
+	if (WaitForMultipleObjects((DWORD)processList.size(), handles, TRUE, time) == WAIT_FAILED)
 		log_error(L"Failed to wait for processus list");
 
 	delete[] handles;

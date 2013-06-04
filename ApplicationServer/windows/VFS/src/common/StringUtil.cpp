@@ -94,7 +94,7 @@ int StringUtil::caseCompare(const std::wstring &str, const std::wstring &str2) {
 	return toLower(str).compare(toLower(str2));
 }
 
-int StringUtil::split(std::vector<std::wstring>& vec, std::wstring str, wchar_t delim) {
+size_t StringUtil::split(std::vector<std::wstring>& vec, std::wstring str, wchar_t delim) {
 	vec.clear();
 
 	std::wstring::size_type pos = str.find(delim);
@@ -110,7 +110,7 @@ int StringUtil::split(std::vector<std::wstring>& vec, std::wstring str, wchar_t 
 	return vec.size();
 }
 
-int StringUtil::split(std::list<std::wstring>& list, std::wstring str, wchar_t delim) {
+size_t StringUtil::split(std::list<std::wstring>& list, std::wstring str, wchar_t delim) {
 	list.clear();
 
 	std::wstring::size_type pos = str.find(delim);
@@ -137,7 +137,7 @@ std::wstring StringUtil::getCommonPart(std::list<std::wstring> list) {
 	std::wstring commonPart = (*j++);
 
 	while (j != list.end()) {
-		for (int i = commonPart.length() ; i > 0 ; i--) {
+		for (size_t i = commonPart.length() ; i > 0 ; i--) {
 			if ((*j).find(commonPart) == 0)
 				break;
 			commonPart = commonPart.substr(0, i);

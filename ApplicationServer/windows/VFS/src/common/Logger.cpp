@@ -159,7 +159,7 @@ void Logger::log(Level lvl, wchar_t *fmt,...) {
 		timeinfo.tm_sec);
 	
 	if (hFile)
-		WriteFile(hFile, temp, wcslen(temp), &dw, NULL);
+		WriteFile(hFile, temp, (DWORD)wcslen(temp), &dw, NULL);
 
 	if (this->useStdOut)
 		std::wcout<<temp;
@@ -169,7 +169,7 @@ void Logger::log(Level lvl, wchar_t *fmt,...) {
 	wsprintf(temp, L"%s : ", modname);
 	
 	if (hFile)
-		WriteFile(hFile, temp, wcslen(temp), &dw, NULL);
+		WriteFile(hFile, temp, (DWORD)wcslen(temp), &dw, NULL);
 
 	if (this->useStdOut)
 		std::wcout<<temp;
@@ -177,10 +177,10 @@ void Logger::log(Level lvl, wchar_t *fmt,...) {
 	va_start(args,fmt);
 	vswprintf_s(temp, fmt, args);
 	va_end(args);
-	WriteFile(hFile, temp, wcslen(temp), &dw, NULL);
+	WriteFile(hFile, temp, (DWORD)wcslen(temp), &dw, NULL);
 
 	if (hFile)
-		WriteFile(hFile, temp, wcslen(temp), &dw, NULL);
+		WriteFile(hFile, temp, (DWORD)wcslen(temp), &dw, NULL);
 
 	if (this->useStdOut)
 		std::wcout<<temp;
@@ -188,7 +188,7 @@ void Logger::log(Level lvl, wchar_t *fmt,...) {
 	wsprintf(temp, L"\r\n");
 
 	if (hFile) {
-		WriteFile(hFile, temp, wcslen(temp), &dw, NULL);
+		WriteFile(hFile, temp, (DWORD)wcslen(temp), &dw, NULL);
 		_lclose((HFILE)hFile);
 	}
 	

@@ -115,7 +115,7 @@ bool Registry::set(const std::wstring& key, const std::wstring& value) {
 		return false;
 	}
 
-	res = RegSetValueEx(k, key.c_str(), 0, REG_SZ, (BYTE *)value.c_str(), (value.length() + 1) * sizeof(wchar_t));
+	res = RegSetValueEx(k, key.c_str(), 0, REG_SZ, (BYTE *)value.c_str(), (DWORD)(value.length() + 1) * sizeof(wchar_t));
 	if (res != ERROR_SUCCESS) {
 		log_error(L"Failed to set key %s to %s", key.c_str(), value.c_str());
 		RegCloseKey(k);

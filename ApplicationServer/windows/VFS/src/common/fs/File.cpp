@@ -84,7 +84,7 @@ bool File::expand() {
 	std::wstring res = this->pathValue;
 	std::wstring csidl;
 	std::wstring csidlPath;
-	int pos = 0;
+	size_t pos = 0;
 	CSIDL c;
 
 	// We are searching for CSIDL constant
@@ -104,7 +104,7 @@ bool File::expand() {
 	pos = 0;
 	while(res.find(L"${", pos) != std::wstring::npos) {
 		pos = res.find(L"${");
-		int posEnd;
+		size_t posEnd;
 		std::wstring sub = res.substr(pos);
 		if (sub.find(L"}") == std::wstring::npos)
 			break;

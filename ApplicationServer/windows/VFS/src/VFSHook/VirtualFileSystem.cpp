@@ -326,8 +326,8 @@ bool VirtualFileSystem::redirectRegPath(POBJECT_ATTRIBUTES ObjectAttributesPtr)
 		)
 	{
 		int originLength = (*puniszRedirectPathPtr)->Length / 2;
-		(*puniszRedirectPathPtr)->Length = szResult.length() * 2;  // * 2 for wchar 
-		(*puniszRedirectPathPtr)->MaximumLength = szResult.length() * 2 + 2; // + 2 for "/0"
+		(*puniszRedirectPathPtr)->Length = (USHORT)szResult.length() * 2;  // * 2 for wchar
+		(*puniszRedirectPathPtr)->MaximumLength = (USHORT)szResult.length() * 2 + 2; // + 2 for "/0"
 		memcpy( (*puniszRedirectPathPtr)->Buffer, szResult.c_str(), (*puniszRedirectPathPtr)->Length);
 		memset( (*puniszRedirectPathPtr)->Buffer + szResult.length() , '\0', originLength -  szResult.length() );
 		
@@ -350,7 +350,7 @@ bool VirtualFileSystem::redirectRegPath(WCHAR Name[1], ULONG* pNameLength)
 						szResult) )
 	{		
 		szResult = DEVICE_PREFIX + szResult;
-		*pNameLength = szResult.length() * 2;// wide char * 2
+		*pNameLength = (ULONG)szResult.length() * 2;// wide char * 2
 		memcpy(Name, szResult.c_str(), *pNameLength);
 
 		return true;
@@ -411,7 +411,7 @@ bool VirtualFileSystem::_isFileInList(const std::wstring& szFileRef, std::vector
 	for(unsigned int i=0; i<vListRef.size(); ++i)
 	{
 		std::wstring szBlackItm = vListRef[i];
-		int len = 0;
+		size_t len = 0;
 		if(szBlackItm[szBlackItm.length()-1] == L'*')// * wild character  
 		{
 			len = szBlackItm.length() - 1;

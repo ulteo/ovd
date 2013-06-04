@@ -74,7 +74,7 @@ NTSTATUS WINAPI myNtCreateFile(	PHANDLE FileHandle,
 		UNICODE_STRING uni;
 
 		uni.Buffer = (PWSTR)result.c_str();
-		uni.Length = result.length() * 2;
+		uni.Length = (USHORT)result.length() * 2;
 		uni.MaximumLength = uni.Length;
 
 		InitializeObjectAttributes(&out, &uni, ObjectAttributes->Attributes, 0, ObjectAttributes->SecurityDescriptor);
@@ -108,7 +108,7 @@ NTSTATUS NTAPI myNtOpenFile(PHANDLE FileHandle,
 		UNICODE_STRING uni;
 
 		uni.Buffer = (PWSTR)result.c_str();
-		uni.Length = result.length() * 2;
+		uni.Length = (USHORT)result.length() * 2;
 		uni.MaximumLength = uni.Length;
 
 		InitializeObjectAttributes(&out, &uni, ObjectAttributes->Attributes, 0, ObjectAttributes->SecurityDescriptor);
@@ -134,7 +134,7 @@ NTSTATUS NTAPI myNtQueryAttributesFile(	POBJECT_ATTRIBUTES ObjectAttributes,
 		UNICODE_STRING uni;
 
 		uni.Buffer = (PWSTR)result.c_str();
-		uni.Length = result.length() * 2;
+		uni.Length = (USHORT)result.length() * 2;
 		uni.MaximumLength = uni.Length;
 
 		InitializeObjectAttributes(&out, &uni, ObjectAttributes->Attributes, 0, ObjectAttributes->SecurityDescriptor);
@@ -171,7 +171,7 @@ NTSTATUS NTAPI myNtSetInformationFile(	HANDLE FileHandle,
 
 			fr->ReplaceIfExists = pFileRename->ReplaceIfExists;
 			fr->RootDirectory = pFileRename->RootDirectory;
-			fr->FileNameLength = result.length() * 2;
+			fr->FileNameLength = (DWORD)result.length() * 2;
 			wcscpy_s(&fr->FileName[0], MAX_PATH * sizeof(wchar_t), result.c_str());
 
 			return OriginNtSetInformationFile(FileHandle, IoStatusBlock, (PVOID)fr, sizeof(buffer), FileInformationClass);

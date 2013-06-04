@@ -174,7 +174,7 @@ private:
 	std::wstring					m_szVirtualFileSpace;
 
 	// Origin User Profile path length
-	int								m_iUserProfileStringLength;
+	size_t								m_iUserProfileStringLength;
 
 	// Origin User Profile path with DevicePrefix //??//
 	std::wstring					m_szDeviceUserProfilePath;

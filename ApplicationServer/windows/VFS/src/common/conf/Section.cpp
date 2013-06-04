@@ -43,9 +43,9 @@ std::vector<std::wstring>& Section::getValues() {
 
 
 std::wstring& Section::getString(std::wstring key) {
-	int length = this->keys.size();
+	size_t length = this->keys.size();
 
-	for (int i = 0 ; i < length ; i++)
+	for (size_t i = 0 ; i < length ; i++)
 		if (this->keys[i].compare(key) == 0)
 			return this->values[i];
 
@@ -73,9 +73,9 @@ void Section::addValue(std::wstring key, std::wstring value) {
 }
 
 bool Section::hasKey(std::wstring key) {
-	int length = this->keys.size();
+	size_t length = this->keys.size();
 
-	for (int i = 0 ; i < length ; i++)
+	for (size_t i = 0 ; i < length ; i++)
 		if (this->keys[i].compare(key) == 0)
 			return true;
 
