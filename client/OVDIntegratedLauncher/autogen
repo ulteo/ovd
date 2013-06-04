@@ -1,9 +1,11 @@
 #! /usr/bin/python
+# -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -20,7 +22,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
-import pysvn
 import sys
 import time
 from subprocess import call
@@ -31,13 +32,8 @@ path = os.path.dirname( os.path.realpath( __file__ ) )
 if os.environ.has_key("OVD_VERSION"):
 	version = os.environ["OVD_VERSION"]
 else:
-	c = pysvn.Client()
-	revision = c.info(path)["revision"].number
-	if sys.platform == "win32":
-		version = "99.99.0.%05d"%(revision)
-	else:
-		version = "99.99+svn%05d"%(revision)
-
+	version = file("VERSION", "r").readline().strip()
+	version += "~dev"
 
 transform_files = []
 if sys.platform == "linux2":

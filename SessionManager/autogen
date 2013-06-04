@@ -39,12 +39,7 @@ done
 if [ -n "$OVD_VERSION" ]; then
     version="$OVD_VERSION"
 else
-    if [ -d .svn ]; then
-      revision=$(svnversion -c $SVN_DIR | cut -d':' -f2)
-    else
-      revision=0
-    fi
-    version="99.99.svn$revision"
+    version=$(cat VERSION | head -n 1)~dev
 fi
 
 sed -e "s/@MODULE@/${module}/g" \

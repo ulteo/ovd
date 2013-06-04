@@ -23,12 +23,7 @@
 if [ -n "$OVD_VERSION" ]; then
     version="$OVD_VERSION"
 else
-    if [ -d .svn ]; then
-      revision=$(LC_ALL=C svn info . | awk '/^Revision: / {printf "%05d\n", $2}')
-    else
-      revision=0
-    fi
-    version="99.99+svn$revision"
+    version=$(cat VERSION | head -n 1)~dev
 fi
 
 sed -e "s/@VERSION@/${version}/g" configure.ac.in > configure.ac

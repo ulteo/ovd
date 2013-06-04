@@ -3,6 +3,7 @@
 # Copyright (C) 2012-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
+# Author Julien LANGLOIS <julien@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -21,6 +22,7 @@
 import os
 import re
 import tempfile
+import time
 from subprocess import Popen, PIPE
 import Image
 
@@ -117,11 +119,11 @@ def compile_images():
 
 
 copyright = """/**
-* Copyright (C) 2012 Ulteo SAS
+* Copyright (C) %s Ulteo SAS
 * http://www.ulteo.com
 * this is the minified version of multiple files
 * see the original files for individual copyright information
-**/"""
+**/"""%(time.strftime("%Y"))
 
 if __name__ == "__main__":
 	compile_images()
