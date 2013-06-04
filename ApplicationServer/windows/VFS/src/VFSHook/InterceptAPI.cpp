@@ -66,10 +66,11 @@ NTSTATUS WINAPI myNtCreateFile(	PHANDLE FileHandle,
 				FileAttributes, ShareAccess, CreateDisposition, CreateOptions, EaBuffer, EaLength);
 	}
 
-	Logger::getSingleton().debug(L"myNtCreateFile");
 	std::wstring result;
 
 	if (vf.redirectFilePath(ObjectAttributes, result)) {
+		Logger::getSingleton().debug(L"myNtCreateFile");
+
 		OBJECT_ATTRIBUTES out;
 		UNICODE_STRING uni;
 
@@ -98,12 +99,12 @@ NTSTATUS NTAPI myNtOpenFile(PHANDLE FileHandle,
 	if(Logger::getSingleton().isLogging())
 		return OriginNtOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
 
-	Logger::getSingleton().debug(L"myNtOpenFile");
-
 	//Reserve origin data before modified
 	std::wstring result;
 
 	if (vf.redirectFilePath(ObjectAttributes, result)) {
+		Logger::getSingleton().debug(L"myNtOpenFile");
+
 		OBJECT_ATTRIBUTES out;
 		UNICODE_STRING uni;
 
@@ -126,10 +127,11 @@ NTSTATUS NTAPI myNtQueryAttributesFile(	POBJECT_ATTRIBUTES ObjectAttributes,
 	if(Logger::getSingleton().isLogging())
 		return OriginNtQueryAttributesFile(ObjectAttributes, FileInformation);
 
-	Logger::getSingleton().debug(L"myNtQueryAttributesFile");
 	std::wstring result;
 
 	if (vf.redirectFilePath(ObjectAttributes, result)) {
+		Logger::getSingleton().debug(L"myNtQueryAttributesFile");
+
 		OBJECT_ATTRIBUTES out;
 		UNICODE_STRING uni;
 
@@ -157,10 +159,10 @@ NTSTATUS NTAPI myNtSetInformationFile(	HANDLE FileHandle,
 			FileInformationLength, FileInformationClass);
 	}
 
-	Logger::getSingleton().debug(L"myNtSetInformationFile");
-
 	//FileRename
 	if(FileInformationClass == FileRenameInformation) {
+		Logger::getSingleton().debug(L"myNtSetInformationFile");
+
 		PFILE_RENAME_INFORMATION pFileRename = (PFILE_RENAME_INFORMATION)FileInformation;
 		std::wstring path = std::wstring(pFileRename->FileName, 0, pFileRename->FileNameLength>>1);
 		std::wstring result;
