@@ -116,6 +116,7 @@ void Configuration::parseUnions(INI& ini) {
 		std::wstring rsyncSrc = L"";
 		std::wstring rsyncFilter = L"";
 		bool deleteOnClose = false;
+		std::wstring predefinedDirectory;
 
 		Section* sec = ini.getSection(unionName);
 
@@ -139,6 +140,21 @@ void Configuration::parseUnions(INI& ini) {
 			try {
 				deleteOnClose = sec->getBool(L"deleteOnEnd");
 				unionNode.setDeleteOnClose(deleteOnClose);
+			}
+			catch (const UException&) { }
+
+			try {
+				std::list<std::wstring> l;
+				std::list<std::wstring>::iterator it;
+				std::wstring s = sec->getString(L"populate");
+				StringUtil::unquote(s);
+				StringUtil::split(l, s, L';');
+
+				for( it = l.begin() ; it != l.end() ; it++) {
+					std::wstring v = (*it);
+					StringUtil::atrim(v);
+					unionNode.addPredefinedDirectory(v);
+				}
 			}
 			catch (const UException&) { }
 		}
@@ -297,6 +313,9 @@ void Configuration::dump() {
 	log_info(L"  Unions:");
 	for(itUnions = this->unions.begin() ; itUnions != this->unions.end() ; itUnions++) {
 		Union& u = (*itUnions);
+		std::list<std::wstring> l;
+		std::list<std::wstring>::iterator it;
+
 		log_info(L"    - union: %s", u.getName().c_str());
 
 		log_info(L"      - path: %s", u.getPath().c_str());
@@ -307,5 +326,14 @@ void Configuration::dump() {
 
 		if (! u.getRsyncFilter().empty())
 			log_info(L"      - rsync filter: %s", u.getRsyncFilter().c_str());
+
+		l = u.getpredefinedDirectoryList();
+		if (! l.empty())
+			log_info(L"      - predefined directories:");
+
+		for(it = l.begin() ; it != l.end() ; it++)
+			log_info(L"        - %s", (*it));
+
+
 	}
 }

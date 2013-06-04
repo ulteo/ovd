@@ -75,6 +75,9 @@ VFS::status VFS::start() {
 
 	for (it = unionList.begin() ; it != unionList.end() ; it++) {
 		Union& u = (*it);
+		std::list<std::wstring> l;
+		std::list<std::wstring>::iterator it;
+
 		File f(u.getPath());
 
 		f.mkdirs();
@@ -87,6 +90,18 @@ VFS::status VFS::start() {
 			RSync rsync(u.getRsyncSrc(), u.getPath(), u.getRsyncFilter());
 			rsync.init();
 			rsync.start();
+		}
+
+		l = u.getpredefinedDirectoryList();
+
+		if (l.empty())
+			continue;
+
+		for(it = l.begin(); it != l.end() ; it++) {
+			File f(*it);
+			f.mkdirs();
+			if (!f.exist())
+				log_error(L"Failed to create directory %s", f.path().c_str());
 		}
 	}
 

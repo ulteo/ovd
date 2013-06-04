@@ -22,6 +22,7 @@
 #define UNION_H_
 
 #include <string>
+#include <list>
 
 
 class Union {
@@ -30,6 +31,7 @@ private:
 	std::wstring path;
 	std::wstring rsyncSrc;
 	std::wstring rsyncFilter;
+	std::list<std::wstring> predefinedDirectory;
 	bool deleteOnClose;
 
 public:
@@ -47,6 +49,8 @@ public:
 	bool isDeleteOnClose();
 	std::wstring& getRsyncSrc();
 	std::wstring& getRsyncFilter();
+	std::list<std::wstring>& getpredefinedDirectoryList();
+	void addPredefinedDirectory(std::wstring& dir);
 };
 
 #endif /* UNION_H_ */

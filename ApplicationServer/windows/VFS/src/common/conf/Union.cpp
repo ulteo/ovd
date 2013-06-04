@@ -19,6 +19,7 @@
  */
 
 #include "Union.h"
+#include <common/fs/File.h>
 
 
 
@@ -72,3 +73,20 @@ std::wstring& Union::getRsyncFilter() {
 	return this->rsyncFilter;
 }
 
+
+std::list<std::wstring>& Union::getpredefinedDirectoryList() {
+	return this->predefinedDirectory;
+}
+
+
+void Union::addPredefinedDirectory(std::wstring& dir){
+	File d(dir);
+	if (d.isAbsolute()) {
+		this->predefinedDirectory.push_back(d.path());
+		return;
+	}
+
+	File root(this->path);
+	root.join(dir);
+	this->predefinedDirectory.push_back(root.path());
+}
