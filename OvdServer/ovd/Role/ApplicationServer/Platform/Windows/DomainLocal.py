@@ -24,8 +24,8 @@ from DomainMicrosoft import DomainMicrosoft
 
 class DomainLocal(DomainMicrosoft):
 	def doCustomizeRegistry(self, hive):
-	return True
+		return True
 	
 	
 	def onSessionEnd(self):
-	return True
+		return True
