@@ -37,6 +37,7 @@ public:
 
 	static bool setEnv(const std::wstring& key, const std::wstring& value);
 	static bool getEnv(const std::wstring& key, std::wstring& value);
+	static void getVersionName(std::wstring& out);
 	static void refreshDesktop();
 };
 

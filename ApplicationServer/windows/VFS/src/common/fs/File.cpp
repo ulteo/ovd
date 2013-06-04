@@ -21,6 +21,7 @@
 #include "File.h"
 #include "string.h"
 #include <common/Logger.h>
+#include <common/sys/System.h>
 #include <Windows.h>
 #include <Shlwapi.h>
 #include <Shlobj.h>
@@ -111,12 +112,19 @@ bool File::expand() {
 
 		posEnd = sub.find(L"}");
 		std::wstring env = sub.substr(2, posEnd - 2);
-		int status = GetEnvironmentVariable(env.c_str(), temp, sizeof(temp));
+		if (env.compare(L"UOS_VERSION") == 0) {
+			std::wstring v;
+			System::getVersionName(v);
+			res.replace(pos, env.length()+3, v);
+		}
+		else {
+			int status = GetEnvironmentVariable(env.c_str(), temp, sizeof(temp));
 
-		if (status > 0)
-			res.replace(pos, env.length()+3, temp);
-		else
-			log_warn(L"%s is not a right environment variable", env.c_str());
+			if (status > 0)
+				res.replace(pos, env.length()+3, temp);
+			else
+				log_warn(L"%s is not a right environment variable", env.c_str());
+		}
 
 		pos +=2;
 	}

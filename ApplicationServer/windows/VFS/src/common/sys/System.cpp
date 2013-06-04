@@ -22,6 +22,7 @@
 #include <windows.h>
 #include <shlwapi.h>
 #include <shlobj.h>
+#include <sstream>
 #include <common/Logger.h>
 
 
@@ -76,6 +77,53 @@ bool System::getEnv(const std::wstring& key, std::wstring& value) {
 
 	value = buffer;
 	return true;
+}
+
+
+void System::getVersionName(std::wstring& out) {
+	DWORD dwVersion = GetVersion();
+	DWORD dwMajorVersion = (DWORD)(LOBYTE(LOWORD(dwVersion)));
+	DWORD dwMinorVersion = (DWORD)(HIBYTE(LOWORD(dwVersion)));
+
+	if (dwMajorVersion == 5) {
+		switch(dwMinorVersion) {
+		case 1:
+			out = L"XP";
+			break;
+
+		case 2:
+			out = L"2003";
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	if (dwMajorVersion == 6) {
+		switch(dwMinorVersion) {
+		case 0:
+			out = L"2008";
+			break;
+
+		case 1:
+			out = L"2008R2";
+			break;
+
+		case 2:
+			out = L"2012";
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	if (out.empty()) {
+		std::wostringstream os;
+		os<<dwMajorVersion<<"."<<dwMinorVersion;
+		out = os.str();
+	}
 }
 
 
