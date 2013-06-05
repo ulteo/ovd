@@ -48,6 +48,7 @@ bool Process::start(bool wait) {
 	ZeroMemory( &this->si, sizeof(STARTUPINFO));
 	ZeroMemory( &this->pi, sizeof(PROCESS_INFORMATION));
 	this->si.cb = sizeof(STARTUPINFO);
+	this->si.dwFlags |= STARTF_USESHOWWINDOW;
 	this->si.wShowWindow = FALSE;
 
 	if (! CreateProcess(NULL, (LPWSTR)commandLine.c_str(), NULL, NULL, FALSE, 0, NULL, NULL, &this->si, &this->pi)) {
