@@ -25,7 +25,7 @@
 
 
 void usage() {
-	std::cout<<"usage: VFS.exe [-h] [-p 'profile path']"<<std::endl;
+	std::cout<<"usage: VFS.exe [-h] [-f] [-p 'profile path']"<<std::endl;
 }
 
 
@@ -35,6 +35,7 @@ int WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmds
 	std::wstring path;
 	LPWSTR *argv;
 	int argc = 0;
+	int index;
 	int status;
 
 	argv = CommandLineToArgvW(GetCommandLineW(), &argc);
@@ -48,21 +49,28 @@ int WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmds
 		return VFS::INVALID_ARGUMENT;
 	}
 
-	arg = argv[1];
+	index = 1;
+	while(index < argc) {
+		arg = argv[index++];
 
-	if (arg.compare(L"-h") == 0 || arg.compare(L"/h") == 0) {
-		usage();
-		return VFS::SUCCESS;
-	}
-
-	if (arg.compare(L"-p") == 0 || arg.compare(L"/p") == 0) {
-		if (argc != 3) {
+		if (arg.compare(L"-h") == 0 || arg.compare(L"/h") == 0) {
 			usage();
 			return VFS::INVALID_ARGUMENT;
 		}
 
-		path = argv[2];
-		StringUtil::unquote(path);
+		if (arg.compare(L"-p") == 0 || arg.compare(L"/p") == 0) {
+			if (index > argc) {
+				usage();
+				return VFS::INVALID_ARGUMENT;
+			}
+
+			path = argv[index++];
+			StringUtil::unquote(path);
+		}
+
+		if (arg.compare(L"-f") == 0 || arg.compare(L"/f") == 0) {
+			AttachConsole(ATTACH_PARENT_PROCESS);
+		}
 	}
 
 	LocalFree(argv);
