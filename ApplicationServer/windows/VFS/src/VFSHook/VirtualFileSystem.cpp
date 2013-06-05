@@ -90,7 +90,7 @@ bool VirtualFileSystem::initFileSystem()
 
 		StringUtil::replaceAll(rule, L"\\", L"\\\\");
 
-		VFSRule* vfsrule = new VFSRule(rule, u.getPath());
+		VFSRule* vfsrule = new VFSRule(rule, u.getPath(), u.needTranslate());
 
 		vfsrule->compile();
 		this->fsRules.push_back(vfsrule);
@@ -237,10 +237,16 @@ bool VirtualFileSystem::substitutePath(	const std::wstring& szPathRef,
 			// match
 			Logger::getSingleton().debug(L"check path %s", szRemainPath.c_str());
 			for (it = this->fsRules.begin() ; it != this->fsRules.end() ; it++) {
+				Logger::getSingleton().debug(L"   => test rules %s", (*it)->getRule().c_str());
+
 				if ((*it)->match(szRemainPath)) {
 					Logger::getSingleton().debug(L"   => match %s -> %s", (*it)->getRule().c_str(), (*it)->getDestination());
+					std::wstring remain = szRemainPath;
 
-					pszSubstitutedPath = (*it)->getDestination() + SEPERATOR + trans.translate(szRemainPath, true);
+					if ((*it)->needTranslate())
+						remain = trans.translate(szRemainPath, true);
+
+					pszSubstitutedPath = (*it)->getDestination() + SEPERATOR + remain;
 					Logger::getSingleton().debug(L"   => replace by is %s %s", pszSubstitutedPath.c_str(), (szDstRef + SEPERATOR + szRemainPath));
 					bSubstituted = true;
 

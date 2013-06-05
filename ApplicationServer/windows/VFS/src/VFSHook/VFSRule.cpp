@@ -23,7 +23,7 @@
 #include <common/UException.h>
 
 
-VFSRule::VFSRule(const std::wstring& rule, const std::wstring& destination): rule(rule), destination(destination), reg(NULL) { }
+VFSRule::VFSRule(const std::wstring& rule, const std::wstring& destination, bool translate): rule(rule), destination(destination), reg(NULL), translate(translate) { }
 
 VFSRule::~VFSRule() {
 	if (this->reg)
@@ -60,4 +60,9 @@ const std::wstring& VFSRule::getRule() {
 
 const std::wstring& VFSRule::getDestination() {
 	return this->destination;
+}
+
+
+bool VFSRule::needTranslate() {
+	return this->translate;
 }

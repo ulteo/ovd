@@ -30,9 +30,10 @@ private:
 	std::wstring rule;
 	std::wstring destination;
 	std::wregex* reg;
+	bool translate;
 
 public:
-	VFSRule(const std::wstring& rule, const std::wstring& unionName);
+	VFSRule(const std::wstring& rule, const std::wstring& unionName, bool translate);
 	virtual ~VFSRule();
 
 	bool compile();
@@ -40,6 +41,7 @@ public:
 	bool match(const std::wstring& path);
 	const std::wstring& getRule();
 	const std::wstring& getDestination();
+	bool needTranslate();
 };
 
 #endif /* VFSRULE_H_ */

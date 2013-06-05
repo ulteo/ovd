@@ -144,6 +144,12 @@ void Configuration::parseUnions(INI& ini) {
 			catch (const UException&) { }
 
 			try {
+				bool translate = sec->getBool(L"translate");
+				unionNode.setTranslate(translate);
+			}
+			catch (const UException&) { }
+
+			try {
 				std::list<std::wstring> l;
 				std::list<std::wstring>::iterator it;
 				std::wstring s = sec->getString(L"populate");

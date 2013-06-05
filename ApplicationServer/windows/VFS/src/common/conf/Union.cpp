@@ -23,7 +23,7 @@
 
 
 
-Union::Union(std::wstring& name): name(name), deleteOnClose(false) { }
+Union::Union(std::wstring& name): name(name), deleteOnClose(false), translate(true) { }
 
 
 Union::~Union() { }
@@ -61,6 +61,16 @@ std::wstring& Union::getPath() {
 
 bool Union::isDeleteOnClose() {
 	return this->deleteOnClose;
+}
+
+
+bool Union::needTranslate() {
+	return this->translate;
+}
+
+
+void Union::setTranslate(bool value) {
+	this->translate = value;
 }
 
 

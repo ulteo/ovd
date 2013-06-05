@@ -33,6 +33,7 @@ private:
 	std::wstring rsyncFilter;
 	std::list<std::wstring> predefinedDirectory;
 	bool deleteOnClose;
+	bool translate;
 
 public:
 	Union(std::wstring& name);
@@ -47,6 +48,8 @@ public:
 	std::wstring& getName();
 	std::wstring& getPath();
 	bool isDeleteOnClose();
+	bool needTranslate();
+	void setTranslate(bool value);
 	std::wstring& getRsyncSrc();
 	std::wstring& getRsyncFilter();
 	std::list<std::wstring>& getpredefinedDirectoryList();
