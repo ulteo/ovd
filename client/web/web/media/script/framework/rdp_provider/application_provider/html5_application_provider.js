@@ -2,26 +2,31 @@
 
 function Html5ApplicationProvider(rdp_provider) {
 	this.initialize(rdp_provider);
-	this.tunnel = this.rdp_provider.guac_tunnel;
-	this.defaultHandler = this.tunnel.oninstruction;
+	this.connections = this.rdp_provider.connections;
 
 	/* Install instruction hook */
 	var self = this; /* closure */
-	this.tunnel.oninstruction = function(opcode, parameters) {
-		self.handleOrders(opcode, parameters);
-		self.defaultHandler(opcode, parameters);
-	};
+	for(var i=0 ; i<this.connections.length ; ++i) {
+		(function(server_id) {
+			 self.connections[server_id].guac_tunnel.addInstructionHandler("ovdapp", self.handleOrders.bind(self, server_id));
+		 })(i);
+	}
 }
 Html5ApplicationProvider.prototype = new ApplicationProvider();
 
 Html5ApplicationProvider.prototype.applicationStart_implementation = function (application_id, token) { 
+	var server_id = this.getServerByAppId(application_id);
 	var opcode    = "01";
 	var appToken  = this.write(token, 4);
 	var appId     = this.write(application_id, 4);
-
 	this.applications[token] = new ApplicationInstance(this, application_id, token);
-	this.tunnel.sendMessage("ovdapp", opcode+""+appToken+""+appId+";\n");
-	this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"unknown"});
+
+	if(server_id != -1) {
+		this.connections[server_id].guac_tunnel.sendMessage("ovdapp", opcode+""+appToken+""+appId+";");
+		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"unknown"});
+	} else {
+		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"aborted"});
+	}
 }
 
 Html5ApplicationProvider.prototype.applicationStartWithArgs_implementation = function(application_id, args, token) { 
@@ -31,12 +36,20 @@ Html5ApplicationProvider.prototype.applicationStartWithArgs_implementation = fun
 Html5ApplicationProvider.prototype.applicationStop_implementation = function(application_id, token) { 
 }
 
-Html5ApplicationProvider.prototype.handleOrders = function(opcode, parameters) {
+Html5ApplicationProvider.prototype.handleOrders = function(server_id, opcode, parameters) {
 	if(opcode == "ovdapp") {
 		/* Format :
 		parameters[0] = binary encoded
 			uint8 : opcode
 		*/
+
+		var connection = this.connections[server_id];
+		var guac_client   = connection.guac_client;
+		var guac_display  = connection.guac_display
+		var guac_canvas   = connection.guac_canvas
+		var guac_tunnel   = connection.guac_tunnel
+		var guac_mouse    = connection.guac_mouse
+		var guac_keyboard = connection.guac_keyboard
 
 		var opcode = parameters[0].slice(0,2);
 		var bin =    parameters[0].slice(2);

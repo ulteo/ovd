@@ -62,20 +62,3 @@ JavaApplicationProvider.prototype.handleOrders = function(app_id, instance, stat
 		console.log("Unknown application status : "+id+" "+token+" "+status);
 	}
 }
-
-JavaApplicationProvider.prototype.getServerByAppId = function(application_id) {
-	var session = this.rdp_provider.session_management.session;
-	var servers = session.servers;
-
-	for(var i = 0 ; i<servers.length ; ++i) {
-		var applications = servers[i].applications;
-
-		for(var j = 0 ; j<applications.length ; ++j) {
-			if(applications[j].id == application_id) {
-				return i;
-			}
-		}
-	}
-
-	return -1;
-}

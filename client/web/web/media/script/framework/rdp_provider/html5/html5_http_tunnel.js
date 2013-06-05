@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-HTTPTunnel = function(tunnelURL) {
+HTTPTunnel = function(tunnelURL, index) {
 
     var self = this; /* closure */
 
@@ -60,6 +60,8 @@ HTTPTunnel = function(tunnelURL) {
     var sendingMessages = false;
     var outputMessageBuffer = "";
 
+    var instructionHandlers = {};
+
 		this.setStatus = function(state) {
 			var status = ""
 			currentState = state;
@@ -69,7 +71,7 @@ HTTPTunnel = function(tunnelURL) {
 			else if(state == STATE_DISCONNECTED) {status = "disconnected";}
 			else {return;}
 			
-			window.serverStatus(0, status);
+			window.serverStatus(index, status);
 		}
 
     this.sendMessage = function() {
@@ -283,7 +285,11 @@ HTTPTunnel = function(tunnelURL) {
                             // Get opcode
                             var opcode = elements.shift();
 
-                            // Call instruction handler.
+                            // Call custom instruction handlers.
+                            if (instructionHandlers[opcode])
+                                instructionHandlers[opcode](opcode, elements);
+
+                            // Call default instruction handler.
                             if (self.oninstruction != null)
                                 self.oninstruction(opcode, elements);
 
@@ -410,6 +416,16 @@ HTTPTunnel = function(tunnelURL) {
 
     this.disconnect = function() {
         this.setStatus(STATE_DISCONNECTED);
+    };
+
+    this.addInstructionHandler = function(opcode, callback) {
+        instructionHandlers[opcode] = callback;
+    };
+
+    this.removeInstructionHandler = function(opcode) {
+        if(instructionHandlers[opcode]) {
+            delete instructionHandlers[opcode];
+        }
     };
 
 };

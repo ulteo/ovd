@@ -51,6 +51,23 @@ ApplicationProvider.prototype.applicationStop = function(application_id, token) 
 	this.applicationStop_implementation(application_id, token);
 }
 
+ApplicationProvider.prototype.getServerByAppId = function(application_id) {
+	var session = this.rdp_provider.session_management.session;
+	var servers = session.servers;
+
+	for(var i = 0 ; i<servers.length ; ++i) {
+		var applications = servers[i].applications;
+
+		for(var j = 0 ; j<applications.length ; ++j) {
+			if(applications[j].id == application_id) {
+				return i;
+			}
+		}
+	}
+
+	return -1;
+}
+
 ApplicationProvider.prototype.end = function() {
 	this.rdp_provider.session_management.removeCallback("ovd.rdpProvider.applicationProvider.applicationStart",         this.handler);
 	this.rdp_provider.session_management.removeCallback("ovd.rdpProvider.applicationProvider.applicationStartWithArgs", this.handler);
