@@ -29,11 +29,19 @@ void usage() {
 }
 
 
-int wmain(int argc, wchar_t** argv) {
+int WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow) {
 	VFS vfs;
 	std::wstring arg;
 	std::wstring path;
+	LPWSTR *argv;
+	int argc = 0;
 	int status;
+
+	argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+	if(argv == NULL) {
+		usage();
+		return VFS::INVALID_ARGUMENT;
+	}
 
 	if (argc < 2) {
 		usage();
@@ -57,6 +65,7 @@ int wmain(int argc, wchar_t** argv) {
 		StringUtil::unquote(path);
 	}
 
+	LocalFree(argv);
 
 	status = vfs.init(path);
 	if (status != VFS::SUCCESS)
