@@ -286,7 +286,6 @@ bool VirtualFileSystem::redirectFilePath(POBJECT_ATTRIBUTES ObjectAttributesPtr,
 	}
 
 	path = std::wstring(ObjectAttributesPtr->ObjectName->Buffer, 0, ObjectAttributesPtr->ObjectName->Length>>1);
-	Logger::getSingleton().debug(L"substiture %s ", path.c_str());
 
 	if (substitutePath(path, m_szDeviceUserProfilePath, m_szVirtualFileSpace, true, result)) {
 		result = DEVICE_PREFIX + result;
@@ -301,7 +300,6 @@ bool VirtualFileSystem::redirectFilePath(const std::wstring& path, std::wstring&
 	// Reset File_RENAME_INFO, redirect if substitutePath success
 	if( substitutePath(	path, m_szDeviceUserProfilePath, m_szVirtualFileSpace, true, result)) {
 		result = DEVICE_PREFIX + result;
-		//Logger::getSingleton().debug(L"substiture %s by %s ", szFilePath, (*puniszRedirectPathPtr)->Buffer);
 		return true;
 	}
 
