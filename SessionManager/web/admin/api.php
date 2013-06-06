@@ -2254,13 +2254,7 @@ class OvdAdminSoap {
 		
 		$search_limit = $this->prefs->get('general', 'max_items_per_page');
 		
-		list($result, $nb) = $userDB->getUsersContains($search_item_, $search_fields_, $search_limit+1);
-		
-		$partial = false;
-		if (count($result) > $search_limit) {
-			array_pop($result);
-			$partial = true;
-		}
+		list($result, $partial) = $userDB->getUsersContains($search_item_, $search_fields_, $search_limit);
 		
 		$ret = array();
 		foreach($result as $user) {
@@ -2552,13 +2546,7 @@ class OvdAdminSoap {
 		
 		$search_limit = $this->prefs->get('general', 'max_items_per_page');
 		
-		list($result, $nb) = $userGroupDB->getGroupsContains($search_item_, $search_fields_, $search_limit+1);
-		
-		$partial = false;
-		if (count($result) > $search_limit) {
-			array_pop($result);
-			$partial = true;
-		}
+		list($result, $partial) = $userGroupDB->getGroupsContains($search_item_, $search_fields_, $search_limit);
 		
 		$ret = array();
 		foreach($result as $group) {
