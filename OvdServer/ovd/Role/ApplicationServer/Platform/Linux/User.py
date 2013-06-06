@@ -293,3 +293,19 @@ class User(AbstractUser):
 				success = False
 		
 		return success
+	
+	
+	@classmethod
+	def exec_command(cls, cmd, wait=True):
+			subprocess_args = {}
+			subprocess_args["stdin"] = subprocess.PIPE
+			subprocess_args["stdout"] = subprocess.PIPE
+			subprocess_args["stderr"] = subprocess.STDOUT
+			subprocess_args["shell"] = True
+			subprocess_args["preexec_fn"] = os.setpgrp
+			
+			p = subprocess.Popen(System.local_encode(cmd), **subprocess_args)
+			if wait:
+					p.wait()
+			
+			return p
