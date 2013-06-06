@@ -84,7 +84,9 @@ class UsersList {
 		$str.= '<table><tr>';
 		$str.= '<td>'._('Search for user pattern: ').'</td>';
 		$str.= '<td><input type="text" name="search_item" value="'.$this->search_item.'" /> ';
-		$str.= '<input type="submit" value="'._('Search').'" /><td>';
+		$str.= '<input type="submit" value="'._('Search').'" /> ';
+		$str.= '<input type="button" value="'._('Reset filter').'" onclick="this.form.search_item.value=\'\'; this.form.submit();"'.($this->empty_filter?' disabled="disabled"':'').'/>';
+		$str.= '</td>';
 		$str.= '</tr><tr><td></td>';
 		$str.= '<td>'._('Search in: ');
 		$str.= '<input type="checkbox" name="search_fields[]" value="login"';
