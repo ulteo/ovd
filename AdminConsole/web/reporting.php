@@ -30,8 +30,8 @@
  * to: 2009-03-01 12:00
  **/
 
-require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/includes/page_template.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 include('libchart/classes/libchart.php');
 
 define('TMP_DIR', SPOOL_DIR);

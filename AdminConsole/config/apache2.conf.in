@@ -1,7 +1,7 @@
 # Ulteo session manager admin alias
 
-Alias /ovd/admin @DATADIR@/ulteo/administration_console
-<Directory @DATADIR@/ulteo/administration_console>
+Alias /ovd/admin @DATADIR@/ulteo/administration_console/web
+<Directory @DATADIR@/ulteo/administration_console/web>
     Options FollowSymLinks
     AllowOverride None
     Order allow,deny

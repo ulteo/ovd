@@ -1,8 +1,8 @@
-# Copyright (C) 2008-2012 Ulteo SAS
+# Copyright (C) 2008-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Gauvain POCENTEK <gauvain@linutop.com> 2008-2009
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2012
+# Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,7 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-SUBDIRS = web config
+SUBDIRS = web config classes includes
 
 DIST_SUBDIRS = $(SUBDIRS)
 
