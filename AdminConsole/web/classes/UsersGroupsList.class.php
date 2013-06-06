@@ -20,6 +20,7 @@
  **/
 
 class UsersGroupsList {
+	protected $empty_filter = true;
 	protected $search_item;
 	protected $search_fields;
 	
@@ -36,6 +37,7 @@ class UsersGroupsList {
 		if (array_keys_exists_not_empty(array('search_item'), $array_env) && isset($array_env['search_fields'])) {
 			$this->search_item = $array_env['search_item'];
 			$this->search_fields = $array_env['search_fields'];
+			$this->empty_filter = false;
 		}
 	}
 	
@@ -66,6 +68,10 @@ class UsersGroupsList {
 	
 	
 	function getForm() {
+		if ($this->empty_filter && !$this->partial_result) {
+			return '';
+		}
+		
 		$str = '';
 		$str.= '<div style="margin-bottom: 15px;">';
 		$str.= '<form action="" method="GET">';
