@@ -118,26 +118,11 @@ Html5RdpProvider.prototype.connectApplications = function() {
 				connection.guac_display = connection.guac_client.getDisplay();
 				connection.guac_canvas  = connection.guac_display.firstChild.firstChild.firstChild;
 
-				/* bind mouse events */
-				connection.guac_mouse = new Guacamole.Mouse(connection.guac_display);
-				connection.guac_mouse.onmousedown = connection.guac_mouse.onmouseup = connection.guac_mouse.onmousemove = function(mouseState) {
-					connection.guac_client.sendMouseState(mouseState);
-				};
-
-				/* bind keyboard events */
-				connection.guac_keyboard= new Guacamole.Keyboard(document);
-				connection.guac_keyboard.onkeydown = function (keysym) {
-					connection.guac_client.sendKeyEvent(1, keysym);
-				};
-				connection.guac_keyboard.onkeyup = function (keysym) {
-					connection.guac_client.sendKeyEvent(0, keysym);
-				};
-
 				/* Save server settings */
 				self.connections.push(connection);
 
 				/* Hide main canvas */
-				jQuery(connection.guac_canvas).width("1").height("1");
+				jQuery(connection.guac_canvas).hide();
 
 				/* Notify main panel insertion */
 				self.session_management.fireEvent("ovd.rdpProvider.desktopPanel", self, {"name":"Desktop_"+index, "node":connection.guac_display});

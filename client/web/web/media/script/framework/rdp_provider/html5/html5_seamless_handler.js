@@ -1,8 +1,8 @@
 function Html5SeamlessHandler(rdp_provider) {
 	this.rdp_provider = rdp_provider;
 	this.connections = this.rdp_provider.connections;
-	this.refreshTimer = null;
-	this.windowIdList = new Array();
+	this.handler = this.handleEvents.bind(this);
+	this.message_id = 0;
 
 	/* Install instruction hook */
 	var self = this; /* closure */
@@ -12,13 +12,8 @@ function Html5SeamlessHandler(rdp_provider) {
 		})(i);
 	}
 
-	/* Refresh windows with a timeout */
-	var self = this; /* closure */
-	this.refreshTimer = setInterval( function() {
-		for (var i=0 ; i<self.windowIdList.length ; ++i) {
-			self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.windowUpdate", self, {"id":self.windowIdList[i]});
-		}
-	}, 100);
+	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.seamless.out.*",   this.handler);
+	this.rdp_provider.session_management.addCallback("ovd.session.server.statusChanged", this.handler);
 }
 
 Html5SeamlessHandler.prototype.handleOrders = function(server_id, opcode, parameters) {
@@ -43,19 +38,23 @@ Html5SeamlessHandler.prototype.handleOrders = function(server_id, opcode, parame
 		var display = guac_client.getDisplay();
 		var main_canvas = display.firstChild.firstChild.firstChild;
 
+		/* Context params for windows */
+		var params = {};
+		params["rdp_provider"] = this.rdp_provider;
+		params["server_id"] = server_id;
+		params["connection"] = connection;
+		params["main_canvas"] = main_canvas;
+
 		if(seamless[0] == "HELLO") {
-		/* Format :
-			 seamless[2] = flags (0x0001 = reconnect)
-		*/
-			if(seamless[2] == 0) {
-				this.rdp_provider.session_management.fireEvent("ovd.log", this, {"message":"Begin seamless session"});
-			} else {
-				this.rdp_provider.session_management.fireEvent("ovd.log", this, {"message":"Oppening existing session"});
-				guac_tunnel.sendMessage("seamrdp", "SYNC,1;\n");
+			/* seamless[2] = flags (0x0001 = reconnect)
+			*/
+			if(seamless[2] == 1) {
+				/* Begin session recovery */
+				guac_tunnel.sendMessage("seamrdp", "SYNC,"+ (this.message_id++) +";\n");
 			}
 		} else if(seamless[0] == "CREATE") {
 			/* seamless[2] = Window id
-			   seamless[3] = group
+				 seamless[3] = group
 				 seamless[4] = parent id
 				 seamless[5] = flags
 					 0x01 = Modal
@@ -64,66 +63,42 @@ Html5SeamlessHandler.prototype.handleOrders = function(server_id, opcode, parame
 					 0x08 = FixedSize
 					 0x10 = ToolTip
 			*/
-			this.windowIdList.push(seamless[2]);
+			params["id"] = parseInt(seamless[2]);
+			params["group"] = parseInt(seamless[3]);
+			params["parent"] = parseInt(seamless[4]);
+			params["attributes"] = new Array();
 
-			/* Create the window content node */
-			var content = document.createElement("CANVAS");
-			var params = {};
-			params["id"] = seamless[2];
-			params["content"] = content;
-			params["update"] = function(win, params) {
-				var win_content = win.getContent();
-				win_content.width = win.w;
-				win_content.height = win.h;
+			var flags = parseInt(seamless[5]);
+			if(flags & 0x01) { params["attributes"].push("Modal"); }
+			if(flags & 0x02) { params["attributes"].push("Topmost"); }
+			if(flags & 0x04) { params["attributes"].push("Popup"); }
+			if(flags & 0x08) { params["attributes"].push("Fixedsize"); }
+			if(flags & 0x10) { params["attributes"].push("Tooltip"); }
 
-				var ctx = win_content.getContext("2d");
-				try {
-					/* !!!! Bound check !!!! */
-					ctx.drawImage(main_canvas,win.x,win.y,win.w,win.h,0,0,win.w,win.h);
-				} catch(e) {}
-			}
-				
-			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.windowCreate", this, params);
-
-			/* bind events */
-			var self = this; /* closure */
-			var mouse = new Guacamole.Mouse(content);
-			mouse.onmousemove = mouse.onmousedown = mouse.onmouseup = function(mouseState) {
-				var x = parseInt(mouseState.x)+parseInt(content.seamless_window.x);
-				var y = parseInt(mouseState.y)+parseInt(content.seamless_window.y);
-				var newState = new Guacamole.Mouse.State(x, y, mouseState.left, mouseState.middle, mouseState.right, mouseState.up, mouseState.down);
-				guac_client.sendMouseState(newState);
-			};
-
+			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.in.windowCreate", this, params);
 		} else if(seamless[0] == "DESTROY") {
 			/* seamless[2] = Window id
 				 seamless[3] = flags
 			*/
-			var params = {};
-			params["id"] = seamless[2];
-			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.windowDestroy", this, params);
-			var new_windowIdList = new Array();
-			for(var i = 0 ; i<this.windowIdList.length ; ++i) {
-				if(this.windowIdList[i] != seamless[2]) {
-					new_windowIdList.push(this.windowIdList[i]);
-				}
-			}
-			this.windowIdList = new_windowIdList;
+			params["id"] = parseInt(seamless[2]);
+			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.in.windowDestroy", this, params);
 		} else if(seamless[0] == "DESTROYGRP") {
 			/* seamless[2] = groupID
-			   seamless[3] = flags
+				 seamless[3] = flags
 			*/
+			params["id"] = parseInt(seamless[2]);
+			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.in.groupDestroy", this, params);
 		} else if(seamless[0] == "TITLE") {
 			/* seamless[2] = Window id
-			   seamless[3] = Title
+				 seamless[3] = Title
 			*/
-			var params = {};
-			params["id"] = seamless[2];
-			params["title"] = seamless[3];
-			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.windowProperties", this, params);
+			params["id"] = parseInt(seamless[2]);
+			params["property"] = "title";
+			params["value"] = seamless[3];
+			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.in.windowPropertyChanged", this, params);
 		} else if(seamless[0] == "SETICON") {
 			/* seamless[2] = Window id
-			   seamless[3] = Chunk seq number
+				 seamless[3] = Chunk seq number
 				 seamless[4] = Format
 				 seamless[5] = Width
 				 seamless[6] = Height
@@ -131,47 +106,53 @@ Html5SeamlessHandler.prototype.handleOrders = function(server_id, opcode, parame
 			*/
 		} else if(seamless[0] == "POSITION") {
 			/* seamless[2] = Window id
-			   seamless[3] = Position x
+				 seamless[3] = Position x
 				 seamless[4] = Position y
 				 seamless[5] = Width
 				 seamless[6] = Height
 				 seamless[7] = Flags
 			*/
-			var params = {};
-			params["id"] = seamless[2];
-			params["position"] = new Array(seamless[3], seamless[4]);
-			params["size"] = new Array(seamless[5], seamless[6]);
-			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.windowProperties", this, params);
+			params["id"] = parseInt(seamless[2]);
+			params["property"] = "position";
+			params["value"] = [parseInt(seamless[3]), parseInt(seamless[4])];
+			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.in.windowPropertyChanged", this, params);
+
+			params["id"] = parseInt(seamless[2]);
+			params["property"] = "size";
+			params["value"] = [parseInt(seamless[5]), parseInt(seamless[6])];
+			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.in.windowPropertyChanged", this, params);
 		} else if(seamless[0] == "STATE") {
 			/* seamless[2] = Window id
-			   seamless[3] = state
+				 seamless[3] = state
 					 -1 = Not yet mapped
-					  0 = Normal
-					  1 = Iconify
-					  2 = Maximized (both state)
-					  3 = Full screen
+						0 = Normal
+						1 = Iconify
+						2 = Maximized (both state)
+						3 = Full screen
 				 seamless[4] = Flags
 			*/
-			var params = {};
-			params["id"] = seamless[2];
-			params["visible"] = (parseInt(seamless[3]) == 0 || parseInt(seamless[3]) == 2 || parseInt(seamless[3]) == 3);
-			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.windowProperties", this, params);
+			params["id"] = parseInt(seamless[2]);
+			params["property"] = "state";
 
-			if(parseInt(seamless[3]) == 2 || parseInt(seamless[3]) == 3) {
-				var params = {};
-				params["id"] = seamless[2];
-				params["position"] = new Array(0, 0);
-				params["size"] = new Array(main_canvas.width, main_canvas.height);
-				this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.windowProperties", this, params);
+			var state = parseInt(seamless[3]);
+			switch(state) {
+				case -1 : params["value"] = "Notmapped";  break;
+				case  0 : params["value"] = "Normal";     break;
+				case  1 : params["value"] = "Iconify";    break;
+				case  2 : params["value"] = "Maximized";  break;
+				case  3 : params["value"] = "Fullscreen"; break;
+				default : params["value"] = "Normal";
 			}
+
+			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.in.windowPropertyChanged", this, params);
 		} else if(seamless[0] == "FOCUS") {
 			/* seamless[2] = Window id
-			   seamless[3] = Action (Unused by server)
+				 seamless[3] = Action (Unused by server)
 			*/
-			var params = {};
-			params["id"] = seamless[2];
-			params["focus"] = true;
-			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.windowProperties", this, params);
+			params["id"] = parseInt(seamless[2]);
+			params["property"] = "focus";
+			params["value"] = true;
+			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.in.windowPropertyChanged", this, params);
 		} else if(seamless[0] == "ACK") {
 			/* seamless[2] = id of ACKed message
 			*/
@@ -185,5 +166,56 @@ Html5SeamlessHandler.prototype.handleOrders = function(server_id, opcode, parame
 			/* seamless[2] = message
 			*/
 		}
-	} 
+	}
+}
+
+Html5SeamlessHandler.prototype.handleEvents = function(type, source, params) {
+	if(type == "ovd.rdpProvider.seamless.out.windowDestroy") {
+		var id = parseInt(params["id"]).toString(16);
+		var server_id = params["server_id"];
+		var connection = this.connections[server_id];
+		var guac_tunnel = connection.guac_tunnel
+		guac_tunnel.sendMessage("seamrdp", "DESTROY,"+ (this.message_id++) +","+id+",;\n");
+	} else if(type == "ovd.rdpProvider.seamless.out.windowPropertyChanged") {
+		var id = parseInt(params["id"]).toString(16);
+		var server_id = params["server_id"];
+		var property = params["property"];
+		var value = params["value"];
+		var connection = this.connections[server_id];
+		var guac_tunnel = connection.guac_tunnel
+
+		switch(property) {
+			case "position" :
+				var size = source.getSize();
+				var w = size[0];
+				var h = size[1];
+				var x = value[0];
+				var y = value[1];
+				guac_tunnel.sendMessage("seamrdp", "POSITION,"+ (this.message_id++) +","+id+","+x+","+y+","+w+","+h+",;\n");
+				break
+
+			case "size" :
+				var position = source.getPosition();
+				var w = value[0];
+				var h = value[1];
+				var x = position[0];
+				var y = position[1];
+				guac_tunnel.sendMessage("seamrdp", "POSITION,"+ (this.message_id++) +","+id+","+x+","+y+","+w+","+h+",;\n");
+				break
+
+			case "state" :
+				var state = 0;
+				if(value == "Notmapped")  state = -1;
+				if(value == "Normal")     state =  0;
+				if(value == "Iconify")    state =  1;
+				if(value == "Maximized")  state =  2;
+				if(value == "Fullscreen") state =  3;
+				guac_tunnel.sendMessage("seamrdp", "STATE,"+ (this.message_id++) +","+id+","+state+",;\n");
+				break
+
+			case "focus" :
+				guac_tunnel.sendMessage("seamrdp", "FOCUS,"+ (this.message_id++) +","+id+","+value+",;\n");
+				break
+		}
+	}
 }

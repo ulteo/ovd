@@ -203,6 +203,7 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_http_tunnel.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_rdp_provider.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_seamless_handler.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_seamless_window.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_seamless_icon.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/rdp_provider/java/java_rdp_provider.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/ui/ajaxplorer.js" charset="utf-8"></script>
@@ -211,7 +212,6 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/framework/ui/desktop_container.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/ui/seamless_dragging_bar.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/ui/seamless_launcher.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/framework/ui/seamless_window_factory.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/ui/seamless_window_manager.js" charset="utf-8"></script>
 <?php } ?>
 
