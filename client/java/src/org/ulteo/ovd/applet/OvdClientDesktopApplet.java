@@ -26,6 +26,7 @@ package org.ulteo.ovd.applet;
 import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.FocusListener;
+import java.util.concurrent.ConcurrentHashMap;
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
@@ -34,22 +35,48 @@ import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.rdp.RdpConnectionOvd;
 
+import java.util.Enumeration;
+import java.applet.Applet;
+
 public class OvdClientDesktopApplet extends OvdClientDesktop {
 	private Properties properties = null;
+private ConcurrentHashMap<Integer, RdpConnectionOvd> matching = null;
 
-	private OvdApplet applet = null;
+	private WebClient webclient = null;
+	private Applet applet = null;
 
 	private boolean isFullscreen = false;
 	private FullscreenWindow externalWindow = null;
 	
-	public OvdClientDesktopApplet(Properties properties_, OvdApplet applet_) throws ClassCastException {
+	public OvdClientDesktopApplet(Properties properties_, WebClient webclient_) throws ClassCastException {
 		super();
+		this.matching = new ConcurrentHashMap<Integer, RdpConnectionOvd>();
 
 		this.properties = properties_;
 
-		if (! (applet_ instanceof FocusListener))
-			throw new ClassCastException("[Programmer error] The Applet class must implement FocusListener class");
-		this.applet = applet_;
+
+		this.webclient = webclient_;
+
+		System.out.println("Looking for applet '"+this.webclient.container+"'");
+		Enumeration<Applet> applets = this.webclient.getAppletContext().getApplets();
+		while (applets.hasMoreElements()) {
+			Applet a = applets.nextElement();
+			System.out.println("  * found applet: "+a+" id: "+a.getParameter("id"));
+			String applet_id = a.getParameter("id");
+			if (applet_id == null || ! applet_id.equals(this.webclient.container)) {
+				continue;
+			}
+			
+			this.applet = a;
+			System.out.println("    * this is the applet I'm looking for!");
+			break;
+		}
+		
+		if (this.applet == null) {
+			System.err.println("Unable to find another applet to host desktop session");
+			// maybe usefull to throw an exception ...
+			throw new ClassCastException("Unable to find applet '"+this.webclient.container+"' Desktop session canno't be started");
+		}
 	}
 
 	public Window getFullscreenWindow() {
@@ -59,6 +86,34 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 	public void setFullscreen(boolean isFullscreen_) {
 		this.isFullscreen = isFullscreen_;
 	}
+
+	/**
+	 * create a {@link RdpConnectionOvd} and add it to the connections list
+	 * @param JSId
+	 * 		ID used for referencing the server beside to the WebClient
+	 * @param server
+	 * 		information object needed to create the {@link RdpConnectionOvd}
+	 * @return
+	 * 		<code>true</code> if the function succeed, <code>false</code> instead
+	 */
+	public boolean addServer(int JSId, ServerAccess server) {
+		RdpConnectionOvd co = createRDPConnection(server);
+		if (co == null)
+			return false;
+		
+		// adjustDesktopSize size must be called in the start method and before the connect.
+		// This prevents that the session start with the resolution 800x600 
+		// It guarantee that the detected resolution is right
+		this.adjustDesktopSize();
+		
+		this.customizeConnection(co);
+		this.matching.put(JSId, co);
+		
+		co.addRdpListener(this);
+		co.connect();
+		return true;
+	}
+
 
 	@Override
 	public RdpConnectionOvd createRDPConnection(ServerAccess server) {
@@ -88,8 +143,8 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 			this.applet.validate();
 		}
 
-		if (this.applet instanceof FocusListener)
-			canvas.addFocusListener((FocusListener) this.applet);
+		if (this.webclient instanceof FocusListener)
+			canvas.addFocusListener((FocusListener) this.webclient);
 	}
 
 	@Override
@@ -119,14 +174,13 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 	@Override
 	public void connected(RdpConnection co) {
 		super.connected(co);
-		this.applet.forwardServerStatusToJS(0, OvdApplet.JS_API_O_SERVER_CONNECTED);
+		this.webclient.forwardServerStatusToJS(0, WebClient.JS_API_O_SERVER_CONNECTED);
 	}
 
 	@Override
 	public void disconnected(RdpConnection co) {
 		super.disconnected(co);
-		this.applet.forwardServerStatusToJS(0, OvdApplet.JS_API_O_SERVER_DISCONNECTED);
-		this.applet.stop();
+		this.webclient.forwardServerStatusToJS(0, WebClient.JS_API_O_SERVER_DISCONNECTED);
 	}
 
 	@Override
@@ -141,7 +195,7 @@ public class OvdClientDesktopApplet extends OvdClientDesktop {
 
 		if (tryNumber > 1) {
 			Logger.error("checkRDPConnections -- Several try to connect to "+co.getServer()+" failed. Will exit.");
-			this.applet.forwardServerStatusToJS(0, OvdApplet.JS_API_O_SERVER_FAILED);
+			this.webclient.forwardServerStatusToJS(0, WebClient.JS_API_O_SERVER_FAILED);
 			return;
 		}
 

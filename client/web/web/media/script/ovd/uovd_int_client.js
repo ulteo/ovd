@@ -38,12 +38,6 @@ NiftyLoad = function() {
 
 /* Bind events after DOM load */
 Event.observe(window, 'load', function() {
-
-	/* Perform the Java Test */
-	var test = new JavaTester();
-	test.add_finished_callback(on_java_test_finished);
-	test.perform();
-
 	/* Center containers at startup */
 	new Effect.Center(jQuery('#splashContainer')[0]);
 	new Effect.Center(jQuery('#endContainer')[0]);
@@ -279,6 +273,10 @@ Event.observe(window, 'load', function() {
 		}
   });
 
+	window.rdp_providers = {};
+	window.rdp_providers["java"]  = new JavaRdpProvider();
+	window.rdp_providers["html5"] = new Html5RdpProvider();
+
 	/* handle client insertion */
 	new DesktopContainer(session_management); /* !!! */
 
@@ -333,10 +331,10 @@ function startSession() {
 
 	switch(jQuery('#rdp_mode').prop('value')) {
 		case "html5" :
-			session_management.setRdpProvider(new Html5RdpProvider());
+			session_management.setRdpProvider(window.rdp_providers["html5"]);
 			break;
 		default :
-			session_management.setRdpProvider(new JavaRdpProvider());
+			session_management.setRdpProvider(window.rdp_providers["java"]);
 			break;
 	}
 

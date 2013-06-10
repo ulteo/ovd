@@ -1,98 +1,226 @@
 /* Java RDP Provider */
 
-function JavaRdpProvider() {
+function JavaRdpProvider(node) {
 	this.initialize();
-	this.applet = null;
-}
-JavaRdpProvider.prototype = new RdpProvider();
+	this.node = jQuery((node || "body"));
+	this.main_applet = null;
 
-JavaRdpProvider.prototype.connectCommon = function(callback) {
-	/* This function's goal is to minimize the code by mutualizing
-	   the common parts between applications and desktop modes
-	*/
-	var server = this.session_management.session.servers[0];
-	var settings = this.session_management.session.settings;
-	var parameters = this.session_management.parameters;
+	/* Applet callbacks */
+	this.applet_registered        = function() {};
+	this.applet_sessionReady      = function() {};
+	this.applet_sessionError      = function() {};
+	this.applet_serverStatus      = function() {};
+	this.applet_applicationStatus = function() {};
 
-	var name = "ulteoapplet";
-	var codebase = "applet/";
-	var archive = "jpedal.jar,log4j-1.2.jar,ulteo-applet.jar";
-	var cache_archive = "jpedal.jar,log4j-1.2.jar,ulteo-applet.jar";
-	var cache_archive_ex = "jpedal.jar,log4j-1.2.jar,ulteo-applet.jar;preload"
+	/* Redefine initialize for JavaRdpProvider */
+	this.initialize = function(onsuccess, onfailure) {
+		var name = "ulteoapplet";
+		var codebase = "applet/";
+		var archive = "ulteo-applet.jar";
+		var cache_archive = "ulteo-applet.jar";
+		var cache_archive_ex = "ulteo-applet.jar;preload"
 
-	this.applet = jQuery(document.createElement("applet"));
-	this.applet.attr("id", "ulteoapplet");
-	this.applet.attr("width", parameters["width"]);
-	this.applet.attr("height", parameters["height"]);
-	this.applet.attr("name", name);
-	this.applet.attr("codebase", codebase);
-	this.applet.attr("archive", archive);
-	this.applet.attr("cache_archive", cache_archive);
-	this.applet.attr("cache_archive_ex", cache_archive_ex);
-	this.applet.attr("mayscript", "true");
+		/* Create and configure the applet */
+		this.main_applet = jQuery(document.createElement("applet"));
+		this.main_applet.attr("id", "ulteoapplet");
+		this.main_applet.attr("width", 1);
+		this.main_applet.attr("height", 1);
+		this.main_applet.attr("name", name);
+		this.main_applet.attr("codebase", codebase);
+		this.main_applet.attr("archive", archive);
+		this.main_applet.attr("cache_archive", cache_archive);
+		this.main_applet.attr("cache_archive_ex", cache_archive_ex);
+		this.main_applet.attr("mayscript", "true");
+		this.main_applet.attr("code", "org.ulteo.ovd.applet.WebClient");
 
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "name").attr("value", name));
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "codebase").attr("value", codebase));
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "archive").attr("value", archive));
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive").attr("value", cache_archive));
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive_ex").attr("value", cache_archive_ex));
-
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "sessionmanager").attr("value", parameters["session_manager"]+":443"));
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "server").attr("value", server.fqdn));
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "token").attr("value", server.token));
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "port").attr("value", server.port));
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "username").attr("value", server.login));
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "password").attr("value", server.password));
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "keymap").attr("value", parameters["keymap"]));
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "rdp_input_method").attr("value", parameters["rdp_input_method"]));
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "fullscreen").attr("value", parameters["fullscreen"]));
-	this.applet.append(jQuery(document.createElement("param")).attr("name", "local_integration").attr("value", parameters["local_integration"]));
-
-	/* Add the servers status callback to global namespace */
-	window.serverStatus = function(id, status) {
-		this.session_management.session.servers[id].setStatus(status);
-	}
-
-	/* Handle desktop|applications mode specificities */
-	callback(this);
-
-	/* Notify main panel insertion */
-	this.session_management.fireEvent("ovd.rdpProvider.desktopPanel", this, {"name":"Desktop", "node":this.applet[0]});
-}
-
-JavaRdpProvider.prototype.connectDesktop = function() {
-	var self = this; /* closure */
-	this.connectCommon( function() {
-		self.applet.attr("code", "org.ulteo.ovd.applet.Desktop");
-		self.applet.append(jQuery(document.createElement("param")).attr("code", "org.ulteo.ovd.applet.Desktop"));
-	});
-}
-
-JavaRdpProvider.prototype.connectApplications = function() {
-	var self = this; /* closure */
-	this.connectCommon( function() {
-		/* Set entry point */
-		self.applet.attr("code", "org.ulteo.ovd.applet.Applications");
-		self.applet.append(jQuery(document.createElement("param")).attr("code", "org.ulteo.ovd.applet.Applications"));
+		this.main_applet.append(jQuery(document.createElement("param")).attr("name", "name").attr("value", name));
+		this.main_applet.append(jQuery(document.createElement("param")).attr("name", "codebase").attr("value", codebase));
+		this.main_applet.append(jQuery(document.createElement("param")).attr("name", "archive").attr("value", archive));
+		this.main_applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive").attr("value", cache_archive));
+		this.main_applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive_ex").attr("value", cache_archive_ex));
+		this.main_applet.append(jQuery(document.createElement("param")).attr("code", "org.ulteo.ovd.applet.WebClient"));
 
 		/* minimize applet size */
 		/* css "display: none" doesn't works with applets */
-		self.applet.width("1").height("1");
+		this.main_applet.width("1").height("1");
+
+		/* Insert it into the specified node */
+		this.node.append(this.main_applet);
+
+		/* Try to activate java applet */
+		var self = this; /* closure */
+		var error_timeout = null;
+		var retry_timeout = null;
+
+		var activation = function() {
+			try {
+				self.main_applet[0].isActive();
+			} catch(e) {
+				retry_timeout = setTimeout(activation, 1000);
+				return;
+			}
+
+			clearTimeout(error_timeout);
+			self.applet_registered = function() {
+				try{ onsuccess(); } catch(e) {}
+			}
+			self.main_applet[0].register(self);
+		};
+
+		error_timeout = setTimeout(function() {
+			clearTimeout(retry_timeout);
+			this.main_applet.remove();
+			this.main_applet = null;
+			try { onfailure(); } catch(e) {}
+		}, 60000);
+
+		retry_timeout = setTimeout(function() {
+			activation();
+		}, 100);
+	};
+}
+JavaRdpProvider.prototype = new RdpProvider();
+
+JavaRdpProvider.prototype.connectDesktop = function() {
+	var self = this; /* closure */
+	var server = this.session_management.session.servers[0];
+	var settings = this.session_management.session.settings;
+	var parameters = this.session_management.parameters;
+	var onfailure = function() {
+		/* !!! Error  */
+	};
+	var onsuccess = function() {
+		var settings = new Array();
+		settings.push("sessionmanager");
+		settings.push(parameters["session_manager"]+":443");
+		settings.push("keymap");
+		settings.push(parameters["keymap"]);
+		settings.push("rdp_input_method");
+		settings.push(""+parameters["rdp_input_method"]);
+		settings.push("fullscreen");
+		settings.push(""+parameters["fullscreen"]);
+		settings.push("local_integration");
+		settings.push(""+parameters["local_integration"]);
+		settings.push("container");
+		settings.push("Desktop_0");
+
+		/* Add the servers status callback */
+		self.applet_serverStatus = function(id, status) {
+			self.session_management.session.servers[id].setStatus(status);
+		};
+
+		/* Generate a desktop applet */
+		var codebase = "applet/";
+		var archive = "ulteo-applet.jar";
+		var cache_archive = "ulteo-applet.jar";
+		var cache_archive_ex = "ulteo-applet.jar;preload"
+		var name = "Desktop_0";
+
+		var desktop_applet = jQuery(document.createElement("applet"));
+		desktop_applet.attr("id", name);
+		desktop_applet.attr("name", name);
+		desktop_applet.attr("width", parameters["width"]);
+		desktop_applet.attr("height", parameters["height"]);
+		desktop_applet.attr("codebase", codebase);
+		desktop_applet.attr("archive", archive);
+		desktop_applet.attr("cache_archive", cache_archive);
+		desktop_applet.attr("cache_archive_ex", cache_archive_ex);
+		desktop_applet.attr("code", "org.ulteo.ovd.applet.DesktopContainer");
+
+		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "id").attr("value", name));
+		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "name").attr("value", name));
+		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "codebase").attr("value", codebase));
+		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "archive").attr("value", archive));
+		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive").attr("value", cache_archive));
+		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive_ex").attr("value", cache_archive_ex));
+		desktop_applet.append(jQuery(document.createElement("param")).attr("code", "org.ulteo.ovd.applet.DesktopContainer"));
+
+		/* Notify main panel insertion */
+		self.session_management.fireEvent("ovd.rdpProvider.desktopPanel", self, {"name":name, "node":desktop_applet[0]});
+
+		/* Wait for desktop applet */
+		var error_timeout = null;
+		var retry_timeout = null;
+
+		var activation = function() {
+			try {
+				desktop_applet[0].isActive();
+			} catch(e) {
+				retry_timeout = setTimeout(activation, 1000);
+				return;
+			}
+
+			clearTimeout(error_timeout);
+
+			/* Applet startSession handler */
+			self.applet_sessionReady = function() {
+				if(! self.main_applet[0].serverConnect(0, server.fqdn, server.port, server.login, server.password)) {
+					/* !!! Error */
+				}
+			};
+
+			/* Start the session */
+			if(! self.main_applet[0].startSession(parameters["session_type"], settings)) {
+				/* !!! Error */
+			}
+		};
+
+		error_timeout = setTimeout(function() {
+			clearTimeout(retry_timeout);
+			/* !!! Error  */
+		}, 60000);
+
+		retry_timeout = setTimeout(function() {
+			activation();
+		}, 100);
+
+	};
+
+	if(this.main_applet == null) {
+		this.initialize(onsuccess, onfailure);
+	} else {
+		onsuccess();
+	}
+};
+
+JavaRdpProvider.prototype.connectApplications = function() {
+	var self = this; /* closure */
+	var server = this.session_management.session.servers[0];
+	var settings = this.session_management.session.settings;
+	var parameters = this.session_management.parameters;
+	var onfailure = function() {
+		/* !!! Error  */
+	};
+	var onsuccess = function() {
+		var settings = new Array();
+		settings.push("sessionmanager");
+		settings.push(parameters["session_manager"]+":443");
+		settings.push("keymap");
+		settings.push(parameters["keymap"]);
+		settings.push("rdp_input_method");
+		settings.push(""+parameters["rdp_input_method"]);
+		settings.push("fullscreen");
+		settings.push(""+parameters["fullscreen"]);
+		settings.push("local_integration");
+		settings.push(""+parameters["local_integration"]);
+		settings.push("container");
+		settings.push("Desktop_0");
 
 		/* set application_provider */
 		var application_provider = new JavaApplicationProvider(self);
 
-		/* wait for applet to be initialized */
-		var waitApplet = function() {
-			try {
-				if( ! self.applet[0].isActive()) {
-					throw "applet is not ready";
-				}
-			} catch(e) {
-				setTimeout(waitApplet, 1000);
-				return;
-			}
+		/* Add the servers status callback */
+		self.applet_serverStatus = function(id, status) {
+			self.session_management.session.servers[id].setStatus(status);
+		};
 
+		/* Add the application status callback */
+		self.applet_applicationStatus = function(id, instance, status) {
+			application_provider.handleOrders(id, instance, status);
+		};
+
+		/* Applet startSession handler */
+		self.applet_sessionReady = function() {
 			/* Connect to all servers and gather application list */
 			for(var i=0 ; i<self.session_management.session.servers.length ; ++i) {
 				var server = self.session_management.session.servers[i];
@@ -106,19 +234,34 @@ JavaRdpProvider.prototype.connectApplications = function() {
 					serialized = server.xml.xml;
 				}
 
-				self.applet[0].serverPrepare(i, serialized);
+				self.main_applet[0].serverPrepare(i, serialized);
 
 				if (server.token != null) {
-					self.applet[0].serverConnect(i, server.fqdn, server.port, server.token, server.login, server.password);
+					if(! self.main_applet[0].serverConnect(i, server.fqdn, server.port, server.token, server.login, server.password)) {
+						/* !!! Error  */
+					};
 				} else {
-					self.applet[0].serverConnect(i, server.fqdn, server.port, server.login, server.password);
+					if(! self.main_applet[0].serverConnect(i, server.fqdn, server.port, server.login, server.password)) {
+						/* !!! Error  */
+					};
 				}
 			}
+		};
+
+		/* Start the session */
+		if(! self.main_applet[0].startSession(parameters["session_type"], settings)) {;
+			/* !!! Error  */
 		}
 
-		waitApplet();
-	});
-}
+	};
+
+	if(this.main_applet == null) {
+		this.initialize(onsuccess, onfailure);
+	} else {
+		onsuccess();
+	}
+};
 
 JavaRdpProvider.prototype.disconnect_implementation = function() {
-}
+	this.main_applet[0].endSession();
+};

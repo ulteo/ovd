@@ -27,11 +27,39 @@ import org.ulteo.Logger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.ovd.sm.ServerAccess;
 
 
 abstract class Order {}
+
+class OrderRegister extends Order {
+}
+
+class OrderSessionStart extends Order {
+	public int mode;
+	public Map<String, String> settings;
+
+	public OrderSessionStart(int mode_, Map<String, String> settings_) {
+		this.mode = mode_;
+		this.settings = settings_;
+	}
+	
+	public String toString() {
+		return String.format("SessionStart (mode: %s)", this.mode);
+	}
+}
+
+class OrderSessionStop extends Order {
+	public OrderSessionStop() {
+	}
+	
+	public String toString() {
+		return String.format("SessionStop");
+	}
+}
 
 class OrderServer extends Order {
 	public int id;
@@ -71,10 +99,10 @@ class SpoolOrder extends Thread {
 	
 	private List<Order> spoolOrder = Collections.synchronizedList(new ArrayList<Order>());
 	
-	private OvdClientApplicationsApplet client;
+	private WebClient client;
 	
 	
-	public SpoolOrder(OvdClientApplicationsApplet client) {
+	public SpoolOrder(WebClient client) {
 		this.client = client;
 	}
 	
@@ -94,15 +122,62 @@ class SpoolOrder extends Thread {
 			}
 			Logger.info("Got job: "+o);
 			
-			if (o instanceof OrderServer) {
+			if (o instanceof OrderSessionStart) {
+				OrderSessionStart order = (OrderSessionStart)o;
+				
+				this.client.createOvdSession(order.mode, order.settings);
+			}
+
+			else if (o instanceof OrderSessionStop) {
+				OrderSessionStop order = (OrderSessionStop)o;
+				
+				this.client.destroyOvdSession();
+			}
+
+			else if (o instanceof OrderRegister) {
+				this.client.confirm_register();
+			}
+
+			else if (o instanceof OrderServer) {
 				OrderServer order = (OrderServer)o;
-				if (! client.addServer(order.id, order.server))
+				OvdClient c = this.client.getOvdClient();
+				if (client == null) {
+					Logger.error("invalid order");
 					continue;
+				}
+				
+				try {
+					OvdClientApplicationsApplet client = (OvdClientApplicationsApplet)c;
+					client.addServer(order.id, order.server);
+				}
+				catch(Exception err) {
+					try {
+						OvdClientDesktopApplet client = (OvdClientDesktopApplet)c;
+						client.addServer(order.id, order.server);
+					}
+					catch(Exception err2) {
+						Logger.error("ovdclient not initialized correctly. Exception: "+err2);
+						continue;
+					}
+				}
 			}
 			
 			else if (o instanceof OrderApplication) {
+				OvdClientApplicationsApplet client = null;
+				try {
+					client = (OvdClientApplicationsApplet)this.client.getOvdClient();
+				}
+				catch(Exception err) {
+					Logger.error("ovdclient not initialized correctly. Exception: "+err);
+					continue;
+				}
+				
+				if (client == null) {
+					Logger.error("invalid order");
+					continue;
+				}
+				
 				OrderApplication order = (OrderApplication)o;
-
 				if (order.file == null)
 					client.startApplication(order.token, order.app_id, order.server_id);
 				else

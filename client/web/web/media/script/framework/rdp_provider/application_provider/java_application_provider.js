@@ -16,7 +16,7 @@ JavaApplicationProvider.prototype.applicationStart_implementation = function (ap
 	this.applications[token] = new ApplicationInstance(this, application_id, token);
 
 	if(server_id != -1) {
-		this.rdp_provider.applet[0].startApplication(token, application_id, server_id);
+		this.rdp_provider.main_applet[0].startApplication(token, application_id, server_id);
 		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"unknown"});
 	} else {
 		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"aborted"});

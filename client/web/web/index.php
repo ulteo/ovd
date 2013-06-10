@@ -300,9 +300,6 @@ function get_users_list() {
 			</div>
 		</div>
 
-		<div id="testJava">
-		</div>
-
 		<div style="background: #2c2c2c; width: 0px; height: 0px;">
 			<div id="systemTestWrap" class="rounded" style="display: none;">
 				<div id="systemTest" class="rounded">
