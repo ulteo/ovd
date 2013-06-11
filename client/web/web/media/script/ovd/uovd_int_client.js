@@ -274,7 +274,7 @@ Event.observe(window, 'load', function() {
   });
 
 	window.rdp_providers = {};
-	window.rdp_providers["java"]  = new JavaRdpProvider();
+	window.rdp_providers["java"]  = new JavaProvider();
 	window.rdp_providers["html5"] = new Html5RdpProvider();
 
 	/* handle client insertion */
