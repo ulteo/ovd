@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2012 Ulteo SAS
+# Copyright (C) 2009-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
-# Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
 #
@@ -40,6 +40,7 @@ from Platform.ApplicationsStatic import ApplicationsStatic
 from Platform.ApplicationsDetection import ApplicationsDetection
 from Platform.TS import TS
 from Platform.Session import Session
+from Platform.Profile import Profile
 
 from Apt import Apt
 from Config import Config
@@ -160,6 +161,7 @@ class Role(AbstractRole):
 			cleaner.destroy_session(session)
 		
 		self.manager.purgeGroup()
+		Profile.cleanup()
 	
 	
 	def get_session_from_login(self, login_):

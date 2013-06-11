@@ -33,16 +33,36 @@ import win32wnet
 
 from ovd.Logger import Logger
 from ovd.Platform.System import System
+from ovd.Role.ApplicationServer.Config import Config
 from ovd.Role.ApplicationServer.Profile import Profile as AbstractProfile
 
 import Reg
 import Util
+from GPO import GPO
+
 
 class Profile(AbstractProfile):
 	registry_copy_blacklist = [r"Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"]
+	vfsCommand = u"VFS.exe"
+	vfsParameter = u"/s U:"
 	
 	def init(self):
 		self.mountPoint = None
+	
+	@staticmethod
+	def cleanup():
+		gpo = GPO()
+		if not gpo.parse():
+			Logger.error("Failed to parse GPO")
+			return False
+		
+		absCommand = System.get_default_sys_dir()
+		absCommand = os.path.join(absCommand, Profile.vfsCommand)
+		if not gpo.contain(GPO.LOGOFF, absCommand, Profile.vfsParameter):
+			gpo.remove(GPO.LOGOFF, absCommand, Profile.vfsParameter)
+                        return gpo.save()
+		
+		return True
 	
 	
 	def hasProfile(self):
@@ -87,6 +107,20 @@ class Profile(AbstractProfile):
 			
 			self.mountPoint = None
 			return False
+		
+		gpo = GPO()
+		if gpo.parse() is False:
+			Logger.error("Failed to parse GPO file")
+			return False
+		
+		
+		absCommand = System.get_default_sys_dir()
+		absCommand = os.path.join(absCommand, Profile.vfsCommand)
+		print "===> ",absCommand
+		if not gpo.contain(GPO.LOGOFF, absCommand, Profile.vfsParameter):
+			gpo.add(GPO.LOGOFF, absCommand, Profile.vfsParameter)
+			return gpo.save()
+		
 		
 		return True
 	

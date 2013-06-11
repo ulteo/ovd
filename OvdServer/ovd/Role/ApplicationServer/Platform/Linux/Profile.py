@@ -46,6 +46,12 @@ class Profile(AbstractProfile):
 		self.profile_mount_point = os.path.join(self.cifs_dst, "profile")
 		self.homeDir = None
 	
+	
+	@staticmethod
+	def cleanup():
+		pass
+	
+	
 	def mount_cifs(self, share, uri, dest):
 		mount_env = {}
 		if share.has_key("login") and share.has_key("password"):
