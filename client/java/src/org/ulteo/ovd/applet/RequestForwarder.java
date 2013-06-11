@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2009, 2010 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -49,22 +49,22 @@ import org.w3c.dom.Element;
 import netscape.javascript.JSObject;
 
 class AjaxOrder {
-	public String sm;
-	public String mode;
-	public String language;
-	public String timezone;
-	public String callback;
+	public String url;
+	public String method;
+	public String content_type;
+	public String data;
+	public String request_id;
 	
-	public AjaxOrder(String sm, String mode, String language, String timezone, String callback) {
-		this.sm = sm;
-		this.mode = mode;
-		this.language = language;
-		this.timezone = timezone;
-		this.callback = callback;
+	public AjaxOrder(String url, String method, String content_type, String data, String request_id) {
+		this.url = url;
+		this.method = method;
+		this.content_type = content_type;
+		this.data = data;
+		this.request_id = request_id;
 	}
 	
 	public String toString() {
-		return "AjaxOrder("+this.sm+", "+this.mode+", "+this.language+", "+this.timezone+", "+this.callback+")";
+		return "AjaxOrder("+this.url+", "+this.method+", "+this.content_type+", "+this.request_id+")";
 	}
 }
 
@@ -72,16 +72,19 @@ public class RequestForwarder implements Runnable, HostnameVerifier, X509TrustMa
 	public static final String FIELD_SESSION_MODE = "session_mode";
 	
 	private static final String CONTENT_TYPE_XML = "text/xml";
+	private static final String REQUEST_METHOD_GET = "GET";
 	private static final String REQUEST_METHOD_POST = "POST";
 	
-	private Applet ref = null;
+	private WebClient ref = null;
 	private List<AjaxOrder> spool = null;
 	private boolean do_continue = true;
+	private List<String> cookies = null;
 	
 	
-	public RequestForwarder(Applet ref) {
+	public RequestForwarder(WebClient ref) {
 		this.ref = ref;
 		this.spool = new ArrayList<AjaxOrder>();
+		this.cookies = new ArrayList<String>();
 	}
 	
 	public void setDisable() {
@@ -108,41 +111,20 @@ public class RequestForwarder implements Runnable, HostnameVerifier, X509TrustMa
 			System.out.println("got job "+o);
 			URL url = null;
 			try {
-				url = new URL("https://"+o.sm+"/ovd/client/start.php");
+				url = new URL(o.url);
 			}
 			catch(Exception err) {
 				System.out.println("Excption while creating URL object "+err);
 			}
 			
-			boolean success = false;
-			if (url != null && o.sm != null) {
-				Document doc = SessionManagerCommunication.getNewDocument();
-				if (doc == null) {
-					System.err.println("Unable to create XML document");
-					continue;
-				}
-				
-				Element session = doc.createElement("session");
-				doc.appendChild(session);
-				
-				if (o.mode != null)
-					session.setAttribute("mode", o.mode);
-				if (o.language != null)
-					session.setAttribute("language", o.language);
-				if (o.timezone != null)
-					session.setAttribute("timezone", o.timezone);
-				
-				String data = SessionManagerCommunication.Document2String(doc);
-				if (data == null) {
-					System.err.println("Unable to transform xml document to string");
-					continue;
-				}
-				
-				success = this.askWebservice(url, CONTENT_TYPE_XML, REQUEST_METHOD_POST, data, o.callback);
+			String method = REQUEST_METHOD_GET;
+			if (o.method.equalsIgnoreCase("post")) {
+				method = REQUEST_METHOD_POST;
 			}
 			
+			boolean success = this.askWebservice(url, o.content_type, method, o.data, o.request_id);
 			if (success == false)
-				this.reportResponse(o.callback, 0, "text/plain", "", new ArrayList<String>());
+				this.ref.forwardAjaxResponse(o.request_id, 0, "text/plain", "");
 		}
 	}
 	
@@ -157,14 +139,13 @@ public class RequestForwarder implements Runnable, HostnameVerifier, X509TrustMa
 		this.spool.add(o);
 	}
 	
-	private boolean askWebservice(URL url, String content_type, String method, String data, String callback) {
+	private boolean askWebservice(URL url, String content_type, String method, String data, String request_id) {
 		HttpURLConnection connexion = null;
 		
 		int http_code = 0;
 		String http_message = "";
 		String contentType = "";
 		String r_data = "";
-		List<String> cookies = new ArrayList<String>();
 		
 		try {
 			System.out.println("Connecting URL ... "+url);
@@ -180,6 +161,9 @@ public class RequestForwarder implements Runnable, HostnameVerifier, X509TrustMa
 			connexion.setDoInput(true);
 			connexion.setDoOutput(true);
 			connexion.setRequestProperty("Content-type", content_type);
+			for (String cookie : this.cookies) {
+				connexion.setRequestProperty("Cookie", cookie);
+			}
 			
 			connexion.setAllowUserInteraction(true);
 			connexion.setRequestMethod(method);
@@ -203,7 +187,7 @@ public class RequestForwarder implements Runnable, HostnameVerifier, X509TrustMa
 				if (headerName.equals("Set-Cookie")) {
 					String cookie = connexion.getHeaderField(i);
 					
-					cookies.add(cookie);
+					this.cookies.add(cookie);
 				}
 			}
 			
@@ -224,31 +208,7 @@ public class RequestForwarder implements Runnable, HostnameVerifier, X509TrustMa
 		}
 		
 		
-		this.reportResponse(callback, http_code, contentType, r_data, cookies);
-		return true;
-	}
-	
-	private boolean reportResponse(String callback, int http_code, String contentType, String data, List<String> cookies) {
-		Object[] args_cookies = new Object[cookies.size()];
-		int i = 0;
-		for(String cookie: cookies)
-			args_cookies[i++] = cookie;
-		
-		Object[] args = new Object[4];
-		args[0] = new Integer(http_code);
-		args[1] = contentType;
-		args[2] = data;
-		args[3] = args_cookies;
-		
-		try {
-			JSObject win = JSObject.getWindow(this.ref);
-			win.call(callback, args);
-		}
-		catch (netscape.javascript.JSException e) {
-			System.err.println(this.getClass()+" error while execute javascript function '"+callback+"' =>"+e.getMessage());
-			return false;
-		}
-		
+		this.ref.forwardAjaxResponse(request_id, http_code, contentType, r_data);
 		return true;
 	}
 	

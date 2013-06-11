@@ -92,11 +92,10 @@ public class WebClient extends Applet implements FocusListener {
 	public static final String JS_API_O_INSTANCE_STARTED = "started";
 	public static final String JS_API_O_INSTANCE_STOPPED = "stopped";
 	public static final String JS_API_O_INSTANCE_ERROR = "error";
+
+	public static final String JS_API_F_AJAXRESPONSE = "applet_ajaxResponse";
 	
 	private JSObject js_instance = null;
-	private String jsCallBack_onSuccess = null;
-	private String jsCallBack_onFailure = null;
-	private boolean hasCallbacks = false;
 	
 	private RequestForwarder ajax = null;
 	private Thread ajaxThread = null;
@@ -234,7 +233,8 @@ public class WebClient extends Applet implements FocusListener {
 			Logger.info(this.getClass().toString() + " inited");
 		}
 		
-		this.setLayout(new BorderLayout());
+		this.ajax = new RequestForwarder(this);
+		this.ajaxThread = new Thread(this.ajax);
 	}
 	
 	
@@ -247,30 +247,15 @@ public class WebClient extends Applet implements FocusListener {
 		
 		this.spooler.start();
 		
-		if (this.hasCallbacks) {
-			String callback = this.jsCallBack_onFailure;
-			
-			try {
-				System.getProperty("user.home");
-				this.userLogin = System.getProperty("user.name");
-				callback = this.jsCallBack_onSuccess;
-			} catch(java.security.AccessControlException e) {
-				System.err.println("AccessControl issue");
-			}
-			this.userKeyboardLayout = LayoutDetector.get();
-			
-			try {
-				JSObject win = JSObject.getWindow(this);
-				Object[] args = new Object[0];
-				
-				win.call(callback, args);
-			}
-			catch (netscape.javascript.JSException e) {
-				System.err.println(this.getClass()+" error while execute javascript function '"+callback+"' =>"+e.getMessage());
-			}
-			
-			this.ajaxThread.start();
+		try {
+			System.getProperty("user.home");
+			this.userLogin = System.getProperty("user.name");
+		} catch(java.security.AccessControlException e) {
+			System.err.println("AccessControl issue");
 		}
+		this.userKeyboardLayout = LayoutDetector.get();
+		
+		this.ajaxThread.start();
 		
 		Logger.info(this.getClass().toString() +" started");
 	}
@@ -536,6 +521,9 @@ public class WebClient extends Applet implements FocusListener {
 		this.spooler.add(new OrderApplication(token, app_id, new Integer(server_id), f));
 	}
 	
+	public void ajaxRequest(String url, String method, String content_type, String data, String request_id) {
+		this.ajax.pushOrder(new AjaxOrder(url, method, content_type, data, request_id));
+	}
 	
 	// ********
 	// Methods to call Javascript
@@ -595,14 +583,20 @@ public class WebClient extends Applet implements FocusListener {
 		this.forwardToJS(JS_API_F_INSTANCE, args);
 	}
 	
-	public void ajaxRequest(String sm, String mode, String language, String timezone, String callback) {
-		this.ajax.pushOrder(new AjaxOrder(sm, mode, language, timezone, callback));
-	}
-	
 	protected void confirm_register() {
 		System.out.println("WebClient::confirm_register: "+this.js_instance);
 		Object[] args = {};
 		this.forwardToJS(JS_API_F_CONFIRM_REGISTER, args);
+	}
+
+	protected void forwardAjaxResponse(String request_id_, int http_code_, String contentType_, String data_) {
+		Object[] args = new Object[4];
+		args[0] = request_id_;
+		args[1] = new Integer(http_code_);
+		args[2] = contentType_;
+		args[3] = data_;
+		
+		this.forwardToJS(JS_API_F_AJAXRESPONSE, args);
 	}
 	
 	/**
