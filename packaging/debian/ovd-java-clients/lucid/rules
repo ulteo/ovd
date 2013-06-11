@@ -5,7 +5,7 @@ DEB_DH_INSTALL_SOURCEDIR = debian/tmp
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/ant.mk
 
-JAVA_HOME = /usr/lib/jvm/java-6-openjdk
+JAVA_HOME = /usr/lib/jvm/default-java
 
 OVD_CERT_DIR = /usr/share/ulteo/ovd-cert
 JKS_PATH ?= $(OVD_CERT_DIR)/keystore
