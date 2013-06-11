@@ -206,6 +206,13 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_seamless_handler.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_seamless_window.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_seamless_icon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/guacamole/keyboard.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/guacamole/mouse.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/guacamole/layer.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/guacamole/tunnel.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/guacamole/guacamole.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/guacamole/encodings.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/guacamole/oskeyboard.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/ui/ajaxplorer.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/ui/application_counter.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/ui/debug_panel.js" charset="utf-8"></script>
@@ -214,15 +221,6 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/framework/ui/seamless_launcher.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/ui/seamless_window_manager.js" charset="utf-8"></script>
 <?php } ?>
-
-		<!-- Guacamole scripts -->
-		<script type="text/javascript" src="media/script/guacamole-js/keyboard.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/guacamole-js/mouse.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/guacamole-js/layer.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/guacamole-js/tunnel.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/guacamole-js/guacamole.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/guacamole-js/encodings.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/guacamole-js/oskeyboard.js" charset="utf-8"></script>
 
 		<script type="text/javascript" src="media/script/ovd/ui.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/ovd/uovd_int_client.js" charset="utf-8"></script>
