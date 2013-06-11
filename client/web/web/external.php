@@ -120,8 +120,44 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 
 		<script type="text/javascript" src="media/script/lib/jquery/jquery.js" charset="utf-8"></script>
 
-<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/webclient/uovd.js")) { ?>
-		<script type="text/javascript" src="media/script/webclient/uovd.js" charset="utf-8"></script>
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/framework/uframework.js")) { ?>
+		<script type="text/javascript" src="media/script/framework/uframework.js" charset="utf-8"></script>
+<?php } else { ?>
+		<script type="text/javascript" src="media/script/framework/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/session.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/session_management.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/base_rdp_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ajax_provider/base_ajax_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ajax_provider/direct_ajax_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ajax_provider/proxy_ajax_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ajax_provider/xhr_ajax_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/java_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/application_provider/base_application_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/application_provider/html5_application_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/application_provider/java_application_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_http_tunnel.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_rdp_provider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_seamless_handler.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_seamless_window.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_seamless_icon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/guacamole/keyboard.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/guacamole/mouse.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/guacamole/layer.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/guacamole/tunnel.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/guacamole/guacamole.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/guacamole/encodings.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/guacamole/oskeyboard.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ui/ajaxplorer.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ui/application_counter.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ui/debug_panel.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ui/desktop_container.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ui/seamless_dragging_bar.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ui/seamless_launcher.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/framework/ui/seamless_window_manager.js" charset="utf-8"></script>
+<?php } ?>
+
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/webclient.js")) { ?>
+		<script type="text/javascript" src="media/script/webclient.js" charset="utf-8"></script>
 <?php } else { ?>
 		<script type="text/javascript" src="media/script/lib/prototype/prototype.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/scriptaculous/effects.js" charset="utf-8"></script>

@@ -143,7 +143,7 @@ if __name__ == "__main__":
 	framework_file = open(framework_filename, "w")
 	framework_file.write(copyright)
 	
-	outfilename = os.path.join("web", "media", "script", "uovd.js")
+	outfilename = os.path.join("web", "media", "script", "webclient.js")
 	outfile = open(outfilename, "w")
 	outfile.write(copyright)
 
@@ -156,7 +156,7 @@ if __name__ == "__main__":
 		if filename in processed_files:
 			continue
 		
-		if os.path.basename(filename) in ("uovd.js", "jquery.js"):
+		if os.path.basename(filename) in ("jquery.js", "webclient.js"):
 			continue
 		
 		if filename.startswith(os.path.join("web", "media", "script", "framework")):
@@ -166,7 +166,7 @@ if __name__ == "__main__":
 			processed_files.append(filename)
 			jscompress(framework_file, filename)
 		else:
-			if os.path.basename(filename) in ("uovd_int_client.js", "uovd_ext_client.js"):
+			if os.path.basename(filename) in ("uovd_int_client.js", "uovd_ext_client.js", "ui.js"):
 				continue
 			
 			processed_files.append(filename)
