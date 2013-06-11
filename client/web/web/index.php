@@ -255,9 +255,9 @@ function get_users_list() {
 		</script>
 	</head>
 
-	<body style="margin: 50px; background: #ddd; color: #333;">
+	<body>
 		<noscript>
-			<div class="finalErrorBox" style="width: 500px;">
+			<div class="finalErrorBox">
 				<table style="width: 100%;" border="0" cellspacing="1" cellpadding="3">
 					<tr>
 						<td style="text-align: left; vertical-align: middle;">
@@ -283,25 +283,18 @@ function get_users_list() {
 <?php if (!$big_image_map) { ?>
 					<img src="media/image/ulteo-small.png" width="141" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop"/>
 <?php } else { ?>
-					<div class="image_ulteo-small_png" style="margin-left: auto; margin-right: auto;"></div>
+					<div class="image_ulteo-small_png"></div>
 <?php } ?>
 				</div>
 			</div>
 		</noscript>
 
-		<div id="lockWrap" style="display: none;">
-		</div>
+		<div id="lockWrap" style="display: none;"></div>
 
-		<div style="background: #2c2c2c; width: 0px; height: 0px;">
-			<div id="errorWrap" class="rounded" style="display: none;">
-			</div>
-			<div id="okWrap" class="rounded" style="display: none;">
-			</div>
-			<div id="infoWrap" class="rounded" style="display: none;">
-			</div>
-		</div>
-
-		<div style="background: #2c2c2c; width: 0px; height: 0px;">
+		<div id="notificationWrap">
+			<div id="errorWrap" class="rounded" style="display: none;"></div>
+			<div id="okWrap" class="rounded" style="display: none;"></div>
+			<div id="infoWrap" class="rounded" style="display: none;"></div>
 			<div id="systemTestWrap" class="rounded" style="display: none;">
 				<div id="systemTest" class="rounded">
 					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
@@ -423,7 +416,6 @@ function get_users_list() {
 			</table>
 		</div>
 
-
 		<div id="endContainer" class="rounded" style="display: none;">
 			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -442,12 +434,7 @@ function get_users_list() {
 			</table>
 		</div>
 
-		<div id="desktopModeContainer" style="display: none;">
-			<div id="desktopAppletContainer" style="display: none;">
-			</div>
-		</div>
-
-		<div id="applicationsModeContainer" style="display: none;">
+		<div id="sessionContainer" style="display: none;">
 			<div id="applicationsHeaderWrap">
 				<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
@@ -462,8 +449,7 @@ function get_users_list() {
 							<h1><span id="user_displayname">&nbsp;</span><span id="welcome_gettext" style="display: none;">&nbsp;</span></h1>
 						</td>
 						<td style="width: 60%; border-bottom: 1px solid #ccc; text-align: left;" class="title centered">
-							<div id="newsContainer" style="padding-left: 5px; padding-right: 5px; height: 70px; overflow: auto;">
-							</div>
+							<div id="newsContainer" style="padding-left: 5px; padding-right: 5px; height: 70px; overflow: auto;"></div>
 						</td>
 						<td style="text-align: right; padding-left: 5px; padding-right: 10px; border-bottom: 1px solid #ccc;">
 							<table style="margin-left: auto; margin-right: 0px;" border="0" cellspacing="0" cellpadding="10">
@@ -491,40 +477,34 @@ function get_users_list() {
 				</table>
 			</div>
 
-			<table id="applicationsContainer" style="width: 100%; background: #eee;" border="0" cellspacing="0" cellpadding="5">
+			<table id="applicationsContainer" border="0" cellspacing="0" cellpadding="5">
 				<tr>
 					<td style="width: 15%; text-align: left; vertical-align: top; background: #eee;">
 						<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
-						<div>
-							<h2 style="display: none;"><span id="my_apps_gettext">&nbsp;</span></h2>
-
-							<div id="appsContainer" style="overflow: auto;">
+							<div>
+								<h2 style="display: none;"><span id="my_apps_gettext">&nbsp;</span></h2>
+								<div id="appsContainer" style="overflow: auto;"></div>
 							</div>
-						</div>
 						</div>
 					</td>
 					<td style="width: 5px;">
 					</td>
 					<td style="text-align: left; vertical-align: top; background: #eee;">
 						<div id="fileManagerWrap" class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
-						<div>
-							<h2 style="display: none;"><span id="my_files_gettext">&nbsp;</span></h2>
+							<div>
+								<h2 style="display: none;"><span id="my_files_gettext">&nbsp;</span></h2>
 
-							<div id="fileManagerContainer">
+								<div id="fileManagerContainer"></div>
 							</div>
-						</div>
 						</div>
 					</td>
 				</tr>
 			</table>
-			<div id="applicationsAppletContainer" style="display: none; width:1; height:1; overflow:hidden;">
-			</div>
-			<div id="windowsContainer">
-			</div>
+			<div id="desktopContainer"></div>
+			<div id="windowsContainer"></div>
 		</div>
 
-		<div id="debugContainer" class="no_debug info warning error" style="display: none;">
-		</div>
+		<div id="debugContainer" class="no_debug info warning error" style="display: none;"></div>
 
 		<div id="debugLevels" style="display: none;">
 			<span class="debug"><input type="checkbox" id="level_debug" value="10" /> Debug</span>
@@ -535,8 +515,7 @@ function get_users_list() {
 		</div>
 
 		<div id="mainWrap">
-			<div id="headerWrap">
-			</div>
+			<div id="headerWrap"></div>
 
 			<div class="spacer"></div>
 
@@ -793,8 +772,7 @@ function get_users_list() {
 
 			<div class="spacer"></div>
 
-			<div id="footerWrap">
-			</div>
+			<div id="footerWrap"></div>
 		</div>
 	</body>
 </html>

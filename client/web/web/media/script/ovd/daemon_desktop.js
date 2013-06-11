@@ -28,7 +28,7 @@ var Desktop = Class.create(Daemon, {
 	initialize: function(debug_) {
 		Daemon.prototype.initialize.apply(this, [debug_]);
 
-		jQuery('#desktopAppletContainer').html('');
+		jQuery('#desktopContainer').html('');
 	},
 
 	start: function() {
@@ -91,9 +91,9 @@ var Desktop = Class.create(Daemon, {
 			applet.setAttribute('height', applet_height);
 
 			// And it's parent element
-			jQuery('#desktopAppletContainer').css({'width' : applet_width+'px', 'height' : applet_height+'px', 'top': '0px', 'left': '0px'});
-			jQuery('#desktopAppletContainer').show();
-			jQuery('#desktopAppletContainer').append(applet);
+			jQuery('#desktopContainer').css({'width' : applet_width+'px', 'height' : applet_height+'px', 'top': '0px', 'left': '0px'});
+			jQuery('#desktopContainer').show();
+			jQuery('#desktopContainer').append(applet);
 
 			return true;
 		}

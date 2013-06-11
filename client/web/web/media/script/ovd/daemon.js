@@ -351,11 +351,11 @@ var Daemon = Class.create({
 	start: function() {
 		Logger.debug('[daemon] start()');
 
-		if (! jQuery('#'+this.mode+'ModeContainer')[0].visible())
-			jQuery('#'+this.mode+'ModeContainer').show();
+		if (! jQuery('#sessionContainer')[0].visible())
+			jQuery('#sessionContainer').show();
 
-		if (! jQuery('#'+this.mode+'AppletContainer')[0].visible())
-			jQuery('#'+this.mode+'AppletContainer').show();
+		if (! jQuery('#desktopContainer')[0].visible())
+			jQuery('#desktopContainer').show();
 
 		this.do_started();
 	},
@@ -380,12 +380,12 @@ var Daemon = Class.create({
 		if (jQuery('#splashContainer')[0].visible())
 			jQuery('#splashContainer').hide();
 
-		if (jQuery('#'+this.mode+'AppletContainer')[0].visible())
-			jQuery('#'+this.mode+'AppletContainer').hide();
-		jQuery('#'+this.mode+'AppletContainer').html('');
+		if (jQuery('#desktopContainer')[0].visible())
+			jQuery('#desktopContainer').hide();
+		jQuery('#desktopContainer').html('');
 
-		if (jQuery('#'+this.mode+'ModeContainer')[0].visible())
-			jQuery('#'+this.mode+'ModeContainer').hide();
+		if (jQuery('#sessionContainer')[0].visible())
+			jQuery('#sessionContainer').hide();
 
 		if (this.explorer) {
 			if (jQuery('#fileManagerWrap')[0])

@@ -68,30 +68,20 @@ function hideIFrame() {
 	hideLock();
 }
 
-function showMainContainer(mode) {
-	if(jQuery('#'+mode+"ModeContainer")[0]) {
-		jQuery('#'+mode+"ModeContainer").show();
-		jQuery('#'+mode+"AppletContainer").show();
-	}
+function showMainContainer() {
+	jQuery('#sessionContainer').show();
 }
 
-function hideMainContainer(mode) {
-	if(jQuery('#'+mode+"ModeContainer")[0]) {
-		jQuery('#'+mode+"ModeContainer").hide();
-		jQuery('#'+mode+"AppletContainer").hide();
-	}
+function hideMainContainer() {
+	jQuery('#sessionContainer').hide();
 }
 
 function pullMainContainer(mode) {
-	if(jQuery('#'+mode+"ModeContainer")[0]) {
-		new Effect.Move(jQuery('#'+mode+"ModeContainer")[0], { x: 0, y: my_height });
-	}
+	new Effect.Move(jQuery('#sessionContainer')[0], { x: 0, y: my_height });
 }
 
 function pushMainContainer(mode) {
-	if(jQuery('#'+mode+"ModeContainer")[0]) {
-		new Effect.Move(jQuery('#'+mode+"ModeContainer")[0], { x: 0, y: -my_height, mode: 'absolute' });
-	}
+	new Effect.Move(jQuery('#sessionContainer')[0], { x: 0, y: -my_height, mode: 'absolute' });
 }
 
 function showInternalError() {
@@ -145,14 +135,22 @@ function generateEnd() {
 function configureUI(mode) {
 	var session_settings = session_management.session.settings;
 	if(mode == "applications") {
-		/* Set page size */
+		/* Configure page layout */
 		(function() {
+			/* Set page size */
 			var header_height = jQuery('#applicationsHeaderWrap').height();
 			var height = parseInt(my_height)-parseInt(header_height);
 			jQuery('#appsContainer').height(height-30);
 			jQuery('#fileManagerContainer').height(height-30);
-			jQuery('#applicationsAppletContainer').width(1).height(1);
-			jQuery("#fileManagerWrap").show();
+
+			/* Hide desktops */
+			/* do not use .hide() or applet wil not load */
+			jQuery('#desktopContainer').width(1).height(1).css("overflow", "hidden");
+
+			/* Show applications mode components */
+			jQuery("#applicationsHeaderWrap").show();
+			jQuery("#applicationsContainer").show();
+			jQuery("#windowsContainer").show();
 		})();
 
 		/* Suport suspend ? */
@@ -160,6 +158,17 @@ function configureUI(mode) {
 			if(session_settings["persistent"]) {
 				jQuery('#suspend_button').show();
 			}
+		})();
+	} else {
+		/* Configure page layout */
+		(function() {
+			/* Show desktop */
+			jQuery('#desktopContainer').width(1).height(1).css("overflow", "visible");
+
+			/* Hide applications mode components */
+			jQuery("#applicationsHeaderWrap").hide();
+			jQuery("#applicationsContainer").hide();
+			jQuery("#windowsContainer").hide();
 		})();
 	}
 }

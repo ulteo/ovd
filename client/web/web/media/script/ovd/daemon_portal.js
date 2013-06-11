@@ -31,7 +31,7 @@ var Portal = Class.create(Applications, {
 	initialize: function(debug_) {
 		Applications.prototype.initialize.apply(this, [debug_]);
 		this.news = new Hash();
-		jQuery('#applicationsAppletContainer').html('');
+		jQuery('#desktopContainer').html('');
 
 		var remove_height = 114;
 		if (this.debug)

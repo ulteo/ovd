@@ -118,13 +118,13 @@ Event.observe(window, 'load', function() {
 		});
 	}
 
-	if (jQuery('#desktopAppletContainer')[0]) {
+	if (jQuery('#desktopContainer')[0]) {
 		Event.observe(window, 'resize', function() {
-			if (jQuery('#desktopAppletContainer')[0].visible()) {
-				new Effect.Center(jQuery('#desktopAppletContainer')[0]);
+			if (jQuery('#desktopContainer')[0].visible()) {
+				new Effect.Center(jQuery('#desktopContainer')[0]);
 
 				if (Logger.has_instance())
-					new Effect.Move(jQuery('#desktopAppletContainer')[0], { x: 0, y: -75, duration: 0.01 });
+					new Effect.Move(jQuery('#desktopContainer')[0], { x: 0, y: -75, duration: 0.01 });
 			}
 		});
 	}

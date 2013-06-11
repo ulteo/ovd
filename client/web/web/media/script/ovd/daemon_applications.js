@@ -103,8 +103,8 @@ var Applications = Class.create(Daemon, {
 		});
 
 		var applet = this.buildAppletNode('Applications', applet_params);
-		jQuery('#applicationsAppletContainer').show();
-		jQuery('#applicationsAppletContainer').append(applet);
+		jQuery('#desktopContainer').show();
+		jQuery('#desktopContainer').append(applet);
 
 		return true;
 	},

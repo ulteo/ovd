@@ -6,7 +6,8 @@ html {
 body {
 	font-size: 0.85em;
 	color: #333;
-	margin: 0;
+	background: #ddd;
+	margin: 50px;
 	padding: 0;
 
 	overflow: hidden;
@@ -69,21 +70,6 @@ div.rounded {
 	width: 406px;
 
 	text-align: left;
-	vertical-align: middle;
-
-	padding: 5px;
-}
-
-#desktopFullscreenContainer {
-	background: #fff;
-
-	border: 0px;
-
-	position: absolute;
-
-	width: 400px;
-
-	text-align: center;
 	vertical-align: middle;
 
 	padding: 5px;
@@ -166,21 +152,6 @@ div.rounded {
 	padding: 5px;
 }
 
-#errorContainer {
-	margin-top: 10px;
-	margin-bottom: 10px;
-}
-
-#errorContainer_content {
-	margin-top: 5px;
-	background: #ffcccc;
-	border: 1px solid #cc0000;
-	color: #a30505;
-	padding: 5px;
-	width: 100%;
-	text-align: left;
-}
-
 .msg_ok {
 	color: #05a305;
 	font-weight: bold;
@@ -190,7 +161,7 @@ div.rounded {
 	font-weight: bold;
 }
 
-#desktopModeContainer {
+#sessionContainer {
 	position: absolute;
 
 	top: 0px;
@@ -202,23 +173,11 @@ div.rounded {
 	margin-right: 0px;
 }
 
-#desktopAppletContainer {
+#desktopContainer {
 	position: absolute;
 
 	top: 0px;
 	left: 0px;
-}
-
-#applicationsModeContainer {
-	position: absolute;
-
-	top: 0px;
-	left: 0px;
-
-	width: 100%;
-
-	margin-left: 0px;
-	margin-right: 0px;
 }
 
 #applicationsHeaderWrap {
@@ -234,6 +193,7 @@ div.rounded {
 
 #applicationsContainer {
 	width: 100%;
+	background: #eee;
 	margin-left: 0px;
 	margin-right: 0px;
 	padding: 0px;
@@ -242,27 +202,6 @@ div.rounded {
 	left: 0px;
 	right: 0px;
 	border-bottom: 1px solid #ccc;
-}
-
-#applicationsAppletContainer {
-	position: absolute;
-
-	top: 0px;
-	left: 0px;
-}
-
-#testJava {
-	position: absolute;
-
-	top: 0px;
-	left: 0px;
-}
-
-#CheckJava {
-	position: absolute;
-
-	top: 0px;
-	left: 0px;
 }
 
 div#lockWrap {
@@ -278,6 +217,12 @@ div#lockWrap {
 	filter: alpha(opacity=80);
 	-moz-opacity: 0.80;
 	opacity: 0.80;
+}
+
+div#notificationWrap {
+	background: #2c2c2c;
+	width: 0px;
+	height: 0px;
 }
 
 div#errorWrap {
@@ -321,6 +266,7 @@ div#systemTest {
 }
 
 div.finalErrorBox {
+	width: 500px;
 	background: #fff;
 	color: #c33;
 	border: 10px solid #c33;
@@ -413,6 +359,11 @@ div#progressBarContent {
 	width: 0%;
 	height: 10px;
 	margin-left: 0px;
+	margin-right: auto;
+}
+
+div#image_ulteo-small_png {
+	margin-left: auto;
 	margin-right: auto;
 }
 

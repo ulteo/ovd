@@ -40,10 +40,7 @@ Event.observe(window, 'load', function() {
 	}
 
 	/* Hide panels */
-	jQuery('#desktopModeContainer').hide();
-	jQuery('#desktopAppletContainer').hide();
-	jQuery('#applicationsModeContainer').hide();
-	jQuery('#applicationsAppletContainer').hide();
+	jQuery('#sessionContainer').hide();
 
 	/* Show splash */
 	jQuery('#splashContainer').show();

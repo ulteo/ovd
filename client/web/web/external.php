@@ -352,13 +352,8 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 			</table>
 		</div>
 
-		<div id="desktopModeContainer" style="display: none;">
-			<div id="desktopAppletContainer" style="display: none;">
-			</div>
-		</div>
-
-		<div id="applicationsModeContainer" style="display: none;">
-			<div id="applicationsAppletContainer" style="display: none;">
+		<div id="sessionContainer" style="display: none;">
+			<div id="desktopContainer">
 			</div>
 		</div>
 

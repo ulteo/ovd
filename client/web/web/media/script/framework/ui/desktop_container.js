@@ -1,10 +1,6 @@
 uovd.DesktopContainer = function(session_management, node) {
-	this.node = null;
+	this.node = jQuery(node);
 	this.session_management = session_management;
-
-	if(node) {
-		this.node = jQuery(node);
-	}
 
 	/* register events listeners */
 	this.handler = this.handleEvents.bind(this);
@@ -17,11 +13,6 @@ uovd.DesktopContainer.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.rdpProvider.desktopPanel") {
 		var name = params["name"];
 		var node = params["node"];
-
-		if(!this.node) {
-			this.node = jQuery("#"+session_management.parameters["session_type"]+"AppletContainer"); /* !!! */
-		}
-
 		this.node.append(node);
 	}
 

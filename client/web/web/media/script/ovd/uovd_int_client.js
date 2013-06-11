@@ -46,17 +46,12 @@ Event.observe(window, 'load', function() {
 	/* Keep containers centered after a window resize */
 	Event.observe(window, 'resize', function() {
 		new Effect.Center(jQuery('#splashContainer')[0]);
-		new Effect.Center(jQuery('#desktopFullscreenContainer')[0]);
 		new Effect.Center(jQuery('#endContainer')[0]);
 		new Effect.Center(jQuery('#iframeWrap')[0]);
 	});
 
 	/* Hide panels */
-	jQuery('#desktopModeContainer').hide();
-	jQuery('#desktopAppletContainer').hide();
-	jQuery('#applicationsModeContainer').hide();
-	jQuery('#applicationsAppletContainer').hide();
-	jQuery('#fileManagerWrap').hide();
+	jQuery('#sessionContainer').hide();
 	jQuery('#debugContainer').hide();
 	jQuery('#debugLevels').hide();
 	jQuery('#loginBox').hide();
@@ -196,18 +191,18 @@ Event.observe(window, 'load', function() {
 		if(to == "ready") {
 			hideLogin();
 			showSplash();
-			pushMainContainer(mode);
+			pushMainContainer();
 
 			/* Wait for the animation end */
 			setTimeout(function() {
-				showMainContainer(mode);
+				showMainContainer();
 				enableLogin();
 			}, 2000);
 		}
 
 		if(to == "logged") {
 			configureUI(mode);
-			pullMainContainer(mode);
+			pullMainContainer();
 
 			/* Wait for the animation end */
 			setTimeout(function() {
@@ -218,7 +213,7 @@ Event.observe(window, 'load', function() {
 		if(from == "logged") {
 			generateEnd();
 			showEnd();
-			pushMainContainer(mode);
+			pushMainContainer();
 		}
   });
 
@@ -278,7 +273,7 @@ Event.observe(window, 'load', function() {
 	window.rdp_providers["html5"] = new uovd.Html5RdpProvider();
 
 	/* handle client insertion */
-	new uovd.DesktopContainer(session_management); /* !!! */
+	new uovd.DesktopContainer(session_management, "#desktopContainer");
 
 	/* applications launcher */
 	new uovd.SeamlessLauncher(session_management, "#appsContainer");
@@ -408,17 +403,10 @@ function onStartSessionSuccess(xml_) {
 	hideLogin();
 	showSplash();
 
-	if (session_mode == 'Desktop') {
-		new Effect.Move(jQuery('#desktopModeContainer')[0], { x: 0, y: -my_height, mode: 'absolute' });
-		setTimeout(function() {
-			jQuery('#desktopModeContainer').show();
-		}, 2000);
-	} else {
-		new Effect.Move(jQuery('#applicationsModeContainer')[0], { x: 0, y: -my_height, mode: 'absolute' });
-		setTimeout(function() {
-			jQuery('#applicationsModeContainer').show();
-		}, 2000);
-	}
+	new Effect.Move(jQuery('#sessionContainer')[0], { x: 0, y: -my_height, mode: 'absolute' });
+	setTimeout(function() {
+		jQuery('#sessionContainer').show();
+	}, 2000);
 
 	if (session_mode == 'Desktop')
 		daemon = new Desktop(debug);
@@ -449,7 +437,7 @@ function onStartSessionSuccess(xml_) {
 
 	daemon.add_session_ready_callback(function onSessionReady(d_) {
 		var mode = session_management.parameters["session_type"];
-		showMainContainer(mode);
+		showMainContainer();
 	});
 
 	// <server> nodes
@@ -463,10 +451,7 @@ function onStartSessionSuccess(xml_) {
 	setTimeout(function() {
 
 		if (debug) {
-			if (session_mode == 'Desktop')
-				jQuery('#desktopModeContainer').height(daemon.my_height);
-			else
-				jQuery('#applicationsModeContainer').height(daemon.my_height);
+			jQuery('#sessionContainer').height(daemon.my_height);
 		}
 		
 		daemon.loop();
