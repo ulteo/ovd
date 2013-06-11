@@ -168,23 +168,23 @@ function get_users_list() {
 
 		<script type="text/javascript" src="media/script/lib/jquery/jquery.js" charset="utf-8"></script>
 
-<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/ovd/uovd.js")) { ?>
-		<script type="text/javascript" src="media/script/ovd/uovd.js" charset="utf-8"></script>
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/webclient/uovd.js")) { ?>
+		<script type="text/javascript" src="media/script/webclient/uovd.js" charset="utf-8"></script>
 <?php } else { ?>
 		<script type="text/javascript" src="media/script/lib/prototype/prototype.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/scriptaculous/effects.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/scriptaculous/extensions.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/ovd/common.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/ovd/daemon.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/ovd/daemon_desktop.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/ovd/daemon_applications.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/ovd/daemon_portal.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/ovd/server.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/ovd/application.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/ovd/JavaTester.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/ovd/Logger.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/ovd/timezones.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/common.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/daemon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/daemon_desktop.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/daemon_applications.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/daemon_portal.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/server.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/application.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/JavaTester.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/Logger.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/timezones.js" charset="utf-8"></script>
 <?php } ?>
 
 <?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/framework/uframework.js")) { ?>
@@ -222,8 +222,8 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/framework/ui/seamless_window_manager.js" charset="utf-8"></script>
 <?php } ?>
 
-		<script type="text/javascript" src="media/script/ovd/ui.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/ovd/uovd_int_client.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/ui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/uovd_int_client.js" charset="utf-8"></script>
 
 		<script type="text/javascript">
 			/* Options from PHP to JS */
