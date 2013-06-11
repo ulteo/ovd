@@ -153,7 +153,7 @@ if __name__ == "__main__":
 			print >>sys.stderr, " Warning: script '%s' does not exists"%(filename)
 			continue
 		
-		if os.path.basename(filename) in processed_files:
+		if filename in processed_files:
 			continue
 		
 		if os.path.basename(filename) in ("uovd.js"):
