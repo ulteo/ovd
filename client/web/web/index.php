@@ -206,7 +206,6 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_seamless_handler.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_seamless_window.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/rdp_provider/html5/html5_seamless_icon.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/framework/rdp_provider/java/java_rdp_provider.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/ui/ajaxplorer.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/ui/application_counter.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/ui/debug_panel.js" charset="utf-8"></script>
