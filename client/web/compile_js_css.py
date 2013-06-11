@@ -156,7 +156,7 @@ if __name__ == "__main__":
 		if filename in processed_files:
 			continue
 		
-		if os.path.basename(filename) in ("uovd.js"):
+		if os.path.basename(filename) in ("uovd.js", "jquery.js"):
 			continue
 		
 		if filename.startswith(os.path.join("web", "media", "script", "framework")):
