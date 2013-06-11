@@ -35,7 +35,6 @@ import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.rdp.RdpConnectionOvd;
 
-import java.util.Enumeration;
 import java.applet.Applet;
 
 public class OvdClientDesktopApplet extends OvdClientDesktop {
@@ -56,27 +55,6 @@ private ConcurrentHashMap<Integer, RdpConnectionOvd> matching = null;
 
 
 		this.webclient = webclient_;
-
-		System.out.println("Looking for applet '"+this.webclient.container+"'");
-		Enumeration<Applet> applets = this.webclient.getAppletContext().getApplets();
-		while (applets.hasMoreElements()) {
-			Applet a = applets.nextElement();
-			System.out.println("  * found applet: "+a+" id: "+a.getParameter("id"));
-			String applet_id = a.getParameter("id");
-			if (applet_id == null || ! applet_id.equals(this.webclient.container)) {
-				continue;
-			}
-			
-			this.applet = a;
-			System.out.println("    * this is the applet I'm looking for!");
-			break;
-		}
-		
-		if (this.applet == null) {
-			System.err.println("Unable to find another applet to host desktop session");
-			// maybe usefull to throw an exception ...
-			throw new ClassCastException("Unable to find applet '"+this.webclient.container+"' Desktop session canno't be started");
-		}
 	}
 
 	public Window getFullscreenWindow() {
@@ -85,6 +63,10 @@ private ConcurrentHashMap<Integer, RdpConnectionOvd> matching = null;
 
 	public void setFullscreen(boolean isFullscreen_) {
 		this.isFullscreen = isFullscreen_;
+	}
+
+	public void setApplet(Applet applet_) {
+		this.applet = applet_;
 	}
 
 	/**

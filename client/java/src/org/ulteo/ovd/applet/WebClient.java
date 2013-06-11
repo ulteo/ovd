@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
@@ -75,7 +76,6 @@ public class WebClient extends Applet implements FocusListener {
 
 	protected AbstractFocusManager focusManager;
 	protected OvdClient ovd = null;
-	protected String container = null;
 	
 	public static final int JS_API_ERROR_CODE_CONTAINER = 1;
 	public static final String JS_API_F_CONFIRM_REGISTER = "applet_registered";
@@ -333,15 +333,6 @@ public class WebClient extends Applet implements FocusListener {
 		String keymap = settings_.get("keymap");
 		String rdp_input_method = settings_.get("rdp_input_method");
 		String wc = settings_.get("wc_url");
-
-		if (this.session_mode == Properties.MODE_DESKTOP && fullscreenMode == false) {
-			this.container = settings_.get("container");
-			if (container == null) {
-				System.err.println("No container given for desktop (no fullscreen) session");
-				this.forwardSessionError(this.JS_API_ERROR_CODE_CONTAINER, "No container given for desktop (no fullscreen) session");
-				return;
-			}
-		}
 		
 		Properties properties = new Properties(this.session_mode);
 		for (Map.Entry<String, String> setting : settings_.entrySet()) {
@@ -358,16 +349,42 @@ public class WebClient extends Applet implements FocusListener {
 			
 		// configure client
 		if (this.session_mode == Properties.MODE_DESKTOP) {
-			OvdClientDesktopApplet client = null;
-			try {
-				client = new OvdClientDesktopApplet(properties, this);
-			}
-			catch (ClassCastException e) {
-				this.forwardSessionError(this.JS_API_ERROR_CODE_CONTAINER, e.getMessage());
-				return;
+			OvdClientDesktopApplet client = new OvdClientDesktopApplet(properties, this);
+			client.setFullscreen(fullscreenMode);
+			
+			if (fullscreenMode == false) {
+				String container = settings_.get("container");
+				if (container == null) {
+					System.err.println("No container given for desktop (no fullscreen) session");
+					this.forwardSessionError(this.JS_API_ERROR_CODE_CONTAINER, "No container given for desktop (no fullscreen) session");
+					return;
+				}
+				
+				System.out.println("Looking for applet '"+container+"'");
+				Applet desktop_container = null;
+				Enumeration<Applet> applets = this.getAppletContext().getApplets();
+				while (applets.hasMoreElements()) {
+					Applet a = applets.nextElement();
+					System.out.println("  * found applet: "+a+" id: "+a.getParameter("id"));
+					String applet_id = a.getParameter("id");
+					if (applet_id == null || ! applet_id.equals(container)) {
+						continue;
+					}
+					
+					desktop_container = a;
+					System.out.println("    * this is the applet I'm looking for!");
+					break;
+				}
+				
+				if (desktop_container == null) {
+					System.err.println("Unable to find another applet to host desktop session");
+					// maybe usefull to throw an exception ...
+					this.forwardSessionError(this.JS_API_ERROR_CODE_CONTAINER, "Unable to find applet '"+container+"' Desktop session canno't be started");
+				}
+				
+				client.setApplet(desktop_container);
 			}
 			
-			client.setFullscreen(fullscreenMode);
 			this.ovd = client;
 		}
 		else {
