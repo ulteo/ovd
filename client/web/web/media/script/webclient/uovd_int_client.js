@@ -183,39 +183,60 @@ Event.observe(window, 'load', function() {
 	}
 
 	/* handle status modifications */
+	session_management.addCallback("ovd.ajaxProvider.*", function(type, source, params) {
+		var state = params["state"];
+
+		if(type == "ovd.ajaxProvider.sessionStart") {
+			/* "Session start" is a success ? show progress bar */
+			if(state == "success") {
+				hideLogin();
+				showSplash();
+				pushMainContainer();
+
+				/* Wait for the animation end then restore in background */
+				setTimeout(function() {
+					showMainContainer();
+					enableLogin();
+				}, 2000);
+			}
+		} else if(type == "ovd.ajaxProvider.sessionEnd" || type == "ovd.ajaxProvider.sessionSuspend") {
+			/* Don't check the state ! */
+			hideMainContainer();
+		}
+	});
+
 	session_management.addCallback("ovd.session.statusChanged", function(type, source, params) {
 		var from = params["from"];
 		var to = params["to"];
 		var mode = session_management.parameters["session_type"];
 
-		if(to == "ready") {
-			hideLogin();
-			showSplash();
-			pushMainContainer();
-
-			/* Wait for the animation end */
-			setTimeout(function() {
-				showMainContainer();
-				enableLogin();
-			}, 2000);
-		}
-
+		/* Session is ready and connected */
 		if(to == "logged") {
 			configureUI(mode);
 			pullMainContainer();
-
-			/* Wait for the animation end */
-			setTimeout(function() {
-				hideSplash();
-			}, 2000);
 		}
 
+		/* Session is ending : hide main container */
 		if(from == "logged") {
-			generateEnd();
-			showEnd();
 			pushMainContainer();
 		}
+
+		/* Destroyed or disconnected ? show end */
+		if(to == "unknown" || to == "disconnected") {
+			hideSplash();
+			generateEnd();
+			showEnd();
+		}
   });
+
+	session_management.addCallback("ovd.session.server.statusChanged", function(type, source, params) {
+		var from = params["from"];
+		var to = params["to"];
+
+		if(to == "disconnected") {
+			hideMainContainer();
+		}
+	});
 
 	/* handle errors */
 	session_management.addCallback("ovd.session.error", function(type, source, params) {
@@ -239,8 +260,9 @@ Event.observe(window, 'load', function() {
 
 	/* handle progress bar */
 	session_management.addCallback("ovd.*", function(type, source, params) {
-		function step(n, message) {
-			jQuery('#progressBarContent').animate({width: n+'%'});
+		function step(n, message, duration) {
+			var dur = duration || 400;
+			jQuery('#progressBarContent').animate({width: n+'%'}, dur);
 
 			jQuery('#progressBar').css({'text-align':'center'});
 			jQuery('#progressBar > span').remove();
@@ -248,12 +270,17 @@ Event.observe(window, 'load', function() {
 		}
 
 		if(type == 'ovd.ajaxProvider.sessionStart' && params['state'] == 'success') {
-			step(25, "Loading session");
+			step(0, "Creating session");
+			return;
+		}
+
+		if(type == 'ovd.session.statusChanged' && params['to'] == 'init') {
+			step(25, "Initializing");
 			return;
 		}
 
 		if(type == 'ovd.session.statusChanged' && params['to'] == 'ready') {
-			step(50, "Connecting...");
+			step(50, "Connecting");
 			return;
 		}
 
@@ -264,6 +291,16 @@ Event.observe(window, 'load', function() {
 
 		if(type == 'ovd.session.statusChanged' && params['to'] == 'logged') {
 			step(100, "Ready");
+
+			/* Wait for the animation end then restore in background */
+			setTimeout(function() {
+				step(100, "Disconnecting");
+			}, 2000);
+			return;
+		}
+
+		if(type == 'ovd.session.statusChanged' && params['to'] == 'destroying') {
+			step(0, "Destroying", 20000);
 			return;
 		}
   });
