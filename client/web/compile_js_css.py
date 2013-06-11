@@ -24,6 +24,7 @@ import re
 import tempfile
 import time
 from subprocess import Popen, PIPE
+import sys
 import Image
 
 def jscompress(outfile, filename):
@@ -138,16 +139,40 @@ if __name__ == "__main__":
 	content += f.read()
 	f.close()
 
+	framework_filename = os.path.join("web", "media", "script", "framework", "uframework.js")
+	framework_file = open(framework_filename, "w")
+	framework_file.write(copyright)
+	
 	outfilename = os.path.join("web", "media", "script", "uovd.js")
 	outfile = open(outfilename, "w")
 	outfile.write(copyright)
 
 	for match in re.findall("<script type=\"text/javascript\" src=\"media/(.*).js[^\"]*\" charset=\"utf-8\"></script>", content, re.IGNORECASE):
 		filename = os.path.join("web", "media", match + ".js")
-		if not os.path.basename(filename) in ("uovd.js", "uovd_int_client.js", "uovd_ext_client.js") and not os.path.basename(filename) in processed_files:
-			processed_files.append(os.path.basename(filename))
+		if not os.path.exists(filename):
+			print >>sys.stderr, " Warning: script '%s' does not exists"%(filename)
+			continue
+		
+		if os.path.basename(filename) in processed_files:
+			continue
+		
+		if os.path.basename(filename) in ("uovd.js"):
+			continue
+		
+		if filename.startswith(os.path.join("web", "media", "script", "framework")):
+			if os.path.basename(filename) in ("page.js", "uframework.js"):
+				continue
+			
+			processed_files.append(filename)
+			jscompress(framework_file, filename)
+		else:
+			if os.path.basename(filename) in ("uovd_int_client.js", "uovd_ext_client.js"):
+				continue
+			
+			processed_files.append(filename)
 			jscompress(outfile, filename)
 
+	framework_file.close()
 	outfile.close()
 
 	outfilename = os.path.join("web", "media", "style", "uovd.css")
