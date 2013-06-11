@@ -22,6 +22,7 @@ chown ovd-fs:ovd-fs $SPOOLDIR
 ID=$(< /dev/urandom tr -dc _A-Za-z0-9 | head -c12)
 sed -e "s/@RANDOM@/$ID/" $DATADIR/samba.conf > /etc/samba/smb.conf
 service smbd restart || true
+service samba restart || true
 
 # VHost webdav config
 a2ensite slaveserver-fs > /dev/null

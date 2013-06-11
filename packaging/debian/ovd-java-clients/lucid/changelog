@@ -1,5 +1,10 @@
 ovd-java-clients (0.2-1) trunk; urgency=low
 
+  * add packaging for Ubuntu 12.04
+
+ -- David PHAM-VAN <d.pham-van@ulteo.com>  Wed, 27 Jun 2012 16:00:00 +0100
+
+
   * add libovd-xclient-area package
 
  -- Samuel Bovée <samuel@ulteo.com>  Wed, 22 Sep 2010 15:46:49 +0200

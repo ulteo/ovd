@@ -1,7 +1,7 @@
 Source: ovd-web-client
 Section: net
 Priority: extra
-Maintainer: Samuel Bovée <samuel@ulteo.com>
+Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
 Build-Depends: cdbs, debhelper (>= 6), intltool
 Standards-Version: 3.7.2
 

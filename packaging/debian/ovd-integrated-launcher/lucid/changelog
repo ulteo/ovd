@@ -1,5 +1,11 @@
 ovd-integrated-launcher (0.1-1) unstable; urgency=low
 
+  * add packaging for Ubuntu 12.04
+
+ -- David PHAM-VAN <d.pham-van@ulteo.com>  Wed, 27 Jun 2012 16:00:00 +0100
+
+ovd-integrated-launcher (0.1-1) unstable; urgency=low
+
   * Initial release
 
  -- Samuel Bovée <samuel@ulteo.com>  Wed, 23 Jun 2010 11:34:23 +0200
