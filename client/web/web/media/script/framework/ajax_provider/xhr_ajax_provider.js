@@ -5,7 +5,7 @@
 function XhrAjaxProvider() {
 	this.initialize();
 }
-XhrAjaxProvider.prototype = new AjaxProvider();
+XhrAjaxProvider.prototype = new uovd.AjaxProvider();
 
 XhrAjaxProvider.prototype.sessionStart_implementation = function(callback) {
 	jQuery.ajax({

@@ -1,4 +1,4 @@
-function Html5SeamlessHandler(rdp_provider) {
+uovd.Html5SeamlessHandler = function(rdp_provider) {
 	this.rdp_provider = rdp_provider;
 	this.connections = this.rdp_provider.connections;
 	this.handler = this.handleEvents.bind(this);
@@ -16,7 +16,7 @@ function Html5SeamlessHandler(rdp_provider) {
 	this.rdp_provider.session_management.addCallback("ovd.session.server.statusChanged", this.handler);
 }
 
-Html5SeamlessHandler.prototype.handleOrders = function(server_id, opcode, parameters) {
+uovd.Html5SeamlessHandler.prototype.handleOrders = function(server_id, opcode, parameters) {
 	if(opcode == "seamrdp") {
 		/* Format :
 			 parameters[0] = string (CSV encoded)
@@ -169,7 +169,7 @@ Html5SeamlessHandler.prototype.handleOrders = function(server_id, opcode, parame
 	}
 }
 
-Html5SeamlessHandler.prototype.handleEvents = function(type, source, params) {
+uovd.Html5SeamlessHandler.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.rdpProvider.seamless.out.windowDestroy") {
 		var id = parseInt(params["id"]).toString(16);
 		var server_id = params["server_id"];

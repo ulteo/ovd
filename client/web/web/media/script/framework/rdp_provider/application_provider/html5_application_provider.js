@@ -1,6 +1,6 @@
 /* Html5 Application provider */
 
-function Html5ApplicationProvider(rdp_provider) {
+uovd.Html5ApplicationProvider = function(rdp_provider) {
 	this.initialize(rdp_provider);
 	this.connections = this.rdp_provider.connections;
 
@@ -12,14 +12,14 @@ function Html5ApplicationProvider(rdp_provider) {
 		 })(i);
 	}
 }
-Html5ApplicationProvider.prototype = new ApplicationProvider();
+uovd.Html5ApplicationProvider.prototype = new uovd.ApplicationProvider();
 
-Html5ApplicationProvider.prototype.applicationStart_implementation = function (application_id, token) { 
+uovd.Html5ApplicationProvider.prototype.applicationStart_implementation = function (application_id, token) { 
 	var server_id = this.getServerByAppId(application_id);
 	var opcode    = "01";
 	var appToken  = this.write(token, 4);
 	var appId     = this.write(application_id, 4);
-	this.applications[token] = new ApplicationInstance(this, application_id, token);
+	this.applications[token] = new uovd.ApplicationInstance(this, application_id, token);
 
 	if(server_id != -1) {
 		this.connections[server_id].guac_tunnel.sendMessage("ovdapp", opcode+""+appToken+""+appId+";");
@@ -29,14 +29,14 @@ Html5ApplicationProvider.prototype.applicationStart_implementation = function (a
 	}
 }
 
-Html5ApplicationProvider.prototype.applicationStartWithArgs_implementation = function(application_id, args, token) { 
+uovd.Html5ApplicationProvider.prototype.applicationStartWithArgs_implementation = function(application_id, args, token) { 
 	this.applicationStart_implementation(application_id, token); /* stub */
 }
 
-Html5ApplicationProvider.prototype.applicationStop_implementation = function(application_id, token) { 
+uovd.Html5ApplicationProvider.prototype.applicationStop_implementation = function(application_id, token) { 
 }
 
-Html5ApplicationProvider.prototype.handleOrders = function(server_id, opcode, parameters) {
+uovd.Html5ApplicationProvider.prototype.handleOrders = function(server_id, opcode, parameters) {
 	if(opcode == "ovdapp") {
 		/* Format :
 		parameters[0] = binary encoded
@@ -68,7 +68,7 @@ Html5ApplicationProvider.prototype.handleOrders = function(server_id, opcode, pa
 				application = this.applications[instance];
 			} else {
 				/* Application created from session recovery */
-				application = new ApplicationInstance(this, app_id, instance);
+				application = new uovd.ApplicationInstance(this, app_id, instance);
 				application.create = 0;
 			}
 
@@ -108,7 +108,7 @@ Html5ApplicationProvider.prototype.handleOrders = function(server_id, opcode, pa
 	}
 }
 
-Html5ApplicationProvider.prototype.write = function(num, bytes) {
+uovd.Html5ApplicationProvider.prototype.write = function(num, bytes) {
 	var buffer = new Array();
 	var output = "";
 	var input = "";
@@ -140,7 +140,7 @@ Html5ApplicationProvider.prototype.write = function(num, bytes) {
 	return output;
 }
 
-Html5ApplicationProvider.prototype.read = function(str, bytes) {
+uovd.Html5ApplicationProvider.prototype.read = function(str, bytes) {
 	var buffer = new Array();
 	var output = "0x";
 	var num = 0;

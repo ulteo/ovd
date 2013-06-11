@@ -190,6 +190,7 @@ function get_users_list() {
 <?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/framework/uframework.js")) { ?>
 		<script type="text/javascript" src="media/script/framework/uframework.js" charset="utf-8"></script>
 <?php } else { ?>
+		<script type="text/javascript" src="media/script/framework/base.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/session.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/session_management.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/framework/ajax_provider/base_ajax_provider.js" charset="utf-8"></script>

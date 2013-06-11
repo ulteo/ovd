@@ -46,36 +46,36 @@ jQuery(document).ready(function() {
 		var provider = jQuery("#rdp_provider").val();
 		var rdp_provider = null;
 		if(provider == "Java") {
-			rdp_provider = new JavaRdpProvider();
+			rdp_provider = new uovd.JavaRdpProvider();
 		} else if(provider == "HTML5") {
-			rdp_provider = new Html5RdpProvider();
+			rdp_provider = new uovd.Html5RdpProvider();
 		}
 
 		/* choose ajax_provider */
 		var provider = jQuery("#ajax_provider").val();
 		var ajax_provider = null;
 		if(provider == "Xhr") {
-			ajax_provider = new XhrAjaxProvider();
+			ajax_provider = new uovd.XhrAjaxProvider();
 		} else if(provider == "Direct") {
-			var ajax_provider = new DirectAjaxProvider();
+			var ajax_provider = new uovd.DirectAjaxProvider();
 		} else if(provider == "Proxy") {
-			var ajax_provider = new ProxyAjaxProvider("proxy.php");
+			var ajax_provider = new uovd.ProxyAjaxProvider("proxy.php");
 		}
 
 		/* build session_management instance */
-		session_management = new SessionManagement(parameters, rdp_provider, ajax_provider);
+		session_management = new uovd.SessionManagement(parameters, rdp_provider, ajax_provider);
 
 		/* Add debug panel */
-		var debug_panel = new DebugPanel(session_management, jQuery("#logs")[0]);
+		var debug_panel = new uovd.DebugPanel(session_management, jQuery("#logs")[0]);
 
 		/* Add seamless panel */
-		var seamless_launcher = new SeamlessLauncher(session_management, jQuery("#client")[0]);
+		var seamless_launcher = new uovd.SeamlessLauncher(session_management, jQuery("#client")[0]);
 
 		/* Add desktop container */
-		var desktop_container = new DesktopContainer(session_management, jQuery("#client")[0]);
+		var desktop_container = new uovd.DesktopContainer(session_management, jQuery("#client")[0]);
 
 		/* Add seamless window manager */
-		var seamless_window_manager = new SeamlessWindowManager(session_management, jQuery("#client")[0], new SeamlessWindowFactory());
+		var seamless_window_manager = new uovd.SeamlessWindowManager(session_management, jQuery("#client")[0], new uovd.SeamlessWindowFactory());
 
 		/* Bind disconnect on sumbit button */
 		jQuery("#submit").val("Close");

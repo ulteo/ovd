@@ -1,4 +1,5 @@
-function SessionManagement(params, rdp_provider, ajax_provider) {
+
+uovd.SessionManagement = function(params, rdp_provider, ajax_provider) {
 	this.parameters = params;
 	this.status_check = null;
 
@@ -96,11 +97,11 @@ function SessionManagement(params, rdp_provider, ajax_provider) {
 	};
 }
 
-SessionManagement.prototype.setParameters = function(params) {
+uovd.SessionManagement.prototype.setParameters = function(params) {
 	this.parameters = params;
 }
 
-SessionManagement.prototype.setRdpProvider = function(rdp_provider) {
+uovd.SessionManagement.prototype.setRdpProvider = function(rdp_provider) {
 	this.rdp_provider = rdp_provider;
 
 	if(this.rdp_provider) {
@@ -108,7 +109,7 @@ SessionManagement.prototype.setRdpProvider = function(rdp_provider) {
 	}
 }
 
-SessionManagement.prototype.setAjaxProvider = function(ajax_provider) {
+uovd.SessionManagement.prototype.setAjaxProvider = function(ajax_provider) {
 	this.ajax_provider = ajax_provider;
 
 	if(this.ajax_provider) {
@@ -116,20 +117,20 @@ SessionManagement.prototype.setAjaxProvider = function(ajax_provider) {
 	}
 }
 
-SessionManagement.prototype.start = function() {
-	this.session = new Session(this);
+uovd.SessionManagement.prototype.start = function() {
+	this.session = new uovd.Session(this);
 	this.ajax_provider.sessionStart();
 }
 
-SessionManagement.prototype.stop = function() {
+uovd.SessionManagement.prototype.stop = function() {
 	this.ajax_provider.sessionEnd();
 }
 
-SessionManagement.prototype.suspend = function() {
+uovd.SessionManagement.prototype.suspend = function() {
 	this.ajax_provider.sessionSuspend();
 }
 
-SessionManagement.prototype.addCallback = function(type, func) {
+uovd.SessionManagement.prototype.addCallback = function(type, func) {
 	if(! this.callbacks[type]) {
 		this.callbacks[type] = new Array();
 	}
@@ -137,7 +138,7 @@ SessionManagement.prototype.addCallback = function(type, func) {
 	this.callbacks[type].push(func);
 }
 
-SessionManagement.prototype.removeCallback = function(type, func) {
+uovd.SessionManagement.prototype.removeCallback = function(type, func) {
 	if(this.callbacks[type]) {
 			var idx = this.callbacks[type].indexOf(func);
 			if(idx != -1) {
@@ -149,7 +150,7 @@ SessionManagement.prototype.removeCallback = function(type, func) {
 	}
 }
 
-SessionManagement.prototype.fireEvent = function(type, source, params) {
+uovd.SessionManagement.prototype.fireEvent = function(type, source, params) {
 	var path_elements = type.split(".");
 	var patterns = [];
 	var callbacks = [];

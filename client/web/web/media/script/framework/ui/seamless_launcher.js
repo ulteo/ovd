@@ -1,4 +1,4 @@
-function SeamlessLauncher(session_management, node) {
+uovd.SeamlessLauncher = function(session_management, node) {
 	this.node = jQuery(node);
 	this.session_management = session_management;
 	this.applications = {}; /* application id as index */
@@ -9,7 +9,7 @@ function SeamlessLauncher(session_management, node) {
 	this.session_management.addCallback("ovd.session.statusChanged", this.handler);
 }
 
-SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
+uovd.SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.session.statusChanged") {
 		var from = params["from"];
 		var to = params["to"];
@@ -149,7 +149,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 	}
 }
 
-SeamlessLauncher.prototype.end = function() {
+uovd.SeamlessLauncher.prototype.end = function() {
 	if(this.session_management.parameters["session_type"] == "applications") {
 		this.node.empty();
 		/* Do NOT remove ovd.session.statusChanged as it is used as a delayed initializer */

@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-var session_management = new SessionManagement();
+var session_management = new uovd.SessionManagement();
 
 var debug = false;
 
@@ -274,23 +274,23 @@ Event.observe(window, 'load', function() {
   });
 
 	window.rdp_providers = {};
-	window.rdp_providers["java"]  = new JavaProvider();
-	window.rdp_providers["html5"] = new Html5RdpProvider();
+	window.rdp_providers["java"]  = new uovd.JavaProvider();
+	window.rdp_providers["html5"] = new uovd.Html5RdpProvider();
 
 	/* handle client insertion */
-	new DesktopContainer(session_management); /* !!! */
+	new uovd.DesktopContainer(session_management); /* !!! */
 
 	/* applications launcher */
-	new SeamlessLauncher(session_management, "#appsContainer");
+	new uovd.SeamlessLauncher(session_management, "#appsContainer");
 
 	/* window manager */
-	new SeamlessWindowManager(session_management, "#windowsContainer", new SeamlessWindowFactory());
+	new uovd.SeamlessWindowManager(session_management, "#windowsContainer", new uovd.SeamlessWindowFactory());
 
 	/* ajaxplorer file manager */
-	new Ajaxplorer(session_management, "#fileManagerContainer");
+	new uovd.Ajaxplorer(session_management, "#fileManagerContainer");
 
 	/* application counter */
-	window.applicationCounter = new ApplicationCounter(session_management);
+	window.applicationCounter = new uovd.ApplicationCounter(session_management);
 });
 
 function startSession() {
@@ -339,7 +339,7 @@ function startSession() {
 	}
 
 	session_management.setParameters(parameters);
-	session_management.setAjaxProvider(new ProxyAjaxProvider("proxy.php"));
+	session_management.setAjaxProvider(new uovd.ProxyAjaxProvider("proxy.php"));
 	session_management.start();
 
 	return false;

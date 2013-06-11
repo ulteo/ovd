@@ -1,4 +1,4 @@
-function SeamlessDraggingBar(node) {
+uovd.SeamlessDraggingBar = function(node) {
 	this.node = jQuery(node);
 	this.content = jQuery(document.createElement("div"));
 	this.header = jQuery(document.createElement("div"));
@@ -45,6 +45,6 @@ function SeamlessDraggingBar(node) {
 	this.header.mousedown(startingDragAndDrop);
 }
 
-SeamlessDraggingBar.prototype.getNode = function() {
+uovd.SeamlessDraggingBar.prototype.getNode = function() {
 	return this.content[0];
 }

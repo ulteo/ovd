@@ -1,4 +1,4 @@
-function DebugPanel(session_management, node) {
+uovd.DebugPanel = function(session_management, node) {
 	this.node = jQuery(node);
 	this.session_management = session_management;
 	this.colors = {
@@ -40,7 +40,7 @@ function DebugPanel(session_management, node) {
 	}
 }
 
-DebugPanel.prototype.handleEvents = function(type, source, params) {
+uovd.DebugPanel.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.log") {
 		var message = params["message"] || "In "+((new RegExp( "function \(.*(.*) \)", "g" ).exec((source.constructor+""))[1]) || "unknown");
 		var level   = params["level"] || "normal";
@@ -52,7 +52,7 @@ DebugPanel.prototype.handleEvents = function(type, source, params) {
 	}
 }
 
-DebugPanel.prototype.end = function() {
+uovd.DebugPanel.prototype.end = function() {
 	this.node.empty();
 
 	for(var type in this.callbacks) {

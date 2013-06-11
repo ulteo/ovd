@@ -1,7 +1,15 @@
 /* Java RDP Provider */
 
-function JavaRdpProvider(node) {
-	this.initialize();
+uovd.JavaProvider = function(node) {
+	/* Call parent inilializers */
+	uovd.AjaxProvider.prototype.initialize.apply(this);
+	uovd.RdpProvider.prototype.initialize.apply(this);
+
+	/* Ajax provider initializer */
+	this.request_cache = {};
+	this.request_cache_index = 0;
+
+	/* ---------- Init Applet ---------- */
 	this.node = jQuery((node || "body"));
 	this.main_applet = null;
 
@@ -81,7 +89,139 @@ function JavaRdpProvider(node) {
 }
 JavaRdpProvider.prototype = new RdpProvider();
 
-JavaRdpProvider.prototype.connectDesktop = function() {
+/* Multiple inheritance */
+for(var i in uovd.AjaxProvider.prototype) { uovd.JavaProvider.prototype[i] = uovd.AjaxProvider.prototype[i]; }
+for(var i in uovd.RdpProvider.prototype)  { uovd.JavaProvider.prototype[i] = uovd.RdpProvider.prototype[i];  }
+
+/* --------------- Ajax provider part --------------- */
+
+uovd.JavaProvider.prototype.applet_ajaxResponse = function(req_id, http_code, contentType, data) {
+	if(! this.request_cache[req_id]) { return; }
+
+	var callback = this.request_cache[req_id];
+	delete this.request_cache[req_id];
+
+	if(http_code != 200) { return; }
+
+	/* parse XML */
+	var xml = null;
+	if (window.ActiveXObject){
+		xml = new ActiveXObject('Microsoft.XMLDOM');
+		xml.async='false';
+		xml.loadXML(data);
+	} else {
+		var parser = new DOMParser();
+		xml = parser.parseFromString(data,'text/xml');
+	}
+
+	callback(xml);
+}
+
+uovd.JavaProvider.prototype.sessionStart_implementation = function(callback) {
+	var session_manager = this.session_management.parameters["session_manager"];
+	var mode = this.session_management.parameters["session_type"];
+	var language = this.session_management.parameters["language"];
+	var timezone = this.session_management.parameters["timezone"];
+	var login = this.session_management.parameters["username"];
+	var password = this.session_management.parameters["password"];
+
+	var service_url = "https://"+session_manager+"/ovd/client/start.php";
+	var data = ""+
+		"<session mode='"+mode+"' language='"+language+"' timezone='"+timezone+"'>"+
+			"<user login='"+login+"' password='"+password+"'/>"+
+		"</session>";
+
+	var self = this; /* closure */
+	var onfailure = function() {
+		/* !!! Error  */
+	};
+	var onsuccess = function() {
+		var index = self.request_cache_index++;
+		self.request_cache[index] = callback;
+		self.main_applet[0].ajaxRequest(service_url, "post", "text/xml", data, index);
+	}
+
+	if(this.main_applet == null) {
+		this.initialize(onsuccess, onfailure);
+	} else {
+		onsuccess();
+	}
+}
+
+uovd.JavaProvider.prototype.sessionStatus_implementation = function(callback) {
+	var session_manager = this.session_management.parameters["session_manager"];
+
+	var service_url = "https://"+session_manager+"/ovd/client/session_status.php";
+	var data = "";
+
+	var self = this; /* closure */
+	var onfailure = function() {
+		/* !!! Error  */
+	};
+	var onsuccess = function() {
+		var index = self.request_cache_index++;
+		self.request_cache[index] = callback;
+		self.main_applet[0].ajaxRequest(service_url, "get", "text/xml", data, index);
+	}
+
+	if(this.main_applet == null) {
+		this.initialize(onsuccess, onfailure);
+	} else {
+		onsuccess();
+	}
+}
+
+uovd.JavaProvider.prototype.sessionEnd_implementation = function(callback) {
+	var session_manager = this.session_management.parameters["session_manager"];
+
+	var service_url = "https://"+session_manager+"/ovd/client/logout.php";
+	var data = ""+
+		"<logout mode='logout'/>";
+
+	var self = this; /* closure */
+	var onfailure = function() {
+		/* !!! Error  */
+	};
+	var onsuccess = function() {
+		var index = self.request_cache_index++;
+		self.request_cache[index] = callback;
+		self.main_applet[0].ajaxRequest(service_url, "post", "text/xml", data, index);
+	}
+
+	if(this.main_applet == null) {
+		this.initialize(onsuccess, onfailure);
+	} else {
+		onsuccess();
+	}
+}
+
+uovd.JavaProvider.prototype.sessionSuspend_implementation = function(callback) {
+	var session_manager = this.session_management.parameters["session_manager"];
+
+	var service_url = "https://"+session_manager+"/ovd/client/logout.php";
+	var data = ""+
+		"<logout mode='suspend'/>";
+
+	var self = this; /* closure */
+	var onfailure = function() {
+		/* !!! Error  */
+	};
+	var onsuccess = function() {
+		var index = self.request_cache_index++;
+		self.request_cache[index] = callback;
+		self.main_applet[0].ajaxRequest(service_url, "post", "text/xml", data, index);
+	}
+
+	if(this.main_applet == null) {
+		this.initialize(onsuccess, onfailure);
+	} else {
+		onsuccess();
+	}
+}
+
+/* --------------- Rdp provider part --------------- */
+
+uovd.JavaProvider.prototype.connectDesktop = function() {
 	var self = this; /* closure */
 	var server = this.session_management.session.servers[0];
 	var settings = this.session_management.session.settings;
@@ -183,7 +323,7 @@ JavaRdpProvider.prototype.connectDesktop = function() {
 	}
 };
 
-JavaRdpProvider.prototype.connectApplications = function() {
+uovd.JavaProvider.prototype.connectApplications = function() {
 	var self = this; /* closure */
 	var server = this.session_management.session.servers[0];
 	var settings = this.session_management.session.settings;
@@ -207,7 +347,7 @@ JavaRdpProvider.prototype.connectApplications = function() {
 		settings.push("Desktop_0");
 
 		/* set application_provider */
-		var application_provider = new JavaApplicationProvider(self);
+		var application_provider = new uovd.JavaApplicationProvider(self);
 
 		/* Add the servers status callback */
 		self.applet_serverStatus = function(id, status) {
@@ -262,6 +402,6 @@ JavaRdpProvider.prototype.connectApplications = function() {
 	}
 };
 
-JavaRdpProvider.prototype.disconnect_implementation = function() {
+uovd.JavaProvider.prototype.disconnect_implementation = function() {
 	this.main_applet[0].endSession();
 };

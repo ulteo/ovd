@@ -1,13 +1,13 @@
 /* Base class */
 
-function RdpProvider() { }
+uovd.RdpProvider = function() { }
 
-RdpProvider.prototype.initialize = function() {
+uovd.RdpProvider.prototype.initialize = function() {
 	this.session_management = null;
 }
 
-RdpProvider.prototype.testCapabilities = function() { return true; }
-RdpProvider.prototype.connect = function() {
+uovd.RdpProvider.prototype.testCapabilities = function() { return true; }
+uovd.RdpProvider.prototype.connect = function() {
 	if (this.session_management.parameters["session_type"] == "desktop") {
 		this.connectDesktop();
 	} else if (this.session_management.parameters["session_type"] == "applications") {
@@ -15,6 +15,6 @@ RdpProvider.prototype.connect = function() {
 	}
 }
 
-RdpProvider.prototype.disconnect = function() {
+uovd.RdpProvider.prototype.disconnect = function() {
 	this.disconnect_implementation();
 }

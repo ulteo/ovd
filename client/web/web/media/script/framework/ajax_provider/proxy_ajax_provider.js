@@ -4,13 +4,13 @@
    specified in the constructor (sample webservice is proxy.php)
 */
 
-function ProxyAjaxProvider(proxy_url) {
+uovd.ProxyAjaxProvider = function(proxy_url) {
 	this.initialize();
 	this.proxy_url = proxy_url;
 }
-ProxyAjaxProvider.prototype = new AjaxProvider();
+uovd.ProxyAjaxProvider.prototype = new uovd.AjaxProvider();
 
-ProxyAjaxProvider.prototype.sessionStart_implementation = function(callback) {
+uovd.ProxyAjaxProvider.prototype.sessionStart_implementation = function(callback) {
 	var session_manager = this.session_management.parameters["session_manager"];
 	var mode = this.session_management.parameters["session_type"];
 	var language = this.session_management.parameters["language"];
@@ -40,7 +40,7 @@ ProxyAjaxProvider.prototype.sessionStart_implementation = function(callback) {
 	});
 }
 
-ProxyAjaxProvider.prototype.sessionStatus_implementation = function(callback) {
+uovd.ProxyAjaxProvider.prototype.sessionStatus_implementation = function(callback) {
 	var session_manager = this.session_management.parameters["session_manager"];
   jQuery.ajax({
 		url: this.proxy_url,
@@ -59,7 +59,7 @@ ProxyAjaxProvider.prototype.sessionStatus_implementation = function(callback) {
 	});
 }
 
-ProxyAjaxProvider.prototype.sessionEnd_implementation = function(callback) {
+uovd.ProxyAjaxProvider.prototype.sessionEnd_implementation = function(callback) {
 	var session_manager = this.session_management.parameters["session_manager"];
   jQuery.ajax({
 		url: this.proxy_url,
@@ -81,7 +81,7 @@ ProxyAjaxProvider.prototype.sessionEnd_implementation = function(callback) {
 	});
 }
 
-ProxyAjaxProvider.prototype.sessionSuspend_implementation = function(callback) {
+uovd.ProxyAjaxProvider.prototype.sessionSuspend_implementation = function(callback) {
 	var session_manager = this.session_management.parameters["session_manager"];
   jQuery.ajax({
 		url: this.proxy_url,

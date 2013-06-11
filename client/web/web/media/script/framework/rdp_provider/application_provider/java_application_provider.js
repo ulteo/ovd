@@ -1,6 +1,6 @@
 /* Java application provider */
 
-function JavaApplicationProvider(rdp_provider) {
+uovd.JavaApplicationProvider = function(rdp_provider) {
 	this.initialize(rdp_provider);
 
 	var self = this; /* closure */
@@ -9,11 +9,11 @@ function JavaApplicationProvider(rdp_provider) {
 	}
 }
 
-JavaApplicationProvider.prototype = new ApplicationProvider();
+uovd.JavaApplicationProvider.prototype = new uovd.ApplicationProvider();
 
-JavaApplicationProvider.prototype.applicationStart_implementation = function (application_id, token) { 
+uovd.JavaApplicationProvider.prototype.applicationStart_implementation = function (application_id, token) { 
 	var server_id = this.getServerByAppId(application_id);
-	this.applications[token] = new ApplicationInstance(this, application_id, token);
+	this.applications[token] = new uovd.ApplicationInstance(this, application_id, token);
 
 	if(server_id != -1) {
 		this.rdp_provider.main_applet[0].startApplication(token, application_id, server_id);
@@ -23,21 +23,21 @@ JavaApplicationProvider.prototype.applicationStart_implementation = function (ap
 	}
 }
 
-JavaApplicationProvider.prototype.applicationStartWithArgs_implementation = function(application_id, args, token) { 
+uovd.JavaApplicationProvider.prototype.applicationStartWithArgs_implementation = function(application_id, args, token) { 
 	this.applicationStart_implementation(application_id, token); /* stub */
 }
 
-JavaApplicationProvider.prototype.applicationStop_implementation = function(application_id, token) { 
+uovd.JavaApplicationProvider.prototype.applicationStop_implementation = function(application_id, token) { 
 }
 
-JavaApplicationProvider.prototype.handleOrders = function(app_id, instance, status) {
+uovd.JavaApplicationProvider.prototype.handleOrders = function(app_id, instance, status) {
 	if(status == "started") {
 		var application = null;
 		if(this.applications[instance]) {
 			application = this.applications[instance];
 		} else {
 			/* Application created from session recovery */
-			application = new ApplicationInstance(this, app_id, instance);
+			application = new uovd.ApplicationInstance(this, app_id, instance);
 			application.create = 0;
 		}
 

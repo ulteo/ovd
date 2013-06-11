@@ -1,4 +1,4 @@
-function SeamlessWindowFactory() {
+uovd.SeamlessWindowFactory = function() {
 
 	this.SeamlessWindow = function(params) {
 		this.id = params["id"];
@@ -184,6 +184,6 @@ function SeamlessWindowFactory() {
 	}
 }
 
-SeamlessWindowFactory.prototype.create = function(params) {
+uovd.SeamlessWindowFactory.prototype.create = function(params) {
 	return new (this.SeamlessWindow)(params);
 }

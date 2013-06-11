@@ -1,4 +1,4 @@
-function DesktopContainer(session_management, node) {
+uovd.DesktopContainer = function(session_management, node) {
 	this.node = null;
 	this.session_management = session_management;
 
@@ -13,7 +13,7 @@ function DesktopContainer(session_management, node) {
 	this.session_management.addCallback("ovd.ajaxProvider.sessionSuspend", this.handler);
 }
 
-DesktopContainer.prototype.handleEvents = function(type, source, params) {
+uovd.DesktopContainer.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.rdpProvider.desktopPanel") {
 		var name = params["name"];
 		var node = params["node"];
@@ -30,6 +30,6 @@ DesktopContainer.prototype.handleEvents = function(type, source, params) {
 	}
 }
 
-DesktopContainer.prototype.end = function() {
+uovd.DesktopContainer.prototype.end = function() {
 	this.node.empty();
 }

@@ -1,4 +1,5 @@
-function Session(session_management) {
+
+uovd.Session = function(session_management) {
 	this.session_management = session_management
 	this.xml = null;
 	this.mode = null
@@ -8,7 +9,7 @@ function Session(session_management) {
 	this.status = "unknown";
 }
 
-Session.prototype.update = function(xml) {
+uovd.Session.prototype.update = function(xml) {
 	var xml_root = jQuery(xml).find(":root");
 
 	switch(xml_root.prop("nodeName")) {
@@ -32,7 +33,7 @@ Session.prototype.update = function(xml) {
 	return "bad_xml";
 }
 
-Session.prototype.parseSession = function(xml) {
+uovd.Session.prototype.parseSession = function(xml) {
 	var self = this; /* closure */
 	try {
 		if(xml.attr("status") != undefined) {
@@ -57,7 +58,7 @@ Session.prototype.parseSession = function(xml) {
 			});
 
 			xml.find("server").each( function() {
-				self.servers.push(new Server(self, jQuery(this)));
+				self.servers.push(new uovd.Server(self, jQuery(this)));
 			});
 		}
 	} catch(error) {
@@ -67,7 +68,7 @@ Session.prototype.parseSession = function(xml) {
 	return null;
 }
 
-Session.prototype.parseResponse = function(xml) {
+uovd.Session.prototype.parseResponse = function(xml) {
 	var code = "";
 	try {
 		code = xml.attr("code");
@@ -79,7 +80,7 @@ Session.prototype.parseResponse = function(xml) {
 	return code;
 }
 
-Session.prototype.parseError = function(xml) {
+uovd.Session.prototype.parseError = function(xml) {
 	var code = "";
 	try {
 		code = xml.attr("id");
@@ -92,13 +93,13 @@ Session.prototype.parseError = function(xml) {
 	return code;
 }
 
-Session.prototype.parseEnd = function(xml) {
+uovd.Session.prototype.parseEnd = function(xml) {
 	return null;
 }
 
 /* Data storage */
 
-function Server(session, xml) {
+uovd.Server = function(session, xml) {
 	var self = this; /* closure */
 	this.session = session;
 	this.xml = xml[0];
@@ -112,7 +113,7 @@ function Server(session, xml) {
 	this.status = "unknown";
 
 	xml.find("application").each( function() {
-		self.applications.push(new Application(self, jQuery(this)));
+		self.applications.push(new uovd.Application(self, jQuery(this)));
 	});
 
 	if(!this.port) {
@@ -126,7 +127,7 @@ function Server(session, xml) {
 	}
 }
 
-Server.prototype.setStatus = function(status) {
+uovd.Server.prototype.setStatus = function(status) {
 	/* Server status message */
 	var old_status = this.status;
 	this.status = status
@@ -136,7 +137,7 @@ Server.prototype.setStatus = function(status) {
 	}
 }
 
-function Application(server, xml) {
+uovd.Application = function(server, xml) {
 	var self = this; /* closure */
 	this.server = server;
 	this.xml = xml[0];
