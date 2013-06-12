@@ -1,14 +1,13 @@
 SUBDIRS = applet auth classes includes media PEAR
 
-scripts_DATA = applications.php \
+scripts_DATA = ajaxplorer.php \
+               applications.php \
                config.php \
                external.php \
                icon.php \
                index.php \
-               login.php \
-               logout.php \
                news.php \
-               session_status.php \
+               proxy.php \
                start_app.php \
                synchronize.php \
                translate.php
