@@ -11,12 +11,8 @@ uovd.provider.http.Proxy = function(proxy_url) {
 uovd.provider.http.Proxy.prototype = new uovd.provider.http.Base();
 
 uovd.provider.http.Proxy.prototype.sessionStart_implementation = function(callback) {
-	var session_manager = this.session_management.parameters["session_manager"];
-	var mode = this.session_management.parameters["session_type"];
-	var language = this.session_management.parameters["language"];
-	var timezone = this.session_management.parameters["timezone"];
-	var login = this.session_management.parameters["username"];
-	var password = this.session_management.parameters["password"];
+	var parameters = this.session_management.parameters;
+	var session_manager = parameters["session_manager"];
 
   jQuery.ajax({
 		url: this.proxy_url,
@@ -27,10 +23,7 @@ uovd.provider.http.Proxy.prototype.sessionStart_implementation = function(callba
 			"X-Ovd-Service" : "start"
 		},
 		contentType: "text/xml",
-		data: ""+
-		"<session mode='"+mode+"' language='"+language+"' timezone='"+timezone+"'>"+
-			"<user login='"+login+"' password='"+password+"'/>"+
-		"</session>",
+		data: this.build_sessionStart(parameters, "txt"),
 		success: function(xml) {
 			callback(xml);
 		},
@@ -60,7 +53,9 @@ uovd.provider.http.Proxy.prototype.sessionStatus_implementation = function(callb
 }
 
 uovd.provider.http.Proxy.prototype.sessionEnd_implementation = function(callback) {
-	var session_manager = this.session_management.parameters["session_manager"];
+	var parameters = this.session_management.parameters;
+	var session_manager = parameters["session_manager"];
+
   jQuery.ajax({
 		url: this.proxy_url,
 		type: "POST",
@@ -70,8 +65,7 @@ uovd.provider.http.Proxy.prototype.sessionEnd_implementation = function(callback
 			"X-Ovd-Service" : "logout"
 		},
 		contentType: "text/xml",
-		data: ""+
-		"<logout mode='logout'/>",
+		data: this.build_sessionEnd(parameters, "txt"),
 		success: function(xml) {
 			callback(xml);
 		},
@@ -82,7 +76,9 @@ uovd.provider.http.Proxy.prototype.sessionEnd_implementation = function(callback
 }
 
 uovd.provider.http.Proxy.prototype.sessionSuspend_implementation = function(callback) {
-	var session_manager = this.session_management.parameters["session_manager"];
+	var parameters = this.session_management.parameters;
+	var session_manager = parameters["session_manager"];
+
   jQuery.ajax({
 		url: this.proxy_url,
 		type: "POST",
@@ -92,8 +88,7 @@ uovd.provider.http.Proxy.prototype.sessionSuspend_implementation = function(call
 			"X-Ovd-Service" : "logout"
 		},
 		contentType: "text/xml",
-		data: ""+
-		"<logout mode='suspend'/>",
+		data: this.build_sessionSuspend(parameters, "txt"),
 		success: function(xml) {
 			callback(xml);
 		},

@@ -117,18 +117,11 @@ uovd.provider.Java.prototype.applet_ajaxResponse = function(req_id, http_code, c
 }
 
 uovd.provider.Java.prototype.sessionStart_implementation = function(callback) {
-	var session_manager = this.session_management.parameters["session_manager"];
-	var mode = this.session_management.parameters["session_type"];
-	var language = this.session_management.parameters["language"];
-	var timezone = this.session_management.parameters["timezone"];
-	var login = this.session_management.parameters["username"];
-	var password = this.session_management.parameters["password"];
+	var parameters = this.session_management.parameters;
+	var session_manager = parameters["session_manager"];
 
 	var service_url = "https://"+session_manager+"/ovd/client/start.php";
-	var data = ""+
-		"<session mode='"+mode+"' language='"+language+"' timezone='"+timezone+"'>"+
-			"<user login='"+login+"' password='"+password+"'/>"+
-		"</session>";
+	var data = this.build_sessionStart(parameters, "txt");
 
 	var self = this; /* closure */
 	var onfailure = function() {
@@ -171,11 +164,11 @@ uovd.provider.Java.prototype.sessionStatus_implementation = function(callback) {
 }
 
 uovd.provider.Java.prototype.sessionEnd_implementation = function(callback) {
-	var session_manager = this.session_management.parameters["session_manager"];
+	var parameters = this.session_management.parameters;
+	var session_manager = parameters["session_manager"];
 
 	var service_url = "https://"+session_manager+"/ovd/client/logout.php";
-	var data = ""+
-		"<logout mode='logout'/>";
+	var data = this.build_sessionEnd(parameters, "txt");
 
 	var self = this; /* closure */
 	var onfailure = function() {
@@ -195,11 +188,11 @@ uovd.provider.Java.prototype.sessionEnd_implementation = function(callback) {
 }
 
 uovd.provider.Java.prototype.sessionSuspend_implementation = function(callback) {
-	var session_manager = this.session_management.parameters["session_manager"];
+	var parameters = this.session_management.parameters;
+	var session_manager = parameters["session_manager"];
 
 	var service_url = "https://"+session_manager+"/ovd/client/logout.php";
-	var data = ""+
-		"<logout mode='suspend'/>";
+	var data = this.build_sessionSuspend(parameters, "txt");
 
 	var self = this; /* closure */
 	var onfailure = function() {
