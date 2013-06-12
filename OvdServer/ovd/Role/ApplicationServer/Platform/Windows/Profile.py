@@ -118,7 +118,7 @@ class Profile(AbstractProfile):
 		
 		
 		absCommand = Util.get_from_PATH(Profile.vfsCommand)
-		 if absCommand is None:
+		if absCommand is None:
 			Logger.warn("VFS.exe is not installed")
 			return False
 		
