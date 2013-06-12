@@ -8,9 +8,9 @@ uovd.provider.rdp.Base.prototype.initialize = function() {
 
 uovd.provider.rdp.Base.prototype.testCapabilities = function() { return true; }
 uovd.provider.rdp.Base.prototype.connect = function() {
-	if (this.session_management.parameters["session_type"] == "desktop") {
+	if (this.session_management.parameters["session_type"] == uovd.SESSION_MODE_DESKTOP) {
 		this.connectDesktop();
-	} else if (this.session_management.parameters["session_type"] == "applications") {
+	} else if (this.session_management.parameters["session_type"] == uovd.SESSION_MODE_APPLICATIONS) {
 		this.connectApplications();
 	}
 }

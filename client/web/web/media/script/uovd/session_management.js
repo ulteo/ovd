@@ -23,7 +23,7 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider) {
 		"ovd.ajaxProvider.sessionStart" : new Array(function(type, source, params) {
 			var state = params["state"];
 
-			if(state == "success") {
+			if(state == uovd.SUCCESS) {
 				self.status_check = setInterval( function() {
 					self.ajax_provider.sessionStatus();
 				}, 3000);
@@ -32,7 +32,7 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider) {
 		"ovd.ajaxProvider.sessionEnd" : new Array(function(type, source, params) {
 			var state = params["state"];
 
-			if(state == "success" && self.status_check) {
+			if(state == uovd.SUCCESS && self.status_check) {
 				/* Set the polling interval to 3 sec */
 				clearInterval(self.status_check);
 				self.status_check = setInterval( function() {
@@ -43,7 +43,7 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider) {
 		"ovd.ajaxProvider.sessionSuspend" : new Array(function(type, source, params) {
 			var state = params["state"];
 
-			if(state == "success" && self.status_check) {
+			if(state == uovd.SUCCESS && self.status_check) {
 				/* Set the polling interval to 3 sec */
 				clearInterval(self.status_check);
 				self.status_check = setInterval( function() {
@@ -55,18 +55,18 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider) {
 			var from = params["from"];
 			var to = params["to"];
 
-			if(to == "ready") {
+			if(to == uovd.SESSION_STATUS_READY) {
 				/* Connect to rdp servers */
 				self.rdp_provider.connect();
 			}
-			if(to == "logged") {
+			if(to == uovd.SESSION_STATUS_LOGGED) {
 				/* Lower the polling interval to 30 sec */
 				clearInterval(self.status_check);
 				self.status_check = setInterval( function() {
 					self.ajax_provider.sessionStatus();
 				}, 30000);
 			}
-			if(to == "disconnected") {
+			if(to == uovd.SESSION_STATUS_DISCONNECTED) {
 				/* Disconnect the client */
 				self.rdp_provider.disconnect();
 
@@ -74,7 +74,7 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider) {
 				clearInterval(self.status_check);
 				self.status_check = 0;
 			}
-			if(to == "unknown") {
+			if(to == uovd.SESSION_STATUS_UNKNOWN ) {
 				/* Call SessionManagement.stop for a clean stop */
 				self.stop();
 				/* Clear status_check interval */
@@ -86,7 +86,7 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider) {
 			var from = params["from"];
 			var to = params["to"];
 
-			if(to == "disconnected" && self.status_check) {
+			if(to == uovd.SESSION_STATUS_DISCONNECTED && self.status_check) {
 				/* Set the polling interval to 3 sec */
 				clearInterval(self.status_check);
 				self.status_check = setInterval( function() {

@@ -188,7 +188,7 @@ Event.observe(window, 'load', function() {
 
 		if(type == "ovd.ajaxProvider.sessionStart") {
 			/* "Session start" is a success ? show progress bar */
-			if(state == "success") {
+			if(state == uovd.SUCCESS) {
 				hideLogin();
 				showSplash();
 				pushMainContainer();
@@ -211,18 +211,18 @@ Event.observe(window, 'load', function() {
 		var mode = session_management.parameters["session_type"];
 
 		/* Session is ready and connected */
-		if(to == "logged") {
+		if(to == uovd.SESSION_STATUS_LOGGED) {
 			configureUI(mode);
 			pullMainContainer();
 		}
 
 		/* Session is ending : hide main container */
-		if(from == "logged") {
+		if(from == uovd.SESSION_STATUS_LOGGED) {
 			pushMainContainer();
 		}
 
 		/* Destroyed or disconnected ? show end */
-		if(to == "unknown" || to == "disconnected") {
+		if(to == uovd.SESSION_STATUS_UNKNOWN || to == uovd.SESSION_STATUS_DISCONNECTED) {
 			hideSplash();
 			generateEnd();
 			showEnd();
@@ -269,17 +269,17 @@ Event.observe(window, 'load', function() {
 			jQuery('#progressBar').append(jQuery('<span>'+message+'</span>').css({'position':'relative', 'top':'-100%'}));
 		}
 
-		if(type == 'ovd.ajaxProvider.sessionStart' && params['state'] == 'success') {
+		if(type == 'ovd.ajaxProvider.sessionStart' && params['state'] == uovd.SUCCESS) {
 			step(0, "Creating session");
 			return;
 		}
 
-		if(type == 'ovd.session.statusChanged' && params['to'] == 'init') {
+		if(type == 'ovd.session.statusChanged' && params['to'] == uovd.SESSION_STATUS_INITED) {
 			step(25, "Initializing");
 			return;
 		}
 
-		if(type == 'ovd.session.statusChanged' && params['to'] == 'ready') {
+		if(type == 'ovd.session.statusChanged' && params['to'] == uovd.SESSION_STATUS_READY) {
 			step(50, "Connecting");
 			return;
 		}
@@ -289,7 +289,7 @@ Event.observe(window, 'load', function() {
 			return;
 		}
 
-		if(type == 'ovd.session.statusChanged' && params['to'] == 'logged') {
+		if(type == 'ovd.session.statusChanged' && params['to'] == uovd.SESSION_STATUS_LOGGED) {
 			step(100, "Ready");
 
 			/* Wait for the animation end then restore in background */
@@ -299,7 +299,7 @@ Event.observe(window, 'load', function() {
 			return;
 		}
 
-		if(type == 'ovd.session.statusChanged' && params['to'] == 'destroying') {
+		if(type == 'ovd.session.statusChanged' && params['to'] == uovd.SESSION_STATUS_DISTROYING) {
 			step(0, "Destroying", 20000);
 			return;
 		}
