@@ -30,6 +30,7 @@ void usage() {
 
 
 int WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow) {
+	bool stop = false;
 	VFS vfs;
 	std::wstring arg = L"";
 	std::wstring path = L"";
@@ -68,6 +69,17 @@ int WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmds
 			StringUtil::unquote(path);
 		}
 
+		if (arg.compare(L"-s") == 0 || arg.compare(L"/s") == 0) {
+			if (index > argc) {
+				usage();
+				return VFS::INVALID_ARGUMENT;
+			}
+
+			path = argv[index++];
+			StringUtil::unquote(path);
+			stop = true;
+		}
+
 		if (arg.compare(L"-f") == 0 || arg.compare(L"/f") == 0) {
 			AttachConsole(ATTACH_PARENT_PROCESS);
 		}
@@ -79,13 +91,8 @@ int WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmds
 	if (status != VFS::SUCCESS)
 		return status;
 
-	status = vfs.start();
-	if (status != VFS::SUCCESS)
-		return status;
-
-	status = vfs.stop();
-	if (status != VFS::SUCCESS)
-		return status;
-
-	return VFS::SUCCESS;
+	if (stop)
+		return vfs.stop();
+	else
+		return vfs.start();
 }
