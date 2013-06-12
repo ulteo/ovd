@@ -49,6 +49,7 @@ public:
 	bool remove();
 
 	bool mkdirs();
+	bool chdir();
 };
 
 #endif /* FILE_H_ */

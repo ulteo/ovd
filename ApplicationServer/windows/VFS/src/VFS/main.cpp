@@ -22,6 +22,7 @@
 #include "VFS.h"
 #include <common/StringUtil.h>
 #include <common/Logger.h>
+#include <common/fs/File.h>
 
 
 void usage() {
@@ -38,6 +39,11 @@ int WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmds
 	int argc = 0;
 	int index;
 	int status;
+	File currentDir(L"${USERPROFILE}");
+	currentDir.expand();
+
+	if (! currentDir.chdir())
+		Logger::getSingleton().debug(L"Failed to switch the current directory to %s", currentDir.path().c_str());
 
 	argv = CommandLineToArgvW(GetCommandLineW(), &argc);
 	if(argv == NULL) {

@@ -159,3 +159,8 @@ bool File::remove() {
 bool File::mkdirs() {
 	return (SHCreateDirectoryEx(NULL, this->pathValue.c_str(), NULL) == ERROR_SUCCESS);
 }
+
+
+bool File::chdir() {
+	return (_wchdir(this->pathValue.c_str()) == 0);
+}
