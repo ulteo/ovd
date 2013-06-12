@@ -1,4 +1,4 @@
-uovd.Ajaxplorer = function(session_management, node) {
+Ajaxplorer = function(session_management, node) {
 	this.node = jQuery(node);
 	this.session_management = session_management;
 	this.start_app_interval = null;
@@ -8,7 +8,7 @@ uovd.Ajaxplorer = function(session_management, node) {
 	this.session_management.addCallback("ovd.session.statusChanged", this.handler);
 }
 
-uovd.Ajaxplorer.prototype.handleEvents = function(type, source, params) {
+Ajaxplorer.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.session.statusChanged") {
 		var from = params["from"];
 		var to = params["to"];
@@ -57,7 +57,7 @@ uovd.Ajaxplorer.prototype.handleEvents = function(type, source, params) {
 	}
 }
 
-uovd.Ajaxplorer.prototype._show_ajaxplorer_ui = function() {
+Ajaxplorer.prototype._show_ajaxplorer_ui = function() {
 	var iframe = jQuery(document.createElement("iframe"));
 	iframe.width("100%").height("100%");
 	iframe.css("border", "none");
@@ -65,7 +65,7 @@ uovd.Ajaxplorer.prototype._show_ajaxplorer_ui = function() {
 	this.node.append(iframe);
 }
 
-uovd.Ajaxplorer.prototype._check_start_app = function() {
+Ajaxplorer.prototype._check_start_app = function() {
 	jQuery.ajax({
 		url: "start_app.php?check=true&differentiator="+Math.floor(Math.random()*50000),
 		type: "GET",
@@ -74,7 +74,7 @@ uovd.Ajaxplorer.prototype._check_start_app = function() {
 	});
 }
 
-uovd.Ajaxplorer.prototype._parse_start_app = function(xml) {
+Ajaxplorer.prototype._parse_start_app = function(xml) {
 	var self = this; /* closure */
 	jQuery(xml).find("start_app").each( function() {
 		var node = jQuery(this);
@@ -93,7 +93,7 @@ uovd.Ajaxplorer.prototype._parse_start_app = function(xml) {
 }
 
 
-uovd.Ajaxplorer.prototype.end = function() {
+Ajaxplorer.prototype.end = function() {
 	if(this.session_management.parameters["session_type"] == "applications") {
 		this.node.empty();
 		/* Do NOT remove ovd.session.statusChanged as it is used as a delayed initializer */

@@ -147,11 +147,6 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<script type="text/javascript" src="media/script/uovd/rdp_provider/html5/guacamole/guacamole.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/rdp_provider/html5/guacamole/encodings.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/rdp_provider/html5/guacamole/oskeyboard.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/ui/ajaxplorer.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/ui/application_counter.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/ui/desktop_container.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/ui/seamless_launcher.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/ui/seamless_window_manager.js" charset="utf-8"></script>
 <?php } ?>
 
 <?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/webclient.js")) { ?>
@@ -171,6 +166,11 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<script type="text/javascript" src="media/script/webclient/JavaTester.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/Logger.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/timezones.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/ajaxplorer.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/application_counter.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/desktop_container.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/seamless_launcher.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/seamless_window_manager.js" charset="utf-8"></script>
 <?php } ?>
 
 		<script type="text/javascript" src="media/script/webclient/uovd_ext_client.js" charset="utf-8"></script>

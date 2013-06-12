@@ -310,19 +310,19 @@ Event.observe(window, 'load', function() {
 	window.rdp_providers["html5"] = new uovd.Html5RdpProvider();
 
 	/* handle client insertion */
-	new uovd.DesktopContainer(session_management, "#desktopContainer");
+	new DesktopContainer(session_management, "#desktopContainer");
 
 	/* applications launcher */
-	new uovd.SeamlessLauncher(session_management, "#appsContainer");
+	new SeamlessLauncher(session_management, "#appsContainer");
 
 	/* window manager */
-	new uovd.SeamlessWindowManager(session_management, "#windowsContainer", new uovd.SeamlessWindowFactory());
+	new SeamlessWindowManager(session_management, "#windowsContainer", new uovd.SeamlessWindowFactory());
 
 	/* ajaxplorer file manager */
-	new uovd.Ajaxplorer(session_management, "#fileManagerContainer");
+	new Ajaxplorer(session_management, "#fileManagerContainer");
 
 	/* application counter */
-	window.applicationCounter = new uovd.ApplicationCounter(session_management);
+	window.applicationCounter = new ApplicationCounter(session_management);
 });
 
 function startSession() {

@@ -1,4 +1,4 @@
-uovd.SeamlessWindowManager = function(session_management, node, windowFactory) {
+SeamlessWindowManager = function(session_management, node, windowFactory) {
 	this.node = jQuery(node);
 	this.session_management = session_management;
 	this.windowFactory = windowFactory;
@@ -10,7 +10,7 @@ uovd.SeamlessWindowManager = function(session_management, node, windowFactory) {
 	this.session_management.addCallback("ovd.session.statusChanged", this.handler);
 }
 
-uovd.SeamlessWindowManager.prototype.handleEvents = function(type, source, params) {
+SeamlessWindowManager.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.session.statusChanged") {
 		var from = params["from"];
 		var to = params["to"];
@@ -135,7 +135,7 @@ uovd.SeamlessWindowManager.prototype.handleEvents = function(type, source, param
 	}
 }
 
-uovd.SeamlessWindowManager.prototype.end = function() {
+SeamlessWindowManager.prototype.end = function() {
 	if(this.session_management.parameters["session_type"] == "applications") {
 		this.node.empty();
 		/* Do NOT remove ovd.session.statusChanged as it is used as a delayed initializer */

@@ -1,4 +1,4 @@
-uovd.ApplicationCounter = function(session_management) {
+ApplicationCounter = function(session_management) {
 	this.session_management = session_management;
 	this.count = 0;
 
@@ -9,7 +9,7 @@ uovd.ApplicationCounter = function(session_management) {
 	this.session_management.addCallback("ovd.ajaxProvider.sessionSuspend",                   this.handler);
 }
 
-uovd.ApplicationCounter.prototype.handleEvents = function(type, source, params) {
+ApplicationCounter.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.rdpProvider.applicationProvider.statusChanged") {
 		var from = params['from'];
 		var to = params['to'];
@@ -24,10 +24,10 @@ uovd.ApplicationCounter.prototype.handleEvents = function(type, source, params) 
 	}
 }
 
-uovd.ApplicationCounter.prototype.get = function() {
+ApplicationCounter.prototype.get = function() {
 	return this.count;
 }
 
-uovd.ApplicationCounter.prototype.end = function() {
+ApplicationCounter.prototype.end = function() {
 	this.count = 0;
 }
