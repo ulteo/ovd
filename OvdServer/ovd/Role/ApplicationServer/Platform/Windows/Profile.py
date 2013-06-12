@@ -56,8 +56,7 @@ class Profile(AbstractProfile):
 			Logger.error("Failed to parse GPO")
 			return False
 		
-		absCommand = System.get_default_sys_dir()
-		absCommand = os.path.join(absCommand, Profile.vfsCommand)
+		absCommand = Util.get_from_PATH(Profile.vfsCommand)
 		if not gpo.contain(GPO.LOGOFF, absCommand, Profile.vfsParameter):
 			gpo.remove(GPO.LOGOFF, absCommand, Profile.vfsParameter)
                         return gpo.save()
@@ -114,9 +113,7 @@ class Profile(AbstractProfile):
 			return False
 		
 		
-		absCommand = System.get_default_sys_dir()
-		absCommand = os.path.join(absCommand, Profile.vfsCommand)
-		print "===> ",absCommand
+		absCommand = Util.get_from_PATH(Profile.vfsCommand)
 		if not gpo.contain(GPO.LOGOFF, absCommand, Profile.vfsParameter):
 			gpo.add(GPO.LOGOFF, absCommand, Profile.vfsParameter)
 			return gpo.save()
