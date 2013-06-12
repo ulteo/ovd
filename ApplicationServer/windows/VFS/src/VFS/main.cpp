@@ -45,7 +45,7 @@ int WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmds
 	if (! currentDir.chdir())
 		Logger::getSingleton().debug(L"Failed to switch the current directory to %s", currentDir.path().c_str());
 
-	argv = CommandLineToArgv(GetCommandLine(), &argc);
+	argv = CommandLineToArgvW(GetCommandLine(), &argc);
 	if(argv == NULL) {
 		usage();
 		return VFS::INVALID_ARGUMENT;
