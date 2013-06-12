@@ -57,6 +57,10 @@ class Profile(AbstractProfile):
 			return False
 		
 		absCommand = Util.get_from_PATH(Profile.vfsCommand)
+		if absCommand is None:
+			Logger.warn("VFS.exe is not installed")
+			return False
+		
 		if not gpo.contain(GPO.LOGOFF, absCommand, Profile.vfsParameter):
 			gpo.remove(GPO.LOGOFF, absCommand, Profile.vfsParameter)
                         return gpo.save()
@@ -114,6 +118,10 @@ class Profile(AbstractProfile):
 		
 		
 		absCommand = Util.get_from_PATH(Profile.vfsCommand)
+		 if absCommand is None:
+			Logger.warn("VFS.exe is not installed")
+			return False
+		
 		if not gpo.contain(GPO.LOGOFF, absCommand, Profile.vfsParameter):
 			gpo.add(GPO.LOGOFF, absCommand, Profile.vfsParameter)
 			return gpo.save()
