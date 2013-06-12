@@ -154,6 +154,9 @@ VFS::status VFS::stop() {
 			rsync.init();
 			rsync.start();
 		}
+
+		if (u.isDeleteOnClose())
+			f.rmdirs();
 	}
 
 	return SUCCESS;

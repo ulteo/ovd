@@ -47,6 +47,7 @@ public:
 
 	bool exist();
 	bool remove();
+	bool rmdirs();
 
 	bool mkdirs();
 	bool chdir();

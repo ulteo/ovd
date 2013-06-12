@@ -151,6 +151,22 @@ bool File::exist() {
 }
 
 
+bool File::rmdirs() {
+	wchar_t buffer[MAX_PATH + 2] = {0};
+	SHFILEOPSTRUCT stSHFileOpStruct = {0};
+
+	wcscpy_s(buffer, MAX_PATH, this->pathValue.c_str());
+	stSHFileOpStruct.wFunc = FO_DELETE;
+	stSHFileOpStruct.pFrom = buffer;
+	stSHFileOpStruct.fFlags = FOF_SILENT | FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_NOCONFIRMMKDIR;
+	stSHFileOpStruct.fAnyOperationsAborted = FALSE;
+
+	int result = SHFileOperation(&stSHFileOpStruct);
+
+	// Check if the operation succeed or if the directory do not exist
+	return (result == 0 || result == 2);
+}
+
 bool File::remove() {
 	return (DeleteFile(this->pathValue.c_str()) == TRUE);
 }
