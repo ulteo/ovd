@@ -172,29 +172,31 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/uovd.js" charset="utf-8"></script>
 <?php } else { ?>
 		<script type="text/javascript" src="media/script/uovd/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/application.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/server.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/session.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/session_management.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/rdp_provider/base_rdp_provider.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/ajax_provider/base_ajax_provider.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/ajax_provider/direct_ajax_provider.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/ajax_provider/proxy_ajax_provider.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/ajax_provider/xhr_ajax_provider.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/java_provider.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/rdp_provider/application_provider/base_application_provider.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/rdp_provider/application_provider/html5_application_provider.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/rdp_provider/application_provider/java_application_provider.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/rdp_provider/html5/html5_http_tunnel.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/rdp_provider/html5/html5_rdp_provider.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/rdp_provider/html5/html5_seamless_handler.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/rdp_provider/html5/html5_seamless_window.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/rdp_provider/html5/html5_seamless_icon.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/rdp_provider/html5/guacamole/keyboard.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/rdp_provider/html5/guacamole/mouse.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/rdp_provider/html5/guacamole/layer.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/rdp_provider/html5/guacamole/tunnel.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/rdp_provider/html5/guacamole/guacamole.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/rdp_provider/html5/guacamole/encodings.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/rdp_provider/html5/guacamole/oskeyboard.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/http/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/http/direct.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/http/proxy.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/java.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/application/application_instance.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/application/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/application/html5.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/application/java.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/http_tunnel.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_handler.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_window_factory.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_icon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/keyboard.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/mouse.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/layer.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/tunnel.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/guacamole.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/encodings.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/oskeyboard.js" charset="utf-8"></script>
 <?php } ?>
 
 <?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/webclient.js")) { ?>

@@ -1,4 +1,4 @@
-uovd.SeamlessWindowFactory = function() {
+uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 
 	this.SeamlessWindow = function(params) {
 		this.id = params["id"];
@@ -184,6 +184,6 @@ uovd.SeamlessWindowFactory = function() {
 	}
 }
 
-uovd.SeamlessWindowFactory.prototype.create = function(params) {
+uovd.provider.rdp.html5.SeamlessWindowFactory.prototype.create = function(params) {
 	return new (this.SeamlessWindow)(params);
 }

@@ -1,6 +1,6 @@
 /* Java application provider */
 
-uovd.JavaApplicationProvider = function(rdp_provider) {
+uovd.provider.rdp.application.Java = function(rdp_provider) {
 	this.initialize(rdp_provider);
 
 	var self = this; /* closure */
@@ -9,11 +9,11 @@ uovd.JavaApplicationProvider = function(rdp_provider) {
 	}
 }
 
-uovd.JavaApplicationProvider.prototype = new uovd.ApplicationProvider();
+uovd.provider.rdp.application.Java.prototype = new uovd.provider.rdp.application.Base();
 
-uovd.JavaApplicationProvider.prototype.applicationStart_implementation = function (application_id, token) { 
+uovd.provider.rdp.application.Java.prototype.applicationStart_implementation = function (application_id, token) { 
 	var server_id = this.getServerByAppId(application_id);
-	this.applications[token] = new uovd.ApplicationInstance(this, application_id, token);
+	this.applications[token] = new uovd.provider.rdp.application.ApplicationInstance(this, application_id, token);
 
 	if(server_id != -1) {
 		this.rdp_provider.main_applet[0].startApplication(token, application_id, server_id);
@@ -23,21 +23,21 @@ uovd.JavaApplicationProvider.prototype.applicationStart_implementation = functio
 	}
 }
 
-uovd.JavaApplicationProvider.prototype.applicationStartWithArgs_implementation = function(application_id, args, token) { 
+uovd.provider.rdp.application.Java.prototype.applicationStartWithArgs_implementation = function(application_id, args, token) { 
 	this.applicationStart_implementation(application_id, token); /* stub */
 }
 
-uovd.JavaApplicationProvider.prototype.applicationStop_implementation = function(application_id, token) { 
+uovd.provider.rdp.application.Java.prototype.applicationStop_implementation = function(application_id, token) { 
 }
 
-uovd.JavaApplicationProvider.prototype.handleOrders = function(app_id, instance, status) {
+uovd.provider.rdp.application.Java.prototype.handleOrders = function(app_id, instance, status) {
 	if(status == "started") {
 		var application = null;
 		if(this.applications[instance]) {
 			application = this.applications[instance];
 		} else {
 			/* Application created from session recovery */
-			application = new uovd.ApplicationInstance(this, app_id, instance);
+			application = new uovd.provider.rdp.application.ApplicationInstance(this, app_id, instance);
 			application.create = 0;
 		}
 

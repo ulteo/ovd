@@ -1,8 +1,8 @@
 /* Base class */
 
-uovd.ApplicationProvider = function(rdp_provider) { }
+uovd.provider.rdp.application.Base = function(rdp_provider) { }
 
-uovd.ApplicationProvider.prototype.initialize = function(rdp_provider) {
+uovd.provider.rdp.application.Base.prototype.initialize = function(rdp_provider) {
 	this.rdp_provider = rdp_provider;
 	this.token = 0;
 	this.applications = {} /* token -> ApplicationInstance */
@@ -16,7 +16,7 @@ uovd.ApplicationProvider.prototype.initialize = function(rdp_provider) {
 	this.rdp_provider.session_management.addCallback("ovd.ajaxProvider.sessionSuspend",                              this.handler);
 }
 
-uovd.ApplicationProvider.prototype.handleEvents = function(type, source, params) {
+uovd.provider.rdp.application.Base.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.rdpProvider.applicationProvider.applicationStart") {
 		var id = params["id"];
 		this.applicationStart(id);
@@ -37,21 +37,21 @@ uovd.ApplicationProvider.prototype.handleEvents = function(type, source, params)
 	}
 }
 
-uovd.ApplicationProvider.prototype.applicationStart = function(application_id) { 
+uovd.provider.rdp.application.Base.prototype.applicationStart = function(application_id) { 
 	this.applicationStart_implementation(application_id, this.token);
 	return this.token++;
 }
 
-uovd.ApplicationProvider.prototype.applicationStartWithArgs = function(application_id, args) { 
+uovd.provider.rdp.application.Base.prototype.applicationStartWithArgs = function(application_id, args) { 
 	this.applicationStartWithArgs_implementation(application_id, args, this.token);
 	return this.token++;
 }
 
-uovd.ApplicationProvider.prototype.applicationStop = function(application_id, token) { 
+uovd.provider.rdp.application.Base.prototype.applicationStop = function(application_id, token) { 
 	this.applicationStop_implementation(application_id, token);
 }
 
-uovd.ApplicationProvider.prototype.getServerByAppId = function(application_id) {
+uovd.provider.rdp.application.Base.prototype.getServerByAppId = function(application_id) {
 	var session = this.rdp_provider.session_management.session;
 	var servers = session.servers;
 
@@ -68,22 +68,10 @@ uovd.ApplicationProvider.prototype.getServerByAppId = function(application_id) {
 	return -1;
 }
 
-uovd.ApplicationProvider.prototype.end = function() {
+uovd.provider.rdp.application.Base.prototype.end = function() {
 	this.rdp_provider.session_management.removeCallback("ovd.rdpProvider.applicationProvider.applicationStart",         this.handler);
 	this.rdp_provider.session_management.removeCallback("ovd.rdpProvider.applicationProvider.applicationStartWithArgs", this.handler);
 	this.rdp_provider.session_management.removeCallback("ovd.rdpProvider.applicationProvider.applicationStop",          this.handler);
 	this.rdp_provider.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",                                  this.handler);
 	this.rdp_provider.session_management.removeCallback("ovd.ajaxProvider.sessionSuspend",                              this.handler);
-}
-
-/* ApplicationInstance class */
-uovd.ApplicationInstance = function(applicationProvider, id, instance) {
-	this.applicationProvider = applicationProvider;
-	this.id = id;
-	this.instance = instance;
-	this.status = "unknown";
-
-	this.create = (new Date()).getTime();
-	this.start = 0;
-	this.end = 0;
 }

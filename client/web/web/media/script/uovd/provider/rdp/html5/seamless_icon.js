@@ -1,11 +1,11 @@
-uovd.Html5SeamlessIcon = function() {
+uovd.provider.rdp.html5.SeamlessIcon = function() {
 	this.pixelOffset = 0;
 	this.canvas = document.createElement("canvas");
 	this.context = this.canvas.getContext("2d");
 	this.image = null;
 }
 
-uovd.Html5SeamlessIcon.prototype.parse = function(chunk, format, width, height, data) {
+uovd.provider.rdp.html5.SeamlessIcon.prototype.parse = function(chunk, format, width, height, data) {
 	if(chunk == 0) {
 		this.image = this.context.createImageData(width, height);
 		this.canvas.width=width;
@@ -25,6 +25,6 @@ uovd.Html5SeamlessIcon.prototype.parse = function(chunk, format, width, height, 
 	this.context.putImageData(this.image,0,0);
 }
 
-uovd.Html5SeamlessIcon.prototype.getCanvas = function() {
+uovd.provider.rdp.html5.SeamlessIcon.prototype.getCanvas = function() {
 	return this.canvas;
 }

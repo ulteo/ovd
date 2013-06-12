@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-uovd.HTTPTunnel = function(tunnelURL, index) {
+uovd.provider.rdp.html5.HTTPTunnel = function(tunnelURL, index) {
 
     var self = this; /* closure */
 
@@ -431,5 +431,5 @@ uovd.HTTPTunnel = function(tunnelURL, index) {
 };
 
 try {
-	uovd.HTTPTunnel.prototype = new Guacamole.Tunnel();
+	uovd.provider.rdp.html5.HTTPTunnel.prototype = new Guacamole.Tunnel();
 } catch(e) {}

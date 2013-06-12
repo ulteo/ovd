@@ -1,6 +1,6 @@
 /* Html5 Application provider */
 
-uovd.Html5ApplicationProvider = function(rdp_provider) {
+uovd.provider.rdp.application.Html5 = function(rdp_provider) {
 	this.initialize(rdp_provider);
 	this.connections = this.rdp_provider.connections;
 
@@ -12,14 +12,14 @@ uovd.Html5ApplicationProvider = function(rdp_provider) {
 		 })(i);
 	}
 }
-uovd.Html5ApplicationProvider.prototype = new uovd.ApplicationProvider();
+uovd.provider.rdp.application.Html5.prototype = new uovd.provider.rdp.application.Base();
 
-uovd.Html5ApplicationProvider.prototype.applicationStart_implementation = function (application_id, token) { 
+uovd.provider.rdp.application.Html5.prototype.applicationStart_implementation = function (application_id, token) { 
 	var server_id = this.getServerByAppId(application_id);
 	var opcode    = "01";
 	var appToken  = this.write(token, 4);
 	var appId     = this.write(application_id, 4);
-	this.applications[token] = new uovd.ApplicationInstance(this, application_id, token);
+	this.applications[token] = new uovd.provider.rdp.application.ApplicationInstance(this, application_id, token);
 
 	if(server_id != -1) {
 		this.connections[server_id].guac_tunnel.sendMessage("ovdapp", opcode+""+appToken+""+appId+";");
@@ -29,14 +29,14 @@ uovd.Html5ApplicationProvider.prototype.applicationStart_implementation = functi
 	}
 }
 
-uovd.Html5ApplicationProvider.prototype.applicationStartWithArgs_implementation = function(application_id, args, token) { 
+uovd.provider.rdp.application.Html5.prototype.applicationStartWithArgs_implementation = function(application_id, args, token) { 
 	this.applicationStart_implementation(application_id, token); /* stub */
 }
 
-uovd.Html5ApplicationProvider.prototype.applicationStop_implementation = function(application_id, token) { 
+uovd.provider.rdp.application.Html5.prototype.applicationStop_implementation = function(application_id, token) { 
 }
 
-uovd.Html5ApplicationProvider.prototype.handleOrders = function(server_id, opcode, parameters) {
+uovd.provider.rdp.application.Html5.prototype.handleOrders = function(server_id, opcode, parameters) {
 	if(opcode == "ovdapp") {
 		/* Format :
 		parameters[0] = binary encoded
@@ -108,7 +108,7 @@ uovd.Html5ApplicationProvider.prototype.handleOrders = function(server_id, opcod
 	}
 }
 
-uovd.Html5ApplicationProvider.prototype.write = function(num, bytes) {
+uovd.provider.rdp.application.Html5.prototype.write = function(num, bytes) {
 	var buffer = new Array();
 	var output = "";
 	var input = "";
@@ -140,7 +140,7 @@ uovd.Html5ApplicationProvider.prototype.write = function(num, bytes) {
 	return output;
 }
 
-uovd.Html5ApplicationProvider.prototype.read = function(str, bytes) {
+uovd.provider.rdp.application.Html5.prototype.read = function(str, bytes) {
 	var buffer = new Array();
 	var output = "0x";
 	var num = 0;

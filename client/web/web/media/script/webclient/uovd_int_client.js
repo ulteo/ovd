@@ -306,8 +306,8 @@ Event.observe(window, 'load', function() {
   });
 
 	window.rdp_providers = {};
-	window.rdp_providers["java"]  = new uovd.JavaProvider();
-	window.rdp_providers["html5"] = new uovd.Html5RdpProvider();
+	window.rdp_providers["java"]  = new uovd.provider.Java();
+	window.rdp_providers["html5"] = new uovd.provider.rdp.Html5();
 
 	/* handle client insertion */
 	new DesktopContainer(session_management, "#desktopContainer");
@@ -316,7 +316,7 @@ Event.observe(window, 'load', function() {
 	new SeamlessLauncher(session_management, "#appsContainer");
 
 	/* window manager */
-	new SeamlessWindowManager(session_management, "#windowsContainer", new uovd.SeamlessWindowFactory());
+	new SeamlessWindowManager(session_management, "#windowsContainer", new uovd.provider.rdp.html5.SeamlessWindowFactory());
 
 	/* ajaxplorer file manager */
 	new Ajaxplorer(session_management, "#fileManagerContainer");
@@ -371,7 +371,7 @@ function startSession() {
 	}
 
 	session_management.setParameters(parameters);
-	session_management.setAjaxProvider(new uovd.ProxyAjaxProvider("proxy.php"));
+	session_management.setAjaxProvider(new uovd.provider.http.Proxy("proxy.php"));
 	session_management.start();
 
 	return false;

@@ -5,12 +5,12 @@
    XmlHttpRequest "same origin" restriction.
 */
 
-uovd.DirectAjaxProvider = function() {
+uovd.provider.http.Direct = function() {
 	this.initialize();
 }
-uovd.DirectAjaxProvider.prototype = new uovd.AjaxProvider();
+uovd.provider.http.Direct.prototype = new uovd.provider.http.Base();
 
-uovd.DirectAjaxProvider.prototype.sessionStart_implementation = function(callback) {
+uovd.provider.http.Direct.prototype.sessionStart_implementation = function(callback) {
 	var mode = this.session_management.parameters["session_type"];
 	var language = this.session_management.parameters["language"];
 	var timezone = this.session_management.parameters["timezone"];
@@ -35,7 +35,7 @@ uovd.DirectAjaxProvider.prototype.sessionStart_implementation = function(callbac
 	});
 }
 
-uovd.DirectAjaxProvider.prototype.sessionStatus_implementation = function(callback) {
+uovd.provider.http.Direct.prototype.sessionStatus_implementation = function(callback) {
   jQuery.ajax({
 		url: "/ovd/client/session_status.php",
 		type: "GET",
@@ -49,7 +49,7 @@ uovd.DirectAjaxProvider.prototype.sessionStatus_implementation = function(callba
 	});
 }
 
-uovd.DirectAjaxProvider.prototype.sessionEnd_implementation = function(callback) {
+uovd.provider.http.Direct.prototype.sessionEnd_implementation = function(callback) {
   jQuery.ajax({
 		url: "/ovd/client/logout.php",
 		type: "POST",
@@ -66,7 +66,7 @@ uovd.DirectAjaxProvider.prototype.sessionEnd_implementation = function(callback)
 	});
 }
 
-uovd.DirectAjaxProvider.prototype.sessionSuspend_implementation = function(callback) {
+uovd.provider.http.Direct.prototype.sessionSuspend_implementation = function(callback) {
   jQuery.ajax({
 		url: "/ovd/client/logout.php",
 		type: "POST",

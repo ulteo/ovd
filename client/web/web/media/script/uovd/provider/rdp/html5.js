@@ -1,13 +1,13 @@
 /* HTML5 RDP Provider */
 
-uovd.Html5RdpProvider = function() {
+uovd.provider.rdp.Html5 = function() {
 	this.initialize();
 	this.connections = new Array();
 }
 
-uovd.Html5RdpProvider.prototype = new uovd.RdpProvider();
+uovd.provider.rdp.Html5.prototype = new uovd.provider.rdp.Base();
 
-uovd.Html5RdpProvider.prototype.connectDesktop = function() {
+uovd.provider.rdp.Html5.prototype.connectDesktop = function() {
 	var self = this; /* closure */
 	var server = this.session_management.session.servers[0];
 
@@ -33,7 +33,7 @@ uovd.Html5RdpProvider.prototype.connectDesktop = function() {
 			var connection = {};
 
 			/* Connect */
-			connection.guac_tunnel = new uovd.HTTPTunnel("/ovd/guacamole/tunnel", 0);
+			connection.guac_tunnel = new uovd.provider.rdp.html5.HTTPTunnel("/ovd/guacamole/tunnel", 0);
 			connection.guac_client = new Guacamole.Client(connection.guac_tunnel);
 			connection.guac_client.connect("id=0");
 
@@ -69,7 +69,7 @@ uovd.Html5RdpProvider.prototype.connectDesktop = function() {
 	});
 }
 
-uovd.Html5RdpProvider.prototype.connectApplications = function() {
+uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 	var self = this; /* closure */
 	var servers = this.session_management.session.servers;
 
@@ -86,10 +86,10 @@ uovd.Html5RdpProvider.prototype.connectApplications = function() {
 			/* Stop recursion : Success ! */
 
 			/* set handler for seamrdp channel */
-			var seamless_instructionHandler = new uovd.Html5SeamlessHandler(self);
+			var seamless_instructionHandler = new uovd.provider.rdp.html5.SeamlessHandler(self);
 
 			/* set application_provider */
-			var application_provider = new uovd.Html5ApplicationProvider(self);
+			var application_provider = new uovd.provider.rdp.application.Html5(self);
 
 			return;
 		};
@@ -110,7 +110,7 @@ uovd.Html5RdpProvider.prototype.connectApplications = function() {
 				var connection = {};
 
 				/* Connect */
-				connection.guac_tunnel = new uovd.HTTPTunnel("/ovd/guacamole/tunnel", index);
+				connection.guac_tunnel = new uovd.provider.rdp.html5.HTTPTunnel("/ovd/guacamole/tunnel", index);
 				connection.guac_client = new Guacamole.Client(connection.guac_tunnel);
 				connection.guac_client.connect("id="+index);
 
@@ -142,7 +142,7 @@ uovd.Html5RdpProvider.prototype.connectApplications = function() {
 	chainLoader(0);
 }
 
-uovd.Html5RdpProvider.prototype.disconnect_implementation = function() {
+uovd.provider.rdp.Html5.prototype.disconnect_implementation = function() {
 	for(var i = 0 ; i<this.connections.length ; ++i) {
 		this.connections[i].guac_client.disconnect();
 	}

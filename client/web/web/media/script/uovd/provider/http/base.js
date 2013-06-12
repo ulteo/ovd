@@ -1,12 +1,12 @@
 /* Base class */
 
-uovd.AjaxProvider = function() { }
+uovd.provider.http.Base = function() { }
 
-uovd.AjaxProvider.prototype.initialize = function() {
+uovd.provider.http.Base.prototype.initialize = function() {
 	this.session_management = null;
 }
 
-uovd.AjaxProvider.prototype.sessionStart = function() {
+uovd.provider.http.Base.prototype.sessionStart = function() {
 	var self = this; /* closure */
 	this.sessionStart_implementation( function(xml) {
 		var error = self.session_management.session.update(xml);
@@ -18,7 +18,7 @@ uovd.AjaxProvider.prototype.sessionStart = function() {
 	});
 }
 
-uovd.AjaxProvider.prototype.sessionStatus = function() {
+uovd.provider.http.Base.prototype.sessionStatus = function() {
 	var self = this; /* closure */
 	this.sessionStatus_implementation( function(xml) {
 		var error = self.session_management.session.update(xml);
@@ -30,7 +30,7 @@ uovd.AjaxProvider.prototype.sessionStatus = function() {
 	});
 }
 
-uovd.AjaxProvider.prototype.sessionEnd = function() {
+uovd.provider.http.Base.prototype.sessionEnd = function() {
 	var self = this; /* closure */
 	this.sessionEnd_implementation( function(xml) {
 		var error = self.session_management.session.update(xml);
@@ -42,7 +42,7 @@ uovd.AjaxProvider.prototype.sessionEnd = function() {
 	});
 }
 
-uovd.AjaxProvider.prototype.sessionSuspend = function() {
+uovd.provider.http.Base.prototype.sessionSuspend = function() {
 	var self = this; /* closure */
 	this.sessionSuspend_implementation( function(xml) {
 		var error = self.session_management.session.update(xml);

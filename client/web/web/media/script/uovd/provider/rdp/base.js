@@ -1,13 +1,13 @@
 /* Base class */
 
-uovd.RdpProvider = function() { }
+uovd.provider.rdp.Base = function() { }
 
-uovd.RdpProvider.prototype.initialize = function() {
+uovd.provider.rdp.Base.prototype.initialize = function() {
 	this.session_management = null;
 }
 
-uovd.RdpProvider.prototype.testCapabilities = function() { return true; }
-uovd.RdpProvider.prototype.connect = function() {
+uovd.provider.rdp.Base.prototype.testCapabilities = function() { return true; }
+uovd.provider.rdp.Base.prototype.connect = function() {
 	if (this.session_management.parameters["session_type"] == "desktop") {
 		this.connectDesktop();
 	} else if (this.session_management.parameters["session_type"] == "applications") {
@@ -15,6 +15,6 @@ uovd.RdpProvider.prototype.connect = function() {
 	}
 }
 
-uovd.RdpProvider.prototype.disconnect = function() {
+uovd.provider.rdp.Base.prototype.disconnect = function() {
 	this.disconnect_implementation();
 }

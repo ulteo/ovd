@@ -1,9 +1,9 @@
-/* Java RDP Provider */
+/* JavaProvider */
 
-uovd.JavaProvider = function(node) {
+uovd.provider.Java = function(node) {
 	/* Call parent inilializers */
-	uovd.AjaxProvider.prototype.initialize.apply(this);
-	uovd.RdpProvider.prototype.initialize.apply(this);
+	uovd.provider.http.Base.prototype.initialize.apply(this);
+	uovd.provider.rdp.Base.prototype.initialize.apply(this);
 
 	/* Ajax provider initializer */
 	this.request_cache = {};
@@ -20,7 +20,7 @@ uovd.JavaProvider = function(node) {
 	this.applet_serverStatus      = function() {};
 	this.applet_applicationStatus = function() {};
 
-	/* Redefine initialize for JavaRdpProvider */
+	/* Redefine initialize for JavaProvider */
 	this.initialize = function(onsuccess, onfailure) {
 		var name = "ulteoapplet";
 		var codebase = "applet/";
@@ -87,15 +87,14 @@ uovd.JavaProvider = function(node) {
 		}, 100);
 	};
 }
-JavaRdpProvider.prototype = new RdpProvider();
 
 /* Multiple inheritance */
-for(var i in uovd.AjaxProvider.prototype) { uovd.JavaProvider.prototype[i] = uovd.AjaxProvider.prototype[i]; }
-for(var i in uovd.RdpProvider.prototype)  { uovd.JavaProvider.prototype[i] = uovd.RdpProvider.prototype[i];  }
+for(var i in uovd.provider.http.Base.prototype) { uovd.provider.Java.prototype[i] = uovd.provider.http.Base.prototype[i]; }
+for(var i in uovd.provider.rdp.Base.prototype)  { uovd.provider.Java.prototype[i] = uovd.provider.rdp.Base.prototype[i];  }
 
 /* --------------- Ajax provider part --------------- */
 
-uovd.JavaProvider.prototype.applet_ajaxResponse = function(req_id, http_code, contentType, data) {
+uovd.provider.Java.prototype.applet_ajaxResponse = function(req_id, http_code, contentType, data) {
 	if(! this.request_cache[req_id]) { return; }
 
 	var callback = this.request_cache[req_id];
@@ -117,7 +116,7 @@ uovd.JavaProvider.prototype.applet_ajaxResponse = function(req_id, http_code, co
 	callback(xml);
 }
 
-uovd.JavaProvider.prototype.sessionStart_implementation = function(callback) {
+uovd.provider.Java.prototype.sessionStart_implementation = function(callback) {
 	var session_manager = this.session_management.parameters["session_manager"];
 	var mode = this.session_management.parameters["session_type"];
 	var language = this.session_management.parameters["language"];
@@ -148,7 +147,7 @@ uovd.JavaProvider.prototype.sessionStart_implementation = function(callback) {
 	}
 }
 
-uovd.JavaProvider.prototype.sessionStatus_implementation = function(callback) {
+uovd.provider.Java.prototype.sessionStatus_implementation = function(callback) {
 	var session_manager = this.session_management.parameters["session_manager"];
 
 	var service_url = "https://"+session_manager+"/ovd/client/session_status.php";
@@ -171,7 +170,7 @@ uovd.JavaProvider.prototype.sessionStatus_implementation = function(callback) {
 	}
 }
 
-uovd.JavaProvider.prototype.sessionEnd_implementation = function(callback) {
+uovd.provider.Java.prototype.sessionEnd_implementation = function(callback) {
 	var session_manager = this.session_management.parameters["session_manager"];
 
 	var service_url = "https://"+session_manager+"/ovd/client/logout.php";
@@ -195,7 +194,7 @@ uovd.JavaProvider.prototype.sessionEnd_implementation = function(callback) {
 	}
 }
 
-uovd.JavaProvider.prototype.sessionSuspend_implementation = function(callback) {
+uovd.provider.Java.prototype.sessionSuspend_implementation = function(callback) {
 	var session_manager = this.session_management.parameters["session_manager"];
 
 	var service_url = "https://"+session_manager+"/ovd/client/logout.php";
@@ -221,7 +220,7 @@ uovd.JavaProvider.prototype.sessionSuspend_implementation = function(callback) {
 
 /* --------------- Rdp provider part --------------- */
 
-uovd.JavaProvider.prototype.connectDesktop = function() {
+uovd.provider.Java.prototype.connectDesktop = function() {
 	var self = this; /* closure */
 	var server = this.session_management.session.servers[0];
 	var settings = this.session_management.session.settings;
@@ -323,7 +322,7 @@ uovd.JavaProvider.prototype.connectDesktop = function() {
 	}
 };
 
-uovd.JavaProvider.prototype.connectApplications = function() {
+uovd.provider.Java.prototype.connectApplications = function() {
 	var self = this; /* closure */
 	var server = this.session_management.session.servers[0];
 	var settings = this.session_management.session.settings;
@@ -347,7 +346,7 @@ uovd.JavaProvider.prototype.connectApplications = function() {
 		settings.push("Desktop_0");
 
 		/* set application_provider */
-		var application_provider = new uovd.JavaApplicationProvider(self);
+		var application_provider = new uovd.provider.rdp.application.Java(self);
 
 		/* Add the servers status callback */
 		self.applet_serverStatus = function(id, status) {
@@ -402,6 +401,6 @@ uovd.JavaProvider.prototype.connectApplications = function() {
 	}
 };
 
-uovd.JavaProvider.prototype.disconnect_implementation = function() {
+uovd.provider.Java.prototype.disconnect_implementation = function() {
 	this.main_applet[0].endSession();
 };
