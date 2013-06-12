@@ -66,9 +66,9 @@ uovd.provider.rdp.html5.HTTPTunnel = function(tunnelURL, index) {
 			var status = ""
 			currentState = state;
 
-			if(state == STATE_IDLE) {status = "unknown";}
-			else if(state == STATE_CONNECTED) {status = "connected";}
-			else if(state == STATE_DISCONNECTED) {status = "disconnected";}
+			if(state == STATE_IDLE) {status = uovd.SERVER_STATUS_UNKNOWN;}
+			else if(state == STATE_CONNECTED) {status = uovd.SERVER_STATUS_CONNECTED;}
+			else if(state == STATE_DISCONNECTED) {status = uovd.SERVER_STATUS_DISCONNECTED;}
 			else {return;}
 			
 			window.serverStatus(index, status);

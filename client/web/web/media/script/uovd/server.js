@@ -10,7 +10,7 @@ uovd.Server = function(session, xml) {
 	this.login = xml.attr("login");
 	this.password = xml.attr("password");
 	this.applications = new Array();
-	this.status = "unknown";
+	this.status = uovd.SERVER_STATUS_UNKNOWN;
 
 	xml.find("application").each( function() {
 		self.applications.push(new uovd.Application(self, jQuery(this)));

@@ -20,3 +20,8 @@ uovd.SESSION_STATUS_LOGGED = "logged";
 uovd.SESSION_STATUS_DISCONNECTED = "disconnected";
 uovd.SESSION_STATUS_DISTROYING = "destroying";
 uovd.SESSION_STATUS_DESTROYED = "destroyed";
+
+
+uovd.SERVER_STATUS_UNKNOWN ="unknown";
+uovd.SERVER_STATUS_CONNECTED = "connected";
+uovd.SERVER_STATUS_DISCONNECTED = "disconnected";

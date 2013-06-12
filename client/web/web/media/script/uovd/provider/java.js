@@ -355,6 +355,12 @@ uovd.provider.Java.prototype.connectApplications = function() {
 
 		/* Add the servers status callback */
 		self.applet_serverStatus = function(id, status) {
+			if (status != uovd.SERVER_STATUS_DISCONNECTED &&
+			    status != uovd.SERVER_STATUS_CONNECTED &&
+			    status != uovd.SERVER_STATUS_UNKNOWN) {
+					status = uovd.SERVER_STATUS_UNKNOWN;
+				}
+			
 			self.session_management.session.servers[id].setStatus(status);
 		};
 

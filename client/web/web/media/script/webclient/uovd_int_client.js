@@ -284,7 +284,7 @@ Event.observe(window, 'load', function() {
 			return;
 		}
 
-		if(type == 'ovd.session.server.statusChanged' && params['to'] == 'connected') {
+		if(type == 'ovd.session.server.statusChanged' && params['to'] == uovd.SERVER_STATUS_CONNECTED) {
 			step(75, "Connection Ok");
 			return;
 		}
