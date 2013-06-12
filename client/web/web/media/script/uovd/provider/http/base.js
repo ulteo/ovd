@@ -117,7 +117,6 @@ uovd.provider.http.Base.prototype.build_sessionEnd = function(parameters, type) 
 	var logout_node = doc.createElement("logout");
 	logout_node.setAttribute("mode", "logout");
 
-	logout_node.appendChild(user_node);
 	doc.appendChild(logout_node);
 
 	/* Returning */
@@ -139,7 +138,6 @@ uovd.provider.http.Base.prototype.build_sessionSuspend = function(parameters, ty
 	var logout_node = doc.createElement("logout");
 	logout_node.setAttribute("mode", "suspend");
 
-	logout_node.appendChild(user_node);
 	doc.appendChild(logout_node);
 
 	/* Returning */
