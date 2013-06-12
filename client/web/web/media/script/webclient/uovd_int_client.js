@@ -305,8 +305,11 @@ Event.observe(window, 'load', function() {
 		}
   });
 
+	var java_provider = new uovd.provider.Java();
+	java_provider.set_applet_codebase("applet/");
+	
 	window.rdp_providers = {};
-	window.rdp_providers["java"]  = new uovd.provider.Java();
+	window.rdp_providers["java"]  = java_provider;
 	window.rdp_providers["html5"] = new uovd.provider.rdp.Html5();
 
 	/* handle client insertion */

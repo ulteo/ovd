@@ -11,6 +11,7 @@ uovd.provider.Java = function(node) {
 
 	/* ---------- Init Applet ---------- */
 	this.node = jQuery((node || "body"));
+	this.applet_codebase = null;
 	this.main_applet = null;
 
 	/* Applet callbacks */
@@ -23,7 +24,6 @@ uovd.provider.Java = function(node) {
 	/* Redefine initialize for JavaProvider */
 	this.initialize = function(onsuccess, onfailure) {
 		var name = "ulteoapplet";
-		var codebase = "applet/";
 		var archive = "ulteo-applet.jar";
 		var cache_archive = "ulteo-applet.jar";
 		var cache_archive_ex = "ulteo-applet.jar;preload"
@@ -34,7 +34,9 @@ uovd.provider.Java = function(node) {
 		this.main_applet.attr("width", 1);
 		this.main_applet.attr("height", 1);
 		this.main_applet.attr("name", name);
-		this.main_applet.attr("codebase", codebase);
+		if (this.applet_codebase != null) {
+			this.main_applet.attr("codebase", this.applet_codebase);
+		}
 		this.main_applet.attr("archive", archive);
 		this.main_applet.attr("cache_archive", cache_archive);
 		this.main_applet.attr("cache_archive_ex", cache_archive_ex);
@@ -42,7 +44,9 @@ uovd.provider.Java = function(node) {
 		this.main_applet.attr("code", "org.ulteo.ovd.applet.WebClient");
 
 		this.main_applet.append(jQuery(document.createElement("param")).attr("name", "name").attr("value", name));
-		this.main_applet.append(jQuery(document.createElement("param")).attr("name", "codebase").attr("value", codebase));
+		if (this.applet_codebase != null) {
+			this.main_applet.append(jQuery(document.createElement("param")).attr("name", "codebase").attr("value", this.applet_codebase));
+		}
 		this.main_applet.append(jQuery(document.createElement("param")).attr("name", "archive").attr("value", archive));
 		this.main_applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive").attr("value", cache_archive));
 		this.main_applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive_ex").attr("value", cache_archive_ex));
@@ -91,6 +95,11 @@ uovd.provider.Java = function(node) {
 /* Multiple inheritance */
 for(var i in uovd.provider.http.Base.prototype) { uovd.provider.Java.prototype[i] = uovd.provider.http.Base.prototype[i]; }
 for(var i in uovd.provider.rdp.Base.prototype)  { uovd.provider.Java.prototype[i] = uovd.provider.rdp.Base.prototype[i];  }
+
+
+uovd.provider.Java.prototype.set_applet_codebase = function(applet_codebase_) {
+	this.applet_codebase = applet_codebase_;
+}
 
 /* --------------- Ajax provider part --------------- */
 
@@ -242,7 +251,6 @@ uovd.provider.Java.prototype.connectDesktop = function() {
 		};
 
 		/* Generate a desktop applet */
-		var codebase = "applet/";
 		var archive = "ulteo-applet.jar";
 		var cache_archive = "ulteo-applet.jar";
 		var cache_archive_ex = "ulteo-applet.jar;preload"
@@ -253,7 +261,9 @@ uovd.provider.Java.prototype.connectDesktop = function() {
 		desktop_applet.attr("name", name);
 		desktop_applet.attr("width", parameters["width"]);
 		desktop_applet.attr("height", parameters["height"]);
-		desktop_applet.attr("codebase", codebase);
+		if (self.applet_codebase != null) {
+			desktop_applet.attr("codebase", self.applet_codebase);
+		}
 		desktop_applet.attr("archive", archive);
 		desktop_applet.attr("cache_archive", cache_archive);
 		desktop_applet.attr("cache_archive_ex", cache_archive_ex);
@@ -261,7 +271,9 @@ uovd.provider.Java.prototype.connectDesktop = function() {
 
 		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "id").attr("value", name));
 		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "name").attr("value", name));
-		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "codebase").attr("value", codebase));
+		if (self.applet_codebase != null) {
+			desktop_applet.append(jQuery(document.createElement("param")).attr("name", "codebase").attr("value", self.applet_codebase));
+		}
 		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "archive").attr("value", archive));
 		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive").attr("value", cache_archive));
 		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive_ex").attr("value", cache_archive_ex));
