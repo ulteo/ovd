@@ -5,6 +5,8 @@
 #include "Logger.h"
 
 #include <windows.h>
+#include <fstream>
+#include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctime>
@@ -132,16 +134,9 @@ void Logger::log(Level lvl, wchar_t *fmt,...) {
 	va_list args;
 
 	wchar_t temp[5000];
-	HANDLE hFile = 0;
-	
-	if (! m_szLogFile.empty()) {
-		if((hFile = CreateFile(m_szLogFile.c_str(), GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) <0)
-			this->debug(L"Failed to open log file %s", m_szLogFile.c_str());
-		else
-			_llseek((HFILE)hFile, 0, SEEK_END);
-	}
-
-	DWORD dw;
+	std::wofstream out(m_szLogFile.c_str());
+	if (out.good())
+		out.seekp(0, std::ios::end);
 
 	time_t rawtime;
 	struct tm timeinfo;
@@ -158,8 +153,8 @@ void Logger::log(Level lvl, wchar_t *fmt,...) {
 		timeinfo.tm_min,
 		timeinfo.tm_sec);
 	
-	if (hFile)
-		WriteFile(hFile, temp, (DWORD)wcslen(temp), &dw, NULL);
+	if (out.good())
+		out<<temp;
 
 	if (this->useStdOut)
 		std::wcout<<temp;
@@ -168,8 +163,8 @@ void Logger::log(Level lvl, wchar_t *fmt,...) {
 	GetModuleFileName(NULL, modname, sizeof(modname));
 	wsprintf(temp, L"%s : ", modname);
 	
-	if (hFile)
-		WriteFile(hFile, temp, (DWORD)wcslen(temp), &dw, NULL);
+	if (out.good())
+		out<<temp;
 
 	if (this->useStdOut)
 		std::wcout<<temp;
@@ -177,19 +172,18 @@ void Logger::log(Level lvl, wchar_t *fmt,...) {
 	va_start(args,fmt);
 	vswprintf_s(temp, fmt, args);
 	va_end(args);
-	WriteFile(hFile, temp, (DWORD)wcslen(temp), &dw, NULL);
 
-	if (hFile)
-		WriteFile(hFile, temp, (DWORD)wcslen(temp), &dw, NULL);
+	if (out.good())
+		out<<temp;
 
 	if (this->useStdOut)
 		std::wcout<<temp;
 
 	wsprintf(temp, L"\r\n");
 
-	if (hFile) {
-		WriteFile(hFile, temp, (DWORD)wcslen(temp), &dw, NULL);
-		_lclose((HFILE)hFile);
+	if (out.good()) {
+		out<<temp;
+		out.close();
 	}
 	
 	if (this->useStdOut)
