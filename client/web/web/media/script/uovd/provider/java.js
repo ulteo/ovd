@@ -77,8 +77,8 @@ uovd.provider.Java = function(node) {
 
 		error_timeout = setTimeout(function() {
 			clearTimeout(retry_timeout);
-			this.main_applet.remove();
-			this.main_applet = null;
+			self.main_applet.remove();
+			self.main_applet = null;
 			try { onfailure(); } catch(e) {}
 		}, 60000);
 
