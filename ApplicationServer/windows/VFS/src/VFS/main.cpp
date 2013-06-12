@@ -31,8 +31,8 @@ void usage() {
 
 int WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow) {
 	VFS vfs;
-	std::wstring arg;
-	std::wstring path;
+	std::wstring arg = L"";
+	std::wstring path = L"";
 	LPWSTR *argv;
 	int argc = 0;
 	int index;
