@@ -16,7 +16,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 		var session_type = this.session_management.parameters["session_type"];
 		var session = source;
 
-		if(to == "ready" && session_type == "applications") {
+		if(to == uovd.SESSION_STATUS_READY && session_type == uovd.SESSION_MODE_APPLICATIONS) {
 			/* register events listeners */
 			this.session_management.addCallback("ovd.session.server.statusChanged",                  this.handler);
 			this.session_management.addCallback("ovd.rdpProvider.applicationProvider.statusChanged", this.handler);
@@ -73,7 +73,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 		var to = params["to"];
 		var server = source;
 
-		if(to == "connected") {
+		if(to == uovd.SERVER_STATUS_CONNECTED) {
 			/* Activate launchers */
 			for(var i = 0 ; i<server.applications.length ; ++i) {
 				var id = server.applications[i].id;
@@ -97,7 +97,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 			}
 		}
 
-		if(to == "disconnected") {
+		if(to == uovd.SERVER_STATUS_DISCONNECTED) {
 			/* Deactivate launchers */
 			for(var i = 0 ; i<server.applications.length ; ++i) {
 				var id = server.applications[i].id;
@@ -115,7 +115,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 		var to = params['to'];
 		var application = params['application'];
 
-		if(to == "started") {
+		if(to == uovd.APPLICATION_STARTED) {
 			var id = application.id;
 			var node = this.content[id]['node'].find(".application_instance_counter");
 			var count = node.html() || 0;
@@ -132,7 +132,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 			}
 		}
 
-		if(to == "stopped") {
+		if(to == uovd.APPLICATION_STOPPED) {
 			var id = application.id;
 			var node = this.content[id]['node'].find(".application_instance_counter");
 			var count = node.html() || 0;
@@ -156,7 +156,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 }
 
 SeamlessLauncher.prototype.end = function() {
-	if(this.session_management.parameters["session_type"] == "applications") {
+	if(this.session_management.parameters["session_type"] == uovd.SESSION_MODE_APPLICATIONS) {
 		this.node.empty();
 		/* Do NOT remove ovd.session.statusChanged as it is used as a delayed initializer */
 		this.session_management.removeCallback("ovd.session.server.statusChanged",                  this.handler);
