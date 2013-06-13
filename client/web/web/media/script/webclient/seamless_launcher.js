@@ -49,10 +49,8 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 				td_img.append(img);
 
 				var td_name = jQuery(document.createElement("td"));
-				var name = jQuery(document.createElement("span"));
-				name.addClass("application_name");
-				name.html(this.applications[id].name+" ");
-				td_name.append(name);
+				td_name.addClass("application_name");
+				td_name.html(this.applications[id].name+" ");
 
 				var td_count = jQuery(document.createElement("td"));
 				var count = jQuery(document.createElement("span"));
@@ -81,13 +79,20 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 				var id = server.applications[i].id;
 				var item =  this.content[id];
 
+				var node = new jQuery(document.createElement("a"));
+				node.prop("href", "javascript:;");
+				node.html(this.applications[id].name);
+				
+				item["node"].find(":eq(2)").empty();
+				item["node"].find(":eq(2)").append(node);
+				
 				var self = this; /* closure */
 				item["event"] = function () {
-					var appId = jQuery(this).prop("id").split("_")[1];
+					var appId = jQuery(this).parent().parent().prop("id").split("_")[1];
 					self.session_management.fireEvent("ovd.log", self, {"message":"Start application "+appId, "level":"debug"});
 					self.session_management.fireEvent("ovd.rdpProvider.applicationProvider.applicationStart", self, {"id":appId});
 				}
-				item["node"].click(item["event"]);
+				node.click(item["event"]);
 				item["node"].prop("className", "applicationLauncherEnabled");
 			}
 		}
@@ -100,6 +105,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 
 				item["node"].off('click');
 				item["node"].prop("className", "applicationLauncherDisabled");
+				item["node"].find(":eq(2)").html(this.applications[id].name);
 			}
 		}
 	}
