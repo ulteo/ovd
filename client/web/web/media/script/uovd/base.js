@@ -28,3 +28,9 @@ uovd.SERVER_STATUS_DISCONNECTED = "disconnected";
 
 uovd.APPLICATION_STARTED = "started";
 uovd.APPLICATION_STOPPED = "stopped";
+
+uovd.SESSION_PHASE_UNKNOWN = "unknown";
+uovd.SESSION_PHASE_STARTING = "starting";
+uovd.SESSION_PHASE_STARTED = "started";
+uovd.SESSION_PHASE_DESTROYING = "destroying";
+uovd.SESSION_PHASE_DESTROYED = "destroyed";

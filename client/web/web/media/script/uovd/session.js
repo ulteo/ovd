@@ -7,6 +7,7 @@ uovd.Session = function(session_management) {
 	this.settings = {};
 	this.servers = new Array();
 	this.status = "unknown";
+	this.phase = uovd.SESSION_PHASE_UNKNOWN;
 }
 
 uovd.Session.prototype.update = function(xml) {
@@ -95,6 +96,30 @@ uovd.Session.prototype.parseError = function(xml) {
 
 uovd.Session.prototype.parseEnd = function(xml) {
 	return null;
+}
+
+uovd.Session.prototype.starting = function(from) {
+	if(this.phase == uovd.SESSION_PHASE_STARTING) { return ; }
+	this.phase = uovd.SESSION_PHASE_STARTING;
+	this.session_management.fireEvent("ovd.session."+this.phase, this, {"from":from});
+}
+
+uovd.Session.prototype.started = function(from) {
+	if(this.phase == uovd.SESSION_PHASE_STARTED) { return ; }
+	this.phase = uovd.SESSION_PHASE_STARTED;
+	this.session_management.fireEvent("ovd.session."+this.phase, this, {"from":from});
+}
+
+uovd.Session.prototype.destroying = function(from) {
+	if(this.phase == uovd.SESSION_PHASE_DESTROYING) { return ; }
+	this.phase = uovd.SESSION_PHASE_DESTROYING;
+	this.session_management.fireEvent("ovd.session."+this.phase, this, {"from":from});
+}
+
+uovd.Session.prototype.destroyed = function(from) {
+	if(this.phase == uovd.SESSION_PHASE_DESTROYED) { return ; }
+	this.phase = uovd.SESSION_PHASE_DESTROYED;
+	this.session_management.fireEvent("ovd.session."+this.phase, this, {"from":from});
 }
 
 /* Data storage */

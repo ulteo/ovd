@@ -24,31 +24,21 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider) {
 			var state = params["state"];
 
 			if(state == uovd.SUCCESS) {
-				self.status_check = setInterval( function() {
-					self.ajax_provider.sessionStatus();
-				}, 3000);
+				self.session.starting(type);
 			}
 		}),
 		"ovd.ajaxProvider.sessionEnd" : new Array(function(type, source, params) {
 			var state = params["state"];
 
-			if(state == uovd.SUCCESS && self.status_check) {
-				/* Set the polling interval to 3 sec */
-				clearInterval(self.status_check);
-				self.status_check = setInterval( function() {
-					self.ajax_provider.sessionStatus();
-				}, 3000);
+			if(state == uovd.SUCCESS) {
+				self.session.destroying(type);
 			}
 		}),
 		"ovd.ajaxProvider.sessionSuspend" : new Array(function(type, source, params) {
 			var state = params["state"];
 
-			if(state == uovd.SUCCESS && self.status_check) {
-				/* Set the polling interval to 3 sec */
-				clearInterval(self.status_check);
-				self.status_check = setInterval( function() {
-					self.ajax_provider.sessionStatus();
-				}, 3000);
+			if(state == uovd.SUCCESS) {
+				self.session.destroying(type);
 			}
 		}),
 		"ovd.session.statusChanged" : new Array(function(type, source, params) {
@@ -60,39 +50,44 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider) {
 				self.rdp_provider.connect();
 			}
 			if(to == uovd.SESSION_STATUS_LOGGED) {
-				/* Lower the polling interval to 30 sec */
-				clearInterval(self.status_check);
-				self.status_check = setInterval( function() {
-					self.ajax_provider.sessionStatus();
-				}, 30000);
+				self.session.started(type);
 			}
 			if(to == uovd.SESSION_STATUS_DISCONNECTED) {
 				/* Disconnect the client */
 				self.rdp_provider.disconnect();
 
-				/* Clear status_check interval */
-				clearInterval(self.status_check);
-				self.status_check = 0;
+				self.session.destroyed(type);
 			}
 			if(to == uovd.SESSION_STATUS_UNKNOWN ) {
-				/* Call SessionManagement.stop for a clean stop */
-				self.stop();
-				/* Clear status_check interval */
-				clearInterval(self.status_check);
-				self.status_check = 0;
+				self.session.destroyed(type);
 			}
 		}),
 		"ovd.session.server.statusChanged" : new Array(function(type, source, params) {
 			var from = params["from"];
 			var to = params["to"];
 
-			if(to == uovd.SERVER_STATUS_DISCONNECTED && self.status_check) {
-				/* Set the polling interval to 3 sec */
-				clearInterval(self.status_check);
-				self.status_check = setInterval( function() {
-					self.ajax_provider.sessionStatus();
-				}, 3000);
+			if(to == uovd.SERVER_STATUS_DISCONNECTED) {
+				self.session.destroying(type);
 			}
+		}),
+		"ovd.session.starting" : new Array(function(type, source, params) {
+			/* Set the polling interval to 3 sec */
+			clearInterval(self.status_check);
+			self.status_check = setInterval(self.ajax_provider.sessionStatus.bind(self.ajax_provider), 3000);
+		}),
+		"ovd.session.started" : new Array(function(type, source, params) {
+			/* Lower the polling interval to 30 sec */
+			clearInterval(self.status_check);
+			self.status_check = setInterval(self.ajax_provider.sessionStatus.bind(self.ajax_provider), 30000);
+		}),
+		"ovd.session.destroying" : new Array(function(type, source, params) {
+			/* Set the polling interval to 3 sec */
+			clearInterval(self.status_check);
+			self.status_check = setInterval(self.ajax_provider.sessionStatus.bind(self.ajax_provider), 3000);
+		}),
+		"ovd.session.destroyed" : new Array(function(type, source, params) {
+			/* Clear status_check interval */
+			clearInterval(self.status_check);
 		})
 	};
 }
