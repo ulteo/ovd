@@ -33,7 +33,7 @@ VFSRule::~VFSRule() {
 
 bool VFSRule::compile() {
 	try {
-		this->reg = new std::wregex(rule);
+		this->reg = new std::wregex(rule, std::wregex::icase);
 	}
 	catch (const UException& e) {
 		log_error(L"Failed to compile rule: %s: %s", this->rule.c_str(), e.wwhat());
