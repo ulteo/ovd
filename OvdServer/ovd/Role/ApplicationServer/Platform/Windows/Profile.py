@@ -23,6 +23,7 @@
 
 import os
 import random
+import time
 import urlparse
 import win32api
 import win32con
@@ -165,10 +166,17 @@ class Profile(AbstractProfile):
 		for f in [self.DesktopDir, self.DocumentsDir]:
 			d = os.path.join(self.mountPoint, "Data", f)
 			
+			trial = 5
 			while not os.path.exists(d):
 				try:
 					os.makedirs(d)
 				except OSError, err:
+					trial -= 1
+					if trial == 0:
+						Logger.error("Failed to create directory %s: %s"%(d, str(err)))
+						return False
+					
+					time.sleep(random.randint(1,10)/100.0)
 					Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
 					continue
 		
@@ -223,10 +231,17 @@ class Profile(AbstractProfile):
 		
 		
 		d = os.path.join(self.mountPoint, "conf.Windows.%s"%System.getWindowsVersionName())
+		trial = 5
 		while not os.path.exists(d):
 			try:
 				os.makedirs(d)
 			except OSError, err:
+				trial -= 1
+				if trial == 0:
+					Logger.error("Failed to create directory %s: %s"%(d, str(err)))
+					return False
+				
+				time.sleep(random.randint(1,10)/100.0)	
 				Logger.debug2("conf.Windows mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
 				continue
 		
