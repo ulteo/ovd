@@ -1,7 +1,6 @@
 Ajaxplorer = function(session_management, node) {
 	this.node = jQuery(node);
 	this.session_management = session_management;
-	this.start_app_interval = null;
 	this.handler = this.handleEvents.bind(this);
 
 	/* Do NOT remove ovd.session.statusChanged in destructor as it is used as a delayed initializer */
@@ -43,9 +42,6 @@ Ajaxplorer.prototype.handleEvents = function(type, source, params) {
 					if(status == "ok") {
 						/* Instert ajaxplorer */
 						self._show_ajaxplorer_ui();
-
-						/* Set polling interval for start_app.php */
-						self.start_app_interval = setInterval(self._check_start_app.bind(self), 2000);
 					}
 				},
 			});
@@ -65,44 +61,11 @@ Ajaxplorer.prototype._show_ajaxplorer_ui = function() {
 	this.node.append(iframe);
 }
 
-Ajaxplorer.prototype._check_start_app = function() {
-	jQuery.ajax({
-		url: "start_app.php?check=true&differentiator="+Math.floor(Math.random()*50000),
-		type: "GET",
-		contentType: "text/xml",
-		success: this._parse_start_app.bind(this)
-	});
-}
-
-Ajaxplorer.prototype._parse_start_app = function(xml) {
-	var self = this; /* closure */
-	jQuery(xml).find("start_app").each( function() {
-		var node = jQuery(this);
-		var id = node.attr("id");
-		var file = node.find("file");
-
-		if(file) {
-			var type = file.attr('type');
-			var path = file.attr('path');
-			var share = file.attr('share');
-			self.session_management.fireEvent("ovd.rdpProvider.applicationProvider.applicationStartWithArgs", self, {"id":id, "args":{"type":type, "path":path, "share":share}});
-		} else {
-			self.session_management.fireEvent("ovd.rdpProvider.applicationProvider.applicationStart", self, {"id":id});
-		}
-	});
-}
-
-
 Ajaxplorer.prototype.end = function() {
 	if(this.session_management.parameters["session_type"] == "applications") {
 		this.node.empty();
 		/* Do NOT remove ovd.session.statusChanged as it is used as a delayed initializer */
 		this.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",      this.handler);
 		this.session_management.removeCallback("ovd.ajaxProvider.sessionSuspend",  this.handler);
-
-		if(this.start_app_interval != null) {
-			clearInterval(this.start_app_interval);
-			this.start_app_interval = null;
-		}
 	}
 }

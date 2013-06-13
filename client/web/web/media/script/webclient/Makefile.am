@@ -13,6 +13,7 @@ scripts_DATA = ajaxplorer.js \
                seamless_launcher.js  \
                seamless_window_manager.js  \
                server.js timezones.js  \
+               start_app.php.js  \
                ui.js  \
                uovd_ext_client.js  \
                uovd_int_client.js

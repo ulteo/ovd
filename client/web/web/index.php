@@ -217,6 +217,7 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/webclient/Logger.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/timezones.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/ajaxplorer.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/start_app.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/application_counter.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/desktop_container.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/seamless_launcher.js" charset="utf-8"></script>
