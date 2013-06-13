@@ -299,7 +299,7 @@ Event.observe(window, 'load', function() {
 			return;
 		}
 
-		if(type == 'ovd.session.statusChanged' && params['to'] == uovd.SESSION_STATUS_DISTROYING) {
+		if(type == 'ovd.session.statusChanged' && params['to'] == uovd.SESSION_STATUS_DESTROYING) {
 			step(0, "Destroying", 20000);
 			return;
 		}
