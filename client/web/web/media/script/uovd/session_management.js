@@ -86,7 +86,7 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider) {
 			var from = params["from"];
 			var to = params["to"];
 
-			if(to == uovd.SESSION_STATUS_DISCONNECTED && self.status_check) {
+			if(to == uovd.SERVER_STATUS_DISCONNECTED && self.status_check) {
 				/* Set the polling interval to 3 sec */
 				clearInterval(self.status_check);
 				self.status_check = setInterval( function() {
