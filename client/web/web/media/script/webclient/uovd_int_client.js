@@ -233,7 +233,7 @@ Event.observe(window, 'load', function() {
 		var from = params["from"];
 		var to = params["to"];
 
-		if(to == "disconnected") {
+		if(to == uovd.SERVER_STATUS_DISCONNECTED) {
 			hideMainContainer();
 		}
 	});
