@@ -26,7 +26,8 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 $big_image_map = false;
-if (get_ie_version() > 7 && file_exists(WEB_CLIENT_ROOT . "/media/image/uovd.png")) {
+if (get_ie_version() > 7 && file_exists(WEB_CLIENT_ROOT . "/media/image/uovd.png") &&
+                            file_exists(WEB_CLIENT_ROOT . "/media/style/images.css")) {
 	$big_image_map = true;
 }
 
@@ -154,7 +155,9 @@ function get_users_list() {
 		<link rel="stylesheet" type="text/css" href="media/style/uovd.css" />
 <?php } else { ?>
 		<link rel="stylesheet" type="text/css" href="media/script/lib/nifty/niftyCorners.css" />
+<?php     if ($big_image_map) { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/images.css" />
+<?php     } ?>
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 <?php } ?>
 
