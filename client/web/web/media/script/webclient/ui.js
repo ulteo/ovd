@@ -76,11 +76,11 @@ function hideMainContainer() {
 	jQuery('#sessionContainer').hide();
 }
 
-function pullMainContainer(mode) {
+function pullMainContainer() {
 	new Effect.Move(jQuery('#sessionContainer')[0], { x: 0, y: my_height });
 }
 
-function pushMainContainer(mode) {
+function pushMainContainer() {
 	new Effect.Move(jQuery('#sessionContainer')[0], { x: 0, y: -my_height, mode: 'absolute' });
 }
 
