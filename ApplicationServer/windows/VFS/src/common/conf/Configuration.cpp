@@ -202,6 +202,12 @@ void Configuration::parseLog(INI& ini) {
 	catch (const UException&) { }
 
 	try {
+		this->develOutput = ini.getBool(L"log", L"enableDevelOutput");
+		logger.setDevelOutput(this->develOutput);
+	}
+	catch (const UException&) { }
+
+	try {
 		this->logFilename = ini.getString(L"log", L"outputFilename");
 		logger.setLogFile(this->logFilename);
 	}

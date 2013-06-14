@@ -25,6 +25,7 @@ Logger::Logger()
 	m_bIsLogging = false;
 	this->logLevel = LOG_INFO;
 	this->useStdOut = true;
+	this->useDevelStdOut = false;
 
 	GetModuleFileName(NULL, modname, sizeof(modname));
 	this->module = modname;
@@ -104,9 +105,16 @@ void Logger::setStdoutput(bool value) {
 }
 
 
+void Logger::setDevelOutput(bool value) {
+	this->useDevelStdOut = value;
+}
+
 
 void Logger::debug(const wchar_t* format,...)
 {
+	if (! this->useDevelStdOut)
+		return;
+
     wchar_t buf[MAX_DBG_MSG_LEN];
 	std::wostringstream out;
 	

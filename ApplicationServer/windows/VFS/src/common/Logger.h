@@ -25,6 +25,7 @@ public:
 	void setLogFile(std::wstring szLogFile);
 	void setLevel(Level lvl);
 	void setStdoutput(bool value);
+	void setDevelOutput(bool value);
 
 	// NOTE: not working
 	void debug(const wchar_t * format,...);
@@ -46,6 +47,7 @@ private:
 	std::wstring module;
 	Level logLevel;
 	bool useStdOut;
+	bool useDevelStdOut;
 
 	bool m_bIsLogging;
 };
