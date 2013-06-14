@@ -1,6 +1,5 @@
 function showLogin() {
-  jQuery('#loginBox').show();
-  new Effect.Move(jQuery('#loginBox')[0], { x: 0, y: 1000 });
+  new Effect.Move(jQuery('#loginBox')[0], { x: 0, y: my_height });
 
   if (debug) {
     Logger.del_instance();
@@ -9,10 +8,7 @@ function showLogin() {
 }
 
 function hideLogin() {
-  new Effect.Move(jQuery('#loginBox')[0], { x: 0, y: -1000 });
-  setTimeout(function() {
-    jQuery('#loginBox').hide();
-  }, 1000);
+  new Effect.Move(jQuery('#loginBox')[0], { x: 0, y: -my_height });
 }
 
 function disableLogin() {
