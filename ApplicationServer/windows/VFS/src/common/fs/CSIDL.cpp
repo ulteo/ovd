@@ -179,6 +179,15 @@ int CSIDL::toID(const std::wstring& csidl) {
 	if (csidl.compare(L"CSIDL_STARTUP") == 0)
 		return CSIDL_STARTUP;
 
+	if (csidl.compare(L"CSIDL_SYSTEMX86") == 0)
+		return CSIDL_SYSTEMX86;
+
+	if (csidl.compare(L"CSIDL_TEMPLATES") == 0)
+		return CSIDL_TEMPLATES;
+
+	if (csidl.compare(L"CSIDL_WINDOWS") == 0)
+		return CSIDL_WINDOWS;
+
 // TODO manage non csidl constant
 //	"DOWNLOADS" => "Downloads"
 //	"LINKS" => "Links"
