@@ -145,16 +145,15 @@ class FSBackend:
 		cmd = "umount \"%s\""%(self.path["spool"])
 		Logger.debug("FSBackend release command '%s'"%(cmd))
 		for _ in xrange(30):
+			if not os.path.ismount(self.path["spool"]):
+				return True
+			
 			p = System.execute(cmd)
 			if p.returncode != 0:
 				Logger.debug("FSBackend is busy, waiting")
 				time.sleep(2)
 			else:
-				break
-		
-		if p.returncode == 0:
-			print "Success"
-			return True
+				return True
 		
 		Logger.error("Failed to release FSBackend (status: %d) %s"%(p.returncode, p.stdout.read()))
 		cmd = "umount -l \"%s\""%(self.path["spool"])
