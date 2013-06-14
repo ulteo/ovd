@@ -13,11 +13,15 @@ uovd.SESSION_MODE_DESKTOP = "desktop";
 uovd.SESSION_MODE_APPLICATIONS = "applications";
 
 
+uovd.SESSION_STATUS_ERROR = "error";
 uovd.SESSION_STATUS_UNKNOWN = "unknown";
+uovd.SESSION_STATUS_CREATING = "creating";
+uovd.SESSION_STATUS_CREATED = "created";
 uovd.SESSION_STATUS_INITED = "init";
 uovd.SESSION_STATUS_READY  = "ready";
 uovd.SESSION_STATUS_LOGGED = "logged";
 uovd.SESSION_STATUS_DISCONNECTED = "disconnected";
+uovd.SESSION_STATUS_WAIT_DESTROY = "wait_destroy";
 uovd.SESSION_STATUS_DESTROYING = "destroying";
 uovd.SESSION_STATUS_DESTROYED = "destroyed";
 
