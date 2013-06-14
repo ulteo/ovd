@@ -174,7 +174,7 @@ uovd.SessionManagement.prototype.fireEvent = function(type, source, params) {
 		try {
 			callbacks[i](type, source, params);
 		} catch(e) {
-			console.log("Error in SessionManagement callback system : "+e);
+			console.log("Error in SessionManagement callback system ("+type+"): "+e);
 		}
 	}
 }
