@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2012 Ulteo SAS
+ * Copyright (C) 2012-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Yann Hodique <y.hodique@ulteo.com> 2012
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author Abraham Macías Paredes <amacias@solutia-it.es> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +23,8 @@ package org.ulteo.ovd.smartCard;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import net.propero.rdp.RdpPacket;
@@ -91,6 +94,9 @@ public class SmartCard extends RdpdrDevice {
 
 	public final int SCARD_INPUT_LINKED = 0xFFFFFFFF;
 
+	
+	private List<Long> rgSCardContextList = new ArrayList<Long>();
+	
 	public SmartCard(RdpdrChannel rdpdr) {
 		super(rdpdr);
 		device_type = DEVICE_TYPE;
@@ -527,6 +533,7 @@ public class SmartCard extends RdpdrDevice {
 		out.setPosition(lengthPos);
 		out.setLittleEndian32(streamLen);
 		out.setPosition(endPos);
+		out.markEnd();
 
 		if (status != PCSC.SCARD_S_SUCCESS) {
 			Logger.error("SmartCard device_dispatch exit code = " + Integer.toHexString(status));
@@ -611,7 +618,7 @@ public class SmartCard extends RdpdrDevice {
 		hContext = in.getLittleEndian32();
 
 		if (SmartCardDebug)
-			Logger.debug("SmartCard SCardListReaders(context: " + Integer.toHexString(hContext) + ")");
+			Logger.debug("SmartCard SCardListReaders(context: " + Integer.toHexString(hContext) + ", unicode: "+useUnicode+")");
 
 		int lenPos1 = out.getPosition();
 		out.incrementPosition(4);
@@ -636,6 +643,15 @@ public class SmartCard extends RdpdrDevice {
 		dataLength = putReaderNames(out, readers, useUnicode);
 
 		int endPos = out.getPosition();
+		
+		if (readers!=null) {
+			out.setPosition(lenPos1);
+			byte[] tempBuf = new byte[endPos-lenPos1];
+			out.copyToByteArray(tempBuf,0, lenPos1, endPos-lenPos1);
+		} else {
+			Logger.debug("No readers available!");
+		}
+		
 		out.setPosition(lenPos1);
 		out.setLittleEndian32(dataLength);
 
@@ -661,12 +677,18 @@ public class SmartCard extends RdpdrDevice {
 		in.incrementPosition(4);
 		scope = in.getLittleEndian32();
 
+		if (SmartCardDebug)
+			Logger.debug("scope = "+scope);
+		
 		try {
 			hContext = PCSC.SCardEstablishContext(scope);
 		} catch (PCSCException e) {
 			rv = e.getErrCode();
 		}
 
+		if (SmartCardDebug)
+			Logger.debug("hContext = "+String.format("%08X ", hContext));
+		
 		out.setLittleEndian32(4); // ?
 		out.setLittleEndian32(0x20000); // ?
 
@@ -674,6 +696,7 @@ public class SmartCard extends RdpdrDevice {
 		out.setLittleEndian32((int) hContext);
 
 		/* TODO: store hContext in allowed context list */
+		this.rgSCardContextList.add(hContext);
 
 		return rv;
 	}
@@ -686,13 +709,22 @@ public class SmartCard extends RdpdrDevice {
 		len = in.getLittleEndian32();
 
 		in.incrementPosition(0x10);
-		hContext = in.getLittleEndian32();
+		hContext = in.getLittleEndian32() & 0xFFFFFFFFL;
 
+		if (SmartCardDebug)
+			Logger.debug("Release hContext = "+String.format("%08X ", hContext));
+		if (!this.rgSCardContextList.contains(hContext)) {
+			Logger.error("Unknown context: "+String.format("%08X ", hContext));
+		}
+		
 		try {
 			PCSC.SCardReleaseContext(hContext);
 		} catch (PCSCException e) {
 			rv = e.getErrCode();
 		}
+		
+		this.rgSCardContextList.remove(hContext);
+		
 		return rv;
 	}
 
@@ -703,6 +735,12 @@ public class SmartCard extends RdpdrDevice {
 		in.incrementPosition(0x1c);
 		hContext = in.getLittleEndian32();
 
+		if (SmartCardDebug)
+			Logger.debug("is valid hContext? = "+String.format("%08X ", hContext));
+		if (!this.rgSCardContextList.contains(hContext)) {
+			Logger.error("Unknown context: "+String.format("%08X ", hContext));
+		}
+		
 		try {
 			PCSC.SCardIsValidContext(hContext);
 		} catch (PCSCException e) {
@@ -727,11 +765,24 @@ public class SmartCard extends RdpdrDevice {
 		int proto = 0;
 		int hCard = 0;
 
+		if (SmartCardDebug)
+			Logger.debug("Use unicode: "+useUnicode);
+		
 		in.incrementPosition(0x1c);
+		
 		shareMode = in.getLittleEndian32();
 		preferredProtocol = in.getLittleEndian32();
 		reader = getReaderName(in, useUnicode);
 
+		if (reader==null || reader.trim().equals("")) {
+			if (SmartCardDebug)
+				Logger.debug("Empty name found!");
+			return PCSC.SCARD_E_UNKNOWN_READER;
+		} else {
+			if (SmartCardDebug)
+				Logger.debug("Connect to: "+reader);
+		}
+		
 		in.incrementPosition(4);
 		hContext = in.getLittleEndian32();
 
@@ -1169,6 +1220,7 @@ public class SmartCard extends RdpdrDevice {
 		atrMasks = new AtrMask[atrMaskCount];
 
 		for (int i = 0; i < atrMaskCount; i++) {
+			atrMasks[i] = new AtrMask();
 			atrMasks[i].cbAtr = in.getLittleEndian32();
 			atrMasks[i].rgbAtr = getBytes(in, 36);
 			atrMasks[i].rgbMask = getBytes(in, 36);
@@ -1237,15 +1289,24 @@ public class SmartCard extends RdpdrDevice {
 
 		// we don't need the trailing \0
 		int dataSize = useUnicode ? (dataLength - 1) * 2 : (dataLength - 1);
-		byte[] data = getBytes(in, dataSize);
-		int increment = (useUnicode ? 2 : 1);
-		in.incrementPosition(increment);
-		if (useUnicode)
-			name = new String(data, Charset.forName("UTF-16LE"));
-		else
-			name = new String(data);
-
-		inRepos(in, dataSize + increment);
+		if (dataSize>0) {
+			byte[] data = getBytes(in, dataSize);
+			int increment = (useUnicode ? 2 : 1);
+			in.incrementPosition(increment);
+			if (useUnicode)
+				name = new String(data, Charset.forName("UTF-16LE"));
+			else
+				name = new String(data);
+			
+			inRepos(in, dataSize + increment);
+		} else {
+			name = null;
+		}
+		
+		if (dataSize>0 && name==null) {
+			throw new RuntimeException("Extrange error!");
+		}
+		
 		return name;
 	}
 
@@ -1355,7 +1416,7 @@ public class SmartCard extends RdpdrDevice {
 			cur.setName(getReaderName(in, useUnicode));
 
 			if (SmartCardDebug) {
-				Logger.debug("   " + cur.getName());
+				Logger.debug("["+i+"]   " + cur.getName());
 				Logger.debug("       user: " + cur.getUserData() + ", state: 0x" + Integer.toHexString(cur.getState())
 					+ ", event: 0x" + Integer.toHexString(cur.getEvent()));
 			}
