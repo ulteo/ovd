@@ -324,6 +324,9 @@ Event.observe(window, 'load', function() {
 	/* ajaxplorer file manager */
 	new Ajaxplorer(session_management, "#fileManagerContainer");
 
+	/* Session-based start_app support */
+	new StartApp(session_management);
+
 	/* application counter */
 	window.applicationCounter = new ApplicationCounter(session_management);
 });
