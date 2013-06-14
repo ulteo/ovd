@@ -58,7 +58,7 @@ int main() {
 
 	set_hooks_fn();
 	
-	Sleep(5000);
+	Sleep(3000);
 	System::refreshDesktop();
 	printf("Running... \n");
 
