@@ -1,16 +1,16 @@
 Source: ovd-desktop
 Section: x11
 Priority: extra
-Maintainer: Samuel Bovée <samuel@ulteo.com>
+Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
 Standards-Version: 3.7.3
 Build-Depends: cdbs, debhelper (>= 6)
 
 Package: ulteo-ovd-desktop
 Architecture: all
 Depends: ulteo-ovd-desktop-settings, ulteo-xfce4-restricted-menu-plugin,
- xfce4-icon-theme, thunar, gtk2-engines-xfce, xfwm4, xfce4-session,
- xfdesktop4, xfce4-mcs-plugins, xfce4-utils, xfce4-panel
-Recommends: xinit, app-install-data
+ thunar, gtk2-engines-xfce, xfwm4, xfce4-session,
+ xfdesktop4, xfce4-utils, xfce4-panel
+Recommends: xinit, app-install-data, xfce4-mcs-plugins, xfce4-icon-theme
 Suggests: gdm
 Conflicts: xfce (>= 4.6)
 Description: Ulteo Open Virtual Desktop - XFCE desktop

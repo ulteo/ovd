@@ -1,7 +1,7 @@
 Source: ovd-desktop-settings
 Section: x11
 Priority: extra
-Maintainer: Samuel Bovée <samuel@ulteo.com>
+Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
 Build-Depends: cdbs, cdbs-xfce, debhelper (>= 6), intltool,
  libthunar-vfs-1-dev, libxfce4util-dev (>= 4.4), libxfcegui4-dev (>= 4.4),
  xfce4-panel-dev (>= 4.4), xfce4-dev-tools, libgconf2-dev, libgtk2.0-dev
@@ -9,10 +9,11 @@ Standards-Version: 3.7.3
 
 Package: ulteo-ovd-desktop-settings
 Architecture: all
-Depends: gnome-icon-theme, gnome-icon-theme-crystal, dmz-cursor-theme,
- xfce4-icon-theme, gtk2-engines-xfce, gtk2-engines-mythbuntu
+Depends: gnome-icon-theme, dmz-cursor-theme, gtk2-engines-xfce 
+Recommends: gnome-icon-theme-crystal, xfce4-icon-theme, gtk2-engines-mythbuntu
 Conflicts: ulteo-ovd-xfce-default-settings, xubuntu-default-settings,
  thunar-settings (<< 0.9.0-4ulteo2)
+Replaces: thunar-data, xfce4-utils
 Description: Ulteo Open Virtual Desktop - Startup scripts and default settings
  This package provides:
  * default settings for the Xfce desktop on an Ulteo Open Virtual Desktop.

@@ -1,9 +1,0 @@
-#!/bin/sh -e
-
-AJAXPLORERDIR=/usr/share/ulteo/webclient/ajaxplorer
-
-chown www-data:www-data $AJAXPLORERDIR/server/logs
-
-#DEBHELPER#
-
-exit 0

@@ -1,7 +1,7 @@
 Source: ovd-administration-console
 Section: net
 Priority: optional
-Maintainer: David PHAM-VAN <dpv@ulteo.com>
+Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
 Build-Depends: debhelper (>= 6), cdbs, po-debconf
 Standards-Version: 3.7.3
 

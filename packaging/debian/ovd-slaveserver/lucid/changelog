@@ -1,5 +1,11 @@
 ovd-slaveserver (99.99~trunk-0ulteo1) trunk; urgency=low
 
+  * add packaging for Ubuntu 12.04
+
+ -- David PHAM-VAN <d.pham-van@ulteo.com>  Wed, 27 Jun 2012 16:00:00 +0100
+
+ovd-slaveserver (99.99~trunk-0ulteo1) trunk; urgency=low
+
   * NMU Remove the depends to Autotools
 
  -- Samuel Bovée <samuel@ulteo.com>  Thu, 18 Feb 2010 09:57:03 +0100

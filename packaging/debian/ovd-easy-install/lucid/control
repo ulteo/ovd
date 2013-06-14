@@ -1,7 +1,7 @@
 Source: ovd-easy-install
 Section: net
 Priority: extra
-Maintainer: Samuel Bovée <samuel@ulteo.com>
+Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
 Standards-Version: 3.7.3
 Build-Depends: cdbs, debhelper (>= 6)
 
