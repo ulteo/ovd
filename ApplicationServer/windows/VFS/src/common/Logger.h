@@ -7,6 +7,7 @@
 #include <string>
 #include <common/UException.h>
 
+#define MAX_DBG_MSG_LEN (4096)
 
 
 class Logger
@@ -42,6 +43,7 @@ private:
 private:
 	static Logger*	m_sInstance;
 	std::wstring	m_szLogFile;
+	std::wstring module;
 	Level logLevel;
 	bool useStdOut;
 

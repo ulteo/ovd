@@ -7,6 +7,7 @@
 #include <windows.h>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctime>
@@ -17,11 +18,16 @@ Logger* Logger::m_sInstance = NULL;
 
 Logger::Logger()
 {
+	wchar_t modname[MAX_PATH];
+
 	// TODO user do not have the right to write here !!!
 	m_szLogFile = L"";
 	m_bIsLogging = false;
 	this->logLevel = LOG_INFO;
 	this->useStdOut = true;
+
+	GetModuleFileName(NULL, modname, sizeof(modname));
+	this->module = modname;
 }
 Logger::~Logger()
 {
@@ -101,28 +107,20 @@ void Logger::setStdoutput(bool value) {
 
 void Logger::debug(const wchar_t* format,...)
 {
-	#define MAX_DBG_MSG_LEN (4096)
     wchar_t buf[MAX_DBG_MSG_LEN];
-	wchar_t msg[MAX_DBG_MSG_LEN];
-	
-	wchar_t modname[200];
-	GetModuleFileName(NULL, modname, sizeof(modname));
+	std::wostringstream out;
 	
 	va_list args;
     va_start(args, format);
-	vswprintf_s(buf, format, args);
+	vswprintf_s(buf,MAX_DBG_MSG_LEN, format, args);
     va_end(args);
 
-	msg[0] = '\0';
-	lstrcat(msg, modname);
-	lstrcat(msg, L": ");
-	lstrcat(msg, buf);
+	out<<this->module<<": "<<buf;
 
-	std::wstring m = msg;
-	if (m.find(L"Dbgview") != std::string::npos)
+	if (out.str().find(L"Dbgview") != std::string::npos)
 		return;
 
-    OutputDebugString(msg);
+    OutputDebugString(out.str().c_str());
 }
 
 void Logger::log(Level lvl, wchar_t *fmt,...) {
@@ -159,15 +157,12 @@ void Logger::log(Level lvl, wchar_t *fmt,...) {
 	if (this->useStdOut)
 		std::wcout<<temp;
 
-	wchar_t modname[200];
-	GetModuleFileName(NULL, modname, sizeof(modname));
-	wsprintf(temp, L"%s : ", modname);
-	
+
 	if (out.good())
-		out<<temp;
+		out<<this->module<<L" : ";
 
 	if (this->useStdOut)
-		std::wcout<<temp;
+		std::wcout<<this->module<<L" : ";
 
 	va_start(args,fmt);
 	vswprintf_s(temp, fmt, args);
