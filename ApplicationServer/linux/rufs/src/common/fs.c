@@ -122,63 +122,61 @@ char* file_getShortName(const char* filename) {
 }
 
 
+
 bool fs_expandPath(const char* source, char* destination) {
-	int i;
-	char* p = destination;
-	List *pathComponent = str_split(source, '/');
+	char keyString[256];
+	char key[256];
+	char* res;
+	char* pos;
+	char* end;
+	size_t len = strlen(source);
+	strncpy(destination, source, len);
+	destination[len] = '\0';
 
-	if (pathComponent == NULL)
-		return true;
+	// We are searching for XDG constant
+	if (strncmp(destination, "%{", 2) == 0) {
+		size_t len;
 
-	if (destination == NULL) {
-		logWarn("Invalid destination");
-		list_delete(pathComponent);
-		return false;
-	}
+		pos = strchr(destination, '}');
+		if (pos != NULL) {
+			len = pos - destination + 1;
+			strncpy(keyString, destination, len);
+			keyString[len] = '\0';
 
-	destination[0] = '\0';
+			strncpy(key, keyString + 2, len - 2);
+			key[len - 3] = '\0';
 
-	for(i = 0 ; i < pathComponent->size ; i++) {
-		char* p = (char*)list_get(pathComponent, i);
-		char* r = NULL;
-		if (str_len(p) == 0)
-			continue;
-
-		if (source[0] == '/')
-			str_cat(destination, "/");
-
-		switch (p[0]) {
-		case '$': // Environment variable
-			r = sys_getEnv(p+1);
-			if (r == NULL) {
-				logWarn("%s is not a valid environment variable", p);
+			res = xdg_user_dir_lookup(key);
+			if (res == NULL) {
+				printf("%s is not a valid xdg variable\n", key);
 				return false;
 			}
 
-			str_cat(destination, r);
-			break;
-		case '%': // XDG variable
-			r = xdg_user_dir_lookup(p+1);
-			if (r == NULL) {
-				printf("%s is not a valid xdg variable\n", p);
-				return false;
-			}
-
-			str_cat(destination, r);
-			memory_free(r);
-			break;
-
-		default:
-			if (str_len(destination) > 0) {
-				str_cat(destination, "/");
-			}
-			str_cat(destination, p);
-			break;
+			str_replaceFirst(destination, keyString, res);
+			memory_free(res);
 		}
 	}
 
-	// Cleaning
-	list_delete(pathComponent);
+	pos = destination;
+	while((pos = strstr(pos, "${")) != NULL) {
+		end = strchr(pos, '}');
+		if (end == NULL)
+			break;
+
+		len = end - pos + 1;
+
+		strncpy(keyString, pos, len);
+		keyString[len] = 0;
+		strncpy(key, keyString + 2, len - 2);
+		key[len - 3] = '\0';
+
+		res = sys_getEnv(key);
+		if (res != NULL)
+			str_replaceFirst(destination, keyString, res);
+
+		pos +=2;
+	}
+
 	str_replaceAll(destination, "//", "/");
 	return true;
 }
