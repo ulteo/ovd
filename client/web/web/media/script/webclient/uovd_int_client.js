@@ -224,7 +224,7 @@ Event.observe(window, 'load', function() {
 		/* Destroyed or disconnected ? show end */
 		if(to == uovd.SESSION_STATUS_UNKNOWN || to == uovd.SESSION_STATUS_DISCONNECTED) {
 			hideSplash();
-			generateEnd();
+			generateEnd_internal();
 			showEnd();
 		}
   });

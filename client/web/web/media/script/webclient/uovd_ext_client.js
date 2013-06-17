@@ -19,8 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-/* Global ovd daemon instance */
-var daemon = null;
+var session_management = new uovd.SessionManagement();
 
 /* Load NiftyCorners */
 NiftyLoad = function() {
@@ -28,14 +27,9 @@ NiftyLoad = function() {
 }
 
 Event.observe(window, 'load', function() {
-
-	/* Perform the Java Test */
-	var test = new JavaTester();
-	test.perform();
-
 	/* Center containers at startup */
 	new Effect.Center(jQuery('#endContainer')[0]);
-	if (session_mode == 'desktop') {
+	if (session_mode == uovd.SESSION_MODE_DESKTOP) {
 		new Effect.Center(jQuery('#splashContainer')[0]);
 	}
 
@@ -48,14 +42,6 @@ Event.observe(window, 'load', function() {
 	/* Translate strings */
 	applyTranslations(i18n_tmp);
 
-	/* Create or Join a session */
-	checkExternalSession( function() {
-		window.close();
-	}, function() {
-		startExternalSession(session_mode, session_user, session_pass, session_token,
-		                     session_app, session_file, session_file_type, session_file_share);
-	});
-
   /* Configure the debug panel */
 	if(debug_mode) {
 		Event.observe(jQuery('#level_debug')[0],   'click', function() { Logger.toggle_level('debug'); });
@@ -64,190 +50,159 @@ Event.observe(window, 'load', function() {
 		Event.observe(jQuery('#level_error')[0],   'click', function() { Logger.toggle_level('error'); });
 		Event.observe(jQuery('#clear_button')[0],  'click', function() { Logger.clear(); });
 	}
+
+	/* handle status modifications */
+	session_management.addCallback("ovd.session.statusChanged", function(type, source, params) {
+		var from = params["from"];
+		var to = params["to"];
+
+		if(to == uovd.SESSION_STATUS_READY) {
+			jQuery('#sessionContainer').fadeIn(1000);
+		}
+	});
+
+	session_management.addCallback("ovd.session.starting", function(type, source, params) {
+		/* Configure unload */
+		window.onbeforeunload = function(e) { return i18n.get('window_onbeforeunload'); };
+		jQuery(window).unload( function() { session_management.stop(); } );
+	});
+
+	session_management.addCallback("ovd.session.destroying", function(type, source, params) {
+		generateEnd_external();
+		jQuery('#splashContainer').hide();
+		jQuery('#endContainer').show();
+		jQuery('#sessionContainer').fadeOut(1000);
+
+		/* Configure unload */
+		window.onbeforeunload = function(e) {};
+		jQuery(window).off('unload');
+	});
+
+	/* handle errors */
+	session_management.addCallback("ovd.session.error", function(type, source, params) {
+		var code = params["code"];
+		var from = params["from"];
+		var message = params["message"];
+
+		if(code == "bad_xml") {
+			showError(i18n.get('internal_error'));
+			enableLogin();
+			return;
+		}
+
+		if(from == "start" || from == "session_status") { /* = xml 'response' || 'error' */
+			var message = i18n.get(code) || i18n.get('internal_error');
+			showError(message);
+			enableLogin();
+			return;
+		}
+  });
+
+	/* handle client insertion */
+	new DesktopContainer(session_management, "#desktopContainer");
+
+	/* window manager */
+	new SeamlessWindowManager(session_management, "#windowsContainer", new uovd.provider.rdp.html5.SeamlessWindowFactory());
+
+	/* Session-based start_app support */
+	new StartApp(session_management);
+
+	/* Create or Join a session */
+	checkExternalSession( function() {
+		window.close();
+	}, function() {
+		session_management.start();
+	});
 });
 
-function startExternalSession(mode_, app_, file_, file_type_, file_share_) {
-	if( ! OPTION_USE_PROXY ) {
-		new Ajax.Request(
-			'login.php',
-			{
-				method: 'post',
-				parameters: {
-					requested_port: ((window.location.port !=  '')?window.location.port:'443'),
-					mode: mode_,
-					language: client_language,
-					keymap: user_keymap,
-					timezone: getTimezoneName(),
-					debug: 0
-				},
-				onSuccess: function(transport) {
-					onStartExternalSessionSuccess(transport.responseXML);
-				},
-				onFailure: function() {
-					onStartExternalSessionFailure();
-				}
-			}
-		);
-	} else {
-		try {
-			var doc = document.implementation.createDocument("", "", null);
-		} catch(e) {
-			var doc = new ActiveXObject("Microsoft.XMLDOM");
+function checkExternalSession(active_callback, inactive_callback) {
+	/* Set parameters */
+	var parameters = {};
+	parameters["session_manager"] = SESSIONMANAGER;
+	parameters["username"] = session_user;
+	parameters["password"] = session_pass;
+	parameters["session_type"] = session_mode;
+	parameters["language"] = window.client_language;
+	parameters["keymap"] = window.user_keymap;
+	parameters["rdp_input_method"] = window.rdp_input_method;
+	parameters["timezone"] = getTimezoneName();
+	parameters["width"] = window.innerWidth;
+	parameters["height"] = window.innerHeight;
+	parameters["fullscreen"] = false;
+	parameters["debug"] = window.debug_mode;
+	parameters["local_integration"] = window.local_integration;
+
+	if(parameters["session_manager"] == "127.0.0.1") {
+		parameters["session_manager"] = location.hostname;
+	}
+
+	if(session_token != '') {
+		parameters["token"] = session_token;
+	}
+
+	if (session_app != '') {
+		if (session_mode == 'desktop') {
+			parameters["no_desktop"] = '1';
 		}
 
-		var session_node = doc.createElement("session");
-		session_node.setAttribute("mode", mode_);
-		session_node.setAttribute("language", client_language);
-		session_node.setAttribute("timezone", getTimezoneName());
+		var application = {};
+		application["id"] = session_app;
 
-		if (app_ != undefined) {
-			var start = doc.createElement("start");
-			var application = doc.createElement("application");
-			application.setAttribute("id", app_);
-
-			if (file_ != undefined && file_type_ != undefined && file_share_ != undefined ) {
-				application.setAttribute("file_location", file_);   /* The name to be given to the copy of the resource */
-				application.setAttribute("file_type", file_type_);  /* The resource type : native/sharedfolder/http */
-				application.setAttribute("file_path", file_share_); /* The path to the resource */
-			}
-
-			start.appendChild(application);
-			session_node.appendChild(start);
+		if (session_file != '' && session_file_type != '' && session_file_share != '' ) {
+			application["file_location"] = session_file;   /* The name to be given to the copy of the resource */
+			application["file_type"] = session_file_type;  /* The resource type : native/sharedfolder/http */
+			application["file_path"] = session_file_share; /* The path to the resource */
 		}
 
-	if( ! OPTION_USE_PROXY ) {
-		jQuery.ajax({
-				url: '/ovd/client/start.php',
-				type: 'POST',
-				dataType: "xml",
-				contentType: 'text/xml',
-				data: (new XMLSerializer()).serializeToString(doc),
-				success: function(xml) {
-					onStartExternalSessionSuccess(xml);
-				},
-				error: function() {
-					onStartExternalSessionFailure();
+		parameters["application"] = application;
+	}
+
+	session_management.setParameters(parameters);
+
+	/* Set providers */
+	var http_provider = new uovd.provider.http.Proxy("proxy.php");
+	var rdp_provider = new uovd.provider.rdp.Html5();
+
+	session_management.setRdpProvider(rdp_provider);
+	session_management.setAjaxProvider(http_provider);
+	
+	/* Check session status */
+	var parse_status = function(xml) {
+		try {
+			var xml_root = jQuery(xml).find(":root");
+			if(xml_root.prop("nodeName") == "session") {
+				switch(xml_root.attr("status")) {
+					case uovd.SESSION_STATUS_CREATING :
+					case uovd.SESSION_STATUS_CREATED :
+					case uovd.SESSION_STATUS_INITED :
+					case uovd.SESSION_STATUS_READY :
+					case uovd.SESSION_STATUS_WAIT_DESTROY :
+					case uovd.SESSION_STATUS_DESTROYING :
+					case uovd.SESSION_STATUS_DESTROYED :
+						/* Wait and retry */
+						setTimeout( function() {
+							http_provider.sessionStatus_implementation(parse_status);
+						}, 1000);
+						return;
+
+					case uovd.SESSION_STATUS_ERROR :
+					case uovd.SESSION_STATUS_UNKNOWN :
+					case uovd.SESSION_STATUS_DISCONNECTED :
+						/* No active session */
+						inactive_callback();
+						return;
+
+					default :
+						/* Active session */
+						active_callback();
+						return;
 				}
 			}
-		);
-	} else {
-		jQuery.ajax({
-				url: 'proxy.php',
-				type: 'POST',
-				dataType: "xml",
-				headers: {
-					"X-Ovd-Service" : 'start'
-				},
-				contentType: 'text/xml',
-				data: (new XMLSerializer()).serializeToString(doc),
-				success: function(xml) {
-					onStartExternalSessionSuccess(xml);
-				},
-				error: function() {
-					onStartExternalSessionFailure();
-				}
-			}
-		);
-	}
-
-	return false;
-}
-
-function onStartExternalSessionSuccess(xml_) {
-	var xml = xml_;
-
-	var buffer = xml.getElementsByTagName('response');
-	if (buffer.length == 1) {
-		try {
-			showError(i18n.get(buffer[0].getAttribute('code')));
 		} catch(e) {}
-		return false;
+
+		/* Bad XML response : treat-it as "no session" */
+		inactive_callback();
 	}
 
-	var buffer = xml.getElementsByTagName('error');
-	if (buffer.length == 1) {
-		try {
-			if (typeof i18n.get(buffer[0].getAttribute('error_id')) != 'undefined')
-				showError(i18n.get(buffer[0].getAttribute('error_id')));
-			else
-				showError(i18n.get('internal_error'));
-		} catch(e) {}
-		return false;
-	}
-
-	var buffer = xml.getElementsByTagName('session');
-	if (buffer.length != 1)
-		return false;
-	session_node = buffer[0];
-
-	var sessionmanager = {'port': 443}; // Default SM & Gateway port
-	if (GATEWAY_FIRST_MODE) {
-		sessionmanager.host = window.location.hostname;
-		if (window.location.port !=  '')
-			sessionmanager.port = window.location.port;
-	}
-	else {
-		var buf = SESSIONMANAGER;
-		var sep = buf.lastIndexOf(":");
-		if (sep == -1)
-			sessionmanager.host = buf;
-		else {
-			sessionmanager.host = buf.substring(0, sep);
-			sessionmanager.port = buf.substring(sep+1, buf.length);
-		}
-	}
-	
-	var session_mode = false;
-	try {
-		session_mode = session_node.getAttribute('mode');
-		session_mode = session_mode.substr(0, 1).toUpperCase()+session_mode.substr(1, session_mode.length-1);
-	} catch(e) {}
-
-	if (session_mode == 'Desktop')
-		daemon = new Desktop(debug_mode);
-	else
-		daemon = new External(debug_mode);
-
-	daemon.sessionmanager = sessionmanager;
-	daemon.keymap = user_keymap;
-	try {
-		var duration = parseInt(session_node.getAttribute('duration'));
-		if (! isNaN(duration))
-			daemon.duration = duration;
-	} catch(e) {}
-	
-	daemon.multimedia = ((session_node.getAttribute('multimedia') == 1)?true:false);
-	daemon.redirect_client_printers = ((session_node.getAttribute('redirect_client_printers') == 1)?true:false);
-	daemon.redirect_smartcards_readers = ((session_node.getAttribute('redirect_smartcards_readers') == 1)?true:false);
-	try {
-		daemon.redirect_client_drives = session_node.getAttribute('redirect_client_drives');
-	} catch(e) {}
-
-	var settings_node = session_node.getElementsByTagName('settings');
-	if (settings_node.length > 0) {
-		var setting_nodes = settings_node[0].getElementsByTagName('setting');
-		daemon.parseSessionSettings(setting_nodes);
-	}
-
-	if (! daemon.parse_list_servers(xml)) {
-		try {
-			showError(i18n.get('internal_error'));
-		} catch(e) {}
-		
-		return false;
-	}
-	
-	daemon.prepare();
-	
-	setTimeout(function() {
-		daemon.loop();
-	}, 2500);
-
-	return true;
-}
-
-function onStartExternalSessionFailure() {
-	showError(i18n.get('internal_error'));
-
-	return false;
+	http_provider.sessionStatus_implementation(parse_status);
 }

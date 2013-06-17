@@ -176,6 +176,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<script type="text/javascript" src="media/script/webclient/seamless_window_manager.js" charset="utf-8"></script>
 <?php } ?>
 
+		<script type="text/javascript" src="media/script/webclient/ui.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/uovd_ext_client.js" charset="utf-8"></script>
 
 		<script type="text/javascript">
@@ -390,8 +391,8 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		</div>
 
 		<div id="sessionContainer" style="display: none;">
-			<div id="desktopContainer">
-			</div>
+			<div id="desktopContainer"></div>
+			<div id="windowsContainer"></div>
 		</div>
 
 		<div id="debugContainer" class="no_debug info warning error" style="display: none;">

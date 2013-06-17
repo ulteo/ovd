@@ -88,7 +88,7 @@ function showInternalError() {
 	enableLogin();
 }
 
-function generateEnd() {
+function generateEnd_internal() {
 	$('endContent').innerHTML = '';
 
 	var buf = jQuery(document.createElement('span'))
@@ -113,6 +113,41 @@ function generateEnd() {
 		close_text.html(i18n.get('start_another_session'));
 
 		close_container.append(close_text);
+		buf.append(close_container);
+	}
+
+	jQuery('#endContent').append(buf);
+
+	if(jQuery('#endMessage')) {
+		/*
+		if(error)
+			jQuery('#endMessage').innerHTML = '<span class="msg_error">'+i18n.get('session_end_unexpected')+'</span>';
+		else
+		*/
+			jQuery('#endMessage').html(i18n.get('session_end_ok'));
+	}
+}
+
+function generateEnd_external() {
+	$('endContent').innerHTML = '';
+
+	var buf = jQuery(document.createElement('span'))
+	buf.css({'font-size' : '1.1em', 'font-weight' : 'bold', 'color' : '#686868'});
+
+	var end_message = jQuery(document.createElement('span'))
+	end_message.prop('id', 'endMessage');
+
+	buf.append(end_message);
+
+	/* if(error) {
+			[...]
+			buf.appendChild(error_message_node);
+		}
+	*/
+
+	if(jQuery('#loginBox')) {
+		var close_container = jQuery(document.createElement('div'));
+		close_container.css('margin-top', '10px');
 		buf.append(close_container);
 	}
 
