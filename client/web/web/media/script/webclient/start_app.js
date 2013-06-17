@@ -43,7 +43,7 @@ StartApp.prototype._parse_start_app = function(xml) {
 		var id = node.attr("id");
 		var file = node.find("file");
 
-		if(file) {
+		if(file[0]) {
 			var type = file.attr('type');
 			var path = file.attr('path');
 			var share = file.attr('share');

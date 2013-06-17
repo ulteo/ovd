@@ -16,9 +16,9 @@ uovd.provider.rdp.application.Html5.prototype = new uovd.provider.rdp.applicatio
 
 uovd.provider.rdp.application.Html5.prototype.applicationStart_implementation = function (application_id, token) { 
 	var server_id = this.getServerByAppId(application_id);
-	var opcode    = "01";
-	var appToken  = this.write(token, 4);
-	var appId     = this.write(application_id, 4);
+	var opcode    = "01";                          /* uint8     */
+	var appToken  = this.write(token, 4);          /* uint32 Le */
+	var appId     = this.write(application_id, 4); /* uint32 Le */
 	this.applications[token] = new uovd.provider.rdp.application.ApplicationInstance(this, application_id, token);
 
 	if(server_id != -1) {
@@ -30,7 +30,40 @@ uovd.provider.rdp.application.Html5.prototype.applicationStart_implementation = 
 }
 
 uovd.provider.rdp.application.Html5.prototype.applicationStartWithArgs_implementation = function(application_id, args, token) { 
-	this.applicationStart_implementation(application_id, token); /* stub */
+	var server_id = this.getServerByAppId(application_id);
+	var file_type = args["type"];
+	var file_path = args["path"];
+	var file_share = args["share"];
+
+	var opcode    = "07";                           /* uint8     */
+	var appToken  = this.write(token, 4);           /* uint32 Le */
+	var appId     = this.write(application_id, 4);  /* uint32 Le */
+	var dir_type  = "";                             /* uint8     */
+	var share_len = "";                             /* uint32 Le */
+	var share     = "";                             /* UTF-16 Le */
+	var path_len  = "";                             /* uint32 Le */
+	var path      = "";                             /* UTF-16 Le */
+
+	switch(file_type) {
+		case "sharedfolder" : dir_type = "01"; break;
+		case "http"         : dir_type = "10"; break;
+		default             : dir_type = "01";
+	}
+
+	share = this.writeString(file_share);
+	share_len = this.write(share.length/2, 4);
+
+	path = this.writeString(file_path);
+	path_len = this.write(path.length/2, 4);
+
+	this.applications[token] = new uovd.provider.rdp.application.ApplicationInstance(this, application_id, token);
+
+	if(server_id != -1) {
+		this.connections[server_id].guac_tunnel.sendMessage("ovdapp", opcode+""+appToken+""+appId+""+dir_type+""+share_len+""+share+""+path_len+""+path+";");
+		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"unknown"});
+	} else {
+		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"aborted"});
+	}
 }
 
 uovd.provider.rdp.application.Html5.prototype.applicationStop_implementation = function(application_id, token) { 
@@ -164,4 +197,13 @@ uovd.provider.rdp.application.Html5.prototype.read = function(str, bytes) {
 	}
 
 	return num;
+}
+
+uovd.provider.rdp.application.Html5.prototype.writeString = function(str) {
+	var buffer = "";
+	for(var i=0 ; i<str.length ; ++i) {
+		buffer+= this.write(str.charCodeAt(i), 2);
+	}
+
+	return buffer;
 }

@@ -24,7 +24,18 @@ uovd.provider.rdp.application.Java.prototype.applicationStart_implementation = f
 }
 
 uovd.provider.rdp.application.Java.prototype.applicationStartWithArgs_implementation = function(application_id, args, token) { 
-	this.applicationStart_implementation(application_id, token); /* stub */
+	var server_id = this.getServerByAppId(application_id);
+	var file_type = args["type"];
+	var file_path = args["path"];
+	var file_share = args["share"];
+	this.applications[token] = new uovd.provider.rdp.application.ApplicationInstance(this, application_id, token);
+
+	if(server_id != -1) {
+		this.rdp_provider.main_applet[0].startApplicationWithFile(token, application_id, server_id, file_type, file_path, file_share);
+		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"unknown"});
+	} else {
+		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"aborted"});
+	}
 }
 
 uovd.provider.rdp.application.Java.prototype.applicationStop_implementation = function(application_id, token) { 
