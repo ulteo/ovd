@@ -100,7 +100,7 @@ bool sys_exec(List* args, int* status, char** message, bool wait) {
 		totalLength += dataLen;
 
 		if (totalLength == bufferSize) {
-			memory_realloc(&message, bufferSize + 1024);
+			*message = memory_realloc(*message, bufferSize + 1024);
 			bufferSize += 1024;
 		}
 	}
