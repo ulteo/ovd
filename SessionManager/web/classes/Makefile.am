@@ -4,6 +4,8 @@ SUBDIRS = abstract \
 
 scripts_DATA = Application.class.php \
                Application_weblink.class.php \
+               Application_webapp.class.php \
+               Application_webapp_configuration.class.php \
                AppsGroup.class.php \
                ConfigElement.class.php \
                ErrorManager.class.php \

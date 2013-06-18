@@ -6,6 +6,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author David LECHEVALIER <david@ulteo.com> 2012
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
+ * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -138,10 +139,28 @@ class Session {
 			$this->setServerStatus($server_id, $ret);
 		}
 
+		foreach ($this->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
+			$server = Abstract_Server::load($server_id);
+			if (! $server) {
+				Logger::error('main', 'Session::getStatus failed to load webapp server (server='.$server_id.')');
+				$this->setServerStatus($server_id, Session::SESSION_STATUS_ERROR);
+				continue;
+			}
+
+			$ret = $server->getSessionStatus($this->id, 'webapps');
+			if (! $ret) {
+				Logger::error('main', 'Session::getStatus('.$this->id.') - WebappS answer is incorrect');
+				$this->setServerStatus($server_id, Session::SESSION_STATUS_ERROR);
+				continue;
+			}
+
+			$this->setServerStatus($server_id, $ret, NULL, Server::SERVER_ROLE_WEBAPPS);
+		}
+
 		return $this->getAttribute('status');
 	}
 
-	public function setServerStatus($server_, $status_, $reason_=NULL) {
+	public function setServerStatus($server_, $status_, $reason_=NULL, $server_role_=NULL) {
 		$states = array(
 			Session::SESSION_STATUS_CREATING		=>	-1,
 			Session::SESSION_STATUS_CREATED			=>	0,
@@ -156,10 +175,13 @@ class Session {
 			Session::SESSION_STATUS_UNKNOWN			=>	6
 		);
 
-		if (! array_key_exists($server_, $this->servers[Server::SERVER_ROLE_APS]))
+		if ($server_role_ == NULL)
+			$server_role_ = Server::SERVER_ROLE_APS;
+
+		if (! array_key_exists($server_, $this->servers[$server_role_]))
 			return false; // no such Server
 
-		$current_status = $this->servers[Server::SERVER_ROLE_APS][$server_]['status'];
+		$current_status = $this->servers[$server_role_][$server_]['status'];
 
 		if ($status_ == $current_status) {
 			Abstract_Session::save($this);
@@ -174,7 +196,7 @@ class Session {
 		Logger::debug('main', 'Starting Session::setServerStatus for \''.$this->id.'\'');
 
 		Logger::debug('main', 'Status set to "'.$status_.'" ('.$this->textStatus($status_).') for server \''.$server_.'\' on session \''.$this->id.'\'');
-		$this->servers[Server::SERVER_ROLE_APS][$server_]['status'] = $status_;
+		$this->servers[$server_role_][$server_]['status'] = $status_;
 		Abstract_Session::save($this);
 
 		switch ($status_) {
@@ -184,7 +206,8 @@ class Session {
 				break;
 			case Session::SESSION_STATUS_READY:
 				$all_ready = true;
-				foreach ($this->servers[Server::SERVER_ROLE_APS] as $server_id => $data) {
+				$all_servers = array_merge($this->servers[Server::SERVER_ROLE_APS], $this->servers[Server::SERVER_ROLE_WEBAPPS]);
+				foreach ($all_servers as $server_id => $data) {
 					if ($server_id != $server_ && $data['status'] != Session::SESSION_STATUS_READY) {
 						$all_ready = false;
 						break;
@@ -218,7 +241,8 @@ class Session {
 				break;
 			case Session::SESSION_STATUS_DESTROYED:
 				$all_destroyed = true;
-				foreach ($this->servers[Server::SERVER_ROLE_APS] as $server_id => $data) {
+				$all_servers = array_merge($this->servers[Server::SERVER_ROLE_APS], $this->servers[Server::SERVER_ROLE_WEBAPPS]);
+				foreach ($all_servers as $server_id => $data) {
 					if ($server_id != $server_ && $data['status'] != Session::SESSION_STATUS_DESTROYED) {
 						$all_destroyed = false;
 						break;
@@ -477,6 +501,26 @@ class Session {
 			$this->setStatus(Session::SESSION_STATUS_DESTROYED, $reason_);
 		else
 			$this->setStatus(Session::SESSION_STATUS_DESTROYING, $reason_);
+
+		foreach ($this->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
+			$session_server = Abstract_Server::load($server_id);
+			if (! $session_server) {
+				Logger::error('main', 'Session::orderDeletion Unable to load server \''.$server_id.'\'');
+				return false;
+			}
+
+			if (is_array($session_server->roles)) {
+				if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $session_server->roles)) {
+					$buf = $session_server->orderSessionDeletion($this->id, 'webapps');
+					if (! $buf) {
+						Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on server \''.$session_server->fqdn.'\'');
+						$this->setServerStatus($session_server->fqdn, Session::SESSION_STATUS_DESTROYED);
+						$destroyed++;
+					} else
+						$this->setServerStatus($session_server->fqdn, Session::SESSION_STATUS_DESTROYING);
+				}
+			}
+		}
 
 		return true;
 	}

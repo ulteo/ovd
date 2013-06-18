@@ -37,6 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.ulteo.ovd.Application;
+import org.ulteo.ovd.WebApplication;
 
 public class MyApplicationPanel extends JPanel {
 
@@ -81,7 +82,14 @@ public class MyApplicationPanel extends JPanel {
 			this.repaint();
 			this.revalidate();
 			
+			if (app.isWebApp()) {
+				// Web apps have non-dynamic listeners and are always active.
+				final WebApplicationListener listener = new WebApplicationListener((WebApplication)app, link);
+				link.addActionListener(listener);
+				link.setEnabled(true);
+			}
 			link.setEnabled(false);
+			
 		}
 	}
 	

@@ -1,8 +1,9 @@
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,6 +37,7 @@ var Daemon = Class.create({
 	settings: null, // Hash
 
 	servers: null, // Hash
+	webapp_servers: null, // Hash
 	liaison_server_applications: null, // Hash
 
 	persistent: false,
@@ -65,6 +67,7 @@ var Daemon = Class.create({
 	initialize: function(debug_) {
 		this.settings = new Hash();
 		this.servers = new Hash();
+		this.webapp_servers = new Hash();
 		this.liaison_server_applications = new Hash();
 		this.session_ready_callback = new Array();
 
@@ -304,6 +307,15 @@ var Daemon = Class.create({
 				}
 			}
 		);
+		if (mode_ == 'suspend') {
+			this.webapp_servers.each(function (param) {
+				var ix = param[0], server = param[1];
+				Logger.debug('[daemon] disconnecting from WebApps: '+ server.server_url);
+				var tag = document.createElement('script'); tag.type = 'text/javascript'; tag.async = true;
+				tag.src = server.server_url+'/disconnect?id='+server.id+'&user='+server.username+'&pass='+server.password;
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(tag, s);
+			});
+		}
 	},
 
 	start: function() {
@@ -525,6 +537,32 @@ var Daemon = Class.create({
 				
 			} catch(e) {
 				Logger.error('[daemon] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "server" node '+i+')');
+				Logger.debug('[daemon] parse_list_servers(transport@list_servers()) - Exception: '+e);
+				return false;
+			}
+		}
+
+		var serverNodes = xml.getElementsByTagName('webapp-server');
+		
+		for (var i=0; i<serverNodes.length; i++) {
+			try { // IE does not have hasAttribute in DOM API...
+				var serverNode = serverNodes[i];
+				
+				var server_base_url = serverNodes[i].getAttribute("base-url");
+				var server_url = serverNodes[i].getAttribute("webapps-url");
+				var server_username = serverNodes[i].getAttribute("login");
+				var server_password = serverNodes[i].getAttribute("password");
+				
+				var server = new WebappServer(i, server_base_url, server_url, server_username, server_password);
+				Logger.info('[daemon] parse_list_servers(transport@list_servers()) - Adding webapp server "'+server.base_url+'" to servers list');
+				this.webapp_servers.set(server.id, server);
+
+				this.parse_server_node(server, serverNodes[i]);
+				
+				server.add_status_changed_callback(this.on_server_status_change.bind(this));
+				
+			} catch(e) {
+				Logger.error('[daemon] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "webapp-server" node '+i+')');
 				Logger.debug('[daemon] parse_list_servers(transport@list_servers()) - Exception: '+e);
 				return false;
 			}

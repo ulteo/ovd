@@ -3,6 +3,7 @@
  * Copyright (C) 2012-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
+ * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1648,7 +1649,7 @@ class OvdAdminSoap {
 		return true;
 	}
 	
-	public function application_web_add($name_, $description_, $url_) {
+	public function application_weblink_add($name_, $description_, $url_) {
 		$this->check_authorized('manageApplications');
 		
 		$applicationDB = ApplicationDB::getInstance();
@@ -1679,6 +1680,233 @@ class OvdAdminSoap {
 		}
 		
 		return $app->getAttribute('id');
+	}
+	
+	public function application_webapp_add($name_, $description_, $configuration_) {
+		Logger::info('api', sprintf('Name: %s, Description: %s, Configuration: %s', $name_, $description_, $configuration_));
+		$application_id = NULL;
+		$this->check_authorized('manageApplications');
+
+		$applicationDB = ApplicationDB::getInstance();
+		if (! $applicationDB->isWriteable()) {
+			Logger::info('api', 'ApplicationDB is not writable');
+			return null;
+		}
+
+		$app = new Application_webapp(NULL, $name_, $description_);
+		if (! $applicationDB->isOK($app)) {
+			Logger::info('api', 'Web application is not ok');
+			return null;
+		}
+
+		$app->unsetAttribute('id');
+		$app->setAttribute('static', 1);
+		$app->setAttribute('revision', 1);
+
+		$ret = $applicationDB->add($app);
+		if (! $ret) {
+			Logger::info('api', 'Failed to add application "'.$app->getAttribute('name').'"');
+			return null;
+		}
+		// Fetch the id
+		$application_id = $app->getAttribute('id');
+
+		if ($app->haveIcon()) {
+			// We remove the application icon if already exists because it shouldn't
+			$app->delIcon();
+		}
+
+		$webapp_configuration_object = new Application_webapp_configuration(NULL, $application_id, $configuration_);
+		// If we use a remote file, it's undocumented and there's no information about what will they provide.
+		if($configuration_ != NULL) {
+			$webapp_application_DB = WebAppConfDB::getInstance();
+			if (! $webapp_application_DB->isWriteable()) {
+				Logger::info('api', 'WebAppConfDB is not writable');
+				return null;
+			}
+
+			if (! $webapp_application_DB->isOK($webapp_configuration_object)) {
+				Logger::info('api', 'Web application configuration is not ok');
+				$removed_stale_application = $this->application_webapp_remove($application_id);
+				if($removed_stale_application == false){
+					Logger::info('api', 'Failed to remove static application "'.$app->getAttribute('name').'". Remove it manually');
+				}
+				return null;
+			}
+
+			$configuration_id = $webapp_application_DB->add($webapp_configuration_object);
+			if (! $configuration_id) {
+				Logger::info('api', 'Failed to add application configuration for "'.$app->getAttribute('name').'". Removing stale application');
+				$removed_stale_application = $this->application_webapp_remove($application_id);
+				if($removed_stale_application == false){
+					Logger::info('api', 'Failed to remove static application "'.$app->getAttribute('name').'". Remove it manually');
+				}
+				return null;
+			}
+			else {
+				Logger::info('api', 'Added configuration for "'. $app->getAttribute('name').'"');
+			}
+		}
+		else {
+			// TODO Pending Gateway:dialog.py output			
+		}
+        
+        $servers = Abstract_Server::load_available_by_role('webapps', true);
+		foreach ($servers as $server) {
+			$server->syncWebApplications();
+		}
+        
+		return $application_id;
+	}
+   
+	public function application_webapp_get_raw_configuration($application_id) {
+		$configuration = NULL;
+		$webapp_application_DB = WebAppConfDB::getInstance();
+		$webapp_configuration_object = $webapp_application_DB->search($application_id);
+		if ($webapp_configuration_object != NULL) {
+			$configuration = $webapp_configuration_object->getAttribute('raw_configuration');
+		}
+		return $configuration;
+	}
+
+	public function application_webapp_set_raw_configuration($application_id, $configuration) {
+		$webapp_application_DB = WebAppConfDB::getInstance();
+		$webapp_configuration_object = $webapp_application_DB->search($application_id);
+		if ($webapp_configuration_object != NULL) {
+			$webapp_configuration_object->setAttribute('raw_configuration', $configuration);
+            if (! $webapp_application_DB->isOK($webapp_configuration_object)) {
+				Logger::info('api', 'Web application configuration is not ok');
+                return false;
+            }
+            $webapp_application_DB->update($webapp_configuration_object);
+            
+            $servers = Abstract_Server::load_available_by_role('webapps', true);
+            foreach ($servers as $server) {
+                $server->syncWebApplications();
+            }
+        
+            return true;
+		}
+		return false;
+	}
+    
+    public function application_webapp_clone($id_) {
+        Logger::info('api', "application_webapp_clone");
+        $this->check_authorized('manageApplications');
+        
+        $applicationDB = ApplicationDB::getInstance();
+        if (! $applicationDB->isWriteable()) {
+            Logger::error('api', 'ApplicationDB is not writable');
+            return false;
+        }
+        $webapp_application_DB = WebAppConfDB::getInstance();
+        if (! $webapp_application_DB->isWriteable()) {
+            Logger::info('api', 'WebAppConfDB is not writable');
+            return null;
+        }
+        
+        $app = $applicationDB->import($id_);
+        if (! is_object($app)) {
+            Logger::error('api', 'Unknown application "'.$id_.'"');
+            return false;
+        }
+        
+        $icon_path = $app->getIconPath();
+
+        $app->unsetAttribute('id');
+        $app->setAttribute('static', 1);
+        $app->setAttribute('revision', 1);
+        $ret = $applicationDB->add($app);
+        if (! $ret) {
+            return false;
+        }
+        
+        // Clone Icon
+        if ($app->haveIcon()) {
+            // We remove the application icon if already exists because it shouldn't
+            $app->delIcon();
+        }
+
+        $path_rw = $app->getIconPathRW();
+        if (is_writable2($path_rw)) {
+            @file_put_contents($path_rw, @file_get_contents($icon_path));
+        }
+        
+        // Clone YAML config
+        $app_configuration = $webapp_application_DB->search($id_);
+        if ($app_configuration != NULL) {
+            $application_id = $app->getAttribute('id');
+            $app_configuration->unsetAttribute('id');
+            $app_configuration->setAttribute('application_id', $application_id);
+
+            if (! $webapp_application_DB->isOK($app_configuration)) {
+                Logger::info('api', 'Application configuration is not ok');
+                $removed_stale_application = $this->application_webapp_remove($application_id);
+                if($removed_stale_application == false){
+                    Logger::info('api', 'Failed to remove static application "'.$app->getAttribute('name').'". Remove it manually');
+                }
+                return null;
+            }
+
+            $configuration_id = $webapp_application_DB->add($app_configuration);
+            if (! $configuration_id) {
+                Logger::info('api', 'Failed to add application configuration for "'.$app->getAttribute('name').'". Removing stale application');
+                $removed_stale_application = $this->application_webapp_remove($application_id);
+                if($removed_stale_application == false){
+                    Logger::info('api', 'Failed to remove static application "'.$app->getAttribute('name').'". Remove it manually');
+                }
+                return null;
+            }
+            else {
+                Logger::info('api', 'Added configuration for "'. $app->getAttribute('name').'"');
+            }
+        }
+
+        $servers = Abstract_Server::load_available_by_role('webapps', true);
+		foreach ($servers as $server) {
+			$server->syncWebApplications();
+		}
+        
+        return true;
+    }
+    
+	public function application_webapp_remove($application_id) {
+		$this->check_authorized('manageApplications');
+		
+		$applicationDB = ApplicationDB::getInstance();
+		if (! $applicationDB->isWriteable()) {
+			Logger::error('api', 'ApplicationDB is not writable');
+			return false;
+		}
+        
+        $webapp_application_DB = WebAppConfDB::getInstance();
+        if (! $webapp_application_DB->isWriteable()) {
+            Logger::info('api', 'WebAppConfDB is not writable');
+            return null;
+        }
+        
+		$app = $applicationDB->import($application_id);
+		if (! is_object($app)) {
+			Logger::error('api', 'Unknown web application "'.$application_id.'"');
+			return false;
+		}
+
+        $webapp_configuration_object = $webapp_application_DB->search($application_id);
+		if ($webapp_configuration_object != NULL)
+            $webapp_application_DB->remove($webapp_configuration_object);
+
+		$ret = $applicationDB->remove($app);
+		if (! $ret) {
+			Logger::error('api', sprintf("Failed to delete web application '%s'", $app->getAttribute('name')));
+			return false;
+		}
+		
+		$servers = Abstract_Server::load_available_by_role('webapps', true);
+		foreach ($servers as $server) {
+			$server->syncWebApplications();
+		}
+		
+		return true;
 	}
 	
 	public function default_browser_get() {

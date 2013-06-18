@@ -7,6 +7,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  * Author David LECHEVALIER <david@ulteo.com> 2012, 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012-2013
+ * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -182,6 +183,13 @@ if ($sessions > 0) {
 				$user_login_fs = $session->settings['fs_access_login'];
 				$user_password_fs = $session->settings['fs_access_password'];
 			}
+			if (array_key_exists('webapps_access_login', $session->settings) && array_key_exists('webapps_access_password', $session->settings)) {
+				$user_login_webapps = $session->settings['webapps_access_login'];
+				$user_password_webapps = $session->settings['webapps_access_password'];
+			}
+			if (array_key_exists('webapps-url', $session->settings)) {
+				$webapps_url = $session->settings['webapps-url'];
+			}
 		} elseif ($session->isAlive()) {
 			Logger::error('main', '(client/start) User \''.$user->getAttribute('login').'\' already have an active session');
 			throw_response(USER_WITH_ACTIVE_SESSION);
@@ -200,11 +208,75 @@ if ($sessions > 0) {
 
 if (isset($old_session_id)) {
 	$session = Abstract_Session::load($old_session_id);
-
 	$session_type = 'resume';
+//
+	$prepare_servers = array();
+	if ($session->mode == Session::MODE_APPLICATIONS) {
+		foreach ($session->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
+			$prepare_servers[] = $server_id;
+		}
+	}
 
+	$count_prepare_servers = 0;
+	foreach ($prepare_servers as $prepare_server) {
+		$count_prepare_servers++;
+
+		$server = Abstract_Server::load($prepare_server);
+		if (! $server)
+			continue;
+
+		if (! array_key_exists(Server::SERVER_ROLE_WEBAPPS, $server->getRoles()))
+			continue;
+
+		$dom = new DomDocument('1.0', 'utf-8');
+		$session_node = $dom->createElement('session');
+		$session_node->setAttribute('id', $session->id);
+		$session_node->setAttribute('mode', Session::MODE_APPLICATIONS);
+		$user_node = $dom->createElement('user');
+		$user_node->setAttribute('login', $user_login_webapps);
+		$user_node->setAttribute('password', $user_password_webapps);
+		$user_node->setAttribute('USER_LOGIN', $_POST['login']);
+		$user_node->setAttribute('USER_PASSWD', $_POST['password']);
+		$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
+		$session_node->appendChild($user_node);
+		
+		$applications_node = $dom->createElement('applications');
+		foreach ($session->getPublishedApplications() as $application) {
+			if ($application->getAttribute('type') != 'webapp')
+				continue;
+
+			$application_node = $dom->createElement('application');
+			$application_node->setAttribute('id', $application->getAttribute('id'));
+			$application_node->setAttribute('type', 'webapp');
+			$application_node->setAttribute('name', $application->getAttribute('name'));
+			$applications_node->appendChild($application_node);
+		}
+		$session_node->appendChild($applications_node);
+		
+		$dom->appendChild($session_node);
+
+		$sessionManagement->appendToSessionCreateXML($dom);
+
+		$xml = $dom->saveXML();
+
+		$ret_xml = query_url_post_xml($server->getBaseURL().'/webapps/session/create', $xml);
+		$ret = $sessionManagement->parseSessionCreate($ret_xml);
+		if (! $ret) {
+			Logger::critical('main', '(client/start) Unable to create Session \''.$session->id.'\' for User \''.$session->user_login.'\' on Server \''.$server->fqdn.'\', aborting');
+			$session->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
+
+			throw_response(INTERNAL_ERROR);
+		}
+
+		$ret_dom = new DomDocument('1.0', 'utf-8');
+		$ret_buf = @$ret_dom->loadXML($ret_xml);
+		$node = $ret_dom->getElementsByTagname('session')->item(0);
+		$webapps_url = $node->getAttribute('webapps-scheme').'://'.$server->getExternalName().':'.$node->getAttribute('webapps-port');
+		$session->settings['webapps-url'] = $webapps_url;
+	}
+
+//
 	$session->setStatus(Session::SESSION_STATUS_READY);
-
 	Logger::info('main', '(client/start) Resuming session for '.$user->getAttribute('login').' ('.$old_session_id.' => '.$session->server.')');
 } else {
 	if (! $sessionManagement->generateCredentials()) {
@@ -218,6 +290,10 @@ if (isset($old_session_id)) {
 	if (array_key_exists(Server::SERVER_ROLE_FS, $sessionManagement->credentials)) {
 		$user_login_fs = $sessionManagement->credentials[Server::SERVER_ROLE_FS]['login'];
 		$user_password_fs = $sessionManagement->credentials[Server::SERVER_ROLE_FS]['password'];
+	}
+	if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $sessionManagement->credentials)) {
+		$user_login_webapps = $sessionManagement->credentials[Server::SERVER_ROLE_WEBAPPS]['login'];
+		$user_password_webapps = $sessionManagement->credentials[Server::SERVER_ROLE_WEBAPPS]['password'];
 	}
 
 	// Desktop server choosing if session mode desktop
@@ -347,6 +423,10 @@ $session->settings['aps_access_password'] = $user_password_aps;
 if (isset($user_login_fs) && isset($user_password_fs)) {
 	$session->settings['fs_access_login'] = $user_login_fs;
 	$session->settings['fs_access_password'] = $user_password_fs;
+}
+if (isset($user_login_webapps) && isset($user_password_webapps)) {
+	$session->settings['webapps_access_login'] = $user_login_webapps;
+	$session->settings['webapps_access_password'] = $user_password_webapps;
 }
 
 $save_session = Abstract_Session::save($session);
@@ -607,6 +687,70 @@ if (! isset($old_session_id)) {
 			throw_response(INTERNAL_ERROR);
 		}
 	}
+	$prepare_servers = array();
+	if ($session->mode == Session::MODE_APPLICATIONS) {
+		foreach ($session->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
+			$prepare_servers[] = $server_id;
+		}
+	}
+
+	$count_prepare_servers = 0;
+	foreach ($prepare_servers as $prepare_server) {
+		$count_prepare_servers++;
+
+		$server = Abstract_Server::load($prepare_server);
+		if (! $server)
+			continue;
+
+		if (! array_key_exists(Server::SERVER_ROLE_WEBAPPS, $server->getRoles()))
+			continue;
+
+		$dom = new DomDocument('1.0', 'utf-8');
+		$session_node = $dom->createElement('session');
+		$session_node->setAttribute('id', $session->id);
+		$session_node->setAttribute('mode', Session::MODE_APPLICATIONS);
+		$user_node = $dom->createElement('user');
+		$user_node->setAttribute('login', $user_login_webapps);
+		$user_node->setAttribute('password', $user_password_webapps);
+		$user_node->setAttribute('USER_LOGIN', $_POST['login']);
+		$user_node->setAttribute('USER_PASSWD', $_POST['password']);
+		$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
+		$session_node->appendChild($user_node);
+		
+		$applications_node = $dom->createElement('applications');
+		foreach ($session->getPublishedApplications() as $application) {
+			if ($application->getAttribute('type') != 'webapp')
+				continue;
+
+			$application_node = $dom->createElement('application');
+			$application_node->setAttribute('id', $application->getAttribute('id'));
+			$application_node->setAttribute('type', 'webapp');
+			$application_node->setAttribute('name', $application->getAttribute('name'));
+			$applications_node->appendChild($application_node);
+		}
+		$session_node->appendChild($applications_node);
+		
+		$dom->appendChild($session_node);
+
+		$sessionManagement->appendToSessionCreateXML($dom);
+
+		$xml = $dom->saveXML();
+
+		$ret_xml = query_url_post_xml($server->getBaseURL().'/webapps/session/create', $xml);
+		$ret = $sessionManagement->parseSessionCreate($ret_xml);
+		if (! $ret) {
+			Logger::critical('main', '(client/start) Unable to create Session \''.$session->id.'\' for User \''.$session->user_login.'\' on Server \''.$server->fqdn.'\', aborting');
+			$session->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
+
+			throw_response(INTERNAL_ERROR);
+		}
+
+		$ret_dom = new DomDocument('1.0', 'utf-8');
+		$ret_buf = @$ret_dom->loadXML($ret_xml);
+		$node = $ret_dom->getElementsByTagname('session')->item(0);
+		$webapps_url = $node->getAttribute('webapps-scheme').'://'.$server->getExternalName().':'.$node->getAttribute('webapps-port');
+		$session->settings['webapps-url'] = $webapps_url;
+	}
 }
 
 $_SESSION['session_id'] = $session->id;
@@ -703,6 +847,38 @@ foreach ($session->servers[Server::SERVER_ROLE_APS] as $server_id => $data) {
 	}
 	$session_node->appendChild($server_node);
 }
+
+foreach ($session->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
+	if ($session->mode == Session::MODE_DESKTOP && $server_id != $session->server)
+		continue;
+
+	$server = Abstract_Server::load($server_id);
+	if (! $server)
+		throw_response(INTERNAL_ERROR);
+
+	if (! array_key_exists(Server::SERVER_ROLE_WEBAPPS, $server->getRoles()))
+		throw_response(INTERNAL_ERROR);
+
+	$server_node = $dom->createElement('webapp-server');
+	$server_node->setAttribute('type', 'webapps');
+	$server_node->setAttribute('base-url', $server->getBaseURL());
+	$server_node->setAttribute('webapps-url', $webapps_url);
+	$server_node->setAttribute('login', $user_login_webapps);
+	$server_node->setAttribute('password', $user_password_webapps);
+
+	foreach ($session->getPublishedApplications() as $application) {
+		if ($application->getAttribute('type') != 'webapp')
+			continue;
+
+		$application_node = $dom->createElement('application');
+		$application_node->setAttribute('id', $application->getAttribute('id'));
+		$application_node->setAttribute('type', 'webapp');
+		$application_node->setAttribute('name', $application->getAttribute('name'));
+		$server_node->appendChild($application_node);
+	}
+	$session_node->appendChild($server_node);
+}
+
 $dom->appendChild($session_node);
 
 $buf = $dom->saveXML();

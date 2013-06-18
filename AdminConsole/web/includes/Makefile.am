@@ -6,7 +6,8 @@ scripts_DATA = core.inc.php \
                ovd-admin.wsdl \
                page_template.php \
                page_template_static.php \
-               template_server.inc.php
+               template_server.inc.php \
+               webapp.inc.php
 
 scriptsdir = $(datadir)/ulteo/administration_console/includes
 
@@ -18,7 +19,8 @@ EXTRA_DIST = core.inc.php \
                ovd-admin.wsdl \
                page_template.php \
                page_template_static.php \
-               template_server.inc.php
+               template_server.inc.php \
+               webapp.inc.php
 
 defaults.inc.php:
 	sed -e "s,@SYSCONFDIR@,$(sysconfdir)," \

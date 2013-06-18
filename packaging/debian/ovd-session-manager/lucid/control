@@ -18,6 +18,7 @@ Depends:
  php-pear,
  php5-imagick,
  php-soap,
+ php5-yaml,
  curl,
  openssl
 Recommends: ulteo-ovd-administration-console

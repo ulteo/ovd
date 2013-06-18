@@ -719,40 +719,8 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 			}
 
 			this.responseProperties = response;
-
-			NodeList serverNodes = rootNode.getElementsByTagName("server");
-			if (serverNodes.getLength() == 0)
-				throw new Exception("bad xml: no server node");
-
-			for (int i = 0; i < serverNodes.getLength(); i++) {
-				Element serverNode = (Element) serverNodes.item(i);
-				
-				String server_host;
-				if (mode_gateway)
-					server_host = this.host;
-				else
-					server_host = serverNode.getAttribute("fqdn");
-				
-				int server_port = this.DEFAULT_RDP_PORT;
-				if (mode_gateway)
-					server_port = this.port;
-				else if (serverNode.hasAttribute("port"))
-					try {
-						server_port = Integer.parseInt(serverNode.getAttribute("port"));
-					}
-					catch (NumberFormatException ex) {
-						Logger.warn("Invalid protocol: server port attribute is not a digit ("+serverNode.getAttribute("port")+")");
-					}
-				
-				ServerAccess server = new ServerAccess(server_host, server_port,
-							serverNode.getAttribute("login"), serverNode.getAttribute("password"));
-				
-				if (mode_gateway)
-					server.setGatewayToken(serverNode.getAttribute("token"));
-				
-				server.applications = parseApplications(serverNode);
-				this.servers.add(server);
- 			}
+			this.parseServers(rootNode, mode_gateway);
+			this.parseWebappServers(rootNode, mode_gateway);
  		}
 		catch(Exception err) {
 			for (Callback c : this.callbacks)
@@ -761,6 +729,62 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		}
 
 		return true;
+	}
+	
+	private void parseServers(Element rootNode, boolean mode_gateway) {
+		NodeList serverNodes = rootNode.getElementsByTagName("server");
+		
+		// We no longer throw an exception here if list is empty.
+		// A server might only be providing web applications and we are fine with that.
+
+		for (int i = 0; i < serverNodes.getLength(); i++) {
+			Element serverNode = (Element) serverNodes.item(i);
+			
+			String server_host;
+			if (mode_gateway)
+				server_host = this.host;
+			else
+				server_host = serverNode.getAttribute("fqdn");
+			
+			int server_port = SessionManagerCommunication.DEFAULT_RDP_PORT;
+			if (mode_gateway)
+				server_port = this.port;
+			else if (serverNode.hasAttribute("port"))
+				try {
+					server_port = Integer.parseInt(serverNode.getAttribute("port"));
+				}
+				catch (NumberFormatException ex) {
+					Logger.warn("Invalid protocol: server port attribute is not a digit ("+serverNode.getAttribute("port")+")");
+				}
+			
+			ServerAccess server = new ServerAccess(server_host, server_port,
+						serverNode.getAttribute("login"), serverNode.getAttribute("password"));
+			
+			if (mode_gateway)
+				server.setGatewayToken(serverNode.getAttribute("token"));
+			
+			server.applications = parseApplications(serverNode);
+			this.servers.add(server);
+		}
+	}
+	
+	private void parseWebappServers(final Element rootNode, final boolean mode_gateway) throws MalformedURLException {
+		NodeList webappServerNodes = rootNode.getElementsByTagName("webapp-server");
+		for (int i = 0; i < webappServerNodes.getLength(); i++) {
+			final Element serverNode = (Element) webappServerNodes.item(i);
+			final String baseUrl = serverNode.getAttribute("base-url");
+			final String login = serverNode.getAttribute("login");
+			final String password = serverNode.getAttribute("password");
+			//final String type = serverNode.getAttribute("type");
+			final String url = serverNode.getAttribute("webapps-url");
+			final List<Application> applications = parseApplications(serverNode);
+			final URL parsedUrl = new URL(baseUrl);
+			final String host = parsedUrl.getHost();
+			final int port = parsedUrl.getPort();
+			final WebAppsServerAccess server = new WebAppsServerAccess(host, port, login, password, url);
+			server.setApplications(applications);
+			this.servers.add(server);
+		}
 	}
 	
 	/**

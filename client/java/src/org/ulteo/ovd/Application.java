@@ -97,4 +97,8 @@ public class Application implements Comparable<Application> {
 	public int compareTo(Application t) {
 		return this.name.compareToIgnoreCase(t.name);
 	}
+
+	public boolean isWebApp() {
+		return false;
+	}
 }

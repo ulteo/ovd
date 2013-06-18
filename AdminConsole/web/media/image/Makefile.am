@@ -20,6 +20,7 @@ scripts_DATA = server-linux.png \
                ulteo.png \
                view.png \
                server-weblink.png \
+               server-webapp.png \
                temp_icon.php
 
 scriptsdir = $(datadir)/ulteo/administration_console/media/image

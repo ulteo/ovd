@@ -1,11 +1,12 @@
 <?php
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2012
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
  * Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
  * Author Omar AKHAM <oakham@ulteo.com> 2011
+ * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -121,12 +122,18 @@ if (isAuthorized('viewUsersGroups'))
 			  'page' => 'usersgroup.php',
 			  'parent' => array('users'));
 
-if (isAuthorized('viewApplications'))
+if (isAuthorized('viewApplications')) {
 	$menu['applications_child'] = 
 		array('id' => 'applications_child',
 			  'name' => _('Applications'),
 			  'page' => 'applications.php',
 			  'parent' => array('applications'));
+	$menu['applications_webapp'] = 
+		array('id' => 'applications_webapp',
+			  'name' => _('Web applications'),
+			  'page' => 'applications_webapp.php',
+			  'parent' => array('applications'));
+}
 
 if (isAuthorized('viewApplicationsGroups'))
 	$menu['applications_groups'] = 

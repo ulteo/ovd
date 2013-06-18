@@ -32,3 +32,10 @@ Depends: ${python:Depends}, python-pyinotify (>= 0.7.1), debconf,
 XB-Python-Version: ${python:Versions}
 Description: Ulteo Open Virtual Desktop - file server role for slave server
  File server role for the Ulteo OVD slave server
+
+Package: ulteo-ovd-slaveserver-role-web
+Architecture: all
+Depends: ${python:Depends}, python-yaml, openssl, python-openssl, debconf, ulteo-ovd-slaveserver, python-ntlm, python-mechanize
+XB-Python-Version: ${python:Versions}
+Description: Ulteo Open Virtual Desktop - web gateway role for slave server
+ Web gateway role for the Ulteo OVD slave server

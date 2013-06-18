@@ -1,9 +1,10 @@
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  * Author Omar AKHAM <oakham@ulteo.com> 2011
+ * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -65,6 +66,11 @@ var Applications = Class.create(Daemon, {
 				Logger.info('[applications] connect_servers() - Connecting to server "'+servers[i].fqdn+'"');
 			servers[i].connect();
 		}
+		var servers = this.webapp_servers.values();
+		for (var i=0; i < servers.length; i++) {
+			Logger.info('[applications] connect_servers() - Connecting to webapp server "'+servers[i].base_url+'"');
+			servers[i].connect();
+		}
 
 		return true;
 	},
@@ -110,13 +116,15 @@ var Applications = Class.create(Daemon, {
 			try { // IE does not have hasAttribute in DOM API...
 				Logger.info('[applications] parse_list_servers(transport@list_servers()) - Adding application "'+applicationNodes[j].getAttribute('id')+'" to applications list');
 				
-				if (typeof this.liaison_server_applications.get(server_.id) == 'undefined')
+				var app_type = applicationNodes[j].getAttribute('type');
+				if (app_type !== 'webapp' && typeof this.liaison_server_applications.get(server_.id) == 'undefined')
 					continue;
 				
-				var application = new Application(applicationNodes[j].getAttribute('id'), applicationNodes[j].getAttribute('name'), server_.id);
+				var application = new Application(applicationNodes[j].getAttribute('id'), applicationNodes[j].getAttribute('name'), server_.id, applicationNodes[j].getAttribute('type'));
 				this.applications.set(application.id, application);
 				
-				this.liaison_server_applications.get(server_.id).push(application.id);
+				if (app_type !== 'webapp')
+					this.liaison_server_applications.get(server_.id).push(application.id);
 				
 				this.on_application_add(application);
 			
@@ -191,9 +199,16 @@ var Applications = Class.create(Daemon, {
 	},
 	
 	launch_application: function(application_) {
-		var server = this.servers.get(application_.server_id);
-		$('ulteoapplet').startApplication(++this.application_token, application_.id, server.java_id);
-		this.liaison_runningapplicationtoken_application.set(this.application_token, application_.id);
+		var server;
+		if (application_.type === 'webapp') {
+			server = this.webapp_servers.get(application_.server_id);
+			var url = server.server_url + '/open?id=' + application_.id + '&user=' + server.username + '&pass=' + server.password;
+			var app_window = window.open(url, '_blank');
+		} else {
+			server = this.servers.get(application_.server_id);
+			$('ulteoapplet').startApplication(++this.application_token, application_.id, server.java_id);
+			this.liaison_runningapplicationtoken_application.set(this.application_token, application_.id);
+		}
 	},
 
 	launch_application_with_file: function(application_, type_, path_, share_) {

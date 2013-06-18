@@ -49,6 +49,15 @@ public class ServerAccess {
 		
 		this.applications = new ArrayList<Application>();
 	}
+
+	/**
+	 * Check if this server is accessed through RDP.
+	 * 
+	 * @return true if this server needs RDP connection.
+	 */
+	public boolean isRDP() {
+		return true;
+	}
 	
 	public String getHost() {
 		return this.host;

@@ -6,6 +6,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
  * Author David LECHEVALIER <david@ulteo.com> 2012, 2013
+ * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -327,6 +328,7 @@ abstract class SessionManagement extends Module {
 
 		$this->servers = array();
 
+		$servers_count = 0;
 		foreach ($serverRoles as $role) {
 			if (! array_key_exists($role, $this->servers))
 				$this->servers[$role] = array();
@@ -335,10 +337,11 @@ abstract class SessionManagement extends Module {
 				case Server::SERVER_ROLE_APS:
 					$servers = $this->chooseApplicationServers();
 					if (! is_array($servers)) {
-						return false;
+						break;
 					}
 
 					foreach ($servers as $server) {
+						$servers_count++;
 						$this->servers[Server::SERVER_ROLE_APS][$server->id] = array(
 							'status' => Session::SESSION_STATUS_CREATED
 						);
@@ -492,9 +495,27 @@ abstract class SessionManagement extends Module {
 					}
 
 					break;
+				case Server::SERVER_ROLE_WEBAPPS:
+					$servers = $this->chooseWebAppServers();
+					if (! is_array($servers)) {
+						break;
+					}
+					Logger::debug('main', 'SessionManagement::buildServersList - found '.count($servers).' webapp server(s)');
+
+					foreach ($servers as $server) {
+						$servers_count++;
+						$this->servers[Server::SERVER_ROLE_WEBAPPS][$server->id] = array(
+							'status' => Session::SESSION_STATUS_CREATED
+						);
+					}
+					break;
 			}
 		}
 
+		if ($servers_count < 1){
+			Logger::error('main', 'SessionManagement::buildServersList - no server found!');
+			return false;
+		}
 		return true;
 	}
 
@@ -518,6 +539,9 @@ abstract class SessionManagement extends Module {
 					break;
 				case Server::SERVER_ROLE_FS:
 					$this->generateFileServerCredentials();
+					break;
+				case Server::SERVER_ROLE_WEBAPPS:
+					$this->generateWebAppServerCredentials();
 					break;
 			}
 		}
@@ -648,6 +672,39 @@ abstract class SessionManagement extends Module {
 			}
 		}
 		
+		return $servers;
+	}
+	
+	public function chooseWebAppServers() {
+		if (! $this->user) {
+			Logger::error('main', 'SessionManagement::chooseWebAppServers - User is not authenticated, aborting');
+			return false;
+		}
+		
+		$applications = array();
+		$all_applications = $this->user->applications();
+		foreach($all_applications as $application) {
+			if($application->getAttribute('type') == 'webapp'){
+				$applications[] = $application;
+		}
+		}
+
+		if (count($applications) == 0) {
+			$event = new SessionStart(array('user' => $this->user));
+			$event->setAttribute('ok', false);
+			$event->setAttribute('error', _('No available application'));
+			$event->emit();
+
+			Logger::error('main', 'SessionManagement::choose_webapp_servers - No webapp published for User "'.$this->user->getAttribute('login').'", aborting');
+			return false;
+		} else {
+			Logger::debug('main', 'SessionManagement::chooseWebAppServers - found '.count($applications).' webapp(s)');
+		}
+		
+		foreach($applications as $application)
+			$this->applications[$application->getAttribute('id')] = $application;
+
+		$servers = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_WEBAPPS);
 		return $servers;
 	}
 	

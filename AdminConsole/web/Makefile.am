@@ -25,6 +25,7 @@ SUBDIRS = ajax media includes classes
 scripts_DATA = actions.php \
                applications.php \
                applications_static.php \
+               applications_webapp.php \
                appsgroup.php \
                checkup.php \
                configuration.php \

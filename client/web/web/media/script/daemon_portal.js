@@ -1,10 +1,11 @@
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  * Author Omar AKHAM <oakham@ulteo.com> 2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -81,6 +82,11 @@ var Portal = Class.create(Applications, {
 		var app_item = new ApplicationItem(application_);
 		
 		this.servers.each(function(pair) {
+			var server = pair.value;
+			server.add_status_changed_callback(app_item.on_server_status_change.bind(app_item));
+		});
+
+		this.webapp_servers.each(function(pair) {
 			var server = pair.value;
 			server.add_status_changed_callback(app_item.on_server_status_change.bind(app_item));
 		});

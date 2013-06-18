@@ -1,12 +1,14 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2008-2012
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+ * Author Tomasz MACKOWIAK <tomasz.mackowiak@stxnext.pl> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,6 +25,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
+
+require_once(dirname(__FILE__).'/includes/webapp.inc.php');
 
 if (! is_array($_SESSION) || ! array_key_exists('admin_login', $_SESSION))
 	redirect('index.php');
@@ -43,6 +47,8 @@ if ($_REQUEST['name'] == 'System') {
 	$_SESSION['service']->system_switch_maintenance(($_REQUEST['switch_to']!='maintenance'));
 	redirect();
 }
+
+$ignore_redirect = false;
 
 /*
  *  Install some Applications on a specific server
@@ -264,7 +270,7 @@ if ($_REQUEST['name'] == 'Application_static') {
 			$type = $_REQUEST['type'];
 			
 			if ($type == 'weblink') {
-				$ret = $_SESSION['service']->application_web_add($name, $description, $executable_path);
+				$ret = $_SESSION['service']->application_weblink_add($name, $description, $executable_path);
 			}
 			else {
 				$ret = $_SESSION['service']->application_static_add($name, $description, $type, $executable_path);
@@ -273,8 +279,10 @@ if ($_REQUEST['name'] == 'Application_static') {
 			if (! $ret) {
 				popup_error(sprintf(_("Failed to add application '%s'"), $name));
 			}
+			else {
+				popup_info(sprintf(_("Application '%s' successfully added"), $name));
+			}
 			
-			popup_info(sprintf(_("Application '%s' successfully added"), $name));
 			redirect('applications_static.php?action=manage&id='.$ret);
 		}
 	}
@@ -375,6 +383,433 @@ if ($_REQUEST['name'] == 'Application_static') {
 					}
 				}
 			}
+		}
+	}
+}
+
+if ($_REQUEST['name'] == 'Application_webapp') {
+	if (! checkAuthorization('manageApplications'))
+		redirect();
+	
+	if ($_REQUEST['action'] == 'add') {
+		if (isset($_REQUEST['attributes_send']) && is_array($_REQUEST['attributes_send'])) {
+
+			if (! array_key_exists('application_name', $_REQUEST) or 
+				! array_key_exists('description', $_REQUEST) or
+				! array_key_exists('type', $_REQUEST)) {
+				redirect();
+			}
+
+			if(! array_key_exists('yaml_file', $_FILES)) {
+				redirect();
+			}
+
+			$name = $_REQUEST['application_name'];
+			$description = $_REQUEST['description'];
+			$url_prefix = $_REQUEST['url_prefix'];
+			
+			if (empty($name)) {
+				popup_error(_('Empty name'));
+				redirect();
+			}
+			
+			$upload = $_FILES['yaml_file'];
+
+			$have_file = true;
+			if ($upload['error']) {
+				switch ($upload['error']) {
+					case 1: // UPLOAD_ERR_INI_SIZE
+						popup_error(_('Oversized file for server rules'));
+						redirect();
+						break;
+					case 3: // UPLOAD_ERR_PARTIAL
+						popup_error(_('The file was corrupted while upload'));
+						redirect();
+						break;
+					case 4: // UPLOAD_ERR_NO_FILE
+						$have_file = false;
+						break;
+				}
+			}
+			
+			if (! $have_file) {
+				popup_error(_('No YAML file'));
+				redirect();
+			}
+			
+			$source_file = $upload['tmp_name'];
+			if (! is_readable($source_file)) {
+				popup_error(_('The file is not readable'));
+				redirect();
+			}
+
+			$configuration = @file_get_contents($source_file);
+			$parsed_config = yaml_parse($configuration);
+			if(!$parsed_config){
+				popup_error(_('Incorrect YAML format'));
+				redirect();
+			}
+
+			if(count(array_keys($parsed_config)) > 1) {
+				popup_info(_('YAML file has more than one main level key, using first, rest will be ignored'));
+			}
+
+			$main_key = current(array_keys($parsed_config));
+			if (empty ($url_prefix)) {
+				// If no prefix was given, use one from YAML file.
+				$url_prefix = $main_key;
+			}
+			
+			// Check if url prefix is valid.
+			if (! checkUrlPrefixFormat($url_prefix)) {
+				popup_error(_('Incorrect URL prefix format'));
+				redirect();
+			}
+			
+			// Check if url prefix is unique across all registered apps.
+			if (! checkUrlPrefixUnique($url_prefix)) {
+				popup_error(_('URL prefix is not unique'));
+				redirect();
+			}
+			
+			$config_content = $parsed_config[$main_key];
+			
+			$pieces = NULL;
+			preg_match_all('/\$\((\w+)\)/m', $configuration, $pieces);
+			$has_matches = count($pieces) > 0;
+
+			if($has_matches) {
+				$dynamic_vars = array_unique($pieces[1]);
+				foreach($dynamic_vars as $index=>$varname) {
+					if (!array_key_exists($varname, $config_content['Configuration'])) {
+						popup_error(_('Incorrect YAML format - missing '.$varname.' parameter'));
+						redirect();
+					}
+				}
+			}
+			
+			// Transform YAML - change save under url_prefix.
+			$transformed_config = array($url_prefix => $config_content);
+			$transformed_yaml = yaml_emit($transformed_config);
+
+			$ret = $_SESSION['service']->application_webapp_add($name, $description, $transformed_yaml);
+			if (! $ret) {
+				popup_error(_('Unable to add web application'));
+				redirect();
+			}
+
+			// Set default icon for applications. The icon used is
+			// elementary-xfce/apps/32/application-default-icon.png
+			$content_base64 = ""
+				. "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA3NCSVQICAjb4U/gAAACEFBMVEUA"
+				. "AAAXFxcSEhIUFBQYGBgXFxePj4+KioovLy8zMzOLi4tUVFRTU1OLi4uOjo6Ojo5NTU1OTk6KiopX"
+				. "V1eGhoZZWVmEhIRcXFyCgoJeXl6AgIBhYWF+fn5jY2N6enpkZGR5eXloaGh1dXVpaWlzc3NQUFBt"
+				. "bW1xcXFubm5PT09ubm5wcHBQUFBsbGxycnJpaWlnZ2d1dXVkZGR3d3dhYWF6enpRUVFfX198fHyO"
+				. "jo5VVVV+fn5cXFyBgYGJiYlaWlpsbGyDg4Orq6tQUFBXV1eGhoZQUFBdXV1fX19gYGBhYWFiYmJj"
+				. "Y2NkZGRlZWVmZmZnZ2doaGhqampra2tsbGxtbW1ubm5vb29wcHBxcXFycnJzc3N0dHR1dXV2dnZ3"
+				. "d3d4eHh5eXl6enp7e3t8fHx9fX1+fn5/f3+AgICBgYGCgoKDg4OEhISFhYWGhoaHh4eIiIiJiYmK"
+				. "ioqLi4uMjIyNjY2Ojo6Pj4+QkJCRkZGSkpKTk5OUlJSVlZWWlpaXl5eYmJiZmZmampqbm5ucnJyd"
+				. "nZ2enp6fn5+goKChoaGioqKjo6OkpKSlpaWmpqanp6eoqKipqamqqqqrq6usrKytra2urq6vr6+w"
+				. "sLCxsbGysrKzs7O0tLS1tbW2tra3t7e4uLi6urq7u7u9vb2/v7/GxsbJycnLy8vNzc3Pz8/S0tLT"
+				. "09PW1tbY2Nja2trc3Nw32WW7AAAARnRSTlMACw4aICIiI0FBxcbKzc3O2Nvl5+jp6erq6+vt7e7u"
+				. "7+/w8PHx8vLy8/T09PX19fb39/j4+fn6+vr6+/v8/Pz9/f39/v7+s6UsGQAAAexJREFUOMvFk89O"
+				. "U0EUxr8zc0srUqREoyFUAgvjnxjFxJ3PYHwHn8u3ceFSjSxEIiK05UIppUit3Dnf5+LWtlEX7vyW"
+				. "M7/85szMOcD/jwGo1u4/+8vW663RZQnUn760SaBJXr0ZAhmAzRdfQ8yyLGbRDJInTym5nr8dA9Uk"
+				. "QGJgaaAoASwCSiBJotEcCgaRTpISZgCaHIBa27hzi+4uUR4ABAAkRbI4SskrFaaUF+XSL4OTBvPd"
+				. "8/5CLh2kQbe+AZKYAiJwNqh2u1lEsYvqoHeN1MRAOoA125sDHZZhtHa7R3qcAoR0coXUgyb2t0zz"
+				. "JySpmRqAk3QRioeNDhp3P9inq5UlzhTpLnUCYjF/BHxfLCqjEeukxwlASITp1AD0SEkuMk6LVHiU"
+				. "vgyZ3wDQlc+vx28sgVAa3OcW193anR+XnZb5en3OfVoD3YPy0GcIh22ETNxvUKLbFJDZ2XFICBFy"
+				. "hGMsaPzUAQBd7lxtFM3NWkq1zWbRWOVvR8B0+ri/eLGyjZW4cX1p1ymlyS1SMpPvLH+WCZeHtryT"
+				. "QDFVZv4i0JjDbj7BXq5ckijNGlh2bLsNaNy3M4bksGAGgwEQBIlCMRwDo9a9YDCDGUACKB0f35dA"
+				. "4LsYAQB+Xo7M0AEgHadAGFDq/4xE/cNs/gSkwISNM9q1fQAAAABJRU5ErkJggg==";
+
+			$icon_ret = $_SESSION['service']->application_icon_set($ret, $content_base64);
+			if (! $icon_ret) {
+				// Display warning, but continue flow.
+				popup_info(_('Unable to change icon'));
+			}
+			
+			popup_info(sprintf(_("Web application '%s' has been successfully uploaded"), $ret));
+			redirect('applications_webapp.php?action=manage&id='.$ret);
+
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'del') {
+		if (isset($_REQUEST['checked_applications']) && is_array($_REQUEST['checked_applications'])) {
+			foreach ($_REQUEST['checked_applications'] as $id) {
+				$app = $_SESSION['service']->application_info($id);
+				if (! is_object($app)) {
+					popup_error(sprintf(_("Unable to import application '%s'"), $id));
+					redirect();
+				}
+				
+				$_SESSION['service']->application_webapp_remove($id);
+				popup_info(sprintf(_("Application '%s' successfully deleted"), $app->getAttribute('name')));
+			}
+			redirect('applications_webapp.php');
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'del_icon') {
+		if (isset($_REQUEST['checked_applications']) && is_array($_REQUEST['checked_applications'])) {
+			foreach ($_REQUEST['checked_applications'] as $id) {
+				$app = $_SESSION['service']->application_info($id);
+				if (! is_object($app)) {
+					popup_error(sprintf(_("Unable to import application '%s'"), $id));
+					redirect();
+				}
+				
+				$_SESSION['service']->application_static_removeIcon($id);
+				popup_info(sprintf(_("'%s' application's icon was successfully deleted"), $app->getAttribute('name')));
+				redirect('applications_webapp.php?action=manage&id='.$app->getAttribute('id'));
+			}
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'modify') {
+		// Update values of additional parameters.
+		if (isset($_REQUEST['task'])) {
+			// extract from request all edited params
+			$dynamic_variables = array();
+			if (isset($_REQUEST['attributes_send']) && is_array($_REQUEST['attributes_send']))
+				foreach ($_REQUEST['attributes_send'] as $attr_name)
+					$dynamic_variables[$attr_name] = $_REQUEST[$attr_name];
+
+			$app_id = $_REQUEST['id'];
+			$raw_config = $_SESSION['service']->application_webapp_get_raw_configuration($app_id);
+			if ($raw_config !== NULL) {
+				$parsed_config = yaml_parse($raw_config);
+				$main_key = current(array_keys($parsed_config));
+				
+				// rewrite values from request into config
+				foreach ($dynamic_variables as $name => $value) {
+					if ($parsed_config[$main_key]['Configuration'][$name]['type'] === 'boolean') {
+						$value = (bool)$value == "on";
+					} elseif ($parsed_config[$main_key]['Configuration'][$name]['type'] === 'url') {
+						if (!preg_match("#((http|https)://(\S*?\.\S*?))(\s|\;|\)|\]|\[|\{|\}|,|\"|'|:|\<|$|\.\s)#ie", $value)) {
+							popup_error(sprintf(_("Parameter '%s' is not a valid URL"), $name));
+							redirect();
+						}
+					} elseif ($parsed_config[$main_key]['Configuration'][$name]['type'] === 'inetaddr') {
+						if (!filter_var($value, FILTER_VALIDATE_IP)) {
+							popup_error(sprintf(_("Parameter '%s' is not a valid IP address"), $name));
+							redirect();
+						}
+					}
+					$parsed_config[$main_key]['Configuration'][$name]['value'] = $value;
+				}
+				
+				$new_config = yaml_emit($parsed_config);
+				if ($new_config != $raw_config) {
+					//save
+					$ret = $_SESSION['service']->application_webapp_set_raw_configuration($app_id, $new_config);
+					if (! $ret) {
+						popup_error(_('Unable to update web application configuration'));
+						redirect();
+					}
+				}
+			}
+			redirect('applications_webapp.php?action=manage&id='.$app_id);
+		}
+		// Modyfing application.
+		elseif (isset($_REQUEST['id']) && isset($_REQUEST['attributes_send']) && is_array($_REQUEST['attributes_send'])) {
+			$app = $_SESSION['service']->application_info($_REQUEST['id']);
+			if (! is_object($app)) {
+				popup_error(sprintf(_("Unable to import application '%s'"), $_REQUEST['id']));
+				redirect();
+			}
+			
+			$current_url_prefix = getUrlPrefix($_REQUEST['id']);
+			if (array_key_exists('url_prefix', $_REQUEST)) {
+				$form_url_prefix = $_REQUEST['url_prefix'];
+				if ($form_url_prefix) {
+					// Prefix is present in the form.
+					// Check if url prefix is valid.
+					if (! checkUrlPrefixFormat($form_url_prefix)) {
+						popup_error(_('Incorrect URL prefix format'));
+						redirect();
+					}
+					
+					// Check if url prefix is unique across all registered apps.
+					if (! checkUrlPrefixUnique($form_url_prefix, $app->getAttribute('id'))) {
+						popup_error(_('URL prefix is not unique'));
+						redirect();
+					}
+
+				} else {
+					$form_url_prefix = $current_url_prefix;
+				}
+			} else {
+				$form_url_prefix = $current_url_prefix;
+			}
+			
+			$app_modified = false;
+			if (array_key_exists('application_name', $_REQUEST)) {
+				if ($app->getAttribute('name') != $_REQUEST['application_name']) {
+					$app_modified = true;
+					$app->setAttribute('name', $_REQUEST['application_name']);
+				}
+			}
+			
+			if (array_key_exists('description', $_REQUEST)) {
+				if ($app->getAttribute('description') != $_REQUEST['description']) {
+					$app_modified = true;
+					$app->setAttribute('description', $_REQUEST['description']);
+				}
+			}
+			
+			if ($app_modified){
+				$ret = $_SESSION['service']->application_static_modify(
+					$app->getAttribute('id'),
+					$app->getAttribute('name'),
+					$app->getAttribute('description'));
+				if (! $ret) {
+					popup_error(sprintf(_("Failed to modify application '%s'"), $app->getAttribute('name')));
+				}
+			}
+
+			if (array_key_exists('file_icon', $_FILES)) {
+				$upload = $_FILES['file_icon'];
+				
+				$have_file = true;
+				if($upload['error']) {
+					switch ($upload['error']) {
+						case 1: // UPLOAD_ERR_INI_SIZE
+							popup_error(_('Oversized file for server rules'));
+							redirect();
+							break;
+						case 3: // UPLOAD_ERR_PARTIAL
+							popup_error(_('The file was corrupted while upload'));
+							redirect();
+							break;
+						case 4: // UPLOAD_ERR_NO_FILE
+							$have_file = false;
+							break;
+					}
+				}
+				
+				if ($have_file) {
+					$source_file = $upload['tmp_name'];
+					if (! is_readable($source_file)) {
+						popup_error(_('The file is not readable'));
+						redirect();
+					}
+					
+					$content = @file_get_contents($source_file);
+					$ret = $_SESSION['service']->application_icon_set($app->getAttribute('id'), base64_encode($content));
+					if (! $ret) {
+						popup_error(_('Unable to change icon'));
+						redirect();
+					}
+				}
+			}
+			if (array_key_exists('file_yaml', $_FILES)) {
+				$upload = $_FILES['file_yaml'];
+				
+				$have_file = true;
+				if($upload['error']) {
+					switch ($upload['error']) {
+						case 1: // UPLOAD_ERR_INI_SIZE
+							popup_error(_('Oversized file for server rules'));
+							redirect();
+							break;
+						case 3: // UPLOAD_ERR_PARTIAL
+							popup_error(_('The file was corrupted while upload'));
+							redirect();
+							break;
+						case 4: // UPLOAD_ERR_NO_FILE
+							$have_file = false;
+							break;
+					}
+				}
+				
+				if ($have_file) {
+					$source_file = $upload['tmp_name'];
+					if (! is_readable($source_file)) {
+						popup_error(_('The file is not readable'));
+						redirect();
+					}
+					
+					$configuration = @file_get_contents($source_file);
+					$parsed_config = yaml_parse($configuration);
+					if(!$parsed_config){
+						popup_error(_('Incorrect YAML format'));
+						redirect();
+					}
+
+					if(count(array_keys($parsed_config)) > 1)
+						popup_info(_('YAML file has more than one main level key, using first, rest will be ignored'));
+
+					$main_key = current(array_keys($parsed_config));
+					$pieces = NULL;
+					preg_match_all('/\$\((\w+)\)/m', $configuration, $pieces);
+					$has_matches = count($pieces) > 0;
+
+					if($has_matches) {
+						$dynamic_vars = array_unique($pieces[1]);
+						foreach($dynamic_vars as $index=>$name) {
+							if (!array_key_exists($name, $parsed_config[$main_key]['Configuration'])) {
+								popup_error(_('Incorrect YAML format - missing '.$name.' parameter'));
+								redirect();
+							}
+						}
+					}
+
+					$transformed_config = array($form_url_prefix => $parsed_config[$main_key]);
+					$transformed_yaml = yaml_emit($transformed_config);
+					
+					$ret = $_SESSION['service']->application_webapp_set_raw_configuration($app->getAttribute('id'), $transformed_yaml);
+					if (! $ret) {
+						popup_error(_('Unable to change yaml'));
+						redirect();
+					}
+				} else {
+					// Check if we need to change url prefix.
+					if ($form_url_prefix != $current_url_prefix) {
+						// Just change the prefix.
+						$ret = changeUrlPrefix($app->getAttribute('id'), $form_url_prefix);
+						if (! $ret) {
+							popup_info(_('Unable to update web application prefix'));
+							// Warn, but continue flow.
+						}
+					}
+				}
+			}
+			$app_id = $app->getAttribute('id');
+			popup_info(sprintf(_("'%s' application was successfully modified"), $app->getAttribute('name')));
+			redirect('applications_webapp.php?action=manage&id='.$app_id);
+		}
+	}
+
+	if ($_REQUEST['action'] == 'clone') {
+		$app = $_SESSION['service']->application_info($_REQUEST['id']);
+		if (! is_object($app)) {
+			popup_error(sprintf(_("Failed to import application '%s'"), $_REQUEST['id']));
+			redirect();
+		}
+
+		$ret = $_SESSION['service']->application_webapp_clone($_REQUEST['id']);
+		if (! $ret) {
+			popup_error(sprintf(_("Failed to clone web application '%s'"), $app->getAttribute('name')));
+			redirect();
+		}
+		popup_info(sprintf(_("Web application '%s' successfully added"), $app->getAttribute('name')));
+		redirect('applications_webapp.php');
+	}
+	
+	if ($_REQUEST['action'] == 'download') {
+		$app_id = $_REQUEST['id'];
+		$raw_config = $_SESSION['service']->application_webapp_get_raw_configuration($app_id);
+
+		if($raw_config!==NULL) {
+			header('Content-disposition: attachment; filename=webapp_'.$app_id.'_config.yaml');
+			header('Content-type: application/x-yaml');
+			$ignore_redirect = true;
+			print $raw_config;
+		} else {
+			popup_error(sprintf(_("Failed to get application's configuration '%s'"), $_REQUEST['id']));
+			redirect('applications_webapp.php');
 		}
 	}
 }
@@ -1552,4 +1987,5 @@ function action_del_sharedfolder_acl($sharedfolder_id_, $usergroup_id_) {
 	}
 }
 
-redirect();
+if (!$ignore_redirect) 
+	redirect();

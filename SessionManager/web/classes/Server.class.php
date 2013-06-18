@@ -5,6 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
+ * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,6 +26,7 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 class Server {
 	const SERVER_ROLE_APS = "aps";
 	const SERVER_ROLE_FS = "fs";
+	const SERVER_ROLE_WEBAPPS = "webapps";
 	const SERVER_TYPE_LINUX = "linux";
 	const SERVER_TYPE_WINDOWS = "windows";
 
@@ -556,7 +558,7 @@ class Server {
 		return true;
 	}
 
-	public function getSessionStatus($session_id_) {
+	public function getSessionStatus($session_id_, $prefix_='aps') {
 		Logger::debug('main', 'Starting Server::getSessionStatus for session \''.$session_id_.'\' on server \''.$this->fqdn.'\'');
 
 		if (! $this->isOnline()) {
@@ -564,7 +566,7 @@ class Server {
 			return false;
 		}
 
-		$xml = query_url($this->getBaseURL().'/aps/session/status/'.$session_id_);
+		$xml = query_url($this->getBaseURL().'/'.$prefix_.'/session/status/'.$session_id_);
 		if (! $xml) {
 			$this->isUnreachable();
 			Logger::error('main', 'Server::getSessionStatus server \''.$this->fqdn.'\' is unreachable');
@@ -595,7 +597,7 @@ class Server {
 		return $session_status;
 	}
 
-	public function orderSessionDeletion($session_id_) {
+	public function orderSessionDeletion($session_id_, $prefix_='aps') {
 		Logger::debug('main', 'Starting Server::orderSessionDeletion for session \''.$session_id_.'\' on server \''.$this->fqdn.'\'');
 
 		if (! $this->isOnline()) {
@@ -603,7 +605,7 @@ class Server {
 			return false;
 		}
 
-		$xml = query_url($this->getBaseURL().'/aps/session/destroy/'.$session_id_);
+		$xml = query_url($this->getBaseURL().'/'.$prefix_.'/session/destroy/'.$session_id_);
 		if (! $xml) {
 			$this->isUnreachable();
 			Logger::error('main', 'Server::orderSessionDeletion server \''.$this->fqdn.'\' is unreachable');
@@ -1171,6 +1173,26 @@ class Server {
 
 		if (! query_url($this->getBaseURL().'/aps/applications/static/sync')) {
 			Logger::error('main', 'Server::syncStaticApplications - Unable to ask for synchronization');
+			return false;
+		}
+
+		return true;
+	}
+	
+	public function syncWebApplications() {
+		Logger::critical('main', 'Server::syncWebApplications - started');
+		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_WEBAPPS, $this->roles)) {
+			Logger::critical('main', 'Server::syncWebApplications - Not an webapps server');
+			return false;
+		}
+
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::syncWebApplications server "'.$this->fqdn.':'.$this->web_port.'" is not online');
+			return false;
+		}
+
+		if (! query_url($this->getBaseURL().'/webapps/sync')) {
+			Logger::error('main', 'Server::syncWebApplications - Unable to ask for synchronization');
 			return false;
 		}
 

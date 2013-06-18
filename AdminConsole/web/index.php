@@ -112,6 +112,7 @@ if ($show_configuration) {
 		<?php
 		if ($show_applications)
 			echo '<li><a href="applications.php">'._('Applications list').'</a></li>';
+		echo '<li><a href="applications_webapp.php">'._('Web applications list').'</a></li>';
 		if ($show_applicationsgroups)
 			echo '<li><a href="appsgroup.php">'._('Applications groups list').'</a><br /><br /></li>';
 		if ($show_publications) {

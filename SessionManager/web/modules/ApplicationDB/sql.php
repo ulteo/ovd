@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
+ * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -140,6 +141,17 @@ class ApplicationDB_sql extends ApplicationDB {
 				unset($row['package']);
 				unset($row['desktopfile']);
 				
+			}
+			elseif ($row['type'] == 'webapp') {
+				$r = new Application_webapp($row['id'], $row['name'],$row['description']);
+				
+				unset($row['id']);
+				unset($row['name']);
+				unset($row['description']);
+				unset($row['type']);
+				unset($row['executable_path']);
+				unset($row['package']);
+				unset($row['desktopfile']);
 			}
 			else {
 				$r = new Application($row['id'], $row['name'],$row['description'], $row['type'], $row['executable_path'], $row['package'], $row['published']);
