@@ -141,19 +141,17 @@ static bool configuration_parseRules(Ini* ini, Configuration* conf) {
 			return false;
 		}
 
-		if (str_len(expandedPath) > 0) {
-			Regexp* reg = regexp_create(expandedPath);
-			if (!reg) {
-				logWarn("Invalid accept close in union, ignoring it");
-				regexp_delete(reg);
-				continue;
-			}
-
-			rule->u = configuration_getUnion(conf, key);
-			rule->reg = reg;
-
-			list_add(conf->rules, (Any)rule);
+		Regexp* reg = regexp_create(expandedPath);
+		if (!reg) {
+			logWarn("Invalid rule '%s', ignoring it", expandedPath);
+			regexp_delete(reg);
+			continue;
 		}
+
+		rule->u = configuration_getUnion(conf, key);
+		rule->reg = reg;
+
+		list_add(conf->rules, (Any)rule);
 	}
 
 	return true;

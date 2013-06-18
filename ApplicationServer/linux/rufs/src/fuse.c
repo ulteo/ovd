@@ -191,9 +191,7 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 	// Firstly, check if it already exist somewhere
 	for(i = 0 ; i < config->unions->size ; i++) {
 		u = (Union*)list_get(config->unions, i);
-		List* accept;
 		List* reject;
-		bool match = false;
 
 		if (!u) {
 			continue;
@@ -210,15 +208,17 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 	}
 
 	// The file do not exist
-	for(i = 0 ; i < config->unions->size ; i++) {
-		u = (Union*)list_get(config->unions, i);
+	for(i = 0 ; i < config->rules->size ; i++) {
+		Rule* rule = (Rule*)list_get(config->rules, i);
 		List* accept;
 		List* reject;
-		bool match = false;
 
-		if (!u) {
+		if (!rule || !u || !reg) {
 			continue;
 		}
+
+		u = rule->u;
+		reg = rule->reg;
 
 		if (isSymlink && !u->acceptSymlink)
 			continue;
@@ -226,41 +226,22 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 		// if the file exist in a union, we return it
 		str_sprintf(to, "%s%s", u->path, trpath);
 
-		accept = u->accept;
 		reject = u->reject;
 
-		for(a = 0 ; a < accept->size ; a++) {
-			reg = (Regexp*)list_get(accept, a);
-			if (regexp_match(reg, trpath)) {
-				match = true;
-				break;
+		if (regexp_match(reg, trpath)) {
+			for(r = 0 ; r < reject->size ; r++) {
+				reg = (Regexp*)list_get(reject, r);
+				if (regexp_match(reg, trpath)) {
+					continue;
+				}
 			}
+
+			// We found a valid union
+			logDebug("Union %s is valid for the path %s", u->name, trpath);
+
+			str_sprintf(to, "%s%s", u->path, trpath);
+			return true;
 		}
-
-		// if no accept rules matched, we test the following union
-		if (!match && accept->size > 0) {
-			continue;
-		}
-
-		match = false;
-		for(r = 0 ; r < reject->size ; r++) {
-			reg = (Regexp*)list_get(reject, r);
-			if (regexp_match(reg, trpath)) {
-				match = true;
-				break;
-			}
-		}
-
-		// if one reject rules match, we test the following union
-		if (match) {
-			continue;
-		}
-
-		// We found a valid union
-		logDebug("Union %s is valid for the path %s", u->name, trpath);
-
-		str_sprintf(to, "%s%s", u->path, trpath);
-		return true;
 	}
 
 	// If we found noting, we return the last union
