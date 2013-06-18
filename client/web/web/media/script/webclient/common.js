@@ -48,12 +48,6 @@ function hideEnd() {
 }
 
 function showEnd() {
-	if (jQuery('#endContainer')[0].visible())
-		return;
-
-	if (jQuery('#loginBox')[0] && jQuery('#loginBox')[0].visible())
-		return;
-
 	new Effect.Appear(jQuery('#endContainer')[0]);
 }
 
