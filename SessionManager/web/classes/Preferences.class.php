@@ -491,7 +491,7 @@ class Preferences {
 		$c->setContentAvailable(array('session_mode', 'language', 'server', 'timeout', 'persistent', /*'shareable'*/));
 		$this->add($c,'general','session_settings_defaults');
 
-		$c = new ConfigElement_select('show_list_users', 1);
+		$c = new ConfigElement_select('show_list_users', 0);
 		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','web_interface_settings');
 		
