@@ -74,4 +74,8 @@ class SessionManagement_localusers extends SessionManagement_internal {
 		
 		return $ret;
 	}
+	
+	public static function isDefault() {
+		return false;
+	}
 }
