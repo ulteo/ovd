@@ -25,6 +25,7 @@
 #include "common/types.h"
 #include "common/fs.h"
 #include "common/ini.h"
+#include "common/regexp.h"
 
 
 
@@ -54,6 +55,8 @@
 #define UNION_ACCEPT_SYMLINK_KEY "acceptSymlink"
 #define UNION_DELETE_ON_END_KEY "deleteOnEnd"
 
+#define RULE_CONFIGURATION_SECTION "rules"
+
 
 typedef struct _Union {
 	char name[256];
@@ -65,6 +68,12 @@ typedef struct _Union {
 	List* accept;
 	List* reject;
 } Union;
+
+
+typedef struct _Rule {
+	Union* u;
+	Regexp* reg;
+} Rule;
 
 
 typedef struct _Translation {
@@ -85,6 +94,7 @@ typedef struct _Configuration {
 	char bind_path[PATH_MAX];
 	List* unions;
 	List* translations;
+	List* rules;
 } Configuration;
 
 
@@ -92,6 +102,7 @@ Configuration* configuration_new();
 bool configuration_free(Configuration* conf);
 bool configuration_parse(Configuration* conf);
 void configuration_dump (Configuration* conf);
+Union* configuration_getUnion(Configuration* conf, const char* unionName);
 
 
 #endif

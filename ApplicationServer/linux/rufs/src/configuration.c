@@ -23,7 +23,6 @@
 #include "common/memory.h"
 #include "common/list.h"
 #include "common/str.h"
-#include "common/regexp.h"
 
 
 Configuration* configuration_new() {
@@ -33,6 +32,7 @@ Configuration* configuration_new() {
 
 	conf->unions = list_new(false);
 	conf->translations = list_new(true);
+	conf->rules = list_new(true);
 	conf->bind = false;
 	conf->bind_path[0] = '\0';
 	conf->shareFile = NULL;
@@ -64,6 +64,7 @@ bool configuration_free(Configuration* conf) {
 	}
 
 	list_delete(conf->translations);
+	list_delete(conf->rules);
 	memory_free(conf->shareFile);
 	memory_free(conf->pidFile);
 
@@ -107,6 +108,57 @@ bool configuration_parseLog(Ini* ini) {
 
 	return true;
 }
+
+
+static bool configuration_parseRules(Ini* ini, Configuration* conf) {
+	Section* section = NULL;
+	char expandedPath[PATH_MAX];
+	char* value;
+	int i;
+
+	if (ini == NULL || conf == NULL) {
+		logWarn("Invalid arguments");
+		return false;
+	}
+
+	section = ini_get(ini, RULE_CONFIGURATION_SECTION);
+
+	if (section == NULL) {
+		logWarn("there is no rules in the configuration file");
+		return false;
+	}
+
+	for (i = 0 ; i < section->keys->size ; i++) {
+		char* key = (char*)list_get(section->keys, i);
+		char* value = (char*)list_get(section->values, i);
+		Rule* rule = memory_new(Rule, true);
+
+		expandedPath[0] = 0;
+		str_trim(key);
+		str_unquote(value);
+		if (! fs_expandPath(value, expandedPath)) {
+			logWarn("Unable to expand %s", value);
+			return false;
+		}
+
+		if (str_len(expandedPath) > 0) {
+			Regexp* reg = regexp_create(expandedPath);
+			if (!reg) {
+				logWarn("Invalid accept close in union, ignoring it");
+				regexp_delete(reg);
+				continue;
+			}
+
+			rule->u = configuration_getUnion(conf, key);
+			rule->reg = reg;
+
+			list_add(conf->rules, (Any)rule);
+		}
+	}
+
+	return true;
+}
+
 
 
 static bool configuration_parseUnion(Ini* ini, Configuration* conf, const char* unionName) {
@@ -322,6 +374,11 @@ static bool configuration_parseMain(Ini* ini, Configuration* conf) {
 		}
 	}
 
+	if (! configuration_parseRules(ini, conf)) {
+		logWarn("Failed to parse rules");
+		return false;
+	}
+
 	value = ini_getKey(ini, MAIN_CONFIGURATION_SECTION, MAIN_BIND_CONFIGURATION_KEY);
 	if (value != NULL) {
 		conf->bind = str_toBool(value);
@@ -421,6 +478,7 @@ end:
 void configuration_dump (Configuration* conf) {
 	logInfo("Configuration dump:");
 	Translation* trans;
+	Rule* rule;
 	int i, j;
 
 	if (conf == NULL) {
@@ -444,6 +502,14 @@ void configuration_dump (Configuration* conf) {
 		for(i = 0 ; i < conf->translations->size; i++) {
 			trans = (Translation*)list_get(conf->translations, i);
 			logInfo("\t %s => %s", trans->in, trans->out);
+		}
+	}
+
+	if ( conf->rules->size > 0) {
+		logInfo("Rules information");
+		for(i = 0 ; i < conf->rules->size; i++) {
+			rule = (Rule*)list_get(conf->rules, i);
+			logInfo("\t %s => %s", rule->u->name, rule->reg->expression);
 		}
 	}
 
