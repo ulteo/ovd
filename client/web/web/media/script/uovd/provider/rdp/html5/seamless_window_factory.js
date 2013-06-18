@@ -175,7 +175,7 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 	this.SeamlessWindow.prototype.destroy = function() {
 		/* Remove node */
 		this.hide();
-		this.node = jQuery(document.createElement("canvas"));
+		this.node.remove();
 
 		/* Unregister handlers */
 		this.mouse.onmousemove = this.mouse.onmousedown = this.mouse.onmouseup = function(mouseState) {};
