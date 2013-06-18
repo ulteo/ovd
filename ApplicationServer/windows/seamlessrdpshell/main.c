@@ -22,9 +22,10 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 /*
- * Copyright (C) 2012 Ulteo SAS
+ * Copyright (C) 2012-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -362,7 +363,7 @@ static void load_configuration(BOOL *use_active_monitoring, BOOL *is_move_offscr
 		return;
 
 	status = RegQueryValueEx(rkey, "use_active_monitoring", NULL, &type, (BYTE*)buffer, &buffer_size);
-	*use_active_monitoring = (status == ERROR_SUCCESS && type == REG_SZ && StrCmpI(buffer, "true") == 0);
+	*use_active_monitoring = ((status == ERROR_SUCCESS && type == REG_SZ && StrCmpI(buffer, "true") == 0) || status == ERROR_FILE_NOT_FOUND);
 
 	status = RegQueryValueEx(rkey, "move_offscreen_forbidden", NULL, &type, (BYTE*)buffer, &buffer_size);
 	*is_move_offscreen_forbidden = (status == ERROR_SUCCESS && type == REG_SZ && StrCmpI(buffer, "true") == 0);

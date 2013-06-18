@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -229,7 +229,7 @@ class Preferences {
 		
 		$this->add($c, 'general');
 
-		$c = new ConfigElement_input('max_items_per_page', 100);
+		$c = new ConfigElement_input('max_items_per_page', 15);
 		$this->add($c,'general');
 		
 		$c = new ConfigElement_inputlist('default_browser', array('linux' => NULL, 'windows' => NULL));
@@ -460,7 +460,7 @@ class Preferences {
 		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
 		
-		$c = new ConfigElement_select('persistent', 0);
+		$c = new ConfigElement_select('persistent', 1);
 		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
 
@@ -491,7 +491,7 @@ class Preferences {
 		$c->setContentAvailable(array('session_mode', 'language', 'server', 'timeout', 'persistent', /*'shareable'*/));
 		$this->add($c,'general','session_settings_defaults');
 
-		$c = new ConfigElement_select('show_list_users', 1);
+		$c = new ConfigElement_select('show_list_users', 0);
 		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','web_interface_settings');
 		

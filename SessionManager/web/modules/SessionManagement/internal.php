@@ -5,6 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -64,7 +65,7 @@ class SessionManagement_internal extends SessionManagement {
 	public static function configuration() {
 		$ret = array();
 
-		$c = new ConfigElement_select('generate_aps_login', 1);
+		$c = new ConfigElement_select('generate_aps_login', 0);
 		$c->setContentAvailable(array(0, 1));
 		$ret []= $c;
 
