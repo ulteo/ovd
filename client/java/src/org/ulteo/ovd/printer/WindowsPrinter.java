@@ -78,5 +78,7 @@ public class WindowsPrinter implements Runnable {
 		} catch (InterruptedException e) {
 			Logger.warn("Unable to print the current job :" + e.getMessage());
 		}
+
+		new File(this.job).delete();
 	}
 }
