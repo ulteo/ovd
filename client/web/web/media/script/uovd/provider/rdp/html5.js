@@ -12,9 +12,9 @@ uovd.provider.rdp.Html5.prototype.connectDesktop = function() {
 	var server = this.session_management.session.servers[0];
 	this.connections = new Array();
 
-	/* Add the servers status callback to global namespace */
+	/* Add the servers status callback */
 	/* __MUST__ Be set before guac_client.connect */
-	window.serverStatus = function(id, status) {
+	self.serverStatus = function(id, status) {
 		self.session_management.session.servers[id].setStatus(status);
 	}
 
@@ -34,7 +34,7 @@ uovd.provider.rdp.Html5.prototype.connectDesktop = function() {
 			var connection = {};
 
 			/* Connect */
-			connection.guac_tunnel = new uovd.provider.rdp.html5.HTTPTunnel("/ovd/guacamole/tunnel", 0);
+			connection.guac_tunnel = new uovd.provider.rdp.html5.HTTPTunnel(self, "/ovd/guacamole/tunnel", 0);
 			connection.guac_client = new Guacamole.Client(connection.guac_tunnel);
 			connection.guac_client.connect("id=0");
 
@@ -65,7 +65,6 @@ uovd.provider.rdp.Html5.prototype.connectDesktop = function() {
 		},
 		error: function( xhr, status ) {
 			console.log("Error : "+status);
-			delete window.serverStatus;
 		}
 	});
 }
@@ -75,9 +74,9 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 	var servers = this.session_management.session.servers;
 	this.connections = new Array();
 
-	/* Add the servers status callback to global namespace */
+	/* Add the servers status callback */
 	/* __MUST__ Be set before guac_client.connect */
-	window.serverStatus = function(id, status) {
+	self.serverStatus = function(id, status) {
 		self.session_management.session.servers[id].setStatus(status);
 	}
 
@@ -112,7 +111,7 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 				var connection = {};
 
 				/* Connect */
-				connection.guac_tunnel = new uovd.provider.rdp.html5.HTTPTunnel("/ovd/guacamole/tunnel", index);
+				connection.guac_tunnel = new uovd.provider.rdp.html5.HTTPTunnel(self, "/ovd/guacamole/tunnel", index);
 				connection.guac_client = new Guacamole.Client(connection.guac_tunnel);
 				connection.guac_client.connect("id="+index);
 
@@ -135,7 +134,6 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 			error: function( xhr, status ) {
 				/* Stop recursion : Error ! */
 				console.log("Error : "+status);
-				delete window.serverStatus;
 			}
 		});
 	};

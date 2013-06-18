@@ -35,7 +35,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-uovd.provider.rdp.html5.HTTPTunnel = function(tunnelURL, index) {
+uovd.provider.rdp.html5.HTTPTunnel = function(rdp_provider, tunnelURL, index) {
+
+		this.rdp_provider = rdp_provider;
 
     var self = this; /* closure */
 
@@ -71,7 +73,7 @@ uovd.provider.rdp.html5.HTTPTunnel = function(tunnelURL, index) {
 			else if(state == STATE_DISCONNECTED) {status = uovd.SERVER_STATUS_DISCONNECTED;}
 			else {return;}
 			
-			window.serverStatus(index, status);
+			self.rdp_provider.serverStatus(index, status);
 		}
 
     this.sendMessage = function() {
