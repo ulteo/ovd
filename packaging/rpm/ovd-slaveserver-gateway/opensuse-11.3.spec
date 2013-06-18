@@ -1,6 +1,7 @@
 # Copyright (C) 2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -30,7 +31,7 @@ Distribution: OpenSUSE 11.3
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Buildrequires: python, subversion-python
+Buildrequires: python
 Buildroot: %{buildroot}
 
 %description

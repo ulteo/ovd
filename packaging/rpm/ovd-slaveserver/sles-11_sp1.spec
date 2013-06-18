@@ -1,6 +1,7 @@
 # Copyright (C) 2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -30,7 +31,7 @@ Distribution: SLES 11 SP1
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Buildrequires: python, subversion-python
+Buildrequires: python
 Buildroot: %{buildroot}
 
 %description
