@@ -6,22 +6,18 @@ SeamlessWindowManager = function(session_management, node, windowFactory) {
 	this.handler = this.handleEvents.bind(this);
 	this.refreshTimer = null;
 
-	/* Do NOT remove ovd.session.statusChanged in destructor as it is used as a delayed initializer */
-	this.session_management.addCallback("ovd.session.statusChanged", this.handler);
+	/* Do NOT remove ovd.session.started in destructor as it is used as a delayed initializer */
+	this.session_management.addCallback("ovd.session.started", this.handler);
 }
 
 SeamlessWindowManager.prototype.handleEvents = function(type, source, params) {
-	if(type == "ovd.session.statusChanged") {
-		var from = params["from"];
-		var to = params["to"];
+	if(type == "ovd.session.started") {
 		var session_type = this.session_management.parameters["session_type"];
 
-		if(to == "ready" && session_type == "applications") {
+		if(session_type == uovd.SESSION_MODE_APPLICATIONS) {
 			/* register events listeners */
 			this.session_management.addCallback("ovd.rdpProvider.seamless.in.*",    this.handler);
-			this.session_management.addCallback("ovd.session.server.statusChanged", this.handler);
-			this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",      this.handler);
-			this.session_management.addCallback("ovd.ajaxProvider.sessionSuspend",  this.handler);
+			this.session_management.addCallback("ovd.session.destroying",           this.handler);
 
 			/* Refresh windows with a timeout */
 			var self = this; /* closure */
@@ -117,20 +113,7 @@ SeamlessWindowManager.prototype.handleEvents = function(type, source, params) {
 				}
 				break;
 		}
-	} else if(type == "ovd.session.server.statusChanged") {
-		var from = params["from"];
-		var to = params["to"];
-		if(to == "disconnected") {
-			/* Server disconnected : unmap all windows */
-			for(id in this.windows) {
-				if(id && this.windows[id]) {
-					jQuery(this.windows[id].getNode()).remove();
-					this.windows[id].destroy();
-					this.windows[id] = null;
-				}
-			}
-		}
-	} else if(type == "ovd.ajaxProvider.sessionEnd" || type == "ovd.ajaxProvider.sessionSuspend" ) { /* Clean context */
+	} else if(type == "ovd.session.destroying" ) { /* Clean context */
 		this.end();
 	}
 }
@@ -138,10 +121,9 @@ SeamlessWindowManager.prototype.handleEvents = function(type, source, params) {
 SeamlessWindowManager.prototype.end = function() {
 	if(this.session_management.parameters["session_type"] == "applications") {
 		this.node.empty();
-		/* Do NOT remove ovd.session.statusChanged as it is used as a delayed initializer */
-		this.session_management.removeCallback("ovd.rdpProvider.seamless.in.*",   this.handler);
-		this.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",     this.handler);
-		this.session_management.removeCallback("ovd.ajaxProvider.sessionSuspend", this.handler);
+		/* Do NOT remove ovd.session.started as it is used as a delayed initializer */
+		this.session_management.removeCallback("ovd.rdpProvider.seamless.in.*",    this.handler);
+		this.session_management.removeCallback("ovd.session.destroying",           this.handler);
 
 		this.windows = {};
 		clearInterval(this.refreshTimer);

@@ -12,8 +12,8 @@ uovd.provider.rdp.html5.SeamlessHandler = function(rdp_provider) {
 		})(i);
 	}
 
-	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.seamless.out.*",   this.handler);
-	this.rdp_provider.session_management.addCallback("ovd.session.server.statusChanged", this.handler);
+	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.seamless.out.*", this.handler);
+	this.rdp_provider.session_management.addCallback("ovd.session.destroying",         this.handler);
 }
 
 uovd.provider.rdp.html5.SeamlessHandler.prototype.handleOrders = function(server_id, opcode, parameters) {
@@ -217,5 +217,16 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleEvents = function(type, 
 				guac_tunnel.sendMessage("seamrdp", "FOCUS,"+ (this.message_id++) +","+id+","+value+",;\n");
 				break
 		}
+	} else if(type == "ovd.session.destroying") {
+		/* Remove instruction hook */
+		var self = this; /* closure */
+		for(var i=0 ; i<this.connections.length ; ++i) {
+			(function(server_id) {
+				self.connections[server_id].guac_tunnel.removeInstructionHandler("seamrdp");
+			})(i);
+		}
+
+		this.rdp_provider.session_management.removeCallback("ovd.rdpProvider.seamless.out.*", this.handler);
+		this.rdp_provider.session_management.removeCallback("ovd.session.destroying",         this.handler);
 	}
 }

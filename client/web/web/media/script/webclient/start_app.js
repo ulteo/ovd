@@ -3,26 +3,24 @@ StartApp = function(session_management) {
 	this.start_app_interval = null;
 	this.handler = this.handleEvents.bind(this);
 
-	/* Do NOT remove ovd.session.statusChanged in destructor as it is used as a delayed initializer */
-	this.session_management.addCallback("ovd.session.statusChanged", this.handler);
+	/* Do NOT remove ovd.session.started in destructor as it is used as a delayed initializer */
+	this.session_management.addCallback("ovd.session.started", this.handler);
 }
 
 StartApp.prototype.handleEvents = function(type, source, params) {
-	if(type == "ovd.session.statusChanged") {
-		var from = params["from"];
-		var to = params["to"];
+	if(type == "ovd.session.started") {
+		var session_type = this.session_management.parameters["session_type"];
 
-		if(to == "logged" && this.session_management.parameters["session_type"] == "applications") {
+		if(session_type == uovd.SESSION_MODE_APPLICATIONS) {
 			/* register events listeners */
-			this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",     this.handler);
-			this.session_management.addCallback("ovd.ajaxProvider.sessionSuspend", this.handler);
+			this.session_management.addCallback("ovd.session.destroying", this.handler);
 
 			/* Set polling interval for start_app.php */
 			this.start_app_interval = setInterval(this._check_start_app.bind(this), 2000);
 		}
 	}
 
-	if(type == "ovd.ajaxProvider.sessionEnd" || type == "ovd.ajaxProvider.sessionSuspend" ) { /* Clean context */
+	if(type == "ovd.session.destroying" ) { /* Clean context */
 		this.end();
 	}
 }
@@ -57,9 +55,8 @@ StartApp.prototype._parse_start_app = function(xml) {
 
 StartApp.prototype.end = function() {
 	if(this.session_management.parameters["session_type"] == "applications") {
-		/* Do NOT remove ovd.session.statusChanged as it is used as a delayed initializer */
-		this.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",      this.handler);
-		this.session_management.removeCallback("ovd.ajaxProvider.sessionSuspend",  this.handler);
+		/* Do NOT remove ovd.session.started as it is used as a delayed initializer */
+		this.session_management.removeCallback("ovd.session.destroying", this.handler);
 
 		if(this.start_app_interval != null) {
 			clearInterval(this.start_app_interval);

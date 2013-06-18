@@ -5,8 +5,7 @@ ApplicationCounter = function(session_management) {
 	/* register events listeners */
 	this.handler = this.handleEvents.bind(this);
 	this.session_management.addCallback("ovd.rdpProvider.applicationProvider.statusChanged", this.handler);
-	this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",                       this.handler);
-	this.session_management.addCallback("ovd.ajaxProvider.sessionSuspend",                   this.handler);
+	this.session_management.addCallback("ovd.session.destroying",                            this.handler);
 }
 
 ApplicationCounter.prototype.handleEvents = function(type, source, params) {
@@ -19,7 +18,7 @@ ApplicationCounter.prototype.handleEvents = function(type, source, params) {
 		if(to == "stopped") { this.count--; }
 	}
 
-	if(type == "ovd.ajaxProvider.sessionEnd" || type == "ovd.ajaxProvider.sessionSuspend" ) { /* Clean context */
+	if(type == "ovd.session.destroying" ) { /* Clean context */
 		this.end();
 	}
 }

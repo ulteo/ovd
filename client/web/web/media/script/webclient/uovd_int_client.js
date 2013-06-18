@@ -183,59 +183,32 @@ Event.observe(window, 'load', function() {
 	}
 
 	/* handle status modifications */
-	session_management.addCallback("ovd.ajaxProvider.*", function(type, source, params) {
-		var state = params["state"];
+	session_management.addCallback("ovd.session.starting", function(type, source, params) {
+		hideLogin();
+		showSplash();
+		pushMainContainer();
 
-		if(type == "ovd.ajaxProvider.sessionStart") {
-			/* "Session start" is a success ? show progress bar */
-			if(state == uovd.SUCCESS) {
-				hideLogin();
-				showSplash();
-				pushMainContainer();
-
-				/* Wait for the animation end then restore in background */
-				setTimeout(function() {
-					showMainContainer();
-					enableLogin();
-				}, 2000);
-			}
-		} else if(type == "ovd.ajaxProvider.sessionEnd" || type == "ovd.ajaxProvider.sessionSuspend") {
-			/* Don't check the state ! */
-			hideMainContainer();
-		}
+		/* Wait for the animation end then show outside of the viewport */
+		setTimeout(function() {
+			showMainContainer();
+			enableLogin();
+		}, 2000);
 	});
 
-	session_management.addCallback("ovd.session.statusChanged", function(type, source, params) {
-		var from = params["from"];
-		var to = params["to"];
+	session_management.addCallback("ovd.session.started", function(type, source, params) {
 		var mode = session_management.parameters["session_type"];
+		configureUI(mode);
+		pullMainContainer();
+	});
 
-		/* Session is ready and connected */
-		if(to == uovd.SESSION_STATUS_LOGGED) {
-			configureUI(mode);
-			pullMainContainer();
-		}
+	session_management.addCallback("ovd.session.destroying", function(type, source, params) {
+		hideMainContainer();
+	});
 
-		/* Session is ending : hide main container */
-		if(from == uovd.SESSION_STATUS_LOGGED) {
-			pushMainContainer();
-		}
-
-		/* Destroyed or disconnected ? show end */
-		if(to == uovd.SESSION_STATUS_UNKNOWN || to == uovd.SESSION_STATUS_DISCONNECTED) {
-			hideSplash();
-			generateEnd_internal();
-			showEnd();
-		}
-  });
-
-	session_management.addCallback("ovd.session.server.statusChanged", function(type, source, params) {
-		var from = params["from"];
-		var to = params["to"];
-
-		if(to == uovd.SERVER_STATUS_DISCONNECTED) {
-			hideMainContainer();
-		}
+	session_management.addCallback("ovd.session.destroyed", function(type, source, params) {
+		hideSplash();
+		generateEnd_internal();
+		showEnd();
 	});
 
 	/* handle errors */

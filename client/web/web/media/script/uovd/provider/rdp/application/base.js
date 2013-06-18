@@ -12,8 +12,7 @@ uovd.provider.rdp.application.Base.prototype.initialize = function(rdp_provider)
 	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.applicationProvider.applicationStart",         this.handler);
 	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.applicationProvider.applicationStartWithArgs", this.handler);
 	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.applicationProvider.applicationStop",          this.handler);
-	this.rdp_provider.session_management.addCallback("ovd.ajaxProvider.sessionEnd",                                  this.handler);
-	this.rdp_provider.session_management.addCallback("ovd.ajaxProvider.sessionSuspend",                              this.handler);
+	this.rdp_provider.session_management.addCallback("ovd.session.destroying",                                       this.handler);
 }
 
 uovd.provider.rdp.application.Base.prototype.handleEvents = function(type, source, params) {
@@ -32,7 +31,7 @@ uovd.provider.rdp.application.Base.prototype.handleEvents = function(type, sourc
 		this.applicationStop(id, token);
 	}
 
-	if(type == "ovd.ajaxProvider.sessionEnd" || type == "ovd.ajaxProvider.sessionSuspend" ) { /* Clean context */
+	if(type == "ovd.session.destroying") { /* Clean context */
 		this.end();
 	}
 }
@@ -72,6 +71,5 @@ uovd.provider.rdp.application.Base.prototype.end = function() {
 	this.rdp_provider.session_management.removeCallback("ovd.rdpProvider.applicationProvider.applicationStart",         this.handler);
 	this.rdp_provider.session_management.removeCallback("ovd.rdpProvider.applicationProvider.applicationStartWithArgs", this.handler);
 	this.rdp_provider.session_management.removeCallback("ovd.rdpProvider.applicationProvider.applicationStop",          this.handler);
-	this.rdp_provider.session_management.removeCallback("ovd.ajaxProvider.sessionEnd",                                  this.handler);
-	this.rdp_provider.session_management.removeCallback("ovd.ajaxProvider.sessionSuspend",                              this.handler);
+	this.rdp_provider.session_management.removeCallback("ovd.session.destroying",                                       this.handler);
 }

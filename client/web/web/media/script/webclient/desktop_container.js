@@ -4,9 +4,8 @@ DesktopContainer = function(session_management, node) {
 
 	/* register events listeners */
 	this.handler = this.handleEvents.bind(this);
-	this.session_management.addCallback("ovd.rdpProvider.desktopPanel",    this.handler);
-	this.session_management.addCallback("ovd.ajaxProvider.sessionEnd",     this.handler);
-	this.session_management.addCallback("ovd.ajaxProvider.sessionSuspend", this.handler);
+	this.session_management.addCallback("ovd.rdpProvider.desktopPanel", this.handler);
+	this.session_management.addCallback("ovd.session.destroying",       this.handler);
 }
 
 DesktopContainer.prototype.handleEvents = function(type, source, params) {
@@ -16,7 +15,7 @@ DesktopContainer.prototype.handleEvents = function(type, source, params) {
 		this.node.append(node);
 	}
 
-	if(type == "ovd.ajaxProvider.sessionEnd" || type == "ovd.ajaxProvider.sessionSuspend" ) { /* Clean context */
+	if(type == "ovd.session.destroying" ) { /* Clean context */
 		this.end();
 	}
 }
