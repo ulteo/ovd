@@ -24,6 +24,7 @@ SUBDIRS = ApplicationDB \
           ApplicationsGroupDB \
           AuthMethod \
           ProfileDB \
+          WebAppConfDB \
           SessionManagement \
           SharedFolderDB \
           UserDB \
@@ -37,6 +38,7 @@ scripts_DATA = ApplicationDB.php \
                ApplicationsGroupDB.php \
                AuthMethod.php \
                ProfileDB.php \
+               WebAppConfDB.php \
                SessionManagement.php \
                SharedFolderDB.php \
                UserDB.php \

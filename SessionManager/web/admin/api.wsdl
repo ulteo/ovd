@@ -140,10 +140,25 @@
 		<part name="command" type="urn:string"/>
 	</message>
 	
-	<message name="application_web_addMessage">
+	<message name="application_weblink_addMessage">
 		<part name="name" type="urn:string"/>
 		<part name="description" type="urn:string"/>
 		<part name="url" type="urn:string"/>
+	</message>
+	
+	<message name="application_webapp_addMessage">
+		<part name="name" type="urn:string"/>
+		<part name="description" type="urn:string"/>
+		<part name="configuration" type="urn:any"/>
+	</message>
+
+	<message name="application_webapp_get_raw_configurationMessage">
+		<part name="application_id" type="urn:integer"/>
+	</message>
+
+	<message name="application_webapp_set_raw_configurationMessage">
+		<part name="application_id" type="urn:integer"/>
+		<part name="configuration" type="urn:any"/>
 	</message>
 	
 	<message name="applications_group_addMessage">
@@ -517,6 +532,31 @@
 			<output message="urn:String"/>
 		</operation>
 		
+		<operation name="application_webapp_add">
+			<input message="urn:application_webapp_addMessage"/>
+			<output message="urn:String"/>
+		</operation>
+
+		<operation name="application_webapp_get_raw_configuration">
+			<input message="urn:application_webapp_get_raw_configurationMessage"/>
+			<output message="urn:String"/>
+		</operation>
+
+		<operation name="application_webapp_set_raw_configuration">
+			<input message="urn:application_webapp_set_raw_configurationMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+        
+		<operation name="application_webapp_clone">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+
+		<operation name="application_webapp_remove">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
 		<operation name="application_static_remove">
 			<input message="urn:String"/>
 			<output message="urn:Boolean"/>
@@ -532,8 +572,8 @@
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="application_web_add">
-			<input message="urn:application_web_addMessage"/>
+		<operation name="application_weblink_add">
+			<input message="urn:application_weblink_addMessage"/>
 			<output message="urn:String"/>
 		</operation>
 		
@@ -1395,6 +1435,56 @@
 			</output>
 		</operation>
 		
+		<operation name="application_webapp_add">
+			<soap:operation soapAction="urn:OvdAdmin#application_webapp_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+
+		<operation name="application_webapp_get_raw_configuration">
+			<soap:operation soapAction="urn:OvdAdmin#application_webapp_get_raw_configuration"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+
+		<operation name="application_webapp_set_raw_configuration">
+			<soap:operation soapAction="urn:OvdAdmin#application_webapp_set_raw_configuration"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+        
+		<operation name="application_webapp_clone">
+			<soap:operation soapAction="urn:OvdAdmin#application_webapp_clone"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+        
+ 		<operation name="application_webapp_remove">
+			<soap:operation soapAction="urn:OvdAdmin#application_webapp_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
 		<operation name="application_static_modify">
 			<soap:operation soapAction="urn:OvdAdmin#application_static_modify"/>
 			<input>
@@ -1405,8 +1495,8 @@
 			</output>
 		</operation>
 		
-		<operation name="application_web_add">
-			<soap:operation soapAction="urn:OvdAdmin#application_web_add"/>
+		<operation name="application_weblink_add">
+			<soap:operation soapAction="urn:OvdAdmin#application_weblink_add"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>

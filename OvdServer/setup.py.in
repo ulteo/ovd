@@ -1,12 +1,13 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author David LECHEVALIER <david@ulteo.com> 2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 # Author Samuel BOVEE    <samuel@ulteo.com> 2010
 # Author Thomas MOUTON <thomas@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -88,6 +89,7 @@ elif sys.platform.startswith('linux'):
 	setup_args["packages"] = [
 		'ovd', 'ovd.Communication', 'ovd.Role',
 		'ovd.Role.FileServer', 'ovd.Role.ApplicationServer',
+		'ovd.Role.WebApps',
 		'ovd.Role.ApplicationServer.Platform',
 		'ovd.Role.ApplicationServer.Platform.Linux',
 		'ovd.Platform', 'ovd.Platform.Linux']

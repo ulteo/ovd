@@ -31,14 +31,15 @@ import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import javax.swing.ImageIcon;
 
 import net.propero.rdp.RdpConnection;
+
 import org.ulteo.Logger;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
 import org.ulteo.ovd.Application;
-import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.client.NativeClientActions;
 import org.ulteo.ovd.client.Newser;
@@ -46,9 +47,10 @@ import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.portal.PortalFrame;
+import org.ulteo.ovd.sm.News;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
-import org.ulteo.ovd.sm.News;
+import org.ulteo.ovd.sm.WebAppsServerAccess;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
@@ -134,6 +136,12 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		for (Application app : co.getOvdAppChannel().getApplicationsList()) {
 			this.appsList.add(app);
 		}
+		// Add shortcuts for web apps.
+		for (WebAppsServerAccess server : this.webAppsServers) {
+			for (Application app : server.getWebApplications()) {
+				this.appsList.add(app);
+			}
+		}
 	}
 
 	@Override
@@ -175,7 +183,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	@Override
 	protected void hide(RdpConnectionOvd rc) {
-		for (Application app : rc.getOvdAppChannel().getApplicationsList()) {
+		final OvdAppChannel ovdAppChannel = rc.getOvdAppChannel();
+		for (Application app : ovdAppChannel.getApplicationsList()) {
 			this.portal.getApplicationPanel().toggleAppButton(app, false);
 		}
 		

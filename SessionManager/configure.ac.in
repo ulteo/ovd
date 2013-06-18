@@ -100,6 +100,7 @@ web/modules/ApplicationDB/Makefile
 web/modules/ApplicationsGroupDB/Makefile
 web/modules/ProfileDB/Makefile
 web/modules/SharedFolderDB/Makefile
+web/modules/WebAppConfDB/Makefile
 web/admin/Makefile
 web/admin/classes/Makefile
 web/admin/includes/Makefile

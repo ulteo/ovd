@@ -33,9 +33,11 @@ import org.ulteo.Logger;
 import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.Application;
+import org.ulteo.ovd.WebApplication;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.ovd.sm.WebAppsServerAccess;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 import org.ulteo.rdp.RdpConnectionOvd;
@@ -69,10 +71,12 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	protected boolean showDesktopIcons = false;
 	protected boolean performDesktopIntegration = true;
 	protected DesktopIntegrator desktopIntegrator = null;
+	protected final List<WebAppsServerAccess> webAppsServers;
 
 	
 	public OvdClientRemoteApps(SessionManagerCommunication smComm, boolean persistent) {
 		super(smComm, persistent);
+		this.webAppsServers = new ArrayList<WebAppsServerAccess>();
 		
 		String sm = this.smComm.getHost();
 		if (OSTools.isWindows()) {
@@ -107,6 +111,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		
 		if (this.performDesktopIntegration && this.system != null) {
 			this.desktopIntegrator = new DesktopIntegrator(this.system, new ArrayList<RdpConnectionOvd>(this.connections), this.smComm);
+			this.desktopIntegrator.setWebAppServers(webAppsServers);
 			this.desktopIntegrator.addDesktopIntegrationListener(this);
 			this.desktopIntegrator.start();
 		}
@@ -231,13 +236,41 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 				appsIcons.put(app.getId(), app.getIcon());
 		}
 		int updatedIcons = this.system.updateAppsIconsCache(appsIcons);
-		if (updatedIcons > 0)
-			Logger.info("Applications cache updated: "+updatedIcons+" icons");
+		Logger.info("Applications cache updated: " + updatedIcons + " icons");
+	}
+	
+	public void processWebAppIconCache(final WebAppsServerAccess server) {
+		if (this.system == null) {
+			return;
+		}
+		final HashMap<Integer, ImageIcon> appsIcons = new HashMap<Integer, ImageIcon>();
+		for (final WebApplication app : server.getWebApplications()) {
+			if (this.isCancelled) {
+				break;
+			}
+
+			if (getAppIcon(app) != null) {
+				Logger.info("Got icon for webapp " + app.getName());
+				appsIcons.put(app.getId(), app.getIcon());
+			} else {
+				Logger.warn("No icon for webapp " + app.getName());
+			}
+		}
+		final int updatedIcons = this.system.updateAppsIconsCache(appsIcons);
+		Logger.info("Web applications cache updated: " + updatedIcons + " icons");
+	}
+	
+	public void createWepAppConnection(WebAppsServerAccess server) {
+		this.webAppsServers.add(server);
 	}
 	
 	public RdpConnectionOvd createRDPConnection(ServerAccess server) {
 		if (server == null)
 			return null;
+		if (!server.isRDP()) {
+			// Non-RDP servers don't need this connection.
+			return null;
+		}
 
 		if (this.screensize == null) {
 			Logger.error("Failed to initialize RDP connection: RDP configuration is not set");
@@ -290,9 +323,15 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			if (this.isCancelled)
 				return;
 			
-			RdpConnectionOvd rc = this.createRDPConnection(server);
-			if (rc != null)
-				this.processIconCache(rc);
+			if (server.isRDP()) {
+				RdpConnectionOvd rc = this.createRDPConnection(server);
+				if (rc != null)
+					this.processIconCache(rc);
+			} else {
+				final WebAppsServerAccess webAppServer = (WebAppsServerAccess) server;
+				createWepAppConnection(webAppServer);
+				this.processWebAppIconCache(webAppServer);
+			}
 		}
 	}
 

@@ -29,13 +29,16 @@ import javax.swing.ImageIcon;
 
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
+import org.ulteo.ovd.WebApplication;
 import org.ulteo.ovd.integrated.mime.XDGMime;
- import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.ovd.sm.WebAppsServerAccess;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public class DesktopIntegrator extends Thread {
 	private SystemAbstract system = null;
 	private List<RdpConnectionOvd> connections = null;
+	private final List<WebAppsServerAccess> webAppServers;
 	private SessionManagerCommunication sm = null;
 
 	private List<DesktopIntegrationListener> listeners = null;
@@ -45,13 +48,18 @@ public class DesktopIntegrator extends Thread {
 	public DesktopIntegrator(SystemAbstract system_, List<RdpConnectionOvd> connections_, SessionManagerCommunication sm_) {
 		if (system_ == null || connections_ == null || sm_ == null)
 			throw new NullPointerException("'DesktopIntegrator' does not accept a null parameter in constructor");
-		
+		this.webAppServers = new ArrayList<WebAppsServerAccess>();
 		this.system = system_;
 		this.connections = connections_;
 		this.sm = sm_;
 
 		this.listeners = Collections.synchronizedList(new ArrayList<DesktopIntegrationListener>());
 		this.integratedConnections = Collections.synchronizedList(new ArrayList<RdpConnectionOvd>());
+	}
+	
+	public void setWebAppServers(List<WebAppsServerAccess> servers) {
+		this.webAppServers.clear();
+		this.webAppServers.addAll(servers);
 	}
 
 	@Override
@@ -70,6 +78,15 @@ public class DesktopIntegrator extends Thread {
 			}
 			this.integratedConnections.add(rc);
 			this.fireShortcutGenerationIsDone(rc);
+		}
+		
+		// Generate webapp shortcuts.
+		for (WebAppsServerAccess server : this.webAppServers) {
+			for (WebApplication app : server.getWebApplications()) {
+				if (this.system.create(app) == null) {
+					Logger.error("The webapp " + app.getName() + " shortcut could not be created");
+				}
+			}
 		}
 		
 		// download mimetypes icons

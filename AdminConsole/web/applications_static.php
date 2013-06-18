@@ -1,10 +1,11 @@
 <?php
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011, 2012
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -47,7 +48,7 @@ function show_default() {
 	$applications2 = $_SESSION['service']->applications_list();
 	$applications = array();
 	foreach ($applications2 as $k => $v) {
-		if ($v->getAttribute('static'))
+		if ($v->getAttribute('static') && $v->getAttribute('type') != 'webapp')
 			$applications[$k] = $v;
 	}
 	$is_empty = (is_null($applications) or count($applications)==0);

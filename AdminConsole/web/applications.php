@@ -1,11 +1,12 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2010, 2012
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -158,6 +159,9 @@ function show_manage($id) {
 		redirect();
 	}
 
+  if ( $app->getAttribute('type') == 'webapp') {
+    redirect('applications_webapp.php?action=manage&id='.$app->getAttribute('id'));
+  }
   if ( $app->getAttribute('static')) {
     redirect('applications_static.php?action=manage&id='.$app->getAttribute('id'));
   }

@@ -1,9 +1,10 @@
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,10 +26,11 @@ var Application = Class.create({
 	name: '',
 	server_id: 0,
 
-	initialize: function(id_, name_, server_id_) {
+	initialize: function(id_, name_, server_id_, type_) {
 		this.id = id_;
 		this.name = name_;
 		this.server_id = server_id_;
+		this.type = type_;
 	}
 });
 
@@ -146,7 +148,12 @@ var ApplicationItem = Class.create({
 	repaintNode: function() {
 		this.app_span.innerHTML = '';
 
-		var server = daemon.servers.get(this.application.server_id);
+		var server;
+		if (this.application.type === 'webapp') {
+			server = daemon.webapp_servers.get(this.application.server_id);
+		} else {
+			server = daemon.servers.get(this.application.server_id);
+		}
 
 		if (server.ready) {
 			var node = new Element('a');

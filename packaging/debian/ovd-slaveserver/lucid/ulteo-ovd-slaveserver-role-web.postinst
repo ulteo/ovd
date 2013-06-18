@@ -1,0 +1,18 @@
+#!/bin/sh -e
+
+CONFDIR=/etc/ulteo/ovd
+
+if [ -z "$2" ]; then
+	ovd-slaveserver-role add WebApps
+fi
+
+if [ ! -e $CONFDIR/WebApps.pem ]; then
+    openssl genrsa 1024 > $CONFDIR/WebApps.pem 2> /dev/null
+    openssl req -new -x509 -days 3650 -key $CONFDIR/WebApps.pem -batch \
+        >> $CONFDIR/WebApps.pem
+    chmod 400 $CONFDIR/WebApps.pem
+fi
+
+#DEBHELPER#
+
+exit 0
