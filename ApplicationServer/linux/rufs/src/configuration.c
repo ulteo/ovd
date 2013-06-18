@@ -124,8 +124,8 @@ static bool configuration_parseRules(Ini* ini, Configuration* conf) {
 	section = ini_get(ini, RULE_CONFIGURATION_SECTION);
 
 	if (section == NULL) {
-		logWarn("there is no rules in the configuration file");
-		return false;
+		logDebug("there is no rules in the configuration file");
+		return true;
 	}
 
 	for (i = 0 ; i < section->keys->size ; i++) {
@@ -291,6 +291,10 @@ static bool configuration_parseUnion(Ini* ini, Configuration* conf, const char* 
 		if (str_ncmp(key, UNION_DELETE_ON_END_KEY, sizeof(UNION_DELETE_ON_END_KEY)) == 0) {
 			unionObject->deleteOnEnd = str_toBool(value);
 			continue;
+		}
+
+		if (str_ncmp(key, UNION_CREATE_PARENT_KEY, sizeof(UNION_CREATE_PARENT_KEY)) == 0) {
+			unionObject->createParentDirectory = str_toBool(value);
 		}
 	}
 

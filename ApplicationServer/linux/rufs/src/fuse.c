@@ -240,6 +240,10 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 			logDebug("Union %s is valid for the path %s", u->name, trpath);
 
 			str_sprintf(to, "%s%s", u->path, trpath);
+
+			if (u->createParentDirectory)
+				fs_mkdirs(to);
+
 			return true;
 		}
 	}
@@ -249,6 +253,10 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 	logDebug("Failed back %s\n", u->name);
 
 	str_sprintf(to, "%s%s", u->path, trpath);
+
+	if (u->createParentDirectory)
+		fs_mkdirs(to);
+
 	return true;
 }
 
