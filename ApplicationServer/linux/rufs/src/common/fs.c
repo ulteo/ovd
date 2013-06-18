@@ -325,20 +325,25 @@ bool fs_mkdirs(const char* file) {
 	struct stat st;
 
 	pos = strchr(cpy,'/');
-	if (pos == NULL)
+	if (pos == NULL) {
+		memory_free(cpy);
 		return false;
+	}
 
 	pos = strchr(pos+1,'/');
 	while (pos != NULL) {
 		*pos = 0;
 		mkdir(cpy, S_IRWXU);
-		if ( lstat(cpy, &st) == -1)
+		if ( lstat(cpy, &st) == -1) {
+			memory_free(cpy);
 			return false;
+		}
 
 		*pos = '/';
 		pos = strchr(pos+1,'/');
 	}
 
+	memory_free(cpy);
 	return true;
 }
 
