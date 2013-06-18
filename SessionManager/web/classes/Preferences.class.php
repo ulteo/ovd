@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -460,7 +460,7 @@ class Preferences {
 		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
 		
-		$c = new ConfigElement_select('persistent', 0);
+		$c = new ConfigElement_select('persistent', 1);
 		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
 
