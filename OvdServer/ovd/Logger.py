@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2011 Ulteo SAS
+# Copyright (C) 2009-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
+# Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -30,6 +31,7 @@ import threading
 import os
 import Queue
 import socket
+import traceback
 
 class Logger:
 	_instance = None
@@ -247,6 +249,18 @@ class Logger:
 			return
 		
 		cls._instance.process('log_error', message)
+	
+	
+	@classmethod
+	def exception(cls, message):
+		if not cls._instance:
+			return
+		
+		if cls._instance.loglevel&cls.ERROR != cls.ERROR:
+			return
+		
+		exc = traceback.format_exc()
+		cls._instance.process('log_error', message + '\n' + exc)
 	
 	
 	@classmethod
