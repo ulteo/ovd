@@ -229,7 +229,7 @@ class Preferences {
 		
 		$this->add($c, 'general');
 
-		$c = new ConfigElement_input('max_items_per_page', 100);
+		$c = new ConfigElement_input('max_items_per_page', 15);
 		$this->add($c,'general');
 		
 		$c = new ConfigElement_inputlist('default_browser', array('linux' => NULL, 'windows' => NULL));
