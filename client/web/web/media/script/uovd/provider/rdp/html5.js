@@ -2,7 +2,7 @@
 
 uovd.provider.rdp.Html5 = function() {
 	this.initialize();
-	this.connections = new Array();
+	this.connections = null;
 }
 
 uovd.provider.rdp.Html5.prototype = new uovd.provider.rdp.Base();
@@ -10,6 +10,7 @@ uovd.provider.rdp.Html5.prototype = new uovd.provider.rdp.Base();
 uovd.provider.rdp.Html5.prototype.connectDesktop = function() {
 	var self = this; /* closure */
 	var server = this.session_management.session.servers[0];
+	this.connections = new Array();
 
 	/* Add the servers status callback to global namespace */
 	/* __MUST__ Be set before guac_client.connect */
@@ -72,6 +73,7 @@ uovd.provider.rdp.Html5.prototype.connectDesktop = function() {
 uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 	var self = this; /* closure */
 	var servers = this.session_management.session.servers;
+	this.connections = new Array();
 
 	/* Add the servers status callback to global namespace */
 	/* __MUST__ Be set before guac_client.connect */
