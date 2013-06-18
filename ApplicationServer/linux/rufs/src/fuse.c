@@ -39,6 +39,7 @@
 #include "common/str.h"
 #include "common/user.h"
 #include "common/rsync.h"
+#include "common/list.h"
 #include "common/signal.h"
 #include "shares.h"
 #include <linux/limits.h>
@@ -365,11 +366,13 @@ static int rufs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 	// We need to list all the file present in all union
 	if (str_cmp(path, "/") == 0) {
 		int i = 0;
+		List* rootContents = list_new(true);
 		for (i = 0 ; i < config->unions->size ; i++) {
 			Union* u = (Union*)list_get(config->unions, i);
 			if (!u) {
 				continue;
 			}
+
 
 			dp = opendir(u->path);
 			while ((de = readdir(dp)) != NULL) {
@@ -379,11 +382,18 @@ static int rufs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 				st.st_ino = de->d_ino;
 				st.st_mode = de->d_type << 12;
 				transformPathOut(de->d_name, trpath);
+
+				if (list_containString(rootContents, trpath))
+					continue;
+
+				list_add(rootContents, (Any)strdup(trpath));
 				if (filler(buf, trpath, &st, 0))
 					break;
 			}
 			closedir(dp);
 		}
+
+		list_delete(rootContents);
 		return 0;
 	}
 

@@ -1,7 +1,7 @@
 /**
- * Copyright (C) 2012 Ulteo SAS
+ * Copyright (C) 2012-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -142,4 +142,24 @@ char* list_dumpStr(List* list, char* separator) {
 	}
 
 	return buffer;
+}
+
+
+bool list_containString(List* list, const char* path) {
+	char* buffer;
+	char* str;
+	int size = 1;
+	int i;
+
+	if (path == NULL)
+		return false;
+
+	for (i = 0; i < list->size; i++) {
+		str = (char*)list->values[i];
+		if (str != NULL && str_cmp(str, path) == 0) {
+			return true;
+		}
+	}
+
+	return false;
 }
