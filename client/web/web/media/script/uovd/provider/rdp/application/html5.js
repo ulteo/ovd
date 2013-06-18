@@ -11,6 +11,20 @@ uovd.provider.rdp.application.Html5 = function(rdp_provider) {
 			 self.connections[server_id].guac_tunnel.addInstructionHandler("ovdapp", self.handleOrders.bind(self, server_id));
 		 })(i);
 	}
+
+	/* Override destructor */
+	var end_super = this.end.bind(this);
+	this.end = function() {
+		end_super();
+
+		/* Remove instruction hook */
+		var self = this; /* closure */
+		for(var i=0 ; i<this.connections.length ; ++i) {
+			(function(server_id) {
+				self.connections[server_id].guac_tunnel.removeInstructionHandler("ovdapp");
+			})(i);
+		}
+	};
 }
 uovd.provider.rdp.application.Html5.prototype = new uovd.provider.rdp.application.Base();
 
