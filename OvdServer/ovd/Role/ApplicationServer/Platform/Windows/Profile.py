@@ -249,7 +249,7 @@ class Profile(AbstractProfile):
 		username_motif = r"u([a-zA-Z0-9\x00]{31}_\x00A\x00P\x00S\x00)"
 		subpath = "Software\Microsoft\Windows NT\CurrentVersion\Windows Messaging Subsystem\Profiles\Outlook"
 		
-		if self.profile is not None or len(self.sharedFolders)>0:
+		if (self.profile is not None and self.mountPoint is not None) or len(self.sharedFolders)>0:
 			Reg.CreateKeyR(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo")
 			
 			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo", 0, win32con.KEY_ALL_ACCESS)
@@ -257,7 +257,7 @@ class Profile(AbstractProfile):
 			win32api.RegCloseKey(key)
 		
 		
-		if self.profile is not None:
+		if self.profile is not None and self.mountPoint is not None:
 			path = hiveName+r"\Software\Ulteo\ovd\profile"
 			Reg.CreateKeyR(win32con.HKEY_USERS, path)
 			
