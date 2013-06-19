@@ -92,6 +92,16 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 			/* set application_provider */
 			var application_provider = new uovd.provider.rdp.application.Html5(self);
 
+			/* Create a keyboard */
+			var keyboard = new Guacamole.Keyboard(document);
+
+			/* Share it among all connections */
+			for(var i=0 ; i<self.connections.length ; ++i) {
+				self.connections[i].guac_keyboard = keyboard;
+			}
+
+			/* /!\ The mouse is not handled per connection but per window /!\ */
+
 			return;
 		};
 

@@ -84,8 +84,10 @@ SeamlessWindowManager.prototype.handleEvents = function(type, source, params) {
 			case "focus" :
 				var state = params["value"];
 				if(state == true) {
-					/* Set focus to the window */
-					this.windows[id].focus();
+					/* Avoid focus loop */
+					if(this.windows[id].isFocused()) {
+						return;
+					}
 
 					/* Set the window on the top */
 					if(this.node.find("> *").length > 1) {
@@ -95,8 +97,9 @@ SeamlessWindowManager.prototype.handleEvents = function(type, source, params) {
 
 					/* Remove focus from other(s) */
 					for(var w_id in this.windows) {
-						if(w_id != id) {
-							if(this.windows[w_id]) {
+						if(this.windows[w_id]) {
+							/* Don't send blur events to window on the same desktop : already done server-side */
+							if(this.windows[w_id].getServerId() != this.windows[id].getServerId()) {
 								if(this.windows[w_id].isFocused()) {
 									var parameters = {};
 									parameters["id"] = w_id;
@@ -104,10 +107,16 @@ SeamlessWindowManager.prototype.handleEvents = function(type, source, params) {
 									parameters["property"] = "focus";
 									parameters["value"] = false;
 									this.session_management.fireEvent("ovd.rdpProvider.seamless.out.windowPropertyChanged", this, parameters);
+
+									this.windows[w_id].blur();
 								}
 							}
 						}
 					}
+
+					/* Set focus to the window */
+					this.windows[id].focus();
+
 				} else {
 					this.windows[id].blur();
 				}

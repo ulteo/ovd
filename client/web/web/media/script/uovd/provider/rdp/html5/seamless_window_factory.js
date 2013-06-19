@@ -25,16 +25,20 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 		this.node = jQuery(document.createElement("canvas"));
 		this.node.css("position", "absolute");
 		this.node.prop("id", "w_"+this.id);
+
+		/* Focus on click */
 		this.node.click(function() {
-			/* Give focus on click : simulate a seamless "focus" event */
-			params["rdp_provider"] = self.rdp_provider;
-			params["server_id"] = self.server_id;
-			params["connection"] = self.connection;
-			params["main_canvas"] = self.main_canvas;
-			params["id"] = self.id;
-      params["property"] = "focus";
-      params["value"] = true;
-      self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.in.windowPropertyChanged", this, params);
+			if(! self.focused) {
+				/* Simulate a focus change event to send the canvas on the top */
+				params["rdp_provider"] = self.rdp_provider;
+				params["server_id"] = self.server_id;
+				params["connection"] = self.connection;
+				params["main_canvas"] = self.main_canvas;
+				params["id"] = self.id;
+				params["property"] = "focus";
+				params["value"] = true;
+				self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.in.windowPropertyChanged", this, params);
+			}
 		});
 
 		this.mouse = new Guacamole.Mouse(this.node[0]);
@@ -45,17 +49,7 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 			self.connection.guac_client.sendMouseState(newState);
 		}
 
-		this.keyboard = new Guacamole.Keyboard(document);
-		this.keyboard.onkeydown = function (keysym) {
-			if(self.focus) {
-				self.connection.guac_client.sendKeyEvent(1, keysym);
-			}
-		}
-		this.keyboard.onkeyup = function (keysym) {
-			if(self.focus) {
-				self.connection.guac_client.sendKeyEvent(0, keysym);
-			}
-		}
+		/* /!\ The keyboard is not handled per window but per connection /!\ */
 	}
 
 	this.SeamlessWindow.prototype.getNode = function() {
@@ -138,10 +132,19 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 
 	this.SeamlessWindow.prototype.focus = function() {
 		this.focused = true;
+
+		/* Bind keyboard events */
+		var self = this; /* closure */
+		this.connection.guac_keyboard.onkeydown = function (keysym) { self.connection.guac_client.sendKeyEvent(1, keysym); };
+		this.connection.guac_keyboard.onkeyup =   function (keysym) { self.connection.guac_client.sendKeyEvent(0, keysym); };
 	}
 
 	this.SeamlessWindow.prototype.blur = function() {
 		this.focused = false;
+
+		/* UnBind keyboard events */
+		this.connection.guac_keyboard.onkeydown = function (keysym) {};
+		this.connection.guac_keyboard.onkeyup =   function (keysym) {};
 	}
 
 	this.SeamlessWindow.prototype.isFocused = function() {
@@ -175,12 +178,12 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 	this.SeamlessWindow.prototype.destroy = function() {
 		/* Remove node */
 		this.hide();
+		this.node.off("click");
 		this.node.remove();
 
 		/* Unregister handlers */
 		this.mouse.onmousemove = this.mouse.onmousedown = this.mouse.onmouseup = function(mouseState) {};
-		this.keyboard.onkeydown = this.keyboard.onkeyup = function (keysym) {};
-		this.keyboard = this.mouse = null;
+		this.mouse = null;
 	}
 }
 

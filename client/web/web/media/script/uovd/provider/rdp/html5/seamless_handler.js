@@ -177,7 +177,7 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleEvents = function(type, 
 		var guac_tunnel = connection.guac_tunnel
 		guac_tunnel.sendMessage("seamrdp", "DESTROY,"+ (this.message_id++) +","+id+",;\n");
 	} else if(type == "ovd.rdpProvider.seamless.out.windowPropertyChanged") {
-		var id = parseInt(params["id"]).toString(16);
+		var id = "0x"+parseInt(params["id"]).toString(16);
 		var server_id = params["server_id"];
 		var property = params["property"];
 		var value = params["value"];
@@ -214,6 +214,7 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleEvents = function(type, 
 				break
 
 			case "focus" :
+				value = value ? "0x0" : "0x1";
 				guac_tunnel.sendMessage("seamrdp", "FOCUS,"+ (this.message_id++) +","+id+","+value+",;\n");
 				break
 		}
