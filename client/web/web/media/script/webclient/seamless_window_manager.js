@@ -74,10 +74,19 @@ SeamlessWindowManager.prototype.handleEvents = function(type, source, params) {
 
 			case "state" :
 				var state = params["value"];
+
+				/* Handle visibility */
 				if(state == "Normal" || state == "Maximized" || state == "Fullscreen") {
 					this.windows[id].show();
 				} else {
 					this.windows[id].hide();
+				}
+
+				/* Handle size */
+				if(state == "Maximized" || state == "Fullscreen") {
+					this.windows[id].maximize();
+				} else if(state == "Normal") {
+					this.windows[id].restore();
 				}
 				break;
 

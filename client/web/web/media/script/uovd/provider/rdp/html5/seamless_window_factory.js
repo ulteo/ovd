@@ -233,6 +233,17 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 		return this.focused;
 	}
 
+	this.SeamlessWindow.prototype.maximize = function() {
+		var xmax = this.main_canvas.prop("width");
+		var ymax = this.main_canvas.prop("height");
+
+		this.setPosition(0, 0);
+		this.setSize(xmax, ymax);
+	};
+
+	this.SeamlessWindow.prototype.restore = function() {
+	};
+
 	this.SeamlessWindow.prototype.update = function() {
 		var window_canvas = this.node[0];
 		var window_context = window_canvas.getContext("2d");
