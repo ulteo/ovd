@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+RUFS_SPOOL=/var/spool/ulteo/rufs
+
+mkdir -p $RUFS_SPOOL
+chown ovd-fs:ovd-fs $RUFS_SPOOL
+
+#DEBHELPER#
+
+exit 0

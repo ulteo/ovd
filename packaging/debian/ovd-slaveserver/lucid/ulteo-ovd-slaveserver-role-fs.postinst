@@ -5,6 +5,7 @@
 DATADIR=/usr/share/ulteo/ovd/slaveserver
 SPOOLDIR=/var/spool/ulteo/ovd/slaveserver
 HOMEDIR=/var/lib/ulteo/ovd/slaveserver/fs
+REALDIR=/var/lib/ulteo/ovd/slaveserver/fs.real
 
 # update slavesever config file
 [ -z "$2" ] && ovd-slaveserver-role add FileServer
@@ -14,6 +15,10 @@ getent passwd ovd-fs >/dev/null || adduser --system --group --home $HOMEDIR ovd-
 usermod -G ovd-fs www-data >/dev/null
 usermod -G fuse ovd-fs >/dev/null
 chown ovd-fs:ovd-fs $HOMEDIR
+
+# create real.fs directory
+mkdir -p $REALDIR
+chown ovd-fs:ovd-fs $REALDIR
 
 # create spool directory
 mkdir -p $SPOOLDIR
