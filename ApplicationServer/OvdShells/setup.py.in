@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author David LECHEVALIER <david@ulteo.com> 2011
-# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2013
 # Author Samuel BOVEE    <samuel@ulteo.com> 2010
 # Author Thomas MOUTON <thomas@ulteo.com> 2011
 #
@@ -68,6 +68,8 @@ elif sys.platform == "win32":
             self.copyright = "Copyright (C) @YEAR@ Ulteo SAS"
             self.name = "Ulteo OVD"
             self.icon_resources = [(0, "media\\ulteo.ico")]
+            self.version = "@VERSION_STRICT@"
+            self.product_version = "@VERSION@"
 
 
     setup_args["zipfile"] = "lib/shared.zip"

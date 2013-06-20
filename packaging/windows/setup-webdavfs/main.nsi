@@ -1,6 +1,6 @@
-;; Copyright (C) 2011-2012 Ulteo SAS
+;; Copyright (C) 2011-2013 Ulteo SAS
 ;; http://www.ulteo.com
-;; Author Julien LANGLOIS <julien@ulteo.com> 2011
+;; Author Julien LANGLOIS <julien@ulteo.com> 2011, 2013
 ;; Author David LECHEVALIER <david@ulteo.com> 2012
 ;;
 ;; This program is free software; you can redistribute it and/or 
@@ -58,7 +58,7 @@
   VIAddVersionKey ProductName "${PRODUCT_NAME}"
   VIAddVersionKey CompanyName "${PRODUCT_PUBLISHER}"
   VIAddVersionKey ProductVersion "${PRODUCT_VERSION}"
-  VIAddVersionKey FileVersion "${PRODUCT_VERSION}"
+  VIAddVersionKey FileVersion "${FILE_VERSION}"
   VIAddVersionKey FileDescription "${PRODUCT_NAME}"
   VIAddVersionKey LegalCopyright "Copyright (C) ${COPYRIGHT_YEAR} Ulteo SAS"
   VIProductVersion "${PRODUCT_VERSION}"
