@@ -56,6 +56,7 @@ Event.observe(window, 'load', function() {
 	jQuery('#debugLevels').hide();
 	jQuery('#loginBox').hide();
 	jQuery('#newsWrap').hide();
+	jQuery('#fullScreenMessage').hide();
 
 	/* Fade-in the login panel */
 	setTimeout(function() {

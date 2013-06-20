@@ -10,9 +10,33 @@ DesktopContainer = function(session_management, node) {
 
 DesktopContainer.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.rdpProvider.desktopPanel") {
-		var name = params["name"];
+		var type = params["type"];
 		var node = params["node"];
-		this.node.append(node);
+
+		if(type == "Desktop" && node != null) {
+			/* This is a canvas or applet */
+			this.node.append(node);
+		}
+
+		if(type == "Fullscreen" && node == null) {
+			/* Fullscreen mode without panel : insert message */
+
+			var fullscreen_message = jQuery("#fullScreenMessage").clone();
+			fullscreen_message.show();
+			fullscreen_message.find("a").click( function() {
+				source.request_fullscreen();
+			});
+
+			var background = jQuery(document.createElement('div'));
+			background.css("background", "#DDD");
+			background.css("color", "#333");
+			background.width(window.innerWidth);
+			background.height(window.innerHeight);
+			background.append(fullscreen_message);
+			jQuery('#desktopContainer').append(background);
+
+			new Effect.Center(fullscreen_message[0]);
+		}
 	}
 
 	if(type == "ovd.session.destroying" ) { /* Clean context */

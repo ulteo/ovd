@@ -61,7 +61,11 @@ uovd.provider.rdp.Html5.prototype.connectDesktop = function() {
 			self.connections.push(connection);
 
 			/* Notify main panel insertion */
-			self.session_management.fireEvent("ovd.rdpProvider.desktopPanel", self, {"name":"Desktop_0", "node":connection.guac_display});
+			self.session_management.fireEvent("ovd.rdpProvider.desktopPanel", self, {"type":"Desktop", "node":connection.guac_display});
+
+			/* Add the fullscreen request function */
+			self.request_fullscreen = function() {
+			};
 		},
 		error: function( xhr, status ) {
 			console.log("Error : "+status);
@@ -136,7 +140,7 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 				jQuery(connection.guac_canvas).hide();
 
 				/* Notify main panel insertion */
-				self.session_management.fireEvent("ovd.rdpProvider.desktopPanel", self, {"name":"Desktop_"+index, "node":connection.guac_display});
+				self.session_management.fireEvent("ovd.rdpProvider.desktopPanel", self, {"type":"Desktop", "node":connection.guac_display});
 
 				/* Call next chainLoader iteration */
 				chainLoader(parseInt(index)+1);

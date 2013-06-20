@@ -206,7 +206,7 @@ function get_available_translations($lang) {
 		'desktop_fullscreen_text1'		=>	_('The Ulteo OVD session runs in a separated window'),
 		'desktop_fullscreen_text2'		=>	str_replace(
 									array('[A]', '[/A]'),
-									array('<a href="javascript:;" onclick="$(\'ulteoapplet\').switchBackFullscreenWindow(); return false;">', '</a>'),
+									array('<a href="javascript:;">', '</a>'),
 									_('Click [A]here[/A] to switch back to your session')
 								),
 

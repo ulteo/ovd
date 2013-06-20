@@ -225,7 +225,6 @@ uovd.provider.Java.prototype.sessionSuspend_implementation = function(callback) 
 uovd.provider.Java.prototype.connectDesktop = function() {
 	var self = this; /* closure */
 	var server = this.session_management.session.servers[0];
-	var settings = this.session_management.session.settings;
 	var parameters = this.session_management.parameters;
 	var onfailure = function() {
 		/* !!! Error  */
@@ -250,81 +249,25 @@ uovd.provider.Java.prototype.connectDesktop = function() {
 			self.session_management.session.servers[id].setStatus(status);
 		};
 
-		/* Generate a desktop applet */
-		var archive = "ulteo-applet.jar";
-		var cache_archive = "ulteo-applet.jar";
-		var cache_archive_ex = "ulteo-applet.jar;preload"
-		var name = "Desktop_0";
-
-		var desktop_applet = jQuery(document.createElement("applet"));
-		desktop_applet.attr("id", name);
-		desktop_applet.attr("name", name);
-		desktop_applet.attr("width", parameters["width"]);
-		desktop_applet.attr("height", parameters["height"]);
-		if (self.applet_codebase != null) {
-			desktop_applet.attr("codebase", self.applet_codebase);
+		if(parameters["fullscreen"] == true) {
+			self.connectDesktop_fullscreen(settings);
+		} else {
+			self.connectDesktop_embeeded(settings);
 		}
-		desktop_applet.attr("archive", archive);
-		desktop_applet.attr("cache_archive", cache_archive);
-		desktop_applet.attr("cache_archive_ex", cache_archive_ex);
-		desktop_applet.attr("code", "org.ulteo.ovd.applet.DesktopContainer");
 
-		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "id").attr("value", name));
-		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "name").attr("value", name));
-		if (self.applet_codebase != null) {
-			desktop_applet.append(jQuery(document.createElement("param")).attr("name", "codebase").attr("value", self.applet_codebase));
-		}
-		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "archive").attr("value", archive));
-		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive").attr("value", cache_archive));
-		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive_ex").attr("value", cache_archive_ex));
-		desktop_applet.append(jQuery(document.createElement("param")).attr("code", "org.ulteo.ovd.applet.DesktopContainer"));
-
-		/* Notify main panel insertion */
-		self.session_management.fireEvent("ovd.rdpProvider.desktopPanel", self, {"name":name, "node":desktop_applet[0]});
-
-		/* Wait for desktop applet */
-		var error_timeout = null;
-		var retry_timeout = null;
-
-		var activation = function() {
-			try {
-				desktop_applet[0].isActive();
-			} catch(e) {
-				retry_timeout = setTimeout(activation, 1000);
-				return;
+		/* Applet startSession handler */
+		self.applet_sessionReady = function() {
+			var success = true;
+			if(self.session_management.session.mode_gateway == true) {
+				success = self.main_applet[0].serverConnect(0, server.fqdn, server.port, server.token, server.login, server.password);
+			} else {
+				success = self.main_applet[0].serverConnect(0, server.fqdn, server.port, server.login, server.password);
 			}
 
-			clearTimeout(error_timeout);
-
-			/* Applet startSession handler */
-			self.applet_sessionReady = function() {
-				var success = true;
-				if(self.session_management.session.mode_gateway == true) {
-					success = self.main_applet[0].serverConnect(0, server.fqdn, server.port, server.token, server.login, server.password);
-				} else {
-				  success = self.main_applet[0].serverConnect(0, server.fqdn, server.port, server.login, server.password);
-				}
-
-				if(! success) {
-					/* !!! Error */
-				}
-			};
-
-			/* Start the session */
-			if(! self.main_applet[0].startSession(parameters["session_type"], settings)) {
+			if(! success) {
 				/* !!! Error */
 			}
 		};
-
-		error_timeout = setTimeout(function() {
-			clearTimeout(retry_timeout);
-			/* !!! Error  */
-		}, 60000);
-
-		retry_timeout = setTimeout(function() {
-			activation();
-		}, 100);
-
 	};
 
 	if(this.main_applet == null) {
@@ -333,6 +276,89 @@ uovd.provider.Java.prototype.connectDesktop = function() {
 		onsuccess();
 	}
 };
+
+uovd.provider.Java.prototype.connectDesktop_embeeded = function(settings) {
+	var self = this; /* closure */
+	var server = this.session_management.session.servers[0];
+	var parameters = this.session_management.parameters;
+
+	/* Generate a desktop applet */
+	var archive = "ulteo-applet.jar";
+	var cache_archive = "ulteo-applet.jar";
+	var cache_archive_ex = "ulteo-applet.jar;preload"
+	var name = "Desktop_0";
+
+	var desktop_applet = jQuery(document.createElement("applet"));
+	desktop_applet.attr("id", name);
+	desktop_applet.attr("name", name);
+	desktop_applet.attr("width", parameters["width"]);
+	desktop_applet.attr("height", parameters["height"]);
+	if (self.applet_codebase != null) {
+		desktop_applet.attr("codebase", self.applet_codebase);
+	}
+	desktop_applet.attr("archive", archive);
+	desktop_applet.attr("cache_archive", cache_archive);
+	desktop_applet.attr("cache_archive_ex", cache_archive_ex);
+	desktop_applet.attr("code", "org.ulteo.ovd.applet.DesktopContainer");
+
+	desktop_applet.append(jQuery(document.createElement("param")).attr("name", "id").attr("value", name));
+	desktop_applet.append(jQuery(document.createElement("param")).attr("name", "name").attr("value", name));
+	if (self.applet_codebase != null) {
+		desktop_applet.append(jQuery(document.createElement("param")).attr("name", "codebase").attr("value", self.applet_codebase));
+	}
+	desktop_applet.append(jQuery(document.createElement("param")).attr("name", "archive").attr("value", archive));
+	desktop_applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive").attr("value", cache_archive));
+	desktop_applet.append(jQuery(document.createElement("param")).attr("name", "cache_archive_ex").attr("value", cache_archive_ex));
+	desktop_applet.append(jQuery(document.createElement("param")).attr("code", "org.ulteo.ovd.applet.DesktopContainer"));
+
+	/* Notify main panel insertion */
+	self.session_management.fireEvent("ovd.rdpProvider.desktopPanel", self, {"type":"Desktop", "node":desktop_applet[0]});
+
+	/* Wait for desktop applet */
+	var error_timeout = null;
+	var retry_timeout = null;
+
+	var activation = function() {
+		try {
+			desktop_applet[0].isActive();
+		} catch(e) {
+			retry_timeout = setTimeout(activation, 1000);
+			return;
+		}
+
+		clearTimeout(error_timeout);
+
+		/* Start the session */
+		if(! self.main_applet[0].startSession(parameters["session_type"], settings)) {
+			/* !!! Error */
+		}
+	};
+
+	error_timeout = setTimeout(function() {
+		clearTimeout(retry_timeout);
+		/* !!! Error  */
+	}, 60000);
+
+	retry_timeout = setTimeout(function() {
+		activation();
+	}, 100);
+};
+
+uovd.provider.Java.prototype.connectDesktop_fullscreen = function(settings) {
+	var parameters = this.session_management.parameters;
+
+	self.session_management.fireEvent("ovd.rdpProvider.desktopPanel", self, {"type":"Fullscreen", "node":null});
+
+	/* Add the fullscreen request function */
+	self.request_fullscreen = function() {
+		self.main_applet[0].switchBackFullscreenWindow();
+	};
+
+	/* Start the session */
+	if(! this.main_applet[0].startSession(parameters["session_type"], settings)) {
+		/* !!! Error */
+	}
+}
 
 uovd.provider.Java.prototype.connectApplications = function() {
 	var self = this; /* closure */

@@ -500,6 +500,26 @@ function get_users_list() {
 					</td>
 				</tr>
 			</table>
+			<div id="fullScreenMessage" class="rounded">
+				<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td style="text-align: center;">
+							<?php if (!$big_image_map) { ?>
+							<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
+							<?php } else { ?>
+							<div class="image_ulteo_png"></div>
+							<?php } ?>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: center; vertical-align: middle; margin-top: 15px;">
+							<span style="font-size: 1.1em; font-weight: bold; color: #686868;" id="desktop_fullscreen_text1_gettext">&nbsp;</span>
+							<br /><br />
+							<span style="font-size: 1.1em; font-weight: bold; color: #686868;" id="desktop_fullscreen_text2_gettext">&nbsp;</span>
+						</td>
+					</tr>
+				</table>
+			</div>
 			<div id="desktopContainer"></div>
 			<div id="windowsContainer"></div>
 		</div>
