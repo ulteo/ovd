@@ -37,7 +37,7 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 				params["id"] = self.id;
 				params["property"] = "focus";
 				params["value"] = true;
-				self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.in.windowPropertyChanged", this, params);
+				self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.in.windowPropertyChanged", self, params);
 			}
 		});
 
