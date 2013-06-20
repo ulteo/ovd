@@ -1,6 +1,6 @@
-;; Copyright (C) 2009 - 2010 Ulteo SAS
+;; Copyright (C) 2009 - 2013 Ulteo SAS
 ;; http://www.ulteo.com
-;; Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
+;; Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2013
 ;; Author Thomas MOUTON <thomas@ulteo.com> 2009, 2010
 ;;
 ;; This program is free software; you can redistribute it and/or 
@@ -59,7 +59,7 @@
   VIAddVersionKey ProductName "${PRODUCT_NAME}"
   VIAddVersionKey CompanyName "${PRODUCT_PUBLISHER}"
   VIAddVersionKey ProductVersion "${PRODUCT_VERSION}"
-  VIAddVersionKey FileVersion "${PRODUCT_VERSION}"
+  VIAddVersionKey FileVersion "${FILE_VERSION}"
   VIAddVersionKey FileDescription "Ulteo OVD Native Client (standalone version)"
   VIAddVersionKey LegalCopyright "Copyright (C) ${COPYRIGHT_YEAR} Ulteo SAS"
   VIProductVersion "${PRODUCT_VERSION}"

@@ -3,7 +3,7 @@
 
 # Copyright (C) 2011-2013 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2011, 2013
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
+import re
 import time
 
 path = os.path.dirname( os.path.realpath( __file__ ) )
@@ -32,13 +33,15 @@ else:
 	version = file("VERSION", "r").readline().strip()
 	version += "~dev"
 
+version_strict = ".".join([p for p in (re.split("[^\d\.]", version)[0]+".0"*4).split(".")  if p.isdigit()][:4])
+
 for name in ["ressources.rc"]:
 	f = file(os.path.join(path, name+".in"), "r")
 	content = f.read()
 	f.close()
 	
 	content = content.replace("@VERSION@", version)
-	content = content.replace("@VERSION_STYLE_C@", version.replace(".", ","))
+	content = content.replace("@VERSION_STYLE_C@", version_strict.replace(".", ","))
 	content = content.replace("@YEAR@", time.strftime("%Y"))
 	
 	f = file(os.path.join(path, name), "w")

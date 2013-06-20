@@ -3,7 +3,7 @@
 
 # Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2013
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
@@ -22,6 +22,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os, sys
+import re
 import time
 
 path = os.path.dirname( os.path.realpath( __file__ ) )
@@ -34,6 +35,8 @@ if os.environ.has_key("OVD_VERSION"):
 else:
 	version = file("VERSION", "r").readline().strip()
 	version += "~dev"
+
+version_strict = ".".join([p for p in (re.split("[^\d\.]", version)[0]+".0"*4).split(".")  if p.isdigit()][:4])
 
 # OS detection
 if sys.platform.startswith('linux'):
@@ -55,6 +58,7 @@ if "--gateway" in sys.argv:
 
 content = content.replace("@NAME@", name)
 content = content.replace("@VERSION@", str(version))
+content = content.replace("@VERSION_STRICT@", version_strict)
 content = content.replace("@EXTRA_MODULES@", extra_modules)
 content = content.replace("@YEAR@", time.strftime("%Y"))
 
