@@ -41,6 +41,88 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 			}
 		});
 
+		/* Move window */
+		this.node.mousedown(function(e) {
+			var begin_drag_n_drop = function() {
+				var lastX = e.pageX;
+				var lastY = e.pageY;
+
+				var x = self.x;
+				var y = self.y;
+				var w = self.w;
+				var h = self.h;
+
+				var overlay = jQuery(document.createElement("canvas"));
+				overlay.css("position", "absolute");
+				overlay.prop("width", w);
+				overlay.prop("height", h);
+				overlay.css("left", x);
+				overlay.css("top", y);
+				var context = overlay[0].getContext("2d");
+				context.lineWidth="4";
+				context.strokeStyle="black";
+				context.rect(0,0,w,h);
+				context.stroke();
+
+				jQuery("#w_"+self.id).after(overlay);
+
+				var drag = function(e) {
+					var dx = parseInt(e.pageX) - parseInt(lastX);
+					var dy = parseInt(e.pageY) - parseInt(lastY);
+					x = parseInt(x) + parseInt(dx);
+					y = parseInt(y) + parseInt(dy);
+					lastX = e.pageX;
+					lastY = e.pageY;
+
+					overlay.css("left", x);
+					overlay.css("top", y);
+				};
+
+				var drop = function(e) {
+					overlay.off("mousemove");
+					overlay.off("onmouseup");
+					overlay.off("mouseout");
+					overlay.remove();
+
+					if(x != self.x || y != self.y) {
+						/* Send seamless move notification */
+						var parameters = {};
+						parameters["id"] = self.id;
+						parameters["server_id"] = self.server_id;
+						parameters["property"] = "position";
+						parameters["value"] = new Array(x, y, w, h);
+						self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.out.windowPropertyChanged", self, parameters);
+					}
+				};
+
+				overlay.mousemove(drag);
+				overlay.mouseup(drop);
+				overlay.mouseout(drop);
+			}
+
+			/* check coords */
+			var localY = e.pageY - self.y;
+			if(localY < 5 || localY > 25 ) { return; }
+
+			/* check long click */
+			var longclick = true;
+			var release_longclick = function() {
+				self.node.off("onmouseup");
+				longclick = false;
+			};
+
+			var check_longclick = function() {
+				if(longclick == true) {
+					self.node.off("onmouseup");
+					begin_drag_n_drop();
+				}
+			};
+
+			setTimeout( check_longclick, 300);
+			self.node.mouseup(release_longclick);
+
+		});
+
 		this.mouse = new Guacamole.Mouse(this.node[0]);
 		this.mouse.onmousemove = this.mouse.onmousedown = this.mouse.onmouseup = function(mouseState) {
 			var x = parseInt(mouseState.x)+parseInt(self.x);
