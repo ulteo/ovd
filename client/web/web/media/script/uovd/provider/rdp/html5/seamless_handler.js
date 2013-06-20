@@ -186,20 +186,10 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleEvents = function(type, 
 
 		switch(property) {
 			case "position" :
-				var size = source.getSize();
-				var w = size[0];
-				var h = size[1];
 				var x = value[0];
 				var y = value[1];
-				guac_tunnel.sendMessage("seamrdp", "POSITION,"+ (this.message_id++) +","+id+","+x+","+y+","+w+","+h+",;\n");
-				break
-
-			case "size" :
-				var position = source.getPosition();
-				var w = value[0];
-				var h = value[1];
-				var x = position[0];
-				var y = position[1];
+				var w = value[2];
+				var h = value[3];
 				guac_tunnel.sendMessage("seamrdp", "POSITION,"+ (this.message_id++) +","+id+","+x+","+y+","+w+","+h+",;\n");
 				break
 
