@@ -222,6 +222,7 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/webclient/desktop_container.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/seamless_launcher.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/seamless_window_manager.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/progress_bar.js" charset="utf-8"></script>
 <?php } ?>
 		<script type="text/javascript" src="media/script/webclient/ui.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/uovd_int_client.js" charset="utf-8"></script>
@@ -393,7 +394,8 @@ function get_users_list() {
 				</tr>
 				<tr>
 					<td style="text-align: left; vertical-align: middle; margin-top: 15px;">
-						<span style="font-size: 1.35em; font-weight: bold; color: #686868;" id="loading_ovd_gettext">&nbsp;</span>
+						<span style="font-size: 1.35em; font-weight: bold; color: #686868; display: none;" id="loading_ovd_gettext">&nbsp;</span>
+						<span style="font-size: 1.35em; font-weight: bold; color: #686868; display: none;" id="unloading_ovd_gettext">&nbsp;</span>
 					</td>
 					<td style="width: 20px"></td>
 					<td style="text-align: left; vertical-align: middle;">

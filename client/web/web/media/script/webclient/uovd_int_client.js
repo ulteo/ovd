@@ -231,59 +231,15 @@ Event.observe(window, 'load', function() {
 		}
   });
 
-	/* handle progress bar */
-	session_management.addCallback("ovd.*", function(type, source, params) {
-		function step(n, message, duration) {
-			var dur = duration || 400;
-			jQuery('#progressBarContent').animate({width: n+'%'}, dur);
-
-			jQuery('#progressBar').css({'text-align':'center'});
-			jQuery('#progressBar > span').remove();
-			jQuery('#progressBar').append(jQuery('<span>'+message+'</span>').css({'position':'relative', 'top':'-100%'}));
-		}
-
-		if(type == 'ovd.ajaxProvider.sessionStart' && params['state'] == uovd.SUCCESS) {
-			step(0, "Creating session");
-			return;
-		}
-
-		if(type == 'ovd.session.statusChanged' && params['to'] == uovd.SESSION_STATUS_INITED) {
-			step(25, "Initializing");
-			return;
-		}
-
-		if(type == 'ovd.session.statusChanged' && params['to'] == uovd.SESSION_STATUS_READY) {
-			step(50, "Connecting");
-			return;
-		}
-
-		if(type == 'ovd.session.server.statusChanged' && params['to'] == uovd.SERVER_STATUS_CONNECTED) {
-			step(75, "Connection Ok");
-			return;
-		}
-
-		if(type == 'ovd.session.statusChanged' && params['to'] == uovd.SESSION_STATUS_LOGGED) {
-			step(100, "Ready");
-
-			/* Wait for the animation end then restore in background */
-			setTimeout(function() {
-				step(100, "Disconnecting");
-			}, 2000);
-			return;
-		}
-
-		if(type == 'ovd.session.statusChanged' && params['to'] == uovd.SESSION_STATUS_DESTROYING) {
-			step(0, "Destroying", 20000);
-			return;
-		}
-  });
-
 	var java_provider = new uovd.provider.Java();
 	java_provider.set_applet_codebase("applet/");
 	
 	window.rdp_providers = {};
 	window.rdp_providers["java"]  = java_provider;
 	window.rdp_providers["html5"] = new uovd.provider.rdp.Html5();
+
+	/* handle progress bar */
+	new ProgressBar(session_management, '#progressBarContent');
 
 	/* handle client insertion */
 	new DesktopContainer(session_management, "#desktopContainer");

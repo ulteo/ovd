@@ -43,6 +43,18 @@ function showSplash() {
 	new Effect.Appear(jQuery('#splashContainer')[0]);
 }
 
+function initSplashConnection() {
+	jQuery("#unloading_ovd_gettext").hide();
+	jQuery("#loading_ovd_gettext").show();
+	jQuery('#progressBarContent').css("width", "0%");
+}
+
+function initSplashDisconnection() {
+	jQuery("#loading_ovd_gettext").hide();
+	jQuery("#unloading_ovd_gettext").show();
+	jQuery('#progressBarContent').css("width", "100%");
+}
+
 function hideEnd() {
 	new Effect.Fade(jQuery('#endContainer')[0]);
 }

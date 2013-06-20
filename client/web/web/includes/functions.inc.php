@@ -198,6 +198,7 @@ function get_available_translations($lang) {
 		'system_compatibility_error_5'	=>	_('You <strong>cannot</strong> have access to this service.'),
 
 		'loading_ovd'					=>	_('Loading Open Virtual Desktop'),
+		'unloading_ovd'					=>  _('Disconnecting Open Virtual Desktop'),
 		'welcome'						=>	_('Welcome!'),
 		'suspend'						=>	_('Suspend'),
 		'logout'						=>	_('Logout'),
