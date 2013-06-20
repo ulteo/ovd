@@ -298,7 +298,14 @@ uovd.provider.Java.prototype.connectDesktop = function() {
 
 			/* Applet startSession handler */
 			self.applet_sessionReady = function() {
-				if(! self.main_applet[0].serverConnect(0, server.fqdn, server.port, server.login, server.password)) {
+				var success = true;
+				if(self.session_management.session.mode_gateway == true) {
+					success = self.main_applet[0].serverConnect(0, server.fqdn, server.port, server.token, server.login, server.password);
+				} else {
+				  success = self.main_applet[0].serverConnect(0, server.fqdn, server.port, server.login, server.password);
+				}
+
+				if(! success) {
 					/* !!! Error */
 				}
 			};
@@ -380,14 +387,15 @@ uovd.provider.Java.prototype.connectApplications = function() {
 
 				self.main_applet[0].serverPrepare(i, serialized);
 
-				if (server.token != null) {
-					if(! self.main_applet[0].serverConnect(i, server.fqdn, server.port, server.token, server.login, server.password)) {
-						/* !!! Error  */
-					};
+				var success = true;
+				if(self.session_management.session.mode_gateway == true) {
+					success = self.main_applet[0].serverConnect(i, server.fqdn, server.port, server.token, server.login, server.password);
 				} else {
-					if(! self.main_applet[0].serverConnect(i, server.fqdn, server.port, server.login, server.password)) {
-						/* !!! Error  */
-					};
+				  success = self.main_applet[0].serverConnect(i, server.fqdn, server.port, server.login, server.password);
+				}
+
+				if(! success) {
+					/* !!! Error  */
 				}
 			}
 		};
