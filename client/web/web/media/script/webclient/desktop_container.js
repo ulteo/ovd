@@ -9,6 +9,8 @@ DesktopContainer = function(session_management, node) {
 }
 
 DesktopContainer.prototype.handleEvents = function(type, source, params) {
+	var self = this; /* closure */
+
 	if(type == "ovd.rdpProvider.desktopPanel") {
 		var type = params["type"];
 		var node = params["node"];
@@ -20,6 +22,11 @@ DesktopContainer.prototype.handleEvents = function(type, source, params) {
 
 		if(type == "Fullscreen") {
 			/* Fullscreen mode without panel : insert message */
+			var logout_header = jQuery("#applicationsHeaderWrap").clone();
+			logout_header.show();
+			logout_header.find("#logout_link").click( function() {
+				self.session_management.stop();
+			});
 
 			var fullscreen_message = jQuery("#fullScreenMessage").clone();
 			fullscreen_message.show();
@@ -32,6 +39,8 @@ DesktopContainer.prototype.handleEvents = function(type, source, params) {
 			background.css("color", "#333");
 			background.width(window.innerWidth);
 			background.height(window.innerHeight);
+
+			background.append(logout_header);
 			background.append(fullscreen_message);
 			jQuery('#desktopContainer').append(background);
 
