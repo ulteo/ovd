@@ -37,7 +37,7 @@ class SessionManagement_internal extends SessionManagement {
 	}
 
 	public static function getServerRoles() {
-		return array(Server::SERVER_ROLE_APS, Server::SERVER_ROLE_FS);
+		return array(Server::SERVER_ROLE_APS, Server::SERVER_ROLE_FS, Server::SERVER_ROLE_WEBAPPS);
 	}
 
 	public static function getApplicationServerTypes() {
@@ -58,6 +58,13 @@ class SessionManagement_internal extends SessionManagement {
 	public function generateFileServerCredentials() {
 		$this->credentials[Server::SERVER_ROLE_FS]['login'] = 'u'.time().gen_string(6).'_FS'; //hardcoded
 		$this->credentials[Server::SERVER_ROLE_FS]['password'] = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
+		return true;
+	}
+    
+	public function generateWebAppServerCredentials() {
+		$this->credentials[Server::SERVER_ROLE_WEBAPPS]['login'] = 'u'.time().gen_string(5).'_WAS'; //hardcoded
+		$this->credentials[Server::SERVER_ROLE_WEBAPPS]['password'] = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 
 		return true;
 	}
