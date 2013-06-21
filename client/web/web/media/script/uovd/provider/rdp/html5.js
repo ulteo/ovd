@@ -242,3 +242,29 @@ uovd.provider.rdp.Html5.prototype.disconnect_implementation = function() {
 		this.connections[i].guac_client.disconnect();
 	}
 }
+
+uovd.provider.rdp.Html5.prototype.testCapabilities = function(onsuccess, onfailure) {
+	var success = true;
+
+	/* Test canvas support */
+	var elem = document.createElement("canvas");
+	if (elem != "[object HTMLCanvasElement]") {
+		success = false;
+	}
+
+	/* Test XMLHttpRequest support */
+	try {
+		elem = eval("new XMLHttpRequest()");
+		if (elem == null) {
+			success = false;
+		}
+	} catch (e) {
+		success = false;
+	}
+
+	if(success) {
+		onsuccess();
+	} else {
+		onfailure();
+	}
+};

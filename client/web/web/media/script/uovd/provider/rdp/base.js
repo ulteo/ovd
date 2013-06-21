@@ -6,7 +6,8 @@ uovd.provider.rdp.Base.prototype.initialize = function() {
 	this.session_management = null;
 }
 
-uovd.provider.rdp.Base.prototype.testCapabilities = function() { return true; }
+uovd.provider.rdp.Base.prototype.testCapabilities = function(onsuccess, onfailure) {};
+
 uovd.provider.rdp.Base.prototype.connect = function() {
 	if (this.session_management.parameters["session_type"] == uovd.SESSION_MODE_DESKTOP) {
 		this.connectDesktop();

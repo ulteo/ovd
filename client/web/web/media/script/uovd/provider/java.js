@@ -444,3 +444,7 @@ uovd.provider.Java.prototype.connectApplications = function() {
 uovd.provider.Java.prototype.disconnect_implementation = function() {
 	this.main_applet[0].endSession();
 };
+
+uovd.provider.Java.prototype.testCapabilities = function(onsuccess, onfailure) {
+	this.initialize(onsuccess, onfailure);
+};
