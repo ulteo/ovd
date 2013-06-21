@@ -345,6 +345,7 @@ uovd.provider.Java.prototype.connectDesktop_embeeded = function(settings) {
 };
 
 uovd.provider.Java.prototype.connectDesktop_fullscreen = function(settings) {
+	var self = this; /* closure */
 	var parameters = this.session_management.parameters;
 
 	self.session_management.fireEvent("ovd.rdpProvider.desktopPanel", self, {"type":"Fullscreen", "node":null});
