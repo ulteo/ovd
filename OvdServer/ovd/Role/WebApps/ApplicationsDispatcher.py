@@ -5,6 +5,7 @@
 # Author Miguel Angel Garcia <mgarcia@pressenter.com.ar> 2012
 # Author Ania WSZEBOROWSKA <anna.wszeborowska@stxnext.pl> 2013
 # Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -101,7 +102,7 @@ class ApplicationsDispatcher(object):
                                 Logger.info('[WebApps] session id={0} for user {1} activated'.format(sess_id, user))
                                 
                                 prot = Config.connection_secure and 'https' or 'http'
-                                new_host = '{0}://{1}.{2}'.format(prot, app_name, host)
+                                new_host = '{0}://{1}.{2}{3}'.format(prot, app_name, host, ApplicationsRepository.get_by_id(app_id).start_path)
                                 host_wo_port = host.split(':')[0]
                                 send_buffer = HTTP_301.format(new_host, Config.ulteo_session_cookie, sess_id, host_wo_port)
                                 communicator.send(send_buffer)
