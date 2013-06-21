@@ -70,6 +70,10 @@ if (defined('OPTION_FORCE_SESSION_MODE'))
 elseif (isset($_COOKIE['ovd-client']['session_mode']))
 	$wi_session_mode = (string)$_COOKIE['ovd-client']['session_mode'];
 
+$wi_session_type = 'java';
+if (isset($_COOKIE['ovd-client']['session_type']))
+	$wi_session_type = (string)$_COOKIE['ovd-client']['session_type'];
+
 if (OPTION_FORCE_LANGUAGE !== true && isset($_COOKIE['ovd-client']['session_language'])) {
 	$lang = (string)$_COOKIE['ovd-client']['session_language'];
 	if (language_is_supported($languages, $lang))
@@ -85,7 +89,7 @@ $wi_desktop_fullscreen = 0;
 if (defined('OPTION_FORCE_FULLSCREEN'))
 	$wi_desktop_fullscreen = ((OPTION_FORCE_FULLSCREEN==true)?1:0);
 elseif (isset($_COOKIE['ovd-client']['desktop_fullscreen']))
-	$wi_desktop_fullscreen = (int)$_COOKIE['ovd-client']['desktop_fullscreen'];
+	$wi_desktop_fullscreen = ($_COOKIE['ovd-client']['desktop_fullscreen'] == "true" ) ? 1:0;
 
 $wi_debug = 1;
 if (isset($_COOKIE['ovd-client']['debug']))
@@ -669,8 +673,8 @@ function get_users_list() {
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
 														<select id="rdp_mode">
-															<option id="rdp_mode_java" value="java" selected="selected">Java</option>
-															<option id="rdp_mode_html5" value="html5">HTML5</option>
+															<option id="rdp_mode_java" value="java"<?php if ($wi_session_type == 'java') echo ' selected="selected"'; ?>>Java</option>
+															<option id="rdp_mode_html5" value="html5"<?php if ($wi_session_type == 'html5') echo ' selected="selected"'; ?>>HTML5</option>
 														</select>
 													</td>
 												</tr>

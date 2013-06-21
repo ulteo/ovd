@@ -91,6 +91,9 @@ Event.observe(window, 'load', function() {
 	Event.observe(jQuery('#session_mode')[0], 'change', function() { checkSessionMode(); });
 	Event.observe(jQuery('#session_mode')[0], 'click',  function() { checkSessionMode(); });
 
+	/* Check now to handle settings set by cookies */
+	checkSessionMode();
+
 	/* Form submit using "Enter" key */
 	Event.observe(jQuery('#user_login')[0], 'keydown', function(event) {
 		if (typeof event == 'undefined' || event.keyCode != 13)
@@ -185,6 +188,7 @@ Event.observe(window, 'load', function() {
 
 	/* handle status modifications */
 	session_management.addCallback("ovd.session.starting", function(type, source, params) {
+		synchronize();
 		hideLogin();
 		showSplash();
 		pushMainContainer();
@@ -643,4 +647,29 @@ function confirmLogout(confirm_) {
 			return;
 	
 	session_management.stop();
+}
+
+function synchronize() {
+	var parameters = {};
+	parameters["login"] = jQuery('#user_login').prop('value');
+	parameters["sessionmanager_host"] = jQuery('#sessionmanager_host').prop('value');
+	parameters["mode"] = jQuery('#session_mode').prop('value');
+	parameters["type"] = jQuery('#rdp_mode').prop('value');
+	parameters["language"] = jQuery('#session_language').prop('value');
+	parameters["keymap"] = jQuery('#session_keymap').prop('value');
+	parameters["debug"] = debug;
+
+	parameters["desktop_fullscreen"] = false;
+	if (jQuery('#desktop_fullscreen_true')[0] && jQuery('#desktop_fullscreen_true').prop('checked'))
+		parameters["desktop_fullscreen"] = true;
+
+	parameters["use_local_credentials"] = false;
+	if (jQuery('#use_local_credentials_true')[0] && jQuery('#use_local_credentials_true').prop('checked'))
+		parameters["use_local_credentials"] = true;
+
+	jQuery.ajax({
+		url: "synchronize.php",
+		type: "POST",
+		data: parameters
+	});
 }
