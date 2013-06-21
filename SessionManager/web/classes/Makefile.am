@@ -23,6 +23,7 @@ scripts_DATA = AdminAction.class.php \
                Preferences.class.php \
                Profile.class.php \
                ReportItems.class.php \
+               Script.class.php \
                Server.class.php \
                Server_Logs.class.php \
                ServerReportItem.class.php \

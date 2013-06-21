@@ -5,6 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -262,7 +263,11 @@ class Preferences {
 			'manageReporting',
 			'viewSummary',
 			'viewNews',
-			'manageNews'
+			'manageNews',
+			'manageScripts',
+			'viewScripts',
+			'manageScriptsGroups',
+			'viewScriptsGroups'
 		));
 
 		$this->add($c,'general', 'policy');

@@ -3,6 +3,7 @@
  * Copyright (C) 2012-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -317,6 +318,39 @@ class SessionManager {
 		}
 		
 		return $group;
+	}
+	
+	public function script_info($id_) {
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('script_info', $args);
+		if ($res === null) {
+			return null;
+		}
+		$n = new Script($res);
+		if (! $n->is_valid()) {
+			continue;
+		}
+		
+		return $n;
+	}
+	
+	public function scripts_list() {
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('scripts_list', $args);
+		if ($res === null) {
+			return null;
+		}
+		
+		$scripts = array();
+		foreach($res as $item) {
+			$s = new Script($item);
+			if (! $s->is_valid())
+				continue;
+			
+			$scripts[]= $s;
+		}
+		
+		return $scripts;
 	}
 	
 	public function shared_folders_list() {

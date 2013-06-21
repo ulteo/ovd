@@ -6,6 +6,7 @@
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  * Author David LECHEVALIER <david@ulteo.com> 2014
+ * Author Vincent ROULLIER <vincent.roullier@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -602,6 +603,10 @@ class Preferences_admin {
 			'viewSummary' => _('view Summary'),
 			'viewNews' => _('view News'),
 			'manageNews' => _('manage News'),
+			'manageScripts' => _('manage Scripts'),
+			'viewScripts' => _('view Scripts'),
+			'viewScriptsGroups' => _('view Scripts groups'),
+			'manageScriptsGroups' => _('manage Scripts groups'),
 			
 			'mysql' => _('MySQL'),
 			'sql' => _('MySQL'),

@@ -67,6 +67,9 @@ def main():
 	im.setDrivesDB(drives)
 	im.setSharedFolderDB(folders)
 	
+	# Script to auto starts
+	Util.manageAutoStartScripts(config, user_sdir)
+	
 	# Applications to auto starts
 	Util.manageAutoStartApplication(config, im)
 	

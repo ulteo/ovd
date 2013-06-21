@@ -580,6 +580,20 @@ if (! isset($old_session_id)) {
 			$parameter_node->setAttribute('value', $$parameter);
 			$session_node->appendChild($parameter_node);
 		}
+		
+		$scripts = $user->scripts();
+		if (is_array($scripts)) {
+			$scripts_node = $dom->createElement('scripts');
+			foreach ($scripts as $script) {
+				$script_node = $dom->createElement('script');
+				$script_node->setAttribute('id', $script->getAttribute('id'));
+				$script_node->setAttribute('type', $script->getAttribute('type'));
+				$script_node->setAttribute('name', $script->getAttribute('name'));
+				$scripts_node->appendChild($script_node);
+			}
+			$shell_node->appendChild($scripts_node);
+		}
+		
 		$user_node = $dom->createElement('user');
 		$user_node->setAttribute('login', $user_login_aps);
 		$user_node->setAttribute('password', $user_password_aps);
@@ -689,11 +703,9 @@ if (! isset($old_session_id)) {
 				
 				$start_node->appendChild($application_node);
 			}
-			$shell_node->appendChild($start_node);
+			$session_node->appendChild($start_node);
 		}
 		
-		$session_node->appendChild($shell_node);
-
 		$dom->appendChild($session_node);
 
 		$sessionManagement->appendToSessionCreateXML($dom);

@@ -321,6 +321,26 @@
 		<part name="limit" type="xsd:integer"/>
 	</message>
 	
+	<message name="script_addMessage">
+		<part name="name" type="xsd:string"/>
+		<part name="os" type="xsd:string"/>
+		<part name="type" type="xsd:string"/>
+		<part name="data" type="xsd:string"/>
+	</message>
+	
+	<message name="script_modifyMessage">
+		<part name="id" type="xsd:string"/>
+		<part name="name" type="xsd:string"/>
+		<part name="os" type="xsd:string"/>
+		<part name="type" type="xsd:string"/>
+		<part name="data" type="xsd:string"/>
+	</message>
+	
+	<message name="ScriptToGroupMessage">
+		<part name="script" type="urn:string"/>
+		<part name="group" type="urn:string"/>
+	</message>
+	
 	<message name="news_modifyMessage">
 		<part name="id" type="xsd:string"/>
 		<part name="title" type="xsd:string"/>
@@ -806,6 +826,46 @@
 		
 		<operation name="publication_remove">
 			<input message="urn:PublicationMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+
+		<operation name="scripts_list">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="script_modify">
+			<input message="urn:script_modifyMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="script_add">
+			<input message="urn:script_addMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="script_remove">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="script_info">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="scripts_groups_list">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="users_group_add_script">
+			<input message="urn:ScriptToGroupMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="users_group_remove_script">
+			<input message="urn:ScriptToGroupMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		
@@ -1699,6 +1759,16 @@
 			</output>
 		</operation>
 		
+		<operation name="scripts_groups_list">
+			<soap:operation soapAction="urn:OvdAdmin#scripts_groups_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
 		<operation name="users_list_partial">
 			<soap:operation soapAction="urn:OvdAdmin#users_list_partial"/>
 			<input>
@@ -1961,6 +2031,76 @@
 		
 		<operation name="publication_remove">
 			<soap:operation soapAction="urn:OvdAdmin#publication_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="scripts_list">
+			<soap:operation soapAction="urn:OvdAdmin#scripts_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+
+		<operation name="script_modify">
+			<soap:operation soapAction="urn:OvdAdmin#script_modify"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="script_add">
+			<soap:operation soapAction="urn:OvdAdmin#script_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="script_remove">
+			<soap:operation soapAction="urn:OvdAdmin#script_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="users_group_add_script">
+			<soap:operation soapAction="urn:OvdAdmin#script_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="users_group_remove_script">
+			<soap:operation soapAction="urn:OvdAdmin#script_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="script_info">
+			<soap:operation soapAction="urn:OvdAdmin#script_info"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>

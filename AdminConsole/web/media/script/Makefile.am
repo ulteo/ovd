@@ -24,6 +24,7 @@ SUBDIRS =  ajax lib
 scripts_DATA = common.js \
                common-regular.js \
                publication.js \
+               file.js \
                sortable.js \
                time_grid.js
 scriptsdir = $(datadir)/ulteo/administration_console/web/media/script

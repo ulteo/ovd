@@ -22,6 +22,7 @@ scripts_DATA = AbstractObject.class.php  \
                News.class.php \
                Preferences_admin.class.php \
                SharedFolder.class.php \
+               Script.class.php \
                Server.class.php \
                ServerReport.class.php \
                Session.class.php \

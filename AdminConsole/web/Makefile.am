@@ -46,6 +46,7 @@ scripts_DATA = actions.php \
                profiles.php \
                publications.php \
                reporting.php \
+               script.php \
                servers.php \
                sharedfolders.php \
                session-reporting.php \

@@ -48,6 +48,7 @@ from Config import Config
 from SessionManagement import SessionManagement
 from Manager import Manager
 import MPQueue
+from Scripts import Scripts
 
 
 class Role(AbstractRole):
@@ -73,6 +74,10 @@ class Role(AbstractRole):
 		self.static_apps = ApplicationsStatic(self.main_instance.smRequestManager)
 		self.static_apps_must_synced = False
 		self.static_apps_lock = threading.Lock()
+		
+		self.scripts = Scripts(self.main_instance.smRequestManager)
+		self.scripts_lock = threading.Lock()
+		self.scripts_must_synced = False
 	
 	
 	def init(self):
@@ -131,6 +136,7 @@ class Role(AbstractRole):
 	
 	def switch_to_production(self):
 		self.setStaticAppsMustBeSync(True)
+		self.setScriptsMustBeSync(True)
 	
 	
 	def order_stop(self):
@@ -279,6 +285,10 @@ class Role(AbstractRole):
 				self.static_apps.synchronize()
 				self.setStaticAppsMustBeSync(False)
 			
+			if self.isScriptsMustBeSync():
+				self.scripts.synchronize()
+				self.setScriptsMustBeSync(False)
+			
 			for thread in self.threads:
 				if not thread.known_death and not thread.is_alive():
 					Logger.error("SessionManagement process (pid: %d, name: %s) is dead (return code: %d) while managed session '%s'"%(thread.pid, repr(thread.name), thread.exitcode, repr(thread.current_session_id.value)))
@@ -326,7 +336,24 @@ class Role(AbstractRole):
 		finally:
 			self.static_apps_lock.release()
 	
+	def setScriptsMustBeSync(self, value):
+		try:
+			self.scripts_lock.acquire()
+			self.scripts_must_synced = (value is True)
+		except:
+			Logger.warn("Unable to lock mutex scripts")
+		finally:
+			self.scripts_lock.release()
 	
+	def isScriptsMustBeSync(self):
+		try:
+			self.scripts_lock.acquire()
+			return self.scripts_must_synced
+		except:
+			Logger.warn("Unable to lock mutex scripts")
+		finally:
+			self.scripts_lock.release()
+			
 	def canManageApplications(self):
 		return self.main_instance.ulteo_system
 	

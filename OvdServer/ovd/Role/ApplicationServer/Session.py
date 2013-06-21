@@ -35,6 +35,7 @@ from ovd.Platform.System import System
 
 from Platform.ApplicationsDetection import ApplicationsDetection
 
+from Scripts import Scripts
 from SessionLogger import SessionLogger
 
 class Session:
@@ -111,9 +112,28 @@ class Session:
 		if self.shellNode is not None:
 			# Push the OvdShell configuration
 			self.shellNode.setAttribute("sm", Config.session_manager)
+
+			scriptsNodes = self.shellNode.getElementsByTagName("script")
+			script2start_dir = os.path.join(self.user_session_dir, 'scripts')
+			scripts_aps = os.path.join(Config.spool_dir, "scripts")
+			os.mkdir(script2start_dir)
+
+
+			for node in scriptsNodes:
+				scriptID = node.getAttribute("id")
+				scriptName = node.getAttribute("name")
+				scriptType = node.getAttribute("type")
+				scriptExt = Scripts.type2ext(scriptType)
+				node.setAttribute("name", scriptName+"."+scriptExt)
+				apsname = os.path.join(scripts_aps, scriptID+"."+scriptExt)
+				sessionname = os.path.join(script2start_dir, scriptName+"."+scriptExt)
+				if os.path.isfile(apsname):
+					shutil.copy(apsname, sessionname)
+			
 			f = open(os.path.join(self.user_session_dir, "shell.conf"), "w")
 			f.write(self.shellNode.toprettyxml())
 			f.close()
+	
 	
 	def post_install(self):
 		pass

@@ -64,7 +64,8 @@ class Dialog(AbstractDialog):
 			
 			elif  path == "/applications/static/sync":
 				return self.req_sync_static_applications(request)
-			
+			elif  path == "/scripts/sync":
+				return self.req_sync_scripts(request)
 			elif path.startswith("/session/status/"):
 				buf = path[len("/session/status/"):]
 				return self.req_session_status(buf)
@@ -565,6 +566,13 @@ class Dialog(AbstractDialog):
 		
 		return self.req_answer(doc)
 	
+	def req_sync_scripts(self, request):
+		self.role_instance.setScriptsMustBeSync(True)
+		doc = Document()
+		rootNode = doc.createElement('scripts')
+		doc.appendChild(rootNode)
+		
+		return self.req_answer(doc)
 	
 	@staticmethod
 	def debian_request2xml(rid, request):

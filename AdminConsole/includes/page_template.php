@@ -5,6 +5,8 @@
  * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2012, 2013
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
  * Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
+ * Author Vincent ROULLIER <vincent.roullier@ulteo.com> 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2013
  * Author Omar AKHAM <oakham@ulteo.com> 2011
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013-2014
@@ -92,6 +94,13 @@ if (isAuthorized('viewSharedFolders')) {
 				'page' => 'sharedfolders.php',
 				'parent' => array('servers'));
 	}
+}
+if (isAuthorized('viewScripts')) {
+	$menu['script'] = 
+		array('id' => 'script',
+			  'name' => _('Login scripts'),
+			  'page' => 'script.php',
+			  'parent' => array('servers'));
 }
 
 if (isAuthorized('viewSharedFolders')) { // it should be viewProfile
@@ -392,6 +401,8 @@ function page_header($params_=array()) {
   echo '</script>';
 
   echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/lib/prototype/prototype.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/lib/edit_area/edit_area_full.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/file.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/lib/scriptaculous/slider.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/common-regular.js" charset="utf-8"></script>';

@@ -26,6 +26,7 @@ upbuilder:
       archs: $(consts.ALL_ARCH)
       clones:
         - { orig: "/ulteo/tcpdf", dest: "includes/tcpdf", branch: "master"}
+        - { orig: "/ulteo/EditArea", dest: "web/media/script/lib/edit_area", branch: "master", source: "edit_area"}
     wc:
       src: "client/web"
       module: "ovd-web-client"

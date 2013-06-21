@@ -1034,6 +1034,18 @@ class Server {
 
 		return $res;
 	}
+	
+	public function getScripts() {
+		Logger::debug('main', 'SERVER::getScripts');
+		$scripts = array();
+		$scripts_tmp = Abstract_Script::load_all();
+		foreach ($scripts_tmp as $script) {
+			if (strtolower($script->getAttribute("os")) == strtolower($this->type) && $this->isOnline()) {
+				$scripts[] = $script;
+			}
+		}
+		return $scripts;
+	}
 
 	public function updateApplications($force_server_refresh = false) {
 		Logger::debug('main', 'Server::updateApplications');
@@ -1242,6 +1254,25 @@ class Server {
 			return false;
 		}
 
+		return true;
+	}
+	
+	public function syncScripts() {
+		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $this->roles)) {
+			Logger::critical('main', 'Server::syncScripts - Not an Aps');
+			return false;
+		}
+		
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::syncScripts server "'.$this->fqdn.':'.$this->web_port.'" is not online');
+			return false;
+		}
+		
+		if (! query_url($this->getBaseURL().'/aps/scripts/sync')) {
+			Logger::error('main', 'Server::syncScripts - Unable to ask for synchronization');
+			return false;
+		}
+		
 		return true;
 	}
 	

@@ -378,6 +378,18 @@ function show_manage($id) {
       $groups_apps_available[]= $group_apps;
   }
 
+  // Scripts
+  $groups_scripts_all = $_SESSION['service']->scripts_groups_list($id);
+  $all_scripts = $_SESSION['service']->scripts_list();
+
+  $scripts_available = array();
+  foreach($all_scripts as $script) {
+    if (! array_key_exists($script->id, $groups_scripts_all))
+      $scripts_available[]= $script;
+  }
+  
+  $can_manage_scripts = isAuthorized('manageScripts');
+
   $can_manage_usersgroups = isAuthorized('manageUsersGroups');
   $can_manage_publications = isAuthorized('managePublications');
   $can_manage_sharedfolders = isAuthorized('manageServers');
@@ -696,6 +708,48 @@ if ($group->isDefault() || (count($users_all) > 0 || !$usersList->is_empty_filte
     echo '</table>';
     echo '</div>';
   }
+
+  // Scripts part
+  if (count($groups_scripts_all) > 0) {
+    echo '<div>';
+    echo '<h2>'._('List of scripts for this group').'</h2>';
+    echo '<table border="0" cellspacing="1" cellpadding="3">';
+
+
+    if (count($groups_scripts_all) > 0) {
+      foreach($groups_scripts_all as $script) {
+
+	echo '<tr>';
+	echo '<td><a href="script.php?action=manage&amp;id='.$script["id"].'">'.$script["name"].'</a></td>';
+		if ($can_manage_scripts) {
+			echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user from this group?').'\');">';
+			echo '<input type="hidden" name="name" value="Script_UserGroup" />';
+			echo '<input type="hidden" name="action" value="del" />';
+			echo '<input type="hidden" name="group" value="'.$id.'" />';
+			echo '<input type="hidden" name="element" value="'.$script["id"].'" />';
+			echo '<input type="submit" value="'._('Delete from this group').'" />';
+			echo '</form></td>';
+		}
+	echo '</tr>';
+      }
+    }
+
+    if ((count($scripts_available) > 0) and $can_manage_scripts) {
+      echo '<tr><form action="actions.php" method="post"><td>';
+      echo '<input type="hidden" name="action" value="add" />';
+      echo '<input type="hidden" name="name" value="Script_UserGroup" />';
+      echo '<input type="hidden" name="group" value="'.$id.'" />';
+      echo '<select name="element">';
+      foreach($scripts_available as $script)
+        echo '<option value="'.$script->id.'" >'.$script->name.'</option>';
+      echo '</select>';
+      echo '</td><td><input type="submit" value="'._('Add this script').'" /></td>';
+      echo '</form></tr>';
+    }
+    echo '</table>';
+    echo '</div>';
+  }
+
 
 
 	// Policy of this group

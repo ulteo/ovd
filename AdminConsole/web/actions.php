@@ -1571,7 +1571,81 @@ if ($_REQUEST['name'] == 'News') {
 		redirect();
 	}
 }
+if ($_REQUEST['name'] == 'Script') {
+	if ($_REQUEST['action'] == 'add' && isset($_REQUEST['script_name']) && isset($_REQUEST['script_data'])) {
+		$data = $_REQUEST['script_data'];
+		if (array_key_exists('script_file', $_FILES) && trim($data) == '') {
+			$upload = $_FILES['script_file'];
+			
+			$have_file = true;
+			if ($upload['error']) {
+				switch ($upload['error']) {
+					case 1: // UPLOAD_ERR_INI_SIZE
+						popup_error(_('Oversized file for server rules'));
+						redirect();
+						break;
+					case 3: // UPLOAD_ERR_PARTIAL
+						popup_error(_('The file was corrupted while upload'));
+						redirect();
+						break;
+					case 4: // UPLOAD_ERR_NO_FILE
+						$have_file = false;
+						break;
+				}
+			}
+			
+			if ($have_file) {
+				$source_file = $upload['tmp_name'];
+				if (! is_readable($source_file)) {
+					popup_error(_('The file is not readable'));
+					redirect();
+				}
+				
+				$data = @file_get_contents($source_file);
+			}
+		}
+		
+		$ret = $_SESSION['service']->script_add($_REQUEST['script_name'], $_REQUEST['script_os'], $_REQUEST['script_type'], $data);
 
+		if ($ret === true)
+			popup_info(_('Script successfully added'));
+		redirect();
+	}
+	elseif ($_REQUEST['action'] == 'del' && isset($_REQUEST['id'])) {
+		$buf = $_SESSION['service']->script_remove($_REQUEST['id']);
+
+		if (! $buf)
+			popup_error(_('Unable to delete this script'));
+		else
+			popup_info(_('Script successfully deleted'));
+
+		redirect();
+	}
+}
+
+if ($_REQUEST['name'] == 'Script_UserGroup') {
+	if (! checkAuthorization('manageScriptsGroups'))
+		redirect();
+	
+	$group = $_SESSION['service']->users_group_info($_REQUEST['group']);
+	if (! is_object($group)) {
+		popup_error(sprintf(_('Unable to import group "%s"'), $_REQUEST['group']));
+		redirect();
+	}
+	if ($_REQUEST['action'] == 'add') {
+		$ret = $_SESSION['service']->users_group_add_script($_REQUEST['element'], $_REQUEST['group']);
+		if ($ret === true) {
+			popup_info(sprintf(_('UserGroup \'%s\' successfully modified'), $group->name));
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'del') {
+		$ret = $_SESSION['service']->users_group_remove_script($_REQUEST['element'], $_REQUEST['group']);
+		if ($ret === true) {
+			popup_info(sprintf(_('UserGroup \'%s\' successfully modified'), $group->name));
+		}
+	}
+}
 if ($_REQUEST['name'] == 'password') {
 	if ($_REQUEST['action'] == 'change') {
 		if (isset($_REQUEST['password_current']) && isset($_REQUEST['password']) && isset($_REQUEST['password_confirm'])) {

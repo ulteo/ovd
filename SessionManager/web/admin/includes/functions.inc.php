@@ -5,6 +5,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com> 2008-2013
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
+ * Author Vincent ROULLIER <vincent.roullier@ulteo.com> 2013
  * Author David LECHEVALIER <david@ulteo.com> 2012
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
  *
@@ -58,6 +59,7 @@ function init_db($prefs_) {
 	Abstract_Session::init($prefs_);
 	Abstract_Token::init($prefs_);
 	Abstract_News::init($prefs_);
+	Abstract_Script::init($prefs_);
 	Abstract_Liaison::init($prefs_);
 	if (class_exists("PremiumManager")) {
 		PremiumManager::initdb($prefs_);

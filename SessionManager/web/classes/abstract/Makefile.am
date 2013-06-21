@@ -4,6 +4,7 @@ scripts_DATA = Abstract_AdminAction.class.php\
                Abstract_ReportServer.class.php \
                Abstract_ReportSession.class.php \
                Abstract_Server.class.php \
+               Abstract_Script.class.php \
                Abstract_Session.class.php \
                Abstract_Task.class.php \
                Abstract_Token.class.php \

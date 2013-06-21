@@ -6,6 +6,7 @@
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013, 2014
  * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -3553,6 +3554,149 @@ class OvdAdminSoap {
 		
 		$this->log_action('publication_remove', array('users_group' => $usergroup->name, 'applications_group' => $applicationsgroup->name));
 		return $ret;
+	}
+	
+	private static function generate_script_array($script_) {
+		return array(
+			'id' => $script_->id,
+			'name' => $script_->name,
+			'os' => $script_->os,
+			'type' => $script_->type,
+			'data' => $script_->data
+		);
+	}
+	
+	public function script_modify($id_, $name_, $os_, $type_, $data_) {
+		$this->check_authorized('manageScripts');
+		
+		$script = Abstract_Script::load($id_);
+		if (! $script) {
+			return false;
+		}
+		
+		$script->name = $name_;
+		$script->type = $type_;
+		$script->os = $os_;
+		$script->data = $data_;
+		
+		Abstract_Script::save($script);
+		
+		$servers = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_APS, true);
+		foreach ($servers as $server)
+			$server->syncScripts();
+		
+		return true;
+	}
+	
+	public function script_add($name_, $os_, $type_, $data_) {
+		$this->check_authorized('manageScripts');
+		
+		$script = new Script('');
+		$script->name = $name_;
+		$script->type = $type_;
+		$script->os = $os_;
+		$script->data = $data_;
+		
+		$ret = Abstract_Script::save($script);
+		if ($ret !== true) {
+			return false;
+		}
+		
+		$servers = Abstract_Server::load_available_by_role(Server::SERVER_ROLE_APS, true);
+		foreach ($servers as $server)
+			$server->syncScripts();
+		
+		return $script->id;
+	}
+	
+	public function script_remove($id_) {
+		$this->check_authorized('manageScripts');
+		
+		$buf = Abstract_Script::delete($id_);
+		return ($buf === true);
+	}
+	
+	public function script_info($id_) {
+		$this->check_authorized('viewScripts');
+		
+		$usersGroupDB = UserGroupDB::getInstance();
+		$script = Abstract_Script::load($id_);
+		if (! $script) {
+			error_log("failed ");
+			return null;
+		}
+		
+		$res = self::generate_script_array($script);
+		$liaisons = Abstract_Liaison::load('Scripts', $script->id, NULL);
+		$res['groups'] = array();
+		if (count($liaisons) > 0) {
+			foreach ($liaisons as $liaison) {
+				$group = $usersGroupDB->import($liaison->group);
+				if (! is_object($group)) {
+					continue;
+				}
+				
+				$res['groups'][$liaison->group]= $group->name;
+			}
+		}
+		
+		return $res;
+	}
+	
+	public function scripts_list() {
+		$this->check_authorized('viewScripts');
+
+		$scripts = Abstract_Script::load_all();
+		
+		
+		$ret = array();
+		foreach($scripts as $script) {
+			$s = array(
+				'id' => $script->id,
+				'name' => $script->name,
+				'type' => $script->type,
+				'os' => $script->os,
+				'data' => $script->data,
+			);
+			
+			$ret[$s['id']] = $s;
+		}
+		
+		return $ret;
+	}
+	
+	public function scripts_groups_list($group_id_) {
+		$this->check_authorized('viewScripts');
+		
+		$liaisons = Abstract_Liaison::load('Scripts', NULL, $group_id_);
+		$res = array();
+		if (count($liaisons) > 0) {
+			foreach ($liaisons as $liaison) {
+				$script = Abstract_Script::load($liaison->element);
+
+				if (! is_object($script)) {
+					continue;
+				}
+				
+				$res[$script->id]= self::generate_script_array($script);
+			}
+		}
+		
+		return $res;
+	}
+	
+	public function users_group_add_script($script_id_, $group_id_) {
+		$this->check_authorized('manageScriptsGroups');
+		$ret = Abstract_Liaison::save('Scripts', $script_id_, $group_id_);
+		return ($ret === true);
+	}
+	
+	public function users_group_remove_script($script_id_, $group_id_) {
+		$this->check_authorized('manageScriptsGroups');
+		
+		Abstract_Liaison::delete('Scripts', $script_id_, $group_id_);
+		
+		return true;
 	}
 	
 	public function shared_folders_list() {

@@ -164,6 +164,39 @@ class User {
 		return $my_applications;
 	}
 	
+	public function scripts() {
+		Logger::debug('main', 'USER::scripts()');
+		$scripts_tmp = Abstract_Script::load_all();
+		$my_scripts_id = array();
+		$my_scripts = array();
+		
+		$publications = Abstract_Liaison::load('Scripts', NULL, NULL);
+		foreach($publications as $publication) {
+			if (in_array($publication->element, $my_scripts_id)) {
+				continue;
+			}
+			
+			$my_scripts_id[]= $publication->group;
+		}
+		
+		// from this group, which are these I am into
+		$users_groups_mine_ids = $this->get_my_usersgroups_from_list($my_scripts_id);
+		
+		foreach($publications as $publication) {
+			if (! in_array($publication->group, $users_groups_mine_ids)) {
+				continue;
+			}
+			
+			foreach ($scripts_tmp as $script) {
+				if ($script->getAttribute('id') == $publication->element) {
+					array_push($my_scripts, $script);
+				}
+			}
+		}
+		
+		return array_unique($my_scripts);
+	}
+	
 	public function getProfiles() {
 		if (Preferences::moduleIsEnabled('ProfileDB') == false) {
 			return array();
