@@ -18,7 +18,7 @@ DesktopContainer.prototype.handleEvents = function(type, source, params) {
 			this.node.append(node);
 		}
 
-		if(type == "Fullscreen" && node == null) {
+		if(type == "Fullscreen") {
 			/* Fullscreen mode without panel : insert message */
 
 			var fullscreen_message = jQuery("#fullScreenMessage").clone();
@@ -36,6 +36,10 @@ DesktopContainer.prototype.handleEvents = function(type, source, params) {
 			jQuery('#desktopContainer').append(background);
 
 			new Effect.Center(fullscreen_message[0]);
+
+			if(node != null) {
+				this.node.append(node);
+			}
 		}
 	}
 
