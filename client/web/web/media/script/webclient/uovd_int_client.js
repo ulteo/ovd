@@ -301,6 +301,10 @@ function startSession() {
 	parameters["use_local_credentials"] = use_local_credentials;
 	parameters["local_integration"] = window.local_integration;
 
+	if(parameters["session_manager"] == "127.0.0.1") {
+		parameters["session_manager"] = location.hostname;
+	}
+
 	switch(jQuery('#rdp_mode').prop('value')) {
 		case "html5" :
 			session_management.setRdpProvider(window.rdp_providers["html5"]);
