@@ -65,65 +65,6 @@ if (OPTION_FORCE_LANGUAGE !== true && array_key_exists('language', $_REQUEST)) {
 
 list($translations, $js_translations) = get_available_translations($user_language);
 
-$first = false;
-if (array_key_exists('ovd-client', $_SESSION) && array_key_exists('sessionmanager', $_SESSION['ovd-client'])) {
-	$sm = $_SESSION['ovd-client']['sessionmanager'];
-	
-	// Check if session still exist SM side
-	$dom = new DomDocument('1.0', 'utf-8');
-	$buf = @$dom->loadXML($sm->query('session_status.php'));
-	if (! $buf)
-		die('Invalid XML from Session Manager');
-	
-	if (! $dom->hasChildNodes())
-		die('Invalid XML from Session Manager');
-	
-	$session_nodes = $dom->getElementsByTagName('session');
-	if ($session_nodes->length == 0)
-		$first = true;
-	elseif ($session_nodes->length > 0) {
-		$session_node = $session_nodes->item(0);
-		if (in_array($session_node->getAttribute('status'), array('unknown', 'error', 'wait_destroy', 'destroyed')))
-			$first = true;
-	}
-}
-else
-	$first = true;
-
-if ($first === true) {
-	$dom = new DomDocument('1.0', 'utf-8');
-
-	$session_node = $dom->createElement('session');
-	if (array_key_exists('mode', $_REQUEST))
-		$session_node->setAttribute('mode', $_REQUEST['mode']);
-	if (array_key_exists('language', $_REQUEST))
-		$session_node->setAttribute('language', $_REQUEST['language']);
-	$user_node = $dom->createElement('user');
-	if (array_key_exists('login', $_REQUEST))
-		$user_node->setAttribute('login', $_REQUEST['login']);
-	if (array_key_exists('password', $_REQUEST))
-		$user_node->setAttribute('password', $_REQUEST['password']);
-	if (array_key_exists('token', $_REQUEST))
-		$user_node->setAttribute('token', $_REQUEST['token']);
-	$session_node->appendChild($user_node);
-	
-	if ($_REQUEST['mode'] == 'desktop' && array_key_exists('app', $_REQUEST))
-		$session_node->setAttribute('no_desktop', '1');
-	
-	$dom->appendChild($session_node);
-
-	$sm_host = @SESSIONMANAGER_HOST; // If the WebClient is not linked to a SessionManager, JavaScript object will return an 'Usage: missing "sessionmanager_host" parameter' error
-	$_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$sm_host.'/ovd/client';
-	$sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
-	
-	$sm = new SessionManager($sessionmanager_url);
-	$_SESSION['ovd-client']['sessionmanager'] = $sm;
-
-	$sm->query_post_xml('auth.php', $dom->saveXML());
-
-	$_SESSION['ovd-client']['start_app'] = array();
-}
-
 if (array_key_exists('app', $_REQUEST)) {
 	$order = array('id' => $_REQUEST['app']);
 
