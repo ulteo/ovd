@@ -93,18 +93,6 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 				item["node"].prop("className", "applicationLauncherEnabled");
 			}
 		}
-
-		if(to == uovd.SERVER_STATUS_DISCONNECTED) {
-			/* Deactivate launchers */
-			for(var i = 0 ; i<server.applications.length ; ++i) {
-				var id = server.applications[i].id;
-				var item =  this.content[id];
-
-				item["node"].off('click');
-				item["node"].prop("className", "applicationLauncherDisabled");
-				item["node"].find(":eq(2)").html(this.applications[id].name);
-			}
-		}
 	}
 
 	if(type == "ovd.rdpProvider.applicationProvider.statusChanged") {
