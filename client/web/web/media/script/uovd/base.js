@@ -1,8 +1,10 @@
 var uovd = uovd || {};
+uovd.server = uovd.server || {};
 uovd.provider = uovd.provider || {};
 uovd.provider.http = uovd.provider.http || {};
 uovd.provider.rdp = uovd.provider.rdp || {};
-uovd.provider.rdp.application = uovd.provider.rdp.application || {};
+uovd.provider.webapps = uovd.provider.webapps || {};
+uovd.provider.applications = uovd.provider.applications || {};
 uovd.provider.rdp.html5 = uovd.provider.rdp.html5 || {};
 
 
@@ -30,6 +32,10 @@ uovd.SERVER_STATUS_UNKNOWN ="unknown";
 uovd.SERVER_STATUS_CONNECTED = "connected";
 uovd.SERVER_STATUS_READY = "ready";
 uovd.SERVER_STATUS_DISCONNECTED = "disconnected";
+
+uovd.SERVER_TYPE_LINUX = "linux";
+uovd.SERVER_TYPE_WINDOWS = "windows";
+uovd.SERVER_TYPE_WEBAPPS = "webapps";
 
 uovd.APPLICATION_STARTED = "started";
 uovd.APPLICATION_STOPPED = "stopped";

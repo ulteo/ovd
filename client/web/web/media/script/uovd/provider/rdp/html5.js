@@ -13,7 +13,11 @@ uovd.provider.rdp.Html5.prototype.connectDesktop = function() {
 	/* Add the servers status callback */
 	/* __MUST__ Be set before guac_client.connect */
 	self.serverStatus = function(id, status) {
-		self.session_management.session.servers[id].setStatus(status);
+		var server = self.session_management.session.servers[id];
+
+		if(server.type == uovd.SERVER_TYPE_LINUX || server.type == uovd.SERVER_TYPE_WINDOWS) {
+			server.setStatus(status);
+		}
 	}
 
 	/* Handle full screen */
@@ -26,10 +30,24 @@ uovd.provider.rdp.Html5.prototype.connectDesktop = function() {
 
 uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 	var self = this; /* closure */
-	var server = this.session_management.session.servers[0];
 	this.connections = new Array();
 	var width = screen.width;
 	var height = screen.height;
+
+	/* Get the first RDP server */
+	var server = null;
+	for(var i=0 ; i<this.session_management.session.servers.length ; ++i) {
+		var srv = this.session_management.session.servers[i];
+		if(server.type == uovd.SERVER_TYPE_LINUX || server.type == uovd.SERVER_TYPE_WINDOWS) {
+			server = srv;
+			break;
+		}
+	}
+
+	if(server == null) {
+		/* Error !!! */
+		return;
+	}
 
 	/* Load server */
 	var url = "/ovd/guacamole/ovdlogin?"
@@ -95,10 +113,24 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 
 uovd.provider.rdp.Html5.prototype.connectDesktop_embeeded = function() {
 	var self = this; /* closure */
-	var server = this.session_management.session.servers[0];
 	this.connections = new Array();
 	var width = this.session_management.parameters["width"];
 	var height = this.session_management.parameters["height"];
+
+	/* Get the first RDP server */
+	var server = null;
+	for(var i=0 ; i<this.session_management.session.servers.length ; ++i) {
+		var srv = this.session_management.session.servers[i];
+		if(server.type == uovd.SERVER_TYPE_LINUX || server.type == uovd.SERVER_TYPE_WINDOWS) {
+			server = srv;
+			break;
+		}
+	}
+
+	if(server == null) {
+		/* Error !!! */
+		return;
+	}
 
 	/* Load server */
 	var url = "/ovd/guacamole/ovdlogin?"
@@ -162,7 +194,11 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 	/* Add the servers status callback */
 	/* __MUST__ Be set before guac_client.connect */
 	self.serverStatus = function(id, status) {
-		self.session_management.session.servers[id].setStatus(status);
+		var server = self.session_management.session.servers[id];
+
+		if(server.type == uovd.SERVER_TYPE_LINUX || server.type == uovd.SERVER_TYPE_WINDOWS) {
+			server.setStatus(status);
+		}
 	}
 
 	/* Load servers */
@@ -174,8 +210,8 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 			/* set handler for seamrdp channel */
 			var seamless_instructionHandler = new uovd.provider.rdp.html5.SeamlessHandler(self);
 
-			/* set application_provider */
-			var application_provider = new uovd.provider.rdp.application.Html5(self);
+			/* set applications_provider */
+			var applications_provider = new uovd.provider.applications.Html5(self);
 
 			/* Create a keyboard */
 			var keyboard = new Guacamole.Keyboard(document);
@@ -191,6 +227,14 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 		};
 
 		var server = servers[index];
+
+		if(server.type != uovd.SERVER_TYPE_LINUX && server.type != uovd.SERVER_TYPE_WINDOWS) {
+			/* Don't try to connect the RDP client to a WebApp server ! */
+			/* Call next chainLoader iteration */
+			chainLoader(parseInt(index)+1);
+			return;
+		}
+
 		var url = "/ovd/guacamole/ovdlogin?"
 		url+="id="+index+"&";
 		url+="server="+server.fqdn+"&";
@@ -225,6 +269,7 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 
 				/* Call next chainLoader iteration */
 				chainLoader(parseInt(index)+1);
+				return;
 			},
 			error: function( xhr, status ) {
 				/* Stop recursion : Error ! */

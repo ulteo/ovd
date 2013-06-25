@@ -1,11 +1,12 @@
 
-uovd.SessionManagement = function(params, rdp_provider, ajax_provider) {
+uovd.SessionManagement = function(params, rdp_provider, ajax_provider, webapps_provider) {
 	this.parameters = params;
 	this.status_check = null;
 
 	this.session = null;
 	this.rdp_provider = rdp_provider;
 	this.ajax_provider = ajax_provider;
+	this.webapps_provider = webapps_provider;
 
 	/* set parent refs */
 	if(this.rdp_provider) {
@@ -14,6 +15,10 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider) {
 
 	if(this.ajax_provider) {
 		this.ajax_provider.session_management = this;
+	}
+
+	if(this.webapps_provider) {
+		this.webapps_provider.session_management = this;
 	}
 
 	/* ---------------- Initial callbacks ------------------ */
@@ -48,14 +53,14 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider) {
 			if(to == uovd.SESSION_STATUS_READY) {
 				/* Connect to rdp servers */
 				self.rdp_provider.connect();
+
+				/* Connect to webapp servers */
+				self.webapps_provider.connect();
 			}
 			if(to == uovd.SESSION_STATUS_LOGGED) {
 				self.session.started(type);
 			}
 			if(to == uovd.SESSION_STATUS_DISCONNECTED) {
-				/* Disconnect the client */
-				self.rdp_provider.disconnect();
-
 				self.session.destroyed(type);
 			}
 			if(to == uovd.SESSION_STATUS_UNKNOWN ) {
@@ -84,6 +89,10 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider) {
 			/* Set the polling interval to 3 sec */
 			clearInterval(self.status_check);
 			self.status_check = setInterval(self.ajax_provider.sessionStatus.bind(self.ajax_provider), 3000);
+
+			/* Disconnect the client */
+			self.rdp_provider.disconnect();
+			self.webapps_provider.disconnect();
 		}),
 		"ovd.session.destroyed" : new Array(function(type, source, params) {
 			/* Clear status_check interval */
@@ -109,6 +118,14 @@ uovd.SessionManagement.prototype.setAjaxProvider = function(ajax_provider) {
 
 	if(this.ajax_provider) {
 		this.ajax_provider.session_management = this;
+	}
+}
+
+uovd.SessionManagement.prototype.setWebAppsProvider = function(webapps_provider) {
+	this.webapps_provider = webapps_provider;
+
+	if(this.webapps_provider) {
+		this.webapps_provider.session_management = this;
 	}
 }
 

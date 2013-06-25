@@ -1,5 +1,7 @@
-SUBDIRS = http \
-          rdp
+SUBDIRS = applications \
+          http \
+          rdp \
+          webapps
 
 scripts_DATA = java.js
 

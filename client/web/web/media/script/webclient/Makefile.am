@@ -16,7 +16,8 @@ scripts_DATA = ajaxplorer.js \
                start_app.php.js  \
                ui.js  \
                uovd_ext_client.js  \
-               uovd_int_client.js
+               uovd_int_client.js \
+               webapps_popup_launcher.js
 
 scriptsdir = $(datadir)/ulteo/webclient/media/script/webclient
 

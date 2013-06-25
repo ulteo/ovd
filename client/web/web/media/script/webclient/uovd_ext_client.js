@@ -107,6 +107,9 @@ Event.observe(window, 'load', function() {
 	/* Session-based start_app support */
 	new StartApp(session_management);
 
+	/* webapps launcher */
+	new WebAppsPopupLauncher(session_management);
+
 	/* Create or Join a session */
 	checkExternalSession( function() {
 		window.close();
@@ -162,9 +165,11 @@ function checkExternalSession(active_callback, inactive_callback) {
 	/* Set providers */
 	var http_provider = new uovd.provider.http.Proxy("proxy.php");
 	var rdp_provider = new uovd.provider.rdp.Html5();
+	var webapps_provider = new uovd.provider.webapps.Jsonp();
 
 	session_management.setRdpProvider(rdp_provider);
 	session_management.setAjaxProvider(http_provider);
+	session_management.setWebAppsProvider(webapps_provider);
 	
 	/* Check session status */
 	var parse_status = function(xml) {

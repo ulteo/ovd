@@ -1,9 +1,9 @@
-SUBDIRS = provider
+SUBDIRS = provider \
+          server
 
 
 scripts_DATA = application.js \
                base.js \
-               server.js \
                session.js \
                session_management.js
 

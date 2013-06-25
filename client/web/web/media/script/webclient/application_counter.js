@@ -4,12 +4,12 @@ ApplicationCounter = function(session_management) {
 
 	/* register events listeners */
 	this.handler = this.handleEvents.bind(this);
-	this.session_management.addCallback("ovd.rdpProvider.applicationProvider.statusChanged", this.handler);
-	this.session_management.addCallback("ovd.session.destroying",                            this.handler);
+	this.session_management.addCallback("ovd.applicationsProvider.statusChanged", this.handler);
+	this.session_management.addCallback("ovd.session.destroying",                 this.handler);
 }
 
 ApplicationCounter.prototype.handleEvents = function(type, source, params) {
-	if(type == "ovd.rdpProvider.applicationProvider.statusChanged") {
+	if(type == "ovd.applicationsProvider.statusChanged") {
 		var from = params['from'];
 		var to = params['to'];
 		var application = params['application'];

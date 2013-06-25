@@ -1,5 +1,4 @@
-SUBDIRS = application \
-          html5
+SUBDIRS = html5
 
 scripts_DATA = base.js \
                html5.js

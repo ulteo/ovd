@@ -1,7 +1,7 @@
 
 /* ApplicationInstance class */
-uovd.provider.rdp.application.ApplicationInstance = function(applicationProvider, id, instance) {
-	this.applicationProvider = applicationProvider;
+uovd.provider.applications.ApplicationInstance = function(applicationsProvider, id, instance) {
+	this.applicationsProvider = applicationsProvider;
 	this.id = id;
 	this.instance = instance;
 	this.status = "unknown";

@@ -16,9 +16,9 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 
 		if(session_type == uovd.SESSION_MODE_APPLICATIONS) {
 			/* register events listeners */
-			this.session_management.addCallback("ovd.session.server.statusChanged",                  this.handler);
-			this.session_management.addCallback("ovd.rdpProvider.applicationProvider.statusChanged", this.handler);
-			this.session_management.addCallback("ovd.session.destroying",                            this.handler);
+			this.session_management.addCallback("ovd.session.server.statusChanged",       this.handler);
+			this.session_management.addCallback("ovd.applicationsProvider.statusChanged", this.handler);
+			this.session_management.addCallback("ovd.session.destroying",                 this.handler);
 
 			var servers = session.servers;
 
@@ -70,7 +70,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 		var to = params["to"];
 		var server = source;
 
-		if(to == uovd.SERVER_STATUS_CONNECTED) {
+		if(to == uovd.SERVER_STATUS_CONNECTED || to == uovd.SERVER_STATUS_READY) {
 			/* Activate launchers */
 			for(var i = 0 ; i<server.applications.length ; ++i) {
 				var id = server.applications[i].id;
@@ -87,7 +87,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 				item["event"] = function () {
 					var appId = jQuery(this).parent().parent().prop("id").split("_")[1];
 					self.session_management.fireEvent("ovd.log", self, {"message":"Start application "+appId, "level":"debug"});
-					self.session_management.fireEvent("ovd.rdpProvider.applicationProvider.applicationStart", self, {"id":appId});
+					self.session_management.fireEvent("ovd.applicationsProvider.applicationStart", self, {"id":appId});
 				}
 				node.click(item["event"]);
 				item["node"].prop("className", "applicationLauncherEnabled");
@@ -95,7 +95,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 		}
 	}
 
-	if(type == "ovd.rdpProvider.applicationProvider.statusChanged") {
+	if(type == "ovd.applicationsProvider.statusChanged") {
 		var from = params['from'];
 		var to = params['to'];
 		var application = params['application'];
@@ -144,9 +144,9 @@ SeamlessLauncher.prototype.end = function() {
 	if(this.session_management.parameters["session_type"] == uovd.SESSION_MODE_APPLICATIONS) {
 		this.node.empty();
 		/* Do NOT remove ovd.session.starting as it is used as a delayed initializer */
-		this.session_management.removeCallback("ovd.session.server.statusChanged",                  this.handler);
-		this.session_management.removeCallback("ovd.rdpProvider.applicationProvider.statusChanged", this.handler);
-		this.session_management.removeCallback("ovd.session.destroying",                            this.handler);
+		this.session_management.removeCallback("ovd.session.server.statusChanged",       this.handler);
+		this.session_management.removeCallback("ovd.applicationsProvider.statusChanged", this.handler);
+		this.session_management.removeCallback("ovd.session.destroying",                 this.handler);
 
 		this.applications = {};
 		this.content = {};

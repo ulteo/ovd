@@ -1,7 +1,8 @@
-/* Html5 Application provider */
+/* Html5 Applications provider */
 
-uovd.provider.rdp.application.Html5 = function(rdp_provider) {
-	this.initialize(rdp_provider);
+uovd.provider.applications.Html5 = function(rdp_provider) {
+	this.initialize(rdp_provider.session_management);
+	this.rdp_provider = rdp_provider;
 	this.connections = this.rdp_provider.connections;
 
 	/* Install instruction hook */
@@ -26,24 +27,28 @@ uovd.provider.rdp.application.Html5 = function(rdp_provider) {
 		}
 	};
 }
-uovd.provider.rdp.application.Html5.prototype = new uovd.provider.rdp.application.Base();
+uovd.provider.applications.Html5.prototype = new uovd.provider.applications.Base();
 
-uovd.provider.rdp.application.Html5.prototype.applicationStart_implementation = function (application_id, token) { 
+uovd.provider.applications.Html5.prototype.applicationStart_implementation = function (application_id, token) { 
 	var server_id = this.getServerByAppId(application_id);
 	var opcode    = "01";                          /* uint8     */
 	var appToken  = this.write(token, 4);          /* uint32 Le */
 	var appId     = this.write(application_id, 4); /* uint32 Le */
-	this.applications[token] = new uovd.provider.rdp.application.ApplicationInstance(this, application_id, token);
+	this.applications[token] = new uovd.provider.applications.ApplicationInstance(this, application_id, token);
 
 	if(server_id != -1) {
-		this.connections[server_id].guac_tunnel.sendMessage("ovdapp", opcode+""+appToken+""+appId+";");
-		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"unknown"});
+		var server = this.session_management.session.servers[server_id];
+
+		if(server.type != uovd.SERVER_TYPE_WEBAPPS) {
+			this.connections[server_id].guac_tunnel.sendMessage("ovdapp", opcode+""+appToken+""+appId+";");
+			this.session_management.fireEvent("ovd.applicationsProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"unknown"});
+		}
 	} else {
-		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"aborted"});
+		this.session_management.fireEvent("ovd.applicationsProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"aborted"});
 	}
 }
 
-uovd.provider.rdp.application.Html5.prototype.applicationStartWithArgs_implementation = function(application_id, args, token) { 
+uovd.provider.applications.Html5.prototype.applicationStartWithArgs_implementation = function(application_id, args, token) { 
 	var server_id = this.getServerByAppId(application_id);
 	var file_type = args["type"];
 	var file_path = args["path"];
@@ -70,20 +75,24 @@ uovd.provider.rdp.application.Html5.prototype.applicationStartWithArgs_implement
 	path = this.writeString(file_path);
 	path_len = this.write(path.length/2, 4);
 
-	this.applications[token] = new uovd.provider.rdp.application.ApplicationInstance(this, application_id, token);
+	this.applications[token] = new uovd.provider.applications.ApplicationInstance(this, application_id, token);
 
 	if(server_id != -1) {
-		this.connections[server_id].guac_tunnel.sendMessage("ovdapp", opcode+""+appToken+""+appId+""+dir_type+""+share_len+""+share+""+path_len+""+path+";");
-		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"unknown"});
+		var server = this.session_management.session.servers[server_id];
+
+		if(server.type != uovd.SERVER_TYPE_WEBAPPS) {
+			this.connections[server_id].guac_tunnel.sendMessage("ovdapp", opcode+""+appToken+""+appId+""+dir_type+""+share_len+""+share+""+path_len+""+path+";");
+			this.session_management.fireEvent("ovd.applicationsProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"unknown"});
+		}
 	} else {
-		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"aborted"});
+		this.session_management.fireEvent("ovd.applicationsProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"aborted"});
 	}
 }
 
-uovd.provider.rdp.application.Html5.prototype.applicationStop_implementation = function(application_id, token) { 
+uovd.provider.applications.Html5.prototype.applicationStop_implementation = function(application_id, token) { 
 }
 
-uovd.provider.rdp.application.Html5.prototype.handleOrders = function(server_id, opcode, parameters) {
+uovd.provider.applications.Html5.prototype.handleOrders = function(server_id, opcode, parameters) {
 	if(opcode == "ovdapp") {
 		/* Format :
 		parameters[0] = binary encoded
@@ -123,7 +132,7 @@ uovd.provider.rdp.application.Html5.prototype.handleOrders = function(server_id,
 			application.start  = (new Date()).getTime();
 
 			this.applications[instance] = application;
-			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":application, "from":"unknown", "to":"started"});
+			this.session_management.fireEvent("ovd.applicationsProvider.statusChanged", this, {"application":application, "from":"unknown", "to":"started"});
 		} else if (opcode == "03") { /* ORDER_STOPPED */
 			/* Format :
 					uint32 = instance
@@ -134,7 +143,7 @@ uovd.provider.rdp.application.Html5.prototype.handleOrders = function(server_id,
 			application.status = "stopped";
 			application.end = (new Date()).getTime();
 
-			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":application, "from":"started", "to":"stopped"});
+			this.session_management.fireEvent("ovd.applicationsProvider.statusChanged", this, {"application":application, "from":"started", "to":"stopped"});
 		} else if (opcode == "06") { /* ORDER_CANT_START */
 			/* Format :
 					uint32 = instance
@@ -145,7 +154,7 @@ uovd.provider.rdp.application.Html5.prototype.handleOrders = function(server_id,
 			application.status = "aborted";
 			application.end = (new Date()).getTime();
 
-			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.applicationProvider.statusChanged", this, {"application":application, "from":"unknown", "to":"aborted"});
+			this.session_management.fireEvent("ovd.applicationsProvider.statusChanged", this, {"application":application, "from":"unknown", "to":"aborted"});
 		} else if (opcode == "20") { /* ORDER_KNOWN_DRIVES */
 			console.log("ORDER_KNOWN_DRIVES : "+bin);
 			/* ??? */
@@ -155,7 +164,7 @@ uovd.provider.rdp.application.Html5.prototype.handleOrders = function(server_id,
 	}
 }
 
-uovd.provider.rdp.application.Html5.prototype.write = function(num, bytes) {
+uovd.provider.applications.Html5.prototype.write = function(num, bytes) {
 	var buffer = new Array();
 	var output = "";
 	var input = "";
@@ -187,7 +196,7 @@ uovd.provider.rdp.application.Html5.prototype.write = function(num, bytes) {
 	return output;
 }
 
-uovd.provider.rdp.application.Html5.prototype.read = function(str, bytes) {
+uovd.provider.applications.Html5.prototype.read = function(str, bytes) {
 	var buffer = new Array();
 	var output = "0x";
 	var num = 0;
@@ -213,7 +222,7 @@ uovd.provider.rdp.application.Html5.prototype.read = function(str, bytes) {
 	return num;
 }
 
-uovd.provider.rdp.application.Html5.prototype.writeString = function(str) {
+uovd.provider.applications.Html5.prototype.writeString = function(str) {
 	var buffer = "";
 	for(var i=0 ; i<str.length ; ++i) {
 		buffer+= this.write(str.charCodeAt(i), 2);

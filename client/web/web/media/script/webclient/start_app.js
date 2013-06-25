@@ -45,9 +45,9 @@ StartApp.prototype._parse_start_app = function(xml) {
 			var type = file.attr('type');
 			var path = file.attr('path');
 			var share = file.attr('share');
-			self.session_management.fireEvent("ovd.rdpProvider.applicationProvider.applicationStartWithArgs", self, {"id":id, "args":{"type":type, "path":path, "share":share}});
+			self.session_management.fireEvent("ovd.applicationsProvider.applicationStartWithArgs", self, {"id":id, "args":{"type":type, "path":path, "share":share}});
 		} else {
-			self.session_management.fireEvent("ovd.rdpProvider.applicationProvider.applicationStart", self, {"id":id});
+			self.session_management.fireEvent("ovd.applicationsProvider.applicationStart", self, {"id":id});
 		}
 	});
 }

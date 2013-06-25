@@ -125,7 +125,9 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 <?php } else { ?>
 		<script type="text/javascript" src="media/script/uovd/base.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/application.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/server.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/server/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/server/rdp.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/server/webapps.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/session.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/session_management.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/base.js" charset="utf-8"></script>
@@ -133,10 +135,11 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<script type="text/javascript" src="media/script/uovd/provider/http/direct.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/http/proxy.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/java.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/provider/rdp/application/application_instance.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/provider/rdp/application/base.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/provider/rdp/application/html5.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/provider/rdp/application/java.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/applications/application_instance.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/applications/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/applications/html5.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/applications/java.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/applications/webapps.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/http_tunnel.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_handler.js" charset="utf-8"></script>
@@ -149,6 +152,8 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/guacamole.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/encodings.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/oskeyboard.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/webapps/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/webapps/jsonp.js" charset="utf-8"></script>
 <?php } ?>
 
 <?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/webclient.js")) { ?>
@@ -174,6 +179,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<script type="text/javascript" src="media/script/webclient/desktop_container.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/seamless_launcher.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/seamless_window_manager.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/webapps_popup_launcher.js" charset="utf-8"></script>
 <?php } ?>
 
 		<script type="text/javascript" src="media/script/webclient/ui.js" charset="utf-8"></script>

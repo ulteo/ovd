@@ -252,6 +252,9 @@ Event.observe(window, 'load', function() {
 	/* applications launcher */
 	new SeamlessLauncher(session_management, "#appsContainer");
 
+	/* webapps launcher */
+	new WebAppsPopupLauncher(session_management);
+
 	/* window manager */
 	new SeamlessWindowManager(session_management, "#windowsContainer", new uovd.provider.rdp.html5.SeamlessWindowFactory());
 
@@ -316,6 +319,7 @@ function startSession() {
 
 	session_management.setParameters(parameters);
 	session_management.setAjaxProvider(new uovd.provider.http.Proxy("proxy.php"));
+	session_management.setWebAppsProvider(new uovd.provider.webapps.Jsonp());
 	session_management.start();
 
 	return false;

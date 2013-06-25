@@ -224,7 +224,22 @@ uovd.provider.Java.prototype.sessionSuspend_implementation = function(callback) 
 
 uovd.provider.Java.prototype.connectDesktop = function() {
 	var self = this; /* closure */
-	var server = this.session_management.session.servers[0];
+
+	/* Get the first RDP server */
+	var server = null;
+	for(var i=0 ; i<this.session_management.session.servers.length ; ++i) {
+		var srv = this.session_management.session.servers[i];
+		if(server.type == uovd.SERVER_TYPE_LINUX || server.type == uovd.SERVER_TYPE_WINDOWS) {
+			server = srv;
+			break;
+		}
+	}
+
+	if(server == null) {
+		/* Error !!! */
+		return;
+	}
+
 	var parameters = this.session_management.parameters;
 	var onfailure = function() {
 		/* !!! Error  */
@@ -246,13 +261,17 @@ uovd.provider.Java.prototype.connectDesktop = function() {
 
 		/* Add the servers status callback */
 		self.applet_serverStatus = function(id, status) {
-			self.session_management.session.servers[id].setStatus(status);
+			var server = self.session_management.session.servers[id];
+
+			if(server.type == uovd.SERVER_TYPE_LINUX || server.type == uovd.SERVER_TYPE_WINDOWS) {
+				server.setStatus(status);
+			}
 		};
 
 		if(parameters["fullscreen"] == true) {
-			self.connectDesktop_fullscreen(settings);
+			self.connectDesktop_fullscreen(server, settings);
 		} else {
-			self.connectDesktop_embeeded(settings);
+			self.connectDesktop_embeeded(server, settings);
 		}
 
 		/* Applet startSession handler */
@@ -277,9 +296,8 @@ uovd.provider.Java.prototype.connectDesktop = function() {
 	}
 };
 
-uovd.provider.Java.prototype.connectDesktop_embeeded = function(settings) {
+uovd.provider.Java.prototype.connectDesktop_embeeded = function(server, settings) {
 	var self = this; /* closure */
-	var server = this.session_management.session.servers[0];
 	var parameters = this.session_management.parameters;
 
 	/* Generate a desktop applet */
@@ -344,7 +362,7 @@ uovd.provider.Java.prototype.connectDesktop_embeeded = function(settings) {
 	}, 100);
 };
 
-uovd.provider.Java.prototype.connectDesktop_fullscreen = function(settings) {
+uovd.provider.Java.prototype.connectDesktop_fullscreen = function(server, settings) {
 	var self = this; /* closure */
 	var parameters = this.session_management.parameters;
 
@@ -363,7 +381,6 @@ uovd.provider.Java.prototype.connectDesktop_fullscreen = function(settings) {
 
 uovd.provider.Java.prototype.connectApplications = function() {
 	var self = this; /* closure */
-	var server = this.session_management.session.servers[0];
 	var settings = this.session_management.session.settings;
 	var parameters = this.session_management.parameters;
 	var onfailure = function() {
@@ -384,17 +401,21 @@ uovd.provider.Java.prototype.connectApplications = function() {
 		settings.push("container");
 		settings.push("Desktop_0");
 
-		/* set application_provider */
-		var application_provider = new uovd.provider.rdp.application.Java(self);
+		/* set applications_provider */
+		var applications_provider = new uovd.provider.applications.Java(self);
 
 		/* Add the servers status callback */
 		self.applet_serverStatus = function(id, status) {
-			self.session_management.session.servers[id].setStatus(status);
+			var server = self.session_management.session.servers[id];
+
+			if(server.type == uovd.SERVER_TYPE_LINUX || server.type == uovd.SERVER_TYPE_WINDOWS) {
+				server.setStatus(status);
+			}
 		};
 
 		/* Add the application status callback */
 		self.applet_applicationStatus = function(id, instance, status) {
-			application_provider.handleOrders(id, instance, status);
+			applications_provider.handleOrders(id, instance, status);
 		};
 
 		/* Applet startSession handler */
@@ -402,6 +423,12 @@ uovd.provider.Java.prototype.connectApplications = function() {
 			/* Connect to all servers and gather application list */
 			for(var i=0 ; i<self.session_management.session.servers.length ; ++i) {
 				var server = self.session_management.session.servers[i];
+
+				if(server.type != uovd.SERVER_TYPE_LINUX && server.type != uovd.SERVER_TYPE_WINDOWS) {
+					/* Not an RDP server : skip it */
+					continue;
+				}
+
 				var serialized;
 				try {
 					// XMLSerializer exists in current Mozilla browsers
