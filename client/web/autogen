@@ -31,3 +31,5 @@ sed -e "s/@VERSION@/${version}/g" configure.ac.in > configure.ac
 autoreconf -vfi && ./configure --without-ulteo-applets $@
 
 python compile_js_css.py
+
+exit 0

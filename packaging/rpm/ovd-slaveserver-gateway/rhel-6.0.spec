@@ -2,6 +2,7 @@
 # http://www.ulteo.com
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -17,6 +18,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+%define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")
+
 Name: ovd-slaveserver-gateway
 Version: @VERSION@
 Release: @RELEASE@
@@ -26,12 +29,11 @@ License: GPL2
 Group: Applications/System
 Vendor: Ulteo SAS
 URL: http://www.ulteo.com
-Packager: Julien LANGLOIS <julien@ulteo.com>
-Distribution: RHEL 6.0
+Packager: David PHAM-VAN <d.pham-van@ulteo.com>
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Buildrequires: python, pysvn
+Buildrequires: python
 Buildroot: %{buildroot}
 
 %description
@@ -43,23 +45,32 @@ Ulteo Open Virtual Desktop gateway role for daemon server
 
 Summary: Ulteo Open Virtual Desktop - gateway role for slave server
 Group: Applications/System
+%if %{defined rhel}
 Requires: python, ulteo-ovd-slaveserver, openssl, pyOpenSSL
+%else
+Requires: python, ulteo-ovd-slaveserver, openssl, python-openssl
+%endif
+
 
 %description -n ulteo-ovd-slaveserver-role-gateway
 Gateway role for the Ulteo OVD slave server.
 
+
 %prep -n ulteo-ovd-slaveserver-role-gateway
 %setup -q
+
 
 %build -n ulteo-ovd-slaveserver-role-gateway
 %{__python} setup.py build
 
-%install -n ulteo-ovd-slaveserver-role-gateway
-%{__python} setup.py install --root $RPM_BUILD_ROOT --prefix %{_prefix}
 
-%{__rm} -r $RPM_BUILD_ROOT{%{_datadir},%{_sysconfdir},%{_sbindir}}
-%{__rm} -r $RPM_BUILD_ROOT/usr/lib/python*/site-packages/ovd/{Communication,Platform,*.py*}
-%{__rm} -r $RPM_BUILD_ROOT/usr/lib/python*/site-packages/ovd/Role/{*.py*,ApplicationServer,FileServer}
+%install -n ulteo-ovd-slaveserver-role-gateway
+%{__python} setup.py install --root %{buildroot} --prefix %{_prefix}
+
+%{__rm} -r %{buildroot}{%{_datadir},%{_sysconfdir},%{_sbindir}}
+%{__rm} -r %{buildroot}%{python_sitelib}/ovd/{Communication,Platform,*.py*}
+%{__rm} -r %{buildroot}%{python_sitelib}/ovd/Role/{*.py*,ApplicationServer,FileServer,WebApps}
+
 
 %post -n ulteo-ovd-slaveserver-role-gateway
 CONFDIR=%{_sysconfdir}/ulteo/ovd
@@ -71,6 +82,7 @@ fi
 
 [ "$1" = "1" ] && %{_sbindir}/ovd-slaveserver-role add Gateway
 
+
 %postun -n ulteo-ovd-slaveserver-role-gateway
 CONFDIR=%{_sysconfdir}/ulteo/ovd
 if [ "$1" = "0" ]; then
@@ -78,14 +90,21 @@ if [ "$1" = "0" ]; then
     %{_sbindir}/ovd-slaveserver-role del Gateway
 fi
 
+
 %clean -n ulteo-ovd-slaveserver-role-gateway
-%{__rm} -rf $RPM_BUILD_ROOT
+%{__rm} -rf %{buildroot}
+
 
 %files -n ulteo-ovd-slaveserver-role-gateway
 %defattr(-,root,root)
-/usr/lib/python*/site-packages/ovd/Role/Gateway/*.py*
-/usr/lib/python*/site-packages/ovd_slaveserver_gateway-*.egg-info
+%{python_sitelib}/ovd/Role/Gateway/*.py*
+%{python_sitelib}/ovd_slaveserver_gateway-*.egg-info
+
 
 %changelog -n ulteo-ovd-slaveserver-role-gateway
+* Fri Jun 21 2013 David PHAM-VAN <d.pham-van@ulteo.com> 4.0
+- Corrections
 * Fri Apr 5 2013 Julien LANGLOIS <julien@ulteo.com> 99.99.svn8681
+- Add rhel
+* Thu Sep 21 2011 Samuel Bovée <samuel@ulteo.com> 99.99.svn7524
 - Initial release
