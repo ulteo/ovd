@@ -153,18 +153,19 @@ Event.observe(window, 'load', function() {
 
 	/* Configure the SM Host field behaviour */
 	if (jQuery('#sessionmanager_host').prop('value') == '') {
+		/* Empty : set default value */
 		jQuery('#sessionmanager_host').css('color', 'grey');
 		jQuery('#sessionmanager_host').prop('value', i18n.get('sessionmanager_host_example'));
-		if (jQuery('#sessionmanager_host')[0] && jQuery('#sessionmanager_host')[0].visible())
-			setCaretPosition(jQuery('#sessionmanager_host')[0], 0);
 	}
 	Event.observe(jQuery('#sessionmanager_host')[0], 'focus', function() {
+		/* Focusing : if default value, then clear */
 		if (jQuery('#sessionmanager_host').prop('value') == i18n.get('sessionmanager_host_example')) {
 			jQuery('#sessionmanager_host').css('color', 'black');
 			jQuery('#sessionmanager_host').prop('value', '');
 		}
 	});
 	Event.observe(jQuery('#sessionmanager_host')[0], 'blur', function() {
+		/* Blur : if empty, then set default value */
 		if (jQuery('#sessionmanager_host').prop('value') == '') {
 			jQuery('#sessionmanager_host').css('color', 'grey');
 			jQuery('#sessionmanager_host').prop('value', i18n.get('sessionmanager_host_example'));
@@ -559,19 +560,6 @@ function switchSettings() {
 			jQuery('#advanced_settings_status').removeClass('image_show_png').addClass('image_hide_png');
 		}
 		new Effect.SlideDown(jQuery('#advanced_settings')[0], { duration: 0.4 });
-	}
-}
-
-function setCaretPosition(ctrl, pos) {
-	if(ctrl.setSelectionRange) {
-		ctrl.focus();
-		ctrl.setSelectionRange(pos, pos);
-	} else if (ctrl.createTextRange) {
-		var range = ctrl.createTextRange();
-		range.collapse(true);
-		range.moveEnd('character', pos);
-		range.moveStart('character', pos);
-		range.select();
 	}
 }
 
