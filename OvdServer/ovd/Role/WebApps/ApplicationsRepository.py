@@ -3,6 +3,7 @@
 # Copyright (C) 2010-2011 Ulteo SAS
 # http://www.ulteo.com
 # Author Miguel Angel Garcia <mgarcia@pressenter.com.ar> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -29,12 +30,13 @@ from Utils import HTTP_403
 
 
 class ApplicationDefinition(object):
-    def __init__(self, app_id, name, rule, base_path, request_processor):
+    def __init__(self, app_id, name, rule, base_path, request_processor, start_path):
         self.id = app_id
         self.name = name
         self.rule = rule
         self.base_path = base_path
         self.request_processor = request_processor
+        self.start_path = start_path
 
 
     def handles(self, communicator):
@@ -176,10 +178,14 @@ class ApplicationsRepository(object):
         Logger.error('[WebApps] using not initialized ApplicationsRepository')
 
     @classmethod
-    def get_name_by_id(cls, app_id):
+    def get_by_id(cls, app_id):
         if cls._instance is None:
             Logger.error('[WebApps] using not initialized ApplicationsRepository')
         
         for app_def in cls._instance.process('_list'):
             if app_def.id == app_id:
-                return app_def.name
+                return app_def
+
+    @classmethod
+    def get_name_by_id(cls, app_id):
+        return cls.get_by_id(app_id).name

@@ -6,6 +6,7 @@
 # Author Ania WSZEBOROWSKA <anna.wszeborowska@stxnext.pl> 2013
 # Author Maciej SKINDZIER <maciej.skindzier@stxnext.pl> 2013
 # Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -58,7 +59,7 @@ def setup_app(config, app_id, app_name):
 
     try:
         config = config[app_name]
-        app_config = {'app_id': app_id, 'app_name': app_name}
+        app_config = {'app_id': app_id, 'app_name': app_name, 'start_path': ''}
         for key in config['Configuration']:
             if config['Configuration'][key]['type'] == 'user_login':
                 app_config[key] = '{USE_CURRENT_USER_LOGIN}'
@@ -97,7 +98,7 @@ def setup_app(config, app_id, app_name):
 
     app_request_processor = ApplicationRequestProcessor(app_req_proc_config)
     app = ApplicationDefinition(app_id, app_name, re.compile('^' + app_name + '\.'), '',
-        app_request_processor)
+        app_request_processor, app_config['start_path'])
     return app
 
     

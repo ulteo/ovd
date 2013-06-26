@@ -6,6 +6,7 @@
 # Author Ania WSZEBOROWSKA <anna.wszeborowska@stxnext.pl> 2013
 # Author Maciej SKINDZIER <maciej.skindzier@stxnext.pl> 2013
 # Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -71,6 +72,7 @@ class ServerHandler(Handler):
     def __init__(self, app_config, options, filters=[]):
         super(ServerHandler, self).__init__(app_config, options, filters)
         self.config['target'] = urlparse.urlparse(self.options['baseURI'])
+        app_config['start_path'] = self.config['target'].path
         
     def __process__(self, context, post_processors):
         return self.options['next_handler']
