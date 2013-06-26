@@ -110,8 +110,8 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<link rel="shortcut icon" href="media/image/favicon.ico" />
 		<link rel="shortcut icon" type="image/png" href="media/image/favicon.png" />
 
-<?php if (file_exists(WEB_CLIENT_ROOT . "/media/style/uovd.css")) { ?>
-		<link rel="stylesheet" type="text/css" href="media/style/uovd.css" />
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/style/webclient.css")) { ?>
+		<link rel="stylesheet" type="text/css" href="media/style/webclient.css" />
 <?php } else { ?>
 		<link rel="stylesheet" type="text/css" href="media/script/lib/nifty/niftyCorners.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/images.css" />

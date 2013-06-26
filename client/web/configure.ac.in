@@ -111,12 +111,14 @@ web/media/script/lib/prototype/Makefile
 web/media/script/lib/scriptaculous/Makefile
 web/media/script/lib/jquery/Makefile
 web/media/script/uovd/Makefile
+web/media/script/uovd/server/Makefile
 web/media/script/uovd/provider/Makefile
+web/media/script/uovd/provider/applications/Makefile
 web/media/script/uovd/provider/http/Makefile
 web/media/script/uovd/provider/rdp/Makefile
-web/media/script/uovd/provider/rdp/application/Makefile
 web/media/script/uovd/provider/rdp/html5/Makefile
 web/media/script/uovd/provider/rdp/html5/guacamole/Makefile
+web/media/script/uovd/provider/webapps/Makefile
 web/media/script/webclient/Makefile
 web/media/style/Makefile
 web/PEAR/Makefile

@@ -1,4 +1,4 @@
-scripts_DATA = common.css images.css uovd.css
+scripts_DATA = common.css images.css webclient.css
 
 scriptsdir = $(datadir)/ulteo/webclient/media/style
 
