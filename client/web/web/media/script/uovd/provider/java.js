@@ -229,7 +229,7 @@ uovd.provider.Java.prototype.connectDesktop = function() {
 	var server = null;
 	for(var i=0 ; i<this.session_management.session.servers.length ; ++i) {
 		var srv = this.session_management.session.servers[i];
-		if(server.type == uovd.SERVER_TYPE_LINUX || server.type == uovd.SERVER_TYPE_WINDOWS) {
+		if(srv.type == uovd.SERVER_TYPE_LINUX || srv.type == uovd.SERVER_TYPE_WINDOWS) {
 			server = srv;
 			break;
 		}
