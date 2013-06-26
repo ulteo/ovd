@@ -242,7 +242,7 @@ function get_available_translations($lang) {
 		'close_this_window'				=>	_('Close this window'),
 		'start_another_session'			=>	str_replace(
 									array('[A]', '[/A]'),
-									array('<a href="javascript:;" onclick="hideEnd(); showLogin(); return false;">', '</a>'),
+									array('<a href="javascript:;">', '</a>'),
 									_('Click [A]here[/A] to start a new session')
 								),
 

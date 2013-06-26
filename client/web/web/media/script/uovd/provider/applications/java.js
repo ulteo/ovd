@@ -79,6 +79,7 @@ uovd.provider.applications.Java.prototype.handleOrders = function(app_id, instan
 
 		this.session_management.fireEvent("ovd.applicationsProvider.statusChanged", this, {"application":application, "from":"unknown", "to":"aborted"});
 	} else {
-		console.log("Unknown application status : "+id+" "+token+" "+status);
+		/* !!! */
+		/*console.log("Unknown application status : "+id+" "+token+" "+status);*/
 	}
 }

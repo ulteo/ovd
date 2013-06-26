@@ -1,16 +1,20 @@
-html {
-	font-family: Arial;
-	font-size: 90%;
-}
+/* ---------------------------------------- Common
+   Session params form :
+	 - SM Host
+   - Login/Password
+   - Session type & adv. params
+*/
 
-body {
-	font-size: 0.85em;
-	color: #333;
-	background: #ddd;
-	margin: 50px;
+html, body {
+	margin: 0;
 	padding: 0;
-
+	width: 100%;
+	height: 100%;
+	color: #333;
 	overflow: hidden;
+	font-family: Arial;
+	font-size: 0.85em;
+	background: #ddd;
 }
 
 img {
@@ -23,6 +27,7 @@ a {
 	border: none;
 	text-decoration: none;
 }
+
 a:hover {
 	color: #963;
 }
@@ -32,139 +37,30 @@ pre {
 	font-size: 1em;
 }
 
+h1, h2, h3, h4, h5, h6 {
+	margin: 0;
+	padding: 0;
+	padding-top: 5px;
+	padding-bottom: 10px;
+	text-align: left;
+	color: #666;
+}
+
 div.spacer {
-	margin-top: 10px;
-	margin-bottom: 10px;
+	margin: 10px 0;
 	clear: both;
 }
 
 div.rounded {
+	border-radius : 10px 10px 10px 10px;
+	-moz-border-radius: 10px 10px 10px 10px;
+	-webkit-border-radius: 10px 10px 10px 10px;
+	-khtml-border-radius: 10px 10px 10px 10px;
 	padding: 10px;
 }
 
-#loginBox {
-	width: 900px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 50px;
-	margin-bottom: 50px;
-	background: #fff;
-}
-
-#loginForm {
-	width: 95%;
-	min-height: 182px;
-	margin-left: auto;
-	margin-right: 0px;
-	padding: 10px;
-	background: #eee;
-}
-
-#splashContainer {
-	background: #fff;
-
-	border: 0px;
-
-	position: absolute;
-
-	width: 406px;
-
-	text-align: left;
-	vertical-align: middle;
-
-	padding: 5px;
-}
-
-#fullScreenMessage {
-	background: #fff;
-
-	border: 0px;
-
-	position: absolute;
-
-	width: 400px;
-
-	text-align: center;
-	vertical-align: middle;
-
-	padding: 5px;
-}
-
-#debugContainer {
-	background: #fff;
-
-	position: absolute;
-
-	left: 0px;
-	bottom: 0px;
-
-	width: 85%;
-	height: 149px;
-
-	overflow: auto;
-}
-
-#debugContainer.no_debug .debug {
-	display: none;
-}
-
-#debugContainer.no_info .info {
-	display: none;
-}
-
-#debugContainer.no_warning .warning {
-	display: none;
-}
-
-#debugContainer.no_error .error {
-	display: none;
-}
-
-#debugLevels {
-	background: #fff;
-
-	position: absolute;
-
-	right: 0px;
-	bottom: 0px;
-
-	width: 15%;
-	height: 149px;
-}
-
-.debug {
-	color: grey;
-	display: block;
-}
-
-.info {
-	color: green;
-	display: block;
-}
-
-.warning {
-	color: orange;
-	display: block;
-}
-
-.error {
-	color: red;
-	display: block;
-}
-
-#endContainer {
-	background: #fff;
-
-	border: 0px;
-
-	position: absolute;
-
-	width: 400px;
-
-	text-align: center;
-	vertical-align: middle;
-
-	padding: 5px;
+div#image_ulteo-small_png {
+	margin: 0 auto;
 }
 
 .msg_ok {
@@ -176,190 +72,71 @@ div.rounded {
 	font-weight: bold;
 }
 
-#sessionContainer {
+/* ---------------------------------------- Main UI
+   Session params form :
+	 - SM Host
+   - Login/Password
+   - Session type & adv. params
+*/
+
+#main {
 	position: absolute;
-
-	top: 0px;
-	left: 0px;
-
-	width: 100%;
-
-	margin-left: 0px;
-	margin-right: 0px;
-}
-
-#desktopContainer {
-	position: absolute;
-
-	top: 0px;
-	left: 0px;
-}
-
-#applicationsHeaderWrap {
-	background: #fff;
-	color: #333;
-	/*border-bottom: 1px solid #ccc;*/
-	position: relative;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-	text-align: center;
-}
-
-#applicationsContainer {
-	width: 100%;
-	background: #eee;
-	margin-left: 0px;
-	margin-right: 0px;
-	padding: 0px;
-	position: relative;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-	border-bottom: 1px solid #ccc;
-}
-
-div#lockWrap {
-	width: 100%;
-	height: 100%;
 	top: 0;
-	left: 0;
-
-	background: #000;
-	position: absolute;
-	z-index: 50;
-
-	filter: alpha(opacity=80);
-	-moz-opacity: 0.80;
-	opacity: 0.80;
+	width: 100%;
 }
 
-div#notificationWrap {
-	background: #2c2c2c;
-	width: 0px;
-	height: 0px;
-}
-
-div#errorWrap {
-	background: #ffcccc;
-	padding: 10px;
-	position: absolute;
-	z-index: 200;
-}
-
-div#okWrap {
-	background: #ccffcc;
-	padding: 10px;
-	position: absolute;
-	z-index: 150;
-}
-
-div#infoWrap {
-	background: #f1f2a1;
-	padding: 10px;
-	position: absolute;
-	z-index: 100;
-}
-
-div#systemTestWrap {
-	position: absolute;
-	background: #999;
-	padding: 10px;
-	z-index: 200;
-	width: 500px;
-}
-
-div#systemTest {
-	background: #fff;
-	color: #333;
-	padding: 20px;
-	z-index: 200;
-	width: 480px;
-	font-size: 1.1em;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-div.finalErrorBox {
-	width: 500px;
-	background: #fff;
-	color: #c33;
-	border: 10px solid #c33;
-	
-	font-size: 1.2em;
-	padding: 20px;
-	z-index: 200;
-	
-	margin-left: auto;
-	margin-right: auto;
-}
-
-div#systemTestErrorWrap {
-	position: absolute;
-	background: #c33;
-	color: #fff;
-	padding: 10px;
-	z-index: 200;
-	width: 500px;
-}
-
-div#systemTestError {
-	background: #fff;
-	color: #c33;
-	padding: 20px;
-	z-index: 200;
-	width: 480px;
-	font-size: 1.2em;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-div#iframeWrap {
-	position: absolute;
-	z-index: 200;
-	text-align: center;
-}
-
-div#iframeCloseButton.msie6 {
-	background: url('../image/close-wrap.png') no-repeat;
-	width: 26px;
-	height: 26px;
-}
-
-div#iframeCloseButton {
-	float: right;
-	text-align: left;
-	margin: 0;
-	padding: 0;
+#loginBox {
 	position: relative;
-	top: -24px;
-	left: -12px;
-}
-
-div#newsWrap {
-	position: absolute;
-	background: #999;
-	padding: 10px;
-	z-index: 200;
-	width: 750px;
-}
-
-div#newsWrapCont {
+	width: 900px;
+	margin: 50px auto;
 	background: #fff;
-	color: #333;
-	padding: 20px;
-	z-index: 200;
-	width: 730px;
-	font-size: 1.1em;
-	margin-left: auto;
-	margin-right: auto;
 }
 
-div#newsWrap_title {
-	font-weight: bold;
-	border-bottom: 1px solid #999;
-	width: 98%;
-	margin-bottom: 15px;
+#loginForm {
+	width: 95%;
+	min-height: 182px;
+	padding: 10px;
+	margin-left: auto;
+	margin-right: 0px;
+	background: #eee;
+}
+
+/* ---------------------------------------- Loading screen
+   Loadin and unloading screens :
+   - ProgressBar
+   - SessionEnd status
+*/
+
+#splashContainer {
+	position: absolute;
+	top: 30%;
+	width: 100%;
+}
+
+#splashContainerContent {
+	width: 400px;
+	padding: 5px;
+	margin: 0 auto;
+	border: 0px;
+	text-align: left;
+	vertical-align: middle;
+	background: #fff;
+}
+
+#endContainer {
+	position: absolute;
+	top: 30%;
+	width: 100%;
+}
+
+#endContainerContent {
+	width: 400px;
+	padding: 5px;
+	margin: 0 auto;
+	border: 0px;
+	text-align: center;
+	vertical-align: middle;
+	background: #fff;
 }
 
 div#progressBar {
@@ -377,18 +154,60 @@ div#progressBarContent {
 	margin-right: auto;
 }
 
-div#image_ulteo-small_png {
-	margin-left: auto;
-	margin-right: auto;
+
+/* ---------------------------------------- Session
+   Desktop and application mode UI :
+   - Applet/Canvas containers
+   - Application launchers
+   - Logout/Disconnect buttons
+*/
+
+#fullScreenMessage {
+	width: 400px;
+	padding: 5px;
+	margin: 0 auto;
+	text-align: center;
+	vertical-align: middle;
+	border: 0px;
+	background: #fff;
 }
 
-h1, h2, h3, h4, h5, h6 {
-	margin: 0;
-	padding: 0;
-	padding-top: 5px;
-	padding-bottom: 10px;
-	text-align: left;
-	color: #666;
+#sessionContainer {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	margin: 0 0;
+}
+
+#desktopContainer {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+#applicationsHeader {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	text-align: center;
+	color: #333;
+	background: #fff;
+}
+
+#applicationsContainer {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	width: 100%;
+	height: 100%;
+	margin: 0 0;
+	padding: 0px;
+	background: #eee;
+	border-bottom: 1px solid #ccc;
 }
 
 .applicationLauncherDisabled {
@@ -410,3 +229,168 @@ h1, h2, h3, h4, h5, h6 {
 	font-size: 0.9em;
 	font-style: italic;
 }
+
+/* ---------------------------------------- Notifications
+   Various notifications :
+	 - Error
+   - OK
+   - Info
+*/
+
+div#notification {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	font-size: 1.2em;
+}
+
+div#error {
+	position: relative;
+	width: 100%;
+	z-index: 100;
+	padding: 10px;
+	background: #ffcccc;
+}
+
+div#ok {
+	position: relative;
+	width: 100%;
+	z-index: 100;
+	padding: 10px;
+	background: #ccffcc;
+}
+
+div#info {
+	position: relative;
+	width: 100%;
+	z-index: 100;
+	padding: 10px;
+	background: #f1f2a1;
+}
+
+/* ---------------------------------------- Overlays
+   Top level messages :
+	 - System test in progress
+   - System test results
+   - System test errors
+   - News
+   - Iframe
+*/
+
+div#overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+div#lock {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 50;
+	background: #000;
+	filter: alpha(opacity=80);
+	-moz-opacity: 0.80;
+	opacity: 0.80;
+}
+
+div#systemTest {
+	position: relative;
+	top: 30%;
+	width: 440px;
+	z-index: 100;
+	margin: 0 auto;
+	padding: 10px;
+	background: #999;
+}
+
+div#systemTestError {
+	position: relative;
+	top: 30%;
+	width: 440px;
+	z-index: 100;
+	margin: 0 auto;
+	padding: 10px;
+	color: #fff;
+	background: #c33;
+}
+
+div#iframe {
+	position: relative;
+	top: 5%;
+	width: 80%;
+	height: 80%;
+	margin: 0 auto;
+	z-index: 100;
+	color: #fff;
+	background: #999;
+}
+
+div#news {
+	position: relative;
+	top: 30%;
+	width: 440px;
+	z-index: 100;
+	margin: 0 auto;
+	padding: 10px;
+	background: #999;
+}
+
+/* Sub components */
+
+#iframeContainer {
+	width: 100%;
+	height: 100%;
+}
+
+div#systemTestContainer {
+	width: 400px;
+	padding: 20px;
+	margin: 0 auto;
+	color: #333;
+	background: #fff;
+}
+
+div#systemTestErrorContainer {
+	margin: 0 auto;
+	width: 400px;
+	padding: 20px;
+	color: #c33;
+	background: #fff;
+}
+
+div#iframeCloseButton.msie6 {
+	width: 26px;
+	height: 26px;
+	background: url('../image/close-wrap.png') no-repeat;
+}
+
+div#iframeCloseButton {
+	position: relative;
+	float: right;
+	top: -24px;
+	left: -12px;
+	padding: 0;
+	margin: 0;
+	text-align: left;
+}
+
+div#newsContainer {
+	width: 400px;
+	padding: 20px;
+	color: #333;
+	background: #fff;
+}
+
+div#newsTitle {
+	width: 98%;
+	margin-bottom: 15px;
+	border-bottom: 1px solid #999;
+	font-weight: bold;
+}
+

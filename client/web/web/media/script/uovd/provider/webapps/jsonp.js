@@ -32,7 +32,7 @@ uovd.provider.webapps.Jsonp.prototype.connectApplications = function() {
 
 		jQuery.ajax({
 			url : url,
-			dataType : 'jsonp',
+			dataType : 'jsonp'
 		});
 	}
 
@@ -51,7 +51,7 @@ uovd.provider.webapps.Jsonp.prototype.disconnect_implementation = function() {
 
 		jQuery.ajax({
 			url : url,
-			dataType : 'jsonp',
+			dataType : 'jsonp'
 		});
 
 		window.webappServerStatus(i, uovd.SERVER_STATUS_DISCONNECTED);

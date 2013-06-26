@@ -3,7 +3,7 @@ ApplicationCounter = function(session_management) {
 	this.count = 0;
 
 	/* register events listeners */
-	this.handler = this.handleEvents.bind(this);
+	this.handler = jQuery.proxy(this.handleEvents, this);
 	this.session_management.addCallback("ovd.applicationsProvider.statusChanged", this.handler);
 	this.session_management.addCallback("ovd.session.destroying",                 this.handler);
 }

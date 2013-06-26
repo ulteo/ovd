@@ -13,6 +13,7 @@ uovd.provider.Java = function(node) {
 	this.node = jQuery((node || "body"));
 	this.applet_codebase = null;
 	this.main_applet = null;
+	this.initialisation_state = 0; // 0=none | 1=started | 2=ok | 3=error
 
 	/* Applet callbacks */
 	this.applet_registered        = function() {};
@@ -23,6 +24,18 @@ uovd.provider.Java = function(node) {
 
 	/* Redefine initialize for JavaProvider */
 	this.initialize = function(onsuccess, onfailure) {
+		/* Handle state */
+		if(this.initialisation_state == 2) { onsuccess(); return; }
+		if(this.initialisation_state == 3) { onfailure(); return; }
+		if(this.initialisation_state == 1) {
+			/* Another initialization is in progress : delaying */
+			setTimeout(jQuery.proxy(this.initialize, this, onsuccess, onfailure), 1000);
+			return;
+		}
+
+		/* First initialization */
+		this.initialisation_state = 1;
+
 		var name = "ulteoapplet";
 		var archive = "ulteo-applet.jar";
 		var cache_archive = "ulteo-applet.jar";
@@ -74,6 +87,7 @@ uovd.provider.Java = function(node) {
 
 			clearTimeout(error_timeout);
 			self.applet_registered = function() {
+				self.initialisation_state = 2;
 				try{ onsuccess(); } catch(e) {}
 			}
 			self.main_applet[0].register(self);
@@ -83,6 +97,7 @@ uovd.provider.Java = function(node) {
 			clearTimeout(retry_timeout);
 			self.main_applet.remove();
 			self.main_applet = null;
+			self.initialisation_state = 3;
 			try { onfailure(); } catch(e) {}
 		}, 60000);
 
@@ -99,6 +114,7 @@ for(var i in uovd.provider.rdp.Base.prototype)  { uovd.provider.Java.prototype[i
 
 uovd.provider.Java.prototype.set_applet_codebase = function(applet_codebase_) {
 	this.applet_codebase = applet_codebase_;
+	return this;
 }
 
 /* --------------- Ajax provider part --------------- */
@@ -127,14 +143,14 @@ uovd.provider.Java.prototype.applet_ajaxResponse = function(req_id, http_code, c
 
 uovd.provider.Java.prototype.sessionStart_implementation = function(callback) {
 	var parameters = this.session_management.parameters;
-	var session_manager = parameters["session_manager"];
+	var sessionmanager = parameters["sessionmanager"];
 
-	var service_url = "https://"+session_manager+"/ovd/client/start.php";
+	var service_url = "https://"+sessionmanager+"/ovd/client/start.php";
 	var data = this.build_sessionStart(parameters, "txt");
 
 	var self = this; /* closure */
 	var onfailure = function() {
-		/* !!! Error  */
+		callback(null);
 	};
 	var onsuccess = function() {
 		var index = self.request_cache_index++;
@@ -150,14 +166,14 @@ uovd.provider.Java.prototype.sessionStart_implementation = function(callback) {
 }
 
 uovd.provider.Java.prototype.sessionStatus_implementation = function(callback) {
-	var session_manager = this.session_management.parameters["session_manager"];
+	var sessionmanager = this.session_management.parameters["sessionmanager"];
 
-	var service_url = "https://"+session_manager+"/ovd/client/session_status.php";
+	var service_url = "https://"+sessionmanager+"/ovd/client/session_status.php";
 	var data = "";
 
 	var self = this; /* closure */
 	var onfailure = function() {
-		/* !!! Error  */
+		callback(null);
 	};
 	var onsuccess = function() {
 		var index = self.request_cache_index++;
@@ -174,14 +190,14 @@ uovd.provider.Java.prototype.sessionStatus_implementation = function(callback) {
 
 uovd.provider.Java.prototype.sessionEnd_implementation = function(callback) {
 	var parameters = this.session_management.parameters;
-	var session_manager = parameters["session_manager"];
+	var sessionmanager = parameters["sessionmanager"];
 
-	var service_url = "https://"+session_manager+"/ovd/client/logout.php";
+	var service_url = "https://"+sessionmanager+"/ovd/client/logout.php";
 	var data = this.build_sessionEnd(parameters, "txt");
 
 	var self = this; /* closure */
 	var onfailure = function() {
-		/* !!! Error  */
+		callback(null);
 	};
 	var onsuccess = function() {
 		var index = self.request_cache_index++;
@@ -198,14 +214,14 @@ uovd.provider.Java.prototype.sessionEnd_implementation = function(callback) {
 
 uovd.provider.Java.prototype.sessionSuspend_implementation = function(callback) {
 	var parameters = this.session_management.parameters;
-	var session_manager = parameters["session_manager"];
+	var sessionmanager = parameters["sessionmanager"];
 
-	var service_url = "https://"+session_manager+"/ovd/client/logout.php";
+	var service_url = "https://"+sessionmanager+"/ovd/client/logout.php";
 	var data = this.build_sessionSuspend(parameters, "txt");
 
 	var self = this; /* closure */
 	var onfailure = function() {
-		/* !!! Error  */
+		callback(null);
 	};
 	var onsuccess = function() {
 		var index = self.request_cache_index++;
@@ -236,18 +252,19 @@ uovd.provider.Java.prototype.connectDesktop = function() {
 	}
 
 	if(server == null) {
-		/* Error !!! */
+		self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"No RDP server"});
 		return;
 	}
 
 	var parameters = this.session_management.parameters;
+	var session_settings = this.session_management.session.settings;
 	var onfailure = function() {
-		/* !!! Error  */
+		self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"Can't initialize applet"});
 	};
 	var onsuccess = function() {
 		var settings = new Array();
 		settings.push("sessionmanager");
-		settings.push(parameters["session_manager"]+":443");
+		settings.push(parameters["sessionmanager"] + (parameters["sessionmanager"].indexOf(":") == -1 ? ":443" : ""));
 		settings.push("keymap");
 		settings.push(parameters["keymap"]);
 		settings.push("rdp_input_method");
@@ -256,8 +273,15 @@ uovd.provider.Java.prototype.connectDesktop = function() {
 		settings.push(""+parameters["fullscreen"]);
 		settings.push("local_integration");
 		settings.push(""+parameters["local_integration"]);
+		settings.push("wc_url");
+		settings.push(""+parameters["wc_url"]);
 		settings.push("container");
 		settings.push("Desktop_0");
+
+		for(i in session_settings) {
+			settings.push(i);
+			settings.push(session_settings[i]);
+		}
 
 		/* Add the servers status callback */
 		self.applet_serverStatus = function(id, status) {
@@ -284,7 +308,7 @@ uovd.provider.Java.prototype.connectDesktop = function() {
 			}
 
 			if(! success) {
-				/* !!! Error */
+				self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"serverConnect failed"});
 			}
 		};
 	};
@@ -347,14 +371,14 @@ uovd.provider.Java.prototype.connectDesktop_embeeded = function(server, settings
 		clearTimeout(error_timeout);
 
 		/* Start the session */
-		if(! self.main_applet[0].startSession(parameters["session_type"], settings)) {
-			/* !!! Error */
+		if(! self.main_applet[0].startSession(parameters["mode"], settings)) {
+			self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"startSession failed"});
 		}
 	};
 
 	error_timeout = setTimeout(function() {
 		clearTimeout(retry_timeout);
-		/* !!! Error  */
+		self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"Can't initialize applet"});
 	}, 60000);
 
 	retry_timeout = setTimeout(function() {
@@ -374,22 +398,22 @@ uovd.provider.Java.prototype.connectDesktop_fullscreen = function(server, settin
 	};
 
 	/* Start the session */
-	if(! this.main_applet[0].startSession(parameters["session_type"], settings)) {
-		/* !!! Error */
+	if(! this.main_applet[0].startSession(parameters["mode"], settings)) {
+		self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"startSession failed"});
 	}
 }
 
 uovd.provider.Java.prototype.connectApplications = function() {
 	var self = this; /* closure */
-	var settings = this.session_management.session.settings;
 	var parameters = this.session_management.parameters;
+	var session_settings = this.session_management.session.settings;
 	var onfailure = function() {
-		/* !!! Error  */
+		self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"Can't initialize applet"});
 	};
 	var onsuccess = function() {
 		var settings = new Array();
 		settings.push("sessionmanager");
-		settings.push(parameters["session_manager"]+":443");
+		settings.push(parameters["sessionmanager"] + (parameters["sessionmanager"].indexOf(":") == -1 ? ":443" : ""));
 		settings.push("keymap");
 		settings.push(parameters["keymap"]);
 		settings.push("rdp_input_method");
@@ -398,8 +422,15 @@ uovd.provider.Java.prototype.connectApplications = function() {
 		settings.push(""+parameters["fullscreen"]);
 		settings.push("local_integration");
 		settings.push(""+parameters["local_integration"]);
+		settings.push("wc_url");
+		settings.push(""+parameters["wc_url"]);
 		settings.push("container");
 		settings.push("Desktop_0");
+
+		for(i in session_settings) {
+			settings.push(i);
+			settings.push(session_settings[i]);
+		}
 
 		/* set applications_provider */
 		var applications_provider = new uovd.provider.applications.Java(self);
@@ -449,16 +480,16 @@ uovd.provider.Java.prototype.connectApplications = function() {
 				}
 
 				if(! success) {
-					/* !!! Error  */
+					self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"serverConnect failed"});
+					return;
 				}
 			}
 		};
 
 		/* Start the session */
-		if(! self.main_applet[0].startSession(parameters["session_type"], settings)) {;
-			/* !!! Error  */
+		if(! self.main_applet[0].startSession(parameters["mode"], settings)) {;
+			self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"startSession failed"});
 		}
-
 	};
 
 	if(this.main_applet == null) {
@@ -472,6 +503,32 @@ uovd.provider.Java.prototype.disconnect_implementation = function() {
 	this.main_applet[0].endSession();
 };
 
+/* --------------- Utils --------------- */
+
 uovd.provider.Java.prototype.testCapabilities = function(onsuccess, onfailure) {
 	this.initialize(onsuccess, onfailure);
 };
+
+uovd.provider.Java.prototype.getUserLogin = function(callback) {
+	var self = this; /* closure */
+	var onfailure = function() {
+		callback("");
+	};
+	var onsuccess = function() {
+		callback(self.main_applet[0].getUserLogin());
+	}
+
+	this.initialize(onsuccess, onfailure);
+}
+
+uovd.provider.Java.prototype.getDetectedKeyboardLayout = function(callback) {
+	var self = this; /* closure */
+	var onfailure = function() {
+		callback("");
+	};
+	var onsuccess = function() {
+		callback(self.main_applet[0].getDetectedKeyboardLayout());
+	}
+
+	this.initialize(onsuccess, onfailure);
+}

@@ -59,7 +59,7 @@ $wi_use_local_credentials = 0;
 if (defined('OPTION_FORCE_USE_LOCAL_CREDENTIALS'))
 	$wi_use_local_credentials = ((OPTION_FORCE_USE_LOCAL_CREDENTIALS==true)?1:0);
 elseif (isset($_COOKIE['ovd-client']['use_local_credentials']))
-	$wi_use_local_credentials = (int)$_COOKIE['ovd-client']['use_local_credentials'];
+	$wi_use_local_credentials = ($_COOKIE['ovd-client']['use_local_credentials'] == "true") ? 1:0;
 
 if (! defined('OPTION_SHOW_USE_LOCAL_CREDENTIALS'))
 	define('OPTION_SHOW_USE_LOCAL_CREDENTIALS', false);
@@ -80,6 +80,14 @@ if (OPTION_FORCE_LANGUAGE !== true && isset($_COOKIE['ovd-client']['session_lang
 		$user_language = $lang;
 }
 
+$java_installed = true;
+if (defined('RDP_PROVIDER_JAVA_INSTALLED'))
+	$java_installed = RDP_PROVIDER_JAVA_INSTALLED;
+
+$html5_installed = false;
+if (defined('RDP_PROVIDER_HTML5_INSTALLED'))
+	$html5_installed = RDP_PROVIDER_HTML5_INSTALLED;
+
 list($translations, $js_translations) = get_available_translations($user_language);
 
 if (OPTION_FORCE_KEYMAP !== true && isset($_COOKIE['ovd-client']['session_keymap']))
@@ -93,7 +101,7 @@ elseif (isset($_COOKIE['ovd-client']['desktop_fullscreen']))
 
 $wi_debug = 1;
 if (isset($_COOKIE['ovd-client']['debug']))
-	$wi_debug = (int)$_COOKIE['ovd-client']['debug'];
+	$wi_debug = ($_COOKIE['ovd-client']['debug'] == "true") ? 1:0;
 
 $rdp_input_unicode = null;
 if (defined('RDP_INPUT_METHOD'))
@@ -162,9 +170,8 @@ function get_users_list() {
 
 <?php if (file_exists(WEB_CLIENT_ROOT . "/media/style/webclient.css")) { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/webclient.css" />
-<?php } else { ?>
-		<link rel="stylesheet" type="text/css" href="media/script/lib/nifty/niftyCorners.css" />
-<?php     if ($big_image_map) { ?>
+<?php } else {
+					if ($big_image_map) { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/images.css" />
 <?php     } ?>
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
@@ -211,19 +218,6 @@ function get_users_list() {
 <?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/webclient.js")) { ?>
 		<script type="text/javascript" src="media/script/webclient.js" charset="utf-8"></script>
 <?php } else { ?>
-		<script type="text/javascript" src="media/script/lib/prototype/prototype.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/lib/scriptaculous/effects.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/lib/scriptaculous/extensions.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/webclient/common.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/webclient/daemon.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/webclient/daemon_desktop.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/webclient/daemon_applications.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/webclient/daemon_portal.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/webclient/server.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/webclient/application.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/webclient/JavaTester.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/webclient/Logger.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/timezones.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/ajaxplorer.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/start_app.js" charset="utf-8"></script>
@@ -233,34 +227,48 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/webclient/seamless_window_manager.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/progress_bar.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/webapps_popup_launcher.js" charset="utf-8"></script>
-<?php } ?>
 		<script type="text/javascript" src="media/script/webclient/ui.js" charset="utf-8"></script>
+<?php } ?>
 		<script type="text/javascript" src="media/script/webclient/uovd_int_client.js" charset="utf-8"></script>
 
 		<script type="text/javascript">
-			/* Options from PHP to JS */
-			var GATEWAY_FIRST_MODE = <?php echo (($gateway_first === true)?'true':'false'); ?>;
-			var OPTION_KEYMAP_AUTO_DETECT = <?php echo ( (OPTION_KEYMAP_AUTO_DETECT === true && !isset($_COOKIE['ovd-client']['session_keymap']))?'true':'false'); ?>;
-			var OPTION_USE_PROXY = <?php echo (($use_proxy === true)?'true':'false'); ?>;
-			var big_image_map = <?php echo ($big_image_map?'true':'false'); ?>;
-			var user_keymap = '<?php echo $user_keymap; ?>';
-			var rdp_input_method = <?php echo (($rdp_input_unicode == null)?'null':'\''.$rdp_input_unicode.'\''); ?>;
-			var local_integration = <?php echo (($local_integration === true)?'true':'false'); ?>;
-			var debug_mode = <?php echo ($debug_mode ? 'true' : 'false'); ?>;
-			var focus_sm_textfield = <?php echo ((! defined('SESSIONMANAGER_HOST') && (! isset($wi_sessionmanager_host) || $wi_sessionmanager_host == '')) ? 'true' : 'false'); ?>;
-			var focus_pw_textfield = <?php echo (((isset($users) && $users !== false) || (isset($wi_user_login) && $wi_user_login != '')) ? 'true' : 'false'); ?>;
-			var confirm_logout = '<?php echo $confirm_logout; ?>';
+			window.ovd = {};
 
-			var i18n = new Hash();
+			/* Options from PHP to JS */
+			window.ovd.defaults = {};
+			window.ovd.defaults.sessionmanager              = <?php echo defined('SESSIONMANAGER_HOST') ? "'".SESSIONMANAGER_HOST."'" : 'undefined'; ?>;
+			window.ovd.defaults.gateway                     = <?php echo $gateway_first === true ? 'true' : 'false'; ?>;
+			window.ovd.defaults.keymap_autodetect           = <?php echo defined('OPTION_KEYMAP_AUTO_DETECT') && OPTION_KEYMAP_AUTO_DETECT === true && !isset($_COOKIE['ovd-client']['session_keymap']) ? 'true' : 'false'; ?>;
+			window.ovd.defaults.use_proxy                   = <?php echo $use_proxy === true ? 'true' : 'false'; ?>;
+			window.ovd.defaults.big_image_map               = <?php echo $big_image_map ? 'true' : 'false'; ?>;
+			window.ovd.defaults.user_keymap                 = <?php echo isset($user_keymap) ? "'".$user_keymap."'" : 'undefined'; ?>;
+			window.ovd.defaults.rdp_input_method            = <?php echo $rdp_input_unicode !== null ? '\''.$rdp_input_unicode.'\'' : 'undefined'; ?>;
+			window.ovd.defaults.local_integration           = <?php echo $local_integration === true ? 'true' : 'false'; ?>;
+			window.ovd.defaults.debug_mode                  = <?php echo isset($debug_mode) && $debug_mode === true ? 'true' : 'false'; ?>;
+			window.ovd.defaults.client_language             = <?php echo isset($user_language) ? "'".$user_language."'" : 'undefined'; ?>;
+			window.ovd.defaults.confirm_logout              = <?php echo isset($confirm_logout) ? "'".$confirm_logout."'" : 'undefined' ; ?>;
+			window.ovd.defaults.java_installed              = <?php echo $java_installed === true ? 'true' : 'false'; ?>;
+			window.ovd.defaults.html5_installed             = <?php echo $html5_installed === true ? 'true' : 'false'; ?>;
+
+			/* "Forced" options */
+			window.ovd.defaults.force_use_local_credentials = <?php echo defined('OPTION_FORCE_USE_LOCAL_CREDENTIALS') && OPTION_FORCE_USE_LOCAL_CREDENTIALS === true ? 'true' : 'false'; ?>;
+			window.ovd.defaults.force_fullscreen            = <?php echo defined('OPTION_FORCE_FULLSCREEN') && OPTION_FORCE_FULLSCREEN === true ? 'true' : 'false'; ?>;
+			window.ovd.defaults.force_session_mode          = <?php echo defined('OPTION_FORCE_SESSION_MODE') ? "'".OPTION_FORCE_SESSION_MODE."'" : 'undefined'; ?>;
+			window.ovd.defaults.force_language              = <?php echo defined('OPTION_FORCE_LANGUAGE') && OPTION_FORCE_LANGUAGE === true ? 'true' : 'false'; ?>;
+			window.ovd.defaults.force_keymap                = <?php echo defined('OPTION_FORCE_KEYMAP') && OPTION_FORCE_KEYMAP === true ? 'true' : 'false'; ?>;
+
+			var i18n = {};
 			<?php
 				foreach ($js_translations as $id => $string)
-					echo 'i18n.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
+					echo 'i18n[\''.$id.'\'] = \''.str_replace('\'', '\\\'', $string).'\';'."\n";
 			?>
-			var i18n_tmp = new Hash();
+
+			var i18n_tmp = {};
 			<?php
 				foreach ($translations as $id => $string)
-					echo 'i18n_tmp.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
+					echo 'i18n_tmp[\''.$id.'\'] = \''.str_replace('\'', '\\\'', $string).'\';'."\n";
 			?>
+
 		</script>
 	</head>
 
@@ -298,14 +306,16 @@ function get_users_list() {
 			</div>
 		</noscript>
 
-		<div id="lockWrap" style="display: none;"></div>
 
-		<div id="notificationWrap">
-			<div id="errorWrap" class="rounded" style="display: none;"></div>
-			<div id="okWrap" class="rounded" style="display: none;"></div>
-			<div id="infoWrap" class="rounded" style="display: none;"></div>
-			<div id="systemTestWrap" class="rounded" style="display: none;">
-				<div id="systemTest" class="rounded">
+		<div id="notification" style="display: none;">
+			<div id="error" style="display: none;"></div>
+			<div id="ok" style="display: none;"></div>
+			<div id="info" style="display: none;"></div>
+		</div>
+		<div id="overlay" style="display: none;">
+			<div id="lock" style="display: none;"></div>
+			<div id="systemTest" class="rounded" style="display: none;">
+				<div id="systemTestContainer" class="rounded">
 					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
 						<tr>
 							<td style="text-align: left; vertical-align: top;">
@@ -327,21 +337,13 @@ function get_users_list() {
 				</div>
 			</div>
 
-			<div id="systemTestErrorWrap" class="rounded" style="display: none;">
-				<div id="systemTestError" class="rounded">
+			<div id="systemTestError" class="rounded" style="display: none;">
+				<div id="systemTestErrorContainer" class="rounded">
 					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
 						<tr>
 							<td style="text-align: left; vertical-align: middle;">
 								<strong><span id="system_compatibility_error_1_gettext">&nbsp;</span></strong>
-								<div id="systemTestError1" style="margin-top: 15px; display: none;">
-									<p id="system_compatibility_error_2_gettext">&nbsp;</p>
-									<p id="system_compatibility_error_3_gettext">&nbsp;</p>
-								</div>
-
-								<div id="systemTestError2" style="margin-top: 15px; display: none;">
-									<p id="system_compatibility_error_4_gettext">&nbsp;</p>
-								</div>
-
+								<div id="systemTestErrorMessage" style="margin-top: 15px;"></div>
 								<p id="system_compatibility_error_5_gettext">&nbsp;</p>
 							</td>
 							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
@@ -356,17 +358,17 @@ function get_users_list() {
 				</div>
 			</div>
 
-			<div id="iframeWrap" class="rounded" style="display: none;">
-				<iframe id="iframeContainer" width="975" height="550"></iframe>
+			<div id="iframe" class="rounded" style="display: none;">
+				<iframe id="iframeContainer"></iframe>
 				<a id="iframeLink" href="javascript:;"><div id="iframeCloseButton" class="rounded <?php echo ($big_image_map ? "image_close-wrap_png" : "msie6"); ?>"></div></a>
 			</div>
 
-			<div id="newsWrap" class="rounded" style="display: none;">
-				<div id="newsWrapCont" class="rounded">
+			<div id="news" class="rounded" style="display: none;">
+				<div id="newsContainer" class="rounded">
 					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
 						<tr>
 							<td style="width: 100%; text-align: left; vertical-align: top;">
-								<div id="newsWrap_title"></div>
+								<div id="newsTitle"></div>
 							</td>
 							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top; margin-bottom: 15px;">
 								<?php if (!$big_image_map) { ?>
@@ -378,7 +380,7 @@ function get_users_list() {
 						</tr>
 						<tr>
 							<td style="text-align: left; vertical-align: top; margin-bottom: 15px;" colspan="2">
-								<div id="newsWrap_content"></div>
+								<div id="newsContent"></div>
 							</td>
 						</tr>
 						<tr>
@@ -392,74 +394,78 @@ function get_users_list() {
 		</div>
 
 		<div id="splashContainer" class="rounded" style="display: none;">
-			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td style="text-align: center;" colspan="3">
-						<?php if (!$big_image_map) { ?>
-						<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
-						<?php } else { ?>
-						<div class="image_ulteo_png"></div>
-						<?php } ?>
-					</td>
-				</tr>
-				<tr>
-					<td style="text-align: left; vertical-align: middle; margin-top: 15px;">
-						<span style="font-size: 1.35em; font-weight: bold; color: #686868; display: none;" id="loading_ovd_gettext">&nbsp;</span>
-						<span style="font-size: 1.35em; font-weight: bold; color: #686868; display: none;" id="unloading_ovd_gettext">&nbsp;</span>
-					</td>
-					<td style="width: 20px"></td>
-					<td style="text-align: left; vertical-align: middle;">
-						<?php if (!$big_image_map) { ?>
-						<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
-						<?php } else { ?>
-						<div class="image_rotate_gif"></div>
-						<?php } ?>
-					</td>
-				</tr>
-				<tr>
-					<td style="text-align: left; vertical-align: middle;" colspan="3">
-						<div id="progressBar">
-							<div id="progressBarContent"></div>
-						</div>
-					</td>
-				</tr>
-			</table>
+			<div id="splashContainerContent" class="rounded">
+				<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td style="text-align: center;" colspan="3">
+							<?php if (!$big_image_map) { ?>
+							<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
+							<?php } else { ?>
+							<div class="image_ulteo_png"></div>
+							<?php } ?>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: left; vertical-align: middle; margin-top: 15px;">
+							<span style="font-size: 1.35em; font-weight: bold; color: #686868; display: none;" id="loading_ovd_gettext">&nbsp;</span>
+							<span style="font-size: 1.35em; font-weight: bold; color: #686868; display: none;" id="unloading_ovd_gettext">&nbsp;</span>
+						</td>
+						<td style="width: 20px"></td>
+						<td style="text-align: left; vertical-align: middle;">
+							<?php if (!$big_image_map) { ?>
+							<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
+							<?php } else { ?>
+							<div class="image_rotate_gif"></div>
+							<?php } ?>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: left; vertical-align: middle;" colspan="3">
+							<div id="progressBar">
+								<div id="progressBarContent"></div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
 		</div>
 
 		<div id="endContainer" class="rounded" style="display: none;">
-			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td style="text-align: center;">
-						<?php if (!$big_image_map) { ?>
-						<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
-						<?php } else { ?>
-						<div class="image_ulteo_png"></div>
-						<?php } ?>
-					</td>
-				</tr>
-				<tr>
-					<td style="text-align: center; vertical-align: middle; margin-top: 15px;" id="endContent">
-					</td>
-				</tr>
-			</table>
+			<div id="endContainerContent" class="rounded">
+				<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td style="text-align: center;">
+							<?php if (!$big_image_map) { ?>
+							<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
+							<?php } else { ?>
+							<div class="image_ulteo_png"></div>
+							<?php } ?>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: center; vertical-align: middle; margin-top: 15px;" id="endContent">
+						</td>
+					</tr>
+				</table>
+			</div>
 		</div>
 
 		<div id="sessionContainer" style="display: none;">
-			<div id="applicationsHeaderWrap">
+			<div id="applicationsHeader">
 				<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
-						<td style="width: 175px; text-align: left; border-bottom: 1px solid #ccc;" class="logo">
+						<td style="width: 17%; text-align: left; border-bottom: 1px solid #ccc;" class="logo">
 							<?php if (!$big_image_map) { ?>
 							<img src="media/image/ulteo-small.png" width="141" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" />
 							<?php } else { ?>
 							<div class="image_ulteo-small_png"></div>
 							<?php } ?>
 						</td>
-						<td style="text-align: left; border-bottom: 1px solid #ccc;" class="title centered">
+						<td style="text-align: left; border-bottom: 1px solid #ccc; padding-left: 20px; padding-right: 20px;" class="title centered">
 							<h1><span id="user_displayname">&nbsp;</span><span id="welcome_gettext" style="display: none;">&nbsp;</span></h1>
 						</td>
-						<td style="width: 60%; border-bottom: 1px solid #ccc; text-align: left;" class="title centered">
-							<div id="newsContainer" style="padding-left: 5px; padding-right: 5px; height: 70px; overflow: auto;"></div>
+						<td style="width: 100%; border-bottom: 1px solid #ccc; text-align: left;" class="title centered">
+							<div id="newsList" style="padding-left: 5px; padding-right: 5px; height: 70px; overflow: auto;"></div>
 						</td>
 						<td style="text-align: right; padding-left: 5px; padding-right: 10px; border-bottom: 1px solid #ccc;">
 							<table style="margin-left: auto; margin-right: 0px;" border="0" cellspacing="0" cellpadding="10">
@@ -470,7 +476,7 @@ function get_users_list() {
 										<?php } else { ?>
 										<div class="image_suspend_png" style="display:inline-block"></div>
 										<?php } ?>
-										<span id="suspend_gettext">&nbsp;</span></a>
+										<br /><span id="suspend_gettext">&nbsp;</span></a>
 									</td>
 									<td style="text-align: center; vertical-align: middle;"><a id="logout_link" href="javascript:;">
 										<?php if (!$big_image_map) { ?>
@@ -500,7 +506,7 @@ function get_users_list() {
 					<td style="width: 5px;">
 					</td>
 					<td style="text-align: left; vertical-align: top; background: #eee;">
-						<div id="fileManagerWrap" class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
+						<div id="fileManager" class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 							<div>
 								<h2 style="display: none;"><span id="my_files_gettext">&nbsp;</span></h2>
 
@@ -510,7 +516,7 @@ function get_users_list() {
 					</td>
 				</tr>
 			</table>
-			<div id="fullScreenMessage" class="rounded">
+			<div id="fullScreenMessage" class="rounded" style="display: none;">
 				<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td style="text-align: center;">
@@ -534,22 +540,12 @@ function get_users_list() {
 			<div id="windowsContainer"></div>
 		</div>
 
-		<div id="debugContainer" class="no_debug info warning error" style="display: none;"></div>
-
-		<div id="debugLevels" style="display: none;">
-			<span class="debug"><input type="checkbox" id="level_debug" value="10" /> Debug</span>
-			<span class="info"><input type="checkbox" id="level_info" value="20" checked="checked" /> Info</span>
-			<span class="warning"><input type="checkbox" id="level_warning" value="30" checked="checked" /> Warning</span>
-			<span class="error"><input type="checkbox" id="level_error" value="40" checked="checked" /> Error</span><br />
-			<input type="button" id="clear_button" value="Clear" />
-		</div>
-
-		<div id="mainWrap">
-			<div id="headerWrap"></div>
+		<div id="main">
+			<div id="header"></div>
 
 			<div class="spacer"></div>
 
-			<div id="pageWrap">
+			<div id="page">
 				<div id="loginBox" class="rounded" style="display: none;">
 					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="0">
 						<tr>
@@ -632,7 +628,7 @@ function get_users_list() {
 										</table>
 										<div id="advanced_settings" style="display: none;">
 											<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="5">
-												<tr<?php if (OPTION_SHOW_USE_LOCAL_CREDENTIALS === false) echo ' style="display: none;"';?>>
+												<tr id='use_local_credentials'<?php if (OPTION_SHOW_USE_LOCAL_CREDENTIALS === false) echo ' style="display: none;"';?>>
 													<td style="text-align: right; vertical-align: middle;">
 														<?php if (!$big_image_map) { ?>
 														<img src="media/image/icons/use_local_credentials.png" width="22" height="22" alt="" title="" />
@@ -679,8 +675,12 @@ function get_users_list() {
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
 														<select id="rdp_mode">
+															<?php if ($java_installed) { ?>
 															<option id="rdp_mode_java" value="java"<?php if ($wi_session_type == 'java') echo ' selected="selected"'; ?>>Java</option>
+															<?php } ?>
+															<?php if ($html5_installed) { ?>
 															<option id="rdp_mode_html5" value="html5"<?php if ($wi_session_type == 'html5') echo ' selected="selected"'; ?>>HTML5</option>
+															<?php } ?>
 														</select>
 													</td>
 												</tr>
@@ -802,7 +802,7 @@ function get_users_list() {
 
 			<div class="spacer"></div>
 
-			<div id="footerWrap"></div>
+			<div id="footer"></div>
 		</div>
 	</body>
 </html>

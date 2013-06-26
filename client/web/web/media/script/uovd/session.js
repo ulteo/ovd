@@ -11,6 +11,11 @@ uovd.Session = function(session_management) {
 }
 
 uovd.Session.prototype.update = function(xml) {
+	if(!xml) {
+		this.session_management.fireEvent("ovd.session.error", this, {"code":"bad_xml"});
+		return "bad_xml";
+	}
+
 	var xml_root = jQuery(xml).find(":root");
 
 	switch(xml_root.prop("nodeName")) {
@@ -31,6 +36,7 @@ uovd.Session.prototype.update = function(xml) {
 		return this.parseError(xml_root);
 	}
 
+	this.session_management.fireEvent("ovd.session.error", this, {"code":"bad_xml"});
 	return "bad_xml";
 }
 

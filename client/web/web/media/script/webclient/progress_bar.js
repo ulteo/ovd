@@ -3,7 +3,7 @@ ProgressBar = function(session_management, node) {
 	this.node = jQuery(node);
 
 	/* register events listeners */
-	this.handler = this.handleEvents.bind(this);
+	this.handler = jQuery.proxy(this.handleEvents, this);
 	this.session_management.addCallback("ovd.session.starting",             this.handler);
 	this.session_management.addCallback("ovd.session.statusChanged",        this.handler);
 	this.session_management.addCallback("ovd.session.server.statusChanged", this.handler);
@@ -43,12 +43,12 @@ ProgressBar.prototype.handleEvents = function(type, source, params) {
 	}
 
 	if(type == 'ovd.session.statusChanged' && params['to'] == uovd.SESSION_STATUS_DESTROYING) {
-		step(0, "Destroying", 20000);
+		step(0, 10000);
 		return;
 	}
 
 	if(type == 'ovd.session.destroying') {
 		initSplashDisconnection();
-		step(50);
+		step(75);
 	}
 }

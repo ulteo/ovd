@@ -71,6 +71,11 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider, webapps_p
 			var from = params["from"];
 			var to = params["to"];
 
+			if(to == uovd.SERVER_STATUS_FAILED) {
+				/* Failed to connect */
+				self.ajax_provider.sessionEnd();
+			}
+
 			if(to == uovd.SERVER_STATUS_DISCONNECTED) {
 				self.session.destroying(type);
 			}
@@ -78,17 +83,17 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider, webapps_p
 		"ovd.session.starting" : new Array(function(type, source, params) {
 			/* Set the polling interval to 3 sec */
 			clearInterval(self.status_check);
-			self.status_check = setInterval(self.ajax_provider.sessionStatus.bind(self.ajax_provider), 3000);
+			self.status_check = setInterval(jQuery.proxy(self.ajax_provider.sessionStatus, self.ajax_provider), 3000);
 		}),
 		"ovd.session.started" : new Array(function(type, source, params) {
 			/* Lower the polling interval to 30 sec */
 			clearInterval(self.status_check);
-			self.status_check = setInterval(self.ajax_provider.sessionStatus.bind(self.ajax_provider), 30000);
+			self.status_check = setInterval(jQuery.proxy(self.ajax_provider.sessionStatus, self.ajax_provider), 30000);
 		}),
 		"ovd.session.destroying" : new Array(function(type, source, params) {
 			/* Set the polling interval to 3 sec */
 			clearInterval(self.status_check);
-			self.status_check = setInterval(self.ajax_provider.sessionStatus.bind(self.ajax_provider), 3000);
+			self.status_check = setInterval(jQuery.proxy(self.ajax_provider.sessionStatus, self.ajax_provider), 3000);
 
 			/* Disconnect the client */
 			self.rdp_provider.disconnect();
@@ -97,6 +102,9 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider, webapps_p
 		"ovd.session.destroyed" : new Array(function(type, source, params) {
 			/* Clear status_check interval */
 			clearInterval(self.status_check);
+		}),
+		"ovd.rdpProvider.crash" : new Array(function(type, source, params) {
+			self.ajax_provider.sessionEnd();
 		})
 	};
 }
@@ -191,7 +199,8 @@ uovd.SessionManagement.prototype.fireEvent = function(type, source, params) {
 		try {
 			callbacks[i](type, source, params);
 		} catch(e) {
-			console.log("Error in SessionManagement callback system ("+type+"): "+e);
+			/* !!! */
+			/*console.log("Error in SessionManagement callback system ("+type+"): "+e);*/
 		}
 	}
 }

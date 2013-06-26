@@ -3,10 +3,10 @@ WebAppsPopupLauncher = function(session_management) {
 	this.webapps_handlers = new Array();
 
 	/* polling interval */
-	this.polling = setInterval(this.monitorWindowStates.bind(this), 2000);
+	this.polling = setInterval(jQuery.proxy(this.monitorWindowStates, this), 2000);
 
 	/* register events listeners */
-	this.handler = this.handleEvents.bind(this);
+	this.handler = jQuery.proxy(this.handleEvents, this);
 	this.session_management.addCallback("ovd.applicationsProvider.web.start", this.handler);
 	this.session_management.addCallback("ovd.session.destroying",             this.handler);
 };

@@ -45,7 +45,7 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 	}
 
 	if(server == null) {
-		/* Error !!! */
+		self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"No RDP server"});
 		return;
 	}
 
@@ -67,6 +67,11 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 			/* Connect */
 			connection.guac_tunnel = new uovd.provider.rdp.html5.HTTPTunnel(self, "/ovd/guacamole/tunnel", 0);
 			connection.guac_client = new Guacamole.Client(connection.guac_tunnel);
+			connection.guac_client.onerror = function() {
+				/* !!! */
+				/* Must find a way to know if it is a real error or a simple session end */
+				/*self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"Tunnel error"});*/
+			}
 			connection.guac_client.connect("id=0");
 
 			/* Display */
@@ -106,7 +111,7 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 			self.session_management.fireEvent("ovd.rdpProvider.desktopPanel", self, {"type":"Fullscreen", "node":connection.guac_display});
 		},
 		error: function( xhr, status ) {
-			console.log("Error : "+status);
+			self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"ovdlogin failed"});
 		}
 	});
 };
@@ -128,7 +133,7 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_embeeded = function() {
 	}
 
 	if(server == null) {
-		/* Error !!! */
+		self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"No RDP server"});
 		return;
 	}
 
@@ -150,6 +155,11 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_embeeded = function() {
 			/* Connect */
 			connection.guac_tunnel = new uovd.provider.rdp.html5.HTTPTunnel(self, "/ovd/guacamole/tunnel", 0);
 			connection.guac_client = new Guacamole.Client(connection.guac_tunnel);
+			connection.guac_client.onerror = function() {
+				/* !!! */
+				/* Must find a way to know if it is a real error or a simple session end */
+				/*self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"Tunnel error"});*/
+			}
 			connection.guac_client.connect("id=0");
 
 			/* Display */
@@ -181,7 +191,7 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_embeeded = function() {
 			self.session_management.fireEvent("ovd.rdpProvider.desktopPanel", self, {"type":"Desktop", "node":connection.guac_display});
 		},
 		error: function( xhr, status ) {
-			console.log("Error : "+status);
+			self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"ovdlogin failed"});
 		}
 	});
 };
@@ -240,8 +250,8 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 		url+="server="+server.fqdn+"&";
 		url+="username="+server.login+"&";
 		url+="password="+server.password+"&";
-		url+="width="+this.session_management.parameters["width"]+"&";
-		url+="height="+this.session_management.parameters["height"]+"";
+		url+="width="+self.session_management.parameters["width"]+"&";
+		url+="height="+self.session_management.parameters["height"]+"";
 
 		jQuery.ajax({
 			url: url,
@@ -252,6 +262,11 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 				/* Connect */
 				connection.guac_tunnel = new uovd.provider.rdp.html5.HTTPTunnel(self, "/ovd/guacamole/tunnel", index);
 				connection.guac_client = new Guacamole.Client(connection.guac_tunnel);
+				connection.guac_client.onerror = function() {
+					/* !!! */
+					/* Must find a way to know if it is a real error or a simple session end */
+					/*self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"Tunnel error"});*/
+				}
 				connection.guac_client.connect("id="+index);
 
 				/* Display */
@@ -272,8 +287,8 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 				return;
 			},
 			error: function( xhr, status ) {
-				/* Stop recursion : Error ! */
-				console.log("Error : "+status);
+				/* Stop recursion */
+				self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"ovdlogin failed"});
 			}
 		});
 	};

@@ -61,7 +61,7 @@ uovd.provider.http.Base.prototype.build_sessionStart = function(parameters, type
 
 	/* Session */
 	var session_node = doc.createElement("session");
-	session_node.setAttribute("mode", parameters["session_type"]);
+	session_node.setAttribute("mode", parameters["mode"]);
 	session_node.setAttribute("language", parameters["language"]);
 	session_node.setAttribute("timezone", parameters["timezone"]);
 	if("no_desktop" in parameters) {
@@ -73,7 +73,7 @@ uovd.provider.http.Base.prototype.build_sessionStart = function(parameters, type
 	if("token" in parameters) {
 		user_node.setAttribute("token", parameters["token"]);
 	} else {
-		user_node.setAttribute("login", parameters["username"]);
+		user_node.setAttribute("login", parameters["login"]);
 		user_node.setAttribute("password", parameters["password"]);
 	}
 

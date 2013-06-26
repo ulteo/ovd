@@ -3,7 +3,7 @@ SeamlessLauncher = function(session_management, node) {
 	this.session_management = session_management;
 	this.applications = {}; /* application id as index */
 	this.content = {}; /* application id as index */
-	this.handler = this.handleEvents.bind(this);
+	this.handler = jQuery.proxy(this.handleEvents, this);
 
 	/* Do NOT remove ovd.session.starting in destructor as it is used as a delayed initializer */
 	this.session_management.addCallback("ovd.session.starting", this.handler);
@@ -11,10 +11,10 @@ SeamlessLauncher = function(session_management, node) {
 
 SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.session.starting") {
-		var session_type = this.session_management.parameters["session_type"];
+		var session_mode = this.session_management.parameters["mode"];
 		var session = this.session_management.session;
 
-		if(session_type == uovd.SESSION_MODE_APPLICATIONS) {
+		if(session_mode == uovd.SESSION_MODE_APPLICATIONS) {
 			/* register events listeners */
 			this.session_management.addCallback("ovd.session.server.statusChanged",       this.handler);
 			this.session_management.addCallback("ovd.applicationsProvider.statusChanged", this.handler);
@@ -141,7 +141,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 }
 
 SeamlessLauncher.prototype.end = function() {
-	if(this.session_management.parameters["session_type"] == uovd.SESSION_MODE_APPLICATIONS) {
+	if(this.session_management.parameters["mode"] == uovd.SESSION_MODE_APPLICATIONS) {
 		this.node.empty();
 		/* Do NOT remove ovd.session.starting as it is used as a delayed initializer */
 		this.session_management.removeCallback("ovd.session.server.statusChanged",       this.handler);

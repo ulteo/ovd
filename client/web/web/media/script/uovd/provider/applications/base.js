@@ -8,7 +8,7 @@ uovd.provider.applications.Base.prototype.initialize = function(session_manageme
 	this.applications = {} /* token -> ApplicationInstance */
 
 	/* register events listeners */
-	this.handler = this.handleEvents.bind(this);
+	this.handler = jQuery.proxy(this.handleEvents, this);
 	this.session_management.addCallback("ovd.applicationsProvider.applicationStart",         this.handler);
 	this.session_management.addCallback("ovd.applicationsProvider.applicationStartWithArgs", this.handler);
 	this.session_management.addCallback("ovd.applicationsProvider.applicationStop",          this.handler);

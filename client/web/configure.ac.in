@@ -106,9 +106,6 @@ web/media/image/flags/Makefile
 web/media/image/icons/Makefile
 web/media/script/Makefile
 web/media/script/lib/Makefile
-web/media/script/lib/nifty/Makefile
-web/media/script/lib/prototype/Makefile
-web/media/script/lib/scriptaculous/Makefile
 web/media/script/lib/jquery/Makefile
 web/media/script/uovd/Makefile
 web/media/script/uovd/server/Makefile

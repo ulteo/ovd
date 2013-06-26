@@ -49,14 +49,14 @@ uovd.provider.applications.Web.prototype.applicationStop_implementation = functi
 uovd.provider.applications.Web.prototype.build_startWebAppInstance = function(session_management, url, token) {
 	var self = this; /* closure */
 	var instance = {};
-	instance.start = (function(session_management, url, token) {
+	instance.start = jQuery.proxy(function(session_management, url, token) {
 		session_management.fireEvent("ovd.applicationsProvider.statusChanged", self, {"application":self.applications[token], "from":"unknown", "to":"started"});
 		instance.onstart(url);
-	}).bind(this, session_management, url, token);
-	instance.stop = (function(session_management, url, token) {
+	}, this, session_management, url, token);
+	instance.stop = jQuery.proxy(function(session_management, url, token) {
 		session_management.fireEvent("ovd.applicationsProvider.statusChanged", self, {"application":self.applications[token], "from":"started", "to":"stopped"});
 		instance.onstop(url);
-	}).bind(this, session_management, url, token);
+	}, this, session_management, url, token);
 
 	/* Default behaviour : open a new window */
 	instance.onstart = function(url) {

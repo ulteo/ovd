@@ -87,3 +87,11 @@
 // define('OPTION_USE_PROXY', true);
 // define('OPTION_USE_PROXY', false);
 // default: false
+
+// HTML5 Client installed
+// define('RDP_PROVIDER_HTML5_INSTALLED', false); // default
+// define('RDP_PROVIDER_HTML5_INSTALLED', true);
+
+// Java web client installed
+// define('RDP_PROVIDER_JAVA_INSTALLED', true); // default
+// define('RDP_PROVIDER_JAVA_INSTALLED', false);

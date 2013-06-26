@@ -19,158 +19,360 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-var session_management = new uovd.SessionManagement();
+/* Bind events after DOM load */
+jQuery(window).on("load", function() {
+	/* Initialize defaults */
+	/* Done by PHP */
 
-/* Load NiftyCorners */
-NiftyLoad = function() {
-	Nifty('div.rounded');
-}
+	/* Initialize framework */
+	initialize_framework();
 
-Event.observe(window, 'load', function() {
-	/* Center containers at startup */
-	new Effect.Center(jQuery('#endContainer')[0]);
-	if (session_mode == uovd.SESSION_MODE_DESKTOP) {
-		new Effect.Center(jQuery('#splashContainer')[0]);
-	}
+	/* Test framework providers */
+	initialize_tests();
 
-	/* Hide panels */
-	jQuery('#sessionContainer').hide();
+	/* Initialize settings */
+	initialize_settings();
 
-	/* Show splash */
-	jQuery('#splashContainer').show();
+	/* Initialize UI components */
+	initialize_ui();
+});
 
-	/* Translate strings */
-	applyTranslations(i18n_tmp);
+function initialize_framework() {
+	/* Set "framework" namespace */
+	window.ovd.framework = {};
+	window.ovd.framework.listeners = {};
 
-  /* Configure the debug panel */
-	if(debug_mode) {
-		Event.observe(jQuery('#level_debug')[0],   'click', function() { Logger.toggle_level('debug'); });
-		Event.observe(jQuery('#level_info')[0],    'click', function() { Logger.toggle_level('info'); });
-		Event.observe(jQuery('#level_warning')[0], 'click', function() { Logger.toggle_level('warning'); });
-		Event.observe(jQuery('#level_error')[0],   'click', function() { Logger.toggle_level('error'); });
-		Event.observe(jQuery('#clear_button')[0],  'click', function() { Logger.clear(); });
-	}
+	var framework = window.ovd.framework; /* shorten names */
+
+	/* Create session_managment */
+	framework.session_management = new uovd.SessionManagement();
+
+	/* Create all providers */
+	framework.http_providers = {
+		java: new uovd.provider.Java().set_applet_codebase("applet/"),
+		proxy: new uovd.provider.http.Proxy("proxy.php"),
+		direct: new uovd.provider.http.Direct()
+	};
+
+	framework.rdp_providers = {
+		java: framework.http_providers["java"],
+		html5: new uovd.provider.rdp.Html5()
+	};
+
+	framework.webapps_providers = {
+		jsonp: new uovd.provider.webapps.Jsonp()
+	};
+
+	/* Setup Handlers */
 
 	/* handle status modifications */
-	session_management.addCallback("ovd.session.statusChanged", function(type, source, params) {
-		var from = params["from"];
-		var to = params["to"];
-
-		if(to == uovd.SESSION_STATUS_READY) {
-			jQuery('#sessionContainer').fadeIn(1000);
-		}
-	});
-
-	session_management.addCallback("ovd.session.starting", function(type, source, params) {
+	framework.session_management.addCallback("ovd.session.starting", function(type, source, params) {
 		/* Configure unload */
-		window.onbeforeunload = function(e) { return i18n.get('window_onbeforeunload'); };
-		jQuery(window).unload( function() { session_management.stop(); } );
+		window.onbeforeunload = function(e) { return i18n['window_onbeforeunload']; };
+		jQuery(window).unload( function() { framework.session_management.stop(); } );
+
+		showSplash();
+		pushMainContainer();
+
+		/* Wait for the animation end then show outside of the viewport */
+		setTimeout(function() {
+			showMainContainer();
+		}, 2000);
 	});
 
-	session_management.addCallback("ovd.session.destroying", function(type, source, params) {
-		generateEnd_external();
-		jQuery('#splashContainer').hide();
-		jQuery('#endContainer').show();
-		jQuery('#sessionContainer').fadeOut(1000);
+	framework.session_management.addCallback("ovd.session.started", function(type, source, params) {
+		var mode = framework.session_management.parameters["mode"];
+		hideOk();
+		hideInfo();
+		hideError();
+		configureUI(mode);
+		pullMainContainer();
+	});
 
+	framework.session_management.addCallback("ovd.session.destroying", function(type, source, params) {
 		/* Configure unload */
 		window.onbeforeunload = function(e) {};
 		jQuery(window).off('unload');
+
+		hideMainContainer();
+	});
+
+	framework.session_management.addCallback("ovd.session.destroyed", function(type, source, params) {
+		hideSplash();
+		generateEnd_external();
+		showEnd();
 	});
 
 	/* handle errors */
-	session_management.addCallback("ovd.session.error", function(type, source, params) {
+	framework.session_management.addCallback("ovd.session.error", function(type, source, params) {
 		var code = params["code"];
 		var from = params["from"];
 		var message = params["message"];
 
 		if(code == "bad_xml") {
-			showError(i18n.get('internal_error'));
-			enableLogin();
+			showError(i18n['internal_error']);
+			hideSplash();
+			generateEnd_external();
+			showEnd();
 			return;
 		}
 
 		if(from == "start" || from == "session_status") { /* = xml 'response' || 'error' */
-			var message = i18n.get(code) || i18n.get('internal_error');
+			var message = i18n[code] || i18n['internal_error'];
 			showError(message);
-			enableLogin();
+			hideSplash();
+			generateEnd_external();
+			showEnd();
 			return;
 		}
   });
 
-	/* handle client insertion */
-	new DesktopContainer(session_management, "#desktopContainer");
-
-	/* window manager */
-	new SeamlessWindowManager(session_management, "#windowsContainer", new uovd.provider.rdp.html5.SeamlessWindowFactory());
-
-	/* Session-based start_app support */
-	new StartApp(session_management);
-
-	/* webapps launcher */
-	new WebAppsPopupLauncher(session_management);
-
-	/* Create or Join a session */
-	checkExternalSession( function() {
-		window.close();
-	}, function() {
-		session_management.start();
+	/* handle crash */
+	framework.session_management.addCallback("ovd.rdpProvider.crash", function(type, source, params) {
+		generateEnd_external(params["message"]);
 	});
-});
 
-function checkExternalSession(active_callback, inactive_callback) {
-	/* Set parameters */
-	var parameters = {};
-	parameters["session_manager"] = SESSIONMANAGER;
-	parameters["username"] = session_user;
-	parameters["password"] = session_pass;
-	parameters["session_type"] = session_mode;
-	parameters["language"] = window.client_language;
-	parameters["keymap"] = window.user_keymap;
-	parameters["rdp_input_method"] = window.rdp_input_method;
-	parameters["timezone"] = getTimezoneName();
-	parameters["width"] = window.innerWidth;
-	parameters["height"] = window.innerHeight;
-	parameters["fullscreen"] = false;
-	parameters["debug"] = window.debug_mode;
-	parameters["local_integration"] = window.local_integration;
 
-	if(parameters["session_manager"] == "127.0.0.1") {
-		parameters["session_manager"] = location.host;
+	/* logger */
+	framework.listeners.logger = new Logger(framework.session_management, "body");
+	/* handle progress bar */
+	framework.listeners.progress_bar = new ProgressBar(framework.session_management, '#progressBarContent');
+	/* handle client insertion */
+	framework.listeners.desktop_container = new DesktopContainer(framework.session_management, "#desktopContainer");
+	/* webapps launcher */
+	framework.listeners.web_apps_popup_launcher = new WebAppsPopupLauncher(framework.session_management);
+	/* window manager */
+	framework.listeners.seamless_window_manager = new SeamlessWindowManager(framework.session_management, "#windowsContainer", new uovd.provider.rdp.html5.SeamlessWindowFactory());
+	/* Session-based start_app support */
+	framework.listeners.start_app = new StartApp(framework.session_management);
+	/* application counter */
+	framework.listeners.application_counter = new ApplicationCounter(framework.session_management);
+}
+
+function initialize_tests() {
+	var framework = window.ovd.framework; /* shorten names */
+	var defaults = window.ovd.defaults;
+
+	/* Show 'test in progress' popup :
+     closed when at least one RDP provider is valid */
+	showLock();
+	showSystemTest();
+
+	/* 1 : Java/HTML5 enabled ? */
+
+	if(! defaults.java_installed) {
+		delete framework.http_providers.java;
+		delete framework.rdp_providers.java;
 	}
 
-	if(session_token != '') {
-		parameters["token"] = session_token;
+	if(! defaults.html5_installed) {
+		delete framework.rdp_providers.html5;
 	}
 
-	if (session_app != '') {
-		if (session_mode == 'desktop') {
-			parameters["no_desktop"] = '1';
+	/* !!! */
+	if(defaults.gateway) { delete framework.rdp_providers.html5; }
+
+  /* 2 : Test RDP providers */
+	var nb_rdp_providers = 0;
+	framework.tests = {};
+
+	function ok(i) {
+		framework.tests[i] = true;
+		validate_settings();
+	}
+
+	function nok(i) {
+		framework.tests[i] = false;
+		delete framework.rdp_providers[i];
+		validate_settings();
+	}
+
+	for(var i in framework.rdp_providers) {
+		nb_rdp_providers++;
+		(function(i) {
+			var provider = framework.rdp_providers[i];
+			var success  = jQuery.proxy(function(i) {  ok(i) }, this, i);
+			var failure  = jQuery.proxy(function(i) { nok(i) }, this, i);
+			var test     = jQuery.proxy(provider.testCapabilities, provider, success, failure);
+			framework.tests[i] = null;
+			setTimeout(test, 1);
+			//provider.testCapabilities(success, failure);
+		})(i);
+	}
+
+	if(nb_rdp_providers == 0) {
+		/* No RDP providers -> no tests ! */
+		validate_settings();
+	}
+}
+
+function initialize_settings() {
+	/* Set "settings" namespace */
+	window.ovd.settings = {};
+
+	/* shorten names */
+	var framework = window.ovd.framework;
+	var settings = window.ovd.settings;
+	var defaults = window.ovd.defaults;
+
+	/* set settings from session/php/ ... */
+	settings.login                 = defaults.login;
+	settings.password              = defaults.password;
+	settings.mode                  = defaults.mode;
+	settings.language              = defaults.language;
+	settings.keymap                = defaults.keymap;
+	settings.timezone              = getTimezoneName();
+	settings.width                 = window.innerWidth;
+	settings.height                = window.innerHeight;
+	settings.fullscreen            = false;
+	settings.debug                 = true;
+	settings.use_local_credentials = defaults.force_use_local_credentials;
+	settings.rdp_provider          = defaults.rdp_provider;
+	settings.http_provider         = "proxy";
+	settings.webapps_provider      = "jsonp";
+	settings.wc_url                = getWebClientBaseURL();
+
+	/* Settings needed by the framework */
+	if(defaults.local_integration) { settings.local_integration = defaults.local_integration; }
+	if(defaults.rdp_input_method)  { settings.rdp_input_method = defaults.rdp_input_method; }
+
+	/* Handle localhost SM */
+	if(! defaults.sessionmanager || defaults.sessionmanager == "127.0.0.1" || defaults.sessionmanager == "localhost") {
+		settings.sessionmanager = location.hostname;
+	} else {
+		settings.sessionmanager = defaults.sessionmanager;
+	}
+
+	/* Delete unset token */
+	if(defaults.token != '') {
+		settings.token = defaults.token;
+	}
+
+	/* Handle applications start */
+	if(defaults.application == '') {
+		delete defaults.application;
+	} else {
+		if(defaults.mode == uovd.SESSION_MODE_DESKTOP) {
+			settings.no_desktop = '1';
 		}
 
 		var application = {};
-		application["id"] = session_app;
+		application["id"] = defaults.application;
 
-		if (session_file != '' && session_file_type != '' && session_file_share != '' ) {
-			application["file_location"] = session_file;   /* The name to be given to the copy of the resource */
-			application["file_type"] = session_file_type;  /* The resource type : native/sharedfolder/http */
-			application["file_path"] = session_file_share; /* The path to the resource */
+		if(defaults.file_location != '' && defaults.file_type != '' && defaults.file_path != '' ) {
+			application["file_location"] = defaults.file_location;       /* The name to be given to the copy of the resource */
+			application["file_type"]     = defaults.file_type;           /* The resource type : native/sharedfolder/http */
+			application["file_path"]     = defaults.file_path;           /* The path to the resource */
+		} else {
+			delete defaults.file_location;
+			delete defaults.file_type;
+			delete defaults.file_path;
 		}
 
-		parameters["application"] = application;
+		settings.application = application;
+	}
+}
+
+function initialize_ui() {
+	/* shorten names */
+	var framework = window.ovd.framework;
+	var settings = window.ovd.settings;
+	var defaults = window.ovd.defaults;
+
+	/* Translate text */
+	applyTranslations(i18n_tmp);
+
+	/* Suspend and logout buttons */
+	jQuery('#logout_link').on('click', function() { confirmLogout(); });
+	jQuery('#suspend_link').on('click', function() { framework.session_management.suspend(); });
+}
+
+function validate_settings() {
+	/* Wait for dependancies */
+	/* All initialize_* functions must have been called before validating */
+	if( ! window.ovd.defaults || ! window.ovd.framework || ! window.ovd.settings) {
+		setTimeout(validate_settings, 1000);
+		return;
 	}
 
-	session_management.setParameters(parameters);
+	/* shorten names */
+	var framework = window.ovd.framework;
+	var settings = window.ovd.settings;
+	var defaults = window.ovd.defaults;
+
+	/* Update RDP providers */
+	var nb_rdp_providers = 0;
+	var last_provider = null;
+	for(var i in framework.tests) {
+		last_provider = i ;
+		nb_rdp_providers += framework.tests[i] == false ? 0 : 1 ;
+	}
+
+	if(nb_rdp_providers == 0) {
+		/* No supported RDP provider */
+		hideSystemTest();
+		showSystemTestError("No RDP provider");
+	} else {
+		if(framework.tests[settings.rdp_provider] === null) {
+			/* The requested mode test is in progress */
+		} else if(framework.tests[settings.rdp_provider] === true) {
+			/* The requested mode test succeeded */
+			hideLock();
+			hideSystemTest();
+		} else {
+			/* False or undefined */
+			/* The requested mode failed */
+			/* But at least on other RDP provider is available */
+			hideLock();
+			hideSystemTest();
+			showInfo("The "+settings.rdp_provider+" mode is not available. Using "+last_provider+" instead");
+			settings.rdp_provider = last_provider;
+		}
+	}
+
+	/* Update HTTP providers */
+	if(defaults.gateway) {
+		if(defaults.use_proxy) { settings.http_provider = "proxy"; }
+		else { settings.http_provider = "direct"; }
+	}
+
+	if(defaults.force_use_local_credentials || settings.use_local_credentials) {
+		if(framework.tests.java == false) {
+			/* Final error : Java needed */
+			hideSystemTest();
+			showSystemTestError("Local credentials not supported");
+		}
+
+		if(framework.tests.java == true) {
+			settings.http_provider = "java";
+		}
+	}
+
+	if(framework.tests[settings.rdp_provider] == true) {
+		/* Can launck the session ? */
+		if(/* Session manager OK ? */
+			 settings.sessionmanager != '' &&
+			 /* User login or local_credentials valid ? */
+			 (settings.login || settings.use_local_credentials) ) {
+				startSession();
+		}
+	}
+};
+
+function checkExternalSession(active_callback, inactive_callback) {
+	/* shorten names */
+	var framework = window.ovd.framework;
+	var settings = window.ovd.settings;
+	var defaults = window.ovd.defaults;
+
+	/* Set parameters */
+	framework.session_management.setParameters(settings);
 
 	/* Set providers */
-	var http_provider = new uovd.provider.http.Proxy("proxy.php");
-	var rdp_provider = new uovd.provider.rdp.Html5();
-	var webapps_provider = new uovd.provider.webapps.Jsonp();
+	framework.session_management.setAjaxProvider(framework.http_providers[settings.http_provider]);
+	framework.session_management.setRdpProvider(framework.rdp_providers[settings.rdp_provider]);
+	framework.session_management.setWebAppsProvider(framework.webapps_providers[settings.webapps_provider]);
 
-	session_management.setRdpProvider(rdp_provider);
-	session_management.setAjaxProvider(http_provider);
-	session_management.setWebAppsProvider(webapps_provider);
-	
 	/* Check session status */
 	var parse_status = function(xml) {
 		try {
@@ -186,7 +388,7 @@ function checkExternalSession(active_callback, inactive_callback) {
 					case uovd.SESSION_STATUS_DESTROYED :
 						/* Wait and retry */
 						setTimeout( function() {
-							http_provider.sessionStatus_implementation(parse_status);
+							framework.http_providers[settings.http_provider].sessionStatus_implementation(parse_status);
 						}, 1000);
 						return;
 
@@ -209,5 +411,20 @@ function checkExternalSession(active_callback, inactive_callback) {
 		inactive_callback();
 	}
 
-	http_provider.sessionStatus_implementation(parse_status);
+	framework.http_providers[settings.http_provider].sessionStatus_implementation(parse_status);
+}
+
+function startSession() {
+	/* shorten names */
+	var framework = window.ovd.framework;
+
+	/* Avoid multiple calls */
+	startSession = function() {};
+
+	/* Create or Join a session */
+	checkExternalSession( function() {
+		window.close();
+	}, function() {
+		framework.session_management.start();
+	});
 }

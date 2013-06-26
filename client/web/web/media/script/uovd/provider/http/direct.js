@@ -23,7 +23,7 @@ uovd.provider.http.Direct.prototype.sessionStart_implementation = function(callb
 			callback(xml);
 		},
 		error: function( xhr, status ) {
-			console.log("Error : "+status);
+			callback(null);
 		}
 	});
 }
@@ -37,7 +37,7 @@ uovd.provider.http.Direct.prototype.sessionStatus_implementation = function(call
 			callback(xml);
 		},
 		error: function( xhr, status ) {
-			console.log("Error : "+status);
+			callback(null);
 		}
 	});
 }
@@ -55,7 +55,7 @@ uovd.provider.http.Direct.prototype.sessionEnd_implementation = function(callbac
 			callback(xml);
 		},
 		error: function( xhr, status ) {
-			console.log("Error : "+status);
+			callback(null);
 		}
 	});
 }
@@ -73,7 +73,7 @@ uovd.provider.http.Direct.prototype.sessionSuspend_implementation = function(cal
 			callback(xml);
 		},
 		error: function( xhr, status ) {
-			console.log("Error : "+status);
+			callback(null);
 		}
 	});
 }

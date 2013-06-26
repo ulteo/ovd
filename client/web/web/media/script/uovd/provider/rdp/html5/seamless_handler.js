@@ -1,14 +1,14 @@
 uovd.provider.rdp.html5.SeamlessHandler = function(rdp_provider) {
 	this.rdp_provider = rdp_provider;
 	this.connections = this.rdp_provider.connections;
-	this.handler = this.handleEvents.bind(this);
+	this.handler = jQuery.proxy(this.handleEvents, this);
 	this.message_id = 0;
 
 	/* Install instruction hook */
 	var self = this; /* closure */
 	for(var i=0 ; i<this.connections.length ; ++i) {
 		(function(server_id) {
-			self.connections[server_id].guac_tunnel.addInstructionHandler("seamrdp", self.handleOrders.bind(self, server_id));
+			self.connections[server_id].guac_tunnel.addInstructionHandler("seamrdp", jQuery.proxy(self.handleOrders, self, server_id));
 		})(i);
 	}
 

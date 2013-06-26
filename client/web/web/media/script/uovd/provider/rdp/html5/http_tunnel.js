@@ -50,6 +50,7 @@ uovd.provider.rdp.html5.HTTPTunnel = function(rdp_provider, tunnelURL, index) {
     var STATE_IDLE          = 0;
     var STATE_CONNECTED     = 1;
     var STATE_DISCONNECTED  = 2;
+    var STATE_FAILED        = 3;
 
     var currentState = STATE_IDLE;
 
@@ -71,6 +72,7 @@ uovd.provider.rdp.html5.HTTPTunnel = function(rdp_provider, tunnelURL, index) {
 			if(state == STATE_IDLE) {status = uovd.SERVER_STATUS_UNKNOWN;}
 			else if(state == STATE_CONNECTED) {status = uovd.SERVER_STATUS_CONNECTED;}
 			else if(state == STATE_DISCONNECTED) {status = uovd.SERVER_STATUS_DISCONNECTED;}
+			else if(state == STATE_FAILED) {status = uovd.SERVER_STATUS_FAILED;}
 			else {return;}
 			
 			self.rdp_provider.serverStatus(index, status);
@@ -404,7 +406,8 @@ uovd.provider.rdp.html5.HTTPTunnel = function(rdp_provider, tunnelURL, index) {
         // If failure, throw error
         if (connect_xmlhttprequest.status != 200) {
             var message = getHTTPTunnelErrorMessage(connect_xmlhttprequest);
-            throw new Error(message);
+            this.setStatus(STATE_FAILED);
+            return;
         }
 
         // Get UUID from response

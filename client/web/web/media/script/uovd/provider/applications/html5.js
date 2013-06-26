@@ -9,12 +9,12 @@ uovd.provider.applications.Html5 = function(rdp_provider) {
 	var self = this; /* closure */
 	for(var i=0 ; i<this.connections.length ; ++i) {
 		(function(server_id) {
-			 self.connections[server_id].guac_tunnel.addInstructionHandler("ovdapp", self.handleOrders.bind(self, server_id));
+			 self.connections[server_id].guac_tunnel.addInstructionHandler("ovdapp", jQuery.proxy(self.handleOrders, self, server_id));
 		 })(i);
 	}
 
 	/* Override destructor */
-	var end_super = this.end.bind(this);
+	var end_super = jQuery.proxy(this.end, this);
 	this.end = function() {
 		end_super();
 
@@ -156,10 +156,8 @@ uovd.provider.applications.Html5.prototype.handleOrders = function(server_id, op
 
 			this.session_management.fireEvent("ovd.applicationsProvider.statusChanged", this, {"application":application, "from":"unknown", "to":"aborted"});
 		} else if (opcode == "20") { /* ORDER_KNOWN_DRIVES */
-			console.log("ORDER_KNOWN_DRIVES : "+bin);
 			/* ??? */
 		} else {
-			console.log("ORDER_??? ("+opcode+") : "+bin);
 		}
 	}
 }
@@ -215,7 +213,6 @@ uovd.provider.applications.Html5.prototype.read = function(str, bytes) {
 	try{
 		num = parseInt(output);
 	} catch (e) {
-		console.error("Error : conversion ("+str+" to "+output+")");
 		return 0;
 	}
 

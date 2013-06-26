@@ -29,6 +29,7 @@ uovd.SESSION_STATUS_DESTROYED = "destroyed";
 
 
 uovd.SERVER_STATUS_UNKNOWN ="unknown";
+uovd.SERVER_STATUS_FAILED = "failed";
 uovd.SERVER_STATUS_CONNECTED = "connected";
 uovd.SERVER_STATUS_READY = "ready";
 uovd.SERVER_STATUS_DISCONNECTED = "disconnected";

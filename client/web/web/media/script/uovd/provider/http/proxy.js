@@ -12,14 +12,14 @@ uovd.provider.http.Proxy.prototype = new uovd.provider.http.Base();
 
 uovd.provider.http.Proxy.prototype.sessionStart_implementation = function(callback) {
 	var parameters = this.session_management.parameters;
-	var session_manager = parameters["session_manager"];
+	var sessionmanager = parameters["sessionmanager"];
 
   jQuery.ajax({
 		url: this.proxy_url,
 		type: "POST",
 		dataType: "xml",
 		headers: {
-			"X-Ovd-SessionManager" : session_manager,
+			"X-Ovd-SessionManager" : sessionmanager,
 			"X-Ovd-Service" : "start"
 		},
 		contentType: "text/xml",
@@ -28,40 +28,40 @@ uovd.provider.http.Proxy.prototype.sessionStart_implementation = function(callba
 			callback(xml);
 		},
 		error: function( xhr, status ) {
-			console.log("Error : "+status);
+			callback(null);
 		}
 	});
 }
 
 uovd.provider.http.Proxy.prototype.sessionStatus_implementation = function(callback) {
-	var session_manager = this.session_management.parameters["session_manager"];
+	var sessionmanager = this.session_management.parameters["sessionmanager"];
   jQuery.ajax({
 		url: this.proxy_url,
 		type: "GET",
 		dataType: "xml",
 		headers: {
-			"X-Ovd-SessionManager" : session_manager,
+			"X-Ovd-SessionManager" : sessionmanager,
 			"X-Ovd-Service" : "session_status"
 		},
 		success: function(xml) {
 			callback(xml);
 		},
 		error: function( xhr, status ) {
-			console.log("Error : "+status);
+			callback(null);
 		}
 	});
 }
 
 uovd.provider.http.Proxy.prototype.sessionEnd_implementation = function(callback) {
 	var parameters = this.session_management.parameters;
-	var session_manager = parameters["session_manager"];
+	var sessionmanager = parameters["sessionmanager"];
 
   jQuery.ajax({
 		url: this.proxy_url,
 		type: "POST",
 		dataType: "xml",
 		headers: {
-			"X-Ovd-SessionManager" : session_manager,
+			"X-Ovd-SessionManager" : sessionmanager,
 			"X-Ovd-Service" : "logout"
 		},
 		contentType: "text/xml",
@@ -70,21 +70,21 @@ uovd.provider.http.Proxy.prototype.sessionEnd_implementation = function(callback
 			callback(xml);
 		},
 		error: function( xhr, status ) {
-			console.log("Error : "+status);
+			callback(null);
 		}
 	});
 }
 
 uovd.provider.http.Proxy.prototype.sessionSuspend_implementation = function(callback) {
 	var parameters = this.session_management.parameters;
-	var session_manager = parameters["session_manager"];
+	var sessionmanager = parameters["sessionmanager"];
 
   jQuery.ajax({
 		url: this.proxy_url,
 		type: "POST",
 		dataType: "xml",
 		headers: {
-			"X-Ovd-SessionManager" : session_manager,
+			"X-Ovd-SessionManager" : sessionmanager,
 			"X-Ovd-Service" : "logout"
 		},
 		contentType: "text/xml",
@@ -93,7 +93,7 @@ uovd.provider.http.Proxy.prototype.sessionSuspend_implementation = function(call
 			callback(xml);
 		},
 		error: function( xhr, status ) {
-			console.log("Error : "+status);
+			callback(null);
 		}
 	});
 }
