@@ -76,7 +76,7 @@ class Profile(AbstractProfile):
 		except Exception, err:
 			cmd = "net use %s %s"%(self.mountPoint, mount_uri)
 			if password is not None:
-				cmd+= " "+password
+				cmd+= " XXXXXXXX"
 			
 			if login is not None:
 				cmd+= " /user:"+login

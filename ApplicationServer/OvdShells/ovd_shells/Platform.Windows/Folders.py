@@ -99,7 +99,7 @@ class Folders(AbstractFolders):
 			except Exception, err:
 				cmd = "net use %s %s"%(letter, mount_uri)
 				if password is not None:
-					cmd+= " "+password
+					cmd+= " XXXXXX"
 				
 				if login is not None:
 					cmd+= " /user:"+login
