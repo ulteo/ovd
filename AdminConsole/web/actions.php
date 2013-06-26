@@ -854,7 +854,7 @@ if ($_REQUEST['name'] == 'Application_ApplicationGroup') {
 	
 	$group = $_SESSION['service']->applications_group_info($_REQUEST['group']);
 	if (! is_object($group)) {
-		popup_error(sprintf(_('Unable to import group "%s"'), $id));
+		popup_error(sprintf(_('Unable to import group "%s"'), $_REQUEST['group']));
 		redirect();
 	}
 	
