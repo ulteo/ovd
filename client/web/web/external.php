@@ -65,65 +65,6 @@ if (OPTION_FORCE_LANGUAGE !== true && array_key_exists('language', $_REQUEST)) {
 
 list($translations, $js_translations) = get_available_translations($user_language);
 
-$first = false;
-if (array_key_exists('ovd-client', $_SESSION) && array_key_exists('sessionmanager', $_SESSION['ovd-client'])) {
-	$sm = $_SESSION['ovd-client']['sessionmanager'];
-	
-	// Check if session still exist SM side
-	$dom = new DomDocument('1.0', 'utf-8');
-	$buf = @$dom->loadXML($sm->query('session_status.php'));
-	if (! $buf)
-		die('Invalid XML from Session Manager');
-	
-	if (! $dom->hasChildNodes())
-		die('Invalid XML from Session Manager');
-	
-	$session_nodes = $dom->getElementsByTagName('session');
-	if ($session_nodes->length == 0)
-		$first = true;
-	elseif ($session_nodes->length > 0) {
-		$session_node = $session_nodes->item(0);
-		if (in_array($session_node->getAttribute('status'), array('unknown', 'error', 'wait_destroy', 'destroyed')))
-			$first = true;
-	}
-}
-else
-	$first = true;
-
-if ($first === true) {
-	$dom = new DomDocument('1.0', 'utf-8');
-
-	$session_node = $dom->createElement('session');
-	if (array_key_exists('mode', $_REQUEST))
-		$session_node->setAttribute('mode', $_REQUEST['mode']);
-	if (array_key_exists('language', $_REQUEST))
-		$session_node->setAttribute('language', $_REQUEST['language']);
-	$user_node = $dom->createElement('user');
-	if (array_key_exists('login', $_REQUEST))
-		$user_node->setAttribute('login', $_REQUEST['login']);
-	if (array_key_exists('password', $_REQUEST))
-		$user_node->setAttribute('password', $_REQUEST['password']);
-	if (array_key_exists('token', $_REQUEST))
-		$user_node->setAttribute('token', $_REQUEST['token']);
-	$session_node->appendChild($user_node);
-	
-	if ($_REQUEST['mode'] == 'desktop' && array_key_exists('app', $_REQUEST))
-		$session_node->setAttribute('no_desktop', '1');
-	
-	$dom->appendChild($session_node);
-
-	$sm_host = @SESSIONMANAGER_HOST; // If the WebClient is not linked to a SessionManager, JavaScript object will return an 'Usage: missing "sessionmanager_host" parameter' error
-	$_SESSION['ovd-client']['sessionmanager_url'] = 'https://'.$sm_host.'/ovd/client';
-	$sessionmanager_url = $_SESSION['ovd-client']['sessionmanager_url'];
-	
-	$sm = new SessionManager($sessionmanager_url);
-	$_SESSION['ovd-client']['sessionmanager'] = $sm;
-
-	$sm->query_post_xml('auth.php', $dom->saveXML());
-
-	$_SESSION['ovd-client']['start_app'] = array();
-}
-
 if (array_key_exists('app', $_REQUEST)) {
 	$order = array('id' => $_REQUEST['app']);
 
@@ -142,6 +83,11 @@ if (array_key_exists('app', $_REQUEST)) {
 $rdp_input_unicode = null;
 if (defined('RDP_INPUT_METHOD'))
 	$rdp_input_unicode = RDP_INPUT_METHOD;
+
+$use_proxy = false;
+if (defined('OPTION_USE_PROXY') && is_bool(OPTION_USE_PROXY)) {
+ $use_proxy = OPTION_USE_PROXY;
+}
 
 $local_integration = (defined('PORTAL_LOCAL_INTEGRATION') && (PORTAL_LOCAL_INTEGRATION === true));
 
@@ -164,106 +110,140 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<link rel="shortcut icon" href="media/image/favicon.ico" />
 		<link rel="shortcut icon" type="image/png" href="media/image/favicon.png" />
 
-<?php if (file_exists(WEB_CLIENT_ROOT . "/media/style/uovd.css")) { ?>
-		<link rel="stylesheet" type="text/css" href="media/style/uovd.css" />
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/style/webclient.css")) { ?>
+		<link rel="stylesheet" type="text/css" href="media/style/webclient.css" />
 <?php } else { ?>
 		<link rel="stylesheet" type="text/css" href="media/script/lib/nifty/niftyCorners.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/images.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 <?php } ?>
 
+		<script type="text/javascript" src="media/script/lib/jquery/jquery.js" charset="utf-8"></script>
+
 <?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/uovd.js")) { ?>
 		<script type="text/javascript" src="media/script/uovd.js" charset="utf-8"></script>
+<?php } else { ?>
+		<script type="text/javascript" src="media/script/uovd/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/application.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/server/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/server/rdp.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/server/webapps.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/session.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/session_management.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/http/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/http/direct.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/http/proxy.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/java.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/applications/application_instance.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/applications/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/applications/html5.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/applications/java.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/applications/webapps.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/http_tunnel.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_handler.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_window_factory.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_icon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/keyboard.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/mouse.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/layer.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/tunnel.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/guacamole.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/encodings.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/oskeyboard.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/webapps/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/webapps/jsonp.js" charset="utf-8"></script>
+<?php } ?>
+
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/webclient.js")) { ?>
+		<script type="text/javascript" src="media/script/webclient.js" charset="utf-8"></script>
 <?php } else { ?>
 		<script type="text/javascript" src="media/script/lib/prototype/prototype.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/scriptaculous/effects.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/scriptaculous/extensions.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/common.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon_desktop.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon_applications.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon_external.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/server.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/application.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/JavaTester.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/Logger.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/timezones.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/common.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/daemon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/daemon_desktop.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/daemon_applications.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/daemon_external.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/server.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/application.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/JavaTester.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/Logger.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/timezones.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/ajaxplorer.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/start_app.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/application_counter.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/desktop_container.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/seamless_launcher.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/seamless_window_manager.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/webapps_popup_launcher.js" charset="utf-8"></script>
 <?php } ?>
 
-		<script type="text/javascript" src="media/script/uovd_ext_client.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/ui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/uovd_ext_client.js" charset="utf-8"></script>
 
 		<script type="text/javascript">
-			var big_image_map = <?php echo ($big_image_map?'true':'false'); ?>;
-
-			NiftyLoad = function() {
-				Nifty('div.rounded');
-			}
-
-			var i18n = new Hash();
-<?php		foreach ($js_translations as $id => $string)
-			echo 'i18n.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
-?>
-			var i18n_tmp = new Hash();
-<?php		foreach ($translations as $id => $string) 
-			echo 'i18n_tmp.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
-?>
-
+			/* Options from PHP to JS */
 			var SESSIONMANAGER = '<?php echo SESSIONMANAGER_HOST; ?>';
 			var GATEWAY_FIRST_MODE = <?php echo (($gateway_first === true)?'true':'false'); ?>;
-			var user_keymap = '<?php echo $user_keymap; ?>';
 			var OPTION_KEYMAP_AUTO_DETECT = <?php echo ((OPTION_KEYMAP_AUTO_DETECT === true)?'true':'false'); ?>;
+			var OPTION_USE_PROXY = <?php echo (($use_proxy === true)?'true':'false'); ?>;
+			var big_image_map = <?php echo ($big_image_map?'true':'false'); ?>;
+			var user_keymap = '<?php echo $user_keymap; ?>';
+			var rdp_input_method = <?php echo (($rdp_input_unicode == null)?'null':'\''.$rdp_input_unicode.'\''); ?>;
+			var local_integration = <?php echo (($local_integration === true)?'true':'false'); ?>;
+			var debug_mode = <?php echo (($debug_mode === true)?'true':'false'); ?>;
+			var client_language = '<?php echo $user_language; ?>';
 
+			/* Session params */
 			<?php
-				if (array_key_exists('mode', $_REQUEST) && $_REQUEST['mode'] == 'applications' && ! $first) {
-			?>
-					Event.observe(window, 'load', function() {
-						window.close();
-					});
-			<?php
-				} else {
-			?>
-					var daemon;
-					var client_language = '<?php echo $user_language; ?>';
-					var rdp_input_method = <?php echo (($rdp_input_unicode == null)?'null':'\''.$rdp_input_unicode.'\''); ?>;
-					var local_integration = <?php echo (($local_integration === true)?'true':'false'); ?>;
-					var debug_mode = <?php echo (($debug_mode === true)?'true':'false'); ?>;
+				$params = array();
+				$params['mode'] = '\''.$_REQUEST['mode'].'\'';
+				$params['login'] = '\''.$_REQUEST['login'].'\'';
+				$params['password'] = '\''.$_REQUEST['password'].'\'';
+				$params['token'] = '\'\'';
 
-					Event.observe(window, 'load', function() {
-						if ('<?php echo $_REQUEST['mode']; ?>' == 'desktop')
-							new Effect.Center($('splashContainer'));
-						new Effect.Center($('endContainer'));
-
-						$('desktopModeContainer').hide();
-						$('desktopAppletContainer').hide();
-
-						$('applicationsModeContainer').hide();
-						$('applicationsAppletContainer').hide();
-						
-						$('splashContainer').show();
-
-						applyTranslations(i18n_tmp);
-						startExternalSession('<?php echo $_REQUEST['mode']; ?>');
-						
-						Event.observe($('level_debug'), 'click', function() {
-							Logger.toggle_level('debug');
-						});
-						Event.observe($('level_info'), 'click', function() {
-							Logger.toggle_level('info');
-						});
-						Event.observe($('level_warning'), 'click', function() {
-							Logger.toggle_level('warning');
-						});
-						Event.observe($('level_error'), 'click', function() {
-							Logger.toggle_level('error');
-						});
-						Event.observe($('clear_button'), 'click', function() {
-							Logger.clear();
-						});
-						
-					});
-			<?php
+				if (array_key_exists('token', $_REQUEST)) {
+					$params['token'] = '\''.$_REQUEST['token'].'\'';
 				}
+
+				$params['app'] = '\'\'';
+				$params['file'] = '\'\'';
+				$params['file_type'] = '\'\'';
+				$params['file_share'] = '\'\'';
+
+				if($_REQUEST['mode'] == 'desktop' && array_key_exists('app', $_REQUEST)) {
+					$params['app'] = '\''.$_REQUEST['app'].'\'';
+
+					if (array_key_exists('file', $_REQUEST)) {
+						$params['file'] = '\''.$_REQUEST['file'].'\'';
+						$params['file_type'] = '\''.$_REQUEST['file_type'].'\'';
+						$params['file_share'] = '\''.base64_decode($_REQUEST['file_share']).'\'';
+					}
+				}
+			?>
+
+			var session_mode = <?php echo $params['mode']; ?>;
+			var session_user = <?php echo $params['login']; ?>;
+			var session_pass = <?php echo $params['password']; ?>;
+			var session_token = <?php echo $params['token']; ?>;
+			var session_app = <?php echo $params['app']; ?>;
+			var session_file = <?php echo $params['file']; ?>;
+			var session_file_type = <?php echo $params['file_type']; ?>;
+			var session_file_share = <?php echo $params['file_share']; ?>;
+
+			var i18n = new Hash();
+			<?php
+				foreach ($js_translations as $id => $string)
+					echo 'i18n.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
+			?>
+			var i18n_tmp = new Hash();
+			<?php
+				foreach ($translations as $id => $string)
+					echo 'i18n_tmp.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
 			?>
 		</script>
 	</head>
@@ -416,14 +396,9 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 			</table>
 		</div>
 
-		<div id="desktopModeContainer" style="display: none;">
-			<div id="desktopAppletContainer" style="display: none;">
-			</div>
-		</div>
-
-		<div id="applicationsModeContainer" style="display: none;">
-			<div id="applicationsAppletContainer" style="display: none;">
-			</div>
+		<div id="sessionContainer" style="display: none;">
+			<div id="desktopContainer"></div>
+			<div id="windowsContainer"></div>
 		</div>
 
 		<div id="debugContainer" class="no_debug info warning error" style="display: none;">

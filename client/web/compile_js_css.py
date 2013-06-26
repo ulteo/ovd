@@ -24,6 +24,7 @@ import re
 import tempfile
 import time
 from subprocess import Popen, PIPE
+import sys
 import Image
 
 def jscompress(outfile, filename):
@@ -138,25 +139,46 @@ if __name__ == "__main__":
 	content += f.read()
 	f.close()
 
-	outfilename = os.path.join("web", "media", "script", "uovd.js")
+	framework_filename = os.path.join("web", "media", "script", "uovd.js")
+	framework_file = open(framework_filename, "w")
+	framework_file.write(copyright)
+	
+	outfilename = os.path.join("web", "media", "script", "webclient.js")
 	outfile = open(outfilename, "w")
 	outfile.write(copyright)
 
 	for match in re.findall("<script type=\"text/javascript\" src=\"media/(.*).js[^\"]*\" charset=\"utf-8\"></script>", content, re.IGNORECASE):
 		filename = os.path.join("web", "media", match + ".js")
-		if not os.path.basename(filename) in ("uovd.js", "uovd_int_client.js", "uovd_ext_client.js") and not os.path.basename(filename) in processed_files:
-			processed_files.append(os.path.basename(filename))
+		if not os.path.exists(filename):
+			print >>sys.stderr, " Warning: script '%s' does not exists"%(filename)
+			continue
+		
+		if filename in processed_files:
+			continue
+		
+		if os.path.basename(filename) in ("jquery.js", "uovd.js", "webclient.js"):
+			continue
+		
+		if filename.startswith(os.path.join("web", "media", "script", "uovd")):
+			processed_files.append(filename)
+			jscompress(framework_file, filename)
+		else:
+			if os.path.basename(filename) in ("uovd_int_client.js", "uovd_ext_client.js", "ui.js"):
+				continue
+			
+			processed_files.append(filename)
 			jscompress(outfile, filename)
 
+	framework_file.close()
 	outfile.close()
 
-	outfilename = os.path.join("web", "media", "style", "uovd.css")
+	outfilename = os.path.join("web", "media", "style", "webclient.css")
 	outfile = open(outfilename, "w")
 	outfile.write(copyright)
 
 	for match in re.findall("<link rel=\"stylesheet\" type=\"text/css\" href=\"media/(.*).css\" />", content, re.IGNORECASE):
 		filename = os.path.join("web", "media", match + ".css")
-		if not os.path.basename(filename) in ("uovd.css", ) and not os.path.basename(filename) in processed_files:
+		if not os.path.basename(filename) in ("webclient.css", ) and not os.path.basename(filename) in processed_files:
 			processed_files.append(os.path.basename(filename))
 			csscompress(outfile, filename)
 

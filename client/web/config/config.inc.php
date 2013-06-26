@@ -82,3 +82,8 @@
 // define('OPTION_CONFIRM_LOGOUT', 'apps_only');
 // define('OPTION_CONFIRM_LOGOUT', 'never');
 // default = never
+
+// Option direct SM communication (with proxy.php)
+// define('OPTION_USE_PROXY', true);
+// define('OPTION_USE_PROXY', false);
+// default: false

@@ -42,14 +42,14 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	 */
 	private ConcurrentHashMap<Integer, RdpConnectionOvd> matching = null;
 
-	private OvdApplet applet = null;
+	private WebClient applet = null;
 	
 	/**
 	 * enable desktop effect in RDP connection
 	 */
 	private boolean enableDesktopEffect;
 
-	public OvdClientApplicationsApplet(SessionManagerCommunication smComm, Properties properties, OvdApplet applet_) {
+	public OvdClientApplicationsApplet(SessionManagerCommunication smComm, Properties properties, WebClient applet_) {
 		super(smComm, properties.isPersistent());
 
 		this.applet = applet_;
@@ -134,7 +134,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 				continue;
 
 			if (rc.getOvdAppChannel() == channel) {
-				this.applet.forwardServerStatusToJS(JSId, OvdApplet.JS_API_O_SERVER_READY);
+				this.applet.forwardServerStatusToJS(JSId, WebClient.JS_API_O_SERVER_READY);
 				return;
 			}
 		}
@@ -143,17 +143,17 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 
 	@Override
 	public void ovdInstanceError(ApplicationInstance appInstance) {
-		this.applet.forwardApplicationStatusToJS(0, new Integer(appInstance.getToken()), OvdApplet.JS_API_O_INSTANCE_ERROR);
+		this.applet.forwardApplicationStatusToJS(0, new Integer(appInstance.getToken()), WebClient.JS_API_O_INSTANCE_ERROR);
 	}
 
 	@Override
 	public void ovdInstanceStarted(OvdAppChannel channel_, ApplicationInstance appInstance) {
-		this.applet.forwardApplicationStatusToJS(appInstance.getApplication().getId(), new Integer(appInstance.getToken()), OvdApplet.JS_API_O_INSTANCE_STARTED);
+		this.applet.forwardApplicationStatusToJS(appInstance.getApplication().getId(), new Integer(appInstance.getToken()), WebClient.JS_API_O_INSTANCE_STARTED);
 	}
 
 	@Override
 	public void ovdInstanceStopped(ApplicationInstance appInstance) {
-		this.applet.forwardApplicationStatusToJS(0, new Integer(appInstance.getToken()), OvdApplet.JS_API_O_INSTANCE_STOPPED);
+		this.applet.forwardApplicationStatusToJS(0, new Integer(appInstance.getToken()), WebClient.JS_API_O_INSTANCE_STOPPED);
 	}
 
 	@Override
@@ -163,7 +163,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 		for (Integer JSId: this.matching.keySet()) {
 			RdpConnectionOvd rc = this.matching.get(JSId);
 			if (rc == co) {
-				this.applet.forwardServerStatusToJS(JSId, OvdApplet.JS_API_O_SERVER_CONNECTED);
+				this.applet.forwardServerStatusToJS(JSId, WebClient.JS_API_O_SERVER_CONNECTED);
 				return;
 			}
 		}
@@ -175,7 +175,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 			RdpConnectionOvd rc = this.matching.get(JSId);
 			if (rc == co) {
 				this.matching.remove(JSId);
-				this.applet.forwardServerStatusToJS(JSId, OvdApplet.JS_API_O_SERVER_DISCONNECTED);
+				this.applet.forwardServerStatusToJS(JSId, WebClient.JS_API_O_SERVER_DISCONNECTED);
 				return;
 			}
 		}
@@ -205,7 +205,7 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 				RdpConnectionOvd rc = this.matching.get(JSId);
 				if (rc == co) {
 					this.matching.remove(JSId);
-					this.applet.forwardServerStatusToJS(JSId, OvdApplet.JS_API_O_SERVER_FAILED);
+					this.applet.forwardServerStatusToJS(JSId, WebClient.JS_API_O_SERVER_FAILED);
 					return;
 				}
 			}

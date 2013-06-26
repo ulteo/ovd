@@ -1,1 +1,4 @@
-SUBDIRS = nifty prototype scriptaculous
+SUBDIRS = jquery \
+          nifty \
+          prototype \
+          scriptaculous

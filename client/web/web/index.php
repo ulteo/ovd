@@ -70,6 +70,10 @@ if (defined('OPTION_FORCE_SESSION_MODE'))
 elseif (isset($_COOKIE['ovd-client']['session_mode']))
 	$wi_session_mode = (string)$_COOKIE['ovd-client']['session_mode'];
 
+$wi_session_type = 'java';
+if (isset($_COOKIE['ovd-client']['session_type']))
+	$wi_session_type = (string)$_COOKIE['ovd-client']['session_type'];
+
 if (OPTION_FORCE_LANGUAGE !== true && isset($_COOKIE['ovd-client']['session_language'])) {
 	$lang = (string)$_COOKIE['ovd-client']['session_language'];
 	if (language_is_supported($languages, $lang))
@@ -85,7 +89,7 @@ $wi_desktop_fullscreen = 0;
 if (defined('OPTION_FORCE_FULLSCREEN'))
 	$wi_desktop_fullscreen = ((OPTION_FORCE_FULLSCREEN==true)?1:0);
 elseif (isset($_COOKIE['ovd-client']['desktop_fullscreen']))
-	$wi_desktop_fullscreen = (int)$_COOKIE['ovd-client']['desktop_fullscreen'];
+	$wi_desktop_fullscreen = ($_COOKIE['ovd-client']['desktop_fullscreen'] == "true" ) ? 1:0;
 
 $wi_debug = 1;
 if (isset($_COOKIE['ovd-client']['debug']))
@@ -94,6 +98,11 @@ if (isset($_COOKIE['ovd-client']['debug']))
 $rdp_input_unicode = null;
 if (defined('RDP_INPUT_METHOD'))
 	$rdp_input_unicode = RDP_INPUT_METHOD;
+
+$use_proxy = false;
+if (defined('OPTION_USE_PROXY') && is_bool(OPTION_USE_PROXY)) {
+ $use_proxy = OPTION_USE_PROXY;
+}
 
 $local_integration = (defined('PORTAL_LOCAL_INTEGRATION') && (PORTAL_LOCAL_INTEGRATION === true));
 
@@ -151,8 +160,8 @@ function get_users_list() {
 		<link rel="shortcut icon" href="media/image/favicon.ico" />
 		<link rel="shortcut icon" type="image/png" href="media/image/favicon.png" />
 
-<?php if (file_exists(WEB_CLIENT_ROOT . "/media/style/uovd.css")) { ?>
-		<link rel="stylesheet" type="text/css" href="media/style/uovd.css" />
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/style/webclient.css")) { ?>
+		<link rel="stylesheet" type="text/css" href="media/style/webclient.css" />
 <?php } else { ?>
 		<link rel="stylesheet" type="text/css" href="media/script/lib/nifty/niftyCorners.css" />
 <?php     if ($big_image_map) { ?>
@@ -161,218 +170,103 @@ function get_users_list() {
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 <?php } ?>
 
+		<script type="text/javascript" src="media/script/lib/jquery/jquery.js" charset="utf-8"></script>
+
 <?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/uovd.js")) { ?>
 		<script type="text/javascript" src="media/script/uovd.js" charset="utf-8"></script>
+<?php } else { ?>
+		<script type="text/javascript" src="media/script/uovd/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/application.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/server/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/server/rdp.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/server/webapps.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/session.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/session_management.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/http/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/http/direct.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/http/proxy.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/java.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/applications/application_instance.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/applications/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/applications/html5.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/applications/java.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/applications/webapps.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/http_tunnel.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_handler.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_window_factory.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_icon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/keyboard.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/mouse.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/layer.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/tunnel.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/guacamole.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/encodings.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/oskeyboard.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/webapps/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/webapps/jsonp.js" charset="utf-8"></script>
+<?php } ?>
+
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/webclient.js")) { ?>
+		<script type="text/javascript" src="media/script/webclient.js" charset="utf-8"></script>
 <?php } else { ?>
 		<script type="text/javascript" src="media/script/lib/prototype/prototype.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/scriptaculous/effects.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/scriptaculous/extensions.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/common.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon_desktop.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon_applications.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon_portal.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/server.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/application.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/JavaTester.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/Logger.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/timezones.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/common.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/daemon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/daemon_desktop.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/daemon_applications.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/daemon_portal.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/server.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/application.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/JavaTester.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/Logger.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/timezones.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/ajaxplorer.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/start_app.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/application_counter.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/desktop_container.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/seamless_launcher.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/seamless_window_manager.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/progress_bar.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/webapps_popup_launcher.js" charset="utf-8"></script>
 <?php } ?>
-
-		<script type="text/javascript" src="media/script/uovd_int_client.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/ui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/uovd_int_client.js" charset="utf-8"></script>
 
 		<script type="text/javascript">
-			var big_image_map = <?php echo ($big_image_map?'true':'false'); ?>;
-
-			NiftyLoad = function() {
-				Nifty('div.rounded');
-			}
-			
-			function updateSMHostField() {
-				 if ($('sessionmanager_host').style.color != 'grey')
-					return;
-				
-				$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
-			}
-			
-			var i18n = new Hash();
-<?php		foreach ($js_translations as $id => $string)
-			echo 'i18n.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
-?>
-			var i18n_tmp = new Hash();
-<?php		foreach ($translations as $id => $string) 
-			echo 'i18n_tmp.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
-?>
-
+			/* Options from PHP to JS */
 			var GATEWAY_FIRST_MODE = <?php echo (($gateway_first === true)?'true':'false'); ?>;
-			var user_keymap = '<?php echo $user_keymap; ?>';
 			var OPTION_KEYMAP_AUTO_DETECT = <?php echo ( (OPTION_KEYMAP_AUTO_DETECT === true && !isset($_COOKIE['ovd-client']['session_keymap']))?'true':'false'); ?>;
-			
-			var daemon;
+			var OPTION_USE_PROXY = <?php echo (($use_proxy === true)?'true':'false'); ?>;
+			var big_image_map = <?php echo ($big_image_map?'true':'false'); ?>;
+			var user_keymap = '<?php echo $user_keymap; ?>';
 			var rdp_input_method = <?php echo (($rdp_input_unicode == null)?'null':'\''.$rdp_input_unicode.'\''); ?>;
 			var local_integration = <?php echo (($local_integration === true)?'true':'false'); ?>;
+			var debug_mode = <?php echo ($debug_mode ? 'true' : 'false'); ?>;
+			var focus_sm_textfield = <?php echo ((! defined('SESSIONMANAGER_HOST') && (! isset($wi_sessionmanager_host) || $wi_sessionmanager_host == '')) ? 'true' : 'false'); ?>;
+			var focus_pw_textfield = <?php echo (((isset($users) && $users !== false) || (isset($wi_user_login) && $wi_user_login != '')) ? 'true' : 'false'); ?>;
+			var confirm_logout = '<?php echo $confirm_logout; ?>';
 
-			Event.observe(window, 'load', function() {
-				new Effect.Center($('splashContainer'));
-				new Effect.Center($('endContainer'));
-
-				Event.observe(window, 'resize', function() {
-					new Effect.Center($('splashContainer'));
-					new Effect.Center($('desktopFullscreenContainer'));
-					new Effect.Center($('endContainer'));
-				});
-				
-				$('desktopModeContainer').hide();
-				$('desktopAppletContainer').hide();
-
-				$('applicationsModeContainer').hide();
-				$('applicationsAppletContainer').hide();
-
-				$('fileManagerWrap').hide();
-
-				$('debugContainer').hide();
-				$('debugLevels').hide();
-				
-				applyTranslations(i18n_tmp);
-				updateFlag($('session_language').value);
-				
-				Event.observe($('sessionmanager_host'), 'keyup', function() {
-					checkLogin();
-				});
-				Event.observe($('sessionmanager_host'), 'change', function() {
-					checkLogin();
-				});
-				
-				Event.observe($('user_login'), 'change', function() {
-					checkLogin();
-				});
-				Event.observe($('user_login'), 'keyup', function() {
-					checkLogin();
-				});
-				Event.observe($('user_login'), 'keydown', function(event) {
-					if (typeof event == 'undefined' || event.keyCode != 13)
-						return;
-					
-					$('startsession').submit();
-				});
-				
-				Event.observe($('user_password'), 'keydown', function(event) {
-					if (typeof event == 'undefined' || event.keyCode != 13)
-						return;
-					
-					$('startsession').submit();
-				});
-				
-				Event.observe($('startsession'), 'submit', function() {
-					startSession();
-				});
-				
-				Event.observe($('use_local_credentials_true'), 'change', function() {
-					checkLogin();
-				});
-				Event.observe($('use_local_credentials_true'), 'click', function() {
-					checkLogin();
-				});
-				Event.observe($('use_local_credentials_false'), 'change', function() {
-					checkLogin();
-				});
-				Event.observe($('use_local_credentials_false'), 'click', function() {
-					checkLogin();
-				});
-				
-				Event.observe($('session_mode'), 'change', function() {
-					checkSessionMode();
-				});
-				Event.observe($('session_mode'), 'click', function() {
-					checkSessionMode();
-				});
-				
-				Event.observe($('session_language'), 'change', function() {
-					translateInterface($('session_language').value);
-					updateFlag($('session_language').value);
-				});
-				Event.observe($('session_language'), 'keyup', function() {
-					translateInterface($('session_language').value);
-					updateFlag($('session_language').value);
-				});
-				
-				Event.observe($('advanced_settings_gettext'), 'click', function() {
-					switchSettings();
-				});
-				
-				Event.observe($('suspend_link'), 'click', function() {
-					daemon.suspend();
-				});
-				Event.observe($('logout_link'), 'click', function() {
-					confirmLogout('<?php echo $confirm_logout; ?>');
-				});
-				
-				Event.observe($('iframeLink'), 'click', function() {
-					hideIFrame();
-				});
-				
-				Event.observe($('newsHideLink'), 'click', function() {
-					hideNews();
-				});
-<?php	if ($debug_mode) { ?>
-				Event.observe($('level_debug'), 'click', function() {
-					Logger.toggle_level('debug');
-				});
-				Event.observe($('level_info'), 'click', function() {
-					Logger.toggle_level('info');
-				});
-				Event.observe($('level_warning'), 'click', function() {
-					Logger.toggle_level('warning');
-				});
-				Event.observe($('level_error'), 'click', function() {
-					Logger.toggle_level('error');
-				});
-				Event.observe($('clear_button'), 'click', function() {
-					Logger.clear();
-				});
-<?php	}	?>
-				
-				setTimeout(function() {
-<?php
-if (! defined('SESSIONMANAGER_HOST') && (! isset($wi_sessionmanager_host) || $wi_sessionmanager_host == ''))
-	echo 'if ($(\'sessionmanager_host\') && $(\'sessionmanager_host\').visible()) $(\'sessionmanager_host\').focus();';
-elseif ((isset($users) && $users !== false) || (isset($wi_user_login) && $wi_user_login != ''))
-	echo 'if ($(\'user_password\') && $(\'user_password\').visible()) $(\'user_password\').focus();';
-else
-	echo 'if ($(\'user_login\') && $(\'user_login\').visible()) $(\'user_login\').focus();';
-?>
-					checkSessionMode();
-					
-					if ($('sessionmanager_host').value == '') {
-						$('sessionmanager_host').style.color = 'grey';
-						$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
-						if ($('sessionmanager_host') && $('sessionmanager_host').visible())
-							setCaretPosition($('sessionmanager_host'), 0);
-					}
-					Event.observe($('sessionmanager_host'), 'focus', function() {
-						if ($('sessionmanager_host').value == i18n.get('sessionmanager_host_example')) {
-							$('sessionmanager_host').style.color = 'black';
-							$('sessionmanager_host').value = '';
-						}
-					});
-					Event.observe($('sessionmanager_host'), 'blur', function() {
-						if ($('sessionmanager_host').value == '') {
-							$('sessionmanager_host').style.color = 'grey';
-							$('sessionmanager_host').value = i18n.get('sessionmanager_host_example');
-						}
-					});
-				}, 1500);
-<?php	if ($debug_mode) {	?>
-				switchSettings();
-<?php	}	?>
-			});
+			var i18n = new Hash();
+			<?php
+				foreach ($js_translations as $id => $string)
+					echo 'i18n.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
+			?>
+			var i18n_tmp = new Hash();
+			<?php
+				foreach ($translations as $id => $string)
+					echo 'i18n_tmp.set(\''.$id.'\', \''.str_replace('\'', '\\\'', $string).'\');'."\n";
+			?>
 		</script>
 	</head>
 
-	<body style="margin: 50px; background: #ddd; color: #333;">
+	<body>
 		<noscript>
-			<div class="finalErrorBox" style="width: 500px;">
+			<div class="finalErrorBox">
 				<table style="width: 100%;" border="0" cellspacing="1" cellpadding="3">
 					<tr>
 						<td style="text-align: left; vertical-align: middle;">
@@ -398,28 +292,18 @@ else
 <?php if (!$big_image_map) { ?>
 					<img src="media/image/ulteo-small.png" width="141" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop"/>
 <?php } else { ?>
-					<div class="image_ulteo-small_png" style="margin-left: auto; margin-right: auto;"></div>
+					<div class="image_ulteo-small_png"></div>
 <?php } ?>
 				</div>
 			</div>
 		</noscript>
 
-		<div id="lockWrap" style="display: none;">
-		</div>
+		<div id="lockWrap" style="display: none;"></div>
 
-		<div style="background: #2c2c2c; width: 0px; height: 0px;">
-			<div id="errorWrap" class="rounded" style="display: none;">
-			</div>
-			<div id="okWrap" class="rounded" style="display: none;">
-			</div>
-			<div id="infoWrap" class="rounded" style="display: none;">
-			</div>
-		</div>
-
-		<div id="testJava">
-		</div>
-
-		<div style="background: #2c2c2c; width: 0px; height: 0px;">
+		<div id="notificationWrap">
+			<div id="errorWrap" class="rounded" style="display: none;"></div>
+			<div id="okWrap" class="rounded" style="display: none;"></div>
+			<div id="infoWrap" class="rounded" style="display: none;"></div>
 			<div id="systemTestWrap" class="rounded" style="display: none;">
 				<div id="systemTest" class="rounded">
 					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
@@ -520,7 +404,8 @@ else
 				</tr>
 				<tr>
 					<td style="text-align: left; vertical-align: middle; margin-top: 15px;">
-						<span style="font-size: 1.35em; font-weight: bold; color: #686868;" id="loading_ovd_gettext">&nbsp;</span>
+						<span style="font-size: 1.35em; font-weight: bold; color: #686868; display: none;" id="loading_ovd_gettext">&nbsp;</span>
+						<span style="font-size: 1.35em; font-weight: bold; color: #686868; display: none;" id="unloading_ovd_gettext">&nbsp;</span>
 					</td>
 					<td style="width: 20px"></td>
 					<td style="text-align: left; vertical-align: middle;">
@@ -541,7 +426,6 @@ else
 			</table>
 		</div>
 
-
 		<div id="endContainer" class="rounded" style="display: none;">
 			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -560,32 +444,7 @@ else
 			</table>
 		</div>
 
-		<div id="desktopModeContainer" style="display: none;">
-			<div id="desktopFullscreenContainer" class="rounded" style="display: none;">
-				<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td style="text-align: center;">
-							<?php if (!$big_image_map) { ?>
-							<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
-							<?php } else { ?>
-							<div class="image_ulteo_png"></div>
-							<?php } ?>
-						</td>
-					</tr>
-					<tr>
-						<td style="text-align: center; vertical-align: middle; margin-top: 15px;">
-							<span style="font-size: 1.1em; font-weight: bold; color: #686868;" id="desktop_fullscreen_text1_gettext">&nbsp;</span>
-							<br /><br />
-							<span style="font-size: 1.1em; font-weight: bold; color: #686868;" id="desktop_fullscreen_text2_gettext">&nbsp;</span>
-						</td>
-					</tr>
-				</table>
-			</div>
-			<div id="desktopAppletContainer" style="display: none;">
-			</div>
-		</div>
-
-		<div id="applicationsModeContainer" style="display: none;">
+		<div id="sessionContainer" style="display: none;">
 			<div id="applicationsHeaderWrap">
 				<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
@@ -600,8 +459,7 @@ else
 							<h1><span id="user_displayname">&nbsp;</span><span id="welcome_gettext" style="display: none;">&nbsp;</span></h1>
 						</td>
 						<td style="width: 60%; border-bottom: 1px solid #ccc; text-align: left;" class="title centered">
-							<div id="newsContainer" style="padding-left: 5px; padding-right: 5px; height: 70px; overflow: auto;">
-							</div>
+							<div id="newsContainer" style="padding-left: 5px; padding-right: 5px; height: 70px; overflow: auto;"></div>
 						</td>
 						<td style="text-align: right; padding-left: 5px; padding-right: 10px; border-bottom: 1px solid #ccc;">
 							<table style="margin-left: auto; margin-right: 0px;" border="0" cellspacing="0" cellpadding="10">
@@ -629,39 +487,54 @@ else
 				</table>
 			</div>
 
-			<table id="applicationsContainer" style="width: 100%; background: #eee;" border="0" cellspacing="0" cellpadding="5">
+			<table id="applicationsContainer" border="0" cellspacing="0" cellpadding="5">
 				<tr>
 					<td style="width: 15%; text-align: left; vertical-align: top; background: #eee;">
 						<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
-						<div>
-							<h2 style="display: none;"><span id="my_apps_gettext">&nbsp;</span></h2>
-
-							<div id="appsContainer" style="overflow: auto;">
+							<div>
+								<h2 style="display: none;"><span id="my_apps_gettext">&nbsp;</span></h2>
+								<div id="appsContainer" style="overflow: auto;"></div>
 							</div>
-						</div>
 						</div>
 					</td>
 					<td style="width: 5px;">
 					</td>
 					<td style="text-align: left; vertical-align: top; background: #eee;">
 						<div id="fileManagerWrap" class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
-						<div>
-							<h2 style="display: none;"><span id="my_files_gettext">&nbsp;</span></h2>
+							<div>
+								<h2 style="display: none;"><span id="my_files_gettext">&nbsp;</span></h2>
 
-							<div id="fileManagerContainer">
+								<div id="fileManagerContainer"></div>
 							</div>
-						</div>
 						</div>
 					</td>
 				</tr>
 			</table>
-
-			<div id="applicationsAppletContainer" style="display: none;">
+			<div id="fullScreenMessage" class="rounded">
+				<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td style="text-align: center;">
+							<?php if (!$big_image_map) { ?>
+							<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
+							<?php } else { ?>
+							<div class="image_ulteo_png"></div>
+							<?php } ?>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: center; vertical-align: middle; margin-top: 15px;">
+							<span style="font-size: 1.1em; font-weight: bold; color: #686868;" id="desktop_fullscreen_text1_gettext">&nbsp;</span>
+							<br /><br />
+							<span style="font-size: 1.1em; font-weight: bold; color: #686868;" id="desktop_fullscreen_text2_gettext">&nbsp;</span>
+						</td>
+					</tr>
+				</table>
 			</div>
+			<div id="desktopContainer"></div>
+			<div id="windowsContainer"></div>
 		</div>
 
-		<div id="debugContainer" class="no_debug info warning error" style="display: none;">
-		</div>
+		<div id="debugContainer" class="no_debug info warning error" style="display: none;"></div>
 
 		<div id="debugLevels" style="display: none;">
 			<span class="debug"><input type="checkbox" id="level_debug" value="10" /> Debug</span>
@@ -672,8 +545,7 @@ else
 		</div>
 
 		<div id="mainWrap">
-			<div id="headerWrap">
-			</div>
+			<div id="headerWrap"></div>
 
 			<div class="spacer"></div>
 
@@ -791,6 +663,24 @@ else
 														<select id="session_mode" <?php if (defined('OPTION_FORCE_SESSION_MODE')) echo ' disabled="disabled"';?>>
 															<option id="mode_desktop_gettext" value="desktop"<?php if ($wi_session_mode == 'desktop') echo ' selected="selected"'; ?>></option>
 															<option id="mode_portal_gettext" value="applications"<?php if ($wi_session_mode == 'applications') echo ' selected="selected"'; ?>></option>
+														</select>
+													</td>
+												</tr>
+												<tr>
+													<td style="width: 22px; text-align: right; vertical-align: middle;">
+														<?php if (!$big_image_map) { ?>
+														<img src="media/image/icons/session_mode.png" width="22" height="22" alt="" title="" />
+														<?php } else { ?>
+														<div class="image_session_mode_png"></div>
+														<?php } ?>
+													</td>
+													<td style="text-align: left; vertical-align: middle;">
+														<strong><span id="rdp_mode_gettext">Type&nbsp;</span></strong>
+													</td>
+													<td style="text-align: right; vertical-align: middle;">
+														<select id="rdp_mode">
+															<option id="rdp_mode_java" value="java"<?php if ($wi_session_type == 'java') echo ' selected="selected"'; ?>>Java</option>
+															<option id="rdp_mode_html5" value="html5"<?php if ($wi_session_type == 'html5') echo ' selected="selected"'; ?>>HTML5</option>
 														</select>
 													</td>
 												</tr>
@@ -912,8 +802,7 @@ else
 
 			<div class="spacer"></div>
 
-			<div id="footerWrap">
-			</div>
+			<div id="footerWrap"></div>
 		</div>
 	</body>
 </html>

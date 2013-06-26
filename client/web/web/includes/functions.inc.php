@@ -198,6 +198,7 @@ function get_available_translations($lang) {
 		'system_compatibility_error_5'	=>	_('You <strong>cannot</strong> have access to this service.'),
 
 		'loading_ovd'					=>	_('Loading Open Virtual Desktop'),
+		'unloading_ovd'					=>  _('Disconnecting Open Virtual Desktop'),
 		'welcome'						=>	_('Welcome!'),
 		'suspend'						=>	_('Suspend'),
 		'logout'						=>	_('Logout'),
@@ -205,7 +206,7 @@ function get_available_translations($lang) {
 		'desktop_fullscreen_text1'		=>	_('The Ulteo OVD session runs in a separated window'),
 		'desktop_fullscreen_text2'		=>	str_replace(
 									array('[A]', '[/A]'),
-									array('<a href="javascript:;" onclick="$(\'ulteoapplet\').switchBackFullscreenWindow(); return false;">', '</a>'),
+									array('<a href="javascript:;">', '</a>'),
 									_('Click [A]here[/A] to switch back to your session')
 								),
 
