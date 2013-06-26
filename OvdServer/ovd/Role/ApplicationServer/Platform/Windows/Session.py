@@ -364,7 +364,7 @@ class Session(AbstractSession):
 			Logger.warn("Unable to reset ActiveSetup")
 			Logger.debug("Unable to reset ActiveSetup: "+str(err))
 		
-		if self.profile is not None and self.profile.mountPoint is not None:
+		if self.profile is not None:
 			self.profile.overrideRegistry(hiveName, self.user.name)
 		
 		self.domain.doCustomizeRegistry(hiveName)
