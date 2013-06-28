@@ -22,9 +22,9 @@
 #include <stdarg.h>
 
 #include "seamlessChannel.h"
-#include "vchannel.h"
-#include "windowUtil.h"
-#include "internalWindow.h"
+#include <vchannel/vchannel.h>
+#include <common/windowUtil.h>
+#include <common/internalWindow.h>
 #include "seamlessWindow.h"
 #include "seamlessWindowHistory.h"
 

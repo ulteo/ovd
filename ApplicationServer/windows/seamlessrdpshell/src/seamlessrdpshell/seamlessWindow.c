@@ -21,7 +21,7 @@
 #include "seamlessWindow.h"
 #include "seamlessWindowHistory.h"
 #include "seamlessChannel.h"
-#include "windowUtil.h"
+#include <common/windowUtil.h>
 
 #include <stdio.h>
 #include <stdlib.h>

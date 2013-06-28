@@ -44,8 +44,8 @@
 #include <windows.h>
 
 #include "hookdll.h"
-#include "../windowUtil.h"
-#include "../internalWindow.h"
+#include <common/windowUtil.h>
+#include <common/internalWindow.h>
 
 #define DLL_EXPORT __declspec(dllexport)
 
