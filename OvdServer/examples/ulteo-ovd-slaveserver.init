@@ -1,11 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
-# Copyright (C) 2008-2011 Ulteo SAS
+# Copyright (C) 2008-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Gauvain POCENTEK <gauvain@ulteo.com> 2008
 # Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
 # Author Laurent CLOUET <laurent@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -82,7 +83,7 @@ do_stop () {
 	fi
 
 	local pid=$(pidofproc -p $PIDFILE)
-	if [ $? -ne 0 ]; then
+	if [ $? -ne 0 -o "0$pid" == "0" ]; then
 		log_warning_msg "not running"
 		rm -f $PIDFILE
 
