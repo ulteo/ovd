@@ -9,7 +9,7 @@ Package: ulteo-ovd-web-client
 Architecture: all
 Depends: debconf, ulteo-ovd-applets, ulteo-ovd-l10n,
  php5, php5-curl, php5-gd, php-gettext, php-pear
-Recommends: ulteo-ovd-web-client-ajaxplorer
+Recommends: ulteo-ovd-web-client-ajaxplorer, ulteo-ovd-guacamole
 Description: Ulteo Open Virtual Desktop - web client
  This is a web based client for Ulteo OVD.
 
