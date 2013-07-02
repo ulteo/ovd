@@ -136,7 +136,7 @@ function checkExternalSession(active_callback, inactive_callback) {
 	parameters["local_integration"] = window.local_integration;
 
 	if(parameters["session_manager"] == "127.0.0.1") {
-		parameters["session_manager"] = location.hostname;
+		parameters["session_manager"] = location.host;
 	}
 
 	if(session_token != '') {
