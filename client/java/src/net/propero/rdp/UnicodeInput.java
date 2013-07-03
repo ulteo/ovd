@@ -89,7 +89,7 @@ public class UnicodeInput extends Input {
      * Add all relevant input listeners to the canvas
     */
 	protected void setInputListeners() {
-		this.mouseAdapter = new RdesktopMouseAdapter();
+		this.mouseAdapter = new UnicodeRdesktopMouseAdapter();
 		this.canvas.addMouseListener(this.mouseAdapter);
 		if (! OSTools.isMac() || MouseInfo.getNumberOfButtons() > 3) {
 			this.opt.isMouseWheelEnabled = true;
@@ -377,4 +377,15 @@ public class UnicodeInput extends Input {
 	  }
 	}
 
+	
+	class UnicodeRdesktopMouseAdapter extends RdesktopMouseAdapter {
+		public void mousePressed(MouseEvent e) {
+			if (shiftDown) {
+				sendScancode(getTime(), RDP_KEYPRESS, KBD_SHIFT_KEY);
+				shiftServerDown = true;
+			}
+			
+			super.mousePressed(e);
+		}
+	}
 }
