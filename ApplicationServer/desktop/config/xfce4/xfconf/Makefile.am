@@ -1,8 +1,6 @@
-#!/bin/sh -e
-
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2013 Ulteo SAS
 # http://www.ulteo.com
-# Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,16 +16,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-# get version
-if [ -n "$OVD_VERSION" ]; then
-    version="$OVD_VERSION"
-else
-    version=$(cat VERSION | head -n 1)~dev
-fi
+xfce4xfconf_DATA = xfwm4.xml
+xfce4xfconfdir = $(sysconfdir)/xdg/xfce4/xfconf/xfce-perchannel-xml
 
-sed -e "s/@VERSION@/${version}/g" < configure.ac.in > configure.ac
-
-xdt-autogen $@
-
-# hack for certain intltoolize version that doesn't create these files
-touch intltool-extract.in intltool-merge.in intltool-update.in
+EXTRA_DIST = \
+	$(xfce4xfconf_DATA)
