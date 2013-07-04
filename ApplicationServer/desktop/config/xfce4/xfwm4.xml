@@ -14,8 +14,8 @@
 	<option name="Xfwm/SnapToBorder" type="int" value="1"/>
 	<option name="Xfwm/SnapToWindows" type="int" value="0"/>
 	<option name="Xfwm/SnapWidth" type="int" value="10"/>
-	<option name="Xfwm/ThemeName" type="string" value="Mythbuntu"/>
-	<option name="Xfwm/TitleAlign" type="string" value="center"/>
+	<option name="Xfwm/ThemeName" type="string" value="Ulteo"/>
+	<option name="Xfwm/TitleAlign" type="string" value="left"/>
 	<option name="Xfwm/TitleFont" type="string" value="Sans Bold 9"/>
 	<option name="Xfwm/WrapResistance" type="int" value="10"/>
 	<option name="Xfwm/WrapWindows" type="int" value="1"/>

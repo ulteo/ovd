@@ -10,6 +10,6 @@
     <property name="show_popup_shadow" type="bool" value="true" />
     <property name="use_compositing" type="bool" value="false" />
     <property name="workspace_count" type="int" value="1" />
-    <property name="theme" type="string" value="Mythbuntu" />
+    <property name="theme" type="string" value="Ulteo" />
   </property>
 </channel>

@@ -62,6 +62,7 @@ AC_CONFIG_FILES([Makefile
                  config/thunar/Makefile
                  config/xfce4/Makefile
                  config/xfce4/xfconf/Makefile
+                 xfwm4/Makefile
                  restricted-menu/Makefile
                  xfsm-compat/Makefile
                  po/Makefile.in
