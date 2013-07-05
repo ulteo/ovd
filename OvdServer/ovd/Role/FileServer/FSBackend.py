@@ -108,22 +108,23 @@ class FSBackend:
 			return False
 		
 		for p in self.path:
+			path = self.path[p]
 			try:
-				os.makedirs(p)
+				os.makedirs(path)
 			except OSError, err:
 				if err[0] is not errno.EEXIST:
-					Logger.error("Failed to create spool directory: %s %s"%(p, str(err)))
+					Logger.error("Failed to create spool directory: %s %s"%(path, str(err)))
 					return False
 			
 			try:
-				os.lchown(p, Config.uid, Config.gid)
+				os.lchown(path, Config.uid, Config.gid)
 			except OSError, err:
-				Logger.warn("Unable to change file owner for '%s'"%(p))
+				Logger.warn("Unable to change file owner for '%s'"%(path))
                                 Logger.debug("lchown returned %s"%(err))
 				return False
 
-			if not os.path.exists(p):
-				Logger.error("Spool directory %s do not exist"%(p))
+			if not os.path.exists(path):
+				Logger.error("Spool directory %s do not exist"%(path))
 				return False
 		
 		cmd = "RegularUnionFS \"%s\" \"%s\" -o user=%s -o fsconfig=%s"%(self.path["spool.real"], self.path["spool"], Config.user, Config.FSBackendConf)
