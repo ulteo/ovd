@@ -43,12 +43,12 @@ class FSBackend:
 				f = open(self.pidFile, "r")
 				pidStr = f.readline()
 				if len(pidStr) == 0:
-					Logger.error("Invalid FSBackend pid"%(pidStr))
+					Logger.error("Invalid FSBackend pid: %s"%(pidStr))
 					return False
 				
 				self.pid = int(pidStr)
 			except Exception, e:
-				Logger.error("Failed to get FSBackend pid"%(str(e)))
+				Logger.error("Failed to get FSBackend pid: %s"%(str(e)))
 				return False
 		
 		try:
