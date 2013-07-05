@@ -171,9 +171,9 @@ fi
 Summary: Ulteo Open Virtual Desktop - file server role for slave server
 Group: Applications/System
 %if %{defined rhel}
-Requires: python, python-inotify, ulteo-ovd-slaveserver, samba, httpd
+Requires: python, python-inotify, ulteo-ovd-slaveserver, samba, httpd, ulteo-ovd-regular-union-fs
 %else
-Requires: python, python-inotify, ulteo-ovd-slaveserver, samba, apache2
+Requires: python, python-inotify, ulteo-ovd-slaveserver, samba, apache2, ulteo-ovd-regular-union-fs
 # There is no python-inotify available package (or equivalent) on OpenSuse. Will become useless with RUFS
 %endif
 
