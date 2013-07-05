@@ -208,7 +208,7 @@ static bool configuration_parseUnion(Ini* ini, Configuration* conf, const char* 
 			else
 				str_ncpy(unionObject->path, expandedPath, sizeof(unionObject->path));
 
-			fs_mkdir(unionObject->path);
+			fs_mkdirs(unionObject->path);
 			if (!fs_exist(unionObject->path)) {
 				logWarn("%s do not exist and can not be created", unionObject->path);
 				return false;
