@@ -82,6 +82,11 @@ class Session(AbstractSession):
 		f.close()
 		
 		if self.profile is not None:
+			profile_cache_dir = os.path.join(self.SPOOL_USER, "profiles", self.user.name)
+			if not os.path.isdir(profile_cache_dir):
+				os.makedirs(profile_cache_dir)
+			os.chown(profile_cache_dir, pwd.getpwnam(name)[2], -1)
+			
 			if self.profile.mount() == False:
 				if self.parameters.has_key("need_valid_profile") and self.parameters["need_valid_profile"] == "1":
 					return False
