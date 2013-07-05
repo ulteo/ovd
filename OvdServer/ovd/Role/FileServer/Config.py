@@ -61,7 +61,7 @@ class Config:
 		
 		cls.uid = infos[2]
 		cls.gid = infos[3]
-		cls.spool = infos[5]
+		cls.spool = infos.pw_dir
 		cls.backendSpool = cls.spool+".real"
 		
 		if not os.path.isdir(cls.spool):
