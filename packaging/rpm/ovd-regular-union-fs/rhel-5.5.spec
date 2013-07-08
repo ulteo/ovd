@@ -50,7 +50,7 @@ union filesystem
 
 %prep -n ulteo-ovd-regular-union-fs
 %setup -q
-cmake .
+cmake . -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr" -DCMAKE_C_FLAGS="-g -O2 -Wall" -DCMAKE_CXX_FLAGS="-g -O2 -Wall" -DCMAKE_SKIP_RPATH=ON -DCMAKE_VERBOSE_MAKEFILE=ON
 
 %install -n ulteo-ovd-regular-union-fs
 make install DESTDIR=$RPM_BUILD_ROOT

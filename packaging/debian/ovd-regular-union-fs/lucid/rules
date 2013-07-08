@@ -1,4 +1,12 @@
 #!/usr/bin/make -f
 
 include /usr/share/cdbs/1/rules/debhelper.mk
-include /usr/share/cdbs/1/class/cmake.mk
+
+pre-build::
+	cmake . -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr" -DCMAKE_C_FLAGS="-g -O2 -Wall" -DCMAKE_CXX_FLAGS="-g -O2 -Wall" -DCMAKE_SKIP_RPATH=ON -DCMAKE_VERBOSE_MAKEFILE=ON
+
+build:
+	make
+
+install/ulteo-ovd-regular-union-fs::
+	make install DESTDIR=$(DEB_DESTDIR)
