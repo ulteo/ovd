@@ -30,7 +30,7 @@ Distribution: RHEL 6.0
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Buildrequires: python, pysvn
+Buildrequires: python
 Buildroot: %{buildroot}
 
 %description
