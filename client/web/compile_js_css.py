@@ -27,16 +27,24 @@ from subprocess import Popen, PIPE
 import sys
 import Image
 
+
+def run(*args):
+	proc = Popen(args, stdout=PIPE)
+	output = proc.stdout.read()
+	proc.wait()
+	return output
+
+
 def jscompress(outfile, filename):
 	print " * compress %s" % filename
-	output = Popen(("yui-compressor", "--type", "js", "--charset", "utf-8", filename), stdout=PIPE).stdout.read()
+	output = run("yui-compressor", "--type", "js", "--charset", "utf-8", filename)
 	outfile.write("\n\n/* %s */\n" % filename)
 	outfile.write(output)
 
 
 def csscompress(outfile, filename):
 	print " * compress %s" % filename
-	output = Popen(("yui-compressor", "--type", "css", "--charset", "utf-8", filename), stdout=PIPE).stdout.read()
+	output = run("yui-compressor", "--type", "css", "--charset", "utf-8", filename)
 	outfile.write("\n\n/* %s */\n" % filename)
 	outfile.write(output)
 
@@ -104,7 +112,7 @@ def compile_images():
 	imagemap = make_image_map(images)
 	uovd_png = tempfile.NamedTemporaryFile()
 	imagemap.save(uovd_png, 'PNG')
-	print Popen(("pngcrush", uovd_png.name, os.path.join("web", "media", "image", "uovd.png")), stdout=PIPE).stdout.read()
+	print run("pngcrush", uovd_png.name, os.path.join("web", "media", "image", "uovd.png"))
 	
 	cssimages = os.path.join("web", "media", "style", "images.css")
 	cssimagesfile = open(cssimages, "w")
