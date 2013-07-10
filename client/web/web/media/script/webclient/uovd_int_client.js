@@ -434,6 +434,8 @@ function initialize_framework() {
 	framework.listeners.desktop_container = new DesktopContainer(framework.session_management, "#desktopContainer");
 	/* applications launcher */
 	framework.listeners.seamless_launcher = new SeamlessLauncher(framework.session_management, "#appsContainer");
+	/* news display */
+	framework.listeners.news = new News(framework.session_management, "#newsList");
 	/* webapps launcher */
 	framework.listeners.web_apps_popup_launcher = new WebAppsPopupLauncher(framework.session_management);
 	/* window manager */

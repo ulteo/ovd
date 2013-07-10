@@ -2,6 +2,7 @@ scripts_DATA = ajaxplorer.js \
                application_counter.js  \
                desktop_container.js  \
                external.js  \
+               news.js  \
                progress_bar.js \
                seamless_launcher.js  \
                seamless_window_manager.js  \
