@@ -229,6 +229,7 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/webclient/webapps_popup_launcher.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/ui.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/news.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/logger.js" charset="utf-8"></script>
 <?php } ?>
 		<script type="text/javascript" src="media/script/webclient/uovd_int_client.js" charset="utf-8"></script>
 

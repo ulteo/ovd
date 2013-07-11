@@ -428,6 +428,8 @@ function initialize_framework() {
 		generateEnd_internal(params["message"]);
 	});
 
+	/* logger */
+	framework.listeners.logger = new Logger(framework.session_management, "body");
 	/* handle progress bar */
 	framework.listeners.progress_bar = new ProgressBar(framework.session_management, '#progressBarContent');
 	/* handle client insertion */
