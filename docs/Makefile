@@ -31,7 +31,8 @@ SRC=\
 	Support_Ubuntu_Hardy.xml \
 	Support_Ubuntu_Precise.xml \
 	Support_Ubuntu_Lucid.xml \
-	WebClient.xml
+	WebClient.xml \
+	WsdlApi.xml
 
 DIRS=xsl2 \
      media \
@@ -71,10 +72,14 @@ Support_openSUSE_11.3.html Support_openSUSE_11.3.pdf: Support_SLES_11.SP1.xml
 %.xml.out: %.xml
 	xmllint --nonet --xinclude $< | ./transform >$@
 
+WsdlApi.xml: xsl2/wsdl.xsl api.wsdl
+	xsltproc $^ > $@
+
 clean:
 	$(RM) $(DST)
 	$(RM) $(PDF)
-	$(RM) *~
+	$(RM) *~ *.xml.out
+	$(RM) WsdlApi.xml
 
 install: all
 	install -d 		$(DIST)
