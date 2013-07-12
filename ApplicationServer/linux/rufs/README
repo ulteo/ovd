@@ -1,0 +1,12 @@
+= Compilation =
+ * mkdir build
+ * cd build
+ * cmake ..
+ * make install
+
+=> compilation result is stored in the directory install/bin
+
+= Run =
+ * add a configuration file (conf/default.conf) in /etc/ulteo/
+ * launch the file install/bin/RegularUnionFS
+

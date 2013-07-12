@@ -19,7 +19,8 @@ Architecture: all
 Depends: ${python:Depends},
  ulteo-ovd-slaveserver, ulteo-ovd-shells, ulteo-ovd-externalapps-client,
  xrdp-python, xrdp-seamrdp, xrdp-rdpdr, xrdp-printer, xrdp-sound, xrdp-clipboard,
- desktop-file-utils, imagemagick, passwd, adduser, rsync, smbfs, python-xdg
+ desktop-file-utils, imagemagick, passwd, adduser, rsync, smbfs, python-xdg,
+ ulteo-ovd-regular-union-fs
 Recommends: tmpreaper
 XB-Python-Version: ${python:Versions}
 Description: Ulteo Open Virtual Desktop - application server role for slave server
@@ -28,7 +29,7 @@ Description: Ulteo Open Virtual Desktop - application server role for slave serv
 Package: ulteo-ovd-slaveserver-role-fs
 Architecture: all
 Depends: ${python:Depends}, python-pyinotify (>= 0.7.1), debconf,
- ulteo-ovd-slaveserver, samba, apache2
+ ulteo-ovd-slaveserver, samba, apache2, ulteo-ovd-regular-union-fs
 XB-Python-Version: ${python:Versions}
 Description: Ulteo Open Virtual Desktop - file server role for slave server
  File server role for the Ulteo OVD slave server

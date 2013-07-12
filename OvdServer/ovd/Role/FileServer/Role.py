@@ -31,7 +31,8 @@ from ovd.Platform.System import System
 from ovd.Role.Role import Role as AbstractRole
 
 from Config import Config
-from DirectoryWatcher import DirectoryWatcher
+from HTGroup import HTGroup
+from FSBackend import FSBackend
 from HTGroup import HTGroup
 from Share import Share
 from User import User
@@ -40,13 +41,19 @@ from User import User
 class Role(AbstractRole):
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
+		self.loop = False
 		self.shares = {}
-		self.wm = None
+		self.FSBackend = FSBackend()
 	
 	def init(self):
 		Logger.info("FileServer init")
 		
 		if not Config.init_role():
+			return False
+
+		if not self.FSBackend.start():
+			Logger.error("FileServer: failed to initialize FSBackend")
+			self.FSBackend.stop()
 			return False
 		
 		if not self.cleanup_samba():
@@ -61,8 +68,6 @@ class Role(AbstractRole):
 			Logger.error("FileServer: unable to cleanup users")
 			return False
 		
-		self.wm = DirectoryWatcher()
-		
 		self.shares = self.get_existing_shares()
 		
 		return True
@@ -74,17 +79,22 @@ class Role(AbstractRole):
 	
 	
 	def stop(self):
-		self.wm.stop()
+		self.loop = False
 	
 	
 	def finalize(self):
 		self.cleanup_samba()
 		self.purgeGroup()
+		self.FSBackend.stop()
 	
 	
 	def run(self):
 		self.status = Role.STATUS_RUNNING
-		self.wm.start()
+		self.loop = True
+		
+		while self.loop:
+			time.sleep(5)
+		
 		self.status = Role.STATUS_STOP
 	
 	
@@ -108,13 +118,13 @@ class Role(AbstractRole):
 	
 	
 	def cleanup_repository(self):
-		cmd = 'chown -R %s:%s "%s"'%(Config.uid, Config.gid, Config.spool)
+		cmd = 'chown -R %s:%s "%s"'%(Config.uid, Config.gid, Config.backendSpool)
 		p = System.execute(cmd)
 		if p.returncode is not 0:
 			Logger.debug("FS: following command '%s' returned %d => %s"%(cmd, p.returncode, p.stdout.read()))
 			return False
 		
-		cmd = 'chmod -R u=rwX,g=rwX,o-rwx "%s"'%(Config.spool)
+		cmd = 'chmod -R u=rwX,g=rwX,o-rwx "%s"'%(Config.backendSpool)
 		p = System.execute(cmd)
 		if p.returncode is not 0:
 			Logger.debug("FS: following command '%s' returned %d => %s"%(cmd, p.returncode, p.stdout.read()))
@@ -151,10 +161,10 @@ class Role(AbstractRole):
 	def get_existing_shares():
 		shares = {}
 		
-		for f in glob.glob(Config.spool+"/*"):
+		for f in glob.glob(Config.backendSpool+"/*"):
 			name = os.path.basename(f)
 			
-			share = Share(name, Config.spool)
+			share = Share(name, Config.backendSpool, Config.spool)
 			shares[name] = share
 			
 		return shares
@@ -190,7 +200,7 @@ class Role(AbstractRole):
 	
 	
 	def get_disk_size_infos(self):
-		stats = os.statvfs(Config.spool)
+		stats = os.statvfs(Config.backendSpool)
 		free_bytes = stats[statvfs.F_BSIZE] * stats[statvfs.F_BFREE] 
 		#avail_bytes = stats[statvfs.F_BSIZE] * stats[statvfs.F_BAVAIL]
 		total_bytes = stats[statvfs.F_BSIZE] * stats[statvfs.F_BLOCKS]
@@ -213,7 +223,11 @@ class Role(AbstractRole):
 			shareNode.setAttribute("id", share_id)
 			shareNode.setAttribute("status", str(share.status()))
 			
-			for user in share.users:
+			for user in share.ro_users:
+				userNode = doc.createElement("user")
+				userNode.setAttribute("login", user)
+				shareNode.appendChild(userNode)
+			for user in share.rw_users:
 				userNode = doc.createElement("user")
 				userNode.setAttribute("login", user)
 				shareNode.appendChild(userNode)

@@ -1460,7 +1460,11 @@ if ($_REQUEST['name'] == 'SharedFolder_ACL') {
 		redirect();
 
 	if ($_REQUEST['action'] == 'add' && isset($_REQUEST['sharedfolder_id']) && isset($_REQUEST['usergroup_id'])) {
-		action_add_sharedfolder_acl($_REQUEST['sharedfolder_id'], $_REQUEST['usergroup_id']);
+		if (! array_key_exists('mode', $_REQUEST) or ! in_array($_REQUEST['mode'], array('ro', 'rw'))) {
+			redirect();
+		}
+		
+		action_add_sharedfolder_acl($_REQUEST['sharedfolder_id'], $_REQUEST['usergroup_id'], $_REQUEST['mode']);
 		redirect();
 	}
 	elseif ($_REQUEST['action'] == 'del' && isset($_REQUEST['sharedfolder_id']) && isset($_REQUEST['usergroup_id'])) {
@@ -1951,14 +1955,14 @@ function action_add_sharedfolder() {
 	return true;
 }
 
-function action_add_sharedfolder_acl($sharedfolder_id_, $usergroup_id_) {
+function action_add_sharedfolder_acl($sharedfolder_id_, $usergroup_id_, $mode_) {
 	$sharedfolder = $_SESSION['service']->shared_folder_info($sharedfolder_id_);
 	if (! $sharedfolder) {
 		popup_error(_('Unable to create this shared folder access'));
 		return false;
 	}
 	
-	$ret = $_SESSION['service']->shared_folder_add_group($usergroup_id_, $sharedfolder_id_);
+	$ret = $_SESSION['service']->shared_folder_add_group($usergroup_id_, $sharedfolder_id_, $mode_);
 	if ($ret === true) {
 		popup_info(_('Shared folder successfully modified'));
 		return true;

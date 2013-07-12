@@ -4,7 +4,7 @@
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012, 2013
-# Author David LECHEVALIER <david@ulteo.com> 2012
+# Author David LECHEVALIER <david@ulteo.com> 2012, 2013
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -26,6 +26,7 @@ import locale
 import os
 import pwd
 import stat
+import time
 import urllib
 import urlparse
 
@@ -124,6 +125,38 @@ class Profile(AbstractProfile):
 			else:
 				self.profileMounted = True
 		
+		if self.profile is not None and self.profileMounted:
+			for d in [self.DesktopDir, self.DocumentsDir]:
+				src = os.path.join(self.profile_mount_point, "Data", d)
+				
+				while not System.mount_point_exist(src):
+					try:
+						os.makedirs(src)
+					except OSError, err:
+						if self.isNetworkError(err[0]):
+							Logger.warn("Unable to access profile: %s"%(str(err)))
+							return False
+						
+						Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
+						continue
+				
+			if not System.mount_point_exist(self.homeDir):
+				os.makedirs(self.homeDir)
+			
+			cmd = "RegularUnionFS \"%s\" \"%s\" -o user=%s"%(self.profile_mount_point, self.homeDir, self.session.user.name)
+			cmd = self.transformToLocaleEncoding(cmd)
+			Logger.debug("Profile bind dir command '%s'"%(cmd))
+			p = System.execute(cmd)
+			if p.returncode != 0:
+				Logger.error("Profile bind dir failed")
+				Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
+				return False
+			else:
+				self.folderRedirection.append(self.homeDir)
+			
+			
+			self.copySessionStart()
+		
 		for sharedFolder in self.sharedFolders:
 			dest = os.path.join(self.MOUNT_POINT, self.session.id, "sharedFolder_"+ hashlib.md5(sharedFolder["uri"]).hexdigest())
 			i = 0
@@ -153,7 +186,7 @@ class Profile(AbstractProfile):
 				
 				dst = os.path.join(home, sharedFolder["name"])
 				i = 0
-				while System.mount_point_exist(dst):
+				while System.mount_point_exist(dst) and self.ismount(dst):
 					dst = os.path.join(home, sharedFolder["name"]+"_%d"%(i))
 					i += 1
 				
@@ -173,38 +206,6 @@ class Profile(AbstractProfile):
 					self.folderRedirection.append(dst)
 					self.addGTKBookmark(dst)
 		
-		if self.profile is not None and self.profileMounted:
-			for d in [self.DesktopDir, self.DocumentsDir]:
-				src = os.path.join(self.profile_mount_point, d)
-				dst = os.path.join(self.homeDir, d)
-				
-				while not System.mount_point_exist(src):
-					try:
-						os.makedirs(src)
-					except OSError, err:
-						if self.isNetworkError(err[0]):
-							Logger.warn("Unable to access profile: %s"%(str(err)))
-							return False
-						
-						Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
-						continue
-				
-				if not System.mount_point_exist(dst):
-					os.makedirs(dst)
-				
-				cmd = "mount -o bind \"%s\" \"%s\""%(src, dst)
-				cmd = self.transformToLocaleEncoding(cmd)
-				Logger.debug("Profile bind dir command '%s'"%(cmd))
-				p = System.execute(cmd)
-				if p.returncode != 0:
-					Logger.error("Profile bind dir failed")
-					Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
-					return False
-				else:
-					self.folderRedirection.append(dst)
-			
-			
-			self.copySessionStart()
 		
 		return True
 	
@@ -259,7 +260,14 @@ class Profile(AbstractProfile):
 			cmd = "umount %s"%(self.profile_mount_point)
 			cmd = self.transformToLocaleEncoding(cmd)
 			Logger.debug("Profile umount command: '%s'"%(cmd))
-			p = System.execute(cmd)
+			
+			for _ in xrange(5):
+				p = System.execute(cmd)
+				if p.returncode != 0:
+					time.sleep(1)
+				else:
+					break
+			
 			if p.returncode != 0:
 				Logger.error("Profile umount failed")
 				Logger.debug("Profile umount failed (status: %d) => %s"%(p.returncode, p.stdout.read()))
@@ -283,15 +291,6 @@ class Profile(AbstractProfile):
 		if not System.mount_point_exist(d):
 			return
 		
-		# Copy conf files
-		cmd = self.getRsyncMethod(d, self.homeDir, True)
-		Logger.debug("rsync cmd '%s'"%(cmd))
-		
-		p = System.execute(cmd)
-		if p.returncode is not 0:
-			Logger.error("Unable to copy conf from profile")
-			Logger.debug("Unable to copy conf from profile, cmd '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read()))
-	
 	
 	def copySessionStop(self):
 		if self.homeDir is None or not os.path.isdir(self.homeDir):
@@ -309,15 +308,6 @@ class Profile(AbstractProfile):
 				Logger.debug2("conf.Linux mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
 				continue
 		
-		# Copy conf files
-		cmd = self.getRsyncMethod(self.homeDir, d)
-		Logger.debug("rsync cmd '%s'"%(cmd))
-		
-		p = System.execute(cmd)
-		if p.returncode is not 0:
-			Logger.error("Unable to copy conf to profile")
-			Logger.debug("Unable to copy conf to profile, cmd '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read()))
-	
 	
 	@staticmethod
 	def getRsyncMethod(src, dst, owner=False):

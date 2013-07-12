@@ -32,17 +32,21 @@ class Config:
 	uid = None
 	gid = None
 	spool = None
+	backendSpool = None
 	
 	dav_user = "www-data"
 	dav_uid = None
 	dav_passwd_file = "/var/spool/ulteo/ovd/fs.dav.passwd"
 	dav_group_file = "/var/spool/ulteo/ovd/fs.dav.group"
+	FSBackendConf = "/etc/ulteo/rufs/FSBackend.conf"
 	
 	@classmethod
 	def init(cls, infos):
 		if infos.has_key("user"):
 			cls.user = infos["user"]
 		
+		if infos.has_key("FSBackendConf"):
+			cls.FSBackendConf = info["FSBackendConf"]
 		
 		return True
 	
@@ -57,7 +61,8 @@ class Config:
 		
 		cls.uid = infos[2]
 		cls.gid = infos[3]
-		cls.spool = infos[5]
+		cls.spool = infos.pw_dir
+		cls.backendSpool = cls.spool+".real"
 		
 		if not os.path.isdir(cls.spool):
 			Logger.info("FileServer Config failed: no such directory '%s'"%(cls.spool))

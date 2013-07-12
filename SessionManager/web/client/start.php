@@ -102,6 +102,7 @@ $rdp_bpp = $default_settings['rdp_bpp'];
 $enhance_user_experience = $default_settings['enhance_user_experience'];
 $persistent = $default_settings['persistent'];
 $need_valid_profile = ($default_settings['start_without_profile'] == 0);
+$default_quota = $default_settings['quota'];
 $need_all_sharedFolders = ($default_settings['start_without_all_sharedfolders'] == 0);
 
 if ($default_settings['use_known_drives'] == 1)
@@ -448,37 +449,24 @@ if (! isset($old_session_id)) {
 		$mounts = array();
 
 		foreach ($servers[Server::SERVER_ROLE_FS] as $server_id => $netfolders) {
-			foreach ($netfolders as $netfolder) {
-				if (! array_key_exists($server_id, $mounts))
-					$mounts[$server_id] = array();
-
-				$mounts[$server_id][] = $netfolder['dir'];
-			}
-		}
-
-		foreach ($mounts as $k => $v) {
-			$server = Abstract_Server::load($k);
+			$server = Abstract_Server::load($server_id);
 			if (! $server)
 				continue;
-
-			if (! $server->orderFSAccessEnable($user_login_fs, $user_password_fs, $v)) {
-				$error = false;
-				if ($need_valid_profile && $need_all_shareFolder) {
-					$error = true;
-				}
-				else if ($need_valid_profile != $need_all_shareFolder) {
-					foreach ($servers[Server::SERVER_ROLE_FS][$k] as $netfolder) {
-						if (! in_array($netfolder['dir'], $v))
-							continue;
-						
-						if (($netfolder['type'] == 'sharedfolder' && $need_all_sharedFolders) || ($netfolder['type'] == 'profile' && $need_valid_profile)) {
-							$error = true;
-							break;
-						}
-					}
-				}
+			
+			foreach ($netfolders as $netfolder) {
+				$quota = 0;
+				$mode = 'rw';
+				if ($netfolder['type'] == 'profile')
+					$quota = $default_quota;
 				
-				if ($error == true) {
+				if ($netfolder['type'] == 'sharedfolder')
+					$mode = $netfolder['mode'];
+				
+				$mounts[$netfolder['dir']] = array('quota' => $quota, 'mode' => $mode);
+			}
+			
+			if (! $server->orderFSAccessEnable($user_login_fs, $user_password_fs, $mounts)) {
+				if (($need_valid_profile && $netfolder['type'] == 'profile') || ($need_all_sharedFolders && $netfolder['type'] == 'sharedfolder')) {
 					Logger::error('main', '(client/start) Cannot enable FS access for User \''.$user->getAttribute('login').'\' on Server \''.$server->fqdn.'\', aborting');
 					$session->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
 					throw_response(INTERNAL_ERROR);
@@ -579,8 +567,10 @@ if (! isset($old_session_id)) {
 					$netfolder_node = $dom->createElement($netfolder['type']);
 					$netfolder_node->setAttribute('rid', $netfolder['rid']);
 					$netfolder_node->setAttribute('uri', $uri);
-					if ($netfolder['type'] == 'sharedfolder')
+					if ($netfolder['type'] == 'sharedfolder') {
 						$netfolder_node->setAttribute('name', $netfolder['name']);
+						$netfolder_node->setAttribute('mode', $netfolder['mode']);
+					}
 					
 					$netfolder_node->setAttribute('login', $user_login_fs);
 					$netfolder_node->setAttribute('password', $user_password_fs);

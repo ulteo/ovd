@@ -481,6 +481,18 @@ abstract class SessionManagement extends Module {
 									}
 								}
 
+								$modeUsed = '';
+								$modes = $sharedfolder->getPublishedUserGroups();
+								$userGroups = array_keys($this->user->usersGroups());
+								
+								foreach($modes as $mode => $group) {
+									if (! in_array(key($group), $userGroups))
+										continue;
+									
+									if (($modeUsed === '') || !($modeUsed === 'rw'))
+										$modeUsed = $mode;
+								}
+
 								if (! array_key_exists($fileserver->id, $this->servers[Server::SERVER_ROLE_FS]))
 									$this->servers[Server::SERVER_ROLE_FS][$fileserver->id] = array();
 
@@ -488,7 +500,8 @@ abstract class SessionManagement extends Module {
 									'type'		=>	'sharedfolder',
 									'rid'		=>	$this->find_uniq_rid('sharedfolder', true),
 									'dir'		=>	$sharedfolder->id,
-									'name'		=>	$sharedfolder->name
+									'name'		=>	$sharedfolder->name,
+									'mode'		=>	$modeUsed
 								);
 							}
 						}

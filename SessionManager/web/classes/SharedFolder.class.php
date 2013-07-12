@@ -32,29 +32,29 @@ class SharedFolder extends NetworkFolder {
 		return get_class($this).'(id \''.$this->id.'\' name \''.$this->name.'\' server \''.$this->server.'\' status \''.$this->status.'\' )';
 	}
 	
-	public function getUserGroups() {
-		$liaisons = Abstract_Liaison::load('UserGroupSharedFolder', NULL, $this->id);
-		if (is_array($liaisons) == false) {
-			Logger::error('main', 'SharedFolder::getUserGroups() load of liaison failed');
-			return false;
-		}
+	public function getPublishedUserGroups() {
+		$sharedfolderdb = SharedFolderDB::getInstance();
+		$usergroups_id = $sharedfolderdb->get_usersgroups($this);
 		
 		$usergroupDB = UserGroupDB::getInstance();
 		
 		$usergroups = array();
-		foreach ($liaisons as $liaison) {
-			$usergroup = $usergroupDB->import($liaison->element);
+		foreach ($usergroups_id as $usergroup_id => $mode) {
+			$usergroup = $usergroupDB->import($usergroup_id);
 			if (! is_object($usergroup))
 				continue;
 			
-			$usergroups[$usergroup->getUniqueID()] = $usergroup;
+			if (! array_key_exists($mode, $usergroups))
+				$usergroups[$mode] = array();
+			
+			$usergroups[$mode][$usergroup->getUniqueID()] = $usergroup;
 		}
 		return $usergroups;
 	}
 	
-	public function addUserGroup($usergroup_) {
+	public function addUserGroup($usergroup_, $mode_) {
 		$sharedfolderdb = SharedFolderDB::getInstance();
-		return $sharedfolderdb->addUserGroupToSharedFolder($usergroup_, $this);
+		return $sharedfolderdb->addUserGroupToSharedFolder($usergroup_, $this, $mode_);
 	}
 	
 	public function delUserGroup($usergroup_) {

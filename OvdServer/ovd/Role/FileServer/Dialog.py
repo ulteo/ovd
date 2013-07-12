@@ -96,7 +96,7 @@ class Dialog(AbstractDialog):
 			return self.req_answer(doc)
 		
 		
-		share = Share(share_id, Config.spool)
+		share = Share(share_id, Config.backendSpool, Config.spool)
 		if self.role_instance.shares.has_key(share_id) or share.status() is not Share.STATUS_NOT_EXISTS:
 			doc = Document()
 			rootNode = doc.createElement('error')
@@ -138,7 +138,7 @@ class Dialog(AbstractDialog):
 		
 		if not self.role_instance.shares.has_key(share_id):
 			Logger.debug("Unknown share '%s'"%(share_id))
-			return self.share2xml(Share(share_id, Config.spool))
+			return self.share2xml(Share(share_id, Config.backendSpool, Config.spool))
 		
 		share = self.role_instance.shares[share_id]
 		share.delete()
@@ -182,9 +182,15 @@ class Dialog(AbstractDialog):
 			if len(user) == 0 or len(password) == 0:
 				raise Exception("empty parameters")
 			
-			shares = []
+			shares = {}
 			for node in rootNode.getElementsByTagName("share"):
-				shares.append(node.getAttribute("id"))
+				shareID = node.getAttribute("id")
+				shareQuota = node.getAttribute("quota")
+				shareMode = node.getAttribute("mode")
+				
+				shares[shareID] = {}
+				shares[shareID]["quota"] = shareQuota
+				shares[shareID]["mode"] = shareMode
 		
 		except Exception, err:
 			Logger.warn("Invalid xml input: "+str(err))
@@ -221,11 +227,11 @@ class Dialog(AbstractDialog):
 		for share_id in shares:
 			if not self.role_instance.shares.has_key(share_id):
 				somethingWrong = True
-				response = self.share2xml(Share(share_id, Config.spool))
+				response = self.share2xml(Share(share_id, Config.backendSpool, Config.spool))
 				break
 			
 			share = self.role_instance.shares[share_id]
-			if not share.add_user(user):
+			if not share.add_user(user, shares[share_id]["mode"]):
 				somethingWrong = True
 				doc = Document()
 				rootNode = doc.createElement('error')
@@ -235,8 +241,15 @@ class Dialog(AbstractDialog):
 				response = self.req_answer(doc)
 				break
 			
-			Logger.debug("FS: Add inotify watch to the directory %s"%(share.directory))
-			self.role_instance.wm.add_monitor_path(share.directory)
+			if not self.role_instance.FSBackend.update_shares(share_id, shares[share_id]["quota"], True):
+				somethingWrong = True
+				doc = Document()
+				rootNode = doc.createElement('error')
+				rootNode.setAttribute("id", "system_error")
+				rootNode.setAttribute("msg", "FSBackend failed to enable share")
+				doc.appendChild(rootNode)
+				response = self.req_answer(doc)
+				break
 		
 		if somethingWrong:
 			for share_id in shares:
@@ -288,8 +301,8 @@ class Dialog(AbstractDialog):
 				if not share.del_user(user):
 					somethingWrong = True
 				
-				Logger.debug("FS: Remove inotify from the directory %s"%(share.directory))
-				self.role_instance.wm.rm_monitor_path(share.directory)
+				if not share.isActive() and not self.role_instance.FSBackend.update_shares(share.name, 0, False):
+					somethingWrong = True
 		
 		if not u.destroy():
 			somethingWrong = True
