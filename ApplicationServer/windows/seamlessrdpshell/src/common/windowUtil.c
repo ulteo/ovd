@@ -18,9 +18,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "seamlessChannel.h"
 #include "windowUtil.h"
 
+#include <vchannel/vchannel.h>
 #include "assert.h"
 #include <CommCtrl.h>
 

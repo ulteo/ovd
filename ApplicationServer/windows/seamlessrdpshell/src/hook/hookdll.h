@@ -21,7 +21,7 @@
 #ifndef _HOOKDLL_H_
 #define _HOOKDLL_H_
 
-#include "../windowUtil.h"
+#include <common/windowUtil.h>
 
 #define HOOK_MSG_STATE			0
 #define HOOK_MSG_FOCUS			1

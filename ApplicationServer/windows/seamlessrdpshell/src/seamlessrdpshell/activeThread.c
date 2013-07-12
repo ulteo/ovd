@@ -20,10 +20,10 @@
 
 #include <windows.h>
 
-#include "internalWindow.h"
+#include <common/internalWindow.h>
 #include "seamlessWindow.h"
 #include "seamlessWindowHistory.h"
-#include "windowUtil.h"
+#include <common/windowUtil.h>
 
 static BOOL g_continue_monitoring = FALSE;
 static HANDLE g_monitoring_thread = NULL;

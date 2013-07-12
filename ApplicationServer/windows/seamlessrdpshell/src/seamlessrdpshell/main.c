@@ -49,9 +49,9 @@
 #include <wtsapi32.h>
 
 #include "activeThread.h"
-#include "HookDll/hookdll.h"
-#include "internalWindow.h"
-#include "windowUtil.h"
+#include <hook/hookdll.h>
+#include <common/internalWindow.h>
+#include <common/windowUtil.h>
 #include "seamlessChannel.h"
 #include "seamlessWindow.h"
 #include "seamlessWindowHistory.h"
