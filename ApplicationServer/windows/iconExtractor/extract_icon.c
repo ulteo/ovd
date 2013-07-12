@@ -134,6 +134,32 @@ BOOL hicon2bmpfile(LPCTSTR pszFileName, HICON ico) {
   return -1; 
 }
 
+typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
+typedef BOOL (WINAPI *LPFN_Wow64DisableWow64FsRedirection) (PVOID);
+
+LPFN_ISWOW64PROCESS fnIsWow64Process;
+
+BOOL IsWow64()
+{
+    BOOL bIsWow64 = FALSE;
+
+    //IsWow64Process is not available on all supported versions of Windows.
+    //Use GetModuleHandle to get a handle to the DLL that contains the function
+    //and GetProcAddress to get a pointer to the function if available.
+
+    fnIsWow64Process = (LPFN_ISWOW64PROCESS) GetProcAddress(
+        GetModuleHandle(TEXT("kernel32")),"IsWow64Process");
+
+    if(NULL != fnIsWow64Process)
+    {
+        if (!fnIsWow64Process(GetCurrentProcess(),&bIsWow64))
+        {
+            //handle error
+        }
+    }
+    return bIsWow64;
+}
+
 int main(int argc, char* argv[]){
   HICON ico;
   TCHAR iconPath[MAX_PATH];
@@ -144,6 +170,14 @@ int main(int argc, char* argv[]){
     printf("usage: %s exe_file[,icon_index] out_bmp_file\n", argv[0]);
     return 1;
   }
+
+    if (IsWow64() == TRUE) {
+		LPFN_Wow64DisableWow64FsRedirection func = (LPFN_Wow64DisableWow64FsRedirection) GetProcAddress(GetModuleHandle(TEXT("kernel32")),"Wow64DisableWow64FsRedirection");
+	    if(NULL != func) {
+		    DWORD s;
+			func(&s);
+		}
+    }
 
   strncpy(iconPath, argv[1], MAX_PATH);
   iconIndex = PathParseIconLocation(iconPath);
