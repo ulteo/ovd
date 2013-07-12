@@ -40,10 +40,54 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		$this->config =  $this->makeLDAPconfig();
 	}
 
+	public function import($login_){
+		Logger::debug('main','UserDB::activedirectory::import('.$login_.')');
+		
+		$atpos = strpos($login_, '@');
+		if ($atpos !== false) {
+			$login = substr($login_, 0, $atpos);
+			$domain = strtoupper(substr($login_, $atpos+1));
+		}
+		else {
+			$login = $login_;
+			$domain = null;
+		}
+		
+		$user = parent::import($login);
+		if (is_null($user)) {
+			return $user;
+		}
+		
+		if ($domain != null) {
+			$user_domain = self::suffix2domain($user->getAttribute('dn'));
+			if ($user_domain == $domain || $user_domain == $domain.'.'.strtoupper($this->config_ad['domain'])) {
+				$user->setAttribute('domain', $user_domain);
+			}
+			else if (strtolower($login_) == strtolower($user->getAttribute('principal'))) {
+				$user->setAttribute('domain', $domain);
+			}
+			else {
+				Logger::error('main','Bad domain name in given login ('.$domain.') rather than result domain for user: '.$user_domain);
+				return null;
+			}
+		}
+		
+		return $user;
+	}
+	
 	public function authenticate($user_, $password_){
 		Logger::debug('main','UserDB::activedirectory::authenticate '.$user_->getAttribute('login'));
+		
 		$conf_ldap2 = $this->config;
-		$conf_ldap2['login'] = $user_->getAttribute('login').'@'.$this->config_ad['domain'];
+		$conf_ldap2['login'] = $user_->getAttribute('login').'@';
+		
+		if ($user_->hasAttribute('domain')) {
+			$conf_ldap2['login'].= $user_->getAttribute('domain');
+		}
+		else {
+			$conf_ldap2['login'].= $this->config_ad['domain'];
+		}
+		
 		$conf_ldap2['password'] = $password_;
 		
 		$LDAP2 = new LDAP($conf_ldap2);
@@ -77,6 +121,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 					'login'	=> 'sAMAccountName',
 					'displayname'	=> 'displayName',
 					'real_login'    => 'sAMAccountName',
+					'principal' => 'userPrincipalName',
 					'countrycode' => 'c', // in ISO-3166 see http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 					'objectclass' => 'objectClass'
 		);
@@ -197,5 +242,22 @@ class UserDB_activedirectory  extends UserDB_ldap{
 			return false;
 		
 		return true;
+	}
+	
+	public static function suffix2domain($dn_, $separator='DC') {
+		$buf = explode(',', $dn_);
+		if (! count($buf))
+			return null;
+		
+		$build = array();
+		foreach($buf as $s) {
+			if (! str_startswith($s, $separator.'='))
+				continue;
+			
+			$build[] = strtoupper(substr($s, strlen($separator)+1));
+		}
+		
+		$str = implode('.', $build);
+		return $str;
 	}
 }

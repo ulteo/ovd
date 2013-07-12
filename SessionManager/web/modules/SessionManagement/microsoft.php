@@ -39,7 +39,15 @@ class SessionManagement_microsoft extends SessionManagement {
 	}
 
 	public function generateApplicationServerCredentials() {
-		$this->credentials[Server::SERVER_ROLE_APS]['login'] = $_POST['login'].'@'.$this->userDB->config_ad['domain'];
+		$aps_login = $this->user->getAttribute('login').'@';
+		if ($this->user->hasAttribute('domain')) {
+			$aps_login.= $this->user->getAttribute('domain');
+		}
+		else {
+			$aps_login.= $this->userDB->config_ad['domain'];
+		}
+		
+		$this->credentials[Server::SERVER_ROLE_APS]['login'] = $aps_login;
 		$this->credentials[Server::SERVER_ROLE_APS]['password'] = $_POST['password'];
 
 		return true;
