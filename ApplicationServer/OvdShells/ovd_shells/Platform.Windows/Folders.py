@@ -3,6 +3,7 @@
 # Copyright (C) 2010-2012 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
+# Author David LECHEVALIER <david@ulteo.com> 2013
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
@@ -71,6 +72,12 @@ class Folders(AbstractFolders):
 					
 					print "Unable to mount share with default URI: ",err
 					print "Try with this command: ",cmd
+				
+				try:
+					Platform.launch("VFS.exe -p U:\\", False)
+				except:
+					print "Failed to start VFS program"
+		
 		
 		for name in self.shares.keys():
 			if name == "profile":

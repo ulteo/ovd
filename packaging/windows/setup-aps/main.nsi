@@ -251,6 +251,8 @@ Section "un.pre" UnPostCmd
   Detailprint "Removing Configuration file"
   RMDir /r "$APPDATA\ulteo\ovd\spool"
   Delete "$APPDATA\ulteo\ovd\slaveserver.conf"
+  Delete "$APPDATA\ulteo\ovd\profiles_filter.conf"
+  Delete "$APPDATA\ulteo\profile\default.conf"
   RMDir  "$APPDATA\ulteo\ovd\log"
   RMDir  "$APPDATA\ulteo\ovd"
   RMDir  "$APPDATA\ulteo"
@@ -260,6 +262,13 @@ SectionEnd
 
 Section "post" PostCmd
   SetOutPath "$APPDATA\ulteo\ovd"
+
+  DetailPrint "Installing rsync filter file"
+  File "conf\profiles_filter.conf"
+
+  DetailPrint "Installing profile configuration file"
+  SetOutPath "$APPDATA\ulteo\profile"
+  File "conf\default.conf"
 
   DetailPrint "Generating Config file"
   WriteRegStr HKLM "${CONFIG_REG_PATH}" "session_manager" "$sm_address"

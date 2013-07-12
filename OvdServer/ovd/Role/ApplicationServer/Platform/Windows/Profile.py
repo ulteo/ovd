@@ -4,7 +4,7 @@
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012, 2013
-# Author David LECHEVALIER <david@ulteo.com> 2010, 2012
+# Author David LECHEVALIER <david@ulteo.com> 2010, 2012, 2013
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
@@ -23,6 +23,7 @@
 
 import os
 import random
+import time
 import urlparse
 import win32api
 import win32con
@@ -33,16 +34,39 @@ import win32wnet
 
 from ovd.Logger import Logger
 from ovd.Platform.System import System
+from ovd.Role.ApplicationServer.Config import Config
 from ovd.Role.ApplicationServer.Profile import Profile as AbstractProfile
 
 import Reg
 import Util
+from GPO import GPO
+
 
 class Profile(AbstractProfile):
 	registry_copy_blacklist = [r"Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"]
+	vfsCommand = u"VFS.exe"
+	vfsParameter = u"/s U:"
 	
 	def init(self):
 		self.mountPoint = None
+	
+	@staticmethod
+	def cleanup():
+		gpo = GPO()
+		if not gpo.parse():
+			Logger.error("Failed to parse GPO")
+			return False
+		
+		absCommand = Util.get_from_PATH(Profile.vfsCommand)
+		if absCommand is None:
+			Logger.warn("VFS.exe is not installed")
+			return False
+		
+		if not gpo.contain(GPO.LOGOFF, absCommand, Profile.vfsParameter):
+			gpo.remove(GPO.LOGOFF, absCommand, Profile.vfsParameter)
+                        return gpo.save()
+		
+		return True
 	
 	
 	def hasProfile(self):
@@ -88,6 +112,22 @@ class Profile(AbstractProfile):
 			self.mountPoint = None
 			return False
 		
+		gpo = GPO()
+		if gpo.parse() is False:
+			Logger.error("Failed to parse GPO file")
+			return False
+		
+		
+		absCommand = Util.get_from_PATH(Profile.vfsCommand)
+		if absCommand is None:
+			Logger.warn("VFS.exe is not installed")
+			return False
+		
+		if not gpo.contain(GPO.LOGOFF, absCommand, Profile.vfsParameter):
+			gpo.add(GPO.LOGOFF, absCommand, Profile.vfsParameter)
+			return gpo.save()
+		
+		
 		return True
 	
 	
@@ -124,12 +164,19 @@ class Profile(AbstractProfile):
 	
 	def copySessionStart(self):
 		for f in [self.DesktopDir, self.DocumentsDir]:
-			d = os.path.join(self.mountPoint, f)
+			d = os.path.join(self.mountPoint, "Data", f)
 			
+			trial = 5
 			while not os.path.exists(d):
 				try:
 					os.makedirs(d)
 				except OSError, err:
+					trial -= 1
+					if trial == 0:
+						Logger.error("Failed to create directory %s: %s"%(d, str(err)))
+						return False
+					
+					time.sleep(random.randint(1,10)/100.0)
 					Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
 					continue
 		
@@ -177,29 +224,6 @@ class Profile(AbstractProfile):
 				
 				win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName_src)
 				win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName_dst)
-			
-			
-			# Copy AppData
-			src = os.path.join(d, "AppData")
-			if os.path.exists(src):
-				dst = self.session.appDataDir
-				
-				try:
-					Util.copyDirOverride(src, dst, ["Protect", "Start Menu", "Crypto", "ulteo", "Identities"])
-				except Exception, err:
-					Logger.error("Unable to copy appData from profile")
-					Logger.debug("Unable to copy appData from profile: %s"%(str(err)))
-			
-			# Copy LocalAppData
-			src = os.path.join(d, "LocalAppData")
-			if os.path.exists(src):
-				dst = self.session.localAppDataDir
-				
-				try:
-					Util.copyDirOverride(src, dst, ["Temp", "Cache", "Caches", "Temporary Internet Files", "History", "Credentials"])
-				except Exception, err:
-					Logger.error("Unable to copy LocalAppData from profile")
-					Logger.debug("Unable to copy LocalAppData from profile: %s"%(str(err)))
 	
 	
 	def copySessionStop(self):
@@ -207,10 +231,17 @@ class Profile(AbstractProfile):
 		
 		
 		d = os.path.join(self.mountPoint, "conf.Windows.%s"%System.getWindowsVersionName())
+		trial = 5
 		while not os.path.exists(d):
 			try:
 				os.makedirs(d)
 			except OSError, err:
+				trial -= 1
+				if trial == 0:
+					Logger.error("Failed to create directory %s: %s"%(d, str(err)))
+					return False
+				
+				time.sleep(random.randint(1,10)/100.0)	
 				Logger.debug2("conf.Windows mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
 				continue
 		
@@ -225,24 +256,6 @@ class Profile(AbstractProfile):
 				Logger.error("Unable to copy registry to profile")
 		else:
 			Logger.warn("Weird: no NTUSER.DAT in user home dir ...")
-		
-		# Copy AppData
-		src = self.session.appDataDir
-		dst = os.path.join(d, "AppData")
-		try:
-			Util.copyDirOverride(src, dst, ["Protect", "Start Menu", "Crypto", "ulteo", "Identities"])
-		except Exception, err:
-			Logger.error("Unable to copy appData to profile "+src+" "+dst)
-			Logger.debug("Unable to copy appData to profile: %s"%(str(err)))
-		
-		# Copy localAppData
-		src = self.session.localAppDataDir
-		dst = os.path.join(d, "LocalAppData")
-		try:
-			Util.copyDirOverride(src, dst, ["Temp", "Cache", "Temporary Internet Files", "History", "Credentials"])
-		except Exception, err:
-			Logger.error("Unable to copy localAppData to profile from "+src+" to "+dst)
-			Logger.debug("Unable to copy localAppData to profile: %s"%(str(err)))	
 	
 	
 	def overrideRegistry(self, hiveName, username):
@@ -313,15 +326,6 @@ class Profile(AbstractProfile):
 			
 			shareNum+= 1
 		
-		if self.profile is not None:
-			# Redirect the Shell Folders to the remote profile
-			path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
-			
-			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
-			win32api.RegSetValueEx(key, "Desktop",  0, win32con.REG_SZ, r"U:\%s"%(self.DesktopDir))
-			win32api.RegSetValueEx(key, "Personal", 0, win32con.REG_SZ, r"U:\%s"%(self.DocumentsDir))
-			win32api.RegCloseKey(key)
-	
 	
 	def getFreeLetter(self):
 		# ToDo: manage a global LOCK system to avoid two threads get the same result

@@ -5,7 +5,7 @@
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011, 2013
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
-# Author David LECHEVALIER <david@ulteo.com> 2012
+# Author David LECHEVALIER <david@ulteo.com> 2012, 2013
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -48,6 +48,12 @@ class System(AbstractSystem):
 	def get_default_config_dir():
 		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
 		return os.path.join(d, "ulteo", "ovd")
+	
+	
+	@staticmethod
+	def get_default_sys_dir():
+		d = shell.SHGetFolderPath(0, shellcon.CSIDL_SYSTEM, 0, 0)
+		return d
 	
 	
 	@staticmethod
