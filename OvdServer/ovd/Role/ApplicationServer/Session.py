@@ -194,6 +194,9 @@ class Session:
 	
 	
 	def cleanupShortcut(self, path):
+		if self.mode != Session.MODE_DESKTOP:
+			return
+		
 		shortcut_ext = ApplicationsDetection.shortcut_ext
 		
 		if not os.path.exists(path):
