@@ -899,6 +899,13 @@ public class Rdp {
 
         int sec_flags = this.opt.encryption ? (Secure.SEC_LOGON_INFO | Secure.SEC_ENCRYPT)
                 : Secure.SEC_LOGON_INFO;
+        
+        if (domain.isEmpty() && username.contains("@") ) {
+            String[] test = username.split("@");
+            username = test[0];
+            domain = test[1];
+        }
+        
         int domainlen = 2 * domain.length();
         int userlen = 2 * username.length();
         int passlen = 2 * password.length();
