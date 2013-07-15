@@ -88,7 +88,7 @@ uovd.provider.Java = function(node) {
 			clearTimeout(error_timeout);
 			self.applet_registered = function() {
 				self.initialisation_state = 2;
-				try{ onsuccess(); } catch(e) {}
+				onsuccess();
 			}
 			self.main_applet[0].register(self);
 		};
@@ -98,7 +98,7 @@ uovd.provider.Java = function(node) {
 			self.main_applet.remove();
 			self.main_applet = null;
 			self.initialisation_state = 3;
-			try { onfailure(); } catch(e) {}
+			onfailure();
 		}, 60000);
 
 		retry_timeout = setTimeout(function() {
