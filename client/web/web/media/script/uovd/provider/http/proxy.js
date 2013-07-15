@@ -19,8 +19,8 @@ uovd.provider.http.Proxy.prototype.sessionStart_implementation = function(callba
 		type: "POST",
 		dataType: "xml",
 		headers: {
-			"X-Ovd-SessionManager" : sessionmanager,
-			"X-Ovd-Service" : "start"
+			"x-ovd-sessionmanager" : sessionmanager,
+			"x-ovd-service" : "start"
 		},
 		contentType: "text/xml",
 		data: this.build_sessionStart(parameters, "txt"),
@@ -40,8 +40,8 @@ uovd.provider.http.Proxy.prototype.sessionStatus_implementation = function(callb
 		type: "GET",
 		dataType: "xml",
 		headers: {
-			"X-Ovd-SessionManager" : sessionmanager,
-			"X-Ovd-Service" : "session_status"
+			"x-ovd-sessionmanager" : sessionmanager,
+			"x-ovd-service" : "session_status"
 		},
 		success: function(xml) {
 			callback(xml);
@@ -61,8 +61,8 @@ uovd.provider.http.Proxy.prototype.sessionEnd_implementation = function(callback
 		type: "POST",
 		dataType: "xml",
 		headers: {
-			"X-Ovd-SessionManager" : sessionmanager,
-			"X-Ovd-Service" : "logout"
+			"x-ovd-sessionmanager" : sessionmanager,
+			"x-ovd-service" : "logout"
 		},
 		contentType: "text/xml",
 		data: this.build_sessionEnd(parameters, "txt"),
@@ -84,8 +84,8 @@ uovd.provider.http.Proxy.prototype.sessionSuspend_implementation = function(call
 		type: "POST",
 		dataType: "xml",
 		headers: {
-			"X-Ovd-SessionManager" : sessionmanager,
-			"X-Ovd-Service" : "logout"
+			"x-ovd-sessionmanager" : sessionmanager,
+			"x-ovd-service" : "logout"
 		},
 		contentType: "text/xml",
 		data: this.build_sessionSuspend(parameters, "txt"),

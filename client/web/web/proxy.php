@@ -30,10 +30,10 @@ function new_session_manager($sm_host) {
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 $ALLOWED_SERVICES = array('start', 'session_status', 'logout');
-$SERVICE_HEADER = 'X-Ovd-Service';
+$SERVICE_HEADER = 'x-ovd-service';
 $service = '';
 
-$SM_HEADER = 'X-Ovd-SessionManager';
+$SM_HEADER = 'x-ovd-sessionmanager';
 $sm_host = '';
 $sessionmanager = NULL;
 $sessionmanager_url = '';
