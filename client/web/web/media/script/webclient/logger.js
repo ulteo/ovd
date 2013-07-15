@@ -48,7 +48,7 @@ Logger.prototype.handleEvents = function(type, source, params) {
 
 			/* Control bar */
 			var controlbar = jQuery(document.createElement("div"));
-			controlbar.width(parseInt(window.innerWidth)/3 - 20);
+			controlbar.width(parseInt(jQuery(window).innerWidth())/3 - 20);
 			controlbar.height("10px");
 			controlbar.css({
 				'padding'     : '10px',
@@ -82,8 +82,8 @@ Logger.prototype.handleEvents = function(type, source, params) {
 			});
 
 			this.content = jQuery(document.createElement("div"));
-			this.content.width(parseInt(window.innerWidth)/3 - 20);
-			this.content.height(parseInt(window.innerHeight)/2 -50);
+			this.content.width(parseInt(jQuery(window).innerWidth())/3 - 20);
+			this.content.height(parseInt(jQuery(window).innerHeight())/2 -50);
 			this.content.css({
 				'padding'     : '10px',
 				'color'       : 'black',

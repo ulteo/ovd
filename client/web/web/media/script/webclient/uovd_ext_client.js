@@ -222,8 +222,8 @@ function initialize_settings() {
 	settings.language              = defaults.language;
 	settings.keymap                = defaults.keymap;
 	settings.timezone              = getTimezoneName();
-	settings.width                 = window.innerWidth;
-	settings.height                = window.innerHeight;
+	settings.width                 = jQuery(window).innerWidth();
+	settings.height                = jQuery(window).innerHeight();
 	settings.fullscreen            = false;
 	settings.debug                 = true;
 	settings.use_local_credentials = defaults.force_use_local_credentials;

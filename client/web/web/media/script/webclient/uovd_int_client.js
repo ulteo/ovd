@@ -198,8 +198,8 @@ function initialize_defaults() {
 	defaults.language              = jQuery('#session_language').val();
 	defaults.keymap                = jQuery('#session_keymap').val();
 	defaults.timezone              = getTimezoneName();
-	defaults.width                 = window.innerWidth;
-	defaults.height                = window.innerHeight;
+	defaults.width                 = jQuery(window).innerWidth();
+	defaults.height                = jQuery(window).innerHeight();
 	defaults.fullscreen            = jQuery("#desktop_fullscreen_true").prop('checked');
 	defaults.debug                 = jQuery("#debug_true").prop('checked');
 	defaults.use_local_credentials = jQuery("#use_local_credentials_true").prop('checked');
@@ -226,8 +226,8 @@ function initialize_settings() {
 	settings.language              = jQuery('#session_language').val();
 	settings.keymap                = jQuery('#session_keymap').val();
 	settings.timezone              = getTimezoneName();
-	settings.width                 = window.innerWidth;
-	settings.height                = window.innerHeight;
+	settings.width                 = jQuery(window).innerWidth();
+	settings.height                = jQuery(window).innerHeight();
 	settings.fullscreen            = jQuery("#desktop_fullscreen_true").prop('checked');
 	settings.debug                 = jQuery("#debug_true").prop('checked');
 	settings.use_local_credentials = jQuery("#use_local_credentials_true").prop('checked');
