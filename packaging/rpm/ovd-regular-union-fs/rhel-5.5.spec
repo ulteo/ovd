@@ -1,6 +1,6 @@
 # Copyright (C) 2013 Ulteo SAS
 # http://www.ulteo.com
-# Author David PḦAM-VAN <d.pham-van@ulteo.com>
+# Author David PHAM-VAN <d.pham-van@ulteo.com>, 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
