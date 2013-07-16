@@ -83,6 +83,7 @@ abstract class ReportMode {
 	abstract public static function transform_date($date_);
 	abstract public static function get_name();
 	abstract public static function get_value();
+	abstract public static function get_pretty_date($t_);
 }
 
 class ReportMode_day extends ReportMode {
@@ -111,6 +112,23 @@ class ReportMode_day extends ReportMode {
 	public static function get_value() {
 		return 'day';
 	}
+
+	public static function get_pretty_date($t_) {
+		$format = '%Y-%m-%d';
+	
+		$t = strptime ($t_, $format);
+		if ($t === false) {
+			return $t_;
+		}
+		
+		$format = '%Y-%m-%d';
+		
+		return strftime($format, mktime(
+			$t['tm_hour'], 0, 0,
+			$t['tm_mon']-1,
+			$t['tm_mday'],
+			$t['tm_year']+1900));
+	}
 }
 
 class ReportMode_hour extends ReportMode {
@@ -126,6 +144,26 @@ class ReportMode_hour extends ReportMode {
 		return '-24 hours';
 	}
 
+	public static function get_pretty_date($t_) {
+		$format = '%Y-%m-%d %H';
+	
+		$t = strptime ($t_, $format);
+		if ($t === false) {
+			return $t_;
+		}
+		
+		$format = '%H:%M';
+		if ($t['tm_hour'] == 0) {
+			$format = '%Y-%m-%d';
+		}
+		
+		return strftime($format, mktime(
+			$t['tm_hour'], 0, 0,
+			$t['tm_mon']-1,
+			$t['tm_mday'],
+			$t['tm_year']+1900));
+	}
+	
 	public static function transform_date($date_) {
 		return mktime(date('H', $date_), 0, 0,
 			      date('m', $date_),
@@ -169,6 +207,26 @@ class ReportMode_minute extends ReportMode {
 
 	public static function get_value() {
 		return 'minute';
+	}
+
+	public static function get_pretty_date($t_) {
+		$format = '%Y-%m-%d %H:%M';
+		
+		$t = strptime ($t_, $format);
+		if ($t === false) {
+			return $t_;
+		}
+		
+		$format = '%M';
+		if ($t['tm_min'] == 0) {
+			$format = '%H:%M';
+		}
+		
+		return strftime($format, mktime(
+			$t['tm_hour'], $t['tm_min'], 0,
+			$t['tm_mon']-1,
+			$t['tm_mday'],
+			$t['tm_year']+1900));
 	}
 }
 
@@ -311,7 +369,11 @@ function show_page($mode_) {
 	$step = max(round(count($result)/MAX_STEPS), 1);
 	$step_i = 0;
 	foreach ($result as $day => $num) {
-		$text = ($step_i%$step == 0?substr($day, -2):'');
+		$text = '';
+		if ($step_i%$step == 0) {
+			$text = $mode_->get_pretty_date($day);
+		}
+		
 		$step_i++;
 		
 		$dataSet->addPoint(new Point($text, $num));
