@@ -357,6 +357,7 @@ class Preferences_admin {
 			'general_session_settings_defaults_max_sessions_number' => _('Maximum number of running sessions'),
 			'general_session_settings_defaults_launch_without_apps' => _('User can launch a session even if some of his published applications are not available'),
 			'general_session_settings_defaults_allow_shell' => _('User can use a console in the session'),
+			'general_session_settings_defaults_bypass_servers_restrictions' => _('Bypass server restrictions'),
 			'general_session_settings_defaults_use_known_drives' => _('Use known drives'),
 			'general_session_settings_defaults_multimedia' => _('Multimedia'),
 			'general_session_settings_defaults_redirect_client_drives' => _('Redirect client drives'),
@@ -481,6 +482,7 @@ class Preferences_admin {
 			'general_remote_desktop_settings_authorize_no_desktop' => _('Useful for web integration starting a maximised application as only windows into the remote screen'),
 			
 			'general_session_settings_defaults_max_sessions_number' => _('The maximum number of sessions that can be started on the farm (0 is unlimited).'),
+			'general_session_settings_defaults_bypass_servers_restrictions' => _('If there is no server available for a session according to server restrictions and this setting is enabled, the system will try to use servers without taking care of server restrictions (so it become as a priority system)'),
 			'general_session_settings_defaults_use_known_drives' => _('Provide file access optimization when using common network drives between client & Application Servers (open the file on server side instead of sending it from client using RDP disk redirection)'),
 			'general_session_settings_defaults_redirect_client_drives' => _("- None: none of the client drives will be used in the OVD session<br />- Partial: Desktop and My Documents user directories will be available in the OVD session<br />- Full: all client drives (including Desktop and My Documents) will be available in the OVD session"),
 			'general_session_settings_defaults_rdp_bpp' => _('RDP color depth'),

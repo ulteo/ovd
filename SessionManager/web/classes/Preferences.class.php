@@ -449,7 +449,11 @@ class Preferences {
 		$c = new ConfigElement_select('use_known_drives', 0);
 		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
-
+		
+		$c = new ConfigElement_select('bypass_servers_restrictions', 1);
+		$c->setContentAvailable(array(0, 1));
+		$this->add($c,'general','session_settings_defaults');
+		
 		$c = new ConfigElement_select('multimedia', 1);
 		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');

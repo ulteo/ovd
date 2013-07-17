@@ -334,9 +334,14 @@ abstract class SessionManagement extends Module {
 
 			switch ($role) {
 				case Server::SERVER_ROLE_APS:
-					$servers = $this->chooseApplicationServers();
+					$default_settings = $this->user->getSessionSettings('session_settings_defaults');
+					$servers = $this->chooseApplicationServers(false);
+					if (! is_array($servers) && $default_settings['bypass_servers_restrictions'] == 1) {
+						$servers = $this->chooseApplicationServers(true);
+					}
+					
 					if (! is_array($servers)) {
-						break;
+						return false;
 					}
 
 					foreach ($servers as $server) {
@@ -558,7 +563,7 @@ abstract class SessionManagement extends Module {
 		return false;
 	}
 
-	public function getDesktopServer() {
+	public function getDesktopServer($bypass_server_restrictions_ = true) {
 		if (! $this->user) {
 			Logger::error('main', 'SessionManagement::getDesktopServer() - User is not authenticated, aborting');
 			return false;
@@ -618,12 +623,37 @@ abstract class SessionManagement extends Module {
 		
 		$servers_id = array_keys($servers);
 		$server_id = $servers_id[0];
-		$this->desktop_server = $servers[$server_id];
+		$desktop_server = $servers[$server_id];
+		if ($bypass_server_restrictions_ !== true) {
+			$desktop_server = null;
+			$restricted_servers = $this->user->get_published_servers_for_user();
+			
+			if (count($restricted_servers) == 0) {
+				// if there is no published server for this user, we reverse the process
+				// we delete from the available list all the published servers
+				$restricted_servers = $this->user->get_all_published_servers();
+			}
+			
+			foreach($servers as $server) {
+				$server_id = $server->getAttribute('id');
+				if (in_array($server_id, $restricted_servers)) {
+					$desktop_server = $server;
+					break;
+				}
+			}
+			
+			if ($desktop_server == null) {
+				Logger::error('main', 'No desktop server available for user '.$this->user->getAttribute('login').": servers group restriction");
+				return false;
+			}
+		}
+		
+		$this->desktop_server = $desktop_server;
 		
 		return true;
 	}
 
-	public function chooseApplicationServers() {
+	public function chooseApplicationServers($bypass_server_restrictions_ = true) {
 		$have_webapp = false;
 		if (! $this->user) {
 			Logger::error('main', 'SessionManagement::chooseApplicationServers - User is not authenticated, aborting');
@@ -659,6 +689,20 @@ abstract class SessionManagement extends Module {
 		
 		$servers = array();
 		$servers_available = $this->getAvailableApplicationServers();
+		
+		if ($bypass_server_restrictions_ !== true) {
+			$restricted_servers = $this->user->get_published_servers_for_user();
+			if (empty($restricted_servers)) {
+				$restricted_servers = $this->user->get_all_published_servers();
+			}
+			
+			foreach($servers_available as $server_id => $server) {
+				if (! in_array($server->getAttribute('id'), $restricted_servers)) {
+					unset($servers_available[$server_id]);
+				}
+			}
+		}
+		
 		$servers_ordered = Server::fire_load_balancing($servers_available, Server::SERVER_ROLE_APS, array('user' => $this->user));
 		
 		if ($this->desktop_server !== false) {

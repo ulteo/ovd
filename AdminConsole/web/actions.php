@@ -1538,6 +1538,128 @@ if ($_REQUEST['name'] == 'Profile') {
 	}
 }
 
+if ($_REQUEST['name'] == 'ServersGroup') {
+	if (! checkAuthorization('manageServers'))
+		redirect();
+	
+	if ($_REQUEST['action'] == 'add') {
+		if ( isset($_REQUEST['name_group']) && isset($_REQUEST['description_group'])) {
+			$name = $_REQUEST['name_group'];
+			$description = $_REQUEST['description_group'];
+			
+			$res = $_SESSION['service']->servers_group_add($name, $description);
+			if (!$res) {
+				popup_error(sprintf(_("Unable to create server group '%s'"), $name));
+				redirect();
+			}
+			
+			popup_info(sprintf(_("Server group '%s' successfully added"), $name));
+			redirect('serversgroup.php?action=manage&id='.$res);
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'del') {
+		if (isset($_REQUEST['checked_groups']) and is_array($_REQUEST['checked_groups'])) {
+			$ids = $_REQUEST['checked_groups'];
+			foreach ($ids as $id) {
+				$res = $_SESSION['service']->servers_group_remove($id);
+				if (! $res) {
+					popup_error(sprintf(_("Unable to remove group '%s'"), $id));
+					continue;
+				}
+				
+				popup_info(sprintf(_("Server Group '%s' successfully deleted"), $id));
+			}
+			
+			redirect('serversgroup.php');
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'modify') {
+		if (isset($_REQUEST['id']) && (isset($_REQUEST['name_group']) || isset($_REQUEST['description_group']) || isset($_REQUEST['published_group']))) {
+			$id = $_REQUEST['id'];
+			$name = null;
+			$description = null;
+			$published = null;
+			
+			if (isset($_REQUEST['name_group'])) {
+				$name = $_REQUEST['name_group'];
+			}
+			
+			if (isset($_REQUEST['description_group'])) {
+				$description = $_REQUEST['description_group'];
+			}
+			
+			if (isset($_REQUEST['published_group'])) {
+				$published = (bool)$_REQUEST['published_group'];
+			}
+			
+			$res = $_SESSION['service']->servers_group_modify($id, $name, $description, $published);
+			if (! $res) {
+				popup_error(sprintf(_("Unable to modify application group '%s'"), $id));
+				redirect();
+			}
+			
+			popup_info(sprintf(_("Application Group '%s' successfully modified"), $name));
+			redirect('serversgroup.php?action=manage&id='.$id);
+		}
+	}
+}
+
+if ($_REQUEST['name'] == 'Server_ServersGroup') {
+	if (! checkAuthorization('manageServers')) {
+		redirect();
+	}
+	
+	if (! isset($_REQUEST['server']) && isset($_REQUEST['group'])) {
+		redirect();
+	}
+	
+	if ($_REQUEST['action'] == 'add') {
+		$ret = $_SESSION['service']->servers_group_add_server($_REQUEST['server'], $_REQUEST['group']);
+		if ($ret === true) {
+			popup_info(sprintf(_('Server Group \'%s\' successfully modified'), $_REQUEST['group']));
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'del') {
+		$ret = $_SESSION['service']->servers_group_remove_server($_REQUEST['server'], $_REQUEST['group']);
+		if ($ret === true) {
+			popup_info(sprintf(_('Server Group \'%s\' successfully modified'), $_REQUEST['group']));
+		}
+	}
+}
+
+if ($_REQUEST['name'] == 'UsersGroupServersGroup') {
+	if (! checkAuthorization('managePublications')) {
+		redirect();
+	}
+	
+	if (!isset($_REQUEST['servers_group']) or !isset($_REQUEST['users_group'])) {
+		redirect();
+	}
+	
+	if ($_REQUEST['action'] == 'add') {
+		$ret = $_SESSION['service']->servers_group_publication_add($_REQUEST['users_group'], $_REQUEST['servers_group']);
+		if ($ret !== true) {
+			popup_error(_('Unable to save the publication'));
+			redirect();
+		}
+		
+		popup_info(_('Publication successfully added'));
+	}
+
+	if ($_REQUEST['action'] == 'del') {
+		$ret = $_SESSION['service']->servers_group_publication_remove($_REQUEST['users_group'], $_REQUEST['servers_group']);
+		if ($ret !== true) {
+			popup_error(_('Unable to delete the publication'));
+			redirect();
+		}
+		
+		popup_info(_('Publication successfully deleted'));
+	}
+}
+
 
 if ($_REQUEST['name'] == 'NetworkFolder') {
 	if (! checkAuthorization('manageServers'))

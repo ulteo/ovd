@@ -56,6 +56,7 @@ function init_db($prefs_) {
 
 	// Init of Abstract
 	Abstract_Server::init($prefs_);
+	Abstract_ServersGroup::init($prefs_);
 	Abstract_Session::init($prefs_);
 	Abstract_Token::init($prefs_);
 	Abstract_News::init($prefs_);

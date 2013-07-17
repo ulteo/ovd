@@ -111,6 +111,11 @@
 		<part name="role" type="xsd:string"/>
 	</message>
 	
+	<message name="ServerToGroupMessage">
+		<part name="server" type="urn:string"/>
+		<part name="group" type="urn:string"/>
+	</message>
+	
 	<message name="Application">
 		<part name="parameters" type="urn:application"/>
 	</message>
@@ -471,6 +476,51 @@
 		
 		<operation name="server_remove_static_application">
 			<input message="urn:ApplicationToServerMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="servers_groups_list">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="servers_group_info">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="servers_group_add">
+			<input message="urn:applications_group_addMessage"/>
+			<output message="urn:String"/>
+		</operation>
+		
+		<operation name="servers_group_remove">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="servers_group_modify">
+			<input message="urn:applications_group_modifyMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="servers_group_add_server">
+			<input message="urn:ServerToGroupMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="servers_group_remove_server">
+			<input message="urn:ServerToGroupMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="servers_group_publication_add">
+			<input message="urn:ServerToGroupMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="servers_group_publication_remove">
+			<input message="urn:ServerToGroupMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		
@@ -1316,6 +1366,96 @@
 		
 		<operation name="server_remove_static_application">
 			<soap:operation soapAction="urn:OvdAdmin#server_remove_static_application"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_groups_list">
+			<soap:operation soapAction="urn:OvdAdmin#servers_groups_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_group_info">
+			<soap:operation soapAction="urn:OvdAdmin#servers_group_info"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_group_add">
+			<soap:operation soapAction="urn:OvdAdmin#servers_group_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_group_remove">
+			<soap:operation soapAction="urn:OvdAdmin#servers_group_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_group_modify">
+			<soap:operation soapAction="urn:OvdAdmin#servers_group_modify"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_group_add_server">
+			<soap:operation soapAction="urn:OvdAdmin#servers_group_add_server"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_group_remove_server">
+			<soap:operation soapAction="urn:OvdAdmin#servers_group_remove_server"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_group_publication_add">
+			<soap:operation soapAction="urn:OvdAdmin#servers_group_publication_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_group_publication_remove">
+			<soap:operation soapAction="urn:OvdAdmin#servers_group_publication_remove"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>

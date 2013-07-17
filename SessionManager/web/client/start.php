@@ -125,6 +125,7 @@ $authorize_no_desktop = ($remote_desktop_settings['authorize_no_desktop'] == 1);
 
 $remote_applications_settings = $user->getSessionSettings('remote_applications_settings');
 $remote_applications_enabled = (($remote_applications_settings['enabled'] == 1)?true:false);
+$bypass_server_restrictions = ($default_settings['bypass_servers_restrictions'] == 1);
 
 if (isset($sessionManagement->mode)) {
 	if (! in_array('session_mode', $advanced_settings) && $sessionManagement->mode != $session_mode)
@@ -333,7 +334,7 @@ if (isset($old_session_id)) {
 
 	// Desktop server choosing if session mode desktop
 	if ($session_mode == Session::MODE_DESKTOP) {
-		$ret = $sessionManagement->getDesktopServer();
+		$ret = $sessionManagement->getDesktopServer($bypass_server_restrictions);
 		if ($ret !== true) {
 			Logger::error('main', '(client/start) No desktop server found for User "'.$user->getAttribute('login').'", aborting');
 			throw_response(SERVICE_NOT_AVAILABLE);

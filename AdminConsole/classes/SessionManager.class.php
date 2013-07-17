@@ -545,6 +545,41 @@ class SessionManager {
 		return $r;
 	}
 	
+	public function servers_groups_list() {
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('servers_groups_list', $args);
+		if ($res === null) {
+			return null;
+		}
+		
+		$groups = array();
+		foreach($res as $item) {
+			$g = new ApplicationsGroup($item);
+			if (! $g->is_valid()) {
+				continue;
+			}
+			
+			$groups[$g->id]= $g;
+		}
+		
+		return $groups;
+	}
+	
+	public function servers_group_info() {
+		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
+		$res = $this->__call('servers_group_info', $args);
+		if ($res === null) {
+			return null;
+		}
+		
+		$g = new ApplicationsGroup($res);
+		if (! $g->is_valid()) {
+			continue;
+		}
+		
+		return $g;
+	}
+
 	public function servers_reports_list($start_, $stop_) {
 		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
 		$res = $this->__call('servers_reports_list', $args);

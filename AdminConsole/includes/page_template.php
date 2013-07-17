@@ -84,6 +84,12 @@ if (isAuthorized('viewServers')) {
 			  'name' => _('Unregistered Servers'),
 			  'page' => 'servers.php?view=unregistered',
 			  'parent' => array('servers'));
+
+	$menu['servers_groups'] =
+		array('id' => 'servers_groups',
+			  'name' => _('Server Groups'),
+			  'page' => 'serversgroup.php',
+			  'parent' => array('servers'));
 }
 
 if (isAuthorized('viewSharedFolders')) {

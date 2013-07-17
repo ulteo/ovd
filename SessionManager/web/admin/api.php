@@ -706,6 +706,17 @@ class OvdAdminSoap {
 		
 		$s['max_sessions_default'] = $server->getDefaultMaxSessions();
 		
+		$servers_groups_list = Abstract_ServersGroup::getList(true);
+		$s['servers_groups'] = array();
+		$liaisons = Abstract_Liaison::load('ServersGroup', $server->id, NULL);
+		foreach ($servers_groups_list as $servers_group_id => $servers_group) {
+			if (! array_key_exists($servers_group_id, $liaisons)) {
+				continue;
+			}
+			
+			$s['servers_groups'][$servers_group->id] = $servers_group->name;
+		}
+		
 		$sessions = Abstract_Session::getByServer($server->id);
 		$s['sessions_number'] = count($sessions);
 		
@@ -1186,6 +1197,219 @@ class OvdAdminSoap {
 		));
 		return true;
 	}
+	
+	
+	// Servers group begin
+	
+	public function servers_groups_list() {
+		$this->check_authorized('viewServers');
+		
+		$groups = Abstract_ServersGroup::getList();
+		
+		$ret = array();
+		foreach($groups as $item) {
+			$g = array(
+				'id' => $item->id,
+				'name' => $item->name,
+				'description' => $item->description,
+				'published' => $item->published,
+			);
+			
+			$ret[$g['id']] = $g;
+		}
+		
+		return $ret;
+	}
+	
+	public function servers_group_info($id_) {
+		$this->check_authorized('viewServers');
+		
+		$group = Abstract_ServersGroup::load($id_);
+		if (! is_object($group)) {
+			return null;
+		}
+		
+		$g = array(
+			'id' => $group->id,
+			'name' => $group->name,
+			'description' => $group->description,
+			'published' => $group->published,
+		);
+		
+		$servers = Abstract_Server::load_registered(true);
+		$liaisons = Abstract_Liaison::load('ServersGroup', NULL, $id_);
+		if (count($liaisons)) {
+			foreach($servers as $server) {
+				if (! array_key_exists($server->id, $liaisons)) {
+					continue;
+				}
+				
+ 				$g['servers'][$server->id]= $server->getDisplayName();
+			}
+		}
+		
+		$liaisons = Abstract_Liaison::load('UsersGroupServersGroup', NULL, $id_);
+		if (count($liaisons)) {
+			$userGroupDB = UserGroupDB::getInstance();
+			$g['usersgroups'] = array();
+			foreach ($liaisons as $liaison) {
+				$obj = $userGroupDB->import($liaison->element);
+				if (! $obj) {
+					continue;
+				}
+				
+				$g['usersgroups'][$liaison->element] = $obj->name;
+			}
+		}
+		
+		return $g;
+	}
+	
+	public function servers_group_add($name_, $description_) {
+		$this->check_authorized('manageServers');
+		
+		$g = new ServersGroup(NULL, $name_, $description_, 1);
+		$res = Abstract_ServersGroup::create($g);
+		if (!$res) {
+			Logger::error('api', sprintf("Unable to create servers group '%s'", $name));
+			return null;
+		}
+		
+		return $g->id;
+	}
+	
+	public function servers_group_remove($id_) {
+		$this->check_authorized('manageServers');
+		
+		$group = Abstract_ServersGroup::load($id_);
+		if (! is_object($group)) {
+			Logger::error('api', sprintf('Unknown servers group "%s"', $id_));
+			return false;
+		}
+		
+		$res = Abstract_ServersGroup::delete($group);
+		if (! $res) {
+			Logger::error('api', sprintf('Unable to remove servers group "%s"', $group->name));
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public function servers_group_modify($id_, $name_, $description_, $published_) {
+		$this->check_authorized('manageServers');
+		
+		$group = Abstract_ServersGroup::load($id_);
+		if (! is_object($group)) {
+			Logger::error('api', sprintf('Unknown servers group "%s"', $id_));
+			return false;
+		}
+		
+		$has_change = false;
+		
+		if ($name_ != null && $name_ != $group->name) {
+			$group->name = $name_;
+			$has_change = true;
+		}
+		
+		if ($description_ != null && $description_ != $group->description) {
+			$group->description = $description_;
+			$has_change = true;
+		}
+		
+		if ($published_ !== null && $published_ !== $group->published) {
+			$group->published = (bool)$published_;
+			$has_change = true;
+		}
+		
+		if (! $has_change) {
+			return false;
+		}
+		
+		$res = Abstract_ServersGroup::update($group);
+		return $res;
+	}
+	
+	public function servers_group_add_server($server_id_, $group_id_) {
+		$this->check_authorized('manageServers');
+		
+		$server = Abstract_Server::load($server_id_);
+		if (! is_object($server)) {
+			Logger::error('api', sprintf("Import of server '%s' failed", $server_id_));
+			return false;
+		}
+		
+		$group = Abstract_ServersGroup::load($group_id_);
+		if (! is_object($group)) {
+			Logger::error('api', sprintf("Import of servers group '%s' failed", $group_id_));
+			return false;
+		}
+		
+		$ret = Abstract_Liaison::save('ServersGroup', $server_id_, $group_id_);
+		return $ret;
+	}
+	
+	public function servers_group_remove_server($server_id_, $group_id_) {
+		$this->check_authorized('manageServers');
+		
+		$server = Abstract_Server::load($server_id_);
+		if (! is_object($server)) {
+			Logger::error('api', sprintf("Import of server '%s' failed", $server_id_));
+			return false;
+		}
+		
+		$group = Abstract_ServersGroup::load($group_id_);
+		if (! is_object($group)) {
+			Logger::error('api', sprintf("Import of servers group '%s' failed", $group_id_));
+			return false;
+		}
+		
+		$ret = Abstract_Liaison::delete('ServersGroup', $server_id_, $group_id_);
+		return $ret;
+	}
+	
+	public function servers_group_publication_add($users_group_id_, $servers_group_id_) {
+		$this->check_authorized('managePublications');
+		
+		$usersGroupDB = UserGroupDB::getInstance();
+		$usersgroup = $usersGroupDB->import($users_group_id_);
+		if (! is_object($usersgroup)) {
+			Logger::error('api', sprintf("Importing usergroup '%s' failed", $users_group_id_));
+			return false;
+		}
+		
+		$serversgroup = Abstract_ServersGroup::load($servers_group_id_);
+		if (! is_object($serversgroup)) {
+			Logger::error('api', sprintf("Import of servers group '%s' failed", $servers_group_id_));
+			return false;
+		}
+		
+		$ret = Abstract_Liaison::save('UsersGroupServersGroup', $usersgroup->getUniqueID(),  $serversgroup->id);
+		return $ret;
+	}
+	
+	public function servers_group_publication_remove($users_group_id_, $servers_group_id_) {
+		$this->check_authorized('managePublications');
+		
+		$usersGroupDB = UserGroupDB::getInstance();
+		$usersgroup = $usersGroupDB->import($users_group_id_);
+		if (! is_object($usersgroup)) {
+			Logger::error('api', sprintf("Importing usergroup '%s' failed", $users_group_id_));
+			return false;
+		}
+		
+		$serversgroup = Abstract_ServersGroup::load($servers_group_id_);
+		if (! is_object($serversgroup)) {
+			Logger::error('api', sprintf("Import of servers group '%s' failed", $servers_group_id_));
+			return false;
+		}
+		
+		$ret = Abstract_Liaison::delete('UsersGroupServersGroup', $usersgroup->getUniqueID(),  $serversgroup->id);
+		return $ret;
+	}
+	
+	// Servers group end
+	
 	
 	private static function generate_task_array($task_) {
 		$t = array(
@@ -3037,6 +3261,18 @@ class OvdAdminSoap {
 			}
 		}
 		
+		$servers_groups = Abstract_ServersGroup::getList(true);;
+		$liaisons = Abstract_Liaison::load('UsersGroupServersGroup',  $id_, NULL);
+		$g['serversgroups'] = array();
+		foreach ($liaisons as $group_s) {
+			if (! array_key_exists($group_s->group, $servers_groups)) {
+				continue;
+			}
+			
+			$group_s = $servers_groups[$group_s->group];
+			$g['serversgroups'][$group_s->id]= $group_s->name;
+		}
+		
 		if (Preferences::moduleIsEnabled('SharedFolderDB')) {
 			$sharedfolderdb = SharedFolderDB::getInstance();
 			$sharedfolders = $sharedfolderdb->importFromUsergroup($group->getUniqueID());
@@ -4803,11 +5039,12 @@ class OvdAdminSoap {
 		$remote_desktop_enabled = ($remote_desktop_settings['enabled'] == 1);
 		$remote_applications_settings = $user->getSessionSettings('remote_applications_settings');
 		$remote_applications_enabled = ($remote_applications_settings['enabled'] == 1);
+		$bypass_servers_restrictions = ($info['settings']['bypass_servers_restrictions'] == 1);
 	
 		$sessionmanagement2 = clone($sessionmanagement);
 		$sessionmanagement2->user = $user;
 		$info['can_start_session_desktop'] = $can_start_session && $remote_desktop_enabled && 
-			$sessionmanagement2->getDesktopServer() && 
+			$sessionmanagement2->getDesktopServer($bypass_servers_restrictions) && 
 			$sessionmanagement2->buildServersList(true);
 		$sessionmanagement2 = clone($sessionmanagement);
 		$sessionmanagement2->user = $user;
@@ -4817,16 +5054,18 @@ class OvdAdminSoap {
 		if ($info['can_start_session_desktop'] || $info['can_start_session_applications']) {
 			$sessionmanagement2 = clone($sessionmanagement);
 			$sessionmanagement2->user = $user;
-			$servers = $sessionmanagement2->chooseApplicationServers();
+			$servers = $sessionmanagement2->chooseApplicationServers($bypass_servers_restrictions);
 			
 			$info['servers'] = array();
-			foreach ($servers as $server) {
-				$s = array(
-					'id' => $server->id,
-					'name' => $server->getDisplayName(),
-					'type' => $server->getAttribute('type'),
-				);
-				$info['servers'][$s['id']] = $s;
+			if (is_array($servers)) {
+				foreach ($servers as $server) {
+					$s = array(
+						'id' => $server->id,
+						'name' => $server->getDisplayName(),
+						'type' => $server->getAttribute('type'),
+					);
+					$info['servers'][$s['id']] = $s;
+				}
 			}
 		}
 		

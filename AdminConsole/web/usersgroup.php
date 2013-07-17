@@ -388,6 +388,13 @@ function show_manage($id) {
       $scripts_available[]= $script;
   }
   
+	// Servers publications
+	$servers_groups_list = $_SESSION['service']->servers_groups_list();
+	$servers_groups_published = array();
+	if ($group->hasAttribute('serversgroups')) {
+		$servers_groups_published = $group->getAttribute('serversgroups');
+	}
+  
   $can_manage_scripts = isAuthorized('manageScripts');
 
   $can_manage_usersgroups = isAuthorized('manageUsersGroups');
@@ -751,6 +758,54 @@ if ($group->isDefault() || (count($users_all) > 0 || !$usersList->is_empty_filte
   }
 
 
+	// Servers publications part
+	if (count($servers_groups_list)>0) {
+		echo '<div>';
+		echo '<h2>'._('List of published Server Groups for this group').'</h1>';
+		echo '<table border="0" cellspacing="1" cellpadding="3">';
+
+		if (count($servers_groups_published)>0) {
+			foreach($servers_groups_published as $servers_group_id => $servers_group_name) {
+				echo '<tr>';
+				echo '<td><a href="serversgroup.php?action=manage&id='.$servers_group_id.'">'.$servers_group_name.'</td>';
+				if ($can_manage_publications) {
+					echo '<td>';
+					echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');">';
+					echo '<input type="hidden" name="action" value="del" />';
+					echo '<input type="hidden" name="name" value="UsersGroupServersGroup" />';
+					echo '<input type="hidden" name="users_group" value="'.$id.'" />';
+					echo '<input type="hidden" name="servers_group" value="'.$servers_group_id.'" />';
+					echo '<input type="submit" value="'._('Delete this publication').'" />';
+					echo '</form>';
+					echo '</td>';
+				}
+				
+				echo '</tr>';
+			}
+		}
+		
+		if (count($servers_groups_list) > count($servers_groups_published) and $can_manage_publications) {
+			echo '<tr><form action="actions.php" method="post"><td>';
+			echo '<input type="hidden" name="action" value="add" />';
+			echo '<input type="hidden" name="name" value="UsersGroupServersGroup" />';
+			echo '<input type="hidden" name="users_group" value="'.$id.'" />';
+			echo '<select name="servers_group">';
+			foreach($servers_groups_list as $servers_group) {
+				if (array_key_exists($servers_group->id, $servers_groups_published)) {
+					continue;
+				}
+				
+				echo '<option value="'.$servers_group->id.'" >'.$servers_group->name.'</option>';
+			}
+			
+			echo '</select>';
+			echo '</td><td><input type="submit" value="'._('Add this publication').'" /></td>';
+			echo '</form></tr>';
+		}
+		
+		echo '</table>';
+		echo '</div>';
+	}
 
 	// Policy of this group
 	echo '<div>';

@@ -404,4 +404,52 @@ class User {
 		
 		return ($restriction_today[$hour_] == '1');
 	}
+	
+	public function get_published_servers_for_user() {
+		Logger::debug('main', "USER::get_my_published_servers");
+		
+		$server_groups = array();
+		
+		$liaisons = Abstract_Liaison::load('UsersGroupServersGroup', NULL, NULL);
+		foreach($liaisons as $liaison) {
+			if (in_array($liaison->element, $server_groups)) {
+				continue;
+			}
+			
+			$server_groups[]= $liaison->element;
+		}
+		
+		// from this group, which are these I am into
+		$users_groups_mine_ids = $this->get_my_usersgroups_from_list($server_groups);
+		$servers = array();
+		
+		foreach($liaisons as $liaison) {
+			if (! in_array($liaison->element, $users_groups_mine_ids)) {
+				continue;
+			}
+			
+			$liaisons2 = Abstract_Liaison::load('ServersGroup', NULL, $liaison->group);
+			foreach($liaisons2 as $liaison2) {
+				$servers []= $liaison2->element;
+			}
+		}
+		
+		return array_unique($servers);
+	}
+	
+	public function get_all_published_servers() {
+		Logger::debug('main', "USER::get_all_published_servers");
+		
+		$servers = array();
+		
+		$liaisons = Abstract_Liaison::load('UsersGroupServersGroup', NULL, NULL);
+		foreach($liaisons as $liaison) {
+			$liaisons2 = Abstract_Liaison::load('ServersGroup', NULL, $liaison->group);
+			foreach($liaisons2 as $liaison2) {
+				$servers []= $liaison2->element;
+			}
+		}
+		
+		return $servers;
+	}
 }

@@ -1,11 +1,12 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2009
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
- * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -93,6 +94,36 @@ function show_default() {
   elseif (count($groups_users) * count($groups_apps) <= count($publications))
     $can_add_publish = false;
 
+	$servers_groups = $_SESSION['service']->servers_groups_list();
+	$publication_servers = array();
+	foreach($servers_groups as $servers_group_id => $servers_group) {
+		$servers_group = $_SESSION['service']->servers_group_info($servers_group_id);
+		if (! is_object($servers_group)) {
+			continue;
+		}
+		
+		if (! $servers_group->published) {
+			continue;
+		}
+		
+		if (! $servers_group->hasAttribute('usersgroups')) {
+			continue;
+		}
+		
+		foreach($servers_group->getAttribute('usersgroups') as $users_group_id => $users_group_name) {
+			$users_group = $_SESSION['service']->users_group_info($users_group_id);
+			if (is_null($users_group)) {
+				continue;
+			}
+			
+			if (! $users_group->published)
+				continue;
+			
+			$publication_servers[]= array('user' => $users_group, 'server' => $servers_group);
+		}
+	}
+
+
   $count = 0;
 
 	$can_manage_publications = isAuthorized('managePublications');
@@ -178,9 +209,101 @@ function show_default() {
 
   echo '</table>';
   echo '<br /><br /><br />';
-	echo $searchDiv;
   echo '</div>';
+
+	// Servers groups publication
+	$count = 0;
+	echo '<div>';
+	echo '<h2>'._('Server Group publications').'</h2>';
+	
+	echo '<table class="main_sub sortable" border="0" cellspacing="1" cellpadding="5">';
+	echo '<thead>';
+	echo '<tr class="title">';
+	echo '<th>'._('User Group').'</th>';
+	echo '<th>'._('Server Group').'</th>';
+	echo '</tr>';
+	echo '</thead>';
+	echo '<tbody>';
+	if (count($publication_servers) == 0) {
+		$content = 'content'.(($count++%2==0)?1:2);
+		echo '<tr class="'.$content.'"><td colspan="3">'._('No publication').'</td></tr>';
+	}
+	else {
+		foreach($publication_servers as $publication) {
+			$content = 'content'.(($count++%2==0)?1:2);
+			$group_u = $publication['user'];
+			$group_s = $publication['server'];
+			
+			echo '<tr class="'.$content.'">';
+			echo '<td><a href="usersgroup.php?action=manage&amp;id='.$group_u->id.'">'.$group_u->name.'</a></td>';
+			echo '<td><a href="serversgroup.php?action=manage&amp;id='.$group_s->id.'">'.$group_s->name.'</a></td>';
+			
+			if ($can_manage_publications) {
+				echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');"><div>';
+				echo '<input type="hidden" name="action" value="del" />';
+				echo '<input type="hidden" name="name" value="UsersGroupServersGroup" />';
+				echo '<input type="hidden" name="servers_group" value="'.$group_s->id.'" />';
+				echo '<input type="hidden" name="users_group" value="'.$group_u->id.'" />';
+				echo '<input type="submit" value="'._('Delete').'"/>';
+				echo '</div></form></td>';
+			}
+			
+			echo '</tr>';
+		}
+	}
+	
+	echo '</tbody>';
+
+	if ($can_manage_publications) {
+		$content = 'content'.(($count++%2==0)?1:2);
+
+		echo '<tfoot>';
+		echo '<form action="actions.php" method="post" >';
+		echo '<input type="hidden" name="action" value="add" />';
+		echo '<input type="hidden" name="name" value="UsersGroupServersGroup" />';
+		echo '<tr class="'.$content.'">';
+		echo '<td>';
+		echo '<select name="users_group" style="width: 100%;">';
+		echo '<option value="">*</option>';
+		foreach($groups_users as $group_users) {
+			echo '<option value="'.$group_users->id.'" >'.$group_users->name.'</option>';
+		}
+		
+		echo '</select>';
+		echo '</td>';
+
+		echo '<td>';
+		echo '<select name="servers_group" style="width: 100%;">';
+		echo '<option value="" >*</option>';
+		foreach($servers_groups as $servers_group) {
+		    echo '<option value="'.$servers_group->id.'" >'.$servers_group->name.'</option>';
+		}
+		echo '</select>';
+		echo '</td><td>';
+		echo '<input type="submit" value="'._('Add').'" />';
+		echo '</td>';
+		echo '</tr>';
+		echo '</form>';
+		echo '</tfoot>';
+	}
+
+	echo '</table>';
+	echo '</div>';
+
+  echo '<br /><br /><br />';
+  echo $searchDiv;
 
   echo '</div>';
   page_footer();
+}
+
+
+function get_users_group($id_, $list_) {
+	foreach($list_ as $i => $group) {
+		if ($group->id == $id_) {
+			return $group;
+		}
+	}
+	
+	return null;
 }
