@@ -552,3 +552,32 @@ div#pageWrap {
 div.section {
 	margin-bottom: 20px;
 }
+
+/* Time grid part */
+table.time_grid th {
+	font-size: 70%
+}
+
+table.time_grid th div {
+	position: relative;
+	margin-left: -15px;
+	text-align: center;
+}
+
+table.time_grid td {
+	width: 10px;
+	background: #bababa;
+	cursor:pointer;
+}
+
+table.time_grid td.hover {
+	background: #0062b3;
+}
+
+table.time_grid td.selected {
+	 background: #004985;
+}
+
+table.time_grid td.selected.hover {
+	 background: #8e8e8e;
+}

@@ -521,7 +521,27 @@ class Session {
 				}
 			}
 		}
-
+		
+		return true;
+	}
+	
+	public function orderDisonnect() {
+		Logger::debug('main', 'Starting Session::orderDisonnect for \''.$this->id.'\'');
+		if ($this->mode != self::MODE_DESKTOP) {
+			return false;
+		}
+		
+		$server = Abstract_Server::load($this->server);
+		if (! $server) {
+			Logger::error('main', 'Session::orderDeletion Unable to load server \''.$this->server.'\'');
+			return false;
+		}
+		
+		$res = $server->orderSessionDisconnect($this->id);
+		if (! $res) {
+			return false;
+		}
+		
 		return true;
 	}
 	

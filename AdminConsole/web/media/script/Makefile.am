@@ -1,8 +1,9 @@
-# Copyright (C) 2008-2010 Ulteo SAS
+# Copyright (C) 2008-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Gauvain POCENTEK <gauvain@linutop.com> 2008
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -23,6 +24,7 @@ SUBDIRS =  ajax lib
 scripts_DATA = common.js \
                common-regular.js \
                publication.js \
-               sortable.js
+               sortable.js \
+               time_grid.js
 scriptsdir = $(datadir)/ulteo/administration_console/web/media/script
 EXTRA_DIST = $(scripts_DATA)

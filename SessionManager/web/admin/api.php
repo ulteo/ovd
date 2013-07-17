@@ -4599,6 +4599,8 @@ class OvdAdminSoap {
 			}
 		}
 		
+		$can_start_session = $user->can_use_session();
+		
 		$remote_desktop_settings = $user->getSessionSettings('remote_desktop_settings');
 		$remote_desktop_enabled = ($remote_desktop_settings['enabled'] == 1);
 		$remote_applications_settings = $user->getSessionSettings('remote_applications_settings');
@@ -4606,13 +4608,12 @@ class OvdAdminSoap {
 	
 		$sessionmanagement2 = clone($sessionmanagement);
 		$sessionmanagement2->user = $user;
-		$info['can_start_session_desktop'] = $remote_desktop_enabled && 
+		$info['can_start_session_desktop'] = $can_start_session && $remote_desktop_enabled && 
 			$sessionmanagement2->getDesktopServer() && 
 			$sessionmanagement2->buildServersList(true);
-		
 		$sessionmanagement2 = clone($sessionmanagement);
 		$sessionmanagement2->user = $user;
-		$info['can_start_session_applications'] = $remote_applications_enabled &&
+		$info['can_start_session_applications'] = $can_start_session && $remote_applications_enabled &&
 			$sessionmanagement2->buildServersList(true);
 		
 		if ($info['can_start_session_desktop'] || $info['can_start_session_applications']) {

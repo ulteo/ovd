@@ -42,3 +42,7 @@ class TS:
 	@staticmethod
 	def logoff(session_id):
 		pass
+	
+	@staticmethod
+	def disconnect(session_id):
+		pass

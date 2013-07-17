@@ -142,6 +142,9 @@ class Preferences_admin {
 			case 'hash':
 				$c = new ConfigElement_dictionary($element_['id'], $title, $description, $description, $element_['value'], $element_['default_value']);
 				break;
+			case 'week_time_select':
+				$c = new ConfigElement_week_time_select($element_['id'], $title, $description, $description, $element_['value'], $element_['default_value']);
+				break;
 			default:
 				// todo log error unknown settings type
 				return null;
@@ -368,6 +371,7 @@ class Preferences_admin {
 			'general_session_settings_defaults_start_without_all_sharedfolders' => _('Launch a session even when a shared folder\'s fileserver is missing'),
 			'general_session_settings_defaults_can_force_sharedfolders' => _('Allow user to force shared folders'),
 			'general_session_settings_defaults_advanced_settings_startsession' => _('Forceable paramaters by users'),
+			'general_session_settings_defaults_time_restriction' => _('Time restriction'),
 			
 			'general_web_interface_settings' => _('Web interface settings'),
 			'general_web_interface_settings_show_list_users' => _('Display users list'),

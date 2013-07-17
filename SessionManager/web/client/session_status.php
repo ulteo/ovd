@@ -79,6 +79,14 @@ $dom = new DomDocument('1.0', 'utf-8');
 $session_node = $dom->createElement('session');
 $session_node->setAttribute('id', $session->id);
 $session_node->setAttribute('status', $session_status);
+if (in_array($session->status, array(Session::SESSION_STATUS_ACTIVE))) {
+	$userDB = UserDB::getInstance();
+	$user = $userDB->import($session->user_login);
+	if (! $user->can_use_session(date('H', mktime(date("H") + 1)))) {
+		$session_node->setAttribute('time_restriction', 60-intval(date('i')));
+	}
+}
+
 $dom->appendChild($session_node);
 
 $xml = $dom->saveXML();

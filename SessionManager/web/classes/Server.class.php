@@ -636,6 +636,45 @@ class Server {
 
 		return true;
 	}
+	
+	public function orderSessionDisconnect($session_id_) {
+		Logger::debug('main', 'Starting Server::orderSessionDisconnect for session \''.$session_id_.'\' on server \''.$this->fqdn.'\'');
+		
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::orderSessionDisconnect for session \''.$session_id_.'\' server "'.$this->fqdn.':'.$this->web_port.'" is not online');
+			return false;
+		}
+		
+		$xml = query_url($this->getBaseURL().'/aps/session/disconnect/'.$session_id_);
+		if (! $xml) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server::orderSessionDisconnect server \''.$this->fqdn.'\' is unreachable');
+			return false;
+		}
+		
+		$dom = new DomDocument('1.0', 'utf-8');
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
+			return false;
+		
+		if (! $dom->hasChildNodes())
+			return false;
+		
+		$node = $dom->getElementsByTagname('session')->item(0);
+		if (is_null($node))
+			return false;
+		
+		if (! $node->hasAttribute('id'))
+			return false;
+		
+		if (! $node->hasAttribute('status'))
+			return false;
+		
+		if ($node->getAttribute('status') != 'logged')
+			return false;
+		
+		return true;
+	}
 
 	public function orderFSAccessEnable($login_, $password_, $netfolders_) {
 		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_FS, $this->roles)) {

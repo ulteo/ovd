@@ -30,7 +30,7 @@ define('IN_MAINTENANCE', 'in_maintenance');
 define('INTERNAL_ERROR', 'internal_error');
 define('INVALID_USER', 'invalid_user');
 define('SERVICE_NOT_AVAILABLE', 'service_not_available');
-define('UNAUTHORIZED_SESSION_MODE', 'unauthorized_session_mode');
+define('UNAUTHORIZED', 'unauthorized');
 define('USER_WITH_ACTIVE_SESSION', 'user_with_active_session');
 
 function throw_response($response_code_) {
@@ -122,8 +122,13 @@ $remote_applications_enabled = (($remote_applications_settings['enabled'] == 1)?
 
 if (isset($_SESSION['mode'])) {
 	if (! in_array('session_mode', $advanced_settings) && $_SESSION['mode'] != $session_mode)
-		throw_response(UNAUTHORIZED_SESSION_MODE);
+		throw_response(UNAUTHORIZED);
 	$session_mode = $_SESSION['mode'];
+}
+
+if (!$user->can_use_session()) {
+	Logger::info('main', '(client/start) User '.$user->getAttribute('login').' cannont start/recover a session because of time restriction policy');
+	throw_response(UNAUTHORIZED);
 }
 
 $locale = $user->getLocale();
@@ -134,7 +139,7 @@ foreach ($protocol_vars as $protocol_var) {
 		switch ($protocol_var) {
 			case 'session_mode':
 				if (! in_array('session_mode', $advanced_settings) && $_REQUEST['session_mode'] != $session_mode)
-					throw_response(UNAUTHORIZED_SESSION_MODE);
+					throw_response(UNAUTHORIZED);
 
 				$session_mode = $_REQUEST['session_mode'];
 				break;
@@ -157,14 +162,14 @@ foreach ($other_vars as $other_var) {
 switch ($session_mode) {
 	case Session::MODE_DESKTOP:
 		if (! isset($remote_desktop_enabled) || $remote_desktop_enabled === false)
-			throw_response(UNAUTHORIZED_SESSION_MODE);
+			throw_response(UNAUTHORIZED);
 		break;
 	case Session::MODE_APPLICATIONS:
 		if (! isset($remote_applications_enabled) || $remote_applications_enabled === false)
-			throw_response(UNAUTHORIZED_SESSION_MODE);
+			throw_response(UNAUTHORIZED);
 		break;
 	default:
-		throw_response(UNAUTHORIZED_SESSION_MODE);
+		throw_response(UNAUTHORIZED);
 		break;
 }
 

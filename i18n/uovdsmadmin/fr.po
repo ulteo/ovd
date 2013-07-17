@@ -4891,6 +4891,27 @@ msgstr "Maximum"
 msgid "Getting userlist failed"
 msgstr "Impossible d'obtenir la liste d'utilisateurs"
 
+msgid "Sunday"
+msgstr "Dimanche"
+
+msgid "Monday"
+msgstr "Lundi"
+
+msgid "Tuesday"
+msgstr "Mardi"
+
+msgid "Wednesday"
+msgstr "Mercredi"
+
+msgid "Thursday"
+msgstr "Jeudi"
+
+msgid "Friday"
+msgstr "Vendredi"
+
+msgid "Saturday"
+msgstr "Samedi"
+
 #~ msgid "unix"
 #~ msgstr "Unix"
 

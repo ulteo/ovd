@@ -57,3 +57,9 @@ class TS (AbstractTS):
 	@staticmethod
 	def logoff(session_id):
 		return xrdp.SessionLogoff(session_id)
+	
+	
+	@staticmethod
+	def disconnect(session_id):
+		return xrdp.SessionDisconnect(session_id)
+

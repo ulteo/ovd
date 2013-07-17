@@ -88,6 +88,11 @@ class SessionManagement(Process):
 				session.locked = False
 				Logger.unregisterHook(session.log)
 				self.queue_sync.put(session)
+			elif request == "disconnect":
+				session = obj
+				self.disconnect_session(session)
+				session.locked = False
+				self.queue_sync.put(session)
 			elif request == "logoff":
 				session = obj
 				self.destroy_user(session.user)
@@ -183,6 +188,39 @@ class SessionManagement(Process):
 		
 		session.domain.onSessionEnd()
 		session.switch_status(Session.SESSION_STATUS_DESTROYED)
+	
+	
+	def disconnect_session(self, session):
+		Logger.info("SessionManagement::disconnect %s"%(session.id))
+		
+		if session.user.created or not session.domain.manage_user():
+			# Doesn't have to disconnect the session if the user was never created
+			
+			try:
+				sessid = TS.getSessionID(session.user.name)
+			except Exception,err:
+				Logger.error("RDP server dialog failed ... ")
+				Logger.debug("SessionManagement::destroy_session: %s"%(str(err)))
+				return False
+			
+			try:
+				status = TS.getState(sessid)
+			except Exception,err:
+				Logger.error("RDP server dialog failed ... ")
+				Logger.debug("SessionManagement::logoff_user: %s"%(str(err)))
+				return
+			
+			if status in [TS.STATUS_LOGGED]:
+				Logger.info("must disconnect ts session %s user %s"%(sessid, session.user.name))
+				
+				try:
+					TS.disconnect(sessid)
+				except Exception,err:
+					Logger.error("RDP server dialog failed ... ")
+					Logger.debug("SessionManagement::logoff_user: %s"%(str(err)))
+					return
+		
+		session.switch_status(Session.SESSION_STATUS_INACTIVE)
 	
 	
 	def logoff_user(self, user):

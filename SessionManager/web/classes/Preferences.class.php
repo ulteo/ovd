@@ -428,6 +428,10 @@ class Preferences {
 			2764800,
 			-1));
 		$this->add($c,'general','session_settings_defaults');
+		
+		$c = new ConfigElement_week_time_select('time_restriction', str_repeat("FF", 3 * 7));
+		$this->add($c,'general','session_settings_defaults');
+		
 		$c = new ConfigElement_input('max_sessions_number', 0);
 		$this->add($c, 'general');
 		$c = new ConfigElement_select('launch_without_apps', 0);

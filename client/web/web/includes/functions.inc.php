@@ -238,6 +238,7 @@ function get_available_translations($lang) {
 		'window_onbeforeunload'			=>	_('You will be disconnected from your OVD session.'),
 
 		'session_expire_in_3_minutes'	=>	_('Your session is going to end in 3 minutes, please save all your data now!'),
+		'session_time_restriction_expire'=>	_('Your session is going to be disconnected in %MINUTES% minutes because of logon time restriction policy'),
 
 		'session_close_unexpected'		=>	_('Server: session closed unexpectedly'),
 		'session_end_ok'				=>	_('Your session has ended, you can now close the window'),

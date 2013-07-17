@@ -72,6 +72,10 @@ class Dialog(AbstractDialog):
 				buf = path[len("/session/destroy/"):]
 				return self.req_session_destroy(buf)
 			
+			elif path.startswith("/session/disconnect/"):
+				buf = path[len("/session/disconnect/"):]
+				return self.req_session_disconnect(buf)
+			
 			elif path.startswith("/debian/") and self.role_instance.canManageApplications():
 				buf = path[len("/debian/"):]
 				return self.req_debian_id(buf)
@@ -388,6 +392,16 @@ class Dialog(AbstractDialog):
 		
 		return self.req_answer(self.session2xmlstatus(session))
 	
+	def req_session_disconnect(self, session_id):
+		if self.role_instance.sessions.has_key(session_id):
+			session = self.role_instance.sessions[session_id]
+			if session.status == Session.SESSION_STATUS_ACTIVE:
+				self.role_instance.spool_action("disconnect", session.id)
+		else:
+			session = Session(session_id, None, None, None, None)
+			session.status = Session.SESSION_STATUS_UNKNOWN
+		
+		return self.req_answer(self.session2xmlstatus(session))
 	
 	def req_user_loggedin(self, request):
 		try:
