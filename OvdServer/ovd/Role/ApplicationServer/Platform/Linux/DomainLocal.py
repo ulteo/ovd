@@ -71,7 +71,7 @@ class DomainLocal(AbstractDomainLocal):
 	
 	def onSessionEnd(self):
 		if not self.session.user.set_groups(self.groups_before_ovd_session):
-			Logger.error("Failed to restore groups of the user %s"%(username))
+			Logger.error("Failed to restore groups of the user %s"%(self.session.user.name))
 		
 		if self.force_local_password:
 			if Config.override_password_method is Config.OVERRIDE_PASSWORD_METHOD_CUSTOM:

@@ -64,7 +64,7 @@ class HTAccess:
 		
 		except IOError, err:
 			Logger.error("FS: unable to write .htaccess")
-			Logger.debug("FS: unable to write .htaccess '%s' return: %s"%(path, str(err)))
+			Logger.debug("FS: unable to write .htaccess '%s' return: %s"%(self.path, str(err)))
 			return False
 		
 		return True

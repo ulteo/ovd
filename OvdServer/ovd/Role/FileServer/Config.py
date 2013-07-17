@@ -46,7 +46,7 @@ class Config:
 			cls.user = infos["user"]
 		
 		if infos.has_key("FSBackendConf"):
-			cls.FSBackendConf = info["FSBackendConf"]
+			cls.FSBackendConf = infos["FSBackendConf"]
 		
 		return True
 	
