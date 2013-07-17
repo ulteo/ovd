@@ -12,7 +12,7 @@ if not %errorlevel%==0 goto :error
 cmake --build . --config Release --target install
 if not %errorlevel%==0 goto :error
 
-
+exit 0
 error:
 exit 1
 
