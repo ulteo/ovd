@@ -23,6 +23,6 @@ scripts_DATA = server-linux.png \
                server-webapp.png \
                temp_icon.php
 
-scriptsdir = $(datadir)/ulteo/administration_console/media/image
+scriptsdir = $(datadir)/ulteo/administration_console/web/media/image
 
 EXTRA_DIST = $(scripts_DATA)

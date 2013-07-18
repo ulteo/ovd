@@ -3,5 +3,5 @@ scripts_DATA = configuration.js \
                servers.js \
                user.js \
                usergroup.js
-scriptsdir = $(datadir)/ulteo/administration_console/media/script/ajax
+scriptsdir = $(datadir)/ulteo/administration_console/web/media/script/ajax
 EXTRA_DIST = $(scripts_DATA)
