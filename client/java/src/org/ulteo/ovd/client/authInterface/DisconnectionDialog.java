@@ -21,12 +21,15 @@
 
 package org.ulteo.ovd.client.authInterface;
 
+import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Window;
 
 import javax.swing.JDialog;
 import javax.swing.JProgressBar;
+
+import java.util.Locale;
 
 import org.ulteo.utils.I18n;
 
@@ -38,6 +41,7 @@ public class DisconnectionDialog extends JDialog {
 		Image logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
 		this.setIconImage(logo);
 		this.setTitle(I18n._("Disconnecting!"));
+		this.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		this.setSize(300, 50);
 		this.setPreferredSize(new Dimension(300,50));

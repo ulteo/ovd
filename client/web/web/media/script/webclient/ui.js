@@ -364,3 +364,18 @@ function getWebClientBaseURL() {
 	url = url.replace(/\?[^\?]*$/, "");
 	return url.replace(/\/[^\/]*$/, "")+"/";
 }
+
+function set_component_orientation(language_) {
+	var rtl_languages = ["ar", "he", "fa", "ur", "yi", "dv"];
+	var lang = language_.substr(0,2).toLowerCase();
+	
+	orientation = "ltr";
+	for(var i=0; i<rtl_languages.length; i++) {
+		if (lang == rtl_languages[i]) {
+			orientation = "rtl";
+			break;
+		}
+	}
+	
+	document.dir = orientation;
+}

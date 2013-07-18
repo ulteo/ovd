@@ -22,6 +22,7 @@
 
 package org.ulteo.ovd.client.authInterface;
 
+import java.awt.ComponentOrientation;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -34,6 +35,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
+
+import java.util.Locale;
 
 import org.ulteo.ovd.client.Language.JDialog;
 import org.ulteo.utils.I18n;
@@ -63,6 +66,8 @@ public class LoadingFrame extends JDialog implements ActionListener {
 		this.cancel.setPreferredSize(new Dimension(120, 10));
 		this.cancel.setSize(new Dimension(120, 10));
 		this.cancel.addActionListener(this);
+
+		this.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 		
 		this.addWindowListener(new WindowAdapter() {
 			@Override

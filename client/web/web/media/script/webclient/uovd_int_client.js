@@ -313,6 +313,7 @@ function initialize_ui() {
 
 		/* Translate UI */
 		translateInterface(settings.language);
+		set_component_orientation(settings.language);
 
 		validate_settings();
 	});
@@ -335,6 +336,7 @@ function initialize_ui() {
 
 	/* Translate text */
 	applyTranslations(i18n_tmp);
+	set_component_orientation(settings.language);
 
 	/* Initial flag */
 	if(defaults.big_image_map) { jQuery('#session_language_flag').prop('class', 'image_'+settings.language+'_png'); }

@@ -281,6 +281,7 @@ function initialize_ui() {
 
 	/* Translate text */
 	applyTranslations(i18n_tmp);
+	set_component_orientation(settings.language);
 
 	/* Suspend and logout buttons */
 	jQuery('#logout_link').on('click', function() { confirmLogout(); });

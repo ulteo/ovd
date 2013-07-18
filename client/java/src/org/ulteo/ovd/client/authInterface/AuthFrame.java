@@ -26,6 +26,7 @@ package org.ulteo.ovd.client.authInterface;
 import java.awt.AWTKeyStroke;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -996,6 +997,8 @@ public class AuthFrame extends JFrame implements ActionListener, Runnable {
 			if (value < this.resolutionStrings.length)
 				this.resolutionValue.setText(this.resolutionStrings[value]);
 		}
+		
+		this.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 	}
 	
 }
