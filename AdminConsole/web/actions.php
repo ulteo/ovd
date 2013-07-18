@@ -26,7 +26,7 @@
  **/
 require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
 
-require_once(dirname(__FILE__).'/includes/webapp.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/webapp.inc.php');
 
 if (! is_array($_SESSION) || ! array_key_exists('admin_login', $_SESSION))
 	redirect('index.php');
