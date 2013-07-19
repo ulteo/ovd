@@ -5,8 +5,12 @@ Listen 1111
 <VirtualHost *:1111>
 	RewriteEngine on
 
-	RewriteCond %{REQUEST_URI} ^/(.+)/(.+)$
-	RewriteRule . /%1_%2.php [L]
+	# Replace all sub "/" by _ in the request URI
+	RewriteRule ^/(.*)/(.*)$ /$1_$2 [N]
+
+	# Add .php at the end of the request if not exists
+	RewriteCond %{REQUEST_URI}  !^(.+)\.php$
+	RewriteRule (.*) $1.php [L]
 
 	DocumentRoot @DATADIR@/ulteo/sessionmanager/webservices
 	<Directory @DATADIR@/ulteo/sessionmanager/webservices>
