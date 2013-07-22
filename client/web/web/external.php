@@ -173,12 +173,6 @@ if (defined('RDP_INPUT_METHOD'))
 		</div>
 
 		<div id="testJava">
-			<applet id="CheckJava" code="org.ulteo.ovd.applet.CheckJava" codebase="applet/" archive="CheckJava.jar" mayscript="true" width="1" height="1">
-				<param name="code" value="org.ulteo.ovd.applet.CheckJava" />
-				<param name="codebase" value="applet/" />
-				<param name="archive" value="CheckJava.jar" />
-				<param name="mayscript" value="true" />
-			</applet>
 		</div>
 
 		<div style="background: #2c2c2c; width: 0px; height: 0px;">

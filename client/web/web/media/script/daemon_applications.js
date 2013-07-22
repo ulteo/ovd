@@ -102,7 +102,7 @@ var Applications = Class.create(Daemon, {
 			applet_params.set('setting_'+pair.key, pair.value);
 		});
 
-		var applet = buildAppletNode('ulteoapplet', this.applet_main_class, 'jpedal.jar,log4j-1.2.jar,'+this.applet_version, applet_params);
+		var applet = buildAppletNode('ulteoapplet', this.applet_main_class, this.applet_version, applet_params);
 		$('applicationsAppletContainer').show();
 		$('applicationsAppletContainer').appendChild(applet);
 

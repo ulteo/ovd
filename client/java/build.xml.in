@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <!--
- Copyright (C) 2008-2011 Ulteo SAS
+ Copyright (C) 2008-2013 Ulteo SAS
  http://www.ulteo.com
  Author Gauvain POCENTEK <gpocentek@linutop.com> 2008-2009
  Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
  Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
  Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
  Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
- Author David LECHEVALIER <david@ulteo.com> 2010
+ Author David LECHEVALIER <david@ulteo.com> 2010, 2013
  Author Guillaume DUPAS <guillaume@ulteo.com> 2010
 
  This program is free software; you can redistribute it and/or
@@ -276,6 +276,10 @@
         <pathelement location="required_libraries/image4j.jar"/>
       </classpath>
     </javac>
+    <unjar dest="build">
+      <filelist dir="required_libraries"
+                files="log4j-1.2.jar, jpedal.jar" />
+    </unjar>
     <exec executable="make" failonerror="true" dir="windowsPathsJNI">
        <env key="JAVAHOME"  path="${java.home}/.." />
        <env key="BINPREFIX" value="${mingw32.prefix}" />
@@ -294,12 +298,9 @@
           todir="build/resources/LinuxLibs/64" failonerror="false" />
     <jar destfile="jars/ulteo-applet.jar" basedir="build">
       <include name="**" />
-    </jar>
-    <jar destfile="jars/CheckJava.jar" basedir="build/">
-      <include name="org/ulteo/ovd/applet/CheckJava.class"/>
-      <manifest>
-        <attribute name="Main-Class" value="org.ulteo.ovd.applet.CheckJava"/>
-      </manifest>
+        <manifest>
+          <attribute name="Trusted-Library" value="true" />
+        </manifest>
     </jar>
     <signjar keystore="${keystore.path}" storepass="${keystore.password}" alias="${keystore.alias}"
              destdir="jars" >
@@ -311,7 +312,7 @@
   <target name="applet.install" description="install applets"
           depends="applet.jar">
     <copy todir="${applets.dir}">
-      <filelist dir="jars" files="jpedal.jar log4j-1.2.jar ulteo-applet.jar CheckJava.jar" />
+      <filelist dir="jars" files="jpedal.jar log4j-1.2.jar ulteo-applet.jar" />
     </copy>
   </target>
 

@@ -478,33 +478,9 @@ function showSystemTestError(error_id_) {
 	new Effect.Appear($('systemTestErrorWrap'));
 }
 
-var testJava_t0 = 0;
 function testJava() {
-	if (testJava_t0 == 0) {
-		// first time
-		showSystemTest();
+	showSystemTest();
 
-		setTimeout(function() {
-			testJava_t0 = (new Date()).getTime();
-			testJava();
-		}, 2000);
-
-		return;
-	}
-
-	try {
-		var checkjava_isactive = $('CheckJava').isActive();
-		if (! checkjava_isactive)
-				throw "applet is not ready";
-	} catch(e) {
-		testJava_t1 = (new Date()).getTime();
-		if (testJava_t1 - testJava_t0 > 10000)
-			showSystemTestError('systemTestError1');
-		else
-			setTimeout(function() { testJava(); }, 500);
-		return;
-	}
-	
 	var applet_params = new Hash();
 	applet_params.set('onSuccess', 'appletSuccess');
 	applet_params.set('onFailure', 'appletFailure');
