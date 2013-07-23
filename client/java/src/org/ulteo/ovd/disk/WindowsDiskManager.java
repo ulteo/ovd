@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
- * Author David Lechevalier <david@ulteo.com> 2010 2011
+ * Author David Lechevalier <david@ulteo.com> 2010 2011 2012
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -185,7 +185,7 @@ public class WindowsDiskManager extends DiskManager {
 			String driveDisplayName = FileSystemView.getFileSystemView().getSystemDisplayName(drive);
 			driveDisplayName = this.getValidName(driveDisplayName);
 			if (driveDisplayName.equals(""))
-				return this.getValidName(path);
+				return this.getValidName(path.replace(":\\", ""));
 			else
 				return driveDisplayName;
 		}
