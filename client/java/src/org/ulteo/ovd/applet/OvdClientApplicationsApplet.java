@@ -61,9 +61,6 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 	protected void runExit() {}
 
 	@Override
-	protected void hide(RdpConnection co) {}
-
-	@Override
 	protected void uncustomizeRemoteAppsConnection(RdpConnectionOvd co) {}
 
 	public boolean addServer(ServerAccess server, int JSId) {
@@ -130,6 +127,8 @@ public class OvdClientApplicationsApplet extends OvdClientRemoteApps {
 
 	@Override
 	public void ovdInited(OvdAppChannel channel) {
+		super.ovdInited(channel);
+
 		for (Integer JSId : this.matching.keySet()) {
 			Integer listId = this.matching.get(JSId);
 			if (listId == null)

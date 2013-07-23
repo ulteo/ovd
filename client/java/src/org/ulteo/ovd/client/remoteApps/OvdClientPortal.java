@@ -148,6 +148,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	@Override
 	public void ovdInited(OvdAppChannel o) {
+		super.ovdInited(o);
+		
 		for (RdpConnectionOvd rc : this.availableConnections) {
 			if (rc.getOvdAppChannel() == o) {
 				for (Application app : rc.getAppsList()) {
@@ -186,7 +188,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	@Override
 	protected void hide(RdpConnection co) {
-
+		super.hide(co);
+		
 		for (Application app : ((RdpConnectionOvd)co).getAppsList()) {
 			this.portal.getApplicationPanel().toggleAppButton(app, false);
 			this.system.uninstall(app);

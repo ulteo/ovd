@@ -1,11 +1,11 @@
 /*
  * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2013
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -69,13 +69,17 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	private boolean debugSeamless = false;
 	protected boolean publicated = false;
 	protected boolean showDesktopIcons = false;
+
+	protected HashMap<RdpConnection, RecoverySeamlessDisplay> recovery_seamless_list = null;
 	
 	public OvdClientRemoteApps(SessionManagerCommunication smComm) {
 		super(smComm, null, false);
+		this.recovery_seamless_list = new HashMap<RdpConnection, RecoverySeamlessDisplay>();
 	}
 
 	public OvdClientRemoteApps(SessionManagerCommunication smComm, Callback obj) {
 		super(smComm, obj, false);
+		this.recovery_seamless_list = new HashMap<RdpConnection, RecoverySeamlessDisplay>();
 	}
 
 	@Override
@@ -153,7 +157,13 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		}
 	}
 
-	public abstract void ovdInited(OvdAppChannel o);
+	public void ovdInited(OvdAppChannel o) {
+		for (RdpConnectionOvd rc : this.availableConnections) {
+			if (rc.getOvdAppChannel() == o) {
+				this.remove_main_frame(rc);
+			}
+		}
+	}
 
 	@Override
 	public void ovdInstanceStarted(int instance_) {}
@@ -422,8 +432,29 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	}
 	
 	@Override
-	protected void display(RdpConnection co) {}
+	protected void display(RdpConnection co) {
+		RecoverySeamlessDisplay r = new RecoverySeamlessDisplay((RdpConnectionOvd)co);
+		this.recovery_seamless_list.put(co, r);
+	}
 	
+	@Override
+	protected void hide(RdpConnection co) {
+		this.remove_main_frame(co);
+	}
+
+	protected void remove_main_frame(RdpConnection co) {
+		RecoverySeamlessDisplay r = this.recovery_seamless_list.remove(co);
+		if (r == null) {
+			System.err.println("OvdClientRemoteApps hide: unable to retrieve frame from rdp connection");
+			return;
+		}
+		
+		r.cancel();
+		r.destroy();
+		r = null;
+	}
+
+
 	/**
 	 * toggle all publish/unpublish applications from all {@link RdpConnectionOvd} in the 
 	 * current {@link OvdClientRemoteApps}

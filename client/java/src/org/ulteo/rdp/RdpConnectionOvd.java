@@ -163,6 +163,10 @@ public class RdpConnectionOvd extends RdpConnection {
 		this.opt.seamlessEnabled = false;
 	}
 
+	public void setSeamlessEnabled(boolean value) {
+		this.opt.seamlessEnabled = value;
+	}
+
 	/**
 	 * Enable OVD applications mode
 	 *	- Init seamless channel

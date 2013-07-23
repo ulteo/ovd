@@ -87,6 +87,8 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 
 	@Override
 	public void ovdInited(OvdAppChannel o) {
+		super.ovdInited(o);
+		
 		for (RdpConnectionOvd rc : this.availableConnections) {
 			if (rc.getOvdAppChannel() != o)
 				continue;
@@ -103,6 +105,8 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 
 	@Override
 	protected void hide(RdpConnection co) {
+		super.hide(co);
+		
 		for (Application app : ((RdpConnectionOvd) co).getAppsList()) {
 			this.system.uninstall(app);
 		}
