@@ -1,7 +1,8 @@
-# Copyright (C) 2010-2012 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -17,6 +18,21 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+%define php_bin %(basename `php-config --php-binary`)
+%if %{defined rhel}
+%define httpd httpd
+%define apachectl apachectl
+%define apache_user apache
+%define apache_group apache
+%define apache_requires %()
+%else
+%define httpd apache2
+%define apachectl apache2ctl
+%define apache_user wwwrun
+%define apache_group www
+%define apache_requires , apache2, apache2-mod_php5
+%endif
+
 Name: ovd-administration-console
 Version: @VERSION@
 Release: @RELEASE@
@@ -27,7 +43,6 @@ Group: Applications/System
 Vendor: Ulteo SAS
 URL: http://www.ulteo.com
 Packager: David PHAM-VAN <dpv@ulteo.com>
-Distribution: RHEL 5.5
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
@@ -43,7 +58,7 @@ Open Virtual Desktop.
 
 Summary: Ulteo Open Virtual Desktop - Administration Console
 Group: Applications/System
-Requires: ulteo-ovd-l10n, php, php-dom, php-mbstring, php-libchart, php-soap
+Requires: ulteo-ovd-l10n, %{php_bin}, %{php_bin}-dom, %{php_bin}-mbstring, %{php_bin}-gettext, php-libchart, %{php_bin}-soap %{apache_requires}
 
 %description -n ulteo-ovd-administration-console
 This package provides the web Administration Console for the Ulteo
@@ -60,8 +75,12 @@ make
 make DESTDIR=%{buildroot} install
 
 %post -n ulteo-ovd-administration-console
-A2CONFDIR=/etc/httpd/conf.d
+A2CONFDIR=/etc/%{httpd}/conf.d
 CONFDIR=/etc/ulteo/administration_console
+
+%if ! %{defined rhel}
+a2enmod php5 > /dev/null
+%endif
 
 # Alias admin
 if [ ! -e $A2CONFDIR/ovd-administration-console.conf ]; then
@@ -69,8 +88,8 @@ if [ ! -e $A2CONFDIR/ovd-administration-console.conf ]; then
 fi
 
 # restart apache server
-if apachectl configtest 2>/dev/null; then
-    /etc/init.d/httpd restart || true
+if %{apachectl} configtest 2>/dev/null; then
+    service %{httpd} restart || true
 else
     echo << EOF
 "Your apache configuration is broken!
@@ -80,14 +99,14 @@ fi
 
 %postun -n ulteo-ovd-administration-console
 if [ "$1" = "0" ]; then
-    A2CONFDIR=/etc/httpd/conf.d
+    A2CONFDIR=/etc/%{httpd}/conf.d
     CONFDIR=/etc/ulteo/administration_console
     rm -f $A2CONFDIR/ovd-administration-console.conf
    
     rm -rf /var/spool/ulteo/administration_console
 
-    if apachectl configtest 2>/dev/null; then
-        /etc/init.d/httpd restart || true
+    if %{apachectl} configtest 2>/dev/null; then
+        service %{httpd} restart || true
     else
         echo "Apache configuration broken: correct the issue and restart the apache2 server"
     fi
@@ -102,9 +121,9 @@ rm -rf %{buildroot}
 %dir /var/*
 %dir /var/*/ulteo
 %config /etc/ulteo/administration_console/*.conf
-%defattr(0660,apache,apache)
+%defattr(0660,%{apache_user},%{apache_group})
 %config /etc/ulteo/administration_console/config.inc.php
-%defattr(2770,apache,apache)
+%defattr(2770,%{apache_user},%{apache_group})
 %dir /var/spool/ulteo/administration_console
 
 %changelog -n ulteo-ovd-administration-console

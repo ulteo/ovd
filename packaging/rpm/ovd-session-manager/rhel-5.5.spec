@@ -1,6 +1,7 @@
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
-# Author Samuel BOVEE <samuel@ulteo.com>
+# Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -16,6 +17,21 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+%define php_bin %(basename `php-config --php-binary`)
+%if %{defined rhel}
+%define httpd httpd
+%define apachectl apachectl
+%define apache_user apache
+%define apache_group apache
+%define apache_requires , mod_ssl, php-xml
+%else
+%define httpd apache2
+%define apachectl apache2ctl
+%define apache_user wwwrun
+%define apache_group www
+%define apache_requires php5-curl, php5-dom, apache2, apache2-mod_php5
+%endif
+
 Name: ovd-session-manager
 Version: @VERSION@
 Release: @RELEASE@
@@ -25,8 +41,7 @@ License: GPL2
 Group: Applications/System
 Vendor: Ulteo SAS
 URL: http://www.ulteo.com
-Packager: Samuel Bovée <samuel@ulteo.com>
-Distribution: RHEL 5.5
+Packager: David PHAM-VAN <d.pham-van@ulteo.com>
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
@@ -42,7 +57,7 @@ Open Virtual Desktop.
 
 Summary: Ulteo Open Virtual Desktop - Session Manager
 Group: Applications/System
-Requires: php, php-ldap, php-mysql, php-mbstring, php-pear, php-xml, php-imagick, php-soap, curl, openssl, mod_ssl
+Requires: %{php_bin}, %{php_bin}-ldap, %{php_bin}-mysql, %{php_bin}-mbstring, %{php_bin}-pear, php-imagick, %{php_bin}-soap, curl, openssl %{apache_requires}
 
 %description -n ulteo-ovd-session-manager
 This package provides the Session Manager web services for the Ulteo
@@ -62,19 +77,31 @@ make DESTDIR=%{buildroot} install
 mkdir -p %{buildroot}/etc/logrotate.d
 install -m 0644 examples/ulteo-sm.logrotate %{buildroot}/etc/logrotate.d/sessionmanager
 
+%if ! %{defined rhel}
+# hack to not provide /usr/bin/php (zypper)
+sed -i -e 's,^#!/usr/bin/php$,#!/usr/bin/php5,' $(find %{buildroot} -name *.php*)
+%endif
+
 # put the correct Apache user in cron file
-A2USER=apache
+A2USER=%{apache_user}
 sed -i "s/@APACHE_USER@/${A2USER}/" %{buildroot}/etc/ulteo/sessionmanager/sessionmanager.cron
 
 
 %post -n ulteo-ovd-session-manager
-A2CONFDIR=/etc/httpd/conf.d
+A2CONFDIR=/etc/%{httpd}/conf.d
 CONFDIR=/etc/ulteo/sessionmanager
+
+%if ! %{defined rhel}
+a2enmod php5 > /dev/null
+%endif
 
 # VHost server config
 if [ ! -e $A2CONFDIR/sessionmanager-vhost-server.conf ]; then
     ln -sfT $CONFDIR/apache2-vhost-server.conf \
         $A2CONFDIR/sessionmanager-vhost-server.conf
+%if ! %{defined rhel}
+    a2enmod rewrite >/dev/null
+%endif
 fi
 
 # Alias admin
@@ -90,6 +117,10 @@ if [ ! -e $A2CONFDIR/sessionmanager-vhost-ssl.conf ]; then
         $CONFDIR/apache2-vhost-ssl.conf
     ln -sfT $CONFDIR/apache2-vhost-ssl.conf \
         $A2CONFDIR/sessionmanager-vhost-ssl.conf
+%if ! %{defined rhel}
+    a2enflag SSL > /dev/null
+    a2enmod ssl > /dev/null
+%endif
 fi
 
 # SSL self-signed key generation
@@ -106,8 +137,8 @@ then
 fi
 
 # restart apache server
-if apachectl configtest 2>/dev/null; then
-    /etc/init.d/httpd restart || true
+if %{apachectl} configtest 2>/dev/null; then
+    service %{httpd} restart || true
 else
     echo << EOF
 "Apache configuration error after enable OVD virtual hosts. Please remove your
@@ -129,7 +160,7 @@ fi
 
 %postun -n ulteo-ovd-session-manager
 if [ "$1" = "0" ]; then
-    A2CONFDIR=/etc/httpd/conf.d
+    A2CONFDIR=/etc/%{httpd}/conf.d
     CONFDIR=/etc/ulteo/sessionmanager
     rm -f $A2CONFDIR/sessionmanager-vhost-server.conf \
           $A2CONFDIR/sessionmanager-vhost-ssl.conf \
@@ -140,8 +171,8 @@ if [ "$1" = "0" ]; then
            /var/cache/ulteo/sessionmanager/* \
            /var/log/ulteo/sessionmanager/*
 
-    if apachectl configtest 2>/dev/null; then
-        /etc/init.d/httpd restart || true
+    if %{apachectl} configtest 2>/dev/null; then
+        service %{httpd} restart || true
     else
         echo "Apache configuration broken: correct the issue and restart the apache2 server"
     fi
@@ -159,9 +190,9 @@ rm -rf %{buildroot}
 %config /etc/logrotate.d/sessionmanager
 %defattr(0644,root,root)
 %config /etc/ulteo/sessionmanager/sessionmanager.cron
-%defattr(0660,apache,apache)
+%defattr(0660,%{apache_user},%{apache_group})
 %config /etc/ulteo/sessionmanager/config.inc.php
-%defattr(2770,apache,apache)
+%defattr(2770,%{apache_user},%{apache_group})
 %dir /var/*/ulteo/sessionmanager
 
 %changelog -n ulteo-ovd-session-manager
