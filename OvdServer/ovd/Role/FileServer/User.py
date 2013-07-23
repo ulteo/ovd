@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2012 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2012
+# Author David LECHEVALIER <david@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -32,7 +33,7 @@ class User:
 	
 	
 	def create(self, password):
-		cmd = "useradd -d /dev/null -s /bin/false -G %s %s"%(Config.group, self.login)
+		cmd = "useradd -d /dev/null -s /bin/false -G %s,%s %s"%(Config.group, "sambashare", self.login)
 		p = System.execute(cmd)
 		if p.returncode == 2304:
 			Logger.warn("FS: unable to create user: already exists")
