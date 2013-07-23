@@ -112,6 +112,10 @@ class Profile(AbstractProfile):
 			self.mountPoint = None
 			return False
 		
+		return True
+	
+	
+	def installLogoffGPO(self):
 		gpo = GPO()
 		if gpo.parse() is False:
 			Logger.error("Failed to parse GPO file")
@@ -126,7 +130,6 @@ class Profile(AbstractProfile):
 		if not gpo.contain(GPO.LOGOFF, absCommand, Profile.vfsParameter):
 			gpo.add(GPO.LOGOFF, absCommand, Profile.vfsParameter)
 			return gpo.save()
-		
 		
 		return True
 	

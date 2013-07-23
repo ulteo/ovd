@@ -78,6 +78,7 @@ class Session(AbstractSession):
 					return False
 			else:
 				self.profile.copySessionStart()
+				self.profile.installLogoffGPO()
 		
 		if self.profile is not None and self.profile.mountPoint is not None:
 			d = os.path.join(self.profile.mountPoint, self.profile.DesktopDir)
