@@ -22,10 +22,15 @@
 import os
 import win32file
 
+from ovd.Platform.System import System
+
+
 FILE_ATTRIBUTE_SYSTEM =        0x4    #system file
 FILE_ATTRIBUTE_REPARSE_POINT = 0x400  #symbolic link
 
 def copyDirOverride(src, dst, exception=None):
+	src = System.local_encode(src)
+	dst = System.local_encode(dst)
 	if not os.path.isdir(src):
 		return
 	
