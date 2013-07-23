@@ -472,9 +472,6 @@ function initialize_tests() {
 		delete framework.rdp_providers.html5;
 	}
 
-	/* !!! */
-	if(defaults.gateway) { delete framework.rdp_providers.html5; }
-
   /* 2 : Test RDP providers */
 	var nb_rdp_providers = 0;
 	framework.tests = {};

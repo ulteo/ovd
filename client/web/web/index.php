@@ -121,6 +121,9 @@ if ($debug_mode === false && array_key_exists('debug', $_REQUEST))
 
 $headers = apache_request_headers();
 $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers));
+if ($gateway_first) {
+	$html5_installed = false;
+}
 
 function get_users_list() {
 	if (! defined('SESSIONMANAGER_HOST'))
