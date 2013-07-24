@@ -108,7 +108,7 @@ class GPO:
 	
 	def contain(self, GPOType, command, parameter):
 		if GPOType not in [GPO.LOGON, GPO.LOGOFF]:
-			Logger.error("GPO of type %s is not supported")
+			Logger.error("GPO of type %s is not supported"%(GPOType))
 			return False
 		
 		if not self.gpos.has_key(GPOType):
@@ -119,7 +119,7 @@ class GPO:
 	
 	def add(self, GPOType, command, parameter):
 		if GPOType not in [GPO.LOGON, GPO.LOGOFF]:
-			Logger.error("GPO of type %s is not supported")
+			Logger.error("GPO of type %s is not supported"%(GPOType))
 			return False
 		
 		if not self.gpos.has_key(GPOType):
