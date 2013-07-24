@@ -183,7 +183,6 @@ class GPO:
 				index += 1
 		
 		try:
-			print "mkdir ", os.path.dirname(self.iniScriptFile)
 			os.makedirs(os.path.dirname(self.iniScriptFile))
 			f = open(self.iniScriptFile, 'wb+')
 			f.truncate()
