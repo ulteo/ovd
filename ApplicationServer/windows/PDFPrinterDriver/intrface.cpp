@@ -667,8 +667,8 @@ HRESULT __stdcall IOemPS::WritePrinter(
     if(isEOF((char*)pBuf, cbBuffer)){
         DoConvertion(poempdev->spoolPSFileName, poempdev->spoolPDFFileName);
         SendPDF(pdevobj->hPrinter, poempdev->spoolPDFFileName);
-        //DeleteFile(poempdev->spoolPSFileName);
-        //DeleteFile(poempdev->spoolPDFFileName);
+        DeleteFile(poempdev->spoolPSFileName);
+        DeleteFile(poempdev->spoolPDFFileName);
         //free memory
         if (poempdev->spoolPSFileName != NULL) {
             delete poempdev->spoolPSFileName;
